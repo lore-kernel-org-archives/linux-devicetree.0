@@ -1,350 +1,218 @@
-From: <Yuantian.Tang@freescale.com>
-Subject: [PATCH 2/2][RFC] clk: add PowerPC corenet clock support
-Date: Tue, 12 Mar 2013 15:07:33 +0800
-Message-ID: <1363072053-32736-2-git-send-email-Yuantian.Tang@freescale.com>
-References: <1363072053-32736-1-git-send-email-Yuantian.Tang@freescale.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] can: at91_can: add dt support
+Date: Tue, 12 Mar 2013 08:45:06 +0100
+Message-ID: <18928.8675006994$1363074352@news.gmane.org>
+References: <1363022764-7647-1-git-send-email-ludovic.desroches@atmel.com>
+ <513E1523.4010803@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1363072053-32736-1-git-send-email-Yuantian.Tang@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Tang Yuantian <Yuantian.Tang@freescale.com>, devicetree-discuss@lists.ozlabs.org, R58472@freescale.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <513E1523.4010803-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tang Yuantian <Yuantian.Tang@freescale.com>
+On Mon, Mar 11, 2013 at 06:32:19PM +0100, Marc Kleine-Budde wrote:
+> On 03/11/2013 06:26 PM, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org wrote:
+> > From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > 
+> > Add device tree support.
+> > 
+> > Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > ---
+> > Changes in v2:
+> > - code cleanup
+> > - correct typo
+> > 
+> >  .../devicetree/bindings/net/can/atmel-can.txt      | 14 ++++
+> >  drivers/net/can/at91_can.c                         | 74 ++++++++++++++++------
+> >  2 files changed, 69 insertions(+), 19 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/net/can/atmel-can.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/can/atmel-can.txt b/Documentation/devicetree/bindings/net/can/atmel-can.txt
+> > new file mode 100644
+> > index 0000000..72cf0c5
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/can/atmel-can.txt
+> > @@ -0,0 +1,14 @@
+> > +* AT91 CAN *
+> > +
+> > +Required properties:
+> > +  - compatible: Should be "atmel,at91sam9263-can" or "atmel,at91sam9x5-can"
+> > +  - reg: Should contain CAN controller registers location and length
+> > +  - interrupts: Should contain IRQ line for the CAN controller
+> > +
+> > +Example:
+> > +
+> > +	can0: can@f000c000 {
+> > +		compatbile = "atmel,at91sam9x5-can";
+> > +		reg = <0xf000c000 0x300>;
+> > +		interrupts = <40 4 5>
+> > +	};
+> > diff --git a/drivers/net/can/at91_can.c b/drivers/net/can/at91_can.c
+> > index 44f3637..8c113f5 100644
+> > --- a/drivers/net/can/at91_can.c
+> > +++ b/drivers/net/can/at91_can.c
+> > @@ -27,6 +27,7 @@
+> >  #include <linux/kernel.h>
+> >  #include <linux/module.h>
+> >  #include <linux/netdevice.h>
+> > +#include <linux/of.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/rtnetlink.h>
+> >  #include <linux/skbuff.h>
+> > @@ -155,19 +156,20 @@ struct at91_priv {
+> >  	canid_t mb0_id;
+> >  };
+> >  
+> > -static const struct at91_devtype_data at91_devtype_data[] = {
+> > -	[AT91_DEVTYPE_SAM9263] = {
+> > -		.rx_first = 1,
+> > -		.rx_split = 8,
+> > -		.rx_last = 11,
+> > -		.tx_shift = 2,
+> > -	},
+> > -	[AT91_DEVTYPE_SAM9X5] = {
+> > -		.rx_first = 0,
+> > -		.rx_split = 4,
+> > -		.rx_last = 5,
+> > -		.tx_shift = 1,
+> > -	},
+> > +static struct at91_devtype_data at91_at91sam9263_data = {
+> > +	.rx_first = 1,
+> > +	.rx_split = 8,
+> > +	.rx_last = 11,
+> > +	.tx_shift = 2,
+> > +	.type = AT91_DEVTYPE_SAM9263,
+> > +};
+> > +
+> > +static struct at91_devtype_data at91_at91sam9x5_data = {
+> > +	.rx_first = 0,
+> > +	.rx_split = 4,
+> > +	.rx_last = 5,
+> > +	.tx_shift = 1,
+> > +	.type = AT91_DEVTYPE_SAM9X5,
+> >  };
+> >  
+> >  static const struct can_bittiming_const at91_bittiming_const = {
+> > @@ -1249,10 +1251,40 @@ static struct attribute_group at91_sysfs_attr_group = {
+> >  	.attrs = at91_sysfs_attrs,
+> >  };
+> >  
+> > +#if defined(CONFIG_OF)
+> > +static const struct of_device_id at91_can_dt_ids[] = {
+> > +	{
+> > +		.compatible = "atmel,at91sam9x5-can",
+> > +		.data = &at91_at91sam9x5_data,
+> > +	}, {
+> > +		.compatible = "atmel,at91sam9263-can",
+> > +		.data = &at91_at91sam9263_data,
+> > +	}, {
+> > +		/* sentinel */
+> > +	}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, at91_can_dt_ids);
+> > +#else
+> > +#define at91_can_dt_ids NULL
+> > +#endif
+> > +
+> > +static struct at91_devtype_data* at91_can_get_driver_data(struct platform_device *pdev)
+> > +{
+> > +	if (pdev->dev.of_node) {
+> > +		const struct of_device_id *match;
+> > +		match = of_match_node(at91_can_dt_ids, pdev->dev.of_node);
+> > +		if (!match) {
+> > +			dev_err(&pdev->dev, "no matching node found in dtb\n");
+> > +			return NULL;
+> > +		}
+> > +		return (struct at91_devtype_data *)match->data;
+> > +	}
+> > +	return (struct at91_devtype_data *)platform_get_device_id(pdev)->driver_data;
+> > +}
+> > +
+> >  static int at91_can_probe(struct platform_device *pdev)
+> >  {
+> >  	const struct at91_devtype_data *devtype_data;
+> > -	enum at91_devtype devtype;
+> >  	struct net_device *dev;
+> >  	struct at91_priv *priv;
+> >  	struct resource *res;
+> > @@ -1260,8 +1292,12 @@ static int at91_can_probe(struct platform_device *pdev)
+> >  	void __iomem *addr;
+> >  	int err, irq;
+> >  
+> > -	devtype = pdev->id_entry->driver_data;
+> > -	devtype_data = &at91_devtype_data[devtype];
+> > +	devtype_data = at91_can_get_driver_data(pdev);
+> > +	if (!devtype_data) {
+> > +		dev_err(&pdev->dev, "no driver data\n");
+> > +		err = -ENODEV;
+> > +		goto exit;
+> > +	}
+> >  
+> >  	clk = clk_get(&pdev->dev, "can_clk");
+> >  	if (IS_ERR(clk)) {
+> > @@ -1310,7 +1346,6 @@ static int at91_can_probe(struct platform_device *pdev)
+> >  	priv->dev = dev;
+> >  	priv->reg_base = addr;
+> >  	priv->devtype_data = *devtype_data;
+> > -	priv->devtype_data.type = devtype;
+> >  	priv->clk = clk;
+> >  	priv->pdata = pdev->dev.platform_data;
+> >  	priv->mb0_id = 0x7ff;
+> > @@ -1373,10 +1408,10 @@ static int at91_can_remove(struct platform_device *pdev)
+> >  static const struct platform_device_id at91_can_id_table[] = {
+> >  	{
+> >  		.name = "at91_can",
+> > -		.driver_data = AT91_DEVTYPE_SAM9263,
+> > +		.driver_data = (unsigned long)&at91_at91sam9x5_data,
+> >  	}, {
+> >  		.name = "at91sam9x5_can",
+> > -		.driver_data = AT91_DEVTYPE_SAM9X5,
+> > +		.driver_data = (unsigned long)&at91_at91sam9263_data,
+> 
+> It's a kernel_ulong_t, not a (unsigned long), I can fix this while
+> applying the patch.
+> 
 
-This adds the clock driver support for Freescale E500MC, E5500,
-E6500 series SoCs using common clock framework.
+Ok I let you fix it while applying so.
 
-Signed-off-by: Tang Yuantian <Yuantian.Tang@freescale.com>
----
- arch/powerpc/platforms/Kconfig.cputype |    1 +
- drivers/clk/Kconfig                    |    7 +
- drivers/clk/Makefile                   |    1 +
- drivers/clk/clk-ppc-corenet.c          |  262 ++++++++++++++++++++++++++++++++
- 4 files changed, 271 insertions(+), 0 deletions(-)
- create mode 100644 drivers/clk/clk-ppc-corenet.c
+Thanks Marc.
 
-diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
-index 72afd28..dc3a56b 100644
---- a/arch/powerpc/platforms/Kconfig.cputype
-+++ b/arch/powerpc/platforms/Kconfig.cputype
-@@ -159,6 +159,7 @@ config E500
- config PPC_E500MC
- 	bool "e500mc Support"
- 	select PPC_FPU
-+	select COMMON_CLK
- 	depends on E500
- 	help
- 	  This must be enabled for running on e500mc (and derivatives
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index a47e6ee..ecb663d 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -63,6 +63,13 @@ config CLK_TWL6040
- 	  McPDM. McPDM module is using the external bit clock on the McPDM bus
- 	  as functional clock.
- 
-+config CLK_PPC_CORENET
-+	bool "Clock driver for PowerPC corenet platforms"
-+	depends on PPC_E500MC
-+	---help---
-+      This adds the clock driver support for Freescale PowerPC corenet
-+	  platforms using common clock framework.
-+
- endmenu
- 
- source "drivers/clk/mvebu/Kconfig"
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index ee90e87..9e7750c 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -22,6 +22,7 @@ obj-$(CONFIG_ARCH_U8500)	+= ux500/
- obj-$(CONFIG_ARCH_VT8500)	+= clk-vt8500.o
- obj-$(CONFIG_ARCH_SUNXI)	+= clk-sunxi.o
- obj-$(CONFIG_ARCH_ZYNQ)		+= clk-zynq.o
-+obj-$(CONFIG_CLK_PPC_CORENET)	+= clk-ppc-corenet.o
- 
- # Chip specific
- obj-$(CONFIG_COMMON_CLK_WM831X) += clk-wm831x.o
-diff --git a/drivers/clk/clk-ppc-corenet.c b/drivers/clk/clk-ppc-corenet.c
-new file mode 100644
-index 0000000..a7bfb02
---- /dev/null
-+++ b/drivers/clk/clk-ppc-corenet.c
-@@ -0,0 +1,262 @@
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/clk-provider.h>
-+#include <linux/of_platform.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/slab.h>
-+
-+struct cmux_clk {
-+	struct clk_hw	hw;
-+	void __iomem	*reg;
-+};
-+
-+#define PLL_KILL				(1 << 31)
-+#define	CLKSEL_SHIFT			27
-+
-+#define to_cmux_clk(p) container_of(p, struct cmux_clk, hw)
-+
-+static const int idx_val[9] = {0, 1, 2, 4, 5, 6, 8, 9, 10};
-+static const int val_idx[12] = {0, 1, 2, 0, 3, 4, 5, 0, 6, 7, 8, 0};
-+
-+static void __iomem *base;
-+
-+static int cmux_set_parent(struct clk_hw *hw, u8 idx)
-+{
-+	struct cmux_clk *clk = to_cmux_clk(hw);
-+	u32 clksel;
-+
-+	clksel = (idx_val[idx] & 0xf) << CLKSEL_SHIFT;
-+	iowrite32be(clksel, clk->reg);
-+
-+	return 0;
-+}
-+
-+static u8 cmux_get_parent(struct clk_hw *hw)
-+{
-+	struct cmux_clk *clk = to_cmux_clk(hw);
-+	u32 val;
-+
-+	val = ioread32be(clk->reg);
-+	val = (val >> CLKSEL_SHIFT) & 0xf;
-+
-+	return val_idx[val];
-+}
-+
-+const struct clk_ops cmux_ops = {
-+	.get_parent = cmux_get_parent,
-+	.set_parent = cmux_set_parent,
-+};
-+
-+static void __init core_mux_init(struct device_node *np)
-+{
-+	struct clk *clk;
-+	struct clk_init_data init;
-+	struct cmux_clk *cmux_clk;
-+	int rc, count, i;
-+	u32	offset;
-+	const char *clk_name;
-+	const char **parent_names;
-+
-+	rc = of_property_read_u32(np, "reg", &offset);
-+	if (rc) {
-+		pr_err("%s: could not get reg property\n", np->name);
-+		return;
-+	}
-+
-+	/* get the input clock source count */
-+	count = of_property_count_strings(np, "clock-names");
-+	if (count < 0) {
-+		pr_err("%s: get clock count error\n", np->name);
-+		return;
-+	}
-+	parent_names = kzalloc((sizeof(char *) * count), GFP_KERNEL);
-+	if (!parent_names) {
-+		pr_err("%s: could not allocate parent_names\n", __func__);
-+		return;
-+	}
-+
-+	for (i = 0; i < count; i++)
-+		parent_names[i] = of_clk_get_parent_name(np, i);
-+
-+	cmux_clk = kzalloc(sizeof(struct cmux_clk), GFP_KERNEL);
-+	if (!cmux_clk) {
-+		pr_err("%s: could not allocate cmux_clk\n", __func__);
-+		goto err_name;
-+	}
-+	cmux_clk->reg = base + offset;
-+
-+	rc = of_property_read_string_index(np, "clock-output-names",
-+			0, &clk_name);
-+	if (rc) {
-+		pr_err("%s: read clock names error\n", np->name);
-+		goto err_clk;
-+	}
-+
-+	init.name = clk_name;
-+	init.ops = &cmux_ops;
-+	init.flags = 0;
-+	init.parent_names = parent_names;
-+	init.num_parents = count;
-+	cmux_clk->hw.init = &init;
-+
-+	clk = clk_register(NULL, &cmux_clk->hw);
-+	if (IS_ERR(clk)) {
-+		pr_err("%s: could not register clock\n", clk_name);
-+		goto err_clk;
-+	}
-+
-+	rc = of_clk_add_provider(np, of_clk_src_simple_get, clk);
-+	if (rc) {
-+		pr_err("Could not register clock provider for node:%s\n",
-+			 np->name);
-+		goto err_clk;
-+	}
-+	goto err_name;
-+
-+err_clk:
-+	kfree(cmux_clk);
-+err_name:
-+	/* free *_names because they are reallocated when registered */
-+	kfree(parent_names);
-+}
-+
-+static void __init core_pll_init(struct device_node *np)
-+{
-+	u32 offset, mult;
-+	int i, rc, count;
-+	const char *clk_name, *parent_name;
-+	struct clk_onecell_data *onecell_data;
-+	struct clk      **subclks;
-+
-+	rc = of_property_read_u32(np, "reg", &offset);
-+	if (rc) {
-+		pr_err("%s: could not get reg property\n", np->name);
-+		return;
-+	}
-+
-+	/* get the multiple of PLL */
-+	mult = ioread32be(base + offset);
-+
-+	/* check if this PLL is disabled */
-+	if (mult & PLL_KILL) {
-+		pr_debug("PLL:%s is disabled\n", np->name);
-+		return;
-+	}
-+	mult = (mult >> 1) & 0x3f;
-+
-+	parent_name = of_clk_get_parent_name(np, 0);
-+	if (!parent_name) {
-+		pr_err("PLL: %s must have a parent\n", np->name);
-+		return;
-+	}
-+
-+	count = of_property_count_strings(np, "clock-output-names");
-+	if (count < 0 || count > 4) {
-+		pr_err("%s: clock is not supported\n", np->name);
-+		return;
-+	}
-+
-+	subclks = kzalloc(sizeof(struct clk *) * count, GFP_KERNEL);
-+	if (!subclks) {
-+		pr_err("%s: could not allocate subclks\n", __func__);
-+		return;
-+	}
-+
-+	onecell_data = kzalloc(sizeof(struct clk_onecell_data), GFP_KERNEL);
-+	if (!onecell_data) {
-+		pr_err("%s: could not allocate onecell_data\n", __func__);
-+		goto err_clks;
-+	}
-+
-+	for (i = 0; i < count; i++) {
-+		rc = of_property_read_string_index(np, "clock-output-names",
-+				i, &clk_name);
-+		if (rc) {
-+			pr_err("%s: could not get clock names\n", np->name);
-+			goto err_cell;
-+		}
-+
-+		/*
-+		 * when count == 4, there are 4 output clocks:
-+		 * /1, /2, /3, /4 respectively
-+		 * when count < 4, there are at least 2 output clocks:
-+		 * /1, /2, (/4, if count == 3) respectively.
-+		 */
-+		if (count == 4)
-+			subclks[i] = clk_register_fixed_factor(NULL, clk_name,
-+					parent_name, 0, mult, 1 + i);
-+		else
-+
-+			subclks[i] = clk_register_fixed_factor(NULL, clk_name,
-+					parent_name, 0, mult, 1 << i);
-+
-+		if (IS_ERR(subclks[i])) {
-+			pr_err("%s: could not register clock\n", clk_name);
-+			goto err_cell;
-+		}
-+	}
-+
-+	onecell_data->clks = subclks;
-+	onecell_data->clk_num = count;
-+
-+	rc = of_clk_add_provider(np, of_clk_src_onecell_get, onecell_data);
-+	if (rc) {
-+		pr_err("Could not register clk provider for node:%s\n",
-+			 np->name);
-+		goto err_cell;
-+	}
-+
-+	return;
-+err_cell:
-+	kfree(onecell_data);
-+err_clks:
-+	kfree(subclks);
-+}
-+
-+static const struct of_device_id clk_match[] __initconst = {
-+	{ .compatible = "fixed-clock", .data = of_fixed_clk_setup, },
-+	{ .compatible = "fsl,core-pll-clock", .data = core_pll_init, },
-+	{ .compatible = "fsl,core-mux-clock", .data = core_mux_init, },
-+	{}
-+};
-+
-+static int __init ppc_corenet_clk_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np;
-+
-+	np = pdev->dev.of_node;
-+	base = of_iomap(np, 0);
-+	if (!base) {
-+		dev_err(&pdev->dev, "iomap error\n");
-+		return -ENOMEM;
-+	}
-+	of_clk_init(clk_match);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ppc_corenet_clk_ids[] __initconst = {
-+	{ .compatible = "fsl,qoriq-clockgen-1.0", },
-+	{ .compatible = "fsl,qoriq-clockgen-2", },
-+	{}
-+};
-+
-+static struct platform_driver ppc_corenet_clk_driver = {
-+	.driver = {
-+		.name = "ppc_corenet_clock",
-+		.owner = THIS_MODULE,
-+		.of_match_table = ppc_corenet_clk_ids,
-+	},
-+	.probe = ppc_corenet_clk_probe,
-+};
-+
-+static int __init ppc_corenet_clk_init(void)
-+{
-+	return platform_driver_register(&ppc_corenet_clk_driver);
-+}
-+subsys_initcall(ppc_corenet_clk_init);
-+
-+MODULE_AUTHOR("Tang Yuantian: <Yuantian.Tang@freescale.com>");
-+MODULE_DESCRIPTION("Clock Driver for Freescale PowerPC Corenet Platform");
-+MODULE_LICENSE("GPL");
--- 
-1.7.0.4
+Regards
+
+Ludovic
+
+> >  	}, {
+> >  		/* sentinel */
+> >  	}
+> > @@ -1389,6 +1424,7 @@ static struct platform_driver at91_can_driver = {
+> >  	.driver = {
+> >  		.name = KBUILD_MODNAME,
+> >  		.owner = THIS_MODULE,
+> > +		.of_match_table = at91_can_dt_ids,
+> >  	},
+> >  	.id_table = at91_can_id_table,
+> >  };
+> > 
+> 
+> Marc
+> 
+> -- 
+> Pengutronix e.K.                  | Marc Kleine-Budde           |
+> Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+> Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+> Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+> 
