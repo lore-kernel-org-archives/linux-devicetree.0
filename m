@@ -1,45 +1,50 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH 11/12] USB: ehci-omap: Try to get PHY even if not in PHY
- mode
-Date: Tue, 12 Mar 2013 11:57:56 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1303121155540.2153-100000@iolanthe.rowland.org>
-References: <1363085090-24676-12-git-send-email-rogerq@ti.com>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP
+ systems
+Date: Tue, 12 Mar 2013 09:57:49 -0600
+Message-ID: <20130312155749.GA1820@obsidianresearch.com>
+References: <513A7845.6040304@firmworks.com>
+ <20130309013152.GA3883@obsidianresearch.com>
+ <513C117D.6080800@firmworks.com>
+ <20130310065539.GA14704@obsidianresearch.com>
+ <513D6F9C.9000100@firmworks.com>
+ <20130311181554.GA10992@obsidianresearch.com>
+ <513E519B.6010503@firmworks.com>
+ <20130311232516.GA13873@obsidianresearch.com>
+ <513E6AFE.3090304@firmworks.com>
+ <20130312070852.GA6727@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1363085090-24676-12-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, Felipe Balbi <balbi@ti.com>
-Cc: gregkh@linuxfoundation.org, b-cousson@ti.com, mark.rutland@arm.com, Kernel development list <linux-kernel@vger.kernel.org>, USB list <linux-usb@vger.kernel.org>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130312070852.GA6727@avionic-0098.mockup.avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Mitch Bradley <wmb@firmworks.com>, Lior Amsalem <alior@marvell.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Maen Suleiman <maen@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, Shadi Ammouri <shadi@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 12 Mar 2013, Roger Quadros wrote:
+On Tue, Mar 12, 2013 at 08:08:52AM +0100, Thierry Reding wrote:
 
-> Even when not in PHY mode, the USB device on the port (e.g. HUB)
-> might need resources like RESET which can be modelled as a PHY
-> device. So try to get the PHY device in any case.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> CC: Alan Stern <stern@rowland.harvard.edu>
+> So to recapitulate, we agree that configuration space can be translated
+> through the "ranges" property. That means the only missing link is a new
+> function to translate not only "assigned-addresses" but also the "reg"
+> property for PCI devices. Is that it?
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+No, the first conclusion is that placing a config space in ranges is
+against the language in the current spec (see section 12).
 
->  		/* get the PHY device */
->  		if (dev->of_node)
->  			phy = devm_usb_get_phy_by_phandle(dev, "phys", i);
->  		else
->  			phy = devm_usb_get_phy_dev(dev, i);
->  		if (IS_ERR(phy) || !phy) {
-> +			/* Don't bail out if PHY is not absolutely necessary */
-> +			if (pdata->port_mode[i] != OMAP_EHCI_PORT_MODE_PHY)
-> +				continue;
-> +
->  			ret = IS_ERR(phy) ? PTR_ERR(phy) : -ENODEV;
->  			dev_err(dev, "Can't get PHY device for port %d: %d\n",
->  					i, ret);
+The second conclusion is that there is probably a way forward to
+update the spec in a backwards compatible way to model ECAM, but would
+require more analysis.
 
-Felipe, this is a strange interface.  Why do we sometimes get an 
-error-pointer and sometimes get just NULL?  Why not always an 
-error-pointer?
+Finally, there was no objections to the approach in Thomas's patch,
+other than the note to fix the '@1,0' and the extra device_type="pci"
+..
 
-Alan Stern
+> And for Marvell the non-configuration-space per-root-port registers need
+> to be mapped separately from the configuration space windows?
+
+No, there are no configuration space windows on Marvell, so only one mapping.
+
+Regards,
+Jason
