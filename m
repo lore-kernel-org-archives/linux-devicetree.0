@@ -1,67 +1,35 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP systems
-Date: Tue, 12 Mar 2013 15:03:28 -0600
-Message-ID: <20130312210328.GA22702@obsidianresearch.com>
-References: <513C117D.6080800@firmworks.com>
- <20130310065539.GA14704@obsidianresearch.com>
- <513D6F9C.9000100@firmworks.com>
- <20130311181554.GA10992@obsidianresearch.com>
- <513E519B.6010503@firmworks.com>
- <20130311232516.GA13873@obsidianresearch.com>
- <513E6AFE.3090304@firmworks.com>
- <20130312070852.GA6727@avionic-0098.mockup.avionic-design.de>
- <20130312155749.GA1820@obsidianresearch.com>
- <20130312203819.GA23221@avionic-0098.mockup.avionic-design.de>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH v2 1/2] leds: Add support for Palmas LEDs
+Date: Tue, 12 Mar 2013 14:15:44 -0700
+Message-ID: <CAK5ve-LLx2fZb_HaermFd2QXtxv-6vjz8=h1o0jpgbMe+G1yxQ@mail.gmail.com>
+References: <1362064909-634-1-git-send-email-ian@slimlogic.co.uk>
+ <CAK5ve-+-=R-f1KpEWD=4J3ia+QXmgnGvhDMV9tNf2_3WZupZaA@mail.gmail.com> <20130312191029.GC19942@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130312203819.GA23221@avionic-0098.mockup.avionic-design.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Mitch Bradley <wmb@firmworks.com>, Lior Amsalem <alior@marvell.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Maen Suleiman <maen@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, Shadi Ammouri <shadi@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130312191029.GC19942@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Ian Lartey <ian@slimlogic.co.uk>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, ldewangan@nvidia.com, j-keerthy@ti.com, gg@slimlogic.co.uk, rpurdie@rpsys.net, grant.likely@secretlab.ca, rob.herring@calxeda.com, sameo@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 12, 2013 at 09:38:19PM +0100, Thierry Reding wrote:
+On Tue, Mar 12, 2013 at 12:10 PM, Mark Brown
+<broonie@opensource.wolfsonmicro.com> wrote:
+> On Tue, Mar 12, 2013 at 11:57:50AM -0700, Bryan Wu wrote:
+>> On Thu, Feb 28, 2013 at 7:21 AM, Ian Lartey <ian@slimlogic.co.uk> wrote:
+>
+>> > +       spinlock_t value_lock;
+>
+>> I think you don't need this spinlock to protect the value, the mutex is enough.
+>
+> You need to use a spinlock because values can be set from hard IRQ
+> context so you can't take a mutex there.  Someone should really factor
+> this out into the framework in their copious free time, the set and
+> schedule pattern is very common in drivers.
 
-> I've also verified that things actually do work with the binding that I
-> proposed for Tegra, even if I add device_type = "pci" to the root port
-> nodes. The reason is that the OF core looks up the type of the *parent*
-> node to find a matching bus. This happens to be the pcie-controller node
-> which is not a PCI device and therefore the address translation works
-> properly.
+Ah, exactly. I think I provided a patch before to add those schedule
+workqueue stuff into the leds frameworks. But don't have time to
+update it according to the review.
 
-Mitch pointed out early on that the parent node needs a 'device_type =
-"pci"' as well.
-
-The pcie-controller node would be classified as a 'bus node' according
-to the spec.
-
-Not going down the of_pci_* code paths for address translation at the
-root port bridge nodes is certainly not right.
-
-> ranges = <0x00000800 0 0 0x80000000 0 0x00001000   /* port 0 configuration space */
->           0x00001000 0 0 0x80001000 0 0x00001000   /* port 1 configuration space */
-
-Section 12 says that the 'b,d,f' bits are 0 in ranges, so the above is
-in conflict with that language:
-
- In particular, the phys.hi fields of the child address spaces in the
- "ranges" property for PCI does not contain the same information as
- "reg" property entries within PCI nodes. The only information that is
- present in "ranges" phys.hi entries are the non-relocatable,
- prefetchable and the PCI address space bits for which the entry
- applies. I.e., only the n, p and ss bits are present; the bbbbbbbb,
- ddddd, fff and rrrrrrrr fields are 0.
-
-And the further requirement:
-
- When an address is to be mapped through a PCI bus bridge node, the
- phys.hi value of the address to be mapped and the child field of a
- "ranges" entry should be masked so that only the ss bits are compared.
-
-Which is embodied by the code in of_bus_pci_map, meaning the OF core
-won't even look at the bits in the high DW when searching ranges.
-
-Regards,
-Jason
+Thanks,
+-Bryan
