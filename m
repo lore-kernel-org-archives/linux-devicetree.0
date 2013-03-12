@@ -1,61 +1,45 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP systems
-Date: Tue, 12 Mar 2013 16:08:54 -0600
-Message-ID: <20130312220854.GA23112@obsidianresearch.com>
-References: <513D6F9C.9000100@firmworks.com>
- <20130311181554.GA10992@obsidianresearch.com>
- <513E519B.6010503@firmworks.com>
- <20130311232516.GA13873@obsidianresearch.com>
- <513E6AFE.3090304@firmworks.com>
- <20130312070852.GA6727@avionic-0098.mockup.avionic-design.de>
- <20130312155749.GA1820@obsidianresearch.com>
- <20130312203819.GA23221@avionic-0098.mockup.avionic-design.de>
- <20130312210328.GA22702@obsidianresearch.com>
- <20130312213006.GA23717@avionic-0098.mockup.avionic-design.de>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [Patch v3 0/4] Add support for tps65090-charger
+Date: Tue, 12 Mar 2013 18:08:05 -0400
+Message-ID: <1363126089-9071-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130312213006.GA23717@avionic-0098.mockup.avionic-design.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Mitch Bradley <wmb@firmworks.com>, Lior Amsalem <alior@marvell.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Maen Suleiman <maen@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, Shadi Ammouri <shadi@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 12, 2013 at 10:30:06PM +0100, Thierry Reding wrote:
+This patchset adds support for the TPS65090-charger. This charger is
+registered as a subdevice of the TPS65090 PMIC.
 
-> > Not going down the of_pci_* code paths for address translation at the
-> > root port bridge nodes is certainly not right.
-> 
-> I'm not so sure. Why should the pcie-controller be a PCI device?
+This series includes a fix for the tps65090 header file where all
+the interrupts were shifted by 1.
 
-The spec is clear on that point as well:
+v3:
+ - fixed up the tps65090-charger driver to fix build errors/warnings
 
- device_type
-  A Standard Package conforming to this specification and corresponding
-  to a device that implements a PCI bus shall implement this property
-  with the string value "pci"
+v2:
+ - cleaned up tps65090 driver per comments (mostly var naming)
+ - flushed out commit description for driver
+ - reordered probe so irq is registered after power_supply and cleaned up 1st
 
-The children of a pcie-controller node are PCI devices, thus the
-pcie-controller node 'implements a PCI bus'. Or, as you say 'device on
-the processor/SoC/platform bus that bridges to the PCI bus'
 
-Think of device_type as also meaning bus_type and it makes more
-logical sense, the name is terrible, but its usage is governed by the
-OF docs..
+Rhyland Klein (4):
+  mfd: tps65090: Fix enum in header file
+  mfd: tps65090: Add resources for charger
+  power_supply: tps65090-charger: Add binding doc
+  power: tps65090: Add support for tps65090-charger
 
-> The other alternative would be to amend the specification. Besides the
-> fact that the specification says so I don't see any reason why this
-> shouldn't be allowed.
+ .../devicetree/bindings/power_supply/tps65090.txt  |   23 ++
+ drivers/mfd/tps65090.c                             |   10 +
+ drivers/power/Kconfig                              |    7 +
+ drivers/power/Makefile                             |    1 +
+ drivers/power/tps65090-charger.c                   |  315 ++++++++++++++++++++
+ include/linux/mfd/tps65090.h                       |    6 +
+ 6 files changed, 362 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power_supply/tps65090.txt
+ create mode 100644 drivers/power/tps65090-charger.c
 
-'the specification says so' *IS* the reason. DT isn't a free for all
-where you get to do whatever you want, or whatever 'feels' right. It
-is supposed to be a stable, OS agnostic ABI. That means bindings have
-to follow the specs (when available).
-
-Maybe a future revision will support PCI-E ECAM, but we don't know
-what that will look like, and I'm pretty sure you don't want to hold
-up your patches until an IEEE committee gets around to deciding
-something ;)
-
-Jason
+-- 
+1.7.9.5
