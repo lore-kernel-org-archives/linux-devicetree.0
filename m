@@ -1,76 +1,82 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH] ASoC: core: fix possible memory leak in
- snd_soc_bytes_put()
-Date: Tue, 12 Mar 2013 18:43:19 +0000
-Message-ID: <20130312184319.GM19942@opensource.wolfsonmicro.com>
-References: <CAPgLHd_DuPDciAt9Qdn-1K2CSL14GDKt6XR+8gaac8hgvLScaw@mail.gmail.com>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH 01/10] imx-ssi: Fix AC97 rates
+Date: Tue, 12 Mar 2013 18:52:26 +0000
+Message-ID: <20130312185225.GS19942@opensource.wolfsonmicro.com>
+References: <1362940391-8338-1-git-send-email-mpa@pengutronix.de>
+ <1362940391-8338-2-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8076977951839843728=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CAPgLHd_DuPDciAt9Qdn-1K2CSL14GDKt6XR+8gaac8hgvLScaw@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: alsa-devel@alsa-project.org, tiwai@suse.de, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, lgirdwood@gmail.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, yongjun_wei@trendmicro.com.cn
+Content-Type: multipart/mixed; boundary="===============2269780330286167394=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1362940391-8338-2-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============8076977951839843728==
+--===============2269780330286167394==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Z/kiM2A+9acXa48/"
+	protocol="application/pgp-signature"; boundary="ZmeoGP/RI+eIV+cU"
 Content-Disposition: inline
 
 
---Z/kiM2A+9acXa48/
+--ZmeoGP/RI+eIV+cU
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 12, 2013 at 12:35:14AM +0800, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+On Sun, Mar 10, 2013 at 07:33:02PM +0100, Markus Pargmann wrote:
+> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 >=20
-> 'data' is malloced in snd_soc_bytes_put() and should be freed
-> before leaving from the error handling cases, otherwise it will cause
-> memory leak.
+> This device supports multiple rates as described in later AC97
+> standards. This patch allows playback of different sample frequencies
+> without conversion.
 
-Applied, thanks.
+Applied, but some notes about why this is already supported would be
+useful and *always* use subject lines appropriate for the subsystem.
 
---Z/kiM2A+9acXa48/
+--ZmeoGP/RI+eIV+cU
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJRP3dAAAoJELSic+t+oim9NxoQAJLV5Is+wD+32jmk8xDatbVs
-kAcoltspELFNTGAxYNeWw+ZqQp/GsTvC4sHy5rqt1zxc9X5iQBkK933KvJ//yrdD
-ozu49KGvtn+0rVJKv0nwVCEG+pZhkodUAK8XWnKBtXoeFWCmMjcjLOEmMiUBuRPF
-7IFLS70IRBkA1xRWyaKsQFr3hLCarbCFyYEkm+Td6Wmzr/1uk14JmJ/dLkh5AQ+k
-3AWGeGJajPcbVSfDSxZsIiIGm1sGTUOGAtiB27NbWSWqcOvbLFKkXglI0bsDnMF4
-/AclfcFXI9N6Kng5L8CZIcq+qX61UtWHfJ3aMwgtd8PzhVdqt2ePYMIw873fnCha
-V6Pim7UbPP8BQQ05GVIwYA2JJZcPgsw6JnkVEWQSyfToDjgtSEKIPC5Hb+nLYP9M
-57zjoxK0QEj1GYA/bkmYvYppqxeG38qG6b0YA8lLDsTt3/7oc/O1ZvOwpDygFGyH
-ikrkA4ZxL2bjhJcuDtyB3/8M/e4ay2D1ib6LvB4RJcd1xAG81beffJI/Bzs6Y1i1
-vV2MBvxDpcJlTg69yXiPT3DWRsTSO8oF+bKacsCRlIm0der8p0O7HGQYdiTwBcXt
-NE8wVUKdzeqZERP6+rnIjbOjMTTUzNWOOsBgIKYcEqmCb+uviDsOTtu628f9bI9n
-FPubaI1p5DhpgRKezSLr
-=kycF
+iQIcBAEBAgAGBQJRP3lfAAoJELSic+t+oim9xBoQAJe3rLMGLA2jyoSuiZ963G9w
+wcx7qnAtUO69Q8IY+KD0taZ2jNTesExE89/TV3xLAbDuy2royWFui1awjyhbE7pS
+/t5fESe5H5UHLxZOY/kXdKDA0eaH1Ow8dKr92CAMZA31P0womMO4yUA4Wh5UEED1
+/eOlwXdmFT25ee5j9AcmjcXJxwRCbqNa6l0Ym8Yf2V1dnQyGYsEgNfl8oPMAavxD
+2OkvA4GlDP/+75dfaTVPMrqXF8BYUvw2a6ghv96qiy+9xwDtnL9RAmi5qmMQLqJ+
+8XJTRaC8BA3h+0sYYNPWTrojx2dEHOvoPevqBOoHKXw5UsjeHHoXugqO+wMSytPN
+60P9dygcC6/n0xqUDgVudmcBRY0T79tdk2SvleN8DIRiFfQlVx+UoLlr8Vco6pq9
+UABGyA2X4ml09V2mWo2U7rkBhquiq8F6f+WK76Lr8iA+PduSVGUhFeBsmX0MhXbO
+k0VIAmSfU1mF8XyXBT7M1iY+WZBIsL6wZFwhu7z+IGvX2YXGG7hC33OIOxqaq1ga
+fQtqWBBwYGorcFdF0X8V4R+gO9G08ukYJIsy15D4sug1XAp6Zq5lz194twYY0VqA
+c85IOjTvhIZ5QFLwgXaZ87orjyDwzvTqm0lPRuWfvDR38T/aZGboKVS+N/VK0Psj
+Xww9zVtiHO4+xX4IJHPZ
+=dIv+
 -----END PGP SIGNATURE-----
 
---Z/kiM2A+9acXa48/--
+--ZmeoGP/RI+eIV+cU--
 
---===============8076977951839843728==
+--===============2269780330286167394==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---===============8076977951839843728==--
+--===============2269780330286167394==--
