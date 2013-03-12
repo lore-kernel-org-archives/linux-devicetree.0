@@ -1,116 +1,61 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH V3 1/2] ARM: dts: OMAP2+: Add SDMA controller bindings
- and nodes
-Date: Tue, 12 Mar 2013 16:43:56 -0500
-Message-ID: <513FA19C.60904@ti.com>
-References: <1361903244-19837-1-git-send-email-jon-hunter@ti.com> <1361903244-19837-2-git-send-email-jon-hunter@ti.com> <513F0AE3.6030408@ti.com>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP systems
+Date: Tue, 12 Mar 2013 16:08:54 -0600
+Message-ID: <20130312220854.GA23112@obsidianresearch.com>
+References: <513D6F9C.9000100@firmworks.com>
+ <20130311181554.GA10992@obsidianresearch.com>
+ <513E519B.6010503@firmworks.com>
+ <20130311232516.GA13873@obsidianresearch.com>
+ <513E6AFE.3090304@firmworks.com>
+ <20130312070852.GA6727@avionic-0098.mockup.avionic-design.de>
+ <20130312155749.GA1820@obsidianresearch.com>
+ <20130312203819.GA23221@avionic-0098.mockup.avionic-design.de>
+ <20130312210328.GA22702@obsidianresearch.com>
+ <20130312213006.GA23717@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <513F0AE3.6030408@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Vinod Koul <vinod.koul@intel.com>, Russell King <linux@arm.linux.org.uk>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Sebastien Guiriec <s-guiriec@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130312213006.GA23717@avionic-0098.mockup.avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Mitch Bradley <wmb@firmworks.com>, Lior Amsalem <alior@marvell.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Maen Suleiman <maen@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, Shadi Ammouri <shadi@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Salut Benoit!
+On Tue, Mar 12, 2013 at 10:30:06PM +0100, Thierry Reding wrote:
 
-On 03/12/2013 06:00 AM, Benoit Cousson wrote:
-> + Seb G.
+> > Not going down the of_pci_* code paths for address translation at the
+> > root port bridge nodes is certainly not right.
 > 
-> Hi Jon,
-> 
-> How to you plan to merge that series?
+> I'm not so sure. Why should the pcie-controller be a PCI device?
 
-Good question ... my thinking was that you or Tony would take 1/2 and
-once that is queued then I would ask Tony to ack 2/2 and Vinod take that
-patch.
+The spec is clear on that point as well:
 
-By the way, I have accumulated several DT patches which I sent out
-altogether [1] (at least for my own sanity if no one elses ;-) and I
-have included the below patch with it. I was hoping that may be I could
-create a branch for you to pull. If you would rather cherry-pick the
-various patches and merge yourself then I can separate them too.
+ device_type
+  A Standard Package conforming to this specification and corresponding
+  to a device that implements a PCI bus shall implement this property
+  with the string value "pci"
 
-> Seb's just posted a McBSP adaptation to SDMA binding, so I'll have to
-> take this one before being able to merge any other SDMA driver
-> adaptation patches.
-> 
-> I'm fine to take that one, if you are OK, to avoid merge conflict in DTS
-> later.
+The children of a pcie-controller node are PCI devices, thus the
+pcie-controller node 'implements a PCI bus'. Or, as you say 'device on
+the processor/SoC/platform bus that bridges to the PCI bus'
 
-Fine with me and that would be preferred. I don't see any downside in
-taking this one and then having Vinod take the other later.
+Think of device_type as also meaning bus_type and it makes more
+logical sense, the name is terrible, but its usage is governed by the
+OF docs..
 
-> On 02/26/2013 07:27 PM, Jon Hunter wrote:
->> Add SDMA controller binding for OMAP2+ devices and populate DMA client
->> information for SPI and MMC periperhal on OMAP3+ devices. Please note
-> 
-> typo-------------------------------^
+> The other alternative would be to amend the specification. Besides the
+> fact that the specification says so I don't see any reason why this
+> shouldn't be allowed.
 
-Thanks! Will fix.
+'the specification says so' *IS* the reason. DT isn't a free for all
+where you get to do whatever you want, or whatever 'feels' right. It
+is supposed to be a stable, OS agnostic ABI. That means bindings have
+to follow the specs (when available).
 
->> that OMAP24xx devices do not have SPI and MMC bindings available yet and
->> so DMA client information is not populated.
->>
->> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
->> Reviewed-by: Felipe Balbi <balbi@ti.com>
->> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->> Tested-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->> ---
->>  .../devicetree/bindings/dma/omap-sdma.txt          |   51 ++++++++++++++++++++
-> 
-> That's a detail, but the bindings should be introduced along with the
-> driver DT adaptation since it does represent its "interface".
+Maybe a future revision will support PCI-E ECAM, but we don't know
+what that will look like, and I'm pretty sure you don't want to hold
+up your patches until an IEEE committee gets around to deciding
+something ;)
 
-Ok, I can add that to patch 2/2 instead.
-
->>  arch/arm/boot/dts/omap2.dtsi                       |   12 +++++
->>  arch/arm/boot/dts/omap3.dtsi                       |   40 +++++++++++++++
->>  arch/arm/boot/dts/omap4.dtsi                       |   41 ++++++++++++++++
->>  arch/arm/boot/dts/omap5.dtsi                       |   41 ++++++++++++++++
->>  5 files changed, 185 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/dma/omap-sdma.txt
->>
->> diff --git a/Documentation/devicetree/bindings/dma/omap-sdma.txt b/Documentation/devicetree/bindings/dma/omap-sdma.txt
->> new file mode 100644
->> index 0000000..22aab28
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dma/omap-sdma.txt
->> @@ -0,0 +1,51 @@
->> +* TI OMAP SDMA controller
->> +
->> +Required properties:
->> +- compatible:		Should be set to one of the following:
->> +
->> +			ti,omap2420-sdma (omap2420)
->> +			ti,omap2430-sdma (omap2430)
->> +			ti,omap3430-sdma (omap3430)
->> +			ti,omap3630-sdma (omap3630)
->> +			ti,omap4430-sdma (omap4430 & omap4460 & omap543x)
->> +
->> +- reg: 			Contains DMA registers location and length.
->> +- interrupts: 		Contains DMA interrupt information.
->> +- #dma-cells: 		Must be 1.
->> +- #dma-channels:	Contains total number of programmable DMA channels.
->> +- #dma-requests:	Contains total number of DMA requests.
->> +
->> +Example:
->> +
->> +	sdma: dma-controller@4A056000 {
->> +		compatible = "ti,omap-sdma";
->> +		reg = <0x4A056000 0x1000>;
-> 
-> 
-> Nit: you do have several hexa values in upper case, here and in some dts
-> as well.
-
-Yes will fix that too.
-
-Cheers
-Jon
-
-[1]
-http://www.mail-archive.com/devicetree-discuss@lists.ozlabs.org/msg28050.html
-
+Jason
