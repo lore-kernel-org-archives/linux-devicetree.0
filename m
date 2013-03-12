@@ -1,50 +1,53 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP
- systems
-Date: Tue, 12 Mar 2013 09:57:49 -0600
-Message-ID: <20130312155749.GA1820@obsidianresearch.com>
-References: <513A7845.6040304@firmworks.com>
- <20130309013152.GA3883@obsidianresearch.com>
- <513C117D.6080800@firmworks.com>
- <20130310065539.GA14704@obsidianresearch.com>
- <513D6F9C.9000100@firmworks.com>
- <20130311181554.GA10992@obsidianresearch.com>
- <513E519B.6010503@firmworks.com>
- <20130311232516.GA13873@obsidianresearch.com>
- <513E6AFE.3090304@firmworks.com>
- <20130312070852.GA6727@avionic-0098.mockup.avionic-design.de>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [RFC 12/12] mipi-csis: Enable all interrupts for fimc-is usage
+Date: Tue, 12 Mar 2013 17:01:53 +0100
+Message-ID: <513F5171.40603@samsung.com>
+References: <1362754765-2651-1-git-send-email-arun.kk@samsung.com>
+ <1362754765-2651-13-git-send-email-arun.kk@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130312070852.GA6727@avionic-0098.mockup.avionic-design.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Mitch Bradley <wmb@firmworks.com>, Lior Amsalem <alior@marvell.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Maen Suleiman <maen@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, Shadi Ammouri <shadi@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1362754765-2651-13-git-send-email-arun.kk@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arun Kumar K <arun.kk@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 12, 2013 at 08:08:52AM +0100, Thierry Reding wrote:
+Hi Arun,
 
-> So to recapitulate, we agree that configuration space can be translated
-> through the "ranges" property. That means the only missing link is a new
-> function to translate not only "assigned-addresses" but also the "reg"
-> property for PCI devices. Is that it?
+On 03/08/2013 03:59 PM, Arun Kumar K wrote:
+> FIMC-IS firmware needs all the MIPI-CSIS interrupts to be enabled.
+> This patch enables all those MIPI interrupts.
+> 
+> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+> ---
+>  drivers/media/platform/s5p-fimc/mipi-csis.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/s5p-fimc/mipi-csis.c b/drivers/media/platform/s5p-fimc/mipi-csis.c
+> index debda7c..11eef67 100644
+> --- a/drivers/media/platform/s5p-fimc/mipi-csis.c
+> +++ b/drivers/media/platform/s5p-fimc/mipi-csis.c
+> @@ -64,7 +64,7 @@ MODULE_PARM_DESC(debug, "Debug level (0-2)");
+>  
+>  /* Interrupt mask */
+>  #define S5PCSIS_INTMSK			0x10
+> -#define S5PCSIS_INTMSK_EN_ALL		0xf000103f
+> +#define S5PCSIS_INTMSK_EN_ALL		0xfc00103f
 
-No, the first conclusion is that placing a config space in ranges is
-against the language in the current spec (see section 12).
+Do you know what interrupts are assigned to the CSIS_INTMSK
+bits 26, 27 ? In the documentation I have they are marked
+as reserved. I have tested this patch on Exynos4x12, it seems
+OK but you might want to merge it to the patch adding compatible
+property for exynos5.
 
-The second conclusion is that there is probably a way forward to
-update the spec in a backwards compatible way to model ECAM, but would
-require more analysis.
+It would be good to know what these bits are for. And how
+enabling the interrupts actually help without modifying the
+interrupt handler ? Is it enough to just acknowledge those
+interrupts ? Or how it works ?
 
-Finally, there was no objections to the approach in Thomas's patch,
-other than the note to fix the '@1,0' and the extra device_type="pci"
-..
-
-> And for Marvell the non-configuration-space per-root-port registers need
-> to be mapped separately from the configuration space windows?
-
-No, there are no configuration space windows on Marvell, so only one mapping.
+--
 
 Regards,
-Jason
+Sylwester
