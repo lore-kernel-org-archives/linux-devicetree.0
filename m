@@ -1,56 +1,112 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [Patch v3 3/4] power_supply: tps65090-charger: Add binding doc
-Date: Tue, 12 Mar 2013 17:10:15 -0600
-Message-ID: <513FB5D7.5090800@wwwdotorg.org>
-References: <1363126089-9071-1-git-send-email-rklein@nvidia.com> <1363126089-9071-4-git-send-email-rklein@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1363126089-9071-4-git-send-email-rklein@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rhyland Klein <rklein@nvidia.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Anton Vorontsov <cbou@mail.ru>, Samuel Ortiz <sameo@linux.intel.com>, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laxman Dewangan <ldewangan@nvidia.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 2/4] iio: adc: Add dt support for turning on the phy in exynos-adc
+Date: Tue, 12 Mar 2013 16:13:12 -0700
+Message-ID: <1363129994-10438-3-git-send-email-dianders@chromium.org>
+References: <1363129994-10438-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1363129994-10438-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/12/2013 04:08 PM, Rhyland Klein wrote:
-> This change adds the binding documentation for the tps65090-charger.
+Without this change the exynos adc controller needed to have its phy
+enabled in some out-of-driver C code.  Add support for specifying the
+phy enable register by listing it in the reg list.
 
-> diff --git a/Documentation/devicetree/bindings/power_supply/tps65090.txt b/Documentation/devicetree/bindings/power_supply/tps65090.txt
+Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ .../devicetree/bindings/arm/samsung/exynos-adc.txt         |  4 ++--
+ drivers/iio/adc/exynos_adc.c                               | 14 +++++++++++++-
+ 2 files changed, 15 insertions(+), 3 deletions(-)
 
-> +Example:
-> +
-> +	tps65090@48 {
-> +		compatible = "ti,tps65090";
-> +		reg = <0x48>;
-> +		interrupts = <0 88 0x4>;
-> +
-> +		ti,enable-low-current-chrg;
-> +
-> +		regulators {
-> +			...
-> +		};
-
-I'm a little confused by this binding.
-
-What goes in the regulators sub-node; is that specified by another
-binding file in bindings/regulator/tps65090.txt?
-
-I would expect one of the following:
-
-1) A single binding file that describes absolutely everything in the
-chip. In this case, the main TPS65909 node wouldn't have child nodes for
-the MFD components, although the regulators sub-node, which in turn
-contains children does still make sense.
-
-2) A separate binding for each component block, and perhaps also some
-top-level binding that indicates which child bindings can "plug into"
-it. In this case, I'd expect each block to be represented as a sub-node
-in DT. The overall regulator component might then still have a
-regulators child DT node itself, to represent each regulator's
-configuration. In this scenario, each binding document describes the
-entirety of a single node.
-
-I think what you've got here is a hybrid; a single top-level node, but
-different binding documents defining the various properties that are
-relevant to each component block in the device. That seems odd to me.
+diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+index 96db940..05be151 100644
+--- a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
++++ b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+@@ -15,7 +15,7 @@ Required properties:
+ 			Must be "samsung,exynos-adc-v2" for
+ 				future controllers.
+ - reg:			Contains ADC register address range (base address and
+-			length).
++			length) and the address of the phy enable register.
+ - interrupts: 		Contains the interrupt information for the timer. The
+ 			format is being dependent on which interrupt controller
+ 			the Samsung device uses.
+@@ -30,7 +30,7 @@ Example: adding device info in dtsi file
+ 
+ adc: adc@12D10000 {
+ 	compatible = "samsung,exynos-adc-v1";
+-	reg = <0x12D10000 0x100>;
++	reg = <0x12D10000 0x100>, <0x10040718 0x4>;
+ 	interrupts = <0 106 0>;
+ 	#io-channel-cells = <1>;
+ 	io-channel-ranges;
+diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
+index ed6fdd7..5ab0dfd 100644
+--- a/drivers/iio/adc/exynos_adc.c
++++ b/drivers/iio/adc/exynos_adc.c
+@@ -85,6 +85,7 @@ enum adc_version {
+ 
+ struct exynos_adc {
+ 	void __iomem		*regs;
++	void __iomem		*enable_reg;
+ 	struct clk		*clk;
+ 	unsigned int		irq;
+ 	struct regulator	*vdd;
+@@ -269,13 +270,19 @@ static int exynos_adc_probe(struct platform_device *pdev)
+ 	info = iio_priv(indio_dev);
+ 
+ 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-
+ 	info->regs = devm_request_and_ioremap(&pdev->dev, mem);
+ 	if (!info->regs) {
+ 		ret = -ENOMEM;
+ 		goto err_iio;
+ 	}
+ 
++	mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	info->enable_reg = devm_request_and_ioremap(&pdev->dev, mem);
++	if (!info->enable_reg) {
++		ret = -ENOMEM;
++		goto err_iio;
++	}
++
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0) {
+ 		dev_err(&pdev->dev, "no irq resource?\n");
+@@ -295,6 +302,8 @@ static int exynos_adc_probe(struct platform_device *pdev)
+ 		goto err_iio;
+ 	}
+ 
++	writel(1, info->enable_reg);
++
+ 	info->clk = devm_clk_get(&pdev->dev, "adc");
+ 	if (IS_ERR(info->clk)) {
+ 		dev_err(&pdev->dev, "failed getting clock, err = %ld\n",
+@@ -370,6 +379,7 @@ static int exynos_adc_remove(struct platform_device *pdev)
+ 				exynos_adc_remove_devices);
+ 	regulator_disable(info->vdd);
+ 	clk_disable_unprepare(info->clk);
++	writel(0, info->enable_reg);
+ 	iio_device_unregister(indio_dev);
+ 	free_irq(info->irq, info);
+ 	iio_device_free(indio_dev);
+@@ -395,6 +405,7 @@ static int exynos_adc_suspend(struct device *dev)
+ 	}
+ 
+ 	clk_disable_unprepare(info->clk);
++	writel(0, info->enable_reg);
+ 	regulator_disable(info->vdd);
+ 
+ 	return 0;
+@@ -410,6 +421,7 @@ static int exynos_adc_resume(struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
++	writel(1, info->enable_reg);
+ 	clk_prepare_enable(info->clk);
+ 
+ 	exynos_adc_hw_init(info);
+-- 
+1.8.1.3
