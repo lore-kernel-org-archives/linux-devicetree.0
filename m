@@ -1,184 +1,111 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP systems
-Date: Tue, 12 Mar 2013 08:08:52 +0100
-Message-ID: <20130312070852.GA6727@avionic-0098.mockup.avionic-design.de>
-References: <20130308200245.GC29435@obsidianresearch.com>
- <513A7845.6040304@firmworks.com>
- <20130309013152.GA3883@obsidianresearch.com>
- <513C117D.6080800@firmworks.com>
- <20130310065539.GA14704@obsidianresearch.com>
- <513D6F9C.9000100@firmworks.com>
- <20130311181554.GA10992@obsidianresearch.com>
- <513E519B.6010503@firmworks.com>
- <20130311232516.GA13873@obsidianresearch.com>
- <513E6AFE.3090304@firmworks.com>
+From: <Yuantian.Tang@freescale.com>
+Subject: [PATCH 1/2][RFC] PowerPC/85xx: Add clock nodes support
+Date: Tue, 12 Mar 2013 15:07:32 +0800
+Message-ID: <1363072053-32736-1-git-send-email-Yuantian.Tang@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5263218042036345012=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <513E6AFE.3090304-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Tang Yuantian <Yuantian.Tang@freescale.com>, devicetree-discuss@lists.ozlabs.org, R58472@freescale.com
 List-Id: devicetree@vger.kernel.org
 
+From: Tang Yuantian <Yuantian.Tang@freescale.com>
 
---===============5263218042036345012==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
-Content-Disposition: inline
+Signed-off-by: Tang Yuantian <Yuantian.Tang@freescale.com>
+---
+take p5020 for example.
 
+ arch/powerpc/boot/dts/fsl/p5020si-post.dtsi |   44 ++++++++++++++++++++++++++-
+ arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi  |    2 +
+ 2 files changed, 45 insertions(+), 1 deletions(-)
 
---bp/iNruPH9dso1Pn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Mar 11, 2013 at 01:38:38PM -1000, Mitch Bradley wrote:
-> On 3/11/2013 1:25 PM, Jason Gunthorpe wrote:
-> > On Mon, Mar 11, 2013 at 11:50:19AM -1000, Mitch Bradley wrote:
-> >=20
-> >>> However - the driver runs the core in a 'root port bridge mode' where
-> >>> the config header register block you are looking at is inhibited. The
-> >>> Marvell IP block requires software support to run in bridge mode. So
-> >>> Marvell really has only (2), while Tegra has only (1).
-> >>
-> >> Interesting.
-> >>
-> >> For Marvell, if Marvell has only (2), does that imply that standard PCI
-> >> discovery and enumeration code cannot find the root port bridges, and
-> >> also there is no way to auto-configure the bridges with common pci-pci
-> >> bridge code?
-> >=20
-> > The driver is required to take care of all of this. From the common
-> > code's perspective there is a bridge config header, and writing to it
-> > controls the device, as the PCI spec intends. But the driver doesn't
-> > copy those read/writes 1:1 to any HW register block, it distributes
-> > them around the device's register space as necessary to create the
-> > PCI bridge config header.
-> >=20
-> > The DT is still modeling the HW, there really are root port bridge(s),
-> > that are completely conformant at the TLP level, but the IP designers
-> > choose to leave the detail of the bridge config space up to a SW
-> > implementation.
->=20
-> Oh, ouch, deep spoofing.  I had to do that in system management mode
-> firmware for a Geode chip.  What a pain that was.
->=20
-> >=20
-> >> At this point I am confused again.  There was talk of the need to
-> >> use standard PCI enumeration code to deal with the bridges, thus the
-> >> need for 3/2 to describe the interface between root-complex and the
-> >> child root-port nodes.
-> >=20
-> > I think your confusion is coming from your expectation that the PCI-E
-> > IP block would be an entirely self contained root port, rather than
-> > 'tools to build a root port, with the right driver SW'.
-> >=20
-> >>> Further, review section 12 about how ranges should be treated - it
-> >>> specifically says that the b,d,f bits in ranges should be 0, and the
-> >>> child address should have those bits masked prior to searching the
-> >>> ranges.
-> >>>
-> >>> Section 12 would seem to forbid this:
-> >>>
-> >>>       ranges =3D <0x00000800 0 0          0xd4004000 0 0x00000800   /=
-* Root port config header */
-> >>>                 0x00001000 0 0          0xd4008000 0 0x00000800   /* =
-Root port config header */
-> >>>
-> >>> Are you reading that differently?
-> >>
-> >> I wasn't reading it at all, until you pointed it out to me :-)  I was
-> >> just reasoning based on my mental model.
-> >>
-> >> Again, I agree with your reading of the spec, but I can't think of any
-> >> reason why relaxing that restriction to permit config space mappings
-> >> would be a problem.
-> >=20
-> > Okay, just wanted to confirm that, I think I follow you now. :)
-> >=20
-> > So you are basically proposing a small update to Section 12 that would
-> > read something like:
-> >=20
-> > 'When matching a config space address, the b,d,f bits are valid in the
-> >  ranges and left unmasked in the child. The r bits in the ranges
-> >  should be 0, and the r bits from the child are copied in the last DW
-> >  and masked off in the first DW.'
-> >=20
-> > Which, as you note, would not conflict with any existing usage..
-> >=20
-> > Though, I can already see that the above language is not good enough,
-> > it doesn't elegantly represent standard ECAM, for instance.. How would
-> > you even represent ECAM with ranges??
-> >=20
-> > Another wrinkle is that tegra not only has the per-bridge memory
-> > mapped config space, bit it also has 4 'all port' ECAM-like memory
-> > mapped config spaces. The rules around them are sufficiently
-> > specialized that I'm not sure a ranges mapping would ever be
-> > practical.. So right out of the gate we'd fail to capture memory
-> > mapped config access via ranges on at least one SOC.
-> >=20
-> > So, to me, this seems like overkill. Only ECAM has a hope of having a
-> > common implementation, everything else will be host driver specific,
-> > so why go to the trouble to revise the OF PCI specification for config
-> > space?
-> >=20
-> > Particularly since there are patches waiting on this question being
-> > resolved :)
->=20
-> Okay, so I'll just bow out.  Do what you have to do.
-
-So to recapitulate, we agree that configuration space can be translated
-through the "ranges" property. That means the only missing link is a new
-function to translate not only "assigned-addresses" but also the "reg"
-property for PCI devices. Is that it?
-
-And for Marvell the non-configuration-space per-root-port registers need
-to be mapped separately from the configuration space windows?
-
-Thierry
-
---bp/iNruPH9dso1Pn
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRPtSDAAoJEN0jrNd/PrOhP94P/ihQJs4LBLFz+otRAT/7ge+j
-7KQCUxfQSEZ9ZrC9vuhecFzU4fyxvELAc5XrY50Mk6PahhnlGFX6kli4gmRxqSQb
-NFLpkTWDmnDv3TwrXbLqboqBR+ONTg2lTNXrKweY2/Y/w4Momsr77ovRmIAy6eHi
-JXXA1JNFip5zw7dl7HCX6zkwbCGQGOL98F3gb4IZhs0lmBfIlQe1sMC8HHWvxOJO
-hVdRwYBeS2uAhSVp4NyTYwbF/W7NnAgOwMWcwudjFm15tcyk4HM/eE+olOYZY4Yh
-WWkaMMbtD1NRbeW4XdqMoO9GOUCfuYfL7fq5qRhwFyl7wh0SeHsiYGUov4lfx38F
-N5aYHVABykEZ6/8fpEoLi1Y/9AWQCJ55U+0GuvWcDCYXuRm8gO4HXOJrkAKHA7wS
-5Epxjaael+ohvE7axSlboMY16JTUks2NzaSDqf85h+E16W7ZnXbt05KN+QG4g4of
-8Q9lDN4cP983YJFy+xFDZZKwThZVyM4khFobdxyfOXadwa9Tze/1EAMUNK93/O6z
-+1VHGFbxhwHSYxaUVmLvAckzt6Y6DHjgW1MJRIPP8j4gXqZ1jlmLx1qHU1aY7qF0
-LtpmjX9aVVVZEa5qOwHDD96BTyhx3Vdr7D3/wG7G4AMozr0cKS5hMdv/PrZUfBda
-G0CaiPYIe6XhYR+mikob
-=+paI
------END PGP SIGNATURE-----
-
---bp/iNruPH9dso1Pn--
-
---===============5263218042036345012==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============5263218042036345012==--
+diff --git a/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi b/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
+index 9ea77c3..2db0d3c 100644
+--- a/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
+@@ -337,9 +337,51 @@
+ 	};
+ 
+ 	clockgen: global-utilities@e1000 {
+-		compatible = "fsl,p5020-clockgen", "fsl,qoriq-clockgen-1.0";
++		compatible = "fsl,p5020-clockgen", "fsl,qoriq-clockgen-1.0", "fixed-clock";
+ 		reg = <0xe1000 0x1000>;
+ 		clock-frequency = <0>;
++		clock-output-names = "sysclk";
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		pll1: pll1@800 {
++			#clock-cells = <1>;
++			reg = <0x800>;
++			compatible = "fsl,core-pll-clock";
++			clocks = <&clockgen>;
++			clock-output-names = "pll1", "pll1-div2", "pll1-div4";
++		};
++
++		pll2: pll2@820 {
++			#clock-cells = <1>;
++			reg = <0x820>;
++			compatible = "fsl,core-pll-clock";
++			clocks = <&clockgen>;
++			clock-output-names = "pll2", "pll2-div2", "pll2-div4";
++		};
++
++		mux0: mux0@0 {
++			#clock-cells = <0>;
++			reg = <0x0>;
++			compatible = "fsl,core-mux-clock";
++			clocks = <&pll1 0>, <&pll1 1>, <&pll1 2>,
++				 <&pll2 0>, <&pll2 1>, <&pll2 2>;
++			clock-names = "pll1_0", "pll1_1", "pll1_2",
++				"pll2_0", "pll2_1", "pll2_2";
++			clock-output-names = "cmux0";
++		};
++
++		mux1: mux1@20 {
++			#clock-cells = <0>;
++			reg = <0x20>;
++			compatible = "fsl,core-mux-clock";
++			clocks = <&pll1 0>, <&pll1 1>, <&pll1 2>,
++				 <&pll2 0>, <&pll2 1>, <&pll2 2>;
++			clock-names = "pll1_0", "pll1_1", "pll1_2",
++				"pll2_0", "pll2_1", "pll2_2";
++			clock-output-names = "cmux1";
++		};
+ 	};
+ 
+ 	rcpm: global-utilities@e2000 {
+diff --git a/arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi b/arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi
+index 8df47fc..fe1a2e6 100644
+--- a/arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi
+@@ -88,6 +88,7 @@
+ 		cpu0: PowerPC,e5500@0 {
+ 			device_type = "cpu";
+ 			reg = <0>;
++			clocks = <&mux0>;
+ 			next-level-cache = <&L2_0>;
+ 			L2_0: l2-cache {
+ 				next-level-cache = <&cpc>;
+@@ -96,6 +97,7 @@
+ 		cpu1: PowerPC,e5500@1 {
+ 			device_type = "cpu";
+ 			reg = <1>;
++			clocks = <&mux1>;
+ 			next-level-cache = <&L2_1>;
+ 			L2_1: l2-cache {
+ 				next-level-cache = <&cpc>;
+-- 
+1.7.0.4
