@@ -1,48 +1,54 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 00/24] ARM: OMAP2+: Adapt to ehci-omap changes for 3.10
-Date: Tue, 12 Mar 2013 09:40:07 -0700
-Message-ID: <20130312164007.GZ26093@atomide.com>
-References: <1363088606-2692-1-git-send-email-rogerq@ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH -next] ASoC: tas5086: use module_i2c_driver to simplify
+ the code
+Date: Tue, 12 Mar 2013 18:17:30 +0000
+Message-ID: <20130312181729.GC19942@opensource.wolfsonmicro.com>
+References: <CAPgLHd_J+xdx6UdSFahEGmPJX-SXEkQBL7xHA7MEGKf21=32Uw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1ccMZA6j1vT5UqiK"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1363088606-2692-1-git-send-email-rogerq@ti.com>
+In-Reply-To: <CAPgLHd_J+xdx6UdSFahEGmPJX-SXEkQBL7xHA7MEGKf21=32Uw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: balbi@ti.com, b-cousson@ti.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+To: Wei Yongjun <weiyj.lk@gmail.com>
+Cc: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, zonque@gmail.com, yongjun_wei@trendmicro.com.cn, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [130312 04:47]:
-> Hi Tony,
-> 
-> These patches provide the SoC side code required to support
-> the changes in the OMAP USB Host drivers done in [1], [2] & [3].
-... 
 
->  arch/arm/mach-omap2/board-3430sdp.c                |   97 +++++++++++++++-
->  arch/arm/mach-omap2/board-3630sdp.c                |  100 +++++++++++++++-
->  arch/arm/mach-omap2/board-am3517crane.c            |   95 +++++++++++++--
->  arch/arm/mach-omap2/board-am3517evm.c              |   66 ++++++++++-
->  arch/arm/mach-omap2/board-cm-t35.c                 |   95 ++++++++++++++-
->  arch/arm/mach-omap2/board-cm-t3517.c               |   97 +++++++++++++++-
->  arch/arm/mach-omap2/board-devkit8000.c             |   20 ++--
->  arch/arm/mach-omap2/board-generic.c                |   67 +++++++++++
->  arch/arm/mach-omap2/board-igep0020.c               |  112 ++++++++++++++++---
->  arch/arm/mach-omap2/board-omap3beagle.c            |   93 +++++++++++++--
->  arch/arm/mach-omap2/board-omap3evm.c               |   62 ++++++++--
->  arch/arm/mach-omap2/board-omap3pandora.c           |   52 +++++++--
->  arch/arm/mach-omap2/board-omap3stalker.c           |   52 +++++++-
->  arch/arm/mach-omap2/board-omap3touchbook.c         |   62 +++++++++-
->  arch/arm/mach-omap2/board-omap4panda.c             |  122 ++++++++++++++------
->  arch/arm/mach-omap2/board-overo.c                  |   54 ++++++++-
->  arch/arm/mach-omap2/board-zoom.c                   |   56 ++++++++-
+--1ccMZA6j1vT5UqiK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Can't you have some mach-omap2/ehci-common.c that takes care
-of the initializiation to avoid this much addition to the
-board-*.c files? You may be able to have just a common function
-to do it and pass few parameters?
+On Tue, Mar 12, 2013 at 09:36:24PM +0800, Wei Yongjun wrote:
+> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+>=20
+> Use the module_i2c_driver() macro to make the code smaller
+> and a bit simpler.
 
-Regards,
+Applied, thanks.
 
-Tony
+--1ccMZA6j1vT5UqiK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRP3EzAAoJELSic+t+oim9gQkQAIh5mymwNCFCWXqCILfcWpZk
+ji+8kCuTU63tfewuVEaiv0tq0hFbtpPEFaDP5r0TqSpw/R6XeynVuhFEuleX3SWj
+qayrwDwlat5SX1RFIgxuKlpnYpoAQ2HA5sDWeKzr7ZlNm2+FZJmKs0caEmibLBNS
+d7QwhUzCCW3D6nG2SFg4D3yfCDDOuMeiFOjt3rh2y1r6zT6uY6aITt845vxbTuq5
+LtL2rJQCeTN1HiAysk3GnVd91D1FFPW0NiJ7L/HyQf6385h+wZxy1n1zGUnRDHrW
+SarSzPAto8rMqSY/bD8Yh+MiUl5fYv2IamUy8KlESYISPhnT33DXmwp4pC68Y2KW
+/oH4FfwbMsb7ZBsN0R5SI/KMM2pDXsRE5MXYAl8Ty4xXcLRyEDtwO1792tO60wrd
+N8KEfls3vAcIuZ4FecqtTWwut1CwqWeXXTe9gQQRHSNBkf64RirhQE2p7iKGIHAH
+13CI1hGj3/m27QcBEd+vxC89uFH6S/R6+DRAeDdmDsasOF4GUxC9JIBCiaElb3qI
+TbYLggHQBYCkuawAiTk1fYn5/AfNar3GSMPEyUE/Uy296UwdDCrjlMhDet9SEnE6
+W3nkjxXdMehb9m5ZLehEsjTG2GCTQVfzhUgQMVE0Xpo7hJFAwt+84iR3sY8Wsqyg
+x+MsplbYOOpU6mHK78ow
+=/tqE
+-----END PGP SIGNATURE-----
+
+--1ccMZA6j1vT5UqiK--
