@@ -1,64 +1,45 @@
-From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/2] cpufreq: cpufreq-cpu0: provide compatibility string
- for DT matchup
-Date: Tue, 12 Mar 2013 16:31:07 +0100
-Message-ID: <513F4A3B.7080806@ti.com>
-References: <1363043130-30270-1-git-send-email-nm@ti.com>
- <1363043130-30270-3-git-send-email-nm@ti.com> <513EB7FE.1070000@ti.com>
- <513F3B98.6050909@ti.com> <20130312144334.GB21599@kahuna>
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH 11/12] USB: ehci-omap: Try to get PHY even if not in PHY
+ mode
+Date: Tue, 12 Mar 2013 11:57:56 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1303121155540.2153-100000@iolanthe.rowland.org>
+References: <1363085090-24676-12-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130312144334.GB21599@kahuna>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cpufreq <cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael
- J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1363085090-24676-12-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, Felipe Balbi <balbi@ti.com>
+Cc: gregkh@linuxfoundation.org, b-cousson@ti.com, mark.rutland@arm.com, Kernel development list <linux-kernel@vger.kernel.org>, USB list <linux-usb@vger.kernel.org>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/12/2013 03:43 PM, Nishanth Menon wrote:
-> On 15:28-20130312, Benoit Cousson wrote:
->> On 03/12/2013 06:07 AM, Santosh Shilimkar wrote:
->>> On Tuesday 12 March 2013 04:35 AM, Nishanth Menon wrote:
->>>> commit 5553f9e (cpufreq: instantiate cpufreq-cpu0 as a platform_driver)
->>>> now forces platform device to be registered for allowing cpufreq-cpu0
->>>> to be used by SoCs. example: drivers/cpufreq/highbank-cpufreq.c
->>>>
->>>> However, for SoCs that wish to link up using device tree, instead
->>>> of platform device, provide compatibility string match:
->>>> compatible = "cpufreq,cpu0";
->>
->> You cannot add a non-HW relative binding... DT is supposed to represent
->> the pure HW.
->> AFAIK, cpufreq has nothing to do with the HW definition.
-> Ref:
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/cpufreq/highbank-cpufreq.c#n61
-> there is a need for a device of some sort.  in the example above, we
-> register a dummy device for linking up with cpufreq-cpu0 driver.
-> what we do in this patch is to indicate that SoC CPUs are managed by
-> cpufreq-cpu0 driver.
+On Tue, 12 Mar 2013, Roger Quadros wrote:
+
+> Even when not in PHY mode, the USB device on the port (e.g. HUB)
+> might need resources like RESET which can be modelled as a PHY
+> device. So try to get the PHY device in any case.
 > 
-> I am a bit curious to see how else would we represent drivers to manage
-> real h/w devices like CPU? Is the highbank style the recommended way to do
-> things?
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> CC: Alan Stern <stern@rowland.harvard.edu>
 
-Yep, I don't think this is a very elegant way to do that, but until we
-do have a generic DVFS layer, I'm not sure we have any other approach.
-But maybe not.
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
 
-The CPU is the real device, but AFAIK, nobody beside OMAP is
-representing the CPU as the device.
-But I'd rather use a CPU device than a fake CPUFREQ device.
+>  		/* get the PHY device */
+>  		if (dev->of_node)
+>  			phy = devm_usb_get_phy_by_phandle(dev, "phys", i);
+>  		else
+>  			phy = devm_usb_get_phy_dev(dev, i);
+>  		if (IS_ERR(phy) || !phy) {
+> +			/* Don't bail out if PHY is not absolutely necessary */
+> +			if (pdata->port_mode[i] != OMAP_EHCI_PORT_MODE_PHY)
+> +				continue;
+> +
+>  			ret = IS_ERR(phy) ? PTR_ERR(phy) : -ENODEV;
+>  			dev_err(dev, "Can't get PHY device for port %d: %d\n",
+>  					i, ret);
 
-Regards,
-Benoit
+Felipe, this is a strange interface.  Why do we sometimes get an 
+error-pointer and sometimes get just NULL?  Why not always an 
+error-pointer?
+
+Alan Stern
