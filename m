@@ -1,103 +1,92 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] cpufreq: cpufreq-cpu0: provide compatibility string
- for DT matchup
-Date: Tue, 12 Mar 2013 15:57:19 +0800
-Message-ID: <20130312075716.GH18574@S2101-09.ap.freescale.net>
-References: <1363043130-30270-1-git-send-email-nm@ti.com>
- <1363043130-30270-3-git-send-email-nm@ti.com>
+From: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v3 5/5] ARM: davinci: da850-evm: add SPI flash support
+Date: Tue, 12 Mar 2013 13:40:27 +0530
+Message-ID: <1363075827-31053-6-git-send-email-prakash.pm@ti.com>
+References: <1363075827-31053-1-git-send-email-prakash.pm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1363043130-30270-3-git-send-email-nm-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cpufreq <cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1363075827-31053-1-git-send-email-prakash.pm-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, "Manjunathappa,
+	Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Copied devicetree-discuss list.
+Enable m25p64 SPI flash support on da850-EVM. Also
+add partition information of SPI flash.
 
-On Mon, Mar 11, 2013 at 06:05:30PM -0500, Nishanth Menon wrote:
-> commit 5553f9e (cpufreq: instantiate cpufreq-cpu0 as a platform_driver)
-> now forces platform device to be registered for allowing cpufreq-cpu0
-> to be used by SoCs. example: drivers/cpufreq/highbank-cpufreq.c
-> 
-> However, for SoCs that wish to link up using device tree, instead
-> of platform device, provide compatibility string match:
-> compatible = "cpufreq,cpu0";
+Signed-off-by: Manjunathappa, Prakash <prakash.pm-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/da850-evm.dts |   40 +++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 40 insertions(+), 0 deletions(-)
 
-This compatible is merely added for asking DT core code to populate
-a platform_device for cpufreq driver.  It's not describing
-hardware/cpus, and it does not belong to device tree.
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index c359872..fe2bbe7 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -41,6 +41,46 @@
+ 		wdt: wdt@1c21000 {
+ 			status = "okay";
+ 		};
++		spi1: spi@1f0e000 {
++			status = "okay";
++			pinctrl-names = "default";
++			pinctrl-0 = <&spi1_pins>;
++			flash: m25p80@0 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				compatible = "m25p64";
++				spi-max-frequency = <30000000>;
++				reg = <0>;
++				partition@0 {
++					label = "U-Boot-SPL";
++					reg = <0x00000000 0x00010000>;
++					read-only;
++				};
++				partition@1 {
++					label = "U-Boot";
++					reg = <0x00010000 0x00080000>;
++					read-only;
++				};
++				partition@2 {
++					label = "U-Boot-Env";
++					reg = <0x00090000 0x00010000>;
++					read-only;
++				};
++				partition@3 {
++					label = "Kernel";
++					reg = <0x000a0000 0x00280000>;
++				};
++				partition@4 {
++					label = "Filesystem";
++					reg = <0x00320000 0x00400000>;
++				};
++				partition@5 {
++					label = "MAC-Address";
++					reg = <0x007f0000 0x00010000>;
++					read-only;
++				};
++			};
++		};
+ 	};
+ 	nand_cs3@62000000 {
+ 		status = "okay";
+-- 
+1.7.4.1
 
-Shawn
 
-> 
-> Cc: "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>
-> Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> 
-> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-> ---
->  .../devicetree/bindings/cpufreq/cpufreq-cpu0.txt   |    3 +++
->  drivers/cpufreq/cpufreq-cpu0.c                     |    6 ++++++
->  2 files changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
-> index f180963..a5699f0 100644
-> --- a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
-> @@ -10,6 +10,8 @@ under node /cpus/cpu@0.
->  Required properties:
->  - operating-points: Refer to Documentation/devicetree/bindings/power/opp.txt
->    for details
-> +- compatible: if platform_device is *not* used, should be:
-> +  "cpufreq,cpu0"
->  
->  Optional properties:
->  - clock-name: If the clock is not converted to device tree, then describe
-> @@ -24,6 +26,7 @@ Examples:
->  cpus {
->  	#address-cells = <1>;
->  	#size-cells = <0>;
-> +	compatible = "cpufreq,cpu0";
->  
->  	cpu@0 {
->  		compatible = "arm,cortex-a9";
-> diff --git a/drivers/cpufreq/cpufreq-cpu0.c b/drivers/cpufreq/cpufreq-cpu0.c
-> index 28223c9..a6f0a9b 100644
-> --- a/drivers/cpufreq/cpufreq-cpu0.c
-> +++ b/drivers/cpufreq/cpufreq-cpu0.c
-> @@ -277,9 +277,15 @@ static int cpu0_cpufreq_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static struct of_device_id of_cpu0_cpufreq_match[] = {
-> +	{ .compatible = "cpufreq,cpu0", },
-> +	{ /* end */ }
-> +};
-> +
->  static struct platform_driver cpu0_cpufreq_platdrv = {
->  	.driver = {
->  		.name	= "cpufreq-cpu0",
-> +		.of_match_table = of_cpu0_cpufreq_match,
->  		.owner	= THIS_MODULE,
->  	},
->  	.probe		= cpu0_cpufreq_probe,
-> -- 
-> 1.7.9.5
-> 
+------------------------------------------------------------------------------
+Symantec Endpoint Protection 12 positioned as A LEADER in The Forrester  
+Wave(TM): Endpoint Security, Q1 2013 and "remains a good choice" in the  
+endpoint security space. For insight on selecting the right partner to 
+tackle endpoint security challenges, access the full report. 
+http://p.sf.net/sfu/symantec-dev2dev
