@@ -1,317 +1,175 @@
-From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Subject: [PATCH v2] hwmon: ntc: Add DT with IIO support to NTC thermistor driver
-Date: Tue, 12 Mar 2013 14:09:26 +0530
-Message-ID: <1363077566-6254-1-git-send-email-ch.naveen@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org
-Cc: devicetree-discuss@lists.ozlabs.org, khali@linux-fr.org, linux@roeck-us.net, dianders@chromium.org, naveenkrishna.ch@gmail.com
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH 4/9] ARM: dts: OMAP3: Add support for OMAP3430 SDP board
+Date: Tue, 12 Mar 2013 09:50:48 +0100
+Message-ID: <CABxcv=npsMrbVqJ0G_Lr3qDVKZ=N5Micd4rmadJP_Egi3hKwiA@mail.gmail.com>
+References: <1362763654-9660-1-git-send-email-jon-hunter@ti.com>
+	<1362763654-9660-5-git-send-email-jon-hunter@ti.com>
+	<CABYxbz7Bg3Uf2wkhH=4d6nEPUjyHF8BiixN6rGCOgEVG_us8Jw@mail.gmail.com>
+	<513E1A1C.8070206@ti.com>
+	<F3DBB1B3EF102E4994C89758CFCA32412CE371@DBDE01.ent.ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <F3DBB1B3EF102E4994C89758CFCA32412CE371@DBDE01.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Kumar, Anil" <anilkumar.v@ti.com>
+Cc: "Hunter, Jon" <jon-hunter@ti.com>, "Cousson, Benoit" <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Anil Kumar <anilk4.v@gmail.com>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT support to NTC driver to parse the
-platform data.
+On Tue, Mar 12, 2013 at 3:42 AM, Kumar, Anil <anilkumar.v@ti.com> wrote:
+>
+> On Mon, Mar 11, 2013 at 23:23:32, Hunter, Jon wrote:
+>>
+>> On 03/08/2013 08:25 PM, Anil Kumar wrote:
+>> > Hi Jon,
+>> >
+>> > On Fri, Mar 8, 2013 at 10:57 PM, Jon Hunter <jon-hunter@ti.com> wrote:
+>> >> Adds basic device-tree support for OMAP3430 SDP board which has 256MB
+>> >> of RAM and uses the TWL4030 power management IC.
+>> >
+>> > I think this board support should be in separate patch series with
+>> > related patches.
+>>
+>> Well I wanted to keep them altogether so that I can send a pull request
+>> to Benoit and Tony.
+>
+> Sorry, but can you please tell what makes you to think that you
+> can send pull request only when they are altogether ?
+>
+> Is there any logical dependency with other patches except
+> "[PATCH 6/9] ARM: dts: Add OMAP3430 SDP flash memory bindings" is on
+> top of this patch ?
+>
+>>
+>> >>
+>> >> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+>> >> ---
+>> >>  arch/arm/boot/dts/Makefile         |    1 +
+>> >>  arch/arm/boot/dts/omap3430-sdp.dts |   46 ++++++++++++++++++++++++++++++++++++
+>> >>  2 files changed, 47 insertions(+)
+>> >>  create mode 100644 arch/arm/boot/dts/omap3430-sdp.dts
+>> >>
+>> >> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> >> index 9c62558..89013ed 100644
+>> >> --- a/arch/arm/boot/dts/Makefile
+>> >> +++ b/arch/arm/boot/dts/Makefile
+>> >> @@ -119,6 +119,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+>> >>         omap3-beagle-xm.dtb \
+>> >>         omap3-evm.dtb \
+>> >>         omap3-tobi.dtb \
+>> >> +       omap3430-sdp.dtb \
+>> >>         omap4-panda.dtb \
+>> >>         omap4-panda-a4.dtb \
+>> >>         omap4-panda-es.dtb \
+>> >> diff --git a/arch/arm/boot/dts/omap3430-sdp.dts b/arch/arm/boot/dts/omap3430-sdp.dts
+>> >> new file mode 100644
+>> >> index 0000000..be0650d
+>> >> --- /dev/null
+>> >> +++ b/arch/arm/boot/dts/omap3430-sdp.dts
+>> >> @@ -0,0 +1,46 @@
+>> >> +/*
+>> >> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
+>> >> + *
+>> >> + * This program is free software; you can redistribute it and/or modify
+>> >> + * it under the terms of the GNU General Public License version 2 as
+>> >> + * published by the Free Software Foundation.
+>> >> + */
+>> >> +/dts-v1/;
+>> >> +
+>> >> +/include/ "omap3.dtsi"
+>> >> +
+>> >> +/ {
+>> >> +       model = "TI OMAP3430 SDP";
+>> >> +       compatible = "ti,omap3430-sdp", "ti,omap3";
+>> >
+>> > I have not seen any related changes in "board-generic.c" for your board.
+>> > So just wanted know, how this board is booting ?
+>>
+>> If you look at board-generic.c you will see that "ti,omap3" will match
+>> the OMAP3 generic machine. So you don't need to modify the board-generic.c.
+>
+> According to this omap3-beagle.dts and omap3-beagle-xm.dts are also
+> booting in some way. So it is not clear to me, why there two
+> "DT_MACHINE_START" for omap3. I have seen there is only one
+> different in "init_time" for the same.
+>
 
-Also adds the support to work as an iio device.
+Hi Anil,
 
-During the probe ntc driver gets the respective channels of ADC
-and uses iio_raw_read calls to get the ADC converted value.
+You may take a look to commit:
 
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
----
-Changes since v1:
-1. Combimed all the IIO and OF/device tree changes under CONFIG_OF
-2. parse_dt function now checks for of_node and iio_channels sanity
-3. merged both the patches to single, as they cant build independently
-4. used pdev_id for proper logging and support of DT and non DT based probing
-5. Rebased on linux git tree
-6. Added documentation for device tree bindings
+7dd9d50 ARM: OMAP3: Add generic machine descriptor for boards with
+OMAP3 GP device
 
-Sorry, for posting a patch rebased on local working branch.
-Thanks Doug, for pointing out.
- .../devicetree/bindings/hwmon/ntc_thermistor.txt   |   29 +++++
- drivers/hwmon/ntc_thermistor.c                     |  133 +++++++++++++++++---
- include/linux/platform_data/ntc_thermistor.h       |    6 +-
- 3 files changed, 148 insertions(+), 20 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt
+So, the second DT_MACHINE_START is meant to be used by OMAP3 boards
+which use GP devices and this is not the case for "ti,omap3430-sdp"
+afaiu.
 
-diff --git a/Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt b/Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt
-new file mode 100644
-index 0000000..731a78f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt
-@@ -0,0 +1,29 @@
-+NTC Thermistor hwmon sensors
-+-------------------------------
-+
-+Requires node properties:
-+- "compatible" value : one of
-+	"ntc,ncp15wb473"
-+	"ntc,ncp18wb473"
-+	"ntc,ncp21wb473"
-+	"ntc,ncp03wb473"
-+	"ntc,ncp15wl333"
-+- "pullup-uV"	Pull up voltage in micro volts
-+- "pullup-ohm"	Pull up resistor value in ohms
-+- "pulldown-ohm" Pull down resistor value in ohms
-+- "connected-positive" Always ON, If not specified.
-+		Status change is possible, value (1) is assigned.
-+- "io-channels"	Channel node of ADC to be used for
-+		conversion.
-+
-+Read more about iio bindings at
-+	Documentation/devicetree/bindings/iio/iio-bindings.txt
-+	
-+Example:
-+	ncp15wb473@0 {
-+		compatible = "ntc,ncp15wb473";
-+		pullup-uV = <1800000>;
-+		pullup-ohm = <47000>;
-+		pulldown-ohm = <0>;
-+		io-channels = <&adc 3>;
-+	};
-diff --git a/drivers/hwmon/ntc_thermistor.c b/drivers/hwmon/ntc_thermistor.c
-index b5f63f9..81d5bdc 100644
---- a/drivers/hwmon/ntc_thermistor.c
-+++ b/drivers/hwmon/ntc_thermistor.c
-@@ -26,9 +26,16 @@
- #include <linux/math64.h>
- #include <linux/platform_device.h>
- #include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- 
- #include <linux/platform_data/ntc_thermistor.h>
- 
-+#include <linux/iio/iio.h>
-+#include <linux/iio/machine.h>
-+#include <linux/iio/driver.h>
-+#include <linux/iio/consumer.h>
-+
- #include <linux/hwmon.h>
- #include <linux/hwmon-sysfs.h>
- 
-@@ -37,6 +44,15 @@ struct ntc_compensation {
- 	unsigned int	ohm;
- };
- 
-+static const struct platform_device_id ntc_thermistor_id[] = {
-+	{ "ncp15wb473", TYPE_NCPXXWB473 },
-+	{ "ncp18wb473", TYPE_NCPXXWB473 },
-+	{ "ncp21wb473", TYPE_NCPXXWB473 },
-+	{ "ncp03wb473", TYPE_NCPXXWB473 },
-+	{ "ncp15wl333", TYPE_NCPXXWL333 },
-+	{ },
-+};
-+
- /*
-  * A compensation table should be sorted by the values of .ohm
-  * in descending order.
-@@ -125,6 +141,76 @@ struct ntc_data {
- 	char name[PLATFORM_NAME_SIZE];
- };
- 
-+#ifdef CONFIG_OF
-+static int ntc_adc_iio_read(struct ntc_thermistor_platform_data *pdata)
-+{
-+	struct iio_channel *channel = pdata->chan;
-+	unsigned int result;
-+	int val, ret;
-+
-+	ret = iio_read_channel_raw(channel, &val);
-+	if (ret < 0) {
-+		pr_err("read channel() error: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* unit: mV */
-+	result = pdata->pullup_uV * (s64) val;
-+	result >>= 12;
-+
-+	return result;
-+}
-+
-+static const struct of_device_id ntc_match[] = {
-+	{ .compatible = "ntc,ncp15wb473",
-+		.data = &ntc_thermistor_id[TYPE_NCPXXWB473] },
-+	{ .compatible = "ntc,ncp18wb473",
-+		.data = &ntc_thermistor_id[TYPE_NCPXXWB473] },
-+	{ .compatible = "ntc,ncp21wb473",
-+		.data = &ntc_thermistor_id[TYPE_NCPXXWB473] },
-+	{ .compatible = "ntc,ncp03wb473",
-+		.data = &ntc_thermistor_id[TYPE_NCPXXWB473] },
-+	{ .compatible = "ntc,ncp15wl333",
-+		.data = &ntc_thermistor_id[TYPE_NCPXXWL333] },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, ntc_match);
-+
-+static int ntc_thermistor_parse_dt(struct ntc_thermistor_platform_data *pdata,
-+						struct platform_device *pdev)
-+{
-+	struct iio_channel *chan;
-+	struct device_node *np = pdev->dev.of_node;
-+
-+	if (!np)
-+		return -ENODEV;
-+
-+	chan = iio_channel_get(&pdev->dev, NULL);
-+	if (IS_ERR(chan))
-+		return IS_ERR(chan);
-+
-+	of_property_read_u32(np, "pullup-uV", &pdata->pullup_uV);
-+	of_property_read_u32(np, "pullup-ohm", &pdata->pullup_ohm);
-+	of_property_read_u32(np, "pulldown-ohm", &pdata->pulldown_ohm);
-+
-+	if (of_find_property(np, "connected-positive", NULL))
-+		pdata->connect = NTC_CONNECTED_POSITIVE;
-+	else /* status change should be possible if not always on. */
-+		pdata->connect = NTC_CONNECTED_GROUND;
-+
-+	pdata->chan = chan;
-+	pdata->read_uV = ntc_adc_iio_read;
-+
-+	return 0;
-+}
-+#else
-+static int ntc_thermistor_parse_dt(struct ntc_thermistor_platform_data *pdata,
-+						struct platform_device *pdev)
-+{
-+	return -ENODEV;
-+}
-+#endif
-+
- static inline u64 div64_u64_safe(u64 dividend, u64 divisor)
- {
- 	if (divisor == 0 && dividend == 0)
-@@ -259,7 +345,7 @@ static int ntc_thermistor_get_ohm(struct ntc_data *data)
- 		return data->pdata->read_ohm();
- 
- 	if (data->pdata->read_uV) {
--		read_uV = data->pdata->read_uV();
-+		read_uV = data->pdata->read_uV(data->pdata);
- 		if (read_uV < 0)
- 			return read_uV;
- 		return get_ohm_of_thermistor(data, read_uV);
-@@ -311,9 +397,22 @@ static const struct attribute_group ntc_attr_group = {
- 
- static int ntc_thermistor_probe(struct platform_device *pdev)
- {
-+	const struct of_device_id *of_id =
-+			of_match_device(of_match_ptr(ntc_match), &pdev->dev);
-+	const struct platform_device_id *pdev_id;
-+	struct ntc_thermistor_platform_data *pdata;
- 	struct ntc_data *data;
--	struct ntc_thermistor_platform_data *pdata = pdev->dev.platform_data;
--	int ret = 0;
-+	int ret;
-+
-+	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return -ENOMEM;
-+
-+	ret = ntc_thermistor_parse_dt(pdata, pdev);
-+	if (ret == -EPROBE_DEFER)
-+		return ret;
-+	else if (ret < 0)
-+		pdata = pdev->dev.platform_data;
- 
- 	if (!pdata) {
- 		dev_err(&pdev->dev, "No platform init data supplied.\n");
-@@ -349,11 +448,13 @@ static int ntc_thermistor_probe(struct platform_device *pdev)
- 	if (!data)
- 		return -ENOMEM;
- 
-+	pdev_id = of_id ? of_id->data : platform_get_device_id(pdev);
-+
- 	data->dev = &pdev->dev;
- 	data->pdata = pdata;
--	strlcpy(data->name, pdev->id_entry->name, sizeof(data->name));
-+	strncpy(data->name, pdev_id->name, sizeof(data->name));
- 
--	switch (pdev->id_entry->driver_data) {
-+	switch (pdev_id->driver_data) {
- 	case TYPE_NCPXXWB473:
- 		data->comp = ncpXXwb473;
- 		data->n_comp = ARRAY_SIZE(ncpXXwb473);
-@@ -364,8 +465,7 @@ static int ntc_thermistor_probe(struct platform_device *pdev)
- 		break;
- 	default:
- 		dev_err(&pdev->dev, "Unknown device type: %lu(%s)\n",
--				pdev->id_entry->driver_data,
--				pdev->id_entry->name);
-+				pdev_id->driver_data, pdev_id->name);
- 		return -EINVAL;
- 	}
- 
-@@ -384,39 +484,34 @@ static int ntc_thermistor_probe(struct platform_device *pdev)
- 		goto err_after_sysfs;
- 	}
- 
--	dev_info(&pdev->dev, "Thermistor %s:%d (type: %s/%lu) successfully probed.\n",
--			pdev->name, pdev->id, pdev->id_entry->name,
--			pdev->id_entry->driver_data);
-+	dev_info(&pdev->dev, "Thermistor type: %s successfully probed.\n",
-+								pdev->name);
-+
- 	return 0;
- err_after_sysfs:
- 	sysfs_remove_group(&data->dev->kobj, &ntc_attr_group);
-+	iio_channel_release(pdata->chan);
- 	return ret;
- }
- 
- static int ntc_thermistor_remove(struct platform_device *pdev)
- {
- 	struct ntc_data *data = platform_get_drvdata(pdev);
-+	struct ntc_thermistor_platform_data *pdata = data->pdata;
- 
- 	hwmon_device_unregister(data->hwmon_dev);
- 	sysfs_remove_group(&data->dev->kobj, &ntc_attr_group);
-+	iio_channel_release(pdata->chan);
- 	platform_set_drvdata(pdev, NULL);
- 
- 	return 0;
- }
- 
--static const struct platform_device_id ntc_thermistor_id[] = {
--	{ "ncp15wb473", TYPE_NCPXXWB473 },
--	{ "ncp18wb473", TYPE_NCPXXWB473 },
--	{ "ncp21wb473", TYPE_NCPXXWB473 },
--	{ "ncp03wb473", TYPE_NCPXXWB473 },
--	{ "ncp15wl333", TYPE_NCPXXWL333 },
--	{ },
--};
--
- static struct platform_driver ntc_thermistor_driver = {
- 	.driver = {
- 		.name = "ntc-thermistor",
- 		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(ntc_match),
- 	},
- 	.probe = ntc_thermistor_probe,
- 	.remove = ntc_thermistor_remove,
-diff --git a/include/linux/platform_data/ntc_thermistor.h b/include/linux/platform_data/ntc_thermistor.h
-index 88734e8..6cf5081 100644
---- a/include/linux/platform_data/ntc_thermistor.h
-+++ b/include/linux/platform_data/ntc_thermistor.h
-@@ -39,13 +39,17 @@ struct ntc_thermistor_platform_data {
- 	 * described at Documentation/hwmon/ntc_thermistor
- 	 *
- 	 * pullup/down_ohm: 0 for infinite / not-connected
-+	 *
-+	 * chan: iio_channel pointer to communicate with the ADC which the
-+	 * thermistor is using for conversion of the analog values.
- 	 */
--	int (*read_uV)(void);
-+	int (*read_uV)(struct ntc_thermistor_platform_data *);
- 	unsigned int pullup_uV;
- 
- 	unsigned int pullup_ohm;
- 	unsigned int pulldown_ohm;
- 	enum { NTC_CONNECTED_POSITIVE, NTC_CONNECTED_GROUND } connect;
-+	struct iio_channel *chan;
- 
- 	int (*read_ohm)(void);
- };
--- 
-1.7.9.5
+I wonder if instead of adding each OMAP3 board with GP devices such as
+"ti,omap3-beagle", is not better to have a "ti,omap3-gp" compatible
+property.
+
+The whole point of DT is to decouple the hardware description from the
+kernel code so in general we should use the more generic compatible
+string ("ti,omap3") unless the hardware has some specifics that have
+to be addressed, such as these boards that use GP devices.
+
+>>
+>> >> +
+>> >> +       memory {
+>> >> +               device_type = "memory";
+>> >> +               reg = <0x80000000 0x10000000>; /* 256 MB */
+>> >> +       };
+>> >> +};
+>> >> +
+>> >> +&i2c1 {
+>> >> +       clock-frequency = <2600000>;
+>> >> +
+>> >> +       twl: twl@48 {
+>> >> +               reg = <0x48>;
+>> >> +               interrupts = <7>; /* SYS_NIRQ cascaded to intc */
+>> >> +               interrupt-parent = <&intc>;
+>> >> +       };
+>> >> +};
+>> >> +
+>> >> +/include/ "twl4030.dtsi"
+>> >> +
+>> >> +&mmc1 {
+>> >> +       vmmc-supply = <&vmmc1>;
+>> >> +       vmmc_aux-supply = <&vsim>;
+>> >> +       bus-width = <8>;
+>> >> +};
+>> >> +
+>> >> +&mmc2 {
+>> >> +       status = "disabled";
+>> >> +};
+>> >> +
+>> >> +&mmc3 {
+>> >> +       status = "disabled";
+>> >> +};
+>> >
+>> > I think you should disable modules those are not currently used
+>> > as they are enabled by default in omap3.dtsi.
+>> >
+>> > exp:-
+>> >
+>> > &mcbsp2 {
+>> >         status = "disabled";
+>> > };
+>>
+>> Well may be we could do that in a follow-up patch. If you look at other
+>> omap3 boards we have not gone through and disabled all unused modules
+>> either. So although I agree, right now I just want to get minimal
+>> support added.
+>>
+>
+> Hmm... But it makes the kernel to call unused driver probe and get failed
+> those required some platform date from DT? you can see the kernel boot logs.
+>
+> Thanks,
+> Anil
+>
+>
+
+Best regards,
+Javier
