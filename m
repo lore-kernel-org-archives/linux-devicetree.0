@@ -1,94 +1,358 @@
-From: "Kumar, Anil" <anilkumar.v@ti.com>
-Subject: RE: [PATCH 4/9] ARM: dts: OMAP3: Add support for OMAP3430 SDP board
-Date: Wed, 13 Mar 2013 02:50:45 +0000
-Message-ID: <F3DBB1B3EF102E4994C89758CFCA32412CE845@DBDE01.ent.ti.com>
-References: <1362763654-9660-1-git-send-email-jon-hunter@ti.com>
-	<1362763654-9660-5-git-send-email-jon-hunter@ti.com>
-	<CABYxbz7Bg3Uf2wkhH=4d6nEPUjyHF8BiixN6rGCOgEVG_us8Jw@mail.gmail.com>
-	<513E1A1C.8070206@ti.com>
-	<F3DBB1B3EF102E4994C89758CFCA32412CE371@DBDE01.ent.ti.com>
- <CABxcv=npsMrbVqJ0G_Lr3qDVKZ=N5Micd4rmadJP_Egi3hKwiA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CABxcv=npsMrbVqJ0G_Lr3qDVKZ=N5Micd4rmadJP_Egi3hKwiA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>, "Cousson, Benoit" <b-cousson@ti.com>
-Cc: "Hunter, Jon" <jon-hunter@ti.com>, Tony Lindgren <tony@atomide.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Anil Kumar <anilk4.v@gmail.com>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Subject: [PATCH v3] hwmon: ntc: Add DT with IIO support to NTC thermistor driver
+Date: Wed, 13 Mar 2013 08:25:09 +0530
+Message-ID: <1363143309-6835-1-git-send-email-ch.naveen@samsung.com>
+References: <1363077566-6254-1-git-send-email-ch.naveen@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1363077566-6254-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org
+Cc: devicetree-discuss@lists.ozlabs.org, khali@linux-fr.org, linux@roeck-us.net, dianders@chromium.org, naveenkrishna.ch@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBNYXIgMTIsIDIwMTMgYXQgMTQ6MjA6NDgsIEphdmllciBNYXJ0aW5leiBDYW5pbGxh
-cyB3cm90ZToNCj4gT24gVHVlLCBNYXIgMTIsIDIwMTMgYXQgMzo0MiBBTSwgS3VtYXIsIEFuaWwg
-PGFuaWxrdW1hci52QHRpLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBPbiBNb24sIE1hciAxMSwgMjAx
-MyBhdCAyMzoyMzozMiwgSHVudGVyLCBKb24gd3JvdGU6DQo+ID4+DQo+ID4+IE9uIDAzLzA4LzIw
-MTMgMDg6MjUgUE0sIEFuaWwgS3VtYXIgd3JvdGU6DQo+ID4+ID4gSGkgSm9uLA0KPiA+PiA+DQo+
-ID4+ID4gT24gRnJpLCBNYXIgOCwgMjAxMyBhdCAxMDo1NyBQTSwgSm9uIEh1bnRlciA8am9uLWh1
-bnRlckB0aS5jb20+IHdyb3RlOg0KPiA+PiA+PiBBZGRzIGJhc2ljIGRldmljZS10cmVlIHN1cHBv
-cnQgZm9yIE9NQVAzNDMwIFNEUCBib2FyZCB3aGljaCBoYXMgMjU2TUINCj4gPj4gPj4gb2YgUkFN
-IGFuZCB1c2VzIHRoZSBUV0w0MDMwIHBvd2VyIG1hbmFnZW1lbnQgSUMuDQo+ID4+ID4NCj4gPj4g
-PiBJIHRoaW5rIHRoaXMgYm9hcmQgc3VwcG9ydCBzaG91bGQgYmUgaW4gc2VwYXJhdGUgcGF0Y2gg
-c2VyaWVzIHdpdGgNCj4gPj4gPiByZWxhdGVkIHBhdGNoZXMuDQo+ID4+DQo+ID4+IFdlbGwgSSB3
-YW50ZWQgdG8ga2VlcCB0aGVtIGFsdG9nZXRoZXIgc28gdGhhdCBJIGNhbiBzZW5kIGEgcHVsbCBy
-ZXF1ZXN0DQo+ID4+IHRvIEJlbm9pdCBhbmQgVG9ueS4NCj4gPg0KPiA+IFNvcnJ5LCBidXQgY2Fu
-IHlvdSBwbGVhc2UgdGVsbCB3aGF0IG1ha2VzIHlvdSB0byB0aGluayB0aGF0IHlvdQ0KPiA+IGNh
-biBzZW5kIHB1bGwgcmVxdWVzdCBvbmx5IHdoZW4gdGhleSBhcmUgYWx0b2dldGhlciA/DQo+ID4N
-Cj4gPiBJcyB0aGVyZSBhbnkgbG9naWNhbCBkZXBlbmRlbmN5IHdpdGggb3RoZXIgcGF0Y2hlcyBl
-eGNlcHQNCj4gPiAiW1BBVENIIDYvOV0gQVJNOiBkdHM6IEFkZCBPTUFQMzQzMCBTRFAgZmxhc2gg
-bWVtb3J5IGJpbmRpbmdzIiBpcyBvbg0KPiA+IHRvcCBvZiB0aGlzIHBhdGNoID8NCj4gPg0KPiA+
-Pg0KPiA+PiA+Pg0KPiA+PiA+PiBTaWduZWQtb2ZmLWJ5OiBKb24gSHVudGVyIDxqb24taHVudGVy
-QHRpLmNvbT4NCj4gPj4gPj4gLS0tDQo+ID4+ID4+ICBhcmNoL2FybS9ib290L2R0cy9NYWtlZmls
-ZSAgICAgICAgIHwgICAgMSArDQo+ID4+ID4+ICBhcmNoL2FybS9ib290L2R0cy9vbWFwMzQzMC1z
-ZHAuZHRzIHwgICA0NiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPj4g
-Pj4gIDIgZmlsZXMgY2hhbmdlZCwgNDcgaW5zZXJ0aW9ucygrKQ0KPiA+PiA+PiAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL29tYXAzNDMwLXNkcC5kdHMNCj4gPj4gPj4NCj4g
-Pj4gPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvTWFrZWZpbGUNCj4gPj4gPj4gaW5kZXggOWM2MjU1OC4uODkwMTNlZCAxMDA2NDQN
-Cj4gPj4gPj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUNCj4gPj4gPj4gKysrIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUNCj4gPj4gPj4gQEAgLTExOSw2ICsxMTksNyBAQCBk
-dGItJChDT05GSUdfQVJDSF9PTUFQMlBMVVMpICs9IG9tYXAyNDIwLWg0LmR0YiBcDQo+ID4+ID4+
-ICAgICAgICAgb21hcDMtYmVhZ2xlLXhtLmR0YiBcDQo+ID4+ID4+ICAgICAgICAgb21hcDMtZXZt
-LmR0YiBcDQo+ID4+ID4+ICAgICAgICAgb21hcDMtdG9iaS5kdGIgXA0KPiA+PiA+PiArICAgICAg
-IG9tYXAzNDMwLXNkcC5kdGIgXA0KPiA+PiA+PiAgICAgICAgIG9tYXA0LXBhbmRhLmR0YiBcDQo+
-ID4+ID4+ICAgICAgICAgb21hcDQtcGFuZGEtYTQuZHRiIFwNCj4gPj4gPj4gICAgICAgICBvbWFw
-NC1wYW5kYS1lcy5kdGIgXA0KPiA+PiA+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
-b21hcDM0MzAtc2RwLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAzNDMwLXNkcC5kdHMNCj4g
-Pj4gPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPj4gPj4gaW5kZXggMDAwMDAwMC4uYmUwNjUw
-ZA0KPiA+PiA+PiAtLS0gL2Rldi9udWxsDQo+ID4+ID4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L29tYXAzNDMwLXNkcC5kdHMNCj4gPj4gPj4gQEAgLTAsMCArMSw0NiBAQA0KPiA+PiA+PiArLyoN
-Cj4gPj4gPj4gKyAqIENvcHlyaWdodCAoQykgMjAxMyBUZXhhcyBJbnN0cnVtZW50cyBJbmNvcnBv
-cmF0ZWQgLSBodHRwOi8vd3d3LnRpLmNvbS8NCj4gPj4gPj4gKyAqDQo+ID4+ID4+ICsgKiBUaGlz
-IHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29y
-IG1vZGlmeQ0KPiA+PiA+PiArICogaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJh
-bCBQdWJsaWMgTGljZW5zZSB2ZXJzaW9uIDIgYXMNCj4gPj4gPj4gKyAqIHB1Ymxpc2hlZCBieSB0
-aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLg0KPiA+PiA+PiArICovDQo+ID4+ID4+ICsvZHRz
-LXYxLzsNCj4gPj4gPj4gKw0KPiA+PiA+PiArL2luY2x1ZGUvICJvbWFwMy5kdHNpIg0KPiA+PiA+
-PiArDQo+ID4+ID4+ICsvIHsNCj4gPj4gPj4gKyAgICAgICBtb2RlbCA9ICJUSSBPTUFQMzQzMCBT
-RFAiOw0KPiA+PiA+PiArICAgICAgIGNvbXBhdGlibGUgPSAidGksb21hcDM0MzAtc2RwIiwgInRp
-LG9tYXAzIjsNCj4gPj4gPg0KPiA+PiA+IEkgaGF2ZSBub3Qgc2VlbiBhbnkgcmVsYXRlZCBjaGFu
-Z2VzIGluICJib2FyZC1nZW5lcmljLmMiIGZvciB5b3VyIGJvYXJkLg0KPiA+PiA+IFNvIGp1c3Qg
-d2FudGVkIGtub3csIGhvdyB0aGlzIGJvYXJkIGlzIGJvb3RpbmcgPw0KPiA+Pg0KPiA+PiBJZiB5
-b3UgbG9vayBhdCBib2FyZC1nZW5lcmljLmMgeW91IHdpbGwgc2VlIHRoYXQgInRpLG9tYXAzIiB3
-aWxsIG1hdGNoDQo+ID4+IHRoZSBPTUFQMyBnZW5lcmljIG1hY2hpbmUuIFNvIHlvdSBkb24ndCBu
-ZWVkIHRvIG1vZGlmeSB0aGUgYm9hcmQtZ2VuZXJpYy5jLg0KPiA+DQo+ID4gQWNjb3JkaW5nIHRv
-IHRoaXMgb21hcDMtYmVhZ2xlLmR0cyBhbmQgb21hcDMtYmVhZ2xlLXhtLmR0cyBhcmUgYWxzbw0K
-PiA+IGJvb3RpbmcgaW4gc29tZSB3YXkuIFNvIGl0IGlzIG5vdCBjbGVhciB0byBtZSwgd2h5IHRo
-ZXJlIHR3bw0KPiA+ICJEVF9NQUNISU5FX1NUQVJUIiBmb3Igb21hcDMuIEkgaGF2ZSBzZWVuIHRo
-ZXJlIGlzIG9ubHkgb25lDQo+ID4gZGlmZmVyZW50IGluICJpbml0X3RpbWUiIGZvciB0aGUgc2Ft
-ZS4NCj4gPg0KPiANCj4gSGkgQW5pbCwNCj4gDQo+IFlvdSBtYXkgdGFrZSBhIGxvb2sgdG8gY29t
-bWl0Og0KPiANCj4gN2RkOWQ1MCBBUk06IE9NQVAzOiBBZGQgZ2VuZXJpYyBtYWNoaW5lIGRlc2Ny
-aXB0b3IgZm9yIGJvYXJkcyB3aXRoDQo+IE9NQVAzIEdQIGRldmljZQ0KPiANCj4gU28sIHRoZSBz
-ZWNvbmQgRFRfTUFDSElORV9TVEFSVCBpcyBtZWFudCB0byBiZSB1c2VkIGJ5IE9NQVAzIGJvYXJk
-cw0KPiB3aGljaCB1c2UgR1AgZGV2aWNlcyBhbmQgdGhpcyBpcyBub3QgdGhlIGNhc2UgZm9yICJ0
-aSxvbWFwMzQzMC1zZHAiDQo+IGFmYWl1Lg0KPiANCj4gSSB3b25kZXIgaWYgaW5zdGVhZCBvZiBh
-ZGRpbmcgZWFjaCBPTUFQMyBib2FyZCB3aXRoIEdQIGRldmljZXMgc3VjaCBhcw0KPiAidGksb21h
-cDMtYmVhZ2xlIiwgaXMgbm90IGJldHRlciB0byBoYXZlIGEgInRpLG9tYXAzLWdwIiBjb21wYXRp
-YmxlDQo+IHByb3BlcnR5Lg0KDQpTb3VuZCBnb29kIHRvIG1lLg0KDQpAQmVub2l0LA0KDQpJcyB0
-aGlzIG1ha2VzIGFueSBzZW5zZSBmb3IgeW91Pw0KDQo+IA0KPiBUaGUgd2hvbGUgcG9pbnQgb2Yg
-RFQgaXMgdG8gZGVjb3VwbGUgdGhlIGhhcmR3YXJlIGRlc2NyaXB0aW9uIGZyb20gdGhlDQo+IGtl
-cm5lbCBjb2RlIHNvIGluIGdlbmVyYWwgd2Ugc2hvdWxkIHVzZSB0aGUgbW9yZSBnZW5lcmljIGNv
-bXBhdGlibGUNCj4gc3RyaW5nICgidGksb21hcDMiKSB1bmxlc3MgdGhlIGhhcmR3YXJlIGhhcyBz
-b21lIHNwZWNpZmljcyB0aGF0IGhhdmUNCj4gdG8gYmUgYWRkcmVzc2VkLCBzdWNoIGFzIHRoZXNl
-IGJvYXJkcyB0aGF0IHVzZSBHUCBkZXZpY2VzLg0KDQpUaGFua3MgeW91IHZlcnkgbXVjaC4gSXQg
-cmVhbGx5IGhlbHAgZnVsbCBmb3IgbWUuDQoNClRoYW5rcywNCkFuaWwgDQoNCg==
+This patch adds DT support to NTC driver to parse the
+platform data.
+
+Also adds the support to work as an iio device.
+
+During the probe ntc driver gets the respective channels of ADC
+and uses iio_raw_read calls to get the ADC converted value.
+
+Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+---
+Changes since v2:
+1. Modified Kconfig to select IIO only if OF is defined
+2. changed "pullup-uV" to "pullup-uv" in dt bindings
+3. allocate pdata in ntc_thermistor_parse_dt and modify the return
+   value to platform data pointer, handled other errors for dt bindings.
+4. used strlcpy instead of strncpy as the former handles
+   null termination
+5. made a wrapper function for iio_channel release and defined to
+   null in case of non-DT
+6. removed a typecase of (s64) which is not needed.
+
+Guenter Roeck, Thanks for your valuble time and comments. They really
+are helping me learn and do better on my future patches.
+
+Doug, Thanks for your support and testing these patches.
+
+ .../devicetree/bindings/hwmon/ntc_thermistor.txt   |   29 ++++
+ drivers/hwmon/Kconfig                              |    1 +
+ drivers/hwmon/ntc_thermistor.c                     |  144 +++++++++++++++++---
+ include/linux/platform_data/ntc_thermistor.h       |    8 +-
+ 4 files changed, 162 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt
+
+diff --git a/Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt b/Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt
+new file mode 100644
+index 0000000..c6f6667
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt
+@@ -0,0 +1,29 @@
++NTC Thermistor hwmon sensors
++-------------------------------
++
++Requires node properties:
++- "compatible" value : one of
++	"ntc,ncp15wb473"
++	"ntc,ncp18wb473"
++	"ntc,ncp21wb473"
++	"ntc,ncp03wb473"
++	"ntc,ncp15wl333"
++- "pullup-uv"	Pull up voltage in micro volts
++- "pullup-ohm"	Pull up resistor value in ohms
++- "pulldown-ohm" Pull down resistor value in ohms
++- "connected-positive" Always ON, If not specified.
++		Status change is possible.
++- "io-channels"	Channel node of ADC to be used for
++		conversion.
++
++Read more about iio bindings at
++	Documentation/devicetree/bindings/iio/iio-bindings.txt
++
++Example:
++	ncp15wb473@0 {
++		compatible = "ntc,ncp15wb473";
++		pullup-uv = <1800000>;
++		pullup-ohm = <47000>;
++		pulldown-ohm = <0>;
++		io-channels = <&adc 3>;
++	};
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index 89ac1cb..cc47c12 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -879,6 +879,7 @@ config SENSORS_MCP3021
+ 
+ config SENSORS_NTC_THERMISTOR
+ 	tristate "NTC thermistor support"
++	select IIO if OF
+ 	help
+ 	  This driver supports NTC thermistors sensor reading and its
+ 	  interpretation. The driver can also monitor the temperature and
+diff --git a/drivers/hwmon/ntc_thermistor.c b/drivers/hwmon/ntc_thermistor.c
+index b5f63f9..ba0f7b0 100644
+--- a/drivers/hwmon/ntc_thermistor.c
++++ b/drivers/hwmon/ntc_thermistor.c
+@@ -26,9 +26,16 @@
+ #include <linux/math64.h>
+ #include <linux/platform_device.h>
+ #include <linux/err.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
+ 
+ #include <linux/platform_data/ntc_thermistor.h>
+ 
++#include <linux/iio/iio.h>
++#include <linux/iio/machine.h>
++#include <linux/iio/driver.h>
++#include <linux/iio/consumer.h>
++
+ #include <linux/hwmon.h>
+ #include <linux/hwmon-sysfs.h>
+ 
+@@ -37,6 +44,15 @@ struct ntc_compensation {
+ 	unsigned int	ohm;
+ };
+ 
++static const struct platform_device_id ntc_thermistor_id[] = {
++	{ "ncp15wb473", TYPE_NCPXXWB473 },
++	{ "ncp18wb473", TYPE_NCPXXWB473 },
++	{ "ncp21wb473", TYPE_NCPXXWB473 },
++	{ "ncp03wb473", TYPE_NCPXXWB473 },
++	{ "ncp15wl333", TYPE_NCPXXWL333 },
++	{ },
++};
++
+ /*
+  * A compensation table should be sorted by the values of .ohm
+  * in descending order.
+@@ -125,6 +141,91 @@ struct ntc_data {
+ 	char name[PLATFORM_NAME_SIZE];
+ };
+ 
++#ifdef CONFIG_OF
++static int ntc_adc_iio_read(struct ntc_thermistor_platform_data *pdata)
++{
++	struct iio_channel *channel = pdata->chan;
++	unsigned int result;
++	int val, ret;
++
++	ret = iio_read_channel_raw(channel, &val);
++	if (ret < 0) {
++		pr_err("read channel() error: %d\n", ret);
++		return ret;
++	}
++
++	/* unit: mV */
++	result = pdata->pullup_uV * val;
++	result >>= 12;
++
++	return result;
++}
++
++static const struct of_device_id ntc_match[] = {
++	{ .compatible = "ntc,ncp15wb473",
++		.data = &ntc_thermistor_id[TYPE_NCPXXWB473] },
++	{ .compatible = "ntc,ncp18wb473",
++		.data = &ntc_thermistor_id[TYPE_NCPXXWB473] },
++	{ .compatible = "ntc,ncp21wb473",
++		.data = &ntc_thermistor_id[TYPE_NCPXXWB473] },
++	{ .compatible = "ntc,ncp03wb473",
++		.data = &ntc_thermistor_id[TYPE_NCPXXWB473] },
++	{ .compatible = "ntc,ncp15wl333",
++		.data = &ntc_thermistor_id[TYPE_NCPXXWL333] },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, ntc_match);
++
++static struct ntc_thermistor_platform_data *
++ntc_thermistor_parse_dt(struct platform_device *pdev)
++{
++	struct iio_channel *chan;
++	struct device_node *np = pdev->dev.of_node;
++	struct ntc_thermistor_platform_data *pdata;
++
++	if (!np)
++		return NULL;
++
++	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
++
++	chan = iio_channel_get(&pdev->dev, NULL);
++	if (IS_ERR(chan))
++		return (struct ntc_thermistor_platform_data *)PTR_ERR(chan);
++
++	if (of_property_read_u32(np, "pullup-uv", &pdata->pullup_uV))
++		return ERR_PTR(-ENODEV);
++	if (of_property_read_u32(np, "pullup-ohm", &pdata->pullup_ohm))
++		return ERR_PTR(-ENODEV);
++	if (of_property_read_u32(np, "pulldown-ohm", &pdata->pulldown_ohm))
++		return ERR_PTR(-ENODEV);
++
++	if (of_find_property(np, "connected-positive", NULL))
++		pdata->connect = NTC_CONNECTED_POSITIVE;
++	else /* status change should be possible if not always on. */
++		pdata->connect = NTC_CONNECTED_GROUND;
++
++	pdata->chan = chan;
++	pdata->read_uV = ntc_adc_iio_read;
++
++	return pdata;
++}
++static void ntc_iio_channel_release(struct ntc_thermistor_platform_data *pdata)
++{
++	iio_channel_release(pdata->chan);
++}
++#else
++static struct ntc_thermistor_platform_data *
++ntc_thermistor_parse_dt(struct platform_device *pdev)
++{
++	return NULL;
++}
++
++static void ntc_iio_channel_release(struct ntc_thermistor_platform_data *pdata)
++{ }
++#endif
++
+ static inline u64 div64_u64_safe(u64 dividend, u64 divisor)
+ {
+ 	if (divisor == 0 && dividend == 0)
+@@ -259,7 +360,7 @@ static int ntc_thermistor_get_ohm(struct ntc_data *data)
+ 		return data->pdata->read_ohm();
+ 
+ 	if (data->pdata->read_uV) {
+-		read_uV = data->pdata->read_uV();
++		read_uV = data->pdata->read_uV(data->pdata);
+ 		if (read_uV < 0)
+ 			return read_uV;
+ 		return get_ohm_of_thermistor(data, read_uV);
+@@ -311,9 +412,18 @@ static const struct attribute_group ntc_attr_group = {
+ 
+ static int ntc_thermistor_probe(struct platform_device *pdev)
+ {
++	const struct of_device_id *of_id =
++			of_match_device(of_match_ptr(ntc_match), &pdev->dev);
++	const struct platform_device_id *pdev_id;
++	struct ntc_thermistor_platform_data *pdata;
+ 	struct ntc_data *data;
+-	struct ntc_thermistor_platform_data *pdata = pdev->dev.platform_data;
+-	int ret = 0;
++	int ret;
++
++	pdata = ntc_thermistor_parse_dt(pdev);
++	if (IS_ERR(pdata))
++		return PTR_ERR(pdata);
++	if (pdata == NULL)
++		pdata = pdev->dev.platform_data;
+ 
+ 	if (!pdata) {
+ 		dev_err(&pdev->dev, "No platform init data supplied.\n");
+@@ -349,11 +459,13 @@ static int ntc_thermistor_probe(struct platform_device *pdev)
+ 	if (!data)
+ 		return -ENOMEM;
+ 
++	pdev_id = of_id ? of_id->data : platform_get_device_id(pdev);
++
+ 	data->dev = &pdev->dev;
+ 	data->pdata = pdata;
+-	strlcpy(data->name, pdev->id_entry->name, sizeof(data->name));
++	strlcpy(data->name, pdev_id->name, sizeof(data->name));
+ 
+-	switch (pdev->id_entry->driver_data) {
++	switch (pdev_id->driver_data) {
+ 	case TYPE_NCPXXWB473:
+ 		data->comp = ncpXXwb473;
+ 		data->n_comp = ARRAY_SIZE(ncpXXwb473);
+@@ -364,8 +476,7 @@ static int ntc_thermistor_probe(struct platform_device *pdev)
+ 		break;
+ 	default:
+ 		dev_err(&pdev->dev, "Unknown device type: %lu(%s)\n",
+-				pdev->id_entry->driver_data,
+-				pdev->id_entry->name);
++				pdev_id->driver_data, pdev_id->name);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -384,39 +495,34 @@ static int ntc_thermistor_probe(struct platform_device *pdev)
+ 		goto err_after_sysfs;
+ 	}
+ 
+-	dev_info(&pdev->dev, "Thermistor %s:%d (type: %s/%lu) successfully probed.\n",
+-			pdev->name, pdev->id, pdev->id_entry->name,
+-			pdev->id_entry->driver_data);
++	dev_info(&pdev->dev, "Thermistor type: %s successfully probed.\n",
++								pdev->name);
++
+ 	return 0;
+ err_after_sysfs:
+ 	sysfs_remove_group(&data->dev->kobj, &ntc_attr_group);
++	ntc_iio_channel_release(pdata);
+ 	return ret;
+ }
+ 
+ static int ntc_thermistor_remove(struct platform_device *pdev)
+ {
+ 	struct ntc_data *data = platform_get_drvdata(pdev);
++	struct ntc_thermistor_platform_data *pdata = data->pdata;
+ 
+ 	hwmon_device_unregister(data->hwmon_dev);
+ 	sysfs_remove_group(&data->dev->kobj, &ntc_attr_group);
++	ntc_iio_channel_release(pdata);
+ 	platform_set_drvdata(pdev, NULL);
+ 
+ 	return 0;
+ }
+ 
+-static const struct platform_device_id ntc_thermistor_id[] = {
+-	{ "ncp15wb473", TYPE_NCPXXWB473 },
+-	{ "ncp18wb473", TYPE_NCPXXWB473 },
+-	{ "ncp21wb473", TYPE_NCPXXWB473 },
+-	{ "ncp03wb473", TYPE_NCPXXWB473 },
+-	{ "ncp15wl333", TYPE_NCPXXWL333 },
+-	{ },
+-};
+-
+ static struct platform_driver ntc_thermistor_driver = {
+ 	.driver = {
+ 		.name = "ntc-thermistor",
+ 		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(ntc_match),
+ 	},
+ 	.probe = ntc_thermistor_probe,
+ 	.remove = ntc_thermistor_remove,
+diff --git a/include/linux/platform_data/ntc_thermistor.h b/include/linux/platform_data/ntc_thermistor.h
+index 88734e8..fa95f9c 100644
+--- a/include/linux/platform_data/ntc_thermistor.h
++++ b/include/linux/platform_data/ntc_thermistor.h
+@@ -21,6 +21,8 @@
+ #ifndef _LINUX_NTC_H
+ #define _LINUX_NTC_H
+ 
++struct iio_channel;
++
+ enum ntc_thermistor_type {
+ 	TYPE_NCPXXWB473,
+ 	TYPE_NCPXXWL333,
+@@ -39,13 +41,17 @@ struct ntc_thermistor_platform_data {
+ 	 * described at Documentation/hwmon/ntc_thermistor
+ 	 *
+ 	 * pullup/down_ohm: 0 for infinite / not-connected
++	 *
++	 * chan: iio_channel pointer to communicate with the ADC which the
++	 * thermistor is using for conversion of the analog values.
+ 	 */
+-	int (*read_uV)(void);
++	int (*read_uV)(struct ntc_thermistor_platform_data *);
+ 	unsigned int pullup_uV;
+ 
+ 	unsigned int pullup_ohm;
+ 	unsigned int pulldown_ohm;
+ 	enum { NTC_CONNECTED_POSITIVE, NTC_CONNECTED_GROUND } connect;
++	struct iio_channel *chan;
+ 
+ 	int (*read_ohm)(void);
+ };
+-- 
+1.7.9.5
