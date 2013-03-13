@@ -1,61 +1,84 @@
-From: kishon <kishon@ti.com>
-Subject: Re: [PATCH v3 0/7] ARM: dts: omap: Add dts data for USB
-Date: Wed, 13 Mar 2013 14:41:27 +0530
-Message-ID: <514042BF.2090207@ti.com>
-References: <1362663320-23799-1-git-send-email-kishon@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1362663320-23799-1-git-send-email-kishon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, b-cousson@ti.com
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, tony@atomide.com, linux@arm.linux.org.uk, balbi@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Vikas Sajjan <vikas.sajjan@linaro.org>
+Subject: [PATCH v7 0/5] Add DRM FIMD DT support for Exynos4 DT Machines
+Date: Wed, 13 Mar 2013 15:39:26 +0530
+Message-ID: <1363169371-310-1-git-send-email-vikas.sajjan@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, sylvester.nawrocki@gmail.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, linaro-kernel@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Benoit,
+This patch series adds support for DRM FIMD DT for Exynos4 DT Machines,
+specifically for Exynos4412 SoC.
 
-Will you be queuing this patch series?
+changes since v6:
+	- addressed comments and added interrupt-names = "fifo", "vsync", "lcd_sys"
+	in exynos4.dtsi and re-ordered the interrupt numbering to match the order in
+	interrupt combiner IP as suggested by Sylwester Nawrocki <sylvester.nawrocki@gmail.com>.
 
-Thanks
-Kishon
+changes since v5:
+	- renamed the fimd binding documentation file name as "samsung-fimd.txt",
+	since it not only talks about exynos display controller but also about
+	previous samsung display controllers.
+	- rephrased an abmigious statement about the interrupt combiner in the
+	fimd binding documentation as pointed out by 
+	Sachin Kamat <sachin.kamat@linaro.org>
 
-On Thursday 07 March 2013 07:05 PM, Kishon Vijay Abraham I wrote:
-> Hi Benoit,
->
-> Here are the dt data patches to get usb device functional in OMAP platforms.
->
-> All the patches deal with modifying arch/arm/boot except one which modifies
-> Documentation/../usb/omap-usb.txt
->
-> Changes from v2:
-> * squashed the dt data for dwc3-omap with dwc3 core into a single patch.
->
-> Changes from v1:
-> Patch *ARM: dts: omap: Add usb_otg and glue data* has some properties with
-> names that has "_". It's replaced with a "-" here.
->
-> This patch is developed on Linux 3.9-rc1.
->
-> Kishon Vijay Abraham I (7):
->    ARM: dts: omap: Add omap control usb data
->    ARM: dts: omap: Add omap-usb2 dt data
->    ARM: dts: omap: Add usb_otg and glue data
->    ARM: dts: omap5: Add omap control usb data
->    ARM: dts: omap5: Add ocp2scp data
->    ARM: dts: omap5: Add omap-usb3 and omap-usb2 dt data
->    ARM: dts: omap5: add dwc3 omap and dwc3 core dt data
->
->   Documentation/devicetree/bindings/usb/omap-usb.txt |    1 +
->   arch/arm/boot/dts/omap3-beagle-xm.dts              |    6 +++
->   arch/arm/boot/dts/omap3-evm.dts                    |    6 +++
->   arch/arm/boot/dts/omap3-overo.dtsi                 |    6 +++
->   arch/arm/boot/dts/omap3.dtsi                       |   12 +++++
->   arch/arm/boot/dts/omap4-panda.dts                  |    6 +++
->   arch/arm/boot/dts/omap4-sdp.dts                    |    6 +++
->   arch/arm/boot/dts/omap4.dtsi                       |   26 +++++++++++
->   arch/arm/boot/dts/omap5.dtsi                       |   48 ++++++++++++++++++++
->   arch/arm/boot/dts/twl4030.dtsi                     |    2 +-
->   10 files changed, 118 insertions(+), 1 deletion(-)
->
+changes since v4:
+	- moved the fimd binding documentation to Documentation/devicetree/bindings/video/
+	as suggested by Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 
+	- added more fimd compatiblity strings in fimd documentation as
+	discussed at  https://patchwork.kernel.org/patch/2144861/ with
+	Sylwester Nawrocki <sylvester.nawrocki@gmail.com> and
+	Tomasz Figa <tomasz.figa@gmail.com>
+
+	- modified compatible string for exynos4 fimd as "exynos4210-fimd"
+	exynos5 fimd as "exynos5250-fimd" to stick to the rule that compatible
+	value should be named after first specific SoC model in which this
+	particular IP version was included as discussed at
+	https://patchwork.kernel.org/patch/2144861/
+
+	- documented more about the interrupt combiner and their order as 
+	suggested by Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+
+changes since v3:
+	- rebased on
+	http://git.kernel.org/?p=linux/kernel/git/kgene/linux-samsung.git;a=shortlog;h=refs/heads/for-next-next
+
+changes since v2:
+	- added alias to 'fimd@11c00000' node
+		(reported by: Rahul Sharma <r.sh.open@gmail.com>)
+	- removed 'lcd0_data' node as there was already a similar node lcd_data24
+		(reported by: Jingoo Han <jg1.han@samsung.com>
+	- replaced spaces with tabs in display-timing node
+
+changes since v1:
+	- added new patch to add FIMD DT binding Documentation
+	- removed patch enabling SAMSUNG_DEV_BACKLIGHT and SAMSUNG_DEV_PMW 
+	for mach-exynos4 DT
+	- added 'status' property to fimd DT node
+
+Is based on branch "for-next-next"
+http://git.kernel.org/?p=linux/kernel/git/kgene/linux-samsung.git;a=shortlog;h=refs/heads/for-next-next
+
+Sachin Kamat (1):
+  ARM: dts: Add lcd pinctrl node entries for EXYNOS4412 SoC
+
+Vikas Sajjan (4):
+  ARM: dts: Add FIMD node to exynos4
+  ARM: dts: Add FIMD node and display timing node to
+    exynos4412-origen.dts
+  ARM: dts: Add FIMD AUXDATA node entry for exynos4 DT
+  ARM: dts: Add FIMD DT binding Documentation
+
+ .../devicetree/bindings/video/samsung-fimd.txt     |   58 ++++++++++++++++++++
+ arch/arm/boot/dts/exynos4.dtsi                     |    8 +++
+ arch/arm/boot/dts/exynos4412-origen.dts            |   22 ++++++++
+ arch/arm/boot/dts/exynos4x12-pinctrl.dtsi          |   14 +++++
+ arch/arm/mach-exynos/mach-exynos4-dt.c             |    2 +
+ 5 files changed, 104 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/samsung-fimd.txt
+
+-- 
+1.7.9.5
