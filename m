@@ -1,37 +1,120 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH] mmc: vt8500: use resource_size() macro
-Date: Wed, 13 Mar 2013 13:36:01 +0800
-Message-ID: <CAPgLHd8h9cKyqd7NGk5eaGYPMqauEcZ1agiDmk5ih2FjGcjgcg@mail.gmail.com>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH V2] DMA: PL330: Add check if device tree compatible
+Date: Wed, 13 Mar 2013 11:06:36 +0530
+Message-ID: <CAAgF-BfEsFyY7e1pTnn9eWeWo5yDq-6KfKoj0eASRJT+8N6j0A@mail.gmail.com>
+References: <1362475531-32260-1-git-send-email-padma.v@samsung.com>
+	<1362475531-32260-2-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux@prisktech.co.nz, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1362475531-32260-2-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, arnd@arndb.de, vinod.koul@intel.com, grant.likely@secretlab.ca, jon-hunter@ti.com, boojin.kim@samsung.com, robherring2@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+Hi,
 
-Use resource_size function on resource object
-instead of explicit computation.
+On Tue, Mar 5, 2013 at 2:55 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
+> This patch register the dma controller with generic dma helpers only
+> in DT case. This also adds some extra error handling in the driver.
+>
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+> Reported-by: Sachin Kamat <sachin.kamat@linaro.org>
+> ---
+>
+> Based on Vinod Koul next branch.
+>
+> Changes since V1:
+>         - return silently when of_dma_controller_register fails, as
+>           suggested by Arnd.
+>
+>  drivers/dma/pl330.c |   38 +++++++++++++++++++++++++++-----------
+>  1 files changed, 27 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+> index 7181531..5dbc594 100644
+> --- a/drivers/dma/pl330.c
+> +++ b/drivers/dma/pl330.c
+> @@ -2882,7 +2882,7 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+>  {
+>         struct dma_pl330_platdata *pdat;
+>         struct dma_pl330_dmac *pdmac;
+> -       struct dma_pl330_chan *pch;
+> +       struct dma_pl330_chan *pch, *_p;
+>         struct pl330_info *pi;
+>         struct dma_device *pd;
+>         struct resource *res;
+> @@ -2984,7 +2984,16 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+>         ret = dma_async_device_register(pd);
+>         if (ret) {
+>                 dev_err(&adev->dev, "unable to register DMAC\n");
+> -               goto probe_err2;
+> +               goto probe_err3;
+> +       }
+> +
+> +       if (adev->dev.of_node) {
+> +               ret = of_dma_controller_register(adev->dev.of_node,
+> +                                        of_dma_pl330_xlate, pdmac);
+> +               if (ret) {
+> +                       dev_err(&adev->dev,
+> +                       "unable to register DMA to the generic DT DMA helpers\n");
+> +               }
+>         }
+>
+>         dev_info(&adev->dev,
+> @@ -2995,16 +3004,21 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+>                 pi->pcfg.data_bus_width / 8, pi->pcfg.num_chan,
+>                 pi->pcfg.num_peri, pi->pcfg.num_events);
+>
+> -       ret = of_dma_controller_register(adev->dev.of_node,
+> -                                        of_dma_pl330_xlate, pdmac);
+> -       if (ret) {
+> -               dev_err(&adev->dev,
+> -               "unable to register DMA to the generic DT DMA helpers\n");
+> -               goto probe_err2;
+> -       }
+> -
+>         return 0;
+> +probe_err3:
+> +       amba_set_drvdata(adev, NULL);
+>
+> +       /* Idle the DMAC */
+> +       list_for_each_entry_safe(pch, _p, &pdmac->ddma.channels,
+> +                       chan.device_node) {
+> +
+> +               /* Remove the channel */
+> +               list_del(&pch->chan.device_node);
+> +
+> +               /* Flush the channel */
+> +               pl330_control(&pch->chan, DMA_TERMINATE_ALL, 0);
+> +               pl330_free_chan_resources(&pch->chan);
+> +       }
+>  probe_err2:
+>         pl330_del(pi);
+>  probe_err1:
+> @@ -3023,8 +3037,10 @@ static int pl330_remove(struct amba_device *adev)
+>         if (!pdmac)
+>                 return 0;
+>
+> -       of_dma_controller_free(adev->dev.of_node);
+> +       if (adev->dev.of_node)
+> +               of_dma_controller_free(adev->dev.of_node);
+>
+> +       dma_async_device_unregister(&pdmac->ddma);
 
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
----
- drivers/mmc/host/wmt-sdmmc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Any comment on this patch?
 
-diff --git a/drivers/mmc/host/wmt-sdmmc.c b/drivers/mmc/host/wmt-sdmmc.c
-index c6d0015..04102d2 100644
---- a/drivers/mmc/host/wmt-sdmmc.c
-+++ b/drivers/mmc/host/wmt-sdmmc.c
-@@ -925,7 +925,7 @@ static int wmt_mci_remove(struct platform_device *pdev)
- 	clk_put(priv->clk_sdmmc);
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	release_mem_region(res->start, res->end - res->start + 1);
-+	release_mem_region(res->start, resource_size(res));
- 
- 	mmc_free_host(mmc);
- 
+Vinod,
 
+Can you please take this patch into your tree?
 
+>         amba_set_drvdata(adev, NULL);
+>
+>         /* Idle the DMAC */
+> --
+> 1.7.4.4
+>
+
+Thanks
+Padma
