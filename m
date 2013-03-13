@@ -1,17 +1,12 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/8] usb: phy: nop: Add some parameters to platform data
-Date: Wed, 13 Mar 2013 16:17:52 +0100
-Message-ID: <514098A0.1030809@ti.com>
-References: <1363087466-32444-1-git-send-email-rogerq@ti.com>
- <1363087466-32444-2-git-send-email-rogerq@ti.com>
- <513F177D.40500@pengutronix.de> <513F37DD.9030301@ti.com>
- <513F38DF.5040404@pengutronix.de> <513F3B7E.8000002@ti.com>
- <513F3EF0.3030609@pengutronix.de> <513F47B4.2060004@ti.com>
+From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH] fbdev: fsl-diu-fb: optionally configure frame buffer depth in
+ DT
+Date: Wed, 13 Mar 2013 16:24:09 +0100
+Message-ID: <1363188249-29341-1-git-send-email-agust@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <513F47B4.2060004-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,52 +17,71 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/12/2013 04:20 PM, Roger Quadros wrote:
-> Adding Peter to the loop. I faintly remember him mentioning this issue be=
-fore
-> for beagle. We really need the deferred probe mechanism or we need to res=
-ort
-> to device registering order.
+Add support for 'depth' property to configure default frame
+buffer color depth over device tree.
 
-Yes, BeagleBoard is a good example. Long story short: we have external
-dependency and the correct way to handle that is via deferred probe.
+Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+---
+ .../devicetree/bindings/powerpc/fsl/diu.txt        |    2 ++
+ drivers/video/fsl-diu-fb.c                         |   16 ++++++++++++++++
+ 2 files changed, 18 insertions(+), 0 deletions(-)
 
-As of now we are not ready to kill the legacy support but over time we shou=
-ld
-move as much as we can to DT only mode.
-
-> The first user for needs_vcc flag will be the beagleboard file. I just di=
-dn't
-> implement it in this patch [1].
-> =
-
-> On second thoughts, since [1] does work on beagleboard without requiring =
-the
-> needs_vcc flag, I think we can just live without it.
-
-The BeagleBoard works because the bootloader happen to enable the PWM
-generator which is used as a GPIO for the external HUB enable port. As soon=
- as
-the bootloader stops doing this we are going to be in trouble.
-
-> =
-
-> Felipe, Peter, what do you think?
-> =
-
-> cheers,
-> -roger
-> =
-
-> [1] https://lkml.org/lkml/2013/3/12/244
-> =
-
-
-
--- =
-
-P=E9ter
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/diu.txt b/Documentation/devicetree/bindings/powerpc/fsl/diu.txt
+index b66cb6d..502aae5 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/diu.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/diu.txt
+@@ -12,6 +12,7 @@ Required properties:
+   services interrupts for this device.
+ 
+ Optional properties:
++- depth : default frame buffer color depth
+ - edid : verbatim EDID data block describing attached display.
+   Data from the detailed timing descriptor will be used to
+   program the display controller.
+@@ -30,5 +31,6 @@ Example for MPC5121:
+ 		reg = <0x2100 0x100>;
+ 		interrupts = <64 0x8>;
+ 		interrupt-parent = <&ipic>;
++		depth = <16>;
+ 		edid = [edid-data];
+ 	};
+diff --git a/drivers/video/fsl-diu-fb.c b/drivers/video/fsl-diu-fb.c
+index 41fbd94..2287817 100644
+--- a/drivers/video/fsl-diu-fb.c
++++ b/drivers/video/fsl-diu-fb.c
+@@ -1534,6 +1534,7 @@ static int fsl_diu_probe(struct platform_device *pdev)
+ 	const void *prop;
+ 	unsigned int i;
+ 	int ret;
++	u32 depth;
+ 
+ 	data = dmam_alloc_coherent(&pdev->dev, sizeof(struct fsl_diu_data),
+ 				   &dma_addr, GFP_DMA | __GFP_ZERO);
+@@ -1584,6 +1585,21 @@ static int fsl_diu_probe(struct platform_device *pdev)
+ 		data->has_edid = true;
+ 	}
+ 
++	if (!of_property_read_u32(np, "depth", &depth)) {
++		switch (depth) {
++		case 32:
++		case 24:
++		case 16:
++		case 8:
++			default_bpp = depth;
++			break;
++		default:
++			dev_err(&pdev->dev,
++				"%s: invalid depth property\n",
++				np->full_name);
++		}
++	}
++
+ 	data->diu_reg = of_iomap(np, 0);
+ 	if (!data->diu_reg) {
+ 		dev_err(&pdev->dev, "cannot map DIU registers\n");
+-- 
+1.7.5.4
