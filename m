@@ -1,330 +1,114 @@
-From: "Christian Daudt" <csd@broadcom.com>
-Subject: [PATCH V7 1/2] ARM: bcm281xx: Add timer driver (driver portion)
-Date: Wed, 13 Mar 2013 14:27:27 -0700
-Message-ID: <1363210048-3334-1-git-send-email-csd@broadcom.com>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP systems
+Date: Wed, 13 Mar 2013 22:33:44 +0100
+Message-ID: <20130313213344.GA29402@avionic-0098.mockup.avionic-design.de>
+References: <20130312070852.GA6727@avionic-0098.mockup.avionic-design.de>
+ <20130312155749.GA1820@obsidianresearch.com>
+ <20130312203819.GA23221@avionic-0098.mockup.avionic-design.de>
+ <20130312210328.GA22702@obsidianresearch.com>
+ <20130312213006.GA23717@avionic-0098.mockup.avionic-design.de>
+ <20130312220854.GA23112@obsidianresearch.com>
+ <20130313081815.GD25940@avionic-0098.mockup.avionic-design.de>
+ <20130313170205.GB24042@obsidianresearch.com>
+ <20130313192628.GA28714@avionic-0098.mockup.avionic-design.de>
+ <5140E85A.3040900@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King <linux@arm.linux.org.uk>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: Christian Daudt <csd@broadcom.com>, csd_b@daudt.org, devicetree-discuss@lists.ozlabs.org, "arm@kernel.org" <arm@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5140E85A.3040900@firmworks.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Mitch Bradley <wmb@firmworks.com>
+Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Lior Amsalem <alior@marvell.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Maen Suleiman <maen@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, Shadi Ammouri <shadi@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the Broadcom timer, used in the following SoCs:
-BCM11130, BCM11140, BCM11351, BCM28145, BCM28155
 
-Updates from V6:
-- Split DT portion into a separate patch
+--bg08WKrSYDhXBjb5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Updates from V5:
-- Rebase to latest arm-soc/for-next
+On Wed, Mar 13, 2013 at 10:58:02AM -1000, Mitch Bradley wrote:
+[...]
+> In this case, the answer to "what does pcie_controller do?" is "it
+> implements a PCI bus" below.  So 'device_type =3D "pci"' is appropriate.
 
-Updates from V4:
-- Switch code to use CLOCKSOURCE_OF_DECLARE
+Alright, that's 2 against 1. I don't have much of a choice but to yield.
 
-Updates from V3:
-- Migrate to 3.9 timer framework updates
+> Having just re-read the code in drivers/of/address.c, I think I have a
+> deeper understanding of a few practical issues:
+>=20
+> In order to translate a 3/2 PCI address via of_get_pci_address(), the
+> parent device (i.e. root complex / pcie-controller) must have both
+> 'device_type =3D "pci"' (else of_match_bus() won't find the pci version of
+> "struct of_bus") and also 'name =3D "pci"' (else strcmp(bus->name, "pci")
+> will fail).
+>=20
+> So it would seem that, if you want to use address.c verbatim (for the
+> interface between pcie-controller and its direct children), not only do
+> you need device_type =3D pci, but you also need to rename
+> "pcie-controller" to "pci".
 
-Updates from V2:
-- prepend static fns + fields with kona_
+bus->name refers to that of the of_bus structure, not the node name of
+the controller.
 
-Updates from V1:
-- Rename bcm_timer.c to bcm_kona_timer.c
-- Pull .h into bcm_kona_timer.c
-- Make timers static
-- Clean up comment block
-- Switched to using clockevents_config_and_register
-- Added an error to the get_timer loop if it repeats too much
-- Added to Documentation/devicetree/bindings/arm/bcm/bcm,kona-timer.txt
-- Added missing readl to timer_disable_and_clear
+> But then you run into the problem that the pci variant of struct of_bus
+> uses "assigned-addresses" instead of "reg".  So it still doesn't work
+> as-is.  To make it work, you would need to add an "assigned-addresses"
+> property to each root port node.  That property value could be in
+> non-relocatable memory space, translatable via normal rules, in which
+> case the "map config space to MMIO via ranges" discussion is moot for
+> Marvell.
 
-Note: bcm,kona-timer was kept as the 'compatible' field to make it
-specific enough for when there are multiple bcm timers (bcm,timer is
-too generic).
+At the risk of quoting the spec: it says (4.1.2) that the entries in the
+"assigned-addresses" property correspond to the function's configuration
+space BARs. In this case however that's no longer true. But if everybody
+thinks that repurposing the "assigned-addresses" property is more
+acceptable than leaving out the device_type =3D "pci" property from the
+pcie-controller node, then so be it.
 
-Signed-off-by: Christian Daudt <csd@broadcom.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: John Stultz <john.stultz@linaro.org>
-Reviewed-by: Stephen Warren <swarren@nvidia.com>
+> Which re-raises a question for which I have not yet heard a compelling
+> answer:  Why use 3/2 PCI addressing between Marvell pcie-controller and
+> its root ports (with their unusual programming model)?  The Marvell
+> hardware address structure between controller and root ports is
+> definitely not 3/2.  Certainly you need 3/2 addressing below
+> (implemented by) the root ports, but I just don't see the utility of
+> pretending 3/2 addressing at the complex-to-port interface.  If the root
+> port hardware used the common programming model, with real config
+> headers and stuff, 3/2 would be good because you could use existing
+> drivers.  But since you need a special root-port driver anyway, why go
+> to the trouble of emulating non-existent addressing?
 
-diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-index bf02471..f112895 100644
---- a/arch/arm/mach-bcm/Kconfig
-+++ b/arch/arm/mach-bcm/Kconfig
-@@ -6,6 +6,7 @@ config ARCH_BCM
- 	select ARM_ERRATA_764369 if SMP
- 	select ARM_GIC
- 	select CPU_V7
-+	select CLKSRC_OF
- 	select GENERIC_CLOCKEVENTS
- 	select GENERIC_TIME
- 	select GPIO_BCM
-diff --git a/arch/arm/mach-bcm/board_bcm.c b/arch/arm/mach-bcm/board_bcm.c
-index f0f9aba..2595935 100644
---- a/arch/arm/mach-bcm/board_bcm.c
-+++ b/arch/arm/mach-bcm/board_bcm.c
-@@ -16,14 +16,11 @@
- #include <linux/device.h>
- #include <linux/platform_device.h>
- #include <linux/irqchip.h>
-+#include <linux/clocksource.h>
- 
- #include <asm/mach/arch.h>
- #include <asm/mach/time.h>
- 
--static void timer_init(void)
--{
--}
--
- 
- static void __init board_init(void)
- {
-@@ -35,7 +32,7 @@ static const char * const bcm11351_dt_compat[] = { "bcm,bcm11351", NULL, };
- 
- DT_MACHINE_START(BCM11351_DT, "Broadcom Application Processor")
- 	.init_irq = irqchip_init,
--	.init_time = timer_init,
-+	.init_time = clocksource_of_init,
- 	.init_machine = board_init,
- 	.dt_compat = bcm11351_dt_compat,
- MACHINE_END
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 4d8283a..96e2531 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -19,6 +19,7 @@ obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835_timer.o
- obj-$(CONFIG_SUNXI_TIMER)	+= sunxi_timer.o
- obj-$(CONFIG_ARCH_TEGRA)	+= tegra20_timer.o
- obj-$(CONFIG_VT8500_TIMER)	+= vt8500_timer.o
-+obj-$(CONFIG_ARCH_BCM)		+= bcm_kona_timer.o
- 
- obj-$(CONFIG_ARM_ARCH_TIMER)		+= arm_arch_timer.o
- obj-$(CONFIG_CLKSRC_METAG_GENERIC)	+= metag_generic.o
-diff --git a/drivers/clocksource/bcm_kona_timer.c b/drivers/clocksource/bcm_kona_timer.c
-new file mode 100644
-index 0000000..350f493
---- /dev/null
-+++ b/drivers/clocksource/bcm_kona_timer.c
-@@ -0,0 +1,211 @@
-+/*
-+ * Copyright (C) 2012 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/irq.h>
-+#include <linux/interrupt.h>
-+#include <linux/jiffies.h>
-+#include <linux/clockchips.h>
-+#include <linux/types.h>
-+
-+#include <linux/io.h>
-+#include <asm/mach/time.h>
-+
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+
-+
-+#define KONA_GPTIMER_STCS_OFFSET			0x00000000
-+#define KONA_GPTIMER_STCLO_OFFSET			0x00000004
-+#define KONA_GPTIMER_STCHI_OFFSET			0x00000008
-+#define KONA_GPTIMER_STCM0_OFFSET			0x0000000C
-+
-+#define KONA_GPTIMER_STCS_TIMER_MATCH_SHIFT		0
-+#define KONA_GPTIMER_STCS_COMPARE_ENABLE_SHIFT		4
-+
-+struct kona_bcm_timers {
-+	int tmr_irq;
-+	void __iomem *tmr_regs;
-+};
-+
-+static struct kona_bcm_timers timers;
-+
-+static u32 arch_timer_rate;
-+
-+/*
-+ * We use the peripheral timers for system tick, the cpu global timer for
-+ * profile tick
-+ */
-+static void kona_timer_disable_and_clear(void __iomem *base)
-+{
-+	uint32_t reg;
-+
-+	/*
-+	 * clear and disable interrupts
-+	 * We are using compare/match register 0 for our system interrupts
-+	 */
-+	reg = readl(base + KONA_GPTIMER_STCS_OFFSET);
-+
-+	/* Clear compare (0) interrupt */
-+	reg |= 1 << KONA_GPTIMER_STCS_TIMER_MATCH_SHIFT;
-+	/* disable compare */
-+	reg &= ~(1 << KONA_GPTIMER_STCS_COMPARE_ENABLE_SHIFT);
-+
-+	writel(reg, base + KONA_GPTIMER_STCS_OFFSET);
-+
-+}
-+
-+static void
-+kona_timer_get_counter(void *timer_base, uint32_t *msw, uint32_t *lsw)
-+{
-+	void __iomem *base = IOMEM(timer_base);
-+	int loop_limit = 4;
-+
-+	/*
-+	 * Read 64-bit free running counter
-+	 * 1. Read hi-word
-+	 * 2. Read low-word
-+	 * 3. Read hi-word again
-+	 * 4.1
-+	 *      if new hi-word is not equal to previously read hi-word, then
-+	 *      start from #1
-+	 * 4.2
-+	 *      if new hi-word is equal to previously read hi-word then stop.
-+	 */
-+
-+	while (--loop_limit) {
-+		*msw = readl(base + KONA_GPTIMER_STCHI_OFFSET);
-+		*lsw = readl(base + KONA_GPTIMER_STCLO_OFFSET);
-+		if (*msw == readl(base + KONA_GPTIMER_STCHI_OFFSET))
-+			break;
-+	}
-+	if (!loop_limit) {
-+		pr_err("bcm_kona_timer: getting counter failed.\n");
-+		pr_err(" Timer will be impacted\n");
-+	}
-+
-+	return;
-+}
-+
-+static const struct of_device_id bcm_timer_ids[] __initconst = {
-+	{.compatible = "bcm,kona-timer"},
-+	{},
-+};
-+
-+static void __init kona_timers_init(void)
-+{
-+	struct device_node *node;
-+	u32 freq;
-+
-+	node = of_find_matching_node(NULL, bcm_timer_ids);
-+
-+	if (!node)
-+		panic("No timer");
-+
-+	if (!of_property_read_u32(node, "clock-frequency", &freq))
-+		arch_timer_rate = freq;
-+	else
-+		panic("clock-frequency not set in the .dts file");
-+
-+	/* Setup IRQ numbers */
-+	timers.tmr_irq = irq_of_parse_and_map(node, 0);
-+
-+	/* Setup IO addresses */
-+	timers.tmr_regs = of_iomap(node, 0);
-+
-+	kona_timer_disable_and_clear(timers.tmr_regs);
-+}
-+
-+static int kona_timer_set_next_event(unsigned long clc,
-+				  struct clock_event_device *unused)
-+{
-+	/*
-+	 * timer (0) is disabled by the timer interrupt already
-+	 * so, here we reload the next event value and re-enable
-+	 * the timer.
-+	 *
-+	 * This way, we are potentially losing the time between
-+	 * timer-interrupt->set_next_event. CPU local timers, when
-+	 * they come in should get rid of skew.
-+	 */
-+
-+	uint32_t lsw, msw;
-+	uint32_t reg;
-+
-+	kona_timer_get_counter(timers.tmr_regs, &msw, &lsw);
-+
-+	/* Load the "next" event tick value */
-+	writel(lsw + clc, timers.tmr_regs + KONA_GPTIMER_STCM0_OFFSET);
-+
-+	/* Enable compare */
-+	reg = readl(timers.tmr_regs + KONA_GPTIMER_STCS_OFFSET);
-+	reg |= (1 << KONA_GPTIMER_STCS_COMPARE_ENABLE_SHIFT);
-+	writel(reg, timers.tmr_regs + KONA_GPTIMER_STCS_OFFSET);
-+
-+	return 0;
-+}
-+
-+static void kona_timer_set_mode(enum clock_event_mode mode,
-+			     struct clock_event_device *unused)
-+{
-+	switch (mode) {
-+	case CLOCK_EVT_MODE_ONESHOT:
-+		/* by default mode is one shot don't do any thing */
-+		break;
-+	case CLOCK_EVT_MODE_UNUSED:
-+	case CLOCK_EVT_MODE_SHUTDOWN:
-+	default:
-+		kona_timer_disable_and_clear(timers.tmr_regs);
-+	}
-+}
-+
-+static struct clock_event_device kona_clockevent_timer = {
-+	.name = "timer 1",
-+	.features = CLOCK_EVT_FEAT_ONESHOT,
-+	.set_next_event = kona_timer_set_next_event,
-+	.set_mode = kona_timer_set_mode
-+};
-+
-+static void __init kona_timer_clockevents_init(void)
-+{
-+	kona_clockevent_timer.cpumask = cpumask_of(0);
-+	clockevents_config_and_register(&kona_clockevent_timer,
-+		arch_timer_rate, 6, 0xffffffff);
-+}
-+
-+static irqreturn_t kona_timer_interrupt(int irq, void *dev_id)
-+{
-+	struct clock_event_device *evt = &kona_clockevent_timer;
-+
-+	kona_timer_disable_and_clear(timers.tmr_regs);
-+	evt->event_handler(evt);
-+	return IRQ_HANDLED;
-+}
-+
-+static struct irqaction kona_timer_irq = {
-+	.name = "Kona Timer Tick",
-+	.flags = IRQF_TIMER,
-+	.handler = kona_timer_interrupt,
-+};
-+
-+static void __init kona_timer_init(void)
-+{
-+	kona_timers_init();
-+	kona_timer_clockevents_init();
-+	setup_irq(timers.tmr_irq, &kona_timer_irq);
-+	kona_timer_set_next_event((arch_timer_rate / HZ), NULL);
-+}
-+
-+CLOCKSOURCE_OF_DECLARE(bcm_kona, "bcm,kona-timer",
-+	kona_timer_init);
--- 
-1.7.10.4
+I think the reason is that reg needs to be in the standard format for
+the device node matching code to work. There are various checks to make
+sure the reg property has entries which are 3/2 each.
+
+There's also the issue that the pcie-controller's ranges property
+contains the mapping of the I/O and memory windows and therefore needs
+the 3/2 addressing to encode the type.
+
+Thierry
+
+--bg08WKrSYDhXBjb5
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRQPC4AAoJEN0jrNd/PrOh4hwQAIfCrinqyssPFH1YZChi0EbK
+jJimmstP3MLxc7CYNWkdsF+fCkiSasGY0m5tl4L9gy7FVhkDPbAe6rGDO3aqQN4n
+T0eBJN/k93H8oKkzPr3Sw3NRoDMpQ18YyG6o6MUN84otJQG8/ThJHDrZQzzTL88q
+Y3bZU1XB5dn5ijgu0x3vZgOF3h26C/JNnLURq6P6/WClFhsgNnYHVyDy1GOR1pVC
+zjM1dl26MD4onkR/AbgGRI7m8vEr8+6862qmsO7cvgvl8UaxXFh6vdU/+sd/a82Z
+cUjSkTq/PyWtaVRkzXYxa2cazPtDZ9byNo/5gjRXZvrSHUl+ynWB3eh0TGMIuIGo
+bFPkZUaXVB6kFHgqaB9SvEjv06nHL8zbpb7OeUQeAhcf9JeawDSCWTDoZhxNLrIy
+Ap4GItc8simq7dacuLMxWmF9szUwHi4FhtP97ckCDab9WVhjytze2nwydGAivfPW
+ZwojwaRczlvW/+rF4Uu2mldi3hQ1fA082NMVEVzl/noDzK891YrAwprQLXPNX96j
+pLaURarxeZU/eR5x1STYPgpWwElvea7u7rhjBfwwk3KKoq0wgXcla/d2YNMN+ezB
+ACMG5PQ6LMIMj+YQ9bjKAmircvow/kiQZetsgtwyyFVcR0kD01l701TdjimlDcvr
+zXf5E9ES4rx8r0g7Ylrv
+=AjXo
+-----END PGP SIGNATURE-----
+
+--bg08WKrSYDhXBjb5--
