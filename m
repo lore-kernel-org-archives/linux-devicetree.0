@@ -1,59 +1,73 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] ARM: dts: add interrupt-names property to get interrupt
- resource by name
-Date: Wed, 13 Mar 2013 09:39:53 -0500
-Message-ID: <51408FB9.90808@gmail.com>
-References: <1363173980-11428-1-git-send-email-vikas.sajjan@linaro.org>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/8] usb: phy: nop: Add some parameters to platform data
+Date: Wed, 13 Mar 2013 16:17:52 +0100
+Message-ID: <514098A0.1030809@ti.com>
+References: <1363087466-32444-1-git-send-email-rogerq@ti.com>
+ <1363087466-32444-2-git-send-email-rogerq@ti.com>
+ <513F177D.40500@pengutronix.de> <513F37DD.9030301@ti.com>
+ <513F38DF.5040404@pengutronix.de> <513F3B7E.8000002@ti.com>
+ <513F3EF0.3030609@pengutronix.de> <513F47B4.2060004@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1363173980-11428-1-git-send-email-vikas.sajjan@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vikas Sajjan <vikas.sajjan@linaro.org>
-Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, l.krishna@samsung.com, devicetree-discuss@lists.ozlabs.org, joshi@samsung.com, inki.dae@samsung.com, linaro-kernel@lists.linaro.org, sylvester.nawrocki@gmail.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <513F47B4.2060004-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The subject is completely misleading. Make it clear what the scope of
-this patch is.
+On 03/12/2013 04:20 PM, Roger Quadros wrote:
+> Adding Peter to the loop. I faintly remember him mentioning this issue be=
+fore
+> for beagle. We really need the deferred probe mechanism or we need to res=
+ort
+> to device registering order.
 
-On 03/13/2013 06:26 AM, Vikas Sajjan wrote:
-> The FIMD driver expects the "vsync" interrupt to be mentioned as the 1st
-> parameter in the FIMD DT node. So to meet this expectation of the driver,
-> the FIMD DT node was forced to be made by keeping "vsync" as the 1st
-> parameter.
-> 
-> this resolves the above mentioned "hack" by introducing
-> "interrupt-names", so that FIMD driver can get the interrupt resource by
-> name as discussed at
-> http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg16211.html
+Yes, BeagleBoard is a good example. Long story short: we have external
+dependency and the correct way to handle that is via deferred probe.
 
-I fail to see what the hack is. The order of interrupt properties must
-be defined by the binding. interrupt-names is auxiliary data and must
-not be required by an OS.
+As of now we are not ready to kill the legacy support but over time we shou=
+ld
+move as much as we can to DT only mode.
 
-> patch is dependent on https://patchwork.kernel.org/patch/2184981/
+> The first user for needs_vcc flag will be the beagleboard file. I just di=
+dn't
+> implement it in this patch [1].
+> =
 
-Why the split? These should be combined.
+> On second thoughts, since [1] does work on beagleboard without requiring =
+the
+> needs_vcc flag, I think we can just live without it.
 
-> 
-> Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
-> ---
->  arch/arm/boot/dts/exynos5250.dtsi |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index 0ee4706..76c8911 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -588,6 +588,7 @@
->  		compatible = "samsung,exynos5-fimd";
->  		interrupt-parent = <&combiner>;
->  		reg = <0x14400000 0x40000>;
-> -		interrupts = <18 5>, <18 4>, <18 6>;
-> +		interrupt-names = "fifo", "vsync", "lcd_sys";
-> +		interrupts = <18 4>, <18 5>, <18 6>;
+The BeagleBoard works because the bootloader happen to enable the PWM
+generator which is used as a GPIO for the external HUB enable port. As soon=
+ as
+the bootloader stops doing this we are going to be in trouble.
 
-There should be some documentation describing the order of the interrupts.
+> =
 
-Rob
+> Felipe, Peter, what do you think?
+> =
+
+> cheers,
+> -roger
+> =
+
+> [1] https://lkml.org/lkml/2013/3/12/244
+> =
+
+
+
+-- =
+
+P=E9ter
