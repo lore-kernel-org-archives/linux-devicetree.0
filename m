@@ -1,63 +1,95 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [lm-sensors] [PATCH v4] hwmon: ntc: Add DT with IIO support to
- NTC thermistor driver
-Date: Tue, 12 Mar 2013 21:56:56 -0700
-Message-ID: <20130313045656.GA15989@roeck-us.net>
-References: <1363077566-6254-1-git-send-email-ch.naveen@samsung.com>
- <1363147700-7042-1-git-send-email-ch.naveen@samsung.com>
- <20130313045226.GA15611@roeck-us.net>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH V2] ARM: dts: Modify SPI nodes according generic DMA DT bindings
+Date: Wed, 13 Mar 2013 11:00:19 +0530
+Message-ID: <CAAgF-Bc53K57YzrCA=js_=f5v5ssvfSv0Nee4hLYMesGFTp9pg@mail.gmail.com>
+References: <1362480394-1064-1-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130313045226.GA15611@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Cc: devicetree-discuss@lists.ozlabs.org, dianders@chromium.org, linux-kernel@vger.kernel.org, naveenkrishna.ch@gmail.com, lm-sensors@lm-sensors.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1362480394-1064-1-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, arnd@arndb.de, vinod.koul@intel.com, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 12, 2013 at 09:52:26PM -0700, Guenter Roeck wrote:
-> On Wed, Mar 13, 2013 at 09:38:20AM +0530, Naveen Krishna Chatradhi wrote:
-> > This patch adds DT support to NTC driver to parse the
-> > platform data.
-> > 
-> > Also adds the support to work as an iio device.
-> > 
-> > During the probe ntc driver gets the respective channels of ADC
-> > and uses iio_raw_read calls to get the ADC converted value.
-> > 
-> > Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> 
-> Unfortunately there is still something we'll need to sort out:
-> 
-> fs/sysfs/Kconfig:1:     symbol SYSFS is selected by AT91_ADC
-> drivers/iio/adc/Kconfig:85:     symbol AT91_ADC depends on IIO
-> drivers/iio/Kconfig:5:  symbol IIO is selected by SENSORS_NTC_THERMISTOR
-> drivers/hwmon/Kconfig:900:      symbol SENSORS_NTC_THERMISTOR depends on HWMON
-> drivers/hwmon/Kconfig:5:        symbol HWMON is selected by EEEPC_LAPTOP
-> drivers/platform/x86/Kconfig:477:       symbol EEEPC_LAPTOP depends on
-> HOTPLUG_PCI
-> drivers/pci/hotplug/Kconfig:5:  symbol HOTPLUG_PCI depends on SYSFS
-> 
-> So we can not just select IIO. I'll see if I can find a solution.
-> 
-Here it is:
+Hi Kukjin,
 
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index f7adbe8..47d2176 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -899,7 +899,7 @@ config SENSORS_MCP3021
+On Tue, Mar 5, 2013 at 4:16 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
+> This patch removes custom way of adding spi dma channels and
+> adds according to new generic DMA DT bindings on samsung exynos4
+> and exynos5440 platforms.
+>
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+> ---
+>
+> Changes since V1:
+>         - Corrected the pdma phandle in spi1 node.
+>
+>  arch/arm/boot/dts/exynos4.dtsi    |   15 +++++++++------
+>  arch/arm/boot/dts/exynos5440.dtsi |    5 +++--
+>  2 files changed, 12 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+> index 1a62bcf..4521a72 100644
+> --- a/arch/arm/boot/dts/exynos4.dtsi
+> +++ b/arch/arm/boot/dts/exynos4.dtsi
+> @@ -235,8 +235,9 @@
+>                 compatible = "samsung,exynos4210-spi";
+>                 reg = <0x13920000 0x100>;
+>                 interrupts = <0 66 0>;
+> -               tx-dma-channel = <&pdma0 7>; /* preliminary */
+> -               rx-dma-channel = <&pdma0 6>; /* preliminary */
+> +               dmas = <&pdma0 7
+> +                       &pdma0 6>;
+> +               dma-names = "tx", "rx";
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>                 status = "disabled";
+> @@ -246,8 +247,9 @@
+>                 compatible = "samsung,exynos4210-spi";
+>                 reg = <0x13930000 0x100>;
+>                 interrupts = <0 67 0>;
+> -               tx-dma-channel = <&pdma1 7>; /* preliminary */
+> -               rx-dma-channel = <&pdma1 6>; /* preliminary */
+> +               dmas = <&pdma1 7
+> +                       &pdma1 6>;
+> +               dma-names = "tx", "rx";
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>                 status = "disabled";
+> @@ -257,8 +259,9 @@
+>                 compatible = "samsung,exynos4210-spi";
+>                 reg = <0x13940000 0x100>;
+>                 interrupts = <0 68 0>;
+> -               tx-dma-channel = <&pdma0 9>; /* preliminary */
+> -               rx-dma-channel = <&pdma0 8>; /* preliminary */
+> +               dmas = <&pdma0 9
+> +                       &pdma0 8>;
+> +               dma-names = "tx", "rx";
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>                 status = "disabled";
+> diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
+> index 9a99755..31a3626 100644
+> --- a/arch/arm/boot/dts/exynos5440.dtsi
+> +++ b/arch/arm/boot/dts/exynos5440.dtsi
+> @@ -79,8 +79,9 @@
+>                 compatible = "samsung,exynos4210-spi";
+>                 reg = <0xD0000 0x1000>;
+>                 interrupts = <0 4 0>;
+> -               tx-dma-channel = <&pdma0 5>; /* preliminary */
+> -               rx-dma-channel = <&pdma0 4>; /* preliminary */
+> +               dmas = <&pdma0 5
+> +                       &pdma0 4>;
+> +               dma-names = "tx", "rx";
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>         };
 
- config SENSORS_NTC_THERMISTOR
-         tristate "NTC thermistor support"
--	 select IIO if OF
-+	 depends on (!OF && !IIO) || (OF && IIO)
-	 help
-		This driver supports NTC thermistors sensor reading and its
-		interpretation. The driver can also monitor the temperature and
+Any comment on this patch? If not can you please take this into your tree?
 
-I'll modify the patch accordingly. No need to resubmit.
-
-Thanks,
-Guenter
+Thanks
+Padma
+> --
+> 1.7.4.4
+>
