@@ -1,9 +1,8 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
 Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP systems
-Date: Wed, 13 Mar 2013 23:02:35 +0100
-Message-ID: <20130313220235.GA29895@avionic-0098.mockup.avionic-design.de>
-References: <20130312070852.GA6727@avionic-0098.mockup.avionic-design.de>
- <20130312155749.GA1820@obsidianresearch.com>
+Date: Wed, 13 Mar 2013 16:21:02 -0600
+Message-ID: <20130313222102.GA28336@obsidianresearch.com>
+References: <20130312155749.GA1820@obsidianresearch.com>
  <20130312203819.GA23221@avionic-0098.mockup.avionic-design.de>
  <20130312210328.GA22702@obsidianresearch.com>
  <20130312213006.GA23717@avionic-0098.mockup.avionic-design.de>
@@ -12,158 +11,36 @@ References: <20130312070852.GA6727@avionic-0098.mockup.avionic-design.de>
  <20130313170205.GB24042@obsidianresearch.com>
  <20130313192628.GA28714@avionic-0098.mockup.avionic-design.de>
  <5140E85A.3040900@firmworks.com>
+ <20130313220235.GA29895@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3917397086366925792=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5140E85A.3040900-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130313220235.GA29895@avionic-0098.mockup.avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Mitch Bradley <wmb@firmworks.com>, Lior Amsalem <alior@marvell.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Maen Suleiman <maen@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, Shadi Ammouri <shadi@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Mar 13, 2013 at 11:02:35PM +0100, Thierry Reding wrote:
+ 
+> Does that look about correct?
 
---===============3917397086366925792==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/9DWx/yDrRhgMJTb"
-Content-Disposition: inline
+By my reading of the spec the entries in ranges should not
+have the b,d,f bits set..
 
+Although it is not a big stretch to include them..
 
---/9DWx/yDrRhgMJTb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Now the code will actually match the first entry and assume that it
+> represents the non-prefetchable 32-bit memory space and program the
+> controller to forward accesses to the 0x80000000-0x80000fff region
+> as PCI memory write transactions.
 
-On Wed, Mar 13, 2013 at 10:58:02AM -1000, Mitch Bradley wrote:
-[...]
-> But then you run into the problem that the pci variant of struct of_bus
-> uses "assigned-addresses" instead of "reg".  So it still doesn't work
-> as-is.  To make it work, you would need to add an "assigned-addresses"
-> property to each root port node.  That property value could be in
-> non-relocatable memory space, translatable via normal rules, in which
-> case the "map config space to MMIO via ranges" discussion is moot for
-> Marvell.
+Yah, it makes a mess of determining the host bridge aperture. Require
+the aperture to be first/last?
 
-So if I understand all of the above correctly, the Tegra binding should
-look like this:
+Make use of the 2nd dword?
 
-	pcie-controller {
-		compatible = "nvidia,tegra20-pcie";
-		device_type = "pci";
-		reg = <0x80003000 0x00000800   /* PADS registers */
-		       0x80003800 0x00000200   /* AFI registers */
-		       0x90000000 0x10000000>; /* configuration space */
-		reg-names = "pads", "afi", "cs";
-		interrupts = <0 98 0x04   /* controller interrupt */
-		              0 99 0x04>; /* MSI interrupt */
-		interrupt-names = "intr", "msi";
+Go back to the idea of the top level reg?
 
-		bus-range = <0x00 0xff>;
-		#address-cells = <3>;
-		#size-cells = <2>;
-
-		ranges = <0x82000800 0 0 0x80000000 0 0x00001000   /* port 0 registers */
-			  0x82001000 0 0 0x80001000 0 0x00001000   /* port 1 registers */
-			  0x81000000 0 0 0x82000000 0 0x00010000   /* downstream I/O */
-			  0x82000000 0 0 0xa0000000 0 0x10000000   /* non-prefetchable memory */
-			  0xc2000000 0 0 0xb0000000 0 0x10000000>; /* prefetchable memory */
-
-		clocks = <&tegra_car 70>, <&tegra_car 72>, <&tegra_car 74>,
-			 <&tegra_car 118>;
-		clock-names = "pex", "afi", "pcie_xclk", "pll_e";
-		status = "disabled";
-
-		pci@1,0 {
-			device_type = "pci";
-			assigned-addresses = <0x82000800 0 0 0x80000000 0x1000>;
-			reg = <0x000800 0 0 0 0>;
-			status = "disabled";
-
-			#address-cells = <3>;
-			#size-cells = <2>;
-
-			nvidia,num-lanes = <2>;
-		};
-
-		pci@2,0 {
-			device_type = "pci";
-			assigned-addresses = <0x82001000 0 0 0x80001000 0x1000>;
-			reg = <0x001000 0 0 0 0>;
-			status = "disabled";
-
-			#address-cells = <3>;
-			#size-cells = <2>;
-
-			nvidia,num-lanes = <2>;
-		};
-	};
-
-Does that look about correct?
-
-One problem I see is that now the ranges property contains three entries
-for 32-bit memory space:
-
-	0x82000800 0 0 0x80000000 0 0x00001000   /* port 0 registers */
-	0x82001000 0 0 0x80001000 0 0x00001000   /* port 1 registers */
-	0x82000000 0 0 0xa0000000 0 0x10000000   /* non-prefetchable memory */
-
-But we used to rely on the ss field to parse the ranges property and
-configure the windows in the controller properly so that accesses to
-these regions will generate the correct transactions.
-
-Now the code will actually match the first entry and assume that it
-represents the non-prefetchable 32-bit memory space and program the
-controller to forward accesses to the 0x80000000-0x80000fff region
-as PCI memory write transactions.
-
-I suppose we could add a check to verify that devfn == 0. However does
-the above ranges property not imply that the brige on bus 0, device 1
-has a 32-bit memory space from 0x80000000 to 0x80000fff and the bridge
-on bus 0, device 2 has a 32-bit memory space from 0x80001000 to
-0x80001fff? Which matches with the wording in the spec that the
-"assigned-addresses" correspond to the bridge's BARs.
-
-Thierry
-
---/9DWx/yDrRhgMJTb
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRQPd7AAoJEN0jrNd/PrOhRNcP/iraYCwX+KmGOOQlo9PHgmk8
-7GjF/A5uZYpq6AQWDlr9yMAdraCYHOQDH8LgGfkxiMb+6E7hkToO+frqqdwHEnyn
-csxQ6FKiWdyp1hiV0diUdEXaV0wKOmyYC24S105VFaX4MZnI9eIvsk6eBubd/B0j
-E+J0b46QzpGP53KOBtLUgSxoDr6IzF4Afvxkl1V7GK9M1mufMhoNE7EYuhPjJwnY
-OAHOnSXnjvZIClWnJaEeJ3hZ6wzAhfjY27xLWaqy2Lt2zWgdJfn/tZZNZnI/meQw
-ziK6uyQfmyEF3N9u6FnYEbtpCMtiW5hCTgbK3+GBBGy7jTEYvWszmTytzJTvys7h
-bsQmTC2NE5Z0/iqg0w7Ci/F8RWli2U/PRvfJcBtKecJwjTwU9lW+7gl6Gq1+DPUQ
-04hptJlEbU8XmDR7HWqL33G/CQuwI43vWtjI2jdRlWPBmdDBLHVtlIduQio711qK
-Wo6E8zLZe9kqSanhDUhLiKgz6Ac1jGToIRW2ev00kkBlNFPLNIhIoFgHlY6QQBLd
-0c0EfL7o5z4AiLUSO3RBTIsZkQHa6b4RWNbunq7bWpXECko5H0ltmNJGNahYy5bR
-rOI84J+TvXdRX+UkKFpkTYfCQBbzd8MO+M84RKHr7pougk+4oUsXSkV18O6VBK0c
-YzQj/++qBYC+z7rifCp3
-=L5o1
------END PGP SIGNATURE-----
-
---/9DWx/yDrRhgMJTb--
-
---===============3917397086366925792==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============3917397086366925792==--
+Jason
