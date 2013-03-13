@@ -1,71 +1,42 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [patch] ALSA: ASoC: tas5086: signedness bug in
- tas5086_hw_params()
-Date: Wed, 13 Mar 2013 11:09:24 +0000
-Message-ID: <20130313110924.GL25610@opensource.wolfsonmicro.com>
-References: <20130313053253.GA17674@longonot.mountain>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2512783431652636634=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20130313053253.GA17674@longonot.mountain>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Daniel Mack <zonque@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, kbuild@01.org
+From: Vikas Sajjan <vikas.sajjan@linaro.org>
+Subject: [PATCH] ARM: dts: add interrupt-names property to get interrupt resource by name
+Date: Wed, 13 Mar 2013 16:56:20 +0530
+Message-ID: <1363173980-11428-1-git-send-email-vikas.sajjan@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, sylvester.nawrocki@gmail.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, linaro-kernel@lists.linaro.org, joshi@samsung.com, l.krishna@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+The FIMD driver expects the "vsync" interrupt to be mentioned as the 1st
+parameter in the FIMD DT node. So to meet this expectation of the driver,
+the FIMD DT node was forced to be made by keeping "vsync" as the 1st
+parameter.
 
---===============2512783431652636634==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5LiOUhUlsRX0HDkW"
-Content-Disposition: inline
+this resolves the above mentioned "hack" by introducing
+"interrupt-names", so that FIMD driver can get the interrupt resource by
+name as discussed at
+http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg16211.html
 
+patch is dependent on https://patchwork.kernel.org/patch/2184981/
 
---5LiOUhUlsRX0HDkW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
+---
+ arch/arm/boot/dts/exynos5250.dtsi |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-On Wed, Mar 13, 2013 at 08:32:53AM +0300, Dan Carpenter wrote:
-> "val" has to be signed for the error handling to work.
-
-Applied, thanks.
-
---5LiOUhUlsRX0HDkW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRQF5WAAoJELSic+t+oim9RaEP/R3Ygor7kfC8wck8RrkuK9Ed
-FzspzUwTxKDsMKHJ5a3a6L6k1/V8ytTll8lq+4fXLFsu7n5aBwC+FaiXzKfvSUWE
-4gK9n9O8t1a+8elFf7iTh6aCjMqOqbcKhricsiafNLDLNq7zc00Ha/7Wh1ljrvLM
-JDKHft+UB9gQPN0IJWjXZJID8tYyTssCCV5818e9ESG0f6epJQbkimAUA2t0MbaE
-6GfW+WSF0Ivqbucz5zcuKxsMQ2NUuEa1c81u4fd8xe/8vMylkQL/Sx4M+3aP72Yt
-BdmNWCjQ3HV6QrgThxco9QDbatMWi4dxK/UdIdr9uwXdBENA1CrBrDeJmPY1b0V1
-3t3idR0HJ4KXuIhD9oT1PguiHeX0oQs/5J9TINsWjieLR1reS76YREUqUur4GRQM
-Ie/VxFizAGdHLecYjGLJJRl2oASUyYcavnFrze3XMzNV2TIruOUF5ak7lJkBW7Lt
-kHp5vcpWQNdrHsltd8Mw1vwXDqzBQy2J6vQnPx/6kV5iyO9awOhyAKJkWDrVOZ/2
-J7pkrLbLWgRvugswm4CyeJ4JxxuIbHkQowEDN1gZW0anocI/cpq/3mX6eyiFbXz4
-Twy8K8PZGZoX+fx2Ox1RJi5oXgWMR/WVrL3CL4Ys/A001RGeGBimfWGK8KEgGWt4
-ZG74jsUu99KrsUBnQfrw
-=6MqM
------END PGP SIGNATURE-----
-
---5LiOUhUlsRX0HDkW--
-
---===============2512783431652636634==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============2512783431652636634==--
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 0ee4706..76c8911 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -588,6 +588,7 @@
+ 		compatible = "samsung,exynos5-fimd";
+ 		interrupt-parent = <&combiner>;
+ 		reg = <0x14400000 0x40000>;
+-		interrupts = <18 5>, <18 4>, <18 6>;
++		interrupt-names = "fifo", "vsync", "lcd_sys";
++		interrupts = <18 4>, <18 5>, <18 6>;
+ 	};
+ };
+-- 
+1.7.9.5
