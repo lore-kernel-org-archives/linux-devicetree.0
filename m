@@ -1,51 +1,94 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 08/10] ASoC: dmaengine_pcm: Add open function for DT DMA
- request
-Date: Wed, 13 Mar 2013 10:18:29 +0800
-Message-ID: <20130313021712.GD27461@S2101-09.ap.freescale.net>
-References: <1362940391-8338-1-git-send-email-mpa@pengutronix.de>
- <1362940391-8338-9-git-send-email-mpa@pengutronix.de>
- <20130312190206.GY19942@opensource.wolfsonmicro.com>
+From: "Kumar, Anil" <anilkumar.v@ti.com>
+Subject: RE: [PATCH 4/9] ARM: dts: OMAP3: Add support for OMAP3430 SDP board
+Date: Wed, 13 Mar 2013 02:50:45 +0000
+Message-ID: <F3DBB1B3EF102E4994C89758CFCA32412CE845@DBDE01.ent.ti.com>
+References: <1362763654-9660-1-git-send-email-jon-hunter@ti.com>
+	<1362763654-9660-5-git-send-email-jon-hunter@ti.com>
+	<CABYxbz7Bg3Uf2wkhH=4d6nEPUjyHF8BiixN6rGCOgEVG_us8Jw@mail.gmail.com>
+	<513E1A1C.8070206@ti.com>
+	<F3DBB1B3EF102E4994C89758CFCA32412CE371@DBDE01.ent.ti.com>
+ <CABxcv=npsMrbVqJ0G_Lr3qDVKZ=N5Micd4rmadJP_Egi3hKwiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130312190206.GY19942-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CABxcv=npsMrbVqJ0G_Lr3qDVKZ=N5Micd4rmadJP_Egi3hKwiA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>, "Cousson, Benoit" <b-cousson@ti.com>
+Cc: "Hunter, Jon" <jon-hunter@ti.com>, Tony Lindgren <tony@atomide.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Anil Kumar <anilk4.v@gmail.com>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 12, 2013 at 07:02:07PM +0000, Mark Brown wrote:
-> On Sun, Mar 10, 2013 at 07:33:09PM +0100, Markus Pargmann wrote:
-> > Add a function to open a DMA PCM substream using devicetree data
-> > provided via the client device node. The patch introduces a public
-> > function and a private subfunction that is called by both open
-> > functions.
-> 
-> Someone (I think it was Shawn) sent a very similar patch just recently
-> which appears to have fallen out of my inbox unfortunately - can you
-> please check what's going on there and coordinate with them?  Let me
-> know if you can't find the patch and I'll dig it out.
-
-It's here, Markus.
-
-http://thread.gmane.org/gmane.linux.alsa.devel/106027/focus=106031
-
-Mark,
-
-I did not see any objection from you on that patch, so I'm waiting for
-you to publish a branch for it, so that my mxs-dma generic binding
-series can move forward.
-
-Shawn
+T24gVHVlLCBNYXIgMTIsIDIwMTMgYXQgMTQ6MjA6NDgsIEphdmllciBNYXJ0aW5leiBDYW5pbGxh
+cyB3cm90ZToNCj4gT24gVHVlLCBNYXIgMTIsIDIwMTMgYXQgMzo0MiBBTSwgS3VtYXIsIEFuaWwg
+PGFuaWxrdW1hci52QHRpLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBPbiBNb24sIE1hciAxMSwgMjAx
+MyBhdCAyMzoyMzozMiwgSHVudGVyLCBKb24gd3JvdGU6DQo+ID4+DQo+ID4+IE9uIDAzLzA4LzIw
+MTMgMDg6MjUgUE0sIEFuaWwgS3VtYXIgd3JvdGU6DQo+ID4+ID4gSGkgSm9uLA0KPiA+PiA+DQo+
+ID4+ID4gT24gRnJpLCBNYXIgOCwgMjAxMyBhdCAxMDo1NyBQTSwgSm9uIEh1bnRlciA8am9uLWh1
+bnRlckB0aS5jb20+IHdyb3RlOg0KPiA+PiA+PiBBZGRzIGJhc2ljIGRldmljZS10cmVlIHN1cHBv
+cnQgZm9yIE9NQVAzNDMwIFNEUCBib2FyZCB3aGljaCBoYXMgMjU2TUINCj4gPj4gPj4gb2YgUkFN
+IGFuZCB1c2VzIHRoZSBUV0w0MDMwIHBvd2VyIG1hbmFnZW1lbnQgSUMuDQo+ID4+ID4NCj4gPj4g
+PiBJIHRoaW5rIHRoaXMgYm9hcmQgc3VwcG9ydCBzaG91bGQgYmUgaW4gc2VwYXJhdGUgcGF0Y2gg
+c2VyaWVzIHdpdGgNCj4gPj4gPiByZWxhdGVkIHBhdGNoZXMuDQo+ID4+DQo+ID4+IFdlbGwgSSB3
+YW50ZWQgdG8ga2VlcCB0aGVtIGFsdG9nZXRoZXIgc28gdGhhdCBJIGNhbiBzZW5kIGEgcHVsbCBy
+ZXF1ZXN0DQo+ID4+IHRvIEJlbm9pdCBhbmQgVG9ueS4NCj4gPg0KPiA+IFNvcnJ5LCBidXQgY2Fu
+IHlvdSBwbGVhc2UgdGVsbCB3aGF0IG1ha2VzIHlvdSB0byB0aGluayB0aGF0IHlvdQ0KPiA+IGNh
+biBzZW5kIHB1bGwgcmVxdWVzdCBvbmx5IHdoZW4gdGhleSBhcmUgYWx0b2dldGhlciA/DQo+ID4N
+Cj4gPiBJcyB0aGVyZSBhbnkgbG9naWNhbCBkZXBlbmRlbmN5IHdpdGggb3RoZXIgcGF0Y2hlcyBl
+eGNlcHQNCj4gPiAiW1BBVENIIDYvOV0gQVJNOiBkdHM6IEFkZCBPTUFQMzQzMCBTRFAgZmxhc2gg
+bWVtb3J5IGJpbmRpbmdzIiBpcyBvbg0KPiA+IHRvcCBvZiB0aGlzIHBhdGNoID8NCj4gPg0KPiA+
+Pg0KPiA+PiA+Pg0KPiA+PiA+PiBTaWduZWQtb2ZmLWJ5OiBKb24gSHVudGVyIDxqb24taHVudGVy
+QHRpLmNvbT4NCj4gPj4gPj4gLS0tDQo+ID4+ID4+ICBhcmNoL2FybS9ib290L2R0cy9NYWtlZmls
+ZSAgICAgICAgIHwgICAgMSArDQo+ID4+ID4+ICBhcmNoL2FybS9ib290L2R0cy9vbWFwMzQzMC1z
+ZHAuZHRzIHwgICA0NiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPj4g
+Pj4gIDIgZmlsZXMgY2hhbmdlZCwgNDcgaW5zZXJ0aW9ucygrKQ0KPiA+PiA+PiAgY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL29tYXAzNDMwLXNkcC5kdHMNCj4gPj4gPj4NCj4g
+Pj4gPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlIGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvTWFrZWZpbGUNCj4gPj4gPj4gaW5kZXggOWM2MjU1OC4uODkwMTNlZCAxMDA2NDQN
+Cj4gPj4gPj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUNCj4gPj4gPj4gKysrIGIv
+YXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUNCj4gPj4gPj4gQEAgLTExOSw2ICsxMTksNyBAQCBk
+dGItJChDT05GSUdfQVJDSF9PTUFQMlBMVVMpICs9IG9tYXAyNDIwLWg0LmR0YiBcDQo+ID4+ID4+
+ICAgICAgICAgb21hcDMtYmVhZ2xlLXhtLmR0YiBcDQo+ID4+ID4+ICAgICAgICAgb21hcDMtZXZt
+LmR0YiBcDQo+ID4+ID4+ICAgICAgICAgb21hcDMtdG9iaS5kdGIgXA0KPiA+PiA+PiArICAgICAg
+IG9tYXAzNDMwLXNkcC5kdGIgXA0KPiA+PiA+PiAgICAgICAgIG9tYXA0LXBhbmRhLmR0YiBcDQo+
+ID4+ID4+ICAgICAgICAgb21hcDQtcGFuZGEtYTQuZHRiIFwNCj4gPj4gPj4gICAgICAgICBvbWFw
+NC1wYW5kYS1lcy5kdGIgXA0KPiA+PiA+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
+b21hcDM0MzAtc2RwLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAzNDMwLXNkcC5kdHMNCj4g
+Pj4gPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPj4gPj4gaW5kZXggMDAwMDAwMC4uYmUwNjUw
+ZA0KPiA+PiA+PiAtLS0gL2Rldi9udWxsDQo+ID4+ID4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRz
+L29tYXAzNDMwLXNkcC5kdHMNCj4gPj4gPj4gQEAgLTAsMCArMSw0NiBAQA0KPiA+PiA+PiArLyoN
+Cj4gPj4gPj4gKyAqIENvcHlyaWdodCAoQykgMjAxMyBUZXhhcyBJbnN0cnVtZW50cyBJbmNvcnBv
+cmF0ZWQgLSBodHRwOi8vd3d3LnRpLmNvbS8NCj4gPj4gPj4gKyAqDQo+ID4+ID4+ICsgKiBUaGlz
+IHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5kL29y
+IG1vZGlmeQ0KPiA+PiA+PiArICogaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJh
+bCBQdWJsaWMgTGljZW5zZSB2ZXJzaW9uIDIgYXMNCj4gPj4gPj4gKyAqIHB1Ymxpc2hlZCBieSB0
+aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLg0KPiA+PiA+PiArICovDQo+ID4+ID4+ICsvZHRz
+LXYxLzsNCj4gPj4gPj4gKw0KPiA+PiA+PiArL2luY2x1ZGUvICJvbWFwMy5kdHNpIg0KPiA+PiA+
+PiArDQo+ID4+ID4+ICsvIHsNCj4gPj4gPj4gKyAgICAgICBtb2RlbCA9ICJUSSBPTUFQMzQzMCBT
+RFAiOw0KPiA+PiA+PiArICAgICAgIGNvbXBhdGlibGUgPSAidGksb21hcDM0MzAtc2RwIiwgInRp
+LG9tYXAzIjsNCj4gPj4gPg0KPiA+PiA+IEkgaGF2ZSBub3Qgc2VlbiBhbnkgcmVsYXRlZCBjaGFu
+Z2VzIGluICJib2FyZC1nZW5lcmljLmMiIGZvciB5b3VyIGJvYXJkLg0KPiA+PiA+IFNvIGp1c3Qg
+d2FudGVkIGtub3csIGhvdyB0aGlzIGJvYXJkIGlzIGJvb3RpbmcgPw0KPiA+Pg0KPiA+PiBJZiB5
+b3UgbG9vayBhdCBib2FyZC1nZW5lcmljLmMgeW91IHdpbGwgc2VlIHRoYXQgInRpLG9tYXAzIiB3
+aWxsIG1hdGNoDQo+ID4+IHRoZSBPTUFQMyBnZW5lcmljIG1hY2hpbmUuIFNvIHlvdSBkb24ndCBu
+ZWVkIHRvIG1vZGlmeSB0aGUgYm9hcmQtZ2VuZXJpYy5jLg0KPiA+DQo+ID4gQWNjb3JkaW5nIHRv
+IHRoaXMgb21hcDMtYmVhZ2xlLmR0cyBhbmQgb21hcDMtYmVhZ2xlLXhtLmR0cyBhcmUgYWxzbw0K
+PiA+IGJvb3RpbmcgaW4gc29tZSB3YXkuIFNvIGl0IGlzIG5vdCBjbGVhciB0byBtZSwgd2h5IHRo
+ZXJlIHR3bw0KPiA+ICJEVF9NQUNISU5FX1NUQVJUIiBmb3Igb21hcDMuIEkgaGF2ZSBzZWVuIHRo
+ZXJlIGlzIG9ubHkgb25lDQo+ID4gZGlmZmVyZW50IGluICJpbml0X3RpbWUiIGZvciB0aGUgc2Ft
+ZS4NCj4gPg0KPiANCj4gSGkgQW5pbCwNCj4gDQo+IFlvdSBtYXkgdGFrZSBhIGxvb2sgdG8gY29t
+bWl0Og0KPiANCj4gN2RkOWQ1MCBBUk06IE9NQVAzOiBBZGQgZ2VuZXJpYyBtYWNoaW5lIGRlc2Ny
+aXB0b3IgZm9yIGJvYXJkcyB3aXRoDQo+IE9NQVAzIEdQIGRldmljZQ0KPiANCj4gU28sIHRoZSBz
+ZWNvbmQgRFRfTUFDSElORV9TVEFSVCBpcyBtZWFudCB0byBiZSB1c2VkIGJ5IE9NQVAzIGJvYXJk
+cw0KPiB3aGljaCB1c2UgR1AgZGV2aWNlcyBhbmQgdGhpcyBpcyBub3QgdGhlIGNhc2UgZm9yICJ0
+aSxvbWFwMzQzMC1zZHAiDQo+IGFmYWl1Lg0KPiANCj4gSSB3b25kZXIgaWYgaW5zdGVhZCBvZiBh
+ZGRpbmcgZWFjaCBPTUFQMyBib2FyZCB3aXRoIEdQIGRldmljZXMgc3VjaCBhcw0KPiAidGksb21h
+cDMtYmVhZ2xlIiwgaXMgbm90IGJldHRlciB0byBoYXZlIGEgInRpLG9tYXAzLWdwIiBjb21wYXRp
+YmxlDQo+IHByb3BlcnR5Lg0KDQpTb3VuZCBnb29kIHRvIG1lLg0KDQpAQmVub2l0LA0KDQpJcyB0
+aGlzIG1ha2VzIGFueSBzZW5zZSBmb3IgeW91Pw0KDQo+IA0KPiBUaGUgd2hvbGUgcG9pbnQgb2Yg
+RFQgaXMgdG8gZGVjb3VwbGUgdGhlIGhhcmR3YXJlIGRlc2NyaXB0aW9uIGZyb20gdGhlDQo+IGtl
+cm5lbCBjb2RlIHNvIGluIGdlbmVyYWwgd2Ugc2hvdWxkIHVzZSB0aGUgbW9yZSBnZW5lcmljIGNv
+bXBhdGlibGUNCj4gc3RyaW5nICgidGksb21hcDMiKSB1bmxlc3MgdGhlIGhhcmR3YXJlIGhhcyBz
+b21lIHNwZWNpZmljcyB0aGF0IGhhdmUNCj4gdG8gYmUgYWRkcmVzc2VkLCBzdWNoIGFzIHRoZXNl
+IGJvYXJkcyB0aGF0IHVzZSBHUCBkZXZpY2VzLg0KDQpUaGFua3MgeW91IHZlcnkgbXVjaC4gSXQg
+cmVhbGx5IGhlbHAgZnVsbCBmb3IgbWUuDQoNClRoYW5rcywNCkFuaWwgDQoNCg==
