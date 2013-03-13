@@ -1,61 +1,71 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH V3 1/2] ARM: dts: OMAP2+: Add SDMA controller bindings
- and nodes
-Date: Wed, 13 Mar 2013 17:11:28 +0100
-Message-ID: <5140A530.7030704@ti.com>
-References: <1361903244-19837-1-git-send-email-jon-hunter@ti.com> <1361903244-19837-2-git-send-email-jon-hunter@ti.com> <513F0AE3.6030408@ti.com> <513FA19C.60904@ti.com> <51409CD3.10301@ti.com> <5140A05F.60108@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 00/24] ARM: OMAP2+: Adapt to ehci-omap changes for 3.10
+Date: Wed, 13 Mar 2013 09:24:54 -0700
+Message-ID: <20130313162454.GE26093@atomide.com>
+References: <1363088606-2692-1-git-send-email-rogerq@ti.com>
+ <20130312164007.GZ26093@atomide.com>
+ <5140821B.2030902@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5140A05F.60108@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Vinod Koul <vinod.koul@intel.com>, Russell King <linux@arm.linux.org.uk>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Sebastien Guiriec <s-guiriec@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5140821B.2030902@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: balbi@ti.com, b-cousson@ti.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/13/2013 04:50 PM, Jon Hunter wrote:
+* Roger Quadros <rogerq@ti.com> [130313 06:46]:
+> On 03/12/2013 06:40 PM, Tony Lindgren wrote:
+> > * Roger Quadros <rogerq@ti.com> [130312 04:47]:
+> >> Hi Tony,
+> >>
+> >> These patches provide the SoC side code required to support
+> >> the changes in the OMAP USB Host drivers done in [1], [2] & [3].
+> > ... 
+> > 
+> >>  arch/arm/mach-omap2/board-3430sdp.c                |   97 +++++++++++++++-
+> >>  arch/arm/mach-omap2/board-3630sdp.c                |  100 +++++++++++++++-
+> >>  arch/arm/mach-omap2/board-am3517crane.c            |   95 +++++++++++++--
+> >>  arch/arm/mach-omap2/board-am3517evm.c              |   66 ++++++++++-
+> >>  arch/arm/mach-omap2/board-cm-t35.c                 |   95 ++++++++++++++-
+> >>  arch/arm/mach-omap2/board-cm-t3517.c               |   97 +++++++++++++++-
+> >>  arch/arm/mach-omap2/board-devkit8000.c             |   20 ++--
+> >>  arch/arm/mach-omap2/board-generic.c                |   67 +++++++++++
+> >>  arch/arm/mach-omap2/board-igep0020.c               |  112 ++++++++++++++++---
+> >>  arch/arm/mach-omap2/board-omap3beagle.c            |   93 +++++++++++++--
+> >>  arch/arm/mach-omap2/board-omap3evm.c               |   62 ++++++++--
+> >>  arch/arm/mach-omap2/board-omap3pandora.c           |   52 +++++++--
+> >>  arch/arm/mach-omap2/board-omap3stalker.c           |   52 +++++++-
+> >>  arch/arm/mach-omap2/board-omap3touchbook.c         |   62 +++++++++-
+> >>  arch/arm/mach-omap2/board-omap4panda.c             |  122 ++++++++++++++------
+> >>  arch/arm/mach-omap2/board-overo.c                  |   54 ++++++++-
+> >>  arch/arm/mach-omap2/board-zoom.c                   |   56 ++++++++-
+> > 
+> > Can't you have some mach-omap2/ehci-common.c that takes care
+> > of the initializiation to avoid this much addition to the
+> > board-*.c files? You may be able to have just a common function
+> > to do it and pass few parameters?
 > 
-> On 03/13/2013 10:35 AM, Benoit Cousson wrote:
->> Salut Jon,
->>
->> On 03/12/2013 10:43 PM, Jon Hunter wrote:
->>> Salut Benoit!
->>>
->>> On 03/12/2013 06:00 AM, Benoit Cousson wrote:
->>>> + Seb G.
->>>>
->>>> Hi Jon,
->>>>
->>>> How to you plan to merge that series?
->>>
->>> Good question ... my thinking was that you or Tony would take 1/2 and
->>> once that is queued then I would ask Tony to ack 2/2 and Vinod take that
->>> patch.
->>
->> Yep, this is what I was thinking too.
->>
->>> By the way, I have accumulated several DT patches which I sent out
->>> altogether [1] (at least for my own sanity if no one elses ;-) and I
->>> have included the below patch with it. I was hoping that may be I could
->>> create a branch for you to pull. If you would rather cherry-pick the
->>> various patches and merge yourself then I can separate them too.
->>
->> Merging your branch is indeed even better for me. So go ahead.
+> Since we moved reset and power handling for the USB PHYs from omap-echi
+> driver into the USB PHY driver we need to define the regulator data
+> for RESET and Power line of each PHY. So most of the code added is just
+> regulator data for the PHY rather than omap-ehci.
+
+It seems that you're now repeating minor variations of the same PHY
+over and over again though.
+ 
+> Instead of a common function, I can implement some macros that make it
+> easier to define the regulators for the PHY in the board files.
+> Does this sound OK?
 > 
-> Ok. Care to take a quick review to see if there is anything else you
-> feel needs fixing before I re-submit fixing the commments posted so far?
+> Personally I don't like such macros because it hides the implementation
+> and is difficult to read/debug.
 
-OK, I will.
-
-> Do you have an updated branch for v3.10 that I should base on?
-
-Yep, I've just pushed the old one rebased on top of 3.9-rc2.
-
-git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.10/dts
-
+I'd prefer a common function to initialize the PHY though as it sounds
+like using macros would just allocate similar PHY many times which seems
+unnecessary.
 
 Regards,
-Benoit
 
-
+Tony
