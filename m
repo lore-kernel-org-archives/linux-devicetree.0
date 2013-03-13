@@ -1,19 +1,49 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH v7 5/5] ARM: dts: Add FIMD DT binding Documentation
-Date: Wed, 13 Mar 2013 15:58:42 +0530
-Message-ID: <CAK9yfHyLk+tWHg9y6SGXfS4MsVC0KwvQOwHjdXZxk6jC9Pq9Yw@mail.gmail.com>
-References: <1363169371-310-1-git-send-email-vikas.sajjan@linaro.org>
-	<1363169371-310-6-git-send-email-vikas.sajjan@linaro.org>
+From: Daniel Mack <zonque@gmail.com>
+Subject: Re: [patch] ALSA: ASoC: tas5086: signedness bug in
+	tas5086_hw_params()
+Date: Wed, 13 Mar 2013 11:29:01 +0100
+Message-ID: <514054ED.7050501@gmail.com>
+References: <20130313053253.GA17674@longonot.mountain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1363169371-310-6-git-send-email-vikas.sajjan@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vikas Sajjan <vikas.sajjan@linaro.org>
-Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, sylvester.nawrocki@gmail.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, linaro-kernel@lists.linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20130313053253.GA17674@longonot.mountain>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, kernel-janitors@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, kbuild@01.org
 List-Id: devicetree@vger.kernel.org
 
-On 13 March 2013 15:39, Vikas Sajjan <vikas.sajjan@linaro.org> wrote:
-> Adds FIMD DT binding documentation both Samsung SoC and Board, with an example
+On 13.03.2013 06:32, Dan Carpenter wrote:
+> "val" has to be signed for the error handling to work.
 
-s/documentation both/documentation for both
+Absolutely.
+
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+
+Acked-by: Daniel Mack <zonque@gmail.com>
+
+
+> 
+> diff --git a/sound/soc/codecs/tas5086.c b/sound/soc/codecs/tas5086.c
+> index 008bea4..41d03ae 100644
+> --- a/sound/soc/codecs/tas5086.c
+> +++ b/sound/soc/codecs/tas5086.c
+> @@ -251,7 +251,7 @@ static int tas5086_hw_params(struct snd_pcm_substream *substream,
+>  {
+>  	struct snd_soc_codec *codec = dai->codec;
+>  	struct tas5086_private *priv = snd_soc_codec_get_drvdata(codec);
+> -	unsigned int val;
+> +	int val;
+>  	int ret;
+>  
+>  	priv->rate = params_rate(params);
+> 
