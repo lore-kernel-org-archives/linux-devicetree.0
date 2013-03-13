@@ -1,73 +1,60 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP systems
-Date: Wed, 13 Mar 2013 13:59:01 -0600
-Message-ID: <20130313195901.GA26550@obsidianresearch.com>
-References: <513E6AFE.3090304@firmworks.com>
- <20130312070852.GA6727@avionic-0098.mockup.avionic-design.de>
- <20130312155749.GA1820@obsidianresearch.com>
- <20130312203819.GA23221@avionic-0098.mockup.avionic-design.de>
- <20130312210328.GA22702@obsidianresearch.com>
- <20130312213006.GA23717@avionic-0098.mockup.avionic-design.de>
- <20130312220854.GA23112@obsidianresearch.com>
- <20130313081815.GD25940@avionic-0098.mockup.avionic-design.de>
- <20130313170205.GB24042@obsidianresearch.com>
- <20130313192628.GA28714@avionic-0098.mockup.avionic-design.de>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH -next] spi: remove unused variable in
+	tegra_slink_read_rx_fifo_to_client_rxbuf()
+Date: Thu, 14 Mar 2013 01:29:30 +0530
+Message-ID: <5140DAA2.3000703@nvidia.com>
+References: <CAPgLHd8yTotMxH-Rb6UX3bsQrTTUM4SdQWNVDoU_LszgxM_qsQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130313192628.GA28714@avionic-0098.mockup.avionic-design.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Mitch Bradley <wmb@firmworks.com>, Lior Amsalem <alior@marvell.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Maen Suleiman <maen@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, Shadi Ammouri <shadi@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <CAPgLHd8yTotMxH-Rb6UX3bsQrTTUM4SdQWNVDoU_LszgxM_qsQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org" <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 13, 2013 at 08:26:28PM +0100, Thierry Reding wrote:
+On Wednesday 13 March 2013 06:59 PM, Wei Yongjun wrote:
+> From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+>
+> The variable bits_per_word is initialized but never used
+> otherwise, so remove the unused variable.
+>
+> Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+> ---
+>   drivers/spi/spi-tegra20-slink.c | 3 ---
+>   1 file changed, 3 deletions(-)
+>
+> diff --git a/drivers/spi/spi-tegra20-slink.c b/drivers/spi/spi-tegra20-slink.c
+> index a829563..17224f0 100644
+> --- a/drivers/spi/spi-tegra20-slink.c
+> +++ b/drivers/spi/spi-tegra20-slink.c
+> @@ -375,9 +375,6 @@ static unsigned int tegra_slink_read_rx_fifo_to_client_rxbuf(
+>   		tspi->cur_rx_pos += tspi->curr_dma_words * tspi->bytes_per_word;
+>   		read_words += tspi->curr_dma_words;
+>   	} else {
+> -		unsigned int bits_per_word;
+> -
+> -		bits_per_word = t->bits_per_word;
+>
 
-> As Mitch already said there's very little chance that the specification
-> update will be ratified through IEEE, so I think that we might just as
-> well put a corresponding text somewhere below Documentation/devicetree.
 
-Sure, I'm fine with that.
- 
-> Also note that this has absolutely nothing to do with ECAM. All I'm
-> proposing is to allow the reg property of a root port to be translated
-> into a CPU addressable memory region through the ranges property. This
-> turns out to actually work properly with the current OF core in Linux.
+Yes, it is not needed.
+Acked-By: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-ECAM is the only standard based mechanism that could possibly use this
-new config space ranges concept. Whatever you do for tegra shouldn't
-stomp on the possibility of making that work in the future. So at
-least think about how ECAM could be modeled for a few mins before
-going ahead.
+Thanks,
+Laxman
 
-Tegra is the non-standard unusual case here, an update to the PCI OF
-binding should be of general use.
 
-> > Anyhow, I think this has been hashed to death, as long as your final
-> > binding has the 'device_type = pci' on the pcie-controller node I
-> > think it will be fine.
-> 
-> No. The pcie-controller is *not* a PCI device. It is a PCI host bridge.
-> It is the instance that translates from the platform to the PCI bus. Why
-> should it be device_type = "pci"? 
-
-Spec says so, Mitch said so, other PCI host bridge bindings in the
-tree work like this. Do a grep in the powerpc tree, for instance.
-
-arch/x86/platform/ce4100/falconfalls.dts is a pretty comprehensive
-example.
-
-> And we've also been over this before, making that change stops the
-> proposed binding from working properly because the entry in the reg
-> property can't be translated into a CPU addressable memory region.
-
-Sigh, that's because the change makes things follow the OF PCI
-spec. The Linux OF core follows the spec. Config space ranges binding
-is specifically *defined to not work* in the spec. Why should it work
-today?
-
-You have to deal with this problem somehow, and omitting the top level
-device_type is not a solution.
-
-Jason
+------------------------------------------------------------------------------
+Everyone hates slow websites. So do we.
+Make your web apps faster with AppDynamics
+Download AppDynamics Lite for free today:
+http://p.sf.net/sfu/appdyn_d2d_mar
