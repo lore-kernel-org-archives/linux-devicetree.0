@@ -1,130 +1,60 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH V3 1/2] ARM: dts: OMAP2+: Add SDMA controller bindings
- and nodes
-Date: Wed, 13 Mar 2013 16:35:47 +0100
-Message-ID: <51409CD3.10301@ti.com>
-References: <1361903244-19837-1-git-send-email-jon-hunter@ti.com> <1361903244-19837-2-git-send-email-jon-hunter@ti.com> <513F0AE3.6030408@ti.com> <513FA19C.60904@ti.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/8] usb: phy: nop: Add some parameters to platform data
+Date: Wed, 13 Mar 2013 17:46:55 +0200
+Message-ID: <51409F6F.6000103@ti.com>
+References: <1363087466-32444-1-git-send-email-rogerq@ti.com>
+ <1363087466-32444-2-git-send-email-rogerq@ti.com>
+ <513F177D.40500@pengutronix.de> <513F37DD.9030301@ti.com>
+ <513F38DF.5040404@pengutronix.de> <513F3B7E.8000002@ti.com>
+ <513F3EF0.3030609@pengutronix.de> <513F47B4.2060004@ti.com>
+ <514098A0.1030809@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <513FA19C.60904@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Vinod Koul <vinod.koul@intel.com>, Russell King <linux@arm.linux.org.uk>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Sebastien Guiriec <s-guiriec@ti.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <514098A0.1030809-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Salut Jon,
-
-On 03/12/2013 10:43 PM, Jon Hunter wrote:
-> Salut Benoit!
+On 03/13/2013 05:17 PM, Peter Ujfalusi wrote:
+> On 03/12/2013 04:20 PM, Roger Quadros wrote:
+>> Adding Peter to the loop. I faintly remember him mentioning this issue before
+>> for beagle. We really need the deferred probe mechanism or we need to resort
+>> to device registering order.
 > 
-> On 03/12/2013 06:00 AM, Benoit Cousson wrote:
->> + Seb G.
+> Yes, BeagleBoard is a good example. Long story short: we have external
+> dependency and the correct way to handle that is via deferred probe.
+> 
+> As of now we are not ready to kill the legacy support but over time we should
+> move as much as we can to DT only mode.
+> 
+>> The first user for needs_vcc flag will be the beagleboard file. I just didn't
+>> implement it in this patch [1].
 >>
->> Hi Jon,
->>
->> How to you plan to merge that series?
+>> On second thoughts, since [1] does work on beagleboard without requiring the
+>> needs_vcc flag, I think we can just live without it.
 > 
-> Good question ... my thinking was that you or Tony would take 1/2 and
-> once that is queued then I would ask Tony to ack 2/2 and Vinod take that
-> patch.
-
-Yep, this is what I was thinking too.
-
-> By the way, I have accumulated several DT patches which I sent out
-> altogether [1] (at least for my own sanity if no one elses ;-) and I
-> have included the below patch with it. I was hoping that may be I could
-> create a branch for you to pull. If you would rather cherry-pick the
-> various patches and merge yourself then I can separate them too.
-
-Merging your branch is indeed even better for me. So go ahead.
-
-Thanks,
-Benoit
-
-> 
->> Seb's just posted a McBSP adaptation to SDMA binding, so I'll have to
->> take this one before being able to merge any other SDMA driver
->> adaptation patches.
->>
->> I'm fine to take that one, if you are OK, to avoid merge conflict in DTS
->> later.
-> 
-> Fine with me and that would be preferred. I don't see any downside in
-> taking this one and then having Vinod take the other later.
-
-
-> 
->> On 02/26/2013 07:27 PM, Jon Hunter wrote:
->>> Add SDMA controller binding for OMAP2+ devices and populate DMA client
->>> information for SPI and MMC periperhal on OMAP3+ devices. Please note
->>
->> typo-------------------------------^
-> 
-> Thanks! Will fix.
-> 
->>> that OMAP24xx devices do not have SPI and MMC bindings available yet and
->>> so DMA client information is not populated.
->>>
->>> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
->>> Reviewed-by: Felipe Balbi <balbi@ti.com>
->>> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->>> Tested-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->>> ---
->>>  .../devicetree/bindings/dma/omap-sdma.txt          |   51 ++++++++++++++++++++
->>
->> That's a detail, but the bindings should be introduced along with the
->> driver DT adaptation since it does represent its "interface".
-> 
-> Ok, I can add that to patch 2/2 instead.
-> 
->>>  arch/arm/boot/dts/omap2.dtsi                       |   12 +++++
->>>  arch/arm/boot/dts/omap3.dtsi                       |   40 +++++++++++++++
->>>  arch/arm/boot/dts/omap4.dtsi                       |   41 ++++++++++++++++
->>>  arch/arm/boot/dts/omap5.dtsi                       |   41 ++++++++++++++++
->>>  5 files changed, 185 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/dma/omap-sdma.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/dma/omap-sdma.txt b/Documentation/devicetree/bindings/dma/omap-sdma.txt
->>> new file mode 100644
->>> index 0000000..22aab28
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/dma/omap-sdma.txt
->>> @@ -0,0 +1,51 @@
->>> +* TI OMAP SDMA controller
->>> +
->>> +Required properties:
->>> +- compatible:		Should be set to one of the following:
->>> +
->>> +			ti,omap2420-sdma (omap2420)
->>> +			ti,omap2430-sdma (omap2430)
->>> +			ti,omap3430-sdma (omap3430)
->>> +			ti,omap3630-sdma (omap3630)
->>> +			ti,omap4430-sdma (omap4430 & omap4460 & omap543x)
->>> +
->>> +- reg: 			Contains DMA registers location and length.
->>> +- interrupts: 		Contains DMA interrupt information.
->>> +- #dma-cells: 		Must be 1.
->>> +- #dma-channels:	Contains total number of programmable DMA channels.
->>> +- #dma-requests:	Contains total number of DMA requests.
->>> +
->>> +Example:
->>> +
->>> +	sdma: dma-controller@4A056000 {
->>> +		compatible = "ti,omap-sdma";
->>> +		reg = <0x4A056000 0x1000>;
->>
->>
->> Nit: you do have several hexa values in upper case, here and in some dts
->> as well.
-> 
-> Yes will fix that too.
-> 
-> Cheers
-> Jon
-> 
-> [1]
-> http://www.mail-archive.com/devicetree-discuss@lists.ozlabs.org/msg28050.html
+> The BeagleBoard works because the bootloader happen to enable the PWM
+> generator which is used as a GPIO for the external HUB enable port. As soon as
+> the bootloader stops doing this we are going to be in trouble.
 > 
 
+Wasn't it the LED A out GPO from PMIC that is used to enable the HUB? Just cross
+checking so I haven't missed anything.
+
+I will resend the board support patch for beagle implementing
+needs_vcc flag for the deferred probe mechanism. Thanks.
+
+cheers,
+-roger
