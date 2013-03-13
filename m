@@ -1,68 +1,47 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] libfdt: Add function to find regions in an FDT
-Date: Tue, 12 Mar 2013 20:46:12 -0700
-Message-ID: <CAPnjgZ2uPRtDZXt1AwtAnp702sEya6OxtDpEy1kUD=Wox=0CfA@mail.gmail.com>
-References: <1360968578-18443-1-git-send-email-sjg@chromium.org>
- <1360968578-18443-2-git-send-email-sjg@chromium.org>
+From: Arun Kumar K <arunkk.samsung@gmail.com>
+Subject: Re: [RFC 12/12] mipi-csis: Enable all interrupts for fimc-is usage
+Date: Wed, 13 Mar 2013 09:39:19 +0530
+Message-ID: <CALt3h7_zXP9M5m+4VXFGhnfpaUO+6F20hTsnR8ATF8+=CNmcrA@mail.gmail.com>
+References: <1362754765-2651-1-git-send-email-arun.kk@samsung.com>
+	<1362754765-2651-13-git-send-email-arun.kk@samsung.com>
+	<513F5171.40603@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1360968578-18443-2-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <513F5171.40603@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Arun Kumar K <arun.kk@samsung.com>, LMML <linux-media@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, kilyeon.im@samsung.com, shaik.ameer@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Sylwester,
 
-On Fri, Feb 15, 2013 at 2:49 PM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> Given a set of nodes and properties, find the regions of the device tree
-> which describe those parts.
+>>
+>>  /* Interrupt mask */
+>>  #define S5PCSIS_INTMSK                       0x10
+>> -#define S5PCSIS_INTMSK_EN_ALL                0xf000103f
+>> +#define S5PCSIS_INTMSK_EN_ALL                0xfc00103f
 >
-> A test is provided which builds a tree while tracking where the regions
-> should be, then calls fdt_first/next_region() to make sure that it agrees.
->
-> Further tests will come as part of fdtgrep.
->
-> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Do you know what interrupts are assigned to the CSIS_INTMSK
+> bits 26, 27 ? In the documentation I have they are marked
+> as reserved. I have tested this patch on Exynos4x12, it seems
+> OK but you might want to merge it to the patch adding compatible
+> property for exynos5.
 
-I just wondered if there any any comments on this new version?
+The bits 26 and 27 are for Frame start and Frame end interrupts.
+Yes this change can be merged with the MIPI-CSIS support for Exynos5.
+Shaik will pick it up and merge it along with his patch series in v2.
 
-> ---
-> Changes in v2:
-> - Move region code to separate fdt_region.c file
-> - Fix info->count <= info->max_regions in fdt_add_region() merge case
-> - Add new FDT_ERR_TOODEEP error type and use it
-> - Change returned error from BADLAYOUT to BADSTRUCTURE
-> - Return FDT_ERR_BADLAYOUT error if strings block is before structure block
-> - Add note that changes in node/property order can cause false hash misses
-> - Add more comments about the -1 return value from h_include
-> - Drop FDT_IS_COMPAT and pass node offset to h_include function
-> - Drop stale comment about names / wildcards
-> - Move to a model with fdt_first_region()/fdt_next_region()
-> - Add long comment explaining theory of operation
 >
->  libfdt/Makefile.libfdt |   3 +-
->  libfdt/fdt_region.c    | 452 +++++++++++++++++++++++++++++++++++++++++++++++++
->  libfdt/libfdt.h        | 213 ++++++++++++++++++++++-
->  tests/.gitignore       |   1 +
->  tests/Makefile.tests   |   3 +-
->  tests/region_tree.c    | 336 ++++++++++++++++++++++++++++++++++++
->  tests/run_tests.sh     |   5 +
->  7 files changed, 1010 insertions(+), 3 deletions(-)
->  create mode 100644 libfdt/fdt_region.c
->  create mode 100644 tests/region_tree.c
+> It would be good to know what these bits are for. And how
+> enabling the interrupts actually help without modifying the
+> interrupt handler ? Is it enough to just acknowledge those
+> interrupts ? Or how it works ?
 >
 
-Regards,
-Simon
+These interrupts are used by the FIMC-IS firmware possibly to check if the
+sensor is working. Without enabling these, I get the error from firmware
+on Sensor Open command.
+
+Regards
+Arun
