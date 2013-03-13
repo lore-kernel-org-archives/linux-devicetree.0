@@ -1,31 +1,61 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2 0/5] cpsw interrupt pacing and get/set phy setting
- implementation
-Date: Wed, 13 Mar 2013 04:39:09 -0400 (EDT)
-Message-ID: <20130313.043909.1985225524093989490.davem@davemloft.net>
-References: <1363079798-18147-1-git-send-email-mugunthanvnm@ti.com>
+From: kishon <kishon@ti.com>
+Subject: Re: [PATCH v3 0/7] ARM: dts: omap: Add dts data for USB
+Date: Wed, 13 Mar 2013 14:41:27 +0530
+Message-ID: <514042BF.2090207@ti.com>
+References: <1362663320-23799-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1363079798-18147-1-git-send-email-mugunthanvnm@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: mugunthanvnm@ti.com
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, b-cousson@ti.com, paul@pwsan.com
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1362663320-23799-1-git-send-email-kishon@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, b-cousson@ti.com
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, tony@atomide.com, linux@arm.linux.org.uk, balbi@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Date: Tue, 12 Mar 2013 14:46:33 +0530
+Benoit,
 
-> This patch serires implements the following features in CPSW driver
-> * get/set phy link settings
-> * interrupt pacing
-> * get phy id via ioctl cmd SIOCGMIIPHY
-> 
-> Changes from initial version
-> * Made active-slave common for cpts, ethtool and SIOCGMIIPHY ioctl
-> * Cleaned CPSW DT binding documentation by seperating slave nodes
->   under sub-section
-> * implemented get phy id via ioctl cmd SIOCGMIIPHY
+Will you be queuing this patch series?
 
-Series applied, thanks.
+Thanks
+Kishon
+
+On Thursday 07 March 2013 07:05 PM, Kishon Vijay Abraham I wrote:
+> Hi Benoit,
+>
+> Here are the dt data patches to get usb device functional in OMAP platforms.
+>
+> All the patches deal with modifying arch/arm/boot except one which modifies
+> Documentation/../usb/omap-usb.txt
+>
+> Changes from v2:
+> * squashed the dt data for dwc3-omap with dwc3 core into a single patch.
+>
+> Changes from v1:
+> Patch *ARM: dts: omap: Add usb_otg and glue data* has some properties with
+> names that has "_". It's replaced with a "-" here.
+>
+> This patch is developed on Linux 3.9-rc1.
+>
+> Kishon Vijay Abraham I (7):
+>    ARM: dts: omap: Add omap control usb data
+>    ARM: dts: omap: Add omap-usb2 dt data
+>    ARM: dts: omap: Add usb_otg and glue data
+>    ARM: dts: omap5: Add omap control usb data
+>    ARM: dts: omap5: Add ocp2scp data
+>    ARM: dts: omap5: Add omap-usb3 and omap-usb2 dt data
+>    ARM: dts: omap5: add dwc3 omap and dwc3 core dt data
+>
+>   Documentation/devicetree/bindings/usb/omap-usb.txt |    1 +
+>   arch/arm/boot/dts/omap3-beagle-xm.dts              |    6 +++
+>   arch/arm/boot/dts/omap3-evm.dts                    |    6 +++
+>   arch/arm/boot/dts/omap3-overo.dtsi                 |    6 +++
+>   arch/arm/boot/dts/omap3.dtsi                       |   12 +++++
+>   arch/arm/boot/dts/omap4-panda.dts                  |    6 +++
+>   arch/arm/boot/dts/omap4-sdp.dts                    |    6 +++
+>   arch/arm/boot/dts/omap4.dtsi                       |   26 +++++++++++
+>   arch/arm/boot/dts/omap5.dtsi                       |   48 ++++++++++++++++++++
+>   arch/arm/boot/dts/twl4030.dtsi                     |    2 +-
+>   10 files changed, 118 insertions(+), 1 deletion(-)
+>
+
