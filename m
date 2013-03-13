@@ -1,68 +1,30 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [Resend/PATCH 0/5] omap4/5: i2c/spi: device tree data
-Date: Wed, 13 Mar 2013 17:46:45 +0100
-Message-ID: <5140AD75.2050900@ti.com>
-References: <1363009486-19430-1-git-send-email-sourav.poddar@ti.com> <513DEAE1.1050606@ti.com> <513DFB62.5030709@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] i2c: mux: Add i2c-arbitrator-cros-ec 'mux' driver
+Date: Wed, 13 Mar 2013 10:53:54 -0600
+Message-ID: <5140AF22.2030809@wwwdotorg.org>
+References: <1360957573-864-1-git-send-email-dianders@chromium.org> <1363192583-26363-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <513DFB62.5030709@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>
-Cc: tony@atomide.com, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com, santosh.shilimkar@ti.com, Andrew Morton <akpm@osdl.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1363192583-26363-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Girish Shivananjappa <girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Yuvaraj Kumar <yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Prashanth G <prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sourav,
-
-I've just applied your branch after a minor subject cleanup for consistency.
-
-git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.10/dts
-
-Regards,
-Benoit
-
-
-On 03/11/2013 04:42 PM, Sourav Poddar wrote:
-> On Monday 11 March 2013 08:02 PM, Benoit Cousson wrote:
->> Hi Sourav,
->>
->> On 03/11/2013 02:44 PM, Sourav Poddar wrote:
->>> Hi Tony/Benoit,
->>>
->>> These patches had been sent couple of times before, but there were no
->>> comments on it.
->> Sorry for that. I got a big flu in Jan and was in Linaro Connect last
->> week.
->> Patches look good, I just have to check that they apply nicely to the
->> dts/for_3.9 I already prepared.
->>
-> Ok. Thanks!!
->> I still have to rebase that branch on top of a recent master branch and
->> then check your branch.
->>
->>> If there are no comments, Can these be picked ?
->>> Cc: Andrew Morton<akpm@osdl.org>
->>>
->>> The following changes since commit
->>> f6161aa153581da4a3867a2d1a7caf4be19b6ec9:
->>>
->>>    Linux 3.9-rc2 (2013-03-10 16:54:19 -0700)
->>>
->>> are available in the git repository at:
->>>    git@gitorious.org:linux-connectivity/linux-connectivity.git
->>> omap_i2c_spi_dts_data
->>>
->>> Felipe Balbi (1):
->>>        arm: dts: omap5: add SPI devices to OMAP5 DeviceTree file
->>>
->>> Sourav Poddar (4):
->>>        arm: dts: omap4-sdp: Add I2c pinctrl data
->>>        arm: dts: omap5-evm: Add I2c pinctrl data
->>>        arm: dts: omap4-panda: Add I2c pinctrl data
->>>        arm: dts: omap5-evm: Add mcspi data
->> Thanks,
->> Benoit
->>
+On 03/13/2013 10:36 AM, Doug Anderson wrote:
+> The i2c-arbitrator-cros-ec driver implements the arbitration scheme
+> that the Embedded Controller (EC) on the ARM Chromebook expects to use
+> for bus multimastering.  This i2c-arbitrator-cros-ec driver could also
+> be used in other places where standard I2C bus arbitration can't be
+> used and two extra GPIOs are available for arbitration.
 > 
+> This driver is based on code that Simon Glass added to the i2c-s3c2410
+> driver in the Chrome OS kernel 3.4 tree.  The current incarnation as a
+> mux driver is as suggested by Grant Likely.  See
+> <https://patchwork.kernel.org/patch/1877311/> for some history.
+...
+> Changes in v4: None
 
+Isn't this 'PATCH V3 REPOST' then?
