@@ -1,16 +1,13 @@
 From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 08/10] ASoC: dmaengine_pcm: Add open
- function for DT DMA request
-Date: Wed, 13 Mar 2013 10:49:45 +0000
-Message-ID: <20130313104945.GI25610@opensource.wolfsonmicro.com>
-References: <1362940391-8338-1-git-send-email-mpa@pengutronix.de>
- <1362940391-8338-9-git-send-email-mpa@pengutronix.de>
- <20130312190206.GY19942@opensource.wolfsonmicro.com>
- <20130313021712.GD27461@S2101-09.ap.freescale.net>
+Subject: Re: [patch] ALSA: ASoC: tas5086: signedness bug in
+ tas5086_hw_params()
+Date: Wed, 13 Mar 2013 11:09:24 +0000
+Message-ID: <20130313110924.GL25610@opensource.wolfsonmicro.com>
+References: <20130313053253.GA17674@longonot.mountain>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0188182391086391191=="
+Content-Type: multipart/mixed; boundary="===============2512783431652636634=="
 Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20130313021712.GD27461@S2101-09.ap.freescale.net>
+In-Reply-To: <20130313053253.GA17674@longonot.mountain>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
@@ -20,62 +17,55 @@ List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
 Errors-To: alsa-devel-bounces@alsa-project.org
 Sender: alsa-devel-bounces@alsa-project.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Markus Pargmann <mpa@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Daniel Mack <zonque@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, kbuild@01.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============0188182391086391191==
+--===============2512783431652636634==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jaTU8Y2VLE5tlY1O"
+	protocol="application/pgp-signature"; boundary="5LiOUhUlsRX0HDkW"
 Content-Disposition: inline
 
 
---jaTU8Y2VLE5tlY1O
+--5LiOUhUlsRX0HDkW
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Mar 13, 2013 at 10:18:29AM +0800, Shawn Guo wrote:
+On Wed, Mar 13, 2013 at 08:32:53AM +0300, Dan Carpenter wrote:
+> "val" has to be signed for the error handling to work.
 
-> I did not see any objection from you on that patch, so I'm waiting for
-> you to publish a branch for it, so that my mxs-dma generic binding
-> series can move forward.
+Applied, thanks.
 
-I commented on the removal of the const from the name parameter (and
-ideally an in order version of the patch series would be nice) but in
-general I was mostly waiting for review and test from other people.  DT
-and dmaengine both seem endless sources of problems so I'd rather make
-sure everyone's had a chance to look.
-
---jaTU8Y2VLE5tlY1O
+--5LiOUhUlsRX0HDkW
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJRQFm7AAoJELSic+t+oim9TsEP/iczbnrnxmXhIrAdzUi15G3M
-ldYDFmpKkBen8gK2DrpzGhV9EskCnvRNJ74HCWMwnxbS/XIacQG0EvT2XsGcf/nb
-HxpDn654+4bMCoJ5qDWLCw2cuwi1AyCQdG0WbbXY0v8JbfgYggjktRYrYk9tTYuc
-8oo24aPyAQgtJqx5p85utyGV34eaAulLsM4RSSCHF0ICaWeTNbSltLDZUcr7EZrA
-MVeSHlBoXzdq2m8ITI0/5DzUP904w5vjkbZbW7I4CG2fTg4EPI3W1kySElLz8Mjr
-iSLpNUr+0LSonoXXCNC+PwmZpbR2bR27kFxOkEe6rwB8b7qdnSh9t5J9ba+yaHPO
-uDtE6UiQB3JAy1/vnyldoVUWETdF1OS6aptKiiL7+hXYpRx9cV519C8V5rknPFIK
-7ZhJvuIWPL1mj13R53SsYfAeWQP8zFn1lT2JxeTrn9bTAsmRJn5MpMvjmhI30s5U
-wutl9NjpcAaDeR5LGGcEjFNy+quBGFRiwVH61poaHiQ4ajIbNaW7NMgbAu1EPH49
-ZfkMq8TLqs3zhPOCqD0NgpIOIoyz5oBD3ICe/BB8QVRWcfM0T5ng4UGZTAidhEZg
-4n7fUVTqnGS86JiLnnCEi+7/VZ/iwgGsySrZ3hfTxET5XBKsBkZ/4CiYK7UPkryd
-oMBbqqY3+05n/zZGoz8o
-=QheD
+iQIcBAEBAgAGBQJRQF5WAAoJELSic+t+oim9RaEP/R3Ygor7kfC8wck8RrkuK9Ed
+FzspzUwTxKDsMKHJ5a3a6L6k1/V8ytTll8lq+4fXLFsu7n5aBwC+FaiXzKfvSUWE
+4gK9n9O8t1a+8elFf7iTh6aCjMqOqbcKhricsiafNLDLNq7zc00Ha/7Wh1ljrvLM
+JDKHft+UB9gQPN0IJWjXZJID8tYyTssCCV5818e9ESG0f6epJQbkimAUA2t0MbaE
+6GfW+WSF0Ivqbucz5zcuKxsMQ2NUuEa1c81u4fd8xe/8vMylkQL/Sx4M+3aP72Yt
+BdmNWCjQ3HV6QrgThxco9QDbatMWi4dxK/UdIdr9uwXdBENA1CrBrDeJmPY1b0V1
+3t3idR0HJ4KXuIhD9oT1PguiHeX0oQs/5J9TINsWjieLR1reS76YREUqUur4GRQM
+Ie/VxFizAGdHLecYjGLJJRl2oASUyYcavnFrze3XMzNV2TIruOUF5ak7lJkBW7Lt
+kHp5vcpWQNdrHsltd8Mw1vwXDqzBQy2J6vQnPx/6kV5iyO9awOhyAKJkWDrVOZ/2
+J7pkrLbLWgRvugswm4CyeJ4JxxuIbHkQowEDN1gZW0anocI/cpq/3mX6eyiFbXz4
+Twy8K8PZGZoX+fx2Ox1RJi5oXgWMR/WVrL3CL4Ys/A001RGeGBimfWGK8KEgGWt4
+ZG74jsUu99KrsUBnQfrw
+=6MqM
 -----END PGP SIGNATURE-----
 
---jaTU8Y2VLE5tlY1O--
+--5LiOUhUlsRX0HDkW--
 
---===============0188182391086391191==
+--===============2512783431652636634==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
 
---===============0188182391086391191==--
+--===============2512783431652636634==--
