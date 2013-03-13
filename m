@@ -1,60 +1,104 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4] hwmon: ntc: Add DT with IIO support to NTC thermistor
- driver
-Date: Wed, 13 Mar 2013 14:15:15 -0700
-Message-ID: <20130313211515.GA14632@roeck-us.net>
-References: <1363077566-6254-1-git-send-email-ch.naveen@samsung.com>
- <1363147700-7042-1-git-send-email-ch.naveen@samsung.com>
- <CAD=FV=Wj6=3M+j5jF5xVFJLJS39on48_4gb6XO2uvyVG1pXVbQ@mail.gmail.com>
+From: "Christian Daudt" <csd@broadcom.com>
+Subject: [PATCH V7 2/2] ARM: bcm281xx: Add timer driver (DT portion)
+Date: Wed, 13 Mar 2013 14:27:28 -0700
+Message-ID: <1363210048-3334-2-git-send-email-csd@broadcom.com>
+References: <1363210048-3334-1-git-send-email-csd@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=Wj6=3M+j5jF5xVFJLJS39on48_4gb6XO2uvyVG1pXVbQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, lm-sensors@lm-sensors.org, devicetree-discuss@lists.ozlabs.org, Jean Delvare <khali@linux-fr.org>, Naveen Krishna <naveenkrishna.ch@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1363210048-3334-1-git-send-email-csd@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King <linux@arm.linux.org.uk>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>
+Cc: Christian Daudt <csd@broadcom.com>, csd_b@daudt.org, devicetree-discuss@lists.ozlabs.org, "arm@kernel.org" <arm@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 13, 2013 at 01:52:35PM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Tue, Mar 12, 2013 at 9:08 PM, Naveen Krishna Chatradhi
-> <ch.naveen@samsung.com> wrote:
-> > This patch adds DT support to NTC driver to parse the
-> > platform data.
-> >
-> > Also adds the support to work as an iio device.
-> >
-> > During the probe ntc driver gets the respective channels of ADC
-> > and uses iio_raw_read calls to get the ADC converted value.
-> >
-> > Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> > ---
-> > Changes since v3:
-> > 1. Added a NULL check before iio_channel_release
-> > 2. Modified a return statement
-> >
-> > Guenter Roeck, Its wonderful working with you. Thanks.
-> >
-> >  .../devicetree/bindings/hwmon/ntc_thermistor.txt   |   29 ++++
-> >  drivers/hwmon/Kconfig                              |    1 +
-> >  drivers/hwmon/ntc_thermistor.c                     |  145 +++++++++++++++++---
-> >  include/linux/platform_data/ntc_thermistor.h       |    8 +-
-> >  4 files changed, 163 insertions(+), 20 deletions(-)
-> 
-> I haven't done a full review of this code, but it I built it in (along
-> with other CLs to enable it on exynos5250-snow) and the thermistors
-> are accessible and report reasonable values.
-> 
-> localhost hwmon # grep "" /sys/class/hwmon/*/device/temp1_input
-> /sys/class/hwmon/hwmon0/device/temp1_input:37890
-> /sys/class/hwmon/hwmon1/device/temp1_input:38393
-> /sys/class/hwmon/hwmon2/device/temp1_input:37148
-> /sys/class/hwmon/hwmon3/device/temp1_input:38059
-> 
-> Tested-by: Doug Anderson <dianders@chromium.org>
-> 
-Thanks!
+This adds support for the Broadcom timer, used in the following SoCs:
+BCM11130, BCM11140, BCM11351, BCM28145, BCM28155
 
-Guenter
+Updates from V6:
+- Split DT portion into a separate patch
+
+Updates from V5:
+- Rebase to latest arm-soc/for-next
+
+Updates from V4:
+- Switch code to use CLOCKSOURCE_OF_DECLARE
+
+Updates from V3:
+- Migrate to 3.9 timer framework updates
+
+Updates from V2:
+- prepend static fns + fields with kona_
+
+Updates from V1:
+- Rename bcm_timer.c to bcm_kona_timer.c
+- Pull .h into bcm_kona_timer.c
+- Make timers static
+- Clean up comment block
+- Switched to using clockevents_config_and_register
+- Added an error to the get_timer loop if it repeats too much
+- Added to Documentation/devicetree/bindings/arm/bcm/bcm,kona-timer.txt
+- Added missing readl to timer_disable_and_clear
+
+Note: bcm,kona-timer was kept as the 'compatible' field to make it
+specific enough for when there are multiple bcm timers (bcm,timer is
+too generic).
+
+Signed-off-by: Christian Daudt <csd@broadcom.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: John Stultz <john.stultz@linaro.org>
+Reviewed-by: Stephen Warren <swarren@nvidia.com>
+
+diff --git a/Documentation/devicetree/bindings/arm/bcm/bcm,kona-timer.txt b/Documentation/devicetree/bindings/arm/bcm/bcm,kona-timer.txt
+new file mode 100644
+index 0000000..59fa6e6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/bcm/bcm,kona-timer.txt
+@@ -0,0 +1,19 @@
++Broadcom Kona Family timer
++-----------------------------------------------------
++This timer is used in the following Broadcom SoCs:
++ BCM11130, BCM11140, BCM11351, BCM28145, BCM28155
++
++Required properties:
++- compatible : "bcm,kona-timer"
++- reg : Register range for the timer
++- interrupts : interrupt for the timer
++- clock-frequency: frequency that the clock operates
++
++Example:
++	timer@35006000 {
++		compatible = "bcm,kona-timer";
++		reg = <0x35006000 0x1000>;
++		interrupts = <0x0 7 0x4>;
++		clock-frequency = <32768>;
++	};
++
+diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
+index ad13588..8f71f40 100644
+--- a/arch/arm/boot/dts/bcm11351.dtsi
++++ b/arch/arm/boot/dts/bcm11351.dtsi
+@@ -47,4 +47,12 @@
+ 		    cache-unified;
+ 		    cache-level = <2>;
+ 	};
++
++	timer@35006000 {
++		compatible = "bcm,kona-timer";
++		reg = <0x35006000 0x1000>;
++		interrupts = <0x0 7 0x4>;
++		clock-frequency = <32768>;
++	};
++
+ };
+-- 
+1.7.10.4
