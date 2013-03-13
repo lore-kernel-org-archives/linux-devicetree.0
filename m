@@ -1,43 +1,59 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v8 08/12] gpio: palmas: Enable DT support for palmas gpio.
-Date: Wed, 13 Mar 2013 15:20:41 +0100
-Message-ID: <CACRpkdbG-aXsCDgrLStHGPJFUO=T62DQyhjkhhiTkG8H9OhLGg@mail.gmail.com>
-References: <1362662276-20792-1-git-send-email-ian@slimlogic.co.uk>
-	<1362662276-20792-8-git-send-email-ian@slimlogic.co.uk>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] ARM: dts: add interrupt-names property to get interrupt
+ resource by name
+Date: Wed, 13 Mar 2013 09:39:53 -0500
+Message-ID: <51408FB9.90808@gmail.com>
+References: <1363173980-11428-1-git-send-email-vikas.sajjan@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1362662276-20792-8-git-send-email-ian@slimlogic.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ian Lartey <ian@slimlogic.co.uk>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, linux-watchdog@vger.kernel.org, swarren@wwwdotorg.org, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, rob@landley.net, mturquette@linaro.org, cooloney@gmail.com, rpurdie@rpsys.net, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, gg@slimlogic.co.uk, j-keerthy@ti.com, ldewangan@nvidia.com, t-kristo@ti.com, devicetree-discuss@lists.ozlabs.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1363173980-11428-1-git-send-email-vikas.sajjan@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vikas Sajjan <vikas.sajjan@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, l.krishna@samsung.com, devicetree-discuss@lists.ozlabs.org, joshi@samsung.com, inki.dae@samsung.com, linaro-kernel@lists.linaro.org, sylvester.nawrocki@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 7, 2013 at 2:17 PM, Ian Lartey <ian@slimlogic.co.uk> wrote:
+The subject is completely misleading. Make it clear what the scope of
+this patch is.
 
-> From: J Keerthy <j-keerthy@ti.com>
->
-> Enable DT support for palmas gpio.
->
-> Signed-off-by: J Keerthy <j-keerthy@ti.com>
+On 03/13/2013 06:26 AM, Vikas Sajjan wrote:
+> The FIMD driver expects the "vsync" interrupt to be mentioned as the 1st
+> parameter in the FIMD DT node. So to meet this expectation of the driver,
+> the FIMD DT node was forced to be made by keeping "vsync" as the 1st
+> parameter.
+> 
+> this resolves the above mentioned "hack" by introducing
+> "interrupt-names", so that FIMD driver can get the interrupt resource by
+> name as discussed at
+> http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg16211.html
 
-This needs to be CC: to devicetree-discuss.
+I fail to see what the hack is. The order of interrupt properties must
+be defined by the binding. interrupt-names is auxiliary data and must
+not be required by an OS.
 
-> +static struct of_device_id of_palmas_match_tbl[] = {
-> +       { .compatible = "ti,palmas-gpio", },
-> +       { .compatible = "ti,palmas-charger-gpio", },
-> +       { .compatible = "ti,twl6035-gpio", },
-> +       { .compatible = "ti,twl6036-gpio", },
-> +       { .compatible = "ti,twl6037-gpio", },
-> +       { .compatible = "ti,tps65913-gpio", },
-> +       { .compatible = "ti,tps65914-gpio", },
-> +       { .compatible = "ti,tps80036-gpio", },
-> +       { /* end */ }
-> +};
+> patch is dependent on https://patchwork.kernel.org/patch/2184981/
 
-I can see that the binding came in a previous patch in this series, OK.
+Why the split? These should be combined.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
+> ---
+>  arch/arm/boot/dts/exynos5250.dtsi |    3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+> index 0ee4706..76c8911 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -588,6 +588,7 @@
+>  		compatible = "samsung,exynos5-fimd";
+>  		interrupt-parent = <&combiner>;
+>  		reg = <0x14400000 0x40000>;
+> -		interrupts = <18 5>, <18 4>, <18 6>;
+> +		interrupt-names = "fifo", "vsync", "lcd_sys";
+> +		interrupts = <18 4>, <18 5>, <18 6>;
 
-Yours,
-Linus Walleij
+There should be some documentation describing the order of the interrupts.
+
+Rob
