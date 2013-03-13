@@ -1,87 +1,130 @@
-From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH] fbdev: fsl-diu-fb: optionally configure frame buffer depth in
- DT
-Date: Wed, 13 Mar 2013 16:24:09 +0100
-Message-ID: <1363188249-29341-1-git-send-email-agust@denx.de>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH V3 1/2] ARM: dts: OMAP2+: Add SDMA controller bindings
+ and nodes
+Date: Wed, 13 Mar 2013 16:35:47 +0100
+Message-ID: <51409CD3.10301@ti.com>
+References: <1361903244-19837-1-git-send-email-jon-hunter@ti.com> <1361903244-19837-2-git-send-email-jon-hunter@ti.com> <513F0AE3.6030408@ti.com> <513FA19C.60904@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <513FA19C.60904@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Vinod Koul <vinod.koul@intel.com>, Russell King <linux@arm.linux.org.uk>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Sebastien Guiriec <s-guiriec@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for 'depth' property to configure default frame
-buffer color depth over device tree.
+Salut Jon,
 
-Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
----
- .../devicetree/bindings/powerpc/fsl/diu.txt        |    2 ++
- drivers/video/fsl-diu-fb.c                         |   16 ++++++++++++++++
- 2 files changed, 18 insertions(+), 0 deletions(-)
+On 03/12/2013 10:43 PM, Jon Hunter wrote:
+> Salut Benoit!
+> 
+> On 03/12/2013 06:00 AM, Benoit Cousson wrote:
+>> + Seb G.
+>>
+>> Hi Jon,
+>>
+>> How to you plan to merge that series?
+> 
+> Good question ... my thinking was that you or Tony would take 1/2 and
+> once that is queued then I would ask Tony to ack 2/2 and Vinod take that
+> patch.
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/diu.txt b/Documentation/devicetree/bindings/powerpc/fsl/diu.txt
-index b66cb6d..502aae5 100644
---- a/Documentation/devicetree/bindings/powerpc/fsl/diu.txt
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/diu.txt
-@@ -12,6 +12,7 @@ Required properties:
-   services interrupts for this device.
- 
- Optional properties:
-+- depth : default frame buffer color depth
- - edid : verbatim EDID data block describing attached display.
-   Data from the detailed timing descriptor will be used to
-   program the display controller.
-@@ -30,5 +31,6 @@ Example for MPC5121:
- 		reg = <0x2100 0x100>;
- 		interrupts = <64 0x8>;
- 		interrupt-parent = <&ipic>;
-+		depth = <16>;
- 		edid = [edid-data];
- 	};
-diff --git a/drivers/video/fsl-diu-fb.c b/drivers/video/fsl-diu-fb.c
-index 41fbd94..2287817 100644
---- a/drivers/video/fsl-diu-fb.c
-+++ b/drivers/video/fsl-diu-fb.c
-@@ -1534,6 +1534,7 @@ static int fsl_diu_probe(struct platform_device *pdev)
- 	const void *prop;
- 	unsigned int i;
- 	int ret;
-+	u32 depth;
- 
- 	data = dmam_alloc_coherent(&pdev->dev, sizeof(struct fsl_diu_data),
- 				   &dma_addr, GFP_DMA | __GFP_ZERO);
-@@ -1584,6 +1585,21 @@ static int fsl_diu_probe(struct platform_device *pdev)
- 		data->has_edid = true;
- 	}
- 
-+	if (!of_property_read_u32(np, "depth", &depth)) {
-+		switch (depth) {
-+		case 32:
-+		case 24:
-+		case 16:
-+		case 8:
-+			default_bpp = depth;
-+			break;
-+		default:
-+			dev_err(&pdev->dev,
-+				"%s: invalid depth property\n",
-+				np->full_name);
-+		}
-+	}
-+
- 	data->diu_reg = of_iomap(np, 0);
- 	if (!data->diu_reg) {
- 		dev_err(&pdev->dev, "cannot map DIU registers\n");
--- 
-1.7.5.4
+Yep, this is what I was thinking too.
+
+> By the way, I have accumulated several DT patches which I sent out
+> altogether [1] (at least for my own sanity if no one elses ;-) and I
+> have included the below patch with it. I was hoping that may be I could
+> create a branch for you to pull. If you would rather cherry-pick the
+> various patches and merge yourself then I can separate them too.
+
+Merging your branch is indeed even better for me. So go ahead.
+
+Thanks,
+Benoit
+
+> 
+>> Seb's just posted a McBSP adaptation to SDMA binding, so I'll have to
+>> take this one before being able to merge any other SDMA driver
+>> adaptation patches.
+>>
+>> I'm fine to take that one, if you are OK, to avoid merge conflict in DTS
+>> later.
+> 
+> Fine with me and that would be preferred. I don't see any downside in
+> taking this one and then having Vinod take the other later.
+
+
+> 
+>> On 02/26/2013 07:27 PM, Jon Hunter wrote:
+>>> Add SDMA controller binding for OMAP2+ devices and populate DMA client
+>>> information for SPI and MMC periperhal on OMAP3+ devices. Please note
+>>
+>> typo-------------------------------^
+> 
+> Thanks! Will fix.
+> 
+>>> that OMAP24xx devices do not have SPI and MMC bindings available yet and
+>>> so DMA client information is not populated.
+>>>
+>>> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+>>> Reviewed-by: Felipe Balbi <balbi@ti.com>
+>>> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>>> Tested-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>>> ---
+>>>  .../devicetree/bindings/dma/omap-sdma.txt          |   51 ++++++++++++++++++++
+>>
+>> That's a detail, but the bindings should be introduced along with the
+>> driver DT adaptation since it does represent its "interface".
+> 
+> Ok, I can add that to patch 2/2 instead.
+> 
+>>>  arch/arm/boot/dts/omap2.dtsi                       |   12 +++++
+>>>  arch/arm/boot/dts/omap3.dtsi                       |   40 +++++++++++++++
+>>>  arch/arm/boot/dts/omap4.dtsi                       |   41 ++++++++++++++++
+>>>  arch/arm/boot/dts/omap5.dtsi                       |   41 ++++++++++++++++
+>>>  5 files changed, 185 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/dma/omap-sdma.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/dma/omap-sdma.txt b/Documentation/devicetree/bindings/dma/omap-sdma.txt
+>>> new file mode 100644
+>>> index 0000000..22aab28
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/dma/omap-sdma.txt
+>>> @@ -0,0 +1,51 @@
+>>> +* TI OMAP SDMA controller
+>>> +
+>>> +Required properties:
+>>> +- compatible:		Should be set to one of the following:
+>>> +
+>>> +			ti,omap2420-sdma (omap2420)
+>>> +			ti,omap2430-sdma (omap2430)
+>>> +			ti,omap3430-sdma (omap3430)
+>>> +			ti,omap3630-sdma (omap3630)
+>>> +			ti,omap4430-sdma (omap4430 & omap4460 & omap543x)
+>>> +
+>>> +- reg: 			Contains DMA registers location and length.
+>>> +- interrupts: 		Contains DMA interrupt information.
+>>> +- #dma-cells: 		Must be 1.
+>>> +- #dma-channels:	Contains total number of programmable DMA channels.
+>>> +- #dma-requests:	Contains total number of DMA requests.
+>>> +
+>>> +Example:
+>>> +
+>>> +	sdma: dma-controller@4A056000 {
+>>> +		compatible = "ti,omap-sdma";
+>>> +		reg = <0x4A056000 0x1000>;
+>>
+>>
+>> Nit: you do have several hexa values in upper case, here and in some dts
+>> as well.
+> 
+> Yes will fix that too.
+> 
+> Cheers
+> Jon
+> 
+> [1]
+> http://www.mail-archive.com/devicetree-discuss@lists.ozlabs.org/msg28050.html
+> 
+
