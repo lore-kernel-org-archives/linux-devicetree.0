@@ -1,133 +1,61 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH v2 3/3] ARM: OMAP2+: Add GPMC DT support for Ethernet
- child nodes
-Date: Thu, 14 Mar 2013 16:29:12 -0500
-Message-ID: <51424128.8030405@ti.com>
-References: <1363293217-21926-1-git-send-email-javier.martinez@collabora.co.uk> <51423663.2030108@ti.com> <7F615964-BC49-4FA6-9D8E-CA6FEFC9C276@collabora.co.uk>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP systems
+Date: Thu, 14 Mar 2013 15:29:21 -0600
+Message-ID: <20130314212921.GB18505@obsidianresearch.com>
+References: <20130312220854.GA23112@obsidianresearch.com>
+ <20130313081815.GD25940@avionic-0098.mockup.avionic-design.de>
+ <20130313170205.GB24042@obsidianresearch.com>
+ <20130313192628.GA28714@avionic-0098.mockup.avionic-design.de>
+ <5140E85A.3040900@firmworks.com>
+ <20130313220235.GA29895@avionic-0098.mockup.avionic-design.de>
+ <20130313222102.GA28336@obsidianresearch.com>
+ <20130314090120.GA2224@avionic-0098.mockup.avionic-design.de>
+ <20130314172555.GA14048@obsidianresearch.com>
+ <20130314210926.GA9098@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <7F615964-BC49-4FA6-9D8E-CA6FEFC9C276@collabora.co.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Matthias Brugger <matthias.bgg@gmail.com>, "<linux-omap@vger.kernel.org>" <linux-omap@vger.kernel.org>, "<devicetree-discuss@lists.ozlabs.org>" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130314210926.GA9098@avionic-0098.mockup.avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Mitch Bradley <wmb@firmworks.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Mar 14, 2013 at 10:09:26PM +0100, Thierry Reding wrote:
 
-On 03/14/2013 04:08 PM, Javier Martinez Canillas wrote:
+> > ranges = <0x82000000 0 0x80000000  0x80000000  0 0x00001000   /* port 0 registers */
+> > 	  0x82000000 0 0x80001000  0x80001000  0 0x00001000   /* port 1 registers */
+> > 	  0x81000000 0          0  0x82000000  0 0x00010000   /* downstream I/O */
+> > 	  0x82000000 0 0xa0000000  0xa0000000  0 0x10000000   /* non-prefetchable memory */
+> > 	  0xc2000000 0 0xb0000000  0xb0000000  0 0x10000000>; /* prefetchable memory */
+> > 
+> > Which says 'access to CPU address 0xa0000000 produces a PCI-E memory TLP with
+> > address 0xa0000000' - this is the 'normal' case, I assume that is what
+> > happens on tegra?
+> > 
+> > It also says 'access to CPU address 0x82000000 produces a PCI-E IO TLP
+> > with address 0' - this translation is something Linux typically
+> > expects..
 > 
-> 
-> Javier
-> 
-> Hi Jon,
-> 
-> On 14/03/2013, at 21:43, Jon Hunter <jon-hunter@ti.com> wrote:
-> 
->>
->> On 03/14/2013 03:33 PM, Javier Martinez Canillas wrote:
->>> Besides being used to interface with external memory devices,
->>> the General-Purpose Memory Controller can be used to connect
->>> Pseudo-SRAM devices such as ethernet controllers to OMAP2+
->>> processors using the TI GPMC as a data bus.
->>>
->>> This patch allows an ethernet chip to be defined as an GPMC
->>> child device node.
->>>
->>> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->>> ---
->>>
->>> Changes since v1:
->>>  - Improve the DT binding documentation explaining that even when the GPMC
->>>    maximum bus address width is 16-bit, it supports devices with 32-bit
->>>    registers address width and the device property especifying this has to
->>>    be set accordingly; suggested by Jon Hunter.
->>>
->>>
->>> Documentation/devicetree/bindings/net/gpmc-eth.txt |  101 ++++++++++++++++++++
->>> arch/arm/mach-omap2/gpmc.c                         |    8 ++
->>> 2 files changed, 109 insertions(+), 0 deletions(-)
->>> create mode 100644 Documentation/devicetree/bindings/net/gpmc-eth.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/gpmc-eth.txt b/Documentation/devicetree/bindings/net/gpmc-eth.txt
->>> new file mode 100644
->>> index 0000000..8c8be58
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/net/gpmc-eth.txt
->>> @@ -0,0 +1,101 @@
->>> +Device tree bindings for Ethernet chip connected to TI GPMC
->>> +
->>> +Besides being used to interface with external memory devices, the
->>> +General-Purpose Memory Controller can be used to connect Pseudo-SRAM devices
->>> +such as ethernet controllers to processors using the TI GPMC as a data bus.
->>> +
->>> +Ethernet controllers connected to TI GPMC are represented as child nodes of
->>> +the GPMC controller with an "ethernet" name.
->>> +
->>> +All timing relevant properties as well as generic GPMC child properties are
->>> +explained in a separate documents. Please refer to
->>> +Documentation/devicetree/bindings/bus/ti-gpmc.txt
->>> +
->>> +For the properties relevant to the ethernet controller connected to the GPMC
->>> +refer to the binding documentation of the device. For example, the documentation
->>> +for the SMSC 911x is Documentation/devicetree/bindings/net/smsc911x.txt
->>> +
->>> +Child nodes need to specify the GPMC bus address width using the "bank-width"
->>> +property but is possible that an ethernet controller also has a property to
->>> +specify the I/O registers address width. Even when the GPMC has a maximum 16-bit
->>> +address width, it supports devices with 32-bit word registers.
->>> +For example with an SMSC LAN911x/912x controller connected to the TI GPMC on an
->>> +OMAP2+ board, "bank-width = <2>;" and "reg-io-width = <4>;".
->>> +
->>> +Required properties:
->>> +- bank-width:        Address width of the device in bytes. GPMC supports 8-bit
->>> +            and 16-bit devices and so must be either 1 or 2 bytes.
->>> +- compatible:        Compatible string property for the ethernet child device.
->>> +- gpmc,cs-on:        Chip-select assertion time
->>> +- gpmc,cs-rd-off:    Chip-select de-assertion time for reads
->>> +- gpmc,cs-wr-off:    Chip-select de-assertion time for writes
->>> +- gpmc,oe-on:        Output-enable assertion time
->>> +- gpmc,oe-off        Output-enable de-assertion time
->>> +- gpmc,we-on:        Write-enable assertion time
->>> +- gpmc,we-off:        Write-enable de-assertion time
->>> +- gpmc,access:        Start cycle to first data capture (read access)
->>> +- gpmc,rd-cycle:    Total read cycle time
->>> +- gpmc,wr-cycle:    Total write cycle time
->>> +- reg:            Chip-select, base address (relative to chip-select)
->>> +            and size of the memory mapped for the device.
->>> +            Note that base address will be typically 0 as this
->>> +            is the start of the chip-select.
->>> +
->>> +Optional properties:
->>> +- gpmc,XXX        Additional GPMC timings and settings parameters. See
->>> +            Documentation/devicetree/bindings/bus/ti-gpmc.txt
->>
->> Should we add "reg-io-width" here and say can be 2 or 4 and to refer to
->> the above description?
->>
-> 
-> I'm not sure about that, this property is not used (neither relevant) to the GPMC driver but is used by the smsc911x driver.
-> 
-> Other Ethernet chips could not need that (e.g: supports only 32 bit word accesses) or can have a different property. Uses should check the documentation binding for the connected device.
+> Both of the above paragraphs are true. However accesses to the windows
+> at 0x80000000 and 0x80001000 don't generate memory TLPs but type 0
+> configuration space TLPs.
 
-Good point. Let's not bother adding that.
+By my understanding access to 0x80000000/0x80001000 doesn't generate
+any externally visible TLPs?
 
->>> +
->>> +Optional properties for partiton table parsing:
->>> +- #address-cells: should be set to 1
->>> +- #size-cells: should be set to 1
->>
->> Sorry should have caught this earlier. The above is not relevant for
->> ethernet.
->>
-> 
-> I should have catch that before sending the first version!
-> 
-> I took the properties from your gpmc-nor.txt documentation and this is a left over. Will send a v3 removing that.
-> 
-> Sorry for being so carelessly...
+IHMO modeling this register space as a controller-internal MMIO region
+associated with the bridge is reasonable... After all, you are
+iomapping it and accessing it with readl/writel - those are MMIO
+functions..
 
-No problem. Thanks for getting this done. Now just to figure out how to
-handle the darn gpio interrupt ;-)
+> So my first instinct was to make the first cell of the first two entries
+> 0, but that doesn't work, since the OF core expects to find either
+> memory or I/O spaces. 
 
-Jon
+Right, there is no specified way to translate config ss through
+ranges.
+
+Regards,
+Jason
