@@ -1,39 +1,118 @@
-From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Subject: GPIO polarity in bindings for Freescale MXS
-Date: Thu, 14 Mar 2013 11:02:53 +0100
-Message-ID: <5141A04D.8020805@digi.com>
+From: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH v3 2/5] spi/davinci: add DT binding documentation
+Date: Thu, 14 Mar 2013 10:23:13 +0000
+Message-ID: <A73F36158E33644199EB82C5EC81C7BC3EA48E7F@DBDE01.ent.ti.com>
+References: <1363075827-31053-1-git-send-email-prakash.pm@ti.com>
+	<1363075827-31053-3-git-send-email-prakash.pm@ti.com>
+	<51419586.7090703@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <51419586.7090703-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Sekhar,
 
-Maybe I'm missing something but the MXS processors (at least i.MX23 and i.M=
-X28) cannot =
+On Thu, Mar 14, 2013 at 14:46:54, Nori, Sekhar wrote:
+> On 3/12/2013 1:40 PM, Manjunathappa, Prakash wrote:
+> > From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+> > 
+> > Get back missed out binding documentation submitted along
+> > with below patch:
+> > "spi/davinci: add OF support for the spi controller"
+> 
+> This is not really the correct description of this patch. Years later
+> its mostly irrelevant that binding documentation did not get applied
+> along with the actual usage.
+> 
 
-set the polarity of the GPIOs, so shouldn't the #gpio-cells be 1?
+Agreed, I will change the commit message. This could have been below
+scissors lines
 
-(From Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt):
+> > 
+> > [prakash.pm-l0cyMroinI0@public.gmane.org: Follow DT naming convention for compatible property]
+> > Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+> > Reviewed-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> > Signed-off-by: Manjunathappa, Prakash <prakash.pm-l0cyMroinI0@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/spi/spi-davinci.txt        |   51 ++++++++++++++++++++
+> >  1 files changed, 51 insertions(+), 0 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/spi/spi-davinci.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/spi/spi-davinci.txt b/Documentation/devicetree/bindings/spi/spi-davinci.txt
+> > new file mode 100644
+> > index 0000000..75ad9ac
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/spi/spi-davinci.txt
+> > @@ -0,0 +1,51 @@
+> > +Davinci SPI controller device bindings
+> > +
+> > +Required properties:
+> > +- #address-cells: number of cells required to define a chip select
+> > +	address on the SPI bus. Should be set to 1.
+> > +- #size-cells: should be zero.
+> > +- compatible:
+> > +	- "ti,dm6441-spi" for SPI used similar to that on DM644x SoC family
+> > +	- "ti,da830-spi" for SPI used similar to that on DA8xx SoC family
+> > +- reg: Offset and length of SPI controller register space
+> > +- num-cs: Number of chip selects
+> > +- ti,davinci-spi-intr-line: interrupt line used to connect the SPI
+> > +	IP to the interrupt controller withn the SoC. Possible values
+> > +	are 0 and 1. Manual says one of the two possible interrupt
+> > +	lines can be tied to the interrupt controller. Set this
+> > +	based on a specifc SoC configuration.
+> > +- interrupts: interrupt number mapped to CPU.
+> > +- clocks: spi clk phandle
+> > +
+> > +Example of a NOR flash slave device (n25q032) connected to DaVinci
+> > +SPI controller device over the SPI bus.
+> > +
+> > +spi0:spi@20BF0000 {
+> > +	#address-cells	 = <1>;
+> > +	#size-cells	 = <0>;
+> > +	compatible	 = "ti,dm6446-spi";
+> > +	reg	 = <0x20BF0000 0x1000>;
+> > +	num-cs	 = <4>;
+> > +	ti,davinci-spi-intr-line	= <0>;
+> > +	interrupts	 = <338>;
+> > +	clocks	 = <&clkspi>;
+> > +
+> > +	flash: n25q032@0 {
+> > +	 #address-cells = <1>;
+> > +	 #size-cells = <1>;
+> > +	 compatible = "st,m25p32";
+> > +	 spi-max-frequency = <25000000>;
+> > +	 reg = <0>;
+> > +
+> > +	 partition@0 {
+> > +	 label = "u-boot-spl";
+> > +	 reg = <0x0 0x80000>;
+> > +	 read-only;
+> > +	 };
+> > +
+> > +	 partition@1 {
+> > +	 label = "test";
+> > +	 reg = <0x80000 0x380000>;
+> > +	 };
+> > +	};
+> 
+> Looks like the tabs were messed up when you took Murali's patch.
+> 
 
-- #gpio-cells : Should be two.  The first cell is the pin number and
-   the second cell is used to specify the gpio polarity:
-       0 =3D active high
-       1 =3D active low
+Ok I will fix this.
 
-Regards,
--- =
-
-H=E9ctor Palacios
+Thanks,
+Prakash
