@@ -1,156 +1,346 @@
-From: Javier Martinez Canillas <martinez.javier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] ARM: OMAP2+: Add GPMC DT support for Ethernet
- child nodes
-Date: Thu, 14 Mar 2013 22:56:38 +0100
-Message-ID: <CAAwP0s3shNns9n5SFjM5XhOTDt-_UaQ0xU7woD+YaO9+0gbH=Q@mail.gmail.com>
-References: <1363293217-21926-1-git-send-email-javier.martinez@collabora.co.uk>
- <51423663.2030108@ti.com>
- <7F615964-BC49-4FA6-9D8E-CA6FEFC9C276@collabora.co.uk>
- <51424128.8030405@ti.com>
+From: "Christian Daudt" <csd@broadcom.com>
+Subject: [PATCH V2 1/2] ARM: bcm281xx: Add L2 cache enable code
+Date: Thu, 14 Mar 2013 15:14:27 -0700
+Message-ID: <1363299268-10506-1-git-send-email-csd@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51424128.8030405-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "<devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "<linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, abhimanyu.kapur@outlook.com, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>
+Cc: Christian Daudt <csd@broadcom.com>, csd_b@daudt.org, devicetree-discuss@lists.ozlabs.org, "arm@kernel.org" <arm@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 14, 2013 at 10:29 PM, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org> wrote:
->
-> On 03/14/2013 04:08 PM, Javier Martinez Canillas wrote:
->>
->>
->> Javier
->>
->> Hi Jon,
->>
->> On 14/03/2013, at 21:43, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org> wrote:
->>
->>>
->>> On 03/14/2013 03:33 PM, Javier Martinez Canillas wrote:
->>>> Besides being used to interface with external memory devices,
->>>> the General-Purpose Memory Controller can be used to connect
->>>> Pseudo-SRAM devices such as ethernet controllers to OMAP2+
->>>> processors using the TI GPMC as a data bus.
->>>>
->>>> This patch allows an ethernet chip to be defined as an GPMC
->>>> child device node.
->>>>
->>>> Signed-off-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
->>>> ---
->>>>
->>>> Changes since v1:
->>>>  - Improve the DT binding documentation explaining that even when the GPMC
->>>>    maximum bus address width is 16-bit, it supports devices with 32-bit
->>>>    registers address width and the device property especifying this has to
->>>>    be set accordingly; suggested by Jon Hunter.
->>>>
->>>>
->>>> Documentation/devicetree/bindings/net/gpmc-eth.txt |  101 ++++++++++++++++++++
->>>> arch/arm/mach-omap2/gpmc.c                         |    8 ++
->>>> 2 files changed, 109 insertions(+), 0 deletions(-)
->>>> create mode 100644 Documentation/devicetree/bindings/net/gpmc-eth.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/net/gpmc-eth.txt b/Documentation/devicetree/bindings/net/gpmc-eth.txt
->>>> new file mode 100644
->>>> index 0000000..8c8be58
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/net/gpmc-eth.txt
->>>> @@ -0,0 +1,101 @@
->>>> +Device tree bindings for Ethernet chip connected to TI GPMC
->>>> +
->>>> +Besides being used to interface with external memory devices, the
->>>> +General-Purpose Memory Controller can be used to connect Pseudo-SRAM devices
->>>> +such as ethernet controllers to processors using the TI GPMC as a data bus.
->>>> +
->>>> +Ethernet controllers connected to TI GPMC are represented as child nodes of
->>>> +the GPMC controller with an "ethernet" name.
->>>> +
->>>> +All timing relevant properties as well as generic GPMC child properties are
->>>> +explained in a separate documents. Please refer to
->>>> +Documentation/devicetree/bindings/bus/ti-gpmc.txt
->>>> +
->>>> +For the properties relevant to the ethernet controller connected to the GPMC
->>>> +refer to the binding documentation of the device. For example, the documentation
->>>> +for the SMSC 911x is Documentation/devicetree/bindings/net/smsc911x.txt
->>>> +
->>>> +Child nodes need to specify the GPMC bus address width using the "bank-width"
->>>> +property but is possible that an ethernet controller also has a property to
->>>> +specify the I/O registers address width. Even when the GPMC has a maximum 16-bit
->>>> +address width, it supports devices with 32-bit word registers.
->>>> +For example with an SMSC LAN911x/912x controller connected to the TI GPMC on an
->>>> +OMAP2+ board, "bank-width = <2>;" and "reg-io-width = <4>;".
->>>> +
->>>> +Required properties:
->>>> +- bank-width:        Address width of the device in bytes. GPMC supports 8-bit
->>>> +            and 16-bit devices and so must be either 1 or 2 bytes.
->>>> +- compatible:        Compatible string property for the ethernet child device.
->>>> +- gpmc,cs-on:        Chip-select assertion time
->>>> +- gpmc,cs-rd-off:    Chip-select de-assertion time for reads
->>>> +- gpmc,cs-wr-off:    Chip-select de-assertion time for writes
->>>> +- gpmc,oe-on:        Output-enable assertion time
->>>> +- gpmc,oe-off        Output-enable de-assertion time
->>>> +- gpmc,we-on:        Write-enable assertion time
->>>> +- gpmc,we-off:        Write-enable de-assertion time
->>>> +- gpmc,access:        Start cycle to first data capture (read access)
->>>> +- gpmc,rd-cycle:    Total read cycle time
->>>> +- gpmc,wr-cycle:    Total write cycle time
->>>> +- reg:            Chip-select, base address (relative to chip-select)
->>>> +            and size of the memory mapped for the device.
->>>> +            Note that base address will be typically 0 as this
->>>> +            is the start of the chip-select.
->>>> +
->>>> +Optional properties:
->>>> +- gpmc,XXX        Additional GPMC timings and settings parameters. See
->>>> +            Documentation/devicetree/bindings/bus/ti-gpmc.txt
->>>
->>> Should we add "reg-io-width" here and say can be 2 or 4 and to refer to
->>> the above description?
->>>
->>
->> I'm not sure about that, this property is not used (neither relevant) to the GPMC driver but is used by the smsc911x driver.
->>
->> Other Ethernet chips could not need that (e.g: supports only 32 bit word accesses) or can have a different property. Uses should check the documentation binding for the connected device.
->
-> Good point. Let's not bother adding that.
->
->>>> +
->>>> +Optional properties for partiton table parsing:
->>>> +- #address-cells: should be set to 1
->>>> +- #size-cells: should be set to 1
->>>
->>> Sorry should have caught this earlier. The above is not relevant for
->>> ethernet.
->>>
->>
->> I should have catch that before sending the first version!
->>
->> I took the properties from your gpmc-nor.txt documentation and this is a left over. Will send a v3 removing that.
->>
+- Adds a module to provide calls into secure monitor mode
+- Uses this module to make secure monitor calls to enable L2 cache.
 
-ok v3 sent removing this left over.
+Updates from V1:
+- Split DT portion into separate patch
+- replace #ifdef-ed L2 code with "if".
+- move init call to board init
 
->> Sorry for being so carelessly...
->
-> No problem. Thanks for getting this done. Now just to figure out how to
-> handle the darn gpio interrupt ;-)
->
+Signed-off-by: Christian Daudt <csd@broadcom.com>
 
-yes, I'll try to do that as my next step :-)
-
-> Jon
-> --
-
-Thanks a lot for your help and best regards,
-Javier
+diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
+index bbf4122..6adb6aec 100644
+--- a/arch/arm/mach-bcm/Makefile
++++ b/arch/arm/mach-bcm/Makefile
+@@ -10,4 +10,6 @@
+ # of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ # GNU General Public License for more details.
+ 
+-obj-$(CONFIG_ARCH_BCM) := board_bcm.o
++obj-$(CONFIG_ARCH_BCM)		:= board_bcm.o bcm_kona_smc.o bcm_kona_smc_asm.o
++plus_sec := $(call as-instr,.arch_extension sec,+sec)
++AFLAGS_bcm_kona_smc_asm.o	:=-Wa,-march=armv7-a$(plus_sec)
+diff --git a/arch/arm/mach-bcm/bcm_kona_smc.c b/arch/arm/mach-bcm/bcm_kona_smc.c
+new file mode 100644
+index 0000000..5f1d131
+--- /dev/null
++++ b/arch/arm/mach-bcm/bcm_kona_smc.c
+@@ -0,0 +1,118 @@
++/*
++ * Copyright (C) 2013 Broadcom Corporation
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <stdarg.h>
++#include <linux/smp.h>
++#include <linux/io.h>
++#include <linux/ioport.h>
++
++#include <asm/cacheflush.h>
++#include <linux/of_address.h>
++
++#include "bcm_kona_smc.h"
++
++struct secure_bridge_data {
++	void __iomem *bounce;		/* virtual address */
++	u32 __iomem buffer_addr;	/* physical address */
++	int initialized;
++} bridge_data;
++
++struct bcm_kona_smc_data {
++	unsigned service_id;
++	unsigned arg0;
++	unsigned arg1;
++	unsigned arg2;
++	unsigned arg3;
++};
++
++static const struct of_device_id bcm_kona_smc_ids[] __initconst = {
++	{.compatible = "bcm,kona-smc"},
++	{},
++};
++
++/* Map in the bounce area */
++void bcm_kona_smc_init(void)
++{
++	struct device_node *node;
++
++	/* Read buffer addr and size from the device tree node */
++	node = of_find_matching_node(NULL, bcm_kona_smc_ids);
++	BUG_ON(!node);
++
++	/* Don't care about size or flags of the DT node */
++	bridge_data.buffer_addr =
++		be32_to_cpu(*of_get_address(node, 0, NULL, NULL));
++	BUG_ON(!bridge_data.buffer_addr);
++
++	bridge_data.bounce = of_iomap(node, 0);
++	BUG_ON(!bridge_data.bounce);
++
++	bridge_data.initialized = 1;
++
++	pr_info("Secure API initialized!\n");
++}
++
++/* __bcm_kona_smc() should only run on CPU 0, with pre-emption disabled */
++static void __bcm_kona_smc(void *info)
++{
++	struct bcm_kona_smc_data *data = info;
++	u32 *args = bridge_data.bounce;
++	int rc = 0;
++
++	/* Must run on CPU 0 */
++	BUG_ON(smp_processor_id() != 0);
++
++	/* Check map in the bounce area */
++	BUG_ON(!bridge_data.initialized);
++
++	/* Copy one 32 bit word into the bounce area */
++	args[0] = data->arg0;
++	args[1] = data->arg1;
++	args[2] = data->arg2;
++	args[3] = data->arg3;
++
++	/* Flush caches for input data passed to Secure Monitor */
++	if (data->service_id != SSAPI_BRCM_START_VC_CORE)
++		flush_cache_all();
++
++	/* Trap into Secure Monitor */
++	rc = bcm_kona_smc_asm(data->service_id, bridge_data.buffer_addr);
++
++	if (rc != SEC_ROM_RET_OK)
++		pr_err("Secure Monitor call failed (0x%x)!\n", rc);
++}
++
++unsigned bcm_kona_smc(unsigned service_id, unsigned arg0, unsigned arg1,
++		  unsigned arg2, unsigned arg3)
++{
++	struct bcm_kona_smc_data data;
++
++	data.service_id = service_id;
++	data.arg0 = arg0;
++	data.arg1 = arg1;
++	data.arg2 = arg2;
++	data.arg3 = arg3;
++
++	/*
++	 * Due to a limitation of the secure monitor, we must use the SMP
++	 * infrastructure to forward all secure monitor calls to Core 0.
++	 */
++	if (get_cpu() != 0)
++		smp_call_function_single(0, __bcm_kona_smc, (void *)&data, 1);
++	else
++		__bcm_kona_smc(&data);
++
++	put_cpu();
++
++	return 0;
++}
+diff --git a/arch/arm/mach-bcm/bcm_kona_smc.h b/arch/arm/mach-bcm/bcm_kona_smc.h
+new file mode 100644
+index 0000000..3bedbed
+--- /dev/null
++++ b/arch/arm/mach-bcm/bcm_kona_smc.h
+@@ -0,0 +1,80 @@
++/*
++ * Copyright (C) 2013 Broadcom Corporation
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef BCM_KONA_SMC_H
++#define BCM_KONA_SMC_H
++
++#include <linux/types.h>
++#define FLAGS	(SEC_ROM_ICACHE_ENABLE_MASK | SEC_ROM_DCACHE_ENABLE_MASK | \
++			SEC_ROM_IRQ_ENABLE_MASK | SEC_ROM_FIQ_ENABLE_MASK)
++
++/*!
++ * Definitions for IRQ & FIQ Mask for ARM
++ */
++
++#define FIQ_IRQ_MASK						0xC0
++#define FIQ_MASK						0x40
++#define IRQ_MASK						0x80
++
++/*!
++ * Secure Mode FLAGs
++ */
++
++/* When set, enables ICache within the secure mode */
++#define SEC_ROM_ICACHE_ENABLE_MASK                        0x00000001
++
++/* When set, enables DCache within the secure mode */
++#define SEC_ROM_DCACHE_ENABLE_MASK                        0x00000002
++
++/* When set, enables IRQ within the secure mode */
++#define SEC_ROM_IRQ_ENABLE_MASK                           0x00000004
++
++/* When set, enables FIQ within the secure mode */
++#define SEC_ROM_FIQ_ENABLE_MASK                           0x00000008
++
++/* When set, enables Unified L2 cache within the secure mode */
++#define SEC_ROM_UL2_CACHE_ENABLE_MASK                     0x00000010
++
++/* Broadcom Secure Service API Service IDs */
++#define SSAPI_DORMANT_ENTRY_SERV                          0x01000000
++#define SSAPI_PUBLIC_OTP_SERV                             0x01000001
++#define SSAPI_ENABLE_L2_CACHE                             0x01000002
++#define SSAPI_DISABLE_L2_CACHE                            0x01000003
++#define SSAPI_WRITE_SCU_STATUS                            0x01000004
++#define SSAPI_WRITE_PWR_GATE                              0x01000005
++
++/* Broadcom Secure Service API Return Codes */
++#define SEC_ROM_RET_OK			0x00000001
++#define SEC_ROM_RET_FAIL		0x00000009
++
++#define SSAPI_RET_FROM_INT_SERV		0x4
++#define SEC_EXIT_NORMAL			0x1
++
++#define SSAPI_ROW_AES			0x0E000006
++#define SSAPI_BRCM_START_VC_CORE	0x0E000008
++
++#ifndef	__ASSEMBLY__
++extern void bcm_kona_smc_init(void);
++
++extern unsigned bcm_kona_smc(unsigned service_id,
++			     unsigned arg0,
++			     unsigned arg1,
++			     unsigned arg2,
++			     unsigned arg3);
++
++extern int bcm_kona_smc_asm(u32 service_id,
++			    u32 buffer_addr);
++
++#endif	/* __ASSEMBLY__ */
++
++#endif /* BCM_KONA_SMC_H */
+diff --git a/arch/arm/mach-bcm/bcm_kona_smc_asm.S b/arch/arm/mach-bcm/bcm_kona_smc_asm.S
+new file mode 100644
+index 0000000..a160848
+--- /dev/null
++++ b/arch/arm/mach-bcm/bcm_kona_smc_asm.S
+@@ -0,0 +1,41 @@
++/*
++ * Copyright (C) 2013 Broadcom Corporation
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/linkage.h>
++#include "bcm_kona_smc.h"
++
++/*
++ * int bcm_kona_smc_asm(u32 service_id, u32 buffer_addr)
++ */
++
++ENTRY(bcm_kona_smc_asm)
++	stmfd	sp!, {r4-r12, lr}
++	mov	r4, r0		@ service_id
++	mov	r5, #3		@ Keep IRQ and FIQ off in SM
++	/*
++	 * Since interrupts are disabled in the open mode, we must keep
++	 * interrupts disabled in secure mode by setting R5=0x3. If interrupts
++	 * are enabled in open mode, we can set R5=0x0 to allow interrupts in
++	 * secure mode.  If we did this, the secure monitor would return back
++	 * control to the open mode to handle the interrupt prior to completing
++	 * the secure service. If this happened, R12 would not be
++	 * SEC_EXIT_NORMAL and we would need to call SMC again after resetting
++	 * R5 (it gets clobbered by the secure monitor) and setting R4 to
++	 * SSAPI_RET_FROM_INT_SERV to indicate that we want the secure monitor
++	 * to finish up the previous uncompleted secure service.
++	 */
++	mov	r6, r1		@ buffer_addr
++	smc	#0
++	/* Check r12 for SEC_EXIT_NORMAL here if interrupts are enabled */
++	ldmfd	sp!, {r4-r12, pc}
++ENDPROC(bcm_kona_smc_asm)
+diff --git a/arch/arm/mach-bcm/board_bcm.c b/arch/arm/mach-bcm/board_bcm.c
+index 2595935..e2ddfec 100644
+--- a/arch/arm/mach-bcm/board_bcm.c
++++ b/arch/arm/mach-bcm/board_bcm.c
+@@ -16,16 +16,39 @@
+ #include <linux/device.h>
+ #include <linux/platform_device.h>
+ #include <linux/irqchip.h>
++#include <asm/hardware/cache-l2x0.h>
+ #include <linux/clocksource.h>
+ 
+ #include <asm/mach/arch.h>
+ #include <asm/mach/time.h>
+ 
+ 
++#include "bcm_kona_smc.h"
++
++static int __init kona_l2_cache_init(void)
++{
++	if (!IS_ENABLED(CONFIG_CACHE_L2X0))
++		return 0;
++
++	bcm_kona_smc(SSAPI_ENABLE_L2_CACHE, 0, 0, 0, 0);
++
++	/*
++	 * The aux_val and aux_mask have no effect since L2 cache is already
++	 * enabled.  Pass 0s for aux_val and 1s for aux_mask for default value.
++	 */
++	l2x0_of_init(0, ~0);
++
++	return 0;
++}
++
+ static void __init board_init(void)
+ {
+ 	of_platform_populate(NULL, of_default_bus_match_table, NULL,
+ 		&platform_bus);
++
++	bcm_kona_smc_init();
++
++	kona_l2_cache_init();
+ }
+ 
+ static const char * const bcm11351_dt_compat[] = { "bcm,bcm11351", NULL, };
+-- 
+1.7.10.4
