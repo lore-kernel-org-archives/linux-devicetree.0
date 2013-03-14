@@ -1,99 +1,60 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH 0/9] ARM: dts: Various OMAP2+ device-tree updates
-Date: Thu, 14 Mar 2013 17:08:47 +0100
-Message-ID: <5141F60F.7060207@ti.com>
-References: <1362763654-9660-1-git-send-email-jon-hunter@ti.com> <5141E55E.9040801@ti.com> <CAAwP0s2BW-GTKsS0UpAWiMbRTFyDzgeUmOCw2p0CaB3RDKOnBw@mail.gmail.com>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH] mmc: mxcmmc: DT support
+Date: Thu, 14 Mar 2013 17:35:13 +0100
+Message-ID: <20130314163513.GF32452@pengutronix.de>
+References: <1361816885-3033-1-git-send-email-mpa@pengutronix.de>
+ <20130314165048.08416241@crub>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAAwP0s2BW-GTKsS0UpAWiMbRTFyDzgeUmOCw2p0CaB3RDKOnBw@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <martinez.javier@gmail.com>
-Cc: Jon Hunter <jon-hunter@ti.com>, Tony Lindgren <tony@atomide.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130314165048.08416241@crub>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Anatolij Gustschin <agust@denx.de>
+Cc: cjb@laptop.org, rob.herring@calxeda.com, rob@landley.net, s.hauer@pengutronix.de, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
+On Thu, Mar 14, 2013 at 04:50:48PM +0100, Anatolij Gustschin wrote:
+> On Mon, 25 Feb 2013 19:28:05 +0100
+> Markus Pargmann <mpa@pengutronix.de> wrote:
+> 
+> > Adding devicetree support for imx21-mmc and imx31-mmc. Based on generic
+> > gpio helper functions by Guennadi and generic DMA devicetree bindings.
+> > 
+> > Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> > ---
+> >  .../devicetree/bindings/mmc/fsl-imx-mmc.txt        | 24 +++++++
+> >  drivers/mmc/host/mxcmmc.c                          | 80 +++++++++++++++++-----
+> >  2 files changed, 86 insertions(+), 18 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
+> > new file mode 100644
+> > index 0000000..a5ab662
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
+> > @@ -0,0 +1,24 @@
+> > +* Freescale Secure Digital Host Controller for i.MX1/2 series
+> 
+> shouldn't it be "... for i.MX2/3 series"?
+> 
+> ...
+> > +	if (!host->pdata) {
+> > +		host->dma = of_dma_request_slave_channel(pdev->dev.of_node,
+> > +				"rx-tx");
+> 
+> please use dma_request_slave_channel(&pdev->dev, "rx-tx")
+> here. of_dma_request_slave_channel() is not exported for
+> modules, building the driver as a module will fail.
 
-On 03/14/2013 05:02 PM, Javier Martinez Canillas wrote:
-> On Thu, Mar 14, 2013 at 3:57 PM, Benoit Cousson <b-cousson@ti.com> wrote:
->> Salut Jon,
->>
->> On 03/08/2013 06:27 PM, Jon Hunter wrote:
->>> Various OMAP device-tree updates for PMU, DMA, GPIO, GPMC and boards.
->>>
->>> The DMA, PMU and OMAP3430 SDP board changes have been sent before
->>> individually but re-sending here as a complete series for v3.10.
->>>
->>> This is based upon v3.9-rc1 and the OMAP3 GPMC binding from Florian
->>> Vaussard [1] and OMAP5 DT SPI patch from Felipe Balbi [2].
->>>
->>> [1] https://patchwork.kernel.org/patch/2057111/
->>
->> I've tried to follow the series review, and it seems that Florian was
->> considering sending some other patches. It is not clear if this is a new
->> version of the series or some additional patches.
->>
-> 
-> Hi Benoit,
-> 
-> According to [1] Jon suggested that it was not necessary to map all
-> the 16MB for the GPMC mapped register address space since in practice
-> is a very small fraction of that size is used.
-> 
-> I had the following patch but I did never post it because Jon said
-> that the I/O memory mapping is page-aligned and the minimum page
-> size for ARM is 4KB anyways, so there is no functional difference
-> between using 0x1000 or 0x02d0.
-> 
-> But now reading [2] I see that you prefer to do what the documentation
-> said and don't assume any the page size / alignment.
-> 
-> [2]: https://patchwork.kernel.org/patch/2239741/
-> 
-> From 68edff5a102bb8fc81e006738baa456eb69f080a Mon Sep 17 00:00:00 2001
-> From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-> Date: Wed, 27 Feb 2013 02:30:51 +0100
-> Subject: [PATCH] ARM: dts: OMAP3: reduce GPMC mapped registers address space
-> 
-> Currently the OMAP General-Purpose Memory Controller (GPMC) device
-> node maps 16 MB of address space for its hardware registers.
-> 
-> This is because the OMAP Technical Reference Manual says that the
-> GPMC module register address space size is 16 MB. But in practice
-> the maximum address offset used by a GPMC register is 0x02d0.
-> 
-> So, there is no need to map such a big address space for GPMC regs.
-> 
-> This change was suggested by Jon Hunter [1].
-> 
-> [1]: https://patchwork.kernel.org/patch/2057111/
-> 
-> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-
-Thanks for that super fast patch :-)
-
-Applied.
+Thank you, I changed both in version 2.
 
 Regards,
-Benoit
 
-> ---
->  arch/arm/boot/dts/omap3.dtsi |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> index 2ddae38..a60eaf1 100644
-> --- a/arch/arm/boot/dts/omap3.dtsi
-> +++ b/arch/arm/boot/dts/omap3.dtsi
-> @@ -407,7 +407,7 @@
->  		gpmc: gpmc@6e000000 {
->  			compatible = "ti,omap3430-gpmc";
->  			ti,hwmods = "gpmc";
-> -			reg = <0x6e000000 0x1000000>;
-> +			reg = <0x6e000000 0x02d0>;
->  			interrupts = <20>;
->  			gpmc,num-cs = <8>;
->  			gpmc,num-waitpins = <4>;
-> 
+Markus
 
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
