@@ -1,14 +1,15 @@
 From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 3/6] mfd: omap-usb-host: Actually update hostconfig
-Date: Thu, 14 Mar 2013 16:03:24 +0200
-Message-ID: <20130314140324.GG26080@arwen.pp.htv.fi>
-References: <1363083940-20050-1-git-send-email-rogerq@ti.com>
- <1363083940-20050-4-git-send-email-rogerq@ti.com>
+Subject: Re: [PATCH 11/12] USB: ehci-omap: Try to get PHY even if not in PHY
+ mode
+Date: Thu, 14 Mar 2013 16:08:32 +0200
+Message-ID: <20130314140832.GH26080@arwen.pp.htv.fi>
+References: <1363085090-24676-12-git-send-email-rogerq@ti.com>
+ <Pine.LNX.4.44L0.1303121155540.2153-100000@iolanthe.rowland.org>
 Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8255260550632455854=="
+Content-Type: multipart/mixed; boundary="===============8506832750621722025=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1363083940-20050-4-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1303121155540.2153-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,60 +20,82 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kernel development list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============8255260550632455854==
+--===============8506832750621722025==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4eRLI4hEmsdu6Npr"
+	protocol="application/pgp-signature"; boundary="6cMF9JLEeZkfJjkP"
 Content-Disposition: inline
 
---4eRLI4hEmsdu6Npr
+--6cMF9JLEeZkfJjkP
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 12, 2013 at 12:25:37PM +0200, Roger Quadros wrote:
-> The helper functions omap_usbhs_rev1_hostconfig()
-> and omap_usbhs_rev2_hostconfig() don't write into
-> the hostconfig register. Make sure that we write
-> the return value into the hostconfig register.
+On Tue, Mar 12, 2013 at 11:57:56AM -0400, Alan Stern wrote:
+> On Tue, 12 Mar 2013, Roger Quadros wrote:
 >=20
-> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> > Even when not in PHY mode, the USB device on the port (e.g. HUB)
+> > might need resources like RESET which can be modelled as a PHY
+> > device. So try to get the PHY device in any case.
+> >=20
+> > Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> > CC: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+>=20
+> Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+>=20
+> >  		/* get the PHY device */
+> >  		if (dev->of_node)
+> >  			phy =3D devm_usb_get_phy_by_phandle(dev, "phys", i);
+> >  		else
+> >  			phy =3D devm_usb_get_phy_dev(dev, i);
+> >  		if (IS_ERR(phy) || !phy) {
+> > +			/* Don't bail out if PHY is not absolutely necessary */
+> > +			if (pdata->port_mode[i] !=3D OMAP_EHCI_PORT_MODE_PHY)
+> > +				continue;
+> > +
+> >  			ret =3D IS_ERR(phy) ? PTR_ERR(phy) : -ENODEV;
+> >  			dev_err(dev, "Can't get PHY device for port %d: %d\n",
+> >  					i, ret);
+>=20
+> Felipe, this is a strange interface.  Why do we sometimes get an=20
+> error-pointer and sometimes get just NULL?  Why not always an=20
+> error-pointer?
 
-makes sense :-)
-
-Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+looks like we get NULL when PHY layer is disabled. Sounds like an
+oversight to me. Do you want to send a patch, or do I cook one and put
+yourself as Reported-by ?
 
 --=20
 balbi
 
---4eRLI4hEmsdu6Npr
+--6cMF9JLEeZkfJjkP
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJRQdisAAoJEIaOsuA1yqREZywP/jBK6J4O1fM75PGTPvrgENvr
-OrSFM/YWc+pD/drAA1JavyCFTf5rxMP7lOSlynTE9qctXy9fyMbhvfnrGUo+FZmH
-ei6ihNPTRYenSO5ugtc2ml9JT7GIToFH47Qi/ch2jst8wrCx9v0JmHJzk4/DhcwY
-X2sLRT6Wl+M+EMDZAyTWuPwSiW0lcM1rLe9oXUbpgiVg1PMQRItJ+1DUGKjl2Gn/
-AAacInWPJJwrZsTrnMSY+u+IFpHkQGMNuMNh0gpfrbvDnb2mXpZ30CiD5+2k37PP
-neq3wQxruKc4ZhvCQ1BwF+AeHqop0Mx1RYr4/S8hyViWnaF2uOtAcvapB/aOdh54
-bGqbtb2IAE/w0iaVx/ydWqrCmrO+C8dodtligviEd+ZkZn8VdT1aG8hBr4bfB81/
-pwz/1xy7camkJdqlqO7M1So6zyexdtkb6NT5QHEKeE4nVsQp6mD5MoxrejhmovOA
-hbb5ChEso7VPpvxoHR/YivjqAHzttcF3859h7Vg2V1uWUxfYjwBa0MVo+bMO1VFD
-1w5RywWP3bV1+/WiuVvJk0xiqRM8vIxwwLh7Kki3WZFN1lWdjd8VcaXVvnAzAXje
-Syyi+cm7yWibNduNNCANEgfHyy7kr8jfe2mq2rSF/HSi6L+tMQhEsXtBtDSeoCeI
-6h1bSWi62twLm1TxW4V2
-=uCzX
+iQIcBAEBAgAGBQJRQdngAAoJEIaOsuA1yqRE714P/iT6BVFaP3kAzslEGu1ZzOSQ
+9IUvWbpjPHdwn7D0Nrnno0u7R9OZHWNPl7hI+be4V/8qbqKtpJpKmfYQisPYEHzS
+Wk5HPVOIQzgoWODFp5+afYpbyOuMBTpwZm5zrHPkVVGv94Gsxmk1/x3/buaDgUg0
+0ycXRP0Z+SRa0uSIV3mF5oSILFjWoA4flppCWBCFTBjubLUHOCcbMCs6tPEA4J6j
+ep7a5dQUDoLj7a1tKbM55ZSPSdGhj/Uwvxh9/r1tP6I2tkmasQ0R4u235JSQ7vDH
+iXEXR3Yfm1S+7jGC7iiK/T/UUTU9sk46H8HqzG3xPNFhHdZxuDE2s0hECpXu85sd
+j/rELZBhlh2+tYMNBmS/piKFOoEVM3ODuwccZLnmDqreTzpMy6xnQdZI9jGKnDxw
+bVSAIC/6o1bjXCndCy7kH2E3l3g+7u+NmuV7+6oWVNBz27iHnLUzLEVLIOpiQs2p
+FirC9NjHTW815oPB9Fpo+KJY55zeZLFb7bNsHlWFvmqJwIqHDvFipBSTusl3d+W4
+IDeqinZC27I8D+5bIr7Z8bUnOMvwFV1++6/KQoqdlYoRPdYbtGrXRL1JEKcJfr0Z
+pqw8JDJ/4eFbtemirGHpwzJtflB+Bk7A9P1TCV33yXHpgb8r5E4wnqPuO30Jct8u
+BktaECJHo+BCO0+6rFtE
+=jd80
 -----END PGP SIGNATURE-----
 
---4eRLI4hEmsdu6Npr--
+--6cMF9JLEeZkfJjkP--
 
---===============8255260550632455854==
+--===============8506832750621722025==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -83,4 +106,4 @@ devicetree-discuss mailing list
 devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---===============8255260550632455854==--
+--===============8506832750621722025==--
