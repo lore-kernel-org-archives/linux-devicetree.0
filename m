@@ -1,45 +1,54 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: GPIO polarity in bindings for Freescale MXS
-Date: Thu, 14 Mar 2013 12:00:15 -0600
-Message-ID: <5142102F.3090309@wwwdotorg.org>
-References: <5141A04D.8020805@digi.com>
+From: Florian Fainelli <florian@openwrt.org>
+Subject: [PATCH 0/4] mv643xx_eth: use mvmdio MDIO bus driver
+Date: Thu, 14 Mar 2013 19:08:31 +0100
+Message-ID: <1363284515-9865-1-git-send-email-florian@openwrt.org>
+References: <1359473048-26551-1-git-send-email-florian@openwrt.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5141A04D.8020805-i7dp0qKlBMg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1359473048-26551-1-git-send-email-florian@openwrt.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: davem@davemloft.net
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, netdev@vger.kernel.org, Paul Mackerras <paulus@samba.org>, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linuxppc-dev@lists.ozlabs.org, Florian Fainelli <florian@openwrt.org>, Lennert Buytenhek <buytenh@wantstofly.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/14/2013 04:02 AM, Hector Palacios wrote:
-> Hello,
-> 
-> Maybe I'm missing something but the MXS processors (at least i.MX23 and
-> i.MX28) cannot set the polarity of the GPIOs, so shouldn't the
-> #gpio-cells be 1?
-> 
-> (From Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt):
-> 
-> - #gpio-cells : Should be two.  The first cell is the pin number and
->   the second cell is used to specify the gpio polarity:
->       0 = active high
->       1 = active low
+Hi all,
 
-This field describes how software should interpret the GPIO values.
+This patch converts the mv643xx_eth driver to use the mvmdio MDIO bus driver
+instead of rolling its own implementation. As a result, all users of this
+mv643xx_eth driver are converted to register an "orion-mdio" platform_device.
+The mvmdio driver is also updated to support an interrupt line which reports
+SMI error/completion, and to allow traditionnal platform device registration
+instead of just device tree.
 
-So, if the GPIO is specified as active-high, then software will
-gpio_set_value(the_value_it_wants), whereas if the GPIO is specified as
-active-low, then software will gpio_set_value(!the_value_it_wants). Note
-that "software" here refers to the driver that requests/uses the GPIO,
-and the flags can be retrieve using of_get_gpio_flags().
+David, I think it makes sense for you to merge all of this, since we do
+not want the architecture files to be desynchronized from the mv643xx_eth to
+avoid runtime breakage. The potential for merge conflicts should be very small.
+
+Florian Fainelli (4):
+  net: mvmdio: allow platform device style registration
+  net: mvmdio: rename base register cookie from smireg to regs
+  net: mvmdio: enhance driver to support SMI error/done interrupts
+  mv643xx_eth: convert to use the Marvell Orion MDIO driver
+
+ .../devicetree/bindings/net/marvell-orion-mdio.txt |    3 +
+ arch/arm/plat-orion/common.c                       |   97 +++++++---
+ arch/powerpc/platforms/chrp/pegasos_eth.c          |   20 +++
+ arch/powerpc/sysdev/mv64x60_dev.c                  |   14 +-
+ drivers/net/ethernet/marvell/Kconfig               |    1 +
+ drivers/net/ethernet/marvell/mv643xx_eth.c         |  186 +-------------------
+ drivers/net/ethernet/marvell/mvmdio.c              |  111 +++++++++---
+ include/linux/mv643xx_eth.h                        |    1 -
+ 8 files changed, 207 insertions(+), 226 deletions(-)
+
+-- 
+1.7.10.4
