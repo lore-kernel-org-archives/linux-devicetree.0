@@ -1,50 +1,55 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 01/10] imx-ssi: Fix AC97 rates
-Date: Thu, 14 Mar 2013 13:44:50 +0100
-Message-ID: <20130314124450.GC32452@pengutronix.de>
-References: <1362940391-8338-1-git-send-email-mpa@pengutronix.de>
- <1362940391-8338-2-git-send-email-mpa@pengutronix.de>
- <CAOMZO5A8F81PzCjKHrkZ_AtGMr341d6OmYHMQvdzgunmGFDVsw@mail.gmail.com>
- <20130311195108.GC18350@pengutronix.de>
- <CAOZdJXXm=jJv3zyD4j11t3BgNGyKz6V9jzShQLTk-BTiwDjvMg@mail.gmail.com>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: RE: [PATCH 1/3] pwm: davinci: Add Kconfig support for ECAP & EHRPWM
+ devices
+Date: Thu, 14 Mar 2013 12:54:08 +0000
+Message-ID: <518397C60809E147AF5323E0420B992E3EA96FA6@DBDE01.ent.ti.com>
+References: <1363257158-11615-1-git-send-email-avinashphilip@ti.com>
+ <1363257158-11615-2-git-send-email-avinashphilip@ti.com>
+ <5141B6D8.2050308@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOZdJXXm=jJv3zyD4j11t3BgNGyKz6V9jzShQLTk-BTiwDjvMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5141B6D8.2050308@ti.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "Nori, Sekhar" <nsekhar@ti.com>
+Cc: "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "Manjunathappa, Prakash" <prakash.pm@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 13, 2013 at 05:55:24PM -0500, Timur Tabi wrote:
-> On Mon, Mar 11, 2013 at 2:51 PM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> >
-> > At the moment fsl-ssi and imx-ssi don't seem to have very much in
-> > common. However I could try to merge the imx-ssi driver code into
-> > fsl_ssi and make it handle imx27-ssi differently.
-> 
-> imx-ssi is the legacy driver that supports older, non-DT IMX platforms.
-> fsl-ssi is the "new" driver that supports PowerPC and IMX DT-enabled platforms.
-
-Okay, I will use the fsl-ssi driver then.
-
-Thanks
-
-Markus
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+T24gVGh1LCBNYXIgMTQsIDIwMTMgYXQgMTc6MDk6MDQsIE5vcmksIFNla2hhciB3cm90ZToNCj4g
+T24gMy8xNC8yMDEzIDQ6MDIgUE0sIFBoaWxpcCBBdmluYXNoIHdyb3RlOg0KPiA+IEFkZCBFSFJQ
+V00gYW5kIEVDQVAgc3VwcG9ydCBidWlsZCBzdXBwb3J0IGZvciBEQVZJTkNJX0RBODUwIHBsYXRm
+b3Jtcy4NCj4gPiANCj4gPiBBbHNvLCBzaW5jZSBEQVZJTkNJIHBsYXRmb3JtcyBkb2Vzbid0IHN1
+cHBvcnQgVEktUFdNLVN1YnN5c3RlbSBtb2R1bGUsDQo+ID4gcmVtb3ZlIHRoZSBzZWxlY3Qgb3B0
+aW9uIGZvciBDT05GSUdfUFdNX1RJUFdNU1MuDQo+ID4gDQo+ID4gQWxzbywgdXBkYXRlIENPTkZJ
+R19QV01fVElQV01TUyBjb21waWxlciBkaXJlY3RpdmUgYXBwcm9wcmlhdGVseSBpbg0KPiA+IHB3
+bS10aXB3bXNzLmggdG8gZml4IHRoZSBiZWxvdyBjb21waWxlciBlcnJvciB1cG9uIHJlbW92YWwg
+b2YNCj4gPiBDT05GSUdfUFdNX1RJUFdNU1MgZm9yIERhdmluY2kgcGxhdGZvcm1zLg0KPiA+IA0K
+PiA+IAlkcml2ZXJzL3B3bS9wd20tdGllY2FwLmM6IEluIGZ1bmN0aW9uICdlY2FwX3B3bV9wcm9i
+ZSc6DQo+ID4gCWRyaXZlcnMvcHdtL3B3bS10aWVjYXAuYzoyNjM6NDogZXJyb3I6ICdQV01TU19F
+Q0FQQ0xLX0VOJyB1bmRlY2xhcmVkDQo+ID4gCShmaXJzdCB1c2UgaW4gdGhpcyBmdW5jdGlvbikN
+Cj4gPiAJZHJpdmVycy9wd20vcHdtLXRpZWNhcC5jOjI2Mzo0OiBub3RlOiBlYWNoIHVuZGVjbGFy
+ZWQgaWRlbnRpZmllcg0KPiA+IAlpcyByZXBvcnRlZCBvbmx5IG9uY2UgZm9yIGVhY2ggZnVuY3Rp
+b24gaXQgYXBwZWFycyBpbg0KPiA+IAlkcml2ZXJzL3B3bS9wd20tdGllY2FwLmM6MjY0OjE3OiBl
+cnJvcjogJ1BXTVNTX0VDQVBDTEtfRU5fQUNLJw0KPiA+IAl1bmRlY2xhcmVkIChmaXJzdCB1c2Ug
+aW4gdGhpcyBmdW5jdGlvbikNCj4gPiAJZHJpdmVycy9wd20vcHdtLXRpZWNhcC5jOiBJbiBmdW5j
+dGlvbiAnZWNhcF9wd21fcmVtb3ZlJzoNCj4gPiAJZHJpdmVycy9wd20vcHdtLXRpZWNhcC5jOjI5
+MTo0OTogZXJyb3I6ICdQV01TU19FQ0FQQ0xLX1NUT1BfUkVRJw0KPiA+IAl1bmRlY2xhcmVkIChm
+aXJzdCB1c2UgaW4gdGhpcyBmdW5jdGlvbikNCj4gPiAJbWFrZVsyXTogKioqIFtkcml2ZXJzL3B3
+bS9wd20tdGllY2FwLm9dIEVycm9yIDENCj4gPiAJbWFrZVsxXTogKioqIFtkcml2ZXJzL3B3bV0g
+RXJyb3IgMg0KPiA+IAltYWtlOiAqKiogW2RyaXZlcnNdIEVycm9yIDINCj4gPiANCj4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBQaGlsaXAgQXZpbmFzaCA8YXZpbmFzaHBoaWxpcEB0aS5jb20+DQo+IA0KPiA+
+ICBjb25maWcgIFBXTV9USUVDQVANCj4gPiAgCXRyaXN0YXRlICJFQ0FQIFBXTSBzdXBwb3J0Ig0K
+PiA+IC0JZGVwZW5kcyBvbiBTT0NfQU0zM1hYDQo+ID4gLQlzZWxlY3QgUFdNX1RJUFdNU1MNCj4g
+PiArCWRlcGVuZHMgb24gU09DX0FNMzNYWCB8fCBBUkNIX0RBVklOQ0lfREE4NTANCj4gDQo+IEhh
+dmluZyBzdWNoIG5hcnJvdyBkZXBlbmRlbmNpZXMgaXMgd3JvbmcuIFRoZSBzYW1lIGRldmljZSBp
+cyBwcmVzZW50IG9uDQo+IERhVmluY2kgREE4MzAgdG9vLiBBIGRlcGVuZHMgb24gc2hvdWxkIG5v
+dCBiZSByZXF1aXJlZCBhdCBhbGwgc2luY2UgdGhlDQo+IGRyaXZlciBzaG91bGQgYnVpbGQgb24g
+YWxsIGFyY2hpdGVjdHVyZXMuIEJ1dCBJIGhhdmUgc2VlbiByZXNpc3RhbmNlIHRvDQo+IGRvaW5n
+IHRoYXQgc2luY2UgdXNlcnMgZG9uJ3QgbGlrZSB0byBzZWUgY29uZmlndXJhdGlvbiBvcHRpb25z
+IHRvdGFsbHkNCj4gaXJyZWxldmFudCBmb3IgdGhlIGFyY2hpdGVjdHVyZSB0aGV5IGFyZSBidWls
+ZGluZyBmb3IuIFNvIG1heSBiZSB0YWtlIGENCj4gbWlkZGxlIHBhdGggYW5kIGRvICdkZXBlbmRz
+IG9uIEFSQ0hfQVJNJz8NCg0KSSB3aWxsIGFkZCBkZXBlbmRlbmN5IG9ubHkgb24gQVJDSF9BUk0g
+YW5kIHN1Ym1pdCBhbm90aGVyIHZlcnNpb24uDQoNClRoYW5rcw0KQXZpbmFzaA0KDQo+IA0KPiBU
+aGFua3MsDQo+IFNla2hhcg0KPiANCg0K
