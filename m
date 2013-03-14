@@ -1,33 +1,96 @@
-From: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Subject: RE: [PATCH v5 0/4] Add DT support for davinci_mmc driver
-Date: Thu, 14 Mar 2013 13:52:19 +0000
-Message-ID: <A73F36158E33644199EB82C5EC81C7BC3EA48F4D@DBDE01.ent.ti.com>
-References: <1363097637-11371-1-git-send-email-prakash.pm@ti.com>
- <5141BAA1.1070906@ti.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] USB: Palmas OTG Transceiver Driver
+Date: Thu, 14 Mar 2013 15:56:57 +0200
+Message-ID: <20130314135657.GE26080@arwen.pp.htv.fi>
+References: <1362662506-14823-1-git-send-email-kishon@ti.com>
+ <1362662506-14823-4-git-send-email-kishon@ti.com>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <5141BAA1.1070906@ti.com>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: "Nori, Sekhar" <nsekhar@ti.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "hs@denx.de" <hs@denx.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "cjb@laptop.org" <cjb@laptop.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>
+Content-Type: multipart/mixed; boundary="===============6198140601423038407=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1362662506-14823-4-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, s-guiriec-l0cyMroinI0@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, ruchika-l0cyMroinI0@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXIgMTQsIDIwMTMgYXQgMTc6MjU6MTMsIE5vcmksIFNla2hhciB3cm90ZToNCj4g
-T24gMy8xMi8yMDEzIDc6NDMgUE0sIE1hbmp1bmF0aGFwcGEsIFByYWthc2ggd3JvdGU6DQo+ID4g
-UGF0Y2ggc2V0IGFkZHMgRFQgc3VwcG9ydCBmb3IgZGF2aW5jaV9tbWMgZHJpdmVyIGFuZCBpcw0K
-PiA+IHZlcmlmaWVkIG9uIGRhODUwLWV2bSB3aXRob3V0IGNhcmRfZGV0ZWN0L3dyaXRlX3Byb3Rl
-Y3QgYW5kDQo+ID4gRURNQSBzdXBwb3J0LiBBbHNvIHRha2VjYXJlIHRvIGRlcml2ZSBjb250cm9s
-bGVyIElQIHZlcnNpb24gZnJvbQ0KPiA+IHBsYXRmb3JtX2RldmljZV9pZCB0YWJsZSwgcmVtb3Zl
-IHZlcnNpb24gc3BlY2lmaWNhdGlvbiBpbiBwZGF0YS4NCj4gPiANCj4gPiBBcHBsaWVzIG9uIHRv
-cCBvZiBiZWxvdyBwYXRjaCB1bmRlciBjb21tdW5pdHkgcmV2aWV3Og0KPiA+ICJFbmFibGUgU1BJ
-IGZsYXNoIHN1cHBvcnQgb24gZGE4NTAtZXZtIERUIGtlcm5lbCINCj4gPiBodHRwOi8vd3d3LnNw
-aW5pY3MubmV0L2xpc3RzL2FybS1rZXJuZWwvbXNnMjI5MzI4Lmh0bWwNCj4gPiANCj4gPiBEZXBl
-bmRzIG9uIHBhdGNoIHdhaXRpbmcgZm9yIGFjY2VwdGFuY2U6DQo+ID4gUGF0Y2ggIm1tYzogZGF2
-aW5jaTogYWxsb3cgZHJpdmVyIHRvIHdvcmsgd2l0aG91dCBETUEgcmVzb3VyY2UiDQo+ID4gaHR0
-cDovL3d3dy5tYWlsLWFyY2hpdmUuY29tL2xpbnV4LW1tY0B2Z2VyLmtlcm5lbC5vcmcvbXNnMTg3
-NzEuaHRtbA0KPiANCj4gU2luY2UgdGhpcyBwYXRjaCBkaWQgbm90IGdldCBwaWNrZWQgZm9yIHYz
-LjksIGl0IG1heSBiZSB3b3J0aHdoaWxlDQo+IHJlYmFzaW5nIGl0IGFuZCBhZGRpbmcgdG8gdGhp
-cyBzZXJpZXMuDQo+IA0KDQpXaWxsIGRvIHRoYXQuDQoNClRoYW5rcywNClByYWthc2ggDQoNCg==
+--===============6198140601423038407==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="19uQFt6ulqmgNgg1"
+Content-Disposition: inline
+
+--19uQFt6ulqmgNgg1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Mar 07, 2013 at 06:51:45PM +0530, Kishon Vijay Abraham I wrote:
+> From: Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
+>=20
+> This is the driver for the OTG transceiver built into the Palmas chip. It
+> handles the various USB OTG events that can be generated by cable
+> insertion/removal.
+>=20
+> Signed-off-by: Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
+> Signed-off-by: Moiz Sonasath <m-sonasath-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Ruchika Kharwar <ruchika-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Sebastien Guiriec <s-guiriec-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/usb/twlxxxx-usb.txt        |   15 +
+>  drivers/usb/otg/Kconfig                            |    6 +
+>  drivers/usb/otg/Makefile                           |    1 +
+>  drivers/usb/otg/palmas-usb.c                       |  396 ++++++++++++++=
+++++++
+
+this has to go to drivers/usb/phy/ and should be named phy-palmas.c or
+phy-twl$(whatever number palmas is).c :-)
+
+--=20
+balbi
+
+--19uQFt6ulqmgNgg1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRQdcpAAoJEIaOsuA1yqRE8OsQAIfC6fnKSeh4jC3YbDNdiYfo
+BXnorVsOuqAz1C6W0+Ett5rhxLQ5fXplYYTnJf8dcJPqclx1vaY2+I3Ud7EFO6Rw
+CSY8p4c6ASx7cFKP+ptDixNBJ0C07p6/vBWV3nWhlxZbm2ycczS/K8lvcYuv4bmf
+Dd3oUjDOlMiCFr8ifLMMm+Fi4Ts30lwrvmrooBU1ARFB5AKmTBiBOduwTCB1jP/5
+9ogCun2+TTtMdwl3R5Ele9Hcoz6gWKHgJboUKWgIkvYcU575evctQ78TNRybeJ3f
+tzGXFzAvryw9sr2XzQFbGs5NZ3CC22DfPUZ6nchyfOFEHLSdn7vnXgP73FgmwXKL
+phPJHY4iRScnLjgduq0GHTnI459pGrO9Q0zeMRoHViN4VBT/C8r9frdGczIyAenC
+YUHVgBWNnScMFOaUkxYauSqWR/Qun4BIrjCjYECMMZp1uSMZMUmgZjmRqV0wIvC5
+F6KFfyws9tD6KbxTKuLKXPYHBV79FfyMSQm2ruLACI5TkMXGwqAiScu/A/ePfw4C
+BspBFX8H6GNXte8p1Oock8fDEdtc+mzUvQ+vLPSKk61wv70tp0sJqfsE0g78cWnj
+6x8v8eD/L9PUx7yZYqkzenQW+VvlhTfoxHZFpclRNsIaQQ0EuRlKl2ONkKkEgs3Q
+8p/GNmZdaWY4e8PQLbAv
+=DQCr
+-----END PGP SIGNATURE-----
+
+--19uQFt6ulqmgNgg1--
+
+--===============6198140601423038407==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============6198140601423038407==--
