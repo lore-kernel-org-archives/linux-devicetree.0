@@ -1,67 +1,56 @@
-From: "Christian Daudt" <csd@broadcom.com>
-Subject: [PATCH V2 2/2] ARM: bcm281xx: Add DT support for SMC handler
-Date: Thu, 14 Mar 2013 15:14:28 -0700
-Message-ID: <1363299268-10506-2-git-send-email-csd@broadcom.com>
-References: <1363299268-10506-1-git-send-email-csd@broadcom.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/5] mmc: mxcmmc: add mpc512x SDHC support
+Date: Thu, 14 Mar 2013 22:52:57 +0000
+Message-ID: <201303142252.57951.arnd@arndb.de>
+References: <1363279254-22351-1-git-send-email-agust@denx.de> <1589714.JH7YyAvXz1@wuerfel> <20130314191332.44ca64c9@crub>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1363299268-10506-1-git-send-email-csd@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, abhimanyu.kapur@outlook.com, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>
-Cc: Christian Daudt <csd@broadcom.com>, csd_b@daudt.org, devicetree-discuss@lists.ozlabs.org, "arm@kernel.org" <arm@kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20130314191332.44ca64c9@crub>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Anatolij Gustschin <agust@denx.de>
+Cc: linux-mmc@vger.kernel.org, Chris Ball <cjb@laptop.org>, Sascha Hauer <s.hauer@pengutronix.de>, Markus Pargmann <mpa@pengutronix.de>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-- Adds devicetree binding and documentation for the smc handler
+On Thursday 14 March 2013, Anatolij Gustschin wrote:
+> I wanted to avoid additional levels of indirection and function calls
+> on i.MX. If something like
+> 
+> static inline u32 mxcmci_readl(struct mxcmci_host *host, int reg)
+> {
+> #if IS_ENABLED(CONFIG_PPC_MPC512x)
+>         return in_be32(host->base + reg);
+> #else
+>         return readl(host->base + reg); 
+> #endif
+> }
+> 
+> is acceptable, I'll use it.
 
-Updates from V1:
-- Created this separate patch for the DT portion
-- Added SoC compatible to smc binding
+I think that's ok. A single #ifdef around the four functions might be
+nicer though. You could also use ioread32_be on powerpc and write it
+like
 
-Signed-off-by: Christian Daudt <csd@broadcom.com>
+static inline u32 mxcmci_readl(struct mxcmci_host *host, int reg)
+{
+	if (IS_ENABLED(CONFIG_PPC_MPC512x))
+		return ioread32_be(host->base + reg);
+	else
+		return readl(host->base + reg); 
+}
 
-diff --git a/Documentation/devicetree/bindings/misc/smc.txt b/Documentation/devicetree/bindings/misc/smc.txt
-new file mode 100644
-index 0000000..02b4281
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/smc.txt
-@@ -0,0 +1,14 @@
-+Broadcom Secure Monitor Bounce buffer
-+-----------------------------------------------------
-+This binding defines the location of the bounce buffer
-+used for non-secure to secure communications.
-+
-+Required properties:
-+- compatible : "bcm,kona-smc"
-+- reg : Location and size of bounce buffer
-+
-+Example:
-+	smc@0x3404c000 {
-+		compatible = "bcm,bcm11351-smc", "bcm,kona-smc";
-+		reg = <0x3404c000 0x400>; //1 KiB in SRAM
-+	};
-diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-index 8f71f40..b2b9d80 100644
---- a/arch/arm/boot/dts/bcm11351.dtsi
-+++ b/arch/arm/boot/dts/bcm11351.dtsi
-@@ -55,4 +55,9 @@
- 		clock-frequency = <32768>;
- 	};
- 
-+	smc@0x3404c000 {
-+		compatible = "bcm,bcm11351-smc", "bcm,kona-smc";
-+		reg = <0x3404c000 0x400>; //1 KiB in SRAM
-+	};
-+
- };
--- 
-1.7.10.4
+> > Does mpc512x have no clock management? I think it should still
+> > work without modifications if CONFIG_HAVE_CLK is disabled.
+> > In that case, devm_clk_get() will return NULL and we don't
+> > error out here.
+> 
+> It does have some clock management (a platform clock driver) and
+> the platform selects CONFIG_HAVE_CLK. But we do not have "ipg"
+> and "per" clocks on that platform, but "sdhc_clk" instead.
+
+As Sascha said, they should really use the same name, although it's
+possible that neither sdhc_clk nor ipg is a good name here.
+
+	Arnd
