@@ -1,90 +1,99 @@
-From: Javier Martinez Canillas <martinez.javier@gmail.com>
-Subject: Re: [PATCH 3/3] ARM: OMAP2+: Add GPMC DT support for Ethernet child nodes
-Date: Thu, 14 Mar 2013 17:56:45 +0100
-Message-ID: <CAAwP0s3LXP4018M7nySiLsKj511PeZxZWfxJ3-_VpQDAAoMBOg@mail.gmail.com>
-References: <1363273762-17441-1-git-send-email-javier.martinez@collabora.co.uk>
- <1363273762-17441-4-git-send-email-javier.martinez@collabora.co.uk>
- <5141F13E.8040300@ti.com> <CAAwP0s2iJscf9nV7Ac7ysebciL=d4z1KiUk29f7A1DaakVY=Ww@mail.gmail.com>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP systems
+Date: Thu, 14 Mar 2013 11:25:55 -0600
+Message-ID: <20130314172555.GA14048@obsidianresearch.com>
+References: <20130312210328.GA22702@obsidianresearch.com>
+ <20130312213006.GA23717@avionic-0098.mockup.avionic-design.de>
+ <20130312220854.GA23112@obsidianresearch.com>
+ <20130313081815.GD25940@avionic-0098.mockup.avionic-design.de>
+ <20130313170205.GB24042@obsidianresearch.com>
+ <20130313192628.GA28714@avionic-0098.mockup.avionic-design.de>
+ <5140E85A.3040900@firmworks.com>
+ <20130313220235.GA29895@avionic-0098.mockup.avionic-design.de>
+ <20130313222102.GA28336@obsidianresearch.com>
+ <20130314090120.GA2224@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAAwP0s2iJscf9nV7Ac7ysebciL=d4z1KiUk29f7A1DaakVY=Ww@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130314090120.GA2224@avionic-0098.mockup.avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Mitch Bradley <wmb@firmworks.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 14, 2013 at 5:37 PM, Javier Martinez Canillas
-<martinez.javier@gmail.com> wrote:
-> On Thu, Mar 14, 2013 at 4:48 PM, Jon Hunter <jon-hunter@ti.com> wrote:
->> Hi Javier,
->>
->> On 03/14/2013 10:09 AM, Javier Martinez Canillas wrote:
->>> Besides being used to interface with external memory devices,
->>> the General-Purpose Memory Controller can be used to connect
->>> Pseudo-SRAM devices such as ethernet controllers to OMAP2+
->>> processors using the TI GPMC as a data bus.
->>>
->>> This patch allows an ethernet chip to be defined as an GPMC
->>> child device node.
->>>
->>> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->>> ---
->>>  Documentation/devicetree/bindings/net/gpmc-eth.txt |   90 ++++++++++++++++++++
->>>  arch/arm/mach-omap2/gpmc.c                         |    8 ++
->>>  2 files changed, 98 insertions(+), 0 deletions(-)
->>>  create mode 100644 Documentation/devicetree/bindings/net/gpmc-eth.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/gpmc-eth.txt b/Documentation/devicetree/bindings/net/gpmc-eth.txt
->>> new file mode 100644
->>> index 0000000..c45363c
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/net/gpmc-eth.txt
->>> @@ -0,0 +1,90 @@
->>> +Device tree bindings for Ethernet chip connected to TI GPMC
->>> +
->>> +Besides being used to interface with external memory devices, the
->>> +General-Purpose Memory Controller can be used to connect Pseudo-SRAM devices
->>> +such as ethernet controllers to processors using the TI GPMC as a data bus.
->>> +
->>> +Ethernet controllers connected to TI GPMC are represented as child nodes of
->>> +the GPMC controller with an "ethernet" name.
->>> +
->>> +All timing relevant properties as well as generic GPMC child properties are
->>> +explained in a separate documents. Please refer to
->>> +Documentation/devicetree/bindings/bus/ti-gpmc.txt
->>> +
->>> +Required properties:
->>> +- bank-width:                Address width of the device in bytes. GPMC supports 8-bit
->>> +                     and 16-bit devices and so must be either 1 or 2 bytes.
->>
->> I am wondering if we should use reg-io-width here. The smsc driver is
->> using this to determine the width of the device. And so I am wondering
->> if this could cause problems.
->>
->> Obviously this complicates gpmc_probe_generic_child() a little, but may
->> be would could pass the name of the width property to
->> gpmc_probe_generic_child() as well. What do you think?
->>
->
-> Hi Jon,
->
-> Well now I'm confused. I thought that both were needed since a
-> combination of bank-width 16-bit / reg-io-width 32-bit is also
-> possible (in fact that is how I'm testing on my IGEPv2) and we have
-> talked about this before [1].
->
-> By reading both the OMAP3 TRM and the smsc LAN9221 data-sheet, it
-> seems that the reg-io-width is not about the data bus address width
-> but the CPU address width. The smsc data-sheet says:
->
+[trimm'd the cc list]
 
-Hi Jon,
+On Thu, Mar 14, 2013 at 10:01:20AM +0100, Thierry Reding wrote:
 
-By the way, here is the smsc LAN9221 data-sheet if you don't have it
-and want to take it a look:
+> It turns out that this works with the Tegra driver because it uses the
+> new of_pci_process_ranges() function and simply overwrites earlier
+> matches by subsequent ones.
+> 
+> 	ranges = <0x82000000 0 0 0x80000000 0 0x00001000   /* port 0 registers */
+> 		  0x82000000 0 0 0x80001000 0 0x00001000   /* port 1 registers */
+> 		  0x81000000 0 0 0x82000000 0 0x00010000   /* downstream I/O */
+> 		  0x82000000 0 0 0xa0000000 0 0x10000000   /* non-prefetchable memory */
+> 		  0xc2000000 0 0 0xb0000000 0 0x10000000>; /* prefetchable memory */
 
-http://www.smsc.com/Downloads/SMSC/Downloads_Public/Data_Sheets/9221.pdf
+Okay.. There is still something funny here, the 3rd dword of the child
+address should not be 0 in every line and there shouldn't be overlaps
+in the child address space.
 
-Thanks a lot and best regards,
-Javier
+I'm assuming 0x80000000, 0xa0000000 and 0xb0000000 are real CPU physical
+addresses?
+
+Then it should probably look like:
+
+ranges = <0x82000000 0 0x80000000  0x80000000  0 0x00001000   /* port 0 registers */
+	  0x82000000 0 0x80001000  0x80001000  0 0x00001000   /* port 1 registers */
+	  0x81000000 0          0  0x82000000  0 0x00010000   /* downstream I/O */
+	  0x82000000 0 0xa0000000  0xa0000000  0 0x10000000   /* non-prefetchable memory */
+	  0xc2000000 0 0xb0000000  0xb0000000  0 0x10000000>; /* prefetchable memory */
+
+Which says 'access to CPU address 0xa0000000 produces a PCI-E memory TLP with
+address 0xa0000000' - this is the 'normal' case, I assume that is what
+happens on tegra?
+
+It also says 'access to CPU address 0x82000000 produces a PCI-E IO TLP
+with address 0' - this translation is something Linux typically
+expects..
+
+Then you'd go on to have:
+
+               pci@1,0 {
+                        device_type = "pci";
+                        assigned-addresses = <0x82000000 0 0x80000000  0 0x1000>;
+                        reg = <0x000800 0 0 0 0>;
+               }
+               pci@2,0 {
+                        device_type = "pci";
+                        assigned-addresses = <0x82000000 0 0x80001000  0 0x1000>;
+                        reg = <0x001000 0 0 0 0>;
+               }
+
+Notice I've made the upper dw of assigned-addresses's size 0 and
+included the full 3dw from the appropriate ranges line.
+
+> So the above will actually work along with the corresponding root-port
+> "assigned-addresses" properties. I still don't like it much because I
+> don't think it accurately reflects the hardware. 
+
+There are lots of valid ways to model the same HW :(
+
+Bear in mind, for the PCI case - the OF PCI bindings model the HW
+through the eyes of the abstractions in the PCI specification. That is
+to say, they are not supposed to be an exact representation of the on
+chip architecture.
+
+Perhaps this would be clearer if you used 'pcie-root-complex' as the
+name of the top level node?
+
+> same kludgy, non-spec conformant smack that my original proposal had
+> because it uses assigned-addresses for something it wasn't intended
+> to.
+
+Yes, only the top level 'reg' method avoids going outside any specs.
+
+Regards,
+Jason
