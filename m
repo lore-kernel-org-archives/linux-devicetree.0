@@ -1,7 +1,8 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 4/6] video: mxsfb: get display timings from device tree
-Date: Thu, 14 Mar 2013 13:53:28 +0800
-Message-ID: <1363240410-16865-5-git-send-email-shawn.guo@linaro.org>
+Subject: [PATCH 5/6] ARM: mxs: move display timing configurations into device
+ tree
+Date: Thu, 14 Mar 2013 13:53:29 +0800
+Message-ID: <1363240410-16865-6-git-send-email-shawn.guo@linaro.org>
 References: <1363240410-16865-1-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,257 +23,467 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fb
 Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use videomode helpers to get display timings and configurations from
-device tree when platform_data is absent.
+Move display timing configurations into device tree, so that the
+auxdata for mxsfb driver can be killed.
 
 Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/fb/mxsfb.txt |   34 +++++++
- drivers/video/Kconfig                          |    2 +
- drivers/video/mxsfb.c                          |  118 ++++++++++++++++++++++--
- 3 files changed, 144 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/imx23-evk.dts        |   25 ++++++
+ arch/arm/boot/dts/imx28-apf28dev.dts   |   25 ++++++
+ arch/arm/boot/dts/imx28-apx4devkit.dts |   25 ++++++
+ arch/arm/boot/dts/imx28-cfa10049.dts   |   25 ++++++
+ arch/arm/boot/dts/imx28-evk.dts        |   25 ++++++
+ arch/arm/boot/dts/imx28-m28evk.dts     |   25 ++++++
+ arch/arm/mach-mxs/mach-mxs.c           |  153 --------------------------------
+ 7 files changed, 150 insertions(+), 153 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/fb/mxsfb.txt b/Documentation/devicetree/bindings/fb/mxsfb.txt
-index b41e5e52..7ba3b76 100644
---- a/Documentation/devicetree/bindings/fb/mxsfb.txt
-+++ b/Documentation/devicetree/bindings/fb/mxsfb.txt
-@@ -5,10 +5,20 @@ Required properties:
-   imx23 and imx28.
- - reg: Address and length of the register set for lcdif
- - interrupts: Should contain lcdif interrupts
-+- display : phandle to display node (see below for details)
+diff --git a/arch/arm/boot/dts/imx23-evk.dts b/arch/arm/boot/dts/imx23-evk.dts
+index 035c13f..7880e17 100644
+--- a/arch/arm/boot/dts/imx23-evk.dts
++++ b/arch/arm/boot/dts/imx23-evk.dts
+@@ -60,7 +60,32 @@
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&lcdif_24bit_pins_a>;
+ 				panel-enable-gpios = <&gpio1 18 0>;
++				display = <&display>;
+ 				status = "okay";
++
++				display: display {
++					bits-per-pixel = <32>;
++					bus-width = <24>;
++
++					display-timings {
++						native-mode = <&timing0>;
++						timing0: timing0 {
++							clock-frequency = <9200000>;
++							hactive = <480>;
++							vactive = <272>;
++							hback-porch = <15>;
++							hfront-porch = <8>;
++							vback-porch = <12>;
++							vfront-porch = <4>;
++							hsync-len = <1>;
++							vsync-len = <1>;
++							hsync-active = <0>;
++							vsync-active = <0>;
++							de-active = <1>;
++							pixelclk-active = <0>;
++						};
++					};
++				};
+ 			};
+ 		};
  
- Optional properties:
- - panel-enable-gpios : Should specify the gpio for panel enable
+diff --git a/arch/arm/boot/dts/imx28-apf28dev.dts b/arch/arm/boot/dts/imx28-apf28dev.dts
+index 6d8865b..3d905d1 100644
+--- a/arch/arm/boot/dts/imx28-apf28dev.dts
++++ b/arch/arm/boot/dts/imx28-apf28dev.dts
+@@ -72,7 +72,32 @@
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&lcdif_16bit_pins_a
+ 						&lcdif_pins_apf28dev>;
++				display = <&display>;
+ 				status = "okay";
++
++				display: display {
++					bits-per-pixel = <16>;
++					bus-width = <16>;
++
++					display-timings {
++						native-mode = <&timing0>;
++						timing0: timing0 {
++							clock-frequency = <33000033>;
++							hactive = <800>;
++							vactive = <480>;
++							hback-porch = <96>;
++							hfront-porch = <96>;
++							vback-porch = <20>;
++							vfront-porch = <21>;
++							hsync-len = <64>;
++							vsync-len = <4>;
++							hsync-active = <1>;
++							vsync-active = <1>;
++							de-active = <1>;
++							pixelclk-active = <0>;
++						};
++					};
++				};
+ 			};
+ 		};
  
-+* display node
+diff --git a/arch/arm/boot/dts/imx28-apx4devkit.dts b/arch/arm/boot/dts/imx28-apx4devkit.dts
+index 5171667..43bf3c7 100644
+--- a/arch/arm/boot/dts/imx28-apx4devkit.dts
++++ b/arch/arm/boot/dts/imx28-apx4devkit.dts
+@@ -94,7 +94,32 @@
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&lcdif_24bit_pins_a
+ 					     &lcdif_pins_apx4>;
++				display = <&display>;
+ 				status = "okay";
 +
-+Required properties:
-+- bits-per-pixel : <16> for RGB565, <32> for RGB888/666.
-+- bus-width : number of data lines.  Could be <8>, <16>, <18> or <24>.
++				display: display {
++					bits-per-pixel = <32>;
++					bus-width = <24>;
 +
-+Required sub-node:
-+- display-timings : Refer to binding doc display-timing.txt for details.
-+
- Examples:
++					display-timings {
++						native-mode = <&timing0>;
++						timing0: timing0 {
++							clock-frequency = <30000000>;
++							hactive = <800>;
++							vactive = <480>;
++							hback-porch = <88>;
++							hfront-porch = <40>;
++							vback-porch = <32>;
++							vfront-porch = <13>;
++							hsync-len = <48>;
++							vsync-len = <3>;
++							hsync-active = <1>;
++							vsync-active = <1>;
++							de-active = <1>;
++							pixelclk-active = <0>;
++						};
++					};
++				};
+ 			};
+ 		};
  
- lcdif@80030000 {
-@@ -16,4 +26,28 @@ lcdif@80030000 {
- 	reg = <0x80030000 2000>;
- 	interrupts = <38 86>;
- 	panel-enable-gpios = <&gpio3 30 0>;
+diff --git a/arch/arm/boot/dts/imx28-cfa10049.dts b/arch/arm/boot/dts/imx28-cfa10049.dts
+index a0d3e9f..7d6e1f8 100644
+--- a/arch/arm/boot/dts/imx28-cfa10049.dts
++++ b/arch/arm/boot/dts/imx28-cfa10049.dts
+@@ -126,7 +126,32 @@
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&lcdif_18bit_pins_cfa10049
+ 					     &lcdif_pins_cfa10049>;
++				display = <&display>;
+ 				status = "okay";
 +
-+	display: display {
-+		bits-per-pixel = <32>;
-+		bus-width = <24>;
++				display: display {
++					bits-per-pixel = <32>;
++					bus-width = <18>;
 +
-+		display-timings {
-+			native-mode = <&timing0>;
-+			timing0: timing0 {
-+				clock-frequency = <33500000>;
-+				hactive = <800>;
-+				vactive = <480>;
-+				hfront-porch = <164>;
-+				hback-porch = <89>;
-+				hsync-len = <10>;
-+				vback-porch = <23>;
-+				vfront-porch = <10>;
-+				vsync-len = <10>;
-+				hsync-active = <0>;
-+				vsync-active = <0>;
-+				de-active = <1>;
-+				pixelclk-active = <0>;
-+			};
-+		};
-+	};
- };
-diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
-index 4c1546f..e7718fd 100644
---- a/drivers/video/Kconfig
-+++ b/drivers/video/Kconfig
-@@ -2437,6 +2437,8 @@ config FB_MXS
- 	select FB_CFB_FILLRECT
- 	select FB_CFB_COPYAREA
- 	select FB_CFB_IMAGEBLIT
-+	select FB_MODE_HELPERS
-+	select OF_VIDEOMODE
- 	help
- 	  Framebuffer support for the MXS SoC.
++					display-timings {
++						native-mode = <&timing0>;
++						timing0: timing0 {
++							clock-frequency = <9216000>;
++							hactive = <320>;
++							vactive = <480>;
++							hback-porch = <2>;
++							hfront-porch = <2>;
++							vback-porch = <2>;
++							vfront-porch = <2>;
++							hsync-len = <15>;
++							vsync-len = <15>;
++							hsync-active = <0>;
++							vsync-active = <0>;
++							de-active = <1>;
++							pixelclk-active = <1>;
++						};
++					};
++				};
+ 			};
+ 		};
  
-diff --git a/drivers/video/mxsfb.c b/drivers/video/mxsfb.c
-index 001983a..cf968c6 100644
---- a/drivers/video/mxsfb.c
-+++ b/drivers/video/mxsfb.c
-@@ -43,12 +43,14 @@
- #include <linux/kernel.h>
- #include <linux/of_device.h>
- #include <linux/of_gpio.h>
-+#include <video/of_display_timing.h>
- #include <linux/platform_device.h>
- #include <linux/clk.h>
- #include <linux/dma-mapping.h>
- #include <linux/io.h>
+diff --git a/arch/arm/boot/dts/imx28-evk.dts b/arch/arm/boot/dts/imx28-evk.dts
+index 2da316e0..2d4ea3b 100644
+--- a/arch/arm/boot/dts/imx28-evk.dts
++++ b/arch/arm/boot/dts/imx28-evk.dts
+@@ -124,7 +124,32 @@
+ 				pinctrl-0 = <&lcdif_24bit_pins_a
+ 					     &lcdif_pins_evk>;
+ 				panel-enable-gpios = <&gpio3 30 0>;
++				display = <&display>;
+ 				status = "okay";
++
++				display: display {
++					bits-per-pixel = <32>;
++					bus-width = <24>;
++
++					display-timings {
++						native-mode = <&timing0>;
++						timing0: timing0 {
++							clock-frequency = <33500000>;
++							hactive = <800>;
++							vactive = <480>;
++							hback-porch = <89>;
++							hfront-porch = <164>;
++							vback-porch = <23>;
++							vfront-porch = <10>;
++							hsync-len = <10>;
++							vsync-len = <10>;
++							hsync-active = <0>;
++							vsync-active = <0>;
++							de-active = <1>;
++							pixelclk-active = <0>;
++						};
++					};
++				};
+ 			};
+ 
+ 			can0: can@80032000 {
+diff --git a/arch/arm/boot/dts/imx28-m28evk.dts b/arch/arm/boot/dts/imx28-m28evk.dts
+index 6ce3d17..83e16c0 100644
+--- a/arch/arm/boot/dts/imx28-m28evk.dts
++++ b/arch/arm/boot/dts/imx28-m28evk.dts
+@@ -119,7 +119,32 @@
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&lcdif_24bit_pins_a
+ 					     &lcdif_pins_m28>;
++				display = <&display>;
+ 				status = "okay";
++
++				display: display {
++					bits-per-pixel = <16>;
++					bus-width = <18>;
++
++					display-timings {
++						native-mode = <&timing0>;
++						timing0: timing0 {
++							clock-frequency = <33260000>;
++							hactive = <800>;
++							vactive = <480>;
++							hback-porch = <0>;
++							hfront-porch = <256>;
++							vback-porch = <0>;
++							vfront-porch = <45>;
++							hsync-len = <1>;
++							vsync-len = <1>;
++							hsync-active = <0>;
++							vsync-active = <0>;
++							de-active = <1>;
++							pixelclk-active = <1>;
++						};
++					};
++				};
+ 			};
+ 
+ 			can0: can@80032000 {
+diff --git a/arch/arm/mach-mxs/mach-mxs.c b/arch/arm/mach-mxs/mach-mxs.c
+index 3218f1f..b0ef36e 100644
+--- a/arch/arm/mach-mxs/mach-mxs.c
++++ b/arch/arm/mach-mxs/mach-mxs.c
+@@ -18,7 +18,6 @@
+ #include <linux/gpio.h>
+ #include <linux/init.h>
+ #include <linux/micrel_phy.h>
+-#include <linux/mxsfb.h>
+ #include <linux/of_platform.h>
+ #include <linux/phy.h>
  #include <linux/pinctrl/consumer.h>
- #include <linux/mxsfb.h>
-+#include <video/videomode.h>
+@@ -28,116 +27,6 @@
+ #include <mach/digctl.h>
+ #include <mach/mxs.h>
  
- #define REG_SET	4
- #define REG_CLR	8
-@@ -677,6 +679,97 @@ static int mxsfb_restore_mode(struct mxsfb_info *host)
- 	return 0;
+-static struct fb_videomode mx23evk_video_modes[] = {
+-	{
+-		.name		= "Samsung-LMS430HF02",
+-		.refresh	= 60,
+-		.xres		= 480,
+-		.yres		= 272,
+-		.pixclock	= 108096, /* picosecond (9.2 MHz) */
+-		.left_margin	= 15,
+-		.right_margin	= 8,
+-		.upper_margin	= 12,
+-		.lower_margin	= 4,
+-		.hsync_len	= 1,
+-		.vsync_len	= 1,
+-		.sync		= FB_SYNC_DATA_ENABLE_HIGH_ACT |
+-				  FB_SYNC_DOTCLK_FAILING_ACT,
+-	},
+-};
+-
+-static struct fb_videomode mx28evk_video_modes[] = {
+-	{
+-		.name		= "Seiko-43WVF1G",
+-		.refresh	= 60,
+-		.xres		= 800,
+-		.yres		= 480,
+-		.pixclock	= 29851, /* picosecond (33.5 MHz) */
+-		.left_margin	= 89,
+-		.right_margin	= 164,
+-		.upper_margin	= 23,
+-		.lower_margin	= 10,
+-		.hsync_len	= 10,
+-		.vsync_len	= 10,
+-		.sync		= FB_SYNC_DATA_ENABLE_HIGH_ACT |
+-				  FB_SYNC_DOTCLK_FAILING_ACT,
+-	},
+-};
+-
+-static struct fb_videomode m28evk_video_modes[] = {
+-	{
+-		.name		= "Ampire AM-800480R2TMQW-T01H",
+-		.refresh	= 60,
+-		.xres		= 800,
+-		.yres		= 480,
+-		.pixclock	= 30066, /* picosecond (33.26 MHz) */
+-		.left_margin	= 0,
+-		.right_margin	= 256,
+-		.upper_margin	= 0,
+-		.lower_margin	= 45,
+-		.hsync_len	= 1,
+-		.vsync_len	= 1,
+-		.sync		= FB_SYNC_DATA_ENABLE_HIGH_ACT,
+-	},
+-};
+-
+-static struct fb_videomode apx4devkit_video_modes[] = {
+-	{
+-		.name		= "HannStar PJ70112A",
+-		.refresh	= 60,
+-		.xres		= 800,
+-		.yres		= 480,
+-		.pixclock	= 33333, /* picosecond (30.00 MHz) */
+-		.left_margin	= 88,
+-		.right_margin	= 40,
+-		.upper_margin	= 32,
+-		.lower_margin	= 13,
+-		.hsync_len	= 48,
+-		.vsync_len	= 3,
+-		.sync		= FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT |
+-				  FB_SYNC_DATA_ENABLE_HIGH_ACT |
+-				  FB_SYNC_DOTCLK_FAILING_ACT,
+-	},
+-};
+-
+-static struct fb_videomode apf28dev_video_modes[] = {
+-	{
+-		.name = "LW700",
+-		.refresh = 60,
+-		.xres = 800,
+-		.yres = 480,
+-		.pixclock = 30303, /* picosecond */
+-		.left_margin = 96,
+-		.right_margin = 96, /* at least 3 & 1 */
+-		.upper_margin = 0x14,
+-		.lower_margin = 0x15,
+-		.hsync_len = 64,
+-		.vsync_len = 4,
+-		.sync = FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT |
+-				FB_SYNC_DATA_ENABLE_HIGH_ACT |
+-				FB_SYNC_DOTCLK_FAILING_ACT,
+-	},
+-};
+-
+-static struct fb_videomode cfa10049_video_modes[] = {
+-	{
+-		.name		= "Himax HX8357-B",
+-		.refresh	= 60,
+-		.xres		= 320,
+-		.yres		= 480,
+-		.pixclock	= 108506, /* picosecond (9.216 MHz) */
+-		.left_margin	= 2,
+-		.right_margin	= 2,
+-		.upper_margin	= 2,
+-		.lower_margin	= 2,
+-		.hsync_len	= 15,
+-		.vsync_len	= 15,
+-		.sync		= FB_SYNC_DATA_ENABLE_HIGH_ACT
+-	},
+-};
+-
+-static struct mxsfb_platform_data mxsfb_pdata __initdata;
+-
+ /*
+  * MX28EVK_FLEXCAN_SWITCH is shared between both flexcan controllers
+  */
+@@ -168,8 +57,6 @@ static void mx28evk_flexcan1_switch(int enable)
+ static struct flexcan_platform_data flexcan_pdata[2];
+ 
+ static struct of_dev_auxdata mxs_auxdata_lookup[] __initdata = {
+-	OF_DEV_AUXDATA("fsl,imx23-lcdif", 0x80030000, NULL, &mxsfb_pdata),
+-	OF_DEV_AUXDATA("fsl,imx28-lcdif", 0x80030000, NULL, &mxsfb_pdata),
+ 	OF_DEV_AUXDATA("fsl,imx28-flexcan", 0x80032000, NULL, &flexcan_pdata[0]),
+ 	OF_DEV_AUXDATA("fsl,imx28-flexcan", 0x80034000, NULL, &flexcan_pdata[1]),
+ 	{ /* sentinel */ }
+@@ -253,14 +140,6 @@ static void __init update_fec_mac_prop(enum mac_oui oui)
+ 	}
  }
  
-+static int mxsfb_init_fbinfo_dt(struct mxsfb_info *host)
-+{
-+	struct fb_info *fb_info = &host->fb_info;
-+	struct fb_var_screeninfo *var = &fb_info->var;
-+	struct device *dev = &host->pdev->dev;
-+	struct device_node *np = host->pdev->dev.of_node;
-+	struct device_node *display_np;
-+	struct device_node *timings_np;
-+	struct display_timings *timings;
-+	u32 width;
-+	int i;
-+	int ret = 0;
-+
-+	display_np = of_parse_phandle(np, "display", 0);
-+	if (!display_np) {
-+		dev_err(dev, "failed to find display phandle\n");
-+		return -ENOENT;
-+	}
-+
-+	ret = of_property_read_u32(display_np, "bus-width", &width);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to get property bus-width\n");
-+		goto put_display_node;
-+	}
-+
-+	switch (width) {
-+	case 8:
-+		host->ld_intf_width = STMLCDIF_8BIT;
-+		break;
-+	case 16:
-+		host->ld_intf_width = STMLCDIF_16BIT;
-+		break;
-+	case 18:
-+		host->ld_intf_width = STMLCDIF_18BIT;
-+		break;
-+	case 24:
-+		host->ld_intf_width = STMLCDIF_24BIT;
-+		break;
-+	default:
-+		dev_err(dev, "invalid bus-width value\n");
-+		ret = -EINVAL;
-+		goto put_display_node;
-+	}
-+
-+	ret = of_property_read_u32(display_np, "bits-per-pixel",
-+				   &var->bits_per_pixel);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to get property bits-per-pixel\n");
-+		goto put_display_node;
-+	}
-+
-+	timings = of_get_display_timings(display_np);
-+	if (!timings) {
-+		dev_err(dev, "failed to get display timings\n");
-+		ret = -ENOENT;
-+		goto put_display_node;
-+	}
-+
-+	timings_np = of_find_node_by_name(display_np,
-+					  "display-timings");
-+	if (!timings_np) {
-+		dev_err(dev, "failed to find display-timings node\n");
-+		ret = -ENOENT;
-+		goto put_display_node;
-+	}
-+
-+	for (i = 0; i < of_get_child_count(timings_np); i++) {
-+		struct videomode vm;
-+		struct fb_videomode fb_vm;
-+
-+		ret = videomode_from_timing(timings, &vm, i);
-+		if (ret < 0)
-+			goto put_timings_node;
-+		ret = fb_videomode_from_videomode(&vm, &fb_vm);
-+		if (ret < 0)
-+			goto put_timings_node;
-+
-+		if (vm.data_flags & DISPLAY_FLAGS_DE_HIGH)
-+			fb_vm.sync |= FB_SYNC_DATA_ENABLE_HIGH_ACT;
-+		if (vm.data_flags & DISPLAY_FLAGS_PIXDATA_NEGEDGE)
-+			fb_vm.sync |= FB_SYNC_DOTCLK_FAILING_ACT;
-+		fb_add_videomode(&fb_vm, &fb_info->modelist);
-+	}
-+
-+put_timings_node:
-+	of_node_put(timings_np);
-+put_display_node:
-+	of_node_put(display_np);
-+	return ret;
-+}
-+
- static int mxsfb_init_fbinfo(struct mxsfb_info *host)
+-static void __init imx23_evk_init(void)
+-{
+-	mxsfb_pdata.mode_list = mx23evk_video_modes;
+-	mxsfb_pdata.mode_count = ARRAY_SIZE(mx23evk_video_modes);
+-	mxsfb_pdata.default_bpp = 32;
+-	mxsfb_pdata.ld_intf_width = STMLCDIF_24BIT;
+-}
+-
+ static inline void enable_clk_enet_out(void)
  {
- 	struct fb_info *fb_info = &host->fb_info;
-@@ -685,6 +778,7 @@ static int mxsfb_init_fbinfo(struct mxsfb_info *host)
- 	dma_addr_t fb_phys;
- 	void *fb_virt;
- 	unsigned fb_size;
-+	int ret;
+ 	struct clk *clk = clk_get_sys("enet_out", NULL);
+@@ -274,11 +153,6 @@ static void __init imx28_evk_init(void)
+ 	enable_clk_enet_out();
+ 	update_fec_mac_prop(OUI_FSL);
  
- 	fb_info->fbops = &mxsfb_ops;
- 	fb_info->flags = FBINFO_FLAG_DEFAULT | FBINFO_READS_FAST;
-@@ -694,14 +788,21 @@ static int mxsfb_init_fbinfo(struct mxsfb_info *host)
- 	fb_info->fix.visual = FB_VISUAL_TRUECOLOR,
- 	fb_info->fix.accel = FB_ACCEL_NONE;
- 
--	var->bits_per_pixel = pdata->default_bpp ? pdata->default_bpp : 16;
-+	if (pdata) {
-+		host->ld_intf_width = pdata->ld_intf_width;
-+		var->bits_per_pixel =
-+			pdata->default_bpp ? pdata->default_bpp : 16;
-+	} else {
-+		ret = mxsfb_init_fbinfo_dt(host);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	var->nonstd = 0;
- 	var->activate = FB_ACTIVATE_NOW;
- 	var->accel_flags = 0;
- 	var->vmode = FB_VMODE_NONINTERLACED;
- 
--	host->ld_intf_width = pdata->ld_intf_width;
+-	mxsfb_pdata.mode_list = mx28evk_video_modes;
+-	mxsfb_pdata.mode_count = ARRAY_SIZE(mx28evk_video_modes);
+-	mxsfb_pdata.default_bpp = 32;
+-	mxsfb_pdata.ld_intf_width = STMLCDIF_24BIT;
 -
- 	/* Memory allocation for framebuffer */
- 	fb_size = SZ_2M;
- 	fb_virt = alloc_pages_exact(fb_size, GFP_DMA);
-@@ -764,11 +865,6 @@ static int mxsfb_probe(struct platform_device *pdev)
- 	if (of_id)
- 		pdev->id_entry = of_id->data;
+ 	mxs_saif_clkmux_select(MXS_DIGCTL_SAIF_CLKMUX_EXTMSTR0);
+ }
  
--	if (!pdata) {
--		dev_err(&pdev->dev, "No platformdata. Giving up\n");
--		return -ENODEV;
--	}
+@@ -291,14 +165,6 @@ static void __init imx28_evk_post_init(void)
+ 	}
+ }
+ 
+-static void __init m28evk_init(void)
+-{
+-	mxsfb_pdata.mode_list = m28evk_video_modes;
+-	mxsfb_pdata.mode_count = ARRAY_SIZE(m28evk_video_modes);
+-	mxsfb_pdata.default_bpp = 16;
+-	mxsfb_pdata.ld_intf_width = STMLCDIF_18BIT;
+-}
 -
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!res) {
- 		dev_err(&pdev->dev, "Cannot get memory IO resource\n");
-@@ -836,8 +932,10 @@ static int mxsfb_probe(struct platform_device *pdev)
- 	if (ret != 0)
- 		goto fb_release;
+ static void __init sc_sps1_init(void)
+ {
+ 	enable_clk_enet_out();
+@@ -317,11 +183,6 @@ static void __init apx4devkit_init(void)
+ 	if (IS_BUILTIN(CONFIG_PHYLIB))
+ 		phy_register_fixup_for_uid(PHY_ID_KSZ8051, MICREL_PHY_ID_MASK,
+ 					   apx4devkit_phy_fixup);
+-
+-	mxsfb_pdata.mode_list = apx4devkit_video_modes;
+-	mxsfb_pdata.mode_count = ARRAY_SIZE(apx4devkit_video_modes);
+-	mxsfb_pdata.default_bpp = 32;
+-	mxsfb_pdata.ld_intf_width = STMLCDIF_24BIT;
+ }
  
--	for (i = 0; i < pdata->mode_count; i++)
--		fb_add_videomode(&pdata->mode_list[i], &fb_info->modelist);
-+	if (pdata)
-+		for (i = 0; i < pdata->mode_count; i++)
-+			fb_add_videomode(&pdata->mode_list[i],
-+					 &fb_info->modelist);
+ #define ENET0_MDC__GPIO_4_0	MXS_GPIO_NR(4, 0)
+@@ -402,11 +263,6 @@ static void __init cfa10049_init(void)
+ {
+ 	enable_clk_enet_out();
+ 	update_fec_mac_prop(OUI_CRYSTALFONTZ);
+-
+-	mxsfb_pdata.mode_list = cfa10049_video_modes;
+-	mxsfb_pdata.mode_count = ARRAY_SIZE(cfa10049_video_modes);
+-	mxsfb_pdata.default_bpp = 32;
+-	mxsfb_pdata.ld_intf_width = STMLCDIF_18BIT;
+ }
  
- 	modelist = list_first_entry(&fb_info->modelist,
- 			struct fb_modelist, list);
+ static void __init cfa10037_init(void)
+@@ -418,21 +274,12 @@ static void __init cfa10037_init(void)
+ static void __init apf28_init(void)
+ {
+ 	enable_clk_enet_out();
+-
+-	mxsfb_pdata.mode_list = apf28dev_video_modes;
+-	mxsfb_pdata.mode_count = ARRAY_SIZE(apf28dev_video_modes);
+-	mxsfb_pdata.default_bpp = 16;
+-	mxsfb_pdata.ld_intf_width = STMLCDIF_16BIT;
+ }
+ 
+ static void __init mxs_machine_init(void)
+ {
+ 	if (of_machine_is_compatible("fsl,imx28-evk"))
+ 		imx28_evk_init();
+-	else if (of_machine_is_compatible("fsl,imx23-evk"))
+-		imx23_evk_init();
+-	else if (of_machine_is_compatible("denx,m28evk"))
+-		m28evk_init();
+ 	else if (of_machine_is_compatible("bluegiga,apx4devkit"))
+ 		apx4devkit_init();
+ 	else if (of_machine_is_compatible("crystalfontz,cfa10037"))
 -- 
 1.7.9.5
