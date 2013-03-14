@@ -1,60 +1,34 @@
 From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 2/3] pwm: pwm-tiecap: Add device-tree binding support
- for da850 SOC
-Date: Thu, 14 Mar 2013 17:13:08 +0530
-Message-ID: <5141B7CC.7000700@ti.com>
-References: <1363257158-11615-1-git-send-email-avinashphilip@ti.com> <1363257158-11615-3-git-send-email-avinashphilip@ti.com>
+Subject: Re: [PATCH v5 0/4] Add DT support for davinci_mmc driver
+Date: Thu, 14 Mar 2013 17:25:13 +0530
+Message-ID: <5141BAA1.1070906@ti.com>
+References: <1363097637-11371-1-git-send-email-prakash.pm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1363257158-11615-3-git-send-email-avinashphilip@ti.com>
+In-Reply-To: <1363097637-11371-1-git-send-email-prakash.pm@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Philip Avinash <avinashphilip@ti.com>
-Cc: thierry.reding@avionic-design.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com, prakash.pm@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>
+To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
+Cc: linux-mmc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, hs@denx.de, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, cjb@laptop.org, davinci-linux-open-source@linux.davincidsp.com
 List-Id: devicetree@vger.kernel.org
 
-On 3/14/2013 4:02 PM, Philip Avinash wrote:
-> ECAP IP is used in da850 SOC's also. Hence adds ECAP device tree binding
-> support for da850.
+On 3/12/2013 7:43 PM, Manjunathappa, Prakash wrote:
+> Patch set adds DT support for davinci_mmc driver and is
+> verified on da850-evm without card_detect/write_protect and
+> EDMA support. Also takecare to derive controller IP version from
+> platform_device_id table, remove version specification in pdata.
 > 
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Rob Landley <rob@landley.net>
-> Signed-off-by: Philip Avinash <avinashphilip@ti.com>
-> ---
-> :100644 100644 131e8c1... fcbd3c1... M	Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
-> :100644 100644 22e96e2... e0d96c8... M	drivers/pwm/pwm-tiecap.c
->  .../devicetree/bindings/pwm/pwm-tiecap.txt         |    2 +-
->  drivers/pwm/pwm-tiecap.c                           |    1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
+> Applies on top of below patch under community review:
+> "Enable SPI flash support on da850-evm DT kernel"
+> http://www.spinics.net/lists/arm-kernel/msg229328.html
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt b/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
-> index 131e8c1..fcbd3c1 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
-> @@ -1,7 +1,7 @@
->  TI SOC ECAP based APWM controller
->  
->  Required properties:
-> -- compatible: Must be "ti,am33xx-ecap"
-> +- compatible: Must be "ti,am33xx-ecap" or "ti,da850-ecap"
->  - #pwm-cells: Should be 3. Number of cells being used to specify PWM property.
->    First cell specifies the per-chip index of the PWM to use, the second
->    cell is the period in nanoseconds and bit 0 in the third cell is used to
-> diff --git a/drivers/pwm/pwm-tiecap.c b/drivers/pwm/pwm-tiecap.c
-> index 22e96e2..e0d96c8 100644
-> --- a/drivers/pwm/pwm-tiecap.c
-> +++ b/drivers/pwm/pwm-tiecap.c
-> @@ -197,6 +197,7 @@ static const struct pwm_ops ecap_pwm_ops = {
->  
->  static const struct of_device_id ecap_of_match[] = {
->  	{ .compatible	= "ti,am33xx-ecap" },
-> +	{ .compatible	= "ti,da850-ecap" },
->  	{},
+> Depends on patch waiting for acceptance:
+> Patch "mmc: davinci: allow driver to work without DMA resource"
+> http://www.mail-archive.com/linux-mmc@vger.kernel.org/msg18771.html
 
-You add a new compatible, but don't really show any changes in driver in
-this series. So why can't we simply use ti,am33xx-ecap on DA850 too?
+Since this patch did not get picked for v3.9, it may be worthwhile
+rebasing it and adding to this series.
 
 Thanks,
 Sekhar
