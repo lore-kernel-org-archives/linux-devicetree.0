@@ -1,50 +1,42 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] Enable SPI flash support on da850-evm DT kernel
-Date: Thu, 14 Mar 2013 15:54:26 +0530
-Message-ID: <5141A55A.9060708@ti.com>
-References: <1363075827-31053-1-git-send-email-prakash.pm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1363075827-31053-1-git-send-email-prakash.pm-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH v7 0/2] Adding USB 3.0 DRD-phy support for exynos5250
+Date: Thu, 14 Mar 2013 15:59:09 +0530
+Message-ID: <1363256951-17158-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, balbi@ti.com, rob.herring@calxeda.com, kgene.kim@samsung.com, thomas.abraham@linaro.org, dianders@chromium.org, p.paneri@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 3/12/2013 1:40 PM, Manjunathappa, Prakash wrote:
-> Patch enables support for m25p64 SPI flash support on
-> da850-EVM.
+Changes from v6:
+ - Changing the file names accordingly as per
+   [PATCH] usb: phy: rename all phy drivers to phy-$name.c
+ - Using devm_clk_get for PHY ref clocks "ext_xtal" and "xusbxti"
+ - Adding the bindings documentation for separate USB 2.0 phy and
+   USB 3.0 phy.
 
-This patch set looks good to me except the comments I had on 2/5. I
-tested it using SPI flash on DA850 EVM and it worked fine on basic
-read/write tests.
+Based on 'usb-next' plus Felipe's 'testing' branch patches;
+(some 194 patches in fact ;-), on top of 3.9rc2 tag).
 
-Grant,
+Tested after merging linux-samsung's 'for-next' into 'usb-next'
+to verify things with recently merged common clock framework for
+samsung's SoCs.
 
-With your ack I would like to merge the series through DaVinci tree so
-its easy to manage the conflicts in DT files.
+Vivek Gautam (2):
+  usb: phy: samsung: Common out the generic stuff
+  usb: phy: samsung: Add PHY support for USB 3.0 controller
 
-> 
-> Testing information:
-> da850-evm comes with partitions specified in DT blob.
-> Able to mount/umount and create/delete files on filesystem partition.
-> 
-> Depends on below patch in spi-next branch of git://git.secretlab.ca/git/linux-2.6.git.
-> "spi/davinci: add OF support for the spi controller"
+ .../devicetree/bindings/usb/samsung-usbphy.txt     |   76 ++-
+ drivers/usb/phy/Kconfig                            |   22 +-
+ drivers/usb/phy/Makefile                           |    2 +
+ drivers/usb/phy/phy-samsung-usb.c                  |  726 +-------------------
+ drivers/usb/phy/phy-samsung-usb.h                  |  327 +++++++++
+ drivers/usb/phy/phy-samsung-usb2.c                 |  509 ++++++++++++++
+ drivers/usb/phy/phy-samsung-usb3.c                 |  349 ++++++++++
+ 7 files changed, 1291 insertions(+), 720 deletions(-)
+ create mode 100644 drivers/usb/phy/phy-samsung-usb.h
+ create mode 100644 drivers/usb/phy/phy-samsung-usb2.c
+ create mode 100644 drivers/usb/phy/phy-samsung-usb3.c
 
-Prakash, there is no need to mention this dependency. The patch is
-already in mainline.
-
-Thanks,
-Sekhar
+-- 
+1.7.6.5
