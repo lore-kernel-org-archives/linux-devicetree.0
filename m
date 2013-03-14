@@ -1,82 +1,60 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 2/2] usb: dwc3: exynos: use clk_prepare_enable and
- clk_disable_unprepare
-Date: Thu, 14 Mar 2013 12:53:20 +0200
-Message-ID: <20130314105320.GH32369@arwen.pp.htv.fi>
-References: <1363257898-17504-1-git-send-email-gautam.vivek@samsung.com>
- <1363257898-17504-3-git-send-email-gautam.vivek@samsung.com>
-Reply-To: <balbi@ti.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v5 1/4] ARM: davinci: mmc: derive version information
+ from device name
+Date: Thu, 14 Mar 2013 16:38:09 +0530
+Message-ID: <5141AF99.5090608@ti.com>
+References: <1363097637-11371-1-git-send-email-prakash.pm@ti.com> <1363097637-11371-2-git-send-email-prakash.pm@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6lXr1rPCNTf1w0X8"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1363257898-17504-3-git-send-email-gautam.vivek@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>
-Cc: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, gregkh@linuxfoundation.org, balbi@ti.com, rob.herring@calxeda.com, kgene.kim@samsung.com, thomas.abraham@linaro.org, dianders@chromium.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1363097637-11371-2-git-send-email-prakash.pm@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
+Cc: linux-mmc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, hs@denx.de, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, cjb@laptop.org, davinci-linux-open-source@linux.davincidsp.com
 List-Id: devicetree@vger.kernel.org
 
---6lXr1rPCNTf1w0X8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Prakash,
 
-Hi,
+The series looks good to me. I tested it again on DA850 EVM (with and
+without DT).
 
-On Thu, Mar 14, 2013 at 04:14:58PM +0530, Vivek Gautam wrote:
-> Convert clk_enable/clk_disable to clk_prepare_enable/clk_disable_unprepare
-> calls as required by common clock framework.
->=20
-> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
-> CC: Felipe Balbi <balbi@ti.com>
-> CC: Kukjin Kim <kgene.kim@samsung.com>
+On 3/12/2013 7:43 PM, Manjunathappa, Prakash wrote:
+> Remove specifying mmc controller IP version information via platform
+> data, instead specify device name so that driver derives it from
+> platform_device_id table. Also change the clock node name to match
+> the changed dev_id.
+> Tested on da850-evm to make sure driver loads without clk_get failures.
+> 
+> Signed-off-by: Manjunathappa, Prakash <prakash.pm@ti.com>
+> Reviewed-by: Sekhar Nori <nsekhar@ti.com>
 > ---
->  drivers/usb/dwc3/dwc3-exynos.c |    6 +++---
->  1 files changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exyno=
-s.c
-> index 66ca9ac..b03f609 100644
-> --- a/drivers/usb/dwc3/dwc3-exynos.c
-> +++ b/drivers/usb/dwc3/dwc3-exynos.c
-> @@ -129,7 +129,7 @@ static int dwc3_exynos_probe(struct platform_device *=
-pdev)
->  	exynos->dev	=3D dev;
->  	exynos->clk	=3D clk;
-> =20
-> -	clk_enable(exynos->clk);
-> +	clk_prepare_enable(exynos->clk);
 
-eventually we need to pass this clock handling to dwc3/core.c. Just make
-sure it's optional since not all platforms need it.
+> diff --git a/drivers/mmc/host/davinci_mmc.c b/drivers/mmc/host/davinci_mmc.c
+> index 27123f8..50e9782 100644
+> --- a/drivers/mmc/host/davinci_mmc.c
+> +++ b/drivers/mmc/host/davinci_mmc.c
+> @@ -1157,6 +1157,18 @@ static void __init init_mmcsd_host(struct mmc_davinci_host *host)
+>  	mmc_davinci_reset_ctrl(host, 0);
+>  }
+>  
+> +static struct platform_device_id davinci_mmc_devtype[] = {
+> +	{
+> +		.name	= "davinci-mmc-dm355",
+> +		.driver_data = MMC_CTLR_VERSION_1,
+> +	}, {
+> +		.name	= "davinci-mmc-da830",
+> +		.driver_data = MMC_CTLR_VERSION_2,
+> +	},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(platform, davinci_mmc_devtype);
 
-I guess the best way would be to handle clocks via
-->runtime_suspend()/->runtime_resume() ??
+I should have mentioned this previously, but your choice of name here is
+too long. You can simply use dm355-mmc (rather dm6441-mmc?) and
+da830-mmc instead like you did for SPI. This would have saved some long
+lines. Sorry about not asking for this earlier. I know it would have
+saved you a bunch of effort.
 
---=20
-balbi
-
---6lXr1rPCNTf1w0X8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRQawgAAoJEIaOsuA1yqRERc8P/jGz7Czv57nw66tpzFV18XaX
-ckMJpC8gcdZYnSKxejFs6sPYkXrYgQajq9FqfAxRGIoYL1ki1DhdJRPCCKsTNBQq
-d42dsESXIFaX+F04SlZRQaDoxYnuNtNz76v9szcJyPiy1uyZgQiJq5h2BpTDWRzZ
-bQJqNKbCnZ3tsk1mJ3l81xmtJ9EpZ3jua+IWX04cARU/u7SaAFmL//eRZgmnx9Jz
-VEdudP/T37xhqeR1R1Q9D/OT8wWxpKtMNcvI9UC6EWBpqq/TuYGR22uc2TLW3Jpz
-Z4LYfdHn8rbvyS6Nz1fVQppm4XrZxCmm4rqS7g4GG5aaFqA5JcD9TZ57UYQTW+o2
-GN8rr74dSmVn8fPhiiOmuT7rX3/93YsdMtSKg+nJUasDL7Cp7TVSAQnG5r+mMccO
-11z+4RgttYNf8be3TUtXznZooGy88sZrZLc1flPcalsLps7xQ7SiQhDbMwQyFDvI
-J55FnStR4pa/tpaprr5sufFH65ul6bRRU49PyElvyq9r5ZaxlIt6YzqNOfrIRX0t
-S1+yX16jUxD918AlSmhKodFA6Vga6AN27RNHCXO1VZ8zXI51bZJvkYxebkwv5+Ip
-xf8pOCXm7j/BgCYEFz9iKAP0LNz5aVkpAGSLeboKjD7YZesv5AgE9CF21qnwqeVL
-x+Ttdo4qCETDN75/g+8v
-=6rTS
------END PGP SIGNATURE-----
-
---6lXr1rPCNTf1w0X8--
+Thanks,
+Sekhar
