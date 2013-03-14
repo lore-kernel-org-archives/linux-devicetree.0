@@ -1,87 +1,54 @@
-From: Javier Martinez Canillas <martinez.javier@gmail.com>
-Subject: Re: [PATCH 0/9] ARM: dts: Various OMAP2+ device-tree updates
-Date: Thu, 14 Mar 2013 17:02:39 +0100
-Message-ID: <CAAwP0s2BW-GTKsS0UpAWiMbRTFyDzgeUmOCw2p0CaB3RDKOnBw@mail.gmail.com>
-References: <1362763654-9660-1-git-send-email-jon-hunter@ti.com> <5141E55E.9040801@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V7 1/2] ARM: bcm281xx: Add timer driver (driver portion)
+Date: Thu, 14 Mar 2013 16:03:02 +0000
+Message-ID: <201303141603.02401.arnd@arndb.de>
+References: <1363210048-3334-1-git-send-email-csd@broadcom.com>
+ <51410BF4.4040400@linaro.org> <alpine.LFD.2.02.1303140951580.22263@ionos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5141E55E.9040801@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Jon Hunter <jon-hunter@ti.com>, Tony Lindgren <tony@atomide.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.02.1303140951580.22263@ionos>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 14, 2013 at 3:57 PM, Benoit Cousson <b-cousson@ti.com> wrote:
-> Salut Jon,
->
-> On 03/08/2013 06:27 PM, Jon Hunter wrote:
->> Various OMAP device-tree updates for PMU, DMA, GPIO, GPMC and boards.
->>
->> The DMA, PMU and OMAP3430 SDP board changes have been sent before
->> individually but re-sending here as a complete series for v3.10.
->>
->> This is based upon v3.9-rc1 and the OMAP3 GPMC binding from Florian
->> Vaussard [1] and OMAP5 DT SPI patch from Felipe Balbi [2].
->>
->> [1] https://patchwork.kernel.org/patch/2057111/
->
-> I've tried to follow the series review, and it seems that Florian was
-> considering sending some other patches. It is not clear if this is a new
-> version of the series or some additional patches.
->
+On Thursday 14 March 2013, Thomas Gleixner wrote:
+> > But if its arch specific for hardware I don't have, I'd really prefer the arch
+> > maintainer be the upstream path.
+> > 
+> > Thomas: Am I being too obstinate here?  If not, should we drop "F:
+> > drivers/clocksource" from the MAINTAINERS entry?
 
-Hi Benoit,
+The idea of moving drivers out of arch/* into drivers/* is definitely to
+have someone who understands the subsystem act as the gatekeeper. There
+should be very little architecture specific knowledge in those drivers,
+and I think it's more important to ensure that they are following a
+sensible understanding of how timekeeping is done than that they
+are following specific architecture maintainer's preferences.
 
-According to [1] Jon suggested that it was not necessary to map all
-the 16MB for the GPMC mapped register address space since in practice
-is a very small fraction of that size is used.
+> Maybe we should move the ARM specific ones into
+> drivers/clocksource/arm/ ?
 
-I had the following patch but I did never post it because Jon said
-that the I/O memory mapping is page-aligned and the minimum page
-size for ARM is 4KB anyways, so there is no functional difference
-between using 0x1000 or 0x02d0.
+About half the IP blocks we use on ARM are also used on at least
+one ARM64/AVR32/MIPS/PowerPC/x86/SH/Hexagon/c6x/etc part. Grouping them
+by which CPU architecture first starts using them or happens to be
+more popular at the time does not seem too helpful here.
 
-But now reading [2] I see that you prefer to do what the documentation
-said and don't assume any the page size / alignment.
+Maybe it's better to have a subdirectory for those clock sources
+that are used on any SoC, or have subdirectories based on the
+company that created that part, as we do for ethernet drivers.
+I wouldn't bother with that until there are a couple of dozen
+different clock source drivers.
 
-[2]: https://patchwork.kernel.org/patch/2239741/
-
->From 68edff5a102bb8fc81e006738baa456eb69f080a Mon Sep 17 00:00:00 2001
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Date: Wed, 27 Feb 2013 02:30:51 +0100
-Subject: [PATCH] ARM: dts: OMAP3: reduce GPMC mapped registers address space
-
-Currently the OMAP General-Purpose Memory Controller (GPMC) device
-node maps 16 MB of address space for its hardware registers.
-
-This is because the OMAP Technical Reference Manual says that the
-GPMC module register address space size is 16 MB. But in practice
-the maximum address offset used by a GPMC register is 0x02d0.
-
-So, there is no need to map such a big address space for GPMC regs.
-
-This change was suggested by Jon Hunter [1].
-
-[1]: https://patchwork.kernel.org/patch/2057111/
-
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
----
- arch/arm/boot/dts/omap3.dtsi |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
-
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-index 2ddae38..a60eaf1 100644
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -407,7 +407,7 @@
- 		gpmc: gpmc@6e000000 {
- 			compatible = "ti,omap3430-gpmc";
- 			ti,hwmods = "gpmc";
--			reg = <0x6e000000 0x1000000>;
-+			reg = <0x6e000000 0x02d0>;
- 			interrupts = <20>;
- 			gpmc,num-cs = <8>;
- 			gpmc,num-waitpins = <4>;
--- 
-1.7.7.6
+	Arnd
