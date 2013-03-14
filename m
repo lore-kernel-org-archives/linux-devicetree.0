@@ -1,56 +1,60 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/5] mmc: mxcmmc: add mpc512x SDHC support
-Date: Thu, 14 Mar 2013 22:52:57 +0000
-Message-ID: <201303142252.57951.arnd@arndb.de>
-References: <1363279254-22351-1-git-send-email-agust@denx.de> <1589714.JH7YyAvXz1@wuerfel> <20130314191332.44ca64c9@crub>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20130314191332.44ca64c9@crub>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Anatolij Gustschin <agust@denx.de>
-Cc: linux-mmc@vger.kernel.org, Chris Ball <cjb@laptop.org>, Sascha Hauer <s.hauer@pengutronix.de>, Markus Pargmann <mpa@pengutronix.de>, devicetree-discuss@lists.ozlabs.org
+From: Doug Anderson <dianders@chromium.org>
+Subject: [PATCH] usb: Document clocks in samsung,exynos4210-ehci/ohci bindings
+Date: Thu, 14 Mar 2013 16:00:46 -0700
+Message-ID: <1363302046-31684-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: Olof Johansson <olof@lixom.net>, Thomas Abraham <thomas.abraham@linaro.org>, Vivek Gautam <gautam.vivek@samsung.com>, Doug Anderson <dianders@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jingoo Han <jg1.han@samsung.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 14 March 2013, Anatolij Gustschin wrote:
-> I wanted to avoid additional levels of indirection and function calls
-> on i.MX. If something like
-> 
-> static inline u32 mxcmci_readl(struct mxcmci_host *host, int reg)
-> {
-> #if IS_ENABLED(CONFIG_PPC_MPC512x)
->         return in_be32(host->base + reg);
-> #else
->         return readl(host->base + reg); 
-> #endif
-> }
-> 
-> is acceptable, I'll use it.
+The exynox4210-ehci and exynos4210-ohci nodes need a clock specified
+using the common clock framework.  Document it.
 
-I think that's ok. A single #ifdef around the four functions might be
-nicer though. You could also use ioread32_be on powerpc and write it
-like
+Signed-off-by: Doug Anderson <dianders@chromium.org>
+---
+ Documentation/devicetree/bindings/usb/exynos-usb.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-static inline u32 mxcmci_readl(struct mxcmci_host *host, int reg)
-{
-	if (IS_ENABLED(CONFIG_PPC_MPC512x))
-		return ioread32_be(host->base + reg);
-	else
-		return readl(host->base + reg); 
-}
+diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+index f66fcdd..d557cf7 100644
+--- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
++++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+@@ -10,6 +10,8 @@ Required properties:
+  - reg: physical base address of the controller and length of memory mapped
+    region.
+  - interrupts: interrupt number to the cpu.
++ - clocks: from common clock binding: handle to adc clock.
++ - clock-names: from common clock binding: Shall be "usbhost".
+ 
+ Optional properties:
+  - samsung,vbus-gpio:  if present, specifies the GPIO that
+@@ -22,6 +24,9 @@ Example:
+ 		reg = <0x12110000 0x100>;
+ 		interrupts = <0 71 0>;
+ 		samsung,vbus-gpio = <&gpx2 6 1 3 3>;
++
++		clocks = <&clock 285>;
++		clock-names = "usbhost";
+ 	};
+ 
+ OHCI
+@@ -31,10 +36,15 @@ Required properties:
+  - reg: physical base address of the controller and length of memory mapped
+    region.
+  - interrupts: interrupt number to the cpu.
++ - clocks: from common clock binding: handle to adc clock.
++ - clock-names: from common clock binding: Shall be "usbhost".
+ 
+ Example:
+ 	usb@12120000 {
+ 		compatible = "samsung,exynos4210-ohci";
+ 		reg = <0x12120000 0x100>;
+ 		interrupts = <0 71 0>;
++
++		clocks = <&clock 285>;
++		clock-names = "usbhost";
+ 	};
+-- 
+1.8.1.3
 
-> > Does mpc512x have no clock management? I think it should still
-> > work without modifications if CONFIG_HAVE_CLK is disabled.
-> > In that case, devm_clk_get() will return NULL and we don't
-> > error out here.
-> 
-> It does have some clock management (a platform clock driver) and
-> the platform selects CONFIG_HAVE_CLK. But we do not have "ipg"
-> and "per" clocks on that platform, but "sdhc_clk" instead.
-
-As Sascha said, they should really use the same name, although it's
-possible that neither sdhc_clk nor ipg is a good name here.
-
-	Arnd
