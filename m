@@ -1,44 +1,27 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 08/10] ASoC: dmaengine_pcm: Add open function for DT DMA
- request
-Date: Thu, 14 Mar 2013 14:04:45 +0800
-Message-ID: <20130314060442.GB27654@S2101-09.ap.freescale.net>
-References: <1362940391-8338-1-git-send-email-mpa@pengutronix.de>
- <1362940391-8338-9-git-send-email-mpa@pengutronix.de>
- <20130312190206.GY19942@opensource.wolfsonmicro.com>
- <20130313021712.GD27461@S2101-09.ap.freescale.net>
- <20130313104945.GI25610@opensource.wolfsonmicro.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [Resend/PATCH 0/5] omap4/5: i2c/spi: device tree data
+Date: Thu, 14 Mar 2013 11:40:49 +0530
+Message-ID: <514169E9.1080105@ti.com>
+References: <1363009486-19430-1-git-send-email-sourav.poddar@ti.com> <513DEAE1.1050606@ti.com> <513DFB62.5030709@ti.com> <5140AD75.2050900@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130313104945.GI25610-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5140AD75.2050900@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com, Andrew Morton <akpm@osdl.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 13, 2013 at 10:49:45AM +0000, Mark Brown wrote:
-> On Wed, Mar 13, 2013 at 10:18:29AM +0800, Shawn Guo wrote:
+On Wednesday 13 March 2013 10:16 PM, Benoit Cousson wrote:
+> Hi Sourav,
 > 
-> > I did not see any objection from you on that patch, so I'm waiting for
-> > you to publish a branch for it, so that my mxs-dma generic binding
-> > series can move forward.
+> I've just applied your branch after a minor subject cleanup for consistency.
 > 
-> I commented on the removal of the const from the name parameter (and
+> git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.10/dts
+> 
+Thanks for the tree Benoit. I shall update my v2 DT series against this branch then.
 
-I just double checked my mailbox and can only see the conversation
-between you and rmk, nothing particularly on the removal of the const
-from the name parameter.  Or I'm still missing something?
+Regards,
+Santosh
 
-Shawn
