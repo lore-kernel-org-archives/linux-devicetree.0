@@ -1,60 +1,119 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH] mmc: mxcmmc: DT support
-Date: Thu, 14 Mar 2013 17:35:13 +0100
-Message-ID: <20130314163513.GF32452@pengutronix.de>
-References: <1361816885-3033-1-git-send-email-mpa@pengutronix.de>
- <20130314165048.08416241@crub>
+From: Javier Martinez Canillas <martinez.javier@gmail.com>
+Subject: Re: [PATCH 3/3] ARM: OMAP2+: Add GPMC DT support for Ethernet child nodes
+Date: Thu, 14 Mar 2013 17:37:46 +0100
+Message-ID: <CAAwP0s2iJscf9nV7Ac7ysebciL=d4z1KiUk29f7A1DaakVY=Ww@mail.gmail.com>
+References: <1363273762-17441-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1363273762-17441-4-git-send-email-javier.martinez@collabora.co.uk> <5141F13E.8040300@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130314165048.08416241@crub>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Anatolij Gustschin <agust@denx.de>
-Cc: cjb@laptop.org, rob.herring@calxeda.com, rob@landley.net, s.hauer@pengutronix.de, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5141F13E.8040300@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 14, 2013 at 04:50:48PM +0100, Anatolij Gustschin wrote:
-> On Mon, 25 Feb 2013 19:28:05 +0100
-> Markus Pargmann <mpa@pengutronix.de> wrote:
-> 
-> > Adding devicetree support for imx21-mmc and imx31-mmc. Based on generic
-> > gpio helper functions by Guennadi and generic DMA devicetree bindings.
-> > 
-> > Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> > ---
-> >  .../devicetree/bindings/mmc/fsl-imx-mmc.txt        | 24 +++++++
-> >  drivers/mmc/host/mxcmmc.c                          | 80 +++++++++++++++++-----
-> >  2 files changed, 86 insertions(+), 18 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
-> > new file mode 100644
-> > index 0000000..a5ab662
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
-> > @@ -0,0 +1,24 @@
-> > +* Freescale Secure Digital Host Controller for i.MX1/2 series
-> 
-> shouldn't it be "... for i.MX2/3 series"?
-> 
-> ...
-> > +	if (!host->pdata) {
-> > +		host->dma = of_dma_request_slave_channel(pdev->dev.of_node,
-> > +				"rx-tx");
-> 
-> please use dma_request_slave_channel(&pdev->dev, "rx-tx")
-> here. of_dma_request_slave_channel() is not exported for
-> modules, building the driver as a module will fail.
+On Thu, Mar 14, 2013 at 4:48 PM, Jon Hunter <jon-hunter@ti.com> wrote:
+> Hi Javier,
+>
+> On 03/14/2013 10:09 AM, Javier Martinez Canillas wrote:
+>> Besides being used to interface with external memory devices,
+>> the General-Purpose Memory Controller can be used to connect
+>> Pseudo-SRAM devices such as ethernet controllers to OMAP2+
+>> processors using the TI GPMC as a data bus.
+>>
+>> This patch allows an ethernet chip to be defined as an GPMC
+>> child device node.
+>>
+>> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+>> ---
+>>  Documentation/devicetree/bindings/net/gpmc-eth.txt |   90 ++++++++++++++++++++
+>>  arch/arm/mach-omap2/gpmc.c                         |    8 ++
+>>  2 files changed, 98 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/net/gpmc-eth.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/gpmc-eth.txt b/Documentation/devicetree/bindings/net/gpmc-eth.txt
+>> new file mode 100644
+>> index 0000000..c45363c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/gpmc-eth.txt
+>> @@ -0,0 +1,90 @@
+>> +Device tree bindings for Ethernet chip connected to TI GPMC
+>> +
+>> +Besides being used to interface with external memory devices, the
+>> +General-Purpose Memory Controller can be used to connect Pseudo-SRAM devices
+>> +such as ethernet controllers to processors using the TI GPMC as a data bus.
+>> +
+>> +Ethernet controllers connected to TI GPMC are represented as child nodes of
+>> +the GPMC controller with an "ethernet" name.
+>> +
+>> +All timing relevant properties as well as generic GPMC child properties are
+>> +explained in a separate documents. Please refer to
+>> +Documentation/devicetree/bindings/bus/ti-gpmc.txt
+>> +
+>> +Required properties:
+>> +- bank-width:                Address width of the device in bytes. GPMC supports 8-bit
+>> +                     and 16-bit devices and so must be either 1 or 2 bytes.
+>
+> I am wondering if we should use reg-io-width here. The smsc driver is
+> using this to determine the width of the device. And so I am wondering
+> if this could cause problems.
+>
+> Obviously this complicates gpmc_probe_generic_child() a little, but may
+> be would could pass the name of the width property to
+> gpmc_probe_generic_child() as well. What do you think?
+>
 
-Thank you, I changed both in version 2.
+Hi Jon,
 
-Regards,
+Well now I'm confused. I thought that both were needed since a
+combination of bank-width 16-bit / reg-io-width 32-bit is also
+possible (in fact that is how I'm testing on my IGEPv2) and we have
+talked about this before [1].
 
-Markus
+By reading both the OMAP3 TRM and the smsc LAN9221 data-sheet, it
+seems that the reg-io-width is not about the data bus address width
+but the CPU address width. The smsc data-sheet says:
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+"The simple, yet highly functional host bus interface provides a
+glue-less connection to most common 16-bit microprocessors and
+microcontrollers as well as 32-bit microprocessors with a 16-bit
+external bus"
+
+By looking at the smsc911x driver
+(drivers/net/ethernet/smsc/smsc911x.c) I see that if you use
+reg-io-width = <4> (SMSC911X_USE_32BIT) then the smsc911x hardware
+registers can be read in one operation and if you use reg-io-width =
+<2> (SMSC911X_USE_16BIT) then you need two operations to read the
+register:
+
+static inline u32 __smsc911x_reg_read(struct smsc911x_data *pdata, u32 reg)
+{
+	if (pdata->config.flags & SMSC911X_USE_32BIT)
+		return readl(pdata->ioaddr + reg);
+
+	if (pdata->config.flags & SMSC911X_USE_16BIT)
+		return ((readw(pdata->ioaddr + reg) & 0xFFFF) |
+			((readw(pdata->ioaddr + reg + 2) & 0xFFFF) << 16));
+
+	BUG();
+	return 0;
+}
+
+Also, by reading at the OMAP3 TRM, I understand that even when the
+GPMC has a maximum 16-bit address width, it support devices that has
+32-bit registers by doing some sort of access adaptation.
+
+So, as far as I understand the "bank-width" is to configure the GPMC
+if is going to use a 8-bit or 16-bit width access and the
+"reg-io-width" is how the smsc911x driver is going to read its
+registers. So, I think we need both properties and there is no need to
+change gpmc_probe_generic_child() neither pass the child name to it.
+
+But to be honest I can be wrong here since data-sheet and technical
+reference manuals can be quite confusing sometimes :-)
+
+Thanks a lot for your feedback and best regards,
+Javier
+
+[1]: http://www.mail-archive.com/linux-omap@vger.kernel.org/msg85597.html
