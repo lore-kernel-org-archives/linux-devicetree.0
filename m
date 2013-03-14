@@ -1,34 +1,53 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v5 0/4] Add DT support for davinci_mmc driver
-Date: Thu, 14 Mar 2013 17:25:13 +0530
-Message-ID: <5141BAA1.1070906@ti.com>
-References: <1363097637-11371-1-git-send-email-prakash.pm@ti.com>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH 1/2] usb: dwc3: exynos: Use of_platform API to create dwc3
+ core pdev
+Date: Thu, 14 Mar 2013 17:40:12 +0530
+Message-ID: <CAFp+6iHZRfiSAXnbwhFNs4Rm7fzFx=v83pcWFJHsOo+JPya6VQ@mail.gmail.com>
+References: <1363257898-17504-1-git-send-email-gautam.vivek@samsung.com>
+	<1363257898-17504-2-git-send-email-gautam.vivek@samsung.com>
+	<20130314105155.GG32369@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1363097637-11371-1-git-send-email-prakash.pm@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Cc: linux-mmc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, hs@denx.de, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, cjb@laptop.org, davinci-linux-open-source@linux.davincidsp.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130314105155.GG32369@arwen.pp.htv.fi>
+Sender: linux-kernel-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, gregkh@linuxfoundation.org, rob.herring@calxeda.com, kgene.kim@samsung.com, thomas.abraham@linaro.org, dianders@chromium.org, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 3/12/2013 7:43 PM, Manjunathappa, Prakash wrote:
-> Patch set adds DT support for davinci_mmc driver and is
-> verified on da850-evm without card_detect/write_protect and
-> EDMA support. Also takecare to derive controller IP version from
-> platform_device_id table, remove version specification in pdata.
-> 
-> Applies on top of below patch under community review:
-> "Enable SPI flash support on da850-evm DT kernel"
-> http://www.spinics.net/lists/arm-kernel/msg229328.html
-> 
-> Depends on patch waiting for acceptance:
-> Patch "mmc: davinci: allow driver to work without DMA resource"
-> http://www.mail-archive.com/linux-mmc@vger.kernel.org/msg18771.html
+On Thu, Mar 14, 2013 at 4:21 PM, Felipe Balbi <balbi@ti.com> wrote:
+> Hi,
+>
+> On Thu, Mar 14, 2013 at 04:14:57PM +0530, Vivek Gautam wrote:
+>> @@ -170,7 +155,6 @@ static int dwc3_exynos_remove(struct platform_device *pdev)
+>>  {
+>>       struct dwc3_exynos      *exynos = platform_get_drvdata(pdev);
+>>
+>> -     platform_device_unregister(exynos->dwc3);
+>
+> don't you want to do what Kishon did here and have:
+>
+> static int dwc3_exynos_remove_child(struct device *dev, void *unused)
+> {
+>         struct platform_device  *pdev = to_platform_device(dev);
+>
+>         platform_device_unregister(pdev);
+>
+>         return 0;
+> }
+>
+> device_for_each_child(&pdev->dev, NULL, dwc3_exynos_remove_child);
+>
+> ???
 
-Since this patch did not get picked for v3.9, it may be worthwhile
-rebasing it and adding to this series.
+Hmm, right. We need to do that. :-)
 
-Thanks,
-Sekhar
+>
+> --
+> balbi
+
+
+
+-- 
+Thanks & Regards
+Vivek
