@@ -1,53 +1,40 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH 1/2] usb: dwc3: exynos: Use of_platform API to create dwc3
- core pdev
-Date: Thu, 14 Mar 2013 17:40:12 +0530
-Message-ID: <CAFp+6iHZRfiSAXnbwhFNs4Rm7fzFx=v83pcWFJHsOo+JPya6VQ@mail.gmail.com>
-References: <1363257898-17504-1-git-send-email-gautam.vivek@samsung.com>
-	<1363257898-17504-2-git-send-email-gautam.vivek@samsung.com>
-	<20130314105155.GG32369@arwen.pp.htv.fi>
+From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
+Subject: Re: GPIO polarity in bindings for Freescale MXS
+Date: Thu, 14 Mar 2013 13:35:47 +0100
+Message-ID: <5141C423.7030202@digi.com>
+References: <5141A04D.8020805@digi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130314105155.GG32369@arwen.pp.htv.fi>
-Sender: linux-kernel-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, gregkh@linuxfoundation.org, rob.herring@calxeda.com, kgene.kim@samsung.com, thomas.abraham@linaro.org, dianders@chromium.org, Kishon Vijay Abraham I <kishon@ti.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5141A04D.8020805-i7dp0qKlBMg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 14, 2013 at 4:21 PM, Felipe Balbi <balbi@ti.com> wrote:
-> Hi,
+On 03/14/2013 11:02 AM, Hector Palacios wrote:
+> Hello,
 >
-> On Thu, Mar 14, 2013 at 04:14:57PM +0530, Vivek Gautam wrote:
->> @@ -170,7 +155,6 @@ static int dwc3_exynos_remove(struct platform_device *pdev)
->>  {
->>       struct dwc3_exynos      *exynos = platform_get_drvdata(pdev);
->>
->> -     platform_device_unregister(exynos->dwc3);
+> Maybe I'm missing something but the MXS processors (at least i.MX23 and i.MX28) cannot
+> set the polarity of the GPIOs, so shouldn't the #gpio-cells be 1?
 >
-> don't you want to do what Kishon did here and have:
->
-> static int dwc3_exynos_remove_child(struct device *dev, void *unused)
-> {
->         struct platform_device  *pdev = to_platform_device(dev);
->
->         platform_device_unregister(pdev);
->
->         return 0;
-> }
->
-> device_for_each_child(&pdev->dev, NULL, dwc3_exynos_remove_child);
->
-> ???
+> (From Documentation/devicetree/bindings/gpio/fsl-imx-gpio.txt):
 
-Hmm, right. We need to do that. :-)
+Sorry, I meant: from Documentation/devicetree/bindings/gpio/gpio-mxs.txt
 
 >
-> --
-> balbi
-
-
-
--- 
-Thanks & Regards
-Vivek
+> - #gpio-cells : Should be two.  The first cell is the pin number and
+>    the second cell is used to specify the gpio polarity:
+>        0 = active high
+>        1 = active low
+>
+> Regards,
