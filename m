@@ -1,92 +1,106 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH V7 1/2] ARM: bcm281xx: Add timer driver (driver
- portion)
-Date: Thu, 14 Mar 2013 10:16:50 +0100 (CET)
-Message-ID: <alpine.LFD.2.02.1303140951580.22263@ionos>
-References: <1363210048-3334-1-git-send-email-csd@broadcom.com>
- <51410BF4.4040400@linaro.org>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] spi/davinci: add DT binding documentation
+Date: Thu, 14 Mar 2013 14:46:54 +0530
+Message-ID: <51419586.7090703@ti.com>
+References: <1363075827-31053-1-git-send-email-prakash.pm@ti.com>
+	<1363075827-31053-3-git-send-email-prakash.pm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51410BF4.4040400-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1363075827-31053-3-git-send-email-prakash.pm-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 13 Mar 2013, John Stultz wrote:
-> On 03/13/2013 02:27 PM, Christian Daudt wrote:
-> > This adds support for the Broadcom timer, used in the following SoCs:
-> > BCM11130, BCM11140, BCM11351, BCM28145, BCM28155
-> [snip]
-> > Signed-off-by: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> > Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> > Acked-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On 3/12/2013 1:40 PM, Manjunathappa, Prakash wrote:
+> From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
 > 
-> Hey Olof,
->     So Christian mentioned you were hoping I'd pull these in through my tree,
-> but I'd really rather these go via the arch-soc tree, since that is more
-> likely where they will be tested and more intelligently reviewed.
+> Get back missed out binding documentation submitted along
+> with below patch:
+> "spi/davinci: add OF support for the spi controller"
+
+This is not really the correct description of this patch. Years later
+its mostly irrelevant that binding documentation did not get applied
+along with the actual usage.
+
 > 
-> I've mentioned before my distaste for the drivers/clocksource directory
-> becoming a dumping ground for arch specific (for the most part arm)
-> clocksource, and more recently clockevent, drivers. I initially wanted the
-
-OTOH, if they are all in one place we have a better chance to analyze
-them in bulk, find similarities and patterns for consolidation. And
-it's simpler for the developer of a new SoC support to find the
-matching driver for his IP block instead of copying stuff from one
-mach directory to the next. We've been there :)
-
-> But I'd really rather the patch flow for arch specific clocksource and
-> clockevent drivers go through the arch tree, since there's a better chance
-> folks will be building and testing against other arch specific changes that
-> might cause problems. There's just no way for me to be able to intelligently
-> review these sorts of changes.
-
-I agree with the build and test part, but you can still review the
-code in general - correctness of the particular hw details aside. I
-just opened a random one there and found:
-
-static cycle_t vt8500_timer_read(struct clocksource *cs)
-{
-        int loops = msecs_to_loops(10);
-        writel(3, regbase + TIMER_CTRL_VAL);
-        while ((readl((regbase + TIMER_AS_VAL)) & TIMER_COUNT_R_ACTIVE)
-                                                && --loops)
-                cpu_relax();
-        return readl(regbase + TIMER_COUNT_VAL);
-
-You don't need particular hw knowledge to see that this looks more
-than fishy at least without comments describing the hardware designers
-brainfart.
- 
-> Now, if there are changes to the clocksource core code, then I definitely want
-> to be in the path there. Additionally meta-drivers like mmio, I should
-> probably be more involved with, so they can be more properly integrated into
-> the clocksource core. Also for drivers that are actually arch shared (ie:
-> things like hpet/acpi_pm where ia64 and x86 share them).
+> [prakash.pm-l0cyMroinI0@public.gmane.org: Follow DT naming convention for compatible property]
+> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+> Reviewed-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Signed-off-by: Manjunathappa, Prakash <prakash.pm-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/spi/spi-davinci.txt        |   51 ++++++++++++++++++++
+>  1 files changed, 51 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-davinci.txt
 > 
-> But if its arch specific for hardware I don't have, I'd really prefer the arch
-> maintainer be the upstream path.
-> 
-> Thomas: Am I being too obstinate here?  If not, should we drop "F:
-> drivers/clocksource" from the MAINTAINERS entry?
+> diff --git a/Documentation/devicetree/bindings/spi/spi-davinci.txt b/Documentation/devicetree/bindings/spi/spi-davinci.txt
+> new file mode 100644
+> index 0000000..75ad9ac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-davinci.txt
+> @@ -0,0 +1,51 @@
+> +Davinci SPI controller device bindings
+> +
+> +Required properties:
+> +- #address-cells: number of cells required to define a chip select
+> +	address on the SPI bus. Should be set to 1.
+> +- #size-cells: should be zero.
+> +- compatible:
+> +	- "ti,dm6441-spi" for SPI used similar to that on DM644x SoC family
+> +	- "ti,da830-spi" for SPI used similar to that on DA8xx SoC family
+> +- reg: Offset and length of SPI controller register space
+> +- num-cs: Number of chip selects
+> +- ti,davinci-spi-intr-line: interrupt line used to connect the SPI
+> +	IP to the interrupt controller withn the SoC. Possible values
+> +	are 0 and 1. Manual says one of the two possible interrupt
+> +	lines can be tied to the interrupt controller. Set this
+> +	based on a specifc SoC configuration.
+> +- interrupts: interrupt number mapped to CPU.
+> +- clocks: spi clk phandle
+> +
+> +Example of a NOR flash slave device (n25q032) connected to DaVinci
+> +SPI controller device over the SPI bus.
+> +
+> +spi0:spi@20BF0000 {
+> +	#address-cells	 = <1>;
+> +	#size-cells	 = <0>;
+> +	compatible	 = "ti,dm6446-spi";
+> +	reg	 = <0x20BF0000 0x1000>;
+> +	num-cs	 = <4>;
+> +	ti,davinci-spi-intr-line	= <0>;
+> +	interrupts	 = <338>;
+> +	clocks	 = <&clkspi>;
+> +
+> +	flash: n25q032@0 {
+> +	 #address-cells = <1>;
+> +	 #size-cells = <1>;
+> +	 compatible = "st,m25p32";
+> +	 spi-max-frequency = <25000000>;
+> +	 reg = <0>;
+> +
+> +	 partition@0 {
+> +	 label = "u-boot-spl";
+> +	 reg = <0x0 0x80000>;
+> +	 read-only;
+> +	 };
+> +
+> +	 partition@1 {
+> +	 label = "test";
+> +	 reg = <0x80000 0x380000>;
+> +	 };
+> +	};
 
-Maybe we should move the ARM specific ones into
-drivers/clocksource/arm/ ?
- 
+Looks like the tabs were messed up when you took Murali's patch.
+
 Thanks,
-
-	tglx
+Sekhar
