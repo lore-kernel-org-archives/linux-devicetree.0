@@ -1,59 +1,35 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 4/4] usb: musb: omap2430: replace *_* with *-* in
- property names
-Date: Thu, 14 Mar 2013 15:57:42 +0200
-Message-ID: <20130314135742.GF26080@arwen.pp.htv.fi>
-References: <1362662506-14823-1-git-send-email-kishon@ti.com>
- <1362662506-14823-5-git-send-email-kishon@ti.com>
-Reply-To: <balbi@ti.com>
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Subject: [PATCH] pinctrl: exynos5440: fix invalid use of sizeof in exynos5440_pinctrl_probe()
+Date: Thu, 14 Mar 2013 21:59:38 +0800
+Message-ID: <CAPgLHd8yrZbidfvavg2nrO77zpx_NvKS7QDk=oDWD4T6Vb5+zQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4VrXvz3cwkc87Wze"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1362662506-14823-5-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, balbi@ti.com, gregkh@linuxfoundation.org, s-guiriec@ti.com, gg@slimlogic.co.uk, sameo@linux.intel.com, broonie@opensource.wolfsonmicro.com, ldewangan@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, ruchika@ti.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linus.walleij@linaro.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
---4VrXvz3cwkc87Wze
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-On Thu, Mar 07, 2013 at 06:51:46PM +0530, Kishon Vijay Abraham I wrote:
-> No functional change. Replace *_* with *-* in property names of otg to
-> follow the general convention.
->=20
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+sizeof() when applied to a pointer typed expression gives the
+size of the pointer, not that of the pointed data.
 
-this has been pending for quite a while, since nobody complained, I'm
-taking it for v3.10.
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+---
+ drivers/pinctrl/pinctrl-exynos5440.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---=20
-balbi
-
---4VrXvz3cwkc87Wze
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRQddWAAoJEIaOsuA1yqREUx4P/jiUDagiitaJugX66ZENCc/6
-MFRz3US0AGr4hzlIwPnxqET3+a90K5c1vZhBODnKHKVEs7qzt4acirzDgxEAwQl6
-ER1UievNA6Rc+63GUQb0Mt7DUE0dfcGQcPA4ryM6MNUoSqLKS54Knev66bt2meIH
-lcQP1TTB+bgPn7PmBhqSMGiScQiVT0TzTIH3o72imNZQ2CmmIa8brjXtG+VEjE53
-7WWhImoWmsm1ye2uKhFm6V05yyzQIYjgD3wz/NeDJN6BkxaoBYr6KABku76T+4G7
-BoLgmSPvCQHe4L+V3G8BgbkuJ3ZLkP+htCQSnowO+jMl1XwmlYSR1VhTUjpNZqgE
-XG1Kf9SOb/13v1yo+3e/Rt7n1JBk5Gce8qyIuTYL8FYX8IXLat0OA8KeFNZntAPJ
-2693mLjNK6a1iRhyiZivtNu6ZntzgySbvWlKv+BIazY8BwMmdW6CVKeZu0AiLZfd
-WqMd9QeKldJTQQtCu3h/9NFfgprt/jzivIB37bHxkVmEBQE6YMYD9HQkAzhjjRsJ
-FQHX1I+gmjjuRzc/DsOpTZN5ssbxx9QkaDVh5RUWx+XDCRQT03T1DUDOvxoV5s9b
-hxMLdSQPDSSIrsNr8JTrPpp0N0EAAB6mOJe4ZUla1sqA4RMDDpZhmZGgL60i8749
-eJ2fSjdNZCrAJp23p+D6
-=rpAI
------END PGP SIGNATURE-----
-
---4VrXvz3cwkc87Wze--
+diff --git a/drivers/pinctrl/pinctrl-exynos5440.c b/drivers/pinctrl/pinctrl-exynos5440.c
+index 1376eb7..fe65739 100644
+--- a/drivers/pinctrl/pinctrl-exynos5440.c
++++ b/drivers/pinctrl/pinctrl-exynos5440.c
+@@ -854,7 +854,7 @@ static int exynos5440_pinctrl_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
+-	priv = devm_kzalloc(dev, sizeof(priv), GFP_KERNEL);
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+ 	if (!priv) {
+ 		dev_err(dev, "could not allocate memory for private data\n");
+ 		return -ENOMEM;
