@@ -1,131 +1,92 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP systems
-Date: Thu, 14 Mar 2013 10:01:20 +0100
-Message-ID: <20130314090120.GA2224@avionic-0098.mockup.avionic-design.de>
-References: <20130312203819.GA23221@avionic-0098.mockup.avionic-design.de>
- <20130312210328.GA22702@obsidianresearch.com>
- <20130312213006.GA23717@avionic-0098.mockup.avionic-design.de>
- <20130312220854.GA23112@obsidianresearch.com>
- <20130313081815.GD25940@avionic-0098.mockup.avionic-design.de>
- <20130313170205.GB24042@obsidianresearch.com>
- <20130313192628.GA28714@avionic-0098.mockup.avionic-design.de>
- <5140E85A.3040900@firmworks.com>
- <20130313220235.GA29895@avionic-0098.mockup.avionic-design.de>
- <20130313222102.GA28336@obsidianresearch.com>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH V7 1/2] ARM: bcm281xx: Add timer driver (driver
+ portion)
+Date: Thu, 14 Mar 2013 10:16:50 +0100 (CET)
+Message-ID: <alpine.LFD.2.02.1303140951580.22263@ionos>
+References: <1363210048-3334-1-git-send-email-csd@broadcom.com>
+ <51410BF4.4040400@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2054454571010990815=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130313222102.GA28336@obsidianresearch.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Maen Suleiman <maen@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Mitch Bradley <wmb@firmworks.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51410BF4.4040400-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 13 Mar 2013, John Stultz wrote:
+> On 03/13/2013 02:27 PM, Christian Daudt wrote:
+> > This adds support for the Broadcom timer, used in the following SoCs:
+> > BCM11130, BCM11140, BCM11351, BCM28145, BCM28155
+> [snip]
+> > Signed-off-by: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> > Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> > Acked-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> Hey Olof,
+>     So Christian mentioned you were hoping I'd pull these in through my tree,
+> but I'd really rather these go via the arch-soc tree, since that is more
+> likely where they will be tested and more intelligently reviewed.
+> 
+> I've mentioned before my distaste for the drivers/clocksource directory
+> becoming a dumping ground for arch specific (for the most part arm)
+> clocksource, and more recently clockevent, drivers. I initially wanted the
 
---===============2054454571010990815==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
-Content-Disposition: inline
+OTOH, if they are all in one place we have a better chance to analyze
+them in bulk, find similarities and patterns for consolidation. And
+it's simpler for the developer of a new SoC support to find the
+matching driver for his IP block instead of copying stuff from one
+mach directory to the next. We've been there :)
 
+> But I'd really rather the patch flow for arch specific clocksource and
+> clockevent drivers go through the arch tree, since there's a better chance
+> folks will be building and testing against other arch specific changes that
+> might cause problems. There's just no way for me to be able to intelligently
+> review these sorts of changes.
 
---UlVJffcvxoiEqYs2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I agree with the build and test part, but you can still review the
+code in general - correctness of the particular hw details aside. I
+just opened a random one there and found:
 
-On Wed, Mar 13, 2013 at 04:21:02PM -0600, Jason Gunthorpe wrote:
-> On Wed, Mar 13, 2013 at 11:02:35PM +0100, Thierry Reding wrote:
-> =20
-> > Does that look about correct?
->=20
-> By my reading of the spec the entries in ranges should not
-> have the b,d,f bits set..
->=20
-> Although it is not a big stretch to include them..
->=20
-> > Now the code will actually match the first entry and assume that it
-> > represents the non-prefetchable 32-bit memory space and program the
-> > controller to forward accesses to the 0x80000000-0x80000fff region
-> > as PCI memory write transactions.
->=20
-> Yah, it makes a mess of determining the host bridge aperture. Require
-> the aperture to be first/last?
->=20
-> Make use of the 2nd dword?
->=20
-> Go back to the idea of the top level reg?
+static cycle_t vt8500_timer_read(struct clocksource *cs)
+{
+        int loops = msecs_to_loops(10);
+        writel(3, regbase + TIMER_CTRL_VAL);
+        while ((readl((regbase + TIMER_AS_VAL)) & TIMER_COUNT_R_ACTIVE)
+                                                && --loops)
+                cpu_relax();
+        return readl(regbase + TIMER_COUNT_VAL);
 
-It turns out that this works with the Tegra driver because it uses the
-new of_pci_process_ranges() function and simply overwrites earlier
-matches by subsequent ones.
+You don't need particular hw knowledge to see that this looks more
+than fishy at least without comments describing the hardware designers
+brainfart.
+ 
+> Now, if there are changes to the clocksource core code, then I definitely want
+> to be in the path there. Additionally meta-drivers like mmio, I should
+> probably be more involved with, so they can be more properly integrated into
+> the clocksource core. Also for drivers that are actually arch shared (ie:
+> things like hpet/acpi_pm where ia64 and x86 share them).
+> 
+> But if its arch specific for hardware I don't have, I'd really prefer the arch
+> maintainer be the upstream path.
+> 
+> Thomas: Am I being too obstinate here?  If not, should we drop "F:
+> drivers/clocksource" from the MAINTAINERS entry?
 
-	ranges =3D <0x82000000 0 0 0x80000000 0 0x00001000   /* port 0 registers */
-		  0x82000000 0 0 0x80001000 0 0x00001000   /* port 1 registers */
-		  0x81000000 0 0 0x82000000 0 0x00010000   /* downstream I/O */
-		  0x82000000 0 0 0xa0000000 0 0x10000000   /* non-prefetchable memory */
-		  0xc2000000 0 0 0xb0000000 0 0x10000000>; /* prefetchable memory */
+Maybe we should move the ARM specific ones into
+drivers/clocksource/arm/ ?
+ 
+Thanks,
 
-So the second entry would overwrite the non-prefetchable memory region
-as established by the first entry. Finally that will also be overwritten
-by the fourth entry.
-
-So the above will actually work along with the corresponding root-port
-"assigned-addresses" properties. I still don't like it much because I
-don't think it accurately reflects the hardware. Furthermore it has the
-same kludgy, non-spec conformant smack that my original proposal had
-because it uses assigned-addresses for something it wasn't intended to.
-Also the mapping is actually not correct, because the first two entries
-don't refer to 32-bit memory space. They really map configuration space
-and therefore the ss field is wrong IMO (it should be 00, but that won't
-work with the OF core). One of the very early versions of my Tegra PCIe
-patch series actually introduced an IORESOURCE_CS type to account for
-this but it didn't go anywhere and became obsolete when I switched to
-the new binding which side-steps this issue by not using the PCI bus'
-translation mechanism.
-
-Thierry
-
---UlVJffcvxoiEqYs2
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRQZHgAAoJEN0jrNd/PrOhJ+cP+wYhgW6TV6RRi1LeCwj8aSG2
-ko3qcYg3qm/HmzygMyRMwhEfWx8oizT6TdbmlkrSTpbEBXxd5lS8ZydmX2p7uRLe
-3jOcQXW+cy21fmSLfMbhbWrkAXsCcTRO4mchJYRJzzfJTgf3Fxo5RvLXZBFMw4Jn
-5TjUEShQX3M/6DomvEDyMbQV4SDh97AcRnbJQjfGfdRVCzcM0wy5L6hr35dW1Jb+
-Iemn9fIiyJcNaPpbkIClHX03TfQBkUJ9N2oQ6M1rg7M1GbSypbFPmFFSc6H6Kond
-Z7qWC726VBRXAoIk0l1K/J1Afq8easpwX/xV7+XZlkzd7hXbuF7LHbFkL0qqGgoJ
-Gq7GVBZy/DkOir4qSMVXFCpHJYqk2gtrrjBUSiJBFG59dECyf6kwLEROuNaxFNMo
-xA9W46roZJFwE61EcQfPRYjkctaHL65a0kShx1fEhqd1kQYcvn82g2WkuzSoVQ4N
-xWMTHQhP6JOc24xqPb0X+a3/Yt94mY7DpOWmhg5kfVmH24gGsnIPjOSbg/EtvrW/
-IZzOLerGelU8xOVwebCjh2v+HarklCstlAzaGHeu848u8ts4HjA6rJPwUSK91KVx
-ILO/AKquEGTfNHy8MlfeXoAY7RJe7I1MiDtxWxT4gla57/4+Z8kwjwXHpywWZr19
-F9Nv/aqbVzFbrQ8HiXHM
-=FBlS
------END PGP SIGNATURE-----
-
---UlVJffcvxoiEqYs2--
-
-
---===============2054454571010990815==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2054454571010990815==--
+	tglx
