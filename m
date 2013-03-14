@@ -1,60 +1,89 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: RE: [PATCH 2/3] pwm: pwm-tiecap: Add device-tree binding support
- for da850 SOC
-Date: Thu, 14 Mar 2013 12:54:08 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3EA96FA1@DBDE01.ent.ti.com>
-References: <1363257158-11615-1-git-send-email-avinashphilip@ti.com>
- <1363257158-11615-3-git-send-email-avinashphilip@ti.com>
- <5141B7CC.7000700@ti.com>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 07/10] ASoC: phycore-ac97: Add DT support
+Date: Thu, 14 Mar 2013 13:55:45 +0100
+Message-ID: <20130314125545.GD32452@pengutronix.de>
+References: <1362940391-8338-1-git-send-email-mpa@pengutronix.de>
+ <1362940391-8338-8-git-send-email-mpa@pengutronix.de>
+ <20130312185921.GX19942@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5141B7CC.7000700@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Nori, Sekhar" <nsekhar@ti.com>
-Cc: "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "Manjunathappa, Prakash" <prakash.pm@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130312185921.GX19942-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Timur Tabi <timur-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXIgMTQsIDIwMTMgYXQgMTc6MTM6MDgsIE5vcmksIFNla2hhciB3cm90ZToNCj4g
-T24gMy8xNC8yMDEzIDQ6MDIgUE0sIFBoaWxpcCBBdmluYXNoIHdyb3RlOg0KPiA+IEVDQVAgSVAg
-aXMgdXNlZCBpbiBkYTg1MCBTT0MncyBhbHNvLiBIZW5jZSBhZGRzIEVDQVAgZGV2aWNlIHRyZWUg
-YmluZGluZw0KPiA+IHN1cHBvcnQgZm9yIGRhODUwLg0KPiA+IA0KPiA+IENjOiBHcmFudCBMaWtl
-bHkgPGdyYW50Lmxpa2VseUBzZWNyZXRsYWIuY2E+DQo+ID4gQ2M6IFJvYiBIZXJyaW5nIDxyb2Iu
-aGVycmluZ0BjYWx4ZWRhLmNvbT4NCj4gPiBDYzogUm9iIExhbmRsZXkgPHJvYkBsYW5kbGV5Lm5l
-dD4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXAgQXZpbmFzaCA8YXZpbmFzaHBoaWxpcEB0aS5j
-b20+DQo+ID4gLS0tDQo+ID4gOjEwMDY0NCAxMDA2NDQgMTMxZThjMS4uLiBmY2JkM2MxLi4uIE0J
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9wd20tdGllY2FwLnR4dA0KPiA+
-IDoxMDA2NDQgMTAwNjQ0IDIyZTk2ZTIuLi4gZTBkOTZjOC4uLiBNCWRyaXZlcnMvcHdtL3B3bS10
-aWVjYXAuYw0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wd20vcHdtLXRpZWNhcC50eHQg
-ICAgICAgICB8ICAgIDIgKy0NCj4gPiAgZHJpdmVycy9wd20vcHdtLXRpZWNhcC5jICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgfCAgICAxICsNCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCAyIGluc2Vy
-dGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9wd20tdGllY2FwLnR4dCBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wd20vcHdtLXRpZWNhcC50eHQNCj4gPiBpbmRleCAxMzFl
-OGMxLi5mY2JkM2MxIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9wd20vcHdtLXRpZWNhcC50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcHdtL3B3bS10aWVjYXAudHh0DQo+ID4gQEAgLTEsNyArMSw3IEBADQo+
-ID4gIFRJIFNPQyBFQ0FQIGJhc2VkIEFQV00gY29udHJvbGxlcg0KPiA+ICANCj4gPiAgUmVxdWly
-ZWQgcHJvcGVydGllczoNCj4gPiAtLSBjb21wYXRpYmxlOiBNdXN0IGJlICJ0aSxhbTMzeHgtZWNh
-cCINCj4gPiArLSBjb21wYXRpYmxlOiBNdXN0IGJlICJ0aSxhbTMzeHgtZWNhcCIgb3IgInRpLGRh
-ODUwLWVjYXAiDQo+ID4gIC0gI3B3bS1jZWxsczogU2hvdWxkIGJlIDMuIE51bWJlciBvZiBjZWxs
-cyBiZWluZyB1c2VkIHRvIHNwZWNpZnkgUFdNIHByb3BlcnR5Lg0KPiA+ICAgIEZpcnN0IGNlbGwg
-c3BlY2lmaWVzIHRoZSBwZXItY2hpcCBpbmRleCBvZiB0aGUgUFdNIHRvIHVzZSwgdGhlIHNlY29u
-ZA0KPiA+ICAgIGNlbGwgaXMgdGhlIHBlcmlvZCBpbiBuYW5vc2Vjb25kcyBhbmQgYml0IDAgaW4g
-dGhlIHRoaXJkIGNlbGwgaXMgdXNlZCB0bw0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3B3bS9w
-d20tdGllY2FwLmMgYi9kcml2ZXJzL3B3bS9wd20tdGllY2FwLmMNCj4gPiBpbmRleCAyMmU5NmUy
-Li5lMGQ5NmM4IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcHdtL3B3bS10aWVjYXAuYw0KPiA+
-ICsrKyBiL2RyaXZlcnMvcHdtL3B3bS10aWVjYXAuYw0KPiA+IEBAIC0xOTcsNiArMTk3LDcgQEAg
-c3RhdGljIGNvbnN0IHN0cnVjdCBwd21fb3BzIGVjYXBfcHdtX29wcyA9IHsNCj4gPiAgDQo+ID4g
-IHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGVjYXBfb2ZfbWF0Y2hbXSA9IHsNCj4g
-PiAgCXsgLmNvbXBhdGlibGUJPSAidGksYW0zM3h4LWVjYXAiIH0sDQo+ID4gKwl7IC5jb21wYXRp
-YmxlCT0gInRpLGRhODUwLWVjYXAiIH0sDQo+ID4gIAl7fSwNCj4gDQo+IFlvdSBhZGQgYSBuZXcg
-Y29tcGF0aWJsZSwgYnV0IGRvbid0IHJlYWxseSBzaG93IGFueSBjaGFuZ2VzIGluIGRyaXZlciBp
-bg0KPiB0aGlzIHNlcmllcy4gU28gd2h5IGNhbid0IHdlIHNpbXBseSB1c2UgdGksYW0zM3h4LWVj
-YXAgb24gREE4NTAgdG9vPw0KDQpPayBpdCBjYW4gaGFwcGlseSBsaXZlIHdpdGggdGksYW0zM3h4
-LWVjYXAuIEhlbmNlIHRoaXMgcGF0Y2ggYW5kIG5leHQgWzFdcGF0Y2gNCmNhbiBiZSBkcm9wcGVk
-Lg0KDQoxLiBbUEFUQ0ggMy8zXSBwd206IHB3bS10aWVocnB3bTogQWRkIGRldmljZSB0cmVlIGJp
-bmRpbmcgc3VwcG9ydCBmb3IgZGE4NTAgU09DDQoNClRoYW5rcw0KQXZpbmFzaA0KPiANCj4gVGhh
-bmtzLA0KPiBTZWtoYXINCj4gDQoNCg==
+On Tue, Mar 12, 2013 at 06:59:22PM +0000, Mark Brown wrote:
+> On Sun, Mar 10, 2013 at 07:33:08PM +0100, Markus Pargmann wrote:
+> > Add devicetree support for this audio soc fabric driver.
+> > 
+> > Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> >  sound/soc/fsl/phycore-ac97.c | 148 ++++++++++++++++++++++++++++++++++++-------
+> >  1 file changed, 125 insertions(+), 23 deletions(-)
+> 
+> A binding document is mandatory for new bindings.
+> 
+> > +#ifdef CONFIG_MACH_IMX27_DT
+> > +		.cpu_dai_name	= "10010000.ssi",
+> > +		.platform_name	= "imx-fiq-pcm-audio",
+> > +#else
+> 
+> This looks wrong, at least the CPU DAI name should be being looked up
+> via the DT.
+
+Yes.
+
+> 
+> > +static const struct of_device_id imx_phycore_ac97_of_dev_id[] = {
+> > +	{
+> > +		.compatible = "phytec,imx27-pca100-ac97",
+> > +		.data = (void *)MX27_PCA100,
+> > +	}, {
+> > +		.compatible = "phytec,imx27-pcm043-ac97",
+> > +		.data = (void *)MX27_PCM043
+> > +	}, {
+> > +		/* sentinel */
+> > +	}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, imx_phycore_ac97_of_dev_id);
+> 
+> It seems like we ought to be able to describe the properties of the
+> boards in this class rather than just enumerating the boards.  What are
+> the differences?
+
+All right I will change it. They are actually using different audmux
+port configuration.
+
+> 
+> >  MODULE_AUTHOR("Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>");
+> > -MODULE_DESCRIPTION("PhyCORE ALSA SoC driver");
+> > +MODULE_DESCRIPTION(DRV_NAME ": PhyCORE ALSA SoC fabric driver");
+> 
+> Please don't make up terms like "fabric driver".
+
+I didn't make it up. There are actually other drivers with that name,
+like "mpc5200 pcm030 fabric driver" or "mpc5200 Efika fabric driver"
+which actually do the same as this one.
+
+Regards,
+
+Markus
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
