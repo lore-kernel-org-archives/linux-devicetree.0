@@ -1,81 +1,74 @@
-From: Javier Martinez Canillas <martinez.javier@gmail.com>
-Subject: Re: [PATCH v2 1/1] gpio: omap: dts: Move interrupt-controller from
- #interrupt-cells description
-Date: Fri, 15 Mar 2013 13:18:32 +0100
-Message-ID: <CAAwP0s1FynkxpFRK0oC7r2PAOQvxoATfrmU787n4k5PZmvt+XQ@mail.gmail.com>
-References: <1362430597-5855-1-git-send-email-javier.martinez@collabora.co.uk>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH v3 0/7] ARM: dts: omap: Add dts data for USB
+Date: Fri, 15 Mar 2013 13:41:30 +0100
+Message-ID: <514316FA.1090002@ti.com>
+References: <1362663320-23799-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1362430597-5855-1-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Landley <rob@landley.net>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@nvidia.com>, Jon Hunter <jon-hunter@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1362663320-23799-1-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, tony@atomide.com, linux@arm.linux.org.uk, balbi@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jon Hunter <jon-hunter@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 4, 2013 at 9:56 PM, Javier Martinez Canillas
-<javier.martinez@collabora.co.uk> wrote:
-> The binding documentation for the OMAP GPIO controller has the description
-> for the "#interrupt-cells" property after the "interrupt-controller".
-> This is confusing so is better to move the "interrupt-controller" after
-> "#interrupt-cells" description.
->
-> While being there, change the properties order to be consistent with
-> Documentation/devicetree/bindings/interrupt-controller/interrupts.txt and
-> Documentation/devicetree/bindings/gpio/gpio.txt.
->
-> Reported-by: Stephen Warren <swarren@nvidia.com>
-> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-> Acked-by: Jon Hunter <jon-hunter@ti.com>
-> ---
->
-> Changes since v1:
->   - Change the properties order to be consistent with the rest of the
->     DT bindings docs suggested by Jon Hunter.
->
->  .../devicetree/bindings/gpio/gpio-omap.txt         |    8 ++++----
->  1 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
-> index bff51a2..a56e3a5 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-omap.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
-> @@ -5,12 +5,12 @@ Required properties:
->    - "ti,omap2-gpio" for OMAP2 controllers
->    - "ti,omap3-gpio" for OMAP3 controllers
->    - "ti,omap4-gpio" for OMAP4 controllers
-> +- gpio-controller : Marks the device node as a GPIO controller.
->  - #gpio-cells : Should be two.
->    - first cell is the pin number
->    - second cell is used to specify optional parameters (unused)
-> -- gpio-controller : Marks the device node as a GPIO controller.
-> +- interrupt-controller: Mark the device node as an interrupt controller.
->  - #interrupt-cells : Should be 2.
-> -- interrupt-controller: Mark the device node as an interrupt controller
->    The first cell is the GPIO number.
->    The second cell is used to specify flags:
->      bits[3:0] trigger type and level flags:
-> @@ -29,8 +29,8 @@ Example:
->  gpio4: gpio4 {
->      compatible = "ti,omap4-gpio";
->      ti,hwmods = "gpio4";
-> -    #gpio-cells = <2>;
->      gpio-controller;
-> -    #interrupt-cells = <2>;
-> +    #gpio-cells = <2>;
->      interrupt-controller;
-> +    #interrupt-cells = <2>;
->  };
-> --
-> 1.7.7.6
->
++ Jon
 
-Hello,
+Hi Kishon,
 
-Any comments on this patch?
+On 03/07/2013 02:35 PM, Kishon Vijay Abraham I wrote:
+> Hi Benoit,
+> 
+> Here are the dt data patches to get usb device functional in OMAP platforms.
+> 
+> All the patches deal with modifying arch/arm/boot except one which modifies
+> Documentation/../usb/omap-usb.txt
+> 
+> Changes from v2:
+> * squashed the dt data for dwc3-omap with dwc3 core into a single patch.
+> 
+> Changes from v1:
+> Patch *ARM: dts: omap: Add usb_otg and glue data* has some properties with
+> names that has "_". It's replaced with a "-" here.
+> 
+> This patch is developed on Linux 3.9-rc1.
 
-I know is just a trivial documentation fix but I think it can be quite
-helpful for people referring to gpio-omap binding.
+The patches looks really good. I've just had to rebase on top of my HEAD due to some conflict with GPMC patch already applied.
 
-Best regards,
-Javier
+I cleaned as well some subject and changelog for consistency.
+
+The patches are available here:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.10/dts
+
+
+Jon,
+
+You might have to rebase your series on top of the new HEAD before reposting.
+
+Thanks,
+Benoit
+
+
+> Kishon Vijay Abraham I (7):
+>   ARM: dts: omap: Add omap control usb data
+>   ARM: dts: omap: Add omap-usb2 dt data
+>   ARM: dts: omap: Add usb_otg and glue data
+>   ARM: dts: omap5: Add omap control usb data
+>   ARM: dts: omap5: Add ocp2scp data
+>   ARM: dts: omap5: Add omap-usb3 and omap-usb2 dt data
+>   ARM: dts: omap5: add dwc3 omap and dwc3 core dt data
+> 
+>  Documentation/devicetree/bindings/usb/omap-usb.txt |    1 +
+>  arch/arm/boot/dts/omap3-beagle-xm.dts              |    6 +++
+>  arch/arm/boot/dts/omap3-evm.dts                    |    6 +++
+>  arch/arm/boot/dts/omap3-overo.dtsi                 |    6 +++
+>  arch/arm/boot/dts/omap3.dtsi                       |   12 +++++
+>  arch/arm/boot/dts/omap4-panda.dts                  |    6 +++
+>  arch/arm/boot/dts/omap4-sdp.dts                    |    6 +++
+>  arch/arm/boot/dts/omap4.dtsi                       |   26 +++++++++++
+>  arch/arm/boot/dts/omap5.dtsi                       |   48 ++++++++++++++++++++
+>  arch/arm/boot/dts/twl4030.dtsi                     |    2 +-
+>  10 files changed, 118 insertions(+), 1 deletion(-)
+> 
