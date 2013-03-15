@@ -1,82 +1,77 @@
-From: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] iio: adc: Document the regulator/clocks for
- exynos-adc
-Date: Fri, 15 Mar 2013 13:35:52 +0530
-Message-ID: <CAHfPSqC3SYAxK4vJydzabWzbLyfFXUF82WPCp6s4vr9WoeWWFw@mail.gmail.com>
-References: <1363129994-10438-1-git-send-email-dianders@chromium.org>
- <1363207202-10858-1-git-send-email-dianders@chromium.org>
- <1363207202-10858-2-git-send-email-dianders@chromium.org>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH 08/10] ASoC: dmaengine_pcm: Add open
+ function for DT DMA request
+Date: Fri, 15 Mar 2013 10:07:03 +0100
+Message-ID: <20130315090703.GB22650@pengutronix.de>
+References: <1362940391-8338-1-git-send-email-mpa@pengutronix.de>
+ <1362940391-8338-9-git-send-email-mpa@pengutronix.de>
+ <20130312190206.GY19942@opensource.wolfsonmicro.com>
+ <20130313021712.GD27461@S2101-09.ap.freescale.net>
+ <20130314130832.GE32452@pengutronix.de>
+ <20130315034246.GA18039@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1363207202-10858-2-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20130315034246.GA18039@S2101-09.ap.freescale.net>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Doug,
+On Fri, Mar 15, 2013 at 11:42:48AM +0800, Shawn Guo wrote:
+> On Thu, Mar 14, 2013 at 02:08:32PM +0100, Markus Pargmann wrote:
+> > On Wed, Mar 13, 2013 at 10:18:29AM +0800, Shawn Guo wrote:
+> > > On Tue, Mar 12, 2013 at 07:02:07PM +0000, Mark Brown wrote:
+> > > > On Sun, Mar 10, 2013 at 07:33:09PM +0100, Markus Pargmann wrote:
+> > > > > Add a function to open a DMA PCM substream using devicetree data
+> > > > > provided via the client device node. The patch introduces a public
+> > > > > function and a private subfunction that is called by both open
+> > > > > functions.
+> > > > 
+> > > > Someone (I think it was Shawn) sent a very similar patch just recently
+> > > > which appears to have fallen out of my inbox unfortunately - can you
+> > > > please check what's going on there and coordinate with them?  Let me
+> > > > know if you can't find the patch and I'll dig it out.
+> > > 
+> > > It's here, Markus.
+> > > 
+> > > http://thread.gmane.org/gmane.linux.alsa.devel/106027/focus=106031
+> > > 
+> > 
+> > Thanks. Do you already have a patch for the non-generic function which I
+> > could use instead?
+> > 
+> I do not follow.  With my patch in place, there will be two
+> dmaengine_pcm APIs.
+> 
+> int snd_dmaengine_pcm_open(struct snd_pcm_substream *substream,
+>         dma_filter_fn filter_fn, void *filter_data)
+> 
+> int snd_dmaengine_generic_pcm_open(struct snd_pcm_substream *substream,
+>                                    struct device *dev, const char *name)
+> 
+> The first one is for users that their dmaengine driver hasn't converted
+> to generic device tree bindings, and the second one is for users that
+> their dmaengine driver is converted to generic device tree bindings.
 
-On 14 March 2013 02:09, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> The exynos ADC won't work without a regulator called "vdd" and a clock
-> called "adc".  Document this fact in the device tree bindings.
->
-> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Thanks for the correction. Clocks and regulator is needed.
-I missed it out, as i did not submit the arch side changes
-> ---
-> Changes in v2: None
->
->  Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
-> index f686378..96db940 100644
-> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
-> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
-> @@ -20,6 +20,9 @@ Required properties:
->                         format is being dependent on which interrupt controller
->                         the Samsung device uses.
->  - #io-channel-cells = <1>; As ADC has multiple outputs
-> +- clocks               From common clock binding: handle to adc clock.
-> +- clock-names          From common clock binding: Shall be "adc".
-> +- vdd-supply           VDD input supply.
->
->  Note: child nodes can be added for auto probing from device tree.
->
-> @@ -31,6 +34,11 @@ adc: adc@12D10000 {
->         interrupts = <0 106 0>;
->         #io-channel-cells = <1>;
->         io-channel-ranges;
-> +
-> +       clocks = <&clock 303>;
-> +       clock-names = "adc";
-> +
-> +       vdd-supply = <&buck5_reg>;
->  };
->
->
-> --
-> 1.8.1.3
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+Sorry, I mixed up different patch versions and was confused.
 
+Regards,
 
+Markus
 
 -- 
-Shine bright,
-(: Nav :)
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
