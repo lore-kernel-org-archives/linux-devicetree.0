@@ -1,72 +1,50 @@
-From: Vikas Sajjan <vikas.sajjan@linaro.org>
-Subject: Re: [PATCH] ARM: dts: add interrupt-names property to get interrupt
- resource by name
-Date: Fri, 15 Mar 2013 09:34:38 +0530
-Message-ID: <CAD025yT4w6QBpo+nShXu6+WCsy8MmJCychLtvE-TxuG-que97w@mail.gmail.com>
-References: <1363173980-11428-1-git-send-email-vikas.sajjan@linaro.org> <51408FB9.90808@gmail.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 2/3] pwm: pwm-tiecap: Add device-tree binding support
+ for da850 SOC
+Date: Fri, 15 Mar 2013 09:55:57 +0530
+Message-ID: <5142A2D5.5090009@ti.com>
+References: <1363257158-11615-1-git-send-email-avinashphilip@ti.com> <1363257158-11615-3-git-send-email-avinashphilip@ti.com> <5141B7CC.7000700@ti.com> <87txoe56lk.fsf@dell.be.48ers.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <51408FB9.90808@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, l.krishna@samsung.com, devicetree-discuss@lists.ozlabs.org, joshi@samsung.com, inki.dae@samsung.com, linaro-kernel@lists.linaro.org, sylvester.nawrocki@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <87txoe56lk.fsf@dell.be.48ers.dk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Korsgaard <jacmet@sunsite.dk>
+Cc: Philip Avinash <avinashphilip@ti.com>, davinci-linux-open-source@linux.davincidsp.com, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, prakash.pm@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 3/14/2013 9:14 PM, Peter Korsgaard wrote:
+>>>>>> "Sekhar" == Sekhar Nori <nsekhar@ti.com> writes:
+> 
+>  >> Required properties:
+>  >> -- compatible: Must be "ti,am33xx-ecap"
+>  >> +- compatible: Must be "ti,am33xx-ecap" or "ti,da850-ecap"
+>  >> - #pwm-cells: Should be 3. Number of cells being used to specify PWM property.
+>  >> First cell specifies the per-chip index of the PWM to use, the second
+>  >> cell is the period in nanoseconds and bit 0 in the third cell is used to
+>  >> diff --git a/drivers/pwm/pwm-tiecap.c b/drivers/pwm/pwm-tiecap.c
+>  >> index 22e96e2..e0d96c8 100644
+>  >> --- a/drivers/pwm/pwm-tiecap.c
+>  >> +++ b/drivers/pwm/pwm-tiecap.c
+>  >> @@ -197,6 +197,7 @@ static const struct pwm_ops ecap_pwm_ops = {
+>  >> 
+>  >> static const struct of_device_id ecap_of_match[] = {
+>  >> { .compatible	= "ti,am33xx-ecap" },
+>  >> +	{ .compatible	= "ti,da850-ecap" },
+>  >> {},
+> 
+>  Sekhar> You add a new compatible, but don't really show any changes in
+>  Sekhar> driver in this series. So why can't we simply use
+>  Sekhar> ti,am33xx-ecap on DA850 too?
+> 
+> Indeed, if the hardware block is identical the dts should simply list:
+> 
+> compatible = "ti,da850-ecap", "ti,am33xx-ecap"
+> 
+> And the driver only bind to ti,am33xx-ecap (unless there ever needs to
+> be a da850 specific workarounde.
 
-On 13 March 2013 20:09, Rob Herring <robherring2@gmail.com> wrote:
-> The subject is completely misleading. Make it clear what the scope of
-> this patch is.
->
-> On 03/13/2013 06:26 AM, Vikas Sajjan wrote:
->> The FIMD driver expects the "vsync" interrupt to be mentioned as the 1st
->> parameter in the FIMD DT node. So to meet this expectation of the driver,
->> the FIMD DT node was forced to be made by keeping "vsync" as the 1st
->> parameter.
->>
->> this resolves the above mentioned "hack" by introducing
->> "interrupt-names", so that FIMD driver can get the interrupt resource by
->> name as discussed at
->> http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg16211.html
->
-> I fail to see what the hack is. The order of interrupt properties must
-> be defined by the binding. interrupt-names is auxiliary data and must
-> not be required by an OS.
->
->> patch is dependent on https://patchwork.kernel.org/patch/2184981/
->
-> Why the split? These should be combined.
-Sure, I shall ask Leela to merge this patch with
-https://patchwork.kernel.org/patch/2184981/
-and resend.
+Okay, so this is to future proof the DA850 DT blob. Makes sense. Thanks!
 
->
->>
->> Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
->> ---
->>  arch/arm/boot/dts/exynos5250.dtsi |    3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
->> index 0ee4706..76c8911 100644
->> --- a/arch/arm/boot/dts/exynos5250.dtsi
->> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> @@ -588,6 +588,7 @@
->>               compatible = "samsung,exynos5-fimd";
->>               interrupt-parent = <&combiner>;
->>               reg = <0x14400000 0x40000>;
->> -             interrupts = <18 5>, <18 4>, <18 6>;
->> +             interrupt-names = "fifo", "vsync", "lcd_sys";
->> +             interrupts = <18 4>, <18 5>, <18 6>;
->
-> There should be some documentation describing the order of the interrupts.
->
-> Rob
->
-
-
-
--- 
-Thanks and Regards
- Vikas Sajjan
+~Sekhar
