@@ -1,176 +1,156 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH v3 3/3] ARM: OMAP2+: Add GPMC DT support for Ethernet
- child nodes
-Date: Fri, 15 Mar 2013 10:34:05 -0500
-Message-ID: <51433F6D.1060205@ti.com>
-References: <1363298051-24574-1-git-send-email-javier.martinez@collabora.co.uk> <51433D3E.1070002@ti.com>
+From: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] iio: adc: Add dt support for turning on the phy in
+ exynos-adc
+Date: Fri, 15 Mar 2013 21:13:07 +0530
+Message-ID: <CAHfPSqCqeRJ-VABi22Q0M33LFFRS_QnK_zGM28j1UPhrRvK-+Q@mail.gmail.com>
+References: <1363129994-10438-1-git-send-email-dianders@chromium.org>
+ <1363207202-10858-1-git-send-email-dianders@chromium.org>
+ <1363207202-10858-3-git-send-email-dianders@chromium.org>
+ <CAHfPSqCJVGsERi+jNTSYOJTCL0H-ytAcLTLb+7fQnFK1KGqkyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <51433D3E.1070002@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
-Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-omap@vger.kernel.org, device-tree <devicetree-discuss@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAHfPSqCJVGsERi+jNTSYOJTCL0H-ytAcLTLb+7fQnFK1KGqkyg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob, Grant,
+On 15 March 2013 17:15, Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 14 March 2013 02:10, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>> Without this change the exynos adc controller needed to have its phy
+>> enabled in some out-of-driver C code.  Add support for specifying the
+>> phy enable register by listing it in the reg list.
+>>
+>> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Tested-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+I used this in mach file for testing. But this one worked aswell.
 
-On 03/15/2013 10:24 AM, Jon Hunter wrote:
-> 
-> On 03/14/2013 04:54 PM, Javier Martinez Canillas wrote:
->> Besides being used to interface with external memory devices,
->> the General-Purpose Memory Controller can be used to connect
->> Pseudo-SRAM devices such as ethernet controllers to OMAP2+
->> processors using the TI GPMC as a data bus.
->>
->> This patch allows an ethernet chip to be defined as an GPMC
->> child device node.
->>
->> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+>
+> Worked for me, Its needed for Exynos5250 and future versions too.
+> Tested on SMDK5250.
 >> ---
+>> Changes in v2: None
 >>
->> Changes since v2:
->>   - remove optional #address-cells and #size-cells since are not relevant for
->>     ethernet chips; suggested by Jon Hunter.
+>>  .../devicetree/bindings/arm/samsung/exynos-adc.txt         |  4 ++--
+>>  drivers/iio/adc/exynos_adc.c                               | 14 +++++++++++++-
+>>  2 files changed, 15 insertions(+), 3 deletions(-)
 >>
->> Changes since v1:
->>   - Improve the DT binding documentation explaining that even when the GPMC
->>     maximum bus address width is 16-bit, it supports devices with 32-bit
->>     registers address width and the device property especifying this has to
->>     be set accordingly; suggested by Jon Hunter.
+>> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+>> index 96db940..05be151 100644
+>> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+>> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+>> @@ -15,7 +15,7 @@ Required properties:
+>>                         Must be "samsung,exynos-adc-v2" for
+>>                                 future controllers.
+>>  - reg:                 Contains ADC register address range (base address and
+>> -                       length).
+>> +                       length) and the address of the phy enable register.
+>>  - interrupts:          Contains the interrupt information for the timer. The
+>>                         format is being dependent on which interrupt controller
+>>                         the Samsung device uses.
+>> @@ -30,7 +30,7 @@ Example: adding device info in dtsi file
 >>
->>  Documentation/devicetree/bindings/net/gpmc-eth.txt |   97 ++++++++++++++++++++
->>  arch/arm/mach-omap2/gpmc.c                         |    8 ++
->>  2 files changed, 105 insertions(+), 0 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/net/gpmc-eth.txt
+>>  adc: adc@12D10000 {
+>>         compatible = "samsung,exynos-adc-v1";
+>> -       reg = <0x12D10000 0x100>;
+>> +       reg = <0x12D10000 0x100>, <0x10040718 0x4>;
+>>         interrupts = <0 106 0>;
+>>         #io-channel-cells = <1>;
+>>         io-channel-ranges;
+>> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
+>> index ed6fdd7..5ab0dfd 100644
+>> --- a/drivers/iio/adc/exynos_adc.c
+>> +++ b/drivers/iio/adc/exynos_adc.c
+>> @@ -85,6 +85,7 @@ enum adc_version {
 >>
->> diff --git a/Documentation/devicetree/bindings/net/gpmc-eth.txt b/Documentation/devicetree/bindings/net/gpmc-eth.txt
->> new file mode 100644
->> index 0000000..24cb4e4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/gpmc-eth.txt
->> @@ -0,0 +1,97 @@
->> +Device tree bindings for Ethernet chip connected to TI GPMC
+>>  struct exynos_adc {
+>>         void __iomem            *regs;
+>> +       void __iomem            *enable_reg;
+>>         struct clk              *clk;
+>>         unsigned int            irq;
+>>         struct regulator        *vdd;
+>> @@ -269,13 +270,19 @@ static int exynos_adc_probe(struct platform_device *pdev)
+>>         info = iio_priv(indio_dev);
+>>
+>>         mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> -
+>>         info->regs = devm_request_and_ioremap(&pdev->dev, mem);
+>>         if (!info->regs) {
+>>                 ret = -ENOMEM;
+>>                 goto err_iio;
+>>         }
+>>
+>> +       mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>> +       info->enable_reg = devm_request_and_ioremap(&pdev->dev, mem);
+>> +       if (!info->enable_reg) {
+>> +               ret = -ENOMEM;
+>> +               goto err_iio;
+>> +       }
 >> +
->> +Besides being used to interface with external memory devices, the
->> +General-Purpose Memory Controller can be used to connect Pseudo-SRAM devices
->> +such as ethernet controllers to processors using the TI GPMC as a data bus.
+>>         irq = platform_get_irq(pdev, 0);
+>>         if (irq < 0) {
+>>                 dev_err(&pdev->dev, "no irq resource?\n");
+>> @@ -295,6 +302,8 @@ static int exynos_adc_probe(struct platform_device *pdev)
+>>                 goto err_iio;
+>>         }
+>>
+>> +       writel(1, info->enable_reg);
 >> +
->> +Ethernet controllers connected to TI GPMC are represented as child nodes of
->> +the GPMC controller with an "ethernet" name.
->> +
->> +All timing relevant properties as well as generic GPMC child properties are
->> +explained in a separate documents. Please refer to
->> +Documentation/devicetree/bindings/bus/ti-gpmc.txt
->> +
->> +For the properties relevant to the ethernet controller connected to the GPMC
->> +refer to the binding documentation of the device. For example, the documentation
->> +for the SMSC 911x is Documentation/devicetree/bindings/net/smsc911x.txt
->> +
->> +Child nodes need to specify the GPMC bus address width using the "bank-width"
->> +property but is possible that an ethernet controller also has a property to
->> +specify the I/O registers address width. Even when the GPMC has a maximum 16-bit
->> +address width, it supports devices with 32-bit word registers.
->> +For example with an SMSC LAN911x/912x controller connected to the TI GPMC on an
->> +OMAP2+ board, "bank-width = <2>;" and "reg-io-width = <4>;".
->> +
->> +Required properties:
->> +- bank-width: 		Address width of the device in bytes. GPMC supports 8-bit
->> +			and 16-bit devices and so must be either 1 or 2 bytes.
->> +- compatible:		Compatible string property for the ethernet child device.
->> +- gpmc,cs-on:		Chip-select assertion time
->> +- gpmc,cs-rd-off:	Chip-select de-assertion time for reads
->> +- gpmc,cs-wr-off:	Chip-select de-assertion time for writes
->> +- gpmc,oe-on:		Output-enable assertion time
->> +- gpmc,oe-off		Output-enable de-assertion time
->> +- gpmc,we-on:		Write-enable assertion time
->> +- gpmc,we-off:		Write-enable de-assertion time
->> +- gpmc,access:		Start cycle to first data capture (read access)
->> +- gpmc,rd-cycle:	Total read cycle time
->> +- gpmc,wr-cycle:	Total write cycle time
->> +- reg:			Chip-select, base address (relative to chip-select)
->> +			and size of the memory mapped for the device.
->> +			Note that base address will be typically 0 as this
->> +			is the start of the chip-select.
->> +
->> +Optional properties:
->> +- gpmc,XXX		Additional GPMC timings and settings parameters. See
->> +			Documentation/devicetree/bindings/bus/ti-gpmc.txt
->> +
->> +Example:
->> +
->> +gpmc: gpmc@6e000000 {
->> +	compatible = "ti,omap3430-gpmc";
->> +	ti,hwmods = "gpmc";
->> +	reg = <0x6e000000 0x1000>;
->> +	interrupts = <20>;
->> +	gpmc,num-cs = <8>;
->> +	gpmc,num-waitpins = <4>;
->> +	#address-cells = <2>;
->> +	#size-cells = <1>;
->> +
->> +	ranges = <5 0 0x2c000000 0x1000000>;
->> +
->> +	ethernet@5,0 {
->> +		compatible = "smsc,lan9221", "smsc,lan9115";
->> +		reg = <5 0 0xff>;
->> +		bank-width = <2>;
->> +
->> +		gpmc,mux-add-data;
->> +		gpmc,cs-on = <0>;
->> +		gpmc,cs-rd-off = <186>;
->> +		gpmc,cs-wr-off = <186>;
->> +		gpmc,adv-on = <12>;
->> +		gpmc,adv-rd-off = <48>;
->> +		gpmc,adv-wr-off = <48>;
->> +		gpmc,oe-on = <54>;
->> +		gpmc,oe-off = <168>;
->> +		gpmc,we-on = <54>;
->> +		gpmc,we-off = <168>;
->> +		gpmc,rd-cycle = <186>;
->> +		gpmc,wr-cycle = <186>;
->> +		gpmc,access = <114>;
->> +		gpmc,page-burst-access = <6>;
->> +		gpmc,bus-turnaround = <12>;
->> +		gpmc,cycle2cycle-delay = <18>;
->> +		gpmc,wr-data-mux-bus = <90>;
->> +		gpmc,wr-access = <186>;
->> +		gpmc,cycle2cycle-samecsen;
->> +		gpmc,cycle2cycle-diffcsen;
->> +
->> +		interrupt-parent = <&gpio6>;
->> +		interrupts = <16>;
->> +		vmmc-supply = <&vddvario>;
->> +		vmmc_aux-supply = <&vdd33a>;
->> +		reg-io-width = <4>;
->> +
->> +		smsc,save-mac-address;
->> +	};
->> +};
->> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
->> index 898b44d..2bc276b 100644
->> --- a/arch/arm/mach-omap2/gpmc.c
->> +++ b/arch/arm/mach-omap2/gpmc.c
->> @@ -1559,6 +1559,14 @@ static int gpmc_probe_dt(struct platform_device *pdev)
->>  		}
->>  	}
->>  
->> +	for_each_node_by_name(child, "ethernet") {
->> +		ret = gpmc_probe_generic_child(pdev, child);
->> +		if (ret < 0) {
->> +			of_node_put(child);
->> +			return ret;
->> +		}
->> +	}
->> +
->>  	return 0;
->>  }
->>  #else
-> 
-> Thanks! I have added this to my gpmc branch [1].
+>>         info->clk = devm_clk_get(&pdev->dev, "adc");
+>>         if (IS_ERR(info->clk)) {
+>>                 dev_err(&pdev->dev, "failed getting clock, err = %ld\n",
+>> @@ -370,6 +379,7 @@ static int exynos_adc_remove(struct platform_device *pdev)
+>>                                 exynos_adc_remove_devices);
+>>         regulator_disable(info->vdd);
+>>         clk_disable_unprepare(info->clk);
+>> +       writel(0, info->enable_reg);
+>>         iio_device_unregister(indio_dev);
+>>         free_irq(info->irq, info);
+>>         iio_device_free(indio_dev);
+>> @@ -395,6 +405,7 @@ static int exynos_adc_suspend(struct device *dev)
+>>         }
+>>
+>>         clk_disable_unprepare(info->clk);
+>> +       writel(0, info->enable_reg);
+>>         regulator_disable(info->vdd);
+>>
+>>         return 0;
+>> @@ -410,6 +421,7 @@ static int exynos_adc_resume(struct device *dev)
+>>         if (ret)
+>>                 return ret;
+>>
+>> +       writel(1, info->enable_reg);
+>>         clk_prepare_enable(info->clk);
+>>
+>>         exynos_adc_hw_init(info);
+>> --
+>> 1.8.1.3
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Please read the FAQ at  http://www.tux.org/lkml/
+>
+>
+>
+> --
+> Shine bright,
+> (: Nav :)
 
-If you are ok with the Documentation part, can you ACK this?
 
-Thanks
-Jon
+
+--
+Shine bright,
+(: Nav :)
