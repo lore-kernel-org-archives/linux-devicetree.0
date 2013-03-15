@@ -1,72 +1,94 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: davinci: da850 evm: update clock rate for UART 1/2
-	DT nodes
-Date: Fri, 15 Mar 2013 20:07:39 +0530
-Message-ID: <51433233.9070303@ti.com>
-References: <1361262734-8540-1-git-send-email-prakash.pm@ti.com>
-	<512F33F3.9070203@ti.com>
-	<A73F36158E33644199EB82C5EC81C7BC3EA49090@DBDE01.ent.ti.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH 0/8] ARM: OMAP3+: Switch to use DT based cpu0-cpufreq
+ driver
+Date: Fri, 15 Mar 2013 09:56:19 -0500
+Message-ID: <51433693.2@ti.com>
+References: <1363294695-658-1-git-send-email-nm@ti.com> <5142AF41.7070003@ti.com> <20130315142157.GC2939@kahuna>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <A73F36158E33644199EB82C5EC81C7BC3EA49090-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
-Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <20130315142157.GC2939@kahuna>
+Sender: cpufreq-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, linux-omap@vger.kernel.org, Kevin Hilman <khilman@deeprootsystems.com>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <b-cousson@ti.com>, Shawn Guo <shawn.guo@linaro.org>, Keerthy <j-keerthy@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-
-On 3/15/2013 6:56 PM, Manjunathappa, Prakash wrote:
-> Hi Sekhar,
-> 
-> On Thu, Feb 28, 2013 at 16:09:47, Nori, Sekhar wrote:
->> Prakash,
->>
->> On 2/19/2013 2:02 PM, Manjunathappa, Prakash wrote:
->>> DT kernel with latest of denx SPL U-boot boots with garbled UART
->>> logs. This is because in U-boot UART2 gets sourced by PLL0_SYSCLK2
->>> configured for 150MHz. But later in kernel UART2 gets mapped to
->>> PLL1_SYSCLK2 and is configured for 132MHz not for 150MHz.
+On 03/15/2013 09:21 AM, Nishanth Menon wrote:
+> On 10:48-20130315, Santosh Shilimkar wrote:
+>> On Friday 15 March 2013 02:28 AM, Nishanth Menon wrote:
+>>> The following series arose from trying to use BeagleBoard-XM (OMAP3 variant)
+>>> for doing CPU DVFS using cpufreq-cpu0. This series will eventually result in
+>>> migrating the cpufreq support only through device tree (part of the effort
+>>> to migrate away from non-DT configurations for OMAP). Unfortunately, as already
+>>> known, we have a bunch of legacy code and mutually dependent device tree
+>>> conversion that is pending.
+>>> Key features pending:
+>>> A) clock framework transition to DT - this should happen soon, so this series hacks
+>>> the clock node for the time being as suggested in review of original series
+>>> B) on processors that use voltage controller, voltage processor (VC/VP hardware
+>>> loop using I2C_SR path) - we have started work on transitioning them to regulator
+>>> framework driven by DT.
+>>> C) Adaptive Body Bias and SmartReflex AVS conversion to DT.
 >>>
->>> PLL1 is configured for 264MHz to support mDDR on the EVM. That is
->>> memory controller driving mDDR can be configured for 150MHz and
->>> mDDR it self can operate at 132MHz.
+>>> As a result of these pending features:
+>>> - OMAP4 TWL6030 and TPS62361 which set voltage ONLY over I2C_SR have no regulators
+>>> associated at the moment - fortunately, we boot at highest voltage, so things still
+>>> work.
+>>> - Missing ABB and AVS implies that for few of the SoCs (3630, OMAP4), I have not added
+>>> those OPPs in DT yet - this also needs alignment with iMX, AM series like pending work,
+>>> where certain OPPs need enabling based on efuse programmed bit sequences - since it
+>>> is an add-on work, it is not addressed here.
 >>>
->>> So override UART1 and UART2 DT node clock-frequency property with
->>> rate available on da850 EVM.
+>> Thanks for looking into it.
+> Yes, this should be the next stage to solve.
+>>
+>>> Note: Somewhere in the future, when we have regulators driven off CCF and OMAP
+>>> converted to CCF, we could remove the DT regulator requirements there as well.
 >>>
->>> Signed-off-by: Manjunathappa, Prakash <prakash.pm-l0cyMroinI0@public.gmane.org>
+>>> Key benefit of the series is to allow all relevant TI platforms now to use a single
+>>> cpufreq driver and equivalent frameworks in addition be part of the transition to
+>>> DT. As a result of this series, CPUFreq feature will not be available for non-DT
+>>> boot systems.
+>>>
+>> As commented by Jon on internal thread, I am also against the idea of dropping
+>> non-DT support now. Till we migrate to 100 % DT, it is best to keep support
+>> alive. Especial OMAP3 based devices.
 >>
->> How about dropping the clock-frequency attribute altogether? of_serial.c
->> seems to be falling back on clk apis if frequency is not passed and that
->> should make the kernel work with all versions of U-Boot.
+>> Why don't you take phased approach and have both supported for time being.
+>> Then once we move to DT only, we just drop the non-DT support as we plan
+>> to do for many more stuff.
 >>
+>> BTW, we are using only CPUFreq driver before this series as well. I guess you
+>> mean the common CPUFReq drivers used by other ARM SOCs.
+> I had removed the entries for OPPs and clock nodes used by
+> omap-cpufreq.c and deleted the omap-cpufreq.c as well - so the statement
+> "CPUFreq wont work in non-DT" configuration was accurate.
 > 
-> Yes it can be dropped by having duplicate clock node for UART having only
+> My intent was as follows:
+> - This series is driven mainly from maintenance angle - having to maintain
+> two different drivers (legacy omap-cpufreq.c and cpufreq-cpu0.c),
+> ensuring the data is proper in both OPP tables in kernel and DT entries
+> is sure to cause mayhem sometime. This is not just an pain for OMAP
+> community, but for cpufreq community as well (since there is absolutely
+> no reason other than OMAP legacy burden for making cpu0-cpufreq work in non-DT
+> world).
+> - as long as non-DT supported boot provides all features, there is no
+> real feature incentive to move to DT.
 
-You meant an additional clk_lookup entry? That's different from a new
-'struct clk' node.
+You are missing the point. Before you can migrate people over to DT, you
+need to be ready. IMO OMAP is still not quite ready unfortunately.
 
-> dev_id. This is required because DT kernel does the clk_get with only dev_id
-> and non-DT kernel only with con_id. In DT kernel clk_get is done from generic
-> code of_platform_serial_setup:of_serial.c and in non-DT kernel is done from
-> platform code, davinci_serial_setup_clk:arch/arm/mach-davinci/serial.c
-> 
-> Please let me know your opinion on this.
+> But, that said, there is one path I see possible:
+> - keep omap-cpufreq alive (BUT I will add a patch that will not let it init
+>   when in DT entries are present)
+> - add DT entries for all relevant OMAPs - in DT mode, we will *only*
+> support cpufreq-cpu0
+> - All future SoCs will continue to use cpufreq-cpu0 using DT, as was the
+> alignment I believe.
 
-When only one clock is present, con_id of NULL is more appropriate. How
-about fixing arch/arm/mach-davinci/serial.c and existing clk_lookup
-entries to use this?
+Yes that is what we are doing for other drivers and should be done here.
 
-Thanks,
-Sekhar
+Jon
+
