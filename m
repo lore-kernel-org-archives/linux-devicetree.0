@@ -1,65 +1,72 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 08/10] ASoC: dmaengine_pcm: Add open
- function for DT DMA request
-Date: Fri, 15 Mar 2013 11:42:48 +0800
-Message-ID: <20130315034246.GA18039@S2101-09.ap.freescale.net>
-References: <1362940391-8338-1-git-send-email-mpa@pengutronix.de>
- <1362940391-8338-9-git-send-email-mpa@pengutronix.de>
- <20130312190206.GY19942@opensource.wolfsonmicro.com>
- <20130313021712.GD27461@S2101-09.ap.freescale.net>
- <20130314130832.GE32452@pengutronix.de>
+From: Vikas Sajjan <vikas.sajjan@linaro.org>
+Subject: Re: [PATCH] ARM: dts: add interrupt-names property to get interrupt
+ resource by name
+Date: Fri, 15 Mar 2013 09:34:38 +0530
+Message-ID: <CAD025yT4w6QBpo+nShXu6+WCsy8MmJCychLtvE-TxuG-que97w@mail.gmail.com>
+References: <1363173980-11428-1-git-send-email-vikas.sajjan@linaro.org> <51408FB9.90808@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20130314130832.GE32452@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <51408FB9.90808@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, l.krishna@samsung.com, devicetree-discuss@lists.ozlabs.org, joshi@samsung.com, inki.dae@samsung.com, linaro-kernel@lists.linaro.org, sylvester.nawrocki@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 14, 2013 at 02:08:32PM +0100, Markus Pargmann wrote:
-> On Wed, Mar 13, 2013 at 10:18:29AM +0800, Shawn Guo wrote:
-> > On Tue, Mar 12, 2013 at 07:02:07PM +0000, Mark Brown wrote:
-> > > On Sun, Mar 10, 2013 at 07:33:09PM +0100, Markus Pargmann wrote:
-> > > > Add a function to open a DMA PCM substream using devicetree data
-> > > > provided via the client device node. The patch introduces a public
-> > > > function and a private subfunction that is called by both open
-> > > > functions.
-> > > 
-> > > Someone (I think it was Shawn) sent a very similar patch just recently
-> > > which appears to have fallen out of my inbox unfortunately - can you
-> > > please check what's going on there and coordinate with them?  Let me
-> > > know if you can't find the patch and I'll dig it out.
-> > 
-> > It's here, Markus.
-> > 
-> > http://thread.gmane.org/gmane.linux.alsa.devel/106027/focus=106031
-> > 
-> 
-> Thanks. Do you already have a patch for the non-generic function which I
-> could use instead?
-> 
-I do not follow.  With my patch in place, there will be two
-dmaengine_pcm APIs.
+Hi,
 
-int snd_dmaengine_pcm_open(struct snd_pcm_substream *substream,
-        dma_filter_fn filter_fn, void *filter_data)
+On 13 March 2013 20:09, Rob Herring <robherring2@gmail.com> wrote:
+> The subject is completely misleading. Make it clear what the scope of
+> this patch is.
+>
+> On 03/13/2013 06:26 AM, Vikas Sajjan wrote:
+>> The FIMD driver expects the "vsync" interrupt to be mentioned as the 1st
+>> parameter in the FIMD DT node. So to meet this expectation of the driver,
+>> the FIMD DT node was forced to be made by keeping "vsync" as the 1st
+>> parameter.
+>>
+>> this resolves the above mentioned "hack" by introducing
+>> "interrupt-names", so that FIMD driver can get the interrupt resource by
+>> name as discussed at
+>> http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg16211.html
+>
+> I fail to see what the hack is. The order of interrupt properties must
+> be defined by the binding. interrupt-names is auxiliary data and must
+> not be required by an OS.
+>
+>> patch is dependent on https://patchwork.kernel.org/patch/2184981/
+>
+> Why the split? These should be combined.
+Sure, I shall ask Leela to merge this patch with
+https://patchwork.kernel.org/patch/2184981/
+and resend.
 
-int snd_dmaengine_generic_pcm_open(struct snd_pcm_substream *substream,
-                                   struct device *dev, const char *name)
+>
+>>
+>> Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
+>> ---
+>>  arch/arm/boot/dts/exynos5250.dtsi |    3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+>> index 0ee4706..76c8911 100644
+>> --- a/arch/arm/boot/dts/exynos5250.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+>> @@ -588,6 +588,7 @@
+>>               compatible = "samsung,exynos5-fimd";
+>>               interrupt-parent = <&combiner>;
+>>               reg = <0x14400000 0x40000>;
+>> -             interrupts = <18 5>, <18 4>, <18 6>;
+>> +             interrupt-names = "fifo", "vsync", "lcd_sys";
+>> +             interrupts = <18 4>, <18 5>, <18 6>;
+>
+> There should be some documentation describing the order of the interrupts.
+>
+> Rob
+>
 
-The first one is for users that their dmaengine driver hasn't converted
-to generic device tree bindings, and the second one is for users that
-their dmaengine driver is converted to generic device tree bindings.
 
-Shawn
+
+-- 
+Thanks and Regards
+ Vikas Sajjan
