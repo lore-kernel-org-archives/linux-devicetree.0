@@ -1,99 +1,65 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH v2 1/1] gpio: omap: dts: Move interrupt-controller from
- #interrupt-cells description
-Date: Fri, 15 Mar 2013 13:56:08 +0100
-Message-ID: <51431A68.5090605@ti.com>
-References: <1362430597-5855-1-git-send-email-javier.martinez@collabora.co.uk> <CAAwP0s1FynkxpFRK0oC7r2PAOQvxoATfrmU787n4k5PZmvt+XQ@mail.gmail.com>
+From: Florian Fainelli <florian@openwrt.org>
+Subject: Re: [PATCH 0/4] mv643xx_eth: use mvmdio MDIO bus driver
+Date: Fri, 15 Mar 2013 13:53:10 +0100
+Message-ID: <514319B6.7030307@openwrt.org>
+References: <1359473048-26551-1-git-send-email-florian@openwrt.org> <1363284515-9865-1-git-send-email-florian@openwrt.org> <20130315.085321.1047694772636447477.davem@davemloft.net> <20130315.085510.974056254781971889.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAAwP0s1FynkxpFRK0oC7r2PAOQvxoATfrmU787n4k5PZmvt+XQ@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <martinez.javier@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@nvidia.com>, Jon Hunter <jon-hunter@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130315.085510.974056254781971889.davem@davemloft.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, jason@lakedaemon.net, andrew@lunn.ch, linux@arm.linux.org.uk, benh@kernel.crashing.org, paulus@samba.org, buytenh@wantstofly.org, thomas.petazzoni@free-electrons.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
-
-On 03/15/2013 01:18 PM, Javier Martinez Canillas wrote:
-> On Mon, Mar 4, 2013 at 9:56 PM, Javier Martinez Canillas
-> <javier.martinez@collabora.co.uk> wrote:
->> The binding documentation for the OMAP GPIO controller has the description
->> for the "#interrupt-cells" property after the "interrupt-controller".
->> This is confusing so is better to move the "interrupt-controller" after
->> "#interrupt-cells" description.
-
-Mmm, your are doing the opposite  :-)
-
-I guess what we do want is that:
-
-    gpio-controller;
-    #gpio-cells = <2>;
-    interrupt-controller;
-    #interrupt-cells = <2>;
-
-So we move "#interrupt-cells" after the "interrupt-controller" description.
-
->> While being there, change the properties order to be consistent with
->> Documentation/devicetree/bindings/interrupt-controller/interrupts.txt and
->> Documentation/devicetree/bindings/gpio/gpio.txt.
+Le 03/15/13 13:55, David Miller a =C3=A9crit :
+> From: David Miller <davem@davemloft.net>
+> Date: Fri, 15 Mar 2013 08:53:21 -0400 (EDT)
+>
+>> From: Florian Fainelli <florian@openwrt.org>
+>> Date: Thu, 14 Mar 2013 19:08:31 +0100
 >>
->> Reported-by: Stephen Warren <swarren@nvidia.com>
->> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->> Acked-by: Jon Hunter <jon-hunter@ti.com>
->> ---
+>>> This patch converts the mv643xx_eth driver to use the mvmdio MDIO b=
+us driver
+>>> instead of rolling its own implementation. As a result, all users o=
+f this
+>>> mv643xx_eth driver are converted to register an "orion-mdio" platfo=
+rm_device.
+>>> The mvmdio driver is also updated to support an interrupt line whic=
+h reports
+>>> SMI error/completion, and to allow traditionnal platform device reg=
+istration
+>>> instead of just device tree.
+>>>
+>>> David, I think it makes sense for you to merge all of this, since w=
+e do
+>>> not want the architecture files to be desynchronized from the mv643=
+xx_eth to
+>>> avoid runtime breakage. The potential for merge conflicts should be=
+ very small.
 >>
->> Changes since v1:
->>   - Change the properties order to be consistent with the rest of the
->>     DT bindings docs suggested by Jon Hunter.
->>
->>  .../devicetree/bindings/gpio/gpio-omap.txt         |    8 ++++----
->>  1 files changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
->> index bff51a2..a56e3a5 100644
->> --- a/Documentation/devicetree/bindings/gpio/gpio-omap.txt
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
->> @@ -5,12 +5,12 @@ Required properties:
->>    - "ti,omap2-gpio" for OMAP2 controllers
->>    - "ti,omap3-gpio" for OMAP3 controllers
->>    - "ti,omap4-gpio" for OMAP4 controllers
->> +- gpio-controller : Marks the device node as a GPIO controller.
->>  - #gpio-cells : Should be two.
->>    - first cell is the pin number
->>    - second cell is used to specify optional parameters (unused)
->> -- gpio-controller : Marks the device node as a GPIO controller.
->> +- interrupt-controller: Mark the device node as an interrupt controller.
->>  - #interrupt-cells : Should be 2.
->> -- interrupt-controller: Mark the device node as an interrupt controller
->>    The first cell is the GPIO number.
->>    The second cell is used to specify flags:
->>      bits[3:0] trigger type and level flags:
->> @@ -29,8 +29,8 @@ Example:
->>  gpio4: gpio4 {
->>      compatible = "ti,omap4-gpio";
->>      ti,hwmods = "gpio4";
->> -    #gpio-cells = <2>;
->>      gpio-controller;
->> -    #interrupt-cells = <2>;
->> +    #gpio-cells = <2>;
->>      interrupt-controller;
->> +    #interrupt-cells = <2>;
->>  };
->> --
->> 1.7.7.6
->>
-> 
-> Hello,
-> 
-> Any comments on this patch?
-> 
-> I know is just a trivial documentation fix but I think it can be quite
-> helpful for people referring to gpio-omap binding.
+>> All applied to net-next, thanks.
+>
+> Actually, reverted.  Please send me code which actually compiles:
+>
+> drivers/net/ethernet/marvell/mvmdio.c: In function =E2=80=98orion_mdi=
+o_wait_ready=E2=80=99:
+> drivers/net/ethernet/marvell/mvmdio.c:70:28: error: =E2=80=98NO_IRQ=E2=
+=80=99 undeclared (first use in this function)
+> drivers/net/ethernet/marvell/mvmdio.c:70:28: note: each undeclared id=
+entifier is reported only once for each function it appears in
+> drivers/net/ethernet/marvell/mvmdio.c: In function =E2=80=98orion_mdi=
+o_probe=E2=80=99:
+> drivers/net/ethernet/marvell/mvmdio.c:242:24: error: =E2=80=98NO_IRQ=E2=
+=80=99 undeclared (first use in this function)
+> make[4]: *** [drivers/net/ethernet/marvell/mvmdio.o] Error 1
+>
+> And don't use Kconfig dependencies to work around this, fix it proper=
+ly.
 
-I do agree. The patch is good, but the changelog is confusing.
-
-Regards,
-Benoit
-
+Is there any platform out there for which we do not have a NO_IRQ=20
+definition by now? If so, what is it?
+--
+=46lorian
