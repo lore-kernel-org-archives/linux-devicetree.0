@@ -1,74 +1,28 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH v3 0/7] ARM: dts: omap: Add dts data for USB
-Date: Fri, 15 Mar 2013 11:26:51 +0100
-Message-ID: <5142F76B.2010907@ti.com>
-References: <1362663320-23799-1-git-send-email-kishon@ti.com> <514042BF.2090207@ti.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [RESEND 0/2] davinci: Add device tree data for tps6507x.
+Date: Fri, 15 Mar 2013 16:06:35 +0530
+Message-ID: <5142F9B3.3050800@ti.com>
+References: <1362637581-12673-1-git-send-email-manishv.b@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <514042BF.2090207@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kishon <kishon@ti.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, tony@atomide.com, linux@arm.linux.org.uk, balbi@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1362637581-12673-1-git-send-email-manishv.b@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>, broonie@opensource.wolfsonmicro.com
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, linux@arm.linux.org.uk, rob.herring@calxeda.com, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+Hi Mark,
 
-On 03/13/2013 10:11 AM, kishon wrote:
-> Benoit,
-> 
-> Will you be queuing this patch series?
+On 3/7/2013 11:56 AM, Vishwanathrao Badarkhe, Manish wrote:
+> Add device tree data for regulator via tps6507x mfd device 
+> in da850-evm.
+> Applies on top of v3.9-rc1 of linus tree.
 
-I'm reviewing them right now.
+I would like to take this series via the davinci tree to manage
+dependencies with rest of the DT patches. Any comments/objections on
+this series? It will be nice to get your Acked-by/Reviewed-by.
 
-Regards,
-Benoit
-
-> 
-> Thanks
-> Kishon
-> 
-> On Thursday 07 March 2013 07:05 PM, Kishon Vijay Abraham I wrote:
->> Hi Benoit,
->>
->> Here are the dt data patches to get usb device functional in OMAP
->> platforms.
->>
->> All the patches deal with modifying arch/arm/boot except one which
->> modifies
->> Documentation/../usb/omap-usb.txt
->>
->> Changes from v2:
->> * squashed the dt data for dwc3-omap with dwc3 core into a single patch.
->>
->> Changes from v1:
->> Patch *ARM: dts: omap: Add usb_otg and glue data* has some properties
->> with
->> names that has "_". It's replaced with a "-" here.
->>
->> This patch is developed on Linux 3.9-rc1.
->>
->> Kishon Vijay Abraham I (7):
->>    ARM: dts: omap: Add omap control usb data
->>    ARM: dts: omap: Add omap-usb2 dt data
->>    ARM: dts: omap: Add usb_otg and glue data
->>    ARM: dts: omap5: Add omap control usb data
->>    ARM: dts: omap5: Add ocp2scp data
->>    ARM: dts: omap5: Add omap-usb3 and omap-usb2 dt data
->>    ARM: dts: omap5: add dwc3 omap and dwc3 core dt data
->>
->>   Documentation/devicetree/bindings/usb/omap-usb.txt |    1 +
->>   arch/arm/boot/dts/omap3-beagle-xm.dts              |    6 +++
->>   arch/arm/boot/dts/omap3-evm.dts                    |    6 +++
->>   arch/arm/boot/dts/omap3-overo.dtsi                 |    6 +++
->>   arch/arm/boot/dts/omap3.dtsi                       |   12 +++++
->>   arch/arm/boot/dts/omap4-panda.dts                  |    6 +++
->>   arch/arm/boot/dts/omap4-sdp.dts                    |    6 +++
->>   arch/arm/boot/dts/omap4.dtsi                       |   26 +++++++++++
->>   arch/arm/boot/dts/omap5.dtsi                       |   48
->> ++++++++++++++++++++
->>   arch/arm/boot/dts/twl4030.dtsi                     |    2 +-
->>   10 files changed, 118 insertions(+), 1 deletion(-)
->>
-> 
+Thanks,
+Sekhar
