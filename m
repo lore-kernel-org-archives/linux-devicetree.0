@@ -1,117 +1,32 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 06/23] ARM: OMAP3: 3430SDP: Adapt to ehci-omap
- changes
-Date: Fri, 15 Mar 2013 09:12:03 -0700
-Message-ID: <20130315161201.GA9370@atomide.com>
-References: <1363360604-21368-1-git-send-email-rogerq@ti.com>
- <1363360604-21368-7-git-send-email-rogerq@ti.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 3/4 v2] net: mvmdio: enhance driver to support SMI
+	error/done interrupts
+Date: Fri, 15 Mar 2013 18:05:03 +0000
+Message-ID: <20130315180503.GU4977@n2100.arm.linux.org.uk>
+References: <1359473048-26551-1-git-send-email-florian@openwrt.org> <1363284515-9865-1-git-send-email-florian@openwrt.org> <1363284515-9865-4-git-send-email-florian@openwrt.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1363360604-21368-7-git-send-email-rogerq@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: balbi@ti.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+In-Reply-To: <1363284515-9865-4-git-send-email-florian@openwrt.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Florian Fainelli <florian@openwrt.org>
+Cc: davem@davemloft.net, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Lennert Buytenhek <buytenh@wantstofly.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-I think you can get rid of quite a bit more of the repeated data for
-most boards, see below.
-
-* Roger Quadros <rogerq@ti.com> [130315 08:21]:
-> Add 2 platform devices for 'nop-usb-xceiv'. These will be used
-> as PHYs for HS USB ports 1 and 2 so provide binding information
-> for them.
-> 
-> Use usbhs_init_phys() to register the PHY's RESET regulators.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->  arch/arm/mach-omap2/board-3430sdp.c |   47 ++++++++++++++++++++++++++++++----
->  1 files changed, 41 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm/mach-omap2/board-3430sdp.c b/arch/arm/mach-omap2/board-3430sdp.c
-> index ce812de..5584682 100644
-> --- a/arch/arm/mach-omap2/board-3430sdp.c
-> +++ b/arch/arm/mach-omap2/board-3430sdp.c
-> @@ -21,6 +21,7 @@
->  #include <linux/spi/spi.h>
->  #include <linux/i2c/twl.h>
->  #include <linux/regulator/machine.h>
-> +#include <linux/usb/phy.h>
->  #include <linux/io.h>
->  #include <linux/gpio.h>
->  #include <linux/mmc/host.h>
-> @@ -445,16 +446,37 @@ static void enable_board_wakeup_source(void)
->  		OMAP_WAKEUP_EN | OMAP_PIN_INPUT_PULLUP);
->  }
->  
-> +/* PHY device on HS USB Port 1 i.e. nop_usb_xceiv.1 */
-> +static struct platform_device hsusb1_phy_device = {
-> +	.name = "nop_usb_xceiv",
-> +	.id = 1,
-> +};
+On Thu, Mar 14, 2013 at 07:08:34PM +0100, Florian Fainelli wrote:
+> +	if (dev->err_interrupt == NO_IRQ) {
+...
+> +	init_waitqueue_head(&dev->smi_busy_wait);
 > +
-> +/* PHY device on HS USB Port 2 i.e. nop_usb_xceiv.2 */
-> +static struct platform_device hsusb2_phy_device = {
-> +	.name = "nop_usb_xceiv",
-> +	.id = 2,
-> +};
+> +	dev->err_interrupt = platform_get_irq(pdev, 0);
+> +	if (dev->err_interrupt != -ENXIO) {
+...
+> +	} else
+> +		dev->err_interrupt = NO_IRQ;
 
-Please allocate these in the common ehci platform init code
-so you don't have to repeat the same nop_usb_xceiv for each
-board-*.c file. If you need to override these, then you can
-pass something instead of NULL to the init function.
 
-> +static struct usbhs_phy_data phy_data[] __initdata = {
-> +	{
-> +		.port = 1,
-> +		.reset_gpio = 57,
-> +		.vcc_gpio = -EINVAL,
-> +		.phy_id = "nop_usb_xceiv.1",
-> +	},
-> +	{
-> +		.port = 2,
-> +		.reset_gpio = 61,
-> +		.vcc_gpio = -EINVAL,
-> +		.phy_id = "nop_usb_xceiv.2",
-> +	},
-> +};
-
-This is OK as it's the board specific data needed. If it's the
-same for many boards, then you might want to add some init function
-for the default case.
-
-> +static struct platform_device *sdp3430_devices[] __initdata = {
-> +	&hsusb1_phy_device,
-> +	&hsusb2_phy_device,
-> +};
-
-It then seems that this can be in the common ehci platform init
-code for most cases.
-
->  static void __init omap_3430sdp_init(void)
->  {
->  	int gpio_pendown;
-> @@ -606,6 +633,14 @@ static void __init omap_3430sdp_init(void)
->  	board_flash_init(sdp_flash_partitions, chip_sel_3430, 0);
->  	sdp3430_display_init();
->  	enable_board_wakeup_source();
-> +
-> +	platform_add_devices(sdp3430_devices, ARRAY_SIZE(sdp3430_devices));
-> +	/* PHY on HSUSB Port 1 i.e. index 0 */
-> +	usb_bind_phy("ehci-omap.0", 0, "nop_usb_xceiv.1");
-> +	/* PHY on HSUSB Port 2 i.e. index 1 */
-> +	usb_bind_phy("ehci-omap.0", 1, "nop_usb_xceiv.2");
-
-And this part too in most cases.
-
-> +	usbhs_init_phys(phy_data, ARRAY_SIZE(phy_data));
->  	usbhs_init(&usbhs_bdata);
->  }
-
-Regards,
-
-Tony
+FYI, NO_IRQ is not supposed to be used anymore (we're supposed to be
+removing it).  platform_get_irq() returns negative numbers for failure,
+so why not test for < 0 in both the above tests, or maybe <= 0 (as
+IRQ0 is also not supposed to be valid.)?
