@@ -1,156 +1,117 @@
-From: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] iio: adc: Add dt support for turning on the phy in
- exynos-adc
-Date: Fri, 15 Mar 2013 21:13:07 +0530
-Message-ID: <CAHfPSqCqeRJ-VABi22Q0M33LFFRS_QnK_zGM28j1UPhrRvK-+Q@mail.gmail.com>
-References: <1363129994-10438-1-git-send-email-dianders@chromium.org>
- <1363207202-10858-1-git-send-email-dianders@chromium.org>
- <1363207202-10858-3-git-send-email-dianders@chromium.org>
- <CAHfPSqCJVGsERi+jNTSYOJTCL0H-ytAcLTLb+7fQnFK1KGqkyg@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 06/23] ARM: OMAP3: 3430SDP: Adapt to ehci-omap
+ changes
+Date: Fri, 15 Mar 2013 09:12:03 -0700
+Message-ID: <20130315161201.GA9370@atomide.com>
+References: <1363360604-21368-1-git-send-email-rogerq@ti.com>
+ <1363360604-21368-7-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAHfPSqCJVGsERi+jNTSYOJTCL0H-ytAcLTLb+7fQnFK1KGqkyg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1363360604-21368-7-git-send-email-rogerq@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: balbi@ti.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 15 March 2013 17:15, Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 14 March 2013 02:10, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->> Without this change the exynos adc controller needed to have its phy
->> enabled in some out-of-driver C code.  Add support for specifying the
->> phy enable register by listing it in the reg list.
->>
->> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Tested-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-I used this in mach file for testing. But this one worked aswell.
+Hi,
 
->
-> Worked for me, Its needed for Exynos5250 and future versions too.
-> Tested on SMDK5250.
->> ---
->> Changes in v2: None
->>
->>  .../devicetree/bindings/arm/samsung/exynos-adc.txt         |  4 ++--
->>  drivers/iio/adc/exynos_adc.c                               | 14 +++++++++++++-
->>  2 files changed, 15 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
->> index 96db940..05be151 100644
->> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
->> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
->> @@ -15,7 +15,7 @@ Required properties:
->>                         Must be "samsung,exynos-adc-v2" for
->>                                 future controllers.
->>  - reg:                 Contains ADC register address range (base address and
->> -                       length).
->> +                       length) and the address of the phy enable register.
->>  - interrupts:          Contains the interrupt information for the timer. The
->>                         format is being dependent on which interrupt controller
->>                         the Samsung device uses.
->> @@ -30,7 +30,7 @@ Example: adding device info in dtsi file
->>
->>  adc: adc@12D10000 {
->>         compatible = "samsung,exynos-adc-v1";
->> -       reg = <0x12D10000 0x100>;
->> +       reg = <0x12D10000 0x100>, <0x10040718 0x4>;
->>         interrupts = <0 106 0>;
->>         #io-channel-cells = <1>;
->>         io-channel-ranges;
->> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
->> index ed6fdd7..5ab0dfd 100644
->> --- a/drivers/iio/adc/exynos_adc.c
->> +++ b/drivers/iio/adc/exynos_adc.c
->> @@ -85,6 +85,7 @@ enum adc_version {
->>
->>  struct exynos_adc {
->>         void __iomem            *regs;
->> +       void __iomem            *enable_reg;
->>         struct clk              *clk;
->>         unsigned int            irq;
->>         struct regulator        *vdd;
->> @@ -269,13 +270,19 @@ static int exynos_adc_probe(struct platform_device *pdev)
->>         info = iio_priv(indio_dev);
->>
->>         mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> -
->>         info->regs = devm_request_and_ioremap(&pdev->dev, mem);
->>         if (!info->regs) {
->>                 ret = -ENOMEM;
->>                 goto err_iio;
->>         }
->>
->> +       mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
->> +       info->enable_reg = devm_request_and_ioremap(&pdev->dev, mem);
->> +       if (!info->enable_reg) {
->> +               ret = -ENOMEM;
->> +               goto err_iio;
->> +       }
->> +
->>         irq = platform_get_irq(pdev, 0);
->>         if (irq < 0) {
->>                 dev_err(&pdev->dev, "no irq resource?\n");
->> @@ -295,6 +302,8 @@ static int exynos_adc_probe(struct platform_device *pdev)
->>                 goto err_iio;
->>         }
->>
->> +       writel(1, info->enable_reg);
->> +
->>         info->clk = devm_clk_get(&pdev->dev, "adc");
->>         if (IS_ERR(info->clk)) {
->>                 dev_err(&pdev->dev, "failed getting clock, err = %ld\n",
->> @@ -370,6 +379,7 @@ static int exynos_adc_remove(struct platform_device *pdev)
->>                                 exynos_adc_remove_devices);
->>         regulator_disable(info->vdd);
->>         clk_disable_unprepare(info->clk);
->> +       writel(0, info->enable_reg);
->>         iio_device_unregister(indio_dev);
->>         free_irq(info->irq, info);
->>         iio_device_free(indio_dev);
->> @@ -395,6 +405,7 @@ static int exynos_adc_suspend(struct device *dev)
->>         }
->>
->>         clk_disable_unprepare(info->clk);
->> +       writel(0, info->enable_reg);
->>         regulator_disable(info->vdd);
->>
->>         return 0;
->> @@ -410,6 +421,7 @@ static int exynos_adc_resume(struct device *dev)
->>         if (ret)
->>                 return ret;
->>
->> +       writel(1, info->enable_reg);
->>         clk_prepare_enable(info->clk);
->>
->>         exynos_adc_hw_init(info);
->> --
->> 1.8.1.3
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->> Please read the FAQ at  http://www.tux.org/lkml/
->
->
->
-> --
-> Shine bright,
-> (: Nav :)
+I think you can get rid of quite a bit more of the repeated data for
+most boards, see below.
 
+* Roger Quadros <rogerq@ti.com> [130315 08:21]:
+> Add 2 platform devices for 'nop-usb-xceiv'. These will be used
+> as PHYs for HS USB ports 1 and 2 so provide binding information
+> for them.
+> 
+> Use usbhs_init_phys() to register the PHY's RESET regulators.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>  arch/arm/mach-omap2/board-3430sdp.c |   47 ++++++++++++++++++++++++++++++----
+>  1 files changed, 41 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm/mach-omap2/board-3430sdp.c b/arch/arm/mach-omap2/board-3430sdp.c
+> index ce812de..5584682 100644
+> --- a/arch/arm/mach-omap2/board-3430sdp.c
+> +++ b/arch/arm/mach-omap2/board-3430sdp.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/spi/spi.h>
+>  #include <linux/i2c/twl.h>
+>  #include <linux/regulator/machine.h>
+> +#include <linux/usb/phy.h>
+>  #include <linux/io.h>
+>  #include <linux/gpio.h>
+>  #include <linux/mmc/host.h>
+> @@ -445,16 +446,37 @@ static void enable_board_wakeup_source(void)
+>  		OMAP_WAKEUP_EN | OMAP_PIN_INPUT_PULLUP);
+>  }
+>  
+> +/* PHY device on HS USB Port 1 i.e. nop_usb_xceiv.1 */
+> +static struct platform_device hsusb1_phy_device = {
+> +	.name = "nop_usb_xceiv",
+> +	.id = 1,
+> +};
+> +
+> +/* PHY device on HS USB Port 2 i.e. nop_usb_xceiv.2 */
+> +static struct platform_device hsusb2_phy_device = {
+> +	.name = "nop_usb_xceiv",
+> +	.id = 2,
+> +};
 
+Please allocate these in the common ehci platform init code
+so you don't have to repeat the same nop_usb_xceiv for each
+board-*.c file. If you need to override these, then you can
+pass something instead of NULL to the init function.
 
---
-Shine bright,
-(: Nav :)
+> +static struct usbhs_phy_data phy_data[] __initdata = {
+> +	{
+> +		.port = 1,
+> +		.reset_gpio = 57,
+> +		.vcc_gpio = -EINVAL,
+> +		.phy_id = "nop_usb_xceiv.1",
+> +	},
+> +	{
+> +		.port = 2,
+> +		.reset_gpio = 61,
+> +		.vcc_gpio = -EINVAL,
+> +		.phy_id = "nop_usb_xceiv.2",
+> +	},
+> +};
+
+This is OK as it's the board specific data needed. If it's the
+same for many boards, then you might want to add some init function
+for the default case.
+
+> +static struct platform_device *sdp3430_devices[] __initdata = {
+> +	&hsusb1_phy_device,
+> +	&hsusb2_phy_device,
+> +};
+
+It then seems that this can be in the common ehci platform init
+code for most cases.
+
+>  static void __init omap_3430sdp_init(void)
+>  {
+>  	int gpio_pendown;
+> @@ -606,6 +633,14 @@ static void __init omap_3430sdp_init(void)
+>  	board_flash_init(sdp_flash_partitions, chip_sel_3430, 0);
+>  	sdp3430_display_init();
+>  	enable_board_wakeup_source();
+> +
+> +	platform_add_devices(sdp3430_devices, ARRAY_SIZE(sdp3430_devices));
+> +	/* PHY on HSUSB Port 1 i.e. index 0 */
+> +	usb_bind_phy("ehci-omap.0", 0, "nop_usb_xceiv.1");
+> +	/* PHY on HSUSB Port 2 i.e. index 1 */
+> +	usb_bind_phy("ehci-omap.0", 1, "nop_usb_xceiv.2");
+
+And this part too in most cases.
+
+> +	usbhs_init_phys(phy_data, ARRAY_SIZE(phy_data));
+>  	usbhs_init(&usbhs_bdata);
+>  }
+
+Regards,
+
+Tony
