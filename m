@@ -1,137 +1,102 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH 0/2] Device Tree support for CMA (Contiguous Memory
- Allocator)
-Date: Fri, 15 Mar 2013 16:05:18 +0100
-Message-ID: <514338AE.60402@samsung.com>
-References: <1360845928-8107-1-git-send-email-m.szyprowski@samsung.com>
- <20130214213013.GG1906@pengutronix.de>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 00/23] ARM: OMAP2+: Adapt to ehci-omap changes for 3.10
+Date: Fri, 15 Mar 2013 17:16:21 +0200
+Message-ID: <1363360604-21368-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <20130214213013.GG1906@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Laura Abbott <lauraa@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Nishanth Peethambaran <nishanth.p@gmail.com>, Michal Nazarewicz <mina86@mina86.com>, Tomasz Figa <tomasz.figa@gmail.com>, linaro-mm-sig@lists.linaro.org, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Tony,
 
-It took me some time to get back to this topic due to my holidays and other
-urgent issues. I hope that this I will be able to participate a bit more 
-actively.
+These patches provide the SoC side code required to support
+the changes in the OMAP USB Host drivers done in [1], [2] & [3].
 
-On 2/14/2013 10:30 PM, Sascha Hauer wrote:
-> Hi Marek,
->
-> On Thu, Feb 14, 2013 at 01:45:26PM +0100, Marek Szyprowski wrote:
-> > Hello,
-> >
-> > Here is my initial proposal for device tree integration for Contiguous
-> > Memory Allocator. The code is quite straightforward, however I expect
-> > that the memory bindings require some discussion.
-> >
-> > The proposed bindings allows to define contiguous memory regions of
-> > specified base address and size. Then, the defined regions can be
-> > assigned to the given device(s) by adding a property with a phanle to
-> > the defined contiguous memory region. From the device tree perspective
-> > that's all. Once the bindings are added, all the memory allocations from
-> > dma-mapping subsystem will be served from the defined contiguous memory
-> > regions.
-> >
->
-> I think CMA regions should not be described in the devicetre at all. The
-> devicetree is about hardware description and it should be OS agnostic,
-> but CMA is only a Linux specific implementation detail. It's not even
-> specific to a particular board, it's specific to a particular usecase of
-> a board.
+Device tree support is added for Beagleboard and Panda.
 
-Well, I see your point. The main problem is the fact that board files 
-consisted
-of both hw related definitions AND particular kernel configuration for 
-the device
-drivers (like the dma_declare_contiguous() calls for example). Now hw 
-related
-definitions are being moved to device tree, but what should we do with the
-kernel configuration data, which was previously in the board files? I 
-know that
-in the ideal scenario there should be no such data at all and all 
-drivers should
-be able to automatically configure all related parameters or give 
-userspace a
-method for changing them in runtime. The real world is not ideal 
-however. There
-is a set of kernel configuration data/parameters which can be set only once,
-usually early in the boot process. How should we handle it?
+NOTE: The first patch needs to be shared between the
+OMAP tree and Felipe's USB tree.
 
-There is kernel command line parameter (surprisingly stored also in 
-device tree,
-which should not have such data...), but it intended mainly for 
-debug/development
-purposes and simple, usually one value parameters.
+v2:
+- Added helper function usbhs_init_phys() that can be used by board files
+to simplify adding of PHY regulators for USB host ports.
 
-There have been discussion about CMA configuration via kernel cmd line 
-long time
-ago (in early CMA development days), but such attempt has been rejected, 
-because
-it introduced too complicated kernel parameters, see
-http://thread.gmane.org/gmane.linux.kernel.mm/50669/focus=50679
+[1] MFD side changes to omap-usb-host and omap-usb-tll
+  https://lkml.org/lkml/2013/3/12/179
+[2] USB EHCI side changes to ehci-omap 
+  http://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg86265.html
+[3] USB PHY driver changes
+  http://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg86293.html
 
-So we need another solution. I'm aware of the idea that DT should be 
-limited to
-hw description. This principle is good and it might let us to find some 
-better,
-more generic approach. However, we already have some of Linux kernel 
-specific
-attributes ("git grep 'linux,' -- Documentation/devicetree | wc -l" 
-gives 71,
-most of them are in keypad and buttons drivers).
+The following changes since commit f6161aa153581da4a3867a2d1a7caf4be19b6ec9:
 
-Are there any KNOWN use cases for using exiting DTS from Linux kernel 
-with other
-operating systems? I believe that 99% of the DTS files will be both 
-developed and
-used only together with Linux kernel. I'm also seeing the DT as a generic
-way of describing different variants of the same hardware (what is quite 
-common
-in the development process) and a method for standardizing the hw 
-description
-to ease the developers (for a good example please just compare some old 
-OMAP and
-Exynos board files - each used completely different way of describing 
-the same
-things).
+  Linux 3.9-rc2 (2013-03-10 16:54:19 -0700)
 
-The CMA DT patches are quite short and lets anyone to put the required 
-kernel
-configuration together with the respective HW definitions in a very 
-convenient
-way. Especially referencing regions and device entries by phandle 
-pointers allows
-us to avoid any text-based config entries and in-kernel parsers for them.
+are available in the git repository at:
+  git://github.com/rogerq/linux.git usbhost-arm-next
 
-If the presented approach is definitely prohibited then what way should 
-we go?
+Roger Quadros (23):
+  usb: phy: nop: Add some parameters to platform data
+  ARM: OMAP2+: omap-usb-host: Add usbhs_init_phys()
+  ARM: OMAP2+: omap4panda: Provide USB Host's PHY platform data
+  ARM: OMAP2+: omap4panda: Adapt to ehci-omap changes
+  ARM: OMAP3: Beagle: Adapt to ehci-omap changes
+  ARM: OMAP3: 3430SDP: Adapt to ehci-omap changes
+  ARM: OMAP3: 3630SDP: Adapt to ehci-omap changes
+  ARM: OMAP: AM3517crane: Adapt to ehci-omap changes
+  ARM: OMAP: AM3517evm: Adapt to ehci-omap changes
+  ARM: OMAP3: cm-t35: Adapt to ehci-omap changes
+  ARM: OMAP3: cm-t3517: Adapt to ehci-omap changes
+  ARM: OMAP: devkit8000: Adapt to ehci-omap changes
+  ARM: OMAP3: igep0020: Adapt to ehci-omap changes
+  ARM: OMAP3: omap3evm: Adapt to ehci-omap changes
+  ARM: OMAP3: omap3pandora: Adapt to ehci-omap changes
+  ARM: OMAP3: omap3stalker: Adapt to ehci-omap changes
+  ARM: OMAP3: omap3touchbook: Adapt to ehci-omap changes
+  ARM: OMAP3: overo: Adapt to ehci-omap changes
+  ARM: OMAP: zoom: Adapt to ehci-omap changes
+  ARM: dts: OMAP4: Add HS USB Host IP nodes
+  ARM: dts: omap4-panda: Add USB Host support
+  ARM: dts: OMAP3: Add HS USB Host IP nodes
+  ARM: dts: omap3-beagle: Add USB Host support
 
-As an alternative I'm thinking about extending 'chosen' node for such cases.
-Embedding the CMA configuration data into a few sub-nodes and attributes 
-there
-should not be a problem. It would also keep all the config related 
-entries in
-a single place. The another advantage I see is the possibility to update
-'chosen' node from the extended dt-aware bootloaders, which might also 
-let one
-to edit them. What's your opinion?
+ arch/arm/boot/dts/omap3-beagle.dts         |   71 ++++++++++++++
+ arch/arm/boot/dts/omap3.dtsi               |   31 ++++++
+ arch/arm/boot/dts/omap4-panda.dts          |   56 +++++++++++
+ arch/arm/boot/dts/omap4.dtsi               |   30 ++++++
+ arch/arm/mach-omap2/board-3430sdp.c        |   47 ++++++++-
+ arch/arm/mach-omap2/board-3630sdp.c        |   48 +++++++++-
+ arch/arm/mach-omap2/board-am3517crane.c    |   38 +++++---
+ arch/arm/mach-omap2/board-am3517evm.c      |   41 +++++++-
+ arch/arm/mach-omap2/board-cm-t35.c         |   45 ++++++++-
+ arch/arm/mach-omap2/board-cm-t3517.c       |   45 ++++++++-
+ arch/arm/mach-omap2/board-devkit8000.c     |   20 +++--
+ arch/arm/mach-omap2/board-igep0020.c       |   66 +++++++++++---
+ arch/arm/mach-omap2/board-omap3beagle.c    |   44 +++++++--
+ arch/arm/mach-omap2/board-omap3evm.c       |   41 ++++++---
+ arch/arm/mach-omap2/board-omap3pandora.c   |   31 +++++--
+ arch/arm/mach-omap2/board-omap3stalker.c   |   29 +++++--
+ arch/arm/mach-omap2/board-omap3touchbook.c |   38 ++++++--
+ arch/arm/mach-omap2/board-omap4panda.c     |   67 +++++++-------
+ arch/arm/mach-omap2/board-overo.c          |   32 +++++-
+ arch/arm/mach-omap2/board-zoom.c           |   32 +++++-
+ arch/arm/mach-omap2/usb-host.c             |  138 +++++++++++++++++++++++++++-
+ arch/arm/mach-omap2/usb.h                  |    9 ++
+ include/linux/usb/nop-usb-xceiv.h          |    5 +
+ 23 files changed, 849 insertions(+), 155 deletions(-)
 
-Best regards
 -- 
-Marek Szyprowski
-Samsung Poland R&D Center
+1.7.4.1
