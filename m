@@ -1,46 +1,99 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 0/4] mv643xx_eth: use mvmdio MDIO bus driver
-Date: Fri, 15 Mar 2013 08:55:10 -0400 (EDT)
-Message-ID: <20130315.085510.974056254781971889.davem@davemloft.net>
-References: <1359473048-26551-1-git-send-email-florian@openwrt.org>
-	<1363284515-9865-1-git-send-email-florian@openwrt.org>
-	<20130315.085321.1047694772636447477.davem@davemloft.net>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH v2 1/1] gpio: omap: dts: Move interrupt-controller from
+ #interrupt-cells description
+Date: Fri, 15 Mar 2013 13:56:08 +0100
+Message-ID: <51431A68.5090605@ti.com>
+References: <1362430597-5855-1-git-send-email-javier.martinez@collabora.co.uk> <CAAwP0s1FynkxpFRK0oC7r2PAOQvxoATfrmU787n4k5PZmvt+XQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130315.085321.1047694772636447477.davem@davemloft.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: florian@openwrt.org
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, jason@lakedaemon.net, andrew@lunn.ch, linux@arm.linux.org.uk, benh@kernel.crashing.org, paulus@samba.org, buytenh@wantstofly.org, thomas.petazzoni@free-electrons.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAAwP0s1FynkxpFRK0oC7r2PAOQvxoATfrmU787n4k5PZmvt+XQ@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <martinez.javier@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@nvidia.com>, Jon Hunter <jon-hunter@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogRGF2aWQgTWlsbGVyIDxkYXZlbUBkYXZlbWxvZnQubmV0Pg0KRGF0ZTogRnJpLCAxNSBN
-YXIgMjAxMyAwODo1MzoyMSAtMDQwMCAoRURUKQ0KDQo+IEZyb206IEZsb3JpYW4gRmFpbmVsbGkg
-PGZsb3JpYW5Ab3BlbndydC5vcmc+DQo+IERhdGU6IFRodSwgMTQgTWFyIDIwMTMgMTk6MDg6MzEg
-KzAxMDANCj4gDQo+PiBUaGlzIHBhdGNoIGNvbnZlcnRzIHRoZSBtdjY0M3h4X2V0aCBkcml2ZXIg
-dG8gdXNlIHRoZSBtdm1kaW8gTURJTyBidXMgZHJpdmVyDQo+PiBpbnN0ZWFkIG9mIHJvbGxpbmcg
-aXRzIG93biBpbXBsZW1lbnRhdGlvbi4gQXMgYSByZXN1bHQsIGFsbCB1c2VycyBvZiB0aGlzDQo+
-PiBtdjY0M3h4X2V0aCBkcml2ZXIgYXJlIGNvbnZlcnRlZCB0byByZWdpc3RlciBhbiAib3Jpb24t
-bWRpbyIgcGxhdGZvcm1fZGV2aWNlLg0KPj4gVGhlIG12bWRpbyBkcml2ZXIgaXMgYWxzbyB1cGRh
-dGVkIHRvIHN1cHBvcnQgYW4gaW50ZXJydXB0IGxpbmUgd2hpY2ggcmVwb3J0cw0KPj4gU01JIGVy
-cm9yL2NvbXBsZXRpb24sIGFuZCB0byBhbGxvdyB0cmFkaXRpb25uYWwgcGxhdGZvcm0gZGV2aWNl
-IHJlZ2lzdHJhdGlvbg0KPj4gaW5zdGVhZCBvZiBqdXN0IGRldmljZSB0cmVlLg0KPj4gDQo+PiBE
-YXZpZCwgSSB0aGluayBpdCBtYWtlcyBzZW5zZSBmb3IgeW91IHRvIG1lcmdlIGFsbCBvZiB0aGlz
-LCBzaW5jZSB3ZSBkbw0KPj4gbm90IHdhbnQgdGhlIGFyY2hpdGVjdHVyZSBmaWxlcyB0byBiZSBk
-ZXN5bmNocm9uaXplZCBmcm9tIHRoZSBtdjY0M3h4X2V0aCB0bw0KPj4gYXZvaWQgcnVudGltZSBi
-cmVha2FnZS4gVGhlIHBvdGVudGlhbCBmb3IgbWVyZ2UgY29uZmxpY3RzIHNob3VsZCBiZSB2ZXJ5
-IHNtYWxsLg0KPiANCj4gQWxsIGFwcGxpZWQgdG8gbmV0LW5leHQsIHRoYW5rcy4NCg0KQWN0dWFs
-bHksIHJldmVydGVkLiAgUGxlYXNlIHNlbmQgbWUgY29kZSB3aGljaCBhY3R1YWxseSBjb21waWxl
-czoNCg0KZHJpdmVycy9uZXQvZXRoZXJuZXQvbWFydmVsbC9tdm1kaW8uYzogSW4gZnVuY3Rpb24g
-oW9yaW9uX21kaW9fd2FpdF9yZWFkeaI6DQpkcml2ZXJzL25ldC9ldGhlcm5ldC9tYXJ2ZWxsL212
-bWRpby5jOjcwOjI4OiBlcnJvcjogoU5PX0lSUaIgdW5kZWNsYXJlZCAoZmlyc3QgdXNlIGluIHRo
-aXMgZnVuY3Rpb24pDQpkcml2ZXJzL25ldC9ldGhlcm5ldC9tYXJ2ZWxsL212bWRpby5jOjcwOjI4
-OiBub3RlOiBlYWNoIHVuZGVjbGFyZWQgaWRlbnRpZmllciBpcyByZXBvcnRlZCBvbmx5IG9uY2Ug
-Zm9yIGVhY2ggZnVuY3Rpb24gaXQgYXBwZWFycyBpbg0KZHJpdmVycy9uZXQvZXRoZXJuZXQvbWFy
-dmVsbC9tdm1kaW8uYzogSW4gZnVuY3Rpb24goW9yaW9uX21kaW9fcHJvYmWiOg0KZHJpdmVycy9u
-ZXQvZXRoZXJuZXQvbWFydmVsbC9tdm1kaW8uYzoyNDI6MjQ6IGVycm9yOiChTk9fSVJRoiB1bmRl
-Y2xhcmVkIChmaXJzdCB1c2UgaW4gdGhpcyBmdW5jdGlvbikNCm1ha2VbNF06ICoqKiBbZHJpdmVy
-cy9uZXQvZXRoZXJuZXQvbWFydmVsbC9tdm1kaW8ub10gRXJyb3IgMQ0KDQpBbmQgZG9uJ3QgdXNl
-IEtjb25maWcgZGVwZW5kZW5jaWVzIHRvIHdvcmsgYXJvdW5kIHRoaXMsIGZpeCBpdCBwcm9wZXJs
-eS4NCg==
+Hi Javier,
+
+On 03/15/2013 01:18 PM, Javier Martinez Canillas wrote:
+> On Mon, Mar 4, 2013 at 9:56 PM, Javier Martinez Canillas
+> <javier.martinez@collabora.co.uk> wrote:
+>> The binding documentation for the OMAP GPIO controller has the description
+>> for the "#interrupt-cells" property after the "interrupt-controller".
+>> This is confusing so is better to move the "interrupt-controller" after
+>> "#interrupt-cells" description.
+
+Mmm, your are doing the opposite  :-)
+
+I guess what we do want is that:
+
+    gpio-controller;
+    #gpio-cells = <2>;
+    interrupt-controller;
+    #interrupt-cells = <2>;
+
+So we move "#interrupt-cells" after the "interrupt-controller" description.
+
+>> While being there, change the properties order to be consistent with
+>> Documentation/devicetree/bindings/interrupt-controller/interrupts.txt and
+>> Documentation/devicetree/bindings/gpio/gpio.txt.
+>>
+>> Reported-by: Stephen Warren <swarren@nvidia.com>
+>> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+>> Acked-by: Jon Hunter <jon-hunter@ti.com>
+>> ---
+>>
+>> Changes since v1:
+>>   - Change the properties order to be consistent with the rest of the
+>>     DT bindings docs suggested by Jon Hunter.
+>>
+>>  .../devicetree/bindings/gpio/gpio-omap.txt         |    8 ++++----
+>>  1 files changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
+>> index bff51a2..a56e3a5 100644
+>> --- a/Documentation/devicetree/bindings/gpio/gpio-omap.txt
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
+>> @@ -5,12 +5,12 @@ Required properties:
+>>    - "ti,omap2-gpio" for OMAP2 controllers
+>>    - "ti,omap3-gpio" for OMAP3 controllers
+>>    - "ti,omap4-gpio" for OMAP4 controllers
+>> +- gpio-controller : Marks the device node as a GPIO controller.
+>>  - #gpio-cells : Should be two.
+>>    - first cell is the pin number
+>>    - second cell is used to specify optional parameters (unused)
+>> -- gpio-controller : Marks the device node as a GPIO controller.
+>> +- interrupt-controller: Mark the device node as an interrupt controller.
+>>  - #interrupt-cells : Should be 2.
+>> -- interrupt-controller: Mark the device node as an interrupt controller
+>>    The first cell is the GPIO number.
+>>    The second cell is used to specify flags:
+>>      bits[3:0] trigger type and level flags:
+>> @@ -29,8 +29,8 @@ Example:
+>>  gpio4: gpio4 {
+>>      compatible = "ti,omap4-gpio";
+>>      ti,hwmods = "gpio4";
+>> -    #gpio-cells = <2>;
+>>      gpio-controller;
+>> -    #interrupt-cells = <2>;
+>> +    #gpio-cells = <2>;
+>>      interrupt-controller;
+>> +    #interrupt-cells = <2>;
+>>  };
+>> --
+>> 1.7.7.6
+>>
+> 
+> Hello,
+> 
+> Any comments on this patch?
+> 
+> I know is just a trivial documentation fix but I think it can be quite
+> helpful for people referring to gpio-omap binding.
+
+I do agree. The patch is good, but the changelog is confusing.
+
+Regards,
+Benoit
+
