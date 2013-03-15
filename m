@@ -1,134 +1,66 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: [PATCH v5 1/3] gpio: gpio-generic: Add 16 and 32 bit big endian byte order support
-Date: Fri, 15 Mar 2013 14:45:38 +0100
-Message-ID: <1363355140-28216-2-git-send-email-andreas@gaisler.com>
-References: <1363355140-28216-1-git-send-email-andreas@gaisler.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1363355140-28216-1-git-send-email-andreas@gaisler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <anton.vorontsov@linaro.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 0/8] ARM: OMAP3+: Switch to use DT based cpu0-cpufreq
+ driver
+Date: Fri, 15 Mar 2013 08:52:27 -0500
+Message-ID: <20130315135227.GB2721@kahuna>
+References: <1363294695-658-1-git-send-email-nm@ti.com>
+ <5142443C.506@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <cpufreq-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5142443C.506@ti.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>, b@kahuna
+Cc: linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, Kevin Hilman <khilman@deeprootsystems.com>, Keerthy <j-keerthy@ti.com>, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-There is no general support for 64-bit big endian accesses, so that is
-left unsupported.
+On 16:42-20130314, Jon Hunter wrote:
+> 
+> On 03/14/2013 03:58 PM, Nishanth Menon wrote:
+> > The following series arose from trying to use BeagleBoard-XM (OMAP3 variant)
+> > for doing CPU DVFS using cpufreq-cpu0. This series will eventually result in
+> > migrating the cpufreq support only through device tree (part of the effort
+> > to migrate away from non-DT configurations for OMAP). Unfortunately, as already
+> > known, we have a bunch of legacy code and mutually dependent device tree
+> > conversion that is pending.
+> > Key features pending:
+> > A) clock framework transition to DT - this should happen soon, so this series hacks
+> > the clock node for the time being as suggested in review of original series
+> > B) on processors that use voltage controller, voltage processor (VC/VP hardware
+> > loop using I2C_SR path) - we have started work on transitioning them to regulator
+> > framework driven by DT.
+> > C) Adaptive Body Bias and SmartReflex AVS conversion to DT.
+> > 
+> > As a result of these pending features:
+> > - OMAP4 TWL6030 and TPS62361 which set voltage ONLY over I2C_SR have no regulators
+> > associated at the moment - fortunately, we boot at highest voltage, so things still
+> > work.
+> > - Missing ABB and AVS implies that for few of the SoCs (3630, OMAP4), I have not added
+> > those OPPs in DT yet - this also needs alignment with iMX, AM series like pending work,
+> > where certain OPPs need enabling based on efuse programmed bit sequences - since it
+> > is an add-on work, it is not addressed here.
+> > 
+> > Note: Somewhere in the future, when we have regulators driven off CCF and OMAP
+> > converted to CCF, we could remove the DT regulator requirements there as well.
+> 
+> OMAP has been converted to the common clock framework (CCF). Are you
+> referring to clock framework transition to DT or something else?
+I should have been explicit here - we do not have DT entries for clock
+nodes for OMAP. For example, compare:
+git grep clocks arch/arm/boot/dts/omap*.dts*
+Vs
+git grep clocks arch/arm/boot/dts/imx*.dts*
 
-Signed-off-by: Andreas Larsson <andreas@gaisler.com>
----
- drivers/gpio/gpio-generic.c     |   56 ++++++++++++++++++++++++++++++++-------
- include/linux/basic_mmio_gpio.h |    1 +
- 2 files changed, 48 insertions(+), 9 deletions(-)
+The specific comment above was intended to see the following series
+equivalent in upstream:
 
-diff --git a/drivers/gpio/gpio-generic.c b/drivers/gpio/gpio-generic.c
-index 05fcc0f..42d4706 100644
---- a/drivers/gpio/gpio-generic.c
-+++ b/drivers/gpio/gpio-generic.c
-@@ -104,6 +104,26 @@ static unsigned long bgpio_read64(void __iomem *reg)
- }
- #endif /* BITS_PER_LONG >= 64 */
- 
-+static void bgpio_write16be(void __iomem *reg, unsigned long data)
-+{
-+	iowrite16be(data, reg);
-+}
-+
-+static unsigned long bgpio_read16be(void __iomem *reg)
-+{
-+	return ioread16be(reg);
-+}
-+
-+static void bgpio_write32be(void __iomem *reg, unsigned long data)
-+{
-+	iowrite32be(data, reg);
-+}
-+
-+static unsigned long bgpio_read32be(void __iomem *reg)
-+{
-+	return ioread32be(reg);
-+}
-+
- static unsigned long bgpio_pin2mask(struct bgpio_chip *bgc, unsigned int pin)
- {
- 	return 1 << pin;
-@@ -249,7 +269,8 @@ static int bgpio_dir_out_inv(struct gpio_chip *gc, unsigned int gpio, int val)
- 
- static int bgpio_setup_accessors(struct device *dev,
- 				 struct bgpio_chip *bgc,
--				 bool be)
-+				 bool bit_be,
-+				 bool byte_be)
- {
- 
- 	switch (bgc->bits) {
-@@ -258,17 +279,33 @@ static int bgpio_setup_accessors(struct device *dev,
- 		bgc->write_reg	= bgpio_write8;
- 		break;
- 	case 16:
--		bgc->read_reg	= bgpio_read16;
--		bgc->write_reg	= bgpio_write16;
-+		if (byte_be) {
-+			bgc->read_reg	= bgpio_read16be;
-+			bgc->write_reg	= bgpio_write16be;
-+		} else {
-+			bgc->read_reg	= bgpio_read16;
-+			bgc->write_reg	= bgpio_write16;
-+		}
- 		break;
- 	case 32:
--		bgc->read_reg	= bgpio_read32;
--		bgc->write_reg	= bgpio_write32;
-+		if (byte_be) {
-+			bgc->read_reg	= bgpio_read32be;
-+			bgc->write_reg	= bgpio_write32be;
-+		} else {
-+			bgc->read_reg	= bgpio_read32;
-+			bgc->write_reg	= bgpio_write32;
-+		}
- 		break;
- #if BITS_PER_LONG >= 64
- 	case 64:
--		bgc->read_reg	= bgpio_read64;
--		bgc->write_reg	= bgpio_write64;
-+		if (byte_be) {
-+			dev_err(dev,
-+				"64 bit big endian byte order unsupported\n");
-+			return -EINVAL;
-+		} else {
-+			bgc->read_reg	= bgpio_read64;
-+			bgc->write_reg	= bgpio_write64;
-+		}
- 		break;
- #endif /* BITS_PER_LONG >= 64 */
- 	default:
-@@ -276,7 +313,7 @@ static int bgpio_setup_accessors(struct device *dev,
- 		return -EINVAL;
- 	}
- 
--	bgc->pin2mask = be ? bgpio_pin2mask_be : bgpio_pin2mask;
-+	bgc->pin2mask = bit_be ? bgpio_pin2mask_be : bgpio_pin2mask;
- 
- 	return 0;
- }
-@@ -385,7 +422,8 @@ int bgpio_init(struct bgpio_chip *bgc, struct device *dev,
- 	if (ret)
- 		return ret;
- 
--	ret = bgpio_setup_accessors(dev, bgc, flags & BGPIOF_BIG_ENDIAN);
-+	ret = bgpio_setup_accessors(dev, bgc, flags & BGPIOF_BIG_ENDIAN,
-+				    flags & BGPIOF_BIG_ENDIAN_BYTE_ORDER);
- 	if (ret)
- 		return ret;
- 
-diff --git a/include/linux/basic_mmio_gpio.h b/include/linux/basic_mmio_gpio.h
-index 1c504ca..d8a97ec 100644
---- a/include/linux/basic_mmio_gpio.h
-+++ b/include/linux/basic_mmio_gpio.h
-@@ -72,5 +72,6 @@ int bgpio_init(struct bgpio_chip *bgc, struct device *dev,
- #define BGPIOF_BIG_ENDIAN		BIT(0)
- #define BGPIOF_UNREADABLE_REG_SET	BIT(1) /* reg_set is unreadable */
- #define BGPIOF_UNREADABLE_REG_DIR	BIT(2) /* reg_dir is unreadable */
-+#define BGPIOF_BIG_ENDIAN_BYTE_ORDER	BIT(3)
- 
- #endif /* __BASIC_MMIO_GPIO_H */
+https://patchwork.kernel.org/patch/2195431/
+https://patchwork.kernel.org/patch/2195421/
+https://patchwork.kernel.org/patch/2195451/
+https://patchwork.kernel.org/patch/2195441/
+https://patchwork.kernel.org/patch/2195461/
+
 -- 
-1.7.10.4
+Regards,
+Nishanth Menon
