@@ -1,55 +1,36 @@
-From: kishon <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 0/7] ARM: dts: omap: Add dts data for USB
-Date: Fri, 15 Mar 2013 19:03:04 +0530
-Message-ID: <51432310.7050201@ti.com>
-References: <1362663320-23799-1-git-send-email-kishon@ti.com>
- <514316FA.1090002@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <514316FA.1090002-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Andreas Larsson <andreas@gaisler.com>
+Subject: [PATCH v5 0/3]  gpio: Add device driver for GRGPIO cores and support custom accessors with gpio-generic
+Date: Fri, 15 Mar 2013 14:45:37 +0100
+Message-ID: <1363355140-28216-1-git-send-email-andreas@gaisler.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <anton.vorontsov@linaro.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
-On Friday 15 March 2013 06:11 PM, Benoit Cousson wrote:
-> + Jon
->
-> Hi Kishon,
->
-> On 03/07/2013 02:35 PM, Kishon Vijay Abraham I wrote:
->> Hi Benoit,
->>
->> Here are the dt data patches to get usb device functional in OMAP platforms.
->>
->> All the patches deal with modifying arch/arm/boot except one which modifies
->> Documentation/../usb/omap-usb.txt
->>
->> Changes from v2:
->> * squashed the dt data for dwc3-omap with dwc3 core into a single patch.
->>
->> Changes from v1:
->> Patch *ARM: dts: omap: Add usb_otg and glue data* has some properties with
->> names that has "_". It's replaced with a "-" here.
->>
->> This patch is developed on Linux 3.9-rc1.
->
-> The patches looks really good. I've just had to rebase on top of my HEAD due to some conflict with GPMC patch already applied.
->
-> I cleaned as well some subject and changelog for consistency.
+Differences since v4:
+- Split out changes to gpio-generic into patch 1
+- Make the basic driver without any irq support into patch 2, so that
+  things can be applied so far if more revisions needs to be done for
+  the irq support parts.
+- Change irq support to use irq domain and put it in patch 3
 
-Ok. Thanks :-)
+Signed-off-by: Andreas Larsson <andreas@gaisler.com>
 
-Regards
-Kishon
+Andreas Larsson (3):
+  gpio: gpio-generic: Add 16 and 32 bit big endian byte order support
+  gpio: grgpio: Add device driver for GRGPIO cores
+  gpio: grgpio: Add irq support
+
+ .../devicetree/bindings/gpio/gpio-grgpio.txt       |   29 ++
+ drivers/gpio/Kconfig                               |    9 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-generic.c                        |   56 ++-
+ drivers/gpio/gpio-grgpio.c                         |  489 ++++++++++++++++++++
+ include/linux/basic_mmio_gpio.h                    |    1 +
+ 6 files changed, 576 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-grgpio.txt
+ create mode 100644 drivers/gpio/gpio-grgpio.c
+
+-- 
+1.7.10.4
