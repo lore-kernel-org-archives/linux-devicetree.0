@@ -1,40 +1,29 @@
-From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] staging: nvec: fix the '&&' vs '&' typo in nvec_toggle_global_events()
-Date: Sat, 16 Mar 2013 22:51:25 +0800
-Message-ID: <CAPgLHd8rhMVb_cpVR6tiYsYTrOgk3m1PyR=Eo9L2_8bOGwwbag@mail.gmail.com>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCAxLzVdIG5ldDogQWRkIGRhdmljb20gd2VtYWMgZXRoZXJu?=
+ =?UTF-8?B?ZXQgZHJpdmVyIGZvdW5kIG9uIEFsbHdpbm5lciBBMTAgU29DJ3M=?=
+Date: Sat, 16 Mar 2013 18:55:10 +0400
+Message-ID: <1363445710.396407038@f286.mail.ru>
+References: <1363380605-6577-1-git-send-email-maxime.ripard@free-electrons.com> <1363380605-6577-2-git-send-email-maxime.ripard@free-electrons.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org, marvin24-Mmb7MZpHnFY@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
-Cc: yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, ac100-oU9gvf+ajcQ97yFScArB1dHuzzzSOjJt@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1363380605-6577-2-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?TWF4aW1lIFJpcGFyZA==?= <maxime.ripard@free-electrons.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring@calxeda.com>, =?UTF-8?B?R3JhbnQgTGlrZWx5?= <grant.likely@secretlab.ca>, =?UTF-8?B?Um9iIExhbmRsZXk=?= <rob@landley.net>, sunny@allwinnertech.com, shuge@allwinnertech.com, =?UTF-8?B?U3RlZmFuIFJvZXNl?= <sr@denx.de>, kevin@allwinnertech.com
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
-
-Fix the '&&' vs '&' typo.
-
-Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
----
- drivers/staging/nvec/nvec.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/staging/nvec/nvec.c b/drivers/staging/nvec/nvec.c
-index cf15936..a88959f 100644
---- a/drivers/staging/nvec/nvec.c
-+++ b/drivers/staging/nvec/nvec.c
-@@ -352,10 +352,10 @@ static void nvec_toggle_global_events(struct nvec_chip *nvec, bool state)
-  */
- static void nvec_event_mask(char *ev, u32 mask)
- {
--	ev[3] = mask >> 16 && 0xff;
--	ev[4] = mask >> 24 && 0xff;
--	ev[5] = mask >> 0  && 0xff;
--	ev[6] = mask >> 8  && 0xff;
-+	ev[3] = mask >> 16 & 0xff;
-+	ev[4] = mask >> 24 & 0xff;
-+	ev[5] = mask >> 0  & 0xff;
-+	ev[6] = mask >> 8  & 0xff;
- }
- 
- /**
+PiBGcm9tOiBTdGVmYW4gUm9lc2UgPHNyQGRlbnguZGU+Cj4gCj4gVGhlIEFsbHdpbm5lciBBMTAg
+aGFzIGFuIGV0aGVybmV0IGNvbnRyb2xsZXIgdGhhdCBpcyBhZHZlcnRpc2VkIGFzCj4gY29taW5n
+IGZyb20gRGF2aWNvbS4KPiAKPiBUaGUgZXhhY3QgZmVhdHVyZSBzZXQgb2YgdGhpcyBjb250cm9s
+bGVyIGlzIHVua25vd24sIHNpbmNlIHRoZXJlIGlzIG5vCj4gcHVibGljIGRvY3VtZW50YXRpb24g
+Zm9yIHRoaXMgSVAsIGFuZCB0aGlzIGRyaXZlciBpcyBtb3N0bHkgdGhlIG9uZQo+IHB1Ymxpc2hl
+ZCBieSBBbGx3aW5uZXIgdGhhdCBoYXMgYmVlbiBoZWF2aWx5IGNsZWFuZWQgdXAuCi4uLgo+ICtF
+eGFtcGxlOgo+ICsKPiArd2VtYWM6IGV0aGVybmV0QDAxYzBiMDAwIHsKPiArICAgICAgIGNvbXBh
+dGlibGUgPSAiZGF2aWNvbSx3ZW1hYyI7Cj4gKyAgICAgICByZWcgPSA8MHgwMWMwYjAwMCAweDEw
+MDA+Owo+ICsgICAgICAgaW50ZXJydXB0cyA9IDw1NT47Cj4gKyAgICAgICBhbGx3aW5uZXIscG93
+ZXItZ3Bpb3MgPSA8JnBpbyA3IDE5IDA+OwoKSSB0aGluayByZWd1bGF0b3IgQVBJIGlzIGJldHRl
+ciBmb3IgdXNlIGZvciB0aGlzLgpBbmQgZ3Bpby1yZWd1bGF0b3IgZm9yIHRoaXMgY2FzZS4KCi0t
+LQo=
