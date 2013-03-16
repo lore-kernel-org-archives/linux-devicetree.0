@@ -1,29 +1,35 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCAxLzVdIG5ldDogQWRkIGRhdmljb20gd2VtYWMgZXRoZXJu?=
- =?UTF-8?B?ZXQgZHJpdmVyIGZvdW5kIG9uIEFsbHdpbm5lciBBMTAgU29DJ3M=?=
-Date: Sat, 16 Mar 2013 18:55:10 +0400
-Message-ID: <1363445710.396407038@f286.mail.ru>
-References: <1363380605-6577-1-git-send-email-maxime.ripard@free-electrons.com> <1363380605-6577-2-git-send-email-maxime.ripard@free-electrons.com>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] clk: add DT test clock consumer driver
+Date: Sat, 16 Mar 2013 14:56:54 +0000
+Message-ID: <201303161456.54246.arnd@arndb.de>
+References: <1363439376-21294-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1363380605-6577-2-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?TWF4aW1lIFJpcGFyZA==?= <maxime.ripard@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring@calxeda.com>, =?UTF-8?B?R3JhbnQgTGlrZWx5?= <grant.likely@secretlab.ca>, =?UTF-8?B?Um9iIExhbmRsZXk=?= <rob@landley.net>, sunny@allwinnertech.com, shuge@allwinnertech.com, =?UTF-8?B?U3RlZmFuIFJvZXNl?= <sr@denx.de>, kevin@allwinnertech.com
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1363439376-21294-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-PiBGcm9tOiBTdGVmYW4gUm9lc2UgPHNyQGRlbnguZGU+Cj4gCj4gVGhlIEFsbHdpbm5lciBBMTAg
-aGFzIGFuIGV0aGVybmV0IGNvbnRyb2xsZXIgdGhhdCBpcyBhZHZlcnRpc2VkIGFzCj4gY29taW5n
-IGZyb20gRGF2aWNvbS4KPiAKPiBUaGUgZXhhY3QgZmVhdHVyZSBzZXQgb2YgdGhpcyBjb250cm9s
-bGVyIGlzIHVua25vd24sIHNpbmNlIHRoZXJlIGlzIG5vCj4gcHVibGljIGRvY3VtZW50YXRpb24g
-Zm9yIHRoaXMgSVAsIGFuZCB0aGlzIGRyaXZlciBpcyBtb3N0bHkgdGhlIG9uZQo+IHB1Ymxpc2hl
-ZCBieSBBbGx3aW5uZXIgdGhhdCBoYXMgYmVlbiBoZWF2aWx5IGNsZWFuZWQgdXAuCi4uLgo+ICtF
-eGFtcGxlOgo+ICsKPiArd2VtYWM6IGV0aGVybmV0QDAxYzBiMDAwIHsKPiArICAgICAgIGNvbXBh
-dGlibGUgPSAiZGF2aWNvbSx3ZW1hYyI7Cj4gKyAgICAgICByZWcgPSA8MHgwMWMwYjAwMCAweDEw
-MDA+Owo+ICsgICAgICAgaW50ZXJydXB0cyA9IDw1NT47Cj4gKyAgICAgICBhbGx3aW5uZXIscG93
-ZXItZ3Bpb3MgPSA8JnBpbyA3IDE5IDA+OwoKSSB0aGluayByZWd1bGF0b3IgQVBJIGlzIGJldHRl
-ciBmb3IgdXNlIGZvciB0aGlzLgpBbmQgZ3Bpby1yZWd1bGF0b3IgZm9yIHRoaXMgY2FzZS4KCi0t
-LQo=
+On Saturday 16 March 2013, Sebastian Hesselbarth wrote:
+> This driver adds a DT test clock consumer that exposes debugfs files to
+> enable/disable and set/get rate of the attached programmable clock.
+> During development of a i2c-attached clock generator I found it useful
+> to debug the clock generator's internal pll settings by enforcing clock
+> rates through debugfs.
+> 
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+
+It sounds a little clumsy to have a device driver to match a device that
+you create just for matching the driver.
+
+Would it be possible to separate the debugging logic from the platform
+device logic? I think it may be useful to have a debugfs or sysfs
+inteface for all clocks in the system, even if that is disabled by
+default or only available after manually loading a module implementing
+that functionality.
+
+	Arnd
