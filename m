@@ -1,121 +1,97 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: Re: [PATCH v2] clk: add si5351 i2c common clock driver
-Date: Sat, 16 Mar 2013 16:10:36 +0100
-Message-ID: <51448B6C.9010702@gmail.com>
-References: <1360414772-12232-1-git-send-email-sebastian.hesselbarth@gmail.com> <1363439447-21336-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: Re: [PATCH V3 02/18] ARM: OMAP2+: Add variable to store number of
+ GPMC waitpins
+Date: Sat, 16 Mar 2013 17:59:17 -0300
+Message-ID: <20130316205916.GA3290@localhost>
+References: <1363360876-13617-1-git-send-email-jon-hunter@ti.com>
+ <1363360876-13617-3-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1363439447-21336-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, Jean-Francois Moine <moinejf@free.fr>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1363360876-13617-3-git-send-email-jon-hunter@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, Ezequiel Garcia <elezegarcia@gmail.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Daniel Mack <zonque@gmail.com>, linux-omap <linux-omap@vger.kernel.org>, Mark Jackson <mpfj-list@mimc.co.uk>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+Hi Jon,
 
-On 16.03.2013 14:10, Sebastian Hesselbarth wrote:
-> This patch adds a common clock driver for Silicon Labs Si5351a/b/c
-> i2c programmable clock generators. Currently, the driver supports
-> DT kernels only and VXCO feature of si5351b is not implemented. DT
-> bindings selectively allow to overwrite stored Si5351 configuration
-> which is very helpful for clock generators with empty eeprom
-> configuration. Corresponding device tree binding documentation is
-> also added.
-> 
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+On Fri, Mar 15, 2013 at 10:21:00AM -0500, Jon Hunter wrote:
+> The GPMC has wait-pin signals that can be assigned to a chip-select
+> to monitor the ready signal of an external device. Add a variable to
+> indicate the total number of wait-pins for a given device. This will
+> allow us to detect if the wait-pin being selected is valid or not.
+>=20
+> When booting with device-tree read the number of wait-pins from the
+> device-tree blob. When device-tree is not used set the number of
+> wait-pins to 4 which is valid for OMAP2-5 devices. Newer devices
+> that have less wait-pins (such as AM335x) only support booting with
+> device-tree and so hard-coding the wait-pin number when not using
+> device-tree is fine.
+>=20
+> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
 > ---
-> Changes from v1:
-> - remove .is_enabled functions as they read from i2c
->   (Reported by Daniel Mack)
-> - add CLK_SET_RATE_PARENT on clkout reparent if clkout uses
->   its own multisync
-> 
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Rob Landley <rob@landley.net>
-> Cc: Mike Turquette <mturquette@linaro.org>
-> Cc: Stephen Warren <swarren@nvidia.com>
-> Cc: Thierry Reding <thierry.reding@avionic-design.de>
-> Cc: Dom Cobley <popcornmix@gmail.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>
-> Cc: Rabeeh Khoury <rabeeh@solid-run.com>
-> Cc: Daniel Mack <zonque@gmail.com>
-> Cc: Jean-Francois Moine <moinejf@free.fr>
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> ---
->  .../devicetree/bindings/clock/silabs,si5351.txt    |  114 ++
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  drivers/clk/Kconfig                                |    9 +
->  drivers/clk/Makefile                               |    1 +
->  drivers/clk/clk-si5351.c                           | 1413 ++++++++++++++++++++
->  drivers/clk/clk-si5351.h                           |  155 +++
->  6 files changed, 1693 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/silabs,si5351.txt
->  create mode 100644 drivers/clk/clk-si5351.c
->  create mode 100644 drivers/clk/clk-si5351.h
-
-[...]
-
-> +static unsigned long si5351_msynth_recalc_rate(struct clk_hw *hw,
-> +					       unsigned long parent_rate)
-> +{
-> +	struct si5351_hw_data *hwdata =
-> +		container_of(hw, struct si5351_hw_data, hw);
-> +	unsigned char reg = SI5351_CLK0_PARAMETERS +
-> +		(SI5351_PARAMETERS_LENGTH * hwdata->num);
-> +	unsigned long long rate;
-> +	unsigned long m;
+>  arch/arm/mach-omap2/gpmc.c |   16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>=20
+> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+> index ef655d9..88a261c 100644
+> --- a/arch/arm/mach-omap2/gpmc.c
+> +++ b/arch/arm/mach-omap2/gpmc.c
+> @@ -108,6 +108,8 @@
+>  #define	GPMC_HAS_WR_ACCESS		0x1
+>  #define	GPMC_HAS_WR_DATA_MUX_BUS	0x2
+> =20
+> +#define GPMC_NR_WAITPINS		4
 > +
-> +	if (!hwdata->params.valid)
-> +		si5351_read_parameters(hwdata->drvdata, reg, &hwdata->params);
-> +
-> +	if (hwdata->params.p3 == 0)
-> +		return parent_rate;
-> +
-> +	/*
-> +	 * multisync0-5: fOUT = (128 * P3 * fIN) / (P1*P3 + P2 + 512*P3)
-> +	 * multisync6-7: fOUT = fIN / P1
-> +	 */
-> +	rate = parent_rate;
-> +	if (hwdata->num > 5)
-> +		m = hwdata->params.p1;
-> +	else if ((si5351_reg_read(hwdata->drvdata, reg + 2) &
-> +		  SI5351_OUTPUT_CLK_DIVBY4) == SI5351_OUTPUT_CLK_DIVBY4)
-> +		m = 4;
-> +	else {
-> +		rate *= 128 * hwdata->params.p3;
-> +		m = hwdata->params.p1 * hwdata->params.p3;
-> +		m += hwdata->params.p2;
-> +		m += 512 * hwdata->params.p3;
+>  /* XXX: Only NAND irq has been considered,currently these are the on=
+ly ones used
+>   */
+>  #define	GPMC_NR_IRQ		2
+> @@ -153,6 +155,7 @@ static struct resource	gpmc_cs_mem[GPMC_CS_NUM];
+>  static DEFINE_SPINLOCK(gpmc_mem_lock);
+>  /* Define chip-selects as reserved by default until probe completes =
+*/
+>  static unsigned int gpmc_cs_map =3D ((1 << GPMC_CS_NUM) - 1);
+> +static unsigned int gpmc_nr_waitpins;
+>  static struct device *gpmc_dev;
+>  static int gpmc_irq;
+>  static resource_size_t phys_base, mem_size;
+> @@ -1297,6 +1300,13 @@ static int gpmc_probe_dt(struct platform_devic=
+e *pdev)
+>  	if (!of_id)
+>  		return 0;
+> =20
+> +	ret =3D of_property_read_u32(pdev->dev.of_node, "gpmc,num-waitpins"=
+,
+> +				   &gpmc_nr_waitpins);
+> +	if (ret < 0) {
+> +		pr_err("%s: number of wait pins not found!\n", __func__);
+> +		return ret;
 > +	}
+> +
+>  	for_each_node_by_name(child, "nand") {
+>  		ret =3D gpmc_probe_nand_child(pdev, child);
+>  		if (ret < 0) {
+> @@ -1372,6 +1382,12 @@ static int gpmc_probe(struct platform_device *=
+pdev)
+>  	if (gpmc_setup_irq() < 0)
+>  		dev_warn(gpmc_dev, "gpmc_setup_irq failed\n");
+> =20
+> +	/* Now the GPMC is initialised, unreserve the chip-selects */
+> +	gpmc_cs_map =3D 0;
 
-A nit only, but according to Documentation/CodingStyle, all if/else
-blocks need curly brackets if any of them needs them. Maybe there are
-more places which are affected.
+The above seems to be a remanent of another patch.
+I think you already sent that one, right?
 
-> +	do_div(rate, m);
-
-I still have the problem that m == 0 in my case as I only set up two
-clocks from my DT - which leads to a DIV0. The easiest fix is certainly
-to bail here in that case.
-
-Another option would be to only register the clocks to the framework
-that are actually set up from DT, but that would require more rework at
-the driver's probe level.
-
-Other than that, this driver works perfectly for me - thanks again for
-your work!
-
-
-
-
-Daniel
-
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
