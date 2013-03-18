@@ -1,88 +1,195 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH V3 02/18] ARM: OMAP2+: Add variable to store number of
- GPMC waitpins
-Date: Mon, 18 Mar 2013 08:43:47 -0500
-Message-ID: <51471A13.9060803@ti.com>
-References: <1363360876-13617-1-git-send-email-jon-hunter@ti.com> <1363360876-13617-3-git-send-email-jon-hunter@ti.com> <20130316205916.GA3290@localhost>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH V3 12/18] ARM: OMAP2+: Add additional GPMC timing parameters
+Date: Mon, 18 Mar 2013 09:07:09 -0500
+Message-ID: <51471F8D.4060608@gmail.com>
+References: <1363360876-13617-1-git-send-email-jon-hunter@ti.com> <1363360876-13617-13-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130316205916.GA3290@localhost>
+In-Reply-To: <1363360876-13617-13-git-send-email-jon-hunter@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, Ezequiel Garcia <elezegarcia@gmail.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Daniel Mack <zonque@gmail.com>, linux-omap <linux-omap@vger.kernel.org>, Mark Jackson <mpfj-list@mimc.co.uk>, linux-arm <linux-arm-kernel@lists.infradead.org>
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, Mark Jackson <mpfj-list@mimc.co.uk>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 03/16/2013 03:59 PM, Ezequiel Garcia wrote:
-> Hi Jon,
+On 03/15/2013 10:21 AM, Jon Hunter wrote:
+> Some of the GPMC timings parameters are currently missing from the GPMC
+> device-tree binding. Add these parameters to the binding documentation
+> as well as code to read them.
 > 
-> On Fri, Mar 15, 2013 at 10:21:00AM -0500, Jon Hunter wrote:
->> The GPMC has wait-pin signals that can be assigned to a chip-select
->> to monitor the ready signal of an external device. Add a variable to
->> indicate the total number of wait-pins for a given device. This will
->> allow us to detect if the wait-pin being selected is valid or not.
->>
->> When booting with device-tree read the number of wait-pins from the
->> device-tree blob. When device-tree is not used set the number of
->> wait-pins to 4 which is valid for OMAP2-5 devices. Newer devices
->> that have less wait-pins (such as AM335x) only support booting with
->> device-tree and so hard-coding the wait-pin number when not using
->> device-tree is fine.
->>
->> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
->> ---
->>  arch/arm/mach-omap2/gpmc.c |   16 ++++++++++++++++
->>  1 file changed, 16 insertions(+)
->>
->> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
->> index ef655d9..88a261c 100644
->> --- a/arch/arm/mach-omap2/gpmc.c
->> +++ b/arch/arm/mach-omap2/gpmc.c
->> @@ -108,6 +108,8 @@
->>  #define	GPMC_HAS_WR_ACCESS		0x1
->>  #define	GPMC_HAS_WR_DATA_MUX_BUS	0x2
->>  
->> +#define GPMC_NR_WAITPINS		4
->> +
->>  /* XXX: Only NAND irq has been considered,currently these are the only ones used
->>   */
->>  #define	GPMC_NR_IRQ		2
->> @@ -153,6 +155,7 @@ static struct resource	gpmc_cs_mem[GPMC_CS_NUM];
->>  static DEFINE_SPINLOCK(gpmc_mem_lock);
->>  /* Define chip-selects as reserved by default until probe completes */
->>  static unsigned int gpmc_cs_map = ((1 << GPMC_CS_NUM) - 1);
->> +static unsigned int gpmc_nr_waitpins;
->>  static struct device *gpmc_dev;
->>  static int gpmc_irq;
->>  static resource_size_t phys_base, mem_size;
->> @@ -1297,6 +1300,13 @@ static int gpmc_probe_dt(struct platform_device *pdev)
->>  	if (!of_id)
->>  		return 0;
->>  
->> +	ret = of_property_read_u32(pdev->dev.of_node, "gpmc,num-waitpins",
->> +				   &gpmc_nr_waitpins);
->> +	if (ret < 0) {
->> +		pr_err("%s: number of wait pins not found!\n", __func__);
->> +		return ret;
->> +	}
->> +
->>  	for_each_node_by_name(child, "nand") {
->>  		ret = gpmc_probe_nand_child(pdev, child);
->>  		if (ret < 0) {
->> @@ -1372,6 +1382,12 @@ static int gpmc_probe(struct platform_device *pdev)
->>  	if (gpmc_setup_irq() < 0)
->>  		dev_warn(gpmc_dev, "gpmc_setup_irq failed\n");
->>  
->> +	/* Now the GPMC is initialised, unreserve the chip-selects */
->> +	gpmc_cs_map = 0;
+> The existing code in gpmc_read_timings_dt() is checking the value of
+> of_property_read_u32() and only is successful storing the value read
+> in the gpmc_timings structure. Checking the return value in this case
+> is not necessary and we can simply read the value, if present, and
+> store directly in the gpmc_timings structure. Therefore, simplify the
+> code by removing these checks.
 > 
-> The above seems to be a remanent of another patch.
-> I think you already sent that one, right?
+> The comment in the gpmc_read_timings_dt() function, "only for OMAP3430"
+> is also incorrect as it is applicable to all OMAP3+ devices. So correct
+> this too.
+> 
+> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+> ---
+>  Documentation/devicetree/bindings/bus/ti-gpmc.txt |   25 +++++-
+>  arch/arm/mach-omap2/gpmc.c                        |   93 ++++++++++-----------
+>  2 files changed, 66 insertions(+), 52 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
+> index 6fde1cf..a63bd93 100644
+> --- a/Documentation/devicetree/bindings/bus/ti-gpmc.txt
+> +++ b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
+> @@ -56,10 +56,27 @@ Timing properties for child nodes. All are optional and default to 0.
+>   - gpmc,oe-off:		Deassertion time
+>  
+>   Access time and cycle time timings corresponding to GPMC_CONFIG5:
+> - - gpmc,page-burst-access: Multiple access word delay
+> - - gpmc,access:		Start-cycle to first data valid delay
+> - - gpmc,rd-cycle:	Total read cycle time
+> - - gpmc,wr-cycle:	Total write cycle time
+> + - gpmc,page-burst-access: 	Multiple access word delay
+> + - gpmc,access:			Start-cycle to first data valid delay
+> + - gpmc,rd-cycle:		Total read cycle time
+> + - gpmc,wr-cycle:		Total write cycle time
+> + - gpmc,bus-turnaround:		Turn-around time between successive accesses
+> + - gpmc,cycle2cycle-delay:	Delay between chip-select pulses
+> + - gpmc,clk-activation: 	GPMC clock activation time
+> + - gpmc,wait-monitoring:	Start of wait monitoring with regard to valid
+> +				data
 
-Good catch. I will fix this up.
+What units are these in? If in nanoseconds, can you append "-ns"
 
-Jon
+> +
+> +Boolean timing parameters. If property is present parameter enabled and
+> +disabled if omitted:
+> + - gpmc,adv-extra-delay:	ADV signal is delayed by half GPMC clock
+> + - gpmc,cs-extra-delay:		CS signal is delayed by half GPMC clock
+> + - gpmc,cycle2cycle-diffcsen:	Add "cycle2cycle-delay" between successive
+> +				accesses to a different CS
+> + - gpmc,cycle2cycle-samecsen:	Add "cycle2cycle-delay" between successive
+> +				accesses to the same CS
+> + - gpmc,oe-extra-delay:		OE signal is delayed by half GPMC clock
+> + - gpmc,we-extra-delay:		WE signal is delayed by half GPMC clock
+> + - gpmc,time-para-granularity:	Multiply all access times by 2
+>  
+>  The following are only applicable to OMAP3+ and AM335x:
+>   - gpmc,wr-access
+> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+> index 85b1a35..c928a8c 100644
+> --- a/arch/arm/mach-omap2/gpmc.c
+> +++ b/arch/arm/mach-omap2/gpmc.c
+> @@ -1274,67 +1274,64 @@ void gpmc_read_settings_dt(struct device_node *np, struct gpmc_settings *p)
+>  static void __maybe_unused gpmc_read_timings_dt(struct device_node *np,
+>  						struct gpmc_timings *gpmc_t)
+>  {
+> -	u32 val;
+> -
+>  	memset(gpmc_t, 0, sizeof(*gpmc_t));
+>  
+>  	/* minimum clock period for syncronous mode */
+> -	if (!of_property_read_u32(np, "gpmc,sync-clk", &val))
+> -		gpmc_t->sync_clk = val;
+> +	of_property_read_u32(np, "gpmc,sync-clk", &gpmc_t->sync_clk);
+>  
+>  	/* chip select timtings */
+> -	if (!of_property_read_u32(np, "gpmc,cs-on", &val))
+> -		gpmc_t->cs_on = val;
+> -
+> -	if (!of_property_read_u32(np, "gpmc,cs-rd-off", &val))
+> -		gpmc_t->cs_rd_off = val;
+> -
+> -	if (!of_property_read_u32(np, "gpmc,cs-wr-off", &val))
+> -		gpmc_t->cs_wr_off = val;
+> +	of_property_read_u32(np, "gpmc,cs-on", &gpmc_t->cs_on);
+> +	of_property_read_u32(np, "gpmc,cs-rd-off", &gpmc_t->cs_rd_off);
+> +	of_property_read_u32(np, "gpmc,cs-wr-off", &gpmc_t->cs_wr_off);
+>  
+>  	/* ADV signal timings */
+> -	if (!of_property_read_u32(np, "gpmc,adv-on", &val))
+> -		gpmc_t->adv_on = val;
+> -
+> -	if (!of_property_read_u32(np, "gpmc,adv-rd-off", &val))
+> -		gpmc_t->adv_rd_off = val;
+> -
+> -	if (!of_property_read_u32(np, "gpmc,adv-wr-off", &val))
+> -		gpmc_t->adv_wr_off = val;
+> +	of_property_read_u32(np, "gpmc,adv-on", &gpmc_t->adv_on);
+> +	of_property_read_u32(np, "gpmc,adv-rd-off", &gpmc_t->adv_rd_off);
+> +	of_property_read_u32(np, "gpmc,adv-wr-off", &gpmc_t->adv_wr_off);
+>  
+>  	/* WE signal timings */
+> -	if (!of_property_read_u32(np, "gpmc,we-on", &val))
+> -		gpmc_t->we_on = val;
+> -
+> -	if (!of_property_read_u32(np, "gpmc,we-off", &val))
+> -		gpmc_t->we_off = val;
+> +	of_property_read_u32(np, "gpmc,we-on", &gpmc_t->we_on);
+> +	of_property_read_u32(np, "gpmc,we-off", &gpmc_t->we_off);
+>  
+>  	/* OE signal timings */
+> -	if (!of_property_read_u32(np, "gpmc,oe-on", &val))
+> -		gpmc_t->oe_on = val;
+> -
+> -	if (!of_property_read_u32(np, "gpmc,oe-off", &val))
+> -		gpmc_t->oe_off = val;
+> +	of_property_read_u32(np, "gpmc,oe-on", &gpmc_t->oe_on);
+> +	of_property_read_u32(np, "gpmc,oe-off", &gpmc_t->oe_off);
+>  
+>  	/* access and cycle timings */
+> -	if (!of_property_read_u32(np, "gpmc,page-burst-access", &val))
+> -		gpmc_t->page_burst_access = val;
+> -
+> -	if (!of_property_read_u32(np, "gpmc,access", &val))
+> -		gpmc_t->access = val;
+> -
+> -	if (!of_property_read_u32(np, "gpmc,rd-cycle", &val))
+> -		gpmc_t->rd_cycle = val;
+> -
+> -	if (!of_property_read_u32(np, "gpmc,wr-cycle", &val))
+> -		gpmc_t->wr_cycle = val;
+> -
+> -	/* only for OMAP3430 */
+> -	if (!of_property_read_u32(np, "gpmc,wr-access", &val))
+> -		gpmc_t->wr_access = val;
+> -
+> -	if (!of_property_read_u32(np, "gpmc,wr-data-mux-bus", &val))
+> -		gpmc_t->wr_data_mux_bus = val;
+> +	of_property_read_u32(np, "gpmc,page-burst-access",
+> +			     &gpmc_t->page_burst_access);
+> +	of_property_read_u32(np, "gpmc,access", &gpmc_t->access);
+> +	of_property_read_u32(np, "gpmc,rd-cycle", &gpmc_t->rd_cycle);
+> +	of_property_read_u32(np, "gpmc,wr-cycle", &gpmc_t->wr_cycle);
+> +	of_property_read_u32(np, "gpmc,bus-turnaround",
+> +			     &gpmc_t->bus_turnaround);
+> +	of_property_read_u32(np, "gpmc,cycle2cycle-delay",
+> +			     &gpmc_t->cycle2cycle_delay);
+> +	of_property_read_u32(np, "gpmc,wait-monitoring",
+> +			     &gpmc_t->wait_monitoring);
+> +	of_property_read_u32(np, "gpmc,clk-activation",
+> +			     &gpmc_t->clk_activation);
+> +
+> +	/* only applicable to OMAP3+ */
+> +	of_property_read_u32(np, "gpmc,wr-access", &gpmc_t->wr_access);
+> +	of_property_read_u32(np, "gpmc,wr-data-mux-bus",
+> +			     &gpmc_t->wr_data_mux_bus);
+> +
+> +	/* bool timing parameters */
+> +	if (of_find_property(np, "gpmc,cycle2cycle-diffcsen", NULL))
+> +		gpmc_t->bool_timings.cycle2cyclediffcsen = true;
+> +	if (of_find_property(np, "gpmc,cycle2cycle-samecsen", NULL))
+> +		gpmc_t->bool_timings.cycle2cyclesamecsen = true;
+> +	if (of_find_property(np, "gpmc,we-extra-delay", NULL))
+> +		gpmc_t->bool_timings.we_extra_delay = true;
+> +	if (of_find_property(np, "gpmc,oe-extra-delay", NULL))
+> +		gpmc_t->bool_timings.oe_extra_delay = true;
+> +	if (of_find_property(np, "gpmc,adv-extra-delay", NULL))
+> +		gpmc_t->bool_timings.adv_extra_delay = true;
+> +	if (of_find_property(np, "gpmc,cs-extra-delay", NULL))
+> +		gpmc_t->bool_timings.cs_extra_delay = true;
+> +	if (of_find_property(np, "gpmc,time-para-granularity", NULL))
+> +		gpmc_t->bool_timings.time_para_granularity = true;
+
+of_property_read_bool doesn't work for these?
+
+Rob
 
