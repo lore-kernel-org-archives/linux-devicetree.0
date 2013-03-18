@@ -1,201 +1,65 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH V3 12/18] ARM: OMAP2+: Add additional GPMC timing parameters
-Date: Mon, 18 Mar 2013 09:32:50 -0500
-Message-ID: <51472592.4030402@ti.com>
-References: <1363360876-13617-1-git-send-email-jon-hunter@ti.com> <1363360876-13617-13-git-send-email-jon-hunter@ti.com> <51471F8D.4060608@gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 1/7] kbuild: create an "include chroot" for DT bindings
+Date: Mon, 18 Mar 2013 23:13:50 +0800
+Message-ID: <20130318151348.GB4713@S2101-09.ap.freescale.net>
+References: <1362594183-21523-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <51471F8D.4060608@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, Mark Jackson <mpfj-list@mimc.co.uk>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1362594183-21523-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: arm@kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Michal Marek <mmarek@suse.cz>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>, Hiroshi Doyu <hdoyu@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 03/18/2013 09:07 AM, Rob Herring wrote:
-> On 03/15/2013 10:21 AM, Jon Hunter wrote:
->> Some of the GPMC timings parameters are currently missing from the GPMC
->> device-tree binding. Add these parameters to the binding documentation
->> as well as code to read them.
->>
->> The existing code in gpmc_read_timings_dt() is checking the value of
->> of_property_read_u32() and only is successful storing the value read
->> in the gpmc_timings structure. Checking the return value in this case
->> is not necessary and we can simply read the value, if present, and
->> store directly in the gpmc_timings structure. Therefore, simplify the
->> code by removing these checks.
->>
->> The comment in the gpmc_read_timings_dt() function, "only for OMAP3430"
->> is also incorrect as it is applicable to all OMAP3+ devices. So correct
->> this too.
->>
->> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
->> ---
->>  Documentation/devicetree/bindings/bus/ti-gpmc.txt |   25 +++++-
->>  arch/arm/mach-omap2/gpmc.c                        |   93 ++++++++++-----------
->>  2 files changed, 66 insertions(+), 52 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
->> index 6fde1cf..a63bd93 100644
->> --- a/Documentation/devicetree/bindings/bus/ti-gpmc.txt
->> +++ b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
->> @@ -56,10 +56,27 @@ Timing properties for child nodes. All are optional and default to 0.
->>   - gpmc,oe-off:		Deassertion time
->>  
->>   Access time and cycle time timings corresponding to GPMC_CONFIG5:
->> - - gpmc,page-burst-access: Multiple access word delay
->> - - gpmc,access:		Start-cycle to first data valid delay
->> - - gpmc,rd-cycle:	Total read cycle time
->> - - gpmc,wr-cycle:	Total write cycle time
->> + - gpmc,page-burst-access: 	Multiple access word delay
->> + - gpmc,access:			Start-cycle to first data valid delay
->> + - gpmc,rd-cycle:		Total read cycle time
->> + - gpmc,wr-cycle:		Total write cycle time
->> + - gpmc,bus-turnaround:		Turn-around time between successive accesses
->> + - gpmc,cycle2cycle-delay:	Delay between chip-select pulses
->> + - gpmc,clk-activation: 	GPMC clock activation time
->> + - gpmc,wait-monitoring:	Start of wait monitoring with regard to valid
->> +				data
+On Wed, Mar 06, 2013 at 11:22:57AM -0700, Stephen Warren wrote:
+> From: Stephen Warren <swarren@nvidia.com>
 > 
-> What units are these in? If in nanoseconds, can you append "-ns"
-
-These are cycles. I can update the comment to reflect that.
-
->> +
->> +Boolean timing parameters. If property is present parameter enabled and
->> +disabled if omitted:
->> + - gpmc,adv-extra-delay:	ADV signal is delayed by half GPMC clock
->> + - gpmc,cs-extra-delay:		CS signal is delayed by half GPMC clock
->> + - gpmc,cycle2cycle-diffcsen:	Add "cycle2cycle-delay" between successive
->> +				accesses to a different CS
->> + - gpmc,cycle2cycle-samecsen:	Add "cycle2cycle-delay" between successive
->> +				accesses to the same CS
->> + - gpmc,oe-extra-delay:		OE signal is delayed by half GPMC clock
->> + - gpmc,we-extra-delay:		WE signal is delayed by half GPMC clock
->> + - gpmc,time-para-granularity:	Multiply all access times by 2
->>  
->>  The following are only applicable to OMAP3+ and AM335x:
->>   - gpmc,wr-access
->> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
->> index 85b1a35..c928a8c 100644
->> --- a/arch/arm/mach-omap2/gpmc.c
->> +++ b/arch/arm/mach-omap2/gpmc.c
->> @@ -1274,67 +1274,64 @@ void gpmc_read_settings_dt(struct device_node *np, struct gpmc_settings *p)
->>  static void __maybe_unused gpmc_read_timings_dt(struct device_node *np,
->>  						struct gpmc_timings *gpmc_t)
->>  {
->> -	u32 val;
->> -
->>  	memset(gpmc_t, 0, sizeof(*gpmc_t));
->>  
->>  	/* minimum clock period for syncronous mode */
->> -	if (!of_property_read_u32(np, "gpmc,sync-clk", &val))
->> -		gpmc_t->sync_clk = val;
->> +	of_property_read_u32(np, "gpmc,sync-clk", &gpmc_t->sync_clk);
->>  
->>  	/* chip select timtings */
->> -	if (!of_property_read_u32(np, "gpmc,cs-on", &val))
->> -		gpmc_t->cs_on = val;
->> -
->> -	if (!of_property_read_u32(np, "gpmc,cs-rd-off", &val))
->> -		gpmc_t->cs_rd_off = val;
->> -
->> -	if (!of_property_read_u32(np, "gpmc,cs-wr-off", &val))
->> -		gpmc_t->cs_wr_off = val;
->> +	of_property_read_u32(np, "gpmc,cs-on", &gpmc_t->cs_on);
->> +	of_property_read_u32(np, "gpmc,cs-rd-off", &gpmc_t->cs_rd_off);
->> +	of_property_read_u32(np, "gpmc,cs-wr-off", &gpmc_t->cs_wr_off);
->>  
->>  	/* ADV signal timings */
->> -	if (!of_property_read_u32(np, "gpmc,adv-on", &val))
->> -		gpmc_t->adv_on = val;
->> -
->> -	if (!of_property_read_u32(np, "gpmc,adv-rd-off", &val))
->> -		gpmc_t->adv_rd_off = val;
->> -
->> -	if (!of_property_read_u32(np, "gpmc,adv-wr-off", &val))
->> -		gpmc_t->adv_wr_off = val;
->> +	of_property_read_u32(np, "gpmc,adv-on", &gpmc_t->adv_on);
->> +	of_property_read_u32(np, "gpmc,adv-rd-off", &gpmc_t->adv_rd_off);
->> +	of_property_read_u32(np, "gpmc,adv-wr-off", &gpmc_t->adv_wr_off);
->>  
->>  	/* WE signal timings */
->> -	if (!of_property_read_u32(np, "gpmc,we-on", &val))
->> -		gpmc_t->we_on = val;
->> -
->> -	if (!of_property_read_u32(np, "gpmc,we-off", &val))
->> -		gpmc_t->we_off = val;
->> +	of_property_read_u32(np, "gpmc,we-on", &gpmc_t->we_on);
->> +	of_property_read_u32(np, "gpmc,we-off", &gpmc_t->we_off);
->>  
->>  	/* OE signal timings */
->> -	if (!of_property_read_u32(np, "gpmc,oe-on", &val))
->> -		gpmc_t->oe_on = val;
->> -
->> -	if (!of_property_read_u32(np, "gpmc,oe-off", &val))
->> -		gpmc_t->oe_off = val;
->> +	of_property_read_u32(np, "gpmc,oe-on", &gpmc_t->oe_on);
->> +	of_property_read_u32(np, "gpmc,oe-off", &gpmc_t->oe_off);
->>  
->>  	/* access and cycle timings */
->> -	if (!of_property_read_u32(np, "gpmc,page-burst-access", &val))
->> -		gpmc_t->page_burst_access = val;
->> -
->> -	if (!of_property_read_u32(np, "gpmc,access", &val))
->> -		gpmc_t->access = val;
->> -
->> -	if (!of_property_read_u32(np, "gpmc,rd-cycle", &val))
->> -		gpmc_t->rd_cycle = val;
->> -
->> -	if (!of_property_read_u32(np, "gpmc,wr-cycle", &val))
->> -		gpmc_t->wr_cycle = val;
->> -
->> -	/* only for OMAP3430 */
->> -	if (!of_property_read_u32(np, "gpmc,wr-access", &val))
->> -		gpmc_t->wr_access = val;
->> -
->> -	if (!of_property_read_u32(np, "gpmc,wr-data-mux-bus", &val))
->> -		gpmc_t->wr_data_mux_bus = val;
->> +	of_property_read_u32(np, "gpmc,page-burst-access",
->> +			     &gpmc_t->page_burst_access);
->> +	of_property_read_u32(np, "gpmc,access", &gpmc_t->access);
->> +	of_property_read_u32(np, "gpmc,rd-cycle", &gpmc_t->rd_cycle);
->> +	of_property_read_u32(np, "gpmc,wr-cycle", &gpmc_t->wr_cycle);
->> +	of_property_read_u32(np, "gpmc,bus-turnaround",
->> +			     &gpmc_t->bus_turnaround);
->> +	of_property_read_u32(np, "gpmc,cycle2cycle-delay",
->> +			     &gpmc_t->cycle2cycle_delay);
->> +	of_property_read_u32(np, "gpmc,wait-monitoring",
->> +			     &gpmc_t->wait_monitoring);
->> +	of_property_read_u32(np, "gpmc,clk-activation",
->> +			     &gpmc_t->clk_activation);
->> +
->> +	/* only applicable to OMAP3+ */
->> +	of_property_read_u32(np, "gpmc,wr-access", &gpmc_t->wr_access);
->> +	of_property_read_u32(np, "gpmc,wr-data-mux-bus",
->> +			     &gpmc_t->wr_data_mux_bus);
->> +
->> +	/* bool timing parameters */
->> +	if (of_find_property(np, "gpmc,cycle2cycle-diffcsen", NULL))
->> +		gpmc_t->bool_timings.cycle2cyclediffcsen = true;
->> +	if (of_find_property(np, "gpmc,cycle2cycle-samecsen", NULL))
->> +		gpmc_t->bool_timings.cycle2cyclesamecsen = true;
->> +	if (of_find_property(np, "gpmc,we-extra-delay", NULL))
->> +		gpmc_t->bool_timings.we_extra_delay = true;
->> +	if (of_find_property(np, "gpmc,oe-extra-delay", NULL))
->> +		gpmc_t->bool_timings.oe_extra_delay = true;
->> +	if (of_find_property(np, "gpmc,adv-extra-delay", NULL))
->> +		gpmc_t->bool_timings.adv_extra_delay = true;
->> +	if (of_find_property(np, "gpmc,cs-extra-delay", NULL))
->> +		gpmc_t->bool_timings.cs_extra_delay = true;
->> +	if (of_find_property(np, "gpmc,time-para-granularity", NULL))
->> +		gpmc_t->bool_timings.time_para_granularity = true;
+> The recent dtc+cpp support allows header files and C pre-processor
+> defines/macros to be used when compiling device tree files. These
+> headers will typically define various constants that are part of the
+> device tree bindings.
 > 
-> of_property_read_bool doesn't work for these?
+> The original patch which set up the dtc+cpp include path only considered
+> using those headers from device tree files. However, most are also
+> useful for kernel code which needs to interpret the device tree.
+> 
+> In both the DT files and the kernel, I'd like to include the DT-related
+> headers in the same way, for example, <dt-bindings/gpio/tegra-gpio.h>.
+> That will simplify any text which discusses the DT header locations.
+> 
+> Creating a <dt-bindings/> for kernel source to use is as simple as
+> placing files into include/dt-bindings/.
+> 
+> However, when compiling DT files, the include path should be restricted
+> so that only the dt-bindings path is available; arbitrary kernel headers
+> shouldn't be exposed. For this reason, create a specific include
+> directory for use by dtc+cpp, and symlink dt-bindings from there to the
+> actual location of include/dt-bindings/. For want of a better location,
+> place this "include chroot" into the existing dts/ directory.
+> 
+> arch/*/boot/dts/include/dt-bindings -> ../../../../../include/dt-bindings
+> 
+> Some headers used by device tree files may not be useful to the kernel;
+> they may be used simply to aid in constructing the DT file (e.g. macros
+> to create a node), but not define any information that the kernel needs
+> to share. These may be placed directly into arch/*/boot/dts/ along with
+> the DT files themselves.
+> 
+> Cc: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Hiroshi Doyu <hdoyu@nvidia.com>
+> Acked-by: Michal Marek <mmarek@suse.cz>
+> Acked-by: Shawn Guo <shawn.guo@linaro.org>
+> Acked-by: Rob Herring <rob.herring@calxeda.com>
+> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> ---
+> This first patch was previously posted separately as V2. I'm including
+> it here to keep it with the whole series. I hope this series can be
+> applied as a topic branch in arm-soc.
 
-It should work fine, I wasn't aware of that. Will change.
+So no comments on the series means that we can start maintain it on
+a topic branch, so that people can base their works on it?
 
-Cheers
-Jon
+Shawn
+
