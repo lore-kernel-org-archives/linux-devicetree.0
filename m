@@ -1,134 +1,241 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [RFC] DT affinity bindings/representing bus masters with DT
-Date: Mon, 18 Mar 2013 14:09:28 +1100
-Message-ID: <20130318030928.GG9402@truffula.fritz.box>
-References: <20130215172102.GF3014@e102568-lin.cambridge.arm.com>
- <20130306215714.GC6740@truffula.fritz.box>
- <20130311170657.GD25250@e102568-lin.cambridge.arm.com>
+From: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V4 3/9] ARM: dt: tegra: add bindings of power management configurations for PMC
+Date: Mon, 18 Mar 2013 16:13:14 +0800
+Message-ID: <1363594400-11663-4-git-send-email-josephl@nvidia.com>
+References: <1363594400-11663-1-git-send-email-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5956457904032563741=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130311170657.GD25250-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1363594400-11663-1-git-send-email-josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The PMC mostly controls the entry and exit of the system from different
+sleep modes. Different platform or system may have different configurations.
+The power management configurations of PMC is represented as some properties.
+The system needs to define the properties when the system supports deep sleep
+mode (i.e. suspend).
 
---===============5956457904032563741==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8bBEDOJVaa9YlTAt"
-Content-Disposition: inline
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Signed-off-by: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+V4:
+* no change
+V3:
+* fix typos
+V2:
+* squash the patches that defined the PM bindings for PMC and the
+  implementation
+* replace the "unsigned long" with "u32" for the variables that are parsed
+  from DT
+---
+ .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 42 ++++++++++-
+ arch/arm/mach-tegra/pmc.c                          | 83 ++++++++++++++++++++++
+ arch/arm/mach-tegra/pmc.h                          |  8 +++
+ 3 files changed, 132 insertions(+), 1 deletion(-)
 
-
---8bBEDOJVaa9YlTAt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Mar 11, 2013 at 05:06:57PM +0000, Lorenzo Pieralisi wrote:
-> Hi David,
->=20
-> thanks for your feedback.
->=20
-> On Wed, Mar 06, 2013 at 09:57:14PM +0000, David Gibson wrote:
-> > On Fri, Feb 15, 2013 at 05:21:02PM +0000, Lorenzo Pieralisi wrote:
-[snip]
-> > > Each foo@2000000 reg property maps to a device that represents a bus =
-master
-> > > (to make it clearer, a foo@2000000 reg property defines an address sp=
-ace that
-> > > belongs to a bus master, ie the address space represents a programming
-> > > interface specific to that master; in the bindings above address 0x20=
-00000 is
-> > > the address at which acme1 device can programme its "foo" interface, =
-address
-> > > 0x2001000 is the address at which acme2 device can programme its "foo"
-> > > interface).
-> >=20
-> > Ok.  I think annotating the existing reg property like this is a very
-> > bad idea.  I haven't seen all the previous discussion, so I'm not
-> > totally clean on what this affinity concept is about.  But as I
-> > understand it, these "slave" resources cannot be treated like an
-> > ordinary resource in in the reg property.  That means an older client
-> > will potentially misinterpret "reg" because it doesn't know about
-> > "affinity".
->=20
-> Not really, "reg" still complies with the current DT bindings. Affinity
-> is there to associate a reg property to a "master" but the reg property
-> definition does not change. I do not think backward compatibility is a
-> problem per-se here.
-
-Ok, I did not understand the problem properly.
-
-> > Worse, again, if I've understood correctly, resources with different
-> > "masters" are essentially in different logical address spaces.  "reg"
-> > properties should always sit in the logical address space representing
-> > the parent node's bus.  Different address spaces could also have
-> > different address sizes, which would really complicate parsing "reg".
->=20
-> I think we need to post what we have, it is really complex to explain
-> the issue without a concrete example. To cut a long story short I
-> would not say that the resources sit in different address spaces, it is
-> that we need to associate those address ranges with specific bus masters.
->=20
-> We have to have a way to say:
->=20
-> "Address range 0x80001000 - 0x80001fff is used to programme the control
-> registers associated with the port connected to master X".
->=20
-> When a CPU wants to programme a control port for a specific master, it
-> needs to know what address range should be programmed.
->=20
-> I mentioned "resources" instead of addresses since the problem we are
-> having is the same when it comes to map IRQs to set of CPUS. We need
-> to associate a resource (IRQ or address) to a set of cpus (or more in
-> general, masters).
-
-Hrm.  See, I think I may be misunderstanding the problem again,
-because with this description I can see no problem.  It's already up
-to the device binding to describe the purpose of each entry in the reg
-property.  So what's the problem with it just being part of the
-binding to say which reg entry is associated with which master port?
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---8bBEDOJVaa9YlTAt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlFGhWgACgkQaILKxv3ab8Y1GQCfdLHX1CnivhoqGzLbSgQKEbz4
-gr4An1CAeSVun8ojVr/q6W3pbjz+Kzkv
-=tD7J
------END PGP SIGNATURE-----
-
---8bBEDOJVaa9YlTAt--
-
---===============5956457904032563741==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============5956457904032563741==--
+diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+index b5846e2..ae4e3ee 100644
+--- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
++++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+@@ -1,14 +1,46 @@
+ NVIDIA Tegra Power Management Controller (PMC)
+ 
+-Properties:
++The PMC block interacts with an external Power Management Unit. The PMC
++mostly controls the entry and exit of the system from different sleep
++modes. It provides power-gating controllers for SoC and CPU power-islands.
++
++Required properties:
+ - name : Should be pmc
+ - compatible : Should contain "nvidia,tegra<chip>-pmc".
+ - reg : Offset and length of the register set for the device
++
++Optional properties:
+ - nvidia,invert-interrupt : If present, inverts the PMU interrupt signal.
+   The PMU is an external Power Management Unit, whose interrupt output
+   signal is fed into the PMC. This signal is optionally inverted, and then
+   fed into the ARM GIC. The PMC is not involved in the detection or
+   handling of this interrupt signal, merely its inversion.
++- nvidia,suspend-mode : The suspend mode that the platform should use.
++  Valid values are 0, 1 and 2:
++  0 (LP0): CPU + Core voltage off and DRAM in self-refresh
++  1 (LP1): CPU vlotage off and DRAM in self-refresh
++  2 (LP2): CPU voltage off
++- nvidia,core-power-req-active-high : Boolean, core power request active-high
++- nvidia,sys-clock-req-active-high : Boolean, system clock request active-high
++- nvidia,combined-power-req : Boolean, combined power request for CPU & Core
++- nvidia,cpu-pwr-good-en : Boolean, CPU power good signal (from PMIC to PMC)
++			   is enabled.
++
++Required properties when nvidia,suspend-mode is specified:
++- nvidia,cpu-pwr-good-time : CPU power good time in uS.
++- nvidia,cpu-pwr-off-time : CPU power off time in uS.
++- nvidia,core-pwr-good-time : <Oscillator-stable-time Power-stable-time>
++			      Core power good time in uS.
++- nvidia,core-pwr-off-time : Core power off time in uS.
++
++Required properties when nvidia,suspend-mode=<0>:
++- nvidia,lp0-vec : <start length> Starting address and length of LP0 vector
++  The LP0 vector contains the warm boot code that is executed by AVP when
++  resuming from the LP0 state. The AVP (Audio-Video Processor) is an ARM7
++  processor and always being the first boot processor when chip is power on
++  or resume from deep sleep mode. When the system is resumed from the deep
++  sleep mode, the warm boot code will restore some PLLs, clocks and then
++  bring up CPU0 for resuming the system.
+ 
+ Example:
+ 
+@@ -16,4 +48,12 @@ pmc@7000f400 {
+ 	compatible = "nvidia,tegra20-pmc";
+ 	reg = <0x7000e400 0x400>;
+ 	nvidia,invert-interrupt;
++	nvidia,suspend-mode = <1>;
++	nvidia,cpu-pwr-good-time = <2000>;
++	nvidia,cpu-pwr-off-time = <100>;
++	nvidia,core-pwr-good-time = <3845 3845>;
++	nvidia,core-pwr-off-time = <458>;
++	nvidia,core-power-req-active-high;
++	nvidia,sys-clock-req-active-high;
++	nvidia,lp0-vec = <0xbdffd000 0x2000>;
+ };
+diff --git a/arch/arm/mach-tegra/pmc.c b/arch/arm/mach-tegra/pmc.c
+index d90279c..9ac10d6 100644
+--- a/arch/arm/mach-tegra/pmc.c
++++ b/arch/arm/mach-tegra/pmc.c
+@@ -21,6 +21,8 @@
+ #include <linux/of_address.h>
+ #include <linux/clk.h>
+ 
++#include "pmc.h"
++
+ #define PMC_CTRL			0x0
+ #define PMC_CTRL_INTR_LOW		(1 << 17)
+ #define PMC_PWRGATE_TOGGLE		0x30
+@@ -49,6 +51,22 @@ static void __iomem *tegra_pmc_base;
+ static bool tegra_pmc_invert_interrupt;
+ static struct clk *tegra_pclk;
+ 
++struct pmc_pm_data {
++	u32 cpu_good_time;	/* CPU power good time in uS */
++	u32 cpu_off_time;	/* CPU power off time in uS */
++	u32 core_osc_time;	/* Core power good osc time in uS */
++	u32 core_pmu_time;	/* Core power good pmu time in uS */
++	u32 core_off_time;	/* Core power off time in uS */
++	bool corereq_high;	/* Core power request active-high */
++	bool sysclkreq_high;	/* System clock request active-high */
++	bool combined_req;	/* Combined pwr req for CPU & Core */
++	bool cpu_pwr_good_en;	/* CPU power good signal is enabled */
++	u32 lp0_vec_phy_addr;	/* The phy addr of LP0 warm boot code */
++	u32 lp0_vec_size;	/* The size of LP0 warm boot code */
++	enum tegra_suspend_mode suspend_mode;
++};
++static struct pmc_pm_data pmc_pm_data;
++
+ static inline u32 tegra_pmc_readl(u32 reg)
+ {
+ 	return readl(tegra_pmc_base + reg);
+@@ -177,6 +195,10 @@ static const struct of_device_id matches[] __initconst = {
+ static void tegra_pmc_parse_dt(void)
+ {
+ 	struct device_node *np;
++	u32 prop;
++	enum tegra_suspend_mode suspend_mode;
++	u32 core_good_time[2] = {0, 0};
++	u32 lp0_vec[2] = {0, 0};
+ 
+ 	np = of_find_matching_node(NULL, matches);
+ 	BUG_ON(!np);
+@@ -187,6 +209,67 @@ static void tegra_pmc_parse_dt(void)
+ 				     "nvidia,invert-interrupt");
+ 	tegra_pclk = of_clk_get(np, 0);
+ 	WARN_ON_ONCE(IS_ERR(tegra_pclk));
++
++	/* Grabbing the power management configurations */
++	if (of_property_read_u32(np, "nvidia,suspend-mode", &prop)) {
++		suspend_mode = TEGRA_SUSPEND_NONE;
++	} else {
++		switch (prop) {
++		case 0:
++			suspend_mode = TEGRA_SUSPEND_LP0;
++			break;
++		case 1:
++			suspend_mode = TEGRA_SUSPEND_LP1;
++			break;
++		case 2:
++			suspend_mode = TEGRA_SUSPEND_LP2;
++			break;
++		default:
++			suspend_mode = TEGRA_SUSPEND_NONE;
++			break;
++		}
++	}
++
++	if (of_property_read_u32(np, "nvidia,cpu-pwr-good-time", &prop))
++		suspend_mode = TEGRA_SUSPEND_NONE;
++	pmc_pm_data.cpu_good_time = prop;
++
++	if (of_property_read_u32(np, "nvidia,cpu-pwr-off-time", &prop))
++		suspend_mode = TEGRA_SUSPEND_NONE;
++	pmc_pm_data.cpu_off_time = prop;
++
++	if (of_property_read_u32_array(np, "nvidia,core-pwr-good-time",
++			core_good_time, ARRAY_SIZE(core_good_time)))
++		suspend_mode = TEGRA_SUSPEND_NONE;
++	pmc_pm_data.core_osc_time = core_good_time[0];
++	pmc_pm_data.core_pmu_time = core_good_time[1];
++
++	if (of_property_read_u32(np, "nvidia,core-pwr-off-time",
++				 &prop))
++		suspend_mode = TEGRA_SUSPEND_NONE;
++	pmc_pm_data.core_off_time = prop;
++
++	pmc_pm_data.corereq_high = of_property_read_bool(np,
++				"nvidia,core-power-req-active-high");
++
++	pmc_pm_data.sysclkreq_high = of_property_read_bool(np,
++				"nvidia,sys-clock-req-active-high");
++
++	pmc_pm_data.combined_req = of_property_read_bool(np,
++				"nvidia,combined-power-req");
++
++	pmc_pm_data.cpu_pwr_good_en = of_property_read_bool(np,
++				"nvidia,cpu-pwr-good-en");
++
++	if (of_property_read_u32_array(np, "nvidia,lp0-vec", lp0_vec,
++				       ARRAY_SIZE(lp0_vec)))
++		if (suspend_mode == TEGRA_SUSPEND_LP0)
++			suspend_mode = TEGRA_SUSPEND_LP1;
++
++	pmc_pm_data.lp0_vec_phy_addr = lp0_vec[0];
++	pmc_pm_data.lp0_vec_size = lp0_vec[1];
++
++	pmc_pm_data.suspend_mode = suspend_mode;
+ }
+ 
+ void __init tegra_pmc_init(void)
+diff --git a/arch/arm/mach-tegra/pmc.h b/arch/arm/mach-tegra/pmc.h
+index 22f16c9..6bc0fc09 100644
+--- a/arch/arm/mach-tegra/pmc.h
++++ b/arch/arm/mach-tegra/pmc.h
+@@ -18,6 +18,14 @@
+ #ifndef __MACH_TEGRA_PMC_H
+ #define __MACH_TEGRA_PMC_H
+ 
++enum tegra_suspend_mode {
++	TEGRA_SUSPEND_NONE = 0,
++	TEGRA_SUSPEND_LP2,	/* CPU voltage off */
++	TEGRA_SUSPEND_LP1,	/* CPU voltage off, DRAM self-refresh */
++	TEGRA_SUSPEND_LP0,      /* CPU + core voltage off, DRAM self-refresh */
++	TEGRA_MAX_SUSPEND_MODE,
++};
++
+ #ifdef CONFIG_PM_SLEEP
+ void set_power_timers(unsigned long us_on, unsigned long us_off);
+ #endif
+-- 
+1.8.1.5
