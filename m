@@ -1,131 +1,225 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 06/23] ARM: OMAP3: 3430SDP: Adapt to ehci-omap changes
-Date: Mon, 18 Mar 2013 14:42:17 +0200
-Message-ID: <51470BA9.1070902@ti.com>
-References: <1363360604-21368-1-git-send-email-rogerq@ti.com> <1363360604-21368-7-git-send-email-rogerq@ti.com> <20130315161201.GA9370@atomide.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [RFC PATCH 5/8] s5p-fimc: Add ISP video capture driver stubs
+Date: Mon, 18 Mar 2013 13:51:31 +0100
+Message-ID: <201303181351.31384.hverkuil@xs4all.nl>
+References: <1363031092-29950-1-git-send-email-s.nawrocki@samsung.com> <201303121544.45438.hverkuil@xs4all.nl> <51462FAA.1060400@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: Text/Plain;
+  charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130315161201.GA9370@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: balbi@ti.com, linux-omap@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <51462FAA.1060400@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, myungjoo.ham@samsung.com, dh09.lee@samsung.com, shaik.samsung@gmail.com, arun.kk@samsung.com, a.hajda@samsung.com, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/15/2013 06:12 PM, Tony Lindgren wrote:
-> Hi,
+On Sun March 17 2013 22:03:38 Sylwester Nawrocki wrote:
+> On 03/12/2013 03:44 PM, Hans Verkuil wrote:
+> > On Mon 11 March 2013 20:44:49 Sylwester Nawrocki wrote:
+> [...]
+> >> +static int isp_video_capture_open(struct file *file)
+> >> +{
+> >> +	struct fimc_isp *isp = video_drvdata(file);
+> >> +	int ret = 0;
+> >> +
+> >> +	if (mutex_lock_interruptible(&isp->video_lock))
+> >> +		return -ERESTARTSYS;
+> >> +
+> >> +	/* ret = pm_runtime_get_sync(&isp->pdev->dev); */
+> >> +	if (ret<  0)
+> >> +		goto done;
+> >> +
+> >> +	ret = v4l2_fh_open(file);
+> >> +	if (ret<  0)
+> >> +		goto done;
+> >> +
+> >> +	/* TODO: prepare video pipeline */
+> >> +done:
+> >> +	mutex_unlock(&isp->video_lock);
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static int isp_video_capture_close(struct file *file)
+> >> +{
+> >> +	struct fimc_isp *isp = video_drvdata(file);
+> >> +	int ret = 0;
+> >> +
+> >> +	mutex_lock(&isp->video_lock);
+> >> +
+> >> +	if (isp->out_path == FIMC_IO_DMA) {
+> >> +		/* TODO: stop capture, cleanup */
+> >> +	}
+> >> +
+> >> +	/* pm_runtime_put(&isp->pdev->dev); */
+> >> +
+> >> +	if (isp->ref_count == 0)
+> >> +		vb2_queue_release(&isp->capture_vb_queue);
+> >> +
+> >> +	ret = v4l2_fh_release(file);
+> >> +
+> >> +	mutex_unlock(&isp->video_lock);
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static unsigned int isp_video_capture_poll(struct file *file,
+> >> +				   struct poll_table_struct *wait)
+> >> +{
+> >> +	struct fimc_isp *isp = video_drvdata(file);
+> >> +	int ret;
+> >> +
+> >> +	mutex_lock(&isp->video_lock);
+> >> +	ret = vb2_poll(&isp->capture_vb_queue, file, wait);
+> >> +	mutex_unlock(&isp->video_lock);
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static int isp_video_capture_mmap(struct file *file, struct vm_area_struct *vma)
+> >> +{
+> >> +	struct fimc_isp *isp = video_drvdata(file);
+> >> +	int ret;
+> >> +
+> >> +	if (mutex_lock_interruptible(&isp->video_lock))
+> >> +		return -ERESTARTSYS;
+> >> +
+> >> +	ret = vb2_mmap(&isp->capture_vb_queue, vma);
+> >> +	mutex_unlock(&isp->video_lock);
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static const struct v4l2_file_operations isp_video_capture_fops = {
+> >> +	.owner		= THIS_MODULE,
+> >> +	.open		= isp_video_capture_open,
+> >> +	.release	= isp_video_capture_close,
+> >> +	.poll		= isp_video_capture_poll,
+> >> +	.unlocked_ioctl	= video_ioctl2,
+> >> +	.mmap		= isp_video_capture_mmap,
+> >
+> > Can't you use the helper functions vb2_fop_open/release/poll/mmap here?
 > 
-> I think you can get rid of quite a bit more of the repeated data for
-> most boards, see below.
-> 
-> * Roger Quadros <rogerq@ti.com> [130315 08:21]:
->> Add 2 platform devices for 'nop-usb-xceiv'. These will be used
->> as PHYs for HS USB ports 1 and 2 so provide binding information
->> for them.
->>
->> Use usbhs_init_phys() to register the PHY's RESET regulators.
->>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->>  arch/arm/mach-omap2/board-3430sdp.c |   47 ++++++++++++++++++++++++++++++----
->>  1 files changed, 41 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/arm/mach-omap2/board-3430sdp.c b/arch/arm/mach-omap2/board-3430sdp.c
->> index ce812de..5584682 100644
->> --- a/arch/arm/mach-omap2/board-3430sdp.c
->> +++ b/arch/arm/mach-omap2/board-3430sdp.c
->> @@ -21,6 +21,7 @@
->>  #include <linux/spi/spi.h>
->>  #include <linux/i2c/twl.h>
->>  #include <linux/regulator/machine.h>
->> +#include <linux/usb/phy.h>
->>  #include <linux/io.h>
->>  #include <linux/gpio.h>
->>  #include <linux/mmc/host.h>
->> @@ -445,16 +446,37 @@ static void enable_board_wakeup_source(void)
->>  		OMAP_WAKEUP_EN | OMAP_PIN_INPUT_PULLUP);
->>  }
->>  
->> +/* PHY device on HS USB Port 1 i.e. nop_usb_xceiv.1 */
->> +static struct platform_device hsusb1_phy_device = {
->> +	.name = "nop_usb_xceiv",
->> +	.id = 1,
->> +};
->> +
->> +/* PHY device on HS USB Port 2 i.e. nop_usb_xceiv.2 */
->> +static struct platform_device hsusb2_phy_device = {
->> +	.name = "nop_usb_xceiv",
->> +	.id = 2,
->> +};
-> 
-> Please allocate these in the common ehci platform init code
-> so you don't have to repeat the same nop_usb_xceiv for each
-> board-*.c file. If you need to override these, then you can
-> pass something instead of NULL to the init function.
+> It seems vb2_fop_mmap/poll can be used directly, open(), release() are
+> a bit more complicated as some media pipeline operations need to
+> additionally be done within these callbacks. There is no vb2_fop_open(),
+> and AFAICS v4l2_fh_open() is sufficient and intended as open() helper.
 
-OK. I think there is nothing to be overridden except the
-platform_data. But that I can pass into via phy_data structure below.
+That's correct. Sorry for the misinformation about the non-existant
+vb2_fop_open.
 
+> For the next iteration I have used vb2_fop_release(), called indirectly,
+> as it nicely simplifies things a bit.
 > 
->> +static struct usbhs_phy_data phy_data[] __initdata = {
->> +	{
->> +		.port = 1,
->> +		.reset_gpio = 57,
->> +		.vcc_gpio = -EINVAL,
->> +		.phy_id = "nop_usb_xceiv.1",
->> +	},
->> +	{
->> +		.port = 2,
->> +		.reset_gpio = 61,
->> +		.vcc_gpio = -EINVAL,
->> +		.phy_id = "nop_usb_xceiv.2",
->> +	},
->> +};
-> 
-> This is OK as it's the board specific data needed. If it's the
-> same for many boards, then you might want to add some init function
-> for the default case.
+> BTW, shouldn't vb2_fop_release() also be taking the lock ? Actually it is
+> more useful for me in current form, but the drivers that directly assign
+> it to struct v4l2_file_operations::open might be in trouble, unless I'm
+> missing something.
 
-To keep it simple I'll leave this the way it is. There is nothing
-much that can be kept common. If reset_gpio and vcc_gpio is not used
-then the data structure is not required at all.
-
-> 
->> +static struct platform_device *sdp3430_devices[] __initdata = {
->> +	&hsusb1_phy_device,
->> +	&hsusb2_phy_device,
->> +};
-> 
-> It then seems that this can be in the common ehci platform init
-> code for most cases.
-
-OK.
-
-> 
->>  static void __init omap_3430sdp_init(void)
->>  {
->>  	int gpio_pendown;
->> @@ -606,6 +633,14 @@ static void __init omap_3430sdp_init(void)
->>  	board_flash_init(sdp_flash_partitions, chip_sel_3430, 0);
->>  	sdp3430_display_init();
->>  	enable_board_wakeup_source();
->> +
->> +	platform_add_devices(sdp3430_devices, ARRAY_SIZE(sdp3430_devices));
->> +	/* PHY on HSUSB Port 1 i.e. index 0 */
->> +	usb_bind_phy("ehci-omap.0", 0, "nop_usb_xceiv.1");
->> +	/* PHY on HSUSB Port 2 i.e. index 1 */
->> +	usb_bind_phy("ehci-omap.0", 1, "nop_usb_xceiv.2");
-> 
-> And this part too in most cases.
-
-Yes.
+I don't see where a lock would be needed. I don't see any concurrency here.
+Nobody else can mess with the queue as long as they are not the owner.
 
 > 
->> +	usbhs_init_phys(phy_data, ARRAY_SIZE(phy_data));
->>  	usbhs_init(&usbhs_bdata);
->>  }
+> >> +};
+> >> +
+> >> +/*
+> >> + * Video node ioctl operations
+> >> + */
+> [...]
+> >> +static int fimc_isp_capture_streamon(struct file *file, void *priv,
+> >> +				     enum v4l2_buf_type type)
+> >> +{
+> >> +	struct fimc_isp *isp = video_drvdata(file);
+> >> +	struct v4l2_subdev *sensor = isp->pipeline.subdevs[IDX_SENSOR];
+> >> +	struct fimc_pipeline *p =&isp->pipeline;
+> >> +	int ret;
+> >> +
+> >> +	/* TODO: check if the OTF interface is not running */
+> >> +
+> >> +	ret = media_entity_pipeline_start(&sensor->entity, p->m_pipeline);
+> >> +	if (ret<  0)
+> >> +		return ret;
+> >> +
+> >> +	ret = fimc_isp_pipeline_validate(isp);
+> >> +	if (ret) {
+> >> +		media_entity_pipeline_stop(&sensor->entity);
+> >> +		return ret;
+> >> +	}
+> >> +
+> >> +	return vb2_streamon(&isp->capture_vb_queue, type);
+> >> +}
+> >> +
+> >> +static int fimc_isp_capture_streamoff(struct file *file, void *priv,
+> >> +				      enum v4l2_buf_type type)
+> >> +{
+> >> +	struct fimc_isp *isp = video_drvdata(file);
+> >> +	struct v4l2_subdev *sd = isp->pipeline.subdevs[IDX_SENSOR];
+> >> +	int ret;
+> >> +
+> >> +	ret = vb2_streamoff(&isp->capture_vb_queue, type);
+> >> +	if (ret == 0)
+> >> +		media_entity_pipeline_stop(&sd->entity);
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static int fimc_isp_capture_reqbufs(struct file *file, void *priv,
+> >> +				    struct v4l2_requestbuffers *reqbufs)
+> >> +{
+> >> +	struct fimc_isp *isp = video_drvdata(file);
+> >> +	int ret;
+> >> +
+> >> +	reqbufs->count = max_t(u32, FIMC_IS_REQ_BUFS_MIN, reqbufs->count);
+> >> +	ret = vb2_reqbufs(&isp->capture_vb_queue, reqbufs);
+> >
+> > You probably want to call vb2_ioctl_reqbufs here since that does additional
+> > ownership checks that vb2_reqbufs doesn't.
 > 
+> Yes, thanks for the suggestion. That was actually helpful, previously
+> it wasn't immediately clear to me one can still take advantage of those
+> vb2_ioctl_* helpers, mainly have the ownership handling in the core,
+> and have some handlers assigned directly to v4l2_ioctl_ops an some called
+> indirectly from the driver's own callbacks, should they need something
+> else that is done in the helpers.
+> 
+> I found those helpers really useful, especially in drivers that need to
+> support several video nodes. Lots of boilerplate can be eliminated. And
+> also vb2_ops_wait_prepare/finish are a simple and nice improvement.
 
-cheers,
--roger
+Glad to hear!
+
+I still think there are some more improvements that could be made with some
+helper functions and perhaps some more fields: most (all?) drivers need a
+list for their active buffers, so I really think adding a struct list to
+vb2_buffer and a list for active buffers + a spinlock to vb2_queue would
+help.
+
+Helper functions could then be added to handle that queue and also to set
+the timestamp and sequence fields. I would need to think more about the
+details, but after using vb2 for a while I see a lot of shared code between
+the various drivers.
+
+Regards,
+
+	Hans
+
+> > The same is true for vb2_ioctl_streamon/off, BTW.
+> 
+> Indeed. I have already applied all possible helpers for the next iteration.
+> 
+> I need to yet resolve an issue with locking order, as I previously missed
+> that media_entity_pipeline_start/stop() also takes the graph mutex.
+> 
+> And currently the driver is supposed to take the graph mutex first and
+> then the video mutex. Since the link_notify callback of the media device
+> is called with the graph mutex already held.
+> 
+> The only solution I came up so far is to provide unlocked versions of
+> media_entity_pipeline_start/stop().
+> 
+> Ideally using video mutex in link_notify() callback should not be needed,
+> but there are things done there needed for backward video device
+> compatibility.
+> 
+> --
+> 
+> Regards,
+> Sylwester
+> 
