@@ -1,62 +1,103 @@
-From: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4 0/6] support other fsl SoCs with usbmisc + small
- fixes
-Date: Mon, 18 Mar 2013 14:30:00 +0100
-Message-ID: <20130318133000.GA16342@pengutronix.de>
-References: <1354033021-10585-1-git-send-email-m.grzeschik@pengutronix.de>
- <20121128025217.GC18593@nchen-desktop>
- <87ip6mor1e.fsf@ashishki-desk.ger.corp.intel.com>
- <20130307225403.GI29785@pengutronix.de>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH V3 10/18] ARM: OMAP2+: Add function to read GPMC settings
+ from device-tree
+Date: Mon, 18 Mar 2013 08:43:26 -0500
+Message-ID: <514719FE.4030607@ti.com>
+References: <1363360876-13617-1-git-send-email-jon-hunter@ti.com> <1363360876-13617-11-git-send-email-jon-hunter@ti.com> <20130317052401.GA9796@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130307225403.GI29785-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130317052401.GA9796@localhost>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Daniel Mack <zonque@gmail.com>, Ezequiel Garcia <elezegarcia@gmail.com>, Mark Jackson <mpfj-list@mimc.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 07, 2013 at 11:54:03PM +0100, Michael Grzeschik wrote:
-> Hey Alex,
-> 
-> On Thu, Jan 24, 2013 at 11:42:53AM +0200, Alexander Shishkin wrote:
-> > Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
-> > 
-> > > On Tue, Nov 27, 2012 at 05:16:55PM +0100, Michael Grzeschik wrote:
-> > >> Nearly every SoC from Freescale has this non-core usb registers. This series
-> > >> adds support for more users of this driver.
-> > >> 
-> > >> This series is based on Peter Chen's work. Its needed to merge his master branch
-> > >> before applying this series:
-> > >> 
-> > >> https://github.com/hzpeterchen/linux-usb.git
-> > >
-> > > I have tested it at i.mx6q sabrelite board, it works good.
-> > >
-> > > I have pushed your commit to my git, please cc me
-> > > your coming chipidea patches, thanks.
-> > >
-> > > Alex, please add:
-> > >
-> > > Reviewed-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > > Tested-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > 
-> > Looks good, queueing this one for submission.
-> 
-> Now that you have your git-tree [1], could you queue that for
-> submission?
-> 
-> [1] git://github.com/virtuoso/linux-ci.git ci-for-greg
 
-Ping!
+On 03/17/2013 12:24 AM, Ezequiel Garcia wrote:
+> Hi Jon,
+> 
+> I have some tiny nitpicks...
+> 
+> On Fri, Mar 15, 2013 at 10:21:08AM -0500, Jon Hunter wrote:
+>> Adds a function to read the various GPMC chip-select settings from
+>> device-tree and store them in the gpmc_settings structure.
+>>
+>> Update the GPMC device-tree binding documentation to describe these
+>> options.
+>>
+>> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/bus/ti-gpmc.txt |   23 ++++++++++
+>>  arch/arm/mach-omap2/gpmc.c                        |   49 +++++++++++++++++++++
+>>  arch/arm/mach-omap2/gpmc.h                        |    2 +
+>>  3 files changed, 74 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
+>> index 5ddb2e9..6fde1cf 100644
+>> --- a/Documentation/devicetree/bindings/bus/ti-gpmc.txt
+>> +++ b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
+>> @@ -65,6 +65,29 @@ The following are only applicable to OMAP3+ and AM335x:
+>>   - gpmc,wr-access
+>>   - gpmc,wr-data-mux-bus
+>>  
+>> +GPMC chip-select settings properties for child nodes. All are optional.
+>> +
+>> +- gpmc,burst-length	Page/burst length. Must be 4, 8 or 16.
+>> +- gpmc,burst-wrap	Enables wrap bursting
+>> +- gpmc,burst-read	Enables read page/burst mode
+>> +- gpmc,burst-write	Enables write page/burst mode
+>> +- gpmc,device-nand	Device is NAND
+>> +- gpmc,device-width	Total width of device(s) connected to a GPMC
+>> +			chip-select in bytes. The GPMC supports 8-bit
+>> +			and 16-bit devices and so this property must be
+>> +			1 or 2.
+>> +- gpmc,mux-add-data	Address and data multiplexing configuration.
+>> +			Valid values are 1 for address-address-data
+>> +			multiplexing mode and 2 for address-data
+>> +			multiplexing mode.
+>> +- gpmc,sync-read	Enables synchronous read. Defaults to asynchronous
+>> +			is this is not set.
+>> +- gpmc,sync-write	Enables synchronous writes. Defaults to asynchronous
+>> +			is this is not set.
+>> +- gpmc,wait-pin		Wait-pin used by client. Must be less than
+>> +			"gpmc,num-waitpins".
+>> +- gpmc,wait-on-read	Enables wait monitoring on reads.
+>> +- gpmc,wait-on-write	Enables wait monitoring on writes.
+>>  
+>>  Example for an AM33xx board:
+>>  
+>> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+>> index 3ec1937..1e7eef3 100644
+>> --- a/arch/arm/mach-omap2/gpmc.c
+>> +++ b/arch/arm/mach-omap2/gpmc.c
+>> @@ -1190,6 +1190,55 @@ static struct of_device_id gpmc_dt_ids[] = {
+>>  };
+>>  MODULE_DEVICE_TABLE(of, gpmc_dt_ids);
+>>  
+>> +/**
+>> + * gpmc_read_settings_dt - read gpmc settings from device-tree
+>> + * @np:		pointer to device-tree node for a gpmc child device
+>> + * @p:		pointer to gpmc settings structure
+>> + *
+>> + * Reads the GPMC settings for a GPMC child device from device-tree and
+>> + * stores them in the GPMC settings structure passed. The GPMC settings
+>> + * structure is initialise to zero by this function and so any previously
+> 
+> s/initialise/initialized ?
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks will add the "d". However, "initialise" is correct British
+English ;-)
+
+>> + * stored settings will be clearer.
+> 
+> s/clearer/cleared ?
+> 
+> I'm not an english native speaker,
+> so please bare with me if I'm wrong on these...
+
+You are right here too. Will fix thanks!
+
+Jon
+
