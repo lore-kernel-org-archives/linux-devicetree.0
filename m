@@ -1,131 +1,125 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] Doc: dt: i2c: tegra: add dt binding for i2c-tegra
-Date: Mon, 18 Mar 2013 15:05:50 +0530
-Message-ID: <1363599350-25187-1-git-send-email-ldewangan@nvidia.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC] DT affinity bindings/representing bus masters with DT
+Date: Mon, 18 Mar 2013 09:48:16 +0000
+Message-ID: <20130318094815.GA30116@e102568-lin.cambridge.arm.com>
+References: <20130215172102.GF3014@e102568-lin.cambridge.arm.com>
+ <20130306215714.GC6740@truffula.fritz.box>
+ <20130311170657.GD25250@e102568-lin.cambridge.arm.com>
+ <20130318030928.GG9402@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130318030928.GG9402-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for device tree binding of NVIDIA's Tegra i2c
-controller driver.
+On Mon, Mar 18, 2013 at 03:09:28AM +0000, David Gibson wrote:
+> On Mon, Mar 11, 2013 at 05:06:57PM +0000, Lorenzo Pieralisi wrote:
+> > Hi David,
+> > 
+> > thanks for your feedback.
+> > 
+> > On Wed, Mar 06, 2013 at 09:57:14PM +0000, David Gibson wrote:
+> > > On Fri, Feb 15, 2013 at 05:21:02PM +0000, Lorenzo Pieralisi wrote:
+> [snip]
+> > > > Each foo@2000000 reg property maps to a device that represents a bus master
+> > > > (to make it clearer, a foo@2000000 reg property defines an address space that
+> > > > belongs to a bus master, ie the address space represents a programming
+> > > > interface specific to that master; in the bindings above address 0x2000000 is
+> > > > the address at which acme1 device can programme its "foo" interface, address
+> > > > 0x2001000 is the address at which acme2 device can programme its "foo"
+> > > > interface).
+> > > 
+> > > Ok.  I think annotating the existing reg property like this is a very
+> > > bad idea.  I haven't seen all the previous discussion, so I'm not
+> > > totally clean on what this affinity concept is about.  But as I
+> > > understand it, these "slave" resources cannot be treated like an
+> > > ordinary resource in in the reg property.  That means an older client
+> > > will potentially misinterpret "reg" because it doesn't know about
+> > > "affinity".
+> > 
+> > Not really, "reg" still complies with the current DT bindings. Affinity
+> > is there to associate a reg property to a "master" but the reg property
+> > definition does not change. I do not think backward compatibility is a
+> > problem per-se here.
+> 
+> Ok, I did not understand the problem properly.
+> 
+> > > Worse, again, if I've understood correctly, resources with different
+> > > "masters" are essentially in different logical address spaces.  "reg"
+> > > properties should always sit in the logical address space representing
+> > > the parent node's bus.  Different address spaces could also have
+> > > different address sizes, which would really complicate parsing "reg".
+> > 
+> > I think we need to post what we have, it is really complex to explain
+> > the issue without a concrete example. To cut a long story short I
+> > would not say that the resources sit in different address spaces, it is
+> > that we need to associate those address ranges with specific bus masters.
+> > 
+> > We have to have a way to say:
+> > 
+> > "Address range 0x80001000 - 0x80001fff is used to programme the control
+> > registers associated with the port connected to master X".
+> > 
+> > When a CPU wants to programme a control port for a specific master, it
+> > needs to know what address range should be programmed.
+> > 
+> > I mentioned "resources" instead of addresses since the problem we are
+> > having is the same when it comes to map IRQs to set of CPUS. We need
+> > to associate a resource (IRQ or address) to a set of cpus (or more in
+> > general, masters).
+> 
+> Hrm.  See, I think I may be misunderstanding the problem again,
+> because with this description I can see no problem.  It's already up
+> to the device binding to describe the purpose of each entry in the reg
+> property.  So what's the problem with it just being part of the
+> binding to say which reg entry is associated with which master port?
 
-Describing all compatible values used for diffenent Tegra SoCs
-in details in this documentation.
+That's exactly what we are trying to do. But to associate the reg
+property to a master port we need a phandle, how can we pull that off
+otherwise ?
 
-Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt |   99 ++++++++++++++++++++
- 1 files changed, 99 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt
+The purpose of each reg entry is to describe the address space
+associated with the programming interface for a port. What reg currently
+can't describe is to what component that port is connected to. It is not
+something we can define in the binding (unless we make it configurable
+with a phandle, and that's what we want to do) because it changes with
+different SoC implementations.
 
-diff --git a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt
-new file mode 100644
-index 0000000..e390ce8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt
-@@ -0,0 +1,99 @@
-+NVIDIA Tegra20/Tegra30/Tegra114 I2C controller driver.
-+
-+Required properties:
-+- compatible : should be:
-+	"nvidia,tegra114-i2c"
-+	"nvidia,tegra30-i2c"
-+	"nvidia,tegra20-i2c"
-+	"nvidia,tegra20-i2c-dvc"
-+
-+ Details of compatible are as follows:
-+  nvidia,tegra20-i2c-dvc: Tegra20 has specific i2c controller called as DVC I2C
-+	controller. This only support master mode of I2C communication. Register
-+	interface/offset and interrupts handling are different than generic I2C
-+	controller. Driver of DVC I2C controller is only compatible with
-+	"nvidia,tegra20-i2c-dvc".
-+  nvidia,tegra20-i2c: Tegra20 has 4 generic I2C controller. This can support
-+	master and slave mode of I2C communication. The i2c-tegra driver only
-+	support master mode of I2C communication. Driver of I2C controller is
-+	only compatible with "nvidia,tegra20-i2c".
-+  nvidia,tegra30-i2c: Tegra30 has 5 generic I2C controller. This controller is
-+	very much similar to Tegra20 I2C controller with additional feature:
-+	Continue Transfer Support. This feature helps to implement M_NO_START
-+	as per I2C core API transfer flags. Driver of I2C controller is
-+	compatible with "nvidia,tegra30-i2c" to enable the continue transfer
-+	support. This is also compatible with "nvidia,tegra20-i2c" without
-+	continue transfer support.
-+  nvidia,tegra114-i2c: Tegra114 has 5 generic I2C controller. This controller is
-+	very much similar to Tegra30 I2C controller with some hardware
-+	modification:
-+	 - Tegra30/Tegra20 I2C controller has 2 clock source called div-clk and
-+	   fast-clk. Tegra114 has only one clock source called as div-clk and
-+	   hence clock mechanism is changed in I2C controller.
-+	 - Tegra30/Tegra20 I2C controller has enabled per packet transfer by
-+	   default and there is no way to disable it. Tegra114 has this
-+	   interrupt disable by default and SW need to enable explicitly.
-+	Due to above changes, Tegra114 I2C driver makes incompatible with
-+	previous hardware driver. Hence, tegra114 I2C controller is compatible
-+	with "nvidia,tegra114-i2c".
-+
-+
-+- reg: Should contain I2C controller registers physical address and length.
-+- interrupts: Should contain I2C controller interrupts.
-+- address-cells: Address cells for I2C device address.
-+- size-cells: Size of the I2C device address.
-+- clocks: Clock Id as per
-+		Documentation/devicetree/bindings/clock/tegra<chip-id>.txt
-+	for I2C controller.
-+- clock-names: Name of the clock:
-+	Tegra20/Tegra30 I2C controller: "div-clk and "fast-clk".
-+	Tegra114 I2C controller: "div-clk".
-+
-+
-+Typical i2c node for Tegra20:
-+	i2c@7000c000 {
-+		compatible = "nvidia,tegra20-i2c";
-+		reg = <0x7000c000 0x100>;
-+		interrupts = <0 38 0x04>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&tegra_car 12>, <&tegra_car 124>;
-+		clock-names = "div-clk", "fast-clk";
-+		status = "disabled";
-+	};
-+
-+Typical dvc-i2c node for Tegra20:
-+	i2c@7000d000 {
-+		compatible = "nvidia,tegra20-i2c-dvc";
-+		reg = <0x7000d000 0x200>;
-+		interrupts = <0 53 0x04>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&tegra_car 47>, <&tegra_car 124>;
-+		clock-names = "div-clk", "fast-clk";
-+		status = "disabled";
-+	};
-+
-+Typical i2c node for Tegra30:
-+	i2c@7000c000 {
-+		compatible =  "nvidia,tegra30-i2c", "nvidia,tegra20-i2c";
-+		reg = <0x7000c000 0x100>;
-+		interrupts = <0 38 0x04>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&tegra_car 12>, <&tegra_car 182>;
-+		clock-names = "div-clk", "fast-clk";
-+		status = "disabled";
-+	};
-+
-+Typical i2c node for Tegra114:
-+	i2c@7000c000 {
-+		compatible = "nvidia,tegra114-i2c";
-+		reg = <0x7000c000 0x100>;
-+		interrupts = <0 38 0x04>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+		clocks = <&tegra_car 12>;
-+		clock-names = "div-clk";
-+	};
--- 
-1.7.1.1
+In one SoC port 0 can be connected to a GPU, in another one to a DMA.
+
+How can we write a binding that encompasses both cases ? The only
+solution is a phandle, to say this port is connected to this master.
+
+When a CPU programmes that port is because it wants to change behaviour
+of the port for a specific component (a DMA, a GPU, a cluster of CPUs).
+
+Let's say we have to describe a binding for a component having three
+slave ports connected to three masters (to have a more accurate example,
+two clusters of cpus and a GPU). Each port can be programmed and has an
+address space associated to it (reg property). The programming interface
+controls the port behaviour.
+
+Now, when a CPU wants to programme the port connected to CPU X (or GPU), how
+can it know what address space (ie what reg property) it has to use ?
+
+We cannot hardcode it in the reg property bindings, the component's ports are
+connected to different masters in different SoCs.
+
+Let me know if it is unclear, the patchset we are about to post will help
+clarify things I hope.
+
+Lorenzo
