@@ -1,241 +1,131 @@
-From: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V4 3/9] ARM: dt: tegra: add bindings of power management configurations for PMC
-Date: Mon, 18 Mar 2013 16:13:14 +0800
-Message-ID: <1363594400-11663-4-git-send-email-josephl@nvidia.com>
-References: <1363594400-11663-1-git-send-email-josephl@nvidia.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] Doc: dt: i2c: tegra: add dt binding for i2c-tegra
+Date: Mon, 18 Mar 2013 15:05:50 +0530
+Message-ID: <1363599350-25187-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1363594400-11663-1-git-send-email-josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The PMC mostly controls the entry and exit of the system from different
-sleep modes. Different platform or system may have different configurations.
-The power management configurations of PMC is represented as some properties.
-The system needs to define the properties when the system supports deep sleep
-mode (i.e. suspend).
+Add documentation for device tree binding of NVIDIA's Tegra i2c
+controller driver.
 
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Signed-off-by: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-V4:
-* no change
-V3:
-* fix typos
-V2:
-* squash the patches that defined the PM bindings for PMC and the
-  implementation
-* replace the "unsigned long" with "u32" for the variables that are parsed
-  from DT
----
- .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 42 ++++++++++-
- arch/arm/mach-tegra/pmc.c                          | 83 ++++++++++++++++++++++
- arch/arm/mach-tegra/pmc.h                          |  8 +++
- 3 files changed, 132 insertions(+), 1 deletion(-)
+Describing all compatible values used for diffenent Tegra SoCs
+in details in this documentation.
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
-index b5846e2..ae4e3ee 100644
---- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
-+++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
-@@ -1,14 +1,46 @@
- NVIDIA Tegra Power Management Controller (PMC)
- 
--Properties:
-+The PMC block interacts with an external Power Management Unit. The PMC
-+mostly controls the entry and exit of the system from different sleep
-+modes. It provides power-gating controllers for SoC and CPU power-islands.
+Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt |   99 ++++++++++++++++++++
+ 1 files changed, 99 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt
+
+diff --git a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt
+new file mode 100644
+index 0000000..e390ce8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt
+@@ -0,0 +1,99 @@
++NVIDIA Tegra20/Tegra30/Tegra114 I2C controller driver.
 +
 +Required properties:
- - name : Should be pmc
- - compatible : Should contain "nvidia,tegra<chip>-pmc".
- - reg : Offset and length of the register set for the device
++- compatible : should be:
++	"nvidia,tegra114-i2c"
++	"nvidia,tegra30-i2c"
++	"nvidia,tegra20-i2c"
++	"nvidia,tegra20-i2c-dvc"
 +
-+Optional properties:
- - nvidia,invert-interrupt : If present, inverts the PMU interrupt signal.
-   The PMU is an external Power Management Unit, whose interrupt output
-   signal is fed into the PMC. This signal is optionally inverted, and then
-   fed into the ARM GIC. The PMC is not involved in the detection or
-   handling of this interrupt signal, merely its inversion.
-+- nvidia,suspend-mode : The suspend mode that the platform should use.
-+  Valid values are 0, 1 and 2:
-+  0 (LP0): CPU + Core voltage off and DRAM in self-refresh
-+  1 (LP1): CPU vlotage off and DRAM in self-refresh
-+  2 (LP2): CPU voltage off
-+- nvidia,core-power-req-active-high : Boolean, core power request active-high
-+- nvidia,sys-clock-req-active-high : Boolean, system clock request active-high
-+- nvidia,combined-power-req : Boolean, combined power request for CPU & Core
-+- nvidia,cpu-pwr-good-en : Boolean, CPU power good signal (from PMIC to PMC)
-+			   is enabled.
++ Details of compatible are as follows:
++  nvidia,tegra20-i2c-dvc: Tegra20 has specific i2c controller called as DVC I2C
++	controller. This only support master mode of I2C communication. Register
++	interface/offset and interrupts handling are different than generic I2C
++	controller. Driver of DVC I2C controller is only compatible with
++	"nvidia,tegra20-i2c-dvc".
++  nvidia,tegra20-i2c: Tegra20 has 4 generic I2C controller. This can support
++	master and slave mode of I2C communication. The i2c-tegra driver only
++	support master mode of I2C communication. Driver of I2C controller is
++	only compatible with "nvidia,tegra20-i2c".
++  nvidia,tegra30-i2c: Tegra30 has 5 generic I2C controller. This controller is
++	very much similar to Tegra20 I2C controller with additional feature:
++	Continue Transfer Support. This feature helps to implement M_NO_START
++	as per I2C core API transfer flags. Driver of I2C controller is
++	compatible with "nvidia,tegra30-i2c" to enable the continue transfer
++	support. This is also compatible with "nvidia,tegra20-i2c" without
++	continue transfer support.
++  nvidia,tegra114-i2c: Tegra114 has 5 generic I2C controller. This controller is
++	very much similar to Tegra30 I2C controller with some hardware
++	modification:
++	 - Tegra30/Tegra20 I2C controller has 2 clock source called div-clk and
++	   fast-clk. Tegra114 has only one clock source called as div-clk and
++	   hence clock mechanism is changed in I2C controller.
++	 - Tegra30/Tegra20 I2C controller has enabled per packet transfer by
++	   default and there is no way to disable it. Tegra114 has this
++	   interrupt disable by default and SW need to enable explicitly.
++	Due to above changes, Tegra114 I2C driver makes incompatible with
++	previous hardware driver. Hence, tegra114 I2C controller is compatible
++	with "nvidia,tegra114-i2c".
 +
-+Required properties when nvidia,suspend-mode is specified:
-+- nvidia,cpu-pwr-good-time : CPU power good time in uS.
-+- nvidia,cpu-pwr-off-time : CPU power off time in uS.
-+- nvidia,core-pwr-good-time : <Oscillator-stable-time Power-stable-time>
-+			      Core power good time in uS.
-+- nvidia,core-pwr-off-time : Core power off time in uS.
 +
-+Required properties when nvidia,suspend-mode=<0>:
-+- nvidia,lp0-vec : <start length> Starting address and length of LP0 vector
-+  The LP0 vector contains the warm boot code that is executed by AVP when
-+  resuming from the LP0 state. The AVP (Audio-Video Processor) is an ARM7
-+  processor and always being the first boot processor when chip is power on
-+  or resume from deep sleep mode. When the system is resumed from the deep
-+  sleep mode, the warm boot code will restore some PLLs, clocks and then
-+  bring up CPU0 for resuming the system.
- 
- Example:
- 
-@@ -16,4 +48,12 @@ pmc@7000f400 {
- 	compatible = "nvidia,tegra20-pmc";
- 	reg = <0x7000e400 0x400>;
- 	nvidia,invert-interrupt;
-+	nvidia,suspend-mode = <1>;
-+	nvidia,cpu-pwr-good-time = <2000>;
-+	nvidia,cpu-pwr-off-time = <100>;
-+	nvidia,core-pwr-good-time = <3845 3845>;
-+	nvidia,core-pwr-off-time = <458>;
-+	nvidia,core-power-req-active-high;
-+	nvidia,sys-clock-req-active-high;
-+	nvidia,lp0-vec = <0xbdffd000 0x2000>;
- };
-diff --git a/arch/arm/mach-tegra/pmc.c b/arch/arm/mach-tegra/pmc.c
-index d90279c..9ac10d6 100644
---- a/arch/arm/mach-tegra/pmc.c
-+++ b/arch/arm/mach-tegra/pmc.c
-@@ -21,6 +21,8 @@
- #include <linux/of_address.h>
- #include <linux/clk.h>
- 
-+#include "pmc.h"
++- reg: Should contain I2C controller registers physical address and length.
++- interrupts: Should contain I2C controller interrupts.
++- address-cells: Address cells for I2C device address.
++- size-cells: Size of the I2C device address.
++- clocks: Clock Id as per
++		Documentation/devicetree/bindings/clock/tegra<chip-id>.txt
++	for I2C controller.
++- clock-names: Name of the clock:
++	Tegra20/Tegra30 I2C controller: "div-clk and "fast-clk".
++	Tegra114 I2C controller: "div-clk".
 +
- #define PMC_CTRL			0x0
- #define PMC_CTRL_INTR_LOW		(1 << 17)
- #define PMC_PWRGATE_TOGGLE		0x30
-@@ -49,6 +51,22 @@ static void __iomem *tegra_pmc_base;
- static bool tegra_pmc_invert_interrupt;
- static struct clk *tegra_pclk;
- 
-+struct pmc_pm_data {
-+	u32 cpu_good_time;	/* CPU power good time in uS */
-+	u32 cpu_off_time;	/* CPU power off time in uS */
-+	u32 core_osc_time;	/* Core power good osc time in uS */
-+	u32 core_pmu_time;	/* Core power good pmu time in uS */
-+	u32 core_off_time;	/* Core power off time in uS */
-+	bool corereq_high;	/* Core power request active-high */
-+	bool sysclkreq_high;	/* System clock request active-high */
-+	bool combined_req;	/* Combined pwr req for CPU & Core */
-+	bool cpu_pwr_good_en;	/* CPU power good signal is enabled */
-+	u32 lp0_vec_phy_addr;	/* The phy addr of LP0 warm boot code */
-+	u32 lp0_vec_size;	/* The size of LP0 warm boot code */
-+	enum tegra_suspend_mode suspend_mode;
-+};
-+static struct pmc_pm_data pmc_pm_data;
 +
- static inline u32 tegra_pmc_readl(u32 reg)
- {
- 	return readl(tegra_pmc_base + reg);
-@@ -177,6 +195,10 @@ static const struct of_device_id matches[] __initconst = {
- static void tegra_pmc_parse_dt(void)
- {
- 	struct device_node *np;
-+	u32 prop;
-+	enum tegra_suspend_mode suspend_mode;
-+	u32 core_good_time[2] = {0, 0};
-+	u32 lp0_vec[2] = {0, 0};
- 
- 	np = of_find_matching_node(NULL, matches);
- 	BUG_ON(!np);
-@@ -187,6 +209,67 @@ static void tegra_pmc_parse_dt(void)
- 				     "nvidia,invert-interrupt");
- 	tegra_pclk = of_clk_get(np, 0);
- 	WARN_ON_ONCE(IS_ERR(tegra_pclk));
++Typical i2c node for Tegra20:
++	i2c@7000c000 {
++		compatible = "nvidia,tegra20-i2c";
++		reg = <0x7000c000 0x100>;
++		interrupts = <0 38 0x04>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clocks = <&tegra_car 12>, <&tegra_car 124>;
++		clock-names = "div-clk", "fast-clk";
++		status = "disabled";
++	};
 +
-+	/* Grabbing the power management configurations */
-+	if (of_property_read_u32(np, "nvidia,suspend-mode", &prop)) {
-+		suspend_mode = TEGRA_SUSPEND_NONE;
-+	} else {
-+		switch (prop) {
-+		case 0:
-+			suspend_mode = TEGRA_SUSPEND_LP0;
-+			break;
-+		case 1:
-+			suspend_mode = TEGRA_SUSPEND_LP1;
-+			break;
-+		case 2:
-+			suspend_mode = TEGRA_SUSPEND_LP2;
-+			break;
-+		default:
-+			suspend_mode = TEGRA_SUSPEND_NONE;
-+			break;
-+		}
-+	}
++Typical dvc-i2c node for Tegra20:
++	i2c@7000d000 {
++		compatible = "nvidia,tegra20-i2c-dvc";
++		reg = <0x7000d000 0x200>;
++		interrupts = <0 53 0x04>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clocks = <&tegra_car 47>, <&tegra_car 124>;
++		clock-names = "div-clk", "fast-clk";
++		status = "disabled";
++	};
 +
-+	if (of_property_read_u32(np, "nvidia,cpu-pwr-good-time", &prop))
-+		suspend_mode = TEGRA_SUSPEND_NONE;
-+	pmc_pm_data.cpu_good_time = prop;
++Typical i2c node for Tegra30:
++	i2c@7000c000 {
++		compatible =  "nvidia,tegra30-i2c", "nvidia,tegra20-i2c";
++		reg = <0x7000c000 0x100>;
++		interrupts = <0 38 0x04>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clocks = <&tegra_car 12>, <&tegra_car 182>;
++		clock-names = "div-clk", "fast-clk";
++		status = "disabled";
++	};
 +
-+	if (of_property_read_u32(np, "nvidia,cpu-pwr-off-time", &prop))
-+		suspend_mode = TEGRA_SUSPEND_NONE;
-+	pmc_pm_data.cpu_off_time = prop;
-+
-+	if (of_property_read_u32_array(np, "nvidia,core-pwr-good-time",
-+			core_good_time, ARRAY_SIZE(core_good_time)))
-+		suspend_mode = TEGRA_SUSPEND_NONE;
-+	pmc_pm_data.core_osc_time = core_good_time[0];
-+	pmc_pm_data.core_pmu_time = core_good_time[1];
-+
-+	if (of_property_read_u32(np, "nvidia,core-pwr-off-time",
-+				 &prop))
-+		suspend_mode = TEGRA_SUSPEND_NONE;
-+	pmc_pm_data.core_off_time = prop;
-+
-+	pmc_pm_data.corereq_high = of_property_read_bool(np,
-+				"nvidia,core-power-req-active-high");
-+
-+	pmc_pm_data.sysclkreq_high = of_property_read_bool(np,
-+				"nvidia,sys-clock-req-active-high");
-+
-+	pmc_pm_data.combined_req = of_property_read_bool(np,
-+				"nvidia,combined-power-req");
-+
-+	pmc_pm_data.cpu_pwr_good_en = of_property_read_bool(np,
-+				"nvidia,cpu-pwr-good-en");
-+
-+	if (of_property_read_u32_array(np, "nvidia,lp0-vec", lp0_vec,
-+				       ARRAY_SIZE(lp0_vec)))
-+		if (suspend_mode == TEGRA_SUSPEND_LP0)
-+			suspend_mode = TEGRA_SUSPEND_LP1;
-+
-+	pmc_pm_data.lp0_vec_phy_addr = lp0_vec[0];
-+	pmc_pm_data.lp0_vec_size = lp0_vec[1];
-+
-+	pmc_pm_data.suspend_mode = suspend_mode;
- }
- 
- void __init tegra_pmc_init(void)
-diff --git a/arch/arm/mach-tegra/pmc.h b/arch/arm/mach-tegra/pmc.h
-index 22f16c9..6bc0fc09 100644
---- a/arch/arm/mach-tegra/pmc.h
-+++ b/arch/arm/mach-tegra/pmc.h
-@@ -18,6 +18,14 @@
- #ifndef __MACH_TEGRA_PMC_H
- #define __MACH_TEGRA_PMC_H
- 
-+enum tegra_suspend_mode {
-+	TEGRA_SUSPEND_NONE = 0,
-+	TEGRA_SUSPEND_LP2,	/* CPU voltage off */
-+	TEGRA_SUSPEND_LP1,	/* CPU voltage off, DRAM self-refresh */
-+	TEGRA_SUSPEND_LP0,      /* CPU + core voltage off, DRAM self-refresh */
-+	TEGRA_MAX_SUSPEND_MODE,
-+};
-+
- #ifdef CONFIG_PM_SLEEP
- void set_power_timers(unsigned long us_on, unsigned long us_off);
- #endif
++Typical i2c node for Tegra114:
++	i2c@7000c000 {
++		compatible = "nvidia,tegra114-i2c";
++		reg = <0x7000c000 0x100>;
++		interrupts = <0 38 0x04>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++		clocks = <&tegra_car 12>;
++		clock-names = "div-clk";
++	};
 -- 
-1.8.1.5
+1.7.1.1
