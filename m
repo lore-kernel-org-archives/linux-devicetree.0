@@ -1,114 +1,66 @@
-From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V4] ARM: dts: add minimal DT support for DevKit8000.
-Date: Mon, 18 Mar 2013 16:21:55 +0100
-Message-ID: <51473113.9060109@ti.com>
-References: <F3DBB1B3EF102E4994C89758CFCA32412CC4E9@DBDE01.ent.ti.com>
- <CABYxbz5GyxYaHANgdpwBNaaR6tnu=6LJuUNSvL7DEzU=4CPHcA@mail.gmail.com>
- <F3DBB1B3EF102E4994C89758CFCA32412CC74F@DBDE01.ent.ti.com>
- <CABYxbz62JrMB95p5i9iu2G=B4ETXLrYbLsyFEFR5F+WVD6YNnQ@mail.gmail.com>
- <20130306175313.GQ11806@atomide.com> <513838F2.60101@ti.com>
- <CABYxbz7bLZxX-6U3O9nRsKxAXbg0nEta55eO-ERuotPnw=X5BQ@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/7] kbuild: create an "include chroot" for DT bindings
+Date: Mon, 18 Mar 2013 09:47:27 -0600
+Message-ID: <5147370F.9030500@wwwdotorg.org>
+References: <1362594183-21523-1-git-send-email-swarren@wwwdotorg.org> <20130318151348.GB4713@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CABYxbz7bLZxX-6U3O9nRsKxAXbg0nEta55eO-ERuotPnw=X5BQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Anil Kumar <anilk4.v-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Weber <thomas-xePHB1Atl/Dsq35pWSNszA@public.gmane.org>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <20130318151348.GB4713@S2101-09.ap.freescale.net>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: arm@kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Michal Marek <mmarek@suse.cz>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>, Hiroshi Doyu <hdoyu@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Anil,
-
-On 03/17/2013 06:23 AM, Anil Kumar wrote:
-> Hi Benoit,
-> 
-> On Thu, Mar 7, 2013 at 12:21 PM, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org> wrote:
->> Hi,
+On 03/18/2013 09:13 AM, Shawn Guo wrote:
+> On Wed, Mar 06, 2013 at 11:22:57AM -0700, Stephen Warren wrote:
+>> From: Stephen Warren <swarren@nvidia.com>
 >>
->> On 03/06/2013 06:53 PM, Tony Lindgren wrote:
->>> * Anil Kumar <anilk4.v-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [130305 18:40]:
->>>> Hi Tony,
->>>>
->>>>>> From: linux-arm-kernel [mailto:linux-arm-kernel-
->>>>>> bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org] On Behalf Of Anil Kumar
->>>>>> Sent: Wednesday, February 27, 2013 8:03 AM
->>>>>> To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
->>>>>> linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>>>>> Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org; Cousson, Benoit; Tony Lindgren; Grant
->>>>>> Likely; Anil Kumar; thomas-xePHB1Atl/Dsq35pWSNszA@public.gmane.org
->>>>>> Subject: Re: FW: [PATCH V4] ARM: dts: add minimal DT support for
->>>>>> DevKit8000.
->>>>>>
->>>>>> Hi,
->>>>>>>
->>>>>>> DevKit8000 is a beagle board clone from Timll, sold by
->>>>>>> armkits.com. The DevKit8000 has RS232 serial port, LCD, DVI-D,
->>>>>>> S-Video, Ethernet, SD/MMC, keyboard, camera, SPI, I2C, USB and
->>>>>>> JTAG interface.
->>>>>>>
->>>>>>> This patch adds the basic DT support for devkit8000. At this time,
->>>>>> Information
->>>>>>> of twl4030 (PMIC), MMC1, I2C1 and leds are added.
->>>>>>>
->>>>>>> Signed-off-by: Anil Kumar <anilk4.v-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>>>>> Tested-by: Thomas Weber <thomas-xePHB1Atl/Dsq35pWSNszA@public.gmane.org>
->>>>>>
->>>>>> Gentle Ping. As there are no review comments on this patch,
->>>>>> Could you please pull this patch ?
->>>>
->>>> Gentle Ping.
->>>>
->>>> This patch also got Reviewed-by: Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> and as patch "ARM: dts: omap3-devkit8000: Enable audio support"  has already got
->>>> "Acked-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>" but it is on the
->>>> top of this patch.
->>>> So, Could you please pull this patch in one of your omap branch? or
->>>> you want me to
->>>> do rebase this patch on top of v3.9-rc1 ?
->>>
->>> Let's wait for Benoit to queue it as he has a bunch of .dts changesfor_3.10/dts already
->>> applied. Too bad we missed v3.9 merge window for those, but hopefully
->>> we can get them queued early for v3.10.
+>> The recent dtc+cpp support allows header files and C pre-processor
+>> defines/macros to be used when compiling device tree files. These
+>> headers will typically define various constants that are part of the
+>> device tree bindings.
 >>
->> Yep, sorry for having missed 3.9, I was a little bit sick at the wrong
->> moment :-(
+>> The original patch which set up the dtc+cpp include path only considered
+>> using those headers from device tree files. However, most are also
+>> useful for kernel code which needs to interpret the device tree.
 >>
->> I'm starting queuing the pending patches, and should have enough to push
->> to you just after Linaro Connect.
+>> In both the DT files and the kernel, I'd like to include the DT-related
+>> headers in the same way, for example, <dt-bindings/gpio/tegra-gpio.h>.
+>> That will simplify any text which discusses the DT header locations.
+>>
+>> Creating a <dt-bindings/> for kernel source to use is as simple as
+>> placing files into include/dt-bindings/.
+>>
+>> However, when compiling DT files, the include path should be restricted
+>> so that only the dt-bindings path is available; arbitrary kernel headers
+>> shouldn't be exposed. For this reason, create a specific include
+>> directory for use by dtc+cpp, and symlink dt-bindings from there to the
+>> actual location of include/dt-bindings/. For want of a better location,
+>> place this "include chroot" into the existing dts/ directory.
+>>
+>> arch/*/boot/dts/include/dt-bindings -> ../../../../../include/dt-bindings
+>>
+>> Some headers used by device tree files may not be useful to the kernel;
+>> they may be used simply to aid in constructing the DT file (e.g. macros
+>> to create a node), but not define any information that the kernel needs
+>> to share. These may be placed directly into arch/*/boot/dts/ along with
+>> the DT files themselves.
+>>
+>> Cc: Shawn Guo <shawn.guo@linaro.org>
+>> Cc: Hiroshi Doyu <hdoyu@nvidia.com>
+>> Acked-by: Michal Marek <mmarek@suse.cz>
+>> Acked-by: Shawn Guo <shawn.guo@linaro.org>
+>> Acked-by: Rob Herring <rob.herring@calxeda.com>
+>> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+>> ---
+>> This first patch was previously posted separately as V2. I'm including
+>> it here to keep it with the whole series. I hope this series can be
+>> applied as a topic branch in arm-soc.
 > 
-> I think you missed below patch which is needed for gpmc nand to work fine.
-> 
-> Jon Hunter:-
->   ARM: OMAP2+: Fix-up gpmc merge error
-> 
-> I have re based my changes on top of your repository to make pull
-> easier for you.
-> I hope you will pull these changes for 3.10.
-> 
-> The following changes since Commit a7f7881de9c0b58de3b3aea8f01a8aef906d4ade
-> 
-> are available in the git repository at:
-> 
-> git://gitorious.org/devkit8000-for_3-10/devkit8000-for_3-10.git
-> branch for_3.10/dts
-> 
-> for you to fetch changes up to Commit 975abc8b2e7ec4ff7324d726c9775958945ccc5e
+> So no comments on the series means that we can start maintain it on
+> a topic branch, so that people can base their works on it?
 
-Thanks, I pulled the patches and rebased that on top of -rc3 to get the
-missing fix from Jon.
-
-I cleaned as well some changelog / subject and pushed then in my
-for_3.10/dts branch.
-
-Regards,
-Benoit
+I was thinking of reposting the series today due to lack of responses,
+so that the content was freshly available in people's inboxes.
