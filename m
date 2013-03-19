@@ -1,193 +1,211 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v6] net: sh_eth: Add support of device tree probe
-Date: Tue, 19 Mar 2013 17:22:33 +0400
-Message-ID: <51486699.6000908@cogentembedded.com>
-References: <1363675196-8940-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [RFC][PATCH 1/2] ARM: OMAP4: clock: Add device tree support for AUXCLKs
+Date: Tue, 19 Mar 2013 16:26:59 +0200
+Message-ID: <1363703220-4777-2-git-send-email-rogerq@ti.com>
+References: <1363703220-4777-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1363675196-8940-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, magnus.damm@gmail.com, kda@linux-powerpc.org, horms+renesas@verge.net.au, mark.rutland@arm.com, grant.likely@secretlab.ca
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1363703220-4777-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 19-03-2013 10:39, Nobuhiro Iwamatsu wrote:
+Register a device tree clock provider for AUX clocks
+on the OMAP4 SoC. Also provide the binding information.
 
-> This adds support of device tree probe for Renesas sh-ether driver.
+Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+---
+ .../devicetree/bindings/clock/omap4-clock.txt      |   32 ++++++++++++++++++
+ arch/arm/boot/dts/omap4.dtsi                       |    5 +++
+ arch/arm/mach-omap2/board-generic.c                |    2 +-
+ arch/arm/mach-omap2/cclock44xx_data.c              |   35 ++++++++++++++++++++
+ arch/arm/mach-omap2/clock44xx.h                    |    1 +
+ arch/arm/mach-omap2/common.h                       |    9 +++++
+ arch/arm/mach-omap2/io.c                           |    6 +++
+ 7 files changed, 89 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/omap4-clock.txt
 
-> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+diff --git a/Documentation/devicetree/bindings/clock/omap4-clock.txt b/Documentation/devicetree/bindings/clock/omap4-clock.txt
+new file mode 100644
+index 0000000..9d5448b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/omap4-clock.txt
+@@ -0,0 +1,32 @@
++* Clock bindings for Texas Instruments OMAP4 SCRM clocks
++
++Required properties:
++- compatible: Should be "ti,omap4-scrm"
++- #clock-cells: Should be <1>
++
++The clock consumer should specify the desired clock by having the clock
++ID in its "clocks" phandle cell.  The following is a full list of SCRM
++clocks and IDs.
++
++	Clock		ID
++	------------------
++	auxclk0_ck	0
++	auxclk1_ck	1
++	auxclk1_ck	1
++	auxclk1_ck	1
++	auxclk1_ck	1
++
++Example:
++
++aux_clks: scrmclks {
++	compatible = "ti,omap4-scrm";
++	#clock-cells = <1>;
++};
++
++hsusb1_phy: hsusb1_phy {
++	compatible = "usb-nop-xceiv";
++	reset-supply = <&hsusb1_reset>;
++	clocks = <&aux_clks 3>;
++	clock-names = "main_clk";
++	clock-frequency = <19200000>;
++};
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index b7db1a2..97de56c 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -101,6 +101,11 @@
+ 			ti,hwmods = "counter_32k";
+ 		};
+ 
++		aux_clks: scrmclks {
++			compatible = "ti,omap4-scrm";
++			#clock-cells = <1>;
++		};
++
+ 		omap4_pmx_core: pinmux@4a100040 {
+ 			compatible = "ti,omap4-padconf", "pinctrl-single";
+ 			reg = <0x4a100040 0x0196>;
+diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
+index 0274ff7..23f2064 100644
+--- a/arch/arm/mach-omap2/board-generic.c
++++ b/arch/arm/mach-omap2/board-generic.c
+@@ -158,7 +158,7 @@ DT_MACHINE_START(OMAP4_DT, "Generic OMAP4 (Flattened Device Tree)")
+ 	.init_irq	= omap_gic_of_init,
+ 	.init_machine	= omap_generic_init,
+ 	.init_late	= omap4430_init_late,
+-	.init_time	= omap4_local_timer_init,
++	.init_time	= omap4_init_time,
+ 	.dt_compat	= omap4_boards_compat,
+ 	.restart	= omap44xx_restart,
+ MACHINE_END
+diff --git a/arch/arm/mach-omap2/cclock44xx_data.c b/arch/arm/mach-omap2/cclock44xx_data.c
+index 3d58f33..bfc46c1 100644
+--- a/arch/arm/mach-omap2/cclock44xx_data.c
++++ b/arch/arm/mach-omap2/cclock44xx_data.c
+@@ -27,6 +27,7 @@
+ #include <linux/clk-private.h>
+ #include <linux/clkdev.h>
+ #include <linux/io.h>
++#include <linux/of.h>
+ 
+ #include "soc.h"
+ #include "iomap.h"
+@@ -1663,6 +1664,40 @@ static struct omap_clk omap44xx_clks[] = {
+ 	CLK(NULL,	"cpufreq_ck",	&dpll_mpu_ck,	CK_443X),
+ };
+ 
++static struct clk *scrm_clks[] = {
++	&auxclk0_ck,
++	&auxclk1_ck,
++	&auxclk2_ck,
++	&auxclk3_ck,
++	&auxclk4_ck,
++	&auxclk5_ck,
++};
++
++static struct clk_onecell_data scrm_data;
++
++#ifdef CONFIG_OF
++int __init omap4_clk_init_dt(void)
++{
++	struct device_node *np;
++
++	np = of_find_compatible_node(NULL, NULL, "ti,omap4-scrm");
++	if (np) {
++		scrm_data.clks = scrm_clks;
++		scrm_data.clk_num = ARRAY_SIZE(scrm_clks);
++		of_clk_add_provider(np, of_clk_src_onecell_get,	&scrm_data);
++	}
++
++	return 0;
++}
++
++#else
++
++int __init omap4_clk_init_dt(void)
++{
++	return 0;
++}
++#endif /* CONFIG_OF */
++
+ int __init omap4xxx_clk_init(void)
+ {
+ 	u32 cpu_clkflg;
+diff --git a/arch/arm/mach-omap2/clock44xx.h b/arch/arm/mach-omap2/clock44xx.h
+index 287a46f..6395f63 100644
+--- a/arch/arm/mach-omap2/clock44xx.h
++++ b/arch/arm/mach-omap2/clock44xx.h
+@@ -16,5 +16,6 @@
+ #define OMAP4430_REGM4XEN_MULT	4
+ 
+ int omap4xxx_clk_init(void);
++int omap4_clk_init_dt(void);
+ 
+ #endif
+diff --git a/arch/arm/mach-omap2/common.h b/arch/arm/mach-omap2/common.h
+index 0a6b9c7..1941d1c 100644
+--- a/arch/arm/mach-omap2/common.h
++++ b/arch/arm/mach-omap2/common.h
+@@ -98,6 +98,7 @@ void am35xx_init_early(void);
+ void ti81xx_init_early(void);
+ void am33xx_init_early(void);
+ void omap4430_init_early(void);
++void omap4_init_time(void);
+ void omap5_init_early(void);
+ void omap3_init_late(void);	/* Do not use this one */
+ void omap4430_init_late(void);
+@@ -143,6 +144,14 @@ static inline void omap44xx_restart(char mode, const char *cmd)
+ }
+ #endif
+ 
++#ifdef CONFIG_ARCH_OMAP4
++void omap4_init_time(void);
++#else
++static inline void omap4_init_time(void)
++{
++}
++#endif
++
+ /* This gets called from mach-omap2/io.c, do not call this */
+ void __init omap2_set_globals_tap(u32 class, void __iomem *tap);
+ 
+diff --git a/arch/arm/mach-omap2/io.c b/arch/arm/mach-omap2/io.c
+index 2c3fdd6..c504363 100644
+--- a/arch/arm/mach-omap2/io.c
++++ b/arch/arm/mach-omap2/io.c
+@@ -603,6 +603,12 @@ void __init omap4430_init_late(void)
+ 	omap4_pm_init();
+ 	omap2_clk_enable_autoidle_all();
+ }
++
++void __init omap4_init_time(void)
++{
++	omap4_clk_init_dt();
++	omap4_local_timer_init();
++}
+ #endif
+ 
+ #ifdef CONFIG_SOC_OMAP5
+-- 
+1.7.4.1
 
-> V6: - Add renesas,sh-eth-gigabit, renesas,sh-eth-sh4 and
->        renesas,sh-eth-sh3-sh2 to compatible string.
-> 	- Remove sh-eth,register-type. This is supplemented by the
->        compatible string.
->      - Use the of_property_read_bool instead of of_find_property.
->      - Add sanity chheck for of_property_read_u32.
->      - Update document.
-> V5: - Rewrite sh_eth_parse_dt().
->        Remove of_device_is_available() and CONFIG_OF from support OF
->        checking function and re-add empty sh_eth_parse_dt().
->      - Add CONFIG_PM to definition of dev_pm_ops.
-> 	- Add CONFIG_OF to definition of of_device_id.
-> V4: - Remove empty sh_eth_parse_dt().
-> V3: - Remove empty sh_eth_parse_dt().
-> V3: - Removed sentnece of "needs-init" from document.
-> V2: - Removed ether_setup().
->      - Fixed typo from "sh-etn" to "sh-eth".
-> 	- Removed "needs-init" and sh-eth,endian from definition of DT.
-> 	- Changed "sh-eth,edmac-endian" instead of "sh-eth,edmac-big-endain"
-> 	  in definition of DT.
-> ---
->   Documentation/devicetree/bindings/net/sh_ether.txt |   48 +++++++
->   drivers/net/ethernet/renesas/sh_eth.c              |  145 ++++++++++++++++----
->   2 files changed, 168 insertions(+), 25 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/net/sh_ether.txt
-
-> diff --git a/Documentation/devicetree/bindings/net/sh_ether.txt b/Documentation/devicetree/bindings/net/sh_ether.txt
-> new file mode 100644
-> index 0000000..d1f961c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/sh_ether.txt
-> @@ -0,0 +1,48 @@
-> +* Renesas Electronics SuperH EMAC
-> +
-> +This file provides information, what the device node
-> +for the sh_eth interface contains.
-> +
-> +Required properties:
-> +- compatible:                   "renesas,sh-eth-gigabit": If a device has
-> +                                            a function of gigabit, you should
-> +											set this.
-> +                                "renesas,sh-eth-sh4": If this is provided by
-> +                                            SH4, you should set this.
-> +                                "renesas,sh-eth-sh3-sh2": If this is provided
-> +                                            by SH3 or SH2, you should set this.
-> +
-> +- interrupt-parent:             The phandle for the interrupt controller that
-> +                                services interrupts for this device.
-> +
-> +- reg:                          Offset and length of the register set for the
-> +                                device. If device has TSU registers, you need
-> +                                to set up two register information here.
-> +
-> +- interrupts:                   Interrupt mapping for the sh_eth interrupt
-> +                                sources (vector id). You can set one value.
-> +
-> +- phy-mode:                     String, operation mode of the PHY interface
-> +                                (a string that of_get_phy_mode() can understand).
-> +
-> +- sh-eth,phy-id:                PHY id.
-> +
-> +Optional properties:
-> +- local-mac-address:            6 bytes, mac address
-> +- sh-eth,no-ether-link:         Set link control by software. When device does
-
-    I got the impression that usually the vendor name, not driver name is used 
-as a property prefix.
-
-> diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
-> index 7a6471d..d9df68e 100644
-> --- a/drivers/net/ethernet/renesas/sh_eth.c
-> +++ b/drivers/net/ethernet/renesas/sh_eth.c
-> @@ -1,7 +1,7 @@
->   /*
->    *  SuperH Ethernet device driver
->    *
-> - *  Copyright (C) 2006-2012 Nobuhiro Iwamatsu
-> + *  Copyright (C) 2006-2013 Nobuhiro Iwamatsu
->    *  Copyright (C) 2008-2012 Renesas Solutions Corp.
-
-    Don't you want to extend the copyright of Renesas also -- you seem to be 
-still working there. :-)
-
-> @@ -2391,12 +2451,33 @@ static int sh_eth_drv_probe(struct platform_device *pdev)
->   		goto out_release;
->   	}
->
-> +	if (np) {
-> +		pd = sh_eth_parse_dt(&pdev->dev, ndev, np);
-> +		if (pdev->dev.platform_data && pd) {
-> +			struct sh_eth_plat_data *tmp =
-> +				pdev->dev.platform_data;
-> +			pd->set_mdio_gate = tmp->set_mdio_gate;
-> +			pd->needs_init = tmp->needs_init;
-
-    OK, so we can't fully convert this driver to the device tree due to 
-procedural platform data. I then would advice just using OF_DEV_AUXDATA() in 
-the platform data instead of trying to convert the driver to device tree.
-
-[...]
-> @@ -2422,20 +2505,16 @@ static int sh_eth_drv_probe(struct platform_device *pdev)
-[...]
->   		mdp->tsu_addr = ioremap(rtsu->start,
-> -					resource_size(rtsu));
-> +				resource_size(rtsu));
-
-    Why? It was indented perfectly before. Anyway, you shouldn't be doing 
-collateral whitespace changes.
-
->   		mdp->port = devno % 2;
->   		ndev->features = NETIF_F_HW_VLAN_FILTER;
->   	}
-> @@ -2502,6 +2581,7 @@ static int sh_eth_drv_remove(struct platform_device *pdev)
->   	return 0;
->   }
->
-> +#ifdef CONFIG_PM
-
-    Unrelated change.
-
->   static int sh_eth_runtime_nop(struct device *dev)
->   {
->   	/*
-> @@ -2515,17 +2595,32 @@ static int sh_eth_runtime_nop(struct device *dev)
->   	return 0;
->   }
->
-> -static struct dev_pm_ops sh_eth_dev_pm_ops = {
-> +static const struct dev_pm_ops sh_eth_dev_pm_ops = {
->   	.runtime_suspend = sh_eth_runtime_nop,
->   	.runtime_resume = sh_eth_runtime_nop,
->   };
-> +#define SH_ETH_PM_OPS (&sh_eth_dev_pm_ops)
-
-    () not needed.
-
-> +#else
-> +#define SH_ETH_PM_OPS NULL
-> +#endif
-
-    Unrelated change. Should be in a different patch.
-
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id sh_eth_match[] = {
-> +	{ .compatible = "renesas,sh-eth-gigabit", },
-> +	{ .compatible = "renesas,sh-eth-sh4", },
-> +	{ .compatible = "renesas,sh-eth-sh3-sh2", },
-
-    Biut this is not really enough: the driver supports much more variations 
-of the SH and ARM SoCs all of which have difference not only in register 
-layout but also in the registers bits or even presence of the whole register 
-blocks. All this IMO should be reflected in the different values of the 
-compatible "property". BTW, it seems another register layout and instance 
-needs to be added for the R-Car SoCs (instead of the current ugly hack).
-
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, sh_eth_match);
-> +#endif
->
->   static struct platform_driver sh_eth_driver = {
->   	.probe = sh_eth_drv_probe,
->   	.remove = sh_eth_drv_remove,
->   	.driver = {
->   		   .name = CARDNAME,
-> -		   .pm = &sh_eth_dev_pm_ops,
-> +		   .pm = SH_ETH_PM_OPS,
-
-    Unrelated as well.
-
-WBR, Sergei
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
