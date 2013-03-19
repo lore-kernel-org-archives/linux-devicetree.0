@@ -1,36 +1,245 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V4 3/9] ARM: dt: tegra: add bindings of power management
- configurations for PMC
-Date: Tue, 19 Mar 2013 11:00:10 -0600
-Message-ID: <5148999A.90102@wwwdotorg.org>
-References: <1363594400-11663-1-git-send-email-josephl@nvidia.com> <1363594400-11663-4-git-send-email-josephl@nvidia.com>
+From: Martin Fuzzey <mfuzzey@parkeon.com>
+Subject: [RFC PATCH] CLK: Allow parent clock and rate to be configured in DT.
+Date: Tue, 19 Mar 2013 18:09:33 +0100
+Message-ID: <20130319170933.28337.50448.stgit@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1363594400-11663-4-git-send-email-josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sascha Hauer <s.hauer@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/18/2013 02:13 AM, Joseph Lo wrote:
-> The PMC mostly controls the entry and exit of the system from different
-> sleep modes. Different platform or system may have different configurations.
-> The power management configurations of PMC is represented as some properties.
-> The system needs to define the properties when the system supports deep sleep
-> mode (i.e. suspend).
+Even on platforms where the entire clock tree is not represented in the DT
+it can still be useful to allow parents and rates to be set from the DT.
 
-> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+An example of such a case is when a multiplexable clock output from a SOC
+is used to supply external chips (eg an audio codec connected to the i.MX53
+cko1 pin).
 
-> +- nvidia,suspend-mode : The suspend mode that the platform should use.
-> +  Valid values are 0, 1 and 2:
-> +  0 (LP0): CPU + Core voltage off and DRAM in self-refresh
-> +  1 (LP1): CPU vlotage off and DRAM in self-refresh
+The cko1 pin can output various internal clock signals but, in
+order to obtain a suitable frequency for the codec, an appropriate parent must
+be selected.
 
-s/vlotage/voltage/
+Another example is setting root clock dividers.
 
-BTW, checkpatch spews hundreds of lines of errors because these patches
-have DOS-style line-endings. Can you please generate and send them
-directly from Linux to fix this. There are also a couple of trailing
-whitespace errors.
+This is board specific rather than device driver or platform clock framework
+specific information and thus would be better in the DT.
+
+Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
+---
+Sending as RFC for the moment in a single patch together with an example
+for i.MX53.  Will split if this goes anywhere.
+---
+ .../bindings/clock/clock-configuration.txt         |   35 +++++++++
+ arch/arm/mach-imx/clk-imx51-imx53.c                |    9 +-
+ drivers/clk/Makefile                               |    1 
+ drivers/clk/clk-configuration.c                    |   79 ++++++++++++++++++++
+ include/linux/clk.h                                |    5 +
+ 5 files changed, 122 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/clock-configuration.txt
+ create mode 100644 drivers/clk/clk-configuration.c
+
+diff --git a/Documentation/devicetree/bindings/clock/clock-configuration.txt b/Documentation/devicetree/bindings/clock/clock-configuration.txt
+new file mode 100644
+index 0000000..482b0ff
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/clock-configuration.txt
+@@ -0,0 +1,35 @@
++This binding allows clocks to configured by setting their parent and/or rate.
++
++Configurations are specified subnodes of nodes with
++compatible="clock-configuration"
++
++The subnode properties are:
++
++Required properties:
++clocks: 		phandle of clock to configure in clock consumer format
++
++Optional properties:
++parent:			phandle of clock to use as parent in clock consumer format
++clock-rate:		clock rate to use
++
++
++For example:
++	clock-configuration {
++		compatible = "clock-configuration";
++		clko1 {
++			clocks = <&clks 160>; /* cko1_sel */
++			parent = <&clks 114>; /* pll3_sw */
++		};
++
++		esdhca {
++			clocks = <&clks 102>; /* esdhc_a_podf */
++			clock-frequency = <200000000>;
++		};
++
++		esdhcb {
++			clocks = <&clks 103>; /* esdhc_b_podf */
++			clock-frequency = <200000000>;
++		};
++	};
++
++
+diff --git a/arch/arm/mach-imx/clk-imx51-imx53.c b/arch/arm/mach-imx/clk-imx51-imx53.c
+index 872a7bc..fd74795 100644
+--- a/arch/arm/mach-imx/clk-imx51-imx53.c
++++ b/arch/arm/mach-imx/clk-imx51-imx53.c
+@@ -432,7 +432,7 @@ int __init mx51_clocks_init(unsigned long rate_ckil, unsigned long rate_osc,
+ 	val |= 1 << 23;
+ 	writel(val, MXC_CCM_CLPCR);
+ 
+-	return 0;
++	return of_clk_configure();
+ }
+ 
+ int __init mx53_clocks_init(unsigned long rate_ckil, unsigned long rate_osc,
+@@ -523,10 +523,6 @@ int __init mx53_clocks_init(unsigned long rate_ckil, unsigned long rate_osc,
+ 	clk_register_clkdev(clk[dummy], "ahb", "sdhci-esdhc-imx53.3");
+ 	clk_register_clkdev(clk[esdhc4_per_gate], "per", "sdhci-esdhc-imx53.3");
+ 
+-	/* set SDHC root clock to 200MHZ*/
+-	clk_set_rate(clk[esdhc_a_podf], 200000000);
+-	clk_set_rate(clk[esdhc_b_podf], 200000000);
+-
+ 	/* System timer */
+ 	mxc_timer_init(MX53_IO_ADDRESS(MX53_GPT1_BASE_ADDR), MX53_INT_GPT);
+ 
+@@ -536,8 +532,7 @@ int __init mx53_clocks_init(unsigned long rate_ckil, unsigned long rate_osc,
+ 
+ 	r = clk_round_rate(clk[usboh3_per_gate], 54000000);
+ 	clk_set_rate(clk[usboh3_per_gate], r);
+-
+-	return 0;
++	return of_clk_configure();
+ }
+ 
+ #ifdef CONFIG_OF
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 300d477..bf364dd 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -7,6 +7,7 @@ obj-$(CONFIG_COMMON_CLK)	+= clk-fixed-factor.o
+ obj-$(CONFIG_COMMON_CLK)	+= clk-fixed-rate.o
+ obj-$(CONFIG_COMMON_CLK)	+= clk-gate.o
+ obj-$(CONFIG_COMMON_CLK)	+= clk-mux.o
++obj-$(CONFIG_COMMON_CLK)	+= clk-configuration.o
+ 
+ # SoCs specific
+ obj-$(CONFIG_ARCH_BCM2835)	+= clk-bcm2835.o
+diff --git a/drivers/clk/clk-configuration.c b/drivers/clk/clk-configuration.c
+new file mode 100644
+index 0000000..ee70619
+--- /dev/null
++++ b/drivers/clk/clk-configuration.c
+@@ -0,0 +1,79 @@
++/*
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * Device tree clock parent, rate configuration
++ */
++
++#include <linux/clk.h>
++#include <linux/of.h>
++
++
++static int configure_one_clock(struct clk *clk, struct device_node *np)
++{
++	int ret;
++	struct of_phandle_args clkspec;
++	struct clk *parent;
++	u32 rate;
++
++	ret = of_parse_phandle_with_args(np, "parent", "#clock-cells", 0,
++					&clkspec);
++	if (!ret) {
++		parent = of_clk_get_from_provider(&clkspec);
++		if (!IS_ERR(parent)) {
++			ret = clk_set_parent(clk, parent);
++			clk_put(parent);
++		}
++		of_node_put(clkspec.np);
++		if (ret)
++			goto err;
++	}
++
++	ret = 0;
++	if (!of_property_read_u32(np, "clock-frequency", &rate))
++		ret = clk_set_rate(clk, rate);
++
++err:
++	return ret;
++
++}
++
++/**
++ * of_clk_configure - configure clocks from device tree
++ *
++ * Allows parent and rate to be set from nodes having
++ * clock-configuration compatible property.
++ *
++ * See binding documentation for example
++ *
++ * Returns 0 on success, -EERROR otherwise.
++ */
++int of_clk_configure()
++{
++	struct device_node *config_node, *np;
++	struct clk *clk;
++	int err_count = 0;
++	int ret = 0;
++
++	for_each_compatible_node(config_node, NULL, "clock-configuration") {
++		for_each_child_of_node(config_node, np) {
++			clk = of_clk_get(np, 0);
++			if (IS_ERR(clk)) {
++				pr_warn("%s: Failed to obtain clock configuration for %s : %d\n", __func__, np->name);
++				err_count++;
++			} else {
++				if (configure_one_clock(clk, np))
++					err_count++;
++				clk_put(clk);
++			}
++		}
++	}
++
++	if (err_count) {
++		pr_warn("%s: Failed %d clocks\n", __func__, err_count);
++		ret = -EINVAL;
++	}
++	return ret;
++}
++EXPORT_SYMBOL_GPL(of_clk_configure);
+diff --git a/include/linux/clk.h b/include/linux/clk.h
+index b3ac22d..4f7f605 100644
+--- a/include/linux/clk.h
++++ b/include/linux/clk.h
+@@ -368,6 +368,7 @@ struct of_phandle_args;
+ struct clk *of_clk_get(struct device_node *np, int index);
+ struct clk *of_clk_get_by_name(struct device_node *np, const char *name);
+ struct clk *of_clk_get_from_provider(struct of_phandle_args *clkspec);
++int of_clk_configure(void);
+ #else
+ static inline struct clk *of_clk_get(struct device_node *np, int index)
+ {
+@@ -378,6 +379,10 @@ static inline struct clk *of_clk_get_by_name(struct device_node *np,
+ {
+ 	return ERR_PTR(-ENOENT);
+ }
++static inline int of_clk_configure(void)
++{
++	return 0;
++}
+ #endif
+ 
+ #endif
