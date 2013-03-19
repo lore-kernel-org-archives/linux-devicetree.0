@@ -1,163 +1,90 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [RFC] DT affinity bindings/representing bus masters with DT
-Date: Tue, 19 Mar 2013 18:07:34 +1100
-Message-ID: <20130319070734.GX9402@truffula.fritz.box>
-References: <20130215172102.GF3014@e102568-lin.cambridge.arm.com>
- <20130306215714.GC6740@truffula.fritz.box>
- <20130311170657.GD25250@e102568-lin.cambridge.arm.com>
- <20130318030928.GG9402@truffula.fritz.box>
- <20130318094815.GA30116@e102568-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6766065742005838809=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130318094815.GA30116-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Vikas Sajjan <vikas.sajjan@linaro.org>
+Subject: [PATCH v8 0/4] Add DRM FIMD DT support for Exynos4 DT Machines
+Date: Tue, 19 Mar 2013 12:38:08 +0530
+Message-ID: <1363676892-21296-1-git-send-email-vikas.sajjan@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, sylvester.nawrocki@gmail.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, linaro-kernel@lists.linaro.org, joshi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+This patch series adds support for DRM FIMD DT for Exynos4 DT Machines,
+specifically for Exynos4412 SoC.
 
---===============6766065742005838809==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tgO4DUqb0GCKXXLG"
-Content-Disposition: inline
+changes since v7:
+	- rebased to kgene's "for-next"
+	- Migrated to Common Clock Framework
+	- removed the patch "ARM: dts: Add FIMD AUXDATA node entry for exynos4 DT",
+	as migration to Common Clock Framework will NOT need this.
+	- addressed the comments raised by Sachin Kamat <sachin.kamat@linaro.org>
+
+changes since v6:
+	- addressed comments and added interrupt-names = "fifo", "vsync", "lcd_sys"
+	in exynos4.dtsi and re-ordered the interrupt numbering to match the order in
+	interrupt combiner IP as suggested by Sylwester Nawrocki <sylvester.nawrocki@gmail.com>.
+
+changes since v5:
+	- renamed the fimd binding documentation file name as "samsung-fimd.txt",
+	since it not only talks about exynos display controller but also about
+	previous samsung display controllers.
+	- rephrased an abmigious statement about the interrupt combiner in the
+	fimd binding documentation as pointed out by 
+	Sachin Kamat <sachin.kamat@linaro.org>
+
+changes since v4:
+	- moved the fimd binding documentation to Documentation/devicetree/bindings/video/
+	as suggested by Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+
+	- added more fimd compatiblity strings in fimd documentation as
+	discussed at  https://patchwork.kernel.org/patch/2144861/ with
+	Sylwester Nawrocki <sylvester.nawrocki@gmail.com> and
+	Tomasz Figa <tomasz.figa@gmail.com>
+
+	- modified compatible string for exynos4 fimd as "exynos4210-fimd"
+	exynos5 fimd as "exynos5250-fimd" to stick to the rule that compatible
+	value should be named after first specific SoC model in which this
+	particular IP version was included as discussed at
+	https://patchwork.kernel.org/patch/2144861/
+
+	- documented more about the interrupt combiner and their order as 
+	suggested by Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+
+changes since v3:
+	- rebased on
+	http://git.kernel.org/?p=linux/kernel/git/kgene/linux-samsung.git;a=shortlog;h=refs/heads/for-next-next
+
+changes since v2:
+	- added alias to 'fimd@11c00000' node
+		(reported by: Rahul Sharma <r.sh.open@gmail.com>)
+	- removed 'lcd0_data' node as there was already a similar node lcd_data24
+		(reported by: Jingoo Han <jg1.han@samsung.com>
+	- replaced spaces with tabs in display-timing node
+
+changes since v1:
+	- added new patch to add FIMD DT binding Documentation
+	- removed patch enabling SAMSUNG_DEV_BACKLIGHT and SAMSUNG_DEV_PMW 
+	for mach-exynos4 DT
+	- added 'status' property to fimd DT node
+
+Is based on branch kgene's "for-next"
+https://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/log/?h=for-next
 
 
---tgO4DUqb0GCKXXLG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sachin Kamat (1):
+  ARM: dts: Add lcd pinctrl node entries for EXYNOS4412 SoC
 
-On Mon, Mar 18, 2013 at 09:48:16AM +0000, Lorenzo Pieralisi wrote:
-> On Mon, Mar 18, 2013 at 03:09:28AM +0000, David Gibson wrote:
-> > On Mon, Mar 11, 2013 at 05:06:57PM +0000, Lorenzo Pieralisi wrote:
-> > > Hi David,
-> > >=20
-> > > thanks for your feedback.
-> > >=20
-> > > On Wed, Mar 06, 2013 at 09:57:14PM +0000, David Gibson wrote:
-> > > > On Fri, Feb 15, 2013 at 05:21:02PM +0000, Lorenzo Pieralisi wrote:
-> > [snip]
-> > > > > Each foo@2000000 reg property maps to a device that represents a =
-bus master
-> > > > > (to make it clearer, a foo@2000000 reg property defines an addres=
-s space that
-> > > > > belongs to a bus master, ie the address space represents a progra=
-mming
-> > > > > interface specific to that master; in the bindings above address =
-0x2000000 is
-> > > > > the address at which acme1 device can programme its "foo" interfa=
-ce, address
-> > > > > 0x2001000 is the address at which acme2 device can programme its =
-"foo"
-> > > > > interface).
-> > > >=20
-> > > > Ok.  I think annotating the existing reg property like this is a ve=
-ry
-> > > > bad idea.  I haven't seen all the previous discussion, so I'm not
-> > > > totally clean on what this affinity concept is about.  But as I
-> > > > understand it, these "slave" resources cannot be treated like an
-> > > > ordinary resource in in the reg property.  That means an older clie=
-nt
-> > > > will potentially misinterpret "reg" because it doesn't know about
-> > > > "affinity".
-> > >=20
-> > > Not really, "reg" still complies with the current DT bindings. Affini=
-ty
-> > > is there to associate a reg property to a "master" but the reg proper=
-ty
-> > > definition does not change. I do not think backward compatibility is a
-> > > problem per-se here.
-> >=20
-> > Ok, I did not understand the problem properly.
-> >=20
-> > > > Worse, again, if I've understood correctly, resources with different
-> > > > "masters" are essentially in different logical address spaces.  "re=
-g"
-> > > > properties should always sit in the logical address space represent=
-ing
-> > > > the parent node's bus.  Different address spaces could also have
-> > > > different address sizes, which would really complicate parsing "reg=
-".
-> > >=20
-> > > I think we need to post what we have, it is really complex to explain
-> > > the issue without a concrete example. To cut a long story short I
-> > > would not say that the resources sit in different address spaces, it =
-is
-> > > that we need to associate those address ranges with specific bus mast=
-ers.
-> > >=20
-> > > We have to have a way to say:
-> > >=20
-> > > "Address range 0x80001000 - 0x80001fff is used to programme the contr=
-ol
-> > > registers associated with the port connected to master X".
-> > >=20
-> > > When a CPU wants to programme a control port for a specific master, it
-> > > needs to know what address range should be programmed.
-> > >=20
-> > > I mentioned "resources" instead of addresses since the problem we are
-> > > having is the same when it comes to map IRQs to set of CPUS. We need
-> > > to associate a resource (IRQ or address) to a set of cpus (or more in
-> > > general, masters).
-> >=20
-> > Hrm.  See, I think I may be misunderstanding the problem again,
-> > because with this description I can see no problem.  It's already up
-> > to the device binding to describe the purpose of each entry in the reg
-> > property.  So what's the problem with it just being part of the
-> > binding to say which reg entry is associated with which master port?
->=20
-> That's exactly what we are trying to do. But to associate the reg
-> property to a master port we need a phandle, how can we pull that off
-> otherwise ?
+Vikas Sajjan (3):
+  ARM: dts: Add FIMD node to exynos4
+  ARM: dts: Add FIMD node and display timing node to
+    exynos4412-origen.dts
+  ARM: dts: Add FIMD DT binding Documentation
 
-Ah, right.  I was meaning that the binding specifies the abstract port
-number that each reg entry is associated with.  I'm fine with adding a
-property to map the port numbers to master devices on the other end.
-I think treating it in two steps like that is better than thinking of
-the master phandles being  directly associated with reg entries,
-because it also handles cases like having a bank of common/global
-registers not associated with any port/master, or cases where the
-ports aren't all identical and some need more resources than others.
+ .../devicetree/bindings/video/samsung-fimd.txt     |   61 ++++++++++++++++++++
+ arch/arm/boot/dts/exynos4.dtsi                     |   11 ++++
+ arch/arm/boot/dts/exynos4412-origen.dts            |   22 +++++++
+ arch/arm/boot/dts/exynos4x12-pinctrl.dtsi          |   14 +++++
+ 4 files changed, 108 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/samsung-fimd.txt
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---tgO4DUqb0GCKXXLG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlFIDrYACgkQaILKxv3ab8b/zQCgj3PrvAf9q9TLkKEAozUztCf0
-YCgAnApyKcVAqabFpaM2wu3+lD9UaBKN
-=rrGf
------END PGP SIGNATURE-----
-
---tgO4DUqb0GCKXXLG--
-
---===============6766065742005838809==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============6766065742005838809==--
+-- 
+1.7.9.5
