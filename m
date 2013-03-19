@@ -1,60 +1,43 @@
-From: Pantelis Antoniou <panto@antoniou-consulting.com>
-Subject: Re: [PATCH 5/6] OF: Introduce Device Tree resolve support.
-Date: Tue, 19 Mar 2013 13:51:01 +0200
-Message-ID: <6BBAEB5D-D4E0-4276-B3B8-468C30547E75@antoniou-consulting.com>
-References: <1357327870-13615-1-git-send-email-panto@antoniou-consulting.com> <1357327870-13615-6-git-send-email-panto@antoniou-consulting.com> <20130121044836.GB24829@truffula.fritz.box> <EEEDB0B2-7410-456B-BED7-89FD5E407553@antoniou-consulting.com> <20130122040524.GG23500@truffula.fritz.box> <AB11FABF-6A45-493D-869D-7549FD758DD2@antoniou-consulting.com> <20130123044041.GS23500@truffula.fritz.box> <060132B1-BB52-4C7F-B8D3-82B49BE49BB7@antoniou-consulting.com> <20130316092435.9FA4B3E095B@localhost>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130316092435.9FA4B3E095B@localhost>
-Sender: linux-doc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: David Gibson <david@gibson.dropbear.id.au>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jon Loeliger <jdl@jdl.com>, Tony Lindgren <tony@atomide.com>, Stephen Warren <swarren@wwwdotorg.org>, Benoit Cousson <b-cousson@ti.com>, Mitch Bradley <wmb@firmworks.com>, Alan Tull <atull@altera.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Joel A Fernandes <agnel.joel@gmail.com>, Rob Clark <robdclark@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, Matt Ranostay <mranostay@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v5] net: sh_eth: Add support of device tree probe
+Date: Tue, 19 Mar 2013 17:02:39 +0400
+Message-ID: <514861EF.7050407@cogentembedded.com>
+References: <1362433940-20533-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com> <20130305004338.GA10651@verge.net.au> <20130319042229.GG21444@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20130319042229.GG21444@verge.net.au>
+Sender: netdev-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, netdev@vger.kernel.org, grant.likely@secretlab.ca, kuninori.morimoto.gx@renesas.com, devicetree-discuss@lists.ozlabs.org, magnus.damm@gmail.com, kda@linux-powerpc.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+Hello.
 
-On Mar 16, 2013, at 11:24 AM, Grant Likely wrote:
+On 19-03-2013 8:22, Simon Horman wrote:
 
-> On Wed, 23 Jan 2013 12:58:02 +0200, Pantelis Antoniou <panto@antoniou-consulting.com> wrote:
->> Hi David,
->> 
->> On Jan 23, 2013, at 6:40 AM, David Gibson wrote:
->>> Ok.  Nonetheless it's not hard to avoid a recursive approach here.
->> 
->> How can I find the maximum phandle value of a subtree without using recursion.
->> Note that the whole function is just 6 lines long.
-> 
-> It's a failure in the existing kernel DT data structures. We need a hash
-> lookup for the phandles to eliminate the search entirely. Then you'd be
-> able to allocated new phandles on the fly easily and resolve phandles
-> without searching the whole tree (which has always been horrible).
-> 
+>> [ Cc: Mark Rutland ]
 
-Yes, it is pretty obvious that the in-kernel data structures are sub-optimal.
-But I was not after modifying them, since that's a different kind of problem.
+>> On Tue, Mar 05, 2013 at 06:52:20AM +0900, Nobuhiro Iwamatsu wrote:
+>>> This adds support of device tree probe for Renesas sh-ether driver.
 
-Since we're having a 'sub-optimal' data structures, I'd like to point out that
-the usage of of_find_by_name(), mostly by drivers trying to find a child
-of their own node, works by a lucky accident of how the device nodes are instantiated
-by the flat tree loader. Most of the use cases should be replaced by a call
-to of_get_child_by_name() which does the right thing.
+>>> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
 
-> That said, I'd like to punt on the whole phandle resolution thing. The
-> DT overlay support can be merged without the phandle resolution support
-> if the core rejects any overlays with phandle collisions.
-> 
+>> Hi Iwamatsu-san,
 
+>> could you please address the review by
+>> Mark Rutland of the bindings in this patch.
+>> The review was made for v2 but I believe it
+>> is still applicable to v5.
 
-Fair enough, but be warned that phandle resolution the overlay feature is mostly useless.
+>> http://www.spinics.net/lists/netdev/msg226454.html
 
-In actual practice the amount of driver nodes that can be overlaid without a single case
-of referencing phandles outside (or within) their own blob is close to zero.
+> Ping.
 
-> g.
+    I don't think converting this driver to device tree can be achieved 
+without unravelling the #ifdef mess first (which I'm currently doing).
+Or at least the driver will look even uglier than today. So I see little use 
+in pinging Iwamatsu-san.
 
-Regards
-
--- Pantelis
-
+WBR, Sergei
