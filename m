@@ -1,48 +1,36 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: [PATCH V4 18/18] ARM: OMAP2+: return -ENODEV if GPMC child device creation fails
-Date: Tue, 19 Mar 2013 11:35:56 -0500
-Message-ID: <1363710956-26773-19-git-send-email-jon-hunter@ti.com>
-References: <1363710956-26773-1-git-send-email-jon-hunter@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V4 3/9] ARM: dt: tegra: add bindings of power management
+ configurations for PMC
+Date: Tue, 19 Mar 2013 11:00:10 -0600
+Message-ID: <5148999A.90102@wwwdotorg.org>
+References: <1363594400-11663-1-git-send-email-josephl@nvidia.com> <1363594400-11663-4-git-send-email-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1363710956-26773-1-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Daniel Mack <zonque@gmail.com>, Ezequiel Garcia <elezegarcia@gmail.com>, Mark Jackson <mpfj-list@mimc.co.uk>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Jon Hunter <jon-hunter@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1363594400-11663-4-git-send-email-josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+On 03/18/2013 02:13 AM, Joseph Lo wrote:
+> The PMC mostly controls the entry and exit of the system from different
+> sleep modes. Different platform or system may have different configurations.
+> The power management configurations of PMC is represented as some properties.
+> The system needs to define the properties when the system supports deep sleep
+> mode (i.e. suspend).
 
-gpmc_probe_nor_child() calls of_platform_device_create() to create a
-platform device for the NOR child. If this function fails the value
-of ret is returned to the caller but this value is zero since it was
-assigned the return of a previous call to gpmc_cs_program_settings()
-that had to succeed or otherwise gpmc_probe_nor_child() would have
-returned before.
+> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
 
-This means that if of_platform_device_create() fails, 0 will be returned
-to the caller instead of an appropriate error code.
+> +- nvidia,suspend-mode : The suspend mode that the platform should use.
+> +  Valid values are 0, 1 and 2:
+> +  0 (LP0): CPU + Core voltage off and DRAM in self-refresh
+> +  1 (LP1): CPU vlotage off and DRAM in self-refresh
 
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Signed-off-by: Jon Hunter <jon-hunter@ti.com>
-Tested-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
----
- arch/arm/mach-omap2/gpmc.c |    1 +
- 1 file changed, 1 insertion(+)
+s/vlotage/voltage/
 
-diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
-index 9208d8e..615da97 100644
---- a/arch/arm/mach-omap2/gpmc.c
-+++ b/arch/arm/mach-omap2/gpmc.c
-@@ -1495,6 +1495,7 @@ static int gpmc_probe_nor_child(struct platform_device *pdev,
- 		return 0;
- 
- 	dev_err(&pdev->dev, "failed to create gpmc child %s\n", child->name);
-+	ret = -ENODEV;
- 
- err:
- 	gpmc_cs_free(cs);
--- 
-1.7.10.4
-
+BTW, checkpatch spews hundreds of lines of errors because these patches
+have DOS-style line-endings. Can you please generate and send them
+directly from Linux to fix this. There are also a couple of trailing
+whitespace errors.
