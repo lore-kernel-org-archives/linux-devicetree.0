@@ -1,58 +1,208 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v6 00/16] clk: exynos4/5: migrate to common clock framework
-Date: Tue, 19 Mar 2013 22:12:16 +0100
-Message-ID: <201303192212.16877.heiko@sntech.de>
-References: <1361175686-19400-1-git-send-email-thomas.abraham@linaro.org>
- <20130319184938.8663.18115@quantum>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 1/5] net: Add davicom wemac ethernet driver found on Allwinner
+ A10 SoC's
+Date: Tue, 19 Mar 2013 19:39:07 +0100
+Message-ID: <5148B0CB.4020605@free-electrons.com>
+References: <1363380605-6577-1-git-send-email-maxime.ripard@free-electrons.com> <1363380605-6577-2-git-send-email-maxime.ripard@free-electrons.com> <201303161541.37341.florian@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130319184938.8663.18115@quantum>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201303161541.37341.florian@openwrt.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <florian@openwrt.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, sunny@allwinnertech.com, shuge@allwinnertech.com, Stefan Roese <sr@denx.de>, kevin@allwinnertech.com
 List-Id: devicetree@vger.kernel.org
 
-QW0gRGllbnN0YWcsIDE5LiBNw6RyeiAyMDEzLCAxOTo0OTozOCBzY2hyaWViIE1pa2UgVHVycXVl
-dHRlOgo+IFF1b3RpbmcgVGhvbWFzIEFicmFoYW0gKDIwMTMtMDItMTggMDA6MjE6MTApCj4gCj4g
-PiBDaGFuZ2VzIHNpbmNlIHY1Ogo+ID4gLSBTcXVhc2hlZCBzZXZlcmFsIEV4eW5vczQgZml4ZXMg
-cGF0Y2ggZnJvbSBUb21hc3ogRmlnYQo+ID4gLSBJbmNsdWRlZCBzdXBwb3J0IGZvciBFeHlub3M1
-MjUwIGFuZCBFeHlub3M1NDQwLCB0aHVzIGNvbnZlcnRpbmcgYWxsCj4gPiAKPiA+ICAgRXh5bm9z
-NCBhbmQgRXh5bm9zNSBwbGF0Zm9ybXMgdG8gY29tbW9uIGNsb2NrIGZyYW1ld29yay4KPiA+IAo+
-ID4gLSBEZXBlbmRzIG9uIHRoZSBmb2xsb3dpbmcgcGF0Y2ggc2VyaWVzLgo+ID4gCj4gPiAgIC0K
-PiA+ICAgaHR0cDovL3d3dy5tYWlsLWFyY2hpdmUuY29tL2xpbnV4LXNhbXN1bmctc29jQHZnZXIu
-a2VybmVsLm9yZy9tc2cxNTg0OQo+ID4gICAuaHRtbCAtCj4gPiAgIGh0dHA6Ly93d3cubWFpbC1h
-cmNoaXZlLmNvbS9saW51eC1zYW1zdW5nLXNvY0B2Z2VyLmtlcm5lbC5vcmcvbXNnMTU4NTIKPiA+
-ICAgLmh0bWwKPiA+IAo+ID4gQ2hhbmdlcyBzaW5jZSB2NDoKPiA+IC0gUmViYXNlZCB0byBsaW51
-eC0zLjgtcmMxLgo+ID4gCj4gPiBDaGFuZ2VzIHNpbmNlIHYzOgo+ID4gLSBJbmNsdWRlcyBjaGFu
-Z2VzIHN1Z2dlc3RlZCBieSBUb21hc3ogRmlnYSA8dG9tYXN6LmZpZ2FAZ21haWwuY29tPgo+ID4g
-Cj4gPiBUaGlzIHBhdGNoIHNlcmllcyBtaWdyYXRlcyB0aGUgU2Ftc3VuZyBFeHlub3M0LzUgU29D
-IGNsb2NrIGNvZGUgdG8gYWRvcHQKPiA+IHRoZSBjb21tb24gY2xvY2sgZnJhbWV3b3JrLiBUaGUg
-dXNlIG9mIFNhbXN1bmcgc3BlY2lmaWMgY2xvY2sgc3RydWN0dXJlcwo+ID4gaGFzIGJlZW4gcmVt
-b3ZlZCBhbmQgYWxsIGJvYXJkIHN1cHBvcnQgY29kZSBoYXMgYmVlbiB1cGRhdGVkLiBpbXgtc3R5
-bGUKPiA+IG9mIGNsb2NrIHJlZ2lzdHJhdGlvbiBhbmQgbG9va3VwIGhhcyBiZWVuIGFkb3B0ZWQg
-Zm9yIGRldmljZSB0cmVlIGJhc2VkCj4gPiBleHlub3M0LzUgcGxhdGZvcm1zLgo+IAo+IFRob21h
-cywKPiAKPiBBcmUgeW91IHBsYW5uaW5nIGEgVjcgc2VyaWVzIHdoaWNoIGluY2x1ZGVzIHRoZSBj
-bG9jayBhbGlhcyBiaXRzIGZyb20KPiBwYXRjaCAjMT8KCkt1a2ppbiBoYXMgYWxyZWFkeSBhcHBs
-aWVkIHRoaXMgc2VyaWVzIGludG8gdGhlIGxpbnV4LXNhbXN1bmcgdHJlZSBbMF0uCgpUaGUgYWxp
-YXMgY2hhbmdlcyBhcmUgYXZhaWxhYmxlIGluIHRoZSBzZXJpZXMgImNsazogc2Ftc3VuZzogcG0g
-Zml4ZXMKYW5kIG11bHRpcGxlIGFsaWFzZXMiIGZyb20gbGFzdCB3ZWRuZXNkYXkgdG8gb24gdG9w
-LCB3aGljaCB5b3Ugc2hvdWxkCmhvcGVmdWxseSBhbHNvIGhhdmUgcmVjZWl2ZWQuCgpUaGlzIHYy
-IHNlcmllcyBpbXBsZW1lbnRzIHRoZSBjaGFuZ2VzIGRpc2N1c3NlZCBpbiB0aGUgcHJldmlvdXMg
-djEgCiJjbGs6IHNhbXN1bmc6IHNtYWxsIGZpeGVzIGFuZCBlbmhhbmNlbWVudHMiIGZyb20gMjAx
-My0wMy0xMiwgYnV0IGRpZG4ndApnZXQgYW55IHJlc3BvbnNlcyB5ZXQuCgoKSGVpa28KCgpbMF0g
-aHR0cHM6Ly9naXQua2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9naXQva2dlbmUvbGludXgt
-c2Ftc3VuZy5naXQvbG9nLz9oPW5leHQvY2xrLWV4eW5vcwpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0
-CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJz
-Lm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+Hi Florian,
+
+Le 16/03/2013 15:41, Florian Fainelli a =E9crit :
+> Hello Maxime, Stefan,
+>=20
+> Please find below some comments regarding your PHY implementation in =
+the driver=20
+> as well as the transmit and transmit completion routines.
+
+Stefan implemented the changes you asked about the PHY, it will be in
+the next iteration of this patchset.
+
+On a general basis, we don't really know much about this chip, since
+we're working without any datasheet on this.
+
+>=20
+>> +#define WEMAC_PHY		0x100	/* PHY address 0x01 */
+>=20
+> This should be made configurable if possible.
+
+Ok
+
+>> +	unsigned		power_gpio;
+>=20
+> you could make this an int, so that you use gpio_is_valid() on this o=
+ne.
+
+Alexander Shiyan suggested to move to the regulator API, so I guess we
+will just remove that variable.
+
+>> +
+>> +static void wemac_dumpblk_32bit(void __iomem *reg, int count)
+>> +{
+>> +	int i;
+>> +	int tmp;
+>> +
+>> +	for (i =3D 0; i < (round_up(count, 4) / 4); i++)
+>> +		tmp =3D readl(reg);
+>> +}
+>=20
+> This could probably be removed, tmp is a write only location, did you=
+ remove=20
+> the variable printing that came along this?
+
+Hmmm, it looks that way yes. I'll remove it
+
+>> +
+>> +static int wemac_ioctl(struct net_device *dev, struct ifreq *req, i=
+nt cmd)
+>> +{
+>> +	struct wemac_board_info *dm =3D to_wemac_board(dev);
+>> +
+>> +	if (!netif_running(dev))
+>> +		return -EINVAL;
+>> +
+>> +	return generic_mii_ioctl(&dm->mii, if_mii(req), cmd, NULL);
+>> +}
+>> +
+>> +/* ethtool ops */
+>> +static void wemac_get_drvinfo(struct net_device *dev,
+>> +			      struct ethtool_drvinfo *info)
+>> +{
+>> +	strcpy(info->driver, DRV_NAME);
+>> +	strcpy(info->version, DRV_VERSION);
+>=20
+> You should use strlcpy() here to ensure null-termination, and you sho=
+uld also=20
+> fill in the bus_info member of struct ethtool_drvinfo.
+
+ok, will do.
+
+>> +	/* Init Driver variable */
+>> +	db->tx_fifo_stat =3D 0;
+>> +	dev->trans_start =3D 0;
+>=20
+> I do not think this is required you are supposed to update this field=
+ only in=20
+> the receive path.
+
+Ok, I'll remove that part.
+
+>> +
+>> +	channel =3D (channel =3D=3D 1 ? 1 : 0);
+>> +
+>> +	spin_lock_irqsave(&db->lock, flags);
+>> +
+>> +	writel(channel, db->membase + EMAC_TX_INS_REG);
+>> +
+>> +	wemac_outblk_32bit(db->membase + EMAC_TX_IO_DATA_REG,
+>> +			skb->data, skb->len);
+>> +	dev->stats.tx_bytes +=3D skb->len;
+>> +
+>> +	db->tx_fifo_stat |=3D 1 << channel;
+>> +	/* TX control: First packet immediately send, second packet queue =
+*/
+>> +	if (channel =3D=3D 0) {
+>> +		/* set TX len */
+>> +		writel(skb->len, db->membase + EMAC_TX_PL0_REG);
+>> +		/* start translate from fifo to phy */
+>> +		writel(readl(db->membase + EMAC_TX_CTL0_REG) | 1,
+>> +		       db->membase + EMAC_TX_CTL0_REG);
+>=20
+> Do not you need some write barrier here to ensure your descriptor add=
+ress and=20
+> control are properly written before the EMAC will see these?
+
+writel has a write barrier, so it shouldn't be a problem I guess.
+
+>=20
+>> +
+>> +		/* save the time stamp */
+>> +		dev->trans_start =3D jiffies;
+>> +	} else if (channel =3D=3D 1) {
+>> +		/* set TX len */
+>> +		writel(skb->len, db->membase + EMAC_TX_PL1_REG);
+>> +		/* start translate from fifo to phy */
+>> +		writel(readl(db->membase + EMAC_TX_CTL1_REG) | 1,
+>> +		       db->membase + EMAC_TX_CTL1_REG);
+>> +
+>> +		/* save the time stamp */
+>> +		dev->trans_start =3D jiffies;
+>> +	}
+>> +
+>> +	if ((db->tx_fifo_stat & 3) =3D=3D 3) {
+>> +		/* Second packet */
+>> +		netif_stop_queue(dev);
+>=20
+> Why is that required? Does that mean that your EMAC can only transmit=
+ one=20
+> packet at a time?
+
+The original driver was working that way, so the hardware can probably
+send several packet at a time, but we don't really know how...
+
+>> +static void wemac_tx_done(struct net_device *dev, struct wemac_boar=
+d_info
+>> *db, +			  unsigned int tx_status)
+>> +{
+>> +	/* One packet sent complete */
+>> +	db->tx_fifo_stat &=3D ~(tx_status & 3);
+>> +	if (3 =3D=3D (tx_status & 3))
+>> +		dev->stats.tx_packets +=3D 2;
+>> +	else
+>> +		dev->stats.tx_packets++;
+>> +
+>> +	if (netif_msg_tx_done(db))
+>> +		dev_dbg(db->dev, "tx done, NSR %02x\n", tx_status);
+>> +
+>> +	netif_wake_queue(dev);
+>=20
+> Why is that also required? According to your start_xmit function you =
+should do=20
+> this only when you have transmitted 2 packets no?
+
+I don't know, maybe the code here is more about always having a buffer
+of one packet at any point in time. With the current code, when you hav=
+e
+to send packets, it will:
+  - send the packet 1
+  - stop the queue
+  - wait for the packet 1 to be sent
+  - once packet 1 is sent, restart the queue, so that it can load a
+    packet 3
+  - start transmitting packet 2 if there's one, and loop, or just wait
+    for it
+
+Which would make sense, and for this, it looks to me that you should
+always restart the queue, no matter what the number of packets to send =
+was.
+
+>> +
+>> +		reg_val =3D readl(db->membase + EMAC_RX_IO_DATA_REG);
+>> +		if (netif_msg_rx_status(db))
+>> +			dev_dbg(db->dev, "receive header: %x\n", reg_val);
+>> +		if (reg_val !=3D 0x0143414d) {
+>=20
+> Where is that magic value coming from?
+
+The original code.
+
+Maybe I should define it to something like "UNDOCUMENTED_VOODOO_MAGIC1"=
+,
+or something like that, but I have no idea what it relates to in the
+hardware :S
+
+Thanks for your review,
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
