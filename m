@@ -1,343 +1,163 @@
-From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
-Subject: [PATCH v6] net: sh_eth: Add support of device tree probe
-Date: Tue, 19 Mar 2013 15:39:56 +0900
-Message-ID: <1363675196-8940-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, magnus.damm@gmail.com, kda@linux-powerpc.org, horms+renesas@verge.net.au, mark.rutland@arm.com, grant.likely@secretlab.ca, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [RFC] DT affinity bindings/representing bus masters with DT
+Date: Tue, 19 Mar 2013 18:07:34 +1100
+Message-ID: <20130319070734.GX9402@truffula.fritz.box>
+References: <20130215172102.GF3014@e102568-lin.cambridge.arm.com>
+ <20130306215714.GC6740@truffula.fritz.box>
+ <20130311170657.GD25250@e102568-lin.cambridge.arm.com>
+ <20130318030928.GG9402@truffula.fritz.box>
+ <20130318094815.GA30116@e102568-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============6766065742005838809=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130318094815.GA30116-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds support of device tree probe for Renesas sh-ether driver.
 
-Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+--===============6766065742005838809==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="tgO4DUqb0GCKXXLG"
+Content-Disposition: inline
 
-V6: - Add renesas,sh-eth-gigabit, renesas,sh-eth-sh4 and
-      renesas,sh-eth-sh3-sh2 to compatible string.
-	- Remove sh-eth,register-type. This is supplemented by the
-      compatible string.
-    - Use the of_property_read_bool instead of of_find_property.
-    - Add sanity chheck for of_property_read_u32.
-    - Update document.
-V5: - Rewrite sh_eth_parse_dt().
-      Remove of_device_is_available() and CONFIG_OF from support OF
-      checking function and re-add empty sh_eth_parse_dt().
-    - Add CONFIG_PM to definition of dev_pm_ops.
-	- Add CONFIG_OF to definition of of_device_id.
-V4: - Remove empty sh_eth_parse_dt().
-V3: - Remove empty sh_eth_parse_dt().
-V3: - Removed sentnece of "needs-init" from document.
-V2: - Removed ether_setup().
-    - Fixed typo from "sh-etn" to "sh-eth".
-	- Removed "needs-init" and sh-eth,endian from definition of DT.
-	- Changed "sh-eth,edmac-endian" instead of "sh-eth,edmac-big-endain"
-	  in definition of DT.
----
- Documentation/devicetree/bindings/net/sh_ether.txt |   48 +++++++
- drivers/net/ethernet/renesas/sh_eth.c              |  145 ++++++++++++++++----
- 2 files changed, 168 insertions(+), 25 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/sh_ether.txt
 
-diff --git a/Documentation/devicetree/bindings/net/sh_ether.txt b/Documentation/devicetree/bindings/net/sh_ether.txt
-new file mode 100644
-index 0000000..d1f961c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/sh_ether.txt
-@@ -0,0 +1,48 @@
-+* Renesas Electronics SuperH EMAC
-+
-+This file provides information, what the device node
-+for the sh_eth interface contains.
-+
-+Required properties:
-+- compatible:                   "renesas,sh-eth-gigabit": If a device has
-+                                            a function of gigabit, you should
-+											set this.
-+                                "renesas,sh-eth-sh4": If this is provided by
-+                                            SH4, you should set this.
-+                                "renesas,sh-eth-sh3-sh2": If this is provided
-+                                            by SH3 or SH2, you should set this.
-+
-+- interrupt-parent:             The phandle for the interrupt controller that
-+                                services interrupts for this device.
-+
-+- reg:                          Offset and length of the register set for the
-+                                device. If device has TSU registers, you need
-+                                to set up two register information here.
-+
-+- interrupts:                   Interrupt mapping for the sh_eth interrupt
-+                                sources (vector id). You can set one value.
-+
-+- phy-mode:                     String, operation mode of the PHY interface
-+                                (a string that of_get_phy_mode() can understand).
-+
-+- sh-eth,phy-id:                PHY id.
-+
-+Optional properties:
-+- local-mac-address:            6 bytes, mac address
-+- sh-eth,no-ether-link:         Set link control by software. When device does
-+                                not support ether-link, set.
-+- sh-eth,ether-link-active-low: Set link check method.
-+                                When detection of link is treated as active-low,
-+                                set.
-+- sh-eth,edmac-big-endian:      Set big endian for sh_eth dmac.
-+                                It work as little endian when this is not set.
-+
-+Example (armadillo800eva):
-+	sh-eth@e9a00000 {
-+		compatible = "renesas,sh-eth-gigabit";
-+		interrupt-parent = <&intca>;
-+		reg = <0xe9a00000 0x800>, <0xe9a01800 0x800>;
-+		interrupts = <0x500>;
-+		phy-mode = "mii";
-+		sh-eth,phy-id = <0>;
-+	};
-diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
-index 7a6471d..d9df68e 100644
---- a/drivers/net/ethernet/renesas/sh_eth.c
-+++ b/drivers/net/ethernet/renesas/sh_eth.c
-@@ -1,7 +1,7 @@
- /*
-  *  SuperH Ethernet device driver
-  *
-- *  Copyright (C) 2006-2012 Nobuhiro Iwamatsu
-+ *  Copyright (C) 2006-2013 Nobuhiro Iwamatsu
-  *  Copyright (C) 2008-2012 Renesas Solutions Corp.
-  *
-  *  This program is free software; you can redistribute it and/or modify it
-@@ -31,6 +31,12 @@
- #include <linux/platform_device.h>
- #include <linux/mdio-bitbang.h>
- #include <linux/netdevice.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_net.h>
- #include <linux/phy.h>
- #include <linux/cache.h>
- #include <linux/io.h>
-@@ -2340,26 +2346,88 @@ static const struct net_device_ops sh_eth_netdev_ops = {
- 	.ndo_change_mtu		= eth_change_mtu,
- };
- 
-+#ifdef CONFIG_OF
-+static struct sh_eth_plat_data *
-+sh_eth_parse_dt(struct device *dev, struct net_device *ndev,
-+				struct device_node *np)
-+{
-+	struct sh_eth_plat_data *pdata;
-+
-+	pdata = devm_kzalloc(dev, sizeof(struct sh_eth_plat_data),
-+					GFP_KERNEL);
-+	if (!pdata) {
-+		dev_err(dev, "%s: failed to allocate config data\n", __func__);
-+		return NULL;
-+	}
-+
-+	pdata->phy_interface = of_get_phy_mode(np);
-+
-+	if (of_property_read_u32(np, "sh-eth,phy-id", &pdata->phy))
-+		goto error;
-+
-+	pdata->edmac_endian =
-+		of_property_read_bool(np, "sh-eth,edmac-big-endian");
-+
-+	pdata->no_ether_link =
-+		of_property_read_bool(np, "sh-eth,no-ether-link");
-+
-+	pdata->ether_link_active_low =
-+		of_property_read_bool(np, "sh-eth,ether-link-active-low");
-+
-+	if (of_device_is_compatible(np, "renesas,sh-eth-gigabit"))
-+		pdata->register_type = SH_ETH_REG_GIGABIT;
-+	else if (of_device_is_compatible(np, "renesas,sh-eth-sh4"))
-+		pdata->register_type = SH_ETH_REG_FAST_SH4;
-+	else if (of_device_is_compatible(np, "renesas,sh-eth-sh3-sh2"))
-+		pdata->register_type = SH_ETH_REG_FAST_SH3_SH2;
-+	else
-+		pdata->register_type = -EINVAL;
-+
-+#ifdef CONFIG_OF_NET
-+	if (!is_valid_ether_addr(ndev->dev_addr)) {
-+		const char *macaddr = of_get_mac_address(np);
-+		if (macaddr)
-+			memcpy(pdata->mac_addr, macaddr, ETH_ALEN);
-+	}
-+#endif
-+
-+	return pdata;
-+
-+error:
-+	devm_kfree(dev, pdata);
-+	return NULL;
-+}
-+#else
-+static inline struct sh_eth_plat_data *
-+sh_eth_parse_dt(struct device *dev, struct net_device *ndev,
-+				struct device_node *np)
-+{
-+	return NULL;
-+}
-+#endif
-+
- static int sh_eth_drv_probe(struct platform_device *pdev)
- {
--	int ret, devno = 0;
-+	int ret = 0, devno = 0;
- 	struct resource *res;
- 	struct net_device *ndev = NULL;
- 	struct sh_eth_private *mdp = NULL;
- 	struct sh_eth_plat_data *pd;
-+	struct device_node *np = pdev->dev.of_node;
-+
-+	ndev = alloc_etherdev(sizeof(struct sh_eth_private));
-+	if (!ndev) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
- 
-+	mdp = netdev_priv(ndev);
- 	/* get base addr */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (unlikely(res == NULL)) {
- 		dev_err(&pdev->dev, "invalid resource\n");
- 		ret = -EINVAL;
--		goto out;
--	}
--
--	ndev = alloc_etherdev(sizeof(struct sh_eth_private));
--	if (!ndev) {
--		ret = -ENOMEM;
--		goto out;
-+		goto out_release;
- 	}
- 
- 	/* The sh Ether-specific entries in the device structure. */
-@@ -2376,14 +2444,6 @@ static int sh_eth_drv_probe(struct platform_device *pdev)
- 	}
- 	ndev->irq = ret;
- 
--	SET_NETDEV_DEV(ndev, &pdev->dev);
--
--	/* Fill in the fields of the device structure with ethernet values. */
--	ether_setup(ndev);
--
--	mdp = netdev_priv(ndev);
--	mdp->num_tx_ring = TX_RING_SIZE;
--	mdp->num_rx_ring = RX_RING_SIZE;
- 	mdp->addr = ioremap(res->start, resource_size(res));
- 	if (mdp->addr == NULL) {
- 		ret = -ENOMEM;
-@@ -2391,12 +2451,33 @@ static int sh_eth_drv_probe(struct platform_device *pdev)
- 		goto out_release;
- 	}
- 
-+	if (np) {
-+		pd = sh_eth_parse_dt(&pdev->dev, ndev, np);
-+		if (pdev->dev.platform_data && pd) {
-+			struct sh_eth_plat_data *tmp =
-+				pdev->dev.platform_data;
-+			pd->set_mdio_gate = tmp->set_mdio_gate;
-+			pd->needs_init = tmp->needs_init;
-+		}
-+	} else
-+		pd = pdev->dev.platform_data;
-+
-+	if (!pd) {
-+		dev_err(&pdev->dev, "no setup data defined\n");
-+		ret = -EINVAL;
-+		goto out_release;
-+	}
-+
-+	SET_NETDEV_DEV(ndev, &pdev->dev);
-+
-+	mdp->num_tx_ring = TX_RING_SIZE;
-+	mdp->num_rx_ring = RX_RING_SIZE;
-+
- 	spin_lock_init(&mdp->lock);
- 	mdp->pdev = pdev;
- 	pm_runtime_enable(&pdev->dev);
- 	pm_runtime_resume(&pdev->dev);
- 
--	pd = (struct sh_eth_plat_data *)(pdev->dev.platform_data);
- 	/* get PHY ID */
- 	mdp->phy_id = pd->phy;
- 	mdp->phy_interface = pd->phy_interface;
-@@ -2405,6 +2486,8 @@ static int sh_eth_drv_probe(struct platform_device *pdev)
- 	mdp->no_ether_link = pd->no_ether_link;
- 	mdp->ether_link_active_low = pd->ether_link_active_low;
- 	mdp->reg_offset = sh_eth_get_register_offset(pd->register_type);
-+	/* read and set MAC address */
-+	read_mac_address(ndev, pd->mac_addr);
- 
- 	/* set cpu data */
- #if defined(SH_ETH_HAS_BOTH_MODULES)
-@@ -2422,20 +2505,16 @@ static int sh_eth_drv_probe(struct platform_device *pdev)
- 	/* debug message level */
- 	mdp->msg_enable = SH_ETH_DEF_MSG_ENABLE;
- 
--	/* read and set MAC address */
--	read_mac_address(ndev, pd->mac_addr);
--
- 	/* ioremap the TSU registers */
- 	if (mdp->cd->tsu) {
- 		struct resource *rtsu;
- 		rtsu = platform_get_resource(pdev, IORESOURCE_MEM, 1);
- 		if (!rtsu) {
- 			dev_err(&pdev->dev, "Not found TSU resource\n");
--			ret = -ENODEV;
- 			goto out_release;
- 		}
- 		mdp->tsu_addr = ioremap(rtsu->start,
--					resource_size(rtsu));
-+				resource_size(rtsu));
- 		mdp->port = devno % 2;
- 		ndev->features = NETIF_F_HW_VLAN_FILTER;
- 	}
-@@ -2502,6 +2581,7 @@ static int sh_eth_drv_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM
- static int sh_eth_runtime_nop(struct device *dev)
- {
- 	/*
-@@ -2515,17 +2595,32 @@ static int sh_eth_runtime_nop(struct device *dev)
- 	return 0;
- }
- 
--static struct dev_pm_ops sh_eth_dev_pm_ops = {
-+static const struct dev_pm_ops sh_eth_dev_pm_ops = {
- 	.runtime_suspend = sh_eth_runtime_nop,
- 	.runtime_resume = sh_eth_runtime_nop,
- };
-+#define SH_ETH_PM_OPS (&sh_eth_dev_pm_ops)
-+#else
-+#define SH_ETH_PM_OPS NULL
-+#endif
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id sh_eth_match[] = {
-+	{ .compatible = "renesas,sh-eth-gigabit", },
-+	{ .compatible = "renesas,sh-eth-sh4", },
-+	{ .compatible = "renesas,sh-eth-sh3-sh2", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, sh_eth_match);
-+#endif
- 
- static struct platform_driver sh_eth_driver = {
- 	.probe = sh_eth_drv_probe,
- 	.remove = sh_eth_drv_remove,
- 	.driver = {
- 		   .name = CARDNAME,
--		   .pm = &sh_eth_dev_pm_ops,
-+		   .pm = SH_ETH_PM_OPS,
-+		   .of_match_table = of_match_ptr(sh_eth_match),
- 	},
- };
- 
--- 
-1.7.10.4
+--tgO4DUqb0GCKXXLG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Mar 18, 2013 at 09:48:16AM +0000, Lorenzo Pieralisi wrote:
+> On Mon, Mar 18, 2013 at 03:09:28AM +0000, David Gibson wrote:
+> > On Mon, Mar 11, 2013 at 05:06:57PM +0000, Lorenzo Pieralisi wrote:
+> > > Hi David,
+> > >=20
+> > > thanks for your feedback.
+> > >=20
+> > > On Wed, Mar 06, 2013 at 09:57:14PM +0000, David Gibson wrote:
+> > > > On Fri, Feb 15, 2013 at 05:21:02PM +0000, Lorenzo Pieralisi wrote:
+> > [snip]
+> > > > > Each foo@2000000 reg property maps to a device that represents a =
+bus master
+> > > > > (to make it clearer, a foo@2000000 reg property defines an addres=
+s space that
+> > > > > belongs to a bus master, ie the address space represents a progra=
+mming
+> > > > > interface specific to that master; in the bindings above address =
+0x2000000 is
+> > > > > the address at which acme1 device can programme its "foo" interfa=
+ce, address
+> > > > > 0x2001000 is the address at which acme2 device can programme its =
+"foo"
+> > > > > interface).
+> > > >=20
+> > > > Ok.  I think annotating the existing reg property like this is a ve=
+ry
+> > > > bad idea.  I haven't seen all the previous discussion, so I'm not
+> > > > totally clean on what this affinity concept is about.  But as I
+> > > > understand it, these "slave" resources cannot be treated like an
+> > > > ordinary resource in in the reg property.  That means an older clie=
+nt
+> > > > will potentially misinterpret "reg" because it doesn't know about
+> > > > "affinity".
+> > >=20
+> > > Not really, "reg" still complies with the current DT bindings. Affini=
+ty
+> > > is there to associate a reg property to a "master" but the reg proper=
+ty
+> > > definition does not change. I do not think backward compatibility is a
+> > > problem per-se here.
+> >=20
+> > Ok, I did not understand the problem properly.
+> >=20
+> > > > Worse, again, if I've understood correctly, resources with different
+> > > > "masters" are essentially in different logical address spaces.  "re=
+g"
+> > > > properties should always sit in the logical address space represent=
+ing
+> > > > the parent node's bus.  Different address spaces could also have
+> > > > different address sizes, which would really complicate parsing "reg=
+".
+> > >=20
+> > > I think we need to post what we have, it is really complex to explain
+> > > the issue without a concrete example. To cut a long story short I
+> > > would not say that the resources sit in different address spaces, it =
+is
+> > > that we need to associate those address ranges with specific bus mast=
+ers.
+> > >=20
+> > > We have to have a way to say:
+> > >=20
+> > > "Address range 0x80001000 - 0x80001fff is used to programme the contr=
+ol
+> > > registers associated with the port connected to master X".
+> > >=20
+> > > When a CPU wants to programme a control port for a specific master, it
+> > > needs to know what address range should be programmed.
+> > >=20
+> > > I mentioned "resources" instead of addresses since the problem we are
+> > > having is the same when it comes to map IRQs to set of CPUS. We need
+> > > to associate a resource (IRQ or address) to a set of cpus (or more in
+> > > general, masters).
+> >=20
+> > Hrm.  See, I think I may be misunderstanding the problem again,
+> > because with this description I can see no problem.  It's already up
+> > to the device binding to describe the purpose of each entry in the reg
+> > property.  So what's the problem with it just being part of the
+> > binding to say which reg entry is associated with which master port?
+>=20
+> That's exactly what we are trying to do. But to associate the reg
+> property to a master port we need a phandle, how can we pull that off
+> otherwise ?
+
+Ah, right.  I was meaning that the binding specifies the abstract port
+number that each reg entry is associated with.  I'm fine with adding a
+property to map the port numbers to master devices on the other end.
+I think treating it in two steps like that is better than thinking of
+the master phandles being  directly associated with reg entries,
+because it also handles cases like having a bank of common/global
+registers not associated with any port/master, or cases where the
+ports aren't all identical and some need more resources than others.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--tgO4DUqb0GCKXXLG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlFIDrYACgkQaILKxv3ab8b/zQCgj3PrvAf9q9TLkKEAozUztCf0
+YCgAnApyKcVAqabFpaM2wu3+lD9UaBKN
+=rrGf
+-----END PGP SIGNATURE-----
+
+--tgO4DUqb0GCKXXLG--
+
+--===============6766065742005838809==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============6766065742005838809==--
