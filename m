@@ -1,44 +1,41 @@
-From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Subject: Options to store device tree blob on NAND Flash
-Date: Tue, 19 Mar 2013 16:15:57 +0100
-Message-ID: <5148812D.4090305@digi.com>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [Patch v3 0/4] Add support for tps65090-charger
+Date: Tue, 19 Mar 2013 11:55:33 -0400
+Message-ID: <51488A75.6000003@nvidia.com>
+References: <1363126089-9071-1-git-send-email-rklein@nvidia.com> <20130319022402.GA14118@lizard.gateway.2wire.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130319022402.GA14118-1CZZkhFgUWNRmOO2HpYVOJIbA5emDH3N@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On 3/18/2013 10:24 PM, Anton Vorontsov wrote:
+> On Tue, Mar 12, 2013 at 06:08:05PM -0400, Rhyland Klein wrote:
+>> This patchset adds support for the TPS65090-charger. This charger is
+>> registered as a subdevice of the TPS65090 PMIC.
+>>
+>> This series includes a fix for the tps65090 header file where all
+>> the interrupts were shifted by 1.
+> 
+> Thanks for the patches, Rhyland! 3/4 and 4/4 applied to the
+> battery-2.6.git tree.
+> 
+> Anton
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+I was planning on posting a slightly changed v4 sometime soon which took
+care of some concerns on the Documentation and added a compatibility
+entry for the charger. Do you want me to send that still and you can
+replace v3 with v4?
 
-For embedded devices where NAND flash is the only storage media, I was wond=
-ering what =
+-rhyland
 
-are the existing approaches on how to store the device tree blob in flash.
-Searching on the Internet I have found only two approaches:
-  1. Have a dedicated MTD partition for the device tree blob (raw).
-  2. Have a UBI volume on a partition and store the device tree blob as a f=
-ile in a =
-
-UBIFS partition (this approach also stores the kernel image as a file in th=
-e same or =
-
-different volume).
-
-Is anybody using other approach for storing the DTB in flash?
-What method is more widely used in embedded devices?
-
-Best regards,
--- =
-
-H=E9ctor Palacios
+-- 
+nvpublic
