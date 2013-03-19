@@ -1,129 +1,58 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 7/7] usb: phy: registering tegra USB PHY as platform driver
-Date: Tue, 19 Mar 2013 14:21:10 -0600
-Message-ID: <5148C8B6.90303@wwwdotorg.org>
-References: <1363609781-4045-1-git-send-email-vbyravarasu@nvidia.com> <1363609781-4045-8-git-send-email-vbyravarasu@nvidia.com>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v6 00/16] clk: exynos4/5: migrate to common clock framework
+Date: Tue, 19 Mar 2013 22:12:16 +0100
+Message-ID: <201303192212.16877.heiko@sntech.de>
+References: <1361175686-19400-1-git-send-email-thomas.abraham@linaro.org>
+ <20130319184938.8663.18115@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1363609781-4045-8-git-send-email-vbyravarasu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Venu Byravarasu <vbyravarasu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130319184938.8663.18115@quantum>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/18/2013 06:29 AM, Venu Byravarasu wrote:
-> Registered tegra USB PHY as a separate platform driver.
-> 
-> To synchronize host controller and PHY initialization, used deferred
-> probe mechanism. As PHY should be initialized before EHCI starts running,
-> deferred probe of Tegra EHCI driver till PHY probe gets completed.
-> 
-> Got rid of instance number based handling in host driver.
-> 
-> Made use of DT params to get the PHY Pad registers.
-> 
-> Merged tegra_phy_init into tegra_usb_phy_init.
-
-> diff --git a/drivers/usb/phy/tegra_usb_phy.c b/drivers/usb/phy/tegra_usb_phy.c
-
->  static void tegra_usb_phy_close(struct usb_phy *x)
->  {
->  	struct tegra_usb_phy *phy = container_of(x, struct tegra_usb_phy, u_phy);
->  
->  	if (phy->is_ulpi_phy)
->  		clk_put(phy->clk);
-
-phy->clk is obtained using devm_clk_get(). This typically means you
-never need to clk_put() it, and if for some reason you really have to,
-you should use devm_clk_put() instead of plain clk_put().
-
->  	clk_put(phy->pll_u);
-
-Same here.
-
-> @@ -774,23 +667,53 @@ struct tegra_usb_phy *tegra_usb_phy_open(struct device *dev, int instance,
-
-> +	if (phy->is_ulpi_phy) {
-> +		phy->clk = devm_clk_get(phy->dev, "ulpi-link");
-> +		if (IS_ERR(phy->clk)) {
-> +			pr_err("%s: can't get ulpi clock\n", __func__);
-> +			err = PTR_ERR(phy->clk);
-> +			goto fail;
-> +
-> +		}
-> +
-> +		err = gpio_request(phy->reset_gpio, "ulpi_phy_reset_b");
-
-I think you can use devm_gpio_request() here to simplify the error-handling.
-
-> +		if (err < 0) {
-> +			dev_err(phy->dev, "request failed for gpio: %d\n",
-> +			       phy->reset_gpio);
-> +			goto fail;
-> +		}
-> +
-> +		err = gpio_direction_output(phy->reset_gpio, 0);
-> +		if (err < 0) {
-> +			dev_err(phy->dev, "gpio %d direction not set to output\n",
-> +			       phy->reset_gpio);
-> +			goto cleanup_gpio_req;
-> +		}
->  
-> -	return phy;
-> +		phy->ulpi = otg_ulpi_create(&ulpi_viewport_access_ops, 0);
-> +		if (!phy->ulpi) {
-> +			dev_err(phy->dev, "otg_ulpi_create returned err\n");
-> +			err = -ENOMEM;
-> +			goto cleanup_gpio_req;
-> +		}
->  
-> -err1:
-> +		phy->ulpi->io_priv = phy->regs + ULPI_VIEWPORT;
-> +	} else {
-> +		err = utmip_pad_open(phy);
-> +		if (err < 0)
-> +			goto fail;
-> +	}
-
-I wonder why in the ULPI case, all the code is inline here, whereas in
-the UTMI case, this simply calls a function. Wouldn't it be more
-consistent to have the following code here:
-
-	if (phy->is_ulpi_phy)
-		err = ulpi_open();
-	else
-		err = utmip_open();
-	if (err)
-		goto fail;
-
-> +static int tegra_usb_phy_probe(struct platform_device *pdev)
-
-Hmmm. Note that in order to make deferred probe work correctly, all the
-gpio_request(), clk_get(), etc. calls that acquire resources from other
-drivers must happen here in probe() and not in tegra_usb_phy_open().
-
-> +	err = of_property_match_string(np, "dr_mode", "otg");
-> +	if (err < 0) {
-> +		err = of_property_match_string(np, "dr_mode", "gadget");
-
-Again, use "peripheral", not "gadget".
-
-> +struct usb_phy *tegra_usb_get_phy(struct device_node *dn)
-> +{
-> +	struct device *dev;
-> +	struct tegra_usb_phy *tegra_phy;
-> +
-> +	dev = driver_find_device(&tegra_usb_phy_driver.driver, NULL, dn,
-> +				 tegra_usb_phy_match);
-> +	if (!dev)
-> +		return ERR_PTR(-EPROBE_DEFER);
-> +
-> +	tegra_phy = dev_get_drvdata(dev);
-> +
-> +	return &tegra_phy->u_phy;
-> +}
-
-I think you need a module_get() somewhere in there, and also need to add
-a tegra_usb_put_phy() function too, so you can call module_put() from it.
+QW0gRGllbnN0YWcsIDE5LiBNw6RyeiAyMDEzLCAxOTo0OTozOCBzY2hyaWViIE1pa2UgVHVycXVl
+dHRlOgo+IFF1b3RpbmcgVGhvbWFzIEFicmFoYW0gKDIwMTMtMDItMTggMDA6MjE6MTApCj4gCj4g
+PiBDaGFuZ2VzIHNpbmNlIHY1Ogo+ID4gLSBTcXVhc2hlZCBzZXZlcmFsIEV4eW5vczQgZml4ZXMg
+cGF0Y2ggZnJvbSBUb21hc3ogRmlnYQo+ID4gLSBJbmNsdWRlZCBzdXBwb3J0IGZvciBFeHlub3M1
+MjUwIGFuZCBFeHlub3M1NDQwLCB0aHVzIGNvbnZlcnRpbmcgYWxsCj4gPiAKPiA+ICAgRXh5bm9z
+NCBhbmQgRXh5bm9zNSBwbGF0Zm9ybXMgdG8gY29tbW9uIGNsb2NrIGZyYW1ld29yay4KPiA+IAo+
+ID4gLSBEZXBlbmRzIG9uIHRoZSBmb2xsb3dpbmcgcGF0Y2ggc2VyaWVzLgo+ID4gCj4gPiAgIC0K
+PiA+ICAgaHR0cDovL3d3dy5tYWlsLWFyY2hpdmUuY29tL2xpbnV4LXNhbXN1bmctc29jQHZnZXIu
+a2VybmVsLm9yZy9tc2cxNTg0OQo+ID4gICAuaHRtbCAtCj4gPiAgIGh0dHA6Ly93d3cubWFpbC1h
+cmNoaXZlLmNvbS9saW51eC1zYW1zdW5nLXNvY0B2Z2VyLmtlcm5lbC5vcmcvbXNnMTU4NTIKPiA+
+ICAgLmh0bWwKPiA+IAo+ID4gQ2hhbmdlcyBzaW5jZSB2NDoKPiA+IC0gUmViYXNlZCB0byBsaW51
+eC0zLjgtcmMxLgo+ID4gCj4gPiBDaGFuZ2VzIHNpbmNlIHYzOgo+ID4gLSBJbmNsdWRlcyBjaGFu
+Z2VzIHN1Z2dlc3RlZCBieSBUb21hc3ogRmlnYSA8dG9tYXN6LmZpZ2FAZ21haWwuY29tPgo+ID4g
+Cj4gPiBUaGlzIHBhdGNoIHNlcmllcyBtaWdyYXRlcyB0aGUgU2Ftc3VuZyBFeHlub3M0LzUgU29D
+IGNsb2NrIGNvZGUgdG8gYWRvcHQKPiA+IHRoZSBjb21tb24gY2xvY2sgZnJhbWV3b3JrLiBUaGUg
+dXNlIG9mIFNhbXN1bmcgc3BlY2lmaWMgY2xvY2sgc3RydWN0dXJlcwo+ID4gaGFzIGJlZW4gcmVt
+b3ZlZCBhbmQgYWxsIGJvYXJkIHN1cHBvcnQgY29kZSBoYXMgYmVlbiB1cGRhdGVkLiBpbXgtc3R5
+bGUKPiA+IG9mIGNsb2NrIHJlZ2lzdHJhdGlvbiBhbmQgbG9va3VwIGhhcyBiZWVuIGFkb3B0ZWQg
+Zm9yIGRldmljZSB0cmVlIGJhc2VkCj4gPiBleHlub3M0LzUgcGxhdGZvcm1zLgo+IAo+IFRob21h
+cywKPiAKPiBBcmUgeW91IHBsYW5uaW5nIGEgVjcgc2VyaWVzIHdoaWNoIGluY2x1ZGVzIHRoZSBj
+bG9jayBhbGlhcyBiaXRzIGZyb20KPiBwYXRjaCAjMT8KCkt1a2ppbiBoYXMgYWxyZWFkeSBhcHBs
+aWVkIHRoaXMgc2VyaWVzIGludG8gdGhlIGxpbnV4LXNhbXN1bmcgdHJlZSBbMF0uCgpUaGUgYWxp
+YXMgY2hhbmdlcyBhcmUgYXZhaWxhYmxlIGluIHRoZSBzZXJpZXMgImNsazogc2Ftc3VuZzogcG0g
+Zml4ZXMKYW5kIG11bHRpcGxlIGFsaWFzZXMiIGZyb20gbGFzdCB3ZWRuZXNkYXkgdG8gb24gdG9w
+LCB3aGljaCB5b3Ugc2hvdWxkCmhvcGVmdWxseSBhbHNvIGhhdmUgcmVjZWl2ZWQuCgpUaGlzIHYy
+IHNlcmllcyBpbXBsZW1lbnRzIHRoZSBjaGFuZ2VzIGRpc2N1c3NlZCBpbiB0aGUgcHJldmlvdXMg
+djEgCiJjbGs6IHNhbXN1bmc6IHNtYWxsIGZpeGVzIGFuZCBlbmhhbmNlbWVudHMiIGZyb20gMjAx
+My0wMy0xMiwgYnV0IGRpZG4ndApnZXQgYW55IHJlc3BvbnNlcyB5ZXQuCgoKSGVpa28KCgpbMF0g
+aHR0cHM6Ly9naXQua2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9naXQva2dlbmUvbGludXgt
+c2Ftc3VuZy5naXQvbG9nLz9oPW5leHQvY2xrLWV4eW5vcwpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0
+CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJz
+Lm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
