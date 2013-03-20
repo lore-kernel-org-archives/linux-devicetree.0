@@ -1,110 +1,61 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 08/11] ARM: versatile: use OF init for sp804 timer
-Date: Wed, 20 Mar 2013 17:54:08 -0500
-Message-ID: <1363820051-24428-9-git-send-email-robherring2@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 05/11] ARM: vexpress: remove sp804 OF init
+Date: Wed, 20 Mar 2013 17:54:05 -0500
+Message-ID: <1363820051-24428-6-git-send-email-robherring2@gmail.com>
 References: <1363820051-24428-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1363820051-24428-1-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: Arnd Bergmann <arnd@arndb.de>, linus.walleij@linaro.org, Russell King <linux@arm.linux.org.uk>, haojian.zhuang@linaro.org, pawel.moll@arm.com, john.stultz@linaro.org, tglx@linutronix.de, Rob Herring <rob.herring@calxeda.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1363820051-24428-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring@calxeda.com>
+From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-Enable DT based init for the sp804 timers on versatile DT platform.
+Remove the vexpress specific setup for the sp804 timer now that
+clocksource_of_init will do it.
 
-Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/versatile-ab.dts     |   12 ++++++++++++
- arch/arm/mach-versatile/core.c         |   26 +++++++++++++-------------
- arch/arm/mach-versatile/versatile_dt.c |    1 -
- 3 files changed, 25 insertions(+), 14 deletions(-)
+ arch/arm/mach-vexpress/v2m.c |   11 -----------
+ 1 file changed, 11 deletions(-)
 
-diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
-index e2fe319..dde75ae 100644
---- a/arch/arm/boot/dts/versatile-ab.dts
-+++ b/arch/arm/boot/dts/versatile-ab.dts
-@@ -121,6 +121,18 @@
- 			interrupts = <0>;
- 		};
+diff --git a/arch/arm/mach-vexpress/v2m.c b/arch/arm/mach-vexpress/v2m.c
+index 9fbfbe4..09e571d 100644
+--- a/arch/arm/mach-vexpress/v2m.c
++++ b/arch/arm/mach-vexpress/v2m.c
+@@ -428,20 +428,9 @@ void __init v2m_dt_init_early(void)
  
-+		timer@101e2000 {
-+			compatible = "arm,sp804", "arm,primecell";
-+			reg = <0x101e2000 0x1000>;
-+			interrupts = <4>;
-+		};
-+
-+		timer@101e3000 {
-+			compatible = "arm,sp804", "arm,primecell";
-+			reg = <0x101e3000 0x1000>;
-+			interrupts = <5>;
-+		};
-+
- 		gpio0: gpio@101e4000 {
- 			compatible = "arm,pl061", "arm,primecell";
- 			reg = <0x101e4000 0x1000>;
-diff --git a/arch/arm/mach-versatile/core.c b/arch/arm/mach-versatile/core.c
-index 286303a..5cdfc87 100644
---- a/arch/arm/mach-versatile/core.c
-+++ b/arch/arm/mach-versatile/core.c
-@@ -748,12 +748,25 @@ void versatile_restart(char mode, const char *cmd)
- /* Early initializations */
- void __init versatile_init_early(void)
+ static void __init v2m_dt_timer_init(void)
  {
-+	u32 val;
- 	void __iomem *sys = __io_address(VERSATILE_SYS_BASE);
- 
- 	osc4_clk.vcoreg	= sys + VERSATILE_SYS_OSCCLCD_OFFSET;
- 	clkdev_add_table(lookups, ARRAY_SIZE(lookups));
- 
- 	versatile_sched_clock_init(sys + VERSATILE_SYS_24MHz_OFFSET, 24000000);
-+
-+	/*
-+	 * set clock frequency:
-+	 *	VERSATILE_REFCLK is 32KHz
-+	 *	VERSATILE_TIMCLK is 1MHz
-+	 */
-+	val = readl(__io_address(VERSATILE_SCTL_BASE));
-+	writel((VERSATILE_TIMCLK << VERSATILE_TIMER1_EnSel) |
-+	       (VERSATILE_TIMCLK << VERSATILE_TIMER2_EnSel) |
-+	       (VERSATILE_TIMCLK << VERSATILE_TIMER3_EnSel) |
-+	       (VERSATILE_TIMCLK << VERSATILE_TIMER4_EnSel) | val,
-+	       __io_address(VERSATILE_SCTL_BASE));
- }
- 
- void __init versatile_init(void)
-@@ -784,19 +797,6 @@ void __init versatile_init(void)
-  */
- void __init versatile_timer_init(void)
- {
--	u32 val;
+-	struct device_node *node = NULL;
 -
--	/* 
--	 * set clock frequency: 
--	 *	VERSATILE_REFCLK is 32KHz
--	 *	VERSATILE_TIMCLK is 1MHz
--	 */
--	val = readl(__io_address(VERSATILE_SCTL_BASE));
--	writel((VERSATILE_TIMCLK << VERSATILE_TIMER1_EnSel) |
--	       (VERSATILE_TIMCLK << VERSATILE_TIMER2_EnSel) | 
--	       (VERSATILE_TIMCLK << VERSATILE_TIMER3_EnSel) |
--	       (VERSATILE_TIMCLK << VERSATILE_TIMER4_EnSel) | val,
--	       __io_address(VERSATILE_SCTL_BASE));
+ 	vexpress_clk_of_init();
  
- 	sp804_clocksource_init(TIMER3_VA_BASE, "timer3");
- 	sp804_clockevents_init(TIMER0_VA_BASE, IRQ_TIMERINT0_1, "timer0");
-diff --git a/arch/arm/mach-versatile/versatile_dt.c b/arch/arm/mach-versatile/versatile_dt.c
-index 2558f2e..3621b00 100644
---- a/arch/arm/mach-versatile/versatile_dt.c
-+++ b/arch/arm/mach-versatile/versatile_dt.c
-@@ -45,7 +45,6 @@ DT_MACHINE_START(VERSATILE_PB, "ARM-Versatile (Device Tree Support)")
- 	.map_io		= versatile_map_io,
- 	.init_early	= versatile_init_early,
- 	.init_irq	= versatile_init_irq,
--	.init_time	= versatile_timer_init,
- 	.init_machine	= versatile_dt_init,
- 	.dt_compat	= versatile_dt_match,
- 	.restart	= versatile_restart,
+ 	clocksource_of_init();
+-	do {
+-		node = of_find_compatible_node(node, NULL, "arm,sp804");
+-	} while (node && vexpress_get_site_by_node(node) != VEXPRESS_SITE_MB);
+-	if (node) {
+-		pr_info("Using SP804 '%s' as a clock & events source\n",
+-				node->full_name);
+-		v2m_sp804_init(of_iomap(node, 0),
+-				irq_of_parse_and_map(node, 0));
+-	}
+ 
+ 	versatile_sched_clock_init(vexpress_get_24mhz_clock_base(),
+ 				24000000);
 -- 
 1.7.10.4
