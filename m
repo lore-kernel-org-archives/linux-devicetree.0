@@ -1,98 +1,57 @@
-From: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v4 5/5] ARM: davinci: da850-evm: add SPI flash support
-Date: Wed, 20 Mar 2013 16:16:59 +0530
-Message-ID: <1363776419-10563-6-git-send-email-prakash.pm@ti.com>
-References: <1363776419-10563-1-git-send-email-prakash.pm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1363776419-10563-1-git-send-email-prakash.pm-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, "Manjunathappa,
-	Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v9 RESEND 4/4] ARM: dts: add sram for imx53 and imx6q
+Date: Wed, 20 Mar 2013 11:52:47 +0100
+Message-ID: <1363776767-2635-5-git-send-email-p.zabel@pengutronix.de>
+References: <1363776767-2635-1-git-send-email-p.zabel@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1363776767-2635-1-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Enable m25p64 SPI flash support on da850-EVM. Also
-add partition information of SPI flash.
-
-Signed-off-by: Manjunathappa, Prakash <prakash.pm-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
 ---
-Since v2:
-Fixed partition sizes.
+Changes since v8:
+ - Changed device tree compatible string to "mmio-sram"
+---
+ arch/arm/boot/dts/imx53.dtsi |    5 +++++
+ arch/arm/boot/dts/imx6q.dtsi |    6 ++++++
+ 2 files changed, 11 insertions(+)
 
-Since v1:
-Look for m25p64 instead of m25p80.
-Corrected the filesystem partition information.
-
- arch/arm/boot/dts/da850-evm.dts |   40 +++++++++++++++++++++++++++++++++++++++
- 1 files changed, 40 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index c359872..fe2bbe7 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -41,6 +41,46 @@
- 		wdt: wdt@1c21000 {
- 			status = "okay";
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index edc3f1e..69d0680 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -664,5 +664,10 @@
+ 				status = "disabled";
+ 			};
  		};
-+		spi1: spi@1f0e000 {
-+			status = "okay";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&spi1_pins>;
-+			flash: m25p80@0 {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				compatible = "m25p64";
-+				spi-max-frequency = <30000000>;
-+				reg = <0>;
-+				partition@0 {
-+					label = "U-Boot-SPL";
-+					reg = <0x00000000 0x00010000>;
-+					read-only;
-+				};
-+				partition@1 {
-+					label = "U-Boot";
-+					reg = <0x00010000 0x00080000>;
-+					read-only;
-+				};
-+				partition@2 {
-+					label = "U-Boot-Env";
-+					reg = <0x00090000 0x00010000>;
-+					read-only;
-+				};
-+				partition@3 {
-+					label = "Kernel";
-+					reg = <0x000a0000 0x00280000>;
-+				};
-+				partition@4 {
-+					label = "Filesystem";
-+					reg = <0x00320000 0x00400000>;
-+				};
-+				partition@5 {
-+					label = "MAC-Address";
-+					reg = <0x007f0000 0x00010000>;
-+					read-only;
-+				};
-+			};
++
++		ocram: ocram@f8000000 {
++			compatible = "fsl,imx-ocram", "mmio-sram";
++			reg = <0xf8000000 0x20000>;
 +		};
  	};
- 	nand_cs3@62000000 {
- 		status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index ff1205e..73302db 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -124,6 +124,12 @@
+ 			status = "disabled";
+ 		};
+ 
++		ocram: ocram@00900000 {
++			compatible = "fsl,imx-ocram", "mmio-sram";
++			reg = <0x00900000 0x3f000>;
++			clocks = <&clks 142>;
++		};
++
+ 		timer@00a00600 {
+ 			compatible = "arm,cortex-a9-twd-timer";
+ 			reg = <0x00a00600 0x20>;
 -- 
-1.7.4.1
-
-
-------------------------------------------------------------------------------
-Everyone hates slow websites. So do we.
-Make your web apps faster with AppDynamics
-Download AppDynamics Lite for free today:
-http://p.sf.net/sfu/appdyn_d2d_mar
+1.7.10.4
