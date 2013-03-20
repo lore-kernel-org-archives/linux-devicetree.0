@@ -1,39 +1,42 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 2/2] of: remove /proc/device-tree
-Date: Wed, 20 Mar 2013 16:40:55 +0000
-Message-ID: <CACxGe6tm1AZo72qJ2Mq7RNAU=Z5Y9T3Dn0L1YNuMFFbExC9v5w@mail.gmail.com>
-References: <1363791074-16415-1-git-send-email-grant.likely@secretlab.ca>
- <1363791074-16415-3-git-send-email-grant.likely@secretlab.ca>
- <5149D38E.9030202@gmail.com> <CACTFLAMXHA58bu_c0hRQuZ=nru63hLaixNXaiU-Xa60WD5d=ew@mail.gmail.com>
+From: Daniel Mack <zonque@gmail.com>
+Subject: Re: [PATCH v3] clk: add si5351 i2c common clock driver
+Date: Wed, 20 Mar 2013 17:48:30 +0100
+Message-ID: <5149E85E.90701@gmail.com>
+References: <fa.WZVD0OA/Ooajh6BejiLf7TwBsJ8@ifi.uio.no> <fa.iIqrS6k+Vb5mLqAeL7iTsNsbKyo@ifi.uio.no> <fa.L0b41q+fYFZG0WOFTGKLhn/cGPA@ifi.uio.no> <fa.XCuSmq9Zwp3+wqFO8NEjpwADVZ0@ifi.uio.no> <6e120226-8a3c-415f-90f2-c44e7b6bbf96@googlegroups.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACTFLAMXHA58bu_c0hRQuZ=nru63hLaixNXaiU-Xa60WD5d=ew@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Mack <daniel@zonque.org>
-Cc: Rob Herring <robherring2@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <6e120226-8a3c-415f-90f2-c44e7b6bbf96@googlegroups.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: michal.bachraty@gmail.com
+Cc: fa.linux.kernel@googlegroups.com, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, Jean-Francois Moine <moinejf@free.fr>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 20, 2013 at 4:24 PM, Daniel Mack <daniel@zonque.org> wrote:
-> On Wed, Mar 20, 2013 at 4:19 PM, Rob Herring <robherring2@gmail.com> wrote:
->> On 03/20/2013 09:51 AM, Grant Likely wrote:
->>> The same data is now available in sysfs, so we can remove the code
->>> that exports it in /proc and replace it with a symlink to the sysfs
->>> version.
->>>
->>> Tested on versatile qemu model and mpc5200 eval board. More testing
->>> would be appreciated.
->>
->> I would suggest testing with lshw in particular. That's the only
->> /proc/device-tree user I've come across.
->
-> kexec is another one. Not to mention various vendor scripts that aren't
-> necessarily public.
->
-> Don't such things also fall under the "we do not break userspace
-> compatibility - ever" rule?
+Hi Michal,
 
-Correct. I've got no intention of applying this without testing the
-major users first.
+On 20.03.2013 14:55, michal.bachraty@gmail.com wrote:
+> Thanks for writing this driver! I have tested your si5351 clock 
+> driver and his tuning capabilities. It works well, it generates 
+> proper clock frequency, but when new frequency is generated, little 
+> clock gap (1ms) is generated. Si5351 datasheet and WP claims, clock 
+> tuning can be without gaps - 
+> http://www.silabs.com/Support%20Documents/TechnicalDocs/Si5350-51-Frequency-Shifting-WP.pdf
+>
+> I made some tests with Si5351A chip and I found that when tuning touch
+> only Multisynth registers, it can tune without gaps. There is no need
+> for soft PLL reset. I found also, accessing Multisynth registers is not
+> atomic, so there can be another frequency at output, while not all
+> registers are written. Writing only to one register seems to be atomic.
 
-g.
+Yeah, but limiting possible changes to the PLLs to one single register
+also means that you cannot offer to generate all the frequencies any
+more. What could probably be done is refine the algorithm so that it
+stays 'as close as possible' to the former values, but I'm not sure how
+much work that implies.
+
+Can you provide a patch against Sebastian's v3 to do that? Then it can
+be cleanly applied on top of the driver later.
+
+
+Daniel
