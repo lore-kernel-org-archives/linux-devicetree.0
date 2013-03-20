@@ -1,35 +1,36 @@
-From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] net: ethernet: davinci_emac: make local function
- emac_poll_controller() static
-Date: Wed, 20 Mar 2013 21:52:43 +0530
-Message-ID: <5149E253.5080903@ti.com>
-References: <CAPgLHd8=u1jepO+Z0HExYyyybaYtVcdqk0yhtmnLUieUhEGLTw@mail.gmail.com>
+From: Daniel Mack <daniel@zonque.org>
+Subject: Re: [PATCH 2/2] of: remove /proc/device-tree
+Date: Wed, 20 Mar 2013 17:24:54 +0100
+Message-ID: <CACTFLAMXHA58bu_c0hRQuZ=nru63hLaixNXaiU-Xa60WD5d=ew@mail.gmail.com>
+References: <1363791074-16415-1-git-send-email-grant.likely@secretlab.ca>
+	<1363791074-16415-3-git-send-email-grant.likely@secretlab.ca>
+	<5149D38E.9030202@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAPgLHd8=u1jepO+Z0HExYyyybaYtVcdqk0yhtmnLUieUhEGLTw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, bhutchings-s/n/eUQHGBpZroRs9YW3xA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5149D38E.9030202@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On 3/20/2013 8:31 PM, Wei Yongjun wrote:
-> From: Wei Yongjun<yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+On Wed, Mar 20, 2013 at 4:19 PM, Rob Herring <robherring2@gmail.com> wrote:
+> On 03/20/2013 09:51 AM, Grant Likely wrote:
+>> The same data is now available in sysfs, so we can remove the code
+>> that exports it in /proc and replace it with a symlink to the sysfs
+>> version.
+>>
+>> Tested on versatile qemu model and mpc5200 eval board. More testing
+>> would be appreciated.
 >
-> emac_poll_controller() was not declared. It should be static.
->
-> Signed-off-by: Wei Yongjun<yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
-Acked-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+> I would suggest testing with lshw in particular. That's the only
+> /proc/device-tree user I've come across.
 
-Regards
-Mugunthan V N
+kexec is another one. Not to mention various vendor scripts that aren't
+necessarily public.
+
+Don't such things also fall under the "we do not break userspace
+compatibility - ever" rule?
+
+
+Daniel
