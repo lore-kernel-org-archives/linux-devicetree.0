@@ -1,19 +1,20 @@
-From: Rob Herring <robherring2@gmail.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Subject: Re: [PATCH 2/2] of: remove /proc/device-tree
-Date: Wed, 20 Mar 2013 10:19:42 -0500
-Message-ID: <5149D38E.9030202@gmail.com>
-References: <1363791074-16415-1-git-send-email-grant.likely@secretlab.ca> <1363791074-16415-3-git-send-email-grant.likely@secretlab.ca>
+Date: Wed, 20 Mar 2013 15:57:59 +0100
+Message-ID: <1363791479.12701.9.camel@pasglop>
+References: <1363791074-16415-1-git-send-email-grant.likely@secretlab.ca>
+	 <1363791074-16415-3-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1363791074-16415-3-git-send-email-grant.likely@secretlab.ca>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Rob Herring <rob.herring@calxeda.com>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On 03/20/2013 09:51 AM, Grant Likely wrote:
+On Wed, 2013-03-20 at 14:51 +0000, Grant Likely wrote:
 > The same data is now available in sysfs, so we can remove the code
 > that exports it in /proc and replace it with a symlink to the sysfs
 > version.
@@ -21,14 +22,12 @@ On 03/20/2013 09:51 AM, Grant Likely wrote:
 > Tested on versatile qemu model and mpc5200 eval board. More testing
 > would be appreciated.
 
-I would suggest testing with lshw in particular. That's the only
-/proc/device-tree user I've come across. lshw can get system data from
-either DMI or DT, so it is a possible alternative to dmidecode on ARM.
-There aren't a large number of properties that it reads though.
+NAK. It should at the very least be a CONFIG option for a while before
+completely switching over.
 
-Rob
+Cheers,
+Ben.
 
-> 
 > Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
 > Cc: Rob Herring <rob.herring@calxeda.com>
 > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -492,4 +491,3 @@ Rob
 >  extern struct proc_dir_entry *proc_symlink(const char *,
 >  		struct proc_dir_entry *, const char *);
 >  extern struct proc_dir_entry *proc_mkdir(const char *,struct proc_dir_entry *);
-> 
