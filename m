@@ -1,86 +1,55 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 0/7] USB: PHY: Tegra: registering TEGRA USB PHY as platform
- driver
-Date: Wed, 20 Mar 2013 11:36:20 -0600
-Message-ID: <5149F394.4070600@wwwdotorg.org>
-References: <1363609781-4045-1-git-send-email-vbyravarasu@nvidia.com> <5148C1DC.1020903@wwwdotorg.org> <D958900912E20642BCBC71664EFECE3E6E5092FFE2@BGMAIL02.nvidia.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 1/2] of: Make device nodes kobjects so they show up in
+ sysfs
+Date: Wed, 20 Mar 2013 18:46:19 +0100
+Message-ID: <1363801579.17680.3.camel@pasglop>
+References: <1363791074-16415-1-git-send-email-grant.likely@secretlab.ca>
+	 <1363791074-16415-2-git-send-email-grant.likely@secretlab.ca>
+	 <1363791432.12701.8.camel@pasglop> <20130320165620.GB28307@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <D958900912E20642BCBC71664EFECE3E6E5092FFE2-QZ+emBqkIFBDw2glCA4ptUEOCMrvLtNR@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Venu Byravarasu <vbyravarasu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org" <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130320165620.GB28307@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On 03/20/2013 06:12 AM, Venu Byravarasu wrote:
->> -----Original Message-----
->> From: Venu Byravarasu
->> Sent: Wednesday, March 20, 2013 11:30 AM
->> To: 'Stephen Warren'
->> Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org;
->> balbi-l0cyMroinI0@public.gmane.org; linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
->> linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> Subject: RE: [PATCH 0/7] USB: PHY: Tegra: registering TEGRA USB PHY as
->> platform driver
->>
->>> -----Original Message-----
->>> From: Stephen Warren [mailto:swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org]
->>> Sent: Wednesday, March 20, 2013 1:22 AM
->>> To: Venu Byravarasu
->>> Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org;
->>> balbi-l0cyMroinI0@public.gmane.org; linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
->>> linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->>> Subject: Re: [PATCH 0/7] USB: PHY: Tegra: registering TEGRA USB PHY as
->>> platform driver
->>>
->>> On 03/18/2013 06:29 AM, Venu Byravarasu wrote:
->>>> As part of this series, apart from patch containing changes to register
->>> TEGRA
->>>> USB PHY driver as platform driver, prepared below patches:
->>>> 1. Re-arranging & adding new DT properties.
->>>> 2. Getting various params from DT properties added.
->>>> 3. code clean up.
->>>
->>> Venu, I'm curious whether these patches were tested at all. I have found
->>> at least two significant problems with trivial testing:
->>
->> Stephen,
->> Initially started testing after applying each and every patch.
->> Like that tested till first 5 patches.
->> As did not see any issues till then, applied rest 2 patches at once and tested
->> with that.
->> Though did not see mouse getting vbus on the 1st boot, Vbus was coming
->> fine after disconnect and connect.
->> Hence did not test thereafter.
->>
->> After checking your current mail, tried now and observed that there seems to
->> be some real issue with patch#7 only. (As tried now after applying till patch#
->> 6 and did not see this issue).
->> Will debug further on patch#7 and update with proper fix after addressing
->> your other comments.
+On Wed, 2013-03-20 at 09:56 -0700, Greg Kroah-Hartman wrote:
+> > Unfortunately they occasionally are... VPDs can be pretty big for
+> > example.
 > 
-> Debugged further and found that the issue is because of http://marc.info/?l=linux-arm-kernel&m=135890098024987&w=2 
-> On reverting that patch and applying it on top of patch#7, able to see  enumeration working fine.
+> If the attributes are binary blobs, use the binary file capability of
+> sysfs to properly handle them.
+
+Except that we don't know that ... we have properties which comes all as
+"blobs", only the consumers can interpret what they contain. Tools like
+lsprop or dtc do have some built-in smarts to differentiate for example
+strings, simple numbers and blobs based roughly on heuristics of content
+& size but that's purely for the sake of pretty printing.
+
+Something like /proc/device-tree (or a sysfs equivalent) has no way
+really to know what's in there. So basically they should *all* be binary
+blobs.
+
+> > > Second, all normal sysfs attributes report their size as 4096 bytes
+> > > instead of the actual property size reported in /proc/device-tree. It is
+> > > possible that this change will cause some userspace tools to break.
+> > 
+> > This is btw a complete idiocy of sysfs and should/could be fixed.
 > 
-> Anyhow, will take care of your other comments and merge this change with patch#7 and resend
-> for review.
+> How can sysfs change this?  It doesn't know the size of the attribute
+> ahead of time, and it can change depending on what happens in the
+> system.  So we default to a page size, which is the largest size an
+> attribute can be.
 
-Venu, we already discussed this downstream, and I pointed out that patch
-is /extremely/ unlikely to cause any issue.
+That's true for some attributes I suppose and I while I do understand
+the difficulty there would be in calculating all the sizes on every
+stat, it's still gross, especially for those plenty of attributes who
+do have a fixed size.
 
-The clk_set_rate() call returns an error since the requested clock rate
-is not supported. The clk_prepare_enable() shouldn't have any effect
-because if it did, the only possible meaning is that the clock is
-otherwise turned off because it has no users, and that would prevent far
-more than USB from operating correctly.
+In our case, we do know the size, we should expose it.
 
-Please fully debug this problem and root-cause it. I'm not reverting
-that EMC clock patch without a complete explanation. There's little
-point reposting the patches until you've found the problem.
-
-If we did have to revert that patch, then we would need to redefine the
-DT bindings for Tegra USB to add that clock into the list of required
-clocks, since otherwise it could not clk_get(dev, "emc"). But the USB
-driver shouldn't be touching non-USB clocks.
+Cheers,
+Ben.
