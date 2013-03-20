@@ -1,55 +1,94 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 1/2] of: Make device nodes kobjects so they show up in
- sysfs
-Date: Wed, 20 Mar 2013 09:56:20 -0700
-Message-ID: <20130320165620.GB28307@kroah.com>
-References: <1363791074-16415-1-git-send-email-grant.likely@secretlab.ca>
- <1363791074-16415-2-git-send-email-grant.likely@secretlab.ca>
- <1363791432.12701.8.camel@pasglop>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/4] ARM: tegra: dalmore: add dt node for TPS65090's regulators
+Date: Wed, 20 Mar 2013 12:57:51 -0400
+Message-ID: <5149EA8F.6090806@nvidia.com>
+References: <1363787070-14801-1-git-send-email-ldewangan@nvidia.com> <1363787070-14801-4-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1363791432.12701.8.camel@pasglop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1363787070-14801-4-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 20, 2013 at 03:57:12PM +0100, Benjamin Herrenschmidt wrote:
-> On Wed, 2013-03-20 at 14:51 +0000, Grant Likely wrote:
-> > Device tree nodes are already treated as objects, and we already want to
-> > expose them to userspace which is done using the /proc filesystem today.
-> > Right now the kernel has to do a lot of work to keep the /proc view in
-> > sync with the in-kernel representation. If device_nodes are switched to
-> > be kobjects then the device tree code can be a whole lot simpler. It
-> > also turns out that switching to using /sysfs from /proc results in
-> > smaller code and data size, and the userspace ABI won't change if
-> > /proc/device-tree symlinks to /sys/device-tree
-> > 
-> > Switching to sysfs does introduce two limitations however. First, normal
-> > sysfs attributes have a maximum size of PAGE_SIZE. Any properties larger
-> > than 4k will still show up in sysfs, but attempting to read them will
-> > result in truncated data. Practically speaking this should not be an
-> > issue assuming large binary blobs aren't encoded into the device tree.
+On 3/20/2013 9:44 AM, Laxman Dewangan wrote:
+> NVIDIA's Tegra114 platform, Dalmore, uses the TPS65090 as
+> secondary PMICs which mainly act as voltage switch controlled
+> by I2C communication.
 > 
-> Unfortunately they occasionally are... VPDs can be pretty big for
-> example.
-
-If the attributes are binary blobs, use the binary file capability of
-sysfs to properly handle them.
-
-> > Second, all normal sysfs attributes report their size as 4096 bytes
-> > instead of the actual property size reported in /proc/device-tree. It is
-> > possible that this change will cause some userspace tools to break.
+> Add regulator node for this device.
 > 
-> This is btw a complete idiocy of sysfs and should/could be fixed.
+> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/regulator/tps65090.txt     |    4 +-
+>  arch/arm/boot/dts/tegra114-dalmore.dts             |   90 ++++++++++++++++++++
+>  2 files changed, 92 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/tps65090.txt b/Documentation/devicetree/bindings/regulator/tps65090.txt
+> index 313a60b..8926e2d 100644
+> --- a/Documentation/devicetree/bindings/regulator/tps65090.txt
+> +++ b/Documentation/devicetree/bindings/regulator/tps65090.txt
+> @@ -41,8 +41,8 @@ Example:
+>  		infet5-supply = <&some_reg>;
+>  		infet6-supply = <&some_reg>;
+>  		infet7-supply = <&some_reg>;
+> -		vsys_l1-supply = <&some_reg>;
+> -		vsys_l2-supply = <&some_reg>;
+> +		vsys-l1-supply = <&some_reg>;
+> +		vsys-l2-supply = <&some_reg>;
+>  
+>  		regulators {
+>  			dcdc1 {
+> diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts b/arch/arm/boot/dts/tegra114-dalmore.dts
+> index 6be9434..a47c3d2 100644
+> --- a/arch/arm/boot/dts/tegra114-dalmore.dts
+> +++ b/arch/arm/boot/dts/tegra114-dalmore.dts
+> @@ -731,6 +731,82 @@
+>  			regulator-boot-on;
+>  			regulator-always-on;
+>  		};
+> +
+> +		tps65090@48 {
+> +			compatible = "ti,tps65090";
+> +			reg = <0x48>;
+> +			interrupt-parent = <&gpio>;
+> +			interrupts = <72 0x04>; /* gpio PJ0 */
+> +
+> +			vsys1-supply = <&vdd_ac_bat_reg>;
+> +			vsys2-supply = <&vdd_ac_bat_reg>;
+> +			vsys3-supply = <&vdd_ac_bat_reg>;
+> +			infet1-supply = <&vdd_ac_bat_reg>;
+> +			infet2-supply = <&vdd_ac_bat_reg>;
+> +			infet3-supply = <&tps65090_dcdc2_reg>;
+> +			infet4-supply = <&tps65090_dcdc2_reg>;
+> +			infet5-supply = <&tps65090_dcdc2_reg>;
+> +			infet6-supply = <&tps65090_dcdc2_reg>;
+> +			infet7-supply = <&tps65090_dcdc2_reg>;
+> +			vsys-l1-supply = <&vdd_ac_bat_reg>;
+> +			vsys-l2-supply = <&vdd_ac_bat_reg>;
+> +
+> +			regulators {
+> +				dcdc1 {
+> +					regulator-name = "vdd-sys-5v0";
+> +					regulator-always-on;
+> +					regulator-boot-on;
+> +				};
 
-How can sysfs change this?  It doesn't know the size of the attribute
-ahead of time, and it can change depending on what happens in the
-system.  So we default to a page size, which is the largest size an
-attribute can be.
+You should also add the tps65090_dcdc1_reg label to dcdc1. I believe you
+make use of it in patch 4 and this currently causes build breaks.
 
-thanks,
+> +
+> +				tps65090_dcdc2_reg: dcdc2 {
+> +					regulator-name = "vdd-sys-3v3";
+> +					regulator-always-on;
+> +					regulator-boot-on;
+> +				};
+> +
+> 
 
-greg k-h
+-rhyland
+
+-- 
+nvpublic
