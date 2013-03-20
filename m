@@ -1,31 +1,62 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 1/4] ARM: tegra: enable Tegra114 based platform PMICs
-Date: Wed, 20 Mar 2013 14:50:21 -0600
-Message-ID: <514A210D.4040507@wwwdotorg.org>
-References: <1363787070-14801-1-git-send-email-ldewangan@nvidia.com> <1363787070-14801-2-git-send-email-ldewangan@nvidia.com>
+From: Andy Gross <andy.gross@ti.com>
+Subject: [PATCH v2 2/2] ARM: OMAP2+: Don't create DMM if DT present
+Date: Wed, 20 Mar 2013 15:50:42 -0500
+Message-ID: <1363812642-2921-3-git-send-email-andy.gross@ti.com>
+References: <1363812642-2921-1-git-send-email-andy.gross@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1363787070-14801-2-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1363812642-2921-1-git-send-email-andy.gross@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: Benoit Cousson <b-cousson@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Nishanth Menon <nm@ti.com>, devicetree-discuss@lists.ozlabs.org, Andy Gross <andy.gross@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/20/2013 07:44 AM, Laxman Dewangan wrote:
-> NVIDIA's Tegra114 have two reference platform, Dalmore and Pluto.
-> Dalmore uses the following PMICs:
-> - TPS65913 as primary PMIC.
-> - TPS65090 as secondary PMIC used for switch regulators and battery charging.
-> - TPS51632 for cpu regulator.
-> 
-> Pluto uses the TPS65913 as the PMIC.
-> 
-> Enable config variable of these PMICs for Dalomore and Pluto.
+Added code to conditionally skip over creating a DMM device from the
+hwmod information if there is a DMM node present in the DT.
 
-Just FYI, I would apply the DT changes to Tegra's for-3.10/dt branch,
-and the defconfig change to Tegra's for-3.10/defconfig branch. The /dt
-branch will get merged first, and the /defconfig after it. Hence, you
-would typically want to send patches in that order. It doesn't really
-make any practical difference in this case though.
+Signed-off-by: Andy Gross <andy.gross@ti.com>
+---
+ arch/arm/mach-omap2/drm.c |   18 ++++++++++++------
+ 1 files changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/mach-omap2/drm.c b/arch/arm/mach-omap2/drm.c
+index 59a4af7..01a0c6a 100644
+--- a/arch/arm/mach-omap2/drm.c
++++ b/arch/arm/mach-omap2/drm.c
+@@ -24,6 +24,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/platform_data/omap_drm.h>
++#include <linux/of.h>
+ 
+ #include "soc.h"
+ #include "omap_device.h"
+@@ -47,13 +48,18 @@ static int __init omap_init_drm(void)
+ 	struct omap_hwmod *oh = NULL;
+ 	struct platform_device *pdev;
+ 
+-	/* lookup and populate the DMM information, if present - OMAP4+ */
+-	oh = omap_hwmod_lookup("dmm");
++	if (!of_have_populated_dt()  ||
++		!of_find_compatible_node(NULL, NULL, "ti,dmm")) {
+ 
+-	if (oh) {
+-		pdev = omap_device_build(oh->name, -1, oh, NULL, 0);
+-		WARN(IS_ERR(pdev), "Could not build omap_device for %s\n",
+-			oh->name);
++		/* resort to hwmod lookup - LEGACY */
++		/* lookup and populate the DMM information, OMAP4+ only */
++		oh = omap_hwmod_lookup("dmm");
++
++		if (oh) {
++			pdev = omap_device_build(oh->name, -1, oh, NULL, 0);
++			WARN(IS_ERR(pdev), "Could not build device for %s\n",
++				oh->name);
++		}
+ 	}
+ 
+ 	platform_data.omaprev = GET_OMAP_TYPE;
+-- 
+1.7.5.4
+
