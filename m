@@ -1,7 +1,7 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 01/11] OF: add empty of_device_is_available for !OF
-Date: Wed, 20 Mar 2013 17:54:01 -0500
-Message-ID: <1363820051-24428-2-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 11/11] devtree: add binding documentation for sp804
+Date: Wed, 20 Mar 2013 17:54:11 -0500
+Message-ID: <1363820051-24428-12-git-send-email-robherring2@gmail.com>
 References: <1363820051-24428-1-git-send-email-robherring2@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1363820051-24428-1-git-send-email-robherring2@gmail.com>
@@ -10,30 +10,53 @@ To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetr
 Cc: Arnd Bergmann <arnd@arndb.de>, linus.walleij@linaro.org, Russell King <linux@arm.linux.org.uk>, haojian.zhuang@linaro.org, pawel.moll@arm.com, john.stultz@linaro.org, tglx@linutronix.de, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring@calxeda.com>
+From: Haojian Zhuang <haojian.zhuang@linaro.org>
 
-Add an empty version of of_device_is_available.
+The sp804 binding is already in use by several platforms. This adds missing
+documentation for the binding and also extends the binding to handle some
+additional possible interrupt configurations.
 
+Signed-off-by: Haojian Zhuang <haojian.zhuang@linaro.org>
 Signed-off-by: Rob Herring <rob.herring@calxeda.com>
 ---
- include/linux/of.h |    5 +++++
- 1 file changed, 5 insertions(+)
+ .../devicetree/bindings/timer/arm,sp804.txt        |   29 ++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/arm,sp804.txt
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index a0f1292..6fe655b 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -379,6 +379,11 @@ static inline int of_device_is_compatible(const struct device_node *device,
- 	return 0;
- }
- 
-+static inline int of_device_is_available(const struct device_node *device,)
-+{
-+	return 0;
-+}
+diff --git a/Documentation/devicetree/bindings/timer/arm,sp804.txt b/Documentation/devicetree/bindings/timer/arm,sp804.txt
+new file mode 100644
+index 0000000..5cd8eee
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/arm,sp804.txt
+@@ -0,0 +1,29 @@
++ARM sp804 Dual Timers
++---------------------------------------
 +
- static inline struct property *of_find_property(const struct device_node *np,
- 						const char *name,
- 						int *lenp)
++Required properties:
++- compatible: Should be "arm,sp804" & "arm,primecell"
++- interrupts: Should contain the list of Dual Timer interrupts. This is the
++	interrupt for timer 1 and timer 2. In the case of a single entry, it is
++	the combined interrupt or if "arm,sp804-has-irq" is present that
++	specifies which timer interrupt is connected.
++- reg: Should contain location and length for dual timer register.
++- clocks: clocks driving the dual timer hardware. This list should be 1 or 3
++	clocks.	With 3 clocks, the order is timer0 clock, timer1 clock,
++	apb_pclk. A single clock can also be specified if the same clock is
++	used for all clock inputs.
++
++Optional properties:
++- arm,sp804-has-irq = <#>: In the case of only 1 timer irq line connected, this
++	specifies if the irq connection is for timer 1 or timer 2. A value of 1
++	or 2 should be used.
++
++Example:
++
++	timer0: timer@fc800000 {
++		compatible = "arm,sp804", "arm,primecell";
++		reg = <0xfc800000 0x1000>;
++		interrupts = <0 0 4>, <0 1 4>;
++		clocks = <&timclk1 &timclk2 &pclk>;
++		clock-names = "timer1", "timer2", "apb_pclk";
++	};
 -- 
 1.7.10.4
