@@ -1,33 +1,76 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 2/2] of: remove /proc/device-tree
-Date: Wed, 20 Mar 2013 21:38:03 +0000
-Message-ID: <CACxGe6u2wNbPQSOPRCRO0To5UC-b8rXYanv2xv26hk5oaozvPA@mail.gmail.com>
-References: <1363791074-16415-1-git-send-email-grant.likely@secretlab.ca>
- <1363791074-16415-3-git-send-email-grant.likely@secretlab.ca> <1363791479.12701.9.camel@pasglop>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v3 1/6] drivers: phy: add generic PHY framework
+Date: Wed, 20 Mar 2013 23:36:19 +0100
+Message-ID: <514A39E3.6090501@gmail.com>
+References: <1363770725-13717-1-git-send-email-kishon@ti.com> <1363770725-13717-2-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1363791479.12701.9.camel@pasglop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1363770725-13717-2-git-send-email-kishon@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: balbi@ti.com, gregkh@linuxfoundation.org, arnd@arndb.de, akpm@linux-foundation.org, rob@landley.net, broonie@opensource.wolfsonmicro.com, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, eballetbo@gmail.com, santosh.shilimkar@ti.com, linux-arm-kernel@lists.infradead.org, swarren@nvidia.com, javier@dowhile0.org, linux-omap@vger.kernel.org, davem@davemloft.net, cesarb@cesarb.net, mchehab@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 20, 2013 at 2:57 PM, Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
-> On Wed, 2013-03-20 at 14:51 +0000, Grant Likely wrote:
->> The same data is now available in sysfs, so we can remove the code
->> that exports it in /proc and replace it with a symlink to the sysfs
->> version.
->>
->> Tested on versatile qemu model and mpc5200 eval board. More testing
->> would be appreciated.
+Hi Kishon,
+
+On 03/20/2013 10:12 AM, Kishon Vijay Abraham I wrote:
+> The PHY framework provides a set of APIs for the PHY drivers to
+> create/destroy a PHY and APIs for the PHY users to obtain a reference to the
+> PHY with or without using phandle. To obtain a reference to the PHY without
+> using phandle, the platform specfic intialization code (say from board file)
+> should have already called phy_bind with the binding information. The binding
+> information consists of phy's device name, phy user device name and an index.
+> The index is used when the same phy user binds to mulitple phys.
 >
-> NAK. It should at the very least be a CONFIG option for a while before
-> completely switching over.
+> PHY drivers should create the PHY by passing phy_descriptor that has
+> describes the PHY (label, type etc..) and ops like init, exit, suspend, resume,
+> poweron, shutdown.
+>
+> The documentation for the generic PHY framework is added in
+> Documentation/phy.txt and the documentation for the sysfs entry is added
+> in Documentation/ABI/testing/sysfs-class-phy.
+>
+> Signed-off-by: Kishon Vijay Abraham I<kishon@ti.com>
+> ---
+[...]
+> +static inline struct phy *phy_get(struct device *dev, int index)
+> +{
+> +	return ERR_PTR(-EOPNOTSUPP);
 
-I'll modify patch 1 to create the symlink if CONFIG_PROC_DEVICETREE is
-not set. After the first patch can be applied we can leave it for a
-release or two before applying the second.
+Shouldn't these be -ENOSYS ? EOPNOTSUPP is defined by POSIX as
+"Operation not supported on socket". And EOPNOTSUPP appears to be
+mostly used in the network code in the kernel.
 
-g.
+> +}
+> +
+> +static inline struct phy *devm_phy_get(struct device *dev, int index)
+> +{
+> +	return ERR_PTR(-EOPNOTSUPP);
+> +}
+> +
+> +static inline struct phy *of_phy_get(struct device *dev, int index)
+> +{
+> +	return ERR_PTR(-EOPNOTSUPP);
+> +}
+> +
+> +static inline struct phy *devm_of_phy_get(struct device *dev, int index)
+> +{
+> +	return ERR_PTR(-EOPNOTSUPP);
+> +}
+> +
+> +static inline struct phy *of_phy_get_byname(struct device *dev,
+> +	const char *string)
+> +{
+> +	return ERR_PTR(-EOPNOTSUPP);
+> +}
+> +
+> +static inline struct phy *devm_of_phy_get_byname(struct device *dev,
+> +	const char *string)
+> +{
+> +	return ERR_PTR(-EOPNOTSUPP);
+> +}
+
+Thanks,
+Sylwester
