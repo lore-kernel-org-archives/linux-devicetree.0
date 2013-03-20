@@ -1,46 +1,37 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v3 5/6] ARM: dts: omap: update usb_otg_hs data
-Date: Wed, 20 Mar 2013 14:59:43 -0600
-Message-ID: <514A233F.8010105@wwwdotorg.org>
-References: <1363770725-13717-1-git-send-email-kishon@ti.com> <1363770725-13717-6-git-send-email-kishon@ti.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/2] of: Make device nodes kobjects so they show up in sysfs
+Date: Wed, 20 Mar 2013 21:28:01 +0000
+Message-ID: <CACxGe6vw5sevcv=NgeQDhH1QuGgTphia-AnKbSQkVm64tSgNSA@mail.gmail.com>
+References: <1363791074-16415-1-git-send-email-grant.likely@secretlab.ca>
+ <1363791074-16415-2-git-send-email-grant.likely@secretlab.ca> <1363791432.12701.8.camel@pasglop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1363770725-13717-6-git-send-email-kishon@ti.com>
+In-Reply-To: <1363791432.12701.8.camel@pasglop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: balbi@ti.com, gregkh@linuxfoundation.org, arnd@arndb.de, akpm@linux-foundation.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, tony@atomide.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, b-cousson@ti.com, linux@arm.linux.org.uk, eballetbo@gmail.com, javier@dowhile0.org, mchehab@redhat.com, santosh.shilimkar@ti.com, broonie@opensource.wolfsonmicro.com, swarren@nvidia.com, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On 03/20/2013 03:12 AM, Kishon Vijay Abraham I wrote:
-> Updated the usb_otg_hs dt data to include the *phy* and *phy-names*
-> binding in order for the driver to use the new generic PHY framework.
-> Also updated the Documentation to include the binding information.
+On Wed, Mar 20, 2013 at 2:57 PM, Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+> On Wed, 2013-03-20 at 14:51 +0000, Grant Likely wrote:
+>> Both of the above problems can be worked around by using
+>> sysfs_create_bin_file() instead of sysfs_create_file(), but doing so
+>> adds an additional 20 to 40 bytes of overhead per property. A device
+>> tree has a lot of properties in it. That overhead will very quickly add
+>> up. The other option is to create a new custom sysfs attribute type
+>> would solve the problem without additional overhead, but at the cost of
+>> more complexity in the sysfs support code. However, I'm hopeful that
+>> these problems are just imaginary and we can stick with normal sysfs
+>> attributes.
+>
+> Disagreed. It would break stuff, especially the incorrect file size.
 
-> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
-> index abce256..3d6f9f6 100644
-> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
-> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
-> @@ -19,6 +19,9 @@ OMAP MUSB GLUE
->   - power : Should be "50". This signifies the controller can supply upto
->     100mA when operating in host mode.
->   - usb-phy : the phandle for the PHY device
-> + - phy : the phandle for the PHY device (used by generic PHY framework)
-> + - phy-names : the names of the PHY corresponding to the PHYs present in the
-> +   *phy* phandle.
+I retried with bin files. Turns out I should stop making assumptions
+and actually try things. It requires less code, is simpler and pretty
+much eliminates the issues listed above. :-)
 
-If the intent is for those properties to be generic and used by any DT
-binding that refers to a PHY node, I think you'd want to define those
-properties in e.g. Documentation/devicetree/bindings/phy/phy.txt, just
-like common clock/GPIO/... properties are defined in standalone common
-files.
+I'll post a new series with the fixes.
 
-I think you want to require that DT nodes that represent PHYs have a
-#phy-cells property, and that the format of the phy property be
-<&phy_phandle phy_specifier*>, where #phy-cells in the referenced node
-defines how many cells are part of phy_specifier*, just like (almost)
-any other DT property that references another node by phandle. That way,
-if a single DT node represents a HW block that implements e.g. 3 PHYs,
-it can use #phy-cells = <1>, and the referencing phy property can
-include a cell that indicates which of those 3 PHYs is being referenced.
+g.
