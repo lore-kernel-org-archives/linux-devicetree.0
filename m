@@ -1,97 +1,53 @@
-From: Venu Byravarasu <vbyravarasu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 0/7] USB: PHY: Tegra: registering TEGRA USB PHY as
- platform driver
-Date: Wed, 20 Mar 2013 11:29:59 +0530
-Message-ID: <D958900912E20642BCBC71664EFECE3E6E5092FED0@BGMAIL02.nvidia.com>
-References: <1363609781-4045-1-git-send-email-vbyravarasu@nvidia.com>
- <5148C1DC.1020903@wwwdotorg.org>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH V2 8/8] cpufreq: OMAP: donot allow to be used with device
+ tree
+Date: Wed, 20 Mar 2013 11:47:50 +0530
+Message-ID: <5149548E.6030405@ti.com>
+References: <1363715590-5131-1-git-send-email-nm@ti.com> <1363715590-5131-9-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5148C1DC.1020903-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Content-Language: en-US
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org" <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <1363715590-5131-9-git-send-email-nm@ti.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: linux-omap@vger.kernel.org, Kevin Hilman <khilman@deeprootsystems.com>, Jon Hunter <jon-hunter@ti.com>, =?UTF-8?B?QmVub8OudCBDb3Vzc29u?= <b-cousson@ti.com>, Shawn Guo <shawn.guo@linaro.org>, Keerthy <j-keerthy@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Stephen Warren [mailto:swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org]
-> Sent: Wednesday, March 20, 2013 1:22 AM
-> To: Venu Byravarasu
-> Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org; stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org;
-> balbi-l0cyMroinI0@public.gmane.org; linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Subject: Re: [PATCH 0/7] USB: PHY: Tegra: registering TEGRA USB PHY as
-> platform driver
-> 
-> On 03/18/2013 06:29 AM, Venu Byravarasu wrote:
-> > As part of this series, apart from patch containing changes to register
-> TEGRA
-> > USB PHY driver as platform driver, prepared below patches:
-> > 1. Re-arranging & adding new DT properties.
-> > 2. Getting various params from DT properties added.
-> > 3. code clean up.
-> 
-> Venu, I'm curious whether these patches were tested at all. I have found
-> at least two significant problems with trivial testing:
-
-Stephen,
-Initially started testing after applying each and every patch.
-Like that tested till first 5 patches.
-As did not see any issues till then, applied rest 2 patches at once and tested with that.
-Though did not see mouse getting vbus on the 1st boot, Vbus was coming fine after disconnect and connect.
-Hence did not test thereafter.
-
-After checking your current mail, tried now and observed that there seems to be some real issue with patch#7 only. (As tried now after applying till patch# 6 and did not see this issue).
-Will debug further on patch#7 and update with proper fix after addressing your other comments.
-
-Thanks for the review & heads up,
-venu
-
-> 
-> 1)
-> 
-> "reboot" or "shutdown -h now" both cause the following crash, with or
-> without any USB devices plugged in (or ever having been plugged in):
-> 
-> > [  355.836288] Unable to handle kernel NULL pointer dereference at virtual
-> address 00000028
-> > [  355.847961] pgd = ed620000
-> > [  355.854093] [00000028] *pgd=00000000
-> ...
-> > [  356.146728] [<c02e5978>] (tegra_ehci_hcd_shutdown+0x18/0x2c) from
-> [<c0279edc>] (platform_drv_shutdown+0x18/0x1c)
-> > [  356.160379] [<c0279edc>] (platform_drv_shutdown+0x18/0x1c) from
-> [<c027703c>] (device_shutdown+0x34/0x188)
-> > [  356.173464] [<c027703c>] (device_shutdown+0x34/0x188) from
-> [<c0034650>] (kernel_restart_prepare+0x34/0x3c)
-> > [  356.186668] [<c0034650>] (kernel_restart_prepare+0x34/0x3c) from
-> [<c0034664>] (kernel_restart+0xc/0x4c)
-> > [  356.199637] [<c0034664>] (kernel_restart+0xc/0x4c) from [<c0034858>]
-> (sys_reboot+0x1ac/0x1d8)
-> > [  356.211704] [<c0034858>] (sys_reboot+0x1ac/0x1d8) from [<c000e2c0>]
-> (ret_fast_syscall+0x0/0x30)
-> > [  356.223965] Code: ebfe4b27 e5903000 e24300e8 e5133044 (e5933028)
-> > [  356.233896] ---[ end trace 088d89482b4af176 ]---
-> 
-> 2)
-> 
-> The first time enumeration USB devices is attempted on a port fails. For
-> devices that are plugged in at boot, this means that to get them
-> working, they must be unplugged and re-plugged after boot. For devices
-> that are not plugged in at boot, this means they must be plugged,
-> unplugged, and then plugged in again.
-> 
-> This is obviously problematic in and of itself. This is especially true
-> for boards like Harmony that have a built-in USB hub and network chip. I
-> didn't actually test this, but I assume that they cannot be made to work
-> at all with this patch series, since they cannot be unplugged.
-> 
-> The failed enumeration is accompanied by the following message:
-> 
-> [    2.451530] hub 3-0:1.0: unable to enumerate USB device on port 1
-> 
-> Both of these problems reproduce on at least boards Ventana and
-> Seaboard(Springbank), although I assume that all boards are affected.
+On Tuesday 19 March 2013 11:23 PM, Nishanth Menon wrote:
+> We now use Soc generic cpufreq-cpu0 driver using DT entries.
+> However to allow cpufreq-cpu0 and omap-cpufreq drivers to co-exist,
+> we need to ensure the following using the same image:
+> 1. With device tree boot, we use cpufreq-cpu0
+> 2. With non device tree boot, we use omap-cpufreq
+>=20
+> In the case of (1), we will have cpu OPPs and regulator registered
+> as part of the DT, to ensure that omap-cpufreq and cpufreq-cpu0 don't
+> conflict in managing the frequency of the same cpu, we should not
+> permit init to pass in omap-cpufreq.
+>=20
+> In the case of (2), we will not have the cpufreq-cpu0 device, hence
+> only omap-cpufreq will be active.
+>=20
+> So, to acommodate both these usage conditions, we fail init of
+> omap-cpufreq when we boot with device tree.
+>=20
+> Cc: Kevin Hilman <khilman@deeprootsystems.com>
+> Cc: Jon Hunter <jon-hunter@ti.com>
+> Cc: "Beno=C3=AEt Cousson" <b-cousson@ti.com>
+> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> Cc: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Keerthy <j-keerthy@ti.com>
+> Cc: linux-omap@vger.kernel.org
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: cpufreq@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+>=20
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> ---
+I haven't followed all the DT binding for opp discussion but
+this patch is inline to keep non-DT cpufreq working till we
+move to DT only build.
+So FWIW,
+Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
