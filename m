@@ -1,59 +1,129 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 5/5] arm: dts: Convert mvebu device tree files to 64 bits
-Date: Thu, 21 Mar 2013 16:30:26 -0400
-Message-ID: <20130321203026.GF13280@titan.lakedaemon.net>
-References: <1363883179-1361-1-git-send-email-gregory.clement@free-electrons.com>
- <1363883179-1361-6-git-send-email-gregory.clement@free-electrons.com>
- <20130321201533.GN21478@lunn.ch> <20130321212236.1015295d@skate>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH V2 1/2] of: Make device nodes kobjects so they show up in sysfs
+Date: Thu, 21 Mar 2013 20:31:43 +0000
+Message-ID: <CACxGe6vv1Own_HFRL3LEv7XW0ycNb2xm53kM9t8TgHj=XFEKeQ@mail.gmail.com>
+References: <1363865097-32764-1-git-send-email-grant.likely@secretlab.ca>
+ <1363865097-32764-2-git-send-email-grant.likely@secretlab.ca> <1363870176.17680.33.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130321212236.1015295d@skate>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1363870176.17680.33.camel@pasglop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 21, 2013 at 09:22:36PM +0100, Thomas Petazzoni wrote:
-> Dear Andrew Lunn,
-> 
-> On Thu, 21 Mar 2013 21:15:33 +0100, Andrew Lunn wrote:
-> 
-> > Could you recommend a document which introduces LPAE.
-> > 
-> > Only being able to address 7GB seems a bit odd to me. I kind of
-> > expected you set up the translation tables to map a page in the 32 bit
-> > address range to any arbitrary page in the 40 bit address range. So
-> > leaving 0xC0000000 to 0xffffffff in the 32bit address range clear is
-> > easy. But why do you loose space in the 40bit address range?
-> 
-> translation tables convert virtual addresses to physical addresses.
-> Here, we are only talking about physical addresses. There is an overlap
-> between the physical addresses used by the RAM, and the physical
-> addresses at which I/O devices are visible.
-> 
-> And I'm not sure the SDRAM address decoding windows allows to split the
-> first 4 GB of RAM into two areas, one that would be mapped starting at
-> physical address 0x0, and another area that would be mapped at a
-> different address (above 4 GB).
-> 
-> However, I'm unsure why 0xC0000000 was chosen. Why not 0xD0000000,
-> where the internal registers currently start?
+On Thu, Mar 21, 2013 at 12:49 PM, Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+> On Thu, 2013-03-21 at 11:24 +0000, Grant Likely wrote:
+>> Device tree nodes are already treated as objects, and we already want to
+>> expose them to userspace which is done using the /proc filesystem today.
+>> Right now the kernel has to do a lot of work to keep the /proc view in
+>> sync with the in-kernel representation. If device_nodes are switched to
+>> be kobjects then the device tree code can be a whole lot simpler. It
+>> also turns out that switching to using /sysfs from /proc results in
+>> smaller code and data size, and the userspace ABI won't change if
+>> /proc/device-tree symlinks to /sys/device-tree
+>
+> Here you say /sys/device-tree
 
-I had the same question earlier but got distracted by other things.
-Thanks for bringing it up.  Gregory, shouldn't this be 0xD0000000?
+That's a typo
 
-thx,
+>
+>> +What:                /sys/firmware/ofw/../device-tree/
+>
+> Here you say /sys/firmware/../device-tree/ ... (wtf are those .. ?)
 
-Jason.
+See below... although I forgot to come back here and fix up the ABI
+document after I fixed up the multiple trees stuff, so the above line
+is a defect in the patch.
+
+>
+> And further down:
+>
+>         proc_symlink("device-tree", NULL, "/sys/firmware/ofw/device-tree-0");
+>
+> Some confusion here ... at least _I_ am confused :-)
+>
+> Then, you do this:
+>
+>> +static bool of_init_complete = false;
+>
+> The above requires some explanations
+
+I'll add a description to the patch here. What is happening is that
+the device tree is unflattened well before the firmware kobject is
+created. The of_init() function was created to loop over all the known
+device_nodes and register them at core_initcall() time. The
+of_init_complete flag is the holdoff mechanism, but looking at it
+again the code can simply check to see if of_kset is NULL to decide
+whether or not to call kobject_add()
+
+>
+>> +static int __of_node_add(struct device_node *np)
+>> +{
+>> +
+>> +     const char *name;
+>> +     struct property *pp;
+>> +     static int extra = 0;
+>> +     int rc;
+>> +
+>> +     np->kobj.kset = of_kset;
+>> +     if (!np->parent) {
+>> +             /* Nodes without parents are new top level trees */
+>> +             rc = kobject_add(&np->kobj, NULL, "device-tree-%i", extra++);
+>> +#if !defined(CONFIG_PROC_DEVICETREE)
+>> +             /* Symlink to the new tree when PROC_DEVICETREE is disabled */
+>> +             if (!rc && extra == 1)
+>> +                     proc_symlink("device-tree", NULL, "/sys/firmware/ofw/device-tree-0");
+>> +#endif /* CONFIG_PROC_DEVICETREE */
+>
+> WTF is this business of having multiple top level trees ? Also that
+> local static extra is gross. What is this all about ?
+
+Separate trees has been supported for a while now. The Xilinx folks
+have used it for describing FPGA configurations on add-in boards that
+are populated at runtime. 'extra' was trivial way to make sure each
+top level tree gets a unique directory name. Yeah, it's not the most
+elegant thing in the world. I wrote that as a placeholder until I've
+got a better idea of how multiple top level trees should be arranged.
+I want to take another look at how the devicetree overlay patches
+before settling on this.
+
+BTW, that is part of the reason why the ABI document states userspace
+should be using /proc/device-tree to access the tree. The location of
+the 'system' device tree may need to be moved.
+
+>
+>> +     } else {
+>> +             name = kbasename(np->full_name);
+>> +             if (!name || !name[0])
+>> +                     return -EINVAL;
+>> +             rc = kobject_add(&np->kobj, &np->parent->kobj, "%s", name);
+>> +     }
+>> +     if (rc)
+>> +             return rc;
+>> +
+>> +     for_each_property_of_node(np, pp) {
+>> +             /* Important: Don't leak passwords */
+>> +             bool secure = strncmp(pp->name, "security-", 9) == 0;
+>> +
+>> +             pp->attr.attr.name = pp->name;
+>> +             pp->attr.attr.mode = secure ? S_IRUSR : S_IRUGO;
+>> +             pp->attr.size = secure ? 0 : pp->length;
+>> +             pp->attr.read = of_node_property_read;
+>> +             rc = sysfs_create_bin_file(&np->kobj, &pp->attr);
+>> +             WARN(rc, "error creating device node attribute\n");
+>
+> Might want some better message (attribute name, node path, ...)
+
+Hahaha. I think I cut and paste that from somewhere. Yeah I can fix that up.
+
+> We have mechanisms to deal with collisions in proc devicetree that you
+> don't seem to have here (or am I missing something ?). The main source
+> of pain is a property and a child node having the same name (happens
+> regulary with l2-cache on macs for example).
+
+I missed those. Will be fixed for v3
+
+g.
