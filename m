@@ -1,33 +1,92 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v3 2/2] crypto: sahara: Add driver for SAHARA2
- accelerator.
-Date: Thu, 21 Mar 2013 17:53:54 +0800
-Message-ID: <20130321095354.GA26931@gondor.apana.org.au>
-References: <1362137873-8827-1-git-send-email-javier.martin@vista-silicon.com>
- <1362137873-8827-3-git-send-email-javier.martin@vista-silicon.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH] rtc: at91rm9200: add DT support
+Date: Thu, 21 Mar 2013 11:01:35 +0100
+Message-ID: <514ADA7F.7070303@atmel.com>
+References: <1360879147-17273-1-git-send-email-manabian@gmail.com> <5139ABEF.2000408@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1362137873-8827-3-git-send-email-javier.martin@vista-silicon.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Javier Martin <javier.martin@vista-silicon.com>
-Cc: linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, davem@davemloft.net, kernel@pengutronix.de, gcembed@gmail.com, shawn.guo@linaro.org, arnd@arndb.de, swarren@nvidia.com
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5139ABEF.2000408@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, a.zummo@towertech.it, rtc-linux@googlegroups.com, Andrew Morton <akpm@linux-foundation.org>
+Cc: Joachim Eastwood <manabian@gmail.com>, devicetree-discuss@lists.ozlabs.org, plagnioj@jcrosoft.com, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 01, 2013 at 12:37:53PM +0100, Javier Martin wrote:
-> SAHARA2 HW module is included in the i.MX27 SoC from
-> Freescale. It is capable of performing cipher algorithms
-> such as AES, 3DES..., hashing and RNG too.
+On 03/08/2013 10:14 AM, Nicolas Ferre :
+> On 02/14/2013 10:59 PM, Joachim Eastwood :
+>> Signed-off-by: Joachim Eastwood <manabian@gmail.com>
 > 
-> This driver provides support for AES-CBC and AES-ECB
-> by now.
+> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 > 
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Javier Martin <javier.martin@vista-silicon.com>
+> Alessandro, do you want to queue this one on your side?
 
-Patch applied to cryptodev.
+Ping?
+
+Maybe Andrew, you may take this one on your side?
+
+> Best regards,
+> 
+>> ---
+>>  .../devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt      | 15 +++++++++++++++
+>>  drivers/rtc/rtc-at91rm9200.c                              |  9 +++++++++
+>>  2 files changed, 24 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt b/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt
+>> new file mode 100644
+>> index 0000000..2a3feab
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt
+>> @@ -0,0 +1,15 @@
+>> +Atmel AT91RM9200 Real Time Clock
+>> +
+>> +Required properties:
+>> +- compatible: should be: "atmel,at91rm9200-rtc"
+>> +- reg: physical base address of the controller and length of memory mapped
+>> +  region.
+>> +- interrupts: rtc alarm/event interrupt
+>> +
+>> +Example:
+>> +
+>> +rtc@fffffe00 {
+>> +	compatible = "atmel,at91rm9200-rtc";
+>> +	reg = <0xfffffe00 0x100>;
+>> +	interrupts = <1 4 7>;
+>> +};
+>> diff --git a/drivers/rtc/rtc-at91rm9200.c b/drivers/rtc/rtc-at91rm9200.c
+>> index b6469e2..2ea0ee3 100644
+>> --- a/drivers/rtc/rtc-at91rm9200.c
+>> +++ b/drivers/rtc/rtc-at91rm9200.c
+>> @@ -28,6 +28,8 @@
+>>  #include <linux/ioctl.h>
+>>  #include <linux/completion.h>
+>>  #include <linux/io.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>>  
+>>  #include <asm/uaccess.h>
+>>  
+>> @@ -382,12 +384,19 @@ static const struct dev_pm_ops at91_rtc_pm = {
+>>  #define at91_rtc_pm_ptr	NULL
+>>  #endif
+>>  
+>> +static const struct of_device_id at91_rtc_dt_ids[] = {
+>> +	{ .compatible = "atmel,at91rm9200-rtc" },
+>> +	{ /* sentinel */ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, at91_rtc_dt_ids);
+>> +
+>>  static struct platform_driver at91_rtc_driver = {
+>>  	.remove		= __exit_p(at91_rtc_remove),
+>>  	.driver		= {
+>>  		.name	= "at91_rtc",
+>>  		.owner	= THIS_MODULE,
+>>  		.pm	= at91_rtc_pm_ptr,
+>> +		.of_match_table = of_match_ptr(at91_rtc_dt_ids),
+>>  	},
+>>  };
+
+
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Nicolas Ferre
