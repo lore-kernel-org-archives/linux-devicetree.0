@@ -1,49 +1,89 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH V2 1/4] ARM: tegra: dalmore: add cpu regulator node
-Date: Thu, 21 Mar 2013 18:07:14 +0400
-Message-ID: <514B1412.9060707@cogentembedded.com>
-References: <1363873663-19272-1-git-send-email-ldewangan@nvidia.com> <1363873663-19272-2-git-send-email-ldewangan@nvidia.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [RFC][PATCH 1/2] ARM: OMAP4: clock: Add device tree support for
+ AUXCLKs
+Date: Thu, 21 Mar 2013 16:11:17 +0200
+Message-ID: <514B1505.30409@ti.com>
+References: <1363703220-4777-1-git-send-email-rogerq@ti.com> <1363703220-4777-2-git-send-email-rogerq@ti.com> <514B0650.5070406@ti.com> <514B10FE.1000805@ti.com> <514B1383.1070102@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1363873663-19272-2-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <514B1383.1070102@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: tony@atomide.com, b-cousson@ti.com, linux@arm.linux.org.uk, balbi@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, "Menon, Nishanth" <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 03/21/2013 04:04 PM, Rajendra Nayak wrote:
+> On Thursday 21 March 2013 07:24 PM, Roger Quadros wrote:
+>> On 03/21/2013 03:08 PM, Rajendra Nayak wrote:
+>>> []..
+>>>
+>>>> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
+>>>> index 0274ff7..23f2064 100644
+>>>> --- a/arch/arm/mach-omap2/board-generic.c
+>>>> +++ b/arch/arm/mach-omap2/board-generic.c
+>>>> @@ -158,7 +158,7 @@ DT_MACHINE_START(OMAP4_DT, "Generic OMAP4 (Flattened Device Tree)")
+>>>>  	.init_irq	= omap_gic_of_init,
+>>>>  	.init_machine	= omap_generic_init,
+>>>>  	.init_late	= omap4430_init_late,
+>>>> -	.init_time	= omap4_local_timer_init,
+>>>> +	.init_time	= omap4_init_time,
+>>>>  	.dt_compat	= omap4_boards_compat,
+>>>>  	.restart	= omap44xx_restart,
+>>>>  MACHINE_END
+>>>
+>>> []..
+>>>> +#ifdef CONFIG_OF
+>>>> +int __init omap4_clk_init_dt(void)
+>>>> +{
+>>>> +	struct device_node *np;
+>>>> +
+>>>> +	np = of_find_compatible_node(NULL, NULL, "ti,omap4-scrm");
+>>>> +	if (np) {
+>>>> +		scrm_data.clks = scrm_clks;
+>>>> +		scrm_data.clk_num = ARRAY_SIZE(scrm_clks);
+>>>> +		of_clk_add_provider(np, of_clk_src_onecell_get,	&scrm_data);
+>>>> +	}
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>
+>>> []..
+>>>> +
+>>>> +void __init omap4_init_time(void)
+>>>> +{
+>>>> +	omap4_clk_init_dt();
+>>>> +	omap4_local_timer_init();
+>>>> +}
+>>>
+>>> I guess you did all this because of_clk_add_provider() needs
+>>> slab to be initialized. With the below patch[1], now clk inits
+>>> happen within .init_timer already, so none of this would
+>>> be needed.
+>>>
+>>> [1] http://www.spinics.net/lists/arm-kernel/msg231288.html
+>>>
+>>
+>> Right. I can then call omap4_clk_init_dt() from within omap4xxx_clk_init().
+>>
+>> Any comments about the main subject? Does the approach look fine?
+> 
+> It looks fine, except for the fact that I was wondering if the clock
+> provider needs to restrict itself to SCRM.
+> Nishant Menon brought up a need for specifying the mpu clock source
+> from within DT, to be able to use a generic cpufreq driver.
+> It could be a provider (not specific to scrm, but having only scrm
+> clocks for now) which we could add clocks as and when we see a need for
+> them to be specified from DT.
 
-On 21-03-2013 17:47, Laxman Dewangan wrote:
+OK, I will revise the patch to not make it SCRM specific.
 
-> Dalmore uses the TPS51632 as CPU regulator. The device is connected
-> on I2C5.
+> 
+> Btw, you need to copy Paul Walmsley for any clock related patches as
+> he is the OMAP clock maintainer.
 
-> Add DT node for TPS51632.
+OK. Thanks for letting know.
 
-> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->   arch/arm/boot/dts/tegra114-dalmore.dts |   15 +++++++++++++++
->   1 files changed, 15 insertions(+), 0 deletions(-)
-
-> diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts b/arch/arm/boot/dts/tegra114-dalmore.dts
-> index a61974e..6be9434 100644
-> --- a/arch/arm/boot/dts/tegra114-dalmore.dts
-> +++ b/arch/arm/boot/dts/tegra114-dalmore.dts
-> @@ -718,6 +718,21 @@
->   		clock-frequency = <408000000>;
->   	};
->
-> +	i2c@7000d000 {
-> +		status = "okay";
-> +		clock-frequency = <400000>;
-> +
-> +		tps51632 {
-
-    Should be named "tps51632@43" I think.
-
-> +			compatible = "ti,tps51632";
-> +			reg = <0x43>;
-
-WBR, Sergei
+cheers,
+-roger
