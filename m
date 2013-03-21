@@ -1,93 +1,116 @@
-From: Pantelis Antoniou <panto@antoniou-consulting.com>
-Subject: Re: [PATCH 5/6] OF: Introduce Device Tree resolve support.
-Date: Thu, 21 Mar 2013 11:12:44 +0200
-Message-ID: <E7AB277F-5875-4533-8977-18E09CA1EEDC@antoniou-consulting.com>
-References: <1357327870-13615-1-git-send-email-panto@antoniou-consulting.com> <1357327870-13615-6-git-send-email-panto@antoniou-consulting.com> <20130121044836.GB24829@truffula.fritz.box> <EEEDB0B2-7410-456B-BED7-89FD5E407553@antoniou-consulting.com> <20130122040524.GG23500@truffula.fritz.box> <AB11FABF-6A45-493D-869D-7549FD758DD2@antoniou-consulting.com> <20130123044041.GS23500@truffula.fritz.box> <060132B1-BB52-4C7F-B8D3-82B49BE49BB7@antoniou-consulting.com> <20130316092435.9FA4B3E095B@localhost> <6BBAEB5D-D4E0-4276-B3B8-468C30547E75@antoniou-consulting.com> <20130319171848.733493E33F5@localhost>
-Mime-Version: 1.0 (Apple Message framework v1085)
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH] DMA: of: Constant names
+Date: Thu, 21 Mar 2013 14:34:47 +0530
+Message-ID: <20130321090447.GJ10326@intel.com>
+References: <1361720169-3832-1-git-send-email-mpa@pengutronix.de>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130319171848.733493E33F5@localhost>
-Sender: linux-doc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: David Gibson <david@gibson.dropbear.id.au>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jon Loeliger <jdl@jdl.com>, Tony Lindgren <tony@atomide.com>, Stephen Warren <swarren@wwwdotorg.org>, Benoit Cousson <b-cousson@ti.com>, Mitch Bradley <wmb@firmworks.com>, Alan Tull <atull@altera.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Joel A Fernandes <agnel.joel@gmail.com>, Rob Clark <robdclark@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, Matt Ranostay <mranostay@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1361720169-3832-1-git-send-email-mpa@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: kernel@pengutronix.de, jon-hunter@ti.com, djbw@fb.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
-
-On Mar 19, 2013, at 7:18 PM, Grant Likely wrote:
-
-> On Tue, 19 Mar 2013 13:51:01 +0200, Pantelis Antoniou <panto@antoniou-consulting.com> wrote:
->> Hi Grant,
->> 
->> On Mar 16, 2013, at 11:24 AM, Grant Likely wrote:
->> 
->>> On Wed, 23 Jan 2013 12:58:02 +0200, Pantelis Antoniou <panto@antoniou-consulting.com> wrote:
->>>> Hi David,
->>>> 
->>>> On Jan 23, 2013, at 6:40 AM, David Gibson wrote:
->>>>> Ok.  Nonetheless it's not hard to avoid a recursive approach here.
->>>> 
->>>> How can I find the maximum phandle value of a subtree without using recursion.
->>>> Note that the whole function is just 6 lines long.
->>> 
->>> It's a failure in the existing kernel DT data structures. We need a hash
->>> lookup for the phandles to eliminate the search entirely. Then you'd be
->>> able to allocated new phandles on the fly easily and resolve phandles
->>> without searching the whole tree (which has always been horrible).
->>> 
->> 
->> Yes, it is pretty obvious that the in-kernel data structures are sub-optimal.
->> But I was not after modifying them, since that's a different kind of problem.
+On Sun, Feb 24, 2013 at 04:36:09PM +0100, Markus Pargmann wrote:
+> No DMA of-function alters the name, so this patch changes the name arguments
+> to be constant. Most drivers will probably request DMA channels using a
+> constant name.
 > 
-> Think about it this way; fixing up that aspect of the data structure
-> makes the job you're trying to do a lot easier. I don't feel bad about
-> asking you to add a radix tree for phandle lookups when it makes your
-> patches a whole lot better.  :-)
+> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+Applied thanks
+
+--
+~Vinod
+> ---
+>  drivers/dma/dmaengine.c   | 2 +-
+>  drivers/dma/of-dma.c      | 6 +++---
+>  include/linux/dmaengine.h | 4 ++--
+>  include/linux/of_dma.h    | 4 ++--
+>  4 files changed, 8 insertions(+), 8 deletions(-)
 > 
-
-Oh that's going to be fun... maybe.
-
->> Since we're having a 'sub-optimal' data structures, I'd like to point out that
->> the usage of of_find_by_name(), mostly by drivers trying to find a child
->> of their own node, works by a lucky accident of how the device nodes are instantiated
->> by the flat tree loader. Most of the use cases should be replaced by a call
->> to of_get_child_by_name() which does the right thing.
+> diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+> index 242b8c0..779f43a 100644
+> --- a/drivers/dma/dmaengine.c
+> +++ b/drivers/dma/dmaengine.c
+> @@ -555,7 +555,7 @@ EXPORT_SYMBOL_GPL(__dma_request_channel);
+>   * @dev:	pointer to client device structure
+>   * @name:	slave channel name
+>   */
+> -struct dma_chan *dma_request_slave_channel(struct device *dev, char *name)
+> +struct dma_chan *dma_request_slave_channel(struct device *dev, const char *name)
+>  {
+>  	/* If device-tree is present get slave info from here */
+>  	if (dev->of_node)
+> diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+> index 69d04d2..6036cd0 100644
+> --- a/drivers/dma/of-dma.c
+> +++ b/drivers/dma/of-dma.c
+> @@ -172,8 +172,8 @@ EXPORT_SYMBOL_GPL(of_dma_controller_free);
+>   * specifiers, matches the name provided. Returns 0 if the name matches and
+>   * a valid pointer to the DMA specifier is found. Otherwise returns -ENODEV.
+>   */
+> -static int of_dma_match_channel(struct device_node *np, char *name, int index,
+> -				struct of_phandle_args *dma_spec)
+> +static int of_dma_match_channel(struct device_node *np, const char *name,
+> +				int index, struct of_phandle_args *dma_spec)
+>  {
+>  	const char *s;
+>  
+> @@ -198,7 +198,7 @@ static int of_dma_match_channel(struct device_node *np, char *name, int index,
+>   * Returns pointer to appropriate dma channel on success or NULL on error.
+>   */
+>  struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
+> -					      char *name)
+> +					      const char *name)
+>  {
+>  	struct of_phandle_args	dma_spec;
+>  	struct of_dma		*ofdma;
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index f593999..f062f89 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -968,7 +968,7 @@ enum dma_status dma_sync_wait(struct dma_chan *chan, dma_cookie_t cookie);
+>  enum dma_status dma_wait_for_async_tx(struct dma_async_tx_descriptor *tx);
+>  void dma_issue_pending_all(void);
+>  struct dma_chan *__dma_request_channel(dma_cap_mask_t *mask, dma_filter_fn fn, void *fn_param);
+> -struct dma_chan *dma_request_slave_channel(struct device *dev, char *name);
+> +struct dma_chan *dma_request_slave_channel(struct device *dev, const char *name);
+>  void dma_release_channel(struct dma_chan *chan);
+>  #else
+>  static inline enum dma_status dma_wait_for_async_tx(struct dma_async_tx_descriptor *tx)
+> @@ -984,7 +984,7 @@ static inline struct dma_chan *__dma_request_channel(dma_cap_mask_t *mask,
+>  	return NULL;
+>  }
+>  static inline struct dma_chan *dma_request_slave_channel(struct device *dev,
+> -							 char *name)
+> +							 const char *name)
+>  {
+>  	return NULL;
+>  }
+> diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+> index d15073e..ce6a8ab 100644
+> --- a/include/linux/of_dma.h
+> +++ b/include/linux/of_dma.h
+> @@ -40,7 +40,7 @@ extern int of_dma_controller_register(struct device_node *np,
+>  		void *data);
+>  extern int of_dma_controller_free(struct device_node *np);
+>  extern struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
+> -						     char *name);
+> +						     const char *name);
+>  extern struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
+>  		struct of_dma *ofdma);
+>  #else
+> @@ -58,7 +58,7 @@ static inline int of_dma_controller_free(struct device_node *np)
+>  }
+>  
+>  static inline struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
+> -						     char *name)
+> +						     const char *name)
+>  {
+>  	return NULL;
+>  }
+> -- 
+> 1.8.1.2
 > 
-> It is true. In fact, calling of_find_node_by_name() when using .dtb is
-> most likely a bug since using node name to determine behaviour is
-> strongly discouraged.
-
-Maybe mark the function as deprecated then? Easier to get people to fix it.
-
-> 
->> Fair enough, but be warned that phandle resolution the overlay feature is mostly useless.
->> 
->> In actual practice the amount of driver nodes that can be overlaid without a single case
->> of referencing phandles outside (or within) their own blob is close to zero.
-> 
-> That's not what I'm saying. I'm saying that (at least for now) we should
-> require the overlay to already know the phandles from the parent and to
-> refuse to load an overlay that defines phandles already in use in the
-> base. Overlays do become usable at that point. A mechanism for phandle
-> resolution so that conflicts can be found and resolved can be added
-> as a feature enhancement. By splitting it out you'll be able to get the
-> overlay feature merged even if we don't have agreement on the resolution
-> mechanism yet.
-> 
-
-As long as we don't come up with something that's too difficult to use for non
-kernel developers. I would hate to punt and push all the complexity of phandle
-resolution to the driver/cape developer.
-
-FWIW, the resolution mechanism we use on the beaglebone seems to work just fine,
-and people seem to handle it just fine. The part that trips them is mostly how
-to install the updated dtc compiler that's required.
-
-> g.
-> 
-
-Regards
-
--- Pantelis
-
