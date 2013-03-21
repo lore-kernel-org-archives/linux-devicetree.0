@@ -1,62 +1,36 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [RFC][PATCH 1/2] ARM: OMAP4: clock: Add device tree support for
- AUXCLKs
-Date: Thu, 21 Mar 2013 18:38:32 +0530
-Message-ID: <514B0650.5070406@ti.com>
-References: <1363703220-4777-1-git-send-email-rogerq@ti.com> <1363703220-4777-2-git-send-email-rogerq@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 00/11] sp804 and integrator timer CLKSRC_OF support
+Date: Thu, 21 Mar 2013 13:24:37 +0000
+Message-ID: <201303211324.37654.arnd@arndb.de>
+References: <1363820051-24428-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1363703220-4777-2-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: tony@atomide.com, b-cousson@ti.com, linux@arm.linux.org.uk, balbi@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1363820051-24428-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[]..
+On Wednesday 20 March 2013, Rob Herring wrote:
+> This series is dependent on my CLKSRC_OF clean-up in arm-soc, my
+> sched_clock selection series[1], and Arnd's default machine descriptor
+> patch (for default clocksource_of_init call). The full series is
+> available here:
 
-> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
-> index 0274ff7..23f2064 100644
-> --- a/arch/arm/mach-omap2/board-generic.c
-> +++ b/arch/arm/mach-omap2/board-generic.c
-> @@ -158,7 +158,7 @@ DT_MACHINE_START(OMAP4_DT, "Generic OMAP4 (Flattened Device Tree)")
->  	.init_irq	= omap_gic_of_init,
->  	.init_machine	= omap_generic_init,
->  	.init_late	= omap4430_init_late,
-> -	.init_time	= omap4_local_timer_init,
-> +	.init_time	= omap4_init_time,
->  	.dt_compat	= omap4_boards_compat,
->  	.restart	= omap44xx_restart,
->  MACHINE_END
+All your patches look good to me, but I'd suggest you don't depend on
+my default machine descriptor patch yet, that just makes the dependencies
+harder to track, and we can easily remove all the calls once they
+are obsoletely.
 
-[]..
-> +#ifdef CONFIG_OF
-> +int __init omap4_clk_init_dt(void)
-> +{
-> +	struct device_node *np;
-> +
-> +	np = of_find_compatible_node(NULL, NULL, "ti,omap4-scrm");
-> +	if (np) {
-> +		scrm_data.clks = scrm_clks;
-> +		scrm_data.clk_num = ARRAY_SIZE(scrm_clks);
-> +		of_clk_add_provider(np, of_clk_src_onecell_get,	&scrm_data);
-> +	}
-> +
-> +	return 0;
-> +}
-
-[]..
-> +
-> +void __init omap4_init_time(void)
-> +{
-> +	omap4_clk_init_dt();
-> +	omap4_local_timer_init();
-> +}
-
-I guess you did all this because of_clk_add_provider() needs
-slab to be initialized. With the below patch[1], now clk inits
-happen within .init_timer already, so none of this would
-be needed.
-
-[1] http://www.spinics.net/lists/arm-kernel/msg231288.html
+	Arnd
