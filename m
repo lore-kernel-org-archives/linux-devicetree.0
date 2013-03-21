@@ -1,50 +1,57 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: RE: RE: [PATCH v6 00/16] clk: exynos4/5: migrate to common clock
- framework
-Date: Fri, 22 Mar 2013 08:26:24 +0900
-Message-ID: <14d801ce268b$80a8d160$81fa7420$%kim@samsung.com>
-References: <1361175686-19400-1-git-send-email-thomas.abraham@linaro.org>
- <20130319184938.8663.18115@quantum> <201303192212.16877.heiko@sntech.de>
- <20130319215038.8663.83548@quantum>
- <116a01ce24fd$e32658b0$a9730a10$%kim@samsung.com>
- <20130320025656.11073.90469@quantum>
- <11af01ce2526$63b0a8f0$2b11fad0$%kim@samsung.com>
- <20130320144000.11073.37741@quantum>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
+Subject: Re: [PATCH V2] cpufreq: ARM big LITTLE: Add generic cpufreq driver and its DT glue
+Date: Fri, 22 Mar 2013 00:50:56 +0100
+Message-ID: <3782512.fC3ZOYy3MV@vostro.rjw.lan>
+References: <6cba8f153cfd4b0d3075a34a6dfe287bdec2eb06.1362676407.git.viresh.kumar@linaro.org> <513CAD9B.908@gmail.com> <CAKohponV8MR=J8bbNFxGF9JXQB0uadv7iDcbW9D-qr2N53U_kQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20130320144000.11073.37741@quantum>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Mike Turquette' <mturquette@linaro.org>, =?utf-8?Q?'Heiko_St=C3=BCbner'?= <heiko@sntech.de>
-Cc: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, t.figa@samsung.com, sylvester.nawrocki@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAKohponV8MR=J8bbNFxGF9JXQB0uadv7iDcbW9D-qr2N53U_kQ@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, robin.randhawa@arm.com
+Cc: Francesco Lavra <francescolavra.fl@gmail.com>, Steve.Bannister@arm.com, linux@arm.linux.org.uk, linux-pm@vger.kernel.org, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>, devicetree-discuss@lists.ozlabs.org, Liviu.Dudau@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.hambleton@broadcom.com, linaro-kernel@lists.linaro.org, charles.garcia-tobin@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Mike Turquette wrote:
-
-[...]
+On Monday, March 11, 2013 08:57:49 AM Viresh Kumar wrote:
+> On 10 March 2013 23:58, Francesco Lavra <francescolavra.fl@gmail.com> wrote:
+> > On 03/07/2013 06:14 PM, Viresh Kumar wrote:
+> >> +void bL_cpufreq_unregister(struct cpufreq_arm_bL_ops *ops)
+> >> +{
+> >> +     if (arm_bL_ops != ops) {
+> >> +             pr_info("%s: Registered with: %s, can't unregister, exiting\n",
+> >> +                             __func__, arm_bL_ops->name);
+> >> +     }
 > >
-> > > Furthermore if I *had* agreed on the previous version it would still
-> > > have been appropriate to put my Acked-by on those patches, which is
-> > > clearly missing today.
-> > >
-> > BTW, how about following?
-> >
-> > http://www.spinics.net/lists/arm-kernel/msg210266.html
-> >
-> > In my understanding, it should be your agreement, it cannot be 'ack' though.
-> >
+> > The code is not doing what the info message says.
 > 
-> I had forgotten about that email from November.  Still my ack should
-> have been added.  If necessary I'll be painfully explicit in the future
+> Yes, following is the improvement:
 
-Agreed.
+Please post a complete update patch if you want me to take it.  I'd also would
+like it to be ACKed by someone involved in the big-LITTLE work on the arch
+side.
 
-> about adding my acked-by.  It's a simple and good rule to follow.
-> 
-Yeah, I know. So if you want to add your ack on drivers/clk stuff for this series in samsung tree, please let me know.
+Thanks,
+Rafael
 
-Thanks, Mike.
 
-- Kukjin
+> diff --git a/drivers/cpufreq/arm_big_little.c b/drivers/cpufreq/arm_big_little.c
+> index 8b8b07e..9d449cf 100644
+> --- a/drivers/cpufreq/arm_big_little.c
+> +++ b/drivers/cpufreq/arm_big_little.c
+> @@ -264,8 +264,9 @@ EXPORT_SYMBOL_GPL(bL_cpufreq_register);
+>  void bL_cpufreq_unregister(struct cpufreq_arm_bL_ops *ops)
+>  {
+>         if (arm_bL_ops != ops) {
+> -               pr_info("%s: Registered with: %s, can't unregister, exiting\n",
+> +               pr_err("%s: Registered with: %s, can't unregister, exiting\n",
+>                                 __func__, arm_bL_ops->name);
+> +               return;
+>         }
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
