@@ -1,40 +1,37 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH v5 06/17] clk: mvebu: create parent-child relation for PCIe clocks on Armada 370
-Date: Thu, 21 Mar 2013 18:30:14 +0100
-Message-ID: <1363887025-19931-7-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1363887025-19931-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1363887025-19931-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, Thierry Reding <thierry.reding@avionic-design.de>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>, Mike Turquette <mturquette@linaro.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2 1/4] ARM: tegra: dalmore: add cpu regulator node
+Date: Thu, 21 Mar 2013 11:30:45 -0600
+Message-ID: <514B43C5.6060404@wwwdotorg.org>
+References: <1363873663-19272-1-git-send-email-ldewangan@nvidia.com> <1363873663-19272-2-git-send-email-ldewangan@nvidia.com> <514B1412.9060707@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <514B1412.9060707-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Armada 370 has two gatable clocks for each PCIe interface, and we
-want both of them to be enabled. We therefore make one of the two
-clocks a child of the other, as we did for the sataX and sataXlnk
-clocks on Armada XP.
+On 03/21/2013 08:07 AM, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 21-03-2013 17:47, Laxman Dewangan wrote:
+> 
+>> Dalmore uses the TPS51632 as CPU regulator. The device is connected
+>> on I2C5.
+> 
+>> Add DT node for TPS51632.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Mike Turquette <mturquette@linaro.org>
----
- drivers/clk/mvebu/clk-gating-ctrl.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+>> diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts
 
-diff --git a/drivers/clk/mvebu/clk-gating-ctrl.c b/drivers/clk/mvebu/clk-gating-ctrl.c
-index ebf141d..b35785a 100644
---- a/drivers/clk/mvebu/clk-gating-ctrl.c
-+++ b/drivers/clk/mvebu/clk-gating-ctrl.c
-@@ -119,8 +119,8 @@ static const struct mvebu_soc_descr __initconst armada_370_gating_descr[] = {
- 	{ "pex1_en", NULL,  2 },
- 	{ "ge1", NULL, 3 },
- 	{ "ge0", NULL, 4 },
--	{ "pex0", NULL, 5 },
--	{ "pex1", NULL, 9 },
-+	{ "pex0", "pex0_en", 5 },
-+	{ "pex1", "pex1_en", 9 },
- 	{ "sata0", NULL, 15 },
- 	{ "sdio", NULL, 17 },
- 	{ "tdm", NULL, 25 },
--- 
-1.7.9.5
+>> +    i2c@7000d000 {
+>> +        status = "okay";
+>> +        clock-frequency = <400000>;
+>> +
+>> +        tps51632 {
+> 
+>    Should be named "tps51632@43" I think.
+
+The unit-address (i.e. "@43" part) of the node name is typically omitted
+if it isn't required to make the node name unique.
