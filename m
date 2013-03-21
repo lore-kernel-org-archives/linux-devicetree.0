@@ -1,45 +1,42 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] of: remove /proc/device-tree
-Date: Thu, 21 Mar 2013 08:16:41 +0000
-Message-ID: <CACxGe6thdnQo6sPDccEGzUEkXFDGRD4aq_DJOop6Cincb94ODA@mail.gmail.com>
-References: <1363791074-16415-1-git-send-email-grant.likely@secretlab.ca>
- <1363791074-16415-3-git-send-email-grant.likely@secretlab.ca>
- <1363791479.12701.9.camel@pasglop>
- <CACxGe6u2wNbPQSOPRCRO0To5UC-b8rXYanv2xv26hk5oaozvPA@mail.gmail.com>
- <1363839594.17680.19.camel@pasglop>
- <CACxGe6sXcg51VhFujsjCsMzF80pdy_QhAposdmya4-C0eEcuUw@mail.gmail.com>
- <1363851836.17680.20.camel@pasglop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1363851836.17680.20.camel@pasglop>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH] net: sh-eth: Use pr_err instead of printk
+Date: Thu, 21 Mar 2013 17:46:55 +0900
+Message-ID: <1363855615-30551-1-git-send-email-horms+renesas@verge.net.au>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: "David S. Miller" <davem@davemloft.net>
+Cc: netdev@vger.kernel.org, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 21, 2013 at 7:43 AM, Benjamin Herrenschmidt
-<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> On Thu, 2013-03-21 at 07:35 +0000, Grant Likely wrote:
->> > Shouldn't we have the symlink just be a config option itself ?
->> > Eventually distros might want get rid of it completely ..
->>
->> Why? It is the cheapest thing in the world and it means the ABI
->> doesn't change at all.
->
-> It's also gross and forces sysfs to remain in /sys which isn't a kernel
-> enforced policy afaik.
+From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
 
-Documentation/sysfs-rules.txt, Line 30
+Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ drivers/net/ethernet/renesas/sh_eth.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-g.
+diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
+index 56884c4..f632085 100644
+--- a/drivers/net/ethernet/renesas/sh_eth.c
++++ b/drivers/net/ethernet/renesas/sh_eth.c
+@@ -592,7 +592,7 @@ static int sh_eth_check_reset(struct net_device *ndev)
+ 		cnt--;
+ 	}
+ 	if (cnt < 0) {
+-		printk(KERN_ERR "Device reset fail\n");
++		pr_err("Device reset fail\n");
+ 		ret = -ETIMEDOUT;
+ 	}
+ 	return ret;
+@@ -2321,7 +2321,7 @@ static const u16 *sh_eth_get_register_offset(int register_type)
+ 		reg_offset = sh_eth_offset_fast_sh3_sh2;
+ 		break;
+ 	default:
+-		printk(KERN_ERR "Unknown register type (%d)\n", register_type);
++		pr_err("Unknown register type (%d)\n", register_type);
+ 		break;
+ 	}
+ 
+-- 
+1.7.10.4
