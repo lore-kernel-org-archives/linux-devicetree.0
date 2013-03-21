@@ -1,41 +1,74 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 03/11] ARM: timer-sp: convert to use CLKSRC_OF init
-Date: Thu, 21 Mar 2013 19:02:57 +0100
-Message-ID: <CACRpkdZCF1KXgGXw2Hj91duGd6kZR8JW0CBhKHRLeXjnfFO7+Q@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 02/11] ARM: remove extra timer-sp control register clearing
+Date: Thu, 21 Mar 2013 13:03:47 -0500
+Message-ID: <514B4B83.60809@gmail.com>
 References: <1363820051-24428-1-git-send-email-robherring2@gmail.com>
-	<1363820051-24428-4-git-send-email-robherring2@gmail.com>
+ <1363820051-24428-3-git-send-email-robherring2@gmail.com>
+ <CACRpkdZLn=KjJisPTN2eHn64UuaZvpBDDhmeqQXF-TVS8VZ7pA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1363820051-24428-4-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@arm.linux.org.uk>, haojian.zhuang@linaro.org, pawel.moll@arm.com, john.stultz@linaro.org, tglx@linutronix.de, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACRpkdZLn=KjJisPTN2eHn64UuaZvpBDDhmeqQXF-TVS8VZ7pA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 20, 2013 at 11:54 PM, Rob Herring <robherring2@gmail.com> wrote:
+On 03/21/2013 12:58 PM, Linus Walleij wrote:
+> On Wed, Mar 20, 2013 at 11:54 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+>> From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>>
+>> The timer-sp initialization code clears the control register before
+>> initializing the timers, so every platform doing this is redundant.
+>>
+>> For unused timers, we should not care what state they are in.
+>>
+>> Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> (...)
+>> diff --git a/arch/arm/mach-integrator/integrator_ap.c b/arch/arm/mach-integrator/integrator_ap.c
+>> index ea96144..4cb322d 100644
+>> --- a/arch/arm/mach-integrator/integrator_ap.c
+>> +++ b/arch/arm/mach-integrator/integrator_ap.c
+>> @@ -643,10 +643,6 @@ static void __init ap_timer_init(void)
+>>         clk_prepare_enable(clk);
+>>         rate = clk_get_rate(clk);
+>>
+>> -       writel(0, TIMER0_VA_BASE + TIMER_CTRL);
+>> -       writel(0, TIMER1_VA_BASE + TIMER_CTRL);
+>> -       writel(0, TIMER2_VA_BASE + TIMER_CTRL);
+>> -
+> 
+> As noted this is not an init function for timer-sp.c so please drop this
+> hunk of the patch. Maybe this zeroing is pointless but that would
+> be a separate patch that I can test.
 
-> From: Rob Herring <rob.herring@calxeda.com>
->
-> This adds CLKSRC_OF based init for sp804 timer. The clock initialization is
-> refactored to support retrieving the clock(s) from the DT.
->
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-(...)
-> @@ -186,6 +201,57 @@ void __init sp804_clockevents_init(void __iomem *base, unsigned int irq,
->         evt->irq = irq;
->         evt->cpumask = cpu_possible_mask;
->
-> +       writel(0, clkevt_base + TIMER_CTRL);
-> +
+Okay. I'll split this out.
 
-Wait, patch 1/11 depends on this being done first, right?
+> 
+>> diff --git a/arch/arm/mach-integrator/integrator_cp.c b/arch/arm/mach-integrator/integrator_cp.c
+>> index 2b0db82..c68e7d8 100644
+>> --- a/arch/arm/mach-integrator/integrator_cp.c
+>> +++ b/arch/arm/mach-integrator/integrator_cp.c
+>> @@ -33,7 +33,6 @@
+>>  #include <mach/platform.h>
+>>  #include <asm/setup.h>
+>>  #include <asm/mach-types.h>
+>> -#include <asm/hardware/arm_timer.h>
+> 
+> What doe this change has to do with $SUBJECT?
 
-So patch 1/11 has to be moved after this one in the series
-to avoid bisectability problems?
+If I remove TIMER_CTRL use, then I don't need the header that defines it
+any more.
 
-Apart from that:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+Rob
