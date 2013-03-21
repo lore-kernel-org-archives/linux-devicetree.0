@@ -1,28 +1,45 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 02/11] ARM: remove extra timer-sp control register
-	clearing
-Date: Thu, 21 Mar 2013 19:23:22 +0000
-Message-ID: <20130321192322.GR4977@n2100.arm.linux.org.uk>
-References: <1363820051-24428-1-git-send-email-robherring2@gmail.com> <1363820051-24428-3-git-send-email-robherring2@gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 5/5] arm: dts: Convert mvebu device tree files to 64 bits
+Date: Thu, 21 Mar 2013 21:15:33 +0100
+Message-ID: <20130321201533.GN21478@lunn.ch>
+References: <1363883179-1361-1-git-send-email-gregory.clement@free-electrons.com>
+ <1363883179-1361-6-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1363820051-24428-3-git-send-email-robherring2@gmail.com>
+In-Reply-To: <1363883179-1361-6-git-send-email-gregory.clement@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>, linus.walleij@linaro.org, haojian.zhuang@linaro.org, pawel.moll@arm.com, john.stultz@linaro.org, tglx@linutronix.de, Rob Herring <rob.herring@calxeda.com>
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Nicolas Pitre <nico@fluxnic.net>, Lior Amsalem <alior@marvell.com>, Maen Suleiman <maen@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ike Pan <ike.pan@canonical.com>, Chris Van Hoof <vanhoof@canonical.com>, Dan Frazier <dann.frazier@canonical.com>, Leif Lindholm <leif.lindholm@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 20, 2013 at 05:54:02PM -0500, Rob Herring wrote:
-> From: Rob Herring <rob.herring@calxeda.com>
-> 
-> The timer-sp initialization code clears the control register before
-> initializing the timers, so every platform doing this is redundant.
-> 
-> For unused timers, we should not care what state they are in.
+>  		/*
+> -		 * 4 GB of plug-in RAM modules by default but only 3GB
+> -		 * are visible, the amount of memory available can be
+> -		 * changed by the bootloader according the size of the
+> -		 * module actually plugged
+> +		 * 8 GB of plug-in RAM modules by default.The amount
+> +		 * of memory available can be changed by the
+> +		 * bootloader according the size of the module
+> +		 * actually plugged. Only 7GB are usable because
+> +		 * addresses from 0xC0000000 to 0xffffffff are used by
+> +		 * the internal registers of the SoC.
+>  		 */
+> -		reg = <0x00000000 0xC0000000>;
+> +		reg = <0x00000000 0x00000000 0x00000000 0xC0000000>,
+> +		      <0x00000001 0x00000000 0x00000001 0x00000000>;
+> +
 
-NAK.  We do care what state they're in.  What if they have their interrupt
-enable bit set, and IRQ is shared with the clock event timer?
+Hi Gregory
 
-No, this patch is just wrong.
+Could you recommend a document which introduces LPAE.
+
+Only being able to address 7GB seems a bit odd to me. I kind of
+expected you set up the translation tables to map a page in the 32 bit
+address range to any arbitrary page in the 40 bit address range. So
+leaving 0xC0000000 to 0xffffffff in the 32bit address range clear is
+easy. But why do you loose space in the 40bit address range?
+
+      Thanks
+	Andrew
