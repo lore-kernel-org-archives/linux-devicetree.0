@@ -1,11 +1,19 @@
-From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Locating syntax error in dts/dtsi files
-Date: Thu, 21 Mar 2013 13:42:40 +0530
-Message-ID: <CAK9yfHzSiXk+4XqpEdmGhdD+pWcv8O_NCNRbNTv9tGNntFWdvg@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] of: remove /proc/device-tree
+Date: Thu, 21 Mar 2013 08:16:41 +0000
+Message-ID: <CACxGe6thdnQo6sPDccEGzUEkXFDGRD4aq_DJOop6Cincb94ODA@mail.gmail.com>
+References: <1363791074-16415-1-git-send-email-grant.likely@secretlab.ca>
+ <1363791074-16415-3-git-send-email-grant.likely@secretlab.ca>
+ <1363791479.12701.9.camel@pasglop>
+ <CACxGe6u2wNbPQSOPRCRO0To5UC-b8rXYanv2xv26hk5oaozvPA@mail.gmail.com>
+ <1363839594.17680.19.camel@pasglop>
+ <CACxGe6sXcg51VhFujsjCsMzF80pdy_QhAposdmya4-C0eEcuUw@mail.gmail.com>
+ <1363851836.17680.20.camel@pasglop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1363851836.17680.20.camel@pasglop>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,29 +24,22 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Mar 21, 2013 at 7:43 AM, Benjamin Herrenschmidt
+<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
+> On Thu, 2013-03-21 at 07:35 +0000, Grant Likely wrote:
+>> > Shouldn't we have the symlink just be a config option itself ?
+>> > Eventually distros might want get rid of it completely ..
+>>
+>> Why? It is the cheapest thing in the world and it means the ABI
+>> doesn't change at all.
+>
+> It's also gross and forces sysfs to remain in /sys which isn't a kernel
+> enforced policy afaik.
 
-I was wondering if there is any way to locate the syntax error in
-included .dtsi files (other than manually inspecting them).
-In certain cases dtc only points at the line which includes the dtsi
-file inside the dts file as the location of syntax (parsing error) and
-does not pinpoint the line number inside the .dtsi file.
+Documentation/sysfs-rules.txt, Line 30
 
-For e.g.
-When a terminating brace and semicolon "};" was missing in
-arch/arm/boot/dts/exynos4.dtsi, dtc gave the following error when I
-did 'make dtbs'
-
-Error: arch/arm/boot/dts/exynos4210-pinctrl.dtsi:17.1-2 syntax error
-FATAL ERROR: Unable to parse input tree
-make[1]: *** [arch/arm/boot/dts/exynos4210-origen.dtb] Error 1
-make: *** [dtbs] Error 2
-
-In this case it doesn't even tell the actual file that has a problem.
--- 
-With warm regards,
-Sachin
+g.
