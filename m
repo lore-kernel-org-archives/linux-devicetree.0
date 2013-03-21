@@ -1,85 +1,57 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [RFC][PATCH 1/2] ARM: OMAP4: clock: Add device tree support for
- AUXCLKs
-Date: Thu, 21 Mar 2013 19:34:51 +0530
-Message-ID: <514B1383.1070102@ti.com>
-References: <1363703220-4777-1-git-send-email-rogerq@ti.com> <1363703220-4777-2-git-send-email-rogerq@ti.com> <514B0650.5070406@ti.com> <514B10FE.1000805@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 00/11] sp804 and integrator timer CLKSRC_OF support
+Date: Thu, 21 Mar 2013 09:06:26 -0500
+Message-ID: <514B13E2.2050201@gmail.com>
+References: <1363820051-24428-1-git-send-email-robherring2@gmail.com> <201303211324.37654.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <514B10FE.1000805@ti.com>
+In-Reply-To: <201303211324.37654.arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: tony@atomide.com, b-cousson@ti.com, linux@arm.linux.org.uk, balbi@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, linus.walleij@linaro.org, Russell King <linux@arm.linux.org.uk>, haojian.zhuang@linaro.org, pawel.moll@arm.com, john.stultz@linaro.org, tglx@linutronix.de, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 21 March 2013 07:24 PM, Roger Quadros wrote:
-> On 03/21/2013 03:08 PM, Rajendra Nayak wrote:
->> []..
->>
->>> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
->>> index 0274ff7..23f2064 100644
->>> --- a/arch/arm/mach-omap2/board-generic.c
->>> +++ b/arch/arm/mach-omap2/board-generic.c
->>> @@ -158,7 +158,7 @@ DT_MACHINE_START(OMAP4_DT, "Generic OMAP4 (Flattened Device Tree)")
->>>  	.init_irq	= omap_gic_of_init,
->>>  	.init_machine	= omap_generic_init,
->>>  	.init_late	= omap4430_init_late,
->>> -	.init_time	= omap4_local_timer_init,
->>> +	.init_time	= omap4_init_time,
->>>  	.dt_compat	= omap4_boards_compat,
->>>  	.restart	= omap44xx_restart,
->>>  MACHINE_END
->>
->> []..
->>> +#ifdef CONFIG_OF
->>> +int __init omap4_clk_init_dt(void)
->>> +{
->>> +	struct device_node *np;
->>> +
->>> +	np = of_find_compatible_node(NULL, NULL, "ti,omap4-scrm");
->>> +	if (np) {
->>> +		scrm_data.clks = scrm_clks;
->>> +		scrm_data.clk_num = ARRAY_SIZE(scrm_clks);
->>> +		of_clk_add_provider(np, of_clk_src_onecell_get,	&scrm_data);
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>
->> []..
->>> +
->>> +void __init omap4_init_time(void)
->>> +{
->>> +	omap4_clk_init_dt();
->>> +	omap4_local_timer_init();
->>> +}
->>
->> I guess you did all this because of_clk_add_provider() needs
->> slab to be initialized. With the below patch[1], now clk inits
->> happen within .init_timer already, so none of this would
->> be needed.
->>
->> [1] http://www.spinics.net/lists/arm-kernel/msg231288.html
->>
+On 03/21/2013 08:24 AM, Arnd Bergmann wrote:
+> On Wednesday 20 March 2013, Rob Herring wrote:
+>> This series is dependent on my CLKSRC_OF clean-up in arm-soc, my
+>> sched_clock selection series[1], and Arnd's default machine descriptor
+>> patch (for default clocksource_of_init call). The full series is
+>> available here:
 > 
-> Right. I can then call omap4_clk_init_dt() from within omap4xxx_clk_init().
+> All your patches look good to me, but I'd suggest you don't depend on
+> my default machine descriptor patch yet, that just makes the dependencies
+> harder to track, and we can easily remove all the calls once they
+> are obsoletely.
 > 
-> Any comments about the main subject? Does the approach look fine?
 
-It looks fine, except for the fact that I was wondering if the clock
-provider needs to restrict itself to SCRM.
-Nishant Menon brought up a need for specifying the mpu clock source
-from within DT, to be able to use a generic cpufreq driver.
-It could be a provider (not specific to scrm, but having only scrm
-clocks for now) which we could add clocks as and when we see a need for
-them to be specified from DT.
+I really only need the hunk that calls clocksource_of_init which is
+really somewhat unrelated to a default machine desc. So what if I just
+pull out this hunk to a separate patch:
 
-Btw, you need to copy Paul Walmsley for any clock related patches as
-he is the OMAP clock maintainer.
+diff --git a/arch/arm/kernel/time.c b/arch/arm/kernel/time.c
+index 955d92d..abff4e9 100644
+--- a/arch/arm/kernel/time.c
++++ b/arch/arm/kernel/time.c
+@@ -22,6 +22,7 @@
+ #include <linux/errno.h>
+ #include <linux/profile.h>
+ #include <linux/timer.h>
++#include <linux/clocksource.h>
+ #include <linux/irq.h>
 
-> 
-> cheers,
-> -roger
-> 
+ #include <asm/thread_info.h>
+@@ -115,6 +116,10 @@ int __init
+register_persistent_clock(clock_access_fn read_boot,
+
+ void __init time_init(void)
+ {
+-	machine_desc->init_time();
++	if (machine_desc->init_time)
++		machine_desc->init_time();
++	else
++		clocksource_of_init();
++
+ 	sched_clock_postinit();
+ }
