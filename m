@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH v5 13/17] arm: mvebu: PCIe Device Tree informations for Armada XP DB
-Date: Thu, 21 Mar 2013 18:30:21 +0100
-Message-ID: <1363887025-19931-14-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCH v5 17/17] arm: mvebu: update defconfig with PCI and USB support
+Date: Thu, 21 Mar 2013 18:30:25 +0100
+Message-ID: <1363887025-19931-18-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1363887025-19931-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1363887025-19931-1-git-send-email-thomas.petazzoni@free-electrons.com>
@@ -10,57 +10,38 @@ To: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca
 Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, Thierry Reding <thierry.reding@avionic-design.de>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The Marvell evaluation board (DB) for the Armada XP SoC has 6
-physicals full-size PCIe slots, so we enable the corresponding PCIe
-interfaces in the Device Tree.
+Now that we have the necessary drivers and Device Tree informations to
+support PCIe on Armada 370 and Armada XP, enable the CONFIG_PCI
+option.
+
+Also, since the Armada 370 Mirabox has a built-in USB XHCI controller
+connected on the PCIe bus, enable the corresponding options as well.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
- arch/arm/boot/dts/armada-xp-db.dts |   33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ arch/arm/configs/mvebu_defconfig |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
-index e83505e..54cc5bb 100644
---- a/arch/arm/boot/dts/armada-xp-db.dts
-+++ b/arch/arm/boot/dts/armada-xp-db.dts
-@@ -121,5 +121,38 @@
- 				spi-max-frequency = <20000000>;
- 			};
- 		};
-+
-+		pcie-controller {
-+			status = "okay";
-+
-+			/*
-+			 * All 6 slots are physically present as
-+			 * standard PCIe slots on the board.
-+			 */
-+			pcie@1,0 {
-+				/* Port 0, Lane 0 */
-+				status = "okay";
-+			};
-+			pcie@2,0 {
-+				/* Port 0, Lane 1 */
-+				status = "okay";
-+			};
-+			pcie@3,0 {
-+				/* Port 0, Lane 2 */
-+				status = "okay";
-+			};
-+			pcie@4,0 {
-+				/* Port 0, Lane 3 */
-+				status = "okay";
-+			};
-+			pcie@9,0 {
-+				/* Port 2, Lane 0 */
-+				status = "okay";
-+			};
-+			pcie@10,0 {
-+				/* Port 3, Lane 0 */
-+				status = "okay";
-+			};
-+		};
- 	};
- };
+diff --git a/arch/arm/configs/mvebu_defconfig b/arch/arm/configs/mvebu_defconfig
+index 2ec8119..071a5b1 100644
+--- a/arch/arm/configs/mvebu_defconfig
++++ b/arch/arm/configs/mvebu_defconfig
+@@ -13,6 +13,8 @@ CONFIG_MACH_ARMADA_370=y
+ CONFIG_MACH_ARMADA_XP=y
+ # CONFIG_CACHE_L2X0 is not set
+ # CONFIG_SWP_EMULATE is not set
++CONFIG_PCI=y
++CONFIG_PCI_MVEBU=y
+ CONFIG_SMP=y
+ CONFIG_AEABI=y
+ CONFIG_HIGHMEM=y
+@@ -53,6 +55,7 @@ CONFIG_USB_SUPPORT=y
+ CONFIG_USB=y
+ CONFIG_USB_EHCI_HCD=y
+ CONFIG_USB_EHCI_ROOT_HUB_TT=y
++CONFIG_USB_XHCI_HCD=y
+ CONFIG_MMC=y
+ CONFIG_MMC_MVSDIO=y
+ CONFIG_NEW_LEDS=y
 -- 
 1.7.9.5
