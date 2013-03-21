@@ -1,225 +1,68 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v3] clk: add si5351 i2c common clock driver
-Date: Thu, 21 Mar 2013 22:32:48 +0100
-Message-ID: <514B7C80.2070008@gmail.com>
-References: <1360414772-12232-1-git-send-email-sebastian.hesselbarth@gmail.com> <1363603397-2762-1-git-send-email-sebastian.hesselbarth@gmail.com> <514B4CBF.7070106@metafoo.de>
+From: Lior Amsalem <alior@marvell.com>
+Subject: RE: [PATCH 5/5] arm: dts: Convert mvebu device tree files to 64 bits
+Date: Thu, 21 Mar 2013 23:35:21 +0200
+Message-ID: <EE71107DF0D1F24FA2D95041E64AB9E801A56C7B6D24@IL-MB01.marvell.com>
+References: <1363883179-1361-1-git-send-email-gregory.clement@free-electrons.com>
+ <1363883179-1361-6-git-send-email-gregory.clement@free-electrons.com>
+ <20130321201533.GN21478@lunn.ch>	<20130321212236.1015295d@skate>
+ <20130321205545.GA8358@obsidianresearch.com> <20130321221523.7ede6ccc@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <514B4CBF.7070106@metafoo.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, Daniel Mack <zonque@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130321221523.7ede6ccc@skate>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Grant Likely <grant.likely@secretlab.ca>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Arnd Bergmann <arnd@arndb.de>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, Jon Masters <jcm@redhat.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Chris Van Hoof <vanhoof@canonical.com>Nicolas Pitre <nic>
 List-Id: devicetree@vger.kernel.org
 
-On 03/21/2013 07:09 PM, Lars-Peter Clausen wrote:
-> On 03/18/2013 11:43 AM, Sebastian Hesselbarth wrote:
->> This patch adds a common clock driver for Silicon Labs Si5351a/b/c
->> i2c programmable clock generators. Currently, the driver supports
->> DT kernels only and VXCO feature of si5351b is not implemented. DT
->> bindings selectively allow to overwrite stored Si5351 configuration
->> which is very helpful for clock generators with empty eeprom
->> configuration. Corresponding device tree binding documentation is
->> also added.
->>
->> Signed-off-by: Sebastian Hesselbarth<sebastian.hesselbarth@gmail.com>
->
-> Hi,
->
-> Couple of comments inside.
+Hi Thomas, Jason,
 
-Lars-Peter,
+> From: Thomas Petazzoni [mailto:thomas.petazzoni@free-electrons.com]
+> Sent: Thursday, March 21, 2013 11:15 PM
+> 
+> Dear Jason Gunthorpe,
+> 
+> On Thu, 21 Mar 2013 14:55:45 -0600, Jason Gunthorpe wrote:
+> 
+> > Or, better, locate all the internal registers above 8G and use
+> > contiguous DRAM mapping from 0 -> 8GB
+> 
+> I see two potential issues with this idea:
+> 
+>  *) It only works when LPAE is enabled, so we would have to have
+>     different internal register addresses depending on whether LPAE is
+>     enabled or not. Probably not impossible, but not very
+>     straightforward either.
+> 
+>  *) It would require Linux to change the internal registers address
+>     (for now the kernel relies on the bootloader). The problem is that
+>     we can't do it early enough to preserve the earlyprintk
+>     functionality. Maybe you have suggestions on how to achieve that?
+> 
 
-thanks for the review.
+Please note that all registers and IOs are still 32bit, the 40bit extension is on 
+the CPU to DRAM path (windows) only.
 
->> ---
-> [...]
->> +==Child nodes==
->> +
->> +Each of the clock outputs can be overwritten individually by
->> +using a child node to the I2C device node. If a child node for a clock
->> +output is not set, the eeprom configuration is not overwritten.
->> +
->> +Required child node properties:
->> +- reg: number of clock output.
->> +
->> +Optional child node properties:
->> +- clock-source: source clock of the output divider stage N, shall be
->> +  0 = multisynth N
->> +  1 = multisynth 0 for output clocks 0-3, else multisynth4
->> +  2 = xtal
->> +  3 = clkin (si5351c only)
->> +- drive-strength: output drive strength in mA, shall be one of {2,4,6,8}.
->> +- multisynth-source: source pll A(0) or B(1) of corresponding multisynth
->> +  divider.
->> +- pll-master: boolean, multisynth can change pll frequency.
->
-> Custom properties need a vendor prefix.
+Therefore, the register that sets the internal register base is 32bit :)
 
-Good catch, I will add "silabs" prefix here.
+> Best regards,
+> 
+> Thomas
+> --
+> Thomas Petazzoni, Free Electrons
+> Kernel, drivers, real-time and embedded Linux development, consulting,
+> training and support.
+> http://free-electrons.com
 
-> [...]
->
->> diff --git a/drivers/clk/clk-si5351.c b/drivers/clk/clk-si5351.c
->> new file mode 100644
->> index 0000000..38540e7
->> --- /dev/null
->> +++ b/drivers/clk/clk-si5351.c
->> @@ -0,0 +1,1429 @@
-> [...]
->> +
->> +/*
->> + * Si5351 vxco clock input (Si5351B only)
->> + */
->> +
->> +static int si5351_vxco_prepare(struct clk_hw *hw)
->> +{
->> +	struct si5351_hw_data *hwdata =
->> +		container_of(hw, struct si5351_hw_data, hw);
->> +
->> +	dev_warn(&hwdata->drvdata->client->dev, "VXCO currently unsupported\n");
->
-> Wouldn't it be better to not add the vxco clock if it is not supported?
-
-Hmm, I thought about that already and knew someone will suggest to remove it.
-But, IMHO it is better to leave that functions there for two reasons:
-
-1. It is only a small part of one of three supported si5351 variant and doesn't
-take much space.
-
-2. The most common user of this driver is a hardware engineer and I want him/her
-to help to add support. No warning, no note.
-
-I can make the clock registration fail, if that is what you suggest.
-
-> [..]
->> +
->> +static const struct of_device_id si5351_dt_ids[] = {
->> +	{ .compatible = "silabs,si5351a", .data = (void *)SI5351_VARIANT_A, },
->> +	{ .compatible = "silabs,si5351a-msop",
->> +					 .data = (void *)SI5351_VARIANT_A3, },
->> +	{ .compatible = "silabs,si5351b", .data = (void *)SI5351_VARIANT_B, },
->> +	{ .compatible = "silabs,si5351c", .data = (void *)SI5351_VARIANT_C, },
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(i2c, si5351_dt_ids);
->
-> MODULE_DEVICE_TABLE(of,  ....
-
-Ack.
-
->> +static int si5351_i2c_probe(
->> +	struct i2c_client *client, const struct i2c_device_id *id)
->
-> This should easily fit in one line.
-
-Ack.
-
->> +{
->> +	struct si5351_driver_data *drvdata;
->> +	struct clk_init_data init;
->> +	struct clk *clk;
->> +	const char *parent_names[4];
->> +	u8 num_parents, num_clocks;
->> +	int ret, n;
->> +
->> +	drvdata = devm_kzalloc(&client->dev, sizeof(struct si5351_driver_data),
->
-> sizeof(*drvdata) is the preferred way of writing this, same for a few other
-> similar instances.
-
-Yeah, I will change that.
-
->> +			       GFP_KERNEL);
->> +	if (drvdata == NULL) {
->> +		dev_err(&client->dev, "unable to allocate driver data\n");
->> +		return -ENOMEM;
->> +	}
->> +
-> [...]
->> +	of_clk_add_provider(client->dev.of_node, of_clk_src_onecell_get,
->> +			&drvdata->onecell);
->
-> You should check the return value of of_clk_add_provider
-
-Ack.
-
->> +
->> +	dev_info(&client->dev, "registered si5351 i2c client\n");
->> +
->
-> That's just noise, imagine every driver would print such a line, your bootlog
-> would be scrolling for hours ;) I'd either remove it or make it dev_dbg
-
-Actually, I understand not to have it, but if you don't want it you can still
-boot with "quiet", can't you? Having one single line that helps you see it has
-been probed helps a lot. But, I don't have a strong opinion on that and can
-make it dev_dbg.
-
->> +	return 0;
->> +}
->> +
->> +static int si5351_i2c_remove(struct i2c_client *client)
->> +{
->> +	i2c_set_clientdata(client, NULL);
->
-> This is not required anymore, the core takes care of it these days. I think you
-> can drop the whole remove callback.
-
-Ok.
-
->> +	return 0;
->> +}
->> +
->> +static const struct i2c_device_id si5351_i2c_ids[] = {
->> +	{ "silabs,si5351", SI5351_BUS_BASE_ADDR | 0 },
->> +	{ "silabs,si5351", SI5351_BUS_BASE_ADDR | 1 },
->> +	{ }
->> +};
->
-> This is not how it is supposed to be used. The second field is not the i2c
-> address of the device, but device specific data, which you can use inside your
-> probe function. Since your driver only supports dt based probe you can just set
-> it to 0.
-
-Ok, thanks for the hint.
-
->> +MODULE_DEVICE_TABLE(i2c, si5351_i2c_ids);
->> +
->> +static struct i2c_driver si5351_driver = {
->> +	.driver = {
->> +		.name = "si5351",
->> +		.of_match_table = si5351_dt_ids,
->> +	},
->> +	.probe = si5351_i2c_probe,
->> +	.remove = si5351_i2c_remove,
->> +	.id_table = si5351_i2c_ids,
->> +};
->> +
->> +static int __init si5351_module_init(void)
->> +{
->> +	return i2c_add_driver(&si5351_driver);
->> +}
->> +module_init(si5351_module_init);
->> +
->> +static void __exit si5351_module_exit(void)
->> +{
->> +	i2c_del_driver(&si5351_driver);
->> +}
->> +module_exit(si5351_module_exit);
->
-> module_i2c_driver(si5351_driver) can be used to replace the two function above.
-
-Ack.
-
->> +
->> +MODULE_AUTHOR("Sebastian Hesselbarth<sebastian.hesselbarth@gmail.de");
->> +MODULE_DESCRIPTION("Silicon Labs Si5351A/B/C clock generator driver");
->> +MODULE_LICENSE("GPL");
-[...]
-
-Again, thanks for the review.
-
-Sebastian
-
+Regards,
+Lior Amsalem
