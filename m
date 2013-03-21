@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH v5 15/17] arm: mvebu: PCIe Device Tree informations for Armada 370 DB
-Date: Thu, 21 Mar 2013 18:30:23 +0100
-Message-ID: <1363887025-19931-16-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCH v5 09/17] arm: mvebu: PCIe support is now available on mvebu
+Date: Thu, 21 Mar 2013 18:30:17 +0100
+Message-ID: <1363887025-19931-10-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1363887025-19931-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1363887025-19931-1-git-send-email-thomas.petazzoni@free-electrons.com>
@@ -10,41 +10,27 @@ To: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca
 Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, Thierry Reding <thierry.reding@avionic-design.de>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The Marvell evaluation board (DB) for the Armada 370 SoC has 2
-physical full-size PCIe slots, so we enable the corresponding PCIe
-interfaces in the Device Tree.
+Now that the PCIe driver for mvebu has been integrated and all its
+relevant dependencies, we can mark the ARCH_MVEBU platform has
+MIGHT_HAVE_PCI, which allows to select the PCI bus support if needed.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
- arch/arm/boot/dts/armada-370-db.dts |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm/mach-mvebu/Kconfig |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-370-db.dts b/arch/arm/boot/dts/armada-370-db.dts
-index e34b280..6403acd 100644
---- a/arch/arm/boot/dts/armada-370-db.dts
-+++ b/arch/arm/boot/dts/armada-370-db.dts
-@@ -94,5 +94,22 @@
- 				spi-max-frequency = <50000000>;
- 			};
- 		};
-+
-+		pcie-controller {
-+			status = "okay";
-+			/*
-+			 * The two PCIe units are accessible through
-+			 * both standard PCIe slots and mini-PCIe
-+			 * slots on the board.
-+			 */
-+			pcie@1,0 {
-+				/* Port 0, Lane 0 */
-+				status = "okay";
-+			};
-+			pcie@2,0 {
-+				/* Port 1, Lane 0 */
-+				status = "okay";
-+			};
-+		};
- 	};
- };
+diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
+index c3715a5..d353249 100644
+--- a/arch/arm/mach-mvebu/Kconfig
++++ b/arch/arm/mach-mvebu/Kconfig
+@@ -14,6 +14,8 @@ config ARCH_MVEBU
+ 	select MVEBU_CLK_CPU
+ 	select MVEBU_CLK_GATING
+ 	select MVEBU_MBUS
++	select MIGHT_HAVE_PCI
++	select PCI_QUIRKS if PCI
+ 
+ if ARCH_MVEBU
+ 
 -- 
 1.7.9.5
