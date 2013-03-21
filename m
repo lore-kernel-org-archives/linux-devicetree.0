@@ -1,120 +1,104 @@
-From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Subject: Re: doubt about where to put pin-mux in MX28 based platform DT
-Date: Thu, 21 Mar 2013 17:57:57 +0100
-Message-ID: <514B3C15.8080103@digi.com>
-References: <5137769F.1000308@digi.com> <513890D3.5060905@free-electrons.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3 5/6] ARM: dts: omap: update usb_otg_hs data
+Date: Thu, 21 Mar 2013 11:10:07 -0600
+Message-ID: <514B3EEF.3080705@wwwdotorg.org>
+References: <1363770725-13717-1-git-send-email-kishon@ti.com> <1363770725-13717-6-git-send-email-kishon@ti.com> <514A233F.8010105@wwwdotorg.org> <514AA74D.9070506@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <513890D3.5060905-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Palacios,
- Hector" <Hector.Palacios-i7dp0qKlBMg@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <514AA74D.9070506@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: kishon <kishon@ti.com>
+Cc: balbi@ti.com, gregkh@linuxfoundation.org, arnd@arndb.de, akpm@linux-foundation.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, tony@atomide.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, b-cousson@ti.com, linux@arm.linux.org.uk, eballetbo@gmail.com, javier@dowhile0.org, mchehab@redhat.com, santosh.shilimkar@ti.com, broonie@opensource.wolfsonmicro.com, swarren@nvidia.com, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Maxime,
-
-On 03/07/2013 02:06 PM, Maxime Ripard wrote:
-> Hi Hector,
->
-> Le 06/03/2013 18:02, Hector Palacios a =E9crit :
->> I'm creating the DT for a custom platform based on Freescale MX28 CPU
->> and I have some doubts about where to add some pin mux configurations:
->> whether in imx28.dtsi or in my platform dts.
+On 03/21/2013 12:23 AM, kishon wrote:
+> Hi,
+> 
+> On Thursday 21 March 2013 02:29 AM, Stephen Warren wrote:
+>> On 03/20/2013 03:12 AM, Kishon Vijay Abraham I wrote:
+>>> Updated the usb_otg_hs dt data to include the *phy* and *phy-names*
+>>> binding in order for the driver to use the new generic PHY framework.
+>>> Also updated the Documentation to include the binding information.
 >>
->> A pair of examples folow:
+>>> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt
+>>> b/Documentation/devicetree/bindings/usb/omap-usb.txt
+>>> index abce256..3d6f9f6 100644
+>>> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
+>>> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
+>>> @@ -19,6 +19,9 @@ OMAP MUSB GLUE
+>>>    - power : Should be "50". This signifies the controller can supply
+>>> upto
+>>>      100mA when operating in host mode.
+>>>    - usb-phy : the phandle for the PHY device
+>>> + - phy : the phandle for the PHY device (used by generic PHY framework)
+>>> + - phy-names : the names of the PHY corresponding to the PHYs
+>>> present in the
+>>> +   *phy* phandle.
 >>
->> Example #1. My platform is using a valid IOMUX for DUART TX/RX lines
->> which is not covered in imx28.dtsi, namely the I2C0 pins. Since this is
->> a valid IOMUX that can be used by other platforms, I'd say I should
->> included it in imx28.dtsi:
+>> If the intent is for those properties to be generic and used by any DT
+>> binding that refers to a PHY node, I think you'd want to define those
+>> properties in e.g. Documentation/devicetree/bindings/phy/phy.txt, just
+>> like common clock/GPIO/... properties are defined in standalone common
+>> files.
+> 
+> Ok. Will add it.
 >>
->> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
->> index 3fa6d19..8928b7b 100644
->> --- a/arch/arm/boot/dts/imx28.dtsi
->> +++ b/arch/arm/boot/dts/imx28.dtsi
->> @@ -186,6 +186,17 @@
->>                                          fsl,pull-up =3D <0>;
->>                                  };
->>
->> +                               duart_pins_c: duart@2 {
->> +                                       reg =3D <2>;
->> +                                       fsl,pinmux-ids =3D <
->> +                                               0x3182 /*
->> MX28_PAD_I2C0_SCL__DUART_RX */
->> +                                               0x3192 /*
->> MX28_PAD_I2C0_SDA__DUART_TX */
->> +                                       >;
->> +                                       fsl,drive-strength =3D <0>;
->> +                                       fsl,voltage =3D <1>;
->> +                                       fsl,pull-up =3D <0>;
->> +                               };
->> +
->>                                  duart_4pins_a: duart-4pins@0 {
->>                                          reg =3D <0>;
->>                                          fsl,pinmux-ids =3D <
->
-> That's right.
+>> I think you want to require that DT nodes that represent PHYs have a
+>> #phy-cells property, and that the format of the phy property be
+>> <&phy_phandle phy_specifier*>, where #phy-cells in the referenced node
+>> defines how many cells are part of phy_specifier*, just like (almost)
+>> any other DT property that references another node by phandle. That way,
+>> if a single DT node represents a HW block that implements e.g. 3 PHYs,
+>> it can use #phy-cells = <1>, and the referencing phy property can
+>> include a cell that indicates which of those 3 PHYs is being referenced.
+> 
+> Currently, if a single phandle have reference to multiple PHYs, we can
+> get PHY by passing index or by name as give in phy-names.
+> I'm not sure if we have <&phy_phandle phy_specifier*>, what could that
+> phy_specifier be? Maybe phy_type?
 
-I'm getting into more cases like this: valid IOMUX configurations that my p=
-latform =
+I'm not talking about the case where a consumer node references multiple
+PHYs. As you say, that is indeed handled by the driver looking at a
+particular index in the phys property, or using phy-names.
 
-uses but are not included into imx28.dtsi.
-So before adding new entries I was wondering whether it is a good idea to h=
-ave IOMUX =
+I'm talking about the case where a single provider provides multiple
+PHYs. For example, consider:
 
-configurations in this include file at all. There are multiple valid combin=
-ations so =
+phys: phy {
+    compatible = "xxx";
+    reg = <...>;
+    #phy-cells = <1>;
+};
 
-why not adding these to the specific platform DTS files instead?
+That node describes an IP block that implements 3 different PHYs. The
+registers are inter-mixed in such a way that you can't split it into 3
+separate nodes each with a separate device instance. If the consumers
+simply say:
 
-Existing IOMUX configurations in imx28.dtsi that later are not used by plat=
-form *.dts =
+phys = <&phys>;
 
-files are 'polluting' the final DTB with unused nodes.
-Do other architectures follow the same approach?
-Maybe there is a good reason that I simply don't see.
+then which of the 3 PHYs are you referring to?
 
-Hector
+Instead, the consumer needs to say one of:
 
->
->> Example #2. My platform assembles a NAND chip which is powered at 1.8V.
->> The imx28.dtsi has a configuration 'gpmi_pins_a: gpmi-nand@0' that
->> configures the pins at 3.3V.
->> Should I create another entry here 'gpmi_pins_b: gpmi-nand@1' with
->> fsl,voltage =3D <0>; or should I create a specific entry in my platform's
->> DT instead?
->> What is the convention?
->
-> Since it's the same pinset, I'd rather go for using gpmi_pins_a in your
-> NAND chip node, but also overload the fsl,voltage property of
-> gpmi_pins_a in your board device tree.
->
-> That would give something like
->
-> pinctrl@80018000 {
-> 	gpmi_pins_a: gpmi-nand@0 {
-> 		fsl,voltage =3D <0>;
-> 	};
-> };
->
-> nand@deadbeef {
-> 	pinctrl-names =3D "default";
-> 	pinctrl-0 =3D <&gpmi_pins_a>;
-> }
->
-> But maybe Sascha will have a different view on this.
->
-> Maxime
->
+phys = <&phys 0>;
+phys = <&phys 1>;
+phys = <&phys 2>;
+
+in order to specify which of the PHYs it refers to.
+
+The number of cells in the phy property after the phandle is specified
+by the #phy-cells property in the node referred to by the phandle. The
+meaning of all those cells is defined by the binding for the phy node.
+This could include both the PHY ID (as in my example here), or whatever
+configuration information or flags the provider needs. For example, both
+GPIOs and interrupts have specifiers than describe both of these things.
+
+For more background, take a look at almost any other binding that uses
+phandles.
+
+By the way, the property in the consumer should probably be "phys" not
+"phy" to be consistent with other similar properties (e.g. gpios,
+interrupts, ... which are all plural).
