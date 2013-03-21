@@ -1,32 +1,92 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH 2/2] of: remove /proc/device-tree
-Date: Thu, 21 Mar 2013 08:43:56 +0100
-Message-ID: <1363851836.17680.20.camel@pasglop>
-References: <1363791074-16415-1-git-send-email-grant.likely@secretlab.ca>
-	 <1363791074-16415-3-git-send-email-grant.likely@secretlab.ca>
-	 <1363791479.12701.9.camel@pasglop>
-	 <CACxGe6u2wNbPQSOPRCRO0To5UC-b8rXYanv2xv26hk5oaozvPA@mail.gmail.com>
-	 <1363839594.17680.19.camel@pasglop>
-	 <CACxGe6sXcg51VhFujsjCsMzF80pdy_QhAposdmya4-C0eEcuUw@mail.gmail.com>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: RE: [PATCH v2 3/3] ARM: davinci: da850: add EHRPWM & ECAP DT node
+Date: Thu, 21 Mar 2013 08:01:03 +0000
+Message-ID: <518397C60809E147AF5323E0420B992E3EA9C651@DBDE01.ent.ti.com>
+References: <1363761714-15034-1-git-send-email-avinashphilip@ti.com>
+	<1363761714-15034-4-git-send-email-avinashphilip@ti.com>
+	<51499DB4.9080907@ti.com> <87wqt2qlts.fsf@dell.be.48ers.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6sXcg51VhFujsjCsMzF80pdy_QhAposdmya4-C0eEcuUw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <87wqt2qlts.fsf@dell.be.48ers.dk>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Korsgaard <jacmet@sunsite.dk>, "Nori, Sekhar" <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Cc: "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2013-03-21 at 07:35 +0000, Grant Likely wrote:
-> > Shouldn't we have the symlink just be a config option itself ?
-> > Eventually distros might want get rid of it completely ..
+On Wed, Mar 20, 2013 at 18:17:59, Peter Korsgaard wrote:
+> >>>>> "Sekhar" == Sekhar Nori <nsekhar@ti.com> writes:
 > 
-> Why? It is the cheapest thing in the world and it means the ABI
-> doesn't change at all.
+>  Sekhar> On 3/20/2013 12:11 PM, Philip Avinash wrote:
+>  >> Add da850 EHRPWM & ECAP DT node.
+>  >> Also adds OF_DEV_AUXDATA for EHRPWM & ECAP driver to use EHRPWM & ECAP
+>  >> clock.
+>  >> 
+>  >> Signed-off-by: Philip Avinash <avinashphilip@ti.com>
+>  >> ---
+>  >> Changes since v1:
+>  >> - Reusing ti,am33xx<ecap/ehrpwm> as compatible field as both IP's are
+>  >> same with am33xx platform and da850 has no platform specific
+>  >> dependency.
+> 
+>  Sekhar> Which is fine, but I think the binding documentation still needs to be
+>  Sekhar> updated to document the ti,da850-ehrpwm binding. Looping Peter (it is
+>  Sekhar> always a good idea to CC folks who reviewed your patch last time
+>  Sekhar> around). Also, please Cc the DT folks and devicetree-discuss list too
+>  Sekhar> for their opinion.
+> 
+> Yes, thanks for CC'ing me. I also think da850-* should be
+> documented. See Documentation/devicetree/bindings/gpio/8xxx_gpio.txt for
+> an similar (old) example.
 
-It's also gross and forces sysfs to remain in /sys which isn't a kernel
-enforced policy afaik.
+Peter,
 
-Cheers,
-Ben.
+In this binding file also, only initial compatible field is updated. Later on many
+compatible were added in driver. But not update back to binding doc.
+
+<Documentation/devicetree/bindings/gpio/8xxx_gpio.txt>
+---
+	followed by "fsl,mpc8349-gpio" for 83xx, "fsl,mpc8572-gpio" for 85xx and
+	"fsl,mpc8610-gpio" for 86xx.
+---
+<drivers/gpio/gpio-mpc8xxx.c>
+---
+static struct of_device_id mpc8xxx_gpio_ids[] __initdata = {
+        { .compatible = "fsl,mpc8349-gpio", },
+        { .compatible = "fsl,mpc8572-gpio", },
+        { .compatible = "fsl,mpc8610-gpio", },
+        { .compatible = "fsl,mpc5121-gpio", .data = mpc512x_irq_set_type, },
+        { .compatible = "fsl,pq3-gpio",     },
+        { .compatible = "fsl,qoriq-gpio",   },
+        {}
+};
+---
+
+Grant/Rob,
+With respect peters explanation (below), what is your opinion on adding information to 
+binding doc for da850 support?
+
+Peter --> if the hardware block is identical the dts should simply list:
+Peter --> compatible = "ti,da850-ecap", "ti,am33xx-ecap"
+Peter --> And the driver only bind to ti,am33xx-ecap (unless there ever needs to
+Peter --> be a da850 specific workaround.
+
+Or
+Should I update both binding doc & the driver to use new compatible option "ti,da830-ecap"
+(as da830 platform has initial IP support)?
+Even with this, platforms da830, da850 and am33xx can reuse "ti,da830-ecap" compatible field.
+
+Thanks
+Avinash
+
+> 
+> -- 
+> Bye, Peter Korsgaard
+> _______________________________________________
+> Davinci-linux-open-source mailing list
+> Davinci-linux-open-source@linux.davincidsp.com
+> http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source
+> 
+
