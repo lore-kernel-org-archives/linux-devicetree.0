@@ -1,92 +1,112 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH] rtc: at91rm9200: add DT support
-Date: Thu, 21 Mar 2013 11:01:35 +0100
-Message-ID: <514ADA7F.7070303@atmel.com>
-References: <1360879147-17273-1-git-send-email-manabian@gmail.com> <5139ABEF.2000408@atmel.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH V2] DMA: PL330: Add check if device tree compatible
+Date: Thu, 21 Mar 2013 15:09:06 +0530
+Message-ID: <20130321093906.GL10326@intel.com>
+References: <1362475531-32260-1-git-send-email-padma.v@samsung.com>
+ <1362475531-32260-2-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5139ABEF.2000408@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, a.zummo@towertech.it, rtc-linux@googlegroups.com, Andrew Morton <akpm@linux-foundation.org>
-Cc: Joachim Eastwood <manabian@gmail.com>, devicetree-discuss@lists.ozlabs.org, plagnioj@jcrosoft.com, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1362475531-32260-2-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.kvr@gmail.com, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, arnd@arndb.de, grant.likely@secretlab.ca, jon-hunter@ti.com, boojin.kim@samsung.com, robherring2@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/08/2013 10:14 AM, Nicolas Ferre :
-> On 02/14/2013 10:59 PM, Joachim Eastwood :
->> Signed-off-by: Joachim Eastwood <manabian@gmail.com>
+On Tue, Mar 05, 2013 at 02:55:31PM +0530, Padmavathi Venna wrote:
+> This patch register the dma controller with generic dma helpers only
+> in DT case. This also adds some extra error handling in the driver.
 > 
-> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+> Reported-by: Sachin Kamat <sachin.kamat@linaro.org>
+> ---
 > 
-> Alessandro, do you want to queue this one on your side?
-
-Ping?
-
-Maybe Andrew, you may take this one on your side?
-
-> Best regards,
+> Based on Vinod Koul next branch.
 > 
->> ---
->>  .../devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt      | 15 +++++++++++++++
->>  drivers/rtc/rtc-at91rm9200.c                              |  9 +++++++++
->>  2 files changed, 24 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt b/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt
->> new file mode 100644
->> index 0000000..2a3feab
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/rtc/atmel,at91rm9200-rtc.txt
->> @@ -0,0 +1,15 @@
->> +Atmel AT91RM9200 Real Time Clock
->> +
->> +Required properties:
->> +- compatible: should be: "atmel,at91rm9200-rtc"
->> +- reg: physical base address of the controller and length of memory mapped
->> +  region.
->> +- interrupts: rtc alarm/event interrupt
->> +
->> +Example:
->> +
->> +rtc@fffffe00 {
->> +	compatible = "atmel,at91rm9200-rtc";
->> +	reg = <0xfffffe00 0x100>;
->> +	interrupts = <1 4 7>;
->> +};
->> diff --git a/drivers/rtc/rtc-at91rm9200.c b/drivers/rtc/rtc-at91rm9200.c
->> index b6469e2..2ea0ee3 100644
->> --- a/drivers/rtc/rtc-at91rm9200.c
->> +++ b/drivers/rtc/rtc-at91rm9200.c
->> @@ -28,6 +28,8 @@
->>  #include <linux/ioctl.h>
->>  #include <linux/completion.h>
->>  #include <linux/io.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->>  
->>  #include <asm/uaccess.h>
->>  
->> @@ -382,12 +384,19 @@ static const struct dev_pm_ops at91_rtc_pm = {
->>  #define at91_rtc_pm_ptr	NULL
->>  #endif
->>  
->> +static const struct of_device_id at91_rtc_dt_ids[] = {
->> +	{ .compatible = "atmel,at91rm9200-rtc" },
->> +	{ /* sentinel */ }
->> +};
->> +MODULE_DEVICE_TABLE(of, at91_rtc_dt_ids);
->> +
->>  static struct platform_driver at91_rtc_driver = {
->>  	.remove		= __exit_p(at91_rtc_remove),
->>  	.driver		= {
->>  		.name	= "at91_rtc",
->>  		.owner	= THIS_MODULE,
->>  		.pm	= at91_rtc_pm_ptr,
->> +		.of_match_table = of_match_ptr(at91_rtc_dt_ids),
->>  	},
->>  };
+> Changes since V1:
+> 	- return silently when of_dma_controller_register fails, as
+> 	  suggested by Arnd.
+> 
+>  drivers/dma/pl330.c |   38 +++++++++++++++++++++++++++-----------
+>  1 files changed, 27 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+> index 7181531..5dbc594 100644
+> --- a/drivers/dma/pl330.c
+> +++ b/drivers/dma/pl330.c
+> @@ -2882,7 +2882,7 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+>  {
+>  	struct dma_pl330_platdata *pdat;
+>  	struct dma_pl330_dmac *pdmac;
+> -	struct dma_pl330_chan *pch;
+> +	struct dma_pl330_chan *pch, *_p;
+>  	struct pl330_info *pi;
+>  	struct dma_device *pd;
+>  	struct resource *res;
+> @@ -2984,7 +2984,16 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+>  	ret = dma_async_device_register(pd);
+>  	if (ret) {
+>  		dev_err(&adev->dev, "unable to register DMAC\n");
+> -		goto probe_err2;
+> +		goto probe_err3;
+> +	}
+> +
+> +	if (adev->dev.of_node) {
+> +		ret = of_dma_controller_register(adev->dev.of_node,
+> +					 of_dma_pl330_xlate, pdmac);
+> +		if (ret) {
+> +			dev_err(&adev->dev,
+> +			"unable to register DMA to the generic DT DMA helpers\n");
+Indent?
+> +		}
+>  	}
+>  
+>  	dev_info(&adev->dev,
+> @@ -2995,16 +3004,21 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+>  		pi->pcfg.data_bus_width / 8, pi->pcfg.num_chan,
+>  		pi->pcfg.num_peri, pi->pcfg.num_events);
+>  
+> -	ret = of_dma_controller_register(adev->dev.of_node,
+> -					 of_dma_pl330_xlate, pdmac);
+> -	if (ret) {
+> -		dev_err(&adev->dev,
+> -		"unable to register DMA to the generic DT DMA helpers\n");
+> -		goto probe_err2;
+> -	}
+> -
+>  	return 0;
+> +probe_err3:
+> +	amba_set_drvdata(adev, NULL);
+>  
+> +	/* Idle the DMAC */
+> +	list_for_each_entry_safe(pch, _p, &pdmac->ddma.channels,
+> +			chan.device_node) {
+> +
+> +		/* Remove the channel */
+> +		list_del(&pch->chan.device_node);
+> +
+> +		/* Flush the channel */
+> +		pl330_control(&pch->chan, DMA_TERMINATE_ALL, 0);
+> +		pl330_free_chan_resources(&pch->chan);
+free_chan for error handling in probe?
 
-
--- 
-Nicolas Ferre
+> +	}
+>  probe_err2:
+>  	pl330_del(pi);
+>  probe_err1:
+> @@ -3023,8 +3037,10 @@ static int pl330_remove(struct amba_device *adev)
+>  	if (!pdmac)
+>  		return 0;
+>  
+> -	of_dma_controller_free(adev->dev.of_node);
+> +	if (adev->dev.of_node)
+> +		of_dma_controller_free(adev->dev.of_node);
+>  
+> +	dma_async_device_unregister(&pdmac->ddma);
+>  	amba_set_drvdata(adev, NULL);
+>  
+>  	/* Idle the DMAC */
+> -- 
+> 1.7.4.4
+> 
