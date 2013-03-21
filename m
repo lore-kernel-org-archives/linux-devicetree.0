@@ -1,24 +1,89 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] net: sh-eth: Use pr_err instead of printk
-Date: Thu, 21 Mar 2013 11:56:51 -0400 (EDT)
-Message-ID: <20130321.115651.1835577210151216326.davem@davemloft.net>
-References: <1363855615-30551-1-git-send-email-horms+renesas@verge.net.au>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [RFC PATCH RESEND v2] of/pci: Provide support for parsing PCI
+ DT ranges property
+Date: Thu, 21 Mar 2013 17:06:25 +0100
+Message-ID: <20130321170625.2a1bf226@skate>
+References: <1362140616-19346-1-git-send-email-Andrew.Murray@arm.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1363855615-30551-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms+renesas@verge.net.au
-Cc: netdev@vger.kernel.org, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, magnus.damm@gmail.com, nobuhiro.iwamatsu.yj@renesas.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1362140616-19346-1-git-send-email-Andrew.Murray@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Murray <Andrew.Murray@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Thierry Reding <thierry.reding@avionic-design.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <Liviu.Dudau@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Simon Horman <horms+renesas@verge.net.au>
-Date: Thu, 21 Mar 2013 17:46:55 +0900
+Dear Andrew Murray,
 
-> From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+On Fri,  1 Mar 2013 12:23:36 +0000, Andrew Murray wrote:
+> This patch factors out common implementations patterns to reduce overall kernel
+> code and provide a means for host bridge drivers to directly obtain struct
+> resources from the DT's ranges property without relying on architecture specific
+> DT handling. This will make it easier to write archiecture independent host bridge
+> drivers and mitigate against further duplication of DT parsing code.
 > 
-> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> This patch can be used in the following way:
+> 
+> 	struct of_pci_range_iter iter;
+> 	for_each_of_pci_range(&iter, np) {
+> 
+> 		//directly access properties of the address range, e.g.:
+> 		//iter.pci_space, iter.pci_addr, iter.cpu_addr, iter.size or
+> 		//iter.flags
+> 
+> 		//alternatively obtain a struct resource, e.g.:
+> 		//struct resource res;
+> 		//range_iter_fill_resource(iter, np, res);
+> 	}
+> 
+> Additionally the implementation takes care of adjacent ranges and merges them
+> into a single range (as was the case with powerpc and microblaze).
+> 
+> The modifications to microblaze, mips and powerpc have not been tested.
+> 
+> v2:
+>   This follows on from suggestions made by Grant Likely
+>   (marc.info/?l=linux-kernel&m=136079602806328)
+> 
+> Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
 
-Applied, thanks.
+Thanks, I've tested this successfully with the Marvell PCIe driver. I'm
+about to send a new version of the Marvell PCIe patch set that includes
+this RFC proposal.
+
+I only made two small changes compared to your version, detailed below.
+
+
+> +#define for_each_of_pci_range(iter, np) \
+> +	for (; of_pci_process_ranges(iter, np);)
+
+In the initial part of the loop, I added a memset() to initialize to
+zero the "iter" structure. Otherwise, if you forget to do it before
+calling of_pci_process_ranges(), it may crash (depending on the random
+values present in the uninitialized structure).
+
+> +#define range_iter_fill_resource(iter, np, res) \
+> +	do { \
+> +		res->flags = iter.flags; \
+> +		res->start = iter.cpu_addr; \
+> +		res->end = iter.cpu_addr + iter.size - 1; \
+> +		res->parent = res->child = res->sibling = NULL; \
+> +		res->name = np->full_name; \
+> +	} while (0)
+
+And here, I enclosed all the usage of the macro parameters in
+parenthesis. Like (res)->flags instead of res->flags. If you don't do
+that, then passing &foobar as the 'res' parameter causes some
+compilation failure because &foobar->res is not valid, while
+(&foobar)->res is.
+
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
