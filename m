@@ -1,97 +1,33 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 03/11] ARM: timer-sp: convert to use CLKSRC_OF init
-Date: Thu, 21 Mar 2013 21:31:01 -0500
-Message-ID: <514BC265.7080204@gmail.com>
-References: <1363820051-24428-1-git-send-email-robherring2@gmail.com>
- <1363820051-24428-4-git-send-email-robherring2@gmail.com>
- <20130321193549.GS4977@n2100.arm.linux.org.uk>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 02/11] ARM: remove extra timer-sp control register clearing
+Date: Thu, 21 Mar 2013 21:36:15 -0500
+Message-ID: <514BC39F.6050209@gmail.com>
+References: <1363820051-24428-1-git-send-email-robherring2@gmail.com> <1363820051-24428-3-git-send-email-robherring2@gmail.com> <20130321192322.GR4977@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130321193549.GS4977-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130321192322.GR4977@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>, linus.walleij@linaro.org, haojian.zhuang@linaro.org, pawel.moll@arm.com, john.stultz@linaro.org, tglx@linutronix.de, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/21/2013 02:35 PM, Russell King - ARM Linux wrote:
-> On Wed, Mar 20, 2013 at 05:54:03PM -0500, Rob Herring wrote:
->> +	clk0 = of_clk_get(np, 0);
->> +	if (IS_ERR(clk0))
->> +		clk0 = NULL;
->> +
->> +	/* Get the 2nd clock if the timer has 2 timer clocks */
->> +	if (of_count_phandle_with_args(np, "clocks", "#clock-cells") == 3) {
->> +		clk1 = of_clk_get(np, 1);
->> +		if (IS_ERR(clk1)) {
->> +			pr_err("sp804: %s clock not found: %d\n", np->name,
->> +				(int)PTR_ERR(clk1));
->> +			return;
->> +		}
->> +	} else
->> +		clk1 = clk0;
->> +
->> +	irq = irq_of_parse_and_map(np, 0);
->> +	if (irq <= 0)
->> +		return;
->> +
->> +	of_property_read_u32(np, "arm,sp804-has-irq", &irq_num);
->> +	if (irq_num == 2)
->> +		tmr2_evt = true;
->> +
->> +	__sp804_clockevents_init(base + (tmr2_evt ? TIMER_2_BASE : 0),
->> +				 irq, tmr2_evt ? clk1 : clk0, name);
->> +	__sp804_clocksource_and_sched_clock_init(base + (tmr2_evt ? 0 : TIMER_2_BASE),
->> +						 name, tmr2_evt ? clk0 : clk1, 1);
+On 03/21/2013 02:23 PM, Russell King - ARM Linux wrote:
+> On Wed, Mar 20, 2013 at 05:54:02PM -0500, Rob Herring wrote:
+>> From: Rob Herring <rob.herring@calxeda.com>
+>>
+>> The timer-sp initialization code clears the control register before
+>> initializing the timers, so every platform doing this is redundant.
+>>
+>> For unused timers, we should not care what state they are in.
 > 
-> This just looks totally screwed to me.
+> NAK.  We do care what state they're in.  What if they have their interrupt
+> enable bit set, and IRQ is shared with the clock event timer?
 > 
-> A SP804 cell has two timers, and has one clock input and two clock
-> enable inputs.  The clock input is common to both timers.  The timers
-> only count on the rising edge of the clock input when the enable
-> input is high.  (the APB PCLK also matters too...)
-> 
-> Now, the clock enable inputs are controlled by the SP810 system
-> controller to achieve different clock rates for each.  So, we *can*
-> view an SP804 as having two clock inputs.
+> No, this patch is just wrong.
 
-Exactly. Effectively, the TIMCLKENx are just dividers of the clock input.
-
-> However, the two clock inputs do not depend on whether one or the
-> other has an IRQ or not.  Timer 1 is always clocked by TIMCLK &
-> TIMCLKEN1.  Timer 2 is always clocked by TIMCLK & TIMCLKEN2.
-> 
-> Using the logic above, the clocks depend on how the IRQs are wired
-> up... really?  Can you see from my description above why that is
-> screwed?  What bearing does the IRQ have on the wiring of the
-> clock inputs?
-
-No. I'm simply swapping which timer is used for clksrc vs. clkevt based
-on the irq connection DT describes. If only timer 2's irq being hooked
-up, then timer 2 is the clkevt. Otherwise I always use timer 1 for the
-clkevt because I either have a combined interrupt or timer 1 interrupt
-hooked up.
-
-Perhaps re-writing it like this would be more clear:
-
-if (irq_num == 2){
-	__sp804_clockevents_init(base + TIMER_2_BASE, irq, clk1, name);
-	__sp804_clocksource_and_sched_clock_init(base, name, clk0, 1);
-} else {
-	__sp804_clockevents_init(base, irq, clk0, name);
-	__sp804_clocksource_and_sched_clock_init(base + TIMER_2_BASE,
-						name, clk1, 1);
-}
-
+Okay, I can have the timer init function clear the register in the case
+that even when the timer is unused.
 
 Rob
