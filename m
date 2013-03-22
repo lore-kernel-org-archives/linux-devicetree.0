@@ -1,38 +1,58 @@
-From: Samuel Ortiz <sameo@linux.intel.com>
-Subject: Re: [PATCH v3 1/3] mfd: as3711: add OF support
-Date: Fri, 22 Mar 2013 17:34:09 +0100
-Message-ID: <20130322163409.GA8997@zurbaran>
-References: <1363968949-12151-1-git-send-email-g.liakhovetski@gmx.de>
- <1363968949-12151-2-git-send-email-g.liakhovetski@gmx.de>
+From: Chris Ball <cjb@laptop.org>
+Subject: Re: [PATCH -next] mmc: wmt-sdmmc: remove unused variable in wmt_complete_data_request()
+Date: Fri, 22 Mar 2013 12:38:17 -0400
+Message-ID: <87li9fo0ee.fsf@octavius.laptop.org>
+References: <CAPgLHd-7nVD3=83wpNtw1cBmkr+xs5iD7tuxZM+PdxWPLtwZsQ@mail.gmail.com>
+	<1363061028.23051.1.camel@gitbox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1363968949-12151-2-git-send-email-g.liakhovetski@gmx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree-discuss@lists.ozlabs.org, Richard Purdie <rpurdie@rpsys.net>, Andrew Morton <akpm@linux-foundation.org>, linux-fbdev@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1363061028.23051.1.camel@gitbox> (Tony Prisk's message of "Tue,
+	12 Mar 2013 17:03:48 +1300")
+Sender: linux-mmc-owner@vger.kernel.org
+To: Tony Prisk <linux@prisktech.co.nz>
+Cc: Wei Yongjun <weiyj.lk@gmail.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guennadi,
+Hi,
 
-On Fri, Mar 22, 2013 at 05:15:47PM +0100, Guennadi Liakhovetski wrote:
-> Add Flat Device Tree support to the AS3711 MFD driver. This patch just
-> allows to bind the driver to I2C devices, instantiated from the DT.
-> DT support for AS3711 cell drivers will be added in separate drivers.
-> 
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
-> Reviwed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
-> ---
->  Documentation/devicetree/bindings/mfd/as3711.txt |   73 ++++++++++++++++++++++
->  drivers/mfd/as3711.c                             |   27 +++++++-
->  2 files changed, 96 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/as3711.txt
-Applied, thanks.
+On Tue, Mar 12 2013, Tony Prisk wrote:
+> On Mon, 2013-03-11 at 22:36 +0800, Wei Yongjun wrote:
+>> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+>> 
+>> The variable 'mmc' is initialized but never used
+>> otherwise, so remove the unused variable.
+>> 
+>> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+>> ---
+>>  drivers/mmc/host/wmt-sdmmc.c | 2 --
+>>  1 file changed, 2 deletions(-)
+>> 
+>> diff --git a/drivers/mmc/host/wmt-sdmmc.c b/drivers/mmc/host/wmt-sdmmc.c
+>> index 154f0e8..41d5802 100644
+>> --- a/drivers/mmc/host/wmt-sdmmc.c
+>> +++ b/drivers/mmc/host/wmt-sdmmc.c
+>> @@ -348,13 +348,11 @@ static void wmt_complete_data_request(struct wmt_mci_priv *priv)
+>>  
+>>  static irqreturn_t wmt_mci_dma_isr(int irq_num, void *data)
+>>  {
+>> -	struct mmc_host *mmc;
+>>  	struct wmt_mci_priv *priv;
+>>  
+>>  	int status;
+>>  
+>>  	priv = (struct wmt_mci_priv *)data;
+>> -	mmc = priv->mmc;
+>>  
+>>  	status = readl(priv->sdmmc_base + SDDMA_CCR) & 0x0F;
+>>  
+>> 
+>
+> Acked-by: Tony Prisk <linux@prisktech.co.nz>
 
-Cheers,
-Samuel.
+Thanks, pushed to mmc-next for 3.10.
 
+- Chris.
 -- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+One Laptop Per Child
