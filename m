@@ -1,17 +1,15 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Subject: Re: [PATCH 5/5] arm: dts: Convert mvebu device tree files to 64 bits
-Date: Fri, 22 Mar 2013 07:28:54 +0100
-Message-ID: <20130322062854.GS21478@lunn.ch>
+Date: Fri, 22 Mar 2013 06:55:25 +0000
+Message-ID: <201303220655.25882.arnd@arndb.de>
 References: <1363883179-1361-1-git-send-email-gregory.clement@free-electrons.com>
- <1363883179-1361-6-git-send-email-gregory.clement@free-electrons.com>
- <20130321201533.GN21478@lunn.ch> <20130321212236.1015295d@skate>
- <20130321205545.GA8358@obsidianresearch.com>
+ <20130321214607.GC8431@obsidianresearch.com>
+ <EE71107DF0D1F24FA2D95041E64AB9E801A56C7B6D25@IL-MB01.marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130321205545.GA8358-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <EE71107DF0D1F24FA2D95041E64AB9E801A56C7B6D25-YTFUtKQQMWV5iqk/IoNZdEEOCMrvLtNR@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,48 +20,32 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+To: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On Thursday 21 March 2013, Lior Amsalem wrote:
+> > From: Jason Gunthorpe [mailto:jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org]
+> > Sent: Thursday, March 21, 2013 11:46 PM
+> >
+> > On Thu, Mar 21, 2013 at 11:35:21PM +0200, Lior Amsalem wrote:
+> > 
+> > > >  *) It would require Linux to change the internal registers address
+> > > >     (for now the kernel relies on the bootloader). The problem is that
+> > > >     we can't do it early enough to preserve the earlyprintk
+> > > >     functionality. Maybe you have suggestions on how to achieve that?
+> > >
+> > > Please note that all registers and IOs are still 32bit, the 40bit
+> > > extension is on the CPU to DRAM path (windows) only.
+> > 
+> > Ah, I did wonder, since Ezequiel's MBUS driver was the same as on prior
+> > families. I guess it is also the case that all on board DMA and DMA from PCI-E
+> > devices are restricted to the low 32 bits as well?
+> 
+> Correct, that's why we sets DMABOUNCE config.
+> 
 
-So, lets see if i have all this right.
+IIRC, DMABOUNCE does not work well in a multiplatform configuration. Have you tried
+using swiotlb instead?
 
-IO space needs to stay where it is, somewhere in the top 1GB, because
-it is limited to the 32bit address space.
-
-We must have some SDRAM in the bottom of the 40bit address range in
-order that DMA works. Bounce buffers are used for anything which is
-outside of the bottom 32bits.
-
-SDRAM can only be split on ranks. I assume this is also a synonym for
-chip select? 
-
-Ideally we want the boot loader to setup the split, since it is not
-very easy to move stuff around in a running system. Alternatively, the
-boot loader could setup the lowest rank/chip select and leave the
-others disabled. That gives enough that Linux can boot and decide
-where it wants to put the rest, without the problem of having to remap
-the SDRAM its currently running from.
-
-It might be possible, in theory, to copy code into the SRAM and run
-from SRAM while moving the SDRAM around. But i get the feeling its not
-very easy.
-
-If there is 4GB in the system, it is probably going to be split with
-2GB low and 2GB high. This is probably the most important use case,
-since throwing away 1/4 of your SDRAM is much worse than 1/8, or 1/16.
-
-If there is 8GB in the system, it is probably going to be split with
-2GB low and 6GB high, assuming it has 4 ranks of 2GB. What might be
-considered is 4/4 split, with 1GB discarded, if that gives better
-overall performance. If it happens to be 2x 4GB you have no choice but
-to discard 1GB.
-
-With 16GB, there is no choice other than 4GB/12GB with 1GB discarded.
-
-Is that all correct?
-
-Thanks
-	Andrew
+	Arnd
