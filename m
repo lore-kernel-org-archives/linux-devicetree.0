@@ -1,307 +1,515 @@
 From: Ian Lartey <ian@slimlogic.co.uk>
-Subject: [PATCH v10 10/12] clk: add a clock driver for palmas
-Date: Fri, 22 Mar 2013 14:55:20 +0000
-Message-ID: <1363964122-19201-11-git-send-email-ian@slimlogic.co.uk>
+Subject: [PATCH v10 01/12] mfd: DT bindings for the palmas family MFD
+Date: Fri, 22 Mar 2013 14:55:11 +0000
+Message-ID: <1363964122-19201-2-git-send-email-ian@slimlogic.co.uk>
 References: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, rob@landley.net, mturquette@linaro.org, linus.walleij@linaro.org, cooloney@gmail.com, sfr@canb.auug.org.au, rpurdie@rpsys.net, akpm@linux-foundation.org, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, gg@slimlogic.co.uk, j-keerthy@ti.com, ldewangan@nvidia.com, t-kristo@ti.com
+Cc: linux-doc@vger.kernel.org, linus.walleij@linaro.org, grant.likely@secretlab.ca, wim@iguana.be, ldewangan@nvidia.com, gg@slimlogic.co.uk, linux-leds@vger.kernel.org, sfr@canb.auug.org.au, mturquette@linaro.org, sameo@linux.intel.com, linux-watchdog@vger.kernel.org, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, cooloney@gmail.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, j-keerthy@ti.com, broonie@opensource.wolfsonmicro.com, lgirdwood@gmail.com, t-kristo@ti.com, rpurdie@rpsys.net, rob@landley.net, akpm@linux-foundation.org
 List-Id: devicetree@vger.kernel.org
 
-Palmas has two clock generators in it, clk32kg and clk32kg audio. They
-are fixed frequency clocks that only have enable/disable functionality.
+From: Graeme Gregory <gg@slimlogic.co.uk>
+
+Add the various binding files for the palmas family of chips. There is a
+top level MFD binding then a seperate binding for IP blocks on chips.
 
 Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
 Signed-off-by: J Keerthy <j-keerthy@ti.com>
 Signed-off-by: Ian Lartey <ian@slimlogic.co.uk>
-Acked-by: Mike Turquette <mturquette@linaro.org>
 ---
- drivers/clk/clk-palmas.c |  275 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 275 insertions(+), 0 deletions(-)
- create mode 100644 drivers/clk/clk-palmas.c
+ .../devicetree/bindings/clock/palmas-clk.txt       |   27 +++
+ .../devicetree/bindings/gpio/gpio-palmas.txt       |   35 ++++
+ .../devicetree/bindings/input/palmas-pwrbutton.txt |   26 +++
+ .../devicetree/bindings/leds/leds-palmas.txt       |   36 ++++
+ Documentation/devicetree/bindings/mfd/palmas.txt   |   81 ++++++++++
+ .../devicetree/bindings/regulator/palmas-pmic.txt  |  168 ++++++++++++++++++++
+ .../devicetree/bindings/rtc/palmas-rtc.txt         |   21 +++
+ .../devicetree/bindings/watchdog/palmas-wdt.txt    |   21 +++
+ 8 files changed, 415 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/palmas-clk.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-palmas.txt
+ create mode 100644 Documentation/devicetree/bindings/input/palmas-pwrbutton.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-palmas.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/palmas.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/palmas-pmic.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/palmas-rtc.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/palmas-wdt.txt
 
-diff --git a/drivers/clk/clk-palmas.c b/drivers/clk/clk-palmas.c
+diff --git a/Documentation/devicetree/bindings/clock/palmas-clk.txt b/Documentation/devicetree/bindings/clock/palmas-clk.txt
 new file mode 100644
-index 0000000..aea7710
+index 0000000..26fbc9f
 --- /dev/null
-+++ b/drivers/clk/clk-palmas.c
-@@ -0,0 +1,275 @@
-+/*
-+ * PALMAS resource clock module driver
-+ *
-+ * Copyright (C) 2011-2013 Texas Instruments Inc.
-+ * Graeme Gregory <gg@slimlogic.co.uk>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-+ * 02110-1301 USA
-+ *
-+ */
++++ b/Documentation/devicetree/bindings/clock/palmas-clk.txt
+@@ -0,0 +1,27 @@
++* palmas and palmas-charger resource clock IP block devicetree bindings
 +
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/platform_device.h>
-+#include <linux/mfd/palmas.h>
-+#include <linux/clk-provider.h>
-+#include <linux/of_platform.h>
++Required properties:
++- compatible : Should be from the list
++  ti,twl6035-clk
++  ti,twl6036-clk
++  ti,twl6037-clk
++  ti,tps65913-clk
++  ti,tps65914-clk
++  ti,tps80036-clk
++and also the generic series names
++  ti,palmas-clk
 +
-+struct palmas_clk {
-+	struct palmas *palmas;
-+	struct device *dev;
-+	struct clk_hw clk32kg;
-+	struct clk_hw clk32kgaudio;
-+	int clk32kgaudio_mode_sleep;
-+	int clk32kg_mode_sleep;
++Optional properties:
++- ti,clk32g-mode-sleep		- mode to adopt in pmic sleep 0 - off, 1 - on
++- ti,clkg32kgaudio-mode-sleep	- see above
++
++Example:
++
++clk {
++    compatible = "ti,twl6035-clk", "ti,palmas-clk";
++    ti,clk32kg-mode-sleep = <0>;
++    ti,clk32kgaudio-mode-sleep = <0>;
++    #clock-cells = <1>;
++    clock-frequency = <32000000>;
++    clock-names = "clk32kg", "clk32kgaudio";
 +};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-palmas.txt b/Documentation/devicetree/bindings/gpio/gpio-palmas.txt
+new file mode 100644
+index 0000000..688eebb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-palmas.txt
+@@ -0,0 +1,35 @@
++* palmas and palmas charger GPIO IP block devicetree bindings
 +
-+static int palmas_clock_setbits(struct palmas *palmas, unsigned int reg,
-+		unsigned int data)
-+{
-+	return palmas_update_bits(palmas, PALMAS_RESOURCE_BASE,
-+			reg, data, data);
-+}
++Required properties:
++- compatible : Should be from the list
++  ti,twl6035-gpio
++  ti,twl6036-gpio
++  ti,twl6037-gpio
++  ti,tps65913-gpio
++  ti,tps65914-gpio
++  ti,tps80036-gpio
 +
-+static int palmas_clock_clrbits(struct palmas *palmas, unsigned int reg,
-+		unsigned int data)
-+{
-+	return palmas_update_bits(palmas, PALMAS_RESOURCE_BASE,
-+			reg, data, 0);
-+}
++and also the generic series names
 +
-+static int palmas_prepare_clk32kg(struct clk_hw *hw)
-+{
-+	struct palmas_clk *palmas_clk = container_of(hw, struct palmas_clk,
-+			clk32kg);
-+	int ret;
++  ti,palmas-gpio
 +
-+	ret = palmas_clock_setbits(palmas_clk->palmas,
-+			PALMAS_CLK32KG_CTRL, PALMAS_CLK32KG_CTRL_MODE_ACTIVE);
-+	if (ret)
-+		dev_err(palmas_clk->dev, "Failed to enable clk32kg: %d\n", ret);
++- gpio-controller: mark the device as a GPIO controller
++- gpio-cells = <1>:  GPIO lines are provided.
++- interrupt-controller : palmas has its own internal IRQs
++- #interrupt-cells : should be set to 2 for IRQ number and flags
++  The first cell is the IRQ number.
++  The second cell is the flags, encoded as the trigger masks from
++  Documentation/devicetree/bindings/interrupts.txt
++- interrupt-parent : The parent interrupt controller.
 +
-+	return ret;
-+}
++Example:
 +
-+static void palmas_unprepare_clk32kg(struct clk_hw *hw)
-+{
-+	struct palmas_clk *palmas_clk = container_of(hw, struct palmas_clk,
-+			clk32kg);
-+	int ret;
++gpio {
++    compatible = "ti,twl6035-gpio", "ti,palmas-gpio";
 +
-+	ret = palmas_clock_clrbits(palmas_clk->palmas,
-+			PALMAS_CLK32KG_CTRL, PALMAS_CLK32KG_CTRL_MODE_ACTIVE);
-+	if (ret)
-+		dev_err(palmas_clk->dev, "Failed to enable clk32kg: %d\n", ret);
-+
-+	return;
-+}
-+
-+static const struct clk_ops palmas_clk32kg_ops = {
-+	.prepare = palmas_prepare_clk32kg,
-+	.unprepare = palmas_unprepare_clk32kg,
++    gpio-controller;
++    #gpio-cells = <1>;
++    interrupt-parent = <&palmas>;
++    interrupt-controller;
++    #interrupt-cells = <2>;
 +};
+diff --git a/Documentation/devicetree/bindings/input/palmas-pwrbutton.txt b/Documentation/devicetree/bindings/input/palmas-pwrbutton.txt
+new file mode 100644
+index 0000000..722ca94
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/palmas-pwrbutton.txt
+@@ -0,0 +1,26 @@
++* palmas and palmas-charger Button IP block devicetree bindings
 +
-+static int palmas_prepare_clk32kgaudio(struct clk_hw *hw)
-+{
-+	struct palmas_clk *palmas_clk = container_of(hw, struct palmas_clk,
-+			clk32kgaudio);
-+	int ret;
++Required properties:
++- compatible : Should be from the list
++  ti,twl6035-pwrbutton
++  ti,twl6036-pwrbutton
++  ti,twl6037-pwrbutton
++  ti,tps65913-pwrbutton
++  ti,tps65914-pwrbutton
++  ti,tps80036-pwrbutton
++and also the generic series names
++  ti,palmas-pwrbutton
 +
-+	ret = palmas_clock_setbits(palmas_clk->palmas,
-+		PALMAS_CLK32KGAUDIO_CTRL, PALMAS_CLK32KGAUDIO_CTRL_MODE_ACTIVE);
-+	if (ret)
-+		dev_err(palmas_clk->dev,
-+				"Failed to enable clk32kgaudio: %d\n", ret);
++- interrupts: the interrupt outputs of the controller.
++- interrupt-names : Should be the name of irq resource. Each interrupt
++  binds its interrupt-name.
++- interrupt-parent : The parent interrupt controller.
 +
-+	return ret;
-+}
++Example:
 +
-+static void palmas_unprepare_clk32kgaudio(struct clk_hw *hw)
-+{
-+	struct palmas_clk *palmas_clk = container_of(hw, struct palmas_clk,
-+			clk32kgaudio);
-+	int ret;
-+
-+	ret = palmas_clock_clrbits(palmas_clk->palmas,
-+		PALMAS_CLK32KGAUDIO_CTRL, PALMAS_CLK32KGAUDIO_CTRL_MODE_ACTIVE);
-+	if (ret)
-+		dev_err(palmas_clk->dev,
-+				"Failed to enable clk32kgaudio: %d\n", ret);
-+
-+	return;
-+}
-+
-+static const struct clk_ops palmas_clk32kgaudio_ops = {
-+	.prepare = palmas_prepare_clk32kgaudio,
-+	.unprepare = palmas_unprepare_clk32kgaudio,
++pwrbutton {
++    compatible = "ti,twl6035-pwrbutton", "ti,palmas-pwrbutton";
++    interrupt-parent = <&palmas>;
++    interrupts = <1 0>;
++    interrupt-names = "pwron-irq";
 +};
+diff --git a/Documentation/devicetree/bindings/leds/leds-palmas.txt b/Documentation/devicetree/bindings/leds/leds-palmas.txt
+new file mode 100644
+index 0000000..a825f43
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-palmas.txt
+@@ -0,0 +1,36 @@
++* palmas and palmas-charger LED IP block devicetree bindings
 +
-+static int palmas_initialise_clk(struct palmas_clk *palmas_clk)
-+{
-+	int ret;
++Required properties:
++- compatible : Should be from the list
++  ti,twl6035-leds
++  ti,twl6036-leds
++  ti,twl6037-leds
++  ti,tps65913-leds
++  ti,tps65914-leds
++  ti,tps80036-leds
++and also the generic series names
++  ti,palmas-leds
 +
-+	if (palmas_clk->clk32kg_mode_sleep) {
-+		ret = palmas_clock_setbits(palmas_clk->palmas,
-+			PALMAS_CLK32KG_CTRL, PALMAS_CLK32KG_CTRL_MODE_SLEEP);
-+		if (ret)
-+			return ret;
++Optional properties:
++-ti,led1-current	- sink current setting 0 - 0mA, 1 - 25mA, 2 - 5mA,
++				3 - 0mA, 4 - 5mA, 5 - 5mA, 6 - 10.0mA, 7 - 0mA
++-ti,led2-current	- see above
++-ti,led3-current	- see above
++-ti,led4-current	- see above
++-ti,chrg-led-mode	- only valid for charger - mode for charging led operation
++				0 - Charging indicator
++				1 - controlled as a general purpose LED
++-ti,chrg-led-vbat-low	- only valid for charger - blinking of low battery led 
++				0 - blinking is enabled,
++				1 - blinking is disabled
++
++Example:
++leds {
++	compatible = "ti,twl6035-leds", "ti,palmas-leds";
++	ti,led1-current = <0>;
++	ti,led2-current = <0>;
++	ti,led3-current = <0>;
++	ti,led4-current = <0>;
++	ti,chrg-led-mode = <0>;
++	ti,chrg-led-vbat-low = <0>;
++};
+diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documentation/devicetree/bindings/mfd/palmas.txt
+new file mode 100644
+index 0000000..84e5c2e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/palmas.txt
+@@ -0,0 +1,81 @@
++* palmas and palmas-charger device tree bindings
++
++The TI palmas family current members :-
++twl6035 (palmas)
++twl6036 (palmas-charger)
++twl6037 (palmas)
++tps65913 (palmas)
++tps65914 (palmas)
++tps80036 (palmas-charger)
++
++Required properties:
++- compatible : Should be from the list
++  ti,twl6035
++  ti,twl6036
++  ti,twl6037
++  ti,tps65913
++  ti,tps65914
++  ti,tps80036
++and also the generic series names
++  ti,palmas
++  ti,palmas-charger
++- interrupt-controller : palmas has its own internal IRQs
++- #interrupt-cells : should be set to 2 for IRQ number and flags
++  The first cell is the IRQ number.
++  The second cell is the flags, encoded as the trigger masks from
++  Documentation/devicetree/bindings/interrupts.txt
++- interrupt-parent : The parent interrupt controller.
++
++Optional properties:
++  ti,mux_padX : set the pad register X (1-2) to the correct muxing for the
++  		hardware, if not set will use muxing in OTP.
++
++Example:
++
++palmas {
++	compatible = "ti,twl6035", "ti,palmas";
++	reg = <0x48>
++	interrupt-parent = <&intc>;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++
++	ti,mux-pad1 = <0>;
++	ti,mux-pad2 = <0>;
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	pmic {
++		compatible = "ti,twl6035-pmic", "ti,palmas-pmic";
++		....
 +	}
 +
-+	if (palmas_clk->clk32kgaudio_mode_sleep) {
-+		ret = palmas_clock_setbits(palmas_clk->palmas,
-+			PALMAS_CLK32KGAUDIO_CTRL,
-+			PALMAS_CLK32KGAUDIO_CTRL_MODE_SLEEP);
-+		if (ret)
-+			return ret;
++	gpio {
++		compatible = "ti,twl6035-gpio", "ti,palmas-gpio";
++		....
++	};
++
++	wdt {
++		compatible = "ti,twl6035-wdt", "ti,palmas-wdt";
++		....
++	};
++
++	rtc {
++		compatible = "ti,twl6035-rtc", "ti,palmas-rtc";
++		....
++	};
++
++	pwrbutton {
++		compatible = "ti,twl6035-pwrbutton", "ti,palmas-pwrbutton";
++		....
++	};
++
++	leds {
++		compatible = "ti,twl6035-leds", "ti-palmas-leds";
 +	}
 +
-+	return 0;
++	clk {
++		compatible = "ti,twl6035-clk", "ti,palmas-clk";
++		....
++	};
 +}
+diff --git a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
+new file mode 100644
+index 0000000..8097616
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
+@@ -0,0 +1,168 @@
++* palmas and palmas-charger regulator IP block devicetree bindings
 +
-+static void palmas_dt_to_pdata(struct device_node *node,
-+		struct palmas_clk_platform_data *pdata,
-+		const char **name1, const char **name2)
-+{
-+	int ret;
-+	u32 prop;
++Required properties:
++- compatible : Should be from the list
++  ti,twl6035-pmic
++  ti,twl6036-pmic
++  ti,twl6037-pmic
++  ti,tps65913-pmic
++  ti,tps65914-pmic
++  ti,tps80036-pmic
++and also the generic series names
++  ti,palmas-pmic
 +
-+	ret = of_property_read_u32(node, "ti,clk32kg-mode-sleep", &prop);
-+	if (!ret)
-+		pdata->clk32kg_mode_sleep = prop;
++Optional properties:
++- ti,ldo6-vibrator : ldo6 is in vibrator mode
 +
-+	ret = of_property_read_u32(node, "ti,clk32kgaudio-mode-sleep", &prop);
-+	if (!ret)
-+		pdata->clk32kgaudio_mode_sleep = prop;
++Optional nodes:
++- regulators : should contain the constrains and init information for the
++	       regulators. It should contain a subnode per regulator from the
++	       list.
++	       For ti,palmas-pmic - smps12, smps123, smps3 depending on OTP,
++	       smps45, smps457, smps7 depending on varient, smps6, smps[8-10],
++	       ldo[1-9], ldoln, ldousb
++	       For ti,palmas-charger-pmic - smps12, smps123, smps3 depending on OTP,
++	       smps[6-9], boost, ldo[1-14], ldoln, ldousb
 +
-+	of_property_read_string_index(node, "clock-names", 1, name1);
++	       optional chip specific regulator fields :-
++	       ti,warm-reset - maintain voltage during warm reset
++	       ti,roof-floor - control voltage selection by pin
++	       ti,sleep-mode - mode to adopt in pmic sleep 0 - off, 1 - auto,
++	       2 - eco, 3 - forced pwm
++	       ti,tstep - slope control 0 - Jump, 1 10mV/us, 2 5mV/us, 3 2.5mV/us
++	       ti,smps-range - OTP has the wrong range set for the hardware so override
++	       0 - low range, 1 - high range
 +
-+	of_property_read_string_index(node, "clock-names", 2, name2);
-+}
++Example:
 +
-+static int palmas_clk_probe(struct platform_device *pdev)
-+{
-+	struct palmas *palmas = dev_get_drvdata(pdev->dev.parent);
-+	struct palmas_clk_platform_data *pdata = pdev->dev.platform_data;
-+	struct device_node *node = pdev->dev.of_node;
-+	struct palmas_clk *palmas_clk;
-+	struct clk *clk;
-+	struct clk_init_data init_clk32g, init_clk32gaudio;
-+	int ret;
++pmic@0 {
++	compatible = "ti,twl6035-pmic", "ti,palmas-pmic";
++	interrupt-parent = <&palmas>;
++	interrupts = <14 0>;
++	interrupt-name = "short-irq";
 +
-+	if (node && !pdata) {
-+		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	ti,ldo6_vibrator;
 +
-+		if (!pdata)
-+			return -ENOMEM;
++	regulators {
++		smps12_reg : smps12 {
++			regulator-name = "smps12";
++			regulator-min-microvolt = < 600000>;
++			regulator-max-microvolt = <1500000>;
++			regulator-always-on;
++			regulator-boot-on;
++			ti,warm-reset;
++			ti,roof-floor;
++			ti,mode-sleep = <0>;
++			ti,tstep = <0>;
++			ti,smps-range = <1>;
++		};
 +
-+		palmas_dt_to_pdata(node, pdata, &init_clk32g.name,
-+				&init_clk32gaudio.name);
-+	}
++		smps3_reg: smps3 {
++			regulator-name = "smps3";
++			regulator-min-microvolt = < 600000>;
++			regulator-max-microvolt = <1310000>;
++		};
 +
-+	palmas_clk = devm_kzalloc(&pdev->dev, sizeof(*palmas_clk), GFP_KERNEL);
-+	if (!palmas_clk)
-+		return -ENOMEM;
++		smps45_reg: smps45 {
++			regulator-name = "smps45";
++			regulator-min-microvolt = < 600000>;
++			regulator-max-microvolt = <1310000>;
++		};
 +
-+	palmas_clk->palmas = palmas;
-+	palmas_clk->dev = &pdev->dev;
++		smps6_reg: smps6 {
++			regulator-name = "smps6";
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1200000>;
++		};
 +
-+	if (!init_clk32g.name)
-+		init_clk32g.name = "clk32kg";
-+	init_clk32g.ops = &palmas_clk32kg_ops;
-+	init_clk32g.parent_names = NULL;
-+	init_clk32g.num_parents = 0;
-+	palmas_clk->clk32kg.init = &init_clk32g;
++		smps7_reg: smps7 {
++			regulator-name = "smps7";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
 +
-+	clk = clk_register(palmas_clk->dev, &palmas_clk->clk32kg);
-+	if (IS_ERR(clk)) {
-+		dev_dbg(&pdev->dev, "clk32kg clock register failed %ld\n",
-+				PTR_ERR(clk));
-+		ret = PTR_ERR(clk);
-+		goto err_clk32kg;
-+	}
++		smps8_reg: smps8 {
++			regulator-name = "smps8";
++			regulator-min-microvolt = < 600000>;
++			regulator-max-microvolt = <1310000>;
++		};
 +
-+	if (!init_clk32gaudio.name)
-+		init_clk32gaudio.name = "clk32kgaudio";
-+	init_clk32gaudio.ops = &palmas_clk32kgaudio_ops;
-+	init_clk32gaudio.parent_names = NULL;
-+	init_clk32gaudio.num_parents = 0;
-+	palmas_clk->clk32kgaudio.init = &init_clk32gaudio;
++		smps9_reg: smps9 {
++			regulator-name = "smps9";
++			regulator-min-microvolt = <2100000>;
++			regulator-max-microvolt = <2100000>;
++		};
 +
-+	clk = clk_register(palmas_clk->dev, &palmas_clk->clk32kgaudio);
-+	if (IS_ERR(clk)) {
-+		dev_dbg(&pdev->dev, "clk32kgaudio clock register failed %ld\n",
-+		PTR_ERR(clk));
-+		ret = PTR_ERR(clk);
-+		goto err_audio;
-+	}
++		smps10_reg: smps10 {
++			regulator-name = "smps10";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++		};
 +
-+	ret = palmas_initialise_clk(palmas_clk);
-+	if (ret)
-+		goto err;
++		ldo1_reg: ldo1 {
++			regulator-name = "ldo1";
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <2800000>;
++		};
 +
-+	dev_set_drvdata(&pdev->dev, palmas_clk);
++		ldo2_reg: ldo2 {
++			regulator-name = "ldo2";
++			regulator-min-microvolt = <2900000>;
++			regulator-max-microvolt = <2900000>;
++		};
 +
-+	return 0;
++		ldo3_reg: ldo3 {
++			regulator-name = "ldo3";
++			regulator-min-microvolt = <3000000>;
++			regulator-max-microvolt = <3000000>;
++		};
 +
-+err:
-+	clk_unregister(palmas_clk->clk32kgaudio.clk);
-+err_audio:
-+	clk_unregister(palmas_clk->clk32kg.clk);
-+err_clk32kg:
++		ldo4_reg: ldo4 {
++			regulator-name = "ldo4";
++			regulator-min-microvolt = <2200000>;
++			regulator-max-microvolt = <2200000>;
++		};
 +
-+	return ret;
-+}
++		ldo5_reg: ldo5 {
++			regulator-name = "ldo5";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
 +
-+static int palmas_clk_remove(struct platform_device *pdev)
-+{
-+	struct palmas_clk *palmas_clk = dev_get_drvdata(&pdev->dev);
++		ldo6_reg: ldo6 {
++			regulator-name = "ldo6";
++			regulator-min-microvolt = <1500000>;
++			regulator-max-microvolt = <1500000>;
++		};
 +
-+	clk_unregister(palmas_clk->clk32kgaudio.clk);
-+	clk_unregister(palmas_clk->clk32kg.clk);
++		ldo7_reg: ldo7 {
++			regulator-name = "ldo7";
++			regulator-min-microvolt = <1500000>;
++			regulator-max-microvolt = <1500000>;
++		};
 +
-+	return 0;
-+}
++		ldo8_reg: ldo8 {
++			regulator-name = "ldo8";
++			regulator-min-microvolt = <1500000>;
++			regulator-max-microvolt = <1500000>;
++		};
 +
-+static struct of_device_id of_palmas_match_tbl[] = {
-+	{ .compatible = "ti,palmas-clk", },
-+	{ .compatible = "ti,twl6035-clk", },
-+	{ .compatible = "ti,twl6036-clk", },
-+	{ .compatible = "ti,twl6037-clk", },
-+	{ .compatible = "ti,tps65913-clk", },
-+	{ .compatible = "ti,tps65914-clk", },
-+	{ .compatible = "ti,tps80036-clk", },
-+	{ /* end */ }
++		ldo9_reg: ldo9 {
++			regulator-name = "ldo9";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		ldoln_reg: ldoln {
++			regulator-name = "ldoln";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++		};
++
++		ldousb_reg: ldousb {
++			regulator-name = "ldousb";
++			regulator-min-microvolt = <3250000>;
++			regulator-max-microvolt = <3250000>;
++		};
++	};
 +};
-+MODULE_DEVICE_TABLE(of, of_palmas_match_tbl);
+diff --git a/Documentation/devicetree/bindings/rtc/palmas-rtc.txt b/Documentation/devicetree/bindings/rtc/palmas-rtc.txt
+new file mode 100644
+index 0000000..f405b36
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/palmas-rtc.txt
+@@ -0,0 +1,21 @@
++* palmas and palmas-charger RTC IP block devicetree bindings
 +
-+static struct platform_driver palmas_clk_driver = {
-+	.probe = palmas_clk_probe,
-+	.remove = palmas_clk_remove,
-+	.driver = {
-+		.name = "palmas-clk",
-+		.of_match_table = of_palmas_match_tbl,
-+		.owner = THIS_MODULE,
-+	},
++Required properties:
++- compatible : Should be from the list
++  ti,twl6035-rtc
++  ti,twl6036-rtc
++  ti,twl6037-rtc
++  ti,tps65913-rtc
++  ti,tps65914-rtc
++  ti,tps80036-rtc
++and also the generic series names
++  ti,palmas-rtc
++
++Examples:
++
++rtc {
++    compatible = "ti,twl6035-rtc", "ti,palmas-rtc";
++    interrupt-parent = <&palmas>;
++    interrupts = <8 0 9 0>;
++    interrupt-name = "alarm-irq", "timer-irq";
 +};
+diff --git a/Documentation/devicetree/bindings/watchdog/palmas-wdt.txt b/Documentation/devicetree/bindings/watchdog/palmas-wdt.txt
+new file mode 100644
+index 0000000..1553a0d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/palmas-wdt.txt
+@@ -0,0 +1,21 @@
++* palmas and palmas-charger Watchdog IP block devicetree bindings
 +
-+module_platform_driver(palmas_clk_driver);
++Required properties:
++- compatible : Should be from the list
++  ti,twl6035-wdt
++  ti,twl6036-wdt
++  ti,twl6037-wdt
++  ti,tps65913-wdt
++  ti,tps65914-wdt
++  ti,tps80036-wdt
++and also the generic series names
++  ti,palmas-wdt
 +
-+MODULE_AUTHOR("Graeme Gregory <gg@slimlogic.co.uk>");
-+MODULE_DESCRIPTION("PALMAS clock driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:palmas-clk");
++Examples:
++
++wdt {
++    compatible = "ti,twl6035-wdt", "ti,palmas-wdt";
++    interrupt-parent = <&palmas>;
++    interrupts = <10 0>;
++    interrupt-name = "watchdog-irq";
++};
 -- 
 1.7.0.4
