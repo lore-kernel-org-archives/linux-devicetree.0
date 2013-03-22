@@ -1,115 +1,87 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 5/5] irqchip: s3c24xx: add devicetree support
-Date: Fri, 22 Mar 2013 22:42:05 +0000
-Message-ID: <201303222242.05269.arnd@arndb.de>
-References: <201303221843.37668.heiko@sntech.de> <201303222055.57400.arnd@arndb.de> <201303222315.44882.heiko@sntech.de>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
+Date: Fri, 22 Mar 2013 17:52:27 -0500
+Message-ID: <514CE0AB.6060207@ti.com>
+References: <1329321854-24490-1-git-send-email-b-cousson@ti.com> <1329321854-24490-4-git-send-email-b-cousson@ti.com> <4F44FA56.7020000@gmail.com> <4F44FC37.2000701@ti.com> <4F452484.5080503@gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF17BD8BC6C1@HQMAIL01.nvidia.com> <4F47AD08.4030504@ti.com> <CAAwP0s0cB368R2mtbJpTZJreR-5GSRLfxC+8DJLo5nw3_OwBuA@mail.gmail.com> <512D39DA.7020306@ti.com> <512D3AB1.1080202@wwwdotorg.org> <512D3EC2.6050408@ti.com> <20130302200524.D230F3E1571@localhost> <51391F41.5000303@ti.com> <CAAwP0s1CFRO-rf==p5sYs1n0gigMif7wuT8Yv0N_iLUDMrtcOg@mail.gmail.com> <CACRpkdYHj-rEF3Rk_CWnmmMw_Amr7m8SgQ=-2zsDYuLeuu3azw@mail.gmail.com> <514C79E1.4090106@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <201303222315.44882.heiko@sntech.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Heiko =?utf-8?q?St=C3=BCbner?= <heiko@sntech.de>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Thomas Abraham <thomas.abraham@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <514C79E1.4090106@wwwdotorg.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Javier Martinez Canillas <martinez.javier@gmail.com>, Stephen Warren <swarren@nvidia.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 22 March 2013, Heiko St=C3=BCbner wrote:
-> Not all main interrupts are parent interrupts, so it would be difficu=
-lt to=20
-> distinguish between main interrupts that are a parent and the ones th=
-at are=20
-> not - is a "-1" a valid cell-value for interrupts?
 
-I'm actually not sure if negative numbers are valid syntax in dtc, but
-you could certainly define some value to mean "none", or you add anothe=
-r
-flag in the trigger type cell.
+On 03/22/2013 10:33 AM, Stephen Warren wrote:
+> On 03/22/2013 02:10 AM, Linus Walleij wrote:
+>> On Fri, Mar 15, 2013 at 12:21 PM, Javier Martinez Canillas
+>> <martinez.javier@gmail.com> wrote:
+>>
+>>> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+>>> index 159f5c5..f5feb43 100644
+>>> --- a/drivers/gpio/gpio-omap.c
+>>> +++ b/drivers/gpio/gpio-omap.c
+>>> @@ -807,6 +807,13 @@ static void gpio_unmask_irq(struct irq_data *d)
+>>>         spin_unlock_irqrestore(&bank->lock, flags);
+>>>  }
+>>>
+>>> +static int gpio_irq_request(struct irq_data *d)
+>>> +{
+>>> +       struct gpio_bank *bank = irq_data_get_irq_chip_data(d);
+>>> +
+>>> +       return gpio_request(irq_to_gpio(bank, d->irq), "gpio-irq");
+>>> +}
+>>> +
+>>>  static struct irq_chip gpio_irq_chip = {
+>>>         .name           = "GPIO",
+>>>         .irq_shutdown   = gpio_irq_shutdown,
+>>> @@ -815,6 +822,7 @@ static struct irq_chip gpio_irq_chip = {
+>>>         .irq_unmask     = gpio_unmask_irq,
+>>>         .irq_set_type   = gpio_irq_type,
+>>>         .irq_set_wake   = gpio_wake_enable,
+>>> +       .irq_request    = gpio_irq_request,
+>>>  };
+>>
+>> This is just turning everything on it's head. The normal order of things
+>> is this sequence for GPIO 14 something like:
+>>
+>> gpio_request(14);
+>> int irq = gpio_to_irq(14);
+>> request_any_context_irq(irq);
+> 
+> That doesn't make any sense at all. Drivers don't want to care whether
+> the IRQ number they receive is a GPIO-that-can-act-like-an-IRQ or a pure
+> dedicated IRQ input.
+> 
+> To fully support the model you proprose, a driver would have to:
+> 
+> if (gpio_is_valid(pdata->gpio)) {
+> 	gpio_request_one(pdata->gpio, GPIOF_IN, "foo irq");
+> 	irq = gpio_to_irq(pdata->gpio);
+> } else
+> 	irq = pdata->irq;
+> request_irq(...);
+> 
+> which means complex code in each driver, plus requiring some indication
+> in platform data and/or device tree re: whether the IRQ is hosted by a
+> GPIO or not.
 
->         <main_irq -1 trigger_type> /* directly used main interrupt */
->         <main_irq child_irq trigger_type> /* sub-interrupt */
->=20
-> Or are you thinking of something like:
->         <main_irq is_a_parent child_irq trigger_type>
+I tend to agree with Stephen here. When we had discussed this previously
+you had mentioned about adding a platform function to request the gpio
+[1], but I could see this adding a bunch more platform files when we are
+trying to get rid of all the board-xxx.c files for OMAP. So if you don't
+like the approach suggested by Stephen and implemented by Javier, then
+may be we need to means to request/reserve gpios in the dts as you had
+suggested before [1].
 
-The first one would work, the second one with four cells seems a bit
-strange if the second cell is just a bit. My first idea was to use=20
-a bit mask for the child irq, in which only one bit is set, so
-it would be <3 0x40000 4> instead of <3 18 4>, and a zero bitmask
-would indicate no sub-interrupt. This is probably harder to read
-though and not a good representation.
+So it seems to me that there are two options at the moment ...
 
-> I looked a bit more thru the other irqchips and it seems the bcm2835 =
-is doing=20
-> something similar but without having a parent relationship:
->         <controller-num irq-num>
->=20
-> so this could be adapted to:
->         <controller-num irq-num parent-num trigger_type>
->=20
-> controller-num being 0 for intc, 1 for subintc, 2 intc2 . The control=
-ler=20
-> itself knows if it's a sub- or main controller - when it should handl=
-e the=20
-> parent-number or simply ignore it.
+1. Add a irq_chip request as suggested by Stephen.
+2. Reserve/request gpios in the dts when registering a gpio chip.
 
-Yes, that looks more logical.
+Cheers
+Jon
 
-You could in theory also compact collapse multiple cells into one, so
-instead of using <1 3 18 4> it could be <0x10031204> or <0x10030012 4>
-to save a little space while making it a little less readable.
-=20
-> > The alternative would be to have three completely separate nodes,
-> > and then you can describe the parent-child relationship like
-> >=20
-> > intc: interrupt-controller@4a000000 {
-> >       compatible =3D "samsung,s3c2416-intc";
-> >       reg =3D <0x4a000000 0x18>;
-> >       interrupt-controller;
-> >       #interrupt-cells =3D <2>;
-> > };
-> >=20
-> > subintc: interrupt-controller@4a000018 {
-> >       compatible =3D "samsung,s3c2416-subintc";
-> >       reg =3D <0x4a000018 0x28>;
-> >       interrupt-controller;
-> >       #interrupt-cells =3D <3>;
-> >       interrupt-parent =3D <&intc>;
-> >       interrupts  =3D <28 0>, <23 0>, <15 0>, <31 0>, <16 0>, <17 0=
->, <18 0>, <9
-> > 0>; };
->=20
->=20
-> The first two iterations had separate nodes, but the interrupt contro=
-ller=20
-> posseses more interesting registers that are shared between all of th=
-e=20
-> controllers, so it did sound better to have them together.
-
-Yes, makes sense.
-
-> Also the interrupts property is most likely not able to accurately de=
-scribe=20
-> the parent relationship, as the interrupts are very much different in=
- all=20
-> s3c24xx SoCs - I would need to tell every sub-interrupt where it casc=
-asdes=20
-> from, because most of them do different things on different s3c24xx S=
-oCs.
->
-> I did start with this approach, using the interrupt index as mapping =
-for the=20
-> hwirq - interrupts[0] for hwirq 0 and so on. But it looked ugly. Usin=
-g only=20
-> one interrupts element per sub-group would require per-SoC mapping da=
-ta to be=20
-> present in the driver, indicating that interrupts[0] is responsible f=
-or bits=20
-> 0,1,2 and so on.
->=20
-> Therefore the idea of handling the parent relationship in the device-=
-nodes=20
-> interrupt property sounds much nicer :-)
-
-Ok.
-
-	Arnd
+[1] http://permalink.gmane.org/gmane.linux.ports.arm.omap/92327
