@@ -1,52 +1,63 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v3 2/3] regulator: as3711: add OF support
-Date: Fri, 22 Mar 2013 19:53:33 +0100
-Message-ID: <20130322185333.GN22890@opensource.wolfsonmicro.com>
-References: <1363968949-12151-1-git-send-email-g.liakhovetski@gmx.de>
- <1363968949-12151-3-git-send-email-g.liakhovetski@gmx.de>
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v10 0/12] Palmas updates
+Date: Sat, 23 Mar 2013 06:04:55 +1100
+Message-ID: <20130323060455.78a4c90c3f1e028434818fd1@canb.auug.org.au>
+References: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="K4LMwn8CgX2KMboP"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1363968949-12151-3-git-send-email-g.liakhovetski@gmx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-kernel@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree-discuss@lists.ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>, Richard Purdie <rpurdie@rpsys.net>, Andrew Morton <akpm@linux-foundation.org>, linux-fbdev@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+ micalg="PGP-SHA256";
+ boundary="Signature=_Sat__23_Mar_2013_06_04_55_+1100_7Olw5O_=bY6EnJIk"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ian Lartey <ian@slimlogic.co.uk>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, rob@landley.net, mturquette@linaro.org, linus.walleij@linaro.org, cooloney@gmail.com, rpurdie@rpsys.net, akpm@linux-foundation.org, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, gg@slimlogic.co.uk, j-keerthy@ti.com, ldewangan@nvidia.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-
---K4LMwn8CgX2KMboP
-Content-Type: text/plain; charset=us-ascii
+--Signature=_Sat__23_Mar_2013_06_04_55_+1100_7Olw5O_=bY6EnJIk
+Content-Type: text/plain; charset=US-ASCII
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 22, 2013 at 05:15:48PM +0100, Guennadi Liakhovetski wrote:
-> AS3711 regulator OF support only evaluates standard regulator DT
-> properties.
+Hi Ian,
 
-It looks like this has no dependencies on the MFD patch, is that
-correct?
+On Fri, 22 Mar 2013 14:55:10 +0000 Ian Lartey <ian@slimlogic.co.uk> wrote:
+>
+> This patchset adds to the support for the Palmas series of PMIC chips.
+>=20
+> Some of the patches have previously been submitted individually.
+> The DT bindings doc has been added first due to comments that it was miss=
+ing.
+>=20
+> Patches based on linux-next-20130319
 
---K4LMwn8CgX2KMboP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I can't really comment on the patch set except to say that you should not
+base on linux-next, you should base on the tree to which you expect the
+patch set to be applied.
+
+--=20
+Cheers,
+Stephen Rothwell                    sfr@canb.auug.org.au
+
+--Signature=_Sat__23_Mar_2013_06_04_55_+1100_7Olw5O_=bY6EnJIk
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJRTKieAAoJELSic+t+oim9ss0QAIsLAPknMA0YSoPbQaNFMyZl
-LqgwM4qc03lDHMJw3ukOHPlgx4Ml+HgMAN51tcpHUPClsCnjNDXS0PN8vdDBSima
-3qEnGjd0iVuVeY/Q/Goj/6bSXAes5vyFfh7kxyLYMY7Vv+JdhmJji8AGvMJFbmTP
-et2qjoVlpybuXdMrXDOU92d1Cy9/A0ZuFpOe2GNb4WIUQ2fRZOB5JP6oz1AeRftc
-3WHZHBr0SaINueKD63co2SbTmvUzKElBL/sVTDK335YxdAZmSwJ3lXetDcNPcLJc
-BHWEBFQ8IqNX5vftXz7Zj7J70wzhQNZbempPrKtwH6PjonGEU+gRIHiMjlCOt4L/
-9TkxhOdUBhUcT+G4TNYcTtUKE4KCsTih59NPCeiRLQMPn2DtIIBsiTqVFYENne2C
-uWqnxvjhjg9OkjAM8E+aKLxgEtXIkvLwir3PvFqRF7f6msdM8oio11OGrQt8LMZX
-cGUsHkQUPG7SKlUQv53ogSEJIWkryU6Vw4TQ979IUHdsJdFxfYOqgGjeaqXrzykI
-mx3Lauu3Yc/FZCd0JzJoqqqMHLkrRvJXoYj2fUQJ/h2SzGdQXbV3bDuxVmndriW7
-bU5vsAwJFcwkbAk8owSMthtlrTVWQytrCiGN/Wrt94dwk4zPQ1KkpCBOC5VNZoV+
-KaCuJXtuSLcx5UVeGwMr
-=bps1
+iQIcBAEBCAAGBQJRTKtXAAoJEECxmPOUX5FE0UQP/0KeuAdMIeoUJESYzR52cQRt
+aykiOFX+2bqP4WysLpghKuqJJKMPtVvVyIiCKtl6KimXgheucQGcAlmYcmHnwIo6
+v3sg+B8wPWBNQOpA+wR8dsly10arpqdQQJ43dyTIpG+4zWD83sSaClKBhj9KuaIn
+Ib8DzbwDOaO3PTyiz8AOWvI4GgqxBhzfzZ2y7heojGPOqvHKy3cMgQMync6vgx7C
+1hTIbOq54KY7OsCBvkZoshGhqRD0DxYrDb3EJFt9ogpGQZx0pLIoUy9AqWgpgHN3
+CXBsy0+QKRjNImOu6za3T1d/vH/SVoupRlvzWxaNeKm285/JnZ9JrCJBKq7uR66i
+4ekE7kpVih0nrN7AGAOFIaSYVYJOroXzrbKBmFqhgTSch0xUTSkYqB6OgOrCbyzg
+cZ3E6kFwEv8tkvFsUEmvFHUnShs9ig8vY4Ria0/UG/IooswCMzxzzyb4Oe1MBi6J
+DEMcjZMUgPhvkwiIx0K4fZVUOg8ejg5Dsm85LPW8vCH9+IWxZkToOxt5dqGWOZNY
+I/RsZa6KiCrPIDn/b0kzsCiW4R1eDgAYG9esZJtD24FjAxy4hz23bIhBGCnyQSGy
+XCNKg7Y7dTldlE3b0NeymXKmCSqB1oVzhYvfsYwTkBEM9Ndn8Xcx3PLkUJuCz+04
+flX7Y1oRx47xFh6o8Ajm
+=vdaI
 -----END PGP SIGNATURE-----
 
---K4LMwn8CgX2KMboP--
+--Signature=_Sat__23_Mar_2013_06_04_55_+1100_7Olw5O_=bY6EnJIk--
