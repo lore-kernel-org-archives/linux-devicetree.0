@@ -1,301 +1,102 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko@sntech.de>
-Subject: [PATCH v4 5/5] irqchip: s3c24xx: add devicetree support
-Date: Fri, 22 Mar 2013 18:46:46 +0100
-Message-ID: <201303221846.46473.heiko@sntech.de>
-References: <201303221843.37668.heiko@sntech.de>
+From: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+Subject: Re: [PATCH V2 2/2] of: remove /proc/device-tree
+Date: Fri, 22 Mar 2013 13:03:29 -0500
+Message-ID: <514C9CF1.7060505@linux.vnet.ibm.com>
+References: <1363865097-32764-1-git-send-email-grant.likely@secretlab.ca> <1363865097-32764-3-git-send-email-grant.likely@secretlab.ca> <1363870366.3312.1.camel@pasglop> <CACxGe6vSywW_iekAKmDMf5_TLLt5Hn+Jttq8kddq3vJ=AE+DQA@mail.gmail.com> <CACxGe6uCKRH8jcGJW+oYt+T33XT_MGzaxmtkNdekMooGqBYTEw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <201303221843.37668.heiko@sntech.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Thomas Abraham <thomas.abraham@linaro.org>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6uCKRH8jcGJW+oYt+T33XT_MGzaxmtkNdekMooGqBYTEw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-Add the necessary code to initialize the interrupt controller
-thru devicetree data using the irqchip infrastructure.
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- .../interrupt-controller/samsung,s3c24xx-irq.txt   |   64 +++++++
- drivers/irqchip/irq-s3c24xx.c                      |  181 ++++++++++++++++++++
- 2 files changed, 245 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/samsung,s3c24xx-irq.txt
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/samsung,s3c24xx-irq.txt b/Documentation/devicetree/bindings/interrupt-controller/samsung,s3c24xx-irq.txt
-new file mode 100644
-index 0000000..bfd689b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/samsung,s3c24xx-irq.txt
-@@ -0,0 +1,64 @@
-+Samsung S3C24XX Interrupt Controllers
-+
-+The S3C24XX SoCs contain a custom set of interrupt controllers providing a
-+varying number of interrupt sources. The set consists of a main- and sub-
-+controller and on newer SoCs even a second main controller.
-+
-+Required properties:
-+- compatible: Compatible property value should be "samsung,s3c24xx-irq",
-+
-+- reg: Physical base address of the controller and length of memory mapped
-+  region.
-+
-+- interrupt-controller : Identifies the node as an interrupt controller
-+
-+Sub-controllers as child nodes:
-+  The interrupt controllers that should be referenced by device nodes are
-+  represented by child nodes. Valid names are intc, subintc and intc2.
-+  The interrupt values in device nodes are than mapped directly to the
-+  bit-numbers of the pending register of the named interrupt controller.
-+
-+  Interrupts properties using sub-controller also should contain the hwirq
-+  of their parent interrupt in the main controller as third interrupt-cell.
-+
-+Required properties:
-+- interrupt-controller : Identifies the node as an interrupt controller
-+
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt source. The value shall be 2 for the main controllers and 3
-+  for the sub-controller.
-+
-+Example:
-+
-+	interrupt-controller@4a000000 {
-+		compatible = "samsung,s3c24xx-irq";
-+		reg = <0x4a000000 0x100>;
-+		interrupt-controller;
-+
-+		intc:intc {
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		subintc:subintc {
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+		};
-+	};
-+
-+	[...]
-+
-+	serial@50000000 {
-+		compatible = "samsung,s3c2410-uart";
-+		reg = <0x50000000 0x4000>;
-+		interrupt-parent = <&subintc>;
-+		interrupts = <0 4 28>, <1 4 28>;
-+	};
-+
-+	rtc@57000000 {
-+		compatible = "samsung,s3c2410-rtc";
-+		reg = <0x57000000 0x100>;
-+		interrupt-parent = <&intc>;
-+		interrupts = <30 3>, <8 3>;
-+		status = "disabled";
-+	};
-diff --git a/drivers/irqchip/irq-s3c24xx.c b/drivers/irqchip/irq-s3c24xx.c
-index 7cba4f0..c26eb3f 100644
---- a/drivers/irqchip/irq-s3c24xx.c
-+++ b/drivers/irqchip/irq-s3c24xx.c
-@@ -25,6 +25,9 @@
- #include <linux/ioport.h>
- #include <linux/device.h>
- #include <linux/irqdomain.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
+On 03/22/2013 05:28 AM, Grant Likely wrote:
+> On Thu, Mar 21, 2013 at 8:07 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
+>> On Thu, Mar 21, 2013 at 12:52 PM, Benjamin Herrenschmidt
+>> <benh@kernel.crashing.org> wrote:
+>>> On Thu, 2013-03-21 at 11:24 +0000, Grant Likely wrote:
+>>> kexec comes to mind (all 4 variants of fs2dt.c (yuck !)), dtc, various
+>>> powerpc-utils (bootloader configuration etc...), and more.
+>>>
+>>> We also need to test the new code with hotplug, I'll see if I can get
+>>> somebody at IBM to give it a spin.
+>>
+>> Thanks
+> 
+> Actually, this will be broken. I missed adding hooks to the property
+> add/remove paths. It will be fixed in v3.
+> 
+> BTW, I'd really like to revisit the locking semantics and reference
+> counting of OF_DYNAMIC. It is incredibly painful it is for driver
+> authors to get right. What is the device_node lifecycle on pseries? Do
+> we really need to be doing of_node_get/put() every time we walk the
+> tree, or is there a different model that can be used?
+> 
+
+With respect to nodes for memory, cpu's, and PCI devices the lifecycle
+can be completely dynamic. All of these are capable of being moved
+between partitions on a pseries system and thus they can be added/removed
+from the device tree at any point.
+
+Almost any property of the device tree can be update at partition migration
+or suspension (this is HMC/pHyp initiated, not Linux suspension). We don't
+have reference counts on properties though so that doesn't matter here, but
+more on that later...
+
+> Bear with me as I think through this out-loud...
+> 
+> How about instead of doing get/put by default every time, we have an
+> explicit mutex that needs to be grabbed if there is a potential that
+> the code will be dealing with dynamic nodes. For device drivers this
+> will almost never be true because the node ref counts will already
+> have been incremented when the device was created (well before probe
+> occurs). Plus the ref count won't be decremented again until the point
+> of struct device removal.
+> 
+> The other scenario is when searching for nodes there is the potential
+> that any node in the system could disappear mid-search, and in most
+> cases it won't even be one of the nodes that is being searched for.
+> For the non-matching nodes that shouldn't be a problem because the
+> lock is held while traversing past them. No worries about them
+> dropping out from under us. It's when one of the matching nodes might
+> disappear that problems could happen.
+> 
+> But for the vast majority of use cases that simply isn't going to
+> happen. We aren't removing individual nodes from a passed in .dtb (at
+> least not yet). I'm not going to base design decisions on that, but it
+> seems like the the current scheme is optimized for the wrong use case.
+> 
+> Would it be reasonable to expect that the caller explicitly grab a
+> lock to hold off node removal tree wide? Then only increment the
+> refcount on nodes that are actually cared about?
+>
+
+I don't any issues with moving to a scheme like this but I would ask that
+this perhaps be part of a different patch set. I started looking at
+all the device tree manipulation we do in pseries and would appreciate
+more time go through all the code and test once you had a patch ready.
+
+Since we're talking about reference counts and I mentioned reference counts
+for properties earlier...
+
+We don't ever free old property values, mainly I assume since we don't keep
+reference counts and can't know when it is safe to do so. The problem I
+am starting to see on pseries is that we are getting very large properties.
+One of the biggest culprits is the property on pseries systems to describe
+the memory on the system in the device tree. These are big and getting
+bigger as memory increases, additionally this property is update every
+time memory is DLPAR added or removed from the system which can lead to
+leaving a bunch of memory that should be free'ed.
+
+Given that, is there (or has there been) any discussion on adding reference
+counts to properties in the device tree? With the myriad ways to get at
+the value of a property this may not be feasible but I would like to hear
+any thoughts from the community.
+
+-Nathan
  
- #include <asm/exception.h>
- #include <asm/mach/irq.h>
-@@ -36,6 +39,8 @@
- #include <plat/regs-irqtype.h>
- #include <plat/pm.h>
- 
-+#include "irqchip.h"
-+
- #define S3C_IRQTYPE_NONE	0
- #define S3C_IRQTYPE_EINT	1
- #define S3C_IRQTYPE_EDGE	2
-@@ -1128,3 +1133,179 @@ void __init s3c2443_init_irq(void)
- 	s3c24xx_init_intc(NULL, &init_s3c2443subint[0], main_intc, 0x4a000018);
- }
- #endif
-+
-+#ifdef CONFIG_OF
-+static int s3c24xx_irq_map_of(struct irq_domain *h, unsigned int virq,
-+							irq_hw_number_t hw)
-+{
-+	struct s3c_irq_intc *intc = h->host_data;
-+	struct s3c_irq_intc *parent_intc = intc->parent;
-+	struct s3c_irq_data *irq_data = &intc->irqs[hw];
-+
-+	/* attach controller pointer to irq_data */
-+	irq_data->intc = intc;
-+
-+	if (!parent_intc)
-+		irq_set_chip_and_handler(virq, &s3c_irq_chip, handle_edge_irq);
-+	else
-+		irq_set_chip_and_handler(virq, &s3c_irq_level_chip,
-+					 handle_edge_irq);
-+
-+	set_irq_flags(virq, IRQF_VALID);
-+
-+	return 0;
-+}
-+
-+static struct irq_domain_ops s3c24xx_irq_ops_of_main = {
-+	.map = s3c24xx_irq_map_of,
-+	.xlate = irq_domain_xlate_twocell,
-+};
-+
-+static int s3c_irq_xlate_subintc(struct irq_domain *d, struct device_node *n,
-+			const u32 *intspec, unsigned int intsize,
-+			irq_hw_number_t *out_hwirq, unsigned int *out_type)
-+{
-+	struct s3c_irq_intc *intc = d->host_data;
-+	struct s3c_irq_intc *parent_intc = intc->parent;
-+	struct s3c_irq_data *irq_data = &intc->irqs[intspec[0]];
-+	struct s3c_irq_data *parent_irq_data;
-+
-+	int irqno;
-+
-+	if (WARN_ON(intsize < 3))
-+		return -EINVAL;
-+
-+	*out_hwirq = intspec[0];
-+	*out_type = intspec[1] & IRQ_TYPE_SENSE_MASK;
-+
-+	irqno = irq_create_mapping(parent_intc->domain, intspec[2]);
-+	if (irqno < 0) {
-+		pr_err("irq: could not map parent interrupt\n");
-+		return irqno;
-+	}
-+
-+	irq_data->parent_irq = intspec[2];
-+	parent_irq_data = &parent_intc->irqs[irq_data->parent_irq];
-+	parent_irq_data->sub_intc = intc;
-+	parent_irq_data->sub_bits |= (1UL << intspec[0]);
-+
-+	irq_set_chained_handler(irqno, s3c_irq_demux);
-+
-+	return 0;
-+}
-+
-+static struct irq_domain_ops s3c24xx_irq_ops_of_sub = {
-+	.map = s3c24xx_irq_map_of,
-+	.xlate = s3c_irq_xlate_subintc,
-+};
-+
-+struct s3c24xx_irq_of_ctrl {
-+	char			*name;
-+	unsigned long		offset;
-+	struct s3c_irq_intc	**handle;
-+	struct s3c_irq_intc	**parent;
-+	struct irq_domain_ops	*ops;
-+};
-+
-+static struct s3c24xx_irq_of_ctrl s3c24xx_ctrl[] = {
-+	{
-+		.name = "intc",
-+		.offset = 0,
-+		.handle = &main_intc,
-+		.ops = &s3c24xx_irq_ops_of_main,
-+	}, {
-+		.name = "subintc",
-+		.offset = 0x18,
-+		.parent = &main_intc,
-+		.ops = &s3c24xx_irq_ops_of_sub,
-+	}, {
-+		.name = "intc2",
-+		.offset = 0x40,
-+		.handle = &main_intc2,
-+		.ops = &s3c24xx_irq_ops_of_main,
-+	}
-+};
-+
-+int __init s3c24xx_init_intc_of(struct device_node *np,
-+				 struct device_node *interrupt_parent)
-+{
-+	struct device_node *intc_node;
-+	struct s3c_irq_intc *intc;
-+	struct s3c24xx_irq_of_ctrl *ctrl;
-+	void __iomem *reg_base;
-+	int i;
-+
-+	reg_base = of_iomap(np, 0);
-+	if (!reg_base) {
-+		pr_err("irq-s3c24xx: could not map irq registers\n");
-+		return -EINVAL;
-+	}
-+
-+	set_handle_irq(s3c24xx_handle_irq);
-+
-+	for (i = 0; i < ARRAY_SIZE(s3c24xx_ctrl); i++) {
-+		ctrl = &s3c24xx_ctrl[i];
-+
-+		intc_node = of_find_node_by_name(np, ctrl->name);
-+		if (!intc_node) {
-+			pr_debug("irq: no device node for %s\n",
-+				ctrl->name);
-+			continue;
-+		}
-+
-+		intc = kzalloc(sizeof(struct s3c_irq_intc), GFP_KERNEL);
-+		if (!intc) {
-+			of_node_put(intc_node);
-+			return -ENOMEM;
-+		}
-+
-+		pr_debug("irq: found controller %s\n", ctrl->name);
-+
-+		intc->irqs = kzalloc(sizeof(struct s3c_irq_data) * 32,
-+				     GFP_KERNEL);
-+		if (!intc->irqs) {
-+			kfree(intc);
-+			of_node_put(intc_node);
-+			return -ENOMEM;
-+		}
-+
-+		if (ctrl->parent) {
-+			intc->reg_pending = reg_base + ctrl->offset;
-+			intc->reg_mask = reg_base + ctrl->offset + 0x4;
-+
-+			if (*(ctrl->parent)) {
-+				intc->parent = *(ctrl->parent);
-+			} else {
-+				pr_warn("irq: parent of %s missing\n",
-+					ctrl->name);
-+				kfree(intc->irqs);
-+				kfree(intc);
-+				of_node_put(intc_node);
-+				continue;
-+			}
-+		} else {
-+			intc->reg_pending = reg_base + ctrl->offset;
-+			intc->reg_mask = reg_base + ctrl->offset + 0x08;
-+			intc->reg_intpnd = reg_base + ctrl->offset + 0x10;
-+		}
-+
-+		/* now that all the data is complete, init the irq-domain */
-+		s3c24xx_clear_intc(intc);
-+		intc->domain = irq_domain_add_linear(intc_node, 32,
-+						     ctrl->ops, intc);
-+		if (!intc->domain) {
-+			pr_err("irq: could not create irq-domain\n");
-+			kfree(intc->irqs);
-+			kfree(intc);
-+			of_node_put(intc_node);
-+			continue;
-+		}
-+
-+		if (ctrl->handle)
-+			*(ctrl->handle) = intc;
-+	}
-+
-+	return 0;
-+}
-+IRQCHIP_DECLARE(s3c24xx_irq, "samsung,s3c24xx-irq", s3c24xx_init_intc_of);
-+#endif
--- 
-1.7.2.3
