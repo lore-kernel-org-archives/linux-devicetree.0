@@ -1,47 +1,162 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: [PATCH v3 0/3] DT support for AS3711 MFD,
- regulator and backlight drivers
-Date: Fri, 22 Mar 2013 17:15:46 +0100
-Message-ID: <1363968949-12151-1-git-send-email-g.liakhovetski@gmx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: [PATCH v3 3/3] backlight: as3711: add OF support
+Date: Fri, 22 Mar 2013 17:15:49 +0100
+Message-ID: <1363968949-12151-4-git-send-email-g.liakhovetski@gmx.de>
+References: <1363968949-12151-1-git-send-email-g.liakhovetski@gmx.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1363968949-12151-1-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree-discuss@lists.ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>, Richard Purdie <rpurdie@rpsys.net>, Andrew Morton <akpm@linux-foundation.org>, linux-fbdev@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This is just a split of the previous version of this patch(-set), no code 
-changes.
+Add support for configuring AS3711 backlight driver from DT.
 
-Guennadi Liakhovetski (3):
-  mfd: as3711: add OF support
-  regulator: as3711: add OF support
-  backlight: as3711: add OF support
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+Reviwed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+---
+ drivers/video/backlight/as3711_bl.c |  118 ++++++++++++++++++++++++++++++++++-
+ 1 files changed, 117 insertions(+), 1 deletions(-)
 
- Documentation/devicetree/bindings/mfd/as3711.txt |   73 +++++++++++++
- drivers/mfd/as3711.c                             |   27 ++++-
- drivers/regulator/as3711-regulator.c             |   74 +++++++++++++-
- drivers/video/backlight/as3711_bl.c              |  118 +++++++++++++++++++++-
- 4 files changed, 284 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/as3711.txt
-
+diff --git a/drivers/video/backlight/as3711_bl.c b/drivers/video/backlight/as3711_bl.c
+index 41d52fe..123887c 100644
+--- a/drivers/video/backlight/as3711_bl.c
++++ b/drivers/video/backlight/as3711_bl.c
+@@ -258,6 +258,109 @@ static int as3711_bl_register(struct platform_device *pdev,
+ 	return 0;
+ }
+ 
++static int as3711_backlight_parse_dt(struct device *dev)
++{
++	struct as3711_bl_pdata *pdata = dev_get_platdata(dev);
++	struct device_node *bl =
++		of_find_node_by_name(dev->parent->of_node, "backlight"), *fb;
++	int ret;
++
++	if (!bl) {
++		dev_dbg(dev, "backlight node not found\n");
++		return -ENODEV;
++	}
++
++	fb = of_parse_phandle(bl, "su1-dev", 0);
++	if (fb) {
++		pdata->su1_fb = fb->full_name;
++
++		ret = of_property_read_u32(bl, "su1-max-uA", &pdata->su1_max_uA);
++		if (pdata->su1_max_uA <= 0)
++			ret = -EINVAL;
++		if (ret < 0)
++			return ret;
++	}
++
++	fb = of_parse_phandle(bl, "su2-dev", 0);
++	if (fb) {
++		int count = 0;
++
++		pdata->su2_fb = fb->full_name;
++
++		ret = of_property_read_u32(bl, "su2-max-uA", &pdata->su2_max_uA);
++		if (pdata->su2_max_uA <= 0)
++			ret = -EINVAL;
++		if (ret < 0)
++			return ret;
++
++		if (of_find_property(bl, "su2-feedback-voltage", NULL)) {
++			pdata->su2_feedback = AS3711_SU2_VOLTAGE;
++			count++;
++		}
++		if (of_find_property(bl, "su2-feedback-curr1", NULL)) {
++			pdata->su2_feedback = AS3711_SU2_CURR1;
++			count++;
++		}
++		if (of_find_property(bl, "su2-feedback-curr2", NULL)) {
++			pdata->su2_feedback = AS3711_SU2_CURR2;
++			count++;
++		}
++		if (of_find_property(bl, "su2-feedback-curr3", NULL)) {
++			pdata->su2_feedback = AS3711_SU2_CURR3;
++			count++;
++		}
++		if (of_find_property(bl, "su2-feedback-curr-auto", NULL)) {
++			pdata->su2_feedback = AS3711_SU2_CURR_AUTO;
++			count++;
++		}
++		if (count != 1)
++			return -EINVAL;
++
++		count = 0;
++		if (of_find_property(bl, "su2-fbprot-lx-sd4", NULL)) {
++			pdata->su2_fbprot = AS3711_SU2_LX_SD4;
++			count++;
++		}
++		if (of_find_property(bl, "su2-fbprot-gpio2", NULL)) {
++			pdata->su2_fbprot = AS3711_SU2_GPIO2;
++			count++;
++		}
++		if (of_find_property(bl, "su2-fbprot-gpio3", NULL)) {
++			pdata->su2_fbprot = AS3711_SU2_GPIO3;
++			count++;
++		}
++		if (of_find_property(bl, "su2-fbprot-gpio4", NULL)) {
++			pdata->su2_fbprot = AS3711_SU2_GPIO4;
++			count++;
++		}
++		if (count != 1)
++			return -EINVAL;
++
++		count = 0;
++		if (of_find_property(bl, "su2-auto-curr1", NULL)) {
++			pdata->su2_auto_curr1 = true;
++			count++;
++		}
++		if (of_find_property(bl, "su2-auto-curr2", NULL)) {
++			pdata->su2_auto_curr2 = true;
++			count++;
++		}
++		if (of_find_property(bl, "su2-auto-curr3", NULL)) {
++			pdata->su2_auto_curr3 = true;
++			count++;
++		}
++
++		/*
++		 * At least one su2-auto-curr* must be specified iff
++		 * AS3711_SU2_CURR_AUTO is used
++		 */
++		if (!count ^ (pdata->su2_feedback != AS3711_SU2_CURR_AUTO))
++			return -EINVAL;
++	}
++
++	return 0;
++}
++
+ static int as3711_backlight_probe(struct platform_device *pdev)
+ {
+ 	struct as3711_bl_pdata *pdata = dev_get_platdata(&pdev->dev);
+@@ -267,11 +370,24 @@ static int as3711_backlight_probe(struct platform_device *pdev)
+ 	unsigned int max_brightness;
+ 	int ret;
+ 
+-	if (!pdata || (!pdata->su1_fb && !pdata->su2_fb)) {
++	if (!pdata) {
+ 		dev_err(&pdev->dev, "No platform data, exiting...\n");
+ 		return -ENODEV;
+ 	}
+ 
++	if (pdev->dev.parent->of_node) {
++		ret = as3711_backlight_parse_dt(&pdev->dev);
++		if (ret < 0) {
++			dev_err(&pdev->dev, "DT parsing failed: %d\n", ret);
++			return ret;
++		}
++	}
++
++	if (!pdata->su1_fb && !pdata->su2_fb) {
++		dev_err(&pdev->dev, "No framebuffer specified\n");
++		return -EINVAL;
++	}
++
+ 	/*
+ 	 * Due to possible hardware damage I chose to block all modes,
+ 	 * unsupported on my hardware. Anyone, wishing to use any of those modes
 -- 
 1.7.2.5
-
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
