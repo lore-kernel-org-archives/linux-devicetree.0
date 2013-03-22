@@ -1,45 +1,59 @@
-From: Samuel Ortiz <sameo@linux.intel.com>
-Subject: Re: [PATCH v2] mfd: as3711: add OF support
-Date: Fri, 22 Mar 2013 15:09:06 +0100
-Message-ID: <20130322140906.GA13778@zurbaran>
-References: <Pine.LNX.4.64.1302181049510.4526@axis700.grange>
- <20130302041547.GJ6610@opensource.wolfsonmicro.com>
- <Pine.LNX.4.64.1303202034090.24222@axis700.grange>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 0/4 v3] mv643xx_eth: use mvmdio MDIO bus driver
+Date: Fri, 22 Mar 2013 10:14:23 -0400
+Message-ID: <20130322141423.GJ13280@titan.lakedaemon.net>
+References: <1363284515-9865-1-git-send-email-florian@openwrt.org>
+ <1363959568-16976-1-git-send-email-florian@openwrt.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.64.1303202034090.24222@axis700.grange>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lrg@ti.com>, Richard Purdie <rpurdie@rpsys.net>, Andrew Morton <akpm@linux-foundation.org>, linux-fbdev@vger.kernel.org
+In-Reply-To: <1363959568-16976-1-git-send-email-florian@openwrt.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Florian Fainelli <florian@openwrt.org>
+Cc: davem@davemloft.net, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Lennert Buytenhek <buytenh@wantstofly.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guennadi,
-
-On Wed, Mar 20, 2013 at 08:40:15PM +0100, Guennadi Liakhovetski wrote:
-> Hi all
+On Fri, Mar 22, 2013 at 02:39:24PM +0100, Florian Fainelli wrote:
+> Hi all,
 > 
-> On Sat, 2 Mar 2013, Mark Brown wrote:
+> This patch converts the mv643xx_eth driver to use the mvmdio MDIO bus driver
+> instead of rolling its own implementation. As a result, all users of this
+> mv643xx_eth driver are converted to register an "orion-mdio" platform_device.
+> The mvmdio driver is also updated to support an interrupt line which reports
+> SMI error/completion, and to allow traditionnal platform device registration
+> instead of just device tree.
 > 
-> > On Mon, Feb 18, 2013 at 10:57:44AM +0100, Guennadi Liakhovetski wrote:
-> > > Add device-tree bindings to the AS3711 regulator and backlight drivers.
-> > 
-> > Reviwed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+> David, I think it makes sense for you to merge all of this, since we do
+> not want the architecture files to be desynchronized from the mv643xx_eth to
+> avoid runtime breakage. The potential for merge conflicts should be very small.
 > 
-> This patch has been submitted more than a month ago and only has got one 
-> reviewed-be (thanks) and no comments otherwise. The patch touches multiple 
-> subsystems, so, it is a bit difficult to decide via which tree it should 
-> be pushed. Since the least trivial and largest portion of the patch is 
-> backlight-related, maybe Samuel could add his ack and then Andrew could 
-> pull it via his tree?
-We could do that, yes. But it also seems to me that this patch could be split
-into 3 different ones that could go in via their own trees. Is there a runtime
-dependency that I'm missing here ?
+> Florian Fainelli (4):
+>   net: mvmdio: allow platform device style registration
+>   net: mvmdio: rename base register cookie from smireg to regs
+>   net: mvmdio: enhance driver to support SMI error/done interrupts
+>   mv643xx_eth: convert to use the Marvell Orion MDIO driver
+> 
+>  .../devicetree/bindings/net/marvell-orion-mdio.txt |    3 +
+>  arch/arm/plat-orion/common.c                       |   54 +++---
+>  arch/powerpc/platforms/chrp/pegasos_eth.c          |   20 ++
+>  arch/powerpc/sysdev/mv64x60_dev.c                  |   16 +-
+>  drivers/net/ethernet/marvell/Kconfig               |    5 +-
+>  drivers/net/ethernet/marvell/Makefile              |    2 +-
+>  drivers/net/ethernet/marvell/mv643xx_eth.c         |  195 ++------------------
+>  drivers/net/ethernet/marvell/mvmdio.c              |  130 ++++++++++---
+>  include/linux/mv643xx_eth.h                        |    1 -
+>  9 files changed, 187 insertions(+), 239 deletions(-)
 
-Cheers,
-Samuel.
+Whole series applied on top of v3.9-rc3 and tested on dreamplug
+(kirkwood DT boot with legacy mv643xx_eth init)
 
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+Tested-by: Jason Cooper <jason@lakedaemon.net>
+
+also, for the bits changing plat-orion:
+
+Acked-by: Jason Cooper <jason@lakedaemon.net>
+
+thx,
+
+Jason.
