@@ -1,58 +1,62 @@
-From: Chris Ball <cjb@laptop.org>
-Subject: Re: [PATCH -next] mmc: wmt-sdmmc: remove unused variable in wmt_complete_data_request()
-Date: Fri, 22 Mar 2013 12:38:17 -0400
-Message-ID: <87li9fo0ee.fsf@octavius.laptop.org>
-References: <CAPgLHd-7nVD3=83wpNtw1cBmkr+xs5iD7tuxZM+PdxWPLtwZsQ@mail.gmail.com>
-	<1363061028.23051.1.camel@gitbox>
+From: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v4 0/6] support other fsl SoCs with usbmisc + small
+ fixes
+Date: Fri, 22 Mar 2013 18:12:36 +0100
+Message-ID: <20130322171236.GG8737@pengutronix.de>
+References: <1354033021-10585-1-git-send-email-m.grzeschik@pengutronix.de>
+ <20121128025217.GC18593@nchen-desktop>
+ <87ip6mor1e.fsf@ashishki-desk.ger.corp.intel.com>
+ <20130307225403.GI29785@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1363061028.23051.1.camel@gitbox> (Tony Prisk's message of "Tue,
-	12 Mar 2013 17:03:48 +1300")
-Sender: linux-mmc-owner@vger.kernel.org
-To: Tony Prisk <linux@prisktech.co.nz>
-Cc: Wei Yongjun <weiyj.lk@gmail.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130307225403.GI29785-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Mar 07, 2013 at 11:54:03PM +0100, Michael Grzeschik wrote:
+> Hey Alex,
+> 
+> On Thu, Jan 24, 2013 at 11:42:53AM +0200, Alexander Shishkin wrote:
+> > Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
+> > 
+> > > On Tue, Nov 27, 2012 at 05:16:55PM +0100, Michael Grzeschik wrote:
+> > >> Nearly every SoC from Freescale has this non-core usb registers. This series
+> > >> adds support for more users of this driver.
+> > >> 
+> > >> This series is based on Peter Chen's work. Its needed to merge his master branch
+> > >> before applying this series:
+> > >> 
+> > >> https://github.com/hzpeterchen/linux-usb.git
+> > >
+> > > I have tested it at i.mx6q sabrelite board, it works good.
+> > >
+> > > I have pushed your commit to my git, please cc me
+> > > your coming chipidea patches, thanks.
+> > >
+> > > Alex, please add:
+> > >
+> > > Reviewed-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > Tested-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > 
+> > Looks good, queueing this one for submission.
+> 
+> Now that you have your git-tree [1], could you queue that for
+> submission?
+> 
+> [1] git://github.com/virtuoso/linux-ci.git ci-for-greg
 
-On Tue, Mar 12 2013, Tony Prisk wrote:
-> On Mon, 2013-03-11 at 22:36 +0800, Wei Yongjun wrote:
->> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->> 
->> The variable 'mmc' is initialized but never used
->> otherwise, so remove the unused variable.
->> 
->> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->> ---
->>  drivers/mmc/host/wmt-sdmmc.c | 2 --
->>  1 file changed, 2 deletions(-)
->> 
->> diff --git a/drivers/mmc/host/wmt-sdmmc.c b/drivers/mmc/host/wmt-sdmmc.c
->> index 154f0e8..41d5802 100644
->> --- a/drivers/mmc/host/wmt-sdmmc.c
->> +++ b/drivers/mmc/host/wmt-sdmmc.c
->> @@ -348,13 +348,11 @@ static void wmt_complete_data_request(struct wmt_mci_priv *priv)
->>  
->>  static irqreturn_t wmt_mci_dma_isr(int irq_num, void *data)
->>  {
->> -	struct mmc_host *mmc;
->>  	struct wmt_mci_priv *priv;
->>  
->>  	int status;
->>  
->>  	priv = (struct wmt_mci_priv *)data;
->> -	mmc = priv->mmc;
->>  
->>  	status = readl(priv->sdmmc_base + SDDMA_CCR) & 0x0F;
->>  
->> 
->
-> Acked-by: Tony Prisk <linux@prisktech.co.nz>
+PING!
 
-Thanks, pushed to mmc-next for 3.10.
-
-- Chris.
 -- 
-Chris Ball   <cjb@laptop.org>   <http://printf.net/>
-One Laptop Per Child
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
