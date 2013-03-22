@@ -1,88 +1,62 @@
-From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 01/17] of: add dma-mask binding
-Date: Fri, 22 Mar 2013 17:16:06 +0800
-Message-ID: <1363943767-16051-1-git-send-email-wenyou.yang@atmel.com>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [RFC PATCH RESEND v2] of/pci: Provide support for parsing PCI
+ DT ranges property
+Date: Fri, 22 Mar 2013 09:39:36 +0000
+Message-ID: <20130322093936.GA875@arm.com>
+References: <1362140616-19346-1-git-send-email-Andrew.Murray@arm.com>
+ <20130321170625.2a1bf226@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: andy.gao-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130321170625.2a1bf226@skate>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Thierry Reding <thierry.reding@avionic-design.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <Liviu.Dudau@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+On Thu, Mar 21, 2013 at 04:06:25PM +0000, Thomas Petazzoni wrote:
+> Dear Andrew Murray,
+> 
+> On Fri,  1 Mar 2013 12:23:36 +0000, Andrew Murray wrote:
+> > This patch factors out common implementations patterns to reduce overall kernel
+> > code and provide a means for host bridge drivers to directly obtain struct
+> > resources from the DT's ranges property without relying on architecture specific
+> > DT handling. This will make it easier to write archiecture independent host bridge
+> > drivers and mitigate against further duplication of DT parsing code.
+> > 
+> > This patch can be used in the following way:
+> > 
+> > 	struct of_pci_range_iter iter;
+> > 	for_each_of_pci_range(&iter, np) {
+> > 
+> > 		//directly access properties of the address range, e.g.:
+> > 		//iter.pci_space, iter.pci_addr, iter.cpu_addr, iter.size or
+> > 		//iter.flags
+> > 
+> > 		//alternatively obtain a struct resource, e.g.:
+> > 		//struct resource res;
+> > 		//range_iter_fill_resource(iter, np, res);
+> > 	}
+> > 
+> > Additionally the implementation takes care of adjacent ranges and merges them
+> > into a single range (as was the case with powerpc and microblaze).
+> > 
+> > The modifications to microblaze, mips and powerpc have not been tested.
+> > 
+> > v2:
+> >   This follows on from suggestions made by Grant Likely
+> >   (marc.info/?l=linux-kernel&m=136079602806328)
+> > 
+> > Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
+> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> 
+> Thanks, I've tested this successfully with the Marvell PCIe driver. I'm
+> about to send a new version of the Marvell PCIe patch set that includes
+> this RFC proposal.
+> 
+> I only made two small changes compared to your version, detailed below.
 
-This will allow each device to specify its dma-mask for this we use the
-coherent_dma_mask as pointer. By default the dma-mask will be set to
-DMA_BIT_MASK(32).
-The microblaze architecture hook is drop
+Thanks for the feedback, all looks good to me. Do I need to give ack?
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
----
- drivers/of/platform.c |   23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index e44f8c2..11c765c 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -121,6 +121,21 @@ void of_device_make_bus_id(struct device *dev)
- 	dev_set_name(dev, "%s.%d", node->name, magic - 1);
- }
- 
-+static void of_get_dma_mask(struct device *dev, struct device_node *np)
-+{
-+	const __be32 *prop;
-+	int len;
-+
-+	prop = of_get_property(np, "dma-mask", &len);
-+
-+	dev->dma_mask = &dev->coherent_dma_mask;
-+
-+	if (!prop)
-+		dev->coherent_dma_mask = DMA_BIT_MASK(32);
-+	else
-+		dev->coherent_dma_mask = of_read_number(prop, len / 4);
-+}
-+
- /**
-  * of_device_alloc - Allocate and initialize an of_device
-  * @np: device node to assign to device
-@@ -161,10 +176,8 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
- 	}
- 
-+	of_get_dma_mask(&dev->dev, np);
- 	dev->dev.of_node = of_node_get(np);
--#if defined(CONFIG_MICROBLAZE)
--	dev->dev.dma_mask = &dev->archdata.dma_mask;
--#endif
- 	dev->dev.parent = parent;
- 
- 	if (bus_id)
-@@ -201,10 +214,6 @@ struct platform_device *of_platform_device_create_pdata(
- 	if (!dev)
- 		return NULL;
- 
--#if defined(CONFIG_MICROBLAZE)
--	dev->archdata.dma_mask = 0xffffffffUL;
--#endif
--	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
- 	dev->dev.bus = &platform_bus_type;
- 	dev->dev.platform_data = platform_data;
- 
--- 
-1.7.9.5
+Andrew Murray
