@@ -1,15 +1,12 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Input: da9052_tsi: make TSI reference regulator
- configurable
-Date: Fri, 22 Mar 2013 08:58:20 -0700
-Message-ID: <9897835.LCtlOrd5pn@dtor-d630.eng.vmware.com>
-References: <1363964129-23392-1-git-send-email-p.zabel@pengutronix.de>
- <514C7DFB.8000708@freescale.com>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: [PATCH v3 0/3] DT support for AS3711 MFD,
+ regulator and backlight drivers
+Date: Fri, 22 Mar 2013 17:15:46 +0100
+Message-ID: <1363968949-12151-1-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <514C7DFB.8000708-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,34 +17,31 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Ashish Jangam <ashish.jangam-edWfh0lVHvKWbvRemg0rlA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, March 22, 2013 12:51:23 PM Fabio Estevam wrote:
-> Philipp Zabel wrote:
-> >  	if (!tsi->stopped) {
-> > 
-> > +		error = regulator_enable(tsi->tsiref);
-> > +		if (error < 0) {
-> > +			dev_err(tsi->da9052->dev,
-> > +				"Failed to enable TSIREF regualtor: %d\n",
-> 
-> s/regualtor/regulator
-> 
-> > @@ -274,12 +287,20 @@ static int da9052_ts_probe(struct platform_device
-> > *pdev)> 
-> >  	/* Disable ADC */
-> >  	da9052_ts_adc_toggle(tsi, false);
-> > 
-> > +	tsi->tsiref = regulator_get(tsi->da9052->dev, "tsiref");
-> 
-> You could use devm_regulator_get here ...
+This is just a split of the previous version of this patch(-set), no code 
+changes.
 
-The rest of the driver does not use managed resources. Mixing styles is not 
-the best idea.
+Guennadi Liakhovetski (3):
+  mfd: as3711: add OF support
+  regulator: as3711: add OF support
+  backlight: as3711: add OF support
 
-Thanks.
+ Documentation/devicetree/bindings/mfd/as3711.txt |   73 +++++++++++++
+ drivers/mfd/as3711.c                             |   27 ++++-
+ drivers/regulator/as3711-regulator.c             |   74 +++++++++++++-
+ drivers/video/backlight/as3711_bl.c              |  118 +++++++++++++++++++++-
+ 4 files changed, 284 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/as3711.txt
 
 -- 
-Dmitry
+1.7.2.5
+
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
