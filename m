@@ -1,112 +1,100 @@
-From: Andy Fleming <afleming@freescale.com>
-Subject: [PATCH] of_mdio: Add of_phy_attach function
-Date: Fri, 5 Mar 2010 13:48:19 -0600
-Message-ID: <E1UJ1fR-0004i1-Fc@swissweb.swissdisk.com>
+From: Florian Fainelli <florian@openwrt.org>
+Subject: [PATCH 1/4 v3] net: mvmdio: allow platform device style registration
+Date: Fri, 22 Mar 2013 14:39:25 +0100
+Message-ID: <1363959568-16976-2-git-send-email-florian@openwrt.org>
+References: <1363284515-9865-1-git-send-email-florian@openwrt.org>
+ <1363959568-16976-1-git-send-email-florian@openwrt.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1363959568-16976-1-git-send-email-florian@openwrt.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+To: davem@davemloft.net
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Lennert Buytenhek <buytenh@wantstofly.org>, Florian Fainelli <florian@openwrt.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-of_phy_connect is useful for most systems, but some drivers will want
-finer-grained control over their PHYs, and won't want to use the
-PHY Lib state machine or interrupt handlers.
+This patch changes the mvmdio driver not to use device tree
+helper functions such as of_mdiobus_register() and of_iomap() so we can
+instantiate this driver using a classic platform_device approach. Use
+the device manager helper to ioremap() the base register cookie so we
+get automatic freeing upon error and removal. This change is harmless
+for Device Tree platforms because they will get the driver be registered
+the same way as it was before.
 
-This mirrors phy_attach() in libphy, which is already exported.
-
-Signed-off-by: Andy Fleming <afleming@freescale.com>
-Signed-off-by: Ben Collins <ben.c@servergy.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: devicetree-discuss@lists.ozlabs.org
+Signed-off-by: Florian Fainelli <florian@openwrt.org>
 ---
- drivers/net/phy/phy_device.c |  8 +++-----
- drivers/of/of_mdio.c         | 14 ++++++++++++++
- include/linux/of_mdio.h      |  3 +++
- include/linux/phy.h          |  2 ++
- 4 files changed, 22 insertions(+), 5 deletions(-)
+Changes since v2:
+- use of_mdiobus_register if device tree node is available to ensure that
+  all child PHY nodes get also registered (fixes PHY probing on DT-only)
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 3657b4a..54ba552 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -60,9 +60,6 @@ extern void mdio_bus_exit(void);
- static LIST_HEAD(phy_fixup_list);
- static DEFINE_MUTEX(phy_fixup_lock);
+Changes since v1:
+- use device managed helpers to fix an ioremap leak in remove function
+- remove the use of Device Tree specific helpers to allow platform-style
+  registration
+
+ drivers/net/ethernet/marvell/mvmdio.c |   22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/net/ethernet/marvell/mvmdio.c b/drivers/net/ethernet/marvell/mvmdio.c
+index 77b7c80..bbc5fde 100644
+--- a/drivers/net/ethernet/marvell/mvmdio.c
++++ b/drivers/net/ethernet/marvell/mvmdio.c
+@@ -24,10 +24,10 @@
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/phy.h>
+-#include <linux/of_address.h>
+-#include <linux/of_mdio.h>
+ #include <linux/platform_device.h>
+ #include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/of_mdio.h>
  
--static int phy_attach_direct(struct net_device *dev, struct phy_device *phydev,
--			     u32 flags, phy_interface_t interface);
--
- /*
-  * Creates a new phy_fixup and adds it to the list
-  * @bus_id: A string which matches phydev->dev.bus_id (or PHY_ANY_ID)
-@@ -524,8 +521,8 @@ int phy_init_hw(struct phy_device *phydev)
-  *     the attaching device, and given a callback for link status
-  *     change.  The phy_device is returned to the attaching driver.
-  */
--static int phy_attach_direct(struct net_device *dev, struct phy_device *phydev,
--			     u32 flags, phy_interface_t interface)
-+int phy_attach_direct(struct net_device *dev, struct phy_device *phydev,
-+		      u32 flags, phy_interface_t interface)
+ #define MVMDIO_SMI_DATA_SHIFT              0
+ #define MVMDIO_SMI_PHY_ADDR_SHIFT          16
+@@ -143,11 +143,17 @@ static int orion_mdio_reset(struct mii_bus *bus)
+ 
+ static int orion_mdio_probe(struct platform_device *pdev)
  {
- 	struct device *d = &phydev->dev;
- 	int err;
-@@ -571,6 +568,7 @@ static int phy_attach_direct(struct net_device *dev, struct phy_device *phydev,
+-	struct device_node *np = pdev->dev.of_node;
++	struct resource *r;
+ 	struct mii_bus *bus;
+ 	struct orion_mdio_dev *dev;
+ 	int i, ret;
  
- 	return err;
- }
-+EXPORT_SYMBOL(phy_attach_direct);
- 
- /**
-  * phy_attach - attach a network device to a particular PHY device
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index 199b7f2..2b2c64c 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -198,3 +198,17 @@ struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
- 	return IS_ERR(phy) ? NULL : phy;
- }
- EXPORT_SYMBOL(of_phy_connect_fixed_link);
++	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!r) {
++		dev_err(&pdev->dev, "No SMI register address given\n");
++		return -ENODEV;
++	}
 +
-+/* Attach a network device to a particular OF PHY device */
-+struct phy_device *of_phy_attach(struct net_device *dev,
-+				struct device_node *phy_np, u32 flags,
-+				phy_interface_t iface)
-+{
-+	struct phy_device *phy = of_phy_find_device(phy_np);
-+
-+	if (!phy)
-+		return NULL;
-+
-+	return phy_attach_direct(dev, phy, flags, iface) ? NULL : phy;
-+}
-+EXPORT_SYMBOL(of_phy_attach);
-diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
-index cdc62c9..88319da 100644
---- a/include/linux/of_mdio.h
-+++ b/include/linux/of_mdio.h
-@@ -22,6 +22,9 @@ extern struct phy_device *of_phy_connect(struct net_device *dev,
- extern struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
- 					 void (*hndlr)(struct net_device *),
- 					 phy_interface_t iface);
-+extern struct phy_device *of_phy_attach(struct net_device *dev,
-+				struct device_node *phy_np, u32 flags,
-+				phy_interface_t iface);
+ 	bus = mdiobus_alloc_size(sizeof(struct orion_mdio_dev));
+ 	if (!bus) {
+ 		dev_err(&pdev->dev, "Cannot allocate MDIO bus\n");
+@@ -172,9 +178,9 @@ static int orion_mdio_probe(struct platform_device *pdev)
+ 		bus->irq[i] = PHY_POLL;
  
- extern struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np);
+ 	dev = bus->priv;
+-	dev->smireg = of_iomap(pdev->dev.of_node, 0);
++	dev->smireg = devm_ioremap(&pdev->dev, r->start, resource_size(r));
+ 	if (!dev->smireg) {
+-		dev_err(&pdev->dev, "No SMI register address given in DT\n");
++		dev_err(&pdev->dev, "Unable to remap SMI register\n");
+ 		kfree(bus->irq);
+ 		mdiobus_free(bus);
+ 		return -ENODEV;
+@@ -182,10 +188,12 @@ static int orion_mdio_probe(struct platform_device *pdev)
  
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 5a94ec7..0521e72 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -508,6 +508,8 @@ int phy_device_register(struct phy_device *phy);
- int phy_init_hw(struct phy_device *phydev);
- struct phy_device * phy_attach(struct net_device *dev,
- 		const char *bus_id, phy_interface_t interface);
-+int phy_attach_direct(struct net_device *dev, struct phy_device *phydev,
-+		      u32 flags, phy_interface_t interface);
- struct phy_device *phy_find_first(struct mii_bus *bus);
- int phy_connect_direct(struct net_device *dev, struct phy_device *phydev,
- 		void (*handler)(struct net_device *),
+ 	mutex_init(&dev->lock);
+ 
+-	ret = of_mdiobus_register(bus, np);
++	if (pdev->dev.of_node)
++		ret = of_mdiobus_register(bus, pdev->dev.of_node);
++	else
++		ret = mdiobus_register(bus);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Cannot register MDIO bus (%d)\n", ret);
+-		iounmap(dev->smireg);
+ 		kfree(bus->irq);
+ 		mdiobus_free(bus);
+ 		return ret;
 -- 
-1.8.1.2
+1.7.10.4
