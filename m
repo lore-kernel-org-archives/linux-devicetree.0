@@ -1,24 +1,97 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V2] cpufreq: ARM big LITTLE: Add generic cpufreq driver
- and its DT glue
-Date: Fri, 22 Mar 2013 07:51:59 +0530
-Message-ID: <CAKohpokW=NFm0TV-XWwgh-YPQx9z8pEc4TBwROA5j_D2_4K35g@mail.gmail.com>
-References: <6cba8f153cfd4b0d3075a34a6dfe287bdec2eb06.1362676407.git.viresh.kumar@linaro.org>
-	<513CAD9B.908@gmail.com>
-	<CAKohponV8MR=J8bbNFxGF9JXQB0uadv7iDcbW9D-qr2N53U_kQ@mail.gmail.com>
-	<3782512.fC3ZOYy3MV@vostro.rjw.lan>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 03/11] ARM: timer-sp: convert to use CLKSRC_OF init
+Date: Thu, 21 Mar 2013 21:31:01 -0500
+Message-ID: <514BC265.7080204@gmail.com>
+References: <1363820051-24428-1-git-send-email-robherring2@gmail.com>
+ <1363820051-24428-4-git-send-email-robherring2@gmail.com>
+ <20130321193549.GS4977@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3782512.fC3ZOYy3MV@vostro.rjw.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@sisk.pl>
-Cc: robin.randhawa@arm.com, Francesco Lavra <francescolavra.fl@gmail.com>, Steve.Bannister@arm.com, linux@arm.linux.org.uk, linux-pm@vger.kernel.org, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>, devicetree-discuss@lists.ozlabs.org, Liviu.Dudau@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.hambleton@broadcom.com, linaro-kernel@lists.linaro.org, charles.garcia-tobin@arm.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130321193549.GS4977-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 22 March 2013 05:20, Rafael J. Wysocki <rjw@sisk.pl> wrote:
-> Please post a complete update patch if you want me to take it.  I'd also would
-> like it to be ACKed by someone involved in the big-LITTLE work on the arch
-> side.
+On 03/21/2013 02:35 PM, Russell King - ARM Linux wrote:
+> On Wed, Mar 20, 2013 at 05:54:03PM -0500, Rob Herring wrote:
+>> +	clk0 = of_clk_get(np, 0);
+>> +	if (IS_ERR(clk0))
+>> +		clk0 = NULL;
+>> +
+>> +	/* Get the 2nd clock if the timer has 2 timer clocks */
+>> +	if (of_count_phandle_with_args(np, "clocks", "#clock-cells") == 3) {
+>> +		clk1 = of_clk_get(np, 1);
+>> +		if (IS_ERR(clk1)) {
+>> +			pr_err("sp804: %s clock not found: %d\n", np->name,
+>> +				(int)PTR_ERR(clk1));
+>> +			return;
+>> +		}
+>> +	} else
+>> +		clk1 = clk0;
+>> +
+>> +	irq = irq_of_parse_and_map(np, 0);
+>> +	if (irq <= 0)
+>> +		return;
+>> +
+>> +	of_property_read_u32(np, "arm,sp804-has-irq", &irq_num);
+>> +	if (irq_num == 2)
+>> +		tmr2_evt = true;
+>> +
+>> +	__sp804_clockevents_init(base + (tmr2_evt ? TIMER_2_BASE : 0),
+>> +				 irq, tmr2_evt ? clk1 : clk0, name);
+>> +	__sp804_clocksource_and_sched_clock_init(base + (tmr2_evt ? 0 : TIMER_2_BASE),
+>> +						 name, tmr2_evt ? clk0 : clk1, 1);
+> 
+> This just looks totally screwed to me.
+> 
+> A SP804 cell has two timers, and has one clock input and two clock
+> enable inputs.  The clock input is common to both timers.  The timers
+> only count on the rising edge of the clock input when the enable
+> input is high.  (the APB PCLK also matters too...)
+> 
+> Now, the clock enable inputs are controlled by the SP810 system
+> controller to achieve different clock rates for each.  So, we *can*
+> view an SP804 as having two clock inputs.
 
-Okay.
+Exactly. Effectively, the TIMCLKENx are just dividers of the clock input.
+
+> However, the two clock inputs do not depend on whether one or the
+> other has an IRQ or not.  Timer 1 is always clocked by TIMCLK &
+> TIMCLKEN1.  Timer 2 is always clocked by TIMCLK & TIMCLKEN2.
+> 
+> Using the logic above, the clocks depend on how the IRQs are wired
+> up... really?  Can you see from my description above why that is
+> screwed?  What bearing does the IRQ have on the wiring of the
+> clock inputs?
+
+No. I'm simply swapping which timer is used for clksrc vs. clkevt based
+on the irq connection DT describes. If only timer 2's irq being hooked
+up, then timer 2 is the clkevt. Otherwise I always use timer 1 for the
+clkevt because I either have a combined interrupt or timer 1 interrupt
+hooked up.
+
+Perhaps re-writing it like this would be more clear:
+
+if (irq_num == 2){
+	__sp804_clockevents_init(base + TIMER_2_BASE, irq, clk1, name);
+	__sp804_clocksource_and_sched_clock_init(base, name, clk0, 1);
+} else {
+	__sp804_clockevents_init(base, irq, clk0, name);
+	__sp804_clocksource_and_sched_clock_init(base + TIMER_2_BASE,
+						name, clk1, 1);
+}
+
+
+Rob
