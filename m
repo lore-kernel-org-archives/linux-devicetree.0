@@ -1,102 +1,52 @@
-From: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-Subject: Re: [PATCH V2 2/2] of: remove /proc/device-tree
-Date: Fri, 22 Mar 2013 13:03:29 -0500
-Message-ID: <514C9CF1.7060505@linux.vnet.ibm.com>
-References: <1363865097-32764-1-git-send-email-grant.likely@secretlab.ca> <1363865097-32764-3-git-send-email-grant.likely@secretlab.ca> <1363870366.3312.1.camel@pasglop> <CACxGe6vSywW_iekAKmDMf5_TLLt5Hn+Jttq8kddq3vJ=AE+DQA@mail.gmail.com> <CACxGe6uCKRH8jcGJW+oYt+T33XT_MGzaxmtkNdekMooGqBYTEw@mail.gmail.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v3 2/3] regulator: as3711: add OF support
+Date: Fri, 22 Mar 2013 19:53:33 +0100
+Message-ID: <20130322185333.GN22890@opensource.wolfsonmicro.com>
+References: <1363968949-12151-1-git-send-email-g.liakhovetski@gmx.de>
+ <1363968949-12151-3-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="K4LMwn8CgX2KMboP"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6uCKRH8jcGJW+oYt+T33XT_MGzaxmtkNdekMooGqBYTEw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1363968949-12151-3-git-send-email-g.liakhovetski@gmx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, David Miller <davem@davemloft.net>
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-kernel@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree-discuss@lists.ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>, Richard Purdie <rpurdie@rpsys.net>, Andrew Morton <akpm@linux-foundation.org>, linux-fbdev@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 
+--K4LMwn8CgX2KMboP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 03/22/2013 05:28 AM, Grant Likely wrote:
-> On Thu, Mar 21, 2013 at 8:07 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
->> On Thu, Mar 21, 2013 at 12:52 PM, Benjamin Herrenschmidt
->> <benh@kernel.crashing.org> wrote:
->>> On Thu, 2013-03-21 at 11:24 +0000, Grant Likely wrote:
->>> kexec comes to mind (all 4 variants of fs2dt.c (yuck !)), dtc, various
->>> powerpc-utils (bootloader configuration etc...), and more.
->>>
->>> We also need to test the new code with hotplug, I'll see if I can get
->>> somebody at IBM to give it a spin.
->>
->> Thanks
-> 
-> Actually, this will be broken. I missed adding hooks to the property
-> add/remove paths. It will be fixed in v3.
-> 
-> BTW, I'd really like to revisit the locking semantics and reference
-> counting of OF_DYNAMIC. It is incredibly painful it is for driver
-> authors to get right. What is the device_node lifecycle on pseries? Do
-> we really need to be doing of_node_get/put() every time we walk the
-> tree, or is there a different model that can be used?
-> 
+On Fri, Mar 22, 2013 at 05:15:48PM +0100, Guennadi Liakhovetski wrote:
+> AS3711 regulator OF support only evaluates standard regulator DT
+> properties.
 
-With respect to nodes for memory, cpu's, and PCI devices the lifecycle
-can be completely dynamic. All of these are capable of being moved
-between partitions on a pseries system and thus they can be added/removed
-from the device tree at any point.
+It looks like this has no dependencies on the MFD patch, is that
+correct?
 
-Almost any property of the device tree can be update at partition migration
-or suspension (this is HMC/pHyp initiated, not Linux suspension). We don't
-have reference counts on properties though so that doesn't matter here, but
-more on that later...
+--K4LMwn8CgX2KMboP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> Bear with me as I think through this out-loud...
-> 
-> How about instead of doing get/put by default every time, we have an
-> explicit mutex that needs to be grabbed if there is a potential that
-> the code will be dealing with dynamic nodes. For device drivers this
-> will almost never be true because the node ref counts will already
-> have been incremented when the device was created (well before probe
-> occurs). Plus the ref count won't be decremented again until the point
-> of struct device removal.
-> 
-> The other scenario is when searching for nodes there is the potential
-> that any node in the system could disappear mid-search, and in most
-> cases it won't even be one of the nodes that is being searched for.
-> For the non-matching nodes that shouldn't be a problem because the
-> lock is held while traversing past them. No worries about them
-> dropping out from under us. It's when one of the matching nodes might
-> disappear that problems could happen.
-> 
-> But for the vast majority of use cases that simply isn't going to
-> happen. We aren't removing individual nodes from a passed in .dtb (at
-> least not yet). I'm not going to base design decisions on that, but it
-> seems like the the current scheme is optimized for the wrong use case.
-> 
-> Would it be reasonable to expect that the caller explicitly grab a
-> lock to hold off node removal tree wide? Then only increment the
-> refcount on nodes that are actually cared about?
->
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-I don't any issues with moving to a scheme like this but I would ask that
-this perhaps be part of a different patch set. I started looking at
-all the device tree manipulation we do in pseries and would appreciate
-more time go through all the code and test once you had a patch ready.
+iQIcBAEBAgAGBQJRTKieAAoJELSic+t+oim9ss0QAIsLAPknMA0YSoPbQaNFMyZl
+LqgwM4qc03lDHMJw3ukOHPlgx4Ml+HgMAN51tcpHUPClsCnjNDXS0PN8vdDBSima
+3qEnGjd0iVuVeY/Q/Goj/6bSXAes5vyFfh7kxyLYMY7Vv+JdhmJji8AGvMJFbmTP
+et2qjoVlpybuXdMrXDOU92d1Cy9/A0ZuFpOe2GNb4WIUQ2fRZOB5JP6oz1AeRftc
+3WHZHBr0SaINueKD63co2SbTmvUzKElBL/sVTDK335YxdAZmSwJ3lXetDcNPcLJc
+BHWEBFQ8IqNX5vftXz7Zj7J70wzhQNZbempPrKtwH6PjonGEU+gRIHiMjlCOt4L/
+9TkxhOdUBhUcT+G4TNYcTtUKE4KCsTih59NPCeiRLQMPn2DtIIBsiTqVFYENne2C
+uWqnxvjhjg9OkjAM8E+aKLxgEtXIkvLwir3PvFqRF7f6msdM8oio11OGrQt8LMZX
+cGUsHkQUPG7SKlUQv53ogSEJIWkryU6Vw4TQ979IUHdsJdFxfYOqgGjeaqXrzykI
+mx3Lauu3Yc/FZCd0JzJoqqqMHLkrRvJXoYj2fUQJ/h2SzGdQXbV3bDuxVmndriW7
+bU5vsAwJFcwkbAk8owSMthtlrTVWQytrCiGN/Wrt94dwk4zPQ1KkpCBOC5VNZoV+
+KaCuJXtuSLcx5UVeGwMr
+=bps1
+-----END PGP SIGNATURE-----
 
-Since we're talking about reference counts and I mentioned reference counts
-for properties earlier...
-
-We don't ever free old property values, mainly I assume since we don't keep
-reference counts and can't know when it is safe to do so. The problem I
-am starting to see on pseries is that we are getting very large properties.
-One of the biggest culprits is the property on pseries systems to describe
-the memory on the system in the device tree. These are big and getting
-bigger as memory increases, additionally this property is update every
-time memory is DLPAR added or removed from the system which can lead to
-leaving a bunch of memory that should be free'ed.
-
-Given that, is there (or has there been) any discussion on adding reference
-counts to properties in the device tree? With the myriad ways to get at
-the value of a property this may not be feasible but I would like to hear
-any thoughts from the community.
-
--Nathan
- 
+--K4LMwn8CgX2KMboP--
