@@ -1,79 +1,141 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v9 RESEND 0/4] Add generic driver for on-chip SRAM
-Date: Fri, 22 Mar 2013 13:49:04 +0100
-Message-ID: <CAHTX3dKS1QGtuhcw96dzABjsPWe-3yaxpLvshJKtwvZ1AMNcew@mail.gmail.com>
-References: <1363776767-2635-1-git-send-email-p.zabel@pengutronix.de>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v8 08/14] clk: tegra: Add flags to tegra_clk_periph()
+Date: Fri, 22 Mar 2013 14:39:25 +0200
+Message-ID: <1363956029-31873-9-git-send-email-pdeschrijver@nvidia.com>
+References: <1363956029-31873-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1363776767-2635-1-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1363956029-31873-1-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andrew Chew <achew-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+We will need some tegra peripheral clocks with the CLK_IGNORE_UNUSED flag,
+most notably mselect, which is a bridge between AXI and most peripherals.
 
-2013/3/20 Philipp Zabel <p.zabel@pengutronix.de>:
-> Hi, last time I posted was a bit close to the merge window, so I'm
-> reposting now. Greg, Arnd, could you take the first two patches?
->
-> These patches add support to configure on-chip SRAM via device-tree
-> node or platform data and to obtain the resulting genalloc pool from
-> the struct device pointer or a phandle pointing at the device tree node.
-> This allows drivers to allocate SRAM with the genalloc API without
-> hard-coding the genalloc pool pointer.
->
-> The on-chip SRAM on i.MX53 and i.MX6q can be registered via device tree
-> and changed to use the simple generic SRAM driver:
->
->                 ocram: ocram@00900000 {
->                         compatible = "fsl,imx-ocram", "mmio-sram";
->                         reg = <0x00900000 0x3f000>;
->                 };
->
-> A driver that needs to allocate SRAM buffers, like the video processing
-> unit on i.MX53, can retrieve the genalloc pool from a phandle in the
-> device tree using of_get_named_gen_pool(node, "iram", 0) from patch 1:
->
->                 vpu@63ff4000 {
->                         /* ... */
->                         iram = <&ocram>;
->                 };
->
-> Changes since v8:
->  - The sram driver now matches against the "mmio-sram" compatible string.
->  - Removed a whitespace error in the device tree binding documentation.
->
-> regards
-> Philipp
->
-> ---
->  Documentation/devicetree/bindings/media/coda.txt |   30 ++++++
->  Documentation/devicetree/bindings/misc/sram.txt  |   16 +++
->  arch/arm/boot/dts/imx53.dtsi                     |    5 +
->  arch/arm/boot/dts/imx6q.dtsi                     |    6 ++
->  drivers/media/platform/Kconfig                   |    1 -
->  drivers/media/platform/coda.c                    |   45 +++++---
->  drivers/misc/Kconfig                             |    9 ++
->  drivers/misc/Makefile                            |    1 +
->  drivers/misc/sram.c                              |  121 ++++++++++++++++++++++
->  include/linux/genalloc.h                         |   15 +++
->  include/linux/platform_data/coda.h               |   18 ++++
->  lib/genalloc.c                                   |   81 +++++++++++++++
->  12 files changed, 333 insertions(+), 15 deletions(-)
+Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/clk/tegra/clk-periph.c  |   11 ++++++-----
+ drivers/clk/tegra/clk-tegra20.c |    2 +-
+ drivers/clk/tegra/clk-tegra30.c |    2 +-
+ drivers/clk/tegra/clk.h         |    9 ++++++---
+ 4 files changed, 14 insertions(+), 10 deletions(-)
 
-Andrew: 1/4 and 2/4 patches should probably go through your tree.
-Can you please handle them?
-Or Philipp should send these two patches directly to you?
-
-Thanks,
-Michal
-
-
+diff --git a/drivers/clk/tegra/clk-periph.c b/drivers/clk/tegra/clk-periph.c
+index 788486e..067abb3 100644
+--- a/drivers/clk/tegra/clk-periph.c
++++ b/drivers/clk/tegra/clk-periph.c
+@@ -170,14 +170,15 @@ const struct clk_ops tegra_clk_periph_nodiv_ops = {
+ static struct clk *_tegra_clk_register_periph(const char *name,
+ 			const char **parent_names, int num_parents,
+ 			struct tegra_clk_periph *periph,
+-			void __iomem *clk_base, u32 offset, bool div)
++			void __iomem *clk_base, u32 offset, bool div,
++			unsigned long flags)
+ {
+ 	struct clk *clk;
+ 	struct clk_init_data init;
+ 
+ 	init.name = name;
+ 	init.ops = div ? &tegra_clk_periph_ops : &tegra_clk_periph_nodiv_ops;
+-	init.flags = div ? 0 : CLK_SET_RATE_PARENT;
++	init.flags = flags;
+ 	init.parent_names = parent_names;
+ 	init.num_parents = num_parents;
+ 
+@@ -202,10 +203,10 @@ static struct clk *_tegra_clk_register_periph(const char *name,
+ struct clk *tegra_clk_register_periph(const char *name,
+ 		const char **parent_names, int num_parents,
+ 		struct tegra_clk_periph *periph, void __iomem *clk_base,
+-		u32 offset)
++		u32 offset, unsigned long flags)
+ {
+ 	return _tegra_clk_register_periph(name, parent_names, num_parents,
+-			periph, clk_base, offset, true);
++			periph, clk_base, offset, true, flags);
+ }
+ 
+ struct clk *tegra_clk_register_periph_nodiv(const char *name,
+@@ -214,5 +215,5 @@ struct clk *tegra_clk_register_periph_nodiv(const char *name,
+ 		u32 offset)
+ {
+ 	return _tegra_clk_register_periph(name, parent_names, num_parents,
+-			periph, clk_base, offset, false);
++			periph, clk_base, offset, false, CLK_SET_RATE_PARENT);
+ }
+diff --git a/drivers/clk/tegra/clk-tegra20.c b/drivers/clk/tegra/clk-tegra20.c
+index e1416e1..4b18701 100644
+--- a/drivers/clk/tegra/clk-tegra20.c
++++ b/drivers/clk/tegra/clk-tegra20.c
+@@ -1019,7 +1019,7 @@ static void __init tegra20_periph_clk_init(void)
+ 		data = &tegra_periph_clk_list[i];
+ 		clk = tegra_clk_register_periph(data->name, data->parent_names,
+ 				data->num_parents, &data->periph,
+-				clk_base, data->offset);
++				clk_base, data->offset, data->flags);
+ 		clk_register_clkdev(clk, data->con_id, data->dev_id);
+ 		clks[data->clk_id] = clk;
+ 	}
+diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
+index aa92745..75cdd46 100644
+--- a/drivers/clk/tegra/clk-tegra30.c
++++ b/drivers/clk/tegra/clk-tegra30.c
+@@ -1668,7 +1668,7 @@ static void __init tegra30_periph_clk_init(void)
+ 		data = &tegra_periph_clk_list[i];
+ 		clk = tegra_clk_register_periph(data->name, data->parent_names,
+ 				data->num_parents, &data->periph,
+-				clk_base, data->offset);
++				clk_base, data->offset, data->flags);
+ 		clk_register_clkdev(clk, data->con_id, data->dev_id);
+ 		clks[data->clk_id] = clk;
+ 	}
+diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
+index bdc085d..8fbdb8a 100644
+--- a/drivers/clk/tegra/clk.h
++++ b/drivers/clk/tegra/clk.h
+@@ -417,7 +417,7 @@ extern const struct clk_ops tegra_clk_periph_ops;
+ struct clk *tegra_clk_register_periph(const char *name,
+ 		const char **parent_names, int num_parents,
+ 		struct tegra_clk_periph *periph, void __iomem *clk_base,
+-		u32 offset);
++		u32 offset, unsigned long flags);
+ struct clk *tegra_clk_register_periph_nodiv(const char *name,
+ 		const char **parent_names, int num_parents,
+ 		struct tegra_clk_periph *periph, void __iomem *clk_base,
+@@ -460,12 +460,14 @@ struct tegra_periph_init_data {
+ 	u32 offset;
+ 	const char *con_id;
+ 	const char *dev_id;
++	unsigned long flags;
+ };
+ 
+ #define TEGRA_INIT_DATA_TABLE(_name, _con_id, _dev_id, _parent_names, _offset,\
+ 			_mux_shift, _mux_mask, _mux_flags, _div_shift,	\
+ 			_div_width, _div_frac_width, _div_flags, _regs,	\
+-			_clk_num, _enb_refcnt, _gate_flags, _clk_id, _table) \
++			_clk_num, _enb_refcnt, _gate_flags, _clk_id, _table,\
++			_flags) \
+ 	{								\
+ 		.name = _name,						\
+ 		.clk_id = _clk_id,					\
+@@ -480,6 +482,7 @@ struct tegra_periph_init_data {
+ 		.offset = _offset,					\
+ 		.con_id = _con_id,					\
+ 		.dev_id = _dev_id,					\
++		.flags = _flags						\
+ 	}
+ 
+ #define TEGRA_INIT_DATA(_name, _con_id, _dev_id, _parent_names, _offset,\
+@@ -490,7 +493,7 @@ struct tegra_periph_init_data {
+ 			_mux_shift, BIT(_mux_width) - 1, _mux_flags,	\
+ 			_div_shift, _div_width, _div_frac_width, _div_flags, \
+ 			_regs, _clk_num, _enb_refcnt, _gate_flags, _clk_id,\
+-			NULL)
++			NULL, 0)
+ 
+ /**
+  * struct clk_super_mux - super clock
 -- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+1.7.7.rc0.72.g4b5ea.dirty
