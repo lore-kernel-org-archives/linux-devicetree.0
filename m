@@ -1,74 +1,65 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 01/17] of/pci: Provide support for parsing PCI DT
- ranges property
-Date: Fri, 22 Mar 2013 11:20:59 +0100
-Message-ID: <20130322112059.35675858@skate>
-References: <1363887025-19931-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1363887025-19931-2-git-send-email-thomas.petazzoni@free-electrons.com>
- <20130322101238.GA22929@avionic-0098.mockup.avionic-design.de>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH V2 2/2] of: remove /proc/device-tree
+Date: Fri, 22 Mar 2013 10:28:20 +0000
+Message-ID: <CACxGe6uCKRH8jcGJW+oYt+T33XT_MGzaxmtkNdekMooGqBYTEw@mail.gmail.com>
+References: <1363865097-32764-1-git-send-email-grant.likely@secretlab.ca>
+ <1363865097-32764-3-git-send-email-grant.likely@secretlab.ca>
+ <1363870366.3312.1.camel@pasglop> <CACxGe6vSywW_iekAKmDMf5_TLLt5Hn+Jttq8kddq3vJ=AE+DQA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130322101238.GA22929-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6vSywW_iekAKmDMf5_TLLt5Hn+Jttq8kddq3vJ=AE+DQA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Mar 21, 2013 at 8:07 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
+> On Thu, Mar 21, 2013 at 12:52 PM, Benjamin Herrenschmidt
+> <benh@kernel.crashing.org> wrote:
+>> On Thu, 2013-03-21 at 11:24 +0000, Grant Likely wrote:
+>> kexec comes to mind (all 4 variants of fs2dt.c (yuck !)), dtc, various
+>> powerpc-utils (bootloader configuration etc...), and more.
+>>
+>> We also need to test the new code with hotplug, I'll see if I can get
+>> somebody at IBM to give it a spin.
+>
+> Thanks
 
-On Fri, 22 Mar 2013 11:12:39 +0100, Thierry Reding wrote:
+Actually, this will be broken. I missed adding hooks to the property
+add/remove paths. It will be fixed in v3.
 
-> This sounds like you're trying to do too much within the for loop. When
-> we discussed this previously I had a vague idea that this functionality
-> could be wrapped into something a bit more object-like.
-> 
-> What I had in mind was something like:
-> 
-> 	struct of_pci_range_parser;
-> 	struct of_pci_range;
-> 
-> 	struct of_pci_range_parser parser;
-> 	struct of_pci_range range;
-> 
-> 	err = of_pci_range_parser(&parser, np);
-> 	if (err < 0)
-> 		return err;
-> 
-> 	for_each_of_pci_range(range, parser) {
-> 		struct resource res;
-> 
-> 		...
-> 		usage of range similar to iterator
-> 		...
-> 
-> 		of_pci_range_to_resource(&res, &range);
-> 	}
-> 
-> In the above the of_pci_range structure pretty much replaces the
-> iterator and the whole is wrapped up within a parser structure to give
-> some extra flexibility and provides for easier (or more structured)
-> setup compared to doing all of it within the loop statement.
-> 
-> But aside from the (perceived?) increased robustness there's not a lot
-> of technical benefit over your implementation, so it isn't a very hard
-> objection. I find it to be a little more encapsulated and therefore
-> easier to work with, but that's possibly just a matter of taste.
+BTW, I'd really like to revisit the locking semantics and reference
+counting of OF_DYNAMIC. It is incredibly painful it is for driver
+authors to get right. What is the device_node lifecycle on pseries? Do
+we really need to be doing of_node_get/put() every time we walk the
+tree, or is there a different model that can be used?
 
-I don't have a strong opinion on this. Andrew, what do you think?
+Bear with me as I think through this out-loud...
 
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+How about instead of doing get/put by default every time, we have an
+explicit mutex that needs to be grabbed if there is a potential that
+the code will be dealing with dynamic nodes. For device drivers this
+will almost never be true because the node ref counts will already
+have been incremented when the device was created (well before probe
+occurs). Plus the ref count won't be decremented again until the point
+of struct device removal.
+
+The other scenario is when searching for nodes there is the potential
+that any node in the system could disappear mid-search, and in most
+cases it won't even be one of the nodes that is being searched for.
+For the non-matching nodes that shouldn't be a problem because the
+lock is held while traversing past them. No worries about them
+dropping out from under us. It's when one of the matching nodes might
+disappear that problems could happen.
+
+But for the vast majority of use cases that simply isn't going to
+happen. We aren't removing individual nodes from a passed in .dtb (at
+least not yet). I'm not going to base design decisions on that, but it
+seems like the the current scheme is optimized for the wrong use case.
+
+Would it be reasonable to expect that the caller explicitly grab a
+lock to hold off node removal tree wide? Then only increment the
+refcount on nodes that are actually cared about?
+
+g.
