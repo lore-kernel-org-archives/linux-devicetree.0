@@ -1,169 +1,95 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH] Input: da9052_tsi: make TSI reference regulator configurable
-Date: Fri, 22 Mar 2013 15:55:29 +0100
-Message-ID: <1363964129-23392-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Fabio Estevam <fabio.estevam@freescale.com>, Ashish Jangam <ashish.jangam@kpitcummins.com>, Philipp Zabel <p.zabel@pengutronix.de>
+From: Ian Lartey <ian@slimlogic.co.uk>
+Subject: [PATCH v10 0/12] Palmas updates
+Date: Fri, 22 Mar 2013 14:55:10 +0000
+Message-ID: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, linus.walleij@linaro.org, grant.likely@secretlab.ca, wim@iguana.be, ldewangan@nvidia.com, gg@slimlogic.co.uk, linux-leds@vger.kernel.org, sfr@canb.auug.org.au, mturquette@linaro.org, sameo@linux.intel.com, linux-watchdog@vger.kernel.org, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, cooloney@gmail.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, j-keerthy@ti.com, broonie@opensource.wolfsonmicro.com, lgirdwood@gmail.com, t-kristo@ti.com, rpurdie@rpsys.net, rob@landley.net, akpm@linux-foundation.org
 List-Id: devicetree@vger.kernel.org
 
-This patch allows to use a different regulator than LDO9 as TSIREF.
-It also only turns on the regulator when there are actual measurements
-to be done. It is not needed for pen detection.
+This patchset adds to the support for the Palmas series of PMIC chips.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
- .../devicetree/bindings/mfd/da9052-i2c.txt         | 10 ++++++
- drivers/input/touchscreen/da9052_tsi.c             | 38 +++++++++++++++++-----
- 2 files changed, 40 insertions(+), 8 deletions(-)
+Some of the patches have previously been submitted individually.
+The DT bindings doc has been added first due to comments that it was missing.
 
-diff --git a/Documentation/devicetree/bindings/mfd/da9052-i2c.txt b/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
-index 1857f4a..807eb63 100644
---- a/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
-+++ b/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
-@@ -4,6 +4,10 @@ Required properties:
- - compatible : Should be "dlg,da9052", "dlg,da9053-aa",
- 			 "dlg,da9053-ab", or "dlg,da9053-bb"
- 
-+Optional properties:
-+- tsiref-supply : Touch screen interface reference voltage regulator.
-+                  This is usually LDO9.
-+
- Sub-nodes:
- - regulators : Contain the regulator nodes. The DA9052/53 regulators are
-   bound using their names as listed below:
-@@ -34,6 +38,7 @@ i2c@63fc8000 { /* I2C1 */
- 	pmic: dialog@48 {
- 		compatible = "dlg,da9053-aa";
- 		reg = <0x48>;
-+		tsiref-supply = <&reg_ldo9>;
- 
- 		regulators {
- 			buck0 {
-@@ -55,6 +60,11 @@ i2c@63fc8000 { /* I2C1 */
- 				regulator-min-microvolt = <925000>;
- 				regulator-max-microvolt = <2500000>;
- 			};
-+
-+			reg_ldo9: ldo9 {
-+				regulator-min-microvolt = <2500000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
- 		};
- 	};
- };
-diff --git a/drivers/input/touchscreen/da9052_tsi.c b/drivers/input/touchscreen/da9052_tsi.c
-index 8f561e2..1eb323f 100644
---- a/drivers/input/touchscreen/da9052_tsi.c
-+++ b/drivers/input/touchscreen/da9052_tsi.c
-@@ -11,10 +11,12 @@
-  *  option) any later version.
-  *
-  */
-+#include <linux/errno.h>
- #include <linux/module.h>
- #include <linux/input.h>
- #include <linux/delay.h>
- #include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/interrupt.h>
- 
- #include <linux/mfd/da9052/reg.h>
-@@ -25,6 +27,7 @@
- struct da9052_tsi {
- 	struct da9052 *da9052;
- 	struct input_dev *dev;
-+	struct regulator *tsiref;
- 	struct delayed_work ts_pen_work;
- 	struct mutex mutex;
- 	bool stopped;
-@@ -40,8 +43,17 @@ static void da9052_ts_adc_toggle(struct da9052_tsi *tsi, bool on)
- static irqreturn_t da9052_ts_pendwn_irq(int irq, void *data)
- {
- 	struct da9052_tsi *tsi = data;
-+	int error;
- 
- 	if (!tsi->stopped) {
-+		error = regulator_enable(tsi->tsiref);
-+		if (error < 0) {
-+			dev_err(tsi->da9052->dev,
-+				"Failed to enable TSIREF regualtor: %d\n",
-+				error);
-+			return IRQ_HANDLED;
-+		}
-+
- 		/* Mask PEN_DOWN event and unmask TSI_READY event */
- 		da9052_disable_irq_nosync(tsi->da9052, DA9052_IRQ_PENDOWN);
- 		da9052_enable_irq(tsi->da9052, DA9052_IRQ_TSIREADY);
-@@ -137,6 +149,12 @@ static void da9052_ts_pen_work(struct work_struct *work)
- 			/* Mask TSI_READY event and unmask PEN_DOWN event */
- 			da9052_disable_irq(tsi->da9052, DA9052_IRQ_TSIREADY);
- 			da9052_enable_irq(tsi->da9052, DA9052_IRQ_PENDOWN);
-+
-+			ret = regulator_disable(tsi->tsiref);
-+			if (ret < 0)
-+				dev_err(tsi->da9052->dev,
-+					"Failed to disable TSIREF regulator: %d\n",
-+					ret);
- 		}
- 	}
- }
-@@ -179,11 +197,6 @@ static int da9052_configure_tsi(struct da9052_tsi *tsi)
- 	if (error < 0)
- 		return error;
- 
--	/* Supply TSIRef through LD09 */
--	error = da9052_reg_write(tsi->da9052, DA9052_LDO9_REG, 0x59);
--	if (error < 0)
--		return error;
--
- 	return 0;
- }
- 
-@@ -274,12 +287,20 @@ static int da9052_ts_probe(struct platform_device *pdev)
- 	/* Disable ADC */
- 	da9052_ts_adc_toggle(tsi, false);
- 
-+	tsi->tsiref = regulator_get(tsi->da9052->dev, "tsiref");
-+	if (IS_ERR(tsi->tsiref)) {
-+		dev_err(tsi->da9052->dev,
-+				"Failed to get TSIREF regulator: %ld\n",
-+				PTR_ERR(tsi->tsiref));
-+		goto err_free_mem;
-+	}
-+
- 	error = da9052_request_irq(tsi->da9052, DA9052_IRQ_PENDOWN,
- 				"pendown-irq", da9052_ts_pendwn_irq, tsi);
- 	if (error) {
- 		dev_err(tsi->da9052->dev,
- 			"Failed to register PENDWN IRQ: %d\n", error);
--		goto err_free_mem;
-+		goto err_put_reg;
- 	}
- 
- 	error = da9052_request_irq(tsi->da9052, DA9052_IRQ_TSIREADY,
-@@ -310,6 +331,8 @@ err_free_datardy_irq:
- 	da9052_free_irq(tsi->da9052, DA9052_IRQ_TSIREADY, tsi);
- err_free_pendwn_irq:
- 	da9052_free_irq(tsi->da9052, DA9052_IRQ_PENDOWN, tsi);
-+err_put_reg:
-+	regulator_put(tsi->tsiref);
- err_free_mem:
- 	kfree(tsi);
- 	input_free_device(input_dev);
-@@ -321,10 +344,9 @@ static int  da9052_ts_remove(struct platform_device *pdev)
- {
- 	struct da9052_tsi *tsi = platform_get_drvdata(pdev);
- 
--	da9052_reg_write(tsi->da9052, DA9052_LDO9_REG, 0x19);
--
- 	da9052_free_irq(tsi->da9052, DA9052_IRQ_TSIREADY, tsi);
- 	da9052_free_irq(tsi->da9052, DA9052_IRQ_PENDOWN, tsi);
-+	regulator_put(tsi->tsiref);
- 
- 	input_unregister_device(tsi->dev);
- 	kfree(tsi);
--- 
-1.8.2.rc2
+Patches based on linux-next-20130319
 
+Changes since v9
+Added in missing [PATCH 01/12] mfd: DT bindings.
+Now all patch sequence numbers with the v9 changes below are correct.
+Please refer to the changes below as they have not been reviewed.
+
+Changes since v8
+The .compatible = "palmas-charger-xxx" has been removed from the DT 
+for all palmas source files as the charger driver is not yet present.
+
+[PATCH 01/12] mfd: DT bindings... - Added in missing descriptions for 
+properties and added in properties that were missing
+
+[PATCH 08/12] gpio: Palmas.... - Added
+palmas_gpio_(read|write|update)  gpio parameter renamed to offset
+palmas_gpio_write   renamed to palmas_gpio_clear_and_set  
+as it no longer takes a data value instead it always sets the
+offset bit and clears all other bits -
+this is how it was being used by the callers
+
+[PATCH 09/12] leds: Add support... -  Combined patches for 
+drivers/leds/leds-palmas.c, drivers/leds/Kconfig and drivers/leds/Makefile.
+palmas_dt_to_pdata - added bounds checking for DT values and
+removed use of child node.
+palmas_led.on_time and palmas_led.period both changed to enums.
+palmas_get_crtl_and_period added which contains factored code 
+from palmas_leds_work for maintainability.
+
+[PATCH 10/12] clk: Add a clock... -  clock names taken from DT if provided
+
+palmas-regulator not in patchset - patch Now applied by Mark Brown
+
+[PATCH 12/12] regulator: palmas-charger-pmic removed from DT compatible list
+
+
+ .../devicetree/bindings/clock/palmas-clk.txt       |   27 +
+ .../devicetree/bindings/gpio/gpio-palmas.txt       |   35 ++
+ .../devicetree/bindings/input/palmas-pwrbutton.txt |   26 +
+ .../devicetree/bindings/leds/leds-palmas.txt       |   36 ++
+ Documentation/devicetree/bindings/mfd/palmas.txt   |   81 +++
+ .../devicetree/bindings/regulator/palmas-pmic.txt  |  168 ++++++
+ .../devicetree/bindings/rtc/palmas-rtc.txt         |   21 +
+ .../devicetree/bindings/watchdog/palmas-wdt.txt    |   21 +
+ drivers/clk/Kconfig                                |    8 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/clk-palmas.c                           |  275 ++++++++++
+ drivers/gpio/gpio-palmas.c                         |   90 +++-
+ drivers/leds/Kconfig                               |    9 +
+ drivers/leds/Makefile                              |    1 +
+ drivers/leds/leds-palmas.c                         |  561 ++++++++++++++++++++
+ drivers/mfd/palmas.c                               |  102 +++-
+ drivers/regulator/palmas-regulator.c               |    1 -
+ drivers/watchdog/Kconfig                           |    8 +
+ drivers/watchdog/Makefile                          |    1 +
+ drivers/watchdog/palmas_wdt.c                      |  169 ++++++
+ include/linux/mfd/palmas.h                         |  139 +++++-
+ 21 files changed, 1739 insertions(+), 41 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/palmas-clk.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-palmas.txt
+ create mode 100644 Documentation/devicetree/bindings/input/palmas-pwrbutton.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-palmas.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/palmas.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/palmas-pmic.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/palmas-rtc.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/palmas-wdt.txt
+ create mode 100644 drivers/clk/clk-palmas.c
+ create mode 100644 drivers/leds/leds-palmas.c
+ create mode 100644 drivers/watchdog/palmas_wdt.c
