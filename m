@@ -1,47 +1,42 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH V2 2/2] of: remove /proc/device-tree
-Date: Fri, 22 Mar 2013 20:29:18 +0100
-Message-ID: <1363980558.11644.8.camel@pasglop>
-References: <1363865097-32764-1-git-send-email-grant.likely@secretlab.ca>
-	 <1363865097-32764-3-git-send-email-grant.likely@secretlab.ca>
-	 <1363870366.3312.1.camel@pasglop>
-	 <CACxGe6vSywW_iekAKmDMf5_TLLt5Hn+Jttq8kddq3vJ=AE+DQA@mail.gmail.com>
-	 <CACxGe6uCKRH8jcGJW+oYt+T33XT_MGzaxmtkNdekMooGqBYTEw@mail.gmail.com>
-	 <514C9CF1.7060505@linux.vnet.ibm.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 5/5] arm: dts: Convert mvebu device tree files to 64 bits
+Date: Fri, 22 Mar 2013 19:33:16 +0000
+Message-ID: <201303221933.16426.arnd@arndb.de>
+References: <1363883179-1361-1-git-send-email-gregory.clement@free-electrons.com>
+ <20130322062854.GS21478@lunn.ch>
+ <20130322174300.GA10230@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <514C9CF1.7060505@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, David Miller <davem@davemloft.net>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130322174300.GA10230-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2013-03-22 at 13:03 -0500, Nathan Fontenot wrote:
-> We don't ever free old property values, mainly I assume since we don't keep
-> reference counts and can't know when it is safe to do so. The problem I
-> am starting to see on pseries is that we are getting very large properties.
-> One of the biggest culprits is the property on pseries systems to describe
-> the memory on the system in the device tree. These are big and getting
-> bigger as memory increases, additionally this property is update every
-> time memory is DLPAR added or removed from the system which can lead to
-> leaving a bunch of memory that should be free'ed.
-> 
-> Given that, is there (or has there been) any discussion on adding reference
-> counts to properties in the device tree? With the myriad ways to get at
-> the value of a property this may not be feasible but I would like to hear
-> any thoughts from the community.
+On Friday 22 March 2013, Jason Gunthorpe wrote:
+> At a certain point low mem exhaustion becomes a serious issue for
+> Linux, a system that can't DMA to 85% of its memory is incredibly
+> broken, IMHO.
 
-My assumption was always that the lifetime of property values is tied
-the the lifetime of the node they are in. IE, we wouldn't free a
-property removed from a node but we could free all properties when
-the node goes away...
+A lot of workloads will also suffer from lowmem exhaustion even without
+the DMA zone problem. If course the combination is particularly nasty
+because now the kernel has a to kmap() a user page in order to copy the
+dma data in and out of lowmem.
 
-Not the best but would do...
+I'm sure there are even workloads that perform well with more than
+16GB, but I can't think of any right now. I would expect that 4 or 8 GB
+is where it gets quite silly for most workloads, but troubles start as
+soon as you go beyond 1GB.
 
-refcount of properties, well ... Grant, do we get kobjects for them with
-the sysfs stuff ? That could do the trick...
-
-Ben.
- 
+	Arnd
