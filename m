@@ -1,145 +1,211 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3] gpio: mcp23s08: convert driver to DT
-Date: Fri, 22 Mar 2013 09:33:10 +0100
-Message-ID: <CACRpkdYYsULLsDQuxoRHp=HXsaOAejwaO-CezdEK4sNprWpDYQ@mail.gmail.com>
-References: <1362414873-17676-1-git-send-email-larsi@wh2.tu-dresden.de>
+From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 02/17] of_spi: add generic binding support to specify cs gpio
+Date: Fri, 22 Mar 2013 17:16:54 +0800
+Message-ID: <1363943814-16130-1-git-send-email-wenyou.yang@atmel.com>
+References: <1363943767-16051-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1362414873-17676-1-git-send-email-larsi@wh2.tu-dresden.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars Poeschel <larsi@wh2.tu-dresden.de>, Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: poeschel@lemonage.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1363943767-16051-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: andy.gao-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
+Cc: richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lars,
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 
-sorry for taking eternities to review stuff :-(
+This will allow to use gpio for chip select with no modification in the
+driver binding
 
-I recommend that you include SPI co-maintainer Mark Brown on subsequent
-postings.
+When use the cs-gpios, the gpio number will be passed via the cs_gpio field
+and the number of chip select will automatically increased.
 
-On Mon, Mar 4, 2013 at 5:34 PM, Lars Poeschel <larsi@wh2.tu-dresden.de> wrote:
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Cc: rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
+Cc: richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+---
+ Documentation/devicetree/bindings/spi/spi-bus.txt |    6 +++
+ drivers/spi/spi.c                                 |   55 +++++++++++++++++++--
+ include/linux/spi/spi.h                           |    3 ++
+ 3 files changed, 61 insertions(+), 3 deletions(-)
 
-> This converts the mcp23s08 driver to be able to be used with device
-> tree.
+diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+index e782add..c253379 100644
+--- a/Documentation/devicetree/bindings/spi/spi-bus.txt
++++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+@@ -12,6 +12,7 @@ The SPI master node requires the following properties:
+ - #size-cells     - should be zero.
+ - compatible      - name of SPI bus controller following generic names
+     		recommended practice.
++- cs-gpios	  - (optional) gpios chip select.
+ No other properties are required in the SPI bus node.  It is assumed
+ that a driver for an SPI bus device will understand that it is an SPI bus.
+ However, the binding does not attempt to define the specific method for
+@@ -21,6 +22,8 @@ assumption that board specific platform code will be used to manage
+ chip selects.  Individual drivers can define additional properties to
+ support describing the chip select layout.
+ 
++If cs-gpios is used the number of chip select will automatically increased.
++
+ SPI slave nodes must be children of the SPI master node and can
+ contain the following properties.
+ - reg             - (required) chip select address of device.
+@@ -34,6 +37,9 @@ contain the following properties.
+ - spi-cs-high     - (optional) Empty property indicating device requires
+     		chip select active high
+ 
++If a gpio chipselect is used for the SPI slave the gpio number will be passed
++via the controller_data
++
+ SPI example for an MPC5200 SPI bus:
+ 	spi@f00 {
+ 		#address-cells = <1>;
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 84c2861..74e6577 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -30,6 +30,7 @@
+ #include <linux/slab.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/spi/spi.h>
++#include <linux/of_gpio.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/export.h>
+ #include <linux/sched.h>
+@@ -327,6 +328,7 @@ struct spi_device *spi_alloc_device(struct spi_master *master)
+ 	spi->dev.parent = &master->dev;
+ 	spi->dev.bus = &spi_bus_type;
+ 	spi->dev.release = spidev_release;
++	spi->cs_gpio = -EINVAL;
+ 	device_initialize(&spi->dev);
+ 	return spi;
+ }
+@@ -344,15 +346,16 @@ EXPORT_SYMBOL_GPL(spi_alloc_device);
+ int spi_add_device(struct spi_device *spi)
+ {
+ 	static DEFINE_MUTEX(spi_add_lock);
+-	struct device *dev = spi->master->dev.parent;
++	struct spi_master *master = spi->master;
++	struct device *dev = master->dev.parent;
+ 	struct device *d;
+ 	int status;
+ 
+ 	/* Chipselects are numbered 0..max; validate. */
+-	if (spi->chip_select >= spi->master->num_chipselect) {
++	if (spi->chip_select >= master->num_chipselect) {
+ 		dev_err(dev, "cs%d >= max %d\n",
+ 			spi->chip_select,
+-			spi->master->num_chipselect);
++			master->num_chipselect);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -376,6 +379,9 @@ int spi_add_device(struct spi_device *spi)
+ 		goto done;
+ 	}
+ 
++	if (master->cs_gpios)
++		spi->cs_gpio = master->cs_gpios[spi->chip_select];
++
+ 	/* Drivers may modify this initial i/o setup, but will
+ 	 * normally rely on the device being setup.  Devices
+ 	 * using SPI_CS_HIGH can't coexist well otherwise...
+@@ -946,6 +952,45 @@ struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
+ }
+ EXPORT_SYMBOL_GPL(spi_alloc_master);
+ 
++#ifdef CONFIG_OF
++static int of_spi_register_master(struct spi_master *master)
++{
++	int nb, i;
++	int *cs;
++	struct device_node *np = master->dev.of_node;
++
++	if (!np)
++		return 0;
++
++	nb = of_gpio_named_count(np, "cs-gpios");
++
++	if (nb < 1)
++		return 0;
++
++	cs = devm_kzalloc(&master->dev,
++			  sizeof(int) * (master->num_chipselect + nb),
++			  GFP_KERNEL);
++	master->cs_gpios = cs;
++
++	if (!master->cs_gpios)
++		return -ENOMEM;
++
++	memset(cs, -EINVAL, master->num_chipselect);
++	cs += master->num_chipselect;
++	master->num_chipselect += nb;
++
++	for (i = 0; i < nb; i++)
++		cs[i] = of_get_named_gpio(np, "cs-gpios", i);
++
++	return 0;
++}
++#else
++static int of_spi_register_master(struct spi_master *master)
++{
++	return 0;
++}
++#endif
++
+ /**
+  * spi_register_master - register SPI master controller
+  * @master: initialized master, originally from spi_alloc_master()
+@@ -977,6 +1022,10 @@ int spi_register_master(struct spi_master *master)
+ 	if (!dev)
+ 		return -ENODEV;
+ 
++	status = of_spi_register_master(master);
++	if (status)
++		return status;
++
+ 	/* even if it's just one always-selected device, there must
+ 	 * be at least one chipselect
+ 	 */
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index fa702ae..f629189 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -90,6 +90,7 @@ struct spi_device {
+ 	void			*controller_state;
+ 	void			*controller_data;
+ 	char			modalias[SPI_NAME_SIZE];
++	int			cs_gpio;	/* chip select gpio */
+ 
+ 	/*
+ 	 * likely need more hooks for more protocol options affecting how
+@@ -362,6 +363,8 @@ struct spi_master {
+ 	int (*transfer_one_message)(struct spi_master *master,
+ 				    struct spi_message *mesg);
+ 	int (*unprepare_transfer_hardware)(struct spi_master *master);
++	/* gpio chip select */
++	int			*cs_gpios;
+ };
+ 
+ static inline void *spi_master_get_devdata(struct spi_master *master)
+-- 
+1.7.9.5
 
-OK!
 
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
-> @@ -0,0 +1,43 @@
-> +Microchip MCP2308/MCP23S08/MCP23017/MCP23S17 driver for
-> +8-/16-bit I/O expander with serial interface (I2C/SPI)
-> +
-> +Required properties:
-> +- compatible : Should be
-> +    - "mcp,mcp23s08" for  8 GPIO SPI version
-> +    - "mcp,mcp23s17" for 16 GPIO SPI version
-> +    - "mcp,mcp23008" for  8 GPIO I2C version or
-> +    - "mcp,mcp23017" for 16 GPIO I2C version of the chip
-> +- #gpio-cells : Should be two.
-> +  - first cell is the pin number
-> +  - second cell is used to specify flags. Flags currently used:
-> +    bit0 : activate a ~100k pullup
-
-Pullup is basically about pin config. This is sort of sneaking
-behind the subsystems, but I know I might be overzealous.
-
-Can the electronics do more things than pull-up?
-
-Like pull-down, open drain, drive strength...
-
-If it's a lot it's better to consider pinctrl from the start.
-I'm saying this because the DT bindings will be maintained
-perpetually and need to set a good example.
-
-I would currently feel a lot better if you did not include this
-flag. How would you control this the day drivers need to
-enable/disable pull-up at runtime?
-
-> +- gpio-controller : Marks the device node as a GPIO controller.
-> +- reg : For an address on its bus
-
-On the I2C/SPI bus?
-
-Please state here what kind of buses it can be. Explain if multiple
-buses are supported.
-
-> +Required device specific properties (only for SPI chips):
-> +- mcp,spi-present-mask : This is a present flag, that makes only sense for SPI
-> +        chips - as the name suggests.
-
-AFAIK this is not how we disable/enable devices in the device tree.
-
-Istead we include a property on the node called "status" and set it
-to "disabled" if the device is not there.
-
-> +        Multiple chips can share the same
-> +        SPI chipselect. Set bit 0-7 in this mask to 1 if there is a chip
-> +        connected with this spi address. If you have a chip with address 3
-> +        connected, you have to set bit3 to 1, which is 0x08. mcp23s08 only
-> +        supports bits 0-3. It is not possible to mix mcp23s08 and mcp23s17
-> +        on the same chipselect. Set at least one bit to 1 for SPI chips.
-
-This looks awkward, why are you using a bitfield for this? Then you
-can only ever support 8 devices, since the text also implies that the
-value is 8bit (this should be stated).
-
-What about just using a number?
-
-> diff --git a/drivers/gpio/gpio-mcp23s08.c b/drivers/gpio/gpio-mcp23s08.c
-> index 3cea0ea..a8ca469 100644
-> --- a/drivers/gpio/gpio-mcp23s08.c
-> +++ b/drivers/gpio/gpio-mcp23s08.c
-> @@ -12,6 +12,8 @@
->  #include <linux/spi/mcp23s08.h>
->  #include <linux/slab.h>
->  #include <asm/byteorder.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
->
->  /**
->   * MCP types supported by driver
-> @@ -21,6 +23,11 @@
->  #define MCP_TYPE_008   2
->  #define MCP_TYPE_017   3
->
-> +/**
-> + * Flags used in device tree
-> + */
-> +#define MCP_DT_FLAG_PULLUP 0x01
-
-So I'm sceptical here. Is this already supported using platform data?
-
->  /* Registers are all 8 bits wide.
->   *
->   * The mcp23s17 has twice as many bits, and can be configured to work
-> @@ -75,6 +82,25 @@ struct mcp23s08_driver_data {
->         struct mcp23s08         chip[];
->  };
->
-> +#ifdef CONFIG_OF
-> +static int mcp23s08_of_xlate(struct gpio_chip *gc,
-> +                       const struct of_phandle_args *gpiospec, u32 *flags);
-> +
-> +static int mcp23s08_set_pullup(struct mcp23s08 *mcp, unsigned offset)
-> +{
-> +       int status;
-> +       u16 value;
-> +
-> +       mutex_lock(&mcp->lock);
-> +       value = mcp->cache[MCP_GPPU] | (1 << offset);
-> +       status = mcp->ops->write(mcp, MCP_GPPU, value);
-> +       if (!status)
-> +               mcp->cache[MCP_GPPU] = value;
-> +       mutex_unlock(&mcp->lock);
-> +
-> +       return status;
-> +}
-
-The pull-up business actually looks like new functionality that
-has nothing to do with adding device tree support and should be
-a separate patch.
-
-Yours,
-Linus Walleij
+------------------------------------------------------------------------------
+Everyone hates slow websites. So do we.
+Make your web apps faster with AppDynamics
+Download AppDynamics Lite for free today:
+http://p.sf.net/sfu/appdyn_d2d_mar
