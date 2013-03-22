@@ -1,28 +1,110 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 03/11] ARM: timer-sp: convert to use CLKSRC_OF init
-Date: Fri, 22 Mar 2013 11:49:43 +0000
-Message-ID: <20130322114943.GC4977@n2100.arm.linux.org.uk>
-References: <1363820051-24428-1-git-send-email-robherring2@gmail.com> <1363820051-24428-4-git-send-email-robherring2@gmail.com> <20130321193549.GS4977@n2100.arm.linux.org.uk> <514BC265.7080204@gmail.com>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: [PATCH v8 00/14] Tegra114 clockframework
+Date: Fri, 22 Mar 2013 14:39:17 +0200
+Message-ID: <1363956029-31873-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <514BC265.7080204@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>, linus.walleij@linaro.org, haojian.zhuang@linaro.org, pawel.moll@arm.com, john.stultz@linaro.org, tglx@linutronix.de, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@wwwdotorg.org>, Russell King <linux@arm.linux.org.uk>, Prashant Gaikwad <pgaikwad@nvidia.com>, Simon Glass <sjg@chromium.org>, Rhyland Klein <rklein@nvidia.com>, Pritesh Raithatha <praithatha@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>, Hiroshi Doyu <hdoyu@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, Andrew Chew <achew@nvidia.com>, Mike Turquette <mturquette@linaro.org>, Thierry Reding <thierry.reding@avionic-design.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 21, 2013 at 09:31:01PM -0500, Rob Herring wrote:
-> Perhaps re-writing it like this would be more clear:
-> 
-> if (irq_num == 2){
-> 	__sp804_clockevents_init(base + TIMER_2_BASE, irq, clk1, name);
-> 	__sp804_clocksource_and_sched_clock_init(base, name, clk0, 1);
-> } else {
-> 	__sp804_clockevents_init(base, irq, clk0, name);
-> 	__sp804_clocksource_and_sched_clock_init(base + TIMER_2_BASE,
-> 						name, clk1, 1);
-> }
+This is the eight version of the Tegra114 clockframework. It is based on the
+next-20130320-fixed branch of
+git://nv-tegra.nvidia.com/user/swarren/linux-2.6.git,
+http://patchwork.ozlabs.org/patch/229972/ and
+http://patchwork.ozlabs.org/patch/229978/
 
-Yes, that is definitely much clearer than the original patch.
+It has been boottested on Dalmore and Beaverboard.
+
+Changes from v7:
+
+* Fixed dummy operations
+* Removed some duplicates from the binding document
+* Fixed tegra114_clk enum to be in line with the binding document
+* Removed __initdata from tegra_periph_clk_list and
+  tegra_periph_nodiv_clk_list
+* Mark csite clock as CLK_IGNORE_UNUSED
+* Fixed mux mask for disp1 and disp2
+* Fixed initializations for PLLX, PLLC, PLLC2 and PLCC3
+* Converted clk_pll_wait_for_lock() to use a mask instead of a single bit
+* added TEGRA_PLL_HAS_LOCK_ENABLE flag
+
+Changes from v6:
+
+* Remove clock-frequency from DT serial nodes
+* Remove useless 'cpu' clock from binding documentation
+* Use HW gate control for PLLU divided outputs
+* Fix clock ID for 'd_audio' clock
+* Add dummy cpu car ops to ease making a bisectable series
+
+Changes from v5:
+
+* Add initialization code for PLLC
+* Remove some unnecessary clocks
+* Fix bug in PLL locking refactoring
+* Add super clocks
+* Remove most calls to clk_register_clkdev() for the peripheral clocks
+
+Changes from v4:
+
+* Split the new PLL types patch into smaller patches
+* Fix some bugs in the PLL patches
+
+Changes from v3:
+
+* Merge with for-next branch
+* Provide empty tegra_cpu_car_ops to make SMP boot not crash
+
+Changes from v2:
+
+* Added missing PLLs
+* Added bindings to tegra114.dtsi
+* Moved the table patch for clk-mux.c to 'clk: add table lookup to mux'
+* Bugfixes
+
+Changes from v1:
+
+* Remove SATA and PCIe clocks. They don't appear in the internal TRM, so I
+  assume they don't exist.
+* Rebase on top of Hiroshi's latest Tegra114 patches
+* More generic mux code. This is necessary for the AHUB and DAM clocks.
+
+
+Peter De Schrijver (14):
+  clk: tegra: provide dummy cpu car ops
+  clk: tegra: Refactor PLL programming code
+  clk: tegra: Add TEGRA_PLL_BYPASS flag
+  clk: tegra: introduce TEGRA_PLL_HAS_LOCK_ENABLE
+  clk: tegra: Add PLL post divider table
+  clk: tegra: move from a lock bit idx to a lock mask
+  clk: tegra: Add new fields and PLL types for Tegra114
+  clk: tegra: Add flags to tegra_clk_periph()
+  clk: tegra: Workaround for Tegra114 MSENC problem
+  ARM: tegra: Define Tegra114 CAR binding
+  clk: tegra: Implement clocks for Tegra114
+  clk: tegra: devicetree match for nvidia,tegra114-car
+  ARM: dt: Add references to tegra_car clocks
+  clk: tegra: Remove forced clk_enable of uartd
+
+ .../bindings/clock/nvidia,tegra114-car.txt         |  317 +++
+ arch/arm/boot/dts/tegra114-dalmore.dts             |    1 -
+ arch/arm/boot/dts/tegra114-pluto.dts               |    1 -
+ arch/arm/boot/dts/tegra114.dtsi                    |    8 +-
+ drivers/clk/tegra/Makefile                         |    1 +
+ drivers/clk/tegra/clk-periph-gate.c                |    9 +
+ drivers/clk/tegra/clk-periph.c                     |   11 +-
+ drivers/clk/tegra/clk-pll.c                        | 1194 ++++++++++--
+ drivers/clk/tegra/clk-tegra114.c                   | 2068 ++++++++++++++++++++
+ drivers/clk/tegra/clk-tegra20.c                    |  173 +-
+ drivers/clk/tegra/clk-tegra30.c                    |  265 ++--
+ drivers/clk/tegra/clk.c                            |    4 +-
+ drivers/clk/tegra/clk.h                            |   96 +-
+ 13 files changed, 3789 insertions(+), 359 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/nvidia,tegra114-car.txt
+ create mode 100644 drivers/clk/tegra/clk-tegra114.c
+
+-- 
+1.7.7.rc0.72.g4b5ea.dirty
+
