@@ -1,63 +1,49 @@
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH v10 0/12] Palmas updates
-Date: Sat, 23 Mar 2013 06:04:55 +1100
-Message-ID: <20130323060455.78a4c90c3f1e028434818fd1@canb.auug.org.au>
-References: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v8 00/14] Tegra114 clockframework
+Date: Fri, 22 Mar 2013 13:05:21 -0600
+Message-ID: <514CAB71.7020005@wwwdotorg.org>
+References: <1363956029-31873-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature";
- micalg="PGP-SHA256";
- boundary="Signature=_Sat__23_Mar_2013_06_04_55_+1100_7Olw5O_=bY6EnJIk"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ian Lartey <ian@slimlogic.co.uk>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, rob@landley.net, mturquette@linaro.org, linus.walleij@linaro.org, cooloney@gmail.com, rpurdie@rpsys.net, akpm@linux-foundation.org, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, gg@slimlogic.co.uk, j-keerthy@ti.com, ldewangan@nvidia.com, t-kristo@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1363956029-31873-1-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---Signature=_Sat__23_Mar_2013_06_04_55_+1100_7Olw5O_=bY6EnJIk
-Content-Type: text/plain; charset=US-ASCII
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 03/22/2013 06:39 AM, Peter De Schrijver wrote:
+> This is the eight version of the Tegra114 clockframework. It is based on the
+> next-20130320-fixed branch of
+> git://nv-tegra.nvidia.com/user/swarren/linux-2.6.git,
 
-Hi Ian,
+Hmmm. Basing this on v3.9-rcX would be better, since when I apply it to
+the Tegra tree, that's what it will be based on. Luckily, it applies
+there with trivial conflicts.
 
-On Fri, 22 Mar 2013 14:55:10 +0000 Ian Lartey <ian@slimlogic.co.uk> wrote:
->
-> This patchset adds to the support for the Palmas series of PMIC chips.
->=20
-> Some of the patches have previously been submitted individually.
-> The DT bindings doc has been added first due to comments that it was miss=
-ing.
->=20
-> Patches based on linux-next-20130319
+> http://patchwork.ozlabs.org/patch/229972/ and
+> http://patchwork.ozlabs.org/patch/229978/
 
-I can't really comment on the patch set except to say that you should not
-base on linux-next, you should base on the tree to which you expect the
-patch set to be applied.
+The series,
 
---=20
-Cheers,
-Stephen Rothwell                    sfr@canb.auug.org.au
+Tested-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
---Signature=_Sat__23_Mar_2013_06_04_55_+1100_7Olw5O_=bY6EnJIk
-Content-Type: application/pgp-signature
+(based on my personal next-20130318-fixed branch, without
+http://patchwork.ozlabs.org/patch/229972/ applied, but instead with the
+audio clocks initialized per the patch I posted yesterday to do this).
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+I tested: serial console, eMMC for the root filesystem, audio playback
+using different pll_a rates, reboot, and shutdown.
 
-iQIcBAEBCAAGBQJRTKtXAAoJEECxmPOUX5FE0UQP/0KeuAdMIeoUJESYzR52cQRt
-aykiOFX+2bqP4WysLpghKuqJJKMPtVvVyIiCKtl6KimXgheucQGcAlmYcmHnwIo6
-v3sg+B8wPWBNQOpA+wR8dsly10arpqdQQJ43dyTIpG+4zWD83sSaClKBhj9KuaIn
-Ib8DzbwDOaO3PTyiz8AOWvI4GgqxBhzfzZ2y7heojGPOqvHKy3cMgQMync6vgx7C
-1hTIbOq54KY7OsCBvkZoshGhqRD0DxYrDb3EJFt9ogpGQZx0pLIoUy9AqWgpgHN3
-CXBsy0+QKRjNImOu6za3T1d/vH/SVoupRlvzWxaNeKm285/JnZ9JrCJBKq7uR66i
-4ekE7kpVih0nrN7AGAOFIaSYVYJOroXzrbKBmFqhgTSch0xUTSkYqB6OgOrCbyzg
-cZ3E6kFwEv8tkvFsUEmvFHUnShs9ig8vY4Ria0/UG/IooswCMzxzzyb4Oe1MBi6J
-DEMcjZMUgPhvkwiIx0K4fZVUOg8ejg5Dsm85LPW8vCH9+IWxZkToOxt5dqGWOZNY
-I/RsZa6KiCrPIDn/b0kzsCiW4R1eDgAYG9esZJtD24FjAxy4hz23bIhBGCnyQSGy
-XCNKg7Y7dTldlE3b0NeymXKmCSqB1oVzhYvfsYwTkBEM9Ndn8Xcx3PLkUJuCz+04
-flX7Y1oRx47xFh6o8Ajm
-=vdaI
------END PGP SIGNATURE-----
-
---Signature=_Sat__23_Mar_2013_06_04_55_+1100_7Olw5O_=bY6EnJIk--
+This version also solves the hard hang I was seeing with V7 during
+shutdown or reboot. Now I don't have to rely on my filesystem journal:-)
