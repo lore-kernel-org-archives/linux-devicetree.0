@@ -1,211 +1,126 @@
-From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 02/17] of_spi: add generic binding support to specify cs gpio
-Date: Fri, 22 Mar 2013 17:16:54 +0800
-Message-ID: <1363943814-16130-1-git-send-email-wenyou.yang@atmel.com>
-References: <1363943767-16051-1-git-send-email-wenyou.yang@atmel.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 5/6] ARM: dts: omap: update usb_otg_hs data
+Date: Fri, 22 Mar 2013 14:50:05 +0530
+Message-ID: <514C2245.4080506@ti.com>
+References: <1363770725-13717-1-git-send-email-kishon@ti.com>
+ <1363770725-13717-6-git-send-email-kishon@ti.com>
+ <514A233F.8010105@wwwdotorg.org> <514AA74D.9070506@ti.com>
+ <514B3EEF.3080705@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1363943767-16051-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: andy.gao-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
-Cc: richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <514B3EEF.3080705-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Hi,
 
-This will allow to use gpio for chip select with no modification in the
-driver binding
+On Thursday 21 March 2013 10:40 PM, Stephen Warren wrote:
+> On 03/21/2013 12:23 AM, kishon wrote:
+>> Hi,
+>>
+>> On Thursday 21 March 2013 02:29 AM, Stephen Warren wrote:
+>>> On 03/20/2013 03:12 AM, Kishon Vijay Abraham I wrote:
+>>>> Updated the usb_otg_hs dt data to include the *phy* and *phy-names*
+>>>> binding in order for the driver to use the new generic PHY framework.
+>>>> Also updated the Documentation to include the binding information.
+>>>
+>>>> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt
+>>>> b/Documentation/devicetree/bindings/usb/omap-usb.txt
+>>>> index abce256..3d6f9f6 100644
+>>>> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
+>>>> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
+>>>> @@ -19,6 +19,9 @@ OMAP MUSB GLUE
+>>>>     - power : Should be "50". This signifies the controller can supply
+>>>> upto
+>>>>       100mA when operating in host mode.
+>>>>     - usb-phy : the phandle for the PHY device
+>>>> + - phy : the phandle for the PHY device (used by generic PHY framework)
+>>>> + - phy-names : the names of the PHY corresponding to the PHYs
+>>>> present in the
+>>>> +   *phy* phandle.
+>>>
+>>> If the intent is for those properties to be generic and used by any DT
+>>> binding that refers to a PHY node, I think you'd want to define those
+>>> properties in e.g. Documentation/devicetree/bindings/phy/phy.txt, just
+>>> like common clock/GPIO/... properties are defined in standalone common
+>>> files.
+>>
+>> Ok. Will add it.
+>>>
+>>> I think you want to require that DT nodes that represent PHYs have a
+>>> #phy-cells property, and that the format of the phy property be
+>>> <&phy_phandle phy_specifier*>, where #phy-cells in the referenced node
+>>> defines how many cells are part of phy_specifier*, just like (almost)
+>>> any other DT property that references another node by phandle. That way,
+>>> if a single DT node represents a HW block that implements e.g. 3 PHYs,
+>>> it can use #phy-cells = <1>, and the referencing phy property can
+>>> include a cell that indicates which of those 3 PHYs is being referenced.
+>>
+>> Currently, if a single phandle have reference to multiple PHYs, we can
+>> get PHY by passing index or by name as give in phy-names.
+>> I'm not sure if we have <&phy_phandle phy_specifier*>, what could that
+>> phy_specifier be? Maybe phy_type?
+>
+> I'm not talking about the case where a consumer node references multiple
+> PHYs. As you say, that is indeed handled by the driver looking at a
+> particular index in the phys property, or using phy-names.
+>
+> I'm talking about the case where a single provider provides multiple
+> PHYs. For example, consider:
+>
+> phys: phy {
+>      compatible = "xxx";
+>      reg = <...>;
+>      #phy-cells = <1>;
+> };
+>
+> That node describes an IP block that implements 3 different PHYs. The
+> registers are inter-mixed in such a way that you can't split it into 3
+> separate nodes each with a separate device instance. If the consumers
+> simply say:
+>
+> phys = <&phys>;
+>
+> then which of the 3 PHYs are you referring to?
+>
+> Instead, the consumer needs to say one of:
+>
+> phys = <&phys 0>;
+> phys = <&phys 1>;
+> phys = <&phys 2>;
+>
+> in order to specify which of the PHYs it refers to.
+>
+> The number of cells in the phy property after the phandle is specified
+> by the #phy-cells property in the node referred to by the phandle. The
+> meaning of all those cells is defined by the binding for the phy node.
+> This could include both the PHY ID (as in my example here), or whatever
+> configuration information or flags the provider needs. For example, both
+> GPIOs and interrupts have specifiers than describe both of these things.
 
-When use the cs-gpios, the gpio number will be passed via the cs_gpio field
-and the number of chip select will automatically increased.
+Thanks for the explanation. I'll add it in my next version.
+>
+> For more background, take a look at almost any other binding that uses
+> phandles.
+>
+> By the way, the property in the consumer should probably be "phys" not
+> "phy" to be consistent with other similar properties (e.g. gpios,
+> interrupts, ... which are all plural).
+>
+Ok.
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
-Cc: rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
-Cc: richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
----
- Documentation/devicetree/bindings/spi/spi-bus.txt |    6 +++
- drivers/spi/spi.c                                 |   55 +++++++++++++++++++--
- include/linux/spi/spi.h                           |    3 ++
- 3 files changed, 61 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-index e782add..c253379 100644
---- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-@@ -12,6 +12,7 @@ The SPI master node requires the following properties:
- - #size-cells     - should be zero.
- - compatible      - name of SPI bus controller following generic names
-     		recommended practice.
-+- cs-gpios	  - (optional) gpios chip select.
- No other properties are required in the SPI bus node.  It is assumed
- that a driver for an SPI bus device will understand that it is an SPI bus.
- However, the binding does not attempt to define the specific method for
-@@ -21,6 +22,8 @@ assumption that board specific platform code will be used to manage
- chip selects.  Individual drivers can define additional properties to
- support describing the chip select layout.
- 
-+If cs-gpios is used the number of chip select will automatically increased.
-+
- SPI slave nodes must be children of the SPI master node and can
- contain the following properties.
- - reg             - (required) chip select address of device.
-@@ -34,6 +37,9 @@ contain the following properties.
- - spi-cs-high     - (optional) Empty property indicating device requires
-     		chip select active high
- 
-+If a gpio chipselect is used for the SPI slave the gpio number will be passed
-+via the controller_data
-+
- SPI example for an MPC5200 SPI bus:
- 	spi@f00 {
- 		#address-cells = <1>;
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 84c2861..74e6577 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -30,6 +30,7 @@
- #include <linux/slab.h>
- #include <linux/mod_devicetable.h>
- #include <linux/spi/spi.h>
-+#include <linux/of_gpio.h>
- #include <linux/pm_runtime.h>
- #include <linux/export.h>
- #include <linux/sched.h>
-@@ -327,6 +328,7 @@ struct spi_device *spi_alloc_device(struct spi_master *master)
- 	spi->dev.parent = &master->dev;
- 	spi->dev.bus = &spi_bus_type;
- 	spi->dev.release = spidev_release;
-+	spi->cs_gpio = -EINVAL;
- 	device_initialize(&spi->dev);
- 	return spi;
- }
-@@ -344,15 +346,16 @@ EXPORT_SYMBOL_GPL(spi_alloc_device);
- int spi_add_device(struct spi_device *spi)
- {
- 	static DEFINE_MUTEX(spi_add_lock);
--	struct device *dev = spi->master->dev.parent;
-+	struct spi_master *master = spi->master;
-+	struct device *dev = master->dev.parent;
- 	struct device *d;
- 	int status;
- 
- 	/* Chipselects are numbered 0..max; validate. */
--	if (spi->chip_select >= spi->master->num_chipselect) {
-+	if (spi->chip_select >= master->num_chipselect) {
- 		dev_err(dev, "cs%d >= max %d\n",
- 			spi->chip_select,
--			spi->master->num_chipselect);
-+			master->num_chipselect);
- 		return -EINVAL;
- 	}
- 
-@@ -376,6 +379,9 @@ int spi_add_device(struct spi_device *spi)
- 		goto done;
- 	}
- 
-+	if (master->cs_gpios)
-+		spi->cs_gpio = master->cs_gpios[spi->chip_select];
-+
- 	/* Drivers may modify this initial i/o setup, but will
- 	 * normally rely on the device being setup.  Devices
- 	 * using SPI_CS_HIGH can't coexist well otherwise...
-@@ -946,6 +952,45 @@ struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
- }
- EXPORT_SYMBOL_GPL(spi_alloc_master);
- 
-+#ifdef CONFIG_OF
-+static int of_spi_register_master(struct spi_master *master)
-+{
-+	int nb, i;
-+	int *cs;
-+	struct device_node *np = master->dev.of_node;
-+
-+	if (!np)
-+		return 0;
-+
-+	nb = of_gpio_named_count(np, "cs-gpios");
-+
-+	if (nb < 1)
-+		return 0;
-+
-+	cs = devm_kzalloc(&master->dev,
-+			  sizeof(int) * (master->num_chipselect + nb),
-+			  GFP_KERNEL);
-+	master->cs_gpios = cs;
-+
-+	if (!master->cs_gpios)
-+		return -ENOMEM;
-+
-+	memset(cs, -EINVAL, master->num_chipselect);
-+	cs += master->num_chipselect;
-+	master->num_chipselect += nb;
-+
-+	for (i = 0; i < nb; i++)
-+		cs[i] = of_get_named_gpio(np, "cs-gpios", i);
-+
-+	return 0;
-+}
-+#else
-+static int of_spi_register_master(struct spi_master *master)
-+{
-+	return 0;
-+}
-+#endif
-+
- /**
-  * spi_register_master - register SPI master controller
-  * @master: initialized master, originally from spi_alloc_master()
-@@ -977,6 +1022,10 @@ int spi_register_master(struct spi_master *master)
- 	if (!dev)
- 		return -ENODEV;
- 
-+	status = of_spi_register_master(master);
-+	if (status)
-+		return status;
-+
- 	/* even if it's just one always-selected device, there must
- 	 * be at least one chipselect
- 	 */
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index fa702ae..f629189 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -90,6 +90,7 @@ struct spi_device {
- 	void			*controller_state;
- 	void			*controller_data;
- 	char			modalias[SPI_NAME_SIZE];
-+	int			cs_gpio;	/* chip select gpio */
- 
- 	/*
- 	 * likely need more hooks for more protocol options affecting how
-@@ -362,6 +363,8 @@ struct spi_master {
- 	int (*transfer_one_message)(struct spi_master *master,
- 				    struct spi_message *mesg);
- 	int (*unprepare_transfer_hardware)(struct spi_master *master);
-+	/* gpio chip select */
-+	int			*cs_gpios;
- };
- 
- static inline void *spi_master_get_devdata(struct spi_master *master)
--- 
-1.7.9.5
-
-
-------------------------------------------------------------------------------
-Everyone hates slow websites. So do we.
-Make your web apps faster with AppDynamics
-Download AppDynamics Lite for free today:
-http://p.sf.net/sfu/appdyn_d2d_mar
+Thanks
+Kishon
