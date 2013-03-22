@@ -1,127 +1,74 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Subject: Re: [PATCH v5 01/17] of/pci: Provide support for parsing PCI DT
  ranges property
-Date: Fri, 22 Mar 2013 11:12:39 +0100
-Message-ID: <20130322101238.GA22929@avionic-0098.mockup.avionic-design.de>
+Date: Fri, 22 Mar 2013 11:20:59 +0100
+Message-ID: <20130322112059.35675858@skate>
 References: <1363887025-19931-1-git-send-email-thomas.petazzoni@free-electrons.com>
  <1363887025-19931-2-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20130322101238.GA22929@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="y0ulUmNC+osPPQO6"
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1363887025-19931-2-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130322101238.GA22929-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---y0ulUmNC+osPPQO6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, 22 Mar 2013 11:12:39 +0100, Thierry Reding wrote:
 
-On Thu, Mar 21, 2013 at 06:30:09PM +0100, Thomas Petazzoni wrote:
-> From: Andrew Murray <Andrew.Murray@arm.com>
->=20
-> This patch factors out common implementations patterns to reduce overall =
-kernel
-> code and provide a means for host bridge drivers to directly obtain struct
-> resources from the DT's ranges property without relying on architecture s=
-pecific
-> DT handling. This will make it easier to write archiecture independent ho=
-st bridge
-> drivers and mitigate against further duplication of DT parsing code.
->=20
-> This patch can be used in the following way:
->=20
-> 	struct of_pci_range_iter iter;
-> 	for_each_of_pci_range(&iter, np) {
->=20
-> 		//directly access properties of the address range, e.g.:
-> 		//iter.pci_space, iter.pci_addr, iter.cpu_addr, iter.size or
-> 		//iter.flags
->=20
-> 		//alternatively obtain a struct resource, e.g.:
-> 		//struct resource res;
-> 		//range_iter_fill_resource(iter, np, res);
+> This sounds like you're trying to do too much within the for loop. When
+> we discussed this previously I had a vague idea that this functionality
+> could be wrapped into something a bit more object-like.
+> 
+> What I had in mind was something like:
+> 
+> 	struct of_pci_range_parser;
+> 	struct of_pci_range;
+> 
+> 	struct of_pci_range_parser parser;
+> 	struct of_pci_range range;
+> 
+> 	err = of_pci_range_parser(&parser, np);
+> 	if (err < 0)
+> 		return err;
+> 
+> 	for_each_of_pci_range(range, parser) {
+> 		struct resource res;
+> 
+> 		...
+> 		usage of range similar to iterator
+> 		...
+> 
+> 		of_pci_range_to_resource(&res, &range);
 > 	}
->=20
-> Additionally the implementation takes care of adjacent ranges and merges =
-them
-> into a single range (as was the case with powerpc and microblaze).
->=20
-> The modifications to microblaze, mips and powerpc have not been tested.
->=20
-> Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
-> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> ---
->=20
-> Compared to the v2 sent by Andrew Murray, Thomas Petazzoni did:
->=20
->  * Add a memset() on the struct of_pci_range_iter when starting the
->    for loop in for_each_pci_range(). Otherwise, with an uninitialized
->    of_pci_range_iter, of_pci_process_ranges() may crash.
+> 
+> In the above the of_pci_range structure pretty much replaces the
+> iterator and the whole is wrapped up within a parser structure to give
+> some extra flexibility and provides for easier (or more structured)
+> setup compared to doing all of it within the loop statement.
+> 
+> But aside from the (perceived?) increased robustness there's not a lot
+> of technical benefit over your implementation, so it isn't a very hard
+> objection. I find it to be a little more encapsulated and therefore
+> easier to work with, but that's possibly just a matter of taste.
 
-This sounds like you're trying to do too much within the for loop. When
-we discussed this previously I had a vague idea that this functionality
-could be wrapped into something a bit more object-like.
+I don't have a strong opinion on this. Andrew, what do you think?
 
-What I had in mind was something like:
-
-	struct of_pci_range_parser;
-	struct of_pci_range;
-
-	struct of_pci_range_parser parser;
-	struct of_pci_range range;
-
-	err =3D of_pci_range_parser(&parser, np);
-	if (err < 0)
-		return err;
-
-	for_each_of_pci_range(range, parser) {
-		struct resource res;
-
-		...
-		usage of range similar to iterator
-		...
-
-		of_pci_range_to_resource(&res, &range);
-	}
-
-In the above the of_pci_range structure pretty much replaces the
-iterator and the whole is wrapped up within a parser structure to give
-some extra flexibility and provides for easier (or more structured)
-setup compared to doing all of it within the loop statement.
-
-But aside from the (perceived?) increased robustness there's not a lot
-of technical benefit over your implementation, so it isn't a very hard
-objection. I find it to be a little more encapsulated and therefore
-easier to work with, but that's possibly just a matter of taste.
-
-Thierry
-
---y0ulUmNC+osPPQO6
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRTC6WAAoJEN0jrNd/PrOhoCEP/2gGHiGUxvw3J4ohvti+uDj7
-9q08Ky1GaVqpmTz02W7qMLoTv5AKxuNmz7ufWl5q6T4kdZtvMU5MLYrDCEtMu1mQ
-/DtGtT4im+k2UvM2ZXP46dTlwpbgmJSjQOzdGMUKEvzwdrXhD//KEV6apV/Jasgg
-AxqGb2F1NMf2UXn+fdhfLwKtFDMyF/kUfPP6NRSGV9s5Dz8AJRmvGr4Jl/8W7rF3
-TLsPa61k8XplyqpSysQ2VNzKsZLh+ztaANd6t861YHO4vncp7onXT37Yu1bFuWN7
-gFyWfnUinOCIP9/pE90dQkE2j8IvOfur6ZBbCTDnLx8cPCCAIXKWugNQUARmptkq
-Gv0nBzoY+a55dDL9eLOJLDY2UsRwDtY7+dpBslyyRflct2K/0BSkMZGtnHEiNWcA
-pRnfw/VdjbbK6ej+cwvloacRvlxKtNe5XNfZzqNSqhuu7OKz7yMd5PeHF4IaaDNb
-tfGHrvGHb+nOELzQgEp0ODj5ppchHGvuMJchmCK3NEVqC0R8PmfVX991QPbskDun
-4dL7wJsLxmppPwUjt5rs7ANTBvBY67TQBbxmt2OjoADLB4uKOkFushkSM3+sjQmi
-x2KBDGaXwAFH5HiLzXd5IDUEvoiBuPMzdvEWXHna4cwFfU8Xp3KI+gt738m10iuE
-ILDoPSsJNKq3cNuSXMal
-=08CP
------END PGP SIGNATURE-----
-
---y0ulUmNC+osPPQO6--
+Thomas
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
