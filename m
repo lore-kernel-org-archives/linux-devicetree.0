@@ -1,62 +1,199 @@
 From: Ian Lartey <ian@slimlogic.co.uk>
-Subject: [PATCH v9 04/11] watchdog: Kconfig for Palmas watchdog
-Date: Fri, 22 Mar 2013 13:36:06 +0000
-Message-ID: <1363959373-10671-5-git-send-email-ian@slimlogic.co.uk>
+Subject: [PATCH v9 05/11] gpio: palmas: add in GPIO support for palmas charger
+Date: Fri, 22 Mar 2013 13:36:07 +0000
+Message-ID: <1363959373-10671-6-git-send-email-ian@slimlogic.co.uk>
 References: <1363959373-10671-1-git-send-email-ian@slimlogic.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1363959373-10671-1-git-send-email-ian@slimlogic.co.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: linux-doc@vger.kernel.org, linus.walleij@linaro.org, grant.likely@secretlab.ca, wim@iguana.be, ldewangan@nvidia.com, gg@slimlogic.co.uk, linux-leds@vger.kernel.org, sfr@canb.auug.org.au, mturquette@linaro.org, sameo@linux.intel.com, linux-watchdog@vger.kernel.org, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, cooloney@gmail.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, j-keerthy@ti.com, broonie@opensource.wolfsonmicro.com, lgirdwood@gmail.com, t-kristo@ti.com, rpurdie@rpsys.net, rob@landley.net, akpm@linux-foundation.org
+Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, rob@landley.net, mturquette@linaro.org, linus.walleij@linaro.org, cooloney@gmail.com, sfr@canb.auug.org.au, rpurdie@rpsys.net, akpm@linux-foundation.org, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, gg@slimlogic.co.uk, j-keerthy@ti.com, ldewangan@nvidia.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Add the Kconfig and Makefile for the Palmas watchdog driver
+Palmas charger has 16 GPIOs
+add palmas_gpio_[read|write|update] api to take account
+second bank of GPIOs
 
 Signed-off-by: Ian Lartey <ian@slimlogic.co.uk>
 Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
 ---
- drivers/watchdog/Kconfig  |    8 ++++++++
- drivers/watchdog/Makefile |    1 +
- 2 files changed, 9 insertions(+), 0 deletions(-)
+ drivers/gpio/gpio-palmas.c |   77 ++++++++++++++++++++++++++++++++++++--------
+ include/linux/mfd/palmas.h |   12 ++++++-
+ 2 files changed, 74 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 9fcc70c..d48cb0e 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -103,6 +103,14 @@ config WM8350_WATCHDOG
- 	  Support for the watchdog in the WM8350 AudioPlus PMIC.  When
- 	  the watchdog triggers the system will be reset.
+diff --git a/drivers/gpio/gpio-palmas.c b/drivers/gpio/gpio-palmas.c
+index e3a4e56..636648c 100644
+--- a/drivers/gpio/gpio-palmas.c
++++ b/drivers/gpio/gpio-palmas.c
+@@ -1,7 +1,7 @@
+ /*
+- * TI Palma series PMIC's GPIO driver.
++ * TI Palmas series PMIC's GPIO driver.
+  *
+- * Copyright (c) 2012, NVIDIA CORPORATION.  All rights reserved.
++ * Copyright (c) 2012-2012, NVIDIA CORPORATION.  All rights reserved.
+  *
+  * Author: Laxman Dewangan <ldewangan@nvidia.com>
+  *
+@@ -31,6 +31,36 @@ struct palmas_gpio {
+ 	struct palmas *palmas;
+ };
  
-+config PALMAS_WATCHDOG
-+	tristate "Palmas Watchdog"
-+	depends on MFD_PALMAS
-+	select WATCHDOG_CORE
-+	help
-+	  Support for the watchdog in the Palmas family of PMICs. When the
-+	  watchdog times out system will be reset.
++static int palmas_gpio_read(struct palmas *palmas, unsigned int reg,
++		int gpio, unsigned int *dest)
++{
++	/* registers for second bank are identical and offset by 0x9 */
++	if (gpio > 7)
++		reg += PALMAS_GPIO_DATA_IN2;
 +
- # ALPHA Architecture
++	return palmas_read(palmas, PALMAS_GPIO_BASE, reg, dest);
++}
++
++static int palmas_gpio_write(struct palmas *palmas, unsigned int reg,
++		int gpio, unsigned int data)
++{
++	/* registers for second bank are identical and offset by 0x9 */
++	if (gpio > 7)
++		reg += PALMAS_GPIO_DATA_IN2;
++
++	return palmas_write(palmas, PALMAS_GPIO_BASE, reg, data);
++}
++
++static int palmas_gpio_update_bits(struct palmas *palmas, unsigned int reg,
++		int gpio, unsigned int mask, unsigned int data)
++{
++	/* registers for second bank are identical and offset by 0x9 */
++	if (gpio > 7)
++		reg += PALMAS_GPIO_DATA_IN2;
++
++	return palmas_update_bits(palmas, PALMAS_GPIO_BASE, reg, mask, data);
++}
++
+ static inline struct palmas_gpio *to_palmas_gpio(struct gpio_chip *chip)
+ {
+ 	return container_of(chip, struct palmas_gpio, gpio_chip);
+@@ -43,12 +73,12 @@ static int palmas_gpio_get(struct gpio_chip *gc, unsigned offset)
+ 	unsigned int val;
+ 	int ret;
  
- # ARM Architecture
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index a300b94..e845c21 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -171,3 +171,4 @@ obj-$(CONFIG_WM831X_WATCHDOG) += wm831x_wdt.o
- obj-$(CONFIG_WM8350_WATCHDOG) += wm8350_wdt.o
- obj-$(CONFIG_MAX63XX_WATCHDOG) += max63xx_wdt.o
- obj-$(CONFIG_SOFT_WATCHDOG) += softdog.o
-+obj-$(CONFIG_PALMAS_WATCHDOG) += palmas_wdt.o
+-	ret = palmas_read(palmas, PALMAS_GPIO_BASE, PALMAS_GPIO_DATA_IN, &val);
++	ret = palmas_gpio_read(palmas, PALMAS_GPIO_DATA_IN, offset, &val);
+ 	if (ret < 0) {
+ 		dev_err(gc->dev, "GPIO_DATA_IN read failed, err = %d\n", ret);
+ 		return ret;
+ 	}
+-	return !!(val & BIT(offset));
++	return !!(val & BIT(offset % 8));
+ }
+ 
+ static void palmas_gpio_set(struct gpio_chip *gc, unsigned offset,
+@@ -59,11 +89,11 @@ static void palmas_gpio_set(struct gpio_chip *gc, unsigned offset,
+ 	int ret;
+ 
+ 	if (value)
+-		ret = palmas_write(palmas, PALMAS_GPIO_BASE,
+-				PALMAS_GPIO_SET_DATA_OUT, BIT(offset));
++		ret = palmas_gpio_write(palmas, PALMAS_GPIO_SET_DATA_OUT,
++				offset, BIT(offset % 8));
+ 	else
+-		ret = palmas_write(palmas, PALMAS_GPIO_BASE,
+-				PALMAS_GPIO_CLEAR_DATA_OUT, BIT(offset));
++		ret = palmas_gpio_write(palmas, PALMAS_GPIO_CLEAR_DATA_OUT,
++				offset, BIT(offset % 8));
+ 	if (ret < 0)
+ 		dev_err(gc->dev, "%s write failed, err = %d\n",
+ 			(value) ? "GPIO_SET_DATA_OUT" : "GPIO_CLEAR_DATA_OUT",
+@@ -80,8 +110,8 @@ static int palmas_gpio_output(struct gpio_chip *gc, unsigned offset,
+ 	/* Set the initial value */
+ 	palmas_gpio_set(gc, offset, value);
+ 
+-	ret = palmas_update_bits(palmas, PALMAS_GPIO_BASE,
+-		PALMAS_GPIO_DATA_DIR, BIT(offset), BIT(offset));
++	ret = palmas_gpio_update_bits(palmas, PALMAS_GPIO_DATA_DIR,
++			offset, 1 << (offset % 8), 1 << (offset % 8));
+ 	if (ret < 0)
+ 		dev_err(gc->dev, "GPIO_DATA_DIR write failed, err = %d\n", ret);
+ 	return ret;
+@@ -93,8 +123,8 @@ static int palmas_gpio_input(struct gpio_chip *gc, unsigned offset)
+ 	struct palmas *palmas = pg->palmas;
+ 	int ret;
+ 
+-	ret = palmas_update_bits(palmas, PALMAS_GPIO_BASE,
+-		PALMAS_GPIO_DATA_DIR, BIT(offset), 0);
++	ret =  palmas_gpio_update_bits(palmas, PALMAS_GPIO_DATA_DIR,
++				offset, 1 << (offset % 8), 0);
+ 	if (ret < 0)
+ 		dev_err(gc->dev, "GPIO_DATA_DIR write failed, err = %d\n", ret);
+ 	return ret;
+@@ -108,7 +138,21 @@ static int palmas_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
+ 	return palmas_irq_get_virq(palmas, PALMAS_GPIO_0_IRQ + offset);
+ }
+ 
+-static int palmas_gpio_probe(struct platform_device *pdev)
++static int palmas_gpio_set_debounce(struct gpio_chip *gc, unsigned offset,
++				    unsigned debounce)
++{
++	struct palmas_gpio *palmas_gpio = to_palmas_gpio(gc);
++	struct palmas *palmas = palmas_gpio->palmas;
++	unsigned int data = 0;
++
++	if (debounce)
++		data = 0xff;
++
++	return palmas_gpio_update_bits(palmas, PALMAS_GPIO_DEBOUNCE_EN,
++			offset, 1 << (offset % 8), data);
++}
++
++static int  palmas_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct palmas *palmas = dev_get_drvdata(pdev->dev.parent);
+ 	struct palmas_platform_data *palmas_pdata;
+@@ -125,10 +169,15 @@ static int palmas_gpio_probe(struct platform_device *pdev)
+ 	palmas_gpio->palmas = palmas;
+ 	palmas_gpio->gpio_chip.owner = THIS_MODULE;
+ 	palmas_gpio->gpio_chip.label = dev_name(&pdev->dev);
+-	palmas_gpio->gpio_chip.ngpio = 8;
++	/* palmas charger has 16 gpios */
++	if (is_palmas_charger(palmas->product_id))
++		palmas_gpio->gpio_chip.ngpio = 16;
++	else
++		palmas_gpio->gpio_chip.ngpio = 8;
+ 	palmas_gpio->gpio_chip.can_sleep = 1;
+ 	palmas_gpio->gpio_chip.direction_input = palmas_gpio_input;
+ 	palmas_gpio->gpio_chip.direction_output = palmas_gpio_output;
++	palmas_gpio->gpio_chip.set_debounce = palmas_gpio_set_debounce,
+ 	palmas_gpio->gpio_chip.to_irq = palmas_gpio_to_irq;
+ 	palmas_gpio->gpio_chip.set	= palmas_gpio_set;
+ 	palmas_gpio->gpio_chip.get	= palmas_gpio_get;
+diff --git a/include/linux/mfd/palmas.h b/include/linux/mfd/palmas.h
+index 4cffe31..d8c303b 100644
+--- a/include/linux/mfd/palmas.h
++++ b/include/linux/mfd/palmas.h
+@@ -244,7 +244,7 @@ struct palmas_platform_data {
+ 	 * then the two value to load into the registers if true
+ 	 */
+ 	int mux_from_pdata;
+-	u8 pad1, pad2;
++	u8 pad1, pad2, pad3, pad4;
+ 
+ 	struct palmas_pmic_platform_data *pmic_pdata;
+ 	struct palmas_gpadc_platform_data *gpadc_pdata;
+@@ -2513,6 +2513,16 @@ enum usb_irq_events {
+ #define PALMAS_PU_PD_GPIO_CTRL1					0x6
+ #define PALMAS_PU_PD_GPIO_CTRL2					0x7
+ #define PALMAS_OD_OUTPUT_GPIO_CTRL				0x8
++#define PALMAS_GPIO_DATA_IN2					0x9
++#define PALMAS_GPIO_DATA_DIR2					0xA
++#define PALMAS_GPIO_DATA_OUT2					0xB
++#define PALMAS_GPIO_DEBOUNCE_EN2				0xC
++#define PALMAS_GPIO_CLEAR_DATA_OUT2				0xD
++#define PALMAS_GPIO_SET_DATA_OUT2				0xE
++#define PALMAS_PU_PD_GPIO_CTRL3					0xF
++#define PALMAS_PU_PD_GPIO_CTRL4					0x10
++#define PALMAS_OD_OUTPUT_GPIO_CTRL2				0x11
++#define PALMAS_GPO_CTRL						0x12
+ 
+ /* Bit definitions for GPIO_DATA_IN */
+ #define PALMAS_GPIO_DATA_IN_GPIO_7_IN				0x80
 -- 
 1.7.0.4
