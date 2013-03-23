@@ -1,43 +1,98 @@
-From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Subject: [PATCH 2/2] ARM: davinci: da850: add tps6507x touchscreen DT data
-Date: Sat, 23 Mar 2013 18:29:31 +0530
-Message-ID: <1364043571-9210-3-git-send-email-manishv.b@ti.com>
-References: <1364043571-9210-1-git-send-email-manishv.b@ti.com>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH] ARM: zynq: add support for ZedBoard
+Date: Sat, 23 Mar 2013 14:04:23 +0100
+Message-ID: <1364043863-20669-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1364043571-9210-1-git-send-email-manishv.b@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com, linux-doc@vger.kernel.org
-Cc: dmitry.torokhov@gmail.com, rob@landley.net, rob.herring@calxeda.com, grant.likely@secretlab.ca, manishv.b@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add tps6507x touchscreen device tree data to da850-evm.
+Support the Avnet ZedBoard.
 
-Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b@ti.com>
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
-:100644 100644 d1d091b... 5652501... M	arch/arm/boot/dts/da850-evm.dts
- arch/arm/boot/dts/da850-evm.dts |    9 +++++++++
- 1 files changed, 9 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/Makefile          |  3 ++-
+ arch/arm/boot/dts/zynq-zedboard.dts | 45 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 47 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/zynq-zedboard.dts
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index d1d091b..5652501 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -108,4 +108,13 @@
- 			regulator-boot-on;
- 		};
- 	};
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 9c62558..1d36a4c 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -174,7 +174,8 @@ dtb-$(CONFIG_ARCH_VT8500) += vt8500-bv07.dtb \
+ 	wm8505-ref.dtb \
+ 	wm8650-mid.dtb \
+ 	wm8850-w70v2.dtb
+-dtb-$(CONFIG_ARCH_ZYNQ) += zynq-zc702.dtb
++dtb-$(CONFIG_ARCH_ZYNQ) += zynq-zc702.dtb \
++	zynq-zedboard.dtb
+ 
+ targets += dtbs
+ targets += $(dtb-y)
+diff --git a/arch/arm/boot/dts/zynq-zedboard.dts b/arch/arm/boot/dts/zynq-zedboard.dts
+new file mode 100644
+index 0000000..1b024c7
+--- /dev/null
++++ b/arch/arm/boot/dts/zynq-zedboard.dts
+@@ -0,0 +1,45 @@
++/*
++ *  Copyright (C) 2013 Steffen Trumrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
++ *
++ * This software is licensed under the terms of the GNU General Public
++ * License version 2, as published by the Free Software Foundation, and
++ * may be copied, distributed, and modified under those terms.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++/dts-v1/;
++/include/ "zynq-7000.dtsi"
 +
-+	tsc {
-+		ti,poll_period = <30>;
-+		ti,min_pressure = <0x30>;
-+		ti,vref = <0>;
-+		ti,vendor = <0>;
-+		ti,product = <65070>;
-+		ti,version = <0x100>;
++/ {
++	model = "Zynq ZedBoard";
++	compatible = "xlnx,zynq-zed", "xlnx,zynq-7000";
++
++	memory {
++		device_type = "memory";
++		reg = <0x0 0x20000000>;
 +	};
- };
++};
++
++&gem0 {
++	status = "okay";
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&ps_clk {
++	clock-frequency = <33333330>;
++};
++
++&ttc0_0 {
++	status = "okay";
++	compatible = "xlnx,ttc-counter-clockevent";
++};
 -- 
-1.7.4.1
-
+1.8.2.rc2
