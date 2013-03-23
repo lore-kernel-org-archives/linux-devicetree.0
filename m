@@ -1,59 +1,62 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 1/6] of/pci: Provide support for parsing PCI DT ranges
-	property
-Date: Sat, 23 Mar 2013 10:41:56 +0000
-Message-ID: <20130323104156.GL4977@n2100.arm.linux.org.uk>
-References: <00c001ce277b$92b26ab0$b8174010$%han@samsung.com>
+From: "Vishwanathrao Badarkhe, Manish" <manishv.b-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] tps6507x-ts: update to devm_* API
+Date: Sat, 23 Mar 2013 16:30:23 +0530
+Message-ID: <1364036423-2057-1-git-send-email-manishv.b@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <00c001ce277b$92b26ab0$b8174010$%han@samsung.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Thierry Reding' <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Andrew Murray' <andrew.murray@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: manishv.b-l0cyMroinI0@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, wfp5p-4Ng6DfrEGID2fBVCVOL8/A@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 23, 2013 at 01:04:53PM +0900, Jingoo Han wrote:
-> -		switch ((pci_space >> 24) & 0x3) {
-> -		case 1:		/* PCI IO space */
-> +		if (iter.flags & IORESOURCE_IO) {
+Update the code to use devm_* API so that driver
+core will manage resources.
 
-Please look at how IORESOURCE_* stuff is defined:
-#define IORESOURCE_TYPE_BITS    0x00001f00      /* Resource type */
-#define IORESOURCE_IO           0x00000100      /* PCI/ISA I/O ports */
-#define IORESOURCE_MEM          0x00000200
-#define IORESOURCE_REG          0x00000300      /* Register offsets */
-#define IORESOURCE_IRQ          0x00000400
-#define IORESOURCE_DMA          0x00000800
-#define IORESOURCE_BUS          0x00001000
+Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b-l0cyMroinI0@public.gmane.org>
+---
+:100644 100644 820a066... 65e0f9a... M	drivers/input/touchscreen/tps6507x-ts.c
+ drivers/input/touchscreen/tps6507x-ts.c |    4 +---
+ 1 files changed, 1 insertions(+), 3 deletions(-)
 
-Notice that it's not an array of bits.
-
-So this should be:
-		if ((iter.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO) {
-
-> +			iter.cpu_addr = iter.pci_addr;
-> +		} else if (iter.flags & IORESOURCE_MEM) {
-
-And this should be:
-		} else if ((iter.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_MEM) {
-
-> +		if (iter.flags & IORESOURCE_IO) {
-
-Same here.
-
-> +		} else if (iter.flags & IORESOURCE_MEM) {
-
-And again here.
-
-> -		switch ((pci_space >> 24) & 0x3) {
-> -		case 1:		/* PCI IO space */
-> +		if (iter.flags & IORESOURCE_IO) {
-
-ditto.
-
-> +			iter.cpu_addr = iter.pci_addr;
-> +		} else if (flags & IORESOURCE_MEM) {
-
-ditto.
+diff --git a/drivers/input/touchscreen/tps6507x-ts.c b/drivers/input/touchscreen/tps6507x-ts.c
+index 820a066..65e0f9a 100644
+--- a/drivers/input/touchscreen/tps6507x-ts.c
++++ b/drivers/input/touchscreen/tps6507x-ts.c
+@@ -261,7 +261,7 @@ static int tps6507x_ts_probe(struct platform_device *pdev)
+ 
+ 	init_data = tps_board->tps6507x_ts_init_data;
+ 
+-	tsc = kzalloc(sizeof(struct tps6507x_ts), GFP_KERNEL);
++	tsc = devm_kzalloc(&pdev->dev, sizeof(struct tps6507x_ts), GFP_KERNEL);
+ 	if (!tsc) {
+ 		dev_err(tps6507x_dev->dev, "failed to allocate driver data\n");
+ 		error = -ENOMEM;
+@@ -339,7 +339,6 @@ err2:
+ 	cancel_delayed_work_sync(&tsc->work);
+ 	input_free_device(input_dev);
+ err1:
+-	kfree(tsc);
+ 	tps6507x_dev->ts = NULL;
+ err0:
+ 	return error;
+@@ -356,7 +355,6 @@ static int tps6507x_ts_remove(struct platform_device *pdev)
+ 	input_unregister_device(input_dev);
+ 
+ 	tps6507x_dev->ts = NULL;
+-	kfree(tsc);
+ 
+ 	return 0;
+ }
+-- 
+1.7.4.1
