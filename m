@@ -1,33 +1,59 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH v3] clk: add si5351 i2c common clock driver
-Date: Sat, 23 Mar 2013 11:07:16 +0100
-Message-ID: <514D7ED4.2030205@metafoo.de>
-References: <1360414772-12232-1-git-send-email-sebastian.hesselbarth@gmail.com> <1363603397-2762-1-git-send-email-sebastian.hesselbarth@gmail.com> <514B4CBF.7070106@metafoo.de> <514B7C80.2070008@gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 1/6] of/pci: Provide support for parsing PCI DT ranges
+	property
+Date: Sat, 23 Mar 2013 10:41:56 +0000
+Message-ID: <20130323104156.GL4977@n2100.arm.linux.org.uk>
+References: <00c001ce277b$92b26ab0$b8174010$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <514B7C80.2070008@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, Daniel Mack <zonque@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <00c001ce277b$92b26ab0$b8174010$%han@samsung.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Thierry Reding' <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, 'Grant Likely' <grant.likely@secretlab.ca>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Andrew Murray' <andrew.murray@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/21/2013 10:32 PM, Sebastian Hesselbarth wrote:
->>> +
->>> +    dev_info(&client->dev, "registered si5351 i2c client\n");
->>> +
->>
->> That's just noise, imagine every driver would print such a line, your bootlog
->> would be scrolling for hours ;) I'd either remove it or make it dev_dbg
-> 
-> Actually, I understand not to have it, but if you don't want it you can still
-> boot with "quiet", can't you? Having one single line that helps you see it has
-> been probed helps a lot. But, I don't have a strong opinion on that and can
-> make it dev_dbg.
+On Sat, Mar 23, 2013 at 01:04:53PM +0900, Jingoo Han wrote:
+> -		switch ((pci_space >> 24) & 0x3) {
+> -		case 1:		/* PCI IO space */
+> +		if (iter.flags & IORESOURCE_IO) {
 
-It is useful during development, but in my opinion only as long as not every
-other driver does this as well. If you want to check whether a device has
-been probed you can easily do this by checking the drivers sysfs node.
+Please look at how IORESOURCE_* stuff is defined:
+#define IORESOURCE_TYPE_BITS    0x00001f00      /* Resource type */
+#define IORESOURCE_IO           0x00000100      /* PCI/ISA I/O ports */
+#define IORESOURCE_MEM          0x00000200
+#define IORESOURCE_REG          0x00000300      /* Register offsets */
+#define IORESOURCE_IRQ          0x00000400
+#define IORESOURCE_DMA          0x00000800
+#define IORESOURCE_BUS          0x00001000
 
-- Lars
+Notice that it's not an array of bits.
+
+So this should be:
+		if ((iter.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_IO) {
+
+> +			iter.cpu_addr = iter.pci_addr;
+> +		} else if (iter.flags & IORESOURCE_MEM) {
+
+And this should be:
+		} else if ((iter.flags & IORESOURCE_TYPE_BITS) == IORESOURCE_MEM) {
+
+> +		if (iter.flags & IORESOURCE_IO) {
+
+Same here.
+
+> +		} else if (iter.flags & IORESOURCE_MEM) {
+
+And again here.
+
+> -		switch ((pci_space >> 24) & 0x3) {
+> -		case 1:		/* PCI IO space */
+> +		if (iter.flags & IORESOURCE_IO) {
+
+ditto.
+
+> +			iter.cpu_addr = iter.pci_addr;
+> +		} else if (flags & IORESOURCE_MEM) {
+
+ditto.
