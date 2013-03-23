@@ -1,98 +1,126 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH] ARM: zynq: add support for ZedBoard
-Date: Sat, 23 Mar 2013 14:04:23 +0100
-Message-ID: <1364043863-20669-1-git-send-email-s.trumtrar@pengutronix.de>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [RFC 01/12] exynos-fimc-is: Adding device tree nodes
+Date: Sat, 23 Mar 2013 14:14:43 +0100
+Message-ID: <514DAAC3.4050202@gmail.com>
+References: <1362754765-2651-1-git-send-email-arun.kk@samsung.com> <1362754765-2651-2-git-send-email-arun.kk@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1362754765-2651-2-git-send-email-arun.kk@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arun Kumar K <arun.kk@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, s.nawrocki@samsung.com, kgene.kim@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Support the Avnet ZedBoard.
+On 03/08/2013 03:59 PM, Arun Kumar K wrote:
+> Add the fimc-is node and the required pinctrl nodes for
+> fimc-is driver for Exynos5. Also adds the DT binding documentation
+> for the new fimc-is node.
+>
+> Signed-off-by: Arun Kumar K<arun.kk@samsung.com>
+> Signed-off-by: Kilyeon Im<kilyeon.im@samsung.com>
+> ---
+>   .../devicetree/bindings/media/soc/exynos5-is.txt   |   81 ++++++++++++++++++++
+>   arch/arm/boot/dts/exynos5250-pinctrl.dtsi          |   60 +++++++++++++++
+>   arch/arm/boot/dts/exynos5250-smdk5250.dts          |   54 ++++++++++++-
+>   arch/arm/boot/dts/exynos5250.dtsi                  |    8 ++
+>   4 files changed, 201 insertions(+), 2 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/media/soc/exynos5-is.txt
+>   mode change 100644 =>  100755 arch/arm/boot/dts/exynos5250-smdk5250.dts
+>   mode change 100644 =>  100755 arch/arm/boot/dts/exynos5250.dtsi
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/Makefile          |  3 ++-
- arch/arm/boot/dts/zynq-zedboard.dts | 45 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 47 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/zynq-zedboard.dts
+I suspect this mode change wasn't intentional.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 9c62558..1d36a4c 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -174,7 +174,8 @@ dtb-$(CONFIG_ARCH_VT8500) += vt8500-bv07.dtb \
- 	wm8505-ref.dtb \
- 	wm8650-mid.dtb \
- 	wm8850-w70v2.dtb
--dtb-$(CONFIG_ARCH_ZYNQ) += zynq-zc702.dtb
-+dtb-$(CONFIG_ARCH_ZYNQ) += zynq-zc702.dtb \
-+	zynq-zedboard.dtb
- 
- targets += dtbs
- targets += $(dtb-y)
-diff --git a/arch/arm/boot/dts/zynq-zedboard.dts b/arch/arm/boot/dts/zynq-zedboard.dts
-new file mode 100644
-index 0000000..1b024c7
---- /dev/null
-+++ b/arch/arm/boot/dts/zynq-zedboard.dts
-@@ -0,0 +1,45 @@
-+/*
-+ *  Copyright (C) 2013 Steffen Trumrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+/dts-v1/;
-+/include/ "zynq-7000.dtsi"
-+
-+/ {
-+	model = "Zynq ZedBoard";
-+	compatible = "xlnx,zynq-zed", "xlnx,zynq-7000";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x0 0x20000000>;
-+	};
-+};
-+
-+&gem0 {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&ps_clk {
-+	clock-frequency = <33333330>;
-+};
-+
-+&ttc0_0 {
-+	status = "okay";
-+	compatible = "xlnx,ttc-counter-clockevent";
-+};
--- 
-1.8.2.rc2
+> diff --git a/Documentation/devicetree/bindings/media/soc/exynos5-is.txt b/Documentation/devicetree/bindings/media/soc/exynos5-is.txt
+> new file mode 100644
+> index 0000000..e0fdf02
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/soc/exynos5-is.txt
+> @@ -0,0 +1,81 @@
+> +Samsung EXYNOS SoC Camera Subsystem
+> +-----------------------------------
+> +
+> +The camera subsystem on Samsung Exynos5 SoC has some changes relative
+> +to previous SoC versions. Exynos5 has almost similar MIPI-CSIS and
+> +FIMC-LITE IPs but removed the FIMC-CAPTURE. Instead it has an improved
+
+s/FIMC-CAPTURE/FIMC IPs (IP blocks) ?
+
+> +FIMC-IS which can provide imate data DMA output.
+
+s/imate/image
+
+Not sure if this is true. FIMC (camera host interface and video 
+post-processor)
+IPs have been removed, but I think they were replaced with GSCALER. 
+There is
+FIMC-IS on both Exynos4 and Exynos5 series.
+
+> +
+> +The device tree binding remain similar to the Exynos4 bindings which can
+> +be seen at samsung-fimc.txt with the addition of fimc-is sub-node which will
+> +be explained here.
+> +
+> +fimc-is subnode of camera node
+> +------------------------------
+> +
+> +Required properties:
+> +
+> +- compatible		: must be "samsung,exynos5250-fimc-is"
+> +- reg			: physical base address and size of the memory mapped
+> +			  registers
+> +- interrupt-parent	: Parent interrupt controller
+> +- interrupts		: fimc-is interrupt to the parent combiner
+> +
+> +Board specific properties:
+> +
+> +- pinctrl-names    : pinctrl names for camera port pinmux control, at least
+> +		     "default" needs to be specified.
+> +- pinctrl-0...N	   : pinctrl properties corresponding to pinctrl-names
+> +
+> +Sensor sub-nodes:
+> +
+> +FIMC-IS IP supports custom built sensors to be controlled exclusively by
+> +the FIMC-IS firmware. These sensor properties are to be defined here.
+
+What this means is that the software architecture defines how we describe
+the hardware. I have serious doubts about this approach. I do recall this
+concept was used in an early version of code I shared with you. But then
+I decided to describe the I2C bus controllers (other bus controllers could
+be probably added later when required) in usual way, as fimc-is node child
+nodes or standalone, at root level.
+
+The reason is that all these peripheral bus controllers are accessible in
+same way by the FIMC-IS and the host CPU. Their interrupts are routed to
+both, and registers regions are visible to both CPUs as well. AFAIK ISP I2C
+bus controllers are directly compatible with s3c2440, so on some systems
+that do not use the IS these I2C controllers should in theory work without
+problems with current i2c-s3c2410 I2C bus driver.
+
+Defining image sensor nodes in a standard way as ISP I2C bus controller
+nodes has an disadvantage that we need dummy I2C bus controller driver,
+at least this is how I have written the driver for Exynos4x12. In some
+version of it I had sensor nodes put in a isp-i2c fimc-is sub-node, but
+then there was an issue that this was not a fully specified I2C bus
+controller node.
+
+You can refer to my exynos4 fimc-is patch series for details on how this
+is now implemented.
+
+Handling the image sensor in a standard way, as regular I2C client devices
+has an advantage that we can put pinctrl properties in relevant device 
+nodes,
+where available, which more closely describes the hardware structure.
+
+I'm not really sure in 100% if all this complication is required. It would
+allow to use same DT blob for different Imaging Subsystem SW architecture.
+For example some parts of functionality handled currently by FIMC-IS (ARM
+Cortex-A5) could be moved to host CPU, without any change in the device
+tree structure. The kernel could decide e.g. if it uses image sensor driver
+implemented in the ISP firmware, or a driver run on the host CPU.
+
+What do you think ?
+
+Thanks,
+Sylwester
