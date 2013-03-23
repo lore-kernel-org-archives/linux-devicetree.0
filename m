@@ -1,80 +1,59 @@
-From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC 12/12] ARM: dts: Add camera node to exynos5250-smdk5250.dts
-Date: Sat, 23 Mar 2013 13:18:02 +0100
-Message-ID: <514D9D7A.5060000@gmail.com>
-References: <1362570838-4737-1-git-send-email-shaik.ameer@samsung.com>
- <1362570838-4737-13-git-send-email-shaik.ameer@samsung.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v4 0/4] Initial Device Tree support for S3C64xx
+Date: Sat, 23 Mar 2013 13:28:40 +0100
+Message-ID: <2474214.PvUtMM3R7F@flatron>
+References: <1362860975-18635-1-git-send-email-tomasz.figa@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1362570838-4737-13-git-send-email-shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shaik.samsung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1362860975-18635-1-git-send-email-tomasz.figa@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/06/2013 12:53 PM, Shaik Ameer Basha wrote:
-> Signed-off-by: Shaik Ameer Basha<shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->   arch/arm/boot/dts/exynos5250-smdk5250.dts |   43 ++++++++++++++++++++++++++++-
->   1 file changed, 42 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> index 4b10744..7fbc236 100644
-> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> @@ -85,9 +85,26 @@
->   	};
->
->   	i2c@12CA0000 {
-> -		status = "disabled";
-> +		samsung,i2c-sda-delay =<100>;
-> +		samsung,i2c-max-bus-freq =<100000>;
->   		pinctrl-0 =<&i2c4_bus>;
->   		pinctrl-names = "default";
-> +
-> +		m5mols@1f {
-> +			compatible = "fujitsu,m-5mols";
-> +			reg =<0x1F>;
-> +			gpios =<&gpx3 3 0xf>,<&gpx1 2 1>;
-> +			clock-frequency =<24000000>;
-> +			pinctrl-0 =<&cam_port_a_clk_active>;
-> +			pinctrl-names = "default";
+Hi,
 
-Ah, so it's that way... I don't think that is correct. What you're doing
-here is assigning an SoC clock output pin pinctrl node to pinctrl property
-of an image sensor device that is external to an SoC. Why don't you put
-this pinctrl properties in the common "camera" node ?
+On Saturday 09 of March 2013 21:29:31 Tomasz Figa wrote:
+> This series adds Device Tree support for Samsung S3C64xx SoC series.
+> 
+> It fixes several problems preventing from booting an S3C64xx-based
+> system using Device Tree, adds all the infrastructure for Device
+> Tree-based board support, including mach-s3c64xx-dt and dts include
+> files for S3C64xx SoCs, and (very) basic device tree source for
+> FriendlyARM Mini6410 board.
+> 
+> Current support is very limited and allows only basic bootup with UART
+> and SDHCI, but should be fine as a start and will be extended in
+> future, hopefully with help of S3C64xx board maintainers.
+> 
+> This series depends on my other series reworking samsung-time for
+> multiplatform: [PATCH v3 00/12] ARM: samsung-time: Prepare for
+> multiplatform support
+> http://thread.gmane.org/gmane.linux.kernel.samsung-soc/16664
+> 
+> Changes since v3:
+>  - Rebased onto current for-next branch of Kgene's tree
+>  - Updated timer node for next version of samsung-time patches
+>  - Replaced local s3c64xx_dt_init_irq with irqchip_init
+> 
+> Changes since v2:
+>  - Updated timer node for next version of samsung-time patches
+> 
+> Changes since v1:
+>  - Dropped two VIC-related patches that are no longer necessary
+>  - Added Device Tree-based instantation of system timers
+>  - Corrected VIC interrupt specifiers
+>  - Adjusted CPU compatible values and dropped @id
+> 
+> Tomasz Figa (4):
+>   ARM: common: vic: Parse interrupt and resume masks from device tree
+>   ARM: s3c64xx: Add board file for boot using Device Tree
+>   ARM: dts: Add basic dts include files for Samsung S3C64xx SoCs
+>   ARM: dts: Add dts file for S3C6410-based Mini6410 board
 
-> +
-> +			port {
-> +				m5mols_ep: endpoint {
-> +					remote-endpoint =<&csis0_ep>;
-> +				};
-> +			};
-> +
-> +		};
->   	};
->
->   	i2c@12CB0000 {
-> @@ -214,4 +231,28 @@
->   		samsung,mfc-r =<0x43000000 0x800000>;
->   		samsung,mfc-l =<0x51000000 0x800000>;
->   	};
-> +
-> +	camera {
-> +		compatible = "samsung,exynos5-fimc", "simple-bus";
+Any comments for this series?
 
-Shouldn't it be "samsung,exynos5-is" (Imaging Subsystem), or something
-more relevant to exynos5 ? Or what would be reasons to use "fimc" for
-exynos5 ?
+Best regards,
+Tomasz
