@@ -1,62 +1,27 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v10 0/12] Palmas updates
-Date: Sun, 24 Mar 2013 21:13:37 +0000
-Message-ID: <20130324211336.GA18316@opensource.wolfsonmicro.com>
-References: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
- <20130323060455.78a4c90c3f1e028434818fd1@canb.auug.org.au>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next] dsa: add device tree bindings to register DSA
+ switches
+Date: Sun, 24 Mar 2013 17:17:38 -0400 (EDT)
+Message-ID: <20130324.171738.301089541347666424.davem@davemloft.net>
+References: <2044972.NvctqPqDPo@bender>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130323060455.78a4c90c3f1e028434818fd1@canb.auug.org.au>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Ian Lartey <ian@slimlogic.co.uk>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, mturquette@linaro.org, linus.walleij@linaro.org, cooloney@gmail.com, rpurdie@rpsys.net, akpm@linux-foundation.org, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, gg@slimlogic.co.uk, j-keerthy@ti.com, ldewangan@nvidia.com, t-kristo@ti.com
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <2044972.NvctqPqDPo@bender>
+Sender: netdev-owner@vger.kernel.org
+To: florian@openwrt.org
+Cc: devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, thomas.petazzoni@free-electrons.com, gregory.clement@free-electrons.com, jason@lakedaemon.net, buytenh@wantstofly.org, netdev@vger.kernel.org, andrew@lunn.ch, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+From: Florian Fainelli <florian@openwrt.org>
+Date: Fri, 22 Mar 2013 21:50:50 +0100
 
---oyUTqETQ0mS9luUI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> This patch adds support for registering DSA switches using Device Tree
+> bindings. Note that we support programming the switch routing table even
+> though no in-tree user seems to require it. I tested this on Armada 370
+> with a Marvell 88E6172 (not supported by mainline yet).
+> 
+> Signed-off-by: Florian Fainelli <florian@openwrt.org>
 
-On Sat, Mar 23, 2013 at 06:04:55AM +1100, Stephen Rothwell wrote:
-> On Fri, 22 Mar 2013 14:55:10 +0000 Ian Lartey <ian@slimlogic.co.uk> wrote:
-
-> > Patches based on linux-next-20130319
-
-> I can't really comment on the patch set except to say that you should not
-> base on linux-next, you should base on the tree to which you expect the
-> patch set to be applied.
-
-It's fairly common to suggest to people working over lots of subsystems
-like this that they use -next since for most subsystems it contains the
-trees that should be submitted against and it's much more efficient.
-This works OK most of the time when people are posting patches as
-opposed to pull requests, though obviously cross tree issues do happen
-=66rom time to time.
-
---oyUTqETQ0mS9luUI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRT2xmAAoJELSic+t+oim9sQ8P/3zX1xNz3uTlq3HlnhSX79xf
-7Iw6wgZ+1SILWpR1+FEfkCNjUuf9C4raa5DBVJM6VOqbldQENviWMrmojhi5y+Ts
-2bCCuB/1+55C0W1WhNaAnmCtL6Yrg7RVlUr3zMLeETOWlmGc+TeNywzJMZdWCurs
-Z+DOMaZRG5AehOc1XZ0lZrGlP9QVSXTjKpGPVT65vS8Ttj9aNa7+U0X4tCVDRxsk
-ptN61dBPWXtx1PSaEiJ6IMgf8Gx7IBEtJFt1i3VgCGlFqgKrEq9oshsn1L4VwjG+
-mWiRVf5lpDhfmxUO8yFq2IbF/nVTsAx4kp45J9IbdCTjwVh5AuF8/VIDDpTIlVdO
-ibotoXoeEF4qZe/UZSwkUhVq3Pv2/z1oSrG++N0Z1KAbrnUjCLymG50zfYY8cJXP
-g1Lu6iv89emD6nMdaA/mOCsFzX+eeuBuY+Cx5j8N+EbergNjxppx4JRnplXvbNOJ
-7I/+VX1flt+pzwz6tpwwzvlSEA2yy1E5cPG9ER3tT8pwgioeR7bq6fd6V9mkiVc/
-oPjgfQ/Wll4V78nSp1yQfvKoxqW/GOczrTSv4KcJFWU+X+xMf3NEUslHYZ0xjqHv
-yNlXBx0WCqnNxCf1v8X68eMqm55YV7VRkddVR7pLV5Wdo0O/wNBc1IqV4cueU1Ze
-zKqVHVWL6GlFwJbMJS8l
-=Zv8k
------END PGP SIGNATURE-----
-
---oyUTqETQ0mS9luUI--
+Applied.
