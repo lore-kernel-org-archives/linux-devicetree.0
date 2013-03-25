@@ -1,50 +1,51 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: RE: RE: RE: [PATCH v6 00/16] clk: exynos4/5: migrate to common
- clock framework
-Date: Mon, 25 Mar 2013 10:05:57 +0900
-Message-ID: <16dd01ce28f4$e8256860$b8703920$%kim@samsung.com>
-References: <1361175686-19400-1-git-send-email-thomas.abraham@linaro.org>
- <20130319184938.8663.18115@quantum> <201303192212.16877.heiko@sntech.de>
- <20130319215038.8663.83548@quantum>
- <116a01ce24fd$e32658b0$a9730a10$%kim@samsung.com>
- <20130320025656.11073.90469@quantum>
- <11af01ce2526$63b0a8f0$2b11fad0$%kim@samsung.com>
- <20130320144000.11073.37741@quantum>
- <14d801ce268b$80a8d160$81fa7420$%kim@samsung.com>
- <20130322142739.834.2721@quantum>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v10 12/12] regulator: palmas remove palmas-charger option
+ from DT bindings
+Date: Mon, 25 Mar 2013 01:07:43 +0000
+Message-ID: <20130325010741.GG18316@opensource.wolfsonmicro.com>
+References: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
+ <1363964122-19201-13-git-send-email-ian@slimlogic.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20130322142739.834.2721@quantum>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Mike Turquette' <mturquette@linaro.org>, =?utf-8?Q?'Heiko_St=C3=BCbner'?= <heiko@sntech.de>
-Cc: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, t.figa@samsung.com, sylvester.nawrocki@gmail.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HB4mHL4PVvkpZAgW"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1363964122-19201-13-git-send-email-ian@slimlogic.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ian Lartey <ian@slimlogic.co.uk>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, mturquette@linaro.org, linus.walleij@linaro.org, cooloney@gmail.com, sfr@canb.auug.org.au, rpurdie@rpsys.net, akpm@linux-foundation.org, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, gg@slimlogic.co.uk, j-keerthy@ti.com, ldewangan@nvidia.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Mike Turquette wrote:
 
-[...]
+--HB4mHL4PVvkpZAgW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > Yeah, I know. So if you want to add your ack on drivers/clk stuff for
-> this series in samsung tree, please let me know.
-> >
-> 
-> The patches are in pretty good shape.  Please add my ack if you are able
+On Fri, Mar 22, 2013 at 02:55:22PM +0000, Ian Lartey wrote:
+> Signed-off-by: Ian Lartey <ian@slimlogic.co.uk>
 
-OK, I will.
+Applied, thanks.
 
-> to rebase comfortably.  But if rebasing causes you and your downstream
-> users a lot of pain then don't do it.
-> 
-Yes it can be, but it can be handled easily because of no-changing codes.
+--HB4mHL4PVvkpZAgW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Note, please check Heiko's follow-up clk/samsung patches.
-<http://comments.gmane.org/gmane.linux.kernel.samsung-soc/16817>
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-I'm fine on that and if you're ok, I'd like to take that with this series.
+iQIcBAEBAgAGBQJRT6NWAAoJELSic+t+oim9KOEP+gPV3x04XgKlV5XMlRypwW1o
+z1JiRLRfzJfA4uWqIenvN+3Mylzh9nWDtFGc526ZTTi9fzVnk4E3PaqCeig/8/p4
+dz8Ym0ywnEZxtO/Pvm79JnIKwCLBZO8hdJ/9YuFOe8eqyad5HW1ub7wYbnQ0NIFl
+hHMpJRxUX+w6+rBD+LK+wu8Bh0ksxmy9/R2ie93MRYMACV4LCXqY5+WtqB21hTMQ
+3nEmzo8Hfp1AaPtJRDxruNB/O2n3AVs7syP9izwG6tgtXLsIqUHKnYRJ2FkDY+jf
++C377QTTVHek+0Yy0H6XujStmRkqNas9uAifyMPUr+nn1tD1JPL4qTkW1rSbYsSG
+zZWWq2m6HtlP6as5qXj7RwR2wcqGAKY+6IJbXFAlaFfwyMT4BKxxOP9MSwe40lRh
+HYCgPvbrF0s+kjB60r0/YOj2KDG8rtJIr8comPMCWNPbY4EL/DBAKHD6yK9sowwl
+6gGGLz0FHphklQDYG35l5athy51G2TbLCKkadDGJnUCFpViD2HMSKramvc0h3Qd0
+JcRUdIGeMKsUymucJnIDXXNtDODNncoFx3QhgbwnRsirNN+pgcechHzcN523QK4l
+U3oasKdCOylc5OKuUnnOBKOfS5Dxiqip1LJ7F4OBVChwtDpsFQvLMq/vo8wbWlrk
+GAYannmZ9/jgGlWqFPg5
+=6DEX
+-----END PGP SIGNATURE-----
 
-Thanks.
-
-- Kukjin
+--HB4mHL4PVvkpZAgW--
