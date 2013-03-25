@@ -1,54 +1,85 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH 0/2] ARM: dts: Add default pin states for client nodes on
- Exynos4/5 platforms
-Date: Mon, 25 Mar 2013 19:40:34 +0900
-Message-ID: <17a301ce2945$2dfc3a30$89f4ae90$%kim@samsung.com>
-References: <1362573398-15126-1-git-send-email-thomas.abraham@linaro.org>
- <CACRpkdbsCpV5_P=z44CMvsgps=AS9C62oprn6To6ExhoWZkvhA@mail.gmail.com>
- <514FF37F.7090405@linaro.org>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 0/6] mfd: omap-usb-host: Device tree support for 3.10
+Date: Mon, 25 Mar 2013 12:42:04 +0200
+Message-ID: <515029FC.3030405@ti.com>
+References: <1363083940-20050-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <514FF37F.7090405@linaro.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Tushar Behera' <tushar.behera@linaro.org>
-Cc: 'Linus Walleij' <linus.walleij@linaro.org>, 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, t.figa@samsung.com, heiko@sntech.de, patches@linaro.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1363083940-20050-1-git-send-email-rogerq@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: sameo@linux.intel.com
+Cc: Roger Quadros <rogerq@ti.com>, balbi@ti.com, b-cousson@ti.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Tushar Behera wrote:
-> 
-> On 03/07/2013 01:45 PM, Linus Walleij wrote:
-> > On Wed, Mar 6, 2013 at 1:36 PM, Thomas Abraham
-> > <thomas.abraham@linaro.org> wrote:
-> >
-> >> This patch series populates the default pin states in client nodes
-> >> of Exynos4 and Exynos5 platforms. Exynos4/5 platforms are migrating
-> >> to use pinctrl framework and having the default pin states listed
-> >> in the client nodes allows the device core to setup the default
-> >> pin configuration for all the controllers.
-> >
-> > The series:
-> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > Yours,
-> > Linus Walleij
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-samsung-
-> soc" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> >
-> 
-> Kukjin,
-> 
-> Would you be applying this patch-set to your tree? We need that to
-> rebase Arndale related patches for v3.10.
-> 
-Just note, you will see this series late tomorrow because I need to sort out
-samsung tree.
+Hi Samuel,
 
-Thanks for your reminder.
+I've rebased this now on top of 3.9-rc4. Please pull this into your
+next branch when appropriate. Thanks.
 
-- Kukjin
+The following changes since commit 8bb9660418e05bb1845ac1a2428444d78e322cc7:
+
+  Linux 3.9-rc4 (2013-03-23 16:52:44 -0700)
+
+are available in the git repository at:
+  git://github.com/rogerq/linux.git usbhost-mfd-next
+
+Roger Quadros (5):
+      mfd: omap-usb-host: update nports in platform_data
+      mfd: omap-usb-host: Remove PHY reset handling code
+      mfd: omap-usb-tll: move configuration code to omap_tll_init()
+      mfd: omap-usb-tll: Add device tree support and binding information
+      mfd: omap-usb-host: Add device tree support and binding information
+
+ .../devicetree/bindings/mfd/omap-usb-host.txt      |   80 ++++++++
+ .../devicetree/bindings/mfd/omap-usb-tll.txt       |   17 ++
+ drivers/mfd/omap-usb-host.c                        |  200 ++++++++++++++-----
+ drivers/mfd/omap-usb-tll.c                         |  214 ++++++++++----------
+ drivers/mfd/omap-usb.h                             |    5 +-
+ 5 files changed, 362 insertions(+), 154 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/omap-usb-host.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/omap-usb-tll.txt
+
+cheers,
+-roger
+
+On 03/12/2013 12:25 PM, Roger Quadros wrote:
+> Hi Samuel,
+> 
+> These patches implement device tree support for the OMAP High Speed
+> USB Host subsystem. The corresponding EHCI & SoC patches will be sent
+> separately and this set has no build dependencies with them.
+> 
+> Patch 3 is acutally a bug fix which should go into 3.9-rc. I've sent
+> it separately to you before.
+> 
+> The following changes since commit f6161aa153581da4a3867a2d1a7caf4be19b6ec9:
+> 
+>   Linux 3.9-rc2 (2013-03-10 16:54:19 -0700)
+> 
+> are available in the git repository at:
+>   git://github.com/rogerq/linux.git usbhost-mfd-next
+> 
+> Roger Quadros (6):
+>       mfd: omap-usb-host: update nports in platform_data
+>       mfd: omap-usb-host: Remove PHY reset handling code
+>       mfd: omap-usb-host: Actually update hostconfig
+>       mfd: omap-usb-tll: move configuration code to omap_tll_init()
+>       mfd: omap-usb-tll: Add device tree support and binding information
+>       mfd: omap-usb-host: Add device tree support and binding information
+> 
+>  .../devicetree/bindings/mfd/omap-usb-host.txt      |   80 ++++++++
+>  .../devicetree/bindings/mfd/omap-usb-tll.txt       |   17 ++
+>  drivers/mfd/omap-usb-host.c                        |  206 ++++++++++++++-----
+>  drivers/mfd/omap-usb-tll.c                         |  214 ++++++++++----------
+>  drivers/mfd/omap-usb.h                             |    5 +-
+>  5 files changed, 365 insertions(+), 157 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/omap-usb-host.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/omap-usb-tll.txt
+> 
+> --
+> cheers,
+> -roger
+> 
+
