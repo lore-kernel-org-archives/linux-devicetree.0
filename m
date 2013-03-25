@@ -1,63 +1,66 @@
 From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH v9 2/4] ARM: dts: Add lcd pinctrl node entries for
- EXYNOS4412 SoC
-Date: Mon, 25 Mar 2013 16:30:03 +0530
-Message-ID: <CAJuYYwT3SiKxg4CX1Gimmr+OT-oV=2UZ07xSbvoJ5kgdNEy0fQ@mail.gmail.com>
+Subject: Re: [PATCH v9 3/4] ARM: dts: Add FIMD node and display timing node to exynos4412-origen.dts
+Date: Mon, 25 Mar 2013 16:32:40 +0530
+Message-ID: <CAJuYYwTnE4_umPiXt5GNb_JYpKy+t5qkQBLscpYuhCry7t0Otw@mail.gmail.com>
 References: <1363960608-23825-1-git-send-email-vikas.sajjan@linaro.org>
-	<1363960608-23825-3-git-send-email-vikas.sajjan@linaro.org>
+	<1363960608-23825-4-git-send-email-vikas.sajjan@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1363960608-23825-3-git-send-email-vikas.sajjan@linaro.org>
+In-Reply-To: <1363960608-23825-4-git-send-email-vikas.sajjan@linaro.org>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: Vikas Sajjan <vikas.sajjan@linaro.org>
 Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, sylvester.nawrocki@gmail.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, linaro-kernel@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
 On 22 March 2013 19:26, Vikas Sajjan <vikas.sajjan@linaro.org> wrote:
-> From: Sachin Kamat <sachin.kamat@linaro.org>
+> Adds FIMD DT support to Origen quad board
 >
-> Adds the lcd panel related picntrl nodes for Exynos4412 SoC
->
-> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
 > Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
 > ---
->  arch/arm/boot/dts/exynos4x12-pinctrl.dtsi |   14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+>  arch/arm/boot/dts/exynos4412-origen.dts |   22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
 >
-> diff --git a/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi b/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi
-> index 099cec7..a59d69c 100644
-> --- a/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi
-> @@ -354,6 +354,20 @@
->                         samsung,pin-drv = <0>;
->                 };
+> diff --git a/arch/arm/boot/dts/exynos4412-origen.dts b/arch/arm/boot/dts/exynos4412-origen.dts
+> index a5478bd..8953c92 100644
+> --- a/arch/arm/boot/dts/exynos4412-origen.dts
+> +++ b/arch/arm/boot/dts/exynos4412-origen.dts
+> @@ -70,6 +70,28 @@
+>                 status = "okay";
+>         };
 >
-> +               lcd_sync: lcd-sync {
-> +                       samsung,pins = "gpf0-0", "gpf0-1";
-> +                       samsung,pin-function = <2>;
-> +                       samsung,pin-pud = <0>;
-> +                       samsung,pin-drv = <0>;
-> +               };
-> +
-> +               lcd_en: lcd-en {
-> +                       samsung,pins = "gpf0-3";
-> +                       samsung,pin-function = <2>;
-> +                       samsung,pin-pud = <0>;
-> +                       samsung,pin-drv = <0>;
-> +               };
-> +
-
-Is lcd_en a board specific configuration. If so, this has to be moved
-into board specfic dts file. Same with lcd_sync.
+> +       fimd@11c00000 {
+> +               samsung,power-domain = <&pd_lcd0>;
+'
+Does the power-domain have be board specific. Can this be moved into
+SoC specific dtsi file?
 
 Thanks,
 Thomas.
 
-
->                 lcd_clk: lcd-clk {
->                         samsung,pins = "gpf0-0", "gpf0-1", "gpf0-2", "gpf0-3";
->                         samsung,pin-function = <2>;
+> +               pinctrl-0 = <&lcd_sync &lcd_clk &lcd_en &lcd_data24 &pwm1_out>;
+> +               pinctrl-names = "default";
+> +               status = "okay";
+> +       };
+> +
+> +       display-timings {
+> +               native-mode = <&timing0>;
+> +               timing0: timing@0 {
+> +                       clock-frequency = <50000>;
+> +                       hactive = <1024>;
+> +                       vactive = <600>;
+> +                       hfront-porch = <64>;
+> +                       hback-porch = <16>;
+> +                       hsync-len = <48>;
+> +                       vback-porch = <64>;
+> +                       vfront-porch = <16>;
+> +                       vsync-len = <3>;
+> +               };
+> +       };
+> +
+>         serial@13800000 {
+>                 status = "okay";
+>         };
 > --
 > 1.7.9.5
 >
