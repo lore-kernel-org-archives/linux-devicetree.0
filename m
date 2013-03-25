@@ -1,63 +1,144 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v8 00/14] Tegra114 clockframework
-Date: Mon, 25 Mar 2013 16:44:15 -0600
-Message-ID: <5150D33F.1000206@wwwdotorg.org>
-References: <1363956029-31873-1-git-send-email-pdeschrijver@nvidia.com> <514CAB71.7020005@wwwdotorg.org>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] spi: spi-omap2-mcspi.c: Add dts for slave device
+	configuration.
+Date: Tue, 26 Mar 2013 00:00:15 +0100
+Message-ID: <1364252415-3613-1-git-send-email-matthias.bgg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <514CAB71.7020005@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Prashant Gaikwad <pgaikwad@nvidia.com>, Simon Glass <sjg@chromium.org>, Rhyland Klein <rklein@nvidia.com>, Pritesh Raithatha <praithatha@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>, Hiroshi Doyu <hdoyu@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, Andrew Chew <achew@nvidia.com>, Mike Turquette <mturquette@linaro.org>, Thierry Reding <thierry.reding@avionic-design.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <martinez.javier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/22/2013 01:05 PM, Stephen Warren wrote:
-> On 03/22/2013 06:39 AM, Peter De Schrijver wrote:
->> This is the eight version of the Tegra114 clockframework. It is based on the
->> next-20130320-fixed branch of
->> git://nv-tegra.nvidia.com/user/swarren/linux-2.6.git,
-> 
-> Hmmm. Basing this on v3.9-rcX would be better, since when I apply it to
-> the Tegra tree, that's what it will be based on. Luckily, it applies
-> there with trivial conflicts.
-> 
->> http://patchwork.ozlabs.org/patch/229972/ and
->> http://patchwork.ozlabs.org/patch/229978/
-> 
-> The series,
-> 
-> Tested-by: Stephen Warren <swarren@nvidia.com>
-> 
-> (based on my personal next-20130318-fixed branch, without
-> http://patchwork.ozlabs.org/patch/229972/ applied, but instead with the
-> audio clocks initialized per the patch I posted yesterday to do this).
-> 
-> I tested: serial console, eMMC for the root filesystem, audio playback
-> using different pll_a rates, reboot, and shutdown.
-> 
-> This version also solves the hard hang I was seeing with V7 during
-> shutdown or reboot. Now I don't have to rely on my filesystem journal:-)
+TI omap2 mcspi allows the slave devices to configure the behavior of
+the SPI master. This patch adds device tree support to the existing
+options.
 
-Hmm. I retract that Tested-by now.
+Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/spi/omap-spi.txt | 23 ++++++++++++
+ drivers/spi/spi-omap2-mcspi.c                      | 41 ++++++++++++++++++++++
+ 2 files changed, 64 insertions(+)
 
-If I apply the series on top of Tegra's for-next branch (which is
-currently entirely based on v3.9-rc1) then it works fine. (Similarly, it
-works fine on top of next-20130318, as I reported above).
+diff --git a/Documentation/devicetree/bindings/spi/omap-spi.txt b/Documentation/devicetree/bindings/spi/omap-spi.txt
+index 938809c..fef16bf 100644
+--- a/Documentation/devicetree/bindings/spi/omap-spi.txt
++++ b/Documentation/devicetree/bindings/spi/omap-spi.txt
+@@ -10,8 +10,20 @@ Required properties:
+ 			  input. The default is D0 as input and
+ 			  D1 as output.
+ 
++SPI Controller specific data in SPI slave nodes:
++
++- The spi slave nodes can provide the following information which is used
++  by the spi controller.
++
++- ti,spi-cs-per-word: Set chipselect to be toggled on every word send.
++
++- ti,spi-turbo-mode: Set turbo mode for this device.
++
++
+ Example:
+ 
++- SoC Specific Portion:
++
+ mcspi1: mcspi@1 {
+     #address-cells = <1>;
+     #size-cells = <0>;
+@@ -20,3 +32,14 @@ mcspi1: mcspi@1 {
+     ti,spi-num-cs = <4>;
+ };
+ 
++- Board Specific Portion:
++
++	spi-device@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		controller-data {
++			ti,spi-cs-per-word = <1>;
++			ti,spi-turbo-mode = <0>;
++		};
++	};
+diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
+index 893c3d7..1ae5009 100644
+--- a/drivers/spi/spi-omap2-mcspi.c
++++ b/drivers/spi/spi-omap2-mcspi.c
+@@ -731,11 +731,47 @@ static u32 omap2_mcspi_calc_divisor(u32 speed_hz)
+ 	return 15;
+ }
+ 
++static struct omap2_mcspi_device_config *omap2_mcspi_get_slave_ctrldata(
++			struct spi_device *spi)
++{
++	struct omap2_mcspi_device_config *cd;
++	struct device_node *slave_np, *data_np = NULL;
++
++	slave_np = spi->dev.of_node;
++	if (!slave_np) {
++		dev_err(&spi->dev, "device node not found\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	data_np = of_get_child_by_name(slave_np, "controller-data");
++	if (!data_np) {
++		dev_err(&spi->dev, "child node 'controller-data' not found\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	cd = kzalloc(sizeof(*cd), GFP_KERNEL);
++	if (!cd) {
++		dev_err(&spi->dev, "could not allocate memory for controller data\n");
++		of_node_put(data_np);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	if (of_get_property(data_np, "ti,spi-cs-per-word", NULL))
++		cd->cs_per_word = 1;
++
++	if (of_get_property(data_np, "ti,spi-turbo-mode", NULL))
++		cd->turbo_mode = 1;
++
++	of_node_put(data_np);
++	return cd;
++}
++
+ /* called only when no transfer is active to this device */
+ static int omap2_mcspi_setup_transfer(struct spi_device *spi,
+ 		struct spi_transfer *t)
+ {
+ 	struct omap2_mcspi_cs *cs = spi->controller_state;
++	struct omap2_mcspi_device_config *cd = spi->controller_data;
+ 	struct omap2_mcspi *mcspi;
+ 	struct spi_master *spi_cntrl;
+ 	u32 l = 0, div = 0;
+@@ -745,6 +781,11 @@ static int omap2_mcspi_setup_transfer(struct spi_device *spi,
+ 	mcspi = spi_master_get_devdata(spi->master);
+ 	spi_cntrl = mcspi->master;
+ 
++	if (!cd && spi->dev.of_node) {
++		cd = omap2_mcspi_get_slave_ctrldata(spi);
++		spi->controller_data = cd;
++	}
++
+ 	if (t != NULL && t->bits_per_word)
+ 		word_len = t->bits_per_word;
+ 
+-- 
+1.7.11.7
 
-If I merge in v3.9-rc3, it's still fine. If I merge in v3.9-rc4, I see a
-hard hang during boot. I believe that "hard hang" here means that some
-module's registers are being touched with the clock turned off, which
-locks up the CPU/bus. Certainly, sysrq doesn't work once it's hung.
 
-I tracked this down to some interaction with commit f7db706 "ARM:
-7674/1: smp: Avoid dummy clockevent being preferred over real hardware
-clock-event". So says a "git bisect" between v3.9-rc3 and v3.9-rc4,
-applying this CCF V8 series at each point.
-
-If I revert that commit, the problem is solved/hidden. I tested this in
-my local dev branch that's based on next-20130325 plus this CCF V8
-series, plus a bunch of other cruft.
-
-Can you please investigate what the problem is? Thanks.
+------------------------------------------------------------------------------
+Own the Future-Intel&reg; Level Up Game Demo Contest 2013
+Rise to greatness in Intel's independent game demo contest.
+Compete for recognition, cash, and the chance to get your game 
+on Steam. $5K grand prize plus 10 genre and skill prizes. 
+Submit your demo by 6/6/13. http://p.sf.net/sfu/intel_levelupd2d
