@@ -1,51 +1,56 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v3] clk: add si5351 i2c common clock driver
-Date: Mon, 25 Mar 2013 12:54:17 +0100
-Message-ID: <CABJ1b_T2x-DkTuYZGLBiedFRWcgYbcN3VCorN2nm3Y54A--wyw@mail.gmail.com>
-References: <fa.WZVD0OA/Ooajh6BejiLf7TwBsJ8@ifi.uio.no>
-	<fa.iIqrS6k+Vb5mLqAeL7iTsNsbKyo@ifi.uio.no>
-	<fa.L0b41q+fYFZG0WOFTGKLhn/cGPA@ifi.uio.no>
-	<fa.XCuSmq9Zwp3+wqFO8NEjpwADVZ0@ifi.uio.no>
-	<6e120226-8a3c-415f-90f2-c44e7b6bbf96@googlegroups.com>
-	<5149E85E.90701@gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v9 4/4] ARM: dts: Add FIMD DT binding Documentation
+Date: Mon, 25 Mar 2013 12:56:32 +0100
+Message-ID: <51503B70.8040506@samsung.com>
+References: <1363960608-23825-1-git-send-email-vikas.sajjan@linaro.org>
+ <1363960608-23825-5-git-send-email-vikas.sajjan@linaro.org>
+ <CAJuYYwQZKXXVNNbDS20d8i6mybzyRc_Y8BQs73NSw6mUVwsGwQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5149E85E.90701@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Daniel Mack <zonque@gmail.com>
-Cc: michal.bachraty@gmail.com, fa.linux.kernel@googlegroups.com, Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, Jean-Francois Moine <moinejf@free.fr>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAJuYYwQZKXXVNNbDS20d8i6mybzyRc_Y8BQs73NSw6mUVwsGwQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vikas Sajjan <vikas.sajjan@linaro.org>
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, linaro-kernel@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 20, 2013 at 5:48 PM, Daniel Mack <zonque@gmail.com> wrote:
-> On 20.03.2013 14:55, michal.bachraty@gmail.com wrote:
->> Thanks for writing this driver! I have tested your si5351 clock
->> driver and his tuning capabilities. It works well, it generates
->> proper clock frequency, but when new frequency is generated, little
->> clock gap (1ms) is generated. Si5351 datasheet and WP claims, clock
->> tuning can be without gaps -
->> http://www.silabs.com/Support%20Documents/TechnicalDocs/Si5350-51-Frequency-Shifting-WP.pdf
->>
->> I made some tests with Si5351A chip and I found that when tuning touch
->> only Multisynth registers, it can tune without gaps. There is no need
->> for soft PLL reset. I found also, accessing Multisynth registers is not
->> atomic, so there can be another frequency at output, while not all
->> registers are written. Writing only to one register seems to be atomic.
+On 03/25/2013 12:10 PM, Thomas Abraham wrote:
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/video/samsung-fimd.txt
+>> @@ -0,0 +1,68 @@
+>> +Device-Tree bindings for Samsung SoC display controller (FIMD)
+[...]
+>> +- interrupts : should contain a list of all FIMD IP block interrupts:
+>> +  FIFO Level, VSYNC, LCD_SYSTEM. The interrupt specifier format depends
+>> +    on the interrupt controller used.
 
-Michael,
+Since the interrupt order is supposed to be defined by the binding, perhaps
+it could be rephrased to something like:
 
-if you don't configure the clock output to modify the pll, changing output
-frequency will not alter pll config and there will be no reset of pll.
+- interrupts : should contain a list of all FIMD IP block interrupts in
+  order: FIFO Level, VSYNC, LCD_SYSTEM. The interrupt specifier format
+  depends on the interrupt controller used.
 
-> Yeah, but limiting possible changes to the PLLs to one single register
-> also means that you cannot offer to generate all the frequencies any
-> more. What could probably be done is refine the algorithm so that it
-> stays 'as close as possible' to the former values, but I'm not sure how
-> much work that implies.
->
-> Can you provide a patch against Sebastian's v3 to do that? Then it can
-> be cleanly applied on top of the driver later.
+>> +- interrupt-names : should contain the interrupt names: "fifo", "vsync",
+>> +       "lcd_sys", in the same order as they were listed in the interrupts
+>> +        property.
+>> +
+>> +- pinctrl : property defining the pinctrl configurations with a phandle
+>> +
+>> +- pinctrl-names : "default" state needs to be specified in the fimd node
+>> +               The pinctrl bindings defined in
+>> +               ../../../pinctrl/pinctrl-bindings.txt must be used to define a
+>> +               pinctrl state named "default".
 
-Ack. Feel free to post a patch on top of v4 now.
+The path should be ../pinctrl/pinctrl-bindings.txt. It probably makes to sense
+to either have this one sentence or pinctrl/pinctrl-names properties listed
+with their description. So for example
 
-Sebastian
+- pinctrl : pin control group to be used for this controller;
+- pinctrl-names : should contain "default" entry;
+
+or
+
+The pinctrl bindings defined in ../pinctrl/pinctrl-bindings.txt must be used
+to define a pinctrl state named "default".
