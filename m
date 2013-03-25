@@ -1,115 +1,116 @@
-From: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC PATCH] CLK: Allow parent clock and rate to be configured
- in DT.
-Date: Mon, 25 Mar 2013 12:07:51 +0100
-Message-ID: <51503007.5020403@parkeon.com>
-References: <20130319170933.28337.50448.stgit@localhost>
- <20130325101707.GZ1906@pengutronix.de>
-Reply-To: mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH v9 4/4] ARM: dts: Add FIMD DT binding Documentation
+Date: Mon, 25 Mar 2013 16:40:02 +0530
+Message-ID: <CAJuYYwQZKXXVNNbDS20d8i6mybzyRc_Y8BQs73NSw6mUVwsGwQ@mail.gmail.com>
+References: <1363960608-23825-1-git-send-email-vikas.sajjan@linaro.org>
+	<1363960608-23825-5-git-send-email-vikas.sajjan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130325101707.GZ1906-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1363960608-23825-5-git-send-email-vikas.sajjan@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vikas Sajjan <vikas.sajjan@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, sylvester.nawrocki@gmail.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, linaro-kernel@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
-
-thanks for the comments.
-
-[corrected Mike's email address - I originally sent it to the old one]
-
-On 25/03/13 11:17, Sascha Hauer wrote:
-> On Tue, Mar 19, 2013 at 06:09:33PM +0100, Martin Fuzzey wrote:
->> Even on platforms where the entire clock tree is not represented in the DT
->> it can still be useful to allow parents and rates to be set from the DT.
->>
->> An example of such a case is when a multiplexable clock output from a SOC
->> is used to supply external chips (eg an audio codec connected to the i.MX53
->> cko1 pin).
->>
->> The cko1 pin can output various internal clock signals but, in
->> order to obtain a suitable frequency for the codec, an appropriate parent must
->> be selected.
->>
->> Another example is setting root clock dividers.
->>
->> This is board specific rather than device driver or platform clock framework
->> specific information and thus would be better in the DT.
-> I see what the patch does and that it could be very useful, but there's
-> a problem: The devicetree is for hardware *description*, not
-> *configuration*.
+On 22 March 2013 19:26, Vikas Sajjan <vikas.sajjan@linaro.org> wrote:
+> Adds FIMD DT binding documentation for both Samsung SoC and Board, with an example
 >
->> +For example:
->> +	clock-configuration {
->> +		compatible = "clock-configuration";
->> +		clko1 {
->> +			clocks = <&clks 160>; /* cko1_sel */
->> +			parent = <&clks 114>; /* pll3_sw */
->> +		};
->> +
->> +		esdhca {
->> +			clocks = <&clks 102>; /* esdhc_a_podf */
->> +			clock-frequency = <200000000>;
->> +		};
-> This example shows this. For some reason we adjust the esdhc frequency
-> to 200MHz in the code currently, but this is because it matches our
-> current usecase. Once you move this into devicetree, we can't change
-> this anymore in the kernel, even if we find a much better way to adjust
-> the frequency in the future (i.e. smaller values might be good for power
-> savings, higher values might increase performance, we even might
-> dynamically change this frequency).
+> Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
+> ---
+>  .../devicetree/bindings/video/samsung-fimd.txt     |   68 ++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/samsung-fimd.txt
 >
-Yes but the problem is that the rates are currently set in 
-clk-imx51-53.c which should be generic
-to all such platforms whereas, as you point out, there may well be valid 
-reasons to choose
-different values depending on the board design and / or intended 
-application.
+> diff --git a/Documentation/devicetree/bindings/video/samsung-fimd.txt b/Documentation/devicetree/bindings/video/samsung-fimd.txt
+> new file mode 100644
+> index 0000000..f92c507
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/samsung-fimd.txt
+> @@ -0,0 +1,68 @@
+> +Device-Tree bindings for Samsung SoC display controller (FIMD)
+> +
+> +FIMD stands for Fully Interactive Mobile Display, is the Display Controller for
+> +the Samsung series of SoCs which transfers the image data from a video buffer
+> +located in the system memory to an external LCD interface.
+> +
+> +Required properties:
+> +- compatible : value should be one of the following
+> +               "samsung,s3c2443-fimd"; /* for S3C24XX SoCs */
+> +               "samsung,s3c6400-fimd"; /* for S3C64XX SoCs */
+> +               "samsung,s5p6440-fimd"; /* for S5P64X0 SoCs */
+> +               "samsung,s5pc100-fimd"; /* for S5PC100 SoC  */
+> +               "samsung,s5pv210-fimd"; /* for S5PV210 SoC */
+> +               "samsung,exynos4210-fimd"; /* for Exynos4 SoCs */
+> +               "samsung,exynos5250-fimd"; /* for Exynos5 SoCs */
+> +
+> +- reg : physical base address of the FIMD and length of memory mapped region
+> +
+> +- interrupt-parent : a phandle to the interrupt combiner node
 
-The cko case is even worse - due to a board design decision that clock 
-needs to have
-a frequency suitable for supplying some external chip. We don't want 
-board specific code in
-the platform clock code and we're trying to get away from board files...
+Since the bindings documentation have to be generic across multiple
+platforms that uses the fimd controller, it is not right to say that
+the interrupt-parent phandle should be combiner node. Instead, it
+should just mention that it should be the phandle of the fimd
+controller's interrupt parent controller.
 
-> So no, this shouldn't be in the devicetree, even though it's very
-> tempting to do so.
+> +
+> +- interrupts : should contain a list of all FIMD IP block interrupts:
+> +  FIFO Level, VSYNC, LCD_SYSTEM. The interrupt specifier format depends
+> +    on the interrupt controller used.
+> +
+> +- interrupt-names : should contain the interrupt names: "fifo", "vsync",
+> +       "lcd_sys", in the same order as they were listed in the interrupts
+> +        property.
+> +
+> +- pinctrl : property defining the pinctrl configurations with a phandle
+> +
+> +- pinctrl-names : "default" state needs to be specified in the fimd node
+> +               The pinctrl bindings defined in
+> +               ../../../pinctrl/pinctrl-bindings.txt must be used to define a
+> +               pinctrl state named "default".
+> +
+> +- clocks : List of phandle and clock ID pairs, one pair for each clock input
+> +       to the device. Should contain clock ID as per
+> +       Documentation/devicetree/bindings/clock/exynosXXXX-clock.txt
+
+Non-exynos platfroms can also migrate to dt. So writing file name
+above will be inappropriate.
+
+> +
+> +- clock-names: List of clock input name strings sorted in the same order as
+> +               the clocks property. Should contain "sclk_fimd" and "fimd".
+> +
+> +Optional Properties:
+> +- samsung,power-domain := a phandle to FIMD power domain node
+> +
+> +Example:
+> +
+> +SoC specific DT Entry:
+> +
+> +       fimd@11c00000 {
+> +               compatible = "samsung,exynos4210-fimd";
+> +               interrupt-parent = <&combiner>;
+> +               reg = <0x11c00000 0x20000>;
+> +               interrupt-names = "fifo", "vsync", "lcd_sys";
+> +               interrupts = <11 0>, <11 1>, <11 2>;
+> +               clocks = <&clock 140>, <&clock 283>;
+> +               clock-names = "sclk_fimd", "fimd";
+> +               status = "disabled";
+> +       };
+> +
+> +Board specific DT Entry:
+> +
+> +       fimd@11c00000 {
+> +               samsung,power-domain = <&pd_lcd0>;
+> +               pinctrl-0 = <&lcd_sync &lcd_clk &lcd_en &lcd0_data &pwm1_out>;
+> +               pinctrl-names = "default";
+> +               status = "okay";
+> +       };
+> --
+> 1.7.9.5
 >
-> I wonder when someone comes up with a 'configtree' where we could put in
-> such stuff.
-I don't understand why we need a seperate tree for this why can't just
-a subtree of the DT be used?
-
-After all the DT already contains "configuration" nodes such as "chosen".
-
-Indeed Documentation/devicetree/usage-model.txt  says:
-     "The chosen node may also optionally contain an arbitrary number of
-     additional properties for platform-specific configuration data."
-
-So what stops us simply placing the clock-configuration node above under 
-chosen? (which already works - just tested it)
-
-If the issue is that hardware vendors should be able to supply a DT 
-without knowing
-the configuration parameters couldn't that be resolved by letting the 
-bootloader
-merge DT subtrees this would give us "configtree" without adding more 
-code to
-the kernel to handle it.
-
-Regards,
-
-Martin
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
