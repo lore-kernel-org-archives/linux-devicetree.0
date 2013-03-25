@@ -1,70 +1,73 @@
-From: Peter Korsgaard <jacmet@sunsite.dk>
-Subject: Re: [PATCH 2/2] pwm: pwm-tiehrpwm: Update device-tree binding document
-Date: Mon, 25 Mar 2013 08:09:17 +0100
-Message-ID: <87ehf4ez1e.fsf@dell.be.48ers.dk>
-References: <1364195093-1357-1-git-send-email-avinashphilip@ti.com>
-	<1364195093-1357-3-git-send-email-avinashphilip@ti.com>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: [PATCH 1/3] ARM: dts: AM33XX: Add pinmux configuration for CPSW to beaglebone
+Date: Mon, 25 Mar 2013 12:57:56 +0530
+Message-ID: <1364196478-16688-2-git-send-email-mugunthanvnm@ti.com>
+References: <1364196478-16688-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1364195093-1357-3-git-send-email-avinashphilip@ti.com> (Philip
-	Avinash's message of "Mon, 25 Mar 2013 12:34:53 +0530")
-Sender: linux-doc-owner@vger.kernel.org
-To: Philip Avinash <avinashphilip@ti.com>
-Cc: thierry.reding@avionic-design.de, nsekhar@ti.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, prakash.pm@ti.com, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1364196478-16688-1-git-send-email-mugunthanvnm@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, b-cousson@ti.com, benoit.cousson@linaro.org, tony@atomide.com, Mugunthan V N <mugunthanvnm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Philip" == Philip Avinash <avinashphilip@ti.com> writes:
+Add pinmux configurations for MII based CPSW ethernet to am335x-bone.
+In this patch, only single named mode/state is added and these pins
+are configured during pinctrl driver initialization.
 
- Philip> Update binding document of pwm-tiehrpwm to reflect the usage of similar
- Philip> modules in da850 and am3xx SOCs.
+Default mode is nothing but the values required for the module during
+active state. With this configurations module is functional as
+expected.
 
-Acked-by: Peter Korsgaard <jacmet@sunsite.dk>
+Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+---
+ arch/arm/boot/dts/am335x-bone.dts |   25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
- Philip> Signed-off-by: Philip Avinash <avinashphilip@ti.com>
- Philip> Cc: Grant Likely <grant.likely@secretlab.ca>
- Philip> Cc: Rob Herring <rob.herring@calxeda.com>
- Philip> Cc: Rob Landley <rob@landley.net>
- Philip> ---
- Philip>  .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       |   12 ++++++++++--
- Philip>  1 file changed, 10 insertions(+), 2 deletions(-)
-
- Philip> diff --git a/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt b/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
- Philip> index 4fc7079..9a71369 100644
- Philip> --- a/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
- Philip> +++ b/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
- Philip> @@ -1,7 +1,9 @@
- Philip>  TI SOC EHRPWM based PWM controller
+diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
+index 11b240c..f90e665 100644
+--- a/arch/arm/boot/dts/am335x-bone.dts
++++ b/arch/arm/boot/dts/am335x-bone.dts
+@@ -26,7 +26,7 @@
  
- Philip>  Required properties:
- Philip> -- compatible : Must be "ti,am33xx-ehrpwm"
- Philip> +- compatible: Must be "ti,<soc>-ehrpwm".
- Philip> +  for am33xx - compatible = "ti,am33xx-ehrpwm";
- Philip> +  for da850  - compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
- Philip>  - #pwm-cells: Should be 3. Number of cells being used to specify PWM property.
- Philip>    First cell specifies the per-chip index of the PWM to use, the second
- Philip>    cell is the period in nanoseconds and bit 0 in the third cell is used to
- Philip> @@ -15,9 +17,15 @@ Optional properties:
+ 	am33xx_pinmux: pinmux@44e10800 {
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&user_leds_s0>;
++		pinctrl-0 = <&user_leds_s0 &cpsw_s0>;
  
- Philip>  Example:
+ 		user_leds_s0: user_leds_s0 {
+ 			pinctrl-single,pins = <
+@@ -36,6 +36,29 @@
+ 				0x60 0x17	/* gpmc_a8.gpio1_24, OUTPUT_PULLUP | MODE7 */
+ 			>;
+ 		};
++
++		cpsw_s0: cpsw_s0 {
++			pinctrl-single,pins = <
++				/* Slave 1 */
++				0x110 0x20	/* mii1_rxerr.mii1_rxerr, MODE0 | INPUT */
++				0x114 0x0	/* mii1_txen.mii1_txen, MODE0 | OUTPUT */
++				0x118 0x20	/* mii1_rxdv.mii1_rxdv, MODE0 | INPUT_PULLDOWN */
++				0x11c 0x0	/* mii1_txd3.mii1_txd3, MODE0 | OUTPUT */
++				0x120 0x0	/* mii1_txd2.mii1_txd2, MODE0 | OUTPUT */
++				0x124 0x0	/* mii1_txd1.mii1_txd1, MODE0 | OUTPUT */
++				0x128 0x0	/* mii1_txd0.mii1_txd0, MODE0 | OUTPUT */
++				0x12c 0x20	/* mii1_txclk.mii1_txclk, MODE0 | INPUT_PULLDOWN */
++				0x130 0x20	/* mii1_rxclk.mii1_rxclk, MODE0 | INPUT_PULLDOWN */
++				0x134 0x20	/* mii1_rxd3.mii1_rxd3, MODE0 | INPUT_PULLDOWN */
++				0x138 0x20	/* mii1_rxd2.mii1_rxd2, MODE0 | INPUT_PULLDOWN */
++				0x13c 0x20	/* mii1_rxd1.mii1_rxd1, MODE0 | INPUT_PULLDOWN */
++				0x140 0x20	/* mii1_rxd0.mii1_rxd0, MODE0 | INPUT_PULLDOWN */
++
++				/* MDIO */
++				0x148 0x30	/* mdio_data.mdio_data, MODE0 | INPUT_PULLUP */
++				0x14c 0x10	/* mdio_clk.mdio_clk, MODE0 | OUTPUT_PULLUP */
++			>;
++		};
+ 	};
  
- Philip> -ehrpwm0: ehrpwm@0 {
- Philip> +ehrpwm0: ehrpwm@0 { /* EHRPWM on am33xx */
- Philip>  	compatible = "ti,am33xx-ehrpwm";
- Philip>  	#pwm-cells = <3>;
- Philip>  	reg = <0x48300200 0x100>;
- Philip>  	ti,hwmods = "ehrpwm0";
- Philip>  };
- Philip> +
- Philip> +ehrpwm0: ehrpwm@0 { /* EHRPWM on da850 */
- Philip> +	compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
- Philip> +	#pwm-cells = <3>;
- Philip> +	reg = <0x300000 0x2000>;
- Philip> +};
- Philip> -- 
- Philip> 1.7.9.5
-
-
-
+ 	ocp {
 -- 
-Bye, Peter Korsgaard
+1.7.9.5
+
