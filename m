@@ -1,67 +1,51 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v4 0/4] Initial Device Tree support for S3C64xx
-Date: Mon, 25 Mar 2013 10:08:02 +0900
-Message-ID: <16de01ce28f5$32d3e850$987bb8f0$%kim@samsung.com>
-References: <1362860975-18635-1-git-send-email-tomasz.figa@gmail.com>
- <2474214.PvUtMM3R7F@flatron>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v3 2/3] regulator: as3711: add OF support
+Date: Mon, 25 Mar 2013 01:08:40 +0000
+Message-ID: <20130325010839.GH18316@opensource.wolfsonmicro.com>
+References: <1363968949-12151-1-git-send-email-g.liakhovetski@gmx.de>
+ <1363968949-12151-3-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <2474214.PvUtMM3R7F@flatron>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Tomasz Figa' <tomasz.figa@gmail.com>, linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, 'Rob Herring' <robherring2@gmail.com>, 'Mark Rutland' <mark.rutland@arm.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="J/zg8ciPNcraoWb6"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1363968949-12151-3-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-kernel@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree-discuss@lists.ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>, Richard Purdie <rpurdie@rpsys.net>, Andrew Morton <akpm@linux-foundation.org>, linux-fbdev@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Tomasz Figa wrote:
-> 
-> Hi,
-> 
-> On Saturday 09 of March 2013 21:29:31 Tomasz Figa wrote:
-> > This series adds Device Tree support for Samsung S3C64xx SoC series.
-> >
-> > It fixes several problems preventing from booting an S3C64xx-based
-> > system using Device Tree, adds all the infrastructure for Device
-> > Tree-based board support, including mach-s3c64xx-dt and dts include
-> > files for S3C64xx SoCs, and (very) basic device tree source for
-> > FriendlyARM Mini6410 board.
-> >
-> > Current support is very limited and allows only basic bootup with UART
-> > and SDHCI, but should be fine as a start and will be extended in
-> > future, hopefully with help of S3C64xx board maintainers.
-> >
-> > This series depends on my other series reworking samsung-time for
-> > multiplatform: [PATCH v3 00/12] ARM: samsung-time: Prepare for
-> > multiplatform support
-> > http://thread.gmane.org/gmane.linux.kernel.samsung-soc/16664
-> >
-> > Changes since v3:
-> >  - Rebased onto current for-next branch of Kgene's tree
-> >  - Updated timer node for next version of samsung-time patches
-> >  - Replaced local s3c64xx_dt_init_irq with irqchip_init
-> >
-> > Changes since v2:
-> >  - Updated timer node for next version of samsung-time patches
-> >
-> > Changes since v1:
-> >  - Dropped two VIC-related patches that are no longer necessary
-> >  - Added Device Tree-based instantation of system timers
-> >  - Corrected VIC interrupt specifiers
-> >  - Adjusted CPU compatible values and dropped @id
-> >
-> > Tomasz Figa (4):
-> >   ARM: common: vic: Parse interrupt and resume masks from device tree
-> >   ARM: s3c64xx: Add board file for boot using Device Tree
-> >   ARM: dts: Add basic dts include files for Samsung S3C64xx SoCs
-> >   ARM: dts: Add dts file for S3C6410-based Mini6410 board
-> 
-> Any comments for this series?
-> 
-Basically, looks good to me but I need to check your samsung-time patches,
-if any updates, let you know.
 
-Thanks.
+--J/zg8ciPNcraoWb6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-- Kukjin
+On Fri, Mar 22, 2013 at 05:15:48PM +0100, Guennadi Liakhovetski wrote:
+> AS3711 regulator OF support only evaluates standard regulator DT
+> properties.
+
+Applied, thanks.
+
+--J/zg8ciPNcraoWb6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRT6OHAAoJELSic+t+oim9Q20P/2AbTGRKQ8PUj16sD2sZK6l4
+NvBAuX9RsDjkwyWDgcRdODEmAAsV3wuUbZWaws1sbfCcRckJR21Ww0CwFGo0Vzq1
+a1WstGbOrTchZDFyx23w6JzDfclFoySpNlFUF5EtXnDTFfASX3Td/1EVyQ2o81Uo
+fELDNDnJFsvlG9Kj9+9BNdpVXdPlGsGHnURAkVmM9pe8ADOZp/Fw+BvTumjZ6P+f
+NKiuNZMA6RgEdqjDUHggmemTv2Bv1cobQF6t5wZmwpBESRkXC+iAXe60qGwAU9Da
+ZunCpWEo9oxKJfGtgLt/vYgoG7tgYW9SFbL87KScQHsOZd9OSnsz3fe5BUhe5Ofa
+WlgJdtzCWJXo5p8LpfJq4iyAYsF72j6lTVHN9CbUsGSDwxFx5crfM7SGGN6lEI9m
+fNbRdanXIrzJg0r/K5HfTyZeQ2PCjjQqG6mrlnoW1wtN+y9eRZ+xzz4V2ZcEvIV+
+mHAliBHAH1u9DnwZFH5Tt0QGFwl4dV0FHb3ZrqYHBY208kH/70Y21yt1xkf7iOii
+Kw8QgLmcKpAk8f4r7ORd9qY7qqSu9z26AewsWL5t0R3hUGplBpZlbFfYMjbqGebt
+dCKufRiP3a9BHgldsE0rCb7JRihTbcR4mg8l0z4JEuvVX5mi4A7DcR6WjOWJg3Ia
+gPKBuAyGyMbFuileh02L
+=Cnn7
+-----END PGP SIGNATURE-----
+
+--J/zg8ciPNcraoWb6--
