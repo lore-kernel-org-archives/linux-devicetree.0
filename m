@@ -1,65 +1,76 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 1/2] ASoC: tegra: add Tegra114 support to the AHUB driver
-Date: Mon, 25 Mar 2013 18:32:00 +0000
-Message-ID: <20130325183159.GS18316@opensource.wolfsonmicro.com>
-References: <1363895802-20484-1-git-send-email-swarren@wwwdotorg.org>
- <20130325155232.GR18316@opensource.wolfsonmicro.com>
- <515078F9.1070800@wwwdotorg.org>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v10 01/12] mfd: DT bindings for the palmas family MFD
+Date: Mon, 25 Mar 2013 19:47:21 +0000
+Message-ID: <20130325194711.GT18316@opensource.wolfsonmicro.com>
+References: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
+ <1363964122-19201-2-git-send-email-ian@slimlogic.co.uk>
+ <5150906F.9040202@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ZcSDOt7TZFizttpn"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="y80AKZIs+e/pKYlV"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <515078F9.1070800-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <5150906F.9040202@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Ian Lartey <ian@slimlogic.co.uk>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, mturquette@linaro.org, linus.walleij@linaro.org, cooloney@gmail.com, sfr@canb.auug.org.au, rpurdie@rpsys.net, akpm@linux-foundation.org, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, gg@slimlogic.co.uk, j-keerthy@ti.com, ldewangan@nvidia.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
 
---ZcSDOt7TZFizttpn
+--y80AKZIs+e/pKYlV
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Mar 25, 2013 at 10:19:05AM -0600, Stephen Warren wrote:
-> On 03/25/2013 09:52 AM, Mark Brown wrote:
-> > On Thu, Mar 21, 2013 at 01:56:41PM -0600, Stephen Warren wrote:
+On Mon, Mar 25, 2013 at 11:59:11AM -0600, Stephen Warren wrote:
+> On 03/22/2013 08:55 AM, Ian Lartey wrote:
+> > From: Graeme Gregory <gg@slimlogic.co.uk>
 
-> >> +	clocks = <&tegra_car 106>, <&tegra_car 107>, <&tegra_car 30>, +
-> >> <&tegra_car 11>, <&tegra_car 18>, <&tegra_car 101>, +
-> >> <&tegra_car 102>, <&tegra_car 108>, <&tegra_car 109>, +
-> >> <&tegra_car 110>, <&tegra_car 162>; +	clock-names = "d_audio",
-> >> "apbif", "i2s0", "i2s1", "i2s2", +		"i2s3", "i2s4", "dam0",
-> >> "dam1", "dam2", +		"spdif_in";
+> > +Optional nodes:
+> > +- regulators : should contain the constrains and init information for the
+> > +	       regulators. It should contain a subnode per regulator from the
+> > +	       list.
+> > +	       For ti,palmas-pmic - smps12, smps123, smps3 depending on OTP,
+> > +	       smps45, smps457, smps7 depending on varient, smps6, smps[8-10],
+> > +	       ldo[1-9], ldoln, ldousb
+> > +	       For ti,palmas-charger-pmic - smps12, smps123, smps3 depending on OTP,
+> > +	       smps[6-9], boost, ldo[1-14], ldoln, ldousb
 
-> > ...this is exactly what I was worried about with the clock bindings
-> > :/
+> The list of legal compatible values for this node above doesn't include
+> both ti,palmas-pmic and ti,palmas-charger-pmic. Should it? This node
+> should describe this PMIC block in a completely standalone fashion,
+> without the need to go look at the top-level node to see if it's a
+> "charger" variant or not.
 
-> What's the exact issue here? The length of the list is rather
-> determined by the HW, so I don't think there's much one can do about that.
+The latter was removed from the code in this series, only palmas-pmic is
+present now.
 
-The fact that it's two lists that need to be matched up.
+Just as a general thing there seems to be an awful lot of stuff here
+about the boilerplate for the generic properties like the interrupt
+and GPIO controller stuff - we probably need to spin round and look at
+factoring this out to make life easier.  There seems to be a lot of
+boiler plate in the bindings that is factored out well by the frameworks
+in the code so people don't even need to think about it.
 
---ZcSDOt7TZFizttpn
+--y80AKZIs+e/pKYlV
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJRUJgXAAoJELSic+t+oim9RnUP/3lwU0PopjjWG2Y2OYPiThJz
-jljVI9/d1CxlbxgxNytwszFwbknd/L6fOTTow/eADzQvLIuvYLp3CB/B2imVWL49
-o0TUo3sZuFWXW9oW++17fM83Ut5qyj1aXhhKUzPsOeHCgC2b1k9UgQbLGVX7nMIn
-nLnTFBCQhdntiMbNS8oCtgauTsWnftNxt1S1yyX/0j0oDymMzIoFFN0yCz2k2S04
-xgj9wXuLLM/YF1C+uUCkup6lAj3u3KYQEXKstVuqv9zXO5Um/QlZdibn8BCzEwTK
-qG2NdNiSA4BI8/yCWEHb5wPnrLZjdmQwisVtWLt5fjL2ff45QREBFtAf+4nNvEgL
-e/cGMl3UBSk/Ft3l3yF6c/CZoI7LUP0Zw+MO4LeR+5eE8oowetdXveF9cltxW967
-8nLL5BkGJTfRpn7D0ITe+dERcy1l/YihN669kmSbfyz4n7+09PJi0ekpJTFuXY4h
-+9hqbeI/v2tQalD0FP7Bi7d+FBLl3kDAWj/+CD2POtZ9TKMyBHwNK+spReMnS4J3
-Uj5LvwwVJFHTqE5oVU/NnUaXLNn53Wt8LEl/C3P6It23mDus/VvQaK5Z5PGSluiU
-o5vg1uvtj/wWyVo6RUxjOk5BgSUHgFZ5djbz1KatrUkZOKlW6LGLLofNZlgwFTFk
-vsPeMmZOw6De5/+6AA8o
-=cAyq
+iQIcBAEBAgAGBQJRUKm3AAoJELSic+t+oim9fowQAJK8XJJZnIkcTIK2LzQfAHFo
+H+dqFvQDFXcfH+JaE/pnAQAYQaTexgj/VaS7ujlkjyxgz8HcnCUqA0daW+uInZB4
+rUiLmt/SpprD0uc9cv6zV7uzff9aZ/MYFUz51IF+MBM5RPu4XYl/jLXWGG7rHDAq
+KD/m1IThbMSJwl0uZ319Qujm3nYorRJzcaJwEcIncfr74h08hr0bqqMCqL/wfZqf
+g63A7Nb9iBVVwcc31OVQk0PmSnMOam6arf1OTbQmSGwUoxH7v6YIELCy3IanUTka
+iVJMrQU22Wwi1gdG4RcMCGmagUoNHD3F+QUD08EqepkVoznfkZHQtKW7Ul1FP0aA
+dvTEUUXk/dDEgIsqX70nbC4Bw94a0ZCV5h6L61kPdgmCvUMfWI8iqsEh1E52yE42
+GkMQt02dcC1uAa+T5J3OoYr9nTDoMm8T6ImuYrV1jl9unO1KHYJ/bM1t8Ayp+kNN
+wAnGfvcFQRF7BtwAwbJu/6V80529fyh+cBztvd69FinY2urQTc0zQUr6swnC5Q15
+g2dX/RMesFZLAo3+l/y6Mfjj9PDMLjPnArF4ai8nH7s3mmOWeCx9sZemM58JGBNq
+E6DLjnaE7NASTfGxA1AMh5A81S/rvCYPyx2CbZpNB98EdE7pnEJRbjCjI8cQzXvn
+YtwdbowWb+augz2h3QWD
+=dRiZ
 -----END PGP SIGNATURE-----
 
---ZcSDOt7TZFizttpn--
+--y80AKZIs+e/pKYlV--
