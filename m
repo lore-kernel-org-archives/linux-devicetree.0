@@ -1,164 +1,406 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v4 0/6] support other fsl SoCs with usbmisc + small fixes
-Date: Mon, 25 Mar 2013 10:30:19 -0700
-Message-ID: <20130325173019.GA1992@kroah.com>
-References: <1354033021-10585-1-git-send-email-m.grzeschik@pengutronix.de>
- <20121128025217.GC18593@nchen-desktop>
- <87ip6mor1e.fsf@ashishki-desk.ger.corp.intel.com>
- <CAOMZO5ArDLKDLEzhYc7EP2CNQGcT=vO7ctbiEsjzsGs+EaT7Dw@mail.gmail.com>
- <20130325162931.GB22810@pengutronix.de>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: RFC v2: Zynq Clock Controller
+Date: Mon, 25 Mar 2013 10:59:53 -0700
+Message-ID: <83871b9e-cbf1-48bc-8b05-2eba50923ba4@DB8EHSMHS015.ehs.local>
+References: <27dae808-1d3a-4001-8eb2-b0a6e2a34b8f@AM1EHSMHS013.ehs.local>
+ <514B5254.50101@metafoo.de>
+ <128fc723-ace7-4f4c-95d9-971b42a52080@CH1EHSMHS028.ehs.local>
+ <5150634B.9060601@metafoo.de>
+ <e44aac14-ca51-446c-b564-00a7a440384a@TX2EHSMHS041.ehs.local>
+ <5150870F.9030008@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130325162931.GB22810-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <5150870F.9030008@metafoo.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Mike Turquette <mturquette@linaro.org>, Josh Cartwright <josh.cartwright@ni.com>, Michal Simek <michal.simek@xilinx.com>, Peter Crosthwaite <pcrost@xilinx.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, git@xilinx.com, Jan =?utf-8?B?TMO8YmJl?= <jlu@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, Peter De Schrijver <pdeschrijver@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 25, 2013 at 05:29:31PM +0100, Michael Grzeschik wrote:
-> Hi Alexander, Fabio, Greg,
-> 
-> On Mon, Mar 25, 2013 at 10:11:15AM -0300, Fabio Estevam wrote:
-> > Hi Alexander,
-> > 
-> > On Thu, Jan 24, 2013 at 7:42 AM, Alexander Shishkin
-> > <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> > > Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
-> > >
-> > >> On Tue, Nov 27, 2012 at 05:16:55PM +0100, Michael Grzeschik wrote:
-> > >>> Nearly every SoC from Freescale has this non-core usb registers. This series
-> > >>> adds support for more users of this driver.
-> > >>>
-> > >>> This series is based on Peter Chen's work. Its needed to merge his master branch
-> > >>> before applying this series:
-> > >>>
-> > >>> https://github.com/hzpeterchen/linux-usb.git
-> > >>
-> > >> I have tested it at i.mx6q sabrelite board, it works good.
-> > >>
-> > >> I have pushed your commit to my git, please cc me
-> > >> your coming chipidea patches, thanks.
-> > >>
-> > >> Alex, please add:
-> > >>
-> > >> Reviewed-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > >> Tested-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > >
-> > > Looks good, queueing this one for submission.
-> > 
-> > Could you please let us know what is preventing this series to be applied?
-> 
-> That's what our chipidea usb disaster currently looks like in detail:
-> 
-> http://git.pengutronix.de/git/mgr/linux.git v3.9/topic/usb-phy
-> 4414a59 Merge 'v3.9/topic/usb-phy' into usb-3.9
-> a806027 usb: otg: mxs-phy: remove clkgate/sftrst clearing
-> 026881b usb: otg: mxs-phy: Improve mxs phy initialization
-> ed42fa9 usb: mxs-phy: register phy at usb phy library
-> d2783aa usb: phy: remove NULL pointer check in usb_add_phy()
-> 
-> /*
->  * The series usb-ci-udc has already been posted some times
->  * but it currently got no replies by Alexander.
->  */
-> http://git.pengutronix.de/git/mgr/linux.git v3.9/topic/usb-ci-udc
-> e548c9d Merge 'v3.9/topic/usb-ci-udc' into usb-3.9
-> 80538f3 usb: chipidea: udc: add multiple td support to hardware_{en,de}queue
-> 02e1c7b usb: chipidea: udc: manage dynamic amount of tds with an linked list
-> 0ebb8f4 usb: chipidea: udc: prepare qhead with dma_alloc_coherent
-> 39be042 usb: chipidea: udc: add the define TD_PAGE_COUNT and fix all users
-> c2f0562 usb: chipidea: udc: use gfp_flags in _hardware_enqueue
-> f818222 usb: chipidea: udc: move _ep_queue into an unlocked function
-> 8aea3b0 usb: chipidea: udc: configure iso endpoints
-> 8e61a12 usb: chipidea: udc: rework ep_enable cap setting
-> e5ceed7 usb: chipidea: udc: move ZLT flag change to ep_enable
-> 2e33742 usb: chipidea: udc: read status of td only once in hardware_dequeue
-> 516803b usb: chipidea: udc: only clear active and halted bits in qhead
-> ee95a49 usb: chipidea: udc: use {read,write}l to handle mapped data
-> 
-> http://git.pengutronix.de/git/mgr/linux.git v3.9/topic/imx-usbmisc
-> 1174002 Merge 'v3.9/topic/imx-usbmisc' into usb-3.9
-> f406383 usb: chipidea: usbmisc: skip clocks on i.MX6
-> d5c8d53 usb: chipidea: usbmisc: use module_platform_driver
-> 105d5d0 usb: chipidea: usbmisc: add support for ahb, ipg and per clock
-> 
-> http://git.pengutronix.de/git/mgr/linux.git v3.9/topic/imx-usb
-> df11f8b Merge 'v3.9/topic/imx-usb' into usb-3.9
-> 9a967c4 usb: chipidea: udc: add force-full-speed option
-> a02af86 USB: chipidea: set STS bit in serial mode
-> af34326 usb: chipidea: ci13xxx_imx: add 2nd and 3rd clock to support imx5x and newer
-> 5b7f6d8 usb: chipidea: pci: mark platformdata as static
-> 
-> /*
->  * All above branches depent on the lower branches of Alexander and Peter
->  * which we currently have rebased on v3.9-rc3 and on top of each other.
->  * It is named alex-and-peter-for-3.9.
->  */
-> http://git.pengutronix.de/git/mgr/linux.git alex-and-peter-for-3.9
-> 
-> /*
->  * Peters branch already contain the usbmisc series,
->  * but they never made it to ci-for-greg, although
->  * Alexander already mentioned (24 Jan 2013) to queue them.
->  */
-> https://github.com/hzpeterchen/linux-usb.git master^^
-> 4d36511 Merge 'v3.9/topic/usb-peterchen'
-> 90314f3 usb: chipidea: usbmisc: add post handling and errata fix for mx25
-> edde2ad usb: chipidea: usbmisc: add mx53 support
-> 6150722 usb: chipidea: usbmisc: prepare driver to handle more than one soc
-> 542384e usb: chipidea: usbmisc: fix a potential race condition
-> cdffb44 usb: chipidea: usbmisc: unset global varibale usbmisc on driver remove
-> b8e47e3 usb: chipidea: usbmisc: rename file, struct and functions to usbmisc_imx
-> c5863f9 usb: chipidea: imx: select usb id pin using syscon interface
-> 8c8a1f5 usb: chipidea: udc: fix the oops when plugs in usb cable after rmmod gadget
-> c703723 usb: chipidea: imx: add getting vbus regulator code
-> e897d66 usb: chipidea: delete the delayed work
-> 4c0be3e usb: chipidea: add vbus regulator control
-> f1e52f8 usb: chipidea: udc: retire the flag CI13_PULLUP_ON_VBUS
-> af4e743 usb: chipidea: udc: add pullup/pulldown dp at hw_device_state
-> 1be0011 usb: chipidea: add otg id switch and vbus connect/disconnect detect
-> 7c3c62d usb: chipidea: add otg file
-> 618bfec Revert "USB: chipidea: add vbus detect for udc"
-> bfe5248 USB chipidea i.MX: use devm_usb_get_phy_by_phandle to get phy
-> 705620f USB mxs-phy: Register phy with framework
-> f5e9796 USB chipidea i.MX: introduce dr_mode property
-> dc622c4 USB chipidea: introduce dual role mode pdata flags
-> b1d4a9e USB: chipidea: add PTW and PTS handling
-> 747eee3 USB: chipidea: ci13xxx-imx: create dynamic platformdata
-> 2f2bb89 USB: add devicetree helpers for determining dr_mode and phy_type
-> 4f30039 USB: move bulk of otg/otg.c to phy/phy.c
-> 760d9a8 nop-xceiv: make nop to use usb_add_phy_dev
-> 
-> /*
->  * This branch is already one month old and stays untouched
->  * /
-> https://github.com/hzpeterchen/linux-ci.git ci-for-greg
-> e0fe4d5 Merge 'ci-for-greg'
-> e160513 usb: chipidea: don't redefine __ffs()
-> 93b27aa usb: chipidea: fix precedence bug in ci_requests_show()
-> 67d0531 usb: chipidea: move debug files creation/removal to the core
-> 5a958dd usb: chipidea: move role to debugfs
-> 038429c usb: chipidea: convert debug entries in sysfs to debugfs
-> 25dc0fb usb: chipidea: replace interrupt accounting with tracepoints
-> dc43e8c usb: chipidea: convert events to tracepoints
-> a84a5bf usb: chipidea: trim include list in the core
-> f2bf55e usb: chipidea: trim include list in udc code
-> adf1889 usb: chipidea: drop redundant includes
+Hi,
 
-Ugh, this is getting to be a horrible mess.
+On Mon, Mar 25, 2013 at 06:19:11PM +0100, Lars-Peter Clausen wrote:
+> On 03/25/2013 06:08 PM, S=C3=B6ren Brinkmann wrote:
+> > Hi Lars,
+> >=20
+> > On Mon, Mar 25, 2013 at 03:46:35PM +0100, Lars-Peter Clausen wrote:
+> >> Hi,
+> >>
+> >> On 03/22/2013 11:41 PM, S=C3=B6ren Brinkmann wrote:
+> >>> Hi Lars,
+> >>>
+> >>> On Thu, Mar 21, 2013 at 07:32:52PM +0100, Lars-Peter Clausen wrot=
+e:
+> >>>> On 03/21/2013 12:56 AM, S=C3=B6ren Brinkmann wrote:
+> >>>>> Hi,
+> >>>>>
+> >>>>> I spent some time working on this and incorporating feedback. H=
+ere's an updated proposal for a clock controller for Zynq:
+> >>>>>
+> >>>>> Required properties:
+> >>>>>  - #clock-cells : Must be 1
+> >>>>>  - compatible : "xlnx,ps7-clkc"  (this may become 'xlnx,zynq-cl=
+kc' terminology differs a bit between Xilinx internal and mainline)
+> >>>>>  - ps-clk-frequency : Frequency of the oscillator providing ps_=
+clk in HZ
+> >>>>>                      (usually 33 MHz oscillators are used for Z=
+ynq platforms)
+> >>>>>  - clock-output-names : List of strings used to name the clock =
+outputs. Shall be a list of the outputs given below.
+> >>>>>
+> >>>>> Optional properties:
+> >>>>>  - clocks : as described in the clock bindings
+> >>>>>  - clock-names : as described in the clock bindings
+> >>>>>
+> >>>>> Clock inputs:
+> >>>>> The following strings are optional parameters to the 'clock-nam=
+es' property in
+> >>>>> order to provide optional (E)MIO clock sources.
+> >>>>>  - swdt_ext_clk
+> >>>>>  - gem0_emio_clk
+> >>>>>  - gem1_emio_clk
+> >>>>>  - mio_clk_XX          # with XX =3D 00..53
+> >>>>>
+> >>>>> Example:
+> >>>>>         clkc: clkc {
+> >>>>>                 #clock-cells =3D <1>;
+> >>>>>                 compatible =3D "xlnx,ps7-clkc";
+> >>>>>                 ps-clk-frequency =3D <33333333>;
+> >>>>
+> >>>> The input frequency should be a clock as well.
+> >>> Again, monolithic vs split. I don't see a reason not to just inte=
+rnally
+> >>> call clk_register_fixed_rate(). That way its children do not have=
+ to
+> >>> cope with a variable name for the xtal.
+> >>> Also, with my proposal 'clocks' and 'clock-names' would be purely
+> >>> optional properties, only required if optional external inputs ar=
+e
+> >>> present. Having the xtal defined externally would add mandatory e=
+ntries for
+> >>> those props.
+> >>
+> >>
+> >>
+> >>>
+> >>>>
+> >>>>>                 clock-output-names =3D "armpll", "ddrpll", "iop=
+ll", "cpu_6or4x", "cpu_3or2x", "cpu_2x", "cpu_1x", "ddr2x", "ddr3x", "d=
+ci", "lqspi", "smc", "pcap", "gem0", "gem1", "fclk0", "fclk1", "fclk2",=
+ "fclk3", "can0", "can1", "sdio0", "sdio1", "uart0", "uart1", "spi0", "=
+spi1", "dma", "usb0_aper", "usb1_aper", "gem0_aper", "gem1_aper", "sdio=
+0_aper", "sdio1_aper", "spi0_aper", "spi1_aper", "can0_aper", "can1_ape=
+r", "i2c0_aper", "i2c1_aper", "uart0_aper", "uart1_aper", "gpio_aper", =
+"lqspi_aper", "smc_aper", "swdt", "dbg_trc", "dbg_apb";  /* long list..=
+=2E explanation below */
+> >>>>>                 /* optional props */
+> >>>>>                 clocks =3D <&clkc 16>, <&clk_foo>;
+> >>>>>                 clock-names =3D "gem1_emio_clk", "can_mio_clk_2=
+3";
+> >>>>>         };
+> >>>>>
+> >>>>> With this revised bindings arbitrary upstream and downstream cl=
+ock providers should be supported and it's also possible to loop back a=
+n output as input. The downside of supporting this is, that I don't see=
+ a way around explicitly listing the clock output names in the DT.
+> >>>>> The reason for this is, that a downstream clock provider should=
+ use of_clk_get_parent_name() to obtain its parent clock name. For a bl=
+ock with multiple outputs of_clk_get_parent_name() can return a valid c=
+lock name only when 'clock-output-names' is present.
+> >>>>> Probably the fclks are the only realistic use case to become pa=
+rent of downstream clock providers, but I could imagine that e.g. a dev=
+ice driver like UART wants to use the CCF to model its internal clocks,=
+ hence it would require its parent clock name. Even though a device dri=
+ver could use clk_get_parent() and __clk_get_name(), of_clk_get_parent_=
+name() should probably work as well. I simply have a bad feeling about =
+breaking of_clk_get_parent_name() for any clock.
+> >>>>> But after all, I'm open for finding a better solution for this.
+> >>>>>
+> >>>>>
+> >>>>> Similar, inputs for optional clock sources through (E)MIO pins =
+can be defined as described in the clock bindings using the 'clocks' an=
+d 'clock-names' properties, with 'clock-names' being an arbitrary subse=
+t of the documented names. The actual parent clock names are internally=
+ resolved using of_clk_get_parent_name().
+> >>>>>
+> >>>>>
+> >>>>> Regarding this monolithic solution versus a finer granular spli=
+t:
+> >>>>>
+> >>>>> On cost of more complex probing we would also have:
+> >>>>>  - one clock driver covering the peripheral clocks
+> >>>>>  - one for the CPU clock domain
+> >>>>>  - one for the DDR clock domain
+> >>>>>  - one for GEM
+> >>>>>  - one for CAN
+> >>>>>  - one for the APER clks
+> >>>>>  - one for the PLLs
+> >>>>>  - one for fclks
+> >>>>
+> >>>> fclks are the same as peripheral clocks except for the gate bit,=
+ as far as I
+> >>>> can see.
+> >>> And that makes them quite different, since they have to access mu=
+ltiple
+> >>> registers instead of a single one. Also, the fclks have two divid=
+ers.
+> >>> If you want to cover all of those with a single driver, you need =
+a
+> >>> plethora of arguments/properties to catch the small differences.
+> >>>
+> >>>>
+> >>>>>  - probably one for the debug clocks (not sure whether we need =
+those)
+> >>>>>
+> >>>>> Except for the peripheral one and probably the fclk, they would=
+ all be instantiated just once. So, there is not a lot of reuse going o=
+n.
+> >>>>
+> >>>> PLLs are going to be instantiated multiple times as well.
+> >>> As mentioned in the very next sentence, I rather see a single dri=
+ver
+> >>> with multiple outputs. Take suspend: My plan is to have a few fun=
+ctions
+> >>> like zynq_clk_(suspend|resume). That should take care of bypassin=
+g
+> >>> shutting down the PLLs (and probably more). Therefore it's easier=
+ to
+> >>> have them all in a single driver.
+> >>> And if it turned out, that other clocks require special handling =
+for
+> >>> such system level functions, that could be addressed that way too=
+ with
+> >>> the monolithic approach.
+> >>>
+> >>>>
+> >>>>> Fclks I would probably also rather put into one driver with fou=
+r outputs instead of instantiating a single output driver multiple time=
+s. Same for PLLs.
+> >>>>>
+> >>>>> And then there is e.g. a mux for the system watchdog input whic=
+h doesn't really fit anywhere and it would be pretty much ridiculous to=
+ have another clock driver just for that one and it would also become "=
+hidden" in one of the others.
+> >>>>>
+> >>>>> In my opinion that's just not necessary. We would create a bunc=
+h of clock drivers including DT bindings for them, probing would become=
+ more complex and it doesn't really help with the probe/naming issue. S=
+o, I don't think it's beneficial to go down that road.
+> >>>>>
+> >>>>> The monolithic solution would need one custom driver for the PL=
+Ls, DT bindings wouldn't be required for it though. Everything else sho=
+uld be internally described using the clock-primitives.
+> >>>>>
+> >>>>> Other than having a much simpler probe and init process, I stil=
+l think it might be beneficial to have this monolithic block with a hol=
+istic view of the clock tree. For suspend e.g. I think the clock contro=
+ller could export functions like zynq_clkc_(suspend|resume) and then th=
+e controller handles the PLL bypassing/shutdown.
+> >>>>> Regarding full dynamic reparenting, I don't know how exactly th=
+at could work, but with the clock controller there is at least a block =
+where that intelligence would be going and which has knowledge of all t=
+he 'struct clk *' required to reparent clocks.
+> >>>>>
+> >>>>> Regarding the DT description, it is probably controversial what=
+ is considered better. I, like the Tegra folks, think having one clock =
+controller in there is fine and hides irrelevant implementation details=
+=2E
+> >>>>>
+> >>>>
+> >>>> I still don't like the monolithic solution. From my point of vie=
+w it is
+> >>>> architecturally inferior, it is a bad abstraction. You argue tha=
+t for a
+> >>>> non-monolithic version you'd have to implement a clock driver fo=
+r each
+> >>>> different type of clock. But you still have to do this for the m=
+onolithic
+> >>>> version, they'd probably just end up in one huge messy file. Unl=
+ess you are
+> >>>> going to duplicate huge amounts of lines you'd probably have fun=
+ctions like
+> >>>> add_gem_clk, add_peripheral_clk, add_pll_clk and so on in your m=
+onolithic drivers.
+> >>> It probably makes sense to differ between having custom drivers a=
+nd
+> >>> describing the whole clock tree in DT.
+> >>>
+> >>> From reusability perspective, it may make sense to factor out som=
+e code
+> >>> in drivers. IMHO, this does only apply to the peripheral clocks, =
+since
+> >>> everything else isn't reused and/or quite Zynq specific.
+> >>> But a monolithic approach would not even prevent this. You could =
+just
+> >>> transparently change the implementation: Just add a clock driver,
+> >>> replace the original code in the controller to use the new driver
+> >>> instead and you're good. No need to touch DT bindings.
+> >>>
+> >>> In Zynq a peripheral clock is essentially described by:
+> >>>         clk =3D clk_register_mux(NULL, mux_name, parents, 4, 0,  =
+                 =20
+> >>>                         clk_ctrl, 4, 2, 0, lock);                =
+               =20
+> >>>                                                                  =
+               =20
+> >>>         clk =3D clk_register_divider(NULL, div_name, mux_name, 0,=
+ clk_ctrl, 8, 6, =20
+> >>>                         CLK_DIVIDER_ONE_BASED, lock);            =
+               =20
+> >>>                                                                  =
+               =20
+> >>>         clks[clk0] =3D clk_register_gate(NULL, clk_name0, div_nam=
+e,               =20
+> >>>                         CLK_SET_RATE_PARENT, clk_ctrl, 0, 0, lock=
+);             =20
+> >>>
+> >>> If we wrapped this by a driver, any code outside of that driver c=
+ouldn't
+> >>> change the mux setting, since its struct clk* is not exposed outs=
+ide.
+> >>> To get around this we'd have to reimplement all the clock ops, to=
+ create a
+> >>> clock which supports all possible operations.
+> >>> In the monolithic approach we could simply remember that struct c=
+lk* and
+> >>> work with it.
+> >>>
+> >>> Bottom line: Factoring out some parts of the monolithic driver mi=
+ght
+> >>> make sense for some parts. But it can be done later in a transpar=
+ent way,
+> >>> especially w/o touching DT bindings.
+> >>>
+> >>>
+> >>> The other thing is describing the whole clock tree in DT:
+> >>> That would force us to not only describe clocks for which it migh=
+t make
+> >>> sense, but also all Zynq specific clocks in custom drivers and DT
+> >>> bindings and we gain nothing from it.
+> >>>
+> >>>>
+> >>>> The SLCR is a virtual construct, which groups the clock units to=
+gether. But the
+> >>>> clock units are the actual entities. E.g. imagine a Zync 2.0, it=
+ would probably
+> >>>> reuse the same clock units, but there would quite likely be diff=
+erent clocks
+> >>>> mapped at different addresses. If you choose a non-monolithic im=
+plementation
+> >>>> you'd just have to update your devicetree to make this work, wit=
+h a monolithic
+> >>>> version you'd have to add a almost identical driver for the v2.
+> >>> Either way you'll end up with a lot of lines describing the hiera=
+rchy.
+> >>> Either in the dts or in the clock driver.
+> >>>
+> >>>
+> >>> I think, my problem is, that I do not yet know how certain functi=
+onality
+> >>> will be implemented later and what exact use-cases have to be sup=
+ported.
+> >>> With the monolithic approach I keep all options open. We hopefull=
+y will
+> >>> never have to touch its DT bindings again. And refactoring the co=
+de and
+> >>> migrating it to use dedicated clock drivers should be transparent
+> >>> changes, if deemed beneficial.
+> >>> Furthermore, I have a driver, which has references to all strucht=
+ clk*
+> >>> in the system and can work with the whole clock tree leveraging a=
+ system
+> >>> level view. Separating things in smaller blocks might complicate =
+things
+> >>> if a use case requires this.
+> >>> And finally pushing the whole hierarchy description into the DT s=
+eems to
+> >>> be the most restrictive approach, without offering big rewards.
+> >>
+> >> I don't see those restrictions you see with a dt binding which has=
+ nodes for
+> >> each clock block. You seem to be under the impression, that each d=
+evice tree
+> >> node requires its own driver or device. This is not the case, have=
+ you looked
+> >> at how the current upstream zynq clock support is implemented? Thi=
+s is still
+> >> one monolithic driver, but there are multiple dt nodes, one for ea=
+ch clock
+> >> block.
+> > I thought the one "huge messy" file was one thing you wanted to avo=
+id?
+>=20
+> I want to avoid a messy one, yes.
+>=20
+> > Also, how does it address my concern regarding inaccessible
+> > 'struct clk *'? A clk_register_foo() will only return a single stru=
+ct
+> > clk *. So, wrapping several clk_register() calls within one
+> > clk_register_foo() makes all but the actual output inaccessible.
+> > And if we do not directly call clk_register_foo() but do the probin=
+g
+> > through DT the clock init code does not even get hold of that struc=
+t clk
+> > *.
+>=20
+> That's what the composite clk driver is for.
+> http://www.mail-archive.com/linux-kernel@vger.kernel.org/msg4k04590.h=
+tml
+Is it merged by now? Last time I checked it wasn't and I was seeking a
+solution w/o this driver. And I think it wouldn't fit all clocks. E.g. =
+the
+ones with multiple dividers or gates.
 
-Alexander, what is going on here?  You can't just constantly ignore
-patches, that's reserved for kernel developers with more experience :)
+>=20
+> >=20
+> >> This leads to a very clean and well structured code and also nicel=
+y
+> >> structured dt, which represents the tree as it is in hardware. If =
+I understand
+> >> you correctly what you suggest is that you basically want to copy =
+'n paste the
+> >> same 10 lines to instantiate a peripheral clock, which you mention=
+ed above,
+> >> again and again. This will be quite messy.
+> > For the peripheral clocks you're right, there is some reuse possibl=
+e.
+> > For those I have a helper, like zynq_clk_register_periph(). But for=
+ pretty much
+> > everything else I don't.
+> >=20
+> > In conclusion, I see the DT approach limiting my ability to modify =
+the
+> > clock tree when implementing system level functionality.=20
+> > Probably quite a stretch, but imagine some smart power management c=
+ode,
+> > which might try to reparent all and every clock in the system to ce=
+rtain
+> > PLLs. How would such a power manager get hold of all the struct clk=
+ * it
+> > needs. In a system probing fully through DT we cannot get hold of t=
+hose
+> > and even less if we wrap several clocks in one clock_foo. Unless, w=
+e add
+> > a dummy device which has every clock in the system as its input. An=
+d
+> > that sounds even wackier than having a clock controller which provi=
+des
+> > all the clocks to consumers.
+>=20
+> If you really really need a list of all the zynq clocks the easiest w=
+ay to
+> implement this is to add a global list and whenever a clock gets prob=
+ed via
+> dt add the clock to the list.
+A simple list wouldn't do it. I need exact knowledge about which clock
+is which. So, I pretty much copied the Tegra approach with a
+'struct clk *clks[clk_max]' array. And filling such an array from a gen=
+eric clock
+driver seems wrong.
+By separating clocks we take away their awareness of the bigger
+hierarchy picture. The clock controller approach maintains this knowled=
+ge.
 
-If I don't hear back from you by Wednesday this week, with a specific
-plan for how to get all of these fixes to me by the end of this week,
-I'm going to assume that you are missing, and will just start taking
-chipidea patches directly myself, sorry.
-
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	S=C3=B6ren
