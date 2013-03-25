@@ -1,113 +1,203 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC] DT affinity bindings/representing bus masters with DT
-Date: Mon, 25 Mar 2013 15:20:39 +0000
-Message-ID: <20130325152038.GC27959@e102568-lin.cambridge.arm.com>
-References: <20130215172102.GF3014@e102568-lin.cambridge.arm.com>
- <20130306215714.GC6740@truffula.fritz.box>
- <20130311170657.GD25250@e102568-lin.cambridge.arm.com>
- <20130318030928.GG9402@truffula.fritz.box>
- <20130318094815.GA30116@e102568-lin.cambridge.arm.com>
- <20130319070734.GX9402@truffula.fritz.box>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130319070734.GX9402-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: [PATCH v2] mmc: mxcmmc: DT support
+Date: Mon, 25 Mar 2013 16:34:19 +0100
+Message-ID: <1364225659-29677-1-git-send-email-mpa@pengutronix.de>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: cjb@laptop.org
+Cc: rob.herring@calxeda.com, rob@landley.net, kernel@pengutronix.de, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Markus Pargmann <mpa@pengutronix.de>, Anatolij Gustschin <agust@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 19, 2013 at 07:07:34AM +0000, David Gibson wrote:
-> On Mon, Mar 18, 2013 at 09:48:16AM +0000, Lorenzo Pieralisi wrote:
-> > On Mon, Mar 18, 2013 at 03:09:28AM +0000, David Gibson wrote:
-> > > On Mon, Mar 11, 2013 at 05:06:57PM +0000, Lorenzo Pieralisi wrote:
-> > > > Hi David,
-> > > > 
-> > > > thanks for your feedback.
-> > > > 
-> > > > On Wed, Mar 06, 2013 at 09:57:14PM +0000, David Gibson wrote:
-> > > > > On Fri, Feb 15, 2013 at 05:21:02PM +0000, Lorenzo Pieralisi wrote:
-> > > [snip]
-> > > > > > Each foo@2000000 reg property maps to a device that represents a bus master
-> > > > > > (to make it clearer, a foo@2000000 reg property defines an address space that
-> > > > > > belongs to a bus master, ie the address space represents a programming
-> > > > > > interface specific to that master; in the bindings above address 0x2000000 is
-> > > > > > the address at which acme1 device can programme its "foo" interface, address
-> > > > > > 0x2001000 is the address at which acme2 device can programme its "foo"
-> > > > > > interface).
-> > > > > 
-> > > > > Ok.  I think annotating the existing reg property like this is a very
-> > > > > bad idea.  I haven't seen all the previous discussion, so I'm not
-> > > > > totally clean on what this affinity concept is about.  But as I
-> > > > > understand it, these "slave" resources cannot be treated like an
-> > > > > ordinary resource in in the reg property.  That means an older client
-> > > > > will potentially misinterpret "reg" because it doesn't know about
-> > > > > "affinity".
-> > > > 
-> > > > Not really, "reg" still complies with the current DT bindings. Affinity
-> > > > is there to associate a reg property to a "master" but the reg property
-> > > > definition does not change. I do not think backward compatibility is a
-> > > > problem per-se here.
-> > > 
-> > > Ok, I did not understand the problem properly.
-> > > 
-> > > > > Worse, again, if I've understood correctly, resources with different
-> > > > > "masters" are essentially in different logical address spaces.  "reg"
-> > > > > properties should always sit in the logical address space representing
-> > > > > the parent node's bus.  Different address spaces could also have
-> > > > > different address sizes, which would really complicate parsing "reg".
-> > > > 
-> > > > I think we need to post what we have, it is really complex to explain
-> > > > the issue without a concrete example. To cut a long story short I
-> > > > would not say that the resources sit in different address spaces, it is
-> > > > that we need to associate those address ranges with specific bus masters.
-> > > > 
-> > > > We have to have a way to say:
-> > > > 
-> > > > "Address range 0x80001000 - 0x80001fff is used to programme the control
-> > > > registers associated with the port connected to master X".
-> > > > 
-> > > > When a CPU wants to programme a control port for a specific master, it
-> > > > needs to know what address range should be programmed.
-> > > > 
-> > > > I mentioned "resources" instead of addresses since the problem we are
-> > > > having is the same when it comes to map IRQs to set of CPUS. We need
-> > > > to associate a resource (IRQ or address) to a set of cpus (or more in
-> > > > general, masters).
-> > > 
-> > > Hrm.  See, I think I may be misunderstanding the problem again,
-> > > because with this description I can see no problem.  It's already up
-> > > to the device binding to describe the purpose of each entry in the reg
-> > > property.  So what's the problem with it just being part of the
-> > > binding to say which reg entry is associated with which master port?
-> > 
-> > That's exactly what we are trying to do. But to associate the reg
-> > property to a master port we need a phandle, how can we pull that off
-> > otherwise ?
-> 
-> Ah, right.  I was meaning that the binding specifies the abstract port
-> number that each reg entry is associated with.  I'm fine with adding a
-> property to map the port numbers to master devices on the other end.
-> I think treating it in two steps like that is better than thinking of
-> the master phandles being  directly associated with reg entries,
-> because it also handles cases like having a bank of common/global
-> registers not associated with any port/master, or cases where the
-> ports aren't all identical and some need more resources than others.
+Adding devicetree support for imx21-mmc and imx31-mmc. Based on generic
+gpio helper functions by Guennadi and generic DMA devicetree bindings.
 
-That's fine by me. Can you provide me with an example of how the bindings
-should tie a specific reg property to an abstract port number ? reg properties
-ordering (ie index) ? Or port number encoded in the reg property itself ?
+Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+Cc: Anatolij Gustschin <agust@denx.de>
+---
 
-Thanks,
-Lorenzo
+Notes:
+    Changes in v2:
+    - Documentation fix
+    - Use dma_request_slave_channel instead of of_*
+
+ .../devicetree/bindings/mmc/fsl-imx-mmc.txt        | 24 +++++++
+ drivers/mmc/host/mxcmmc.c                          | 79 +++++++++++++++++-----
+ 2 files changed, 85 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
+
+diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
+new file mode 100644
+index 0000000..db44235
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
+@@ -0,0 +1,24 @@
++* Freescale Secure Digital Host Controller for i.MX2/3 series
++
++This file documents differences to the properties defined in mmc.txt.
++
++Required properties:
++- compatible : Should be "fsl,<chip>-mmc", chip can be imx21 or imx31
++
++Optional properties:
++- dmas: One DMA phandle with arguments as defined by the devicetree bindings
++	of the used DMA controller.
++- dma-names: Has to be "rx-tx".
++
++Example:
++
++sdhci1: sdhci@10014000 {
++	compatible = "fsl,imx27-mmc", "fsl,imx21-mmc";
++	reg = <0x10014000 0x1000>;
++	interrupts = <11>;
++	dmas = <&dma 7>;
++	dma-names = "rx-tx";
++	bus-width = <4>;
++	cd-gpios = <&gpio3 29>;
++	status = "okay";
++};
+diff --git a/drivers/mmc/host/mxcmmc.c b/drivers/mmc/host/mxcmmc.c
+index a72936e..f477b4f 100644
+--- a/drivers/mmc/host/mxcmmc.c
++++ b/drivers/mmc/host/mxcmmc.c
+@@ -34,6 +34,10 @@
+ #include <linux/regulator/consumer.h>
+ #include <linux/dmaengine.h>
+ #include <linux/types.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_dma.h>
++#include <linux/of_gpio.h>
+ 
+ #include <asm/dma.h>
+ #include <asm/irq.h>
+@@ -173,6 +177,19 @@ static struct platform_device_id mxcmci_devtype[] = {
+ };
+ MODULE_DEVICE_TABLE(platform, mxcmci_devtype);
+ 
++static const struct of_device_id mxcmci_of_match[] = {
++	{
++		.compatible = "fsl,imx21-mmc",
++		.data = &mxcmci_devtype[IMX21_MMC],
++	}, {
++		.compatible = "fsl,imx31-mmc",
++		.data = &mxcmci_devtype[IMX31_MMC],
++	}, {
++		/* sentinel */
++	}
++};
++MODULE_DEVICE_TABLE(of, mxcmci_of_match);
++
+ static inline int is_imx31_mmc(struct mxcmci_host *host)
+ {
+ 	return host->devtype == IMX31_MMC;
+@@ -935,10 +952,15 @@ static int mxcmci_probe(struct platform_device *pdev)
+ 	struct mxcmci_host *host = NULL;
+ 	struct resource *iores, *r;
+ 	int ret = 0, irq;
++	bool dat3_card_detect = false;
+ 	dma_cap_mask_t mask;
++	const struct of_device_id *of_id;
++	struct imxmmc_platform_data *pdata = pdev->dev.platform_data;
+ 
+ 	pr_info("i.MX SDHC driver\n");
+ 
++	of_id = of_match_device(mxcmci_of_match, &pdev->dev);
++
+ 	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (!iores || irq < 0)
+@@ -954,8 +976,14 @@ static int mxcmci_probe(struct platform_device *pdev)
+ 		goto out_release_mem;
+ 	}
+ 
++	mmc_of_parse(mmc);
+ 	mmc->ops = &mxcmci_ops;
+-	mmc->caps = MMC_CAP_4_BIT_DATA | MMC_CAP_SDIO_IRQ;
++
++	/* For devicetree parsing, the bus width is read from devicetree */
++	if (pdata)
++		mmc->caps = MMC_CAP_4_BIT_DATA | MMC_CAP_SDIO_IRQ;
++	else
++		mmc->caps |= MMC_CAP_SDIO_IRQ;
+ 
+ 	/* MMC core transfer sizes tunable parameters */
+ 	mmc->max_segs = 64;
+@@ -971,14 +999,25 @@ static int mxcmci_probe(struct platform_device *pdev)
+ 		goto out_free;
+ 	}
+ 
++	if (of_id) {
++		const struct platform_device_id *id_entry = of_id->data;
++		host->devtype = id_entry->driver_data;
++	} else {
++		host->devtype = pdev->id_entry->driver_data;
++	}
+ 	host->mmc = mmc;
+-	host->pdata = pdev->dev.platform_data;
+-	host->devtype = pdev->id_entry->driver_data;
++	host->pdata = pdata;
+ 	spin_lock_init(&host->lock);
+ 
++	if (pdata)
++		dat3_card_detect = pdata->dat3_card_detect;
++	else if (!(mmc->caps & MMC_CAP_NONREMOVABLE)
++			&& !of_property_read_bool(pdev->dev.of_node, "cd-gpios"))
++		dat3_card_detect = true;
++
+ 	mxcmci_init_ocr(host);
+ 
+-	if (host->pdata && host->pdata->dat3_card_detect)
++	if (dat3_card_detect)
+ 		host->default_irq_mask =
+ 			INT_CARD_INSERTION_EN | INT_CARD_REMOVAL_EN;
+ 	else
+@@ -1020,21 +1059,24 @@ static int mxcmci_probe(struct platform_device *pdev)
+ 
+ 	writel(host->default_irq_mask, host->base + MMC_REG_INT_CNTR);
+ 
+-	r = platform_get_resource(pdev, IORESOURCE_DMA, 0);
+-	if (r) {
+-		host->dmareq = r->start;
+-		host->dma_data.peripheral_type = IMX_DMATYPE_SDHC;
+-		host->dma_data.priority = DMA_PRIO_LOW;
+-		host->dma_data.dma_request = host->dmareq;
+-		dma_cap_zero(mask);
+-		dma_cap_set(DMA_SLAVE, mask);
+-		host->dma = dma_request_channel(mask, filter, host);
+-		if (host->dma)
+-			mmc->max_seg_size = dma_get_max_seg_size(
+-					host->dma->device->dev);
++	if (!host->pdata) {
++		host->dma = dma_request_slave_channel(pdev->dev, "rx-tx");
++	} else {
++		r = platform_get_resource(pdev, IORESOURCE_DMA, 0);
++		if (r) {
++			host->dmareq = r->start;
++			host->dma_data.peripheral_type = IMX_DMATYPE_SDHC;
++			host->dma_data.priority = DMA_PRIO_LOW;
++			host->dma_data.dma_request = host->dmareq;
++			dma_cap_zero(mask);
++			dma_cap_set(DMA_SLAVE, mask);
++			host->dma = dma_request_channel(mask, filter, host);
++		}
+ 	}
+-
+-	if (!host->dma)
++	if (host->dma)
++		mmc->max_seg_size = dma_get_max_seg_size(
++				host->dma->device->dev);
++	else
+ 		dev_info(mmc_dev(host->mmc), "dma not available. Using PIO\n");
+ 
+ 	INIT_WORK(&host->datawork, mxcmci_datawork);
+@@ -1153,6 +1195,7 @@ static struct platform_driver mxcmci_driver = {
+ #ifdef CONFIG_PM
+ 		.pm	= &mxcmci_pm_ops,
+ #endif
++		.of_match_table	= mxcmci_of_match,
+ 	}
+ };
+ 
+-- 
+1.8.1.5
+
