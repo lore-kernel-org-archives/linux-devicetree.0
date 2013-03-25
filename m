@@ -1,38 +1,67 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH v3 3/3] backlight: as3711: add OF support
-Date: Mon, 25 Mar 2013 11:52:11 +0100 (CET)
-Message-ID: <Pine.LNX.4.64.1303251151430.11549@axis700.grange>
-References: <1363968949-12151-1-git-send-email-g.liakhovetski@gmx.de>
- <1363968949-12151-4-git-send-email-g.liakhovetski@gmx.de>
- <00da01ce2917$54856ce0$fd9046a0$%han@samsung.com>
- <20130325101442.GJ18316@opensource.wolfsonmicro.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH v9 2/4] ARM: dts: Add lcd pinctrl node entries for
+ EXYNOS4412 SoC
+Date: Mon, 25 Mar 2013 16:30:03 +0530
+Message-ID: <CAJuYYwT3SiKxg4CX1Gimmr+OT-oV=2UZ07xSbvoJ5kgdNEy0fQ@mail.gmail.com>
+References: <1363960608-23825-1-git-send-email-vikas.sajjan@linaro.org>
+	<1363960608-23825-3-git-send-email-vikas.sajjan@linaro.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130325101442.GJ18316@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Jingoo Han <jg1.han@samsung.com>, 'Andrew Morton' <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, 'Magnus Damm' <magnus.damm@gmail.com>, 'Simon Horman' <horms@verge.net.au>, devicetree-discuss@lists.ozlabs.org, 'Samuel Ortiz' <sameo@linux.intel.com>, 'Richard Purdie' <rpurdie@rpsys.net>, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1363960608-23825-3-git-send-email-vikas.sajjan@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vikas Sajjan <vikas.sajjan@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, sylvester.nawrocki@gmail.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, linaro-kernel@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Mar 2013, Mark Brown wrote:
+On 22 March 2013 19:26, Vikas Sajjan <vikas.sajjan@linaro.org> wrote:
+> From: Sachin Kamat <sachin.kamat@linaro.org>
+>
+> Adds the lcd panel related picntrl nodes for Exynos4412 SoC
+>
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
+> ---
+>  arch/arm/boot/dts/exynos4x12-pinctrl.dtsi |   14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi b/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi
+> index 099cec7..a59d69c 100644
+> --- a/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/exynos4x12-pinctrl.dtsi
+> @@ -354,6 +354,20 @@
+>                         samsung,pin-drv = <0>;
+>                 };
+>
+> +               lcd_sync: lcd-sync {
+> +                       samsung,pins = "gpf0-0", "gpf0-1";
+> +                       samsung,pin-function = <2>;
+> +                       samsung,pin-pud = <0>;
+> +                       samsung,pin-drv = <0>;
+> +               };
+> +
+> +               lcd_en: lcd-en {
+> +                       samsung,pins = "gpf0-3";
+> +                       samsung,pin-function = <2>;
+> +                       samsung,pin-pud = <0>;
+> +                       samsung,pin-drv = <0>;
+> +               };
+> +
 
-> On Mon, Mar 25, 2013 at 02:12:21PM +0900, Jingoo Han wrote:
-> > On Saturday, March 23, 2013 1:16 AM, Guennadi Liakhovetski wrote:
-> 
-> > But, there is a typo in comment.
-> > > +		 * At least one su2-auto-curr* must be specified iff
-> > s/iff/if
-> 
-> Are you sure that's a typo?  "Iff" is a bit of mathematical jargon
-> which means "if and only if" that's fairly often used in a computing
-> context.
+Is lcd_en a board specific configuration. If so, this has to be moved
+into board specfic dts file. Same with lcd_sync.
 
-Thanks, Mark, that's exactly what I was trying to say there :)
+Thanks,
+Thomas.
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+
+>                 lcd_clk: lcd-clk {
+>                         samsung,pins = "gpf0-0", "gpf0-1", "gpf0-2", "gpf0-3";
+>                         samsung,pin-function = <2>;
+> --
+> 1.7.9.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
