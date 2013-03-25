@@ -1,113 +1,311 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH] ARM: zynq: add support for ZedBoard
-Date: Mon, 25 Mar 2013 15:28:43 +0100
-Message-ID: <CAHTX3dJK4r6w1GFp7x=KYvK65XwM366+=BD-B8dH5pGtDBm=Tw@mail.gmail.com>
-References: <1364043863-20669-1-git-send-email-s.trumtrar@pengutronix.de>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: RFC v2: Zynq Clock Controller
+Date: Mon, 25 Mar 2013 15:46:35 +0100
+Message-ID: <5150634B.9060601@metafoo.de>
+References: <27dae808-1d3a-4001-8eb2-b0a6e2a34b8f@AM1EHSMHS013.ehs.local> <514B5254.50101@metafoo.de> <128fc723-ace7-4f4c-95d9-971b42a52080@CH1EHSMHS028.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1364043863-20669-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <128fc723-ace7-4f4c-95d9-971b42a52080@CH1EHSMHS028.ehs.local>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>
+Cc: Mike Turquette <mturquette@linaro.org>, Josh Cartwright <josh.cartwright@ni.com>, Michal Simek <michal.simek@xilinx.com>, Peter Crosthwaite <pcrost@xilinx.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, git@xilinx.com, =?UTF-8?B?SmFuIEzDvA==?= =?UTF-8?B?YmJl?= <jlu@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, Peter De Schrijver <pdeschrijver@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-2013/3/23 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>:
-> Support the Avnet ZedBoard.
->
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile          |  3 ++-
->  arch/arm/boot/dts/zynq-zedboard.dts | 45 +++++++++++++++++++++++++++++++++++++
->  2 files changed, 47 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/zynq-zedboard.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 9c62558..1d36a4c 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -174,7 +174,8 @@ dtb-$(CONFIG_ARCH_VT8500) += vt8500-bv07.dtb \
->         wm8505-ref.dtb \
->         wm8650-mid.dtb \
->         wm8850-w70v2.dtb
-> -dtb-$(CONFIG_ARCH_ZYNQ) += zynq-zc702.dtb
-> +dtb-$(CONFIG_ARCH_ZYNQ) += zynq-zc702.dtb \
-> +       zynq-zedboard.dtb
->
->  targets += dtbs
->  targets += $(dtb-y)
-> diff --git a/arch/arm/boot/dts/zynq-zedboard.dts b/arch/arm/boot/dts/zynq-zedboard.dts
-> new file mode 100644
-> index 0000000..1b024c7
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/zynq-zedboard.dts
-> @@ -0,0 +1,45 @@
-> +/*
-> + *  Copyright (C) 2013 Steffen Trumrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +/dts-v1/;
-> +/include/ "zynq-7000.dtsi"
-> +
-> +/ {
-> +       model = "Zynq ZedBoard";
-> +       compatible = "xlnx,zynq-zed", "xlnx,zynq-7000";
-> +
-> +       memory {
-> +               device_type = "memory";
-> +               reg = <0x0 0x20000000>;
-> +       };
-> +};
-> +
-> +&gem0 {
-> +       status = "okay";
-> +};
-> +
-> +&uart0 {
-> +       status = "okay";
-> +};
-> +
-> +&uart1 {
-> +       status = "okay";
-> +};
-> +
-> +&ps_clk {
-> +       clock-frequency = <33333330>;
-> +};
-> +
-> +&ttc0_0 {
-> +       status = "okay";
-> +       compatible = "xlnx,ttc-counter-clockevent";
-> +};
+Hi,
 
-Look at my timer patches for it.
-I have discussed this with Josh and this is not needed anymore.
-
-Thanks,
-Michal
+On 03/22/2013 11:41 PM, S=C3=B6ren Brinkmann wrote:
+> Hi Lars,
+>=20
+> On Thu, Mar 21, 2013 at 07:32:52PM +0100, Lars-Peter Clausen wrote:
+>> On 03/21/2013 12:56 AM, S=C3=B6ren Brinkmann wrote:
+>>> Hi,
+>>>
+>>> I spent some time working on this and incorporating feedback. Here'=
+s an updated proposal for a clock controller for Zynq:
+>>>
+>>> Required properties:
+>>>  - #clock-cells : Must be 1
+>>>  - compatible : "xlnx,ps7-clkc"  (this may become 'xlnx,zynq-clkc' =
+terminology differs a bit between Xilinx internal and mainline)
+>>>  - ps-clk-frequency : Frequency of the oscillator providing ps_clk =
+in HZ
+>>>                      (usually 33 MHz oscillators are used for Zynq =
+platforms)
+>>>  - clock-output-names : List of strings used to name the clock outp=
+uts. Shall be a list of the outputs given below.
+>>>
+>>> Optional properties:
+>>>  - clocks : as described in the clock bindings
+>>>  - clock-names : as described in the clock bindings
+>>>
+>>> Clock inputs:
+>>> The following strings are optional parameters to the 'clock-names' =
+property in
+>>> order to provide optional (E)MIO clock sources.
+>>>  - swdt_ext_clk
+>>>  - gem0_emio_clk
+>>>  - gem1_emio_clk
+>>>  - mio_clk_XX          # with XX =3D 00..53
+>>>
+>>> Example:
+>>>         clkc: clkc {
+>>>                 #clock-cells =3D <1>;
+>>>                 compatible =3D "xlnx,ps7-clkc";
+>>>                 ps-clk-frequency =3D <33333333>;
+>>
+>> The input frequency should be a clock as well.
+> Again, monolithic vs split. I don't see a reason not to just internal=
+ly
+> call clk_register_fixed_rate(). That way its children do not have to
+> cope with a variable name for the xtal.
+> Also, with my proposal 'clocks' and 'clock-names' would be purely
+> optional properties, only required if optional external inputs are
+> present. Having the xtal defined externally would add mandatory entri=
+es for
+> those props.
 
 
--- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+>=20
+>>
+>>>                 clock-output-names =3D "armpll", "ddrpll", "iopll",=
+ "cpu_6or4x", "cpu_3or2x", "cpu_2x", "cpu_1x", "ddr2x", "ddr3x", "dci",=
+ "lqspi", "smc", "pcap", "gem0", "gem1", "fclk0", "fclk1", "fclk2", "fc=
+lk3", "can0", "can1", "sdio0", "sdio1", "uart0", "uart1", "spi0", "spi1=
+", "dma", "usb0_aper", "usb1_aper", "gem0_aper", "gem1_aper", "sdio0_ap=
+er", "sdio1_aper", "spi0_aper", "spi1_aper", "can0_aper", "can1_aper", =
+"i2c0_aper", "i2c1_aper", "uart0_aper", "uart1_aper", "gpio_aper", "lqs=
+pi_aper", "smc_aper", "swdt", "dbg_trc", "dbg_apb";  /* long list... ex=
+planation below */
+>>>                 /* optional props */
+>>>                 clocks =3D <&clkc 16>, <&clk_foo>;
+>>>                 clock-names =3D "gem1_emio_clk", "can_mio_clk_23";
+>>>         };
+>>>
+>>> With this revised bindings arbitrary upstream and downstream clock =
+providers should be supported and it's also possible to loop back an ou=
+tput as input. The downside of supporting this is, that I don't see a w=
+ay around explicitly listing the clock output names in the DT.
+>>> The reason for this is, that a downstream clock provider should use=
+ of_clk_get_parent_name() to obtain its parent clock name. For a block =
+with multiple outputs of_clk_get_parent_name() can return a valid clock=
+ name only when 'clock-output-names' is present.
+>>> Probably the fclks are the only realistic use case to become parent=
+ of downstream clock providers, but I could imagine that e.g. a device =
+driver like UART wants to use the CCF to model its internal clocks, hen=
+ce it would require its parent clock name. Even though a device driver =
+could use clk_get_parent() and __clk_get_name(), of_clk_get_parent_name=
+() should probably work as well. I simply have a bad feeling about brea=
+king of_clk_get_parent_name() for any clock.
+>>> But after all, I'm open for finding a better solution for this.
+>>>
+>>>
+>>> Similar, inputs for optional clock sources through (E)MIO pins can =
+be defined as described in the clock bindings using the 'clocks' and 'c=
+lock-names' properties, with 'clock-names' being an arbitrary subset of=
+ the documented names. The actual parent clock names are internally res=
+olved using of_clk_get_parent_name().
+>>>
+>>>
+>>> Regarding this monolithic solution versus a finer granular split:
+>>>
+>>> On cost of more complex probing we would also have:
+>>>  - one clock driver covering the peripheral clocks
+>>>  - one for the CPU clock domain
+>>>  - one for the DDR clock domain
+>>>  - one for GEM
+>>>  - one for CAN
+>>>  - one for the APER clks
+>>>  - one for the PLLs
+>>>  - one for fclks
+>>
+>> fclks are the same as peripheral clocks except for the gate bit, as =
+far as I
+>> can see.
+> And that makes them quite different, since they have to access multip=
+le
+> registers instead of a single one. Also, the fclks have two dividers.
+> If you want to cover all of those with a single driver, you need a
+> plethora of arguments/properties to catch the small differences.
+>=20
+>>
+>>>  - probably one for the debug clocks (not sure whether we need thos=
+e)
+>>>
+>>> Except for the peripheral one and probably the fclk, they would all=
+ be instantiated just once. So, there is not a lot of reuse going on.
+>>
+>> PLLs are going to be instantiated multiple times as well.
+> As mentioned in the very next sentence, I rather see a single driver
+> with multiple outputs. Take suspend: My plan is to have a few functio=
+ns
+> like zynq_clk_(suspend|resume). That should take care of bypassing
+> shutting down the PLLs (and probably more). Therefore it's easier to
+> have them all in a single driver.
+> And if it turned out, that other clocks require special handling for
+> such system level functions, that could be addressed that way too wit=
+h
+> the monolithic approach.
+>=20
+>>
+>>> Fclks I would probably also rather put into one driver with four ou=
+tputs instead of instantiating a single output driver multiple times. S=
+ame for PLLs.
+>>>
+>>> And then there is e.g. a mux for the system watchdog input which do=
+esn't really fit anywhere and it would be pretty much ridiculous to hav=
+e another clock driver just for that one and it would also become "hidd=
+en" in one of the others.
+>>>
+>>> In my opinion that's just not necessary. We would create a bunch of=
+ clock drivers including DT bindings for them, probing would become mor=
+e complex and it doesn't really help with the probe/naming issue. So, I=
+ don't think it's beneficial to go down that road.
+>>>
+>>> The monolithic solution would need one custom driver for the PLLs, =
+DT bindings wouldn't be required for it though. Everything else should =
+be internally described using the clock-primitives.
+>>>
+>>> Other than having a much simpler probe and init process, I still th=
+ink it might be beneficial to have this monolithic block with a holisti=
+c view of the clock tree. For suspend e.g. I think the clock controller=
+ could export functions like zynq_clkc_(suspend|resume) and then the co=
+ntroller handles the PLL bypassing/shutdown.
+>>> Regarding full dynamic reparenting, I don't know how exactly that c=
+ould work, but with the clock controller there is at least a block wher=
+e that intelligence would be going and which has knowledge of all the '=
+struct clk *' required to reparent clocks.
+>>>
+>>> Regarding the DT description, it is probably controversial what is =
+considered better. I, like the Tegra folks, think having one clock cont=
+roller in there is fine and hides irrelevant implementation details.
+>>>
+>>
+>> I still don't like the monolithic solution. From my point of view it=
+ is
+>> architecturally inferior, it is a bad abstraction. You argue that fo=
+r a
+>> non-monolithic version you'd have to implement a clock driver for ea=
+ch
+>> different type of clock. But you still have to do this for the monol=
+ithic
+>> version, they'd probably just end up in one huge messy file. Unless =
+you are
+>> going to duplicate huge amounts of lines you'd probably have functio=
+ns like
+>> add_gem_clk, add_peripheral_clk, add_pll_clk and so on in your monol=
+ithic drivers.
+> It probably makes sense to differ between having custom drivers and
+> describing the whole clock tree in DT.
+>=20
+> From reusability perspective, it may make sense to factor out some co=
+de
+> in drivers. IMHO, this does only apply to the peripheral clocks, sinc=
+e
+> everything else isn't reused and/or quite Zynq specific.
+> But a monolithic approach would not even prevent this. You could just
+> transparently change the implementation: Just add a clock driver,
+> replace the original code in the controller to use the new driver
+> instead and you're good. No need to touch DT bindings.
+>=20
+> In Zynq a peripheral clock is essentially described by:
+>         clk =3D clk_register_mux(NULL, mux_name, parents, 4, 0,      =
+             =20
+>                         clk_ctrl, 4, 2, 0, lock);                    =
+           =20
+>                                                                      =
+           =20
+>         clk =3D clk_register_divider(NULL, div_name, mux_name, 0, clk=
+_ctrl, 8, 6, =20
+>                         CLK_DIVIDER_ONE_BASED, lock);                =
+           =20
+>                                                                      =
+           =20
+>         clks[clk0] =3D clk_register_gate(NULL, clk_name0, div_name,  =
+             =20
+>                         CLK_SET_RATE_PARENT, clk_ctrl, 0, 0, lock);  =
+           =20
+>=20
+> If we wrapped this by a driver, any code outside of that driver could=
+n't
+> change the mux setting, since its struct clk* is not exposed outside.
+> To get around this we'd have to reimplement all the clock ops, to cre=
+ate a
+> clock which supports all possible operations.
+> In the monolithic approach we could simply remember that struct clk* =
+and
+> work with it.
+>=20
+> Bottom line: Factoring out some parts of the monolithic driver might
+> make sense for some parts. But it can be done later in a transparent =
+way,
+> especially w/o touching DT bindings.
+>=20
+>=20
+> The other thing is describing the whole clock tree in DT:
+> That would force us to not only describe clocks for which it might ma=
+ke
+> sense, but also all Zynq specific clocks in custom drivers and DT
+> bindings and we gain nothing from it.
+>=20
+>>
+>> The SLCR is a virtual construct, which groups the clock units togeth=
+er. But the
+>> clock units are the actual entities. E.g. imagine a Zync 2.0, it wou=
+ld probably
+>> reuse the same clock units, but there would quite likely be differen=
+t clocks
+>> mapped at different addresses. If you choose a non-monolithic implem=
+entation
+>> you'd just have to update your devicetree to make this work, with a =
+monolithic
+>> version you'd have to add a almost identical driver for the v2.
+> Either way you'll end up with a lot of lines describing the hierarchy=
+=2E
+> Either in the dts or in the clock driver.
+>=20
+>=20
+> I think, my problem is, that I do not yet know how certain functional=
+ity
+> will be implemented later and what exact use-cases have to be support=
+ed.
+> With the monolithic approach I keep all options open. We hopefully wi=
+ll
+> never have to touch its DT bindings again. And refactoring the code a=
+nd
+> migrating it to use dedicated clock drivers should be transparent
+> changes, if deemed beneficial.
+> Furthermore, I have a driver, which has references to all strucht clk=
+*
+> in the system and can work with the whole clock tree leveraging a sys=
+tem
+> level view. Separating things in smaller blocks might complicate thin=
+gs
+> if a use case requires this.
+> And finally pushing the whole hierarchy description into the DT seems=
+ to
+> be the most restrictive approach, without offering big rewards.
+
+I don't see those restrictions you see with a dt binding which has node=
+s for
+each clock block. You seem to be under the impression, that each device=
+ tree
+node requires its own driver or device. This is not the case, have you =
+looked
+at how the current upstream zynq clock support is implemented? This is =
+still
+one monolithic driver, but there are multiple dt nodes, one for each cl=
+ock
+block. This leads to a very clean and well structured code and also nic=
+ely
+structured dt, which represents the tree as it is in hardware. If I und=
+erstand
+you correctly what you suggest is that you basically want to copy 'n pa=
+ste the
+same 10 lines to instantiate a peripheral clock, which you mentioned ab=
+ove,
+again and again. This will be quite messy.
+
+- Lars
