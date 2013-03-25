@@ -1,311 +1,113 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: RFC v2: Zynq Clock Controller
-Date: Mon, 25 Mar 2013 15:46:35 +0100
-Message-ID: <5150634B.9060601@metafoo.de>
-References: <27dae808-1d3a-4001-8eb2-b0a6e2a34b8f@AM1EHSMHS013.ehs.local> <514B5254.50101@metafoo.de> <128fc723-ace7-4f4c-95d9-971b42a52080@CH1EHSMHS028.ehs.local>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC] DT affinity bindings/representing bus masters with DT
+Date: Mon, 25 Mar 2013 15:20:39 +0000
+Message-ID: <20130325152038.GC27959@e102568-lin.cambridge.arm.com>
+References: <20130215172102.GF3014@e102568-lin.cambridge.arm.com>
+ <20130306215714.GC6740@truffula.fritz.box>
+ <20130311170657.GD25250@e102568-lin.cambridge.arm.com>
+ <20130318030928.GG9402@truffula.fritz.box>
+ <20130318094815.GA30116@e102568-lin.cambridge.arm.com>
+ <20130319070734.GX9402@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <128fc723-ace7-4f4c-95d9-971b42a52080@CH1EHSMHS028.ehs.local>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>
-Cc: Mike Turquette <mturquette@linaro.org>, Josh Cartwright <josh.cartwright@ni.com>, Michal Simek <michal.simek@xilinx.com>, Peter Crosthwaite <pcrost@xilinx.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, git@xilinx.com, =?UTF-8?B?SmFuIEzDvA==?= =?UTF-8?B?YmJl?= <jlu@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, Peter De Schrijver <pdeschrijver@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130319070734.GX9402-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Mar 19, 2013 at 07:07:34AM +0000, David Gibson wrote:
+> On Mon, Mar 18, 2013 at 09:48:16AM +0000, Lorenzo Pieralisi wrote:
+> > On Mon, Mar 18, 2013 at 03:09:28AM +0000, David Gibson wrote:
+> > > On Mon, Mar 11, 2013 at 05:06:57PM +0000, Lorenzo Pieralisi wrote:
+> > > > Hi David,
+> > > > 
+> > > > thanks for your feedback.
+> > > > 
+> > > > On Wed, Mar 06, 2013 at 09:57:14PM +0000, David Gibson wrote:
+> > > > > On Fri, Feb 15, 2013 at 05:21:02PM +0000, Lorenzo Pieralisi wrote:
+> > > [snip]
+> > > > > > Each foo@2000000 reg property maps to a device that represents a bus master
+> > > > > > (to make it clearer, a foo@2000000 reg property defines an address space that
+> > > > > > belongs to a bus master, ie the address space represents a programming
+> > > > > > interface specific to that master; in the bindings above address 0x2000000 is
+> > > > > > the address at which acme1 device can programme its "foo" interface, address
+> > > > > > 0x2001000 is the address at which acme2 device can programme its "foo"
+> > > > > > interface).
+> > > > > 
+> > > > > Ok.  I think annotating the existing reg property like this is a very
+> > > > > bad idea.  I haven't seen all the previous discussion, so I'm not
+> > > > > totally clean on what this affinity concept is about.  But as I
+> > > > > understand it, these "slave" resources cannot be treated like an
+> > > > > ordinary resource in in the reg property.  That means an older client
+> > > > > will potentially misinterpret "reg" because it doesn't know about
+> > > > > "affinity".
+> > > > 
+> > > > Not really, "reg" still complies with the current DT bindings. Affinity
+> > > > is there to associate a reg property to a "master" but the reg property
+> > > > definition does not change. I do not think backward compatibility is a
+> > > > problem per-se here.
+> > > 
+> > > Ok, I did not understand the problem properly.
+> > > 
+> > > > > Worse, again, if I've understood correctly, resources with different
+> > > > > "masters" are essentially in different logical address spaces.  "reg"
+> > > > > properties should always sit in the logical address space representing
+> > > > > the parent node's bus.  Different address spaces could also have
+> > > > > different address sizes, which would really complicate parsing "reg".
+> > > > 
+> > > > I think we need to post what we have, it is really complex to explain
+> > > > the issue without a concrete example. To cut a long story short I
+> > > > would not say that the resources sit in different address spaces, it is
+> > > > that we need to associate those address ranges with specific bus masters.
+> > > > 
+> > > > We have to have a way to say:
+> > > > 
+> > > > "Address range 0x80001000 - 0x80001fff is used to programme the control
+> > > > registers associated with the port connected to master X".
+> > > > 
+> > > > When a CPU wants to programme a control port for a specific master, it
+> > > > needs to know what address range should be programmed.
+> > > > 
+> > > > I mentioned "resources" instead of addresses since the problem we are
+> > > > having is the same when it comes to map IRQs to set of CPUS. We need
+> > > > to associate a resource (IRQ or address) to a set of cpus (or more in
+> > > > general, masters).
+> > > 
+> > > Hrm.  See, I think I may be misunderstanding the problem again,
+> > > because with this description I can see no problem.  It's already up
+> > > to the device binding to describe the purpose of each entry in the reg
+> > > property.  So what's the problem with it just being part of the
+> > > binding to say which reg entry is associated with which master port?
+> > 
+> > That's exactly what we are trying to do. But to associate the reg
+> > property to a master port we need a phandle, how can we pull that off
+> > otherwise ?
+> 
+> Ah, right.  I was meaning that the binding specifies the abstract port
+> number that each reg entry is associated with.  I'm fine with adding a
+> property to map the port numbers to master devices on the other end.
+> I think treating it in two steps like that is better than thinking of
+> the master phandles being  directly associated with reg entries,
+> because it also handles cases like having a bank of common/global
+> registers not associated with any port/master, or cases where the
+> ports aren't all identical and some need more resources than others.
 
-On 03/22/2013 11:41 PM, S=C3=B6ren Brinkmann wrote:
-> Hi Lars,
->=20
-> On Thu, Mar 21, 2013 at 07:32:52PM +0100, Lars-Peter Clausen wrote:
->> On 03/21/2013 12:56 AM, S=C3=B6ren Brinkmann wrote:
->>> Hi,
->>>
->>> I spent some time working on this and incorporating feedback. Here'=
-s an updated proposal for a clock controller for Zynq:
->>>
->>> Required properties:
->>>  - #clock-cells : Must be 1
->>>  - compatible : "xlnx,ps7-clkc"  (this may become 'xlnx,zynq-clkc' =
-terminology differs a bit between Xilinx internal and mainline)
->>>  - ps-clk-frequency : Frequency of the oscillator providing ps_clk =
-in HZ
->>>                      (usually 33 MHz oscillators are used for Zynq =
-platforms)
->>>  - clock-output-names : List of strings used to name the clock outp=
-uts. Shall be a list of the outputs given below.
->>>
->>> Optional properties:
->>>  - clocks : as described in the clock bindings
->>>  - clock-names : as described in the clock bindings
->>>
->>> Clock inputs:
->>> The following strings are optional parameters to the 'clock-names' =
-property in
->>> order to provide optional (E)MIO clock sources.
->>>  - swdt_ext_clk
->>>  - gem0_emio_clk
->>>  - gem1_emio_clk
->>>  - mio_clk_XX          # with XX =3D 00..53
->>>
->>> Example:
->>>         clkc: clkc {
->>>                 #clock-cells =3D <1>;
->>>                 compatible =3D "xlnx,ps7-clkc";
->>>                 ps-clk-frequency =3D <33333333>;
->>
->> The input frequency should be a clock as well.
-> Again, monolithic vs split. I don't see a reason not to just internal=
-ly
-> call clk_register_fixed_rate(). That way its children do not have to
-> cope with a variable name for the xtal.
-> Also, with my proposal 'clocks' and 'clock-names' would be purely
-> optional properties, only required if optional external inputs are
-> present. Having the xtal defined externally would add mandatory entri=
-es for
-> those props.
+That's fine by me. Can you provide me with an example of how the bindings
+should tie a specific reg property to an abstract port number ? reg properties
+ordering (ie index) ? Or port number encoded in the reg property itself ?
 
-
-
->=20
->>
->>>                 clock-output-names =3D "armpll", "ddrpll", "iopll",=
- "cpu_6or4x", "cpu_3or2x", "cpu_2x", "cpu_1x", "ddr2x", "ddr3x", "dci",=
- "lqspi", "smc", "pcap", "gem0", "gem1", "fclk0", "fclk1", "fclk2", "fc=
-lk3", "can0", "can1", "sdio0", "sdio1", "uart0", "uart1", "spi0", "spi1=
-", "dma", "usb0_aper", "usb1_aper", "gem0_aper", "gem1_aper", "sdio0_ap=
-er", "sdio1_aper", "spi0_aper", "spi1_aper", "can0_aper", "can1_aper", =
-"i2c0_aper", "i2c1_aper", "uart0_aper", "uart1_aper", "gpio_aper", "lqs=
-pi_aper", "smc_aper", "swdt", "dbg_trc", "dbg_apb";  /* long list... ex=
-planation below */
->>>                 /* optional props */
->>>                 clocks =3D <&clkc 16>, <&clk_foo>;
->>>                 clock-names =3D "gem1_emio_clk", "can_mio_clk_23";
->>>         };
->>>
->>> With this revised bindings arbitrary upstream and downstream clock =
-providers should be supported and it's also possible to loop back an ou=
-tput as input. The downside of supporting this is, that I don't see a w=
-ay around explicitly listing the clock output names in the DT.
->>> The reason for this is, that a downstream clock provider should use=
- of_clk_get_parent_name() to obtain its parent clock name. For a block =
-with multiple outputs of_clk_get_parent_name() can return a valid clock=
- name only when 'clock-output-names' is present.
->>> Probably the fclks are the only realistic use case to become parent=
- of downstream clock providers, but I could imagine that e.g. a device =
-driver like UART wants to use the CCF to model its internal clocks, hen=
-ce it would require its parent clock name. Even though a device driver =
-could use clk_get_parent() and __clk_get_name(), of_clk_get_parent_name=
-() should probably work as well. I simply have a bad feeling about brea=
-king of_clk_get_parent_name() for any clock.
->>> But after all, I'm open for finding a better solution for this.
->>>
->>>
->>> Similar, inputs for optional clock sources through (E)MIO pins can =
-be defined as described in the clock bindings using the 'clocks' and 'c=
-lock-names' properties, with 'clock-names' being an arbitrary subset of=
- the documented names. The actual parent clock names are internally res=
-olved using of_clk_get_parent_name().
->>>
->>>
->>> Regarding this monolithic solution versus a finer granular split:
->>>
->>> On cost of more complex probing we would also have:
->>>  - one clock driver covering the peripheral clocks
->>>  - one for the CPU clock domain
->>>  - one for the DDR clock domain
->>>  - one for GEM
->>>  - one for CAN
->>>  - one for the APER clks
->>>  - one for the PLLs
->>>  - one for fclks
->>
->> fclks are the same as peripheral clocks except for the gate bit, as =
-far as I
->> can see.
-> And that makes them quite different, since they have to access multip=
-le
-> registers instead of a single one. Also, the fclks have two dividers.
-> If you want to cover all of those with a single driver, you need a
-> plethora of arguments/properties to catch the small differences.
->=20
->>
->>>  - probably one for the debug clocks (not sure whether we need thos=
-e)
->>>
->>> Except for the peripheral one and probably the fclk, they would all=
- be instantiated just once. So, there is not a lot of reuse going on.
->>
->> PLLs are going to be instantiated multiple times as well.
-> As mentioned in the very next sentence, I rather see a single driver
-> with multiple outputs. Take suspend: My plan is to have a few functio=
-ns
-> like zynq_clk_(suspend|resume). That should take care of bypassing
-> shutting down the PLLs (and probably more). Therefore it's easier to
-> have them all in a single driver.
-> And if it turned out, that other clocks require special handling for
-> such system level functions, that could be addressed that way too wit=
-h
-> the monolithic approach.
->=20
->>
->>> Fclks I would probably also rather put into one driver with four ou=
-tputs instead of instantiating a single output driver multiple times. S=
-ame for PLLs.
->>>
->>> And then there is e.g. a mux for the system watchdog input which do=
-esn't really fit anywhere and it would be pretty much ridiculous to hav=
-e another clock driver just for that one and it would also become "hidd=
-en" in one of the others.
->>>
->>> In my opinion that's just not necessary. We would create a bunch of=
- clock drivers including DT bindings for them, probing would become mor=
-e complex and it doesn't really help with the probe/naming issue. So, I=
- don't think it's beneficial to go down that road.
->>>
->>> The monolithic solution would need one custom driver for the PLLs, =
-DT bindings wouldn't be required for it though. Everything else should =
-be internally described using the clock-primitives.
->>>
->>> Other than having a much simpler probe and init process, I still th=
-ink it might be beneficial to have this monolithic block with a holisti=
-c view of the clock tree. For suspend e.g. I think the clock controller=
- could export functions like zynq_clkc_(suspend|resume) and then the co=
-ntroller handles the PLL bypassing/shutdown.
->>> Regarding full dynamic reparenting, I don't know how exactly that c=
-ould work, but with the clock controller there is at least a block wher=
-e that intelligence would be going and which has knowledge of all the '=
-struct clk *' required to reparent clocks.
->>>
->>> Regarding the DT description, it is probably controversial what is =
-considered better. I, like the Tegra folks, think having one clock cont=
-roller in there is fine and hides irrelevant implementation details.
->>>
->>
->> I still don't like the monolithic solution. From my point of view it=
- is
->> architecturally inferior, it is a bad abstraction. You argue that fo=
-r a
->> non-monolithic version you'd have to implement a clock driver for ea=
-ch
->> different type of clock. But you still have to do this for the monol=
-ithic
->> version, they'd probably just end up in one huge messy file. Unless =
-you are
->> going to duplicate huge amounts of lines you'd probably have functio=
-ns like
->> add_gem_clk, add_peripheral_clk, add_pll_clk and so on in your monol=
-ithic drivers.
-> It probably makes sense to differ between having custom drivers and
-> describing the whole clock tree in DT.
->=20
-> From reusability perspective, it may make sense to factor out some co=
-de
-> in drivers. IMHO, this does only apply to the peripheral clocks, sinc=
-e
-> everything else isn't reused and/or quite Zynq specific.
-> But a monolithic approach would not even prevent this. You could just
-> transparently change the implementation: Just add a clock driver,
-> replace the original code in the controller to use the new driver
-> instead and you're good. No need to touch DT bindings.
->=20
-> In Zynq a peripheral clock is essentially described by:
->         clk =3D clk_register_mux(NULL, mux_name, parents, 4, 0,      =
-             =20
->                         clk_ctrl, 4, 2, 0, lock);                    =
-           =20
->                                                                      =
-           =20
->         clk =3D clk_register_divider(NULL, div_name, mux_name, 0, clk=
-_ctrl, 8, 6, =20
->                         CLK_DIVIDER_ONE_BASED, lock);                =
-           =20
->                                                                      =
-           =20
->         clks[clk0] =3D clk_register_gate(NULL, clk_name0, div_name,  =
-             =20
->                         CLK_SET_RATE_PARENT, clk_ctrl, 0, 0, lock);  =
-           =20
->=20
-> If we wrapped this by a driver, any code outside of that driver could=
-n't
-> change the mux setting, since its struct clk* is not exposed outside.
-> To get around this we'd have to reimplement all the clock ops, to cre=
-ate a
-> clock which supports all possible operations.
-> In the monolithic approach we could simply remember that struct clk* =
-and
-> work with it.
->=20
-> Bottom line: Factoring out some parts of the monolithic driver might
-> make sense for some parts. But it can be done later in a transparent =
-way,
-> especially w/o touching DT bindings.
->=20
->=20
-> The other thing is describing the whole clock tree in DT:
-> That would force us to not only describe clocks for which it might ma=
-ke
-> sense, but also all Zynq specific clocks in custom drivers and DT
-> bindings and we gain nothing from it.
->=20
->>
->> The SLCR is a virtual construct, which groups the clock units togeth=
-er. But the
->> clock units are the actual entities. E.g. imagine a Zync 2.0, it wou=
-ld probably
->> reuse the same clock units, but there would quite likely be differen=
-t clocks
->> mapped at different addresses. If you choose a non-monolithic implem=
-entation
->> you'd just have to update your devicetree to make this work, with a =
-monolithic
->> version you'd have to add a almost identical driver for the v2.
-> Either way you'll end up with a lot of lines describing the hierarchy=
-=2E
-> Either in the dts or in the clock driver.
->=20
->=20
-> I think, my problem is, that I do not yet know how certain functional=
-ity
-> will be implemented later and what exact use-cases have to be support=
-ed.
-> With the monolithic approach I keep all options open. We hopefully wi=
-ll
-> never have to touch its DT bindings again. And refactoring the code a=
-nd
-> migrating it to use dedicated clock drivers should be transparent
-> changes, if deemed beneficial.
-> Furthermore, I have a driver, which has references to all strucht clk=
-*
-> in the system and can work with the whole clock tree leveraging a sys=
-tem
-> level view. Separating things in smaller blocks might complicate thin=
-gs
-> if a use case requires this.
-> And finally pushing the whole hierarchy description into the DT seems=
- to
-> be the most restrictive approach, without offering big rewards.
-
-I don't see those restrictions you see with a dt binding which has node=
-s for
-each clock block. You seem to be under the impression, that each device=
- tree
-node requires its own driver or device. This is not the case, have you =
-looked
-at how the current upstream zynq clock support is implemented? This is =
-still
-one monolithic driver, but there are multiple dt nodes, one for each cl=
-ock
-block. This leads to a very clean and well structured code and also nic=
-ely
-structured dt, which represents the tree as it is in hardware. If I und=
-erstand
-you correctly what you suggest is that you basically want to copy 'n pa=
-ste the
-same 10 lines to instantiate a peripheral clock, which you mentioned ab=
-ove,
-again and again. This will be quite messy.
-
-- Lars
+Thanks,
+Lorenzo
