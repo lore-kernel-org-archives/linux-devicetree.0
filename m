@@ -1,152 +1,63 @@
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 3/3] backlight: as3711: add OF support
-Date: Mon, 25 Mar 2013 15:40:46 -0700
-Message-ID: <20130325154046.82d9337f25cec12b9fa03625@linux-foundation.org>
-References: <1363968949-12151-1-git-send-email-g.liakhovetski@gmx.de>
-	<1363968949-12151-4-git-send-email-g.liakhovetski@gmx.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v8 00/14] Tegra114 clockframework
+Date: Mon, 25 Mar 2013 16:44:15 -0600
+Message-ID: <5150D33F.1000206@wwwdotorg.org>
+References: <1363956029-31873-1-git-send-email-pdeschrijver@nvidia.com> <514CAB71.7020005@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1363968949-12151-4-git-send-email-g.liakhovetski@gmx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree-discuss@lists.ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>, Richard Purdie <rpurdie@rpsys.net>, linux-fbdev@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <514CAB71.7020005@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Prashant Gaikwad <pgaikwad@nvidia.com>, Simon Glass <sjg@chromium.org>, Rhyland Klein <rklein@nvidia.com>, Pritesh Raithatha <praithatha@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>, Hiroshi Doyu <hdoyu@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, Andrew Chew <achew@nvidia.com>, Mike Turquette <mturquette@linaro.org>, Thierry Reding <thierry.reding@avionic-design.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 22 Mar 2013 17:15:49 +0100 Guennadi Liakhovetski <g.liakhovetski@gmx.de> wrote:
-
-> Add support for configuring AS3711 backlight driver from DT.
+On 03/22/2013 01:05 PM, Stephen Warren wrote:
+> On 03/22/2013 06:39 AM, Peter De Schrijver wrote:
+>> This is the eight version of the Tegra114 clockframework. It is based on the
+>> next-20130320-fixed branch of
+>> git://nv-tegra.nvidia.com/user/swarren/linux-2.6.git,
 > 
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
-> Reviwed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
-> ---
->  drivers/video/backlight/as3711_bl.c |  118 ++++++++++++++++++++++++++++++++++-
->  1 files changed, 117 insertions(+), 1 deletions(-)
+> Hmmm. Basing this on v3.9-rcX would be better, since when I apply it to
+> the Tegra tree, that's what it will be based on. Luckily, it applies
+> there with trivial conflicts.
 > 
-> diff --git a/drivers/video/backlight/as3711_bl.c b/drivers/video/backlight/as3711_bl.c
-> index 41d52fe..123887c 100644
-> --- a/drivers/video/backlight/as3711_bl.c
-> +++ b/drivers/video/backlight/as3711_bl.c
-> @@ -258,6 +258,109 @@ static int as3711_bl_register(struct platform_device *pdev,
->  	return 0;
->  }
->  
-> +static int as3711_backlight_parse_dt(struct device *dev)
-> +{
-> +	struct as3711_bl_pdata *pdata = dev_get_platdata(dev);
-> +	struct device_node *bl =
-> +		of_find_node_by_name(dev->parent->of_node, "backlight"), *fb;
-> +	int ret;
+>> http://patchwork.ozlabs.org/patch/229972/ and
+>> http://patchwork.ozlabs.org/patch/229978/
+> 
+> The series,
+> 
+> Tested-by: Stephen Warren <swarren@nvidia.com>
+> 
+> (based on my personal next-20130318-fixed branch, without
+> http://patchwork.ozlabs.org/patch/229972/ applied, but instead with the
+> audio clocks initialized per the patch I posted yesterday to do this).
+> 
+> I tested: serial console, eMMC for the root filesystem, audio playback
+> using different pll_a rates, reboot, and shutdown.
+> 
+> This version also solves the hard hang I was seeing with V7 during
+> shutdown or reboot. Now I don't have to rely on my filesystem journal:-)
 
-It's tidier to do
+Hmm. I retract that Tested-by now.
 
-	struct device_node *bl;
-	
-	bl = of_find_node_by_name(dev->parent->of_node, "backlight"), *fb;
+If I apply the series on top of Tegra's for-next branch (which is
+currently entirely based on v3.9-rc1) then it works fine. (Similarly, it
+works fine on top of next-20130318, as I reported above).
 
-and avoid the 80-col trickery.
+If I merge in v3.9-rc3, it's still fine. If I merge in v3.9-rc4, I see a
+hard hang during boot. I believe that "hard hang" here means that some
+module's registers are being touched with the clock turned off, which
+locks up the CPU/bus. Certainly, sysrq doesn't work once it's hung.
 
-> +	if (!bl) {
-> +		dev_dbg(dev, "backlight node not found\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	fb = of_parse_phandle(bl, "su1-dev", 0);
-> +	if (fb) {
-> +		pdata->su1_fb = fb->full_name;
-> +
-> +		ret = of_property_read_u32(bl, "su1-max-uA", &pdata->su1_max_uA);
-> +		if (pdata->su1_max_uA <= 0)
-> +			ret = -EINVAL;
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	fb = of_parse_phandle(bl, "su2-dev", 0);
-> +	if (fb) {
-> +		int count = 0;
-> +
-> +		pdata->su2_fb = fb->full_name;
-> +
-> +		ret = of_property_read_u32(bl, "su2-max-uA", &pdata->su2_max_uA);
-> +		if (pdata->su2_max_uA <= 0)
-> +			ret = -EINVAL;
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		if (of_find_property(bl, "su2-feedback-voltage", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_VOLTAGE;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-feedback-curr1", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_CURR1;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-feedback-curr2", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_CURR2;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-feedback-curr3", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_CURR3;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-feedback-curr-auto", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_CURR_AUTO;
-> +			count++;
-> +		}
-> +		if (count != 1)
-> +			return -EINVAL;
+I tracked this down to some interaction with commit f7db706 "ARM:
+7674/1: smp: Avoid dummy clockevent being preferred over real hardware
+clock-event". So says a "git bisect" between v3.9-rc3 and v3.9-rc4,
+applying this CCF V8 series at each point.
 
-This looks odd.  If the firmware provides both su2-feedback-voltage and
-su2-feedback-curr1, we fail?  Firmware developers are notoriously
-flakey - can the code be more defensive here?
+If I revert that commit, the problem is solved/hidden. I tested this in
+my local dev branch that's based on next-20130325 plus this CCF V8
+series, plus a bunch of other cruft.
 
-> +		count = 0;
-> +		if (of_find_property(bl, "su2-fbprot-lx-sd4", NULL)) {
-> +			pdata->su2_fbprot = AS3711_SU2_LX_SD4;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-fbprot-gpio2", NULL)) {
-> +			pdata->su2_fbprot = AS3711_SU2_GPIO2;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-fbprot-gpio3", NULL)) {
-> +			pdata->su2_fbprot = AS3711_SU2_GPIO3;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-fbprot-gpio4", NULL)) {
-> +			pdata->su2_fbprot = AS3711_SU2_GPIO4;
-> +			count++;
-> +		}
-> +		if (count != 1)
-> +			return -EINVAL;
-> +
-> +		count = 0;
-> +		if (of_find_property(bl, "su2-auto-curr1", NULL)) {
-> +			pdata->su2_auto_curr1 = true;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-auto-curr2", NULL)) {
-> +			pdata->su2_auto_curr2 = true;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-auto-curr3", NULL)) {
-> +			pdata->su2_auto_curr3 = true;
-> +			count++;
-> +		}
-> +
-> +		/*
-> +		 * At least one su2-auto-curr* must be specified iff
-> +		 * AS3711_SU2_CURR_AUTO is used
-> +		 */
-> +		if (!count ^ (pdata->su2_feedback != AS3711_SU2_CURR_AUTO))
-> +			return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->
-> ...
->
+Can you please investigate what the problem is? Thanks.
