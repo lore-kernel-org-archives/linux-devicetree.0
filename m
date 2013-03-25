@@ -1,17 +1,13 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC PATCH] CLK: Allow parent clock and rate to be configured in
- DT.
-Date: Mon, 25 Mar 2013 14:29:35 +0100
-Message-ID: <20130325132935.GE1906@pengutronix.de>
-References: <20130319170933.28337.50448.stgit@localhost>
- <20130325101707.GZ1906@pengutronix.de>
- <51503007.5020403@parkeon.com>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH] ARM: zynq: add support for ZedBoard
+Date: Mon, 25 Mar 2013 15:28:43 +0100
+Message-ID: <CAHTX3dJK4r6w1GFp7x=KYvK65XwM366+=BD-B8dH5pGtDBm=Tw@mail.gmail.com>
+References: <1364043863-20669-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51503007.5020403-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1364043863-20669-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,112 +18,96 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 25, 2013 at 12:07:51PM +0100, Martin Fuzzey wrote:
-> Hi Sascha,
-> 
-> thanks for the comments.
-> 
-> [corrected Mike's email address - I originally sent it to the old one]
-> 
-> On 25/03/13 11:17, Sascha Hauer wrote:
-> >On Tue, Mar 19, 2013 at 06:09:33PM +0100, Martin Fuzzey wrote:
-> >>Even on platforms where the entire clock tree is not represented in the DT
-> >>it can still be useful to allow parents and rates to be set from the DT.
-> >>
-> >>An example of such a case is when a multiplexable clock output from a SOC
-> >>is used to supply external chips (eg an audio codec connected to the i.MX53
-> >>cko1 pin).
-> >>
-> >>The cko1 pin can output various internal clock signals but, in
-> >>order to obtain a suitable frequency for the codec, an appropriate parent must
-> >>be selected.
-> >>
-> >>Another example is setting root clock dividers.
-> >>
-> >>This is board specific rather than device driver or platform clock framework
-> >>specific information and thus would be better in the DT.
-> >I see what the patch does and that it could be very useful, but there's
-> >a problem: The devicetree is for hardware *description*, not
-> >*configuration*.
-> >
-> >>+For example:
-> >>+	clock-configuration {
-> >>+		compatible = "clock-configuration";
-> >>+		clko1 {
-> >>+			clocks = <&clks 160>; /* cko1_sel */
-> >>+			parent = <&clks 114>; /* pll3_sw */
-> >>+		};
-> >>+
-> >>+		esdhca {
-> >>+			clocks = <&clks 102>; /* esdhc_a_podf */
-> >>+			clock-frequency = <200000000>;
-> >>+		};
-> >This example shows this. For some reason we adjust the esdhc frequency
-> >to 200MHz in the code currently, but this is because it matches our
-> >current usecase. Once you move this into devicetree, we can't change
-> >this anymore in the kernel, even if we find a much better way to adjust
-> >the frequency in the future (i.e. smaller values might be good for power
-> >savings, higher values might increase performance, we even might
-> >dynamically change this frequency).
-> >
-> Yes but the problem is that the rates are currently set in
-> clk-imx51-53.c which should be generic
-> to all such platforms whereas, as you point out, there may well be
-> valid reasons to choose
-> different values depending on the board design and / or intended
-> application.
+2013/3/23 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>:
+> Support the Avnet ZedBoard.
+>
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile          |  3 ++-
+>  arch/arm/boot/dts/zynq-zedboard.dts | 45 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 47 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/zynq-zedboard.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 9c62558..1d36a4c 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -174,7 +174,8 @@ dtb-$(CONFIG_ARCH_VT8500) += vt8500-bv07.dtb \
+>         wm8505-ref.dtb \
+>         wm8650-mid.dtb \
+>         wm8850-w70v2.dtb
+> -dtb-$(CONFIG_ARCH_ZYNQ) += zynq-zc702.dtb
+> +dtb-$(CONFIG_ARCH_ZYNQ) += zynq-zc702.dtb \
+> +       zynq-zedboard.dtb
+>
+>  targets += dtbs
+>  targets += $(dtb-y)
+> diff --git a/arch/arm/boot/dts/zynq-zedboard.dts b/arch/arm/boot/dts/zynq-zedboard.dts
+> new file mode 100644
+> index 0000000..1b024c7
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/zynq-zedboard.dts
+> @@ -0,0 +1,45 @@
+> +/*
+> + *  Copyright (C) 2013 Steffen Trumrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +/dts-v1/;
+> +/include/ "zynq-7000.dtsi"
+> +
+> +/ {
+> +       model = "Zynq ZedBoard";
+> +       compatible = "xlnx,zynq-zed", "xlnx,zynq-7000";
+> +
+> +       memory {
+> +               device_type = "memory";
+> +               reg = <0x0 0x20000000>;
+> +       };
+> +};
+> +
+> +&gem0 {
+> +       status = "okay";
+> +};
+> +
+> +&uart0 {
+> +       status = "okay";
+> +};
+> +
+> +&uart1 {
+> +       status = "okay";
+> +};
+> +
+> +&ps_clk {
+> +       clock-frequency = <33333330>;
+> +};
+> +
+> +&ttc0_0 {
+> +       status = "okay";
+> +       compatible = "xlnx,ttc-counter-clockevent";
+> +};
 
-Put it differently. OpenBSD might have much better clock support.
-Imagine it can dynamically figure out the correct esdhc frequencies
-for different usecases on the fly. In this situation it would be
-counterproductive if Linux requires static values for these in the
-devicetree.
+Look at my timer patches for it.
+I have discussed this with Josh and this is not needed anymore.
 
-> 
-> The cko case is even worse - due to a board design decision that
-> clock needs to have
-> a frequency suitable for supplying some external chip. We don't want
-> board specific code in
-> the platform clock code and we're trying to get away from board files...
+Thanks,
+Michal
 
-The codec could be provided a phandle to the cko clk. This is hardware
-description and is fine for putting into the devicetree.
-
-> 
-> >So no, this shouldn't be in the devicetree, even though it's very
-> >tempting to do so.
-> >
-> >I wonder when someone comes up with a 'configtree' where we could put in
-> >such stuff.
-> I don't understand why we need a seperate tree for this why can't just
-> a subtree of the DT be used?
-> 
-> After all the DT already contains "configuration" nodes such as "chosen".
-> 
-> Indeed Documentation/devicetree/usage-model.txt  says:
->     "The chosen node may also optionally contain an arbitrary number of
->     additional properties for platform-specific configuration data."
-> 
-> So what stops us simply placing the clock-configuration node above
-> under chosen? (which already works - just tested it)
-
-What stops us doing so is that currently we have the policy that the
-devicetree is hardware description only, even if there are already
-counteraxamples in the devicetree.
-
-I know that we currently have no place to put such information. There
-recently was a similar discussion with CMA descriptions in the
-devicetree and I remember several other discussions of the same type,
-all of which ended at the dont-know-but-not-in-the-devicetree point.
-
-Sascha
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
