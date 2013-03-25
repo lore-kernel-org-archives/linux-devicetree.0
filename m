@@ -1,27 +1,50 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next] dsa: add device tree bindings to register DSA
- switches
-Date: Sun, 24 Mar 2013 17:17:38 -0400 (EDT)
-Message-ID: <20130324.171738.301089541347666424.davem@davemloft.net>
-References: <2044972.NvctqPqDPo@bender>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: RE: RE: RE: [PATCH v6 00/16] clk: exynos4/5: migrate to common
+ clock framework
+Date: Mon, 25 Mar 2013 10:05:57 +0900
+Message-ID: <16dd01ce28f4$e8256860$b8703920$%kim@samsung.com>
+References: <1361175686-19400-1-git-send-email-thomas.abraham@linaro.org>
+ <20130319184938.8663.18115@quantum> <201303192212.16877.heiko@sntech.de>
+ <20130319215038.8663.83548@quantum>
+ <116a01ce24fd$e32658b0$a9730a10$%kim@samsung.com>
+ <20130320025656.11073.90469@quantum>
+ <11af01ce2526$63b0a8f0$2b11fad0$%kim@samsung.com>
+ <20130320144000.11073.37741@quantum>
+ <14d801ce268b$80a8d160$81fa7420$%kim@samsung.com>
+ <20130322142739.834.2721@quantum>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <2044972.NvctqPqDPo@bender>
-Sender: netdev-owner@vger.kernel.org
-To: florian@openwrt.org
-Cc: devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, thomas.petazzoni@free-electrons.com, gregory.clement@free-electrons.com, jason@lakedaemon.net, buytenh@wantstofly.org, netdev@vger.kernel.org, andrew@lunn.ch, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20130322142739.834.2721@quantum>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Mike Turquette' <mturquette@linaro.org>, =?utf-8?Q?'Heiko_St=C3=BCbner'?= <heiko@sntech.de>
+Cc: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, t.figa@samsung.com, sylvester.nawrocki@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Florian Fainelli <florian@openwrt.org>
-Date: Fri, 22 Mar 2013 21:50:50 +0100
+Mike Turquette wrote:
 
-> This patch adds support for registering DSA switches using Device Tree
-> bindings. Note that we support programming the switch routing table even
-> though no in-tree user seems to require it. I tested this on Armada 370
-> with a Marvell 88E6172 (not supported by mainline yet).
+[...]
+
+> > Yeah, I know. So if you want to add your ack on drivers/clk stuff for
+> this series in samsung tree, please let me know.
+> >
 > 
-> Signed-off-by: Florian Fainelli <florian@openwrt.org>
+> The patches are in pretty good shape.  Please add my ack if you are able
 
-Applied.
+OK, I will.
+
+> to rebase comfortably.  But if rebasing causes you and your downstream
+> users a lot of pain then don't do it.
+> 
+Yes it can be, but it can be handled easily because of no-changing codes.
+
+Note, please check Heiko's follow-up clk/samsung patches.
+<http://comments.gmane.org/gmane.linux.kernel.samsung-soc/16817>
+
+I'm fine on that and if you're ok, I'd like to take that with this series.
+
+Thanks.
+
+- Kukjin
