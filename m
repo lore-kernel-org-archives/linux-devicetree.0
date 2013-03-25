@@ -1,75 +1,29 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: RFC v2: Zynq Clock Controller
-Date: Mon, 25 Mar 2013 12:13:08 -0600
-Message-ID: <515093B4.2090701@wwwdotorg.org>
-References: <27dae808-1d3a-4001-8eb2-b0a6e2a34b8f@AM1EHSMHS013.ehs.local>
+From: Peter Korsgaard <jacmet@sunsite.dk>
+Subject: Re: [PATCH v3] gpio: mcp23s08: convert driver to DT
+Date: Mon, 25 Mar 2013 19:25:33 +0100
+Message-ID: <87wqsvbale.fsf@dell.be.48ers.dk>
+References: <1362414873-17676-1-git-send-email-larsi@wh2.tu-dresden.de>
+	<CACRpkdYYsULLsDQuxoRHp=HXsaOAejwaO-CezdEK4sNprWpDYQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <27dae808-1d3a-4001-8eb2-b0a6e2a34b8f-dAX9Bq04yCTT7m58JnLnSLjjLBE8jN/0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?SmFuIEzDvA==?= =?UTF-8?B?YmJl?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, git-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Peter Crosthwaite <pcrost-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYYsULLsDQuxoRHp=HXsaOAejwaO-CezdEK4sNprWpDYQ@mail.gmail.com>
+	(Linus Walleij's message of "Fri, 22 Mar 2013 09:33:10 +0100")
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Lars Poeschel <larsi@wh2.tu-dresden.de>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, poeschel@lemonage.de, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, spi-devel-general@lists.sourceforge.net
 List-Id: devicetree@vger.kernel.org
 
-T24gMDMvMjAvMjAxMyAwNTo1NiBQTSwgU8O2cmVuIEJyaW5rbWFubiB3cm90ZToKPiBIaSwKPiAK
-PiBJIHNwZW50IHNvbWUgdGltZSB3b3JraW5nIG9uIHRoaXMgYW5kIGluY29ycG9yYXRpbmcgZmVl
-ZGJhY2suIEhlcmUncyBhbiB1cGRhdGVkIHByb3Bvc2FsIGZvciBhIGNsb2NrIGNvbnRyb2xsZXIg
-Zm9yIFp5bnE6Cj4gCj4gUmVxdWlyZWQgcHJvcGVydGllczoKPiAgLSAjY2xvY2stY2VsbHMgOiBN
-dXN0IGJlIDEKPiAgLSBjb21wYXRpYmxlIDogInhsbngscHM3LWNsa2MiICAodGhpcyBtYXkgYmVj
-b21lICd4bG54LHp5bnEtY2xrYycgdGVybWlub2xvZ3kgZGlmZmVycyBhIGJpdCBiZXR3ZWVuIFhp
-bGlueCBpbnRlcm5hbCBhbmQgbWFpbmxpbmUpCj4gIC0gcHMtY2xrLWZyZXF1ZW5jeSA6IEZyZXF1
-ZW5jeSBvZiB0aGUgb3NjaWxsYXRvciBwcm92aWRpbmcgcHNfY2xrIGluIEhaCj4gICAgICAgICAg
-ICAgICAgICAgICAgKHVzdWFsbHkgMzMgTUh6IG9zY2lsbGF0b3JzIGFyZSB1c2VkIGZvciBaeW5x
-IHBsYXRmb3JtcykKClRoaXMgbWF5IGhhdmUgYmVlbiBtZW50aW9uZWQgYmVmb3JlLCBidXQgc2hv
-dWxkbid0IHRoZSBpbnB1dCBjbG9jayBiZQpyZXByZXNlbnRlZCBhcyBhbiBhY3R1YWwgY2xvY2sg
-aW4gRFQsIGFuZCBoZW5jZSBhcyBhbiBlbnRyeSBpbiB0aGlzCm5vZGUncyBjbG9ja3MgcHJvcGVy
-dHk/IFRoZSBjcnlzdGFsLy4uLiBpdHNlbGYgY2FuIGJlIHJlcHJlc2VudGVkIGluIERUCmFzIGEg
-Zml4ZWQtY2xvY2suCgo+ICAtIGNsb2NrLW91dHB1dC1uYW1lcyA6IExpc3Qgb2Ygc3RyaW5ncyB1
-c2VkIHRvIG5hbWUgdGhlIGNsb2NrIG91dHB1dHMuIFNoYWxsIGJlIGEgbGlzdCBvZiB0aGUgb3V0
-cHV0cyBnaXZlbiBiZWxvdy4KClRoYXQgc2hvdWxkbid0IGJlIHJlcXVpcmVkLgoKPiBPcHRpb25h
-bCBwcm9wZXJ0aWVzOgo+ICAtIGNsb2NrcyA6IGFzIGRlc2NyaWJlZCBpbiB0aGUgY2xvY2sgYmlu
-ZGluZ3MKPiAgLSBjbG9jay1uYW1lcyA6IGFzIGRlc2NyaWJlZCBpbiB0aGUgY2xvY2sgYmluZGlu
-Z3MKCkkgdGhpbmsgY2xvY2tzIHNob3VsZCBiZSByZXF1aXJlZCwgd2l0aCBhdCBsZWFzdCB0aGUg
-bWFpbiBjcnlzdGFsIGNsb2NrCmlucHV0IGFsd2F5cyBwcmVzZW50LCBidXQgcGVyaGFwcyBoYXZp
-bmcgc29tZSBvcHRpb25hbCBlbnRyaWVzIGZvciB0aGUKKEUpTUlPIGZlYXR1cmUgeW91IG1lbnRp
-b24uCgo+IEV4YW1wbGU6Cj4gICAgICAgICBjbGtjOiBjbGtjIHsKPiAgICAgICAgICAgICAgICAg
-I2Nsb2NrLWNlbGxzID0gPDE+Owo+ICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInhsbngs
-cHM3LWNsa2MiOwo+ICAgICAgICAgICAgICAgICBwcy1jbGstZnJlcXVlbmN5ID0gPDMzMzMzMzMz
-PjsKPiAgICAgICAgICAgICAgICAgY2xvY2stb3V0cHV0LW5hbWVzID0gImFybXBsbCIsICJkZHJw
-bGwiLCAiaW9wbGwiLCAiY3B1XzZvcjR4IiwgImNwdV8zb3IyeCIsICJjcHVfMngiLCAiY3B1XzF4
-IiwgImRkcjJ4IiwgImRkcjN4IiwgImRjaSIsICJscXNwaSIsICJzbWMiLCAicGNhcCIsICJnZW0w
-IiwgImdlbTEiLCAiZmNsazAiLCAiZmNsazEiLCAiZmNsazIiLCAiZmNsazMiLCAiY2FuMCIsICJj
-YW4xIiwgInNkaW8wIiwgInNkaW8xIiwgInVhcnQwIiwgInVhcnQxIiwgInNwaTAiLCAic3BpMSIs
-ICJkbWEiLCAidXNiMF9hcGVyIiwgInVzYjFfYXBlciIsICJnZW0wX2FwZXIiLCAiZ2VtMV9hcGVy
-IiwgInNkaW8wX2FwZXIiLCAic2RpbzFfYXBlciIsICJzcGkwX2FwZXIiLCAic3BpMV9hcGVyIiwg
-ImNhbjBfYXBlciIsICJjYW4xX2FwZXIiLCAiaTJjMF9hcGVyIiwgImkyYzFfYXBlciIsICJ1YXJ0
-MF9hcGVyIiwgInVhcnQxX2FwZXIiLCAiZ3Bpb19hcGVyIiwgImxxc3BpX2FwZXIiLCAic21jX2Fw
-ZXIiLCAic3dkdCIsICJkYmdfdHJjIiwgImRiZ19hcGIiOyAgLyogbG9uZyBsaXN0Li4uIGV4cGxh
-bmF0aW9uIGJlbG93ICovCj4gICAgICAgICAgICAgICAgIC8qIG9wdGlvbmFsIHByb3BzICovCj4g
-ICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmY2xrYyAxNj4sIDwmY2xrX2Zvbz47Cj4gICAgICAg
-ICAgICAgICAgIGNsb2NrLW5hbWVzID0gImdlbTFfZW1pb19jbGsiLCAiY2FuX21pb19jbGtfMjMi
-Owo+ICAgICAgICAgfTsKPiAKPiBUaGUgZG93bnNpZGUgb2Ygc3VwcG9ydGluZyB0aGlzIGlzLCB0
-aGF0IEkgZG9uJ3Qgc2VlIGEgd2F5IGFyb3VuZCBleHBsaWNpdGx5IGxpc3RpbmcgdGhlIGNsb2Nr
-IG91dHB1dCBuYW1lcyBpbiB0aGUgRFQuCgooUGxlYXNlIHdyYXAgeW91ciBlbWFpbHMgdG8gfjc0
-IGNoYXJhY3RlcnMgb3Igc28pCgpBcyBNaWtlIG1lbnRpb25lZCBvZmYtbGlzdCwgb25lIGNhbiBj
-cmVhdGUgYSBuZXcgY2xrIHJlZ2lzdHJhdGlvbiBBUEkKdGhhdCB0YWtlcyBhIHN0cnVjdCBjbGsq
-IGFzIHBhcmVudCByYXRoZXIgdGhhbiBhIGNoYXIgKmNsa19uYW1lLgoKPiBUaGlzIGVtYWlsIGFu
-ZCBhbnkgYXR0YWNobWVudHMgYXJlIGludGVuZGVkIGZvciB0aGUgc29sZSB1c2Ugb2YgdGhlIG5h
-bWVkIHJlY2lwaWVudChzKS4uLgoKSXQncyBub3QgZ29vZCBmb3JtIHRvIGluY2x1ZGUgdGhhdCBr
-aW5kIG9mIGRpc2NsYWltZXIgb24gcHVibGljIG1haWxpbmcKbGlzdCBwb3N0cy4gVGhhdCdzIHdo
-eSBtYW55IHBlb3BsZSB1c2UgdGhlaXIgcGVyc29uYWwgZW1haWwgd2hlbiBwb3N0aW5nCnRvIG1h
-aWxpbmcgbGlzdHMuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxp
-c3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRy
-ZWUtZGlzY3Vzcwo=
+>>>>> "Linus" == Linus Walleij <linus.walleij@linaro.org> writes:
+
+ Linus> Hi Lars,
+ Linus> sorry for taking eternities to review stuff :-(
+
+ Linus> I recommend that you include SPI co-maintainer Mark Brown on
+ Linus> subsequent postings.
+
+And me, as I'm the only one who has done any significant work on that
+driver since David..
+
+-- 
+Bye, Peter Korsgaard
