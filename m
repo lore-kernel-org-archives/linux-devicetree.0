@@ -1,185 +1,233 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH v3 3/3] backlight: as3711: add OF support
-Date: Mon, 25 Mar 2013 14:12:21 +0900
-Message-ID: <00da01ce2917$54856ce0$fd9046a0$%han@samsung.com>
-References: <1363968949-12151-1-git-send-email-g.liakhovetski@gmx.de>
- <1363968949-12151-4-git-send-email-g.liakhovetski@gmx.de>
+From: Shaik Ameer Basha <shaik.samsung@gmail.com>
+Subject: Re: [RFC 11/12] media: m5mols: Adding dt support to m5mols driver
+Date: Mon, 25 Mar 2013 11:09:11 +0530
+Message-ID: <CAOD6ATrwqFX=_MorC=9xuJoXGu+UWzbp69Wu6kkHM9kRVzUrFw@mail.gmail.com>
+References: <1362570838-4737-1-git-send-email-shaik.ameer@samsung.com>
+	<1362570838-4737-12-git-send-email-shaik.ameer@samsung.com>
+	<514D9888.4090307@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1363968949-12151-4-git-send-email-g.liakhovetski@gmx.de>
-Content-language: ko
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Andrew Morton' <akpm@linux-foundation.org>, 'Guennadi Liakhovetski' <g.liakhovetski@gmx.de>
-Cc: linux-kernel@vger.kernel.org, 'Mark Brown' <broonie@opensource.wolfsonmicro.com>, 'Magnus Damm' <magnus.damm@gmail.com>, 'Simon Horman' <horms@verge.net.au>, devicetree-discuss@lists.ozlabs.org, 'Samuel Ortiz' <sameo@linux.intel.com>, 'Richard Purdie' <rpurdie@rpsys.net>, linux-fbdev@vger.kernel.org, 'Guennadi Liakhovetski' <g.liakhovetski+renesas@gmail.com>, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <514D9888.4090307@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Saturday, March 23, 2013 1:16 AM, Guennadi Liakhovetski wrote:
-> 
-> Add support for configuring AS3711 backlight driver from DT.
-> 
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
-> Reviwed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Hi Sylwester,
 
-Acked-by: Jingoo Han <jg1.han@samsung.com>
+Thanks for the review.
+Actually I agree with all of your review comments.
+
+This was just a temporary test patch, used to test exynos5-mdev.
+I thought for some one to test exynos5-mdev series patches, i need to
+provide one working m5mols dt driver.
+
+Good to hear you already have one patch for this driver.
+If you can able to post the dt patch for this driver, I will use that.
+
+Regards,
+Shaik Ameer Basha
 
 
-But, there is a typo in comment.
-> +		 * At least one su2-auto-curr* must be specified iff
-s/iff/if
-
-Best regards.
-Jingoo Han
-
-> ---
->  drivers/video/backlight/as3711_bl.c |  118 ++++++++++++++++++++++++++++++++++-
->  1 files changed, 117 insertions(+), 1 deletions(-)
-> 
-> diff --git a/drivers/video/backlight/as3711_bl.c b/drivers/video/backlight/as3711_bl.c
-> index 41d52fe..123887c 100644
-> --- a/drivers/video/backlight/as3711_bl.c
-> +++ b/drivers/video/backlight/as3711_bl.c
-> @@ -258,6 +258,109 @@ static int as3711_bl_register(struct platform_device *pdev,
->  	return 0;
->  }
-> 
-> +static int as3711_backlight_parse_dt(struct device *dev)
-> +{
-> +	struct as3711_bl_pdata *pdata = dev_get_platdata(dev);
-> +	struct device_node *bl =
-> +		of_find_node_by_name(dev->parent->of_node, "backlight"), *fb;
-> +	int ret;
-> +
-> +	if (!bl) {
-> +		dev_dbg(dev, "backlight node not found\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	fb = of_parse_phandle(bl, "su1-dev", 0);
-> +	if (fb) {
-> +		pdata->su1_fb = fb->full_name;
-> +
-> +		ret = of_property_read_u32(bl, "su1-max-uA", &pdata->su1_max_uA);
-> +		if (pdata->su1_max_uA <= 0)
-> +			ret = -EINVAL;
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	fb = of_parse_phandle(bl, "su2-dev", 0);
-> +	if (fb) {
-> +		int count = 0;
-> +
-> +		pdata->su2_fb = fb->full_name;
-> +
-> +		ret = of_property_read_u32(bl, "su2-max-uA", &pdata->su2_max_uA);
-> +		if (pdata->su2_max_uA <= 0)
-> +			ret = -EINVAL;
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		if (of_find_property(bl, "su2-feedback-voltage", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_VOLTAGE;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-feedback-curr1", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_CURR1;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-feedback-curr2", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_CURR2;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-feedback-curr3", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_CURR3;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-feedback-curr-auto", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_CURR_AUTO;
-> +			count++;
-> +		}
-> +		if (count != 1)
-> +			return -EINVAL;
-> +
-> +		count = 0;
-> +		if (of_find_property(bl, "su2-fbprot-lx-sd4", NULL)) {
-> +			pdata->su2_fbprot = AS3711_SU2_LX_SD4;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-fbprot-gpio2", NULL)) {
-> +			pdata->su2_fbprot = AS3711_SU2_GPIO2;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-fbprot-gpio3", NULL)) {
-> +			pdata->su2_fbprot = AS3711_SU2_GPIO3;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-fbprot-gpio4", NULL)) {
-> +			pdata->su2_fbprot = AS3711_SU2_GPIO4;
-> +			count++;
-> +		}
-> +		if (count != 1)
-> +			return -EINVAL;
-> +
-> +		count = 0;
-> +		if (of_find_property(bl, "su2-auto-curr1", NULL)) {
-> +			pdata->su2_auto_curr1 = true;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-auto-curr2", NULL)) {
-> +			pdata->su2_auto_curr2 = true;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-auto-curr3", NULL)) {
-> +			pdata->su2_auto_curr3 = true;
-> +			count++;
-> +		}
-> +
-> +		/*
-> +		 * At least one su2-auto-curr* must be specified iff
-> +		 * AS3711_SU2_CURR_AUTO is used
-> +		 */
-> +		if (!count ^ (pdata->su2_feedback != AS3711_SU2_CURR_AUTO))
-> +			return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int as3711_backlight_probe(struct platform_device *pdev)
->  {
->  	struct as3711_bl_pdata *pdata = dev_get_platdata(&pdev->dev);
-> @@ -267,11 +370,24 @@ static int as3711_backlight_probe(struct platform_device *pdev)
->  	unsigned int max_brightness;
->  	int ret;
-> 
-> -	if (!pdata || (!pdata->su1_fb && !pdata->su2_fb)) {
-> +	if (!pdata) {
->  		dev_err(&pdev->dev, "No platform data, exiting...\n");
->  		return -ENODEV;
->  	}
-> 
-> +	if (pdev->dev.parent->of_node) {
-> +		ret = as3711_backlight_parse_dt(&pdev->dev);
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "DT parsing failed: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (!pdata->su1_fb && !pdata->su2_fb) {
-> +		dev_err(&pdev->dev, "No framebuffer specified\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	/*
->  	 * Due to possible hardware damage I chose to block all modes,
->  	 * unsupported on my hardware. Anyone, wishing to use any of those modes
-> --
-> 1.7.2.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-fbdev" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Sat, Mar 23, 2013 at 5:26 PM, Sylwester Nawrocki
+<sylvester.nawrocki@gmail.com> wrote:
+> Hi Shaik,
+>
+>
+> On 03/06/2013 12:53 PM, Shaik Ameer Basha wrote:
+>>
+>> This patch adds the dt support to m5mols driver.
+>>
+>> Signed-off-by: Shaik Ameer Basha<shaik.ameer@samsung.com>
+>> ---
+>>   drivers/media/i2c/m5mols/m5mols_core.c |   54
+>> +++++++++++++++++++++++++++++++-
+>>   1 file changed, 53 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/media/i2c/m5mols/m5mols_core.c
+>> b/drivers/media/i2c/m5mols/m5mols_core.c
+>> index d4e7567..21c66ef 100644
+>> --- a/drivers/media/i2c/m5mols/m5mols_core.c
+>> +++ b/drivers/media/i2c/m5mols/m5mols_core.c
+>> @@ -19,6 +19,8 @@
+>>   #include<linux/interrupt.h>
+>>   #include<linux/delay.h>
+>>   #include<linux/gpio.h>
+>> +#include<linux/of_gpio.h>
+>> +#include<linux/pinctrl/consumer.h>
+>
+>
+> What would you need pinctrl for ? In most cases this driver just needs one
+> GPIO
+> (sensor RESET), which is normally passed in gpios property.
+>
+>
+>>   #include<linux/regulator/consumer.h>
+>>   #include<linux/videodev2.h>
+>>   #include<linux/module.h>
+>> @@ -926,13 +928,38 @@ static irqreturn_t m5mols_irq_handler(int irq, void
+>> *data)
+>>         return IRQ_HANDLED;
+>>   }
+>>
+>> +static const struct of_device_id m5mols_match[];
+>> +
+>>   static int m5mols_probe(struct i2c_client *client,
+>>                         const struct i2c_device_id *id)
+>>   {
+>> -       const struct m5mols_platform_data *pdata =
+>> client->dev.platform_data;
+>> +       struct m5mols_platform_data *pdata;
+>>         struct m5mols_info *info;
+>> +       const struct of_device_id *of_id;
+>>         struct v4l2_subdev *sd;
+>>         int ret;
+>> +       struct pinctrl *pctrl;
+>> +       int eint_gpio = 0;
+>> +
+>> +       if (client->dev.of_node) {
+>> +               of_id = of_match_node(m5mols_match, client->dev.of_node);
+>> +               if (of_id)
+>> +                       pdata = (struct m5mols_platform_data
+>> *)of_id->data;
+>> +               client->dev.platform_data = pdata;
+>
+>
+> Oh, no. Probably best thing to do would be to get rid of struct
+> m5mols_platform_data pointer from struct m5mols_info and just add gpio_reset
+> field there. That's what we have currently in the driver's platform data
+> structure.
+>
+> struct m5mols_platform_data {
+>         int gpio_reset;
+>         u8 reset_polarity;
+>         int (*set_power)(struct device *dev, int on);
+> };
+>
+> gpio_reset and reset_polarity are already handled in the driver, and for
+> this we just need a single entry in 'gpios' property.
+>
+> set_power callback can't be supported. Luckily there seems to be no board
+> that needs it any more. So we just drop it. One solution for more complex
+> power sequence could be the Runtime Interpreted Power Sequences. Once it
+> is available we might be able to describe what was previously in a board
+> file in set_power callback in the device tree.
+>
+>
+>> +       } else {
+>> +               pdata = client->dev.platform_data;
+>> +       }
+>> +
+>> +       if (!pdata)
+>> +               return -EINVAL;
+>> +
+>> +       pctrl = devm_pinctrl_get_select_default(&client->dev);
+>
+>
+> Two issues here:
+>
+> 1. m5mols DT node doesn't include pinctrl property, does it ?
+> 2. default pinctrl state is now being handled in the driver core.
+>
+> Hence this pinctrl set up could well be removed.
+>
+>
+>> +       if (client->dev.of_node) {
+>> +               eint_gpio = of_get_named_gpio(client->dev.of_node,
+>> "gpios", 0);
+>> +               client->irq = gpio_to_irq(eint_gpio);
+>> +               pdata->gpio_reset = of_get_named_gpio(client->dev.of_node,
+>> +                                                               "gpios",
+>> 1);
+>
+>
+> Err, now when pinctrl and generic GPIO DT bindings are supported on Exynos5
+> this should not be needed at all. request_irq() should work when you add
+> relevant properties in this device DT node. Please see exynos4210-trats.dts,
+> mms114-touchscreen node for an example.
+>
+>         mms114-touchscreen@48 {
+>                 ...
+>                 interrupt-parent = <&gpx0>;
+>                 interrupts = <4 2>;
+>                 ...
+>         };
+>
+> You specify GPIO bank in the 'interrupt-parent' property, and the GPIO
+> index within the bank in first cell of 'interrupts' property. The second
+> cell are interrupt flags as defined in /Documentation/devicetree/bindings/
+> interrupt-controller/interrupts.txt. I'm not sure how this interacts with
+> the interrupt flags passed to request_irq ATM.
+>
+> It's the pinctrl driver's task to configure the GPIO pinmux into EINT
+> function, when the above properties are present in device DT node.
+>
+>
+>> +       }
+>>
+>>         if (pdata == NULL) {
+>>                 dev_err(&client->dev, "No platform data\n");
+>> @@ -1040,9 +1067,34 @@ static const struct i2c_device_id m5mols_id[] = {
+>>   };
+>>   MODULE_DEVICE_TABLE(i2c, m5mols_id);
+>>
+>> +static int m5mols_set_power(struct device *dev, int on)
+>> +{
+>> +       struct m5mols_platform_data *pdata =
+>> +                       (struct m5mols_platform_data *)dev->platform_data;
+>> +       gpio_set_value(pdata->gpio_reset, !on);
+>> +       gpio_set_value(pdata->gpio_reset, !!on);
+>> +       return 0;
+>> +}
+>> +
+>> +static struct m5mols_platform_data m5mols_drvdata = {
+>> +       .gpio_reset     = 0,
+>> +       .reset_polarity = 0,
+>> +       .set_power      = m5mols_set_power,
+>> +};
+>
+>
+> Huh, you've got extra bonus points for creativity! :)
+>
+> Do you have fixed voltage regulators, permanently turned on on your board ?
+> gpio_reset is already being configured in m5mols_sensor_power() function.
+>
+> Does so short pulse on RESET line change anything in your case ? If needed
+> we could modify m5mols_sensor_power() function to properly cover more cases.
+> Or does it also work when you remove the above m5mols_set_power callback ?
+>
+>
+>> +static const struct of_device_id m5mols_match[] = {
+>> +       {
+>> +               .compatible = "fujitsu,m-5mols",
+>> +               .data =&m5mols_drvdata,
+>> +       },
+>> +       {},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, m5mols_match);
+>
+>
+> We already have a patch adding DT support to this driver. I'll probably
+> send it out for 3.10 next week. An important issue your patch doesn't
+> address is that in most H/W configurations camera host device provides
+> master clock to the sensor. It is the case for all our boards. So we
+> need to ensure that the clocks is enabled for the sensor when it tries
+> to access hardware. This essentially boils down to performing I2C
+> communication with the sensor device.
+>
+> We currently worked around this by moving initial sensor detection to
+> v4l2 subdev .registered callback. But the preferred approach is to expose
+> clocks in the host driver so the sensor sub-device drivers can get them
+> and control as they seem fit. This also allows more fine grained power
+> management in the sensor driver. That said the asynchronous probing and
+> clock handling API is still not settled in the media subsystem and I think
+> it's worth to push the above mentioned patch upstream, even though it's
+> just an interim solution.
+>
+> That doesn't mean we don't need the DT binding documentation for this
+> device though. :-)
+>
+>
+> Regards,
+> Sylwester
