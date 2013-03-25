@@ -1,65 +1,152 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 7/7] irqchip: s3c24xx: add devicetree support
-Date: Mon, 25 Mar 2013 22:00:46 +0000
-Message-ID: <201303252200.46258.arnd@arndb.de>
-References: <201303252226.21402.heiko@sntech.de> <201303252234.21314.heiko@sntech.de>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 3/3] backlight: as3711: add OF support
+Date: Mon, 25 Mar 2013 15:40:46 -0700
+Message-ID: <20130325154046.82d9337f25cec12b9fa03625@linux-foundation.org>
+References: <1363968949-12151-1-git-send-email-g.liakhovetski@gmx.de>
+	<1363968949-12151-4-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <201303252234.21314.heiko@sntech.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Thomas Abraham <thomas.abraham@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1363968949-12151-4-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree-discuss@lists.ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>, Richard Purdie <rpurdie@rpsys.net>, linux-fbdev@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 25 March 2013, Heiko St=FCbner wrote:
-> Add the necessary code to initialize the interrupt controller
-> thru devicetree data using the irqchip infrastructure.
->=20
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+On Fri, 22 Mar 2013 17:15:49 +0100 Guennadi Liakhovetski <g.liakhovetski@gmx.de> wrote:
 
-The binding looks fine now. I have a few detail comments but am happy
-with the series otherwise.
+> Add support for configuring AS3711 backlight driver from DT.
+> 
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+> Reviwed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+> ---
+>  drivers/video/backlight/as3711_bl.c |  118 ++++++++++++++++++++++++++++++++++-
+>  1 files changed, 117 insertions(+), 1 deletions(-)
+> 
+> diff --git a/drivers/video/backlight/as3711_bl.c b/drivers/video/backlight/as3711_bl.c
+> index 41d52fe..123887c 100644
+> --- a/drivers/video/backlight/as3711_bl.c
+> +++ b/drivers/video/backlight/as3711_bl.c
+> @@ -258,6 +258,109 @@ static int as3711_bl_register(struct platform_device *pdev,
+>  	return 0;
+>  }
+>  
+> +static int as3711_backlight_parse_dt(struct device *dev)
+> +{
+> +	struct as3711_bl_pdata *pdata = dev_get_platdata(dev);
+> +	struct device_node *bl =
+> +		of_find_node_by_name(dev->parent->of_node, "backlight"), *fb;
+> +	int ret;
 
-> +Required properties:
-> +- compatible: Compatible property value should be "samsung,s3c24xx-i=
-rq"
-> +  for non s3c2416 machines and "samsung,s3c2416-irq" for s3c2416 mac=
-hines
+It's tidier to do
 
-We try to avoid wildcards in the "compatible" properties. Better use
-the name of the first SoC that had this controller, and let the other
-ones mark themselves as compatible with that one.
+	struct device_node *bl;
+	
+	bl = of_find_node_by_name(dev->parent->of_node, "backlight"), *fb;
 
-I guess "samsung,s3c2410-irq" would be the right identifier here.
+and avoid the 80-col trickery.
 
-> +- #interrupt-cells : Specifies the number of cells needed to encode =
-an
-> +  interrupt source. The value shall be 4 and interrupt descriptor sh=
-all
-> +  have the following format:
-> +      <ctrl_num ctrl_irq parent_irq type>
+> +	if (!bl) {
+> +		dev_dbg(dev, "backlight node not found\n");
+> +		return -ENODEV;
+> +	}
 > +
-> +  ctrl_num contains the controller to use:
-> +      - 0 ... main controller
-> +      - 1 ... sub controller
-> +      - 2 ... second main controller on s3c2416 and s3c2450
-> +  ctrl_irq contains the interrupt bit of the controller
-> +  parent_irq contains the parent bit in the main controller and will=
- be
-> +             ignored in main controllers
+> +	fb = of_parse_phandle(bl, "su1-dev", 0);
+> +	if (fb) {
+> +		pdata->su1_fb = fb->full_name;
+> +
+> +		ret = of_property_read_u32(bl, "su1-max-uA", &pdata->su1_max_uA);
+> +		if (pdata->su1_max_uA <= 0)
+> +			ret = -EINVAL;
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	fb = of_parse_phandle(bl, "su2-dev", 0);
+> +	if (fb) {
+> +		int count = 0;
+> +
+> +		pdata->su2_fb = fb->full_name;
+> +
+> +		ret = of_property_read_u32(bl, "su2-max-uA", &pdata->su2_max_uA);
+> +		if (pdata->su2_max_uA <= 0)
+> +			ret = -EINVAL;
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		if (of_find_property(bl, "su2-feedback-voltage", NULL)) {
+> +			pdata->su2_feedback = AS3711_SU2_VOLTAGE;
+> +			count++;
+> +		}
+> +		if (of_find_property(bl, "su2-feedback-curr1", NULL)) {
+> +			pdata->su2_feedback = AS3711_SU2_CURR1;
+> +			count++;
+> +		}
+> +		if (of_find_property(bl, "su2-feedback-curr2", NULL)) {
+> +			pdata->su2_feedback = AS3711_SU2_CURR2;
+> +			count++;
+> +		}
+> +		if (of_find_property(bl, "su2-feedback-curr3", NULL)) {
+> +			pdata->su2_feedback = AS3711_SU2_CURR3;
+> +			count++;
+> +		}
+> +		if (of_find_property(bl, "su2-feedback-curr-auto", NULL)) {
+> +			pdata->su2_feedback = AS3711_SU2_CURR_AUTO;
+> +			count++;
+> +		}
+> +		if (count != 1)
+> +			return -EINVAL;
 
-I expected the second and third cell to be in the opposite order, so
-the meaning of the second cell is always the same.
+This looks odd.  If the firmware provides both su2-feedback-voltage and
+su2-feedback-curr1, we fail?  Firmware developers are notoriously
+flakey - can the code be more defensive here?
 
-> +	/* we're using individual domains for the non-dt case
-> +	 * and one big domain for the dt case where the subintc
-> +	 * starts at hwirq number 32.
-> +	 */
-> +	offset =3D (intc->domain->of_node) ? 32 : 0;
-
-Wouldn't it be easier to always use the same setup for the domains here=
-?
-
-	Arnd
+> +		count = 0;
+> +		if (of_find_property(bl, "su2-fbprot-lx-sd4", NULL)) {
+> +			pdata->su2_fbprot = AS3711_SU2_LX_SD4;
+> +			count++;
+> +		}
+> +		if (of_find_property(bl, "su2-fbprot-gpio2", NULL)) {
+> +			pdata->su2_fbprot = AS3711_SU2_GPIO2;
+> +			count++;
+> +		}
+> +		if (of_find_property(bl, "su2-fbprot-gpio3", NULL)) {
+> +			pdata->su2_fbprot = AS3711_SU2_GPIO3;
+> +			count++;
+> +		}
+> +		if (of_find_property(bl, "su2-fbprot-gpio4", NULL)) {
+> +			pdata->su2_fbprot = AS3711_SU2_GPIO4;
+> +			count++;
+> +		}
+> +		if (count != 1)
+> +			return -EINVAL;
+> +
+> +		count = 0;
+> +		if (of_find_property(bl, "su2-auto-curr1", NULL)) {
+> +			pdata->su2_auto_curr1 = true;
+> +			count++;
+> +		}
+> +		if (of_find_property(bl, "su2-auto-curr2", NULL)) {
+> +			pdata->su2_auto_curr2 = true;
+> +			count++;
+> +		}
+> +		if (of_find_property(bl, "su2-auto-curr3", NULL)) {
+> +			pdata->su2_auto_curr3 = true;
+> +			count++;
+> +		}
+> +
+> +		/*
+> +		 * At least one su2-auto-curr* must be specified iff
+> +		 * AS3711_SU2_CURR_AUTO is used
+> +		 */
+> +		if (!count ^ (pdata->su2_feedback != AS3711_SU2_CURR_AUTO))
+> +			return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>
+> ...
+>
