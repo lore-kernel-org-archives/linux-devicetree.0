@@ -1,52 +1,133 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/6] support other fsl SoCs with usbmisc + small fixes
-Date: Mon, 25 Mar 2013 10:11:15 -0300
-Message-ID: <CAOMZO5ArDLKDLEzhYc7EP2CNQGcT=vO7ctbiEsjzsGs+EaT7Dw@mail.gmail.com>
-References: <1354033021-10585-1-git-send-email-m.grzeschik@pengutronix.de>
-	<20121128025217.GC18593@nchen-desktop>
-	<87ip6mor1e.fsf@ashishki-desk.ger.corp.intel.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RFC PATCH] CLK: Allow parent clock and rate to be configured in
+ DT.
+Date: Mon, 25 Mar 2013 14:29:35 +0100
+Message-ID: <20130325132935.GE1906@pengutronix.de>
+References: <20130319170933.28337.50448.stgit@localhost>
+ <20130325101707.GZ1906@pengutronix.de>
+ <51503007.5020403@parkeon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87ip6mor1e.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <51503007.5020403-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexander,
+On Mon, Mar 25, 2013 at 12:07:51PM +0100, Martin Fuzzey wrote:
+> Hi Sascha,
+> 
+> thanks for the comments.
+> 
+> [corrected Mike's email address - I originally sent it to the old one]
+> 
+> On 25/03/13 11:17, Sascha Hauer wrote:
+> >On Tue, Mar 19, 2013 at 06:09:33PM +0100, Martin Fuzzey wrote:
+> >>Even on platforms where the entire clock tree is not represented in the DT
+> >>it can still be useful to allow parents and rates to be set from the DT.
+> >>
+> >>An example of such a case is when a multiplexable clock output from a SOC
+> >>is used to supply external chips (eg an audio codec connected to the i.MX53
+> >>cko1 pin).
+> >>
+> >>The cko1 pin can output various internal clock signals but, in
+> >>order to obtain a suitable frequency for the codec, an appropriate parent must
+> >>be selected.
+> >>
+> >>Another example is setting root clock dividers.
+> >>
+> >>This is board specific rather than device driver or platform clock framework
+> >>specific information and thus would be better in the DT.
+> >I see what the patch does and that it could be very useful, but there's
+> >a problem: The devicetree is for hardware *description*, not
+> >*configuration*.
+> >
+> >>+For example:
+> >>+	clock-configuration {
+> >>+		compatible = "clock-configuration";
+> >>+		clko1 {
+> >>+			clocks = <&clks 160>; /* cko1_sel */
+> >>+			parent = <&clks 114>; /* pll3_sw */
+> >>+		};
+> >>+
+> >>+		esdhca {
+> >>+			clocks = <&clks 102>; /* esdhc_a_podf */
+> >>+			clock-frequency = <200000000>;
+> >>+		};
+> >This example shows this. For some reason we adjust the esdhc frequency
+> >to 200MHz in the code currently, but this is because it matches our
+> >current usecase. Once you move this into devicetree, we can't change
+> >this anymore in the kernel, even if we find a much better way to adjust
+> >the frequency in the future (i.e. smaller values might be good for power
+> >savings, higher values might increase performance, we even might
+> >dynamically change this frequency).
+> >
+> Yes but the problem is that the rates are currently set in
+> clk-imx51-53.c which should be generic
+> to all such platforms whereas, as you point out, there may well be
+> valid reasons to choose
+> different values depending on the board design and / or intended
+> application.
 
-On Thu, Jan 24, 2013 at 7:42 AM, Alexander Shishkin
-<alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
->
->> On Tue, Nov 27, 2012 at 05:16:55PM +0100, Michael Grzeschik wrote:
->>> Nearly every SoC from Freescale has this non-core usb registers. This series
->>> adds support for more users of this driver.
->>>
->>> This series is based on Peter Chen's work. Its needed to merge his master branch
->>> before applying this series:
->>>
->>> https://github.com/hzpeterchen/linux-usb.git
->>
->> I have tested it at i.mx6q sabrelite board, it works good.
->>
->> I have pushed your commit to my git, please cc me
->> your coming chipidea patches, thanks.
->>
->> Alex, please add:
->>
->> Reviewed-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> Tested-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->
-> Looks good, queueing this one for submission.
+Put it differently. OpenBSD might have much better clock support.
+Imagine it can dynamically figure out the correct esdhc frequencies
+for different usecases on the fly. In this situation it would be
+counterproductive if Linux requires static values for these in the
+devicetree.
 
-Could you please let us know what is preventing this series to be applied?
+> 
+> The cko case is even worse - due to a board design decision that
+> clock needs to have
+> a frequency suitable for supplying some external chip. We don't want
+> board specific code in
+> the platform clock code and we're trying to get away from board files...
 
-Thanks,
+The codec could be provided a phandle to the cko clk. This is hardware
+description and is fine for putting into the devicetree.
 
-Fabio Estevam
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> >So no, this shouldn't be in the devicetree, even though it's very
+> >tempting to do so.
+> >
+> >I wonder when someone comes up with a 'configtree' where we could put in
+> >such stuff.
+> I don't understand why we need a seperate tree for this why can't just
+> a subtree of the DT be used?
+> 
+> After all the DT already contains "configuration" nodes such as "chosen".
+> 
+> Indeed Documentation/devicetree/usage-model.txt  says:
+>     "The chosen node may also optionally contain an arbitrary number of
+>     additional properties for platform-specific configuration data."
+> 
+> So what stops us simply placing the clock-configuration node above
+> under chosen? (which already works - just tested it)
+
+What stops us doing so is that currently we have the policy that the
+devicetree is hardware description only, even if there are already
+counteraxamples in the devicetree.
+
+I know that we currently have no place to put such information. There
+recently was a similar discussion with CMA descriptions in the
+devicetree and I remember several other discussions of the same type,
+all of which ended at the dont-know-but-not-in-the-devicetree point.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
