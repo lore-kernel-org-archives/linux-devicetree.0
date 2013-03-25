@@ -1,126 +1,65 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: RFC v2: Zynq Clock Controller
-Date: Mon, 25 Mar 2013 11:27:24 -0700
-Message-ID: <8fd7278d-37c5-48ff-8d06-edc64d532a96@VA3EHSMHS037.ehs.local>
-References: <27dae808-1d3a-4001-8eb2-b0a6e2a34b8f@AM1EHSMHS013.ehs.local>
- <515093B4.2090701@wwwdotorg.org>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH 1/2] ASoC: tegra: add Tegra114 support to the AHUB driver
+Date: Mon, 25 Mar 2013 18:32:00 +0000
+Message-ID: <20130325183159.GS18316@opensource.wolfsonmicro.com>
+References: <1363895802-20484-1-git-send-email-swarren@wwwdotorg.org>
+ <20130325155232.GR18316@opensource.wolfsonmicro.com>
+ <515078F9.1070800@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ZcSDOt7TZFizttpn"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <515093B4.2090701@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Mike Turquette <mturquette@linaro.org>, Josh Cartwright <josh.cartwright@ni.com>, Michal Simek <michal.simek@xilinx.com>, Peter Crosthwaite <pcrost@xilinx.com>, Lars-Peter Clausen <lars@metafoo.de>, Prashant Gaikwad <pgaikwad@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, git@xilinx.com, Jan =?utf-8?B?TMO8YmJl?= <jlu@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Peter De Schrijver <pdeschrijver@nvidia.com>
+In-Reply-To: <515078F9.1070800-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
 
-On Mon, Mar 25, 2013 at 12:13:08PM -0600, Stephen Warren wrote:
-> On 03/20/2013 05:56 PM, S=C3=B6ren Brinkmann wrote:
-> > Hi,
-> >=20
-> > I spent some time working on this and incorporating feedback. Here'=
-s an updated proposal for a clock controller for Zynq:
-> >=20
-> > Required properties:
-> >  - #clock-cells : Must be 1
-> >  - compatible : "xlnx,ps7-clkc"  (this may become 'xlnx,zynq-clkc' =
-terminology differs a bit between Xilinx internal and mainline)
-> >  - ps-clk-frequency : Frequency of the oscillator providing ps_clk =
-in HZ
-> >                      (usually 33 MHz oscillators are used for Zynq =
-platforms)
->=20
-> This may have been mentioned before, but shouldn't the input clock be
-> represented as an actual clock in DT, and hence as an entry in this
-> node's clocks property? The crystal/... itself can be represented in =
-DT
-> as a fixed-clock.
-Lars-Peter brought that up, too. Please refer to my answer to him.
+--ZcSDOt7TZFizttpn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->=20
-> >  - clock-output-names : List of strings used to name the clock outp=
-uts. Shall be a list of the outputs given below.
->=20
-> That shouldn't be required.
-When I want to support of_clk_get_parent_name() for my clocks, I think
-it is. And I'm inclined to not brake this functionality.
+On Mon, Mar 25, 2013 at 10:19:05AM -0600, Stephen Warren wrote:
+> On 03/25/2013 09:52 AM, Mark Brown wrote:
+> > On Thu, Mar 21, 2013 at 01:56:41PM -0600, Stephen Warren wrote:
 
->=20
-> > Optional properties:
-> >  - clocks : as described in the clock bindings
-> >  - clock-names : as described in the clock bindings
->=20
-> I think clocks should be required, with at least the main crystal clo=
-ck
-> input always present, but perhaps having some optional entries for th=
-e
-> (E)MIO feature you mention.
-This is why I have the xtal separate. This way these props are purely
-optional and the xtal frequency is obtained separately. It also makes i=
-t
-a little easier internally, because I don't have to cope with a variabl=
-e
-name for the xtal this way.
+> >> +	clocks = <&tegra_car 106>, <&tegra_car 107>, <&tegra_car 30>, +
+> >> <&tegra_car 11>, <&tegra_car 18>, <&tegra_car 101>, +
+> >> <&tegra_car 102>, <&tegra_car 108>, <&tegra_car 109>, +
+> >> <&tegra_car 110>, <&tegra_car 162>; +	clock-names = "d_audio",
+> >> "apbif", "i2s0", "i2s1", "i2s2", +		"i2s3", "i2s4", "dam0",
+> >> "dam1", "dam2", +		"spdif_in";
 
-Describing the xtal as fixed clock in DT means a mandatory entry for
-'clocks' and 'clock-names' and a variable name for the xtal clock. I
-wanted to avoid this.
+> > ...this is exactly what I was worried about with the clock bindings
+> > :/
 
->=20
-> > Example:
-> >         clkc: clkc {
-> >                 #clock-cells =3D <1>;
-> >                 compatible =3D "xlnx,ps7-clkc";
-> >                 ps-clk-frequency =3D <33333333>;
-> >                 clock-output-names =3D "armpll", "ddrpll", "iopll",=
- "cpu_6or4x", "cpu_3or2x", "cpu_2x", "cpu_1x", "ddr2x", "ddr3x", "dci",=
- "lqspi", "smc", "pcap", "gem0", "gem1", "fclk0", "fclk1", "fclk2", "fc=
-lk3", "can0", "can1", "sdio0", "sdio1", "uart0", "uart1", "spi0", "spi1=
-", "dma", "usb0_aper", "usb1_aper", "gem0_aper", "gem1_aper", "sdio0_ap=
-er", "sdio1_aper", "spi0_aper", "spi1_aper", "can0_aper", "can1_aper", =
-"i2c0_aper", "i2c1_aper", "uart0_aper", "uart1_aper", "gpio_aper", "lqs=
-pi_aper", "smc_aper", "swdt", "dbg_trc", "dbg_apb";  /* long list... ex=
-planation below */
-> >                 /* optional props */
-> >                 clocks =3D <&clkc 16>, <&clk_foo>;
-> >                 clock-names =3D "gem1_emio_clk", "can_mio_clk_23";
-> >         };
-> >=20
-> > The downside of supporting this is, that I don't see a way around e=
-xplicitly listing the clock output names in the DT.
->=20
-> (Please wrap your emails to ~74 characters or so)
-I changed my settings.
+> What's the exact issue here? The length of the list is rather
+> determined by the HW, so I don't think there's much one can do about that.
 
->=20
-> As Mike mentioned off-list, one can create a new clk registration API
-> that takes a struct clk* as parent rather than a char *clk_name.
-Then we also have to make sure clocks are probed in a specific order. T=
-o
-obtain a 'struct clk *' through clk_get() the requested clock has to be
-already been probed. Currently clock probing relies purely on data pres=
-ent
-in DT. This makes this proposal not that trivial, IMHO.
+The fact that it's two lists that need to be matched up.
 
-e.g. in this case the clock controller probe would fail if the potentia=
-l
-fixed clock describing the xtal isn't probed first.
+--ZcSDOt7TZFizttpn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
->=20
-> > This email and any attachments are intended for the sole use of the=
- named recipient(s)...
->=20
-> It's not good form to include that kind of disclaimer on public maili=
-ng
-> list posts. That's why many people use their personal email when post=
-ing
-> to mailing lists.
-My apologies. IT is currently messing with the email configuration and =
-broke
-the flows which used to work. AFAIK, it's currently fixed. And I
-sincerely hope it stays this way.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-	S=C3=B6ren
+iQIcBAEBAgAGBQJRUJgXAAoJELSic+t+oim9RnUP/3lwU0PopjjWG2Y2OYPiThJz
+jljVI9/d1CxlbxgxNytwszFwbknd/L6fOTTow/eADzQvLIuvYLp3CB/B2imVWL49
+o0TUo3sZuFWXW9oW++17fM83Ut5qyj1aXhhKUzPsOeHCgC2b1k9UgQbLGVX7nMIn
+nLnTFBCQhdntiMbNS8oCtgauTsWnftNxt1S1yyX/0j0oDymMzIoFFN0yCz2k2S04
+xgj9wXuLLM/YF1C+uUCkup6lAj3u3KYQEXKstVuqv9zXO5Um/QlZdibn8BCzEwTK
+qG2NdNiSA4BI8/yCWEHb5wPnrLZjdmQwisVtWLt5fjL2ff45QREBFtAf+4nNvEgL
+e/cGMl3UBSk/Ft3l3yF6c/CZoI7LUP0Zw+MO4LeR+5eE8oowetdXveF9cltxW967
+8nLL5BkGJTfRpn7D0ITe+dERcy1l/YihN669kmSbfyz4n7+09PJi0ekpJTFuXY4h
++9hqbeI/v2tQalD0FP7Bi7d+FBLl3kDAWj/+CD2POtZ9TKMyBHwNK+spReMnS4J3
+Uj5LvwwVJFHTqE5oVU/NnUaXLNn53Wt8LEl/C3P6It23mDus/VvQaK5Z5PGSluiU
+o5vg1uvtj/wWyVo6RUxjOk5BgSUHgFZ5djbz1KatrUkZOKlW6LGLLofNZlgwFTFk
+vsPeMmZOw6De5/+6AA8o
+=cAyq
+-----END PGP SIGNATURE-----
+
+--ZcSDOt7TZFizttpn--
