@@ -1,203 +1,63 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: [PATCH v2] mmc: mxcmmc: DT support
-Date: Mon, 25 Mar 2013 16:34:19 +0100
-Message-ID: <1364225659-29677-1-git-send-email-mpa@pengutronix.de>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: cjb@laptop.org
-Cc: rob.herring@calxeda.com, rob@landley.net, kernel@pengutronix.de, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Markus Pargmann <mpa@pengutronix.de>, Anatolij Gustschin <agust@denx.de>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH 1/2] ASoC: tegra: add Tegra114 support to the AHUB driver
+Date: Mon, 25 Mar 2013 15:52:33 +0000
+Message-ID: <20130325155232.GR18316@opensource.wolfsonmicro.com>
+References: <1363895802-20484-1-git-send-email-swarren@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RpDyejMaDGJhP2PU"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1363895802-20484-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding devicetree support for imx21-mmc and imx31-mmc. Based on generic
-gpio helper functions by Guennadi and generic DMA devicetree bindings.
 
-Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-Cc: Anatolij Gustschin <agust@denx.de>
----
+--RpDyejMaDGJhP2PU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Notes:
-    Changes in v2:
-    - Documentation fix
-    - Use dma_request_slave_channel instead of of_*
+On Thu, Mar 21, 2013 at 01:56:41PM -0600, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>=20
+> Tegra114's AHUB shares a design with Tegra30, with the followin changes:
+> * Supports more (10 vs. 4) bi-directional FIFO channels into RAM.
 
- .../devicetree/bindings/mmc/fsl-imx-mmc.txt        | 24 +++++++
- drivers/mmc/host/mxcmmc.c                          | 79 +++++++++++++++++-----
- 2 files changed, 85 insertions(+), 18 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
+Applied but...
 
-diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
-new file mode 100644
-index 0000000..db44235
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
-@@ -0,0 +1,24 @@
-+* Freescale Secure Digital Host Controller for i.MX2/3 series
-+
-+This file documents differences to the properties defined in mmc.txt.
-+
-+Required properties:
-+- compatible : Should be "fsl,<chip>-mmc", chip can be imx21 or imx31
-+
-+Optional properties:
-+- dmas: One DMA phandle with arguments as defined by the devicetree bindings
-+	of the used DMA controller.
-+- dma-names: Has to be "rx-tx".
-+
-+Example:
-+
-+sdhci1: sdhci@10014000 {
-+	compatible = "fsl,imx27-mmc", "fsl,imx21-mmc";
-+	reg = <0x10014000 0x1000>;
-+	interrupts = <11>;
-+	dmas = <&dma 7>;
-+	dma-names = "rx-tx";
-+	bus-width = <4>;
-+	cd-gpios = <&gpio3 29>;
-+	status = "okay";
-+};
-diff --git a/drivers/mmc/host/mxcmmc.c b/drivers/mmc/host/mxcmmc.c
-index a72936e..f477b4f 100644
---- a/drivers/mmc/host/mxcmmc.c
-+++ b/drivers/mmc/host/mxcmmc.c
-@@ -34,6 +34,10 @@
- #include <linux/regulator/consumer.h>
- #include <linux/dmaengine.h>
- #include <linux/types.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_dma.h>
-+#include <linux/of_gpio.h>
- 
- #include <asm/dma.h>
- #include <asm/irq.h>
-@@ -173,6 +177,19 @@ static struct platform_device_id mxcmci_devtype[] = {
- };
- MODULE_DEVICE_TABLE(platform, mxcmci_devtype);
- 
-+static const struct of_device_id mxcmci_of_match[] = {
-+	{
-+		.compatible = "fsl,imx21-mmc",
-+		.data = &mxcmci_devtype[IMX21_MMC],
-+	}, {
-+		.compatible = "fsl,imx31-mmc",
-+		.data = &mxcmci_devtype[IMX31_MMC],
-+	}, {
-+		/* sentinel */
-+	}
-+};
-+MODULE_DEVICE_TABLE(of, mxcmci_of_match);
-+
- static inline int is_imx31_mmc(struct mxcmci_host *host)
- {
- 	return host->devtype == IMX31_MMC;
-@@ -935,10 +952,15 @@ static int mxcmci_probe(struct platform_device *pdev)
- 	struct mxcmci_host *host = NULL;
- 	struct resource *iores, *r;
- 	int ret = 0, irq;
-+	bool dat3_card_detect = false;
- 	dma_cap_mask_t mask;
-+	const struct of_device_id *of_id;
-+	struct imxmmc_platform_data *pdata = pdev->dev.platform_data;
- 
- 	pr_info("i.MX SDHC driver\n");
- 
-+	of_id = of_match_device(mxcmci_of_match, &pdev->dev);
-+
- 	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	irq = platform_get_irq(pdev, 0);
- 	if (!iores || irq < 0)
-@@ -954,8 +976,14 @@ static int mxcmci_probe(struct platform_device *pdev)
- 		goto out_release_mem;
- 	}
- 
-+	mmc_of_parse(mmc);
- 	mmc->ops = &mxcmci_ops;
--	mmc->caps = MMC_CAP_4_BIT_DATA | MMC_CAP_SDIO_IRQ;
-+
-+	/* For devicetree parsing, the bus width is read from devicetree */
-+	if (pdata)
-+		mmc->caps = MMC_CAP_4_BIT_DATA | MMC_CAP_SDIO_IRQ;
-+	else
-+		mmc->caps |= MMC_CAP_SDIO_IRQ;
- 
- 	/* MMC core transfer sizes tunable parameters */
- 	mmc->max_segs = 64;
-@@ -971,14 +999,25 @@ static int mxcmci_probe(struct platform_device *pdev)
- 		goto out_free;
- 	}
- 
-+	if (of_id) {
-+		const struct platform_device_id *id_entry = of_id->data;
-+		host->devtype = id_entry->driver_data;
-+	} else {
-+		host->devtype = pdev->id_entry->driver_data;
-+	}
- 	host->mmc = mmc;
--	host->pdata = pdev->dev.platform_data;
--	host->devtype = pdev->id_entry->driver_data;
-+	host->pdata = pdata;
- 	spin_lock_init(&host->lock);
- 
-+	if (pdata)
-+		dat3_card_detect = pdata->dat3_card_detect;
-+	else if (!(mmc->caps & MMC_CAP_NONREMOVABLE)
-+			&& !of_property_read_bool(pdev->dev.of_node, "cd-gpios"))
-+		dat3_card_detect = true;
-+
- 	mxcmci_init_ocr(host);
- 
--	if (host->pdata && host->pdata->dat3_card_detect)
-+	if (dat3_card_detect)
- 		host->default_irq_mask =
- 			INT_CARD_INSERTION_EN | INT_CARD_REMOVAL_EN;
- 	else
-@@ -1020,21 +1059,24 @@ static int mxcmci_probe(struct platform_device *pdev)
- 
- 	writel(host->default_irq_mask, host->base + MMC_REG_INT_CNTR);
- 
--	r = platform_get_resource(pdev, IORESOURCE_DMA, 0);
--	if (r) {
--		host->dmareq = r->start;
--		host->dma_data.peripheral_type = IMX_DMATYPE_SDHC;
--		host->dma_data.priority = DMA_PRIO_LOW;
--		host->dma_data.dma_request = host->dmareq;
--		dma_cap_zero(mask);
--		dma_cap_set(DMA_SLAVE, mask);
--		host->dma = dma_request_channel(mask, filter, host);
--		if (host->dma)
--			mmc->max_seg_size = dma_get_max_seg_size(
--					host->dma->device->dev);
-+	if (!host->pdata) {
-+		host->dma = dma_request_slave_channel(pdev->dev, "rx-tx");
-+	} else {
-+		r = platform_get_resource(pdev, IORESOURCE_DMA, 0);
-+		if (r) {
-+			host->dmareq = r->start;
-+			host->dma_data.peripheral_type = IMX_DMATYPE_SDHC;
-+			host->dma_data.priority = DMA_PRIO_LOW;
-+			host->dma_data.dma_request = host->dmareq;
-+			dma_cap_zero(mask);
-+			dma_cap_set(DMA_SLAVE, mask);
-+			host->dma = dma_request_channel(mask, filter, host);
-+		}
- 	}
--
--	if (!host->dma)
-+	if (host->dma)
-+		mmc->max_seg_size = dma_get_max_seg_size(
-+				host->dma->device->dev);
-+	else
- 		dev_info(mmc_dev(host->mmc), "dma not available. Using PIO\n");
- 
- 	INIT_WORK(&host->datawork, mxcmci_datawork);
-@@ -1153,6 +1195,7 @@ static struct platform_driver mxcmci_driver = {
- #ifdef CONFIG_PM
- 		.pm	= &mxcmci_pm_ops,
- #endif
-+		.of_match_table	= mxcmci_of_match,
- 	}
- };
- 
--- 
-1.8.1.5
+> +	clocks =3D <&tegra_car 106>, <&tegra_car 107>, <&tegra_car 30>,
+> +		<&tegra_car 11>, <&tegra_car 18>, <&tegra_car 101>,
+> +		<&tegra_car 102>, <&tegra_car 108>, <&tegra_car 109>,
+> +		<&tegra_car 110>, <&tegra_car 162>;
+> +	clock-names =3D "d_audio", "apbif", "i2s0", "i2s1", "i2s2",
+> +		"i2s3", "i2s4", "dam0", "dam1", "dam2",
+> +		"spdif_in";
 
+=2E..this is exactly what I was worried about with the clock bindings :/
+
+--RpDyejMaDGJhP2PU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRUHKTAAoJELSic+t+oim9ZxgP+wbnqg4PLiVeNaaJdCnFgGcr
+tLF03Sg+a1ewoe2qJMuparB76HM5popzrp6XpOhXQ72+aFhAdClGhuWjJuqMBdXi
+GOO04z59zEuoPH4z9GoLnOX7rNwCOZLpbcEQHqM/K8FP4TqFoACdzMuzZUDMr6wM
+GDTn2hngTb+kfiGTyPSzwYapBRY0XsuDpYKXyeywx6Rm1QQWu/ZKpPVVxSqRshwh
+CY5+lA5t4V2ccgmpYG5s0SX6INdnM5lgp7G0FMrTtwjVaX0HR6Fw7ZNIQg6as9lp
+aIWTrLYg+gdNgNtdYRdUNMocEVB0oOC6i/wLg1SpaVxQaxs2ntsC0Kxm51nYH7Gh
+UFrzN5Sr5OqC8odnDi8P79CvFvtiLHfKU3HW9EjLQiH7Gnu+UlOpFiSoZ8iLlY7z
+dw1pGt0aKd0ac3+L7OSTNTKk76fWR7KSvCJ8NKxR45NRmk/53xOYfmoYHkRA7Ru3
+b2DrU0BgU9ccS7GdNq320qgn0otBhaAzW7vA34Sqejt2LQn1hT7D+OMGAlFdP9xj
+QhitmklU64RWoPbSv9okPgl1ARU+ouQzZRIgob8o/QmFgtoG7psmCnEyipRvhLSv
+bCKzlkQYQQYsXzBEGlctdZigfwamayDCTKvB7TbZ77gkFqjgTqEJBYohiTljsvv5
+Wv0E7WAbc3H2qCJiOFW9
+=secE
+-----END PGP SIGNATURE-----
+
+--RpDyejMaDGJhP2PU--
