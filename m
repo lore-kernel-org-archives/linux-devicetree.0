@@ -1,62 +1,185 @@
-From: "Vishwanathrao Badarkhe, Manish" <manishv.b-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH 0/2] Add dT support for tps6507x touchscreen.
-Date: Mon, 25 Mar 2013 05:06:03 +0000
-Message-ID: <A4887BF146CD57468F700B415D2F4701585C7C@DBDE01.ent.ti.com>
-References: <1364043571-9210-1-git-send-email-manishv.b@ti.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH v3 3/3] backlight: as3711: add OF support
+Date: Mon, 25 Mar 2013 14:12:21 +0900
+Message-ID: <00da01ce2917$54856ce0$fd9046a0$%han@samsung.com>
+References: <1363968949-12151-1-git-send-email-g.liakhovetski@gmx.de>
+ <1363968949-12151-4-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1364043571-9210-1-git-send-email-manishv.b-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Vishwanathrao Badarkhe, Manish" <manishv.b-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1363968949-12151-4-git-send-email-g.liakhovetski@gmx.de>
+Content-language: ko
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Andrew Morton' <akpm@linux-foundation.org>, 'Guennadi Liakhovetski' <g.liakhovetski@gmx.de>
+Cc: linux-kernel@vger.kernel.org, 'Mark Brown' <broonie@opensource.wolfsonmicro.com>, 'Magnus Damm' <magnus.damm@gmail.com>, 'Simon Horman' <horms@verge.net.au>, devicetree-discuss@lists.ozlabs.org, 'Samuel Ortiz' <sameo@linux.intel.com>, 'Richard Purdie' <rpurdie@rpsys.net>, linux-fbdev@vger.kernel.org, 'Guennadi Liakhovetski' <g.liakhovetski+renesas@gmail.com>, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi all
-I am sending next version for this, as need to update commit message for 
-some patches.
+On Saturday, March 23, 2013 1:16 AM, Guennadi Liakhovetski wrote:
+> 
+> Add support for configuring AS3711 backlight driver from DT.
+> 
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+> Reviwed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
 
-Thanks
-Manish Badarkhe
+Acked-by: Jingoo Han <jg1.han@samsung.com>
 
------Original Message-----
-From: Vishwanathrao Badarkhe, Manish 
-Sent: Saturday, March 23, 2013 6:29 PM
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org; linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org; rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org; grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org; Vishwanathrao Badarkhe, Manish
-Subject: [PATCH 0/2] Add dT support for tps6507x touchscreen.
 
-Patch set adds DT support for tps6507x based touchscreen
-Also, add DT data for tps6507x touchscreen in da850-evm by 
-providing touchscreen node inside tps6507x mfd device.
+But, there is a typo in comment.
+> +		 * At least one su2-auto-curr* must be specified iff
+s/iff/if
 
-This patch series applies on top of v3.9-rc2 of linus tree and
-depends on [1].  
+Best regards.
+Jingoo Han
 
-[1]davinci: Add device tree data for tps6507x
-   http://www.spinics.net/lists/linux-doc/msg09473.html
- 
-Tested on da850-evm board.
-
-Vishwanathrao Badarkhe, Manish (2):
-  tps6507x-ts: Add DT support
-  ARM: davinci: da850: add tps6507x touchscreen DT data
-
- Documentation/devicetree/bindings/mfd/tps6507x.txt |   22 ++++
- arch/arm/boot/dts/da850-evm.dts                    |    9 ++
- drivers/input/touchscreen/tps6507x-ts.c            |  104 ++++++++++++++------
- 3 files changed, 105 insertions(+), 30 deletions(-)
-
--- 
-1.7.4.1
+> ---
+>  drivers/video/backlight/as3711_bl.c |  118 ++++++++++++++++++++++++++++++++++-
+>  1 files changed, 117 insertions(+), 1 deletions(-)
+> 
+> diff --git a/drivers/video/backlight/as3711_bl.c b/drivers/video/backlight/as3711_bl.c
+> index 41d52fe..123887c 100644
+> --- a/drivers/video/backlight/as3711_bl.c
+> +++ b/drivers/video/backlight/as3711_bl.c
+> @@ -258,6 +258,109 @@ static int as3711_bl_register(struct platform_device *pdev,
+>  	return 0;
+>  }
+> 
+> +static int as3711_backlight_parse_dt(struct device *dev)
+> +{
+> +	struct as3711_bl_pdata *pdata = dev_get_platdata(dev);
+> +	struct device_node *bl =
+> +		of_find_node_by_name(dev->parent->of_node, "backlight"), *fb;
+> +	int ret;
+> +
+> +	if (!bl) {
+> +		dev_dbg(dev, "backlight node not found\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	fb = of_parse_phandle(bl, "su1-dev", 0);
+> +	if (fb) {
+> +		pdata->su1_fb = fb->full_name;
+> +
+> +		ret = of_property_read_u32(bl, "su1-max-uA", &pdata->su1_max_uA);
+> +		if (pdata->su1_max_uA <= 0)
+> +			ret = -EINVAL;
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	fb = of_parse_phandle(bl, "su2-dev", 0);
+> +	if (fb) {
+> +		int count = 0;
+> +
+> +		pdata->su2_fb = fb->full_name;
+> +
+> +		ret = of_property_read_u32(bl, "su2-max-uA", &pdata->su2_max_uA);
+> +		if (pdata->su2_max_uA <= 0)
+> +			ret = -EINVAL;
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		if (of_find_property(bl, "su2-feedback-voltage", NULL)) {
+> +			pdata->su2_feedback = AS3711_SU2_VOLTAGE;
+> +			count++;
+> +		}
+> +		if (of_find_property(bl, "su2-feedback-curr1", NULL)) {
+> +			pdata->su2_feedback = AS3711_SU2_CURR1;
+> +			count++;
+> +		}
+> +		if (of_find_property(bl, "su2-feedback-curr2", NULL)) {
+> +			pdata->su2_feedback = AS3711_SU2_CURR2;
+> +			count++;
+> +		}
+> +		if (of_find_property(bl, "su2-feedback-curr3", NULL)) {
+> +			pdata->su2_feedback = AS3711_SU2_CURR3;
+> +			count++;
+> +		}
+> +		if (of_find_property(bl, "su2-feedback-curr-auto", NULL)) {
+> +			pdata->su2_feedback = AS3711_SU2_CURR_AUTO;
+> +			count++;
+> +		}
+> +		if (count != 1)
+> +			return -EINVAL;
+> +
+> +		count = 0;
+> +		if (of_find_property(bl, "su2-fbprot-lx-sd4", NULL)) {
+> +			pdata->su2_fbprot = AS3711_SU2_LX_SD4;
+> +			count++;
+> +		}
+> +		if (of_find_property(bl, "su2-fbprot-gpio2", NULL)) {
+> +			pdata->su2_fbprot = AS3711_SU2_GPIO2;
+> +			count++;
+> +		}
+> +		if (of_find_property(bl, "su2-fbprot-gpio3", NULL)) {
+> +			pdata->su2_fbprot = AS3711_SU2_GPIO3;
+> +			count++;
+> +		}
+> +		if (of_find_property(bl, "su2-fbprot-gpio4", NULL)) {
+> +			pdata->su2_fbprot = AS3711_SU2_GPIO4;
+> +			count++;
+> +		}
+> +		if (count != 1)
+> +			return -EINVAL;
+> +
+> +		count = 0;
+> +		if (of_find_property(bl, "su2-auto-curr1", NULL)) {
+> +			pdata->su2_auto_curr1 = true;
+> +			count++;
+> +		}
+> +		if (of_find_property(bl, "su2-auto-curr2", NULL)) {
+> +			pdata->su2_auto_curr2 = true;
+> +			count++;
+> +		}
+> +		if (of_find_property(bl, "su2-auto-curr3", NULL)) {
+> +			pdata->su2_auto_curr3 = true;
+> +			count++;
+> +		}
+> +
+> +		/*
+> +		 * At least one su2-auto-curr* must be specified iff
+> +		 * AS3711_SU2_CURR_AUTO is used
+> +		 */
+> +		if (!count ^ (pdata->su2_feedback != AS3711_SU2_CURR_AUTO))
+> +			return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int as3711_backlight_probe(struct platform_device *pdev)
+>  {
+>  	struct as3711_bl_pdata *pdata = dev_get_platdata(&pdev->dev);
+> @@ -267,11 +370,24 @@ static int as3711_backlight_probe(struct platform_device *pdev)
+>  	unsigned int max_brightness;
+>  	int ret;
+> 
+> -	if (!pdata || (!pdata->su1_fb && !pdata->su2_fb)) {
+> +	if (!pdata) {
+>  		dev_err(&pdev->dev, "No platform data, exiting...\n");
+>  		return -ENODEV;
+>  	}
+> 
+> +	if (pdev->dev.parent->of_node) {
+> +		ret = as3711_backlight_parse_dt(&pdev->dev);
+> +		if (ret < 0) {
+> +			dev_err(&pdev->dev, "DT parsing failed: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	if (!pdata->su1_fb && !pdata->su2_fb) {
+> +		dev_err(&pdev->dev, "No framebuffer specified\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	/*
+>  	 * Due to possible hardware damage I chose to block all modes,
+>  	 * unsupported on my hardware. Anyone, wishing to use any of those modes
+> --
+> 1.7.2.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-fbdev" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
