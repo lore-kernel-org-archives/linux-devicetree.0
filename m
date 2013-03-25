@@ -1,70 +1,28 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH v9 3/4] ARM: dts: Add FIMD node and display timing node to exynos4412-origen.dts
-Date: Mon, 25 Mar 2013 16:32:40 +0530
-Message-ID: <CAJuYYwTnE4_umPiXt5GNb_JYpKy+t5qkQBLscpYuhCry7t0Otw@mail.gmail.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v9 0/4] Add DRM FIMD DT support for Exynos4 DT Machines
+Date: Mon, 25 Mar 2013 20:04:48 +0900
+Message-ID: <17a601ce2948$90f8c650$b2ea52f0$%kim@samsung.com>
 References: <1363960608-23825-1-git-send-email-vikas.sajjan@linaro.org>
-	<1363960608-23825-4-git-send-email-vikas.sajjan@linaro.org>
+ <CAGm_ybhxqzDJ8zNCEMnnaApVnfVzVzP_k6MSy7PA5NQZeYD5uw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1363960608-23825-4-git-send-email-vikas.sajjan@linaro.org>
+In-reply-to: <CAGm_ybhxqzDJ8zNCEMnnaApVnfVzVzP_k6MSy7PA5NQZeYD5uw@mail.gmail.com>
+Content-language: ko
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vikas Sajjan <vikas.sajjan@linaro.org>
-Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, sylvester.nawrocki@gmail.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, linaro-kernel@lists.linaro.org
+To: 'Vikas Sajjan' <sajjan.linux@gmail.com>
+Cc: linux-samsung-soc@vger.kernel.org, 'sunil joshi' <joshi@samsung.com>, sylvester.nawrocki@gmail.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, linaro-kernel@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 22 March 2013 19:26, Vikas Sajjan <vikas.sajjan@linaro.org> wrote:
-> Adds FIMD DT support to Origen quad board
->
-> Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
-> ---
->  arch/arm/boot/dts/exynos4412-origen.dts |   22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/exynos4412-origen.dts b/arch/arm/boot/dts/exynos4412-origen.dts
-> index a5478bd..8953c92 100644
-> --- a/arch/arm/boot/dts/exynos4412-origen.dts
-> +++ b/arch/arm/boot/dts/exynos4412-origen.dts
-> @@ -70,6 +70,28 @@
->                 status = "okay";
->         };
->
-> +       fimd@11c00000 {
-> +               samsung,power-domain = <&pd_lcd0>;
-'
-Does the power-domain have be board specific. Can this be moved into
-SoC specific dtsi file?
+Vikas Sajjan wrote:
+> 
+> Hi Kukjin Kim,
+> 
+> Can you please apply these patches?
+> 
+Please address comments from Thomas about board-specific feature.
 
-Thanks,
-Thomas.
+Thanks.
 
-> +               pinctrl-0 = <&lcd_sync &lcd_clk &lcd_en &lcd_data24 &pwm1_out>;
-> +               pinctrl-names = "default";
-> +               status = "okay";
-> +       };
-> +
-> +       display-timings {
-> +               native-mode = <&timing0>;
-> +               timing0: timing@0 {
-> +                       clock-frequency = <50000>;
-> +                       hactive = <1024>;
-> +                       vactive = <600>;
-> +                       hfront-porch = <64>;
-> +                       hback-porch = <16>;
-> +                       hsync-len = <48>;
-> +                       vback-porch = <64>;
-> +                       vfront-porch = <16>;
-> +                       vsync-len = <3>;
-> +               };
-> +       };
-> +
->         serial@13800000 {
->                 status = "okay";
->         };
-> --
-> 1.7.9.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Kukjin
