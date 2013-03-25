@@ -1,28 +1,115 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v9 0/4] Add DRM FIMD DT support for Exynos4 DT Machines
-Date: Mon, 25 Mar 2013 20:04:48 +0900
-Message-ID: <17a601ce2948$90f8c650$b2ea52f0$%kim@samsung.com>
-References: <1363960608-23825-1-git-send-email-vikas.sajjan@linaro.org>
- <CAGm_ybhxqzDJ8zNCEMnnaApVnfVzVzP_k6MSy7PA5NQZeYD5uw@mail.gmail.com>
+From: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC PATCH] CLK: Allow parent clock and rate to be configured
+ in DT.
+Date: Mon, 25 Mar 2013 12:07:51 +0100
+Message-ID: <51503007.5020403@parkeon.com>
+References: <20130319170933.28337.50448.stgit@localhost>
+ <20130325101707.GZ1906@pengutronix.de>
+Reply-To: mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAGm_ybhxqzDJ8zNCEMnnaApVnfVzVzP_k6MSy7PA5NQZeYD5uw@mail.gmail.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Vikas Sajjan' <sajjan.linux@gmail.com>
-Cc: linux-samsung-soc@vger.kernel.org, 'sunil joshi' <joshi@samsung.com>, sylvester.nawrocki@gmail.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, linaro-kernel@lists.linaro.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130325101707.GZ1906-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Vikas Sajjan wrote:
-> 
-> Hi Kukjin Kim,
-> 
-> Can you please apply these patches?
-> 
-Please address comments from Thomas about board-specific feature.
+Hi Sascha,
 
-Thanks.
+thanks for the comments.
 
-- Kukjin
+[corrected Mike's email address - I originally sent it to the old one]
+
+On 25/03/13 11:17, Sascha Hauer wrote:
+> On Tue, Mar 19, 2013 at 06:09:33PM +0100, Martin Fuzzey wrote:
+>> Even on platforms where the entire clock tree is not represented in the DT
+>> it can still be useful to allow parents and rates to be set from the DT.
+>>
+>> An example of such a case is when a multiplexable clock output from a SOC
+>> is used to supply external chips (eg an audio codec connected to the i.MX53
+>> cko1 pin).
+>>
+>> The cko1 pin can output various internal clock signals but, in
+>> order to obtain a suitable frequency for the codec, an appropriate parent must
+>> be selected.
+>>
+>> Another example is setting root clock dividers.
+>>
+>> This is board specific rather than device driver or platform clock framework
+>> specific information and thus would be better in the DT.
+> I see what the patch does and that it could be very useful, but there's
+> a problem: The devicetree is for hardware *description*, not
+> *configuration*.
+>
+>> +For example:
+>> +	clock-configuration {
+>> +		compatible = "clock-configuration";
+>> +		clko1 {
+>> +			clocks = <&clks 160>; /* cko1_sel */
+>> +			parent = <&clks 114>; /* pll3_sw */
+>> +		};
+>> +
+>> +		esdhca {
+>> +			clocks = <&clks 102>; /* esdhc_a_podf */
+>> +			clock-frequency = <200000000>;
+>> +		};
+> This example shows this. For some reason we adjust the esdhc frequency
+> to 200MHz in the code currently, but this is because it matches our
+> current usecase. Once you move this into devicetree, we can't change
+> this anymore in the kernel, even if we find a much better way to adjust
+> the frequency in the future (i.e. smaller values might be good for power
+> savings, higher values might increase performance, we even might
+> dynamically change this frequency).
+>
+Yes but the problem is that the rates are currently set in 
+clk-imx51-53.c which should be generic
+to all such platforms whereas, as you point out, there may well be valid 
+reasons to choose
+different values depending on the board design and / or intended 
+application.
+
+The cko case is even worse - due to a board design decision that clock 
+needs to have
+a frequency suitable for supplying some external chip. We don't want 
+board specific code in
+the platform clock code and we're trying to get away from board files...
+
+> So no, this shouldn't be in the devicetree, even though it's very
+> tempting to do so.
+>
+> I wonder when someone comes up with a 'configtree' where we could put in
+> such stuff.
+I don't understand why we need a seperate tree for this why can't just
+a subtree of the DT be used?
+
+After all the DT already contains "configuration" nodes such as "chosen".
+
+Indeed Documentation/devicetree/usage-model.txt  says:
+     "The chosen node may also optionally contain an arbitrary number of
+     additional properties for platform-specific configuration data."
+
+So what stops us simply placing the clock-configuration node above under 
+chosen? (which already works - just tested it)
+
+If the issue is that hardware vendors should be able to supply a DT 
+without knowing
+the configuration parameters couldn't that be resolved by letting the 
+bootloader
+merge DT subtrees this would give us "configtree" without adding more 
+code to
+the kernel to handle it.
+
+Regards,
+
+Martin
