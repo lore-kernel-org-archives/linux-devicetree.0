@@ -1,51 +1,67 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v10 12/12] regulator: palmas remove palmas-charger option
- from DT bindings
-Date: Mon, 25 Mar 2013 01:07:43 +0000
-Message-ID: <20130325010741.GG18316@opensource.wolfsonmicro.com>
-References: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
- <1363964122-19201-13-git-send-email-ian@slimlogic.co.uk>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v4 0/4] Initial Device Tree support for S3C64xx
+Date: Mon, 25 Mar 2013 10:08:02 +0900
+Message-ID: <16de01ce28f5$32d3e850$987bb8f0$%kim@samsung.com>
+References: <1362860975-18635-1-git-send-email-tomasz.figa@gmail.com>
+ <2474214.PvUtMM3R7F@flatron>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HB4mHL4PVvkpZAgW"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1363964122-19201-13-git-send-email-ian@slimlogic.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ian Lartey <ian@slimlogic.co.uk>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, mturquette@linaro.org, linus.walleij@linaro.org, cooloney@gmail.com, sfr@canb.auug.org.au, rpurdie@rpsys.net, akpm@linux-foundation.org, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, gg@slimlogic.co.uk, j-keerthy@ti.com, ldewangan@nvidia.com, t-kristo@ti.com
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <2474214.PvUtMM3R7F@flatron>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Tomasz Figa' <tomasz.figa@gmail.com>, linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, 'Rob Herring' <robherring2@gmail.com>, 'Mark Rutland' <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+Tomasz Figa wrote:
+> 
+> Hi,
+> 
+> On Saturday 09 of March 2013 21:29:31 Tomasz Figa wrote:
+> > This series adds Device Tree support for Samsung S3C64xx SoC series.
+> >
+> > It fixes several problems preventing from booting an S3C64xx-based
+> > system using Device Tree, adds all the infrastructure for Device
+> > Tree-based board support, including mach-s3c64xx-dt and dts include
+> > files for S3C64xx SoCs, and (very) basic device tree source for
+> > FriendlyARM Mini6410 board.
+> >
+> > Current support is very limited and allows only basic bootup with UART
+> > and SDHCI, but should be fine as a start and will be extended in
+> > future, hopefully with help of S3C64xx board maintainers.
+> >
+> > This series depends on my other series reworking samsung-time for
+> > multiplatform: [PATCH v3 00/12] ARM: samsung-time: Prepare for
+> > multiplatform support
+> > http://thread.gmane.org/gmane.linux.kernel.samsung-soc/16664
+> >
+> > Changes since v3:
+> >  - Rebased onto current for-next branch of Kgene's tree
+> >  - Updated timer node for next version of samsung-time patches
+> >  - Replaced local s3c64xx_dt_init_irq with irqchip_init
+> >
+> > Changes since v2:
+> >  - Updated timer node for next version of samsung-time patches
+> >
+> > Changes since v1:
+> >  - Dropped two VIC-related patches that are no longer necessary
+> >  - Added Device Tree-based instantation of system timers
+> >  - Corrected VIC interrupt specifiers
+> >  - Adjusted CPU compatible values and dropped @id
+> >
+> > Tomasz Figa (4):
+> >   ARM: common: vic: Parse interrupt and resume masks from device tree
+> >   ARM: s3c64xx: Add board file for boot using Device Tree
+> >   ARM: dts: Add basic dts include files for Samsung S3C64xx SoCs
+> >   ARM: dts: Add dts file for S3C6410-based Mini6410 board
+> 
+> Any comments for this series?
+> 
+Basically, looks good to me but I need to check your samsung-time patches,
+if any updates, let you know.
 
---HB4mHL4PVvkpZAgW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks.
 
-On Fri, Mar 22, 2013 at 02:55:22PM +0000, Ian Lartey wrote:
-> Signed-off-by: Ian Lartey <ian@slimlogic.co.uk>
-
-Applied, thanks.
-
---HB4mHL4PVvkpZAgW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRT6NWAAoJELSic+t+oim9KOEP+gPV3x04XgKlV5XMlRypwW1o
-z1JiRLRfzJfA4uWqIenvN+3Mylzh9nWDtFGc526ZTTi9fzVnk4E3PaqCeig/8/p4
-dz8Ym0ywnEZxtO/Pvm79JnIKwCLBZO8hdJ/9YuFOe8eqyad5HW1ub7wYbnQ0NIFl
-hHMpJRxUX+w6+rBD+LK+wu8Bh0ksxmy9/R2ie93MRYMACV4LCXqY5+WtqB21hTMQ
-3nEmzo8Hfp1AaPtJRDxruNB/O2n3AVs7syP9izwG6tgtXLsIqUHKnYRJ2FkDY+jf
-+C377QTTVHek+0Yy0H6XujStmRkqNas9uAifyMPUr+nn1tD1JPL4qTkW1rSbYsSG
-zZWWq2m6HtlP6as5qXj7RwR2wcqGAKY+6IJbXFAlaFfwyMT4BKxxOP9MSwe40lRh
-HYCgPvbrF0s+kjB60r0/YOj2KDG8rtJIr8comPMCWNPbY4EL/DBAKHD6yK9sowwl
-6gGGLz0FHphklQDYG35l5athy51G2TbLCKkadDGJnUCFpViD2HMSKramvc0h3Qd0
-JcRUdIGeMKsUymucJnIDXXNtDODNncoFx3QhgbwnRsirNN+pgcechHzcN523QK4l
-U3oasKdCOylc5OKuUnnOBKOfS5Dxiqip1LJ7F4OBVChwtDpsFQvLMq/vo8wbWlrk
-GAYannmZ9/jgGlWqFPg5
-=6DEX
------END PGP SIGNATURE-----
-
---HB4mHL4PVvkpZAgW--
+- Kukjin
