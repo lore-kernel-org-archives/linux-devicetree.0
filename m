@@ -1,54 +1,69 @@
-From: Ryan Mallon <rmallon@gmail.com>
-Subject: Re: [PATCH v3 3/3] backlight: as3711: add OF support
-Date: Tue, 26 Mar 2013 10:09:30 +1100
-Message-ID: <5150D92A.4000206@gmail.com>
-References: <1363968949-12151-1-git-send-email-g.liakhovetski@gmx.de> <1363968949-12151-4-git-send-email-g.liakhovetski@gmx.de> <20130325154046.82d9337f25cec12b9fa03625@linux-foundation.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: RFC v2: Zynq Clock Controller
+Date: Mon, 25 Mar 2013 17:29:33 -0600
+Message-ID: <5150DDDD.9010904@wwwdotorg.org>
+References: <27dae808-1d3a-4001-8eb2-b0a6e2a34b8f@AM1EHSMHS013.ehs.local>
+ <514B5254.50101@metafoo.de>
+ <128fc723-ace7-4f4c-95d9-971b42a52080@CH1EHSMHS028.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130325154046.82d9337f25cec12b9fa03625@linux-foundation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-kernel@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree-discuss@lists.ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>, Richard Purdie <rpurdie@rpsys.net>, linux-fbdev@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <128fc723-ace7-4f4c-95d9-971b42a52080-p/+QeVIcf1ANTaRkHJHP0bjjLBE8jN/0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?SmFuIEzDvA==?= =?UTF-8?B?YmJl?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, git-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Peter Crosthwaite <pcrost-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/03/13 09:40, Andrew Morton wrote:
-> On Fri, 22 Mar 2013 17:15:49 +0100 Guennadi Liakhovetski <g.liakhovetski@gmx.de> wrote:
-> 
->> Add support for configuring AS3711 backlight driver from DT.
->>
->> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
->> Reviwed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
->> ---
->>  drivers/video/backlight/as3711_bl.c |  118 ++++++++++++++++++++++++++++++++++-
->>  1 files changed, 117 insertions(+), 1 deletions(-)
->>
->> diff --git a/drivers/video/backlight/as3711_bl.c b/drivers/video/backlight/as3711_bl.c
->> index 41d52fe..123887c 100644
->> --- a/drivers/video/backlight/as3711_bl.c
->> +++ b/drivers/video/backlight/as3711_bl.c
->> @@ -258,6 +258,109 @@ static int as3711_bl_register(struct platform_device *pdev,
->>  	return 0;
->>  }
->>  
->> +static int as3711_backlight_parse_dt(struct device *dev)
->> +{
->> +	struct as3711_bl_pdata *pdata = dev_get_platdata(dev);
->> +	struct device_node *bl =
->> +		of_find_node_by_name(dev->parent->of_node, "backlight"), *fb;
->> +	int ret;
-> 
-> It's tidier to do
-> 
-> 	struct device_node *bl;
-> 	
-> 	bl = of_find_node_by_name(dev->parent->of_node, "backlight"), *fb;
-> 
-> and avoid the 80-col trickery.
-
-The other reason being that it now becomes much more apparent that *fb
-is not an argument to of_find_node_by_name(), but a second variable of
-type struct device_node :-).
-
-~Ryan
+T24gMDMvMjIvMjAxMyAwNDo0MSBQTSwgU8O2cmVuIEJyaW5rbWFubiB3cm90ZToKPiBIaSBMYXJz
+LAo+IAo+IE9uIFRodSwgTWFyIDIxLCAyMDEzIGF0IDA3OjMyOjUyUE0gKzAxMDAsIExhcnMtUGV0
+ZXIgQ2xhdXNlbiB3cm90ZToKPj4gT24gMDMvMjEvMjAxMyAxMjo1NiBBTSwgU8O2cmVuIEJyaW5r
+bWFubiB3cm90ZToKPj4+IEhpLAo+Pj4KPj4+IEkgc3BlbnQgc29tZSB0aW1lIHdvcmtpbmcgb24g
+dGhpcyBhbmQgaW5jb3Jwb3JhdGluZyBmZWVkYmFjay4gSGVyZSdzIGFuIHVwZGF0ZWQgcHJvcG9z
+YWwgZm9yIGEgY2xvY2sgY29udHJvbGxlciBmb3IgWnlucToKPj4+Cj4+PiBSZXF1aXJlZCBwcm9w
+ZXJ0aWVzOgo+Pj4gIC0gI2Nsb2NrLWNlbGxzIDogTXVzdCBiZSAxCj4+PiAgLSBjb21wYXRpYmxl
+IDogInhsbngscHM3LWNsa2MiICAodGhpcyBtYXkgYmVjb21lICd4bG54LHp5bnEtY2xrYycgdGVy
+bWlub2xvZ3kgZGlmZmVycyBhIGJpdCBiZXR3ZWVuIFhpbGlueCBpbnRlcm5hbCBhbmQgbWFpbmxp
+bmUpCj4+PiAgLSBwcy1jbGstZnJlcXVlbmN5IDogRnJlcXVlbmN5IG9mIHRoZSBvc2NpbGxhdG9y
+IHByb3ZpZGluZyBwc19jbGsgaW4gSFoKPj4+ICAgICAgICAgICAgICAgICAgICAgICh1c3VhbGx5
+IDMzIE1IeiBvc2NpbGxhdG9ycyBhcmUgdXNlZCBmb3IgWnlucSBwbGF0Zm9ybXMpCj4+PiAgLSBj
+bG9jay1vdXRwdXQtbmFtZXMgOiBMaXN0IG9mIHN0cmluZ3MgdXNlZCB0byBuYW1lIHRoZSBjbG9j
+ayBvdXRwdXRzLiBTaGFsbCBiZSBhIGxpc3Qgb2YgdGhlIG91dHB1dHMgZ2l2ZW4gYmVsb3cuCj4+
+Pgo+Pj4gT3B0aW9uYWwgcHJvcGVydGllczoKPj4+ICAtIGNsb2NrcyA6IGFzIGRlc2NyaWJlZCBp
+biB0aGUgY2xvY2sgYmluZGluZ3MKPj4+ICAtIGNsb2NrLW5hbWVzIDogYXMgZGVzY3JpYmVkIGlu
+IHRoZSBjbG9jayBiaW5kaW5ncwo+Pj4KPj4+IENsb2NrIGlucHV0czoKPj4+IFRoZSBmb2xsb3dp
+bmcgc3RyaW5ncyBhcmUgb3B0aW9uYWwgcGFyYW1ldGVycyB0byB0aGUgJ2Nsb2NrLW5hbWVzJyBw
+cm9wZXJ0eSBpbgo+Pj4gb3JkZXIgdG8gcHJvdmlkZSBvcHRpb25hbCAoRSlNSU8gY2xvY2sgc291
+cmNlcy4KPj4+ICAtIHN3ZHRfZXh0X2Nsawo+Pj4gIC0gZ2VtMF9lbWlvX2Nsawo+Pj4gIC0gZ2Vt
+MV9lbWlvX2Nsawo+Pj4gIC0gbWlvX2Nsa19YWCAgICAgICAgICAjIHdpdGggWFggPSAwMC4uNTMK
+Pj4+Cj4+PiBFeGFtcGxlOgo+Pj4gICAgICAgICBjbGtjOiBjbGtjIHsKPj4+ICAgICAgICAgICAg
+ICAgICAjY2xvY2stY2VsbHMgPSA8MT47Cj4+PiAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9
+ICJ4bG54LHBzNy1jbGtjIjsKPj4+ICAgICAgICAgICAgICAgICBwcy1jbGstZnJlcXVlbmN5ID0g
+PDMzMzMzMzMzPjsKPj4KPj4gVGhlIGlucHV0IGZyZXF1ZW5jeSBzaG91bGQgYmUgYSBjbG9jayBh
+cyB3ZWxsLgo+Cj4gQWdhaW4sIG1vbm9saXRoaWMgdnMgc3BsaXQuIEkgZG9uJ3Qgc2VlIGEgcmVh
+c29uIG5vdCB0byBqdXN0IGludGVybmFsbHkKPiBjYWxsIGNsa19yZWdpc3Rlcl9maXhlZF9yYXRl
+KCkuIFRoYXQgd2F5IGl0cyBjaGlsZHJlbiBkbyBub3QgaGF2ZSB0bwo+IGNvcGUgd2l0aCBhIHZh
+cmlhYmxlIG5hbWUgZm9yIHRoZSB4dGFsLgo+IEFsc28sIHdpdGggbXkgcHJvcG9zYWwgJ2Nsb2Nr
+cycgYW5kICdjbG9jay1uYW1lcycgd291bGQgYmUgcHVyZWx5Cj4gb3B0aW9uYWwgcHJvcGVydGll
+cywgb25seSByZXF1aXJlZCBpZiBvcHRpb25hbCBleHRlcm5hbCBpbnB1dHMgYXJlCj4gcHJlc2Vu
+dC4gSGF2aW5nIHRoZSB4dGFsIGRlZmluZWQgZXh0ZXJuYWxseSB3b3VsZCBhZGQgbWFuZGF0b3J5
+IGVudHJpZXMgZm9yCj4gdGhvc2UgcHJvcHMuCgpCdXQgaXNuJ3QgdGhlIGNsb2NrIHNvdXJjZSBi
+b2FyZC1zcGVjaWZpYz8gSXQncyBhIGNvbXBsZXRlbHkgc2VwYXJhdGUKb2JqZWN0IGZyb20gWnlu
+cSdzIG93biBjbG9jayBjb250cm9sbGVyIEhXLCBhbmQgYXMgc3VjaCBzaG91bGQgYmUKcmVwcmVz
+ZW50ZWQgYnkgYSBzZXBhcmF0ZSBEVCBub2RlLCByaWdodD8KClRoZSBpc3N1ZSB3aXRoIHBhcmVu
+dCBjbG9jayBuYW1lcyBpcyBzaW1wbHkgYSByZWQgaGVycmluZy4gQSBzb2x1dGlvbiBpcwpuZWVk
+ZWQgdG8gcmVnaXN0ZXJlZCBjbG9jayB3aXRoIGEgcGFyZW50IGNsb2NrIG9iamVjdCwgcmF0aGVy
+IHRoYW4gYQpwYXJlbnQgY2xvY2sgbmFtZS4gVGhlbiwgdGhlIHBhcmVudCBuYW1lcyBhcmUgY29t
+cGxldGVseSBpcnJlbGV2YW50LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlz
+Y3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9k
+ZXZpY2V0cmVlLWRpc2N1c3MK
