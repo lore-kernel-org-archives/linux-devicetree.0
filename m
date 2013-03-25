@@ -1,76 +1,49 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v10 01/12] mfd: DT bindings for the palmas family MFD
-Date: Mon, 25 Mar 2013 19:47:21 +0000
-Message-ID: <20130325194711.GT18316@opensource.wolfsonmicro.com>
-References: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
- <1363964122-19201-2-git-send-email-ian@slimlogic.co.uk>
- <5150906F.9040202@wwwdotorg.org>
+From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
+Subject: [PATCH v5 0/7] move s3c24xx-irq to drivers/irqchip and add dt support
+Date: Mon, 25 Mar 2013 22:26:20 +0100
+Message-ID: <201303252226.21402.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="y80AKZIs+e/pKYlV"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5150906F.9040202@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Ian Lartey <ian@slimlogic.co.uk>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, mturquette@linaro.org, linus.walleij@linaro.org, cooloney@gmail.com, sfr@canb.auug.org.au, rpurdie@rpsys.net, akpm@linux-foundation.org, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, gg@slimlogic.co.uk, j-keerthy@ti.com, ldewangan@nvidia.com, t-kristo@ti.com
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Thomas Abraham <thomas.abraham@linaro.org>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+After more discussion with Arnd Bergmann on v4 it seems a better way to
+handle the interrupt controllers inside the s3c24xx SoCs is to not have
+separate controller nodes, but to bundle the controllers into one node
+and access the individual controllers via interrupt descriptor of the
+device nodes.
 
---y80AKZIs+e/pKYlV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Therefore this series changes the interrupt descriptors to a format of
+  <ctrl_num irq_num parent_num type>
 
-On Mon, Mar 25, 2013 at 11:59:11AM -0600, Stephen Warren wrote:
-> On 03/22/2013 08:55 AM, Ian Lartey wrote:
-> > From: Graeme Gregory <gg@slimlogic.co.uk>
+It also improves the binding documentation to explain the interrupt
+descriptor format better.
 
-> > +Optional nodes:
-> > +- regulators : should contain the constrains and init information for the
-> > +	       regulators. It should contain a subnode per regulator from the
-> > +	       list.
-> > +	       For ti,palmas-pmic - smps12, smps123, smps3 depending on OTP,
-> > +	       smps45, smps457, smps7 depending on varient, smps6, smps[8-10],
-> > +	       ldo[1-9], ldoln, ldousb
-> > +	       For ti,palmas-charger-pmic - smps12, smps123, smps3 depending on OTP,
-> > +	       smps[6-9], boost, ldo[1-14], ldoln, ldousb
+As always tested on a s3c2416 based machine for the dt and non-dt case
+and depends on changes already in the linux-samsung tree.
 
-> The list of legal compatible values for this node above doesn't include
-> both ti,palmas-pmic and ti,palmas-charger-pmic. Should it? This node
-> should describe this PMIC block in a completely standalone fashion,
-> without the need to go look at the top-level node to see if it's a
-> "charger" variant or not.
 
-The latter was removed from the code in this series, only palmas-pmic is
-present now.
+Heiko Stuebner (7):
+  ARM: S3C24XX: move irq driver to drivers/irqchip
+  irqchip: s3c24xx: fix comments on some camera interrupts
+  irqchip: s3c24xx: fix irqlist of second s3c2416 controller
+  irqchip: s3c24xx: add irq_set_type callback for basic interrupt types
+  irqchip: s3c24xx: globally keep track of the created intc instances
+  irqchip: s3c24xx: make interrupt handling independent of irq_domain structure
+  irqchip: s3c24xx: add devicetree support
 
-Just as a general thing there seems to be an awful lot of stuff here
-about the boilerplate for the generic properties like the interrupt
-and GPIO controller stuff - we probably need to spin round and look at
-factoring this out to make life easier.  There seems to be a lot of
-boiler plate in the bindings that is factored out well by the frameworks
-in the code so people don't even need to think about it.
+ .../interrupt-controller/samsung,s3c24xx-irq.txt   |   53 +++
+ arch/arm/mach-s3c24xx/Makefile                     |    2 +-
+ drivers/irqchip/Makefile                           |    1 +
+ .../irq.c => drivers/irqchip/irq-s3c24xx.c         |  388 ++++++++++++++++----
+ 4 files changed, 373 insertions(+), 71 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/samsung,s3c24xx-irq.txt
+ rename arch/arm/mach-s3c24xx/irq.c => drivers/irqchip/irq-s3c24xx.c (78%)
 
---y80AKZIs+e/pKYlV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRUKm3AAoJELSic+t+oim9fowQAJK8XJJZnIkcTIK2LzQfAHFo
-H+dqFvQDFXcfH+JaE/pnAQAYQaTexgj/VaS7ujlkjyxgz8HcnCUqA0daW+uInZB4
-rUiLmt/SpprD0uc9cv6zV7uzff9aZ/MYFUz51IF+MBM5RPu4XYl/jLXWGG7rHDAq
-KD/m1IThbMSJwl0uZ319Qujm3nYorRJzcaJwEcIncfr74h08hr0bqqMCqL/wfZqf
-g63A7Nb9iBVVwcc31OVQk0PmSnMOam6arf1OTbQmSGwUoxH7v6YIELCy3IanUTka
-iVJMrQU22Wwi1gdG4RcMCGmagUoNHD3F+QUD08EqepkVoznfkZHQtKW7Ul1FP0aA
-dvTEUUXk/dDEgIsqX70nbC4Bw94a0ZCV5h6L61kPdgmCvUMfWI8iqsEh1E52yE42
-GkMQt02dcC1uAa+T5J3OoYr9nTDoMm8T6ImuYrV1jl9unO1KHYJ/bM1t8Ayp+kNN
-wAnGfvcFQRF7BtwAwbJu/6V80529fyh+cBztvd69FinY2urQTc0zQUr6swnC5Q15
-g2dX/RMesFZLAo3+l/y6Mfjj9PDMLjPnArF4ai8nH7s3mmOWeCx9sZemM58JGBNq
-E6DLjnaE7NASTfGxA1AMh5A81S/rvCYPyx2CbZpNB98EdE7pnEJRbjCjI8cQzXvn
-YtwdbowWb+augz2h3QWD
-=dRiZ
------END PGP SIGNATURE-----
-
---y80AKZIs+e/pKYlV--
+-- 
+1.7.10.4
