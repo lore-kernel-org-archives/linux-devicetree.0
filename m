@@ -1,144 +1,54 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] spi: spi-omap2-mcspi.c: Add dts for slave device
-	configuration.
-Date: Tue, 26 Mar 2013 00:00:15 +0100
-Message-ID: <1364252415-3613-1-git-send-email-matthias.bgg@gmail.com>
+From: Ryan Mallon <rmallon@gmail.com>
+Subject: Re: [PATCH v3 3/3] backlight: as3711: add OF support
+Date: Tue, 26 Mar 2013 10:09:30 +1100
+Message-ID: <5150D92A.4000206@gmail.com>
+References: <1363968949-12151-1-git-send-email-g.liakhovetski@gmx.de> <1363968949-12151-4-git-send-email-g.liakhovetski@gmx.de> <20130325154046.82d9337f25cec12b9fa03625@linux-foundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <martinez.javier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130325154046.82d9337f25cec12b9fa03625@linux-foundation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-kernel@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree-discuss@lists.ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>, Richard Purdie <rpurdie@rpsys.net>, linux-fbdev@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-TI omap2 mcspi allows the slave devices to configure the behavior of
-the SPI master. This patch adds device tree support to the existing
-options.
+On 26/03/13 09:40, Andrew Morton wrote:
+> On Fri, 22 Mar 2013 17:15:49 +0100 Guennadi Liakhovetski <g.liakhovetski@gmx.de> wrote:
+> 
+>> Add support for configuring AS3711 backlight driver from DT.
+>>
+>> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+>> Reviwed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+>> ---
+>>  drivers/video/backlight/as3711_bl.c |  118 ++++++++++++++++++++++++++++++++++-
+>>  1 files changed, 117 insertions(+), 1 deletions(-)
+>>
+>> diff --git a/drivers/video/backlight/as3711_bl.c b/drivers/video/backlight/as3711_bl.c
+>> index 41d52fe..123887c 100644
+>> --- a/drivers/video/backlight/as3711_bl.c
+>> +++ b/drivers/video/backlight/as3711_bl.c
+>> @@ -258,6 +258,109 @@ static int as3711_bl_register(struct platform_device *pdev,
+>>  	return 0;
+>>  }
+>>  
+>> +static int as3711_backlight_parse_dt(struct device *dev)
+>> +{
+>> +	struct as3711_bl_pdata *pdata = dev_get_platdata(dev);
+>> +	struct device_node *bl =
+>> +		of_find_node_by_name(dev->parent->of_node, "backlight"), *fb;
+>> +	int ret;
+> 
+> It's tidier to do
+> 
+> 	struct device_node *bl;
+> 	
+> 	bl = of_find_node_by_name(dev->parent->of_node, "backlight"), *fb;
+> 
+> and avoid the 80-col trickery.
 
-Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/spi/omap-spi.txt | 23 ++++++++++++
- drivers/spi/spi-omap2-mcspi.c                      | 41 ++++++++++++++++++++++
- 2 files changed, 64 insertions(+)
+The other reason being that it now becomes much more apparent that *fb
+is not an argument to of_find_node_by_name(), but a second variable of
+type struct device_node :-).
 
-diff --git a/Documentation/devicetree/bindings/spi/omap-spi.txt b/Documentation/devicetree/bindings/spi/omap-spi.txt
-index 938809c..fef16bf 100644
---- a/Documentation/devicetree/bindings/spi/omap-spi.txt
-+++ b/Documentation/devicetree/bindings/spi/omap-spi.txt
-@@ -10,8 +10,20 @@ Required properties:
- 			  input. The default is D0 as input and
- 			  D1 as output.
- 
-+SPI Controller specific data in SPI slave nodes:
-+
-+- The spi slave nodes can provide the following information which is used
-+  by the spi controller.
-+
-+- ti,spi-cs-per-word: Set chipselect to be toggled on every word send.
-+
-+- ti,spi-turbo-mode: Set turbo mode for this device.
-+
-+
- Example:
- 
-+- SoC Specific Portion:
-+
- mcspi1: mcspi@1 {
-     #address-cells = <1>;
-     #size-cells = <0>;
-@@ -20,3 +32,14 @@ mcspi1: mcspi@1 {
-     ti,spi-num-cs = <4>;
- };
- 
-+- Board Specific Portion:
-+
-+	spi-device@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		controller-data {
-+			ti,spi-cs-per-word = <1>;
-+			ti,spi-turbo-mode = <0>;
-+		};
-+	};
-diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
-index 893c3d7..1ae5009 100644
---- a/drivers/spi/spi-omap2-mcspi.c
-+++ b/drivers/spi/spi-omap2-mcspi.c
-@@ -731,11 +731,47 @@ static u32 omap2_mcspi_calc_divisor(u32 speed_hz)
- 	return 15;
- }
- 
-+static struct omap2_mcspi_device_config *omap2_mcspi_get_slave_ctrldata(
-+			struct spi_device *spi)
-+{
-+	struct omap2_mcspi_device_config *cd;
-+	struct device_node *slave_np, *data_np = NULL;
-+
-+	slave_np = spi->dev.of_node;
-+	if (!slave_np) {
-+		dev_err(&spi->dev, "device node not found\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	data_np = of_get_child_by_name(slave_np, "controller-data");
-+	if (!data_np) {
-+		dev_err(&spi->dev, "child node 'controller-data' not found\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	cd = kzalloc(sizeof(*cd), GFP_KERNEL);
-+	if (!cd) {
-+		dev_err(&spi->dev, "could not allocate memory for controller data\n");
-+		of_node_put(data_np);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	if (of_get_property(data_np, "ti,spi-cs-per-word", NULL))
-+		cd->cs_per_word = 1;
-+
-+	if (of_get_property(data_np, "ti,spi-turbo-mode", NULL))
-+		cd->turbo_mode = 1;
-+
-+	of_node_put(data_np);
-+	return cd;
-+}
-+
- /* called only when no transfer is active to this device */
- static int omap2_mcspi_setup_transfer(struct spi_device *spi,
- 		struct spi_transfer *t)
- {
- 	struct omap2_mcspi_cs *cs = spi->controller_state;
-+	struct omap2_mcspi_device_config *cd = spi->controller_data;
- 	struct omap2_mcspi *mcspi;
- 	struct spi_master *spi_cntrl;
- 	u32 l = 0, div = 0;
-@@ -745,6 +781,11 @@ static int omap2_mcspi_setup_transfer(struct spi_device *spi,
- 	mcspi = spi_master_get_devdata(spi->master);
- 	spi_cntrl = mcspi->master;
- 
-+	if (!cd && spi->dev.of_node) {
-+		cd = omap2_mcspi_get_slave_ctrldata(spi);
-+		spi->controller_data = cd;
-+	}
-+
- 	if (t != NULL && t->bits_per_word)
- 		word_len = t->bits_per_word;
- 
--- 
-1.7.11.7
-
-
-------------------------------------------------------------------------------
-Own the Future-Intel&reg; Level Up Game Demo Contest 2013
-Rise to greatness in Intel's independent game demo contest.
-Compete for recognition, cash, and the chance to get your game 
-on Steam. $5K grand prize plus 10 genre and skill prizes. 
-Submit your demo by 6/6/13. http://p.sf.net/sfu/intel_levelupd2d
+~Ryan
