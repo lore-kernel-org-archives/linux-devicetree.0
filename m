@@ -1,55 +1,26 @@
-From: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/2] ARM: dts: Add default pin states for client nodes
- on Exynos4/5 platforms
-Date: Mon, 25 Mar 2013 12:19:35 +0530
-Message-ID: <514FF37F.7090405@linaro.org>
-References: <1362573398-15126-1-git-send-email-thomas.abraham@linaro.org>
- <CACRpkdbsCpV5_P=z44CMvsgps=AS9C62oprn6To6ExhoWZkvhA@mail.gmail.com>
+From: Philip Avinash <avinashphilip@ti.com>
+Subject: [PATCH 0/2] Update device tree binding document for pwm-tiehrpwm & pwm-tiecap
+Date: Mon, 25 Mar 2013 12:34:51 +0530
+Message-ID: <1364195093-1357-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdbsCpV5_P=z44CMvsgps=AS9C62oprn6To6ExhoWZkvhA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: thierry.reding@avionic-design.de
+Cc: nsekhar@ti.com, jacmet@sunsite.dk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, prakash.pm@ti.com, Philip Avinash <avinashphilip@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/07/2013 01:45 PM, Linus Walleij wrote:
-> On Wed, Mar 6, 2013 at 1:36 PM, Thomas Abraham
-> <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> 
->> This patch series populates the default pin states in client nodes
->> of Exynos4 and Exynos5 platforms. Exynos4/5 platforms are migrating
->> to use pinctrl framework and having the default pin states listed
->> in the client nodes allows the device core to setup the default
->> pin configuration for all the controllers.
-> 
-> The series:
-> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Yours,
-> Linus Walleij
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Update device tree document of pwm-tiehrpwm & pwm-tiecap in order to reflect the
+usage of similar modules in both da850 and am33xx platforms.
 
-Kukjin,
+Philip Avinash (2):
+  pwm: pwm-tiecap: Update device-tree binding document
+  pwm: pwm-tiehrpwm: Update device-tree binding document
 
-Would you be applying this patch-set to your tree? We need that to
-rebase Arndale related patches for v3.10.
-
+ .../devicetree/bindings/pwm/pwm-tiecap.txt         |   12 ++++++++++--
+ .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       |   12 ++++++++++--
+ 2 files changed, 20 insertions(+), 4 deletions(-)
 
 -- 
-Tushar Behera
+1.7.9.5
+
