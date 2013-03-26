@@ -1,13 +1,25 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 07/10] irqchip: sunxi: Rename sunxi to sun4i
-Date: Tue, 26 Mar 2013 10:13:14 +0100
-Message-ID: <1364289198-11589-8-git-send-email-maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 04/10] clocksource: sunxi: Rename sunxi to sun4i
+Date: Tue, 26 Mar 2013 10:13:11 +0100
+Message-ID: <1364289198-11589-5-git-send-email-maxime.ripard@free-electrons.com>
 References: <1364289198-11589-1-git-send-email-maxime.ripard@free-electrons.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1364289198-11589-1-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: kevin@allwinnertech.com, sunny@allwinnertech.com, shuge@allwinnertech.com, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Thomas Gleixner <tglx@linutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1364289198-11589-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 During the introduction of the Allwinner SoC platforms, sunxi was
@@ -24,237 +36,171 @@ Moreover, it makes the compatible strings naming scheme not consistent
 with other architectures, where usually for this kind of compability, we
 just use the oldest SoC name that has this IP, so let's do just this.
 
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- ...lwinner,sunxi-ic.txt => allwinner,sun4i-ic.txt} |    4 +-
- drivers/irqchip/Makefile                           |    2 +-
- drivers/irqchip/{irq-sunxi.c => irq-sun4i.c}       |  102 ++++++++++----------
- 3 files changed, 54 insertions(+), 54 deletions(-)
- rename Documentation/devicetree/bindings/interrupt-controller/{allwinner,sunxi-ic.txt => allwinner,sun4i-ic.txt} (94%)
- rename drivers/irqchip/{irq-sunxi.c => irq-sun4i.c} (41%)
+ ...r,sunxi-timer.txt => allwinner,sun4i-timer.txt} |    4 +--
+ arch/arm/mach-sunxi/Kconfig                        |    4 +--
+ drivers/clocksource/Kconfig                        |    2 +-
+ drivers/clocksource/Makefile                       |    2 +-
+ .../clocksource/{sunxi_timer.c => sun4i_timer.c}   |   34 ++++++++++----------
+ 5 files changed, 23 insertions(+), 23 deletions(-)
+ rename Documentation/devicetree/bindings/timer/{allwinner,sunxi-timer.txt => allwinner,sun4i-timer.txt} (78%)
+ rename drivers/clocksource/{sunxi_timer.c => sun4i_timer.c} (80%)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-ic.txt b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt
-similarity index 94%
-rename from Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-ic.txt
-rename to Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt
-index 7f9fb85..e7f4dc1 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-ic.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sun4i-ic.txt
-@@ -2,7 +2,7 @@ Allwinner Sunxi Interrupt Controller
+diff --git a/Documentation/devicetree/bindings/timer/allwinner,sunxi-timer.txt b/Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt
+similarity index 78%
+rename from Documentation/devicetree/bindings/timer/allwinner,sunxi-timer.txt
+rename to Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt
+index 0c7b64e..48aeb78 100644
+--- a/Documentation/devicetree/bindings/timer/allwinner,sunxi-timer.txt
++++ b/Documentation/devicetree/bindings/timer/allwinner,sun4i-timer.txt
+@@ -2,7 +2,7 @@ Allwinner A1X SoCs Timer Controller
  
  Required properties:
  
--- compatible : should be "allwinner,sunxi-ic"
-+- compatible : should be "allwinner,sun4i-ic"
+-- compatible : should be "allwinner,sunxi-timer"
++- compatible : should be "allwinner,sun4i-timer"
  - reg : Specifies base physical address and size of the registers.
- - interrupt-controller : Identifies the node as an interrupt controller
- - #interrupt-cells : Specifies the number of cells needed to encode an
-@@ -97,7 +97,7 @@ The interrupt sources are as follows:
+ - interrupts : The interrupt of the first timer
+ - clocks: phandle to the source clock (usually a 24 MHz fixed clock)
+@@ -10,7 +10,7 @@ Required properties:
  Example:
  
- intc: interrupt-controller {
--	compatible = "allwinner,sunxi-ic";
-+	compatible = "allwinner,sun4i-ic";
- 	reg = <0x01c20400 0x400>;
- 	interrupt-controller;
- 	#interrupt-cells = <2>;
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 98e3b87..5416965 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -4,7 +4,7 @@ obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
- obj-$(CONFIG_ARCH_EXYNOS)		+= exynos-combiner.o
- obj-$(CONFIG_METAG)			+= irq-metag-ext.o
- obj-$(CONFIG_METAG_PERFCOUNTER_IRQS)	+= irq-metag.o
--obj-$(CONFIG_ARCH_SUNXI)		+= irq-sunxi.o
-+obj-$(CONFIG_ARCH_SUNXI)		+= irq-sun4i.o
- obj-$(CONFIG_ARCH_SPEAR3XX)		+= spear-shirq.o
- obj-$(CONFIG_ARM_GIC)			+= irq-gic.o
- obj-$(CONFIG_ARM_VIC)			+= irq-vic.o
-diff --git a/drivers/irqchip/irq-sunxi.c b/drivers/irqchip/irq-sun4i.c
-similarity index 41%
-rename from drivers/irqchip/irq-sunxi.c
-rename to drivers/irqchip/irq-sun4i.c
-index 0fc49c5..b66d4ae 100644
---- a/drivers/irqchip/irq-sunxi.c
-+++ b/drivers/irqchip/irq-sun4i.c
-@@ -25,125 +25,125 @@
+ timer {
+-	compatible = "allwinner,sunxi-timer";
++	compatible = "allwinner,sun4i-timer";
+ 	reg = <0x01c20c00 0x400>;
+ 	interrupts = <22>;
+ 	clocks = <&osc>;
+diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
+index 06c2894..d259c78 100644
+--- a/arch/arm/mach-sunxi/Kconfig
++++ b/arch/arm/mach-sunxi/Kconfig
+@@ -7,5 +7,5 @@ config ARCH_SUNXI
+ 	select GENERIC_IRQ_CHIP
+ 	select PINCTRL
+ 	select SPARSE_IRQ
+-	select SUNXI_TIMER
+-	select PINCTRL_SUNXI
+\ No newline at end of file
++	select SUN4I_TIMER
++	select PINCTRL_SUNXI
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index e507ab7..9002185 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -25,7 +25,7 @@ config DW_APB_TIMER_OF
+ config ARMADA_370_XP_TIMER
+ 	bool
  
- #include "irqchip.h"
+-config SUNXI_TIMER
++config SUN4I_TIMER
+ 	bool
  
--#define SUNXI_IRQ_VECTOR_REG		0x00
--#define SUNXI_IRQ_PROTECTION_REG	0x08
--#define SUNXI_IRQ_NMI_CTRL_REG		0x0c
--#define SUNXI_IRQ_PENDING_REG(x)	(0x10 + 0x4 * x)
--#define SUNXI_IRQ_FIQ_PENDING_REG(x)	(0x20 + 0x4 * x)
--#define SUNXI_IRQ_ENABLE_REG(x)		(0x40 + 0x4 * x)
--#define SUNXI_IRQ_MASK_REG(x)		(0x50 + 0x4 * x)
-+#define SUN4I_IRQ_VECTOR_REG		0x00
-+#define SUN4I_IRQ_PROTECTION_REG	0x08
-+#define SUN4I_IRQ_NMI_CTRL_REG		0x0c
-+#define SUN4I_IRQ_PENDING_REG(x)	(0x10 + 0x4 * x)
-+#define SUN4I_IRQ_FIQ_PENDING_REG(x)	(0x20 + 0x4 * x)
-+#define SUN4I_IRQ_ENABLE_REG(x)		(0x40 + 0x4 * x)
-+#define SUN4I_IRQ_MASK_REG(x)		(0x50 + 0x4 * x)
+ config VT8500_TIMER
+diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+index 4d8283a..7d5d23a 100644
+--- a/drivers/clocksource/Makefile
++++ b/drivers/clocksource/Makefile
+@@ -16,7 +16,7 @@ obj-$(CONFIG_CLKSRC_NOMADIK_MTU)	+= nomadik-mtu.o
+ obj-$(CONFIG_CLKSRC_DBX500_PRCMU)	+= clksrc-dbx500-prcmu.o
+ obj-$(CONFIG_ARMADA_370_XP_TIMER)	+= time-armada-370-xp.o
+ obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835_timer.o
+-obj-$(CONFIG_SUNXI_TIMER)	+= sunxi_timer.o
++obj-$(CONFIG_SUN4I_TIMER)	+= sun4i_timer.o
+ obj-$(CONFIG_ARCH_TEGRA)	+= tegra20_timer.o
+ obj-$(CONFIG_VT8500_TIMER)	+= vt8500_timer.o
  
--static void __iomem *sunxi_irq_base;
--static struct irq_domain *sunxi_irq_domain;
-+static void __iomem *sun4i_irq_base;
-+static struct irq_domain *sun4i_irq_domain;
+diff --git a/drivers/clocksource/sunxi_timer.c b/drivers/clocksource/sun4i_timer.c
+similarity index 80%
+rename from drivers/clocksource/sunxi_timer.c
+rename to drivers/clocksource/sun4i_timer.c
+index 308bbe3..d4674e7 100644
+--- a/drivers/clocksource/sunxi_timer.c
++++ b/drivers/clocksource/sun4i_timer.c
+@@ -37,7 +37,7 @@
  
--static asmlinkage void __exception_irq_entry sunxi_handle_irq(struct pt_regs *regs);
-+static asmlinkage void __exception_irq_entry sun4i_handle_irq(struct pt_regs *regs);
+ static void __iomem *timer_base;
  
--void sunxi_irq_ack(struct irq_data *irqd)
-+void sun4i_irq_ack(struct irq_data *irqd)
+-static void sunxi_clkevt_mode(enum clock_event_mode mode,
++static void sun4i_clkevt_mode(enum clock_event_mode mode,
+ 			      struct clock_event_device *clk)
  {
- 	unsigned int irq = irqd_to_hwirq(irqd);
- 	unsigned int irq_off = irq % 32;
- 	int reg = irq / 32;
- 	u32 val;
- 
--	val = readl(sunxi_irq_base + SUNXI_IRQ_PENDING_REG(reg));
-+	val = readl(sun4i_irq_base + SUN4I_IRQ_PENDING_REG(reg));
- 	writel(val | (1 << irq_off),
--	       sunxi_irq_base + SUNXI_IRQ_PENDING_REG(reg));
-+	       sun4i_irq_base + SUN4I_IRQ_PENDING_REG(reg));
- }
- 
--static void sunxi_irq_mask(struct irq_data *irqd)
-+static void sun4i_irq_mask(struct irq_data *irqd)
- {
- 	unsigned int irq = irqd_to_hwirq(irqd);
- 	unsigned int irq_off = irq % 32;
- 	int reg = irq / 32;
- 	u32 val;
- 
--	val = readl(sunxi_irq_base + SUNXI_IRQ_ENABLE_REG(reg));
-+	val = readl(sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
- 	writel(val & ~(1 << irq_off),
--	       sunxi_irq_base + SUNXI_IRQ_ENABLE_REG(reg));
-+	       sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
- }
- 
--static void sunxi_irq_unmask(struct irq_data *irqd)
-+static void sun4i_irq_unmask(struct irq_data *irqd)
- {
- 	unsigned int irq = irqd_to_hwirq(irqd);
- 	unsigned int irq_off = irq % 32;
- 	int reg = irq / 32;
- 	u32 val;
- 
--	val = readl(sunxi_irq_base + SUNXI_IRQ_ENABLE_REG(reg));
-+	val = readl(sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
- 	writel(val | (1 << irq_off),
--	       sunxi_irq_base + SUNXI_IRQ_ENABLE_REG(reg));
-+	       sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
- }
- 
--static struct irq_chip sunxi_irq_chip = {
--	.name		= "sunxi_irq",
--	.irq_ack	= sunxi_irq_ack,
--	.irq_mask	= sunxi_irq_mask,
--	.irq_unmask	= sunxi_irq_unmask,
-+static struct irq_chip sun4i_irq_chip = {
-+	.name		= "sun4i_irq",
-+	.irq_ack	= sun4i_irq_ack,
-+	.irq_mask	= sun4i_irq_mask,
-+	.irq_unmask	= sun4i_irq_unmask,
- };
- 
--static int sunxi_irq_map(struct irq_domain *d, unsigned int virq,
-+static int sun4i_irq_map(struct irq_domain *d, unsigned int virq,
- 			 irq_hw_number_t hw)
- {
--	irq_set_chip_and_handler(virq, &sunxi_irq_chip,
-+	irq_set_chip_and_handler(virq, &sun4i_irq_chip,
- 				 handle_level_irq);
- 	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
- 
- 	return 0;
- }
- 
--static struct irq_domain_ops sunxi_irq_ops = {
--	.map = sunxi_irq_map,
-+static struct irq_domain_ops sun4i_irq_ops = {
-+	.map = sun4i_irq_map,
- 	.xlate = irq_domain_xlate_onecell,
- };
- 
--static int __init sunxi_of_init(struct device_node *node,
-+static int __init sun4i_of_init(struct device_node *node,
- 				struct device_node *parent)
- {
--	sunxi_irq_base = of_iomap(node, 0);
--	if (!sunxi_irq_base)
-+	sun4i_irq_base = of_iomap(node, 0);
-+	if (!sun4i_irq_base)
- 		panic("%s: unable to map IC registers\n",
- 			node->full_name);
- 
- 	/* Disable all interrupts */
--	writel(0, sunxi_irq_base + SUNXI_IRQ_ENABLE_REG(0));
--	writel(0, sunxi_irq_base + SUNXI_IRQ_ENABLE_REG(1));
--	writel(0, sunxi_irq_base + SUNXI_IRQ_ENABLE_REG(2));
-+	writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(0));
-+	writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(1));
-+	writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(2));
- 
- 	/* Mask all the interrupts */
--	writel(0, sunxi_irq_base + SUNXI_IRQ_MASK_REG(0));
--	writel(0, sunxi_irq_base + SUNXI_IRQ_MASK_REG(1));
--	writel(0, sunxi_irq_base + SUNXI_IRQ_MASK_REG(2));
-+	writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(0));
-+	writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(1));
-+	writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(2));
- 
- 	/* Clear all the pending interrupts */
--	writel(0xffffffff, sunxi_irq_base + SUNXI_IRQ_PENDING_REG(0));
--	writel(0xffffffff, sunxi_irq_base + SUNXI_IRQ_PENDING_REG(1));
--	writel(0xffffffff, sunxi_irq_base + SUNXI_IRQ_PENDING_REG(2));
-+	writel(0xffffffff, sun4i_irq_base + SUN4I_IRQ_PENDING_REG(0));
-+	writel(0xffffffff, sun4i_irq_base + SUN4I_IRQ_PENDING_REG(1));
-+	writel(0xffffffff, sun4i_irq_base + SUN4I_IRQ_PENDING_REG(2));
- 
- 	/* Enable protection mode */
--	writel(0x01, sunxi_irq_base + SUNXI_IRQ_PROTECTION_REG);
-+	writel(0x01, sun4i_irq_base + SUN4I_IRQ_PROTECTION_REG);
- 
- 	/* Configure the external interrupt source type */
--	writel(0x00, sunxi_irq_base + SUNXI_IRQ_NMI_CTRL_REG);
-+	writel(0x00, sun4i_irq_base + SUN4I_IRQ_NMI_CTRL_REG);
- 
--	sunxi_irq_domain = irq_domain_add_linear(node, 3 * 32,
--						 &sunxi_irq_ops, NULL);
--	if (!sunxi_irq_domain)
-+	sun4i_irq_domain = irq_domain_add_linear(node, 3 * 32,
-+						 &sun4i_irq_ops, NULL);
-+	if (!sun4i_irq_domain)
- 		panic("%s: unable to create IRQ domain\n", node->full_name);
- 
--	set_handle_irq(sunxi_handle_irq);
-+	set_handle_irq(sun4i_handle_irq);
- 
- 	return 0;
- }
--IRQCHIP_DECLARE(allwinner_sunxi_ic, "allwinner,sunxi-ic", sunxi_of_init);
-+IRQCHIP_DECLARE(allwinner_sun4i_ic, "allwinner,sun4i-ic", sun4i_of_init);
- 
--static asmlinkage void __exception_irq_entry sunxi_handle_irq(struct pt_regs *regs)
-+static asmlinkage void __exception_irq_entry sun4i_handle_irq(struct pt_regs *regs)
- {
- 	u32 irq, hwirq;
- 
--	hwirq = readl(sunxi_irq_base + SUNXI_IRQ_VECTOR_REG) >> 2;
-+	hwirq = readl(sun4i_irq_base + SUN4I_IRQ_VECTOR_REG) >> 2;
- 	while (hwirq != 0) {
--		irq = irq_find_mapping(sunxi_irq_domain, hwirq);
-+		irq = irq_find_mapping(sun4i_irq_domain, hwirq);
- 		handle_IRQ(irq, regs);
--		hwirq = readl(sunxi_irq_base + SUNXI_IRQ_VECTOR_REG) >> 2;
-+		hwirq = readl(sun4i_irq_base + SUN4I_IRQ_VECTOR_REG) >> 2;
+ 	u32 u = readl(timer_base + TIMER_CTL_REG(0));
+@@ -59,7 +59,7 @@ static void sunxi_clkevt_mode(enum clock_event_mode mode,
  	}
  }
+ 
+-static int sunxi_clkevt_next_event(unsigned long evt,
++static int sun4i_clkevt_next_event(unsigned long evt,
+ 				   struct clock_event_device *unused)
+ {
+ 	u32 u = readl(timer_base + TIMER_CTL_REG(0));
+@@ -70,16 +70,16 @@ static int sunxi_clkevt_next_event(unsigned long evt,
+ 	return 0;
+ }
+ 
+-static struct clock_event_device sunxi_clockevent = {
+-	.name = "sunxi_tick",
++static struct clock_event_device sun4i_clockevent = {
++	.name = "sun4i_tick",
+ 	.rating = 300,
+ 	.features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT,
+-	.set_mode = sunxi_clkevt_mode,
+-	.set_next_event = sunxi_clkevt_next_event,
++	.set_mode = sun4i_clkevt_mode,
++	.set_next_event = sun4i_clkevt_next_event,
+ };
+ 
+ 
+-static irqreturn_t sunxi_timer_interrupt(int irq, void *dev_id)
++static irqreturn_t sun4i_timer_interrupt(int irq, void *dev_id)
+ {
+ 	struct clock_event_device *evt = (struct clock_event_device *)dev_id;
+ 
+@@ -89,14 +89,14 @@ static irqreturn_t sunxi_timer_interrupt(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static struct irqaction sunxi_timer_irq = {
+-	.name = "sunxi_timer0",
++static struct irqaction sun4i_timer_irq = {
++	.name = "sun4i_timer0",
+ 	.flags = IRQF_DISABLED | IRQF_TIMER | IRQF_IRQPOLL,
+-	.handler = sunxi_timer_interrupt,
+-	.dev_id = &sunxi_clockevent,
++	.handler = sun4i_timer_interrupt,
++	.dev_id = &sun4i_clockevent,
+ };
+ 
+-static void __init sunxi_timer_init(struct device_node *node)
++static void __init sun4i_timer_init(struct device_node *node)
+ {
+ 	unsigned long rate = 0;
+ 	struct clk *clk;
+@@ -131,7 +131,7 @@ static void __init sunxi_timer_init(struct device_node *node)
+ 	val = readl(timer_base + TIMER_CTL_REG(0));
+ 	writel(val | TIMER_CTL_AUTORELOAD, timer_base + TIMER_CTL_REG(0));
+ 
+-	ret = setup_irq(irq, &sunxi_timer_irq);
++	ret = setup_irq(irq, &sun4i_timer_irq);
+ 	if (ret)
+ 		pr_warn("failed to setup irq %d\n", irq);
+ 
+@@ -139,10 +139,10 @@ static void __init sunxi_timer_init(struct device_node *node)
+ 	val = readl(timer_base + TIMER_IRQ_EN_REG);
+ 	writel(val | TIMER_IRQ_EN(0), timer_base + TIMER_IRQ_EN_REG);
+ 
+-	sunxi_clockevent.cpumask = cpumask_of(0);
++	sun4i_clockevent.cpumask = cpumask_of(0);
+ 
+-	clockevents_config_and_register(&sunxi_clockevent, rate / TIMER_SCAL,
++	clockevents_config_and_register(&sun4i_clockevent, rate / TIMER_SCAL,
+ 					0x1, 0xff);
+ }
+-CLOCKSOURCE_OF_DECLARE(sunxi, "allwinner,sunxi-timer",
+-		       sunxi_timer_init);
++CLOCKSOURCE_OF_DECLARE(sun4i, "allwinner,sun4i-timer",
++		       sun4i_timer_init);
 -- 
 1.7.10.4
-
