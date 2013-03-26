@@ -1,48 +1,109 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 Subject: Re: [RFCv1 07/11] irqchip: armada-370-xp: add MSI support to
  interrupt controller driver
-Date: Tue, 26 Mar 2013 22:42:51 +0100
-Message-ID: <20130326224251.6a925892@skate>
+Date: Tue, 26 Mar 2013 22:47:13 +0100
+Message-ID: <20130326224713.04c85cd3@skate>
 References: <1364316746-8702-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1364316746-8702-8-git-send-email-thomas.petazzoni@free-electrons.com>
-	<201303262115.41200.arnd@arndb.de>
+	<20130326180245.GA22775@obsidianresearch.com>
+	<20130326221654.34bce6d7@skate>
+	<201303262131.45410.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <201303262115.41200.arnd@arndb.de>
+In-Reply-To: <201303262131.45410.arnd@arndb.de>
 Sender: linux-pci-owner@vger.kernel.org
 To: Arnd Bergmann <arnd@arndb.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Maen Suleiman <maen@marvell.com>, Thierry Reding <thierry.reding@avionic-design.de>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>
+Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Maen Suleiman <maen@marvell.com>, Thierry Reding <thierry.reding@avionic-design.de>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 Dear Arnd Bergmann,
 
-On Tue, 26 Mar 2013 21:15:40 +0000, Arnd Bergmann wrote:
+On Tue, 26 Mar 2013 21:31:45 +0000, Arnd Bergmann wrote:
 > On Tuesday 26 March 2013, Thomas Petazzoni wrote:
-> > +                       msimask = readl_relaxed(per_cpu_int_base +
-> > +                                       ARMADA_370_XP_IN_DRBEL_CAUSE_OFFS)
-> > +                               & PCI_MSI_DOORBELL_MASK;
-> > +
-> > +                       writel(~PCI_MSI_DOORBELL_MASK, per_cpu_int_base +
-> > +                              ARMADA_370_XP_IN_DRBEL_CAUSE_OFFS);
-> > +
+> > > FWIW, MSI-X is not restricted to 16 bits, so if you can detect from
+> > > the PCI layer if it is setting up MSI or MSI-X you could allocate low
+> > > bits first to MSI-X and high bits first to MSI, increasing the number
+> > > of available MSI/MSI-X vectors.
+> > 
+> > This could be an improvement. There are also other, non-per-CPU,
+> > doorbell interrupts that could potentially be used. Can we consider
+> > this a possible improvement, and not something that is fundamentally
+> > necessary? For now, I'm trying to get the current feature set merged,
+> > and not necessarily to extend it to cover all possible features of the
+> > hardware.
 > 
-> Upon reading this code again, I stumbled over the barriers. You use
-> a readl_relaxed() without barrier but a writel() with barrier. Is
-> that intentional? Are you sure that you don't need a full readl()
-> to guarantee that all inbound DMA that was sent by the device before
-> the MSI message has arrived by the time the interrupt handler function
-> is called? It depends on the implementation of the MSI controller whether
-> that guarantee is already made by the fact that you are handling the
-> interrupt.
+> If we are extending the DT binding for the current feature, we should
+> at least think about how it would look like for future extensions, to
+> make sure it won't be fundamentally incompatible.
 
-This question I will have to raise to the Marvell HW engineers, the
-datasheet does not go into these considerations. For now, I'm rather
-trying to validate the 'architecture' of the code: DT binding,
-interaction between the IRQ controller driver and the PCIe driver, etc.
+Sure.
 
-Thanks,
+> > > > +   - marvell,doorbell: Gives the physical address at which PCIe
+> > > > +     devices should write to signal an MSI interrupt.
+> > > 
+> > > Why is this necessary? Can't the doorbell register physical address be
+> > > computed by the driver? AFAIK there is no possibility for address
+> > > translation on SOC inbound TLPs.
+> > 
+> > It is the responsibility of the PCIe driver to prepare the 'struct
+> > msi_msg', which contains the physical address at which the PCIe device
+> > should write to trigger an MSI. But this physical address is part of
+> > the interrupt controller registers, so there is no way for the PCIe
+> > driver to magically know about it.
+> 
+> If we introduce an irq_find_msi_host() interface, we can also introduce
+> an interface to return the doorbell register, or more. I suppose
+> we could actually have a generic version of your mvebu_pcie_setup_msi_irq()
+> function that looks up the domain from the device node and calls
+> a new irq_domain_ops function, which allocates a free MSI hwirq number,
+> creates a mapping for it, and fills out a struct msi_msg with the
+> doorbell register and data.
+
+Ok, sounds like a plan. I must admit I'm not very familiar with the IRQ
+domain code, but I guess I should take this as an opportunity to become
+a little bit more familiar :)
+
+> > > Thinking about it a bit, maybe less magic code is needed here, be
+> > > explicit about the available interrupts in the DT:
+> > > 
+> > > pcie-controller {
+> > >    msi-interrupts = <0xd0020a04 (1<<16) &msi 16
+> > >                      0xd0020a04 (1<<17) &msi 17
+> > >                      [..]
+> > >    msi-x-interrupts = <0xd0020a04 (1<<1) &msi 1
+> > >                        0xd0020a04 (1<<2) &msi 2
+> > >                        [..]
+> > > 
+> > > There is a better chance of that supporting other Marvell SOCs.. Not
+> > > sure, just throwing it out there.
+> > 
+> > Isn't that very verbose, to list each and every MSI interrupt, bit per
+> > bit? I'm fine with doing that (except maybe implement both MSI and
+> > MSI-X support, I'd like to stick with the current feature set for now),
+> > but it sounds like a lot more code in the DT and a lot more code in the
+> > driver to parse this... just to get the exact same feature.
+> > 
+> > Arnd, what is your feeling about this suggestion?
+> 
+> I think we should only need an msi-parent property and let the details
+> be handled by the irq driver.
+
+Ok. Having the irq driver allocate the MSI interrupt number as you
+suggested above seems a good idea.
+
+> > > Also, I'm not super familiar with the irq stuff, but is
+> > > irq_find_mapping the best way? Most of the drivers I looked at used
+> > > irq_alloc_descs to get a contiguous range of irq numbers and then just
+> > > used a simple offset in the handle_irq...
+> > 
+> > I'll let Arnd answer this one, but I'm pretty sure that using IRQ
+> > domains is the way to go. The fact that a number of drivers don't yet
+> > use IRQ domains is maybe just because they haven't been converted yet.
+> 
+> Yes, irq_find_mapping is what we should be using here.
+
+Ok, thanks.
 
 Thomas
 -- 
