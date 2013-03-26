@@ -1,113 +1,137 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [RFCv1 00/11] MSI support for Marvell EBU PCIe driver
-Date: Tue, 26 Mar 2013 17:52:15 +0100
-Message-ID: <1364316746-8702-1-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [RFCv1 03/11] irqchip: armada-370-xp: move IRQ handler to avoid
+ forward declaration
+Date: Tue, 26 Mar 2013 17:52:18 +0100
+Message-ID: <1364316746-8702-4-git-send-email-thomas.petazzoni@free-electrons.com>
+References: <1364316746-8702-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Andrew Murray <andrew.murray@arm.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org, Mitch Bradley <wmb@firmworks.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1364316746-8702-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+If we move the IRQ handler function above the initialization function,
+we avoid a forward declaration. This wasn't done as part of the
+previous commit, in order to increase the readibility of the previous
+commit, who was also moving the IRQ controller driver from arch/arm to
+drivers/irqchip.
 
-This set of patches introduces Message Signaled Interrupt support in
-the Marvell EBU PCIe driver. It has been successfully tested on the
-Armada XP GP platform and the Armada 370 DB platform with an Intel
-e1000e PCIe network card that supports MSI.
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/irqchip/irq-armada-370-xp.c |   83 +++++++++++++++++------------------
+ 1 file changed, 40 insertions(+), 43 deletions(-)
 
-This is based on work done by Lior Amsalem <alior@marvell.com>.
-
-The patches do the following:
-
- * Patches 1, 2 and 3 move the IRQ controller driver of Armada 370/XP
-   platforms from arch/arm/mach-mvebu/ into drivers/irqchip/ and use
-   the proper irqchip infrastructure. Those changes are not strictly
-   needed to add MSI interrupts support, but since we will be touching
-   the IRQ controller driver anyway, it sounded like the right time to
-   do this move.
-
- * Patches 4 and 5 do some minor cleanups that will help for the
-   remainer of the changes.
-
- * Patch 6 makes the MPIC node a subnode of the interrupt controller
-   node, since the MSI interrupt controller will be added as a second
-   subnode. The details on why this is needed are given in the commit
-   log. It is important to read those details to understand why such a
-   Device Tree representation was used.
-
- * Patch 7 modifies the IRQ controller driver to support MSI.
-
- * Patch 8 is a patch from Thierry Reding that introduces a small
-   infrastructure based on 'struct msi_chip' which makes the MSI
-   support usable on multiplatform kernel.
-
- * Patch 9 adds the MSI support to the Marvell EBU PCIe driver.
-
- * Patch 10 and 11 respectively update the Device Tree and the
-   defconfig of Armada 370/XP platforms to enable MSI.
-
-It is for now sent as a RFC in order to define whether the Device Tree
-representation is correct or not. Again, patch 6 gives the rationale
-for this choice.
-
-This patch set is meant to be applied on top of the Marvell PCIe
-driver. I keep it distinct from the PCIe driver patch set because the
-PCIe driver itself is mostly reading for merging (it has gone through
-multiple iterations over the last 3 months), while this patch set is
-brand new and will most likely need a bunch of iterations as well.
-
-Thanks,
-
-Thomas
-
-Thierry Reding (1):
-  PCI: Introduce new MSI chip infrastructure
-
-Thomas Petazzoni (10):
-  arm: mvebu: move L2 cache initialization in init_early()
-  irqchip: move IRQ driver for Armada 370/XP
-  irqchip: armada-370-xp: move IRQ handler to avoid forward declaration
-  irqchip: armada-370-xp: slightly cleanup irq controller driver
-  arm: mvebu: do not duplicate the mpic alias
-  irqchip: armada-370-xp: use a separate mpic node
-  irqchip: armada-370-xp: add MSI support to interrupt controller
-    driver
-  pci: mvebu: add MSI support
-  arm: mvebu: enable MSI support in DT
-  arm: mvebu: enable PCI MSI support in defconfig
-
- .../devicetree/bindings/arm/armada-370-xp-mpic.txt |   39 +++-
- .../devicetree/bindings/pci/mvebu-pci.txt          |    5 +
- arch/arm/boot/dts/armada-370-xp.dtsi               |   15 +-
- arch/arm/boot/dts/armada-370.dtsi                  |    3 +-
- arch/arm/boot/dts/armada-xp-mv78230.dtsi           |    1 +
- arch/arm/boot/dts/armada-xp-mv78260.dtsi           |    1 +
- arch/arm/boot/dts/armada-xp-mv78460.dtsi           |    1 +
- arch/arm/boot/dts/armada-xp.dtsi                   |    2 +-
- arch/arm/configs/mvebu_defconfig                   |    1 +
- arch/arm/mach-mvebu/Kconfig                        |    1 +
- arch/arm/mach-mvebu/Makefile                       |    2 +-
- arch/arm/mach-mvebu/armada-370-xp.c                |    9 +-
- drivers/irqchip/Makefile                           |    1 +
- .../irqchip}/irq-armada-370-xp.c                   |  202 ++++++++++++++------
- drivers/pci/host/pci-mvebu.c                       |  128 +++++++++++++
- drivers/pci/msi.c                                  |   35 +++-
- drivers/pci/probe.c                                |    1 +
- include/linux/msi.h                                |   10 +
- include/linux/pci.h                                |    1 +
- 19 files changed, 384 insertions(+), 74 deletions(-)
- rename {arch/arm/mach-mvebu => drivers/irqchip}/irq-armada-370-xp.c (68%)
-
+diff --git a/drivers/irqchip/irq-armada-370-xp.c b/drivers/irqchip/irq-armada-370-xp.c
+index d20a832..1115bf8 100644
+--- a/drivers/irqchip/irq-armada-370-xp.c
++++ b/drivers/irqchip/irq-armada-370-xp.c
+@@ -206,49 +206,6 @@ static struct irq_domain_ops armada_370_xp_mpic_irq_ops = {
+ };
+ 
+ static asmlinkage void __exception_irq_entry
+-armada_370_xp_handle_irq(struct pt_regs *regs);
+-
+-static int __init armada_370_xp_mpic_of_init(struct device_node *node,
+-					     struct device_node *parent)
+-{
+-	u32 control;
+-
+-	main_int_base = of_iomap(node, 0);
+-	per_cpu_int_base = of_iomap(node, 1);
+-
+-	BUG_ON(!main_int_base);
+-	BUG_ON(!per_cpu_int_base);
+-
+-	control = readl(main_int_base + ARMADA_370_XP_INT_CONTROL);
+-
+-	armada_370_xp_mpic_domain =
+-		irq_domain_add_linear(node, (control >> 2) & 0x3ff,
+-				&armada_370_xp_mpic_irq_ops, NULL);
+-
+-	if (!armada_370_xp_mpic_domain)
+-		panic("Unable to add Armada_370_Xp MPIC irq domain (DT)\n");
+-
+-	irq_set_default_host(armada_370_xp_mpic_domain);
+-
+-#ifdef CONFIG_SMP
+-	armada_xp_mpic_smp_cpu_init();
+-
+-	/*
+-	 * Set the default affinity from all CPUs to the boot cpu.
+-	 * This is required since the MPIC doesn't limit several CPUs
+-	 * from acknowledging the same interrupt.
+-	 */
+-	cpumask_clear(irq_default_affinity);
+-	cpumask_set_cpu(smp_processor_id(), irq_default_affinity);
+-
+-#endif
+-
+-	set_handle_irq(armada_370_xp_handle_irq);
+-
+-	return 0;
+-}
+-
+-static asmlinkage void __exception_irq_entry
+ armada_370_xp_handle_irq(struct pt_regs *regs)
+ {
+ 	u32 irqstat, irqnr;
+@@ -291,4 +248,44 @@ armada_370_xp_handle_irq(struct pt_regs *regs)
+ 	} while (1);
+ }
+ 
++static int __init armada_370_xp_mpic_of_init(struct device_node *node,
++					     struct device_node *parent)
++{
++	u32 control;
++
++	main_int_base = of_iomap(node, 0);
++	per_cpu_int_base = of_iomap(node, 1);
++
++	BUG_ON(!main_int_base);
++	BUG_ON(!per_cpu_int_base);
++
++	control = readl(main_int_base + ARMADA_370_XP_INT_CONTROL);
++
++	armada_370_xp_mpic_domain =
++		irq_domain_add_linear(node, (control >> 2) & 0x3ff,
++				&armada_370_xp_mpic_irq_ops, NULL);
++
++	if (!armada_370_xp_mpic_domain)
++		panic("Unable to add Armada_370_Xp MPIC irq domain (DT)\n");
++
++	irq_set_default_host(armada_370_xp_mpic_domain);
++
++#ifdef CONFIG_SMP
++	armada_xp_mpic_smp_cpu_init();
++
++	/*
++	 * Set the default affinity from all CPUs to the boot cpu.
++	 * This is required since the MPIC doesn't limit several CPUs
++	 * from acknowledging the same interrupt.
++	 */
++	cpumask_clear(irq_default_affinity);
++	cpumask_set_cpu(smp_processor_id(), irq_default_affinity);
++
++#endif
++
++	set_handle_irq(armada_370_xp_handle_irq);
++
++	return 0;
++}
++
+ IRQCHIP_DECLARE(armada_370_xp_mpic, "marvell,mpic", armada_370_xp_mpic_of_init);
 -- 
 1.7.9.5
