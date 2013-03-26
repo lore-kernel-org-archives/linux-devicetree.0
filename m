@@ -1,167 +1,64 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 09/10] ARM: sunxi: Rework the restart code
-Date: Tue, 26 Mar 2013 10:13:16 +0100
-Message-ID: <1364289198-11589-10-git-send-email-maxime.ripard@free-electrons.com>
-References: <1364289198-11589-1-git-send-email-maxime.ripard@free-electrons.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH v3] USB: PHY: Palmas USB Transceiver Driver
+Date: Tue, 26 Mar 2013 14:42:53 +0530
+Message-ID: <51516695.8020808@nvidia.com>
+References: <1362662506-14823-4-git-send-email-kishon@ti.com> <1364203926-24488-1-git-send-email-kishon@ti.com> <51501CFB.4020905@nvidia.com> <51513A40.7080905@ti.com> <515163F6.3010400@slimlogic.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1364289198-11589-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <515163F6.3010400@slimlogic.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Graeme Gregory <gg@slimlogic.co.uk>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "balbi@ti.com" <balbi@ti.com>, Rajendra Nayak <rnayak@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "s-guiriec@ti.com" <s-guiriec@ti.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The Allwinner sun6i (A31) has a slightly different watchdog, that
-doesn't allow to use the already existing restart code.
+On Tuesday 26 March 2013 02:31 PM, Graeme Gregory wrote:
+> On 26/03/13 06:03, Kishon Vijay Abraham I wrote:
+>>> +static int palmas_usb_read(struct palmas *palmas, unsigned int reg,
+>>> +               unsigned int *dest)
+>>> +{
+>>> +       unsigned int addr;
+>>> +       int slave;
+>>> +
+>>> +       slave = PALMAS_BASE_TO_SLAVE(PALMAS_USB_OTG_BASE);
+>>> +       addr = PALMAS_BASE_TO_REG(PALMAS_USB_OTG_BASE, reg);
+>>> +
+>>> +       return regmap_read(palmas->regmap[slave], addr, dest);
+>>>
+>>>
+>>> Please use the generic api for palmas_read()/palmas_write(0 as it will
+>>> be ease on debugging on register access.
+>>> Direct regmap_read() does not help much on this.
+>> Graeme,
+>> Any reason why you dint use palmas_read()/palmas_write here?
+>> Btw palmas_read()/palmas_write() internally uses regmap APIs.
+> Because I was not a fan of tightly coupling the child devices to the
+> parent MFD. palmas_read/write were added by Laxman.
 
-Rework a bit the restart code to allow to plug in more easily different
-restart handlers depending on the device tree.
 
-In the past, we were also meaning sunxi as a generic name covering all
-Allwinner SoCs. This won't be true anymore with the A31 (sun6i) that
-differs pretty much from sun4i and sun5i, and we will end up having
-sunxi, for sun4i and sun5i, and sun6i, which is neither consistent nor
-convenient. So, while we're at it, also change sunxi to sun4i.
+But still you are using the PALMAS macro here and indirectly it is tied 
+up. It is not completely independent.
+If need to be independent then regmap pointer with address need to be 
+passed as independt header and no where on code whould refer the PALMA.
+I think as per current code, it is not possible although it is your big 
+plan what I understand from some time back in one of patch discussion.
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- .../watchdog/{sunxi-wdt.txt => sun4i-wdt.txt}      |    6 +-
- arch/arm/mach-sunxi/sunxi.c                        |   58 ++++++++++++--------
- 2 files changed, 38 insertions(+), 26 deletions(-)
- rename Documentation/devicetree/bindings/watchdog/{sunxi-wdt.txt => sun4i-wdt.txt} (57%)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt b/Documentation/devicetree/bindings/watchdog/sun4i-wdt.txt
-similarity index 57%
-rename from Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-rename to Documentation/devicetree/bindings/watchdog/sun4i-wdt.txt
-index 0b27177..ecd650a 100644
---- a/Documentation/devicetree/bindings/watchdog/sunxi-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/sun4i-wdt.txt
-@@ -1,13 +1,13 @@
--Allwinner sunXi Watchdog timer
-+Allwinner sun4i Watchdog timer
- 
- Required properties:
- 
--- compatible : should be "allwinner,sunxi-wdt"
-+- compatible : should be "allwinner,sun4i-wdt"
- - reg : Specifies base physical address and size of the registers.
- 
- Example:
- 
- wdt: watchdog@01c20c90 {
--	compatible = "allwinner,sunxi-wdt";
-+	compatible = "allwinner,sun4i-wdt";
- 	reg = <0x01c20c90 0x10>;
- };
-diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
-index c99ab1b..706ce35 100644
---- a/arch/arm/mach-sunxi/sunxi.c
-+++ b/arch/arm/mach-sunxi/sunxi.c
-@@ -24,50 +24,63 @@
- 
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
-+#include <asm/system_misc.h>
- 
- #include "sunxi.h"
- 
--#define WATCHDOG_CTRL_REG	0x00
--#define WATCHDOG_CTRL_RESTART		(1 << 0)
--#define WATCHDOG_MODE_REG	0x04
--#define WATCHDOG_MODE_ENABLE		(1 << 0)
--#define WATCHDOG_MODE_RESET_ENABLE	(1 << 1)
-+#define SUN4I_WATCHDOG_CTRL_REG		0x00
-+#define SUN4I_WATCHDOG_CTRL_RESTART		(1 << 0)
-+#define SUN4I_WATCHDOG_MODE_REG		0x04
-+#define SUN4I_WATCHDOG_MODE_ENABLE		(1 << 0)
-+#define SUN4I_WATCHDOG_MODE_RESET_ENABLE	(1 << 1)
- 
- static void __iomem *wdt_base;
- 
--static void sunxi_setup_restart(void)
--{
--	struct device_node *np = of_find_compatible_node(NULL, NULL,
--						"allwinner,sunxi-wdt");
--	if (WARN(!np, "unable to setup watchdog restart"))
--		return;
--
--	wdt_base = of_iomap(np, 0);
--	WARN(!wdt_base, "failed to map watchdog base address");
--}
--
--static void sunxi_restart(char mode, const char *cmd)
-+static void sun4i_restart(char mode, const char *cmd)
- {
- 	if (!wdt_base)
- 		return;
- 
- 	/* Enable timer and set reset bit in the watchdog */
--	writel(WATCHDOG_MODE_ENABLE | WATCHDOG_MODE_RESET_ENABLE,
--		wdt_base + WATCHDOG_MODE_REG);
-+	writel(SUN4I_WATCHDOG_MODE_ENABLE | SUN4I_WATCHDOG_MODE_RESET_ENABLE,
-+	       wdt_base + SUN4I_WATCHDOG_MODE_REG);
- 
- 	/*
- 	 * Restart the watchdog. The default (and lowest) interval
- 	 * value for the watchdog is 0.5s.
- 	 */
--	writel(WATCHDOG_CTRL_RESTART, wdt_base + WATCHDOG_CTRL_REG);
-+	writel(SUN4I_WATCHDOG_CTRL_RESTART, wdt_base + SUN4I_WATCHDOG_CTRL_REG);
- 
- 	while (1) {
- 		mdelay(5);
--		writel(WATCHDOG_MODE_ENABLE | WATCHDOG_MODE_RESET_ENABLE,
--			wdt_base + WATCHDOG_MODE_REG);
-+		writel(SUN4I_WATCHDOG_MODE_ENABLE | SUN4I_WATCHDOG_MODE_RESET_ENABLE,
-+		       wdt_base + SUN4I_WATCHDOG_MODE_REG);
- 	}
- }
- 
-+static struct of_device_id sunxi_restart_ids[] = {
-+	{ .compatible = "allwinner,sun4i-wdt", .data = sun4i_restart },
-+	{ /*sentinel*/ }
-+};
-+
-+static void sunxi_setup_restart(void)
-+{
-+	const struct of_device_id *of_id;
-+	struct device_node *np;
-+
-+	np = of_find_matching_node(NULL, sunxi_restart_ids);
-+	if (WARN(!np, "unable to setup watchdog restart"))
-+		return;
-+
-+	wdt_base = of_iomap(np, 0);
-+	WARN(!wdt_base, "failed to map watchdog base address");
-+
-+	of_id = of_match_node(sunxi_restart_ids, np);
-+	WARN(!of_id, "restart function not available");
-+
-+	arm_pm_restart = of_id->data;
-+}
-+
- static struct map_desc sunxi_io_desc[] __initdata = {
- 	{
- 		.virtual	= (unsigned long) SUNXI_REGS_VIRT_BASE,
-@@ -105,7 +118,6 @@ DT_MACHINE_START(SUNXI_DT, "Allwinner A1X (Device Tree)")
- 	.init_machine	= sunxi_dt_init,
- 	.map_io		= sunxi_map_io,
- 	.init_irq	= irqchip_init,
--	.restart	= sunxi_restart,
- 	.init_time	= sunxi_timer_init,
- 	.dt_compat	= sunxi_board_dt_compat,
- MACHINE_END
--- 
-1.7.10.4
+>>>> +       palmas_usb->dev         = &pdev->dev;
+>>>> +
+>>>> +       palmas_usb->irq1 = regmap_irq_get_virq(palmas->irq_data,
+>>>> +                                               PALMAS_ID_OTG_IRQ);
+>>>> +       palmas_usb->irq2 = regmap_irq_get_virq(palmas->irq_data,
+>>>> +                                               PALMAS_ID_IRQ);
+>>>> +       palmas_usb->irq3 = regmap_irq_get_virq(palmas->irq_data,
+>>>> +                                               PALMAS_VBUS_OTG_IRQ);
+>>>> +       palmas_usb->irq4 = regmap_irq_get_virq(palmas->irq_data,
+>>>> +                                               PALMAS_VBUS_IRQ);
+>>> Should be come from platform_get_irq() through platform driver.
+>> No. It can be obtained from regmap too.
+Kishon,
+I think it is very much possible. You can pass the interrupt throough 
+IRQ_RESOURCE and populate it from DT. If you provide proper interrupt 
+parent and irq number then irq framework take care of every thing.  
+already tested this with RTC interrupt of plama and it worked very well.
