@@ -1,160 +1,77 @@
 From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3] USB: PHY: Palmas USB Transceiver Driver
-Date: Tue, 26 Mar 2013 14:07:08 +0200
-Message-ID: <20130326120708.GP11244@arwen.pp.htv.fi>
-References: <1362662506-14823-4-git-send-email-kishon@ti.com>
- <1364203926-24488-1-git-send-email-kishon@ti.com>
- <51501CFB.4020905@nvidia.com> <51513A40.7080905@ti.com>
- <515163F6.3010400@slimlogic.co.uk>
- <20130326102100.GD11244@arwen.pp.htv.fi>
- <51517859.2020407@nvidia.com>
-Reply-To: balbi-l0cyMroinI0@public.gmane.org
+Subject: Re: [PATCH v4 0/6] support other fsl SoCs with usbmisc + small fixes
+Date: Tue, 26 Mar 2013 14:09:32 +0200
+Message-ID: <20130326120932.GQ11244@arwen.pp.htv.fi>
+References: <1354033021-10585-1-git-send-email-m.grzeschik@pengutronix.de>
+ <20121128025217.GC18593@nchen-desktop>
+ <87ip6mor1e.fsf@ashishki-desk.ger.corp.intel.com>
+ <CAOMZO5ArDLKDLEzhYc7EP2CNQGcT=vO7ctbiEsjzsGs+EaT7Dw@mail.gmail.com>
+ <20130325162931.GB22810@pengutronix.de>
+ <87wqsujrdm.fsf@ashishki-desk.ger.corp.intel.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8930565990525003064=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51517859.2020407-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "s-guiriec-l0cyMroinI0@public.gmane.org" <s-guiriec-l0cyMroinI0@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lt3WynA+XK9Fj6D4"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87wqsujrdm.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============8930565990525003064==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ngPZezdD7QsvFaqQ"
-Content-Disposition: inline
-
---ngPZezdD7QsvFaqQ
+--lt3WynA+XK9Fj6D4
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Tue, Mar 26, 2013 at 03:58:41PM +0530, Laxman Dewangan wrote:
-> On Tuesday 26 March 2013 03:51 PM, Felipe Balbi wrote:
-> >* PGP Signed by an unknown key
-> >
-> >Hi,
-> >
-> >On Tue, Mar 26, 2013 at 09:01:42AM +0000, Graeme Gregory wrote:
-> >>>>>From: Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
-> >>>>>
-> >>>>>This is the driver for the OTG transceiver built into the Palmas
-> >>>>>chip. It
-> >>>>>handles the various USB OTG events that can be generated by cable
-> >>>>>insertion/removal.
-> >>>>>
-> >>>>>Signed-off-by: Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
-> >>>>>Signed-off-by: Moiz Sonasath <m-sonasath-l0cyMroinI0@public.gmane.org>
-> >>>>>Signed-off-by: Ruchika Kharwar <ruchika-l0cyMroinI0@public.gmane.org>
-> >>>>>Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> >>>>>Signed-off-by: Sebastien Guiriec <s-guiriec-l0cyMroinI0@public.gmane.org>
-> >>>>>---
-> >>>>I think this driver is more over the cable connection like vbus
-> >>>>detetcion or ID pin detection.
-> >>>>Then why not it is implemented based on extcon framework?
-> >>>extcon framework uses notification mechanism and Felipe dint like
-> >>>using notification here. right Felipe?
-> >>>>That way, generic usb driver (like tegra_usb driver) will get
-> >>>>notification through extcon.
-> >>>>
-> >>>>We need this cable detection through extcon on our tegra solution
-> >>>>through the Palmas.
-> >>>>
-> >>>>
-> >>>>+#include <linux/of.h>
-> >>>>+#include <linux/of_platform.h>
-> >>>>+
-> >>>>+static int palmas_usb_read(struct palmas *palmas, unsigned int reg,
-> >>>>+               unsigned int *dest)
-> >>>>+{
-> >>>>+       unsigned int addr;
-> >>>>+       int slave;
-> >>>>+
-> >>>>+       slave =3D PALMAS_BASE_TO_SLAVE(PALMAS_USB_OTG_BASE);
-> >>>>+       addr =3D PALMAS_BASE_TO_REG(PALMAS_USB_OTG_BASE, reg);
-> >>>>+
-> >>>>+       return regmap_read(palmas->regmap[slave], addr, dest);
-> >>>>
-> >>>>
-> >>>>Please use the generic api for palmas_read()/palmas_write(0 as it will
-> >>>>be ease on debugging on register access.
-> >>>>Direct regmap_read() does not help much on this.
-> >>>Graeme,
-> >>>Any reason why you dint use palmas_read()/palmas_write here?
-> >>>Btw palmas_read()/palmas_write() internally uses regmap APIs.
-> >>Because I was not a fan of tightly coupling the child devices to the
-> >>parent MFD. palmas_read/write were added by Laxman.
-> >I guess regmap would also help abstracting SPI versus I2C connection.
-> >IMHO, palmas_read/write should be removed.
-> >
-> >Laxman's complaint that it doesn't help with debugging is utter
-> >nonsense.
-> palams read/write api uses the regmap only and hence not break
-> anything on abstraction.
-> in place of doing the following three statement in whole word, it
-> provides wrapper of palmas_read()
-> which actually does the same.
+On Tue, Mar 26, 2013 at 02:08:05PM +0200, Alexander Shishkin wrote:
+> > http://git.pengutronix.de/git/mgr/linux.git v3.9/topic/usb-phy
+> > 4414a59 Merge 'v3.9/topic/usb-phy' into usb-3.9
+> > a806027 usb: otg: mxs-phy: remove clkgate/sftrst clearing
+> > 026881b usb: otg: mxs-phy: Improve mxs phy initialization
+> > ed42fa9 usb: mxs-phy: register phy at usb phy library
+> > d2783aa usb: phy: remove NULL pointer check in usb_add_phy()
 >=20
-> slave =3D PALMAS_BASE_TO_SLAVE(PALMAS_USB_OTG_BASE);
-> addr =3D PALMAS_BASE_TO_REG(PALMAS_USB_OTG_BASE, reg);
+> looks like Felipe's call, doesn't it? I also can't seem to find these in
+> my inbox. If you want me to ack them, you should at least send them to
+> me. :)
 >=20
-> regmap_read(palmas->regmap[slave], addr, dest);
->=20
-> Above 3 lines in all the places for resgister access or make single call:
-> palmas_read(palmas, PALMAS_USB_OTG_BASE, PALMAS_USB_OTG_BASE, dest).
->=20
-> This function implement the above 3 lines.
+> Felipe, btw, is also often not copied on chipidea-related phy patches
+> that I see. And just in case, Cc'ing him on this thread.
 
-now you have explained what the problem is. Makes much more sense to use
-palmas_read() indeed. Duplicating the same thing all over the place
-isn't very nice.
+if it's not in my tree yet, it needs to be rebased to my 'next' brach,
+since PHY drivers have moved out of drivers/usb/otg/. Rebase and resend.
 
 --=20
 balbi
 
---ngPZezdD7QsvFaqQ
+--lt3WynA+XK9Fj6D4
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJRUY9sAAoJEIaOsuA1yqREpR0P/2+DgajcHW6mRpafChn/eC74
-MX2chFolDKZZ/73YWFJb0xc8sMVHeGPV36k5w818OL3kY4KOCwpxQ0ITAvKAp4hG
-d0t2kUvEj89CsOUOT3Wkunoxqc0ZLutWHQzGSLvNTPKF7N9L2P1eEuFPSy8cbN51
-sC1CGysKFTQJOMLvf3wbWIRyxcaCpwGiTID0bY0P8e015d0rm2uq9yXhp1bs4u9b
-0Kb3oGiwlNSuY3790A5+doa/8eLB9kqUEsqkIyMjnqXUzFdx8HMhmqa16+Fap0OR
-nQuyXJQ9UyOcJY7b0WEYNYQV5OAgMp3zRvJJ6UB1ut61m7vCnyV8RmcfSnY5dX9A
-+dQOG+9HrAJ8+csbYSKONtGeW5aWA7P8XTn6T/FQZXOObGNM05HurkxnVT1AhMaN
-GXomJQ6ICKbKPBkZywQXZpSIfCkWR4V8762eNpzZPhyhsVxftwjD9t20X/ns90Xs
-n2MAsIDQ4Cukt3lKyv4jM7DEvFuWOsEMM4qVlpviBgWFGcI8rGSv+zaQ3ONPzIyf
-hrDgjmGwfDfUd0LcAzts0oEPZVfugErDJoCY/QNQMBz4u7LojM3tksFM6RbpsleP
-YhUU3dW5N5EBvjb9ZN/gvAe+kzo7nHc+1DJJ4aGU4ifp7VXJ8ZQA5M5ZTgYRYkJy
-G5sKcZSLP9mHllphA6FP
-=Px6Q
+iQIcBAEBAgAGBQJRUY/8AAoJEIaOsuA1yqRElkwP/1pCDlcTNrLUF7dEDOtNtBJp
+ChPK5/j3d7rCQmQqBtf31Z6XAYtCEJTc9uyeoPTY5qserEUumVcnpWvfDR+xK8Ay
+hrnzwmyp9o+u7b8HcJBSmv2Qf4UQoEry2KXX2fb0wAL0qkwG+x/io8jv0o8NZrYv
+qWU+QoBzTNIY/wquTrSPIjJi5GmvqKSg2ztXZZake3yGRpEiCWShSJuezV7KCtR/
+rEJK5N3uXj7AirqCEmId8M7YaEWwRQTlVCxB4y6AKRj1Nck3JSIVk/pYl7fTav6u
+09CL3NAvUPLiwBlLtOZsoM9uO5MuH4LYTzRS5YSYXOsIDzOYJA17zjvEXOXoKdu+
+ApkSqpkoiGvl9kUNRxk2jx1xmj9TclCIRPXnVabsh4/8tLSn6SwP5qhS2XzHcRNU
+vA+vQZU7pM0WckMAOTmQRPMDNqyPG0GIOsJ3NVNr0w6pBlPeA6+SeDD+qHgz3nJL
+sVE7pkudpZTYD1VltJU/ItuHGnfL14Bc1O8OMpEojCM2tq28AhlqNgAuqq/TQVfQ
+qkzgSt49PiR74wWI8+zkHac0znJxIdllT6oAigDmD7fxbf9Iz+d2sELq7MH4Ipzi
+lumIW74rNPE8wHc90ztmh/o2aSSo72AEl7whlGm299Xpjp/94W5rcGn+kzAnBUyl
+8cN2rILw/UDeN85rJ19u
+=3beB
 -----END PGP SIGNATURE-----
 
---ngPZezdD7QsvFaqQ--
-
---===============8930565990525003064==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============8930565990525003064==--
+--lt3WynA+XK9Fj6D4--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
