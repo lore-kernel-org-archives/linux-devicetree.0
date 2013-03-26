@@ -1,80 +1,95 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] i2c: mux: Add i2c-arbitrator-cros-ec 'mux' driver
-Date: Tue, 26 Mar 2013 13:23:49 -0700
-Message-ID: <CAD=FV=UW4wGFqsg2B3MmC24jhnba5PSvCh8Wck-V6iuYk+Xifw@mail.gmail.com>
-References: <1360957573-864-1-git-send-email-dianders@chromium.org>
- <1363192583-26363-1-git-send-email-dianders@chromium.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [RFCv1 07/11] irqchip: armada-370-xp: add MSI support to
+ interrupt controller driver
+Date: Tue, 26 Mar 2013 21:46:13 +0100
+Message-ID: <20130326214613.30fbdddf@skate>
+References: <1364316746-8702-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<201303261707.41563.arnd@arndb.de>
+	<20130326181754.33b89559@skate>
+	<201303261838.23246.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1363192583-26363-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Girish Shivananjappa <girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bhushan.r" <bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sreekumar.c" <sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Yuvaraj Kumar <yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Prashanth G <prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <201303261838.23246.arnd@arndb.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Maen Suleiman <maen@marvell.com>, Thierry Reding <thierry.reding@avionic-design.de>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Wolfram,
+Dear Arnd Bergmann,
 
-On Wed, Mar 13, 2013 at 9:36 AM, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> The i2c-arbitrator-cros-ec driver implements the arbitration scheme
-> that the Embedded Controller (EC) on the ARM Chromebook expects to use
-> for bus multimastering.  This i2c-arbitrator-cros-ec driver could also
-> be used in other places where standard I2C bus arbitration can't be
-> used and two extra GPIOs are available for arbitration.
->
-> This driver is based on code that Simon Glass added to the i2c-s3c2410
-> driver in the Chrome OS kernel 3.4 tree.  The current incarnation as a
-> mux driver is as suggested by Grant Likely.  See
-> <https://patchwork.kernel.org/patch/1877311/> for some history.
->
-> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Tested-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
-> Changes in v4: None
-> Changes in v3:
-> - Handle of_find_i2c_adapter_by_node() failure more properly by
->   changing init order.
-> - Don't warn on -EPROBE_DEFER from calls that could return it.
-> - Move to module_platform_driver().  As we pull in parts of the system
->   that rely on devices under this i2c bus we'll need to make sure they
->   can handle the fact that they'll be initted later now.
->
-> Changes in v2:
-> - Renamed to i2c-arbitrator-cros-ec.
-> - Documented "microsecond" properties as optional; removed
->   "bus-arbitration" prefix since it was just extra wordy.
-> - Split GPIOs into two properties to make it cleaner.
-> - Capitalized I2C in freeform text.
-> - Get 'active low' from device tree.
->
->  .../bindings/i2c/i2c-arbitrator-cros-ec.txt        |  76 +++++++
->  drivers/i2c/muxes/Kconfig                          |  11 +
->  drivers/i2c/muxes/Makefile                         |   2 +
->  drivers/i2c/muxes/i2c-arbitrator-cros-ec.c         | 222 +++++++++++++++++++++
->  4 files changed, 311 insertions(+)
+On Tue, 26 Mar 2013 18:38:22 +0000, Arnd Bergmann wrote:
 
-I'm still looking for some feedback about this patch.  Should I ask
-another maintainer to review / pick it up or are you planning on
-reviewing / picking up once you have some time?  The lack of this
-patch blocks access to quite a few important devices on the ARM
-Chromebook.
+> >     Note that both the parent and the child node need to have the
+> >     'interrupt-controller' empty property:
+> >     
+> >       * The interrupt-controller property is needed in the main
+> >     interrupt controller node (interrupt-controller@d0020000)
+> > because the of_irq_init() function skips nodes that are matching
+> > the given compatible string, but that don't have the
+> > interrupt-controller property.
+> >     
+> >      * The interrupt-controller property is needed in the child
+> >     interrupt controller node (main-intc@d0020000) otherwise the
+> >     resolution done by of_irq_map_one() doesn't work.
+> 
+> If you add compatible properties to the children, that would work
+> I suppose.
 
-Note: I'd expect that "dts" parts of this patchset would be picked up
-by Kukjin once the main code lands.
+To which children? Only to the main-intc children? If so,
+armada_370_xp_mpic_of_init() would be called with a 'device_node *'
+that points to the main-intc, correct? Then it would have to go back up
+in the Device Tree to find the msi node? It's doable of course, but
+sounds strange, no?
 
-Thanks!  :)
+To me, the topology of the hardware is really that a single device
+provides two features: the main interrupt controller and the MSI
+interrupt controller. But I will adapt to whatever DT binding you
+propose.
 
--Doug
+> > So really, the thing is that irq_domain_add_linear() registers an
+> > IRQ domain on a specific DT node, and then irq_find_host() finds
+> > back an IRQ domain from a given DT node. So if you have two IRQ
+> > domains registered on the same DT node, then you don't know which
+> > one will be used.
+> > 
+> > So if I do the two irq_domain_add_linear() (one for MPIC, one for
+> > MSI) on one single DT node, when the timer driver will request its
+> > interrupt, it turns out that the MSI IRQ domain is used and not the
+> > MPIC IRQ domain, even though the timer has <&mpic> as its interrupt
+> > parent.
+> 
+> I still wonder if the real solution shouldn't instead be to make the
+> irq domain code MSI aware. For instance, you don't really need a
+> cell to describe an interrupt because the interrupt number is
+> not a hardware property. So an MSI using device doesn't really
+> needs an "msis" or "interrupts" property, just an "msi-parent",
+> and we can add code to handle as a separate domain even if you
+> have a single device node that can do both level and message
+> interrupts.
+
+So the msi-parent property should point to the single mpic node? But
+then the IRQ domain for MSI cannot be registered on this single MPIC
+node. Then, what would be the first argument of:
+
+        armada_370_xp_msi_domain =
+                irq_domain_add_linear(msi_node, PCI_MSI_DOORBELL_NR,
+                                      &armada_370_xp_msi_irq_ops, NULL);
+
+and how would the PCIe driver get a pointer to this IRQ domain? (In the
+currently proposed code, it just does a irq_find_host(), which sounded
+very simple and straightforward).
+
+To clarify: I really don't mind reworking the code, but unfortunately
+"make the IRQ domain code MSI aware" is too vague for me to understand
+the direction you're thinking of.
+
+Thanks for your review and comments!
+
+Thomas
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
