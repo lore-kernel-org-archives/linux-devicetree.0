@@ -1,96 +1,80 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v3] USB: PHY: Palmas USB Transceiver Driver
-Date: Tue, 26 Mar 2013 14:23:24 -0600
-Message-ID: <515203BC.7010003@wwwdotorg.org>
-References: <1362662506-14823-4-git-send-email-kishon@ti.com> <1364203926-24488-1-git-send-email-kishon@ti.com> <51501CFB.4020905@nvidia.com> <51513A40.7080905@ti.com> <515163F6.3010400@slimlogic.co.uk> <51516695.8020808@nvidia.com> <51516A10.40704@slimlogic.co.uk> <5151CB36.1050404@wwwdotorg.org> <5151D37A.4020300@slimlogic.co.uk>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] i2c: mux: Add i2c-arbitrator-cros-ec 'mux' driver
+Date: Tue, 26 Mar 2013 13:23:49 -0700
+Message-ID: <CAD=FV=UW4wGFqsg2B3MmC24jhnba5PSvCh8Wck-V6iuYk+Xifw@mail.gmail.com>
+References: <1360957573-864-1-git-send-email-dianders@chromium.org>
+ <1363192583-26363-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5151D37A.4020300@slimlogic.co.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Graeme Gregory <gg@slimlogic.co.uk>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, Kishon Vijay Abraham I <kishon@ti.com>, "balbi@ti.com" <balbi@ti.com>, Rajendra Nayak <rnayak@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "s-guiriec@ti.com" <s-guiriec@ti.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Ian Lartey <ian@slimlogic.co.uk>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1363192583-26363-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Girish Shivananjappa <girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bhushan.r" <bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sreekumar.c" <sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Yuvaraj Kumar <yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Prashanth G <prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/26/2013 10:57 AM, Graeme Gregory wrote:
-> On 26/03/13 16:22, Stephen Warren wrote:
->> On 03/26/2013 03:27 AM, Graeme Gregory wrote:
->> ...
->>> If we are tightly coupling as above then using platform_irq is an extra
->>> inefficiency. You both have to populate this then parse it afterwards.
->>> Why not just use the regmap helper? Ill admit this code is like this as
->>> there was a period where platform irqs in DT just was not working right!
->>>
->>> We should really agree now if we are going for loose or tight coupling
->>> now rather than keep switching?
->> Yes, this is something that I think needs to be fully resolved before
->> any more Palmas patches are discussed.
->>
->> So you can have the MFD components fully coupled or completely
->> standalone. We should fully pick one or the other, not some mish-mash of
->> the two.
->>
->> In practical terms, this means that:
->>
->> a) Tightly coupled
->>
->> The top-level MFD device knows exactly which child devices are present.
->> It has an internal table to defined the set of child devices, and
->> instantiate them. It provides them with IRQs, I2C addresses and register
->> base addresses (or regmaps), etc. etc., using purely Palmas-internal
->> APIs. If using device tree, the DT won't include any representation of
->> which child devices are present, nor their I2C addresses, nor their
->> register addresses, nor their IRQs, etc. That's all inside the driver.
->>
->> b) Completely decoupled.
->>
->> The top-level MFD device knows nothing about its children. It simply
->> provides a bus into which they can be instantiated, and a generic IRQ
->> controller into which they can hook.
->>
->> Platform data or device tree is solely used to define which children
->> exist, which of the top-level MFD's I2C addresses is used for each
->> child, the base register address for each child device, the IRQs used by
->> each child device, etc.
->>
->>
->> Which of those two models are different people expecting?
->>
->> (b) appears to be the most flexible, and since you have defined the DT
->> bindings to contain a separate node for each MFD child device, each with
->> its own compatible value, seems to be what you're aiming for. In this
->> scenario, there should be no private APIs between the top-level MFD
->> device and the children though; everything should be using standard bus
->> APIs.
+Wolfram,
+
+On Wed, Mar 13, 2013 at 9:36 AM, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> The i2c-arbitrator-cros-ec driver implements the arbitration scheme
+> that the Embedded Controller (EC) on the ARM Chromebook expects to use
+> for bus multimastering.  This i2c-arbitrator-cros-ec driver could also
+> be used in other places where standard I2C bus arbitration can't be
+> used and two extra GPIOs are available for arbitration.
 >
-> I was aiming towards (b) which would allow drivers for IP blocks that I
-> know are shared between multiple devices such as RTC which is shared by
-> twl6030, twl6032, tps80032, tps65910, tps65911, tps65912, tps80035,
-> tps80036 and probably many more.
-> 
-> Finishing (b) implementation is currently beyond the time I have
-> available I think.
-> 
-> If we choose to ignore path (b) and ignore the code duplication of half
-> a dozen RTC drivers for the same IP than the path to (a) is much quicker
-> and easier. Can just rip out a lot of the DT stuff, use mfd_add_devices.
-> Makes the binding much simpler. Means we don't have to use platform
-> resources for IRQs. Makes palmas and palmas-charger just 2 black boxes
-> which is in line with other MFDs.
-> 
-> So I think I have come around to just do it the easy way and select (a)
-> 
-> I shall work on the main palmas series to implement (a).
-> 
-> This will obviously invalidate some comments on this patch and the main
-> series.
+> This driver is based on code that Simon Glass added to the i2c-s3c2410
+> driver in the Chrome OS kernel 3.4 tree.  The current incarnation as a
+> mux driver is as suggested by Grant Likely.  See
+> <https://patchwork.kernel.org/patch/1877311/> for some history.
+>
+> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Tested-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+> Changes in v4: None
+> Changes in v3:
+> - Handle of_find_i2c_adapter_by_node() failure more properly by
+>   changing init order.
+> - Don't warn on -EPROBE_DEFER from calls that could return it.
+> - Move to module_platform_driver().  As we pull in parts of the system
+>   that rely on devices under this i2c bus we'll need to make sure they
+>   can handle the fact that they'll be initted later now.
+>
+> Changes in v2:
+> - Renamed to i2c-arbitrator-cros-ec.
+> - Documented "microsecond" properties as optional; removed
+>   "bus-arbitration" prefix since it was just extra wordy.
+> - Split GPIOs into two properties to make it cleaner.
+> - Capitalized I2C in freeform text.
+> - Get 'active low' from device tree.
+>
+>  .../bindings/i2c/i2c-arbitrator-cros-ec.txt        |  76 +++++++
+>  drivers/i2c/muxes/Kconfig                          |  11 +
+>  drivers/i2c/muxes/Makefile                         |   2 +
+>  drivers/i2c/muxes/i2c-arbitrator-cros-ec.c         | 222 +++++++++++++++++++++
+>  4 files changed, 311 insertions(+)
 
-Well, my question was more directed at which way we want to model the HW
-in the device tree, rather than how we want to implement the driver. The
-driver implementation style might end up being derived from the DT
-structure, but it shouldn't be the other way around.
+I'm still looking for some feedback about this patch.  Should I ask
+another maintainer to review / pick it up or are you planning on
+reviewing / picking up once you have some time?  The lack of this
+patch blocks access to quite a few important devices on the ARM
+Chromebook.
 
-I think if people think (b) is the right way to go, we should just do
-it, and ignore any time issues; if it takes a while to get it right
-upstream, what is the issue with that?
+Note: I'd expect that "dts" parts of this patchset would be picked up
+by Kukjin once the main code lands.
+
+Thanks!  :)
+
+-Doug
