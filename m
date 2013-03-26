@@ -1,152 +1,318 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 01/11] staging: drm/imx: Add LDB support
-Date: Tue, 26 Mar 2013 16:38:29 +0100
-Message-ID: <1364312309.4085.16.camel@pizza.hi.pengutronix.de>
-References: <1364307246-9017-1-git-send-email-p.zabel@pengutronix.de>
- <1364307246-9017-2-git-send-email-p.zabel@pengutronix.de>
- <20130326153455.5a093e15@skate>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v7] [media] Add common video interfaces OF bindings
+ documentation
+Date: Tue, 26 Mar 2013 16:58:15 +0100
+Message-ID: <1364313495-18635-1-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130326153455.5a093e15@skate>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: devel@driverdev.osuosl.org, Fabio Estevam <fabio.estevam@freescale.com>, Sascha Hauer <s.hauer@pengutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de, Sean Cross <xobs@kosagi.com>, Shawn Guo <shawn.guo@linaro.org>, Martin Fuzzey <mfuzzey@parkeon.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dh09.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, prabhakar.lad-l0cyMroinI0@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, g.liakhovetski-Mmb7MZpHnFY@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
 
-Am Dienstag, den 26.03.2013, 15:34 +0100 schrieb Thomas Petazzoni:
-> Dear Philipp Zabel,
-> 
-> On Tue, 26 Mar 2013 15:13:56 +0100, Philipp Zabel wrote:
-> 
-> > +/*
-> > + * For a device declaring compatible = "fsl,imx6q-ldb", "fsl,imx53-ldb",
-> > + * of_match_device will walk through this list and take the first entry
-> > + * matching any of its compatible values. Therefore, the more generic
-> > + * entries (in this case fsl,imx53-ldb) need to be ordered last.
-> > + */
-> > +static const struct of_device_id imx_ldb_dt_ids[] = {
-> > +	{ .compatible = "fsl,imx6q-ldb", .data = imx6q_lvds_mux, },
-> > +	{ .compatible = "fsl,imx53-ldb", .data = NULL, },
-> > +	{ }
-> > +};
-> 
-> You probably want a new DT binding documentation in
-> Documentation/devicetree/bindings/.
+This patch adds a document describing common OF bindings for video
+capture, output and video processing devices. It is curently mainly
+focused on video capture devices, with data busses defined by
+standards such as ITU-R BT.656 or MIPI-CSI2.
+It also documents a method of describing data links between devices.
 
-Yes, this could be something along the lines of:
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+If there is no more comments I intend to send a pull request at end
+of this week to merge this patch through the media tree.
 
-Device-Tree bindings for LVDS Display Bridge (ldb)
+Changes since v6:
+ - grammar corrections and cosmetic changes.
 
-LVDS Display Bridge
-===================
+hanges since v5:
+ - added 'ports' node documentation.
 
-The LVDS Display Bridge device tree node contains up to two lvds-channel
-nodes describing each of the two LVDS encoder channels of the bridge.
+Changes since v4:
+ - added note that multiple endpoints at a port can be active at any time,
+ - introduced optional 'ports' node aggregating 'port' nodes if required
+   to avoid conflicts with any child bus of a device,
+ - improved definition of the 'slave-mode' property,
+ - corrected 'bus-width' and 'data-shift' properties specification,
+ - dropped 'immutable' properties in the example dts snippet.
 
-Required properties:
- - #address-cells : should be <1>
- - #size-cells : should be <0>
- - compatible : should be "fsl,imx53-ldb" or "fsl,imx6q-ldb".
-                Both LDB versions are similar, but i.MX6 has an additional
-                multiplexer in the front to select any of the four IPU display
-                interfaces as input.
- - gpr : should be <&gpr> on i.MX53 and i.MX6q.
-         The phandle points to the iomuxc-gpr region containing the LVDS
-         control register.
- - clocks : phandles pointing to the LDB display interface clocks, LDB source
-            selector clocks
-- clocks, clock-names : phandles to the LDB divider and selector clocks and to
-                        the display interface selector clocks, as described in
-                        Documentation/devicetree/bindings/clock/clock-bindings.txt
-	The following clocks are expected on i.MX53:
-		"di0_pll" - LDB LVDS channel 0 mux
-		"di1_pll" - LDB LVDS channel 1 mux
-		"di0" - LDB LVDS channel 0 gate
-		"di1" - LDB LVDS channel 1 gate
-		"di0_sel" - IPU1 DI0 mux
-		"di1_sel" - IPU1 DI1 mux
-	On i.MX6q the following additional clocks are needed:
-		"di2_sel" - IPU2 DI0 mux
-		"di3_sel" - IPU2 DI1 mux
-	The needed clock numbers for each are documented in
-	Documentation/devicetree/bindings/clock/imx5-clock.txt, and in
-	Documentation/devicetree/bindings/clock/imx6q-clock.txt.
+Changes since v3:
+ - improved clock-lanes property description,
+ - grammar corrections of the example dts snippet description.
 
-Optional properties:
- - pinctrl-names : should be "default" on i.MX53, not used on i.MX6q
- - pinctrl-0 : should be <&pinctrl_lvds1_1> on i.MX53, not used on i.MX6q
- - fsl,dual-channel : boolean. if it exists, only LVDS channel 0 should
-   be configured - one input will be distributed on both outputs in dual
-   channel mode
+Changes since v2:
+ - corrected pclk-sample property definition,
+ - s/buses/busses,
+ - whitespace changes.
 
-LVDS Channel
-============
+Changes since v1:
+ - couple typo/grammar issue corrections.
 
-Each LVDS Channel has to contain a display-timings node that describes the
-video timings for the connected LVDS display. For detailed information,
-have a look at Documentation/devicetree/bindings/video/display-timing.txt.
+Changes since initial version:
+ - renamed 'link' node to 'endpoint,
+ - renamed 'remote' phandle to 'remote-endpoint',
+ - file v4l2.txt renamed to video-interfaces.txt,
+ - removed references to V4L2,
+ - added short description of the example DT snippet
+ - added "Required properties' paragraph,
+ - updated description of 'data-lanes' property,
+ - renamed all erroneous occurrences of 'data-width' to 'bus-width',
+ - added 'bus-width' property description,
+ - modified description of hsync-active, vsync-active properties,
+ - added a little paragraph further explaining that each endpoint
+   node has properties determining configuration of its corresponding
+   device.
 
-Required properties:
- - reg : should be <0> or <1>
- - crtcs : a list of phandles with index pointing to the IPU display interfaces
-           that can be used as video source for this channel.
- - fsl,data-mapping : should be "spwg" or "jeida"
-                      This describes how the color bits are laid out in the
-                      serialized LVDS signal.
- - fsl,data-width : should be <18> or <24>
+---
+ .../devicetree/bindings/media/video-interfaces.txt |  227 ++++++++++++++++++++
+ 1 file changed, 227 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/video-interfaces.txt
 
-Example:
-
-        gpr: iomuxc-gpr@53fa8000 {
-                /* ... */
-        };
-
-        ldb: ldb@53fa8008 {
-                #address-cells = <1>;
-                #size-cells = <0>;
-                compatible = "fsl,imx53-ldb";
-                gpr = <&gpr>;
-                clocks = <&clks 122>, <&clks 120>,
-                         <&clks 115>, <&clks 116>,
-                         <&clks 123>, <&clks 85>;
-                clock-names = "di0_pll", "di1_pll",
-                              "di0_sel", "di1_sel",
-                              "di0", "di1";
-
-                lvds-channel@0 {
-                        reg = <0>;
-                        crtcs = <&ipu 0>;
-                        fsl,data-mapping = "spwg";
-                        fsl,data-width = <24>;
-
-                        display-timings {
-                                /* ... */
-                        };
-                };
-
-                lvds-channel@1 {
-                        reg = <1>;
-                        crtcs = <&ipu 1>;
-                        fsl,data-mapping = "spwg";
-                        fsl,data-width = <24>;
-
-                        display-timings {
-                                /* ... */
-                        };
-                };
-        };
-
-thanks
-Philipp
+diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+new file mode 100644
+index 0000000..3d10a95
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+@@ -0,0 +1,227 @@
++Common bindings for video receiver and transmitter interfaces
++
++General concept
++---------------
++
++Video data pipelines usually consist of external devices, e.g. camera sensors,
++controlled over an I2C, SPI or UART bus, and SoC internal IP blocks, including
++video DMA engines and video data processors.
++
++SoC internal blocks are described by DT nodes, placed similarly to other SoC
++blocks.  External devices are represented as child nodes of their respective
++bus controller nodes, e.g. I2C.
++
++Data interfaces on all video devices are described by their child 'port' nodes.
++Configuration of a port depends on other devices participating in the data
++transfer and is described by 'endpoint' subnodes.
++
++device {
++	...
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			endpoint@0 { ... };
++			endpoint@1 { ... };
++		};
++		port@1 { ... };
++	};
++};
++
++If a port can be configured to work with more than one remote device on the same
++bus, an 'endpoint' child node must be provided for each of them.  If more than
++one port is present in a device node or there is more than one endpoint at a
++port, or port node needs to be associated with a selected hardware interface,
++a common scheme using '#address-cells', '#size-cells' and 'reg' properties is
++used.
++
++All 'port' nodes can be grouped under optional 'ports' node, which allows to
++specify #address-cells, #size-cells properties independently for the 'port'
++and 'endpoint' nodes and any child device nodes a device might have.
++
++Two 'endpoint' nodes are linked with each other through their 'remote-endpoint'
++phandles.  An endpoint subnode of a device contains all properties needed for
++configuration of this device for data exchange with other device.  In most
++cases properties at the peer 'endpoint' nodes will be identical, however they
++might need to be different when there is any signal modifications on the bus
++between two devices, e.g. there are logic signal inverters on the lines.
++
++It is allowed for multiple endpoints at a port to be active simultaneously,
++where supported by a device.  For example, in case where a data interface of
++a device is partitioned into multiple data busses, e.g. 16-bit input port
++divided into two separate ITU-R BT.656 8-bit busses.  In such case bus-width
++and data-shift properties can be used to assign physical data lines to each
++endpoint node (logical bus).
++
++
++Required properties
++-------------------
++
++If there is more than one 'port' or more than one 'endpoint' node or 'reg'
++property is present in port and/or endpoint nodes the following properties
++are required in a relevant parent node:
++
++ - #address-cells : number of cells required to define port/endpoint
++		    identifier, should be 1.
++ - #size-cells    : should be zero.
++
++Optional endpoint properties
++----------------------------
++
++- remote-endpoint: phandle to an 'endpoint' subnode of a remote device node.
++- slave-mode: a boolean property indicating that the link is run in slave mode.
++  The default when this property is not specified is master mode. In the slave
++  mode horizontal and vertical synchronization signals are provided to the
++  slave device (data source) by the master device (data sink). In the master
++  mode the data source device is also the source of the synchronization signals.
++- bus-width: number of data lines actively used, valid for the parallel busses.
++- data-shift: on the parallel data busses, if bus-width is used to specify the
++  number of data lines, data-shift can be used to specify which data lines are
++  used, e.g. "bus-width=<8>; data-shift=<2>;" means, that lines 9:2 are used.
++- hsync-active: active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
++- vsync-active: active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
++  Note, that if HSYNC and VSYNC polarities are not specified, embedded
++  synchronization may be required, where supported.
++- data-active: similar to HSYNC and VSYNC, specifies data line polarity.
++- field-even-active: field signal level during the even field data transmission.
++- pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
++  signal.
++- data-lanes: an array of physical data lane indexes. Position of an entry
++  determines the logical lane number, while the value of an entry indicates
++  physical lane, e.g. for 2-lane MIPI CSI-2 bus we could have
++  "data-lanes = <1 2>;", assuming the clock lane is on hardware lane 0.
++  This property is valid for serial busses only (e.g. MIPI CSI-2).
++- clock-lanes: an array of physical clock lane indexes. Position of an entry
++  determines the logical lane number, while the value of an entry indicates
++  physical lane, e.g. for a MIPI CSI-2 bus we could have "clock-lanes = <0>;",
++  which places the clock lane on hardware lane 0. This property is valid for
++  serial busses only (e.g. MIPI CSI-2). Note that for the MIPI CSI-2 bus this
++  array contains only one entry.
++- clock-noncontinuous: a boolean property to allow MIPI CSI-2 non-continuous
++  clock mode.
++
++
++Example
++-------
++
++The example snippet below describes two data pipelines.  ov772x and imx074 are
++camera sensors with a parallel and serial (MIPI CSI-2) video bus respectively.
++Both sensors are on the I2C control bus corresponding to the i2c0 controller
++node.  ov772x sensor is linked directly to the ceu0 video host interface.
++imx074 is linked to ceu0 through the MIPI CSI-2 receiver (csi2). ceu0 has a
++(single) DMA engine writing captured data to memory.  ceu0 node has a single
++'port' node which may indicate that at any time only one of the following data
++pipelines can be active: ov772x -> ceu0 or imx074 -> csi2 -> ceu0.
++
++	ceu0: ceu@0xfe910000 {
++		compatible = "renesas,sh-mobile-ceu";
++		reg = <0xfe910000 0xa0>;
++		interrupts = <0x880>;
++
++		mclk: master_clock {
++			compatible = "renesas,ceu-clock";
++			#clock-cells = <1>;
++			clock-frequency = <50000000>;	/* Max clock frequency */
++			clock-output-names = "mclk";
++		};
++
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/* Parallel bus endpoint */
++			ceu0_1: endpoint@1 {
++				reg = <1>;		/* Local endpoint # */
++				remote = <&ov772x_1_1>;	/* Remote phandle */
++				bus-width = <8>;	/* Used data lines */
++				data-shift = <2>;	/* Lines 9:2 are used */
++
++				/* If hsync-active/vsync-active are missing,
++				   embedded BT.656 sync is used */
++				hsync-active = <0>;	/* Active low */
++				vsync-active = <0>;	/* Active low */
++				data-active = <1>;	/* Active high */
++				pclk-sample = <1>;	/* Rising */
++			};
++
++			/* MIPI CSI-2 bus endpoint */
++			ceu0_0: endpoint@0 {
++				reg = <0>;
++				remote = <&csi2_2>;
++			};
++		};
++	};
++
++	i2c0: i2c@0xfff20000 {
++		...
++		ov772x_1: camera@0x21 {
++			compatible = "omnivision,ov772x";
++			reg = <0x21>;
++			vddio-supply = <&regulator1>;
++			vddcore-supply = <&regulator2>;
++
++			clock-frequency = <20000000>;
++			clocks = <&mclk 0>;
++			clock-names = "xclk";
++
++			port {
++				/* With 1 endpoint per port no need for addresses. */
++				ov772x_1_1: endpoint {
++					bus-width = <8>;
++					remote-endpoint = <&ceu0_1>;
++					hsync-active = <1>;
++					vsync-active = <0>; /* Who came up with an
++							       inverter here ?... */
++					data-active = <1>;
++					pclk-sample = <1>;
++				};
++			};
++		};
++
++		imx074: camera@0x1a {
++			compatible = "sony,imx074";
++			reg = <0x1a>;
++			vddio-supply = <&regulator1>;
++			vddcore-supply = <&regulator2>;
++
++			clock-frequency = <30000000>;	/* Shared clock with ov772x_1 */
++			clocks = <&mclk 0>;
++			clock-names = "sysclk";		/* Assuming this is the
++							   name in the datasheet */
++			port {
++				imx074_1: endpoint {
++					clock-lanes = <0>;
++					data-lanes = <1 2>;
++					remote-endpoint = <&csi2_1>;
++				};
++			};
++		};
++	};
++
++	csi2: csi2@0xffc90000 {
++		compatible = "renesas,sh-mobile-csi2";
++		reg = <0xffc90000 0x1000>;
++		interrupts = <0x17a0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@1 {
++			compatible = "renesas,csi2c";	/* One of CSI2I and CSI2C. */
++			reg = <1>;			/* CSI-2 PHY #1 of 2: PHY_S,
++							   PHY_M has port address 0,
++							   is unused. */
++			csi2_1: endpoint {
++				clock-lanes = <0>;
++				data-lanes = <2 1>;
++				remote-endpoint = <&imx074_1>;
++			};
++		};
++		port@2 {
++			reg = <2>;			/* port 2: link to the CEU */
++
++			csi2_2: endpoint {
++				remote-endpoint = <&ceu0_0>;
++			};
++		};
++	};
+--
+1.7.9.5
