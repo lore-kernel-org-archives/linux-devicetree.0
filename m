@@ -1,45 +1,192 @@
-From: Pavel Machek <pavel@denx.de>
-Subject: Re: [PATCH v5 0/8] Reset controller API to reset IP modules on
- i.MX5 and i.MX6
-Date: Tue, 26 Mar 2013 19:19:09 +0100
-Message-ID: <20130326181909.GA31593@amd.pavel.ucw.cz>
-References: <1364231189-12497-1-git-send-email-p.zabel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1364231189-12497-1-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@wwwdotorg.org>, Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, Mike Turquette <mturquette@linaro.org>, Len Brown <len.brown@intel.com>, "Rafael J. Wysocki" <rjw@sisk.pl>, linux-pm@vger.kernel.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 2/5] capemgr: Add beaglebone's cape driver bindings
+Date: Tue, 26 Mar 2013 17:36:19 +0000
+Message-ID: <20130326173619.E6F483E2585@localhost>
+References: <1357584666-17374-1-git-send-email-panto@antoniou-consulting.com> <1357584666-17374-3-git-send-email-panto@antoniou-consulting.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1357584666-17374-3-git-send-email-panto@antoniou-consulting.com>
+Sender: linux-doc-owner@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jon Loeliger <jdl@jdl.com>, Tony Lindgren <tony@atomide.com>, Stephen Warren <swarren@wwwdotorg.org>, David Gibson <david@gibson.dropbear.id.au>, Benoit Cousson <b-cousson@ti.com>, Mitch Bradley <wmb@firmworks.com>, Alan Tull <atull@altera.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Joel A Fernandes <agnel.joel@gmail.com>, Rob Clark <robdclark@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, Matt Ranostay <mranostay@gmail.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On Mon,  7 Jan 2013 20:51:03 +0200, Pantelis Antoniou <panto@antoniou-consulting.com> wrote:
+> Document the beaglebone's cape driver bindings.
+> 
+> Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
 
-> The system reset controller (SRC) on i.MX51, i.MX53, and i.MX6q controls
-> reset lines to the GPU, VPU, IPU, and OpenVG IP modules.
-> 
-> The following patches add a simple API for devices to request being reset
-> by separate reset controller hardware and implements the reset signal
-> device tree binding proposed by Stephen Warren. Contrary to Tegra hardware,
-> the i.MX SRC contains self-deasserting reset registers, so I've included
-> both ops to manually assert/deassert a reset line, as well as a "reset"
-> operation that is supposed to assert the reset line and wait for it to
-> deassert.
-> 
-> The i.MX SRC is enhanced to provide a reset controller and the IPU driver
-> is made to request being reset by calling the device_reset(&pdev->dev)
-> convenience wrapper during probing.
-> 
-> Changes since v4:
->  - removed flags parameter from .of_xlate / of_reset_simple_xlate
->  - warn also if reset_spec->args_count > rcdev->of_reset_n_cells
->  - unlock list mutex only after try_module_get
->  - tighten devm_reset_control_match a bit
+Hi Pantelis,
 
-Series looks mostly ok to me. (Should the last patch be actually
-first, so that reset functionality is kept between 5/8 and 8/8?)
-									Pavel
+I'll go back and review the driver in a minute, but I'll start here
+since this is the data model that we'll be using for a long time.
+Overall this looks pretty sane. It's pretty well contained too which I
+like. Long term I do want to try and create some common patterns for
+overlay connections, but it's really hard to do that when this is the
+first serious attempt at implementing one.  :-) This is nicely contained
+to only the beaglebone use case which makes it easy to try out without
+forcing this exact data model on all users. If it works in other places,
+then fantastic! we've got our generic model. If not, then we can refine
+the interface for new boards without breaking beaglebone.
+
+Comments below...
+
+> ---
+>  .../devicetree/bindings/misc/capes-beaglebone.txt  | 110 +++++++++++++++++++++
+>  1 file changed, 110 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/capes-beaglebone.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/capes-beaglebone.txt b/Documentation/devicetree/bindings/misc/capes-beaglebone.txt
+> new file mode 100644
+> index 0000000..f73cab5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/capes-beaglebone.txt
+> @@ -0,0 +1,110 @@
+> +* TI Beaglebone DT Overlay Cape Driver
+> +
+> +Required properties:
+> +
+> +- compatible: "ti,bone-capemgr"
+
+"capemgr" sounds like a software construct. Can you rename this to
+something that sounds more like describing concrete hardware? From that
+perspective, "ti,bone-capebus" would be appropriate here, regardless of
+where the driver actually lives in the kernel tree.
+
+It would be better to be more specific here with the compatible
+property also. Put the actual board name into the compatible string.
+Following the lead of the board level compatible property, call it
+'ti,am335x-bone-capebus". Newer boards can claim compatibilty with the
+older where appropriate.
+
+> +
+> +- eeprom: Contains the phandle beaglebone's baseboard i2c eeprom.
+> +
+> +- baseboardmaps - node containing a list of supported
+> +	beaglebone revisions; each node in should have the
+> +	following properties:
+> +	- board-name: The board name stored in the baseboard
+> +		eeprom.
+
+If it is stored in the baseboard eeprom, then why does it need to appear
+in the .dtb?
+
+> +	- compatible-name: The name which will be used for
+> +		matching compatible capes.
+
+What is the matching logic for this compatible capes? How does it get
+used?
+
+> +
+> +- slots: node containing a list of slot nodes (which in the beaglebone
+> +	case correspond to I2C addresses for dynamically probed capes,
+> +	or an override slot definition for hardcoded capes.
+> +	- eeprom: Contains the phandle beaglebone's cape i2c eeprom.
+> +
+> +	It is possible to define override slots that will be activated
+> +	when the baseboard matches, and/or if supplied on the kernel command
+> +	line and/or when dynamically requested on runtime.
+> +	In that case the slot is marked with
+> +	- ti,cape-override: Marks a slot override.
+> +	- compatible: any of the "runtime", "kernel", or any compatible-name
+> +	  on a matching baseboardmap node.
+> +	- Any of the eeprom-format-revision, board-name, version, manufacturer,
+> +	  part-number, number-of-pins, serial-number, pin-usage, vdd-3v3exp,
+> +	  vdd-5v, sys-5v, dc-supplied properties which fill in the simulated
+> +	  cape's EEPROM fields. The part-number field is required, the rest
+> +	  are optional taking into default values.
+
+I could use some help understanding the use-case for the override slots.
+It isn't clear to me how the override is intended to work. Can you
+describe exactly what happens when an override slot is defined? Do
+override slots replace detected slots, or are they separate?
+
+> +
+> +- capemaps: node contains list of cape mappings, which allow converting
+> +	from a part-number & version tuple to the filename of the dtbo file.
+> +	- part-number: part number contained in the EEPROM
+> +	- version node containing a
+> +		- version: specific version to map to
+> +		- dtbo: name of the dtbo file 
+
+I think you'd be better off here defining a direct 1:1 mapping from
+board name + revision to dtb filename. Maintaining a list of mappings in
+the dtb file means it needs to be updated when new capes are created. It
+would be nicer to drop the new overlay in the root filesystem (or initrd
+if that is more convenient) and have the kernel know when to pick it up.
+
+> +
+> +Example:
+> +bone_capemgr {
+> +	compatible = "ti,bone-capemgr";
+> +	status = "okay";
+> +
+> +	eeprom = <&baseboard_eeprom>;
+> +
+> +	baseboardmaps {
+> +		baseboard_beaglebone: board@0 {
+> +			board-name = "A335BONE";
+> +			compatible-name = "ti,beaglebone";
+> +		};
+> +	};
+> +
+> +	slots {
+> +		slot@0 {
+> +			eeprom = <&cape_eeprom0>;
+> +		};
+> +
+> +		slot@1 {
+> +			eeprom = <&cape_eeprom1>;
+> +		};
+> +
+> +		slot@2 {
+> +			eeprom = <&cape_eeprom2>;
+> +		};
+> +
+> +		slot@3 {
+> +			eeprom = <&cape_eeprom3>;
+> +		};
+> +	};
+> +
+> +	/* mapping between board names and dtb objects */
+> +	capemaps {
+> +		/* Weather cape */
+> +		cape@0 {
+> +			part-number = "BB-BONE-WTHR-01";
+> +			version@00A0 {
+> +				version = "00A0";
+> +				dtbo = "cape-bone-weather-00A0.dtbo";
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +Example of the override syntax when used on a bone compatible foo board.
+> +
+> +{
+> +	...
+> +
+> +	baseboardmaps {
+> +		...
+> +		baseboard_beaglebone: board@0 {
+> +			board-name = "A335FOO";
+> +			compatible-name = "ti,foo";
+> +		};
+> +
+> +		slot@6 {
+> +			ti,cape-override;
+> +			compatible = "ti,foo";
+> +			board-name = "FOO-hardcoded";
+> +			version = "00A0";
+> +			manufacturer = "Texas Instruments";
+> +			part-number = "BB-BONE-FOO-01";
+> +		};
+> +	};
+> +
+> +};
+> +	
+> -- 
+> 1.7.12
+> 
+
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
