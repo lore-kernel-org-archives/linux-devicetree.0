@@ -1,7 +1,7 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH 10/11] ARM i.MX53: Add LDB device to device tree
-Date: Tue, 26 Mar 2013 15:14:05 +0100
-Message-ID: <1364307246-9017-11-git-send-email-p.zabel@pengutronix.de>
+Subject: [PATCH 08/11] ARM i.MX6q: fix ldb di divider and selector clocks
+Date: Tue, 26 Mar 2013 15:14:03 +0100
+Message-ID: <1364307246-9017-9-git-send-email-p.zabel@pengutronix.de>
 References: <1364307246-9017-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,48 +21,40 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: devel@driverdev.osuosl.org, Fabio Estevam <fabio.estevam@freescale.com>, Philipp Zabel <p.zabel@pengutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de, Martin Fuzzey <mfuzzey@parkeon.com>, Sean Cross <xobs@kosagi.com>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+Use imx_clk_mux_flags and imx_clk_divider_flags to set the appropriate
+flags for the LDB display interface divider and selector clocks.
+
 Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- arch/arm/boot/dts/imx53.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/arm/mach-imx/clk-imx6q.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index b07bbdcc..30aed40 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -511,6 +511,33 @@
- 				reg = <0x53fa8000 0xc>;
- 			};
- 
-+			ldb: ldb@53fa8008 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				compatible = "fsl,imx53-ldb";
-+				reg = <0x53fa8008 0x4>;
-+				gpr = <&gpr>;
-+				clocks = <&clks 122>, <&clks 120>,
-+					 <&clks 115>, <&clks 116>,
-+					 <&clks 123>, <&clks 85>;
-+				clock-names = "di0_pll", "di1_pll",
-+					      "di0_sel", "di1_sel",
-+					      "di0", "di1";
-+				status = "disabled";
-+
-+				lvds-channel@0 {
-+					reg = <0>;
-+					crtcs = <&ipu 0>;
-+					status = "disabled";
-+				};
-+
-+				lvds-channel@1 {
-+					reg = <1>;
-+					crtcs = <&ipu 1>;
-+					status = "disabled";
-+				};
-+			};
-+
- 			pwm1: pwm@53fb4000 {
- 				#pwm-cells = <2>;
- 				compatible = "fsl,imx53-pwm", "fsl,imx27-pwm";
+diff --git a/arch/arm/mach-imx/clk-imx6q.c b/arch/arm/mach-imx/clk-imx6q.c
+index 5528656..516f03e 100644
+--- a/arch/arm/mach-imx/clk-imx6q.c
++++ b/arch/arm/mach-imx/clk-imx6q.c
+@@ -299,8 +299,8 @@ int __init mx6q_clocks_init(void)
+ 	clk[gpu3d_shader_sel] = imx_clk_mux("gpu3d_shader_sel", base + 0x18, 8,  2, gpu3d_shader_sels, ARRAY_SIZE(gpu3d_shader_sels));
+ 	clk[ipu1_sel]         = imx_clk_mux("ipu1_sel",         base + 0x3c, 9,  2, ipu_sels,          ARRAY_SIZE(ipu_sels));
+ 	clk[ipu2_sel]         = imx_clk_mux("ipu2_sel",         base + 0x3c, 14, 2, ipu_sels,          ARRAY_SIZE(ipu_sels));
+-	clk[ldb_di0_sel]      = imx_clk_mux("ldb_di0_sel",      base + 0x2c, 9,  3, ldb_di_sels,       ARRAY_SIZE(ldb_di_sels));
+-	clk[ldb_di1_sel]      = imx_clk_mux("ldb_di1_sel",      base + 0x2c, 12, 3, ldb_di_sels,       ARRAY_SIZE(ldb_di_sels));
++	clk[ldb_di0_sel]      = imx_clk_mux_flags("ldb_di0_sel", base + 0x2c, 9,  3, ldb_di_sels,      ARRAY_SIZE(ldb_di_sels), CLK_SET_RATE_PARENT);
++	clk[ldb_di1_sel]      = imx_clk_mux_flags("ldb_di1_sel", base + 0x2c, 12, 3, ldb_di_sels,      ARRAY_SIZE(ldb_di_sels), CLK_SET_RATE_PARENT);
+ 	clk[ipu1_di0_pre_sel] = imx_clk_mux("ipu1_di0_pre_sel", base + 0x34, 6,  3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels));
+ 	clk[ipu1_di1_pre_sel] = imx_clk_mux("ipu1_di1_pre_sel", base + 0x34, 15, 3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels));
+ 	clk[ipu2_di0_pre_sel] = imx_clk_mux("ipu2_di0_pre_sel", base + 0x38, 6,  3, ipu_di_pre_sels,   ARRAY_SIZE(ipu_di_pre_sels));
+@@ -348,9 +348,9 @@ int __init mx6q_clocks_init(void)
+ 	clk[ipu1_podf]        = imx_clk_divider("ipu1_podf",        "ipu1_sel",          base + 0x3c, 11, 3);
+ 	clk[ipu2_podf]        = imx_clk_divider("ipu2_podf",        "ipu2_sel",          base + 0x3c, 16, 3);
+ 	clk[ldb_di0_div_3_5]  = imx_clk_fixed_factor("ldb_di0_div_3_5", "ldb_di0_sel", 2, 7);
+-	clk[ldb_di0_podf]     = imx_clk_divider("ldb_di0_podf",     "ldb_di0_div_3_5",       base + 0x20, 10, 1);
++	clk[ldb_di0_podf]     = imx_clk_divider_flags("ldb_di0_podf", "ldb_di0_div_3_5", base + 0x20, 10, 1, 0);
+ 	clk[ldb_di1_div_3_5]  = imx_clk_fixed_factor("ldb_di1_div_3_5", "ldb_di1_sel", 2, 7);
+-	clk[ldb_di1_podf]     = imx_clk_divider("ldb_di1_podf",     "ldb_di1_div_3_5",   base + 0x20, 11, 1);
++	clk[ldb_di1_podf]     = imx_clk_divider_flags("ldb_di1_podf", "ldb_di1_div_3_5", base + 0x20, 11, 1, 0);
+ 	clk[ipu1_di0_pre]     = imx_clk_divider("ipu1_di0_pre",     "ipu1_di0_pre_sel",  base + 0x34, 3,  3);
+ 	clk[ipu1_di1_pre]     = imx_clk_divider("ipu1_di1_pre",     "ipu1_di1_pre_sel",  base + 0x34, 12, 3);
+ 	clk[ipu2_di0_pre]     = imx_clk_divider("ipu2_di0_pre",     "ipu2_di0_pre_sel",  base + 0x38, 3,  3);
 -- 
 1.8.2.rc2
