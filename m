@@ -1,94 +1,127 @@
-From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v5 7/7] irqchip: s3c24xx: add devicetree support
-Date: Tue, 26 Mar 2013 08:38:42 +0100
-Message-ID: <201303260838.42804.heiko@sntech.de>
-References: <201303252226.21402.heiko@sntech.de> <201303252234.21314.heiko@sntech.de> <201303252200.46258.arnd@arndb.de>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 2/3] mfd: db8500-prcmu: Fetch the PRCMU TCDM base address
+ from Device Tree
+Date: Tue, 26 Mar 2013 08:17:04 +0000
+Message-ID: <20130326081704.GB11734@gmail.com>
+References: <1364223758-17621-1-git-send-email-lee.jones@linaro.org>
+ <1364223758-17621-2-git-send-email-lee.jones@linaro.org>
+ <201303251540.51104.arnd@arndb.de>
+ <20130325164600.GA11734@gmail.com>
+ <CACRpkdbn4WARSp7_MUpCZTghTrsPYvsa9GEUC31T7nP_=9oZag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <201303252200.46258.arnd@arndb.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Thomas Abraham <thomas.abraham@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbn4WARSp7_MUpCZTghTrsPYvsa9GEUC31T7nP_=9oZag@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linus.walleij@stericsson.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On Mon, 25 Mar 2013, Linus Walleij wrote:
 
-thanks again for taking the time to look at the changes.
-
-
-Am Montag, 25. M=E4rz 2013, 23:00:46 schrieb Arnd Bergmann:
-> On Monday 25 March 2013, Heiko St=FCbner wrote:
-> > Add the necessary code to initialize the interrupt controller
-> > thru devicetree data using the irqchip infrastructure.
-> >=20
-> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> On Mon, Mar 25, 2013 at 5:46 PM, Lee Jones <lee.jones@linaro.org> wro=
+te:
 >=20
-> The binding looks fine now. I have a few detail comments but am happy
-> with the series otherwise.
+> >> >         res =3D platform_get_resource_byname(pdev, IORESOURCE_ME=
+M,
+> >> >                                            "prcmu-tcpm");
+> >> >         if (!res) {
+> >> > -               dev_err(&pdev->dev,
+> >> > -                       "Error: no prcmu tcpm memory region prov=
+ided\n");
+> >> > -               return;
+> >> > -       }
+> >> > -       tcpm_base =3D ioremap(res->start, resource_size(res));
+> >> > +               if (np) {
+> >> > +                       tcpm_np =3D of_find_node_by_name(np->par=
+ent,
+> >> > +                                                      "prcmu-tc=
+pm-per4");
+> >> > +                       if (!tcpm_np) {
+> >> > +                               dev_err(&pdev->dev,
+> >> > +                                       "no prcmu tcpm mem regio=
+n provided\n");
+> >> > +                               return;
+> >> > +                       }
+> >> > +                       tcpm_base =3D of_iomap(tcpm_np, 0);
+> >> > +               }
+> >> > +       } else
+> >> > +               tcpm_base =3D ioremap(res->start, resource_size(=
+res));
+> >> > +
+> >>
+> >> Why don't you just add these extra registers to the prcmu node its=
+elf like
+> >>
+> >> diff --git a/arch/arm/boot/dts/dbx5x0.dtsi b/arch/arm/boot/dts/dbx=
+5x0.dtsi
+> >> index 9de9309..6ee6c31 100644
+> >> --- a/arch/arm/boot/dts/dbx5x0.dtsi
+> >> +++ b/arch/arm/boot/dts/dbx5x0.dtsi
+> >> @@ -191,8 +191,8 @@
+> >>
+> >>               prcmu: prcmu@80157000 {
+> >>                       compatible =3D "stericsson,db8500-prcmu";
+> >> -                     reg =3D <0x80157000 0x1000>;
+> >> -                     reg-names =3D "prcmu";
+> >> +                     reg =3D <0x80157000 0x1000>, <0x801b0000 0x1=
+000>, <0x801b8000 0x1000>;
+> >> +                     reg-names =3D "prcmu", "prcmu-tcpm", "prcmu-=
+tcdm-per4";
+> >>                       interrupts =3D <0 47 0x4>;
+> >>                       #address-cells =3D <1>;
+> >>                       #size-cells =3D <1>;
+> >>
+> >>
+> >> and document those in the prcmu binding?
+> >>
+> >> That would keep the code simpler and the same for both cases.
+> >
+> > I'm not sure you can. These addresses differ from platform to
+> > platform, so I'd need to provide the base PRCMU address in
+> > dbx5x0.dtsi, then the other two in the dts files. Can you do that?
 >=20
-> > +Required properties:
-> > +- compatible: Compatible property value should be "samsung,s3c24xx=
--irq"
-> > +  for non s3c2416 machines and "samsung,s3c2416-irq" for s3c2416
-> > machines
+> Better ask on devicetree-discuss.
 >=20
-> We try to avoid wildcards in the "compatible" properties. Better use
-> the name of the first SoC that had this controller, and let the other
-> ones mark themselves as compatible with that one.
+> What it reflects are differences between SoC:s, so I think the
+> right solution is to split it in a three-layer cake:
 >=20
-> I guess "samsung,s3c2410-irq" would be the right identifier here.
-
-ok, sounds sensible
-
-
-> > +- #interrupt-cells : Specifies the number of cells needed to encod=
-e an
-> > +  interrupt source. The value shall be 4 and interrupt descriptor =
-shall
-> > +  have the following format:
-> > +      <ctrl_num ctrl_irq parent_irq type>
-> > +
-> > +  ctrl_num contains the controller to use:
-> > +      - 0 ... main controller
-> > +      - 1 ... sub controller
-> > +      - 2 ... second main controller on s3c2416 and s3c2450
-> > +  ctrl_irq contains the interrupt bit of the controller
-> > +  parent_irq contains the parent bit in the main controller and wi=
-ll be
-> > +             ignored in main controllers
+> dbx5x0.dtsi -> included by
+> db8500.dtsi -> included by
+> snowball/hrefv60plus.dts
 >=20
-> I expected the second and third cell to be in the opposite order, so
-> the meaning of the second cell is always the same.
-
-ok, so we do <ctrl_num parent_irq ctrl_irq type>, right? ... As it only=
-=20
-involves exchanging the intspec values, that's easy :-)
-
-
-> > +	/* we're using individual domains for the non-dt case
-> > +	 * and one big domain for the dt case where the subintc
-> > +	 * starts at hwirq number 32.
-> > +	 */
-> > +	offset =3D (intc->domain->of_node) ? 32 : 0;
+> dbx5x0.dtsi -> included by
+> dbx540.dtsi -> included by
+> ccu9540/ccu8540.dts
 >=20
-> Wouldn't it be easier to always use the same setup for the domains he=
-re?
+> Here you may insert the reg property into the node at the
+> db8500.dtsi or dbx540.dtsi layer.
 
-nope ... the non-dt domains are not uniform (different lengths and star=
-t-irqs)=20
-to recreate the static irq mappings that are still needed. For the non-=
-dt case=20
-it also implement the handling of the external interrupts that is not p=
-art of=20
-the interrupt-controller itself but comes from the gpio-registers and w=
-ill=20
-move to pinctrl for dt machines.
+It's easy done, if that's the right way.
 
-My hope is still to move to dt in a "reasonable" time, so this stuff ca=
-n go=20
-away then altogether.
+> If you prefer I can cook a patch...
 
+=2E.. and I'm fine to do it.
 
-Heiko
+[5 mins later]
+
+Hmm... it appears that in STE's kernel, the same address is used for
+all SoCs:=20
+
+  #define U8500_PRCMU_TCDM_BASE    (U8500_PER4_BASE + 0x68000)
+
+However, in Mainline there is another definition:
+
+  #define U9540_PRCMU_TCDM_BASE    (U8500_PER4_BASE + 0x6A000)
+
+=2E.. which doesn't seem to be in use anywhere - even for the u9540.
+
+What's the deal big-man?
+
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
