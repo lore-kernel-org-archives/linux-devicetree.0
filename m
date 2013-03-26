@@ -1,91 +1,90 @@
-From: Javier Martinez Canillas <martinez.javier@gmail.com>
-Subject: Re: [PATCH v3 1/1] gpio: omap: dts: Move interrupt-controller from
- #interrupt-cells description
-Date: Tue, 26 Mar 2013 10:33:12 +0100
-Message-ID: <CAAwP0s3PqsCF6TsMe6-aD9LKAOfQ=ToSXDXnnu5MvN01x3b5cw@mail.gmail.com>
-References: <1363354317-14985-1-git-send-email-javier.martinez@collabora.co.uk>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH v3] USB: PHY: Palmas USB Transceiver Driver
+Date: Tue, 26 Mar 2013 15:04:59 +0530
+Message-ID: <51516BC3.7030707@nvidia.com>
+References: <1362662506-14823-4-git-send-email-kishon@ti.com> <1364203926-24488-1-git-send-email-kishon@ti.com> <51501CFB.4020905@nvidia.com> <51513A40.7080905@ti.com> <515163F6.3010400@slimlogic.co.uk> <51516695.8020808@nvidia.com> <51516A10.40704@slimlogic.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1363354317-14985-1-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@nvidia.com>, Jon Hunter <jon-hunter@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51516A10.40704@slimlogic.co.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Graeme Gregory <gg@slimlogic.co.uk>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "balbi@ti.com" <balbi@ti.com>, Rajendra Nayak <rnayak@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "s-guiriec@ti.com" <s-guiriec@ti.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 15, 2013 at 2:31 PM, Javier Martinez Canillas
-<javier.martinez@collabora.co.uk> wrote:
-> The binding documentation for the OMAP GPIO controller has the
-> "#interrupt-cells" property listed before "#interrupt-controller"
-> property but its description after.
-> This is confusing so we move "#interrupt-cells" after the
-> "interrupt-controller" property so is followed by its description.
->
-> While being there, change the properties order to be consistent with
-> Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> and Documentation/devicetree/bindings/gpio/gpio.txt.
->
-> According with these docs, the order of the properties for a gpio-omap
-> device node should be:
->
->     gpio-controller;
->     #gpio-cells = <2>;
->     interrupt-controller;
->     #interrupt-cells = <2>;
->
-> Reported-by: Stephen Warren <swarren@nvidia.com>
-> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-> Acked-by: Jon Hunter <jon-hunter@ti.com>
-> ---
->
-> Changes since v1:
->   - Change the properties order to be consistent with the rest of the
->     DT bindings docs suggested by Jon Hunter.
->
-> Changes since v2:
->   - Fix changelog that explained the opposite of what the patch was doing as
->     suggested by Benoit Cousson.
->
->  .../devicetree/bindings/gpio/gpio-omap.txt         |    8 ++++----
->  1 files changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
-> index bff51a2..a56e3a5 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-omap.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
-> @@ -5,12 +5,12 @@ Required properties:
->    - "ti,omap2-gpio" for OMAP2 controllers
->    - "ti,omap3-gpio" for OMAP3 controllers
->    - "ti,omap4-gpio" for OMAP4 controllers
-> +- gpio-controller : Marks the device node as a GPIO controller.
->  - #gpio-cells : Should be two.
->    - first cell is the pin number
->    - second cell is used to specify optional parameters (unused)
-> -- gpio-controller : Marks the device node as a GPIO controller.
-> +- interrupt-controller: Mark the device node as an interrupt controller.
->  - #interrupt-cells : Should be 2.
-> -- interrupt-controller: Mark the device node as an interrupt controller
->    The first cell is the GPIO number.
->    The second cell is used to specify flags:
->      bits[3:0] trigger type and level flags:
-> @@ -29,8 +29,8 @@ Example:
->  gpio4: gpio4 {
->      compatible = "ti,omap4-gpio";
->      ti,hwmods = "gpio4";
-> -    #gpio-cells = <2>;
->      gpio-controller;
-> -    #interrupt-cells = <2>;
-> +    #gpio-cells = <2>;
->      interrupt-controller;
-> +    #interrupt-cells = <2>;
->  };
-> --
-> 1.7.7.6
->
+On Tuesday 26 March 2013 02:57 PM, Graeme Gregory wrote:
+> On 26/03/13 09:12, Laxman Dewangan wrote:
+>> On Tuesday 26 March 2013 02:31 PM, Graeme Gregory wrote:
+>>
+>> But still you are using the PALMAS macro here and indirectly it is
+>> tied up. It is not completely independent.
+>> If need to be independent then regmap pointer with address need to be
+>> passed as independt header and no where on code whould refer the PALMA.
+>> I think as per current code, it is not possible although it is your
+>> big plan what I understand from some time back in one of patch
+>> discussion.
+>>
+> It is actually almost possible, but it is something I gave up looking
+> at. You can get the regmap of your parent i2c device without having
+> knowledge of the type of parent.
 
-Hello,
+There is multiple regmap of parent and hence getting correct regmap is 
+really issue.  May be RTC require regmap[0] and gpio require regmap[1].
 
-any comments on this patch?
 
-Best regards,
-Javier
+>
+>>>>>> +       palmas_usb->dev         = &pdev->dev;
+>>>>>> +
+>>>>>> +       palmas_usb->irq1 = regmap_irq_get_virq(palmas->irq_data,
+>>>>>> +                                               PALMAS_ID_OTG_IRQ);
+>>>>>> +       palmas_usb->irq2 = regmap_irq_get_virq(palmas->irq_data,
+>>>>>> +                                               PALMAS_ID_IRQ);
+>>>>>> +       palmas_usb->irq3 = regmap_irq_get_virq(palmas->irq_data,
+>>>>>> +                                               PALMAS_VBUS_OTG_IRQ);
+>>>>>> +       palmas_usb->irq4 = regmap_irq_get_virq(palmas->irq_data,
+>>>>>> +                                               PALMAS_VBUS_IRQ);
+>>>>> Should be come from platform_get_irq() through platform driver.
+>>>> No. It can be obtained from regmap too.
+>> Kishon,
+>> I think it is very much possible. You can pass the interrupt throough
+>> IRQ_RESOURCE and populate it from DT. If you provide proper interrupt
+>> parent and irq number then irq framework take care of every thing.
+>> already tested this with RTC interrupt of plama and it worked very well.
+>>
+> If we are tightly coupling as above then using platform_irq is an extra
+> inefficiency. You both have to populate this then parse it afterwards.
+> Why not just use the regmap helper? Ill admit this code is like this as
+> there was a period where platform irqs in DT just was not working right!
+>
+> We should really agree now if we are going for loose or tight coupling
+> now rather than keep switching?
+
+Here we are hardcoding for PALMAS_ID_OTG_IRQ and so on. If we take data 
+from platform then it need not and it will be completely independent of 
+palma atleast on this front.
+We need to populate just as:
+palmas: palmas {
+:::::::
+     palams_usb_phy {
+         compatile = ...
+         interrupt-parent = <& palmas>;
+         interrupt = < 10, 0,
+                                 21, 0,
+                             22, 0,
+                             23, 0>;
+}
+
+
+and in code, we just need to do
+irq1 = platform_get_irq(pdev, 0);
+irq2 = platform_get_irq(pdev, 1);
+etc..
+
+
+So here, actually we do not need to use palmas one and it is completely 
+independent.
+
+Also the way you define the DT od palmas, the above one looks more 
+appropriate.
+
