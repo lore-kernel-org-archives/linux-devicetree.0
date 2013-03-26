@@ -1,80 +1,79 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [RFCv1 07/11] irqchip: armada-370-xp: add MSI support to
- interrupt controller driver
-Date: Tue, 26 Mar 2013 16:26:56 -0600
-Message-ID: <20130326222656.GB8650@obsidianresearch.com>
-References: <1364316746-8702-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1364316746-8702-8-git-send-email-thomas.petazzoni@free-electrons.com>
- <20130326180245.GA22775@obsidianresearch.com>
- <20130326221654.34bce6d7@skate>
- <20130326215546.GA8650@obsidianresearch.com>
- <20130326230656.3326e187@skate>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [RFC 01/12] exynos-fimc-is: Adding device tree nodes
+Date: Tue, 26 Mar 2013 23:51:29 +0100
+Message-ID: <51522671.5080706@gmail.com>
+References: <1362754765-2651-1-git-send-email-arun.kk@samsung.com> <1362754765-2651-2-git-send-email-arun.kk@samsung.com> <514DAAC3.4050202@gmail.com> <CALt3h7_nXSd6A2t55fi3PD+BkpZh5Lo4suWcg-ZF=jDq+V3NXA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130326230656.3326e187@skate>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, Thierry Reding <thierry.reding@avionic-design.de>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CALt3h7_nXSd6A2t55fi3PD+BkpZh5Lo4suWcg-ZF=jDq+V3NXA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arun Kumar K <arunkk.samsung@gmail.com>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Arun Kumar K <arun.kk@samsung.com>, LMML <linux-media@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, kgene.kim@samsung.com, kilyeon.im@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 26, 2013 at 11:06:56PM +0100, Thomas Petazzoni wrote:
+On 03/26/2013 01:17 PM, Arun Kumar K wrote:
+>>> +Sensor sub-nodes:
+>>> +
+>>> +FIMC-IS IP supports custom built sensors to be controlled exclusively by
+>>> +the FIMC-IS firmware. These sensor properties are to be defined here.
+>
+> [snip]
+>
+>> Defining image sensor nodes in a standard way as ISP I2C bus controller
+>> nodes has an disadvantage that we need dummy I2C bus controller driver,
+>> at least this is how I have written the driver for Exynos4x12. In some
+>> version of it I had sensor nodes put in a isp-i2c fimc-is sub-node, but
+>> then there was an issue that this was not a fully specified I2C bus
+>> controller node.
+>>
+>> You can refer to my exynos4 fimc-is patch series for details on how this
+>> is now implemented.
+>>
+>> Handling the image sensor in a standard way, as regular I2C client devices
+>> has an advantage that we can put pinctrl properties in relevant device
+>> nodes,
+>> where available, which more closely describes the hardware structure.
+>>
+>> I'm not really sure in 100% if all this complication is required. It would
+>> allow to use same DT blob for different Imaging Subsystem SW architecture.
+>> For example some parts of functionality handled currently by FIMC-IS (ARM
+>> Cortex-A5) could be moved to host CPU, without any change in the device
+>> tree structure. The kernel could decide e.g. if it uses image sensor driver
+>> implemented in the ISP firmware, or a driver run on the host CPU.
+>>
+>> What do you think ?
+>
+> I have seen your Exynos4 FIMC-IS patchset and you have made a dummy
+> I2C sensor driver there.
+> That mode would work fine in Exynos4 since the sensor and ISP will be used
+> by the same media controller pipeline. So the ISP component in the pipeline
+> will ensure that the HW is initialized and sensor is working.
+>
+> But in Exynos5, we are using sensor in pipeline0 and ISP in pipeline1.
+> So there is a possibility of using sensor subdev independently
+> without using pipeline1 ISP components.
+>
+> So with the driver I sent, the pipeline0 can still work like this -->
+>
+> ISP sensor --->  MIPI-CSIS --->  FIMC-LITE --->  Memory
+>
+> This cannot be done if a dummy I2C driver is made for ISP sensor.
 
-> > The PCIe host driver just seems to get in the way, it has no knowledge
-> > it is adding to the process.
-> > 
-> > irqchip knows:
-> >  - what the physical address of the doorbell is
-> >  - how to construct an address that is per-cpu or all-cpu
-> >  - which bits in the doorbell registers are allocated and which are
-> >    free
-> > 
-> > pci has none of that info.
-> 
-> Wait, wait. Did you look at the Tegra PCIe driver? In the Tegra case,
-> the MSI stuff is handled completely by the PCIe unit, and does not need
-> the special interaction with the IRQ controller driver that I need.
+Why not ? I'm not sure what the problem is here.
 
-Yes, but only briefly. It doesn't matter if the mechanisms are in the
-PCI-E register block or someplace else. If irqchip is providing the
-interface then the PCI-E driver would have to also instantiate an
-irqchip block.
+I realize that describing image sensors in DT as standard I2C slave devices
+is not helpful with current firmware architecture. It adds some unnecessary
+complication, OTOH it could simplify the sensors registration and media 
+graph
+initialization code, by unifying it for the firmware based ISP specific
+sensors and the external ones with a built-in ISP. Also we could avoid 
+having
+the bindings defined by current architecture of the driver.
 
-This is no different from what would be required to handle INTx on
-Marvell, the PCI-E driver would have to create a chained irqchip from
-the PEX interrupt and decode the cause register into INTA/B/C/D.
-
-> > > Again, I don't see how it's possible to not care whether it's MSI or
-> > > IPI. IPIs have to call handle_IPI() which is a ARM-specific call, and I
-> > > don't understand how handle_fasteoi_irq() would end up calling
-> > > handle_IPI().
-> > 
-> > - The main IRQ vector is entered, it decodes the main cause register
-> >   and calls the handler for the doorbell
-> > - The doorbell handler is setup as a chained handler and it uses
-> >   handle_fasteoi_irq to enter into armada_370_xp_handle_irq
-> > - armada_370_xp_handle_irq then runs through all bits and calls their
-> >   handlers
-> > - the handler for IPI bits is associated with the IPI handler that
-> >   simply calls handle_IPI(...)
-> > 
-> > handle_fasteoi_irq acks's and clears the handled bits in the doorbell
-> > register at the proper time.
-> 
-> Could you propose some code that implements this? The existing code
-> works fine, and is modeled after what the GIC IRQ driver is doing. I
-> don't say what you're proposing is not interesting, but just that it
-> looks like every time I come with some code, you're suggesting me to
-> 'reinvent' the whole world, and you've never come up with some code to
-> help in a direction or another.
-
-I'll send you my doorbell driver for Kirkwood - it doesn't attempt to
-generically solve the MSI problem, but the basic template shows how to
-wire up the doorbell concept to irqchip's generic code, and it works
-in the MSI role with lots of rather ugly hacking..
-
-The XP driver is taking some small shortcuts because it only uses the
-doorbell for IPI..
-
-Jason
+Nevertheless, coming back to your question, the I2C controller driver would
+be in same module as the FIMC-IS driver. From user space perspective nothing
+changes when you add I2C bus driver and register the sensor in a 
+standard way.
+What exactly couldn't be done in the kernel ?
