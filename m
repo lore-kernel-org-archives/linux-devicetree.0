@@ -1,151 +1,243 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [RFCv1 02/11] irqchip: move IRQ driver for Armada 370/XP
-Date: Tue, 26 Mar 2013 17:52:17 +0100
-Message-ID: <1364316746-8702-3-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [RFCv1 09/11] pci: mvebu: add MSI support
+Date: Tue, 26 Mar 2013 17:52:24 +0100
+Message-ID: <1364316746-8702-10-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1364316746-8702-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1364316746-8702-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1364316746-8702-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, Thierry Reding <thierry.reding@avionic-design.de>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-When the Marvell Armada 370/XP support was included in the kernel, the
-drivers/irqchip/ directory didn't exist and the minimal infrastructure
-in it also didn't exist. Now that we have those things in place, we
-move the Armada 370/XP IRQ controller driver from
-arch/arm/mach-mvebu/irq-armada-370-xp.c to
-drivers/irqchip/irq-armada-370-xp.c.
+This commit adds the MSI support for the Marvell EBU PCIe driver. The
+driver now looks at the 'msi-parent' property of the PCIe controller
+DT node, and if it exists, it gets the associated IRQ domain, which
+should be the MSI interrupt controller registered by the IRQ
+controller driver.
 
-Note in order to reduce code movement and therefore ease the review of
-this patch, we intentionally introduce a forward declaration of
-armada_370_xp_handle_irq(). It is in fact not needed because this
-handler can now simply be implemented before
-armada_370_xp_mpic_of_init(). That will be done in the next commit.
+Using this, the PCIe driver registers the ->setup_irq() and
+->teardown_irq() callbacks using the newly introduced msi_chip
+infrastructure, which allows the kernel PCI core to use the MSI
+functionality.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
- arch/arm/mach-mvebu/Makefile                       |    2 +-
- arch/arm/mach-mvebu/armada-370-xp.c                |    4 ++--
- drivers/irqchip/Makefile                           |    1 +
- .../irqchip}/irq-armada-370-xp.c                   |   22 ++++++++++----------
- 4 files changed, 15 insertions(+), 14 deletions(-)
- rename {arch/arm/mach-mvebu => drivers/irqchip}/irq-armada-370-xp.c (95%)
+ .../devicetree/bindings/pci/mvebu-pci.txt          |    5 +
+ drivers/pci/host/pci-mvebu.c                       |  128 ++++++++++++++++++++
+ 2 files changed, 133 insertions(+)
 
-diff --git a/arch/arm/mach-mvebu/Makefile b/arch/arm/mach-mvebu/Makefile
-index ba769e0..2d04f0e 100644
---- a/arch/arm/mach-mvebu/Makefile
-+++ b/arch/arm/mach-mvebu/Makefile
-@@ -5,6 +5,6 @@ AFLAGS_coherency_ll.o		:= -Wa,-march=armv7-a
+diff --git a/Documentation/devicetree/bindings/pci/mvebu-pci.txt b/Documentation/devicetree/bindings/pci/mvebu-pci.txt
+index 192bdfb..53cc437 100644
+--- a/Documentation/devicetree/bindings/pci/mvebu-pci.txt
++++ b/Documentation/devicetree/bindings/pci/mvebu-pci.txt
+@@ -14,6 +14,10 @@ Mandatory properties:
+   corresponding registers
+ - ranges: ranges for the PCI memory and I/O regions
  
- obj-y				 += system-controller.o
- obj-$(CONFIG_MACH_ARMADA_370_XP) += armada-370-xp.o
--obj-$(CONFIG_ARCH_MVEBU)	 += coherency.o coherency_ll.o pmsu.o irq-armada-370-xp.o
-+obj-$(CONFIG_ARCH_MVEBU)	 += coherency.o coherency_ll.o pmsu.o
- obj-$(CONFIG_SMP)                += platsmp.o headsmp.o
- obj-$(CONFIG_HOTPLUG_CPU)        += hotplug.o
-diff --git a/arch/arm/mach-mvebu/armada-370-xp.c b/arch/arm/mach-mvebu/armada-370-xp.c
-index d98a0ca..42a4cb3 100644
---- a/arch/arm/mach-mvebu/armada-370-xp.c
-+++ b/arch/arm/mach-mvebu/armada-370-xp.c
-@@ -20,6 +20,7 @@
- #include <linux/clk/mvebu.h>
- #include <linux/dma-mapping.h>
++Optional properties:
++- msi-parent: a phandle pointing to the interrupt controller that
++  handles the MSI interrupts.
++
+ In addition, the Device Tree node must have sub-nodes describing each
+ PCIe interface, having the following mandatory properties:
+ - reg: used only for interrupt mapping, so only the first four bytes
+@@ -43,6 +47,7 @@ pcie-controller {
+ 	#address-cells = <3>;
+ 	#size-cells = <2>;
+ 
++	msi-parent = <&msi>;
+ 	bus-range = <0x00 0xff>;
+ 
+ 	reg = <0xd0040000 0x2000>, <0xd0042000 0x2000>,
+diff --git a/drivers/pci/host/pci-mvebu.c b/drivers/pci/host/pci-mvebu.c
+index 9e6b137..b46fab8 100644
+--- a/drivers/pci/host/pci-mvebu.c
++++ b/drivers/pci/host/pci-mvebu.c
+@@ -7,17 +7,23 @@
+  */
+ 
+ #include <linux/kernel.h>
++#include <linux/irq.h>
++#include <linux/irqdomain.h>
+ #include <linux/pci.h>
++#include <linux/msi.h>
+ #include <linux/clk.h>
+ #include <linux/module.h>
  #include <linux/mbus.h>
-+#include <linux/irqchip.h>
- #include <asm/hardware/cache-l2x0.h>
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
-@@ -95,8 +96,7 @@ DT_MACHINE_START(ARMADA_XP_DT, "Marvell Armada 370/XP (Device Tree)")
- 	.init_machine	= armada_370_xp_dt_init,
- 	.map_io		= armada_370_xp_map_io,
- 	.init_early	= armada_370_xp_init_early,
--	.init_irq	= armada_370_xp_init_irq,
--	.handle_irq     = armada_370_xp_handle_irq,
-+	.init_irq	= irqchip_init,
- 	.init_time	= armada_370_xp_timer_and_clk_init,
- 	.restart	= mvebu_restart,
- 	.dt_compat	= armada_370_xp_dt_compat,
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 98e3b87..dae27a7 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -2,6 +2,7 @@ obj-$(CONFIG_IRQCHIP)			+= irqchip.o
+ #include <linux/slab.h>
+ #include <linux/platform_device.h>
++#include <linux/interrupt.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_platform.h>
  
- obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
- obj-$(CONFIG_ARCH_EXYNOS)		+= exynos-combiner.o
-+obj-$(CONFIG_ARCH_MVEBU)		+= irq-armada-370-xp.o
- obj-$(CONFIG_METAG)			+= irq-metag-ext.o
- obj-$(CONFIG_METAG_PERFCOUNTER_IRQS)	+= irq-metag.o
- obj-$(CONFIG_ARCH_SUNXI)		+= irq-sunxi.o
-diff --git a/arch/arm/mach-mvebu/irq-armada-370-xp.c b/drivers/irqchip/irq-armada-370-xp.c
-similarity index 95%
-rename from arch/arm/mach-mvebu/irq-armada-370-xp.c
-rename to drivers/irqchip/irq-armada-370-xp.c
-index f6699f3..d20a832 100644
---- a/arch/arm/mach-mvebu/irq-armada-370-xp.c
-+++ b/drivers/irqchip/irq-armada-370-xp.c
-@@ -25,6 +25,9 @@
- #include <asm/mach/arch.h>
- #include <asm/exception.h>
- #include <asm/smp_plat.h>
-+#include <asm/mach/irq.h>
++#define INT_PCI_MSI_NR (16)
 +
-+#include "irqchip.h"
+ /*
+  * PCIe unit register offsets.
+  */
+@@ -101,10 +107,19 @@ struct mvebu_sw_pci_bridge {
  
- /* Interrupt Controller Registers Map */
- #define ARMADA_370_XP_INT_SET_MASK_OFFS		(0x48)
-@@ -202,6 +205,9 @@ static struct irq_domain_ops armada_370_xp_mpic_irq_ops = {
- 	.xlate = irq_domain_xlate_onecell,
- };
+ struct mvebu_pcie_port;
  
-+static asmlinkage void __exception_irq_entry
-+armada_370_xp_handle_irq(struct pt_regs *regs);
++struct mvebu_pcie_msi {
++	DECLARE_BITMAP(used, INT_PCI_MSI_NR);
++	struct irq_domain *domain;
++	struct mutex lock;
++	struct msi_chip chip;
++	phys_addr_t doorbell;
++};
 +
- static int __init armada_370_xp_mpic_of_init(struct device_node *node,
- 					     struct device_node *parent)
+ /* Structure representing all PCIe interfaces */
+ struct mvebu_pcie {
+ 	struct platform_device *pdev;
+ 	struct mvebu_pcie_port *ports;
++	struct mvebu_pcie_msi msi;
+ 	struct resource io;
+ 	struct resource realio;
+ 	struct resource mem;
+@@ -546,6 +561,11 @@ static inline struct mvebu_pcie *sys_to_pcie(struct pci_sys_data *sys)
+ 	return sys->private_data;
+ }
+ 
++static inline struct mvebu_pcie_msi *to_mvebu_msi(struct msi_chip *chip)
++{
++	return container_of(chip, struct mvebu_pcie_msi, chip);
++}
++
+ /* Find the PCIe interface that corresponds to the given bus */
+ static struct mvebu_pcie_port *mvebu_find_port_from_bus(struct mvebu_pcie *pcie,
+ 							int bus)
+@@ -710,6 +730,8 @@ static struct pci_bus *mvebu_pcie_scan_bus(int nr, struct pci_sys_data *sys)
+ 	if (!bus)
+ 		return NULL;
+ 
++	bus->msi = &pcie->msi.chip;
++
+ 	pci_scan_child_bus(bus);
+ 
+ 	return bus;
+@@ -786,6 +808,105 @@ static void __iomem *mvebu_pcie_map_registers(struct platform_device *pdev,
+ 	return devm_request_and_ioremap(&pdev->dev, &regs);
+ }
+ 
++#if defined(CONFIG_PCI_MSI)
++static int mvebu_pcie_msi_alloc(struct mvebu_pcie_msi *chip)
++{
++	int msi;
++
++	mutex_lock(&chip->lock);
++
++	msi = find_first_zero_bit(chip->used, INT_PCI_MSI_NR);
++
++	if (msi < INT_PCI_MSI_NR)
++		set_bit(msi, chip->used);
++	else
++		msi = -ENOSPC;
++
++	mutex_unlock(&chip->lock);
++
++	return msi;
++}
++
++static void mvebu_pcie_msi_free(struct mvebu_pcie_msi *chip, unsigned long irq)
++{
++	struct device *dev = chip->chip.dev;
++
++	mutex_lock(&chip->lock);
++
++	if (!test_bit(irq, chip->used))
++		dev_err(dev, "trying to free unused MSI#%lu\n", irq);
++	else
++		clear_bit(irq, chip->used);
++
++	mutex_unlock(&chip->lock);
++}
++
++static int mvebu_pcie_setup_msi_irq(struct msi_chip *chip,
++				    struct pci_dev *pdev,
++				    struct msi_desc *desc)
++{
++	struct mvebu_pcie_msi *msi = to_mvebu_msi(chip);
++	struct msi_msg msg;
++	unsigned int irq;
++	int hwirq;
++
++	hwirq = mvebu_pcie_msi_alloc(msi);
++	if (hwirq < 0)
++		return hwirq;
++
++	irq = irq_create_mapping(msi->domain, hwirq);
++	if (!irq)
++		return -EINVAL;
++
++	irq_set_msi_desc(irq, desc);
++
++	msg.address_lo = msi->doorbell;
++	msg.address_hi = 0;
++	msg.data = 0xf00 | (hwirq + 16);
++
++	write_msi_msg(irq, &msg);
++
++	return 0;
++}
++
++static void mvebu_pcie_teardown_msi_irq(struct msi_chip *chip,
++					unsigned int irq)
++{
++	struct mvebu_pcie_msi *msi = to_mvebu_msi(chip);
++	struct irq_data *d = irq_get_irq_data(irq);
++
++	mvebu_pcie_msi_free(msi, d->hwirq);
++}
++
++static int mvebu_pcie_enable_msi(struct mvebu_pcie *pcie)
++{
++	struct device_node *msi_node;
++	struct mvebu_pcie_msi *msi;
++
++	msi = &pcie->msi;
++
++	mutex_init(&msi->lock);
++
++	msi_node = of_parse_phandle(pcie->pdev->dev.of_node,
++				    "msi-parent", 0);
++	if (!msi_node)
++		return -EINVAL;
++
++	msi->domain = irq_find_host(msi_node);
++	if (!msi->domain)
++		return -EINVAL;
++
++	if (of_property_read_u32(msi_node, "marvell,doorbell", &msi->doorbell))
++		return -EINVAL;
++
++	msi->chip.dev = &pcie->pdev->dev;
++	msi->chip.setup_irq = mvebu_pcie_setup_msi_irq;
++	msi->chip.teardown_irq = mvebu_pcie_teardown_msi_irq;
++
++	return 0;
++}
++#endif /* CONFIG_PCI_MSI */
++
+ static int __init mvebu_pcie_probe(struct platform_device *pdev)
  {
-@@ -237,11 +243,13 @@ static int __init armada_370_xp_mpic_of_init(struct device_node *node,
+ 	struct mvebu_pcie *pcie;
+@@ -903,6 +1024,13 @@ static int __init mvebu_pcie_probe(struct platform_device *pdev)
  
- #endif
+ 	mvebu_pcie_enable(pcie);
  
-+	set_handle_irq(armada_370_xp_handle_irq);
++#ifdef CONFIG_PCI_MSI
++	ret = mvebu_pcie_enable_msi(pcie);
++	if (ret)
++		dev_warn(&pdev->dev, "could not enable MSI support: %d\n",
++			 ret);
++#endif
 +
  	return 0;
  }
  
--asmlinkage void __exception_irq_entry armada_370_xp_handle_irq(struct pt_regs
--							       *regs)
-+static asmlinkage void __exception_irq_entry
-+armada_370_xp_handle_irq(struct pt_regs *regs)
- {
- 	u32 irqstat, irqnr;
- 
-@@ -283,12 +291,4 @@ asmlinkage void __exception_irq_entry armada_370_xp_handle_irq(struct pt_regs
- 	} while (1);
- }
- 
--static const struct of_device_id mpic_of_match[] __initconst = {
--	{.compatible = "marvell,mpic", .data = armada_370_xp_mpic_of_init},
--	{},
--};
--
--void __init armada_370_xp_init_irq(void)
--{
--	of_irq_init(mpic_of_match);
--}
-+IRQCHIP_DECLARE(armada_370_xp_mpic, "marvell,mpic", armada_370_xp_mpic_of_init);
 -- 
 1.7.9.5
