@@ -1,48 +1,65 @@
-From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v4 0/6] support other fsl SoCs with usbmisc + small fixes
-Date: Tue, 26 Mar 2013 14:53:06 +0200
-Message-ID: <87r4j2jpal.fsf@ashishki-desk.ger.corp.intel.com>
-References: <1354033021-10585-1-git-send-email-m.grzeschik@pengutronix.de> <20121128025217.GC18593@nchen-desktop> <87ip6mor1e.fsf@ashishki-desk.ger.corp.intel.com> <CAOMZO5ArDLKDLEzhYc7EP2CNQGcT=vO7ctbiEsjzsGs+EaT7Dw@mail.gmail.com> <20130325162931.GB22810@pengutronix.de> <20130325173019.GA1992@kroah.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130325173019.GA1992-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH v2] ARM: dts: Add SYSREG block node for S5P/Exynos4 SoC series
+Date: Tue, 26 Mar 2013 14:00:21 +0100
+Message-ID: <1364302821-17989-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: kgene.kim@samsung.com
+Cc: kyungmin.park@samsung.com, thomas.abraham@linaro.org, t.figa@samsung.com, myungjoo.ham@samsung.com, dh09.lee@samsung.com, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> writes:
+This patch adds device tree node for the SYSREG registers block
+found in Samsung S5P/Exynos SoC series. The SYSREG module
+generates control signals for the ARM CPU and various IP blocks
+and buses. SYSREG block registers are exposed through APB bus
+interface. A sysreg device tree node is to be associated with
+mfd syscon driver and all SYSREG clients should use regmap
+interface it provides. It allows to eliminate any possible races
+and conflicts should different drivers attempt to concurrently
+access same register.
 
-> Ugh, this is getting to be a horrible mess.
->
-> Alexander, what is going on here?  You can't just constantly ignore
-> patches, that's reserved for kernel developers with more experience :)
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
 
-Long story short, I'm waiting for a coherent set of patches to arrive to
-my inbox (I guess that's a fair expectation) for them to be included in
-what I am going to send you on friday, if that's reasonable. I'll also
-post my current stack of chipidea patches later today to sync with
-everybody.
+Changes since v1:
+ - Added missing "samsung," prefix to the compatible property,
+ - the binding documentation moved to ...bindings/arm/samsung
+   as SYSREG block can be also found on other SoCs than Exynos.
+---
+ .../devicetree/bindings/arm/samsung/sysreg.txt     |    7 +++++++
+ arch/arm/boot/dts/exynos4.dtsi                     |    5 +++++
+ 2 files changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/samsung/sysreg.txt
 
-This email did bring to my attention 6 patches that I could have missed
-otherwise. And these are the *only* patches from the abovementioned ones
-that don't have unaddressed comments or obscure dependencies on other
-patchsets and/or trees.
-
-> If I don't hear back from you by Wednesday this week, with a specific
-> plan for how to get all of these fixes to me by the end of this week,
-> I'm going to assume that you are missing, and will just start taking
-> chipidea patches directly myself, sorry.
-
-For a long story, see my other email [1].
-
-[1] http://marc.info/?l=linux-arm-kernel&m=136429960606655&w=2
-
-Regards,
---
-Alex
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+new file mode 100644
+index 0000000..5039c0a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+@@ -0,0 +1,7 @@
++SAMSUNG S5P/Exynos SoC series System Registers (SYSREG)
++
++Properties:
++ - name : should be 'sysreg';
++ - compatible : should contain "samsung,<chip name>-sysreg", "syscon";
++   For Exynos4 SoC series it should be "samsung,exynos4-sysreg", "syscon";
++ - reg : offset and length of the register set.
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index 9ac47d5..462f055 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -82,6 +82,11 @@
+ 		reg = <0x10440000 0x1000>;
+ 	};
+ 
++	sys_reg: sysreg {
++		compatible = "samsung,exynos4-sysreg", "syscon";
++		reg = <0x10010000 0x400>;
++	};
++
+ 	watchdog@10060000 {
+ 		compatible = "samsung,s3c2410-wdt";
+ 		reg = <0x10060000 0x100>;
+-- 
+1.7.9.5
