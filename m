@@ -1,243 +1,88 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [RFCv1 09/11] pci: mvebu: add MSI support
-Date: Tue, 26 Mar 2013 17:52:24 +0100
-Message-ID: <1364316746-8702-10-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1364316746-8702-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1364316746-8702-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, Thierry Reding <thierry.reding@avionic-design.de>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>
+From: Graeme Gregory <gg@slimlogic.co.uk>
+Subject: Re: [PATCH v3] USB: PHY: Palmas USB Transceiver Driver
+Date: Tue, 26 Mar 2013 16:57:30 +0000
+Message-ID: <5151D37A.4020300@slimlogic.co.uk>
+References: <1362662506-14823-4-git-send-email-kishon@ti.com> <1364203926-24488-1-git-send-email-kishon@ti.com> <51501CFB.4020905@nvidia.com> <51513A40.7080905@ti.com> <515163F6.3010400@slimlogic.co.uk> <51516695.8020808@nvidia.com> <51516A10.40704@slimlogic.co.uk> <5151CB36.1050404@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5151CB36.1050404@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, Kishon Vijay Abraham I <kishon@ti.com>, "balbi@ti.com" <balbi@ti.com>, Rajendra Nayak <rnayak@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "s-guiriec@ti.com" <s-guiriec@ti.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Ian Lartey <ian@slimlogic.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the MSI support for the Marvell EBU PCIe driver. The
-driver now looks at the 'msi-parent' property of the PCIe controller
-DT node, and if it exists, it gets the associated IRQ domain, which
-should be the MSI interrupt controller registered by the IRQ
-controller driver.
+On 26/03/13 16:22, Stephen Warren wrote:
+> On 03/26/2013 03:27 AM, Graeme Gregory wrote:
+> ...
+>> If we are tightly coupling as above then using platform_irq is an extra
+>> inefficiency. You both have to populate this then parse it afterwards.
+>> Why not just use the regmap helper? Ill admit this code is like this as
+>> there was a period where platform irqs in DT just was not working right!
+>>
+>> We should really agree now if we are going for loose or tight coupling
+>> now rather than keep switching?
+> Yes, this is something that I think needs to be fully resolved before
+> any more Palmas patches are discussed.
+>
+> So you can have the MFD components fully coupled or completely
+> standalone. We should fully pick one or the other, not some mish-mash of
+> the two.
+>
+> In practical terms, this means that:
+>
+> a) Tightly coupled
+>
+> The top-level MFD device knows exactly which child devices are present.
+> It has an internal table to defined the set of child devices, and
+> instantiate them. It provides them with IRQs, I2C addresses and register
+> base addresses (or regmaps), etc. etc., using purely Palmas-internal
+> APIs. If using device tree, the DT won't include any representation of
+> which child devices are present, nor their I2C addresses, nor their
+> register addresses, nor their IRQs, etc. That's all inside the driver.
+>
+> b) Completely decoupled.
+>
+> The top-level MFD device knows nothing about its children. It simply
+> provides a bus into which they can be instantiated, and a generic IRQ
+> controller into which they can hook.
+>
+> Platform data or device tree is solely used to define which children
+> exist, which of the top-level MFD's I2C addresses is used for each
+> child, the base register address for each child device, the IRQs used by
+> each child device, etc.
+>
+>
+> Which of those two models are different people expecting?
+>
+> (b) appears to be the most flexible, and since you have defined the DT
+> bindings to contain a separate node for each MFD child device, each with
+> its own compatible value, seems to be what you're aiming for. In this
+> scenario, there should be no private APIs between the top-level MFD
+> device and the children though; everything should be using standard bus
+> APIs.
+I was aiming towards (b) which would allow drivers for IP blocks that I
+know are shared between multiple devices such as RTC which is shared by
+twl6030, twl6032, tps80032, tps65910, tps65911, tps65912, tps80035,
+tps80036 and probably many more.
 
-Using this, the PCIe driver registers the ->setup_irq() and
-->teardown_irq() callbacks using the newly introduced msi_chip
-infrastructure, which allows the kernel PCI core to use the MSI
-functionality.
+Finishing (b) implementation is currently beyond the time I have
+available I think.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
----
- .../devicetree/bindings/pci/mvebu-pci.txt          |    5 +
- drivers/pci/host/pci-mvebu.c                       |  128 ++++++++++++++++++++
- 2 files changed, 133 insertions(+)
+If we choose to ignore path (b) and ignore the code duplication of half
+a dozen RTC drivers for the same IP than the path to (a) is much quicker
+and easier. Can just rip out a lot of the DT stuff, use mfd_add_devices.
+Makes the binding much simpler. Means we don't have to use platform
+resources for IRQs. Makes palmas and palmas-charger just 2 black boxes
+which is in line with other MFDs.
 
-diff --git a/Documentation/devicetree/bindings/pci/mvebu-pci.txt b/Documentation/devicetree/bindings/pci/mvebu-pci.txt
-index 192bdfb..53cc437 100644
---- a/Documentation/devicetree/bindings/pci/mvebu-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/mvebu-pci.txt
-@@ -14,6 +14,10 @@ Mandatory properties:
-   corresponding registers
- - ranges: ranges for the PCI memory and I/O regions
- 
-+Optional properties:
-+- msi-parent: a phandle pointing to the interrupt controller that
-+  handles the MSI interrupts.
-+
- In addition, the Device Tree node must have sub-nodes describing each
- PCIe interface, having the following mandatory properties:
- - reg: used only for interrupt mapping, so only the first four bytes
-@@ -43,6 +47,7 @@ pcie-controller {
- 	#address-cells = <3>;
- 	#size-cells = <2>;
- 
-+	msi-parent = <&msi>;
- 	bus-range = <0x00 0xff>;
- 
- 	reg = <0xd0040000 0x2000>, <0xd0042000 0x2000>,
-diff --git a/drivers/pci/host/pci-mvebu.c b/drivers/pci/host/pci-mvebu.c
-index 9e6b137..b46fab8 100644
---- a/drivers/pci/host/pci-mvebu.c
-+++ b/drivers/pci/host/pci-mvebu.c
-@@ -7,17 +7,23 @@
-  */
- 
- #include <linux/kernel.h>
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
- #include <linux/pci.h>
-+#include <linux/msi.h>
- #include <linux/clk.h>
- #include <linux/module.h>
- #include <linux/mbus.h>
- #include <linux/slab.h>
- #include <linux/platform_device.h>
-+#include <linux/interrupt.h>
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
- 
-+#define INT_PCI_MSI_NR (16)
-+
- /*
-  * PCIe unit register offsets.
-  */
-@@ -101,10 +107,19 @@ struct mvebu_sw_pci_bridge {
- 
- struct mvebu_pcie_port;
- 
-+struct mvebu_pcie_msi {
-+	DECLARE_BITMAP(used, INT_PCI_MSI_NR);
-+	struct irq_domain *domain;
-+	struct mutex lock;
-+	struct msi_chip chip;
-+	phys_addr_t doorbell;
-+};
-+
- /* Structure representing all PCIe interfaces */
- struct mvebu_pcie {
- 	struct platform_device *pdev;
- 	struct mvebu_pcie_port *ports;
-+	struct mvebu_pcie_msi msi;
- 	struct resource io;
- 	struct resource realio;
- 	struct resource mem;
-@@ -546,6 +561,11 @@ static inline struct mvebu_pcie *sys_to_pcie(struct pci_sys_data *sys)
- 	return sys->private_data;
- }
- 
-+static inline struct mvebu_pcie_msi *to_mvebu_msi(struct msi_chip *chip)
-+{
-+	return container_of(chip, struct mvebu_pcie_msi, chip);
-+}
-+
- /* Find the PCIe interface that corresponds to the given bus */
- static struct mvebu_pcie_port *mvebu_find_port_from_bus(struct mvebu_pcie *pcie,
- 							int bus)
-@@ -710,6 +730,8 @@ static struct pci_bus *mvebu_pcie_scan_bus(int nr, struct pci_sys_data *sys)
- 	if (!bus)
- 		return NULL;
- 
-+	bus->msi = &pcie->msi.chip;
-+
- 	pci_scan_child_bus(bus);
- 
- 	return bus;
-@@ -786,6 +808,105 @@ static void __iomem *mvebu_pcie_map_registers(struct platform_device *pdev,
- 	return devm_request_and_ioremap(&pdev->dev, &regs);
- }
- 
-+#if defined(CONFIG_PCI_MSI)
-+static int mvebu_pcie_msi_alloc(struct mvebu_pcie_msi *chip)
-+{
-+	int msi;
-+
-+	mutex_lock(&chip->lock);
-+
-+	msi = find_first_zero_bit(chip->used, INT_PCI_MSI_NR);
-+
-+	if (msi < INT_PCI_MSI_NR)
-+		set_bit(msi, chip->used);
-+	else
-+		msi = -ENOSPC;
-+
-+	mutex_unlock(&chip->lock);
-+
-+	return msi;
-+}
-+
-+static void mvebu_pcie_msi_free(struct mvebu_pcie_msi *chip, unsigned long irq)
-+{
-+	struct device *dev = chip->chip.dev;
-+
-+	mutex_lock(&chip->lock);
-+
-+	if (!test_bit(irq, chip->used))
-+		dev_err(dev, "trying to free unused MSI#%lu\n", irq);
-+	else
-+		clear_bit(irq, chip->used);
-+
-+	mutex_unlock(&chip->lock);
-+}
-+
-+static int mvebu_pcie_setup_msi_irq(struct msi_chip *chip,
-+				    struct pci_dev *pdev,
-+				    struct msi_desc *desc)
-+{
-+	struct mvebu_pcie_msi *msi = to_mvebu_msi(chip);
-+	struct msi_msg msg;
-+	unsigned int irq;
-+	int hwirq;
-+
-+	hwirq = mvebu_pcie_msi_alloc(msi);
-+	if (hwirq < 0)
-+		return hwirq;
-+
-+	irq = irq_create_mapping(msi->domain, hwirq);
-+	if (!irq)
-+		return -EINVAL;
-+
-+	irq_set_msi_desc(irq, desc);
-+
-+	msg.address_lo = msi->doorbell;
-+	msg.address_hi = 0;
-+	msg.data = 0xf00 | (hwirq + 16);
-+
-+	write_msi_msg(irq, &msg);
-+
-+	return 0;
-+}
-+
-+static void mvebu_pcie_teardown_msi_irq(struct msi_chip *chip,
-+					unsigned int irq)
-+{
-+	struct mvebu_pcie_msi *msi = to_mvebu_msi(chip);
-+	struct irq_data *d = irq_get_irq_data(irq);
-+
-+	mvebu_pcie_msi_free(msi, d->hwirq);
-+}
-+
-+static int mvebu_pcie_enable_msi(struct mvebu_pcie *pcie)
-+{
-+	struct device_node *msi_node;
-+	struct mvebu_pcie_msi *msi;
-+
-+	msi = &pcie->msi;
-+
-+	mutex_init(&msi->lock);
-+
-+	msi_node = of_parse_phandle(pcie->pdev->dev.of_node,
-+				    "msi-parent", 0);
-+	if (!msi_node)
-+		return -EINVAL;
-+
-+	msi->domain = irq_find_host(msi_node);
-+	if (!msi->domain)
-+		return -EINVAL;
-+
-+	if (of_property_read_u32(msi_node, "marvell,doorbell", &msi->doorbell))
-+		return -EINVAL;
-+
-+	msi->chip.dev = &pcie->pdev->dev;
-+	msi->chip.setup_irq = mvebu_pcie_setup_msi_irq;
-+	msi->chip.teardown_irq = mvebu_pcie_teardown_msi_irq;
-+
-+	return 0;
-+}
-+#endif /* CONFIG_PCI_MSI */
-+
- static int __init mvebu_pcie_probe(struct platform_device *pdev)
- {
- 	struct mvebu_pcie *pcie;
-@@ -903,6 +1024,13 @@ static int __init mvebu_pcie_probe(struct platform_device *pdev)
- 
- 	mvebu_pcie_enable(pcie);
- 
-+#ifdef CONFIG_PCI_MSI
-+	ret = mvebu_pcie_enable_msi(pcie);
-+	if (ret)
-+		dev_warn(&pdev->dev, "could not enable MSI support: %d\n",
-+			 ret);
-+#endif
-+
- 	return 0;
- }
- 
--- 
-1.7.9.5
+So I think I have come around to just do it the easy way and select (a)
+
+I shall work on the main palmas series to implement (a).
+
+This will obviously invalidate some comments on this patch and the main
+series.
+
+Graeme
+
