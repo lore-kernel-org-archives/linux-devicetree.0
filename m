@@ -1,120 +1,131 @@
-From: Graeme Gregory <gg@slimlogic.co.uk>
-Subject: Re: [PATCH v3] USB: PHY: Palmas USB Transceiver Driver
-Date: Tue, 26 Mar 2013 09:01:42 +0000
-Message-ID: <515163F6.3010400@slimlogic.co.uk>
-References: <1362662506-14823-4-git-send-email-kishon@ti.com> <1364203926-24488-1-git-send-email-kishon@ti.com> <51501CFB.4020905@nvidia.com> <51513A40.7080905@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] mfd: db8500-prcmu: Fetch the PRCMU TCDM base address
+ from Device Tree
+Date: Tue, 26 Mar 2013 10:11:13 +0100
+Message-ID: <CACRpkdZxU197moM_00UQr-tHdip4b50c+CfYkR5OK+MbwsE-aw@mail.gmail.com>
+References: <1364223758-17621-1-git-send-email-lee.jones@linaro.org>
+ <1364223758-17621-2-git-send-email-lee.jones@linaro.org>
+ <201303251540.51104.arnd@arndb.de>
+ <20130325164600.GA11734@gmail.com>
+ <CACRpkdbn4WARSp7_MUpCZTghTrsPYvsa9GEUC31T7nP_=9oZag@mail.gmail.com>
+ <20130326081704.GB11734@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51513A40.7080905@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, "balbi@ti.com" <balbi@ti.com>, Rajendra Nayak <rnayak@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "s-guiriec@ti.com" <s-guiriec@ti.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130326081704.GB11734-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/03/13 06:03, Kishon Vijay Abraham I wrote:
-> Hi,
+On Tue, Mar 26, 2013 at 9:17 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, 25 Mar 2013, Linus Walleij wrote:
+>> On Mon, Mar 25, 2013 at 5:46 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>
+>> >> >         res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+>> >> >                                            "prcmu-tcpm");
+>> >> >         if (!res) {
+>> >> > -               dev_err(&pdev->dev,
+>> >> > -                       "Error: no prcmu tcpm memory region provided\n");
+>> >> > -               return;
+>> >> > -       }
+>> >> > -       tcpm_base = ioremap(res->start, resource_size(res));
+>> >> > +               if (np) {
+>> >> > +                       tcpm_np = of_find_node_by_name(np->parent,
+>> >> > +                                                      "prcmu-tcpm-per4");
+>> >> > +                       if (!tcpm_np) {
+>> >> > +                               dev_err(&pdev->dev,
+>> >> > +                                       "no prcmu tcpm mem region provided\n");
+>> >> > +                               return;
+>> >> > +                       }
+>> >> > +                       tcpm_base = of_iomap(tcpm_np, 0);
+>> >> > +               }
+>> >> > +       } else
+>> >> > +               tcpm_base = ioremap(res->start, resource_size(res));
+>> >> > +
+>> >>
+>> >> Why don't you just add these extra registers to the prcmu node itself like
+>> >>
+>> >> diff --git a/arch/arm/boot/dts/dbx5x0.dtsi b/arch/arm/boot/dts/dbx5x0.dtsi
+>> >> index 9de9309..6ee6c31 100644
+>> >> --- a/arch/arm/boot/dts/dbx5x0.dtsi
+>> >> +++ b/arch/arm/boot/dts/dbx5x0.dtsi
+>> >> @@ -191,8 +191,8 @@
+>> >>
+>> >>               prcmu: prcmu@80157000 {
+>> >>                       compatible = "stericsson,db8500-prcmu";
+>> >> -                     reg = <0x80157000 0x1000>;
+>> >> -                     reg-names = "prcmu";
+>> >> +                     reg = <0x80157000 0x1000>, <0x801b0000 0x1000>, <0x801b8000 0x1000>;
+>> >> +                     reg-names = "prcmu", "prcmu-tcpm", "prcmu-tcdm-per4";
+>> >>                       interrupts = <0 47 0x4>;
+>> >>                       #address-cells = <1>;
+>> >>                       #size-cells = <1>;
+>> >>
+>> >>
+>> >> and document those in the prcmu binding?
+>> >>
+>> >> That would keep the code simpler and the same for both cases.
+>> >
+>> > I'm not sure you can. These addresses differ from platform to
+>> > platform, so I'd need to provide the base PRCMU address in
+>> > dbx5x0.dtsi, then the other two in the dts files. Can you do that?
+>>
+>> Better ask on devicetree-discuss.
+>>
+>> What it reflects are differences between SoC:s, so I think the
+>> right solution is to split it in a three-layer cake:
+>>
+>> dbx5x0.dtsi -> included by
+>> db8500.dtsi -> included by
+>> snowball/hrefv60plus.dts
+>>
+>> dbx5x0.dtsi -> included by
+>> dbx540.dtsi -> included by
+>> ccu9540/ccu8540.dts
+>>
+>> Here you may insert the reg property into the node at the
+>> db8500.dtsi or dbx540.dtsi layer.
 >
-> On Monday 25 March 2013 03:16 PM, Laxman Dewangan wrote:
->> On Monday 25 March 2013 03:02 PM, Kishon Vijay Abraham I wrote:
->>> From: Graeme Gregory <gg@slimlogic.co.uk>
->>>
->>> This is the driver for the OTG transceiver built into the Palmas
->>> chip. It
->>> handles the various USB OTG events that can be generated by cable
->>> insertion/removal.
->>>
->>> Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
->>> Signed-off-by: Moiz Sonasath <m-sonasath@ti.com>
->>> Signed-off-by: Ruchika Kharwar <ruchika@ti.com>
->>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>> Signed-off-by: Sebastien Guiriec <s-guiriec@ti.com>
->>> ---
->>
->> I think this driver is more over the cable connection like vbus
->> detetcion or ID pin detection.
->> Then why not it is implemented based on extcon framework?
+> It's easy done, if that's the right way.
 >
-> extcon framework uses notification mechanism and Felipe dint like
-> using notification here. right Felipe?
->>
->> That way, generic usb driver (like tegra_usb driver) will get
->> notification through extcon.
->>
->> We need this cable detection through extcon on our tegra solution
->> through the Palmas.
->>
->>
->> +#include <linux/of.h>
->> +#include <linux/of_platform.h>
->> +
->> +static int palmas_usb_read(struct palmas *palmas, unsigned int reg,
->> +               unsigned int *dest)
->> +{
->> +       unsigned int addr;
->> +       int slave;
->> +
->> +       slave = PALMAS_BASE_TO_SLAVE(PALMAS_USB_OTG_BASE);
->> +       addr = PALMAS_BASE_TO_REG(PALMAS_USB_OTG_BASE, reg);
->> +
->> +       return regmap_read(palmas->regmap[slave], addr, dest);
->>
->>
->> Please use the generic api for palmas_read()/palmas_write(0 as it will
->> be ease on debugging on register access.
->> Direct regmap_read() does not help much on this.
+>> If you prefer I can cook a patch...
 >
-> Graeme,
-> Any reason why you dint use palmas_read()/palmas_write here?
-> Btw palmas_read()/palmas_write() internally uses regmap APIs.
-Because I was not a fan of tightly coupling the child devices to the
-parent MFD. palmas_read/write were added by Laxman.
+> ... and I'm fine to do it.
+>
+> [5 mins later]
+>
+> Hmm... it appears that in STE's kernel, the same address is used for
+> all SoCs:
+>
+>   #define U8500_PRCMU_TCDM_BASE    (U8500_PER4_BASE + 0x68000)
 
->>
->>> +}
->>> +
->>> +static int palmas_usb_write(struct palmas *palmas, unsigned int reg,
->>> +               unsigned int data)
->>> +{
->>> +       unsigned int addr;
->>> +       int slave;
->>> +
->>> +       slave = PALMAS_BASE_TO_SLAVE(PALMAS_USB_OTG_BASE);
->>> +       addr = PALMAS_BASE_TO_REG(PALMAS_USB_OTG_BASE, reg);
->>> +
->>> +       return regmap_write(palmas->regmap[slave], addr, data);
->>
->> Same as above.
->>
->>
->>
->>> +
->>> +       if (status != OMAP_DWC3_UNKNOWN) {
->>> +               palmas_usb->linkstat = status;
->>> +               palmas_usb->mailboxstat = dwc3_omap_mailbox(status);
->> Omap specific call, why? This is generic palma driver.
+Yes that's correct...
+
+> However, in Mainline there is another definition:
 >
-> hmm.. I think we should either fall-back to the notification mechanism
-> or have the client drivers pass function pointer here. Felipe?
->>
->>
->>> +
->>
->>> +       palmas_usb->dev         = &pdev->dev;
->>> +
->>> +       palmas_usb->irq1 = regmap_irq_get_virq(palmas->irq_data,
->>> +                                               PALMAS_ID_OTG_IRQ);
->>> +       palmas_usb->irq2 = regmap_irq_get_virq(palmas->irq_data,
->>> +                                               PALMAS_ID_IRQ);
->>> +       palmas_usb->irq3 = regmap_irq_get_virq(palmas->irq_data,
->>> +                                               PALMAS_VBUS_OTG_IRQ);
->>> +       palmas_usb->irq4 = regmap_irq_get_virq(palmas->irq_data,
->>> +                                               PALMAS_VBUS_IRQ);
->>
->> Should be come from platform_get_irq() through platform driver.
+>   #define U9540_PRCMU_TCDM_BASE    (U8500_PER4_BASE + 0x6A000)
 >
-> No. It can be obtained from regmap too.
+> ... which doesn't seem to be in use anywhere - even for the u9540.
 >
-> Thanks
-> Kishon
+> What's the deal big-man?
+
+Probably there was another address at some point in some FPGA or
+early silicon and it now needs fixing.
+
+So you should be able to use the same thing on all ASICs, put one
+single value in the dbx5x0.dtsi *and* fix this bug at the same time,
+good!
+
+Yours,
+Linus Walleij
