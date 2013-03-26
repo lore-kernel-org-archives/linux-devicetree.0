@@ -1,106 +1,90 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH v3 1/1] gpio: omap: dts: Move interrupt-controller from
- #interrupt-cells description
-Date: Tue, 26 Mar 2013 15:29:13 +0100
-Message-ID: <5151B0B9.7090308@ti.com>
-References: <1363354317-14985-1-git-send-email-javier.martinez@collabora.co.uk> <CAAwP0s3PqsCF6TsMe6-aD9LKAOfQ=ToSXDXnnu5MvN01x3b5cw@mail.gmail.com> <5151AC59.5060802@ti.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V2] cpufreq: ARM big LITTLE: Add generic cpufreq driver
+ and its DT glue
+Date: Tue, 26 Mar 2013 20:00:55 +0530
+Message-ID: <CAKohpomRYXaKPoMX-3+SknSQsWiP_sMndPb4WsnLaw0Pa0k2xQ@mail.gmail.com>
+References: <1f864ec505cae7c5daea3810a3c26e0f5cda38ea.1364290815.git.viresh.kumar@linaro.org>
+	<51519FD3.5000402@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5151AC59.5060802@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <martinez.javier@gmail.com>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@nvidia.com>, Jon Hunter <jon-hunter@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <51519FD3.5000402@gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "Rafael J. Wysocki" <rjw@sisk.pl>, nicolas.pitre@linaro.org, robin.randhawa@arm.com, linux@arm.linux.org.uk, mark.hambleton@broadcom.com, linux-pm@vger.kernel.org, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>, devicetree-discuss@lists.ozlabs.org, Liviu.Dudau@arm.com, linux-kernel@vger.kernel.org, cpufreq@vger.kernel.org, linaro-kernel@lists.linaro.org, Steve.Bannister@arm.com, arvind.chauhan@arm.com, linux-arm-kernel@lists.infradead.org, charles.garcia-tobin@arm.com, Mark Langsdorf <mark.langsdorf@calxeda.com>, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/26/2013 03:10 PM, Benoit Cousson wrote:
-> Hi Javier,
-> 
-> On 03/26/2013 10:33 AM, Javier Martinez Canillas wrote:
->> On Fri, Mar 15, 2013 at 2:31 PM, Javier Martinez Canillas
->> <javier.martinez@collabora.co.uk> wrote:
->>> The binding documentation for the OMAP GPIO controller has the
->>> "#interrupt-cells" property listed before "#interrupt-controller"
->>> property but its description after.
->>> This is confusing so we move "#interrupt-cells" after the
->>> "interrupt-controller" property so is followed by its description.
->>>
->>> While being there, change the properties order to be consistent with
->>> Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->>> and Documentation/devicetree/bindings/gpio/gpio.txt.
->>>
->>> According with these docs, the order of the properties for a gpio-omap
->>> device node should be:
->>>
->>>     gpio-controller;
->>>     #gpio-cells = <2>;
->>>     interrupt-controller;
->>>     #interrupt-cells = <2>;
->>>
->>> Reported-by: Stephen Warren <swarren@nvidia.com>
->>> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->>> Acked-by: Jon Hunter <jon-hunter@ti.com>
->>> ---
->>>
->>> Changes since v1:
->>>   - Change the properties order to be consistent with the rest of the
->>>     DT bindings docs suggested by Jon Hunter.
->>>
->>> Changes since v2:
->>>   - Fix changelog that explained the opposite of what the patch was doing as
->>>     suggested by Benoit Cousson.
->>>
->>>  .../devicetree/bindings/gpio/gpio-omap.txt         |    8 ++++----
->>>  1 files changed, 4 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
->>> index bff51a2..a56e3a5 100644
->>> --- a/Documentation/devicetree/bindings/gpio/gpio-omap.txt
->>> +++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
->>> @@ -5,12 +5,12 @@ Required properties:
->>>    - "ti,omap2-gpio" for OMAP2 controllers
->>>    - "ti,omap3-gpio" for OMAP3 controllers
->>>    - "ti,omap4-gpio" for OMAP4 controllers
->>> +- gpio-controller : Marks the device node as a GPIO controller.
->>>  - #gpio-cells : Should be two.
->>>    - first cell is the pin number
->>>    - second cell is used to specify optional parameters (unused)
->>> -- gpio-controller : Marks the device node as a GPIO controller.
->>> +- interrupt-controller: Mark the device node as an interrupt controller.
->>>  - #interrupt-cells : Should be 2.
->>> -- interrupt-controller: Mark the device node as an interrupt controller
->>>    The first cell is the GPIO number.
->>>    The second cell is used to specify flags:
->>>      bits[3:0] trigger type and level flags:
->>> @@ -29,8 +29,8 @@ Example:
->>>  gpio4: gpio4 {
->>>      compatible = "ti,omap4-gpio";
->>>      ti,hwmods = "gpio4";
->>> -    #gpio-cells = <2>;
->>>      gpio-controller;
->>> -    #interrupt-cells = <2>;
->>> +    #gpio-cells = <2>;
->>>      interrupt-controller;
->>> +    #interrupt-cells = <2>;
->>>  };
->>> --
->>> 1.7.7.6
->>>
->>
->> Hello,
->>
->> any comments on this patch?
-> 
-> That's perfect. I've just applied it in my branch.
+On 26 March 2013 18:47, Rob Herring <robherring2@gmail.com> wrote:
+> On 03/26/2013 04:51 AM, Viresh Kumar wrote:
+> I fail to see anything bL specific here. This is just multi-cluster, but
+> even for that I don't see anything new other than simply allowing per
+> cpu or per cluster opp's. The fact that we have one opp for a cluster is
+> simply an implementation decision in CortexA cores.
 
-OK, in fact it is almost perfect :-)
+For now it is a very simple driver and yes probably multi-cluster only. It
+will be updated with In Kernel Switcher support as soon as Linaro makes
+a decision to opensource that (likely to happen soon).
 
-The patch modified the documentation and not the driver itself, so I modified the subject to reflect that accurately.
+Yes, there can be implementations, like krait, which can have per cpu
+control of opp, but we will wait for any such platform before making this
+driver complex.
 
-Documentation: dt: gpio-omap: Move interrupt-controller from #interrupt-cell
+>> +NOTE: Cpus should boot in the order specified in DT and all cpus for a cluster
+>> +must be present contiguously. Generic DT driver will check only node 'x' for
+>> +cpu:x.
+>
+> The OS cannot necessarily control the order. The OS should be able to
+> boot on which ever core comes up first.
 
-Regards,
-Benoit
+This should be a FIXME instead (will update it). I am waiting for
+final DT bindings
+from ARM guys before this can be written on stone.
 
+For now this is the limitation and it should go away as soon as DT bindings are
+finalized.
 
+>> +Optional properties:
+>> +- clock-latency: Specify the possible maximum transition latency for clock,
+>> +  in unit of nanoseconds.
+>
+> Don't we already have "transition-latency" defined?
+
+No, its clock-latency.
+
+$ git grep "clock-latency" Documentation/devicetree/bindings/
+Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt:-
+clock-latency: Specify the possible maximum transition latency for
+clock,
+Documentation/devicetree/bindings/cpufreq/cpufreq-spear.txt:-
+clock-latency: Specify the possible maximum transition latency for
+clock, in
+
+Though transition-latency is mentioned by the example of cpufreq-cpu0.
+I will fix it.
+
+> Don't create
+> something new. Ideally, this should have had "-ns" appended, but the
+> binding is already defined.
+
+I had the same intention.
+
+>> diff --git a/drivers/cpufreq/arm_big_little.c b/drivers/cpufreq/arm_big_little.c
+> What is specific to bL? This looks like just a multi-cluster cpufreq
+> driver and should be generalized to that. Also, why can't the existing
+> cpufreq-cpu0 driver be extended to support this?
+
+With IKS code in, it will be a complete big LITTLE driver.
+
+>> +/* Currently we support only two clusters */
+>> +#define MAX_CLUSTERS 2
+>
+> Why? Because that is what the define is or there are other limitations?
+> Seems like this could and should be dynamically discovered with DT.
+
+To keep it simple, as for now as all early systems (atleast which are announced)
+have dual cluster systems only.
+
+We will update it once we have some real systems breaking this law.
+
+--
+viresh
