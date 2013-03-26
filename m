@@ -1,78 +1,61 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFCv1 01/11] arm: mvebu: move L2 cache initialization in init_early()
-Date: Tue, 26 Mar 2013 20:53:08 -0500
-Message-ID: <51525104.4010304@gmail.com>
-References: <1364316746-8702-1-git-send-email-thomas.petazzoni@free-electrons.com> <1364316746-8702-2-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v5 0/8] Reset controller API to reset IP modules on i.MX5
+ and i.MX6
+Date: Tue, 26 Mar 2013 22:13:38 +0100
+Message-ID: <201303262213.39068.marex@denx.de>
+References: <1364231189-12497-1-git-send-email-p.zabel@pengutronix.de>
+ <20130326181909.GA31593@amd.pavel.ucw.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1364316746-8702-2-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Andrew Murray <andrew.murray@arm.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org, Mitch Bradley <wmb@firmworks.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130326181909.GA31593-tWAi6jLit6GreWDznjuHag@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/26/2013 11:52 AM, Thomas Petazzoni wrote:
-> In preparation for moving the IRQ controller driver to
-> drivers/irqchip/, we don't want the IRQ controller driver to be
-> responsible for initializing the L2 cache. Instead, let's initialize
-> the L2 cache at the init_early() level, like mach-exynos/common.c is
-> doing.
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> ---
->  arch/arm/mach-mvebu/armada-370-xp.c     |    5 +++++
->  arch/arm/mach-mvebu/irq-armada-370-xp.c |    4 ----
->  2 files changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm/mach-mvebu/armada-370-xp.c b/arch/arm/mach-mvebu/armada-370-xp.c
-> index 12d3655..d98a0ca 100644
-> --- a/arch/arm/mach-mvebu/armada-370-xp.c
-> +++ b/arch/arm/mach-mvebu/armada-370-xp.c
-> @@ -20,6 +20,7 @@
->  #include <linux/clk/mvebu.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/mbus.h>
-> +#include <asm/hardware/cache-l2x0.h>
->  #include <asm/mach/arch.h>
->  #include <asm/mach/map.h>
->  #include <asm/mach/time.h>
-> @@ -72,6 +73,10 @@ void __init armada_370_xp_init_early(void)
->  			ARMADA_370_XP_MBUS_WINS_SIZE,
->  			ARMADA_370_XP_SDRAM_WINS_BASE,
->  			ARMADA_370_XP_SDRAM_WINS_SIZE);
-> +
-> +#ifdef CONFIG_CACHE_L2X0
-> +	l2x0_of_init(0, ~0UL);
-> +#endif
+Dear Pavel Machek,
 
-Have you actually tested this? I don't think the ioremap in here will
-work during init_early.
-
-Rob
-
->  }
->  
->  static void __init armada_370_xp_dt_init(void)
-> diff --git a/arch/arm/mach-mvebu/irq-armada-370-xp.c b/arch/arm/mach-mvebu/irq-armada-370-xp.c
-> index 6a9195e..f6699f3 100644
-> --- a/arch/arm/mach-mvebu/irq-armada-370-xp.c
-> +++ b/arch/arm/mach-mvebu/irq-armada-370-xp.c
-> @@ -25,7 +25,6 @@
->  #include <asm/mach/arch.h>
->  #include <asm/exception.h>
->  #include <asm/smp_plat.h>
-> -#include <asm/hardware/cache-l2x0.h>
->  
->  /* Interrupt Controller Registers Map */
->  #define ARMADA_370_XP_INT_SET_MASK_OFFS		(0x48)
-> @@ -292,7 +291,4 @@ static const struct of_device_id mpic_of_match[] __initconst = {
->  void __init armada_370_xp_init_irq(void)
->  {
->  	of_irq_init(mpic_of_match);
-> -#ifdef CONFIG_CACHE_L2X0
-> -	l2x0_of_init(0, ~0UL);
-> -#endif
->  }
+> Hi!
 > 
+> > The system reset controller (SRC) on i.MX51, i.MX53, and i.MX6q controls
+> > reset lines to the GPU, VPU, IPU, and OpenVG IP modules.
+> > 
+> > The following patches add a simple API for devices to request being reset
+> > by separate reset controller hardware and implements the reset signal
+> > device tree binding proposed by Stephen Warren. Contrary to Tegra
+> > hardware, the i.MX SRC contains self-deasserting reset registers, so
+> > I've included both ops to manually assert/deassert a reset line, as well
+> > as a "reset" operation that is supposed to assert the reset line and
+> > wait for it to deassert.
+> > 
+> > The i.MX SRC is enhanced to provide a reset controller and the IPU driver
+> > is made to request being reset by calling the device_reset(&pdev->dev)
+> > convenience wrapper during probing.
+> > 
+> > Changes since v4:
+> >  - removed flags parameter from .of_xlate / of_reset_simple_xlate
+> >  - warn also if reset_spec->args_count > rcdev->of_reset_n_cells
+> >  - unlock list mutex only after try_module_get
+> >  - tighten devm_reset_control_match a bit
+> 
+> Series looks mostly ok to me. (Should the last patch be actually
+> first, so that reset functionality is kept between 5/8 and 8/8?)
+
+Not first, but rather third.
+
+You can add my
+Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+
+Best regards,
+Marek Vasut
