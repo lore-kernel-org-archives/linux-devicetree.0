@@ -1,88 +1,79 @@
-From: Graeme Gregory <gg@slimlogic.co.uk>
-Subject: Re: [PATCH v3] USB: PHY: Palmas USB Transceiver Driver
-Date: Tue, 26 Mar 2013 16:57:30 +0000
-Message-ID: <5151D37A.4020300@slimlogic.co.uk>
-References: <1362662506-14823-4-git-send-email-kishon@ti.com> <1364203926-24488-1-git-send-email-kishon@ti.com> <51501CFB.4020905@nvidia.com> <51513A40.7080905@ti.com> <515163F6.3010400@slimlogic.co.uk> <51516695.8020808@nvidia.com> <51516A10.40704@slimlogic.co.uk> <5151CB36.1050404@wwwdotorg.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCHv6 10/17] arm: mvebu: add PCIe Device Tree informations
+ for Armada 370
+Date: Tue, 26 Mar 2013 17:58:20 +0100
+Message-ID: <20130326175820.78c9b3c7@skate>
+References: <1364314719-1049-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1364314719-1049-11-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20130326163421.GA30255@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5151CB36.1050404@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, Kishon Vijay Abraham I <kishon@ti.com>, "balbi@ti.com" <balbi@ti.com>, Rajendra Nayak <rnayak@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "s-guiriec@ti.com" <s-guiriec@ti.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Ian Lartey <ian@slimlogic.co.uk>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20130326163421.GA30255@obsidianresearch.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, Thierry Reding <thierry.reding@avionic-design.de>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 26/03/13 16:22, Stephen Warren wrote:
-> On 03/26/2013 03:27 AM, Graeme Gregory wrote:
-> ...
->> If we are tightly coupling as above then using platform_irq is an extra
->> inefficiency. You both have to populate this then parse it afterwards.
->> Why not just use the regmap helper? Ill admit this code is like this as
->> there was a period where platform irqs in DT just was not working right!
->>
->> We should really agree now if we are going for loose or tight coupling
->> now rather than keep switching?
-> Yes, this is something that I think needs to be fully resolved before
-> any more Palmas patches are discussed.
->
-> So you can have the MFD components fully coupled or completely
-> standalone. We should fully pick one or the other, not some mish-mash of
-> the two.
->
-> In practical terms, this means that:
->
-> a) Tightly coupled
->
-> The top-level MFD device knows exactly which child devices are present.
-> It has an internal table to defined the set of child devices, and
-> instantiate them. It provides them with IRQs, I2C addresses and register
-> base addresses (or regmaps), etc. etc., using purely Palmas-internal
-> APIs. If using device tree, the DT won't include any representation of
-> which child devices are present, nor their I2C addresses, nor their
-> register addresses, nor their IRQs, etc. That's all inside the driver.
->
-> b) Completely decoupled.
->
-> The top-level MFD device knows nothing about its children. It simply
-> provides a bus into which they can be instantiated, and a generic IRQ
-> controller into which they can hook.
->
-> Platform data or device tree is solely used to define which children
-> exist, which of the top-level MFD's I2C addresses is used for each
-> child, the base register address for each child device, the IRQs used by
-> each child device, etc.
->
->
-> Which of those two models are different people expecting?
->
-> (b) appears to be the most flexible, and since you have defined the DT
-> bindings to contain a separate node for each MFD child device, each with
-> its own compatible value, seems to be what you're aiming for. In this
-> scenario, there should be no private APIs between the top-level MFD
-> device and the children though; everything should be using standard bus
-> APIs.
-I was aiming towards (b) which would allow drivers for IP blocks that I
-know are shared between multiple devices such as RTC which is shared by
-twl6030, twl6032, tps80032, tps65910, tps65911, tps65912, tps80035,
-tps80036 and probably many more.
+Dear Jason Gunthorpe,
 
-Finishing (b) implementation is currently beyond the time I have
-available I think.
+On Tue, 26 Mar 2013 10:34:21 -0600, Jason Gunthorpe wrote:
+> On Tue, Mar 26, 2013 at 05:18:32PM +0100, Thomas Petazzoni wrote:
+> 
+> > +		pcie-controller {
+> > +			compatible = "marvell,armada-370-pcie";
+> > +			status = "disabled";
+> > +			device_type = "pci";
+> > +
+> > +			#address-cells = <3>;
+> > +			#size-cells = <2>;
+> > +
+> > +			bus-range = <0x00 0xff>;
+> > +
+> > +			reg = <0xd0040000 0x2000>, <0xd0080000 0x2000>;
+> > +
+> > +			reg-names = "pcie0.0", "pcie1.0";
+> > +
+> > +			ranges = <0x82000000 0 0xe0000000 0xe0000000 0 0x08000000   /* non-prefetchable memory */
+> > +			          0x81000000 0 0          0xe8000000 0 0x00100000>; /* downstream I/O */
+> > +
+> > +			pcie@1,0 {
+> > +				device_type = "pci";
+> > +				reg = <0x0800 0 0 0 0>;
+> > +				#address-cells = <3>;
+> > +				#size-cells = <2>;
+> 
+> Very Minor Nit: These two # fields are not strictly necessary
 
-If we choose to ignore path (b) and ignore the code duplication of half
-a dozen RTC drivers for the same IP than the path to (a) is much quicker
-and easier. Can just rip out a lot of the DT stuff, use mfd_add_devices.
-Makes the binding much simpler. Means we don't have to use platform
-resources for IRQs. Makes palmas and palmas-charger just 2 black boxes
-which is in line with other MFDs.
+Ok. I'll wait to see if there are more comments on this patch set,
+especially on deciding between reg = <...> or assigned-addresses, and
+I'll repost an updated version.
 
-So I think I have come around to just do it the easy way and select (a)
+> This basically looks fine to me, however, I think it is valuable if
+> you and Thierry could use the same method to pass per-port registers. I
+> expect others are going to reference these bindings for future work,
+> and one standard method is more clear than two.
+> 
+> Thierry: Did you settle on using assigned-addresses? Can you share the
+> final binding for your driver?
+> 
+> Jingoo Han's driver for Exynos uses lots of per-port registers, so I'm
+> inclined to think that assigned-addresses is the clearer way forward.
+> 
+> This is a fairly minor comment. Would people be comfortable going in as-is
+> with a small follow-up revision to the DT?
 
-I shall work on the main palmas series to implement (a).
+I'm fine reworking the driver in one way or another. I really don't
+care much about how the registers addresses are represented in the DT,
+as long as it gets the job done. So, let's wait for Thierry's opinion
+so we can align our DT bindings.
 
-This will obviously invalidate some comments on this patch and the main
-series.
+Thanks,
 
-Graeme
-
+Thomas
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
