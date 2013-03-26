@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCHv6 12/17] arm: mvebu: PCIe Device Tree informations for OpenBlocks AX3-4
-Date: Tue, 26 Mar 2013 17:18:34 +0100
-Message-ID: <1364314719-1049-13-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv6 16/17] arm: mvebu: PCIe Device Tree informations for Armada XP GP
+Date: Tue, 26 Mar 2013 17:18:38 +0100
+Message-ID: <1364314719-1049-17-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1364314719-1049-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1364314719-1049-1-git-send-email-thomas.petazzoni@free-electrons.com>
@@ -10,29 +10,40 @@ To: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca
 Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, Thierry Reding <thierry.reding@avionic-design.de>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The PlatHome OpenBlocks AX3-4 has an internal mini-PCIe slot that can
-be used to plug mini-PCIe devices. We therefore enable the PCIe
-interface that corresponds to this slot.
+The Marvell Armada XP GP board has 3 physical full-size PCIe slots, so
+we enable the corresponding PCIe interfaces in the Device Tree.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
- arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/armada-xp-gp.dts |   21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-index 3818a82..5a748bd 100644
---- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-+++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
-@@ -139,5 +139,14 @@
- 		usb@d0051000 {
- 			status = "okay";
+diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
+index 1c8afe2..e2bf6b4 100644
+--- a/arch/arm/boot/dts/armada-xp-gp.dts
++++ b/arch/arm/boot/dts/armada-xp-gp.dts
+@@ -109,5 +109,26 @@
+ 				spi-max-frequency = <108000000>;
+ 			};
  		};
 +
 +		pcie-controller {
 +			status = "okay";
-+			/* Internal mini-PCIe connector */
++
++			/*
++			 * The 3 slots are physically present as
++			 * standard PCIe slots on the board.
++			 */
 +			pcie@1,0 {
 +				/* Port 0, Lane 0 */
++				status = "okay";
++			};
++			pcie@9,0 {
++				/* Port 2, Lane 0 */
++				status = "okay";
++			};
++			pcie@10,0 {
++				/* Port 3, Lane 0 */
 +				status = "okay";
 +			};
 +		};
