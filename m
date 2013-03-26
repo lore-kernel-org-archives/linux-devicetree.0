@@ -1,137 +1,38 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [RFCv1 03/11] irqchip: armada-370-xp: move IRQ handler to avoid
- forward declaration
-Date: Tue, 26 Mar 2013 17:52:18 +0100
-Message-ID: <1364316746-8702-4-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFCv1 01/11] arm: mvebu: move L2 cache initialization in
+ init_early()
+Date: Tue, 26 Mar 2013 16:53:48 +0000
+Message-ID: <201303261653.48998.arnd@arndb.de>
 References: <1364316746-8702-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1364316746-8702-2-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1364316746-8702-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1364316746-8702-2-git-send-email-thomas.petazzoni@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, Olof Johansson <olof@lixom.net>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@secretlab.ca>, Maen Suleiman <maen@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Andrew Murray <andrew.murray@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Gregory Clement <gregory.clement@free-electrons.com>, Mitch Bradley <wmb@firmworks.com>, linux-arm-kernel@lists.infradead.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
 List-Id: devicetree@vger.kernel.org
 
-If we move the IRQ handler function above the initialization function,
-we avoid a forward declaration. This wasn't done as part of the
-previous commit, in order to increase the readibility of the previous
-commit, who was also moving the IRQ controller driver from arch/arm to
-drivers/irqchip.
+On Tuesday 26 March 2013, Thomas Petazzoni wrote:
+> @@ -72,6 +73,10 @@ void __init armada_370_xp_init_early(void)
+>                         ARMADA_370_XP_MBUS_WINS_SIZE,
+>                         ARMADA_370_XP_SDRAM_WINS_BASE,
+>                         ARMADA_370_XP_SDRAM_WINS_SIZE);
+> +
+> +#ifdef CONFIG_CACHE_L2X0
+> +       l2x0_of_init(0, ~0UL);
+> +#endif
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/irqchip/irq-armada-370-xp.c |   83 +++++++++++++++++------------------
- 1 file changed, 40 insertions(+), 43 deletions(-)
+I guess you should remove the #ifdef as well here, it's not needed.
 
-diff --git a/drivers/irqchip/irq-armada-370-xp.c b/drivers/irqchip/irq-armada-370-xp.c
-index d20a832..1115bf8 100644
---- a/drivers/irqchip/irq-armada-370-xp.c
-+++ b/drivers/irqchip/irq-armada-370-xp.c
-@@ -206,49 +206,6 @@ static struct irq_domain_ops armada_370_xp_mpic_irq_ops = {
- };
- 
- static asmlinkage void __exception_irq_entry
--armada_370_xp_handle_irq(struct pt_regs *regs);
--
--static int __init armada_370_xp_mpic_of_init(struct device_node *node,
--					     struct device_node *parent)
--{
--	u32 control;
--
--	main_int_base = of_iomap(node, 0);
--	per_cpu_int_base = of_iomap(node, 1);
--
--	BUG_ON(!main_int_base);
--	BUG_ON(!per_cpu_int_base);
--
--	control = readl(main_int_base + ARMADA_370_XP_INT_CONTROL);
--
--	armada_370_xp_mpic_domain =
--		irq_domain_add_linear(node, (control >> 2) & 0x3ff,
--				&armada_370_xp_mpic_irq_ops, NULL);
--
--	if (!armada_370_xp_mpic_domain)
--		panic("Unable to add Armada_370_Xp MPIC irq domain (DT)\n");
--
--	irq_set_default_host(armada_370_xp_mpic_domain);
--
--#ifdef CONFIG_SMP
--	armada_xp_mpic_smp_cpu_init();
--
--	/*
--	 * Set the default affinity from all CPUs to the boot cpu.
--	 * This is required since the MPIC doesn't limit several CPUs
--	 * from acknowledging the same interrupt.
--	 */
--	cpumask_clear(irq_default_affinity);
--	cpumask_set_cpu(smp_processor_id(), irq_default_affinity);
--
--#endif
--
--	set_handle_irq(armada_370_xp_handle_irq);
--
--	return 0;
--}
--
--static asmlinkage void __exception_irq_entry
- armada_370_xp_handle_irq(struct pt_regs *regs)
- {
- 	u32 irqstat, irqnr;
-@@ -291,4 +248,44 @@ armada_370_xp_handle_irq(struct pt_regs *regs)
- 	} while (1);
- }
- 
-+static int __init armada_370_xp_mpic_of_init(struct device_node *node,
-+					     struct device_node *parent)
-+{
-+	u32 control;
-+
-+	main_int_base = of_iomap(node, 0);
-+	per_cpu_int_base = of_iomap(node, 1);
-+
-+	BUG_ON(!main_int_base);
-+	BUG_ON(!per_cpu_int_base);
-+
-+	control = readl(main_int_base + ARMADA_370_XP_INT_CONTROL);
-+
-+	armada_370_xp_mpic_domain =
-+		irq_domain_add_linear(node, (control >> 2) & 0x3ff,
-+				&armada_370_xp_mpic_irq_ops, NULL);
-+
-+	if (!armada_370_xp_mpic_domain)
-+		panic("Unable to add Armada_370_Xp MPIC irq domain (DT)\n");
-+
-+	irq_set_default_host(armada_370_xp_mpic_domain);
-+
-+#ifdef CONFIG_SMP
-+	armada_xp_mpic_smp_cpu_init();
-+
-+	/*
-+	 * Set the default affinity from all CPUs to the boot cpu.
-+	 * This is required since the MPIC doesn't limit several CPUs
-+	 * from acknowledging the same interrupt.
-+	 */
-+	cpumask_clear(irq_default_affinity);
-+	cpumask_set_cpu(smp_processor_id(), irq_default_affinity);
-+
-+#endif
-+
-+	set_handle_irq(armada_370_xp_handle_irq);
-+
-+	return 0;
-+}
-+
- IRQCHIP_DECLARE(armada_370_xp_mpic, "marvell,mpic", armada_370_xp_mpic_of_init);
--- 
-1.7.9.5
+	Arnd
