@@ -1,90 +1,52 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V2] cpufreq: ARM big LITTLE: Add generic cpufreq driver
- and its DT glue
-Date: Tue, 26 Mar 2013 20:00:55 +0530
-Message-ID: <CAKohpomRYXaKPoMX-3+SknSQsWiP_sMndPb4WsnLaw0Pa0k2xQ@mail.gmail.com>
-References: <1f864ec505cae7c5daea3810a3c26e0f5cda38ea.1364290815.git.viresh.kumar@linaro.org>
-	<51519FD3.5000402@gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 01/11] staging: drm/imx: Add LDB support
+Date: Tue, 26 Mar 2013 15:34:55 +0100
+Message-ID: <20130326153455.5a093e15@skate>
+References: <1364307246-9017-1-git-send-email-p.zabel@pengutronix.de>
+ <1364307246-9017-2-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <51519FD3.5000402@gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "Rafael J. Wysocki" <rjw@sisk.pl>, nicolas.pitre@linaro.org, robin.randhawa@arm.com, linux@arm.linux.org.uk, mark.hambleton@broadcom.com, linux-pm@vger.kernel.org, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>, devicetree-discuss@lists.ozlabs.org, Liviu.Dudau@arm.com, linux-kernel@vger.kernel.org, cpufreq@vger.kernel.org, linaro-kernel@lists.linaro.org, Steve.Bannister@arm.com, arvind.chauhan@arm.com, linux-arm-kernel@lists.infradead.org, charles.garcia-tobin@arm.com, Mark Langsdorf <mark.langsdorf@calxeda.com>, Shawn Guo <shawn.guo@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1364307246-9017-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 26 March 2013 18:47, Rob Herring <robherring2@gmail.com> wrote:
-> On 03/26/2013 04:51 AM, Viresh Kumar wrote:
-> I fail to see anything bL specific here. This is just multi-cluster, but
-> even for that I don't see anything new other than simply allowing per
-> cpu or per cluster opp's. The fact that we have one opp for a cluster is
-> simply an implementation decision in CortexA cores.
+Dear Philipp Zabel,
 
-For now it is a very simple driver and yes probably multi-cluster only. It
-will be updated with In Kernel Switcher support as soon as Linaro makes
-a decision to opensource that (likely to happen soon).
+On Tue, 26 Mar 2013 15:13:56 +0100, Philipp Zabel wrote:
 
-Yes, there can be implementations, like krait, which can have per cpu
-control of opp, but we will wait for any such platform before making this
-driver complex.
+> +/*
+> + * For a device declaring compatible = "fsl,imx6q-ldb", "fsl,imx53-ldb",
+> + * of_match_device will walk through this list and take the first entry
+> + * matching any of its compatible values. Therefore, the more generic
+> + * entries (in this case fsl,imx53-ldb) need to be ordered last.
+> + */
+> +static const struct of_device_id imx_ldb_dt_ids[] = {
+> +	{ .compatible = "fsl,imx6q-ldb", .data = imx6q_lvds_mux, },
+> +	{ .compatible = "fsl,imx53-ldb", .data = NULL, },
+> +	{ }
+> +};
 
->> +NOTE: Cpus should boot in the order specified in DT and all cpus for a cluster
->> +must be present contiguously. Generic DT driver will check only node 'x' for
->> +cpu:x.
->
-> The OS cannot necessarily control the order. The OS should be able to
-> boot on which ever core comes up first.
+You probably want a new DT binding documentation in
+Documentation/devicetree/bindings/.
 
-This should be a FIXME instead (will update it). I am waiting for
-final DT bindings
-from ARM guys before this can be written on stone.
+Best regards,
 
-For now this is the limitation and it should go away as soon as DT bindings are
-finalized.
-
->> +Optional properties:
->> +- clock-latency: Specify the possible maximum transition latency for clock,
->> +  in unit of nanoseconds.
->
-> Don't we already have "transition-latency" defined?
-
-No, its clock-latency.
-
-$ git grep "clock-latency" Documentation/devicetree/bindings/
-Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt:-
-clock-latency: Specify the possible maximum transition latency for
-clock,
-Documentation/devicetree/bindings/cpufreq/cpufreq-spear.txt:-
-clock-latency: Specify the possible maximum transition latency for
-clock, in
-
-Though transition-latency is mentioned by the example of cpufreq-cpu0.
-I will fix it.
-
-> Don't create
-> something new. Ideally, this should have had "-ns" appended, but the
-> binding is already defined.
-
-I had the same intention.
-
->> diff --git a/drivers/cpufreq/arm_big_little.c b/drivers/cpufreq/arm_big_little.c
-> What is specific to bL? This looks like just a multi-cluster cpufreq
-> driver and should be generalized to that. Also, why can't the existing
-> cpufreq-cpu0 driver be extended to support this?
-
-With IKS code in, it will be a complete big LITTLE driver.
-
->> +/* Currently we support only two clusters */
->> +#define MAX_CLUSTERS 2
->
-> Why? Because that is what the define is or there are other limitations?
-> Seems like this could and should be dynamically discovered with DT.
-
-To keep it simple, as for now as all early systems (atleast which are announced)
-have dual cluster systems only.
-
-We will update it once we have some real systems breaking this law.
-
---
-viresh
+Thomas
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
