@@ -1,97 +1,87 @@
-From: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC PATCH] CLK: Allow parent clock and rate to be configured
- in DT.
-Date: Tue, 26 Mar 2013 12:12:22 +0100
-Message-ID: <51518296.7000500@parkeon.com>
-References: <20130319170933.28337.50448.stgit@localhost>
- <20130325101707.GZ1906@pengutronix.de> <51503007.5020403@parkeon.com>
- <20130325132935.GE1906@pengutronix.de>
-Reply-To: mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH v3] USB: PHY: Palmas USB Transceiver Driver
+Date: Tue, 26 Mar 2013 16:58:49 +0530
+Message-ID: <51518671.7050901@nvidia.com>
+References: <1362662506-14823-4-git-send-email-kishon@ti.com> <1364203926-24488-1-git-send-email-kishon@ti.com> <51501CFB.4020905@nvidia.com> <51513A40.7080905@ti.com> <515163F6.3010400@slimlogic.co.uk> <51516695.8020808@nvidia.com> <51516A10.40704@slimlogic.co.uk> <51516BC3.7030707@nvidia.com> <51516FB5.3050504@slimlogic.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130325132935.GE1906-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51516FB5.3050504@slimlogic.co.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Graeme Gregory <gg@slimlogic.co.uk>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "balbi@ti.com" <balbi@ti.com>, Rajendra Nayak <rnayak@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "s-guiriec@ti.com" <s-guiriec@ti.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 25/03/13 14:29, Sascha Hauer wrote:
-> Put it differently. OpenBSD might have much better clock support. 
-> Imagine it can dynamically figure out the correct esdhc frequencies 
-> for different usecases on the fly. In this situation it would be 
-> counterproductive if Linux requires static values for these in the 
-> devicetree. 
-It shouldn't *require* them.
-If they are in a separate subtree of the DT OpenBSD would be free to 
-ignore them and use its better method.
->> The cko case is even worse - due to a board design decision that
->> clock needs to have
->> a frequency suitable for supplying some external chip. We don't want
->> board specific code in
->> the platform clock code and we're trying to get away from board files...
-> The codec could be provided a phandle to the cko clk. This is hardware
-> description and is fine for putting into the devicetree.
-Sure but just the phandle isn't enough.
-We also need the frequency and the parent.
+On Tuesday 26 March 2013 03:21 PM, Graeme Gregory wrote:
+> On 26/03/13 09:34, Laxman Dewangan wrote:
+>>>>
+>>>> Kishon,
+>>>> I think it is very much possible. You can pass the interrupt throough
+>>>> IRQ_RESOURCE and populate it from DT. If you provide proper interrupt
+>>>> parent and irq number then irq framework take care of every thing.
+>>>> already tested this with RTC interrupt of plama and it worked very
+>>>> well.
+>>>>
+>>> If we are tightly coupling as above then using platform_irq is an extra
+>>> inefficiency. You both have to populate this then parse it afterwards.
+>>> Why not just use the regmap helper? Ill admit this code is like this as
+>>> there was a period where platform irqs in DT just was not working right!
+>>>
+>>> We should really agree now if we are going for loose or tight coupling
+>>> now rather than keep switching?
+>> Here we are hardcoding for PALMAS_ID_OTG_IRQ and so on. If we take
+>> data from platform then it need not and it will be completely
+>> independent of palma atleast on this front.
+>> We need to populate just as:
+>> palmas: palmas {
+>> :::::::
+>>      palams_usb_phy {
+>>          compatile = ...
+>>          interrupt-parent = <& palmas>;
+>>          interrupt = < 10, 0,
+>>                                  21, 0,
+>>                              22, 0,
+>>                              23, 0>;
+>> }
+>>
+>>
+>> and in code, we just need to do
+>> irq1 = platform_get_irq(pdev, 0);
+>> irq2 = platform_get_irq(pdev, 1);
+>> etc..
+>>
+>>
+>> So here, actually we do not need to use palmas one and it is
+>> completely independent.
+>>
+>> Also the way you define the DT od palmas, the above one looks more
+>> appropriate.
+>>
+> Ok that makes sense if you are actually planning to feed non palmas IRQs
+> to the usb via either palmas GPIO or even directly! I did not know there
+> was such a use case!
+>
+> Graeme
+>
 
-For the frequency the driver could, and maybe should, set it (and indeed 
-I've submitted a patch for this for the sgtl5000 driver).
+Hi Graeme,
+There is multiple reqson for requesting this change:
+- When we register the device through non-dt, the irq number come as 
+IRQ_RESOURCE when we add mfd sub devices. We added the same irq number 
+on mfd/palma.c
+- So if that is true then irq should get from platform_irq_get() for 
+having proper transfer of infomration.
+- Same thing can be populated through dt. If any change then change will 
+be on the driver which si registerung in place of on driver which is 
+implementing.
 
-But IMHO it's not the driver's business to be setting the parent clock 
-(the driver just gets a phandle and
-shouldn't know if it can be reparented).
+Another important point is: we have tps80036 (called palams-charger in 
+some of places) which support extended gpios and interrupts. The 
+extended interrupt register is not properly offsetted and in current 
+regmp-irq framework, it can ot be accomodate. For that the palma need to 
+implement the local irq implementation.
+In this case, really regmap will not help much as the registration will 
+not be through regmap-irq as irq domain will be created locally.
 
-Maybe if and when the clock framework learns how to reparent clocks 
-during set_rate() this problem may go away but
-I'm not entirely comfortable with that - I'm sure there are cases where 
-it will be better to manually specify the parent clock.
 
-> I know that we currently have no place to put such information. There
-> recently was a similar discussion with CMA descriptions in the
-> devicetree and I remember several other discussions of the same type,
-> all of which ended at the dont-know-but-not-in-the-devicetree point.
-Yes, I looked up the CMA discussion which, AFAICT ended with a proposition
-to use chosen to which there was no reply :(
-
-I quite understand (and agree with) not wanting to scatter linux 
-specific configuration
-data all over the DT but, given that there are clearly usecases for this 
-type of
-configuration,  I fail to see the conceptual difference between:
-
-1) Pure hardware DT plus a completely seperate "config-tree"
-2) DT with a configuration node ("chosen" or probably better something 
-like "linux-config")
-
-Except that 1) requires more work to implement.
-Even if the DT parser and tooling were reused it would still require:
-* A means of passing another blob to the kernel
-* A means of providing the parsed data to drivers
-
-Both of these are obtained "for free" with solution 2), whilst still 
-retaining the
-separation of the tree into "hardware" and "configuration"
-
-It would be possible for hardware vendors to ship the pure hardware part 
-and then
-add the configuration node either at runtime in the bootloader or by a 
-preprocessing
-tool "dtcat"?
-
-Other OSs would simply ignore the "linux-config" node (and could add 
-"bsd-config" node too)
-
-Just my 2 centimes,
-
-Martin
