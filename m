@@ -1,64 +1,30 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH v3] USB: PHY: Palmas USB Transceiver Driver
-Date: Tue, 26 Mar 2013 14:42:53 +0530
-Message-ID: <51516695.8020808@nvidia.com>
-References: <1362662506-14823-4-git-send-email-kishon@ti.com> <1364203926-24488-1-git-send-email-kishon@ti.com> <51501CFB.4020905@nvidia.com> <51513A40.7080905@ti.com> <515163F6.3010400@slimlogic.co.uk>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [RFC: PATCH v5] i2c: exynos5: add High Speed I2C controller
+ driver
+Date: Tue, 26 Mar 2013 10:23:07 +0100
+Message-ID: <20130326092306.GA8553@the-dreams.de>
+References: <1363062732-27869-1-git-send-email-ch.naveen@samsung.com>
+ <1363796690-30242-1-git-send-email-ch.naveen@samsung.com>
+ <CA+NduCBFUTW9Pu1k4NyTK+tFUyWUHBbMONO_oAr6PK+y30sYDw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <515163F6.3010400@slimlogic.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Graeme Gregory <gg@slimlogic.co.uk>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, "balbi@ti.com" <balbi@ti.com>, Rajendra Nayak <rnayak@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "s-guiriec@ti.com" <s-guiriec@ti.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CA+NduCBFUTW9Pu1k4NyTK+tFUyWUHBbMONO_oAr6PK+y30sYDw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yuvaraj CD <yuvaraj.lkml@gmail.com>
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, w.sang@pengutronix.de, khali@linux-fr.org, ben-linux@fluff.org, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, sjg@chromium.org, grundler@chromium.org, naveenkrishna.ch@gmail.com, broonie@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 26 March 2013 02:31 PM, Graeme Gregory wrote:
-> On 26/03/13 06:03, Kishon Vijay Abraham I wrote:
->>> +static int palmas_usb_read(struct palmas *palmas, unsigned int reg,
->>> +               unsigned int *dest)
->>> +{
->>> +       unsigned int addr;
->>> +       int slave;
->>> +
->>> +       slave = PALMAS_BASE_TO_SLAVE(PALMAS_USB_OTG_BASE);
->>> +       addr = PALMAS_BASE_TO_REG(PALMAS_USB_OTG_BASE, reg);
->>> +
->>> +       return regmap_read(palmas->regmap[slave], addr, dest);
->>>
->>>
->>> Please use the generic api for palmas_read()/palmas_write(0 as it will
->>> be ease on debugging on register access.
->>> Direct regmap_read() does not help much on this.
->> Graeme,
->> Any reason why you dint use palmas_read()/palmas_write here?
->> Btw palmas_read()/palmas_write() internally uses regmap APIs.
-> Because I was not a fan of tightly coupling the child devices to the
-> parent MFD. palmas_read/write were added by Laxman.
 
+> > +       /* CLK_DIV max is 256 */
+> > +       for (i = 0; i < 256; i++) {
+> > +               utemp1 = utemp0 / (i + 1);
+> > +               /* SCLK_L/H max is 256 / 2 */
+> > +               if (utemp1 < 128) {
+> I think TSCLK_L and TSCLK_H both can be configured upto 255.Why
+> limiting it to < 128 ?
+> By limiting it to < 128 dont we achieve lesser SCL clock?
 
-But still you are using the PALMAS macro here and indirectly it is tied 
-up. It is not completely independent.
-If need to be independent then regmap pointer with address need to be 
-passed as independt header and no where on code whould refer the PALMA.
-I think as per current code, it is not possible although it is your big 
-plan what I understand from some time back in one of patch discussion.
-
-
->>>> +       palmas_usb->dev         = &pdev->dev;
->>>> +
->>>> +       palmas_usb->irq1 = regmap_irq_get_virq(palmas->irq_data,
->>>> +                                               PALMAS_ID_OTG_IRQ);
->>>> +       palmas_usb->irq2 = regmap_irq_get_virq(palmas->irq_data,
->>>> +                                               PALMAS_ID_IRQ);
->>>> +       palmas_usb->irq3 = regmap_irq_get_virq(palmas->irq_data,
->>>> +                                               PALMAS_VBUS_OTG_IRQ);
->>>> +       palmas_usb->irq4 = regmap_irq_get_virq(palmas->irq_data,
->>>> +                                               PALMAS_VBUS_IRQ);
->>> Should be come from platform_get_irq() through platform driver.
->> No. It can be obtained from regmap too.
-Kishon,
-I think it is very much possible. You can pass the interrupt throough 
-IRQ_RESOURCE and populate it from DT. If you provide proper interrupt 
-parent and irq number then irq framework take care of every thing.  
-already tested this with RTC interrupt of plama and it worked very well.
+Thanks for reviewing but please quote only the relevant part of the
+message (like I did). This improves readability a lot.
