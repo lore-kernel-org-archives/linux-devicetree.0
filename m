@@ -1,30 +1,263 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCHv6 10/17] arm: mvebu: add PCIe Device Tree informations
- for Armada 370
-Date: Tue, 26 Mar 2013 16:51:39 -0600
-Message-ID: <20130326225139.GB10124@obsidianresearch.com>
-References: <1364314719-1049-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1364314719-1049-11-git-send-email-thomas.petazzoni@free-electrons.com>
- <20130326163421.GA30255@obsidianresearch.com>
- <20130326201654.GA7109@avionic-0098.mockup.avionic-design.de>
- <20130326222744.54e9fc82@skate>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130326222744.54e9fc82@skate>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Thierry Reding <thierry.reding@avionic-design.de>, Lior Amsalem <alior@marvell.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olof Johansson <olof@lixom.net>, Maen Suleiman <maen@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Andrew Murray <andrew.murray@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Gregory Clement <gregory.clement@free-electrons.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org, Mitch Bradley <wmb@firmworks.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH] ARM: tegra: add clocks property to sound nodes
+Date: Tue, 26 Mar 2013 17:21:19 -0600
+Message-ID: <1364340079-3762-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 26, 2013 at 10:27:44PM +0100, Thomas Petazzoni wrote:
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-> Is this correct? Thierry, Jason, if you could confirm my understanding,
-> that would be great. I could then rework and resend the patch set.
+Audio-related clocks need to be represented in the device tree. Update
+bindings to describe which clocks are needed, and DT files to include
+those clocks.
 
-It looked to me the same as what Thierry was doing, and Thierry's
-looked like it included everything from the big discussion on that
-subject. Seems good to go to me.
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/sound/nvidia,tegra-audio-alc5632.txt   |    8 ++++++++
+ .../devicetree/bindings/sound/nvidia,tegra-audio-trimslice.txt |    7 +++++++
+ .../devicetree/bindings/sound/nvidia,tegra-audio-wm8753.txt    |    8 ++++++++
+ .../devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt    |    8 ++++++++
+ arch/arm/boot/dts/tegra20-harmony.dts                          |    3 +++
+ arch/arm/boot/dts/tegra20-medcom-wide.dts                      |    3 +++
+ arch/arm/boot/dts/tegra20-paz00.dts                            |    3 +++
+ arch/arm/boot/dts/tegra20-plutux.dts                           |    3 +++
+ arch/arm/boot/dts/tegra20-seaboard.dts                         |    3 +++
+ arch/arm/boot/dts/tegra20-tec.dts                              |    3 +++
+ arch/arm/boot/dts/tegra20-trimslice.dts                        |    3 +++
+ arch/arm/boot/dts/tegra20-ventana.dts                          |    3 +++
+ arch/arm/boot/dts/tegra20-whistler.dts                         |    3 +++
+ arch/arm/boot/dts/tegra30-cardhu.dtsi                          |    3 +++
+ 14 files changed, 61 insertions(+)
 
-Jason
+diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-alc5632.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-alc5632.txt
+index b77a97c..05ffecb 100644
+--- a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-alc5632.txt
++++ b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-alc5632.txt
+@@ -2,6 +2,11 @@ NVIDIA Tegra audio complex
+ 
+ Required properties:
+ - compatible : "nvidia,tegra-audio-alc5632"
++- clocks : Must contain an entry for each entry in clock-names.
++- clock-names : Must include the following entries:
++  "pll_a" (The Tegra clock of that name),
++  "pll_a_out0" (The Tegra clock of that name),
++  "mclk" (The Tegra cdev1/extern1 clock, which feeds the CODEC's mclk)
+ - nvidia,model : The user-visible name of this sound complex.
+ - nvidia,audio-routing : A list of the connections between audio components.
+   Each entry is a pair of strings, the first being the connection's sink,
+@@ -56,4 +61,7 @@ sound {
+ 
+ 	nvidia,i2s-controller = <&tegra_i2s1>;
+ 	nvidia,audio-codec = <&alc5632>;
++
++	clocks = <&tegra_car 112>, <&tegra_car 113>, <&tegra_car 93>;
++	clock-names = "pll_a", "pll_a_out0", "mclk";
+ };
+diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-trimslice.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-trimslice.txt
+index 04b14cf..ef1fe73 100644
+--- a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-trimslice.txt
++++ b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-trimslice.txt
+@@ -2,6 +2,11 @@ NVIDIA Tegra audio complex for TrimSlice
+ 
+ Required properties:
+ - compatible : "nvidia,tegra-audio-trimslice"
++- clocks : Must contain an entry for each entry in clock-names.
++- clock-names : Must include the following entries:
++  "pll_a" (The Tegra clock of that name),
++  "pll_a_out0" (The Tegra clock of that name),
++  "mclk" (The Tegra cdev1/extern1 clock, which feeds the CODEC's mclk)
+ - nvidia,i2s-controller : The phandle of the Tegra I2S1 controller
+ - nvidia,audio-codec : The phandle of the WM8903 audio codec
+ 
+@@ -11,4 +16,6 @@ sound {
+ 	compatible = "nvidia,tegra-audio-trimslice";
+ 	nvidia,i2s-controller = <&tegra_i2s1>;
+ 	nvidia,audio-codec = <&codec>;
++	clocks = <&tegra_car 112>, <&tegra_car 113>, <&tegra_car 93>;
++	clock-names = "pll_a", "pll_a_out0", "mclk";
+ };
+diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8753.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8753.txt
+index c4dd39c..d145106 100644
+--- a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8753.txt
++++ b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8753.txt
+@@ -2,6 +2,11 @@ NVIDIA Tegra audio complex
+ 
+ Required properties:
+ - compatible : "nvidia,tegra-audio-wm8753"
++- clocks : Must contain an entry for each entry in clock-names.
++- clock-names : Must include the following entries:
++  "pll_a" (The Tegra clock of that name),
++  "pll_a_out0" (The Tegra clock of that name),
++  "mclk" (The Tegra cdev1/extern1 clock, which feeds the CODEC's mclk)
+ - nvidia,model : The user-visible name of this sound complex.
+ - nvidia,audio-routing : A list of the connections between audio components.
+   Each entry is a pair of strings, the first being the connection's sink,
+@@ -50,5 +55,8 @@ sound {
+ 
+ 	nvidia,i2s-controller = <&i2s1>;
+ 	nvidia,audio-codec = <&wm8753>;
++
++	clocks = <&tegra_car 112>, <&tegra_car 113>, <&tegra_car 93>;
++	clock-names = "pll_a", "pll_a_out0", "mclk";
+ };
+ 
+diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt
+index d5b0da8..3bf722d 100644
+--- a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt
++++ b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm8903.txt
+@@ -2,6 +2,11 @@ NVIDIA Tegra audio complex
+ 
+ Required properties:
+ - compatible : "nvidia,tegra-audio-wm8903"
++- clocks : Must contain an entry for each entry in clock-names.
++- clock-names : Must include the following entries:
++  "pll_a" (The Tegra clock of that name),
++  "pll_a_out0" (The Tegra clock of that name),
++  "mclk" (The Tegra cdev1/extern1 clock, which feeds the CODEC's mclk)
+ - nvidia,model : The user-visible name of this sound complex.
+ - nvidia,audio-routing : A list of the connections between audio components.
+   Each entry is a pair of strings, the first being the connection's sink,
+@@ -67,5 +72,8 @@ sound {
+ 	nvidia,hp-det-gpios = <&gpio 178 0>; /* gpio PW2 */
+ 	nvidia,int-mic-en-gpios = <&gpio 184 0>; /*gpio PX0 */
+ 	nvidia,ext-mic-en-gpios = <&gpio 185 0>; /* gpio PX1 */
++
++	clocks = <&tegra_car 112>, <&tegra_car 113>, <&tegra_car 93>;
++	clock-names = "pll_a", "pll_a_out0", "mclk";
+ };
+ 
+diff --git a/arch/arm/boot/dts/tegra20-harmony.dts b/arch/arm/boot/dts/tegra20-harmony.dts
+index 1f79c0d..5fb0888 100644
+--- a/arch/arm/boot/dts/tegra20-harmony.dts
++++ b/arch/arm/boot/dts/tegra20-harmony.dts
+@@ -656,5 +656,8 @@
+ 		nvidia,hp-det-gpios = <&gpio 178 0>; /* gpio PW2 */
+ 		nvidia,int-mic-en-gpios = <&gpio 184 0>; /*gpio PX0 */
+ 		nvidia,ext-mic-en-gpios = <&gpio 185 0>; /* gpio PX1 */
++
++		clocks = <&tegra_car 112>, <&tegra_car 113>, <&tegra_car 93>;
++		clock-names = "pll_a", "pll_a_out0", "mclk";
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/tegra20-medcom-wide.dts b/arch/arm/boot/dts/tegra20-medcom-wide.dts
+index 52993a1..740ba7c 100644
+--- a/arch/arm/boot/dts/tegra20-medcom-wide.dts
++++ b/arch/arm/boot/dts/tegra20-medcom-wide.dts
+@@ -58,5 +58,8 @@
+ 
+ 		nvidia,spkr-en-gpios = <&wm8903 2 0>;
+ 		nvidia,hp-det-gpios = <&gpio 178 0>; /* gpio PW2 */
++
++		clocks = <&tegra_car 112>, <&tegra_car 113>, <&tegra_car 93>;
++		clock-names = "pll_a", "pll_a_out0", "mclk";
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/tegra20-paz00.dts b/arch/arm/boot/dts/tegra20-paz00.dts
+index 9db36da..43fd28b 100644
+--- a/arch/arm/boot/dts/tegra20-paz00.dts
++++ b/arch/arm/boot/dts/tegra20-paz00.dts
+@@ -501,5 +501,8 @@
+ 		nvidia,audio-codec = <&alc5632>;
+ 		nvidia,i2s-controller = <&tegra_i2s1>;
+ 		nvidia,hp-det-gpios = <&gpio 178 0>; /* gpio PW2 */
++
++		clocks = <&tegra_car 112>, <&tegra_car 113>, <&tegra_car 93>;
++		clock-names = "pll_a", "pll_a_out0", "mclk";
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/tegra20-plutux.dts b/arch/arm/boot/dts/tegra20-plutux.dts
+index 2894800..7085ae5 100644
+--- a/arch/arm/boot/dts/tegra20-plutux.dts
++++ b/arch/arm/boot/dts/tegra20-plutux.dts
+@@ -52,5 +52,8 @@
+ 
+ 		nvidia,spkr-en-gpios = <&wm8903 2 0>;
+ 		nvidia,hp-det-gpios = <&gpio 178 0>; /* gpio PW2 */
++
++		clocks = <&tegra_car 112>, <&tegra_car 113>, <&tegra_car 93>;
++		clock-names = "pll_a", "pll_a_out0", "mclk";
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/tegra20-seaboard.dts b/arch/arm/boot/dts/tegra20-seaboard.dts
+index 715a8b8..4f810a5 100644
+--- a/arch/arm/boot/dts/tegra20-seaboard.dts
++++ b/arch/arm/boot/dts/tegra20-seaboard.dts
+@@ -808,5 +808,8 @@
+ 
+ 		nvidia,spkr-en-gpios = <&wm8903 2 0>;
+ 		nvidia,hp-det-gpios = <&gpio 185 0>; /* gpio PX1 */
++
++		clocks = <&tegra_car 112>, <&tegra_car 113>, <&tegra_car 93>;
++		clock-names = "pll_a", "pll_a_out0", "mclk";
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/tegra20-tec.dts b/arch/arm/boot/dts/tegra20-tec.dts
+index 402b210..9be175d 100644
+--- a/arch/arm/boot/dts/tegra20-tec.dts
++++ b/arch/arm/boot/dts/tegra20-tec.dts
+@@ -52,5 +52,8 @@
+ 
+ 		nvidia,spkr-en-gpios = <&wm8903 2 0>;
+ 		nvidia,hp-det-gpios = <&gpio 178 0>; /* gpio PW2 */
++
++		clocks = <&tegra_car 112>, <&tegra_car 113>, <&tegra_car 93>;
++		clock-names = "pll_a", "pll_a_out0", "mclk";
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/tegra20-trimslice.dts b/arch/arm/boot/dts/tegra20-trimslice.dts
+index 98f3e44..955bf49 100644
+--- a/arch/arm/boot/dts/tegra20-trimslice.dts
++++ b/arch/arm/boot/dts/tegra20-trimslice.dts
+@@ -363,5 +363,8 @@
+ 		compatible = "nvidia,tegra-audio-trimslice";
+ 		nvidia,i2s-controller = <&tegra_i2s1>;
+ 		nvidia,audio-codec = <&codec>;
++
++		clocks = <&tegra_car 112>, <&tegra_car 113>, <&tegra_car 93>;
++		clock-names = "pll_a", "pll_a_out0", "mclk";
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/tegra20-ventana.dts b/arch/arm/boot/dts/tegra20-ventana.dts
+index 4aef56f..3f8ae10 100644
+--- a/arch/arm/boot/dts/tegra20-ventana.dts
++++ b/arch/arm/boot/dts/tegra20-ventana.dts
+@@ -607,5 +607,8 @@
+ 		nvidia,hp-det-gpios = <&gpio 178 0>; /* gpio PW2 */
+ 		nvidia,int-mic-en-gpios = <&gpio 184 0>; /* gpio PX0 */
+ 		nvidia,ext-mic-en-gpios = <&gpio 185 0>; /* gpio PX1 */
++
++		clocks = <&tegra_car 112>, <&tegra_car 113>, <&tegra_car 93>;
++		clock-names = "pll_a", "pll_a_out0", "mclk";
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/tegra20-whistler.dts b/arch/arm/boot/dts/tegra20-whistler.dts
+index 5762188..87e2d85 100644
+--- a/arch/arm/boot/dts/tegra20-whistler.dts
++++ b/arch/arm/boot/dts/tegra20-whistler.dts
+@@ -560,5 +560,8 @@
+ 
+ 		nvidia,i2s-controller = <&tegra_i2s1>;
+ 		nvidia,audio-codec = <&codec>;
++
++		clocks = <&tegra_car 112>, <&tegra_car 113>, <&tegra_car 93>;
++		clock-names = "pll_a", "pll_a_out0", "mclk";
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/tegra30-cardhu.dtsi b/arch/arm/boot/dts/tegra30-cardhu.dtsi
+index 3e2d210..11204e1 100644
+--- a/arch/arm/boot/dts/tegra30-cardhu.dtsi
++++ b/arch/arm/boot/dts/tegra30-cardhu.dtsi
+@@ -496,5 +496,8 @@
+ 
+ 		nvidia,spkr-en-gpios = <&wm8903 2 0>;
+ 		nvidia,hp-det-gpios = <&gpio 178 0>; /* gpio PW2 */
++
++		clocks = <&tegra_car 184>, <&tegra_car 185>, <&tegra_car 120>;
++		clock-names = "pll_a", "pll_a_out0", "mclk";
+ 	};
+ };
+-- 
+1.7.10.4
