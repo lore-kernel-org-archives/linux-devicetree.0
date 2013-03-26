@@ -1,59 +1,51 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 03/11] ARM i.MX6q: export imx6q_revision
-Date: Tue, 26 Mar 2013 15:13:58 +0100
-Message-ID: <1364307246-9017-4-git-send-email-p.zabel@pengutronix.de>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH 05/11] ARM i.MX6q: set the LDB serial clock parent to the
+ video PLL
+Date: Tue, 26 Mar 2013 15:14:00 +0100
+Message-ID: <1364307246-9017-6-git-send-email-p.zabel@pengutronix.de>
 References: <1364307246-9017-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1364307246-9017-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1364307246-9017-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/devel>,
+ <mailto:devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/devel/>
+List-Post: <mailto:devel@linuxdriverproject.org>
+List-Help: <mailto:devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/devel>,
+ <mailto:devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: devel-bounces@linuxdriverproject.org
+Sender: "devel" <devel-bounces@linuxdriverproject.org>
+To: linux-arm-kernel@lists.infradead.org
+Cc: devel@driverdev.osuosl.org, Fabio Estevam <fabio.estevam@freescale.com>, Philipp Zabel <p.zabel@pengutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de, Martin Fuzzey <mfuzzey@parkeon.com>, Sean Cross <xobs@kosagi.com>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-So it can be used in clk-imx6q.c for revision dependent clock tree setup.
+On i.MX6q revision 1.1 and later, set the video PLL as parent for
+the LDB clock branch. On revision 1.0, the video PLL is useless
+due to missing dividers, so keep the default parent (mmdc_ch1_axi).
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- arch/arm/mach-imx/common.h     | 1 +
- arch/arm/mach-imx/mach-imx6q.c | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/mach-imx/clk-imx6q.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
-index 5a800bf..6c909d1 100644
---- a/arch/arm/mach-imx/common.h
-+++ b/arch/arm/mach-imx/common.h
-@@ -74,6 +74,7 @@ extern void mxc_set_cpu_type(unsigned int type);
- extern void mxc_restart(char, const char *);
- extern void mxc_arch_reset_init(void __iomem *);
- extern int mx53_revision(void);
-+extern int imx6q_revision(void);
- extern int mx53_display_revision(void);
- extern void imx_set_aips(void __iomem *);
- extern int mxc_device_init(void);
-diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
-index 9ffd103..ca10acc 100644
---- a/arch/arm/mach-imx/mach-imx6q.c
-+++ b/arch/arm/mach-imx/mach-imx6q.c
-@@ -41,7 +41,7 @@
+diff --git a/arch/arm/mach-imx/clk-imx6q.c b/arch/arm/mach-imx/clk-imx6q.c
+index fbab4a9..5528656 100644
+--- a/arch/arm/mach-imx/clk-imx6q.c
++++ b/arch/arm/mach-imx/clk-imx6q.c
+@@ -465,6 +465,11 @@ int __init mx6q_clocks_init(void)
+ 	clk_register_clkdev(clk[cko1], "cko1", NULL);
+ 	clk_register_clkdev(clk[arm], NULL, "cpu0");
  
- #define IMX6Q_ANALOG_DIGPROG	0x260
- 
--static int imx6q_revision(void)
-+int imx6q_revision(void)
- {
- 	struct device_node *np;
- 	void __iomem *base;
++	if (imx6q_revision() != IMX_CHIP_REVISION_1_0) {
++		clk_set_parent(clk[ldb_di0_sel], clk[pll5_control3]);
++		clk_set_parent(clk[ldb_di1_sel], clk[pll5_control3]);
++	}
++
+ 	/*
+ 	 * The gpmi needs 100MHz frequency in the EDO/Sync mode,
+ 	 * We can not get the 100MHz from the pll2_pfd0_352m.
 -- 
 1.8.2.rc2
