@@ -1,87 +1,37 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH v3] USB: PHY: Palmas USB Transceiver Driver
-Date: Tue, 26 Mar 2013 16:58:49 +0530
-Message-ID: <51518671.7050901@nvidia.com>
-References: <1362662506-14823-4-git-send-email-kishon@ti.com> <1364203926-24488-1-git-send-email-kishon@ti.com> <51501CFB.4020905@nvidia.com> <51513A40.7080905@ti.com> <515163F6.3010400@slimlogic.co.uk> <51516695.8020808@nvidia.com> <51516A10.40704@slimlogic.co.uk> <51516BC3.7030707@nvidia.com> <51516FB5.3050504@slimlogic.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51516FB5.3050504@slimlogic.co.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Graeme Gregory <gg@slimlogic.co.uk>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, "balbi@ti.com" <balbi@ti.com>, Rajendra Nayak <rnayak@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "s-guiriec@ti.com" <s-guiriec@ti.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/1] iio: exynos-adc: Fix typo in DT documentation
+Date: Tue, 26 Mar 2013 17:22:57 +0530
+Message-ID: <1364298777-8178-1-git-send-email-sachin.kamat@linaro.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 26 March 2013 03:21 PM, Graeme Gregory wrote:
-> On 26/03/13 09:34, Laxman Dewangan wrote:
->>>>
->>>> Kishon,
->>>> I think it is very much possible. You can pass the interrupt throough
->>>> IRQ_RESOURCE and populate it from DT. If you provide proper interrupt
->>>> parent and irq number then irq framework take care of every thing.
->>>> already tested this with RTC interrupt of plama and it worked very
->>>> well.
->>>>
->>> If we are tightly coupling as above then using platform_irq is an extra
->>> inefficiency. You both have to populate this then parse it afterwards.
->>> Why not just use the regmap helper? Ill admit this code is like this as
->>> there was a period where platform irqs in DT just was not working right!
->>>
->>> We should really agree now if we are going for loose or tight coupling
->>> now rather than keep switching?
->> Here we are hardcoding for PALMAS_ID_OTG_IRQ and so on. If we take
->> data from platform then it need not and it will be completely
->> independent of palma atleast on this front.
->> We need to populate just as:
->> palmas: palmas {
->> :::::::
->>      palams_usb_phy {
->>          compatile = ...
->>          interrupt-parent = <& palmas>;
->>          interrupt = < 10, 0,
->>                                  21, 0,
->>                              22, 0,
->>                              23, 0>;
->> }
->>
->>
->> and in code, we just need to do
->> irq1 = platform_get_irq(pdev, 0);
->> irq2 = platform_get_irq(pdev, 1);
->> etc..
->>
->>
->> So here, actually we do not need to use palmas one and it is
->> completely independent.
->>
->> Also the way you define the DT od palmas, the above one looks more
->> appropriate.
->>
-> Ok that makes sense if you are actually planning to feed non palmas IRQs
-> to the usb via either palmas GPIO or even directly! I did not know there
-> was such a use case!
->
-> Graeme
->
+Fixes some typos in the documentation of exynos-adc.txt.
 
-Hi Graeme,
-There is multiple reqson for requesting this change:
-- When we register the device through non-dt, the irq number come as 
-IRQ_RESOURCE when we add mfd sub devices. We added the same irq number 
-on mfd/palma.c
-- So if that is true then irq should get from platform_irq_get() for 
-having proper transfer of infomration.
-- Same thing can be populated through dt. If any change then change will 
-be on the driver which si registerung in place of on driver which is 
-implementing.
+Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/arm/samsung/exynos-adc.txt |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-Another important point is: we have tps80036 (called palams-charger in 
-some of places) which support extended gpios and interrupts. The 
-extended interrupt register is not properly offsetted and in current 
-regmp-irq framework, it can ot be accomodate. For that the palma need to 
-implement the local irq implementation.
-In this case, really regmap will not help much as the registration will 
-not be through regmap-irq as irq domain will be created locally.
-
-
+diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+index 05e9d95..1fc744b 100644
+--- a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
++++ b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+@@ -1,6 +1,6 @@
+ Samsung Exynos Analog to Digital Converter bindings
+ 
+-This devicetree binding are for the new adc driver written fori
++The devicetree bindings are for the new ADC driver written for
+ Exynos4 and upward SoCs from Samsung.
+ 
+ New driver handles the following
+@@ -49,4 +49,4 @@ adc@12D10000 {
+ };
+ 
+ Note: Does not apply to ADC driver under arch/arm/plat-samsung/
+-Note: The child node can be added under the adc node or seperately.
++Note: The child node can be added under the adc node or separately.
+-- 
+1.7.4.1
