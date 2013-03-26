@@ -1,87 +1,56 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCHv6 10/17] arm: mvebu: add PCIe Device Tree informations
- for Armada 370
-Date: Tue, 26 Mar 2013 10:34:21 -0600
-Message-ID: <20130326163421.GA30255@obsidianresearch.com>
-References: <1364314719-1049-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1364314719-1049-11-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH v2 0/7] Add G2D nodes to Exynos4 machines
+Date: Tue, 26 Mar 2013 22:08:54 +0530
+Message-ID: <CAK9yfHwTkPWy5i-NcK3oYYzr_L6kAwXAwky+n6T4NptcokTPFg@mail.gmail.com>
+References: <1361163733-4338-1-git-send-email-sachin.kamat@linaro.org>
+	<CAK9yfHyQ=2EjRKknhN7nKUygnryKfWZ2A61w1+WRtrzLaF3SBA@mail.gmail.com>
+	<052101ce1e25$4370c410$ca524c30$%kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1364314719-1049-11-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, Thierry Reding <thierry.reding@avionic-design.de>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <052101ce1e25$4370c410$ca524c30$%kim@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 26, 2013 at 05:18:32PM +0100, Thomas Petazzoni wrote:
+On 11 March 2013 12:24, Kukjin Kim <kgene.kim@samsung.com> wrote:
+> Sachin Kamat wrote:
+>>
+>> Hi Kukjin,
+>>
+>> Can you please look into this series as it is pending since quite some time.
+>>
+> Applied, I have another opinion about the compatible string though...
 
-> +		pcie-controller {
-> +			compatible = "marvell,armada-370-pcie";
-> +			status = "disabled";
-> +			device_type = "pci";
-> +
-> +			#address-cells = <3>;
-> +			#size-cells = <2>;
-> +
-> +			bus-range = <0x00 0xff>;
-> +
-> +			reg = <0xd0040000 0x2000>, <0xd0080000 0x2000>;
-> +
-> +			reg-names = "pcie0.0", "pcie1.0";
-> +
-> +			ranges = <0x82000000 0 0xe0000000 0xe0000000 0 0x08000000   /* non-prefetchable memory */
-> +			          0x81000000 0 0          0xe8000000 0 0x00100000>; /* downstream I/O */
-> +
-> +			pcie@1,0 {
-> +				device_type = "pci";
-> +				reg = <0x0800 0 0 0 0>;
-> +				#address-cells = <3>;
-> +				#size-cells = <2>;
-
-Very Minor Nit: These two # fields are not strictly necessary
-
-> +				#interrupt-cells = <1>;
-> +				interrupt-map-mask = <0 0 0 0>;
-> +				interrupt-map = <0 0 0 0 &mpic 58>;
-> +				marvell,pcie-port = <0>;
-> +				marvell,pcie-lane = <0>;
-> +				clocks = <&gateclk 5>;
-> +				status = "disabled";
-> +			};
-> +
-> +			pcie@2,0 {
-> +				device_type = "pci";
-> +				reg = <0x1000 0 0 0 0>;
-> +				#address-cells = <3>;
-> +				#size-cells = <2>;
-> +				#interrupt-cells = <1>;
-> +				interrupt-map-mask = <0 0 0 0>;
-> +				interrupt-map = <0 0 0 0 &mpic 62>;
-> +				marvell,pcie-port = <1>;
-> +				marvell,pcie-lane = <0>;
-> +				clocks = <&gateclk 9>;
-> +				status = "disabled";
-> +			};
-> +		};
->  	};
->  };
+Couldn't find this series in your latest for-next. Please let me know
+which branch this is applied to.
 
 
-This basically looks fine to me, however, I think it is valuable if
-you and Thierry could use the same method to pass per-port registers. I
-expect others are going to reference these bindings for future work,
-and one standard method is more clear than two.
 
-Thierry: Did you settle on using assigned-addresses? Can you share the
-final binding for your driver?
+>> On 18 February 2013 10:32, Sachin Kamat <sachin.kamat@linaro.org> wrote:
+>> > This patch series is based on Kukjin Kim's next/dt-exynos branch of
+>> > git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
+>> > tree.
+>> >
+>> > Changes since v1:
+>> > * Removed power-domain entry in patch 1/7 as the driver currently
+>> >   does not use it.
+>> > * Addressed review comments from Sylwester Nawrocki and Tomasz Figa
+>> >   in patch 7/7.
+>> >
+>> > Sachin Kamat (7):
+>> >   ARM: dts: Add G2D node to exynos4210.dtsi
+>> >   ARM: dts: Add G2D node to SMDKV310
+>> >   ARM: dts: Add G2D node to exynos4210-origen
+>> >   ARM: dts: Add G2D node to exynos4x12.dtsi
+>> >   ARM: dts: Add G2D node to SMDK4412
+>> >   ARM: dts: Add G2D node to exynos4412-origen
+>> >   ARM: dts: Add Samsung G2D DT bindings documentation
+>
 
-Jingoo Han's driver for Exynos uses lots of per-port registers, so I'm
-inclined to think that assigned-addresses is the clearer way forward.
 
-This is a fairly minor comment. Would people be comfortable going in as-is
-with a small follow-up revision to the DT?
 
-Regards,
-Jason
+-- 
+With warm regards,
+Sachin
