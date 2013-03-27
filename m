@@ -1,179 +1,68 @@
-From: Lars Poeschel <poeschel@lemonage.de>
-Subject: Re: [PATCH v3] gpio: mcp23s08: convert driver to DT
-Date: Wed, 27 Mar 2013 12:35:32 +0100
-Message-ID: <201303271235.32346.poeschel@lemonage.de>
-References: <1362414873-17676-1-git-send-email-larsi@wh2.tu-dresden.de> <CACRpkdYYsULLsDQuxoRHp=HXsaOAejwaO-CezdEK4sNprWpDYQ@mail.gmail.com>
+From: Martin Fuzzey <mfuzzey@parkeon.com>
+Subject: Re: [PATCH 01/11] staging: drm/imx: Add LDB support
+Date: Wed, 27 Mar 2013 12:54:19 +0100
+Message-ID: <5152DDEB.9020907@parkeon.com>
+References: <1364307246-9017-1-git-send-email-p.zabel@pengutronix.de>
+ <1364307246-9017-2-git-send-email-p.zabel@pengutronix.de>
+Reply-To: mfuzzey@parkeon.com
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYYsULLsDQuxoRHp=HXsaOAejwaO-CezdEK4sNprWpDYQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Lars Poeschel <larsi@wh2.tu-dresden.de>, Mark Brown <broonie@opensource.wolfsonmicro.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, Peter Korsgaard <jacmet@sunsite.dk>
+Content-Type: text/plain; charset="windows-1252"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1364307246-9017-2-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/devel>,
+ <mailto:devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/devel/>
+List-Post: <mailto:devel@linuxdriverproject.org>
+List-Help: <mailto:devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/devel>,
+ <mailto:devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: devel-bounces@linuxdriverproject.org
+Sender: "devel" <devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devel@driverdev.osuosl.org, Fabio Estevam <fabio.estevam@freescale.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de, Sean Cross <xobs@kosagi.com>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 22 March 2013 at 09:33:10, Linus Walleij wrote:
+Hi Philipp,
 
-> > +++ b/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
-> > @@ -0,0 +1,43 @@
-> > +Microchip MCP2308/MCP23S08/MCP23017/MCP23S17 driver for
-> > +8-/16-bit I/O expander with serial interface (I2C/SPI)
-> > +
-> > +Required properties:
-> > +- compatible : Should be
-> > +    - "mcp,mcp23s08" for  8 GPIO SPI version
-> > +    - "mcp,mcp23s17" for 16 GPIO SPI version
-> > +    - "mcp,mcp23008" for  8 GPIO I2C version or
-> > +    - "mcp,mcp23017" for 16 GPIO I2C version of the chip
-> > +- #gpio-cells : Should be two.
-> > +  - first cell is the pin number
-> > +  - second cell is used to specify flags. Flags currently used:
-> > +    bit0 : activate a ~100k pullup
-> 
-> Pullup is basically about pin config. This is sort of sneaking
-> behind the subsystems, but I know I might be overzealous.
-> 
-> Can the electronics do more things than pull-up?
-> 
-> Like pull-down, open drain, drive strength...
+On 26/03/13 15:13, Philipp Zabel wrote:
 
-No pull-down, no open drain, no drive strength, nothing - only 100k pull-up.
- 
-> If it's a lot it's better to consider pinctrl from the start.
-> I'm saying this because the DT bindings will be maintained
-> perpetually and need to set a good example.
-> 
-> I would currently feel a lot better if you did not include this
-> flag. How would you control this the day drivers need to
-> enable/disable pull-up at runtime?
+> +static void imx_ldb_encoder_disable(struct drm_encoder *encoder)
+> +{
+> +	struct imx_ldb_channel *imx_ldb_ch =3D enc_to_imx_ldb_ch(encoder);
+> +	struct imx_ldb *ldb =3D imx_ldb_ch->ldb;
+> +
+> +	if (gpio_is_valid(imx_ldb_ch->enable_gpio))
+> +		gpio_set_value(imx_ldb_ch->enable_gpio, 0);
+>
+I get a compile error here:
+drivers/staging/imx-drm/imx-ldb.c: In function =91imx_ldb_encoder_disable=
+=92:
+drivers/staging/imx-drm/imx-ldb.c:283:2: error: implicit declaration of =
 
-For me it would also be easier to remove the flag (for DT boot case). I don't 
-need the pullups. I did only include it, because this is how the driver is 
-designed to work and what it did already. What I wanted was to make a good 
-transfer from what the features of the driver are and how it works to be able 
-to use it with device tree. If it now turns out that's bad for some reason, I 
-have no problem to remove this from the patch completely.
-You're right: Runtime config is not possible this way.
-What should I do now ? Remove it ?
+function =91gpio_is_valid=92 [-Werror=3Dimplicit-function-declaration]
+drivers/staging/imx-drm/imx-ldb.c:283:30: error: =91struct =
 
-> > +- gpio-controller : Marks the device node as a GPIO controller.
-> > +- reg : For an address on its bus
-> 
-> On the I2C/SPI bus?
+imx_ldb_channel=92 has no member named =91enable_gpio=92
+drivers/staging/imx-drm/imx-ldb.c:284:3: error: implicit declaration of =
 
-Yes, both. For I2C it's the I2C address, for SPI it's the chip select to use 
-for this chip.
+function =91gpio_set_value=92 [-Werror=3Dimplicit-function-declaration]
+drivers/staging/imx-drm/imx-ldb.c:284:28: error: =91struct =
 
-> Please state here what kind of buses it can be. Explain if multiple
-> buses are supported.
+imx_ldb_channel=92 has no member named =91enable_gpio=92
 
-Ok, I will add a line about it.
+Adding #include <linux/gpio.h> fixes that but gives another error:
+drivers/staging/imx-drm/imx-ldb.c: In function =91imx_ldb_encoder_disable=
+=92:
+drivers/staging/imx-drm/imx-ldb.c:284:30: error: =91struct =
 
-> > +Required device specific properties (only for SPI chips):
-> > +- mcp,spi-present-mask : This is a present flag, that makes only sense
-> > for SPI +        chips - as the name suggests.
-> 
-> AFAIK this is not how we disable/enable devices in the device tree.
-> 
-> Istead we include a property on the node called "status" and set it
-> to "disabled" if the device is not there.
+imx_ldb_channel=92 has no member named =91enable_gpio=92
+drivers/staging/imx-drm/imx-ldb.c:285:28: error: =91struct =
 
-This would require multiple instances with the same reg property as up to 8 
-chips can live on the same chip select. I wonder if this is possible ?
- 
-> > +        Multiple chips can share the same
-> > +        SPI chipselect. Set bit 0-7 in this mask to 1 if there is a
-> > chip +        connected with this spi address. If you have a chip with
-> > address 3 +        connected, you have to set bit3 to 1, which is 0x08.
-> > mcp23s08 only +        supports bits 0-3. It is not possible to mix
-> > mcp23s08 and mcp23s17 +        on the same chipselect. Set at least one
-> > bit to 1 for SPI chips.
-> 
-> This looks awkward, why are you using a bitfield for this? Then you
-> can only ever support 8 devices, since the text also implies that the
-> value is 8bit (this should be stated).
+imx_ldb_channel=92 has no member named =91enable_gpio=92
 
-Grant had the idea with the bitfield. You have the reg property specifying 
-the chip select line. This bitfield is then used to indicate which of the 8 
-possible chips on this same chip select line is really present. Not beeing 
-able to support more than 8 devices is not problem, because it is a hardware 
-limitation, that not more than 8 devices can share the same SPI chip select. 
-This is again how the driver worked so far.
- 
-> What about just using a number?
-
-This would again require multiple instances with the same reg property for 
-SPI. Is this really possible ?
- 
-> > diff --git a/drivers/gpio/gpio-mcp23s08.c b/drivers/gpio/gpio-mcp23s08.c
-> > index 3cea0ea..a8ca469 100644
-> > --- a/drivers/gpio/gpio-mcp23s08.c
-> > +++ b/drivers/gpio/gpio-mcp23s08.c
-> > @@ -12,6 +12,8 @@
-> > 
-> >  #include <linux/spi/mcp23s08.h>
-> >  #include <linux/slab.h>
-> >  #include <asm/byteorder.h>
-> > 
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> > 
-> >  /**
-> >  
-> >   * MCP types supported by driver
-> > 
-> > @@ -21,6 +23,11 @@
-> > 
-> >  #define MCP_TYPE_008   2
-> >  #define MCP_TYPE_017   3
-> > 
-> > +/**
-> > + * Flags used in device tree
-> > + */
-> > +#define MCP_DT_FLAG_PULLUP 0x01
-> 
-> So I'm sceptical here. Is this already supported using platform data?
-
-Yes, setting the pullups using platform data on probe time is supported.
-
-> >  /* Registers are all 8 bits wide.
-> >  
-> >   *
-> >   * The mcp23s17 has twice as many bits, and can be configured to work
-> > 
-> > @@ -75,6 +82,25 @@ struct mcp23s08_driver_data {
-> > 
-> >         struct mcp23s08         chip[];
-> >  
-> >  };
-> > 
-> > +#ifdef CONFIG_OF
-> > +static int mcp23s08_of_xlate(struct gpio_chip *gc,
-> > +                       const struct of_phandle_args *gpiospec, u32
-> > *flags); +
-> > +static int mcp23s08_set_pullup(struct mcp23s08 *mcp, unsigned offset)
-> > +{
-> > +       int status;
-> > +       u16 value;
-> > +
-> > +       mutex_lock(&mcp->lock);
-> > +       value = mcp->cache[MCP_GPPU] | (1 << offset);
-> > +       status = mcp->ops->write(mcp, MCP_GPPU, value);
-> > +       if (!status)
-> > +               mcp->cache[MCP_GPPU] = value;
-> > +       mutex_unlock(&mcp->lock);
-> > +
-> > +       return status;
-> > +}
-> 
-> The pull-up business actually looks like new functionality that
-> has nothing to do with adding device tree support and should be
-> a separate patch.
-
-I can put this in a seperate patch if you want. There still is the general 
-question: Remove the pullup thing from the device tree boot or keep it in ?
+Commenting out the block gives a working driver.
 
 Regards,
-Lars
+
+Martin
