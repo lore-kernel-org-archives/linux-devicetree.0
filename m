@@ -1,74 +1,97 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH v2 1/4] iio: adc: Document the regulator/clocks for exynos-adc
-Date: Wed, 27 Mar 2013 19:40:52 +0100
-Message-ID: <51533D34.7020406@metafoo.de>
-References: <1363129994-10438-1-git-send-email-dianders@chromium.org> <1363207202-10858-1-git-send-email-dianders@chromium.org> <1363207202-10858-2-git-send-email-dianders@chromium.org> <CAHfPSqDLXD-T6__eF=d+U7Me953DqTgMXi=Jmx7LnHL+W-FLhQ@mail.gmail.com>
+From: Kevin Hilman <khilman@linaro.org>
+Subject: Re: [PATCH V2 8/8] cpufreq: OMAP: donot allow to be used with device tree
+Date: Wed, 27 Mar 2013 11:39:09 -0700
+Message-ID: <87vc8c7kmq.fsf@linaro.org>
+References: <1363715590-5131-1-git-send-email-nm@ti.com>
+	<1363715590-5131-9-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAHfPSqDLXD-T6__eF=d+U7Me953DqTgMXi=Jmx7LnHL+W-FLhQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-Cc: Doug Anderson <dianders@chromium.org>, Jonathan Cameron <jic23@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, Olof Johansson <olof@lixom.net>, Guenter Roeck <linux@roeck-us.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <1363715590-5131-9-git-send-email-nm@ti.com> (Nishanth Menon's
+	message of "Tue, 19 Mar 2013 12:53:10 -0500")
+Sender: cpufreq-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: linux-omap@vger.kernel.org, Jon Hunter <jon-hunter@ti.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <b-cousson@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Shawn Guo <shawn.guo@linaro.org>, Keerthy <j-keerthy@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/27/2013 07:35 PM, Naveen Krishna Ch wrote:
-> On 13 March 2013 13:39, Doug Anderson <dianders@chromium.org> wrote:
->> The exynos ADC won't work without a regulator called "vdd" and a clock
->> called "adc".  Document this fact in the device tree bindings.
->>
->> Signed-off-by: Doug Anderson <dianders@chromium.org>
-> Reviewed-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> 
-> Lars, any update on this patch set. This change is required.
+Nishanth Menon <nm@ti.com> writes:
 
-Uhm, looks fine to me. I'm sure Jonathan will pick it up :)
+> We now use Soc generic cpufreq-cpu0 driver using DT entries.
+> However to allow cpufreq-cpu0 and omap-cpufreq drivers to co-exist,
+> we need to ensure the following using the same image:
+> 1. With device tree boot, we use cpufreq-cpu0
+> 2. With non device tree boot, we use omap-cpufreq
+>
+> In the case of (1), we will have cpu OPPs and regulator registered
+> as part of the DT, to ensure that omap-cpufreq and cpufreq-cpu0 don't
+> conflict in managing the frequency of the same cpu, we should not
+> permit init to pass in omap-cpufreq.
+>
+> In the case of (2), we will not have the cpufreq-cpu0 device, hence
+> only omap-cpufreq will be active.
+>
+> So, to acommodate both these usage conditions, we fail init of
+> omap-cpufreq when we boot with device tree.
+>
+> Cc: Kevin Hilman <khilman@deeprootsystems.com>
+> Cc: Jon Hunter <jon-hunter@ti.com>
+> Cc: "Beno=C3=AEt Cousson" <b-cousson@ti.com>
+> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> Cc: Shawn Guo <shawn.guo@linaro.org>
+> Cc: Keerthy <j-keerthy@ti.com>
+> Cc: linux-omap@vger.kernel.org
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: cpufreq@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+>
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> ---
+> Changes in V2:
+> 	- donot remove support for omap-cpufreq in non-DT boot
+> 	- little more verbose commit log
+> V1: https://patchwork.kernel.org/patch/2273641/
+>
+>  drivers/cpufreq/omap-cpufreq.c |   14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>
+> diff --git a/drivers/cpufreq/omap-cpufreq.c b/drivers/cpufreq/omap-cp=
+ufreq.c
+> index 9128c07..9382ed0 100644
+> --- a/drivers/cpufreq/omap-cpufreq.c
+> +++ b/drivers/cpufreq/omap-cpufreq.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/err.h>
+>  #include <linux/clk.h>
+>  #include <linux/io.h>
+> +#include <linux/of.h>
+>  #include <linux/opp.h>
+>  #include <linux/cpu.h>
+>  #include <linux/module.h>
+> @@ -174,6 +175,19 @@ static inline void freq_table_free(void)
+>  static int __cpuinit omap_cpu_init(struct cpufreq_policy *policy)
+>  {
+>  	int result =3D 0;
+> +	struct device_node *np;
+> +
+> +	/*
+> +	 * If we have a device tree node describing OPPs,
+> +	 * we will NOT permit usage of omap-cpufreq driver.
+> +	 * use cpufreq-cpu0 driver to manage.
+> +	 */
+> +	if (of_have_populated_dt()) {
+> +		for_each_child_of_node(of_find_node_by_path("/cpus"), np) {
+> +			if (of_get_property(np, "operating-points", NULL))
+> +				return -EPERM;
+> +		}
+> +	}
 
->> ---
->> Changes in v2: None
->>
->>  Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt | 8 ++++++++
->>  1 file changed, 8 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
->> index f686378..96db940 100644
->> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
->> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
->> @@ -20,6 +20,9 @@ Required properties:
->>                         format is being dependent on which interrupt controller
->>                         the Samsung device uses.
->>  - #io-channel-cells = <1>; As ADC has multiple outputs
->> +- clocks               From common clock binding: handle to adc clock.
->> +- clock-names          From common clock binding: Shall be "adc".
->> +- vdd-supply           VDD input supply.
->>
->>  Note: child nodes can be added for auto probing from device tree.
->>
->> @@ -31,6 +34,11 @@ adc: adc@12D10000 {
->>         interrupts = <0 106 0>;
->>         #io-channel-cells = <1>;
->>         io-channel-ranges;
->> +
->> +       clocks = <&clock 303>;
->> +       clock-names = "adc";
->> +
->> +       vdd-supply = <&buck5_reg>;
->>  };
->>
->>
->> --
->> 1.8.1.3
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->> Please read the FAQ at  http://www.tux.org/lkml/
-> 
-> 
-> 
-> --
-> Shine bright,
-> (: Nav :)
+I think it's much cleaner to just convert this to a platform_driver lik=
+e
+was done for the generic driver[1].  Then the registration in the
+previous patch can register the omap driver when needed.
 
+Kevin
+
+[1] https://patchwork.kernel.org/patch/2067751/
