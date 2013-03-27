@@ -1,8 +1,7 @@
 From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 06/11] ARM i.MX: Add imx_clk_divider_flags and
- imx_clk_mux_flags
-Date: Wed, 27 Mar 2013 18:30:40 +0100
-Message-ID: <1364405445-5271-7-git-send-email-p.zabel@pengutronix.de>
+Subject: [PATCH v2 07/11] ARM i.MX53: fix ldb di divider and selector clocks
+Date: Wed, 27 Mar 2013 18:30:41 +0100
+Message-ID: <1364405445-5271-8-git-send-email-p.zabel@pengutronix.de>
 References: <1364405445-5271-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,49 +22,39 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The default is for dividers to set CLK_SET_PARENT_RATE and for muxes to
-not set that flag. In the LDB clock tree, we need the opposite, so add
-functions to create divider and mux clocks with configurable flags.
+Use imx_clk_mux_flags and imx_clk_divider_flags to set the appropriate
+flags for the LDB display interface divider and selector clocks.
 
 Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- arch/arm/mach-imx/clk.h | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm/mach-imx/clk-imx51-imx53.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/mach-imx/clk.h b/arch/arm/mach-imx/clk.h
-index 9d1f3b9..d9d9d9c 100644
---- a/arch/arm/mach-imx/clk.h
-+++ b/arch/arm/mach-imx/clk.h
-@@ -59,6 +59,14 @@ static inline struct clk *imx_clk_divider(const char *name, const char *parent,
- 			reg, shift, width, 0, &imx_ccm_lock);
- }
+diff --git a/arch/arm/mach-imx/clk-imx51-imx53.c b/arch/arm/mach-imx/clk-imx51-imx53.c
+index d22ee6a..ed08aba 100644
+--- a/arch/arm/mach-imx/clk-imx51-imx53.c
++++ b/arch/arm/mach-imx/clk-imx51-imx53.c
+@@ -420,15 +420,15 @@ int __init mx53_clocks_init(unsigned long rate_ckil, unsigned long rate_osc,
+ 	clk[pll3_sw] = imx_clk_pllv2("pll3_sw", "osc", MX53_DPLL3_BASE);
+ 	clk[pll4_sw] = imx_clk_pllv2("pll4_sw", "osc", MX53_DPLL4_BASE);
  
-+static inline struct clk *imx_clk_divider_flags(const char *name,
-+		const char *parent, void __iomem *reg, u8 shift, u8 width,
-+		unsigned long flags)
-+{
-+	return clk_register_divider(NULL, name, parent, flags,
-+			reg, shift, width, 0, &imx_ccm_lock);
-+}
-+
- static inline struct clk *imx_clk_gate(const char *name, const char *parent,
- 		void __iomem *reg, u8 shift)
- {
-@@ -73,6 +81,15 @@ static inline struct clk *imx_clk_mux(const char *name, void __iomem *reg,
- 			width, 0, &imx_ccm_lock);
- }
- 
-+static inline struct clk *imx_clk_mux_flags(const char *name,
-+		void __iomem *reg, u8 shift, u8 width, const char **parents,
-+		int num_parents, unsigned long flags)
-+{
-+	return clk_register_mux(NULL, name, parents, num_parents,
-+			flags, reg, shift, width, 0,
-+			&imx_ccm_lock);
-+}
-+
- static inline struct clk *imx_clk_fixed_factor(const char *name,
- 		const char *parent, unsigned int mult, unsigned int div)
- {
+-	clk[ldb_di1_sel] = imx_clk_mux("ldb_di1_sel", MXC_CCM_CSCMR2, 9, 1,
+-				mx53_ldb_di1_sel, ARRAY_SIZE(mx53_ldb_di1_sel));
+ 	clk[ldb_di1_div_3_5] = imx_clk_fixed_factor("ldb_di1_div_3_5", "ldb_di1_sel", 2, 7);
+-	clk[ldb_di1_div] = imx_clk_divider("ldb_di1_div", "ldb_di1_div_3_5", MXC_CCM_CSCMR2, 11, 1);
++	clk[ldb_di1_div] = imx_clk_divider_flags("ldb_di1_div", "ldb_di1_div_3_5", MXC_CCM_CSCMR2, 11, 1, 0);
++	clk[ldb_di1_sel] = imx_clk_mux_flags("ldb_di1_sel", MXC_CCM_CSCMR2, 9, 1,
++				mx53_ldb_di1_sel, ARRAY_SIZE(mx53_ldb_di1_sel), CLK_SET_RATE_PARENT);
+ 	clk[di_pll4_podf] = imx_clk_divider("di_pll4_podf", "pll4_sw", MXC_CCM_CDCDR, 16, 3);
+-	clk[ldb_di0_sel] = imx_clk_mux("ldb_di0_sel", MXC_CCM_CSCMR2, 8, 1,
+-				mx53_ldb_di0_sel, ARRAY_SIZE(mx53_ldb_di0_sel));
+ 	clk[ldb_di0_div_3_5] = imx_clk_fixed_factor("ldb_di0_div_3_5", "ldb_di0_sel", 2, 7);
+-	clk[ldb_di0_div] = imx_clk_divider("ldb_di0_div", "ldb_di0_div_3_5", MXC_CCM_CSCMR2, 10, 1);
++	clk[ldb_di0_div] = imx_clk_divider_flags("ldb_di0_div", "ldb_di0_div_3_5", MXC_CCM_CSCMR2, 10, 1, 0);
++	clk[ldb_di0_sel] = imx_clk_mux_flags("ldb_di0_sel", MXC_CCM_CSCMR2, 8, 1,
++				mx53_ldb_di0_sel, ARRAY_SIZE(mx53_ldb_di0_sel), CLK_SET_RATE_PARENT);
+ 	clk[ldb_di0_gate] = imx_clk_gate2("ldb_di0_gate", "ldb_di0_div", MXC_CCM_CCGR6, 28);
+ 	clk[ldb_di1_gate] = imx_clk_gate2("ldb_di1_gate", "ldb_di1_div", MXC_CCM_CCGR6, 30);
+ 	clk[ipu_di0_sel] = imx_clk_mux("ipu_di0_sel", MXC_CCM_CSCMR2, 26, 3,
 -- 
 1.8.2.rc2
