@@ -1,84 +1,57 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 02/11] ARM i.MX5: Move IPU clock lookups into device tree
-Date: Wed, 27 Mar 2013 18:30:36 +0100
-Message-ID: <1364405445-5271-3-git-send-email-p.zabel@pengutronix.de>
-References: <1364405445-5271-1-git-send-email-p.zabel@pengutronix.de>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v2 0/11] LVDS Display Bridge support for i.MX
+Date: Wed, 27 Mar 2013 18:30:34 +0100
+Message-ID: <1364405445-5271-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1364405445-5271-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devel@driverdev.osuosl.org, Fabio Estevam <fabio.estevam@freescale.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de, Martin Fuzzey <mfuzzey@parkeon.com>, Sean Cross <xobs@kosagi.com>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/imx51.dtsi        | 2 ++
- arch/arm/boot/dts/imx53.dtsi        | 2 ++
- arch/arm/mach-imx/clk-imx51-imx53.c | 7 -------
- 3 files changed, 4 insertions(+), 7 deletions(-)
+Hi,
 
-diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
-index fcf035b..e9480b8 100644
---- a/arch/arm/boot/dts/imx51.dtsi
-+++ b/arch/arm/boot/dts/imx51.dtsi
-@@ -67,6 +67,8 @@
- 			compatible = "fsl,imx51-ipu";
- 			reg = <0x40000000 0x20000000>;
- 			interrupts = <11 10>;
-+			clocks = <&clks 59>, <&clks 110>, <&clks 61>;
-+			clock-names = "bus", "di0", "di1";
- 		};
- 
- 		aips@70000000 { /* AIPS1 */
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index d05aa21..7a6f5a8 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -72,6 +72,8 @@
- 			compatible = "fsl,imx53-ipu";
- 			reg = <0x18000000 0x080000000>;
- 			interrupts = <11 10>;
-+			clocks = <&clks 59>, <&clks 110>, <&clks 61>;
-+			clock-names = "bus", "di0", "di1";
- 		};
- 
- 		aips@50000000 { /* AIPS1 */
-diff --git a/arch/arm/mach-imx/clk-imx51-imx53.c b/arch/arm/mach-imx/clk-imx51-imx53.c
-index 0f39f8c..d22ee6a 100644
---- a/arch/arm/mach-imx/clk-imx51-imx53.c
-+++ b/arch/arm/mach-imx/clk-imx51-imx53.c
-@@ -362,9 +362,6 @@ int __init mx51_clocks_init(unsigned long rate_ckil, unsigned long rate_osc,
- 	clk_register_clkdev(clk[mx51_mipi], "mipi_hsp", NULL);
- 	clk_register_clkdev(clk[vpu_gate], NULL, "imx51-vpu.0");
- 	clk_register_clkdev(clk[fec_gate], NULL, "imx27-fec.0");
--	clk_register_clkdev(clk[ipu_gate], "bus", "40000000.ipu");
--	clk_register_clkdev(clk[ipu_di0_gate], "di0", "40000000.ipu");
--	clk_register_clkdev(clk[ipu_di1_gate], "di1", "40000000.ipu");
- 	clk_register_clkdev(clk[usb_phy_gate], "phy", "mxc-ehci.0");
- 	clk_register_clkdev(clk[esdhc1_ipg_gate], "ipg", "sdhci-esdhc-imx51.0");
- 	clk_register_clkdev(clk[dummy], "ahb", "sdhci-esdhc-imx51.0");
-@@ -471,10 +468,6 @@ int __init mx53_clocks_init(unsigned long rate_ckil, unsigned long rate_osc,
- 	clk_register_clkdev(clk[vpu_gate], NULL, "imx53-vpu.0");
- 	clk_register_clkdev(clk[i2c3_gate], NULL, "imx21-i2c.2");
- 	clk_register_clkdev(clk[fec_gate], NULL, "imx25-fec.0");
--	clk_register_clkdev(clk[ipu_gate], "bus", "18000000.ipu");
--	clk_register_clkdev(clk[ipu_di0_gate], "di0", "18000000.ipu");
--	clk_register_clkdev(clk[ipu_di1_gate], "di1", "18000000.ipu");
--	clk_register_clkdev(clk[ipu_gate], "hsp", "18000000.ipu");
- 	clk_register_clkdev(clk[usb_phy1_gate], "usb_phy1", "mxc-ehci.0");
- 	clk_register_clkdev(clk[esdhc1_ipg_gate], "ipg", "sdhci-esdhc-imx53.0");
- 	clk_register_clkdev(clk[dummy], "ahb", "sdhci-esdhc-imx53.0");
--- 
-1.8.2.rc2
+the following patches add support for LVDS displays on
+i.MX53 and i.MX6q boards.
+
+The clock patches are needed because the LVDS serial clock
+needs to be in lockstep with the IPU display interface clock
+providing the pixel data. A fixed factor of 7:1 (or 3.5:1 in
+dual link mode) needs to be maintained. This is achieved on
+i.MX by clocking the LDB DI clock directly from a PLL, and
+manually setting the 3.5/7:1 divider depending on dual/single
+link mode. The IPU display interface clock is then sourced
+from the divided LDB clock.
+
+Changes since v1:
+ - Added device-tree bindings documentation
+ - Dropped remains of GPIO handling from LDB driver, sorry about that
+
+regards
+Philipp
+
+---
+ .../devicetree/bindings/staging/imx-drm/ldb.txt    |  99 ++++
+ arch/arm/boot/dts/imx51.dtsi                       |   2 +
+ arch/arm/boot/dts/imx53.dtsi                       |  34 ++
+ arch/arm/boot/dts/imx6q.dtsi                       |  17 +
+ arch/arm/boot/dts/imx6qdl.dtsi                     |  26 +
+ arch/arm/mach-imx/clk-imx51-imx53.c                |  19 +-
+ arch/arm/mach-imx/clk-imx6q.c                      |  43 +-
+ arch/arm/mach-imx/clk.h                            |  17 +
+ arch/arm/mach-imx/common.h                         |   1 +
+ arch/arm/mach-imx/mach-imx6q.c                     |   2 +-
+ drivers/staging/imx-drm/Kconfig                    |   7 +
+ drivers/staging/imx-drm/Makefile                   |   1 +
+ drivers/staging/imx-drm/imx-ldb.c                  | 611 +++++++++++++++++++++
+ 13 files changed, 854 insertions(+), 25 deletions(-)
