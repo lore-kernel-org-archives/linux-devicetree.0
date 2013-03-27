@@ -1,26 +1,35 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v5 8/8] reset: Add driver for gpio-controlled reset pins
-Date: Wed, 27 Mar 2013 20:10:26 +0800
-Message-ID: <20130327121024.GC2674@S2101-09.ap.freescale.net>
-References: <1364231189-12497-1-git-send-email-p.zabel@pengutronix.de>
- <1364231189-12497-9-git-send-email-p.zabel@pengutronix.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH v2] of/pci: Provide support for parsing PCI DT ranges property
+Date: Wed, 27 Mar 2013 13:50:09 +0100
+Message-ID: <CACRpkdZ_iuz96JWjHcr+6ugRY29MPA-wiGWtQQJqk30iTQE--Q@mail.gmail.com>
+References: <20130221154709.GA26660@arm.com>
+	<20130320210521.65261e77@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1364231189-12497-9-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@wwwdotorg.org>, Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, Mike Turquette <mturquette@linaro.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, "Rafael J. Wysocki" <rjw@sisk.pl>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20130320210521.65261e77@skate>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Andrew Murray <Andrew.Murray@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Thierry Reding <thierry.reding@avionic-design.de>, linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 25, 2013 at 06:06:29PM +0100, Philipp Zabel wrote:
-> This driver implements a reset controller device that toggles gpios
-> connected to reset pins of peripheral ICs. The delay between assertion
-> and de-assertion of the reset signal can be configured.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> Reviewed-by: Stephen Warren <swarren@nvidia.com>
+On Wed, Mar 20, 2013 at 9:05 PM, Thomas Petazzoni
+<thomas.petazzoni@free-electrons.com> wrote:
 
-Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
+> What is the status of the below patch? Both Marvell PCIe driver and
+> Tegra PCIe driver need a way to parse the ranges = <...> property of
+> the PCI DT node.
+>
+> Would it be possible to get this patch merged for 3.10, or get some
+> review comments that would allow us to rework it in time for 3.10 ?
 
+Thomas can you supply a Reviewed-by/Tested-by tag?
+That certainly helps...
+
+I was meaning to test it on the Integrator but I've been sidetracked.
+
+It'd be good to take this through ARM SoC's DT branch so different
+platforms can use it.
+
+Yours,
+Linus Walleij
