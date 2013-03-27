@@ -1,58 +1,69 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v2 03/11] ARM i.MX6q: export imx6q_revision
-Date: Wed, 27 Mar 2013 18:30:37 +0100
-Message-ID: <1364405445-5271-4-git-send-email-p.zabel@pengutronix.de>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2 10/11] ARM i.MX53: Add LDB device to device tree
+Date: Wed, 27 Mar 2013 18:30:44 +0100
+Message-ID: <1364405445-5271-11-git-send-email-p.zabel@pengutronix.de>
 References: <1364405445-5271-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1364405445-5271-1-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devel@driverdev.osuosl.org, Fabio Estevam <fabio.estevam@freescale.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de, Martin Fuzzey <mfuzzey@parkeon.com>, Philipp Zabel <p.zabel@pengutronix.de>, Sean Cross <xobs@kosagi.com>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1364405445-5271-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-So it can be used in clk-imx6q.c for revision dependent clock tree setup.
-
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- arch/arm/mach-imx/common.h     | 1 +
- arch/arm/mach-imx/mach-imx6q.c | 2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx53.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
-index 5a800bf..6c909d1 100644
---- a/arch/arm/mach-imx/common.h
-+++ b/arch/arm/mach-imx/common.h
-@@ -74,6 +74,7 @@ extern void mxc_set_cpu_type(unsigned int type);
- extern void mxc_restart(char, const char *);
- extern void mxc_arch_reset_init(void __iomem *);
- extern int mx53_revision(void);
-+extern int imx6q_revision(void);
- extern int mx53_display_revision(void);
- extern void imx_set_aips(void __iomem *);
- extern int mxc_device_init(void);
-diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
-index 9ffd103..ca10acc 100644
---- a/arch/arm/mach-imx/mach-imx6q.c
-+++ b/arch/arm/mach-imx/mach-imx6q.c
-@@ -41,7 +41,7 @@
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index b07bbdcc..30aed40 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -511,6 +511,33 @@
+ 				reg = <0x53fa8000 0xc>;
+ 			};
  
- #define IMX6Q_ANALOG_DIGPROG	0x260
- 
--static int imx6q_revision(void)
-+int imx6q_revision(void)
- {
- 	struct device_node *np;
- 	void __iomem *base;
++			ldb: ldb@53fa8008 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "fsl,imx53-ldb";
++				reg = <0x53fa8008 0x4>;
++				gpr = <&gpr>;
++				clocks = <&clks 122>, <&clks 120>,
++					 <&clks 115>, <&clks 116>,
++					 <&clks 123>, <&clks 85>;
++				clock-names = "di0_pll", "di1_pll",
++					      "di0_sel", "di1_sel",
++					      "di0", "di1";
++				status = "disabled";
++
++				lvds-channel@0 {
++					reg = <0>;
++					crtcs = <&ipu 0>;
++					status = "disabled";
++				};
++
++				lvds-channel@1 {
++					reg = <1>;
++					crtcs = <&ipu 1>;
++					status = "disabled";
++				};
++			};
++
+ 			pwm1: pwm@53fb4000 {
+ 				#pwm-cells = <2>;
+ 				compatible = "fsl,imx53-pwm", "fsl,imx27-pwm";
 -- 
 1.8.2.rc2
