@@ -1,65 +1,85 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH v2 5/5] ARM: imx: Remove cpufreq driver
-Date: Wed, 27 Mar 2013 16:14:54 +0100
-Message-ID: <20130327151454.GC6347@pengutronix.de>
-References: <1364389294-1997-1-git-send-email-mpa@pengutronix.de>
- <1364389294-1997-6-git-send-email-mpa@pengutronix.de>
- <20130327140529.GG2674@S2101-09.ap.freescale.net>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3] gpio: mcp23s08: convert driver to DT
+Date: Wed, 27 Mar 2013 16:23:25 +0100
+Message-ID: <CACRpkdZue4QjQ+SS_go8i_LJZm7RJPFQr6sDcNaCp3FhkUrseQ@mail.gmail.com>
+References: <1362414873-17676-1-git-send-email-larsi@wh2.tu-dresden.de>
+	<CACRpkdYYsULLsDQuxoRHp=HXsaOAejwaO-CezdEK4sNprWpDYQ@mail.gmail.com>
+	<201303271235.32346.poeschel@lemonage.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20130327140529.GG2674@S2101-09.ap.freescale.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <201303271235.32346.poeschel@lemonage.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lars Poeschel <poeschel@lemonage.de>
+Cc: Lars Poeschel <larsi@wh2.tu-dresden.de>, Mark Brown <broonie@opensource.wolfsonmicro.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, Peter Korsgaard <jacmet@sunsite.dk>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 27, 2013 at 10:05:31PM +0800, Shawn Guo wrote:
-> On Wed, Mar 27, 2013 at 02:01:34PM +0100, Markus Pargmann wrote:
-> > The old cpufreq driver is not necessary anymore with DT and
-> > cpufreq-cpu0.
-> > 
-> > Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> > ---
-> >  arch/arm/Kconfig                      |   7 --
-> >  arch/arm/mach-imx/Makefile            |   1 -
-> >  arch/arm/mach-imx/cpu_op-mx51.c       |  31 -----
-> >  arch/arm/mach-imx/cpu_op-mx51.h       |  14 ---
-> >  arch/arm/mach-imx/cpufreq.c           | 206 ----------------------------------
-> >  arch/arm/mach-imx/mach-cpuimx51sd.c   |   5 -
-> >  arch/arm/mach-imx/mach-mx51_babbage.c |   4 -
-> >  7 files changed, 268 deletions(-)
-> >  delete mode 100644 arch/arm/mach-imx/cpu_op-mx51.c
-> 
-> Target cpu_op-mx51.o should be removed from Makefile then.
-> 
-> I fixed it up and applied the series expect the first patch.  I expect
-> you will send follow-up patches to add imx51 operating-points into
-> device tree though.
+On Wed, Mar 27, 2013 at 12:35 PM, Lars Poeschel <poeschel@lemonage.de> wrote:
+> On Friday 22 March 2013 at 09:33:10, Linus Walleij wrote:
 
-Thanks.
+>> I would currently feel a lot better if you did not include this
+>> flag. How would you control this the day drivers need to
+>> enable/disable pull-up at runtime?
+>
+> For me it would also be easier to remove the flag (for DT boot case). I don't
+> need the pullups. I did only include it, because this is how the driver is
+> designed to work and what it did already. What I wanted was to make a good
+> transfer from what the features of the driver are and how it works to be able
+> to use it with device tree. If it now turns out that's bad for some reason, I
+> have no problem to remove this from the patch completely.
+> You're right: Runtime config is not possible this way.
+> What should I do now ? Remove it ?
 
-I just prepared a patch for mx51 babbage board. cpuimx51sd does not seem
-to have a DTS file yet. In general I think the operating points have to
-be in the board specific DTS files because the frequencies of imx51
-devices are different.
+Remove. The less complicated binding, the better.
 
-Regards,
+>> > +- gpio-controller : Marks the device node as a GPIO controller.
+>> > +- reg : For an address on its bus
+>>
+>> On the I2C/SPI bus?
+>
+> Yes, both. For I2C it's the I2C address, for SPI it's the chip select to use
+> for this chip.
 
-Markus
+OK please write these specifics in the binding doc.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+>> Please state here what kind of buses it can be. Explain if multiple
+>> buses are supported.
+>
+> Ok, I will add a line about it.
+
+Thx.
+
+>> > +Required device specific properties (only for SPI chips):
+>> > +- mcp,spi-present-mask : This is a present flag, that makes only sense
+>> > for SPI +        chips - as the name suggests.
+>>
+>> AFAIK this is not how we disable/enable devices in the device tree.
+>>
+>> Istead we include a property on the node called "status" and set it
+>> to "disabled" if the device is not there.
+>
+> This would require multiple instances with the same reg property as up to 8
+> chips can live on the same chip select. I wonder if this is possible ?
+
+If there is not one instance/device node per chip things are
+very wrong anyway. Maybe I don't understand fully... each
+device on the system should have a node, you can't have a node
+spanning several devices unless it's a bus node.
+
+> Grant had the idea with the bitfield. You have the reg property specifying
+> the chip select line. This bitfield is then used to indicate which of the 8
+> possible chips on this same chip select line is really present. Not beeing
+> able to support more than 8 devices is not problem, because it is a hardware
+> limitation, that not more than 8 devices can share the same SPI chip select.
+> This is again how the driver worked so far.
+>
+>> What about just using a number?
+>
+> This would again require multiple instances with the same reg property for
+> SPI. Is this really possible ?
+
+If Grant is OK with this then so am I, he surely know this better
+than me. But you nee to trick him to come out and review it.
+
+Yours,
+Linus Walleij
