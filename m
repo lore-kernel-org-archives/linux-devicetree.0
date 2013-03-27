@@ -1,56 +1,72 @@
-From: Philip Avinash <avinashphilip@ti.com>
-Subject: [PATCH 3/3] ARM: davinci: da850 evm: Add da850-evm LCD panel support
-Date: Wed, 27 Mar 2013 13:13:59 +0530
-Message-ID: <1364370239-18390-4-git-send-email-avinashphilip@ti.com>
-References: <1364370239-18390-1-git-send-email-avinashphilip@ti.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v9 RESEND 0/4] Add generic driver for on-chip SRAM
+Date: Wed, 27 Mar 2013 09:33:34 +0100
+Message-ID: <1364373214.5442.1.camel@pizza.hi.pengutronix.de>
+References: <1363776767-2635-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1364370239-18390-1-git-send-email-avinashphilip@ti.com>
+In-Reply-To: <1363776767-2635-1-git-send-email-p.zabel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: nsekhar@ti.com, linux@arm.linux.org.uk, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net
-Cc: linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Philip Avinash <avinashphilip@ti.com>
+To: linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Update LCDC node with panel timings for da850-evm along pin-mux info.
+Am Mittwoch, den 20.03.2013, 11:52 +0100 schrieb Philipp Zabel:
+> Hi, last time I posted was a bit close to the merge window, so I'm
+> reposting now. Greg, Arnd, could you take the first two patches?
 
-Signed-off-by: Philip Avinash <avinashphilip@ti.com>
----
- arch/arm/boot/dts/da850-evm.dts |   22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Ping,
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index cae024b..33d024e 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -50,6 +50,28 @@
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&ehrpwm1_pins>;
- 		};
-+
-+		lcdc: lcdc@01e13000 {
-+			status = "okay";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&lcdc_pins>;
-+
-+			display-timings {
-+				480x272p62 {
-+					clock-frequency = <7833600>;
-+					hactive = <480>;
-+					vactive = <272>;
-+					hfront-porch = <2>;
-+					hback-porch = <2>;
-+					hsync-len = <41>;
-+					vback-porch = <2>;
-+					vfront-porch = <2>;
-+					vsync-len = <10>;
-+					hsync-active = <1>;
-+					vsync-active = <1>;
-+				};
-+			};
-+		};
- 	};
- 	nand_cs3@62000000 {
- 		status = "okay";
--- 
-1.7.9.5
+can I do anything to help move this along?
+
+regards
+Philipp
+
+> These patches add support to configure on-chip SRAM via device-tree
+> node or platform data and to obtain the resulting genalloc pool from
+> the struct device pointer or a phandle pointing at the device tree node.
+> This allows drivers to allocate SRAM with the genalloc API without
+> hard-coding the genalloc pool pointer.
+> 
+> The on-chip SRAM on i.MX53 and i.MX6q can be registered via device tree
+> and changed to use the simple generic SRAM driver:
+> 
+> 		ocram: ocram@00900000 {
+> 			compatible = "fsl,imx-ocram", "mmio-sram";
+> 			reg = <0x00900000 0x3f000>;
+>  		};
+> 
+> A driver that needs to allocate SRAM buffers, like the video processing
+> unit on i.MX53, can retrieve the genalloc pool from a phandle in the
+> device tree using of_get_named_gen_pool(node, "iram", 0) from patch 1:
+> 
+> 		vpu@63ff4000 {
+> 			/* ... */
+> 			iram = <&ocram>;
+>  		};
+> 
+> Changes since v8:
+>  - The sram driver now matches against the "mmio-sram" compatible string.
+>  - Removed a whitespace error in the device tree binding documentation.
+> 
+> regards
+> Philipp
+> 
+> ---
+>  Documentation/devicetree/bindings/media/coda.txt |   30 ++++++
+>  Documentation/devicetree/bindings/misc/sram.txt  |   16 +++
+>  arch/arm/boot/dts/imx53.dtsi                     |    5 +
+>  arch/arm/boot/dts/imx6q.dtsi                     |    6 ++
+>  drivers/media/platform/Kconfig                   |    1 -
+>  drivers/media/platform/coda.c                    |   45 +++++---
+>  drivers/misc/Kconfig                             |    9 ++
+>  drivers/misc/Makefile                            |    1 +
+>  drivers/misc/sram.c                              |  121 ++++++++++++++++++++++
+>  include/linux/genalloc.h                         |   15 +++
+>  include/linux/platform_data/coda.h               |   18 ++++
+>  lib/genalloc.c                                   |   81 +++++++++++++++
+>  12 files changed, 333 insertions(+), 15 deletions(-)
+> 
+> 
