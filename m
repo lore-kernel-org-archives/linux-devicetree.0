@@ -1,83 +1,39 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH] ARM i.MX53: Add GPU clocks to clock tree
-Date: Wed, 27 Mar 2013 10:51:33 +0100
-Message-ID: <1364377893-26839-1-git-send-email-p.zabel@pengutronix.de>
+From: "Manjunathappa, Prakash" <prakash.pm@ti.com>
+Subject: RE: [PATCH v6 3/5] mmc: davinci_mmc: add DT support
+Date: Wed, 27 Mar 2013 09:55:43 +0000
+Message-ID: <A73F36158E33644199EB82C5EC81C7BC3EA4A96A@DBDE01.ent.ti.com>
+References: <1363779852-24083-1-git-send-email-prakash.pm@ti.com>
+ <1363779852-24083-4-git-send-email-prakash.pm@ti.com>
+ <201303201326.09265.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201303201326.09265.arnd@arndb.de>
+Content-Language: en-US
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "cjb@laptop.org" <cjb@laptop.org>, "Nori, Sekhar" <nsekhar@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "hs@denx.de" <hs@denx.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Porter, Matt" <mporter@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the missing GPU2D and GPU3D mux and gate clocks,
-and the graphics arbiter gate clock.
+Hi Arnd,
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- Documentation/devicetree/bindings/clock/imx5-clock.txt | 5 +++++
- arch/arm/mach-imx/clk-imx51-imx53.c                    | 9 ++++++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+On Wed, Mar 20, 2013 at 18:56:09, Arnd Bergmann wrote:
+> On Wednesday 20 March 2013, Manjunathappa, Prakash wrote:
+> > Adds device tree support for davinci_mmc. Also add binding documentation.
+> > As of now in non-dma PIO mode and without GPIO card_detect/write_protect
+> > option because of dependencies on EDMA and GPIO module DT support.
+> 
+> Shouldn't the binding at least specify the names for the DMA channels?
+> It's fine if the driver works without those, but I think there is no
+> strict dependency here: If dma_request_slave_channel does not find
+> a channel, the driver can just continue in PIO mode, and as soon
+> as the EDMA driver is merged, it will work with DMA.
+> 
 
-diff --git a/Documentation/devicetree/bindings/clock/imx5-clock.txt b/Documentation/devicetree/bindings/clock/imx5-clock.txt
-index 2a0c904..342ad0f 100644
---- a/Documentation/devicetree/bindings/clock/imx5-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/imx5-clock.txt
-@@ -172,6 +172,11 @@ clocks and IDs.
- 	can1_serial_gate	157
- 	can1_ipg_gate		158
- 	owire_gate		159
-+	gpu3d_s			160
-+	gpu2d_s			161
-+	gpu3d_gate		162
-+	gpu2d_gate		163
-+	garb_gate		164
- 
- Examples (for mx53):
- 
-diff --git a/arch/arm/mach-imx/clk-imx51-imx53.c b/arch/arm/mach-imx/clk-imx51-imx53.c
-index 0f39f8c..fdd8657 100644
---- a/arch/arm/mach-imx/clk-imx51-imx53.c
-+++ b/arch/arm/mach-imx/clk-imx51-imx53.c
-@@ -47,6 +47,8 @@ static const char *mx51_tve_ext_sel[] = { "osc", "ckih1", };
- static const char *mx53_tve_ext_sel[] = { "pll4_sw", "ckih1", };
- static const char *tve_sel[] = { "tve_pred", "tve_ext_sel", };
- static const char *ipu_sel[] = { "axi_a", "axi_b", "emi_slow_gate", "ahb", };
-+static const char *gpu3d_sel[] = { "axi_a", "axi_b", "emi_slow_gate", "ahb" };
-+static const char *gpu2d_sel[] = { "axi_a", "axi_b", "emi_slow_gate", "ahb" };
- static const char *vpu_sel[] = { "axi_a", "axi_b", "emi_slow_gate", "ahb", };
- static const char *mx53_can_sel[] = { "ipg", "ckih1", "ckih2", "lp_apm", };
- 
-@@ -83,7 +85,7 @@ enum imx5_clks {
- 	ssi2_root_gate, ssi3_root_gate, ssi_ext1_gate, ssi_ext2_gate,
- 	epit1_ipg_gate, epit1_hf_gate, epit2_ipg_gate, epit2_hf_gate,
- 	can_sel, can1_serial_gate, can1_ipg_gate,
--	owire_gate,
-+	owire_gate, gpu3d_s, gpu2d_s, gpu3d_gate, gpu2d_gate, garb_gate,
- 	clk_max
- };
- 
-@@ -200,6 +202,11 @@ static void __init mx5_clocks_common_init(unsigned long rate_ckil,
- 	clk[nfc_gate] = imx_clk_gate2("nfc_gate", "nfc_podf", MXC_CCM_CCGR5, 20);
- 	clk[ipu_di0_gate] = imx_clk_gate2("ipu_di0_gate", "ipu_di0_sel", MXC_CCM_CCGR6, 10);
- 	clk[ipu_di1_gate] = imx_clk_gate2("ipu_di1_gate", "ipu_di1_sel", MXC_CCM_CCGR6, 12);
-+	clk[gpu3d_s] = imx_clk_mux("gpu3d_sel", MXC_CCM_CBCMR, 4, 2, gpu3d_sel, ARRAY_SIZE(gpu3d_sel));
-+	clk[gpu2d_s] = imx_clk_mux("gpu2d_sel", MXC_CCM_CBCMR, 16, 2, gpu2d_sel, ARRAY_SIZE(gpu2d_sel));
-+	clk[gpu3d_gate] = imx_clk_gate2("gpu3d_gate", "gpu3d_sel", MXC_CCM_CCGR5, 2);
-+	clk[garb_gate] = imx_clk_gate2("garb_gate", "axi_a", MXC_CCM_CCGR5, 4);
-+	clk[gpu2d_gate] = imx_clk_gate2("gpu2d_gate", "gpu2d_sel", MXC_CCM_CCGR6, 14);
- 	clk[vpu_s] = imx_clk_mux("vpu_sel", MXC_CCM_CBCMR, 14, 2, vpu_sel, ARRAY_SIZE(vpu_sel));
- 	clk[vpu_gate] = imx_clk_gate2("vpu_gate", "vpu_sel", MXC_CCM_CCGR5, 6);
- 	clk[vpu_reference_gate] = imx_clk_gate2("vpu_reference_gate", "osc", MXC_CCM_CCGR5, 8);
--- 
-1.8.2.rc2
+In that case, don't I have to add support for it in driver also using
+dma_request_slave_channel_compat? As we do not have edma support yet on
+da850, I will not be able to test it.
+
+Thanks,
+Prakash
