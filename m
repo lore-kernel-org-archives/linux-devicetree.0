@@ -1,72 +1,187 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v9 RESEND 0/4] Add generic driver for on-chip SRAM
-Date: Wed, 27 Mar 2013 09:33:34 +0100
-Message-ID: <1364373214.5442.1.camel@pizza.hi.pengutronix.de>
-References: <1363776767-2635-1-git-send-email-p.zabel@pengutronix.de>
+From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 6/6] ARM: dts: Add pcie controller node for Samsung
+ EXYNOS5440 SoC
+Date: Wed, 27 Mar 2013 17:35:48 +0900
+Message-ID: <020e01ce2ac6$14fd7850$3ef868f0$%han@samsung.com>
+References: <00c001ce277b$92b26ab0$b8174010$%han@samsung.com>
+ <00c501ce277c$30e49dc0$92add940$%han@samsung.com>
+ <20130325170448.GB16690@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1363776767-2635-1-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <20130325170448.GB16690-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Content-language: ko
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: 'Jason Gunthorpe' <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: 'Jingoo Han' <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Siva Reddy Kallam' <siva.kallam-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Surendranath Gurivireddy Balla' <suren.reddy-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Kukjin Kim' <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Bjorn Helgaas' <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, 'Andrew Murray' <andrew.murray-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 20.03.2013, 11:52 +0100 schrieb Philipp Zabel:
-> Hi, last time I posted was a bit close to the merge window, so I'm
-> reposting now. Greg, Arnd, could you take the first two patches?
+On Tuesday, March 26, 2013 2:05 AM, Jason Gunthorpe wrote:
+> 
+> On Sat, Mar 23, 2013 at 01:09:18PM +0900, Jingoo Han wrote:
+> 
+> > +	pcie0@40000000 {
+> > +		compatible = "samsung,exynos5440-pcie";
+> > +		reg = <0x40000000 0x4000
+> > +			0x290000 0x1000
+> > +			0x270000 0x1000
+> > +			0x271000 0x40>;
+> > +		interrupts = <0 20 0>, <0 21 0>, <0 22 0>;
+> > +		#address-cells = <3>;
+> > +		#size-cells = <2>;
+> > +		device_type = "pci";
+> > +		bus-range = <0x0 0xf>;
+> > +		ranges = <0x00000800 0 0x40000000 0x40000000 0 0x00200000   /* configuration space */
+> > +			  0x81000000 0 0	  0x40200000 0 0x00004000   /* downstream I/O */
+> > +			  0x82000000 0 0	  0x40204000 0 0x10000000>; /* non-prefetchable memory */
+> > +	};
+> 
+> Can you send the lspci output so these bindings can be properly
+> reviewed? What PCI devices are internal to the SOC?
+> 
+> What is behind 'exynos_pcie_wr_own_conf' ? Is this a root port bridge
+> config space? What line is it in the lspci output? Can you include a
+> lspci -vv for it as well?
 
-Ping,
+Hi Jason Gunthorpe,
+Thank you for your comment :)
 
-can I do anything to help move this along?
+Here is the lspci -vv output.
+I tested Exynos PCIe with e1000e lan card.
 
-regards
-Philipp
+00:00.0 PCI bridge: Samsung Electronics Co Ltd Device a549 (rev 01) (prog-if 00 [Normal decode])
+        Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr+ Stepping- SERR+ FastB2B- DisINTx-
+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 0, Cache Line Size: 64 bytes
+        Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
+        I/O behind bridge: 00000000-00000fff
+        Memory behind bridge: 40300000-403fffff
+        Prefetchable memory behind bridge: 40400000-404fffff
+        Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
+        BridgeCtl: Parity+ SERR- NoISA- VGA- MAbort- >Reset- FastB2B-
+                PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+        Capabilities: <access denied>
+        Kernel driver in use: pcieport
 
-> These patches add support to configure on-chip SRAM via device-tree
-> node or platform data and to obtain the resulting genalloc pool from
-> the struct device pointer or a phandle pointing at the device tree node.
-> This allows drivers to allocate SRAM with the genalloc API without
-> hard-coding the genalloc pool pointer.
+01:00.0 Ethernet controller: Intel Corporation 82574L Gigabit Network Connection
+        Subsystem: Intel Corporation Gigabit CT Desktop Adapter
+        Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr+ Stepping- SERR+ FastB2B- DisINTx-
+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 0, Cache Line Size: 64 bytes
+        Interrupt: pin A routed to IRQ 53
+        Region 0: Memory at 40380000 (32-bit, non-prefetchable) [size=128K]
+        Region 1: Memory at 40300000 (32-bit, non-prefetchable) [size=512K]
+        Region 2: I/O ports at 40200000 [disabled] [size=32]
+        Region 3: Memory at 403a0000 (32-bit, non-prefetchable) [size=16K]
+        [virtual] Expansion ROM at 40400000 [disabled] [size=256K]
+        Capabilities: <access denied>
+        Kernel driver in use: e1000e
+
+10:00.0 PCI bridge: Samsung Electronics Co Ltd Device a549 (rev 01) (prog-if 00 [Normal decode])
+        Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr+ Stepping- SERR+ FastB2B- DisINTx-
+        Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+        Latency: 0, Cache Line Size: 64 bytes
+        Bus: primary=10, secondary=11, subordinate=11, sec-latency=0
+        Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
+        BridgeCtl: Parity+ SERR- NoISA- VGA- MAbort- >Reset- FastB2B-
+                PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+        Capabilities: <access denied>
+        Kernel driver in use: pcieport
+
+
+
 > 
-> The on-chip SRAM on i.MX53 and i.MX6q can be registered via device tree
-> and changed to use the simple generic SRAM driver:
+> Your DT has overlapping bus-ranges, and two top level nodes. This is
+> going to require separate PCI domains in Linux.
 > 
-> 		ocram: ocram@00900000 {
-> 			compatible = "fsl,imx-ocram", "mmio-sram";
-> 			reg = <0x00900000 0x3f000>;
->  		};
+> However, based on your driver this HW looks similar to tegra, did you
+> review how tegra is setup? Merging all the ports into a single domain
+> is certainly preferred.
+
+In Tegra case, the address of IO control register is same.
++	pcie-controller {
++		compatible = "nvidia,tegra20-pcie";
++		reg = <0x80003000 0x00000800   /* PADS registers */
++		       0x80003800 0x00000200   /* AFI registers */
++		       0x81000000 0x01000000   /* configuration space */
++		       0x90000000 0x10000000>; /* extended configuration space */
+
+But, in Exynos case, address of IP control register is different
+between PCIe0 and PCIe1.
+
++	pcie0@40000000 {
++		compatible = "samsung,exynos5440-pcie";
++		reg = <0x40000000 0x4000
++			0x290000 0x1000
++			0x270000 0x1000
++			0x271000 0x40>;
+
++	pcie1@60000000 {
++		compatible = "samsung,exynos5440-pcie";
++		reg = <0x60000000 0x4000
++			0x2a0000 0x1000
++			0x272000 0x1000
++			0x271040 0x40>;
+
+
 > 
-> A driver that needs to allocate SRAM buffers, like the video processing
-> unit on i.MX53, can retrieve the genalloc pool from a phandle in the
-> device tree using of_get_named_gen_pool(node, "iram", 0) from patch 1:
+> > +	pcie1@60000000 {
+> > +		compatible = "samsung,exynos5440-pcie";
+> > +		reg = <0x60000000 0x4000
+> > +			0x2a0000 0x1000
+> > +			0x272000 0x1000
+> > +			0x271040 0x40>;
+> > +		interrupts = <0 23 0>, <0 24 0>, <0 25 0>;
+> > +		#address-cells = <3>;
+> > +		#size-cells = <2>;
+> > +		device_type = "pci";
+> > +		bus-range = <0x0 0xf>;
+> > +		ranges = <0x00000800 0 0x60000000 0x60000000 0 0x00200000   /* configuration space */
 > 
-> 		vpu@63ff4000 {
-> 			/* ... */
-> 			iram = <&ocram>;
->  		};
+> Do not include configuration space in ranges
+
+How can I include configuration space?
+Please let me know kindly :)
+
 > 
-> Changes since v8:
->  - The sram driver now matches against the "mmio-sram" compatible string.
->  - Removed a whitespace error in the device tree binding documentation.
+> > +			  0x81000000 0 0	  0x60200000 0 0x00004000   /* downstream I/O */
 > 
-> regards
-> Philipp
+> Please confirm that an MMIO to 0x60200000 produces a PCI-E IO TLP to
+> address 0
 > 
-> ---
->  Documentation/devicetree/bindings/media/coda.txt |   30 ++++++
->  Documentation/devicetree/bindings/misc/sram.txt  |   16 +++
->  arch/arm/boot/dts/imx53.dtsi                     |    5 +
->  arch/arm/boot/dts/imx6q.dtsi                     |    6 ++
->  drivers/media/platform/Kconfig                   |    1 -
->  drivers/media/platform/coda.c                    |   45 +++++---
->  drivers/misc/Kconfig                             |    9 ++
->  drivers/misc/Makefile                            |    1 +
->  drivers/misc/sram.c                              |  121 ++++++++++++++++++++++
->  include/linux/genalloc.h                         |   15 +++
->  include/linux/platform_data/coda.h               |   18 ++++
->  lib/genalloc.c                                   |   81 +++++++++++++++
->  12 files changed, 333 insertions(+), 15 deletions(-)
+> > +			  0x82000000 0 0	  0x60204000 0 0x10000000>; /* non-prefetchable memory */
 > 
+> Please check this, generally it should be:
 > 
+> 			  0x82000000 0 0x60204000 0x60204000 0 0x10000000>; /* non-prefetchable memory */
+> 
+> Reflecting an identity mapping for MMIO - eg MMIO access to 0x60204000
+> producse a PCI Memory TLP to address 0x60204000 - unless your hardware
+> is actually doing address translation (then there are other things to
+> confirm..)
+
+OK, I will change it.
+
+> 
+> It is usual to have an interrupt-map - have you tested that interrupts
+> resolve properly?
+
+There is no problem about interrupts.
+However, I will consider an interrupt-map.
+
+> 
+> It looks like the INTx's should be routed by an interrupt-map to the
+> pulse pin. Consider an interrupt controller to decode the INT ABCD.
+> 
+> Regards,
+> Jason
