@@ -1,421 +1,171 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v6 7/7] irqchip: s3c24xx: add devicetree support
-Date: Wed, 27 Mar 2013 16:58:29 -0500
-Message-ID: <51536B85.1070205@gmail.com>
-References: <201303262305.49725.heiko@sntech.de> <201303262310.35354.heiko@sntech.de>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v9 RESEND 2/4] misc: Generic on-chip SRAM allocation
+ driver
+Date: Wed, 27 Mar 2013 15:27:23 -0700
+Message-ID: <20130327152723.723cd65e884413df405abe2d@linux-foundation.org>
+References: <1363776767-2635-1-git-send-email-p.zabel@pengutronix.de>
+	<1363776767-2635-3-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <201303262310.35354.heiko@sntech.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Thomas Abraham <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1363776767-2635-3-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/26/2013 05:10 PM, Heiko St=FCbner wrote:
-> Add the necessary code to initialize the interrupt controller
-> thru devicetree data using the irqchip infrastructure.
->=20
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+On Wed, 20 Mar 2013 11:52:45 +0100 Philipp Zabel <p.zabel@pengutronix.de> wrote:
 
-Acked-by: Rob Herring <rob.herring@calxeda.com>
+> This driver requests and remaps a memory region as configured in the
+> device tree. It serves memory from this region via the genalloc API.
+> It optionally enables the SRAM clock.
+> 
+> Other drivers can retrieve the genalloc pool from a phandle pointing
+> to this drivers' device node in the device tree.
+> 
+> The allocation granularity is hard-coded to 32 bytes for now,
+> to make the SRAM driver useful for the 6502 remoteproc driver.
+> There is overhead for bigger SRAMs, where only a much coarser
+> allocation granularity is needed: At 32 bytes minimum allocation
+> size, a 256 KiB SRAM needs a 1 KiB bitmap to track allocations.
+> 
+>  Documentation/devicetree/bindings/misc/sram.txt |   16 +++
+>  drivers/misc/Kconfig                            |    9 ++
+>  drivers/misc/Makefile                           |    1 +
+>  drivers/misc/sram.c                             |  121 +++++++++++++++++++++++
 
-> ---
->  .../interrupt-controller/samsung,s3c24xx-irq.txt   |   53 +++++
->  drivers/irqchip/irq-s3c24xx.c                      |  231 ++++++++++=
-+++++++++-
->  2 files changed, 278 insertions(+), 6 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-contr=
-oller/samsung,s3c24xx-irq.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/s=
-amsung,s3c24xx-irq.txt b/Documentation/devicetree/bindings/interrupt-co=
-ntroller/samsung,s3c24xx-irq.txt
-> new file mode 100644
-> index 0000000..c54c5a9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/samsung,=
-s3c24xx-irq.txt
-> @@ -0,0 +1,53 @@
-> +Samsung S3C24XX Interrupt Controllers
-> +
-> +The S3C24XX SoCs contain a custom set of interrupt controllers provi=
-ding a
-> +varying number of interrupt sources. The set consists of a main- and=
- sub-
-> +controller and on newer SoCs even a second main controller.
-> +
-> +Required properties:
-> +- compatible: Compatible property value should be "samsung,s3c2410-i=
-rq"
-> +  for machines before s3c2416 and "samsung,s3c2416-irq" for s3c2416 =
-and later.
-> +
-> +- reg: Physical base address of the controller and length of memory =
-mapped
-> +  region.
-> +
-> +- interrupt-controller : Identifies the node as an interrupt control=
-ler
-> +
-> +- #interrupt-cells : Specifies the number of cells needed to encode =
-an
-> +  interrupt source. The value shall be 4 and interrupt descriptor sh=
-all
-> +  have the following format:
-> +      <ctrl_num parent_irq ctrl_irq type>
-> +
-> +  ctrl_num contains the controller to use:
-> +      - 0 ... main controller
-> +      - 1 ... sub controller
-> +      - 2 ... second main controller on s3c2416 and s3c2450
-> +  parent_irq contains the parent bit in the main controller and will=
- be
-> +             ignored in main controllers
-> +  ctrl_irq contains the interrupt bit of the controller
-> +  type contains the trigger type to use
-> +
-> +Example:
-> +
-> +	interrupt-controller@4a000000 {
-> +		compatible =3D "samsung,s3c2410-irq";
-> +		reg =3D <0x4a000000 0x100>;
-> +		interrupt-controller;
-> +		#interrupt-cells=3D<4>;
-> +	};
-> +
-> +	[...]
-> +
-> +	serial@50000000 {
-> +		compatible =3D "samsung,s3c2410-uart";
-> +		reg =3D <0x50000000 0x4000>;
-> +		interrupt-parent =3D <&subintc>;
-> +		interrupts =3D <1 28 0 4>, <1 28 1 4>;
-> +	};
-> +
-> +	rtc@57000000 {
-> +		compatible =3D "samsung,s3c2410-rtc";
-> +		reg =3D <0x57000000 0x100>;
-> +		interrupt-parent =3D <&intc>;
-> +		interrupts =3D <0 30 0 3>, <0 8 0 3>;
-> +	};
-> diff --git a/drivers/irqchip/irq-s3c24xx.c b/drivers/irqchip/irq-s3c2=
-4xx.c
-> index 02b82db..5e40b34 100644
-> --- a/drivers/irqchip/irq-s3c24xx.c
-> +++ b/drivers/irqchip/irq-s3c24xx.c
-> @@ -25,6 +25,9 @@
->  #include <linux/ioport.h>
->  #include <linux/device.h>
->  #include <linux/irqdomain.h>
-> +#include <linux/of.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_address.h>
-> =20
->  #include <asm/exception.h>
->  #include <asm/mach/irq.h>
-> @@ -36,6 +39,8 @@
->  #include <plat/regs-irqtype.h>
->  #include <plat/pm.h>
-> =20
-> +#include "irqchip.h"
-> +
->  #define S3C_IRQTYPE_NONE	0
->  #define S3C_IRQTYPE_EINT	1
->  #define S3C_IRQTYPE_EDGE	2
-> @@ -94,7 +99,10 @@ static void s3c_irq_mask(struct irq_data *data)
->  	if (parent_intc) {
->  		parent_data =3D &parent_intc->irqs[irq_data->parent_irq];
-> =20
-> -		/* check to see if we need to mask the parent IRQ */
-> +		/* check to see if we need to mask the parent IRQ
-> +		 * The parent_irq is always in main_intc, so the hwirq
-> +		 * for find_mapping does not need an offset in any case.
-> +		 */
->  		if ((mask & parent_data->sub_bits) =3D=3D parent_data->sub_bits) {
->  			irqno =3D irq_find_mapping(parent_intc->domain,
->  					 irq_data->parent_irq);
-> @@ -294,10 +302,18 @@ static void s3c_irq_demux(unsigned int irq, str=
-uct irq_desc *desc)
->  {
->  	struct irq_chip *chip =3D irq_desc_get_chip(desc);
->  	struct s3c_irq_data *irq_data =3D irq_desc_get_chip_data(desc);
-> +	struct s3c_irq_intc *intc =3D irq_data->intc;
->  	struct s3c_irq_intc *sub_intc =3D irq_data->sub_intc;
->  	unsigned long src;
->  	unsigned long msk;
->  	unsigned int n;
-> +	unsigned int offset;
-> +
-> +	/* we're using individual domains for the non-dt case
-> +	 * and one big domain for the dt case where the subintc
-> +	 * starts at hwirq number 32.
-> +	 */
-> +	offset =3D (intc->domain->of_node) ? 32 : 0;
-> =20
->  	chained_irq_enter(chip, desc);
-> =20
-> @@ -310,14 +326,15 @@ static void s3c_irq_demux(unsigned int irq, str=
-uct irq_desc *desc)
->  	while (src) {
->  		n =3D __ffs(src);
->  		src &=3D ~(1 << n);
-> -		generic_handle_irq(irq_find_mapping(sub_intc->domain, n));
-> +		irq =3D irq_find_mapping(sub_intc->domain, offset + n);
-> +		generic_handle_irq(irq);
->  	}
-> =20
->  	chained_irq_exit(chip, desc);
->  }
-> =20
->  static inline int s3c24xx_handle_intc(struct s3c_irq_intc *intc,
-> -				      struct pt_regs *regs)
-> +				      struct pt_regs *regs, int intc_offset)
->  {
->  	int pnd;
->  	int offset;
-> @@ -327,6 +344,10 @@ static inline int s3c24xx_handle_intc(struct s3c=
-_irq_intc *intc,
->  	if (!pnd)
->  		return false;
-> =20
-> +	/* non-dt machines use individual domains */
-> +	if (!intc->domain->of_node)
-> +		intc_offset =3D 0;
-> +
->  	/* We have a problem that the INTOFFSET register does not always
->  	 * show one interrupt. Occasionally we get two interrupts through
->  	 * the prioritiser, and this causes the INTOFFSET register to show
-> @@ -343,7 +364,7 @@ static inline int s3c24xx_handle_intc(struct s3c_=
-irq_intc *intc,
->  	if (!(pnd & (1 << offset)))
->  		offset =3D  __ffs(pnd);
-> =20
-> -	irq =3D irq_find_mapping(intc->domain, offset);
-> +	irq =3D irq_find_mapping(intc->domain, intc_offset + offset);
->  	handle_IRQ(irq, regs);
->  	return true;
->  }
-> @@ -352,11 +373,11 @@ asmlinkage void __exception_irq_entry s3c24xx_h=
-andle_irq(struct pt_regs *regs)
->  {
->  	do {
->  		if (likely(s3c_intc[0]))
-> -			if (s3c24xx_handle_intc(s3c_intc[0], regs))
-> +			if (s3c24xx_handle_intc(s3c_intc[0], regs, 0))
->  				continue;
-> =20
->  		if (s3c_intc[2])
-> -			if (s3c24xx_handle_intc(s3c_intc[2], regs))
-> +			if (s3c24xx_handle_intc(s3c_intc[2], regs, 64))
->  				continue;
-> =20
->  		break;
-> @@ -1134,3 +1155,201 @@ void __init s3c2443_init_irq(void)
->  					s3c_intc[0], 0x4a000018);
->  }
->  #endif
-> +
-> +#ifdef CONFIG_OF
-> +static int s3c24xx_irq_map_of(struct irq_domain *h, unsigned int vir=
-q,
-> +							irq_hw_number_t hw)
+drivers/misc/sram.c is a pretty generic-sounding thing.  Is it really
+Linux's One True SRAM driver?  How many different sorts of sram devices
+do we expect this can be used with?  If I don't use DT?
+
+In other words, perhaps this should have a more specific and accurate
+name?
+
+> --- a/drivers/misc/Kconfig
+> +++ b/drivers/misc/Kconfig
+> @@ -510,6 +510,15 @@ config LATTICE_ECP3_CONFIG
+>  
+>  	  If unsure, say N.
+>  
+> ...
+>
+> +static int sram_probe(struct platform_device *pdev)
 > +{
-> +	unsigned int ctrl_num =3D hw / 32;
-> +	unsigned int intc_hw =3D hw % 32;
-> +	struct s3c_irq_intc *intc =3D s3c_intc[ctrl_num];
-> +	struct s3c_irq_intc *parent_intc =3D intc->parent;
-> +	struct s3c_irq_data *irq_data =3D &intc->irqs[intc_hw];
+> +	void __iomem *virt_base;
+> +	struct sram_dev *sram;
+> +	struct resource *res;
+> +	unsigned long size;
+> +	int ret;
 > +
-> +	/* attach controller pointer to irq_data */
-> +	irq_data->intc =3D intc;
-> +	irq_data->offset =3D intc_hw;
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return -EINVAL;
 > +
-> +	if (!parent_intc)
-> +		irq_set_chip_and_handler(virq, &s3c_irq_chip, handle_edge_irq);
+> +	size = resource_size(res);
+> +
+> +	virt_base = devm_request_and_ioremap(&pdev->dev, res);
+> +	if (!virt_base)
+> +		return -EADDRNOTAVAIL;
+
+EADDRNOTAVAIL is a networking error.  If your users see this error pop
+up on their console they'll start wiggling ethernet cables, wondering
+why that didn't fix it.
+
+> +	sram = devm_kzalloc(&pdev->dev, sizeof(*sram), GFP_KERNEL);
+> +	if (!sram)
+> +		return -ENOMEM;
+> +
+> +	sram->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(sram->clk))
+> +		sram->clk = NULL;
 > +	else
-> +		irq_set_chip_and_handler(virq, &s3c_irq_level_chip,
-> +					 handle_edge_irq);
+> +		clk_prepare_enable(sram->clk);
 > +
-> +	irq_set_chip_data(virq, irq_data);
+> +	sram->pool = devm_gen_pool_create(&pdev->dev, ilog2(SRAM_GRANULARITY), -1);
+> +	if (!sram->pool)
+> +		return -ENOMEM;
 > +
-> +	set_irq_flags(virq, IRQF_VALID);
+> +	ret = gen_pool_add_virt(sram->pool, (unsigned long)virt_base,
+> +				res->start, size, -1);
+> +	if (ret < 0) {
+> +		gen_pool_destroy(sram->pool);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, sram);
+> +
+> +	dev_dbg(&pdev->dev, "SRAM pool: %ld KiB @ 0x%p\n", size / 1024, virt_base);
 > +
 > +	return 0;
 > +}
-> +
-> +/* Translate our of irq notation
-> + * format: <ctrl_num ctrl_irq parent_irq type>
-> + */
-> +static int s3c24xx_irq_xlate_of(struct irq_domain *d, struct device_=
-node *n,
-> +			const u32 *intspec, unsigned int intsize,
-> +			irq_hw_number_t *out_hwirq, unsigned int *out_type)
+>
+> ...
+>
+> +int __init sram_init(void)
 > +{
-> +	struct s3c_irq_intc *intc;
-> +	struct s3c_irq_intc *parent_intc;
-> +	struct s3c_irq_data *irq_data;
-> +	struct s3c_irq_data *parent_irq_data;
-> +	int irqno;
-> +
-> +	if (WARN_ON(intsize < 4))
-> +		return -EINVAL;
-> +
-> +	if (intspec[0] > 2 || !s3c_intc[intspec[0]]) {
-> +		pr_err("controller number %d invalid\n", intspec[0]);
-> +		return -EINVAL;
-> +	}
-> +	intc =3D s3c_intc[intspec[0]];
-> +
-> +	*out_hwirq =3D intspec[0] * 32 + intspec[2];
-> +	*out_type =3D intspec[3] & IRQ_TYPE_SENSE_MASK;
-> +
-> +	parent_intc =3D intc->parent;
-> +	if (parent_intc) {
-> +		irq_data =3D &intc->irqs[intspec[2]];
-> +		irq_data->parent_irq =3D intspec[1];
-> +		parent_irq_data =3D &parent_intc->irqs[irq_data->parent_irq];
-> +		parent_irq_data->sub_intc =3D intc;
-> +		parent_irq_data->sub_bits |=3D (1UL << intspec[2]);
-> +
-> +		/* parent_intc is always s3c_intc[0], so no offset */
-> +		irqno =3D irq_create_mapping(parent_intc->domain, intspec[1]);
-> +		if (irqno < 0) {
-> +			pr_err("irq: could not map parent interrupt\n");
-> +			return irqno;
-> +		}
-> +
-> +		irq_set_chained_handler(irqno, s3c_irq_demux);
-> +	}
-> +
-> +	return 0;
+> +	return platform_driver_register(&sram_driver);
 > +}
 > +
-> +static struct irq_domain_ops s3c24xx_irq_ops_of =3D {
-> +	.map =3D s3c24xx_irq_map_of,
-> +	.xlate =3D s3c24xx_irq_xlate_of,
-> +};
-> +
-> +struct s3c24xx_irq_of_ctrl {
-> +	char			*name;
-> +	unsigned long		offset;
-> +	struct s3c_irq_intc	**handle;
-> +	struct s3c_irq_intc	**parent;
-> +	struct irq_domain_ops	*ops;
-> +};
-> +
-> +static int __init s3c_init_intc_of(struct device_node *np,
-> +			struct device_node *interrupt_parent,
-> +			struct s3c24xx_irq_of_ctrl *s3c_ctrl, int num_ctrl)
-> +{
-> +	struct s3c_irq_intc *intc;
-> +	struct s3c24xx_irq_of_ctrl *ctrl;
-> +	struct irq_domain *domain;
-> +	void __iomem *reg_base;
-> +	int i;
-> +
-> +	reg_base =3D of_iomap(np, 0);
-> +	if (!reg_base) {
-> +		pr_err("irq-s3c24xx: could not map irq registers\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	domain =3D irq_domain_add_linear(np, num_ctrl * 32,
-> +						     &s3c24xx_irq_ops_of, NULL);
-> +	if (!domain) {
-> +		pr_err("irq: could not create irq-domain\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	for (i =3D 0; i < num_ctrl; i++) {
-> +		ctrl =3D &s3c_ctrl[i];
-> +
-> +		pr_debug("irq: found controller %s\n", ctrl->name);
-> +
-> +		intc =3D kzalloc(sizeof(struct s3c_irq_intc), GFP_KERNEL);
-> +		if (!intc)
-> +			return -ENOMEM;
-> +
-> +		intc->domain =3D domain;
-> +		intc->irqs =3D kzalloc(sizeof(struct s3c_irq_data) * 32,
-> +				     GFP_KERNEL);
-> +		if (!intc->irqs) {
-> +			kfree(intc);
-> +			return -ENOMEM;
-> +		}
-> +
-> +		if (ctrl->parent) {
-> +			intc->reg_pending =3D reg_base + ctrl->offset;
-> +			intc->reg_mask =3D reg_base + ctrl->offset + 0x4;
-> +
-> +			if (*(ctrl->parent)) {
-> +				intc->parent =3D *(ctrl->parent);
-> +			} else {
-> +				pr_warn("irq: parent of %s missing\n",
-> +					ctrl->name);
-> +				kfree(intc->irqs);
-> +				kfree(intc);
-> +				continue;
-> +			}
-> +		} else {
-> +			intc->reg_pending =3D reg_base + ctrl->offset;
-> +			intc->reg_mask =3D reg_base + ctrl->offset + 0x08;
-> +			intc->reg_intpnd =3D reg_base + ctrl->offset + 0x10;
-> +		}
-> +
-> +		s3c24xx_clear_intc(intc);
-> +		s3c_intc[i] =3D intc;
-> +	}
-> +
-> +	set_handle_irq(s3c24xx_handle_irq);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct s3c24xx_irq_of_ctrl s3c2410_ctrl[] =3D {
-> +	{
-> +		.name =3D "intc",
-> +		.offset =3D 0,
-> +	}, {
-> +		.name =3D "subintc",
-> +		.offset =3D 0x18,
-> +		.parent =3D &s3c_intc[0],
-> +	}
-> +};
-> +
-> +int __init s3c2410_init_intc_of(struct device_node *np,
-> +			struct device_node *interrupt_parent,
-> +			struct s3c24xx_irq_of_ctrl *ctrl, int num_ctrl)
-> +{
-> +	return s3c_init_intc_of(np, interrupt_parent,
-> +				s3c2410_ctrl, ARRAY_SIZE(s3c2410_ctrl));
-> +}
-> +IRQCHIP_DECLARE(s3c2410_irq, "samsung,s3c2410-irq", s3c2410_init_int=
-c_of);
-> +
-> +static struct s3c24xx_irq_of_ctrl s3c2416_ctrl[] =3D {
-> +	{
-> +		.name =3D "intc",
-> +		.offset =3D 0,
-> +	}, {
-> +		.name =3D "subintc",
-> +		.offset =3D 0x18,
-> +		.parent =3D &s3c_intc[0],
-> +	}, {
-> +		.name =3D "intc2",
-> +		.offset =3D 0x40,
-> +	}
-> +};
-> +
-> +int __init s3c2416_init_intc_of(struct device_node *np,
-> +			struct device_node *interrupt_parent,
-> +			struct s3c24xx_irq_of_ctrl *ctrl, int num_ctrl)
-> +{
-> +	return s3c_init_intc_of(np, interrupt_parent,
-> +				s3c2416_ctrl, ARRAY_SIZE(s3c2416_ctrl));
-> +}
-> +IRQCHIP_DECLARE(s3c2416_irq, "samsung,s3c2416-irq", s3c2416_init_int=
-c_of);
-> +#endif
->=20
+> +postcore_initcall(sram_init);
+
+Why is it postcore_initcall()?
+
+
+Fixlets:
+
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: misc-generic-on-chip-sram-allocation-driver-fix
+
+fix Kconfig text, make sram_init static
+
+Cc: Dong Aisheng <dong.aisheng@linaro.org>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Huang Shijie <shijie8@gmail.com>
+Cc: Javier Martin <javier.martin@vista-silicon.com>
+Cc: Matt Porter <mporter@ti.com>
+Cc: Michal Simek <monstr@monstr.eu>
+Cc: Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+
+ drivers/misc/Kconfig |    6 +++---
+ drivers/misc/sram.c  |    2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff -puN Documentation/devicetree/bindings/misc/sram.txt~misc-generic-on-chip-sram-allocation-driver-fix Documentation/devicetree/bindings/misc/sram.txt
+diff -puN drivers/misc/Kconfig~misc-generic-on-chip-sram-allocation-driver-fix drivers/misc/Kconfig
+--- a/drivers/misc/Kconfig~misc-generic-on-chip-sram-allocation-driver-fix
++++ a/drivers/misc/Kconfig
+@@ -523,9 +523,9 @@ config SRAM
+ 	depends on HAS_IOMEM
+ 	select GENERIC_ALLOCATOR
+ 	help
+-	  This driver allows to declare a memory region to be managed
+-	  by the genalloc API. It is supposed to be used for small
+-	  on-chip SRAM areas found on many SoCs.
++	  This driver allows you to declare a memory region to be managed by
++	  the genalloc API. It is supposed to be used for small on-chip SRAM
++	  areas found on many SoCs.
+ 
+ source "drivers/misc/c2port/Kconfig"
+ source "drivers/misc/eeprom/Kconfig"
+diff -puN drivers/misc/Makefile~misc-generic-on-chip-sram-allocation-driver-fix drivers/misc/Makefile
+diff -puN drivers/misc/sram.c~misc-generic-on-chip-sram-allocation-driver-fix drivers/misc/sram.c
+--- a/drivers/misc/sram.c~misc-generic-on-chip-sram-allocation-driver-fix
++++ a/drivers/misc/sram.c
+@@ -113,7 +113,7 @@ static struct platform_driver sram_drive
+ 	.remove = sram_remove,
+ };
+ 
+-int __init sram_init(void)
++static int __init sram_init(void)
+ {
+ 	return platform_driver_register(&sram_driver);
+ }
+_
