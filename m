@@ -1,166 +1,58 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/1] drivers/gpio: Altera soft IP GPIO driver
-Date: Wed, 27 Mar 2013 12:58:32 +0100
-Message-ID: <CACRpkdZY0sZUK_9ZX8rBOExVRPQL=UeoAWT=O1NZX2wTJGQLsA@mail.gmail.com>
-References: <1363066655-17474-1-git-send-email-thloh@altera.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 01/11] staging: drm/imx: Add LDB support
+Date: Wed, 27 Mar 2013 12:58:42 +0100
+Message-ID: <1364385522.5442.14.camel@pizza.hi.pengutronix.de>
+References: <1364307246-9017-1-git-send-email-p.zabel@pengutronix.de>
+ <1364307246-9017-2-git-send-email-p.zabel@pengutronix.de>
+ <5152DDEB.9020907@parkeon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1363066655-17474-1-git-send-email-thloh@altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: thloh@altera.com, Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5152DDEB.9020907-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org
+Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 12, 2013 at 6:37 AM,  <thloh@altera.com> wrote:
-
-> From: Tien Hock Loh <thloh@altera.com>
->
-> Adds a new driver for Altera soft GPIO IP. The driver is able to
-> do read/write and allows GPIO to be a interrupt controller.
->
-> Tested on Altera GHRD on interrupt handling and IO.
->
-> Signed-off-by: Tien Hock Loh <thloh@altera.com>
-> ---
->  .../devicetree/bindings/gpio/gpio-altera.txt       |  37 +++
-
-Patches containing device tree bindings shall be CC:ed to devicetree-discuss
-(added on CC here, remember at next posting).
-
-(...)
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-altera.txt b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
-> new file mode 100644
-> index 0000000..3bdb8b6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
-> @@ -0,0 +1,37 @@
-> +Altera GPIO controller bindings
-> +
-> +Required properties:
-> +- compatible:
-> +  - "altr,pio-1.0"
-> +- reg: Physical base address and length of the controller's registers.
-> +- #gpio-cells : Should be two.
-> +  - first cell is the pin number
-
-What does that mean? The GPIO subsystem is not referring
-to pins, it's about "gpios" which are just a handler or number.
-
-It can be a local offset into the numberspace representiong
-the GPIO lines at this block, I guess that is what is meant
-here.
-
-(...)
-> +Altera GPIO specific properties:
-> +- width: Width of the GPIO bank, range from 1-32
-> +- level_trigger: Specifies whether the GPIO interrupt is level trigger.
-> +  This field is required if the Altera GPIO controller used has IRQ enabled.
-
-This is a configuration for the irc_chip portion of the driver
-I guess, isn't the usual custom that you don't set up
-things like this from the device tree, but instead use the
-kernels facilities on request_irq() such as:
-
-#define IRQF_TRIGGER_NONE       0x00000000
-#define IRQF_TRIGGER_RISING     0x00000001
-#define IRQF_TRIGGER_FALLING    0x00000002
-#define IRQF_TRIGGER_HIGH       0x00000004
-#define IRQF_TRIGGER_LOW        0x00000008
-
-?
-
-I.e. that this is something you do at runtime and not a static
-config from the device tree?
-
-Or shall this be percieved as some kind of default setting?
-
-(...)
-> +++ b/drivers/gpio/gpio-altera.c
-
-> +struct altera_gpio_chip {
-> +       struct of_mm_gpio_chip mmchip;
-> +       struct irq_domain *irq; /* GPIO controller IRQ number */
-> +       spinlock_t gpio_lock;   /* Lock used for synchronization */
-> +       int level_trigger;
-
-I doubt this member of the struct. The irq core shall keep track
-of stuff like this.
-
-> +       int hwirq;
-> +};
-
-(then follows some real nice code using irqdomain in a professional
-way, thanks for doing this!)
-
-> +static int altera_gpio_irq_set_type(struct irq_data *d,
-> +                               unsigned int type)
-> +{
-> +       if (type == IRQ_TYPE_NONE)
-> +               return 0;
-> +       return -EINVAL;
-> +}
-
-So if the chip supports setting edge vs level trigging,
-this is where you implement it, not as device tree
-properties.
-
-> +static void altera_gpio_irq_handler(unsigned int irq, struct irq_desc *desc)
-> +{
-> +       struct altera_gpio_chip *altera_gc = irq_desc_get_handler_data(desc);
-> +       struct irq_chip *chip = irq_desc_get_chip(desc);
-> +       struct of_mm_gpio_chip *mm_gc = &altera_gc->mmchip;
-> +       unsigned long status;
-> +
-> +       int base;
-> +       chip->irq_mask(&desc->irq_data);
-> +
-> +       if (altera_gc->level_trigger)
-> +               status = readl(mm_gc->regs + ALTERA_GPIO_DATA);
-
-So on the level trigged variant you read the ALTERA_GPIO_DATA
-and discard the result? Is it some kind of latch register?
-
-
-> +       else {
-> +               status = readl(mm_gc->regs + ALTERA_GPIO_EDGE_CAP);
-> +               writel(status, mm_gc->regs + ALTERA_GPIO_EDGE_CAP);
-> +       }
-
-So you need to get the affected register depending on the type set
-in the irq descriptor instead.
-
-> +       status &= readl(mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
-> +       for (base = 0; base < mm_gc->gc.ngpio; base++) {
-> +               if ((1 << base) & status) {
-> +                       generic_handle_irq(
-> +                               irq_linear_revmap(altera_gc->irq, base));
-> +               }
-> +       }
-
-When we looked at this for some IRQ controllers we realized we
-had to write the loop like so:
-
-while ((stat = readl_relaxed(vic->base + VIC_IRQ_STATUS))) {
-(...)
-}
-
-Only to avoid missing transient IRQs occuring while we were
-processing another IRQ. (Like, you handle IRQ0, then IRQ4,
-and while you're handling IRQ4, IRQ0 triggers again and
-you miss it.
-
-Make sure this does not apply to you...
-
-> +       if (of_property_read_u32(node, "level_trigger", &reg)) {
-> +               ret = -EINVAL;
-> +               pr_err("%s: level_trigger value not set in device tree\n",
-> +                       node->full_name);
-> +               goto teardown;
-> +       }
-> +       altera_gc->level_trigger = reg;
-
-So I'm suspicious about this.
-
-Yours,
-Linus Walleij
+SGkgTWFydGluLAoKQW0gTWl0dHdvY2gsIGRlbiAyNy4wMy4yMDEzLCAxMjo1NCArMDEwMCBzY2hy
+aWViIE1hcnRpbiBGdXp6ZXk6Cj4gSGkgUGhpbGlwcCwKPiAKPiBPbiAyNi8wMy8xMyAxNToxMywg
+UGhpbGlwcCBaYWJlbCB3cm90ZToKPiAKPiA+ICtzdGF0aWMgdm9pZCBpbXhfbGRiX2VuY29kZXJf
+ZGlzYWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCj4gPiArewo+ID4gKwlzdHJ1Y3Qg
+aW14X2xkYl9jaGFubmVsICppbXhfbGRiX2NoID0gZW5jX3RvX2lteF9sZGJfY2goZW5jb2Rlcik7
+Cj4gPiArCXN0cnVjdCBpbXhfbGRiICpsZGIgPSBpbXhfbGRiX2NoLT5sZGI7Cj4gPiArCj4gPiAr
+CWlmIChncGlvX2lzX3ZhbGlkKGlteF9sZGJfY2gtPmVuYWJsZV9ncGlvKSkKPiA+ICsJCWdwaW9f
+c2V0X3ZhbHVlKGlteF9sZGJfY2gtPmVuYWJsZV9ncGlvLCAwKTsKPiA+Cj4gSSBnZXQgYSBjb21w
+aWxlIGVycm9yIGhlcmU6Cj4gZHJpdmVycy9zdGFnaW5nL2lteC1kcm0vaW14LWxkYi5jOiBJbiBm
+dW5jdGlvbiDigJhpbXhfbGRiX2VuY29kZXJfZGlzYWJsZeKAmToKPiBkcml2ZXJzL3N0YWdpbmcv
+aW14LWRybS9pbXgtbGRiLmM6MjgzOjI6IGVycm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiAK
+PiBmdW5jdGlvbiDigJhncGlvX2lzX3ZhbGlk4oCZIFstV2Vycm9yPWltcGxpY2l0LWZ1bmN0aW9u
+LWRlY2xhcmF0aW9uXQo+IGRyaXZlcnMvc3RhZ2luZy9pbXgtZHJtL2lteC1sZGIuYzoyODM6MzA6
+IGVycm9yOiDigJhzdHJ1Y3QgCj4gaW14X2xkYl9jaGFubmVs4oCZIGhhcyBubyBtZW1iZXIgbmFt
+ZWQg4oCYZW5hYmxlX2dwaW/igJkKPiBkcml2ZXJzL3N0YWdpbmcvaW14LWRybS9pbXgtbGRiLmM6
+Mjg0OjM6IGVycm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiAKPiBmdW5jdGlvbiDigJhncGlv
+X3NldF92YWx1ZeKAmSBbLVdlcnJvcj1pbXBsaWNpdC1mdW5jdGlvbi1kZWNsYXJhdGlvbl0KPiBk
+cml2ZXJzL3N0YWdpbmcvaW14LWRybS9pbXgtbGRiLmM6Mjg0OjI4OiBlcnJvcjog4oCYc3RydWN0
+IAo+IGlteF9sZGJfY2hhbm5lbOKAmSBoYXMgbm8gbWVtYmVyIG5hbWVkIOKAmGVuYWJsZV9ncGlv
+4oCZCj4gCj4gQWRkaW5nICNpbmNsdWRlIDxsaW51eC9ncGlvLmg+IGZpeGVzIHRoYXQgYnV0IGdp
+dmVzIGFub3RoZXIgZXJyb3I6Cj4gZHJpdmVycy9zdGFnaW5nL2lteC1kcm0vaW14LWxkYi5jOiBJ
+biBmdW5jdGlvbiDigJhpbXhfbGRiX2VuY29kZXJfZGlzYWJsZeKAmToKPiBkcml2ZXJzL3N0YWdp
+bmcvaW14LWRybS9pbXgtbGRiLmM6Mjg0OjMwOiBlcnJvcjog4oCYc3RydWN0IAo+IGlteF9sZGJf
+Y2hhbm5lbOKAmSBoYXMgbm8gbWVtYmVyIG5hbWVkIOKAmGVuYWJsZV9ncGlv4oCZCj4gZHJpdmVy
+cy9zdGFnaW5nL2lteC1kcm0vaW14LWxkYi5jOjI4NToyODogZXJyb3I6IOKAmHN0cnVjdCAKPiBp
+bXhfbGRiX2NoYW5uZWzigJkgaGFzIG5vIG1lbWJlciBuYW1lZCDigJhlbmFibGVfZ3Bpb+KAmQo+
+IAo+IENvbW1lbnRpbmcgb3V0IHRoZSBibG9jayBnaXZlcyBhIHdvcmtpbmcgZHJpdmVyLgoKdGhh
+bmsgeW91IGZvciBwb2ludGluZyB0aGlzIG91dCwgdGhlIEdQSU8gaGFuZGxpbmcgc2hvdWxkbid0
+IGhhdmUgbGVha2VkCmludG8gdGhpcyBwYXRjaCBzZXJpZXMuCgpyZWdhcmRzClBoaWxpcHAKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUt
+ZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcK
+aHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
