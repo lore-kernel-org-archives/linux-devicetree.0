@@ -1,102 +1,30 @@
-From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [REPOST Patch v1 2/3] power: power_supply: Add core support for
- supplied_from
-Date: Wed, 27 Mar 2013 17:12:32 -0400
-Message-ID: <515360C0.1040108@nvidia.com>
-References: <1364264690-2124-1-git-send-email-rklein@nvidia.com> <1364264690-2124-3-git-send-email-rklein@nvidia.com> <51531E92.9070805@wwwdotorg.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] pinctrl: exynos5440: fix invalid use of sizeof in exynos5440_pinctrl_probe()
+Date: Wed, 27 Mar 2013 22:24:59 +0100
+Message-ID: <CACRpkdZ7Kmy+DXN2Xnt1K1hbZo5FTcHCKuDOmHU9zmJsNj_PQA@mail.gmail.com>
+References: <CAPgLHd8yrZbidfvavg2nrO77zpx_NvKS7QDk=oDWD4T6Vb5+zQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <51531E92.9070805-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPgLHd8yrZbidfvavg2nrO77zpx_NvKS7QDk=oDWD4T6Vb5+zQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wei Yongjun <weiyj.lk@gmail.com>, Thomas Abraham <thomas.abraham@linaro.org>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 3/27/2013 12:30 PM, Stephen Warren wrote:
-> On 03/25/2013 08:24 PM, Rhyland Klein wrote:
->> This patch adds support for supplies to register a list of char *'s
->> which represent the list of supplies which supply them. This is the
->> opposite as the supplied_to list.
->>
->> This change maintains support for supplied_to until all drivers which
->> make use of it already are converted.
-> 
->> diff --git a/drivers/power/power_supply_core.c b/drivers/power/power_supply_core.c
-> 
->> +static int __power_supply_is_supplied_by(struct power_supply *supplier,
->> +					 struct power_supply *supply)
-> 
-> Shouldn't this function return a Boolean since it's "is" something? At
-> least, 1 for yes 0 for no would be more comprehensible than 0 for yes
-> and error for no?
+On Thu, Mar 14, 2013 at 2:59 PM, Wei Yongjun <weiyj.lk@gmail.com> wrote:
 
-Yes, 1 or 0 or a boolean makes much more sense. I think this is carry
-over from a previous iteration.
+> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+>
+> sizeof() when applied to a pointer typed expression gives the
+> size of the pointer, not that of the pointed data.
+>
+> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> ---
+>  drivers/pinctrl/pinctrl-exynos5440.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
->> +{
->> +	int i;
->> +
->> +	if (!supply->supplied_from && !supplier->supplied_to)
->> +		return -EINVAL;
->> +
->> +	/* Support both supplied_to and supplied_from modes */
->> +	if (supply->supplied_from) {
->> +		for (i = 0; i < supply->num_supplies; i++) {
->> +			if (!supplier->name)
->> +				continue;
-> 
-> That test is loop invariant. Why put it inside the loop?
+Patch applied, unless the Exynos maintainer protest..
 
-Will move before the loop.
-
-> 
-> Why wouldn't a supply have a name? The loop in
-> __power_supply_changed_work() that this function replaces doesn't test
-> for NULL names.
-
-Looking at the registration path for a power_supply, the only check that
-might catch a power_supply with no name being registered is the call to
-kobject_set_name. From looking into it I am not sure if would explicitly
-fail if there was no name set, meaning that it would be possible for
-power_supplies to not have a name. Therefore, I figured it would be
-harmless to add a check here just to be sure before I accessed a
-possibly NULL value.
-
-> 
->> +			if (!strcmp(supplier->name, supply->supplied_from[i]))
->> +				return 0;
-> 
-> Don't you want to return something true here, so that the if block
-> inside __power_supply_changed_work() is executed in this case?
-> 
-> Similar comment for the else block.
-
-Yes I think switching to boolean will cleanup the return codes and make
-them make more sense.
-
-> 
->>  static int __power_supply_changed_work(struct device *dev, void *data)
-> 
->> -	for (i = 0; i < psy->num_supplicants; i++)
->> -		if (!strcmp(psy->supplied_to[i], pst->name)) {
->> -			if (pst->external_power_changed)
->> -				pst->external_power_changed(pst);
->> -		}
->> +	if (__power_supply_is_supplied_by(psy, pst)) {
->> +		if (pst->external_power_changed)
->> +			pst->external_power_changed(pst);
->> +	}
->> +
->>  	return 0;
->>  }
-> 
-
-Thanks.
-
--rhyland
-
--- 
-nvpublic
+Yours,
+Linus Walleij
