@@ -1,53 +1,78 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH 4/6] pci: Add PCIe driver for Samsung Exynos
-Date: Wed, 27 Mar 2013 10:29:51 +0900
-Message-ID: <005401ce2a8a$943cf780$bcb6e680$%han@samsung.com>
-References: <00c001ce277b$92b26ab0$b8174010$%han@samsung.com>
- <00c301ce277b$f2790080$d76b0180$%han@samsung.com> <51521421.9020906@gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFCv1 01/11] arm: mvebu: move L2 cache initialization in init_early()
+Date: Tue, 26 Mar 2013 20:53:08 -0500
+Message-ID: <51525104.4010304@gmail.com>
+References: <1364316746-8702-1-git-send-email-thomas.petazzoni@free-electrons.com> <1364316746-8702-2-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <51521421.9020906@gmail.com>
-Content-language: ko
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Rob Herring' <robherring2@gmail.com>
-Cc: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Andrew Murray' <andrew.murray@arm.com>, linux-arm-kernel@lists.infradead.org, 'Jingoo Han' <jg1.han@samsung.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1364316746-8702-2-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Andrew Murray <andrew.murray@arm.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org, Mitch Bradley <wmb@firmworks.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, March 27, 2013 6:33 AM, Rob Herring wrote:
+On 03/26/2013 11:52 AM, Thomas Petazzoni wrote:
+> In preparation for moving the IRQ controller driver to
+> drivers/irqchip/, we don't want the IRQ controller driver to be
+> responsible for initializing the L2 cache. Instead, let's initialize
+> the L2 cache at the init_early() level, like mach-exynos/common.c is
+> doing.
 > 
-> On 03/22/2013 11:07 PM, Jingoo Han wrote:
-> > Exynos5440 has a PCIe controller which can be used as Root Complex.
-> > This driver supports a PCIe controller as Root Complex mode.
-> >
-> > Signed-off-by: Surendranath Gurivireddy Balla <suren.reddy@samsung.com>
-> > Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
-> > Signed-off-by: Jingoo Han <jg1.han@samsung.com>
-> > ---
-> >  .../devicetree/bindings/pci/exynos-pcie.txt        |   56 +
-> >  drivers/pci/host/Kconfig                           |    5 +
-> >  drivers/pci/host/Makefile                          |    1 +
-> >  drivers/pci/host/pci-exynos.c                      | 1139 ++++++++++++++++++++
-> >  4 files changed, 1201 insertions(+), 0 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/exynos-pcie.txt
-> >  create mode 100644 drivers/pci/host/Makefile
-> >  create mode 100644 drivers/pci/host/pci-exynos.c
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> ---
+>  arch/arm/mach-mvebu/armada-370-xp.c     |    5 +++++
+>  arch/arm/mach-mvebu/irq-armada-370-xp.c |    4 ----
+>  2 files changed, 5 insertions(+), 4 deletions(-)
 > 
-> [...]
-> 
-> > +
-> > +/* synopsis specific PCIE configuration registers*/
-> 
-> If this is a standard IP block, then the driver naming should reflect
-> that. I suspect there are several others with the same IP block.
+> diff --git a/arch/arm/mach-mvebu/armada-370-xp.c b/arch/arm/mach-mvebu/armada-370-xp.c
+> index 12d3655..d98a0ca 100644
+> --- a/arch/arm/mach-mvebu/armada-370-xp.c
+> +++ b/arch/arm/mach-mvebu/armada-370-xp.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/clk/mvebu.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/mbus.h>
+> +#include <asm/hardware/cache-l2x0.h>
+>  #include <asm/mach/arch.h>
+>  #include <asm/mach/map.h>
+>  #include <asm/mach/time.h>
+> @@ -72,6 +73,10 @@ void __init armada_370_xp_init_early(void)
+>  			ARMADA_370_XP_MBUS_WINS_SIZE,
+>  			ARMADA_370_XP_SDRAM_WINS_BASE,
+>  			ARMADA_370_XP_SDRAM_WINS_SIZE);
+> +
+> +#ifdef CONFIG_CACHE_L2X0
+> +	l2x0_of_init(0, ~0UL);
+> +#endif
 
-Sorry, I don't think so.
-Only core block is a standard IP block, other parts are Exynos-specific.
-So, it is hard to share with other PCIe IPs using synopsis core.
+Have you actually tested this? I don't think the ioremap in here will
+work during init_early.
 
-Best regards,
-Jingoo Han
+Rob
 
+>  }
+>  
+>  static void __init armada_370_xp_dt_init(void)
+> diff --git a/arch/arm/mach-mvebu/irq-armada-370-xp.c b/arch/arm/mach-mvebu/irq-armada-370-xp.c
+> index 6a9195e..f6699f3 100644
+> --- a/arch/arm/mach-mvebu/irq-armada-370-xp.c
+> +++ b/arch/arm/mach-mvebu/irq-armada-370-xp.c
+> @@ -25,7 +25,6 @@
+>  #include <asm/mach/arch.h>
+>  #include <asm/exception.h>
+>  #include <asm/smp_plat.h>
+> -#include <asm/hardware/cache-l2x0.h>
+>  
+>  /* Interrupt Controller Registers Map */
+>  #define ARMADA_370_XP_INT_SET_MASK_OFFS		(0x48)
+> @@ -292,7 +291,4 @@ static const struct of_device_id mpic_of_match[] __initconst = {
+>  void __init armada_370_xp_init_irq(void)
+>  {
+>  	of_irq_init(mpic_of_match);
+> -#ifdef CONFIG_CACHE_L2X0
+> -	l2x0_of_init(0, ~0UL);
+> -#endif
+>  }
 > 
-> Rob
