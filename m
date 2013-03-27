@@ -1,49 +1,102 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V2 8/8] cpufreq: OMAP: donot allow to be used with device
- tree
-Date: Wed, 27 Mar 2013 15:59:40 -0500
-Message-ID: <20130327205940.GA660@kahuna>
-References: <1363715590-5131-1-git-send-email-nm@ti.com>
- <1363715590-5131-9-git-send-email-nm@ti.com>
- <87vc8c7kmq.fsf@linaro.org>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [REPOST Patch v1 2/3] power: power_supply: Add core support for
+ supplied_from
+Date: Wed, 27 Mar 2013 17:12:32 -0400
+Message-ID: <515360C0.1040108@nvidia.com>
+References: <1364264690-2124-1-git-send-email-rklein@nvidia.com> <1364264690-2124-3-git-send-email-rklein@nvidia.com> <51531E92.9070805@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <cpufreq-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87vc8c7kmq.fsf@linaro.org>
-Sender: cpufreq-owner@vger.kernel.org
-To: Kevin Hilman <khilman@linaro.org>
-Cc: linux-omap@vger.kernel.org, Jon Hunter <jon-hunter@ti.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <b-cousson@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Shawn Guo <shawn.guo@linaro.org>, Keerthy <j-keerthy@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <51531E92.9070805-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11:39-20130327, Kevin Hilman wrote:
-> Nishanth Menon <nm@ti.com> writes:
-> >  #include <linux/module.h>
-> > @@ -174,6 +175,19 @@ static inline void freq_table_free(void)
-> >  static int __cpuinit omap_cpu_init(struct cpufreq_policy *policy)
-> >  {
-> >  	int result = 0;
-> > +	struct device_node *np;
-> > +
-> > +	/*
-> > +	 * If we have a device tree node describing OPPs,
-> > +	 * we will NOT permit usage of omap-cpufreq driver.
-> > +	 * use cpufreq-cpu0 driver to manage.
-> > +	 */
-> > +	if (of_have_populated_dt()) {
-> > +		for_each_child_of_node(of_find_node_by_path("/cpus"), np) {
-> > +			if (of_get_property(np, "operating-points", NULL))
-> > +				return -EPERM;
-> > +		}
-> > +	}
+On 3/27/2013 12:30 PM, Stephen Warren wrote:
+> On 03/25/2013 08:24 PM, Rhyland Klein wrote:
+>> This patch adds support for supplies to register a list of char *'s
+>> which represent the list of supplies which supply them. This is the
+>> opposite as the supplied_to list.
+>>
+>> This change maintains support for supplied_to until all drivers which
+>> make use of it already are converted.
 > 
-> I think it's much cleaner to just convert this to a platform_driver like
-> was done for the generic driver[1].  Then the registration in the
-> previous patch can register the omap driver when needed.
-Thanks for the review.
-Yes. I agree. Will wait for any further comments on the DT angle before
-I send out an V3.
+>> diff --git a/drivers/power/power_supply_core.c b/drivers/power/power_supply_core.c
+> 
+>> +static int __power_supply_is_supplied_by(struct power_supply *supplier,
+>> +					 struct power_supply *supply)
+> 
+> Shouldn't this function return a Boolean since it's "is" something? At
+> least, 1 for yes 0 for no would be more comprehensible than 0 for yes
+> and error for no?
+
+Yes, 1 or 0 or a boolean makes much more sense. I think this is carry
+over from a previous iteration.
+
+> 
+>> +{
+>> +	int i;
+>> +
+>> +	if (!supply->supplied_from && !supplier->supplied_to)
+>> +		return -EINVAL;
+>> +
+>> +	/* Support both supplied_to and supplied_from modes */
+>> +	if (supply->supplied_from) {
+>> +		for (i = 0; i < supply->num_supplies; i++) {
+>> +			if (!supplier->name)
+>> +				continue;
+> 
+> That test is loop invariant. Why put it inside the loop?
+
+Will move before the loop.
+
+> 
+> Why wouldn't a supply have a name? The loop in
+> __power_supply_changed_work() that this function replaces doesn't test
+> for NULL names.
+
+Looking at the registration path for a power_supply, the only check that
+might catch a power_supply with no name being registered is the call to
+kobject_set_name. From looking into it I am not sure if would explicitly
+fail if there was no name set, meaning that it would be possible for
+power_supplies to not have a name. Therefore, I figured it would be
+harmless to add a check here just to be sure before I accessed a
+possibly NULL value.
+
+> 
+>> +			if (!strcmp(supplier->name, supply->supplied_from[i]))
+>> +				return 0;
+> 
+> Don't you want to return something true here, so that the if block
+> inside __power_supply_changed_work() is executed in this case?
+> 
+> Similar comment for the else block.
+
+Yes I think switching to boolean will cleanup the return codes and make
+them make more sense.
+
+> 
+>>  static int __power_supply_changed_work(struct device *dev, void *data)
+> 
+>> -	for (i = 0; i < psy->num_supplicants; i++)
+>> -		if (!strcmp(psy->supplied_to[i], pst->name)) {
+>> -			if (pst->external_power_changed)
+>> -				pst->external_power_changed(pst);
+>> -		}
+>> +	if (__power_supply_is_supplied_by(psy, pst)) {
+>> +		if (pst->external_power_changed)
+>> +			pst->external_power_changed(pst);
+>> +	}
+>> +
+>>  	return 0;
+>>  }
+> 
+
+Thanks.
+
+-rhyland
 
 -- 
-Regards,
-Nishanth Menon
+nvpublic
