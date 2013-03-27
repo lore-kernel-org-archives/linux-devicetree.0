@@ -1,45 +1,69 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [RFC PATCHv1 0/5] Use the mvebu PCIe driver on Kirkwood
-Date: Wed, 27 Mar 2013 19:18:50 +0100
-Message-ID: <20130327191850.26ab1623@skate>
-References: <1364407504-13524-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<201303271807.51023.arnd@arndb.de>
-	<20130327191114.2662b3b8@skate>
+From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Subject: Re: [PATCH v2 1/4] iio: adc: Document the regulator/clocks for exynos-adc
+Date: Wed, 27 Mar 2013 11:35:32 -0700
+Message-ID: <CAHfPSqDLXD-T6__eF=d+U7Me953DqTgMXi=Jmx7LnHL+W-FLhQ@mail.gmail.com>
+References: <1363129994-10438-1-git-send-email-dianders@chromium.org>
+ <1363207202-10858-1-git-send-email-dianders@chromium.org> <1363207202-10858-2-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20130327191114.2662b3b8@skate>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, Olof Johansson <olof@lixom.net>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@secretlab.ca>, Maen Suleiman <maen@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Andrew Murray <andrew.murray@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Gregory Clement <gregory.clement@free-electrons.com>, Mitch Bradley <wmb@firmworks.com>, linux-arm-kernel@lists.infradead.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1363207202-10858-2-git-send-email-dianders@chromium.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Lars-Peter Clausen <lars@metafoo.de>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, Olof Johansson <olof@lixom.net>, Guenter Roeck <linux@roeck-us.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Arnd,
+On 13 March 2013 13:39, Doug Anderson <dianders@chromium.org> wrote:
+> The exynos ADC won't work without a regulator called "vdd" and a clock
+> called "adc".  Document this fact in the device tree bindings.
+>
+> Signed-off-by: Doug Anderson <dianders@chromium.org>
+Reviewed-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
 
-On Wed, 27 Mar 2013 19:11:14 +0100, Thomas Petazzoni wrote:
+Lars, any update on this patch set. This change is required.
+> ---
+> Changes in v2: None
+>
+>  Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+> index f686378..96db940 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+> @@ -20,6 +20,9 @@ Required properties:
+>                         format is being dependent on which interrupt controller
+>                         the Samsung device uses.
+>  - #io-channel-cells = <1>; As ADC has multiple outputs
+> +- clocks               From common clock binding: handle to adc clock.
+> +- clock-names          From common clock binding: Shall be "adc".
+> +- vdd-supply           VDD input supply.
+>
+>  Note: child nodes can be added for auto probing from device tree.
+>
+> @@ -31,6 +34,11 @@ adc: adc@12D10000 {
+>         interrupts = <0 106 0>;
+>         #io-channel-cells = <1>;
+>         io-channel-ranges;
+> +
+> +       clocks = <&clock 303>;
+> +       clock-names = "adc";
+> +
+> +       vdd-supply = <&buck5_reg>;
+>  };
+>
+>
+> --
+> 1.8.1.3
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
-> > I assume it works with PIO, but does the SATA card use the I/O
-> > space registers, or just memory space?
-> 
-> Both cards only use memory space. I have a quick and dirty patch for
-> the e1000e driver that makes it read/write one particular register from
-> the I/O space to test that it works, but I haven't checked this yet on
-> Kirkwood. I don't expect much troubles, but who knows.
 
-Just to let you know, I've tested the e1000e with my small changes that
-does one I/O access, and it seems to work properly. At least, I read
-from the register the value I should be reading (and therefore writing
-works, because the I/O space of the e1000e essentially has two
-registers: one address register, and one data register, so you must
-write one address in the address register before being able to read
-something from the data register).
 
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+--
+Shine bright,
+(: Nav :)
