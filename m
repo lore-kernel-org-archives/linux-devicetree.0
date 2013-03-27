@@ -1,46 +1,29 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v9 05/11] gpio: palmas: add in GPIO support for palmas charger
-Date: Wed, 27 Mar 2013 14:15:57 +0100
-Message-ID: <CACRpkdbc3U=4T4P-CtbzU1Ds4Fupno__AkZjPRenzdwW0jEOjg@mail.gmail.com>
-References: <1363959373-10671-1-git-send-email-ian@slimlogic.co.uk>
-	<1363959373-10671-6-git-send-email-ian@slimlogic.co.uk>
+From: Peter Korsgaard <jacmet@sunsite.dk>
+Subject: Re: [PATCH 1/5] ARM: dts: AM33XX: Fix the i2c numbering to match hardware/TRM
+Date: Wed, 27 Mar 2013 14:22:22 +0100
+Message-ID: <87k3ot6kq9.fsf@dell.be.48ers.dk>
+References: <1364389156-8273-1-git-send-email-hvaibhav@ti.com>
+	<1364389156-8273-2-git-send-email-hvaibhav@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1363959373-10671-6-git-send-email-ian@slimlogic.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ian Lartey <ian@slimlogic.co.uk>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, rob@landley.net, mturquette@linaro.org, cooloney@gmail.com, sfr@canb.auug.org.au, rpurdie@rpsys.net, akpm@linux-foundation.org, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, gg@slimlogic.co.uk, j-keerthy@ti.com, ldewangan@nvidia.com, t-kristo@ti.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1364389156-8273-2-git-send-email-hvaibhav@ti.com> (Vaibhav
+	Hiremath's message of "Wed, 27 Mar 2013 18:29:12 +0530")
+Sender: linux-omap-owner@vger.kernel.org
+To: Vaibhav Hiremath <hvaibhav@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b-cousson@ti.com, mporter@ti.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 22, 2013 at 2:36 PM, Ian Lartey <ian@slimlogic.co.uk> wrote:
+>>>>> "Vaibhav" == Vaibhav Hiremath <hvaibhav@ti.com> writes:
 
-> Palmas charger has 16 GPIOs
-> add palmas_gpio_[read|write|update] api to take account
-> second bank of GPIOs
->
-> Signed-off-by: Ian Lartey <ian@slimlogic.co.uk>
-> Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
-> ---
->  drivers/gpio/gpio-palmas.c |   77 ++++++++++++++++++++++++++++++++++++--------
->  include/linux/mfd/palmas.h |   12 ++++++-
->  2 files changed, 74 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-palmas.c b/drivers/gpio/gpio-palmas.c
-> index e3a4e56..636648c 100644
-> --- a/drivers/gpio/gpio-palmas.c
-> +++ b/drivers/gpio/gpio-palmas.c
-> @@ -1,7 +1,7 @@
->  /*
-> - * TI Palma series PMIC's GPIO driver.
-> + * TI Palmas series PMIC's GPIO driver.
->   *
-> - * Copyright (c) 2012, NVIDIA CORPORATION.  All rights reserved.
-> + * Copyright (c) 2012-2012, NVIDIA CORPORATION.  All rights reserved.
+ Vaibhav> With DT support, where naming convention is based on base-addr
+ Vaibhav> and not id, so we should follow TRM/Spec numbering label.
 
-Do you mean 2012-2013?
+ Vaibhav> This patch changes I2C numbering as per TRM, as I2C0, I2C1 and I2C2.
 
-Anyway, Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Peter Korsgaard <jacmet@sunsite.dk>
 
-Yours,
-Linus Walleij
+What about the uart numbers while we're at it?
+
+-- 
+Bye, Peter Korsgaard
