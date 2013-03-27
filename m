@@ -1,65 +1,35 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [RFC PATCHv1 3/5] arm: mach-kirkwood: seperate PCIe window init
- from other windows
-Date: Wed, 27 Mar 2013 21:17:15 +0100
-Message-ID: <20130327211715.27058a10@skate>
-References: <1364407504-13524-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1364407504-13524-4-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20130327183534.GA9643@obsidianresearch.com>
+From: Kevin Hilman <khilman@linaro.org>
+Subject: Re: [PATCH V2 0/8] ARM: OMAP3+: support cpufreq-cpu0 for device tree boot
+Date: Wed, 27 Mar 2013 13:37:58 -0700
+Message-ID: <87a9po60k9.fsf@linaro.org>
+References: <1363715590-5131-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20130327183534.GA9643@obsidianresearch.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, Thierry Reding <thierry.reding@avionic-design.de>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1363715590-5131-1-git-send-email-nm@ti.com> (Nishanth Menon's
+	message of "Tue, 19 Mar 2013 12:53:02 -0500")
+Sender: linux-omap-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: linux-omap@vger.kernel.org, Jon Hunter <jon-hunter@ti.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <b-cousson@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Shawn Guo <shawn.guo@linaro.org>, Keerthy <j-keerthy@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Jason Gunthorpe,
+Hi Nishanth,
 
-On Wed, 27 Mar 2013 12:35:34 -0600, Jason Gunthorpe wrote:
-> On Wed, Mar 27, 2013 at 07:05:02PM +0100, Thomas Petazzoni wrote:
-> 
-> This all looks really great to me, I hope to try it as well when I get
-> time. But just one small suggestion:
-> 
-> > diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
-> > index ea49476..1b4675f 100644
-> > +++ b/arch/arm/mach-kirkwood/board-dt.c
-> > @@ -72,6 +72,8 @@ static void __init kirkwood_of_clk_init(void)
-> >  
-> >  static void __init kirkwood_dt_init(void)
-> >  {
-> > +	int needs_pcie_wins = 1;
-> > +
-> >  	pr_info("Kirkwood: %s, TCLK=%d.\n", kirkwood_id(), kirkwood_tclk);
-> >  
-> >  	/*
-> > @@ -144,6 +146,9 @@ static void __init kirkwood_dt_init(void)
-> >  	if (of_machine_is_compatible("usi,topkick"))
-> >  		usi_topkick_init();
-> >  
-> > +	if (needs_pcie_wins)
-> > +		kirkwood_setup_pcie_wins();
-> > +
-> >  	of_platform_populate(NULL, kirkwood_dt_match_table, NULL, NULL);
-> >  }
-> 
-> Moving the window setup into mach-kirkwood/pcie.c:kirkwood_pcie_init
-> would avoid this needs_pcie_wins thing since kirkwood_pcie_init will
-> naturally never be called once the other patches are applied.
+Nishanth Menon <nm@ti.com> writes:
 
-Ah, yes, right. I now remember you made this suggestion when reviewing
-the mvebu-mbus patch set, and I replied that I would do it when I'll
-start working on using the pci-mvebu driver on Kirkwood. It looks like
-it's time for me to honor this commitment :-)
+> Hi,
+> The following version 2 of the series arose from trying to use BeagleBoard-XM
+> (OMAP3 variant) for doing CPU DVFS using cpufreq-cpu0. This series enables the
+> generic cpufreq-cpu0 driver to be used in device tree enabled boot while
+> maintaining support of the legacy omap-cpufreq driver when used in non device
+> tree enabled boot.
 
-Thanks for the feedback,
+Benoit should have a look and ack the DT data changes, but the general
+direction is right IMO.  
 
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+I just had one comment on the last patch about how the omap-cpufreq
+driver should be handled for the non-DT case.
+
+Other than that, this is a great step in the right direction.  Thanks!
+
+Kevin
