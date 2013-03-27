@@ -1,15 +1,17 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v5 0/8] Reset controller API to reset IP modules on i.MX5
- and i.MX6
-Date: Tue, 26 Mar 2013 22:13:38 +0100
-Message-ID: <201303262213.39068.marex@denx.de>
-References: <1364231189-12497-1-git-send-email-p.zabel@pengutronix.de>
- <20130326181909.GA31593@amd.pavel.ucw.cz>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: RFC v2: Zynq Clock Controller
+Date: Tue, 26 Mar 2013 19:18:44 -0700
+Message-ID: <20130327021844.4014.43809@quantum>
+References: <27dae808-1d3a-4001-8eb2-b0a6e2a34b8f@AM1EHSMHS013.ehs.local>
+ <515093B4.2090701@wwwdotorg.org>
+ <8fd7278d-37c5-48ff-8d06-edc64d532a96@VA3EHSMHS037.ehs.local>
+ <5150DEB6.7070208@wwwdotorg.org>
+ <b810d127-dad8-447c-bf88-8ac715debbff@CO9EHSMHS026.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130326181909.GA31593-tWAi6jLit6GreWDznjuHag@public.gmane.org>
+In-Reply-To: <b810d127-dad8-447c-bf88-8ac715debbff-QhSrsHip19vVOT3FKhN2rLjjLBE8jN/0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,42 +22,113 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: =?utf-8?q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, =?utf-8?q?Jan_L=C3=BCbbe?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, git-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Peter Crosthwaite <pcrost-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Pavel Machek,
-
-> Hi!
-> 
-> > The system reset controller (SRC) on i.MX51, i.MX53, and i.MX6q controls
-> > reset lines to the GPU, VPU, IPU, and OpenVG IP modules.
-> > 
-> > The following patches add a simple API for devices to request being reset
-> > by separate reset controller hardware and implements the reset signal
-> > device tree binding proposed by Stephen Warren. Contrary to Tegra
-> > hardware, the i.MX SRC contains self-deasserting reset registers, so
-> > I've included both ops to manually assert/deassert a reset line, as well
-> > as a "reset" operation that is supposed to assert the reset line and
-> > wait for it to deassert.
-> > 
-> > The i.MX SRC is enhanced to provide a reset controller and the IPU driver
-> > is made to request being reset by calling the device_reset(&pdev->dev)
-> > convenience wrapper during probing.
-> > 
-> > Changes since v4:
-> >  - removed flags parameter from .of_xlate / of_reset_simple_xlate
-> >  - warn also if reset_spec->args_count > rcdev->of_reset_n_cells
-> >  - unlock list mutex only after try_module_get
-> >  - tighten devm_reset_control_match a bit
-> 
-> Series looks mostly ok to me. (Should the last patch be actually
-> first, so that reset functionality is kept between 5/8 and 8/8?)
-
-Not first, but rather third.
-
-You can add my
-Reviewed-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-
-Best regards,
-Marek Vasut
+UXVvdGluZyBTw7ZyZW4gQnJpbmttYW5uICgyMDEzLTAzLTI1IDE3OjAzOjI0KQo+IE9uIE1vbiwg
+TWFyIDI1LCAyMDEzIGF0IDA1OjMzOjEwUE0gLTA2MDAsIFN0ZXBoZW4gV2FycmVuIHdyb3RlOgo+
+ID4gT24gMDMvMjUvMjAxMyAxMjoyNyBQTSwgU8O2cmVuIEJyaW5rbWFubiB3cm90ZToKPiA+ID4g
+SGkgU3RlcGhlbiwKPiA+ID4gCj4gPiA+IE9uIE1vbiwgTWFyIDI1LCAyMDEzIGF0IDEyOjEzOjA4
+UE0gLTA2MDAsIFN0ZXBoZW4gV2FycmVuIHdyb3RlOgo+ID4gPj4gT24gMDMvMjAvMjAxMyAwNTo1
+NiBQTSwgU8O2cmVuIEJyaW5rbWFubiB3cm90ZToKPiA+ID4+PiBIaSwKPiA+ID4+Pgo+ID4gPj4+
+IEkgc3BlbnQgc29tZSB0aW1lIHdvcmtpbmcgb24gdGhpcyBhbmQgaW5jb3Jwb3JhdGluZyBmZWVk
+YmFjay4gSGVyZSdzIGFuIHVwZGF0ZWQgcHJvcG9zYWwgZm9yIGEgY2xvY2sgY29udHJvbGxlciBm
+b3IgWnlucToKPiA+ID4+Pgo+ID4gPj4+IFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiA+Pj4gIC0g
+I2Nsb2NrLWNlbGxzIDogTXVzdCBiZSAxCj4gPiA+Pj4gIC0gY29tcGF0aWJsZSA6ICJ4bG54LHBz
+Ny1jbGtjIiAgKHRoaXMgbWF5IGJlY29tZSAneGxueCx6eW5xLWNsa2MnIHRlcm1pbm9sb2d5IGRp
+ZmZlcnMgYSBiaXQgYmV0d2VlbiBYaWxpbnggaW50ZXJuYWwgYW5kIG1haW5saW5lKQo+ID4gPj4+
+ICAtIHBzLWNsay1mcmVxdWVuY3kgOiBGcmVxdWVuY3kgb2YgdGhlIG9zY2lsbGF0b3IgcHJvdmlk
+aW5nIHBzX2NsayBpbiBIWgo+ID4gPj4+ICAgICAgICAgICAgICAgICAgICAgICh1c3VhbGx5IDMz
+IE1IeiBvc2NpbGxhdG9ycyBhcmUgdXNlZCBmb3IgWnlucSBwbGF0Zm9ybXMpCj4gPiA+Pgo+ID4g
+Pj4gVGhpcyBtYXkgaGF2ZSBiZWVuIG1lbnRpb25lZCBiZWZvcmUsIGJ1dCBzaG91bGRuJ3QgdGhl
+IGlucHV0IGNsb2NrIGJlCj4gPiA+PiByZXByZXNlbnRlZCBhcyBhbiBhY3R1YWwgY2xvY2sgaW4g
+RFQsIGFuZCBoZW5jZSBhcyBhbiBlbnRyeSBpbiB0aGlzCj4gPiA+PiBub2RlJ3MgY2xvY2tzIHBy
+b3BlcnR5PyBUaGUgY3J5c3RhbC8uLi4gaXRzZWxmIGNhbiBiZSByZXByZXNlbnRlZCBpbiBEVAo+
+ID4gPj4gYXMgYSBmaXhlZC1jbG9jay4KPiA+ID4gTGFycy1QZXRlciBicm91Z2h0IHRoYXQgdXAs
+IHRvby4gUGxlYXNlIHJlZmVyIHRvIG15IGFuc3dlciB0byBoaW0uCj4gPiA+IAo+ID4gPj4KPiA+
+ID4+PiAgLSBjbG9jay1vdXRwdXQtbmFtZXMgOiBMaXN0IG9mIHN0cmluZ3MgdXNlZCB0byBuYW1l
+IHRoZSBjbG9jayBvdXRwdXRzLiBTaGFsbCBiZSBhIGxpc3Qgb2YgdGhlIG91dHB1dHMgZ2l2ZW4g
+YmVsb3cuCj4gPiA+Pgo+ID4gPj4gVGhhdCBzaG91bGRuJ3QgYmUgcmVxdWlyZWQuCj4gPiA+Cj4g
+PiA+IFdoZW4gSSB3YW50IHRvIHN1cHBvcnQgb2ZfY2xrX2dldF9wYXJlbnRfbmFtZSgpIGZvciBt
+eSBjbG9ja3MsIEkgdGhpbmsKPiA+ID4gaXQgaXMuIEFuZCBJJ20gaW5jbGluZWQgdG8gbm90IGJy
+YWtlIHRoaXMgZnVuY3Rpb25hbGl0eS4KPiA+IAo+ID4gVGhlIHNvbHV0aW9uIGhlcmUgaXMgdG8g
+bWFrZSBjbG9jayBwYXJlbnQgbmFtZXMgaXJyZWxldmFudC4KPiA+IAo+ID4gQWxzbyBub3RlIHRo
+YXQgZGV2aWNlIHRyZWUgaXMgc3VwcG9zZWQgdG8gZGVzY3JpYmUgSFcuIEFzIHN1Y2gsIHRoaXMK
+PiA+IGtpbmQgb2YgaW50ZXJuYWwgaW1wbGVtZW50YXRpb24gZGV0YWlsIG9mIHRoZSBMaW51eCBj
+bG9jayBkcml2ZXIgc2hvdWxkCj4gPiBoYXZlIGJhc2ljYWxseSB6ZXJvIGVmZmVjdCBvbiB0aGUg
+RFQgYmluZGluZyBkZWZpbml0aW9uLgo+ID4gCj4gPiA+Pj4gT3B0aW9uYWwgcHJvcGVydGllczoK
+PiA+ID4+PiAgLSBjbG9ja3MgOiBhcyBkZXNjcmliZWQgaW4gdGhlIGNsb2NrIGJpbmRpbmdzCj4g
+PiA+Pj4gIC0gY2xvY2stbmFtZXMgOiBhcyBkZXNjcmliZWQgaW4gdGhlIGNsb2NrIGJpbmRpbmdz
+Cj4gPiA+Pgo+ID4gPj4gSSB0aGluayBjbG9ja3Mgc2hvdWxkIGJlIHJlcXVpcmVkLCB3aXRoIGF0
+IGxlYXN0IHRoZSBtYWluIGNyeXN0YWwgY2xvY2sKPiA+ID4+IGlucHV0IGFsd2F5cyBwcmVzZW50
+LCBidXQgcGVyaGFwcyBoYXZpbmcgc29tZSBvcHRpb25hbCBlbnRyaWVzIGZvciB0aGUKPiA+ID4+
+IChFKU1JTyBmZWF0dXJlIHlvdSBtZW50aW9uLgo+ID4gPgo+ID4gPiBUaGlzIGlzIHdoeSBJIGhh
+dmUgdGhlIHh0YWwgc2VwYXJhdGUuIFRoaXMgd2F5IHRoZXNlIHByb3BzIGFyZSBwdXJlbHkKPiA+
+ID4gb3B0aW9uYWwgYW5kIHRoZSB4dGFsIGZyZXF1ZW5jeSBpcyBvYnRhaW5lZCBzZXBhcmF0ZWx5
+LiBJdCBhbHNvIG1ha2VzIGl0Cj4gPiA+IGEgbGl0dGxlIGVhc2llciBpbnRlcm5hbGx5LCBiZWNh
+dXNlIEkgZG9uJ3QgaGF2ZSB0byBjb3BlIHdpdGggYSB2YXJpYWJsZQo+ID4gPiBuYW1lIGZvciB0
+aGUgeHRhbCB0aGlzIHdheS4KPiA+ID4gCj4gPiA+IERlc2NyaWJpbmcgdGhlIHh0YWwgYXMgZml4
+ZWQgY2xvY2sgaW4gRFQgbWVhbnMgYSBtYW5kYXRvcnkgZW50cnkgZm9yCj4gPiA+ICdjbG9ja3Mn
+IGFuZCAnY2xvY2stbmFtZXMnIGFuZCBhIHZhcmlhYmxlIG5hbWUgZm9yIHRoZSB4dGFsIGNsb2Nr
+LiBJCj4gPiA+IHdhbnRlZCB0byBhdm9pZCB0aGlzLgo+ID4gCj4gPiBJIGRvbid0IHNlZSBhbnkg
+YmVuZWZpdCB3aXRoIHNvbWUgcHJvcGVydGllcyBiZWluZyBwdXJlbHkgb3B0aW9uYWwuCj4gPiBI
+YXZpbmcgb3B0aW9uYWwgZW50cmllcyBpbiBhIHByb3BlcnR5IHNlZW1zIGp1c3QgZmluZSB0byBt
+ZS4KPiA+IAo+ID4gVGhlIG5hbWUgb2YgdGhlIGNyeXN0YWwgY2xvY2sgc2hvdWxkIGJlIGlycmVs
+ZXZhbnQ7IHRoYXQgaXNzdWUgc2ltcGx5Cj4gPiBuZWVkcyB0byBiZSBmaXhlZC4gSXQncyBkcml2
+aW5nIHRvbyBtdWNoIG9mIHRoaXMgZGlzY3Vzc2lvbiwgYW5kIGl0IHdpbGwKPiA+IGJlIGlycmVs
+ZXZhbnQgb25jZSBpdCdzIGZpeGVkLgo+ID4gCj4gPiA+Pj4gRXhhbXBsZToKPiA+ID4+PiAgICAg
+ICAgIGNsa2M6IGNsa2Mgewo+ID4gPj4+ICAgICAgICAgICAgICAgICAjY2xvY2stY2VsbHMgPSA8
+MT47Cj4gPiA+Pj4gICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAieGxueCxwczctY2xrYyI7
+Cj4gPiA+Pj4gICAgICAgICAgICAgICAgIHBzLWNsay1mcmVxdWVuY3kgPSA8MzMzMzMzMzM+Owo+
+ID4gPj4+ICAgICAgICAgICAgICAgICBjbG9jay1vdXRwdXQtbmFtZXMgPSAiYXJtcGxsIiwgImRk
+cnBsbCIsICJpb3BsbCIsICJjcHVfNm9yNHgiLCAiY3B1XzNvcjJ4IiwgImNwdV8yeCIsICJjcHVf
+MXgiLCAiZGRyMngiLCAiZGRyM3giLCAiZGNpIiwgImxxc3BpIiwgInNtYyIsICJwY2FwIiwgImdl
+bTAiLCAiZ2VtMSIsICJmY2xrMCIsICJmY2xrMSIsICJmY2xrMiIsICJmY2xrMyIsICJjYW4wIiwg
+ImNhbjEiLCAic2RpbzAiLCAic2RpbzEiLCAidWFydDAiLCAidWFydDEiLCAic3BpMCIsICJzcGkx
+IiwgImRtYSIsICJ1c2IwX2FwZXIiLCAidXNiMV9hcGVyIiwgImdlbTBfYXBlciIsICJnZW0xX2Fw
+ZXIiLCAic2RpbzBfYXBlciIsICJzZGlvMV9hcGVyIiwgInNwaTBfYXBlciIsICJzcGkxX2FwZXIi
+LCAiY2FuMF9hcGVyIiwgImNhbjFfYXBlciIsICJpMmMwX2FwZXIiLCAiaTJjMV9hcGVyIiwgInVh
+cnQwX2FwZXIiLCAidWFydDFfYXBlciIsICJncGlvX2FwZXIiLCAibHFzcGlfYXBlciIsICJzbWNf
+YXBlciIsICJzd2R0IiwgImRiZ190cmMiLCAiZGJnX2FwYiI7ICAvKiBsb25nIGxpc3QuLi4gZXhw
+bGFuYXRpb24gYmVsb3cgKi8KPiA+ID4+PiAgICAgICAgICAgICAgICAgLyogb3B0aW9uYWwgcHJv
+cHMgKi8KPiA+ID4+PiAgICAgICAgICAgICAgICAgY2xvY2tzID0gPCZjbGtjIDE2PiwgPCZjbGtf
+Zm9vPjsKPiA+ID4+PiAgICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAiZ2VtMV9lbWlvX2Ns
+ayIsICJjYW5fbWlvX2Nsa18yMyI7Cj4gPiA+Pj4gICAgICAgICB9Owo+ID4gPj4+Cj4gPiA+Pj4g
+VGhlIGRvd25zaWRlIG9mIHN1cHBvcnRpbmcgdGhpcyBpcywgdGhhdCBJIGRvbid0IHNlZSBhIHdh
+eSBhcm91bmQgZXhwbGljaXRseSBsaXN0aW5nIHRoZSBjbG9jayBvdXRwdXQgbmFtZXMgaW4gdGhl
+IERULgo+ID4gPj4KPiA+ID4+IChQbGVhc2Ugd3JhcCB5b3VyIGVtYWlscyB0byB+NzQgY2hhcmFj
+dGVycyBvciBzbykKPiA+ID4gSSBjaGFuZ2VkIG15IHNldHRpbmdzLgo+ID4gPiAKPiA+ID4+Cj4g
+PiA+PiBBcyBNaWtlIG1lbnRpb25lZCBvZmYtbGlzdCwgb25lIGNhbiBjcmVhdGUgYSBuZXcgY2xr
+IHJlZ2lzdHJhdGlvbiBBUEkKPiA+ID4+IHRoYXQgdGFrZXMgYSBzdHJ1Y3QgY2xrKiBhcyBwYXJl
+bnQgcmF0aGVyIHRoYW4gYSBjaGFyICpjbGtfbmFtZS4KPiA+ID4KPiA+ID4gVGhlbiB3ZSBhbHNv
+IGhhdmUgdG8gbWFrZSBzdXJlIGNsb2NrcyBhcmUgcHJvYmVkIGluIGEgc3BlY2lmaWMgb3JkZXIu
+IFRvCj4gPiA+IG9idGFpbiBhICdzdHJ1Y3QgY2xrIConIHRocm91Z2ggY2xrX2dldCgpIHRoZSBy
+ZXF1ZXN0ZWQgY2xvY2sgaGFzIHRvIGJlCj4gPiA+IGFscmVhZHkgYmVlbiBwcm9iZWQuIEN1cnJl
+bnRseSBjbG9jayBwcm9iaW5nIHJlbGllcyBwdXJlbHkgb24gZGF0YSBwcmVzZW50Cj4gPiA+IGlu
+IERULiBUaGlzIG1ha2VzIHRoaXMgcHJvcG9zYWwgbm90IHRoYXQgdHJpdmlhbCwgSU1ITy4KPiA+
+IAo+ID4gU2ltcGx5IHVzZSBkZWZlcnJlZCBwcm9iZS4KPiBUaGlzIHdvdWxkIHJlcXVpcmUgbWFq
+b3IgY2hhbmdlcyB0byB0aGUgd2hvbGUgY2xvY2sgcHJvYmluZyBtZWNoYW5pc20uCgpXaGljaCBt
+ZWNoYW5pc20gYXJlIHlvdSByZWZlcnJpbmcgdG8/Cgo+IEN1cnJlbnRseSwgY2xvY2tzIGNhbiBu
+b3QgZGVmZXIgcHJvYmluZy4gQW5kIGluIGNhc2Ugb2YgY2lyY3VsYXIKPiBkZXBlbmRlbmNpZXMg
+aW4gdGhlIGNsb2NrIHRyZWUsIGl0IHdvdWxkIHJhdGhlciByZXF1aXJlIGEgbXVsdGlwbGUgc3Rl
+cHMKPiBwcm9iZS4gU2ltcGx5IGRlZmVycmluZyB3b24ndCBiZSBlbm91Z2guCgpDaXJjdWxhciBk
+ZXBlbmRlbmNpZXMgaW4gdGhlIGNsb2NrIHRyZWU/CgpBbnl3YXlzIHRoZSBjbG9jayBjb3JlIG1h
+aW50YWlucyBhbiBvcnBoYW4gbGlzdCB0aGF0IHdhcyBvcmlnaW5hbGx5CmRlc2lnbmVkIGZvciB0
+aGlzIHByb2JsZW06IHJlZ2lzdGVyaW5nIGEgY2xvY2sgYmVmb3JlIHRoYXQgY2xvY2sncwpwYXJl
+bnQgaXMgcmVnaXN0ZXJlZC4gIEp1c3QgZm9yIGtpY2tzIEkgaGF2ZSBhY3R1YWxseSByZWdpc3Rl
+cmVkIGFsbCBvZgpPTUFQNCdzIGNsb2NrcyBpbiBleGFjdGx5IHRoZSBvcHBvc2l0ZSBvcmRlciBh
+bmQgZXZlcnl0aGluZyBzdGlsbCB3b3Jrcy4KT2YgY291cnNlIHRoaXMgbWFrZXMgdGhlIGNsb2Nr
+IHJlZ2lzdHJhdGlvbiBwYXJlbnQtZGlzY292ZXJ5IGNvZGUKTyhuXjIpLCBidXQgdGhhdCBpcyB0
+aGUgc2FtZSB3b3JzdCBjYXNlIGZvciBkZWZlcnJlZCBwcm9iZS4KCkFzIGxvbmcgYXMgYSBrZXkg
+ZXhpc3RzIHRvIGxpbmsgdHdvIGNsb2NrcyB0b2dldGhlciB0aGVuIHJlZ2lzdHJhdGlvbgpvcmRl
+ciBzaG91bGRuJ3QgbWF0dGVyLiAgT3JpZ2luYWxseSB0aGlzIGtleSB3YXMgYW4gaW1tdXRhYmxl
+IGNsayBuYW1lCnN0cmluZy4KCklmIGNsb2NrIHBhcmVudHMgYXJlIHNwZWNpZmllZCBpbiBEVCB0
+aGVuIHRoYXQgc2hvdWxkIGFsc28gc3VmZmljZSwgaW4KcGxhY2Ugb2YgZG9pbmcgc3RyaW5nIGNv
+bXBhcmlzb25zLgoKSWYgbm8ga2V5IHRvIHBhaXIgdXAgY2xvY2tzIGV4aXN0cyB0aGVuIHllcyB3
+ZSB3aWxsIGhhdmUgdG8gcmVseSBwdXJlbHkKb24gdGhlIHN0cnVjdCBjbGsgKm9wYXF1ZV9jb29r
+aWUgYW5kIHJlZ2lzdGVyIGNsb2NrcyBpbiBvcmRlci4KClJlZ2FyZHMsCk1pa2UKCj4gCj4gICAg
+ICAgICBTw7ZyZW4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlz
+dHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJl
+ZS1kaXNjdXNzCg==
