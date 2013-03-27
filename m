@@ -1,118 +1,58 @@
-From: Matt Porter <mporter@ti.com>
-Subject: Re: [PATCH 5/5] ARM: dts: AM33XX: Add default pinctrl binding for
- UART0 device
-Date: Wed, 27 Mar 2013 09:32:42 -0400
-Message-ID: <20130327133242.GJ18335@beef>
-References: <1364389156-8273-1-git-send-email-hvaibhav@ti.com>
- <896a1261daec485db6be66630bc4019a@DFLE51.ent.ti.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] cpufreq: cpufreq-cpu0: Fix documentation example
+Date: Wed, 27 Mar 2013 21:37:32 +0800
+Message-ID: <20130327133731.GE2674@S2101-09.ap.freescale.net>
+References: <1364389294-1997-1-git-send-email-mpa@pengutronix.de>
+ <1364389294-1997-2-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <896a1261daec485db6be66630bc4019a@DFLE51.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Hiremath, Vaibhav" <hvaibhav@ti.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Cousson, Benoit" <b-cousson@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+In-Reply-To: <1364389294-1997-2-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 27, 2013 at 12:59:16PM +0000, Vaibhav Hiremath wrote:
-> Add pin control binding for UART0 device nodes in all
-> board specific DT files.
+On Wed, Mar 27, 2013 at 02:01:30PM +0100, Markus Pargmann wrote:
+> The example includes a property 'transition-latency', which should be
+> clock-latency.
 > 
-> Signed-off-by: Vaibhav Hiremath <hvaibhav@ti.com>
-> Cc: Benoit Cousson <b-cousson@ti.com>
 
-Except for trivial comments below I'll add my
+Viresh already sent a fix [1] for that.
 
-Acked-by: Matt Porter <mporter@ti.com>
+Shawn
 
+[1] https://lkml.org/lkml/2013/3/26/267
+
+> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
->  arch/arm/boot/dts/am335x-bone.dts  |   10 ++++++++++
->  arch/arm/boot/dts/am335x-evm.dts   |   10 ++++++++++
->  arch/arm/boot/dts/am335x-evmsk.dts |   10 ++++++++++
->  3 files changed, 30 insertions(+), 0 deletions(-)
+>  Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
-> index 1d623e4..3c4c66f 100644
-> --- a/arch/arm/boot/dts/am335x-bone.dts
-> +++ b/arch/arm/boot/dts/am335x-bone.dts
-> @@ -43,10 +43,20 @@
->  				0x18c 0x30	/* i2c0_scl.i2c0_scl PULLUP | INPUTENABLE | MODE0 */
->  			>;
->  		};
-> +
-> +		uart0_pins: pinmux_uart0_pins {
-> +			pinctrl-single,pins = <
-> +				0x170 0x30	/* uart0_rxd.uart0_rxd PULLUP | INPUTENABLE | MODE0 */
-> +				0x174 0x00	/* uart0_txd.uart0_txd PULLDOWN | MODE0 */
-> +			>;
-> +		};
+> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+> index 4416ccc..051f764 100644
+> --- a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+> @@ -32,7 +32,7 @@ cpus {
+>  			396000  950000
+>  			198000  850000
+>  		>;
+> -		transition-latency = <61036>; /* two CLK32 periods */
+> +		clock-latency = <61036>; /* two CLK32 periods */
 >  	};
 >  
->  	ocp {
->  		uart1: serial@44e09000 {
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&uart0_pins>;
-> +
-
-Please change this to be uart0 so it all matches.
-
->  			status = "okay";
->  		};
->  
-> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-> index 79b3cc8..89e1edd 100644
-> --- a/arch/arm/boot/dts/am335x-evm.dts
-> +++ b/arch/arm/boot/dts/am335x-evm.dts
-> @@ -58,10 +58,20 @@
->  				0x15c 0x32	/* spi0_cs0.i2c1_scl PULLUP | INPUTENABLE | MODE2 */
->  			>;
->  		};
-> +
-> +		uart0_pins: pinmux_uart0_pins {
-> +			pinctrl-single,pins = <
-> +				0x170 0x30	/* uart0_rxd.uart0_rxd PULLUP | INPUTENABLE | MODE0 */
-> +				0x174 0x00	/* uart0_txd.uart0_txd PULLDOWN | MODE0 */
-> +			>;
-> +		};
->  	};
->  
->  	ocp {
->  		uart1: serial@44e09000 {
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&uart0_pins>;
-> +
-
-Also here.
-
->  			status = "okay";
->  		};
->  
-> diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-> index 21d5a08..0e7f1b8 100644
-> --- a/arch/arm/boot/dts/am335x-evmsk.dts
-> +++ b/arch/arm/boot/dts/am335x-evmsk.dts
-> @@ -58,10 +58,20 @@
->  				0x18c 0x30	/* i2c0_scl.i2c0_scl PULLUP | INPUTENABLE | MODE0 */
->  			>;
->  		};
-> +
-> +		uart0_pins: pinmux_uart0_pins {
-> +			pinctrl-single,pins = <
-> +				0x170 0x30	/* uart0_rxd.uart0_rxd PULLUP | INPUTENABLE | MODE0 */
-> +				0x174 0x00	/* uart0_txd.uart0_txd PULLDOWN | MODE0 */
-> +			>;
-> +		};
->  	};
->  
->  	ocp {
->  		uart1: serial@44e09000 {
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&uart0_pins>;
-> +
->  			status = "okay";
->  		};
-
-And here.
-
--Matt
+>  	cpu@1 {
+> -- 
+> 1.8.1.5
+> 
