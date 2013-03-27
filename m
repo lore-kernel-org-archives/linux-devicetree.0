@@ -1,40 +1,103 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [RFC PATCH v2] of/pci: Provide support for parsing PCI DT
- ranges property
-Date: Wed, 27 Mar 2013 13:55:37 +0100
-Message-ID: <20130327135537.52da5818@skate>
-References: <20130221154709.GA26660@arm.com>
-	<20130320210521.65261e77@skate>
-	<CACRpkdZ_iuz96JWjHcr+6ugRY29MPA-wiGWtQQJqk30iTQE--Q@mail.gmail.com>
+From: Vaibhav Hiremath <hvaibhav@ti.com>
+Subject: [PATCH 5/5] ARM: dts: AM33XX: Add default pinctrl binding for UART0 device
+Date: Wed, 27 Mar 2013 18:29:16 +0530
+Message-ID: <1364389156-8273-6-git-send-email-hvaibhav@ti.com>
+References: <1364389156-8273-1-git-send-email-hvaibhav@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZ_iuz96JWjHcr+6ugRY29MPA-wiGWtQQJqk30iTQE--Q@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andrew Murray <Andrew.Murray@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Thierry Reding <thierry.reding@avionic-design.de>, linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1364389156-8273-1-git-send-email-hvaibhav@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, b-cousson@ti.com, mporter@ti.com, devicetree-discuss@lists.ozlabs.org, Vaibhav Hiremath <hvaibhav@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Linus Walleij,
+Add pin control binding for UART0 device nodes in all
+board specific DT files.
 
-On Wed, 27 Mar 2013 13:50:09 +0100, Linus Walleij wrote:
+Signed-off-by: Vaibhav Hiremath <hvaibhav@ti.com>
+Cc: Benoit Cousson <b-cousson@ti.com>
+---
+ arch/arm/boot/dts/am335x-bone.dts  |   10 ++++++++++
+ arch/arm/boot/dts/am335x-evm.dts   |   10 ++++++++++
+ arch/arm/boot/dts/am335x-evmsk.dts |   10 ++++++++++
+ 3 files changed, 30 insertions(+), 0 deletions(-)
 
-> > Would it be possible to get this patch merged for 3.10, or get some
-> > review comments that would allow us to rework it in time for 3.10 ?
-> 
-> Thomas can you supply a Reviewed-by/Tested-by tag?
-> That certainly helps...
-
-Yes, I'm planning on testing RFC v3 from Andrew right now, and send a
-new version of the Marvell PCIe patch set that includes it. If all goes
-well, should happen this afternoon.
-
-Thanks,
-
-Thomas
+diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
+index 1d623e4..3c4c66f 100644
+--- a/arch/arm/boot/dts/am335x-bone.dts
++++ b/arch/arm/boot/dts/am335x-bone.dts
+@@ -43,10 +43,20 @@
+ 				0x18c 0x30	/* i2c0_scl.i2c0_scl PULLUP | INPUTENABLE | MODE0 */
+ 			>;
+ 		};
++
++		uart0_pins: pinmux_uart0_pins {
++			pinctrl-single,pins = <
++				0x170 0x30	/* uart0_rxd.uart0_rxd PULLUP | INPUTENABLE | MODE0 */
++				0x174 0x00	/* uart0_txd.uart0_txd PULLDOWN | MODE0 */
++			>;
++		};
+ 	};
+ 
+ 	ocp {
+ 		uart1: serial@44e09000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart0_pins>;
++
+ 			status = "okay";
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+index 79b3cc8..89e1edd 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -58,10 +58,20 @@
+ 				0x15c 0x32	/* spi0_cs0.i2c1_scl PULLUP | INPUTENABLE | MODE2 */
+ 			>;
+ 		};
++
++		uart0_pins: pinmux_uart0_pins {
++			pinctrl-single,pins = <
++				0x170 0x30	/* uart0_rxd.uart0_rxd PULLUP | INPUTENABLE | MODE0 */
++				0x174 0x00	/* uart0_txd.uart0_txd PULLDOWN | MODE0 */
++			>;
++		};
+ 	};
+ 
+ 	ocp {
+ 		uart1: serial@44e09000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart0_pins>;
++
+ 			status = "okay";
+ 		};
+ 
+diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
+index 21d5a08..0e7f1b8 100644
+--- a/arch/arm/boot/dts/am335x-evmsk.dts
++++ b/arch/arm/boot/dts/am335x-evmsk.dts
+@@ -58,10 +58,20 @@
+ 				0x18c 0x30	/* i2c0_scl.i2c0_scl PULLUP | INPUTENABLE | MODE0 */
+ 			>;
+ 		};
++
++		uart0_pins: pinmux_uart0_pins {
++			pinctrl-single,pins = <
++				0x170 0x30	/* uart0_rxd.uart0_rxd PULLUP | INPUTENABLE | MODE0 */
++				0x174 0x00	/* uart0_txd.uart0_txd PULLDOWN | MODE0 */
++			>;
++		};
+ 	};
+ 
+ 	ocp {
+ 		uart1: serial@44e09000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart0_pins>;
++
+ 			status = "okay";
+ 		};
+ 
 -- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+1.7.0.4
+
