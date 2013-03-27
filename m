@@ -1,47 +1,65 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCHv7 17/17] arm: mvebu: update defconfig with PCI and USB support
-Date: Wed, 27 Mar 2013 15:40:34 +0100
-Message-ID: <1364395234-11195-18-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1364395234-11195-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1364395234-11195-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, Thierry Reding <thierry.reding@avionic-design.de>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH v2 5/5] ARM: imx: Remove cpufreq driver
+Date: Wed, 27 Mar 2013 16:14:54 +0100
+Message-ID: <20130327151454.GC6347@pengutronix.de>
+References: <1364389294-1997-1-git-send-email-mpa@pengutronix.de>
+ <1364389294-1997-6-git-send-email-mpa@pengutronix.de>
+ <20130327140529.GG2674@S2101-09.ap.freescale.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20130327140529.GG2674@S2101-09.ap.freescale.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Now that we have the necessary drivers and Device Tree informations to
-support PCIe on Armada 370 and Armada XP, enable the CONFIG_PCI
-option.
+On Wed, Mar 27, 2013 at 10:05:31PM +0800, Shawn Guo wrote:
+> On Wed, Mar 27, 2013 at 02:01:34PM +0100, Markus Pargmann wrote:
+> > The old cpufreq driver is not necessary anymore with DT and
+> > cpufreq-cpu0.
+> > 
+> > Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> > ---
+> >  arch/arm/Kconfig                      |   7 --
+> >  arch/arm/mach-imx/Makefile            |   1 -
+> >  arch/arm/mach-imx/cpu_op-mx51.c       |  31 -----
+> >  arch/arm/mach-imx/cpu_op-mx51.h       |  14 ---
+> >  arch/arm/mach-imx/cpufreq.c           | 206 ----------------------------------
+> >  arch/arm/mach-imx/mach-cpuimx51sd.c   |   5 -
+> >  arch/arm/mach-imx/mach-mx51_babbage.c |   4 -
+> >  7 files changed, 268 deletions(-)
+> >  delete mode 100644 arch/arm/mach-imx/cpu_op-mx51.c
+> 
+> Target cpu_op-mx51.o should be removed from Makefile then.
+> 
+> I fixed it up and applied the series expect the first patch.  I expect
+> you will send follow-up patches to add imx51 operating-points into
+> device tree though.
 
-Also, since the Armada 370 Mirabox has a built-in USB XHCI controller
-connected on the PCIe bus, enable the corresponding options as well.
+Thanks.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
----
- arch/arm/configs/mvebu_defconfig |    3 +++
- 1 file changed, 3 insertions(+)
+I just prepared a patch for mx51 babbage board. cpuimx51sd does not seem
+to have a DTS file yet. In general I think the operating points have to
+be in the board specific DTS files because the frequencies of imx51
+devices are different.
 
-diff --git a/arch/arm/configs/mvebu_defconfig b/arch/arm/configs/mvebu_defconfig
-index 2ec8119..071a5b1 100644
---- a/arch/arm/configs/mvebu_defconfig
-+++ b/arch/arm/configs/mvebu_defconfig
-@@ -13,6 +13,8 @@ CONFIG_MACH_ARMADA_370=y
- CONFIG_MACH_ARMADA_XP=y
- # CONFIG_CACHE_L2X0 is not set
- # CONFIG_SWP_EMULATE is not set
-+CONFIG_PCI=y
-+CONFIG_PCI_MVEBU=y
- CONFIG_SMP=y
- CONFIG_AEABI=y
- CONFIG_HIGHMEM=y
-@@ -53,6 +55,7 @@ CONFIG_USB_SUPPORT=y
- CONFIG_USB=y
- CONFIG_USB_EHCI_HCD=y
- CONFIG_USB_EHCI_ROOT_HUB_TT=y
-+CONFIG_USB_XHCI_HCD=y
- CONFIG_MMC=y
- CONFIG_MMC_MVSDIO=y
- CONFIG_NEW_LEDS=y
+Regards,
+
+Markus
+
 -- 
-1.7.9.5
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
