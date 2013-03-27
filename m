@@ -1,45 +1,46 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH -next] ssbi: use module_platform_driver to simplify the code
-Date: Wed, 27 Mar 2013 21:14:16 +0800
-Message-ID: <CAPgLHd8NYrrWnNMbpa+pBAC87_ZYJDkoneHMB7=0m+1FiUQv_Q@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v9 05/11] gpio: palmas: add in GPIO support for palmas charger
+Date: Wed, 27 Mar 2013 14:15:57 +0100
+Message-ID: <CACRpkdbc3U=4T4P-CtbzU1Ds4Fupno__AkZjPRenzdwW0jEOjg@mail.gmail.com>
+References: <1363959373-10671-1-git-send-email-ian@slimlogic.co.uk>
+	<1363959373-10671-6-git-send-email-ian@slimlogic.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: davidb@codeaurora.org, dwalker@fifo99.com, bryanh@codeaurora.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1363959373-10671-6-git-send-email-ian@slimlogic.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ian Lartey <ian@slimlogic.co.uk>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, rob@landley.net, mturquette@linaro.org, cooloney@gmail.com, sfr@canb.auug.org.au, rpurdie@rpsys.net, akpm@linux-foundation.org, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, gg@slimlogic.co.uk, j-keerthy@ti.com, ldewangan@nvidia.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+On Fri, Mar 22, 2013 at 2:36 PM, Ian Lartey <ian@slimlogic.co.uk> wrote:
 
-module_platform_driver() makes the code simpler by eliminating
-boilerplate code.
+> Palmas charger has 16 GPIOs
+> add palmas_gpio_[read|write|update] api to take account
+> second bank of GPIOs
+>
+> Signed-off-by: Ian Lartey <ian@slimlogic.co.uk>
+> Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
+> ---
+>  drivers/gpio/gpio-palmas.c |   77 ++++++++++++++++++++++++++++++++++++--------
+>  include/linux/mfd/palmas.h |   12 ++++++-
+>  2 files changed, 74 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-palmas.c b/drivers/gpio/gpio-palmas.c
+> index e3a4e56..636648c 100644
+> --- a/drivers/gpio/gpio-palmas.c
+> +++ b/drivers/gpio/gpio-palmas.c
+> @@ -1,7 +1,7 @@
+>  /*
+> - * TI Palma series PMIC's GPIO driver.
+> + * TI Palmas series PMIC's GPIO driver.
+>   *
+> - * Copyright (c) 2012, NVIDIA CORPORATION.  All rights reserved.
+> + * Copyright (c) 2012-2012, NVIDIA CORPORATION.  All rights reserved.
 
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
----
- drivers/ssbi/ssbi.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+Do you mean 2012-2013?
 
-diff --git a/drivers/ssbi/ssbi.c b/drivers/ssbi/ssbi.c
-index f32da02..f667204 100644
---- a/drivers/ssbi/ssbi.c
-+++ b/drivers/ssbi/ssbi.c
-@@ -361,17 +361,7 @@ static struct platform_driver ssbi_driver = {
- 	},
- };
- 
--static int __init ssbi_init(void)
--{
--	return platform_driver_register(&ssbi_driver);
--}
--module_init(ssbi_init);
--
--static void __exit ssbi_exit(void)
--{
--	platform_driver_unregister(&ssbi_driver);
--}
--module_exit(ssbi_exit)
-+module_platform_driver(ssbi_driver);
- 
- MODULE_LICENSE("GPL v2");
- MODULE_VERSION("1.0");
+Anyway, Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
