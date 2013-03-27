@@ -1,58 +1,35 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 01/11] staging: drm/imx: Add LDB support
-Date: Wed, 27 Mar 2013 12:58:42 +0100
-Message-ID: <1364385522.5442.14.camel@pizza.hi.pengutronix.de>
-References: <1364307246-9017-1-git-send-email-p.zabel@pengutronix.de>
- <1364307246-9017-2-git-send-email-p.zabel@pengutronix.de>
- <5152DDEB.9020907@parkeon.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v9 RESEND 0/4] Add generic driver for on-chip SRAM
+Date: Wed, 27 Mar 2013 20:00:18 +0800
+Message-ID: <20130327120017.GA2674@S2101-09.ap.freescale.net>
+References: <1363776767-2635-1-git-send-email-p.zabel@pengutronix.de>
+ <1364373214.5442.1.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5152DDEB.9020907-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org
-Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1364373214.5442.1.camel@pizza.hi.pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFydGluLAoKQW0gTWl0dHdvY2gsIGRlbiAyNy4wMy4yMDEzLCAxMjo1NCArMDEwMCBzY2hy
-aWViIE1hcnRpbiBGdXp6ZXk6Cj4gSGkgUGhpbGlwcCwKPiAKPiBPbiAyNi8wMy8xMyAxNToxMywg
-UGhpbGlwcCBaYWJlbCB3cm90ZToKPiAKPiA+ICtzdGF0aWMgdm9pZCBpbXhfbGRiX2VuY29kZXJf
-ZGlzYWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCj4gPiArewo+ID4gKwlzdHJ1Y3Qg
-aW14X2xkYl9jaGFubmVsICppbXhfbGRiX2NoID0gZW5jX3RvX2lteF9sZGJfY2goZW5jb2Rlcik7
-Cj4gPiArCXN0cnVjdCBpbXhfbGRiICpsZGIgPSBpbXhfbGRiX2NoLT5sZGI7Cj4gPiArCj4gPiAr
-CWlmIChncGlvX2lzX3ZhbGlkKGlteF9sZGJfY2gtPmVuYWJsZV9ncGlvKSkKPiA+ICsJCWdwaW9f
-c2V0X3ZhbHVlKGlteF9sZGJfY2gtPmVuYWJsZV9ncGlvLCAwKTsKPiA+Cj4gSSBnZXQgYSBjb21w
-aWxlIGVycm9yIGhlcmU6Cj4gZHJpdmVycy9zdGFnaW5nL2lteC1kcm0vaW14LWxkYi5jOiBJbiBm
-dW5jdGlvbiDigJhpbXhfbGRiX2VuY29kZXJfZGlzYWJsZeKAmToKPiBkcml2ZXJzL3N0YWdpbmcv
-aW14LWRybS9pbXgtbGRiLmM6MjgzOjI6IGVycm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiAK
-PiBmdW5jdGlvbiDigJhncGlvX2lzX3ZhbGlk4oCZIFstV2Vycm9yPWltcGxpY2l0LWZ1bmN0aW9u
-LWRlY2xhcmF0aW9uXQo+IGRyaXZlcnMvc3RhZ2luZy9pbXgtZHJtL2lteC1sZGIuYzoyODM6MzA6
-IGVycm9yOiDigJhzdHJ1Y3QgCj4gaW14X2xkYl9jaGFubmVs4oCZIGhhcyBubyBtZW1iZXIgbmFt
-ZWQg4oCYZW5hYmxlX2dwaW/igJkKPiBkcml2ZXJzL3N0YWdpbmcvaW14LWRybS9pbXgtbGRiLmM6
-Mjg0OjM6IGVycm9yOiBpbXBsaWNpdCBkZWNsYXJhdGlvbiBvZiAKPiBmdW5jdGlvbiDigJhncGlv
-X3NldF92YWx1ZeKAmSBbLVdlcnJvcj1pbXBsaWNpdC1mdW5jdGlvbi1kZWNsYXJhdGlvbl0KPiBk
-cml2ZXJzL3N0YWdpbmcvaW14LWRybS9pbXgtbGRiLmM6Mjg0OjI4OiBlcnJvcjog4oCYc3RydWN0
-IAo+IGlteF9sZGJfY2hhbm5lbOKAmSBoYXMgbm8gbWVtYmVyIG5hbWVkIOKAmGVuYWJsZV9ncGlv
-4oCZCj4gCj4gQWRkaW5nICNpbmNsdWRlIDxsaW51eC9ncGlvLmg+IGZpeGVzIHRoYXQgYnV0IGdp
-dmVzIGFub3RoZXIgZXJyb3I6Cj4gZHJpdmVycy9zdGFnaW5nL2lteC1kcm0vaW14LWxkYi5jOiBJ
-biBmdW5jdGlvbiDigJhpbXhfbGRiX2VuY29kZXJfZGlzYWJsZeKAmToKPiBkcml2ZXJzL3N0YWdp
-bmcvaW14LWRybS9pbXgtbGRiLmM6Mjg0OjMwOiBlcnJvcjog4oCYc3RydWN0IAo+IGlteF9sZGJf
-Y2hhbm5lbOKAmSBoYXMgbm8gbWVtYmVyIG5hbWVkIOKAmGVuYWJsZV9ncGlv4oCZCj4gZHJpdmVy
-cy9zdGFnaW5nL2lteC1kcm0vaW14LWxkYi5jOjI4NToyODogZXJyb3I6IOKAmHN0cnVjdCAKPiBp
-bXhfbGRiX2NoYW5uZWzigJkgaGFzIG5vIG1lbWJlciBuYW1lZCDigJhlbmFibGVfZ3Bpb+KAmQo+
-IAo+IENvbW1lbnRpbmcgb3V0IHRoZSBibG9jayBnaXZlcyBhIHdvcmtpbmcgZHJpdmVyLgoKdGhh
-bmsgeW91IGZvciBwb2ludGluZyB0aGlzIG91dCwgdGhlIEdQSU8gaGFuZGxpbmcgc2hvdWxkbid0
-IGhhdmUgbGVha2VkCmludG8gdGhpcyBwYXRjaCBzZXJpZXMuCgpyZWdhcmRzClBoaWxpcHAKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUt
-ZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcK
-aHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+On Wed, Mar 27, 2013 at 09:33:34AM +0100, Philipp Zabel wrote:
+> Am Mittwoch, den 20.03.2013, 11:52 +0100 schrieb Philipp Zabel:
+> > Hi, last time I posted was a bit close to the merge window, so I'm
+> > reposting now. Greg, Arnd, could you take the first two patches?
+> 
+> Ping,
+> 
+> can I do anything to help move this along?
+
+You haven't indicated how the series should be merged and by whom.  I
+think we should have the first two patches get in through either
+Andrew's tree or Greg's tree, since Andrew is handling genalloc and Greg
+is handling drivers/misc.
+
+Greg, can you please give your ACK on the second patch to have the first
+two go via Andrew's tree?  Otherwise, we can try to ask for Andrew's
+ACK on the first patch to have them go through yours.  Please tell.
+
+Shawn
