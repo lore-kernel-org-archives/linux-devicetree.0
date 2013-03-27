@@ -1,85 +1,98 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3] gpio: mcp23s08: convert driver to DT
-Date: Wed, 27 Mar 2013 16:23:25 +0100
-Message-ID: <CACRpkdZue4QjQ+SS_go8i_LJZm7RJPFQr6sDcNaCp3FhkUrseQ@mail.gmail.com>
-References: <1362414873-17676-1-git-send-email-larsi@wh2.tu-dresden.de>
-	<CACRpkdYYsULLsDQuxoRHp=HXsaOAejwaO-CezdEK4sNprWpDYQ@mail.gmail.com>
-	<201303271235.32346.poeschel@lemonage.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
+Date: Wed, 27 Mar 2013 10:09:57 -0600
+Message-ID: <515319D5.20105@wwwdotorg.org>
+References: <1329321854-24490-1-git-send-email-b-cousson@ti.com> <1329321854-24490-4-git-send-email-b-cousson@ti.com> <4F44FA56.7020000@gmail.com> <4F44FC37.2000701@ti.com> <4F452484.5080503@gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF17BD8BC6C1@HQMAIL01.nvidia.com> <4F47AD08.4030504@ti.com> <CAAwP0s0cB368R2mtbJpTZJreR-5GSRLfxC+8DJLo5nw3_OwBuA@mail.gmail.com> <512D39DA.7020306@ti.com> <512D3AB1.1080202@wwwdotorg.org> <512D3EC2.6050408@ti.com> <20130302200524.D230F3E1571@localhost> <51391F41.5000303@ti.com> <CAAwP0s1CFRO-rf==p5sYs1n0gigMif7wuT8Yv0N_iLUDMrtcOg@mail.gmail.com> <CACRpkdYHj-rEF3Rk_CWnmmMw_Amr7m8SgQ=-2zsDYuLeuu3azw@mail.gmail.com> <514C79E1.4090106@wwwdotorg.org> <514CE0AB.6060207@ti.com> <CACRpkdZmv-rAoKSQYpkHHSMzKJOn5TixVW_P3=m7ZNagBYCUPw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <201303271235.32346.poeschel@lemonage.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lars Poeschel <poeschel@lemonage.de>
-Cc: Lars Poeschel <larsi@wh2.tu-dresden.de>, Mark Brown <broonie@opensource.wolfsonmicro.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, Peter Korsgaard <jacmet@sunsite.dk>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZmv-rAoKSQYpkHHSMzKJOn5TixVW_P3=m7ZNagBYCUPw@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jon Hunter <jon-hunter@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Alexandre Courbot <acourbot@nvidia.com>, Javier Martinez Canillas <martinez.javier@gmail.com>, Stephen Warren <swarren@nvidia.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 27, 2013 at 12:35 PM, Lars Poeschel <poeschel@lemonage.de> wrote:
-> On Friday 22 March 2013 at 09:33:10, Linus Walleij wrote:
+On 03/27/2013 07:52 AM, Linus Walleij wrote:
+> On Fri, Mar 22, 2013 at 11:52 PM, Jon Hunter <jon-hunter@ti.com> wrote:
+>> On 03/22/2013 10:33 AM, Stephen Warren wrote:
+>>> On 03/22/2013 02:10 AM, Linus Walleij wrote:
+>>>> This is just turning everything on it's head. The normal order of things
+>>>> is this sequence for GPIO 14 something like:
+>>>>
+>>>> gpio_request(14);
+>>>> int irq = gpio_to_irq(14);
+>>>> request_any_context_irq(irq);
+>>>
+>>> That doesn't make any sense at all. Drivers don't want to care whether
+>>> the IRQ number they receive is a GPIO-that-can-act-like-an-IRQ or a pure
+>>> dedicated IRQ input.
+>>>
+>>> To fully support the model you proprose, a driver would have to:
+>>>
+>>> if (gpio_is_valid(pdata->gpio)) {
+>>>       gpio_request_one(pdata->gpio, GPIOF_IN, "foo irq");
+>>>       irq = gpio_to_irq(pdata->gpio);
+>>> } else
+>>>       irq = pdata->irq;
+>>> request_irq(...);
+>>>
+>>> which means complex code in each driver, plus requiring some indication
+>>> in platform data and/or device tree re: whether the IRQ is hosted by a
+>>> GPIO or not.
+> 
+> I suspect the above is just referring to the DT or similar usecases
+> (such as ACPI)?
+...
+> What worries me is changing kernel semantics to fit device tree,
+> I think it is better to try to confine this to the drivers/gpio/gpiolib-of.c
+> file.
 
->> I would currently feel a lot better if you did not include this
->> flag. How would you control this the day drivers need to
->> enable/disable pull-up at runtime?
->
-> For me it would also be easier to remove the flag (for DT boot case). I don't
-> need the pullups. I did only include it, because this is how the driver is
-> designed to work and what it did already. What I wanted was to make a good
-> transfer from what the features of the driver are and how it works to be able
-> to use it with device tree. If it now turns out that's bad for some reason, I
-> have no problem to remove this from the patch completely.
-> You're right: Runtime config is not possible this way.
-> What should I do now ? Remove it ?
+No, this has absolutely noting to do with device tree; the example I
+gave above is purely based on platform data.
 
-Remove. The less complicated binding, the better.
+It's simply that if a device emits an IRQ, there's no reason to assume
+that the IRQ is in fact a GPIO. It might be a dedicated IRQ input pin
+and not something that gpiolib (or any other GPIO API) knows about.
 
->> > +- gpio-controller : Marks the device node as a GPIO controller.
->> > +- reg : For an address on its bus
->>
->> On the I2C/SPI bus?
->
-> Yes, both. For I2C it's the I2C address, for SPI it's the chip select to use
-> for this chip.
+One possibility:
 
-OK please write these specifics in the binding doc.
+(Device IRQ output wired into GPIO input on SoC which then generates an
+interrupt)
 
->> Please state here what kind of buses it can be. Explain if multiple
->> buses are supported.
->
-> Ok, I will add a line about it.
++----------------------------+
+| SoC                        |         +--------+
+|     IRQ 5 +------+ GPIO 10 | DEV_IRQ | Device |
+| GIC <---- | GPIO | <-------|---------|-IRQ    |
+|           +------+         |         +--------+
++----------------------------+
 
-Thx.
+Another possibility:
 
->> > +Required device specific properties (only for SPI chips):
->> > +- mcp,spi-present-mask : This is a present flag, that makes only sense
->> > for SPI +        chips - as the name suggests.
->>
->> AFAIK this is not how we disable/enable devices in the device tree.
->>
->> Istead we include a property on the node called "status" and set it
->> to "disabled" if the device is not there.
->
-> This would require multiple instances with the same reg property as up to 8
-> chips can live on the same chip select. I wonder if this is possible ?
+(Device IRQ output wired directly into dedicated IRQ input pin, and that
+pin has no GPIO capabilities)
 
-If there is not one instance/device node per chip things are
-very wrong anyway. Maybe I don't understand fully... each
-device on the system should have a node, you can't have a node
-spanning several devices unless it's a bus node.
++----------------------------+
+| SoC                        |         +--------+
+|      IRQ 5                 | DEV_IRQ | Device |
+| GIC <----------------------|---------|-IRQ    |
+|                            |         +--------+
++----------------------------+
 
-> Grant had the idea with the bitfield. You have the reg property specifying
-> the chip select line. This bitfield is then used to indicate which of the 8
-> possible chips on this same chip select line is really present. Not beeing
-> able to support more than 8 devices is not problem, because it is a hardware
-> limitation, that not more than 8 devices can share the same SPI chip select.
-> This is again how the driver worked so far.
->
->> What about just using a number?
->
-> This would again require multiple instances with the same reg property for
-> SPI. Is this really possible ?
+As such, the driver /must/ receive an "int irq" in platform data. If it
+received an "int gpio", then there would be no way for the driver to
+support boards that routed that interrupt signal to a dedicated IRQ pin
+on the SoC, rather than to a GPIO pin that just happened to have
+interrupt generation capabilities.
 
-If Grant is OK with this then so am I, he surely know this better
-than me. But you nee to trick him to come out and review it.
+And then, given that irq_to_gpio() isn't semantically possible, there's
+no way for the driver to be able to gpio_request() anything, since it
+doesn't, can't, and shouldn't know whether there is in fact any GPIO ID
+that it should request, let alone what that GPIO ID is.
 
-Yours,
-Linus Walleij
+And finally, even if we ignore dedicated IRQ input pins, and assume that
+every IRQ input is really a GPIO, why should the driver be forced to
+call both request_irq() and gpio_request(); that's something that should
+really be dealt with inside the IRQ subsystem or relevant IRQ driver.
+Otherwise, every other driver that uses IRQs has to be burdened with the
+code to do that.
