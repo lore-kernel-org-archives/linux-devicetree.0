@@ -1,68 +1,166 @@
-From: Martin Fuzzey <mfuzzey@parkeon.com>
-Subject: Re: [PATCH 01/11] staging: drm/imx: Add LDB support
-Date: Wed, 27 Mar 2013 12:54:19 +0100
-Message-ID: <5152DDEB.9020907@parkeon.com>
-References: <1364307246-9017-1-git-send-email-p.zabel@pengutronix.de>
- <1364307246-9017-2-git-send-email-p.zabel@pengutronix.de>
-Reply-To: mfuzzey@parkeon.com
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/1] drivers/gpio: Altera soft IP GPIO driver
+Date: Wed, 27 Mar 2013 12:58:32 +0100
+Message-ID: <CACRpkdZY0sZUK_9ZX8rBOExVRPQL=UeoAWT=O1NZX2wTJGQLsA@mail.gmail.com>
+References: <1363066655-17474-1-git-send-email-thloh@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1364307246-9017-2-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/devel>,
- <mailto:devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/devel/>
-List-Post: <mailto:devel@linuxdriverproject.org>
-List-Help: <mailto:devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/devel>,
- <mailto:devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: devel-bounces@linuxdriverproject.org
-Sender: "devel" <devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devel@driverdev.osuosl.org, Fabio Estevam <fabio.estevam@freescale.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de, Sean Cross <xobs@kosagi.com>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1363066655-17474-1-git-send-email-thloh@altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: thloh@altera.com, Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+On Tue, Mar 12, 2013 at 6:37 AM,  <thloh@altera.com> wrote:
 
-On 26/03/13 15:13, Philipp Zabel wrote:
-
-> +static void imx_ldb_encoder_disable(struct drm_encoder *encoder)
-> +{
-> +	struct imx_ldb_channel *imx_ldb_ch =3D enc_to_imx_ldb_ch(encoder);
-> +	struct imx_ldb *ldb =3D imx_ldb_ch->ldb;
-> +
-> +	if (gpio_is_valid(imx_ldb_ch->enable_gpio))
-> +		gpio_set_value(imx_ldb_ch->enable_gpio, 0);
+> From: Tien Hock Loh <thloh@altera.com>
 >
-I get a compile error here:
-drivers/staging/imx-drm/imx-ldb.c: In function =91imx_ldb_encoder_disable=
-=92:
-drivers/staging/imx-drm/imx-ldb.c:283:2: error: implicit declaration of =
+> Adds a new driver for Altera soft GPIO IP. The driver is able to
+> do read/write and allows GPIO to be a interrupt controller.
+>
+> Tested on Altera GHRD on interrupt handling and IO.
+>
+> Signed-off-by: Tien Hock Loh <thloh@altera.com>
+> ---
+>  .../devicetree/bindings/gpio/gpio-altera.txt       |  37 +++
 
-function =91gpio_is_valid=92 [-Werror=3Dimplicit-function-declaration]
-drivers/staging/imx-drm/imx-ldb.c:283:30: error: =91struct =
+Patches containing device tree bindings shall be CC:ed to devicetree-discuss
+(added on CC here, remember at next posting).
 
-imx_ldb_channel=92 has no member named =91enable_gpio=92
-drivers/staging/imx-drm/imx-ldb.c:284:3: error: implicit declaration of =
+(...)
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-altera.txt b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+> new file mode 100644
+> index 0000000..3bdb8b6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+> @@ -0,0 +1,37 @@
+> +Altera GPIO controller bindings
+> +
+> +Required properties:
+> +- compatible:
+> +  - "altr,pio-1.0"
+> +- reg: Physical base address and length of the controller's registers.
+> +- #gpio-cells : Should be two.
+> +  - first cell is the pin number
 
-function =91gpio_set_value=92 [-Werror=3Dimplicit-function-declaration]
-drivers/staging/imx-drm/imx-ldb.c:284:28: error: =91struct =
+What does that mean? The GPIO subsystem is not referring
+to pins, it's about "gpios" which are just a handler or number.
 
-imx_ldb_channel=92 has no member named =91enable_gpio=92
+It can be a local offset into the numberspace representiong
+the GPIO lines at this block, I guess that is what is meant
+here.
 
-Adding #include <linux/gpio.h> fixes that but gives another error:
-drivers/staging/imx-drm/imx-ldb.c: In function =91imx_ldb_encoder_disable=
-=92:
-drivers/staging/imx-drm/imx-ldb.c:284:30: error: =91struct =
+(...)
+> +Altera GPIO specific properties:
+> +- width: Width of the GPIO bank, range from 1-32
+> +- level_trigger: Specifies whether the GPIO interrupt is level trigger.
+> +  This field is required if the Altera GPIO controller used has IRQ enabled.
 
-imx_ldb_channel=92 has no member named =91enable_gpio=92
-drivers/staging/imx-drm/imx-ldb.c:285:28: error: =91struct =
+This is a configuration for the irc_chip portion of the driver
+I guess, isn't the usual custom that you don't set up
+things like this from the device tree, but instead use the
+kernels facilities on request_irq() such as:
 
-imx_ldb_channel=92 has no member named =91enable_gpio=92
+#define IRQF_TRIGGER_NONE       0x00000000
+#define IRQF_TRIGGER_RISING     0x00000001
+#define IRQF_TRIGGER_FALLING    0x00000002
+#define IRQF_TRIGGER_HIGH       0x00000004
+#define IRQF_TRIGGER_LOW        0x00000008
 
-Commenting out the block gives a working driver.
+?
 
-Regards,
+I.e. that this is something you do at runtime and not a static
+config from the device tree?
 
-Martin
+Or shall this be percieved as some kind of default setting?
+
+(...)
+> +++ b/drivers/gpio/gpio-altera.c
+
+> +struct altera_gpio_chip {
+> +       struct of_mm_gpio_chip mmchip;
+> +       struct irq_domain *irq; /* GPIO controller IRQ number */
+> +       spinlock_t gpio_lock;   /* Lock used for synchronization */
+> +       int level_trigger;
+
+I doubt this member of the struct. The irq core shall keep track
+of stuff like this.
+
+> +       int hwirq;
+> +};
+
+(then follows some real nice code using irqdomain in a professional
+way, thanks for doing this!)
+
+> +static int altera_gpio_irq_set_type(struct irq_data *d,
+> +                               unsigned int type)
+> +{
+> +       if (type == IRQ_TYPE_NONE)
+> +               return 0;
+> +       return -EINVAL;
+> +}
+
+So if the chip supports setting edge vs level trigging,
+this is where you implement it, not as device tree
+properties.
+
+> +static void altera_gpio_irq_handler(unsigned int irq, struct irq_desc *desc)
+> +{
+> +       struct altera_gpio_chip *altera_gc = irq_desc_get_handler_data(desc);
+> +       struct irq_chip *chip = irq_desc_get_chip(desc);
+> +       struct of_mm_gpio_chip *mm_gc = &altera_gc->mmchip;
+> +       unsigned long status;
+> +
+> +       int base;
+> +       chip->irq_mask(&desc->irq_data);
+> +
+> +       if (altera_gc->level_trigger)
+> +               status = readl(mm_gc->regs + ALTERA_GPIO_DATA);
+
+So on the level trigged variant you read the ALTERA_GPIO_DATA
+and discard the result? Is it some kind of latch register?
+
+
+> +       else {
+> +               status = readl(mm_gc->regs + ALTERA_GPIO_EDGE_CAP);
+> +               writel(status, mm_gc->regs + ALTERA_GPIO_EDGE_CAP);
+> +       }
+
+So you need to get the affected register depending on the type set
+in the irq descriptor instead.
+
+> +       status &= readl(mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
+> +       for (base = 0; base < mm_gc->gc.ngpio; base++) {
+> +               if ((1 << base) & status) {
+> +                       generic_handle_irq(
+> +                               irq_linear_revmap(altera_gc->irq, base));
+> +               }
+> +       }
+
+When we looked at this for some IRQ controllers we realized we
+had to write the loop like so:
+
+while ((stat = readl_relaxed(vic->base + VIC_IRQ_STATUS))) {
+(...)
+}
+
+Only to avoid missing transient IRQs occuring while we were
+processing another IRQ. (Like, you handle IRQ0, then IRQ4,
+and while you're handling IRQ4, IRQ0 triggers again and
+you miss it.
+
+Make sure this does not apply to you...
+
+> +       if (of_property_read_u32(node, "level_trigger", &reg)) {
+> +               ret = -EINVAL;
+> +               pr_err("%s: level_trigger value not set in device tree\n",
+> +                       node->full_name);
+> +               goto teardown;
+> +       }
+> +       altera_gc->level_trigger = reg;
+
+So I'm suspicious about this.
+
+Yours,
+Linus Walleij
