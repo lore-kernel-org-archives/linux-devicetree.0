@@ -1,55 +1,37 @@
-From: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v6 3/5] mmc: davinci_mmc: add DT support
-Date: Wed, 27 Mar 2013 17:46:12 +0000
-Message-ID: <A73F36158E33644199EB82C5EC81C7BC3EA4A9FC@DBDE01.ent.ti.com>
-References: <1363779852-24083-1-git-send-email-prakash.pm@ti.com>
-	<201303201326.09265.arnd@arndb.de>
-	<A73F36158E33644199EB82C5EC81C7BC3EA4A96A@DBDE01.ent.ti.com>
-	<201303271043.51265.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <201303271043.51265.arnd-r2nGTMty4D4@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "Porter, Matt" <mporter-l0cyMroinI0@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org" <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [RFC PATCHv1 2/5] bus: mvebu: fix mistake in PCIe window target attribute for Kirkwood
+Date: Wed, 27 Mar 2013 19:05:01 +0100
+Message-ID: <1364407504-13524-3-git-send-email-thomas.petazzoni@free-electrons.com>
+References: <1364407504-13524-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1364407504-13524-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>
+Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, Thierry Reding <thierry.reding@avionic-design.de>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 27, 2013 at 16:13:51, Arnd Bergmann wrote:
-> On Wednesday 27 March 2013, Manjunathappa, Prakash wrote:
-> > On Wed, Mar 20, 2013 at 18:56:09, Arnd Bergmann wrote:
-> > > On Wednesday 20 March 2013, Manjunathappa, Prakash wrote:
-> > > > Adds device tree support for davinci_mmc. Also add binding documentation.
-> > > > As of now in non-dma PIO mode and without GPIO card_detect/write_protect
-> > > > option because of dependencies on EDMA and GPIO module DT support.
-> > > 
-> > > Shouldn't the binding at least specify the names for the DMA channels?
-> > > It's fine if the driver works without those, but I think there is no
-> > > strict dependency here: If dma_request_slave_channel does not find
-> > > a channel, the driver can just continue in PIO mode, and as soon
-> > > as the EDMA driver is merged, it will work with DMA.
-> > 
-> > In that case, don't I have to add support for it in driver also using
-> > dma_request_slave_channel_compat? As we do not have edma support yet on
-> > da850, I will not be able to test it.
-> 
-> The code is independent of the binding in this case. If you already know
-> that the hardware supports DMA channels and you will add support in the
-> code later, I would recommend writing up the binding the way it should
-> be used.
-> 
+The target and attributes for the PCIe address decoding windows were
+not correct on Kirkwood for the second PCIe interface.
 
-Ok I will add support for DMA bindings with a note saying "not tested dma capability via DT". 
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+---
+Note: this patch should be merged with the existing mvebu-mbus driver.
+---
+ drivers/bus/mvebu-mbus.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Prakash
+diff --git a/drivers/bus/mvebu-mbus.c b/drivers/bus/mvebu-mbus.c
+index 586d03e..4de2c6b 100644
+--- a/drivers/bus/mvebu-mbus.c
++++ b/drivers/bus/mvebu-mbus.c
+@@ -626,7 +626,7 @@ static const struct mvebu_mbus_soc_data armada_xp_mbus_data = {
+ 
+ static const struct mvebu_mbus_mapping kirkwood_map[] = {
+ 	MAPDEF("pcie0.0", 4, 0xe0, MAPDEF_PCIMASK),
+-	MAPDEF("pcie1.0", 8, 0xe0, MAPDEF_PCIMASK),
++	MAPDEF("pcie1.0", 4, 0xd0, MAPDEF_PCIMASK),
+ 	MAPDEF("sram",    3, 0x01, MAPDEF_NOMASK),
+ 	MAPDEF("nand",    1, 0x2f, MAPDEF_NOMASK),
+ 	{},
+-- 
+1.7.9.5
