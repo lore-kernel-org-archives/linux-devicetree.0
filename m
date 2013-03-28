@@ -1,16 +1,16 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 06/11] ARM i.MX: Add imx_clk_divider_flags and
- imx_clk_mux_flags
-Date: Thu, 28 Mar 2013 15:39:48 +0800
-Message-ID: <20130328073945.GA2756@S2101-09.ap.freescale.net>
+Subject: Re: [PATCH v2 07/11] ARM i.MX53: fix ldb di divider and selector
+ clocks
+Date: Thu, 28 Mar 2013 15:40:14 +0800
+Message-ID: <20130328074012.GB2756@S2101-09.ap.freescale.net>
 References: <1364405445-5271-1-git-send-email-p.zabel@pengutronix.de>
- <1364405445-5271-7-git-send-email-p.zabel@pengutronix.de>
+ <1364405445-5271-8-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1364405445-5271-7-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1364405445-5271-8-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -25,10 +25,9 @@ To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 27, 2013 at 06:30:40PM +0100, Philipp Zabel wrote:
-> The default is for dividers to set CLK_SET_PARENT_RATE and for muxes to
-> not set that flag. In the LDB clock tree, we need the opposite, so add
-> functions to create divider and mux clocks with configurable flags.
+On Wed, Mar 27, 2013 at 06:30:41PM +0100, Philipp Zabel wrote:
+> Use imx_clk_mux_flags and imx_clk_divider_flags to set the appropriate
+> flags for the LDB display interface divider and selector clocks.
 > 
 > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
