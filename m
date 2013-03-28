@@ -1,235 +1,213 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH V2 0/8] ARM: OMAP3+: support cpufreq-cpu0 for device tree
- boot
-Date: Thu, 28 Mar 2013 12:03:44 +0100
-Message-ID: <51542390.1020300@ti.com>
-References: <1363715590-5131-1-git-send-email-nm@ti.com>
+From: Tien Hock Loh <thloh@altera.com>
+Subject: Re: [PATCH 1/1] drivers/gpio: Altera soft IP GPIO driver
+Date: Thu, 28 Mar 2013 19:40:47 +0800
+Message-ID: <1364470847.2340.16.camel@thloh-virtual-machine>
+References: <1363066655-17474-1-git-send-email-thloh@altera.com>
+	 <CACRpkdZY0sZUK_9ZX8rBOExVRPQL=UeoAWT=O1NZX2wTJGQLsA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1363715590-5131-1-git-send-email-nm@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: linux-omap@vger.kernel.org, Kevin Hilman <khilman@deeprootsystems.com>, Jon Hunter <jon-hunter@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Shawn Guo <shawn.guo@linaro.org>, Keerthy <j-keerthy@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZY0sZUK_9ZX8rBOExVRPQL=UeoAWT=O1NZX2wTJGQLsA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Nishanth,
+On Wed, 2013-03-27 at 12:58 +0100, Linus Walleij wrote:
+> On Tue, Mar 12, 2013 at 6:37 AM,  <thloh@altera.com> wrote:
+> 
+> > From: Tien Hock Loh <thloh@altera.com>
+> >
+> > Adds a new driver for Altera soft GPIO IP. The driver is able to
+> > do read/write and allows GPIO to be a interrupt controller.
+> >
+> > Tested on Altera GHRD on interrupt handling and IO.
+> >
+> > Signed-off-by: Tien Hock Loh <thloh@altera.com>
+> > ---
+> >  .../devicetree/bindings/gpio/gpio-altera.txt       |  37 +++
+> 
+> Patches containing device tree bindings shall be CC:ed to devicetree-discuss
+> (added on CC here, remember at next posting).
 
-The patches 1 to 6 looks good to me. Beside the pretty long Cc list,
-that should not necessarily contain all the mailing list.
+Noted. Thanks for the info. 
 
-Since you are changing / renaming some DTS files, and to avoid any merg=
-e
-conflict I will apply only these 6 patches.
-DTS and driver changes are in theory orthogonal enough to allow merging
-them separately and in any order.
+> 
+> (...)
+> > diff --git a/Documentation/devicetree/bindings/gpio/gpio-altera.txt b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+> > new file mode 100644
+> > index 0000000..3bdb8b6
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+> > @@ -0,0 +1,37 @@
+> > +Altera GPIO controller bindings
+> > +
+> > +Required properties:
+> > +- compatible:
+> > +  - "altr,pio-1.0"
+> > +- reg: Physical base address and length of the controller's registers.
+> > +- #gpio-cells : Should be two.
+> > +  - first cell is the pin number
+> 
+> What does that mean? The GPIO subsystem is not referring
+> to pins, it's about "gpios" which are just a handler or number.
+> 
+> It can be a local offset into the numberspace representiong
+> the GPIO lines at this block, I guess that is what is meant
+> here.
 
-I'll update my branch with these patches ASAP.
+Yes that's what I was trying to describe. I'll fix this in the next
+patch.
 
-Regards,
-Benoit
+> 
+> (...)
+> > +Altera GPIO specific properties:
+> > +- width: Width of the GPIO bank, range from 1-32
+> > +- level_trigger: Specifies whether the GPIO interrupt is level trigger.
+> > +  This field is required if the Altera GPIO controller used has IRQ enabled.
+> 
+> This is a configuration for the irc_chip portion of the driver
+> I guess, isn't the usual custom that you don't set up
+> things like this from the device tree, but instead use the
+> kernels facilities on request_irq() such as:
+> 
+> #define IRQF_TRIGGER_NONE       0x00000000
+> #define IRQF_TRIGGER_RISING     0x00000001
+> #define IRQF_TRIGGER_FALLING    0x00000002
+> #define IRQF_TRIGGER_HIGH       0x00000004
+> #define IRQF_TRIGGER_LOW        0x00000008
+> 
+> ?
+> 
+> I.e. that this is something you do at runtime and not a static
+> config from the device tree?
+> 
+> Or shall this be percieved as some kind of default setting?
+
+The Altera GPIO IP cannot be software configurable. It is determined by
+the tool that generates the hardware, and thus I've put this as device
+tree parameter. If I understand correctly, if we implement using
+irq_set_type, it should be software configurable.
+
+Technically it can still be implemented in irq_set_type, I'm just not
+sure if it is the correct way, because the trigger type cannot be "set"
+in Altera GPIO. Please let me know if you think this should still be
+implemented as irq_set_type.
+
+> 
+> (...)
+> > +++ b/drivers/gpio/gpio-altera.c
+> 
+> > +struct altera_gpio_chip {
+> > +       struct of_mm_gpio_chip mmchip;
+> > +       struct irq_domain *irq; /* GPIO controller IRQ number */
+> > +       spinlock_t gpio_lock;   /* Lock used for synchronization */
+> > +       int level_trigger;
+> 
+> I doubt this member of the struct. The irq core shall keep track
+> of stuff like this.
+> 
+
+We shouldn't be adding anything to the gpio chip struct and has to
+follow exactly how the irq core defines it?
+
+> > +       int hwirq;
+> > +};
+> 
+> (then follows some real nice code using irqdomain in a professional
+> way, thanks for doing this!)
+> 
+> > +static int altera_gpio_irq_set_type(struct irq_data *d,
+> > +                               unsigned int type)
+> > +{
+> > +       if (type == IRQ_TYPE_NONE)
+> > +               return 0;
+> > +       return -EINVAL;
+> > +}
+> 
+> So if the chip supports setting edge vs level trigging,
+> this is where you implement it, not as device tree
+> properties.
+
+Discussed above
+
+> 
+> > +static void altera_gpio_irq_handler(unsigned int irq, struct irq_desc *desc)
+> > +{
+> > +       struct altera_gpio_chip *altera_gc = irq_desc_get_handler_data(desc);
+> > +       struct irq_chip *chip = irq_desc_get_chip(desc);
+> > +       struct of_mm_gpio_chip *mm_gc = &altera_gc->mmchip;
+> > +       unsigned long status;
+> > +
+> > +       int base;
+> > +       chip->irq_mask(&desc->irq_data);
+> > +
+> > +       if (altera_gc->level_trigger)
+> > +               status = readl(mm_gc->regs + ALTERA_GPIO_DATA);
+> 
+> So on the level trigged variant you read the ALTERA_GPIO_DATA
+> and discard the result? Is it some kind of latch register?
+
+No, the status isn't discarded. It will be & with the peripheral's
+interrupt mask to get the interrupts that needs to be handled. 
+
+> 
+> 
+> > +       else {
+> > +               status = readl(mm_gc->regs + ALTERA_GPIO_EDGE_CAP);
+> > +               writel(status, mm_gc->regs + ALTERA_GPIO_EDGE_CAP);
+> > +       }
+> 
+> So you need to get the affected register depending on the type set
+> in the irq descriptor instead.
+
+Yes you are correct. 
+
+> 
+> > +       status &= readl(mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
+> > +       for (base = 0; base < mm_gc->gc.ngpio; base++) {
+> > +               if ((1 << base) & status) {
+> > +                       generic_handle_irq(
+> > +                               irq_linear_revmap(altera_gc->irq, base));
+> > +               }
+> > +       }
+> 
+> When we looked at this for some IRQ controllers we realized we
+> had to write the loop like so:
+> 
+> while ((stat = readl_relaxed(vic->base + VIC_IRQ_STATUS))) {
+> (...)
+> }
+> 
+> Only to avoid missing transient IRQs occuring while we were
+> processing another IRQ. (Like, you handle IRQ0, then IRQ4,
+> and while you're handling IRQ4, IRQ0 triggers again and
+> you miss it.
+> 
+> Make sure this does not apply to you...
+
+Noted. Thanks for the info. I'll look into this.
+
+> 
+> > +       if (of_property_read_u32(node, "level_trigger", &reg)) {
+> > +               ret = -EINVAL;
+> > +               pr_err("%s: level_trigger value not set in device tree\n",
+> > +                       node->full_name);
+> > +               goto teardown;
+> > +       }
+> > +       altera_gc->level_trigger = reg;
+> 
+> So I'm suspicious about this.
+
+Discussed above. 
+
+> 
+> Yours,
+> Linus Walleij
+> 
+
+Thanks. 
+Tien Hock Loh
 
 
-On 03/19/2013 06:53 PM, Nishanth Menon wrote:
-> Hi,
-> The following version 2 of the series arose from trying to use Beagle=
-Board-XM
-> (OMAP3 variant) for doing CPU DVFS using cpufreq-cpu0. This series en=
-ables the
-> generic cpufreq-cpu0 driver to be used in device tree enabled boot wh=
-ile
-> maintaining support of the legacy omap-cpufreq driver when used in no=
-n device
-> tree enabled boot.
->=20
-> However, in order to enable complete SoC entitlement for OMAP platfor=
-ms, with
-> this series, key features are still pending on device tree adaptation=
- for OMAP:
-> A) clock framework data transition to DT - this should happen soon, s=
-o this
-> series hacks the clock node for the time being as suggested in review=
- of
-> original series[1].
-> B) On processors that use voltage controller, voltage processor (VC/V=
-P hardware
-> loop using I2C_SR path) - we have started work on transitioning them =
-to
-> regulator framework driven by DT.
-> C) Adaptive Body Bias and SmartReflex AVS conversion to DT.
->=20
-> As a result of these pending features:
-> - OMAP4 TWL6030 and TPS62361 which set voltage ONLY over I2C_SR have =
-no
-> regulators associated at the moment - fortunately, we boot at highest=
- voltage,
-> so things still work.
-> - Missing ABB and AVS implies that for few of the SoCs (3630, OMAP4),=
- I have
-> not added those OPPs in DT yet - this also needs alignment with iMX, =
-AM series
-> pending work, where certain OPPs need enabling based on efuse program=
-med
-> bit sequences - since it is an add-on work, it is not addressed here.
->=20
-> Note: At this point in time, we do not have DT entries for clock on O=
-MAP
-> platforms. Common Clock Framework(CCF) could also control regulators[=
-2].
-> Once these conversions are complete, there will be minimal cleanup wo=
-rk to
-> switch to the new data structure changes.
->=20
-> Key benefit of the series is to allow all relevant TI platforms now t=
-o use a
-> single cpufreq driver and equivalent frameworks in addition be part o=
-f the
-> transition to device tree.
-> NOTE: As a result of this series:
-> 1. omap-cpufreq will be used only in non device tree boot scenario. w=
-e should
->    delete this driver once the 100% DT conversion is complete.
-> 2. Generic cpufreq-cpu0 will be used only in device tree boot scenari=
-o.
-> boot systems.
->=20
-> Key changes in version 2:
-> 	- series now rebased on Device tree patches queued for OMAP 3.10
-> 	- cpufreq-cpu0 and omap_cpufreq will co-exist and used depending on
-> 	  usage of device tree.
-> 	- minor wording, cleanups for the same.
-> 	- omap3.dtsi and omap4.dtsi now become common dtsi which is used by
-> 	  omap34xx.dtsi, omap36xx.dtsi, omap443x.dtsi, omap4460.dtsi as need=
-ed.
->=20
-> version 1 of the series:
-> 	http://marc.info/?t=3D136329485400005&r=3D1&w=3D2
-> 	available at:
-> 	https://github.com/nmenon/linux-2.6-playground/commits/push/cpufreq-=
-cpu0-omap-all-v1
->=20
-> [1] Original discussion thread which triggered this series:
-> 	http://marc.info/?l=3Dlinux-pm&m=3D136304313700602&w=3D2
-> 	https://patchwork.kernel.org/patch/2251841/
-> 	https://patchwork.kernel.org/patch/2251851/
-> [2] CCF DVFS patches:
-> https://patchwork.kernel.org/patch/2195431/
-> https://patchwork.kernel.org/patch/2195421/
-> https://patchwork.kernel.org/patch/2195451/
-> https://patchwork.kernel.org/patch/2195441/
-> https://patchwork.kernel.org/patch/2195461/
->=20
-> Version 2 is now based on for-3.10/dts branch from Benoit:
-> 	http://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.g=
-it/log/?h=3Dfor_3.10/dts
-> 	44fab7a ARM: dts: omap3-devkit8000: Add NAND DT node
->=20
-> Version 2 is also available at:
-> 	https://github.com/nmenon/linux-2.6-playground/commits/push/cpufreq-=
-cpu0-omap-all-v2
-> 	git link: git://github.com/nmenon/linux-2.6-playground.git
-> 	branch: cpufreq-cpu0-omap-all-v2
->=20
-> Test coverage:
-> 	test script: http://pastebin.com/zrr8ptge
-> Platforms verified:
-> 	beaglebone(rev A6a) - AM33xx compatible - http://pastebin.com/PUx5h6=
-Jy
-> 	beagleboard (rev C1D) - OMAP3430 compatible - http://pastebin.com/Sy=
-cCinFb (DT) http://pastebin.com/qwJHw9Ev (no DT)
-> 	omap3-beagle-xm -OMAP3630 compatible - http://pastebin.com/tVEXeVZC
-> 	Pandaboard -(OMAP4430 ES2.2) verified with omapconf - http://pastebi=
-n.com/cAtytfW0
-> 	Pandaboard-ES -(OMAP4460 ES1.1) verified with omapconf - http://past=
-ebin.com/3EymNTMp
->=20
-> Nishanth Menon (8):
->   ARM: dts: OMAP34xx/35xx: Add CPU OPP table
->   ARM: dts: OMAP36xx: Add CPU OPP table
->   ARM: dts: OMAP3: use twl4030 vdd1 regulator for CPU
->   ARM: dts: OMAP443x: Add CPU OPP table
->   ARM: dts: omap4-panda: move generic sections to panda-common
->   ARM: dts: OMAP4460: Add CPU OPP table
->   ARM: OMAP3+: use cpu0-cpufreq driver in device tree supported boot
->   cpufreq: OMAP: donot allow to be used with device tree
->=20
->  arch/arm/boot/dts/am3517-evm.dts          |    2 +-
->  arch/arm/boot/dts/am3517_mt_ventoux.dts   |    2 +-
->  arch/arm/boot/dts/omap3-beagle-xm.dts     |    6 +
->  arch/arm/boot/dts/omap3-beagle.dts        |    8 +-
->  arch/arm/boot/dts/omap3-devkit8000.dts    |    2 +-
->  arch/arm/boot/dts/omap3-evm.dts           |    8 +-
->  arch/arm/boot/dts/omap3-igep.dtsi         |    2 +-
->  arch/arm/boot/dts/omap3-overo.dtsi        |    2 +-
->  arch/arm/boot/dts/omap3430-sdp.dts        |    2 +-
->  arch/arm/boot/dts/omap34xx.dtsi           |   28 ++++
->  arch/arm/boot/dts/omap36xx.dtsi           |   13 ++
->  arch/arm/boot/dts/omap4-panda-a4.dts      |    5 +-
->  arch/arm/boot/dts/omap4-panda-common.dtsi |  251 +++++++++++++++++++=
-++++++++++
->  arch/arm/boot/dts/omap4-panda-es.dts      |    3 +-
->  arch/arm/boot/dts/omap4-panda.dts         |  247 +------------------=
----------
->  arch/arm/boot/dts/omap4-sdp.dts           |    2 +-
->  arch/arm/boot/dts/omap4-var-som.dts       |    2 +-
->  arch/arm/boot/dts/omap443x.dtsi           |   27 ++++
->  arch/arm/boot/dts/omap4460.dtsi           |   14 ++
->  arch/arm/boot/dts/twl4030.dtsi            |    6 +
->  arch/arm/mach-omap2/board-generic.c       |    5 +
->  arch/arm/mach-omap2/cclock33xx_data.c     |    2 +-
->  arch/arm/mach-omap2/cclock3xxx_data.c     |    3 +-
->  arch/arm/mach-omap2/cclock44xx_data.c     |    3 +-
->  drivers/cpufreq/omap-cpufreq.c            |   14 ++
->  25 files changed, 399 insertions(+), 260 deletions(-)
->  create mode 100644 arch/arm/boot/dts/omap34xx.dtsi
->  create mode 100644 arch/arm/boot/dts/omap4-panda-common.dtsi
->  create mode 100644 arch/arm/boot/dts/omap443x.dtsi
->=20
-> vmlinux size change information (omap2plus_defconfig + CPUFREQ enable=
-d):
-> add/remove: 0/0 grow/shrink: 5/0 up/down: 208/0 (208)
-> function                                     old     new   delta
-> omap_cpu_init                                360     472    +112
-> omap_generic_init                             96     140     +44
-> omap44xx_clks                               5832    5856     +24
-> omap3xxx_clks                               6720    6744     +24
-> omap3xxx_clk_init                           1072    1076      +4
->=20
-> non-zero DTB size deltas(bytes):
-> old	new	delta	 filename
-> 10671	10898	+227	omap3-beagle-xm.dtb
-> 9947	10190	+243	omap3-beagle.dtb
-> 11399	11582	+183	omap3-devkit8000.dtb
-> 9731	9974	+243	omap3-evm.dtb
-> 10958	11141	+183	omap3-igep0020.dtb
-> 10906	11089	+183	omap3-igep0030.dtb
-> 10255	10438	+183	omap3-tobi.dtb
-> 11361	11544	+183	omap3430-sdp.dtb
-> 16270	16361	+91	omap4-panda-a4.dtb
-> 16326	16409	+83	omap4-panda-es.dtb
-> 16270	16361	+91	omap4-panda.dtb
-> 19379	19470	+91	omap4-sdp.dtb
-> 12943	13034	+91	omap4-var-som.dtb
->=20
-> Cc: Kevin Hilman <khilman@deeprootsystems.com>
-> Cc: Jon Hunter <jon-hunter@ti.com>
-> Cc: "Beno=C3=AEt Cousson" <b-cousson@ti.com>
-> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> Cc: Shawn Guo <shawn.guo@linaro.org>
-> Cc: Keerthy <j-keerthy@ti.com>
-> Cc: linux-omap@vger.kernel.org
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: cpufreq@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
->=20
-> Regards,
-> Nishanth Menon
->=20
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
