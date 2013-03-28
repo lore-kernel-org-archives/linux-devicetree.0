@@ -1,38 +1,53 @@
-From: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 10/11] ARM i.MX53: Add LDB device to device tree
-Date: Thu, 28 Mar 2013 09:41:35 +0100
-Message-ID: <5154023F.600@parkeon.com>
-References: <1364405445-5271-1-git-send-email-p.zabel@pengutronix.de>
- <1364405445-5271-11-git-send-email-p.zabel@pengutronix.de>
- <51533DDC.2030401@parkeon.com>
- <20130328073212.GM5429@S2101-09.ap.freescale.net>
-Reply-To: mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v9 RESEND 4/4] ARM: dts: add sram for imx53 and imx6q
+Date: Thu, 28 Mar 2013 10:05:18 +0100
+Message-ID: <1364461518.4018.4.camel@pizza.hi.pengutronix.de>
+References: <1363776767-2635-1-git-send-email-p.zabel@pengutronix.de>
+	 <1363776767-2635-5-git-send-email-p.zabel@pengutronix.de>
+	 <20130328025422.GH5429@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130328073212.GM5429-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130328025422.GH5429@S2101-09.ap.freescale.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 28/03/13 08:32, Shawn Guo wrote:
-> On Wed, Mar 27, 2013 at 07:43:40PM +0100, Martin Fuzzey wrote:
->>
->> Maybe pinctrl entries should also be added?
-> Generally, the pinctrl entries should be added in <board>.dts.
+Am Donnerstag, den 28.03.2013, 10:54 +0800 schrieb Shawn Guo:
+> On Wed, Mar 20, 2013 at 11:52:47AM +0100, Philipp Zabel wrote:
+> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
+> > Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> > ---
+> > Changes since v8:
+> >  - Changed device tree compatible string to "mmio-sram"
+> > ---
+> >  arch/arm/boot/dts/imx53.dtsi |    5 +++++
+> >  arch/arm/boot/dts/imx6q.dtsi |    6 ++++++
+> >  2 files changed, 11 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+> > index edc3f1e..69d0680 100644
+> > --- a/arch/arm/boot/dts/imx53.dtsi
+> > +++ b/arch/arm/boot/dts/imx53.dtsi
+> > @@ -664,5 +664,10 @@
+> >  				status = "disabled";
+> >  			};
+> >  		};
+> > +
+> > +		ocram: ocram@f8000000 {
+> > +			compatible = "fsl,imx-ocram", "mmio-sram";
+> 
+> We should probably just drop "fsl,imx-ocram".
+> 
+> Shawn
 
-Yes sorry I meant the pinctrl groups under the iomuxc node.
+I thought that in the future somebody might want to implement some i.MX
+OCRAM specifics in a different driver, like the L2 cache / OCRAM mode
+switching, the timing settings, or the TrustZone bits that are
+configurable in the IOMUXC GPR registers.
 
-Regards,
-Martin
+regards
+Philipp
