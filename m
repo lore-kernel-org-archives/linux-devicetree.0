@@ -1,39 +1,50 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 01/11] staging: drm/imx: Add LDB support
-Date: Thu, 28 Mar 2013 14:08:08 +0800
-Message-ID: <20130328060806.GI5429@S2101-09.ap.freescale.net>
-References: <1364405445-5271-1-git-send-email-p.zabel@pengutronix.de>
- <1364405445-5271-2-git-send-email-p.zabel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1364405445-5271-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH] bcm2835: Add Broadcom BCM2835 RNG to the device tree
+Date: Thu, 28 Mar 2013 07:12:04 +0100
+Message-ID: <1364451124-5039-1-git-send-email-lkundrak@v3.sk>
+References: <1364135511-26970-1-git-send-email-lkundrak@v3.sk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1364135511-26970-1-git-send-email-lkundrak@v3.sk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Lubomir Rintel <lkundrak@v3.sk>, Stephen Warren <swarren@wwwdotorg.org>, linux-rpi-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 27, 2013 at 06:30:35PM +0100, Philipp Zabel wrote:
-> +config DRM_IMX_LDB
-> +	tristate "Support for LVDS displays"
-> +	help
-> +	  Choose this to enable the internal LVDS Display Bridge (LDB)
-> +	  found on i.MX53 and i.MX6 processors.
-> +	depends on DRM_IMX
-> +
+This adds a device tree binding for random number generator present on Broadcom
+BCM2835 SoC, used in Raspberry Pi and Roku 2 devices.
 
-Shouldn't we select OF_VIDEOMODE here, since of_get_drm_display_mode()
-is called there.
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Tested-by: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>
+Cc: linux-rpi-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org
+---
+Changes for v2:
+    - Split out from the driver changeset
+    - Added documentation
 
-Shawn
+Changes for v3:
+    - Moved documentation away to the driver commit
+
+ arch/arm/boot/dts/bcm2835.dtsi |    5 +++++
+ 1 files changed, 5 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index 7e0481e..dc22336 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -34,6 +34,11 @@
+ 			reg = <0x7e100000 0x28>;
+ 		};
+ 
++		rng {
++			compatible = "brcm,bcm2835-rng";
++			reg = <0x7e104000 0x10>;
++		};
++
+ 		uart@20201000 {
+ 			compatible = "brcm,bcm2835-pl011", "arm,pl011", "arm,primecell";
+ 			reg = <0x7e201000 0x1000>;
+-- 
+1.7.1
