@@ -1,7 +1,7 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v3 04/11] ARM i.MX53: fix ldb di divider and selector clocks
-Date: Thu, 28 Mar 2013 16:23:28 +0100
-Message-ID: <1364484215-13935-5-git-send-email-p.zabel@pengutronix.de>
+Subject: [PATCH v3 11/11] ARM i.MX6q: Add LDB device to device tree
+Date: Thu, 28 Mar 2013 16:23:35 +0100
+Message-ID: <1364484215-13935-12-git-send-email-p.zabel@pengutronix.de>
 References: <1364484215-13935-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,42 +18,79 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/devel>
 Errors-To: devel-bounces@linuxdriverproject.org
 Sender: "devel" <devel-bounces@linuxdriverproject.org>
 To: linux-arm-kernel@lists.infradead.org
-Cc: devel@driverdev.osuosl.org, Fabio Estevam <fabio.estevam@freescale.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de, Martin Fuzzey <mfuzzey@parkeon.com>, Philipp Zabel <p.zabel@pengutronix.de>, Sean Cross <xobs@kosagi.com>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>
+Cc: devel@driverdev.osuosl.org, Fabio Estevam <fabio.estevam@freescale.com>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de, Martin Fuzzey <mfuzzey@parkeon.com>, Philipp Zabel <p.zabel@pengutronix.de>, Sean Cross <xobs@kosagi.com>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Use imx_clk_mux_flags and imx_clk_divider_flags to set the appropriate
-flags for the LDB display interface divider and selector clocks.
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 
+Add ldb device tree node and clock lookups.
+
+Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- arch/arm/mach-imx/clk-imx51-imx53.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Changes since v2:
+ - Removed clocks properties from imx6qdl.dtsi,
+   those are to be set in imx6q.dtsi and imx6dl.
+---
+ arch/arm/boot/dts/imx6q.dtsi   | 17 +++++++++++++++++
+ arch/arm/boot/dts/imx6qdl.dtsi | 26 ++++++++++++++++++++++++++
+ 2 files changed, 43 insertions(+)
 
-diff --git a/arch/arm/mach-imx/clk-imx51-imx53.c b/arch/arm/mach-imx/clk-imx51-imx53.c
-index d22ee6a..ed08aba 100644
---- a/arch/arm/mach-imx/clk-imx51-imx53.c
-+++ b/arch/arm/mach-imx/clk-imx51-imx53.c
-@@ -420,15 +420,15 @@ int __init mx53_clocks_init(unsigned long rate_ckil, unsigned long rate_osc,
- 	clk[pll3_sw] = imx_clk_pllv2("pll3_sw", "osc", MX53_DPLL3_BASE);
- 	clk[pll4_sw] = imx_clk_pllv2("pll4_sw", "osc", MX53_DPLL4_BASE);
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index cba021e..1a30227 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -294,3 +294,20 @@
+ 		};
+ 	};
+ };
++
++&ldb {
++	clocks = <&clks 33>, <&clks 34>,
++		 <&clks 39>, <&clks 40>, <&clks 41>, <&clks 42>,
++		 <&clks 135>, <&clks 136>;
++	clock-names = "di0_pll", "di1_pll",
++		      "di0_sel", "di1_sel", "di2_sel", "di3_sel",
++		      "di0", "di1";
++
++	lvds-channel@0 {
++		crtcs = <&ipu1 0>, <&ipu1 1>, <&ipu2 0>, <&ipu2 1>;
++	};
++
++	lvds-channel@1 {
++		crtcs = <&ipu1 0>, <&ipu1 1>, <&ipu2 0>, <&ipu2 1>;
++	};
++};
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 06ec460..dd5ef96 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -529,6 +529,26 @@
+ 				reg = <0x020e0000 0x38>;
+ 			};
  
--	clk[ldb_di1_sel] = imx_clk_mux("ldb_di1_sel", MXC_CCM_CSCMR2, 9, 1,
--				mx53_ldb_di1_sel, ARRAY_SIZE(mx53_ldb_di1_sel));
- 	clk[ldb_di1_div_3_5] = imx_clk_fixed_factor("ldb_di1_div_3_5", "ldb_di1_sel", 2, 7);
--	clk[ldb_di1_div] = imx_clk_divider("ldb_di1_div", "ldb_di1_div_3_5", MXC_CCM_CSCMR2, 11, 1);
-+	clk[ldb_di1_div] = imx_clk_divider_flags("ldb_di1_div", "ldb_di1_div_3_5", MXC_CCM_CSCMR2, 11, 1, 0);
-+	clk[ldb_di1_sel] = imx_clk_mux_flags("ldb_di1_sel", MXC_CCM_CSCMR2, 9, 1,
-+				mx53_ldb_di1_sel, ARRAY_SIZE(mx53_ldb_di1_sel), CLK_SET_RATE_PARENT);
- 	clk[di_pll4_podf] = imx_clk_divider("di_pll4_podf", "pll4_sw", MXC_CCM_CDCDR, 16, 3);
--	clk[ldb_di0_sel] = imx_clk_mux("ldb_di0_sel", MXC_CCM_CSCMR2, 8, 1,
--				mx53_ldb_di0_sel, ARRAY_SIZE(mx53_ldb_di0_sel));
- 	clk[ldb_di0_div_3_5] = imx_clk_fixed_factor("ldb_di0_div_3_5", "ldb_di0_sel", 2, 7);
--	clk[ldb_di0_div] = imx_clk_divider("ldb_di0_div", "ldb_di0_div_3_5", MXC_CCM_CSCMR2, 10, 1);
-+	clk[ldb_di0_div] = imx_clk_divider_flags("ldb_di0_div", "ldb_di0_div_3_5", MXC_CCM_CSCMR2, 10, 1, 0);
-+	clk[ldb_di0_sel] = imx_clk_mux_flags("ldb_di0_sel", MXC_CCM_CSCMR2, 8, 1,
-+				mx53_ldb_di0_sel, ARRAY_SIZE(mx53_ldb_di0_sel), CLK_SET_RATE_PARENT);
- 	clk[ldb_di0_gate] = imx_clk_gate2("ldb_di0_gate", "ldb_di0_div", MXC_CCM_CCGR6, 28);
- 	clk[ldb_di1_gate] = imx_clk_gate2("ldb_di1_gate", "ldb_di1_div", MXC_CCM_CCGR6, 30);
- 	clk[ipu_di0_sel] = imx_clk_mux("ipu_di0_sel", MXC_CCM_CSCMR2, 26, 3,
++			ldb: ldb@020e0008 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "fsl,imx6q-ldb", "fsl,imx53-ldb";
++				gpr = <&gpr>;
++				status = "disabled";
++
++				lvds-channel@0 {
++					reg = <0>;
++					crtcs = <&ipu1 0>;
++					status = "disabled";
++				};
++
++				lvds-channel@1 {
++					reg = <1>;
++					crtcs = <&ipu1 1>;
++					status = "disabled";
++				};
++			};
++
+ 			dcic1: dcic@020e4000 {
+ 				reg = <0x020e4000 0x4000>;
+ 				interrupts = <0 124 0x04>;
 -- 
 1.8.2.rc2
