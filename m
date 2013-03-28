@@ -1,33 +1,37 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V2 0/8] ARM: OMAP3+: support cpufreq-cpu0 for device tree boot
-Date: Thu, 28 Mar 2013 08:43:18 -0500
-Message-ID: <CAGo_u6rn=GHVfJiz_7gkse2e-e3BZicEqJBQWomftpi-nCvfng@mail.gmail.com>
-References: <1363715590-5131-1-git-send-email-nm@ti.com>
-	<51542390.1020300@ti.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v9 RESEND 4/4] ARM: dts: add sram for imx53 and imx6q
+Date: Thu, 28 Mar 2013 22:22:08 +0800
+Message-ID: <20130328142106.GA699@S2101-09.ap.freescale.net>
+References: <1363776767-2635-1-git-send-email-p.zabel@pengutronix.de>
+ <1363776767-2635-5-git-send-email-p.zabel@pengutronix.de>
+ <20130328025422.GH5429@S2101-09.ap.freescale.net>
+ <1364461518.4018.4.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <51542390.1020300@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>, linux-pm@vger.kernel.org, Kevin Hilman <khilman@deeprootsystems.com>, Keerthy <j-keerthy@ti.com>, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Jon Hunter <jon-hunter@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1364461518.4018.4.camel@pizza.hi.pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
+On Thu, Mar 28, 2013 at 10:05:18AM +0100, Philipp Zabel wrote:
+> > > +
+> > > +		ocram: ocram@f8000000 {
+> > > +			compatible = "fsl,imx-ocram", "mmio-sram";
+> > 
+> > We should probably just drop "fsl,imx-ocram".
+> > 
+> > Shawn
+> 
+> I thought that in the future somebody might want to implement some i.MX
+> OCRAM specifics in a different driver, like the L2 cache / OCRAM mode
+> switching, the timing settings, or the TrustZone bits that are
+> configurable in the IOMUXC GPR registers.
 
-On Thu, Mar 28, 2013 at 6:03 AM, Benoit Cousson <b-cousson@ti.com> wrote:
-> The patches 1 to 6 looks good to me. Beside the pretty long Cc list,
-> that should not necessarily contain all the mailing list.
-Arrgh.. my bad. I will keep it in mind for the future.
+We can add i.MX OCRAM specific compatible when we see that real need.
+Also, generally we should use a specific chip/osc name rather than "imx"
+for compatible to specify the particular hardware version.
 
->
-> Since you are changing / renaming some DTS files, and to avoid any merge
-> conflict I will apply only these 6 patches.
-> DTS and driver changes are in theory orthogonal enough to allow merging
-> them separately and in any order.
->
-> I'll update my branch with these patches ASAP.
-Thanks. I will post a v3 of remaining patches later today.
-
-Regards,
-Nishanth Menon
+Shawn
