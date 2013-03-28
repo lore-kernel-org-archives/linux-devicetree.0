@@ -1,12 +1,16 @@
-From: Michal Bachraty <michal.bachraty-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>
-Subject: drm/tilcdc: LCD panels clocks initialization and earlier backlight
- initialization
-Date: Thu, 28 Mar 2013 18:32:07 +0100
-Message-ID: <1552838.0ugGbIv7sQ@ganymedes>
+From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V7 1/2] ARM: bcm281xx: Add timer driver (driver portion)
+Date: Thu, 28 Mar 2013 10:57:33 -0700
+Message-ID: <5154848D.7010400@linaro.org>
+References: <1363210048-3334-1-git-send-email-csd@broadcom.com>
+ <51410BF4.4040400@linaro.org> <alpine.LFD.2.02.1303140951580.22263@ionos>
+ <201303141603.02401.arnd@arndb.de>
+ <CAGFynZ-8hQLLYuny6V6=9c+dqtAHs51BcH_wPb=k7WdY9FXS3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAGFynZ-8hQLLYuny6V6=9c+dqtAHs51BcH_wPb=k7WdY9FXS3Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -17,155 +21,95 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org
+To: Christian Daudt <csd_b-jCriFORwCPHYtjvyW6yDsg@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 03/28/2013 09:03 AM, Christian Daudt wrote:
+> On Thu, Mar 14, 2013 at 9:03 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> On Thursday 14 March 2013, Thomas Gleixner wrote:
+>>>> But if its arch specific for hardware I don't have, I'd really prefer the arch
+>>>> maintainer be the upstream path.
+>>>>
+>>>> Thomas: Am I being too obstinate here?  If not, should we drop "F:
+>>>> drivers/clocksource" from the MAINTAINERS entry?
+>> The idea of moving drivers out of arch/* into drivers/* is definitely to
+>> have someone who understands the subsystem act as the gatekeeper. There
+>> should be very little architecture specific knowledge in those drivers,
+>> and I think it's more important to ensure that they are following a
+>> sensible understanding of how timekeeping is done than that they
+>> are following specific architecture maintainer's preferences.
 
-I'm trying to use tilcdc driver for KWH050TG08 LCD panel connected to AM335x 
-processor (3.9 rc1 kernel). I have prepared DT bindings for that (listed 
-bellow). I see fb0 device but I have no clocks going from cpu to LCD.  My 
-clocks for LCD seems not properly to be set ...
+Sorry for the slow reply here.
 
-virt_25000000_ck               1           1            25000000  
-    sys_clkin_ck                8           19           25000000  
-       dpll_disp_ck             0           1            25000000  
-          dpll_disp_m2_ck       0           1            25000000  
-             lcd_gclk           0           1            25000000   
+Arnd: So I think I better understand the crux of the debate:
 
-and tilcdc_crtc is not called. I also set lcd_gclk to 300MHz, but I got same 
-result. The question is there any way how to properly set clocks for LCD?
+I'm unfamiliar with the hardware specifics, so I'm pushing the 
+gatekeeping to the SoC maintainers, where as the SoC maintainer (dealing 
+with tons of different SoC's), you're also unfamiliar with the hardware 
+specifics, and would like to push the gatekeeping of the subsystem 
+specific functionality to those maintainers.
 
-There is also one issue with backlight panel driver initialization in tilcdc 
-driver. This problem seems to depend on DT and I2c driver deferried 
-initialization and then also tps65217-bl driver.  Therefore tilcdc is 
-initialized earlier than backlight driver. The question is: is there any way 
-to switch order for loading drivers and how can be that done?
-
-My short dmesg listing is as follows:
-...
-[    3.330046] pinctrl-single 44e10800.pinmux: request pin 41 (44e108a4) for 
-lcd_panel.15
-[    3.338390] pinctrl-single 44e10800.pinmux: request pin 40 (44e108a0) for 
-lcd_panel.15
-[    3.346707] pinctrl-single 44e10800.pinmux: enabling pinmux_lcd_pins 
-function6
-[    3.354387] panel lcd_panel.15: obtain a copy of previously claimed pinctrl
-[    3.368248] [drm] Supports vblank timestamp caching Rev 1 (10.10.2010).
-[    3.375202] [drm] No driver support for vblank timestamp query.
-[    3.386253] tilcdc 4830e000.fb: fb0:  frame buffer device
-[    3.392015] tilcdc 4830e000.fb: registered panic notifier
-[    3.397781] [drm] Initialized tilcdc 1.0.0 20121205 on minor 0
-[    3.405347] pinctrl core: add 1 pinmux maps
-[    3.409879] pinctrl-single 44e10800.pinmux: found group selector 7 for 
-pinmux_i2c1_pins
-[    3.418347] pinctrl-single 44e10800.pinmux: request pin 98 (44e10988) for 
-44e0b000.i2c
-[    3.426662] pinctrl-single 44e10800.pinmux: request pin 99 (44e1098c) for 
-44e0b000.i2c
-[    3.435014] pinctrl-single 44e10800.pinmux: enabling pinmux_i2c1_pins 
-function7
-[    3.442900] omap_i2c 44e0b000.i2c: obtain a copy of previously claimed 
-pinctrl
-[    3.453107] omap_i2c 44e0b000.i2c: bus 1 rev0.11 at 400 kHz
-[    3.462980] tps65217-pmic tps65217-pmic: no of_node; not parsing pinctrl DT
-[    3.473866] DCDC1: 925 <--> 1800 mV at 1800 mV 
-[    3.480899] vdd_mpu: 925 <--> 1325 mV at 1100 mV 
-[    3.487935] vdd_core: 925 <--> 1150 mV at 1100 mV 
-[    3.494958] LDO1: 1000 <--> 3300 mV at 1800 mV 
-[    3.501814] LDO2: 900 <--> 3300 mV at 3300 mV 
-[    3.508447] LDO3: 1800 <--> 3300 mV at 3300 mV 
-[    3.515238] LDO4: 1800 <--> 3300 mV at 3300 mV 
-[    3.521270] tps65217-bl tps65217-bl: no of_node; not parsing pinctrl DT
-[    3.531348] tps65217 1-0024: TPS65217 ID 0xf version 1.1
+Given that for each SoC there's tons of subsystem specific functionality 
+that you're having to deal with, I can sympathize with your need to 
+offload some of the gatekeeping.
 
 
-With older version of kernel (3.7 ) I uses to use da8xx driver (with some 
-patches for DT support and hack for proper clock setup)  and this  
-configuration works fine. 
+>>> Maybe we should move the ARM specific ones into
+>>> drivers/clocksource/arm/ ?
+>> About half the IP blocks we use on ARM are also used on at least
+>> one ARM64/AVR32/MIPS/PowerPC/x86/SH/Hexagon/c6x/etc part. Grouping them
+>> by which CPU architecture first starts using them or happens to be
+>> more popular at the time does not seem too helpful here.
+>>
+>> Maybe it's better to have a subdirectory for those clock sources
+>> that are used on any SoC, or have subdirectories based on the
+>> company that created that part, as we do for ethernet drivers.
+>> I wouldn't bother with that until there are a couple of dozen
+>> different clock source drivers.
+
+So having had a few days to think about this, I think what usually rubs 
+me the wrong way when I get driver/clocksource submissions, is that for 
+99% of it, they *aren't clocksource drivers*.  Most of the code is 
+*clockevent* driver logic, and then maybe 1-5 lines of actual 
+clocksource code.
+
+Now, I know the reason for this is often the clocksource and clockevent 
+drivers are backed by the same hardware, and since there's no clockevent 
+directory, might as well have it all in a single file somewhere. But 
+mixing the different subsystem drivers together causes some of the 
+maintenance confusion here.
+
+So instead of creating drivers/clocksource/arch/ directories, what I'd 
+propose is we create a drivers/clockevent directory to handle the actual 
+clockevent code. I think this would better delineate the lines of 
+responsibility on the gatekeeper side (that being Thomas or maybe 
+someone else who has an interest in the subtleties of how various 
+hardware timers are be broken-by-design ;), and I'd be much happier 
+taking clocksource code where I felt I had a reasonable chance of 
+noticing bugs.
+
+Thomas: Not that you need more to maintain, but does this seem 
+semi-reasonable? Do we need to find someone else to help here?
+
+That said, at the end of the day, if I take a bad drivers/clocksource 
+patch, what breaks won't be the timekeeping core, it will be an SoC 
+board.  So I'll have to really rely on the original clocksource driver 
+authors to help vet incoming patches. This is where I think having the 
+SoC tree as a central point for SoC patches has and advantage, as its 
+less likely breakage will sneak upstream via a subsystem tree. But 
+understanding the need for review help, I think I'm ok with taking on 
+more clocksource specific review.
 
 
-Best regards,
+> So it seems the (weak...) consensus is that it should go through the
+> clocksource tree. John, can you please apply the patch ?
 
-Michal Bachraty
+Christian: So thanks again for the ping here. So I think I'd prefer 
+Thomas to be the one to apply these sorts (ie: clockevent) of patches in 
+the future, but this time around I'll do it because its been unfair to 
+make you the monkey-in-the-middle as we've tossed the responsibility 
+around (and my stuff goes through Thomas anyway).
 
-device tree:
-am3358_pinmux: pinmux@44e10800 {
-
-		lcdc_pins: pinmux_lcd_pins {
-			pinctrl-single,pins = < /*  pin-name     -> function      (name)*/
-				0xec  0x00		/* lcd_ac_bias_en ->lcd_ac_bias_en (LCD_EN)- out */
-				0xe4  0x00 		/* lcd_hsync -> lcd_hsync (LCD_HSYNC) -out */
-				0xe0  0x00 		/* lcd_vsync -> lcd_vsync (LCD_VSYNC) -out */
-				0xe8  0x00 		/* lcd_pclk -> lcd_pclk (LCD_PCLK) -out */
-				0xdc  0x00 		/* lcd_data15 -> lcd_data15 (LCD_DATA15) -out */
-				0xd8  0x00 		/* lcd_data14 -> lcd_data14 (LCD_DATA14) -out */
-				0xd4  0x00 		/* lcd_data13 -> lcd_data13 (LCD_DATA13) -out */
-				0xd0  0x00 		/* lcd_data12 -> lcd_data12 (LCD_DATA12) -out */
-				0xcc  0x00 		/* lcd_data11 -> lcd_data11 (LCD_DATA11) -out */
-				0xc8  0x00 		/* lcd_data10 -> lcd_data10 (LCD_DATA10) -out */
-				0xc4  0x00 		/* lcd_data9 -> lcd_data9 (LCD_DATA9) -out */
-				0xc0  0x00 		/* lcd_data8 -> lcd_data8 (LCD_DATA8) -out */
-				0xbc  0x00 		/* lcd_data7 -> lcd_data7 (LCD_DATA7) -out */
-				0xb8  0x00 		/* lcd_data6 -> lcd_data6 (LCD_DATA6) -out */
-				0xb4  0x00 		/* lcd_data5 -> lcd_data5 (LCD_DATA5) -out */
-				0xb0  0x00 		/* lcd_data4 -> lcd_data4 (LCD_DATA4) -out */
-				0xac  0x00 		/* lcd_data3 -> lcd_data3 (LCD_DATA3) -out */
-				0xa8  0x00 		/* lcd_data2 -> lcd_data2 (LCD_DATA2) -out */
-				0xa4  0x00 		/* lcd_data1 -> lcd_data1 (LCD_DATA1) -out */
-				0xa0  0x00 		/* lcd_data0 -> lcd_data0 (LCD_DATA0) -out */
-			>;
-		};
-	};
-};
-
-	fb: fb@4830e000 {
-		compatible = "ti,am33xx-tilcdc";
-		reg = <0x4830e000 0x1000>;
-		interrupt-parent = <&intc>;
-		interrupts = <36>;
-		ti,hwmods = "lcdc";
-	};
-
-	lcd_panel {
-		compatible = "ti,tilcdc,panel";
-		pinctrl-names = "default";
-		pinctrl-0 = <&lcdc_pins>;
-		panel-info {
-			ac-bias           = <255>;
-			ac-bias-intrpt    = <0>;
-			dma-burst-sz      = <16>;
-			bpp               = <16>;
-			fdd               = <0x80>;
-			sync-edge         = <0>;
-			sync-ctrl         = <1>;
-			raster-order      = <0>;
-			fifo-th           = <0>;
-		};
-
-		display-timings {
-			native-mode = <&timing_0>;
-			timing_0: 800x480px {
-				/* 800x480 */
-				clock-frequency = <50000000>;
-				hactive = <800>;
-				vactive = <480>;
-				hfront-porch = <87>;
-				hback-porch = <0>;
-				hsync-len = <0>; 
-				vback-porch = <0>;
-				vfront-porch = <32>;
-				vsync-len = <0>; 
-				hsync-active = <0>;
-				vsync-active = <0>;
-			};
-		};
-	};
-
-&tps {
-	backlight {
-		fdim = <100>; /* 100Hz,200Hz,500Hz,1000Hz */
-		isel = <1>; /* 1 = TPS65217_BL_ISET1, 2 = TPS65217_BL_ISET2*/
-	};
-};
+thanks
+-john
