@@ -1,8 +1,7 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v3 08/11] ARM i.MX6q: set the LDB serial clock parent to the
- video PLL
-Date: Thu, 28 Mar 2013 16:23:32 +0100
-Message-ID: <1364484215-13935-9-git-send-email-p.zabel@pengutronix.de>
+Subject: [PATCH v3 10/11] ARM i.MX53: Add LDB device to device tree
+Date: Thu, 28 Mar 2013 16:23:34 +0100
+Message-ID: <1364484215-13935-11-git-send-email-p.zabel@pengutronix.de>
 References: <1364484215-13935-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,33 +21,48 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: devel@driverdev.osuosl.org, Fabio Estevam <fabio.estevam@freescale.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de, Martin Fuzzey <mfuzzey@parkeon.com>, Philipp Zabel <p.zabel@pengutronix.de>, Sean Cross <xobs@kosagi.com>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On i.MX6q revision 1.1 and later, set the video PLL as parent for
-the LDB clock branch. On revision 1.0, the video PLL is useless
-due to missing dividers, so keep the default parent (mmdc_ch1_axi).
-
 Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
-Changes since v2:
- - Renamed pll5_control3 to pll5_video_div
----
- arch/arm/mach-imx/clk-imx6q.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/imx53.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/arch/arm/mach-imx/clk-imx6q.c b/arch/arm/mach-imx/clk-imx6q.c
-index 9c6a08e..398d672 100644
---- a/arch/arm/mach-imx/clk-imx6q.c
-+++ b/arch/arm/mach-imx/clk-imx6q.c
-@@ -477,6 +477,11 @@ int __init mx6q_clocks_init(void)
- 	clk_register_clkdev(clk[cko1], "cko1", NULL);
- 	clk_register_clkdev(clk[arm], NULL, "cpu0");
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index b07bbdcc..30aed40 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -511,6 +511,33 @@
+ 				reg = <0x53fa8000 0xc>;
+ 			};
  
-+	if (imx6q_revision() != IMX_CHIP_REVISION_1_0) {
-+		clk_set_parent(clk[ldb_di0_sel], clk[pll5_video_div]);
-+		clk_set_parent(clk[ldb_di1_sel], clk[pll5_video_div]);
-+	}
++			ldb: ldb@53fa8008 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				compatible = "fsl,imx53-ldb";
++				reg = <0x53fa8008 0x4>;
++				gpr = <&gpr>;
++				clocks = <&clks 122>, <&clks 120>,
++					 <&clks 115>, <&clks 116>,
++					 <&clks 123>, <&clks 85>;
++				clock-names = "di0_pll", "di1_pll",
++					      "di0_sel", "di1_sel",
++					      "di0", "di1";
++				status = "disabled";
 +
- 	/*
- 	 * The gpmi needs 100MHz frequency in the EDO/Sync mode,
- 	 * We can not get the 100MHz from the pll2_pfd0_352m.
++				lvds-channel@0 {
++					reg = <0>;
++					crtcs = <&ipu 0>;
++					status = "disabled";
++				};
++
++				lvds-channel@1 {
++					reg = <1>;
++					crtcs = <&ipu 1>;
++					status = "disabled";
++				};
++			};
++
+ 			pwm1: pwm@53fb4000 {
+ 				#pwm-cells = <2>;
+ 				compatible = "fsl,imx53-pwm", "fsl,imx27-pwm";
 -- 
 1.8.2.rc2
