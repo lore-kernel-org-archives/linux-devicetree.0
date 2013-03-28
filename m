@@ -1,66 +1,65 @@
-From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V7 1/2] ARM: bcm281xx: Add timer driver (driver portion)
-Date: Thu, 28 Mar 2013 11:01:38 -0700
-Message-ID: <51548582.1000507@linaro.org>
-References: <1363210048-3334-1-git-send-email-csd@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1363210048-3334-1-git-send-email-csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH] ARM: tegra: add clocks property to AC'97 sound nodes
+Date: Thu, 28 Mar 2013 12:18:38 -0600
+Message-ID: <1364494718-12098-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/13/2013 02:27 PM, Christian Daudt wrote:
-> This adds support for the Broadcom timer, used in the following SoCs:
-> BCM11130, BCM11140, BCM11351, BCM28145, BCM28155
->
-> Updates from V6:
-> - Split DT portion into a separate patch
->
-> Updates from V5:
-> - Rebase to latest arm-soc/for-next
->
-> Updates from V4:
-> - Switch code to use CLOCKSOURCE_OF_DECLARE
->
-> Updates from V3:
-> - Migrate to 3.9 timer framework updates
->
-> Updates from V2:
-> - prepend static fns + fields with kona_
->
-> Updates from V1:
-> - Rename bcm_timer.c to bcm_kona_timer.c
-> - Pull .h into bcm_kona_timer.c
-> - Make timers static
-> - Clean up comment block
-> - Switched to using clockevents_config_and_register
-> - Added an error to the get_timer loop if it repeats too much
-> - Added to Documentation/devicetree/bindings/arm/bcm/bcm,kona-timer.txt
-> - Added missing readl to timer_disable_and_clear
->
-> Note: bcm,kona-timer was kept as the 'compatible' field to make it
-> specific enough for when there are multiple bcm timers (bcm,timer is
-> too generic).
->
-> Signed-off-by: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Acked-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Applied to my fortglx/3.10/time branch.
+Audio-related clocks need to be represented in the device tree. Update
+bindings to describe which clocks are needed, and DT files to include
+those clocks.
 
-thanks
--john
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+I forgot to add the clocks to AC'97 based sound nodes in my previous
+patch. This patch fixes that.
+---
+ .../devicetree/bindings/sound/nvidia,tegra-audio-wm9712.txt    |    8 ++++++++
+ arch/arm/boot/dts/tegra20-colibri-512.dtsi                     |    3 +++
+ 2 files changed, 11 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm9712.txt b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm9712.txt
+index be35d34..ad589b1 100644
+--- a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm9712.txt
++++ b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-wm9712.txt
+@@ -2,6 +2,11 @@ NVIDIA Tegra audio complex
+ 
+ Required properties:
+ - compatible : "nvidia,tegra-audio-wm9712"
++- clocks : Must contain an entry for each entry in clock-names.
++- clock-names : Must include the following entries:
++  "pll_a" (The Tegra clock of that name),
++  "pll_a_out0" (The Tegra clock of that name),
++  "mclk" (The Tegra cdev1/extern1 clock, which feeds the CODEC's mclk)
+ - nvidia,model : The user-visible name of this sound complex.
+ - nvidia,audio-routing : A list of the connections between audio components.
+   Each entry is a pair of strings, the first being the connection's sink,
+@@ -48,4 +53,7 @@ sound {
+ 		"Mic", "MIC1";
+ 
+ 	nvidia,ac97-controller = <&ac97>;
++
++	clocks = <&tegra_car 112>, <&tegra_car 113>, <&tegra_car 93>;
++	clock-names = "pll_a", "pll_a_out0", "mclk";
+ };
+diff --git a/arch/arm/boot/dts/tegra20-colibri-512.dtsi b/arch/arm/boot/dts/tegra20-colibri-512.dtsi
+index cb73e62..79af149 100644
+--- a/arch/arm/boot/dts/tegra20-colibri-512.dtsi
++++ b/arch/arm/boot/dts/tegra20-colibri-512.dtsi
+@@ -460,6 +460,9 @@
+ 			"Mic", "MIC1";
+ 
+ 		nvidia,ac97-controller = <&ac97>;
++
++		clocks = <&tegra_car 112>, <&tegra_car 113>, <&tegra_car 93>;
++		clock-names = "pll_a", "pll_a_out0", "mclk";
+ 	};
+ 
+ 	regulators {
+-- 
+1.7.10.4
