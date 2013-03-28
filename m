@@ -1,53 +1,78 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v9 RESEND 4/4] ARM: dts: add sram for imx53 and imx6q
-Date: Thu, 28 Mar 2013 10:05:18 +0100
-Message-ID: <1364461518.4018.4.camel@pizza.hi.pengutronix.de>
-References: <1363776767-2635-1-git-send-email-p.zabel@pengutronix.de>
-	 <1363776767-2635-5-git-send-email-p.zabel@pengutronix.de>
-	 <20130328025422.GH5429@S2101-09.ap.freescale.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130328025422.GH5429@S2101-09.ap.freescale.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
+From: Mischa Jonker <Mischa.Jonker@synopsys.com>
+Subject: [PATCH] Input: arc_ps2 - add support for device tree
+Date: Thu, 28 Mar 2013 10:46:26 +0100
+Message-ID: <1364463986-23012-1-git-send-email-mjonker@synopsys.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, arc-linux-dev@synopsys.com, Vineet.Gupta1@synopsys.com
+Cc: Mischa Jonker <Mischa.Jonker@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 28.03.2013, 10:54 +0800 schrieb Shawn Guo:
-> On Wed, Mar 20, 2013 at 11:52:47AM +0100, Philipp Zabel wrote:
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
-> > Acked-by: Grant Likely <grant.likely@secretlab.ca>
-> > ---
-> > Changes since v8:
-> >  - Changed device tree compatible string to "mmio-sram"
-> > ---
-> >  arch/arm/boot/dts/imx53.dtsi |    5 +++++
-> >  arch/arm/boot/dts/imx6q.dtsi |    6 ++++++
-> >  2 files changed, 11 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-> > index edc3f1e..69d0680 100644
-> > --- a/arch/arm/boot/dts/imx53.dtsi
-> > +++ b/arch/arm/boot/dts/imx53.dtsi
-> > @@ -664,5 +664,10 @@
-> >  				status = "disabled";
-> >  			};
-> >  		};
-> > +
-> > +		ocram: ocram@f8000000 {
-> > +			compatible = "fsl,imx-ocram", "mmio-sram";
-> 
-> We should probably just drop "fsl,imx-ocram".
-> 
-> Shawn
+Add match table for device tree binding and dts binding doc.
 
-I thought that in the future somebody might want to implement some i.MX
-OCRAM specifics in a different driver, like the L2 cache / OCRAM mode
-switching, the timing settings, or the TrustZone bits that are
-configurable in the IOMUXC GPR registers.
+Signed-off-by: Mischa Jonker <mjonker@synopsys.com>
+---
+ .../devicetree/bindings/serio/snps-arc_ps2.txt     |   16 ++++++++++++++++
+ drivers/input/serio/arc_ps2.c                      |   14 ++++++++++++--
+ 2 files changed, 28 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/serio/snps-arc_ps2.txt
 
-regards
-Philipp
+diff --git a/Documentation/devicetree/bindings/serio/snps-arc_ps2.txt b/Documentation/devicetree/bindings/serio/snps-arc_ps2.txt
+new file mode 100644
+index 0000000..38c2f21
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serio/snps-arc_ps2.txt
+@@ -0,0 +1,16 @@
++* ARC PS/2 driver: PS/2 block used in some ARC FPGA's & nSIM OSCI model
++
++Required properties:
++- compatible		: "snps,arc_ps2"
++- reg			: offset and length (always 0x14) of registers
++- interrupts		: interrupt
++- interrupt-names	: name of interrupt, must be "arc_ps2_irq"
++
++Example:
++
++serio@c9000400 {
++	compatible = "snps,arc_ps2";
++	reg = <0xc9000400 0x14>;
++	interrupts = <13>;
++	interrupt-names = "arc_ps2_irq";
++}
+diff --git a/drivers/input/serio/arc_ps2.c b/drivers/input/serio/arc_ps2.c
+index c52e3e5..76a685d 100644
+--- a/drivers/input/serio/arc_ps2.c
++++ b/drivers/input/serio/arc_ps2.c
+@@ -14,6 +14,7 @@
+ #include <linux/input.h>
+ #include <linux/serio.h>
+ #include <linux/platform_device.h>
++#include <linux/of.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
+ #include <linux/slab.h>
+@@ -259,10 +260,19 @@ static int arc_ps2_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id arc_ps2_match[] = {
++	{ .compatible = "snps,arc_ps2" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, arc_ps2_match);
++#endif
++
+ static struct platform_driver arc_ps2_driver = {
+ 	.driver	= {
+-		.name	= "arc_ps2",
+-		.owner	= THIS_MODULE,
++		.name		= "arc_ps2",
++		.owner		= THIS_MODULE,
++		.of_match_table	= of_match_ptr(arc_ps2_match),
+ 	},
+ 	.probe	= arc_ps2_probe,
+ 	.remove	= arc_ps2_remove,
+-- 
+1.7.0.4
+
