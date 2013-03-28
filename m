@@ -1,32 +1,58 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V3] spi: tegra114: add spi driver
-Date: Thu, 28 Mar 2013 17:08:45 +0530
-Message-ID: <51542BC5.10701@nvidia.com>
-References: <1361536659-23225-1-git-send-email-ldewangan@nvidia.com> <CAKDJKT5yngpZQC-ZvHSaKeBVHW97wo4QwLSXQ4KsVWCs5J1YKg@mail.gmail.com> <20130302230906.141BE3E336A@localhost>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH] ARM: dts: AM33XX: Corrects typo in interrupt field in
+ SPI node
+Date: Thu, 28 Mar 2013 13:20:37 +0100
+Message-ID: <51543595.40004@ti.com>
+References: <1359697047-1816-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130302230906.141BE3E336A@localhost>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1359697047-1816-1-git-send-email-avinashphilip@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philip Avinash <avinashphilip@ti.com>
+Cc: tony@atomide.com, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com, vaibhav.bedia@ti.com, hvaibhav@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 03 March 2013 04:39 AM, Grant Likely wrote:
-> On Fri, 22 Feb 2013 19:59:11 +0530, Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Fri, Feb 22, 2013 at 6:07 PM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->>> Add SPI driver for NVIDIA's Tegra114 SPI controller. This controller
->>> is different than the older SoCs SPI controller in internal design as
->>> well as register interface.
->>>
->>> This driver supports the:
->>> - non DMA based transfer for smaller transfer i.e. less than FIFO depth.
->>> - APB DMA based transfer for lager transfer i.e. more than FIFO depth.
->> s/lager/larger
-> Applied, thanks. And I fixed up the typo when I did.
->
+Hi Philip,
 
-Grant,
-I still do not see this change in linux-next? Are you going to put this 
-change for K3.10? Wanted to close some of stuff from Tegra side.
+On 02/01/2013 06:37 AM, Philip Avinash wrote:
+> DT field of "interrupts" was mentioned wrongly as "interrupt" in SPI
+> node. This went unnoticed as spi-omap2 driver not making use of
+> interrupt. Fixes the typo.
+> 
+> Signed-off-by: Philip Avinash <avinashphilip@ti.com>
+> ---
+>  arch/arm/boot/dts/am33xx.dtsi |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+> index fbcb90b..cece3ad 100644
+> --- a/arch/arm/boot/dts/am33xx.dtsi
+> +++ b/arch/arm/boot/dts/am33xx.dtsi
+> @@ -309,7 +309,7 @@
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  			reg = <0x48030000 0x400>;
+> -			interrupt = <65>;
+> +			interrupts = <65>;
+>  			ti,spi-num-cs = <2>;
+>  			ti,hwmods = "spi0";
+>  			status = "disabled";
+> @@ -320,7 +320,7 @@
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  			reg = <0x481a0000 0x400>;
+> -			interrupt = <125>;
+> +			interrupts = <125>;
+>  			ti,spi-num-cs = <2>;
+>  			ti,hwmods = "spi1";
+>  			status = "disabled";
+> 
+
+Thanks for the fix. Applied with Peter Acked-by. It will be available in the following branch:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.10/dts
+
+Regards,
+Benoit
