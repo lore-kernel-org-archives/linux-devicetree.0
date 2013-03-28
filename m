@@ -1,66 +1,27 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 03/11] ARM i.MX6q: export imx6q_revision
-Date: Thu, 28 Mar 2013 15:04:43 +0800
-Message-ID: <20130328070442.GK5429@S2101-09.ap.freescale.net>
-References: <1364405445-5271-1-git-send-email-p.zabel@pengutronix.de>
- <1364405445-5271-4-git-send-email-p.zabel@pengutronix.de>
+From: Peter Korsgaard <jacmet@sunsite.dk>
+Subject: Re: [PATCH-V2 5/6] ARM: dts: AM33XX: Fix uart numbering to match hardware/TRM
+Date: Thu, 28 Mar 2013 08:07:44 +0100
+Message-ID: <87mwto3su7.fsf@dell.be.48ers.dk>
+References: <1364452963-22083-1-git-send-email-hvaibhav@ti.com>
+	<1364452963-22083-6-git-send-email-hvaibhav@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1364405445-5271-4-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1364452963-22083-6-git-send-email-hvaibhav@ti.com> (Vaibhav
+	Hiremath's message of "Thu, 28 Mar 2013 12:12:42 +0530")
+Sender: linux-omap-owner@vger.kernel.org
+To: Vaibhav Hiremath <hvaibhav@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, mporter@ti.com, b-cousson@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 27, 2013 at 06:30:37PM +0100, Philipp Zabel wrote:
-> So it can be used in clk-imx6q.c for revision dependent clock tree setup.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>>>> "Vaibhav" == Vaibhav Hiremath <hvaibhav@ti.com> writes:
 
-Applied, thanks.
+ Vaibhav> With DT support, where naming convention is based on base-addr
+ Vaibhav> and not id, so we should follow TRM/Spec numbering label.
 
-> ---
->  arch/arm/mach-imx/common.h     | 1 +
->  arch/arm/mach-imx/mach-imx6q.c | 2 +-
->  2 files changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
-> index 5a800bf..6c909d1 100644
-> --- a/arch/arm/mach-imx/common.h
-> +++ b/arch/arm/mach-imx/common.h
-> @@ -74,6 +74,7 @@ extern void mxc_set_cpu_type(unsigned int type);
->  extern void mxc_restart(char, const char *);
->  extern void mxc_arch_reset_init(void __iomem *);
->  extern int mx53_revision(void);
-> +extern int imx6q_revision(void);
->  extern int mx53_display_revision(void);
->  extern void imx_set_aips(void __iomem *);
->  extern int mxc_device_init(void);
-> diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
-> index 9ffd103..ca10acc 100644
-> --- a/arch/arm/mach-imx/mach-imx6q.c
-> +++ b/arch/arm/mach-imx/mach-imx6q.c
-> @@ -41,7 +41,7 @@
->  
->  #define IMX6Q_ANALOG_DIGPROG	0x260
->  
-> -static int imx6q_revision(void)
-> +int imx6q_revision(void)
->  {
->  	struct device_node *np;
->  	void __iomem *base;
-> -- 
-> 1.8.2.rc2
-> 
+ Vaibhav> This patch changes UART numbering as per TRM, as uart0-5.
+
+Acked-by: Peter Korsgaard <jacmet@sunsite.dk>
+
+-- 
+Bye, Peter Korsgaard
