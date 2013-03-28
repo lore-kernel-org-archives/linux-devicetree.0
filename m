@@ -1,112 +1,69 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 11/11] ARM i.MX6q: Add LDB device to device tree
-Date: Thu, 28 Mar 2013 15:51:52 +0800
-Message-ID: <20130328075148.GD2756@S2101-09.ap.freescale.net>
-References: <1364405445-5271-1-git-send-email-p.zabel@pengutronix.de>
- <1364405445-5271-12-git-send-email-p.zabel@pengutronix.de>
+From: Christoph Fritz <chf.fritz@googlemail.com>
+Subject: [PATCH] arm/dts: OMAP3: fix pinctrl-single configuration
+Date: Thu, 28 Mar 2013 09:08:26 +0100
+Message-ID: <1364458106.3757.11.camel@mars>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1364405445-5271-12-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?Beno=EEt?= Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Cc: Daniel Mack <daniel@zonque.org>, "Hans J. Koch" <hjk@hansjkoch.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 27, 2013 at 06:30:45PM +0100, Philipp Zabel wrote:
-> From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> Add ldb device tree node and clock lookups.
-> 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx6q.dtsi   | 17 +++++++++++++++++
->  arch/arm/boot/dts/imx6qdl.dtsi | 26 ++++++++++++++++++++++++++
->  2 files changed, 43 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-> index cba021e..1a30227 100644
-> --- a/arch/arm/boot/dts/imx6q.dtsi
-> +++ b/arch/arm/boot/dts/imx6q.dtsi
-> @@ -294,3 +294,20 @@
->  		};
->  	};
->  };
-> +
-> +&ldb {
-> +	clocks = <&clks 33>, <&clks 34>,
-> +		 <&clks 39>, <&clks 40>, <&clks 41>, <&clks 42>,
-> +		 <&clks 135>, <&clks 136>;
-> +	clock-names = "di0_pll", "di1_pll",
-> +		      "di0_sel", "di1_sel", "di2_sel", "di3_sel",
-> +		      "di0", "di1";
+- Fix 'function-mask' referring to TRM Section 7.4.4:
+  "Pad Functional Multiplexing and Configuration".
+- Fix 'omap3_pmx_core' referring to TRM Table 7-4:
+  "Core Control Module Pad Configuration Register Fields"
+- Fix 'omap3_pmx_wkup' referring to TRM Table 7-6:
+  "Wake-Up Control Module Pad Configuration Register Fields".
 
-These are identical with the ones in imx6qdl.dtsi, so not needed at all?
+Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
+---
+ arch/arm/boot/dts/omap3.dtsi |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-> +
-> +	lvds-channel@0 {
-> +		crtcs = <&ipu1 0>, <&ipu1 1>, <&ipu2 0>, <&ipu2 1>;
-> +	};
-> +
-> +	lvds-channel@1 {
-> +		crtcs = <&ipu1 0>, <&ipu1 1>, <&ipu2 0>, <&ipu2 1>;
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-> index 06ec460..dd5ef96 100644
-> --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> @@ -529,6 +529,32 @@
->  				reg = <0x020e0000 0x38>;
->  			};
->  
-> +			ldb: ldb@020e0008 {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				compatible = "fsl,imx6q-ldb", "fsl,imx53-ldb";
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+index 1acc261..6ce3b5c 100644
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -27,7 +27,7 @@
+ 	};
+ 
+ 	/*
+-	 * The soc node represents the soc top level view. It is uses for IPs
++	 * The soc node represents the soc top level view. It is used for IPs
+ 	 * that are not memory mapped in the MPU view or for the MPU itself.
+ 	 */
+ 	soc {
+@@ -77,20 +77,20 @@
+ 
+ 		omap3_pmx_core: pinmux@48002030 {
+ 			compatible = "ti,omap3-padconf", "pinctrl-single";
+-			reg = <0x48002030 0x05cc>;
++			reg = <0x48002030 0x234>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			pinctrl-single,register-width = <16>;
+-			pinctrl-single,function-mask = <0x7fff>;
++			pinctrl-single,function-mask = <0x7f1f>;
+ 		};
+ 
+-		omap3_pmx_wkup: pinmux@0x48002a58 {
++		omap3_pmx_wkup: pinmux@0x48002a00 {
+ 			compatible = "ti,omap3-padconf", "pinctrl-single";
+-			reg = <0x48002a58 0x5c>;
++			reg = <0x48002a00 0x54>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			pinctrl-single,register-width = <16>;
+-			pinctrl-single,function-mask = <0x7fff>;
++			pinctrl-single,function-mask = <0x7f1f>;
+ 		};
+ 
+ 		gpio1: gpio@48310000 {
+-- 
+1.7.10.4
 
-Since both compatible strings are in the driver matching table, it's not
-necessary to have "fsl,imx53-ldb" listed here.
 
-Shawn
 
-> +				clocks = <&clks 33>, <&clks 34>,
-> +					 <&clks 39>, <&clks 40>,
-> +					 <&clks 135>, <&clks 136>;
-> +				clock-names = "di0_pll", "di1_pll",
-> +					      "di0_sel", "di1_sel",
-> +					      "di0", "di1";
-> +				gpr = <&gpr>;
-> +				status = "disabled";
-> +
-> +				lvds-channel@0 {
-> +					reg = <0>;
-> +					crtcs = <&ipu1 0>;
-> +					status = "disabled";
-> +				};
-> +
-> +				lvds-channel@1 {
-> +					reg = <1>;
-> +					crtcs = <&ipu1 1>;
-> +					status = "disabled";
-> +				};
-> +			};
-> +
->  			dcic1: dcic@020e4000 {
->  				reg = <0x020e4000 0x4000>;
->  				interrupts = <0 124 0x04>;
-> -- 
-> 1.8.2.rc2
-> 
