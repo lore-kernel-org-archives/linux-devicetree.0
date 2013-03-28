@@ -1,69 +1,38 @@
-From: Christoph Fritz <chf.fritz@googlemail.com>
-Subject: [PATCH] arm/dts: OMAP3: fix pinctrl-single configuration
-Date: Thu, 28 Mar 2013 09:08:26 +0100
-Message-ID: <1364458106.3757.11.camel@mars>
+From: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 10/11] ARM i.MX53: Add LDB device to device tree
+Date: Thu, 28 Mar 2013 09:41:35 +0100
+Message-ID: <5154023F.600@parkeon.com>
+References: <1364405445-5271-1-git-send-email-p.zabel@pengutronix.de>
+ <1364405445-5271-11-git-send-email-p.zabel@pengutronix.de>
+ <51533DDC.2030401@parkeon.com>
+ <20130328073212.GM5429@S2101-09.ap.freescale.net>
+Reply-To: mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Beno=EEt?= Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-Cc: Daniel Mack <daniel@zonque.org>, "Hans J. Koch" <hjk@hansjkoch.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130328073212.GM5429-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-- Fix 'function-mask' referring to TRM Section 7.4.4:
-  "Pad Functional Multiplexing and Configuration".
-- Fix 'omap3_pmx_core' referring to TRM Table 7-4:
-  "Core Control Module Pad Configuration Register Fields"
-- Fix 'omap3_pmx_wkup' referring to TRM Table 7-6:
-  "Wake-Up Control Module Pad Configuration Register Fields".
+On 28/03/13 08:32, Shawn Guo wrote:
+> On Wed, Mar 27, 2013 at 07:43:40PM +0100, Martin Fuzzey wrote:
+>>
+>> Maybe pinctrl entries should also be added?
+> Generally, the pinctrl entries should be added in <board>.dts.
 
-Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
----
- arch/arm/boot/dts/omap3.dtsi |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Yes sorry I meant the pinctrl groups under the iomuxc node.
 
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-index 1acc261..6ce3b5c 100644
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -27,7 +27,7 @@
- 	};
- 
- 	/*
--	 * The soc node represents the soc top level view. It is uses for IPs
-+	 * The soc node represents the soc top level view. It is used for IPs
- 	 * that are not memory mapped in the MPU view or for the MPU itself.
- 	 */
- 	soc {
-@@ -77,20 +77,20 @@
- 
- 		omap3_pmx_core: pinmux@48002030 {
- 			compatible = "ti,omap3-padconf", "pinctrl-single";
--			reg = <0x48002030 0x05cc>;
-+			reg = <0x48002030 0x234>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			pinctrl-single,register-width = <16>;
--			pinctrl-single,function-mask = <0x7fff>;
-+			pinctrl-single,function-mask = <0x7f1f>;
- 		};
- 
--		omap3_pmx_wkup: pinmux@0x48002a58 {
-+		omap3_pmx_wkup: pinmux@0x48002a00 {
- 			compatible = "ti,omap3-padconf", "pinctrl-single";
--			reg = <0x48002a58 0x5c>;
-+			reg = <0x48002a00 0x54>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			pinctrl-single,register-width = <16>;
--			pinctrl-single,function-mask = <0x7fff>;
-+			pinctrl-single,function-mask = <0x7f1f>;
- 		};
- 
- 		gpio1: gpio@48310000 {
--- 
-1.7.10.4
-
-
-
+Regards,
+Martin
