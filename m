@@ -1,40 +1,68 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/5] ARM: imx: Remove cpufreq driver
-Date: Thu, 28 Mar 2013 09:48:22 +0800
-Message-ID: <20130328014820.GC5429@S2101-09.ap.freescale.net>
-References: <1364389294-1997-1-git-send-email-mpa@pengutronix.de>
- <1364389294-1997-6-git-send-email-mpa@pengutronix.de>
- <20130327140529.GG2674@S2101-09.ap.freescale.net>
- <20130327151454.GC6347@pengutronix.de>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v9 RESEND 4/4] ARM: dts: add sram for imx53 and imx6q
+Date: Thu, 28 Mar 2013 10:54:23 +0800
+Message-ID: <20130328025422.GH5429@S2101-09.ap.freescale.net>
+References: <1363776767-2635-1-git-send-email-p.zabel@pengutronix.de>
+ <1363776767-2635-5-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130327151454.GC6347-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1363776767-2635-5-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 27, 2013 at 04:14:54PM +0100, Markus Pargmann wrote:
-> I just prepared a patch for mx51 babbage board. cpuimx51sd does not seem
-> to have a DTS file yet. In general I think the operating points have to
-> be in the board specific DTS files because the frequencies of imx51
-> devices are different.
+On Wed, Mar 20, 2013 at 11:52:47AM +0100, Philipp Zabel wrote:
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> ---
+> Changes since v8:
+>  - Changed device tree compatible string to "mmio-sram"
+> ---
+>  arch/arm/boot/dts/imx53.dtsi |    5 +++++
+>  arch/arm/boot/dts/imx6q.dtsi |    6 ++++++
+>  2 files changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+> index edc3f1e..69d0680 100644
+> --- a/arch/arm/boot/dts/imx53.dtsi
+> +++ b/arch/arm/boot/dts/imx53.dtsi
+> @@ -664,5 +664,10 @@
+>  				status = "disabled";
+>  			};
+>  		};
+> +
+> +		ocram: ocram@f8000000 {
+> +			compatible = "fsl,imx-ocram", "mmio-sram";
 
-Shouldn't the operating-points generally be SoC specific?  I think we
-should have the operating-points recommended by SoC design added in
-<soc>.dtsi, and if there is an odd system design requiring different
-settings, we can override the operating-points in <board>.dts.
+We should probably just drop "fsl,imx-ocram".
 
 Shawn
+
+> +			reg = <0xf8000000 0x20000>;
+> +		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+> index ff1205e..73302db 100644
+> --- a/arch/arm/boot/dts/imx6q.dtsi
+> +++ b/arch/arm/boot/dts/imx6q.dtsi
+> @@ -124,6 +124,12 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		ocram: ocram@00900000 {
+> +			compatible = "fsl,imx-ocram", "mmio-sram";
+> +			reg = <0x00900000 0x3f000>;
+> +			clocks = <&clks 142>;
+> +		};
+> +
+>  		timer@00a00600 {
+>  			compatible = "arm,cortex-a9-twd-timer";
+>  			reg = <0x00a00600 0x20>;
+> -- 
+> 1.7.10.4
+> 
