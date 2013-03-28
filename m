@@ -1,14 +1,16 @@
-From: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH-V2 1/6] ARM: dts: AM33XX: Fix the i2c numbering to match
- hardware/TRM
-Date: Thu, 28 Mar 2013 12:12:38 +0530
-Message-ID: <1364452963-22083-2-git-send-email-hvaibhav@ti.com>
-References: <1364452963-22083-1-git-send-email-hvaibhav@ti.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 02/11] ARM i.MX5: Move IPU clock lookups into device
+ tree
+Date: Thu, 28 Mar 2013 15:04:24 +0800
+Message-ID: <20130328070421.GJ5429@S2101-09.ap.freescale.net>
+References: <1364405445-5271-1-git-send-email-p.zabel@pengutronix.de>
+ <1364405445-5271-3-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1364452963-22083-1-git-send-email-hvaibhav-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1364405445-5271-3-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,104 +21,72 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mporter-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-With DT support, where naming convention is based on base-addr
-and not id, so we should follow TRM/Spec numbering label.
+On Wed, Mar 27, 2013 at 06:30:36PM +0100, Philipp Zabel wrote:
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-This patch changes I2C numbering as per TRM, as I2C0, I2C1 and I2C2.
+Applied, thanks.
 
-Signed-off-by: Vaibhav Hiremath <hvaibhav-l0cyMroinI0@public.gmane.org>
-Acked-by: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
-Acked-by: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
-Cc: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am335x-bone.dts  |    2 +-
- arch/arm/boot/dts/am335x-evm.dts   |    4 ++--
- arch/arm/boot/dts/am335x-evmsk.dts |    2 +-
- arch/arm/boot/dts/am33xx.dtsi      |    6 +++---
- 4 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
-index 11b240c..cdc8307 100644
---- a/arch/arm/boot/dts/am335x-bone.dts
-+++ b/arch/arm/boot/dts/am335x-bone.dts
-@@ -43,7 +43,7 @@
- 			status = "okay";
- 		};
-
--		i2c1: i2c@44e0b000 {
-+		i2c0: i2c@44e0b000 {
- 			status = "okay";
- 			clock-frequency = <400000>;
-
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index d649644..a6539ad 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -51,7 +51,7 @@
- 			status = "okay";
- 		};
-
--		i2c1: i2c@44e0b000 {
-+		i2c0: i2c@44e0b000 {
- 			status = "okay";
- 			clock-frequency = <400000>;
-
-@@ -60,7 +60,7 @@
- 			};
- 		};
-
--		i2c2: i2c@4802a000 {
-+		i2c1: i2c@4802a000 {
- 			status = "okay";
- 			clock-frequency = <100000>;
-
-diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-index f5a6162..45cb39a 100644
---- a/arch/arm/boot/dts/am335x-evmsk.dts
-+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-@@ -58,7 +58,7 @@
- 			status = "okay";
- 		};
-
--		i2c1: i2c@44e0b000 {
-+		i2c0: i2c@44e0b000 {
- 			status = "okay";
- 			clock-frequency = <400000>;
-
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 0957645..c38b2fa 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -185,7 +185,7 @@
- 			status = "disabled";
- 		};
-
--		i2c1: i2c@44e0b000 {
-+		i2c0: i2c@44e0b000 {
- 			compatible = "ti,omap4-i2c";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -195,7 +195,7 @@
- 			status = "disabled";
- 		};
-
--		i2c2: i2c@4802a000 {
-+		i2c1: i2c@4802a000 {
- 			compatible = "ti,omap4-i2c";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -205,7 +205,7 @@
- 			status = "disabled";
- 		};
-
--		i2c3: i2c@4819c000 {
-+		i2c2: i2c@4819c000 {
- 			compatible = "ti,omap4-i2c";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
---
-1.7.0.4
+> ---
+>  arch/arm/boot/dts/imx51.dtsi        | 2 ++
+>  arch/arm/boot/dts/imx53.dtsi        | 2 ++
+>  arch/arm/mach-imx/clk-imx51-imx53.c | 7 -------
+>  3 files changed, 4 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
+> index fcf035b..e9480b8 100644
+> --- a/arch/arm/boot/dts/imx51.dtsi
+> +++ b/arch/arm/boot/dts/imx51.dtsi
+> @@ -67,6 +67,8 @@
+>  			compatible = "fsl,imx51-ipu";
+>  			reg = <0x40000000 0x20000000>;
+>  			interrupts = <11 10>;
+> +			clocks = <&clks 59>, <&clks 110>, <&clks 61>;
+> +			clock-names = "bus", "di0", "di1";
+>  		};
+>  
+>  		aips@70000000 { /* AIPS1 */
+> diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+> index d05aa21..7a6f5a8 100644
+> --- a/arch/arm/boot/dts/imx53.dtsi
+> +++ b/arch/arm/boot/dts/imx53.dtsi
+> @@ -72,6 +72,8 @@
+>  			compatible = "fsl,imx53-ipu";
+>  			reg = <0x18000000 0x080000000>;
+>  			interrupts = <11 10>;
+> +			clocks = <&clks 59>, <&clks 110>, <&clks 61>;
+> +			clock-names = "bus", "di0", "di1";
+>  		};
+>  
+>  		aips@50000000 { /* AIPS1 */
+> diff --git a/arch/arm/mach-imx/clk-imx51-imx53.c b/arch/arm/mach-imx/clk-imx51-imx53.c
+> index 0f39f8c..d22ee6a 100644
+> --- a/arch/arm/mach-imx/clk-imx51-imx53.c
+> +++ b/arch/arm/mach-imx/clk-imx51-imx53.c
+> @@ -362,9 +362,6 @@ int __init mx51_clocks_init(unsigned long rate_ckil, unsigned long rate_osc,
+>  	clk_register_clkdev(clk[mx51_mipi], "mipi_hsp", NULL);
+>  	clk_register_clkdev(clk[vpu_gate], NULL, "imx51-vpu.0");
+>  	clk_register_clkdev(clk[fec_gate], NULL, "imx27-fec.0");
+> -	clk_register_clkdev(clk[ipu_gate], "bus", "40000000.ipu");
+> -	clk_register_clkdev(clk[ipu_di0_gate], "di0", "40000000.ipu");
+> -	clk_register_clkdev(clk[ipu_di1_gate], "di1", "40000000.ipu");
+>  	clk_register_clkdev(clk[usb_phy_gate], "phy", "mxc-ehci.0");
+>  	clk_register_clkdev(clk[esdhc1_ipg_gate], "ipg", "sdhci-esdhc-imx51.0");
+>  	clk_register_clkdev(clk[dummy], "ahb", "sdhci-esdhc-imx51.0");
+> @@ -471,10 +468,6 @@ int __init mx53_clocks_init(unsigned long rate_ckil, unsigned long rate_osc,
+>  	clk_register_clkdev(clk[vpu_gate], NULL, "imx53-vpu.0");
+>  	clk_register_clkdev(clk[i2c3_gate], NULL, "imx21-i2c.2");
+>  	clk_register_clkdev(clk[fec_gate], NULL, "imx25-fec.0");
+> -	clk_register_clkdev(clk[ipu_gate], "bus", "18000000.ipu");
+> -	clk_register_clkdev(clk[ipu_di0_gate], "di0", "18000000.ipu");
+> -	clk_register_clkdev(clk[ipu_di1_gate], "di1", "18000000.ipu");
+> -	clk_register_clkdev(clk[ipu_gate], "hsp", "18000000.ipu");
+>  	clk_register_clkdev(clk[usb_phy1_gate], "usb_phy1", "mxc-ehci.0");
+>  	clk_register_clkdev(clk[esdhc1_ipg_gate], "ipg", "sdhci-esdhc-imx53.0");
+>  	clk_register_clkdev(clk[dummy], "ahb", "sdhci-esdhc-imx53.0");
+> -- 
+> 1.8.2.rc2
+> 
