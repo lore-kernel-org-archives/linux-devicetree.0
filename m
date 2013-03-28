@@ -1,40 +1,61 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH V2 0/8] ARM: OMAP3+: support cpufreq-cpu0 for device tree
- boot
-Date: Thu, 28 Mar 2013 16:49:20 +0100
-Message-ID: <51546680.5080107@ti.com>
-References: <1363715590-5131-1-git-send-email-nm@ti.com> <51542390.1020300@ti.com> <CAGo_u6rn=GHVfJiz_7gkse2e-e3BZicEqJBQWomftpi-nCvfng@mail.gmail.com>
+From: Christian Daudt <csd_b-jCriFORwCPHYtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH V7 1/2] ARM: bcm281xx: Add timer driver (driver portion)
+Date: Thu, 28 Mar 2013 09:03:47 -0700
+Message-ID: <CAGFynZ-8hQLLYuny6V6=9c+dqtAHs51BcH_wPb=k7WdY9FXS3Q@mail.gmail.com>
+References: <1363210048-3334-1-git-send-email-csd@broadcom.com>
+ <51410BF4.4040400@linaro.org>
+ <alpine.LFD.2.02.1303140951580.22263@ionos>
+ <201303141603.02401.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <CAGo_u6rn=GHVfJiz_7gkse2e-e3BZicEqJBQWomftpi-nCvfng@mail.gmail.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>, linux-pm@vger.kernel.org, Kevin Hilman <khilman@deeprootsystems.com>, Keerthy <j-keerthy@ti.com>, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Jon Hunter <jon-hunter@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201303141603.02401.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/28/2013 02:43 PM, Nishanth Menon wrote:
-> Hi Benoit,
-> 
-> On Thu, Mar 28, 2013 at 6:03 AM, Benoit Cousson <b-cousson@ti.com> wrote:
->> The patches 1 to 6 looks good to me. Beside the pretty long Cc list,
->> that should not necessarily contain all the mailing list.
-> Arrgh.. my bad. I will keep it in mind for the future.
-> 
->>
->> Since you are changing / renaming some DTS files, and to avoid any merge
->> conflict I will apply only these 6 patches.
->> DTS and driver changes are in theory orthogonal enough to allow merging
->> them separately and in any order.
->>
->> I'll update my branch with these patches ASAP.
-> Thanks. I will post a v3 of remaining patches later today.
+On Thu, Mar 14, 2013 at 9:03 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thursday 14 March 2013, Thomas Gleixner wrote:
+>> > But if its arch specific for hardware I don't have, I'd really prefer the arch
+>> > maintainer be the upstream path.
+>> >
+>> > Thomas: Am I being too obstinate here?  If not, should we drop "F:
+>> > drivers/clocksource" from the MAINTAINERS entry?
+>
+> The idea of moving drivers out of arch/* into drivers/* is definitely to
+> have someone who understands the subsystem act as the gatekeeper. There
+> should be very little architecture specific knowledge in those drivers,
+> and I think it's more important to ensure that they are following a
+> sensible understanding of how timekeeping is done than that they
+> are following specific architecture maintainer's preferences.
+>
+>> Maybe we should move the ARM specific ones into
+>> drivers/clocksource/arm/ ?
+>
+> About half the IP blocks we use on ARM are also used on at least
+> one ARM64/AVR32/MIPS/PowerPC/x86/SH/Hexagon/c6x/etc part. Grouping them
+> by which CPU architecture first starts using them or happens to be
+> more popular at the time does not seem too helpful here.
+>
+> Maybe it's better to have a subdirectory for those clock sources
+> that are used on any SoC, or have subdirectories based on the
+> company that created that part, as we do for ethernet drivers.
+> I wouldn't bother with that until there are a couple of dozen
+> different clock source drivers.
 
-Patches after changelog cleanup are available in the following branch:
+So it seems the (weak...) consensus is that it should go through the
+clocksource tree. John, can you please apply the patch ?
 
-git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.10/dts
-
-Regards,
-Benoit
-
+ Thanks,
+   csd
