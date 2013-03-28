@@ -1,48 +1,75 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 1/4] iio: adc: Document the regulator/clocks for exynos-adc
-Date: Thu, 28 Mar 2013 06:31:06 +0000
-Message-ID: <20b79acf-6799-4aad-b2fc-8300d04f5faa@email.android.com>
-References: <1363129994-10438-1-git-send-email-dianders@chromium.org> <1363207202-10858-1-git-send-email-dianders@chromium.org> <1363207202-10858-2-git-send-email-dianders@chromium.org> <CAHfPSqDLXD-T6__eF=d+U7Me953DqTgMXi=Jmx7LnHL+W-FLhQ@mail.gmail.com> <51533D34.7020406@metafoo.de> <CAD=FV=XVWe+GNzEuYkXL3n85t2zRCHJkz5ry_uVXY62rp61qKQ@mail.gmail.com>
+From: Vaibhav Hiremath <hvaibhav@ti.com>
+Subject: [PATCH-V2 4/6] ARM: dts: AM33XX: Add pinctrl binding to gpio-leds node
+Date: Thu, 28 Mar 2013 12:12:41 +0530
+Message-ID: <1364452963-22083-5-git-send-email-hvaibhav@ti.com>
+References: <1364452963-22083-1-git-send-email-hvaibhav@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=XVWe+GNzEuYkXL3n85t2zRCHJkz5ry_uVXY62rp61qKQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, Lars-Peter Clausen <lars@metafoo.de>, Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, Olof Johansson <olof@lixom.net>, Guenter Roeck <linux@roeck-us.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1364452963-22083-1-git-send-email-hvaibhav@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, mporter@ti.com, b-cousson@ti.com, jacmet@sunsite.dk, Vaibhav Hiremath <hvaibhav@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Now gpio-leds driver is using devm_pinctrl_get_select_default()
+api to set default pinmux configuration required for the
+functionality of the driver, so this patch moves respective
+pinctrl binding inside leds node.
 
+Signed-off-by: Vaibhav Hiremath <hvaibhav@ti.com>
+Cc: Benoit Cousson <b-cousson@ti.com>
+---
+ arch/arm/boot/dts/am335x-bone.dts  |    5 ++++-
+ arch/arm/boot/dts/am335x-evmsk.dts |    5 ++++-
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-Doug Anderson <dianders@chromium.org> wrote:
+diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
+index 860630b..1d623e4 100644
+--- a/arch/arm/boot/dts/am335x-bone.dts
++++ b/arch/arm/boot/dts/am335x-bone.dts
+@@ -26,7 +26,7 @@
 
->Hi,
->
->On Wed, Mar 27, 2013 at 11:40 AM, Lars-Peter Clausen <lars@metafoo.de>
->wrote:
->> On 03/27/2013 07:35 PM, Naveen Krishna Ch wrote:
->>> On 13 March 2013 13:39, Doug Anderson <dianders@chromium.org> wrote:
->>>> The exynos ADC won't work without a regulator called "vdd" and a
->clock
->>>> called "adc".  Document this fact in the device tree bindings.
->>>>
->>>> Signed-off-by: Doug Anderson <dianders@chromium.org>
->>> Reviewed-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
->>>
->>> Lars, any update on this patch set. This change is required.
->>
->> Uhm, looks fine to me. I'm sure Jonathan will pick it up :)
->
->Part 2 made it in, but not the documentation patch.  Now that it has a
->Reviewed-by it can probably go in...  :)
->
->-Doug
-I'll take it sometime over the weekend. 
+ 	am33xx_pinmux: pinmux@44e10800 {
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&user_leds_s0>;
++		pinctrl-0 = <>;
 
-Thanks. 
-Jonathan
+ 		user_leds_s0: user_leds_s0 {
+ 			pinctrl-single,pins = <
+@@ -65,6 +65,9 @@
+ 	};
 
--- 
-Sent from my Android phone with K-9 Mail. Please excuse my brevity.
+ 	leds {
++		pinctrl-names = "default";
++		pinctrl-0 = <&user_leds_s0>;
++
+ 		compatible = "gpio-leds";
+
+ 		led@2 {
+diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
+index 15a3052..21d5a08 100644
+--- a/arch/arm/boot/dts/am335x-evmsk.dts
++++ b/arch/arm/boot/dts/am335x-evmsk.dts
+@@ -32,7 +32,7 @@
+
+ 	am33xx_pinmux: pinmux@44e10800 {
+ 		pinctrl-names = "default";
+-		pinctrl-0 = <&user_leds_s0 &gpio_keys_s0>;
++		pinctrl-0 = <&gpio_keys_s0>;
+
+ 		user_leds_s0: user_leds_s0 {
+ 			pinctrl-single,pins = <
+@@ -121,6 +121,9 @@
+ 	};
+
+ 	leds {
++		pinctrl-names = "default";
++		pinctrl-0 = <&user_leds_s0>;
++
+ 		compatible = "gpio-leds";
+
+ 		led@1 {
+--
+1.7.0.4
+
