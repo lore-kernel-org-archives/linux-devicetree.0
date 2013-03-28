@@ -1,49 +1,66 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH REPOST 2/7] kbuild: fixdep: support concatenated dep files
-Date: Thu, 28 Mar 2013 12:00:57 -0600
-Message-ID: <51548559.6030605@wwwdotorg.org>
-References: <1363890194-31538-1-git-send-email-swarren@wwwdotorg.org> <1363890194-31538-2-git-send-email-swarren@wwwdotorg.org>
+From: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V7 1/2] ARM: bcm281xx: Add timer driver (driver portion)
+Date: Thu, 28 Mar 2013 11:01:38 -0700
+Message-ID: <51548582.1000507@linaro.org>
+References: <1363210048-3334-1-git-send-email-csd@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <1363890194-31538-2-git-send-email-swarren@wwwdotorg.org>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Michal Marek <mmarek@suse.cz>, Grant Likely <glikely@secretlab.ca>, Rob Herring <robherring2@gmail.com>
-Cc: arm@kernel.org, Shawn Guo <shawn.guo@linaro.org>, Hiroshi Doyu <hdoyu@nvidia.com>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1363210048-3334-1-git-send-email-csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/21/2013 12:23 PM, Stephen Warren wrote:
-> From: Stephen Warren <swarren@nvidia.com>
-> 
-> The current use-case for fixdep is: a source file is run through a single
-> processing step, which creates a single dependency file as a side-effect,
-> which fixdep transforms into the file used by the kernel build process.
-> 
-> In order to transparently run the C pre-processor on device-tree files,
-> we wish to run both gcc -E and dtc on a source file in a single rule.
-> This generates two dependency files, which must be transformed together
-> into the file used by the kernel build process. This change modifies
-> fixdep so it can process the concatenation of multiple separate input
-> dependency files, and produce a correct unified output.
-> 
-> The code changes have the slight benefit of transforming the loop in
-> parse_dep_file() into more of a lexer/tokenizer, with the loop body being
-> more of a parser. Previously, some of this logic was mixed together
-> before the loop. I also added some comments, which I hope are useful.
-> 
-> Benchmarking shows that on a cross-compiled ARM tegra_defconfig build,
-> there is less than 0.5 seconds speed decrease with this change, on top
-> of a build time of ~2m24s. This is probably within the noise.
+On 03/13/2013 02:27 PM, Christian Daudt wrote:
+> This adds support for the Broadcom timer, used in the following SoCs:
+> BCM11130, BCM11140, BCM11351, BCM28145, BCM28155
+>
+> Updates from V6:
+> - Split DT portion into a separate patch
+>
+> Updates from V5:
+> - Rebase to latest arm-soc/for-next
+>
+> Updates from V4:
+> - Switch code to use CLOCKSOURCE_OF_DECLARE
+>
+> Updates from V3:
+> - Migrate to 3.9 timer framework updates
+>
+> Updates from V2:
+> - prepend static fns + fields with kona_
+>
+> Updates from V1:
+> - Rename bcm_timer.c to bcm_kona_timer.c
+> - Pull .h into bcm_kona_timer.c
+> - Make timers static
+> - Clean up comment block
+> - Switched to using clockevents_config_and_register
+> - Added an error to the get_timer loop if it repeats too much
+> - Added to Documentation/devicetree/bindings/arm/bcm/bcm,kona-timer.txt
+> - Added missing readl to timer_disable_and_clear
+>
+> Note: bcm,kona-timer was kept as the 'compatible' field to make it
+> specific enough for when there are multiple bcm timers (bcm,timer is
+> too generic).
+>
+> Signed-off-by: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Acked-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Marek, do patches 2, 3, and 4 in this series look good to you from a
-kbuild perspective?
+Applied to my fortglx/3.10/time branch.
 
-I'm hoping that you can review/ack those 3 patches for kbuild, and that
-Grant will review/ack the whole series, and then the series can be
-merged via arm-soc for 3.10.
-
-Let me know if you need me to repost the series again in case it's
-fallen out of your inbox.
-
-Thanks.
+thanks
+-john
