@@ -1,215 +1,87 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v6 4/8] ARM i.MX6q: Add GPU, VPU, IPU, and OpenVG resets to System Reset Controller (SRC)
-Date: Thu, 28 Mar 2013 17:35:19 +0100
-Message-ID: <1364488523-20310-5-git-send-email-p.zabel@pengutronix.de>
-References: <1364488523-20310-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1364488523-20310-1-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Warren <swarren@wwwdotorg.org>, Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, Mike Turquette <mturquette@linaro.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, "Rafael J. Wysocki" <rjw@sisk.pl>, linux-pm@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] arm/dts: OMAP3: fix pinctrl-single configuration
+Date: Thu, 28 Mar 2013 09:38:55 -0700
+Message-ID: <20130328163854.GV10155@atomide.com>
+References: <1364458106.3757.11.camel@mars>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1364458106.3757.11.camel@mars>
+Sender: linux-omap-owner@vger.kernel.org
+To: Christoph Fritz <chf.fritz@googlemail.com>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <b-cousson@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Daniel Mack <daniel@zonque.org>, "Hans J. Koch" <hjk@hansjkoch.de>
 List-Id: devicetree@vger.kernel.org
 
-The SRC has auto-deasserting reset bits that control reset lines to
-the GPU, VPU, IPU, and OpenVG IP modules. This patch adds a reset
-controller that can be controlled by those devices using the
-reset controller API.
+* Christoph Fritz <chf.fritz@googlemail.com> [130328 01:12]:
+> - Fix 'function-mask' referring to TRM Section 7.4.4:
+>   "Pad Functional Multiplexing and Configuration".
+> - Fix 'omap3_pmx_core' referring to TRM Table 7-4:
+>   "Core Control Module Pad Configuration Register Fields"
+> - Fix 'omap3_pmx_wkup' referring to TRM Table 7-6:
+>   "Wake-Up Control Module Pad Configuration Register Fields".
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Reviewed-by: Stephen Warren <swarren@nvidia.com>
-Reviewed-by: Marek Vasut <marex@denx.de>
----
- .../devicetree/bindings/reset/fsl,imx-src.txt      | 49 ++++++++++++++++
- arch/arm/mach-imx/Kconfig                          |  1 +
- arch/arm/mach-imx/src.c                            | 65 ++++++++++++++++++++++
- 3 files changed, 115 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/fsl,imx-src.txt
+Maybe mention which TRM this is so people will know.
+ 
+> Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
+> ---
+>  arch/arm/boot/dts/omap3.dtsi |   12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+> index 1acc261..6ce3b5c 100644
+> --- a/arch/arm/boot/dts/omap3.dtsi
+> +++ b/arch/arm/boot/dts/omap3.dtsi
+> @@ -27,7 +27,7 @@
+>  	};
+>  
+>  	/*
+> -	 * The soc node represents the soc top level view. It is uses for IPs
+> +	 * The soc node represents the soc top level view. It is used for IPs
+>  	 * that are not memory mapped in the MPU view or for the MPU itself.
+>  	 */
+>  	soc {
+> @@ -77,20 +77,20 @@
+>  
+>  		omap3_pmx_core: pinmux@48002030 {
+>  			compatible = "ti,omap3-padconf", "pinctrl-single";
+> -			reg = <0x48002030 0x05cc>;
+> +			reg = <0x48002030 0x234>;
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  			pinctrl-single,register-width = <16>;
+> -			pinctrl-single,function-mask = <0x7fff>;
+> +			pinctrl-single,function-mask = <0x7f1f>;
+>  		};
 
-diff --git a/Documentation/devicetree/bindings/reset/fsl,imx-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx-src.txt
-new file mode 100644
-index 0000000..1330177
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/fsl,imx-src.txt
-@@ -0,0 +1,49 @@
-+Freescale i.MX System Reset Controller
-+======================================
-+
-+Please also refer to reset.txt in this directory for common reset
-+controller binding usage.
-+
-+Required properties:
-+- compatible: Should be "fsl,<chip>-src"
-+- reg: should be register base and length as documented in the
-+  datasheet
-+- interrupts: Should contain SRC interrupt and CPU WDOG interrupt,
-+  in this order.
-+- #reset-cells: 1, see below
-+
-+example:
-+
-+src: src@020d8000 {
-+        compatible = "fsl,imx6q-src";
-+        reg = <0x020d8000 0x4000>;
-+        interrupts = <0 91 0x04 0 96 0x04>;
-+        #reset-cells = <1>;
-+};
-+
-+Specifying reset lines connected to IP modules
-+==============================================
-+
-+The system reset controller can be used to reset the GPU, VPU,
-+IPU, and OpenVG IP modules on i.MX5 and i.MX6 ICs. Those device
-+nodes should specify the reset line on the SRC in their resets
-+property, containing a phandle to the SRC device node and a
-+RESET_INDEX specifying which module to reset, as described in
-+reset.txt
-+
-+example:
-+
-+        ipu1: ipu@02400000 {
-+                resets = <&src 2>;
-+        };
-+        ipu2: ipu@02800000 {
-+                resets = <&src 4>;
-+        };
-+
-+The following RESET_INDEX values are valid for i.MX5:
-+GPU_RESET     0
-+VPU_RESET     1
-+IPU1_RESET    2
-+OPEN_VG_RESET 3
-+The following additional RESET_INDEX value is valid for i.MX6:
-+IPU2_RESET    4
-diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-index 4c9c6f9..5052e31 100644
---- a/arch/arm/mach-imx/Kconfig
-+++ b/arch/arm/mach-imx/Kconfig
-@@ -73,6 +73,7 @@ config HAVE_IMX_MMDC
- 
- config HAVE_IMX_SRC
- 	def_bool y if SMP
-+	select ARCH_HAS_RESET_CONTROLLER
- 
- config IMX_HAVE_IOMUX_V1
- 	bool
-diff --git a/arch/arm/mach-imx/src.c b/arch/arm/mach-imx/src.c
-index e15f155..b50eee0 100644
---- a/arch/arm/mach-imx/src.c
-+++ b/arch/arm/mach-imx/src.c
-@@ -14,16 +14,72 @@
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/reset-controller.h>
- #include <linux/smp.h>
- #include <asm/smp_plat.h>
- 
- #define SRC_SCR				0x000
- #define SRC_GPR1			0x020
- #define BP_SRC_SCR_WARM_RESET_ENABLE	0
-+#define BP_SRC_SCR_SW_GPU_RST		1
-+#define BP_SRC_SCR_SW_VPU_RST		2
-+#define BP_SRC_SCR_SW_IPU1_RST		3
-+#define BP_SRC_SCR_SW_OPEN_VG_RST	4
-+#define BP_SRC_SCR_SW_IPU2_RST		12
- #define BP_SRC_SCR_CORE1_RST		14
- #define BP_SRC_SCR_CORE1_ENABLE		22
- 
- static void __iomem *src_base;
-+static DEFINE_SPINLOCK(scr_lock);
-+
-+static const int sw_reset_bits[5] = {
-+	BP_SRC_SCR_SW_GPU_RST,
-+	BP_SRC_SCR_SW_VPU_RST,
-+	BP_SRC_SCR_SW_IPU1_RST,
-+	BP_SRC_SCR_SW_OPEN_VG_RST,
-+	BP_SRC_SCR_SW_IPU2_RST
-+};
-+
-+static int imx_src_reset_module(struct reset_controller_dev *rcdev,
-+		unsigned long sw_reset_idx)
-+{
-+	unsigned long timeout;
-+	unsigned long flags;
-+	int bit;
-+	u32 val;
-+
-+	if (!src_base)
-+		return -ENODEV;
-+
-+	if (sw_reset_idx >= ARRAY_SIZE(sw_reset_bits))
-+		return -EINVAL;
-+
-+	bit = 1 << sw_reset_bits[sw_reset_idx];
-+
-+	spin_lock_irqsave(&scr_lock, flags);
-+	val = readl_relaxed(src_base + SRC_SCR);
-+	val |= bit;
-+	writel_relaxed(val, src_base + SRC_SCR);
-+	spin_unlock_irqrestore(&scr_lock, flags);
-+
-+	timeout = jiffies + msecs_to_jiffies(1000);
-+	while (readl(src_base + SRC_SCR) & bit) {
-+		if (time_after(jiffies, timeout))
-+			return -ETIME;
-+		cpu_relax();
-+	}
-+
-+	return 0;
-+}
-+
-+static struct reset_control_ops imx_src_ops = {
-+	.reset = imx_src_reset_module,
-+};
-+
-+static struct reset_controller_dev imx_reset_controller = {
-+	.ops = &imx_src_ops,
-+	.nr_resets = ARRAY_SIZE(sw_reset_bits),
-+};
- 
- void imx_enable_cpu(int cpu, bool enable)
- {
-@@ -31,9 +87,11 @@ void imx_enable_cpu(int cpu, bool enable)
- 
- 	cpu = cpu_logical_map(cpu);
- 	mask = 1 << (BP_SRC_SCR_CORE1_ENABLE + cpu - 1);
-+	spin_lock(&scr_lock);
- 	val = readl_relaxed(src_base + SRC_SCR);
- 	val = enable ? val | mask : val & ~mask;
- 	writel_relaxed(val, src_base + SRC_SCR);
-+	spin_unlock(&scr_lock);
- }
- 
- void imx_set_cpu_jump(int cpu, void *jump_addr)
-@@ -48,9 +106,11 @@ void imx_src_prepare_restart(void)
- 	u32 val;
- 
- 	/* clear enable bits of secondary cores */
-+	spin_lock(&scr_lock);
- 	val = readl_relaxed(src_base + SRC_SCR);
- 	val &= ~(0x7 << BP_SRC_SCR_CORE1_ENABLE);
- 	writel_relaxed(val, src_base + SRC_SCR);
-+	spin_unlock(&scr_lock);
- 
- 	/* clear persistent entry register of primary core */
- 	writel_relaxed(0, src_base + SRC_GPR1);
-@@ -65,11 +125,16 @@ void __init imx_src_init(void)
- 	src_base = of_iomap(np, 0);
- 	WARN_ON(!src_base);
- 
-+	imx_reset_controller.of_node = np;
-+	reset_controller_register(&imx_reset_controller);
-+
- 	/*
- 	 * force warm reset sources to generate cold reset
- 	 * for a more reliable restart
- 	 */
-+	spin_lock(&scr_lock);
- 	val = readl_relaxed(src_base + SRC_SCR);
- 	val &= ~(1 << BP_SRC_SCR_WARM_RESET_ENABLE);
- 	writel_relaxed(val, src_base + SRC_SCR);
-+	spin_unlock(&scr_lock);
- }
--- 
-1.8.2.rc2
+Changing the size from 0x5cc to 0x234 misses the range ending at
+CONTROL_PADCONF_ETK_D14[31:16] 0x480025f8 that's listed at least in
+the 3630 TRM. Which TRM are you looking at?
 
+Ack for the function-mask change for omap3, looks like those bits are not
+used.
+  
+> -		omap3_pmx_wkup: pinmux@0x48002a58 {
+> +		omap3_pmx_wkup: pinmux@0x48002a00 {
+>  			compatible = "ti,omap3-padconf", "pinctrl-single";
+> -			reg = <0x48002a58 0x5c>;
+> +			reg = <0x48002a00 0x54>;
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  			pinctrl-single,register-width = <16>;
+> -			pinctrl-single,function-mask = <0x7fff>;
+> +			pinctrl-single,function-mask = <0x7f1f>;
+>  		};
+
+Hmm I think I converted these from the legacy mux framework, that seems
+to be missing the wkup range between 0x2a00 - 0x2a58. So yes 0x2a00
+is the right start as otherwise we're missing some wkup registers.
+
+But the size should be 0x50 instead of 0x54 as the JTAG_TDO[31:16] is
+already un-used in TRM?
+
+Or it could be 0x60 if we want to map also the reserved GPIO128[31:16].
+
+Regards,
+
+Tony
