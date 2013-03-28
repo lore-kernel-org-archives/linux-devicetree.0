@@ -1,87 +1,67 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] arm/dts: OMAP3: fix pinctrl-single configuration
-Date: Thu, 28 Mar 2013 09:38:55 -0700
-Message-ID: <20130328163854.GV10155@atomide.com>
-References: <1364458106.3757.11.camel@mars>
+From: Andrii Tseglytskyi <andrii.tseglytskyi@ti.com>
+Subject: [PATCH 1/6] ARM: dts: OMAP36xx: add device tree for ABB
+Date: Thu, 28 Mar 2013 19:16:03 +0200
+Message-ID: <1364490968-13613-1-git-send-email-andrii.tseglytskyi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1364458106.3757.11.camel@mars>
 Sender: linux-omap-owner@vger.kernel.org
-To: Christoph Fritz <chf.fritz@googlemail.com>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <b-cousson@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Daniel Mack <daniel@zonque.org>, "Hans J. Koch" <hjk@hansjkoch.de>
+To: linux-patch-review@list.ti.com
+Cc: Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, "Andrii.Tseglytskyi" <andrii.tseglytskyi@ti.com>, Mike Turquette <mturquette@linaro.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Christoph Fritz <chf.fritz@googlemail.com> [130328 01:12]:
-> - Fix 'function-mask' referring to TRM Section 7.4.4:
->   "Pad Functional Multiplexing and Configuration".
-> - Fix 'omap3_pmx_core' referring to TRM Table 7-4:
->   "Core Control Module Pad Configuration Register Fields"
-> - Fix 'omap3_pmx_wkup' referring to TRM Table 7-6:
->   "Wake-Up Control Module Pad Configuration Register Fields".
+=46rom: "Andrii.Tseglytskyi" <andrii.tseglytskyi@ti.com>
 
-Maybe mention which TRM this is so people will know.
- 
-> Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
-> ---
->  arch/arm/boot/dts/omap3.dtsi |   12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> index 1acc261..6ce3b5c 100644
-> --- a/arch/arm/boot/dts/omap3.dtsi
-> +++ b/arch/arm/boot/dts/omap3.dtsi
-> @@ -27,7 +27,7 @@
->  	};
->  
->  	/*
-> -	 * The soc node represents the soc top level view. It is uses for IPs
-> +	 * The soc node represents the soc top level view. It is used for IPs
->  	 * that are not memory mapped in the MPU view or for the MPU itself.
->  	 */
->  	soc {
-> @@ -77,20 +77,20 @@
->  
->  		omap3_pmx_core: pinmux@48002030 {
->  			compatible = "ti,omap3-padconf", "pinctrl-single";
-> -			reg = <0x48002030 0x05cc>;
-> +			reg = <0x48002030 0x234>;
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			pinctrl-single,register-width = <16>;
-> -			pinctrl-single,function-mask = <0x7fff>;
-> +			pinctrl-single,function-mask = <0x7f1f>;
->  		};
+Add DT ABB data for OMAP36xx family of devices.
+This data is based on OMAP36XX_ES1.x_NDA_TRM_vAB.pdf
+document.
 
-Changing the size from 0x5cc to 0x234 misses the range ending at
-CONTROL_PADCONF_ETK_D14[31:16] 0x480025f8 that's listed at least in
-the 3630 TRM. Which TRM are you looking at?
+Cc: Mike Turquette <mturquette@linaro.org>
+Cc: Tero Kristo <t-kristo@ti.com>
+Cc: Nishanth Menon <nm@ti.com>
+Cc: "Beno=C3=AEt Cousson" <b-cousson@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-omap@vger.kernel.org
 
-Ack for the function-mask change for omap3, looks like those bits are not
-used.
-  
-> -		omap3_pmx_wkup: pinmux@0x48002a58 {
-> +		omap3_pmx_wkup: pinmux@0x48002a00 {
->  			compatible = "ti,omap3-padconf", "pinctrl-single";
-> -			reg = <0x48002a58 0x5c>;
-> +			reg = <0x48002a00 0x54>;
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			pinctrl-single,register-width = <16>;
-> -			pinctrl-single,function-mask = <0x7fff>;
-> +			pinctrl-single,function-mask = <0x7f1f>;
->  		};
+Signed-off-by: Andrii.Tseglytskyi <andrii.tseglytskyi@ti.com>
+---
+ arch/arm/boot/dts/omap36xx.dtsi |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-Hmm I think I converted these from the legacy mux framework, that seems
-to be missing the wkup range between 0x2a00 - 0x2a58. So yes 0x2a00
-is the right start as otherwise we're missing some wkup registers.
+diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36=
+xx.dtsi
+index 96bf028..72d5135 100644
+--- a/arch/arm/boot/dts/omap36xx.dtsi
++++ b/arch/arm/boot/dts/omap36xx.dtsi
+@@ -15,6 +15,22 @@
+ 		serial3 =3D &uart4;
+ 	};
+=20
++	abb@0x483072f0 {
++		compatible =3D "ti,omap36xx-abb";
++		#address-cells =3D <1>;
++		#size-cells =3D <1>;
++		reg =3D <0x483072f0 0x8>,
++		      <0x48306818 0x4>; /* PRM_IRQSTATUS_MPU */
++		operating-points =3D <
++			/* kHz   ABB */
++			300000  0
++			600000  0
++			800000  0
++			1000000 1
++		>;
++		ti,tranxdone_status_mask =3D <0x4000000>; /* (1 << 26) */
++	};
++
+ 	ocp {
+ 		uart4: serial@49042000 {
+ 			compatible =3D "ti,omap3-uart";
+--=20
+1.7.9.5
 
-But the size should be 0x50 instead of 0x54 as the JTAG_TDO[31:16] is
-already un-used in TRM?
-
-Or it could be 0x60 if we want to map also the reserved GPIO128[31:16].
-
-Regards,
-
-Tony
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
