@@ -1,45 +1,33 @@
-From: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Subject: [PATCH v7 5/5] ARM: davinci: da850: override mmc DT node device name
-Date: Thu, 28 Mar 2013 18:42:02 +0530
-Message-ID: <1364476322-15882-6-git-send-email-prakash.pm@ti.com>
-References: <1364476322-15882-3-git-send-email-prakash.pm@ti.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH V2 0/8] ARM: OMAP3+: support cpufreq-cpu0 for device tree boot
+Date: Thu, 28 Mar 2013 08:43:18 -0500
+Message-ID: <CAGo_u6rn=GHVfJiz_7gkse2e-e3BZicEqJBQWomftpi-nCvfng@mail.gmail.com>
+References: <1363715590-5131-1-git-send-email-nm@ti.com>
+	<51542390.1020300@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1364476322-15882-3-git-send-email-prakash.pm@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: davinci-linux-open-source@linux.davincidsp.com, linux-mmc@vger.kernel.org
-Cc: cjb@laptop.org, nsekhar@ti.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, hs@denx.de, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, arnd@arndb.de, "Manjunathappa, Prakash" <prakash.pm@ti.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51542390.1020300@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>, linux-pm@vger.kernel.org, Kevin Hilman <khilman@deeprootsystems.com>, Keerthy <j-keerthy@ti.com>, devicetree-discuss@lists.ozlabs.org, cpufreq@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Jon Hunter <jon-hunter@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Populate OF_DEV_AUXDATA with desired device name expected by
-davinci_mmc driver. Without this clk_get of davinci_mmc DT driver
-fails.
+Hi Benoit,
 
-Signed-off-by: Manjunathappa, Prakash <prakash.pm@ti.com>
-Cc: linux-mmc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: davinci-linux-open-source@linux.davincidsp.com
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: cjb@laptop.org
-Cc: Sekhar Nori <nsekhar@ti.com>
----
- arch/arm/mach-davinci/da8xx-dt.c |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+On Thu, Mar 28, 2013 at 6:03 AM, Benoit Cousson <b-cousson@ti.com> wrote:
+> The patches 1 to 6 looks good to me. Beside the pretty long Cc list,
+> that should not necessarily contain all the mailing list.
+Arrgh.. my bad. I will keep it in mind for the future.
 
-diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
-index 24146de..f581068 100644
---- a/arch/arm/mach-davinci/da8xx-dt.c
-+++ b/arch/arm/mach-davinci/da8xx-dt.c
-@@ -41,6 +41,7 @@ struct of_dev_auxdata da850_auxdata_lookup[] __initdata = {
- 	OF_DEV_AUXDATA("ti,davinci-i2c", 0x01c22000, "i2c_davinci.1", NULL),
- 	OF_DEV_AUXDATA("ti,davinci-wdt", 0x01c21000, "watchdog", NULL),
- 	OF_DEV_AUXDATA("ti,da830-spi", 0x01f0e000, "spi_davinci.1", NULL),
-+	OF_DEV_AUXDATA("ti,da830-mmc", 0x01c40000, "da830-mmc.0", NULL),
- 	{}
- };
- 
--- 
-1.7.4.1
+>
+> Since you are changing / renaming some DTS files, and to avoid any merge
+> conflict I will apply only these 6 patches.
+> DTS and driver changes are in theory orthogonal enough to allow merging
+> them separately and in any order.
+>
+> I'll update my branch with these patches ASAP.
+Thanks. I will post a v3 of remaining patches later today.
 
+Regards,
+Nishanth Menon
