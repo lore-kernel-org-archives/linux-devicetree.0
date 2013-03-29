@@ -1,60 +1,52 @@
-From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: [PATCH 2/4] ARM: kirkwood: add device node entries for the gigabit
- interfaces
-Date: Fri, 29 Mar 2013 19:51:53 +0100
-Message-ID: <5155E2C9.9050201@openwrt.org>
-References: <1364580879-4297-1-git-send-email-florian@openwrt.org> <1364580879-4297-3-git-send-email-florian@openwrt.org> <20130329184852.GM13280@titan.lakedaemon.net>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 1/2] video: ssd1307fb: Add support for SSD1306 OLED controller
+Date: Fri, 29 Mar 2013 20:34:19 +0100
+Message-ID: <5155ECBB.9000008@free-electrons.com>
+References: <1362588251-1824-1-git-send-email-maxime.ripard@free-electrons.com> <1362588251-1824-2-git-send-email-maxime.ripard@free-electrons.com> <20130329183842.GH20693@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20130329184852.GM13280@titan.lakedaemon.net>
-Sender: netdev-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: davem@davemloft.net, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, thomas.petazzoni@free-electrons.com, jm@lentin.co.uk, moinejf@free.fr, sebastian.hesselbarth@gmail.com, buytenh@wantstofly.org, andrew@lunn.ch, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130329183842.GH20693@game.jcrosoft.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: linux-fbdev@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Andrew Morton <akpm@linux-foundation.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Le 03/29/13 19:48, Jason Cooper a =C3=A9crit :
-> On Fri, Mar 29, 2013 at 07:14:37PM +0100, Florian Fainelli wrote:
->> This patch modifies kirkwood.dtsi to specify the various gigabit
->> interfaces nodes available on kirkwood devices. They are disabled by
->> default and should be enabled on a per-board basis. egiga0 and egiga=
-1
->> aliases are defined for convenience. The mdio node is also present a=
-nd
->> should be enabled on a per-board basis as well.
->>
->> Signed-off-by: Florian Fainelli <florian@openwrt.org>
->> ---
->>   arch/arm/boot/dts/kirkwood.dtsi |   46 +++++++++++++++++++++++++++=
-++++++++++++
->>   arch/arm/mach-kirkwood/common.c |    4 ++--
->>   2 files changed, 48 insertions(+), 2 deletions(-)
->>
-> ...
->> diff --git a/arch/arm/mach-kirkwood/common.c b/arch/arm/mach-kirkwoo=
-d/common.c
->> index 49792a0..a606f9f 100644
->> --- a/arch/arm/mach-kirkwood/common.c
->> +++ b/arch/arm/mach-kirkwood/common.c
->> @@ -251,8 +251,8 @@ void __init kirkwood_clk_init(void)
->>   	/* clkdev entries, mapping clks to devices */
->>   	orion_clkdev_add(NULL, "orion_spi.0", runit);
->>   	orion_clkdev_add(NULL, "orion_spi.1", runit);
->> -	orion_clkdev_add(NULL, MV643XX_ETH_NAME ".0", ge0);
->> -	orion_clkdev_add(NULL, MV643XX_ETH_NAME ".1", ge1);
->> +	orion_clkdev_add("0", MV643XX_ETH_NAME ".0", ge0);
->> +	orion_clkdev_add("1", MV643XX_ETH_NAME ".1", ge1);
->
-> Your first patch is going to go through David's tree, and I'd like to
-> prevent any hard dependency between his tree and arm-soc.  Can this
-> change be pulled out and applied separately?  At first glance, it loo=
-ks
-> like a fix to match sata and pcie.
+Hi Jean Christophe,
 
-I just actually did the same thing as what SATA has (two clocks with=20
-names), define a clock name "0" and "1" (is not that too generic BTW?)=20
-for ge0 and ge1. But I don't think this change is required.
---
-=46lorian
+Le 29/03/2013 19:38, Jean-Christophe PLAGNIOL-VILLARD a =E9crit :
+> On 17:44 Wed 06 Mar     , Maxime Ripard wrote:
+
+[snip]
+
+>>  static int ssd1307fb_probe(struct i2c_client *client,
+>>  			   const struct i2c_device_id *id)
+>>  {
+>>  	struct fb_info *info;
+>> -	u32 vmem_size =3D SSD1307FB_WIDTH * SSD1307FB_HEIGHT / 8;
+>> +	struct device_node *node =3D client->dev.of_node;
+>> +	u32 vmem_size;
+>>  	struct ssd1307fb_par *par;
+>>  	u8 *vmem;
+>>  	int ret;
+>> =20
+>> -	if (!client->dev.of_node) {
+>> +	if (!node) {
+> why this will be DT only?
+>=20
+> a platform or ARN that does not support DT can not use this driver
+>=20
+> this looks not right
+
+Because the platform I was developing that for was DT-only, and I guess
+if someone wants to use this driver on a non-DT platform, that
+hypothetical someone can always send a patch to enable the "old-style"
+probing in this driver.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
