@@ -1,7 +1,7 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH v3 0/11] LVDS Display Bridge support for i.MX
-Date: Fri, 29 Mar 2013 19:19:58 +0800
-Message-ID: <20130329111956.GA30696@S2101-09.ap.freescale.net>
+Date: Fri, 29 Mar 2013 19:44:05 +0800
+Message-ID: <20130329114402.GA27148@S2101-09.ap.freescale.net>
 References: <1364484215-13935-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -30,10 +30,7 @@ On Thu, Mar 28, 2013 at 04:23:24PM +0100, Philipp Zabel wrote:
 > i.MX53 and i.MX6q boards. I have reordered the patches,
 > as Shawn has already applied the now first five patches.
 
-I do not think you need to necessarily resend the patches that have
-already been applied.
-
-BTW, I applied "ARM i.MX53: Add IOMUXC GPR to device tree" as well last
-night.
+Just applied patches #7, #8 and #11.  #9 and #10 were applied yesterday
+actually.  So all "ARM:" patches are applied.
 
 Shawn
