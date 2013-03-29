@@ -1,95 +1,55 @@
-From: Christoph Fritz <chf.fritz@googlemail.com>
-Subject: Re: [PATCH] arm/dts: OMAP3: fix pinctrl-single configuration
-Date: Fri, 29 Mar 2013 10:37:28 +0100
-Message-ID: <1364549848.4634.13.camel@mars>
-References: <1364458106.3757.11.camel@mars>
-	 <20130328163854.GV10155@atomide.com>
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCH v6 0/8] Reset controller API to reset IP modules on
+ i.MX5 and i.MX6
+Date: Fri, 29 Mar 2013 11:16:03 +0100
+Message-ID: <20130329101602.GA7283@amd.pavel.ucw.cz>
+References: <1364488523-20310-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130328163854.GV10155@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: =?ISO-8859-1?Q?Beno=EEt?= Cousson <b-cousson@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Daniel Mack <daniel@zonque.org>, "Hans J. Koch" <hjk@hansjkoch.de>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1364488523-20310-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, kernel@pengutronix.de, Len Brown <len.brown@intel.com>, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2013-03-28 at 09:38 -0700, Tony Lindgren wrote:
-> * Christoph Fritz <chf.fritz@googlemail.com> [130328 01:12]:
-> > - Fix 'function-mask' referring to TRM Section 7.4.4:
-> >   "Pad Functional Multiplexing and Configuration".
-> > - Fix 'omap3_pmx_core' referring to TRM Table 7-4:
-> >   "Core Control Module Pad Configuration Register Fields"
-> > - Fix 'omap3_pmx_wkup' referring to TRM Table 7-6:
-> >   "Wake-Up Control Module Pad Configuration Register Fields".
+On Thu 2013-03-28 17:35:15, Philipp Zabel wrote:
+> [Added Arnd and Greg to the recipients] I think the first three patches
+> of this series are candidates to go through Arnd's tree. Arnd, would you
+> take those patches?
+>         [PATCH v6 1/8] dt: describe base reset signal binding
+>         [PATCH v6 2/8] reset: Add reset controller API
+>         [PATCH v6 3/8] reset: Add driver for gpio-controlled reset pins
 > 
-> Maybe mention which TRM this is so people will know.
->  
-> > Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
-> > ---
-> >  arch/arm/boot/dts/omap3.dtsi |   12 ++++++------
-> >  1 file changed, 6 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> > index 1acc261..6ce3b5c 100644
-> > --- a/arch/arm/boot/dts/omap3.dtsi
-> > +++ b/arch/arm/boot/dts/omap3.dtsi
-> > @@ -27,7 +27,7 @@
-> >  	};
-> >  
-> >  	/*
-> > -	 * The soc node represents the soc top level view. It is uses for IPs
-> > +	 * The soc node represents the soc top level view. It is used for IPs
-> >  	 * that are not memory mapped in the MPU view or for the MPU itself.
-> >  	 */
-> >  	soc {
-> > @@ -77,20 +77,20 @@
-> >  
-> >  		omap3_pmx_core: pinmux@48002030 {
-> >  			compatible = "ti,omap3-padconf", "pinctrl-single";
-> > -			reg = <0x48002030 0x05cc>;
-> > +			reg = <0x48002030 0x234>;
-> >  			#address-cells = <1>;
-> >  			#size-cells = <0>;
-> >  			pinctrl-single,register-width = <16>;
-> > -			pinctrl-single,function-mask = <0x7fff>;
-> > +			pinctrl-single,function-mask = <0x7f1f>;
-> >  		};
+> The system reset controller (SRC) on i.MX51, i.MX53, and i.MX6q controls
+> reset lines to the GPU, VPU, IPU, and OpenVG IP modules.
 > 
-> Changing the size from 0x5cc to 0x234 misses the range ending at
-> CONTROL_PADCONF_ETK_D14[31:16] 0x480025f8 that's listed at least in
-> the 3630 TRM. Which TRM are you looking at?
-
-I used TRM Omap35xx, and yes in the TRM Omap36xx 0x234 is fine. I'll fix
-this in the next revision of this patch.
-
-
-> Ack for the function-mask change for omap3, looks like those bits are not
-> used.
->   
-> > -		omap3_pmx_wkup: pinmux@0x48002a58 {
-> > +		omap3_pmx_wkup: pinmux@0x48002a00 {
-> >  			compatible = "ti,omap3-padconf", "pinctrl-single";
-> > -			reg = <0x48002a58 0x5c>;
-> > +			reg = <0x48002a00 0x54>;
-> >  			#address-cells = <1>;
-> >  			#size-cells = <0>;
-> >  			pinctrl-single,register-width = <16>;
-> > -			pinctrl-single,function-mask = <0x7fff>;
-> > +			pinctrl-single,function-mask = <0x7f1f>;
-> >  		};
+> The following patches add a simple API for devices to request being reset
+> by separate reset controller hardware and implements the reset signal
+> device tree binding proposed by Stephen Warren. Contrary to Tegra hardware,
+> the i.MX SRC contains self-deasserting reset registers, so I've included
+> both ops to manually assert/deassert a reset line, as well as a "reset"
+> operation that is supposed to assert the reset line and wait for it to
+> deassert.
 > 
-> Hmm I think I converted these from the legacy mux framework, that seems
-> to be missing the wkup range between 0x2a00 - 0x2a58. So yes 0x2a00
-> is the right start as otherwise we're missing some wkup registers.
+> The i.MX SRC is enhanced to provide a reset controller and the IPU driver
+> is made to request being reset by calling the device_reset(&pdev->dev)
+> convenience wrapper during probing.
 > 
-> But the size should be 0x50 instead of 0x54 as the JTAG_TDO[31:16] is
-> already un-used in TRM?
-> 
-> Or it could be 0x60 if we want to map also the reserved GPIO128[31:16].
+> No changes since v5, I just reordered the series.
 
-Why not 0x5c ? GPIO128[31:16] starts at 0x2a5a and its size is 2 bytes.
+Reviewed-by: Pavel Machek <pavel@ucw.cz>
 
- Thanks
-  -- Christoph
-
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
