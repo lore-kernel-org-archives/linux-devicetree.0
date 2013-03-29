@@ -1,39 +1,95 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 1/4] iio: adc: Document the regulator/clocks for exynos-adc
-Date: Fri, 29 Mar 2013 09:36:04 +0000
-Message-ID: <51556084.2040307@kernel.org>
-References: <1363129994-10438-1-git-send-email-dianders@chromium.org> <1363207202-10858-1-git-send-email-dianders@chromium.org> <1363207202-10858-2-git-send-email-dianders@chromium.org> <CAHfPSqDLXD-T6__eF=d+U7Me953DqTgMXi=Jmx7LnHL+W-FLhQ@mail.gmail.com> <51533D34.7020406@metafoo.de> <CAD=FV=XVWe+GNzEuYkXL3n85t2zRCHJkz5ry_uVXY62rp61qKQ@mail.gmail.com>
+From: Christoph Fritz <chf.fritz@googlemail.com>
+Subject: Re: [PATCH] arm/dts: OMAP3: fix pinctrl-single configuration
+Date: Fri, 29 Mar 2013 10:37:28 +0100
+Message-ID: <1364549848.4634.13.camel@mars>
+References: <1364458106.3757.11.camel@mars>
+	 <20130328163854.GV10155@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=XVWe+GNzEuYkXL3n85t2zRCHJkz5ry_uVXY62rp61qKQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Naveen Krishna Ch <naveenkrishna.ch@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, Olof Johansson <olof@lixom.net>, Guenter Roeck <linux@roeck-us.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130328163854.GV10155@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: =?ISO-8859-1?Q?Beno=EEt?= Cousson <b-cousson@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Daniel Mack <daniel@zonque.org>, "Hans J. Koch" <hjk@hansjkoch.de>
 List-Id: devicetree@vger.kernel.org
 
-On 03/27/2013 06:46 PM, Doug Anderson wrote:
-> Hi,
+On Thu, 2013-03-28 at 09:38 -0700, Tony Lindgren wrote:
+> * Christoph Fritz <chf.fritz@googlemail.com> [130328 01:12]:
+> > - Fix 'function-mask' referring to TRM Section 7.4.4:
+> >   "Pad Functional Multiplexing and Configuration".
+> > - Fix 'omap3_pmx_core' referring to TRM Table 7-4:
+> >   "Core Control Module Pad Configuration Register Fields"
+> > - Fix 'omap3_pmx_wkup' referring to TRM Table 7-6:
+> >   "Wake-Up Control Module Pad Configuration Register Fields".
 > 
-> On Wed, Mar 27, 2013 at 11:40 AM, Lars-Peter Clausen <lars@metafoo.de> wrote:
->> On 03/27/2013 07:35 PM, Naveen Krishna Ch wrote:
->>> On 13 March 2013 13:39, Doug Anderson <dianders@chromium.org> wrote:
->>>> The exynos ADC won't work without a regulator called "vdd" and a clock
->>>> called "adc".  Document this fact in the device tree bindings.
->>>>
->>>> Signed-off-by: Doug Anderson <dianders@chromium.org>
->>> Reviewed-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
->>>
->>> Lars, any update on this patch set. This change is required.
->>
->> Uhm, looks fine to me. I'm sure Jonathan will pick it up :)
+> Maybe mention which TRM this is so people will know.
+>  
+> > Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
+> > ---
+> >  arch/arm/boot/dts/omap3.dtsi |   12 ++++++------
+> >  1 file changed, 6 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+> > index 1acc261..6ce3b5c 100644
+> > --- a/arch/arm/boot/dts/omap3.dtsi
+> > +++ b/arch/arm/boot/dts/omap3.dtsi
+> > @@ -27,7 +27,7 @@
+> >  	};
+> >  
+> >  	/*
+> > -	 * The soc node represents the soc top level view. It is uses for IPs
+> > +	 * The soc node represents the soc top level view. It is used for IPs
+> >  	 * that are not memory mapped in the MPU view or for the MPU itself.
+> >  	 */
+> >  	soc {
+> > @@ -77,20 +77,20 @@
+> >  
+> >  		omap3_pmx_core: pinmux@48002030 {
+> >  			compatible = "ti,omap3-padconf", "pinctrl-single";
+> > -			reg = <0x48002030 0x05cc>;
+> > +			reg = <0x48002030 0x234>;
+> >  			#address-cells = <1>;
+> >  			#size-cells = <0>;
+> >  			pinctrl-single,register-width = <16>;
+> > -			pinctrl-single,function-mask = <0x7fff>;
+> > +			pinctrl-single,function-mask = <0x7f1f>;
+> >  		};
 > 
-> Part 2 made it in, but not the documentation patch.  Now that it has a
-> Reviewed-by it can probably go in...  :)
-> 
-And indeed it has now done so. Well into the togreg branch of iio.git
+> Changing the size from 0x5cc to 0x234 misses the range ending at
+> CONTROL_PADCONF_ETK_D14[31:16] 0x480025f8 that's listed at least in
+> the 3630 TRM. Which TRM are you looking at?
 
-Jonathan
-> -Doug
+I used TRM Omap35xx, and yes in the TRM Omap36xx 0x234 is fine. I'll fix
+this in the next revision of this patch.
+
+
+> Ack for the function-mask change for omap3, looks like those bits are not
+> used.
+>   
+> > -		omap3_pmx_wkup: pinmux@0x48002a58 {
+> > +		omap3_pmx_wkup: pinmux@0x48002a00 {
+> >  			compatible = "ti,omap3-padconf", "pinctrl-single";
+> > -			reg = <0x48002a58 0x5c>;
+> > +			reg = <0x48002a00 0x54>;
+> >  			#address-cells = <1>;
+> >  			#size-cells = <0>;
+> >  			pinctrl-single,register-width = <16>;
+> > -			pinctrl-single,function-mask = <0x7fff>;
+> > +			pinctrl-single,function-mask = <0x7f1f>;
+> >  		};
 > 
+> Hmm I think I converted these from the legacy mux framework, that seems
+> to be missing the wkup range between 0x2a00 - 0x2a58. So yes 0x2a00
+> is the right start as otherwise we're missing some wkup registers.
+> 
+> But the size should be 0x50 instead of 0x54 as the JTAG_TDO[31:16] is
+> already un-used in TRM?
+> 
+> Or it could be 0x60 if we want to map also the reserved GPIO128[31:16].
+
+Why not 0x5c ? GPIO128[31:16] starts at 0x2a5a and its size is 2 bytes.
+
+ Thanks
+  -- Christoph
+
