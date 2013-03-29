@@ -1,100 +1,32 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] arm/dts: OMAP3: fix pinctrl-single configuration
-Date: Fri, 29 Mar 2013 08:17:59 -0700
-Message-ID: <20130329151759.GB10155@atomide.com>
-References: <1364458106.3757.11.camel@mars>
- <20130328163854.GV10155@atomide.com>
- <1364549848.4634.13.camel@mars>
+From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v4 0/6] support other fsl SoCs with usbmisc + small fixes
+Date: Fri, 29 Mar 2013 18:00:36 +0200
+Message-ID: <87fvzep55n.fsf@ashishki-desk.ger.corp.intel.com>
+References: <1354033021-10585-1-git-send-email-m.grzeschik@pengutronix.de> <20121128025217.GC18593@nchen-desktop> <87ip6mor1e.fsf@ashishki-desk.ger.corp.intel.com> <CAOMZO5ArDLKDLEzhYc7EP2CNQGcT=vO7ctbiEsjzsGs+EaT7Dw@mail.gmail.com> <20130325162931.GB22810@pengutronix.de> <20130325173019.GA1992@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1364549848.4634.13.camel@mars>
-Sender: linux-omap-owner@vger.kernel.org
-To: Christoph Fritz <chf.fritz@googlemail.com>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <b-cousson@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Daniel Mack <daniel@zonque.org>, "Hans J. Koch" <hjk@hansjkoch.de>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130325173019.GA1992-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Christoph Fritz <chf.fritz@googlemail.com> [130329 02:41]:
-> On Thu, 2013-03-28 at 09:38 -0700, Tony Lindgren wrote:
-> > * Christoph Fritz <chf.fritz@googlemail.com> [130328 01:12]:
-> > > - Fix 'function-mask' referring to TRM Section 7.4.4:
-> > >   "Pad Functional Multiplexing and Configuration".
-> > > - Fix 'omap3_pmx_core' referring to TRM Table 7-4:
-> > >   "Core Control Module Pad Configuration Register Fields"
-> > > - Fix 'omap3_pmx_wkup' referring to TRM Table 7-6:
-> > >   "Wake-Up Control Module Pad Configuration Register Fields".
-> > 
-> > Maybe mention which TRM this is so people will know.
-> >  
-> > > Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
-> > > ---
-> > >  arch/arm/boot/dts/omap3.dtsi |   12 ++++++------
-> > >  1 file changed, 6 insertions(+), 6 deletions(-)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> > > index 1acc261..6ce3b5c 100644
-> > > --- a/arch/arm/boot/dts/omap3.dtsi
-> > > +++ b/arch/arm/boot/dts/omap3.dtsi
-> > > @@ -27,7 +27,7 @@
-> > >  	};
-> > >  
-> > >  	/*
-> > > -	 * The soc node represents the soc top level view. It is uses for IPs
-> > > +	 * The soc node represents the soc top level view. It is used for IPs
-> > >  	 * that are not memory mapped in the MPU view or for the MPU itself.
-> > >  	 */
-> > >  	soc {
-> > > @@ -77,20 +77,20 @@
-> > >  
-> > >  		omap3_pmx_core: pinmux@48002030 {
-> > >  			compatible = "ti,omap3-padconf", "pinctrl-single";
-> > > -			reg = <0x48002030 0x05cc>;
-> > > +			reg = <0x48002030 0x234>;
-> > >  			#address-cells = <1>;
-> > >  			#size-cells = <0>;
-> > >  			pinctrl-single,register-width = <16>;
-> > > -			pinctrl-single,function-mask = <0x7fff>;
-> > > +			pinctrl-single,function-mask = <0x7f1f>;
-> > >  		};
-> > 
-> > Changing the size from 0x5cc to 0x234 misses the range ending at
-> > CONTROL_PADCONF_ETK_D14[31:16] 0x480025f8 that's listed at least in
-> > the 3630 TRM. Which TRM are you looking at?
-> 
-> I used TRM Omap35xx, and yes in the TRM Omap36xx 0x234 is fine. I'll fix
-> this in the next revision of this patch.
+Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> writes:
 
-OK 
- 
-> > Ack for the function-mask change for omap3, looks like those bits are not
-> > used.
-> >   
-> > > -		omap3_pmx_wkup: pinmux@0x48002a58 {
-> > > +		omap3_pmx_wkup: pinmux@0x48002a00 {
-> > >  			compatible = "ti,omap3-padconf", "pinctrl-single";
-> > > -			reg = <0x48002a58 0x5c>;
-> > > +			reg = <0x48002a00 0x54>;
-> > >  			#address-cells = <1>;
-> > >  			#size-cells = <0>;
-> > >  			pinctrl-single,register-width = <16>;
-> > > -			pinctrl-single,function-mask = <0x7fff>;
-> > > +			pinctrl-single,function-mask = <0x7f1f>;
-> > >  		};
-> > 
-> > Hmm I think I converted these from the legacy mux framework, that seems
-> > to be missing the wkup range between 0x2a00 - 0x2a58. So yes 0x2a00
-> > is the right start as otherwise we're missing some wkup registers.
-> > 
-> > But the size should be 0x50 instead of 0x54 as the JTAG_TDO[31:16] is
-> > already un-used in TRM?
-> > 
-> > Or it could be 0x60 if we want to map also the reserved GPIO128[31:16].
-> 
-> Why not 0x5c ? GPIO128[31:16] starts at 0x2a5a and its size is 2 bytes.
+> If I don't hear back from you by Wednesday this week, with a specific
+> plan for how to get all of these fixes to me by the end of this week,
+> I'm going to assume that you are missing, and will just start taking
+> chipidea patches directly myself, sorry.
 
-Oops yes 0x5c as it's 2 bytes. So the original value is fine then.
+Actually it looks like there might be more patches coming for this
+round, so I'd like to send chipidea stuff to you after rc5 if that's ok
+with you.
 
 Regards,
-
-Tony
+--
+Alex
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
