@@ -1,57 +1,31 @@
-From: "Hiremath, Vaibhav" <hvaibhav@ti.com>
-Subject: RE: [PATCH-V2 0/6] ARM: dts: AM33XX: Cleanup and pinctrl binding
- support
-Date: Fri, 29 Mar 2013 14:52:02 +0000
-Message-ID: <79CD15C6BA57404B839C016229A409A83EC3DDC8@DBDE01.ent.ti.com>
-References: <1364452963-22083-1-git-send-email-hvaibhav@ti.com>
- <515436FF.9030703@ti.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v6 6/8] staging: drm/imx: Use SRC to reset IPU
+Date: Fri, 29 Mar 2013 08:12:17 -0700
+Message-ID: <20130329151217.GA554@kroah.com>
+References: <1364488523-20310-1-git-send-email-p.zabel@pengutronix.de>
+ <1364488523-20310-7-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <515436FF.9030703@ti.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Porter, Matt" <mporter@ti.com>, "jacmet@sunsite.dk" <jacmet@sunsite.dk>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1364488523-20310-7-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-pm-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, Mike Turquette <mturquette@linaro.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, "Rafael J. Wysocki" <rjw@sisk.pl>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Cousson, Benoit
-> Sent: Thursday, March 28, 2013 5:57 PM
-> To: Hiremath, Vaibhav
-> Cc: linux-omap@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> devicetree-discuss@lists.ozlabs.org; Porter, Matt; jacmet@sunsite.dk
-> Subject: Re: [PATCH-V2 0/6] ARM: dts: AM33XX: Cleanup and pinctrl
-> binding support
+On Thu, Mar 28, 2013 at 05:35:21PM +0100, Philipp Zabel wrote:
+> Request the System Reset Controller to reset the IPU if
+> specified via device tree phandle.
 > 
-> Hi Vaibhav,
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Reviewed-by: Stephen Warren <swarren@nvidia.com>
+> Reviewed-by: Marek Vasut <marex@denx.de>
+> ---
+>  .../devicetree/bindings/staging/imx-drm/fsl-imx-drm.txt      |  3 +++
+>  drivers/staging/imx-drm/ipu-v3/ipu-common.c                  | 12 +++++++++---
+>  2 files changed, 12 insertions(+), 3 deletions(-)
 > 
-> The series looks good to me, but unfortunately does not apply cleanly
-> on
-> top of the latest for_3.10/dts branch.
-> 
-> Could you rebase it?
-> 
-Benoit,
 
-You can simply skip below two patches,
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[PATCH 1/6] ARM: dts: AM33XX: Fix the i2c numbering to match hardware/TRM
-[PATCH 3/6] ARM: dts: AM33XX: Fix gpio numbering to match hardware/TRM
-
-
-You have already merged Anil Kumar's patch into your branch.
-
-commit 9115b7c03565b5797714b2e819f6a79f040d8782
-Author: AnilKumar Ch <anilkumar@ti.com>
-Date:   Wed Nov 21 17:22:17 2012 +0530
-
-    ARM: dts: AM33XX: Rename I2C and GPIO nodes
-
-
-
-NOTE: I have build and boot tested by skipping above 2 patches.
-
-Thanks,
-Vaibhav
