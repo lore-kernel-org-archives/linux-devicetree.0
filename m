@@ -1,41 +1,96 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH] pinctrl: pinctrl-mxs: document the missing pull-ups
-Date: Sat, 30 Mar 2013 00:51:12 +0100
-Message-ID: <1364601072-30226-1-git-send-email-alexandre.belloni@free-electrons.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Christoph Fritz <chf.fritz@googlemail.com>
+Subject: [RFC][BUG] arm/dts: OMAP3: set #interrupt-cells to two
+Date: Sat, 30 Mar 2013 09:21:28 +0100
+Message-ID: <1364631689.3767.7.camel@mars>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?Beno=EEt?= Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Tarun Kanti DebBarma <tarun.kanti@ti.com>, Daniel Mack <daniel@zonque.org>, "Hans J. Koch" <hjk@hansjkoch.de>
 List-Id: devicetree@vger.kernel.org
 
-Some pins on the i.mx23 and i.mx28 are missing pull-ups, document that
-oddity because it was difficult to know the expected behaviour.
+This patch sets gpio #interrupt-cells from a falsely acquired '1' to '2'
+referring to Documentation/devicetree/bindings/gpio/gpio-omap.txt:
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+      The first cell is the GPIO number.
+      The second cell is used to specify flags:
+        bits[3:0] trigger type and level flags:
+          1 = low-to-high edge triggered.
+          2 = high-to-low edge triggered.
+          4 = active high level-sensitive.
+          8 = active low level-sensitive.
+
+But using this trigger cell in a board specific devicetree leads to a
+non-starting kernel. This is due to not yet enabled gpio-clocks while
+kernel/irq/irqdomain.c tries to set this trigger-flag (from the second
+interrupt-cell) to gpio-irq-controller.
+
+ Any ideas?
 ---
+ arch/arm/boot/dts/omap3.dtsi |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-I don't think it is necessary to list the pins with the missing pull ups in
-that file but we may want to explicitly direct to the datasheet as even with
-the same chip, it can depend on the package (BGA or QFP for example).
-
- Documentation/devicetree/bindings/pinctrl/fsl,mxs-pinctrl.txt |    4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,mxs-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,mxs-pinctrl.txt
-index f7e8e8f..3077370 100644
---- a/Documentation/devicetree/bindings/pinctrl/fsl,mxs-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/fsl,mxs-pinctrl.txt
-@@ -70,6 +70,10 @@ Optional subnode-properties:
-     0: Disable the internal pull-up
-     1: Enable the internal pull-up
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+index 1997b41..e8e6b8f 100644
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -99,7 +99,7 @@
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+-			#interrupt-cells = <1>;
++			#interrupt-cells = <2>;
+ 		};
  
-+Note that when enabling the pull-up, the internal pad keeper gets disabled.
-+Also, some pins doesn't have a pull up, in that case, setting the fsl,pull-up
-+will only disable the internal pad keeper.
-+
- Examples:
+ 		gpio2: gpio@49050000 {
+@@ -108,7 +108,7 @@
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+-			#interrupt-cells = <1>;
++			#interrupt-cells = <2>;
+ 		};
  
- pinctrl@80018000 {
+ 		gpio3: gpio@49052000 {
+@@ -117,7 +117,7 @@
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+-			#interrupt-cells = <1>;
++			#interrupt-cells = <2>;
+ 		};
+ 
+ 		gpio4: gpio@49054000 {
+@@ -126,7 +126,7 @@
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+-			#interrupt-cells = <1>;
++			#interrupt-cells = <2>;
+ 		};
+ 
+ 		gpio5: gpio@49056000 {
+@@ -135,7 +135,7 @@
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+-			#interrupt-cells = <1>;
++			#interrupt-cells = <2>;
+ 		};
+ 
+ 		gpio6: gpio@49058000 {
+@@ -144,7 +144,7 @@
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+-			#interrupt-cells = <1>;
++			#interrupt-cells = <2>;
+ 		};
+ 
+ 		uart1: serial@4806a000 {
 -- 
 1.7.10.4
+
+
 
