@@ -1,148 +1,132 @@
-From: Javier Martinez Canillas <martinez.javier@gmail.com>
-Subject: Re: [RFC][BUG] arm/dts: OMAP3: set #interrupt-cells to two
-Date: Sat, 30 Mar 2013 14:18:19 +0100
-Message-ID: <CAAwP0s35J-edpvFv08xjjpwaezQBYNvMNhhXL-UacsuUtSt4ZA@mail.gmail.com>
-References: <1364631689.3767.7.camel@mars>
+From: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>
+Subject: Re: [REPOST Patch v1 3/3] power: power_supply_core: Add support for
+ supplied_from
+Date: Sat, 30 Mar 2013 15:41:17 -0700
+Message-ID: <20130330224117.GA24610@lizard>
+References: <1364264690-2124-1-git-send-email-rklein@nvidia.com>
+ <1364264690-2124-4-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1364631689.3767.7.camel@mars>
-Sender: linux-omap-owner@vger.kernel.org
-To: Christoph Fritz <chf.fritz@googlemail.com>
-Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, Daniel Mack <daniel@zonque.org>, "Hans J. Koch" <hjk@hansjkoch.de>, Jon Hunter <jon-hunter@ti.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1364264690-2124-4-git-send-email-rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 30, 2013 at 9:21 AM, Christoph Fritz
-<chf.fritz@googlemail.com> wrote:
-> This patch sets gpio #interrupt-cells from a falsely acquired '1' to '2'
-> referring to Documentation/devicetree/bindings/gpio/gpio-omap.txt:
->
->       The first cell is the GPIO number.
->       The second cell is used to specify flags:
->         bits[3:0] trigger type and level flags:
->           1 = low-to-high edge triggered.
->           2 = high-to-low edge triggered.
->           4 = active high level-sensitive.
->           8 = active low level-sensitive.
->
-> But using this trigger cell in a board specific devicetree leads to a
-> non-starting kernel. This is due to not yet enabled gpio-clocks while
-> kernel/irq/irqdomain.c tries to set this trigger-flag (from the second
-> interrupt-cell) to gpio-irq-controller.
->
->  Any ideas?
+On Mon, Mar 25, 2013 at 10:24:50PM -0400, Rhyland Klein wrote:
+[...]
+> +int power_supply_find_supply_from_node(struct device_node *supply_node)
+> +{
+> +	int error;
+> +	struct device *dev;
+> +	struct class_dev_iter iter;
+> +
+> +	/* Use iterator to see if any other device is registered.
+> +	 * This is required since class_for_each_device returns 0
+> +	 * if there are no devices registered.
+> +	 */
 
-Hi Christoph,
+Minor nit: can you please adhere to the canonical style for the multiline
+comments?
 
-A call to gpio_request() to enable the GPIO bank is needed before
-using a GPIO as an IRQ source, otherwise accesses to the GPIO bank
-registers fails making the kernel to hang. Jon's (added as cc)
-"gpio/omap: warn if bank is not enabled on setting irq type" patch [1]
-fixes the issue by warning and returning -EINVAL.
+> +	class_dev_iter_init(&iter, power_supply_class, NULL, NULL);
+> +	dev = class_dev_iter_next(&iter);
+> +
+> +	if (!dev)
+> +		return -EPROBE_DEFER;
+> +
+> +	/* we have to treat the return value as inverted, because if
+> +	 * we return error on not found, then it won't continue looking.
+> +	 * So we trick it by returning error on success to stop looking
+> +	 * once the matching device is found.
+> +	 */
 
-This patch will make the kernel to boot but the call to request_irq()
-will fail of course. For now, the only solution is to call
-gpio_request() before request_irq() in your platform code or device
-driver. There is an on going discussion about what's the better way to
-address this but we still haven't found a good solution to this
-problem, you can see the last email for this discussion here [2]
+Ditto.
 
-Also, even when calling gpio_request() before request_irq() this won't
-work. When specifying the trigger/level flags on the second cell for
-an GPIO-IRQ, this is not set on the IORESOURCE_IRQ struct resource.
-The IRQ flag is set on of_irq_to_resource() but it just does:
+> +	error = class_for_each_device(power_supply_class, NULL, supply_node,
+> +				       __power_supply_find_supply_from_node);
+> +
+> +	return error ? 0 : -EPROBE_DEFER;
+> +}
+> +
+> +int power_supply_check_supplies(struct power_supply *psy)
+> +{
+> +	struct device_node *np;
+> +	int cnt = 0;
+> +	int ret = 0;
+> +
+> +	/* If there is already a list honor it */
+> +	if (psy->supplied_from && psy->num_supplies > 0)
+> +		return 0;
+> +
+> +	/* No device node found, nothing to do */
+> +	if (!psy->of_node)
+> +		return 0;
+> +
+> +	do {
 
-r->flags = IORESOURCE_IRQ;
+You can move 'int ret;' here (without initializer).
 
-and then the call stack is irq_to_parse_and_map() ->
-irq_set_irq_type() ->  __irq_set_trigger() -> chip->irq_set_type() ->
-(drivers/gpio/gpio-omap.c) gpio_irq_type().
+> +		np = of_parse_phandle(psy->of_node, "power-supplies", cnt++);
+> +		if (!np)
+> +			continue;
+> +
+> +		ret = power_supply_find_supply_from_node(np);
+> +		if (ret) {
+> +			dev_dbg(psy->dev, "Failed to find supply, defer!\n");
+> +			return -EPROBE_DEFER;
+> +		}
+> +	} while (np);
+> +
+> +	/* All supplies found, allocate char ** array for filling */
+> +	psy->supplied_from = devm_kzalloc(psy->dev, sizeof(psy->supplied_from),
+> +					  GFP_KERNEL);
+> +	if (!psy->supplied_from) {
+> +		dev_err(psy->dev, "Couldn't allocate memory for supply list\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	*psy->supplied_from = devm_kzalloc(psy->dev, sizeof(char *) * cnt,
+> +					   GFP_KERNEL);
+> +	if (!*psy->supplied_from) {
+> +		dev_err(psy->dev, "Couldn't allocate memory for supply list\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ret = power_supply_populate_supplied_from(psy);
+> +
+> +	return ret;
 
-So, even when gpio_irq_type() receive the correct flags, this are not
-returned neither stored on the flags member of the IORESOURCE_IRQ
-struct resource that passed to the drivers in their struct
-platform_device.
+can be just 'return power_supply_populate_supplied_from(psy);'
 
-I have on my TODO to better investigate if this behavior is
-intentional or is a bug in the interrupt core but didn't have time to
-work on this yet. A relevant discussion about this is here [3].
+> +}
+> +#endif
+> +
+>  static int __power_supply_am_i_supplied(struct device *dev, void *data)
+>  {
+>  	union power_supply_propval ret = {0,};
+> @@ -359,6 +486,14 @@ int power_supply_register(struct device *parent, struct power_supply *psy)
+>  
+>  	INIT_WORK(&psy->changed_work, power_supply_changed_work);
+>  
+> +#ifdef CONFIG_OF
+> +	rc = power_supply_check_supplies(psy);
+> +	if (rc) {
+> +		dev_info(dev, "Not all required supplies found, defer probe\n");
+> +		goto check_supplies_failed;
+> +	}
+> +#endif
+[...]
+> +#ifdef CONFIG_OF
+> +check_supplies_failed:
+> +#endif
 
-> ---
->  arch/arm/boot/dts/omap3.dtsi |   12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> index 1997b41..e8e6b8f 100644
-> --- a/arch/arm/boot/dts/omap3.dtsi
-> +++ b/arch/arm/boot/dts/omap3.dtsi
-> @@ -99,7 +99,7 @@
->                         gpio-controller;
->                         #gpio-cells = <2>;
->                         interrupt-controller;
-> -                       #interrupt-cells = <1>;
-> +                       #interrupt-cells = <2>;
->                 };
->
->                 gpio2: gpio@49050000 {
-> @@ -108,7 +108,7 @@
->                         gpio-controller;
->                         #gpio-cells = <2>;
->                         interrupt-controller;
-> -                       #interrupt-cells = <1>;
-> +                       #interrupt-cells = <2>;
->                 };
->
->                 gpio3: gpio@49052000 {
-> @@ -117,7 +117,7 @@
->                         gpio-controller;
->                         #gpio-cells = <2>;
->                         interrupt-controller;
-> -                       #interrupt-cells = <1>;
-> +                       #interrupt-cells = <2>;
->                 };
->
->                 gpio4: gpio@49054000 {
-> @@ -126,7 +126,7 @@
->                         gpio-controller;
->                         #gpio-cells = <2>;
->                         interrupt-controller;
-> -                       #interrupt-cells = <1>;
-> +                       #interrupt-cells = <2>;
->                 };
->
->                 gpio5: gpio@49056000 {
-> @@ -135,7 +135,7 @@
->                         gpio-controller;
->                         #gpio-cells = <2>;
->                         interrupt-controller;
-> -                       #interrupt-cells = <1>;
-> +                       #interrupt-cells = <2>;
->                 };
->
->                 gpio6: gpio@49058000 {
-> @@ -144,7 +144,7 @@
->                         gpio-controller;
->                         #gpio-cells = <2>;
->                         interrupt-controller;
-> -                       #interrupt-cells = <1>;
-> +                       #interrupt-cells = <2>;
->                 };
->
->                 uart1: serial@4806a000 {
-> --
-> 1.7.10.4
->
->
->
+Can you make an empty, static inline stub for
+power_supply_check_supplies() for !CONFIG_OF case, so that we won't need
+#ifdefs inside this function?
 
-By the way, Jon has already sent a "ARM: dts: OMAP3+: Correct gpio
-#interrupts-cells property" patch [4] that changes #interrupt-cells to
-<2> for all OMAP platforms.
+Otherwise it looks great, thanks a lot!
 
-Best regards,
-Javier
-
-[1]: https://patchwork.kernel.org/patch/2202511/
-[2]: http://www.spinics.net/lists/linux-omap/msg89247.html
-[3]: https://patchwork.kernel.org/patch/2194911/
-[4]: https://patchwork.kernel.org/patch/2278081/
+Anton
