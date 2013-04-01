@@ -1,54 +1,117 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH -next] spi: remove unused variable in
- tegra_slink_read_rx_fifo_to_client_rxbuf()
-Date: Mon, 1 Apr 2013 14:28:02 +0100
-Message-ID: <20130401132802.GO18636@opensource.wolfsonmicro.com>
-References: <CAPgLHd8yTotMxH-Rb6UX3bsQrTTUM4SdQWNVDoU_LszgxM_qsQ@mail.gmail.com>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: drm/tilcdc: LCD panels clocks initialization and earlier
+ backlight initialization
+Date: Mon, 1 Apr 2013 09:46:05 -0400
+Message-ID: <CAF6AEGur7yuduNs9-HqP980NcXSB24Wz=2g_P4uPmXC9fJ9-9w@mail.gmail.com>
+References: <1552838.0ugGbIv7sQ@ganymedes>
+ <79CD15C6BA57404B839C016229A409A83EC3E861@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="OAiy6VLsECigG9dy"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPgLHd8yTotMxH-Rb6UX3bsQrTTUM4SdQWNVDoU_LszgxM_qsQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <79CD15C6BA57404B839C016229A409A83EC3E861-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Michal Bachraty <michal.bachraty-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org" <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Apr 1, 2013 at 7:31 AM, Hiremath, Vaibhav <hvaibhav-l0cyMroinI0@public.gmane.org> wrote:
+>
+>> -----Original Message-----
+>> From: devicetree-discuss [mailto:devicetree-discuss-
+>> bounces+hvaibhav=ti.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On Behalf Of Michal Bachraty
+>> Sent: Thursday, March 28, 2013 11:02 PM
+>> To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org; devicetree-
+>> discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> Cc: robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org
+>> Subject: drm/tilcdc: LCD panels clocks initialization and earlier
+>> backlight initialization
+>>
+>> Hi,
+>>
+>> I'm trying to use tilcdc driver for KWH050TG08 LCD panel connected to
+>> AM335x
+>> processor (3.9 rc1 kernel). I have prepared DT bindings for that
+>> (listed
+>> bellow). I see fb0 device but I have no clocks going from cpu to LCD.
+>> My
+>> clocks for LCD seems not properly to be set ...
+>>
+>> virt_25000000_ck               1           1            25000000
+>>     sys_clkin_ck                8           19           25000000
+>>        dpll_disp_ck             0           1            25000000
+>>           dpll_disp_m2_ck       0           1            25000000
+>>              lcd_gclk           0           1            25000000
+>>
+>> and tilcdc_crtc is not called. I also set lcd_gclk to 300MHz, but I got
+>> same
+>> result. The question is there any way how to properly set clocks for
+>> LCD?
+>>
+> Not sure  about the LCDC DRM driver, but I just tested clk_set_rate()
+> For lcdc_gclk clock and it is working for me. I could able to set
+> 300MHz freq on my BeagleBone platform, with below code -
+>
 
---OAiy6VLsECigG9dy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+fwiw, tilcdc drm driver won't set clocks until you do modeset, as it
+is setting them based on the requested pixel clock.  As opposed to
+setting it once at boot time.
 
-On Wed, Mar 13, 2013 at 09:29:12PM +0800, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
->=20
-> The variable bits_per_word is initialized but never used
-> otherwise, so remove the unused variable.
+Michal, you may want to add 'drm.debug=7' in your bootargs, and send
+the bootlog.  That should set some light about whether it is even
+trying to modeset but failing, or some other issue.
 
-Applied, thanks.
+BR,
+-R
 
---OAiy6VLsECigG9dy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRWYtbAAoJELSic+t+oim96uEP/Rf2oo72G7qHrCgT6aw71uK6
-W90uyK6kloGj9Ba/34brpxSETRBU5DC/ggWcIYFZCwLjHjMdCv43hfq9DWJeu675
-+7uPOjPeDGl2DHibtdVn7MEQX9lT460ZODSU4/cjguSzCcTp+UJxb8qEfNA3jI4A
-YC9U+UWHUmhPeW1Mfxu8p+cmoQQag/nEg/A/uxVgDGmuRBCfNyPFEQokhQcQTJzp
-o6nItb0IiK+7HtGNtykg7WU0vBAw8mvOjOMSMIaJ4xwIkg/OkBx4vxxx1Z5RkPEd
-QmVoqXoezXKVv4+TT2WBEaYtEKYYSimB1yX2rixCur871treQxtOcZZaJJ2ZwB3X
-LXCM6v3Z+ZtKYmTosPE7G2RE+u9dbltD+mzS2WORbcNTHbQSBhy2/7/tONE7rPRQ
-gNhTmmCOKuWpXQ1Sxc1YN3toDdT3wI3x/x2cLusa0Ptul29P8epBYafuNlUM1HoD
-F+IQJmcuPzwg5NVfdvFIOpe1R79QTCKNZrmsWipz6CNeXxuO98YIoCPRduqJhOZR
-Vq3PL0RfAuy1RgMVF2424Isgq/W9hIUImLlvGaZXP+/59nPU/TQs2U1eF5ZnMq6M
-bM+AgJHGgx4E7FuAoipe6eHNqkf17CVfvO1L2tPORfyxaRQO+g3Nh9Jx3M4qfpfp
-rfSId20b5NGiiKbh7jgh
-=0WWA
------END PGP SIGNATURE-----
-
---OAiy6VLsECigG9dy--
+>
+> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
+> index e54a480..443fb26 100644
+> --- a/arch/arm/mach-omap2/board-generic.c
+> +++ b/arch/arm/mach-omap2/board-generic.c
+> @@ -11,6 +11,7 @@
+>   * it under the terms of the GNU General Public License version 2 as
+>   * published by the Free Software Foundation.
+>   */
+> +#include <linux/clk-private.h>
+>  #include <linux/io.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+> @@ -37,6 +38,8 @@ static struct of_device_id omap_dt_match_table[] __initdata = {
+>
+>  static void __init omap_generic_init(void)
+>  {
+> +       struct clk *clk;
+> +
+>         omap_sdrc_init(NULL, NULL);
+>
+>         of_platform_populate(NULL, omap_dt_match_table, NULL, NULL);
+> @@ -49,6 +52,15 @@ static void __init omap_generic_init(void)
+>                 omap4_panda_display_init_of();
+>         else if (of_machine_is_compatible("ti,omap4-sdp"))
+>                 omap_4430sdp_display_init_of();
+> +
+> +       clk = clk_get(NULL, "lcd_gclk");
+> +       if (IS_ERR(clk))
+> +               printk("Can not get lcd_gclk clock\n");
+> +
+> +       printk("%s:%d gclk_rate - %lu\n", __func__, __LINE__, clk_get_rate(clk));
+> +       clk_set_rate(clk, 300000000);
+> +       printk("%s:%d clk_rate - %lu\n", __func__, __LINE__, clk_get_rate(clk));
+> +       clk_put(clk);
+>  }
+>
+>  #ifdef CONFIG_SOC_OMAP2420
+>
+>
+> Thanks,
+> Vaibhav
