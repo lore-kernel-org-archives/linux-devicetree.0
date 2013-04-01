@@ -1,41 +1,32 @@
-From: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Subject: [patch] mtd: denali_dt: harmless case of testing the wrong variable
-Date: Mon, 1 Apr 2013 09:21:51 +0300
-Message-ID: <20130401062151.GA5197@longonot.mountain>
+From: Jan Luebbe <jlu@pengutronix.de>
+Subject: Re: [PATCH 1/3] ARM: dts: AM33XX: Add pinmux configuration for CPSW
+ to beaglebone
+Date: Mon, 1 Apr 2013 12:45:14 +0200
+Message-ID: <20130401104514.GA27388@pengutronix.de>
+References: <1364196478-16688-1-git-send-email-mugunthanvnm@ti.com>
+ <1364196478-16688-2-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Bill Pemberton <wfp5p-4Ng6DfrEGID2fBVCVOL8/A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1364196478-16688-2-git-send-email-mugunthanvnm@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mugunthan V N <mugunthanvnm@ti.com>
+Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, b-cousson@ti.com, benoit.cousson@linaro.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-There is a warning message that can't be printed because we test the
-wrong variable.
+On Mon, Mar 25, 2013 at 12:57:56PM +0530, Mugunthan V N wrote:
+>  	am33xx_pinmux: pinmux@44e10800 {
+>  		pinctrl-names = "default";
+> -		pinctrl-0 = <&user_leds_s0>;
+> +		pinctrl-0 = <&user_leds_s0 &cpsw_s0>;
 
-Signed-off-by: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Why do you add &cpsw_s0 to the pinmux node? This should go into the cpsw
+node itself, which should work without further code changes since:
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=ab78029ecc347
+(drivers/pinctrl: grab default handles from device core)
 
-diff --git a/drivers/mtd/nand/denali_dt.c b/drivers/mtd/nand/denali_dt.c
-index 546f8cb..02988b0 100644
---- a/drivers/mtd/nand/denali_dt.c
-+++ b/drivers/mtd/nand/denali_dt.c
-@@ -42,7 +42,7 @@ static void __iomem *request_and_map(struct device *dev,
- 	}
- 
- 	ptr = devm_ioremap_nocache(dev, res->start, resource_size(res));
--	if (!res)
-+	if (!ptr)
- 		dev_err(dev, "ioremap_nocache of %s failed!", res->name);
- 
- 	return ptr;
+Same for the other patches.
+
+Regards,
+Jan
