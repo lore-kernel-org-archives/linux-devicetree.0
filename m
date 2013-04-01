@@ -1,224 +1,33 @@
-From: Rhyland Klein <rklein@nvidia.com>
-Subject: [PATCH V2 3/3] power: power_supply_core: Add support for supplied_from
-Date: Mon, 1 Apr 2013 17:45:55 -0400
-Message-ID: <1364852755-17425-4-git-send-email-rklein@nvidia.com>
-References: <1364852755-17425-1-git-send-email-rklein@nvidia.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: How to represent negative values for device tree property
+Date: Mon, 01 Apr 2013 16:00:47 -0600
+Message-ID: <515A038F.2090902@wwwdotorg.org>
+References: <5159F760.1080605@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1364852755-17425-1-git-send-email-rklein@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anton Vorontsov <cbou@mail.ru>, Grant Likely <grant.likely@secretlab.ca>
-Cc: David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-tegra@vger.kernel.org, Rhyland Klein <rklein@nvidia.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <5159F760.1080605@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: David Collins <collinsd@codeaurora.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Adding support for supplied_from char * array. This is meant to store the
-list of suppliers for a given supply, i.e. chargers for a battery. This
-list can be populated through devicetree readily as well as passed
-directly from the driver.
+On 04/01/2013 03:08 PM, David Collins wrote:
+> Hi,
+> 
+> I am working on a thermal driver which needs to be able to read a
+> temperature threshold from a device tree property.  The hardware supports
+> thresholds in the range -204.8 to +204.7 C in 0.1 C steps.  I have found,
+> as I am sure others have as well, that dtc treats a '-' before an integer
+> in a dtsi file as a syntax error.  Therefore, I need some artificial way
+> to represent negative numbers in device tree.  Here are the possibilities
+> that I have thought of so far:
 
-Signed-off-by: Rhyland Klein <rklein@nvidia.com>
----
-v2:
- - fixed multiline comment style
- - fixed usage of ret to inside loop and directly return result of
-   power_supply_populate_supplied_from
+Doesn't the very latest dtc, which contains integer expression support,
+allow unary -? I thought that code had been imported into the kernel
+(goes and checks) yes it has. What's the error you're seeing;
+over/underflow or syntax?
 
-v1:
- - Changed from RFC v2 -> patch v1
- - removed list logic, added logic to first verify all supplies are
-   present and defer probe until they are.
- - after all devices are registered, populate the char ** supplied_from
-   array which simulates the case of dt not being used.
- - added of_node element to struct power_supply
-
-v2 (RFC):
-  - Simplified and renamed the logic to parse dt for the charger list.
-  - Tied the dt parsing directly to power_supply_register to make fewer
-    changes required for converting existing chargers/supplies.
-
- drivers/power/power_supply_core.c |  140 +++++++++++++++++++++++++++++++++++++
- include/linux/power_supply.h      |    3 +
- 2 files changed, 143 insertions(+)
-
-diff --git a/drivers/power/power_supply_core.c b/drivers/power/power_supply_core.c
-index d843cc9..5e84321 100644
---- a/drivers/power/power_supply_core.c
-+++ b/drivers/power/power_supply_core.c
-@@ -88,6 +88,139 @@ void power_supply_changed(struct power_supply *psy)
- }
- EXPORT_SYMBOL_GPL(power_supply_changed);
- 
-+#ifdef CONFIG_OF
-+#include <linux/of.h>
-+
-+static int __power_supply_populate_supplied_from(struct device *dev,
-+						 void *data)
-+{
-+	struct power_supply *psy = (struct power_supply *)data;
-+	struct power_supply *epsy = dev_get_drvdata(dev);
-+	struct device_node *np;
-+	int i = 0;
-+
-+	do {
-+		np = of_parse_phandle(psy->of_node, "power-supplies", i++);
-+		if (!np)
-+			continue;
-+
-+		if (np == epsy->of_node) {
-+			dev_info(psy->dev, "%s: Found supply : %s\n",
-+				psy->name, epsy->name);
-+			psy->supplied_from[i-1] = (char *)epsy->name;
-+			psy->num_supplies++;
-+			break;
-+		}
-+	} while (np);
-+
-+	return 0;
-+}
-+
-+int power_supply_populate_supplied_from(struct power_supply *psy)
-+{
-+	int error;
-+
-+	error = class_for_each_device(power_supply_class, NULL, psy,
-+				      __power_supply_populate_supplied_from);
-+
-+	dev_dbg(psy->dev, "%s %d\n", __func__, error);
-+
-+	return error;
-+}
-+
-+static int  __power_supply_find_supply_from_node(struct device *dev,
-+						 void *data)
-+{
-+	struct device_node *np = (struct device_node *)data;
-+	struct power_supply *epsy = dev_get_drvdata(dev);
-+
-+	/* return error breaks out of class_for_each_device loop */
-+	if (epsy->of_node == np)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+int power_supply_find_supply_from_node(struct device_node *supply_node)
-+{
-+	int error;
-+	struct device *dev;
-+	struct class_dev_iter iter;
-+
-+	/*
-+	 * Use iterator to see if any other device is registered.
-+	 * This is required since class_for_each_device returns 0
-+	 * if there are no devices registered.
-+	 */
-+	class_dev_iter_init(&iter, power_supply_class, NULL, NULL);
-+	dev = class_dev_iter_next(&iter);
-+
-+	if (!dev)
-+		return -EPROBE_DEFER;
-+
-+	/*
-+	 * We have to treat the return value as inverted, because if
-+	 * we return error on not found, then it won't continue looking.
-+	 * So we trick it by returning error on success to stop looking
-+	 * once the matching device is found.
-+	 */
-+	error = class_for_each_device(power_supply_class, NULL, supply_node,
-+				       __power_supply_find_supply_from_node);
-+
-+	return error ? 0 : -EPROBE_DEFER;
-+}
-+
-+int power_supply_check_supplies(struct power_supply *psy)
-+{
-+	struct device_node *np;
-+	int cnt = 0;
-+
-+	/* If there is already a list honor it */
-+	if (psy->supplied_from && psy->num_supplies > 0)
-+		return 0;
-+
-+	/* No device node found, nothing to do */
-+	if (!psy->of_node)
-+		return 0;
-+
-+	do {
-+		int ret;
-+
-+		np = of_parse_phandle(psy->of_node, "power-supplies", cnt++);
-+		if (!np)
-+			continue;
-+
-+		ret = power_supply_find_supply_from_node(np);
-+		if (ret) {
-+			dev_dbg(psy->dev, "Failed to find supply, defer!\n");
-+			return -EPROBE_DEFER;
-+		}
-+	} while (np);
-+
-+	/* All supplies found, allocate char ** array for filling */
-+	psy->supplied_from = devm_kzalloc(psy->dev, sizeof(psy->supplied_from),
-+					  GFP_KERNEL);
-+	if (!psy->supplied_from) {
-+		dev_err(psy->dev, "Couldn't allocate memory for supply list\n");
-+		return -ENOMEM;
-+	}
-+
-+	*psy->supplied_from = devm_kzalloc(psy->dev, sizeof(char *) * cnt,
-+					   GFP_KERNEL);
-+	if (!*psy->supplied_from) {
-+		dev_err(psy->dev, "Couldn't allocate memory for supply list\n");
-+		return -ENOMEM;
-+	}
-+
-+	return power_supply_populate_supplied_from(psy);
-+}
-+#else
-+static inline int power_supply_check_supplies(struct power_supply *psy)
-+{
-+	return 0;
-+}
-+#endif
-+
- static int __power_supply_am_i_supplied(struct device *dev, void *data)
- {
- 	union power_supply_propval ret = {0,};
-@@ -357,6 +490,12 @@ int power_supply_register(struct device *parent, struct power_supply *psy)
- 
- 	INIT_WORK(&psy->changed_work, power_supply_changed_work);
- 
-+	rc = power_supply_check_supplies(psy);
-+	if (rc) {
-+		dev_info(dev, "Not all required supplies found, defer probe\n");
-+		goto check_supplies_failed;
-+	}
-+
- 	rc = kobject_set_name(&dev->kobj, "%s", psy->name);
- 	if (rc)
- 		goto kobject_set_name_failed;
-@@ -389,6 +528,7 @@ register_thermal_failed:
- 	device_del(dev);
- kobject_set_name_failed:
- device_add_failed:
-+check_supplies_failed:
- 	put_device(dev);
- success:
- 	return rc;
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index c1cbd5e..3828cef 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -173,6 +173,9 @@ struct power_supply {
- 
- 	char **supplied_from;
- 	size_t num_supplies;
-+#ifdef CONFIG_OF
-+	struct device_node *of_node;
-+#endif
- 
- 	int (*get_property)(struct power_supply *psy,
- 			    enum power_supply_property psp,
--- 
-1.7.9.5
+That said, DT cells are supposed to be u32 not s32, so perhaps this
+isn't unexpected.
