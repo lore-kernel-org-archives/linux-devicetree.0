@@ -1,63 +1,126 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] of_net.h: Provide dummy functions if OF_NET is not configured
-Date: Mon, 01 Apr 2013 13:44:24 -0500
-Message-ID: <5159D588.5070603@gmail.com>
-References: <1364840349-10696-1-git-send-email-linux@roeck-us.net>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH V2] DMA: PL330: Add check if device tree compatible
+Date: Mon, 1 Apr 2013 23:51:51 +0530
+Message-ID: <20130401182151.GH10326@intel.com>
+References: <1362475531-32260-1-git-send-email-padma.v@samsung.com>
+ <1362475531-32260-2-git-send-email-padma.v@samsung.com>
+ <20130321093906.GL10326@intel.com>
+ <CAL_Jsq+3bJDiA=rXS=WY3BGuRh5X+nyxxosrqtSD9fx-asbCKQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1364840349-10696-1-git-send-email-linux@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <rob.herring@calxeda.com>, David Daney <david.daney@cavium.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+3bJDiA=rXS=WY3BGuRh5X+nyxxosrqtSD9fx-asbCKQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, padma.kvr@gmail.com, sbkim73@samsung.com, "Mark Brown (broonie@opensource.wolfsonmicro.com)" <broonie@opensource.wolfsonmicro.com>, kgene.kim@samsung.com, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, jon-hunter@ti.com, boojin.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/01/2013 01:19 PM, Guenter Roeck wrote:
-> of_get_mac_address() and of_get_phy_mode() are only provided if OF_NET
-> is configured. While most callers check for the define, not all do, and those
-> who do require #ifdef around the code. For those who don't, the missing check
-> can result in errors such as
+On Mon, Apr 01, 2013 at 08:13:31AM -0500, Rob Herring wrote:
+> On Thu, Mar 21, 2013 at 4:39 AM, Vinod Koul <vinod.koul@intel.com> wrote:
+> > On Tue, Mar 05, 2013 at 02:55:31PM +0530, Padmavathi Venna wrote:
+> >> This patch register the dma controller with generic dma helpers only
+> >> in DT case. This also adds some extra error handling in the driver.
+> >>
+> >> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+> >> Reported-by: Sachin Kamat <sachin.kamat@linaro.org>
+> 
+> What's the status on this? It is needed for 3.9 to fix pl330 on highbank.
+Well the status is that submitter has been rude. I had few questions and
+comments on this patch and they are yet to be addressed.
 
-How about removing the ifdef from those callers?
-
-Rob
-
+--
+~Vinod
 > 
-> arch/powerpc/sysdev/tsi108_dev.c:107:3: error: implicit declaration of
-> 	function 'of_get_mac_address' [-Werror=implicit-function-declaration]
-> arch/powerpc/sysdev/mv64x60_dev.c:253:2: error: implicit declaration of
-> 	function 'of_get_mac_address' [-Werror=implicit-function-declaration]
+> Rob
 > 
-> Provide dummy function declarations if OF_NET is not configured. This is safe
-> because all callers do check the return values. If desired, at least some of
-> the #ifdefs in the code can subsequently be removed.
-> 
-> Cc: David Daney <david.daney@cavium.com>
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
->  include/linux/of_net.h |   10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/include/linux/of_net.h b/include/linux/of_net.h
-> index f474641..61bf53b 100644
-> --- a/include/linux/of_net.h
-> +++ b/include/linux/of_net.h
-> @@ -11,6 +11,16 @@
->  #include <linux/of.h>
->  extern const int of_get_phy_mode(struct device_node *np);
->  extern const void *of_get_mac_address(struct device_node *np);
-> +#else
-> +static inline const int of_get_phy_mode(struct device_node *np)
-> +{
-> +	return -ENODEV;
-> +}
-> +
-> +static inline const void *of_get_mac_address(struct device_node *np)
-> +{
-> +	return NULL;
-> +}
->  #endif
->  
->  #endif /* __LINUX_OF_NET_H */
-> 
+> >> ---
+> >>
+> >> Based on Vinod Koul next branch.
+> >>
+> >> Changes since V1:
+> >>       - return silently when of_dma_controller_register fails, as
+> >>         suggested by Arnd.
+> >>
+> >>  drivers/dma/pl330.c |   38 +++++++++++++++++++++++++++-----------
+> >>  1 files changed, 27 insertions(+), 11 deletions(-)
+> >>
+> >> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+> >> index 7181531..5dbc594 100644
+> >> --- a/drivers/dma/pl330.c
+> >> +++ b/drivers/dma/pl330.c
+> >> @@ -2882,7 +2882,7 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+> >>  {
+> >>       struct dma_pl330_platdata *pdat;
+> >>       struct dma_pl330_dmac *pdmac;
+> >> -     struct dma_pl330_chan *pch;
+> >> +     struct dma_pl330_chan *pch, *_p;
+> >>       struct pl330_info *pi;
+> >>       struct dma_device *pd;
+> >>       struct resource *res;
+> >> @@ -2984,7 +2984,16 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+> >>       ret = dma_async_device_register(pd);
+> >>       if (ret) {
+> >>               dev_err(&adev->dev, "unable to register DMAC\n");
+> >> -             goto probe_err2;
+> >> +             goto probe_err3;
+> >> +     }
+> >> +
+> >> +     if (adev->dev.of_node) {
+> >> +             ret = of_dma_controller_register(adev->dev.of_node,
+> >> +                                      of_dma_pl330_xlate, pdmac);
+> >> +             if (ret) {
+> >> +                     dev_err(&adev->dev,
+> >> +                     "unable to register DMA to the generic DT DMA helpers\n");
+> > Indent?
+> >> +             }
+> >>       }
+> >>
+> >>       dev_info(&adev->dev,
+> >> @@ -2995,16 +3004,21 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+> >>               pi->pcfg.data_bus_width / 8, pi->pcfg.num_chan,
+> >>               pi->pcfg.num_peri, pi->pcfg.num_events);
+> >>
+> >> -     ret = of_dma_controller_register(adev->dev.of_node,
+> >> -                                      of_dma_pl330_xlate, pdmac);
+> >> -     if (ret) {
+> >> -             dev_err(&adev->dev,
+> >> -             "unable to register DMA to the generic DT DMA helpers\n");
+> >> -             goto probe_err2;
+> >> -     }
+> >> -
+> >>       return 0;
+> >> +probe_err3:
+> >> +     amba_set_drvdata(adev, NULL);
+> >>
+> >> +     /* Idle the DMAC */
+> >> +     list_for_each_entry_safe(pch, _p, &pdmac->ddma.channels,
+> >> +                     chan.device_node) {
+> >> +
+> >> +             /* Remove the channel */
+> >> +             list_del(&pch->chan.device_node);
+> >> +
+> >> +             /* Flush the channel */
+> >> +             pl330_control(&pch->chan, DMA_TERMINATE_ALL, 0);
+> >> +             pl330_free_chan_resources(&pch->chan);
+> > free_chan for error handling in probe?
+> >
+> >> +     }
+> >>  probe_err2:
+> >>       pl330_del(pi);
+> >>  probe_err1:
+> >> @@ -3023,8 +3037,10 @@ static int pl330_remove(struct amba_device *adev)
+> >>       if (!pdmac)
+> >>               return 0;
+> >>
+> >> -     of_dma_controller_free(adev->dev.of_node);
+> >> +     if (adev->dev.of_node)
+> >> +             of_dma_controller_free(adev->dev.of_node);
+> >>
+> >> +     dma_async_device_unregister(&pdmac->ddma);
+> >>       amba_set_drvdata(adev, NULL);
+> >>
+> >>       /* Idle the DMAC */
+> >> --
+> >> 1.7.4.4
+> >>
