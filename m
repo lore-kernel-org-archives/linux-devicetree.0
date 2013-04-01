@@ -1,117 +1,96 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: drm/tilcdc: LCD panels clocks initialization and earlier
- backlight initialization
-Date: Mon, 1 Apr 2013 09:46:05 -0400
-Message-ID: <CAF6AEGur7yuduNs9-HqP980NcXSB24Wz=2g_P4uPmXC9fJ9-9w@mail.gmail.com>
-References: <1552838.0ugGbIv7sQ@ganymedes>
- <79CD15C6BA57404B839C016229A409A83EC3E861@DBDE01.ent.ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <79CD15C6BA57404B839C016229A409A83EC3E861-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Michal Bachraty <michal.bachraty-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org" <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
+From: Vikas Sajjan <vikas.sajjan@linaro.org>
+Subject: [PATCH v10 0/3] Add DRM FIMD DT support for Exynos4 DT Machines
+Date: Mon,  1 Apr 2013 19:52:29 +0530
+Message-ID: <1364826153-8925-1-git-send-email-vikas.sajjan@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, sylvester.nawrocki@gmail.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, patches@linaro.org, linaro-kernel@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 1, 2013 at 7:31 AM, Hiremath, Vaibhav <hvaibhav-l0cyMroinI0@public.gmane.org> wrote:
->
->> -----Original Message-----
->> From: devicetree-discuss [mailto:devicetree-discuss-
->> bounces+hvaibhav=ti.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On Behalf Of Michal Bachraty
->> Sent: Thursday, March 28, 2013 11:02 PM
->> To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org; devicetree-
->> discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> Cc: robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org
->> Subject: drm/tilcdc: LCD panels clocks initialization and earlier
->> backlight initialization
->>
->> Hi,
->>
->> I'm trying to use tilcdc driver for KWH050TG08 LCD panel connected to
->> AM335x
->> processor (3.9 rc1 kernel). I have prepared DT bindings for that
->> (listed
->> bellow). I see fb0 device but I have no clocks going from cpu to LCD.
->> My
->> clocks for LCD seems not properly to be set ...
->>
->> virt_25000000_ck               1           1            25000000
->>     sys_clkin_ck                8           19           25000000
->>        dpll_disp_ck             0           1            25000000
->>           dpll_disp_m2_ck       0           1            25000000
->>              lcd_gclk           0           1            25000000
->>
->> and tilcdc_crtc is not called. I also set lcd_gclk to 300MHz, but I got
->> same
->> result. The question is there any way how to properly set clocks for
->> LCD?
->>
-> Not sure  about the LCDC DRM driver, but I just tested clk_set_rate()
-> For lcdc_gclk clock and it is working for me. I could able to set
-> 300MHz freq on my BeagleBone platform, with below code -
->
+This patch series adds support for DRM FIMD DT for Exynos4 DT Machines,
+specifically for Exynos4412 SoC.
 
-fwiw, tilcdc drm driver won't set clocks until you do modeset, as it
-is setting them based on the requested pixel clock.  As opposed to
-setting it once at boot time.
+changes since v9:
+	- dropped the patch "ARM: dts: Add lcd pinctrl node entries for EXYNOS4412 SoC"
+	as the gpios in the newly added nodes "lcd_en" and "lcd_sync" in this patch 
+	were already PULLed high by existing "lcd_clk" node.
+	- addressed comments from Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+	and Thomas Abraham <thomas.abraham@linaro.org>
 
-Michal, you may want to add 'drm.debug=7' in your bootargs, and send
-the bootlog.  That should set some light about whether it is even
-trying to modeset but failing, or some other issue.
+changes since v8:
+	- addressed comments to add missing documentation for clock and clock-names
+	properties as pointed out by Sachin Kamat <sachin.kamat@linaro.org>
 
-BR,
--R
+changes since v7:
+	- rebased to kgene's "for-next"
+	- Migrated to Common Clock Framework
+	- removed the patch "ARM: dts: Add FIMD AUXDATA node entry for exynos4 DT",
+	as migration to Common Clock Framework will NOT need this.
+	- addressed the comments raised by Sachin Kamat <sachin.kamat@linaro.org>
 
->
-> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
-> index e54a480..443fb26 100644
-> --- a/arch/arm/mach-omap2/board-generic.c
-> +++ b/arch/arm/mach-omap2/board-generic.c
-> @@ -11,6 +11,7 @@
->   * it under the terms of the GNU General Public License version 2 as
->   * published by the Free Software Foundation.
->   */
-> +#include <linux/clk-private.h>
->  #include <linux/io.h>
->  #include <linux/of_irq.h>
->  #include <linux/of_platform.h>
-> @@ -37,6 +38,8 @@ static struct of_device_id omap_dt_match_table[] __initdata = {
->
->  static void __init omap_generic_init(void)
->  {
-> +       struct clk *clk;
-> +
->         omap_sdrc_init(NULL, NULL);
->
->         of_platform_populate(NULL, omap_dt_match_table, NULL, NULL);
-> @@ -49,6 +52,15 @@ static void __init omap_generic_init(void)
->                 omap4_panda_display_init_of();
->         else if (of_machine_is_compatible("ti,omap4-sdp"))
->                 omap_4430sdp_display_init_of();
-> +
-> +       clk = clk_get(NULL, "lcd_gclk");
-> +       if (IS_ERR(clk))
-> +               printk("Can not get lcd_gclk clock\n");
-> +
-> +       printk("%s:%d gclk_rate - %lu\n", __func__, __LINE__, clk_get_rate(clk));
-> +       clk_set_rate(clk, 300000000);
-> +       printk("%s:%d clk_rate - %lu\n", __func__, __LINE__, clk_get_rate(clk));
-> +       clk_put(clk);
->  }
->
->  #ifdef CONFIG_SOC_OMAP2420
->
->
-> Thanks,
-> Vaibhav
+changes since v6:
+	- addressed comments and added interrupt-names = "fifo", "vsync", "lcd_sys"
+	in exynos4.dtsi and re-ordered the interrupt numbering to match the order in
+	interrupt combiner IP as suggested by Sylwester Nawrocki <sylvester.nawrocki@gmail.com>.
+
+changes since v5:
+	- renamed the fimd binding documentation file name as "samsung-fimd.txt",
+	since it not only talks about exynos display controller but also about
+	previous samsung display controllers.
+	- rephrased an abmigious statement about the interrupt combiner in the
+	fimd binding documentation as pointed out by 
+	Sachin Kamat <sachin.kamat@linaro.org>
+
+changes since v4:
+	- moved the fimd binding documentation to Documentation/devicetree/bindings/video/
+	as suggested by Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+
+	- added more fimd compatiblity strings in fimd documentation as
+	discussed at  https://patchwork.kernel.org/patch/2144861/ with
+	Sylwester Nawrocki <sylvester.nawrocki@gmail.com> and
+	Tomasz Figa <tomasz.figa@gmail.com>
+
+	- modified compatible string for exynos4 fimd as "exynos4210-fimd"
+	exynos5 fimd as "exynos5250-fimd" to stick to the rule that compatible
+	value should be named after first specific SoC model in which this
+	particular IP version was included as discussed at
+	https://patchwork.kernel.org/patch/2144861/
+
+	- documented more about the interrupt combiner and their order as 
+	suggested by Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+
+changes since v3:
+	- rebased on
+	http://git.kernel.org/?p=linux/kernel/git/kgene/linux-samsung.git;a=shortlog;h=refs/heads/for-next-next
+
+changes since v2:
+	- added alias to 'fimd@11c00000' node
+		(reported by: Rahul Sharma <r.sh.open@gmail.com>)
+	- removed 'lcd0_data' node as there was already a similar node lcd_data24
+		(reported by: Jingoo Han <jg1.han@samsung.com>
+	- replaced spaces with tabs in display-timing node
+
+changes since v1:
+	- added new patch to add FIMD DT binding Documentation
+	- removed patch enabling SAMSUNG_DEV_BACKLIGHT and SAMSUNG_DEV_PMW 
+	for mach-exynos4 DT
+	- added 'status' property to fimd DT node
+
+Is based on branch kgene's "for-next"
+https://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/log/?h=for-next
+
+Vikas Sajjan (3):
+  ARM: dts: Add FIMD node to exynos4
+  ARM: dts: Add FIMD node and display timing node to
+    exynos4412-origen.dts
+  ARM: dts: Add FIMD DT binding Documentation
+
+ .../devicetree/bindings/video/samsung-fimd.txt     |   65 ++++++++++++++++++++
+ arch/arm/boot/dts/exynos4.dtsi                     |   12 ++++
+ arch/arm/boot/dts/exynos4412-origen.dts            |   21 +++++++
+ 3 files changed, 98 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/samsung-fimd.txt
+
+-- 
+1.7.9.5
