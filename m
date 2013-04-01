@@ -1,94 +1,142 @@
-From: Alexander Clouter <alex@digriz.org.uk>
-Subject: [PATCH 3/6] rtc: rtc-m48t86: add detect method for RTC
-Date: Tue,  2 Apr 2013 00:22:42 +0100
-Message-ID: <1364858565-17192-4-git-send-email-alex@digriz.org.uk>
+From: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
+Subject: [PATCH 4/6] arm: orion5x: move ts78xx to use rtc-m48t86 driver side
+ memory interface
+Date: Tue,  2 Apr 2013 00:22:43 +0100
+Message-ID: <1364858565-17192-5-git-send-email-alex@digriz.org.uk>
 References: <1364858565-17192-1-git-send-email-alex@digriz.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1364858565-17192-1-git-send-email-alex@digriz.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alessandro Zummo <a.zummo@towertech.it>, Hartley Sweeten <hsweeten@visionengravers.com>, Grant Likely <grant.likely@secretlab.ca>, Jason Cooper <jason@lakedaemon.net>, Ryan Mallon <rmallon@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Andrew Lunn <andrew@lunn.ch>
-Cc: devicetree-discuss@lists.ozlabs.org, rtc-linux@googlegroups.com, linux-arm-kernel@lists.infradead.org, Alexander Clouter <alex@digriz.org.uk>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1364858565-17192-1-git-send-email-alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The m48t86 has 114 bytes of user space available, so we can use this
-space to detect for the presence of the RTC.
+Remove platform_data hooks into rtc-m48t86 and use named resource regions.
 
-Signed-off-by: Alexander Clouter <alex@digriz.org.uk>
+Signed-off-by: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
 ---
- drivers/rtc/rtc-m48t86.c |   43 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ arch/arm/mach-orion5x/ts78xx-setup.c |   78 ++++++++--------------------------
+ 1 file changed, 17 insertions(+), 61 deletions(-)
 
-diff --git a/drivers/rtc/rtc-m48t86.c b/drivers/rtc/rtc-m48t86.c
-index 6f99e64..b8edf73 100644
---- a/drivers/rtc/rtc-m48t86.c
-+++ b/drivers/rtc/rtc-m48t86.c
-@@ -173,6 +173,41 @@ static const struct rtc_class_ops m48t86_rtc_ops = {
- 	.proc		= m48t86_rtc_proc,
+diff --git a/arch/arm/mach-orion5x/ts78xx-setup.c b/arch/arm/mach-orion5x/ts78xx-setup.c
+index ffe3603..613216f 100644
+--- a/arch/arm/mach-orion5x/ts78xx-setup.c
++++ b/arch/arm/mach-orion5x/ts78xx-setup.c
+@@ -16,7 +16,6 @@
+ #include <linux/platform_device.h>
+ #include <linux/mv643xx_eth.h>
+ #include <linux/ata_platform.h>
+-#include <linux/platform_data/rtc-m48t86.h>
+ #include <linux/mtd/nand.h>
+ #include <linux/mtd/partitions.h>
+ #include <linux/timeriomem-rng.h>
+@@ -80,78 +79,35 @@ static struct mv_sata_platform_data ts78xx_sata_data = {
+ /*****************************************************************************
+  * RTC M48T86 - nicked^Wborrowed from arch/arm/mach-ep93xx/ts72xx.c
+  ****************************************************************************/
+-#define TS_RTC_CTRL	(TS78XX_FPGA_REGS_VIRT_BASE + 0x808)
+-#define TS_RTC_DATA	(TS78XX_FPGA_REGS_VIRT_BASE + 0x80c)
++#define TS_RTC_INDEX	(TS78XX_FPGA_REGS_PHYS_BASE + 0x808)
++#define TS_RTC_DATA	(TS78XX_FPGA_REGS_PHYS_BASE + 0x80c)
+ 
+-static unsigned char ts78xx_ts_rtc_readbyte(unsigned long addr)
+-{
+-	writeb(addr, TS_RTC_CTRL);
+-	return readb(TS_RTC_DATA);
+-}
+-
+-static void ts78xx_ts_rtc_writebyte(unsigned char value, unsigned long addr)
+-{
+-	writeb(addr, TS_RTC_CTRL);
+-	writeb(value, TS_RTC_DATA);
+-}
+-
+-static struct m48t86_ops ts78xx_ts_rtc_ops = {
+-	.readbyte	= ts78xx_ts_rtc_readbyte,
+-	.writebyte	= ts78xx_ts_rtc_writebyte,
++static struct resource ts78xx_ts_rtc_resource[] = {
++	DEFINE_RES_NAMED(TS_RTC_INDEX, 4, "rtc_index", IORESOURCE_MEM),
++	DEFINE_RES_NAMED(TS_RTC_DATA, 4, "rtc_data", IORESOURCE_MEM),
  };
  
-+/*
-+ * The RTC chip has 114 bytes upper bytes that can be used as user storage
-+ * space which we can use to test if the chip is present; for example it is
-+ * an optional feature and not all boards will have it present.
-+ *
-+ * I've used the method Technologic Systems use in their rtc7800.c example
-+ * for the detection.
-+ *
-+ * TODO: track down a guinea pig without an RTC to see if we can work out a
-+ *	better RTC detection routine
-+ */
-+static int m48t86_rtc_detect(struct device *dev)
-+{
-+	unsigned char tmp_rtc0, tmp_rtc1;
-+
-+	tmp_rtc0 = m48t86_rtc_readbyte(dev, 126);
-+	tmp_rtc1 = m48t86_rtc_readbyte(dev, 127);
-+
-+	m48t86_rtc_writebyte(dev, 0x00, 126);
-+	m48t86_rtc_writebyte(dev, 0x55, 127);
-+	if (m48t86_rtc_readbyte(dev, 127) == 0x55) {
-+		m48t86_rtc_writebyte(dev, 0xaa, 127);
-+		if (m48t86_rtc_readbyte(dev, 127) == 0xaa
-+				&& m48t86_rtc_readbyte(dev, 126) == 0x00) {
-+			m48t86_rtc_writebyte(dev, tmp_rtc0, 126);
-+			m48t86_rtc_writebyte(dev, tmp_rtc1, 127);
-+
-+			return 0;
-+		}
-+	}
-+
-+	dev_info(dev, "RTC not found\n");
-+	return -ENODEV;
-+}
-+
- static int m48t86_rtc_probe(struct platform_device *pdev)
- {
- 	unsigned char reg;
-@@ -232,6 +267,14 @@ static int m48t86_rtc_probe(struct platform_device *pdev)
- 	} else
- 		priv->ops = pdev->dev.platform_data;
+ static struct platform_device ts78xx_ts_rtc_device = {
+ 	.name		= "rtc-m48t86",
+ 	.id		= -1,
+-	.dev		= {
+-		.platform_data	= &ts78xx_ts_rtc_ops,
+-	},
+-	.num_resources	= 0,
++	.resource	= ts78xx_ts_rtc_resource,
++	.num_resources	= ARRAY_SIZE(ts78xx_ts_rtc_resource),
+ };
  
-+	err = m48t86_rtc_detect(&pdev->dev);
-+	if (err) {
-+		if (!pdev->dev.platform_data)
-+			goto out_io_data;
-+		else
-+			goto out_free;
-+	}
+-/*
+- * TS uses some of the user storage space on the RTC chip so see if it is
+- * present; as it's an optional feature at purchase time and not all boards
+- * will have it present
+- *
+- * I've used the method TS use in their rtc7800.c example for the detection
+- *
+- * TODO: track down a guinea pig without an RTC to see if we can work out a
+- *		better RTC detection routine
+- */
+ static int ts78xx_ts_rtc_load(void)
+ {
+ 	int rc;
+-	unsigned char tmp_rtc0, tmp_rtc1;
+-
+-	tmp_rtc0 = ts78xx_ts_rtc_readbyte(126);
+-	tmp_rtc1 = ts78xx_ts_rtc_readbyte(127);
+-
+-	ts78xx_ts_rtc_writebyte(0x00, 126);
+-	ts78xx_ts_rtc_writebyte(0x55, 127);
+-	if (ts78xx_ts_rtc_readbyte(127) == 0x55) {
+-		ts78xx_ts_rtc_writebyte(0xaa, 127);
+-		if (ts78xx_ts_rtc_readbyte(127) == 0xaa
+-				&& ts78xx_ts_rtc_readbyte(126) == 0x00) {
+-			ts78xx_ts_rtc_writebyte(tmp_rtc0, 126);
+-			ts78xx_ts_rtc_writebyte(tmp_rtc1, 127);
+-
+-			if (ts78xx_fpga.supports.ts_rtc.init == 0) {
+-				rc = platform_device_register(&ts78xx_ts_rtc_device);
+-				if (!rc)
+-					ts78xx_fpga.supports.ts_rtc.init = 1;
+-			} else
+-				rc = platform_device_add(&ts78xx_ts_rtc_device);
+-
+-			if (rc)
+-				pr_info("RTC could not be registered: %d\n",
+-					rc);
+-			return rc;
+-		}
+-	}
+ 
+-	pr_info("RTC not found\n");
+-	return -ENODEV;
++	if (ts78xx_fpga.supports.ts_rtc.init == 0) {
++		rc = platform_device_register(&ts78xx_ts_rtc_device);
++		if (!rc)
++			ts78xx_fpga.supports.ts_rtc.init = 1;
++	} else
++		rc = platform_device_add(&ts78xx_ts_rtc_device);
 +
- 	priv->rtc = rtc_device_register("m48t86",
- 				&pdev->dev, &m48t86_rtc_ops, THIS_MODULE);
- 	if (IS_ERR(priv->rtc)) {
++	if (rc)
++		pr_info("RTC could not be registered: %d\n", rc);
++	return rc;
+ };
+ 
+ static void ts78xx_ts_rtc_unload(void)
 -- 
 1.7.10.4
