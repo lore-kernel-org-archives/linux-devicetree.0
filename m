@@ -1,53 +1,69 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH] of_net.h: Provide dummy functions if OF_NET is not configured
-Date: Mon,  1 Apr 2013 11:19:09 -0700
-Message-ID: <1364840349-10696-1-git-send-email-linux@roeck-us.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>, Guenter Roeck <linux@roeck-us.net>, David Daney <david.daney@cavium.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v10 2/3] ARM: dts: Add FIMD node and display timing node
+ to exynos4412-origen.dts
+Date: Mon, 01 Apr 2013 20:37:16 +0200
+Message-ID: <5159D3DC.4070507@gmail.com>
+References: <1364826153-8925-1-git-send-email-vikas.sajjan@linaro.org> <1364826153-8925-3-git-send-email-vikas.sajjan@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1364826153-8925-3-git-send-email-vikas.sajjan@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vikas Sajjan <vikas.sajjan@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, sylvester.nawrocki@gmail.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, patches@linaro.org, linaro-kernel@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-of_get_mac_address() and of_get_phy_mode() are only provided if OF_NET
-is configured. While most callers check for the define, not all do, and those
-who do require #ifdef around the code. For those who don't, the missing check
-can result in errors such as
+On 04/01/2013 04:22 PM, Vikas Sajjan wrote:
+> This patch adds FIMD related nodes for the Origen Quad board.
+>
+> Signed-off-by: Vikas Sajjan<vikas.sajjan@linaro.org>
+> ---
+>   arch/arm/boot/dts/exynos4412-origen.dts |   21 +++++++++++++++++++++
+>   1 file changed, 21 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos4412-origen.dts b/arch/arm/boot/dts/exynos4412-origen.dts
+> index a5478bd..cb0c507 100644
+> --- a/arch/arm/boot/dts/exynos4412-origen.dts
+> +++ b/arch/arm/boot/dts/exynos4412-origen.dts
+> @@ -70,6 +70,27 @@
+>   		status = "okay";
+>   	};
+>
+> +	fimd@11c00000 {
+> +		pinctrl-0 =<&lcd_clk&lcd_data24&pwm1_out>;
+> +		pinctrl-names = "default";
+> +		status = "okay";
+> +	};
+> +
+> +	display-timings {
+> +		native-mode =<&timing0>;
+> +		timing0: timing@0 {
 
-arch/powerpc/sysdev/tsi108_dev.c:107:3: error: implicit declaration of
-	function 'of_get_mac_address' [-Werror=implicit-function-declaration]
-arch/powerpc/sysdev/mv64x60_dev.c:253:2: error: implicit declaration of
-	function 'of_get_mac_address' [-Werror=implicit-function-declaration]
+I think you could leave out '@0' part, since there is only one node.
+And if you decide to keep it, then this node should contain 'reg'
+property AFAICT.
 
-Provide dummy function declarations if OF_NET is not configured. This is safe
-because all callers do check the return values. If desired, at least some of
-the #ifdefs in the code can subsequently be removed.
+Otherwise the series looks good to me. With the above issue addressed
+feel free to add
 
-Cc: David Daney <david.daney@cavium.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- include/linux/of_net.h |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-diff --git a/include/linux/of_net.h b/include/linux/of_net.h
-index f474641..61bf53b 100644
---- a/include/linux/of_net.h
-+++ b/include/linux/of_net.h
-@@ -11,6 +11,16 @@
- #include <linux/of.h>
- extern const int of_get_phy_mode(struct device_node *np);
- extern const void *of_get_mac_address(struct device_node *np);
-+#else
-+static inline const int of_get_phy_mode(struct device_node *np)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline const void *of_get_mac_address(struct device_node *np)
-+{
-+	return NULL;
-+}
- #endif
- 
- #endif /* __LINUX_OF_NET_H */
--- 
-1.7.9.7
+> +			clock-frequency =<50000>;
+> +			hactive =<1024>;
+> +			vactive =<600>;
+> +			hfront-porch =<64>;
+> +			hback-porch =<16>;
+> +			hsync-len =<48>;
+> +			vback-porch =<64>;
+> +			vfront-porch =<16>;
+> +			vsync-len =<3>;
+> +		};
+> +	};
+> +
+>   	serial@13800000 {
+>   		status = "okay";
+>   	};
+
+Thanks,
+Sylwester
