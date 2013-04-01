@@ -1,69 +1,58 @@
-From: Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] add devicetree bindings for rtc-m48t86
-Date: Tue, 02 Apr 2013 08:44:10 +1100
-Message-ID: <5159FFAA.5030205@gmail.com>
-References: <1364766971-5914-1-git-send-email-alex@digriz.org.uk>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V2 0/3] Add DT Binding for Power-Supply power-supplies property
+Date: Mon, 1 Apr 2013 17:45:52 -0400
+Message-ID: <1364852755-17425-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1364766971-5914-1-git-send-email-alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/04/13 08:56, Alexander Clouter wrote:
-> Currently there are two users of rtc-m48t86 (mach-ep93xx/ts72xx.c and
-> mach-orion5x/ts78xx-setup.c) and both just use {read,write}b against
-> a memory mapped region.  As I am devicetree'ing the TS-7800, this
-> driver needs converting and thats what this patchset does.
-> 
-> The patch does the following:
->  * remove platform specific ops hooks, moving ioremap'ing and
-> 	everything into the driver
->  * utilises named resources to indicate index/data ranges
->  * moves the RTC detection routine from ts78xx-setup.c into rtc-m48t86.c
->  * and, of course, enable devicetree hooks and include documentation
-> 
-> Awkward step, the first patch breaks both boards, the two following
-> patches fix them.  Happy to re-work this if folks give me a pointer
-> on how to do this in an acceptable way.
+This series defines a common way for devicetree initialized
+power_supplies to define their relationships between chargers and
+supplicants.
 
-Sorry, that's no good. It breaks things like git bisect.
+This series adds a supplied_from array to complement the supplied_to
+array and to allow supplies to define the list of supplies which
+supply them.
 
-> 
-> My vote is to break fast, fix fast, spend the time writing other code :)
+Then once this property is supported, we can use a new property for
+devicetree to define the relationships between nodes, and read in this
+property to generate the supplied_from list.
 
-The patch series will need to be reworked so that there is no
-build/runtime breakage between any of the patches. I'll have a read
-through and see if I can suggest something.
+With this logic in place, all drivers need to do to add support for
+this mechanism, is to store their device tree node in the power_supply
+struct. They should also handle EPROBE_DEFER properly.
 
-~Ryan
+Changes since:
+v2:
+ - Changed __power_supply_is_supplied_by to a boolean function and
+   corrected return paths around it
+ - took loop invariant tests out of loops
+ - Fixed multiline comment style
+ - fixed up return paths around power_supplies_check_supplies
 
+RFC v2:
+ - Changed to official Patch set rather than RFC
+ - defined supplied_from char ** array rather than complicated
+   struct device_node related array
 
-> Signed-off-by: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
-> 
-> Alexander Clouter (3):
->   rtc: rtc-m48t86: add devicetree bindings
->   arm: orion5x: fixup ts78xx to be able to use the rtc-m48t86 again.
->   arm: ep93xx: fixup ts72xx to be able to use the rtc-m48t86 again.
-> 
->  .../devicetree/bindings/rtc/rtc-m48t86.txt         |   17 ++
->  arch/arm/mach-ep93xx/ts72xx.c                      |   29 +--
->  arch/arm/mach-orion5x/ts78xx-setup.c               |   79 ++----
->  drivers/rtc/rtc-m48t86.c                           |  254 +++++++++++++++-----
->  include/linux/m48t86.h                             |   16 --
->  5 files changed, 239 insertions(+), 156 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-m48t86.txt
->  delete mode 100644 include/linux/m48t86.h
-> 
+RFC v1:
+ - Inverted the logic so that supplies (batteries) contain a list of
+   the supplies (chargers) which supply them.
+
+Rhyland Klein (3):
+  power_supply: Define Binding for power-supplies
+  power: power_supply: Add core support for supplied_from
+  power: power_supply_core: Add support for supplied_from
+
+ .../bindings/power_supply/power_supply.txt         |   23 +++
+ drivers/power/power_supply_core.c                  |  187 ++++++++++++++++++--
+ include/linux/power_supply.h                       |    6 +
+ 3 files changed, 203 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power_supply/power_supply.txt
+
+-- 
+1.7.9.5
