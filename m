@@ -1,163 +1,53 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH V3 2/2] dmaengine: OMAP: Register SDMA controller with
- Device Tree DMA driver
-Date: Mon, 1 Apr 2013 12:48:26 -0500
-Message-ID: <5159C86A.30701@ti.com>
-References: <1361903244-19837-1-git-send-email-jon-hunter@ti.com> <1361903244-19837-3-git-send-email-jon-hunter@ti.com> <51488C8B.4010206@ti.com> <20130320163654.GN16413@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130320163654.GN16413@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Tony Lindgren <tony@atomide.com>, "Cousson, Benoit" <b-cousson@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH] of_net.h: Provide dummy functions if OF_NET is not configured
+Date: Mon,  1 Apr 2013 11:19:09 -0700
+Message-ID: <1364840349-10696-1-git-send-email-linux@roeck-us.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>, Guenter Roeck <linux@roeck-us.net>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Vinod,
+of_get_mac_address() and of_get_phy_mode() are only provided if OF_NET
+is configured. While most callers check for the define, not all do, and those
+who do require #ifdef around the code. For those who don't, the missing check
+can result in errors such as
 
-On 03/20/2013 11:36 AM, Tony Lindgren wrote:
-> * Jon Hunter <jon-hunter@ti.com> [130319 09:08]:
->> Vinod, Tony, Benoit,
->>
->> On 02/26/2013 12:27 PM, Jon Hunter wrote:
->>> If the device-tree blob is present during boot, then register the SDMA
->>> controller with the device-tree DMA driver so that we can use device-tree
->>> to look-up DMA client information.
->>>
->>> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
->>> Reviewed-by: Felipe Balbi <balbi@ti.com>
->>> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->>> Tested-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->>> ---
->>>  arch/arm/mach-omap2/dma.c |    4 ++++
->>>  drivers/dma/omap-dma.c    |   38 ++++++++++++++++++++++++++++++++++++--
->>>  2 files changed, 40 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/arch/arm/mach-omap2/dma.c b/arch/arm/mach-omap2/dma.c
->>> index dab9fc0..49fd0d5 100644
->>> --- a/arch/arm/mach-omap2/dma.c
->>> +++ b/arch/arm/mach-omap2/dma.c
->>> @@ -28,6 +28,7 @@
->>>  #include <linux/init.h>
->>>  #include <linux/device.h>
->>>  #include <linux/dma-mapping.h>
->>> +#include <linux/of.h>
->>>  #include <linux/omap-dma.h>
->>>  
->>>  #include "soc.h"
->>> @@ -304,6 +305,9 @@ static int __init omap2_system_dma_init(void)
->>>  	if (res)
->>>  		return res;
->>>  
->>> +	if (of_have_populated_dt())
->>> +		return res;
->>> +
->>>  	pdev = platform_device_register_full(&omap_dma_dev_info);
->>>  	if (IS_ERR(pdev))
->>>  		return PTR_ERR(pdev);
-> 
-> AFAIK we don't currently have anything else touching this file..
-> 
->>> diff --git a/drivers/dma/omap-dma.c b/drivers/dma/omap-dma.c
->>> index c4b4fd2..2ea3d7e 100644
->>> --- a/drivers/dma/omap-dma.c
->>> +++ b/drivers/dma/omap-dma.c
->>> @@ -16,6 +16,8 @@
->>>  #include <linux/platform_device.h>
->>>  #include <linux/slab.h>
->>>  #include <linux/spinlock.h>
->>> +#include <linux/of_dma.h>
->>> +#include <linux/of_device.h>
->>>  
->>>  #include "virt-dma.h"
->>>  
->>> @@ -67,6 +69,10 @@ static const unsigned es_bytes[] = {
->>>  	[OMAP_DMA_DATA_TYPE_S32] = 4,
->>>  };
->>>  
->>> +static struct of_dma_filter_info omap_dma_info = {
->>> +	.filter_fn = omap_dma_filter_fn,
->>> +};
->>> +
->>>  static inline struct omap_dmadev *to_omap_dma_dev(struct dma_device *d)
->>>  {
->>>  	return container_of(d, struct omap_dmadev, ddev);
->>> @@ -621,8 +627,22 @@ static int omap_dma_probe(struct platform_device *pdev)
->>>  		pr_warn("OMAP-DMA: failed to register slave DMA engine device: %d\n",
->>>  			rc);
->>>  		omap_dma_free(od);
->>> -	} else {
->>> -		platform_set_drvdata(pdev, od);
->>> +		return rc;
->>> +	}
->>> +
->>> +	platform_set_drvdata(pdev, od);
->>> +
->>> +	if (pdev->dev.of_node) {
->>> +		omap_dma_info.dma_cap = od->ddev.cap_mask;
->>> +
->>> +		/* Device-tree DMA controller registration */
->>> +		rc = of_dma_controller_register(pdev->dev.of_node,
->>> +				of_dma_simple_xlate, &omap_dma_info);
->>> +		if (rc) {
->>> +			pr_warn("OMAP-DMA: failed to register DMA controller\n");
->>> +			dma_async_device_unregister(&od->ddev);
->>> +			omap_dma_free(od);
->>> +		}
->>>  	}
->>>  
->>>  	dev_info(&pdev->dev, "OMAP DMA engine driver\n");
->>> @@ -634,18 +654,32 @@ static int omap_dma_remove(struct platform_device *pdev)
->>>  {
->>>  	struct omap_dmadev *od = platform_get_drvdata(pdev);
->>>  
->>> +	if (pdev->dev.of_node)
->>> +		of_dma_controller_free(pdev->dev.of_node);
->>> +
->>>  	dma_async_device_unregister(&od->ddev);
->>>  	omap_dma_free(od);
->>>  
->>>  	return 0;
->>>  }
->>>  
->>> +static const struct of_device_id omap_dma_match[] = {
->>> +	{ .compatible = "ti,omap2420-sdma", },
->>> +	{ .compatible = "ti,omap2430-sdma", },
->>> +	{ .compatible = "ti,omap3430-sdma", },
->>> +	{ .compatible = "ti,omap3630-sdma", },
->>> +	{ .compatible = "ti,omap4430-sdma", },
->>> +	{},
->>> +};
->>> +MODULE_DEVICE_TABLE(of, omap_dma_match);
->>> +
->>>  static struct platform_driver omap_dma_driver = {
->>>  	.probe	= omap_dma_probe,
->>>  	.remove	= omap_dma_remove,
->>>  	.driver = {
->>>  		.name = "omap-dma-engine",
->>>  		.owner = THIS_MODULE,
->>> +		.of_match_table = of_match_ptr(omap_dma_match),
->>>  	},
->>>  };
->>
->> Who's tree does it make most sense for this patch to go through?
->>
->> Benoit has queued up patch 1/2 and so I am not sure if this should go
->> via Benoit tree to Tony or directly via Vinod's tree. What are your
->> thoughts?
-> 
-> OK
->  
->> It would be great if this could make v3.10.
-> 
-> I suggest Vinod/Grant/Linus W queue this patch:
-> 
-> Acked-by: Tony Lindgren <tony@atomide.com>
+arch/powerpc/sysdev/tsi108_dev.c:107:3: error: implicit declaration of
+	function 'of_get_mac_address' [-Werror=implicit-function-declaration]
+arch/powerpc/sysdev/mv64x60_dev.c:253:2: error: implicit declaration of
+	function 'of_get_mac_address' [-Werror=implicit-function-declaration]
 
-Can you take this patch with Tony's ACK? Let me know if you want me to
-resend with the ACK.
+Provide dummy function declarations if OF_NET is not configured. This is safe
+because all callers do check the return values. If desired, at least some of
+the #ifdefs in the code can subsequently be removed.
 
-Cheers
-Jon
+Cc: David Daney <david.daney@cavium.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+ include/linux/of_net.h |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
+diff --git a/include/linux/of_net.h b/include/linux/of_net.h
+index f474641..61bf53b 100644
+--- a/include/linux/of_net.h
++++ b/include/linux/of_net.h
+@@ -11,6 +11,16 @@
+ #include <linux/of.h>
+ extern const int of_get_phy_mode(struct device_node *np);
+ extern const void *of_get_mac_address(struct device_node *np);
++#else
++static inline const int of_get_phy_mode(struct device_node *np)
++{
++	return -ENODEV;
++}
++
++static inline const void *of_get_mac_address(struct device_node *np)
++{
++	return NULL;
++}
+ #endif
+ 
+ #endif /* __LINUX_OF_NET_H */
+-- 
+1.7.9.7
