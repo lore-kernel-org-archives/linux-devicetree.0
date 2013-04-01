@@ -1,94 +1,51 @@
-From: Anatolij Gustschin <agust@denx.de>
-Subject: [PATCH v2 5/5] mmc: mxcmmc: fix race conditions for host->req and host->data access
-Date: Mon,  1 Apr 2013 00:23:05 +0200
-Message-ID: <1364768585-5177-6-git-send-email-agust@denx.de>
-References: <1364768585-5177-1-git-send-email-agust@denx.de>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1364768585-5177-1-git-send-email-agust@denx.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org
-Cc: Chris Ball <cjb@laptop.org>, Sascha Hauer <s.hauer@pengutronix.de>, Markus Pargmann <mpa@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, Anatolij Gustschin <agust@denx.de>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH] pinctrl: pinctrl-mxs: document the missing pull-ups
+Date: Mon, 1 Apr 2013 10:16:39 +0800
+Message-ID: <20130401021637.GA1693@S2101-09.ap.freescale.net>
+References: <1364601072-30226-1-git-send-email-alexandre.belloni@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1364601072-30226-1-git-send-email-alexandre.belloni@free-electrons.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-mxcmci_dma_callback() is invoked by DMA drivers in soft-irq
-context and can be interrupted by the mxcmci_irq() interrupt
-which can finish the mmc request or data transfer and set
-host->req or host->data pointers to NULL. Then mxcmci_data_done()
-crashes with a null pointer dereferences. Protect all accesses
-to host->req and host->data by spin locks.
+On Sat, Mar 30, 2013 at 12:51:12AM +0100, Alexandre Belloni wrote:
+> Some pins on the i.mx23 and i.mx28 are missing pull-ups, document that
+> oddity because it was difficult to know the expected behaviour.
+> 
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 
-Also check host->data pointer in mxcmci_watchdog() before
-dereferencing it.
+Applied, thanks.
 
-Signed-off-by: Anatolij Gustschin <agust@denx.de>
----
-v2:
- - only rebased
-
- drivers/mmc/host/mxcmmc.c |   31 ++++++++++++++++++++++++-------
- 1 files changed, 24 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/mmc/host/mxcmmc.c b/drivers/mmc/host/mxcmmc.c
-index 2861e0d..23deb2a 100644
---- a/drivers/mmc/host/mxcmmc.c
-+++ b/drivers/mmc/host/mxcmmc.c
-@@ -694,24 +694,40 @@ static void mxcmci_datawork(struct work_struct *work)
- 
- static void mxcmci_data_done(struct mxcmci_host *host, unsigned int stat)
- {
--	struct mmc_data *data = host->data;
-+	struct mmc_request *req;
- 	int data_error;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&host->lock, flags);
- 
--	if (!data)
-+	if (!host->data) {
-+		spin_unlock_irqrestore(&host->lock, flags);
- 		return;
-+	}
-+
-+	if (!host->req) {
-+		spin_unlock_irqrestore(&host->lock, flags);
-+		return;
-+	}
-+
-+	req = host->req;
-+	if (!req->stop)
-+		host->req = NULL; /* we will handle finish req below */
- 
- 	data_error = mxcmci_finish_data(host, stat);
- 
-+	spin_unlock_irqrestore(&host->lock, flags);
-+
- 	mxcmci_read_response(host, stat);
- 	host->cmd = NULL;
- 
--	if (host->req->stop) {
--		if (mxcmci_start_cmd(host, host->req->stop, 0)) {
--			mxcmci_finish_request(host, host->req);
-+	if (req->stop) {
-+		if (mxcmci_start_cmd(host, req->stop, 0)) {
-+			mxcmci_finish_request(host, req);
- 			return;
- 		}
- 	} else {
--		mxcmci_finish_request(host, host->req);
-+		mxcmci_finish_request(host, req);
- 	}
- }
- 
-@@ -1005,7 +1021,8 @@ static void mxcmci_watchdog(unsigned long data)
- 
- 	/* Mark transfer as erroneus and inform the upper layers */
- 
--	host->data->error = -ETIMEDOUT;
-+	if (host->data)
-+		host->data->error = -ETIMEDOUT;
- 	host->req = NULL;
- 	host->cmd = NULL;
- 	host->data = NULL;
--- 
-1.7.5.4
+> ---
+> 
+> I don't think it is necessary to list the pins with the missing pull ups in
+> that file but we may want to explicitly direct to the datasheet as even with
+> the same chip, it can depend on the package (BGA or QFP for example).
+> 
+>  Documentation/devicetree/bindings/pinctrl/fsl,mxs-pinctrl.txt |    4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,mxs-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,mxs-pinctrl.txt
+> index f7e8e8f..3077370 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/fsl,mxs-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,mxs-pinctrl.txt
+> @@ -70,6 +70,10 @@ Optional subnode-properties:
+>      0: Disable the internal pull-up
+>      1: Enable the internal pull-up
+>  
+> +Note that when enabling the pull-up, the internal pad keeper gets disabled.
+> +Also, some pins doesn't have a pull up, in that case, setting the fsl,pull-up
+> +will only disable the internal pad keeper.
+> +
+>  Examples:
+>  
+>  pinctrl@80018000 {
+> -- 
+> 1.7.10.4
+> 
 
