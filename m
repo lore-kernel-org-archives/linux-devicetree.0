@@ -1,52 +1,36 @@
-From: Anton Vorontsov <anton@enomsg.org>
-Subject: Re: [PATCH 2/2] power_supply: tps65090: Setup compatible property
- for dt
-Date: Sun, 31 Mar 2013 23:18:04 -0700
-Message-ID: <20130401061803.GB30190@lizard>
-References: <1363897985-19980-1-git-send-email-rklein@nvidia.com>
- <1363897985-19980-2-git-send-email-rklein@nvidia.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v6 0/8] Reset controller API to reset IP modules on i.MX5
+ and i.MX6
+Date: Mon, 1 Apr 2013 14:23:34 +0800
+Message-ID: <20130401062332.GB1693@S2101-09.ap.freescale.net>
+References: <1364488523-20310-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1363897985-19980-2-git-send-email-rklein@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rhyland Klein <rklein@nvidia.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1364488523-20310-1-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-pm-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Warren <swarren@wwwdotorg.org>, Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, Mike Turquette <mturquette@linaro.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, "Rafael J. Wysocki" <rjw@sisk.pl>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 21, 2013 at 04:33:05PM -0400, Rhyland Klein wrote:
-> Setup the compatible property so that when this device is registered
-> through device tree, it can match the expected compatiblity string
-> used in the tps65090 driver.
->=20
-> Signed-off-by: Rhyland Klein <rklein@nvidia.com>
-> ---
->  drivers/power/tps65090-charger.c |   10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/power/tps65090-charger.c b/drivers/power/tps6509=
-0-charger.c
-> index 0c66c66..3b3dafd 100644
-> --- a/drivers/power/tps65090-charger.c
-> +++ b/drivers/power/tps65090-charger.c
-> @@ -204,7 +204,7 @@ static int tps65090_charger_probe(struct platform=
-_device *pdev)
-> =20
->  	pdata =3D dev_get_platdata(pdev->dev.parent);
-> =20
-> -	if (!pdata && tps65090_mfd->dev->of_node)
-> +	if (!pdata && pdev->dev.of_node)
+On Thu, Mar 28, 2013 at 05:35:15PM +0100, Philipp Zabel wrote:
+> The system reset controller (SRC) on i.MX51, i.MX53, and i.MX6q controls
+> reset lines to the GPU, VPU, IPU, and OpenVG IP modules.
+> 
+> The following patches add a simple API for devices to request being reset
+> by separate reset controller hardware and implements the reset signal
+> device tree binding proposed by Stephen Warren. Contrary to Tegra hardware,
+> the i.MX SRC contains self-deasserting reset registers, so I've included
+> both ops to manually assert/deassert a reset line, as well as a "reset"
+> operation that is supposed to assert the reset line and wait for it to
+> deassert.
+> 
+> The i.MX SRC is enhanced to provide a reset controller and the IPU driver
+> is made to request being reset by calling the device_reset(&pdev->dev)
+> convenience wrapper during probing.
+> 
+> No changes since v5, I just reordered the series.
 
-  CC      drivers/power/tps65090-charger.o
-drivers/power/tps65090-charger.c: In function =E2=80=98tps65090_charger=
-_probe=E2=80=99:
-drivers/power/tps65090-charger.c:198:19: warning: unused variable =E2=80=
-=98tps65090_mfd=E2=80=99 [-Wunused-variable]
+All applied, thanks.
 
-=2E..I fixed this up and applied the patches.
-
-Thanks!
-
-Anton
