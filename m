@@ -1,118 +1,54 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH V2] DMA: PL330: Add check if device tree compatible
-Date: Mon, 1 Apr 2013 08:13:31 -0500
-Message-ID: <CAL_Jsq+3bJDiA=rXS=WY3BGuRh5X+nyxxosrqtSD9fx-asbCKQ@mail.gmail.com>
-References: <1362475531-32260-1-git-send-email-padma.v@samsung.com>
-	<1362475531-32260-2-git-send-email-padma.v@samsung.com>
-	<20130321093906.GL10326@intel.com>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH -next] spi: remove unused variable in
+ tegra_slink_read_rx_fifo_to_client_rxbuf()
+Date: Mon, 1 Apr 2013 14:28:02 +0100
+Message-ID: <20130401132802.GO18636@opensource.wolfsonmicro.com>
+References: <CAPgLHd8yTotMxH-Rb6UX3bsQrTTUM4SdQWNVDoU_LszgxM_qsQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130321093906.GL10326@intel.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, padma.kvr@gmail.com, sbkim73@samsung.com, "Mark Brown (broonie@opensource.wolfsonmicro.com)" <broonie@opensource.wolfsonmicro.com>, kgene.kim@samsung.com, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, jon-hunter@ti.com, boojin.kim@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OAiy6VLsECigG9dy"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPgLHd8yTotMxH-Rb6UX3bsQrTTUM4SdQWNVDoU_LszgxM_qsQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 21, 2013 at 4:39 AM, Vinod Koul <vinod.koul@intel.com> wrote:
-> On Tue, Mar 05, 2013 at 02:55:31PM +0530, Padmavathi Venna wrote:
->> This patch register the dma controller with generic dma helpers only
->> in DT case. This also adds some extra error handling in the driver.
->>
->> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
->> Reported-by: Sachin Kamat <sachin.kamat@linaro.org>
 
-What's the status on this? It is needed for 3.9 to fix pl330 on highbank.
+--OAiy6VLsECigG9dy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rob
+On Wed, Mar 13, 2013 at 09:29:12PM +0800, Wei Yongjun wrote:
+> From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+>=20
+> The variable bits_per_word is initialized but never used
+> otherwise, so remove the unused variable.
 
->> ---
->>
->> Based on Vinod Koul next branch.
->>
->> Changes since V1:
->>       - return silently when of_dma_controller_register fails, as
->>         suggested by Arnd.
->>
->>  drivers/dma/pl330.c |   38 +++++++++++++++++++++++++++-----------
->>  1 files changed, 27 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
->> index 7181531..5dbc594 100644
->> --- a/drivers/dma/pl330.c
->> +++ b/drivers/dma/pl330.c
->> @@ -2882,7 +2882,7 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
->>  {
->>       struct dma_pl330_platdata *pdat;
->>       struct dma_pl330_dmac *pdmac;
->> -     struct dma_pl330_chan *pch;
->> +     struct dma_pl330_chan *pch, *_p;
->>       struct pl330_info *pi;
->>       struct dma_device *pd;
->>       struct resource *res;
->> @@ -2984,7 +2984,16 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
->>       ret = dma_async_device_register(pd);
->>       if (ret) {
->>               dev_err(&adev->dev, "unable to register DMAC\n");
->> -             goto probe_err2;
->> +             goto probe_err3;
->> +     }
->> +
->> +     if (adev->dev.of_node) {
->> +             ret = of_dma_controller_register(adev->dev.of_node,
->> +                                      of_dma_pl330_xlate, pdmac);
->> +             if (ret) {
->> +                     dev_err(&adev->dev,
->> +                     "unable to register DMA to the generic DT DMA helpers\n");
-> Indent?
->> +             }
->>       }
->>
->>       dev_info(&adev->dev,
->> @@ -2995,16 +3004,21 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
->>               pi->pcfg.data_bus_width / 8, pi->pcfg.num_chan,
->>               pi->pcfg.num_peri, pi->pcfg.num_events);
->>
->> -     ret = of_dma_controller_register(adev->dev.of_node,
->> -                                      of_dma_pl330_xlate, pdmac);
->> -     if (ret) {
->> -             dev_err(&adev->dev,
->> -             "unable to register DMA to the generic DT DMA helpers\n");
->> -             goto probe_err2;
->> -     }
->> -
->>       return 0;
->> +probe_err3:
->> +     amba_set_drvdata(adev, NULL);
->>
->> +     /* Idle the DMAC */
->> +     list_for_each_entry_safe(pch, _p, &pdmac->ddma.channels,
->> +                     chan.device_node) {
->> +
->> +             /* Remove the channel */
->> +             list_del(&pch->chan.device_node);
->> +
->> +             /* Flush the channel */
->> +             pl330_control(&pch->chan, DMA_TERMINATE_ALL, 0);
->> +             pl330_free_chan_resources(&pch->chan);
-> free_chan for error handling in probe?
->
->> +     }
->>  probe_err2:
->>       pl330_del(pi);
->>  probe_err1:
->> @@ -3023,8 +3037,10 @@ static int pl330_remove(struct amba_device *adev)
->>       if (!pdmac)
->>               return 0;
->>
->> -     of_dma_controller_free(adev->dev.of_node);
->> +     if (adev->dev.of_node)
->> +             of_dma_controller_free(adev->dev.of_node);
->>
->> +     dma_async_device_unregister(&pdmac->ddma);
->>       amba_set_drvdata(adev, NULL);
->>
->>       /* Idle the DMAC */
->> --
->> 1.7.4.4
->>
+Applied, thanks.
+
+--OAiy6VLsECigG9dy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRWYtbAAoJELSic+t+oim96uEP/Rf2oo72G7qHrCgT6aw71uK6
+W90uyK6kloGj9Ba/34brpxSETRBU5DC/ggWcIYFZCwLjHjMdCv43hfq9DWJeu675
++7uPOjPeDGl2DHibtdVn7MEQX9lT460ZODSU4/cjguSzCcTp+UJxb8qEfNA3jI4A
+YC9U+UWHUmhPeW1Mfxu8p+cmoQQag/nEg/A/uxVgDGmuRBCfNyPFEQokhQcQTJzp
+o6nItb0IiK+7HtGNtykg7WU0vBAw8mvOjOMSMIaJ4xwIkg/OkBx4vxxx1Z5RkPEd
+QmVoqXoezXKVv4+TT2WBEaYtEKYYSimB1yX2rixCur871treQxtOcZZaJJ2ZwB3X
+LXCM6v3Z+ZtKYmTosPE7G2RE+u9dbltD+mzS2WORbcNTHbQSBhy2/7/tONE7rPRQ
+gNhTmmCOKuWpXQ1Sxc1YN3toDdT3wI3x/x2cLusa0Ptul29P8epBYafuNlUM1HoD
+F+IQJmcuPzwg5NVfdvFIOpe1R79QTCKNZrmsWipz6CNeXxuO98YIoCPRduqJhOZR
+Vq3PL0RfAuy1RgMVF2424Isgq/W9hIUImLlvGaZXP+/59nPU/TQs2U1eF5ZnMq6M
+bM+AgJHGgx4E7FuAoipe6eHNqkf17CVfvO1L2tPORfyxaRQO+g3Nh9Jx3M4qfpfp
+rfSId20b5NGiiKbh7jgh
+=0WWA
+-----END PGP SIGNATURE-----
+
+--OAiy6VLsECigG9dy--
