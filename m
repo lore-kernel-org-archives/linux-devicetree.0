@@ -1,14 +1,13 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: Add missing node iteration stubs for disabled
- CONFIG_OF
-Date: Mon, 01 Apr 2013 16:19:34 -0500
-Message-ID: <5159F9E6.50508@gmail.com>
-References: <1362860154-3089-1-git-send-email-tomasz.figa@gmail.com>
+From: Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/3] add devicetree bindings for rtc-m48t86
+Date: Tue, 02 Apr 2013 08:44:10 +1100
+Message-ID: <5159FFAA.5030205@gmail.com>
+References: <1364766971-5914-1-git-send-email-alex@digriz.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1362860154-3089-1-git-send-email-tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1364766971-5914-1-git-send-email-alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,187 +18,52 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+To: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/09/2013 02:15 PM, Tomasz Figa wrote:
-> This patch moves several for_each macros out of the #ifdef CONFIG_OF
-> block and adds inline stubs for functions used by these macros, compiled
-> conditionally when CONFIG_OF is not enabled.
+On 01/04/13 08:56, Alexander Clouter wrote:
+> Currently there are two users of rtc-m48t86 (mach-ep93xx/ts72xx.c and
+> mach-orion5x/ts78xx-setup.c) and both just use {read,write}b against
+> a memory mapped region.  As I am devicetree'ing the TS-7800, this
+> driver needs converting and thats what this patchset does.
 > 
-> This eliminates the need to explicitly check for CONFIG_OF in driver
-> code using mentioned functions and macros.
+> The patch does the following:
+>  * remove platform specific ops hooks, moving ioremap'ing and
+> 	everything into the driver
+>  * utilises named resources to indicate index/data ranges
+>  * moves the RTC detection routine from ts78xx-setup.c into rtc-m48t86.c
+>  * and, of course, enable devicetree hooks and include documentation
+> 
+> Awkward step, the first patch breaks both boards, the two following
+> patches fix them.  Happy to re-work this if folks give me a pointer
+> on how to do this in an acceptable way.
 
-Do you have some users of this?
-
-Rob
+Sorry, that's no good. It breaks things like git bisect.
 
 > 
-> Signed-off-by: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  include/linux/of.h | 92 +++++++++++++++++++++++++++++++++++++-----------------
->  1 file changed, 63 insertions(+), 29 deletions(-)
+> My vote is to break fast, fix fast, spend the time writing other code :)
+
+The patch series will need to be reworked so that there is no
+build/runtime breakage between any of the patches. I'll have a read
+through and see if I can suggest something.
+
+~Ryan
+
+
+> Signed-off-by: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
 > 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index a0f1292..7a736b8 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -86,6 +86,31 @@ static inline struct device_node *of_node_get(struct device_node *node)
->  static inline void of_node_put(struct device_node *node) { }
->  #endif /* !CONFIG_OF_DYNAMIC */
->  
-> +#define for_each_node_by_name(dn, name) \
-> +	for (dn = of_find_node_by_name(NULL, name); dn; \
-> +	     dn = of_find_node_by_name(dn, name))
-> +#define for_each_node_by_type(dn, type) \
-> +	for (dn = of_find_node_by_type(NULL, type); dn; \
-> +	     dn = of_find_node_by_type(dn, type))
-> +#define for_each_compatible_node(dn, type, compatible) \
-> +	for (dn = of_find_compatible_node(NULL, type, compatible); dn; \
-> +	     dn = of_find_compatible_node(dn, type, compatible))
-> +#define for_each_matching_node(dn, matches) \
-> +	for (dn = of_find_matching_node(NULL, matches); dn; \
-> +	     dn = of_find_matching_node(dn, matches))
-> +#define for_each_matching_node_and_match(dn, matches, match) \
-> +	for (dn = of_find_matching_node_and_match(NULL, matches, match); \
-> +	     dn; dn = of_find_matching_node_and_match(dn, matches, match))
-> +#define for_each_child_of_node(parent, child) \
-> +	for (child = of_get_next_child(parent, NULL); child != NULL; \
-> +	     child = of_get_next_child(parent, child))
-> +#define for_each_available_child_of_node(parent, child) \
-> +	for (child = of_get_next_available_child(parent, NULL); child != NULL; \
-> +	     child = of_get_next_available_child(parent, child))
-> +#define for_each_node_with_property(dn, prop_name) \
-> +	for (dn = of_find_node_with_property(NULL, prop_name); dn; \
-> +	     dn = of_find_node_with_property(dn, prop_name))
-> +
->  #ifdef CONFIG_OF
->  
->  /* Pointer for first entry in chain of all nodes. */
-> @@ -167,19 +192,10 @@ static inline const char *of_node_full_name(const struct device_node *np)
->  
->  extern struct device_node *of_find_node_by_name(struct device_node *from,
->  	const char *name);
-> -#define for_each_node_by_name(dn, name) \
-> -	for (dn = of_find_node_by_name(NULL, name); dn; \
-> -	     dn = of_find_node_by_name(dn, name))
->  extern struct device_node *of_find_node_by_type(struct device_node *from,
->  	const char *type);
-> -#define for_each_node_by_type(dn, type) \
-> -	for (dn = of_find_node_by_type(NULL, type); dn; \
-> -	     dn = of_find_node_by_type(dn, type))
->  extern struct device_node *of_find_compatible_node(struct device_node *from,
->  	const char *type, const char *compat);
-> -#define for_each_compatible_node(dn, type, compatible) \
-> -	for (dn = of_find_compatible_node(NULL, type, compatible); dn; \
-> -	     dn = of_find_compatible_node(dn, type, compatible))
->  extern struct device_node *of_find_matching_node_and_match(
->  	struct device_node *from,
->  	const struct of_device_id *matches,
-> @@ -190,12 +206,6 @@ static inline struct device_node *of_find_matching_node(
->  {
->  	return of_find_matching_node_and_match(from, matches, NULL);
->  }
-> -#define for_each_matching_node(dn, matches) \
-> -	for (dn = of_find_matching_node(NULL, matches); dn; \
-> -	     dn = of_find_matching_node(dn, matches))
-> -#define for_each_matching_node_and_match(dn, matches, match) \
-> -	for (dn = of_find_matching_node_and_match(NULL, matches, match); \
-> -	     dn; dn = of_find_matching_node_and_match(dn, matches, match))
->  extern struct device_node *of_find_node_by_path(const char *path);
->  extern struct device_node *of_find_node_by_phandle(phandle handle);
->  extern struct device_node *of_get_parent(const struct device_node *node);
-> @@ -207,14 +217,6 @@ extern struct device_node *of_get_next_available_child(
->  
->  extern struct device_node *of_get_child_by_name(const struct device_node *node,
->  					const char *name);
-> -#define for_each_child_of_node(parent, child) \
-> -	for (child = of_get_next_child(parent, NULL); child != NULL; \
-> -	     child = of_get_next_child(parent, child))
-> -
-> -#define for_each_available_child_of_node(parent, child) \
-> -	for (child = of_get_next_available_child(parent, NULL); child != NULL; \
-> -	     child = of_get_next_available_child(parent, child))
-> -
->  static inline int of_get_child_count(const struct device_node *np)
->  {
->  	struct device_node *child;
-> @@ -228,10 +230,6 @@ static inline int of_get_child_count(const struct device_node *np)
->  
->  extern struct device_node *of_find_node_with_property(
->  	struct device_node *from, const char *prop_name);
-> -#define for_each_node_with_property(dn, prop_name) \
-> -	for (dn = of_find_node_with_property(NULL, prop_name); dn; \
-> -	     dn = of_find_node_with_property(dn, prop_name))
-> -
->  extern struct property *of_find_property(const struct device_node *np,
->  					 const char *name,
->  					 int *lenp);
-> @@ -353,13 +351,28 @@ static inline struct device_node *of_find_node_by_name(struct device_node *from,
->  	return NULL;
->  }
->  
-> +static inline struct device_node *of_find_node_by_type(struct device_node *from,
-> +	const char *type)
-> +{
-> +	return NULL;
-> +}
-> +
->  static inline bool of_have_populated_dt(void)
->  {
->  	return false;
->  }
->  
-> -#define for_each_child_of_node(parent, child) \
-> -	while (0)
-> +static inline struct device_node *of_get_next_child(const struct device_node *node,
-> +					     struct device_node *prev)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline struct device_node *of_get_next_available_child(
-> +	const struct device_node *node, struct device_node *prev)
-> +{
-> +	return NULL;
-> +}
->  
->  static inline struct device_node *of_get_child_by_name(
->  					const struct device_node *node,
-> @@ -373,6 +386,12 @@ static inline int of_get_child_count(const struct device_node *np)
->  	return 0;
->  }
->  
-> +static inline struct device_node *of_find_node_with_property(
-> +	struct device_node *from, const char *prop_name)
-> +{
-> +	return NULL;
-> +}
-> +
->  static inline int of_device_is_compatible(const struct device_node *device,
->  					  const char *name)
->  {
-> @@ -394,6 +413,21 @@ static inline struct device_node *of_find_compatible_node(
->  	return NULL;
->  }
->  
-> +static inline struct device_node *of_find_matching_node_and_match(
-> +	struct device_node *from,
-> +	const struct of_device_id *matches,
-> +	const struct of_device_id **match)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline struct device_node *of_find_matching_node(
-> +	struct device_node *from,
-> +	const struct of_device_id *matches)
-> +{
-> +	return NULL;
-> +}
-> +
->  static inline int of_property_read_u8_array(const struct device_node *np,
->  			const char *propname, u8 *out_values, size_t sz)
->  {
+> Alexander Clouter (3):
+>   rtc: rtc-m48t86: add devicetree bindings
+>   arm: orion5x: fixup ts78xx to be able to use the rtc-m48t86 again.
+>   arm: ep93xx: fixup ts72xx to be able to use the rtc-m48t86 again.
+> 
+>  .../devicetree/bindings/rtc/rtc-m48t86.txt         |   17 ++
+>  arch/arm/mach-ep93xx/ts72xx.c                      |   29 +--
+>  arch/arm/mach-orion5x/ts78xx-setup.c               |   79 ++----
+>  drivers/rtc/rtc-m48t86.c                           |  254 +++++++++++++++-----
+>  include/linux/m48t86.h                             |   16 --
+>  5 files changed, 239 insertions(+), 156 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-m48t86.txt
+>  delete mode 100644 include/linux/m48t86.h
 > 
