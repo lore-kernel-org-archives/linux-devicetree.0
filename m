@@ -1,8 +1,7 @@
 From: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
-Subject: [PATCH 5/6] arm: ep93xx: move ts72xx to use rtc-m48t86 driver side
- memory interface
-Date: Tue,  2 Apr 2013 00:22:44 +0100
-Message-ID: <1364858565-17192-6-git-send-email-alex@digriz.org.uk>
+Subject: [PATCH 6/6] rtc: rtc-m48t86: add devicetree bindings
+Date: Tue,  2 Apr 2013 00:22:45 +0100
+Message-ID: <1364858565-17192-7-git-send-email-alex@digriz.org.uk>
 References: <1364858565-17192-1-git-send-email-alex@digriz.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,80 +22,69 @@ To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Hartley 
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove platform_data hooks into rtc-m48t86 and use named resource regions.
+Add devicetree bindings (and documentation) for rtc-m48t86.
 
 Signed-off-by: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
 ---
- arch/arm/mach-ep93xx/ts72xx.c |   38 +++++++-------------------------------
- 1 file changed, 7 insertions(+), 31 deletions(-)
+ Documentation/devicetree/bindings/rtc/rtc-m48t86.txt |   17 +++++++++++++++++
+ drivers/rtc/rtc-m48t86.c                             |   12 ++++++++++--
+ 2 files changed, 27 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-m48t86.txt
 
-diff --git a/arch/arm/mach-ep93xx/ts72xx.c b/arch/arm/mach-ep93xx/ts72xx.c
-index a278639..baadffd 100644
---- a/arch/arm/mach-ep93xx/ts72xx.c
-+++ b/arch/arm/mach-ep93xx/ts72xx.c
-@@ -16,7 +16,6 @@
- #include <linux/init.h>
- #include <linux/platform_device.h>
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-m48t86.txt b/Documentation/devicetree/bindings/rtc/rtc-m48t86.txt
+new file mode 100644
+index 0000000..375ea56
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/rtc-m48t86.txt
+@@ -0,0 +1,17 @@
++RTC support for the rtc-m48t86 driver
++
++Required properties:
++- compatible : "rtc-m48t86"
++- reg : Array of base physical addresses for the RTC control and data
++- reg-names : must have "rtc_index" and "rtc_data"
++
++Example:
++
++rtc@808 {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "rtc-m48t86";
++	reg =	<0x808 0x04>,
++		<0x80c 0x04>;
++	reg-names = "rtc_index", "rtc_data";
++};
+diff --git a/drivers/rtc/rtc-m48t86.c b/drivers/rtc/rtc-m48t86.c
+index b8edf73..9395126 100644
+--- a/drivers/rtc/rtc-m48t86.c
++++ b/drivers/rtc/rtc-m48t86.c
+@@ -20,6 +20,7 @@
+ #include <linux/bcd.h>
+ #include <linux/slab.h>
  #include <linux/io.h>
--#include <linux/platform_data/rtc-m48t86.h>
- #include <linux/mtd/nand.h>
- #include <linux/mtd/partitions.h>
++#include <linux/of.h>
  
-@@ -45,16 +44,6 @@ static struct map_desc ts72xx_io_desc[] __initdata = {
- 		.pfn		= __phys_to_pfn(TS72XX_OPTIONS2_PHYS_BASE),
- 		.length		= TS72XX_OPTIONS2_SIZE,
- 		.type		= MT_DEVICE,
--	}, {
--		.virtual	= (unsigned long)TS72XX_RTC_INDEX_VIRT_BASE,
--		.pfn		= __phys_to_pfn(TS72XX_RTC_INDEX_PHYS_BASE),
--		.length		= TS72XX_RTC_INDEX_SIZE,
--		.type		= MT_DEVICE,
--	}, {
--		.virtual	= (unsigned long)TS72XX_RTC_DATA_VIRT_BASE,
--		.pfn		= __phys_to_pfn(TS72XX_RTC_DATA_PHYS_BASE),
--		.length		= TS72XX_RTC_DATA_SIZE,
--		.type		= MT_DEVICE,
- 	}
- };
- 
-@@ -179,31 +168,18 @@ static void __init ts72xx_register_flash(void)
- 	}
+ #define M48T86_REG_SEC		0x00
+ #define M48T86_REG_SECALRM	0x01
+@@ -335,10 +336,17 @@ static int m48t86_rtc_remove(struct platform_device *pdev)
+ 	return 0;
  }
  
--
--static unsigned char ts72xx_rtc_readbyte(unsigned long addr)
--{
--	__raw_writeb(addr, TS72XX_RTC_INDEX_VIRT_BASE);
--	return __raw_readb(TS72XX_RTC_DATA_VIRT_BASE);
--}
--
--static void ts72xx_rtc_writebyte(unsigned char value, unsigned long addr)
--{
--	__raw_writeb(addr, TS72XX_RTC_INDEX_VIRT_BASE);
--	__raw_writeb(value, TS72XX_RTC_DATA_VIRT_BASE);
--}
--
--static struct m48t86_ops ts72xx_rtc_ops = {
--	.readbyte	= ts72xx_rtc_readbyte,
--	.writebyte	= ts72xx_rtc_writebyte,
-+static struct resource ts72xx_rtc_resource[] = {
-+	DEFINE_RES_NAMED(TS72XX_RTC_INDEX_PHYS_BASE, 4,
-+				"rtc_index", IORESOURCE_MEM),
-+	DEFINE_RES_NAMED(TS72XX_RTC_DATA_PHYS_BASE, 4,
-+				"rtc_data", IORESOURCE_MEM),
- };
- 
- static struct platform_device ts72xx_rtc_device = {
- 	.name		= "rtc-m48t86",
- 	.id		= -1,
--	.dev		= {
--		.platform_data	= &ts72xx_rtc_ops,
--	},
--	.num_resources	= 0,
-+	.resource	= ts72xx_rtc_resource,
-+	.num_resources	= ARRAY_SIZE(ts72xx_rtc_resource),
- };
- 
- static struct resource ts72xx_wdt_resources[] = {
++static const struct of_device_id m48t86_rtc_match[] = {
++	{ .compatible = "rtc-m48t86" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, m48t86_rtc_match);
++
+ static struct platform_driver m48t86_rtc_platform_driver = {
+ 	.driver		= {
+-		.name	= "rtc-m48t86",
+-		.owner	= THIS_MODULE,
++		.name		= "rtc-m48t86",
++		.owner		= THIS_MODULE,
++		.of_match_table	= m48t86_rtc_match,
+ 	},
+ 	.probe		= m48t86_rtc_probe,
+ 	.remove		= m48t86_rtc_remove,
 -- 
 1.7.10.4
