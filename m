@@ -1,186 +1,132 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v4 1/6] drivers: phy: add generic PHY framework
-Date: Mon, 01 Apr 2013 21:34:47 +0200
-Message-ID: <5159E157.6000800@gmail.com>
-References: <1364449408-9510-1-git-send-email-kishon@ti.com> <1364449408-9510-2-git-send-email-kishon@ti.com>
+From: Javier Martinez Canillas <martinez.javier@gmail.com>
+Subject: Re: [RFC][BUG] arm/dts: OMAP3: set #interrupt-cells to two
+Date: Mon, 1 Apr 2013 22:05:00 +0200
+Message-ID: <CAAwP0s1H9zaBZPMDz9=He-E68UK0Ay3jnxZ2frYH9r1xNeQhxQ@mail.gmail.com>
+References: <1364631689.3767.7.camel@mars> <CAAwP0s35J-edpvFv08xjjpwaezQBYNvMNhhXL-UacsuUtSt4ZA@mail.gmail.com>
+ <1364834508.3939.74.camel@mars>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1364449408-9510-2-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: balbi@ti.com, gregkh@linuxfoundation.org, arnd@arndb.de, akpm@linux-foundation.org, rob@landley.net, swarren@wwwdotorg.org, davem@davemloft.net, cesarb@cesarb.net, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, tony@atomide.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, b-cousson@ti.com, linux@arm.linux.org.uk, eballetbo@gmail.com, javier@dowhile0.org, mchehab@redhat.com, santosh.shilimkar@ti.com, broonie@opensource.wolfsonmicro.com, swarren@nvidia.com, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1364834508.3939.74.camel@mars>
+Sender: linux-omap-owner@vger.kernel.org
+To: Christoph Fritz <chf.fritz@googlemail.com>
+Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Mack <daniel@zonque.org>, "Hans J. Koch" <hjk@hansjkoch.de>, Jon Hunter <jon-hunter@ti.com>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@ti.com>, Rajendra Nayak <rnayak@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Just couple minor comments...
-
-On 03/28/2013 06:43 AM, Kishon Vijay Abraham I wrote:
-> The PHY framework provides a set of APIs for the PHY drivers to
-> create/destroy a PHY and APIs for the PHY users to obtain a reference to the
-> PHY with or without using phandle. To obtain a reference to the PHY without
-> using phandle, the platform specfic intialization code (say from board file)
-> should have already called phy_bind with the binding information. The binding
-> information consists of phy's device name, phy user device name and an index.
-> The index is used when the same phy user binds to mulitple phys.
+On Mon, Apr 1, 2013 at 6:41 PM, Christoph Fritz
+<chf.fritz@googlemail.com> wrote:
+> Hi Javier
 >
-> PHY drivers should create the PHY by passing phy_descriptor that has
-> describes the PHY (label, type etc..) and ops like init, exit, suspend, resume,
-> poweron, shutdown.
+> On Sat, 2013-03-30 at 14:18 +0100, Javier Martinez Canillas wrote:
+>> A call to gpio_request() to enable the GPIO bank is needed before
+>> using a GPIO as an IRQ source, otherwise accesses to the GPIO bank
+>> registers fails making the kernel to hang.
 >
-> The documentation for the generic PHY framework is added in
-> Documentation/phy.txt and the documentation for the sysfs entry is added
-> in Documentation/ABI/testing/sysfs-class-phy and the documentation for
-> dt binding is can be found at
-> Documentation/devicetree/bindings/phy/phy-bindings.txt
+> Yes, that is exactly my problem here. I'm using the GPIO as an IRQ
+> source.
 >
-> Signed-off-by: Kishon Vijay Abraham I<kishon@ti.com>
-> ---
-[...]
-> +/**
-> + * phy_put - release the PHY
+>> Jon's (added as cc)"gpio/omap: warn if bank is not enabled on setting
+>> irq type" patch [1] fixes the issue by warning and returning -EINVAL.
+>>
+>> This patch will make the kernel to boot but the call to request_irq()
+>> will fail of course. For now, the only solution is to call
+>> gpio_request() before request_irq() in your platform code or device
+>> driver. There is an on going discussion about what's the better way to
+>> address this but we still haven't found a good solution to this
+>> problem, you can see the last email for this discussion here [2]
+>>
+>> Also, even when calling gpio_request() before request_irq() this won't
+>> work. When specifying the trigger/level flags on the second cell for
+>> an GPIO-IRQ, this is not set on the IORESOURCE_IRQ struct resource.
+>> The IRQ flag is set on of_irq_to_resource() but it just does:
+>>
+>> r->flags = IORESOURCE_IRQ;
+>>
+>> and then the call stack is irq_to_parse_and_map() ->
+>> irq_set_irq_type() ->  __irq_set_trigger() -> chip->irq_set_type() ->
+>> (drivers/gpio/gpio-omap.c) gpio_irq_type().
+>>
+>> So, even when gpio_irq_type() receive the correct flags, this are not
+>> returned neither stored on the flags member of the IORESOURCE_IRQ
+>> struct resource that passed to the drivers in their struct
+>> platform_device.
+>
+> As a quick-fix (hack) I wrote directly to the registers in gpio_probe()
+> to enable GPIO banks. I now geht this:
+>
+>> > [    0.214630] omap_gpio_probe, 1133, CM_CLKSEL_PER 0x48005040: 0x000000ff
+>> > [    0.214660] omap_gpio_probe, 1136, CM_ICLKEN_PER 0x48005010: 0x0007ffff
+>> > [    0.214660] omap_gpio_probe, 1139, CM_FCLKEN_PER 0x48005000: 0x0007ffff
+>
+> And it works for me. _But_ when I do enable regulator twl4030
+> (CONFIG_REGULATOR_TWL4030=y) in my config these registers get reset:
+>
+> [    2.935455] smsc911x_open, 1537, CM_CLKSEL_PER 0x48005040: 0x000000ff
+> [    2.942291] smsc911x_open, 1540, CM_ICLKEN_PER 0x48005010: 0x00040fff
+> [    2.949066] smsc911x_open, 1543, CM_FCLKEN_PER 0x48005000: 0x00000000
+>
+> And the IRQ source for the network chip (smsc911x) is disabled :-(
+>
+> Do you have any idea how to ("quick") fix this?
+>
 
-nit: According to kernel-doc documentation function names should have
-parentheses appended to the name. So it would need to be
+A quick hack is to call gpio_request() explicitly before calling to
+irq_set_type() is made.
+I've this patch just to make it work until we find a clean solution:
 
-+ * phy_put() - release the PHY
+diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+index 90c15ee..d594e1d 100644
+--- a/arch/arm/mach-omap2/gpmc.c
++++ b/arch/arm/mach-omap2/gpmc.c
+@@ -14,6 +14,7 @@
+  */
+ #undef DEBUG
 
-in this case and it applies to multiple places elsewhere in this patch.
++#include <linux/gpio.h>
+ #include <linux/irq.h>
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+@@ -1528,6 +1529,11 @@ static int gpmc_probe_dt(struct platform_device *pdev)
+                return ret;
+        }
 
-> + * @phy: the phy returned by phy_get()
-> + *
-> + * Releases a refcount the caller received from phy_get().
-> + */
-> +void phy_put(struct phy *phy)
-> +{
-> +	if (phy) {
-> +		module_put(phy->ops->owner);
-> +		put_device(&phy->dev);
-> +	}
-> +}
-> +EXPORT_SYMBOL_GPL(phy_put);
-[...]
-> +/**
-> + * devm_of_phy_get_byname - lookup and obtain a reference to a phy by name
-> + * @dev: device that requests this phy
-> + * @string - the phy name as given in the dt data
++       ret = gpio_request_one(176, GPIOF_IN, "smsc911x irq");
++       if (ret) {
++               pr_err("Failed to request IRQ GPIO%d\n", 176);
++               return ret;
++       }
++
+        for_each_node_by_name(child, "nand") {
+                ret = gpmc_probe_nand_child(pdev, child);
+                if (ret < 0) {
 
-s/ -/:
+This solves the issue of the non-initialized GPIO bank before that
+makes the kernel to hang. Since I've to configure the IRQ polarity as
+active low level-sensitive on my board and the flags are not set by
+the IRQ core, I've another ugly hack that forces this:
 
-> + *
-> + * Calls devm_of_phy_get (which associates the device with the phy using devres
-> + * on successful phy get) and passes on the return value of devm_of_phy_get.
-> + */
-> +struct phy *devm_of_phy_get_byname(struct device *dev, const char *string)
-> +{
-> +	int index;
-> +
-> +	if (!dev->of_node) {
-> +		dev_dbg(dev, "device does not have a device node entry\n");
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	index = of_property_match_string(dev->of_node, "phy-names", string);
-> +
-> +	return devm_of_phy_get(dev, index);
-> +}
-> +EXPORT_SYMBOL_GPL(devm_of_phy_get_byname);
-> +
-> +/**
-> + * phy_get - lookup and obtain a reference to a phy.
-> + * @dev: device that requests this phy
-> + * @index: the index of the phy
-> + *
-> + * Returns the phy driver, after getting a refcount to it; or
-> + * -ENODEV if there is no such phy.  The caller is responsible for
-> + * calling phy_put() to release that count.
-> + */
-> +struct phy *phy_get(struct device *dev, int index)
-> +{
-> +	struct phy *phy = NULL;
+diff --git a/drivers/net/ethernet/smsc/smsc911x.c
+b/drivers/net/ethernet/smsc/smsc
+index da5cc9a..27e46f9 100644
+--- a/drivers/net/ethernet/smsc/smsc911x.c
++++ b/drivers/net/ethernet/smsc/smsc911x.c
+@@ -2390,6 +2390,9 @@ static int smsc911x_drv_probe(struct
+platform_device *pdev)
+        pdata = netdev_priv(dev);
+        dev->irq = irq_res->start;
+-        irq_flags = irq_res->flags & IRQF_TRIGGER_MASK;
++       irq_flags = IRQF_TRIGGER_LOW;
+        pdata->ioaddr = ioremap_nocache(res->start, res_size);
 
-Unneeded initialization.
+        pdata->dev = dev;
 
-> +	phy = phy_lookup(dev, index);
-> +	if (IS_ERR(phy)) {
-> +		dev_err(dev, "unable to find phy\n");
-> +		goto err0;
+>  Thanks
+>   -- Christoph
+>
 
-Wouldn't it be better to just do:
+I hope to find some time this week to work on this and at least find a
+solution for the second issue (IORESOURCE_IRQ struct resource flags
+not being set).
 
-		return phy;
-> +	}
-> +
-> +	if (!try_module_get(phy->ops->owner)) {
-> +		phy = ERR_PTR(-EPROBE_DEFER);
-
-and
-		return ERR_PTR(-EPROBE_DEFER);
-
-> +		goto err0;
-
-and to drop this goto and the label below ?
-
-> +	}
-> +
-> +	get_device(&phy->dev);
-> +
-> +err0:
-> +	return phy;
-> +}
-> +EXPORT_SYMBOL_GPL(phy_get);
-
-> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-> new file mode 100644
-> index 0000000..0cb2298
-> --- /dev/null
-> +++ b/include/linux/phy/phy.h
-> @@ -0,0 +1,237 @@
-> +/*
-> + * phy.h -- generic phy header file
-[...]
-> +#ifndef __DRIVERS_PHY_H
-> +#define __DRIVERS_PHY_H
-> +
-> +#include<linux/err.h>
-> +#include<linux/of.h>
-> +
-> +struct phy
-
-I think you also need to add either
-
-#include <linux/device.h>
-
-or
-
-struct device;
-
-struct device * is used further in this file.
-
-> +/**
-> + * struct phy_ops - set of function pointers for performing phy operations
-> + * @init: operation to be performed for initializing phy
-> + * @exit: operation to be performed while exiting
-> + * @suspend: suspending the phy
-> + * @resume: resuming the phy
-
-> + * @poweron: powering on the phy
-> + * @shutdown: shutting down the phy
-
-Could these be named power_on/power_off ? Looks a bit more symmetric
-to me that way.
-
-> + * @owner: the module owner containing the ops
-> + */
-> +struct phy_ops {
-> +	int	(*init)(struct phy *phy);
-> +	int	(*exit)(struct phy *phy);
-> +	int	(*suspend)(struct phy *phy);
-> +	int	(*resume)(struct phy *phy);
-> +	int	(*poweron)(struct phy *phy);
-> +	int	(*shutdown)(struct phy *phy);
-> +	struct module *owner;
-> +};
-
-Thanks,
-Sylwester
+Best regards,
+Javier
