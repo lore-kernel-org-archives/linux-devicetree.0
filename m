@@ -1,33 +1,65 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: How to represent negative values for device tree property
-Date: Mon, 01 Apr 2013 16:00:47 -0600
-Message-ID: <515A038F.2090902@wwwdotorg.org>
-References: <5159F760.1080605@codeaurora.org>
+From: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
+Subject: Re: [PATCH 0/3] add devicetree bindings for rtc-m48t86
+Date: Mon, 1 Apr 2013 23:02:04 +0100
+Message-ID: <20130401220204.GJ1953@edkhil>
+References: <1364766971-5914-1-git-send-email-alex@digriz.org.uk>
+ <5159FFAA.5030205@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <5159F760.1080605@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: David Collins <collinsd@codeaurora.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5159FFAA.5030205-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/01/2013 03:08 PM, David Collins wrote:
-> Hi,
-> 
-> I am working on a thermal driver which needs to be able to read a
-> temperature threshold from a device tree property.  The hardware supports
-> thresholds in the range -204.8 to +204.7 C in 0.1 C steps.  I have found,
-> as I am sure others have as well, that dtc treats a '-' before an integer
-> in a dtsi file as a syntax error.  Therefore, I need some artificial way
-> to represent negative numbers in device tree.  Here are the possibilities
-> that I have thought of so far:
+On Tue, Apr 02, 2013 at 08:44:10AM +1100, Ryan Mallon wrote:
+>On 01/04/13 08:56, Alexander Clouter wrote:
+>> Currently there are two users of rtc-m48t86 (mach-ep93xx/ts72xx.c and
+>> mach-orion5x/ts78xx-setup.c) and both just use {read,write}b against
+>> a memory mapped region.  As I am devicetree'ing the TS-7800, this
+>> driver needs converting and thats what this patchset does.
+>>
+>> The patch does the following:
+>>  * remove platform specific ops hooks, moving ioremap'ing and
+>> 	everything into the driver
+>>  * utilises named resources to indicate index/data ranges
+>>  * moves the RTC detection routine from ts78xx-setup.c into rtc-m48t86.c
+>>  * and, of course, enable devicetree hooks and include documentation
+>>
+>> Awkward step, the first patch breaks both boards, the two following
+>> patches fix them.  Happy to re-work this if folks give me a pointer
+>> on how to do this in an acceptable way.
+>
+>Sorry, that's no good. It breaks things like git bisect.
 
-Doesn't the very latest dtc, which contains integer expression support,
-allow unary -? I thought that code had been imported into the kernel
-(goes and checks) yes it has. What's the error you're seeing;
-over/underflow or syntax?
+Bah :)
 
-That said, DT cells are supposed to be u32 not s32, so perhaps this
-isn't unexpected.
+>> My vote is to break fast, fix fast, spend the time writing other code :)
+>
+>The patch series will need to be reworked so that there is no
+>build/runtime breakage between any of the patches. I'll have a read
+>through and see if I can suggest something.
+
+I am currently working through a new patchset now.  It maintains the original {write,read}byte 
+ops but if not defined, and the required named resources are present, it moves to using driver 
+side mem mapped regions and what not...
+
+'watch this space'
+
+Cheers
+
+-- 
+Alexander Clouter
+.sigmonster says: Deflector shields just came on, Captain.
