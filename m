@@ -1,36 +1,41 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v6 0/8] Reset controller API to reset IP modules on i.MX5
- and i.MX6
-Date: Mon, 1 Apr 2013 14:23:34 +0800
-Message-ID: <20130401062332.GB1693@S2101-09.ap.freescale.net>
-References: <1364488523-20310-1-git-send-email-p.zabel@pengutronix.de>
+From: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: [patch] mtd: denali_dt: harmless case of testing the wrong variable
+Date: Mon, 1 Apr 2013 09:21:51 +0300
+Message-ID: <20130401062151.GA5197@longonot.mountain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1364488523-20310-1-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Warren <swarren@wwwdotorg.org>, Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, Mike Turquette <mturquette@linaro.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, "Rafael J. Wysocki" <rjw@sisk.pl>, linux-pm@vger.kernel.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Bill Pemberton <wfp5p-4Ng6DfrEGID2fBVCVOL8/A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 28, 2013 at 05:35:15PM +0100, Philipp Zabel wrote:
-> The system reset controller (SRC) on i.MX51, i.MX53, and i.MX6q controls
-> reset lines to the GPU, VPU, IPU, and OpenVG IP modules.
-> 
-> The following patches add a simple API for devices to request being reset
-> by separate reset controller hardware and implements the reset signal
-> device tree binding proposed by Stephen Warren. Contrary to Tegra hardware,
-> the i.MX SRC contains self-deasserting reset registers, so I've included
-> both ops to manually assert/deassert a reset line, as well as a "reset"
-> operation that is supposed to assert the reset line and wait for it to
-> deassert.
-> 
-> The i.MX SRC is enhanced to provide a reset controller and the IPU driver
-> is made to request being reset by calling the device_reset(&pdev->dev)
-> convenience wrapper during probing.
-> 
-> No changes since v5, I just reordered the series.
+There is a warning message that can't be printed because we test the
+wrong variable.
 
-All applied, thanks.
+Signed-off-by: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
 
+diff --git a/drivers/mtd/nand/denali_dt.c b/drivers/mtd/nand/denali_dt.c
+index 546f8cb..02988b0 100644
+--- a/drivers/mtd/nand/denali_dt.c
++++ b/drivers/mtd/nand/denali_dt.c
+@@ -42,7 +42,7 @@ static void __iomem *request_and_map(struct device *dev,
+ 	}
+ 
+ 	ptr = devm_ioremap_nocache(dev, res->start, resource_size(res));
+-	if (!res)
++	if (!ptr)
+ 		dev_err(dev, "ioremap_nocache of %s failed!", res->name);
+ 
+ 	return ptr;
