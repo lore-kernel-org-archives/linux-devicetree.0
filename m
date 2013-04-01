@@ -1,73 +1,163 @@
-From: Christoph Fritz <chf.fritz@googlemail.com>
-Subject: Re: [RFC][BUG] arm/dts: OMAP3: set #interrupt-cells to two
-Date: Mon, 01 Apr 2013 18:41:48 +0200
-Message-ID: <1364834508.3939.74.camel@mars>
-References: <1364631689.3767.7.camel@mars>
-	 <CAAwP0s35J-edpvFv08xjjpwaezQBYNvMNhhXL-UacsuUtSt4ZA@mail.gmail.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH V3 2/2] dmaengine: OMAP: Register SDMA controller with
+ Device Tree DMA driver
+Date: Mon, 1 Apr 2013 12:48:26 -0500
+Message-ID: <5159C86A.30701@ti.com>
+References: <1361903244-19837-1-git-send-email-jon-hunter@ti.com> <1361903244-19837-3-git-send-email-jon-hunter@ti.com> <51488C8B.4010206@ti.com> <20130320163654.GN16413@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAAwP0s35J-edpvFv08xjjpwaezQBYNvMNhhXL-UacsuUtSt4ZA@mail.gmail.com>
+In-Reply-To: <20130320163654.GN16413@atomide.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <martinez.javier@gmail.com>
-Cc: =?ISO-8859-1?Q?Beno=EEt?= Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Mack <daniel@zonque.org>, "Hans J. Koch" <hjk@hansjkoch.de>, Jon Hunter <jon-hunter@ti.com>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@ti.com>, Rajendra Nayak <rnayak@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Tony Lindgren <tony@atomide.com>, "Cousson, Benoit" <b-cousson@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier
+Vinod,
 
-On Sat, 2013-03-30 at 14:18 +0100, Javier Martinez Canillas wrote:
-> A call to gpio_request() to enable the GPIO bank is needed before
-> using a GPIO as an IRQ source, otherwise accesses to the GPIO bank
-> registers fails making the kernel to hang.
-
-Yes, that is exactly my problem here. I'm using the GPIO as an IRQ
-source.
-
-> Jon's (added as cc)"gpio/omap: warn if bank is not enabled on setting
-> irq type" patch [1] fixes the issue by warning and returning -EINVAL.
+On 03/20/2013 11:36 AM, Tony Lindgren wrote:
+> * Jon Hunter <jon-hunter@ti.com> [130319 09:08]:
+>> Vinod, Tony, Benoit,
+>>
+>> On 02/26/2013 12:27 PM, Jon Hunter wrote:
+>>> If the device-tree blob is present during boot, then register the SDMA
+>>> controller with the device-tree DMA driver so that we can use device-tree
+>>> to look-up DMA client information.
+>>>
+>>> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+>>> Reviewed-by: Felipe Balbi <balbi@ti.com>
+>>> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>>> Tested-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>>> ---
+>>>  arch/arm/mach-omap2/dma.c |    4 ++++
+>>>  drivers/dma/omap-dma.c    |   38 ++++++++++++++++++++++++++++++++++++--
+>>>  2 files changed, 40 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/arm/mach-omap2/dma.c b/arch/arm/mach-omap2/dma.c
+>>> index dab9fc0..49fd0d5 100644
+>>> --- a/arch/arm/mach-omap2/dma.c
+>>> +++ b/arch/arm/mach-omap2/dma.c
+>>> @@ -28,6 +28,7 @@
+>>>  #include <linux/init.h>
+>>>  #include <linux/device.h>
+>>>  #include <linux/dma-mapping.h>
+>>> +#include <linux/of.h>
+>>>  #include <linux/omap-dma.h>
+>>>  
+>>>  #include "soc.h"
+>>> @@ -304,6 +305,9 @@ static int __init omap2_system_dma_init(void)
+>>>  	if (res)
+>>>  		return res;
+>>>  
+>>> +	if (of_have_populated_dt())
+>>> +		return res;
+>>> +
+>>>  	pdev = platform_device_register_full(&omap_dma_dev_info);
+>>>  	if (IS_ERR(pdev))
+>>>  		return PTR_ERR(pdev);
 > 
-> This patch will make the kernel to boot but the call to request_irq()
-> will fail of course. For now, the only solution is to call
-> gpio_request() before request_irq() in your platform code or device
-> driver. There is an on going discussion about what's the better way to
-> address this but we still haven't found a good solution to this
-> problem, you can see the last email for this discussion here [2]
+> AFAIK we don't currently have anything else touching this file..
 > 
-> Also, even when calling gpio_request() before request_irq() this won't
-> work. When specifying the trigger/level flags on the second cell for
-> an GPIO-IRQ, this is not set on the IORESOURCE_IRQ struct resource.
-> The IRQ flag is set on of_irq_to_resource() but it just does:
+>>> diff --git a/drivers/dma/omap-dma.c b/drivers/dma/omap-dma.c
+>>> index c4b4fd2..2ea3d7e 100644
+>>> --- a/drivers/dma/omap-dma.c
+>>> +++ b/drivers/dma/omap-dma.c
+>>> @@ -16,6 +16,8 @@
+>>>  #include <linux/platform_device.h>
+>>>  #include <linux/slab.h>
+>>>  #include <linux/spinlock.h>
+>>> +#include <linux/of_dma.h>
+>>> +#include <linux/of_device.h>
+>>>  
+>>>  #include "virt-dma.h"
+>>>  
+>>> @@ -67,6 +69,10 @@ static const unsigned es_bytes[] = {
+>>>  	[OMAP_DMA_DATA_TYPE_S32] = 4,
+>>>  };
+>>>  
+>>> +static struct of_dma_filter_info omap_dma_info = {
+>>> +	.filter_fn = omap_dma_filter_fn,
+>>> +};
+>>> +
+>>>  static inline struct omap_dmadev *to_omap_dma_dev(struct dma_device *d)
+>>>  {
+>>>  	return container_of(d, struct omap_dmadev, ddev);
+>>> @@ -621,8 +627,22 @@ static int omap_dma_probe(struct platform_device *pdev)
+>>>  		pr_warn("OMAP-DMA: failed to register slave DMA engine device: %d\n",
+>>>  			rc);
+>>>  		omap_dma_free(od);
+>>> -	} else {
+>>> -		platform_set_drvdata(pdev, od);
+>>> +		return rc;
+>>> +	}
+>>> +
+>>> +	platform_set_drvdata(pdev, od);
+>>> +
+>>> +	if (pdev->dev.of_node) {
+>>> +		omap_dma_info.dma_cap = od->ddev.cap_mask;
+>>> +
+>>> +		/* Device-tree DMA controller registration */
+>>> +		rc = of_dma_controller_register(pdev->dev.of_node,
+>>> +				of_dma_simple_xlate, &omap_dma_info);
+>>> +		if (rc) {
+>>> +			pr_warn("OMAP-DMA: failed to register DMA controller\n");
+>>> +			dma_async_device_unregister(&od->ddev);
+>>> +			omap_dma_free(od);
+>>> +		}
+>>>  	}
+>>>  
+>>>  	dev_info(&pdev->dev, "OMAP DMA engine driver\n");
+>>> @@ -634,18 +654,32 @@ static int omap_dma_remove(struct platform_device *pdev)
+>>>  {
+>>>  	struct omap_dmadev *od = platform_get_drvdata(pdev);
+>>>  
+>>> +	if (pdev->dev.of_node)
+>>> +		of_dma_controller_free(pdev->dev.of_node);
+>>> +
+>>>  	dma_async_device_unregister(&od->ddev);
+>>>  	omap_dma_free(od);
+>>>  
+>>>  	return 0;
+>>>  }
+>>>  
+>>> +static const struct of_device_id omap_dma_match[] = {
+>>> +	{ .compatible = "ti,omap2420-sdma", },
+>>> +	{ .compatible = "ti,omap2430-sdma", },
+>>> +	{ .compatible = "ti,omap3430-sdma", },
+>>> +	{ .compatible = "ti,omap3630-sdma", },
+>>> +	{ .compatible = "ti,omap4430-sdma", },
+>>> +	{},
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, omap_dma_match);
+>>> +
+>>>  static struct platform_driver omap_dma_driver = {
+>>>  	.probe	= omap_dma_probe,
+>>>  	.remove	= omap_dma_remove,
+>>>  	.driver = {
+>>>  		.name = "omap-dma-engine",
+>>>  		.owner = THIS_MODULE,
+>>> +		.of_match_table = of_match_ptr(omap_dma_match),
+>>>  	},
+>>>  };
+>>
+>> Who's tree does it make most sense for this patch to go through?
+>>
+>> Benoit has queued up patch 1/2 and so I am not sure if this should go
+>> via Benoit tree to Tony or directly via Vinod's tree. What are your
+>> thoughts?
 > 
-> r->flags = IORESOURCE_IRQ;
+> OK
+>  
+>> It would be great if this could make v3.10.
 > 
-> and then the call stack is irq_to_parse_and_map() ->
-> irq_set_irq_type() ->  __irq_set_trigger() -> chip->irq_set_type() ->
-> (drivers/gpio/gpio-omap.c) gpio_irq_type().
+> I suggest Vinod/Grant/Linus W queue this patch:
 > 
-> So, even when gpio_irq_type() receive the correct flags, this are not
-> returned neither stored on the flags member of the IORESOURCE_IRQ
-> struct resource that passed to the drivers in their struct
-> platform_device.
+> Acked-by: Tony Lindgren <tony@atomide.com>
 
-As a quick-fix (hack) I wrote directly to the registers in gpio_probe()
-to enable GPIO banks. I now geht this:
+Can you take this patch with Tony's ACK? Let me know if you want me to
+resend with the ACK.
 
-> > [    0.214630] omap_gpio_probe, 1133, CM_CLKSEL_PER 0x48005040: 0x000000ff
-> > [    0.214660] omap_gpio_probe, 1136, CM_ICLKEN_PER 0x48005010: 0x0007ffff
-> > [    0.214660] omap_gpio_probe, 1139, CM_FCLKEN_PER 0x48005000: 0x0007ffff
-
-And it works for me. _But_ when I do enable regulator twl4030
-(CONFIG_REGULATOR_TWL4030=y) in my config these registers get reset:
-
-[    2.935455] smsc911x_open, 1537, CM_CLKSEL_PER 0x48005040: 0x000000ff
-[    2.942291] smsc911x_open, 1540, CM_ICLKEN_PER 0x48005010: 0x00040fff
-[    2.949066] smsc911x_open, 1543, CM_FCLKEN_PER 0x48005000: 0x00000000
-
-And the IRQ source for the network chip (smsc911x) is disabled :-(
-
-Do you have any idea how to ("quick") fix this?
-
- Thanks
-  -- Christoph
+Cheers
+Jon
 
