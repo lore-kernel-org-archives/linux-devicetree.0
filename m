@@ -1,92 +1,186 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of_net.h: Provide dummy functions if OF_NET is not
- configured
-Date: Mon, 01 Apr 2013 14:14:10 -0500
-Message-ID: <5159DC82.3050804@gmail.com>
-References: <1364840349-10696-1-git-send-email-linux@roeck-us.net>
- <5159D588.5070603@gmail.com> <20130401190100.GA1042@roeck-us.net>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v4 1/6] drivers: phy: add generic PHY framework
+Date: Mon, 01 Apr 2013 21:34:47 +0200
+Message-ID: <5159E157.6000800@gmail.com>
+References: <1364449408-9510-1-git-send-email-kishon@ti.com> <1364449408-9510-2-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130401190100.GA1042-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1364449408-9510-2-git-send-email-kishon@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: balbi@ti.com, gregkh@linuxfoundation.org, arnd@arndb.de, akpm@linux-foundation.org, rob@landley.net, swarren@wwwdotorg.org, davem@davemloft.net, cesarb@cesarb.net, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, tony@atomide.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, b-cousson@ti.com, linux@arm.linux.org.uk, eballetbo@gmail.com, javier@dowhile0.org, mchehab@redhat.com, santosh.shilimkar@ti.com, broonie@opensource.wolfsonmicro.com, swarren@nvidia.com, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/01/2013 02:01 PM, Guenter Roeck wrote:
-> On Mon, Apr 01, 2013 at 01:44:24PM -0500, Rob Herring wrote:
->> On 04/01/2013 01:19 PM, Guenter Roeck wrote:
->>> of_get_mac_address() and of_get_phy_mode() are only provided if OF_NET
->>> is configured. While most callers check for the define, not all do, and those
->>> who do require #ifdef around the code. For those who don't, the missing check
->>> can result in errors such as
->>
->> How about removing the ifdef from those callers?
->>
-> That would be the next step, after/if this one is accepted.
-> If not, it doesn't make sense to waste my time.
+Just couple minor comments...
 
-Assuming that is done:
+On 03/28/2013 06:43 AM, Kishon Vijay Abraham I wrote:
+> The PHY framework provides a set of APIs for the PHY drivers to
+> create/destroy a PHY and APIs for the PHY users to obtain a reference to the
+> PHY with or without using phandle. To obtain a reference to the PHY without
+> using phandle, the platform specfic intialization code (say from board file)
+> should have already called phy_bind with the binding information. The binding
+> information consists of phy's device name, phy user device name and an index.
+> The index is used when the same phy user binds to mulitple phys.
+>
+> PHY drivers should create the PHY by passing phy_descriptor that has
+> describes the PHY (label, type etc..) and ops like init, exit, suspend, resume,
+> poweron, shutdown.
+>
+> The documentation for the generic PHY framework is added in
+> Documentation/phy.txt and the documentation for the sysfs entry is added
+> in Documentation/ABI/testing/sysfs-class-phy and the documentation for
+> dt binding is can be found at
+> Documentation/devicetree/bindings/phy/phy-bindings.txt
+>
+> Signed-off-by: Kishon Vijay Abraham I<kishon@ti.com>
+> ---
+[...]
+> +/**
+> + * phy_put - release the PHY
 
-Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+nit: According to kernel-doc documentation function names should have
+parentheses appended to the name. So it would need to be
 
-Presumably with the follow-on patches, this can go in thru the net tree.
++ * phy_put() - release the PHY
 
-Rob
+in this case and it applies to multiple places elsewhere in this patch.
 
-> Thanks,
-> Guenter
-> 
->> Rob
->>
->>>
->>> arch/powerpc/sysdev/tsi108_dev.c:107:3: error: implicit declaration of
->>> 	function 'of_get_mac_address' [-Werror=implicit-function-declaration]
->>> arch/powerpc/sysdev/mv64x60_dev.c:253:2: error: implicit declaration of
->>> 	function 'of_get_mac_address' [-Werror=implicit-function-declaration]
->>>
->>> Provide dummy function declarations if OF_NET is not configured. This is safe
->>> because all callers do check the return values. If desired, at least some of
->>> the #ifdefs in the code can subsequently be removed.
->>>
->>> Cc: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>> Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
->>> ---
->>>  include/linux/of_net.h |   10 ++++++++++
->>>  1 file changed, 10 insertions(+)
->>>
->>> diff --git a/include/linux/of_net.h b/include/linux/of_net.h
->>> index f474641..61bf53b 100644
->>> --- a/include/linux/of_net.h
->>> +++ b/include/linux/of_net.h
->>> @@ -11,6 +11,16 @@
->>>  #include <linux/of.h>
->>>  extern const int of_get_phy_mode(struct device_node *np);
->>>  extern const void *of_get_mac_address(struct device_node *np);
->>> +#else
->>> +static inline const int of_get_phy_mode(struct device_node *np)
->>> +{
->>> +	return -ENODEV;
->>> +}
->>> +
->>> +static inline const void *of_get_mac_address(struct device_node *np)
->>> +{
->>> +	return NULL;
->>> +}
->>>  #endif
->>>  
->>>  #endif /* __LINUX_OF_NET_H */
->>>
->>
->>
+> + * @phy: the phy returned by phy_get()
+> + *
+> + * Releases a refcount the caller received from phy_get().
+> + */
+> +void phy_put(struct phy *phy)
+> +{
+> +	if (phy) {
+> +		module_put(phy->ops->owner);
+> +		put_device(&phy->dev);
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(phy_put);
+[...]
+> +/**
+> + * devm_of_phy_get_byname - lookup and obtain a reference to a phy by name
+> + * @dev: device that requests this phy
+> + * @string - the phy name as given in the dt data
+
+s/ -/:
+
+> + *
+> + * Calls devm_of_phy_get (which associates the device with the phy using devres
+> + * on successful phy get) and passes on the return value of devm_of_phy_get.
+> + */
+> +struct phy *devm_of_phy_get_byname(struct device *dev, const char *string)
+> +{
+> +	int index;
+> +
+> +	if (!dev->of_node) {
+> +		dev_dbg(dev, "device does not have a device node entry\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	index = of_property_match_string(dev->of_node, "phy-names", string);
+> +
+> +	return devm_of_phy_get(dev, index);
+> +}
+> +EXPORT_SYMBOL_GPL(devm_of_phy_get_byname);
+> +
+> +/**
+> + * phy_get - lookup and obtain a reference to a phy.
+> + * @dev: device that requests this phy
+> + * @index: the index of the phy
+> + *
+> + * Returns the phy driver, after getting a refcount to it; or
+> + * -ENODEV if there is no such phy.  The caller is responsible for
+> + * calling phy_put() to release that count.
+> + */
+> +struct phy *phy_get(struct device *dev, int index)
+> +{
+> +	struct phy *phy = NULL;
+
+Unneeded initialization.
+
+> +	phy = phy_lookup(dev, index);
+> +	if (IS_ERR(phy)) {
+> +		dev_err(dev, "unable to find phy\n");
+> +		goto err0;
+
+Wouldn't it be better to just do:
+
+		return phy;
+> +	}
+> +
+> +	if (!try_module_get(phy->ops->owner)) {
+> +		phy = ERR_PTR(-EPROBE_DEFER);
+
+and
+		return ERR_PTR(-EPROBE_DEFER);
+
+> +		goto err0;
+
+and to drop this goto and the label below ?
+
+> +	}
+> +
+> +	get_device(&phy->dev);
+> +
+> +err0:
+> +	return phy;
+> +}
+> +EXPORT_SYMBOL_GPL(phy_get);
+
+> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+> new file mode 100644
+> index 0000000..0cb2298
+> --- /dev/null
+> +++ b/include/linux/phy/phy.h
+> @@ -0,0 +1,237 @@
+> +/*
+> + * phy.h -- generic phy header file
+[...]
+> +#ifndef __DRIVERS_PHY_H
+> +#define __DRIVERS_PHY_H
+> +
+> +#include<linux/err.h>
+> +#include<linux/of.h>
+> +
+> +struct phy
+
+I think you also need to add either
+
+#include <linux/device.h>
+
+or
+
+struct device;
+
+struct device * is used further in this file.
+
+> +/**
+> + * struct phy_ops - set of function pointers for performing phy operations
+> + * @init: operation to be performed for initializing phy
+> + * @exit: operation to be performed while exiting
+> + * @suspend: suspending the phy
+> + * @resume: resuming the phy
+
+> + * @poweron: powering on the phy
+> + * @shutdown: shutting down the phy
+
+Could these be named power_on/power_off ? Looks a bit more symmetric
+to me that way.
+
+> + * @owner: the module owner containing the ops
+> + */
+> +struct phy_ops {
+> +	int	(*init)(struct phy *phy);
+> +	int	(*exit)(struct phy *phy);
+> +	int	(*suspend)(struct phy *phy);
+> +	int	(*resume)(struct phy *phy);
+> +	int	(*poweron)(struct phy *phy);
+> +	int	(*shutdown)(struct phy *phy);
+> +	struct module *owner;
+> +};
+
+Thanks,
+Sylwester
