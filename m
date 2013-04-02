@@ -1,122 +1,84 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/1] drivers/gpio: Altera soft IP GPIO driver
-Date: Tue, 2 Apr 2013 10:55:32 +0200
-Message-ID: <CACRpkdbF_CHmfbumKYf751wpW7dX=bF6cD-V3Y=jvsGQ21bPew@mail.gmail.com>
-References: <1363066655-17474-1-git-send-email-thloh@altera.com>
-	<CACRpkdZY0sZUK_9ZX8rBOExVRPQL=UeoAWT=O1NZX2wTJGQLsA@mail.gmail.com>
-	<1364470847.2340.16.camel@thloh-virtual-machine>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v2] ARM: dts: Add SYSREG block node for S5P/Exynos4 SoC
+ series
+Date: Tue, 02 Apr 2013 18:47:33 +0900
+Message-ID: <237801ce2f87$1947cf30$4bd76d90$%kim@samsung.com>
+References: <1364302821-17989-1-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1364470847.2340.16.camel@thloh-virtual-machine>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tien Hock Loh <thloh@altera.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1364302821-17989-1-git-send-email-s.nawrocki@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Sylwester Nawrocki' <s.nawrocki@samsung.com>
+Cc: kyungmin.park@samsung.com, thomas.abraham@linaro.org, t.figa@samsung.com, myungjoo.ham@samsung.com, dh09.lee@samsung.com, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 28, 2013 at 12:40 PM, Tien Hock Loh <thloh@altera.com> wrote:
+Sylwester Nawrocki wrote:
+> 
+> This patch adds device tree node for the SYSREG registers block
+> found in Samsung S5P/Exynos SoC series. The SYSREG module
+> generates control signals for the ARM CPU and various IP blocks
+> and buses. SYSREG block registers are exposed through APB bus
+> interface. A sysreg device tree node is to be associated with
+> mfd syscon driver and all SYSREG clients should use regmap
+> interface it provides. It allows to eliminate any possible races
+> and conflicts should different drivers attempt to concurrently
+> access same register.
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+> 
+> Changes since v1:
+>  - Added missing "samsung," prefix to the compatible property,
+>  - the binding documentation moved to ...bindings/arm/samsung
+>    as SYSREG block can be also found on other SoCs than Exynos.
+> ---
+>  .../devicetree/bindings/arm/samsung/sysreg.txt     |    7 +++++++
+>  arch/arm/boot/dts/exynos4.dtsi                     |    5 +++++
+>  2 files changed, 12 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+> b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+> new file mode 100644
+> index 0000000..5039c0a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+> @@ -0,0 +1,7 @@
+> +SAMSUNG S5P/Exynos SoC series System Registers (SYSREG)
+> +
+> +Properties:
+> + - name : should be 'sysreg';
+> + - compatible : should contain "samsung,<chip name>-sysreg", "syscon";
+> +   For Exynos4 SoC series it should be "samsung,exynos4-sysreg",
+"syscon";
+> + - reg : offset and length of the register set.
+> diff --git a/arch/arm/boot/dts/exynos4.dtsi
+> b/arch/arm/boot/dts/exynos4.dtsi
+> index 9ac47d5..462f055 100644
+> --- a/arch/arm/boot/dts/exynos4.dtsi
+> +++ b/arch/arm/boot/dts/exynos4.dtsi
+> @@ -82,6 +82,11 @@
+>  		reg = <0x10440000 0x1000>;
+>  	};
+> 
+> +	sys_reg: sysreg {
+> +		compatible = "samsung,exynos4-sysreg", "syscon";
+> +		reg = <0x10010000 0x400>;
+> +	};
+> +
+>  	watchdog@10060000 {
+>  		compatible = "samsung,s3c2410-wdt";
+>  		reg = <0x10060000 0x100>;
+> --
+> 1.7.9.5
 
->> (...)
->> > +Altera GPIO specific properties:
->> > +- width: Width of the GPIO bank, range from 1-32
->> > +- level_trigger: Specifies whether the GPIO interrupt is level trigger.
->> > +  This field is required if the Altera GPIO controller used has IRQ enabled.
->>
->> This is a configuration for the irc_chip portion of the driver
->> I guess, isn't the usual custom that you don't set up
->> things like this from the device tree, but instead use the
->> kernels facilities on request_irq() such as:
->>
->> #define IRQF_TRIGGER_NONE       0x00000000
->> #define IRQF_TRIGGER_RISING     0x00000001
->> #define IRQF_TRIGGER_FALLING    0x00000002
->> #define IRQF_TRIGGER_HIGH       0x00000004
->> #define IRQF_TRIGGER_LOW        0x00000008
->>
->> ?
->>
->> I.e. that this is something you do at runtime and not a static
->> config from the device tree?
->>
->> Or shall this be percieved as some kind of default setting?
->
-> The Altera GPIO IP cannot be software configurable. It is determined by
-> the tool that generates the hardware, and thus I've put this as device
-> tree parameter. If I understand correctly, if we implement using
-> irq_set_type, it should be software configurable.
->
-> Technically it can still be implemented in irq_set_type, I'm just not
-> sure if it is the correct way, because the trigger type cannot be "set"
-> in Altera GPIO. Please let me know if you think this should still be
-> implemented as irq_set_type.
+Looks ok to me, applied.
 
-Hm I must be getting things wrong. It's correct that the driver
-needs to keep track of if a certain IRQ line has a certain
-trigger characteristic. So the member in this struct:
+Thanks.
 
-+struct altera_gpio_chip {
-+       struct of_mm_gpio_chip mmchip;
-+       struct irq_domain *irq; /* GPIO controller IRQ number */
-+       spinlock_t gpio_lock;   /* Lock used for synchronization */
-+       int level_trigger;
-
-Is OK. But it should definately be a bool instead.
-
-Then the irq_set_type() should check if the requested type is available.
-
-You state that some interrupts are edge triggered, so this is
-clearly wrong:
-
-+static int altera_gpio_irq_set_type(struct irq_data *d,
-+                               unsigned int type)
-+{
-+       if (type == IRQ_TYPE_NONE)
-+               return 0;
-+       return -EINVAL;
-+}
-
-I think it should rather be something like:
-
-static int altera_gpio_irq_set_type(struct irq_data *d,
-                               unsigned int type)
-{
-       struct altera_gpio_chip *a = irq_data_get_irq_chip_data(d);
-
-       if (a->level_trigger) {
-           if (type == IRQ_TYPE_LEVEL_HIGH)
-              /* Configure the IRQ for high level */
-           else if (type == IRQ_TYPE_LEVEL_LOW)
-              /* Configure the IRQ for low level */
-           else
-             return -EINVAL;
-       } else {
-           /* assume it's edge triggered? */
-           if (type == IRQ_TYPE_EDGE_RISING)
-              /* Configure for rising edge */
-           else if (type == IRQ_TYPE_EDGE_FALLING)
-              /* Configure for falling edge */
-           else
-                return -EINVAL;
-       }
-}
-
-As you can see from above a few new questions arise.
-
-When you say an IRQ is "level trigged" does it actually mean
-it is high or low level triggered? Or is this somehow configurable?
-
-If it is *not* edge triggered, is it then implicitly edge
-triggered?
-
-If it is then implicitly edge triggered, does it trigger on
-rising or falling edges or is this configurable?
-
-As you see, the .irq_set_type needs to reflect what the
-hardware can actually react to, and return errors on the
-rest.
-
-The current implementation which states that the hardware
-cannot react to any IRQ is clearly wrong.
-
-Yours,
-Linus Walleij
+- Kukjin
