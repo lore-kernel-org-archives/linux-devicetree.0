@@ -1,144 +1,68 @@
-From: Padma Venkat <padma.kvr@gmail.com>
-Subject: Re: [PATCH V2] DMA: PL330: Add check if device tree compatible
-Date: Tue, 2 Apr 2013 08:28:10 +0530
-Message-ID: <CAAgF-BdMgwKaVCaURwCeZcH9-H7nQBpafjZ51zJYi6AXXk72yw@mail.gmail.com>
-References: <1362475531-32260-1-git-send-email-padma.v@samsung.com>
-	<1362475531-32260-2-git-send-email-padma.v@samsung.com>
-	<20130321093906.GL10326@intel.com>
-	<CAL_Jsq+3bJDiA=rXS=WY3BGuRh5X+nyxxosrqtSD9fx-asbCKQ@mail.gmail.com>
-	<20130401182151.GH10326@intel.com>
+From: Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/6] rtc: rtc-m48t86: add hooks to support driver side
+ memory mapping
+Date: Tue, 02 Apr 2013 16:34:07 +1100
+Message-ID: <515A6DCF.1080902@gmail.com>
+References: <1364858565-17192-1-git-send-email-alex@digriz.org.uk>
+ <1364858565-17192-3-git-send-email-alex@digriz.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130401182151.GH10326@intel.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Rob Herring <robherring2@gmail.com>, Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sangbeom Kim <sbkim73@samsung.com>, "Mark Brown (broonie@opensource.wolfsonmicro.com)" <broonie@opensource.wolfsonmicro.com>, Kukjin Kim <kgene.kim@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, jon-hunter@ti.com, boojin.kim@samsung.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1364858565-17192-3-git-send-email-alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
-
-I apologies for the delayed reply. Last week I was out of station and
-no access to mails. I will send another patch addressing your
-comments.
-
-Thanks
-Padma
-On Mon, Apr 1, 2013 at 11:51 PM, Vinod Koul <vinod.koul@intel.com> wrote:
->
-> On Mon, Apr 01, 2013 at 08:13:31AM -0500, Rob Herring wrote:
-> > On Thu, Mar 21, 2013 at 4:39 AM, Vinod Koul <vinod.koul@intel.com> wrote:
-> > > On Tue, Mar 05, 2013 at 02:55:31PM +0530, Padmavathi Venna wrote:
-> > >> This patch register the dma controller with generic dma helpers only
-> > >> in DT case. This also adds some extra error handling in the driver.
-> > >>
-> > >> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
-> > >> Reported-by: Sachin Kamat <sachin.kamat@linaro.org>
-> >
-> > What's the status on this? It is needed for 3.9 to fix pl330 on highbank.
-> Well the status is that submitter has been rude. I had few questions and
-> comments on this patch and they are yet to be addressed.
->
-> --
-> ~Vinod
-> >
-> > Rob
-> >
-> > >> ---
-> > >>
-> > >> Based on Vinod Koul next branch.
-> > >>
-> > >> Changes since V1:
-> > >>       - return silently when of_dma_controller_register fails, as
-> > >>         suggested by Arnd.
-> > >>
-> > >>  drivers/dma/pl330.c |   38 +++++++++++++++++++++++++++-----------
-> > >>  1 files changed, 27 insertions(+), 11 deletions(-)
-> > >>
-> > >> diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-> > >> index 7181531..5dbc594 100644
-> > >> --- a/drivers/dma/pl330.c
-> > >> +++ b/drivers/dma/pl330.c
-> > >> @@ -2882,7 +2882,7 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
-> > >>  {
-> > >>       struct dma_pl330_platdata *pdat;
-> > >>       struct dma_pl330_dmac *pdmac;
-> > >> -     struct dma_pl330_chan *pch;
-> > >> +     struct dma_pl330_chan *pch, *_p;
-> > >>       struct pl330_info *pi;
-> > >>       struct dma_device *pd;
-> > >>       struct resource *res;
-> > >> @@ -2984,7 +2984,16 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
-> > >>       ret = dma_async_device_register(pd);
-> > >>       if (ret) {
-> > >>               dev_err(&adev->dev, "unable to register DMAC\n");
-> > >> -             goto probe_err2;
-> > >> +             goto probe_err3;
-> > >> +     }
-> > >> +
-> > >> +     if (adev->dev.of_node) {
-> > >> +             ret = of_dma_controller_register(adev->dev.of_node,
-> > >> +                                      of_dma_pl330_xlate, pdmac);
-> > >> +             if (ret) {
-> > >> +                     dev_err(&adev->dev,
-> > >> +                     "unable to register DMA to the generic DT DMA helpers\n");
-> > > Indent?
-
-Okey.
->
-> > >> +             }
-> > >>       }
-> > >>
-> > >>       dev_info(&adev->dev,
-> > >> @@ -2995,16 +3004,21 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
-> > >>               pi->pcfg.data_bus_width / 8, pi->pcfg.num_chan,
-> > >>               pi->pcfg.num_peri, pi->pcfg.num_events);
-> > >>
-> > >> -     ret = of_dma_controller_register(adev->dev.of_node,
-> > >> -                                      of_dma_pl330_xlate, pdmac);
-> > >> -     if (ret) {
-> > >> -             dev_err(&adev->dev,
-> > >> -             "unable to register DMA to the generic DT DMA helpers\n");
-> > >> -             goto probe_err2;
-> > >> -     }
-> > >> -
-> > >>       return 0;
-> > >> +probe_err3:
-> > >> +     amba_set_drvdata(adev, NULL);
-> > >>
-> > >> +     /* Idle the DMAC */
-> > >> +     list_for_each_entry_safe(pch, _p, &pdmac->ddma.channels,
-> > >> +                     chan.device_node) {
-> > >> +
-> > >> +             /* Remove the channel */
-> > >> +             list_del(&pch->chan.device_node);
-> > >> +
-> > >> +             /* Flush the channel */
-> > >> +             pl330_control(&pch->chan, DMA_TERMINATE_ALL, 0);
-> > >> +             pl330_free_chan_resources(&pch->chan);
-> > > free_chan for error handling in probe?
-
-
-Will remove this.
-
-> > >
->
-> > >> +     }
-> > >>  probe_err2:
-> > >>       pl330_del(pi);
-> > >>  probe_err1:
-> > >> @@ -3023,8 +3037,10 @@ static int pl330_remove(struct amba_device *adev)
-> > >>       if (!pdmac)
-> > >>               return 0;
-> > >>
-> > >> -     of_dma_controller_free(adev->dev.of_node);
-> > >> +     if (adev->dev.of_node)
-> > >> +             of_dma_controller_free(adev->dev.of_node);
-> > >>
-> > >> +     dma_async_device_unregister(&pdmac->ddma);
-> > >>       amba_set_drvdata(adev, NULL);
-> > >>
-> > >>       /* Idle the DMAC */
-> > >> --
-> > >> 1.7.4.4
-> > >>
+T24gMDIvMDQvMTMgMTA6MjIsIEFsZXhhbmRlciBDbG91dGVyIHdyb3RlOgo+IElmIHBsYXRmb3Jt
+X2RhdGEgaXMgbm90IGRlZmluZWQgKGFzIGJlZm9yZSksIHRoZW4gbmFtZWQgbWVtb3J5IGlvCj4g
+cmFuZ2VzIG5lZWQgdG8gYmUgZGVmaW5lZCAoInJ0Y19pbmRleCIgYW5kICJydGNfZGF0YSIpLiAg
+VGhlIGRyaXZlcgo+IHRoZW4gbWFwcyB0aG9zZSByZWdpb25zIGFuZCB1c2VzIHRoZW0gYXMgdGhl
+IFJUQyBpbmRleCBhbmQgZGF0YQo+IGFkZHJlc3Nlcy4KPiAKPiBEb2VzIGNvbXBpbGUgd2l0aCB0
+aGUgZm9sbG93aW5nIHdhcm5pbmdzLCBJIGNhbm5vdCBzZWUgdGhlIGNvZGVwYXRoCj4gYWZmZWN0
+ZWQgbXlzZWxmOgo+IC0tLS0KPiBkcml2ZXJzL3J0Yy9ydGMtbTQ4dDg2LmM6IEluIGZ1bmN0aW9u
+IOKAmG00OHQ4Nl9ydGNfcHJvYmXigJk6Cj4gZHJpdmVycy9ydGMvcnRjLW00OHQ4Ni5jOjE4MDog
+d2FybmluZzog4oCYcmVzX2luZGV44oCZIG1heSBiZSB1c2VkIHVuaW5pdGlhbGl6ZWQgaW4gdGhp
+cyBmdW5jdGlvbgo+IGRyaXZlcnMvcnRjL3J0Yy1tNDh0ODYuYzoxODA6IHdhcm5pbmc6IOKAmHJl
+c19kYXRh4oCZIG1heSBiZSB1c2VkIHVuaW5pdGlhbGl6ZWQgaW4gdGhpcyBmdW5jdGlvbgo+IC0t
+LS0KPiAKPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kZXIgQ2xvdXRlciA8YWxleEBkaWdyaXoub3Jn
+LnVrPgo+IC0tLQo+ICBkcml2ZXJzL3J0Yy9ydGMtbTQ4dDg2LmMgfCAgMjMwICsrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDE3
+MyBpbnNlcnRpb25zKCspLCA1NyBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9ydGMvcnRjLW00OHQ4Ni5jIGIvZHJpdmVycy9ydGMvcnRjLW00OHQ4Ni5jCj4gaW5kZXggMjVl
+MDExNi4uNmY5OWU2NCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL3J0Yy9ydGMtbTQ4dDg2LmMKPiAr
+KysgYi9kcml2ZXJzL3J0Yy9ydGMtbTQ4dDg2LmMKPiBAQCAtMTgsNiArMTgsOCBAQAo+ICAjaW5j
+bHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9y
+bV9kYXRhL3J0Yy1tNDh0ODYuaD4KPiAgI2luY2x1ZGUgPGxpbnV4L2JjZC5oPgo+ICsjaW5jbHVk
+ZSA8bGludXgvc2xhYi5oPgo+ICsjaW5jbHVkZSA8bGludXgvaW8uaD4KPiAgCj4gICNkZWZpbmUg
+TTQ4VDg2X1JFR19TRUMJCTB4MDAKPiAgI2RlZmluZSBNNDhUODZfUkVHX1NFQ0FMUk0JMHgwMQo+
+IEBAIC00MSw0MCArNDMsNzEgQEAKPiAgCj4gICNkZWZpbmUgRFJWX1ZFUlNJT04gIjAuMSIKPiAg
+Cj4gK3N0cnVjdCBtNDh0ODZfcnRjX3ByaXZhdGVfZGF0YSB7Cj4gKwl2b2lkIF9faW9tZW0JCSpp
+b19pbmRleDsKPiArCXZvaWQgX19pb21lbQkJKmlvX2RhdGE7Cj4gKwo+ICsJc3RydWN0IHJ0Y19k
+ZXZpY2UJKnJ0YzsKPiArCXN0cnVjdCBtNDh0ODZfb3BzCSpvcHM7Cj4gK307Cj4gKwo+ICtzdGF0
+aWMgdm9pZCBtNDh0ODZfcnRjX3dyaXRlYnl0ZShzdHJ1Y3QgZGV2aWNlICpkZXYsCj4gKwkJCXVu
+c2lnbmVkIGNoYXIgdmFsdWUsIHVuc2lnbmVkIGxvbmcgYWRkcikKPiArewo+ICsJc3RydWN0IG00
+OHQ4Nl9ydGNfcHJpdmF0ZV9kYXRhICpwcml2ID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4gKwo+
+ICsJaWYgKHByaXYtPm9wcykgewo+ICsJCXByaXYtPm9wcy0+d3JpdGVieXRlKHZhbHVlLCBhZGRy
+KTsKPiArCQlyZXR1cm47Cj4gKwl9Cj4gKwo+ICsJd3JpdGViKGFkZHIsIHByaXYtPmlvX2luZGV4
+KTsKPiArCXdyaXRlYih2YWx1ZSwgcHJpdi0+aW9fZGF0YSk7Cj4gK30KPiArCj4gK3N0YXRpYyB1
+bnNpZ25lZCBjaGFyIG00OHQ4Nl9ydGNfcmVhZGJ5dGUoc3RydWN0IGRldmljZSAqZGV2LAo+ICsJ
+CQl1bnNpZ25lZCBsb25nIGFkZHIpCgpUaGUgcmVhZC93cml0ZWJ5dGUgZnVuY3Rpb25zIHNob3Vs
+ZCByZXR1cm4gYSB1OCBhbmQgdGFrZSBhIHU4IGZvciB0aGUKYWRkcmVzcyAoc2luY2UgeW91IGFy
+ZSB1c2luZyByZWFkYi93cml0ZWIpLiBGb3IgdGhlIHRlbXBvcmFyeSBzdGVwIHdoaWNoCnN0aWxs
+IGhhcyB0aGUgb3BzIHN0cnVjdHVyZSwgeW91IGNhbiBleHBsaWNpdGx5IGNhc3QgYWRkciB0byB1
+bnNpZ25lZApsb25nIGlmIHlvdSB3YW50IHRvIG1ha2UgaXQgb2J2aW91cyB0aGF0IHRoZSBvbGQg
+YXBpIHdhcyBzaWxseS4KCn5SeWFuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUt
+ZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5m
+by9kZXZpY2V0cmVlLWRpc2N1c3MK
