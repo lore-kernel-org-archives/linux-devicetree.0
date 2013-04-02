@@ -1,71 +1,106 @@
-From: Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/6] rtc: rtc-m48t86: add hooks to support driver side
- memory mapping
-Date: Tue, 02 Apr 2013 16:37:36 +1100
-Message-ID: <515A6EA0.1010700@gmail.com>
-References: <1364858565-17192-1-git-send-email-alex@digriz.org.uk>
- <1364858565-17192-3-git-send-email-alex@digriz.org.uk>
- <515A1A0B.8040803@gmail.com> <20130401234207.GL1953@edkhil>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: How to represent negative values for device tree property
+Date: Tue, 2 Apr 2013 17:17:47 +1100
+Message-ID: <20130402061747.GI7426@truffula.fritz.box>
+References: <5159F760.1080605@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130401234207.GL1953@edkhil>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/Gk0KcsbyUMelFU1"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5159F760.1080605@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: David Collins <collinsd@codeaurora.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/04/13 10:42, Alexander Clouter wrote:
-> On Tue, Apr 02, 2013 at 10:36:43AM +1100, Ryan Mallon wrote:
->> On 02/04/13 10:22, Alexander Clouter wrote:
->>> If platform_data is not defined (as before), then named memory io
->>> ranges need to be defined ("rtc_index" and "rtc_data").  The driver
->>> then maps those regions and uses them as the RTC index and data
->>> addresses.
->>>
->>> Does compile with the following warnings, I cannot see the codepath
->>> affected myself:
->>> ----
->>> drivers/rtc/rtc-m48t86.c: In function =91m48t86_rtc_probe=92:
->>> drivers/rtc/rtc-m48t86.c:180: warning: =91res_index=92 may be used
->>> uninitialized in this function
->>> drivers/rtc/rtc-m48t86.c:180: warning: =91res_data=92 may be used
->>> uninitialized in this function
->>
->> It is caused by the exit paths. If pdev->dev.platform_data is set, the
->> res_index and res_data are never initialised, but in the error case you
->> still for rtc_device_register you jump to out_io_data, which will then
->> dereference res_index/res_data. You need to make the exit paths
->> conditional on pdev->dev.platform_data (or init res_index/data to NULL
->> and make the release_mem_regions conditional on that).
-> =
 
-> However, the 'goto out_io_data' in the 'IS_ERR(priv->rtc)' is wrapped in
-> a 'if (!pdev->dev.platform_data)', else we jump to out_free.
+--/Gk0KcsbyUMelFU1
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ah right, I missed that. In that case, I can't see the problem either :-/.
+On Mon, Apr 01, 2013 at 02:08:48PM -0700, David Collins wrote:
+> Hi,
+>=20
+> I am working on a thermal driver which needs to be able to read a
+> temperature threshold from a device tree property.  The hardware supports
+> thresholds in the range -204.8 to +204.7 C in 0.1 C steps.  I have found,
+> as I am sure others have as well, that dtc treats a '-' before an integer
+> in a dtsi file as a syntax error.  Therefore, I need some artificial way
+> to represent negative numbers in device tree.  Here are the possibilities
+> that I have thought of so far:
 
-> =
+So, as a later posted suggests, dtc does now have integer expression
+support, including unary -.  The catch is you have to put your
+expression in parentheses, so < (-200) > should work where < -200 >
+does not.  The reason for this is that otherwise something like
+	<500 -300>
+is ambiguous.  It could either mean <(500 -300)> =3D=3D <200> or it could
+mean <(500) (-300)>.
 
-> I suspect I am probably missing something *too* obvious here for it to
-> click?
+It's a bit of a pain, but there's not really any way of fixing it that
+doesn't cause more pain along the way.
 
-It could be gcc being dumb, though this does seem a straight-forward
-enough case for gcc to get it correct. It would be nice to get rid of
-the warning though. Doing:
+Well.. while writing that I realised its a bit more complicated.  We
+could allow negative literals (similar but different in parsing from
+unary -).  But that causes lexing/parsing problems since then
+(500-300) (no spaces) would, without extra fiddling, get lexed as:
+	"(" LITERAL(500) LITERAL(-300) ")"
+whereas the parser would need to see it as
+	"(" LITERAL(500) "-" LITERAL(300) ")"
+So, maybe there's a way but I haven't thought of it yet.
 
-  struct resource *res_index =3D NULL; /* Avoid GCC warning */
 
-Isn't too costly.
+> 1. Use a second integer to specify the sign of the threshold:
+>      20000 mC --> <0 20000>
+>     -20000 mC --> <1 20000>
+> 2. Use a string instead of an integer to specify the threshold and
+>    then convert it to an integer in the driver software:
+>      20000 mC --> "20000"
+>     -20000 mC --> "-20000"
+> 3. Use units of millikelvin instead of millicelcius.  0 mC =3D=3D 273150 =
+mK
+>      20000 mC --> <293150>
+>     -20000 mC --> <253150>
 
-~Ryan
+There's always something to be said for using SI units, regardless of
+any other considerations.
+
+> 4. Use an arbitrary offset e.g. 0 mC =3D=3D 1000000
+>      20000 mC --> <1020000>
+>     -20000 mC --> <980000>
+> 5. Use the unsigned 32-bit representation for 2=E2=80=99s-compliment
+>    signed 32-bit integer
+>      20000 mC --> <20000>
+>     -20000 mC --> <0xffffb1e0> or <4294947296>
+
+This is effectively what use of unary - in dtc will do.
+
+> Which of these options would you recommend using?  Is there any better way
+> to handle negative values that I haven=E2=80=99t listed?  What is the bes=
+t general
+> case solution for specifying negative numbers in device tree?
+
+In short both (3) and (5) are reasonable, and dtc will help you with
+(5).  For the love of god, don't do (1), (2) or (4).
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--/Gk0KcsbyUMelFU1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlFaeAsACgkQaILKxv3ab8Y93QCcC7CNyi9tYGgp3L3R1pcSnO3n
+xA8An0OfrTOkr2xYPMzRI+umEFWvSBR0
+=AmrE
+-----END PGP SIGNATURE-----
+
+--/Gk0KcsbyUMelFU1--
