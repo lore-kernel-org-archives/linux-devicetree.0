@@ -1,40 +1,32 @@
 From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v6 0/7] move s3c24xx-irq to drivers/irqchip and add dt
- support
-Date: Tue, 02 Apr 2013 17:17:00 +0900
-Message-ID: <22c901ce2f7a$731fe9f0$595fbdd0$%kim@samsung.com>
+Subject: RE: [PATCH v6 7/7] irqchip: s3c24xx: add devicetree support
+Date: Tue, 02 Apr 2013 17:17:42 +0900
+Message-ID: <22ca01ce2f7a$8c17d210$a4477630$%kim@samsung.com>
 References: <201303262305.49725.heiko@sntech.de>
- <201303262212.31283.arnd@arndb.de>
+ <201303262310.35354.heiko@sntech.de> <51536B85.1070205@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <201303262212.31283.arnd@arndb.de>
+In-reply-to: <51536B85.1070205@gmail.com>
 Content-language: ko
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Arnd Bergmann' <arnd@arndb.de>, =?ISO-8859-1?Q?'Heiko_St=FCbner'?= <heiko@sntech.de>
-Cc: 'Grant Likely' <grant.likely@secretlab.ca>, 'Rob Herring' <rob.herring@calxeda.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+To: 'Rob Herring' <robherring2@gmail.com>, =?ISO-8859-1?Q?'Heiko_St=FCbner'?= <heiko@sntech.de>
+Cc: linux-samsung-soc@vger.kernel.org, 'Arnd Bergmann' <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, 'Rob Herring' <rob.herring@calxeda.com>, 'Grant Likely' <grant.likely@secretlab.ca>, 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Arnd Bergmann wrote:
+Rob Herring wrote:
 >=20
-> On Tuesday 26 March 2013, Heiko St=FCbner wrote:
-> > This v6 addresses more comments from Arnd Bergmann, setting the
-> compatible
-> > property to the first supported SoC (s3c2410) instead of using the
-> s3c24xx
-> > wildcard. It also switches the parent-irq and controller irq in the=
- dt
-> > irq descriptor bringing it to a format of
+> On 03/26/2013 05:10 PM, Heiko St=FCbner wrote:
+> > Add the necessary code to initialize the interrupt controller
+> > thru devicetree data using the irqchip infrastructure.
 > >
-> >   <ctrl_num parent_irq ctrl_irq type>
+> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 >=20
-> Entire series
+> Acked-by: Rob Herring <rob.herring@calxeda.com>
 >=20
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
+Rob, thanks for your ack.
 
-Thanks.
-
-Applied this whole series.
+Applied with your ack.
 
 - Kukjin
