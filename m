@@ -1,14 +1,16 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 1/6] drivers: phy: add generic PHY framework
-Date: Tue, 2 Apr 2013 14:09:21 +0530
-Message-ID: <515A9939.40406@ti.com>
-References: <1364449408-9510-1-git-send-email-kishon@ti.com>
- <1364449408-9510-2-git-send-email-kishon@ti.com> <5159E157.6000800@gmail.com>
+From: Michal Bachraty <michal.bachraty-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>
+Subject: Re: drm/tilcdc: LCD panels clocks initialization and earlier
+ backlight initialization
+Date: Tue, 02 Apr 2013 10:45:39 +0200
+Message-ID: <4669375.gFxBLPqWg9@ganymedes>
+References: <1552838.0ugGbIv7sQ@ganymedes>
+ <79CD15C6BA57404B839C016229A409A83EC3E861@DBDE01.ent.ti.com>
+ <CAF6AEGur7yuduNs9-HqP980NcXSB24Wz=2g_P4uPmXC9fJ9-9w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5159E157.6000800-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAF6AEGur7yuduNs9-HqP980NcXSB24Wz=2g_P4uPmXC9fJ9-9w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,190 +21,189 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org" <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Rob,
 
-On Tuesday 02 April 2013 01:04 AM, Sylwester Nawrocki wrote:
-> Just couple minor comments...
->
-> On 03/28/2013 06:43 AM, Kishon Vijay Abraham I wrote:
->> The PHY framework provides a set of APIs for the PHY drivers to
->> create/destroy a PHY and APIs for the PHY users to obtain a reference
->> to the
->> PHY with or without using phandle. To obtain a reference to the PHY
->> without
->> using phandle, the platform specfic intialization code (say from board
->> file)
->> should have already called phy_bind with the binding information. The
->> binding
->> information consists of phy's device name, phy user device name and an
->> index.
->> The index is used when the same phy user binds to mulitple phys.
->>
->> PHY drivers should create the PHY by passing phy_descriptor that has
->> describes the PHY (label, type etc..) and ops like init, exit,
->> suspend, resume,
->> poweron, shutdown.
->>
->> The documentation for the generic PHY framework is added in
->> Documentation/phy.txt and the documentation for the sysfs entry is added
->> in Documentation/ABI/testing/sysfs-class-phy and the documentation for
->> dt binding is can be found at
->> Documentation/devicetree/bindings/phy/phy-bindings.txt
->>
->> Signed-off-by: Kishon Vijay Abraham I<kishon-l0cyMroinI0@public.gmane.org>
->> ---
-> [...]
->> +/**
->> + * phy_put - release the PHY
->
-> nit: According to kernel-doc documentation function names should have
-> parentheses appended to the name. So it would need to be
->
-> + * phy_put() - release the PHY
->
-> in this case and it applies to multiple places elsewhere in this patch.
+On Monday, April 01, 2013 09:46:05 Rob Clark wrote:
+> On Mon, Apr 1, 2013 at 7:31 AM, Hiremath, Vaibhav <hvaibhav-l0cyMroinI0@public.gmane.org> wrote:
+> >> -----Original Message-----
+> >> From: devicetree-discuss [mailto:devicetree-discuss-
+> >> bounces+hvaibhav=ti.com-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org] On Behalf Of Michal Bachraty
+> >> Sent: Thursday, March 28, 2013 11:02 PM
+> >> To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org; devicetree-
+> >> discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> >> Cc: robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org
+> >> Subject: drm/tilcdc: LCD panels clocks initialization and earlier
+> >> backlight initialization
+> >> 
+> >> Hi,
+> >> 
+> >> I'm trying to use tilcdc driver for KWH050TG08 LCD panel connected to
+> >> AM335x
+> >> processor (3.9 rc1 kernel). I have prepared DT bindings for that
+> >> (listed
+> >> bellow). I see fb0 device but I have no clocks going from cpu to LCD.
+> >> My
+> >> clocks for LCD seems not properly to be set ...
+> >> 
+> >> virt_25000000_ck               1           1            25000000
+> >> 
+> >>     sys_clkin_ck                8           19           25000000
+> >>     
+> >>        dpll_disp_ck             0           1            25000000
+> >>        
+> >>           dpll_disp_m2_ck       0           1            25000000
+> >>           
+> >>              lcd_gclk           0           1            25000000
+> >> 
+> >> and tilcdc_crtc is not called. I also set lcd_gclk to 300MHz, but I got
+> >> same
+> >> result. The question is there any way how to properly set clocks for
+> >> LCD?
+> > 
+> > Not sure  about the LCDC DRM driver, but I just tested clk_set_rate()
+> > For lcdc_gclk clock and it is working for me. I could able to set
+> > 300MHz freq on my BeagleBone platform, with below code -
+> 
+> fwiw, tilcdc drm driver won't set clocks until you do modeset, as it
+> is setting them based on the requested pixel clock.  As opposed to
+> setting it once at boot time.
+> 
+> Michal, you may want to add 'drm.debug=7' in your bootargs, and send
+> the bootlog.  That should set some light about whether it is even
+> trying to modeset but failing, or some other issue.
+> 
 
-Will fix it.
->
->> + * @phy: the phy returned by phy_get()
->> + *
->> + * Releases a refcount the caller received from phy_get().
->> + */
->> +void phy_put(struct phy *phy)
->> +{
->> +    if (phy) {
->> +        module_put(phy->ops->owner);
->> +        put_device(&phy->dev);
->> +    }
->> +}
->> +EXPORT_SYMBOL_GPL(phy_put);
-> [...]
->> +/**
->> + * devm_of_phy_get_byname - lookup and obtain a reference to a phy by
->> name
->> + * @dev: device that requests this phy
->> + * @string - the phy name as given in the dt data
->
-> s/ -/:
+Yes, here it is:
 
-Ok.
->
->> + *
->> + * Calls devm_of_phy_get (which associates the device with the phy
->> using devres
->> + * on successful phy get) and passes on the return value of
->> devm_of_phy_get.
->> + */
->> +struct phy *devm_of_phy_get_byname(struct device *dev, const char
->> *string)
->> +{
->> +    int index;
->> +
->> +    if (!dev->of_node) {
->> +        dev_dbg(dev, "device does not have a device node entry\n");
->> +        return ERR_PTR(-EINVAL);
->> +    }
->> +
->> +    index = of_property_match_string(dev->of_node, "phy-names", string);
->> +
->> +    return devm_of_phy_get(dev, index);
->> +}
->> +EXPORT_SYMBOL_GPL(devm_of_phy_get_byname);
->> +
->> +/**
->> + * phy_get - lookup and obtain a reference to a phy.
->> + * @dev: device that requests this phy
->> + * @index: the index of the phy
->> + *
->> + * Returns the phy driver, after getting a refcount to it; or
->> + * -ENODEV if there is no such phy.  The caller is responsible for
->> + * calling phy_put() to release that count.
->> + */
->> +struct phy *phy_get(struct device *dev, int index)
->> +{
->> +    struct phy *phy = NULL;
->
-> Unneeded initialization.
->
->> +    phy = phy_lookup(dev, index);
->> +    if (IS_ERR(phy)) {
->> +        dev_err(dev, "unable to find phy\n");
->> +        goto err0;
->
-> Wouldn't it be better to just do:
+[    3.098732] platform audio.11: Driver snd-soc-am33xx-s800 requests probe 
+deferral
+[    3.107280] TCP: cubic registered
+[    3.110822] Initializing XFRM netlink socket
+[    3.115844] NET: Registered protocol family 10
+[    3.123212] NET: Registered protocol family 17
+[    3.128064] NET: Registered protocol family 15
+[    3.133176] Key type dns_resolver registered
+[    3.137846] VFP support v0.3: implementor 41 architecture 3 part 30 variant 
+c rev 3
+[    3.146087] ThumbEE CPU extension supported.
+[    3.150659] Registering SWP/SWPB emulation handler
+[    3.160695] registered taskstats version 1
+[    3.166007] [drm:tilcdc_drm_init], init
+[    3.171117] pinctrl core: add 1 pinmux maps
+[    3.175564] pinctrl-single 44e10800.pinmux: found group selector 6 for 
+pinmux_lcd_pins
+[    3.183957] pinctrl-single 44e10800.pinmux: request pin 59 (44e108ec) for 
+lcd_panel.15
+[    3.192312] pinctrl-single 44e10800.pinmux: request pin 57 (44e108e4) for 
+lcd_panel.15
+[    3.200662] pinctrl-single 44e10800.pinmux: request pin 56 (44e108e0) for 
+lcd_panel.15
+[    3.209010] pinctrl-single 44e10800.pinmux: request pin 58 (44e108e8) for 
+lcd_panel.15
+[    3.217321] pinctrl-single 44e10800.pinmux: request pin 55 (44e108dc) for 
+lcd_panel.15
+[    3.225666] pinctrl-single 44e10800.pinmux: request pin 54 (44e108d8) for 
+lcd_panel.15
+[    3.234012] pinctrl-single 44e10800.pinmux: request pin 53 (44e108d4) for 
+lcd_panel.15
+[    3.242359] pinctrl-single 44e10800.pinmux: request pin 52 (44e108d0) for 
+lcd_panel.15
+[    3.250708] pinctrl-single 44e10800.pinmux: request pin 51 (44e108cc) for 
+lcd_panel.15
+[    3.259052] pinctrl-single 44e10800.pinmux: request pin 50 (44e108c8) for 
+lcd_panel.15
+[    3.267362] pinctrl-single 44e10800.pinmux: request pin 49 (44e108c4) for 
+lcd_panel.15
+[    3.275710] pinctrl-single 44e10800.pinmux: request pin 48 (44e108c0) for 
+lcd_panel.15
+[    3.284057] pinctrl-single 44e10800.pinmux: request pin 47 (44e108bc) for 
+lcd_panel.15
+[    3.292404] pinctrl-single 44e10800.pinmux: request pin 46 (44e108b8) for 
+lcd_panel.15
+[    3.300748] pinctrl-single 44e10800.pinmux: request pin 45 (44e108b4) for 
+lcd_panel.15
+[    3.309091] pinctrl-single 44e10800.pinmux: request pin 44 (44e108b0) for 
+lcd_panel.15
+[    3.317404] pinctrl-single 44e10800.pinmux: request pin 43 (44e108ac) for 
+lcd_panel.15
+[    3.325751] pinctrl-single 44e10800.pinmux: request pin 42 (44e108a8) for 
+lcd_panel.15
+[    3.334098] pinctrl-single 44e10800.pinmux: request pin 41 (44e108a4) for 
+lcd_panel.15
+[    3.342445] pinctrl-single 44e10800.pinmux: request pin 40 (44e108a0) for 
+lcd_panel.15
+[    3.350794] pinctrl-single 44e10800.pinmux: enabling pinmux_lcd_pins 
+function6
+[    3.358477] panel lcd_panel.15: obtain a copy of previously claimed pinctrl
+[    3.366365] [drm:drm_platform_init], 
+[    3.370270] [drm:drm_get_platform_dev], 
+[    3.374940] [drm:drm_get_minor], 
+[    3.381143] [drm:drm_get_minor], new minor assigned 64
+[    3.386558] [drm:drm_get_minor], 
+[    3.391333] [drm:drm_get_minor], new minor assigned 0
+[    3.397698] [drm:modeset_init], loading module: panel
+[    3.403141] [drm:drm_sysfs_connector_add], adding "LVDS-1" to sysfs
+[    3.410040] [drm:drm_sysfs_hotplug_event], generating hotplug event
+[    3.416678] [drm] Supports vblank timestamp caching Rev 1 (10.10.2010).
+[    3.423662] [drm] No driver support for vblank timestamp query.
+[    3.429958] [drm:drm_irq_install], irq=52
+[    3.434354] [drm:drm_helper_probe_single_connector_modes], 
+[CONNECTOR:5:LVDS-1]
+[    3.442160] [drm:drm_helper_probe_single_connector_modes], 
+[CONNECTOR:5:LVDS-1] probed modes :
+[    3.451246] [drm:drm_mode_debug_printmodeline], Modeline 6:"800x480" 110 
+50000 800 887 887 887 480 512 512 51a
+[    3.462611] [drm:drm_setup_crtcs], 
+[    3.466284] [drm:drm_enable_connectors], connector 5 enabled? yes
+[    3.472722] [drm:drm_target_preferred], looking for cmdline mode on 
+connector 5
+[    3.480430] [drm:drm_target_preferred], looking for preferred mode on 
+connector 5
+[    3.488320] [drm:drm_target_preferred], found mode 800x480
+[    3.494083] [drm:drm_setup_crtcs], picking CRTCs for 2048x2048 config
+[    3.500886] [drm:drm_setup_crtcs], desired mode 800x480 set on crtc 3
+[    3.507667] [drm:drm_fbdev_cma_create], surface width(800), height(480) and 
+bpp(16)
+[    3.517992] [drm:drm_framebuffer_reference], FB ID: 8
+[    3.525610] tilcdc 4830e000.fb: fb0:  frame buffer device
+[    3.531352] tilcdc 4830e000.fb: registered panic notifier
+[    3.537123] [drm] Initialized tilcdc 1.0.0 20121205 on minor 0
+[    3.544706] pinctrl core: add 1 pinmux maps
+[    3.549234] pinctrl-single 44e10800.pinmux: found group selector 7 for 
+pinmux_i2c1_pins
+[    3.557662] pinctrl-single 44e10800.pinmux: request pin 98 (44e10988) for 
+44e0b000.i2c
+[    3.566020] pinctrl-single 44e10800.pinmux: request pin 99 (44e1098c) for 
+44e0b000.i2c
+[    3.574373] pinctrl-single 44e10800.pinmux: enabling pinmux_i2c1_pins 
+function7
+[    3.582257] omap_i2c 44e0b000.i2c: obtain a copy of previously claimed 
+pinctrl
+[    3.592470] omap_i2c 44e0b000.i2c: bus 1 rev0.11 at 400 kHz
+[    3.602698] tps65217-pmic tps65217-pmic: no of_node; not parsing pinctrl DT
+[    3.613524] DCDC1: 925 <--> 1800 mV at 1800 mV 
+[    3.620565] vdd_mpu: 925 <--> 1325 mV at 1100 mV 
+[    3.627579] vdd_core: 925 <--> 1150 mV at 1100 mV 
+[    3.634644] LDO1: 1000 <--> 3300 mV at 1800 mV 
+[    3.641483] LDO2: 900 <--> 3300 mV at 3300 mV 
+[    3.648293] LDO3: 1800 <--> 3300 mV at 3300 mV 
+[    3.655102] LDO4: 1800 <--> 3300 mV at 3300 mV 
+[    3.661130] tps65217-bl tps65217-bl: no of_node; not parsing pinctrl DT
+[    3.671184] tps65217 1-0024: TPS65217 ID 0xf version 1.1
+[    3.678824] dummy 1-0051: no of_node; not parsing pinctrl DT
+[    3.685255] dummy 1-0052: no of_node; not parsing pinctrl DT
+[    3.691691] dummy 1-0053: no of_node; not parsing pinctrl DT
+[    3.697774] at24 1-0050: 1024 byte 24c08 EEPROM, writable, 16 bytes/write
+[    3.710546] si5351 1-0060: si5351_pll_recalc_rate - plla: p1 = 3074, p2 = 
+116286, p3 = 390625, parent_rate = 8
 
-Indeed.
->
->          return phy;
->> +    }
->> +
->> +    if (!try_module_get(phy->ops->owner)) {
->> +        phy = ERR_PTR(-EPROBE_DEFER);
->
-> and
->          return ERR_PTR(-EPROBE_DEFER);
->
->> +        goto err0;
->
-> and to drop this goto and the label below ?
->
->> +    }
->> +
->> +    get_device(&phy->dev);
->> +
->> +err0:
->> +    return phy;
->> +}
->> +EXPORT_SYMBOL_GPL(phy_get);
->
->> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
->> new file mode 100644
->> index 0000000..0cb2298
->> --- /dev/null
->> +++ b/include/linux/phy/phy.h
->> @@ -0,0 +1,237 @@
->> +/*
->> + * phy.h -- generic phy header file
-> [...]
->> +#ifndef __DRIVERS_PHY_H
->> +#define __DRIVERS_PHY_H
->> +
->> +#include<linux/err.h>
->> +#include<linux/of.h>
->> +
->> +struct phy
->
-> I think you also need to add either
->
-> #include <linux/device.h>
->
-> or
->
-> struct device;
->
-> struct device * is used further in this file.
+Seems drm mode is set [drm:drm_setup_crtcs], desired mode 800x480 set on crtc 
+3
+I have no clue, what is wrong.
 
-Ok.
->
->> +/**
->> + * struct phy_ops - set of function pointers for performing phy
->> operations
->> + * @init: operation to be performed for initializing phy
->> + * @exit: operation to be performed while exiting
->> + * @suspend: suspending the phy
->> + * @resume: resuming the phy
->
->> + * @poweron: powering on the phy
->> + * @shutdown: shutting down the phy
->
-> Could these be named power_on/power_off ? Looks a bit more symmetric
-> to me that way.
-
-Ok. Will have it that way.
-
-Thanks
-Kishon
+Thanks,
+Michal
