@@ -1,163 +1,44 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: OMAP4: clock: Add device tree support for AUXCLKs
-Date: Tue, 2 Apr 2013 11:23:39 +0300
-Message-ID: <515A958B.5080905@ti.com>
-References: <1363703220-4777-2-git-send-email-rogerq@ti.com>
- <1364293408-20677-1-git-send-email-rogerq@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1364293408-20677-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+From: Tushar Behera <tushar.behera@linaro.org>
+Subject: [PATCH V3 0/7] Update Arndale board support
+Date: Tue,  2 Apr 2013 13:45:00 +0530
+Message-ID: <1364890507-19261-1-git-send-email-tushar.behera@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: kgene.kim@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-+ Paul
+Arndale board support has been updated using pin-control and
+common clock framework.
 
-On 03/26/2013 12:23 PM, Roger Quadros wrote:
-> Register a device tree clock provider for the clocks
-> on the OMAP4 SoC. Also provide the binding information.
-> 
-> For now we only provide AUXCLKs.
-> 
-> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-> ---
->  .../devicetree/bindings/clock/omap4-clock.txt      |   33 ++++++++++++++++
->  arch/arm/boot/dts/omap4.dtsi                       |    5 ++
->  arch/arm/mach-omap2/cclock44xx_data.c              |   41 ++++++++++++++++++++
->  3 files changed, 79 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/omap4-clock.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/omap4-clock.txt b/Documentation/devicetree/bindings/clock/omap4-clock.txt
-> new file mode 100644
-> index 0000000..2845a3f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/omap4-clock.txt
-> @@ -0,0 +1,33 @@
-> +* Clock bindings for Texas Instruments OMAP4 clocks
-> +
-> +Required properties:
-> +- compatible: Should be "ti,omap4-clock"
-> +- #clock-cells: Should be <1>
-> +
-> +The clock consumer should specify the desired clock by having the clock
-> +ID in its "clocks" phandle cell.  The following is a list of OMAP4 clocks
-> +and IDs.
-> +
-> +	Clock		ID
-> +	------------------
-> +	auxclk0_ck	0
-> +	auxclk1_ck	1
-> +	auxclk2_ck	2
-> +	auxclk3_ck	3
-> +	auxclk4_ck	4
-> +	auxclk5_ck	5
-> +
-> +Example:
-> +
-> +aux_clks: scrmclks {
-> +	compatible = "ti,omap4-clock";
-> +	#clock-cells = <1>;
-> +};
-> +
-> +hsusb1_phy: hsusb1_phy {
-> +	compatible = "usb-nop-xceiv";
-> +	reset-supply = <&hsusb1_reset>;
-> +	clocks = <&aux_clks 3>;
-> +	clock-names = "main_clk";
-> +	clock-frequency = <19200000>;
-> +};
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> index 739bb79..f27548a 100644
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -101,6 +101,11 @@
->  			ti,hwmods = "counter_32k";
->  		};
->  
-> +		clks: clocks {
-> +			compatible = "ti,omap4-clock";
-> +			#clock-cells = <1>;
-> +		};
-> +
->  		omap4_pmx_core: pinmux@4a100040 {
->  			compatible = "ti,omap4-padconf", "pinctrl-single";
->  			reg = <0x4a100040 0x0196>;
-> diff --git a/arch/arm/mach-omap2/cclock44xx_data.c b/arch/arm/mach-omap2/cclock44xx_data.c
-> index 3d58f33..a93617b 100644
-> --- a/arch/arm/mach-omap2/cclock44xx_data.c
-> +++ b/arch/arm/mach-omap2/cclock44xx_data.c
-> @@ -27,6 +27,7 @@
->  #include <linux/clk-private.h>
->  #include <linux/clkdev.h>
->  #include <linux/io.h>
-> +#include <linux/of.h>
->  
->  #include "soc.h"
->  #include "iomap.h"
-> @@ -1663,6 +1664,44 @@ static struct omap_clk omap44xx_clks[] = {
->  	CLK(NULL,	"cpufreq_ck",	&dpll_mpu_ck,	CK_443X),
->  };
->  
-> +/*
-> + * List of clocks that can be referenced in device tree
-> + * Must match with Documentation/devicetree/bindings/clock/omap4-clock.txt
-> + */
-> +static struct clk *dt_clks[] = {
-> +	&auxclk0_ck,
-> +	&auxclk1_ck,
-> +	&auxclk2_ck,
-> +	&auxclk3_ck,
-> +	&auxclk4_ck,
-> +	&auxclk5_ck,
-> +};
-> +
-> +static struct clk_onecell_data clock_data;
-> +
-> +#ifdef CONFIG_OF
-> +int __init omap4_clk_init_dt(void)
-> +{
-> +	struct device_node *np;
-> +
-> +	np = of_find_compatible_node(NULL, NULL, "ti,omap4-clock");
-> +	if (np) {
-> +		clock_data.clks = dt_clks;
-> +		clock_data.clk_num = ARRAY_SIZE(dt_clks);
-> +		of_clk_add_provider(np, of_clk_src_onecell_get,	&clock_data);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +#else
-> +
-> +int __init omap4_clk_init_dt(void)
-> +{
-> +	return 0;
-> +}
-> +#endif /* CONFIG_OF */
-> +
->  int __init omap4xxx_clk_init(void)
->  {
->  	u32 cpu_clkflg;
-> @@ -1693,6 +1732,8 @@ int __init omap4xxx_clk_init(void)
->  
->  	omap2_clk_disable_autoidle_all();
->  
-> +	omap4_clk_init_dt();
-> +
->  	/*
->  	 * On OMAP4460 the ABE DPLL fails to turn on if in idle low-power
->  	 * state when turning the ABE clock domain. Workaround this by
-> 
+The patchset is based on Kukjin's for-next.
+commit d58f6a153f40 ("Merge branch 'next/clk-exynos-2' into for-next")
+
+It depends on following patchset.
+
+[PATCH 0/2] ARM: dts: Add default pin states for client nodes on Exynos4/5 platforms
+http://comments.gmane.org/gmane.linux.kernel.samsung-soc/16559
+
+Following 2 patches have been newly added in this patchset because
+of changes during 3.9 merge window.
+1/7: ARM: dts: Add pin-control related changes for Arndale board
+2/7: ARM: dts: Add disable-wp for card slot on exynos5250-arndale
+
+Amit Daniel Kachhap (1):
+  ARM: dts: Add PMIC node entry for Arndale board
+
+Sachin Kamat (4):
+  ARM: dts: Add disable-wp for card slot on exynos5250-arndale
+  ARM: dts: Add vmmc regulator support for Arndale board
+  ARM: dts: Add MFC codec support for Arndale board
+  ARM: dts: Add HDMI HPD and regulator node for Arndale board
+
+Tushar Behera (2):
+  ARM: dts: Add pin-control related changes for Arndale board
+  ARM: dts: Add gpio-button entries for Arndale board
+
+ arch/arm/boot/dts/exynos5250-arndale.dts |  343 +++++++++++++++++++++++++++++-
+ 1 file changed, 333 insertions(+), 10 deletions(-)
+
+-- 
+1.7.9.5
