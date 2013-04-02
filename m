@@ -1,40 +1,63 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 4/6] arm: orion5x: move ts78xx to use rtc-m48t86 driver
- side memory interface
-Date: Tue, 2 Apr 2013 07:50:51 -0400
-Message-ID: <20130402115051.GS13280@titan.lakedaemon.net>
-References: <1364858565-17192-1-git-send-email-alex@digriz.org.uk>
- <1364858565-17192-5-git-send-email-alex@digriz.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1364858565-17192-5-git-send-email-alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH] exynos4-is: Correct clock properties description at the DT
+ binding documentation
+Date: Tue, 02 Apr 2013 15:32:10 +0200
+Message-ID: <1364909530-25392-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 02, 2013 at 12:22:43AM +0100, Alexander Clouter wrote:
-> Remove platform_data hooks into rtc-m48t86 and use named resource regions.
-> 
-> Signed-off-by: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
-> ---
->  arch/arm/mach-orion5x/ts78xx-setup.c |   78 ++++++++--------------------------
->  1 file changed, 17 insertions(+), 61 deletions(-)
+The 'camera' DT node needs to have sclk_cam0/1 and pxl_async0/1 clocks
+specified, while 'fimc' nodes should have only "fimc" and "sclk_fimc".
+"mux" and "parent" are leftovers from early versions of patches adding
+DT support, when the IP bus clock parent clock was being set by the
+driver. A better solution is needed to have e.g. clocks driver setting
+all required parent clocks, before clock consumers start using the
+clocks. Currently this binding doesn't describe the parent clocks setup,
+it needs to be specified and handled somewhere else.
 
-Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ .../devicetree/bindings/media/samsung-fimc.txt     |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-thx,
+diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+index 2a63ddd..51c776b 100644
+--- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
++++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
+@@ -17,9 +17,9 @@ Required properties:
 
-Jason.
+ - compatible	: must be "samsung,fimc", "simple-bus"
+ - clocks	: list of clock specifiers, corresponding to entries in
+-		  clock-names property;
+-- clock-names	: must contain "fimc", "sclk_fimc" entries, matching entries
+-		  in the clocks property.
++		  the clock-names property;
++- clock-names	: must contain "sclk_cam0", "sclk_cam1", "pxl_async0",
++		  "pxl_async1" entries, matching entries in the clocks property.
+
+ The pinctrl bindings defined in ../pinctrl/pinctrl-bindings.txt must be used
+ to define a required pinctrl state named "default" and optional pinctrl states:
+@@ -32,7 +32,6 @@ way around.
+
+ The 'camera' node must include at least one 'fimc' child node.
+
+-
+ 'fimc' device nodes
+ -------------------
+
+@@ -44,8 +43,7 @@ Required properties:
+ - interrupts: should contain FIMC interrupt;
+ - clocks: list of clock specifiers, must contain an entry for each required
+   entry in clock-names;
+-- clock-names: must include "fimc", "sclk_fimc", "mux" entries and optionally
+-  "parent" entry.
++- clock-names: must contain "fimc", "sclk_fimc" entries.
+ - samsung,pix-limits: an array of maximum supported image sizes in pixels, for
+   details refer to Table 2-1 in the S5PV210 SoC User Manual; The meaning of
+   each cell is as follows:
+--
+1.7.9.5
