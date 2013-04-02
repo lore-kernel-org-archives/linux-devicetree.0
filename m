@@ -1,73 +1,51 @@
-From: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
-Subject: Re: [PATCH 2/6] rtc: rtc-m48t86: add hooks to support driver side
- memory mapping
-Date: Tue, 2 Apr 2013 00:42:07 +0100
-Message-ID: <20130401234207.GL1953@edkhil>
-References: <1364858565-17192-1-git-send-email-alex@digriz.org.uk>
- <1364858565-17192-3-git-send-email-alex@digriz.org.uk>
- <515A1A0B.8040803@gmail.com>
+From: David Collins <collinsd@codeaurora.org>
+Subject: Re: How to represent negative values for device tree property
+Date: Mon, 01 Apr 2013 17:24:19 -0700
+Message-ID: <515A2533.8050005@codeaurora.org>
+References: <5159F760.1080605@codeaurora.org> <515A038F.2090902@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <515A1A0B.8040803-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <515A038F.2090902@wwwdotorg.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBcHIgMDIsIDIwMTMgYXQgMTA6MzY6NDNBTSArMTEwMCwgUnlhbiBNYWxsb24gd3Jv
-dGU6Cj5PbiAwMi8wNC8xMyAxMDoyMiwgQWxleGFuZGVyIENsb3V0ZXIgd3JvdGU6Cj4+IElmIHBs
-YXRmb3JtX2RhdGEgaXMgbm90IGRlZmluZWQgKGFzIGJlZm9yZSksIHRoZW4gbmFtZWQgbWVtb3J5
-IGlvCj4+IHJhbmdlcyBuZWVkIHRvIGJlIGRlZmluZWQgKCJydGNfaW5kZXgiIGFuZCAicnRjX2Rh
-dGEiKS4gIFRoZSBkcml2ZXIKPj4gdGhlbiBtYXBzIHRob3NlIHJlZ2lvbnMgYW5kIHVzZXMgdGhl
-bSBhcyB0aGUgUlRDIGluZGV4IGFuZCBkYXRhCj4+IGFkZHJlc3Nlcy4KPj4KPj4gRG9lcyBjb21w
-aWxlIHdpdGggdGhlIGZvbGxvd2luZyB3YXJuaW5ncywgSSBjYW5ub3Qgc2VlIHRoZSBjb2RlcGF0
-aAo+PiBhZmZlY3RlZCBteXNlbGY6Cj4+IC0tLS0KPj4gZHJpdmVycy9ydGMvcnRjLW00OHQ4Ni5j
-OiBJbiBmdW5jdGlvbiDigJhtNDh0ODZfcnRjX3Byb2Jl4oCZOgo+PiBkcml2ZXJzL3J0Yy9ydGMt
-bTQ4dDg2LmM6MTgwOiB3YXJuaW5nOiDigJhyZXNfaW5kZXjigJkgbWF5IGJlIHVzZWQgdW5pbml0
-aWFsaXplZCBpbiB0aGlzIGZ1bmN0aW9uCj4+IGRyaXZlcnMvcnRjL3J0Yy1tNDh0ODYuYzoxODA6
-IHdhcm5pbmc6IOKAmHJlc19kYXRh4oCZIG1heSBiZSB1c2VkIHVuaW5pdGlhbGl6ZWQgaW4gdGhp
-cyBmdW5jdGlvbgo+Cj5JdCBpcyBjYXVzZWQgYnkgdGhlIGV4aXQgcGF0aHMuIElmIHBkZXYtPmRl
-di5wbGF0Zm9ybV9kYXRhIGlzIHNldCwgdGhlCj5yZXNfaW5kZXggYW5kIHJlc19kYXRhIGFyZSBu
-ZXZlciBpbml0aWFsaXNlZCwgYnV0IGluIHRoZSBlcnJvciBjYXNlIHlvdQo+c3RpbGwgZm9yIHJ0
-Y19kZXZpY2VfcmVnaXN0ZXIgeW91IGp1bXAgdG8gb3V0X2lvX2RhdGEsIHdoaWNoIHdpbGwgdGhl
-bgo+ZGVyZWZlcmVuY2UgcmVzX2luZGV4L3Jlc19kYXRhLiBZb3UgbmVlZCB0byBtYWtlIHRoZSBl
-eGl0IHBhdGhzCj5jb25kaXRpb25hbCBvbiBwZGV2LT5kZXYucGxhdGZvcm1fZGF0YSAob3IgaW5p
-dCByZXNfaW5kZXgvZGF0YSB0byBOVUxMCj5hbmQgbWFrZSB0aGUgcmVsZWFzZV9tZW1fcmVnaW9u
-cyBjb25kaXRpb25hbCBvbiB0aGF0KS4KCkhvd2V2ZXIsIHRoZSAnZ290byBvdXRfaW9fZGF0YScg
-aW4gdGhlICdJU19FUlIocHJpdi0+cnRjKScgaXMgd3JhcHBlZCBpbiBhICdpZiAKKCFwZGV2LT5k
-ZXYucGxhdGZvcm1fZGF0YSknLCBlbHNlIHdlIGp1bXAgdG8gb3V0X2ZyZWUuCgpJIHN1c3BlY3Qg
-SSBhbSBwcm9iYWJseSBtaXNzaW5nIHNvbWV0aGluZyAqdG9vKiBvYnZpb3VzIGhlcmUgZm9yIGl0
-IHRvIGNsaWNrPwoKQ2hlZXJzCgo+PiArCXByaXYtPnJ0YyA9IHJ0Y19kZXZpY2VfcmVnaXN0ZXIo
-Im00OHQ4NiIsCj4+ICsJCQkJJnBkZXYtPmRldiwgJm00OHQ4Nl9ydGNfb3BzLCBUSElTX01PRFVM
-RSk7Cj4+ICsJaWYgKElTX0VSUihwcml2LT5ydGMpKSB7ICAgICAgICAgICAgICAgIDwtLS0tLS0t
-LS0tLS0tLQo+PiArCQllcnIgPSBQVFJfRVJSKHByaXYtPnJ0Yyk7Cj4+ICsJCWlmICghcGRldi0+
-ZGV2LnBsYXRmb3JtX2RhdGEpICAgPC0tLS0tLS0tLS0tLS0tCj4+ICsJCQlnb3RvIG91dF9pb19k
-YXRhOwo+PiArCQllbHNlCj4+ICsJCQlnb3RvIG91dF9mcmVlOwo+PiArCX0KPj4KPj4gIAkvKiBy
-ZWFkIGJhdHRlcnkgc3RhdHVzICovCj4+IC0JcmVnID0gb3BzLT5yZWFkYnl0ZShNNDhUODZfUkVH
-X0QpOwo+PiAtCWRldl9pbmZvKCZkZXYtPmRldiwgImJhdHRlcnkgJXNcbiIsCj4+ICsJcmVnID0g
-bTQ4dDg2X3J0Y19yZWFkYnl0ZSgmcGRldi0+ZGV2LCBNNDhUODZfUkVHX0QpOwo+PiArCWRldl9p
-bmZvKCZwZGV2LT5kZXYsICJiYXR0ZXJ5ICVzXG4iLAo+PiAgCQkocmVnICYgTTQ4VDg2X1JFR19E
-X1ZSVCkgPyAib2siIDogImV4aGF1c3RlZCIpOwo+Pgo+PiAgCXJldHVybiAwOwo+PiArCj4+ICtv
-dXRfaW9fZGF0YToKPj4gKwlpb3VubWFwKHByaXYtPmlvX2RhdGEpOwo+PiArb3V0X2lvX2luZGV4
-Ogo+PiArCWlvdW5tYXAocHJpdi0+aW9faW5kZXgpOwo+PiArb3V0X3JlbGVhc2VfZGF0YToKPj4g
-KwlyZWxlYXNlX21lbV9yZWdpb24ocmVzX2RhdGEtPnN0YXJ0LCByZXNvdXJjZV9zaXplKHJlc19k
-YXRhKSk7Cj4+ICtvdXRfcmVsZWFzZV9pbmRleDoKPj4gKwlyZWxlYXNlX21lbV9yZWdpb24ocmVz
-X2luZGV4LT5zdGFydCwgcmVzb3VyY2Vfc2l6ZShyZXNfaW5kZXgpKTsKPj4gK291dF9mcmVlOgo+
-PiArCXBsYXRmb3JtX3NldF9kcnZkYXRhKHBkZXYsIE5VTEwpOwo+PiArCWtmcmVlKHByaXYpOwo+
-PiArCXJldHVybiBlcnI7Cj4+ICB9CgotLSAKQWxleGFuZGVyIENsb3V0ZXIKLnNpZ21vbnN0ZXIg
-c2F5czogWmV1cyBnYXZlIExlZGEgdGhlIGJpcmQuCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2
-aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3Jn
-L2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+On 04/01/2013 03:00 PM, Stephen Warren wrote:
+> On 04/01/2013 03:08 PM, David Collins wrote:
+>> Hi,
+>>
+>> I am working on a thermal driver which needs to be able to read a
+>> temperature threshold from a device tree property.  The hardware supports
+>> thresholds in the range -204.8 to +204.7 C in 0.1 C steps.  I have found,
+>> as I am sure others have as well, that dtc treats a '-' before an integer
+>> in a dtsi file as a syntax error.  Therefore, I need some artificial way
+>> to represent negative numbers in device tree.  Here are the possibilities
+>> that I have thought of so far:
+> 
+> Doesn't the very latest dtc, which contains integer expression support,
+> allow unary -? I thought that code had been imported into the kernel
+> (goes and checks) yes it has. What's the error you're seeing;
+> over/underflow or syntax?
+> 
+> That said, DT cells are supposed to be u32 not s32, so perhaps this
+> isn't unexpected.
+
+It is likely that my dtc version is out of date.  dtc -v outputs 1.2.0.  I
+will try updating to a newer version of dtc.  The error that I currently
+get is a syntax error: "FATAL ERROR: Unable to parse input tree".
+
+Does the device tree binary documentation define any format for negative
+numbers?  Unsigned 32-bit integers are clearly defined as bytes in
+big-endian order.  I suppose that you could assume 32-bit signed integers
+are 2's complement with bytes in big-endian order, but that would need to
+be well defined somewhere.
+
+Assuming that dtb has no well defined means of holding a negative integer
+value, then what is the most elegant workaround to specify a negative value?
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
