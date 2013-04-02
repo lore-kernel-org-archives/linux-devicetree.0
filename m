@@ -1,44 +1,49 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2 2/3] power: power_supply: Add core support for supplied_from
-Date: Tue, 02 Apr 2013 15:31:30 -0600
-Message-ID: <515B4E32.8080006@wwwdotorg.org>
-References: <1364852755-17425-1-git-send-email-rklein@nvidia.com> <1364852755-17425-3-git-send-email-rklein@nvidia.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH] mfd: Add device tree bindings for Arizona class devices
+Date: Tue, 2 Apr 2013 22:38:00 +0100
+Message-ID: <20130402213739.GM23065@opensource.wolfsonmicro.com>
+References: <1364935878-11500-1-git-send-email-broonie@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1364852755-17425-3-git-send-email-rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LwbuP8dfxhLLLUfV"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1364935878-11500-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>
+Cc: linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/01/2013 03:45 PM, Rhyland Klein wrote:
-> This patch adds support for supplies to register a list of char *'s
-> which represent the list of supplies which supply them. This is the
-> opposite as the supplied_to list.
 
-This patch resolves the concerns I had before, so,
-Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+--LwbuP8dfxhLLLUfV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> diff --git a/drivers/power/power_supply_core.c b/drivers/power/power_supply_core.c
+On Tue, Apr 02, 2013 at 09:51:18PM +0100, Mark Brown wrote:
+> Signed-off-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
 
-> +static bool __power_supply_is_supplied_by(struct power_supply *supplier,
-> +					 struct power_supply *supply)
-> +{
-> +	int i;
-> +
-> +	if (!supply->supplied_from && !supplier->supplied_to)
-> +		return false;
+*sigh* ignore this one, revised version coming shortly.
 
-Nit: that somewhat duplicates the if below, so perhaps could just be
-removed?
+--LwbuP8dfxhLLLUfV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +	/* Support both supplied_to and supplied_from modes */
-> +	if (supply->supplied_from) {
-> +		if (!supplier->name)
-> +			return false;
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-Likewise, I'm still not convinced these !name tests should be required.
+iQIcBAEBAgAGBQJRW0+ZAAoJELSic+t+oim9ykUP/0aj0JJuaKSSXWc8CgF8dcC3
+jayNIKchpBVaJZ14VG4w43fauyTnwjV+sx7EGqniHgXEZar/1wnalbL+2snuihjk
+yrTuUBCijC4gpfqsx3VHF6xyT8WclSN46HV+KrWKdKEjYpM6Ha0vOUVkA5PAQGPe
+McR1GpISASGLrfrGsXTVHWqurJoZlxpmMsjPdBYlJokoXumJ6m2RSPwhYAHYyrQt
+aIV1UbVE7oRBLqVmnbpyPdvwZ9Oqn3eMyTiwdqpspnFVHSKN+k8V8FBauSGKJRuh
+XWFi49FnX8FWeEGlcVYGgLIX3jdN1xGQ+mlmzyz2NNh80p+kcnvW3y06RCltjgOC
+lf/cQKJqb+gjV8YOYvfWV8ABfBbuElrkZA1Tepcu+oQJZ4Q1AsZWCuoc1LOGRfkU
+aaJrM6sTiZq3NOzEmgZDGuAzCw6XhnrvgFYFWvZUUAjuYvgDwSltr4vtaJ14m0X/
+GrHAE+bFxqVwgq8z5AVtrcNDOWVwRZe+1pYWgbxWVN1LWjVbsJpoMXRNvln3VjHk
+8rVNUgV0uChlKhcPzkln+LwTu7Js5YgFyfXoX5jpsE7BYJ8TbvSEWfL5KTAHpQJR
+3wBjEnY8QAvV5s6UBGQA0vjyBM0kbMEA99Yvmn36P1Gu84ZxiuyI9g3O7i1VV/+n
+RxVcR6Ao+fhUMS6n1oCI
+=Jcyc
+-----END PGP SIGNATURE-----
 
-However, there's no harm here I think, so it's fine.
+--LwbuP8dfxhLLLUfV--
