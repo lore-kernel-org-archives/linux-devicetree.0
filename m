@@ -1,84 +1,31 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v2] ARM: dts: Add SYSREG block node for S5P/Exynos4 SoC
- series
-Date: Tue, 02 Apr 2013 18:47:33 +0900
-Message-ID: <237801ce2f87$1947cf30$4bd76d90$%kim@samsung.com>
-References: <1364302821-17989-1-git-send-email-s.nawrocki@samsung.com>
+From: "Manjunathappa, Prakash" <prakash.pm@ti.com>
+Subject: RE: [PATCH v7 1/5] mmc: davinci: allow driver to work without DMA
+ resource
+Date: Tue, 2 Apr 2013 09:55:59 +0000
+Message-ID: <A73F36158E33644199EB82C5EC81C7BC3EA4BEAE@DBDE01.ent.ti.com>
+References: <1364476211-14322-1-git-send-email-prakash.pm@ti.com>
+ <1364476211-14322-2-git-send-email-prakash.pm@ti.com>
+ <515A9941.9030708@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1364302821-17989-1-git-send-email-s.nawrocki@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Sylwester Nawrocki' <s.nawrocki@samsung.com>
-Cc: kyungmin.park@samsung.com, thomas.abraham@linaro.org, t.figa@samsung.com, myungjoo.ham@samsung.com, dh09.lee@samsung.com, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <515A9941.9030708@ti.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "Nori, Sekhar" <nsekhar@ti.com>
+Cc: "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "cjb@laptop.org" <cjb@laptop.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "hs@denx.de" <hs@denx.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "arnd@arndb.de" <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Sylwester Nawrocki wrote:
-> 
-> This patch adds device tree node for the SYSREG registers block
-> found in Samsung S5P/Exynos SoC series. The SYSREG module
-> generates control signals for the ARM CPU and various IP blocks
-> and buses. SYSREG block registers are exposed through APB bus
-> interface. A sysreg device tree node is to be associated with
-> mfd syscon driver and all SYSREG clients should use regmap
-> interface it provides. It allows to eliminate any possible races
-> and conflicts should different drivers attempt to concurrently
-> access same register.
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
-> 
-> Changes since v1:
->  - Added missing "samsung," prefix to the compatible property,
->  - the binding documentation moved to ...bindings/arm/samsung
->    as SYSREG block can be also found on other SoCs than Exynos.
-> ---
->  .../devicetree/bindings/arm/samsung/sysreg.txt     |    7 +++++++
->  arch/arm/boot/dts/exynos4.dtsi                     |    5 +++++
->  2 files changed, 12 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> new file mode 100644
-> index 0000000..5039c0a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> @@ -0,0 +1,7 @@
-> +SAMSUNG S5P/Exynos SoC series System Registers (SYSREG)
-> +
-> +Properties:
-> + - name : should be 'sysreg';
-> + - compatible : should contain "samsung,<chip name>-sysreg", "syscon";
-> +   For Exynos4 SoC series it should be "samsung,exynos4-sysreg",
-"syscon";
-> + - reg : offset and length of the register set.
-> diff --git a/arch/arm/boot/dts/exynos4.dtsi
-> b/arch/arm/boot/dts/exynos4.dtsi
-> index 9ac47d5..462f055 100644
-> --- a/arch/arm/boot/dts/exynos4.dtsi
-> +++ b/arch/arm/boot/dts/exynos4.dtsi
-> @@ -82,6 +82,11 @@
->  		reg = <0x10440000 0x1000>;
->  	};
-> 
-> +	sys_reg: sysreg {
-> +		compatible = "samsung,exynos4-sysreg", "syscon";
-> +		reg = <0x10010000 0x400>;
-> +	};
-> +
->  	watchdog@10060000 {
->  		compatible = "samsung,s3c2410-wdt";
->  		reg = <0x10060000 0x100>;
-> --
-> 1.7.9.5
-
-Looks ok to me, applied.
-
-Thanks.
-
-- Kukjin
+T24gVHVlLCBBcHIgMDIsIDIwMTMgYXQgMTQ6MDk6MjksIE5vcmksIFNla2hhciB3cm90ZToNCj4g
+T24gMy8yOC8yMDEzIDY6NDAgUE0sIE1hbmp1bmF0aGFwcGEsIFByYWthc2ggd3JvdGU6DQo+ID4g
+RG8gbm90IHJldHVybiBwcm9iZSBmYWlsdXJlIHdpdGggbWlzc2luZyBETUEgcmVzb3VyY2VzLA0K
+PiA+IGFsbG93IGRyaXZlciB0byB3b3JrIGluIFBJTyBtb2RlLg0KPiA+IFRlc3RlZCBvbiBkYTg1
+MC1ldm0gYnkgbW91bnRpbmcgcGFydGl0aW9uIGZvbGxvd2VkIGJ5DQo+ID4gZmlsZSBjcmVhdGlv
+biBhbmQgZGVsZXRpb24uDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogTWFuanVuYXRoYXBwYSwg
+UHJha2FzaCA8cHJha2FzaC5wbUB0aS5jb20+DQo+ID4gVGVzdGVkLWJ5OiBTZWtoYXIgTm9yaSA8
+bnNla2hhckB0aS5jb20+DQo+IA0KPiBDaHJpcyBhY2NlcHRlZCB0aGlzIHBhdGNoIG9uIE1hcmNo
+IDIybmQuIFlvdSBzaG91bGQgaGF2ZSBkcm9wcGVkIHRoaXMNCj4gZnJvbSB0aGlzIHNlcmllcy4N
+Cj4gDQoNClRoYW5rcyBTZWtoYXIsIEkgbWlzc2VkIENocmlzJ3MgcmVwbHkgc29tZWhvdy4NCg0K
+Q2hyaXMsDQpQbGVhc2UgaWdub3JlIHRoaXMgcGF0Y2guDQoNClJlZ2FyZHMsDQpQcmFrYXNoDQoN
+Cg==
