@@ -1,128 +1,51 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v4 1/6] drivers: phy: add generic PHY framework
-Date: Tue, 02 Apr 2013 23:51:17 +0200
-Message-ID: <515B52D5.5090709@gmail.com>
-References: <1364449408-9510-1-git-send-email-kishon@ti.com> <1364449408-9510-2-git-send-email-kishon@ti.com> <515A09D8.7040703@gmail.com> <515A0C70.90201@wwwdotorg.org>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v4] clk: add si5351 i2c common clock driver
+Date: Tue, 02 Apr 2013 16:46:48 -0700
+Message-ID: <20130402234648.8177.86213@quantum>
+References: <1363603397-2762-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1364050010-23919-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <515A0C70.90201@wwwdotorg.org>
+In-Reply-To: <1364050010-23919-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, balbi@ti.com, gregkh@linuxfoundation.org, arnd@arndb.de, akpm@linux-foundation.org, rob@landley.net, davem@davemloft.net, cesarb@cesarb.net, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, tony@atomide.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, b-cousson@ti.com, linux@arm.linux.org.uk, eballetbo@gmail.com, javier@dowhile0.org, mchehab@redhat.com, santosh.shilimkar@ti.com, broonie@opensource.wolfsonmicro.com, swarren@nvidia.com, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, Daniel Mack <zonque@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/02/2013 12:38 AM, Stephen Warren wrote:
-> On 04/01/2013 04:27 PM, Sylwester Nawrocki wrote:
->> On 03/28/2013 06:43 AM, Kishon Vijay Abraham I wrote:
->>> diff --git a/Documentation/devicetree/bindings/phy/phy-bindings.txt
->
->>> +example2:
->>> +phys: phy {
->>> +    compatible = "xxx";
->>> +    reg =<...>;
->>> +    .
->>> +    .
->>> +    phys =<&phys 1>;
->>> +    .
->>> +    .
->>> +};
->>> +
->>> +This node represents a controller that uses one of the PHYs which is defined
->>> +previously. Note that the phy handle has an additional specifier "1" to
->>> +differentiate between the three PHYs. For this case, the controller driver
->>> +should use of_phy_get_with_args/devm_of_phy_get_with_args.
->>
->> This means a PHY user needs to know indexes at the PHY driver ?
->
-> The client node's DT has to specify which of the provider's PHYs it
-> references, yes. Presumably the device driver for the client node knows
-> absolutely nothing about this.
+Quoting Sebastian Hesselbarth (2013-03-23 07:46:50)
+> diff --git a/drivers/clk/clk-si5351.c b/drivers/clk/clk-si5351.c
+> new file mode 100644
+> index 0000000..9d0c210
+> --- /dev/null
+> +++ b/drivers/clk/clk-si5351.c
+> @@ -0,0 +1,1411 @@
+> +/*
+> + * clk-si5351.c: Silicon Laboratories Si5351A/B/C I2C Clock Generator
+> + *
+> + * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> + * Rabeeh Khoury <rabeeh@solid-run.com>
+> + *
+> + * References:
+> + * [1] "Si5351A/B/C Data Sheet"
+> + *     http://www.silabs.com/Support%20Documents/TechnicalDocs/Si5351.pdf
+> + * [2] "Manually Generating an Si5351 Register Map"
+> + *     http://www.silabs.com/Support%20Documents/TechnicalDocs/AN619.pdf
+> + *
+> + * This program is free software; you can redistribute  it and/or modify it
+> + * under  the terms of  the GNU General  Public License as published by the
+> + * Free Software Foundation;  either version 2 of the  License, or (at your
+> + * option) any later version.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/clk-private.h>
 
-Ah, right. The device driver for the client node not necessarily need to be
-aware about this. I think I got misled by the 'index' argument of
-of_phy_get_with_args() which the PHY consumer need to supply. However it is
-only an index pointing to a PHY specifier in its 'phys' property, hence it
-would be normally 0 if the client needs only one PHY. Hopefully I got it
-right this time.
+I hope that this is supposed to be clk-provider.h.  I don't plan on
+taking in any more clock drivers that depend on clk-private.h.  I didn't
+see any reason for this patch to not use clk-provider.h.
 
->> I have been thinking of using this for an IP which has 4 video PHYs: 2 MIPI
->> CSI-2 and 2 MIPI DSI. The IP has just 2 registers, each of which is shared
->> between one MIPI CSI-2 DPHY and one MIPI DSI DPHY. So I thought about creating
->> a single device node for this IP and using 4 indexes for the PHYs, e.g. 0...3.
->
-> That sounds right.
->
->> Then users of each PHY type would use only indexes 0..1 (to select their
->> corresponding port).
->
-> I don't follow that. If the provider exports PHYs 0..3, then the client
-> nodes would refer to PHYS 0..3 not 0..1.
-
-Indeed, it seems I just wanted to preserve the CSI/DSI "channel" information
-(0, 1), but that is not really needed anywhere.
-
->> However I fail to see how this could now be represented in the bindings.
->
-> Exactly like the example you gave below, I would expect.
->
->> I assume struct phy::type could be used to differentiate between CSI-2 and DSI.
->> And struct phy::port could be used to select specific CSI-2 or DSI channel
->> (0, 1). Ideally the phy users should not care about index of a PHY at the PHY
->> device tree node. E.g. there are 2 MIPI CSI-2 receivers and each has only
->> one PHY assigned to it. I'm just wondering how the binding should look like,
->> so a PHY could be associated with a receiver automatically by the phy-core,
->> e.g.
->
-> Details such as phy::type and phy::port sounds like internal driver
-> implementation details which would have no effect on the bindings.
-
-Yes, I seem to have mixed the phy-core implementation and the bindings a 
-bit.
-My intention was to have the PHYs registered with phy::port that would 
-reflect
-data channel id, as specified in the SoC's datasheet. However I can't 
-think of
-any use of it at the moment, except for debugging purpose.
-
->> /* DPHY IP node */
->> video-phy {
->>        reg =<0x10000000 8>;
->> };
->>
->> /* MIPI DSI nodes */
->> dsi_0 {
->>       phys =<&video-phy 0>;
->> };
->>
->> dsi_1 {
->>       phys =<&video-phy 1>;
->> };
->>
->> /* MIPI CSI-2 nodes */
->> csi_0 {
->>       phys =<&video-phy 2>;
->> };
->>
->> csi_1 {
->>       phys =<&video-phy 3>;
->> };
->
-> That looks correct to me.
->
->> I'm not sure if it is not an overkill to use this the PHY framework with
->> a device which has only 2 registers. Perhaps something less heavy could
->> be designed for it. However, if the PHY framework is commonly used there
->> should be no issue wrt enabling the whole big infrastructure for a simple
->> device like this.
->
-> I don't think the number of registers should really makes any
-> difference; the whole point of the PHY framework is to decouple to
-> providers and consumers, so doing anything custom for special cases
-> would completely destroy the ability of the PHY framework to do that.
-
-Ok, that's a very good argument. Something I have not been focused on
-that much, given the architecture of hardware I used to work with.
-
-I'll git it a try and I'll see if any any further questions jump out.
+Regards,
+Mike
