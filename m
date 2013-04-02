@@ -1,15 +1,16 @@
 From: Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH 2/6] rtc: rtc-m48t86: add hooks to support driver side
  memory mapping
-Date: Tue, 02 Apr 2013 16:34:07 +1100
-Message-ID: <515A6DCF.1080902@gmail.com>
+Date: Tue, 02 Apr 2013 16:37:36 +1100
+Message-ID: <515A6EA0.1010700@gmail.com>
 References: <1364858565-17192-1-git-send-email-alex@digriz.org.uk>
  <1364858565-17192-3-git-send-email-alex@digriz.org.uk>
+ <515A1A0B.8040803@gmail.com> <20130401234207.GL1953@edkhil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1364858565-17192-3-git-send-email-alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <20130401234207.GL1953@edkhil>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,45 +25,47 @@ To: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
 Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDIvMDQvMTMgMTA6MjIsIEFsZXhhbmRlciBDbG91dGVyIHdyb3RlOgo+IElmIHBsYXRmb3Jt
-X2RhdGEgaXMgbm90IGRlZmluZWQgKGFzIGJlZm9yZSksIHRoZW4gbmFtZWQgbWVtb3J5IGlvCj4g
-cmFuZ2VzIG5lZWQgdG8gYmUgZGVmaW5lZCAoInJ0Y19pbmRleCIgYW5kICJydGNfZGF0YSIpLiAg
-VGhlIGRyaXZlcgo+IHRoZW4gbWFwcyB0aG9zZSByZWdpb25zIGFuZCB1c2VzIHRoZW0gYXMgdGhl
-IFJUQyBpbmRleCBhbmQgZGF0YQo+IGFkZHJlc3Nlcy4KPiAKPiBEb2VzIGNvbXBpbGUgd2l0aCB0
-aGUgZm9sbG93aW5nIHdhcm5pbmdzLCBJIGNhbm5vdCBzZWUgdGhlIGNvZGVwYXRoCj4gYWZmZWN0
-ZWQgbXlzZWxmOgo+IC0tLS0KPiBkcml2ZXJzL3J0Yy9ydGMtbTQ4dDg2LmM6IEluIGZ1bmN0aW9u
-IOKAmG00OHQ4Nl9ydGNfcHJvYmXigJk6Cj4gZHJpdmVycy9ydGMvcnRjLW00OHQ4Ni5jOjE4MDog
-d2FybmluZzog4oCYcmVzX2luZGV44oCZIG1heSBiZSB1c2VkIHVuaW5pdGlhbGl6ZWQgaW4gdGhp
-cyBmdW5jdGlvbgo+IGRyaXZlcnMvcnRjL3J0Yy1tNDh0ODYuYzoxODA6IHdhcm5pbmc6IOKAmHJl
-c19kYXRh4oCZIG1heSBiZSB1c2VkIHVuaW5pdGlhbGl6ZWQgaW4gdGhpcyBmdW5jdGlvbgo+IC0t
-LS0KPiAKPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kZXIgQ2xvdXRlciA8YWxleEBkaWdyaXoub3Jn
-LnVrPgo+IC0tLQo+ICBkcml2ZXJzL3J0Yy9ydGMtbTQ4dDg2LmMgfCAgMjMwICsrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDE3
-MyBpbnNlcnRpb25zKCspLCA1NyBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9ydGMvcnRjLW00OHQ4Ni5jIGIvZHJpdmVycy9ydGMvcnRjLW00OHQ4Ni5jCj4gaW5kZXggMjVl
-MDExNi4uNmY5OWU2NCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL3J0Yy9ydGMtbTQ4dDg2LmMKPiAr
-KysgYi9kcml2ZXJzL3J0Yy9ydGMtbTQ4dDg2LmMKPiBAQCAtMTgsNiArMTgsOCBAQAo+ICAjaW5j
-bHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9y
-bV9kYXRhL3J0Yy1tNDh0ODYuaD4KPiAgI2luY2x1ZGUgPGxpbnV4L2JjZC5oPgo+ICsjaW5jbHVk
-ZSA8bGludXgvc2xhYi5oPgo+ICsjaW5jbHVkZSA8bGludXgvaW8uaD4KPiAgCj4gICNkZWZpbmUg
-TTQ4VDg2X1JFR19TRUMJCTB4MDAKPiAgI2RlZmluZSBNNDhUODZfUkVHX1NFQ0FMUk0JMHgwMQo+
-IEBAIC00MSw0MCArNDMsNzEgQEAKPiAgCj4gICNkZWZpbmUgRFJWX1ZFUlNJT04gIjAuMSIKPiAg
-Cj4gK3N0cnVjdCBtNDh0ODZfcnRjX3ByaXZhdGVfZGF0YSB7Cj4gKwl2b2lkIF9faW9tZW0JCSpp
-b19pbmRleDsKPiArCXZvaWQgX19pb21lbQkJKmlvX2RhdGE7Cj4gKwo+ICsJc3RydWN0IHJ0Y19k
-ZXZpY2UJKnJ0YzsKPiArCXN0cnVjdCBtNDh0ODZfb3BzCSpvcHM7Cj4gK307Cj4gKwo+ICtzdGF0
-aWMgdm9pZCBtNDh0ODZfcnRjX3dyaXRlYnl0ZShzdHJ1Y3QgZGV2aWNlICpkZXYsCj4gKwkJCXVu
-c2lnbmVkIGNoYXIgdmFsdWUsIHVuc2lnbmVkIGxvbmcgYWRkcikKPiArewo+ICsJc3RydWN0IG00
-OHQ4Nl9ydGNfcHJpdmF0ZV9kYXRhICpwcml2ID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4gKwo+
-ICsJaWYgKHByaXYtPm9wcykgewo+ICsJCXByaXYtPm9wcy0+d3JpdGVieXRlKHZhbHVlLCBhZGRy
-KTsKPiArCQlyZXR1cm47Cj4gKwl9Cj4gKwo+ICsJd3JpdGViKGFkZHIsIHByaXYtPmlvX2luZGV4
-KTsKPiArCXdyaXRlYih2YWx1ZSwgcHJpdi0+aW9fZGF0YSk7Cj4gK30KPiArCj4gK3N0YXRpYyB1
-bnNpZ25lZCBjaGFyIG00OHQ4Nl9ydGNfcmVhZGJ5dGUoc3RydWN0IGRldmljZSAqZGV2LAo+ICsJ
-CQl1bnNpZ25lZCBsb25nIGFkZHIpCgpUaGUgcmVhZC93cml0ZWJ5dGUgZnVuY3Rpb25zIHNob3Vs
-ZCByZXR1cm4gYSB1OCBhbmQgdGFrZSBhIHU4IGZvciB0aGUKYWRkcmVzcyAoc2luY2UgeW91IGFy
-ZSB1c2luZyByZWFkYi93cml0ZWIpLiBGb3IgdGhlIHRlbXBvcmFyeSBzdGVwIHdoaWNoCnN0aWxs
-IGhhcyB0aGUgb3BzIHN0cnVjdHVyZSwgeW91IGNhbiBleHBsaWNpdGx5IGNhc3QgYWRkciB0byB1
-bnNpZ25lZApsb25nIGlmIHlvdSB3YW50IHRvIG1ha2UgaXQgb2J2aW91cyB0aGF0IHRoZSBvbGQg
-YXBpIHdhcyBzaWxseS4KCn5SeWFuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUt
-ZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5m
-by9kZXZpY2V0cmVlLWRpc2N1c3MK
+On 02/04/13 10:42, Alexander Clouter wrote:
+> On Tue, Apr 02, 2013 at 10:36:43AM +1100, Ryan Mallon wrote:
+>> On 02/04/13 10:22, Alexander Clouter wrote:
+>>> If platform_data is not defined (as before), then named memory io
+>>> ranges need to be defined ("rtc_index" and "rtc_data").  The driver
+>>> then maps those regions and uses them as the RTC index and data
+>>> addresses.
+>>>
+>>> Does compile with the following warnings, I cannot see the codepath
+>>> affected myself:
+>>> ----
+>>> drivers/rtc/rtc-m48t86.c: In function =91m48t86_rtc_probe=92:
+>>> drivers/rtc/rtc-m48t86.c:180: warning: =91res_index=92 may be used
+>>> uninitialized in this function
+>>> drivers/rtc/rtc-m48t86.c:180: warning: =91res_data=92 may be used
+>>> uninitialized in this function
+>>
+>> It is caused by the exit paths. If pdev->dev.platform_data is set, the
+>> res_index and res_data are never initialised, but in the error case you
+>> still for rtc_device_register you jump to out_io_data, which will then
+>> dereference res_index/res_data. You need to make the exit paths
+>> conditional on pdev->dev.platform_data (or init res_index/data to NULL
+>> and make the release_mem_regions conditional on that).
+> =
+
+> However, the 'goto out_io_data' in the 'IS_ERR(priv->rtc)' is wrapped in
+> a 'if (!pdev->dev.platform_data)', else we jump to out_free.
+
+Ah right, I missed that. In that case, I can't see the problem either :-/.
+
+> =
+
+> I suspect I am probably missing something *too* obvious here for it to
+> click?
+
+It could be gcc being dumb, though this does seem a straight-forward
+enough case for gcc to get it correct. It would be nice to get rid of
+the warning though. Doing:
+
+  struct resource *res_index =3D NULL; /* Avoid GCC warning */
+
+Isn't too costly.
+
+~Ryan
