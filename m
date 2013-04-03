@@ -1,53 +1,37 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH -next] mxs/spi: fix error return code in mxs_spi_probe()
-Date: Wed, 3 Apr 2013 18:37:56 +0100
-Message-ID: <20130403173755.GJ11305@opensource.wolfsonmicro.com>
-References: <CAPgLHd9u8Nhfa-7dp_atXfLb-vRBzdqVbrCbPSd5xMmh2Q5THg@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v9 10/14] ARM: tegra: Define Tegra114 CAR binding
+Date: Wed, 03 Apr 2013 11:55:40 -0600
+Message-ID: <515C6D1C.60503@wwwdotorg.org>
+References: <1365000110-8916-1-git-send-email-pdeschrijver@nvidia.com> <1365000110-8916-10-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Re2uCLPLNzqOLVJA"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPgLHd9u8Nhfa-7dp_atXfLb-vRBzdqVbrCbPSd5xMmh2Q5THg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1365000110-8916-10-git-send-email-pdeschrijver@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>
+Cc: linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Simon Glass <sjg@chromium.org>, Rhyland Klein <rklein@nvidia.com>, Pritesh Raithatha <praithatha@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>, Hiroshi Doyu <hdoyu@nvidia.com>, Laxman Dewangan <ldewangan@nvidia.com>, Andrew Chew <achew@nvidia.com>, Mike Turquette <mturquette@linaro.org>, Thierry Reding <thierry.reding@avionic-design.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 04/03/2013 08:40 AM, Peter De Schrijver wrote:
+> The device tree binding models Tegra114 CAR (Clock And Reset) as a single
+> monolithic clock provider.
 
---Re2uCLPLNzqOLVJA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra114-car.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra114-car.txt
 
-On Wed, Apr 03, 2013 at 09:06:40PM +0800, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->=20
-> Fix to return a negative error code from the error handling
-> case instead of 0, as returned elsewhere in this function.
+> +Mux clocks
+> +
+> +  300	audio0_mux
+> +  301	audio1_mux
+> +  302	audio2_mux
+> +  303	audio3_mux
+> +  304	audio4_mux
+> +  305	spdif_mux
+> +  306	clk_out_1_mux
+> +  307	clk_out_2_mux
+> +  308	clk_out_3_mux
+> +  309	dsia_mux
+> +  310	dsib_mux
 
-Applied, thanks.
-
---Re2uCLPLNzqOLVJA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRXGjsAAoJELSic+t+oim91l8P/0d0WQyespmZGJxLLkIZFG+f
-r4gyoMQXJAglqI0C9yZwThMbCJU2mBMZoqKFiL8EIygGyMQ0+hk/98bkPdhiz6sD
-JWm9ilHz/xLmgnuJjt+WdRVaFdohGRxdlKkLq1iOgPdzSzGvcyJee34xbqaMTHty
-xfIhAT0eYvJJFsYVQPPG7L24ZKFH3jY6lce6Nb04iCEffa/MGeMyufu2pY7OTHjS
-ZOljcKvM1ST6bteiAgimEE7lZIf1OZSpNT4JRUV8j1Me7RuO08CpWb6LXZ8kxoxk
-5ZsTcxcTmjB12mTlapcyPj2QU2ImmgvIY+8Q/WZYyHfGnzWIzu/bWqKYxU7fxNpi
-Zs9VrxGRDqHMF8L8HlU/bbj4+/UQEwpb9ui1DeZavLAJgE+fxMICiuk4OfiBLJuK
-91jiFF1O9CHJApbL2g3t7SQYLFIxliiuUJ7dD5WbUpt+VgW6QImEACUjJv5MsGUi
-5IDBQUhblerE5RjU7WvVaMMTw6D4sfYOBa98wGIKh9Krox7HPBJgQN2UDHlaeX2H
-03GxjrkoQTqswmpnOXBzQw5ylwk0XcQ4OindHGOoiWHALvAZ/kF+f4oADd0HaK4P
-Cq+RlYDQpvs1PQEgHdo86juBdxx132vtiJEk/kkU1ZFP3YpFbE1sZcavHZvzoCG6
-5WLHGCo7q7XGiyIU1++R
-=iEIB
------END PGP SIGNATURE-----
-
---Re2uCLPLNzqOLVJA--
+I think Prashant was expecting those to be removed, and for this series
+to rely on "clk: Add composite clock type" instead?
