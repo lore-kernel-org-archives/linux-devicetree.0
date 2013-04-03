@@ -1,7 +1,7 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH V2 7/7] ARM: dt: create a DT header for the GIC
-Date: Wed,  3 Apr 2013 17:34:58 -0600
-Message-ID: <1365032098-22825-7-git-send-email-swarren@wwwdotorg.org>
+Subject: [PATCH V2 5/7] ARM: dt: add header to define GPIO flags
+Date: Wed,  3 Apr 2013 17:34:56 -0600
+Message-ID: <1365032098-22825-5-git-send-email-swarren@wwwdotorg.org>
 References: <1365032098-22825-1-git-send-email-swarren@wwwdotorg.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1365032098-22825-1-git-send-email-swarren@wwwdotorg.org>
@@ -12,8 +12,8 @@ List-Id: devicetree@vger.kernel.org
 
 From: Stephen Warren <swarren@nvidia.com>
 
-The ARM GIC binding defines a few custom cells and flags for its IRQ
-specifier. Provide names for those.
+Many GPIO device tree bindings use the same flags. Create a header to
+define those.
 
 Signed-off-by: Stephen Warren <swarren@nvidia.com>
 ---
@@ -22,36 +22,29 @@ v1: Moved header. Added include guard.
     (this patch was previously posted separately, hence there are
     changes in v1!)
 ---
- include/dt-bindings/interrupt-controller/arm-gic.h |   22 ++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 include/dt-bindings/interrupt-controller/arm-gic.h
+ include/dt-bindings/gpio/gpio.h |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+ create mode 100644 include/dt-bindings/gpio/gpio.h
 
-diff --git a/include/dt-bindings/interrupt-controller/arm-gic.h b/include/dt-bindings/interrupt-controller/arm-gic.h
+diff --git a/include/dt-bindings/gpio/gpio.h b/include/dt-bindings/gpio/gpio.h
 new file mode 100644
-index 0000000..1ea1b70
+index 0000000..e6b1e0a
 --- /dev/null
-+++ b/include/dt-bindings/interrupt-controller/arm-gic.h
-@@ -0,0 +1,22 @@
++++ b/include/dt-bindings/gpio/gpio.h
+@@ -0,0 +1,15 @@
 +/*
-+ * This header provides constants for the ARM GIC.
++ * This header provides constants for most GPIO bindings.
++ *
++ * Most GPIO bindings include a flags cell as part of the GPIO specifier.
++ * In most cases, the format of the flags cell uses the standard values
++ * defined in this header.
 + */
 +
-+#ifndef _DT_BINDINGS_INTERRUPT_CONTROLLER_ARM_GIC_H
-+#define _DT_BINDINGS_INTERRUPT_CONTROLLER_ARM_GIC_H
++#ifndef _DT_BINDINGS_GPIO_GPIO_H
++#define _DT_BINDINGS_GPIO_GPIO_H
 +
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+/* interrupt specific cell 0 */
-+
-+#define GIC_SPI 0
-+#define GIC_PPI 1
-+
-+/*
-+ * Interrupt specifier cell 2.
-+ * The flaggs in irq.h are valid, plus those below.
-+ */
-+#define GIC_CPU_MASK_RAW(x) ((x) << 8)
-+#define GIC_CPU_MASK_SIMPLE(num) GIC_CPU_MASK_RAW((1 << (num)) - 1)
++#define GPIO_ACTIVE_HIGH 0
++#define GPIO_ACTIVE_LOW 1
 +
 +#endif
 -- 
