@@ -1,69 +1,116 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [RFC 12/12] mipi-csis: Enable all interrupts for fimc-is usage
-Date: Wed, 03 Apr 2013 14:31:11 +0200
-Message-ID: <515C210F.8030806@samsung.com>
-References: <1362754765-2651-1-git-send-email-arun.kk@samsung.com>
- <1362754765-2651-13-git-send-email-arun.kk@samsung.com>
- <513F5171.40603@samsung.com>
- <CALt3h7_zXP9M5m+4VXFGhnfpaUO+6F20hTsnR8ATF8+=CNmcrA@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v5 2/6] usb: phy: omap-usb2: use the new generic PHY framework
+Date: Wed, 3 Apr 2013 18:23:50 +0530
+Message-ID: <1364993634-6378-3-git-send-email-kishon@ti.com>
+References: <1364993634-6378-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <CALt3h7_zXP9M5m+4VXFGhnfpaUO+6F20hTsnR8ATF8+=CNmcrA@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Arun Kumar K <arunkk.samsung@gmail.com>
-Cc: Arun Kumar K <arun.kk@samsung.com>, LMML <linux-media@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, kilyeon.im@samsung.com, shaik.ameer@samsung.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1364993634-6378-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
+Cc: broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arun,
+Used the generic PHY framework API to create the PHY. omap_usb2_suspend
+is split into omap_usb_suspend and omap_usb_resume in order to align
+with the new framework.
 
-On 03/13/2013 05:09 AM, Arun Kumar K wrote:
-> Hi Sylwester,
-> 
->>>
->>>  /* Interrupt mask */
->>>  #define S5PCSIS_INTMSK                       0x10
->>> -#define S5PCSIS_INTMSK_EN_ALL                0xf000103f
->>> +#define S5PCSIS_INTMSK_EN_ALL                0xfc00103f
->>
->> Do you know what interrupts are assigned to the CSIS_INTMSK
->> bits 26, 27 ? In the documentation I have they are marked
->> as reserved. I have tested this patch on Exynos4x12, it seems
->> OK but you might want to merge it to the patch adding compatible
->> property for exynos5.
-> 
-> The bits 26 and 27 are for Frame start and Frame end interrupts.
-> Yes this change can be merged with the MIPI-CSIS support for Exynos5.
-> Shaik will pick it up and merge it along with his patch series in v2.
+However using the old USB PHY library cannot be completely removed
+because OTG is intertwined with PHY and moving to the new framework
+will break OTG. Once we have a separate OTG state machine, we
+can get rid of the USB PHY library.
 
-OK, thanks a lot for the clarification. I tested this patch on
-Exynos4x12 and I could see twice as many interrupts from MIPI-CSIS as
-there was captured frames from the sensor. Certainly we don't want to
-see these interrupts when they are not needed. I have been thinking of
-some interface that the MIPI-CSIS subdev would provide to the media
-driver, so it can enable the interrupts when needed. I suppose a
-private subdev ioctl might be good for that. But first I think there
-is e.g. a subdev flag needed so a subdev driver can decide that it
-doesn't want to have its non-standard ioctls called from user space.
+Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+---
+ drivers/usb/phy/omap-usb2.c |   48 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-I'll see if I can address those issues.
-
->> It would be good to know what these bits are for. And how
->> enabling the interrupts actually help without modifying the
->> interrupt handler ? Is it enough to just acknowledge those
->> interrupts ? Or how it works ?
->>
-> 
-> These interrupts are used by the FIMC-IS firmware possibly to check if the
-> sensor is working. Without enabling these, I get the error from firmware
-> on Sensor Open command.
-
-Hm, interesting... Looks like the MIPI-CSIS interrupts get routed to the
-FIMC-IS GIC. I was also wondering how the FIMC-IS receives Embedded Data
-from the MIPI CSIS IP, which is sent by an image sensor. Presumably
-FIMC-IS can memory map the Embedded Data buffer at the MIPI CSIS internal
-memory, and then it reads from there. It's just a guess though.
-
-Regards,
-Sylwester
+diff --git a/drivers/usb/phy/omap-usb2.c b/drivers/usb/phy/omap-usb2.c
+index 844ab68..4e48db4 100644
+--- a/drivers/usb/phy/omap-usb2.c
++++ b/drivers/usb/phy/omap-usb2.c
+@@ -28,6 +28,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/delay.h>
+ #include <linux/usb/omap_control_usb.h>
++#include <linux/phy/phy.h>
+ 
+ /**
+  * omap_usb2_set_comparator - links the comparator present in the sytem with
+@@ -119,9 +120,49 @@ static int omap_usb2_suspend(struct usb_phy *x, int suspend)
+ 	return 0;
+ }
+ 
++static int omap_usb_suspend(struct phy *x)
++{
++	struct omap_usb *phy = dev_get_drvdata(&x->dev);
++
++	if (!phy->is_suspended) {
++		omap_control_usb_phy_power(phy->control_dev, 0);
++		pm_runtime_put_sync(phy->dev);
++		phy->is_suspended = 1;
++	}
++
++	return 0;
++}
++
++static int omap_usb_resume(struct phy *x)
++{
++	u32 ret;
++	struct omap_usb *phy = dev_get_drvdata(&x->dev);
++
++	if (phy->is_suspended) {
++		ret = pm_runtime_get_sync(phy->dev);
++		if (ret < 0) {
++			dev_err(phy->dev, "get_sync failed with err %d\n",
++									ret);
++			return ret;
++		}
++		omap_control_usb_phy_power(phy->control_dev, 1);
++		phy->is_suspended = 0;
++	}
++
++	return 0;
++}
++
++static struct phy_ops ops = {
++	.suspend	= omap_usb_suspend,
++	.resume		= omap_usb_resume,
++	.of_xlate	= of_phy_xlate,
++	.owner		= THIS_MODULE,
++};
++
+ static int omap_usb2_probe(struct platform_device *pdev)
+ {
+ 	struct omap_usb			*phy;
++	struct phy			*generic_phy;
+ 	struct usb_otg			*otg;
+ 
+ 	phy = devm_kzalloc(&pdev->dev, sizeof(*phy), GFP_KERNEL);
+@@ -144,6 +185,13 @@ static int omap_usb2_probe(struct platform_device *pdev)
+ 	phy->phy.otg		= otg;
+ 	phy->phy.type		= USB_PHY_TYPE_USB2;
+ 
++	generic_phy = devm_phy_create(phy->dev, "omap-usb2", pdev->dev.of_node,
++		USB_PHY_TYPE_USB2, &ops, phy);
++	if (IS_ERR(generic_phy)) {
++		dev_dbg(&pdev->dev, "Failed to create PHY\n");
++		return PTR_ERR(generic_phy);
++	}
++
+ 	phy->control_dev = omap_get_control_dev();
+ 	if (IS_ERR(phy->control_dev)) {
+ 		dev_dbg(&pdev->dev, "Failed to get control device\n");
+-- 
+1.7.10.4
