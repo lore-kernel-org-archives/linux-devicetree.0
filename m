@@ -1,64 +1,38 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: RFC v2: Zynq Clock Controller
-Date: Tue, 02 Apr 2013 17:34:50 -0700
-Message-ID: <20130403003450.8177.2879@quantum>
-References: <27dae808-1d3a-4001-8eb2-b0a6e2a34b8f@AM1EHSMHS013.ehs.local>
- <515093B4.2090701@wwwdotorg.org>
- <8fd7278d-37c5-48ff-8d06-edc64d532a96@VA3EHSMHS037.ehs.local>
- <5150DEB6.7070208@wwwdotorg.org>
- <b810d127-dad8-447c-bf88-8ac715debbff@CO9EHSMHS026.ehs.local>
- <20130327021844.4014.43809@quantum>
- <9b6821a5-8275-427e-a5aa-1bfd8e800d1b@TX2EHSMHS027.ehs.local>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v7 0/5] Add DT support for davinci_mmc driver
+Date: Wed, 3 Apr 2013 09:47:10 +0530
+Message-ID: <515BAD46.8060904@ti.com>
+References: <1364476211-14322-1-git-send-email-prakash.pm@ti.com>
+	<515AAB88.3030406@ti.com> <87wqskx6pd.fsf@octavius.laptop.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <9b6821a5-8275-427e-a5aa-1bfd8e800d1b-8XeO8fnFoNFBP3niSOyP4rjjLBE8jN/0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: =?utf-8?q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, =?utf-8?q?Jan_L=C3=BCbbe?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, git-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Peter Crosthwaite <pcrost-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <87wqskx6pd.fsf-DGHOrqG7t0YzNDMTQreKSUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBTw7ZyZW4gQnJpbmttYW5uICgyMDEzLTAzLTI5IDE1OjM2OjE4KQo+IE9uIFR1ZSwg
-TWFyIDI2LCAyMDEzIGF0IDA3OjE4OjQ0UE0gLTA3MDAsIE1pa2UgVHVycXVldHRlIHdyb3RlOgo+
-ID4gQXMgbG9uZyBhcyBhIGtleSBleGlzdHMgdG8gbGluayB0d28gY2xvY2tzIHRvZ2V0aGVyIHRo
-ZW4gcmVnaXN0cmF0aW9uCj4gPiBvcmRlciBzaG91bGRuJ3QgbWF0dGVyLiAgT3JpZ2luYWxseSB0
-aGlzIGtleSB3YXMgYW4gaW1tdXRhYmxlIGNsayBuYW1lCj4gPiBzdHJpbmcuCj4gPiAKPiA+IElm
-IGNsb2NrIHBhcmVudHMgYXJlIHNwZWNpZmllZCBpbiBEVCB0aGVuIHRoYXQgc2hvdWxkIGFsc28g
-c3VmZmljZSwgaW4KPiA+IHBsYWNlIG9mIGRvaW5nIHN0cmluZyBjb21wYXJpc29ucy4KPiA+IAo+
-ID4gSWYgbm8ga2V5IHRvIHBhaXIgdXAgY2xvY2tzIGV4aXN0cyB0aGVuIHllcyB3ZSB3aWxsIGhh
-dmUgdG8gcmVseSBwdXJlbHkKPiA+IG9uIHRoZSBzdHJ1Y3QgY2xrICpvcGFxdWVfY29va2llIGFu
-ZCByZWdpc3RlciBjbG9ja3MgaW4gb3JkZXIuCj4gT2theSwgc28gSSBndWVzcywgdGhlIGZ1bmRh
-bWVudGFsIG1lY2hhbmlzbXMgc2hvdWxkIGJlIGluIHBsYWNlLiBXaGF0IGlzCj4gbmVlZGVkLCBp
-cyBjaGFuZ2luZyB0aGUga2V5IGZyb20gYmVpbmcgdGhlIGNsayBuYW1lIHRvIHNvbWV0aGluZyBl
-bHNlLgo+IEFuZCBwcmVmZXJhYmx5IHRoaXMgc29tZXRoaW5nIGVsc2UgaXMgbWFkZSB1cCBvZiBz
-b21ldGhpbmcgYXZhaWxhYmxlCj4gdGhyb3VnaCBEVCwgc28gYSBjaGlsZCBjYW4gcmVmZXJlbmNl
-IGl0cyBwYXJlbnQgdy9vIHRoZSBwYXJlbnQgdG8gYmUKPiBwcm9iZWQgZmlyc3QuIEUuZy4gdGhl
-IHByb3ZpZGVyJ3Mgbm9kZSBuYW1lICsgdGhlIGluZGV4IG9mIHRoZSBjbG9jawo+IG91dHB1dD8K
-ClJpZ2h0LCBvcmRlciBzaG91bGRuJ3QgbWF0dGVyIGluIHRoZSBzZW5zZSB0aGF0IHJlZ2lzdGVy
-aW5nIGEgY2hpbGQKYmVmb3JlIGEgcGFyZW50IHNob3VsZCBub3QgY29uc3RpdHV0ZSBhbiBhYnNv
-bHV0ZSBmYWlsdXJlIGZyb20gdGhlIGNsb2NrCmZyYW1ld29yayBwb2ludCBvZiB2aWV3LgoKRm9s
-a3MgdXNpbmcgRFQgdG9kYXkgc3RpbGwgcmVseSBvbiB0aGUgcGFyZW50IHN0cmluZyBuYW1lIHRv
-IGxpbmsgdGhpbmdzCnVwLiAgR3JlcCBhcm91bmQgZm9yIHVzYWdlIG9mIG9mX2Nsa19nZXRfcGFy
-ZW50X25hbWUgdG8gc2VlIGhvdyBzZXZlcmFsCnBsYXRmb3JtcyB1c2UgdGhhdCBkdXJpbmcgcmVn
-aXN0cmF0aW9uLgoKPiBZb3UgbWVudGlvbmVkLCBzb21ldGhpbmcgbGlrZSB0aGlzIHdhcyBzdXBw
-b3NlZCB0byBoYXBwZW4gYW55d2F5LCByaWdodD8KPiBEbyB5b3UgYWxyZWFkeSBoYXZlIHNvbWV0
-aGluZyBzcGVjaWZpYyBpbiBtaW5kL2FyZSB3b3JraW5nIG9uIGEKPiBzb2x1dGlvbj8KPiAKCkkn
-bSBub3QgbG9va2luZyBhdCBpdCBjdXJyZW50bHkuICBJZiBubyBvbmUgZWxzZSBnZXRzIGFyb3Vu
-ZCB0byBpdCB0aGVuCmV2ZW50dWFsbHkgSSB3aWxsLiAgSXQgd291bGQgYmUgbmljZSB0byBub3Qg
-aGF2ZSB0byB1c2UKb2ZfY2xrX2dldF9wYXJlbnRfbmFtZSBhbmQgaW5zdGVhZCBoYXZlIGEgYmV0
-dGVyIHdheSB0byBlc3RhYmxpc2gKcGFyZW50LWNoaWxkIHJlbGF0aW9uc2hpcHMgYXQgY2xvY2sg
-cmVnaXN0cmF0aW9uLXRpbWUgZm9yIERUIGNsb2Nrcy4KClJlZ2FyZHMsCk1pa2UKCj4gICAgICAg
-ICBTw7ZyZW4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMu
-b3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1k
-aXNjdXNzCg==
+On 4/2/2013 9:31 PM, Chris Ball wrote:
+> Hi,
+> 
+> On Tue, Apr 02 2013, Sekhar Nori wrote:
+>> I would like to take this series through DaVinci tree to manage the
+>> dependencies with mach-davinci. I need your ack on the driver part and
+>> the DT binding. Can you please provide your ack?
+> 
+> Acked-by: Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+
+Thanks Chris. I added your Ack to 2/5 and 3/5 which had driver changes.
+
+Regards,
+Sekhar
