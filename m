@@ -1,37 +1,84 @@
-From: Andreas Larson <andreas@gaisler.com>
-Subject: Re: [PATCH v5 1/3] gpio: gpio-generic: Add 16 and 32 bit big endian
- byte order support
-Date: Wed, 03 Apr 2013 09:49:55 +0200
-Message-ID: <515BDF23.9000508@gaisler.com>
-References: <1363355140-28216-1-git-send-email-andreas@gaisler.com> <1363355140-28216-2-git-send-email-andreas@gaisler.com> <20130319004012.GA1004@lizard.gateway.2wire.net> <CACRpkdY6D3hvBm13Y41NTbnAav03guB7LEB4RHnRanFXjj_UJw@mail.gmail.com>
+From: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Query on pinctrl usage for DT nodes
+Date: Wed, 3 Apr 2013 14:46:02 +0530
+Message-ID: <CA+V-a8uiPwsAD--OHFAE=i2ed+-wbXm4p2deZXr92+Zv6GDS1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdY6D3hvBm13Y41NTbnAav03guB7LEB4RHnRanFXjj_UJw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>
-Cc: Anton Vorontsov <anton@enomsg.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2013-03-27 09:58, Linus Walleij wrote:
-> On Tue, Mar 19, 2013 at 1:40 AM, Anton Vorontsov <anton@enomsg.org> wrote:
->> On Fri, Mar 15, 2013 at 02:45:38PM +0100, Andreas Larsson wrote:
->>> There is no general support for 64-bit big endian accesses, so that is
->>> left unsupported.
->>>
->>> Signed-off-by: Andreas Larsson <andreas@gaisler.com>
->>
->> This looks perfect, thanks a lot!
->>
->> Acked-by: Anton Vorontsov <anton@enomsg.org>
->
-> Looks good to me as well, but since this was discussed with Grant
-> I want his review on this before I merge it.
+Hi Linus/Stephen,
 
-I take it that you are happy with the other two patches as well?
+I am working adding  DT nodes for DA850.
 
-Grant, any chance of getting this into the 3.10 merge window?
+Following is the pin control snippet of da850.dtsi:-
 
-Cheers,
-Andreas Larsson
+		pmx_core: pinmux@1c14120 {
+			compatible = "pinctrl-single";
+			reg = <0x14120 0x50>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+			pinctrl-single,bit-per-mux;
+			pinctrl-single,register-width = <32>;
+			pinctrl-single,function-mask = <0xffffffff>;
+			status = "disabled"
+
+                        i2c0_pins: pinmux_i2c0_pins {
+                                pinctrl-single,bits = <
+                                        /* I2C0_SDA,I2C0_SCL */
+                                        0x10 0x00002200 0x0000ff00
+                                >;
+                        };
+                        mdio_pins: pinmux_mdio_pins {
+                                pinctrl-single,bits = <
+                                        /* MDIO_CLK, MDIO_D */
+                                        0x10 0x00000088 0x000000ff
+                                >;
+                        };
+                }
+
+And following is the code snippet for dts:-
+
+		i2c0: i2c@1c22000 {
+			status = "okay";
+			clock-frequency = <100000>;
+			pinctrl-names = "default";
+			pinctrl-0 = <&i2c0_pins>;
+		};
+		mdio: mdio@1e24000 {
+			status = "okay";
+			bus_freq = <2200000>;
+			pinctrl-names = "default";
+              };
+		
+But while booting I see the following boot log:-
+...
+cpuidle: using governor menu
+TCP: cubic registered
+NET: Registered protocol family 17
+pinctrl-single 1c14120.pinmux: pin 1c14130 already requested by
+davinci_mdio.0; cannot claim for i2c_davinci.1
+pinctrl-single 1c14120.pinmux: pin-4 (i2c_davinci.1) status -22
+pinctrl-single 1c14120.pinmux: could not request pin 4 on device pinctrl-single
+console [netcon0] enabled
+....
+
+This is because the mdio and i2c are using same pin 0x10, Is there any
+alternative way to handle if the two node's are using same pins any
+pointers could be very much helpful ?
+
+Regards,
+--Prabhakar
