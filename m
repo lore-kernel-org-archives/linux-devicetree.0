@@ -1,32 +1,49 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v9 12/14] clk: tegra: devicetree match for nvidia,
- tegra114-car
-Date: Wed, 03 Apr 2013 12:10:11 -0600
-Message-ID: <515C7083.9070702@wwwdotorg.org>
-References: <1365000110-8916-1-git-send-email-pdeschrijver@nvidia.com>
- <1365000110-8916-13-git-send-email-pdeschrijver@nvidia.com>
+Subject: Re: [PATCH v9 00/14] Tegra114 clockframework
+Date: Wed, 03 Apr 2013 12:27:33 -0600
+Message-ID: <515C7495.8060106@wwwdotorg.org>
+References: <1365000110-8916-1-git-send-email-pdeschrijver@nvidia.com> <515C6C6E.6060302@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365000110-8916-13-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <515C6C6E.6060302-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andrew Chew <achew-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/03/2013 08:40 AM, Peter De Schrijver wrote:
-> Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On 04/03/2013 11:52 AM, Stephen Warren wrote:
+> On 04/03/2013 08:40 AM, Peter De Schrijver wrote:
+>> This is the nineth version of the Tegra114 clockframework. It is based on the
+>> next-20130320-fixed branch of
+>> git://nv-tegra.nvidia.com/user/swarren/linux-2.6.git,
+... [it depends on]
+>> http://patchwork.ozlabs.org/patch/233415/
+> 
+> That is Joseph's "clocksource: tegra: enable arch_timer". Is this
+> actually a dependency, or an optimization, or ...?
+> 
+> Rob Herring objected to that patch since it isn't necessary if his
+> series "ARM arch, sp804 and integrator timer CLKSRC_OF support" is applied.
+> 
+> If I apply just your (Peter's) CCF series without Joseph's or Rob's
+> patches, will everything still work, or is this a hard dependency to
+> create a working system?
 
-I see this patch does depend on my "clk: tegra: defer application of
-init table", although my patch was based on top of this series so needs
-to be adjusted to remove the Tegra114 portions so it can be applied first.
+I manage to get this series applied on top of my local dev branch, based
+on next-20130328 (it was painful). Testing indicates that there is no
+dependency on Joseph's patch mentioned above; I could boot, log in, and
+play audio (with local patches) with /or/ without Joseph's patch applied.
+
+However, I still find that I need to revert f7db706 ARM: "7674/1: smp:
+Avoid dummy clockevent being preferred over real hardware clock-event",
+or I get a hard system hang right after the root fs is mounted. As such,
+I not sure if it's worthwhile applying this series since it's unlikely
+to actually work once merged into Torvalds' tree.
+
+Do you have any idea what the problem is here?
+
+I'll try rebasing my local test branch on top of the latest linux-next
+just in case some other fix solved this already, but I'm not going to
+hold my breath.
