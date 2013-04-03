@@ -1,242 +1,54 @@
-From: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V6 3/9] ARM: dt: tegra: add bindings of power management configurations for PMC
-Date: Wed, 3 Apr 2013 19:31:46 +0800
-Message-ID: <1364988712-24797-4-git-send-email-josephl@nvidia.com>
-References: <1364988712-24797-1-git-send-email-josephl@nvidia.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v9 0/9] DMA Engine support for AM33XX
+Date: Wed, 3 Apr 2013 17:15:54 +0530
+Message-ID: <515C1672.4060000@ti.com>
+References: <1362586540-10393-1-git-send-email-mporter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1364988712-24797-1-git-send-email-josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1362586540-10393-1-git-send-email-mporter-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
+Cc: Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The PMC mostly controls the entry and exit of the system from different
-sleep modes. Different platform or system may have different configurations.
-The power management configurations of PMC is represented as some properties.
-The system needs to define the properties when the system supports deep sleep
-mode (i.e. suspend).
+Hi Matt,
 
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Signed-off-by: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-V6:
-* no change
-V5:
-* fix typos
-V4:
-* no change
-V3:
-* fix typos
-V2:
-* squash the patches that defined the PM bindings for PMC and the
-  implementation
-* replace the "unsigned long" with "u32" for the variables that are parsed
-  from DT
----
- .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 38 ++++++++++
- arch/arm/mach-tegra/pmc.c                          | 83 ++++++++++++++++++++++
- arch/arm/mach-tegra/pmc.h                          |  8 +++
- 3 files changed, 129 insertions(+)
+On 3/6/2013 9:45 PM, Matt Porter wrote:
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
-index ee529b1..1608a54 100644
---- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
-+++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
-@@ -1,5 +1,9 @@
- NVIDIA Tegra Power Management Controller (PMC)
- 
-+The PMC block interacts with an external Power Management Unit. The PMC
-+mostly controls the entry and exit of the system from different sleep
-+modes. It provides power-gating controllers for SoC and CPU power-islands.
-+
- Required properties:
- - name : Should be pmc
- - compatible : Should contain "nvidia,tegra<chip>-pmc".
-@@ -15,6 +19,32 @@ Optional properties:
-   signal is fed into the PMC. This signal is optionally inverted, and then
-   fed into the ARM GIC. The PMC is not involved in the detection or
-   handling of this interrupt signal, merely its inversion.
-+- nvidia,suspend-mode : The suspend mode that the platform should use.
-+  Valid values are 0, 1 and 2:
-+  0 (LP0): CPU + Core voltage off and DRAM in self-refresh
-+  1 (LP1): CPU voltage off and DRAM in self-refresh
-+  2 (LP2): CPU voltage off
-+- nvidia,core-power-req-active-high : Boolean, core power request active-high
-+- nvidia,sys-clock-req-active-high : Boolean, system clock request active-high
-+- nvidia,combined-power-req : Boolean, combined power request for CPU & Core
-+- nvidia,cpu-pwr-good-en : Boolean, CPU power good signal (from PMIC to PMC)
-+			   is enabled.
-+
-+Required properties when nvidia,suspend-mode is specified:
-+- nvidia,cpu-pwr-good-time : CPU power good time in uS.
-+- nvidia,cpu-pwr-off-time : CPU power off time in uS.
-+- nvidia,core-pwr-good-time : <Oscillator-stable-time Power-stable-time>
-+			      Core power good time in uS.
-+- nvidia,core-pwr-off-time : Core power off time in uS.
-+
-+Required properties when nvidia,suspend-mode=<0>:
-+- nvidia,lp0-vec : <start length> Starting address and length of LP0 vector
-+  The LP0 vector contains the warm boot code that is executed by AVP when
-+  resuming from the LP0 state. The AVP (Audio-Video Processor) is an ARM7
-+  processor and always being the first boot processor when chip is power on
-+  or resume from deep sleep mode. When the system is resumed from the deep
-+  sleep mode, the warm boot code will restore some PLLs, clocks and then
-+  bring up CPU0 for resuming the system.
- 
- Example:
- 
-@@ -25,6 +55,14 @@ pmc@7000f400 {
- 	clocks = <&tegra_car 110>, <&clk32k_in>;
- 	clock-names = "pclk", "clk32k_in";
- 	nvidia,invert-interrupt;
-+	nvidia,suspend-mode = <1>;
-+	nvidia,cpu-pwr-good-time = <2000>;
-+	nvidia,cpu-pwr-off-time = <100>;
-+	nvidia,core-pwr-good-time = <3845 3845>;
-+	nvidia,core-pwr-off-time = <458>;
-+	nvidia,core-power-req-active-high;
-+	nvidia,sys-clock-req-active-high;
-+	nvidia,lp0-vec = <0xbdffd000 0x2000>;
- };
- 
- / Tegra board dts file
-diff --git a/arch/arm/mach-tegra/pmc.c b/arch/arm/mach-tegra/pmc.c
-index faa33e8..e896826 100644
---- a/arch/arm/mach-tegra/pmc.c
-+++ b/arch/arm/mach-tegra/pmc.c
-@@ -21,6 +21,8 @@
- #include <linux/of.h>
- #include <linux/of_address.h>
- 
-+#include "pmc.h"
-+
- #define PMC_CTRL			0x0
- #define PMC_CTRL_INTR_LOW		(1 << 17)
- #define PMC_PWRGATE_TOGGLE		0x30
-@@ -49,6 +51,22 @@ static void __iomem *tegra_pmc_base;
- static bool tegra_pmc_invert_interrupt;
- static struct clk *tegra_pclk;
- 
-+struct pmc_pm_data {
-+	u32 cpu_good_time;	/* CPU power good time in uS */
-+	u32 cpu_off_time;	/* CPU power off time in uS */
-+	u32 core_osc_time;	/* Core power good osc time in uS */
-+	u32 core_pmu_time;	/* Core power good pmu time in uS */
-+	u32 core_off_time;	/* Core power off time in uS */
-+	bool corereq_high;	/* Core power request active-high */
-+	bool sysclkreq_high;	/* System clock request active-high */
-+	bool combined_req;	/* Combined pwr req for CPU & Core */
-+	bool cpu_pwr_good_en;	/* CPU power good signal is enabled */
-+	u32 lp0_vec_phy_addr;	/* The phy addr of LP0 warm boot code */
-+	u32 lp0_vec_size;	/* The size of LP0 warm boot code */
-+	enum tegra_suspend_mode suspend_mode;
-+};
-+static struct pmc_pm_data pmc_pm_data;
-+
- static inline u32 tegra_pmc_readl(u32 reg)
- {
- 	return readl(tegra_pmc_base + reg);
-@@ -176,6 +194,10 @@ static const struct of_device_id matches[] __initconst = {
- static void tegra_pmc_parse_dt(void)
- {
- 	struct device_node *np;
-+	u32 prop;
-+	enum tegra_suspend_mode suspend_mode;
-+	u32 core_good_time[2] = {0, 0};
-+	u32 lp0_vec[2] = {0, 0};
- 
- 	np = of_find_matching_node(NULL, matches);
- 	BUG_ON(!np);
-@@ -186,6 +208,67 @@ static void tegra_pmc_parse_dt(void)
- 				     "nvidia,invert-interrupt");
- 	tegra_pclk = of_clk_get_by_name(np, "pclk");
- 	WARN_ON(IS_ERR(tegra_pclk));
-+
-+	/* Grabbing the power management configurations */
-+	if (of_property_read_u32(np, "nvidia,suspend-mode", &prop)) {
-+		suspend_mode = TEGRA_SUSPEND_NONE;
-+	} else {
-+		switch (prop) {
-+		case 0:
-+			suspend_mode = TEGRA_SUSPEND_LP0;
-+			break;
-+		case 1:
-+			suspend_mode = TEGRA_SUSPEND_LP1;
-+			break;
-+		case 2:
-+			suspend_mode = TEGRA_SUSPEND_LP2;
-+			break;
-+		default:
-+			suspend_mode = TEGRA_SUSPEND_NONE;
-+			break;
-+		}
-+	}
-+
-+	if (of_property_read_u32(np, "nvidia,cpu-pwr-good-time", &prop))
-+		suspend_mode = TEGRA_SUSPEND_NONE;
-+	pmc_pm_data.cpu_good_time = prop;
-+
-+	if (of_property_read_u32(np, "nvidia,cpu-pwr-off-time", &prop))
-+		suspend_mode = TEGRA_SUSPEND_NONE;
-+	pmc_pm_data.cpu_off_time = prop;
-+
-+	if (of_property_read_u32_array(np, "nvidia,core-pwr-good-time",
-+			core_good_time, ARRAY_SIZE(core_good_time)))
-+		suspend_mode = TEGRA_SUSPEND_NONE;
-+	pmc_pm_data.core_osc_time = core_good_time[0];
-+	pmc_pm_data.core_pmu_time = core_good_time[1];
-+
-+	if (of_property_read_u32(np, "nvidia,core-pwr-off-time",
-+				 &prop))
-+		suspend_mode = TEGRA_SUSPEND_NONE;
-+	pmc_pm_data.core_off_time = prop;
-+
-+	pmc_pm_data.corereq_high = of_property_read_bool(np,
-+				"nvidia,core-power-req-active-high");
-+
-+	pmc_pm_data.sysclkreq_high = of_property_read_bool(np,
-+				"nvidia,sys-clock-req-active-high");
-+
-+	pmc_pm_data.combined_req = of_property_read_bool(np,
-+				"nvidia,combined-power-req");
-+
-+	pmc_pm_data.cpu_pwr_good_en = of_property_read_bool(np,
-+				"nvidia,cpu-pwr-good-en");
-+
-+	if (of_property_read_u32_array(np, "nvidia,lp0-vec", lp0_vec,
-+				       ARRAY_SIZE(lp0_vec)))
-+		if (suspend_mode == TEGRA_SUSPEND_LP0)
-+			suspend_mode = TEGRA_SUSPEND_LP1;
-+
-+	pmc_pm_data.lp0_vec_phy_addr = lp0_vec[0];
-+	pmc_pm_data.lp0_vec_size = lp0_vec[1];
-+
-+	pmc_pm_data.suspend_mode = suspend_mode;
- }
- 
- void __init tegra_pmc_init(void)
-diff --git a/arch/arm/mach-tegra/pmc.h b/arch/arm/mach-tegra/pmc.h
-index 22f16c9..6bc0fc09 100644
---- a/arch/arm/mach-tegra/pmc.h
-+++ b/arch/arm/mach-tegra/pmc.h
-@@ -18,6 +18,14 @@
- #ifndef __MACH_TEGRA_PMC_H
- #define __MACH_TEGRA_PMC_H
- 
-+enum tegra_suspend_mode {
-+	TEGRA_SUSPEND_NONE = 0,
-+	TEGRA_SUSPEND_LP2,	/* CPU voltage off */
-+	TEGRA_SUSPEND_LP1,	/* CPU voltage off, DRAM self-refresh */
-+	TEGRA_SUSPEND_LP0,      /* CPU + core voltage off, DRAM self-refresh */
-+	TEGRA_MAX_SUSPEND_MODE,
-+};
-+
- #ifdef CONFIG_PM_SLEEP
- void set_power_timers(unsigned long us_on, unsigned long us_off);
- #endif
--- 
-1.8.2
+> This series adds DMA Engine support for AM33xx, which uses
+> an EDMA DMAC. The EDMA DMAC has been previously supported by only
+> a private API implementation (much like the situation with OMAP
+> DMA) found on the DaVinci family of SoCs.
+
+> Matt Porter (9):
+>   ARM: davinci: move private EDMA API to arm/common
+>   ARM: edma: remove unused transfer controller handlers
+
+If you are going to be late in re-spinning the entire series in time for
+v3.10, then I suggest I queue the first two patches through davinci tree
+for v3.10 and then you can work on rest of patches for next (v3.11)
+merge window.
+
+Let me know what you think.
+
+>   ARM: edma: add AM33XX support to the private EDMA API
+>   dmaengine: edma: enable build for AM33XX
+>   dmaengine: edma: Add TI EDMA device tree binding
+>   ARM: dts: add AM33XX EDMA support
+>   spi: omap2-mcspi: convert to dma_request_slave_channel_compat()
+>   spi: omap2-mcspi: add generic DMA request support to the DT binding
+>   ARM: dts: add AM33XX SPI DMA support
+
+Thanks,
+Sekhar
