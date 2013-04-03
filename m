@@ -1,90 +1,53 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: Query on pinctrl usage for DT nodes
-Date: Wed, 03 Apr 2013 10:44:38 -0600
-Message-ID: <515C5C76.3080009@wwwdotorg.org>
-References: <CA+V-a8uiPwsAD--OHFAE=i2ed+-wbXm4p2deZXr92+Zv6GDS1w@mail.gmail.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH -next] mxs/spi: fix error return code in mxs_spi_probe()
+Date: Wed, 3 Apr 2013 18:37:56 +0100
+Message-ID: <20130403173755.GJ11305@opensource.wolfsonmicro.com>
+References: <CAPgLHd9u8Nhfa-7dp_atXfLb-vRBzdqVbrCbPSd5xMmh2Q5THg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CA+V-a8uiPwsAD--OHFAE=i2ed+-wbXm4p2deZXr92+Zv6GDS1w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Re2uCLPLNzqOLVJA"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPgLHd9u8Nhfa-7dp_atXfLb-vRBzdqVbrCbPSd5xMmh2Q5THg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wei Yongjun <weiyj.lk@gmail.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/03/2013 03:16 AM, Prabhakar Lad wrote:
-> Hi Linus/Stephen,
-> 
-> I am working adding  DT nodes for DA850.
-> 
-> Following is the pin control snippet of da850.dtsi:-
-> 
-> 		pmx_core: pinmux@1c14120 {
-...
->                         i2c0_pins: pinmux_i2c0_pins {
->                                 pinctrl-single,bits = <
->                                         /* I2C0_SDA,I2C0_SCL */
->                                         0x10 0x00002200 0x0000ff00
->                                 >;
->                         };
->                         mdio_pins: pinmux_mdio_pins {
->                                 pinctrl-single,bits = <
->                                         /* MDIO_CLK, MDIO_D */
->                                         0x10 0x00000088 0x000000ff
->                                 >;
->                         };
->                 }
-> 
-> And following is the code snippet for dts:-
-> 
-> 		i2c0: i2c@1c22000 {
-> 			status = "okay";
-> 			clock-frequency = <100000>;
-> 			pinctrl-names = "default";
-> 			pinctrl-0 = <&i2c0_pins>;
-> 		};
-> 		mdio: mdio@1e24000 {
-> 			status = "okay";
-> 			bus_freq = <2200000>;
-> 			pinctrl-names = "default";
 
-I assume there's also the following there:
+--Re2uCLPLNzqOLVJA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-			pinctrl-0 = <&mdio_pins>;
+On Wed, Apr 03, 2013 at 09:06:40PM +0800, Wei Yongjun wrote:
+> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+>=20
+> Fix to return a negative error code from the error handling
+> case instead of 0, as returned elsewhere in this function.
 
->               };
-> 		
-> But while booting I see the following boot log:-
-> ...
-> cpuidle: using governor menu
-> TCP: cubic registered
-> NET: Registered protocol family 17
-> pinctrl-single 1c14120.pinmux: pin 1c14130 already requested by
-> davinci_mdio.0; cannot claim for i2c_davinci.1
-> pinctrl-single 1c14120.pinmux: pin-4 (i2c_davinci.1) status -22
-> pinctrl-single 1c14120.pinmux: could not request pin 4 on device pinctrl-single
-> console [netcon0] enabled
-> ....
-> 
-> This is because the mdio and i2c are using same pin 0x10,
+Applied, thanks.
 
-How can two devices use the same pin? I mean physically, in hardware?
+--Re2uCLPLNzqOLVJA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Is this because pinctrl-single uses the register address as the pin
-number, whereas you have registers which configure multiple pins at
-once? If so, your hardware isn't something that can be represented by
-pinctrl-single.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-> Is there any
-> alternative way to handle if the two node's are using same pins any
-> pointers could be very much helpful ?
+iQIcBAEBAgAGBQJRXGjsAAoJELSic+t+oim91l8P/0d0WQyespmZGJxLLkIZFG+f
+r4gyoMQXJAglqI0C9yZwThMbCJU2mBMZoqKFiL8EIygGyMQ0+hk/98bkPdhiz6sD
+JWm9ilHz/xLmgnuJjt+WdRVaFdohGRxdlKkLq1iOgPdzSzGvcyJee34xbqaMTHty
+xfIhAT0eYvJJFsYVQPPG7L24ZKFH3jY6lce6Nb04iCEffa/MGeMyufu2pY7OTHjS
+ZOljcKvM1ST6bteiAgimEE7lZIf1OZSpNT4JRUV8j1Me7RuO08CpWb6LXZ8kxoxk
+5ZsTcxcTmjB12mTlapcyPj2QU2ImmgvIY+8Q/WZYyHfGnzWIzu/bWqKYxU7fxNpi
+Zs9VrxGRDqHMF8L8HlU/bbj4+/UQEwpb9ui1DeZavLAJgE+fxMICiuk4OfiBLJuK
+91jiFF1O9CHJApbL2g3t7SQYLFIxliiuUJ7dD5WbUpt+VgW6QImEACUjJv5MsGUi
+5IDBQUhblerE5RjU7WvVaMMTw6D4sfYOBa98wGIKh9Krox7HPBJgQN2UDHlaeX2H
+03GxjrkoQTqswmpnOXBzQw5ylwk0XcQ4OindHGOoiWHALvAZ/kF+f4oADd0HaK4P
+Cq+RlYDQpvs1PQEgHdo86juBdxx132vtiJEk/kkU1ZFP3YpFbE1sZcavHZvzoCG6
+5WLHGCo7q7XGiyIU1++R
+=iEIB
+-----END PGP SIGNATURE-----
+
+--Re2uCLPLNzqOLVJA--
