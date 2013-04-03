@@ -1,74 +1,87 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v9 00/14] Tegra114 clockframework
-Date: Wed, 03 Apr 2013 17:23:05 -0600
-Message-ID: <515CB9D9.90303@wwwdotorg.org>
-References: <1365000110-8916-1-git-send-email-pdeschrijver@nvidia.com> <515C6C6E.6060302@wwwdotorg.org> <515C7495.8060106@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <515C7495.8060106-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andrew Chew <achew-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH V2 1/7] kbuild: create an "include chroot" for DT bindings
+Date: Wed,  3 Apr 2013 17:34:52 -0600
+Message-ID: <1365032098-22825-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Michal Marek <mmarek@suse.cz>, Grant Likely <glikely@secretlab.ca>, Rob Herring <robherring2@gmail.com>
+Cc: arm@kernel.org, Shawn Guo <shawn.guo@linaro.org>, Hiroshi Doyu <hdoyu@nvidia.com>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/03/2013 12:27 PM, Stephen Warren wrote:
-> On 04/03/2013 11:52 AM, Stephen Warren wrote:
->> On 04/03/2013 08:40 AM, Peter De Schrijver wrote:
->>> This is the nineth version of the Tegra114 clockframework. It is based on the
->>> next-20130320-fixed branch of
->>> git://nv-tegra.nvidia.com/user/swarren/linux-2.6.git,
-> ... [it depends on]
->>> http://patchwork.ozlabs.org/patch/233415/
->>
->> That is Joseph's "clocksource: tegra: enable arch_timer". Is this
->> actually a dependency, or an optimization, or ...?
->>
->> Rob Herring objected to that patch since it isn't necessary if his
->> series "ARM arch, sp804 and integrator timer CLKSRC_OF support" is applied.
->>
->> If I apply just your (Peter's) CCF series without Joseph's or Rob's
->> patches, will everything still work, or is this a hard dependency to
->> create a working system?
-> 
-> I manage to get this series applied on top of my local dev branch, based
-> on next-20130328 (it was painful). Testing indicates that there is no
-> dependency on Joseph's patch mentioned above; I could boot, log in, and
-> play audio (with local patches) with /or/ without Joseph's patch applied.
-> 
-> However, I still find that I need to revert f7db706 ARM: "7674/1: smp:
-> Avoid dummy clockevent being preferred over real hardware clock-event",
-> or I get a hard system hang right after the root fs is mounted. As such,
-> I not sure if it's worthwhile applying this series since it's unlikely
-> to actually work once merged into Torvalds' tree.
-> 
-> Do you have any idea what the problem is here?
-> 
-> I'll try rebasing my local test branch on top of the latest linux-next
-> just in case some other fix solved this already, but I'm not going to
-> hold my breath.
+From: Stephen Warren <swarren@nvidia.com>
 
-I've found the problem. My bootloader wasn't initializing the TSC and
-hence I guess it wasn't working properly, even with Joseph's patch to
-add a call to the initialization function.
+The recent dtc+cpp support allows header files and C pre-processor
+defines/macros to be used when compiling device tree files. These
+headers will typically define various constants that are part of the
+device tree bindings.
 
-So, if I:
+The original patch which set up the dtc+cpp include path only considered
+using those headers from device tree files. However, most are also
+useful for kernel code which needs to interpret the device tree.
 
-a) Fix my bootloader to enable TSC.
+In both the DT files and the kernel, I'd like to include the DT-related
+headers in the same way, for example, <dt-bindings/gpio/tegra-gpio.h>.
+That will simplify any text which discusses the DT header locations.
 
-b) Merge Rob's patch series to enable the TSC. This is needed rather
-than Joseph's patch since the two conflict, and I assume that Rob's
-patch is going into 3.10.
+Creating a <dt-bindings/> for kernel source to use is as simple as
+placing files into include/dt-bindings/.
 
-c) Undo my local revert of "ARM: 7674/1: smp: Avoid dummy clockevent
-being preferred over real hardware clock-event".
+However, when compiling DT files, the include path should be restricted
+so that only the dt-bindings path is available; arbitrary kernel headers
+shouldn't be exposed. For this reason, create a specific include
+directory for use by dtc+cpp, and symlink dt-bindings from there to the
+actual location of include/dt-bindings/. For want of a better location,
+place this "include chroot" into the existing dts/ directory.
 
-... then everything now works.
+arch/*/boot/dts/include/dt-bindings -> ../../../../../include/dt-bindings
 
-So the only remaining issues are:
+Some headers used by device tree files may not be useful to the kernel;
+they may be used simply to aid in constructing the DT file (e.g. macros
+to create a node), but not define any information that the kernel needs
+to share. These may be placed directly into arch/*/boot/dts/ along with
+the DT files themselves.
 
-1) Should the mux clocks still be defined in the binding document?
-Prashant didn't seem to think so.
+Cc: Shawn Guo <shawn.guo@linaro.org>
+Cc: Hiroshi Doyu <hdoyu@nvidia.com>
+Acked-by: Michal Marek <mmarek@suse.cz>
+Acked-by: Shawn Guo <shawn.guo@linaro.org>
+Acked-by: Rob Herring <rob.herring@calxeda.com>
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+Grant, Rob, Michal, I'm hoping for acks or comments from you so this
+series can be placed into a topic branch in the arm-soc repo, for others
+to build on during the 3.10 kernel cycle. Thanks.
 
-2) I need Mike's ack to apply this series to the Tegra tree.
+This first patch was previously posted separately as V2. I'm including
+it here to keep it with the whole series. I hope this series can be
+applied as a topic branch in arm-soc.
+---
+ arch/arm/boot/dts/include/dt-bindings |    1 +
+ scripts/Makefile.lib                  |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+ create mode 120000 arch/arm/boot/dts/include/dt-bindings
+
+diff --git a/arch/arm/boot/dts/include/dt-bindings b/arch/arm/boot/dts/include/dt-bindings
+new file mode 120000
+index 0000000..08c00e4
+--- /dev/null
++++ b/arch/arm/boot/dts/include/dt-bindings
+@@ -0,0 +1 @@
++../../../../../include/dt-bindings
+\ No newline at end of file
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 07125e6..af35521 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -158,7 +158,7 @@ ld_flags       = $(LDFLAGS) $(ldflags-y)
+ 
+ dtc_cpp_flags  = -Wp,-MD,$(depfile) -nostdinc                            \
+ 		 -I$(srctree)/arch/$(SRCARCH)/boot/dts                   \
+-		 -I$(srctree)/arch/$(SRCARCH)/include/dts                \
++		 -I$(srctree)/arch/$(SRCARCH)/boot/dts/include           \
+ 		 -undef -D__DTS__
+ 
+ # Finds the multi-part object the current object will be linked into
+-- 
+1.7.10.4
+
