@@ -1,50 +1,60 @@
-From: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH 2/4] ARM: kirkwood: add device node entries for the gigabit
- interfaces
-Date: Wed, 03 Apr 2013 11:27:02 +0200
-Message-ID: <515BF5E6.5040703@openwrt.org>
-References: <1364580879-4297-1-git-send-email-florian@openwrt.org>
- <1364580879-4297-3-git-send-email-florian@openwrt.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [RFC PATCHv1 2/5] bus: mvebu: fix mistake in PCIe window target
+ attribute for Kirkwood
+Date: Wed, 3 Apr 2013 12:52:47 +0200
+Message-ID: <20130403125247.5914a862@skate>
+References: <1364407504-13524-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1364407504-13524-3-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1364580879-4297-3-git-send-email-florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: moinejf-GANU6spQydw@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, buytenh-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1364407504-13524-3-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Olof Johansson <olof@lixom.net>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Andrew Murray <andrew.murray@arm.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org, Mitch Bradley <wmb@firmworks.com>
 List-Id: devicetree@vger.kernel.org
 
-TGUgMDMvMjkvMTMgMTk6MTQsIEZsb3JpYW4gRmFpbmVsbGkgYSDDqWNyaXQgOgo+IFRoaXMgcGF0
-Y2ggbW9kaWZpZXMga2lya3dvb2QuZHRzaSB0byBzcGVjaWZ5IHRoZSB2YXJpb3VzIGdpZ2FiaXQK
-PiBpbnRlcmZhY2VzIG5vZGVzIGF2YWlsYWJsZSBvbiBraXJrd29vZCBkZXZpY2VzLiBUaGV5IGFy
-ZSBkaXNhYmxlZCBieQo+IGRlZmF1bHQgYW5kIHNob3VsZCBiZSBlbmFibGVkIG9uIGEgcGVyLWJv
-YXJkIGJhc2lzLiBlZ2lnYTAgYW5kIGVnaWdhMQo+IGFsaWFzZXMgYXJlIGRlZmluZWQgZm9yIGNv
-bnZlbmllbmNlLiBUaGUgbWRpbyBub2RlIGlzIGFsc28gcHJlc2VudCBhbmQKPiBzaG91bGQgYmUg
-ZW5hYmxlZCBvbiBhIHBlci1ib2FyZCBiYXNpcyBhcyB3ZWxsLgo+Cj4gU2lnbmVkLW9mZi1ieTog
-RmxvcmlhbiBGYWluZWxsaSA8ZmxvcmlhbkBvcGVud3J0Lm9yZz4KPiAtLS0KCltzbmlwXQoKPiAr
-Cj4gKwkJZXRoZXJuZXQtZ3JvdXBANzAwMDAgewoKVGhpcyBvbmUgaXMgb2ZmLWJ5IDB4MjAwMCBh
-bmQgc2hvdWxkIGhhdmUgYmVlbiA3MjAwMAoKPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4g
-KwkJCSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQljb21wYXRpYmxlID0gIm1hcnZlbGwsbXY2NDN4
-eC1ldGgtYmxvY2siOwo+ICsJCQlyZWcgPSA8MHg3MDAwMCAweDQwMDA+OwoKU2FtZSBoZXJlCgo+
-ICsJCQl0eC1jc3VtLWxpbWl0ID0gPDE2MDA+Owo+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+
-ICsKPiArCQkJZWdpZ2EwOiBlZ2lnYTBAMCB7Cj4gKwkJCQlkZXZpY2VfdHlwZSA9ICJuZXR3b3Jr
-IjsKPiArCQkJCWNvbXBhdGlibGUgPSAibWFydmVsbCxtdjY0M3h4LWV0aCI7Cj4gKwkJCQlyZWcg
-PSA8MD47Cj4gKwkJCQlpbnRlcnJ1cHRzID0gPDExPjsKPiArCQkJCWNsb2NrcyA9IDwmZ2F0ZV9j
-bGsgMD47Cj4gKwkJCQljbG9jay1uYW1lcyA9ICIwIjsKPiArCQkJfTsKPiArCQl9Owo+ICsKPiAr
-CQlldGhlcm5ldC1ncm91cEA3NDAwMCB7CgpBbmQgaGVyZSwgaXQgc2hvdWxkIGJlIDc2MDAwCgo+
-ICsJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwkJ
-CWNvbXBhdGlibGUgPSAibWFydmVsbCxtdjY0M3h4LWV0aC1ibG9jayI7Cj4gKwkJCXJlZyA9IDww
-eDc0MDAwIDB4NDAwMD47CgpBbmQgaGVyZSB0b28uCi0tCkZsb3JpYW4KX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxp
-bmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3Rz
-Lm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+Jason (Cooper),
+
+Do you mind taking this patch in your mvebu/drivers branch, next to the
+patch adding the mvebu-mbus driver? Or do you want a new mvebu-mbus
+driver patch that contains this fix and would replace the one you have
+already merged in mvebu/drivers?
+
+Thanks!
+
+Thomas
+
+On Wed, 27 Mar 2013 19:05:01 +0100, Thomas Petazzoni wrote:
+> The target and attributes for the PCIe address decoding windows were
+> not correct on Kirkwood for the second PCIe interface.
+> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> ---
+> Note: this patch should be merged with the existing mvebu-mbus driver.
+> ---
+>  drivers/bus/mvebu-mbus.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/bus/mvebu-mbus.c b/drivers/bus/mvebu-mbus.c
+> index 586d03e..4de2c6b 100644
+> --- a/drivers/bus/mvebu-mbus.c
+> +++ b/drivers/bus/mvebu-mbus.c
+> @@ -626,7 +626,7 @@ static const struct mvebu_mbus_soc_data armada_xp_mbus_data = {
+>  
+>  static const struct mvebu_mbus_mapping kirkwood_map[] = {
+>  	MAPDEF("pcie0.0", 4, 0xe0, MAPDEF_PCIMASK),
+> -	MAPDEF("pcie1.0", 8, 0xe0, MAPDEF_PCIMASK),
+> +	MAPDEF("pcie1.0", 4, 0xd0, MAPDEF_PCIMASK),
+>  	MAPDEF("sram",    3, 0x01, MAPDEF_NOMASK),
+>  	MAPDEF("nand",    1, 0x2f, MAPDEF_NOMASK),
+>  	{},
+
+
+
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
