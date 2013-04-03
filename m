@@ -1,56 +1,111 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH V2 6/7] ARM: dt: add header to define IRQ flags
-Date: Wed,  3 Apr 2013 17:34:57 -0600
-Message-ID: <1365032098-22825-6-git-send-email-swarren@wwwdotorg.org>
-References: <1365032098-22825-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <1365032098-22825-1-git-send-email-swarren@wwwdotorg.org>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Michal Marek <mmarek@suse.cz>, Grant Likely <glikely@secretlab.ca>, Rob Herring <robherring2@gmail.com>
-Cc: arm@kernel.org, Shawn Guo <shawn.guo@linaro.org>, Hiroshi Doyu <hdoyu@nvidia.com>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC][PATCH 1/2] ARM: OMAP4: clock: Add device tree support
+ for AUXCLKs
+Date: Wed, 3 Apr 2013 16:42:43 -0700
+Message-ID: <20130403234242.GE10155@atomide.com>
+References: <1363703220-4777-1-git-send-email-rogerq@ti.com>
+ <1363703220-4777-2-git-send-email-rogerq@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1363703220-4777-2-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: b-cousson@ti.com, linux@arm.linux.org.uk, rnayak@ti.com, balbi@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
+Hi,
 
-Many IRQ device tree bindings use the same flags. Create a header to
-define those.
+* Roger Quadros <rogerq@ti.com> [130319 07:31]:
+> Register a device tree clock provider for AUX clocks
+> on the OMAP4 SoC. Also provide the binding information.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>  .../devicetree/bindings/clock/omap4-clock.txt      |   32 ++++++++++++++++++
+>  arch/arm/boot/dts/omap4.dtsi                       |    5 +++
+>  arch/arm/mach-omap2/board-generic.c                |    2 +-
+>  arch/arm/mach-omap2/cclock44xx_data.c              |   35 ++++++++++++++++++++
+>  arch/arm/mach-omap2/clock44xx.h                    |    1 +
+>  arch/arm/mach-omap2/common.h                       |    9 +++++
+>  arch/arm/mach-omap2/io.c                           |    6 +++
+>  7 files changed, 89 insertions(+), 1 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/omap4-clock.txt
+> 
+...
 
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
----
-v2: No change.
-v1: Moved header. Added include guard.
-    (this patch was previously posted separately, hence there are
-    changes in v1!)
----
- include/dt-bindings/interrupt-controller/irq.h |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 include/dt-bindings/interrupt-controller/irq.h
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/omap4-clock.txt
 
-diff --git a/include/dt-bindings/interrupt-controller/irq.h b/include/dt-bindings/interrupt-controller/irq.h
-new file mode 100644
-index 0000000..33a1003
---- /dev/null
-+++ b/include/dt-bindings/interrupt-controller/irq.h
-@@ -0,0 +1,19 @@
-+/*
-+ * This header provides constants for most IRQ bindings.
-+ *
-+ * Most IRQ bindings include a flags cell as part of the IRQ specifier.
-+ * In most cases, the format of the flags cell uses the standard values
-+ * defined in this header.
-+ */
-+
-+#ifndef _DT_BINDINGS_INTERRUPT_CONTROLLER_IRQ_H
-+#define _DT_BINDINGS_INTERRUPT_CONTROLLER_IRQ_H
-+
-+#define IRQ_TYPE_NONE		0
-+#define IRQ_TYPE_EDGE_RISING	1
-+#define IRQ_TYPE_EDGE_FALLING	2
-+#define IRQ_TYPE_EDGE_BOTH	(IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING)
-+#define IRQ_TYPE_LEVEL_HIGH	4
-+#define IRQ_TYPE_LEVEL_LOW	8
-+
-+#endif
--- 
-1.7.10.4
+Is this really specific to omap4 and auxclk only?
 
+Shouldn't it be just omap-clock.txt?
+
+> --- a/arch/arm/mach-omap2/cclock44xx_data.c
+> +++ b/arch/arm/mach-omap2/cclock44xx_data.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/clk-private.h>
+>  #include <linux/clkdev.h>
+>  #include <linux/io.h>
+> +#include <linux/of.h>
+>  
+>  #include "soc.h"
+>  #include "iomap.h"
+> @@ -1663,6 +1664,40 @@ static struct omap_clk omap44xx_clks[] = {
+>  	CLK(NULL,	"cpufreq_ck",	&dpll_mpu_ck,	CK_443X),
+>  };
+>  
+> +static struct clk *scrm_clks[] = {
+> +	&auxclk0_ck,
+> +	&auxclk1_ck,
+> +	&auxclk2_ck,
+> +	&auxclk3_ck,
+> +	&auxclk4_ck,
+> +	&auxclk5_ck,
+> +};
+
+Hmm I don't like the idea of specifying the auxclk both in the
+cclock44xx_data.c and in DT..
+
+> +static struct clk_onecell_data scrm_data;
+> +
+> +#ifdef CONFIG_OF
+> +int __init omap4_clk_init_dt(void)
+> +{
+> +	struct device_node *np;
+> +
+> +	np = of_find_compatible_node(NULL, NULL, "ti,omap4-scrm");
+> +	if (np) {
+> +		scrm_data.clks = scrm_clks;
+> +		scrm_data.clk_num = ARRAY_SIZE(scrm_clks);
+> +		of_clk_add_provider(np, of_clk_src_onecell_get,	&scrm_data);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +#else
+> +
+> +int __init omap4_clk_init_dt(void)
+> +{
+> +	return 0;
+> +}
+> +#endif /* CONFIG_OF */
+> +
+>  int __init omap4xxx_clk_init(void)
+>  {
+>  	u32 cpu_clkflg;
+
+.. and I'm not too keen on adding driver specific stuff to this file.
+
+How about just add a minimal drivers/clk/omap/clk-xyz.c that takes
+the configuration from DT and is based on the binding we already have in
+Documentation/devicetree/bindings/clock/clock-bindings.txt?
+
+Then as we add new bindings there we can drop them from current
+cclock44xx_data.c, no? That is after omap4 is DT only..
+
+Regards,
+
+Tony
