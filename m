@@ -1,51 +1,64 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v4] clk: add si5351 i2c common clock driver
-Date: Tue, 02 Apr 2013 16:46:48 -0700
-Message-ID: <20130402234648.8177.86213@quantum>
-References: <1363603397-2762-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1364050010-23919-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: RFC v2: Zynq Clock Controller
+Date: Tue, 02 Apr 2013 17:34:50 -0700
+Message-ID: <20130403003450.8177.2879@quantum>
+References: <27dae808-1d3a-4001-8eb2-b0a6e2a34b8f@AM1EHSMHS013.ehs.local>
+ <515093B4.2090701@wwwdotorg.org>
+ <8fd7278d-37c5-48ff-8d06-edc64d532a96@VA3EHSMHS037.ehs.local>
+ <5150DEB6.7070208@wwwdotorg.org>
+ <b810d127-dad8-447c-bf88-8ac715debbff@CO9EHSMHS026.ehs.local>
+ <20130327021844.4014.43809@quantum>
+ <9b6821a5-8275-427e-a5aa-1bfd8e800d1b@TX2EHSMHS027.ehs.local>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1364050010-23919-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, Daniel Mack <zonque@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <9b6821a5-8275-427e-a5aa-1bfd8e800d1b-8XeO8fnFoNFBP3niSOyP4rjjLBE8jN/0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: =?utf-8?q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, =?utf-8?q?Jan_L=C3=BCbbe?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, git-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Peter Crosthwaite <pcrost-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sebastian Hesselbarth (2013-03-23 07:46:50)
-> diff --git a/drivers/clk/clk-si5351.c b/drivers/clk/clk-si5351.c
-> new file mode 100644
-> index 0000000..9d0c210
-> --- /dev/null
-> +++ b/drivers/clk/clk-si5351.c
-> @@ -0,0 +1,1411 @@
-> +/*
-> + * clk-si5351.c: Silicon Laboratories Si5351A/B/C I2C Clock Generator
-> + *
-> + * Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> + * Rabeeh Khoury <rabeeh@solid-run.com>
-> + *
-> + * References:
-> + * [1] "Si5351A/B/C Data Sheet"
-> + *     http://www.silabs.com/Support%20Documents/TechnicalDocs/Si5351.pdf
-> + * [2] "Manually Generating an Si5351 Register Map"
-> + *     http://www.silabs.com/Support%20Documents/TechnicalDocs/AN619.pdf
-> + *
-> + * This program is free software; you can redistribute  it and/or modify it
-> + * under  the terms of  the GNU General  Public License as published by the
-> + * Free Software Foundation;  either version 2 of the  License, or (at your
-> + * option) any later version.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/clk-private.h>
-
-I hope that this is supposed to be clk-provider.h.  I don't plan on
-taking in any more clock drivers that depend on clk-private.h.  I didn't
-see any reason for this patch to not use clk-provider.h.
-
-Regards,
-Mike
+UXVvdGluZyBTw7ZyZW4gQnJpbmttYW5uICgyMDEzLTAzLTI5IDE1OjM2OjE4KQo+IE9uIFR1ZSwg
+TWFyIDI2LCAyMDEzIGF0IDA3OjE4OjQ0UE0gLTA3MDAsIE1pa2UgVHVycXVldHRlIHdyb3RlOgo+
+ID4gQXMgbG9uZyBhcyBhIGtleSBleGlzdHMgdG8gbGluayB0d28gY2xvY2tzIHRvZ2V0aGVyIHRo
+ZW4gcmVnaXN0cmF0aW9uCj4gPiBvcmRlciBzaG91bGRuJ3QgbWF0dGVyLiAgT3JpZ2luYWxseSB0
+aGlzIGtleSB3YXMgYW4gaW1tdXRhYmxlIGNsayBuYW1lCj4gPiBzdHJpbmcuCj4gPiAKPiA+IElm
+IGNsb2NrIHBhcmVudHMgYXJlIHNwZWNpZmllZCBpbiBEVCB0aGVuIHRoYXQgc2hvdWxkIGFsc28g
+c3VmZmljZSwgaW4KPiA+IHBsYWNlIG9mIGRvaW5nIHN0cmluZyBjb21wYXJpc29ucy4KPiA+IAo+
+ID4gSWYgbm8ga2V5IHRvIHBhaXIgdXAgY2xvY2tzIGV4aXN0cyB0aGVuIHllcyB3ZSB3aWxsIGhh
+dmUgdG8gcmVseSBwdXJlbHkKPiA+IG9uIHRoZSBzdHJ1Y3QgY2xrICpvcGFxdWVfY29va2llIGFu
+ZCByZWdpc3RlciBjbG9ja3MgaW4gb3JkZXIuCj4gT2theSwgc28gSSBndWVzcywgdGhlIGZ1bmRh
+bWVudGFsIG1lY2hhbmlzbXMgc2hvdWxkIGJlIGluIHBsYWNlLiBXaGF0IGlzCj4gbmVlZGVkLCBp
+cyBjaGFuZ2luZyB0aGUga2V5IGZyb20gYmVpbmcgdGhlIGNsayBuYW1lIHRvIHNvbWV0aGluZyBl
+bHNlLgo+IEFuZCBwcmVmZXJhYmx5IHRoaXMgc29tZXRoaW5nIGVsc2UgaXMgbWFkZSB1cCBvZiBz
+b21ldGhpbmcgYXZhaWxhYmxlCj4gdGhyb3VnaCBEVCwgc28gYSBjaGlsZCBjYW4gcmVmZXJlbmNl
+IGl0cyBwYXJlbnQgdy9vIHRoZSBwYXJlbnQgdG8gYmUKPiBwcm9iZWQgZmlyc3QuIEUuZy4gdGhl
+IHByb3ZpZGVyJ3Mgbm9kZSBuYW1lICsgdGhlIGluZGV4IG9mIHRoZSBjbG9jawo+IG91dHB1dD8K
+ClJpZ2h0LCBvcmRlciBzaG91bGRuJ3QgbWF0dGVyIGluIHRoZSBzZW5zZSB0aGF0IHJlZ2lzdGVy
+aW5nIGEgY2hpbGQKYmVmb3JlIGEgcGFyZW50IHNob3VsZCBub3QgY29uc3RpdHV0ZSBhbiBhYnNv
+bHV0ZSBmYWlsdXJlIGZyb20gdGhlIGNsb2NrCmZyYW1ld29yayBwb2ludCBvZiB2aWV3LgoKRm9s
+a3MgdXNpbmcgRFQgdG9kYXkgc3RpbGwgcmVseSBvbiB0aGUgcGFyZW50IHN0cmluZyBuYW1lIHRv
+IGxpbmsgdGhpbmdzCnVwLiAgR3JlcCBhcm91bmQgZm9yIHVzYWdlIG9mIG9mX2Nsa19nZXRfcGFy
+ZW50X25hbWUgdG8gc2VlIGhvdyBzZXZlcmFsCnBsYXRmb3JtcyB1c2UgdGhhdCBkdXJpbmcgcmVn
+aXN0cmF0aW9uLgoKPiBZb3UgbWVudGlvbmVkLCBzb21ldGhpbmcgbGlrZSB0aGlzIHdhcyBzdXBw
+b3NlZCB0byBoYXBwZW4gYW55d2F5LCByaWdodD8KPiBEbyB5b3UgYWxyZWFkeSBoYXZlIHNvbWV0
+aGluZyBzcGVjaWZpYyBpbiBtaW5kL2FyZSB3b3JraW5nIG9uIGEKPiBzb2x1dGlvbj8KPiAKCkkn
+bSBub3QgbG9va2luZyBhdCBpdCBjdXJyZW50bHkuICBJZiBubyBvbmUgZWxzZSBnZXRzIGFyb3Vu
+ZCB0byBpdCB0aGVuCmV2ZW50dWFsbHkgSSB3aWxsLiAgSXQgd291bGQgYmUgbmljZSB0byBub3Qg
+aGF2ZSB0byB1c2UKb2ZfY2xrX2dldF9wYXJlbnRfbmFtZSBhbmQgaW5zdGVhZCBoYXZlIGEgYmV0
+dGVyIHdheSB0byBlc3RhYmxpc2gKcGFyZW50LWNoaWxkIHJlbGF0aW9uc2hpcHMgYXQgY2xvY2sg
+cmVnaXN0cmF0aW9uLXRpbWUgZm9yIERUIGNsb2Nrcy4KClJlZ2FyZHMsCk1pa2UKCj4gICAgICAg
+ICBTw7ZyZW4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMu
+b3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1k
+aXNjdXNzCg==
