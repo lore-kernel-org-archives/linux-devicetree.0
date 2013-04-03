@@ -1,54 +1,47 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v9 0/9] DMA Engine support for AM33XX
-Date: Wed, 3 Apr 2013 17:15:54 +0530
-Message-ID: <515C1672.4060000@ti.com>
-References: <1362586540-10393-1-git-send-email-mporter@ti.com>
+From: "Manjunathappa, Prakash" <prakash.pm@ti.com>
+Subject: RE: [PATCH v4 3/5] ARM: davinci: da850: add SPI1 DT node
+Date: Wed, 3 Apr 2013 12:13:02 +0000
+Message-ID: <A73F36158E33644199EB82C5EC81C7BC3EA4C066@DBDE01.ent.ti.com>
+References: <1363776419-10563-1-git-send-email-prakash.pm@ti.com>
+ <1363776419-10563-4-git-send-email-prakash.pm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1362586540-10393-1-git-send-email-mporter-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
-Cc: Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1363776419-10563-4-git-send-email-prakash.pm@ti.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "Manjunathappa, Prakash" <prakash.pm@ti.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "spi-devel-general@lists.sourceforge.net" <spi-devel-general@lists.sourceforge.net>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "Nori, Sekhar" <nsekhar@ti.com>, "hs@denx.de" <hs@denx.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matt,
+Hi,
 
-On 3/6/2013 9:45 PM, Matt Porter wrote:
+On Wed, Mar 20, 2013 at 16:16:57, Manjunathappa, Prakash wrote:
+> Patch adds SPI1 DT node along with pinmux data.
+> 
+> Signed-off-by: Manjunathappa, Prakash <prakash.pm@ti.com>
+> ---
+>  arch/arm/boot/dts/da850.dtsi |   18 ++++++++++++++++++
+>  1 files changed, 18 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+> index 3ec1bda..327fb06 100644
+> --- a/arch/arm/boot/dts/da850.dtsi
+> +++ b/arch/arm/boot/dts/da850.dtsi
+> @@ -62,6 +62,14 @@
+>  					0x10 0x00002200 0x0000ff00
+>  				>;
+>  			};
+> +			spi1_pins: pinmux_spi_pins {
+> +				pinctrl-single,bits = <
+> +					/* SIMO, SOMI, ENA,
+> +					 * CLK, CS[0], CS[1]
+> +					 */
+> +					0x14 0x00111111 0x00ffffff
 
-> This series adds DMA Engine support for AM33xx, which uses
-> an EDMA DMAC. The EDMA DMAC has been previously supported by only
-> a private API implementation (much like the situation with OMAP
-> DMA) found on the DaVinci family of SoCs.
-
-> Matt Porter (9):
->   ARM: davinci: move private EDMA API to arm/common
->   ARM: edma: remove unused transfer controller handlers
-
-If you are going to be late in re-spinning the entire series in time for
-v3.10, then I suggest I queue the first two patches through davinci tree
-for v3.10 and then you can work on rest of patches for next (v3.11)
-merge window.
-
-Let me know what you think.
-
->   ARM: edma: add AM33XX support to the private EDMA API
->   dmaengine: edma: enable build for AM33XX
->   dmaengine: edma: Add TI EDMA device tree binding
->   ARM: dts: add AM33XX EDMA support
->   spi: omap2-mcspi: convert to dma_request_slave_channel_compat()
->   spi: omap2-mcspi: add generic DMA request support to the DT binding
->   ARM: dts: add AM33XX SPI DMA support
+Since chip select is specific to a board, let me separate it out so as to
+allow boards choose accordingly.
 
 Thanks,
-Sekhar
+Prakash
