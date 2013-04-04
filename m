@@ -1,14 +1,13 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] Documentation: gpio-reset.txt: Fix 'initially-in-reset'
- example
-Date: Thu, 04 Apr 2013 09:53:42 +0200
-Message-ID: <1365062022.4089.7.camel@pizza.hi.pengutronix.de>
-References: <1365012265-32514-1-git-send-email-fabio.estevam@freescale.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] rtc: rtc-at91sam9.c add DT support
+Date: Thu, 4 Apr 2013 10:11:46 +0200
+Message-ID: <515D35C2.7050405@atmel.com>
+References: <515CF985.6050009@interlog.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365012265-32514-1-git-send-email-fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <515CF985.6050009-qazKcTl6WRFWk0Htik3J/w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,32 +18,52 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Robert Nelson <Robert.Nelson-9gsZL1vm+hpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 03.04.2013, 15:04 -0300 schrieb Fabio Estevam:
-> Fix typo in 'initially-in-reset' example.
+On 04/04/2013 05:54 AM, Douglas Gilbert :
+> Some members of the at91 SoCs use the Real Time Timer (RTT)
+> and the General Purpose Backup Registers (GPBR) to implement
+> a real time clock (RTC). The AT91SAM9G20 is one example.
 > 
-> Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  .../devicetree/bindings/reset/gpio-reset.txt       |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Attached is a patch to add DT support to rtc-at91sam9.c .
+> The patch is against lk 3.9.0-rc5 .
 > 
-> diff --git a/Documentation/devicetree/bindings/reset/gpio-reset.txt b/Documentation/devicetree/bindings/reset/gpio-reset.txt
-> index 1f203eb..8ab044c 100644
-> --- a/Documentation/devicetree/bindings/reset/gpio-reset.txt
-> +++ b/Documentation/devicetree/bindings/reset/gpio-reset.txt
-> @@ -26,7 +26,7 @@ gpio_reset: gpio-reset {
->  	compatible = "gpio-reset";
->  	reset-gpios = <&gpio5 0 1>; /* active-low */
->  	reset-delays = <10000>; /* 10 ms */
-> -	initially-in-reset: <1>;
-> +	initially-in-reset = <1>;
->  	#reset-cells = <1>;
->  };
+> Below is a snippet of DT code for the 'G20 that was observed
+> to work with this patch:
+> 
+> ahb {
+>     apb {
+> 
+>         rtc {
+>             compatible = "atmel,at91sam9-rtc";
 
-Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+The compatible string has to be formed by the name of the first SoC
+compatible with this IP. It turns to be the at91sam9260.
+The second part of the string should be a name that reflects the nature
+of the peripheral. For this binding, I would like to mention the "RTT"
+in the compatibility string (because other drivers can use other RTT
+with other uses).
 
-thanks
-Philipp
+What do you think about:
+"atmel,at91sam9260-rtt-as-rtc"? or something shorter?
+
+>                          /* RTTC followed by GPBR (backup registers) */
+>                          reg = <0xfffffd20 0x10>, <0xfffffd50 0x10>;
+>                          interrupts = <1 4 7>;
+>                          status = "okay";
+
+Last, but not least, when we add a DT binding, it is a requirement to
+add the corresponding documentation in the
+Documentation/devicetree/bindings/rtc/ directory.
+
+>         };
+>     }
+> };
+> 
+> Signed-off-by: Douglas Gilbert <dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org>
+
+Thanks, best regards,
+-- 
+Nicolas Ferre
