@@ -1,33 +1,72 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 07/12] PCI: tegra: Move PCIe driver to drivers/pci/host
-Date: Thu, 04 Apr 2013 15:30:01 -0600
-Message-ID: <515DF0D9.40007@wwwdotorg.org>
-References: <1365000318-28256-1-git-send-email-thierry.reding@avionic-design.de> <1365000318-28256-8-git-send-email-thierry.reding@avionic-design.de> <515DF096.2000703@wwwdotorg.org>
+From: Simon Baatz <gmbnomis@gmail.com>
+Subject: Re: [PATCH 3/5 v2] ARM: kirkwood: add device node entries for the
+ gigabit interfaces
+Date: Thu, 4 Apr 2013 23:35:17 +0200
+Message-ID: <20130404213517.GB25904@schnuecks.de>
+References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
+ <1365071235-11611-4-git-send-email-florian@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <515DF096.2000703-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1365071235-11611-4-git-send-email-florian@openwrt.org>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <florian@openwrt.org>
+Cc: davem@davemloft.net, thomas.petazzoni@free-electrons.com, moinejf@free.fr, jason@lakedaemon.net, andrew@lunn.ch, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jogo@openwrt.org, buytenh@wantstofly.org, jm@lentin.co.uk, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/04/2013 03:28 PM, Stephen Warren wrote:
-> On 04/03/2013 08:45 AM, Thierry Reding wrote:
->> Move the PCIe driver from arch/arm/mach-tegra into the drivers/pci/host
->> directory. The motivation is to collect various host controller drivers
->> in the same location in order to facilitate refactoring.
->>
->> The Tegra PCIe driver has been largely rewritten, both in order to turn
->> it into a proper platform driver and to add MSI (based on code by
->> Krishna Kishore <kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>) as well as device tree support.
-> 
->>  arch/arm/boot/dts/tegra20.dtsi                     |   53 +
-> 
-> I guess this has to touch both the driver and the dtsi file so that
-> bisectabilty isn't broken? I guess that's OK.
+Hi Florian,
 
-Actually, can't you move all the *.dts/*.dtsi changes to the start of
-the series, then put the driver conversion patch last, to avoid any
-bisectability issues and still keep code and DT changes separate?
+On Thu, Apr 04, 2013 at 12:27:13PM +0200, Florian Fainelli wrote:
+> This patch modifies kirkwood.dtsi to specify the various gigabit
+> interfaces nodes available on kirkwood devices. They are disabled by
+> default and should be enabled on a per-board basis. egiga0 and egiga1
+> aliases are defined for convenience. The mdio node is also present and
+> should be enabled on a per-board basis as well.
+> 
+> Signed-off-by: Florian Fainelli <florian@openwrt.org>
+> ---
+> Changes since v1:
+> - dropped change to arch/arm/mach-kirkwood/common.c to avoid merge conflicts
+
+I think we should remove the clock aliases in
+kirkwood_legacy_clk_init() in mach-kirkwood/dt-board.c (once we have
+proper clock support, see my other mail).
+
+> - fixed off-by 0x2000 ethernet-group nodes address
+> 
+>  arch/arm/boot/dts/kirkwood.dtsi |   46 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
+> index fada7e6..254f5a8 100644
+> --- a/arch/arm/boot/dts/kirkwood.dtsi
+> +++ b/arch/arm/boot/dts/kirkwood.dtsi
+> @@ -7,6 +7,8 @@
+>  	aliases {
+>  	       gpio0 = &gpio0;
+>  	       gpio1 = &gpio1;
+> +	       egiga0 = &egiga0;
+> +	       egiga1 = &egiga1;
+>  	};
+>  	intc: interrupt-controller {
+>  		compatible = "marvell,orion-intc", "marvell,intc";
+> @@ -202,5 +204,49 @@
+>  			clocks = <&gate_clk 4>;
+>  			status = "disabled";
+>  		};
+> +
+> +		mdio@72004 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "marvell,orion-mdio";
+> +			reg = <0x72004 0x84>;
+
+Don't we need to add:
+
+			interrupts = <46>;
+
+here?
+
+
+- Simon
