@@ -1,28 +1,29 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v7] [media] Add common video interfaces OF bindings documentation
-Date: Thu, 04 Apr 2013 14:45:21 -0600
-Message-ID: <515DE661.2050902@wwwdotorg.org>
-References: <1364313495-18635-1-git-send-email-s.nawrocki@samsung.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH 5/5] ARM: dts: OMAP2+: Identify GPIO banks that are always
+ powered
+Date: Thu, 4 Apr 2013 16:01:17 -0500
+Message-ID: <515DEA1D.9070001@ti.com>
+References: <1365106576-31816-1-git-send-email-jon-hunter@ti.com> <1365106576-31816-6-git-send-email-jon-hunter@ti.com> <20130404203519.GR10155@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1364313495-18635-1-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dh09.lee@samsung.com, prabhakar.lad@ti.com, hverkuil@xs4all.nl, kyungmin.park@samsung.com, myungjoo.ham@samsung.com, laurent.pinchart@ideasonboard.com, g.liakhovetski@gmx.de
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130404203519.GR10155@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Benoit Cousson <b-cousson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/26/2013 09:58 AM, Sylwester Nawrocki wrote:
-> From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> 
-> This patch adds a document describing common OF bindings for video
-> capture, output and video processing devices. It is curently mainly
-> focused on video capture devices, with data busses defined by
-> standards such as ITU-R BT.656 or MIPI-CSI2.
-> It also documents a method of describing data links between devices.
-> 
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-Acked-by: Stephen Warren <swarren@nvidia.com>
+On 04/04/2013 03:35 PM, Tony Lindgren wrote:
+> * Jon Hunter <jon-hunter@ti.com> [130404 13:21]:
+>> Add the "ti,gpio-always-on" property to the appropriate GPIO banks to
+>> indicate which banks are always powered and will never lose logic state.
+> 
+> This patch should be queued by Benoit as this will likely cause
+> pointless merge conflicts with the other .dts files.
+
+Yes agreed. I mentioned that in the cover-letter.
+
+Cheers
+Jon
