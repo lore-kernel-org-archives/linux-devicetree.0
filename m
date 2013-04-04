@@ -1,34 +1,110 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 5/5] ARM: dts: OMAP2+: Identify GPIO banks that are
- always powered
-Date: Thu, 4 Apr 2013 14:08:03 -0700
-Message-ID: <20130404210801.GT10155@atomide.com>
-References: <1365106576-31816-1-git-send-email-jon-hunter@ti.com>
- <1365106576-31816-6-git-send-email-jon-hunter@ti.com>
- <20130404203519.GR10155@atomide.com>
- <515DEA1D.9070001@ti.com>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v9 00/14] Tegra114 clockframework
+Date: Thu, 04 Apr 2013 14:20:02 -0700
+Message-ID: <20130404212002.8665.12387@quantum>
+References: <1365000110-8916-1-git-send-email-pdeschrijver@nvidia.com>
+ <515C6C6E.6060302@wwwdotorg.org> <515C7495.8060106@wwwdotorg.org>
+ <515CB9D9.90303@wwwdotorg.org>
+ <20130404082043.GY18519@tbergstrom-lnx.Nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <515DEA1D.9070001@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Benoit Cousson <b-cousson@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130404082043.GY18519-Rysk9IDjsxmJz7etNGeUX8VPkgjIgRvpAL8bYrjMMd8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Jon Hunter <jon-hunter@ti.com> [130404 14:05]:
-> 
-> On 04/04/2013 03:35 PM, Tony Lindgren wrote:
-> > * Jon Hunter <jon-hunter@ti.com> [130404 13:21]:
-> >> Add the "ti,gpio-always-on" property to the appropriate GPIO banks to
-> >> indicate which banks are always powered and will never lose logic state.
+Quoting Peter De Schrijver (2013-04-04 01:20:44)
+> On Thu, Apr 04, 2013 at 01:23:05AM +0200, Stephen Warren wrote:
+> > On 04/03/2013 12:27 PM, Stephen Warren wrote:
+> > > On 04/03/2013 11:52 AM, Stephen Warren wrote:
+> > >> On 04/03/2013 08:40 AM, Peter De Schrijver wrote:
+> > >>> This is the nineth version of the Tegra114 clockframework. It is based on the
+> > >>> next-20130320-fixed branch of
+> > >>> git://nv-tegra.nvidia.com/user/swarren/linux-2.6.git,
+> > > ... [it depends on]
+> > >>> http://patchwork.ozlabs.org/patch/233415/
+> > >>
+> > >> That is Joseph's "clocksource: tegra: enable arch_timer". Is this
+> > >> actually a dependency, or an optimization, or ...?
+> > >>
+> > >> Rob Herring objected to that patch since it isn't necessary if his
+> > >> series "ARM arch, sp804 and integrator timer CLKSRC_OF support" is applied.
+> > >>
+> > >> If I apply just your (Peter's) CCF series without Joseph's or Rob's
+> > >> patches, will everything still work, or is this a hard dependency to
+> > >> create a working system?
+> > > 
+> > > I manage to get this series applied on top of my local dev branch, based
+> > > on next-20130328 (it was painful). Testing indicates that there is no
+> > > dependency on Joseph's patch mentioned above; I could boot, log in, and
+> > > play audio (with local patches) with /or/ without Joseph's patch applied.
+> > > 
+> > > However, I still find that I need to revert f7db706 ARM: "7674/1: smp:
+> > > Avoid dummy clockevent being preferred over real hardware clock-event",
+> > > or I get a hard system hang right after the root fs is mounted. As such,
+> > > I not sure if it's worthwhile applying this series since it's unlikely
+> > > to actually work once merged into Torvalds' tree.
+> > > 
+> > > Do you have any idea what the problem is here?
+> > > 
+> > > I'll try rebasing my local test branch on top of the latest linux-next
+> > > just in case some other fix solved this already, but I'm not going to
+> > > hold my breath.
 > > 
-> > This patch should be queued by Benoit as this will likely cause
-> > pointless merge conflicts with the other .dts files.
+> > I've found the problem. My bootloader wasn't initializing the TSC and
+> > hence I guess it wasn't working properly, even with Joseph's patch to
+> > add a call to the initialization function.
+> > 
 > 
-> Yes agreed. I mentioned that in the cover-letter.
+> Ok.
+> 
+> > So, if I:
+> > 
+> > a) Fix my bootloader to enable TSC.
+> > 
+> > b) Merge Rob's patch series to enable the TSC. This is needed rather
+> > than Joseph's patch since the two conflict, and I assume that Rob's
+> > patch is going into 3.10.
+> > 
+> > c) Undo my local revert of "ARM: 7674/1: smp: Avoid dummy clockevent
+> > being preferred over real hardware clock-event".
+> > 
+> 
+> Ok. Good. That's close to what I have and works here. As well.
+> 
+> > ... then everything now works.
+> > 
+> > So the only remaining issues are:
+> > 
+> > 1) Should the mux clocks still be defined in the binding document?
+> > Prashant didn't seem to think so.
+> > 
+> 
+> I guess we should remove them then.
+> 
+> > 2) I need Mike's ack to apply this series to the Tegra tree.
+> 
+> Ok. Mike?
+> 
 
-OK thanks.
+Cool to see this come together!
 
-Tony
+For the drivers/clk bits:
+
+Acked-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+> Cheers,
+> 
+> Peter.
