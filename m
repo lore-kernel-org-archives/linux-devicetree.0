@@ -1,27 +1,36 @@
-From: Stefan Roese <sr@denx.de>
-Subject: Re: [PATCH 1/5] net: Add EMAC ethernet driver found on Allwinner
- A10 SoC's
-Date: Thu, 04 Apr 2013 17:37:48 +0200
-Message-ID: <515D9E4C.6000409@denx.de>
-References: <1364077814-2233-1-git-send-email-maxime.ripard@free-electrons.com> <1364077814-2233-2-git-send-email-maxime.ripard@free-electrons.com> <201303242003.52827.florian@openwrt.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <201303242003.52827.florian@openwrt.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Florian Fainelli <florian@openwrt.org>
-Cc: linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-doc@vger.kernel.org, Alejandro Mery <amery@geeks.cl>, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, sunny@allwinnertech.com, shuge@allwinnertech.com, kevin@allwinnertech.com
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: [PATCH 0/2] input: touchscreen: atmel_mxt_ts: Add Device Tree support
+Date: Thu, 04 Apr 2013 18:14:24 +0200
+Message-ID: <1365092066-31753-1-git-send-email-t.figa@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-input@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, dmitry.torokhov@gmail.com, jy0922.shim@samsung.com, kyungmin.park@samsung.com, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
+This series is an attempt to add Device Tree support to Atmel maXtouch
+touchscreen driver.
 
-On 24.03.2013 20:03, Florian Fainelli wrote:
-> Your phylib implementation looks good now, just some minor comments below:
+First patch adds support for VDD voltage regulator to get operating voltage
+using regulator API instead of a driver specific field in platform data.
 
-Thanks for the review. I'll try to address your new comments in a few
-days (currently swamped).
+Second patch implements Device Tree bindings for the driver and adds
+respective documentation.
 
-Thanks,
-Stefan
+Tested on Universal C210 board.
 
+Tomasz Figa (2):
+  input: touchscreen: atmel_mxt_ts: Add support for voltage regulator
+  input: touchscreen: atmel_mxt_ts: Add support for Device Tree
+
+ .../bindings/input/touchscreen/atmel_mxt_ts.txt    | 51 ++++++++++++
+ arch/arm/mach-exynos/mach-nuri.c                   | 29 ++++++-
+ arch/arm/mach-exynos/mach-universal_c210.c         | 29 ++++++-
+ arch/arm/mach-s5pv210/mach-goni.c                  | 28 ++++++-
+ drivers/input/touchscreen/atmel_mxt_ts.c           | 97 ++++++++++++++++++++--
+ include/linux/i2c/atmel_mxt_ts.h                   |  1 -
+ 6 files changed, 226 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/atmel_mxt_ts.txt
+
+-- 
+1.8.1.5
