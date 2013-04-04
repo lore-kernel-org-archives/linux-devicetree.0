@@ -1,248 +1,69 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: [PATCH 2/3] regulator: max8998: Use arrays for specifying voltages in
- platform data
-Date: Thu, 04 Apr 2013 18:19:22 +0200
-Message-ID: <1365092363-12763-3-git-send-email-t.figa@samsung.com>
-References: <1365092363-12763-1-git-send-email-t.figa@samsung.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC][PATCH 1/2] ARM: OMAP4: clock: Add device tree support
+ for AUXCLKs
+Date: Thu, 4 Apr 2013 09:33:46 -0700
+Message-ID: <20130404163346.GG10155@atomide.com>
+References: <1363703220-4777-1-git-send-email-rogerq@ti.com>
+ <1363703220-4777-2-git-send-email-rogerq@ti.com>
+ <20130403234242.GE10155@atomide.com>
+ <515D0D8A.7030500@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1365092363-12763-1-git-send-email-t.figa@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <515D0D8A.7030500@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, lrg@ti.com, broonie@opensource.wolfsonmicro.com, m.szyprowski@samsung.com, kgene.kim@samsung.com, Tomasz Figa <t.figa@samsung.com>
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: Roger Quadros <rogerq@ti.com>, b-cousson@ti.com, linux@arm.linux.org.uk, balbi@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch modifies the platform data of max8998 to use arrays for
-specifying predefined voltages of buck1 and buck2 instead of separate
-field for each voltage.
+* Rajendra Nayak <rnayak@ti.com> [130403 22:25]:
+> On Thursday 04 April 2013 05:12 AM, Tony Lindgren wrote:
+> > 
+> > How about just add a minimal drivers/clk/omap/clk-xyz.c that takes
+> > the configuration from DT and is based on the binding we already have in
+> > Documentation/devicetree/bindings/clock/clock-bindings.txt?
+> > 
+> > Then as we add new bindings there we can drop them from current
+> > cclock44xx_data.c, no? That is after omap4 is DT only..
+> 
+> The patch just provides an alternative for clkdev mapping in case of DT.
+> Are you suggesting we move all *clock data* related to auxclks (and eventually
+> all clocks) into DT?
 
-This allows to simplify the code a bit and will help in adding support
-for Device Tree, which will be introduced in further patch.
+Well I think we should have a driver that can take any defined clock binding
+from DT at least for boottime clocks. We need at least the timer clocks
+early during the boot, and probably the root device like MMC or possibly
+Ethernet depending on the board.
 
-Signed-off-by: Tomasz Figa <t.figa@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- arch/arm/mach-exynos/mach-universal_c210.c |  8 +--
- arch/arm/mach-s5pv210/mach-aquila.c        |  8 +--
- arch/arm/mach-s5pv210/mach-goni.c          |  8 +--
- drivers/regulator/max8998.c                | 96 +++++++++---------------------
- include/linux/mfd/max8998.h                | 16 ++---
- 5 files changed, 39 insertions(+), 97 deletions(-)
+The rest of the huge amount of clocks we can just load from /lib/firmware
+after mounting intramfs or root on MMC. As long as we can define any
+boottime clock in DT also, loading the rest of the clock data from
+/lib/firmware should not cause issues with booting.
 
-diff --git a/arch/arm/mach-exynos/mach-universal_c210.c b/arch/arm/mach-exynos/mach-universal_c210.c
-index 497fcb7..366abb3 100644
---- a/arch/arm/mach-exynos/mach-universal_c210.c
-+++ b/arch/arm/mach-exynos/mach-universal_c210.c
-@@ -540,15 +540,11 @@ static struct max8998_regulator_data lp3974_regulators[] = {
- static struct max8998_platform_data universal_lp3974_pdata = {
- 	.num_regulators		= ARRAY_SIZE(lp3974_regulators),
- 	.regulators		= lp3974_regulators,
--	.buck1_voltage1		= 1100000,	/* INT */
--	.buck1_voltage2		= 1000000,
--	.buck1_voltage3		= 1100000,
--	.buck1_voltage4		= 1000000,
-+	.buck1_voltage		= { 1100000, 1000000, 1100000, 1000000 },
- 	.buck1_set1		= EXYNOS4_GPX0(5),
- 	.buck1_set2		= EXYNOS4_GPX0(6),
--	.buck2_voltage1		= 1200000,	/* G3D */
--	.buck2_voltage2		= 1100000,
- 	.buck1_default_idx	= 0,
-+	.buck2_voltage		= { 1200000, 1100000 },
- 	.buck2_set3		= EXYNOS4_GPE2(0),
- 	.buck2_default_idx	= 0,
- 	.wakeup			= true,
-diff --git a/arch/arm/mach-s5pv210/mach-aquila.c b/arch/arm/mach-s5pv210/mach-aquila.c
-index 11900a8..7e6c718 100644
---- a/arch/arm/mach-s5pv210/mach-aquila.c
-+++ b/arch/arm/mach-s5pv210/mach-aquila.c
-@@ -377,12 +377,8 @@ static struct max8998_platform_data aquila_max8998_pdata = {
- 	.buck1_set1	= S5PV210_GPH0(3),
- 	.buck1_set2	= S5PV210_GPH0(4),
- 	.buck2_set3	= S5PV210_GPH0(5),
--	.buck1_voltage1	= 1200000,
--	.buck1_voltage2	= 1200000,
--	.buck1_voltage3	= 1200000,
--	.buck1_voltage4	= 1200000,
--	.buck2_voltage1	= 1200000,
--	.buck2_voltage2	= 1200000,
-+	.buck1_voltage	= { 1200000, 1200000, 1200000, 1200000 },
-+	.buck2_voltage	= { 1200000, 1200000 },
- };
- #endif
- 
-diff --git a/arch/arm/mach-s5pv210/mach-goni.c b/arch/arm/mach-s5pv210/mach-goni.c
-index e373de4..2ae61d4 100644
---- a/arch/arm/mach-s5pv210/mach-goni.c
-+++ b/arch/arm/mach-s5pv210/mach-goni.c
-@@ -580,12 +580,8 @@ static struct max8998_platform_data goni_max8998_pdata = {
- 	.buck1_set1	= S5PV210_GPH0(3),
- 	.buck1_set2	= S5PV210_GPH0(4),
- 	.buck2_set3	= S5PV210_GPH0(5),
--	.buck1_voltage1	= 1200000,
--	.buck1_voltage2	= 1200000,
--	.buck1_voltage3	= 1200000,
--	.buck1_voltage4	= 1200000,
--	.buck2_voltage1	= 1200000,
--	.buck2_voltage2	= 1200000,
-+	.buck1_voltage	= { 1200000, 1200000, 1200000, 1200000 },
-+	.buck2_voltage	= { 1200000, 1200000 },
- };
- #endif
- 
-diff --git a/drivers/regulator/max8998.c b/drivers/regulator/max8998.c
-index a57a1b1..8c45b93 100644
---- a/drivers/regulator/max8998.c
-+++ b/drivers/regulator/max8998.c
-@@ -630,6 +630,7 @@ static int max8998_pmic_probe(struct platform_device *pdev)
- 	struct max8998_data *max8998;
- 	struct i2c_client *i2c;
- 	int i, ret, size;
-+	unsigned int v;
- 
- 	if (!pdata) {
- 		dev_err(pdev->dev.parent, "No platform init data supplied\n");
-@@ -688,53 +689,21 @@ static int max8998_pmic_probe(struct platform_device *pdev)
- 		gpio_request(pdata->buck1_set2, "MAX8998 BUCK1_SET2");
- 		gpio_direction_output(pdata->buck1_set2,
- 				      (max8998->buck1_idx >> 1) & 0x1);
--		/* Set predefined value for BUCK1 register 1 */
--		i = 0;
--		while (buck12_voltage_map_desc.min +
--		       buck12_voltage_map_desc.step*i
--		       < pdata->buck1_voltage1)
--			i++;
--		max8998->buck1_vol[0] = i;
--		ret = max8998_write_reg(i2c, MAX8998_REG_BUCK1_VOLTAGE1, i);
--		if (ret)
--			goto err_out;
--
--		/* Set predefined value for BUCK1 register 2 */
--		i = 0;
--		while (buck12_voltage_map_desc.min +
--		       buck12_voltage_map_desc.step*i
--		       < pdata->buck1_voltage2)
--			i++;
--
--		max8998->buck1_vol[1] = i;
--		ret = max8998_write_reg(i2c, MAX8998_REG_BUCK1_VOLTAGE2, i);
--		if (ret)
--			goto err_out;
--
--		/* Set predefined value for BUCK1 register 3 */
--		i = 0;
--		while (buck12_voltage_map_desc.min +
--		       buck12_voltage_map_desc.step*i
--		       < pdata->buck1_voltage3)
--			i++;
--
--		max8998->buck1_vol[2] = i;
--		ret = max8998_write_reg(i2c, MAX8998_REG_BUCK1_VOLTAGE3, i);
--		if (ret)
--			goto err_out;
--
--		/* Set predefined value for BUCK1 register 4 */
--		i = 0;
--		while (buck12_voltage_map_desc.min +
--		       buck12_voltage_map_desc.step*i
--		       < pdata->buck1_voltage4)
--			i++;
--
--		max8998->buck1_vol[3] = i;
--		ret = max8998_write_reg(i2c, MAX8998_REG_BUCK1_VOLTAGE4, i);
--		if (ret)
--			goto err_out;
- 
-+		/* Set predefined values for BUCK1 registers */
-+		for (v = 0; v < ARRAY_SIZE(pdata->buck1_voltage); ++v) {
-+			i = 0;
-+			while (buck12_voltage_map_desc.min +
-+			       buck12_voltage_map_desc.step*i
-+			       < pdata->buck1_voltage[v])
-+				i++;
-+
-+			max8998->buck1_vol[v] = i;
-+			ret = max8998_write_reg(i2c,
-+					MAX8998_REG_BUCK1_VOLTAGE1 + v, i);
-+			if (ret)
-+				goto err_out;
-+		}
- 	}
- 
- 	if (gpio_is_valid(pdata->buck2_set3)) {
-@@ -750,27 +719,20 @@ static int max8998_pmic_probe(struct platform_device *pdev)
- 		gpio_direction_output(pdata->buck2_set3,
- 				      max8998->buck2_idx & 0x1);
- 
--		/* BUCK2 register 1 */
--		i = 0;
--		while (buck12_voltage_map_desc.min +
--		       buck12_voltage_map_desc.step*i
--		       < pdata->buck2_voltage1)
--			i++;
--		max8998->buck2_vol[0] = i;
--		ret = max8998_write_reg(i2c, MAX8998_REG_BUCK2_VOLTAGE1, i);
--		if (ret)
--			goto err_out;
--
--		/* BUCK2 register 2 */
--		i = 0;
--		while (buck12_voltage_map_desc.min +
--		       buck12_voltage_map_desc.step*i
--		       < pdata->buck2_voltage2)
--			i++;
--		max8998->buck2_vol[1] = i;
--		ret = max8998_write_reg(i2c, MAX8998_REG_BUCK2_VOLTAGE2, i);
--		if (ret)
--			goto err_out;
-+		/* Set predefined values for BUCK2 registers */
-+		for (v = 0; v < ARRAY_SIZE(pdata->buck2_voltage); ++v) {
-+			i = 0;
-+			while (buck12_voltage_map_desc.min +
-+			       buck12_voltage_map_desc.step*i
-+			       < pdata->buck2_voltage[v])
-+				i++;
-+
-+			max8998->buck2_vol[v] = i;
-+			ret = max8998_write_reg(i2c,
-+					MAX8998_REG_BUCK2_VOLTAGE1 + v, i);
-+			if (ret)
-+				goto err_out;
-+		}
- 	}
- 
- 	for (i = 0; i < pdata->num_regulators; i++) {
-diff --git a/include/linux/mfd/max8998.h b/include/linux/mfd/max8998.h
-index 9df60ba..e8b9ba7 100644
---- a/include/linux/mfd/max8998.h
-+++ b/include/linux/mfd/max8998.h
-@@ -72,12 +72,8 @@ struct max8998_regulator_data {
-  * @buck_voltage_lock: Do NOT change the values of the following six
-  *   registers set by buck?_voltage?. The voltage of BUCK1/2 cannot
-  *   be other than the preset values.
-- * @buck1_voltage1: BUCK1 DVS mode 1 voltage register
-- * @buck1_voltage2: BUCK1 DVS mode 2 voltage register
-- * @buck1_voltage3: BUCK1 DVS mode 3 voltage register
-- * @buck1_voltage4: BUCK1 DVS mode 4 voltage register
-- * @buck2_voltage1: BUCK2 DVS mode 1 voltage register
-- * @buck2_voltage2: BUCK2 DVS mode 2 voltage register
-+ * @buck1_voltage: BUCK1 DVS mode 1 voltage registers
-+ * @buck2_voltage: BUCK2 DVS mode 2 voltage registers
-  * @buck1_set1: BUCK1 gpio pin 1 to set output voltage
-  * @buck1_set2: BUCK1 gpio pin 2 to set output voltage
-  * @buck1_default_idx: Default for BUCK1 gpio pin 1, 2
-@@ -101,12 +97,8 @@ struct max8998_platform_data {
- 	int				num_regulators;
- 	int				ono;
- 	bool				buck_voltage_lock;
--	int				buck1_voltage1;
--	int				buck1_voltage2;
--	int				buck1_voltage3;
--	int				buck1_voltage4;
--	int				buck2_voltage1;
--	int				buck2_voltage2;
-+	int				buck1_voltage[4];
-+	int				buck2_voltage[2];
- 	int				buck1_set1;
- 	int				buck1_set2;
- 	int				buck1_default_idx;
--- 
-1.8.1.5
+And as we get the clocks moved, we can drop them from cclock44xx_data.c.
+AFAIK the new driver can just clk_get the parent clocks so those can
+stay in cclock44xx_data.c for now?
+
+So basically we can do the same as we are already doing with pinctrl-single.c,
+but with addition of loading large amounts of data from /lib/firmware.
+And eventually we can do the same with hwmod too.
+
+Regarding the readability issue, we now have preprocessing support for
+.dts files merged AFAIK, so they can be as readable as data structures :)
+
+> We have discussed this multiple times in the past, and moving 250 clock nodes
+> with each needing multiple register offsets, masks, shifts etc into DT makes it
+> completely un-readable. For me, having a way for devices to reference a clock that they
+> use for a device using DT makes sense, but not moving all clock data into dts files.
+
+Yes that's why we should also support loading clocks from /lib/firmware.
+Naturally the parent clocks can be allocated by the clock driver(s) at
+least initially.
+
+But the main reason I think we should do this is so we get out of the
+flame path with these huge data files for every new SoC.
+
+Regards,
+
+Tony
