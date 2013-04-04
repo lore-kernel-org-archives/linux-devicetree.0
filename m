@@ -1,52 +1,67 @@
 From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 1/2] ARM: dts: Add MFC clock entries for exynos4
-Date: Thu, 04 Apr 2013 12:49:24 +0200
-Message-ID: <515D5AB4.5000501@samsung.com>
+Subject: Re: [PATCH 2/2] ARM: dts: Update MFC documentation for clock entries
+Date: Thu, 04 Apr 2013 13:08:25 +0200
+Message-ID: <515D5F29.8030709@samsung.com>
 References: <1365056815-28000-1-git-send-email-sachin.kamat@linaro.org>
+ <1365056815-28000-2-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1365056815-28000-1-git-send-email-sachin.kamat@linaro.org>
+In-reply-to: <1365056815-28000-2-git-send-email-sachin.kamat@linaro.org>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: Sachin Kamat <sachin.kamat@linaro.org>
 Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, rob.herring@calxeda.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
 On 04/04/2013 08:26 AM, Sachin Kamat wrote:
-> Added MFC related clock entries in exynos4.dtsi file.
->=20
+> Added clock entry definitions to MFC bindings document.
+> 
 > Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> ---
+>  .../devicetree/bindings/media/s5p-mfc.txt          |    5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt b/Documentation/devicetree/bindings/media/s5p-mfc.txt
+> index bf0182d..d7b991a 100644
+> --- a/Documentation/devicetree/bindings/media/s5p-mfc.txt
+> +++ b/Documentation/devicetree/bindings/media/s5p-mfc.txt
+> @@ -15,6 +15,9 @@ Required properties:
+>  	  mapped region.
+>  
+>    - interrupts : MFC interrupt number to the CPU.
+> +  - clocks: from common clock binding: handle to mfc clocks.
+> +  - clock-names: from common clock binding: Shall be "sclk_mfc" and "mfc"
+> +		 for "samsung,mfc-v5".
+
+Not sure if we shouldn't be more specific about the fact the entries in
+the clocks property must be in same order as names in clock-names. Perhaps
+it's sufficient you mentioned the common clock binding which defines that.
+
+Also we should keep the clock names same, regardless which MFC IP version
+those apply to. At least as far as same driver is used for them and the
+number of clocks is same. Thus perhaps this could be:
+
+- clock-names : from common clock binding: must contain "sclk_mfc" and "mfc",
+	corresponding to entries in the clocks property.
+
+Please note there is a white space before the first colon, that makes
+it really an important improvement...
+
+Please feel free to add my
 
 Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-> ---
-> Based on Kukjin's for-next.
-> Dependent on the below patch:
-> https://patchwork.kernel.org/patch/2349361/
-> ---
->  arch/arm/boot/dts/exynos4.dtsi |    2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exyno=
-s4.dtsi
-> index 59e6730..4061f48 100644
-> --- a/arch/arm/boot/dts/exynos4.dtsi
-> +++ b/arch/arm/boot/dts/exynos4.dtsi
-> @@ -150,6 +150,8 @@
->  		reg =3D <0x13400000 0x10000>;
->  		interrupts =3D <0 94 0>;
->  		samsung,power-domain =3D <&pd_mfc>;
-> +		clocks =3D <&clock 170>, <&clock 273>;
-> +		clock-names =3D "sclk_mfc", "mfc";
->  		status =3D "disabled";
->  	};
-> =20
->=20
+with those issues addressed.
 
-
---=20
-Sylwester Nawrocki
-=EC=8B=A4=EB=B2=A0=EC=8A=A4=ED=84=B0 =EB=82=98=EB=B8=8C=EB=A1=9C=EC=B8=A0=
-=ED=82=A4
-Samsung Poland R&D Center
+>    - samsung,mfc-r : Base address of the first memory bank used by MFC
+>  		    for DMA contiguous memory allocation and its size.
+> @@ -34,6 +37,8 @@ mfc: codec@13400000 {
+>  	reg = <0x13400000 0x10000>;
+>  	interrupts = <0 94 0>;
+>  	samsung,power-domain = <&pd_mfc>;
+> +	clocks = <&clock 170>, <&clock 273>;
+> +	clock-names = "sclk_mfc", "mfc";
+>  };
+>  
+>  Board specific DT entry:
