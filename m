@@ -1,15 +1,16 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 1/6] drivers: phy: add generic PHY framework
-Date: Thu, 4 Apr 2013 10:15:34 +0300
-Message-ID: <20130404071534.GC30287@arwen.pp.htv.fi>
-References: <1364993634-6378-1-git-send-email-kishon@ti.com>
- <1364993634-6378-2-git-send-email-kishon@ti.com>
- <515CC123.4060402@wwwdotorg.org>
-Reply-To: balbi-l0cyMroinI0@public.gmane.org
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 2/6] rtc: rtc-m48t86: add hooks to support driver side
+ memory mapping
+Date: Thu, 4 Apr 2013 09:25:03 +0200
+Message-ID: <20130404072503.GE28914@lunn.ch>
+References: <1364858565-17192-1-git-send-email-alex@digriz.org.uk>
+ <1364858565-17192-3-git-send-email-alex@digriz.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5015946729000906689=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <515CC123.4060402-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1364858565-17192-3-git-send-email-alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,71 +21,152 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+To: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============5015946729000906689==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="KDt/GgjP6HVcx58l"
-Content-Disposition: inline
+> -static int m48t86_rtc_probe(struct platform_device *dev)
+> +static int m48t86_rtc_probe(struct platform_device *pdev)
+>  {
+>  	unsigned char reg;
+> -	struct m48t86_ops *ops = dev->dev.platform_data;
+> -	struct rtc_device *rtc = rtc_device_register("m48t86",
+> -				&dev->dev, &m48t86_rtc_ops, THIS_MODULE);
+> -
+> -	if (IS_ERR(rtc))
+> -		return PTR_ERR(rtc);
+> -
+> -	platform_set_drvdata(dev, rtc);
+> +	int err;
+> +	struct resource *res_index, *res_data;
+> +	struct m48t86_rtc_private_data *priv;
+> +
+> +	/* Allocate memory for the device structure (and zero it) */
+> +	priv = kzalloc(sizeof(struct m48t86_rtc_private_data), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	if (!pdev->dev.platform_data) {
+> +		res_index = platform_get_resource_byname(
+> +					pdev, IORESOURCE_MEM, "rtc_index");
+> +		if (!res_index) {
+> +			err = -ENXIO;
+> +			goto out_free;
+> +		}
+> +
+> +		res_data = platform_get_resource_byname(
+> +					pdev, IORESOURCE_MEM, "rtc_data");
+> +		if (!res_data) {
+> +			err = -ENXIO;
+> +			goto out_free;
+> +		}
+> +
+> +		if (!request_mem_region(res_index->start,
+> +					resource_size(res_index),
+> +					dev_name(&pdev->dev))) {
+> +			err = -EBUSY;
+> +			goto out_free;
+> +		}
+> +
+> +		if (!request_mem_region(res_data->start,
+> +					resource_size(res_data),
+> +					dev_name(&pdev->dev))) {
+> +			err = -EBUSY;
+> +			goto out_release_index;
+> +		}
+> +
+> +		priv->io_index = ioremap(res_index->start,
+> +					resource_size(res_index));
+> +		if (!priv->io_index) {
+> +			err = -EIO;
+> +			goto out_release_data;
+> +		}
+> +
+> +		priv->io_data = ioremap(res_data->start,
+> +					resource_size(res_data));
+> +		if (!priv->io_data) {
+> +			err = -EIO;
+> +			goto out_io_index;
+> +		}
+> +	} else
 
---KDt/GgjP6HVcx58l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Alexander
 
-Hi,
+It would be good to use the devm_ functions here. It will make the
+cleanup on error much simpler, solve your warnings problem, and simply
+the remove function.
 
-On Wed, Apr 03, 2013 at 05:54:11PM -0600, Stephen Warren wrote:
-> struct phy {
-> 	struct device *dev;
-> 	struct module *owner;
-> 	int	(*init)(struct phy *phy);
-> 	int	(*exit)(struct phy *phy);
-> 	int	(*suspend)(struct phy *phy);
-> 	int	(*resume)(struct phy *phy);
 
-I wonder whether it makes sense to provide ->suspend/->resume callbacks
-here. We already have dev_pm_ops providing those methods and we can just
-wrap pm_runtime_* calls to be called by consumers.
-
---=20
-balbi
-
---KDt/GgjP6HVcx58l
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRXSiWAAoJEIaOsuA1yqREFXkQAIP3OrjLQw12ylU/UHkhNtSJ
-B9qlFZyTCIGB0Vt9B3LZj5E3Vr7+GjR6UVbgC4FrYGJ57kFM7bzF/s+4r/8IjHzQ
-OrVRwpQButjAQZ6AgOd3rWMl2GvV60Eq6qlaWxWnjYLlzyBon1ThFPcOqBwDXaxi
-FwADvC1Yi1RqPDyvAUz+awgwZI11F4PRv+CQtf2kzDrbSdyrM64IykFGzhe9SrMJ
-50A6YUZ2DSniypLc53dYFgaLQSatCBPVT5MAMrvGABE7XyiAN4WHYpWco75FfaM2
-/FGsGfp2JBewuWYOV/M2ARnE8YVYYMQYaBMlf1i0wdFmW4VWRbcRYeMPAKpjAOJn
-QLfhRyfDUeKb8L6IZxRLHo0LnF3UUXy27EmtZBAFGXDa2fTIieJSE1KE3nR9K9CF
-AKFdNwBxW54Z/FBn9atxJQzZcWaoVkp3iQhdZK3Nqhg5k5AaO5eZssm+YEPRMiZ0
-yjSintNTJDLR1JCwX6f4fgXgPhrKt48y7XdReHpeqFPZVnSCB4W+Y4STHI4sw6N8
-975ACZvbnw5NA+FpNwrBxcwsyQ7CdodsLsRDDlRrKRlu3jedXy5dhtIVu9Q7bCNn
-g5DK/nQ7mrVAZMpGN240eAdZszGR78RgZAL7+90YcoKJT7Kns667clNN2giJ6Tn9
-QbXnLOdkrSFA1+UF2k8E
-=jF/V
------END PGP SIGNATURE-----
-
---KDt/GgjP6HVcx58l--
-
---===============5015946729000906689==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============5015946729000906689==--
+> +		priv->ops = pdev->dev.platform_data;
+> +
+> +	priv->rtc = rtc_device_register("m48t86",
+> +				&pdev->dev, &m48t86_rtc_ops, THIS_MODULE);
+> +	if (IS_ERR(priv->rtc)) {
+> +		err = PTR_ERR(priv->rtc);
+> +		if (!pdev->dev.platform_data)
+> +			goto out_io_data;
+> +		else
+> +			goto out_free;
+> +	}
+>  
+>  	/* read battery status */
+> -	reg = ops->readbyte(M48T86_REG_D);
+> -	dev_info(&dev->dev, "battery %s\n",
+> +	reg = m48t86_rtc_readbyte(&pdev->dev, M48T86_REG_D);
+> +	dev_info(&pdev->dev, "battery %s\n",
+>  		(reg & M48T86_REG_D_VRT) ? "ok" : "exhausted");
+>  
+>  	return 0;
+> +
+> +out_io_data:
+> +	iounmap(priv->io_data);
+> +out_io_index:
+> +	iounmap(priv->io_index);
+> +out_release_data:
+> +	release_mem_region(res_data->start, resource_size(res_data));
+> +out_release_index:
+> +	release_mem_region(res_index->start, resource_size(res_index));
+> +out_free:
+> +	platform_set_drvdata(pdev, NULL);
+> +	kfree(priv);
+> +	return err;
+>  }
+>  
+> -static int m48t86_rtc_remove(struct platform_device *dev)
+> +static int m48t86_rtc_remove(struct platform_device *pdev)
+>  {
+> -	struct rtc_device *rtc = platform_get_drvdata(dev);
+> +	struct resource *res;
+> +	struct m48t86_rtc_private_data *priv = platform_get_drvdata(pdev);
+> +
+> +	if (priv->rtc)
+> +		rtc_device_unregister(priv->rtc);
+> +
+> +	if (priv->io_data) {
+> +		iounmap(priv->io_data);
+> +		res = platform_get_resource_byname(
+> +					pdev, IORESOURCE_MEM, "rtc_data");
+> +		release_mem_region(res->start, resource_size(res));
+> +	}
+> +
+> +	if (priv->io_index) {
+> +		iounmap(priv->io_index);
+> +		res = platform_get_resource_byname(
+> +					pdev, IORESOURCE_MEM, "rtc_index");
+> +		release_mem_region(res->start, resource_size(res));
+> +	}
+>  
+> - 	if (rtc)
+> -		rtc_device_unregister(rtc);
+> +	platform_set_drvdata(pdev, NULL);
+>  
+> -	platform_set_drvdata(dev, NULL);
+> +	kfree(priv);
+>  
+>  	return 0;
+>  }
+> -- 
+> 1.7.10.4
+> 
