@@ -1,131 +1,101 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v6 1/8] dt: describe base reset signal binding
-Date: Thu, 04 Apr 2013 08:49:10 -0500
-Message-ID: <515D84D6.8090107@gmail.com>
-References: <1364488523-20310-1-git-send-email-p.zabel@pengutronix.de> <1364488523-20310-2-git-send-email-p.zabel@pengutronix.de>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] rtc: rtc-at91sam9.c add DT support
+Date: Thu, 4 Apr 2013 16:08:04 +0200
+Message-ID: <515D8944.2060308@atmel.com>
+References: <515CF985.6050009@interlog.com> <515D35C2.7050405@atmel.com>
+ <515D7F56.90702@interlog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1364488523-20310-2-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, kernel@pengutronix.de, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <515D7F56.90702-qazKcTl6WRFWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org, Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Robert Nelson <Robert.Nelson-9gsZL1vm+hpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/28/2013 11:35 AM, Philipp Zabel wrote:
-> From: Stephen Warren <swarren@nvidia.com>
+On 04/04/2013 03:25 PM, Douglas Gilbert :
+> On 13-04-04 04:11 AM, Nicolas Ferre wrote:
+>> On 04/04/2013 05:54 AM, Douglas Gilbert :
+>>> Some members of the at91 SoCs use the Real Time Timer (RTT)
+>>> and the General Purpose Backup Registers (GPBR) to implement
+>>> a real time clock (RTC). The AT91SAM9G20 is one example.
+>>>
+>>> Attached is a patch to add DT support to rtc-at91sam9.c .
+>>> The patch is against lk 3.9.0-rc5 .
+>>>
+>>> Below is a snippet of DT code for the 'G20 that was observed
+>>> to work with this patch:
+>>>
+>>> ahb {
+>>>      apb {
+>>>
+>>>          rtc {
+>>>              compatible = "atmel,at91sam9-rtc";
+>>
+>> The compatible string has to be formed by the name of the first SoC
+>> compatible with this IP. It turns to be the at91sam9260.
+>> The second part of the string should be a name that reflects the nature
+>> of the peripheral. For this binding, I would like to mention the "RTT"
+>> in the compatibility string (because other drivers can use other RTT
+>> with other uses).
+>>
+>> What do you think about:
+>> "atmel,at91sam9260-rtt-as-rtc"? or something shorter?
 > 
-> This binding is intended to represent the hardware reset signals present
-> internally in most IC (SoC, FPGA, ...) designs.
-> It consists of a binding for a reset controller device (provider), and a
-> pair of properties, "resets" and "reset-names", to link a device node
-> (consumer) to its reset controller via phandle, similarly to the clock
-> and interrupt bindings.
+> Hi Nicolas,
+> Johan Hovold suggested:
+>    atmel,at91sam9260-rtt
+
+Yes, but I fear this could bring confusion if someone is building a RTT
+driver that is not targeted at acting as a RTC...
+
+> I notice (in the G20 doco) that the acronym RTTC is also used
+
+The "C" at the end stands for "Controller" (not very useful convention
+in my opinion).
+
+> for the rtt registers. What do you want?
+
+I found xxx-rtt-as-rtc or xxx-rtt-rtc but not completely satisfied with
+any of them...
+
+>>>                           /* RTTC followed by GPBR (backup registers) */
+>>>                           reg = <0xfffffd20 0x10>, <0xfffffd50 0x10>;
+>>>                           interrupts = <1 4 7>;
+>>>                           status = "okay";
+>>
+>> Last, but not least, when we add a DT binding, it is a requirement to
+>> add the corresponding documentation in the
+>> Documentation/devicetree/bindings/rtc/ directory.
 > 
-> The reset controller has all information necessary to reset the consumer
-> device. That could be provided via device tree, or it could be implemented
-> in hardware.
-> The aim is to enable device drivers to request a framework API to issue a
-> reset simply by providing their struct device pointer as the most common
-> case.
+> I have been underwhelmed by the accuracy and the organisation
+> of information in that documentation. And the examples are
+> often misleading given the actual hierarchy of real dtsi/dts
+> config files.
+
+Oh, really? I will have a look one of those days...
+
+
+> Give me working examples any day. You could (and should) test
+> what I gave on a g20ek board.
 > 
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
-> Reviewed-by: Marek Vasut <marex@denx.de>
+> Also I note there is no "bindings" documentation for
+> rtc-at91rm9200.c :-) After you, sir ....
 
-Looks good.
+Already submitted, my dear ;-)
+Here:
+http://ozlabs.org/~akpm/mmots/broken-out/drivers-rtc-rtc-at91rm9200c-add-dt-support.patch
 
-Acked-by: Rob Herring <rob.herring@calxeda.com>
-
-Rob
-
-> ---
->  Documentation/devicetree/bindings/reset/reset.txt | 75 +++++++++++++++++++++++
->  1 file changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/reset.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/reset.txt b/Documentation/devicetree/bindings/reset/reset.txt
-> new file mode 100644
-> index 0000000..31db6ff
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/reset.txt
-> @@ -0,0 +1,75 @@
-> += Reset Signal Device Tree Bindings =
-> +
-> +This binding is intended to represent the hardware reset signals present
-> +internally in most IC (SoC, FPGA, ...) designs. Reset signals for whole
-> +standalone chips are most likely better represented as GPIOs, although there
-> +are likely to be exceptions to this rule.
-> +
-> +Hardware blocks typically receive a reset signal. This signal is generated by
-> +a reset provider (e.g. power management or clock module) and received by a
-> +reset consumer (the module being reset, or a module managing when a sub-
-> +ordinate module is reset). This binding exists to represent the provider and
-> +consumer, and provide a way to couple the two together.
-> +
-> +A reset signal is represented by the phandle of the provider, plus a reset
-> +specifier - a list of DT cells that represents the reset signal within the
-> +provider. The length (number of cells) and semantics of the reset specifier
-> +are dictated by the binding of the reset provider, although common schemes
-> +are described below.
-> +
-> +A word on where to place reset signal consumers in device tree: It is possible
-> +in hardware for a reset signal to affect multiple logically separate HW blocks
-> +at once. In this case, it would be unwise to represent this reset signal in
-> +the DT node of each affected HW block, since if activated, an unrelated block
-> +may be reset. Instead, reset signals should be represented in the DT node
-> +where it makes most sense to control it; this may be a bus node if all
-> +children of the bus are affected by the reset signal, or an individual HW
-> +block node for dedicated reset signals. The intent of this binding is to give
-> +appropriate software access to the reset signals in order to manage the HW,
-> +rather than to slavishly enumerate the reset signal that affects each HW
-> +block.
-> +
-> += Reset providers =
-> +
-> +Required properties:
-> +#reset-cells:	Number of cells in a reset specifier; Typically 0 for nodes
-> +		with a single reset output and 1 for nodes with multiple
-> +		reset outputs.
-> +
-> +For example:
-> +
-> +	rst: reset-controller {
-> +		#reset-cells = <1>;
-> +	};
-> +
-> += Reset consumers =
-> +
-> +Required properties:
-> +resets:		List of phandle and reset specifier pairs, one pair
-> +		for each reset signal that affects the device, or that the
-> +		device manages. Note: if the reset provider specifies '0' for
-> +		#reset-cells, then only the phandle portion of the pair will
-> +		appear.
-> +
-> +Optional properties:
-> +reset-names:	List of reset signal name strings sorted in the same order as
-> +		the resets property. Consumers drivers will use reset-names to
-> +		match reset signal names with reset specifiers.
-> +
-> +For example:
-> +
-> +	device {
-> +		resets = <&rst 20>;
-> +		reset-names = "reset";
-> +	};
-> +
-> +This represents a device with a single reset signal named "reset".
-> +
-> +	bus {
-> +		resets = <&rst 10> <&rst 11> <&rst 12> <&rst 11>;
-> +		reset-names = "i2s1", "i2s2", "dma", "mixer";
-> +	};
-> +
-> +This represents a bus that controls the reset signal of each of four sub-
-> +ordinate devices. Consider for example a bus that fails to operate unless no
-> +child device has reset asserted.
-> 
-
+Bye,
+-- 
+Nicolas Ferre
