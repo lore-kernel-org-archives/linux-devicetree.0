@@ -1,58 +1,36 @@
 From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH V3 0/7] Update Arndale board support
-Date: Thu, 04 Apr 2013 14:24:57 +0900
-Message-ID: <276401ce30f4$beff29f0$3cfd7dd0$%kim@samsung.com>
-References: <1364890507-19261-1-git-send-email-tushar.behera@linaro.org>
+Subject: RE: [PATCH v2] usb: Document clocks in samsung,exynos4210-ehci/ohci
+ bindings
+Date: Thu, 04 Apr 2013 15:12:46 +0900
+Message-ID: <27a301ce30fb$6d141400$473c3c00$%kim@samsung.com>
+References: <1363302046-31684-1-git-send-email-dianders@chromium.org>
+ <1363316303-12736-1-git-send-email-dianders@chromium.org>
+ <007c01ce212a$059e3340$10da99c0$%han@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1364890507-19261-1-git-send-email-tushar.behera@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <007c01ce212a$059e3340$10da99c0$%han@samsung.com>
 Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Tushar Behera' <tushar.behera@linaro.org>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: patches@linaro.org
+Sender: linux-doc-owner@vger.kernel.org
+To: 'Jingoo Han' <jg1.han@samsung.com>, 'Doug Anderson' <dianders@chromium.org>
+Cc: 'Olof Johansson' <olof@lixom.net>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Vivek Gautam' <gautam.vivek@samsung.com>, 'Grant Likely' <grant.likely@secretlab.ca>, 'Rob Herring' <rob.herring@calxeda.com>, 'Rob Landley' <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Tushar Behera wrote:
+Jingoo Han wrote:
 > 
-> Arndale board support has been updated using pin-control and
-> common clock framework.
+> On Friday, March 15, 2013 8:01 AM, Doug Anderson wrote:
+> >
+> > The exynox4210-ehci and exynos4210-ohci nodes need a clock specified
+> > using the common clock framework.  Document it.
+> >
+> > Signed-off-by: Doug Anderson <dianders@chromium.org>
 > 
-> The patchset is based on Kukjin's for-next.
-> commit d58f6a153f40 ("Merge branch 'next/clk-exynos-2' into for-next")
+> It looks good.
+> Acked-by: Jingoo Han <jg1.han@samsung.com>
 > 
-> It depends on following patchset.
 > 
-> [PATCH 0/2] ARM: dts: Add default pin states for client nodes on Exynos4/5
-> platforms
-> http://comments.gmane.org/gmane.linux.kernel.samsung-soc/16559
-> 
-> Following 2 patches have been newly added in this patchset because
-> of changes during 3.9 merge window.
-> 1/7: ARM: dts: Add pin-control related changes for Arndale board
-> 2/7: ARM: dts: Add disable-wp for card slot on exynos5250-arndale
-> 
-> Amit Daniel Kachhap (1):
->   ARM: dts: Add PMIC node entry for Arndale board
-> 
-> Sachin Kamat (4):
->   ARM: dts: Add disable-wp for card slot on exynos5250-arndale
->   ARM: dts: Add vmmc regulator support for Arndale board
->   ARM: dts: Add MFC codec support for Arndale board
->   ARM: dts: Add HDMI HPD and regulator node for Arndale board
-> 
-> Tushar Behera (2):
->   ARM: dts: Add pin-control related changes for Arndale board
->   ARM: dts: Add gpio-button entries for Arndale board
-> 
->  arch/arm/boot/dts/exynos5250-arndale.dts |  343
-> +++++++++++++++++++++++++++++-
->  1 file changed, 333 insertions(+), 10 deletions(-)
-> 
-> --
-> 1.7.9.5
-
-Applied this whole series, thanks.
+Applied, thanks.
 
 - Kukjin
+
