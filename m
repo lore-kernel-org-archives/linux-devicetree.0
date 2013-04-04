@@ -1,36 +1,36 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v2] usb: Document clocks in samsung,exynos4210-ehci/ohci
- bindings
-Date: Thu, 04 Apr 2013 15:12:46 +0900
-Message-ID: <27a301ce30fb$6d141400$473c3c00$%kim@samsung.com>
-References: <1363302046-31684-1-git-send-email-dianders@chromium.org>
- <1363316303-12736-1-git-send-email-dianders@chromium.org>
- <007c01ce212a$059e3340$10da99c0$%han@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <007c01ce212a$059e3340$10da99c0$%han@samsung.com>
-Content-language: ko
-Sender: linux-doc-owner@vger.kernel.org
-To: 'Jingoo Han' <jg1.han@samsung.com>, 'Doug Anderson' <dianders@chromium.org>
-Cc: 'Olof Johansson' <olof@lixom.net>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Vivek Gautam' <gautam.vivek@samsung.com>, 'Grant Likely' <grant.likely@secretlab.ca>, 'Rob Herring' <rob.herring@calxeda.com>, 'Rob Landley' <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH 1/2] ARM: dts: Add MFC clock entries for exynos4
+Date: Thu,  4 Apr 2013 11:56:54 +0530
+Message-ID: <1365056815-28000-1-git-send-email-sachin.kamat@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: kgene.kim@samsung.com, rob.herring@calxeda.com, sachin.kamat@linaro.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Jingoo Han wrote:
-> 
-> On Friday, March 15, 2013 8:01 AM, Doug Anderson wrote:
-> >
-> > The exynox4210-ehci and exynos4210-ohci nodes need a clock specified
-> > using the common clock framework.  Document it.
-> >
-> > Signed-off-by: Doug Anderson <dianders@chromium.org>
-> 
-> It looks good.
-> Acked-by: Jingoo Han <jg1.han@samsung.com>
-> 
-> 
-Applied, thanks.
+Added MFC related clock entries in exynos4.dtsi file.
 
-- Kukjin
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+---
+Based on Kukjin's for-next.
+Dependent on the below patch:
+https://patchwork.kernel.org/patch/2349361/
+---
+ arch/arm/boot/dts/exynos4.dtsi |    2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index 59e6730..4061f48 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -150,6 +150,8 @@
+ 		reg = <0x13400000 0x10000>;
+ 		interrupts = <0 94 0>;
+ 		samsung,power-domain = <&pd_mfc>;
++		clocks = <&clock 170>, <&clock 273>;
++		clock-names = "sclk_mfc", "mfc";
+ 		status = "disabled";
+ 	};
+ 
+-- 
+1.7.9.5
