@@ -1,56 +1,121 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 0/5] ARM: OMAP: DMTIMER updates for v3.10
-Date: Thu, 4 Apr 2013 11:38:55 -0700
-Message-ID: <20130404183855.GP10155@atomide.com>
-References: <1363714699-29622-1-git-send-email-jon-hunter@ti.com>
+From: Douglas Gilbert <dgilbert@interlog.com>
+Subject: Re: [PATCH] rtc: rtc-at91sam9.c add DT support
+Date: Thu, 04 Apr 2013 15:14:14 -0400
+Message-ID: <515DD106.1090603@interlog.com>
+References: <515CF985.6050009@interlog.com> <515D35C2.7050405@atmel.com>
+ <515D7F56.90702@interlog.com> <515D8944.2060308@atmel.com>
+Reply-To: dgilbert@interlog.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1363714699-29622-1-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <515D8944.2060308@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Johan Hovold <jhovold@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-arm-kernel@lists.infradead.org, Robert Nelson <Robert.Nelson@digikey.com>
 List-Id: devicetree@vger.kernel.org
 
-* Jon Hunter <jon-hunter@ti.com> [130319 10:42]:
-> Includes:
-> - A couple fixes for DMTIMER context loss handling.
-> - Populating DMTIMER errata when booting with device-tree.
-> - A new function for requesting a DMTIMER by device-tree node.
-> 
-> Based upon v3.9-rc3.
-> 
-> Tested on OMAP5912 OSK, OMAP2420 H4, OMAP3430 SDP, OMAP4430 Blaze
-> and AM335x EVM. Testing includes ...
-> 1. Booting kernel on above boards
-> 2. Testing of various DMTIMER request APIs
-> 3. Testing the timer overflow and match interrupts.
-> 4. Using different clock sources to operate the timer with.
-> 
-> Jon Hunter (4):
->   ARM: OMAP: Force dmtimer restore if context loss is not detectable
->   ARM: OMAP: Add function to request timer by node
->   ARM: dts: OMAP2+: Update DMTIMER compatibility property
->   ARM: OMAP2+: Populate DMTIMER errata when using device-tree
-> 
-> NeilBrown (1):
->   ARM: OMAP: Simplify dmtimer context-loss handling
-> 
->  .../devicetree/bindings/arm/omap/timer.txt         |   17 +-
->  arch/arm/boot/dts/am33xx.dtsi                      |   14 +-
->  arch/arm/boot/dts/omap2.dtsi                       |   22 +-
->  arch/arm/boot/dts/omap2420.dtsi                    |    2 +-
->  arch/arm/boot/dts/omap2430.dtsi                    |    2 +-
->  arch/arm/boot/dts/omap3.dtsi                       |   24 +-
->  arch/arm/boot/dts/omap4.dtsi                       |   22 +-
->  arch/arm/boot/dts/omap5.dtsi                       |   22 +-
->  arch/arm/mach-omap2/timer.c                        |    7 +-
->  arch/arm/plat-omap/dmtimer.c                       |  241 ++++++++++++--------
->  arch/arm/plat-omap/include/plat/dmtimer.h          |    1 +
->  11 files changed, 220 insertions(+), 154 deletions(-)
+On 13-04-04 10:08 AM, Nicolas Ferre wrote:
+> On 04/04/2013 03:25 PM, Douglas Gilbert :
+>> On 13-04-04 04:11 AM, Nicolas Ferre wrote:
+>>> On 04/04/2013 05:54 AM, Douglas Gilbert :
+>>>> Some members of the at91 SoCs use the Real Time Timer (RTT)
+>>>> and the General Purpose Backup Registers (GPBR) to implement
+>>>> a real time clock (RTC). The AT91SAM9G20 is one example.
+>>>>
+>>>> Attached is a patch to add DT support to rtc-at91sam9.c .
+>>>> The patch is against lk 3.9.0-rc5 .
+>>>>
+>>>> Below is a snippet of DT code for the 'G20 that was observed
+>>>> to work with this patch:
+>>>>
+>>>> ahb {
+>>>>       apb {
+>>>>
+>>>>           rtc {
+>>>>               compatible = "atmel,at91sam9-rtc";
+>>>
+>>> The compatible string has to be formed by the name of the first SoC
+>>> compatible with this IP. It turns to be the at91sam9260.
+>>> The second part of the string should be a name that reflects the nature
+>>> of the peripheral. For this binding, I would like to mention the "RTT"
+>>> in the compatibility string (because other drivers can use other RTT
+>>> with other uses).
+>>>
+>>> What do you think about:
+>>> "atmel,at91sam9260-rtt-as-rtc"? or something shorter?
+>>
+>> Hi Nicolas,
+>> Johan Hovold suggested:
+>>     atmel,at91sam9260-rtt
+>
+> Yes, but I fear this could bring confusion if someone is building a RTT
+> driver that is not targeted at acting as a RTC...
+>
+>> I notice (in the G20 doco) that the acronym RTTC is also used
+>
+> The "C" at the end stands for "Controller" (not very useful convention
+> in my opinion).
+>
+>> for the rtt registers. What do you want?
+>
+> I found xxx-rtt-as-rtc or xxx-rtt-rtc but not completely satisfied with
+> any of them...
+>
+>>>>                            /* RTTC followed by GPBR (backup registers) */
+>>>>                            reg = <0xfffffd20 0x10>, <0xfffffd50 0x10>;
+>>>>                            interrupts = <1 4 7>;
+>>>>                            status = "okay";
+>>>
+>>> Last, but not least, when we add a DT binding, it is a requirement to
+>>> add the corresponding documentation in the
+>>> Documentation/devicetree/bindings/rtc/ directory.
+>>
+>> I have been underwhelmed by the accuracy and the organisation
+>> of information in that documentation. And the examples are
+>> often misleading given the actual hierarchy of real dtsi/dts
+>> config files.
+>
+> Oh, really? I will have a look one of those days...
+>
+>
+>> Give me working examples any day. You could (and should) test
+>> what I gave on a g20ek board.
+>>
+>> Also I note there is no "bindings" documentation for
+>> rtc-at91rm9200.c :-) After you, sir ....
+>
+> Already submitted, my dear ;-)
+> Here:
+> http://ozlabs.org/~akpm/mmots/broken-out/drivers-rtc-rtc-at91rm9200c-add-dt-support.patch
 
-For all these it sounds like it's best that Benoit queues
-them with the .dts changes:
+Good.
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+On a more serious note, looking at a dts file for working
+hardware is useful _but_ it is not clear how a kernel should
+be configured to fully utilize that dts file. Without a
+defconfig a user may need to resort to several searches like
+this:
+
+   find <kernel_src> -name '*.c' -exec grep "atmel,at91sam9x5-rtc" {} \; -print
+
+which is non-obvious to the novice. After a line like
+that, the Makefile in that directory may need to be checked
+to find out which CONFIG_ option needs to be set to get
+the associated driver built in (or a module?). So is there
+a policy _not_ to place "compat" strings in Kconfig files
+where they might be searchable?
+
+The "bindings" documentation and DT incantations are all
+for nought if the associated driver is not configured.
+Looking at the dmesg output is futile.
+
+Doug Gilbert
