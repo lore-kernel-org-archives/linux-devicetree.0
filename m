@@ -1,121 +1,52 @@
-From: Douglas Gilbert <dgilbert@interlog.com>
-Subject: Re: [PATCH] rtc: rtc-at91sam9.c add DT support
-Date: Thu, 04 Apr 2013 15:14:14 -0400
-Message-ID: <515DD106.1090603@interlog.com>
-References: <515CF985.6050009@interlog.com> <515D35C2.7050405@atmel.com>
- <515D7F56.90702@interlog.com> <515D8944.2060308@atmel.com>
-Reply-To: dgilbert@interlog.com
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: [PATCH 0/5] gpio/omap: 2nd batch of updates for v3.10
+Date: Thu, 4 Apr 2013 15:16:11 -0500
+Message-ID: <1365106576-31816-1-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <515D8944.2060308@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Johan Hovold <jhovold@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-arm-kernel@lists.infradead.org, Robert Nelson <Robert.Nelson@digikey.com>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Jon Hunter <jon-hunter@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 13-04-04 10:08 AM, Nicolas Ferre wrote:
-> On 04/04/2013 03:25 PM, Douglas Gilbert :
->> On 13-04-04 04:11 AM, Nicolas Ferre wrote:
->>> On 04/04/2013 05:54 AM, Douglas Gilbert :
->>>> Some members of the at91 SoCs use the Real Time Timer (RTT)
->>>> and the General Purpose Backup Registers (GPBR) to implement
->>>> a real time clock (RTC). The AT91SAM9G20 is one example.
->>>>
->>>> Attached is a patch to add DT support to rtc-at91sam9.c .
->>>> The patch is against lk 3.9.0-rc5 .
->>>>
->>>> Below is a snippet of DT code for the 'G20 that was observed
->>>> to work with this patch:
->>>>
->>>> ahb {
->>>>       apb {
->>>>
->>>>           rtc {
->>>>               compatible = "atmel,at91sam9-rtc";
->>>
->>> The compatible string has to be formed by the name of the first SoC
->>> compatible with this IP. It turns to be the at91sam9260.
->>> The second part of the string should be a name that reflects the nature
->>> of the peripheral. For this binding, I would like to mention the "RTT"
->>> in the compatibility string (because other drivers can use other RTT
->>> with other uses).
->>>
->>> What do you think about:
->>> "atmel,at91sam9260-rtt-as-rtc"? or something shorter?
->>
->> Hi Nicolas,
->> Johan Hovold suggested:
->>     atmel,at91sam9260-rtt
->
-> Yes, but I fear this could bring confusion if someone is building a RTT
-> driver that is not targeted at acting as a RTC...
->
->> I notice (in the G20 doco) that the acronym RTTC is also used
->
-> The "C" at the end stands for "Controller" (not very useful convention
-> in my opinion).
->
->> for the rtt registers. What do you want?
->
-> I found xxx-rtt-as-rtc or xxx-rtt-rtc but not completely satisfied with
-> any of them...
->
->>>>                            /* RTTC followed by GPBR (backup registers) */
->>>>                            reg = <0xfffffd20 0x10>, <0xfffffd50 0x10>;
->>>>                            interrupts = <1 4 7>;
->>>>                            status = "okay";
->>>
->>> Last, but not least, when we add a DT binding, it is a requirement to
->>> add the corresponding documentation in the
->>> Documentation/devicetree/bindings/rtc/ directory.
->>
->> I have been underwhelmed by the accuracy and the organisation
->> of information in that documentation. And the examples are
->> often misleading given the actual hierarchy of real dtsi/dts
->> config files.
->
-> Oh, really? I will have a look one of those days...
->
->
->> Give me working examples any day. You could (and should) test
->> what I gave on a g20ek board.
->>
->> Also I note there is no "bindings" documentation for
->> rtc-at91rm9200.c :-) After you, sir ....
->
-> Already submitted, my dear ;-)
-> Here:
-> http://ozlabs.org/~akpm/mmots/broken-out/drivers-rtc-rtc-at91rm9200c-add-dt-support.patch
+Main change is ensuring that the state of a gpio bank is restored when
+booting with device-tree. The rest of the patches are clean-ups and one
+optimisation.
 
-Good.
+The patch modifying the *.dtsi files should go via Benoit Cousson's
+for_3.10/dts branch [1] as it is dependent on changes in his branch but
+I have included here for completeness.
 
-On a more serious note, looking at a dts file for working
-hardware is useful _but_ it is not clear how a kernel should
-be configured to fully utilize that dts file. Without a
-defconfig a user may need to resort to several searches like
-this:
+Testing includes:
+- Boot testing on OMAP5912 OSK, OMAP2420 H4, OMAP3430 SDP, OMAP4430 SDP
+  and AM335x EVM.
+- Verified that GPIO interrupts are working on OMAP5912 OSK, OMAP2420 H4,
+  OMAP3430 SDP and OMAP4430 SDP by making sure networking was working
+  correctly as these boards use a GPIO with the ethernet chips. Also
+  checked /proc/interrupts to ensure GPIO interrupt counts are
+  incrementing as expected.
 
-   find <kernel_src> -name '*.c' -exec grep "atmel,at91sam9x5-rtc" {} \; -print
+[1] http://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git
 
-which is non-obvious to the novice. After a line like
-that, the Makefile in that directory may need to be checked
-to find out which CONFIG_ option needs to be set to get
-the associated driver built in (or a module?). So is there
-a policy _not_ to place "compat" strings in Kconfig files
-where they might be searchable?
+Jon Hunter (4):
+  gpio/omap: free irq domain in probe() failure paths
+  gpio/omap: optimise interrupt service routine
+  gpio/omap: force restore if context loss is not detectable
+  ARM: dts: OMAP2+: Identify GPIO banks that are always powered
 
-The "bindings" documentation and DT incantations are all
-for nought if the associated driver is not configured.
-Looking at the dmesg output is futile.
+Tarun Kanti DebBarma (1):
+  gpio/omap: remove extra context restores in *_runtime_resume()
 
-Doug Gilbert
+ .../devicetree/bindings/gpio/gpio-omap.txt         |    7 ++-
+ arch/arm/boot/dts/omap2420.dtsi                    |    4 ++
+ arch/arm/boot/dts/omap2430.dtsi                    |    4 ++
+ arch/arm/boot/dts/omap3.dtsi                       |    1 +
+ arch/arm/boot/dts/omap4.dtsi                       |    1 +
+ arch/arm/boot/dts/omap5.dtsi                       |    1 +
+ drivers/gpio/gpio-omap.c                           |   49 +++++++++++---------
+ 7 files changed, 44 insertions(+), 23 deletions(-)
+
+-- 
+1.7.10.4
+
