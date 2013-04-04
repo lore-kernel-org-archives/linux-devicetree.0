@@ -1,172 +1,91 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 2/6] rtc: rtc-m48t86: add hooks to support driver side
- memory mapping
-Date: Thu, 4 Apr 2013 09:25:03 +0200
-Message-ID: <20130404072503.GE28914@lunn.ch>
-References: <1364858565-17192-1-git-send-email-alex@digriz.org.uk>
- <1364858565-17192-3-git-send-email-alex@digriz.org.uk>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC][PATCH 1/2] ARM: OMAP4: clock: Add device tree support for
+ AUXCLKs
+Date: Thu, 4 Apr 2013 10:35:12 +0300
+Message-ID: <515D2D30.3000306@ti.com>
+References: <1363703220-4777-1-git-send-email-rogerq@ti.com> <1363703220-4777-2-git-send-email-rogerq@ti.com> <20130403234242.GE10155@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1364858565-17192-3-git-send-email-alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Ryan Mallon <rmallon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130403234242.GE10155-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: b-cousson-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> -static int m48t86_rtc_probe(struct platform_device *dev)
-> +static int m48t86_rtc_probe(struct platform_device *pdev)
->  {
->  	unsigned char reg;
-> -	struct m48t86_ops *ops = dev->dev.platform_data;
-> -	struct rtc_device *rtc = rtc_device_register("m48t86",
-> -				&dev->dev, &m48t86_rtc_ops, THIS_MODULE);
-> -
-> -	if (IS_ERR(rtc))
-> -		return PTR_ERR(rtc);
-> -
-> -	platform_set_drvdata(dev, rtc);
-> +	int err;
-> +	struct resource *res_index, *res_data;
-> +	struct m48t86_rtc_private_data *priv;
-> +
-> +	/* Allocate memory for the device structure (and zero it) */
-> +	priv = kzalloc(sizeof(struct m48t86_rtc_private_data), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	if (!pdev->dev.platform_data) {
-> +		res_index = platform_get_resource_byname(
-> +					pdev, IORESOURCE_MEM, "rtc_index");
-> +		if (!res_index) {
-> +			err = -ENXIO;
-> +			goto out_free;
-> +		}
-> +
-> +		res_data = platform_get_resource_byname(
-> +					pdev, IORESOURCE_MEM, "rtc_data");
-> +		if (!res_data) {
-> +			err = -ENXIO;
-> +			goto out_free;
-> +		}
-> +
-> +		if (!request_mem_region(res_index->start,
-> +					resource_size(res_index),
-> +					dev_name(&pdev->dev))) {
-> +			err = -EBUSY;
-> +			goto out_free;
-> +		}
-> +
-> +		if (!request_mem_region(res_data->start,
-> +					resource_size(res_data),
-> +					dev_name(&pdev->dev))) {
-> +			err = -EBUSY;
-> +			goto out_release_index;
-> +		}
-> +
-> +		priv->io_index = ioremap(res_index->start,
-> +					resource_size(res_index));
-> +		if (!priv->io_index) {
-> +			err = -EIO;
-> +			goto out_release_data;
-> +		}
-> +
-> +		priv->io_data = ioremap(res_data->start,
-> +					resource_size(res_data));
-> +		if (!priv->io_data) {
-> +			err = -EIO;
-> +			goto out_io_index;
-> +		}
-> +	} else
+Hi,
 
-Hi Alexander
-
-It would be good to use the devm_ functions here. It will make the
-cleanup on error much simpler, solve your warnings problem, and simply
-the remove function.
-
-
-> +		priv->ops = pdev->dev.platform_data;
-> +
-> +	priv->rtc = rtc_device_register("m48t86",
-> +				&pdev->dev, &m48t86_rtc_ops, THIS_MODULE);
-> +	if (IS_ERR(priv->rtc)) {
-> +		err = PTR_ERR(priv->rtc);
-> +		if (!pdev->dev.platform_data)
-> +			goto out_io_data;
-> +		else
-> +			goto out_free;
-> +	}
->  
->  	/* read battery status */
-> -	reg = ops->readbyte(M48T86_REG_D);
-> -	dev_info(&dev->dev, "battery %s\n",
-> +	reg = m48t86_rtc_readbyte(&pdev->dev, M48T86_REG_D);
-> +	dev_info(&pdev->dev, "battery %s\n",
->  		(reg & M48T86_REG_D_VRT) ? "ok" : "exhausted");
->  
->  	return 0;
-> +
-> +out_io_data:
-> +	iounmap(priv->io_data);
-> +out_io_index:
-> +	iounmap(priv->io_index);
-> +out_release_data:
-> +	release_mem_region(res_data->start, resource_size(res_data));
-> +out_release_index:
-> +	release_mem_region(res_index->start, resource_size(res_index));
-> +out_free:
-> +	platform_set_drvdata(pdev, NULL);
-> +	kfree(priv);
-> +	return err;
->  }
->  
-> -static int m48t86_rtc_remove(struct platform_device *dev)
-> +static int m48t86_rtc_remove(struct platform_device *pdev)
->  {
-> -	struct rtc_device *rtc = platform_get_drvdata(dev);
-> +	struct resource *res;
-> +	struct m48t86_rtc_private_data *priv = platform_get_drvdata(pdev);
-> +
-> +	if (priv->rtc)
-> +		rtc_device_unregister(priv->rtc);
-> +
-> +	if (priv->io_data) {
-> +		iounmap(priv->io_data);
-> +		res = platform_get_resource_byname(
-> +					pdev, IORESOURCE_MEM, "rtc_data");
-> +		release_mem_region(res->start, resource_size(res));
-> +	}
-> +
-> +	if (priv->io_index) {
-> +		iounmap(priv->io_index);
-> +		res = platform_get_resource_byname(
-> +					pdev, IORESOURCE_MEM, "rtc_index");
-> +		release_mem_region(res->start, resource_size(res));
-> +	}
->  
-> - 	if (rtc)
-> -		rtc_device_unregister(rtc);
-> +	platform_set_drvdata(pdev, NULL);
->  
-> -	platform_set_drvdata(dev, NULL);
-> +	kfree(priv);
->  
->  	return 0;
->  }
-> -- 
-> 1.7.10.4
+On 04/04/2013 02:42 AM, Tony Lindgren wrote:
+> Hi,
 > 
+> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [130319 07:31]:
+>> Register a device tree clock provider for AUX clocks
+>> on the OMAP4 SoC. Also provide the binding information.
+>>
+>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/clock/omap4-clock.txt      |   32 ++++++++++++++++++
+>>  arch/arm/boot/dts/omap4.dtsi                       |    5 +++
+>>  arch/arm/mach-omap2/board-generic.c                |    2 +-
+>>  arch/arm/mach-omap2/cclock44xx_data.c              |   35 ++++++++++++++++++++
+>>  arch/arm/mach-omap2/clock44xx.h                    |    1 +
+>>  arch/arm/mach-omap2/common.h                       |    9 +++++
+>>  arch/arm/mach-omap2/io.c                           |    6 +++
+>>  7 files changed, 89 insertions(+), 1 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/omap4-clock.txt
+>>
+> ...
+> 
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/omap4-clock.txt
+> 
+> Is this really specific to omap4 and auxclk only?
+> 
+> Shouldn't it be just omap-clock.txt?
+
+Yes, I've fixed this up in v2 of this patch.
+
+> 
+>> --- a/arch/arm/mach-omap2/cclock44xx_data.c
+>> +++ b/arch/arm/mach-omap2/cclock44xx_data.c
+>> @@ -27,6 +27,7 @@
+>>  #include <linux/clk-private.h>
+>>  #include <linux/clkdev.h>
+>>  #include <linux/io.h>
+>> +#include <linux/of.h>
+>>  
+>>  #include "soc.h"
+>>  #include "iomap.h"
+>> @@ -1663,6 +1664,40 @@ static struct omap_clk omap44xx_clks[] = {
+>>  	CLK(NULL,	"cpufreq_ck",	&dpll_mpu_ck,	CK_443X),
+>>  };
+>>  
+>> +static struct clk *scrm_clks[] = {
+>> +	&auxclk0_ck,
+>> +	&auxclk1_ck,
+>> +	&auxclk2_ck,
+>> +	&auxclk3_ck,
+>> +	&auxclk4_ck,
+>> +	&auxclk5_ck,
+>> +};
+> 
+> Hmm I don't like the idea of specifying the auxclk both in the
+> cclock44xx_data.c and in DT..
+
+Right, but till we have all clocks moved to DT we only need this
+approach for general purpose clocks that are not mapped to devices
+by hwmod.
+
+e.g. auxclk are required to be specified in DT nodes for USB PHY.
+Without this we can't get USB host working on Panda.
+
+As Rajendra points out, it seems moving entire clock data to DT is not
+going to happen soon. So this is the simplistic way things can work.
+
+cheers,
+-roger
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
