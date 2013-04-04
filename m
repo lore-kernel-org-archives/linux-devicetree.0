@@ -1,72 +1,43 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH] CLK: Allow parent clock and rate to be configured in
- DT.
-Date: Thu, 4 Apr 2013 20:08:29 -0300
-Message-ID: <CAOMZO5ASkvquyzPCEGObvB5Xh9bDPTJ2zx26eOUJT_Vb36Bn3Q@mail.gmail.com>
-References: <20130319170933.28337.50448.stgit@localhost>
- <20130325101707.GZ1906@pengutronix.de>
+From: Heiko =?iso-8859-15?q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v4 00/14] ARM: samsung-time: Prepare for multiplatform support
+Date: Fri, 5 Apr 2013 01:15:02 +0200
+Message-ID: <201304050115.03879.heiko@sntech.de>
+References: <1365093431-30621-1-git-send-email-t.figa@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130325101707.GZ1906-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1365093431-30621-1-git-send-email-t.figa@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, sameo@linux.intel.com, kgene.kim@samsung.com, kyungmin.park@samsung.com, linux@simtec.co.uk, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, sylvester.nawrocki@gmail.com, buserror@gmail.com, christer@weinigel.se, jekhor@gmail.com, ghcstop@gmail.com, mark.rutland@arm.com, tomasz.figa@gmail.com, robherring2@gmail.com, m.szyprowski@samsung.com, arnd@arndb.de, john.stultz@linaro.org, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
+Am Donnerstag, 4. April 2013, 18:36:57 schrieb Tomasz Figa:
+> This series is an attempt to make the samsung-time clocksource driver ready
+> for multiplatform kernels. It moves the driver to drivers/clocksource,
+> cleans it up from uses of static platform-specific definitions, simplifies
+> timer interrupt handling and adds Device Tree support.
+> 
+> Only samsung-time driver is reworked to use the master driver at this time,
+> since the PWM driver can be already considered broken at the moment and
+> needs separate series of several patches to fix and clean it up, which
+> I am already working on.
+> 
+> Tested on Universal C210 board with Device Tree. Not tested without
+> Device Tree, since it has been already broken before this series.
+> Compile tested for other related SoCs.
 
-On Mon, Mar 25, 2013 at 7:17 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+Looks nice.
 
->> +For example:
->> +     clock-configuration {
->> +             compatible = "clock-configuration";
->> +             clko1 {
->> +                     clocks = <&clks 160>; /* cko1_sel */
->> +                     parent = <&clks 114>; /* pll3_sw */
->> +             };
->> +
->> +             esdhca {
->> +                     clocks = <&clks 102>; /* esdhc_a_podf */
->> +                     clock-frequency = <200000000>;
->> +             };
->
-> This example shows this. For some reason we adjust the esdhc frequency
-> to 200MHz in the code currently, but this is because it matches our
-> current usecase. Once you move this into devicetree, we can't change
-> this anymore in the kernel, even if we find a much better way to adjust
-> the frequency in the future (i.e. smaller values might be good for power
-> savings, higher values might increase performance, we even might
-> dynamically change this frequency).
+On a non-DT S3C2416 board:
+Tested-by: Heiko Stuebner <heiko@sntech.de>
 
-What if we use Martin's idea, but without the "clock-frequency" option
-and only pass the parent information? This way the driver can find the
-better clock as you described. Something like:
 
-     clock-parent {
-             compatible = "clock-parent";
-             clko1 {
-                     clocks = <&clks 160>; /* cko1_sel */
-                    parent = <&clks 114>; /* pll3_sw */
-             };
+And just so I don't search myself silly, am I right in thinking that the 
+driver does not use the generic clocksource registration yet and dt machines 
+must still use samsung_timer_init at this point?
 
-This could be useful for removing the imx6q_sabrelite_cko1_setup()
-function from arch/arm/mach-imx/mach-imx6q.c.
 
-I would like to add audio support for another board and would like to
-avoid to do the same as imx6q_sabrelite_cko1_setup()  for setting up
-the CLKO, if possible.
-
-Regards,
-
-Fabio Estevam
+Heiko
