@@ -1,80 +1,39 @@
-From: Douglas Gilbert <dgilbert@interlog.com>
-Subject: Re: [PATCH] rtc: rtc-at91sam9.c add DT support
-Date: Thu, 04 Apr 2013 09:25:42 -0400
-Message-ID: <515D7F56.90702@interlog.com>
-References: <515CF985.6050009@interlog.com> <515D35C2.7050405@atmel.com>
-Reply-To: dgilbert@interlog.com
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4] gpio: mcp23s08: convert driver to DT
+Date: Thu, 4 Apr 2013 15:44:08 +0200
+Message-ID: <CACRpkdZdOabqWHo9j+Kq_MHWFEaj9=+d8vBxLtH6OZbBX3vGJw@mail.gmail.com>
+References: <1365069722-15408-1-git-send-email-larsi@wh2.tu-dresden.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <515D35C2.7050405@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Johan Hovold <jhovold@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-arm-kernel@lists.infradead.org, Robert Nelson <Robert.Nelson@digikey.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1365069722-15408-1-git-send-email-larsi@wh2.tu-dresden.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lars Poeschel <larsi@wh2.tu-dresden.de>
+Cc: Lars Poeschel <poeschel@lemonage.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, spi mailing list <spi-devel-general@lists.sourceforge.net>, Peter Korsgaard <jacmet@sunsite.dk>, Mark Brown <broonie@opensource.wolfsonmicro.com>
 List-Id: devicetree@vger.kernel.org
 
-On 13-04-04 04:11 AM, Nicolas Ferre wrote:
-> On 04/04/2013 05:54 AM, Douglas Gilbert :
->> Some members of the at91 SoCs use the Real Time Timer (RTT)
->> and the General Purpose Backup Registers (GPBR) to implement
->> a real time clock (RTC). The AT91SAM9G20 is one example.
->>
->> Attached is a patch to add DT support to rtc-at91sam9.c .
->> The patch is against lk 3.9.0-rc5 .
->>
->> Below is a snippet of DT code for the 'G20 that was observed
->> to work with this patch:
->>
->> ahb {
->>      apb {
->>
->>          rtc {
->>              compatible = "atmel,at91sam9-rtc";
+On Thu, Apr 4, 2013 at 12:02 PM, Lars Poeschel <larsi@wh2.tu-dresden.de> wrote:
+
+> From: Lars Poeschel <poeschel@lemonage.de>
 >
-> The compatible string has to be formed by the name of the first SoC
-> compatible with this IP. It turns to be the at91sam9260.
-> The second part of the string should be a name that reflects the nature
-> of the peripheral. For this binding, I would like to mention the "RTT"
-> in the compatibility string (because other drivers can use other RTT
-> with other uses).
+> This converts the mcp23s08 driver to be able to be used with device
+> tree.
+> There is a "spi-present-mask" device tree property, that allows to
+> use multiple of this spi chips on the same chipselect.
 >
-> What do you think about:
-> "atmel,at91sam9260-rtt-as-rtc"? or something shorter?
+> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+> ---
+> v4:
+> - removed the ability to specify the pullup from device tree
+> - updated binding doc
+(...)
+> @@ -668,6 +742,7 @@ static struct spi_driver mcp23s08_driver = {
+>         .driver = {
+>                 .name   = "mcp23s08",
+>                 .owner  = THIS_MODULE,
+> +               .of_match_table = of_match_ptr(mcp23s08_spi_of_match),
 
-Hi Nicolas,
-Johan Hovold suggested:
-    atmel,at91sam9260-rtt
+Will this compile if CONFIG_OF is not enabled?
 
-I notice (in the G20 doco) that the acronym RTTC is also used
-for the rtt registers. What do you want?
-
->
->>                           /* RTTC followed by GPBR (backup registers) */
->>                           reg = <0xfffffd20 0x10>, <0xfffffd50 0x10>;
->>                           interrupts = <1 4 7>;
->>                           status = "okay";
->
-> Last, but not least, when we add a DT binding, it is a requirement to
-> add the corresponding documentation in the
-> Documentation/devicetree/bindings/rtc/ directory.
-
-I have been underwhelmed by the accuracy and the organisation
-of information in that documentation. And the examples are
-often misleading given the actual hierarchy of real dtsi/dts
-config files.
-Give me working examples any day. You could (and should) test
-what I gave on a g20ek board.
-
-Also I note there is no "bindings" documentation for
-rtc-at91rm9200.c :-) After you, sir ....
-
-Doug Gilbert
+Yours,
+Linus Walleij
