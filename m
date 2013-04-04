@@ -1,37 +1,80 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] ARM: bcm281xx: Add L2 cache enable code
-Date: Thu, 4 Apr 2013 11:23:53 +0000
-Message-ID: <201304041123.53852.arnd@arndb.de>
-References: <1363299268-10506-1-git-send-email-csd@broadcom.com>
- <CAGFynZ9pE_B8KQNQvWsyn4Yz7tdd5VQwm=c76S-SPsGKNgu9ug@mail.gmail.com>
+From: Douglas Gilbert <dgilbert@interlog.com>
+Subject: Re: [PATCH] rtc: rtc-at91sam9.c add DT support
+Date: Thu, 04 Apr 2013 09:25:42 -0400
+Message-ID: <515D7F56.90702@interlog.com>
+References: <515CF985.6050009@interlog.com> <515D35C2.7050405@atmel.com>
+Reply-To: dgilbert@interlog.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAGFynZ9pE_B8KQNQvWsyn4Yz7tdd5VQwm=c76S-SPsGKNgu9ug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Christian Daudt <csd_b-jCriFORwCPHYtjvyW6yDsg@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Abhimanyu Kapur <abhimanyu.kapur-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <515D35C2.7050405@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Johan Hovold <jhovold@gmail.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-arm-kernel@lists.infradead.org, Robert Nelson <Robert.Nelson@digikey.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 03 April 2013, Christian Daudt wrote:
-> any willing reviewers ?
+On 13-04-04 04:11 AM, Nicolas Ferre wrote:
+> On 04/04/2013 05:54 AM, Douglas Gilbert :
+>> Some members of the at91 SoCs use the Real Time Timer (RTT)
+>> and the General Purpose Backup Registers (GPBR) to implement
+>> a real time clock (RTC). The AT91SAM9G20 is one example.
+>>
+>> Attached is a patch to add DT support to rtc-at91sam9.c .
+>> The patch is against lk 3.9.0-rc5 .
+>>
+>> Below is a snippet of DT code for the 'G20 that was observed
+>> to work with this patch:
+>>
+>> ahb {
+>>      apb {
+>>
+>>          rtc {
+>>              compatible = "atmel,at91sam9-rtc";
+>
+> The compatible string has to be formed by the name of the first SoC
+> compatible with this IP. It turns to be the at91sam9260.
+> The second part of the string should be a name that reflects the nature
+> of the peripheral. For this binding, I would like to mention the "RTT"
+> in the compatibility string (because other drivers can use other RTT
+> with other uses).
+>
+> What do you think about:
+> "atmel,at91sam9260-rtt-as-rtc"? or something shorter?
 
-Looks ok to me,
+Hi Nicolas,
+Johan Hovold suggested:
+    atmel,at91sam9260-rtt
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+I notice (in the G20 doco) that the acronym RTTC is also used
+for the rtt registers. What do you want?
 
-but please when you reply to a longer email with a single sentence, don't
-include a full quote of the original email, it just takes a lot of time
-to scan through it. (I realize a lot of people do this unfortunately)
+>
+>>                           /* RTTC followed by GPBR (backup registers) */
+>>                           reg = <0xfffffd20 0x10>, <0xfffffd50 0x10>;
+>>                           interrupts = <1 4 7>;
+>>                           status = "okay";
+>
+> Last, but not least, when we add a DT binding, it is a requirement to
+> add the corresponding documentation in the
+> Documentation/devicetree/bindings/rtc/ directory.
 
-	Arnd
+I have been underwhelmed by the accuracy and the organisation
+of information in that documentation. And the examples are
+often misleading given the actual hierarchy of real dtsi/dts
+config files.
+Give me working examples any day. You could (and should) test
+what I gave on a g20ek board.
+
+Also I note there is no "bindings" documentation for
+rtc-at91rm9200.c :-) After you, sir ....
+
+Doug Gilbert
