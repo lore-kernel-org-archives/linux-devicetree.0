@@ -1,13 +1,16 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] rtc: rtc-at91sam9.c add DT support
-Date: Thu, 4 Apr 2013 10:11:46 +0200
-Message-ID: <515D35C2.7050405@atmel.com>
-References: <515CF985.6050009@interlog.com>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v9 00/14] Tegra114 clockframework
+Date: Thu, 4 Apr 2013 11:20:44 +0300
+Message-ID: <20130404082043.GY18519@tbergstrom-lnx.Nvidia.com>
+References: <1365000110-8916-1-git-send-email-pdeschrijver@nvidia.com>
+ <515C6C6E.6060302@wwwdotorg.org> <515C7495.8060106@wwwdotorg.org>
+ <515CB9D9.90303@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <515CF985.6050009-qazKcTl6WRFWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <515CB9D9.90303-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,52 +21,82 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Robert Nelson <Robert.Nelson-9gsZL1vm+hpBDgjK7y7TUQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/04/2013 05:54 AM, Douglas Gilbert :
-> Some members of the at91 SoCs use the Real Time Timer (RTT)
-> and the General Purpose Backup Registers (GPBR) to implement
-> a real time clock (RTC). The AT91SAM9G20 is one example.
+On Thu, Apr 04, 2013 at 01:23:05AM +0200, Stephen Warren wrote:
+> On 04/03/2013 12:27 PM, Stephen Warren wrote:
+> > On 04/03/2013 11:52 AM, Stephen Warren wrote:
+> >> On 04/03/2013 08:40 AM, Peter De Schrijver wrote:
+> >>> This is the nineth version of the Tegra114 clockframework. It is based on the
+> >>> next-20130320-fixed branch of
+> >>> git://nv-tegra.nvidia.com/user/swarren/linux-2.6.git,
+> > ... [it depends on]
+> >>> http://patchwork.ozlabs.org/patch/233415/
+> >>
+> >> That is Joseph's "clocksource: tegra: enable arch_timer". Is this
+> >> actually a dependency, or an optimization, or ...?
+> >>
+> >> Rob Herring objected to that patch since it isn't necessary if his
+> >> series "ARM arch, sp804 and integrator timer CLKSRC_OF support" is applied.
+> >>
+> >> If I apply just your (Peter's) CCF series without Joseph's or Rob's
+> >> patches, will everything still work, or is this a hard dependency to
+> >> create a working system?
+> > 
+> > I manage to get this series applied on top of my local dev branch, based
+> > on next-20130328 (it was painful). Testing indicates that there is no
+> > dependency on Joseph's patch mentioned above; I could boot, log in, and
+> > play audio (with local patches) with /or/ without Joseph's patch applied.
+> > 
+> > However, I still find that I need to revert f7db706 ARM: "7674/1: smp:
+> > Avoid dummy clockevent being preferred over real hardware clock-event",
+> > or I get a hard system hang right after the root fs is mounted. As such,
+> > I not sure if it's worthwhile applying this series since it's unlikely
+> > to actually work once merged into Torvalds' tree.
+> > 
+> > Do you have any idea what the problem is here?
+> > 
+> > I'll try rebasing my local test branch on top of the latest linux-next
+> > just in case some other fix solved this already, but I'm not going to
+> > hold my breath.
 > 
-> Attached is a patch to add DT support to rtc-at91sam9.c .
-> The patch is against lk 3.9.0-rc5 .
+> I've found the problem. My bootloader wasn't initializing the TSC and
+> hence I guess it wasn't working properly, even with Joseph's patch to
+> add a call to the initialization function.
 > 
-> Below is a snippet of DT code for the 'G20 that was observed
-> to work with this patch:
+
+Ok.
+
+> So, if I:
 > 
-> ahb {
->     apb {
+> a) Fix my bootloader to enable TSC.
 > 
->         rtc {
->             compatible = "atmel,at91sam9-rtc";
-
-The compatible string has to be formed by the name of the first SoC
-compatible with this IP. It turns to be the at91sam9260.
-The second part of the string should be a name that reflects the nature
-of the peripheral. For this binding, I would like to mention the "RTT"
-in the compatibility string (because other drivers can use other RTT
-with other uses).
-
-What do you think about:
-"atmel,at91sam9260-rtt-as-rtc"? or something shorter?
-
->                          /* RTTC followed by GPBR (backup registers) */
->                          reg = <0xfffffd20 0x10>, <0xfffffd50 0x10>;
->                          interrupts = <1 4 7>;
->                          status = "okay";
-
-Last, but not least, when we add a DT binding, it is a requirement to
-add the corresponding documentation in the
-Documentation/devicetree/bindings/rtc/ directory.
-
->         };
->     }
-> };
+> b) Merge Rob's patch series to enable the TSC. This is needed rather
+> than Joseph's patch since the two conflict, and I assume that Rob's
+> patch is going into 3.10.
 > 
-> Signed-off-by: Douglas Gilbert <dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org>
+> c) Undo my local revert of "ARM: 7674/1: smp: Avoid dummy clockevent
+> being preferred over real hardware clock-event".
+> 
 
-Thanks, best regards,
--- 
-Nicolas Ferre
+Ok. Good. That's close to what I have and works here. As well.
+
+> ... then everything now works.
+> 
+> So the only remaining issues are:
+> 
+> 1) Should the mux clocks still be defined in the binding document?
+> Prashant didn't seem to think so.
+> 
+
+I guess we should remove them then.
+
+> 2) I need Mike's ack to apply this series to the Tegra tree.
+
+Ok. Mike?
+
+Cheers,
+
+Peter.
