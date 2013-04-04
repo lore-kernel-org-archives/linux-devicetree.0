@@ -1,16 +1,17 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v9 00/14] Tegra114 clockframework
-Date: Thu, 4 Apr 2013 11:20:44 +0300
-Message-ID: <20130404082043.GY18519@tbergstrom-lnx.Nvidia.com>
-References: <1365000110-8916-1-git-send-email-pdeschrijver@nvidia.com>
- <515C6C6E.6060302@wwwdotorg.org> <515C7495.8060106@wwwdotorg.org>
- <515CB9D9.90303@wwwdotorg.org>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 1/6] drivers: phy: add generic PHY framework
+Date: Thu, 4 Apr 2013 14:26:48 +0530
+Message-ID: <515D4050.7090506@ti.com>
+References: <1364993634-6378-1-git-send-email-kishon@ti.com>
+ <1364993634-6378-2-git-send-email-kishon@ti.com>
+ <20130403134102.GC14680@arwen.pp.htv.fi> <515C3A42.4020404@ti.com>
+ <20130403142747.GK14680@arwen.pp.htv.fi> <515C3D94.1060000@ti.com>
+ <20130403154704.GD19093@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <515CB9D9.90303-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20130403154704.GD19093-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,82 +22,39 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 04, 2013 at 01:23:05AM +0200, Stephen Warren wrote:
-> On 04/03/2013 12:27 PM, Stephen Warren wrote:
-> > On 04/03/2013 11:52 AM, Stephen Warren wrote:
-> >> On 04/03/2013 08:40 AM, Peter De Schrijver wrote:
-> >>> This is the nineth version of the Tegra114 clockframework. It is based on the
-> >>> next-20130320-fixed branch of
-> >>> git://nv-tegra.nvidia.com/user/swarren/linux-2.6.git,
-> > ... [it depends on]
-> >>> http://patchwork.ozlabs.org/patch/233415/
-> >>
-> >> That is Joseph's "clocksource: tegra: enable arch_timer". Is this
-> >> actually a dependency, or an optimization, or ...?
-> >>
-> >> Rob Herring objected to that patch since it isn't necessary if his
-> >> series "ARM arch, sp804 and integrator timer CLKSRC_OF support" is applied.
-> >>
-> >> If I apply just your (Peter's) CCF series without Joseph's or Rob's
-> >> patches, will everything still work, or is this a hard dependency to
-> >> create a working system?
-> > 
-> > I manage to get this series applied on top of my local dev branch, based
-> > on next-20130328 (it was painful). Testing indicates that there is no
-> > dependency on Joseph's patch mentioned above; I could boot, log in, and
-> > play audio (with local patches) with /or/ without Joseph's patch applied.
-> > 
-> > However, I still find that I need to revert f7db706 ARM: "7674/1: smp:
-> > Avoid dummy clockevent being preferred over real hardware clock-event",
-> > or I get a hard system hang right after the root fs is mounted. As such,
-> > I not sure if it's worthwhile applying this series since it's unlikely
-> > to actually work once merged into Torvalds' tree.
-> > 
-> > Do you have any idea what the problem is here?
-> > 
-> > I'll try rebasing my local test branch on top of the latest linux-next
-> > just in case some other fix solved this already, but I'm not going to
-> > hold my breath.
-> 
-> I've found the problem. My bootloader wasn't initializing the TSC and
-> hence I guess it wasn't working properly, even with Joseph's patch to
-> add a call to the initialization function.
-> 
+Hi,
 
-Ok.
+On Wednesday 03 April 2013 09:17 PM, Felipe Balbi wrote:
+> Hi,
+>
+> On Wed, Apr 03, 2013 at 08:02:52PM +0530, Kishon Vijay Abraham I wrote:
+>>>>>> +		ret = -EINVAL;
+>>>>>> +		goto err0;
+>>>>>> +	}
+>>>>>> +
+>>>>>> +	if (!phy_class)
+>>>>>> +		phy_core_init();
+>>>>>
+>>>>> why don't you setup the class on module_init ? Then this would be a
+>>>>> terrible error condition here :-)
+>>>>
+>>>> This is for the case where the PHY driver gets loaded before the PHY
+>>>> framework. I could have returned EPROBE_DEFER here instead I thought
+>>>> will have it this way.
+>>>
+>>> looks a bit weird IMO. Is it really possible for PHY to load before ?
+>>
+>> yeah. it actually happened when I tried with beagle and had all the
+>> modules as built-in. Because twl4030 has subsys_initcall(), it loads
+>> before PHY framework.
+>
+> that's a bug in twl4030.
 
-> So, if I:
-> 
-> a) Fix my bootloader to enable TSC.
-> 
-> b) Merge Rob's patch series to enable the TSC. This is needed rather
-> than Joseph's patch since the two conflict, and I assume that Rob's
-> patch is going into 3.10.
-> 
-> c) Undo my local revert of "ARM: 7674/1: smp: Avoid dummy clockevent
-> being preferred over real hardware clock-event".
-> 
+right. Will fix it.
 
-Ok. Good. That's close to what I have and works here. As well.
-
-> ... then everything now works.
-> 
-> So the only remaining issues are:
-> 
-> 1) Should the mux clocks still be defined in the binding document?
-> Prashant didn't seem to think so.
-> 
-
-I guess we should remove them then.
-
-> 2) I need Mike's ack to apply this series to the Tegra tree.
-
-Ok. Mike?
-
-Cheers,
-
-Peter.
+Thanks
+Kishon
