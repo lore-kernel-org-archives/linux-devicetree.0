@@ -1,62 +1,56 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH v3] of/pci: Provide support for parsing PCI DT ranges
- property
-Date: Thu, 04 Apr 2013 09:57:34 +0900
-Message-ID: <002b01ce30cf$64da6180$2e8f2480$%han@samsung.com>
-References: <20130326162022.GA25625@arm.com>
- <20130327130418.GA10480@avionic-0098.mockup.avionic-design.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] video: implement a dumb framebuffer driver
+Date: Wed, 03 Apr 2013 20:25:06 -0600
+Message-ID: <515CE482.4030707@wwwdotorg.org>
+References: <1364969830-6481-1-git-send-email-swarren@wwwdotorg.org>
+ <20130403064653.GA6263@quad.lixom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20130327130418.GA10480@avionic-0098.mockup.avionic-design.de>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Thierry Reding' <thierry.reding@avionic-design.de>, 'Andrew Murray' <Andrew.Murray@arm.com>
-Cc: 'Bjorn Helgaas' <bhelgaas@google.com>, 'Grant Likely' <grant.likely@secretlab.ca>, 'Russell King - ARM Linux' <linux@arm.linux.org.uk>, 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, 'Arnd Bergmann' <arnd@arndb.de>, 'Liviu Dudau' <Liviu.Dudau@arm.com>, 'Jingoo Han' <jg1.han@samsung.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130403064653.GA6263-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, March 27, 2013 10:04 PM, Thierry Reding wrote:
+On 04/03/2013 12:46 AM, Olof Johansson wrote:
+> On Wed, Apr 03, 2013 at 12:17:10AM -0600, Stephen Warren wrote:
+>> A dumb frame-buffer describes a raw memory region that may be rendered
+>> to, with the assumption that the display hardware has already been set
+>> up to scan out from that buffer.
+>>
+>> This is useful in cases where a bootloader exists and has set up the
+>> display hardware, but a Linux driver doesn't yet exist for the display
+>> hardware.
+...
+>> diff --git a/Documentation/devicetree/bindings/video/dumb-framebuffer.txt b/Documentation/devicetree/bindings/video/dumb-framebuffer.txt
+...
+>> +Required properties:
+...
+>> +- format: The format of the framebuffer surface. Valid values are:
+>> +  r5g6b5: A 16bpp format.
 > 
-> On Tue, Mar 26, 2013 at 04:20:23PM +0000, Andrew Murray wrote:
-> > This patch factors out common implementation patterns to reduce overall kernel
-> > code and provide a means for host bridge drivers to directly obtain struct
-> > resources from the DT's ranges property without relying on architecture specific
-> > DT handling. This will make it easier to write archiecture independent host bridge
-> > drivers and mitigate against further duplication of DT parsing code.
-> >
-> > This patch can be used in the following way:
-> >
-> > 	struct of_pci_range_parser parser;
-> > 	struct of_pci_range range;
-> >
-> > 	if (of_pci_range_parser(&parser, np))
-> > 		; //no ranges property
-> >
-> > 	for_each_of_pci_range(&parser, &range) {
-> >
-> > 		/*
-> > 			directly access properties of the address range, e.g.:
-> > 			range.pci_space, range.pci_addr, range.cpu_addr,
-> > 			range.size, range.flags
-> >
-> > 			alternatively obtain a struct resource, e.g.:
-> > 			struct resource res;
-> > 			of_pci_range_to_resource(&range, np, &res);
-> > 		*/
-> > 	}
-> >
-> > Additionally the implementation takes care of adjacent ranges and merges them
-> > into a single range (as was the case with powerpc and microblaze).
-> >
-> > The modifications to microblaze, mips and powerpc have not been tested.
-> >
-> > Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> Hm, I'm used to this being written as "rgb565", which is also the format
+> string that the fsl-imx-drm binding seems to use.
 > 
-> Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
+> I guess actual depth can easily be derived from format.
 
-It works properly with Exynos5440.
+I'd prefer the bit-widths be interleaved with the component names; doing
+so is a little more precise if you end up with 2-digit component widths,
+e.g. 10-bit r/g/b plus 2-bit alpha, where the multi-digit numbers would
+run together otherwise and hence aren't easily algorithmically parsable.
+I believe this interleaved style is more common in the graphics world
+too. The IMX binding doesn't seem like a good example; the other option
+besides "rgb565" is "rgb24", which could be one one many different formats.
 
-Tested-by: Jingoo Han <jg1.han@samsung.com>
+I'll address the dumb/simple naming issue and repost.
