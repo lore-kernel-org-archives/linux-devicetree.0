@@ -1,40 +1,41 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V2 4/7] kbuild: always run gcc -E on *.dts, remove cmd_dtc_cpp
-Date: Thu, 04 Apr 2013 10:41:49 -0600
-Message-ID: <515DAD4D.9020100@wwwdotorg.org>
-References: <1365032098-22825-1-git-send-email-swarren@wwwdotorg.org> <1365032098-22825-4-git-send-email-swarren@wwwdotorg.org> <515CC317.2000703@elopez.com.ar>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <515CC317.2000703@elopez.com.ar>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>
-Cc: Michal Marek <mmarek@suse.cz>, Grant Likely <glikely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@nvidia.com>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, arm@kernel.org, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org, Hiroshi Doyu <hdoyu@nvidia.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: [PATCH 1/3] ARM: dts: exynos4: Add node for PWM device
+Date: Thu, 04 Apr 2013 18:51:13 +0200
+Message-ID: <1365094275-4811-2-git-send-email-t.figa@samsung.com>
+References: <1365094275-4811-1-git-send-email-t.figa@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1365094275-4811-1-git-send-email-t.figa@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, thomas.abraham@linaro.org, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/03/2013 06:02 PM, Emilio L=F3pez wrote:
-> Hi Stephen,
->=20
-> El 03/04/13 20:34, Stephen Warren escribi=F3:
->> From: Stephen Warren <swarren@nvidia.com>
->>
->> Replace cmd_dtc with cmd_dtc_cpp, and delete the latter.
->>
->> Previously, a special file extension (.dtsp) was required to trigger
->> the C pre-processor to run on device tree files. This was ugly. Now =
-that
->> previous changes have enhanced cmd_dtc_cpp to collect dependency
->> information from both gcc -E and dtc, we can transparently run the p=
-re-
->> processor on all device tree files, irrespective of whether they
->>
->=20
-> I think a line got dropped on the commit description by mistake.
+This patch adds device tree node for PWM block present on Exynos 4 SoCs.
 
-Thanks for noticing. I've locally added the following line to the end o=
-f
-the description, but won't repost unless there's some other reason, or
-the series is ack'd enough to actually be applied:
+Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ arch/arm/boot/dts/exynos4.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-use /include/ or #include syntax to include *.dtsi.
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index 800ff11..d1bedd4 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -331,6 +331,14 @@
+ 		status = "disabled";
+ 	};
+ 
++	pwm@139D0000 {
++		compatible = "samsung,s5pc100-pwm";
++		reg = <0x139D0000 0x1000>;
++		interrupts = <0 37 0>, <0 38 0>, <0 39 0>, <0 40 0>, <0 41 0>;
++		#pwm-cells = <2>;
++		status = "disabled";
++	};
++
+ 	amba {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-- 
+1.8.1.5
