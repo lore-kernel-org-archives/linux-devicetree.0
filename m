@@ -1,16 +1,17 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 1/5 v2] mv643xx_eth: add Device Tree bindings
-Date: Fri, 5 Apr 2013 15:58:03 +0200
-Message-ID: <CABJ1b_TdzE_Q9qLsdSGZy8byFpCTtVBUy5FtxiZAx7QqgG-rVg@mail.gmail.com>
-References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
- <1365071235-11611-2-git-send-email-florian@openwrt.org>
- <20130404212906.GA25904@schnuecks.de>
- <515E9FE0.8050402@openwrt.org>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [RFC][PATCH 1/2] ARM: OMAP4: clock: Add device tree support for
+ AUXCLKs
+Date: Fri, 5 Apr 2013 13:39:31 +0300
+Message-ID: <515EA9E3.1010409@ti.com>
+References: <1363703220-4777-1-git-send-email-rogerq@ti.com>
+ <1363703220-4777-2-git-send-email-rogerq@ti.com>
+ <20130403234242.GE10155@atomide.com> <515D2D30.3000306@ti.com>
+ <20130404164137.GH10155@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <515E9FE0.8050402@openwrt.org>
+In-Reply-To: <20130404164137.GH10155@atomide.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,154 +21,106 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <florian@openwrt.org>
-Cc: thomas.petazzoni@free-electrons.com, moinejf@free.fr, Simon Baatz <gmbnomis@gmail.com>, andrew@lunn.ch, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jogo@openwrt.org, linux-arm-kernel@lists.infradead.org, jm@lentin.co.uk, davem@davemloft.net, buytenh@wantstofly.org, jason@lakedaemon.net
+To: Tony Lindgren <tony@atomide.com>
+Cc: "Menon, Nishanth" <nm@ti.com>, Paul Walmsley <paul@pwsan.com>, linux-usb@vger.kernel.org, linux@arm.linux.org.uk, b-cousson@ti.com, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, linux-kernel@vger.kernel.org, balbi@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 5, 2013 at 11:56 AM, Florian Fainelli <florian@openwrt.org> wrote:
-> [snip]
-
-Florian,
-
-took me a while to try you patches out on Dove but now I fixed all
-issues. I will
-comment on all related patches but first I want to comment here.
-
-One general note for Dove related patches: You didn't remove the registration of
-ge platform_device from mach-dove/board-dt.c. That will lead to double
-registration
-of mdio and mv643xx_eth/shared, so you'll never be sure if DT or non-DT code is
-executed. I haven't checked mach-kirkwood/board-dt.c or orion5x code.
-
->>>         if (!mv643xx_eth_version_printed++)
->>>                 pr_notice("MV-643xx 10/100/1000 ethernet driver version
->>> %s\n",
+On 04/04/2013 07:41 PM, Tony Lindgren wrote:
+> * Roger Quadros <rogerq@ti.com> [130404 00:39]:
+>> On 04/04/2013 02:42 AM, Tony Lindgren wrote:
+>>>> --- a/arch/arm/mach-omap2/cclock44xx_data.c
+>>>> +++ b/arch/arm/mach-omap2/cclock44xx_data.c
+>>>> @@ -27,6 +27,7 @@
+>>>>  #include <linux/clk-private.h>
+>>>>  #include <linux/clkdev.h>
+>>>>  #include <linux/io.h>
+>>>> +#include <linux/of.h>
+>>>>  
+>>>>  #include "soc.h"
+>>>>  #include "iomap.h"
+>>>> @@ -1663,6 +1664,40 @@ static struct omap_clk omap44xx_clks[] = {
+>>>>  	CLK(NULL,	"cpufreq_ck",	&dpll_mpu_ck,	CK_443X),
+>>>>  };
+>>>>  
+>>>> +static struct clk *scrm_clks[] = {
+>>>> +	&auxclk0_ck,
+>>>> +	&auxclk1_ck,
+>>>> +	&auxclk2_ck,
+>>>> +	&auxclk3_ck,
+>>>> +	&auxclk4_ck,
+>>>> +	&auxclk5_ck,
+>>>> +};
+>>>
+>>> Hmm I don't like the idea of specifying the auxclk both in the
+>>> cclock44xx_data.c and in DT..
 >>
->>
->> This is not related to your change, but there is a problem in this
->> function that has already been discussed in the past if I remember
->> correctly: The respective clock needs to be enabled here (at least
->> on Kirkwood), since accesses to the hardware are done below.
->> Enabling the clock only in mv643xx_eth_probe() is too late.
->>
->> As said, this is not a problem introduced by your changes (and which
->> is currently circumvented by enabling the respective clocks in
->> kirkwood_legacy_clk_init() and kirkwood_ge0x_init()), but we might
->> want to fix this now to get rid of unconditionally enabling the GE
->> clocks in the DT case.
->
->
-> I think there may have been some confusion between the "ethernet-group"
-> clock and the actual Ethernet port inside the "ethernet-group". The
-> mv643xx_eth driver assumes we have a per-port clock gating scheme, while I
-> think we have a per "ethernet-group" clock gating scheme instead. Like you
-> said, I think this should be addressed separately.
+>> Right, but till we have all clocks moved to DT we only need this
+>> approach for general purpose clocks that are not mapped to devices
+>> by hwmod.
+> 
+> For v3.10, let's just make sure that USB works with DT as then
+> after v3.10 we can make omap4 DT only and get rid of estimated
+> 7K lines of code and data. I guess this is the last piece missing
+> for that, or are we also missing something else?
 
-IMHO, there should be a clocks property where ever you try to access registers,
-i.e. in all three "parts" mv643xx_eth_shared (group), mv643xx_eth
-(port) and mdio.
-Since port depends on shared it would be ok to have it per group but that may
-collide with other SoCs than Dove/Kirkwood that have per port clocks.
+For panda we just need a way to map the auxclk to the USB PHY device
+and the relevant dts data to get USB host working with DT.
+Beagle USB host should work already with DT without any changes.
 
-Is that separation (group/port) really required for any SoC?
+> 
+> Can't you set up a clock alias for your device so it can find the
+> auxclk when requesting it with the dev entry?
+> 
 
->
-> [snip]
->>
->> You don't change the clk initialization here:
->>
->> #if defined(CONFIG_HAVE_CLK)
->>         mp->clk = clk_get(&pdev->dev, (pdev->id ? "1" : "0"));
->>         if (!IS_ERR(mp->clk)) {
->>                 clk_prepare_enable(mp->clk);
->>                 mp->t_clk = clk_get_rate(mp->clk);
->>         }
->> #endif
->>
->> Which, if I understand correctly, works in the DT case because you
->> assign "clock-names" to the clocks in the DTS. However, I wonder
->> whether this works for any but the first Ethernet device.
+which clock is mapped to which PHY device depends on board design
+and that cannot be per-determined at one place. This information
+needs to come from the board.dts file.
 
-Yes, it does. Assigned clocks from clocks property get a clock alias for
-that device name (node name). Using anything else than NULL here is
-IMHO just wrong. We should rather provide proper clock aliases for non-DT case.
+There was an earlier attempt to provide a way of building clock aliases
+at runtime from device tree [1], but the current approach is way better
 
->> In the old platform device setup, the pdev->id was set when
->> initialiazing the platform_device structure in common.c.  Where is
->> this done in the DT case?
->
-> Looks like you are right, in the DT case, I assume that we should lookup the
-> clock using NULL instead of "1" or "0" so we match any clock instead of a
-> specific one.
+[1]
+https://lkml.org/lkml/2013/3/12/241
 
-Yes.
+> For the DT clock driver if needed for v3.10, how about just do a
+> minimal drivers/clock/omap/ that uses the standard binding?
+> Then that driver can just do clk_get() from cclock44xx_data.c
 
-> [snip]
->>
->>
->> In phy_scan(), the phy is searched like this:
->>
->>                 snprintf(phy_id, sizeof(phy_id), PHY_ID_FMT,
->>                                 "orion-mdio-mii", addr);
->>
->>                 phydev = phy_connect(mp->dev, phy_id,
->> mv643xx_eth_adjust_link,
->>                                 PHY_INTERFACE_MODE_GMII);
->>
->> But "orion-mdio-mii:xx" is the name of the PHY if MDIO is setup via a
->> platform_device. I could not get this to work if the MDIO device is
->> setup via DT. Am I doing something wrong?
->
-> I just missed updating this part of the code to probe for PHYs. The board I
-> tested with uses a "PHY_NONE" configuration. I will add the missing bits for
-> of_phy_connect() to be called here.
+I don't understand how to do it and why it is better than the current
+approach.
 
-I don't think that the ethernet controller should probe the PHY's on mdio-bus
-at all. At least not for DT enabled platforms. I had a look at DT and non-DT
-mdio-bus sources, and realized that there is a bus scan for non-DT only.
-of_mdiobus_register requires you to set (and know) the PHY address.
+How can that driver do clk_get() from cclock44xx_data.c?
+from where does it get the clk_id to pass into clk_get()?
 
-I prepared a patch for of_mdio_register that will allow you to probe mdio and
-assign phy addresses to each node found. Currently, the heuristic for probing
-is: assign each phy node the next probed phy_addr starting with 0. But that
-will not allow to e.g. set some PHY addresses and probe the rest.
+> for now? And then later on we'll just move all the clocks to a
+> combination of DT + /lib/firmware.
 
-We had a similar discussion whether to probe or not for DT nodes, and I guess
-there also will be some discussion about the above patch. OTOH we could just
-(again) ask users of every kirkwood/orion5x/dove board to tell their
-phy addresses
-and fail to probe the phy for new boards...
+What is the benefit of moving clock data to /lib/firmware? We could
+as well just move it to DT only, no?
 
-I will prepare a proper patch soon and post it on the corresponding lists.
+> 
+>> e.g. auxclk are required to be specified in DT nodes for USB PHY.
+>> Without this we can't get USB host working on Panda.
+> 
+> OK. So if the USB PHY has a dev entry, can't you just set up a
+> clock alias in struct omap_clk omap44xx_clks[] for it?
 
->> Additionally, in phy_scan() there is this:
->>
->>         if (phy_addr == MV643XX_ETH_PHY_ADDR_DEFAULT) {
->>                 start = phy_addr_get(mp) & 0x1f;
->>                 num = 32;
->>         } else {
->>         ...
->>
->> MV643XX_ETH_PHY_ADDR_DEFAULT is defined as 0. However, many Kirkwood
->> devices use "MV643XX_ETH_PHY_ADDR(0)".  If the module probe is
->> deferred in mv643xx_eth because the MDIO driver is not yet loaded,
->> all 32 PHY addresses are scanned without success.  This is not needed
->> and clutters the log.
->
->
-> Ok, I am not sure how we can circumvent the log cluttering that happens,
-> what would be your suggestion?
+I've explained why this can't be done above.
 
-My suggestion is to change MV643XX_ETH_PHY_ADDR_DEFAULT from a valid
-phy address (0)
-to something invalid (32). I understand that using 0 helps if you
-don't want to set it in mv643xx's platform_data
-but it is always difficult to rely on that if 0 is a valid number.
+>  
+>> As Rajendra points out, it seems moving entire clock data to DT is not
+>> going to happen soon. So this is the simplistic way things can work.
+> 
+> Right but seems like we can get started there without moving
+> them all at once.
+> 
+What if we provide a complete clock list instead of only auxclks in
+dt_clks[]?
 
-Changing the above to 32 should just work because most (all?) boards
-using phy_scan should also
-already use MV643XX_ETH_PHY_ADDR_DEFAULT. I also suggest to rename
-current define to a
-better name, e.g. MV643XX_ETH_PHY_ADDR_AUTOSCAN.
+This approach is similar to arch/arm/mach-imx/clk-imx35.c
 
-Sebastian
+Device drivers can then use them as they migrate to DT. Then later
+we could migrate clock data to DT, without impacting device drivers.
+
+cheers,
+-roger
