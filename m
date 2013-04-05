@@ -1,15 +1,18 @@
-From: Samuel Ortiz <sameo@linux.intel.com>
-Subject: Re: [PATCH v4 04/14] mfd: Add Samsung PWM/timer master driver
-Date: Fri, 5 Apr 2013 18:39:58 +0200
-Message-ID: <20130405163958.GP17363@zurbaran>
-References: <1365093431-30621-1-git-send-email-t.figa@samsung.com>
- <1365093431-30621-5-git-send-email-t.figa@samsung.com>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH 1/5 v2] mv643xx_eth: add Device Tree bindings
+Date: Fri, 5 Apr 2013 12:04:43 -0600
+Message-ID: <20130405180443.GE3598@obsidianresearch.com>
+References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
+ <1365071235-11611-2-git-send-email-florian@openwrt.org>
+ <20130404212906.GA25904@schnuecks.de>
+ <515E9FE0.8050402@openwrt.org>
+ <CABJ1b_TdzE_Q9qLsdSGZy8byFpCTtVBUy5FtxiZAx7QqgG-rVg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1365093431-30621-5-git-send-email-t.figa@samsung.com>
+In-Reply-To: <CABJ1b_TdzE_Q9qLsdSGZy8byFpCTtVBUy5FtxiZAx7QqgG-rVg@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,38 +22,69 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: mark.rutland@arm.com, heiko@sntech.de, tomasz.figa@gmail.com, buserror@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, christer@weinigel.se, sylvester.nawrocki@gmail.com, m.szyprowski@samsung.com, kgene.kim@samsung.com, linux@arm.linux.org.uk, kwangwoo.lee@gmail.com, mcuelenaere@gmail.com, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, john.stultz@linaro.org, ghcstop@gmail.com, linux@simtec.co.uk, linux-arm-kernel@lists.infradead.org, broonie@opensource.wolfsonmicro.com, jekhor@gmail.com, kyungmin.park@samsung.com, tglx@linutronix.de
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: thomas.petazzoni@free-electrons.com, moinejf@free.fr, Simon Baatz <gmbnomis@gmail.com>, andrew@lunn.ch, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, davem@davemloft.net, grant.likely@secretlab.ca, jogo@openwrt.org, buytenh@wantstofly.org, jm@lentin.co.uk, Florian Fainelli <florian@openwrt.org>, linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+On Fri, Apr 05, 2013 at 03:58:03PM +0200, Sebastian Hesselbarth wrote:
 
-On Thu, Apr 04, 2013 at 06:37:01PM +0200, Tomasz Figa wrote:
-> This patch adds master driver for PWM/timer block available on many
-> Samsung SoCs providing clocksource and PWM output capabilities.
-> 
-> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-samsung.txt        |  37 ++
->  drivers/clocksource/Kconfig                        |   1 +
->  drivers/mfd/Kconfig                                |   3 +
->  drivers/mfd/Makefile                               |   1 +
->  drivers/mfd/samsung-pwm.c                          | 439 +++++++++++++++++++++
->  drivers/pwm/Kconfig                                |   1 +
->  include/linux/mfd/samsung-pwm.h                    |  49 +++
->  include/linux/platform_data/samsung-pwm.h          |  28 ++
->  8 files changed, 559 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-samsung.txt
->  create mode 100644 drivers/mfd/samsung-pwm.c
->  create mode 100644 include/linux/mfd/samsung-pwm.h
->  create mode 100644 include/linux/platform_data/samsung-pwm.h
-Why is that an MFD driver, and why aren't you using the PWM APIs for it ?
-Also, you probably want to look at using the regmap APIs for your IO.
+> I don't think that the ethernet controller should probe the PHY's on mdio-bus
+> at all. At least not for DT enabled platforms. I had a look at DT and non-DT
+> mdio-bus sources, and realized that there is a bus scan for non-DT only.
+> of_mdiobus_register requires you to set (and know) the PHY address.
 
-Cheers,
-Samuel.
+DT platforms should have the option to use the standard phy-phandle
+connection:
 
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+
+		mdio@72004 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			compatible = "marvell,orion-mdio";
+			reg = <0x72004 0x84>;
+			status = "disabled";
+
++                        PHY1: ethernet-phy@1 {
++                                reg = <1>;
++                                device_type = "ethernet-phy";
++                        };
+		};
+
+		ethernet-group@72000 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			compatible = "marvell,mv643xx-eth-block";
+			reg = <0x72000 0x4000>;
+			tx-csum-limit = <1600>;
+			status = "disabled";
+
+			egiga0: ethernet@0 {
+				device_type = "network";
+				compatible = "marvell,mv643xx-eth";
+				reg = <0>;
+				interrupts = <29>;
+				clocks = <&gate_clk 2>;
++	                        phy-handle = <&PHY1>;
+			};
+		};
+
+When phy-handle is present the ethernet driver should not probe/scan for
+phys.
+
+There is standard code to handle all of this - an important gain is
+that the phy driver now has access to a DT node and can apply
+phy-specific properties.
+
+> We had a similar discussion whether to probe or not for DT nodes,
+> and I guess there also will be some discussion about the above
+> patch. OTOH we could just (again) ask users of every
+> kirkwood/orion5x/dove board to tell their phy addresses and fail to
+> probe the phy for new boards...
+
+Maybe print a warning and call the no-DT phy probe code if phy-handle
+is nor present?
+
+Not sure this should be in the common code, phy probing is sketchy, it
+shouldn't be encouraged, IMHO..
+
+Jason
