@@ -1,14 +1,16 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v4 04/14] mfd: Add Samsung PWM/timer master driver
-Date: Sat, 06 Apr 2013 00:24:18 +0200
-Message-ID: <2359597.ofbj7Kvioz@flatron>
-References: <1365093431-30621-1-git-send-email-t.figa@samsung.com>
- <19231120.yHlZtTPUMd@amdc1227> <201304052154.21361.arnd@arndb.de>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 1/5 v2] mv643xx_eth: add Device Tree bindings
+Date: Fri, 5 Apr 2013 15:58:03 +0200
+Message-ID: <CABJ1b_TdzE_Q9qLsdSGZy8byFpCTtVBUy5FtxiZAx7QqgG-rVg@mail.gmail.com>
+References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
+ <1365071235-11611-2-git-send-email-florian@openwrt.org>
+ <20130404212906.GA25904@schnuecks.de>
+ <515E9FE0.8050402@openwrt.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201304052154.21361.arnd@arndb.de>
+In-Reply-To: <515E9FE0.8050402@openwrt.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,73 +20,154 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: mark.rutland@arm.com, heiko@sntech.de, Tomasz Figa <t.figa@samsung.com>, buserror@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, christer@weinigel.se, sylvester.nawrocki@gmail.com, m.szyprowski@samsung.com, kgene.kim@samsung.com, linux@arm.linux.org.uk, Samuel Ortiz <sameo@linux.intel.com>, kwangwoo.lee@gmail.com, mcuelenaere@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, john.stultz@linaro.org, ghcstop@gmail.com, linux@simtec.co.uk, linux-arm-kernel@lists.infradead.org, broonie@opensource.wolfsonmicro.com, jekhor@gmail.com, kyungmin.park@samsung.com, tglx@linutronix.de
+To: Florian Fainelli <florian@openwrt.org>
+Cc: thomas.petazzoni@free-electrons.com, moinejf@free.fr, Simon Baatz <gmbnomis@gmail.com>, andrew@lunn.ch, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jogo@openwrt.org, linux-arm-kernel@lists.infradead.org, jm@lentin.co.uk, davem@davemloft.net, buytenh@wantstofly.org, jason@lakedaemon.net
 List-Id: devicetree@vger.kernel.org
 
-On Friday 05 of April 2013 21:54:21 Arnd Bergmann wrote:
-> On Friday 05 April 2013, Tomasz Figa wrote:
-> > > I don't think anyone ever suggested using a private API though.
-> > 
-> > I must have gotten the last paragraph of
-> > http://article.gmane.org/gmane.linux.kernel.samsung-soc/16638
-> > wrong then. For me it seemed like the timer driver would expose a
-> > private API to the PWM driver.
-> 
-> Yes, sorry I wasn't clear enough. I meant a register-level interface
-> exposed from the base driver, not a high-level interface like you
-> did.
+On Fri, Apr 5, 2013 at 11:56 AM, Florian Fainelli <florian@openwrt.org> wrote:
+> [snip]
 
-I'm not sure what you mean by a register-level interface. Something like 
-samsung_pwm_update_reg(reg, mask, val), which modifies bitfields according 
-to the mask and value with appropriate synchronization? If yes, this 
-solves only the problem of access to shared registers.
+Florian,
 
-The other problems that remain:
+took me a while to try you patches out on Dove but now I fixed all
+issues. I will
+comment on all related patches but first I want to comment here.
 
-- negotiation of PWM channels to use for clock source and clock events,
-  because each board can use different channels for PWM outputs,
+One general note for Dove related patches: You didn't remove the registration of
+ge platform_device from mach-dove/board-dt.c. That will lead to double
+registration
+of mdio and mv643xx_eth/shared, so you'll never be sure if DT or non-DT code is
+executed. I haven't checked mach-kirkwood/board-dt.c or orion5x code.
 
-- code duplication caused by both of the drivers doing mostly the same
-  things and or having to parse the same data from device tree,
+>>>         if (!mv643xx_eth_version_printed++)
+>>>                 pr_notice("MV-643xx 10/100/1000 ethernet driver version
+>>> %s\n",
+>>
+>>
+>> This is not related to your change, but there is a problem in this
+>> function that has already been discussed in the past if I remember
+>> correctly: The respective clock needs to be enabled here (at least
+>> on Kirkwood), since accesses to the hardware are done below.
+>> Enabling the clock only in mv643xx_eth_probe() is too late.
+>>
+>> As said, this is not a problem introduced by your changes (and which
+>> is currently circumvented by enabling the respective clocks in
+>> kirkwood_legacy_clk_init() and kirkwood_ge0x_init()), but we might
+>> want to fix this now to get rid of unconditionally enabling the GE
+>> clocks in the DT case.
+>
+>
+> I think there may have been some confusion between the "ethernet-group"
+> clock and the actual Ethernet port inside the "ethernet-group". The
+> mv643xx_eth driver assumes we have a per-port clock gating scheme, while I
+> think we have a per "ethernet-group" clock gating scheme instead. Like you
+> said, I think this should be addressed separately.
 
-- both non-DT and DT platforms must be supported,
+IMHO, there should be a clocks property where ever you try to access registers,
+i.e. in all three "parts" mv643xx_eth_shared (group), mv643xx_eth
+(port) and mdio.
+Since port depends on shared it would be ok to have it per group but that may
+collide with other SoCs than Dove/Kirkwood that have per port clocks.
 
-- how to keep the ability to load PWM driver as a module (or not load it
-  at all when PWM is not used on particular board), while retaining
-  everything that is needed for the clocksource driver in kernel,
+Is that separation (group/port) really required for any SoC?
 
-- some platforms can't use PWM timers as system clocksources, while on
-  others this is the only timekeeping hardware available.
+>
+> [snip]
+>>
+>> You don't change the clk initialization here:
+>>
+>> #if defined(CONFIG_HAVE_CLK)
+>>         mp->clk = clk_get(&pdev->dev, (pdev->id ? "1" : "0"));
+>>         if (!IS_ERR(mp->clk)) {
+>>                 clk_prepare_enable(mp->clk);
+>>                 mp->t_clk = clk_get_rate(mp->clk);
+>>         }
+>> #endif
+>>
+>> Which, if I understand correctly, works in the DT case because you
+>> assign "clock-names" to the clocks in the DTS. However, I wonder
+>> whether this works for any but the first Ethernet device.
 
-> > > I think
-> > > it's ok if the driver lives in drivers/mfd when it doesn't fit
-> > > anywhere
-> > > else easily, but you should really register it to the pwm subsystem
-> > > to
-> > > expose that functionality, not export functions that can be used by
-> > > a pwm shim driver, which even seems to be missing from the series.
-> > 
-> > Anyway, using PWM API in a clocksource driver that needs to be running
-> > very early (before any initcalls get called) seems a bit weird for
-> > me, especially when PWM API doesn't provide such fine grained control
-> > over PWM timers that is required in the clocksource drivers.
-> 
-> Exactly, that's why you should have a regular PWM driver that gets
-> loaded at a convenient time and just uses an interface exported by the
-> base driver to access the common registers.
+Yes, it does. Assigned clocks from clocks property get a clock alias for
+that device name (node name). Using anything else than NULL here is
+IMHO just wrong. We should rather provide proper clock aliases for non-DT case.
 
-Well, this is basically what my patches do, except that the PWM driver 
-isn't reworked to use the base driver yet.
+>> In the old platform device setup, the pdev->id was set when
+>> initialiazing the platform_device structure in common.c.  Where is
+>> this done in the DT case?
+>
+> Looks like you are right, in the DT case, I assume that we should lookup the
+> clock using NULL instead of "1" or "0" so we match any clock instead of a
+> specific one.
 
-The private API exported to the samsung-time and pwm-samsung drivers isn't 
-maybe the most fortunate one, but it clearly has the advantage of solving 
-all the problems I mentioned before.
+Yes.
 
-Same goes for calling this an MFD driver. It doesn't even use the MFD 
-core, but there seems to be no better place to put it. Maybe 
-drivers/platform/arm would be better, if it existed, just as currently 
-available drivers/platform/x86?
+> [snip]
+>>
+>>
+>> In phy_scan(), the phy is searched like this:
+>>
+>>                 snprintf(phy_id, sizeof(phy_id), PHY_ID_FMT,
+>>                                 "orion-mdio-mii", addr);
+>>
+>>                 phydev = phy_connect(mp->dev, phy_id,
+>> mv643xx_eth_adjust_link,
+>>                                 PHY_INTERFACE_MODE_GMII);
+>>
+>> But "orion-mdio-mii:xx" is the name of the PHY if MDIO is setup via a
+>> platform_device. I could not get this to work if the MDIO device is
+>> setup via DT. Am I doing something wrong?
+>
+> I just missed updating this part of the code to probe for PHYs. The board I
+> tested with uses a "PHY_NONE" configuration. I will add the missing bits for
+> of_phy_connect() to be called here.
 
-Best regards,
-Tomasz
+I don't think that the ethernet controller should probe the PHY's on mdio-bus
+at all. At least not for DT enabled platforms. I had a look at DT and non-DT
+mdio-bus sources, and realized that there is a bus scan for non-DT only.
+of_mdiobus_register requires you to set (and know) the PHY address.
+
+I prepared a patch for of_mdio_register that will allow you to probe mdio and
+assign phy addresses to each node found. Currently, the heuristic for probing
+is: assign each phy node the next probed phy_addr starting with 0. But that
+will not allow to e.g. set some PHY addresses and probe the rest.
+
+We had a similar discussion whether to probe or not for DT nodes, and I guess
+there also will be some discussion about the above patch. OTOH we could just
+(again) ask users of every kirkwood/orion5x/dove board to tell their
+phy addresses
+and fail to probe the phy for new boards...
+
+I will prepare a proper patch soon and post it on the corresponding lists.
+
+>> Additionally, in phy_scan() there is this:
+>>
+>>         if (phy_addr == MV643XX_ETH_PHY_ADDR_DEFAULT) {
+>>                 start = phy_addr_get(mp) & 0x1f;
+>>                 num = 32;
+>>         } else {
+>>         ...
+>>
+>> MV643XX_ETH_PHY_ADDR_DEFAULT is defined as 0. However, many Kirkwood
+>> devices use "MV643XX_ETH_PHY_ADDR(0)".  If the module probe is
+>> deferred in mv643xx_eth because the MDIO driver is not yet loaded,
+>> all 32 PHY addresses are scanned without success.  This is not needed
+>> and clutters the log.
+>
+>
+> Ok, I am not sure how we can circumvent the log cluttering that happens,
+> what would be your suggestion?
+
+My suggestion is to change MV643XX_ETH_PHY_ADDR_DEFAULT from a valid
+phy address (0)
+to something invalid (32). I understand that using 0 helps if you
+don't want to set it in mv643xx's platform_data
+but it is always difficult to rely on that if 0 is a valid number.
+
+Changing the above to 32 should just work because most (all?) boards
+using phy_scan should also
+already use MV643XX_ETH_PHY_ADDR_DEFAULT. I also suggest to rename
+current define to a
+better name, e.g. MV643XX_ETH_PHY_ADDR_AUTOSCAN.
+
+Sebastian
