@@ -1,53 +1,32 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH 0/5] gpio/omap: 2nd batch of updates for v3.10
-Date: Fri, 5 Apr 2013 12:05:36 +0530
-Message-ID: <515E70B8.6060903@ti.com>
-References: <1365106576-31816-1-git-send-email-jon-hunter@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1365106576-31816-1-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Kevin Hilman <khilman@linaro.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+From: Padmavathi Venna <padma.v@samsung.com>
+Subject: [PATCH 0/3] clk: Exynos: Register audio subsytem clocks using common
+ clk framework
+Date: Fri, 05 Apr 2013 12:10:43 +0530
+Message-ID: <1365144043-17101-1-git-send-email-padma.v@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.v@samsung.com, padma.kvr@gmail.com
+Cc: sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, thomas.abraham@linaro.org, kgene.kim@samsung.com, sangsu4u.park@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Friday 05 April 2013 01:46 AM, Jon Hunter wrote:
-> Main change is ensuring that the state of a gpio bank is restored when
-> booting with device-tree. The rest of the patches are clean-ups and one
-> optimisation.
-> 
-> The patch modifying the *.dtsi files should go via Benoit Cousson's
-> for_3.10/dts branch [1] as it is dependent on changes in his branch but
-> I have included here for completeness.
-> 
-> Testing includes:
-> - Boot testing on OMAP5912 OSK, OMAP2420 H4, OMAP3430 SDP, OMAP4430 SDP
->   and AM335x EVM.
-> - Verified that GPIO interrupts are working on OMAP5912 OSK, OMAP2420 H4,
->   OMAP3430 SDP and OMAP4430 SDP by making sure networking was working
->   correctly as these boards use a GPIO with the ethernet chips. Also
->   checked /proc/interrupts to ensure GPIO interrupt counts are
->   incrementing as expected.
-> 
-> [1] http://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git
-> 
-> Jon Hunter (4):
->   gpio/omap: free irq domain in probe() failure paths
->   gpio/omap: optimise interrupt service routine
->   gpio/omap: force restore if context loss is not detectable
->   ARM: dts: OMAP2+: Identify GPIO banks that are always powered
-> 
-> Tarun Kanti DebBarma (1):
->   gpio/omap: remove extra context restores in *_runtime_resume()
->
+Samsung Exynos SoC has a separate subsystem for audio. This subsystem
+has a internal clock controller which controls i2s0 and pcm0 clocks.
+This patch series adds the Samsung Exynos SoC audio subsytem clock code
+to the common clock framework and provides the I2S0 clock information in
+the dtsi file.
 
-Thanks Jon for pulling the fixes. I suggest you to split the series so
-that 'gpio/omap:*' can be pulled by Grant and 'ARM: dts:*' by Benoit.
+Padmavathi Venna (3):
+  clk: exynos: register audio subsystem clocks using common clock
+    framework
+  ARM: dts: add Exynos audio subsystem clock controller node
+  ARM: dts: add clock provider information for i2s0 controller in
+    Exynos5250
 
-All the 'gpio/omap:*' patches in the series looks fine to me.
-FWIW,
-Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+ arch/arm/boot/dts/exynos5250.dtsi      |    8 ++
+ drivers/clk/samsung/Makefile           |    1 +
+ drivers/clk/samsung/clk-exynos-audss.c |  139 ++++++++++++++++++++++++++++++++
+ 3 files changed, 148 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/clk/samsung/clk-exynos-audss.c
 
-
+-- 
+1.7.4.4
