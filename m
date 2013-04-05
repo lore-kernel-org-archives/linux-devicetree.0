@@ -1,15 +1,16 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 2/2] mfd: stmpe: DT: Add stmpe-i2c dt alias to get id
- device
-Date: Fri, 5 Apr 2013 18:07:00 +0200
-Message-ID: <20130405160700.GK17363@zurbaran>
-References: <1362139646-23613-1-git-send-email-linus.walleij@stericsson.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] documentation: iommu: add description of ARM System MMU
+ binding
+Date: Fri, 05 Apr 2013 13:25:26 -0500
+Message-ID: <515F1716.70309@gmail.com>
+References: <1365094259-24847-1-git-send-email-will.deacon@arm.com>
+ <515EFF1A.5030705@gmail.com>
+ <20130405165745.GB17151@mudshark.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1362139646-23613-1-git-send-email-linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+In-Reply-To: <20130405165745.GB17151-MRww78TxoiP5vMa5CHWGZ34zcgK1vI+I0E9HWUfgJXw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,29 +21,30 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-Cc: Anmar Oueja <anmar.oueja-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-On Fri, Mar 01, 2013 at 01:07:26PM +0100, Linus Walleij wrote:
-> From: Gabriel Fernandez <gabriel.fernandez-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+On 04/05/2013 11:57 AM, Will Deacon wrote:
+> Hi Rob,
 > 
-> This patch augments the STMP driver to read the device id
-> from the stmpe-i2c dt alias if present.
+> On Fri, Apr 05, 2013 at 05:43:06PM +0100, Rob Herring wrote:
+
+[...]
+
+>>> +- compatible    : Should be one of "arm,smmu-v1" or "arm,smmu-v2"
+>>> +                  depending on the version of the architecture
+>>> +                  implemented.
+>>
+>> We can keep these, but we should have specific models like arm,smmu-400,
+>> etc. as well.
 > 
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/mfd/stmpe.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-Applied to mfd-next as well.
+> Ok, if distinctions need to be between MMU-400 and a v1 implementation, then
+> we can add those strings later.
 
-Cheers,
-Samuel.
+No, you want to have specific values in the dtb's up front. If there is
+something needed later in the kernel, you don't want to require a dtb
+update then. Adding future parts later is fine, but we already know what
+blocks we have.
 
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+Rob
