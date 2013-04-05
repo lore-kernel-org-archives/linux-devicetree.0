@@ -1,54 +1,57 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 2/2] regulator: max8952: Add Device Tree support
-Date: Fri, 5 Apr 2013 11:22:21 +0100
-Message-ID: <20130405102221.GE6597@opensource.wolfsonmicro.com>
-References: <1365092240-8956-1-git-send-email-t.figa@samsung.com>
- <1365092240-8956-3-git-send-email-t.figa@samsung.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v2 4/9] arm: dts: Add a 64 bits version of the skeleton device
+ tree
+Date: Fri,  5 Apr 2013 22:23:59 +0200
+Message-ID: <1365193444-13441-5-git-send-email-gregory.clement@free-electrons.com>
+References: <1365193444-13441-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="DqhR8hV3EnoxUkKN"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1365092240-8956-3-git-send-email-t.figa@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, lrg@ti.com, myungjoo.ham@samsung.com, kgene.kim@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1365193444-13441-1-git-send-email-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Ike Pan <ike.pan@canonical.com>, Grant Likely <grant.likely@secretlab.ca>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.com>, Nicolas Pitre <nico@fluxnic.net>, linux-kernel@vger.kernel.org, Maen Suleiman <maen@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Lior Amsalem <alior@marvell.com>
 
---DqhR8hV3EnoxUkKN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In order to be able to use more than 4GB address-cells and size-cells
+have to be set to 2
 
-On Thu, Apr 04, 2013 at 06:17:20PM +0200, Tomasz Figa wrote:
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Signed-off-by: Lior Amsalem <alior@marvell.com>
+---
+ arch/arm/boot/dts/skeleton64.dtsi |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+ create mode 100644 arch/arm/boot/dts/skeleton64.dtsi
 
-> +	if (of_property_read_u32(np, "max8952,ramp-speed", &pd->ramp_speed))
-> +		dev_warn(dev, "max8952,ramp-speed property not specified, defaulting to 32mV/us\n");
-
-Applied both, though the above warning seems a bit harsh - it seems like
-assuming a worst case ramp rate ought to be totally safe and just a
-minor performance issue so silently accepted.
-
---DqhR8hV3EnoxUkKN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRXqXUAAoJELSic+t+oim9qjMP/RcN/I75yaRvGz5361wf3kMk
-jogmGn59Rj1S9MmpLqw6cBGa0yDh253Rv8rHAHBgw9R8hK1KE8xc3zF+qoaSDMT+
-i2BSpbgC9fC882BzOdWxoqljlwa3LVtw4uqC0eDPYeC0aV9Y8EgQ4gIx8kw5EZa2
-607murpSy7hDYMA091leJUJwuQ0snAuo5LWFO+m6GJ11XdwN5pordVE7aYhq/R+C
-anrQEfCtuIok1M4gEoWn8kf/bcceZKEfkvIm9MKhO7zscmw9rOUWYKs3LiE71mdz
-b9NYsZKtqBdE4sgTcpFtqwOZIXylcsADbq241qemfbi0tBkEoivOGsghhxG9ohnp
-F8rhR6j9alFpGqN751H7VxCk6Ntag1gEwJUWiO4NWSNAPzjeyNEeJ/kpLZG/EjQn
-2YwT6jOsXIlbapl6WQKohYIB23JswkE3BIbIXkKu29H+ufz5jKAMBwNhT86u+F09
-5e6jxM6ZVFEcB5nMXf/U5mUmAny5VpOcKS3x09cS5YQ3GOu4ZIoo2c5TbRZiA3SZ
-4sYnUBvso8nCJgpGAyG7s3TJ3FDeiydZcUYE241vBEBrtizA/Fl+DXJnCxpGhJ0h
-At7eFpkGWBi9ResksVOdpTP6+tGPVqkrgUSSBmN4AC0S4GV+ejoxO94CfoU/wrNB
-HsOCIkUmJ19j94J4Rq2c
-=uoC8
------END PGP SIGNATURE-----
-
---DqhR8hV3EnoxUkKN--
+diff --git a/arch/arm/boot/dts/skeleton64.dtsi b/arch/arm/boot/dts/skeleton64.dtsi
+new file mode 100644
+index 0000000..1599415
+--- /dev/null
++++ b/arch/arm/boot/dts/skeleton64.dtsi
+@@ -0,0 +1,13 @@
++/*
++ * Skeleton device tree in the 64 bits version; the bare minimum
++ * needed to boot; just include and add a compatible value.  The
++ * bootloader will typically populate the memory node.
++ */
++
++/ {
++	#address-cells = <2>;
++	#size-cells = <2>;
++	chosen { };
++	aliases { };
++	memory { device_type = "memory"; reg = <0 0>; };
++};
+-- 
+1.7.9.5
