@@ -1,14 +1,17 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCHv7 07/17] clk: mvebu: add more PCIe clocks for Armada XP
-Date: Fri, 5 Apr 2013 16:59:54 +0200
-Message-ID: <20130405165954.03e08f1a@skate>
-References: <1364395234-11195-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1364395234-11195-8-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 1/5 v2] mv643xx_eth: add Device Tree bindings
+Date: Fri, 05 Apr 2013 22:35:41 +0200
+Message-ID: <515F359D.7000306@gmail.com>
+References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
+ <1365071235-11611-2-git-send-email-florian@openwrt.org>
+ <20130404212906.GA25904@schnuecks.de> <515E9FE0.8050402@openwrt.org>
+ <CABJ1b_TdzE_Q9qLsdSGZy8byFpCTtVBUy5FtxiZAx7QqgG-rVg@mail.gmail.com>
+ <20130405180443.GE3598@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1364395234-11195-8-git-send-email-thomas.petazzoni@free-electrons.com>
+In-Reply-To: <20130405180443.GE3598@obsidianresearch.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,71 +21,102 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@secretlab.ca>, Olof Johansson <olof@lixom.net>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Andrew Murray <andrew.murray@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Gregory Clement <gregory.clement@free-electrons.com>, Tawfik Bayouk <tawfik@marvell.com>, Mitch Bradley <wmb@firmworks.com>, linux-arm-kernel@lists.infradead.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: thomas.petazzoni@free-electrons.com, moinejf@free.fr, Simon Baatz <gmbnomis@gmail.com>, andrew@lunn.ch, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, davem@davemloft.net, grant.likely@secretlab.ca, jogo@openwrt.org, buytenh@wantstofly.org, jm@lentin.co.uk, Florian Fainelli <florian@openwrt.org>, linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net
 List-Id: devicetree@vger.kernel.org
 
-Mike,
+On 04/05/2013 08:04 PM, Jason Gunthorpe wrote:
+> On Fri, Apr 05, 2013 at 03:58:03PM +0200, Sebastian Hesselbarth wrote:
+>> I don't think that the ethernet controller should probe the PHY's on mdio-bus
+>> at all. At least not for DT enabled platforms. I had a look at DT and non-DT
+>> mdio-bus sources, and realized that there is a bus scan for non-DT only.
+>> of_mdiobus_register requires you to set (and know) the PHY address.
+>
+> DT platforms should have the option to use the standard phy-phandle
+> connection:
+>
+>
+> 		mdio@72004 {
+> 			#address-cells =<1>;
+> 			#size-cells =<0>;
+> 			compatible = "marvell,orion-mdio";
+> 			reg =<0x72004 0x84>;
+> 			status = "disabled";
+>
+> +                        PHY1: ethernet-phy@1 {
+> +                                reg =<1>;
+> +                                device_type = "ethernet-phy";
+> +                        };
+> 		};
+>
+> 		ethernet-group@72000 {
+> 			#address-cells =<1>;
+> 			#size-cells =<0>;
+> 			compatible = "marvell,mv643xx-eth-block";
+> 			reg =<0x72000 0x4000>;
+> 			tx-csum-limit =<1600>;
+> 			status = "disabled";
+>
+> 			egiga0: ethernet@0 {
+> 				device_type = "network";
+> 				compatible = "marvell,mv643xx-eth";
+> 				reg =<0>;
+> 				interrupts =<29>;
+> 				clocks =<&gate_clk 2>;
+> +	                        phy-handle =<&PHY1>;
+> 			};
+> 		};
+>
+> When phy-handle is present the ethernet driver should not probe/scan for
+> phys.
+>
+> There is standard code to handle all of this - an important gain is
+> that the phy driver now has access to a DT node and can apply
+> phy-specific properties.
 
-Could we have your opinion on the below patch, and possibly an Acked-by
-to carry it through the arm-soc tree?
+The above is what I use as a modification of Florian's patches.
+I compared of_mdiobus_register against mdiobus_register. The difference
+is that DT version does not scan the bus for attached PHYs. That is ok,
+if you know the phy_address of the PHY that you pass the handle of. But 
+in most cases there will be only one PHY on the mdiobus and especially
+for new boards probing will help here.
 
-Thanks,
+>> We had a similar discussion whether to probe or not for DT nodes,
+>> and I guess there also will be some discussion about the above
+>> patch. OTOH we could just (again) ask users of every
+>> kirkwood/orion5x/dove board to tell their phy addresses and fail to
+>> probe the phy for new boards...
+>
+> Maybe print a warning and call the no-DT phy probe code if phy-handle
+> is nor present?
 
-Thomas
+I think it would be best to spam each probing result during mdiobus
+scan to encourage people to edit the DT and put in the phy_addr
+directly. IMHO it will be best to have bus scan on mdiobus rather than
+ethernet driver.
 
-On Wed, 27 Mar 2013 15:40:24 +0100, Thomas Petazzoni wrote:
-> The current revision of the datasheet only mentions the gatable clocks
-> for the PCIe 0.0, 0.1, 0.2 and 0.3 interfaces, and forgot to mention
-> the ones for the PCIe 1.0, 1.1, 1.2, 1.3, 2.0 and 3.0
-> interfaces. After confirmation with Marvell engineers, this patch adds
-> the missing gatable clocks for those PCIe interfaces.
-> 
-> It also changes the name of the previously existing PCIe gatable
-> clocks, in order to match the naming using the datasheets.
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> ---
->  drivers/clk/mvebu/clk-gating-ctrl.c |   14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/clk/mvebu/clk-gating-ctrl.c b/drivers/clk/mvebu/clk-gating-ctrl.c
-> index b35785a..2f03723 100644
-> --- a/drivers/clk/mvebu/clk-gating-ctrl.c
-> +++ b/drivers/clk/mvebu/clk-gating-ctrl.c
-> @@ -137,10 +137,14 @@ static const struct mvebu_soc_descr __initconst armada_xp_gating_descr[] = {
->  	{ "ge2", NULL,  2 },
->  	{ "ge1", NULL, 3 },
->  	{ "ge0", NULL, 4 },
-> -	{ "pex0", NULL, 5 },
-> -	{ "pex1", NULL, 6 },
-> -	{ "pex2", NULL, 7 },
-> -	{ "pex3", NULL, 8 },
-> +	{ "pex00", NULL, 5 },
-> +	{ "pex01", NULL, 6 },
-> +	{ "pex02", NULL, 7 },
-> +	{ "pex03", NULL, 8 },
-> +	{ "pex10", NULL, 9 },
-> +	{ "pex11", NULL, 10 },
-> +	{ "pex12", NULL, 11 },
-> +	{ "pex13", NULL, 12 },
->  	{ "bp", NULL, 13 },
->  	{ "sata0lnk", NULL, 14 },
->  	{ "sata0", "sata0lnk", 15 },
-> @@ -152,6 +156,8 @@ static const struct mvebu_soc_descr __initconst armada_xp_gating_descr[] = {
->  	{ "xor0", NULL, 22 },
->  	{ "crypto", NULL, 23 },
->  	{ "tdm", NULL, 25 },
-> +	{ "pex20", NULL, 26 },
-> +	{ "pex30", NULL, 27 },
->  	{ "xor1", NULL, 28 },
->  	{ "sata1lnk", NULL, 29 },
->  	{ "sata1", "sata1lnk", 30 },
+> Not sure this should be in the common code, phy probing is sketchy, it
+> shouldn't be encouraged, IMHO..
 
+Actually, it is in common code (non-DT case) and I think passing the
+phy_addr by DT node like above is best. But for boards you don't
+know the address (yet) probing helps a lot. If all phy nodes have their
+reg property set, no probing will be performed.
 
+For testing mdio bus probe, I used
 
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+mdio {
+	...
+	ethphy: ethernet-phy {
+		reg = <32>;
+	};
+};
+
+And 32 should be defined as OF_PHY_ADDR_AUTOSCAN. It is an invalid
+address as max phy_addr is 31. I also thought about a bool property
+but passing an invalid reg property in SoC file allows to overwrite
+it in board file with the actual address easily.
+And AFAIK bool properties cannot be removed later on by board specific
+nodes.
+
+Sebastian
