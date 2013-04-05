@@ -1,14 +1,11 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH 0/5] gpio/omap: 2nd batch of updates for v3.10
-Date: Fri, 5 Apr 2013 07:18:29 -0500
-Message-ID: <515EC115.8040408@ti.com>
-References: <1365106576-31816-1-git-send-email-jon-hunter@ti.com>
- <515E70B8.6060903@ti.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v2 0/9] rm: mvebu: Enable LPAE support for Armada XP SoCs
+Date: Fri,  5 Apr 2013 22:23:55 +0200
+Message-ID: <1365193444-13441-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <515E70B8.6060903@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,52 +15,116 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Kevin Hilman <khilman@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, linux-omap <linux-omap@vger.kernel.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Ike Pan <ike.pan@canonical.com>, Grant Likely <grant.likely@secretlab.ca>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.com>, Nicolas Pitre <nico@fluxnic.net>, linux-kernel@vger.kernel.org, Maen Suleiman <maen@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
-On 04/05/2013 01:35 AM, Santosh Shilimkar wrote:
-> On Friday 05 April 2013 01:46 AM, Jon Hunter wrote:
->> Main change is ensuring that the state of a gpio bank is restored when
->> booting with device-tree. The rest of the patches are clean-ups and one
->> optimisation.
->>
->> The patch modifying the *.dtsi files should go via Benoit Cousson's
->> for_3.10/dts branch [1] as it is dependent on changes in his branch but
->> I have included here for completeness.
->>
->> Testing includes:
->> - Boot testing on OMAP5912 OSK, OMAP2420 H4, OMAP3430 SDP, OMAP4430 SDP
->>   and AM335x EVM.
->> - Verified that GPIO interrupts are working on OMAP5912 OSK, OMAP2420 H4,
->>   OMAP3430 SDP and OMAP4430 SDP by making sure networking was working
->>   correctly as these boards use a GPIO with the ethernet chips. Also
->>   checked /proc/interrupts to ensure GPIO interrupt counts are
->>   incrementing as expected.
->>
->> [1] http://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git
->>
->> Jon Hunter (4):
->>   gpio/omap: free irq domain in probe() failure paths
->>   gpio/omap: optimise interrupt service routine
->>   gpio/omap: force restore if context loss is not detectable
->>   ARM: dts: OMAP2+: Identify GPIO banks that are always powered
->>
->> Tarun Kanti DebBarma (1):
->>   gpio/omap: remove extra context restores in *_runtime_resume()
->>
-> 
-> Thanks Jon for pulling the fixes. I suggest you to split the series so
-> that 'gpio/omap:*' can be pulled by Grant and 'ARM: dts:*' by Benoit.
+The Armada XP SoCs have LPAE support. This is the second version patch
+set whixh allow to run kernel on this SoCs with LPAE support.
 
-Agreed. I had kept them altogether here for completeness as it would
-have been odd to add a new property but not use it. If everyone is ok
-with the changes, then I can either resend or Grant/Linus just pick up 1-4.
+The biggest changes are the conversion of the device tree file to 64
+bits in order to be able to use more than 4GB of memory (without this
+the LPAE is pointless).
 
-> All the 'gpio/omap:*' patches in the series looks fine to me.
-> FWIW,
-> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+The main change since the first version is the usage of the range
+property as suggested by Rob Herring. As this massive change on the
+dts file will have an impact on the mvebu-mbus driver binding, I also
+added some patches from Thomas Petazzoni. The purpose is to avoid a
+new big change in the devices tree files when Thomas will improve the
+mvebu-mbus driver to rely on the device tree.
 
-Thanks
-Jon
+The other point is about DMA usage. LPAE allows to use 40bits address
+only between CPU and DRAM. All the DMA transfer are restricted to the
+low 32 bits address space. The first version try to use DMABOUNCE to
+allows DMA transfer from any place in memory. There were a consensus
+on the fact that was a something to avoid. The alternative was
+swiotlb, however it will require a large rewrite of
+arch/arm/mach-mvebu/coherency.c (our dma_map_ops was defined here),
+and we are close the opening of the merge window. So I chose, in a
+first phase, to use ZONE_DMA to limit the use of the DMA on the 32
+bits address space. Later our dma_map_ops would be improve with
+swiotlb.
+
+This new patch set have been tested on a Armada XP GP board with 8GB
+of DRAM with LPAE selected. It have been tested on Armada XP DB board
+with 3GB of DRAM with and without LPAE. And also on the Armada 370 DB
+board (without LPAE) to check that no regression appeared.
+
+This patch set is based on 3.9-rc5 and is still 3.10 material. The git
+branch called lpae-v2 is available at:
+
+https://github.com/MISL-EBU-System-SW/mainline-public.git.
+
+Thanks,
+
+Changelog:
+v1 -> v2:
+
+* The patch to convert the mvebu device tree files to 64 bits was
+  split in 3 parts:
+
+    - "arm: dts: move all peripherals inside soc" from Thomas
+
+	- then "arm: dts: Convert all the mvebu files to use the range
+    property" which will allow to keep 32 bits addresses for the
+    internal registers whereas the memory of the system will be 64
+    bits
+
+	- and finally "arm: dts: Convert mvebu device tree files to 64
+      bits" which was the move to 64 bits itself.
+
+* A new patch was added "arm: dts: introduce internal-regs node" based
+  on the work of Thomas for the mvebu-mbus driver. It introduce a
+  'internal-regs' subnode, under which all devices are moved. This is
+  not really needed for now, but will be for the mvebu-mbus
+  driver. This generates a lot of code movement since it's indenting
+  by one more tab all the devices. So it was a good opportunity to fix
+  all the bad indentation.
+
+* New patch from Thomas "fix cpus section indentation" to finalize the
+  fixing of the bad indentation
+
+* For DMA transfer, DMA_ZONE was selected instead of DMABOUNCE: all
+  the DMA transfer are restricted to the low 32 bits address space.
+
+
+Gregory CLEMENT (4):
+  arm: mvebu: Limit the DMA zone when LPAE is selected
+  arm: dts: mvebu: Convert all the mvebu files to use the range
+    property
+  arm: dts: mvebu: introduce internal-regs node
+  arm: dts: mvebu: Convert mvebu device tree files to 64 bits
+
+Lior Amsalem (3):
+  arm: mvebu: Align the internal registers virtual base to support LPAE
+  arm: mvebu: Enable pj4b on LPAE compilations
+  arm: dts: Add a 64 bits version of the skeleton device tree
+
+Thomas Petazzoni (2):
+  arm: dts: mvebu: move all peripherals inside soc
+  arm: dts: mvebu: fix cpus section indentation
+
+ arch/arm/boot/dts/armada-370-db.dts              |  110 +++++-----
+ arch/arm/boot/dts/armada-370-mirabox.dts         |   80 +++----
+ arch/arm/boot/dts/armada-370-rd.dts              |   18 +-
+ arch/arm/boot/dts/armada-370-xp.dtsi             |  253 +++++++++++-----------
+ arch/arm/boot/dts/armada-370.dtsi                |  211 +++++++++---------
+ arch/arm/boot/dts/armada-xp-db.dts               |  156 ++++++-------
+ arch/arm/boot/dts/armada-xp-gp.dts               |  138 ++++++------
+ arch/arm/boot/dts/armada-xp-mv78230.dtsi         |   84 +++----
+ arch/arm/boot/dts/armada-xp-mv78260.dtsi         |  110 +++++-----
+ arch/arm/boot/dts/armada-xp-mv78460.dtsi         |  136 ++++++------
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts |  198 ++++++++---------
+ arch/arm/boot/dts/armada-xp.dtsi                 |  191 ++++++++--------
+ arch/arm/boot/dts/skeleton64.dtsi                |   13 ++
+ arch/arm/include/debug/mvebu.S                   |    2 +-
+ arch/arm/mach-mvebu/Kconfig                      |    1 +
+ arch/arm/mach-mvebu/armada-370-xp.h              |    2 +-
+ arch/arm/mm/proc-v7.S                            |    3 +-
+ 17 files changed, 873 insertions(+), 833 deletions(-)
+ create mode 100644 arch/arm/boot/dts/skeleton64.dtsi
+
+-- 
+1.7.9.5
