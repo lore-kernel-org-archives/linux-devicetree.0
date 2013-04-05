@@ -1,16 +1,14 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v2 1/9] arm: mvebu: Limit the DMA zone when LPAE is
- selected
-Date: Fri, 05 Apr 2013 22:59:59 +0200
-Message-ID: <515F3B4F.3070505@free-electrons.com>
-References: <1365193444-13441-1-git-send-email-gregory.clement@free-electrons.com>
- <1365193444-13441-2-git-send-email-gregory.clement@free-electrons.com>
- <201304052241.14865.arnd@arndb.de>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 0/3] clk: Exynos: Register audio subsytem clocks using
+ common clk framework
+Date: Fri, 05 Apr 2013 14:54:46 +0200
+Message-ID: <515EC996.8030904@samsung.com>
+References: <1365144043-17101-1-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201304052241.14865.arnd@arndb.de>
+In-reply-to: <1365144043-17101-1-git-send-email-padma.v@samsung.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,35 +18,106 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Grant Likely <grant.likely@secretlab.ca>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.com>, Nicolas Pitre <nico@fluxnic.net>, linux-kernel@vger.kernel.org, Maen Suleiman <maen@marvell.com>
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, sbkim73@samsung.com, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, thomas.abraham@linaro.org, padma.kvr@gmail.com, sangsu4u.park@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/05/2013 10:41 PM, Arnd Bergmann wrote:
-> On Friday 05 April 2013, Gregory CLEMENT wrote:
->> When LPAE is activated on Armada XP, all registers and IOs are still
->> 32bit, the 40bit extension is on the CPU to DRAM path (windows) only.
->> That means that all the DMA transfer are restricted to the low 32 bits
->> address space. This is limitation is achieved by selecting ZONE_DMA.
->>
->> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Hi Padmavathi,
+
+On 04/05/2013 08:40 AM, Padmavathi Venna wrote:
+> Samsung Exynos SoC has a separate subsystem for audio. This subsystem
+> has a internal clock controller which controls i2s0 and pcm0 clocks.
+> This patch series adds the Samsung Exynos SoC audio subsytem clock code
+> to the common clock framework and provides the I2S0 clock information in
+> the dtsi file.
 > 
+> Padmavathi Venna (3):
+>   clk: exynos: register audio subsystem clocks using common clock
+>     framework
+>   ARM: dts: add Exynos audio subsystem clock controller node
+>   ARM: dts: add clock provider information for i2s0 controller in
+>     Exynos5250
 > 
-> Shouldn't that be ZONE_DMA32?
-> 
+>  arch/arm/boot/dts/exynos5250.dtsi      |    8 ++
+>  drivers/clk/samsung/Makefile           |    1 +
+>  drivers/clk/samsung/clk-exynos-audss.c |  139 ++++++++++++++++++++++++++++++++
+>  3 files changed, 148 insertions(+), 0 deletions(-)
+>  create mode 100644 drivers/clk/samsung/clk-exynos-audss.c
 
-Well common code for ARM don't manage the ZONE_DMA32. Whereas with
-ZONE_DMA, setup_dma_zone() in arch/arm/mm/init.c does exactly what
-I want: setting arm_dma_limit to 0xffffffff.
+It looks good, it's very similar what we have written recently for Exynos4.
+It seems the binding documentation is missing in this patch set. I've included
+below content of our .../bindings/clock/exynos4-audss-clock.txt file. Feel free
+to reuse any parts of it. 
 
-ZONE_DMA32 is used on arm64 however.
+>From a brief look Exynos4 and Exynos5 Audio Subsystem CLKCON very similar.
+I've just found bit 2 of 0x0381_0008 register is not used on Exynos5250.
 
-> 	Arnd
-> 
+Additionally the Audio Subsystem Clock controller is present on S5PV210
+SoCs and IMO compatible property you used is too generic. I would propose
+to use at least:
+
+"samsung,s5pv210-audss-clock"    - for S5PV210 
+"samsung,exynos4210-audss-clock" - for Exynos4
+"samsung,exynos5250-audss-clock" - for Exynos5
 
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+8<---------------------------------------------------------------------------
+* Samsung Exynos4 Audio Subsystem Clock Controller
+
+The Exynos4 Audio Subsystem clock controller generates and supplies clocks
+to Audio Subsystem block available in the Exynos4 SoCs. The clock binding
+described here is applicable to all SoC's in the Exynos4 family.
+
+Required Properties:
+
+- compatible: should be one of the following:
+  - "samsung,exynos4210-audss-clock" - controller compatible with all Exynos4 SoCs.
+
+- reg: physical base address and length of the controller's register set.
+
+- #clock-cells: should be 1.
+
+The following is the list of clocks generated by the controller. Each clock is
+assigned an identifier and client nodes use this identifier to specify the
+clock which they consume. Some of the clocks are available only on a particular
+Exynos4 SoC and this is specified where applicable.
+
+Provided clocks:
+
+Clock		ID	SoC (if specific)
+-----------------------------------------------
+
+mout_audss	0
+dout_rp		1
+dout_aud_bus	2
+mout_i2s	3
+dout_i2sclk0	4
+clk_i2s0	5
+clk_pcm0	6
+
+
+Example 1: An example of a clock controller node is listed below.
+
+clock_audss: clock-controller@03810000 {
+	compatible = "samsung,exynos4-audss-clock";
+	reg = <0x03810000 0x0C>;
+	#clock-cells = <1>;
+};
+
+Example 2: I2S controller node that consumes the clock generated by the clock
+	   controller. Refer to the standard clock bindings for information
+	   about 'clocks' and 'clock-names' property.
+
+i2s0: i2s@03830000 {
+	compatible = "samsung,i2s-v5";
+	reg = <0x03830000 0x100>;
+	clocks = <&clock_audss 0>, <&clock_audss 3>, <&clock_audss 1>,
+		<&clock_audss 2>, <&clock_audss 4>, <&clock_audss 2>;
+	clock-names = "mout_audss", "mout_i2s", "dout_srp",
+		"dout_bus", "dout_i2s", "i2s_opclk0";
+};
+
+8<---------------------------------------------------------------------------
+
+Thanks,
+Sylwester
