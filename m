@@ -1,16 +1,14 @@
-From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: [PATCH 3/5 v2] ARM: kirkwood: add device node entries for the
- gigabit interfaces
-Date: Fri, 05 Apr 2013 11:21:50 +0200
-Message-ID: <515E97AE.4080608@openwrt.org>
-References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
- <1365071235-11611-4-git-send-email-florian@openwrt.org>
- <20130404213517.GB25904@schnuecks.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] documentation: iommu: add description of ARM System MMU
+ binding
+Date: Fri, 05 Apr 2013 11:43:06 -0500
+Message-ID: <515EFF1A.5030705@gmail.com>
+References: <1365094259-24847-1-git-send-email-will.deacon@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130404213517.GB25904@schnuecks.de>
+In-Reply-To: <1365094259-24847-1-git-send-email-will.deacon@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,29 +18,114 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Baatz <gmbnomis@gmail.com>
-Cc: thomas.petazzoni@free-electrons.com, moinejf@free.fr, jason@lakedaemon.net, andrew@lunn.ch, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jogo@openwrt.org, linux-arm-kernel@lists.infradead.org, jm@lentin.co.uk, davem@davemloft.net, buytenh@wantstofly.org, sebastian.hesselbarth@gmail.com
+To: Will Deacon <will.deacon@arm.com>
+Cc: Andreas Herrmann <andreas.herrmann@calxeda.com>, devicetree-discuss@lists.ozlabs.org, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-TGUgMDQvMDQvMTMgMjM6MzUsIFNpbW9uIEJhYXR6IGEgw6ljcml0IDoKPiBIaSBGbG9yaWFuLAo+
-Cj4gT24gVGh1LCBBcHIgMDQsIDIwMTMgYXQgMTI6Mjc6MTNQTSArMDIwMCwgRmxvcmlhbiBGYWlu
-ZWxsaSB3cm90ZToKPj4gVGhpcyBwYXRjaCBtb2RpZmllcyBraXJrd29vZC5kdHNpIHRvIHNwZWNp
-ZnkgdGhlIHZhcmlvdXMgZ2lnYWJpdAo+PiBpbnRlcmZhY2VzIG5vZGVzIGF2YWlsYWJsZSBvbiBr
-aXJrd29vZCBkZXZpY2VzLiBUaGV5IGFyZSBkaXNhYmxlZCBieQo+PiBkZWZhdWx0IGFuZCBzaG91
-bGQgYmUgZW5hYmxlZCBvbiBhIHBlci1ib2FyZCBiYXNpcy4gZWdpZ2EwIGFuZCBlZ2lnYTEKPj4g
-YWxpYXNlcyBhcmUgZGVmaW5lZCBmb3IgY29udmVuaWVuY2UuIFRoZSBtZGlvIG5vZGUgaXMgYWxz
-byBwcmVzZW50IGFuZAo+PiBzaG91bGQgYmUgZW5hYmxlZCBvbiBhIHBlci1ib2FyZCBiYXNpcyBh
-cyB3ZWxsLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBGbG9yaWFuIEZhaW5lbGxpIDxmbG9yaWFuQG9w
-ZW53cnQub3JnPgo+PiAtLS0KPj4gQ2hhbmdlcyBzaW5jZSB2MToKPj4gLSBkcm9wcGVkIGNoYW5n
-ZSB0byBhcmNoL2FybS9tYWNoLWtpcmt3b29kL2NvbW1vbi5jIHRvIGF2b2lkIG1lcmdlIGNvbmZs
-aWN0cwo+Cj4gSSB0aGluayB3ZSBzaG91bGQgcmVtb3ZlIHRoZSBjbG9jayBhbGlhc2VzIGluCj4g
-a2lya3dvb2RfbGVnYWN5X2Nsa19pbml0KCkgaW4gbWFjaC1raXJrd29vZC9kdC1ib2FyZC5jIChv
-bmNlIHdlIGhhdmUKPiBwcm9wZXIgY2xvY2sgc3VwcG9ydCwgc2VlIG15IG90aGVyIG1haWwpLgo+
-CltzbmlwXQo+Cj4gRG9uJ3Qgd2UgbmVlZCB0byBhZGQ6Cj4KPiAJCQlpbnRlcnJ1cHRzID0gPDQ2
-PjsKPgo+IGhlcmU/CgpSaWdodCB0aGlzIGlzIG1pc3NpbmcsIGluIGZhY3QgaXQgc3RpbGwgd29y
-a3Mgb2sgYmVjYXVzZSB0aGUgb3Jpb24tbWRpbyAKZHJpdmVyIGNhbiBkbyBidXN5IHdhaXRpbmcg
-aW5zdGVhZCBvZiBpbnRlcnJ1cHQgc2lnbmFsaW5nLiBXaWxsIGZpeCB0aGF0IAppbiB0aGUgbmV4
-dCByb3VuZCwgdGhhbmtzIQotLQpGbG9yaWFuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On 04/04/2013 11:50 AM, Will Deacon wrote:
+> This patch adds a description of the device tree binding for the ARM
+> System MMU architecture.
+> 
+> Cc: Rob Herring <robherring2@gmail.com>
+> Cc: Andreas Herrmann <andreas.herrmann@calxeda.com>
+> Signed-off-by: Will Deacon <will.deacon@arm.com>
+> ---
+> 
+> Hello,
+> 
+> The driver for this is still a WIP. Both Andreas and myself have prototype
+> code, but we're planning to merge that together to get something more
+> general. Deciding on the binding is a good first step.
+
+Thanks for getting this out.
+
+> All comments welcome,
+> 
+> Will
+> 
+>  .../devicetree/bindings/iommu/arm,smmu.txt         | 61 ++++++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> new file mode 100644
+> index 0000000..938325f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> @@ -0,0 +1,61 @@
+> +* ARM System MMU Architecture Implementation
+> +
+> +ARM SoCs may contain an implementation of the ARM System Memory
+> +Management Unit Architecture, which can be used to provide 1 or 2 stages
+> +of address translation to bus masters external to the CPU.
+> +
+> +The SMMU may also raise interrupts in response to various fault
+> +conditions.
+> +
+> +** System MMU required properties:
+> +
+> +- compatible    : Should be one of "arm,smmu-v1" or "arm,smmu-v2"
+> +                  depending on the version of the architecture
+> +                  implemented.
+
+We can keep these, but we should have specific models like arm,smmu-400,
+etc. as well.
+
+> +
+> +- reg           : Base address and size of the SMMU.
+> +
+> +- #global-interrupts : The number of global interrupts exposed by the
+> +                       device.
+> +
+> +- interrupts    : Interrupt list, with the first #global-irqs entries
+> +                  corresponding to the global interrupts and any
+> +                  following entries corresponding to context interrupts,
+> +                  specified in order of their indexing by the SMMU.
+> +
+> +- mmu-masters   : A list of phandles to device nodes representing bus
+> +                  masters for which the SMMU can provide a translation.
+> +
+> +- stream-ids    : A list of 16-bit values corresponding to the StreamIDs
+> +                  for the devices listed in the mmu-masters property.
+> +                  This list must be same length as mmu-masters, so
+> +                  masters with multiple stream-ids will have multiple
+> +                  entries in mmu-masters.
+
+Your example below is actually 32-bit values in the DTB. You can
+annotate them to actually be 16-bit if you want. But I would just leave
+them as 32-bit.
+
+> +
+> +** System MMU optional properties:
+> +
+> +- smmu-parent   : When multiple SMMUs are chained together, this
+> +                  property can be used to provide a phandle to the
+> +                  parent SMMU (that is the next SMMU on the path going
+> +                  from the mmu-masters towards memory) node for this
+> +                  SMMU.
+
+Does the SMMU need to know if it is coherent or not?
+
+Rob
+
+> +
+> +Example:
+> +
+> +        smmu {
+> +                compatible = "arm,smmu-v1";
+> +                reg = <0xba5e0000 0x10000>;
+> +                #global-interrupts = <2>;
+> +                interrupts = <0 32 4>,
+> +                             <0 33 4>,
+> +                             <0 34 4>, /* This is the first context interrupt */
+> +                             <0 35 4>,
+> +                             <0 36 4>,
+> +                             <0 37 4>;
+> +                mmu-masters = <&dma0>,
+> +                              <&dma0>,
+> +                              <&dma1>;
+> +                stream-ids  = <0xd01d>,
+> +                              <0xd01e>,
+> +                              <0xd11c>;
+> +        };
+> 
