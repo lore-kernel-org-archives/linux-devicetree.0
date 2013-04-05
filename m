@@ -1,35 +1,50 @@
-From: Padmavathi Venna <padma.v@samsung.com>
-Subject: [PATCH 3/3] ARM: dts: add clock provider information for i2s0
- controller in Exynos5250
-Date: Fri, 05 Apr 2013 11:53:49 +0530
-Message-ID: <1365143029-16936-3-git-send-email-padma.v@samsung.com>
-References: <1365143029-16936-1-git-send-email-padma.v@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1365143029-16936-1-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.v@samsung.com, padma.kvr@gmail.com
-Cc: sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, sangsu4u.park@samsung.com
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: OMAP4+: Correct L3 interrupts
+Date: Fri, 5 Apr 2013 11:56:54 +0530
+Message-ID: <515E6EAE.9000107@ti.com>
+References: <1365098790-9078-1-git-send-email-jon-hunter@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1365098790-9078-1-git-send-email-jon-hunter-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
+Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add clock lookup information for i2s0 controller on exynos5250 SoC.
+On Thursday 04 April 2013 11:36 PM, Jon Hunter wrote:
+> The L3 interrupt numbers are incorrect for OMAP4+ and are conflicting
+> with some of the timer interrupts causing the allocation of timer
+> interrupts to fail.
+> 
+> The problem is caused by adding 32 to the interrupt number for the L3
+> interrupts to account for per processor interrupts (PPI) and software
+> generated interrupts (SGI) which typically are mapped to the first 32
+> interrupts in the ARM GIC. This is not necessary because the first
+> parameter of the ARM GIC interrupt property specifies the GIC interrupt
+> type (ie. SGI, PPI, etc). Hence, fix the interrupt number fo the L3
+> interrupts by substracting 32.
+> 
+> Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
+> ---
+> 
+> Please note that this problem is observed in Benoit's for_3.10/dts branch [1].
+> 
+> [1] http://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git
+> 
+Thats correct. I overlooked the 32 addition part. This patch should
+also be pulled into Benoit's 3.10 tree.
 
-Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
----
- arch/arm/boot/dts/exynos5250.dtsi |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 14d454c..08e3b3f 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -387,6 +387,8 @@
- 			&pdma0 9
- 			&pdma0 8>;
- 		dma-names = "tx", "rx", "tx-sec";
-+		clocks = <&clock_audss 6>, <&clock_audss 6>, <&clock_audss 7>;
-+		clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
- 		samsung,supports-6ch;
- 		samsung,supports-rstclr;
- 		samsung,supports-secdai;
--- 
-1.7.4.4
+For the patch,
+Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
