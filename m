@@ -1,14 +1,12 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] documentation: iommu: add description of ARM System MMU
- binding
-Date: Fri, 05 Apr 2013 11:43:06 -0500
-Message-ID: <515EFF1A.5030705@gmail.com>
-References: <1365094259-24847-1-git-send-email-will.deacon@arm.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: [PATCH v2] irqchip: renesas-intc-irqpin: DT binding for sense bitfield
+ width
+Date: Fri, 5 Apr 2013 11:33:42 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1304051128090.997@axis700.grange>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1365094259-24847-1-git-send-email-will.deacon@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,114 +16,66 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Andreas Herrmann <andreas.herrmann@calxeda.com>, devicetree-discuss@lists.ozlabs.org, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/04/2013 11:50 AM, Will Deacon wrote:
-> This patch adds a description of the device tree binding for the ARM
-> System MMU architecture.
-> 
-> Cc: Rob Herring <robherring2@gmail.com>
-> Cc: Andreas Herrmann <andreas.herrmann@calxeda.com>
-> Signed-off-by: Will Deacon <will.deacon@arm.com>
-> ---
-> 
-> Hello,
-> 
-> The driver for this is still a WIP. Both Andreas and myself have prototype
-> code, but we're planning to merge that together to get something more
-> general. Deciding on the binding is a good first step.
+Most Renesas irqpin controllers have 4-bit sense fields, however, some
+have different widths. This patch adds a DT binding to optionally
+specify such non-standard values.
 
-Thanks for getting this out.
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+---
 
-> All comments welcome,
-> 
-> Will
-> 
->  .../devicetree/bindings/iommu/arm,smmu.txt         | 61 ++++++++++++++++++++++
->  1 file changed, 61 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> new file mode 100644
-> index 0000000..938325f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> @@ -0,0 +1,61 @@
-> +* ARM System MMU Architecture Implementation
-> +
-> +ARM SoCs may contain an implementation of the ARM System Memory
-> +Management Unit Architecture, which can be used to provide 1 or 2 stages
-> +of address translation to bus masters external to the CPU.
-> +
-> +The SMMU may also raise interrupts in response to various fault
-> +conditions.
-> +
-> +** System MMU required properties:
-> +
-> +- compatible    : Should be one of "arm,smmu-v1" or "arm,smmu-v2"
-> +                  depending on the version of the architecture
-> +                  implemented.
+v2: is no longer based on an earlier "ARM: shmobile: irqpin: fix handling 
+of spurious interrupts in DT case" patch, which needs more work.
 
-We can keep these, but we should have specific models like arm,smmu-400,
-etc. as well.
+ .../interrupt-controller/renesas,intc-irqpin.txt   |   13 +++++++++++++
+ drivers/irqchip/irq-renesas-intc-irqpin.c          |    5 +++++
+ 2 files changed, 18 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
 
-> +
-> +- reg           : Base address and size of the SMMU.
-> +
-> +- #global-interrupts : The number of global interrupts exposed by the
-> +                       device.
-> +
-> +- interrupts    : Interrupt list, with the first #global-irqs entries
-> +                  corresponding to the global interrupts and any
-> +                  following entries corresponding to context interrupts,
-> +                  specified in order of their indexing by the SMMU.
-> +
-> +- mmu-masters   : A list of phandles to device nodes representing bus
-> +                  masters for which the SMMU can provide a translation.
-> +
-> +- stream-ids    : A list of 16-bit values corresponding to the StreamIDs
-> +                  for the devices listed in the mmu-masters property.
-> +                  This list must be same length as mmu-masters, so
-> +                  masters with multiple stream-ids will have multiple
-> +                  entries in mmu-masters.
-
-Your example below is actually 32-bit values in the DTB. You can
-annotate them to actually be 16-bit if you want. But I would just leave
-them as 32-bit.
-
-> +
-> +** System MMU optional properties:
-> +
-> +- smmu-parent   : When multiple SMMUs are chained together, this
-> +                  property can be used to provide a phandle to the
-> +                  parent SMMU (that is the next SMMU on the path going
-> +                  from the mmu-masters towards memory) node for this
-> +                  SMMU.
-
-Does the SMMU need to know if it is coherent or not?
-
-Rob
-
-> +
-> +Example:
-> +
-> +        smmu {
-> +                compatible = "arm,smmu-v1";
-> +                reg = <0xba5e0000 0x10000>;
-> +                #global-interrupts = <2>;
-> +                interrupts = <0 32 4>,
-> +                             <0 33 4>,
-> +                             <0 34 4>, /* This is the first context interrupt */
-> +                             <0 35 4>,
-> +                             <0 36 4>,
-> +                             <0 37 4>;
-> +                mmu-masters = <&dma0>,
-> +                              <&dma0>,
-> +                              <&dma1>;
-> +                stream-ids  = <0xd01d>,
-> +                              <0xd01e>,
-> +                              <0xd11c>;
-> +        };
-> 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+new file mode 100644
+index 0000000..c6f09b7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+@@ -0,0 +1,13 @@
++DT bindings for the R-/SH-Mobile irqpin controller
++
++Required properties:
++
++- compatible: has to be "renesas,intc-irqpin"
++- #interrupt-cells: has to be <2>
++
++Optional properties:
++
++- any properties, listed in interrupts.txt in this directory, and any standard
++  resource allocation properties
++- sense-bitfield-width: width of a single sense bitfield in the SENSE register,
++  if different from the default 4 bits
+diff --git a/drivers/irqchip/irq-renesas-intc-irqpin.c b/drivers/irqchip/irq-renesas-intc-irqpin.c
+index 5a68e5a..7a02dfe 100644
+--- a/drivers/irqchip/irq-renesas-intc-irqpin.c
++++ b/drivers/irqchip/irq-renesas-intc-irqpin.c
+@@ -18,6 +18,7 @@
+  */
+ 
+ #include <linux/init.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/spinlock.h>
+ #include <linux/interrupt.h>
+@@ -429,6 +430,10 @@ static int intc_irqpin_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++	if (!pdata)
++		of_property_read_u32(pdev->dev.of_node, "sense-bitfield-width",
++				     &p->config.sense_bitfield_width);
++
+ 	/* use more severe masking method if requested */
+ 	if (p->config.control_parent) {
+ 		enable_fn = intc_irqpin_irq_enable_force;
+-- 
+1.7.2.5
