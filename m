@@ -1,16 +1,14 @@
-From: Matt Sealey <matt@genesi-usa.com>
-Subject: Re: [RFC PATCH] CLK: Allow parent clock and rate to be configured in
- DT.
-Date: Fri, 5 Apr 2013 20:07:09 -0500
-Message-ID: <CAKGA1bkWLrOs15ni=8D__BvuG6kvqkeeLZGOLrVZY9g0q0z4Bg@mail.gmail.com>
-References: <20130319170933.28337.50448.stgit@localhost>
- <20130325101707.GZ1906@pengutronix.de>
- <CAOMZO5ASkvquyzPCEGObvB5Xh9bDPTJ2zx26eOUJT_Vb36Bn3Q@mail.gmail.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 3/5] gpio/omap: optimise interrupt service routine
+Date: Fri, 5 Apr 2013 12:19:02 +0300
+Message-ID: <20130405091902.GA9626@arwen.pp.htv.fi>
+References: <1365106576-31816-1-git-send-email-jon-hunter@ti.com>
+ <1365106576-31816-4-git-send-email-jon-hunter@ti.com>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0847517519849373494=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOMZO5ASkvquyzPCEGObvB5Xh9bDPTJ2zx26eOUJT_Vb36Bn3Q@mail.gmail.com>
+In-Reply-To: <1365106576-31816-4-git-send-email-jon-hunter@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,85 +18,127 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Martin Fuzzey <mfuzzey@parkeon.com>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Linux ARM Kernel ML <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@ti.com>
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Kevin Hilman <khilman@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Santosh Shilimkar <santosh.shilimkar@ti.com>, linux-omap <linux-omap@vger.kernel.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 4, 2013 at 6:08 PM, Fabio Estevam <festevam@gmail.com> wrote:
->
-> This could be useful for removing the imx6q_sabrelite_cko1_setup()
-> function from arch/arm/mach-imx/mach-imx6q.c.
->
-> I would like to add audio support for another board and would like to
-> avoid to do the same as imx6q_sabrelite_cko1_setup()  for setting up
-> the CLKO, if possible.
+--===============0847517519849373494==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
+Content-Disposition: inline
 
-You know, we have the same problem on one of our designs here (CLKO is
-used on MX53 for audio codec and camera device, shared) - the current
-solution is hack it into platform support in a BSP kernel.
+--RnlQjJ0d97Da+TV1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If we move to device tree, we know and you know the solution already;
-all this clock setup HAS to be done in the bootloader.
+On Thu, Apr 04, 2013 at 03:16:14PM -0500, Jon Hunter wrote:
+> The OMAP GPIO interrupt service routine is checking each bit in the
+> GPIO interrupt status register to see which bits are set. It is not
+> efficient to check every bit especially if only a few bits are set.
+> Therefore, instead of checking every bit use the __ffs() function,
+> which returns the location of the first set bit, to find all the set
+> bits.
+>=20
+> This optimisation was suggested-by and developed in collaboration
+> with Felipe Balbi.
+>=20
+> Cc: Felipe Balbi <balbi@ti.com>
+>=20
+> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
 
-The device tree really, really is only a way to describe the
-configuration as it exists or to describe alternatives - for instance,
-a clock with 10 parents may be described as having 10 parents, and the
-binding (in complicated cases) or driver (if it is simple as a value
-from 0 to 7 and the field width is 3 bits for example) will determine
-how that alternative can be selected (and by consequence, what the
-current setting is).
+looks alright:
 
-The device tree concept is NOT a place to dump configuration items for
-your board as hardcoded values to try and force something you could
-have done elsewhere. On i.MX53 you cannot boot a kernel verbatim - you
-at least have to run through the Boot ROM and supply a DCD table or
-plugins first. This is where you figure things like this out.
+Reviewed-by: Felipe Balbi <balbi@ti.com>
 
-In a case where you have, say, an audio codec and it has a dynamic
-input clock that you want to change on the fly, first of all you would
-not hardcode a frequency into a device tree, second of all there is
-nothing stopping you from doing that right now anyway. If the clock is
-static and fixed frequency and can only be turned on and off, there
-are clock bindings for this already. If it is static and can never be
-turned off, then there are clock bindings for this too, and in this
-case the proviso is that the clock is ALREADY turned on and ALREADY
-stable before you enter the kernel otherwise the description is by
-it's very definition invalid.
+> ---
+>  drivers/gpio/gpio-omap.c |   14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+> index 5af7acd..685e850 100644
+> --- a/drivers/gpio/gpio-omap.c
+> +++ b/drivers/gpio/gpio-omap.c
+> @@ -689,7 +689,7 @@ static void gpio_irq_handler(unsigned int irq, struct=
+ irq_desc *desc)
+>  {
+>  	void __iomem *isr_reg =3D NULL;
+>  	u32 isr;
+> -	unsigned int i;
+> +	unsigned int bit;
+>  	struct gpio_bank *bank;
+>  	int unmasked =3D 0;
+>  	struct irq_chip *chip =3D irq_desc_get_chip(desc);
+> @@ -730,9 +730,9 @@ static void gpio_irq_handler(unsigned int irq, struct=
+ irq_desc *desc)
+>  		if (!isr)
+>  			break;
+> =20
+> -		for (i =3D 0; isr !=3D 0; isr >>=3D 1, i++) {
+> -			if (!(isr & 1))
+> -				continue;
+> +		while (isr) {
+> +			bit =3D __ffs(isr);
+> +			isr &=3D ~(1 << bit);
+> =20
+>  			/*
+>  			 * Some chips can't respond to both rising and falling
+> @@ -741,10 +741,10 @@ static void gpio_irq_handler(unsigned int irq, stru=
+ct irq_desc *desc)
+>  			 * to respond to the IRQ for the opposite direction.
+>  			 * This will be indicated in the bank toggle_mask.
+>  			 */
+> -			if (bank->toggle_mask & (1 << i))
+> -				_toggle_gpio_edge_triggering(bank, i);
+> +			if (bank->toggle_mask & (1 << bit))
+> +				_toggle_gpio_edge_triggering(bank, bit);
+> =20
+> -			generic_handle_irq(irq_find_mapping(bank->domain, i));
+> +			generic_handle_irq(irq_find_mapping(bank->domain, bit));
+>  		}
+>  	}
+>  	/* if bank has any level sensitive GPIO pin interrupt
+> --=20
+> 1.7.10.4
+>=20
 
-If the clock frequency in hardware is not what you wanted when the
-driver comes up, and you only have an on/off switch, it is not up to
-the device tree binding to describe how to go about configuring the
-system to make sure. You cannot in good conscience put a clock
-frequency "to be set later" in the device tree along with a clock
-phandle, simply because that means the device tree no longer describes
-the hardware accurately - the clock phandle is a valid clock, the
-hardware will tell you a frequency from registers in the clock driver,
-the device tree will disagree. How do you know which one is the
-correct value, or if the frequency in the tree is a suggestion rather
-than a description?
+--=20
+balbi
 
-I am totally against this (sorry Sascha..). Let's put some effort into
-fixing the bootloaders rather than trying to use the device tree to
-enforce the ridiculous assumption that "Linux kernel does not trust
-the bootloader". Once the bindings and trees are out of the kernel
-source, you're going to HAVE to trust what the bootloader passes, be
-it pregenerated compiled blob (which needs to be written to match the
-hardware state the bootloader finishes up at) or dynamically generated
-at runtime during the boot process (which can describe to the bit what
-the hardware is doing). If you are testing this on Beagle XM you can
-fix your U-Boot easily. New boards will have to be designed *with the
-idea of device trees and working configurations in mind* - that is a
-fact of life, in fact this is how it should be in reality these days
-anyway (most HW designers will do initial bringup of the board - at
-least a minimal working configuration, in a restricted environment
-where they can use test pads to measure clocks, voltage outputs and
-levels of devices to ensure both production was successful and that
-the design is in itself electrically sound. This code 99% of the time
-ends up in the bootloader... sometimes not, when the board was
-designed by one group and the software written by the community, but
-in this case the community needs to learn board bringup and proper
-behavior...)
+--RnlQjJ0d97Da+TV1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
--- 
-Matt Sealey <matt@genesi-usa.com>
-Product Development Analyst, Genesi USA, Inc.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRXpcGAAoJEIaOsuA1yqREFMYP/3nJzJjW38yHtk+TZtbT/X31
+srZXK/50hgRbtW9Jsm+nWIS/9vWSiqXlFJVqClmLyTmtdW9lFRkbpYjJz4ktFvhA
+egtpUyzopyz31x2p/wLTqJGbQzx6yDeJzrTnbQuOLSU0AzTDp1/u0XNb1lS7AAKI
+DFisbsLjgNt+X02bV43ZNnML4QsLkNuPHjqE6+/siVbG0QU3DPwGogiykdCAbEUn
+wijYeUXl66Olouo7IDX6WTbMu3++eQ4LyjHXm/Qafdrufjx52k2ypmDNJmChqX+R
+7pFNtwgPVwFgS+PJbJ04J3P5aR11F6DZFDuBZb5dbwax21rvVckJOzoOgExbr3tv
+6XO7fNZbaTOeJea2HRJn3qCiTo2Uecmk2c6TcOgJCCaH/MSaN4VBPptSyD4eC6x0
+i58rlDsM4iLzxaFHNwim2v+FE/G/Hn3Xk1Qjburg2z2tUmIBGK8T4cbGVySAdTnB
+kceXvtCXtiPOq7mg/1usHx5EFS9wn2zbivPQge+lNdnS0Xzo8WGwkZU6xhRZsZB8
+I/fVMDCyqX6/Y8bYLRGu2ZbYawN/woHKTRC5hiasE7HI1RIcmDqHxtT3zorS4rMD
+923W2ZaUSXVrRkwdo+tedpXoTMU/lR6LwpoLo4V20cLUwE4siszjNVuVcox3KHZ8
+1o/4KSfQv0hmQpAWxbg+
+=jcxI
+-----END PGP SIGNATURE-----
+
+--RnlQjJ0d97Da+TV1--
+
+
+--===============0847517519849373494==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============0847517519849373494==--
