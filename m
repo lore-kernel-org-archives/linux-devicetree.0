@@ -1,21 +1,72 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v9 00/14] Tegra114 clockframework
-Date: Thu, 04 Apr 2013 17:29:06 -0600
-Message-ID: <515E0CC2.4060006@wwwdotorg.org>
-References: <1365000110-8916-1-git-send-email-pdeschrijver@nvidia.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V2 1/7] kbuild: create an "include chroot" for DT bindings
+Date: Thu, 04 Apr 2013 19:01:11 -0600
+Message-ID: <515E2257.4030607@wwwdotorg.org>
+References: <1365032098-22825-1-git-send-email-swarren@wwwdotorg.org> <515E09FA.1090408@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1365000110-8916-1-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andrew Chew <achew-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <515E09FA.1090408@gmail.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Michal Marek <mmarek@suse.cz>, Grant Likely <glikely@secretlab.ca>, arm@kernel.org, Shawn Guo <shawn.guo@linaro.org>, Hiroshi Doyu <hdoyu@nvidia.com>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/03/2013 08:40 AM, Peter De Schrijver wrote:
-> This is the nineth version of the Tegra114 clockframework. It is based on the
-> next-20130320-fixed branch of ...
+On 04/04/2013 05:17 PM, Rob Herring wrote:
+> On 04/03/2013 06:34 PM, Stephen Warren wrote:
+>> From: Stephen Warren <swarren@nvidia.com>
+>>
+>> The recent dtc+cpp support allows header files and C pre-processor
+>> defines/macros to be used when compiling device tree files. These
+>> headers will typically define various constants that are part of the
+>> device tree bindings.
+>>
+>> The original patch which set up the dtc+cpp include path only considered
+>> using those headers from device tree files. However, most are also
+>> useful for kernel code which needs to interpret the device tree.
+>>
+>> In both the DT files and the kernel, I'd like to include the DT-related
+>> headers in the same way, for example, <dt-bindings/gpio/tegra-gpio.h>.
+>> That will simplify any text which discusses the DT header locations.
+>>
+>> Creating a <dt-bindings/> for kernel source to use is as simple as
+>> placing files into include/dt-bindings/.
+>>
+>> However, when compiling DT files, the include path should be restricted
+>> so that only the dt-bindings path is available; arbitrary kernel headers
+>> shouldn't be exposed. For this reason, create a specific include
+>> directory for use by dtc+cpp, and symlink dt-bindings from there to the
+>> actual location of include/dt-bindings/. For want of a better location,
+>> place this "include chroot" into the existing dts/ directory.
+>>
+>> arch/*/boot/dts/include/dt-bindings -> ../../../../../include/dt-bindings
+>>
+>> Some headers used by device tree files may not be useful to the kernel;
+>> they may be used simply to aid in constructing the DT file (e.g. macros
+>> to create a node), but not define any information that the kernel needs
+>> to share. These may be placed directly into arch/*/boot/dts/ along with
+>> the DT files themselves.
+>>
+>> Cc: Shawn Guo <shawn.guo@linaro.org>
+>> Cc: Hiroshi Doyu <hdoyu@nvidia.com>
+>> Acked-by: Michal Marek <mmarek@suse.cz>
+>> Acked-by: Shawn Guo <shawn.guo@linaro.org>
+>> Acked-by: Rob Herring <rob.herring@calxeda.com>
+>> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+>> ---
+>> Grant, Rob, Michal, I'm hoping for acks or comments from you so this
+>> series can be placed into a topic branch in the arm-soc repo, for others
+>> to build on during the 3.10 kernel cycle. Thanks.
+> 
+> Well, you have mine here and the rest looks fine, so add it to the others.
 
-I have applied this series to Tegra's for-3.10/clk branch, with patch
-10/14 replaced by v9b.
+Rob,
+
+I had originally hoped for this to go into an arm-soc branch so that a
+number of SoCs could convert to use the feature in the same release,
+hence I was looking for acks to let that happen.
+
+However, it's too late in the 3.10 cycle now for that to happen. Can the
+series be applied to the DT tree instead; people can convert during the
+3.11 cycle.
