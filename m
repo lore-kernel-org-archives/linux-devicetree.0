@@ -1,49 +1,110 @@
-From: Lars Poeschel <larsi@wh2.tu-dresden.de>
-Subject: Re: [PATCH v4] gpio: mcp23s08: convert driver to DT
-Date: Fri, 5 Apr 2013 07:51:01 +0200
-Message-ID: <201304050751.02172.larsi@wh2.tu-dresden.de>
-References: <1365069722-15408-1-git-send-email-larsi@wh2.tu-dresden.de> <CACRpkdZdOabqWHo9j+Kq_MHWFEaj9=+d8vBxLtH6OZbBX3vGJw@mail.gmail.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v3 07/12] PCI: tegra: Move PCIe driver to drivers/pci/host
+Date: Fri, 5 Apr 2013 08:03:51 +0200
+Message-ID: <20130405060351.GA15848@avionic-0098.mockup.avionic-design.de>
+References: <1365000318-28256-1-git-send-email-thierry.reding@avionic-design.de>
+ <1365000318-28256-8-git-send-email-thierry.reding@avionic-design.de>
+ <515DF096.2000703@wwwdotorg.org> <515DF0D9.40007@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZdOabqWHo9j+Kq_MHWFEaj9=+d8vBxLtH6OZbBX3vGJw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Lars Poeschel <poeschel@lemonage.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, spi mailing list <spi-devel-general@lists.sourceforge.net>, Peter Korsgaard <jacmet@sunsite.dk>, Mark Brown <broonie@opensource.wolfsonmicro.com>
+Content-Type: multipart/mixed; boundary="===============5304525153459755907=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <515DF0D9.40007-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 04 April 2013 15:44:08 Linus Walleij wrote:
-> On Thu, Apr 4, 2013 at 12:02 PM, Lars Poeschel <larsi@wh2.tu-dresden.de> 
-wrote:
-> > From: Lars Poeschel <poeschel@lemonage.de>
-> > 
-> > This converts the mcp23s08 driver to be able to be used with device
-> > tree.
-> > There is a "spi-present-mask" device tree property, that allows to
-> > use multiple of this spi chips on the same chipselect.
-> > 
-> > Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
-> > ---
-> > v4:
-> > - removed the ability to specify the pullup from device tree
-> > - updated binding doc
-> 
-> (...)
-> 
-> > @@ -668,6 +742,7 @@ static struct spi_driver mcp23s08_driver = {
-> > 
-> >         .driver = {
-> >         
-> >                 .name   = "mcp23s08",
-> >                 .owner  = THIS_MODULE,
-> > 
-> > +               .of_match_table = of_match_ptr(mcp23s08_spi_of_match),
-> 
-> Will this compile if CONFIG_OF is not enabled?
 
-Yes, of_match_ptr(blah) after preprocessing gets NULL then.
+--===============5304525153459755907==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+Content-Disposition: inline
 
-Regards,
-Lars
+
+--HcAYCG3uE/tztfnV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Apr 04, 2013 at 03:30:01PM -0600, Stephen Warren wrote:
+> On 04/04/2013 03:28 PM, Stephen Warren wrote:
+> > On 04/03/2013 08:45 AM, Thierry Reding wrote:
+> >> Move the PCIe driver from arch/arm/mach-tegra into the drivers/pci/host
+> >> directory. The motivation is to collect various host controller drivers
+> >> in the same location in order to facilitate refactoring.
+> >>
+> >> The Tegra PCIe driver has been largely rewritten, both in order to turn
+> >> it into a proper platform driver and to add MSI (based on code by
+> >> Krishna Kishore <kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>) as well as device tree support.
+> >=20
+> >>  arch/arm/boot/dts/tegra20.dtsi                     |   53 +
+> >=20
+> > I guess this has to touch both the driver and the dtsi file so that
+> > bisectabilty isn't broken? I guess that's OK.
+>=20
+> Actually, can't you move all the *.dts/*.dtsi changes to the start of
+> the series, then put the driver conversion patch last, to avoid any
+> bisectability issues and still keep code and DT changes separate?
+
+I'm not sure if that'll work. There's this oddity in the Harmony DTS
+where the regulator@3 is disabled with a comment that this is a hack
+required until board-harmony-pcie.c is removed. If we change the DTS
+before the driver rewrite I think that would break requesting the GPIO
+in the board file.
+
+A possible workaround I can think of is accessing the regulator from
+board-harmony-pcie.c instead of the GPIO directly. But perhaps such an
+attempt already failed (deferred probing getting in the way?).
+
+Since it looks like this series will not make it into 3.10, maybe we
+should try and at least get these things ironed out so that the merge
+can be done more easily in 3.11. One big step in that direction would
+obviously be if we could get the DTS changes merged already which, as
+you point out, should be independent of the driver rewrite itself.
+
+Thierry
+
+--HcAYCG3uE/tztfnV
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRXmlHAAoJEN0jrNd/PrOhm0EP/jaE+4AqxS3UniRXtEt5ooLB
+HnAII6XrN3WWhIthBQHNPWZeWI0uRSAa7THfE+/x38TiG16pkm1l1RWUgY/dM+ma
+6pty8WeO+wjx0CavfjBslDk0+yEZKdpKiNBnSvRlFkfqSw45cuszCz9JuV/ua3gK
+akR44L1SnbroifdvJ4gJYo1RDl6eoV88njApi8BtnhssVgRW3TSPYjTD3OK1qB93
+BPoEY3mGExBgRZi6wDXcddqP+pT2WUdKq5362zFHIiyNJl5rc7Bvhlv4vLu+KZFl
+mql/B5RzYPFAwnw73eyEa+ak6v6m7uXETF3m0r4EySqG+1FDLv6C2if1GSqKk7HM
+dJelC8wJLDSmZ5Yzo758HTvwlFAmGjHjmjYRUSfBHWL2C+kmBCGXdrJgS//6SEkx
+d8F0JJGX1yvsyvOr0xNOcqbYhMzmaiwLaphCD9DMKKJGxzUW/i5i6LpFsOmdq14a
+mh3ARP1YjjxelhAgh3kz0iBtBeeRy4/wdC7mO6X3hI33WRZazyIIa60T3zPAHFnW
+UOG+zN15NJBJ//YyaLjqD2eEuMQlEHsHwyzJ+n+dX5RCR1D1wlAoFIedUSXFPYsS
+z6+M9+qPofYovv1iDE/LYqR480vZ+kljGF+2s75qNMcJ45GwQZtxY/QJ0v9JUpVx
+0dJFSH5J5yDNUin3HsNa
+=Akm0
+-----END PGP SIGNATURE-----
+
+--HcAYCG3uE/tztfnV--
+
+--===============5304525153459755907==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============5304525153459755907==--
