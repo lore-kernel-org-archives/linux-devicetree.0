@@ -1,42 +1,88 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v6] pstore/ram: Add ramoops support for the Flattened
- Device Tree.
-Date: Thu, 4 Apr 2013 21:03:47 -0500
-Message-ID: <CAL_JsqK_L9nN6+oxUQzNwFjbFf3+3NroeEwzbMdPS4T6=Mnemg@mail.gmail.com>
-References: <1347042576-17675-1-git-send-email-bfreed@chromium.org>
-	<20120908052907.GA4724@lizard>
-	<20120917062302.GA768@lizard>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH/RFC 0/2] ARM: shmobile: DT irqpin for r8a7779 and
+ marzen-reference
+Date: Fri, 5 Apr 2013 11:13:39 +0900
+Message-ID: <20130405021339.GZ29203@verge.net.au>
+References: <Pine.LNX.4.64.1304031103590.10531@axis700.grange>
+ <20130404035426.GC28297@verge.net.au>
+ <Pine.LNX.4.64.1304042325140.21548@axis700.grange>
+ <20130405014429.GV29203@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20120917062302.GA768@lizard>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anton Vorontsov <cbouatmailru@gmail.com>
-Cc: Bryan Freed <bfreed@chromium.org>, Tony Luck <tony.luck@intel.com>, keescook@chromium.org, marco.stornelli@gmail.com, gregkh@linuxfoundation.org, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, sboyd@codeaurora.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130405014429.GV29203@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss@lists.ozlabs.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 17, 2012 at 1:23 AM, Anton Vorontsov <cbouatmailru@gmail.com> wrote:
-> On Fri, Sep 07, 2012 at 10:29:10PM -0700, Anton Vorontsov wrote:
->> On Fri, Sep 07, 2012 at 11:29:36AM -0700, Bryan Freed wrote:
->> > When called with a non-zero of_node, fill out a new ramoops_platform_data
->> > with data from the specified Flattened Device Tree node.
->> > Update ramoops documentation with the new FDT interface.
->> > Update devicetree/binding documentation with pstore/ramoops.txt.
->>
->> Thanks for your work, Bryan! There were a few issues, I fixed
->> them myself but I need your confirmation if you're OK w/ all
->> the changes.
-> [...]
->> So, the resulting patch is down below. But I have not pushed
->> it out yet, I'm waiting for your sign off. If you're OK with the
->> changes, please reply with
->> 'Signed-off-by: Bryan Freed <bfreed@chromium.org>'
->
-> Bryan, have you had a chance to look into this?
+On Fri, Apr 05, 2013 at 10:44:29AM +0900, Simon Horman wrote:
+> On Thu, Apr 04, 2013 at 11:47:05PM +0200, Guennadi Liakhovetski wrote:
+> > Hi Simon
+> > 
+> > On Thu, 4 Apr 2013, Simon Horman wrote:
+> > 
+> > > On Wed, Apr 03, 2013 at 11:18:57AM +0200, Guennadi Liakhovetski wrote:
+> > > > Hi
+> > > > 
+> > > > This 2 patches add DT irqpin support on marzen-reference. Only 
+> > > > compile-tested due to the lack of hardware. The patches can go 
+> > > > independently via their respective trees. irqpin on marzen will not work 
+> > > > if patch 2 is applied before patch 1, but as long as there are no devices, 
+> > > > using irqpin interrupts, no breakage will be caused.
+> > > 
+> > > I have applied both patches and the dependency I mention below.
+> > > I have also applied the small patch, inlined below, to hook-up
+> > > the LAN controller. Unfortunately it doesn't seem to be receiving
+> > > any interrupts. Perhaps I am missing something?
+> > 
+> > Are you sure 28 is the correct number in the irqpin IRQ space? Seems 
+> > strange to me. Should be 1 perhaps (counting from 0), or 2 - not sure how 
+> > that mapping would look like.
+> 
+> Thanks!
+> 
+> 0 seems to be the lucky number, I have SMSC (and NFS root) working
+> on marzen-reference.
 
-Whatever happened to this? Olof was also looking at doing a binding
-back in Jan 2012:
+s/0/1/
 
-http://www.mail-archive.com/devicetree-discuss@lists.ozlabs.org/msg09905.html
-
-Rob
+> I have posted "ARM: shmobile: marzen-reference: use irqpin for lan"
+> 
+> > > > Guennadi Liakhovetski (2):
+> > > >       irqchip: renesas-intc-irqpin: DT binding for sense bitfield width
+> > > 
+> > > The above patch depends on "[1/3] ARM: shmobile: irqpin: fix handling of
+> > > spurious interrupts in DT case", right?
+> > 
+> > Not functionally. Spurious interrupts occur on sh73a0, the sense bitfield 
+> > is needed for r8a7779. But the latter won't apply without the former, 
+> > that's right.
+> 
+> Thanks, could you reposts this series rebase so that it doesn't require
+> ""[1/3] ARM: shmobile: irqpin: fix handling of spurious interrupts in DT case"
+> to apply cleanly.
+> 
+> Feel free to break the creation of
+> Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+> into a separate patch.
+> 
+> Please add "ARM: shmobile: marzen-reference: use irqpin for lan" to
+> the end of the series with an Ack if you have no objections to it.
+> 
+> > > Has there been any progress in your
+> > > discussions with Magnus about what to do about that patch?
+> > 
+> > No, not yet.
+> 
+> Thanks, understood.
+> 
+> And thanks doubly for this series.
+> It is very nice to have bouth irqpin and ethernet working on
+> marzen-reference.
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
