@@ -1,94 +1,69 @@
-From: Vikas Sajjan <vikas.sajjan@linaro.org>
-Subject: [PATCH v11 3/3] ARM: dts: Add FIMD DT binding Documentation
-Date: Fri,  5 Apr 2013 15:47:42 +0530
-Message-ID: <1365157062-8669-4-git-send-email-vikas.sajjan@linaro.org>
-References: <1365157062-8669-1-git-send-email-vikas.sajjan@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1365157062-8669-1-git-send-email-vikas.sajjan@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, sylvester.nawrocki@gmail.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, patches@linaro.org, linaro-kernel@lists.linaro.org
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCHv7 06/17] clk: mvebu: create parent-child relation for
+ PCIe clocks on Armada 370
+Date: Fri, 5 Apr 2013 15:58:33 +0200
+Message-ID: <20130405155833.6e6a4b75@skate>
+References: <1364395234-11195-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1364395234-11195-7-git-send-email-thomas.petazzoni@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1364395234-11195-7-git-send-email-thomas.petazzoni@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@secretlab.ca>, Olof Johansson <olof@lixom.net>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Andrew Murray <andrew.murray@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Gregory Clement <gregory.clement@free-electrons.com>, Tawfik Bayouk <tawfik@marvell.com>, Mitch Bradley <wmb@firmworks.com>, linux-arm-kernel@lists.infradead.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding documentation for the FIMD IP block found in Samsung SoCs.
+Mike,
 
-Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- .../devicetree/bindings/video/samsung-fimd.txt     |   65 ++++++++++++++++++++
- 1 file changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/samsung-fimd.txt
+Could we have your opinion on this patch, and possibly a Acked-by to
+pass it through arm-soc?
 
-diff --git a/Documentation/devicetree/bindings/video/samsung-fimd.txt b/Documentation/devicetree/bindings/video/samsung-fimd.txt
-new file mode 100644
-index 0000000..1984dbb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/samsung-fimd.txt
-@@ -0,0 +1,65 @@
-+Device-Tree bindings for Samsung SoC display controller (FIMD)
-+
-+FIMD (Fully Interactive Mobile Display) is the Display Controller for the
-+Samsung series of SoCs which transfers the image data from a video memory
-+buffer to an external LCD interface.
-+
-+Required properties:
-+- compatible: value should be one of the following
-+		"samsung,s3c2443-fimd"; /* for S3C24XX SoCs */
-+		"samsung,s3c6400-fimd"; /* for S3C64XX SoCs */
-+		"samsung,s5p6440-fimd"; /* for S5P64X0 SoCs */
-+		"samsung,s5pc100-fimd"; /* for S5PC100 SoC  */
-+		"samsung,s5pv210-fimd"; /* for S5PV210 SoC */
-+		"samsung,exynos4210-fimd"; /* for Exynos4 SoCs */
-+		"samsung,exynos5250-fimd"; /* for Exynos5 SoCs */
-+
-+- reg: physical base address and length of the FIMD registers set.
-+
-+- interrupt-parent: should be the phandle of the fimd controller's
-+		parent interrupt controller.
-+
-+- interrupts: should contain a list of all FIMD IP block interrupts in the
-+		 order: FIFO Level, VSYNC, LCD_SYSTEM. The interrupt specifier
-+		 format depends on the interrupt controller used.
-+
-+- interrupt-names: should contain the interrupt names: "fifo", "vsync",
-+	"lcd_sys", in the same order as they were listed in the interrupts
-+        property.
-+
-+- pinctrl-0: pin control group to be used for this controller.
-+
-+- pinctrl-names: must contain a "default" entry.
-+
-+- clocks: must include clock specifiers corresponding to entries in the
-+         clock-names property.
-+
-+- clock-names: list of clock names sorted in the same order as the clocks
-+               property. Must contain "sclk_fimd" and "fimd".
-+
-+Optional Properties:
-+- samsung,power-domain: a phandle to FIMD power domain node.
-+
-+Example:
-+
-+SoC specific DT entry:
-+
-+	fimd@11c00000 {
-+		compatible = "samsung,exynos4210-fimd";
-+		interrupt-parent = <&combiner>;
-+		reg = <0x11c00000 0x20000>;
-+		interrupt-names = "fifo", "vsync", "lcd_sys";
-+		interrupts = <11 0>, <11 1>, <11 2>;
-+		clocks = <&clock 140>, <&clock 283>;
-+		clock-names = "sclk_fimd", "fimd";
-+		samsung,power-domain = <&pd_lcd0>;
-+		status = "disabled";
-+	};
-+
-+Board specific DT entry:
-+
-+	fimd@11c00000 {
-+		pinctrl-0 = <&lcd_clk &lcd_data24 &pwm1_out>;
-+		pinctrl-names = "default";
-+		status = "okay";
-+	};
+Thanks!
+
+Thomas
+
+On Wed, 27 Mar 2013 15:40:23 +0100, Thomas Petazzoni wrote:
+> The Armada 370 has two gatable clocks for each PCIe interface, and we
+> want both of them to be enabled. We therefore make one of the two
+> clocks a child of the other, as we did for the sataX and sataXlnk
+> clocks on Armada XP.
+> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> Cc: Mike Turquette <mturquette@linaro.org>
+> ---
+>  drivers/clk/mvebu/clk-gating-ctrl.c |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clk/mvebu/clk-gating-ctrl.c b/drivers/clk/mvebu/clk-gating-ctrl.c
+> index ebf141d..b35785a 100644
+> --- a/drivers/clk/mvebu/clk-gating-ctrl.c
+> +++ b/drivers/clk/mvebu/clk-gating-ctrl.c
+> @@ -119,8 +119,8 @@ static const struct mvebu_soc_descr __initconst armada_370_gating_descr[] = {
+>  	{ "pex1_en", NULL,  2 },
+>  	{ "ge1", NULL, 3 },
+>  	{ "ge0", NULL, 4 },
+> -	{ "pex0", NULL, 5 },
+> -	{ "pex1", NULL, 9 },
+> +	{ "pex0", "pex0_en", 5 },
+> +	{ "pex1", "pex1_en", 9 },
+>  	{ "sata0", NULL, 15 },
+>  	{ "sdio", NULL, 17 },
+>  	{ "tdm", NULL, 25 },
+
+
+
 -- 
-1.7.9.5
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
