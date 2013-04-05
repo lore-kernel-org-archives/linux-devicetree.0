@@ -1,122 +1,54 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 1/5 v2] mv643xx_eth: add Device Tree bindings
-Date: Fri, 05 Apr 2013 22:35:41 +0200
-Message-ID: <515F359D.7000306@gmail.com>
-References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
- <1365071235-11611-2-git-send-email-florian@openwrt.org>
- <20130404212906.GA25904@schnuecks.de> <515E9FE0.8050402@openwrt.org>
- <CABJ1b_TdzE_Q9qLsdSGZy8byFpCTtVBUy5FtxiZAx7QqgG-rVg@mail.gmail.com>
- <20130405180443.GE3598@obsidianresearch.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 2/2] regulator: max8952: Add Device Tree support
+Date: Fri, 5 Apr 2013 11:22:21 +0100
+Message-ID: <20130405102221.GE6597@opensource.wolfsonmicro.com>
+References: <1365092240-8956-1-git-send-email-t.figa@samsung.com>
+ <1365092240-8956-3-git-send-email-t.figa@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130405180443.GE3598@obsidianresearch.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: thomas.petazzoni@free-electrons.com, moinejf@free.fr, Simon Baatz <gmbnomis@gmail.com>, andrew@lunn.ch, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, davem@davemloft.net, grant.likely@secretlab.ca, jogo@openwrt.org, buytenh@wantstofly.org, jm@lentin.co.uk, Florian Fainelli <florian@openwrt.org>, linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="DqhR8hV3EnoxUkKN"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1365092240-8956-3-git-send-email-t.figa@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, lrg@ti.com, myungjoo.ham@samsung.com, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/05/2013 08:04 PM, Jason Gunthorpe wrote:
-> On Fri, Apr 05, 2013 at 03:58:03PM +0200, Sebastian Hesselbarth wrote:
->> I don't think that the ethernet controller should probe the PHY's on mdio-bus
->> at all. At least not for DT enabled platforms. I had a look at DT and non-DT
->> mdio-bus sources, and realized that there is a bus scan for non-DT only.
->> of_mdiobus_register requires you to set (and know) the PHY address.
->
-> DT platforms should have the option to use the standard phy-phandle
-> connection:
->
->
-> 		mdio@72004 {
-> 			#address-cells =<1>;
-> 			#size-cells =<0>;
-> 			compatible = "marvell,orion-mdio";
-> 			reg =<0x72004 0x84>;
-> 			status = "disabled";
->
-> +                        PHY1: ethernet-phy@1 {
-> +                                reg =<1>;
-> +                                device_type = "ethernet-phy";
-> +                        };
-> 		};
->
-> 		ethernet-group@72000 {
-> 			#address-cells =<1>;
-> 			#size-cells =<0>;
-> 			compatible = "marvell,mv643xx-eth-block";
-> 			reg =<0x72000 0x4000>;
-> 			tx-csum-limit =<1600>;
-> 			status = "disabled";
->
-> 			egiga0: ethernet@0 {
-> 				device_type = "network";
-> 				compatible = "marvell,mv643xx-eth";
-> 				reg =<0>;
-> 				interrupts =<29>;
-> 				clocks =<&gate_clk 2>;
-> +	                        phy-handle =<&PHY1>;
-> 			};
-> 		};
->
-> When phy-handle is present the ethernet driver should not probe/scan for
-> phys.
->
-> There is standard code to handle all of this - an important gain is
-> that the phy driver now has access to a DT node and can apply
-> phy-specific properties.
 
-The above is what I use as a modification of Florian's patches.
-I compared of_mdiobus_register against mdiobus_register. The difference
-is that DT version does not scan the bus for attached PHYs. That is ok,
-if you know the phy_address of the PHY that you pass the handle of. But 
-in most cases there will be only one PHY on the mdiobus and especially
-for new boards probing will help here.
+--DqhR8hV3EnoxUkKN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->> We had a similar discussion whether to probe or not for DT nodes,
->> and I guess there also will be some discussion about the above
->> patch. OTOH we could just (again) ask users of every
->> kirkwood/orion5x/dove board to tell their phy addresses and fail to
->> probe the phy for new boards...
->
-> Maybe print a warning and call the no-DT phy probe code if phy-handle
-> is nor present?
+On Thu, Apr 04, 2013 at 06:17:20PM +0200, Tomasz Figa wrote:
 
-I think it would be best to spam each probing result during mdiobus
-scan to encourage people to edit the DT and put in the phy_addr
-directly. IMHO it will be best to have bus scan on mdiobus rather than
-ethernet driver.
+> +	if (of_property_read_u32(np, "max8952,ramp-speed", &pd->ramp_speed))
+> +		dev_warn(dev, "max8952,ramp-speed property not specified, defaulting to 32mV/us\n");
 
-> Not sure this should be in the common code, phy probing is sketchy, it
-> shouldn't be encouraged, IMHO..
+Applied both, though the above warning seems a bit harsh - it seems like
+assuming a worst case ramp rate ought to be totally safe and just a
+minor performance issue so silently accepted.
 
-Actually, it is in common code (non-DT case) and I think passing the
-phy_addr by DT node like above is best. But for boards you don't
-know the address (yet) probing helps a lot. If all phy nodes have their
-reg property set, no probing will be performed.
+--DqhR8hV3EnoxUkKN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-For testing mdio bus probe, I used
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-mdio {
-	...
-	ethphy: ethernet-phy {
-		reg = <32>;
-	};
-};
+iQIcBAEBAgAGBQJRXqXUAAoJELSic+t+oim9qjMP/RcN/I75yaRvGz5361wf3kMk
+jogmGn59Rj1S9MmpLqw6cBGa0yDh253Rv8rHAHBgw9R8hK1KE8xc3zF+qoaSDMT+
+i2BSpbgC9fC882BzOdWxoqljlwa3LVtw4uqC0eDPYeC0aV9Y8EgQ4gIx8kw5EZa2
+607murpSy7hDYMA091leJUJwuQ0snAuo5LWFO+m6GJ11XdwN5pordVE7aYhq/R+C
+anrQEfCtuIok1M4gEoWn8kf/bcceZKEfkvIm9MKhO7zscmw9rOUWYKs3LiE71mdz
+b9NYsZKtqBdE4sgTcpFtqwOZIXylcsADbq241qemfbi0tBkEoivOGsghhxG9ohnp
+F8rhR6j9alFpGqN751H7VxCk6Ntag1gEwJUWiO4NWSNAPzjeyNEeJ/kpLZG/EjQn
+2YwT6jOsXIlbapl6WQKohYIB23JswkE3BIbIXkKu29H+ufz5jKAMBwNhT86u+F09
+5e6jxM6ZVFEcB5nMXf/U5mUmAny5VpOcKS3x09cS5YQ3GOu4ZIoo2c5TbRZiA3SZ
+4sYnUBvso8nCJgpGAyG7s3TJ3FDeiydZcUYE241vBEBrtizA/Fl+DXJnCxpGhJ0h
+At7eFpkGWBi9ResksVOdpTP6+tGPVqkrgUSSBmN4AC0S4GV+ejoxO94CfoU/wrNB
+HsOCIkUmJ19j94J4Rq2c
+=uoC8
+-----END PGP SIGNATURE-----
 
-And 32 should be defined as OF_PHY_ADDR_AUTOSCAN. It is an invalid
-address as max phy_addr is 31. I also thought about a bool property
-but passing an invalid reg property in SoC file allows to overwrite
-it in board file with the actual address easily.
-And AFAIK bool properties cannot be removed later on by board specific
-nodes.
-
-Sebastian
+--DqhR8hV3EnoxUkKN--
