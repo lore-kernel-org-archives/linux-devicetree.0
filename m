@@ -1,18 +1,15 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH 1/5 v2] mv643xx_eth: add Device Tree bindings
-Date: Fri, 5 Apr 2013 12:04:43 -0600
-Message-ID: <20130405180443.GE3598@obsidianresearch.com>
-References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
- <1365071235-11611-2-git-send-email-florian@openwrt.org>
- <20130404212906.GA25904@schnuecks.de>
- <515E9FE0.8050402@openwrt.org>
- <CABJ1b_TdzE_Q9qLsdSGZy8byFpCTtVBUy5FtxiZAx7QqgG-rVg@mail.gmail.com>
+From: Samuel Ortiz <sameo@linux.intel.com>
+Subject: Re: [PATCH v10 03/12] mfd: palmas add variant and OTP detection
+Date: Fri, 5 Apr 2013 18:32:23 +0200
+Message-ID: <20130405163223.GO17363@zurbaran>
+References: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
+ <1363964122-19201-4-git-send-email-ian@slimlogic.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <CABJ1b_TdzE_Q9qLsdSGZy8byFpCTtVBUy5FtxiZAx7QqgG-rVg@mail.gmail.com>
+In-Reply-To: <1363964122-19201-4-git-send-email-ian@slimlogic.co.uk>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,69 +19,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: thomas.petazzoni@free-electrons.com, moinejf@free.fr, Simon Baatz <gmbnomis@gmail.com>, andrew@lunn.ch, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, davem@davemloft.net, grant.likely@secretlab.ca, jogo@openwrt.org, buytenh@wantstofly.org, jm@lentin.co.uk, Florian Fainelli <florian@openwrt.org>, linux-arm-kernel@lists.infradead.org, jason@lakedaemon.net
+To: Ian Lartey <ian@slimlogic.co.uk>
+Cc: linux-doc@vger.kernel.org, linus.walleij@linaro.org, lgirdwood@gmail.com, grant.likely@secretlab.ca, wim@iguana.be, ldewangan@nvidia.com, gg@slimlogic.co.uk, linux-leds@vger.kernel.org, sfr@canb.auug.org.au, mturquette@linaro.org, linux-watchdog@vger.kernel.org, swarren@wwwdotorg.org, devicetree-discuss@lists.ozlabs.org, cooloney@gmail.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, j-keerthy@ti.com, broonie@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, rpurdie@rpsys.net, rob@landley.net, akpm@linux-foundation.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 05, 2013 at 03:58:03PM +0200, Sebastian Hesselbarth wrote:
+Hi Ian,
 
-> I don't think that the ethernet controller should probe the PHY's on mdio-bus
-> at all. At least not for DT enabled platforms. I had a look at DT and non-DT
-> mdio-bus sources, and realized that there is a bus scan for non-DT only.
-> of_mdiobus_register requires you to set (and know) the PHY address.
+On Fri, Mar 22, 2013 at 02:55:13PM +0000, Ian Lartey wrote:
+> @@ -278,20 +329,20 @@ static void palmas_dt_to_pdata(struct i2c_client *i2c,
+>  	int ret;
+>  	u32 prop;
+>  
+> -	ret = of_property_read_u32(node, "ti,mux_pad1", &prop);
+> +	ret = of_property_read_u32(node, "ti,mux-pad1", &prop);
+>  	if (!ret) {
+>  		pdata->mux_from_pdata = 1;
+>  		pdata->pad1 = prop;
+>  	}
+>  
+> -	ret = of_property_read_u32(node, "ti,mux_pad2", &prop);
+> +	ret = of_property_read_u32(node, "ti,mux-pad2", &prop);
+>  	if (!ret) {
+>  		pdata->mux_from_pdata = 1;
+>  		pdata->pad2 = prop;
+>  	}
+>  
+>  	/* The default for this register is all masked */
+> -	ret = of_property_read_u32(node, "ti,power_ctrl", &prop);
+> +	ret = of_property_read_u32(node, "ti,power-ctrl", &prop);
+>  	if (!ret)
+>  		pdata->power_ctrl = prop;
+>  	else
+> @@ -309,7 +360,7 @@ static int palmas_i2c_probe(struct i2c_client *i2c,
+>  	struct palmas_platform_data *pdata;
+>  	struct device_node *node = i2c->dev.of_node;
+>  	int ret = 0, i;
+> -	unsigned int reg, addr;
+> +	unsigned int reg;
+>  	int slave;
+>  	struct mfd_cell *children;
+The '-' to '_' fix has been sent by J Keerthy and is on my mfd-next tree
+aready. Would you mind removing it from this patch ?
 
-DT platforms should have the option to use the standard phy-phandle
-connection:
+Cheers,
+Samuel.
 
-
-		mdio@72004 {
-			#address-cells = <1>;
-			#size-cells = <0>;
-			compatible = "marvell,orion-mdio";
-			reg = <0x72004 0x84>;
-			status = "disabled";
-
-+                        PHY1: ethernet-phy@1 {
-+                                reg = <1>;
-+                                device_type = "ethernet-phy";
-+                        };
-		};
-
-		ethernet-group@72000 {
-			#address-cells = <1>;
-			#size-cells = <0>;
-			compatible = "marvell,mv643xx-eth-block";
-			reg = <0x72000 0x4000>;
-			tx-csum-limit = <1600>;
-			status = "disabled";
-
-			egiga0: ethernet@0 {
-				device_type = "network";
-				compatible = "marvell,mv643xx-eth";
-				reg = <0>;
-				interrupts = <29>;
-				clocks = <&gate_clk 2>;
-+	                        phy-handle = <&PHY1>;
-			};
-		};
-
-When phy-handle is present the ethernet driver should not probe/scan for
-phys.
-
-There is standard code to handle all of this - an important gain is
-that the phy driver now has access to a DT node and can apply
-phy-specific properties.
-
-> We had a similar discussion whether to probe or not for DT nodes,
-> and I guess there also will be some discussion about the above
-> patch. OTOH we could just (again) ask users of every
-> kirkwood/orion5x/dove board to tell their phy addresses and fail to
-> probe the phy for new boards...
-
-Maybe print a warning and call the no-DT phy probe code if phy-handle
-is nor present?
-
-Not sure this should be in the common code, phy probing is sketchy, it
-shouldn't be encouraged, IMHO..
-
-Jason
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
