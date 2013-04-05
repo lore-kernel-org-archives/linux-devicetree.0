@@ -1,15 +1,15 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: OMAP4: clock: Add device tree support for AUXCLKs
-Date: Fri, 5 Apr 2013 11:50:59 +0300
-Message-ID: <515E9073.8050504@ti.com>
-References: <1363703220-4777-2-git-send-email-rogerq@ti.com>
- <1364293408-20677-1-git-send-email-rogerq@ti.com> <515A958B.5080905@ti.com>
- <515E8F85.2060700@ti.com> <20130405084836.GA11331@kahuna>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 2/2] mfd: stmpe: DT: Add stmpe-i2c dt alias to get id
+ device
+Date: Fri, 5 Apr 2013 18:07:00 +0200
+Message-ID: <20130405160700.GK17363@zurbaran>
+References: <1362139646-23613-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130405084836.GA11331@kahuna>
+Content-Disposition: inline
+In-Reply-To: <1362139646-23613-1-git-send-email-linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,36 +20,29 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Cc: Anmar Oueja <anmar.oueja-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/05/2013 11:48 AM, Nishanth Menon wrote:
-> On 11:47-20130405, Roger Quadros wrote:
->> On 04/02/2013 11:23 AM, Roger Quadros wrote:
->>> + Paul
->>>
->>> On 03/26/2013 12:23 PM, Roger Quadros wrote:
->>>> Register a device tree clock provider for the clocks
->>>> on the OMAP4 SoC. Also provide the binding information.
->>>>
->>>> For now we only provide AUXCLKs.
->>
->> NOTE: this patch depends on
->> https://patchwork.kernel.org/patch/2312211/
->>
->>>>
->>>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->>>> ---
->>>>  .../devicetree/bindings/clock/omap4-clock.txt      |   33 ++++++++++++++++
->>>>  arch/arm/boot/dts/omap4.dtsi                       |    5 ++
->>>>  arch/arm/mach-omap2/cclock44xx_data.c              |   41 ++++++++++++++++++++
->>>>  3 files changed, 79 insertions(+), 0 deletions(-)
->>>>  create mode 100644 Documentation/devicetree/bindings/clock/omap4-clock.txt
-> If we are doing this, we might as well do for all platforms(OMAP3-5,
-> AM..) in an series, no?
-> 
-Yes, once we agree on the approach, I can write it for all OMAPs.
+Hi Linus,
 
-cheers,
--roger
+On Fri, Mar 01, 2013 at 01:07:26PM +0100, Linus Walleij wrote:
+> From: Gabriel Fernandez <gabriel.fernandez-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+> 
+> This patch augments the STMP driver to read the device id
+> from the stmpe-i2c dt alias if present.
+> 
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/mfd/stmpe.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+Applied to mfd-next as well.
+
+Cheers,
+Samuel.
+
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
