@@ -1,15 +1,14 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 2/9] arm: mvebu: Align the internal registers virtual
- base to support LPAE
-Date: Fri, 5 Apr 2013 22:50:28 +0200
-Message-ID: <201304052250.28641.arnd@arndb.de>
-References: <1365193444-13441-1-git-send-email-gregory.clement@free-electrons.com>
- <1365193444-13441-3-git-send-email-gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v4 04/14] mfd: Add Samsung PWM/timer master driver
+Date: Fri, 5 Apr 2013 21:54:21 +0200
+Message-ID: <201304052154.21361.arnd@arndb.de>
+References: <1365093431-30621-1-git-send-email-t.figa@samsung.com>
+ <201304051905.24644.arnd@arndb.de> <19231120.yHlZtTPUMd@amdc1227>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1365193444-13441-3-git-send-email-gregory.clement@free-electrons.com>
+In-Reply-To: <19231120.yHlZtTPUMd@amdc1227>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,20 +18,35 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Grant Likely <grant.likely@secretlab.ca>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.com>, Nicolas Pitre <nico@fluxnic.net>, linux-kernel@vger.kernel.org, Maen Suleiman <maen@marvell.com>
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: mark.rutland@arm.com, heiko@sntech.de, tomasz.figa@gmail.com, buserror@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, christer@weinigel.se, sylvester.nawrocki@gmail.com, m.szyprowski@samsung.com, kgene.kim@samsung.com, linux@arm.linux.org.uk, Samuel Ortiz <sameo@linux.intel.com>, kwangwoo.lee@gmail.com, mcuelenaere@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, john.stultz@linaro.org, ghcstop@gmail.com, linux@simtec.co.uk, linux-arm-kernel@lists.infradead.org, broonie@opensource.wolfsonmicro.com, jekhor@gmail.com, kyungmin.park@samsung.com, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Friday 05 April 2013, Gregory CLEMENT wrote:
-> From: Lior Amsalem <alior@marvell.com>
+On Friday 05 April 2013, Tomasz Figa wrote:
+> > I don't think anyone ever suggested using a private API though.
 > 
-> In order to be able to support he LPAE, the internal registers virtual
-> base must be aligned to 2MB.
-> 
-> Signed-off-by: Lior Amsalem <alior@marvell.com>
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> I must have gotten the last paragraph of
+> http://article.gmane.org/gmane.linux.kernel.samsung-soc/16638
+> wrong then. For me it seemed like the timer driver would expose a private API 
+> to the PWM driver.
 
-This is a surprising limitation. Can you extend the above text to go into more
-detail where that alignment requirement comes from?
+Yes, sorry I wasn't clear enough. I meant a register-level interface
+exposed from the base driver, not a high-level interface like you
+did.
+
+> > I think
+> > it's ok if the driver lives in drivers/mfd when it doesn't fit anywhere
+> > else easily, but you should really register it to the pwm subsystem to
+> > expose that functionality, not export functions that can be used by
+> > a pwm shim driver, which even seems to be missing from the series.
+> 
+> Anyway, using PWM API in a clocksource driver that needs to be running very 
+> early (before any initcalls get called) seems a bit weird for me, especially 
+> when PWM API doesn't provide such fine grained control over PWM timers that is 
+> required in the clocksource drivers.
+
+Exactly, that's why you should have a regular PWM driver that gets loaded
+at a convenient time and just uses an interface exported by the base driver
+to access the common registers.
 
 	Arnd
