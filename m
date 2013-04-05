@@ -1,14 +1,18 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 1/7] kbuild: create an "include chroot" for DT bindings
-Date: Fri, 05 Apr 2013 11:06:34 -0500
-Message-ID: <515EF68A.3020505@gmail.com>
-References: <1365032098-22825-1-git-send-email-swarren@wwwdotorg.org>
- <515E09FA.1090408@gmail.com> <515E2257.4030607@wwwdotorg.org>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] i2c: mux: Add i2c-arbitrator-cros-ec 'mux' driver
+Date: Fri, 5 Apr 2013 12:37:19 -0700
+Message-ID: <CAPnjgZ0bt+ppAMAB1RtoeUKrzUjxxZ3+=GQwHqxByce7fmOLDg@mail.gmail.com>
+References: <1360957573-864-1-git-send-email-dianders@chromium.org>
+ <1363192583-26363-1-git-send-email-dianders@chromium.org>
+ <CAD=FV=UW4wGFqsg2B3MmC24jhnba5PSvCh8Wck-V6iuYk+Xifw@mail.gmail.com>
+ <20130329115821.GC6359@the-dreams.de>
+ <CAD=FV=XyBZXD1dsOy4kY3CjkFiJXCO+taAJ-zZ8op6V-z9J8jQ@mail.gmail.com>
+ <20130403191938.GA7875@the-dreams.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <515E2257.4030607-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20130403191938.GA7875-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,69 +23,152 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Girish Shivananjappa <girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bhushan.r" <bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sreekumar.c" <sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Yuvaraj
 List-Id: devicetree@vger.kernel.org
 
-On 04/04/2013 08:01 PM, Stephen Warren wrote:
-> On 04/04/2013 05:17 PM, Rob Herring wrote:
->> On 04/03/2013 06:34 PM, Stephen Warren wrote:
->>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>>
->>> The recent dtc+cpp support allows header files and C pre-processor
->>> defines/macros to be used when compiling device tree files. These
->>> headers will typically define various constants that are part of the
->>> device tree bindings.
->>>
->>> The original patch which set up the dtc+cpp include path only considered
->>> using those headers from device tree files. However, most are also
->>> useful for kernel code which needs to interpret the device tree.
->>>
->>> In both the DT files and the kernel, I'd like to include the DT-related
->>> headers in the same way, for example, <dt-bindings/gpio/tegra-gpio.h>.
->>> That will simplify any text which discusses the DT header locations.
->>>
->>> Creating a <dt-bindings/> for kernel source to use is as simple as
->>> placing files into include/dt-bindings/.
->>>
->>> However, when compiling DT files, the include path should be restricted
->>> so that only the dt-bindings path is available; arbitrary kernel headers
->>> shouldn't be exposed. For this reason, create a specific include
->>> directory for use by dtc+cpp, and symlink dt-bindings from there to the
->>> actual location of include/dt-bindings/. For want of a better location,
->>> place this "include chroot" into the existing dts/ directory.
->>>
->>> arch/*/boot/dts/include/dt-bindings -> ../../../../../include/dt-bindings
->>>
->>> Some headers used by device tree files may not be useful to the kernel;
->>> they may be used simply to aid in constructing the DT file (e.g. macros
->>> to create a node), but not define any information that the kernel needs
->>> to share. These may be placed directly into arch/*/boot/dts/ along with
->>> the DT files themselves.
->>>
->>> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> Acked-by: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>
->>> Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> ---
->>> Grant, Rob, Michal, I'm hoping for acks or comments from you so this
->>> series can be placed into a topic branch in the arm-soc repo, for others
->>> to build on during the 3.10 kernel cycle. Thanks.
->>
->> Well, you have mine here and the rest looks fine, so add it to the others.
-> 
-> Rob,
-> 
-> I had originally hoped for this to go into an arm-soc branch so that a
-> number of SoCs could convert to use the feature in the same release,
-> hence I was looking for acks to let that happen.
-> 
-> However, it's too late in the 3.10 cycle now for that to happen. Can the
-> series be applied to the DT tree instead; people can convert during the
-> 3.11 cycle.
+HI Wolfram,
 
-That is fine. Can you send me a pull request.
+On Wed, Apr 3, 2013 at 12:19 PM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+> Doug,
+>
+>> Separately from a discussion of the technical merits, I'd say that
+>> this patch is needed because the Embedded Controller (EC) on the ARM
+>> Chromebook shipped expecting to communicate with this scheme.  While
+>
+> Uhrm, with all respect, "we already shipped it" is not a convincing
+> argument regarding inclusion. Benefit for the kernel is.
+>
+>> ...but we can also talk technical merits.  One person on our team
+>> spent a bit of time thinking about this and decided that traditional
+>> i2c arbitration can't actually be used in this case (aside from the
+>
+> The details would be extremly interesting here. I am very interested in
+> this and will ask a few questions further on. This is to get a better
+> undestanding for the situation regarding multi-master and what is
+> needed, because I expect some demand for it in the near future.
+>
+>> general experience about multimaster being buggy).  Specifically, our
+>
+> I'm also interested in these experiences.
 
-Rob
+Thanks for coming back on this. Please see my comments below.
+
+>
+>> The problem here is that the EC is both a master and a slave.  It's my
+>> understanding that if the AP tries to talk EC on the bus at the same
+>> time that the EC is trying to talk to the battery of PMU that we can
+>> get into trouble.
+>
+> If I understand correctly, the I2C Specs mention this case explicitly:
+>
+> "If a master also incorporates a slave function and it loses arbitration
+> during the addressing stage, it is possible that the winning master is
+> trying to address it. The losing master must therefore switch over
+> immediately to its slave mode."
+
+This seems pretty complicated - does the EC then need to compare the
+address it was sending with the remaining bits that are to be received
+in that address?
+
+Anyway yes we did consider this case at the time, and the STM32
+datasheet had mention of it. But it adds quite a bit of complexity. I
+think the start sequence is intended to make this all work, at least
+in theory, but it seemed risky to rely on it.
+
+The practical problem here is that in my experience the I2C
+multi-master feature is lightly used in practice, and is quite tricky
+to get right. That experience was shared with other engineers in the
+team, and no one was willing to take the risk on getting everything
+running perfectly with i2c multi-master, or doing it on a tight
+timeline. I suspect this same problem has arisen many times before,
+and will arise again, so from that point of view this feature is a
+useful addition to the kernel.
+
+If you are interested in specific experiences then I might be able to
+collect some comments from people here. For myself I have found that
+getting a reliable I2C driver at all is a sufficient challenge and
+time sink with many embedded chips. My memory is a little vague now,
+but I know that in 2-3 projects we had to use bit-bash due to bugs or
+insufficient documentation in the chip's dedicated I2C peripheral. One
+project which had multi-master used a retry scheme with sequenced
+packets which seemed to work well enough (i.e. adding a layer above
+the I2C layer to sort out problems). The snow project was more
+challenging on the I2C  ront, due to the critical nature of I2C buses
+in the device.
+
+For snow we found that the Exynos driver did not support arbitration
+loss, the STM32 driver we had did not support it, the STM32F I2C
+errata indicated problems with I2C in general which reduced our
+confidence, and we were unable to determine whether the slave devices
+on the bus (smart battery and pmic) would definitely do the right
+thing (both chips had I2C issues which we were tracking). I am not
+trying to point fingers here, and certainly anything can be solved
+given sufficient persistence...but keeping to common features that are
+well-tested and available is prudent. As it was we spent more time on
+I2C drivers than I would like, and you can get a feel for that in the
+Chromium bug tracker if you wish.
+
+Again, I don't believe this would be an unusual situation in a product
+development. We need to consider the risk and cost of an approach,
+rather than just whether it is technically possible.
+
+>From the point of view of arbitration, the two critical points in the
+I2C transfer are claiming the bus (detecting that the start condition
+failed) and detecting loss of arbitration during a transfer. These
+points need to be tested and validated on all master devices, which
+can add a considerable burden. Silicon and driver bugs may make this
+even more onerous and in fact for some non-compliant implementations
+it simply might not work, or might not work reliably.
+
+Please don't take this as a negative view of I2C in general, which is
+an excellent bus, unmatched for what it was designed in my view.
+
+>
+>> Specifically the EC needs to be switched to "master
+>> mode" to talk to the battery/PMU and thus has a period of time where
+>> it won't be listening for the AP's messages.
+>
+> When it talks to the battery, the bus is busy and the EC will not be
+> addressed by the AP?
+
+That's right - there is only one bus and we want to avoid contention for it.
+
+>
+>> The arbitration lines make it very clear that the EC has gained
+>> mastery of the bus and is free to switch into "master mode" without
+>> worrying that the AP may talk to it.
+>
+> There is another thing I wonder: The arbitration is not I2C specific.
+> You could use this scheme for various busses. So, besides the question
+> if this is really needed on top of I2C arbitration, the other question
+> is if this should reside inside the I2C kernel realm or should/could be
+> generic.
+
+Yes this is an interesting point! So far this feature has been added:
+
+- in a separate 'arbitrator' driver (my original implementation, and
+now suggested by you)
+- in the Samsung I2C driver (suggested by Olof Johansson, my second
+implementation)
+- in the I2C core (suggested in code review I think and implemented by
+Naveen Chatradhi)
+- as an I2C mux (suggested by Grant Likely, implemented by Doug Anderson)
+
+So yes there are clearly a number of places where it could go and we
+might be going around in circles. But we should be careful to address
+this question based on present need rather than theoretical value. I
+believe there is clear value in having an I2C mux which can arbitrate
+between masters using an out-of-band method for the reasons explained
+above. Other needs and wishes should be justified on their merits when
+they arise.
+
+Having a mux, which can be is set up using the device tree, is quite
+an attractive option. It allows the feature to be used by any I2C
+driver, and does not touch the core I2C code.
+
+The present patch is a nice clean implementation IMO, and I believe it
+has value for the kernel.
+
+Regards,
+Simon
