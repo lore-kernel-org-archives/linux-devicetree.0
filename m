@@ -1,14 +1,15 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2 4/9] arm: dts: Add a 64 bits version of the skeleton device
- tree
-Date: Fri,  5 Apr 2013 22:23:59 +0200
-Message-ID: <1365193444-13441-5-git-send-email-gregory.clement@free-electrons.com>
-References: <1365193444-13441-1-git-send-email-gregory.clement@free-electrons.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v4 00/14] ARM: samsung-time: Prepare for multiplatform
+ support
+Date: Fri, 05 Apr 2013 12:33:12 +0200
+Message-ID: <2744467.M5ElrZXicK@amdc1227>
+References: <1365093431-30621-1-git-send-email-t.figa@samsung.com>
+ <201304050115.03879.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1365193444-13441-1-git-send-email-gregory.clement@free-electrons.com>
+In-reply-to: <201304050115.03879.heiko@sntech.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,40 +19,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, Ike Pan <ike.pan@canonical.com>, Grant Likely <grant.likely@secretlab.ca>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.com>, Nicolas Pitre <nico@fluxnic.net>, linux-kernel@vger.kernel.org, Maen Suleiman <maen@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc: mark.rutland@arm.com, tomasz.figa@gmail.com, buserror@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, christer@weinigel.se, sylvester.nawrocki@gmail.com, m.szyprowski@samsung.com, kgene.kim@samsung.com, linux@arm.linux.org.uk, sameo@linux.intel.com, kwangwoo.lee@gmail.com, mcuelenaere@gmail.com, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, john.stultz@linaro.org, ghcstop@gmail.com, linux@simtec.co.uk, linux-arm-kernel@lists.infradead.org, broonie@opensource.wolfsonmicro.com, jekhor@gmail.com, kyungmin.park@samsung.com, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-From: Lior Amsalem <alior@marvell.com>
+Hi Heiko,
 
-In order to be able to use more than 4GB address-cells and size-cells
-have to be set to 2
+On Friday 05 of April 2013 01:15:02 Heiko St=FCbner wrote:
+> Am Donnerstag, 4. April 2013, 18:36:57 schrieb Tomasz Figa:
+> > This series is an attempt to make the samsung-time clocksource driver
+> > ready
+> > for multiplatform kernels. It moves the driver to drivers/clocksource,
+> > cleans it up from uses of static platform-specific definitions, simplif=
+ies
+> > timer interrupt handling and adds Device Tree support.
+> > =
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Signed-off-by: Lior Amsalem <alior@marvell.com>
----
- arch/arm/boot/dts/skeleton64.dtsi |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
- create mode 100644 arch/arm/boot/dts/skeleton64.dtsi
+> > Only samsung-time driver is reworked to use the master driver at this
+> > time,
+> > since the PWM driver can be already considered broken at the moment and
+> > needs separate series of several patches to fix and clean it up, which
+> > I am already working on.
+> > =
 
-diff --git a/arch/arm/boot/dts/skeleton64.dtsi b/arch/arm/boot/dts/skeleton64.dtsi
-new file mode 100644
-index 0000000..1599415
---- /dev/null
-+++ b/arch/arm/boot/dts/skeleton64.dtsi
-@@ -0,0 +1,13 @@
-+/*
-+ * Skeleton device tree in the 64 bits version; the bare minimum
-+ * needed to boot; just include and add a compatible value.  The
-+ * bootloader will typically populate the memory node.
-+ */
-+
-+/ {
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	chosen { };
-+	aliases { };
-+	memory { device_type = "memory"; reg = <0 0>; };
-+};
--- 
-1.7.9.5
+> > Tested on Universal C210 board with Device Tree. Not tested without
+> > Device Tree, since it has been already broken before this series.
+> > Compile tested for other related SoCs.
+> =
+
+> Looks nice.
+> =
+
+> On a non-DT S3C2416 board:
+> Tested-by: Heiko Stuebner <heiko@sntech.de>
+
+Thanks for testing.
+
+> And just so I don't search myself silly, am I right in thinking that the
+> driver does not use the generic clocksource registration yet and dt machi=
+nes
+> must still use samsung_timer_init at this point?
+
+Yes. Because of the build failures it caused recently I have decided not to =
+
+use it yet. It can be added with a small patch later, though.
+
+Best regards,
+-- =
+
+Tomasz Figa
+Samsung Poland R&D Center
+SW Solution Development, Kernel and System Framework
