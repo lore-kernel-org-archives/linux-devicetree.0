@@ -1,43 +1,88 @@
-From: Vikas Sajjan <vikas.sajjan@linaro.org>
-Subject: [PATCH v11 1/3] ARM: dts: Add FIMD node to exynos4
-Date: Fri,  5 Apr 2013 15:47:40 +0530
-Message-ID: <1365157062-8669-2-git-send-email-vikas.sajjan@linaro.org>
-References: <1365157062-8669-1-git-send-email-vikas.sajjan@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1365157062-8669-1-git-send-email-vikas.sajjan@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, sylvester.nawrocki@gmail.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, patches@linaro.org, linaro-kernel@lists.linaro.org
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCHv7 07/17] clk: mvebu: add more PCIe clocks for Armada XP
+Date: Fri, 5 Apr 2013 16:59:54 +0200
+Message-ID: <20130405165954.03e08f1a@skate>
+References: <1364395234-11195-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1364395234-11195-8-git-send-email-thomas.petazzoni@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1364395234-11195-8-git-send-email-thomas.petazzoni@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@secretlab.ca>, Olof Johansson <olof@lixom.net>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Andrew Murray <andrew.murray@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Gregory Clement <gregory.clement@free-electrons.com>, Tawfik Bayouk <tawfik@marvell.com>, Mitch Bradley <wmb@firmworks.com>, linux-arm-kernel@lists.infradead.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a common FIMD device node for all Exynos4 SoCs.
+Mike,
 
-Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- arch/arm/boot/dts/exynos4.dtsi |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Could we have your opinion on the below patch, and possibly an Acked-by
+to carry it through the arm-soc tree?
 
-diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-index 800ff11..b8771c5 100644
---- a/arch/arm/boot/dts/exynos4.dtsi
-+++ b/arch/arm/boot/dts/exynos4.dtsi
-@@ -371,4 +371,16 @@
- 			#dma-requests = <1>;
- 		};
- 	};
-+
-+	fimd: fimd@11c00000 {
-+		compatible = "samsung,exynos4210-fimd";
-+		interrupt-parent = <&combiner>;
-+		reg = <0x11c00000 0x20000>;
-+		interrupt-names = "fifo", "vsync", "lcd_sys";
-+		interrupts = <11 0>, <11 1>, <11 2>;
-+		clocks = <&clock 140>, <&clock 283>;
-+		clock-names = "sclk_fimd", "fimd";
-+		samsung,power-domain = <&pd_lcd0>;
-+		status = "disabled";
-+	};
- };
+Thanks,
+
+Thomas
+
+On Wed, 27 Mar 2013 15:40:24 +0100, Thomas Petazzoni wrote:
+> The current revision of the datasheet only mentions the gatable clocks
+> for the PCIe 0.0, 0.1, 0.2 and 0.3 interfaces, and forgot to mention
+> the ones for the PCIe 1.0, 1.1, 1.2, 1.3, 2.0 and 3.0
+> interfaces. After confirmation with Marvell engineers, this patch adds
+> the missing gatable clocks for those PCIe interfaces.
+> 
+> It also changes the name of the previously existing PCIe gatable
+> clocks, in order to match the naming using the datasheets.
+> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> ---
+>  drivers/clk/mvebu/clk-gating-ctrl.c |   14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/clk/mvebu/clk-gating-ctrl.c b/drivers/clk/mvebu/clk-gating-ctrl.c
+> index b35785a..2f03723 100644
+> --- a/drivers/clk/mvebu/clk-gating-ctrl.c
+> +++ b/drivers/clk/mvebu/clk-gating-ctrl.c
+> @@ -137,10 +137,14 @@ static const struct mvebu_soc_descr __initconst armada_xp_gating_descr[] = {
+>  	{ "ge2", NULL,  2 },
+>  	{ "ge1", NULL, 3 },
+>  	{ "ge0", NULL, 4 },
+> -	{ "pex0", NULL, 5 },
+> -	{ "pex1", NULL, 6 },
+> -	{ "pex2", NULL, 7 },
+> -	{ "pex3", NULL, 8 },
+> +	{ "pex00", NULL, 5 },
+> +	{ "pex01", NULL, 6 },
+> +	{ "pex02", NULL, 7 },
+> +	{ "pex03", NULL, 8 },
+> +	{ "pex10", NULL, 9 },
+> +	{ "pex11", NULL, 10 },
+> +	{ "pex12", NULL, 11 },
+> +	{ "pex13", NULL, 12 },
+>  	{ "bp", NULL, 13 },
+>  	{ "sata0lnk", NULL, 14 },
+>  	{ "sata0", "sata0lnk", 15 },
+> @@ -152,6 +156,8 @@ static const struct mvebu_soc_descr __initconst armada_xp_gating_descr[] = {
+>  	{ "xor0", NULL, 22 },
+>  	{ "crypto", NULL, 23 },
+>  	{ "tdm", NULL, 25 },
+> +	{ "pex20", NULL, 26 },
+> +	{ "pex30", NULL, 27 },
+>  	{ "xor1", NULL, 28 },
+>  	{ "sata1lnk", NULL, 29 },
+>  	{ "sata1", "sata1lnk", 30 },
+
+
+
 -- 
-1.7.9.5
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
