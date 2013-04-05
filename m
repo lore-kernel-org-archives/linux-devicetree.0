@@ -1,16 +1,14 @@
-From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: [PATCH 1/5 v2] mv643xx_eth: add Device Tree bindings
-Date: Fri, 05 Apr 2013 16:23:17 +0200
-Message-ID: <515EDE55.9030609@openwrt.org>
-References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
- <1365071235-11611-2-git-send-email-florian@openwrt.org>
- <20130404212906.GA25904@schnuecks.de> <515E9FE0.8050402@openwrt.org>
- <CABJ1b_TdzE_Q9qLsdSGZy8byFpCTtVBUy5FtxiZAx7QqgG-rVg@mail.gmail.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v2 9/9] arm: dts: mvebu: Convert mvebu device tree files to 64
+ bits
+Date: Fri,  5 Apr 2013 22:24:04 +0200
+Message-ID: <1365193444-13441-10-git-send-email-gregory.clement@free-electrons.com>
+References: <1365193444-13441-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABJ1b_TdzE_Q9qLsdSGZy8byFpCTtVBUy5FtxiZAx7QqgG-rVg@mail.gmail.com>
+In-Reply-To: <1365193444-13441-1-git-send-email-gregory.clement@free-electrons.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,144 +18,143 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: thomas.petazzoni@free-electrons.com, moinejf@free.fr, Simon Baatz <gmbnomis@gmail.com>, andrew@lunn.ch, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jogo@openwrt.org, linux-arm-kernel@lists.infradead.org, jm@lentin.co.uk, davem@davemloft.net, buytenh@wantstofly.org, jason@lakedaemon.net
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Ike Pan <ike.pan@canonical.com>, Grant Likely <grant.likely@secretlab.ca>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.com>, Nicolas Pitre <nico@fluxnic.net>, linux-kernel@vger.kernel.org, Maen Suleiman <maen@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gU2ViYXN0aWFuLAoKTGUgMDQvMDUvMTMgMTU6NTgsIFNlYmFzdGlhbiBIZXNzZWxiYXJ0
-aCBhIMOpY3JpdCA6Cj4gT24gRnJpLCBBcHIgNSwgMjAxMyBhdCAxMTo1NiBBTSwgRmxvcmlhbiBG
-YWluZWxsaSA8ZmxvcmlhbkBvcGVud3J0Lm9yZz4gd3JvdGU6Cj4+IFtzbmlwXQo+Cj4gRmxvcmlh
-biwKPgo+IHRvb2sgbWUgYSB3aGlsZSB0byB0cnkgeW91IHBhdGNoZXMgb3V0IG9uIERvdmUgYnV0
-IG5vdyBJIGZpeGVkIGFsbAo+IGlzc3Vlcy4gSSB3aWxsCj4gY29tbWVudCBvbiBhbGwgcmVsYXRl
-ZCBwYXRjaGVzIGJ1dCBmaXJzdCBJIHdhbnQgdG8gY29tbWVudCBoZXJlLgo+Cj4gT25lIGdlbmVy
-YWwgbm90ZSBmb3IgRG92ZSByZWxhdGVkIHBhdGNoZXM6IFlvdSBkaWRuJ3QgcmVtb3ZlIHRoZSBy
-ZWdpc3RyYXRpb24gb2YKPiBnZSBwbGF0Zm9ybV9kZXZpY2UgZnJvbSBtYWNoLWRvdmUvYm9hcmQt
-ZHQuYy4gVGhhdCB3aWxsIGxlYWQgdG8gZG91YmxlCj4gcmVnaXN0cmF0aW9uCj4gb2YgbWRpbyBh
-bmQgbXY2NDN4eF9ldGgvc2hhcmVkLCBzbyB5b3UnbGwgbmV2ZXIgYmUgc3VyZSBpZiBEVCBvciBu
-b24tRFQgY29kZSBpcwo+IGV4ZWN1dGVkLiBJIGhhdmVuJ3QgY2hlY2tlZCBtYWNoLWtpcmt3b29k
-L2JvYXJkLWR0LmMgb3Igb3Jpb241eCBjb2RlLgoKVGhpcyB3YXMgaW50ZW50aW9uYWwsIHRoaXMg
-cGF0Y2hzZXQgaXMganVzdCBwcmVwYXJhdG9yeSBpbiB0aGUgc2Vuc2UgCnRoYXQgaXQgZG9lcyBu
-byBjb252ZXJzaW9uIG9mIHRoZSBleGlzdGluZyB1c2VycyBvZiB0aGUgbXY2NDN4eF9ldGggCnBs
-YXRmb3JtIGRyaXZlciBvdmVyIERUIChoYXZlIHNvbWUgcGF0Y2hlcyB0byB0aGF0IHRob3VnaCku
-IEkgd2FudGVkIHRvIApyZXN1bWUgdGhlIGRpc2N1c3Npb24gb24gdGhlc2UgYmluZGluZ3MgZmly
-c3QsIHRoZW4gcHJvY2VlZCB3aXRoIHRoZSAKY29udmVyc2lvbi4KCj4KPj4+PiAgICAgICAgICBp
-ZiAoIW12NjQzeHhfZXRoX3ZlcnNpb25fcHJpbnRlZCsrKQo+Pj4+ICAgICAgICAgICAgICAgICAg
-cHJfbm90aWNlKCJNVi02NDN4eCAxMC8xMDAvMTAwMCBldGhlcm5ldCBkcml2ZXIgdmVyc2lvbgo+
-Pj4+ICVzXG4iLAo+Pj4KPj4+Cj4+PiBUaGlzIGlzIG5vdCByZWxhdGVkIHRvIHlvdXIgY2hhbmdl
-LCBidXQgdGhlcmUgaXMgYSBwcm9ibGVtIGluIHRoaXMKPj4+IGZ1bmN0aW9uIHRoYXQgaGFzIGFs
-cmVhZHkgYmVlbiBkaXNjdXNzZWQgaW4gdGhlIHBhc3QgaWYgSSByZW1lbWJlcgo+Pj4gY29ycmVj
-dGx5OiBUaGUgcmVzcGVjdGl2ZSBjbG9jayBuZWVkcyB0byBiZSBlbmFibGVkIGhlcmUgKGF0IGxl
-YXN0Cj4+PiBvbiBLaXJrd29vZCksIHNpbmNlIGFjY2Vzc2VzIHRvIHRoZSBoYXJkd2FyZSBhcmUg
-ZG9uZSBiZWxvdy4KPj4+IEVuYWJsaW5nIHRoZSBjbG9jayBvbmx5IGluIG12NjQzeHhfZXRoX3By
-b2JlKCkgaXMgdG9vIGxhdGUuCj4+Pgo+Pj4gQXMgc2FpZCwgdGhpcyBpcyBub3QgYSBwcm9ibGVt
-IGludHJvZHVjZWQgYnkgeW91ciBjaGFuZ2VzIChhbmQgd2hpY2gKPj4+IGlzIGN1cnJlbnRseSBj
-aXJjdW12ZW50ZWQgYnkgZW5hYmxpbmcgdGhlIHJlc3BlY3RpdmUgY2xvY2tzIGluCj4+PiBraXJr
-d29vZF9sZWdhY3lfY2xrX2luaXQoKSBhbmQga2lya3dvb2RfZ2UweF9pbml0KCkpLCBidXQgd2Ug
-bWlnaHQKPj4+IHdhbnQgdG8gZml4IHRoaXMgbm93IHRvIGdldCByaWQgb2YgdW5jb25kaXRpb25h
-bGx5IGVuYWJsaW5nIHRoZSBHRQo+Pj4gY2xvY2tzIGluIHRoZSBEVCBjYXNlLgo+Pgo+Pgo+PiBJ
-IHRoaW5rIHRoZXJlIG1heSBoYXZlIGJlZW4gc29tZSBjb25mdXNpb24gYmV0d2VlbiB0aGUgImV0
-aGVybmV0LWdyb3VwIgo+PiBjbG9jayBhbmQgdGhlIGFjdHVhbCBFdGhlcm5ldCBwb3J0IGluc2lk
-ZSB0aGUgImV0aGVybmV0LWdyb3VwIi4gVGhlCj4+IG12NjQzeHhfZXRoIGRyaXZlciBhc3N1bWVz
-IHdlIGhhdmUgYSBwZXItcG9ydCBjbG9jayBnYXRpbmcgc2NoZW1lLCB3aGlsZSBJCj4+IHRoaW5r
-IHdlIGhhdmUgYSBwZXIgImV0aGVybmV0LWdyb3VwIiBjbG9jayBnYXRpbmcgc2NoZW1lIGluc3Rl
-YWQuIExpa2UgeW91Cj4+IHNhaWQsIEkgdGhpbmsgdGhpcyBzaG91bGQgYmUgYWRkcmVzc2VkIHNl
-cGFyYXRlbHkuCj4KPiBJTUhPLCB0aGVyZSBzaG91bGQgYmUgYSBjbG9ja3MgcHJvcGVydHkgd2hl
-cmUgZXZlciB5b3UgdHJ5IHRvIGFjY2VzcyByZWdpc3RlcnMsCj4gaS5lLiBpbiBhbGwgdGhyZWUg
-InBhcnRzIiBtdjY0M3h4X2V0aF9zaGFyZWQgKGdyb3VwKSwgbXY2NDN4eF9ldGgKPiAocG9ydCkg
-YW5kIG1kaW8uCj4gU2luY2UgcG9ydCBkZXBlbmRzIG9uIHNoYXJlZCBpdCB3b3VsZCBiZSBvayB0
-byBoYXZlIGl0IHBlciBncm91cCBidXQgdGhhdCBtYXkKPiBjb2xsaWRlIHdpdGggb3RoZXIgU29D
-cyB0aGFuIERvdmUvS2lya3dvb2QgdGhhdCBoYXZlIHBlciBwb3J0IGNsb2Nrcy4KCk9rLCB3aGlj
-aCBtZWFucyB0aGF0IHdlIHNob3VsZCBhbHNvIHRlYWNoIG12NjQzeHhfZXRoX3NoYXJlZF9wcm9i
-ZSgpIAphYm91dCBpdCwgYXMgd2VsbCBhcyB0aGUgb3Jpb24tbWRpbyBkcml2ZXIuIEkgZG9uJ3Qg
-aGF2ZSBhbnkgcGFydGljdWxhciAKb2JqZWN0aW9ucyBzaW5jZSBpdCBzaG91bGQganVzdCBtYWtl
-IHRoaW5ncyBzYWZlciB3aXRoIHJlc3BlY3QgdG8gY2xvY2tpbmcuCgo+Cj4gSXMgdGhhdCBzZXBh
-cmF0aW9uIChncm91cC9wb3J0KSByZWFsbHkgcmVxdWlyZWQgZm9yIGFueSBTb0M/CgpQcm9iYWJs
-eSBub3QsIGl0IHdhcyBub3QgY2xlYXIgd2hlbiBJIGxvb2tlZCBhdCBtdjc4eHgwIGlmIGl0IHVz
-ZXMgdHdvIApwb3J0cyBwZXIgZ3JvdXAgb3IgNCBncm91cHMgYW5kIDEgcG9ydC4gQW55d2F5LCBz
-aW5jZSB3ZSBhcmUgcmUtdXNpbmcgCnRoZSBleGlzdGluZyBEZXZpY2UgVHJlZSBiaW5kaW5nIGRl
-ZmluaXRpb24gYW5kIHRoYXQgdGhlIGhhcmR3YXJlIApwcmVzZW50IGl0c2VsZiBhcyBldGhlcm5l
-dCBncm91cHMgYW5kIHBvcnRzLCBJIGRvbid0IHNlZSBhbnkgcHJvYmxlbSAKd2l0aCBrZWVwaW5n
-IHRoYXQgZGlmZmVyZW5jZSBzaW5jZSBpdCBhbGxvd3MgZm9yIGZpbmUtZ3JhaW5lZCAKcmVwcmVz
-ZW50YXRpb24gb2YgdGhlIGhhcmR3YXJlLgoKPgo+Pgo+PiBbc25pcF0KPj4+Cj4+PiBZb3UgZG9u
-J3QgY2hhbmdlIHRoZSBjbGsgaW5pdGlhbGl6YXRpb24gaGVyZToKPj4+Cj4+PiAjaWYgZGVmaW5l
-ZChDT05GSUdfSEFWRV9DTEspCj4+PiAgICAgICAgICBtcC0+Y2xrID0gY2xrX2dldCgmcGRldi0+
-ZGV2LCAocGRldi0+aWQgPyAiMSIgOiAiMCIpKTsKPj4+ICAgICAgICAgIGlmICghSVNfRVJSKG1w
-LT5jbGspKSB7Cj4+PiAgICAgICAgICAgICAgICAgIGNsa19wcmVwYXJlX2VuYWJsZShtcC0+Y2xr
-KTsKPj4+ICAgICAgICAgICAgICAgICAgbXAtPnRfY2xrID0gY2xrX2dldF9yYXRlKG1wLT5jbGsp
-Owo+Pj4gICAgICAgICAgfQo+Pj4gI2VuZGlmCj4+Pgo+Pj4gV2hpY2gsIGlmIEkgdW5kZXJzdGFu
-ZCBjb3JyZWN0bHksIHdvcmtzIGluIHRoZSBEVCBjYXNlIGJlY2F1c2UgeW91Cj4+PiBhc3NpZ24g
-ImNsb2NrLW5hbWVzIiB0byB0aGUgY2xvY2tzIGluIHRoZSBEVFMuIEhvd2V2ZXIsIEkgd29uZGVy
-Cj4+PiB3aGV0aGVyIHRoaXMgd29ya3MgZm9yIGFueSBidXQgdGhlIGZpcnN0IEV0aGVybmV0IGRl
-dmljZS4KPgo+IFllcywgaXQgZG9lcy4gQXNzaWduZWQgY2xvY2tzIGZyb20gY2xvY2tzIHByb3Bl
-cnR5IGdldCBhIGNsb2NrIGFsaWFzIGZvcgo+IHRoYXQgZGV2aWNlIG5hbWUgKG5vZGUgbmFtZSku
-IFVzaW5nIGFueXRoaW5nIGVsc2UgdGhhbiBOVUxMIGhlcmUgaXMKPiBJTUhPIGp1c3Qgd3Jvbmcu
-IFdlIHNob3VsZCByYXRoZXIgcHJvdmlkZSBwcm9wZXIgY2xvY2sgYWxpYXNlcyBmb3Igbm9uLURU
-IGNhc2UuCj4KPj4+IEluIHRoZSBvbGQgcGxhdGZvcm0gZGV2aWNlIHNldHVwLCB0aGUgcGRldi0+
-aWQgd2FzIHNldCB3aGVuCj4+PiBpbml0aWFsaWF6aW5nIHRoZSBwbGF0Zm9ybV9kZXZpY2Ugc3Ry
-dWN0dXJlIGluIGNvbW1vbi5jLiAgV2hlcmUgaXMKPj4+IHRoaXMgZG9uZSBpbiB0aGUgRFQgY2Fz
-ZT8KPj4KPj4gTG9va3MgbGlrZSB5b3UgYXJlIHJpZ2h0LCBpbiB0aGUgRFQgY2FzZSwgSSBhc3N1
-bWUgdGhhdCB3ZSBzaG91bGQgbG9va3VwIHRoZQo+PiBjbG9jayB1c2luZyBOVUxMIGluc3RlYWQg
-b2YgIjEiIG9yICIwIiBzbyB3ZSBtYXRjaCBhbnkgY2xvY2sgaW5zdGVhZCBvZiBhCj4+IHNwZWNp
-ZmljIG9uZS4KPgo+IFllcy4KPgo+PiBbc25pcF0KPj4+Cj4+Pgo+Pj4gSW4gcGh5X3NjYW4oKSwg
-dGhlIHBoeSBpcyBzZWFyY2hlZCBsaWtlIHRoaXM6Cj4+Pgo+Pj4gICAgICAgICAgICAgICAgICBz
-bnByaW50ZihwaHlfaWQsIHNpemVvZihwaHlfaWQpLCBQSFlfSURfRk1ULAo+Pj4gICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIm9yaW9uLW1kaW8tbWlpIiwgYWRkcik7Cj4+Pgo+Pj4g
-ICAgICAgICAgICAgICAgICBwaHlkZXYgPSBwaHlfY29ubmVjdChtcC0+ZGV2LCBwaHlfaWQsCj4+
-PiBtdjY0M3h4X2V0aF9hZGp1c3RfbGluaywKPj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIFBIWV9JTlRFUkZBQ0VfTU9ERV9HTUlJKTsKPj4+Cj4+PiBCdXQgIm9yaW9uLW1kaW8t
-bWlpOnh4IiBpcyB0aGUgbmFtZSBvZiB0aGUgUEhZIGlmIE1ESU8gaXMgc2V0dXAgdmlhIGEKPj4+
-IHBsYXRmb3JtX2RldmljZS4gSSBjb3VsZCBub3QgZ2V0IHRoaXMgdG8gd29yayBpZiB0aGUgTURJ
-TyBkZXZpY2UgaXMKPj4+IHNldHVwIHZpYSBEVC4gQW0gSSBkb2luZyBzb21ldGhpbmcgd3Jvbmc/
-Cj4+Cj4+IEkganVzdCBtaXNzZWQgdXBkYXRpbmcgdGhpcyBwYXJ0IG9mIHRoZSBjb2RlIHRvIHBy
-b2JlIGZvciBQSFlzLiBUaGUgYm9hcmQgSQo+PiB0ZXN0ZWQgd2l0aCB1c2VzIGEgIlBIWV9OT05F
-IiBjb25maWd1cmF0aW9uLiBJIHdpbGwgYWRkIHRoZSBtaXNzaW5nIGJpdHMgZm9yCj4+IG9mX3Bo
-eV9jb25uZWN0KCkgdG8gYmUgY2FsbGVkIGhlcmUuCj4KPiBJIGRvbid0IHRoaW5rIHRoYXQgdGhl
-IGV0aGVybmV0IGNvbnRyb2xsZXIgc2hvdWxkIHByb2JlIHRoZSBQSFkncyBvbiBtZGlvLWJ1cwo+
-IGF0IGFsbC4gQXQgbGVhc3Qgbm90IGZvciBEVCBlbmFibGVkIHBsYXRmb3Jtcy4gSSBoYWQgYSBs
-b29rIGF0IERUIGFuZCBub24tRFQKPiBtZGlvLWJ1cyBzb3VyY2VzLCBhbmQgcmVhbGl6ZWQgdGhh
-dCB0aGVyZSBpcyBhIGJ1cyBzY2FuIGZvciBub24tRFQgb25seS4KPiBvZl9tZGlvYnVzX3JlZ2lz
-dGVyIHJlcXVpcmVzIHlvdSB0byBzZXQgKGFuZCBrbm93KSB0aGUgUEhZIGFkZHJlc3MuCgpPbmUg
-cmVhc29uIHRoZSBFdGhlcm5ldCBjb250cm9sbGVyIGNvdWxkIGRvIHRoZSBwcm9iaW5nIGlzIGlu
-IHRoZSBjYXNlIAp3ZSBuZWVkIHRvIGFwcGx5IHF1aXJrcyAoZS5nOiB1c2luZyBwaHlkZXYtPmZs
-YWdzKSBmb3IgaW5zdGFuY2UuIFRoaXMgCmNhbiBiZSBkb25lIGV2ZW4gYWZ0ZXIgdGhlIE1ESU8g
-YnVzIGRyaXZlciBkaWQgcHJvYmUgUEhZIGRldmljZXMgdGhvdWdoLgoKPgo+IEkgcHJlcGFyZWQg
-YSBwYXRjaCBmb3Igb2ZfbWRpb19yZWdpc3RlciB0aGF0IHdpbGwgYWxsb3cgeW91IHRvIHByb2Jl
-IG1kaW8gYW5kCj4gYXNzaWduIHBoeSBhZGRyZXNzZXMgdG8gZWFjaCBub2RlIGZvdW5kLiBDdXJy
-ZW50bHksIHRoZSBoZXVyaXN0aWMgZm9yIHByb2JpbmcKPiBpczogYXNzaWduIGVhY2ggcGh5IG5v
-ZGUgdGhlIG5leHQgcHJvYmVkIHBoeV9hZGRyIHN0YXJ0aW5nIHdpdGggMC4gQnV0IHRoYXQKPiB3
-aWxsIG5vdCBhbGxvdyB0byBlLmcuIHNldCBzb21lIFBIWSBhZGRyZXNzZXMgYW5kIHByb2JlIHRo
-ZSByZXN0LgoKT2ssIHdlIGp1c3QgbmVlZCB0byBtYWtlIHN1cmUgdGhhdCB0aGlzIGRvZXMgbm90
-IGJyZWFrIGFueSBzcGVjaWZpYyB1c2UgCmNhc2UsIEkgZG9uJ3QgdGhpbmsgaXQgZG9lcywgc2lu
-Y2UgaXQgc2VlbXMgdG8gYmUgbW9yZSBhY2N1cmF0ZSBvciAKZXF1aXZhbGVudCB0byBFdGhlcm5l
-dCBkcml2ZXIgZG9pbmcgdGhlIHByb2JpbmcuCgo+Cj4gV2UgaGFkIGEgc2ltaWxhciBkaXNjdXNz
-aW9uIHdoZXRoZXIgdG8gcHJvYmUgb3Igbm90IGZvciBEVCBub2RlcywgYW5kIEkgZ3Vlc3MKPiB0
-aGVyZSBhbHNvIHdpbGwgYmUgc29tZSBkaXNjdXNzaW9uIGFib3V0IHRoZSBhYm92ZSBwYXRjaC4g
-T1RPSCB3ZSBjb3VsZCBqdXN0Cj4gKGFnYWluKSBhc2sgdXNlcnMgb2YgZXZlcnkga2lya3dvb2Qv
-b3Jpb241eC9kb3ZlIGJvYXJkIHRvIHRlbGwgdGhlaXIKPiBwaHkgYWRkcmVzc2VzCj4gYW5kIGZh
-aWwgdG8gcHJvYmUgdGhlIHBoeSBmb3IgbmV3IGJvYXJkcy4uLgo+Cj4gSSB3aWxsIHByZXBhcmUg
-YSBwcm9wZXIgcGF0Y2ggc29vbiBhbmQgcG9zdCBpdCBvbiB0aGUgY29ycmVzcG9uZGluZyBsaXN0
-cy4KCkNvb2wsIHRoYW5rcyEKCj4KPj4+IEFkZGl0aW9uYWxseSwgaW4gcGh5X3NjYW4oKSB0aGVy
-ZSBpcyB0aGlzOgo+Pj4KPj4+ICAgICAgICAgIGlmIChwaHlfYWRkciA9PSBNVjY0M1hYX0VUSF9Q
-SFlfQUREUl9ERUZBVUxUKSB7Cj4+PiAgICAgICAgICAgICAgICAgIHN0YXJ0ID0gcGh5X2FkZHJf
-Z2V0KG1wKSAmIDB4MWY7Cj4+PiAgICAgICAgICAgICAgICAgIG51bSA9IDMyOwo+Pj4gICAgICAg
-ICAgfSBlbHNlIHsKPj4+ICAgICAgICAgIC4uLgo+Pj4KPj4+IE1WNjQzWFhfRVRIX1BIWV9BRERS
-X0RFRkFVTFQgaXMgZGVmaW5lZCBhcyAwLiBIb3dldmVyLCBtYW55IEtpcmt3b29kCj4+PiBkZXZp
-Y2VzIHVzZSAiTVY2NDNYWF9FVEhfUEhZX0FERFIoMCkiLiAgSWYgdGhlIG1vZHVsZSBwcm9iZSBp
-cwo+Pj4gZGVmZXJyZWQgaW4gbXY2NDN4eF9ldGggYmVjYXVzZSB0aGUgTURJTyBkcml2ZXIgaXMg
-bm90IHlldCBsb2FkZWQsCj4+PiBhbGwgMzIgUEhZIGFkZHJlc3NlcyBhcmUgc2Nhbm5lZCB3aXRo
-b3V0IHN1Y2Nlc3MuICBUaGlzIGlzIG5vdCBuZWVkZWQKPj4+IGFuZCBjbHV0dGVycyB0aGUgbG9n
-Lgo+Pgo+Pgo+PiBPaywgSSBhbSBub3Qgc3VyZSBob3cgd2UgY2FuIGNpcmN1bXZlbnQgdGhlIGxv
-ZyBjbHV0dGVyaW5nIHRoYXQgaGFwcGVucywKPj4gd2hhdCB3b3VsZCBiZSB5b3VyIHN1Z2dlc3Rp
-b24/Cj4KPiBNeSBzdWdnZXN0aW9uIGlzIHRvIGNoYW5nZSBNVjY0M1hYX0VUSF9QSFlfQUREUl9E
-RUZBVUxUIGZyb20gYSB2YWxpZAo+IHBoeSBhZGRyZXNzICgwKQo+IHRvIHNvbWV0aGluZyBpbnZh
-bGlkICgzMikuIEkgdW5kZXJzdGFuZCB0aGF0IHVzaW5nIDAgaGVscHMgaWYgeW91Cj4gZG9uJ3Qg
-d2FudCB0byBzZXQgaXQgaW4gbXY2NDN4eCdzIHBsYXRmb3JtX2RhdGEKPiBidXQgaXQgaXMgYWx3
-YXlzIGRpZmZpY3VsdCB0byByZWx5IG9uIHRoYXQgaWYgMCBpcyBhIHZhbGlkIG51bWJlci4KPgo+
-IENoYW5naW5nIHRoZSBhYm92ZSB0byAzMiBzaG91bGQganVzdCB3b3JrIGJlY2F1c2UgbW9zdCAo
-YWxsPykgYm9hcmRzCj4gdXNpbmcgcGh5X3NjYW4gc2hvdWxkIGFsc28KPiBhbHJlYWR5IHVzZSBN
-VjY0M1hYX0VUSF9QSFlfQUREUl9ERUZBVUxULiBJIGFsc28gc3VnZ2VzdCB0byByZW5hbWUKPiBj
-dXJyZW50IGRlZmluZSB0byBhCj4gYmV0dGVyIG5hbWUsIGUuZy4gTVY2NDNYWF9FVEhfUEhZX0FE
-RFJfQVVUT1NDQU4uCgpTb3VuZHMgZ29vZCB0byBtZS4KLS0KRmxvcmlhbgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+In order to be able to use more than 4GB of RAM when the LPAE is
+activated, the dts must be converted in 64 bits.
+
+Armada XP and Armada 370 share a dtsi file which have also be
+converted to 64 bits. This lead to convert all the device tree files
+to 64 bits even the one used for Armada 370 (which don't support LPAE)
+
+This was heavily based on the work of Lior Amsalem.
+
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+---
+ arch/arm/boot/dts/armada-370-db.dts              |    2 +-
+ arch/arm/boot/dts/armada-370-mirabox.dts         |    2 +-
+ arch/arm/boot/dts/armada-370-rd.dts              |    2 +-
+ arch/arm/boot/dts/armada-370-xp.dtsi             |    4 ++--
+ arch/arm/boot/dts/armada-xp-db.dts               |    2 +-
+ arch/arm/boot/dts/armada-xp-gp.dts               |   14 ++++++++------
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts |    2 +-
+ 7 files changed, 15 insertions(+), 13 deletions(-)
+
+diff --git a/arch/arm/boot/dts/armada-370-db.dts b/arch/arm/boot/dts/armada-370-db.dts
+index 6c30a9f..c996c06 100644
+--- a/arch/arm/boot/dts/armada-370-db.dts
++++ b/arch/arm/boot/dts/armada-370-db.dts
+@@ -26,7 +26,7 @@
+ 
+ 	memory {
+ 		device_type = "memory";
+-		reg = <0x00000000 0x40000000>; /* 1 GB */
++		reg = <0 0x00000000 0 0x40000000>; /* 1 GB */
+ 	};
+ 
+ 	soc {
+diff --git a/arch/arm/boot/dts/armada-370-mirabox.dts b/arch/arm/boot/dts/armada-370-mirabox.dts
+index 5a06e87..29b6b64 100644
+--- a/arch/arm/boot/dts/armada-370-mirabox.dts
++++ b/arch/arm/boot/dts/armada-370-mirabox.dts
+@@ -21,7 +21,7 @@
+ 
+ 	memory {
+ 		device_type = "memory";
+-		reg = <0x00000000 0x20000000>; /* 512 MB */
++		reg = <0 0x00000000 0 0x20000000>; /* 512 MB */
+ 	};
+ 
+ 	soc {
+diff --git a/arch/arm/boot/dts/armada-370-rd.dts b/arch/arm/boot/dts/armada-370-rd.dts
+index 437dcd2..09e75fc 100644
+--- a/arch/arm/boot/dts/armada-370-rd.dts
++++ b/arch/arm/boot/dts/armada-370-rd.dts
+@@ -24,7 +24,7 @@
+ 
+ 	memory {
+ 		device_type = "memory";
+-		reg = <0x00000000 0x20000000>; /* 512 MB */
++		reg = <0 0x00000000 0 0x20000000>; /* 512 MB */
+ 	};
+ 
+ 	soc {
+diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
+index 8b9adc6..6a3b418 100644
+--- a/arch/arm/boot/dts/armada-370-xp.dtsi
++++ b/arch/arm/boot/dts/armada-370-xp.dtsi
+@@ -16,7 +16,7 @@
+  * 370 and Armada XP SoC.
+  */
+ 
+-/include/ "skeleton.dtsi"
++/include/ "skeleton64.dtsi"
+ 
+ / {
+ 	model = "Marvell Armada 370 and XP SoC";
+@@ -33,7 +33,7 @@
+ 		#size-cells = <1>;
+ 		compatible = "simple-bus";
+ 		interrupt-parent = <&mpic>;
+-		ranges = <0 0xd0000000 0x100000>;
++		ranges = <0 0 0xd0000000 0x100000>;
+ 
+ 		internal-regs {
+ 			compatible = "simple-bus";
+diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
+index fbd0f04..a2dd24e 100644
+--- a/arch/arm/boot/dts/armada-xp-db.dts
++++ b/arch/arm/boot/dts/armada-xp-db.dts
+@@ -26,7 +26,7 @@
+ 
+ 	memory {
+ 		device_type = "memory";
+-		reg = <0x00000000 0x80000000>; /* 2 GB */
++		reg = <0 0x00000000 0 0x80000000>; /* 2 GB */
+ 	};
+ 
+ 	soc {
+diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
+index b0298d7..b022906 100644
+--- a/arch/arm/boot/dts/armada-xp-gp.dts
++++ b/arch/arm/boot/dts/armada-xp-gp.dts
+@@ -26,14 +26,16 @@
+ 
+ 	memory {
+ 		device_type = "memory";
+-
+ 		/*
+-		 * 4 GB of plug-in RAM modules by default but only 3GB
+-		 * are visible, the amount of memory available can be
+-		 * changed by the bootloader according the size of the
+-		 * module actually plugged
++                 * 8 GB of plug-in RAM modules by default.The amount
++                 * of memory available can be changed by the
++                 * bootloader according the size of the module
++                 * actually plugged. Only 7GB are usable because
++                 * addresses from 0xC0000000 to 0xffffffff are used by
++                 * the internal registers of the SoC.
+ 		 */
+-		reg = <0x00000000 0xC0000000>;
++		reg = <0x00000000 0x00000000 0x00000000 0xC0000000>,
++		      <0x00000001 0x00000000 0x00000001 0x00000000>;
+ 	};
+ 
+ 	soc {
+diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+index e2eaf4f..1f274e7 100644
+--- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
++++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+@@ -23,7 +23,7 @@
+ 
+ 	memory {
+ 		device_type = "memory";
+-		reg = <0x00000000 0xC0000000>; /* 3 GB */
++		reg = <0 0x00000000 0 0xC0000000>; /* 3 GB */
+ 	};
+ 
+ 	soc {
+-- 
+1.7.9.5
