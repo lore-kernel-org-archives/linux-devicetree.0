@@ -1,42 +1,53 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: Re: [PATCH v3 0/2] omap_hsmmc DT DMA Client support
-Date: Fri, 5 Apr 2013 18:28:36 +0530
-Message-ID: <515ECA7C.4080604@ti.com>
-References: <1362579128-5312-1-git-send-email-mporter@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v4 1/3] i2c: mux: Add i2c-arbitrator-cros-ec 'mux' driver
+Date: Fri, 05 Apr 2013 14:03:52 -0600
+Message-ID: <515F2E28.2090105@wwwdotorg.org>
+References: <1360957573-864-1-git-send-email-dianders@chromium.org> <1363192583-26363-1-git-send-email-dianders@chromium.org> <CAD=FV=UW4wGFqsg2B3MmC24jhnba5PSvCh8Wck-V6iuYk+Xifw@mail.gmail.com> <20130329115821.GC6359@the-dreams.de> <CAD=FV=XyBZXD1dsOy4kY3CjkFiJXCO+taAJ-zZ8op6V-z9J8jQ@mail.gmail.com> <20130403191938.GA7875@the-dreams.de> <CAPnjgZ0bt+ppAMAB1RtoeUKrzUjxxZ3+=GQwHqxByce7fmOLDg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1362579128-5312-1-git-send-email-mporter@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@ti.com>, Chris Ball <cjb@laptop.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Vinod Koul <vinod.koul@intel.com>, Tony Lindgren <tony@atomide.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Dan Williams <djbw@fb.com>, Jon Hunter <jon-hunter@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAPnjgZ0bt+ppAMAB1RtoeUKrzUjxxZ3+=GQwHqxByce7fmOLDg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Simon Glass <sjg@chromium.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Warren <swarren@nvidia.com>, Ben Dooks <ben.dooks@codethink.co.uk>, u.kleine-koenig@pengutronix.de, Grant Grundler <grundler@chromium.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Jean Delvare <khali@linux-fr.org>, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, Girish Shivananjappa <girish.shivananjappa@linaro.org>, "bhushan.r" <bhushan.r@samsung.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "sreekumar.c" <sreekumar.c@samsung.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Peter Korsgaard <peter.ko>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 06 March 2013 07:42 PM, Matt Porter wrote:
-> Changes since v2:
-> 	- dropped skip platform_get_resource_byname() patch
-> Changes since v1:
-> 	- rebase to 3.9-rc1, previous dependencies upstream
->
-> This series adds DT DMA Engine Client support to the omap_hsmmc.
-> It leverages the generic DMA OF helpers and the
-> dma_request_slave_channel_compat() wrapper to support DMA in
-> omap_hsmmc on platforms booting via DT. These platforms include
-> omap2/3/4/5 and am33xx.
->
-> These patches were split out from the v5 version of the AM33XX DMA
-> series and split from the EDMA-specific omap_hsmmc changes.
->
-> Matt Porter (2):
->    mmc: omap_hsmmc: convert to dma_request_slave_channel_compat()
->    mmc: omap_hsmmc: add generic DMA request support to the DT binding
->
+On 04/05/2013 01:37 PM, Simon Glass wrote:
+> HI Wolfram,
+> 
+> On Wed, Apr 3, 2013 at 12:19 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
+>> Doug,
+>>
+>>> Separately from a discussion of the technical merits, I'd say that
+>>> this patch is needed because the Embedded Controller (EC) on the ARM
+>>> Chromebook shipped expecting to communicate with this scheme.  While
+>>
+>> Uhrm, with all respect, "we already shipped it" is not a convincing
+>> argument regarding inclusion. Benefit for the kernel is.
 
-Looks good to me
-Acked-by: Balaji T K <balajitk@ti.com>
+I'm not quite sure why that isn't a convincing argument.
 
->   .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |   26 +++++++++++++++++++-
->   drivers/mmc/host/omap_hsmmc.c                      |   10 ++++++--
->   2 files changed, 33 insertions(+), 3 deletions(-)
->
+The hardware has shipped. I don't know whether the EC microcode can be
+updated in the field; it seems risky to do so even if it's possible. So,
+it either gets supported or not; the HW/ucode isn't going to change I
+suspect.
+
+Hence, it seems that the decision would be:
+
+a) Disallow the implementation of the arbitration scheme in the kernel,
+and hence don't support this board in the kernel. (or at least some very
+core features of this board)
+
+b) Allow the implementation of the arbitration scheme in the kernel, and
+hence make possible support this board in the kernel.
+
+>From that perspective, the benefit for the kernel question comes down
+to: do we see a benefit for the kernel to support this board? I can't
+see why that wouldn't be a benefit.
+
+The only disadvantage would be having to carrying code to support that
+board. That same argument can be made for any board, and I think
+typically doesn't cause any issue. The code for this I2C mux seems
+pretty self-contained, so even if it was absolutely terrible (which I
+don't think it is), it still wouldn't cause any wide-spread issues, I think.
