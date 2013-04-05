@@ -1,14 +1,12 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH 0/5] gpio/omap: 2nd batch of updates for v3.10
-Date: Fri, 05 Apr 2013 10:56:03 -0700
-Message-ID: <87hajklv4c.fsf@linaro.org>
-References: <1365106576-31816-1-git-send-email-jon-hunter@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [GIT PULL] dt: run C pre-processor on *.dts,
+ create some standard headers
+Date: Fri,  5 Apr 2013 12:46:50 -0600
+Message-ID: <1365187610-29422-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1365106576-31816-1-git-send-email-jon-hunter@ti.com> (Jon
- Hunter's message of "Thu, 4 Apr 2013 15:16:11 -0500")
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,40 +16,65 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Santosh Shilimkar <santosh.shilimkar@ti.com>, linux-omap <linux-omap@vger.kernel.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <rob.herring@calxeda.com>
+Cc: Michal Marek <mmarek@suse.cz>, Grant Likely <glikely@secretlab.ca>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@wwwdotorg.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Jon Hunter <jon-hunter@ti.com> writes:
+Rob, it might be worth keeping this in a separate branch in linux-next
+so you can pull it out if it causes any issues. I've been using these
+patches for quite a while now, but there's always opportunity for
+surprises on architectures I don't use. I did just fix a bug when
+building with O= a few days back, hence the V2 that I posted as patches.
 
-> Main change is ensuring that the state of a gpio bank is restored when
-> booting with device-tree. The rest of the patches are clean-ups and one
-> optimisation.
->
-> The patch modifying the *.dtsi files should go via Benoit Cousson's
-> for_3.10/dts branch [1] as it is dependent on changes in his branch but
-> I have included here for completeness.
->
-> Testing includes:
-> - Boot testing on OMAP5912 OSK, OMAP2420 H4, OMAP3430 SDP, OMAP4430 SDP
->   and AM335x EVM.
-> - Verified that GPIO interrupts are working on OMAP5912 OSK, OMAP2420 H4,
->   OMAP3430 SDP and OMAP4430 SDP by making sure networking was working
->   correctly as these boards use a GPIO with the ethernet chips. Also
->   checked /proc/interrupts to ensure GPIO interrupt counts are
->   incrementing as expected.
->
-> [1] http://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git
->
-> Jon Hunter (4):
->   gpio/omap: free irq domain in probe() failure paths
->   gpio/omap: optimise interrupt service routine
->   gpio/omap: force restore if context loss is not detectable
->   ARM: dts: OMAP2+: Identify GPIO banks that are always powered
->
-> Tarun Kanti DebBarma (1):
->   gpio/omap: remove extra context restores in *_runtime_resume()
+----------------------------------------------------------------
 
-For the gpio/omap patches
+This branch enhances the support for running dtc on device tree files.
 
-Reviewed-by: Kevin Hilman <khilman@linaro.org>
+A dedicated directory is created for header files that provide constants
+for device-tree bindings.
+
+The kbuild dependency script processor is enhanced to support processing
+the dependency outputs from multiple separate commands at once.
+
+The kbuild dtc rule is modified so that the C pre-processor is always
+applied when compiling any device tree.
+
+Some standard headers are created which define common constants for GPIO,
+IRQ, and ARM GIC device tree bindings.
+
+----------------------------------------------------------------
+
+The following changes since commit 6dbe51c251a327e012439c4772097a13df43c5b8:
+
+  Linux 3.9-rc1
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/swarren/linux-tegra.git tegra-for-3.10-dtc-cpp-chroot-std-headers
+
+for you to fetch changes up to 4be505d4fc7a07371a2b658469ca1dda99993ca3:
+
+  ARM: dt: create a DT header for the GIC
+
+----------------------------------------------------------------
+
+Stephen Warren (7):
+      kbuild: create an "include chroot" for DT bindings
+      kbuild: fixdep: support concatenated dep files
+      kbuild: cmd_dtc_cpp: extract deps from both gcc -E and dtc
+      kbuild: always run gcc -E on *.dts, remove cmd_dtc_cpp
+      ARM: dt: add header to define GPIO flags
+      ARM: dt: add header to define IRQ flags
+      ARM: dt: create a DT header for the GIC
+
+ arch/arm/boot/dts/include/dt-bindings           |    1 +
+ include/dt-bindings/gpio/gpio.h                 |   15 +++
+ .../dt-bindings/interrupt-controller/arm-gic.h  |   22 +++++
+ include/dt-bindings/interrupt-controller/irq.h  |   19 ++++
+ scripts/Makefile.lib                            |   17 ++--
+ scripts/basic/fixdep.c                          |   93 ++++++++++++------
+ 6 files changed, 125 insertions(+), 42 deletions(-)
+ create mode 120000 arch/arm/boot/dts/include/dt-bindings
+ create mode 100644 include/dt-bindings/gpio/gpio.h
+ create mode 100644 include/dt-bindings/interrupt-controller/arm-gic.h
+ create mode 100644 include/dt-bindings/interrupt-controller/irq.h
