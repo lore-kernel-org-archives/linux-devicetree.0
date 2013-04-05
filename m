@@ -1,72 +1,79 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V2 1/7] kbuild: create an "include chroot" for DT bindings
-Date: Thu, 04 Apr 2013 19:01:11 -0600
-Message-ID: <515E2257.4030607@wwwdotorg.org>
-References: <1365032098-22825-1-git-send-email-swarren@wwwdotorg.org> <515E09FA.1090408@gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH/RFC 0/2] ARM: shmobile: DT irqpin for r8a7779 and
+ marzen-reference
+Date: Fri, 5 Apr 2013 10:44:29 +0900
+Message-ID: <20130405014429.GV29203@verge.net.au>
+References: <Pine.LNX.4.64.1304031103590.10531@axis700.grange>
+ <20130404035426.GC28297@verge.net.au>
+ <Pine.LNX.4.64.1304042325140.21548@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <515E09FA.1090408@gmail.com>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Michal Marek <mmarek@suse.cz>, Grant Likely <glikely@secretlab.ca>, arm@kernel.org, Shawn Guo <shawn.guo@linaro.org>, Hiroshi Doyu <hdoyu@nvidia.com>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.64.1304042325140.21548@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss@lists.ozlabs.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/04/2013 05:17 PM, Rob Herring wrote:
-> On 04/03/2013 06:34 PM, Stephen Warren wrote:
->> From: Stephen Warren <swarren@nvidia.com>
->>
->> The recent dtc+cpp support allows header files and C pre-processor
->> defines/macros to be used when compiling device tree files. These
->> headers will typically define various constants that are part of the
->> device tree bindings.
->>
->> The original patch which set up the dtc+cpp include path only considered
->> using those headers from device tree files. However, most are also
->> useful for kernel code which needs to interpret the device tree.
->>
->> In both the DT files and the kernel, I'd like to include the DT-related
->> headers in the same way, for example, <dt-bindings/gpio/tegra-gpio.h>.
->> That will simplify any text which discusses the DT header locations.
->>
->> Creating a <dt-bindings/> for kernel source to use is as simple as
->> placing files into include/dt-bindings/.
->>
->> However, when compiling DT files, the include path should be restricted
->> so that only the dt-bindings path is available; arbitrary kernel headers
->> shouldn't be exposed. For this reason, create a specific include
->> directory for use by dtc+cpp, and symlink dt-bindings from there to the
->> actual location of include/dt-bindings/. For want of a better location,
->> place this "include chroot" into the existing dts/ directory.
->>
->> arch/*/boot/dts/include/dt-bindings -> ../../../../../include/dt-bindings
->>
->> Some headers used by device tree files may not be useful to the kernel;
->> they may be used simply to aid in constructing the DT file (e.g. macros
->> to create a node), but not define any information that the kernel needs
->> to share. These may be placed directly into arch/*/boot/dts/ along with
->> the DT files themselves.
->>
->> Cc: Shawn Guo <shawn.guo@linaro.org>
->> Cc: Hiroshi Doyu <hdoyu@nvidia.com>
->> Acked-by: Michal Marek <mmarek@suse.cz>
->> Acked-by: Shawn Guo <shawn.guo@linaro.org>
->> Acked-by: Rob Herring <rob.herring@calxeda.com>
->> Signed-off-by: Stephen Warren <swarren@nvidia.com>
->> ---
->> Grant, Rob, Michal, I'm hoping for acks or comments from you so this
->> series can be placed into a topic branch in the arm-soc repo, for others
->> to build on during the 3.10 kernel cycle. Thanks.
+On Thu, Apr 04, 2013 at 11:47:05PM +0200, Guennadi Liakhovetski wrote:
+> Hi Simon
 > 
-> Well, you have mine here and the rest looks fine, so add it to the others.
+> On Thu, 4 Apr 2013, Simon Horman wrote:
+> 
+> > On Wed, Apr 03, 2013 at 11:18:57AM +0200, Guennadi Liakhovetski wrote:
+> > > Hi
+> > > 
+> > > This 2 patches add DT irqpin support on marzen-reference. Only 
+> > > compile-tested due to the lack of hardware. The patches can go 
+> > > independently via their respective trees. irqpin on marzen will not work 
+> > > if patch 2 is applied before patch 1, but as long as there are no devices, 
+> > > using irqpin interrupts, no breakage will be caused.
+> > 
+> > I have applied both patches and the dependency I mention below.
+> > I have also applied the small patch, inlined below, to hook-up
+> > the LAN controller. Unfortunately it doesn't seem to be receiving
+> > any interrupts. Perhaps I am missing something?
+> 
+> Are you sure 28 is the correct number in the irqpin IRQ space? Seems 
+> strange to me. Should be 1 perhaps (counting from 0), or 2 - not sure how 
+> that mapping would look like.
 
-Rob,
+Thanks!
 
-I had originally hoped for this to go into an arm-soc branch so that a
-number of SoCs could convert to use the feature in the same release,
-hence I was looking for acks to let that happen.
+0 seems to be the lucky number, I have SMSC (and NFS root) working
+on marzen-reference.
 
-However, it's too late in the 3.10 cycle now for that to happen. Can the
-series be applied to the DT tree instead; people can convert during the
-3.11 cycle.
+I have posted "ARM: shmobile: marzen-reference: use irqpin for lan"
+
+> > > Guennadi Liakhovetski (2):
+> > >       irqchip: renesas-intc-irqpin: DT binding for sense bitfield width
+> > 
+> > The above patch depends on "[1/3] ARM: shmobile: irqpin: fix handling of
+> > spurious interrupts in DT case", right?
+> 
+> Not functionally. Spurious interrupts occur on sh73a0, the sense bitfield 
+> is needed for r8a7779. But the latter won't apply without the former, 
+> that's right.
+
+Thanks, could you reposts this series rebase so that it doesn't require
+""[1/3] ARM: shmobile: irqpin: fix handling of spurious interrupts in DT case"
+to apply cleanly.
+
+Feel free to break the creation of
+Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+into a separate patch.
+
+Please add "ARM: shmobile: marzen-reference: use irqpin for lan" to
+the end of the series with an Ack if you have no objections to it.
+
+> > Has there been any progress in your
+> > discussions with Magnus about what to do about that patch?
+> 
+> No, not yet.
+
+Thanks, understood.
+
+And thanks doubly for this series.
+It is very nice to have bouth irqpin and ethernet working on
+marzen-reference.
