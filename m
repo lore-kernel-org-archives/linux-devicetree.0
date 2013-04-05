@@ -1,99 +1,121 @@
-From: Vikas Sajjan <vikas.sajjan@linaro.org>
-Subject: [PATCH v11 0/3] Add DRM FIMD DT support for Exynos4 DT Machines
-Date: Fri,  5 Apr 2013 15:47:39 +0530
-Message-ID: <1365157062-8669-1-git-send-email-vikas.sajjan@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, sylvester.nawrocki@gmail.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, patches@linaro.org, linaro-kernel@lists.linaro.org
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: [PATCH v3 1/2] imxfb: Set alpha value of the framebuffer
+Date: Fri,  5 Apr 2013 12:31:15 +0200
+Message-ID: <1365157876-1757-2-git-send-email-mpa@pengutronix.de>
+References: <1365157876-1757-1-git-send-email-mpa@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1365157876-1757-1-git-send-email-mpa@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Tobias Schandinat <FlorianSchandinat@gmx.de>
+Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Christian Hemp <c.hemp@phytec.de>, Markus Pargmann <mpa@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds support for DRM FIMD DT for Exynos4 DT Machines,
-specifically for Exynos4412 SoC.
+From: Christian Hemp <c.hemp@phytec.de>
 
-changes since v10:
-	- addressed comments from Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Based on Sascha Hauer's patch i.MX27 clock: Do not disable lcd clocks during
+startup.
+This patch gives a interface to chance the alphavalue of the framebuffer.
 
-changes since v9:
-	- dropped the patch "ARM: dts: Add lcd pinctrl node entries for EXYNOS4412 SoC"
-	as the gpios in the newly added nodes "lcd_en" and "lcd_sync" in this patch 
-	were already PULLed high by existing "lcd_clk" node.
-	- addressed comments from Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-	and Thomas Abraham <thomas.abraham@linaro.org>
+Signed-off-by: Christian Hemp <c.hemp@phytec.de>
 
-changes since v8:
-	- addressed comments to add missing documentation for clock and clock-names
-	properties as pointed out by Sachin Kamat <sachin.kamat@linaro.org>
+rebased to 3.7
+Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+---
+ drivers/video/imxfb.c                     | 35 +++++++++++++++++++++++++++++++
+ include/linux/platform_data/video-imxfb.h |  3 +++
+ 2 files changed, 38 insertions(+)
 
-changes since v7:
-	- rebased to kgene's "for-next"
-	- Migrated to Common Clock Framework
-	- removed the patch "ARM: dts: Add FIMD AUXDATA node entry for exynos4 DT",
-	as migration to Common Clock Framework will NOT need this.
-	- addressed the comments raised by Sachin Kamat <sachin.kamat@linaro.org>
-
-changes since v6:
-	- addressed comments and added interrupt-names = "fifo", "vsync", "lcd_sys"
-	in exynos4.dtsi and re-ordered the interrupt numbering to match the order in
-	interrupt combiner IP as suggested by Sylwester Nawrocki <sylvester.nawrocki@gmail.com>.
-
-changes since v5:
-	- renamed the fimd binding documentation file name as "samsung-fimd.txt",
-	since it not only talks about exynos display controller but also about
-	previous samsung display controllers.
-	- rephrased an abmigious statement about the interrupt combiner in the
-	fimd binding documentation as pointed out by 
-	Sachin Kamat <sachin.kamat@linaro.org>
-
-changes since v4:
-	- moved the fimd binding documentation to Documentation/devicetree/bindings/video/
-	as suggested by Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-
-	- added more fimd compatiblity strings in fimd documentation as
-	discussed at  https://patchwork.kernel.org/patch/2144861/ with
-	Sylwester Nawrocki <sylvester.nawrocki@gmail.com> and
-	Tomasz Figa <tomasz.figa@gmail.com>
-
-	- modified compatible string for exynos4 fimd as "exynos4210-fimd"
-	exynos5 fimd as "exynos5250-fimd" to stick to the rule that compatible
-	value should be named after first specific SoC model in which this
-	particular IP version was included as discussed at
-	https://patchwork.kernel.org/patch/2144861/
-
-	- documented more about the interrupt combiner and their order as 
-	suggested by Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-
-changes since v3:
-	- rebased on
-	http://git.kernel.org/?p=linux/kernel/git/kgene/linux-samsung.git;a=shortlog;h=refs/heads/for-next-next
-
-changes since v2:
-	- added alias to 'fimd@11c00000' node
-		(reported by: Rahul Sharma <r.sh.open@gmail.com>)
-	- removed 'lcd0_data' node as there was already a similar node lcd_data24
-		(reported by: Jingoo Han <jg1.han@samsung.com>
-	- replaced spaces with tabs in display-timing node
-
-changes since v1:
-	- added new patch to add FIMD DT binding Documentation
-	- removed patch enabling SAMSUNG_DEV_BACKLIGHT and SAMSUNG_DEV_PMW 
-	for mach-exynos4 DT
-	- added 'status' property to fimd DT node
-
-Is based on branch kgene's "for-next"
-https://git.kernel.org/cgit/linux/kernel/git/kgene/linux-samsung.git/log/?h=for-next
-
-Vikas Sajjan (3):
-  ARM: dts: Add FIMD node to exynos4
-  ARM: dts: Add FIMD node and display timing node to
-    exynos4412-origen.dts
-  ARM: dts: Add FIMD DT binding Documentation
-
- .../devicetree/bindings/video/samsung-fimd.txt     |   65 ++++++++++++++++++++
- arch/arm/boot/dts/exynos4.dtsi                     |   12 ++++
- arch/arm/boot/dts/exynos4412-origen.dts            |   21 +++++++
- 3 files changed, 98 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/samsung-fimd.txt
-
+diff --git a/drivers/video/imxfb.c b/drivers/video/imxfb.c
+index 0abf2bf..ef2b587 100644
+--- a/drivers/video/imxfb.c
++++ b/drivers/video/imxfb.c
+@@ -31,6 +31,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/io.h>
+ #include <linux/math64.h>
++#include <linux/uaccess.h>
+ 
+ #include <linux/platform_data/video-imxfb.h>
+ 
+@@ -112,6 +113,10 @@
+ #define LCDISR_EOF	(1<<1)
+ #define LCDISR_BOF	(1<<0)
+ 
++#define LCDC_LGWCR	0x64
++#define LGWCR_GWAV(alpha)	(((alpha) & 0xff) << 24)
++#define LGWCR_GWE	(1 << 22)
++
+ /* Used fb-mode. Can be set on kernel command line, therefore file-static. */
+ static const char *fb_mode;
+ 
+@@ -610,6 +615,35 @@ static int imxfb_blank(int blank, struct fb_info *info)
+ 	return 0;
+ }
+ 
++static int imxfb_ioctl(struct fb_info *info, unsigned int cmd,
++			unsigned long arg)
++{
++	struct imxfb_info *fbi = info->par;
++	int alpha, ret = 0;
++	unsigned int tmp;
++
++	switch (cmd) {
++	case IMXFB_ALPHA:
++		if (get_user(alpha, (int __user *)arg)) {
++			ret = -EFAULT;
++		} else {
++			tmp = readl(fbi->regs + LCDC_LGWCR);
++			tmp &= ~LGWCR_GWAV(0xff);
++			tmp |= LGWCR_GWAV(alpha);
++			if (!alpha)
++				tmp &= ~LGWCR_GWE;
++			else
++				tmp |= LGWCR_GWE;
++			writel(tmp , fbi->regs + LCDC_LGWCR);
++		}
++		break;
++	default:
++		ret = -EINVAL;
++	}
++
++	return ret;
++}
++
+ static struct fb_ops imxfb_ops = {
+ 	.owner		= THIS_MODULE,
+ 	.fb_check_var	= imxfb_check_var,
+@@ -619,6 +653,7 @@ static struct fb_ops imxfb_ops = {
+ 	.fb_copyarea	= cfb_copyarea,
+ 	.fb_imageblit	= cfb_imageblit,
+ 	.fb_blank	= imxfb_blank,
++	.fb_ioctl	= imxfb_ioctl,
+ };
+ 
+ /*
+diff --git a/include/linux/platform_data/video-imxfb.h b/include/linux/platform_data/video-imxfb.h
+index 9de8f06..ce3875f 100644
+--- a/include/linux/platform_data/video-imxfb.h
++++ b/include/linux/platform_data/video-imxfb.h
+@@ -51,6 +51,9 @@
+ #define DMACR_HM(x)	(((x) & 0xf) << 16)
+ #define DMACR_TM(x)	((x) & 0xf)
+ 
++#define IMXFB_IOW(num, dtype)	_IOW('I', num, dtype)
++#define IMXFB_ALPHA		IMXFB_IOW(31, int)
++
+ struct imx_fb_videomode {
+ 	struct fb_videomode mode;
+ 	u32 pcr;
 -- 
-1.7.9.5
+1.8.1.5
