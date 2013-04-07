@@ -1,13 +1,16 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 2/5] ARM i.MX53: Remove unused tve_gate clkdev entry
-Date: Mon,  8 Apr 2013 16:46:20 +0200
-Message-ID: <1365432383-7787-3-git-send-email-p.zabel@pengutronix.de>
-References: <1365432383-7787-1-git-send-email-p.zabel@pengutronix.de>
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH] CLK: Allow parent clock and rate to be configured in
+ DT.
+Date: Sun, 07 Apr 2013 23:14:22 +0200
+Message-ID: <8699707.bKlCq77L0P@flatron>
+References: <20130319170933.28337.50448.stgit@localhost>
+ <CAKGA1bnt_wrNPg2JdAu=ac+WiUm8pVaGh3Tjrt3NvgdFeLxB8A@mail.gmail.com>
+ <CAKGA1bnhMz-18RvUq1Bx-b_AztwspYC+Q+3QGYf=kBtMe1nq2w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365432383-7787-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <CAKGA1bnhMz-18RvUq1Bx-b_AztwspYC+Q+3QGYf=kBtMe1nq2w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,26 +21,99 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Cc: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux ARM Kernel ML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/mach-imx/clk-imx51-imx53.c | 1 -
- 1 file changed, 1 deletion(-)
+On Sunday 07 of April 2013 11:34:14 Matt Sealey wrote:
+> Or actually, let me rephrase that; sure, when we decide that the
+> actual clock tree is described IN the device tree and not in Linux -
+> the only thing I have to test this on is i.MX and OMAP and it's all a
+> huge table in the Linux kernel which the DT uses to reference
+> arbitrary indices into a provider array...
 
-diff --git a/arch/arm/mach-imx/clk-imx51-imx53.c b/arch/arm/mach-imx/clk-imx51-imx53.c
-index 9daef9d..890012e 100644
---- a/arch/arm/mach-imx/clk-imx51-imx53.c
-+++ b/arch/arm/mach-imx/clk-imx51-imx53.c
-@@ -319,7 +319,6 @@ static void __init mx5_clocks_common_init(unsigned long rate_ckil,
- 	clk_register_clkdev(clk[dummy], NULL, "imx2-wdt.0");
- 	clk_register_clkdev(clk[dummy], NULL, "imx2-wdt.1");
- 	clk_register_clkdev(clk[dummy], NULL, "imx-keypad");
--	clk_register_clkdev(clk[tve_gate], NULL, "imx-tve.0");
- 	clk_register_clkdev(clk[ipu_di1_gate], "di1", "imx-tve.0");
- 	clk_register_clkdev(clk[gpc_dvfs], "gpc_dvfs", NULL);
- 	clk_register_clkdev(clk[epit1_ipg_gate], "ipg", "imx-epit.0");
--- 
-1.8.2.rc2
+I'm not sure what's wrong with that.
+
+> I could add desired parents to the provider array but that wouldn't
+> really fix the configuration problem.
+
+I'm not really seeing any configuration problem here. This is an 
+artificial problem created by looking at device tree way too 
+conservatively, without any significant reason.
+
+> Can we get an agreement that
+> actually, no matter how "unwieldy" or "unreadable" some people think
+> it might be, that the entire clock tree for a board should end up in
+> it's device tree (muxes, selects, gates and all) with suitable
+> bindings? This is the only way you'll get clock "hacks" out of the
+> source.
+
+Hardware initialization is not really a hack...
+
+Going this way, why to keep any initialization code inside drivers at all? 
+Let's initialize USB, MMC, display controllers in the bootloader and just 
+make the driver handle user requests assuming that the hardware is already 
+initialized.
+
+> I do have a kernel tree for some 3.8-rc (which you know of already)
+> which started work on this and I had some success with it. I'll need a
+> little while to move it forward after Shawn moved some things around,
+> rebase all the work.. there are more problems to fix with how
+> everything "works" right now than just a need for configuration data,
+> which is why I am so opposed to adding that configuration data. It
+> supposes that we are giving complete descriptions already anyway, and
+> my proposal relies on having complete descriptions anyway, when we are
+> not in either case. Give me a couple weeks and I'll probably have it
+> done, if nothing moves under my feet again..
+> 
+> At the point where we have two proposals here; implement 100 clocks as
+> device tree nodes, or implement multiple ways of providing clock
+> reparenting and frequency setting information as a configuration
+> clock, I would rather implement those 100 clocks as nodes..
+
+...or 200 or 300 or 400... (yes, there are platforms which have so many 
+elements in their clock networks and they are not uncommon), good luck 
+with parsing this at runtime (either with CPU or yourself when reading
+a dts file).
+
+It would make some sense if all those basic elements (divs, muxes, gates) 
+on all platforms would be identical, but each platform will have its own 
+specific quirks, for which such uber-generic binding would have to 
+account.
+
+Now, why the other option is to have multiple ways? What's holding us from 
+defining a single way of doing so?
+
+Best regards,
+Tomasz
+
+> Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+> Product Development Analyst, Genesi USA, Inc.
+> 
+> On Sun, Apr 7, 2013 at 11:23 AM, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org> 
+wrote:
+> > On Sun, Apr 7, 2013 at 11:00 AM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> 
+wrote:
+> >> On Sun, Apr 7, 2013 at 12:50 PM, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org> 
+wrote:
+> >>> If we're dealing with audio codecs, fix the audio codec to accept a
+> >>> *table* of possible clock values and if that hardware operates
+> >>> differently per clock value, then add that data in there too (like
+> >>> the
+> >>> cs42l52 audio codec). Where the software and hardware is a little
+> >>> more
+> >>> dynamic, the same binding works here - and the usual trick is just
+> >>> force one configuration possible out of many. The board designer can
+> >>> look at all the possibilities and choose the one or two or all that
+> >>> will work with the design, and it can go into the device tree.
+> >> 
+> >> Sorry, but I have a hard time following a so long response.
+> >> 
+> >> Can't you just send patches to the list with your proposal so that we
+> >> can move forward with the idea?
+> > 
+> > Sure.
+> > 
+> > --
+> > Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+> > Product Development Analyst, Genesi USA, Inc.
