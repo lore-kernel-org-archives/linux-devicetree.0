@@ -1,87 +1,51 @@
-From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Subject: Re: [RFC PATCH] CLK: Allow parent clock and rate to be configured in
- DT.
-Date: Sun, 7 Apr 2013 11:34:14 -0500
-Message-ID: <CAKGA1bnhMz-18RvUq1Bx-b_AztwspYC+Q+3QGYf=kBtMe1nq2w@mail.gmail.com>
-References: <20130319170933.28337.50448.stgit@localhost>
- <CAOMZO5ASkvquyzPCEGObvB5Xh9bDPTJ2zx26eOUJT_Vb36Bn3Q@mail.gmail.com>
- <CAKGA1bkWLrOs15ni=8D__BvuG6kvqkeeLZGOLrVZY9g0q0z4Bg@mail.gmail.com>
- <6581638.FPkNsv6peb@flatron> <20130407132623.GP1906@pengutronix.de>
- <CAKGA1b=AcQsA-P-pR+in+9CzqW=XfEBhdoR+AC7QCLYfUhQqJg@mail.gmail.com>
- <CAOMZO5ARwOLdSg4Np_HB2m7zvTNE94bJBUh3R-oG=xcP4R6Y-Q@mail.gmail.com>
- <CAKGA1bnt_wrNPg2JdAu=ac+WiUm8pVaGh3Tjrt3NvgdFeLxB8A@mail.gmail.com>
+From: Anton Vorontsov <anton@enomsg.org>
+Subject: Re: [PATCH v6] pstore/ram: Add ramoops support for the Flattened
+ Device Tree.
+Date: Sun, 7 Apr 2013 10:43:13 -0700
+Message-ID: <20130407174313.GA7168@lizard>
+References: <1347042576-17675-1-git-send-email-bfreed@chromium.org>
+ <20120908052907.GA4724@lizard>
+ <20120917062302.GA768@lizard>
+ <CAL_JsqK_L9nN6+oxUQzNwFjbFf3+3NroeEwzbMdPS4T6=Mnemg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAKGA1bnt_wrNPg2JdAu=ac+WiUm8pVaGh3Tjrt3NvgdFeLxB8A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux ARM Kernel ML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqK_L9nN6+oxUQzNwFjbFf3+3NroeEwzbMdPS4T6=Mnemg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Bryan Freed <bfreed@chromium.org>, Tony Luck <tony.luck@intel.com>, keescook@chromium.org, marco.stornelli@gmail.com, gregkh@linuxfoundation.org, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, sboyd@codeaurora.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Or actually, let me rephrase that; sure, when we decide that the
-actual clock tree is described IN the device tree and not in Linux -
-the only thing I have to test this on is i.MX and OMAP and it's all a
-huge table in the Linux kernel which the DT uses to reference
-arbitrary indices into a provider array...
+On Thu, Apr 04, 2013 at 09:03:47PM -0500, Rob Herring wrote:
+> On Mon, Sep 17, 2012 at 1:23 AM, Anton Vorontsov <cbouatmailru@gmail.com> wrote:
+> > On Fri, Sep 07, 2012 at 10:29:10PM -0700, Anton Vorontsov wrote:
+> >> On Fri, Sep 07, 2012 at 11:29:36AM -0700, Bryan Freed wrote:
+> >> > When called with a non-zero of_node, fill out a new ramoops_platform_data
+> >> > with data from the specified Flattened Device Tree node.
+> >> > Update ramoops documentation with the new FDT interface.
+> >> > Update devicetree/binding documentation with pstore/ramoops.txt.
+> >>
+> >> Thanks for your work, Bryan! There were a few issues, I fixed
+> >> them myself but I need your confirmation if you're OK w/ all
+> >> the changes.
+> > [...]
+> >> So, the resulting patch is down below. But I have not pushed
+> >> it out yet, I'm waiting for your sign off. If you're OK with the
+> >> changes, please reply with
+> >> 'Signed-off-by: Bryan Freed <bfreed@chromium.org>'
+> >
+> > Bryan, have you had a chance to look into this?
+> 
+> Whatever happened to this? Olof was also looking at doing a binding
+> back in Jan 2012:
+> 
+> http://www.mail-archive.com/devicetree-discuss@lists.ozlabs.org/msg09905.html
 
-I could add desired parents to the provider array but that wouldn't
-really fix the configuration problem. Can we get an agreement that
-actually, no matter how "unwieldy" or "unreadable" some people think
-it might be, that the entire clock tree for a board should end up in
-it's device tree (muxes, selects, gates and all) with suitable
-bindings? This is the only way you'll get clock "hacks" out of the
-source.
+I don't know. Bryan's patch looked good, I'd happily apply it. But I still
+need Bryan's Signed-off-by tag. :-/ Or, somebody needs to sign off on his
+behalf (anyone from Chromium project?). Or redo the patch.
 
-I do have a kernel tree for some 3.8-rc (which you know of already)
-which started work on this and I had some success with it. I'll need a
-little while to move it forward after Shawn moved some things around,
-rebase all the work.. there are more problems to fix with how
-everything "works" right now than just a need for configuration data,
-which is why I am so opposed to adding that configuration data. It
-supposes that we are giving complete descriptions already anyway, and
-my proposal relies on having complete descriptions anyway, when we are
-not in either case. Give me a couple weeks and I'll probably have it
-done, if nothing moves under my feet again..
+Thanks,
 
-At the point where we have two proposals here; implement 100 clocks as
-device tree nodes, or implement multiple ways of providing clock
-reparenting and frequency setting information as a configuration
-clock, I would rather implement those 100 clocks as nodes..
-Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Product Development Analyst, Genesi USA, Inc.
-
-
-On Sun, Apr 7, 2013 at 11:23 AM, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org> wrote:
-> On Sun, Apr 7, 2013 at 11:00 AM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Sun, Apr 7, 2013 at 12:50 PM, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org> wrote:
->>
->>> If we're dealing with audio codecs, fix the audio codec to accept a
->>> *table* of possible clock values and if that hardware operates
->>> differently per clock value, then add that data in there too (like the
->>> cs42l52 audio codec). Where the software and hardware is a little more
->>> dynamic, the same binding works here - and the usual trick is just
->>> force one configuration possible out of many. The board designer can
->>> look at all the possibilities and choose the one or two or all that
->>> will work with the design, and it can go into the device tree.
->>
->> Sorry, but I have a hard time following a so long response.
->>
->> Can't you just send patches to the list with your proposal so that we
->> can move forward with the idea?
->
-> Sure.
->
-> --
-> Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-> Product Development Analyst, Genesi USA, Inc.
+Anton
