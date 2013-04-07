@@ -1,102 +1,58 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH 3/3] ARM: dts: Add OMAP3430 SDP NOR flash memory binding
-Date: Sun, 7 Apr 2013 20:30:00 -0500
-Message-ID: <51621D98.80403@ti.com>
-References: <1365383828-25627-1-git-send-email-jon-hunter@ti.com> <1365383828-25627-3-git-send-email-jon-hunter@ti.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [v5] clk: add si5351 i2c common clock driver
+Date: Mon, 08 Apr 2013 01:49:24 +0200
+Message-ID: <51620604.4070204@gmail.com>
+References: <1365139415-17815-1-git-send-email-sebastian.hesselbarth@gmail.com> <20130407225046.GA16326@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1365383828-25627-3-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130407225046.GA16326@roeck-us.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, Daniel Mack <zonque@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 04/08/2013 12:50 AM, Guenter Roeck wrote:
+> On Fri, Apr 05, 2013 at 05:23:35AM -0000, Sebastian Hesselbarth wrote:
+>> This patch adds a common clock driver for Silicon Labs Si5351a/b/c
+>> i2c programmable clock generators. Currently, the driver supports
+>> DT kernels only and VXCO feature of si5351b is not implemented. DT
+>> bindings selectively allow to overwrite stored Si5351 configuration
+>> which is very helpful for clock generators with empty eeprom
+>> configuration. Corresponding device tree binding documentation is
+>> also added.
+>>
+>> Signed-off-by: Sebastian Hesselbarth<sebastian.hesselbarth@gmail.com>
+>> Tested-by: Daniel Mack<zonque@gmail.com>
+>>
+> [ ... ]
+>
+>> +static inline void _si5351_msynth_set_pll_master(
+>> +	struct si5351_driver_data *drvdata, unsigned char num, int is_master)
+>> +{
+>> +	unsigned long flags;
+>> +
+>> +	if (num>  8 ||
+>> +	    (drvdata->variant == SI5351_VARIANT_A3&&  num>  3))
+>> +		return;
+>> +
+>> +	flags = __clk_get_flags(drvdata->msynth[num].hw.clk);
+>> +	if (is_master)
+>> +		flags |= CLK_SET_RATE_PARENT;
+>> +	else
+>> +		flags&= ~CLK_SET_RATE_PARENT;
+>> +	__clk_set_flags(drvdata->msynth[num].hw.clk, flags);
+>> +}
+>> +
+> Unless I am missing something, neither __clk_get_flags() nor the new
+> __clk_set_flags is exported.
+>
+> Did you try to build and load the driver as module ?
 
-On 04/07/2013 08:17 PM, Jon Hunter wrote:
-> Add device-tree node for the 128MB NOR on the OMAP3423-SDP board.
+Well, good catch. I didn't try to build v5 as a module, but I guess it
+will fail. But I consider this as something that has to be addressed in
+clk framework itself, not in this patch. There will be other
+clk-providers built as module in the future for sure.
 
-Bugger ... it seems I have invented and new board. OMAP3423 SDP
-does not exist. Fixed below.
-
-Jon
-
->From 4f486b5dddc5d960d786504b4e3e97a28b63c1c0 Mon Sep 17 00:00:00 2001
-From: Jon Hunter <jon-hunter@ti.com>
-Date: Thu, 21 Feb 2013 18:52:05 -0600
-Subject: [PATCH 3/3] ARM: dts: Add OMAP3430 SDP NOR flash memory binding
-
-Add device-tree node for the 128MB NOR on the OMAP3430-SDP board.
-
-Signed-off-by: Jon Hunter <jon-hunter@ti.com>
----
- arch/arm/boot/dts/omap3430-sdp.dts |   51 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/omap3430-sdp.dts b/arch/arm/boot/dts/omap3430-sdp.dts
-index 44d2191..144ae43 100644
---- a/arch/arm/boot/dts/omap3430-sdp.dts
-+++ b/arch/arm/boot/dts/omap3430-sdp.dts
-@@ -45,9 +45,58 @@
- };
- 
- &gpmc {
--	ranges = <1 0 0x28000000 0x08000000>,
-+	ranges = <0 0 0x10000000 0x08000000>,
-+		 <1 0 0x28000000 0x08000000>,
- 		 <2 0 0x20000000 0x10000000>;
- 
-+	nor@0,0 {
-+		compatible = "cfi-flash";
-+		linux,mtd-name= "intel,pf48f6000m0y1be";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0 0 0x08000000>;
-+		bank-width = <2>;
-+
-+		gpmc,mux-add-data = <2>;
-+		gpmc,cs-on-ns = <0>;
-+		gpmc,cs-rd-off-ns = <186>;
-+		gpmc,cs-wr-off-ns = <186>;
-+		gpmc,adv-on-ns = <12>;
-+		gpmc,adv-rd-off-ns = <48>;
-+		gpmc,adv-wr-off-ns = <48>;
-+		gpmc,oe-on-ns = <54>;
-+		gpmc,oe-off-ns = <168>;
-+		gpmc,we-on-ns = <54>;
-+		gpmc,we-off-ns = <168>;
-+		gpmc,rd-cycle-ns = <186>;
-+		gpmc,wr-cycle-ns = <186>;
-+		gpmc,access-ns = <114>;
-+		gpmc,page-burst-access-ns = <6>;
-+		gpmc,bus-turnaround-ns = <12>;
-+		gpmc,cycle2cycle-delay-ns = <18>;
-+		gpmc,wr-data-mux-bus-ns = <90>;
-+		gpmc,wr-access-ns = <186>;
-+		gpmc,cycle2cycle-samecsen;
-+		gpmc,cycle2cycle-diffcsen;
-+
-+		partition@0 {
-+			label = "bootloader-nor";
-+			reg = <0 0x40000>;
-+		};
-+		partition@0x40000 {
-+			label = "params-nor";
-+			reg = <0x40000 0x40000>;
-+		};
-+		partition@0x80000 {
-+			label = "kernel-nor";
-+			reg = <0x80000 0x200000>;
-+		};
-+		partition@0x280000 {
-+			label = "filesystem-nor";
-+			reg = <0x240000 0x7d80000>;
-+		};
-+	};
-+
- 	nand@1,0 {
- 		linux,mtd-name= "micron,mt29f1g08abb";
- 		#address-cells = <1>;
--- 
-1.7.10.4
+Sebastian
