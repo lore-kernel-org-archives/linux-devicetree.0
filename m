@@ -1,156 +1,53 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 05/11] ASoC: fsl-ssi: Add support for imx-pcm-fiq
-Date: Sun,  7 Apr 2013 21:25:15 +0200
-Message-ID: <1365362721-3731-6-git-send-email-mpa@pengutronix.de>
-References: <1365362721-3731-1-git-send-email-mpa@pengutronix.de>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [v5] clk: add si5351 i2c common clock driver
+Date: Sun, 7 Apr 2013 15:50:46 -0700
+Message-ID: <20130407225046.GA16326@roeck-us.net>
+References: <1365139415-17815-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365362721-3731-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1365139415-17815-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, Daniel Mack <zonque@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for non-dma pcm for imx platforms with imx-pcm-fiq support.
-Instead of imx-pcm-audio, in this case imx-pcm-fiq-audio device is added
-and the SIER flags are set differently.
+On Fri, Apr 05, 2013 at 05:23:35AM -0000, Sebastian Hesselbarth wrote:
+> This patch adds a common clock driver for Silicon Labs Si5351a/b/c
+> i2c programmable clock generators. Currently, the driver supports
+> DT kernels only and VXCO feature of si5351b is not implemented. DT
+> bindings selectively allow to overwrite stored Si5351 configuration
+> which is very helpful for clock generators with empty eeprom
+> configuration. Corresponding device tree binding documentation is
+> also added.
+> 
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> Tested-by: Daniel Mack <zonque@gmail.com>
+>
+[ ... ]
 
-Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- sound/soc/fsl/fsl_ssi.c | 70 ++++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 58 insertions(+), 12 deletions(-)
+> +static inline void _si5351_msynth_set_pll_master(
+> +	struct si5351_driver_data *drvdata, unsigned char num, int is_master)
+> +{
+> +	unsigned long flags;
+> +
+> +	if (num > 8 ||
+> +	    (drvdata->variant == SI5351_VARIANT_A3 && num > 3))
+> +		return;
+> +
+> +	flags = __clk_get_flags(drvdata->msynth[num].hw.clk);
+> +	if (is_master)
+> +		flags |= CLK_SET_RATE_PARENT;
+> +	else
+> +		flags &= ~CLK_SET_RATE_PARENT;
+> +	__clk_set_flags(drvdata->msynth[num].hw.clk, flags);
+> +}
+> +
+Unless I am missing something, neither __clk_get_flags() nor the new
+__clk_set_flags is exported.
 
-diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
-index 7decbd9..afb5a23 100644
---- a/sound/soc/fsl/fsl_ssi.c
-+++ b/sound/soc/fsl/fsl_ssi.c
-@@ -120,10 +120,12 @@ struct fsl_ssi_private {
- 
- 	bool new_binding;
- 	bool ssi_on_imx;
-+	bool dma;
- 	struct clk *clk;
- 	struct platform_device *imx_pcm_pdev;
- 	struct imx_pcm_dma_params dma_params_tx;
- 	struct imx_pcm_dma_params dma_params_rx;
-+	struct imx_pcm_fiq_params fiq_params;
- 
- 	struct {
- 		unsigned int rfrc;
-@@ -353,7 +355,8 @@ static int fsl_ssi_startup(struct snd_pcm_substream *substream,
- 		 */
- 
- 		/* Enable the interrupts and DMA requests */
--		write_ssi(SIER_FLAGS, &ssi->sier);
-+		if (ssi_private->dma)
-+			write_ssi(SIER_FLAGS, &ssi->sier);
- 
- 		/*
- 		 * Set the watermark for transmit FIFI 0 and receive FIFO 0. We
-@@ -520,6 +523,18 @@ static int fsl_ssi_trigger(struct snd_pcm_substream *substream, int cmd,
- 		return -EINVAL;
- 	}
- 
-+	if (!ssi_private->dma) {
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-+			write_ssi(CCSR_SSI_SOR_TX_CLR, &ssi->sor);
-+			write_ssi(CCSR_SSI_SIER_TIE | CCSR_SSI_SIER_TFE0_EN,
-+					&ssi->sier);
-+		} else {
-+			write_ssi(CCSR_SSI_SOR_RX_CLR, &ssi->sor);
-+			write_ssi(CCSR_SSI_SIER_RIE | CCSR_SSI_SIER_RFF0_EN,
-+					&ssi->sier);
-+		}
-+	}
-+
- 	return 0;
- }
- 
-@@ -680,6 +695,8 @@ static int fsl_ssi_probe(struct platform_device *pdev)
- 	       sizeof(fsl_ssi_dai_template));
- 	ssi_private->cpu_dai_drv.name = ssi_private->name;
- 
-+	ssi_private->dma = !of_property_read_bool(np, "fsl,imx-fiq");
-+
- 	/* Get the addresses and IRQ */
- 	ret = of_address_to_resource(np, 0, &res);
- 	if (ret) {
-@@ -701,12 +718,15 @@ static int fsl_ssi_probe(struct platform_device *pdev)
- 		goto error_iomap;
- 	}
- 
--	/* The 'name' should not have any slashes in it. */
--	ret = request_irq(ssi_private->irq, fsl_ssi_isr, 0, ssi_private->name,
--			  ssi_private);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "could not claim irq %u\n", ssi_private->irq);
--		goto error_irqmap;
-+	if (ssi_private->dma) {
-+		/* The 'name' should not have any slashes in it. */
-+		ret = request_irq(ssi_private->irq, fsl_ssi_isr, 0,
-+				ssi_private->name, ssi_private);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "could not claim irq %u\n",
-+					ssi_private->irq);
-+			goto error_irqmap;
-+		}
- 	}
- 
- 	/* Are the RX and the TX clocks locked? */
-@@ -789,12 +809,38 @@ static int fsl_ssi_probe(struct platform_device *pdev)
- 	}
- 
- 	if (ssi_private->ssi_on_imx) {
--		ssi_private->imx_pcm_pdev =
--			platform_device_register_simple("imx-pcm-audio",
-+		if (!ssi_private->dma) {
-+			ssi_private->imx_pcm_pdev = platform_device_alloc(
-+							"imx-fiq-pcm-audio",
-+							pdev->id);
-+			if (!ssi_private->imx_pcm_pdev) {
-+				ret = -ENOMEM;
-+				goto error_dev;
-+			}
-+
-+			ssi_private->fiq_params.irq = ssi_private->irq;
-+			ssi_private->fiq_params.base = ssi_private->ssi;
-+			ssi_private->fiq_params.dma_params_rx =
-+				&ssi_private->dma_params_rx;
-+			ssi_private->fiq_params.dma_params_tx =
-+				&ssi_private->dma_params_tx;
-+
-+			platform_set_drvdata(ssi_private->imx_pcm_pdev,
-+					&ssi_private->fiq_params);
-+			ret = platform_device_add(ssi_private->imx_pcm_pdev);
-+			if (ret) {
-+				dev_err(&pdev->dev, "Failed to add imx-fiq-pcm-audio device\n");
-+				platform_device_put(ssi_private->imx_pcm_pdev);
-+				goto error_dev;
-+			}
-+		} else {
-+			ssi_private->imx_pcm_pdev =
-+				platform_device_register_simple("imx-pcm-audio",
- 							-1, NULL, 0);
--		if (IS_ERR(ssi_private->imx_pcm_pdev)) {
--			ret = PTR_ERR(ssi_private->imx_pcm_pdev);
--			goto error_dev;
-+			if (IS_ERR(ssi_private->imx_pcm_pdev)) {
-+				ret = PTR_ERR(ssi_private->imx_pcm_pdev);
-+				goto error_dev;
-+			}
- 		}
- 	}
- 
--- 
-1.8.1.5
+Did you try to build and load the driver as module ?
+
+Thanks,
+Guenter
