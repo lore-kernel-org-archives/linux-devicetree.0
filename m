@@ -1,67 +1,86 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH] CLK: Allow parent clock and rate to be configured in
- DT.
-Date: Sat, 6 Apr 2013 16:40:48 -0300
-Message-ID: <CAOMZO5CcQgf+sTBNKhwXb8FWN3XN4f2Sgjfp5KHup6feOs4h9A@mail.gmail.com>
-References: <20130319170933.28337.50448.stgit@localhost>
- <CAOMZO5ASkvquyzPCEGObvB5Xh9bDPTJ2zx26eOUJT_Vb36Bn3Q@mail.gmail.com>
- <CAKGA1bkWLrOs15ni=8D__BvuG6kvqkeeLZGOLrVZY9g0q0z4Bg@mail.gmail.com>
- <6581638.FPkNsv6peb@flatron>
- <CALBypN4mHwWZNiAQqErh1bL1sPHNuRbO5-yxzY+R1enQqEJOSQ@mail.gmail.com>
- <CAKGA1b=Z4M6t4BVFyfqxq=iZ6MHGbgHf5WodGbTCSaC7E_b7FA@mail.gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [GIT PULL] dt: run C pre-processor on *.dts, create some
+ standard headers
+Date: Sun, 7 Apr 2013 15:15:45 +0800
+Message-ID: <20130407071542.GA4214@S2101-09.ap.freescale.net>
+References: <1365187610-29422-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAKGA1b=Z4M6t4BVFyfqxq=iZ6MHGbgHf5WodGbTCSaC7E_b7FA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Cc: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Martin Fuzzey <mfuzzey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1365187610-29422-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, Michal Marek <mmarek@suse.cz>, Grant Likely <glikely@secretlab.ca>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, arm@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Matt,
+On Fri, Apr 05, 2013 at 12:46:50PM -0600, Stephen Warren wrote:
+> Rob, it might be worth keeping this in a separate branch in linux-next
+> so you can pull it out if it causes any issues. I've been using these
+> patches for quite a while now, but there's always opportunity for
+> surprises on architectures I don't use. I did just fix a bug when
+> building with O= a few days back, hence the V2 that I posted as patches.
+> 
+> ----------------------------------------------------------------
+> 
+> This branch enhances the support for running dtc on device tree files.
+> 
+> A dedicated directory is created for header files that provide constants
+> for device-tree bindings.
+> 
+> The kbuild dependency script processor is enhanced to support processing
+> the dependency outputs from multiple separate commands at once.
+> 
+> The kbuild dtc rule is modified so that the C pre-processor is always
+> applied when compiling any device tree.
+> 
+> Some standard headers are created which define common constants for GPIO,
+> IRQ, and ARM GIC device tree bindings.
+> 
+> ----------------------------------------------------------------
+> 
+> The following changes since commit 6dbe51c251a327e012439c4772097a13df43c5b8:
+> 
+>   Linux 3.9-rc1
+> 
+> are available in the git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/swarren/linux-tegra.git tegra-for-3.10-dtc-cpp-chroot-std-headers
+> 
+I just rebuilt my imx/dt branch based on this to avoid all those dts
+files renaming.  So regardless of the path it goes to mainline, I will
+need it as a dependency in arm-soc tree.
 
-On Sat, Apr 6, 2013 at 4:24 PM, Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org> wrote:
+Shawn
 
-> Indeed, but you can guarantee in the time it took you to do that
-> someone changed a binding because the source code for the DTS, and the
-> documentation for the binding, is still part of Linux and it means
-> Linux "hack it in and we'll do it properly later" design methodology
-> comes into play.
->
-> If you have a fixed clock which cannot change, and the bare minimum
-> functionality implemented is gating, you need to set this up in the
-> bootloader and - at option, depending on if it's needed to boot - gate
-> it. Then tell Linux there's a fixed rate clock and it can turn it on
-> and off via the device tree.. that's the solution here, it's already
-> written and has bindings, we don't need new ones to cover the case
-> whereby someone forgot to do so.
->
-> I am going to stand by my little proposal; we modify the clock
-> initialization so effectively check whether the parent in the DTB is
-> the same as the one in hardware, and if not then report this fact (and
-> optionally set that clock's parent to the one in the DTB). This is a
-> sly back-door approach in one sense, but in the future when people
-> build a board, put initial revision of bootloader code on the board,
-> boot a kernel with a device tree that is not describing the hardware,
-> they will see warnings; "Your clock "fooclk" isn't the same as your DT
-> says it is. Fix the bootloader, please."
+> for you to fetch changes up to 4be505d4fc7a07371a2b658469ca1dda99993ca3:
+> 
+>   ARM: dt: create a DT header for the GIC
+> 
+> ----------------------------------------------------------------
+> 
+> Stephen Warren (7):
+>       kbuild: create an "include chroot" for DT bindings
+>       kbuild: fixdep: support concatenated dep files
+>       kbuild: cmd_dtc_cpp: extract deps from both gcc -E and dtc
+>       kbuild: always run gcc -E on *.dts, remove cmd_dtc_cpp
+>       ARM: dt: add header to define GPIO flags
+>       ARM: dt: add header to define IRQ flags
+>       ARM: dt: create a DT header for the GIC
+> 
+>  arch/arm/boot/dts/include/dt-bindings           |    1 +
+>  include/dt-bindings/gpio/gpio.h                 |   15 +++
+>  .../dt-bindings/interrupt-controller/arm-gic.h  |   22 +++++
+>  include/dt-bindings/interrupt-controller/irq.h  |   19 ++++
+>  scripts/Makefile.lib                            |   17 ++--
+>  scripts/basic/fixdep.c                          |   93 ++++++++++++------
+>  6 files changed, 125 insertions(+), 42 deletions(-)
+>  create mode 120000 arch/arm/boot/dts/include/dt-bindings
+>  create mode 100644 include/dt-bindings/gpio/gpio.h
+>  create mode 100644 include/dt-bindings/interrupt-controller/arm-gic.h
+>  create mode 100644 include/dt-bindings/interrupt-controller/irq.h
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
 
-Care to submit a patch about your proposal for the codec clock example, please?
-
-It makes much easier to get comments/testing, etc in a real patch format.
-
-I will be glad to test your proposal if you submit a patch for it.
-
-Thanks,
-
-Fabio Estevam
