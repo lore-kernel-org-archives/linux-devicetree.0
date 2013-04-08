@@ -1,7 +1,7 @@
 From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 8/8] util: drop "long" from usage helpers
-Date: Mon,  8 Apr 2013 03:06:52 -0400
-Message-ID: <1365404812-15153-9-git-send-email-vapier@gentoo.org>
+Subject: [PATCH 4/8] util_version: new helper for displaying version info
+Date: Mon,  8 Apr 2013 03:06:48 -0400
+Message-ID: <1365404812-15153-5-git-send-email-vapier@gentoo.org>
 References: <1365404812-15153-1-git-send-email-vapier@gentoo.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,184 +21,73 @@ Sender: "devicetree-discuss"
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now that all utils have converted to the new usage framework, we can
-rename to just plain "usage()" and avoid naming conflicts.
+This is so all utilities can have this flag and not just dtc.
 
 Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
 ---
- dtc.c     |  6 +++---
- fdtdump.c |  2 +-
- fdtget.c  |  6 +++---
- fdtput.c  |  8 ++++----
- util.c    |  6 +++---
- util.h    | 18 +++++++++---------
- 6 files changed, 23 insertions(+), 23 deletions(-)
+ dtc.c  | 5 +----
+ util.c | 7 +++++++
+ util.h | 5 +++++
+ 3 files changed, 13 insertions(+), 4 deletions(-)
 
 diff --git a/dtc.c b/dtc.c
-index d0a1f2d..e3c9653 100644
+index d40e220..e4e1b84 100644
 --- a/dtc.c
 +++ b/dtc.c
-@@ -186,14 +186,14 @@ int main(int argc, char *argv[])
+@@ -21,8 +21,6 @@
+ #include "dtc.h"
+ #include "srcpos.h"
+ 
+-#include "version_gen.h"
+-
+ /*
+  * Command line options
+  */
+@@ -158,8 +156,7 @@ int main(int argc, char *argv[])
+ 			srcfile_add_search_path(optarg);
  			break;
- 
- 		case 'h':
--			long_usage(NULL);
-+			usage(NULL);
- 		default:
--			long_usage("unknown option");
-+			usage("unknown option");
- 		}
- 	}
- 
- 	if (argc > (optind+1))
--		long_usage("missing files");
-+		usage("missing files");
- 	else if (argc < (optind+1))
- 		arg = "-";
- 	else
-diff --git a/fdtdump.c b/fdtdump.c
-index 7b967aa..2b8c194 100644
---- a/fdtdump.c
-+++ b/fdtdump.c
-@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
- 		}
- 	}
- 	if (optind != argc - 1)
--		long_usage("missing input filename");
-+		usage("missing input filename");
- 	file = argv[optind];
- 
- 	buf = utilfdt_read(file, &len);
-diff --git a/fdtget.c b/fdtget.c
-index c08efd4..65dd907 100644
---- a/fdtget.c
-+++ b/fdtget.c
-@@ -319,7 +319,7 @@ int main(int argc, char *argv[])
- 		case 't':
- 			if (utilfdt_decode_type(optarg, &disp.type,
- 					&disp.size))
--				long_usage("invalid type string");
-+				usage("invalid type string");
- 			break;
- 
- 		case 'p':
-@@ -341,7 +341,7 @@ int main(int argc, char *argv[])
- 	if (optind < argc)
- 		filename = argv[optind++];
- 	if (!filename)
--		long_usage("missing filename");
-+		usage("missing filename");
- 
- 	argv += optind;
- 	argc -= optind;
-@@ -352,7 +352,7 @@ int main(int argc, char *argv[])
- 
- 	/* Check for node, property arguments */
- 	if (args_per_step == 2 && (argc % 2))
--		long_usage("must have an even number of arguments");
-+		usage("must have an even number of arguments");
- 
- 	if (do_fdtget(&disp, filename, argv, argc, args_per_step))
- 		return 1;
-diff --git a/fdtput.c b/fdtput.c
-index 1be326a..bdf9d95 100644
---- a/fdtput.c
-+++ b/fdtput.c
-@@ -327,7 +327,7 @@ int main(int argc, char *argv[])
- 		case 't':
- 			if (utilfdt_decode_type(optarg, &disp.type,
- 					&disp.size))
--				long_usage("invalid type string");
-+				usage("invalid type string");
- 			break;
- 
  		case 'v':
-@@ -339,16 +339,16 @@ int main(int argc, char *argv[])
- 	if (optind < argc)
- 		filename = argv[optind++];
- 	if (!filename)
--		long_usage("missing filename");
-+		usage("missing filename");
- 
- 	argv += optind;
- 	argc -= optind;
- 
- 	if (disp.oper == OPER_WRITE_PROP) {
- 		if (argc < 1)
--			long_usage("missing node");
-+			usage("missing node");
- 		if (argc < 2)
--			long_usage("missing property");
-+			usage("missing property");
- 	}
- 
- 	if (do_fdtput(&disp, filename, argv, argc))
+-			printf("Version: %s\n", DTC_VERSION);
+-			exit(0);
++			util_version();
+ 		case 'H':
+ 			if (streq(optarg, "legacy"))
+ 				phandle_format = PHANDLE_LEGACY;
 diff --git a/util.c b/util.c
-index a1f4313..62d2167 100644
+index c689ea7..a9b118c 100644
 --- a/util.c
 +++ b/util.c
-@@ -382,9 +382,9 @@ void util_version(void)
- 	exit(0);
- }
+@@ -34,6 +34,7 @@
  
--void util_long_usage(const char *errmsg, const char *synopsis,
--		     const char *short_opts, struct option const long_opts[],
--		     const char * const opts_help[])
-+void util_usage(const char *errmsg, const char *synopsis,
-+		const char *short_opts, struct option const long_opts[],
-+		const char * const opts_help[])
+ #include "libfdt.h"
+ #include "util.h"
++#include "version_gen.h"
+ 
+ char *xstrdup(const char *s)
  {
- 	FILE *fp = errmsg ? stderr : stdout;
- 	const char a_arg[] = "<arg>";
+@@ -374,3 +375,9 @@ void utilfdt_print_data(const char *data, int len)
+ 		printf("]");
+ 	}
+ }
++
++void util_version(void)
++{
++	printf("Version: %s\n", DTC_VERSION);
++	exit(0);
++}
 diff --git a/util.h b/util.h
-index 3d8c0a9..3f48664 100644
+index d856eb9..e09cc25 100644
 --- a/util.h
 +++ b/util.h
-@@ -178,7 +178,7 @@ void util_version(void) __attribute__((noreturn));
-  * Show usage and exit
-  *
-  * This helps standardize the output of various utils.  You most likely want
-- * to use the long_usage() helper below rather than call this.
-+ * to use the usage() helper below rather than call this.
-  *
-  * @param errmsg	If non-NULL, an error message to display
-  * @param synopsis	The initial example usage text (and possible examples)
-@@ -186,9 +186,9 @@ void util_version(void) __attribute__((noreturn));
-  * @param long_opts	The structure of long options
-  * @param opts_help	An array of help strings (should align with long_opts)
+@@ -168,4 +168,9 @@ int utilfdt_decode_type(const char *fmt, int *type, int *size);
   */
--void util_long_usage(const char *errmsg, const char *synopsis,
--		     const char *short_opts, struct option const long_opts[],
--		     const char * const opts_help[]) __attribute__((noreturn));
-+void util_usage(const char *errmsg, const char *synopsis,
-+		const char *short_opts, struct option const long_opts[],
-+		const char * const opts_help[]) __attribute__((noreturn));
+ void utilfdt_print_data(const char *data, int len);
  
- /**
-  * Show usage and exit
-@@ -198,9 +198,9 @@ void util_long_usage(const char *errmsg, const char *synopsis,
-  *
-  * @param errmsg	If non-NULL, an error message to display
-  */
--#define long_usage(errmsg) \
--	util_long_usage(errmsg, usage_synopsis, usage_short_opts, \
--			usage_long_opts, usage_opts_help)
-+#define usage(errmsg) \
-+	util_usage(errmsg, usage_synopsis, usage_short_opts, \
-+		   usage_long_opts, usage_opts_help)
- 
- /**
-  * Call getopt_long() with standard options
-@@ -230,8 +230,8 @@ void util_long_usage(const char *errmsg, const char *synopsis,
- 
- /* Helper for getopt case statements */
- #define case_USAGE_COMMON_FLAGS \
--	case 'h': long_usage(NULL); \
-+	case 'h': usage(NULL); \
- 	case 'V': util_version(); \
--	case '?': long_usage("unknown option");
-+	case '?': usage("unknown option");
- 
++/**
++ * Show source version and exit
++ */
++void util_version(void) __attribute__((noreturn));
++
  #endif /* _UTIL_H */
 -- 
 1.8.1.2
