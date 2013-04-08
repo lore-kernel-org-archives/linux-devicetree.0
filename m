@@ -1,105 +1,111 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v6] pstore/ram: Add ramoops support for the Flattened
- Device Tree.
-Date: Mon, 08 Apr 2013 17:43:50 -0500
-Message-ID: <51634826.5010602@gmail.com>
-References: <1347042576-17675-1-git-send-email-bfreed@chromium.org> <20120908052907.GA4724@lizard> <20120917062302.GA768@lizard> <CAL_JsqK_L9nN6+oxUQzNwFjbFf3+3NroeEwzbMdPS4T6=Mnemg@mail.gmail.com> <20130407174313.GA7168@lizard> <CAEYUcX0rQKDGD3_pbc7JnDO6WJ_QMd8AWW+X1giNVL313wODyA@mail.gmail.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 1/1] of/irq: store IRQ trigger/level in struct resource
+ flags
+Date: Tue, 09 Apr 2013 00:44:05 +0200
+Message-ID: <51634835.5010302@collabora.co.uk>
+References: <1365148088-11175-1-git-send-email-javier.martinez@collabora.co.uk> <51633F26.7000400@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAEYUcX0rQKDGD3_pbc7JnDO6WJ_QMd8AWW+X1giNVL313wODyA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bryan Freed <bfreed@chromium.org>
-Cc: Anton Vorontsov <anton@enomsg.org>, Tony Luck <tony.luck@intel.com>, Kees Cook <keescook@chromium.org>, Marco Stornelli <marco.stornelli@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51633F26.7000400@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, linux-omap <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/08/2013 02:54 PM, Bryan Freed wrote:
-> Sorry for dropping the ball on this one, Anton.
+On 04/09/2013 12:05 AM, Rob Herring wrote:
+> On 04/05/2013 02:48 AM, Javier Martinez Canillas wrote:
+>> According to Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>> the "#interrupt-cells" property of an "interrupt-controller" is used
+>> to define the number of cells needed to specify a single interrupt.
+>> 
+>> A commonly used variant is two cell on which #interrupt-cells = <2>
+>> and the first cell defines the index of the interrupt in the controller
+>> and the second cell is used to specify any of the following flags:
+>> 
+>>     - bits[3:0] trigger type and level flags
+>>         1 = low-to-high edge triggered
+>>         2 = high-to-low edge triggered
+>>         4 = active high level-sensitive
+>>         8 = active low level-sensitive
+>> 
+>> An example of an interrupt controller which use the two cell format is
+>> the OMAP GPIO controller that allows GPIO lines to be used as IRQ
+>> (Documentation/devicetree/bindings/gpio/gpio-omap.txt)
+>> 
+>> But setting #interrupt-cells = <2> on the OMAP GPIO device node and
+>> specifying the GPIO-IRQ type and level flags on the second cell does not
+>> store this value on the populated IORESOURCE_IRQ struct resource.
+>> 
+>> This is because when using an IRQ from an interrupt controller and
+>> setting both cells (e.g:)
+>> 
+>> 	interrupt-parent = <&gpio6>;
+>> 	interrupts = <16 8>;
+>> 
+>> A call to of_irq_to_resource() is made and this function calls to
+>> irq_of_parse_and_map_type() to get the virtual IRQ mapped to the real
+>> index for this interrupt controller. This IRQ number is populated on
+>> the struct resource:
+>> 
+>> int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
+>> {
+>> 	int irq = irq_of_parse_and_map(dev, index);
+>> 	..
+>> 	r->start = r->end = irq;
+>> }
+>> 
+>> irq_of_parse_and_map() calls to irq_create_of_mapping() which calls to
+>> the correct xlate function handler according to "#interrupt-cells"
+>> (irq_domain_xlate_onecell or irq_domain_xlate_twocell) and to
+>> irq_set_irq_type() to set the IRQ type.
+>> 
+>> But the type is never returned so it can't be saved on the IRQ struct
+>> resource flags member.
+>> 
+>> This means that drivers that need the IRQ type/level flags defined in
+>> the DT won't be able to get it.
 > 
-> Thank you for your feedback and modifications in the code.
-> I gotta ask, however, why do you completely remove key ramoops fields
-> like record_size and ftrace_size?
-> 
-> From your 9/7/2012 comments (again, sorry for the delay in getting back to you):
->> Personally, I don't see how this fits into device tree. It doesn't
->> describe hardware, instead it's more a configuration stuff, which
->> usually we try to not put into the device tree.
->>
->> It would be better to have a sane defaults in ramoops, instead of
->> introducing more "virtual" stuff in the device tree. That is, feel
->> free to change defaults if they seem to be not enough for most your
->> setups.
-> 
-> So there are only two alternatives I can see to set these fields.
-> 1. Pass kernel command line parameters, or
-> 2. Modify the defaults in ram.c.
-> 
-> Neither of these alternatives is particularly clean to me.  The first
-> is shunned to avoid clutter on the command line.
-> And the second requires us to maintain our own version of ram.c or
-> push our defaults on the rest of the community.
-> 
-> We (ok, maybe just 'I') prefer to keep our device specific values in
-> the device tree, even though it is not strictly defining hardware in
-> the system.
-> What do you think of at least keeping the record_size, console_size
-> and ftrace_size fields as optional in the ramoops device tree
-> specification?
-> 
-> And as a more general question, why should we try not to put
-> configuration in the device tree?  It seems like a great (and
-> portable) place to put this stuff.
-> It certainly seems better to have it there than hardwired in the
-> kernel or tacked onto the kernel command line.
+> But the interrupt controllers that need the information should be able
+> to get to it via irqd_get_trigger_type. What problem exactly are you
+> trying to fix? What driver would use this?
+>
 
-You have to account for the fact that you may not be able to update the
-dtb which may be part of firmware. I can imagine you might want to
-change some of the sizes frequently based on what you are doing and
-trying to capture. So even if you put in the DT, you need some easy way
-to override the settings. This could always be fixed-up by the
-bootloader which is what is done for things we don't expect the firmware
-to know like initrd address/size and kernel command line. This is why
-the prior discussion I mentioned below suggested putting all this in the
-/chosen node.
+Yes but this is not about the interrupt controller wanting this information but
+a device driver that is using the IORESOURCE_IRQ struct resource that has the
+information about the virtual IRQ associated with a GPIO-IRQ.
 
-Rob
+The driver doesn't know neither care if its IRQ line is connected to a line of
+an real IRQ controller or to a GPIO controller that allows a GPIO line to be
+used as an IRQ.
 
+> My understanding of the IORESOURCE_IRQ_xxx (and DMA) bits are they are
+> ISA specific and therefore should not be used on non-ISA buses.
 > 
-> Thanks,
+
+Many TI OMAP2+ SoC based boards have an SMSC LAN911x/912x controller
+(drivers/net/ethernet/smsc/smsc911x.c) that is connected to the OMAP processor
+through its General-Purpose Memory Controller (GPMC) and this LAN driver obtain
+its IRQ and I/O address space from a struct resource IORESOURCE_IRQ and
+IORESOURCE_MEM respectively, that is filled by the DeviceTree core.
+
+It does this:
+
+irq_res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+irq_flags = irq_res->flags & IRQF_TRIGGER_MASK;
+
+Since of_irq_to_resource() doesn't fill the trigger/level flags on the
+IORESOURCE_IRQ struct resource, irq_flags will always be 0 regarding the value
+specified on the second cell of the "interrupts" DT property.
+
+A previous discussion about this can be found here [1].
+
+> Rob
 > 
-> bryan.
 > 
-> On Sun, Apr 7, 2013 at 10:43 AM, Anton Vorontsov <anton@enomsg.org> wrote:
->> On Thu, Apr 04, 2013 at 09:03:47PM -0500, Rob Herring wrote:
->>> On Mon, Sep 17, 2012 at 1:23 AM, Anton Vorontsov <cbouatmailru@gmail.com> wrote:
->>>> On Fri, Sep 07, 2012 at 10:29:10PM -0700, Anton Vorontsov wrote:
->>>>> On Fri, Sep 07, 2012 at 11:29:36AM -0700, Bryan Freed wrote:
->>>>>> When called with a non-zero of_node, fill out a new ramoops_platform_data
->>>>>> with data from the specified Flattened Device Tree node.
->>>>>> Update ramoops documentation with the new FDT interface.
->>>>>> Update devicetree/binding documentation with pstore/ramoops.txt.
->>>>>
->>>>> Thanks for your work, Bryan! There were a few issues, I fixed
->>>>> them myself but I need your confirmation if you're OK w/ all
->>>>> the changes.
->>>> [...]
->>>>> So, the resulting patch is down below. But I have not pushed
->>>>> it out yet, I'm waiting for your sign off. If you're OK with the
->>>>> changes, please reply with
->>>>> 'Signed-off-by: Bryan Freed <bfreed@chromium.org>'
->>>>
->>>> Bryan, have you had a chance to look into this?
->>>
->>> Whatever happened to this? Olof was also looking at doing a binding
->>> back in Jan 2012:
->>>
->>> http://www.mail-archive.com/devicetree-discuss@lists.ozlabs.org/msg09905.html
->>
->> I don't know. Bryan's patch looked good, I'd happily apply it. But I still
->> need Bryan's Signed-off-by tag. :-/ Or, somebody needs to sign off on his
->> behalf (anyone from Chromium project?). Or redo the patch.
->>
->> Thanks,
->>
->> Anton
+
+Thanks a lot and best regards,
+Javier
+
+[1]: https://patchwork.kernel.org/patch/2194911/
