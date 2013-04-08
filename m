@@ -1,36 +1,58 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH v2 1/2] ARM: dts: Add MFC clock entries for exynos4
-Date: Mon,  8 Apr 2013 11:44:16 +0530
-Message-ID: <1365401657-5428-1-git-send-email-sachin.kamat@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, rob.herring@calxeda.com, s.nawrocki@samsung.com, sachin.kamat@linaro.org, patches@linaro.org
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: Add NFC support for i.MX27 Phytec PCM038
+ module
+Date: Mon, 8 Apr 2013 14:33:42 +0800
+Message-ID: <20130408063340.GB5047@S2101-09.ap.freescale.net>
+References: <1365348554-24345-1-git-send-email-shc_work@mail.ru>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1365348554-24345-1-git-send-email-shc_work-JGs/UdohzUI@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Added MFC related clock entries in exynos4.dtsi file.
+On Sun, Apr 07, 2013 at 07:29:12PM +0400, Alexander Shiyan wrote:
+> Added NFC node to imx27-phytec-phycore DT file.
+> 
+> Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
-Based on Kukjin's for-next tree.
-No change since v1 (except added reviewed-by tag).
----
- arch/arm/boot/dts/exynos4.dtsi |    2 ++
- 1 file changed, 2 insertions(+)
+Applied, thanks.
 
-diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-index 800ff11..74f18d2 100644
---- a/arch/arm/boot/dts/exynos4.dtsi
-+++ b/arch/arm/boot/dts/exynos4.dtsi
-@@ -155,6 +155,8 @@
- 		reg = <0x13400000 0x10000>;
- 		interrupts = <0 94 0>;
- 		samsung,power-domain = <&pd_mfc>;
-+		clocks = <&clock 170>, <&clock 273>;
-+		clock-names = "sclk_mfc", "mfc";
- 		status = "disabled";
- 	};
- 
--- 
-1.7.9.5
+> ---
+>  arch/arm/boot/dts/imx27-phytec-phycore.dtsp | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx27-phytec-phycore.dtsp b/arch/arm/boot/dts/imx27-phytec-phycore.dtsp
+> index 924097a..7228153 100644
+> --- a/arch/arm/boot/dts/imx27-phytec-phycore.dtsp
+> +++ b/arch/arm/boot/dts/imx27-phytec-phycore.dtsp
+> @@ -71,3 +71,9 @@
+>  		#size-cells = <1>;
+>  	};
+>  };
+> +
+> +&nfc {
+> +	nand-bus-width = <8>;
+> +	nand-ecc-mode = "hw";
+> +	status = "okay";
+> +};
+> -- 
+> 1.8.1.5
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
