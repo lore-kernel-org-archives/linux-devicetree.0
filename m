@@ -1,17 +1,12 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC 2/5] ARM: at91/dts: add general purpose backup register
- (GPBR) support
-Date: Mon, 8 Apr 2013 09:35:39 +0200
-Message-ID: <20130408073539.GP20693@game.jcrosoft.org>
-References: <20130407150938.GA25605@localhost>
- <1365347572-14972-1-git-send-email-jhovold@gmail.com>
- <1365347572-14972-2-git-send-email-jhovold@gmail.com>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH -next v2] spi: tegra: slink: make local symbols static
+Date: Mon, 8 Apr 2013 13:41:21 +0100
+Message-ID: <20130408124120.GJ9243@opensource.wolfsonmicro.com>
+References: <CAPgLHd-sTt5eKoiLb13dWHipT6Q46qCbG=b9mCYNq=Q7YLmGVA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============4054153253478420280=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1365347572-14972-2-git-send-email-jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAPgLHd-sTt5eKoiLb13dWHipT6Q46qCbG=b9mCYNq=Q7YLmGVA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,170 +17,63 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Robert Nelson <Robert.Nelson-9gsZL1vm+hpBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org
+To: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17:12 Sun 07 Apr     , Johan Hovold wrote:
-> Add arch device-tree setup code and DT-nodes for the General Purpose
-> Backup Registers (GPBR).
-> 
-> Note that all AT91 SoCs but at91rm9200 have these backup-powered
-> registers.
-> 
-> Signed-off-by: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/arm/atmel-at91.txt          |  4 ++++
->  arch/arm/boot/dts/at91sam9260.dtsi                  |  5 +++++
->  arch/arm/boot/dts/at91sam9263.dtsi                  |  5 +++++
->  arch/arm/boot/dts/at91sam9g45.dtsi                  |  5 +++++
->  arch/arm/boot/dts/at91sam9n12.dtsi                  |  5 +++++
->  arch/arm/boot/dts/at91sam9x5.dtsi                   |  5 +++++
->  arch/arm/mach-at91/setup.c                          | 21 +++++++++++++++++++++
->  7 files changed, 50 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-> index 1196290..fe64d0a 100644
-> --- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
-> +++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-> @@ -1,6 +1,10 @@
->  Atmel AT91 device tree bindings.
->  ================================
->  
-> +General Purpose Backup Registers (GPBR) required properties:
-> +- compatible: Should be "atmel,at91sam9260-gpbr"
-> +- reg: Should contain register location and length
-> +
->  PIT Timer required properties:
->  - compatible: Should be "atmel,at91sam9260-pit"
->  - reg: Should contain registers location and length
-> diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-> index cb7bcc5..48ef04d 100644
-> --- a/arch/arm/boot/dts/at91sam9260.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9260.dtsi
-> @@ -87,6 +87,11 @@
->  				interrupts = <1 4 7>;
->  			};
->  
-> +			gpbr@fffffd50 {
-> +				compatible = "atmel,at91sam9260-gpbr";
-> +				reg = <0xfffffd50 0x10>;
-> +			};
-> +
->  			tcb0: timer@fffa0000 {
->  				compatible = "atmel,at91rm9200-tcb";
->  				reg = <0xfffa0000 0x100>;
-> diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-> index 271d4de..e9676ba 100644
-> --- a/arch/arm/boot/dts/at91sam9263.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9263.dtsi
-> @@ -75,6 +75,11 @@
->  				interrupts = <1 4 7>;
->  			};
->  
-> +			gpbr@fffffd60 {
-> +				compatible = "atmel,at91sam9260-gpbr";
-> +				reg = <0xfffffd60 0x50>;
-> +			};
-> +
->  			tcb0: timer@fff7c000 {
->  				compatible = "atmel,at91rm9200-tcb";
->  				reg = <0xfff7c000 0x100>;
-> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-> index 6b1d4ca..d5e37ce 100644
-> --- a/arch/arm/boot/dts/at91sam9g45.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-> @@ -92,6 +92,11 @@
->  				reg = <0xfffffd10 0x10>;
->  			};
->  
-> +			gpbr@fffffd60 {
-> +				compatible = "atmel,at91sam9260-gpbr";
-> +				reg = <0xfffffd60 0x10>;
-> +			};
-> +
->  			tcb0: timer@fff7c000 {
->  				compatible = "atmel,at91rm9200-tcb";
->  				reg = <0xfff7c000 0x100>;
-> diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-> index 4801717..ac122a6 100644
-> --- a/arch/arm/boot/dts/at91sam9n12.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-> @@ -85,6 +85,11 @@
->  				reg = <0xfffffe10 0x10>;
->  			};
->  
-> +			gpbr@fffffe60 {
-> +				compatible = "atmel,at91sam9260-gpbr";
-> +				reg = <0xfffffe60 0x10>;
-> +			};
-> +
->  			mmc0: mmc@f0008000 {
->  				compatible = "atmel,hsmci";
->  				reg = <0xf0008000 0x600>;
-> diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-> index c461e11..13d069e 100644
-> --- a/arch/arm/boot/dts/at91sam9x5.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-> @@ -88,6 +88,11 @@
->  				interrupts = <1 4 7>;
->  			};
->  
-> +			gpbr@fffffe60 {
-> +				compatible = "atmel,at91sam9260-gpbr";
-> +				reg = <0xfffffe60 0x10>;
-> +			};
-> +
->  			tcb0: timer@f8008000 {
->  				compatible = "atmel,at91sam9x5-tcb";
->  				reg = <0xf8008000 0x100>;
-> diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
-> index b01f4aa..a525390 100644
-> --- a/arch/arm/mach-at91/setup.c
-> +++ b/arch/arm/mach-at91/setup.c
-> @@ -374,6 +374,26 @@ static void at91_dt_ramc(void)
->  	of_node_put(np);
->  }
->  
-> +static struct of_device_id gpbr_ids[] = {
-> +	{ .compatible = "atmel,at91sam9260-gpbr", },
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static void at91_dt_gpbr(void)
-> +{
-> +	struct device_node *np;
-> +
-> +	np = of_find_matching_node(NULL, gpbr_ids);
-> +	if (!np)
-> +		panic("AT91: failed to find compatible gpbr node in dtb\n");
-> +
-> +	at91_gpbr_base = of_iomap(np, 0);
-> +	if (!at91_gpbr_base)
-> +		panic("AT91: Failed to map gpbr registers\n");
-> +
-> +	of_node_put(np);
-> +}
 
-binding ok this NO
-no global pointer unless no choice
+--===============4054153253478420280==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5mZBmBd1ZkdwT1ny"
+Content-Disposition: inline
 
-we need a framework
 
-Best Regards,
-J.
-> +
->  static struct of_device_id shdwc_ids[] = {
->  	{ .compatible = "atmel,at91sam9260-shdwc", },
->  	{ .compatible = "atmel,at91sam9rl-shdwc", },
-> @@ -468,6 +488,7 @@ void __init at91_dt_initialize(void)
->  	at91_dt_rstc();
->  	at91_dt_ramc();
->  	at91_dt_shdwc();
-> +	at91_dt_gpbr();
->  
->  	/* Init clock subsystem */
->  	at91_dt_clock_init();
-> -- 
-> 1.8.1.5
-> 
+--5mZBmBd1ZkdwT1ny
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Apr 05, 2013 at 09:45:36PM +0800, Wei Yongjun wrote:
+> From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+>=20
+> Neither tegra20_spi_cdata nor tegra30_spi_cdata are used outside this
+> file so they can, and should, be static.
+
+Applied, thanks.
+
+--5mZBmBd1ZkdwT1ny
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRYrrnAAoJELSic+t+oim9tTEP/3RYhLvSavrpTxzdG56MBFPU
+DgCvfahkXQJko7Hb5gdZJoAkFQuC96/is+rI6xO3lzb4rOsVnE6EL+4agy6mh1TV
+b5Yg5k7PoY2yFg+iM1oBo8vXfIBw5+0VD4Rz7WWQXlRZS+CRRgR+naRlikeenx/E
+ZyNnU+vJnvnlmRVbRtqKLQ4Tvwp2/rDR0wg57lOImTOOWZ4YPKSRwzwezgi8BeLQ
+WAKIinGDVdzC1D09nBMGU1LXNYJ94QW4gHlW7HgKCJ5CA6iF+27Znokn8IVYSCrT
+sdGAEAUZvpNI7RRO6PcwbCrTL5aig0RnV/wTgaa7vLRzhN01K156VqunbGKNHfm1
+/fgUE7LyDNHOiScVx4x9IKbhqZQcdXX/fLmsObFhokXi0i1rD0NXmrw7dGBOZv5u
+IvcZcbTIGZ/kkLiuKMsG4AVeSKjbgqqGB+Ped5W238YqTHviQ4cfHbhWLQ8EjUxu
+Z02oWTaSwso6ErtRLFsUqxPaoM9f70/tkCFJUU1kj7DJFmDZEINqguh5WThS8kpP
+VwnADHOp3FcHbN0JWyhWKIu3MtmFGMjrqzPYkmYQu02Q9WVolG3eeJGzxxphnwBS
+3/C2qofeNMMN9lg/TT6qw4kgC4+GA8e4H/n9rg7TMJg6pH3VP/Sdtxl8PsEDpHkQ
+lw1y7kLbPj/EoJ45yV9F
+=pNwo
+-----END PGP SIGNATURE-----
+
+--5mZBmBd1ZkdwT1ny--
+
+--===============4054153253478420280==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============4054153253478420280==--
