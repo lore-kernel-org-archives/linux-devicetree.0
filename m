@@ -1,157 +1,124 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v6] clk: add si5351 i2c common clock driver
-Date: Mon, 08 Apr 2013 20:24:08 +0200
-Message-ID: <51630B48.9050005@gmail.com>
-References: <1365139415-17815-1-git-send-email-sebastian.hesselbarth@gmail.com> <1365439617-18816-1-git-send-email-sebastian.hesselbarth@gmail.com> <20130408174636.GA1885@roeck-us.net>
+Subject: Re: [v5] clk: add si5351 i2c common clock driver
+Date: Mon, 08 Apr 2013 20:32:30 +0200
+Message-ID: <51630D3E.30706@gmail.com>
+References: <1365139415-17815-1-git-send-email-sebastian.hesselbarth@gmail.com> <20130407225046.GA16326@roeck-us.net> <51620604.4070204@gmail.com> <20130408001725.GA16648@roeck-us.net> <51625F9A.1050308@gmail.com> <20130408145407.GA12243@roeck-us.net> <CABJ1b_T30trVjXps-rSbYTNo1DcPeT8WsZ+M18B9wTJPBnL-gA@mail.gmail.com> <20130408173628.14359.70620@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130408174636.GA1885@roeck-us.net>
+In-Reply-To: <20130408173628.14359.70620@quantum>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, Daniel Mack <zonque@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, Daniel Mack <zonque@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/08/2013 07:46 PM, Guenter Roeck wrote:
-> On Mon, Apr 08, 2013 at 06:46:57PM +0200, Sebastian Hesselbarth wrote:
->> This patch adds a common clock driver for Silicon Labs Si5351a/b/c
->> i2c programmable clock generators. Currently, the driver does not
->> support VXCO feature of si5351b. Passing platform_data or DT bindings
->> selectively allow to overwrite stored Si5351 configuration which is
->> very helpful for clock generators with empty eeprom configuration.
->> Corresponding device tree binding documentation is also added.
+On 04/08/2013 07:36 PM, Mike Turquette wrote:
+> Quoting Sebastian Hesselbarth (2013-04-08 08:38:44)
+>> On Mon, Apr 8, 2013 at 4:54 PM, Guenter Roeck<linux@roeck-us.net>  wrote:
+>>> On Mon, Apr 08, 2013 at 08:11:38AM +0200, Sebastian Hesselbarth wrote:
+>>>> On 04/08/2013 02:17 AM, Guenter Roeck wrote:
+>>>>> On Mon, Apr 08, 2013 at 01:49:24AM +0200, Sebastian Hesselbarth wrote:
+>>>>>> On 04/08/2013 12:50 AM, Guenter Roeck wrote:
+>>>>>>> On Fri, Apr 05, 2013 at 05:23:35AM -0000, Sebastian Hesselbarth wrote:
+>>>>>>>> This patch adds a common clock driver for Silicon Labs Si5351a/b/c
+>>>>>>>> i2c programmable clock generators. Currently, the driver supports
+>>>>>>>> DT kernels only and VXCO feature of si5351b is not implemented. DT
+>>>>>>>> bindings selectively allow to overwrite stored Si5351 configuration
+>>>>>>>> which is very helpful for clock generators with empty eeprom
+>>>>>>>> configuration. Corresponding device tree binding documentation is
+>>>>>>>> also added.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Sebastian Hesselbarth<sebastian.hesselbarth@gmail.com>
+>>>>>>>> Tested-by: Daniel Mack<zonque@gmail.com>
+>>>>>>>>
+>>>>>>> [ ... ]
+>>>>>>>
+>>>>>>>> +static inline void _si5351_msynth_set_pll_master(
+>>>>>>>> + struct si5351_driver_data *drvdata, unsigned char num, int is_master)
+>>>>>>>> +{
+>>>>>>>> + unsigned long flags;
+>>>>>>>> +
+>>>>>>>> + if (num>    8 ||
+>>>>>>>> +     (drvdata->variant == SI5351_VARIANT_A3&&    num>    3))
+>>>>>>>> +         return;
+>>>>>>>> +
+>>>>>>>> + flags = __clk_get_flags(drvdata->msynth[num].hw.clk);
+>>>>>>>> + if (is_master)
+>>>>>>>> +         flags |= CLK_SET_RATE_PARENT;
+>>>>>>>> + else
+>>>>>>>> +         flags&= ~CLK_SET_RATE_PARENT;
+>>>>>>>> + __clk_set_flags(drvdata->msynth[num].hw.clk, flags);
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>> Unless I am missing something, neither __clk_get_flags() nor the new
+>>>>>>> __clk_set_flags is exported.
+>>>>>>>
+>>>>>>> Did you try to build and load the driver as module ?
+>>>>>>
+>>>>>> Well, good catch. I didn't try to build v5 as a module, but I guess it
+>>>>>> will fail. But I consider this as something that has to be addressed in
+>>>>>> clk framework itself, not in this patch. There will be other
+>>>>>> clk-providers built as module in the future for sure.
+>>>>>>
+>>>>> Sure, but you provided the patch to make __clk_set_flags global. To avoid
+>>>>> build failures, I would suggest to either submit a patch to export the
+>>>>> missing functions, or to remove the ability to build the driver as module.
+>>>>
+>>>> Actually, I knew that __clk_set_flags patch will not be accepted
+>>>> before posting it ;)
+>>>>
+>>> Ah, but part of that is to get you to think about it again, and to defend it if
+>>> it is really needed. After all, "it can be abused" applies to pretty much every
+>>> API.
 >>
->> Signed-off-by: Sebastian Hesselbarth<sebastian.hesselbarth@gmail.com>
+>> Guenter,
+>>
+>> I already thought about it a lot and I consider clk api broken in a way here.
+>>
+>>> Key question is if you _really_ need run-time flag modifications, or if you can
+>>> live with initialization-time settings. If you really need it, you'll have to
+>>> explain the reasons.
+>>
+>> The question is not if _I_ really need run-time flags but why the api allows to
+>> perform run-time modifications of the clock hierarchy without allowing different
+>> flags? There is clk_set_parent() so I guess clk api knows about run-time changes
+>> already, but you cannot have different flags per parent. And with
+>> __clk_set_flags()
+>> rejected, you are not allowed to change the flags.
+>>
+>> I understand that some flags are permanent and required at registration, but
+>> CLK_SET_PARENT_RATE is not. It is not limited by hardware but limited by api.
+>> One way would be a more generic clk-mux with per parent flags, but for
+>> the current
+>> implementation, I cannot see how clk-mux can be exploited here.
+>>
 >
-> [ ... ]
+> There are a couple of ways to get past this issue.  One is removal of
+> some of the flags.  I have never liked CLK_SET_RATE_PARENT, since I
+> think the ability to propagate a rate-change request up to the parent
+> should be enabled for all clocks.  This is in the interest of the driver
+> author who does not care to know intimate details of the clock
+> hierarchy.
 >
->> +
->> +/*
->> + * Si5351 i2c probe and DT
->> + */
->> +#ifdef CONFIG_OF
->> +static const struct of_device_id si5351_dt_ids[] = {
->> +	{ .compatible = "silabs,si5351a", .data = (void *)SI5351_VARIANT_A, },
->> +	{ .compatible = "silabs,si5351a-msop",
->> +					 .data = (void *)SI5351_VARIANT_A3, },
->> +	{ .compatible = "silabs,si5351b", .data = (void *)SI5351_VARIANT_B, },
->> +	{ .compatible = "silabs,si5351c", .data = (void *)SI5351_VARIANT_C, },
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(of, si5351_dt_ids);
->> +
->> +static int si5351_dt_parse(struct i2c_client *client)
->> +{
->> +	struct device_node *child, *np = client->dev.of_node;
->> +	struct si5351_platform_data *pdata;
->> +	const struct of_device_id *match;
->> +	struct property *prop;
->> +	const __be32 *p;
->> +	int num = 0;
->> +	u32 val;
->> +
->> +	if (np == NULL)
->> +		return 0;
->> +
->> +	match = of_match_node(si5351_dt_ids, np);
->> +	if (match == NULL)
->> +		return -EINVAL;
->> +
->> +	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
->> +	if (!pdata)
->> +		return -ENOMEM;
->> +
->> +	pdata->variant = (enum si5351_variant)match->data;
->> +	pdata->clk_xtal = of_clk_get(np, 0);
->> +	if (!IS_ERR(pdata->clk_xtal))
->> +		clk_put(pdata->clk_xtal);
->> +	pdata->clk_clkin = of_clk_get(np, 1);
->> +	if (!IS_ERR(pdata->clk_clkin))
->> +		clk_put(pdata->clk_clkin);
->> +
->> +	/*
->> +	 * property silabs,pll-source :<num src>, [<..>]
->> +	 * allow to selectively set pll source
->> +	 */
->> +	of_property_for_each_u32(np, "silabs,pll-source", prop, p, num) {
->> +		if (num>= 2) {
->> +			dev_err(&client->dev,
->> +				"invalid pll %d on pll-source prop\n", num);
->> +			break;
+> When I developed the rate-change propagation code I was likely too hasty
+> in defining a per-clock flag for that behavior.  It might have been
+> enough to simply compare the&best_parent_rate value from .round_rate
+> and compare it against clk->parent->rate.  This means that no flag is
+> necessary.
 >
-> You report dev_err here, but you don't return an error to the caller.
-> Is this on purpose ? If it is not a fatal error, maybe it should be dev_info ?
-
-This shouldn't break but continue with one u32 skipped. Actually, it is
-a warning because somebody passed an invalid value and should be 
-dev_warn(). But see my note below, I will make them all fatal.
-
->> +		}
->> +
->> +		p = of_prop_next_u32(prop, p,&val);
->> +		if (!p)
->> +			break;
->> +
->> +		switch (val) {
->> +		case 0:
->> +			pdata->pll_src[num] = SI5351_PLL_SRC_XTAL;
->> +			break;
->> +		case 1:
->> +			pdata->pll_src[num] = SI5351_PLL_SRC_CLKIN;
->> +			break;
->> +		default:
->> +			dev_warn(&client->dev,
->> +				 "invalid parent %d for pll %d\n", val, num);
->> +			continue;
+> This assumes that the .round_rate implementation has enough knowledge to
+> know whether or not to propagate the rate-change request up to the
+> parent.  This may not not true for the common divider type.
 >
-> Same here, and a couple of times below. Given the context, I think it would
-> be better if the error cases would return an error. After all, the condition
-> suggests that the device tree data is wrong, meaning one has to assume it
-> won't work anyway and should be fixed in the device tree and not be ignored
-> by the driver.
+> I'll make some tests on removing this flag (and potentially other flags)
+> to see how painful it is.
 
-I am skipping invalid DT data enties here, but I can make them all
-fatal. I will also add more variant checks in the corresponding
-_si5351_* functions.
+Mike,
 
->> +		}
->> +	}
->> +
->> +	/* per clkout properties */
->> +	num = of_get_child_count(np);
->> +
->> +	if (num == 0)
->> +		return 0;
->> +
->
-> This doesn't set client->dev.platform_data yet returns no error, meaning the
-> calling code will either use provided platform data or fail after all if it is
-> NULL. That seems to be inconsistent, given that a dt entry was already detected.
-> The user might end up wondering why the provided device tree data is not used,
-> not realizing that it is incomplete.
->
-> If children are not mandatory, you could just drop the code above and go through
-> for_each_child_of_node() anyway; it won't do anything and set
-> client->dev.platform_data at the end. If children are mandatory, it might make
-> sense to return an eror here (if there is dt information, it should be complete
-> and consistent).
+another good thing would be to have implementation independent building 
+blocks for clk drivers. I think clk-fixed-rate, clk-gate, clk-mux and
+some clk-synth should be enough. The current core clk templates in the
+api are almost all special implementations.
 
-Not having children is valid as you only provide them if you want to
-overwrite the current config stored in the eeprom. But yes, skipping
-for_each_child_of_node below is a left-over from an implementation where
-I used dynamically allocated ->pll/->clkout.
-
->> +	for_each_child_of_node(np, child) {
->> +		if (of_property_read_u32(child, "reg",&num)) {
->> +			dev_err(&client->dev, "missing reg property of %s\n",
->> +				child->name);
->> +			continue;
->> +		}
->> +
-> What if "num" returns 100 ? Or 1000 ?
-
-Segmentation fault? ;) I will add a check for 0 <= num < 8.
-
-Thanks for the review,
-   Sebastian
+Sebastian
