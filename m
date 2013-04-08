@@ -1,58 +1,104 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [v5] clk: add si5351 i2c common clock driver
-Date: Mon, 08 Apr 2013 01:49:24 +0200
-Message-ID: <51620604.4070204@gmail.com>
-References: <1365139415-17815-1-git-send-email-sebastian.hesselbarth@gmail.com> <20130407225046.GA16326@roeck-us.net>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: [PATCH 1/3] ARM: dts: Update OMAP3430 SDP NAND and ONENAND properties
+Date: Sun, 7 Apr 2013 20:17:06 -0500
+Message-ID: <1365383828-25627-1-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130407225046.GA16326@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, Daniel Mack <zonque@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Jon Hunter <jon-hunter@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/08/2013 12:50 AM, Guenter Roeck wrote:
-> On Fri, Apr 05, 2013 at 05:23:35AM -0000, Sebastian Hesselbarth wrote:
->> This patch adds a common clock driver for Silicon Labs Si5351a/b/c
->> i2c programmable clock generators. Currently, the driver supports
->> DT kernels only and VXCO feature of si5351b is not implemented. DT
->> bindings selectively allow to overwrite stored Si5351 configuration
->> which is very helpful for clock generators with empty eeprom
->> configuration. Corresponding device tree binding documentation is
->> also added.
->>
->> Signed-off-by: Sebastian Hesselbarth<sebastian.hesselbarth@gmail.com>
->> Tested-by: Daniel Mack<zonque@gmail.com>
->>
-> [ ... ]
->
->> +static inline void _si5351_msynth_set_pll_master(
->> +	struct si5351_driver_data *drvdata, unsigned char num, int is_master)
->> +{
->> +	unsigned long flags;
->> +
->> +	if (num>  8 ||
->> +	    (drvdata->variant == SI5351_VARIANT_A3&&  num>  3))
->> +		return;
->> +
->> +	flags = __clk_get_flags(drvdata->msynth[num].hw.clk);
->> +	if (is_master)
->> +		flags |= CLK_SET_RATE_PARENT;
->> +	else
->> +		flags&= ~CLK_SET_RATE_PARENT;
->> +	__clk_set_flags(drvdata->msynth[num].hw.clk, flags);
->> +}
->> +
-> Unless I am missing something, neither __clk_get_flags() nor the new
-> __clk_set_flags is exported.
->
-> Did you try to build and load the driver as module ?
+The GPMC timing properties for device-tree have been updated by adding
+a "-ns" or "-ps" suffix to indicate the units of time the property
+represents (as suggested by Rob Herring). Therefore, update the timing
+property names for the OMAP3430 SDP NAND and ONENAND devices.
 
-Well, good catch. I didn't try to build v5 as a module, but I guess it
-will fail. But I consider this as something that has to be addressed in
-clk framework itself, not in this patch. There will be other
-clk-providers built as module in the future for sure.
+Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+---
 
-Sebastian
+Hi Benoit, this is a changed that is going to be introduced for v3.10.
+Feel free to squash this with the patch "ARM: dts: OMAP3: Add support
+for OMAP3430 SDP board" that you have queued for v3.10 if you prefer.
+
+ arch/arm/boot/dts/omap3430-sdp.dts |   56 ++++++++++++++++++------------------
+ 1 file changed, 28 insertions(+), 28 deletions(-)
+
+diff --git a/arch/arm/boot/dts/omap3430-sdp.dts b/arch/arm/boot/dts/omap3430-sdp.dts
+index 05cd8ba..44d2191 100644
+--- a/arch/arm/boot/dts/omap3430-sdp.dts
++++ b/arch/arm/boot/dts/omap3430-sdp.dts
+@@ -57,20 +57,20 @@
+ 
+ 		ti,nand-ecc-opt = "sw";
+ 		gpmc,device-nand;
+-		gpmc,cs-on = <0>;
+-		gpmc,cs-rd-off = <36>;
+-		gpmc,cs-wr-off = <36>;
+-		gpmc,adv-on = <6>;
+-		gpmc,adv-rd-off = <24>;
+-		gpmc,adv-wr-off = <36>;
+-		gpmc,oe-on = <6>;
+-		gpmc,oe-off = <48>;
+-		gpmc,we-on = <6>;
+-		gpmc,we-off = <30>;
+-		gpmc,rd-cycle = <72>;
+-		gpmc,wr-cycle = <72>;
+-		gpmc,access = <54>;
+-		gpmc,wr-access = <30>;
++		gpmc,cs-on-ns = <0>;
++		gpmc,cs-rd-off-ns = <36>;
++		gpmc,cs-wr-off-ns = <36>;
++		gpmc,adv-on-ns = <6>;
++		gpmc,adv-rd-off-ns = <24>;
++		gpmc,adv-wr-off-ns = <36>;
++		gpmc,oe-on-ns = <6>;
++		gpmc,oe-off-ns = <48>;
++		gpmc,we-on-ns = <6>;
++		gpmc,we-off-ns = <30>;
++		gpmc,rd-cycle-ns = <72>;
++		gpmc,wr-cycle-ns = <72>;
++		gpmc,access-ns = <54>;
++		gpmc,wr-access-ns = <30>;
+ 
+ 		partition@0 {
+ 			label = "xloader-nand";
+@@ -102,20 +102,20 @@
+ 
+ 		gpmc,device-width = <2>;
+ 		gpmc,mux-add-data = <2>;
+-		gpmc,cs-on = <0>;
+-		gpmc,cs-rd-off = <84>;
+-		gpmc,cs-wr-off = <72>;
+-		gpmc,adv-on = <0>;
+-		gpmc,adv-rd-off = <18>;
+-		gpmc,adv-wr-off = <18>;
+-		gpmc,oe-on = <30>;
+-		gpmc,oe-off = <84>;
+-		gpmc,we-on = <0>;
+-		gpmc,we-off = <42>;
+-		gpmc,rd-cycle = <108>;
+-		gpmc,wr-cycle = <96>;
+-		gpmc,access = <78>;
+-		gpmc,wr-data-mux-bus = <30>;
++		gpmc,cs-on-ns = <0>;
++		gpmc,cs-rd-off-ns = <84>;
++		gpmc,cs-wr-off-ns = <72>;
++		gpmc,adv-on-ns = <0>;
++		gpmc,adv-rd-off-ns = <18>;
++		gpmc,adv-wr-off-ns = <18>;
++		gpmc,oe-on-ns = <30>;
++		gpmc,oe-off-ns = <84>;
++		gpmc,we-on-ns = <0>;
++		gpmc,we-off-ns = <42>;
++		gpmc,rd-cycle-ns = <108>;
++		gpmc,wr-cycle-ns = <96>;
++		gpmc,access-ns = <78>;
++		gpmc,wr-data-mux-bus-ns = <30>;
+ 
+ 		partition@0 {
+ 			label = "xloader-onenand";
+-- 
+1.7.10.4
+
