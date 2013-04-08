@@ -1,14 +1,11 @@
 From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 2/7] staging: drm/imx: ipuv3-crtc: use external clock for TV
- Encoder
-Date: Mon,  8 Apr 2013 18:04:33 +0200
-Message-ID: <1365437078-22579-3-git-send-email-p.zabel@pengutronix.de>
-References: <1365437078-22579-1-git-send-email-p.zabel@pengutronix.de>
+Subject: [PATCH 0/7] i.MX53 IPU + TVE patches
+Date: Mon,  8 Apr 2013 18:04:31 +0200
+Message-ID: <1365437078-22579-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365437078-22579-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,26 +17,27 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- drivers/staging/imx-drm/ipuv3-crtc.c | 2 ++
- 1 file changed, 2 insertions(+)
+Hi,
 
-diff --git a/drivers/staging/imx-drm/ipuv3-crtc.c b/drivers/staging/imx-drm/ipuv3-crtc.c
-index b028b0d..620e571 100644
---- a/drivers/staging/imx-drm/ipuv3-crtc.c
-+++ b/drivers/staging/imx-drm/ipuv3-crtc.c
-@@ -413,6 +413,8 @@ static int ipu_set_interface_pix_fmt(struct drm_crtc *crtc, u32 encoder_type,
- 	ipu_crtc->interface_pix_fmt = pixfmt;
- 
- 	switch (encoder_type) {
-+	case DRM_MODE_ENCODER_DAC:
-+	case DRM_MODE_ENCODER_TVDAC:
- 	case DRM_MODE_ENCODER_LVDS:
- 		ipu_crtc->di_clkflags = IPU_DI_CLKMODE_SYNC |
- 			IPU_DI_CLKMODE_EXT;
--- 
-1.8.2.rc2
+the following patches allow to use the integrated Television Encoder
+(TVEv2) on the i.MX53 SoC as VGA output encoder for the IPU. This is
+useful for the Freescale i.MX53-QSB and TQ MBa53 boards, which have
+VGA and DVI-I connectors, respectively.
+
+regards
+Philipp
+
+---
+ drivers/staging/imx-drm/Kconfig             |   7 +
+ drivers/staging/imx-drm/Makefile            |   1 +
+ drivers/staging/imx-drm/imx-drm-core.c      |  15 +-
+ drivers/staging/imx-drm/imx-drm.h           |  14 +-
+ drivers/staging/imx-drm/imx-tve.c           | 755 ++++++++++++++++++++++++++++
+ drivers/staging/imx-drm/ipu-v3/imx-ipu-v3.h |   3 +
+ drivers/staging/imx-drm/ipu-v3/ipu-dc.c     |  55 +-
+ drivers/staging/imx-drm/ipu-v3/ipu-di.c     | 100 +++-
+ drivers/staging/imx-drm/ipuv3-crtc.c        |  11 +-
+ 9 files changed, 932 insertions(+), 29 deletions(-)
