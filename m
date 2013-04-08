@@ -1,35 +1,39 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 0/5] i.MX53 TVE clock patches
-Date: Mon,  8 Apr 2013 16:46:18 +0200
-Message-ID: <1365432383-7787-1-git-send-email-p.zabel@pengutronix.de>
+From: Barry Song <21cnbao@gmail.com>
+Subject: Re: [PATCH 10/14] media: soc-camera: support OF cameras
+Date: Mon, 8 Apr 2013 17:19:52 +0800
+Message-ID: <CAGsJ_4zYvF-U0_ETs9EP8i+bOJiJLkXWrJdMNnW_sXU-QwnXQw@mail.gmail.com>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de> <1348754853-28619-11-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1348754853-28619-11-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Magnus Damm <magnus.damm@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, DL-SHA-WorkGroupLinux <workgroup.linux@csr.com>, zilong.wu@csr.com, "renwei.wu" <renwei.wu@csr.com>, xiaomeng.hou@csr.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+hi Guennadi,
 
-the first two are just cleanups, the following three patches are changes
-to the i.MX53 clock tree that are necessary to use the TVEv2 module as
-VGA output on the Freescale i.MX53-QSB or TQ MBa53 boards.
+2012/9/27 Guennadi Liakhovetski <g.liakhovetski@gmx.de>:
+> With OF we aren't getting platform data any more. To minimise changes we
+> create all the missing data ourselves, including compulsory struct
+> soc_camera_link objects. Host-client linking is now done, based on the OF
+> data. Media bus numbers also have to be assigned dynamically.
+>
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 
-regards
-Philipp
+as your V4L2 core DT based supports
+[media] Add a V4L2 OF parser
+[media] Add common video interfaces OF bindings documentation
+have been in media_tree queue for 3.10. i do care about the status of
+this patch for soc_camera.
 
----
- Documentation/devicetree/bindings/clock/imx5-clock.txt |  1 -
- arch/arm/mach-imx/clk-imx51-imx53.c                    | 17 ++++++++---------
- 2 files changed, 8 insertions(+), 10 deletions(-)
+will you have a plan to resend these soc-camera patches based on your
+final V4L2 core DT patches? otherwise, we might do some jobs for that.
+
+> ---
+>  drivers/media/platform/soc_camera/soc_camera.c |  337 ++++++++++++++++++++++--
+>  include/media/soc_camera.h                     |    5 +
+>  2 files changed, 326 insertions(+), 16 deletions(-)
+>
+-barry
