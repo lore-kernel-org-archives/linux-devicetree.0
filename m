@@ -1,67 +1,36 @@
-From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/1] Revert "of/exynos_g2d: Add Bindings for exynos G2D driver"
-Date: Mon,  8 Apr 2013 12:12:19 +0530
-Message-ID: <1365403339-28171-1-git-send-email-sachin.kamat@linaro.org>
+From: Timur Tabi <timur@tabi.org>
+Subject: Re: [PATCH v2 08/11] ASoC: fsl-ssi: imx ac97 support
+Date: Sun, 07 Apr 2013 21:49:03 -0500
+Message-ID: <5162301F.9090000@tabi.org>
+References: <1365362721-3731-1-git-send-email-mpa@pengutronix.de>
+ <1365362721-3731-9-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1365362721-3731-9-git-send-email-mpa@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Markus Pargmann <mpa@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This reverts commit 09495dda6a62c74b13412a63528093910ef80edd.
-The description is incomplete and the location of this file
-is incorrect. Based on discussion with the Samsung media and DRM subsystem
-maintainers, the documentaion of Samsung G2D bindings has been placed at:
-Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+Markus Pargmann wrote:
+> This patch copies some parts from imx-ssi to support AC97 on
+> imx27-pca100 and imx27-pcm043. It is activated with a new fsl,imx-ac97
+> bool property. It was tested on imx27-pca100.
 
-Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/drm/exynos/g2d.txt         |   22 --------------------
- 1 file changed, 22 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/drm/exynos/g2d.txt
+I'm not crazy about this patch -- it seems a bit hackish.  There are too 
+many "if (imx_ac97)" clauses.  Large pieces of code that don't appear to 
+be related to AC97 are indented in an if-clause.  I especially don't like 
+the "If we use AC97, the registers are already setup correctly".
 
-diff --git a/Documentation/devicetree/bindings/drm/exynos/g2d.txt b/Documentation/devicetree/bindings/drm/exynos/g2d.txt
-deleted file mode 100644
-index 1eb124d..0000000
---- a/Documentation/devicetree/bindings/drm/exynos/g2d.txt
-+++ /dev/null
-@@ -1,22 +0,0 @@
--Samsung 2D Graphic Accelerator using DRM frame work
--
--Samsung FIMG2D is a graphics 2D accelerator which supports Bit Block Transfer.
--We set the drawing-context registers for configuring rendering parameters and
--then start rendering.
--This driver is for SOCs which contain G2D IPs with version 4.1.
--
--Required properties:
--	-compatible:
--		should be "samsung,exynos-g2d-41".
--	-reg:
--		physical base address of the controller and length
--		of memory mapped region.
--	-interrupts:
--		interrupt combiner values.
--
--Example:
--	g2d {
--		compatible = "samsung,exynos-g2d-41";
--		reg = <0x10850000 0x1000>;
--		interrupts = <0 91 0>;
--	};
 -- 
-1.7.9.5
+Timur Tabi
