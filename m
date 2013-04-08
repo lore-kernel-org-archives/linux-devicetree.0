@@ -1,16 +1,16 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC 4/5] RTC: rtc-at91sam9: add device-tree support
-Date: Mon, 8 Apr 2013 09:38:07 +0200
-Message-ID: <20130408073807.GQ20693@game.jcrosoft.org>
-References: <20130407150938.GA25605@localhost>
- <1365347572-14972-1-git-send-email-jhovold@gmail.com>
- <1365347572-14972-4-git-send-email-jhovold@gmail.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [v5] clk: add si5351 i2c common clock driver
+Date: Mon, 8 Apr 2013 17:38:44 +0200
+Message-ID: <CABJ1b_T30trVjXps-rSbYTNo1DcPeT8WsZ+M18B9wTJPBnL-gA@mail.gmail.com>
+References: <1365139415-17815-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <20130407225046.GA16326@roeck-us.net> <51620604.4070204@gmail.com>
+ <20130408001725.GA16648@roeck-us.net> <51625F9A.1050308@gmail.com>
+ <20130408145407.GA12243@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1365347572-14972-4-git-send-email-jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20130408145407.GA12243-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,133 +21,102 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Robert Nelson <Robert.Nelson-9gsZL1vm+hpBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dom Cobley <popcornmix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17:12 Sun 07 Apr     , Johan Hovold wrote:
-> Add device-tree support.
-> 
-> The AT91 RTT can be used as an RTC if the atmel,at91-rtt-as-rtc-gpbr
-> property is present and set to the general-purpose backup register to
-> use to store the RTC time base.
-> 
-> Signed-off-by: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/rtc/rtc-at91sam9.txt       | 19 ++++++++++++
->  drivers/rtc/rtc-at91sam9.c                         | 36 +++++++++++++++++++++-
->  2 files changed, 54 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt b/Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt
-> new file mode 100644
-> index 0000000..0f54988
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt
-> @@ -0,0 +1,19 @@
-> +Atmel AT91 RTT as RTC
-> +=====================
-> +
-> +Required properties:
-> +- compatible: Should be "atmel,at91sam9260-rtt"
-> +- reg: Should contain register location and length
-> +- interrupts: Should contain interrupt for the RTT which is the IRQ line
-> +  shared across all System Controller members.
-> +- atmel,rtt-as-rtc-gpbr: Should contain the backup-register to use to store
-> +  the RTC time base
-> +
-> +Example:
-> +
-> +rtt@fffffd20 {
-> +		compatible = "atmel,at91sam9g45-rtt", "atmel,at91sam9260-rtt";
-> +		reg = <0xfffffd20 0x10>;
-> +		interrupts = <1 4 7>;
-> +		atmel,at91-rtt-as-rtc-gpbr = <0>;
-no you miss the point of the DT
+On Mon, Apr 8, 2013 at 4:54 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> On Mon, Apr 08, 2013 at 08:11:38AM +0200, Sebastian Hesselbarth wrote:
+>> On 04/08/2013 02:17 AM, Guenter Roeck wrote:
+>> >On Mon, Apr 08, 2013 at 01:49:24AM +0200, Sebastian Hesselbarth wrote:
+>> >>On 04/08/2013 12:50 AM, Guenter Roeck wrote:
+>> >>>On Fri, Apr 05, 2013 at 05:23:35AM -0000, Sebastian Hesselbarth wrote:
+>> >>>>This patch adds a common clock driver for Silicon Labs Si5351a/b/c
+>> >>>>i2c programmable clock generators. Currently, the driver supports
+>> >>>>DT kernels only and VXCO feature of si5351b is not implemented. DT
+>> >>>>bindings selectively allow to overwrite stored Si5351 configuration
+>> >>>>which is very helpful for clock generators with empty eeprom
+>> >>>>configuration. Corresponding device tree binding documentation is
+>> >>>>also added.
+>> >>>>
+>> >>>>Signed-off-by: Sebastian Hesselbarth<sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> >>>>Tested-by: Daniel Mack<zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> >>>>
+>> >>>[ ... ]
+>> >>>
+>> >>>>+static inline void _si5351_msynth_set_pll_master(
+>> >>>>+ struct si5351_driver_data *drvdata, unsigned char num, int is_master)
+>> >>>>+{
+>> >>>>+ unsigned long flags;
+>> >>>>+
+>> >>>>+ if (num>   8 ||
+>> >>>>+     (drvdata->variant == SI5351_VARIANT_A3&&   num>   3))
+>> >>>>+         return;
+>> >>>>+
+>> >>>>+ flags = __clk_get_flags(drvdata->msynth[num].hw.clk);
+>> >>>>+ if (is_master)
+>> >>>>+         flags |= CLK_SET_RATE_PARENT;
+>> >>>>+ else
+>> >>>>+         flags&= ~CLK_SET_RATE_PARENT;
+>> >>>>+ __clk_set_flags(drvdata->msynth[num].hw.clk, flags);
+>> >>>>+}
+>> >>>>+
+>> >>>Unless I am missing something, neither __clk_get_flags() nor the new
+>> >>>__clk_set_flags is exported.
+>> >>>
+>> >>>Did you try to build and load the driver as module ?
+>> >>
+>> >>Well, good catch. I didn't try to build v5 as a module, but I guess it
+>> >>will fail. But I consider this as something that has to be addressed in
+>> >>clk framework itself, not in this patch. There will be other
+>> >>clk-providers built as module in the future for sure.
+>> >>
+>> >Sure, but you provided the patch to make __clk_set_flags global. To avoid
+>> >build failures, I would suggest to either submit a patch to export the
+>> >missing functions, or to remove the ability to build the driver as module.
+>>
+>> Actually, I knew that __clk_set_flags patch will not be accepted
+>> before posting it ;)
+>>
+> Ah, but part of that is to get you to think about it again, and to defend it if
+> it is really needed. After all, "it can be abused" applies to pretty much every
+> API.
 
-you need to describe the hardware no a particular use of it
+Guenter,
 
-the RTT is a general purpose timer backuped that we use in linux as a RTC with a gpbr
-to store the time
+I already thought about it a lot and I consider clk api broken in a way here.
 
+> Key question is if you _really_ need run-time flag modifications, or if you can
+> live with initialization-time settings. If you really need it, you'll have to
+> explain the reasons.
 
-you need 2 binding on for the RTT one the RTT-rtc
-> +	};
-> diff --git a/drivers/rtc/rtc-at91sam9.c b/drivers/rtc/rtc-at91sam9.c
-> index 983667b..7ccce19 100644
-> --- a/drivers/rtc/rtc-at91sam9.c
-> +++ b/drivers/rtc/rtc-at91sam9.c
-> @@ -13,6 +13,7 @@
->  
->  #include <linux/module.h>
->  #include <linux/kernel.h>
-> +#include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/time.h>
->  #include <linux/rtc.h>
-> @@ -282,6 +283,29 @@ static const struct rtc_class_ops at91_rtc_ops = {
->  	.alarm_irq_enable = at91_rtc_alarm_irq_enable,
->  };
->  
-> +
-> +#ifdef CONFIG_OF
-> +static struct of_device_id at91_rtc_of_match[] = {
-> +	{ .compatible = "atmel,at91sam9260-rtt", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, at91_rtc_of_match);
-> +#endif
-> +
-> +static int at91_rtc_parse_dt(struct device_node *node, unsigned *gpbr)
-> +{
-> +	u32 val;
-> +	int res;
-> +
-> +	res = of_property_read_u32(node, "atmel,at91-rtt-as-rtc-gpbr", &val);
-> +	if (!res)
-> +		return -ENODEV;
-> +
-> +	*gpbr = val;
-> +
-> +	return 0;
-> +}
-> +
->  /*
->   * Initialize and install RTC driver
->   */
-> @@ -291,6 +315,15 @@ static int at91_rtc_probe(struct platform_device *pdev)
->  	struct sam9_rtc	*rtc;
->  	int		ret, irq;
->  	u32		mr;
-> +	unsigned	gpbr;
-> +
-> +	if (pdev->dev.of_node) {
-> +		ret = at91_rtc_parse_dt(pdev->dev.of_node, &gpbr);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		gpbr = CONFIG_RTC_DRV_AT91SAM9_GPBR;
-> +	}
->  
->  	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	if (!r)
-> @@ -320,7 +353,7 @@ static int at91_rtc_probe(struct platform_device *pdev)
->  		goto fail;
->  	}
->  
-> -	rtc->gpbr = CONFIG_RTC_DRV_AT91SAM9_GPBR;
-> +	rtc->gpbr = gpbr;
->  
->  	mr = rtt_readl(rtc, MR);
->  
-> @@ -455,6 +488,7 @@ static struct platform_driver at91_rtc_driver = {
->  	.driver		= {
->  		.name	= "rtc-at91sam9",
->  		.owner	= THIS_MODULE,
-> +		.of_match_table = of_match_ptr(at91_rtc_of_match),
->  	},
->  };
->  
-> -- 
-> 1.8.1.5
-> 
+The question is not if _I_ really need run-time flags but why the api allows to
+perform run-time modifications of the clock hierarchy without allowing different
+flags? There is clk_set_parent() so I guess clk api knows about run-time changes
+already, but you cannot have different flags per parent. And with
+__clk_set_flags()
+rejected, you are not allowed to change the flags.
+
+I understand that some flags are permanent and required at registration, but
+CLK_SET_PARENT_RATE is not. It is not limited by hardware but limited by api.
+One way would be a more generic clk-mux with per parent flags, but for
+the current
+implementation, I cannot see how clk-mux can be exploited here.
+
+I can live with it, because then dynamic muxing of clock hierarchy
+within clk-si5351
+is just not supported or will break function. Currently, there is no
+support for dynamic
+muxing, so everything is fine.
+
+>> >On a side note, do you happen to know anyone working on drivers for Si5319 or
+>> >Si5368 ?
+>>
+>> No.
+>
+> Too bad ... I may have to write that code myself then.
+
+Well, if clk-si5351 will ever get in mainline kernel, feel free to use
+it as a template ;)
+
+Sebastian
