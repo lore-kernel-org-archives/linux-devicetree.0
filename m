@@ -1,107 +1,66 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH 1/2] dmaengine: mpc512x_dma: use generic DMA DT bindings
-Date: Mon, 08 Apr 2013 12:46:47 +0200
-Message-ID: <5162A017.8010102@metafoo.de>
-References: <1364746680-6564-1-git-send-email-agust@denx.de>
+From: Barry Song <21cnbao@gmail.com>
+Subject: Re: [PATCH 10/14] media: soc-camera: support OF cameras
+Date: Mon, 8 Apr 2013 19:49:35 +0800
+Message-ID: <CAGsJ_4wYCARgV-YZ6uRTTjBvqNb1Ryzagb3AOmGjQksX-OFFzA@mail.gmail.com>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+ <1348754853-28619-11-git-send-email-g.liakhovetski@gmx.de>
+ <CAGsJ_4zYvF-U0_ETs9EP8i+bOJiJLkXWrJdMNnW_sXU-QwnXQw@mail.gmail.com> <Pine.LNX.4.64.1304081308000.29945@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1364746680-6564-1-git-send-email-agust@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anatolij Gustschin <agust@denx.de>, Vinod Koul <vinod.koul@intel.com>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1304081308000.29945@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Magnus Damm <magnus.damm@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, DL-SHA-WorkGroupLinux <workgroup.linux@csr.com>, zilong.wu@csr.com, "renwei.wu" <renwei.wu@csr.com>, xiaomeng.hou@csr.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/31/2013 06:17 PM, Anatolij Gustschin wrote:
-> Add generic DMA bindings and register the DMA controller
-> to DT DMA helpers.
-> 
-> Signed-off-by: Anatolij Gustschin <agust@denx.de>
+Hi Guennadi,
+
+2013/4/8 Guennadi Liakhovetski <g.liakhovetski@gmx.de>:
+> Hi Barry
+>
+> On Mon, 8 Apr 2013, Barry Song wrote:
+>
+>> hi Guennadi,
+>>
+>> 2012/9/27 Guennadi Liakhovetski <g.liakhovetski@gmx.de>:
+>> > With OF we aren't getting platform data any more. To minimise changes we
+>> > create all the missing data ourselves, including compulsory struct
+>> > soc_camera_link objects. Host-client linking is now done, based on the OF
+>> > data. Media bus numbers also have to be assigned dynamically.
+>> >
+>> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+>>
+>> as your V4L2 core DT based supports
+>> [media] Add a V4L2 OF parser
+>> [media] Add common video interfaces OF bindings documentation
+>> have been in media_tree queue for 3.10. i do care about the status of
+>> this patch for soc_camera.
+>>
+>> will you have a plan to resend these soc-camera patches based on your
+>> final V4L2 core DT patches? otherwise, we might do some jobs for that.
+>
+> This patch depends not only on the above two OF patches, that Sylwester
+> kindly polished to make them finally suitable for the mainline :-), but
+> also on V4L2 (temporary) clock and asynchronous probing patches, which
+> I've just re-posted in their v7. Once those patches stabilise, it will be
+> possible to re-spin this patch too. However, currently I don't have any
+> interested users for this work, so I can only run it as a low priority
+> task in my spare time, of which I don't have much.
+
+as we are considering putting CSR SiRFprimaII/SiRFatlas6/SiRFmarco
+soc_camera based drivers in drivers/media/platform/soc_camera, so we
+might become your real user. Old imx, omap users might have lost the
+loop.
+I will take a careful at all these patches and find the way to make
+the things happen faster.
+
+>
+> Thanks
+> Guennadi
 > ---
->  arch/powerpc/boot/dts/mpc5121.dtsi |    5 ++-
->  drivers/dma/mpc512x_dma.c          |   63 ++++++++++++++++++++++++++++++++++--
->  2 files changed, 64 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/powerpc/boot/dts/mpc5121.dtsi b/arch/powerpc/boot/dts/mpc5121.dtsi
-> index 723e292..d1fe070 100644
-> --- a/arch/powerpc/boot/dts/mpc5121.dtsi
-> +++ b/arch/powerpc/boot/dts/mpc5121.dtsi
-> @@ -384,10 +384,13 @@
->  			interrupts = <40 0x8>;
->  		};
->  
-> -		dma@14000 {
-> +		dma0: dma@14000 {
->  			compatible = "fsl,mpc5121-dma";
->  			reg = <0x14000 0x1800>;
->  			interrupts = <65 0x8>;
-> +			#dma-cells = <1>;
-> +			#dma-channels = <64>;
-> +			#dma-requests = <64>;
->  		};
->  	};
->  
-> diff --git a/drivers/dma/mpc512x_dma.c b/drivers/dma/mpc512x_dma.c
-> index 2d95673..bc6c356 100644
-> --- a/drivers/dma/mpc512x_dma.c
-> +++ b/drivers/dma/mpc512x_dma.c
-> @@ -40,6 +40,7 @@
->  #include <linux/io.h>
->  #include <linux/slab.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_dma.h>
->  #include <linux/of_platform.h>
->  
->  #include <linux/random.h>
-> @@ -641,6 +642,44 @@ mpc_dma_prep_memcpy(struct dma_chan *chan, dma_addr_t dst, dma_addr_t src,
->  	return &mdesc->desc;
->  }
->  
-> +struct mpc_dma_filter_args {
-> +	struct mpc_dma *mdma;
-> +	unsigned int chan_id;
-> +};
-> +
-> +static bool mpc_dma_filter(struct dma_chan *chan, void *param)
-> +{
-> +	struct mpc_dma_filter_args *fargs = param;
-> +
-> +	if (chan->device != &fargs->mdma->dma)
-> +		return false;
-> +
-> +	return (chan->chan_id == fargs->chan_id);
-> +}
-> +
-> +static struct dma_chan *mpc_dma_xlate(struct of_phandle_args *dma_spec,
-> +						struct of_dma *ofdma)
-> +{
-> +	int count = dma_spec->args_count;
-> +	struct mpc_dma *mdma = ofdma->of_dma_data;
-> +	struct mpc_dma_filter_args fargs;
-> +	dma_cap_mask_t cap;
-> +
-> +	if (!mdma)
-> +		return NULL;
-> +
-> +	if (count != 1)
-> +		return NULL;
-> +
-> +	fargs.mdma = mdma;
-> +	fargs.chan_id = dma_spec->args[0];
-> +
-> +	dma_cap_zero(cap);
-> +	dma_cap_set(DMA_SLAVE, cap);
-> +
-> +	return dma_request_channel(cap, mpc_dma_filter, &fargs);
-> +}
-> +
+> Guennadi Liakhovetski, Ph.D.
+> Freelance Open-Source Software Developer
+> http://www.open-technology.de/
 
-This is more or less the same as the generic of_dma_xlate_by_chan_id
-function I posted about two weeks ago:
-https://patchwork.kernel.org/patch/2331091/
-
-Vinod, can you take a look at that patch again? I'm not quite sure what you
-meant by your question 'how will the client know which "id" to request?'.
-
-- Lars
+-barry
