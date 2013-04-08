@@ -1,55 +1,37 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC 1/5] ARM: at91: add general purpose backup register
- (GPBR) support
-Date: Mon, 8 Apr 2013 12:04:17 +0200
-Message-ID: <20130408100417.GT20693@game.jcrosoft.org>
-References: <20130407150938.GA25605@localhost>
- <1365347572-14972-1-git-send-email-jhovold@gmail.com>
- <20130408073329.GO20693@game.jcrosoft.org>
- <20130408084618.GB25605@localhost>
+From: Samuel Ortiz <sameo@linux.intel.com>
+Subject: Re: [PATCH] mfd: Add device tree bindings for Arizona class devices
+Date: Mon, 8 Apr 2013 16:30:08 +0200
+Message-ID: <20130408143008.GA21256@zurbaran>
+References: <1364938728-7732-1-git-send-email-broonie@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130408084618.GB25605@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Robert Nelson <Robert.Nelson-9gsZL1vm+hpBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org
+In-Reply-To: <1364938728-7732-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 10:46 Mon 08 Apr     , Johan Hovold wrote:
-> On Mon, Apr 08, 2013 at 09:33:29AM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > On 17:12 Sun 07 Apr     , Johan Hovold wrote:
-> > > 
-> > > Add General Purpose Backup Register (GPBR) support.
-> > > 
-> > > Most at91 SoCs have at least four 32-bit General Purpose Backup
-> > > Registers (GPBR) powered by backup-power (VDDBU). One such register is
-> > > currently used by rtc-at91sam9 driver to store the RTC time base.
-> > > 
-> > > Make sure the registers are mapped by arch setup code and add generic
-> > > accessors for in-kernel use.
-> > > 
-> > > This is a step in adding device-tree support to the rtc-at91sam9 driver.
-> > > 
-> > This is a regression
-> > 
-> > we loose the tracking of what request and use the GPBR
-> 
-> Implementing the GPBR accessors using a simple global resource was one
-> quick way forward to decouple and generalise the GPBR. Of course, this
-> could be turned into a more elaborate framework or driver where
-> registers are requested and released by other drivers and possibly also
-> by user-space.
-yes must as we used on SAMA5 to pass the boot source from the firstage of the boot
-loader to the other software
+Hi Mark,
+
+On Tue, Apr 02, 2013 at 10:38:48PM +0100, Mark Brown wrote:
+> Signed-off-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/arizona.txt |   62 ++++++++++++++++++++
+>  drivers/mfd/arizona-core.c                        |   64 +++++++++++++++++++++
+>  drivers/mfd/arizona-i2c.c                         |   10 +++-
+>  drivers/mfd/arizona-spi.c                         |   10 +++-
+>  drivers/mfd/arizona.h                             |   12 ++++
+>  5 files changed, 154 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/arizona.txt
+This is the one that caused the build failure around missing
+arizona_of_get_core_pdata() with !CONFIG_OF, so I'm leaving this one out for
+now.
+
+Cheers,
+Samuel.
+
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
