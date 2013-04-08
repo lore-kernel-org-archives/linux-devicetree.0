@@ -1,18 +1,18 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC 4/5] RTC: rtc-at91sam9: add device-tree support
-Date: Mon, 8 Apr 2013 12:03:01 +0200
-Message-ID: <20130408100301.GS20693@game.jcrosoft.org>
-References: <20130407150938.GA25605@localhost>
- <1365347572-14972-1-git-send-email-jhovold@gmail.com>
- <1365347572-14972-4-git-send-email-jhovold@gmail.com>
- <20130408073807.GQ20693@game.jcrosoft.org>
- <20130408090023.GC25605@localhost> <51629472.3070404@atmel.com>
+From: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC PATCH] CLK: Allow parent clock and rate to be configured
+ in DT.
+Date: Mon, 08 Apr 2013 11:35:29 +0200
+Message-ID: <51628F61.9000300@parkeon.com>
+References: <20130319170933.28337.50448.stgit@localhost>
+ <CAOMZO5ASkvquyzPCEGObvB5Xh9bDPTJ2zx26eOUJT_Vb36Bn3Q@mail.gmail.com>
+ <CAKGA1bkWLrOs15ni=8D__BvuG6kvqkeeLZGOLrVZY9g0q0z4Bg@mail.gmail.com>
+ <6581638.FPkNsv6peb@flatron> <20130407132623.GP1906@pengutronix.de>
+Reply-To: mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51629472.3070404-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20130407132623.GP1906-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,131 +23,42 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Nelson <Robert.Nelson-9gsZL1vm+hpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11:57 Mon 08 Apr     , Nicolas Ferre wrote:
-> On 04/08/2013 11:00 AM, Johan Hovold :
-> > On Mon, Apr 08, 2013 at 09:38:07AM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> >> On 17:12 Sun 07 Apr     , Johan Hovold wrote:
-> >>> Add device-tree support.
-> >>>
-> >>> The AT91 RTT can be used as an RTC if the atmel,at91-rtt-as-rtc-gpbr
-> >>> property is present and set to the general-purpose backup register to
-> >>> use to store the RTC time base.
-> >>>
-> >>> Signed-off-by: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>> ---
-> >>>  .../devicetree/bindings/rtc/rtc-at91sam9.txt       | 19 ++++++++++++
-> >>>  drivers/rtc/rtc-at91sam9.c                         | 36 +++++++++++++++++++++-
-> >>>  2 files changed, 54 insertions(+), 1 deletion(-)
-> >>>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt b/Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt
-> >>> new file mode 100644
-> >>> index 0000000..0f54988
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt
-> >>> @@ -0,0 +1,19 @@
-> >>> +Atmel AT91 RTT as RTC
-> >>> +=====================
-> >>> +
-> >>> +Required properties:
-> >>> +- compatible: Should be "atmel,at91sam9260-rtt"
-> >>> +- reg: Should contain register location and length
-> >>> +- interrupts: Should contain interrupt for the RTT which is the IRQ line
-> >>> +  shared across all System Controller members.
-> >>> +- atmel,rtt-as-rtc-gpbr: Should contain the backup-register to use to store
-> >>> +  the RTC time base
-> >>> +
-> >>> +Example:
-> >>> +
-> >>> +rtt@fffffd20 {
-> >>> +		compatible = "atmel,at91sam9g45-rtt", "atmel,at91sam9260-rtt";
-> 
-> No, there is no visible difference between the sam9g45 RTT and the
-> sam9260 one. So the most precise compatibility string is still sam9260.
-> If one day we feel the need for a advanced feature that exists on a more
-> recent SoC, we have the possibility to add it at that time...
-> 
-> >>> +		reg = <0xfffffd20 0x10>;
-> >>> +		interrupts = <1 4 7>;
-> >>> +		atmel,at91-rtt-as-rtc-gpbr = <0>;
-> >> no you miss the point of the DT
-> >>
-> >> you need to describe the hardware no a particular use of it
-> > 
-> > That was what I was trying to achieve by adding the two use-neutral
-> > rtt and gpbr-nodes. But then the question is how would you influence
-> > which out of two rtt-drivers to use?
-> > 
-> > Adding a property as above in the final board descriptions seemed
-> > preferable to adding rtt-as-rtc to the compatible string of the rtt as
-> > that would mean describing use rather than just hardware.
-> 
-> Well, re-reading the Device_Tree_Usage page, I found this sentence:
-> "
-> Understanding the compatible Property
-> 
-> Every node in the tree that represents a device is required to have the
-> compatible property. compatible is the key an operating system uses to
-> decide which device driver to bind to a device.
-> "
-> or ePARP:
-> 
-> "
-> The compatible property value consists of one or more strings that
-> define the specific programming model for the device.
-> "
-> 
-> We have the notion of link between hardware and software in this
-> *compatible* sting, even if the *node* itself is about hardware description.
-> 
-> >> the RTT is a general purpose timer backuped that we use in linux as a
-> >> RTC with a gpbr to store the time
-> >>
-> >> you need 2 binding on for the RTT one the RTT-rtc
-> > 
-> > As in adding some virtual hardware-node which uses the rtt and gpbr as
-> > resources?
-> 
-> So, why not simply having a compatibility string that collects the uses
-> of this RTT node:
-> 
-> compatible = "atmel,at91sam9260-rtt-as-rtc", "atmel,at91sam9260-rtt";
-> 
-> And then "decide which device driver to bind to [the RTT] device"...
-> If the rtt-as-rtc driver is not selected, the device can still be used
-> as a simple "rtt". The board .dts can overload a compatibility string
-> according to the use, etc.
-> 
-> Then the way do describe which GPBR to use has still to be discussed.
-> But for the RTT itself, I would keep it simple like that.
+On 07/04/13 15:26, Sascha Hauer wrote:
+>
+> Honestly I'm annoyed by this aswell. The devicetree contains a nice and
+> complete hardware description and it seems convenient to put hardware
+> related configuration data there aswell.
+Yes
+> The problem is that hardware description and configuration data are two
+> completely different sets of data. The hardware description is static
+> for a given board and should (ideally) never change. The configuration
+> data instead is often usecase specific and changes over the lifetime of
+> a board. The configuration data can only handle a single (or maybe a
+> table of) static setup(s). It's a good way to specify a sane default or
+> a very special setup, but doesn't handle the case when some OS (or
+> version thereof) wants to have a static setup and another wants to
+> figure out the same data dynamically.
+Agreed
+> For these reasons I am against throwing the two data sets into a single
+> pot. Still I also want to have the devicetree way to configure some
+> static setup items.
+Sure but why does using the DT for both mean "throwing them into a 
+single pot?"
 
-no as infact the rtc-at91sam9 should not even exist
-as this is much more generic
+I think we need to seperate the ideas of "DT as a container format" and 
+"semantics of DT nodes".
 
-we use a backped register and a timer to emulate a RTC this can be unsed by
-any one
+The format is the same everywhere but the semantics could change in 
+different parts of the tree.
 
-and I can use any backuped timer
+Since the DT is a tree structure surely all we need to do is agree on a 
+designated configuration root node
+"linux-config" for example under which we put all configuration related 
+stuff specific to linux whilst
+retaining the "hardware description only" rule for the rest of the DT.
 
-we need to have frameworks
-where the gpbr are tracked and the rtt
-
-	for you describe the resources
-
-	rtt0: rtt@fffffd20 {
-		compatible = "atmel,at91sam9260-rtt";
-		reg = <0xfffffd20 0x10>;
-		interrupts = <1 4 7>;
-	};
-
-	rtc-timer {
-		compatible = "linux,rtc-timer";
-		timer = <&rtt0>;
-		backuped-register = <&gpbr 0>;
-	};
-
-this need to SoC implemetation generic
+Martin
