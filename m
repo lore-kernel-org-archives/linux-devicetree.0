@@ -1,17 +1,17 @@
 From: Johan Hovold <jhovold@gmail.com>
-Subject: Re: [RFC 4/5] RTC: rtc-at91sam9: add device-tree support
-Date: Mon, 8 Apr 2013 11:00:23 +0200
-Message-ID: <20130408090023.GC25605@localhost>
+Subject: Re: [RFC 1/5] ARM: at91: add general purpose backup register (GPBR)
+ support
+Date: Mon, 8 Apr 2013 10:46:18 +0200
+Message-ID: <20130408084618.GB25605@localhost>
 References: <20130407150938.GA25605@localhost>
  <1365347572-14972-1-git-send-email-jhovold@gmail.com>
- <1365347572-14972-4-git-send-email-jhovold@gmail.com>
- <20130408073807.GQ20693@game.jcrosoft.org>
+ <20130408073329.GO20693@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20130408073807.GQ20693@game.jcrosoft.org>
+In-Reply-To: <20130408073329.GO20693@game.jcrosoft.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,64 +25,29 @@ To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 Cc: Johan Hovold <jhovold@gmail.com>, dgilbert@interlog.com, Nicolas Ferre <nicolas.ferre@atmel.com>, Robert Nelson <Robert.Nelson@digikey.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 08, 2013 at 09:38:07AM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
+On Mon, Apr 08, 2013 at 09:33:29AM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
 > On 17:12 Sun 07 Apr     , Johan Hovold wrote:
-> > Add device-tree support.
 > > 
-> > The AT91 RTT can be used as an RTC if the atmel,at91-rtt-as-rtc-gpbr
-> > property is present and set to the general-purpose backup register to
-> > use to store the RTC time base.
+> > Add General Purpose Backup Register (GPBR) support.
 > > 
-> > Signed-off-by: Johan Hovold <jhovold@gmail.com>
-> > ---
-> >  .../devicetree/bindings/rtc/rtc-at91sam9.txt       | 19 ++++++++++++
-> >  drivers/rtc/rtc-at91sam9.c                         | 36 +++++++++++++++++++++-
-> >  2 files changed, 54 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt
+> > Most at91 SoCs have at least four 32-bit General Purpose Backup
+> > Registers (GPBR) powered by backup-power (VDDBU). One such register is
+> > currently used by rtc-at91sam9 driver to store the RTC time base.
 > > 
-> > diff --git a/Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt b/Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt
-> > new file mode 100644
-> > index 0000000..0f54988
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt
-> > @@ -0,0 +1,19 @@
-> > +Atmel AT91 RTT as RTC
-> > +=====================
-> > +
-> > +Required properties:
-> > +- compatible: Should be "atmel,at91sam9260-rtt"
-> > +- reg: Should contain register location and length
-> > +- interrupts: Should contain interrupt for the RTT which is the IRQ line
-> > +  shared across all System Controller members.
-> > +- atmel,rtt-as-rtc-gpbr: Should contain the backup-register to use to store
-> > +  the RTC time base
-> > +
-> > +Example:
-> > +
-> > +rtt@fffffd20 {
-> > +		compatible = "atmel,at91sam9g45-rtt", "atmel,at91sam9260-rtt";
-> > +		reg = <0xfffffd20 0x10>;
-> > +		interrupts = <1 4 7>;
-> > +		atmel,at91-rtt-as-rtc-gpbr = <0>;
-> no you miss the point of the DT
+> > Make sure the registers are mapped by arch setup code and add generic
+> > accessors for in-kernel use.
+> > 
+> > This is a step in adding device-tree support to the rtc-at91sam9 driver.
+> > 
+> This is a regression
 > 
-> you need to describe the hardware no a particular use of it
+> we loose the tracking of what request and use the GPBR
 
-That was what I was trying to achieve by adding the two use-neutral
-rtt and gpbr-nodes. But then the question is how would you influence
-which out of two rtt-drivers to use?
-
-Adding a property as above in the final board descriptions seemed
-preferable to adding rtt-as-rtc to the compatible string of the rtt as
-that would mean describing use rather than just hardware.
-
-> the RTT is a general purpose timer backuped that we use in linux as a
-> RTC with a gpbr to store the time
-> 
-> you need 2 binding on for the RTT one the RTT-rtc
-
-As in adding some virtual hardware-node which uses the rtt and gpbr as
-resources?
+Implementing the GPBR accessors using a simple global resource was one
+quick way forward to decouple and generalise the GPBR. Of course, this
+could be turned into a more elaborate framework or driver where
+registers are requested and released by other drivers and possibly also
+by user-space.
 
 Thanks,
 Johan
