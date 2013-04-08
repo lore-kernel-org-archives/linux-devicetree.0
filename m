@@ -1,11 +1,13 @@
 From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 0/8] usage()/--help clean up & unification
-Date: Mon,  8 Apr 2013 03:06:44 -0400
-Message-ID: <1365404812-15153-1-git-send-email-vapier@gentoo.org>
+Subject: [PATCH 2/8] utilfdt_read: pass back up the length of data read
+Date: Mon,  8 Apr 2013 03:06:46 -0400
+Message-ID: <1365404812-15153-3-git-send-email-vapier@gentoo.org>
+References: <1365404812-15153-1-git-send-email-vapier@gentoo.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1365404812-15153-1-git-send-email-vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,39 +21,102 @@ Sender: "devicetree-discuss"
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Each utility currently open codes how they process options and
-implement usage().  This leads to inconsistent behavior and output
-which sucks.  A bunch also get common things wrong (like sending
---help to stderr).
+For a follow up commit, we want to be able to scan the buffer that was
+returned to us.  In order to do that safely, we need to know how big
+the buffer actually is, so pass that back if requested.
 
-Rather than go through them one by one and fix their bugs, start
-a new mini framework in the util.[ch] code base.  This allows the
-utils to be much more data driven in their approach to options --
-they declare certain structures with the right format, and then
-call usage() as needed.  The new util code takes care of the rest.
+Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+---
+ fdtget.c | 2 +-
+ fdtput.c | 2 +-
+ util.c   | 8 +++++---
+ util.h   | 6 ++++--
+ 4 files changed, 11 insertions(+), 7 deletions(-)
 
-I also snuck in a few minor fixes in this patch series that I
-noticed as I was hacking on things.  Really I just wanted a --scan
-option in the fdtdump tool :).
-
-Mike Frysinger (8):
-  utilfdt_read_err: use xmalloc funcs
-  utilfdt_read: pass back up the length of data read
-  die: constify format string arg
-  util_version: new helper for displaying version info
-  fdtdump: make usage a bit more friendly
-  fdtdump: add a --scan option
-  dtc/fdt{get,put}/convert-dtsv0-lexer: convert to new usage helpers
-  util: drop "long" from usage helpers
-
- convert-dtsv0-lexer.l |  22 +++++++---
- dtc.c                 | 116 +++++++++++++++++++++++++-------------------------
- fdtdump.c             |  72 +++++++++++++++++++++++++++----
- fdtget.c              |  62 ++++++++++++---------------
- fdtput.c              |  65 +++++++++++++---------------
- util.c                |  72 ++++++++++++++++++++++++++++---
- util.h                |  76 +++++++++++++++++++++++++++++++--
- 7 files changed, 336 insertions(+), 149 deletions(-)
-
+diff --git a/fdtget.c b/fdtget.c
+index c2fbab2..374bee2 100644
+--- a/fdtget.c
++++ b/fdtget.c
+@@ -254,7 +254,7 @@ static int do_fdtget(struct display_info *disp, const char *filename,
+ 	const char *prop;
+ 	int i, node;
+ 
+-	blob = utilfdt_read(filename);
++	blob = utilfdt_read(filename, NULL);
+ 	if (!blob)
+ 		return -1;
+ 
+diff --git a/fdtput.c b/fdtput.c
+index f2197f5..572d6da 100644
+--- a/fdtput.c
++++ b/fdtput.c
+@@ -239,7 +239,7 @@ static int do_fdtput(struct display_info *disp, const char *filename,
+ 	char *blob;
+ 	int len, ret = 0;
+ 
+-	blob = utilfdt_read(filename);
++	blob = utilfdt_read(filename, NULL);
+ 	if (!blob)
+ 		return -1;
+ 
+diff --git a/util.c b/util.c
+index 12f0614..c689ea7 100644
+--- a/util.c
++++ b/util.c
+@@ -197,7 +197,7 @@ char get_escape_char(const char *s, int *i)
+ 	return val;
+ }
+ 
+-int utilfdt_read_err(const char *filename, char **buffp)
++int utilfdt_read_err(const char *filename, char **buffp, off_t *len)
+ {
+ 	int fd = 0;	/* assume stdin */
+ 	char *buf = NULL;
+@@ -238,13 +238,15 @@ int utilfdt_read_err(const char *filename, char **buffp)
+ 		free(buf);
+ 	else
+ 		*buffp = buf;
++	if (len)
++		*len = bufsize;
+ 	return ret;
+ }
+ 
+-char *utilfdt_read(const char *filename)
++char *utilfdt_read(const char *filename, off_t *len)
+ {
+ 	char *buff;
+-	int ret = utilfdt_read_err(filename, &buff);
++	int ret = utilfdt_read_err(filename, &buff, len);
+ 
+ 	if (ret) {
+ 		fprintf(stderr, "Couldn't open blob from '%s': %s\n", filename,
+diff --git a/util.h b/util.h
+index 543a173..3c20b15 100644
+--- a/util.h
++++ b/util.h
+@@ -80,9 +80,10 @@ char get_escape_char(const char *s, int *i);
+  * stderr.
+  *
+  * @param filename	The filename to read, or - for stdin
++ * @param len		If non-NULL, the amount of data we managed to read
+  * @return Pointer to allocated buffer containing fdt, or NULL on error
+  */
+-char *utilfdt_read(const char *filename);
++char *utilfdt_read(const char *filename, off_t *len);
+ 
+ /**
+  * Read a device tree file into a buffer. Does not report errors, but only
+@@ -91,9 +92,10 @@ char *utilfdt_read(const char *filename);
+  *
+  * @param filename	The filename to read, or - for stdin
+  * @param buffp		Returns pointer to buffer containing fdt
++ * @param len		If non-NULL, the amount of data we managed to read
+  * @return 0 if ok, else an errno value representing the error
+  */
+-int utilfdt_read_err(const char *filename, char **buffp);
++int utilfdt_read_err(const char *filename, char **buffp, off_t *len);
+ 
+ 
+ /**
 -- 
 1.8.1.2
