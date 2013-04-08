@@ -1,20 +1,16 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC 4/5] RTC: rtc-at91sam9: add device-tree support
-Date: Mon, 8 Apr 2013 13:08:55 +0200
-Message-ID: <20130408110855.GW20693@game.jcrosoft.org>
-References: <20130407150938.GA25605@localhost>
- <1365347572-14972-1-git-send-email-jhovold@gmail.com>
- <1365347572-14972-4-git-send-email-jhovold@gmail.com>
- <20130408073807.GQ20693@game.jcrosoft.org>
- <20130408090023.GC25605@localhost> <51629472.3070404@atmel.com>
- <20130408100301.GS20693@game.jcrosoft.org>
- <20130408104823.GF25605@localhost>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v10 02/12] mfd: palmas: is_palmas_charger needed by
+ multiple drivers
+Date: Mon, 8 Apr 2013 17:51:37 +0200
+Message-ID: <20130408155137.GY24058@zurbaran>
+References: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
+ <1363964122-19201-3-git-send-email-ian@slimlogic.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130408104823.GF25605@localhost>
+In-Reply-To: <1363964122-19201-3-git-send-email-ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -25,90 +21,27 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Robert Nelson <Robert.Nelson-9gsZL1vm+hpBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org
+To: Ian Lartey <ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12:48 Mon 08 Apr     , Johan Hovold wrote:
-> On Mon, Apr 08, 2013 at 12:03:01PM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > On 11:57 Mon 08 Apr     , Nicolas Ferre wrote:
-> > > On 04/08/2013 11:00 AM, Johan Hovold :
-> > > > On Mon, Apr 08, 2013 at 09:38:07AM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > > >> On 17:12 Sun 07 Apr     , Johan Hovold wrote:
+Hi Ian,
+
+On Fri, Mar 22, 2013 at 02:55:12PM +0000, Ian Lartey wrote:
+> is_palmas_charger checks for the presence of charging
+> functionality in the device
 > 
-> [...]
-> 
-> > > >> the RTT is a general purpose timer backuped that we use in linux as a
-> > > >> RTC with a gpbr to store the time
-> > > >>
-> > > >> you need 2 binding on for the RTT one the RTT-rtc
-> > > > 
-> > > > As in adding some virtual hardware-node which uses the rtt and gpbr as
-> > > > resources?
-> > > 
-> > > So, why not simply having a compatibility string that collects the uses
-> > > of this RTT node:
-> > > 
-> > > compatible = "atmel,at91sam9260-rtt-as-rtc", "atmel,at91sam9260-rtt";
-> > > 
-> > > And then "decide which device driver to bind to [the RTT] device"...
-> > > If the rtt-as-rtc driver is not selected, the device can still be used
-> > > as a simple "rtt". The board .dts can overload a compatibility string
-> > > according to the use, etc.
-> > > 
-> > > Then the way do describe which GPBR to use has still to be discussed.
-> > > But for the RTT itself, I would keep it simple like that.
-> > 
-> > no as infact the rtc-at91sam9 should not even exist
-> > as this is much more generic
-> > 
-> > we use a backped register and a timer to emulate a RTC this can be unsed by
-> > any one
-> > 
-> > and I can use any backuped timer
-> > 
-> > we need to have frameworks
-> > where the gpbr are tracked and the rtt
-> > 
-> > 	for you describe the resources
-> > 
-> > 	rtt0: rtt@fffffd20 {
-> > 		compatible = "atmel,at91sam9260-rtt";
-> > 		reg = <0xfffffd20 0x10>;
-> > 		interrupts = <1 4 7>;
-> > 	};
-> > 
-> > 	rtc-timer {
-> > 		compatible = "linux,rtc-timer";
-> > 		timer = <&rtt0>;
-> > 		backuped-register = <&gpbr 0>;
-> > 	};
-> > 
-> > this need to SoC implemetation generic
-> 
-> This would indeed be a neat solution, albeit one that requires a lot
-> work to be realised as both a backup-register and backed-up-timer
-> framework would need to be implemented.
+> Signed-off-by: Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
+> Signed-off-by: Ian Lartey <ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
+> Acked-by: Laxman Dewangani <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+>  include/linux/mfd/palmas.h |   12 +++++++++++-
+>  1 files changed, 11 insertions(+), 1 deletions(-)
+I applied this one now, thanks.
 
-not that much
+Cheers,
+Samuel.
 
-for backuped register or rtt a simple list with spinlock will be enougth
-and after just handle the phandle
-
-it's not that complex but if we want to describe the hardware correctly this
-is needed
-
-And this will not be AT91 specific but SoC generic
-
-Ensure the GPBR are requested once is mandatory for any bug detection
-a global ioremap is really dirty and need to be used when only NO other choice
-
-Best Regards,
-J.
-> 
-> Bye,
-> -- 
-> Nicolas Ferre
-> 
-> Thanks,
-> Johan
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
