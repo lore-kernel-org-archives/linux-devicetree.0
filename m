@@ -1,16 +1,18 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] documentation: iommu: add description of ARM System MMU
- binding
-Date: Mon, 8 Apr 2013 10:25:35 +0100
-Message-ID: <20130408092535.GA17476@mudshark.cambridge.arm.com>
-References: <1365094259-24847-1-git-send-email-will.deacon@arm.com>
- <515F37C1.4000109@codeaurora.org>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC 1/5] ARM: at91: add general purpose backup register
+ (GPBR) support
+Date: Mon, 8 Apr 2013 12:04:17 +0200
+Message-ID: <20130408100417.GT20693@game.jcrosoft.org>
+References: <20130407150938.GA25605@localhost>
+ <1365347572-14972-1-git-send-email-jhovold@gmail.com>
+ <20130408073329.GO20693@game.jcrosoft.org>
+ <20130408084618.GB25605@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <515F37C1.4000109-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <20130408084618.GB25605@localhost>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,172 +23,33 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "tzeng-sgV2jX0FEOLY0TyS/+Ba5Q@public.gmane.org" <tzeng-sgV2jX0FEOLY0TyS/+Ba5Q@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Robert Nelson <Robert.Nelson-9gsZL1vm+hpBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Olav,
-
-On Fri, Apr 05, 2013 at 09:44:49PM +0100, Olav Haugan wrote:
-> On 4/4/2013 9:50 AM, Will Deacon wrote:
-> > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> > new file mode 100644
-> > index 0000000..938325f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> > @@ -0,0 +1,61 @@
-> > +* ARM System MMU Architecture Implementation
-> > +
-> > +ARM SoCs may contain an implementation of the ARM System Memory
-> > +Management Unit Architecture, which can be used to provide 1 or 2 stages
-> > +of address translation to bus masters external to the CPU.
-> > +
-> > +The SMMU may also raise interrupts in response to various fault
-> > +conditions.
-> > +
-> > +** System MMU required properties:
-> > +
-> > +- compatible    : Should be one of "arm,smmu-v1" or "arm,smmu-v2"
-> > +                  depending on the version of the architecture
-> > +                  implemented.
-> > +
-> > +- reg           : Base address and size of the SMMU.
-> > +
-> > +- #global-interrupts : The number of global interrupts exposed by the
-> > +                       device.
-> > +
-> > +- interrupts    : Interrupt list, with the first #global-irqs entries
-> > +                  corresponding to the global interrupts and any
-> > +                  following entries corresponding to context interrupts,
-> > +                  specified in order of their indexing by the SMMU.
-> > +
-> > +- mmu-masters   : A list of phandles to device nodes representing bus
-> > +                  masters for which the SMMU can provide a translation.
+On 10:46 Mon 08 Apr     , Johan Hovold wrote:
+> On Mon, Apr 08, 2013 at 09:33:29AM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > On 17:12 Sun 07 Apr     , Johan Hovold wrote:
+> > > 
+> > > Add General Purpose Backup Register (GPBR) support.
+> > > 
+> > > Most at91 SoCs have at least four 32-bit General Purpose Backup
+> > > Registers (GPBR) powered by backup-power (VDDBU). One such register is
+> > > currently used by rtc-at91sam9 driver to store the RTC time base.
+> > > 
+> > > Make sure the registers are mapped by arch setup code and add generic
+> > > accessors for in-kernel use.
+> > > 
+> > > This is a step in adding device-tree support to the rtc-at91sam9 driver.
+> > > 
+> > This is a regression
+> > 
+> > we loose the tracking of what request and use the GPBR
 > 
-> I am not sure I understand the use of mmu-masters. I would imagine that
-> the bus masters themselves would have phandles to their respective SMMUs
-> that provides the translation.
-
-The problem with that is when you have chained SMMUs. E.g., a separate SMMU
-for stage 1 and stage 2, where the StreamIDs are not the same going into the
-second SMMU on the chain. The set of masters and StreamIDs coming into a
-system MMU is really a property of that system MMU, and is determined at
-integration time.
-
-> > +
-> > +- stream-ids    : A list of 16-bit values corresponding to the StreamIDs
-> > +                  for the devices listed in the mmu-masters property.
-> > +                  This list must be same length as mmu-masters, so
-> > +                  masters with multiple stream-ids will have multiple
-> > +                  entries in mmu-masters.
-> > +
-> 
-> Why are the stream IDs (SIDs) coupled with the bus masters in this way?
-> You are probably following a different pattern than we do. Our SMMU
-> driver programs the SMMU SIDs and does not really know or care which
-> mmu-master it belongs to.
-
-Generally, the StreamIDs are fixed in hardware (as a function of various AXI
-bits -- see the SMMU integration guide) and cannot be set by software.
-Furthermore, when the StreamIDs have an implicit effect on IOMMU domain
-configuration, since stream-matching may not be always be able to identify a
-master uniquely.
-
-> Please see my comments above. I would like to work with you on defining
-> the bindings for System MMU. We have had System MMU DT bindings for some
-> time and I'd like to share what we are doing in hope that we can merge
-> something that works for all of us.
-> 
-> We use some of the same properties but we have a lot more. We also model
-> the context banks as children of each SMMU in an object-oriented way.
-
-Hmm, what you have looks really... complicated. Why do you need so much stuff?
-
-> Here is our current binding for SMMUv1:
-> 
-> * Qualcomm MSM IOMMU v1
-> 
-> Required properties:
-> - compatible : one of:
-> 	- "qcom,msm-smmu-v1"
-> - reg : offset and length of the register set for the device. Optional
-> 	offset and length for clock register for additional clock that
-> 	needs to be turned on for access to this IOMMU.
-> - reg-names: "iommu_base", "clk_base" (optional)
-
-Since I'm just working on a software model, I've not gone near clocks.
-However, clocks are fairly well understood so we could easily add those
-later if they're needed.
-
-> - label: name of this IOMMU instance.
-
-What?
-
-> Optional properties:
-> - qcom,iommu-secure-id : Secure identifier for the IOMMU block
-> - vdd-supply : vdd-supply: phandle to GDSC regulator controlling this IOMMU.
-> - qcom,alt-vdd-supply : Alternative regulator needed to access IOMMU
->   configuration registers.
-> - interrupts : should contain the performance monitor overflow interrupt
-> number.
-> - qcom,iommu-enable-halt : Enable halt of the IOMMU before programming
-> certain	registers
-> - qcom,iommu-pmu-ngroups: Number of Performance Monitor Unit (PMU) groups.
-> - qcom,iommu-pmu-ncounters: Number of PMU counters per group.
-> - qcom,iommu-pmu-event-classes: List of event classes supported.
-> - qcom,needs-alt-core-clk : boolean to enable the secondary core clock
-> for access to the IOMMU configuration registers
-> - qcom,iommu-bfb-regs : An array of unsigned 32-bit integers
-> corresponding to BFB register addresses that need to be configured for
-> performance tuning purposes. If this property is present, the
-> qcom,iommu-bfb-data must also be present. Register addresses are
-> specified as an offset from the base of the IOMMU hardware block. This
-> property may be omitted if no BFB register configuration needs to be
-> done for a particular IOMMU hardware instance. The registers specified
-> by this property shall fall within the IOMMU implementation-defined
-> register region.
-> - qcom,iommu-bfb-data : An array of unsigned 32-bit integers
-> representing the values to be programmed into the corresponding
-> registers given by the qcom,iommu-bfb-regs property. If this property is
-> present, the qcom,iommu-bfb-regs property shall also be present, and the
-> lengths of both properties shall be the same.
-
-This really looks specific to your implementation/integration and I can't
-see that we'd want this in the binding to be honest. It would be good to
-have PMU support in the future, but I've not thought about that part yet.
-
-> - List of sub nodes, one for each of the translation context banks
-> supported.
->   Each sub node has the following required properties:
-> 
->   - reg : offset and length of the register set for the context bank.
-
-Why do you need this? The structure of the context banks is well defined by
-the SMMU architecture.
-
->   - interrupts : should contain the context bank interrupt.
->   - qcom,iommu-ctx-sids : List of stream identifiers associated with
-> this translation context.
-
-StreamIDs aren't statically associated with a translation context. Why do
-you put them here? Also, how do this interact with stream matching?
-
->   - label : Name of the context bank
-
-Again: what?
-
-> Optional sub-node properties:
->    - qcom,secure-context : boolean indicating that a context is secure
->  and programmed by the secure environment.
-
-Why does Linux care about this?
-
-> Please let me know your thoughts on this.
-
-I'd really rather start off small, and describe precisely what we need to
-get architecturally-compliant SMMUs off the ground. Then, as the code grows
-to use more features (PM, PMU, ...) then we can extend the binding.
-Otherwise, we paint ourselves into a corner with the binding before we've
-developed any driver code.
-
-Will
+> Implementing the GPBR accessors using a simple global resource was one
+> quick way forward to decouple and generalise the GPBR. Of course, this
+> could be turned into a more elaborate framework or driver where
+> registers are requested and released by other drivers and possibly also
+> by user-space.
+yes must as we used on SAMA5 to pass the boot source from the firstage of the boot
+loader to the other software
