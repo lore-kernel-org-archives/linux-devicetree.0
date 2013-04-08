@@ -1,43 +1,169 @@
-From: Graeme Gregory <gg@slimlogic.co.uk>
-Subject: Re: [PATCH v10 0/12] Palmas updates
-Date: Mon, 08 Apr 2013 16:55:58 +0100
-Message-ID: <5162E88E.9010204@slimlogic.co.uk>
-References: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk> <20130405163056.GN17363@zurbaran>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC 4/5] RTC: rtc-at91sam9: add device-tree support
+Date: Mon, 8 Apr 2013 12:42:06 +0200
+Message-ID: <51629EFE.9000508@atmel.com>
+References: <20130407150938.GA25605@localhost>
+ <1365347572-14972-1-git-send-email-jhovold@gmail.com>
+ <1365347572-14972-4-git-send-email-jhovold@gmail.com>
+ <20130408073807.GQ20693@game.jcrosoft.org> <20130408090023.GC25605@localhost>
+ <51629472.3070404@atmel.com> <20130408100301.GS20693@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130405163056.GN17363@zurbaran>
-Sender: linux-doc-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>
-Cc: Ian Lartey <ian@slimlogic.co.uk>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, rob@landley.net, mturquette@linaro.org, linus.walleij@linaro.org, cooloney@gmail.com, sfr@canb.auug.org.au, rpurdie@rpsys.net, akpm@linux-foundation.org, wim@iguana.be, lgirdwood@gmail.com, j-keerthy@ti.com, ldewangan@nvidia.com, t-kristo@ti.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130408100301.GS20693-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Nelson <Robert.Nelson-9gsZL1vm+hpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/04/13 17:30, Samuel Ortiz wrote:
-> Hi Ian,
->
-> On Fri, Mar 22, 2013 at 02:55:10PM +0000, Ian Lartey wrote:
->> This patchset adds to the support for the Palmas series of PMIC chips.
+On 04/08/2013 12:03 PM, Jean-Christophe PLAGNIOL-VILLARD :
+> On 11:57 Mon 08 Apr     , Nicolas Ferre wrote:
+>> On 04/08/2013 11:00 AM, Johan Hovold :
+>>> On Mon, Apr 08, 2013 at 09:38:07AM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>>>> On 17:12 Sun 07 Apr     , Johan Hovold wrote:
+>>>>> Add device-tree support.
+>>>>>
+>>>>> The AT91 RTT can be used as an RTC if the atmel,at91-rtt-as-rtc-gpbr
+>>>>> property is present and set to the general-purpose backup register to
+>>>>> use to store the RTC time base.
+>>>>>
+>>>>> Signed-off-by: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>> ---
+>>>>>  .../devicetree/bindings/rtc/rtc-at91sam9.txt       | 19 ++++++++++++
+>>>>>  drivers/rtc/rtc-at91sam9.c                         | 36 +++++++++++++++++++++-
+>>>>>  2 files changed, 54 insertions(+), 1 deletion(-)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt b/Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..0f54988
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt
+>>>>> @@ -0,0 +1,19 @@
+>>>>> +Atmel AT91 RTT as RTC
+>>>>> +=====================
+>>>>> +
+>>>>> +Required properties:
+>>>>> +- compatible: Should be "atmel,at91sam9260-rtt"
+>>>>> +- reg: Should contain register location and length
+>>>>> +- interrupts: Should contain interrupt for the RTT which is the IRQ line
+>>>>> +  shared across all System Controller members.
+>>>>> +- atmel,rtt-as-rtc-gpbr: Should contain the backup-register to use to store
+>>>>> +  the RTC time base
+>>>>> +
+>>>>> +Example:
+>>>>> +
+>>>>> +rtt@fffffd20 {
+>>>>> +		compatible = "atmel,at91sam9g45-rtt", "atmel,at91sam9260-rtt";
 >>
->> Some of the patches have previously been submitted individually.
->> The DT bindings doc has been added first due to comments that it was missing.
+>> No, there is no visible difference between the sam9g45 RTT and the
+>> sam9260 one. So the most precise compatibility string is still sam9260.
+>> If one day we feel the need for a advanced feature that exists on a more
+>> recent SoC, we have the possibility to add it at that time...
 >>
->> Patches based on linux-next-20130319
-> Are you expecting all those patches to go through the MFD tree ?
-> Also, you stil have a few comments from Milo and Stephen to adress. Are you
-> planning to send a v11 ?
->
->
-Hi Samuel,
+>>>>> +		reg = <0xfffffd20 0x10>;
+>>>>> +		interrupts = <1 4 7>;
+>>>>> +		atmel,at91-rtt-as-rtc-gpbr = <0>;
+>>>> no you miss the point of the DT
+>>>>
+>>>> you need to describe the hardware no a particular use of it
+>>>
+>>> That was what I was trying to achieve by adding the two use-neutral
+>>> rtt and gpbr-nodes. But then the question is how would you influence
+>>> which out of two rtt-drivers to use?
+>>>
+>>> Adding a property as above in the final board descriptions seemed
+>>> preferable to adding rtt-as-rtc to the compatible string of the rtt as
+>>> that would mean describing use rather than just hardware.
+>>
+>> Well, re-reading the Device_Tree_Usage page, I found this sentence:
+>> "
+>> Understanding the compatible Property
+>>
+>> Every node in the tree that represents a device is required to have the
+>> compatible property. compatible is the key an operating system uses to
+>> decide which device driver to bind to a device.
+>> "
+>> or ePARP:
+>>
+>> "
+>> The compatible property value consists of one or more strings that
+>> define the specific programming model for the device.
+>> "
+>>
+>> We have the notion of link between hardware and software in this
+>> *compatible* sting, even if the *node* itself is about hardware description.
+>>
+>>>> the RTT is a general purpose timer backuped that we use in linux as a
+>>>> RTC with a gpbr to store the time
+>>>>
+>>>> you need 2 binding on for the RTT one the RTT-rtc
+>>>
+>>> As in adding some virtual hardware-node which uses the rtt and gpbr as
+>>> resources?
+>>
+>> So, why not simply having a compatibility string that collects the uses
+>> of this RTT node:
+>>
+>> compatible = "atmel,at91sam9260-rtt-as-rtc", "atmel,at91sam9260-rtt";
+>>
+>> And then "decide which device driver to bind to [the RTT] device"...
+>> If the rtt-as-rtc driver is not selected, the device can still be used
+>> as a simple "rtt". The board .dts can overload a compatibility string
+>> according to the use, etc.
+>>
+>> Then the way do describe which GPBR to use has still to be discussed.
+>> But for the RTT itself, I would keep it simple like that.
+> 
+> no as infact the rtc-at91sam9 should not even exist
+> as this is much more generic
+> 
+> we use a backped register and a timer to emulate a RTC this can be unsed by
+> any one
+> 
+> and I can use any backuped timer
+> 
+> we need to have frameworks
 
-The device is an MFD so I suspect the best path is through MFD tree
-although I notice you have applied the patch that was required by all
-other patches so maybe this is not so much the case now!
+Is it possible to focus on the current problem instead of calling for
+the creation for Yet Another Framework?
 
-Real life has got in the way of the next updated series of patches but
-they will be issued just as soon as we can.
+> where the gpbr are tracked and the rtt
+> 
+> 	for you describe the resources
+> 
+> 	rtt0: rtt@fffffd20 {
+> 		compatible = "atmel,at91sam9260-rtt";
+> 		reg = <0xfffffd20 0x10>;
+> 		interrupts = <1 4 7>;
+> 	};
+> 
+> 	rtc-timer {
+> 		compatible = "linux,rtc-timer";
+> 		timer = <&rtt0>;
+> 		backuped-register = <&gpbr 0>;
+> 	};
+> 
+> this need to SoC implemetation generic
 
-Thanks
+OMG, so well, we will have to re-write the whole rtc-at91sam9 now??!! Oh
+yes, I see, we do not have more urgent things to do...
 
-Graeme
+Please stop trying re-inventing things that will do everything but
+solving the real issues: why not agree on a sort term solution about
+this rtt/rtc thing: I have *never* heard complains about this precise
+driver. And we must concentrate now on problem solving.
 
+Bye,
+-- 
+Nicolas Ferre
