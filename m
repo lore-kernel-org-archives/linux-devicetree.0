@@ -1,180 +1,239 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC 4/5] RTC: rtc-at91sam9: add device-tree support
-Date: Mon, 8 Apr 2013 13:02:51 +0200
-Message-ID: <20130408110251.GV20693@game.jcrosoft.org>
-References: <20130407150938.GA25605@localhost>
- <1365347572-14972-1-git-send-email-jhovold@gmail.com>
- <1365347572-14972-4-git-send-email-jhovold@gmail.com>
- <20130408073807.GQ20693@game.jcrosoft.org>
- <20130408090023.GC25605@localhost> <51629472.3070404@atmel.com>
- <20130408100301.GS20693@game.jcrosoft.org>
- <51629EFE.9000508@atmel.com>
+From: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] documentation: iommu: add description of ARM System MMU
+	binding
+Date: Mon, 08 Apr 2013 10:03:54 -0700
+Message-ID: <5162F87A.7070409@codeaurora.org>
+References: <1365094259-24847-1-git-send-email-will.deacon@arm.com>
+	<515F37C1.4000109@codeaurora.org>
+	<20130408092535.GA17476@mudshark.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51629EFE.9000508-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Nelson <Robert.Nelson-9gsZL1vm+hpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20130408092535.GA17476-MRww78TxoiP5vMa5CHWGZ34zcgK1vI+I0E9HWUfgJXw@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12:42 Mon 08 Apr     , Nicolas Ferre wrote:
-> On 04/08/2013 12:03 PM, Jean-Christophe PLAGNIOL-VILLARD :
-> > On 11:57 Mon 08 Apr     , Nicolas Ferre wrote:
-> >> On 04/08/2013 11:00 AM, Johan Hovold :
-> >>> On Mon, Apr 08, 2013 at 09:38:07AM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> >>>> On 17:12 Sun 07 Apr     , Johan Hovold wrote:
-> >>>>> Add device-tree support.
-> >>>>>
-> >>>>> The AT91 RTT can be used as an RTC if the atmel,at91-rtt-as-rtc-gpbr
-> >>>>> property is present and set to the general-purpose backup register to
-> >>>>> use to store the RTC time base.
-> >>>>>
-> >>>>> Signed-off-by: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>>>> ---
-> >>>>>  .../devicetree/bindings/rtc/rtc-at91sam9.txt       | 19 ++++++++++++
-> >>>>>  drivers/rtc/rtc-at91sam9.c                         | 36 +++++++++++++++++++++-
-> >>>>>  2 files changed, 54 insertions(+), 1 deletion(-)
-> >>>>>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt
-> >>>>>
-> >>>>> diff --git a/Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt b/Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt
-> >>>>> new file mode 100644
-> >>>>> index 0000000..0f54988
-> >>>>> --- /dev/null
-> >>>>> +++ b/Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt
-> >>>>> @@ -0,0 +1,19 @@
-> >>>>> +Atmel AT91 RTT as RTC
-> >>>>> +=====================
-> >>>>> +
-> >>>>> +Required properties:
-> >>>>> +- compatible: Should be "atmel,at91sam9260-rtt"
-> >>>>> +- reg: Should contain register location and length
-> >>>>> +- interrupts: Should contain interrupt for the RTT which is the IRQ line
-> >>>>> +  shared across all System Controller members.
-> >>>>> +- atmel,rtt-as-rtc-gpbr: Should contain the backup-register to use to store
-> >>>>> +  the RTC time base
-> >>>>> +
-> >>>>> +Example:
-> >>>>> +
-> >>>>> +rtt@fffffd20 {
-> >>>>> +		compatible = "atmel,at91sam9g45-rtt", "atmel,at91sam9260-rtt";
-> >>
-> >> No, there is no visible difference between the sam9g45 RTT and the
-> >> sam9260 one. So the most precise compatibility string is still sam9260.
-> >> If one day we feel the need for a advanced feature that exists on a more
-> >> recent SoC, we have the possibility to add it at that time...
-> >>
-> >>>>> +		reg = <0xfffffd20 0x10>;
-> >>>>> +		interrupts = <1 4 7>;
-> >>>>> +		atmel,at91-rtt-as-rtc-gpbr = <0>;
-> >>>> no you miss the point of the DT
-> >>>>
-> >>>> you need to describe the hardware no a particular use of it
-> >>>
-> >>> That was what I was trying to achieve by adding the two use-neutral
-> >>> rtt and gpbr-nodes. But then the question is how would you influence
-> >>> which out of two rtt-drivers to use?
-> >>>
-> >>> Adding a property as above in the final board descriptions seemed
-> >>> preferable to adding rtt-as-rtc to the compatible string of the rtt as
-> >>> that would mean describing use rather than just hardware.
-> >>
-> >> Well, re-reading the Device_Tree_Usage page, I found this sentence:
-> >> "
-> >> Understanding the compatible Property
-> >>
-> >> Every node in the tree that represents a device is required to have the
-> >> compatible property. compatible is the key an operating system uses to
-> >> decide which device driver to bind to a device.
-> >> "
-> >> or ePARP:
-> >>
-> >> "
-> >> The compatible property value consists of one or more strings that
-> >> define the specific programming model for the device.
-> >> "
-> >>
-> >> We have the notion of link between hardware and software in this
-> >> *compatible* sting, even if the *node* itself is about hardware description.
-> >>
-> >>>> the RTT is a general purpose timer backuped that we use in linux as a
-> >>>> RTC with a gpbr to store the time
-> >>>>
-> >>>> you need 2 binding on for the RTT one the RTT-rtc
-> >>>
-> >>> As in adding some virtual hardware-node which uses the rtt and gpbr as
-> >>> resources?
-> >>
-> >> So, why not simply having a compatibility string that collects the uses
-> >> of this RTT node:
-> >>
-> >> compatible = "atmel,at91sam9260-rtt-as-rtc", "atmel,at91sam9260-rtt";
-> >>
-> >> And then "decide which device driver to bind to [the RTT] device"...
-> >> If the rtt-as-rtc driver is not selected, the device can still be used
-> >> as a simple "rtt". The board .dts can overload a compatibility string
-> >> according to the use, etc.
-> >>
-> >> Then the way do describe which GPBR to use has still to be discussed.
-> >> But for the RTT itself, I would keep it simple like that.
-> > 
-> > no as infact the rtc-at91sam9 should not even exist
-> > as this is much more generic
-> > 
-> > we use a backped register and a timer to emulate a RTC this can be unsed by
-> > any one
-> > 
-> > and I can use any backuped timer
-> > 
-> > we need to have frameworks
+Hi Will,
+
+On 4/8/2013 2:25 AM, Will Deacon wrote:
+> Hi Olav,
 > 
-> Is it possible to focus on the current problem instead of calling for
-> the creation for Yet Another Framework?
+> On Fri, Apr 05, 2013 at 09:44:49PM +0100, Olav Haugan wrote:
+>> On 4/4/2013 9:50 AM, Will Deacon wrote:
+>>> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+>>> new file mode 100644
+>>> index 0000000..938325f
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+>>> @@ -0,0 +1,61 @@
+>>> +* ARM System MMU Architecture Implementation
+>>> +
+>>> +ARM SoCs may contain an implementation of the ARM System Memory
+>>> +Management Unit Architecture, which can be used to provide 1 or 2 stages
+>>> +of address translation to bus masters external to the CPU.
+>>> +
+>>> +The SMMU may also raise interrupts in response to various fault
+>>> +conditions.
+>>> +
+>>> +** System MMU required properties:
+>>> +
+>>> +- compatible    : Should be one of "arm,smmu-v1" or "arm,smmu-v2"
+>>> +                  depending on the version of the architecture
+>>> +                  implemented.
+>>> +
+>>> +- reg           : Base address and size of the SMMU.
+>>> +
+>>> +- #global-interrupts : The number of global interrupts exposed by the
+>>> +                       device.
+>>> +
+>>> +- interrupts    : Interrupt list, with the first #global-irqs entries
+>>> +                  corresponding to the global interrupts and any
+>>> +                  following entries corresponding to context interrupts,
+>>> +                  specified in order of their indexing by the SMMU.
+>>> +
+>>> +- mmu-masters   : A list of phandles to device nodes representing bus
+>>> +                  masters for which the SMMU can provide a translation.
+>>
+>> I am not sure I understand the use of mmu-masters. I would imagine that
+>> the bus masters themselves would have phandles to their respective SMMUs
+>> that provides the translation.
 > 
-> > where the gpbr are tracked and the rtt
-> > 
-> > 	for you describe the resources
-> > 
-> > 	rtt0: rtt@fffffd20 {
-> > 		compatible = "atmel,at91sam9260-rtt";
-> > 		reg = <0xfffffd20 0x10>;
-> > 		interrupts = <1 4 7>;
-> > 	};
-> > 
-> > 	rtc-timer {
-> > 		compatible = "linux,rtc-timer";
-> > 		timer = <&rtt0>;
-> > 		backuped-register = <&gpbr 0>;
-> > 	};
-> > 
-> > this need to SoC implemetation generic
+> The problem with that is when you have chained SMMUs. E.g., a separate SMMU
+> for stage 1 and stage 2, where the StreamIDs are not the same going into the
+> second SMMU on the chain. The set of masters and StreamIDs coming into a
+> system MMU is really a property of that system MMU, and is determined at
+> integration time.
 > 
-> OMG, so well, we will have to re-write the whole rtc-at91sam9 now??!! Oh
-> yes, I see, we do not have more urgent things to do...
+>>> +
+>>> +- stream-ids    : A list of 16-bit values corresponding to the StreamIDs
+>>> +                  for the devices listed in the mmu-masters property.
+>>> +                  This list must be same length as mmu-masters, so
+>>> +                  masters with multiple stream-ids will have multiple
+>>> +                  entries in mmu-masters.
+>>> +
+>>
+>> Why are the stream IDs (SIDs) coupled with the bus masters in this way?
+>> You are probably following a different pattern than we do. Our SMMU
+>> driver programs the SMMU SIDs and does not really know or care which
+>> mmu-master it belongs to.
 > 
-> Please stop trying re-inventing things that will do everything but
-> solving the real issues: why not agree on a sort term solution about
-> this rtt/rtc thing: I have *never* heard complains about this precise
-> driver. And we must concentrate now on problem solving.
+> Generally, the StreamIDs are fixed in hardware (as a function of various AXI
+> bits -- see the SMMU integration guide) and cannot be set by software.
+> Furthermore, when the StreamIDs have an implicit effect on IOMMU domain
+> configuration, since stream-matching may not be always be able to identify a
+> master uniquely.
 
-no the current driver is badly design this need to be cleanup
+Let me clarify what I mean by "our SMMU driver programs the SMMU SIDs".
+What I meant to say is that our SMMU driver programs the SID into the
+Stream Match Register (SMR) to route the transactions to the correct
+context bank based on the SID.
 
-switch to DT does mean do the stuff CLEAN no quirk hack
+>> Please see my comments above. I would like to work with you on defining
+>> the bindings for System MMU. We have had System MMU DT bindings for some
+>> time and I'd like to share what we are doing in hope that we can merge
+>> something that works for all of us.
+>>
+>> We use some of the same properties but we have a lot more. We also model
+>> the context banks as children of each SMMU in an object-oriented way.
+> 
+> Hmm, what you have looks really... complicated. Why do you need so much stuff?
 
-we did the same for pinctrl/dma/fb. This need to be done correctly
+Yes, some of the stuff is implementation specific.
 
-DT is to describe hardware not software implentation
+>> Here is our current binding for SMMUv1:
+>>
+>> * Qualcomm MSM IOMMU v1
+>>
+>> Required properties:
+>> - compatible : one of:
+>> 	- "qcom,msm-smmu-v1"
+>> - reg : offset and length of the register set for the device. Optional
+>> 	offset and length for clock register for additional clock that
+>> 	needs to be turned on for access to this IOMMU.
+>> - reg-names: "iommu_base", "clk_base" (optional)
+> 
+> Since I'm just working on a software model, I've not gone near clocks.
+> However, clocks are fairly well understood so we could easily add those
+> later if they're needed.
+> 
+>> - label: name of this IOMMU instance.
+> 
+> What?
 
-Best Regards,
-J.
+This is mostly used for debugging allowing us to log a name that is more
+user friendly instead of something like "fda64000.qcom,iommu" as the
+device name. We also use this to create debugfs directory with a user
+friendly name.
+
+> 
+>> Optional properties:
+>> - qcom,iommu-secure-id : Secure identifier for the IOMMU block
+>> - vdd-supply : vdd-supply: phandle to GDSC regulator controlling this IOMMU.
+>> - qcom,alt-vdd-supply : Alternative regulator needed to access IOMMU
+>>   configuration registers.
+>> - interrupts : should contain the performance monitor overflow interrupt
+>> number.
+>> - qcom,iommu-enable-halt : Enable halt of the IOMMU before programming
+>> certain	registers
+>> - qcom,iommu-pmu-ngroups: Number of Performance Monitor Unit (PMU) groups.
+>> - qcom,iommu-pmu-ncounters: Number of PMU counters per group.
+>> - qcom,iommu-pmu-event-classes: List of event classes supported.
+>> - qcom,needs-alt-core-clk : boolean to enable the secondary core clock
+>> for access to the IOMMU configuration registers
+>> - qcom,iommu-bfb-regs : An array of unsigned 32-bit integers
+>> corresponding to BFB register addresses that need to be configured for
+>> performance tuning purposes. If this property is present, the
+>> qcom,iommu-bfb-data must also be present. Register addresses are
+>> specified as an offset from the base of the IOMMU hardware block. This
+>> property may be omitted if no BFB register configuration needs to be
+>> done for a particular IOMMU hardware instance. The registers specified
+>> by this property shall fall within the IOMMU implementation-defined
+>> register region.
+>> - qcom,iommu-bfb-data : An array of unsigned 32-bit integers
+>> representing the values to be programmed into the corresponding
+>> registers given by the qcom,iommu-bfb-regs property. If this property is
+>> present, the qcom,iommu-bfb-regs property shall also be present, and the
+>> lengths of both properties shall be the same.
+> 
+> This really looks specific to your implementation/integration and I can't
+> see that we'd want this in the binding to be honest. It would be good to
+> have PMU support in the future, but I've not thought about that part yet.
+
+Yes, some of this is specific to our implementation. However, the
+properties related to regulators and PMU are not specific I believe. How
+do you do handle regulators?
+
+>> - List of sub nodes, one for each of the translation context banks
+>> supported.
+>>   Each sub node has the following required properties:
+>>
+>>   - reg : offset and length of the register set for the context bank.
+> 
+> Why do you need this? The structure of the context banks is well defined by
+> the SMMU architecture.
+
+Since we specify the context banks as children of the IOMMU we specify
+the address of each node. I believe you should be specifying the "reg"
+property for the nodes when you do this.
+
+>>   - interrupts : should contain the context bank interrupt.
+>>   - qcom,iommu-ctx-sids : List of stream identifiers associated with
+>> this translation context.
+> 
+> StreamIDs aren't statically associated with a translation context. Why do
+> you put them here? Also, how do this interact with stream matching?
+
+We put the StreamIDs in the context bank to tell our driver that these
+StreamIDs should be programmed into the Stream Match Register (SMR) to
+route the transactions bearing these StreamIDs to this context bank. We
+don't really change the SID2CB mapping during run-time. It is set during
+compile time.
+
+>>   - label : Name of the context bank
+> 
+> Again: what?
+
+Same idea as the label in the IOMMU parent node. We also use this to
+allow clients to find context bank devices to attach to based on the name.
+
+>> Optional sub-node properties:
+>>    - qcom,secure-context : boolean indicating that a context is secure
+>>  and programmed by the secure environment.
+> 
+> Why does Linux care about this?
+
+Linux cares about this because if we are doing content protection using
+one of the context banks then the context bank is programmed by the
+secure environment and not accessible/programmable by the HLOS.
+
+> 
+>> Please let me know your thoughts on this.
+> 
+> I'd really rather start off small, and describe precisely what we need to
+> get architecturally-compliant SMMUs off the ground. Then, as the code grows
+> to use more features (PM, PMU, ...) then we can extend the binding.
+> Otherwise, we paint ourselves into a corner with the binding before we've
+> developed any driver code.
+
+Sure, I did not mean to add implementation specific stuff to upstream
+bindings. Does it makes sense to you thought the way we modeled context
+banks as child nodes?
+
+Thanks,
+
+Olav Haugan
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
