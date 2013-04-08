@@ -1,139 +1,55 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [v5] clk: add si5351 i2c common clock driver
-Date: Mon, 08 Apr 2013 10:36:28 -0700
-Message-ID: <20130408173628.14359.70620@quantum>
-References: <1365139415-17815-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <20130407225046.GA16326@roeck-us.net> <51620604.4070204@gmail.com>
- <20130408001725.GA16648@roeck-us.net> <51625F9A.1050308@gmail.com>
- <20130408145407.GA12243@roeck-us.net>
- <CABJ1b_T30trVjXps-rSbYTNo1DcPeT8WsZ+M18B9wTJPBnL-gA@mail.gmail.com>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 0/7] i.MX53 IPU + TVE patches
+Date: Mon, 8 Apr 2013 10:40:16 -0700
+Message-ID: <20130408174016.GB30036@kroah.com>
+References: <1365437078-22579-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CABJ1b_T30trVjXps-rSbYTNo1DcPeT8WsZ+M18B9wTJPBnL-gA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, Daniel Mack <zonque@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1365437078-22579-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sebastian Hesselbarth (2013-04-08 08:38:44)
-> On Mon, Apr 8, 2013 at 4:54 PM, Guenter Roeck <linux@roeck-us.net> wrote:
-> > On Mon, Apr 08, 2013 at 08:11:38AM +0200, Sebastian Hesselbarth wrote:
-> >> On 04/08/2013 02:17 AM, Guenter Roeck wrote:
-> >> >On Mon, Apr 08, 2013 at 01:49:24AM +0200, Sebastian Hesselbarth wrote:
-> >> >>On 04/08/2013 12:50 AM, Guenter Roeck wrote:
-> >> >>>On Fri, Apr 05, 2013 at 05:23:35AM -0000, Sebastian Hesselbarth wrote:
-> >> >>>>This patch adds a common clock driver for Silicon Labs Si5351a/b/c
-> >> >>>>i2c programmable clock generators. Currently, the driver supports
-> >> >>>>DT kernels only and VXCO feature of si5351b is not implemented. DT
-> >> >>>>bindings selectively allow to overwrite stored Si5351 configuration
-> >> >>>>which is very helpful for clock generators with empty eeprom
-> >> >>>>configuration. Corresponding device tree binding documentation is
-> >> >>>>also added.
-> >> >>>>
-> >> >>>>Signed-off-by: Sebastian Hesselbarth<sebastian.hesselbarth@gmail.com>
-> >> >>>>Tested-by: Daniel Mack<zonque@gmail.com>
-> >> >>>>
-> >> >>>[ ... ]
-> >> >>>
-> >> >>>>+static inline void _si5351_msynth_set_pll_master(
-> >> >>>>+ struct si5351_driver_data *drvdata, unsigned char num, int is_master)
-> >> >>>>+{
-> >> >>>>+ unsigned long flags;
-> >> >>>>+
-> >> >>>>+ if (num>   8 ||
-> >> >>>>+     (drvdata->variant == SI5351_VARIANT_A3&&   num>   3))
-> >> >>>>+         return;
-> >> >>>>+
-> >> >>>>+ flags = __clk_get_flags(drvdata->msynth[num].hw.clk);
-> >> >>>>+ if (is_master)
-> >> >>>>+         flags |= CLK_SET_RATE_PARENT;
-> >> >>>>+ else
-> >> >>>>+         flags&= ~CLK_SET_RATE_PARENT;
-> >> >>>>+ __clk_set_flags(drvdata->msynth[num].hw.clk, flags);
-> >> >>>>+}
-> >> >>>>+
-> >> >>>Unless I am missing something, neither __clk_get_flags() nor the new
-> >> >>>__clk_set_flags is exported.
-> >> >>>
-> >> >>>Did you try to build and load the driver as module ?
-> >> >>
-> >> >>Well, good catch. I didn't try to build v5 as a module, but I guess it
-> >> >>will fail. But I consider this as something that has to be addressed in
-> >> >>clk framework itself, not in this patch. There will be other
-> >> >>clk-providers built as module in the future for sure.
-> >> >>
-> >> >Sure, but you provided the patch to make __clk_set_flags global. To avoid
-> >> >build failures, I would suggest to either submit a patch to export the
-> >> >missing functions, or to remove the ability to build the driver as module.
-> >>
-> >> Actually, I knew that __clk_set_flags patch will not be accepted
-> >> before posting it ;)
-> >>
-> > Ah, but part of that is to get you to think about it again, and to defend it if
-> > it is really needed. After all, "it can be abused" applies to pretty much every
-> > API.
+On Mon, Apr 08, 2013 at 06:04:31PM +0200, Philipp Zabel wrote:
+> Hi,
 > 
-> Guenter,
+> the following patches allow to use the integrated Television Encoder
+> (TVEv2) on the i.MX53 SoC as VGA output encoder for the IPU. This is
+> useful for the Freescale i.MX53-QSB and TQ MBa53 boards, which have
+> VGA and DVI-I connectors, respectively.
 > 
-> I already thought about it a lot and I consider clk api broken in a way here.
+> regards
+> Philipp
 > 
-> > Key question is if you _really_ need run-time flag modifications, or if you can
-> > live with initialization-time settings. If you really need it, you'll have to
-> > explain the reasons.
-> 
-> The question is not if _I_ really need run-time flags but why the api allows to
-> perform run-time modifications of the clock hierarchy without allowing different
-> flags? There is clk_set_parent() so I guess clk api knows about run-time changes
-> already, but you cannot have different flags per parent. And with
-> __clk_set_flags()
-> rejected, you are not allowed to change the flags.
-> 
-> I understand that some flags are permanent and required at registration, but
-> CLK_SET_PARENT_RATE is not. It is not limited by hardware but limited by api.
-> One way would be a more generic clk-mux with per parent flags, but for
-> the current
-> implementation, I cannot see how clk-mux can be exploited here.
-> 
+> ---
+>  drivers/staging/imx-drm/Kconfig             |   7 +
+>  drivers/staging/imx-drm/Makefile            |   1 +
+>  drivers/staging/imx-drm/imx-drm-core.c      |  15 +-
+>  drivers/staging/imx-drm/imx-drm.h           |  14 +-
+>  drivers/staging/imx-drm/imx-tve.c           | 755 ++++++++++++++++++++++++++++
+>  drivers/staging/imx-drm/ipu-v3/imx-ipu-v3.h |   3 +
+>  drivers/staging/imx-drm/ipu-v3/ipu-dc.c     |  55 +-
+>  drivers/staging/imx-drm/ipu-v3/ipu-di.c     | 100 +++-
+>  drivers/staging/imx-drm/ipuv3-crtc.c        |  11 +-
+>  9 files changed, 932 insertions(+), 29 deletions(-)
 
-There are a couple of ways to get past this issue.  One is removal of
-some of the flags.  I have never liked CLK_SET_RATE_PARENT, since I
-think the ability to propagate a rate-change request up to the parent
-should be enabled for all clocks.  This is in the interest of the driver
-author who does not care to know intimate details of the clock
-hierarchy.
+That's a lot of new features being added here, yet no work seems to be
+happening to move this out of the staging tree.  What is left to do
+here, and why isn't that being worked on first, before stuff like this?
 
-When I developed the rate-change propagation code I was likely too hasty
-in defining a per-clock flag for that behavior.  It might have been
-enough to simply compare the &best_parent_rate value from .round_rate
-and compare it against clk->parent->rate.  This means that no flag is
-necessary.
+thanks,
 
-This assumes that the .round_rate implementation has enough knowledge to
-know whether or not to propagate the rate-change request up to the
-parent.  This may not not true for the common divider type.
-
-I'll make some tests on removing this flag (and potentially other flags)
-to see how painful it is.
-
-Regards,
-Mike
-
-> I can live with it, because then dynamic muxing of clock hierarchy
-> within clk-si5351
-> is just not supported or will break function. Currently, there is no
-> support for dynamic
-> muxing, so everything is fine.
-> 
-> >> >On a side note, do you happen to know anyone working on drivers for Si5319 or
-> >> >Si5368 ?
-> >>
-> >> No.
-> >
-> > Too bad ... I may have to write that code myself then.
-> 
-> Well, if clk-si5351 will ever get in mainline kernel, feel free to use
-> it as a template ;)
-> 
-> Sebastian
+greg k-h
