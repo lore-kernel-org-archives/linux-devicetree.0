@@ -1,168 +1,61 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] i2c: mux: Add i2c-arbitrator-cros-ec 'mux' driver
-Date: Mon, 8 Apr 2013 12:26:17 +0200
-Message-ID: <20130408102617.GC3496@the-dreams.de>
-References: <1360957573-864-1-git-send-email-dianders@chromium.org>
- <1363192583-26363-1-git-send-email-dianders@chromium.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 0/3] clk: Exynos: Register audio subsytem clocks using
+ common clk framework
+Date: Mon, 08 Apr 2013 12:48:41 +0200
+Message-ID: <5162A089.4030405@samsung.com>
+References: <1365144043-17101-1-git-send-email-padma.v@samsung.com>
+ <515EC996.8030904@samsung.com>
+ <CAAgF-Be1Hvkt=BDK913KTu66M4izxbuOuORQ8hyT-GZR1+ABnQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1363192583-26363-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Yuvaraj Kumar <yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Girish Shivananjappa <girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Prashanth G <prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAAgF-Be1Hvkt=BDK913KTu66M4izxbuOuORQ8hyT-GZR1+ABnQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padma Venkat <padma.kvr@gmail.com>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Padmavathi Venna <padma.v@samsung.com>, Sangbeom Kim <sbkim73@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, SangSu Park <sangsu4u.park@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 13, 2013 at 09:36:21AM -0700, Doug Anderson wrote:
-> The i2c-arbitrator-cros-ec driver implements the arbitration scheme
-> that the Embedded Controller (EC) on the ARM Chromebook expects to use
-> for bus multimastering.  This i2c-arbitrator-cros-ec driver could also
-> be used in other places where standard I2C bus arbitration can't be
-> used and two extra GPIOs are available for arbitration.
+Hi,
+
+On 04/06/2013 12:16 PM, Padma Venkat wrote:
+> On Fri, Apr 5, 2013 at 6:24 PM, Sylwester Nawrocki
+> <s.nawrocki@samsung.com> wrote:
+>>
+>> From a brief look Exynos4 and Exynos5 Audio Subsystem CLKCON very similar.
+>> I've just found bit 2 of 0x0381_0008 register is not used on Exynos5250.
 > 
-> This driver is based on code that Simon Glass added to the i2c-s3c2410
-> driver in the Chrome OS kernel 3.4 tree.  The current incarnation as a
-> mux driver is as suggested by Grant Likely.  See
-> <https://patchwork.kernel.org/patch/1877311/> for some history.
+> I added bit 2 as i2s_bus gate clock or you are pointing to something else?
+
+Sorry, I should have written "bit 1".
+
+>> Additionally the Audio Subsystem Clock controller is present on S5PV210
+>> SoCs and IMO compatible property you used is too generic. I would propose
+>> to use at least:
+>>
+>> "samsung,s5pv210-audss-clock"    - for S5PV210
+>> "samsung,exynos4210-audss-clock" - for Exynos4
+>> "samsung,exynos5250-audss-clock" - for Exynos5
 > 
-> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Tested-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Different compatible names means different driver files for exynos4 and 5??
 
-I'd like to have the bindings more generic. They should allow for n
-possible masters IMO. It doesn't need to be implemented right now, but
-it should be possible to add that later.
+No, it would be same driver but with multiple entries in the of_match_table.
 
-> ---
-> Changes in v4: None
-> Changes in v3:
-> - Handle of_find_i2c_adapter_by_node() failure more properly by
->   changing init order.
-> - Don't warn on -EPROBE_DEFER from calls that could return it.
-> - Move to module_platform_driver().  As we pull in parts of the system
->   that rely on devices under this i2c bus we'll need to make sure they
->   can handle the fact that they'll be initted later now.
-> 
-> Changes in v2:
-> - Renamed to i2c-arbitrator-cros-ec.
-> - Documented "microsecond" properties as optional; removed
->   "bus-arbitration" prefix since it was just extra wordy.
-> - Split GPIOs into two properties to make it cleaner.
-> - Capitalized I2C in freeform text.
-> - Get 'active low' from device tree.
-> 
->  .../bindings/i2c/i2c-arbitrator-cros-ec.txt        |  76 +++++++
+> I haven't seen any difference between Exynos4 and Exynos5 audio subsystem.
+> Can't we maintain one for both? If any extra clock instance is added
+> on newer SoCs
+> anyway it gets added at the end of the list of clocks. Please correct
+> me if I am wrong.
 
-I wonder about a more generic name. i2c-arb-gpio-challenge.* maybe?
+Sure, the differences between Exynos4 and Exynos5 audio subsystem are very
+minor ones. So we could easily use one clock driver for those. Probably same
+driver can be used for S5PV210, an any differences could be handled in the
+driver based on the compatible property.
 
->  drivers/i2c/muxes/Kconfig                          |  11 +
->  drivers/i2c/muxes/Makefile                         |   2 +
->  drivers/i2c/muxes/i2c-arbitrator-cros-ec.c         | 222 +++++++++++++++++++++
->  4 files changed, 311 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-arbitrator-cros-ec.txt
->  create mode 100644 drivers/i2c/muxes/i2c-arbitrator-cros-ec.c
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-arbitrator-cros-ec.txt b/Documentation/devicetree/bindings/i2c/i2c-arbitrator-cros-ec.txt
-> new file mode 100644
-> index 0000000..1f893e7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-arbitrator-cros-ec.txt
-> @@ -0,0 +1,76 @@
-> +GPIO-based Arbitration used by the ARM Chromebook (exynos5250-snow)
-> +===================================================================
-> +This uses GPIO lines between the AP (Application Processor) and an attached
-> +EC (Embedded Controller) which both want to talk on the same I2C bus as master.
-> +
-> +The AP and EC each have a 'bus claim' line, which is an output that the
-> +other can see. These are both active low, with pull-ups enabled.
-> +
-> +- AP_CLAIM: output from AP, signalling to the EC that the AP wants the bus
-> +- EC_CLAIM: output from EC, signalling to the AP that the EC wants the bus
-
-I'd like to drop the specific terms of AP and EC and just talk about
-multiple masters.
-
-> +This mechanism is used instead of standard I2C multimaster to avoid some of the
-> +subtle driver and silicon bugs that are often present with I2C multimaster.
-> +
-> +
-> +Algorithm:
-> +
-> +The basic algorithm is to assert your line when you want the bus, then make
-> +sure that the other side doesn't want it also. A detailed explanation is best
-> +done with an example.
-> +
-> +Let's say the AP wants to claim the bus. It:
-> +1. Asserts AP_CLAIM.
-> +2. Waits a little bit for the other side to notice (slew time, say 10
-> +   microseconds).
-> +3. Checks EC_CLAIM. If this is not asserted then the AP has the bus and we are
-> +   done.
-> +4. Otherwise, wait for a few milliseconds and see if EC_CLAIM is released.
-> +5. If not, back off, release the claim and wait for a few more milliseconds.
-> +6. Go back to 1 (until retry time has expired).
-> +
-> +
-> +Required properties:
-> +- compatible: i2c-arbitrator-cros-ec
-> +- ap-claim-gpio: The GPIO that we (the AP) use to claim the bus.
-> +- ec-claim-gpio: The GPIO that the other side (the EC) uses the claim the bus.
-
-An array based approach like in the i2c-mux-gpio driver would be more
-generic. Just mention that the driver only supports 2 entries at the
-moment.
-
-> +- Standard I2C mux properties. See mux.txt in this directory.
-> +- Single I2C child bus node at reg 0. See mux.txt in this directory.
-> +
-> +Optional properties:
-> +- slew-delay-us: microseconds to wait for a GPIO to go high. Default is 10 us.
-> +- wait-retry-us: we'll attempt another claim after this many microseconds.
-> +    Default is 3000 us.
-> +- wait-free-us: we'll give up after this many microseconds. Default is 50000 us.
-
-Grant, I assume it is okay to introduce these generic bindings?
-
-> diff --git a/drivers/i2c/muxes/Kconfig b/drivers/i2c/muxes/Kconfig
-> index 0be5b83..ca19378 100644
-> --- a/drivers/i2c/muxes/Kconfig
-> +++ b/drivers/i2c/muxes/Kconfig
-> @@ -5,6 +5,17 @@
->  menu "Multiplexer I2C Chip support"
->  	depends on I2C_MUX
->  
-> +config I2C_ARBITRATOR_CROS_EC
-> +	tristate "GPIO-based I2C arbitrator used on exynos5250-snow"
-> +	depends on GENERIC_GPIO && OF
-> +	help
-> +	  If you say yes to this option, support will be included for an
-> +	  I2C multimaster arbitration scheme using GPIOs that is used in
-> +	  the Samsung ARM Chromebook (exynos5250-snow).
-> +
-> +	  This driver can also be built as a module.  If so, the module
-> +	  will be called i2c-arbitrator-cros-ec.
-> +
-
-This text could be more generic then, too.
-
-> +static int i2c_arbitrator_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct device_node *parent_np;
-> +	struct i2c_arbitrator_data *arb;
-> +	enum of_gpio_flags gpio_flags;
-> +	unsigned long out_init;
-> +	int ret;
-> +
-> +	/* We only support probing from device tree; no platform_data */
-> +	if (WARN_ON(!np))
-> +		return -ENODEV;
-
-Too much WARN_ON for my taste.
 
 Thanks,
+Sylwester
 
-   Wolfram
+-- 
+Sylwester Nawrocki
+Samsung Poland R&D Center
