@@ -1,98 +1,139 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: Query on pinctrl usage for DT nodes
-Date: Mon, 08 Apr 2013 11:24:26 -0600
-Message-ID: <5162FD4A.1030909@wwwdotorg.org>
-References: <CA+V-a8uiPwsAD--OHFAE=i2ed+-wbXm4p2deZXr92+Zv6GDS1w@mail.gmail.com>
- <515C5C76.3080009@wwwdotorg.org>
- <CA+V-a8t3wtP77DdeUoQHKMjAuWmV+ude+1J3UjJmMTqobgStjA@mail.gmail.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [v5] clk: add si5351 i2c common clock driver
+Date: Mon, 08 Apr 2013 10:36:28 -0700
+Message-ID: <20130408173628.14359.70620@quantum>
+References: <1365139415-17815-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <20130407225046.GA16326@roeck-us.net> <51620604.4070204@gmail.com>
+ <20130408001725.GA16648@roeck-us.net> <51625F9A.1050308@gmail.com>
+ <20130408145407.GA12243@roeck-us.net>
+ <CABJ1b_T30trVjXps-rSbYTNo1DcPeT8WsZ+M18B9wTJPBnL-gA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CA+V-a8t3wtP77DdeUoQHKMjAuWmV+ude+1J3UjJmMTqobgStjA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CABJ1b_T30trVjXps-rSbYTNo1DcPeT8WsZ+M18B9wTJPBnL-gA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, Daniel Mack <zonque@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/08/2013 07:12 AM, Prabhakar Lad wrote:
-> On Wed, Apr 3, 2013 at 10:14 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 04/03/2013 03:16 AM, Prabhakar Lad wrote:
->>> Hi Linus/Stephen,
->>>
->>> I am working adding  DT nodes for DA850.
-...
->>> But while booting I see the following boot log:-
->>> ...
->>> cpuidle: using governor menu
->>> TCP: cubic registered
->>> NET: Registered protocol family 17
->>> pinctrl-single 1c14120.pinmux: pin 1c14130 already requested by
->>> davinci_mdio.0; cannot claim for i2c_davinci.1
->>> pinctrl-single 1c14120.pinmux: pin-4 (i2c_davinci.1) status -22
->>> pinctrl-single 1c14120.pinmux: could not request pin 4 on device pinctrl-single
->>> console [netcon0] enabled
->>> ....
->>>
->>> This is because the mdio and i2c are using same pin 0x10,
->>
->> How can two devices use the same pin? I mean physically, in hardware?
->>
->> Is this because pinctrl-single uses the register address as the pin
->> number, whereas you have registers which configure multiple pins at
+Quoting Sebastian Hesselbarth (2013-04-08 08:38:44)
+> On Mon, Apr 8, 2013 at 4:54 PM, Guenter Roeck <linux@roeck-us.net> wrote:
+> > On Mon, Apr 08, 2013 at 08:11:38AM +0200, Sebastian Hesselbarth wrote:
+> >> On 04/08/2013 02:17 AM, Guenter Roeck wrote:
+> >> >On Mon, Apr 08, 2013 at 01:49:24AM +0200, Sebastian Hesselbarth wrote:
+> >> >>On 04/08/2013 12:50 AM, Guenter Roeck wrote:
+> >> >>>On Fri, Apr 05, 2013 at 05:23:35AM -0000, Sebastian Hesselbarth wrote:
+> >> >>>>This patch adds a common clock driver for Silicon Labs Si5351a/b/c
+> >> >>>>i2c programmable clock generators. Currently, the driver supports
+> >> >>>>DT kernels only and VXCO feature of si5351b is not implemented. DT
+> >> >>>>bindings selectively allow to overwrite stored Si5351 configuration
+> >> >>>>which is very helpful for clock generators with empty eeprom
+> >> >>>>configuration. Corresponding device tree binding documentation is
+> >> >>>>also added.
+> >> >>>>
+> >> >>>>Signed-off-by: Sebastian Hesselbarth<sebastian.hesselbarth@gmail.com>
+> >> >>>>Tested-by: Daniel Mack<zonque@gmail.com>
+> >> >>>>
+> >> >>>[ ... ]
+> >> >>>
+> >> >>>>+static inline void _si5351_msynth_set_pll_master(
+> >> >>>>+ struct si5351_driver_data *drvdata, unsigned char num, int is_master)
+> >> >>>>+{
+> >> >>>>+ unsigned long flags;
+> >> >>>>+
+> >> >>>>+ if (num>   8 ||
+> >> >>>>+     (drvdata->variant == SI5351_VARIANT_A3&&   num>   3))
+> >> >>>>+         return;
+> >> >>>>+
+> >> >>>>+ flags = __clk_get_flags(drvdata->msynth[num].hw.clk);
+> >> >>>>+ if (is_master)
+> >> >>>>+         flags |= CLK_SET_RATE_PARENT;
+> >> >>>>+ else
+> >> >>>>+         flags&= ~CLK_SET_RATE_PARENT;
+> >> >>>>+ __clk_set_flags(drvdata->msynth[num].hw.clk, flags);
+> >> >>>>+}
+> >> >>>>+
+> >> >>>Unless I am missing something, neither __clk_get_flags() nor the new
+> >> >>>__clk_set_flags is exported.
+> >> >>>
+> >> >>>Did you try to build and load the driver as module ?
+> >> >>
+> >> >>Well, good catch. I didn't try to build v5 as a module, but I guess it
+> >> >>will fail. But I consider this as something that has to be addressed in
+> >> >>clk framework itself, not in this patch. There will be other
+> >> >>clk-providers built as module in the future for sure.
+> >> >>
+> >> >Sure, but you provided the patch to make __clk_set_flags global. To avoid
+> >> >build failures, I would suggest to either submit a patch to export the
+> >> >missing functions, or to remove the ability to build the driver as module.
+> >>
+> >> Actually, I knew that __clk_set_flags patch will not be accepted
+> >> before posting it ;)
+> >>
+> > Ah, but part of that is to get you to think about it again, and to defend it if
+> > it is really needed. After all, "it can be abused" applies to pretty much every
+> > API.
 > 
-> Yes you are correct, we have registers  which configure multiple pins at once.
-> For example for above Pin Multiplexing Control 4 Register (Pinmux4)
-> [1] page(250) : -
+> Guenter,
 > 
-> PINMUX4_31_28 --> SP1_SCS[2]/UART1_TXD/SATA_CP_POD/GP1[0] Control
-> PINMUX4_27_24 --> SPI1_SCS[3]/UART1_RXD/SATA_LED/GP1[1] Control
-> PINMUX4_23_20 --> SPI1_SCS[4]/UART2_TXD/I2C1_SDA/GP1[2] Control
-> PINMUX4_19_16 --> SPI1_SCS[5]/UART2_RXD/I2C1_SCL/GP1[3] Control
-> PINMUX4_15_12 --> SPI1_SCS[6]/I2C0_SDA/TM64P3_OUT12/GP1[4] Control
-> PINMUX4_11_8 --> SPI1_SCS[7]/I2C0_SCL/TM64P2_OUT12/GP1[5] Control
-> PINMUX4_7_4 --> SPI0_SCS[0]/TM64P1_OUT12/GP1[6]/MDIO_D/TM64P1_IN12 Control
-> PINMUX4_3_0 --> SPI0_SCS[1]/TM64P0_OUT12/GP1[7]/MDIO_CLK/TM64P0_IN12 Control
+> I already thought about it a lot and I consider clk api broken in a way here.
 > 
->> once? If so, your hardware isn't something that can be represented by
->> pinctrl-single.
->
-> What is the alternative for such case ? any pointer would be helpful.
+> > Key question is if you _really_ need run-time flag modifications, or if you can
+> > live with initialization-time settings. If you really need it, you'll have to
+> > explain the reasons.
 > 
-> [1] http://www.ti.com/general/docs/lit/getliterature.tsp?literatureNumber=spruh77a&fileType=pdf
+> The question is not if _I_ really need run-time flags but why the api allows to
+> perform run-time modifications of the clock hierarchy without allowing different
+> flags? There is clk_set_parent() so I guess clk api knows about run-time changes
+> already, but you cannot have different flags per parent. And with
+> __clk_set_flags()
+> rejected, you are not allowed to change the flags.
+> 
+> I understand that some flags are permanent and required at registration, but
+> CLK_SET_PARENT_RATE is not. It is not limited by hardware but limited by api.
+> One way would be a more generic clk-mux with per parent flags, but for
+> the current
+> implementation, I cannot see how clk-mux can be exploited here.
+> 
 
-Tony previously replied:
+There are a couple of ways to get past this issue.  One is removal of
+some of the flags.  I have never liked CLK_SET_RATE_PARENT, since I
+think the ability to propagate a rate-change request up to the parent
+should be enabled for all clocks.  This is in the interest of the driver
+author who does not care to know intimate details of the clock
+hierarchy.
 
-Tony wrote:
-> Tony wrote:
->> ??? wrote:
->>> Prabhakar wrote:
->>>> Is there any
->>>> alternative way to handle if the two node's are using same pins any
->>>> pointers could be very much helpful ?
->>
->> It could also that the mux register(s) follow the one-mux-per-bit
->> mapping.
->>
->> In that case pinctrl-single,bits option as documented in the
->> Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt.
+When I developed the rate-change propagation code I was likely too hasty
+in defining a per-clock flag for that behavior.  It might have been
+enough to simply compare the &best_parent_rate value from .round_rate
+and compare it against clk->parent->rate.  This means that no flag is
+necessary.
+
+This assumes that the .round_rate implementation has enough knowledge to
+know whether or not to propagate the rate-change request up to the
+parent.  This may not not true for the common divider type.
+
+I'll make some tests on removing this flag (and potentially other flags)
+to see how painful it is.
+
+Regards,
+Mike
+
+> I can live with it, because then dynamic muxing of clock hierarchy
+> within clk-si5351
+> is just not supported or will break function. Currently, there is no
+> support for dynamic
+> muxing, so everything is fine.
 > 
-> Oh it's already using pinctrl-single,bits option. Maybe there's a
-> bug, adding Peter to cc.
-
-So I guess you need to debug the code to see why that option isn't
-working for you.
-
-Going back to your original question above though, if the pinctrl-single
-driver doesn't work out for you, then you'd need to create a custom
-pinctrl driver for your chip, just like the many examples already in
-drivers/pinctrl.
+> >> >On a side note, do you happen to know anyone working on drivers for Si5319 or
+> >> >Si5368 ?
+> >>
+> >> No.
+> >
+> > Too bad ... I may have to write that code myself then.
+> 
+> Well, if clk-si5351 will ever get in mainline kernel, feel free to use
+> it as a template ;)
+> 
+> Sebastian
