@@ -1,14 +1,16 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 0/5] i.MX53 TVE clock patches
-Date: Mon, 08 Apr 2013 18:17:18 +0200
-Message-ID: <1365437838.6626.7.camel@pizza.hi.pengutronix.de>
-References: <1365432383-7787-1-git-send-email-p.zabel@pengutronix.de>
- <CAOMZO5CjC4HEvZo7rqdN1inAz_=xif=5aANLPhB9oF_mygJeGg@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v3] irqchip: renesas-intc-irqpin: DT binding for sense
+ bitfield width
+Date: Mon, 08 Apr 2013 13:37:30 +0200
+Message-ID: <15518520.KQOfZxAAdo@avalon>
+References: <Pine.LNX.4.64.1304081002190.29945@axis700.grange>
+ <1694336.shM2ct4pzX@avalon>
+ <Pine.LNX.4.64.1304081324370.29945@axis700.grange>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAOMZO5CjC4HEvZo7rqdN1inAz_=xif=5aANLPhB9oF_mygJeGg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.64.1304081324370.29945-0199iw4Nj15frtckUFj5Ag@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,29 +21,101 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Cc: SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+Hi Guennadi,
 
-Am Montag, den 08.04.2013, 12:26 -0300 schrieb Fabio Estevam:
-> Hi Phiipp,
+On Monday 08 April 2013 13:25:46 Guennadi Liakhovetski wrote:
+> On Mon, 8 Apr 2013, Laurent Pinchart wrote:
+> > On Monday 08 April 2013 10:08:40 Guennadi Liakhovetski wrote:
+> > > Most Renesas irqpin controllers have 4-bit sense fields, however, some
+> > > have different widths. This patch adds a DT binding to optionally
+> > > specify such non-standard values.
+> > > 
+> > > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > ---
+> > > 
+> > > v3: move the code to a common location, where device configuration
+> > > parameters are retrieved
+> > > 
+> > >  .../interrupt-controller/renesas,intc-irqpin.txt   |   13 +++++++++++++
+> > >  drivers/irqchip/irq-renesas-intc-irqpin.c          |    4 ++++
+> > >  2 files changed, 17 insertions(+), 0 deletions(-)
+> > >  create mode 100644
+> > > 
+> > > Documentation/devicetree/bindings/interrupt-controller/renesas,intc-
+> > > irqpin.txt
+> > > diff --git a/Documentation/devicetree/bindings/interrupt-
+> > > controller/renesas,intc-irqpin.txt
+> > > b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-
+> > > irqpin.txt
+> > > new file mode 100644
+> > > index 0000000..c6f09b7
+> > > --- /dev/null
+> > > +++
+> > > b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-
+> > > irqpin.txt
+> > > @@ -0,0 +1,13 @@
+> > > +DT bindings for the R-/SH-Mobile irqpin controller
+> > > +
+> > > +Required properties:
+> > > +
+> > > +- compatible: has to be "renesas,intc-irqpin"
+> > > +- #interrupt-cells: has to be <2>
+> > > +
+> > > +Optional properties:
+> > > +
+> > > +- any properties, listed in interrupts.txt in this directory, and any
+> > > standard
+> > > +  resource allocation properties
+> > > +- sense-bitfield-width: width of a single sense bitfield in the SENSE
+> > > register,
+> > > +  if different from the default 4 bits
+> > 
+> > Wouldn't it be better to define per-SoC compatible strings, and infer the
+> > sense bitfield width from that ?
 > 
-> On Mon, Apr 8, 2013 at 11:46 AM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > Hi,
-> >
-> > the first two are just cleanups, the following three patches are changes
-> > to the i.MX53 clock tree that are necessary to use the TVEv2 module as
-> > VGA output on the Freescale i.MX53-QSB or TQ MBa53 boards.
-> 
-> I would like to test this series on a mx53qsb.
->
-> Is the TVE driver available in some git tree?
+> This is not a boolean, it is an integer, I don't think defining
+> compatibility strings for 1, 2, 3, 4, 5,... bits is better than having one
+> integer property.
 
-I have pushed the series for you at:
+I'm not advocating for compatibility strings for a given number of bits, but 
+for per-SoC compatibility strings from which to infer the width.
 
-    git://git.pengutronix.de/git/pza/linux.git imx-ipu-tve/wip
+For instance, if the r8a7779 has a 6-bit sense field, you would use
 
-regards
-Philipp
+compatible = "r8a7779,intc-irqpin";
+
+and map that to 6 in the irqpin driver.
+
+> > > diff --git a/drivers/irqchip/irq-renesas-intc-irqpin.c
+> > > b/drivers/irqchip/irq-renesas-intc-irqpin.c index 5a68e5a..4aca1b2
+> > > 100644
+> > > --- a/drivers/irqchip/irq-renesas-intc-irqpin.c
+> > > +++ b/drivers/irqchip/irq-renesas-intc-irqpin.c
+> > > @@ -18,6 +18,7 @@
+	> > >   */
+> > >  
+> > >  #include <linux/init.h>
+> > > +#include <linux/of.h>
+> > >  #include <linux/platform_device.h>
+> > >  #include <linux/spinlock.h>
+> > >  #include <linux/interrupt.h>
+> > > 
+> > > @@ -349,6 +350,9 @@ static int intc_irqpin_probe(struct platform_device
+> > > *pdev) /* deal with driver instance configuration */
+> > >  	if (pdata)
+> > >  		memcpy(&p->config, pdata, sizeof(*pdata));
+> > > +	else
+> > > +		of_property_read_u32(pdev->dev.of_node, "sense-bitfield-width",
+> > > +				     &p->config.sense_bitfield_width);
+> > > 
+> > >  	if (!p->config.sense_bitfield_width)
+> > >  		p->config.sense_bitfield_width = 4; /* default to 4 bits */
+
+-- 
+Regards,
+
+Laurent Pinchart
