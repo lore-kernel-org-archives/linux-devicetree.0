@@ -1,104 +1,82 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: [PATCH 1/3] ARM: dts: Update OMAP3430 SDP NAND and ONENAND properties
-Date: Sun, 7 Apr 2013 20:17:06 -0500
-Message-ID: <1365383828-25627-1-git-send-email-jon-hunter@ti.com>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH v2] irqchip: renesas-intc-irqpin: DT binding for sense
+ bitfield width
+Date: Mon, 8 Apr 2013 10:03:43 +0900
+Message-ID: <CANqRtoQtvNPPFxoe9st3M2g8gTek3LYucRLupV_p6GgfoiCY6A@mail.gmail.com>
+References: <Pine.LNX.4.64.1304051128090.997@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Jon Hunter <jon-hunter@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1304051128090.997@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Simon Horman <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The GPMC timing properties for device-tree have been updated by adding
-a "-ns" or "-ps" suffix to indicate the units of time the property
-represents (as suggested by Rob Herring). Therefore, update the timing
-property names for the OMAP3430 SDP NAND and ONENAND devices.
+Hi Guennadi,
 
-Signed-off-by: Jon Hunter <jon-hunter@ti.com>
----
+On Fri, Apr 5, 2013 at 6:33 PM, Guennadi Liakhovetski
+<g.liakhovetski@gmx.de> wrote:
+> Most Renesas irqpin controllers have 4-bit sense fields, however, some
+> have different widths. This patch adds a DT binding to optionally
+> specify such non-standard values.
+>
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+> ---
+>
+> v2: is no longer based on an earlier "ARM: shmobile: irqpin: fix handling
+> of spurious interrupts in DT case" patch, which needs more work.
+>
+>  .../interrupt-controller/renesas,intc-irqpin.txt   |   13 +++++++++++++
+>  drivers/irqchip/irq-renesas-intc-irqpin.c          |    5 +++++
+>  2 files changed, 18 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+>
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+> new file mode 100644
+> index 0000000..c6f09b7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+> @@ -0,0 +1,13 @@
+> +DT bindings for the R-/SH-Mobile irqpin controller
+> +
+> +Required properties:
+> +
+> +- compatible: has to be "renesas,intc-irqpin"
+> +- #interrupt-cells: has to be <2>
+> +
+> +Optional properties:
+> +
+> +- any properties, listed in interrupts.txt in this directory, and any standard
+> +  resource allocation properties
+> +- sense-bitfield-width: width of a single sense bitfield in the SENSE register,
+> +  if different from the default 4 bits
+> diff --git a/drivers/irqchip/irq-renesas-intc-irqpin.c b/drivers/irqchip/irq-renesas-intc-irqpin.c
+> index 5a68e5a..7a02dfe 100644
+> --- a/drivers/irqchip/irq-renesas-intc-irqpin.c
+> +++ b/drivers/irqchip/irq-renesas-intc-irqpin.c
+> @@ -18,6 +18,7 @@
+>   */
+>
+>  #include <linux/init.h>
+> +#include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/interrupt.h>
+> @@ -429,6 +430,10 @@ static int intc_irqpin_probe(struct platform_device *pdev)
+>                 }
+>         }
+>
+> +       if (!pdata)
+> +               of_property_read_u32(pdev->dev.of_node, "sense-bitfield-width",
+> +                                    &p->config.sense_bitfield_width);
+> +
 
-Hi Benoit, this is a changed that is going to be introduced for v3.10.
-Feel free to squash this with the patch "ARM: dts: OMAP3: Add support
-for OMAP3430 SDP board" that you have queued for v3.10 if you prefer.
+Thanks for remaking this patch into V2. I am OK with the actual code,
+but I wonder why you don't keep the above together with the rest of
+the configuration setup code somewhere below the comment "/* deal with
+driver instance configuration */".
 
- arch/arm/boot/dts/omap3430-sdp.dts |   56 ++++++++++++++++++------------------
- 1 file changed, 28 insertions(+), 28 deletions(-)
+Cheers,
 
-diff --git a/arch/arm/boot/dts/omap3430-sdp.dts b/arch/arm/boot/dts/omap3430-sdp.dts
-index 05cd8ba..44d2191 100644
---- a/arch/arm/boot/dts/omap3430-sdp.dts
-+++ b/arch/arm/boot/dts/omap3430-sdp.dts
-@@ -57,20 +57,20 @@
- 
- 		ti,nand-ecc-opt = "sw";
- 		gpmc,device-nand;
--		gpmc,cs-on = <0>;
--		gpmc,cs-rd-off = <36>;
--		gpmc,cs-wr-off = <36>;
--		gpmc,adv-on = <6>;
--		gpmc,adv-rd-off = <24>;
--		gpmc,adv-wr-off = <36>;
--		gpmc,oe-on = <6>;
--		gpmc,oe-off = <48>;
--		gpmc,we-on = <6>;
--		gpmc,we-off = <30>;
--		gpmc,rd-cycle = <72>;
--		gpmc,wr-cycle = <72>;
--		gpmc,access = <54>;
--		gpmc,wr-access = <30>;
-+		gpmc,cs-on-ns = <0>;
-+		gpmc,cs-rd-off-ns = <36>;
-+		gpmc,cs-wr-off-ns = <36>;
-+		gpmc,adv-on-ns = <6>;
-+		gpmc,adv-rd-off-ns = <24>;
-+		gpmc,adv-wr-off-ns = <36>;
-+		gpmc,oe-on-ns = <6>;
-+		gpmc,oe-off-ns = <48>;
-+		gpmc,we-on-ns = <6>;
-+		gpmc,we-off-ns = <30>;
-+		gpmc,rd-cycle-ns = <72>;
-+		gpmc,wr-cycle-ns = <72>;
-+		gpmc,access-ns = <54>;
-+		gpmc,wr-access-ns = <30>;
- 
- 		partition@0 {
- 			label = "xloader-nand";
-@@ -102,20 +102,20 @@
- 
- 		gpmc,device-width = <2>;
- 		gpmc,mux-add-data = <2>;
--		gpmc,cs-on = <0>;
--		gpmc,cs-rd-off = <84>;
--		gpmc,cs-wr-off = <72>;
--		gpmc,adv-on = <0>;
--		gpmc,adv-rd-off = <18>;
--		gpmc,adv-wr-off = <18>;
--		gpmc,oe-on = <30>;
--		gpmc,oe-off = <84>;
--		gpmc,we-on = <0>;
--		gpmc,we-off = <42>;
--		gpmc,rd-cycle = <108>;
--		gpmc,wr-cycle = <96>;
--		gpmc,access = <78>;
--		gpmc,wr-data-mux-bus = <30>;
-+		gpmc,cs-on-ns = <0>;
-+		gpmc,cs-rd-off-ns = <84>;
-+		gpmc,cs-wr-off-ns = <72>;
-+		gpmc,adv-on-ns = <0>;
-+		gpmc,adv-rd-off-ns = <18>;
-+		gpmc,adv-wr-off-ns = <18>;
-+		gpmc,oe-on-ns = <30>;
-+		gpmc,oe-off-ns = <84>;
-+		gpmc,we-on-ns = <0>;
-+		gpmc,we-off-ns = <42>;
-+		gpmc,rd-cycle-ns = <108>;
-+		gpmc,wr-cycle-ns = <96>;
-+		gpmc,access-ns = <78>;
-+		gpmc,wr-data-mux-bus-ns = <30>;
- 
- 		partition@0 {
- 			label = "xloader-onenand";
--- 
-1.7.10.4
-
+/ magnus
