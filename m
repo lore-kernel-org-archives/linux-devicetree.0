@@ -1,8 +1,7 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 3/9] ARM: mvebu: Align the internal registers virtual base
- to support LPAE
-Date: Tue,  9 Apr 2013 00:52:11 +0200
-Message-ID: <1365461538-30702-4-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH v3 4/9] ARM: mvebu: Enable pj4b on LPAE compilations
+Date: Tue,  9 Apr 2013 00:52:12 +0200
+Message-ID: <1365461538-30702-5-git-send-email-gregory.clement@free-electrons.com>
 References: <1365461538-30702-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -25,43 +24,35 @@ List-Id: devicetree@vger.kernel.org
 
 From: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 
-In order to be able to support the LPAE, the internal registers
-virtual base must be aligned to 2MB. In LPAE section size is 2MB, in
-earlyprintk we map the internal registers and it must be section
-aligned.
+pj4b cpus are LPAE capable so enable them on LPAE compilations
 
 Signed-off-by: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Tested-by: Franklin <flin-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/include/debug/mvebu.S      |    2 +-
- arch/arm/mach-mvebu/armada-370-xp.h |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/mm/proc-v7.S |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/include/debug/mvebu.S b/arch/arm/include/debug/mvebu.S
-index 865c6d0..df191af 100644
---- a/arch/arm/include/debug/mvebu.S
-+++ b/arch/arm/include/debug/mvebu.S
-@@ -12,7 +12,7 @@
- */
+diff --git a/arch/arm/mm/proc-v7.S b/arch/arm/mm/proc-v7.S
+index f584d3f..d75dc67 100644
+--- a/arch/arm/mm/proc-v7.S
++++ b/arch/arm/mm/proc-v7.S
+@@ -402,6 +402,8 @@ __v7_ca9mp_proc_info:
+ 	__v7_proc __v7_ca9mp_setup
+ 	.size	__v7_ca9mp_proc_info, . - __v7_ca9mp_proc_info
  
- #define ARMADA_370_XP_REGS_PHYS_BASE	0xd0000000
--#define ARMADA_370_XP_REGS_VIRT_BASE	0xfeb00000
-+#define ARMADA_370_XP_REGS_VIRT_BASE	0xfec00000
++#endif	/* CONFIG_ARM_LPAE */
++
+ 	/*
+ 	 * Marvell PJ4B processor.
+ 	 */
+@@ -411,7 +413,6 @@ __v7_pj4b_proc_info:
+ 	.long	0xfffffff0
+ 	__v7_proc __v7_pj4b_setup
+ 	.size	__v7_pj4b_proc_info, . - __v7_pj4b_proc_info
+-#endif	/* CONFIG_ARM_LPAE */
  
- 	.macro	addruart, rp, rv, tmp
- 	ldr	\rp, =ARMADA_370_XP_REGS_PHYS_BASE
-diff --git a/arch/arm/mach-mvebu/armada-370-xp.h b/arch/arm/mach-mvebu/armada-370-xp.h
-index c6a7d74..c49c08e 100644
---- a/arch/arm/mach-mvebu/armada-370-xp.h
-+++ b/arch/arm/mach-mvebu/armada-370-xp.h
-@@ -16,7 +16,7 @@
- #define __MACH_ARMADA_370_XP_H
- 
- #define ARMADA_370_XP_REGS_PHYS_BASE	0xd0000000
--#define ARMADA_370_XP_REGS_VIRT_BASE	IOMEM(0xfeb00000)
-+#define ARMADA_370_XP_REGS_VIRT_BASE	IOMEM(0xfec00000)
- #define ARMADA_370_XP_REGS_SIZE		SZ_1M
- 
- #ifdef CONFIG_SMP
+ 	/*
+ 	 * ARM Ltd. Cortex A7 processor.
 -- 
 1.7.9.5
