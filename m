@@ -1,50 +1,72 @@
-From: Timur Tabi <timur@tabi.org>
-Subject: Re: [PATCH v2 01/11] ASoC: phycore-ac97: Add DT support
-Date: Sun, 07 Apr 2013 21:52:17 -0500
-Message-ID: <516230E1.3070509@tabi.org>
-References: <1365362721-3731-1-git-send-email-mpa@pengutronix.de>
- <1365362721-3731-2-git-send-email-mpa@pengutronix.de>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: [PATCH v3] irqchip: renesas-intc-irqpin: DT binding for sense bitfield
+ width
+Date: Mon, 8 Apr 2013 10:08:40 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1304081002190.29945@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1365362721-3731-2-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Markus Pargmann <mpa@pengutronix.de>, linux-arm-kernel@lists.infradead.org
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: Simon Horman <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Markus Pargmann wrote:
-> Notes:
->     Changes in v2:
->      - Simplify the driver, by combining audmux port configurations. The
->        audmux driver actually knows on which platform he is running and
->        will return the appropriate error code if we use functions for
->        another platform. So we don't need to have the knowledge about it
->        in phycore-ac97 and can try both functions. This removes the need
->        of different compatibilities and renames it to imx27-ac97.
->      - Use a phandle for the cpu_dai link.
->      - Add devicetree binding documentation.
->      - Rename binding to phytec,phycore-ac97 and fsl,ssi to phytec,ssi
+Most Renesas irqpin controllers have 4-bit sense fields, however, some
+have different widths. This patch adds a DT binding to optionally
+specify such non-standard values.
 
-I think some of this information belongs in the changelog.
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+---
 
-> +#ifdef CONFIG_MACH_IMX27_DT
-> +		.platform_name	= "imx-fiq-pcm-audio",
-> +#else
->   		.cpu_dai_name	= "imx-ssi.0",
->   		.platform_name	= "imx-fiq-pcm-audio.0",
-> +#endif
+v3: move the code to a common location, where device configuration 
+parameters are retrieved
 
-What's the difference between "imx-fiq-pcm-audio" and "imx-fiq-pcm-audio.0"?
+ .../interrupt-controller/renesas,intc-irqpin.txt   |   13 +++++++++++++
+ drivers/irqchip/irq-renesas-intc-irqpin.c          |    4 ++++
+ 2 files changed, 17 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+new file mode 100644
+index 0000000..c6f09b7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+@@ -0,0 +1,13 @@
++DT bindings for the R-/SH-Mobile irqpin controller
++
++Required properties:
++
++- compatible: has to be "renesas,intc-irqpin"
++- #interrupt-cells: has to be <2>
++
++Optional properties:
++
++- any properties, listed in interrupts.txt in this directory, and any standard
++  resource allocation properties
++- sense-bitfield-width: width of a single sense bitfield in the SENSE register,
++  if different from the default 4 bits
+diff --git a/drivers/irqchip/irq-renesas-intc-irqpin.c b/drivers/irqchip/irq-renesas-intc-irqpin.c
+index 5a68e5a..4aca1b2 100644
+--- a/drivers/irqchip/irq-renesas-intc-irqpin.c
++++ b/drivers/irqchip/irq-renesas-intc-irqpin.c
+@@ -18,6 +18,7 @@
+  */
+ 
+ #include <linux/init.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/spinlock.h>
+ #include <linux/interrupt.h>
+@@ -349,6 +350,9 @@ static int intc_irqpin_probe(struct platform_device *pdev)
+ 	/* deal with driver instance configuration */
+ 	if (pdata)
+ 		memcpy(&p->config, pdata, sizeof(*pdata));
++	else
++		of_property_read_u32(pdev->dev.of_node, "sense-bitfield-width",
++				     &p->config.sense_bitfield_width);
+ 	if (!p->config.sense_bitfield_width)
+ 		p->config.sense_bitfield_width = 4; /* default to 4 bits */
+ 
 -- 
-Timur Tabi
+1.7.2.5
+
