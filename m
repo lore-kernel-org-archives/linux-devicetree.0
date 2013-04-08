@@ -1,70 +1,61 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 4/5] ARM i.MX53: tve_di clock is not part of the CCM,
- but of TVE
-Date: Mon,  8 Apr 2013 16:46:22 +0200
-Message-ID: <1365432383-7787-5-git-send-email-p.zabel@pengutronix.de>
-References: <1365432383-7787-1-git-send-email-p.zabel@pengutronix.de>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH 0/2] Update device tree binding document for pwm-tiehrpwm
+ & pwm-tiecap
+Date: Mon, 8 Apr 2013 10:23:20 +0200
+Message-ID: <20130408082320.GB21392@avionic-0098.mockup.avionic-design.de>
+References: <1364195093-1357-1-git-send-email-avinashphilip@ti.com>
+ <518397C60809E147AF5323E0420B992E3EAA8DDE@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365432383-7787-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="wq9mPyueHGvFACwf"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <518397C60809E147AF5323E0420B992E3EAA8DDE@DBDE01.ent.ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Philip, Avinash" <avinashphilip@ti.com>
+Cc: "Nori, Sekhar" <nsekhar@ti.com>, "jacmet@sunsite.dk" <jacmet@sunsite.dk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "Manjunathappa, Prakash" <prakash.pm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Remove the tve_di clock from the CCM clock tree. It will be provided
-by the Television Encoder driver, as this clock is an output signal
-of the TVE module.
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- Documentation/devicetree/bindings/clock/imx5-clock.txt | 1 -
- arch/arm/mach-imx/clk-imx51-imx53.c                    | 3 +--
- 2 files changed, 1 insertion(+), 3 deletions(-)
+--wq9mPyueHGvFACwf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/clock/imx5-clock.txt b/Documentation/devicetree/bindings/clock/imx5-clock.txt
-index 84cae1f..d71b4b2 100644
---- a/Documentation/devicetree/bindings/clock/imx5-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/imx5-clock.txt
-@@ -38,7 +38,6 @@ clocks and IDs.
- 	usb_phy_podf		23
- 	cpu_podf		24
- 	di_pred			25
--	tve_di			26
- 	tve_s			27
- 	uart1_ipg_gate		28
- 	uart1_per_gate		29
-diff --git a/arch/arm/mach-imx/clk-imx51-imx53.c b/arch/arm/mach-imx/clk-imx51-imx53.c
-index 9226940..189d654 100644
---- a/arch/arm/mach-imx/clk-imx51-imx53.c
-+++ b/arch/arm/mach-imx/clk-imx51-imx53.c
-@@ -78,7 +78,7 @@ enum imx5_clks {
- 	dummy, ckil, osc, ckih1, ckih2, ahb, ipg, axi_a, axi_b, uart_pred,
- 	uart_root, esdhc_a_pred, esdhc_b_pred, esdhc_c_s, esdhc_d_s,
- 	emi_sel, emi_slow_podf, nfc_podf, ecspi_pred, ecspi_podf, usboh3_pred,
--	usboh3_podf, usb_phy_pred, usb_phy_podf, cpu_podf, di_pred, tve_di,
-+	usboh3_podf, usb_phy_pred, usb_phy_podf, cpu_podf, di_pred, tve_di_unused,
- 	tve_s, uart1_ipg_gate, uart1_per_gate, uart2_ipg_gate,
- 	uart2_per_gate, uart3_ipg_gate, uart3_per_gate, i2c1_gate, i2c2_gate,
- 	gpt_ipg_gate, pwm1_ipg_gate, pwm1_hf_gate, pwm2_ipg_gate, pwm2_hf_gate,
-@@ -187,7 +187,6 @@ static void __init mx5_clocks_common_init(unsigned long rate_ckil,
- 				usb_phy_sel_str, ARRAY_SIZE(usb_phy_sel_str));
- 	clk[cpu_podf] = imx_clk_divider("cpu_podf", "pll1_sw", MXC_CCM_CACRR, 0, 3);
- 	clk[di_pred] = imx_clk_divider("di_pred", "pll3_sw", MXC_CCM_CDCDR, 6, 3);
--	clk[tve_di] = imx_clk_fixed("tve_di", 65000000); /* FIXME */
- 	clk[iim_gate] = imx_clk_gate2("iim_gate", "ipg", MXC_CCM_CCGR0, 30);
- 	clk[uart1_ipg_gate] = imx_clk_gate2("uart1_ipg_gate", "ipg", MXC_CCM_CCGR1, 6);
- 	clk[uart1_per_gate] = imx_clk_gate2("uart1_per_gate", "uart_root", MXC_CCM_CCGR1, 8);
--- 
-1.8.2.rc2
+On Mon, Apr 08, 2013 at 05:56:39AM +0000, Philip, Avinash wrote:
+> Thierry,
+>=20
+> On Mon, Mar 25, 2013 at 12:34:51, Philip, Avinash wrote:
+> > Update device tree document of pwm-tiehrpwm & pwm-tiecap in order to re=
+flect the
+> > usage of similar modules in both da850 and am33xx platforms.
+>=20
+> Can you accept both documentation update patches with Peter Korsgaard's A=
+ck.
+
+Thanks for the reminder. Both patches applied.
+
+Thierry
+
+--wq9mPyueHGvFACwf
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRYn54AAoJEN0jrNd/PrOhIh0QAJOHYAIa0Kb/TwaCMPupzJ0W
+ImAEMBoaFU5hmpH2VDUKxWX1R/HfFDrDWnku3pXnDr5YeOYAOeXmPn66XVOK8wTS
+AiNbBigeGjGNGDMdX01gFcrGKmxgbcmmpw672Hm6I4metob5vKdmKKy5b3OLBBPY
+LvX1pVFS9Lipnyq+5qpaXbxgHQ1QUDwSDd6g13YYOxDQ5cM5t/dAp0C2i01/uJQ/
+rFzL7Lru/IfWhE0TFC0fwscYCbk00xa67q/oJblNvm1maJGqqYPZ6P/ZHsqi0LfL
+PlwEXPiAhXNbPbGFLm//BOuwZnbNKDgOzssIbjy9HBtE0FzE6GvIjDsvL4Y0QwdR
+l4JfRlntjDy2IUbtXj3VdZigKtfWe4CQe7bL1o/7+Fs9SN5tSL8pTxpdRpAmwGke
+mJGktErKHwcJ2RkFk9aFyHFzSZ20eFhKnF0jHtmUjGlYOUkROfYnTTpsPHZrbZb9
+SXKxKPQqqElleZVtuHw054W4S/FKk5lacSMPP/n6KuArCVQboz370bGuXCaENDPr
+poKCKQEFvZu6gR7nG3lYE0mIEmatL0jnjV2SsCmh/+ctBdgx6hlReaAF57qDU5eI
+Yer66W5julM/J/5jdLHlfYvsdQzUoumDGwk1b50iIte9mnzhzKAaH6i7+RWwPaH2
+hN6ASagd3v1L8qBBxXwx
+=t9sC
+-----END PGP SIGNATURE-----
+
+--wq9mPyueHGvFACwf--
