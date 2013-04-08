@@ -1,19 +1,16 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC 4/5] RTC: rtc-at91sam9: add device-tree support
-Date: Mon, 8 Apr 2013 13:11:13 +0200
-Message-ID: <20130408111113.GX20693@game.jcrosoft.org>
-References: <20130407150938.GA25605@localhost>
- <1365347572-14972-1-git-send-email-jhovold@gmail.com>
- <1365347572-14972-4-git-send-email-jhovold@gmail.com>
- <20130408073807.GQ20693@game.jcrosoft.org>
- <20130408090023.GC25605@localhost> <51629472.3070404@atmel.com>
- <20130408103847.GE25605@localhost>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [v5] clk: add si5351 i2c common clock driver
+Date: Mon, 8 Apr 2013 07:54:07 -0700
+Message-ID: <20130408145407.GA12243@roeck-us.net>
+References: <1365139415-17815-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <20130407225046.GA16326@roeck-us.net> <51620604.4070204@gmail.com>
+ <20130408001725.GA16648@roeck-us.net> <51625F9A.1050308@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130408103847.GE25605@localhost>
+In-Reply-To: <51625F9A.1050308-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,81 +21,76 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Robert Nelson <Robert.Nelson-9gsZL1vm+hpBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dgilbert-qazKcTl6WRFWk0Htik3J/w@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dom Cobley <popcornmix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12:38 Mon 08 Apr     , Johan Hovold wrote:
-> On Mon, Apr 08, 2013 at 11:57:06AM +0200, Nicolas Ferre wrote:
-> > On 04/08/2013 11:00 AM, Johan Hovold :
-> > > On Mon, Apr 08, 2013 at 09:38:07AM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > >> On 17:12 Sun 07 Apr     , Johan Hovold wrote:
-> > >>> Add device-tree support.
-> > >>>
-> > >>> The AT91 RTT can be used as an RTC if the atmel,at91-rtt-as-rtc-gpbr
-> > >>> property is present and set to the general-purpose backup register to
-> > >>> use to store the RTC time base.
-> > >>>
-> > >>> Signed-off-by: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > >>> ---
-> > >>>  .../devicetree/bindings/rtc/rtc-at91sam9.txt       | 19 ++++++++++++
-> > >>>  drivers/rtc/rtc-at91sam9.c                         | 36 +++++++++++++++++++++-
-> > >>>  2 files changed, 54 insertions(+), 1 deletion(-)
-> > >>>  create mode 100644 Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt > >>>
-> > >>> diff --git
-> > >>> a/Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt
-> > >>> b/Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt > >>> new
-> > >>> file mode 100644
-> > >>> index 0000000..0f54988
-> > >>> --- /dev/null
-> > >>> +++ b/Documentation/devicetree/bindings/rtc/rtc-at91sam9.txt
-> > >>> @@ -0,0 +1,19 @@
-> > >>> +Atmel AT91 RTT as RTC
-> > >>> +=====================
-> > >>> +
-> > >>> +Required properties:
-> > >>> +- compatible: Should be "atmel,at91sam9260-rtt"
-> > >>> +- reg: Should contain register location and length
-> > >>> +- interrupts: Should contain interrupt for the RTT which is the IRQ line
-> > >>> +  shared across all System Controller members.
-> > >>> +- atmel,rtt-as-rtc-gpbr: Should contain the backup-register to use to store
-> > >>> +  the RTC time base
-> > >>> +
-> > >>> +Example:
-> > >>> +
-> > >>> +rtt@fffffd20 {
-> > >>> +		compatible = "atmel,at91sam9g45-rtt", "atmel,at91sam9260-rtt";
-> > 
-> > No, there is no visible difference between the sam9g45 RTT and the
-> > sam9260 one. So the most precise compatibility string is still sam9260.
-> > If one day we feel the need for a advanced feature that exists on a more
-> > recent SoC, we have the possibility to add it at that time...
+On Mon, Apr 08, 2013 at 08:11:38AM +0200, Sebastian Hesselbarth wrote:
+> On 04/08/2013 02:17 AM, Guenter Roeck wrote:
+> >On Mon, Apr 08, 2013 at 01:49:24AM +0200, Sebastian Hesselbarth wrote:
+> >>On 04/08/2013 12:50 AM, Guenter Roeck wrote:
+> >>>On Fri, Apr 05, 2013 at 05:23:35AM -0000, Sebastian Hesselbarth wrote:
+> >>>>This patch adds a common clock driver for Silicon Labs Si5351a/b/c
+> >>>>i2c programmable clock generators. Currently, the driver supports
+> >>>>DT kernels only and VXCO feature of si5351b is not implemented. DT
+> >>>>bindings selectively allow to overwrite stored Si5351 configuration
+> >>>>which is very helpful for clock generators with empty eeprom
+> >>>>configuration. Corresponding device tree binding documentation is
+> >>>>also added.
+> >>>>
+> >>>>Signed-off-by: Sebastian Hesselbarth<sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>>>Tested-by: Daniel Mack<zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>>>
+> >>>[ ... ]
+> >>>
+> >>>>+static inline void _si5351_msynth_set_pll_master(
+> >>>>+	struct si5351_driver_data *drvdata, unsigned char num, int is_master)
+> >>>>+{
+> >>>>+	unsigned long flags;
+> >>>>+
+> >>>>+	if (num>   8 ||
+> >>>>+	    (drvdata->variant == SI5351_VARIANT_A3&&   num>   3))
+> >>>>+		return;
+> >>>>+
+> >>>>+	flags = __clk_get_flags(drvdata->msynth[num].hw.clk);
+> >>>>+	if (is_master)
+> >>>>+		flags |= CLK_SET_RATE_PARENT;
+> >>>>+	else
+> >>>>+		flags&= ~CLK_SET_RATE_PARENT;
+> >>>>+	__clk_set_flags(drvdata->msynth[num].hw.clk, flags);
+> >>>>+}
+> >>>>+
+> >>>Unless I am missing something, neither __clk_get_flags() nor the new
+> >>>__clk_set_flags is exported.
+> >>>
+> >>>Did you try to build and load the driver as module ?
+> >>
+> >>Well, good catch. I didn't try to build v5 as a module, but I guess it
+> >>will fail. But I consider this as something that has to be addressed in
+> >>clk framework itself, not in this patch. There will be other
+> >>clk-providers built as module in the future for sure.
+> >>
+> >Sure, but you provided the patch to make __clk_set_flags global. To avoid
+> >build failures, I would suggest to either submit a patch to export the
+> >missing functions, or to remove the ability to build the driver as module.
 > 
-> Yes, this should be just "atmel,at91sam9260-rtt" to follow the current
-> practise in AT91. However, as I mentioned in an earlier mail one could
-> interpret
+> Actually, I knew that __clk_set_flags patch will not be accepted
+> before posting it ;)
 > 
-> 	"The first string in the list specifies the exact device that
-> 	the node represents in the form "<manufacturer>,<model>". The
-> 	following strings represent other devices that the device is
-> 	compatible with.
-> 
-> 	For example, the Freescale MPC8349 System on Chip (SoC) has a
-> 	serial device which implements the National Semiconductor
-> 	ns16550 register interface. The compatible property for the
-> 	MPC8349 serial device should therefore be: compatible =
-> 	"fsl,mpc8349-uart", "ns16550". In this case, fsl,mpc8349-uart
-> 	specifies the exact device, and ns16550 states that it is
-> 	register-level compatible with a National Semiconductor 16550
-> 	UART."
-> 
-> 	http://www.devicetree.org/Device_Tree_Usage#Understanding_the_compatible_Property
-> 
-> to mean that the compatible property should always be exact SoC-IP
-> followed by the first (most generic) compatible one.
-here you describe compatible IP not drivers implementation
+Ah, but part of that is to get you to think about it again, and to defend it if
+it is really needed. After all, "it can be abused" applies to pretty much every
+API.
 
-they are both usuart IP that are compatible at IP level.
+Key question is if you _really_ need run-time flag modifications, or if you can
+live with initialization-time settings. If you really need it, you'll have to
+explain the reasons.
 
-Best Regards,
-J.
+> >On a side note, do you happen to know anyone working on drivers for Si5319 or
+> >Si5368 ?
+> 
+> No.
+
+Too bad ... I may have to write that code myself then.
+
+Thanks,
+Guenter
