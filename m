@@ -1,30 +1,38 @@
-From: Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCHv7 04/17] pci: infrastructure to add drivers in drivers/pci/host
-Date: Mon, 8 Apr 2013 14:32:09 -0600
-Message-ID: <CAErSpo61=gqnNkUYhsu88UUBRQN0SBynG07mby1f3HJUm=oZKA@mail.gmail.com>
-References: <1364395234-11195-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1364395234-11195-5-git-send-email-thomas.petazzoni@free-electrons.com>
- <CAAfodu2t4j4ZASzdaKV0QarffXRwMgkMESGy=dDq1oMfTANEeg@mail.gmail.com> <20130328082436.317d698a@skate>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH] net: of_mdio: scan mdiobus for PHYs without reg property
+Date: Mon, 08 Apr 2013 16:56:55 -0400 (EDT)
+Message-ID: <20130408.165655.1503589676064125796.davem@davemloft.net>
+References: <1365332988-9053-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1365332988-9053-2-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20130328082436.317d698a@skate>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Neil Greatorex <neil@fatboyfat.co.uk>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thierry Reding <thierry.reding@avionic-design.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Andrew Murray <andrew.murray@arm.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm <linux-arm-kernel@lists.infradead.org>, Mitch Bradley <wmb@firmworks.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1365332988-9053-2-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 28, 2013 at 1:24 AM, Thomas Petazzoni
-<thomas.petazzoni@free-electrons.com> wrote:
-> Dear Neil Greatorex,
->
-> On Thu, 28 Mar 2013 00:28:02 +0000, Neil Greatorex wrote:
->
->> Surely this patch should include the drivers/pci/host/Makefile or it will
->> not build?
->
-> Ah, correct. I'll fix that up in the v8. Thank you for noticing!
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Date: Sun,  7 Apr 2013 13:09:48 +0200
 
-With the fix, looks OK to me.
+> Using DT for mdiobus and ethernet-phy requires to know the PHY address, which
+> is hard to guess if you don't know it. This patch extends of_mdiobus_register
+> to scan mdiobus for PHYs if reg property of the corresponding node is not set.
+> This also allows to have phy nodes in SoC DT files where the reg property can
+> be overwritten in the board file later. To encourage people to finally set the
+> actual phy address, the mdiobus scan is noisier than required.
+> 
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Bjorn
+Applied.
