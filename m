@@ -1,57 +1,97 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH 1/1] of/irq: store IRQ trigger/level in struct resource
- flags
-Date: Tue, 09 Apr 2013 00:56:31 +0200
-Message-ID: <51634B1F.4030408@collabora.co.uk>
-References: <1365148088-11175-1-git-send-email-javier.martinez@collabora.co.uk> <51633F26.7000400@gmail.com> <516341AF.7030207@wwwdotorg.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3] irqchip: renesas-intc-irqpin: DT binding for sense bitfield width
+Date: Tue, 09 Apr 2013 01:22:29 +0200
+Message-ID: <2492042.P3NGiSlrcg@avalon>
+References: <Pine.LNX.4.64.1304081002190.29945@axis700.grange> <15518520.KQOfZxAAdo@avalon> <Pine.LNX.4.64.1304081412550.29945@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <516341AF.7030207@wwwdotorg.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, linux-omap <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1304081412550.29945@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/09/2013 12:16 AM, Stephen Warren wrote:
-> On 04/08/2013 04:05 PM, Rob Herring wrote:
->> On 04/05/2013 02:48 AM, Javier Martinez Canillas wrote:
->>> According to Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->>> the "#interrupt-cells" property of an "interrupt-controller" is used
->>> to define the number of cells needed to specify a single interrupt.
-> ...
->>> But the type is never returned so it can't be saved on the IRQ struct
->>> resource flags member.
->>>
->>> This means that drivers that need the IRQ type/level flags defined in
->>> the DT won't be able to get it.
->> 
->> But the interrupt controllers that need the information should be able
->> to get to it via irqd_get_trigger_type. What problem exactly are you
->> trying to fix? What driver would use this?
+Hi Guennadi,
+
+On Monday 08 April 2013 14:15:39 Guennadi Liakhovetski wrote:
+> On Mon, 8 Apr 2013, Laurent Pinchart wrote:
+> > On Monday 08 April 2013 13:25:46 Guennadi Liakhovetski wrote:
+> > > On Mon, 8 Apr 2013, Laurent Pinchart wrote:
+> > > > On Monday 08 April 2013 10:08:40 Guennadi Liakhovetski wrote:
+> > > > > Most Renesas irqpin controllers have 4-bit sense fields, however,
+> > > > > some have different widths. This patch adds a DT binding to
+> > > > > optionally specify such non-standard values.
+> > > > > 
+> > > > > Signed-off-by: Guennadi Liakhovetski
+> > > > > <g.liakhovetski+renesas@gmail.com>
+> > > > > ---
+> > > > > 
+> > > > > v3: move the code to a common location, where device configuration
+> > > > > parameters are retrieved
+> > > > > 
+> > > > >  .../interrupt-controller/renesas,intc-irqpin.txt   |   13 +++++++++
+> > > > >  drivers/irqchip/irq-renesas-intc-irqpin.c          |    4 ++++
+> > > > >  2 files changed, 17 insertions(+), 0 deletions(-)
+> > > > >  create mode 100644
+> > > > > 
+> > > > > Documentation/devicetree/bindings/interrupt-controller/renesas,intc-
+> > > > > irqpin.txt
+> > > > > diff --git a/Documentation/devicetree/bindings/interrupt-
+> > > > > controller/renesas,intc-irqpin.txt
+> > > > > b/Documentation/devicetree/bindings/interrupt-controller/
+> > > > > renesas,intc-irqpin.txt
+> > > > > new file mode 100644
+> > > > > index 0000000..c6f09b7
+> > > > > --- /dev/null
+> > > > > +++
+> > > > > b/Documentation/devicetree/bindings/interrupt-controller/renesas,int
+> > > > > c-
+> > > > > irqpin.txt
+> > > > > @@ -0,0 +1,13 @@
+> > > > > +DT bindings for the R-/SH-Mobile irqpin controller
+> > > > > +
+> > > > > +Required properties:
+> > > > > +
+> > > > > +- compatible: has to be "renesas,intc-irqpin"
+> > > > > +- #interrupt-cells: has to be <2>
+> > > > > +
+> > > > > +Optional properties:
+> > > > > +
+> > > > > +- any properties, listed in interrupts.txt in this directory, and
+> > > > > any standard
+> > > > > +  resource allocation properties
+> > > > > +- sense-bitfield-width: width of a single sense bitfield in the
+> > > > > SENSE register,
+> > > > > +  if different from the default 4 bits
+> > > > 
+> > > > Wouldn't it be better to define per-SoC compatible strings, and infer
+> > > > the sense bitfield width from that ?
+> > > 
+> > > This is not a boolean, it is an integer, I don't think defining
+> > > compatibility strings for 1, 2, 3, 4, 5,... bits is better than having
+> > > one integer property.
+> > 
+> > I'm not advocating for compatibility strings for a given number of bits,
+> > but for per-SoC compatibility strings from which to infer the width.
+> > 
+> > For instance, if the r8a7779 has a 6-bit sense field, you would use
+> > 
+> > compatible = "r8a7779,intc-irqpin";
+> > 
+> > and map that to 6 in the irqpin driver.
 > 
-> FYI, that is indeed what I did in sound/soc/codecs/wm8903.c. Thinking
-> back, I'm not sure if that was the right thing or whether I should have
-> sent this same patch:-)
-> 
+> I understand what you mean, still I don't think mapping N SoC-compatibility
+> strings to various values of a single integer is better than having a single
+> property.
 
-Hi Stephen,
+The way I understand (or maybe rather feel) the DT bindings philosophy is that 
+hardware information for on-SoC IP cores that depend on the IP core version 
+should be conveyed through the compatible property. I might be wrong though.
 
-I'm glad you agree :-)
+-- 
+Regards,
 
-I could change drivers/net/ethernet/smsc/smsc911x.c to get the type flags for
-the IRQ with irqd_get_trigger_type() but I prefer $subject because:
+Laurent Pinchart
 
-a) This works in the non-DT case with board files and filling the resources from
-platform data in arch/arm/mach-omap2/gpmc-smsc911x.c. So this is definitely a
-bug on the DT core.
-
-b) I don't see why of_irq_to_resource() should discard the type/level flags when
-filling the IORESOURCE_IRQ if it was specified on the DT.
-
-c) We will have to change all drivers that expect to get the IRQ type flags from
-a IORESOURCE_IRQ struct resource.
-
-Thanks a lot and best regards,
-Javier
