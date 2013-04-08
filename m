@@ -1,34 +1,36 @@
-From: Timur Tabi <timur@tabi.org>
-Subject: Re: [PATCH v2 04/11] ASoC: fsl-ssi: Add SACNT
-	definitions
-Date: Sun, 07 Apr 2013 19:13:38 -0500
-Message-ID: <51620BB2.5070900@tabi.org>
-References: <1365362721-3731-1-git-send-email-mpa@pengutronix.de>
- <1365362721-3731-5-git-send-email-mpa@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1365362721-3731-5-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Markus Pargmann <mpa@pengutronix.de>, linux-arm-kernel@lists.infradead.org
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH v2 1/2] ARM: dts: Add MFC clock entries for exynos4
+Date: Mon,  8 Apr 2013 11:44:16 +0530
+Message-ID: <1365401657-5428-1-git-send-email-sachin.kamat@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: kgene.kim@samsung.com, rob.herring@calxeda.com, s.nawrocki@samsung.com, sachin.kamat@linaro.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Markus Pargmann wrote:
-> Add definitions for AC97 control register.
->
-> Signed-off-by: Markus Pargmann<mpa@pengutronix.de>
+Added MFC related clock entries in exynos4.dtsi file.
 
-Acked-by: Timur Tabi <timur@tabi.org>
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+---
+Based on Kukjin's for-next tree.
+No change since v1 (except added reviewed-by tag).
+---
+ arch/arm/boot/dts/exynos4.dtsi |    2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index 800ff11..74f18d2 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -155,6 +155,8 @@
+ 		reg = <0x13400000 0x10000>;
+ 		interrupts = <0 94 0>;
+ 		samsung,power-domain = <&pd_mfc>;
++		clocks = <&clock 170>, <&clock 273>;
++		clock-names = "sclk_mfc", "mfc";
+ 		status = "disabled";
+ 	};
+ 
 -- 
-Timur Tabi
+1.7.9.5
