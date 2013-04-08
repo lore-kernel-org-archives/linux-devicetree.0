@@ -1,72 +1,63 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: [PATCH v3] irqchip: renesas-intc-irqpin: DT binding for sense bitfield
- width
-Date: Mon, 8 Apr 2013 10:08:40 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1304081002190.29945@axis700.grange>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 1/5] ARM i.MX5: Remove tve_sel clock from i.MX53 clock tree
+Date: Mon,  8 Apr 2013 16:46:19 +0200
+Message-ID: <1365432383-7787-2-git-send-email-p.zabel@pengutronix.de>
+References: <1365432383-7787-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: Simon Horman <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1365432383-7787-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Most Renesas irqpin controllers have 4-bit sense fields, however, some
-have different widths. This patch adds a DT binding to optionally
-specify such non-standard values.
+On i.MX53, there is only tve_ext_sel.
 
-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
+ arch/arm/mach-imx/clk-imx51-imx53.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-v3: move the code to a common location, where device configuration 
-parameters are retrieved
-
- .../interrupt-controller/renesas,intc-irqpin.txt   |   13 +++++++++++++
- drivers/irqchip/irq-renesas-intc-irqpin.c          |    4 ++++
- 2 files changed, 17 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-new file mode 100644
-index 0000000..c6f09b7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-@@ -0,0 +1,13 @@
-+DT bindings for the R-/SH-Mobile irqpin controller
-+
-+Required properties:
-+
-+- compatible: has to be "renesas,intc-irqpin"
-+- #interrupt-cells: has to be <2>
-+
-+Optional properties:
-+
-+- any properties, listed in interrupts.txt in this directory, and any standard
-+  resource allocation properties
-+- sense-bitfield-width: width of a single sense bitfield in the SENSE register,
-+  if different from the default 4 bits
-diff --git a/drivers/irqchip/irq-renesas-intc-irqpin.c b/drivers/irqchip/irq-renesas-intc-irqpin.c
-index 5a68e5a..4aca1b2 100644
---- a/drivers/irqchip/irq-renesas-intc-irqpin.c
-+++ b/drivers/irqchip/irq-renesas-intc-irqpin.c
-@@ -18,6 +18,7 @@
-  */
- 
- #include <linux/init.h>
-+#include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/spinlock.h>
- #include <linux/interrupt.h>
-@@ -349,6 +350,9 @@ static int intc_irqpin_probe(struct platform_device *pdev)
- 	/* deal with driver instance configuration */
- 	if (pdata)
- 		memcpy(&p->config, pdata, sizeof(*pdata));
-+	else
-+		of_property_read_u32(pdev->dev.of_node, "sense-bitfield-width",
-+				     &p->config.sense_bitfield_width);
- 	if (!p->config.sense_bitfield_width)
- 		p->config.sense_bitfield_width = 4; /* default to 4 bits */
- 
+diff --git a/arch/arm/mach-imx/clk-imx51-imx53.c b/arch/arm/mach-imx/clk-imx51-imx53.c
+index 1be5078..9daef9d 100644
+--- a/arch/arm/mach-imx/clk-imx51-imx53.c
++++ b/arch/arm/mach-imx/clk-imx51-imx53.c
+@@ -45,7 +45,7 @@ static const char *mx53_ipu_di1_sel[] = { "di_pred", "osc", "ckih1", "tve_di", "
+ static const char *mx53_ldb_di1_sel[] = { "pll3_sw", "pll4_sw", };
+ static const char *mx51_tve_ext_sel[] = { "osc", "ckih1", };
+ static const char *mx53_tve_ext_sel[] = { "pll4_sw", "ckih1", };
+-static const char *tve_sel[] = { "tve_pred", "tve_ext_sel", };
++static const char *mx51_tve_sel[] = { "tve_pred", "tve_ext_sel", };
+ static const char *ipu_sel[] = { "axi_a", "axi_b", "emi_slow_gate", "ahb", };
+ static const char *gpu3d_sel[] = { "axi_a", "axi_b", "emi_slow_gate", "ahb" };
+ static const char *gpu2d_sel[] = { "axi_a", "axi_b", "emi_slow_gate", "ahb" };
+@@ -188,7 +188,6 @@ static void __init mx5_clocks_common_init(unsigned long rate_ckil,
+ 	clk[cpu_podf] = imx_clk_divider("cpu_podf", "pll1_sw", MXC_CCM_CACRR, 0, 3);
+ 	clk[di_pred] = imx_clk_divider("di_pred", "pll3_sw", MXC_CCM_CDCDR, 6, 3);
+ 	clk[tve_di] = imx_clk_fixed("tve_di", 65000000); /* FIXME */
+-	clk[tve_s] = imx_clk_mux("tve_sel", MXC_CCM_CSCMR1, 7, 1, tve_sel, ARRAY_SIZE(tve_sel));
+ 	clk[iim_gate] = imx_clk_gate2("iim_gate", "ipg", MXC_CCM_CCGR0, 30);
+ 	clk[uart1_ipg_gate] = imx_clk_gate2("uart1_ipg_gate", "ipg", MXC_CCM_CCGR1, 6);
+ 	clk[uart1_per_gate] = imx_clk_gate2("uart1_per_gate", "uart_root", MXC_CCM_CCGR1, 8);
+@@ -367,6 +366,8 @@ int __init mx51_clocks_init(unsigned long rate_ckil, unsigned long rate_osc,
+ 				mx51_ipu_di1_sel, ARRAY_SIZE(mx51_ipu_di1_sel));
+ 	clk[tve_ext_sel] = imx_clk_mux("tve_ext_sel", MXC_CCM_CSCMR1, 6, 1,
+ 				mx51_tve_ext_sel, ARRAY_SIZE(mx51_tve_ext_sel));
++	clk[tve_s] = imx_clk_mux("tve_sel", MXC_CCM_CSCMR1, 7, 1,
++				mx51_tve_sel, ARRAY_SIZE(mx51_tve_sel));
+ 	clk[tve_gate] = imx_clk_gate2("tve_gate", "tve_sel", MXC_CCM_CCGR2, 30);
+ 	clk[tve_pred] = imx_clk_divider("tve_pred", "pll3_sw", MXC_CCM_CDCDR, 28, 3);
+ 	clk[esdhc1_per_gate] = imx_clk_gate2("esdhc1_per_gate", "esdhc_a_podf", MXC_CCM_CCGR3, 2);
 -- 
-1.7.2.5
-
+1.8.2.rc2
