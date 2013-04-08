@@ -1,16 +1,15 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v10 02/12] mfd: palmas: is_palmas_charger needed by
- multiple drivers
-Date: Mon, 8 Apr 2013 17:51:37 +0200
-Message-ID: <20130408155137.GY24058@zurbaran>
-References: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
- <1363964122-19201-3-git-send-email-ian@slimlogic.co.uk>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH 10/14] media: soc-camera: support OF cameras
+Date: Mon, 8 Apr 2013 13:21:52 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1304081308000.29945@axis700.grange>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+ <1348754853-28619-11-git-send-email-g.liakhovetski@gmx.de>
+ <CAGsJ_4zYvF-U0_ETs9EP8i+bOJiJLkXWrJdMNnW_sXU-QwnXQw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1363964122-19201-3-git-send-email-ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
+In-Reply-To: <CAGsJ_4zYvF-U0_ETs9EP8i+bOJiJLkXWrJdMNnW_sXU-QwnXQw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,27 +20,44 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ian Lartey <ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
+To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "renwei.wu" <renwei.wu-kQvG35nSl+M@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DL-SHA-WorkGroupLinux <workgroup.linux-kQvG35nSl+M@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, zilong.wu-kQvG35nSl+M@public.gmane.org, xiaomeng.hou-kQvG35nSl+M@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ian,
+Hi Barry
 
-On Fri, Mar 22, 2013 at 02:55:12PM +0000, Ian Lartey wrote:
-> is_palmas_charger checks for the presence of charging
-> functionality in the device
+On Mon, 8 Apr 2013, Barry Song wrote:
+
+> hi Guennadi,
 > 
-> Signed-off-by: Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
-> Signed-off-by: Ian Lartey <ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
-> Acked-by: Laxman Dewangani <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  include/linux/mfd/palmas.h |   12 +++++++++++-
->  1 files changed, 11 insertions(+), 1 deletions(-)
-I applied this one now, thanks.
+> 2012/9/27 Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>:
+> > With OF we aren't getting platform data any more. To minimise changes we
+> > create all the missing data ourselves, including compulsory struct
+> > soc_camera_link objects. Host-client linking is now done, based on the OF
+> > data. Media bus numbers also have to be assigned dynamically.
+> >
+> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+> 
+> as your V4L2 core DT based supports
+> [media] Add a V4L2 OF parser
+> [media] Add common video interfaces OF bindings documentation
+> have been in media_tree queue for 3.10. i do care about the status of
+> this patch for soc_camera.
+> 
+> will you have a plan to resend these soc-camera patches based on your
+> final V4L2 core DT patches? otherwise, we might do some jobs for that.
 
-Cheers,
-Samuel.
+This patch depends not only on the above two OF patches, that Sylwester 
+kindly polished to make them finally suitable for the mainline :-), but 
+also on V4L2 (temporary) clock and asynchronous probing patches, which 
+I've just re-posted in their v7. Once those patches stabilise, it will be 
+possible to re-spin this patch too. However, currently I don't have any 
+interested users for this work, so I can only run it as a low priority 
+task in my spare time, of which I don't have much.
 
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
