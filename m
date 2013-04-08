@@ -1,104 +1,67 @@
-From: Timur Tabi <timur@tabi.org>
-Subject: Re: [PATCH v2 05/11] ASoC: fsl-ssi: Add support for
-	imx-pcm-fiq
-Date: Sun, 07 Apr 2013 19:18:50 -0500
-Message-ID: <51620CEA.3010703@tabi.org>
-References: <1365362721-3731-1-git-send-email-mpa@pengutronix.de>
- <1365362721-3731-6-git-send-email-mpa@pengutronix.de>
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/1] Revert "of/exynos_g2d: Add Bindings for exynos G2D driver"
+Date: Mon,  8 Apr 2013 12:12:19 +0530
+Message-ID: <1365403339-28171-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1365362721-3731-6-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Markus Pargmann <mpa@pengutronix.de>, linux-arm-kernel@lists.infradead.org
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Markus Pargmann wrote:
-> Add support for non-dma pcm for imx platforms with imx-pcm-fiq support.
-> Instead of imx-pcm-audio, in this case imx-pcm-fiq-audio device is added
-> and the SIER flags are set differently.
+This reverts commit 09495dda6a62c74b13412a63528093910ef80edd.
+The description is incomplete and the location of this file
+is incorrect. Based on discussion with the Samsung media and DRM subsystem
+maintainers, the documentaion of Samsung G2D bindings has been placed at:
+Documentation/devicetree/bindings/gpu/samsung-g2d.txt
 
-So just to be clear, this is interrupt-driven SSI audio?  So you're 
-generating an interrupt every time the transmit FIFO goes below the threshold?
+Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ .../devicetree/bindings/drm/exynos/g2d.txt         |   22 --------------------
+ 1 file changed, 22 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/drm/exynos/g2d.txt
 
-I wonder if it makes sense to enable both FIFOs, so that you take half as 
-many interrupts per second.
-
->
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> ---
->   sound/soc/fsl/fsl_ssi.c | 70 ++++++++++++++++++++++++++++++++++++++++---------
->   1 file changed, 58 insertions(+), 12 deletions(-)
->
-> diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
-> index 7decbd9..afb5a23 100644
-> --- a/sound/soc/fsl/fsl_ssi.c
-> +++ b/sound/soc/fsl/fsl_ssi.c
-> @@ -120,10 +120,12 @@ struct fsl_ssi_private {
->
->   	bool new_binding;
->   	bool ssi_on_imx;
-> +	bool dma;
-
-Can you rename this to "use_dma" or something like that?
-
->   	struct clk *clk;
->   	struct platform_device *imx_pcm_pdev;
->   	struct imx_pcm_dma_params dma_params_tx;
->   	struct imx_pcm_dma_params dma_params_rx;
-> +	struct imx_pcm_fiq_params fiq_params;
->
->   	struct {
->   		unsigned int rfrc;
-> @@ -353,7 +355,8 @@ static int fsl_ssi_startup(struct snd_pcm_substream *substream,
->   		 */
->
->   		/* Enable the interrupts and DMA requests */
-> -		write_ssi(SIER_FLAGS, &ssi->sier);
-> +		if (ssi_private->dma)
-> +			write_ssi(SIER_FLAGS, &ssi->sier);
->
->   		/*
->   		 * Set the watermark for transmit FIFI 0 and receive FIFO 0. We
-> @@ -520,6 +523,18 @@ static int fsl_ssi_trigger(struct snd_pcm_substream *substream, int cmd,
->   		return -EINVAL;
->   	}
->
-> +	if (!ssi_private->dma) {
-> +		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-> +			write_ssi(CCSR_SSI_SOR_TX_CLR, &ssi->sor);
-> +			write_ssi(CCSR_SSI_SIER_TIE | CCSR_SSI_SIER_TFE0_EN,
-> +					&ssi->sier);
-> +		} else {
-> +			write_ssi(CCSR_SSI_SOR_RX_CLR, &ssi->sor);
-> +			write_ssi(CCSR_SSI_SIER_RIE | CCSR_SSI_SIER_RFF0_EN,
-> +					&ssi->sier);
-> +		}
-> +	}
-> +
->   	return 0;
->   }
->
-> @@ -680,6 +695,8 @@ static int fsl_ssi_probe(struct platform_device *pdev)
->   	       sizeof(fsl_ssi_dai_template));
->   	ssi_private->cpu_dai_drv.name = ssi_private->name;
->
-> +	ssi_private->dma = !of_property_read_bool(np, "fsl,imx-fiq");
-
-Instead of looking for the FIQ property, maybe you should just look for 
-the absence of a DMA property/node, and then default to interrupts if 
-there is no DMA.  That would make it more generic, and even work on 
-non-IMX systems.
-
+diff --git a/Documentation/devicetree/bindings/drm/exynos/g2d.txt b/Documentation/devicetree/bindings/drm/exynos/g2d.txt
+deleted file mode 100644
+index 1eb124d..0000000
+--- a/Documentation/devicetree/bindings/drm/exynos/g2d.txt
++++ /dev/null
+@@ -1,22 +0,0 @@
+-Samsung 2D Graphic Accelerator using DRM frame work
+-
+-Samsung FIMG2D is a graphics 2D accelerator which supports Bit Block Transfer.
+-We set the drawing-context registers for configuring rendering parameters and
+-then start rendering.
+-This driver is for SOCs which contain G2D IPs with version 4.1.
+-
+-Required properties:
+-	-compatible:
+-		should be "samsung,exynos-g2d-41".
+-	-reg:
+-		physical base address of the controller and length
+-		of memory mapped region.
+-	-interrupts:
+-		interrupt combiner values.
+-
+-Example:
+-	g2d {
+-		compatible = "samsung,exynos-g2d-41";
+-		reg = <0x10850000 0x1000>;
+-		interrupts = <0 91 0>;
+-	};
 -- 
-Timur Tabi
+1.7.9.5
