@@ -1,16 +1,15 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v10 0/12] Palmas updates
-Date: Mon, 8 Apr 2013 18:11:24 +0200
-Message-ID: <20130408161124.GA7255@zurbaran>
-References: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
- <20130405163056.GN17363@zurbaran>
- <5162E88E.9010204@slimlogic.co.uk>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH v3] irqchip: renesas-intc-irqpin: DT binding for sense
+ bitfield width
+Date: Mon, 8 Apr 2013 13:25:46 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1304081324370.29945@axis700.grange>
+References: <Pine.LNX.4.64.1304081002190.29945@axis700.grange>
+ <1694336.shM2ct4pzX@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5162E88E.9010204-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
+In-Reply-To: <1694336.shM2ct4pzX@avalon>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,44 +20,99 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Ian Lartey <ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Graeme,
+On Mon, 8 Apr 2013, Laurent Pinchart wrote:
 
-On Mon, Apr 08, 2013 at 04:55:58PM +0100, Graeme Gregory wrote:
-> On 05/04/13 17:30, Samuel Ortiz wrote:
-> > Hi Ian,
-> >
-> > On Fri, Mar 22, 2013 at 02:55:10PM +0000, Ian Lartey wrote:
-> >> This patchset adds to the support for the Palmas series of PMIC chips.
-> >>
-> >> Some of the patches have previously been submitted individually.
-> >> The DT bindings doc has been added first due to comments that it was missing.
-> >>
-> >> Patches based on linux-next-20130319
-> > Are you expecting all those patches to go through the MFD tree ?
-> > Also, you stil have a few comments from Milo and Stephen to adress. Are you
-> > planning to send a v11 ?
-> >
-> >
-> Hi Samuel,
+> Hi Guennadi,
 > 
-> The device is an MFD so I suspect the best path is through MFD tree
-Yes, that's fine. I just need to make sure everyone is on sync.
-
-
-> although I notice you have applied the patch that was required by all
-> other patches so maybe this is not so much the case now!
+> Thanks for the patch.
 > 
-> Real life has got in the way of the next updated series of patches but
-> they will be issued just as soon as we can.
-I know about real life getting in the way, no worries ;)
+> On Monday 08 April 2013 10:08:40 Guennadi Liakhovetski wrote:
+> > Most Renesas irqpin controllers have 4-bit sense fields, however, some
+> > have different widths. This patch adds a DT binding to optionally
+> > specify such non-standard values.
+> > 
+> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> > 
+> > v3: move the code to a common location, where device configuration
+> > parameters are retrieved
+> > 
+> >  .../interrupt-controller/renesas,intc-irqpin.txt   |   13 +++++++++++++
+> >  drivers/irqchip/irq-renesas-intc-irqpin.c          |    4 ++++
+> >  2 files changed, 17 insertions(+), 0 deletions(-)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.
+> > txt
+> > 
+> > diff --git
+> > a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpi
+> > n.txt
+> > b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpi
+> > n.txt new file mode 100644
+> > index 0000000..c6f09b7
+> > --- /dev/null
+> > +++
+> > b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpi
+> > n.txt @@ -0,0 +1,13 @@
+> > +DT bindings for the R-/SH-Mobile irqpin controller
+> > +
+> > +Required properties:
+> > +
+> > +- compatible: has to be "renesas,intc-irqpin"
+> > +- #interrupt-cells: has to be <2>
+> > +
+> > +Optional properties:
+> > +
+> > +- any properties, listed in interrupts.txt in this directory, and any
+> > standard
+> > +  resource allocation properties
+> > +- sense-bitfield-width: width of a single sense bitfield in the SENSE
+> > register,
+> > +  if different from the default 4 bits
+> 
+> Wouldn't it be better to define per-SoC compatible strings, and infer the 
+> sense bitfield width from that ?
 
-Cheers,
-Samuel.
+This is not a boolean, it is an integer, I don't think defining 
+compatibility strings for 1, 2, 3, 4, 5,... bits is better than having one 
+integer property.
 
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+Thanks
+Guennadi
+
+> 
+> > diff --git a/drivers/irqchip/irq-renesas-intc-irqpin.c
+> > b/drivers/irqchip/irq-renesas-intc-irqpin.c index 5a68e5a..4aca1b2 100644
+> > --- a/drivers/irqchip/irq-renesas-intc-irqpin.c
+> > +++ b/drivers/irqchip/irq-renesas-intc-irqpin.c
+> > @@ -18,6 +18,7 @@
+> >   */
+> > 
+> >  #include <linux/init.h>
+> > +#include <linux/of.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/spinlock.h>
+> >  #include <linux/interrupt.h>
+> > @@ -349,6 +350,9 @@ static int intc_irqpin_probe(struct platform_device
+> > *pdev) /* deal with driver instance configuration */
+> >  	if (pdata)
+> >  		memcpy(&p->config, pdata, sizeof(*pdata));
+> > +	else
+> > +		of_property_read_u32(pdev->dev.of_node, "sense-bitfield-width",
+> > +				     &p->config.sense_bitfield_width);
+> >  	if (!p->config.sense_bitfield_width)
+> >  		p->config.sense_bitfield_width = 4; /* default to 4 bits */
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> 
+
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
