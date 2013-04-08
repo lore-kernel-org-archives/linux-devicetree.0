@@ -1,94 +1,81 @@
-From: Bryan Freed <bfreed@chromium.org>
-Subject: Re: [PATCH v6] pstore/ram: Add ramoops support for the Flattened
- Device Tree.
-Date: Mon, 8 Apr 2013 12:54:01 -0700
-Message-ID: <CAEYUcX0rQKDGD3_pbc7JnDO6WJ_QMd8AWW+X1giNVL313wODyA@mail.gmail.com>
-References: <1347042576-17675-1-git-send-email-bfreed@chromium.org>
-	<20120908052907.GA4724@lizard>
-	<20120917062302.GA768@lizard>
-	<CAL_JsqK_L9nN6+oxUQzNwFjbFf3+3NroeEwzbMdPS4T6=Mnemg@mail.gmail.com>
-	<20130407174313.GA7168@lizard>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [RFC PATCH] CLK: Allow parent clock and rate to be configured in
+ DT.
+Date: Mon, 8 Apr 2013 22:00:38 +0200
+Message-ID: <20130408200038.GU1906@pengutronix.de>
+References: <20130319170933.28337.50448.stgit@localhost>
+ <CAOMZO5ASkvquyzPCEGObvB5Xh9bDPTJ2zx26eOUJT_Vb36Bn3Q@mail.gmail.com>
+ <CAKGA1bkWLrOs15ni=8D__BvuG6kvqkeeLZGOLrVZY9g0q0z4Bg@mail.gmail.com>
+ <6581638.FPkNsv6peb@flatron> <20130407132623.GP1906@pengutronix.de>
+ <51628F61.9000300@parkeon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130407174313.GA7168@lizard>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anton Vorontsov <anton@enomsg.org>
-Cc: Rob Herring <robherring2@gmail.com>, Tony Luck <tony.luck@intel.com>, Kees Cook <keescook@chromium.org>, Marco Stornelli <marco.stornelli@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <51628F61.9000300@parkeon.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Fuzzey <mfuzzey@parkeon.com>
+Cc: Matt Sealey <matt@genesi-usa.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Tomasz Figa <tomasz.figa@gmail.com>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Sorry for dropping the ball on this one, Anton.
+On Mon, Apr 08, 2013 at 11:35:29AM +0200, Martin Fuzzey wrote:
+> On 07/04/13 15:26, Sascha Hauer wrote:
+> >
+> >Honestly I'm annoyed by this aswell. The devicetree contains a nice and
+> >complete hardware description and it seems convenient to put hardware
+> >related configuration data there aswell.
+> Yes
+> >The problem is that hardware description and configuration data are two
+> >completely different sets of data. The hardware description is static
+> >for a given board and should (ideally) never change. The configuration
+> >data instead is often usecase specific and changes over the lifetime of
+> >a board. The configuration data can only handle a single (or maybe a
+> >table of) static setup(s). It's a good way to specify a sane default or
+> >a very special setup, but doesn't handle the case when some OS (or
+> >version thereof) wants to have a static setup and another wants to
+> >figure out the same data dynamically.
+> Agreed
+> >For these reasons I am against throwing the two data sets into a single
+> >pot. Still I also want to have the devicetree way to configure some
+> >static setup items.
+> Sure but why does using the DT for both mean "throwing them into a
+> single pot?"
 
-Thank you for your feedback and modifications in the code.
-I gotta ask, however, why do you completely remove key ramoops fields
-like record_size and ftrace_size?
+Because most likely without further intervention they would end up in
+the dts files in the kernel tree. This for example happened to the
+mtd partitions for several boards. This means the kernel dts files now
+enforce a certain partitioning which is not very nice.
 
->From your 9/7/2012 comments (again, sorry for the delay in getting back to you):
-> Personally, I don't see how this fits into device tree. It doesn't
-> describe hardware, instead it's more a configuration stuff, which
-> usually we try to not put into the device tree.
->
-> It would be better to have a sane defaults in ramoops, instead of
-> introducing more "virtual" stuff in the device tree. That is, feel
-> free to change defaults if they seem to be not enough for most your
-> setups.
+> 
+> I think we need to seperate the ideas of "DT as a container format"
+> and "semantics of DT nodes".
+> 
+> The format is the same everywhere but the semantics could change in
+> different parts of the tree.
+> 
+> Since the DT is a tree structure surely all we need to do is agree
+> on a designated configuration root node
+> "linux-config" for example under which we put all configuration
+> related stuff specific to linux whilst
+> retaining the "hardware description only" rule for the rest of the DT.
 
-So there are only two alternatives I can see to set these fields.
-1. Pass kernel command line parameters, or
-2. Modify the defaults in ram.c.
+Fine with me, but I was also referring to the dts source files. Ideally
+even the bootloader has a devicetree dtb and a configuration overlay dtb
+so that both could be changed independently.
 
-Neither of these alternatives is particularly clean to me.  The first
-is shunned to avoid clutter on the command line.
-And the second requires us to maintain our own version of ram.c or
-push our defaults on the rest of the community.
+Sascha
 
-We (ok, maybe just 'I') prefer to keep our device specific values in
-the device tree, even though it is not strictly defining hardware in
-the system.
-What do you think of at least keeping the record_size, console_size
-and ftrace_size fields as optional in the ramoops device tree
-specification?
-
-And as a more general question, why should we try not to put
-configuration in the device tree?  It seems like a great (and
-portable) place to put this stuff.
-It certainly seems better to have it there than hardwired in the
-kernel or tacked onto the kernel command line.
-
-Thanks,
-
-bryan.
-
-On Sun, Apr 7, 2013 at 10:43 AM, Anton Vorontsov <anton@enomsg.org> wrote:
-> On Thu, Apr 04, 2013 at 09:03:47PM -0500, Rob Herring wrote:
->> On Mon, Sep 17, 2012 at 1:23 AM, Anton Vorontsov <cbouatmailru@gmail.com> wrote:
->> > On Fri, Sep 07, 2012 at 10:29:10PM -0700, Anton Vorontsov wrote:
->> >> On Fri, Sep 07, 2012 at 11:29:36AM -0700, Bryan Freed wrote:
->> >> > When called with a non-zero of_node, fill out a new ramoops_platform_data
->> >> > with data from the specified Flattened Device Tree node.
->> >> > Update ramoops documentation with the new FDT interface.
->> >> > Update devicetree/binding documentation with pstore/ramoops.txt.
->> >>
->> >> Thanks for your work, Bryan! There were a few issues, I fixed
->> >> them myself but I need your confirmation if you're OK w/ all
->> >> the changes.
->> > [...]
->> >> So, the resulting patch is down below. But I have not pushed
->> >> it out yet, I'm waiting for your sign off. If you're OK with the
->> >> changes, please reply with
->> >> 'Signed-off-by: Bryan Freed <bfreed@chromium.org>'
->> >
->> > Bryan, have you had a chance to look into this?
->>
->> Whatever happened to this? Olof was also looking at doing a binding
->> back in Jan 2012:
->>
->> http://www.mail-archive.com/devicetree-discuss@lists.ozlabs.org/msg09905.html
->
-> I don't know. Bryan's patch looked good, I'd happily apply it. But I still
-> need Bryan's Signed-off-by tag. :-/ Or, somebody needs to sign off on his
-> behalf (anyone from Chromium project?). Or redo the patch.
->
-> Thanks,
->
-> Anton
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
