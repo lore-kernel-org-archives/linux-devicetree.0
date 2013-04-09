@@ -1,51 +1,40 @@
-From: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Subject: [PATCH 4/4] ARM: davinci: da8xx: remove da8xx_uart_clk_enable
-Date: Tue, 9 Apr 2013 18:01:04 +0530
-Message-ID: <1365510664-1394-5-git-send-email-prakash.pm@ti.com>
-References: <1365510481-32129-1-git-send-email-prakash.pm@ti.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 0/5] i.MX53 TVE clock patches
+Date: Tue, 9 Apr 2013 20:49:16 +0800
+Message-ID: <20130409124914.GH5044@S2101-09.ap.freescale.net>
+References: <1365432383-7787-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1365510481-32129-1-git-send-email-prakash.pm@ti.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: davinci-linux-open-source@linux.davincidsp.com, linux-serial@vger.kernel.org
-Cc: nsekhar@ti.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux@arm.linux.org.uk, hs@denx.de, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, "Manjunathappa, Prakash" <prakash.pm@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1365432383-7787-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Serial clocks are enabled from of_platform_serial_setup:of_serial.c,
-so remove davinci_serial_setup_clk from here.
+On Mon, Apr 08, 2013 at 04:46:18PM +0200, Philipp Zabel wrote:
+> Hi,
+> 
+> the first two are just cleanups, the following three patches are changes
+> to the i.MX53 clock tree that are necessary to use the TVEv2 module as
+> VGA output on the Freescale i.MX53-QSB or TQ MBa53 boards.
+> 
+> regards
+> Philipp
+> 
+> ---
+>  Documentation/devicetree/bindings/clock/imx5-clock.txt |  1 -
+>  arch/arm/mach-imx/clk-imx51-imx53.c                    | 17 ++++++++---------
+>  2 files changed, 8 insertions(+), 10 deletions(-)
 
-Signed-off-by: Manjunathappa, Prakash <prakash.pm@ti.com>
----
- arch/arm/mach-davinci/da8xx-dt.c |    8 --------
- 1 files changed, 0 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
-index fff78a1..219126b 100644
---- a/arch/arm/mach-davinci/da8xx-dt.c
-+++ b/arch/arm/mach-davinci/da8xx-dt.c
-@@ -20,13 +20,6 @@
- 
- #define DA8XX_NUM_UARTS	3
- 
--void __init da8xx_uart_clk_enable(void)
--{
--	int i;
--	for (i = 0; i < DA8XX_NUM_UARTS; i++)
--		davinci_serial_setup_clk(i, NULL);
--}
--
- static struct of_device_id da8xx_irq_match[] __initdata = {
- 	{ .compatible = "ti,cp-intc", .data = cp_intc_of_init, },
- 	{ }
-@@ -53,7 +46,6 @@ static void __init da850_init_machine(void)
- 	of_platform_populate(NULL, of_default_bus_match_table,
- 			     da850_auxdata_lookup, NULL);
- 
--	da8xx_uart_clk_enable();
- }
- 
- static const char *da850_boards_compat[] __initdata = {
--- 
-1.7.4.1
-
+All 5 patches applied, thanks.
