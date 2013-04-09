@@ -1,47 +1,57 @@
-From: Samuel Ortiz <sameo@linux.intel.com>
-Subject: Re: [PATCH 0/6] mfd: omap-usb-host: Device tree support for 3.10
-Date: Tue, 9 Apr 2013 09:54:57 +0200
-Message-ID: <20130409075457.GF24058@zurbaran>
-References: <1363083940-20050-1-git-send-email-rogerq@ti.com>
- <515029FC.3030405@ti.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] Documentation: gpio-reset.txt: Fix 'initially-in-reset'
+ example
+Date: Tue, 09 Apr 2013 10:07:21 +0200
+Message-ID: <1365494841.4023.22.camel@pizza.hi.pengutronix.de>
+References: <1365012265-32514-1-git-send-email-fabio.estevam@freescale.com>
+ <1365062022.4089.7.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <515029FC.3030405@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: balbi@ti.com, b-cousson@ti.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1365062022.4089.7.camel-/rZezPiN1rtR6QfukMTsflXZhhPuCNm+@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger,
+Am Donnerstag, den 04.04.2013, 09:53 +0200 schrieb Philipp Zabel:
+> Am Mittwoch, den 03.04.2013, 15:04 -0300 schrieb Fabio Estevam:
+> > Fix typo in 'initially-in-reset' example.
+> > 
+> > Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/reset/gpio-reset.txt       |    2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/reset/gpio-reset.txt b/Documentation/devicetree/bindings/reset/gpio-reset.txt
+> > index 1f203eb..8ab044c 100644
+> > --- a/Documentation/devicetree/bindings/reset/gpio-reset.txt
+> > +++ b/Documentation/devicetree/bindings/reset/gpio-reset.txt
+> > @@ -26,7 +26,7 @@ gpio_reset: gpio-reset {
+> >  	compatible = "gpio-reset";
+> >  	reset-gpios = <&gpio5 0 1>; /* active-low */
+> >  	reset-delays = <10000>; /* 10 ms */
+> > -	initially-in-reset: <1>;
+> > +	initially-in-reset = <1>;
+> >  	#reset-cells = <1>;
+> >  };
+> 
+> Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-On Mon, Mar 25, 2013 at 12:42:04PM +0200, Roger Quadros wrote:
-> Hi Samuel,
-> 
-> I've rebased this now on top of 3.9-rc4. Please pull this into your
-> next branch when appropriate. Thanks.
-> 
-> The following changes since commit 8bb9660418e05bb1845ac1a2428444d78e322cc7:
-> 
->   Linux 3.9-rc4 (2013-03-23 16:52:44 -0700)
-> 
-> are available in the git repository at:
->   git://github.com/rogerq/linux.git usbhost-mfd-next
-> 
-> Roger Quadros (5):
->       mfd: omap-usb-host: update nports in platform_data
->       mfd: omap-usb-host: Remove PHY reset handling code
->       mfd: omap-usb-tll: move configuration code to omap_tll_init()
->       mfd: omap-usb-tll: Add device tree support and binding information
->       mfd: omap-usb-host: Add device tree support and binding information
-I had to apply them manually, as patches #2 and #5 do not apply.
-I am pushing #1, #3 and #4, please rebase 2 and 5 on top of mfd-next and
-resend them to me.
+Disregard that, I think this fix belongs with the rest of the reset
+series. I've added the patch on top of the branch at
+git://git.pengutronix.de/git/pza/linux.git reset/for_v3.10
+for Olof to pull.
 
-Cheers,
-Samuel.
-
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+regards
+Philipp
