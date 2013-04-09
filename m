@@ -1,82 +1,64 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC][PATCH 1/2] ARM: OMAP4: clock: Add device tree support
- for AUXCLKs
-Date: Tue, 9 Apr 2013 09:49:29 -0700
-Message-ID: <20130409164928.GL10155@atomide.com>
-References: <1363703220-4777-1-git-send-email-rogerq@ti.com>
- <1363703220-4777-2-git-send-email-rogerq@ti.com>
- <20130403234242.GE10155@atomide.com>
- <515D2D30.3000306@ti.com>
- <20130404164137.GH10155@atomide.com>
- <515EA9E3.1010409@ti.com>
- <20130405155851.GA10155@atomide.com>
- <5163E589.1040809@ti.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: [PATCH] Documentation: dt: update properties in TI GPMC NAND example
+Date: Tue, 9 Apr 2013 12:23:35 -0500
+Message-ID: <1365528215-5030-1-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5163E589.1040809@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: b-cousson@ti.com, linux@arm.linux.org.uk, rnayak@ti.com, balbi@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, "Menon, Nishanth" <nm@ti.com>, grygorii.strashko@ti.com
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Jon Hunter <jon-hunter@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [130409 03:00]:
-> On 04/05/2013 06:58 PM, Tony Lindgren wrote:
-> > 
-> > Well your approach is fine as a first step moving all the clock
-> > code, but it needs to be a real driver under drivers/clock/omap.
-> > And the DT binding needs to stay the same for the driver(s) in the
-> > long term as we start moving clocks to DT + /lib/firmware.
-> 
-> The code needs to be there were the clock structs are defined.
-> Currently they are in arch/arm/mach-omap2/cclock44xx_data.c for OMAP4.
+The GPMC timing properties for device-tree have been updated
+by adding a "-ns" or "-ps" suffix to indicate the units of
+time the property represents. Therefore, update the timing
+property names for TI GPMC NAND example.
 
-But if you do just a passthrough driver then that should not
-be needed. 
+Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+---
+ .../devicetree/bindings/mtd/gpmc-nand.txt          |   28 ++++++++++----------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+index e7f8d7e..6a983c1 100644
+--- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+@@ -56,20 +56,20 @@ Example for an AM33xx board:
+ 			nand-bus-width = <16>;
+ 			ti,nand-ecc-opt = "bch8";
  
-> > If this all is too late for v3.10, I suggest you just set up the
-> > right clock alias for panda with machine_is_compatible flag in
-> > board-generic.c so we get EHCI working with DT for v3.10. Then
-> > it's easy to to deal with it properly for v3.11.
-> 
-> OK, let's do it this way for Panda for 3.10.
-
-Yes otherwise we'll be delaying omap4 DT conversion again. 
+-			gpmc,sync-clk = <0>;
+-			gpmc,cs-on = <0>;
+-			gpmc,cs-rd-off = <44>;
+-			gpmc,cs-wr-off = <44>;
+-			gpmc,adv-on = <6>;
+-			gpmc,adv-rd-off = <34>;
+-			gpmc,adv-wr-off = <44>;
+-			gpmc,we-off = <40>;
+-			gpmc,oe-off = <54>;
+-			gpmc,access = <64>;
+-			gpmc,rd-cycle = <82>;
+-			gpmc,wr-cycle = <82>;
+-			gpmc,wr-access = <40>;
+-			gpmc,wr-data-mux-bus = <0>;
++			gpmc,sync-clk-ps = <0>;
++			gpmc,cs-on-ns = <0>;
++			gpmc,cs-rd-off-ns = <44>;
++			gpmc,cs-wr-off-ns = <44>;
++			gpmc,adv-on-ns = <6>;
++			gpmc,adv-rd-off-ns = <34>;
++			gpmc,adv-wr-off-ns = <44>;
++			gpmc,we-off-ns = <40>;
++			gpmc,oe-off-ns = <54>;
++			gpmc,access-ns = <64>;
++			gpmc,rd-cycle-ns = <82>;
++			gpmc,wr-cycle-ns = <82>;
++			gpmc,wr-access-ns = <40>;
++			gpmc,wr-data-mux-bus-ns = <0>;
  
-> >> How can that driver do clk_get() from cclock44xx_data.c?
-> >> from where does it get the clk_id to pass into clk_get()?
-> > 
-> > Can't you just use the clock name there to get it?
-> 
-> In device tree we don't pass around clock names. You can either get
-> a phandle or an index to the clock.
-> 
-> e.g. Documentation/devicetree/bindings/clock/imx31-clock.txt
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-- 
+1.7.10.4
 
-Yes I understand that. But the driver/clock/omap driver can just
-remap the DT device initially so the board specific clock is
-found from the clock alias table. Basically initially a passthrough
-driver that can be enhanced to parse DT clock bindings and load
-data from /lib/firmware.
-
-> > As long as the binding stays the same in the long run too, this
-> > clock remapping approach is just fine as a starting point. And
-> > the driver needs to go to drivers/clock/omap. But in the long run
-> > we just want to get the huge amounts static data out of the kernel
-> > for clocks and hwmod data to fix things for good.
-> 
-> In that case we need to identify what clocks need to be supported.
-> If it is all (~200) of them, is this method good enough?
-
-We should support any clock we need for booting the device with
-just DT bindings to get timers, console and rootfs working. Then
-we just need to load the complete set from /lib/firmware.
-
-It seems that the binding can be the same for all the clocks.
-For now, we can just use the standard clock binding and do the
-remapping in the clock driver.
-
-Regards,
-
-Tony
