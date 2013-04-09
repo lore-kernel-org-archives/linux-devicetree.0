@@ -1,32 +1,86 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCHv7 08/17] pci: PCIe driver for Marvell Armada 370/XP systems
-Date: Tue, 9 Apr 2013 21:09:43 +0200
-Message-ID: <201304092109.43404.arnd@arndb.de>
-References: <1364395234-11195-1-git-send-email-thomas.petazzoni@free-electrons.com> <201304090014.06959.arnd@arndb.de> <20130409210652.3bc1958b@skate>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [GIT PULL] dt: run C pre-processor on *.dts, create some standard
+ headers
+Date: Tue, 09 Apr 2013 15:15:32 -0500
+Message-ID: <516476E4.3050206@gmail.com>
+References: <1365187610-29422-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20130409210652.3bc1958b@skate>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Maen Suleiman <maen@marvell.com>, Thierry Reding <thierry.reding@avionic-design.de>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1365187610-29422-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Michal Marek <mmarek@suse.cz>, Grant Likely <glikely@secretlab.ca>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 09 April 2013, Thomas Petazzoni wrote:
-> Dear Arnd Bergmann,
-> 
-> On Tue, 9 Apr 2013 00:14:06 +0200, Arnd Bergmann wrote:
-> 
-> >       pcie->realio.type = IORESOURCE_IO;
-> >       pcie->realio.start = max(PCIBIOS_MIN_IO, range->pci_addr);
-> >       pcie->realio.end = max(IO_SPACE_LIMIT, range->pci_addr + range->size);
-> 
-> Shouldn't this last line be using "min()" so that we guarantee we don't
-> have an I/O region that goes beyond IO_SPACE_LIMIT?
+On 04/05/2013 01:46 PM, Stephen Warren wrote:
+> Rob, it might be worth keeping this in a separate branch in linux-next
+> so you can pull it out if it causes any issues. I've been using these
+> patches for quite a while now, but there's always opportunity for
+> surprises on architectures I don't use. I did just fix a bug when
+> building with O= a few days back, hence the V2 that I posted as patches.
 > 
 
-Yes, of course. Sorry for not typing what I was thinking ;-)
+Pulled into my for-next branch.
 
-	Arnd
+Rob
+
+> ----------------------------------------------------------------
+> 
+> This branch enhances the support for running dtc on device tree files.
+> 
+> A dedicated directory is created for header files that provide constants
+> for device-tree bindings.
+> 
+> The kbuild dependency script processor is enhanced to support processing
+> the dependency outputs from multiple separate commands at once.
+> 
+> The kbuild dtc rule is modified so that the C pre-processor is always
+> applied when compiling any device tree.
+> 
+> Some standard headers are created which define common constants for GPIO,
+> IRQ, and ARM GIC device tree bindings.
+> 
+> ----------------------------------------------------------------
+> 
+> The following changes since commit 6dbe51c251a327e012439c4772097a13df43c5b8:
+> 
+>   Linux 3.9-rc1
+> 
+> are available in the git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/swarren/linux-tegra.git tegra-for-3.10-dtc-cpp-chroot-std-headers
+> 
+> for you to fetch changes up to 4be505d4fc7a07371a2b658469ca1dda99993ca3:
+> 
+>   ARM: dt: create a DT header for the GIC
+> 
+> ----------------------------------------------------------------
+> 
+> Stephen Warren (7):
+>       kbuild: create an "include chroot" for DT bindings
+>       kbuild: fixdep: support concatenated dep files
+>       kbuild: cmd_dtc_cpp: extract deps from both gcc -E and dtc
+>       kbuild: always run gcc -E on *.dts, remove cmd_dtc_cpp
+>       ARM: dt: add header to define GPIO flags
+>       ARM: dt: add header to define IRQ flags
+>       ARM: dt: create a DT header for the GIC
+> 
+>  arch/arm/boot/dts/include/dt-bindings           |    1 +
+>  include/dt-bindings/gpio/gpio.h                 |   15 +++
+>  .../dt-bindings/interrupt-controller/arm-gic.h  |   22 +++++
+>  include/dt-bindings/interrupt-controller/irq.h  |   19 ++++
+>  scripts/Makefile.lib                            |   17 ++--
+>  scripts/basic/fixdep.c                          |   93 ++++++++++++------
+>  6 files changed, 125 insertions(+), 42 deletions(-)
+>  create mode 120000 arch/arm/boot/dts/include/dt-bindings
+>  create mode 100644 include/dt-bindings/gpio/gpio.h
+>  create mode 100644 include/dt-bindings/interrupt-controller/arm-gic.h
+>  create mode 100644 include/dt-bindings/interrupt-controller/irq.h
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
+> 
