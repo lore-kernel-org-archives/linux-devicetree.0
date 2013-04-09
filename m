@@ -1,42 +1,81 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9b 10/14] ARM: tegra: Define Tegra114 CAR binding
-Date: Mon, 08 Apr 2013 21:25:37 -0700
-Message-ID: <20130409042537.14359.94241@quantum>
-References: <1365097717-11874-1-git-send-email-pdeschrijver@nvidia.com>
- <515DBE24.3090501@wwwdotorg.org>
+From: "Manjunathappa, Prakash" <prakash.pm@ti.com>
+Subject: RE: [PATCH] ARM: davinci: da850 evm: update clock rate for UART 1/2
+ DT nodes
+Date: Tue, 9 Apr 2013 05:31:22 +0000
+Message-ID: <A73F36158E33644199EB82C5EC81C7BC3EA4C535@DBDE01.ent.ti.com>
+References: <1361262734-8540-1-git-send-email-prakash.pm@ti.com>
+ <512F33F3.9070203@ti.com>
+ <A73F36158E33644199EB82C5EC81C7BC3EA49090@DBDE01.ent.ti.com>
+ <51433233.9070303@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <515DBE24.3090501-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <51433233.9070303@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Nori, Sekhar" <nsekhar@ti.com>
+Cc: "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "hs@denx.de" <hs@denx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Stephen Warren (2013-04-04 10:53:40)
-> On 04/04/2013 11:48 AM, Peter De Schrijver wrote:
-> > The device tree binding models Tegra114 CAR (Clock And Reset) as a single
-> > monolithic clock provider.
-> > 
-> > --
-> > 
-> > Mike,
-> > 
-> > This is a small binding doc update only. Hence I didn't make an entire new
-> > patch series, but just an updated version of this patch. Please apply this
-> > instead of '[PATCH v9 10/14] ARM: tegra: Define Tegra114 CAR binding'
-> > (http://www.spinics.net/lists/linux-tegra/msg10910.html).
-> > The rest of the series is not affected. 
+On Fri, Mar 15, 2013 at 20:07:39, Nori, Sekhar wrote:
 > 
-> I believe I was planning to take this series through the Tegra tree, so
-> I'm more looking for Mikes ack than for him to apply this.
 > 
-> If that's changed, there are some other Tegra clock bug-fixes that'd
-> benefit from moving to the clock tree.
+> On 3/15/2013 6:56 PM, Manjunathappa, Prakash wrote:
+> > Hi Sekhar,
+> > 
+> > On Thu, Feb 28, 2013 at 16:09:47, Nori, Sekhar wrote:
+> >> Prakash,
+> >>
+> >> On 2/19/2013 2:02 PM, Manjunathappa, Prakash wrote:
+> >>> DT kernel with latest of denx SPL U-boot boots with garbled UART
+> >>> logs. This is because in U-boot UART2 gets sourced by PLL0_SYSCLK2
+> >>> configured for 150MHz. But later in kernel UART2 gets mapped to
+> >>> PLL1_SYSCLK2 and is configured for 132MHz not for 150MHz.
+> >>>
+> >>> PLL1 is configured for 264MHz to support mDDR on the EVM. That is
+> >>> memory controller driving mDDR can be configured for 150MHz and
+> >>> mDDR it self can operate at 132MHz.
+> >>>
+> >>> So override UART1 and UART2 DT node clock-frequency property with
+> >>> rate available on da850 EVM.
+> >>>
+> >>> Signed-off-by: Manjunathappa, Prakash <prakash.pm@ti.com>
+> >>
+> >> How about dropping the clock-frequency attribute altogether? of_serial.c
+> >> seems to be falling back on clk apis if frequency is not passed and that
+> >> should make the kernel work with all versions of U-Boot.
+> >>
+> > 
+> > Yes it can be dropped by having duplicate clock node for UART having only
+> 
+> You meant an additional clk_lookup entry? That's different from a new
+> 'struct clk' node.
+> 
 
-I forgot to reply to this one last week with the rest of the v9 series.
-This patch update also has my ack.
+Yes I meant adding to clk_lookup, not new 'struct clk'.
 
-Regards,
-Mike
+> > dev_id. This is required because DT kernel does the clk_get with only dev_id
+> > and non-DT kernel only with con_id. In DT kernel clk_get is done from generic
+> > code of_platform_serial_setup:of_serial.c and in non-DT kernel is done from
+> > platform code, davinci_serial_setup_clk:arch/arm/mach-davinci/serial.c
+> > 
+> > Please let me know your opinion on this.
+> 
+> When only one clock is present, con_id of NULL is more appropriate. How
+> about fixing arch/arm/mach-davinci/serial.c and existing clk_lookup
+> entries to use this?
+> 
+
+Ok I will share patch which fixes this.
+
+Thanks,
+Prakash
