@@ -1,137 +1,170 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [RFC][PATCH 1/2] ARM: OMAP4: clock: Add device tree support for
- AUXCLKs
-Date: Tue, 9 Apr 2013 13:16:27 +0300
-Message-ID: <5163EA7B.6090109@ti.com>
-References: <1363703220-4777-1-git-send-email-rogerq@ti.com>
- <1363703220-4777-2-git-send-email-rogerq@ti.com>
- <20130403234242.GE10155@atomide.com> <515D2D30.3000306@ti.com>
- <20130404164137.GH10155@atomide.com> <515F1035.8090500@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <515F1035.8090500@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: "Menon, Nishanth" <nm@ti.com>, Paul Walmsley <paul@pwsan.com>, linux-usb@vger.kernel.org, linux@arm.linux.org.uk, b-cousson@ti.com, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, linux-kernel@vger.kernel.org, balbi@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: [PATCH] max77693: added device tree support
+Date: Tue, 09 Apr 2013 13:03:05 +0200
+Message-ID: <1365505385-24946-1-git-send-email-a.hajda@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sameo@linux.intel.com
+Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, s.nawrocki@samsung.com, Andrzej Hajda <a.hajda@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/05/2013 08:56 PM, Grygorii Strashko wrote:
-> On 04/04/2013 07:41 PM, Tony Lindgren wrote:
->> * Roger Quadros <rogerq@ti.com> [130404 00:39]:
->>> On 04/04/2013 02:42 AM, Tony Lindgren wrote:
->>>>> --- a/arch/arm/mach-omap2/cclock44xx_data.c
->>>>> +++ b/arch/arm/mach-omap2/cclock44xx_data.c
->>>>> @@ -27,6 +27,7 @@
->>>>>   #include <linux/clk-private.h>
->>>>>   #include <linux/clkdev.h>
->>>>>   #include <linux/io.h>
->>>>> +#include <linux/of.h>
->>>>>     #include "soc.h"
->>>>>   #include "iomap.h"
->>>>> @@ -1663,6 +1664,40 @@ static struct omap_clk omap44xx_clks[] = {
->>>>>       CLK(NULL,    "cpufreq_ck",    &dpll_mpu_ck,    CK_443X),
->>>>>   };
->>>>>   +static struct clk *scrm_clks[] = {
->>>>> +    &auxclk0_ck,
->>>>> +    &auxclk1_ck,
->>>>> +    &auxclk2_ck,
->>>>> +    &auxclk3_ck,
->>>>> +    &auxclk4_ck,
->>>>> +    &auxclk5_ck,
->>>>> +};
->>>> Hmm I don't like the idea of specifying the auxclk both in the
->>>> cclock44xx_data.c and in DT..
->>> Right, but till we have all clocks moved to DT we only need this
->>> approach for general purpose clocks that are not mapped to devices
->>> by hwmod.
->> For v3.10, let's just make sure that USB works with DT as then
->> after v3.10 we can make omap4 DT only and get rid of estimated
->> 7K lines of code and data. I guess this is the last piece missing
->> for that, or are we also missing something else?
->>
->> Can't you set up a clock alias for your device so it can find the
->> auxclk when requesting it with the dev entry?
->>
->> For the DT clock driver if needed for v3.10, how about just do a
->> minimal drivers/clock/omap/ that uses the standard binding?
->> Then that driver can just do clk_get() from cclock44xx_data.c
->> for now? And then later on we'll just move all the clocks to a
->> combination of DT + /lib/firmware.
->>
-> Hi Roger, Rajendra, All
-> 
-> Sorry that disturbing you.
+max77693 mfd main device uses only wakeup field
+from max77693_platform_data. This field is mapped
+to wakeup-source common property in device tree.
 
-Hi Grygorri,
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+Hi Samuel,
 
-Nothing to disturb at all ;).
+This is "max77693: added device tree support" patch rebased to mfd-next/master.
+I have added Documentation/devicetree/bindings/mfd/max77693.txt.
+Thanks for the review.
 
-> 
-> I'm supporting Android OMAP4 kernels (K3.0/K3.4) and like to clarify few
-> points regarding this approach (having into account possible future migrations
-> on newer Kernels and OMAP5).
-> If I understand everything right, this patch series allows to create clock binding
-> in DT using following syntax: clocks = <&aux_clks 3>
+Regards
+Andrzej
 
-Actually in v2 of the patch this would be clocks = <&clks 3>
+ Documentation/devicetree/bindings/mfd/max77693.txt |   31 ++++++++++++
+ drivers/mfd/max77693.c                             |   50 +++++++++++++++-----
+ 2 files changed, 68 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77693.txt
 
->  - does it means that in worst case there will be ~200 clock IDs defined?
-
-I'm afraid so yes. But when I wrote this I was only thinking of generic clocks, i.e. AUXCLKS.
-So when we start talking of all clocks we might need to reconsider the approach.
-
->  - does it means that clock nodes binding using phandles (human-friendly notation)
-> isn't going to be supported?
-> for example:
->     clocks = <&sys_clkin_ck>
->     clocks = <&dss_sys_clk &dss_tv_clk &dss_dss_clk>)
-
-This would depend if we define the clock nodes within DT or not. From what Tony
-mentioned (i.e. inefficiency) it seems that the clock nodes won't be defined
-in the device tree. Then we are left with using an index.
-> 
-> I was horrified to think about the problems of this approach support
-> (in case if there would be more then ~30 IDs) - just miss with on digit
-> and weeks of debugging would be guaranteed.
-> 
-> Please, say me that i'm wrong.
-
-It is still not written in stone so if you have a better idea we could
-go that route.
-
-cheers,
--roger
-
-> And why clock DT data can't be auto-generated like all other OMAP data
-> to close this questions?
-> 
-> Thanks.
-> 
->>> e.g. auxclk are required to be specified in DT nodes for USB PHY.
->>> Without this we can't get USB host working on Panda.
->> OK. So if the USB PHY has a dev entry, can't you just set up a
->> clock alias in struct omap_clk omap44xx_clks[] for it?
->>  
->>> As Rajendra points out, it seems moving entire clock data to DT is not
->>> going to happen soon. So this is the simplistic way things can work.
->> Right but seems like we can get started there without moving
->> them all at once.
->>
->> Regards,
->>
->> Tony
->> -- 
->> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+diff --git a/Documentation/devicetree/bindings/mfd/max77693.txt b/Documentation/devicetree/bindings/mfd/max77693.txt
+new file mode 100644
+index 0000000..a7213b7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/max77693.txt
+@@ -0,0 +1,31 @@
++Maxim MAX77693 multi-function device
++
++MAX77686 is a Mulitifunction device with the following submodules:
++- PMIC,
++- Charger,
++- LED,
++- MUIC,
++- HAPTIC.
++
++It is interfaced to host controller using i2c.
++This document describes the bindings for the mfd device.
++
++Required properties:
++- compatible : Must be "maxim,max77693".
++- reg : Specifies the i2c slave address of PMIC block.
++- interrupts : This i2c device has an IRQ line connected to the main SoC.
++- interrupt-parent : The parent interrupt controller.
++
++Optional properties:
++- wakeup-source : Indicates if the device can wakeup the system from the sleep
++	state.
++
++Example:
++max77693@66 {
++	compatible = "maxim,max77693";
++	reg = <0x66>;
++	interrupt-parent = <&gpx1>;
++	interrupts = <5 0>;
++	wakeup-source;
++	};
++};
+diff --git a/drivers/mfd/max77693.c b/drivers/mfd/max77693.c
+index 9e60fed..6045706 100644
+--- a/drivers/mfd/max77693.c
++++ b/drivers/mfd/max77693.c
+@@ -106,29 +106,41 @@ static const struct regmap_config max77693_regmap_config = {
+ 	.max_register = MAX77693_PMIC_REG_END,
+ };
+ 
++static int max77693_get_platform_data(struct max77693_dev *max77693,
++				      struct device *dev)
++{
++	struct device_node *node = dev->of_node;
++	struct max77693_platform_data *pdata = dev->platform_data;
++
++	if (node) {
++		max77693->wakeup = of_property_read_bool(node, "wakeup-source");
++		return 0;
++	}
++
++	if (pdata) {
++		max77693->wakeup = pdata->wakeup;
++		return 0;
++	}
++
++	dev_err(dev, "No platform data found.\n");
++	return -EINVAL;
++}
++
+ static int max77693_i2c_probe(struct i2c_client *i2c,
+ 			      const struct i2c_device_id *id)
+ {
+ 	struct max77693_dev *max77693;
+-	struct max77693_platform_data *pdata = i2c->dev.platform_data;
+ 	u8 reg_data;
+ 	int ret = 0;
+ 
+-	if (!pdata) {
+-		dev_err(&i2c->dev, "No platform data found.\n");
+-		return -EINVAL;
+-	}
+-
+ 	max77693 = devm_kzalloc(&i2c->dev,
+ 			sizeof(struct max77693_dev), GFP_KERNEL);
+ 	if (max77693 == NULL)
+ 		return -ENOMEM;
+ 
+-	i2c_set_clientdata(i2c, max77693);
+-	max77693->dev = &i2c->dev;
+-	max77693->i2c = i2c;
+-	max77693->irq = i2c->irq;
+-	max77693->type = id->driver_data;
++	ret = max77693_get_platform_data(max77693, &i2c->dev);
++	if (ret < 0)
++		return ret;
+ 
+ 	max77693->regmap = devm_regmap_init_i2c(i2c, &max77693_regmap_config);
+ 	if (IS_ERR(max77693->regmap)) {
+@@ -138,7 +150,11 @@ static int max77693_i2c_probe(struct i2c_client *i2c,
+ 		return ret;
+ 	}
+ 
+-	max77693->wakeup = pdata->wakeup;
++	i2c_set_clientdata(i2c, max77693);
++	max77693->dev = &i2c->dev;
++	max77693->i2c = i2c;
++	max77693->irq = i2c->irq;
++	max77693->type = id->driver_data;
+ 
+ 	ret = max77693_read_reg(max77693->regmap, MAX77693_PMIC_REG_PMIC_ID2,
+ 				&reg_data);
+@@ -179,7 +195,7 @@ static int max77693_i2c_probe(struct i2c_client *i2c,
+ 	if (ret < 0)
+ 		goto err_mfd;
+ 
+-	device_init_wakeup(max77693->dev, pdata->wakeup);
++	device_init_wakeup(max77693->dev, max77693->wakeup);
+ 
+ 	return ret;
+ 
+@@ -235,11 +251,19 @@ static const struct dev_pm_ops max77693_pm = {
+ 	.resume = max77693_resume,
+ };
+ 
++#ifdef CONFIG_OF
++static struct of_device_id max77693_dt_match[] = {
++	{.compatible = "maxim,max77693"},
++	{},
++};
++#endif
++
+ static struct i2c_driver max77693_i2c_driver = {
+ 	.driver = {
+ 		   .name = "max77693",
+ 		   .owner = THIS_MODULE,
+ 		   .pm = &max77693_pm,
++		   .of_match_table = of_match_ptr(max77693_dt_match),
+ 	},
+ 	.probe = max77693_i2c_probe,
+ 	.remove = max77693_i2c_remove,
+-- 
+1.7.10.4
