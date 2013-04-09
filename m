@@ -1,111 +1,70 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH 1/4] Documentation: Add memory mapped ARM architected timer binding
-Date: Mon,  8 Apr 2013 19:30:20 -0700
-Message-ID: <1365474623-29181-2-git-send-email-sboyd@codeaurora.org>
-References: <1365474623-29181-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1365474623-29181-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/1] of/irq: store IRQ trigger/level in struct resource
+ flags
+Date: Mon, 08 Apr 2013 21:45:43 -0500
+Message-ID: <516380D7.3060000@gmail.com>
+References: <1365148088-11175-1-git-send-email-javier.martinez@collabora.co.uk> <51633F26.7000400@gmail.com> <516341AF.7030207@wwwdotorg.org> <51634B1F.4030408@collabora.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51634B1F.4030408@collabora.co.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, linux-omap <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add a binding for the arm architected timer hardware's memory
-mapped interface. The mmio timer hardware is made up of one base
-frame and a collection of up to 8 timer frames, where each of the
-8 timer frames can have either one or two views. A frame
-typically maps to a privilege level (user/kernel, hypervisor,
-secure). The first view has full access to the registers within a
-frame, while the second view can be restricted to particular
-registers within a frame. Each frame must support a physical
-timer. It's optional for a frame to support a virtual timer.
+On 04/08/2013 05:56 PM, Javier Martinez Canillas wrote:
+> On 04/09/2013 12:16 AM, Stephen Warren wrote:
+>> On 04/08/2013 04:05 PM, Rob Herring wrote:
+>>> On 04/05/2013 02:48 AM, Javier Martinez Canillas wrote:
+>>>> According to Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>>>> the "#interrupt-cells" property of an "interrupt-controller" is used
+>>>> to define the number of cells needed to specify a single interrupt.
+>> ...
+>>>> But the type is never returned so it can't be saved on the IRQ struct
+>>>> resource flags member.
+>>>>
+>>>> This means that drivers that need the IRQ type/level flags defined in
+>>>> the DT won't be able to get it.
+>>>
+>>> But the interrupt controllers that need the information should be able
+>>> to get to it via irqd_get_trigger_type. What problem exactly are you
+>>> trying to fix? What driver would use this?
+>>
+>> FYI, that is indeed what I did in sound/soc/codecs/wm8903.c. Thinking
+>> back, I'm not sure if that was the right thing or whether I should have
+>> sent this same patch:-)
+>>
+> 
+> Hi Stephen,
+> 
+> I'm glad you agree :-)
+> 
+> I could change drivers/net/ethernet/smsc/smsc911x.c to get the type flags for
+> the IRQ with irqd_get_trigger_type() but I prefer $subject because:
 
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
----
- .../devicetree/bindings/arm/arch_timer.txt         | 62 ++++++++++++++++++++--
- 1 file changed, 59 insertions(+), 3 deletions(-)
+irqd_get_trigger_type probably is not meant for outside of irqchips.
+Creating an irq_get_irq_type function which takes an irq number would be
+the right function as that does not expose struct irq_data.
 
-diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
-index 20746e5..69ef711 100644
---- a/Documentation/devicetree/bindings/arm/arch_timer.txt
-+++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
-@@ -1,10 +1,14 @@
- * ARM architected timer
- 
--ARM cores may have a per-core architected timer, which provides per-cpu timers.
-+ARM cores may have a per-core architected timer, which provides per-cpu timers,
-+or a memory mapped architected timer, which provides up to 8 frames with a
-+physical and optional virtual timer per frame.
- 
--The timer is attached to a GIC to deliver its per-processor interrupts.
-+The per-core architected timer is attached to a GIC to deliver its
-+per-processor interrupts via PPIs. The memory mapped timer is attached to a GIC
-+to deliver its interrupts via SPIs.
- 
--** Timer node properties:
-+** CP15 Timer node properties:
- 
- - compatible : Should at least contain one of
- 	"arm,armv7-timer"
-@@ -26,3 +30,55 @@ Example:
- 			     <1 10 0xf08>;
- 		clock-frequency = <100000000>;
- 	};
-+
-+** Memory mapped timer node properties
-+
-+- compatible : Should at least contain "arm,armv7-timer-mem".
-+
-+- #address-cells : Must be 1.
-+
-+- #size-cells : Must be 1.
-+
-+- ranges : Indicates parent and child bus address space are the same.
-+
-+- clock-frequency : The frequency of the main counter, in Hz. Optional.
-+
-+- reg : The control frame base address.
-+
-+Frame:
-+
-+- frame-id: Encoded as follows:
-+		bits[3:0]  frame number: 0 to 7.
-+		bits[10:8] frame usage:
-+			0 - user/kernel
-+			1 - hyp
-+			2 - secure
-+
-+- interrupts : Interrupt list for physical and virtual timers in that order.
-+  The virtual timer interrupt is optional.
-+
-+- reg : The first and second view base addresses in that order. The second view
-+  base address is optional.
-+
-+Example:
-+
-+	timer@f0000000 {
-+		compatible = "arm,armv7-timer-mem";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		reg = <0xf0000000 0x1000>;
-+		clock-frequency = <50000000>;
-+		frame0@f0001000 {
-+			frame-id = <0x0>
-+			interrupts = <0 13 0x8>,
-+				     <0 14 0x8>;
-+			reg = <0xf0001000 0x1000>,
-+			      <0xf0002000 0x1000>;
-+		};
-+		frame1@f0003000 {
-+			frame-id = <0x11>
-+			interrupts = <0 15 0x8>;
-+			reg = <0xf0003000 0x1000>;
-+		};
-+	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+> a) This works in the non-DT case with board files and filling the resources from
+> platform data in arch/arm/mach-omap2/gpmc-smsc911x.c. So this is definitely a
+> bug on the DT core.
+
+And hackery/abuse like this:
+
+arch/arm/mach-omap2/board-3630sdp.c:32:    .flags          =
+GPMC_MUX_ADD_DATA | IORESOURCE_IRQ_LOWLEVEL,
+
+> b) I don't see why of_irq_to_resource() should discard the type/level flags when
+> filling the IORESOURCE_IRQ if it was specified on the DT.
+> 
+> c) We will have to change all drivers that expect to get the IRQ type flags from
+> a IORESOURCE_IRQ struct resource.
+
+I'm not convinced that is a high number of drivers. Nearly all the
+occurrences of IORESOURCE_IRQ_ in drivers/ are for ISA (acpi/pnp) and
+drivers for ISA devices.
+
+Rob
