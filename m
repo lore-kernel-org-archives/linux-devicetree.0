@@ -1,74 +1,50 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2] arm/dts: OMAP3: fix pinctrl-single configuration
-Date: Mon, 8 Apr 2013 17:15:30 -0700
-Message-ID: <20130409001530.GI10155@atomide.com>
-References: <1364458106.3757.11.camel@mars>
- <20130328163854.GV10155@atomide.com>
- <1364549848.4634.13.camel@mars>
- <20130329151759.GB10155@atomide.com>
- <1364574725.4634.51.camel@mars>
+From: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
+Date: Mon, 8 Apr 2013 17:16:37 -0700
+Message-ID: <20130408171637.98b5ad1f867bcbda883af68b@linux-foundation.org>
+References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1364574725.4634.51.camel@mars>
-Sender: linux-omap-owner@vger.kernel.org
-To: Christoph Fritz <chf.fritz@googlemail.com>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <b-cousson@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Daniel Mack <daniel@zonque.org>, "Hans J. Koch" <hjk@hansjkoch.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1365043183-28905-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Christoph Fritz <chf.fritz@googlemail.com> [130329 09:36]:
->  - Fix 'function-mask' referring to TRM (Omap 36xx) Section 13.4.4:
->    "Pad Functional Multiplexing and Configuration".
->  - Fix 'omap3_pmx_wkup' referring to TRM Table 13-6:
->    "Wkup Control Module Pad Configuration Register Fields".
+On Wed,  3 Apr 2013 20:39:43 -0600 Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
 
-Thanks applying into omap-for-v3.10/dt on top of the patches
-queued by Benoit.
+> A simple frame-buffer describes a raw memory region that may be rendered
+> to, with the assumption that the display hardware has already been set
+> up to scan out from that buffer.
+> 
+> This is useful in cases where a bootloader exists and has set up the
+> display hardware, but a Linux driver doesn't yet exist for the display
+> hardware.
+> 
+> ...
+>
+> +config FB_SIMPLE
+> +	bool "Simple framebuffer support"
+> +	depends on (FB = y) && OF
 
-Tony
- 
-> Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
-> ---
->  arch/arm/boot/dts/omap3.dtsi |   10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> index 1acc261..1997b41 100644
-> --- a/arch/arm/boot/dts/omap3.dtsi
-> +++ b/arch/arm/boot/dts/omap3.dtsi
-> @@ -27,7 +27,7 @@
->  	};
->  
->  	/*
-> -	 * The soc node represents the soc top level view. It is uses for IPs
-> +	 * The soc node represents the soc top level view. It is used for IPs
->  	 * that are not memory mapped in the MPU view or for the MPU itself.
->  	 */
->  	soc {
-> @@ -81,16 +81,16 @@
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			pinctrl-single,register-width = <16>;
-> -			pinctrl-single,function-mask = <0x7fff>;
-> +			pinctrl-single,function-mask = <0x7f1f>;
->  		};
->  
-> -		omap3_pmx_wkup: pinmux@0x48002a58 {
-> +		omap3_pmx_wkup: pinmux@0x48002a00 {
->  			compatible = "ti,omap3-padconf", "pinctrl-single";
-> -			reg = <0x48002a58 0x5c>;
-> +			reg = <0x48002a00 0x5c>;
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			pinctrl-single,register-width = <16>;
-> -			pinctrl-single,function-mask = <0x7fff>;
-> +			pinctrl-single,function-mask = <0x7f1f>;
->  		};
->  
->  		gpio1: gpio@48310000 {
-> -- 
-> 1.7.10.4
-> 
-> 
-> 
+It's sad that this simple little thing requires Open Firmware.  Could
+it be generalised in some way so that the small amount of setup info
+could be provided by other means (eg, module_param) or does the
+dependency go deeper than that?
+
+> +struct simplefb_format simplefb_formats[] = {
+> +	{ "r5g6b5", 16, {11, 5}, {5, 6}, {0, 5}, {0, 0} },
+> +};
+
+I'll make this static.
