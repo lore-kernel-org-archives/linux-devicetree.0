@@ -1,75 +1,74 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 4/8] util_version: new helper for displaying version info
-Date: Tue, 9 Apr 2013 10:01:38 +1000
-Message-ID: <20130409000138.GL17787@truffula.fritz.box>
-References: <1365404812-15153-1-git-send-email-vapier@gentoo.org>
- <1365404812-15153-5-git-send-email-vapier@gentoo.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2] arm/dts: OMAP3: fix pinctrl-single configuration
+Date: Mon, 8 Apr 2013 17:15:30 -0700
+Message-ID: <20130409001530.GI10155@atomide.com>
+References: <1364458106.3757.11.camel@mars>
+ <20130328163854.GV10155@atomide.com>
+ <1364549848.4634.13.camel@mars>
+ <20130329151759.GB10155@atomide.com>
+ <1364574725.4634.51.camel@mars>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6458329908382412195=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365404812-15153-5-git-send-email-vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1364574725.4634.51.camel@mars>
+Sender: linux-omap-owner@vger.kernel.org
+To: Christoph Fritz <chf.fritz@googlemail.com>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <b-cousson@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Daniel Mack <daniel@zonque.org>, "Hans J. Koch" <hjk@hansjkoch.de>
 List-Id: devicetree@vger.kernel.org
 
+* Christoph Fritz <chf.fritz@googlemail.com> [130329 09:36]:
+>  - Fix 'function-mask' referring to TRM (Omap 36xx) Section 13.4.4:
+>    "Pad Functional Multiplexing and Configuration".
+>  - Fix 'omap3_pmx_wkup' referring to TRM Table 13-6:
+>    "Wkup Control Module Pad Configuration Register Fields".
 
---===============6458329908382412195==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="bFUYW7mPOLJ+Jd2A"
-Content-Disposition: inline
+Thanks applying into omap-for-v3.10/dt on top of the patches
+queued by Benoit.
 
-
---bFUYW7mPOLJ+Jd2A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Apr 08, 2013 at 03:06:48AM -0400, Mike Frysinger wrote:
-> This is so all utilities can have this flag and not just dtc.
->=20
-> Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-
-Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---bFUYW7mPOLJ+Jd2A
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlFjWmIACgkQaILKxv3ab8YfuQCfZ/vLXBgwREgrz1dwlLMw28jP
-/XEAniNdyo73iThfFMKR1Ze5KvDyGLvy
-=mZgv
------END PGP SIGNATURE-----
-
---bFUYW7mPOLJ+Jd2A--
-
---===============6458329908382412195==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============6458329908382412195==--
+Tony
+ 
+> Signed-off-by: Christoph Fritz <chf.fritz@googlemail.com>
+> ---
+>  arch/arm/boot/dts/omap3.dtsi |   10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+> index 1acc261..1997b41 100644
+> --- a/arch/arm/boot/dts/omap3.dtsi
+> +++ b/arch/arm/boot/dts/omap3.dtsi
+> @@ -27,7 +27,7 @@
+>  	};
+>  
+>  	/*
+> -	 * The soc node represents the soc top level view. It is uses for IPs
+> +	 * The soc node represents the soc top level view. It is used for IPs
+>  	 * that are not memory mapped in the MPU view or for the MPU itself.
+>  	 */
+>  	soc {
+> @@ -81,16 +81,16 @@
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  			pinctrl-single,register-width = <16>;
+> -			pinctrl-single,function-mask = <0x7fff>;
+> +			pinctrl-single,function-mask = <0x7f1f>;
+>  		};
+>  
+> -		omap3_pmx_wkup: pinmux@0x48002a58 {
+> +		omap3_pmx_wkup: pinmux@0x48002a00 {
+>  			compatible = "ti,omap3-padconf", "pinctrl-single";
+> -			reg = <0x48002a58 0x5c>;
+> +			reg = <0x48002a00 0x5c>;
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  			pinctrl-single,register-width = <16>;
+> -			pinctrl-single,function-mask = <0x7fff>;
+> +			pinctrl-single,function-mask = <0x7f1f>;
+>  		};
+>  
+>  		gpio1: gpio@48310000 {
+> -- 
+> 1.7.10.4
+> 
+> 
+> 
