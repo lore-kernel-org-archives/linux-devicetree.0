@@ -1,458 +1,500 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v5 1/3] i2c: mux: Add i2c-arb-gpio-challenge 'mux' driver
-Date: Tue,  9 Apr 2013 14:34:28 -0700
-Message-ID: <1365543270-10736-1-git-send-email-dianders@chromium.org>
-References: <1363192583-26363-1-git-send-email-dianders@chromium.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [RFC][PATCH 1/2] ARM: OMAP4: clock: Add device tree support for
+ AUXCLKs
+Date: Tue, 9 Apr 2013 16:54:19 -0500
+Message-ID: <20130409215419.GA13731@kahuna>
+References: <1363703220-4777-2-git-send-email-rogerq@ti.com>
+ <20130403234242.GE10155@atomide.com> <515D2D30.3000306@ti.com>
+ <20130404164137.GH10155@atomide.com> <515EA9E3.1010409@ti.com>
+ <20130405155851.GA10155@atomide.com> <5163E589.1040809@ti.com>
+ <20130409164928.GL10155@atomide.com>
+ <20130409174319.GP10155@atomide.com> <20130409204900.GA8815@kahuna>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1363192583-26363-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <guenter.roeck-IzeFyvvaP7pWk0Htik3J/w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20130409204900.GA8815@kahuna>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: grygorii.strashko@ti.com, linux@arm.linux.org.uk, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The i2c-arb-gpio-challenge driver implements an I2C arbitration scheme
-where masters need to claim the bus with a GPIO before they can start
-a transcation.  This should generally only be used when standard I2C
-multimaster isn't appropriate for some reason (errata/bugs).
+On 15:49-20130409, Nishanth Menon wrote:
+> On 10:43-20130409, Tony Lindgren wrote:
+> > * Tony Lindgren <tony@atomide.com> [130409 09:54]:
+> > > * Roger Quadros <rogerq@ti.com> [130409 03:00]:
+> > > > On 04/05/2013 06:58 PM, Tony Lindgren wrote:
+> > > > > 
+> > > > > Can't you just use the clock name there to get it?
+> > > > 
+> > > > In device tree we don't pass around clock names. You can either get
+> > > > a phandle or an index to the clock.
+> > > > 
+> > > > e.g. Documentation/devicetree/bindings/clock/imx31-clock.txt
+> > > 
+> > > Yes I understand that. But the driver/clock/omap driver can just
+> > > remap the DT device initially so the board specific clock is
+> > > found from the clock alias table. Basically initially a passthrough
+> > > driver that can be enhanced to parse DT clock bindings and load
+> > > data from /lib/firmware.
+> > 
+> > Actually probably the driver/clock/omap can even do even less
+> > initially. There probably even no need to remap clocks there.
+> > 
+> > As long as the DT clock driver understands that a board specific
+> > auxclk is specified in the DT it can just call clk_add_alias() so
+> > the driver will get the right auxclk from cclock44xx_data.c.
+> > 
+> > Then other features can be added later on like to allocate a
+> > clock entirely based on the binding etc.
+> I did try to have an implementation for cpufreq using clock nodes.
+> unfortunately, device tree wont let me have arguments of strings :(
+> So, I am unable to do clock = <&clk mpu_dpll>;
+> instead, I am forced to do clock = <&clk 249>;
+> 
+> Here is an attempt on beagleXM - adds every clock node to the list.
+> Tons of un-necessary prints added to give an idea - see log:
+> http://pastebin.com/F9A2zSTr
+> 
+> Would an cleaned up version be good enough as a step #1 of transition?
+> 
+Approach #2:
+Here is yet another revision -> here I am trying to avoid the risk of
+folks messing up indexing. for example: using an older DTB with newer
+kernel, clocks being inserted into existing list etc. to prevent these,
+we add an "DT_ID" for omap clock nodes, and use it to uniquely identify
+the clock node. We try to minimize(not avoidable with integer indexing)
+mistakes during development/productization.
 
-This driver is based on code that Simon Glass added to the i2c-s3c2410
-driver in the Chrome OS kernel 3.4 tree.  The current incarnation as a
-mux driver is as suggested by Grant Likely.  See
-<https://patchwork.kernel.org/patch/1877311/> for some history.
+>From 2b576affdc6f6bf0b51ebf9b85ef4319357a7994 Mon Sep 17 00:00:00 2001
+From: Nishanth Menon <nm@ti.com>
+Date: Tue, 26 Mar 2013 10:23:27 +0000
+Subject: [RFC PATCH V2] OMAP: add devicetree support for clock nodes.(rev 2)
 
-Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Dummy patch based on Roger's original idea
+this time have lesser possibiltiy of screwing up indices. instead
+use a specific integer ID to uniquely (TI SoC wide) identify an clock.
+on the flip side, we do not all make clock nodes to be accesible from DT
+clock indexing.
+
+Nyet-Signed-off-by: Nishanth Menon <nm@ti.com>
 ---
-(Sorry if you got v5 more than once--apparently the CC list has grown
- too long and my mail was rejected; resending with a shorter header)
+ .../devicetree/bindings/clock/ti,clock.txt         |   48 +++++++++++
+ arch/arm/boot/dts/omap3.dtsi                       |    5 ++
+ arch/arm/boot/dts/omap34xx.dtsi                    |    2 +
+ arch/arm/boot/dts/omap4.dtsi                       |    5 ++
+ arch/arm/boot/dts/omap443x.dtsi                    |    2 +
+ arch/arm/mach-omap2/cclock3xxx_data.c              |    5 +-
+ arch/arm/mach-omap2/cclock44xx_data.c              |    5 +-
+ arch/arm/mach-omap2/clock.h                        |   12 +++
+ arch/arm/mach-omap2/pm.c                           |   11 ++-
+ drivers/clk/Kconfig                                |    6 ++
+ drivers/clk/Makefile                               |    2 +
+ drivers/clk/ti.c                                   |   85 ++++++++++++++++++++
+ include/linux/clk/ti.h                             |   30 +++++++
+ 13 files changed, 211 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/ti,clock.txt
+ create mode 100644 drivers/clk/ti.c
+ create mode 100644 include/linux/clk/ti.h
 
-Changes in v5:
-- Renamed as per Wolfram Sang.
-- Avoid references to AP and EC.
-- Bindings are now generic and could support N other masters; code
-  still only supports one other master.
-- Replaced all instances of WARN_ON with error messages.
-- Left Stephen's Reviewed-by from v4 since changes aren't huge, but
-  please yell if you want it removed or don't like something about the
-  new code; removed Naveen's Tested-by for now.
-
-Changes in v4: None
-Changes in v3:
-- Handle of_find_i2c_adapter_by_node() failure more properly by
-  changing init order.
-- Don't warn on -EPROBE_DEFER from calls that could return it.
-- Move to module_platform_driver().  As we pull in parts of the system
-  that rely on devices under this i2c bus we'll need to make sure they
-  can handle the fact that they'll be initted later now.
-
-Changes in v2:
-- Renamed to i2c-arb-gpio-challenge.
-- Documented "microsecond" properties as optional; removed
-  "bus-arbitration" prefix since it was just extra wordy.
-- Split GPIOs into two properties to make it cleaner.
-- Capitalized I2C in freeform text.
-- Get 'active low' from device tree.
-
- .../bindings/i2c/i2c-arb-gpio-challenge.txt        |  80 +++++++
- drivers/i2c/muxes/Kconfig                          |  11 +
- drivers/i2c/muxes/Makefile                         |   2 +
- drivers/i2c/muxes/i2c-arb-gpio-challenge.c         | 252 +++++++++++++++++++++
- 4 files changed, 345 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-arb-gpio-challenge.txt
- create mode 100644 drivers/i2c/muxes/i2c-arb-gpio-challenge.c
-
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-arb-gpio-challenge.txt b/Documentation/devicetree/bindings/i2c/i2c-arb-gpio-challenge.txt
+diff --git a/Documentation/devicetree/bindings/clock/ti,clock.txt b/Documentation/devicetree/bindings/clock/ti,clock.txt
 new file mode 100644
-index 0000000..726e099
+index 0000000..53c947c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-arb-gpio-challenge.txt
-@@ -0,0 +1,80 @@
-+GPIO-based I2C Arbitration
-+==========================
-+This uses GPIO lines to arbitrate who is the master of an I2C bus in a
-+multimaster situation.
-+
-+In many cases using GPIOs to arbitrate is not needed and a design can use
-+the standard I2C multi-master rules.  Using GPIOs is generally useful in
-+the case where there is a device on the bus that has errata and/or bugs
-+that makes standard multimaster mode not feasible.
-+
-+
-+Algorithm:
-+
-+All masters on the bus have a 'bus claim' line which is an output that the
-+others can see. These are all active low with pull-ups enabled.  We'll
-+describe these lines as:
-+
-+- OUR_CLAIM: output from us signaling to other hosts that we want the bus
-+- THEIR_CLAIMS: output from others signaling that they want the bus
-+
-+The basic algorithm is to assert your line when you want the bus, then make
-+sure that the other side doesn't want it also.  A detailed explanation is best
-+done with an example.
-+
-+Let's say we want to claim the bus.  We:
-+1. Assert OUR_CLAIM.
-+2. Waits a little bit for the other sides to notice (slew time, say 10
-+   microseconds).
-+3. Check THEIR_CLAIMS.  If none are asserted then the we have the bus and we are
-+   done.
-+4. Otherwise, wait for a few milliseconds and see if THEIR_CLAIMS are released.
-+5. If not, back off, release the claim and wait for a few more milliseconds.
-+6. Go back to 1 (until retry time has expired).
-+
++++ b/Documentation/devicetree/bindings/clock/ti,clock.txt
+@@ -0,0 +1,48 @@
++* Clock bindings for Texas Instruments clocks
 +
 +Required properties:
-+- compatible: i2c-arb-gpio-challenge
-+- our-claim-gpio: The GPIO that we use to claim the bus.
-+- their-claim-gpios: The GPIOs that the other sides use the claim the bus.
-+  Note that some implementations may only support a single other master.
-+- Standard I2C mux properties. See mux.txt in this directory.
-+- Single I2C child bus node at reg 0. See mux.txt in this directory.
++- compatible: Should be "ti,clock"
++- #clock-cells: Should be <1>
 +
-+Optional properties:
-+- slew-delay-us: microseconds to wait for a GPIO to go high. Default is 10 us.
-+- wait-retry-us: we'll attempt another claim after this many microseconds.
-+    Default is 3000 us.
-+- wait-free-us: we'll give up after this many microseconds. Default is 50000 us.
++The clock consumer should specify the desired clock by having the clock
++ID in its "clocks" phandle cell.  The following is a list of ID reservations
++across TI SoCs
 +
++       Clock           ID
++       ------------------
++       cpu clock	1
 +
-+Example:
-+	i2c@12CA0000 {
-+		compatible = "acme,some-i2c-device";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
++The definition is used by SoC clock data using CLKDT() macro
++(example of OMAP2+).
 +
-+	i2c-arbitrator {
-+		compatible = "i2c-arb-gpio-challenge";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++Example Steps:
++/* step 1: definiting an SoC nodes compatible with ti clocks -skip if already done */
++clks: clocks {
++	compatible = "ti,clock";
++	#clock-cells = <1>;
++};
 +
-+		i2c-parent = <&{/i2c@12CA0000}>;
++/* step 2: Modify the bindings documentation to reserve an ID */
++	auxclk0_ck      2
++	auxclk1_ck      3
++	auxclk2_ck      4
++	auxclk3_ck      5
++	auxclk4_ck      6
++	auxclk5_ck      7
++etc. use an unique number not conflicting with previous reservations.
++WARNING: DONOT insert values - this breaks backward compatibility.
++/* Step 3: replace in clock data file */
++	CLK(NULL,	"auxclk0_ck",			&auxclk0_ck,	CK_443X),
++with
++	CLKDT(2, NULL,	"auxclk0_ck",			&auxclk0_ck,	CK_443X),
 +
-+		our-claim-gpio = <&gpf0 3 1>;
-+		their-claim-gpios = <&gpe0 4 1>;
-+		slew-delay-us = <10>;
-+		wait-retry-us = <3000>;
-+		wait-free-us = <50000>;
++/* step 4: in device tree entry, now we can use index 2 to uniquely identify auxclk0 clock */
 +
-+		i2c@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
++hsusb1_phy: hsusb1_phy {
++	compatible = "usb-nop-xceiv";
++	reset-supply = <&hsusb1_reset>;
++	clocks = <&aux_clks 2>;
++	clock-names = "main_clk";
++	clock-frequency = <19200000>;
++};
 +
-+			i2c@52 {
-+				// Normal I2C device
-+			};
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+index 3344f05..a08990d 100644
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -73,6 +73,11 @@
+ 			ti,hwmods = "counter_32k";
+ 		};
+ 
++		clks: clocks {
++			compatible = "ti,clock";
++			#clock-cells = <1>;
 +		};
-+	};
-diff --git a/drivers/i2c/muxes/Kconfig b/drivers/i2c/muxes/Kconfig
-index 0be5b83..ab4dcaf 100644
---- a/drivers/i2c/muxes/Kconfig
-+++ b/drivers/i2c/muxes/Kconfig
-@@ -5,6 +5,17 @@
- menu "Multiplexer I2C Chip support"
- 	depends on I2C_MUX
++
+ 		intc: interrupt-controller@48200000 {
+ 			compatible = "ti,omap2-intc";
+ 			interrupt-controller;
+diff --git a/arch/arm/boot/dts/omap34xx.dtsi b/arch/arm/boot/dts/omap34xx.dtsi
+index 75ed4ae..de59fb8 100644
+--- a/arch/arm/boot/dts/omap34xx.dtsi
++++ b/arch/arm/boot/dts/omap34xx.dtsi
+@@ -23,6 +23,8 @@
+ 				600000  1350000
+ 			>;
+ 			clock-latency = <300000>; /* From legacy driver */
++			clocks = <&clks 1>;
++			clock-names = "cpu";
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 3329140..ad18d6a 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -106,6 +106,11 @@
+ 			ti,hwmods = "counter_32k";
+ 		};
  
-+config I2C_ARB_GPIO_CHALLENGE
-+	tristate "GPIO-based I2C arbitration"
-+	depends on GENERIC_GPIO && OF
-+	help
-+	  If you say yes to this option, support will be included for an
-+	  I2C multimaster arbitration scheme using GPIOs where masters have
-+	  to claim the bus by asserting a GPIO.
++		clks: clocks {
++			compatible = "ti,clock";
++			#clock-cells = <1>;
++		};
 +
-+	  This driver can also be built as a module.  If so, the module
-+	  will be called i2c-arb-gpio-challenge.
-+
- config I2C_MUX_GPIO
- 	tristate "GPIO-based I2C multiplexer"
- 	depends on GENERIC_GPIO
-diff --git a/drivers/i2c/muxes/Makefile b/drivers/i2c/muxes/Makefile
-index 76da869..465778b 100644
---- a/drivers/i2c/muxes/Makefile
-+++ b/drivers/i2c/muxes/Makefile
-@@ -1,6 +1,8 @@
- #
- # Makefile for multiplexer I2C chip drivers.
+ 		omap4_pmx_core: pinmux@4a100040 {
+ 			compatible = "ti,omap4-padconf", "pinctrl-single";
+ 			reg = <0x4a100040 0x0196>;
+diff --git a/arch/arm/boot/dts/omap443x.dtsi b/arch/arm/boot/dts/omap443x.dtsi
+index cccf39a..5bfc02b 100644
+--- a/arch/arm/boot/dts/omap443x.dtsi
++++ b/arch/arm/boot/dts/omap443x.dtsi
+@@ -22,6 +22,8 @@
+ 				1008000 1375000
+ 			>;
+ 			clock-latency = <300000>; /* From legacy driver */
++			clocks = <&clks 1>;
++			clock-names = "cpu";
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/mach-omap2/cclock3xxx_data.c b/arch/arm/mach-omap2/cclock3xxx_data.c
+index 4579c3c..2f2932b 100644
+--- a/arch/arm/mach-omap2/cclock3xxx_data.c
++++ b/arch/arm/mach-omap2/cclock3xxx_data.c
+@@ -22,6 +22,7 @@
+ #include <linux/clk-private.h>
+ #include <linux/list.h>
+ #include <linux/io.h>
++#include <linux/clk/ti.h>
  
-+obj-$(CONFIG_I2C_ARB_GPIO_CHALLENGE)	+= i2c-arb-gpio-challenge.o
+ #include "soc.h"
+ #include "iomap.h"
+@@ -3501,7 +3502,7 @@ static struct omap_clk omap3xxx_clks[] = {
+ 	CLK(NULL,	"uart4_ick",	&uart4_ick_am35xx,	CK_AM35XX),
+ 	CLK(NULL,	"timer_32k_ck",	&omap_32k_fck,  CK_3XXX),
+ 	CLK(NULL,	"timer_sys_ck",	&sys_ck,	CK_3XXX),
+-	CLK(NULL,	"cpufreq_ck",	&dpll1_ck,	CK_3XXX),
++	CLKDT(1, NULL,	"cpufreq_ck",	&dpll1_ck,	CK_3XXX),
+ };
+ 
+ static const char *enable_init_clks[] = {
+@@ -3574,7 +3575,7 @@ int __init omap3xxx_clk_init(void)
+ 	for (c = omap3xxx_clks; c < omap3xxx_clks + ARRAY_SIZE(omap3xxx_clks);
+ 	     c++)
+ 		if (c->cpu & cpu_clkflg) {
+-			clkdev_add(&c->lk);
++			ti_clk_node_add(&c->lk, c->dt_clkid);
+ 			if (!__clk_init(NULL, c->lk.clk))
+ 				omap2_init_clk_hw_omap_clocks(c->lk.clk);
+ 		}
+diff --git a/arch/arm/mach-omap2/cclock44xx_data.c b/arch/arm/mach-omap2/cclock44xx_data.c
+index 0c6834a..74d4e8c 100644
+--- a/arch/arm/mach-omap2/cclock44xx_data.c
++++ b/arch/arm/mach-omap2/cclock44xx_data.c
+@@ -27,6 +27,7 @@
+ #include <linux/clk-private.h>
+ #include <linux/clkdev.h>
+ #include <linux/io.h>
++#include <linux/clk/ti.h>
+ 
+ #include "soc.h"
+ #include "iomap.h"
+@@ -1672,7 +1673,7 @@ static struct omap_clk omap44xx_clks[] = {
+ 	CLK("4013a000.timer",	"timer_sys_ck",	&syc_clk_div_ck,	CK_443X),
+ 	CLK("4013c000.timer",	"timer_sys_ck",	&syc_clk_div_ck,	CK_443X),
+ 	CLK("4013e000.timer",	"timer_sys_ck",	&syc_clk_div_ck,	CK_443X),
+-	CLK(NULL,	"cpufreq_ck",	&dpll_mpu_ck,	CK_443X),
++	CLKDT(1, NULL,	"cpufreq_ck",	&dpll_mpu_ck,	CK_443X),
+ };
+ 
+ int __init omap4xxx_clk_init(void)
+@@ -1697,7 +1698,7 @@ int __init omap4xxx_clk_init(void)
+ 	for (c = omap44xx_clks; c < omap44xx_clks + ARRAY_SIZE(omap44xx_clks);
+ 									c++) {
+ 		if (c->cpu & cpu_clkflg) {
+-			clkdev_add(&c->lk);
++			ti_clk_node_add(&c->lk, c->dt_clkid);
+ 			if (!__clk_init(NULL, c->lk.clk))
+ 				omap2_init_clk_hw_omap_clocks(c->lk.clk);
+ 		}
+diff --git a/arch/arm/mach-omap2/clock.h b/arch/arm/mach-omap2/clock.h
+index 60ddd86..9a7c95b 100644
+--- a/arch/arm/mach-omap2/clock.h
++++ b/arch/arm/mach-omap2/clock.h
+@@ -23,10 +23,22 @@
+ #include <linux/clk-provider.h>
+ 
+ struct omap_clk {
++	u16				dt_clkid;
+ 	u16				cpu;
+ 	struct clk_lookup		lk;
+ };
+ 
++#define CLKDT(id, dev, con, ck, cp)	\
++	{				\
++		.dt_clkid = id,		\
++		.cpu = cp,		\
++		.lk = {			\
++			.dev_id = dev,	\
++			.con_id = con,	\
++			.clk = ck,	\
++		},			\
++	}
 +
- obj-$(CONFIG_I2C_MUX_GPIO)	+= i2c-mux-gpio.o
- obj-$(CONFIG_I2C_MUX_PCA9541)	+= i2c-mux-pca9541.o
- obj-$(CONFIG_I2C_MUX_PCA954x)	+= i2c-mux-pca954x.o
-diff --git a/drivers/i2c/muxes/i2c-arb-gpio-challenge.c b/drivers/i2c/muxes/i2c-arb-gpio-challenge.c
+ #define CLK(dev, con, ck, cp)		\
+ 	{				\
+ 		 .cpu = cp,		\
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index a47e6ee..03c6e48 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -55,6 +55,12 @@ config COMMON_CLK_MAX77686
+ 	---help---
+ 	  This driver supports Maxim 77686 crystal oscillator clock. 
+ 
++config COMMON_CLK_TI
++	tristate "Clock driver for TI SoCs"
++	depends on ARCH_OMAP && OF
++	---help---
++	  Fill me up.. some generic statement ofcourse (lets start with OMAP)
++
+ config CLK_TWL6040
+ 	tristate "External McPDM functional clock from twl6040"
+ 	depends on TWL6040_CORE
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 300d477..9621815 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -30,6 +30,8 @@ obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
+ 
+ obj-$(CONFIG_X86)		+= x86/
+ 
++obj-$(CONFIG_COMMON_CLK_TI)	+= ti.o
++
+ # Chip specific
+ obj-$(CONFIG_COMMON_CLK_WM831X) += clk-wm831x.o
+ obj-$(CONFIG_COMMON_CLK_MAX77686) += clk-max77686.o
+diff --git a/drivers/clk/ti.c b/drivers/clk/ti.c
 new file mode 100644
-index 0000000..bda020a
+index 0000000..56b8754
 --- /dev/null
-+++ b/drivers/i2c/muxes/i2c-arb-gpio-challenge.c
-@@ -0,0 +1,252 @@
++++ b/drivers/clk/ti.c
+@@ -0,0 +1,85 @@
 +/*
-+ * GPIO-based I2C Arbitration
++ * TI Clock node provider
 + *
-+ * Copyright (C) 2012 Google, Inc
++ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
++ *	Nishanth Menon
 + *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 + * GNU General Public License for more details.
-+ *
 + */
-+
-+#include <linux/delay.h>
-+#include <linux/gpio.h>
 +#include <linux/kernel.h>
-+#include <linux/i2c.h>
-+#include <linux/i2c-mux.h>
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/of_i2c.h>
-+#include <linux/of_gpio.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
++#include <linux/list.h>
++#include <linux/clk-private.h>
++#include <linux/clkdev.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/clk/ti.h>
 +
-+
-+/**
-+ * struct i2c_arbitrator_data - Driver data for I2C arbitrator
-+ *
-+ * @parent: Parent adapter
-+ * @child: Child bus
-+ * @our_gpio: GPIO we'll use to claim.
-+ * @our_gpio_release: 0 if active high; 1 if active low; AKA if the GPIO ==
-+ *   this then consider it released.
-+ * @their_gpio: GPIO that the other side will use to claim.
-+ * @their_gpio_release: 0 if active high; 1 if active low; AKA if the GPIO ==
-+ *   this then consider it released.
-+ * @slew_delay_us: microseconds to wait for a GPIO to go high.
-+ * @wait_retry_us: we'll attempt another claim after this many microseconds.
-+ * @wait_free_us: we'll give up after this many microseconds.
-+ */
-+
-+struct i2c_arbitrator_data {
-+	struct i2c_adapter *parent;
-+	struct i2c_adapter *child;
-+
-+	int		our_gpio;
-+	int		our_gpio_release;
-+	int		their_gpio;
-+	int		their_gpio_release;
-+	unsigned int	slew_delay_us;
-+	unsigned int	wait_retry_us;
-+	unsigned int	wait_free_us;
++struct ti_clk {
++	struct clk_lookup *lk;
++	u16	id;
++	struct list_head node;
 +};
 +
++static LIST_HEAD(ti_clk_list);
 +
-+/**
-+ * i2c_arbitrator_select - claim the I2C bus
-+ *
-+ * Use the GPIO-based signalling protocol; return -EBUSY if we fail.
-+ */
-+static int i2c_arbitrator_select(struct i2c_adapter *adap, void *data, u32 chan)
++static struct clk *ti_bypass_clk_get_by_name(struct of_phandle_args *clkspec,
++					     void *data)
 +{
-+	const struct i2c_arbitrator_data *arb = data;
-+	unsigned long stop_retry, stop_time;
++	struct ti_clk *c;
++	int idx = clkspec->args[0];
 +
-+	/* Start a round of trying to claim the bus */
-+	stop_time = jiffies + usecs_to_jiffies(arb->wait_free_us) + 1;
-+	do {
-+		/* Indicate that we want to claim the bus */
-+		gpio_set_value(arb->our_gpio, !arb->our_gpio_release);
-+		udelay(arb->slew_delay_us);
++	list_for_each_entry(c, &ti_clk_list, node) {
++		if (idx == c->id)
++			return c->lk->clk;
++	}
 +
-+		/* Wait for the other master to release it */
-+		stop_retry = jiffies + usecs_to_jiffies(arb->wait_retry_us) + 1;
-+		while (time_before(jiffies, stop_retry)) {
-+			int gpio_val = !!gpio_get_value(arb->their_gpio);
-+
-+			if (gpio_val == arb->their_gpio_release) {
-+				/* We got it, so return */
-+				return 0;
-+			}
-+
-+			usleep_range(50, 200);
-+		}
-+
-+		/* It didn't release, so give up, wait, and try again */
-+		gpio_set_value(arb->our_gpio, arb->our_gpio_release);
-+
-+		usleep_range(arb->wait_retry_us, arb->wait_retry_us * 2);
-+	} while (time_before(jiffies, stop_time));
-+
-+	/* Give up, release our claim */
-+	gpio_set_value(arb->our_gpio, arb->our_gpio_release);
-+	udelay(arb->slew_delay_us);
-+	dev_err(&adap->dev, "Could not claim bus, timeout\n");
-+	return -EBUSY;
++	pr_err("%s: Clock ID %d not found in list\n", __func__, idx);
++	return ERR_PTR(-ENODEV);
 +}
 +
-+/**
-+ * i2c_arbitrator_deselect - release the I2C bus
-+ *
-+ * Release the I2C bus using the GPIO-based signalling protocol.
-+ */
-+static int i2c_arbitrator_deselect(struct i2c_adapter *adap, void *data,
-+				   u32 chan)
++static void __init ti_clock_init(struct device_node *node)
 +{
-+	const struct i2c_arbitrator_data *arb = data;
 +
-+	/* Release the bus and wait for the other master to notice */
-+	gpio_set_value(arb->our_gpio, arb->our_gpio_release);
-+	udelay(arb->slew_delay_us);
-+
-+	return 0;
++	pr_err("%s: START\n", __func__);
++	of_clk_add_provider(node, ti_bypass_clk_get_by_name, NULL);
++	pr_err("%s: END\n", __func__);
 +}
++CLK_OF_DECLARE(ti_clk, "ti,clock", ti_clock_init);
 +
-+static int i2c_arbitrator_probe(struct platform_device *pdev)
++void __init ti_clk_node_add(struct clk_lookup *lk, u16 id)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct device_node *parent_np;
-+	struct i2c_arbitrator_data *arb;
-+	enum of_gpio_flags gpio_flags;
-+	unsigned long out_init;
-+	int ret;
++	struct ti_clk *c;
++	static bool of_added;
 +
-+	/* We only support probing from device tree; no platform_data */
-+	if (!np) {
-+		dev_err(dev, "Cannot find device tree node\n");
-+		return -ENODEV;
++	if (lk->dev_id || !id)
++		goto out;
++
++	/* No lists if we did not boot supported by DT entries */
++	if (!of_have_populated_dt())
++		goto out;
++
++	c = kzalloc(sizeof(struct ti_clk), GFP_KERNEL);
++	if (!c) {
++		pr_err("%s: No memory!! cannot add clk node for DT!\n",
++			__func__);
++		/* lets try atleast an regular clock node */
++		goto out;
 +	}
-+	if (dev->platform_data) {
-+		dev_err(dev, "Platform data is not supported\n");
-+		return -EINVAL;
++	c->lk = lk;
++	c->id = id;
++	list_add_tail(&c->node, &ti_clk_list);
++	pr_err("%s: Added clock node %s\n", __func__, lk->con_id);
++	if (!of_added) {
++		of_clk_init(NULL);
++		of_added =  true;
 +	}
-+
-+	arb = devm_kzalloc(dev, sizeof(*arb), GFP_KERNEL);
-+	if (!arb) {
-+		dev_err(dev, "Cannot allocate i2c_arbitrator_data\n");
-+		return -ENOMEM;
-+	}
-+	platform_set_drvdata(pdev, arb);
-+
-+	/* Request GPIOs */
-+	ret = of_get_named_gpio_flags(np, "our-claim-gpio", 0, &gpio_flags);
-+	if (!gpio_is_valid(ret)) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Error getting our-claim-gpio\n");
-+		return ret;
-+	}
-+	arb->our_gpio = ret;
-+	arb->our_gpio_release = !!(gpio_flags & OF_GPIO_ACTIVE_LOW);
-+	out_init = (gpio_flags & OF_GPIO_ACTIVE_LOW) ?
-+		GPIOF_OUT_INIT_HIGH : GPIOF_OUT_INIT_LOW;
-+	ret = devm_gpio_request_one(dev, arb->our_gpio, out_init,
-+				    "our-claim-gpio");
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Error requesting our-claim-gpio\n");
-+		return ret;
-+	}
-+
-+	ret = of_get_named_gpio_flags(np, "their-claim-gpios", 0, &gpio_flags);
-+	if (!gpio_is_valid(ret)) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Error getting their-claim-gpio\n");
-+		return ret;
-+	}
-+	arb->their_gpio = ret;
-+	arb->their_gpio_release = !!(gpio_flags & OF_GPIO_ACTIVE_LOW);
-+	ret = devm_gpio_request_one(dev, arb->their_gpio, GPIOF_IN,
-+				    "their-claim-gpio");
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Error requesting their-claim-gpio\n");
-+		return ret;
-+	}
-+
-+	/* At the moment we only support a single two master (us + 1 other) */
-+	if (gpio_is_valid(of_get_named_gpio(np, "their-claim-gpios", 1))) {
-+		dev_err(dev, "Only one other master is supported\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Arbitration parameters */
-+	if (of_property_read_u32(np, "slew-delay-us", &arb->slew_delay_us))
-+		arb->slew_delay_us = 10;
-+	if (of_property_read_u32(np, "wait-retry-us", &arb->wait_retry_us))
-+		arb->wait_retry_us = 3000;
-+	if (of_property_read_u32(np, "wait-free-us", &arb->wait_free_us))
-+		arb->wait_free_us = 50000;
-+
-+	/* Find our parent */
-+	parent_np = of_parse_phandle(np, "i2c-parent", 0);
-+	if (!parent_np) {
-+		dev_err(dev, "Cannot parse i2c-parent\n");
-+		return -EINVAL;
-+	}
-+	arb->parent = of_find_i2c_adapter_by_node(parent_np);
-+	if (!arb->parent) {
-+		dev_err(dev, "Cannot find parent bus\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Actually add the mux adapter */
-+	arb->child = i2c_add_mux_adapter(arb->parent, dev, arb, 0, 0, 0,
-+					 i2c_arbitrator_select,
-+					 i2c_arbitrator_deselect);
-+	if (!arb->child) {
-+		dev_err(dev, "Failed to add adapter\n");
-+		ret = -ENODEV;
-+		i2c_put_adapter(arb->parent);
-+	}
-+
-+	return ret;
-+}
-+
-+static int i2c_arbitrator_remove(struct platform_device *pdev)
-+{
-+	struct i2c_arbitrator_data *arb = platform_get_drvdata(pdev);
-+
-+	i2c_del_mux_adapter(arb->child);
-+	i2c_put_adapter(arb->parent);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id i2c_arbitrator_of_match[] = {
-+	{ .compatible = "i2c-arb-gpio-challenge", },
-+	{},
++out:
++	clkdev_add(lk);
 +};
-+MODULE_DEVICE_TABLE(of, i2c_arbitrator_of_match);
+diff --git a/include/linux/clk/ti.h b/include/linux/clk/ti.h
+new file mode 100644
+index 0000000..ebed98a
+--- /dev/null
++++ b/include/linux/clk/ti.h
+@@ -0,0 +1,30 @@
++/*
++ * TI Clock node provider header
++ *
++ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
++ *	Nishanth Menon
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++#ifndef __TI_CLK_H
++#define __TI_CLK_H
 +
-+static struct platform_driver i2c_arbitrator_driver = {
-+	.probe	= i2c_arbitrator_probe,
-+	.remove	= i2c_arbitrator_remove,
-+	.driver	= {
-+		.owner	= THIS_MODULE,
-+		.name	= "i2c-arb-gpio-challenge",
-+		.of_match_table = of_match_ptr(i2c_arbitrator_of_match),
-+	},
-+};
++#include <linux/clkdev.h>
 +
-+module_platform_driver(i2c_arbitrator_driver);
++#ifdef CONFIG_OF
++extern void ti_clk_node_add(struct clk_lookup *lk, u16 id);
++#else
++static inline void ti_clk_node_add(struct clk_lookup *lk, u16 id)
++{
++	clkdev_add(lk);
++}
++#endif /* CONFIG_OF */
 +
-+MODULE_DESCRIPTION("GPIO-based I2C Arbitration");
-+MODULE_AUTHOR("Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:i2c-arb-gpio-challenge");
++#endif	/* __TI_CLK_H */
+diff --git a/arch/arm/mach-omap2/pm.c b/arch/arm/mach-omap2/pm.c
+index 8d15f9a..6cf95160 100644
+--- a/arch/arm/mach-omap2/pm.c
++++ b/arch/arm/mach-omap2/pm.c
+@@ -267,7 +267,12 @@ static void __init omap4_init_voltages(void)
+ 
+ static inline void omap_init_cpufreq(void)
+ {
+-	struct platform_device_info devinfo = { .name = "omap-cpufreq", };
++	struct platform_device_info devinfo = { };
++
++	if (!of_have_populated_dt())
++		devinfo.name = "omap-cpufreq";
++	else
++		devinfo.name = "cpufreq-cpu0";
+ 	platform_device_register_full(&devinfo);
+ }
+ 
+@@ -301,9 +306,9 @@ int __init omap2_common_pm_late_init(void)
+ 		/* Smartreflex device init */
+ 		omap_devinit_smartreflex();
+ 
+-		/* cpufreq dummy device instantiation */
+-		omap_init_cpufreq();
+ 	}
++	/* cpufreq dummy device instantiation */
++	omap_init_cpufreq();
+ 
+ #ifdef CONFIG_SUSPEND
+ 	suspend_set_ops(&omap_pm_ops);
 -- 
-1.8.1.3
+1.7.9.5
+
+-- 
+Regards,
+Nishanth Menon
