@@ -1,148 +1,103 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/4] Documentation: Add memory mapped ARM architected
- timer binding
-Date: Tue, 9 Apr 2013 10:08:43 +0100
-Message-ID: <20130409090843.GS23725@e106331-lin.cambridge.arm.com>
-References: <1365474623-29181-1-git-send-email-sboyd@codeaurora.org>
- <1365474623-29181-2-git-send-email-sboyd@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1365474623-29181-2-git-send-email-sboyd@codeaurora.org>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Marc Zyngier <Marc.Zyngier@arm.com>
+From: Fabio Baltieri <fabio.baltieri@linaro.org>
+Subject: [PATCH] ARM: ux500: Fix intcore regulator name
+Date: Tue,  9 Apr 2013 11:16:56 +0200
+Message-ID: <1365499016-8348-1-git-send-email-fabio.baltieri@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, devicetree-discuss@lists.ozlabs.org, Fabio Baltieri <fabio.baltieri@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Ux500 regulator name for V-INTCORE is misspelled as vinitcore instead of
+vintcore in some .dts file, causing the AB8500 regulator driver to not
+bind properly.  Fix this by replacing all occurrences with the right
+name.
 
-On Tue, Apr 09, 2013 at 03:30:20AM +0100, Stephen Boyd wrote:
-> Add a binding for the arm architected timer hardware's memory
-> mapped interface. The mmio timer hardware is made up of one base
-> frame and a collection of up to 8 timer frames, where each of the
-> 8 timer frames can have either one or two views. A frame
-> typically maps to a privilege level (user/kernel, hypervisor,
-> secure). The first view has full access to the registers within a
-> frame, while the second view can be restricted to particular
-> registers within a frame. Each frame must support a physical
-> timer. It's optional for a frame to support a virtual timer.
-> 
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Marc Zyngier <Marc.Zyngier@arm.com>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> ---
->  .../devicetree/bindings/arm/arch_timer.txt         | 62 ++++++++++++++++++++--
->  1 file changed, 59 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
-> index 20746e5..69ef711 100644
-> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
-> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
-> @@ -1,10 +1,14 @@
->  * ARM architected timer
->  
-> -ARM cores may have a per-core architected timer, which provides per-cpu timers.
-> +ARM cores may have a per-core architected timer, which provides per-cpu timers,
-> +or a memory mapped architected timer, which provides up to 8 frames with a
-> +physical and optional virtual timer per frame.
->  
-> -The timer is attached to a GIC to deliver its per-processor interrupts.
-> +The per-core architected timer is attached to a GIC to deliver its
-> +per-processor interrupts via PPIs. The memory mapped timer is attached to a GIC
-> +to deliver its interrupts via SPIs.
->  
-> -** Timer node properties:
-> +** CP15 Timer node properties:
->  
->  - compatible : Should at least contain one of
->  	"arm,armv7-timer"
-> @@ -26,3 +30,55 @@ Example:
->  			     <1 10 0xf08>;
->  		clock-frequency = <100000000>;
->  	};
-> +
-> +** Memory mapped timer node properties
-> +
-> +- compatible : Should at least contain "arm,armv7-timer-mem".
-> +
-> +- #address-cells : Must be 1.
+Acked-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Fabio Baltieri <fabio.baltieri@linaro.org>
+---
+ Documentation/devicetree/bindings/mfd/ab8500.txt | 2 +-
+ arch/arm/boot/dts/dbx5x0.dtsi                    | 6 +++---
+ arch/arm/boot/dts/href.dtsi                      | 2 +-
+ arch/arm/boot/dts/hrefv60plus.dts                | 2 +-
+ arch/arm/boot/dts/snowball.dts                   | 2 +-
+ 5 files changed, 7 insertions(+), 7 deletions(-)
 
-What about LPAE systems?
-
-How about something like the following:
-
-#address-cells : If the ranges property is empty, the same value as the
-                 parent node's #address-cells property. Otherwise, a
-		 value such that the ranges property specifies a
-		 mapping to the parent node's address space.            
-
-> +
-> +- #size-cells : Must be 1.
-> +
-> +- ranges : Indicates parent and child bus address space are the same.
-> +
-
-Similarly, what if someone wants to write a more complex mapping for some
-reason?
-
-We should be able to handle it if we use the standard accessors.
-
-> +- clock-frequency : The frequency of the main counter, in Hz. Optional.
-> +
-> +- reg : The control frame base address.
-> +
-> +Frame:
-> +
-> +- frame-id: Encoded as follows:
-> +		bits[3:0]  frame number: 0 to 7.
-> +		bits[10:8] frame usage:
-> +			0 - user/kernel
-> +			1 - hyp
-> +			2 - secure
-> +
-
-Could we not just have a disabled status property for those frames claimed by a
-higher level (either secure firmware or hypervisor)? Or have I missed something
-here?
-
-Then we'd just have a frame-number property, which is easier for humans to read
-and understand.
-
-> +- interrupts : Interrupt list for physical and virtual timers in that order.
-> +  The virtual timer interrupt is optional.
-> +
-> +- reg : The first and second view base addresses in that order. The second view
-> +  base address is optional.
-> +
-> +Example:
-> +
-> +	timer@f0000000 {
-> +		compatible = "arm,armv7-timer-mem";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +		reg = <0xf0000000 0x1000>;
-> +		clock-frequency = <50000000>;
-> +		frame0@f0001000 {
-> +			frame-id = <0x0>
-> +			interrupts = <0 13 0x8>,
-> +				     <0 14 0x8>;
-> +			reg = <0xf0001000 0x1000>,
-> +			      <0xf0002000 0x1000>;
-> +		};
-> +		frame1@f0003000 {
-> +			frame-id = <0x11>
-> +			interrupts = <0 15 0x8>;
-> +			reg = <0xf0003000 0x1000>;
-> +		};
-> +	};
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
-> 
-> 
-
-Mark.
+diff --git a/Documentation/devicetree/bindings/mfd/ab8500.txt b/Documentation/devicetree/bindings/mfd/ab8500.txt
+index c3a14e0..cd9e90c 100644
+--- a/Documentation/devicetree/bindings/mfd/ab8500.txt
++++ b/Documentation/devicetree/bindings/mfd/ab8500.txt
+@@ -120,7 +120,7 @@ ab8500 {
+                                   "USB_LINK_STATUS",
+                                   "USB_ADP_PROBE_PLUG",
+                                   "USB_ADP_PROBE_UNPLUG";
+-                vddulpivio18-supply = <&ab8500_ldo_initcore_reg>;
++                vddulpivio18-supply = <&ab8500_ldo_intcore_reg>;
+                 v-ape-supply = <&db8500_vape_reg>;
+                 musb_1v8-supply = <&db8500_vsmps2_reg>;
+         };
+diff --git a/arch/arm/boot/dts/dbx5x0.dtsi b/arch/arm/boot/dts/dbx5x0.dtsi
+index 9de9309..70e5d5a 100644
+--- a/arch/arm/boot/dts/dbx5x0.dtsi
++++ b/arch/arm/boot/dts/dbx5x0.dtsi
+@@ -383,7 +383,7 @@
+ 							  "USB_LINK_STATUS",
+ 							  "USB_ADP_PROBE_PLUG",
+ 							  "USB_ADP_PROBE_UNPLUG";
+-					vddulpivio18-supply = <&ab8500_ldo_initcore_reg>;
++					vddulpivio18-supply = <&ab8500_ldo_intcore_reg>;
+ 					v-ape-supply = <&db8500_vape_reg>;
+ 					musb_1v8-supply = <&db8500_vsmps2_reg>;
+ 				};
+@@ -441,8 +441,8 @@
+ 					};
+ 
+ 					// supply for v-intcore12; VINTCORE12 LDO
+-					ab8500_ldo_initcore_reg: ab8500_ldo_initcore {
+-						regulator-compatible = "ab8500_ldo_initcore";
++					ab8500_ldo_intcore_reg: ab8500_ldo_intcore {
++						regulator-compatible = "ab8500_ldo_intcore";
+ 					};
+ 
+ 					// supply for tvout; gpadc; TVOUT LDO
+diff --git a/arch/arm/boot/dts/href.dtsi b/arch/arm/boot/dts/href.dtsi
+index 379128e..2e0978a 100644
+--- a/arch/arm/boot/dts/href.dtsi
++++ b/arch/arm/boot/dts/href.dtsi
+@@ -235,7 +235,7 @@
+ 						regulator-name = "V-MMC-SD";
+ 					};
+ 
+-					ab8500_ldo_initcore_reg: ab8500_ldo_initcore {
++					ab8500_ldo_intcore_reg: ab8500_ldo_intcore {
+ 						regulator-name = "V-INTCORE";
+ 					};
+ 
+diff --git a/arch/arm/boot/dts/hrefv60plus.dts b/arch/arm/boot/dts/hrefv60plus.dts
+index 2b587a7..27fabc8 100644
+--- a/arch/arm/boot/dts/hrefv60plus.dts
++++ b/arch/arm/boot/dts/hrefv60plus.dts
+@@ -172,7 +172,7 @@
+ 						regulator-name = "V-MMC-SD";
+ 					};
+ 
+-					ab8500_ldo_initcore_reg: ab8500_ldo_initcore {
++					ab8500_ldo_intcore_reg: ab8500_ldo_intcore {
+ 						regulator-name = "V-INTCORE";
+ 					};
+ 
+diff --git a/arch/arm/boot/dts/snowball.dts b/arch/arm/boot/dts/snowball.dts
+index d3ec32f..5e3438b 100644
+--- a/arch/arm/boot/dts/snowball.dts
++++ b/arch/arm/boot/dts/snowball.dts
+@@ -312,7 +312,7 @@
+ 						regulator-name = "V-MMC-SD";
+ 					};
+ 
+-					ab8500_ldo_initcore_reg: ab8500_ldo_initcore {
++					ab8500_ldo_intcore_reg: ab8500_ldo_intcore {
+ 						regulator-name = "V-INTCORE";
+ 					};
+ 
+-- 
+1.8.1.3
