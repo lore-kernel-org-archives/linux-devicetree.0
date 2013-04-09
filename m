@@ -1,14 +1,13 @@
-From: Michal Bachraty <michal.bachraty-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>
-Subject: Re: [PATCH] clk: si5351: Add gapless tuning for SI5351 PLL
-Date: Tue, 09 Apr 2013 15:49:37 +0200
-Message-ID: <2031033.gNGydvIeAk@ganymedes>
-References: <1365495975-792-1-git-send-email-michal.bachraty@streamunlimited.com>
- <CABJ1b_RW=UUxmTrYOsx2wsDm1egs9DL3dWtat0--5kqec9-rQA@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] watchdog: at91rm9200: add DT support
+Date: Tue, 9 Apr 2013 16:04:04 +0200
+Message-ID: <51641FD4.9070706@atmel.com>
+References: <1360879349-17369-1-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CABJ1b_RW=UUxmTrYOsx2wsDm1egs9DL3dWtat0--5kqec9-rQA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1360879349-17369-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,19 +18,109 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+Hi Joachim,
 
-> does gapless tuning have any constraints? Can we use it for all rate
-> changes or determine the
-> need for pll reset by rate offset?
+On 02/14/2013 11:02 PM, Joachim Eastwood :
+> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/watchdog/atmel-at91rm9200-wdt.txt        | 9 +++++++++
+>  drivers/watchdog/Kconfig                                         | 2 +-
+>  drivers/watchdog/at91rm9200_wdt.c                                | 9 +++++++++
+>  3 files changed, 19 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-at91rm9200-wdt.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/atmel-at91rm9200-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-at91rm9200-wdt.txt
+> new file mode 100644
+> index 0000000..d4d86cf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/atmel-at91rm9200-wdt.txt
+> @@ -0,0 +1,9 @@
+> +Atmel AT91RM9200 System Timer Watchdog
+> +
+> +Required properties:
+> +- compatible: must be "atmel,at91sam9260-wdt".
+> +
+> +Example:
+> +	watchdog@fffffd00 {
+> +		compatible = "atmel,at91rm9200-wdt";
+> +	};
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 7f809fd..82ebff9 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -116,7 +116,7 @@ config ARM_SP805_WATCHDOG
+>  
+>  config AT91RM9200_WATCHDOG
+>  	tristate "AT91RM9200 watchdog"
+> -	depends on ARCH_AT91RM9200
+> +	depends on ARCH_AT91
 
-Today I made some test measurements ( switching from 22.5MHz to 32kHz, then to 
-50MHz, then to 1MHz) with good results: without any gaps and any side 
-frequences.  So there are no constrains, and we can use it for any frequences. 
+This seems to trigger errors when compiling without AT91RM9200 selected:
 
-Best,
-Michal
+
+drivers/built-in.o: In function `at91_wdt_close':
+at91_adc.c:(.text+0xc9fe4): undefined reference to `at91_st_base'
+drivers/built-in.o: In function `at91_wdt_write':
+at91_adc.c:(.text+0xca004): undefined reference to `at91_st_base'
+drivers/built-in.o: In function `at91wdt_shutdown':
+at91_adc.c:(.text+0xca01c): undefined reference to `at91_st_base'
+drivers/built-in.o: In function `at91wdt_suspend':
+at91_adc.c:(.text+0xca038): undefined reference to `at91_st_base'
+drivers/built-in.o: In function `at91_wdt_open':
+at91_adc.c:(.text+0xca0cc): undefined reference to `at91_st_base'
+drivers/built-in.o:at91_adc.c:(.text+0xca2c8): more undefined references to `at91_st_base' follow
+make[2]: *** [vmlinux] Error 1
+make[1]: *** [sub-make] Error 2
+make: *** [all] Error 2
+
+It seems thatthis driver is not written for non-rm9200-proof compilation...
+So, it can be a good idea to revert this *line* for 3.9-final: Wim, what do you think?
+
+Best regards,
+
+>  	help
+>  	  Watchdog timer embedded into AT91RM9200 chips. This will reboot your
+>  	  system when the timeout is reached.
+> diff --git a/drivers/watchdog/at91rm9200_wdt.c b/drivers/watchdog/at91rm9200_wdt.c
+> index 89831ed..1c75260 100644
+> --- a/drivers/watchdog/at91rm9200_wdt.c
+> +++ b/drivers/watchdog/at91rm9200_wdt.c
+> @@ -24,6 +24,8 @@
+>  #include <linux/types.h>
+>  #include <linux/watchdog.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <mach/at91_st.h>
+>  
+>  #define WDT_DEFAULT_TIME	5	/* seconds */
+> @@ -252,6 +254,12 @@ static int at91wdt_resume(struct platform_device *pdev)
+>  #define at91wdt_resume	NULL
+>  #endif
+>  
+> +static const struct of_device_id at91_wdt_dt_ids[] = {
+> +	{ .compatible = "atmel,at91rm9200-wdt" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, at91_wdt_dt_ids);
+> +
+>  static struct platform_driver at91wdt_driver = {
+>  	.probe		= at91wdt_probe,
+>  	.remove		= at91wdt_remove,
+> @@ -261,6 +269,7 @@ static struct platform_driver at91wdt_driver = {
+>  	.driver		= {
+>  		.name	= "at91_wdt",
+>  		.owner	= THIS_MODULE,
+> +		.of_match_table = of_match_ptr(at91_wdt_dt_ids),
+>  	},
+>  };
+>  
+> 
+
+
+-- 
+Nicolas Ferre
