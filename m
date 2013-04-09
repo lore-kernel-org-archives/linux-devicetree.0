@@ -1,50 +1,36 @@
-From: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
-Date: Mon, 8 Apr 2013 17:16:37 -0700
-Message-ID: <20130408171637.98b5ad1f867bcbda883af68b@linux-foundation.org>
-References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365043183-28905-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH 0/4] Memory mapped architected timers
+Date: Mon,  8 Apr 2013 19:30:19 -0700
+Message-ID: <1365474623-29181-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  3 Apr 2013 20:39:43 -0600 Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+This patchset adds support for memory mapped architected timers. We
+don't have any other global broadcast timer in our system, so we use the
+mmio timer during low power modes. The first patch is the binding.
+The next two patches lay some groundwork so that the last patch is simpler.
+The final patch adds support for mmio timers.
 
-> A simple frame-buffer describes a raw memory region that may be rendered
-> to, with the assumption that the display hardware has already been set
-> up to scan out from that buffer.
-> 
-> This is useful in cases where a bootloader exists and has set up the
-> display hardware, but a Linux driver doesn't yet exist for the display
-> hardware.
-> 
-> ...
->
-> +config FB_SIMPLE
-> +	bool "Simple framebuffer support"
-> +	depends on (FB = y) && OF
+Patches are based on a recent patch from Mark that removes the
+physical count reading (clocksource: arch_timer: use virtual counter,
+message id <1364404312-4427-4-git-send-email-mark.rutland@arm.com>).
 
-It's sad that this simple little thing requires Open Firmware.  Could
-it be generalised in some way so that the small amount of setup info
-could be provided by other means (eg, module_param) or does the
-dependency go deeper than that?
+Stephen Boyd (4):
+  Documentation: Add memory mapped ARM architected timer binding
+  ARM: arch_timers: Pass clock event to set_mode callback
+  clocksource: arch_timer: Push the read/write wrappers deeper
+  clocksource: arch_timer: Add support for memory mapped timers
 
-> +struct simplefb_format simplefb_formats[] = {
-> +	{ "r5g6b5", 16, {11, 5}, {5, 6}, {0, 5}, {0, 0} },
-> +};
+ .../devicetree/bindings/arm/arch_timer.txt         |  62 ++-
+ arch/arm/include/asm/arch_timer.h                  |   5 +-
+ arch/arm64/include/asm/arch_timer.h                |   4 +-
+ drivers/clocksource/arm_arch_timer.c               | 451 +++++++++++++++++----
+ include/clocksource/arm_arch_timer.h               |   4 +-
+ 5 files changed, 448 insertions(+), 78 deletions(-)
 
-I'll make this static.
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
