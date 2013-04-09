@@ -1,51 +1,44 @@
-From: Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH 1/2] dmaengine: mpc512x_dma: use generic DMA DT bindings
-Date: Tue, 9 Apr 2013 13:42:36 +0200
-Message-ID: <20130409134236.4d1bffa6@crub>
-References: <1364746680-6564-1-git-send-email-agust@denx.de>
-	<5162A017.8010102@metafoo.de>
+From: "Manjunathappa, Prakash" <prakash.pm@ti.com>
+Subject: [PATCH 0/4] ARM: davinci: fix UART clock enabling
+Date: Tue, 9 Apr 2013 17:57:57 +0530
+Message-ID: <1365510481-32129-1-git-send-email-prakash.pm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5162A017.8010102@metafoo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Vinod Koul <vinod.koul@intel.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: davinci-linux-open-source@linux.davincidsp.com, linux-serial@vger.kernel.org
+Cc: nsekhar@ti.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux@arm.linux.org.uk, hs@denx.de, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, "Manjunathappa, Prakash" <prakash.pm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 08 Apr 2013 12:46:47 +0200
-Lars-Peter Clausen <lars@metafoo.de> wrote:
-...
-> > +static struct dma_chan *mpc_dma_xlate(struct of_phandle_args *dma_spec,
-> > +						struct of_dma *ofdma)
-> > +{
-> > +	int count = dma_spec->args_count;
-> > +	struct mpc_dma *mdma = ofdma->of_dma_data;
-> > +	struct mpc_dma_filter_args fargs;
-> > +	dma_cap_mask_t cap;
-> > +
-> > +	if (!mdma)
-> > +		return NULL;
-> > +
-> > +	if (count != 1)
-> > +		return NULL;
-> > +
-> > +	fargs.mdma = mdma;
-> > +	fargs.chan_id = dma_spec->args[0];
-> > +
-> > +	dma_cap_zero(cap);
-> > +	dma_cap_set(DMA_SLAVE, cap);
-> > +
-> > +	return dma_request_channel(cap, mpc_dma_filter, &fargs);
-> > +}
-> > +
-> 
-> This is more or less the same as the generic of_dma_xlate_by_chan_id
-> function I posted about two weeks ago:
-> https://patchwork.kernel.org/patch/2331091/
+Patch series addresses below issues:
+1) Do clk_get on dev_id when there is single clock for a module
+2) Fix garbled UART log with DT kernel on da850-evm.
 
-Thanks. I can use the generic of_dma_xlate_by_chan_id() when above patch
-will be accepted.
+Applies on top of v3.9-rc9 of Linus's.
+Tested on da850-evm. Able to see proper bootup log and console on UART2.
 
-Anatolij
+Manjunathappa, Prakash (4):
+  ARM: davinci: uart: move to devid based clk_get
+  ARM: davinci: da850: override device name of UART in DT kernel
+  ARM: davinci: da850: do not specify clock_frequency for UART DT node
+  ARM: davinci: da8xx: remove da8xx_uart_clk_enable
+
+ arch/arm/boot/dts/da850.dtsi                   |    3 -
+ arch/arm/mach-davinci/da830.c                  |    8 ++--
+ arch/arm/mach-davinci/da850.c                  |    8 ++--
+ arch/arm/mach-davinci/da8xx-dt.c               |   11 +----
+ arch/arm/mach-davinci/devices-da8xx.c          |   40 ++++++++++++++++---
+ arch/arm/mach-davinci/devices-tnetv107x.c      |   35 ++++++++++++++---
+ arch/arm/mach-davinci/dm355.c                  |   48 ++++++++++++++++++-----
+ arch/arm/mach-davinci/dm365.c                  |   35 ++++++++++++----
+ arch/arm/mach-davinci/dm644x.c                 |   48 ++++++++++++++++++-----
+ arch/arm/mach-davinci/dm646x.c                 |   49 +++++++++++++++++++-----
+ arch/arm/mach-davinci/include/mach/da8xx.h     |    2 +-
+ arch/arm/mach-davinci/include/mach/tnetv107x.h |    2 +-
+ arch/arm/mach-davinci/serial.c                 |   19 ++++++---
+ arch/arm/mach-davinci/tnetv107x.c              |    8 ++--
+ 14 files changed, 233 insertions(+), 83 deletions(-)
+
+-- 
+1.7.4.1
+
