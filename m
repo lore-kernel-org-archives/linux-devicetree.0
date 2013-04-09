@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCHv8 07/19] arm: pci: add a align_resource hook
-Date: Tue,  9 Apr 2013 23:06:28 +0200
-Message-ID: <1365541601-14095-8-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv8 05/19] of/pci: Add of_pci_parse_bus_range() function
+Date: Tue,  9 Apr 2013 23:06:26 +0200
+Message-ID: <1365541601-14095-6-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1365541601-14095-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1365541601-14095-1-git-send-email-thomas.petazzoni@free-electrons.com>
@@ -10,93 +10,61 @@ To: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca
 Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, Thierry Reding <thierry.reding@avionic-design.de>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The PCI specifications says that an I/O region must be aligned on a 4
-KB boundary, and a memory region aligned on a 1 MB boundary.
+From: Thierry Reding <thierry.reding@avionic-design.de>
 
-However, the Marvell PCIe interfaces rely on address decoding windows
-(which allow to associate a range of physical addresses with a given
-device). For PCIe memory windows, those windows are defined with a 1
-MB granularity (which matches the PCI specs), but PCIe I/O windows can
-only be defined with a 64 KB granularity, so they have to be 64 KB
-aligned. We therefore need to tell the PCI core about this special
-alignement requirement.
+This function can be used to parse a bus-range property as specified by
+device nodes representing PCI bridges.
 
-The PCI core already calls pcibios_align_resource() in the ARM PCI
-core, specifically for such purposes. So this patch extends the ARM
-PCI core so that it calls a ->align_resource() hook registered by the
-PCI driver, exactly like the existing ->map_irq() and ->swizzle()
-hooks.
-
-A particular PCI driver can register a align_resource() hook, and do
-its own specific alignement, depending on the specific constraints of
-the underlying hardware.
-
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Russell King <linux@arm.linux.org.uk>
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
 ---
- arch/arm/include/asm/mach/pci.h |   11 +++++++++++
- arch/arm/kernel/bios32.c        |    6 ++++++
- 2 files changed, 17 insertions(+)
+ drivers/of/of_pci.c    |   25 +++++++++++++++++++++++++
+ include/linux/of_pci.h |    1 +
+ 2 files changed, 26 insertions(+)
 
-diff --git a/arch/arm/include/asm/mach/pci.h b/arch/arm/include/asm/mach/pci.h
-index 5cf2e97..7d2c3c8 100644
---- a/arch/arm/include/asm/mach/pci.h
-+++ b/arch/arm/include/asm/mach/pci.h
-@@ -30,6 +30,11 @@ struct hw_pci {
- 	void		(*postinit)(void);
- 	u8		(*swizzle)(struct pci_dev *dev, u8 *pin);
- 	int		(*map_irq)(const struct pci_dev *dev, u8 slot, u8 pin);
-+	resource_size_t (*align_resource)(struct pci_dev *dev,
-+					  const struct resource *res,
-+					  resource_size_t start,
-+					  resource_size_t size,
-+					  resource_size_t align);
- };
- 
- /*
-@@ -51,6 +56,12 @@ struct pci_sys_data {
- 	u8		(*swizzle)(struct pci_dev *, u8 *);
- 					/* IRQ mapping				*/
- 	int		(*map_irq)(const struct pci_dev *, u8, u8);
-+					/* Resource alignement requirements	*/
-+	resource_size_t (*align_resource)(struct pci_dev *dev,
-+					  const struct resource *res,
-+					  resource_size_t start,
-+					  resource_size_t size,
-+					  resource_size_t align);
- 	void		*private_data;	/* platform controller private data	*/
- };
- 
-diff --git a/arch/arm/kernel/bios32.c b/arch/arm/kernel/bios32.c
-index a1f73b5..b2ed73c 100644
---- a/arch/arm/kernel/bios32.c
-+++ b/arch/arm/kernel/bios32.c
-@@ -462,6 +462,7 @@ static void pcibios_init_hw(struct hw_pci *hw, struct list_head *head)
- 		sys->busnr   = busnr;
- 		sys->swizzle = hw->swizzle;
- 		sys->map_irq = hw->map_irq;
-+		sys->align_resource = hw->align_resource;
- 		INIT_LIST_HEAD(&sys->resources);
- 
- 		if (hw->private_data)
-@@ -574,6 +575,8 @@ char * __init pcibios_setup(char *str)
- resource_size_t pcibios_align_resource(void *data, const struct resource *res,
- 				resource_size_t size, resource_size_t align)
- {
-+	struct pci_dev *dev = data;
-+	struct pci_sys_data *sys = dev->sysdata;
- 	resource_size_t start = res->start;
- 
- 	if (res->flags & IORESOURCE_IO && start & 0x300)
-@@ -581,6 +584,9 @@ resource_size_t pcibios_align_resource(void *data, const struct resource *res,
- 
- 	start = (start + align - 1) & ~(align - 1);
- 
-+	if (sys->align_resource)
-+		return sys->align_resource(dev, res, start, size, align);
-+
- 	return start;
+diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+index b77e8d8..e9106dc 100644
+--- a/drivers/of/of_pci.c
++++ b/drivers/of/of_pci.c
+@@ -232,3 +232,28 @@ int of_pci_get_devfn(struct device_node *np)
+ 	return (be32_to_cpup(reg) >> 8) & 0xff;
  }
+ EXPORT_SYMBOL_GPL(of_pci_get_devfn);
++
++/**
++ * of_pci_parse_bus_range() - parse the bus-range property of a PCI device
++ * @node: device node
++ * @res: address to a struct resource to return the bus-range
++ *
++ * Returns 0 on success or a negative error-code on failure.
++ */
++int of_pci_parse_bus_range(struct device_node *node, struct resource *res)
++{
++	const __be32 *values;
++	int len;
++
++	values = of_get_property(node, "bus-range", &len);
++	if (!values || len < sizeof(*values) * 2)
++		return -EINVAL;
++
++	res->name = node->name;
++	res->start = be32_to_cpup(values++);
++	res->end = be32_to_cpup(values);
++	res->flags = IORESOURCE_BUS;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_pci_parse_bus_range);
+diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+index 302aca0..be97a6f 100644
+--- a/include/linux/of_pci.h
++++ b/include/linux/of_pci.h
+@@ -12,6 +12,7 @@ struct device_node;
+ struct device_node *of_pci_find_child_device(struct device_node *parent,
+ 					     unsigned int devfn);
+ int of_pci_get_devfn(struct device_node *np);
++int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
  
+ void pci_process_bridge_OF_ranges(struct pci_controller *hose,
+ 			struct device_node *dev, int primary);
 -- 
 1.7.9.5
