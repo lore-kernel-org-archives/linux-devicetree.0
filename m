@@ -1,42 +1,148 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 0/6] mfd: omap-usb-host: Device tree support for 3.10
-Date: Tue, 9 Apr 2013 11:00:27 +0200
-Message-ID: <20130409090027.GE23447@zurbaran>
-References: <20130409075457.GF24058@zurbaran>
- <1365496758-16287-1-git-send-email-rogerq@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/4] Documentation: Add memory mapped ARM architected
+ timer binding
+Date: Tue, 9 Apr 2013 10:08:43 +0100
+Message-ID: <20130409090843.GS23725@e106331-lin.cambridge.arm.com>
+References: <1365474623-29181-1-git-send-email-sboyd@codeaurora.org>
+ <1365474623-29181-2-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1365496758-16287-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1365474623-29181-2-git-send-email-sboyd@codeaurora.org>
+Content-Language: en-US
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Marc Zyngier <Marc.Zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 09, 2013 at 11:39:16AM +0300, Roger Quadros wrote:
-> Samuel,
-> 
-> You had the conflicts because a patch [*] was introduced and is not
-> required since the reset logic is being removed from the driver.
-> 
-> Anyways, I've rebased the 2 patches on top of mfd-next, so now it
-> shouldn't matter.
-Both patches applied, thanks a lot.
+Hi Stephen,
 
-Cheers,
-Samuel.
+On Tue, Apr 09, 2013 at 03:30:20AM +0100, Stephen Boyd wrote:
+> Add a binding for the arm architected timer hardware's memory
+> mapped interface. The mmio timer hardware is made up of one base
+> frame and a collection of up to 8 timer frames, where each of the
+> 8 timer frames can have either one or two views. A frame
+> typically maps to a privilege level (user/kernel, hypervisor,
+> secure). The first view has full access to the registers within a
+> frame, while the second view can be restricted to particular
+> registers within a frame. Each frame must support a physical
+> timer. It's optional for a frame to support a virtual timer.
+> 
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Marc Zyngier <Marc.Zyngier@arm.com>
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> ---
+>  .../devicetree/bindings/arm/arch_timer.txt         | 62 ++++++++++++++++++++--
+>  1 file changed, 59 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
+> index 20746e5..69ef711 100644
+> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
+> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
+> @@ -1,10 +1,14 @@
+>  * ARM architected timer
+>  
+> -ARM cores may have a per-core architected timer, which provides per-cpu timers.
+> +ARM cores may have a per-core architected timer, which provides per-cpu timers,
+> +or a memory mapped architected timer, which provides up to 8 frames with a
+> +physical and optional virtual timer per frame.
+>  
+> -The timer is attached to a GIC to deliver its per-processor interrupts.
+> +The per-core architected timer is attached to a GIC to deliver its
+> +per-processor interrupts via PPIs. The memory mapped timer is attached to a GIC
+> +to deliver its interrupts via SPIs.
+>  
+> -** Timer node properties:
+> +** CP15 Timer node properties:
+>  
+>  - compatible : Should at least contain one of
+>  	"arm,armv7-timer"
+> @@ -26,3 +30,55 @@ Example:
+>  			     <1 10 0xf08>;
+>  		clock-frequency = <100000000>;
+>  	};
+> +
+> +** Memory mapped timer node properties
+> +
+> +- compatible : Should at least contain "arm,armv7-timer-mem".
+> +
+> +- #address-cells : Must be 1.
 
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
+What about LPAE systems?
+
+How about something like the following:
+
+#address-cells : If the ranges property is empty, the same value as the
+                 parent node's #address-cells property. Otherwise, a
+		 value such that the ranges property specifies a
+		 mapping to the parent node's address space.            
+
+> +
+> +- #size-cells : Must be 1.
+> +
+> +- ranges : Indicates parent and child bus address space are the same.
+> +
+
+Similarly, what if someone wants to write a more complex mapping for some
+reason?
+
+We should be able to handle it if we use the standard accessors.
+
+> +- clock-frequency : The frequency of the main counter, in Hz. Optional.
+> +
+> +- reg : The control frame base address.
+> +
+> +Frame:
+> +
+> +- frame-id: Encoded as follows:
+> +		bits[3:0]  frame number: 0 to 7.
+> +		bits[10:8] frame usage:
+> +			0 - user/kernel
+> +			1 - hyp
+> +			2 - secure
+> +
+
+Could we not just have a disabled status property for those frames claimed by a
+higher level (either secure firmware or hypervisor)? Or have I missed something
+here?
+
+Then we'd just have a frame-number property, which is easier for humans to read
+and understand.
+
+> +- interrupts : Interrupt list for physical and virtual timers in that order.
+> +  The virtual timer interrupt is optional.
+> +
+> +- reg : The first and second view base addresses in that order. The second view
+> +  base address is optional.
+> +
+> +Example:
+> +
+> +	timer@f0000000 {
+> +		compatible = "arm,armv7-timer-mem";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +		reg = <0xf0000000 0x1000>;
+> +		clock-frequency = <50000000>;
+> +		frame0@f0001000 {
+> +			frame-id = <0x0>
+> +			interrupts = <0 13 0x8>,
+> +				     <0 14 0x8>;
+> +			reg = <0xf0001000 0x1000>,
+> +			      <0xf0002000 0x1000>;
+> +		};
+> +		frame1@f0003000 {
+> +			frame-id = <0x11>
+> +			interrupts = <0 15 0x8>;
+> +			reg = <0xf0003000 0x1000>;
+> +		};
+> +	};
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> hosted by The Linux Foundation
+> 
+> 
+
+Mark.
