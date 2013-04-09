@@ -1,46 +1,97 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [RFCv1 08/11] PCI: Introduce new MSI chip infrastructure
-Date: Tue, 9 Apr 2013 09:25:32 +0100
-Message-ID: <20130409082532.GA31140@arm.com>
-References: <1364316746-8702-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1364316746-8702-9-git-send-email-thomas.petazzoni@free-electrons.com>
- <CAErSpo42AFdKH2RKTxOaeJgCPrYD5KYkOs3UEBez8x8Bjmun5w@mail.gmail.com>
- <20130409081119.GA30736@arm.com>
- <20130409082232.GC27255@avionic-0098.mockup.avionic-design.de>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH 1/1] of/irq: store IRQ trigger/level in struct resource flags
+Date: Tue, 9 Apr 2013 10:26:38 +0200
+Message-ID: <CABxcv==GPmsC+-1-arFrA4xF5RbOtK1h-UMUDyft0PcbJCuF7A@mail.gmail.com>
+References: <1365148088-11175-1-git-send-email-javier.martinez@collabora.co.uk>
+	<51633F26.7000400@gmail.com>
+	<516341AF.7030207@wwwdotorg.org>
+	<51634B1F.4030408@collabora.co.uk>
+	<516380D7.3060000@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20130409082232.GC27255@avionic-0098.mockup.avionic-design.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@secretlab.ca>, Maen Suleiman <maen@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Bjorn Helgaas <bhelgaas@google.com>, Gregory Clement <gregory.clement@free-electrons.com>, Tawfik Bayouk <tawfik@marvell.com>, Mitch Bradley <wmb@firmworks.com>, linux-arm <linux-arm-kernel@lists.infradead.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <516380D7.3060000@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Stephen Warren <swarren@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, linux-omap <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 09, 2013 at 09:22:33AM +0100, Thierry Reding wrote:
-> On Tue, Apr 09, 2013 at 09:11:19AM +0100, Andrew Murray wrote:
-> [...]
-> > Also I believe pci_alloc_child_bus function would need to be changed to add
-> > "b->msi = msi" to inherit msi_chip for child buses in the above patch?
-> 
-> The patch already does:
-> 
-> 	child->msi = parent->msi;
-> 
-> in pci_alloc_child_bus(), the same way that ops is inherited. I have
-> admittedly only tested this code on Tegra, but I don't see why that
-> wouldn't be enough. Or maybe I haven't understood your question?
+On Tue, Apr 9, 2013 at 4:45 AM, Rob Herring <robherring2@gmail.com> wrote:
+> On 04/08/2013 05:56 PM, Javier Martinez Canillas wrote:
+>> On 04/09/2013 12:16 AM, Stephen Warren wrote:
+>>> On 04/08/2013 04:05 PM, Rob Herring wrote:
+>>>> On 04/05/2013 02:48 AM, Javier Martinez Canillas wrote:
+>>>>> According to Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>>>>> the "#interrupt-cells" property of an "interrupt-controller" is used
+>>>>> to define the number of cells needed to specify a single interrupt.
+>>> ...
+>>>>> But the type is never returned so it can't be saved on the IRQ struct
+>>>>> resource flags member.
+>>>>>
+>>>>> This means that drivers that need the IRQ type/level flags defined in
+>>>>> the DT won't be able to get it.
+>>>>
+>>>> But the interrupt controllers that need the information should be able
+>>>> to get to it via irqd_get_trigger_type. What problem exactly are you
+>>>> trying to fix? What driver would use this?
+>>>
+>>> FYI, that is indeed what I did in sound/soc/codecs/wm8903.c. Thinking
+>>> back, I'm not sure if that was the right thing or whether I should have
+>>> sent this same patch:-)
+>>>
+>>
+>> Hi Stephen,
+>>
+>> I'm glad you agree :-)
+>>
+>> I could change drivers/net/ethernet/smsc/smsc911x.c to get the type flags for
+>> the IRQ with irqd_get_trigger_type() but I prefer $subject because:
+>
+> irqd_get_trigger_type probably is not meant for outside of irqchips.
+> Creating an irq_get_irq_type function which takes an irq number would be
+> the right function as that does not expose struct irq_data.
+>
 
-Sorry I missed that part of your patch - that was exacatly what I was
-hoping to see.
+Ok, I can add an irqd_get_trigger_type() that just return the flags to
+the caller without exposing the struct irq_data and using it on the
+SMSC 911x driver instead using struct resource *irq_res->flags
 
-Andrew Murray
+I hope networking folks understand why this change is needed in this
+driver to get the type/level flags for an IRQ defined on a DT...
+
+>> a) This works in the non-DT case with board files and filling the resources from
+>> platform data in arch/arm/mach-omap2/gpmc-smsc911x.c. So this is definitely a
+>> bug on the DT core.
+>
+> And hackery/abuse like this:
+>
+> arch/arm/mach-omap2/board-3630sdp.c:32:    .flags          =
+> GPMC_MUX_ADD_DATA | IORESOURCE_IRQ_LOWLEVEL,
+>
+>> b) I don't see why of_irq_to_resource() should discard the type/level flags when
+>> filling the IORESOURCE_IRQ if it was specified on the DT.
+>>
+>> c) We will have to change all drivers that expect to get the IRQ type flags from
+>> a IORESOURCE_IRQ struct resource.
+>
+> I'm not convinced that is a high number of drivers. Nearly all the
+> occurrences of IORESOURCE_IRQ_ in drivers/ are for ISA (acpi/pnp) and
+> drivers for ISA devices.
+>
+
+If IORESOURCE_IRQ is just supposed to be used for ISA devices drivers
+that use ACPI/PnP instead DT, then of_irq_to_resource() callers should
+just use irq_of_parse_and_map() that returns the virtual IRQ number
+for an index within a controller instead of a struct resource.
+
+In fact I wonder what's the point to have an of_irq_to_resource()
+function at all if  IORESOURCE_IRQ is not supposed to be used for
+devices connected through dumb buses that need a DT and the struct
+resource will only hold the mapped virtual IRQ number and no the IRQ
+flags.
+
+> Rob
+>
+
+Best regards,
+Javier
