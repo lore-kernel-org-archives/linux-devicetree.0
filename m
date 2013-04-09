@@ -1,60 +1,71 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH v3] irqchip: renesas-intc-irqpin: DT binding for sense
- bitfield width
-Date: Wed, 10 Apr 2013 07:23:06 +0900
-Message-ID: <CANqRtoS7fkYd8iX3yAh7xoTNR39UiquWooUSr8+BjbBSUNozFQ@mail.gmail.com>
-References: <Pine.LNX.4.64.1304081002190.29945@axis700.grange>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 0/7] i.MX53 IPU + TVE patches
+Date: Tue, 9 Apr 2013 16:15:23 -0700
+Message-ID: <20130409231523.GA15722@kroah.com>
+References: <1365437078-22579-1-git-send-email-p.zabel@pengutronix.de>
+ <20130408174016.GB30036@kroah.com>
+ <1365493486.4023.13.camel@pizza.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1304081002190.29945@axis700.grange>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Simon Horman <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1365493486.4023.13.camel@pizza.hi.pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kernel@pengutronix.de, Shawn Guo <shawn.guo@linaro.org>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guennadi,
+On Tue, Apr 09, 2013 at 09:44:46AM +0200, Philipp Zabel wrote:
+> Hi Greg,
+> 
+> Am Montag, den 08.04.2013, 10:40 -0700 schrieb Greg Kroah-Hartman:
+> > On Mon, Apr 08, 2013 at 06:04:31PM +0200, Philipp Zabel wrote:
+> > > Hi,
+> > > 
+> > > the following patches allow to use the integrated Television Encoder
+> > > (TVEv2) on the i.MX53 SoC as VGA output encoder for the IPU. This is
+> > > useful for the Freescale i.MX53-QSB and TQ MBa53 boards, which have
+> > > VGA and DVI-I connectors, respectively.
+> > > 
+> > > regards
+> > > Philipp
+> > > 
+> > > ---
+> > >  drivers/staging/imx-drm/Kconfig             |   7 +
+> > >  drivers/staging/imx-drm/Makefile            |   1 +
+> > >  drivers/staging/imx-drm/imx-drm-core.c      |  15 +-
+> > >  drivers/staging/imx-drm/imx-drm.h           |  14 +-
+> > >  drivers/staging/imx-drm/imx-tve.c           | 755 ++++++++++++++++++++++++++++
+> > >  drivers/staging/imx-drm/ipu-v3/imx-ipu-v3.h |   3 +
+> > >  drivers/staging/imx-drm/ipu-v3/ipu-dc.c     |  55 +-
+> > >  drivers/staging/imx-drm/ipu-v3/ipu-di.c     | 100 +++-
+> > >  drivers/staging/imx-drm/ipuv3-crtc.c        |  11 +-
+> > >  9 files changed, 932 insertions(+), 29 deletions(-)
+> > 
+> > That's a lot of new features being added here, yet no work seems to be
+> > happening to move this out of the staging tree.  What is left to do
+> > here, and why isn't that being worked on first, before stuff like this?
+> 
+> the IPU code could still use a bit of testing, and I hope adding
+> features like VGA output on common development boards will increase the
+> amount of scrutiny this code will get.
+> I expect the structure of the IPU drivers to change when the common
+> display framework gets introduced at last, also requiring changes to the
+> device tree bindings, and I'm a bit reluctant to push for mainline
+> proper while the bindings are still not clear.
 
-On Mon, Apr 8, 2013 at 5:08 PM, Guennadi Liakhovetski
-<g.liakhovetski@gmx.de> wrote:
-> Most Renesas irqpin controllers have 4-bit sense fields, however, some
-> have different widths. This patch adds a DT binding to optionally
-> specify such non-standard values.
->
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
-> ---
->
-> v3: move the code to a common location, where device configuration
-> parameters are retrieved
+Ok, thanks for the information.  Is the TODO file still correct with
+these changes?  If not, care to send a patch to update it as well?
 
-Thanks for rearranging the code, this looks good to me.
+thanks,
 
-Acked-by: Magnus Damm <damm@opensource.se>
-
-To be clear, I prefer your approach over a per-SoC compatible string.
-
-In general I think a per-SoC compatible string is nice in theory, but
-I don't think it is correct to use it to describe a change in a IP
-block that just happens to included in the SoC. Instead the version of
-the IP block shall be used with the compatible value. In some cases it
-may not be easy to retrieve such a version.
-
-The per-SoC compatible string may look good but they come with at
-least two drawbacks. Either
-1) the driver has to be updated for each new SoC even though the
-device IP the driver is handling hasn't changed which leads to
-1.1) more need for pointless per-SoC compatible string patches to be
-merged and tracked and back ported
-and
-1.2) less chance of running a standard distro lacking per-SoC
-compatible string but has actual code for support
-or
-2) to ship soon the per-SoC DT will use SoC compatible strings
-matching other SoC names which works but is even more confusing.
-
-For the INTC irqpin case I believe this approach with a single
-property is the best.
-
-Thanks,
-
-/ magnus
+greg k-h
