@@ -1,97 +1,75 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3] irqchip: renesas-intc-irqpin: DT binding for sense bitfield width
-Date: Tue, 09 Apr 2013 01:22:29 +0200
-Message-ID: <2492042.P3NGiSlrcg@avalon>
-References: <Pine.LNX.4.64.1304081002190.29945@axis700.grange> <15518520.KQOfZxAAdo@avalon> <Pine.LNX.4.64.1304081412550.29945@axis700.grange>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 4/8] util_version: new helper for displaying version info
+Date: Tue, 9 Apr 2013 10:01:38 +1000
+Message-ID: <20130409000138.GL17787@truffula.fritz.box>
+References: <1365404812-15153-1-git-send-email-vapier@gentoo.org>
+ <1365404812-15153-5-git-send-email-vapier@gentoo.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1304081412550.29945@axis700.grange>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============6458329908382412195=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1365404812-15153-5-git-send-email-vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guennadi,
 
-On Monday 08 April 2013 14:15:39 Guennadi Liakhovetski wrote:
-> On Mon, 8 Apr 2013, Laurent Pinchart wrote:
-> > On Monday 08 April 2013 13:25:46 Guennadi Liakhovetski wrote:
-> > > On Mon, 8 Apr 2013, Laurent Pinchart wrote:
-> > > > On Monday 08 April 2013 10:08:40 Guennadi Liakhovetski wrote:
-> > > > > Most Renesas irqpin controllers have 4-bit sense fields, however,
-> > > > > some have different widths. This patch adds a DT binding to
-> > > > > optionally specify such non-standard values.
-> > > > > 
-> > > > > Signed-off-by: Guennadi Liakhovetski
-> > > > > <g.liakhovetski+renesas@gmail.com>
-> > > > > ---
-> > > > > 
-> > > > > v3: move the code to a common location, where device configuration
-> > > > > parameters are retrieved
-> > > > > 
-> > > > >  .../interrupt-controller/renesas,intc-irqpin.txt   |   13 +++++++++
-> > > > >  drivers/irqchip/irq-renesas-intc-irqpin.c          |    4 ++++
-> > > > >  2 files changed, 17 insertions(+), 0 deletions(-)
-> > > > >  create mode 100644
-> > > > > 
-> > > > > Documentation/devicetree/bindings/interrupt-controller/renesas,intc-
-> > > > > irqpin.txt
-> > > > > diff --git a/Documentation/devicetree/bindings/interrupt-
-> > > > > controller/renesas,intc-irqpin.txt
-> > > > > b/Documentation/devicetree/bindings/interrupt-controller/
-> > > > > renesas,intc-irqpin.txt
-> > > > > new file mode 100644
-> > > > > index 0000000..c6f09b7
-> > > > > --- /dev/null
-> > > > > +++
-> > > > > b/Documentation/devicetree/bindings/interrupt-controller/renesas,int
-> > > > > c-
-> > > > > irqpin.txt
-> > > > > @@ -0,0 +1,13 @@
-> > > > > +DT bindings for the R-/SH-Mobile irqpin controller
-> > > > > +
-> > > > > +Required properties:
-> > > > > +
-> > > > > +- compatible: has to be "renesas,intc-irqpin"
-> > > > > +- #interrupt-cells: has to be <2>
-> > > > > +
-> > > > > +Optional properties:
-> > > > > +
-> > > > > +- any properties, listed in interrupts.txt in this directory, and
-> > > > > any standard
-> > > > > +  resource allocation properties
-> > > > > +- sense-bitfield-width: width of a single sense bitfield in the
-> > > > > SENSE register,
-> > > > > +  if different from the default 4 bits
-> > > > 
-> > > > Wouldn't it be better to define per-SoC compatible strings, and infer
-> > > > the sense bitfield width from that ?
-> > > 
-> > > This is not a boolean, it is an integer, I don't think defining
-> > > compatibility strings for 1, 2, 3, 4, 5,... bits is better than having
-> > > one integer property.
-> > 
-> > I'm not advocating for compatibility strings for a given number of bits,
-> > but for per-SoC compatibility strings from which to infer the width.
-> > 
-> > For instance, if the r8a7779 has a 6-bit sense field, you would use
-> > 
-> > compatible = "r8a7779,intc-irqpin";
-> > 
-> > and map that to 6 in the irqpin driver.
-> 
-> I understand what you mean, still I don't think mapping N SoC-compatibility
-> strings to various values of a single integer is better than having a single
-> property.
+--===============6458329908382412195==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bFUYW7mPOLJ+Jd2A"
+Content-Disposition: inline
 
-The way I understand (or maybe rather feel) the DT bindings philosophy is that 
-hardware information for on-SoC IP cores that depend on the IP core version 
-should be conveyed through the compatible property. I might be wrong though.
 
--- 
-Regards,
+--bFUYW7mPOLJ+Jd2A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Laurent Pinchart
+On Mon, Apr 08, 2013 at 03:06:48AM -0400, Mike Frysinger wrote:
+> This is so all utilities can have this flag and not just dtc.
+>=20
+> Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
 
+Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--bFUYW7mPOLJ+Jd2A
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlFjWmIACgkQaILKxv3ab8YfuQCfZ/vLXBgwREgrz1dwlLMw28jP
+/XEAniNdyo73iThfFMKR1Ze5KvDyGLvy
+=mZgv
+-----END PGP SIGNATURE-----
+
+--bFUYW7mPOLJ+Jd2A--
+
+--===============6458329908382412195==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============6458329908382412195==--
