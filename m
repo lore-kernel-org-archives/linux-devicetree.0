@@ -1,15 +1,14 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] Documentation: gpio-reset.txt: Fix 'initially-in-reset'
- example
-Date: Tue, 09 Apr 2013 10:07:21 +0200
-Message-ID: <1365494841.4023.22.camel@pizza.hi.pengutronix.de>
-References: <1365012265-32514-1-git-send-email-fabio.estevam@freescale.com>
- <1365062022.4089.7.camel@pizza.hi.pengutronix.de>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
+Date: Tue, 9 Apr 2013 10:08:12 +0200
+Message-ID: <CAMuHMdXm94FtmS-qMN6FGjtRs08xkZhmSmCU8Nfr1UgyTK5QEw@mail.gmail.com>
+References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
+ <20130408171637.98b5ad1f867bcbda883af68b@linux-foundation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365062022.4089.7.camel-/rZezPiN1rtR6QfukMTsflXZhhPuCNm+@public.gmane.org>
+In-Reply-To: <20130408171637.98b5ad1f867bcbda883af68b-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,38 +19,61 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 04.04.2013, 09:53 +0200 schrieb Philipp Zabel:
-> Am Mittwoch, den 03.04.2013, 15:04 -0300 schrieb Fabio Estevam:
-> > Fix typo in 'initially-in-reset' example.
-> > 
-> > Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/reset/gpio-reset.txt       |    2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/reset/gpio-reset.txt b/Documentation/devicetree/bindings/reset/gpio-reset.txt
-> > index 1f203eb..8ab044c 100644
-> > --- a/Documentation/devicetree/bindings/reset/gpio-reset.txt
-> > +++ b/Documentation/devicetree/bindings/reset/gpio-reset.txt
-> > @@ -26,7 +26,7 @@ gpio_reset: gpio-reset {
-> >  	compatible = "gpio-reset";
-> >  	reset-gpios = <&gpio5 0 1>; /* active-low */
-> >  	reset-delays = <10000>; /* 10 ms */
-> > -	initially-in-reset: <1>;
-> > +	initially-in-reset = <1>;
-> >  	#reset-cells = <1>;
-> >  };
-> 
-> Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Tue, Apr 9, 2013 at 2:16 AM, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org> wrote:
+> On Wed,  3 Apr 2013 20:39:43 -0600 Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> A simple frame-buffer describes a raw memory region that may be rendered
+>> to, with the assumption that the display hardware has already been set
+>> up to scan out from that buffer.
+>>
+>> This is useful in cases where a bootloader exists and has set up the
+>> display hardware, but a Linux driver doesn't yet exist for the display
+>> hardware.
+>>
+>> ...
+>>
+>> +config FB_SIMPLE
+>> +     bool "Simple framebuffer support"
+>> +     depends on (FB = y) && OF
+>
+> It's sad that this simple little thing requires Open Firmware.  Could
+> it be generalised in some way so that the small amount of setup info
+> could be provided by other means (eg, module_param) or does the
+> dependency go deeper than that?
 
-Disregard that, I think this fix belongs with the rest of the reset
-series. I've added the patch on top of the branch at
-git://git.pengutronix.de/git/pza/linux.git reset/for_v3.10
-for Olof to pull.
+Indeed. Instead of consolidating, we seem to get more of them: offb, vesafb,
+efifb, ...
 
-regards
-Philipp
+cfr. near the tail of drivers/video/Makefile (don't know about all of them):
+ # Platform or fallback drivers go here
+obj-$(CONFIG_FB_UVESA)            += uvesafb.o
+obj-$(CONFIG_FB_VESA)             += vesafb.o
+obj-$(CONFIG_FB_EFI)              += efifb.o
+obj-$(CONFIG_FB_VGA16)            += vga16fb.o
+obj-$(CONFIG_FB_OF)               += offb.o
+obj-$(CONFIG_FB_BF537_LQ035)      += bf537-lq035.o
+obj-$(CONFIG_FB_BF54X_LQ043)      += bf54x-lq043fb.o
+obj-$(CONFIG_FB_BFIN_LQ035Q1)     += bfin-lq035q1-fb.o
+obj-$(CONFIG_FB_BFIN_T350MCQB)    += bfin-t350mcqb-fb.o
+obj-$(CONFIG_FB_BFIN_7393)        += bfin_adv7393fb.o
+obj-$(CONFIG_FB_MX3)              += mx3fb.o
+obj-$(CONFIG_FB_DA8XX)            += da8xx-fb.o
+obj-$(CONFIG_FB_MXS)              += mxsfb.o
+obj-$(CONFIG_FB_SSD1307)          += ssd1307fb.o
+
+# the test framebuffer is last
+obj-$(CONFIG_FB_VIRTUAL)          += vfb.o
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
