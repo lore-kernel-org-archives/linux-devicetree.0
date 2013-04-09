@@ -1,17 +1,14 @@
 From: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Subject: RE: [PATCH] ARM: davinci: da850 evm: update clock rate for UART 1/2
- DT nodes
-Date: Tue, 9 Apr 2013 05:31:22 +0000
-Message-ID: <A73F36158E33644199EB82C5EC81C7BC3EA4C535@DBDE01.ent.ti.com>
-References: <1361262734-8540-1-git-send-email-prakash.pm@ti.com>
- <512F33F3.9070203@ti.com>
- <A73F36158E33644199EB82C5EC81C7BC3EA49090@DBDE01.ent.ti.com>
- <51433233.9070303@ti.com>
+Subject: RE: [PATCH v5 0/5] Patch enables support for m25p64 SPI flash
+ support on da850-EVM.
+Date: Tue, 9 Apr 2013 05:44:10 +0000
+Message-ID: <A73F36158E33644199EB82C5EC81C7BC3EA4C560@DBDE01.ent.ti.com>
+References: <1364998150-5980-1-git-send-email-prakash.pm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <51433233.9070303@ti.com>
+In-Reply-To: <1364998150-5980-1-git-send-email-prakash.pm@ti.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -22,60 +19,65 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Nori, Sekhar" <nsekhar@ti.com>
-Cc: "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "hs@denx.de" <hs@denx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
+Cc: "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori,
+ Sekhar" <nsekhar@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "spi-devel-general@lists.sourceforge.net" <spi-devel-general@lists.sourceforge.net>, "hs@denx.de" <hs@denx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 15, 2013 at 20:07:39, Nori, Sekhar wrote:
-> 
-> 
-> On 3/15/2013 6:56 PM, Manjunathappa, Prakash wrote:
-> > Hi Sekhar,
-> > 
-> > On Thu, Feb 28, 2013 at 16:09:47, Nori, Sekhar wrote:
-> >> Prakash,
-> >>
-> >> On 2/19/2013 2:02 PM, Manjunathappa, Prakash wrote:
-> >>> DT kernel with latest of denx SPL U-boot boots with garbled UART
-> >>> logs. This is because in U-boot UART2 gets sourced by PLL0_SYSCLK2
-> >>> configured for 150MHz. But later in kernel UART2 gets mapped to
-> >>> PLL1_SYSCLK2 and is configured for 132MHz not for 150MHz.
-> >>>
-> >>> PLL1 is configured for 264MHz to support mDDR on the EVM. That is
-> >>> memory controller driving mDDR can be configured for 150MHz and
-> >>> mDDR it self can operate at 132MHz.
-> >>>
-> >>> So override UART1 and UART2 DT node clock-frequency property with
-> >>> rate available on da850 EVM.
-> >>>
-> >>> Signed-off-by: Manjunathappa, Prakash <prakash.pm@ti.com>
-> >>
-> >> How about dropping the clock-frequency attribute altogether? of_serial.c
-> >> seems to be falling back on clk apis if frequency is not passed and that
-> >> should make the kernel work with all versions of U-Boot.
-> >>
-> > 
-> > Yes it can be dropped by having duplicate clock node for UART having only
-> 
-> You meant an additional clk_lookup entry? That's different from a new
-> 'struct clk' node.
+Hi Grant,
+
+On Wed, Apr 03, 2013 at 19:39:05, Manjunathappa, Prakash wrote:
+> Testing information:
+> da850-evm comes with partitions specified in DT blob.
+> Able to mount/umount and create/delete files on filesystem partition.
 > 
 
-Yes I meant adding to clk_lookup, not new 'struct clk'.
-
-> > dev_id. This is required because DT kernel does the clk_get with only dev_id
-> > and non-DT kernel only with con_id. In DT kernel clk_get is done from generic
-> > code of_platform_serial_setup:of_serial.c and in non-DT kernel is done from
-> > platform code, davinci_serial_setup_clk:arch/arm/mach-davinci/serial.c
-> > 
-> > Please let me know your opinion on this.
-> 
-> When only one clock is present, con_id of NULL is more appropriate. How
-> about fixing arch/arm/mach-davinci/serial.c and existing clk_lookup
-> entries to use this?
-> 
-
-Ok I will share patch which fixes this.
+Could you please ack the driver(1/5) and documentation(2/5) changes so
+that Sekhar can merge the platform changes, he doesn't have any
+objection on this series.
+http://marc.info/?l=linux-doc&m=136489750130615&w=1
 
 Thanks,
 Prakash
+
+> Applies on top of linux_davinci/master tree:
+> git://gitorious.org/linux-davinci/linux-davinci.git
+> 
+> Since v4:
+> Separate out chip_select pinmuxing so as to allow boards choose
+> accordingly.
+> 
+> Since v3:
+> Minor nit, fix tabs and commit message of 2/5.
+> 
+> Since v2:
+> Fix compatible property DT naming convention.
+> 
+> Since v1:
+> Look for m25p64 instead of m25p80 flash chip and correct partition information.
+> Dropped below accepted patch:
+> "spi/davinci: fix module build error"
+> Considered below missed out patch:
+> spi/davinci: add DT binding documentation
+> 
+> Manjunathappa, Prakash (4):
+>   spi/davinci: no wildcards in DT compatible property
+>   ARM: davinci: da850: add SPI1 DT node
+>   ARM: davinci: da850: override SPI DT node device name
+>   ARM: davinci: da850-evm: add SPI flash support
+> 
+> Murali Karicheri (1):
+>   spi/davinci: add DT binding documentation
+> 
+>  .../devicetree/bindings/spi/spi-davinci.txt        |   51 ++++++++++++++++++++
+>  arch/arm/boot/dts/da850-evm.dts                    |   40 +++++++++++++++
+>  arch/arm/boot/dts/da850.dtsi                       |   22 ++++++++
+>  arch/arm/mach-davinci/da8xx-dt.c                   |    1 +
+>  drivers/spi/spi-davinci.c                          |    4 +-
+>  5 files changed, 116 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-davinci.txt
+> 
+> -- 
+> 1.7.4.1
+> 
+> 
