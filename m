@@ -1,14 +1,16 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
-Date: Tue, 9 Apr 2013 10:08:12 +0200
-Message-ID: <CAMuHMdXm94FtmS-qMN6FGjtRs08xkZhmSmCU8Nfr1UgyTK5QEw@mail.gmail.com>
-References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
- <20130408171637.98b5ad1f867bcbda883af68b@linux-foundation.org>
+From: Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFCv1 08/11] PCI: Introduce new MSI chip infrastructure
+Date: Tue, 9 Apr 2013 09:11:19 +0100
+Message-ID: <20130409081119.GA30736@arm.com>
+References: <1364316746-8702-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1364316746-8702-9-git-send-email-thomas.petazzoni@free-electrons.com>
+ <CAErSpo42AFdKH2RKTxOaeJgCPrYD5KYkOs3UEBez8x8Bjmun5w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130408171637.98b5ad1f867bcbda883af68b-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAErSpo42AFdKH2RKTxOaeJgCPrYD5KYkOs3UEBez8x8Bjmun5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,61 +21,65 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 9, 2013 at 2:16 AM, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org> wrote:
-> On Wed,  3 Apr 2013 20:39:43 -0600 Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> A simple frame-buffer describes a raw memory region that may be rendered
->> to, with the assumption that the display hardware has already been set
->> up to scan out from that buffer.
->>
->> This is useful in cases where a bootloader exists and has set up the
->> display hardware, but a Linux driver doesn't yet exist for the display
->> hardware.
->>
->> ...
->>
->> +config FB_SIMPLE
->> +     bool "Simple framebuffer support"
->> +     depends on (FB = y) && OF
->
-> It's sad that this simple little thing requires Open Firmware.  Could
-> it be generalised in some way so that the small amount of setup info
-> could be provided by other means (eg, module_param) or does the
-> dependency go deeper than that?
+On Mon, Apr 08, 2013 at 11:28:58PM +0100, Bjorn Helgaas wrote:
+> On Tue, Mar 26, 2013 at 10:52 AM, Thomas Petazzoni
+> <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> >
+> >  #endif /* LINUX_MSI_H */
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 2461033a..6aca43ea 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -416,6 +416,7 @@ struct pci_bus {
+> >         struct resource busn_res;       /* bus numbers routed to this bus */
+> >
+> >         struct pci_ops  *ops;           /* configuration access functions */
+> > +       struct msi_chip *msi;           /* MSI controller */
+> 
+> "msi" seems like a too-generic name here; it suggests an interrupt or
+> IRQ, not a controller.
+> 
+> I'm not sure this is the correct place for it.  Having it in the
+> struct pci_bus means you need arch code to fill it in, e.g., you added
+> it in mvebu_pcie_scan_bus() in patch 09/11.  There's no good way to do
+> that for arches that use pci_scan_root_bus(), which is the direction
+> I'd like to go.
+> 
+> I think it probably should go in sysdata instead.  That would mean you
+> can't really do generic weak setup/tear-down functions, because they
+> wouldn't know how to pull the MSI controller info out of the
+> arch-specific sysdata.  But there are so many levels of weak-ness
+> going on there, maybe it would be a good thing to get rid of one :)
 
-Indeed. Instead of consolidating, we seem to get more of them: offb, vesafb,
-efifb, ...
+But generic setup/tear-down functions would allow for architecture
+independent MSI controllers. This would be useful for MSI controllers that
+are unrelated to PCI host controllers or a specific architecture. It would
+make drivers sit more comfortably in drivers/irqchip or drivers/pci/host. Also
+having the msi_chip in struct pci_bus could allow there to exist multiple
+MSI controllers on a PCI fabric and is consistent with pci_ops.
 
-cfr. near the tail of drivers/video/Makefile (don't know about all of them):
- # Platform or fallback drivers go here
-obj-$(CONFIG_FB_UVESA)            += uvesafb.o
-obj-$(CONFIG_FB_VESA)             += vesafb.o
-obj-$(CONFIG_FB_EFI)              += efifb.o
-obj-$(CONFIG_FB_VGA16)            += vga16fb.o
-obj-$(CONFIG_FB_OF)               += offb.o
-obj-$(CONFIG_FB_BF537_LQ035)      += bf537-lq035.o
-obj-$(CONFIG_FB_BF54X_LQ043)      += bf54x-lq043fb.o
-obj-$(CONFIG_FB_BFIN_LQ035Q1)     += bfin-lq035q1-fb.o
-obj-$(CONFIG_FB_BFIN_T350MCQB)    += bfin-t350mcqb-fb.o
-obj-$(CONFIG_FB_BFIN_7393)        += bfin_adv7393fb.o
-obj-$(CONFIG_FB_MX3)              += mx3fb.o
-obj-$(CONFIG_FB_DA8XX)            += da8xx-fb.o
-obj-$(CONFIG_FB_MXS)              += mxsfb.o
-obj-$(CONFIG_FB_SSD1307)          += ssd1307fb.o
+Assuming the MSI controller is represented in the device tree and there is a
+relationship between the controller and the host bridge
+(phandle/interrupt-parent) then as Thierry suggested[1] previously you could call
+something like of_find_msi_chip_by_node(node) to locate an msi_chip from a
+device node. Could this look up exist in pci_scan_root_bus via its struct
+device.of_node? Perhaps pci_create_root_bus can be changed to take a parameter
+for msi_chip alongside the ops parameter? The of_find_msi_chip_by_node could
+walk up the device tree until it finds an MSI controller.
 
-# the test framebuffer is last
-obj-$(CONFIG_FB_VIRTUAL)          += vfb.o
+In the case where device tree isn't used - then I guess the weakly defined
+arch_ callbacks would be replaced with the architectures existing
+implementation. Or perhaps if MSI controllers are registered (msi_chip_add)
+then pci_scan_root_bus could use the first controller it finds.
 
-Gr{oetje,eeting}s,
+Also I believe pci_alloc_child_bus function would need to be changed to add
+"b->msi = msi" to inherit msi_chip for child buses in the above patch?
 
-                        Geert
+Andrew Murray
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+[1] http://lkml.org/lkml/2013/3/25/67
