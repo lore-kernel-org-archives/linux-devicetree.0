@@ -1,14 +1,14 @@
-From: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v4 0/2] ARM: Exynos5250: Enabling samsung usb phy
-Date: Wed, 10 Apr 2013 19:31:29 +0900
-Message-ID: <310001ce35d6$901546b0$b03fd410$%kim@samsung.com>
-References: <1363334171-21812-1-git-send-email-gautam.vivek@samsung.com>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] ARM: S3C24XX: Add devicetree support for s3c2416
+Date: Wed, 10 Apr 2013 12:37:31 +0200
+Message-ID: <201304101237.31874.heiko@sntech.de>
+References: <201302180103.53084.heiko@sntech.de>
+ <30ff01ce35d4$5f4920d0$1ddb6270$%kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1363334171-21812-1-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Content-language: ko
+In-Reply-To: <30ff01ce35d4$5f4920d0$1ddb6270$%kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,34 +19,75 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: 'Vivek Gautam' <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+To: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Rob Herring' <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Vivek Gautam wrote:
-> 
-> Based on 'for-next' of linux-samsung tree with following patches
-> from Doug on top:
-> usb: Document clocks in samsung, exynos4210-ehci/ohci bindings
-> ARM: dts: add usb 2.0 clock references to exynos5250 device tree
-> 
-> Also depending upon following patch-series for Samsung-usb-phy driver:
-> [PATCH v7 0/2] Adding USB 3.0 DRD-phy support for exynos5250
-> 
-> Changes from v3:
-> Added 'clocks' and 'clock-names' entry also in device nodes, aligning
-> with common clock framework for Samsung's SoCs.
-> 
-> Vivek Gautam (2):
->   ARM: Exynos5250: Enabling samsung-usb2phy driver
->   ARM: Exynos5250: Enabling samsung-usb3phy driver
-> 
->  arch/arm/boot/dts/exynos5250.dtsi |   29 +++++++++++++++++++++++++++++
->  1 files changed, 29 insertions(+), 0 deletions(-)
-> 
-> --
-> 1.7.6.5
-
-OK, applied, thanks.
-
-- Kukjin
+QW0gTWl0dHdvY2gsIDEwLiBBcHJpbCAyMDEzLCAxMjoxNTo0OCBzY2hyaWViIEt1a2ppbiBLaW06
+Cj4gSGVpa28gU3TDvGJuZXIgd3JvdGU6Cj4gPiBUaGlzIGlzIHRoZSBzZWNvbmQgaW5zdGFsbG1l
+bnQgb2YgYmVnaW5uaW5nIGRldmljZXRyZWUgc3VwcG9ydCB0aGUKPiA+IFNhbXN1bmcgUzNDMjR4
+eCBhcmNoaXRlY3R1cmVzIGFuZCBmb2N1c2VzIG9uIHRoZSBzM2MyNDE2IGZvciBub3cuCj4gPiAK
+PiA+IEluY2x1ZGVkIGlzIHRoZSBkZXZpY2V0cmVlIHN1cHBvcnQgZm9yIHRoZSBzM2MyNHh4IGly
+cSBjb250cm9sbGVyIGFuZAo+ID4gYmFzaWMgc3VwcG9ydCBmb3Igc21kazI0MTYgYm9hcmRzLCB3
+aGljaCBjYW4gc3VjZXNzZnVsbHkgYm9vdC4KPiA+IAo+ID4gCj4gPiBBZnRlciB0aGUgZGlzY3Vz
+c2lvbiB3aXRoIFRob21hcyBBYnJhaGFtIG9uIHYxIGFuZCBzdGFyaW5nIHRvIGxvbmcgYXQgYWxs
+Cj4gPiBvZgo+ID4gdGhpcywgSSdtIG5vdCBldmVuIHN1cmUgaWYgaGF2aW5nIHRoZSBpbnRlcnJ1
+cHQgbWFwcGluZyBpbiB0aGUgYmluZGluZwo+ID4gaXMgdGhlIGNvcnJlY3Qgd2F5IHRvIGdvIGFu
+eW1vcmUuCj4gPiAKPiA+IFRoZSBrZXkgcG9zaXRpdmUgYXNwZWN0IG9mIHRoaXMgc29sdXRpb24g
+aXMsIHRoYXQgYWZ0ZXIgZXZlcnl0aGluZyBpcwo+ID4gcnVubmluZwo+ID4gdmlhIGR0IGFsbCB0
+aGUgU29DIHNwZWNpZmljIG1hcHBpbmcgdGFibGVzIGluIHRoZSBkcml2ZXIgY2FuIGdvIGF3YXks
+Cj4gPiBjdXR0aW5nCj4gPiBpdHMgbGVuZ3RoIGluIGhhbGYuCj4gPiAKPiA+IFRoZSBvdGhlciBv
+cHRpb24gd291bGQgYmUgYXMgVGhvbWFzIHN1Z2dlc3RlZCB0byBkZWZpbmUgc3BlY2lmaWMgaXJx
+LQo+ID4gY29udHJvbGxlcgo+ID4gdHlwZXMgKGkuZS4gczNjMjQxNi1pbnRjLCBzM2MyNDQzLWlu
+dGMsIC4uLiByZXN1bHRpbmcgaW4gMTYgdHlwZXMpIGFuZAo+ID4ga2VlcAo+ID4gdGhlIG1hcHBp
+bmcgZGF0YSBpbiB0aGUgY29kZSwgYXMgaXQgaXMgbm93Lgo+ID4gCj4gPiBTbyBJIHdvdWxkIGJl
+IHZlcnkgdGhhbmtmdWwgZm9yIGEgYml0IG9mIGd1aWRhbmNlIG9uIHdoYXQgaXMgdGhlIGJldHRl
+cgo+ID4gd2F5Lgo+ID4gCj4gPiAKPiA+IFRoZSBzZXJpZXMgZGVwZW5kcyBvbiB0aGUgZmluYWxp
+emVkIHMzYzI0eHggaXJxIHJld29yaywgd2hpY2ggcHJvYmFibHkKPiA+IHdvbid0Cj4gPiBtYWtl
+IGl0IGludG8gMy45IGFuZCBhbHNvIHRoZSBjbG9ja3NvdXJjZSBkdCBzdXBwb3J0IGJ5IFRvbWFz
+eiBGaWdhLAo+ID4gd2hpY2ggYXJlIG5vdCBpbiBhbnkgdHJlZSB5ZXQuCj4gPiAKPiA+IAo+ID4g
+Q2hhbmdlcyBzaW5jZSB2MToKPiA+IC0gYWRhcHQgdG8gY2hhbmdlcyBpbiB0aGUgdW5kZXJseWlu
+ZyBzM2MyNHh4IGlycSByZXdvcmsKPiA+IAo+ID4gICA9IG1vcmUgc2hhcmVkIGluaXQgY29kZQo+
+ID4gCj4gPiAtIHVzZSBpcnFjaGlwIGluZnJhc3RydWN0dXJlCj4gPiAtIGxpbWl0IG51bWJlciBv
+ZiBwb3NzaWJsZSBpcnEtdHlwZXMgdG8gbm90IGVuY29kZSBpbXBsZW1lbnRhdGlvbiBkZXRhaWxz
+Cj4gPiAKPiA+ICAgaW50byB0aGUgYmluZGluZwo+ID4gCj4gPiAtIGluY2x1ZGUgbmV3IHNhbXN1
+bmctY2xvY2tzb3VyY2UKPiA+IAo+ID4gSGVpa28gU3R1ZWJuZXIgKDMpOgo+ID4gICBBUk06IFMz
+QzI0WFg6IG1vdmUgaXJxIGRyaXZlciB0byBkcml2ZXJzL2lycWNoaXAKPiA+ICAgaXJxY2hpcDog
+aXJxLXMzYzI0eHg6IGFkZCBkZXZpY2V0cmVlIHN1cHBvcnQKPiA+ICAgQVJNOiBTM0MyNFhYOiBB
+ZGQgZGV2aWNldHJlZSBzdXBwb3J0IGFuZCBkdC1ib2FyZCBmaWxlIGZvciBzM2MyNDE2IFNvQ3MK
+PiA+ICAKPiA+ICAuLi4vaW50ZXJydXB0LWNvbnRyb2xsZXIvc2Ftc3VuZyxzM2MyNHh4LWlycS50
+eHQgICB8ICAgNTMgKysrKysrCj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUgICAgICAg
+ICAgICAgICAgICAgICAgICAgfCAgICAxICsKPiA+ICBhcmNoL2FybS9ib290L2R0cy9zM2MyNDE2
+LXNtZGsyNDE2LmR0cyAgICAgICAgICAgICB8ICAgNzkgKysrKysrKysKPiA+ICBhcmNoL2FybS9i
+b290L2R0cy9zM2MyNDE2LmR0c2kgICAgICAgICAgICAgICAgICAgICB8ICAxOTMKPiA+ICArKysr
+KysrKysrKysrKysrKysrKyBhcmNoL2FybS9ib290L2R0cy9zM2MyNHh4LmR0c2kgICAgICAgICAg
+ICAgICAgICAgIAo+ID4gIHwgIDE2NSArKysrKysrKysrKysrKysrKyBhcmNoL2FybS9tYWNoLXMz
+YzI0eHgvS2NvbmZpZyAgICAgICAgICAgICAgICAgCj4gPiAgICAgIHwgICAxMCArCj4gPiAgYXJj
+aC9hcm0vbWFjaC1zM2MyNHh4L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgfCAgICAzICst
+Cj4gPiAgYXJjaC9hcm0vbWFjaC1zM2MyNHh4L21hY2gtczNjMjQxNi1kdC5jICAgICAgICAgICAg
+fCAgIDkxICsrKysrKysrKwo+ID4gIGRyaXZlcnMvaXJxY2hpcC9NYWtlZmlsZSAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHwgICAgMSArCj4gPiAgLi4uL2lycS5jID0+IGRyaXZlcnMvaXJxY2hp
+cC9pcnEtczNjMjR4eC5jICAgICAgICAgfCAgMTI4ICsrKysrKysrKysrKysKPiA+ICAxMCBmaWxl
+cyBjaGFuZ2VkLCA3MjMgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbnMoLSkKPiA+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVycnVwdC0K
+PiA+IAo+ID4gY29udHJvbGxlci9zYW1zdW5nLHMzYzI0eHgtaXJxLnR4dAo+ID4gCj4gPiAgY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL3MzYzI0MTYtc21kazI0MTYuZHRzCj4g
+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL3MzYzI0MTYuZHRzaQo+ID4g
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy9zM2MyNHh4LmR0c2kKPiA+ICBj
+cmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vbWFjaC1zM2MyNHh4L21hY2gtczNjMjQxNi1kdC5j
+Cj4gPiAgcmVuYW1lIGFyY2gvYXJtL21hY2gtczNjMjR4eC9pcnEuYyA9PiBkcml2ZXJzL2lycWNo
+aXAvaXJxLXMzYzI0eHguYwo+ID4gICg5MiUpCj4gPiAKPiA+IC0tCj4gPiAxLjcuMi4zCj4gCj4g
+QmFzaWNhbGx5LCBsb29rcyBnb29kIHRvIG1lIGFuZCB0aGFua3MgZm9yIHlvdXIgZWZmb3J0Lgo+
+IAo+IEJUVywgaWYgeW91IGRvbid0IG1pbmQsIHdvdWxkIGJlIGJldHRlciB0byBzZW5kIHRvIHVw
+c3RyZWFtIG5leHQgdGltZS4KPiBCZWNhdXNlIEkgbmVlZCB0byBjb25zaWRlciBvdGhlciBzM2My
+NHh4IFNvQ3MgZm9yIERULi4uCgpoZWhlLCB5b3UncmUgZGlnZ2luZyB1cCBxdWl0ZSBvbGQgc3R1
+ZmYgOi0pCgpUaGlzIG9mIGNvdXJzZSBnb3Qgc3VwZXJzZWVkZWQgYnkgdGhlIGRpZmZlcmVudCBh
+cHByb2FjaCB0byBzM2MyNHh4LWlycSBkdC0Kc3VwcG9ydCBhbmQgdGhlIHBpbmN0cmwgd29yay4K
+CkknbGwgc2VuZCBhIG5ldyB2ZXJzaW9uIG9mIHRoZSBkdCBzdXBwb3J0IHdoaWNoIHRha2VzIGlu
+dG8gYWNjb3VudCBhbGwgdGhlIApyZWNlbnQgY2hhbmdlcyBpbiB0aGUgbmV4dCBjb3VwbGUgb2Yg
+ZGF5cy4KCk9mIGNvdXJzZSBJJ20gb2sgd2l0aCBkZWxheWluZyB0aGlzIHVudGlsIDMuMTEuIEF0
+IGxlYXN0IGFsbCB0aGUgYnVpbGRpbmcgCmJsb2NrcyAoaXJxIGFuZCBwaW5jdHJsKSBhcmUgdGhl
+cmUgbm93LgoKCkhlaWtvCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNz
+QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2Rldmlj
+ZXRyZWUtZGlzY3Vzcwo=
