@@ -1,70 +1,60 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [RFC][PATCH 1/2] ARM: OMAP4: clock: Add device tree support for
- AUXCLKs
-Date: Wed, 10 Apr 2013 14:04:33 +0300
-Message-ID: <51654741.30206@ti.com>
-References: <1363703220-4777-2-git-send-email-rogerq@ti.com> <20130403234242.GE10155@atomide.com> <515D2D30.3000306@ti.com> <20130404164137.GH10155@atomide.com> <515EA9E3.1010409@ti.com> <20130405155851.GA10155@atomide.com> <5163E589.1040809@ti.com> <20130409164928.GL10155@atomide.com> <20130409174319.GP10155@atomide.com> <20130409204900.GA8815@kahuna> <20130409215419.GA13731@kahuna>
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH] of: remove the unnecessary of_node_put for
+ of_parse_phandle_with_args()
+Date: Wed, 10 Apr 2013 21:09:50 +1000
+Message-ID: <20130410210950.972df35671f7fa5573ef2d7b@canb.auug.org.au>
+References: <1365490569-32455-1-git-send-email-Yuantian.Tang@freescale.com>
+	<20130410190327.a70d4c3798509d664aef2f13@canb.auug.org.au>
+	<D07C73A334FF604B95B3CBD2A545D07B0B128AE0@039-SN2MPN1-013.039d.mgd.msft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+ micalg="PGP-SHA256";
+ boundary="Signature=_Wed__10_Apr_2013_21_09_50_+1000_qXeBHYRWuh+e7ml+"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130409215419.GA13731@kahuna>
+In-Reply-To: <D07C73A334FF604B95B3CBD2A545D07B0B128AE0@039-SN2MPN1-013.039d.mgd.msft.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, grygorii.strashko@ti.com, linux@arm.linux.org.uk, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Tang Yuantian-B29983 <B29983@freescale.com>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/10/2013 12:54 AM, Nishanth Menon wrote:
-> On 15:49-20130409, Nishanth Menon wrote:
->> On 10:43-20130409, Tony Lindgren wrote:
->>> * Tony Lindgren <tony@atomide.com> [130409 09:54]:
->>>> * Roger Quadros <rogerq@ti.com> [130409 03:00]:
->>>>> On 04/05/2013 06:58 PM, Tony Lindgren wrote:
->>>>>>
->>>>>> Can't you just use the clock name there to get it?
->>>>>
->>>>> In device tree we don't pass around clock names. You can either get
->>>>> a phandle or an index to the clock.
->>>>>
->>>>> e.g. Documentation/devicetree/bindings/clock/imx31-clock.txt
->>>>
->>>> Yes I understand that. But the driver/clock/omap driver can just
->>>> remap the DT device initially so the board specific clock is
->>>> found from the clock alias table. Basically initially a passthrough
->>>> driver that can be enhanced to parse DT clock bindings and load
->>>> data from /lib/firmware.
->>>
->>> Actually probably the driver/clock/omap can even do even less
->>> initially. There probably even no need to remap clocks there.
->>>
->>> As long as the DT clock driver understands that a board specific
->>> auxclk is specified in the DT it can just call clk_add_alias() so
->>> the driver will get the right auxclk from cclock44xx_data.c.
->>>
->>> Then other features can be added later on like to allocate a
->>> clock entirely based on the binding etc.
->> I did try to have an implementation for cpufreq using clock nodes.
->> unfortunately, device tree wont let me have arguments of strings :(
->> So, I am unable to do clock = <&clk mpu_dpll>;
->> instead, I am forced to do clock = <&clk 249>;
->>
->> Here is an attempt on beagleXM - adds every clock node to the list.
->> Tons of un-necessary prints added to give an idea - see log:
->> http://pastebin.com/F9A2zSTr
->>
->> Would an cleaned up version be good enough as a step #1 of transition?
->>
-> Approach #2:
-> Here is yet another revision -> here I am trying to avoid the risk of
-> folks messing up indexing. for example: using an older DTB with newer
-> kernel, clocks being inserted into existing list etc. to prevent these,
+--Signature=_Wed__10_Apr_2013_21_09_50_+1000_qXeBHYRWuh+e7ml+
+Content-Type: text/plain; charset=US-ASCII
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Why do you need to worry about users using old DTB with new kernel.
-That is entirely the user's fault no?
+Hi,
 
-> we add an "DT_ID" for omap clock nodes, and use it to uniquely identify
-> the clock node. We try to minimize(not avoidable with integer indexing)
-> mistakes during development/productization.
+On Wed, 10 Apr 2013 09:06:11 +0000 Tang Yuantian-B29983 <B29983@freescale.c=
+om> wrote:
+>
+> Yes, I already sent out the v2 patch.
+> Please see: http://patchwork.ozlabs.org/patch/235288/
 
-cheers,
--roger
+Thanks.  I should read all my email before replying to it :-)
+
+--=20
+Cheers,
+Stephen Rothwell                    sfr@canb.auug.org.au
+
+--Signature=_Wed__10_Apr_2013_21_09_50_+1000_qXeBHYRWuh+e7ml+
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBCAAGBQJRZUh+AAoJEECxmPOUX5FEeAEP/0CDnfupqEJGQK/TSg8+gfG8
+jota7lb/iIaPnxryLAZRlkUC+qGvrd5ZPokbbZhYeDPcTuDGSqBuTBwtP03Fa05D
+Ihw5OkO17uJzcEcP0LBYvdHRcMxVNT1ag5nuT9Dk9phjTS++JQC85aBzatZJN+/i
+wEn37tbdHIOayb9HYHjA7/0e8dDx+QJdA9tag4lZ/dm0zD44KEF3ynUFbH2FeAQs
+03Ptkv6PKcWfmCniMGaODDauy4tmtFuLteOPx7rqLLX1zd/DRTsr6JdRup5S/8q+
+6g2TTr37xFd5hfCLE2QZPiIyxualsCgsWkVcfRFr22LGY5auNZ0oNd2IxP5CfArv
+pqxJtBzBxfDZ7mtAMZlhxeEzy3JetNPGWga9MJ7w/En97O9406f49dDZn+022m4N
+aSyJyTzR7q0NbvzzfMt+wEa6ntWiK1zs3Gixf1Do4a1cJ23rjqga3rpGMZwrSFwr
+DLmUdwJaVoORil0Hn1S5OfmGa+UwgL55raJYOmIcm3AmiOpw4zRtpUh/NCQuxsLY
+tzoZ3tQ5Ind0mc2mbgeUN+jFp9O0agjK6qM7pZi7K+t7kgaCvnPAWNR1Emvw5o98
+7gU67bByN+FjrOc2lRYFRzr7EQ/7GtmPMC59g+tAP8lK51wV8xNtywLb/3Zf9fZs
+fd53wL/NgPRUadbj9BxY
+=au+7
+-----END PGP SIGNATURE-----
+
+--Signature=_Wed__10_Apr_2013_21_09_50_+1000_qXeBHYRWuh+e7ml+--
