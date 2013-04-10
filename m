@@ -1,28 +1,129 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v2 1/2] ARM: dts: Add MFC clock entries for exynos4
-Date: Wed, 10 Apr 2013 19:03:13 +0900
-Message-ID: <30fd01ce35d2$9cfc7c80$d6f57580$%kim@samsung.com>
-References: <1365401657-5428-1-git-send-email-sachin.kamat@linaro.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/4] Documentation: Add memory mapped ARM architected
+ timer binding
+Date: Wed, 10 Apr 2013 11:13:36 +0100
+Message-ID: <20130410101336.GB8799@e106331-lin.cambridge.arm.com>
+References: <1365474623-29181-1-git-send-email-sboyd@codeaurora.org>
+ <1365474623-29181-2-git-send-email-sboyd@codeaurora.org>
+ <20130409090843.GS23725@e106331-lin.cambridge.arm.com>
+ <516444FE.2080200@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1365401657-5428-1-git-send-email-sachin.kamat@linaro.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: rob.herring@calxeda.com, s.nawrocki@samsung.com, patches@linaro.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <516444FE.2080200@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Marc Zyngier <Marc.Zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Sachin Kamat wrote:
+On Tue, Apr 09, 2013 at 05:42:38PM +0100, Stephen Boyd wrote:
+> On 04/09/13 02:08, Mark Rutland wrote:
+> > On Tue, Apr 09, 2013 at 03:30:20AM +0100, Stephen Boyd wrote:
+> >>  
+> >> -** Timer node properties:
+> >> +** CP15 Timer node properties:
+> >>  
+> >>  - compatible : Should at least contain one of
+> >>  	"arm,armv7-timer"
+> >> @@ -26,3 +30,55 @@ Example:
+> >>  			     <1 10 0xf08>;
+> >>  		clock-frequency = <100000000>;
+> >>  	};
+> >> +
+> >> +** Memory mapped timer node properties
+> >> +
+> >> +- compatible : Should at least contain "arm,armv7-timer-mem".
+> >> +
+> >> +- #address-cells : Must be 1.
+> > What about LPAE systems?
+> >
+> > How about something like the following:
+> >
+> > #address-cells : If the ranges property is empty, the same value as the
+> >                  parent node's #address-cells property. Otherwise, a
+> > 		 value such that the ranges property specifies a
+> > 		 mapping to the parent node's address space.            
 > 
-> Added MFC related clock entries in exynos4.dtsi file.
+> Yes that is much better. I wasn't trying to preclude LPAE or 64 bit systems.
+
+Great.
+
 > 
-> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> >> +
+> >> +- #size-cells : Must be 1.
+> >> +
+> >> +- ranges : Indicates parent and child bus address space are the same.
+> >> +
+> > Similarly, what if someone wants to write a more complex mapping for some
+> > reason?
+> >
+> > We should be able to handle it if we use the standard accessors.
+> 
+> Maybe I should just leave this part out? They are standard DT properties
+> so I could assume DT writers know what to do.
 
-Applied this series.
+I'd be happy with that. It may be worth describing them as "as necessary" or
+something to that effect.
 
-Thanks.
+> 
+> >> +- clock-frequency : The frequency of the main counter, in Hz. Optional.
+> >> +
+> >> +- reg : The control frame base address.
+> >> +
+> >> +Frame:
+> >> +
+> >> +- frame-id: Encoded as follows:
+> >> +		bits[3:0]  frame number: 0 to 7.
+> >> +		bits[10:8] frame usage:
+> >> +			0 - user/kernel
+> >> +			1 - hyp
+> >> +			2 - secure
+> >> +
+> > Could we not just have a disabled status property for those frames claimed by a
+> > higher level (either secure firmware or hypervisor)? Or have I missed something
+> > here?
+> 
+> Using disabled status would work. I was also thinking maybe we should
+> use a compatible string in each frame's node. Then we could match
+> against compatible children like "frame-user", "frame-kernel",
+> "frame-hyp", "frame-secure", "frame-user-kernel", etc. It allows us
+> flexibility if we should need to add something else in the future.
 
-- Kukjin
+I can see why we need to specify secure/non-secure, but I'm not sure why we
+need to specify hyp/user/kernel usage. Could we not leave this up to the kernel
+to figure out?
+
+A basic overveiew for those that don't know about the memory mapped timers:
+
+* There's one control frame CNTCTLBase. Some registers in this frame are only
+  available for secure accesses, including CNTNSAR which sets whether the
+  counter frames are accessible from the non-secure side.
+
+* There are up to 8 timer frames, which have their own CNTVOFF and
+  physical/virtual timers. Each frame CNTBaseN is duplicated at CNTPL0BaseN
+  with CNTVOFF and CNTPL0ACR (which controls PL0 accesses) inaccessible.
+
+I can see that we might have frames/registers we can't access (if we were
+booted on the non-secure side), but I can't see anything limiting whether we
+use a frame for kernel/hyp/user beyond that. Have I missed something?
+
+Could we not have something like the following for each frame:
+
+frame0 {
+	frame-id = <0>;
+	status = "disabled"; /* booted NS, secure firmware has not enabled access */
+	reg = <0x... 0x1000>, /* CNTBase0 */
+	      <0x... 0x1000>; /* CNTPL0Base0 */
+};
+
+> 
+> Also to get the frame number, I was thinking maybe we should expand the
+> reg property to have two address cells. Then we could have reg = <0
+> 0xf0001000 0x1000>.
+
+We could do that, but then you definitely need a more complex ranges property,
+and additional parsing code to handle grabbing it out of the reg property. I
+can't see what it buys us.
+
+Mark.
