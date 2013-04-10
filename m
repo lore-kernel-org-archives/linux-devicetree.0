@@ -1,120 +1,232 @@
-From: Barry Song <21cnbao@gmail.com>
-Subject: Re: [PATCH 07/14] media: soc-camera: support deferred probing of clients
-Date: Wed, 10 Apr 2013 22:30:05 +0800
-Message-ID: <CAGsJ_4z-FnbHtmbi16YD5LmYfpL+=ngke8EgkPHWy_PJ8QBPNg@mail.gmail.com>
-References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
- <1348754853-28619-8-git-send-email-g.liakhovetski@gmx.de> <CAGsJ_4yUY6PE0NWZ9yaOLFmRb3O-HL55=w7Y6muwL0YbkJtP0Q@mail.gmail.com>
- <Pine.LNX.4.64.1304101358490.13557@axis700.grange> <CAGsJ_4xn_R7D7Uh0dJB7WuDQG3K_mZkMwYNtMDuHMhX+4oTk=Q@mail.gmail.com>
- <Pine.LNX.4.64.1304101601160.13557@axis700.grange>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1304101601160.13557@axis700.grange>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "renwei.wu" <renwei.wu@csr.com>, DL-SHA-WorkGroupLinux <workgroup.linux@csr.com>, xiaomeng.hou@csr.com, zilong.wu@csr.com
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: [PATCH 2/2] mfd: wm8994: Add some OF properties
+Date: Wed, 10 Apr 2013 15:39:23 +0100
+Message-ID: <1365604763-13122-2-git-send-email-broonie@opensource.wolfsonmicro.com>
+References: <1365604763-13122-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1365604763-13122-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Sangbeom Kim <sbkim73@samsung.com>, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>
 List-Id: devicetree@vger.kernel.org
 
-2013/4/10 Guennadi Liakhovetski <g.liakhovetski@gmx.de>:
-> On Wed, 10 Apr 2013, Barry Song wrote:
->
->> Hi Guennadi,
->
-> There's a typo above.
+Add properties for some of the more important bits of platform data and
+fill out the binding document.
 
-sorry for the typo.
+Not all of the current platform data is suitable for the sort of fixed
+configuration that is done using DT, some of it should have runtime
+mechanisms added instead and some is unlikely to ever be used in practical
+systems.
 
->
->> Thanks!
->>
->> 2013/4/10 Guennadi Liakhovetski <g.liakhovetski@gmx.de>:
->> > Hi Barry
->> >
->> > On Wed, 10 Apr 2013, Barry Song wrote:
->> >
->> >> Hi Guennadia,
->> >>
->> >> 2012/9/27 Guennadi Liakhovetski <g.liakhovetski@gmx.de>:
->> >> > Currently soc-camera doesn't work with independently registered I2C client
->> >> > devices, it has to register them itself. This patch adds support for such
->> >> > configurations, in which case client drivers have to request deferred
->> >> > probing until their host becomes available and enables the data interface.
->> >> >
->> >> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
->> >> > ---
->> >>
->> >> it seems deferred probing for i2c camera sensors is a more workaround
->> >> than a solution.
->> >> currently,  soc-camera-pdrv is the manager of the whole initilization
->> >> flow. it all requires the host/client registerred and initilized
->> >> synchronously. so that results in strange things like that we fill a
->> >> i2c_board_info structure in arch/arm/mach-xxx but we never call
->> >> anything like i2c_new_device() to add the i2c client in mach. because
->> >> we need to do that in the soc-camera-pdrv driver to make all things
->> >> happen orderly.
->> >>
->> >> but now after we move to DT, all i2c device will be registerred
->> >> automatically by of_i2c_register_devices() in i2c_host 's probe, that
->> >> makes the problem much worse and very urgent to get fixed.
->> >>
->> >> returning DEFERRED_PROBE error until getting the private data filled
->> >> by the manager,
->> >
->> > This hasn't been the case since several versions of these patches. We no
->> > longer use private data to decide whether subdevices can probe
->> > successfully or have to defer probing.
->>
->> sorry for missing.  i will refer to your newer versions.
->>
->> >
->> >> indirectly, makes the things seem to be asynchronous,
->> >> but essentially it is still synchronous because the overall timing
->> >> line is still controller by soc-camera-pdrv.
->> >
->> > It isn't. If your subdevice driver doesn't have any dependencies, like
->> > e.g. sh_mobile_csi2.c, it will probe asynchronously whenever it's loaded.
->> > It is the task of a bridge driver, in our case of the soc-camera core, to
->> > register notifiers and a list of expected subdevices with the v4l2-async
->> > subsystem. As subdevices complete their probing they signal that to the
->> > v4l2-async too, which then calls bridge's notifiers, which then can build
->> > the pipeline.
->>
->> it seems we didn't describle my idea clearly in the last mail. i
->> actually mean we don't need that if we put the pipeline building to
->> the last stage after all things have been placed there.
->>
->> >
->> >> what about another possible way:
->> >> we let all host and i2c client driver probed in any order,
->> >
->> > This cannot work, because some I2C devices, e.g. sensors, need a clock
->> > signal from the camera interface to probe. Before the bridge driver has
->> > completed its probing and registered a suitable clock source with the
->> > v4l2-clk framework, sensors cannot be probed. And no, we don't want to
->> > fake successful probing without actually being able to talk to the
->> > hardware.
->>
->> i'd say same dependency also exists on ASoC.  a "fake" successful
->> probing doesn't mean it should really begin to work if there is no
->> external trigger source.  ASoC has successfully done that by a machine
->> driver to connect all DAI.
->> a way is we put all things ready in their places, finally we connect
->> them together and launch the whole hardware flow.
->>
->> anyway, if you have maken the things work by some simple hacking and
->> that means minimial changes to current soc-camera, i think we can
->> follow.
->
-> If you want to volunteer to step up as a new soc-camera maintainer to
-> replace my simple hacking with your comprehencive and advanced designs -
-> feel free, I'll ack straight away.
+Signed-off-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+---
 
-i am not sure whether you agree the new way or not. if you also agree
-this is a better way, i think we can do something to move ahead. i
-need sync and get input from you expert :-)
+Untested at present.
 
->
-> Thanks
-> Guennadi
+ Documentation/devicetree/bindings/sound/wm8994.txt |   56 +++++++++++++-
+ drivers/mfd/wm8994-core.c                          |   81 +++++++++++++++++++-
+ 2 files changed, 134 insertions(+), 3 deletions(-)
 
--barry
+diff --git a/Documentation/devicetree/bindings/sound/wm8994.txt b/Documentation/devicetree/bindings/sound/wm8994.txt
+index 7a7eb1e..51edc5f 100644
+--- a/Documentation/devicetree/bindings/sound/wm8994.txt
++++ b/Documentation/devicetree/bindings/sound/wm8994.txt
+@@ -5,14 +5,68 @@ on the board).
+ 
+ Required properties:
+ 
+-  - compatible : "wlf,wm1811", "wlf,wm8994", "wlf,wm8958"
++  - compatible : One of "wlf,wm1811", "wlf,wm8994" or "wlf,wm8958"
+ 
+   - reg : the I2C address of the device for I2C, the chip select
+           number for SPI.
+ 
++  - gpio-controller : Indicates this device is a GPIO controller.
++  - #gpio-cells : Must be 2. The first cell is the pin number and the
++    second cell is used to specify optional parameters (currently unused).
++
++  - AVDD2-supply, DBVDD1-supply, DBVDD2-supply, DBVDD3-supply, CPVDD-supply,
++    SPKVDD1-supply, SPKVDD2-supply : power supplies for the device, as covered
++    in Documentation/devicetree/bindings/regulator/regulator.txt
++
++Optional properties:
++
++  - interrupts : The interrupt line the IRQ signal for the device is
++    connected to.  This is optional, if it is not connected then none
++    of the interrupt related properties should be specified.
++  - interrupt-controller : These devices contain interrupt controllers
++    and may provide interrupt services to other devices if they have an
++    interrupt line connected.
++  - interrupt-parent : The parent interrupt controller.
++  - #interrupt-cells: the number of cells to describe an IRQ, this should be 2.
++    The first cell is the IRQ number.
++    The second cell is the flags, encoded as the trigger masks from
++    Documentation/devicetree/bindings/interrupts.txt
++
++  - gpio-cfg : A list of GPIO configuration register values. If absent,
++    no configuration of these registers is performed. If any value is
++    over 0xffff then the register will be left as default. If present 11
++    values must be supplied.
++
++  - micbias-cfg : Three MICBIAS register values for WM1811 or
++    WM8958.  If absent the register defaults will be used.
++
++  - ldo1ena : GPIO specifier for control of LDO1ENA input to device.
++  - ldo2ena : GPIO specifier for control of LDO2ENA input to device.
++
++  - lineout1-se : If present LINEOUT1 is in single ended mode.
++  - lineout2-se : If present LINEOUT2 is in single ended mode.
++
++  - lineout1-feedback : If present LINEOUT1 has common mode feedback connected.
++  - lineout2-feedback : If present LINEOUT2 has common mode feedback connected.
++
++  - ldoena-always-driven : If present LDOENA is always driven
++
+ Example:
+ 
+ codec: wm8994@1a {
+ 	compatible = "wlf,wm8994";
+ 	reg = <0x1a>;
++
++	gpio-controoler;
++	#gpio-cells = <2>;
++
++        lineout1-se;
++
++	AVDD2-supply = <&regulator>;
++	CPVDD-supply = <&regulator>;
++	DBVDD1-supply = <&regulator>;
++	DBVDD2-supply = <&regulator>;
++	DBVDD3-supply = <&regulator>;
++	SPKVDD1-supply = <&regulator>;
++	SPKVDD2-supply = <&regulator>;
+ };
+diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
+index 3f8d591..3f87f25 100644
+--- a/drivers/mfd/wm8994-core.c
++++ b/drivers/mfd/wm8994-core.c
+@@ -19,6 +19,9 @@
+ #include <linux/err.h>
+ #include <linux/delay.h>
+ #include <linux/mfd/core.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+@@ -396,6 +399,68 @@ static const struct reg_default wm1811_reva_patch[] = {
+ 	{ 0x102, 0x0 },
+ };
+ 
++#ifdef CONFIG_OF
++static int wm8994_set_pdata_from_of(struct wm8994 *wm8994)
++{
++	struct device_node *np = wm8994->dev->of_node;
++	struct wm8994_pdata *pdata = &wm8994->pdata;
++	int i;
++
++	if (!np)
++		return 0;
++
++	if (of_property_read_u32_array(np, "gpio-cfg", pdata->gpio_defaults,
++				       ARRAY_SIZE(pdata->gpio_defaults)) >= 0) {
++		for (i = 0; i < ARRAY_SIZE(pdata->gpio_defaults); i++) {
++			if (wm8994->pdata.gpio_defaults[i] == 0) {
++				pdata->gpio_defaults[i]
++					= WM8994_CONFIGURE_GPIO;
++			} else if (pdata->gpio_defaults[i] == 0xffffffff) {
++				pdata->gpio_defaults[i] = 0;
++			} else if (pdata->gpio_defaults[i] > 0xffff) {
++				dev_err(wm8994->dev,
++					"Invalid gpio-cfg[%d] %x\n",
++					i, pdata->gpio_defaults[i]);
++				return -EINVAL;
++			}
++		}
++	}
++
++	of_property_read_u32_array(np, "micbias-cfg", pdata->micbias,
++				   ARRAY_SIZE(pdata->micbias));
++
++	pdata->lineout1_diff = true;
++	pdata->lineout2_diff = true;
++	if (of_find_property(np, "lineout1-se", NULL))
++		pdata->lineout1_diff = false;
++	if (of_find_property(np, "lineout2-se", NULL))
++		pdata->lineout2_diff = false;
++
++	if (of_find_property(np, "lineout1-feedback", NULL))
++		pdata->lineout1fb = true;
++	if (of_find_property(np, "lineout2-feedback", NULL))
++		pdata->lineout2fb = true;
++
++	if (of_find_property(np, "ldoena-always-driven", NULL))
++		pdata->lineout2fb = true;
++
++	pdata->ldo[0].enable = of_get_named_gpio(np, "ldo1ena", 0);
++	if (pdata->ldo[0].enable < 0)
++		pdata->ldo[0].enable = 0;
++
++	pdata->ldo[1].enable = of_get_named_gpio(np, "ldo2ena", 0);
++	if (pdata->ldo[1].enable < 0)
++		pdata->ldo[1].enable = 0;
++
++	return 0;
++}
++#else
++static int wm8994_set_pdata_from_of(struct wm8994 *wm8994)
++{
++	return 0;
++}
++#endif
++
+ /*
+  * Instantiate the generic non-control parts of the device.
+  */
+@@ -414,6 +479,10 @@ static int wm8994_device_init(struct wm8994 *wm8994, int irq)
+ 	}
+ 	pdata = &wm8994->pdata;
+ 
++	ret = wm8994_set_pdata_from_of(wm8994);
++	if (ret != 0)
++		return ret;
++
+ 	dev_set_drvdata(wm8994->dev, wm8994);
+ 
+ 	/* Add the on-chip regulators first for bootstrapping */
+@@ -683,6 +752,7 @@ MODULE_DEVICE_TABLE(of, wm8994_of_match);
+ static int wm8994_i2c_probe(struct i2c_client *i2c,
+ 				      const struct i2c_device_id *id)
+ {
++	const struct of_device_id *of_id;
+ 	struct wm8994 *wm8994;
+ 	int ret;
+ 
+@@ -693,7 +763,14 @@ static int wm8994_i2c_probe(struct i2c_client *i2c,
+ 	i2c_set_clientdata(i2c, wm8994);
+ 	wm8994->dev = &i2c->dev;
+ 	wm8994->irq = i2c->irq;
+-	wm8994->type = id->driver_data;
++
++	if (i2c->dev.of_node) {
++		of_id = of_match_device(wm8994_of_match, &i2c->dev);
++		if (of_id)
++			wm8994->type = (int)of_id->data;
++	} else {
++		wm8994->type = id->driver_data;
++	}
+ 
+ 	wm8994->regmap = devm_regmap_init_i2c(i2c, &wm8994_base_regmap_config);
+ 	if (IS_ERR(wm8994->regmap)) {
+@@ -733,7 +810,7 @@ static struct i2c_driver wm8994_i2c_driver = {
+ 		.name = "wm8994",
+ 		.owner = THIS_MODULE,
+ 		.pm = &wm8994_pm_ops,
+-		.of_match_table = wm8994_of_match,
++		.of_match_table = of_match_ptr(wm8994_of_match),
+ 	},
+ 	.probe = wm8994_i2c_probe,
+ 	.remove = wm8994_i2c_remove,
+-- 
+1.7.10.4
