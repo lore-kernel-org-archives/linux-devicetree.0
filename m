@@ -1,7 +1,7 @@
 From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 01/10] utilfdt_read_err: use xmalloc funcs
-Date: Wed, 10 Apr 2013 14:29:06 -0400
-Message-ID: <1365618555-5893-2-git-send-email-vapier@gentoo.org>
+Subject: [PATCH 03/10] die: constify format string arg
+Date: Wed, 10 Apr 2013 14:29:08 -0400
+Message-ID: <1365618555-5893-4-git-send-email-vapier@gentoo.org>
 References: <1365618555-5893-1-git-send-email-vapier@gentoo.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,32 +21,27 @@ Sender: "devicetree-discuss"
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We've got these handy helpers, so let's use them.
+We only display this string, so there's no need for it to be writable.
+Constify away!
 
 Acked-by: David Gibson <David-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
 ---
- util.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ util.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/util.c b/util.c
-index b081fa8..12f0614 100644
---- a/util.c
-+++ b/util.c
-@@ -212,12 +212,12 @@ int utilfdt_read_err(const char *filename, char **buffp)
- 	}
+diff --git a/util.h b/util.h
+index 3c20b15..d856eb9 100644
+--- a/util.h
++++ b/util.h
+@@ -23,7 +23,7 @@
+  *                                                                   USA
+  */
  
- 	/* Loop until we have read everything */
--	buf = malloc(bufsize);
-+	buf = xmalloc(bufsize);
- 	do {
- 		/* Expand the buffer to hold the next chunk */
- 		if (offset == bufsize) {
- 			bufsize *= 2;
--			buf = realloc(buf, bufsize);
-+			buf = xrealloc(buf, bufsize);
- 			if (!buf) {
- 				ret = ENOMEM;
- 				break;
+-static inline void __attribute__((noreturn)) die(char * str, ...)
++static inline void __attribute__((noreturn)) die(const char *str, ...)
+ {
+ 	va_list ap;
+ 
 -- 
 1.8.1.2
