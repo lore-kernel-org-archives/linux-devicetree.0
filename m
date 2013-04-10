@@ -1,191 +1,126 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 2/3] gpio: grgpio: Add device driver for GRGPIO cores
-Date: Wed, 10 Apr 2013 20:50:19 +0200
-Message-ID: <CACRpkdYf7U=YY92Pma8+mWGALJvQDPU=d3x7Z6rX+rWkhuBANg@mail.gmail.com>
-References: <1363355140-28216-1-git-send-email-andreas@gaisler.com>
-	<1363355140-28216-3-git-send-email-andreas@gaisler.com>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC][PATCH 1/2] ARM: OMAP4: clock: Add device tree support for AUXCLKs
+Date: Wed, 10 Apr 2013 14:19:13 -0500
+Message-ID: <CAGo_u6rqN6YFQ6vX87-Cg28RbiR9UU2JHgLecOU5Nd=B5XPUEA@mail.gmail.com>
+References: <20130404164137.GH10155@atomide.com>
+	<515EA9E3.1010409@ti.com>
+	<20130405155851.GA10155@atomide.com>
+	<5163E589.1040809@ti.com>
+	<20130409164928.GL10155@atomide.com>
+	<20130409174319.GP10155@atomide.com>
+	<20130409204900.GA8815@kahuna>
+	<20130410080630.14359.68178@quantum>
+	<5165453E.6090503@ti.com>
+	<20130410173921.GA31017@kahuna>
+	<20130410184919.GJ10155@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1363355140-28216-3-git-send-email-andreas@gaisler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <anton.vorontsov@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, software@gaisler.com
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130410184919.GJ10155-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 15, 2013 at 2:45 PM, Andreas Larsson <andreas@gaisler.com> wrote:
-
-> This driver supports GRGPIO gpio cores available in the GRLIB VHDL IP
-> core library from Aeroflex Gaisler.
+Hi Tony,
+On Wed, Apr 10, 2013 at 1:49 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> * Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [130410 10:44]:
+>> Details in the patch below (Tony, I have added you as collaborator for
+>> helping in getting this working-clk_add_alias was'nt needed in the
+>> internal patch discussion we had - I have taken a bit of freedom in
+>> adding your contributions to the patch below)
 >
-> Signed-off-by: Andreas Larsson <andreas@gaisler.com>
-> ---
->  .../devicetree/bindings/gpio/gpio-grgpio.txt       |   24 +++
->  drivers/gpio/Kconfig                               |    9 ++
->  drivers/gpio/Makefile                              |    1 +
->  drivers/gpio/gpio-grgpio.c                         |  164 ++++++++++++++++++++
->  4 files changed, 198 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-grgpio.txt
->  create mode 100644 drivers/gpio/gpio-grgpio.c
+> OK thanks. Noticed few minor things, see below.
+Thanks on the checkup
 >
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-grgpio.txt b/Documentation/devicetree/bindings/gpio/gpio-grgpio.txt
-> new file mode 100644
-> index 0000000..1050dc8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-grgpio.txt
-> @@ -0,0 +1,24 @@
-> +Aeroflex Gaisler GRGPIO General Purpose I/O cores.
-> +
-> +The GRGPIO GPIO core is available in the GRLIB VHDL IP core library.
-> +
-> +Note: In the ordinary environment for the GRGPIO core, a Leon SPARC system,
-> +these properties are built from information in the AMBA plug&play.
-> +
-> +Required properties:
-> +
-> +- name : Should be "GAISLER_GPIO" or "01_01a"
+>> Folks, this does seem to be the best compromise we can achieve at this
+>> point in time. feedback on this approach is much appreciated - if folks
+>> are ok, I can post this as an formal patch series.
+>>
+>> From 130a41821bf57081ca45ef654029175d173135e6 Mon Sep 17 00:00:00 2001
+>> From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+>> Date: Tue, 9 Apr 2013 19:26:40 -0500
+>> Subject: [RFC PATCH] clk: OMAP: introduce device tree binding to kernel clock
+>>  data
+>>
+>> OMAP clock data is located in arch/arm/mach-omap2/cclockXYZ_data.c.
+>> However, this presents an obstacle for using these clock nodes in
+>> Device Tree definitions. There are many possible approaches to this
+>> problem as discussed in the following thread:
+>> http://marc.info/?t=136370325600009&r=1&w=2
+>
+> It might be worth clarifying that this is especially for the board
+> specific clocks initially. The fixed clocks are currently found via
+> the clock aliases table.
+Ack.
+[...]
+>
+>> +Example #2: describing clock node for auxilary clock #3 on OMAP443x platform:
+>> +Ref: arch/arm/mach-omap2/cclock44xx_data.c
+>> +describes the auxclk3 clock to be as follows:
+>> +     CLK(NULL,       "auxclk3_ck",   &auxclk3_ck,    CK_443X),
+>> +Corresponding binding will be:
+>> +     auxclk3: auxclk3 {
+>> +             #clock-cells = <1>;
+>> +             compatible = "ti,omap-clock";
+>> +     };
+>> +And it's usage will be:
+>> +     clocks = <&auxclk3>;
+>
+> The #clock-cells in the auxclk3 example should also be 0 instead of 1
+> AFAIK. We should only use #clock-cells = <1> when the same physical
+> clock provides multiple outputs. I believe the auxclocks are all separate,
+> but that needs to be verified.
+Oops.. my bad. you are correct here - auxclk is single output. all of them.
+will fix.
+[...]
+>> +static int omap_clk_probe(struct platform_device *pdev)
+>> +{
+>> +     struct clk *clk;
+>> +     int res;
+>> +
+>> +     const struct of_device_id *match;
+>> +     struct device_node *np = pdev->dev.of_node;
+>> +     char clk_name[32];
+>> +
+>> +     match = of_match_device(omap_clk_of_match, &pdev->dev);
+>> +
+>> +     /* Set up things so consumer can call clk_get() with name */
+>> +     snprintf(clk_name, 32, "%s_ck", np->name);
+>> +     clk = clk_get(NULL, clk_name);
+>> +     if (IS_ERR(clk)) {
+>> +             res = PTR_ERR(clk);
+>> +             dev_err(&pdev->dev, "could not get clock %s (%d)\n",
+>> +                     clk_name, res);
+>> +             goto out;
+>> +     }
+>
+> It seems that at least for now we can assume the naming will stay
+> that way, then if we need other rules for finding clocks, we can
+> add omap_match_clock() function or something.
+ack.
+>
+>> +     /* This allows the driver to of_clk_get() */
+>> +     res = of_clk_add_provider(np, of_clk_src_simple_get, clk);
+>> +     if (res)
+>> +             dev_err(&pdev->dev, "could not add provider for %s (%d)\n",
+>> +                     clk_name, res);
+>> +
+>> +     clk_put(clk);
+>> +out:
+>> +     return res;
+>> +}
+>
+> We can avoid the concern of storing the struct clk * and do the
+> look up lazily on consumer driver probe by setting a dummy struct
+> clk * here. Then replace of_clk_src_simple_get() with a custom
+> omap_clk_src_get() that does the lookup and replaces the struct
+> clk * with the real one.
+Hmm.. this is interesting. will give it a try. Thanks on the suggestion.
 
-What is this? Don't we usually use a .compatible string for this?
-Name? Que? Is that something legacy?
-
-I would prefer:
-
-- Add you vendor prefix to Documentation/devicetree/bindings/vendor-prefixes.txt
-- Use a compatible string like this "gaisler,gpio"
-
-> +- reg : Address and length of the register set for the device
-> +
-> +- interrupts : Interrupt numbers for this device
-> +
-> +Optional properties:
-> +
-> +- base : The base gpio number for the core. A dynamic base is used if not
-> +       present
-
-This has to go. We don't hardcode numbers from the global GPIO
-space into the device tree, beacause as you soon realize this is
-Linux-specific and the device tree shall be OS agnostic.
-
-The discussion has come up a number of times, review the mailing
-lists for suggestions on how to get around this.
-
-(...)
-> +++ b/drivers/gpio/gpio-grgpio.c
-
-> +struct grgpio_regs {
-> +       u32 data;       /* 0x00 */
-> +       u32 output;     /* 0x04 */
-> +       u32 dir;        /* 0x08 */
-> +       u32 imask;      /* 0x0c */
-> +       u32 ipol;       /* 0x10  */
-> +       u32 iedge;      /* 0x14 */
-> +       u32 bypass;     /* 0x18 */
-> +       u32 __reserved; /* 0x1c */
-> +       u32 imap[8];    /* 0x20-0x3c */
-> +};
-
-Um... Why are you doing this?
-
-> +struct grgpio_priv {
-> +       struct bgpio_chip bgc;
-> +       struct grgpio_regs __iomem *regs;
-
-And that's tagged as __iomem * as well, that is very unorthodox.
-The usual practice is to have a base pointer void __iomem *base
-and offset from that.
-
-> +       struct device *dev;
-> +};
-> +
-> +static inline struct grgpio_priv *grgpio_gc_to_priv(struct gpio_chip *gc)
-> +{
-> +       struct bgpio_chip *bgc = to_bgpio_chip(gc);
-> +
-> +       return container_of(bgc, struct grgpio_priv, bgc);
-> +}
-> +
-> +static int grgpio_to_irq(struct gpio_chip *gc, unsigned offset)
-> +{
-> +       return -ENXIO;
-> +}
-
-The gpiolib core already returns -ENXIO if this function is
-not assigned so just delete this function and leave that
-function pointer as NULL.
-
-> +static int grgpio_probe(struct platform_device *ofdev)
-> +{
-> +       struct device_node *np = ofdev->dev.of_node;
-> +       struct grgpio_regs __iomem *regs;
-
-Prefer void __iomem *base;
-
-> +       struct gpio_chip *gc;
-> +       struct bgpio_chip *bgc;
-> +       struct grgpio_priv *priv;
-> +       struct resource *res;
-> +       int err;
-> +       u32 prop;
-> +
-> +       priv = devm_kzalloc(&ofdev->dev, sizeof(*priv), GFP_KERNEL);
-> +       if (!priv)
-> +               return -ENOMEM;
-> +
-> +       res = platform_get_resource(ofdev, IORESOURCE_MEM, 0);
-> +       regs = devm_ioremap_resource(&ofdev->dev, res);
-> +       if (IS_ERR(regs))
-> +               return PTR_ERR(regs);
-> +
-> +       bgc = &priv->bgc;
-> +       err = bgpio_init(bgc, &ofdev->dev, 4, &regs->data, &regs->output, NULL,
-> +                        &regs->dir, NULL, BGPIOF_BIG_ENDIAN_BYTE_ORDER);
-
-So I would prefer if you did:
-
-#define GRGPIO_DATA 0x00
-#define GRGPIO_OUTPUT 0x04
-#define GRGPIO_DIR 0x08
-(...)
-
-err = bgpio_init(bgc, &ofdev->dev, 4, base + GRGPIO_DATA, base +
-GRGPIO_OUTPUT, NULL,
-                       base + GRGPIO_DIR, NULL, BGPIOF_BIG_ENDIAN_BYTE_ORDER);
-
-> +       if (err) {
-> +               dev_err(&ofdev->dev, "bgpio_init() failed\n");
-> +               return err;
-> +       }
-> +
-> +       priv->regs = regs;
-> +       priv->dev = &ofdev->dev;
-> +
-> +       gc = &bgc->gc;
-> +       gc->of_node = np;
-> +       gc->owner = THIS_MODULE;
-> +       gc->to_irq = grgpio_to_irq;
-> +       gc->label = np->full_name;
-> +
-> +       err = of_property_read_u32(np, "base", &prop);
-> +       if (err) {
-> +               dev_dbg(&ofdev->dev, "No base property: use dynamic base\n");
-> +               gc->base = -1;
-> +       } else {
-> +               gc->base = prop;
-> +       }
-
-Over my dead body ;-)
-
-(...)
-> +static struct of_device_id grgpio_match[] = {
-> +       {.name = "GAISLER_GPIO"},
-> +       {.name = "01_01a"},
-> +       {},
-> +};
-
-This is very weird. Especially "01_01a" needs a real good explanation
-if it is to be kept.
-
-Alas, I don't really know what the .name field in the of_device_id is for...
-
-Yours,
-Linus Walleij
+Regards,
+Nishanth Menon
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
