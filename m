@@ -1,65 +1,102 @@
-From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 00/10 v2] usage()/--help clean up & unification
-Date: Wed, 10 Apr 2013 14:29:05 -0400
-Message-ID: <1365618555-5893-1-git-send-email-vapier@gentoo.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v5 3/3] of/pci: mips: convert to common of_pci_range_parser
+Date: Wed, 10 Apr 2013 13:28:34 -0500
+Message-ID: <5165AF52.9000001@gmail.com>
+References: <1365578969-30966-1-git-send-email-Andrew.Murray@arm.com> <1365578969-30966-4-git-send-email-Andrew.Murray@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1365578969-30966-4-git-send-email-Andrew.Murray@arm.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andrew Murray <Andrew.Murray@arm.com>
+Cc: rob.herring@calxeda.com, siva.kallam@samsung.com, linux-pci@vger.kernel.org, Liviu.Dudau@arm.com, paulus@samba.org, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, jg1.han@samsung.com, jgunthorpe@obsidianresearch.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, suren.reddy@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Each utility currently open codes how they process options and
-implement usage().  This leads to inconsistent behavior and output
-which sucks.  A bunch also get common things wrong (like sending
---help to stderr).
+On 04/10/2013 02:29 AM, Andrew Murray wrote:
+> This patch converts the pci_load_of_ranges function to use the new common
+> of_pci_range_parser.
+> 
+> Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
 
-Rather than go through them one by one and fix their bugs, start
-a new mini framework in the util.[ch] code base.  This allows the
-utils to be much more data driven in their approach to options --
-they declare certain structures with the right format, and then
-call usage() as needed.  The new util code takes care of the rest.
+Reviewed-by: Rob Herring <rob.herring@calxeda.com>
 
-I also snuck in a few minor fixes in this patch series that I
-noticed as I was hacking on things.  Really I just wanted a --scan
-option in the fdtdump tool :).
 
-For the v2 series, I fixed a compile/output bug in one of the
-patches and this now passes `make check`.  I also added a --debug
-option to fdtdump.
-
-Mike Frysinger (10):
-  utilfdt_read_err: use xmalloc funcs
-  utilfdt_read: pass back up the length of data read
-  die: constify format string arg
-  util_version: new helper for displaying version info
-  fdtdump: make usage a bit more friendly
-  fdtdump: add a --scan option
-  dtc/fdt{get,put}/convert-dtsv0-lexer: convert to new usage helpers
-  util: drop "long" from usage helpers
-  util: add common ARRAY_SIZE define
-  fdtdump: add a debug mode
-
- convert-dtsv0-lexer.l |  24 +++++++----
- dtc.c                 | 116 +++++++++++++++++++++++++-------------------------
- dtc.h                 |   1 -
- fdtdump.c             | 109 ++++++++++++++++++++++++++++++++++++++++++-----
- fdtget.c              |  62 ++++++++++++---------------
- fdtput.c              |  65 +++++++++++++---------------
- tests/testutils.c     |   2 +-
- util.c                |  73 ++++++++++++++++++++++++++++---
- util.h                |  78 +++++++++++++++++++++++++++++++--
- 9 files changed, 375 insertions(+), 155 deletions(-)
-
--- 
-1.8.1.2
+> ---
+>  arch/mips/pci/pci.c |   50 ++++++++++++++++----------------------------------
+>  1 files changed, 16 insertions(+), 34 deletions(-)
+> 
+> diff --git a/arch/mips/pci/pci.c b/arch/mips/pci/pci.c
+> index 0872f12..bee49a4 100644
+> --- a/arch/mips/pci/pci.c
+> +++ b/arch/mips/pci/pci.c
+> @@ -122,51 +122,33 @@ static void pcibios_scanbus(struct pci_controller *hose)
+>  #ifdef CONFIG_OF
+>  void pci_load_of_ranges(struct pci_controller *hose, struct device_node *node)
+>  {
+> -	const __be32 *ranges;
+> -	int rlen;
+> -	int pna = of_n_addr_cells(node);
+> -	int np = pna + 5;
+> +	struct of_pci_range_range range;
+> +	struct of_pci_range_parser parser;
+> +	u32 res_type;
+>  
+>  	pr_info("PCI host bridge %s ranges:\n", node->full_name);
+> -	ranges = of_get_property(node, "ranges", &rlen);
+> -	if (ranges == NULL)
+> -		return;
+>  	hose->of_node = node;
+>  
+> -	while ((rlen -= np * 4) >= 0) {
+> -		u32 pci_space;
+> +	if (of_pci_range_parser(&parser, node))
+> +		return;
+> +
+> +	for_each_of_pci_range(&parser, &range) {
+>  		struct resource *res = NULL;
+> -		u64 addr, size;
+> -
+> -		pci_space = be32_to_cpup(&ranges[0]);
+> -		addr = of_translate_address(node, ranges + 3);
+> -		size = of_read_number(ranges + pna + 3, 2);
+> -		ranges += np;
+> -		switch ((pci_space >> 24) & 0x3) {
+> -		case 1:		/* PCI IO space */
+> +
+> +		res_type = range.flags & IORESOURCE_TYPE_BITS;
+> +		if (res_type == IORESOURCE_IO) {
+>  			pr_info("  IO 0x%016llx..0x%016llx\n",
+> -					addr, addr + size - 1);
+> +				range.addr, range.addr + range.size - 1);
+>  			hose->io_map_base =
+> -				(unsigned long)ioremap(addr, size);
+> +				(unsigned long)ioremap(range.addr, range.size);
+>  			res = hose->io_resource;
+> -			res->flags = IORESOURCE_IO;
+> -			break;
+> -		case 2:		/* PCI Memory space */
+> -		case 3:		/* PCI 64 bits Memory space */
+> +		} else if (res_type == IORESOURCE_MEM) {
+>  			pr_info(" MEM 0x%016llx..0x%016llx\n",
+> -					addr, addr + size - 1);
+> +				range.addr, range.addr + range.size - 1);
+>  			res = hose->mem_resource;
+> -			res->flags = IORESOURCE_MEM;
+> -			break;
+> -		}
+> -		if (res != NULL) {
+> -			res->start = addr;
+> -			res->name = node->full_name;
+> -			res->end = res->start + size - 1;
+> -			res->parent = NULL;
+> -			res->sibling = NULL;
+> -			res->child = NULL;
+>  		}
+> +		if (res != NULL)
+> +			of_pci_range_to_resource(&range, node, res);
+>  	}
+>  }
+>  #endif
+> 
