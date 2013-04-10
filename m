@@ -1,49 +1,152 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCHv7 06/17] clk: mvebu: create parent-child relation for PCIe clocks
- on Armada 370
-Date: Wed, 10 Apr 2013 01:09:00 -0700
-Message-ID: <20130410080900.14359.97128@quantum>
-References: <1364395234-11195-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1364395234-11195-7-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: Re: Query on pinctrl usage for DT nodes
+Date: Wed, 10 Apr 2013 13:42:29 +0530
+Message-ID: <CA+V-a8vwdCkyMqiynj5BodXbjwJ=e4qNb-29FhLweqbjc7DBQA@mail.gmail.com>
+References: <CA+V-a8uiPwsAD--OHFAE=i2ed+-wbXm4p2deZXr92+Zv6GDS1w@mail.gmail.com>
+ <515C5C76.3080009@wwwdotorg.org>
+ <CA+V-a8t3wtP77DdeUoQHKMjAuWmV+ude+1J3UjJmMTqobgStjA@mail.gmail.com>
+ <5162FD4A.1030909@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1364395234-11195-7-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, Thierry Reding <thierry.reding@avionic-design.de>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5162FD4A.1030909@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, linus.walleij@linaro.org, Stephen Warren <swarren@nvidia.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, LAK <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Thomas Petazzoni (2013-03-27 07:40:23)
-> The Armada 370 has two gatable clocks for each PCIe interface, and we
-> want both of them to be enabled. We therefore make one of the two
-> clocks a child of the other, as we did for the sataX and sataXlnk
-> clocks on Armada XP.
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> Cc: Mike Turquette <mturquette@linaro.org>
+Hi Stephen,Peter,
 
-Acked-by: Mike Turquette <mturquette@linaro.org>
+On Mon, Apr 8, 2013 at 10:54 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 04/08/2013 07:12 AM, Prabhakar Lad wrote:
+>> On Wed, Apr 3, 2013 at 10:14 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>>> On 04/03/2013 03:16 AM, Prabhakar Lad wrote:
+>>>> Hi Linus/Stephen,
+>>>>
+>>>> I am working adding  DT nodes for DA850.
+> ...
+>>>> But while booting I see the following boot log:-
+>>>> ...
+>>>> cpuidle: using governor menu
+>>>> TCP: cubic registered
+>>>> NET: Registered protocol family 17
+>>>> pinctrl-single 1c14120.pinmux: pin 1c14130 already requested by
+>>>> davinci_mdio.0; cannot claim for i2c_davinci.1
+>>>> pinctrl-single 1c14120.pinmux: pin-4 (i2c_davinci.1) status -22
+>>>> pinctrl-single 1c14120.pinmux: could not request pin 4 on device pinctrl-single
+>>>> console [netcon0] enabled
+>>>> ....
+>>>>
+>>>> This is because the mdio and i2c are using same pin 0x10,
+>>>
+>>> How can two devices use the same pin? I mean physically, in hardware?
+>>>
+>>> Is this because pinctrl-single uses the register address as the pin
+>>> number, whereas you have registers which configure multiple pins at
+>>
+>> Yes you are correct, we have registers  which configure multiple pins at once.
+>> For example for above Pin Multiplexing Control 4 Register (Pinmux4)
+>> [1] page(250) : -
+>>
+>> PINMUX4_31_28 --> SP1_SCS[2]/UART1_TXD/SATA_CP_POD/GP1[0] Control
+>> PINMUX4_27_24 --> SPI1_SCS[3]/UART1_RXD/SATA_LED/GP1[1] Control
+>> PINMUX4_23_20 --> SPI1_SCS[4]/UART2_TXD/I2C1_SDA/GP1[2] Control
+>> PINMUX4_19_16 --> SPI1_SCS[5]/UART2_RXD/I2C1_SCL/GP1[3] Control
+>> PINMUX4_15_12 --> SPI1_SCS[6]/I2C0_SDA/TM64P3_OUT12/GP1[4] Control
+>> PINMUX4_11_8 --> SPI1_SCS[7]/I2C0_SCL/TM64P2_OUT12/GP1[5] Control
+>> PINMUX4_7_4 --> SPI0_SCS[0]/TM64P1_OUT12/GP1[6]/MDIO_D/TM64P1_IN12 Control
+>> PINMUX4_3_0 --> SPI0_SCS[1]/TM64P0_OUT12/GP1[7]/MDIO_CLK/TM64P0_IN12 Control
+>>
+>>> once? If so, your hardware isn't something that can be represented by
+>>> pinctrl-single.
+>>
+>> What is the alternative for such case ? any pointer would be helpful.
+>>
+>> [1] http://www.ti.com/general/docs/lit/getliterature.tsp?literatureNumber=spruh77a&fileType=pdf
+>
+> Tony previously replied:
+>
+> Tony wrote:
+>> Tony wrote:
+>>> ??? wrote:
+>>>> Prabhakar wrote:
+>>>>> Is there any
+>>>>> alternative way to handle if the two node's are using same pins any
+>>>>> pointers could be very much helpful ?
+>>>
+>>> It could also that the mux register(s) follow the one-mux-per-bit
+>>> mapping.
+>>>
+>>> In that case pinctrl-single,bits option as documented in the
+>>> Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt.
+>>
+>> Oh it's already using pinctrl-single,bits option. Maybe there's a
+>> bug, adding Peter to cc.
+>
+> So I guess you need to debug the code to see why that option isn't
+> working for you.
+>
+Following is the proposed fix/hack let me know if its OK.
 
-> ---
->  drivers/clk/mvebu/clk-gating-ctrl.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/mvebu/clk-gating-ctrl.c b/drivers/clk/mvebu/clk-gating-ctrl.c
-> index ebf141d..b35785a 100644
-> --- a/drivers/clk/mvebu/clk-gating-ctrl.c
-> +++ b/drivers/clk/mvebu/clk-gating-ctrl.c
-> @@ -119,8 +119,8 @@ static const struct mvebu_soc_descr __initconst armada_370_gating_descr[] = {
->         { "pex1_en", NULL,  2 },
->         { "ge1", NULL, 3 },
->         { "ge0", NULL, 4 },
-> -       { "pex0", NULL, 5 },
-> -       { "pex1", NULL, 9 },
-> +       { "pex0", "pex0_en", 5 },
-> +       { "pex1", "pex1_en", 9 },
->         { "sata0", NULL, 15 },
->         { "sdio", NULL, 17 },
->         { "tdm", NULL, 25 },
-> -- 
-> 1.7.9.5
+Regards,
+--Prabhakar
+
+->>>>>>>>>>>>>>>>>>>
+
+diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
+index ee72f1f..78fb42d 100644
+--- a/drivers/pinctrl/core.h
++++ b/drivers/pinctrl/core.h
+@@ -46,6 +46,7 @@ struct pinctrl_dev {
+        struct pinctrl *p;
+        struct pinctrl_state *hog_default;
+        struct pinctrl_state *hog_sleep;
++       bool bits_per_mux;
+ #ifdef CONFIG_DEBUG_FS
+        struct dentry *device_root;
+ #endif
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index 5c32e88..d2a91ec 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -974,6 +974,7 @@ static int pcs_probe(struct platform_device *pdev)
+                ret = -EINVAL;
+                goto free;
+        }
++       pcs->pctl->bits_per_mux = pcs->bits_per_mux;
+
+        dev_info(pcs->dev, "%i pins at pa %p size %u\n",
+                 pcs->desc.npins, pcs->base, pcs->size);
+diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
+index 1a00658..4989f01 100644
+--- a/drivers/pinctrl/pinmux.c
++++ b/drivers/pinctrl/pinmux.c
+@@ -110,7 +110,7 @@ static int pin_request(struct pinctrl_dev *pctldev,
+
+                desc->gpio_owner = owner;
+        } else {
+-               if (desc->mux_usecount && strcmp(desc->mux_owner, owner)) {
++               if (!pctldev->bits_per_mux && desc->mux_usecount &&
+strcmp(desc->mux_owner, owner)) {
+                        dev_err(pctldev->dev,
+                                "pin %s already requested by %s;
+cannot claim for %s\n",
+                                desc->name, desc->mux_owner, owner);
+@@ -118,7 +118,7 @@ static int pin_request(struct pinctrl_dev *pctldev,
+                }
+
+                desc->mux_usecount++;
+-               if (desc->mux_usecount > 1)
++               if (desc->mux_usecount > 1 && !pctldev->bits_per_mux)
+                        return 0;
+
+                desc->mux_owner = owner;
