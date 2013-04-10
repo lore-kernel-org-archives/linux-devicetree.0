@@ -1,60 +1,56 @@
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] of: remove the unnecessary of_node_put for
- of_parse_phandle_with_args()
-Date: Wed, 10 Apr 2013 21:09:50 +1000
-Message-ID: <20130410210950.972df35671f7fa5573ef2d7b@canb.auug.org.au>
-References: <1365490569-32455-1-git-send-email-Yuantian.Tang@freescale.com>
-	<20130410190327.a70d4c3798509d664aef2f13@canb.auug.org.au>
-	<D07C73A334FF604B95B3CBD2A545D07B0B128AE0@039-SN2MPN1-013.039d.mgd.msft.net>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH v2 08/11] ASoC: fsl-ssi: imx ac97 support
+Date: Wed, 10 Apr 2013 13:33:04 +0200
+Message-ID: <20130410113304.GB16749@pengutronix.de>
+References: <1365362721-3731-1-git-send-email-mpa@pengutronix.de>
+ <1365362721-3731-9-git-send-email-mpa@pengutronix.de>
+ <5162301F.9090000@tabi.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature";
- micalg="PGP-SHA256";
- boundary="Signature=_Wed__10_Apr_2013_21_09_50_+1000_qXeBHYRWuh+e7ml+"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <D07C73A334FF604B95B3CBD2A545D07B0B128AE0@039-SN2MPN1-013.039d.mgd.msft.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tang Yuantian-B29983 <B29983@freescale.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <5162301F.9090000@tabi.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Timur Tabi <timur@tabi.org>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---Signature=_Wed__10_Apr_2013_21_09_50_+1000_qXeBHYRWuh+e7ml+
-Content-Type: text/plain; charset=US-ASCII
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sun, Apr 07, 2013 at 09:49:03PM -0500, Timur Tabi wrote:
+> Markus Pargmann wrote:
+> >This patch copies some parts from imx-ssi to support AC97 on
+> >imx27-pca100 and imx27-pcm043. It is activated with a new fsl,imx-ac97
+> >bool property. It was tested on imx27-pca100.
+> 
+> I'm not crazy about this patch -- it seems a bit hackish.  There are
+> too many "if (imx_ac97)" clauses.  Large pieces of code that don't
+> appear to be related to AC97 are indented in an if-clause.  I
+> especially don't like the "If we use AC97, the registers are already
+> setup correctly".
+> 
 
-Hi,
+I will try to seperate it a little bit cleaner by using different dai
+ops for ac97 for the two big ifs and perhaps use a seperated register
+setup function so it can be used from ssi startup and ac97_setup.
 
-On Wed, 10 Apr 2013 09:06:11 +0000 Tang Yuantian-B29983 <B29983@freescale.c=
-om> wrote:
->
-> Yes, I already sent out the v2 patch.
-> Please see: http://patchwork.ozlabs.org/patch/235288/
+Regards,
 
-Thanks.  I should read all my email before replying to it :-)
+Markus
 
---=20
-Cheers,
-Stephen Rothwell                    sfr@canb.auug.org.au
+> -- 
+> Timur Tabi
+> 
 
---Signature=_Wed__10_Apr_2013_21_09_50_+1000_qXeBHYRWuh+e7ml+
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBCAAGBQJRZUh+AAoJEECxmPOUX5FEeAEP/0CDnfupqEJGQK/TSg8+gfG8
-jota7lb/iIaPnxryLAZRlkUC+qGvrd5ZPokbbZhYeDPcTuDGSqBuTBwtP03Fa05D
-Ihw5OkO17uJzcEcP0LBYvdHRcMxVNT1ag5nuT9Dk9phjTS++JQC85aBzatZJN+/i
-wEn37tbdHIOayb9HYHjA7/0e8dDx+QJdA9tag4lZ/dm0zD44KEF3ynUFbH2FeAQs
-03Ptkv6PKcWfmCniMGaODDauy4tmtFuLteOPx7rqLLX1zd/DRTsr6JdRup5S/8q+
-6g2TTr37xFd5hfCLE2QZPiIyxualsCgsWkVcfRFr22LGY5auNZ0oNd2IxP5CfArv
-pqxJtBzBxfDZ7mtAMZlhxeEzy3JetNPGWga9MJ7w/En97O9406f49dDZn+022m4N
-aSyJyTzR7q0NbvzzfMt+wEa6ntWiK1zs3Gixf1Do4a1cJ23rjqga3rpGMZwrSFwr
-DLmUdwJaVoORil0Hn1S5OfmGa+UwgL55raJYOmIcm3AmiOpw4zRtpUh/NCQuxsLY
-tzoZ3tQ5Ind0mc2mbgeUN+jFp9O0agjK6qM7pZi7K+t7kgaCvnPAWNR1Emvw5o98
-7gU67bByN+FjrOc2lRYFRzr7EQ/7GtmPMC59g+tAP8lK51wV8xNtywLb/3Zf9fZs
-fd53wL/NgPRUadbj9BxY
-=au+7
------END PGP SIGNATURE-----
-
---Signature=_Wed__10_Apr_2013_21_09_50_+1000_qXeBHYRWuh+e7ml+--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
