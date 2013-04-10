@@ -1,62 +1,108 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH] watchdog: Revert the AT91RM9200_WATCHDOG dependency
-Date: Wed, 10 Apr 2013 06:41:56 -0700
-Message-ID: <20130410134156.GA15456@roeck-us.net>
-References: <20130409202711.GG7867@spo001.leaseweb.com>
- <1365597382-15455-1-git-send-email-nicolas.ferre@atmel.com>
- <20130410133351.GA7295@roeck-us.net>
+From: Barry Song <21cnbao@gmail.com>
+Subject: Re: [PATCH 07/14] media: soc-camera: support deferred probing of clients
+Date: Wed, 10 Apr 2013 21:53:20 +0800
+Message-ID: <CAGsJ_4xn_R7D7Uh0dJB7WuDQG3K_mZkMwYNtMDuHMhX+4oTk=Q@mail.gmail.com>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+ <1348754853-28619-8-git-send-email-g.liakhovetski@gmx.de> <CAGsJ_4yUY6PE0NWZ9yaOLFmRb3O-HL55=w7Y6muwL0YbkJtP0Q@mail.gmail.com>
+ <Pine.LNX.4.64.1304101358490.13557@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130410133351.GA7295-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1304101358490.13557@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "renwei.wu" <renwei.wu@csr.com>, DL-SHA-WorkGroupLinux <workgroup.linux@csr.com>, xiaomeng.hou@csr.com, zilong.wu@csr.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 10, 2013 at 06:33:51AM -0700, Guenter Roeck wrote:
-> On Wed, Apr 10, 2013 at 02:36:22PM +0200, Nicolas Ferre wrote:
-> > Compiling the at91rm9200_wdt.c driver without at91rm9200
-> > support was leading to several errors:
-> > 
-> > drivers/built-in.o: In function `at91_wdt_close':
-> > at91_adc.c:(.text+0xc9fe4): undefined reference to `at91_st_base'
-> > drivers/built-in.o: In function `at91_wdt_write':
-> > at91_adc.c:(.text+0xca004): undefined reference to `at91_st_base'
-> > drivers/built-in.o: In function `at91wdt_shutdown':
-> > at91_adc.c:(.text+0xca01c): undefined reference to `at91_st_base'
-> > drivers/built-in.o: In function `at91wdt_suspend':
-> > at91_adc.c:(.text+0xca038): undefined reference to `at91_st_base'
-> > drivers/built-in.o: In function `at91_wdt_open':
-> > at91_adc.c:(.text+0xca0cc): undefined reference to `at91_st_base'
-> > drivers/built-in.o:at91_adc.c:(.text+0xca2c8): more undefined references to
-> > `at91_st_base' follow
-> > 
-> > So, reverting the modification of the "depends" Kconfig line
-> > introduced by patch a6a1bcd37 (watchdog: at91rm9200: add DT support)
-> > seems to be the good solution.
-> > 
-> Really ? Why ? I mean, this was supposed to be for at91rm9200, wasn't it ?
-> And why would want try to compile a watchdog for at91rm9200 without at91rm9200
-> support ?
-> 
-> I understand there is a problem, I just don't see how removing that line would
-> solve it.
-> 
-Me confused, sorry. I somehow thought you were removing the ARCH_AT91RM9200
-dependency, not adding it.
+Hi Guennadia,
+Thanks!
 
-Acked-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+2013/4/10 Guennadi Liakhovetski <g.liakhovetski@gmx.de>:
+> Hi Barry
+>
+> On Wed, 10 Apr 2013, Barry Song wrote:
+>
+>> Hi Guennadia,
+>>
+>> 2012/9/27 Guennadi Liakhovetski <g.liakhovetski@gmx.de>:
+>> > Currently soc-camera doesn't work with independently registered I2C client
+>> > devices, it has to register them itself. This patch adds support for such
+>> > configurations, in which case client drivers have to request deferred
+>> > probing until their host becomes available and enables the data interface.
+>> >
+>> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+>> > ---
+>>
+>> it seems deferred probing for i2c camera sensors is a more workaround
+>> than a solution.
+>> currently,  soc-camera-pdrv is the manager of the whole initilization
+>> flow. it all requires the host/client registerred and initilized
+>> synchronously. so that results in strange things like that we fill a
+>> i2c_board_info structure in arch/arm/mach-xxx but we never call
+>> anything like i2c_new_device() to add the i2c client in mach. because
+>> we need to do that in the soc-camera-pdrv driver to make all things
+>> happen orderly.
+>>
+>> but now after we move to DT, all i2c device will be registerred
+>> automatically by of_i2c_register_devices() in i2c_host 's probe, that
+>> makes the problem much worse and very urgent to get fixed.
+>>
+>> returning DEFERRED_PROBE error until getting the private data filled
+>> by the manager,
+>
+> This hasn't been the case since several versions of these patches. We no
+> longer use private data to decide whether subdevices can probe
+> successfully or have to defer probing.
 
-Guenter
+sorry for missing.  i will refer to your newer versions.
+
+>
+>> indirectly, makes the things seem to be asynchronous,
+>> but essentially it is still synchronous because the overall timing
+>> line is still controller by soc-camera-pdrv.
+>
+> It isn't. If your subdevice driver doesn't have any dependencies, like
+> e.g. sh_mobile_csi2.c, it will probe asynchronously whenever it's loaded.
+> It is the task of a bridge driver, in our case of the soc-camera core, to
+> register notifiers and a list of expected subdevices with the v4l2-async
+> subsystem. As subdevices complete their probing they signal that to the
+> v4l2-async too, which then calls bridge's notifiers, which then can build
+> the pipeline.
+
+it seems we didn't describle my idea clearly in the last mail. i
+actually mean we don't need that if we put the pipeline building to
+the last stage after all things have been placed there.
+
+>
+>> what about another possible way:
+>> we let all host and i2c client driver probed in any order,
+>
+> This cannot work, because some I2C devices, e.g. sensors, need a clock
+> signal from the camera interface to probe. Before the bridge driver has
+> completed its probing and registered a suitable clock source with the
+> v4l2-clk framework, sensors cannot be probed. And no, we don't want to
+> fake successful probing without actually being able to talk to the
+> hardware.
+
+i'd say same dependency also exists on ASoC.  a "fake" successful
+probing doesn't mean it should really begin to work if there is no
+external trigger source.  ASoC has successfully done that by a machine
+driver to connect all DAI.
+a way is we put all things ready in their places, finally we connect
+them together and launch the whole hardware flow.
+
+anyway, if you have maken the things work by some simple hacking and
+that means minimial changes to current soc-camera, i think we can
+follow.
+
+>
+> Thanks
+> Guennadi
+>
+>> but let the
+>> final soc-camera-pdrv is the connection of all things. the situation
+>> of soc_camera is very similar with ALSA SoC. it turns out ASoC has
+>> done that very well.
+>>
+
+-barry
