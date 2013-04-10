@@ -1,7 +1,7 @@
 From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 06/10] fdtdump: add a --scan option
-Date: Wed, 10 Apr 2013 14:29:11 -0400
-Message-ID: <1365618555-5893-7-git-send-email-vapier@gentoo.org>
+Subject: [PATCH 05/10] fdtdump: make usage a bit more friendly
+Date: Wed, 10 Apr 2013 14:29:10 -0400
+Message-ID: <1365618555-5893-6-git-send-email-vapier@gentoo.org>
 References: <1365618555-5893-1-git-send-email-vapier@gentoo.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,111 +21,203 @@ Sender: "devicetree-discuss"
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Often times, fdts get embedded in other larger files.  Rather than force
-people to `dd` the blob out themselves, make the fdtdump file smarter.
-
-It can now scan the blob looking for the fdt magic.  Once locate, it does
-a little validation on the main struct to make sure we didn't hit random
-binary data.
+This starts a new usage framework and then cuts fdtdump over to it.
+Now we can do `fdtdump -h` and get something useful back.
 
 Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
 ---
- fdtdump.c | 46 ++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 44 insertions(+), 2 deletions(-)
+ fdtdump.c | 31 +++++++++++++++++++++++--------
+ util.c    | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ util.h    | 61 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 138 insertions(+), 8 deletions(-)
 
 diff --git a/fdtdump.c b/fdtdump.c
-index b685ed1..7b967aa 100644
+index 03ea429..b685ed1 100644
 --- a/fdtdump.c
 +++ b/fdtdump.c
-@@ -2,12 +2,14 @@
-  * fdtdump.c - Contributed by Pantelis Antoniou <pantelis.antoniou AT gmail.com>
-  */
- 
-+#include <stdbool.h>
- #include <stdint.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
- #include <ctype.h>
- 
-+#include <libfdt.h>
- #include <libfdt_env.h>
- #include <fdt.h>
- 
-@@ -119,11 +121,13 @@ static void dump_blob(void *blob)
- 
- /* Usage related data. */
- static const char usage_synopsis[] = "fdtdump [options] <file>";
--static const char usage_short_opts[] = USAGE_COMMON_SHORT_OPTS;
-+static const char usage_short_opts[] = "s" USAGE_COMMON_SHORT_OPTS;
- static struct option const usage_long_opts[] = {
-+	{"scan",             no_argument, NULL, 's'},
- 	USAGE_COMMON_LONG_OPTS
- };
- static const char * const usage_opts_help[] = {
-+	"Scan for an embedded fdt in file",
- 	USAGE_COMMON_OPTS_HELP
- };
- 
-@@ -132,20 +136,58 @@ int main(int argc, char *argv[])
- 	int opt;
- 	const char *file;
- 	char *buf;
-+	bool scan = false;
-+	off_t len;
- 
- 	while ((opt = util_getopt_long()) != EOF) {
- 		switch (opt) {
- 		case_USAGE_COMMON_FLAGS
-+
-+		case 's':
-+			scan = true;
-+			break;
- 		}
+@@ -117,21 +117,36 @@ static void dump_blob(void *blob)
  	}
- 	if (optind != argc - 1)
- 		long_usage("missing input filename");
- 	file = argv[optind];
+ }
  
--	buf = utilfdt_read(file, NULL);
-+	buf = utilfdt_read(file, &len);
- 	if (!buf)
- 		die("could not read: %s\n", file);
++/* Usage related data. */
++static const char usage_synopsis[] = "fdtdump [options] <file>";
++static const char usage_short_opts[] = USAGE_COMMON_SHORT_OPTS;
++static struct option const usage_long_opts[] = {
++	USAGE_COMMON_LONG_OPTS
++};
++static const char * const usage_opts_help[] = {
++	USAGE_COMMON_OPTS_HELP
++};
  
-+	/* try and locate an embedded fdt in a bigger blob */
-+	if (scan) {
-+		unsigned char smagic[4];
-+		char *p = buf;
-+		char *endp = buf + len;
-+
-+		fdt_set_magic(smagic, FDT_MAGIC);
-+
-+		/* poor man's memmem */
-+		while (true) {
-+			p = memchr(p, smagic[0], endp - p - 4);
-+			if (!p)
-+				break;
-+			if (fdt_magic(p) == FDT_MAGIC) {
-+				/* try and validate the main struct */
-+				off_t this_len = endp - p;
-+				fdt32_t max_version = 17;
-+				if (fdt_version(p) <= max_version &&
-+				    fdt_last_comp_version(p) < max_version &&
-+				    fdt_totalsize(p) < this_len &&
-+				    fdt_off_dt_struct(p) < this_len &&
-+					fdt_off_dt_strings(p) < this_len)
-+					break;
-+			}
-+			++p;
+ int main(int argc, char *argv[])
+ {
++	int opt;
++	const char *file;
+ 	char *buf;
+ 
+-	if (argc < 2) {
+-		fprintf(stderr, "supply input filename\n");
+-		return 5;
++	while ((opt = util_getopt_long()) != EOF) {
++		switch (opt) {
++		case_USAGE_COMMON_FLAGS
 +		}
-+		if (!p)
-+			die("%s: could not locate fdt magic\n", file);
-+		printf("%s: found fdt at offset %#zx\n", file, p - buf);
-+		buf = p;
-+	}
+ 	}
++	if (optind != argc - 1)
++		long_usage("missing input filename");
++	file = argv[optind];
 +
- 	dump_blob(buf);
++	buf = utilfdt_read(file, NULL);
++	if (!buf)
++		die("could not read: %s\n", file);
+ 
+-	buf = utilfdt_read(argv[1]);
+-	if (buf)
+-		dump_blob(buf);
+-	else
+-		return 10;
++	dump_blob(buf);
  
  	return 0;
+ }
+diff --git a/util.c b/util.c
+index a9b118c..8d427e4 100644
+--- a/util.c
++++ b/util.c
+@@ -381,3 +381,57 @@ void util_version(void)
+ 	printf("Version: %s\n", DTC_VERSION);
+ 	exit(0);
+ }
++
++void util_long_usage(const char *errmsg, const char *synopsis,
++		     const char *short_opts, struct option const long_opts[],
++		     const char * const opts_help[])
++{
++	FILE *fp = errmsg ? stderr : stdout;
++	const char a_arg[] = "<arg>";
++	size_t a_arg_len = strlen(a_arg) + 1;
++	size_t i;
++	int optlen;
++
++	fprintf(fp,
++		"Usage: %s\n"
++		"\n"
++		"Options: -[%s]\n", synopsis, short_opts);
++
++	/* prescan the --long opt length to auto-align */
++	optlen = 0;
++	for (i = 0; long_opts[i].name; ++i) {
++		/* +1 is for space between --opt and help text */
++		int l = strlen(long_opts[i].name) + 1;
++		if (long_opts[i].has_arg == a_argument)
++			l += a_arg_len;
++		if (optlen < l)
++			optlen = l;
++	}
++
++	for (i = 0; long_opts[i].name; ++i) {
++		/* helps when adding new applets or options */
++		assert(opts_help[i] != NULL);
++
++		/* first output the short flag if it has one */
++		if (long_opts[i].val > '~')
++			fprintf(fp, "      ");
++		else
++			fprintf(fp, "  -%c, ", long_opts[i].val);
++
++		/* then the long flag */
++		if (long_opts[i].has_arg == no_argument)
++			fprintf(fp, "--%-*s", optlen, long_opts[i].name);
++		else
++			fprintf(fp, "--%s %s%*s", long_opts[i].name, a_arg,
++				(int)(optlen - strlen(long_opts[i].name) - a_arg_len), "");
++
++		/* finally the help text */
++		fprintf(fp, "%s\n", opts_help[i]);
++	}
++
++	if (errmsg) {
++		fprintf(fp, "\nError: %s\n", errmsg);
++		exit(EXIT_FAILURE);
++	} else
++		exit(EXIT_SUCCESS);
++}
+diff --git a/util.h b/util.h
+index e09cc25..f9bc777 100644
+--- a/util.h
++++ b/util.h
+@@ -2,6 +2,7 @@
+ #define _UTIL_H
+ 
+ #include <stdarg.h>
++#include <getopt.h>
+ 
+ /*
+  * Copyright 2011 The Chromium Authors, All Rights Reserved.
+@@ -173,4 +174,64 @@ void utilfdt_print_data(const char *data, int len);
+  */
+ void util_version(void) __attribute__((noreturn));
+ 
++/**
++ * Show usage and exit
++ *
++ * This helps standardize the output of various utils.  You most likely want
++ * to use the long_usage() helper below rather than call this.
++ *
++ * @param errmsg	If non-NULL, an error message to display
++ * @param synopsis	The initial example usage text (and possible examples)
++ * @param short_opts	The string of short options
++ * @param long_opts	The structure of long options
++ * @param opts_help	An array of help strings (should align with long_opts)
++ */
++void util_long_usage(const char *errmsg, const char *synopsis,
++		     const char *short_opts, struct option const long_opts[],
++		     const char * const opts_help[]) __attribute__((noreturn));
++
++/**
++ * Show usage and exit
++ *
++ * If you name all your usage variables with usage_xxx, then you can call this
++ * help macro rather than expanding all arguments yourself.
++ *
++ * @param errmsg	If non-NULL, an error message to display
++ */
++#define long_usage(errmsg) \
++	util_long_usage(errmsg, usage_synopsis, usage_short_opts, \
++			usage_long_opts, usage_opts_help)
++
++/**
++ * Call getopt_long() with standard options
++ *
++ * Since all util code runs getopt in the same way, provide a helper.
++ */
++#define util_getopt_long() getopt_long(argc, argv, usage_short_opts, \
++				       usage_long_opts, NULL)
++
++/* Helper for aligning long_opts array */
++#define a_argument required_argument
++
++/* Helper for usage_short_opts string constant */
++#define USAGE_COMMON_SHORT_OPTS "hV"
++
++/* Helper for usage_long_opts option array */
++#define USAGE_COMMON_LONG_OPTS \
++	{"help",      no_argument, NULL, 'h'}, \
++	{"version",   no_argument, NULL, 'V'}, \
++	{NULL,        no_argument, NULL, 0x0}
++
++/* Helper for usage_opts_help array */
++#define USAGE_COMMON_OPTS_HELP \
++	"Print this help and exit", \
++	"Print version and exit", \
++	NULL
++
++/* Helper for getopt case statements */
++#define case_USAGE_COMMON_FLAGS \
++	case 'h': long_usage(NULL); \
++	case 'V': util_version(); \
++	case '?': long_usage("unknown option");
++
+ #endif /* _UTIL_H */
 -- 
 1.8.1.2
