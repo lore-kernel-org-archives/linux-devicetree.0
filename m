@@ -1,15 +1,17 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v7] clk: add si5351 i2c common clock driver
-Date: Wed, 10 Apr 2013 19:27:25 +0200
-Message-ID: <5165A0FD.5030308@gmail.com>
-References: <1365439617-18816-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1365586810-6752-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <51653C3E.2020702@gmail.com> <14854575.YAd2OMKOy9@ganymedes>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: Query on pinctrl usage for DT nodes
+Date: Wed, 10 Apr 2013 11:32:27 -0600
+Message-ID: <5165A22B.4070200@wwwdotorg.org>
+References: <CA+V-a8uiPwsAD--OHFAE=i2ed+-wbXm4p2deZXr92+Zv6GDS1w@mail.gmail.com>
+ <515C5C76.3080009@wwwdotorg.org>
+ <CA+V-a8t3wtP77DdeUoQHKMjAuWmV+ude+1J3UjJmMTqobgStjA@mail.gmail.com>
+ <5162FD4A.1030909@wwwdotorg.org>
+ <CA+V-a8vwdCkyMqiynj5BodXbjwJ=e4qNb-29FhLweqbjc7DBQA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <14854575.YAd2OMKOy9@ganymedes>
+In-Reply-To: <CA+V-a8vwdCkyMqiynj5BodXbjwJ=e4qNb-29FhLweqbjc7DBQA@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,103 +21,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michal Bachraty <michal.bachraty@streamunlimited.com>
-Cc: linux-doc@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@secretlab.ca>, Lars-Peter Clausen <lars@metafoo.de>, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, Mike Turquette <mturquette@linaro.org>, Rabeeh Khoury <rabeeh@solid-run.com>, Guenter Roeck <linux@roeck-us.net>, Pawel Moll <pawel.moll@arm.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Dom Cobley <popcornmix@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Jean-Francois Moine <moinejf@free.fr>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org, Daniel Mack <zonque@gmail.com>, Rob Landley <rob@landley.net>, Andrew Morton <akpm@linux-foundation.org>
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: Stephen Warren <swarren@nvidia.com>, Tony Lindgren <tony@atomide.com>, linus.walleij@linaro.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, LAK <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hooray Google!
+On 04/10/2013 02:12 AM, Prabhakar Lad wrote:
+...
+> Following is the proposed fix/hack let me know if its OK.
+> 
+> Regards,
+> --Prabhakar
+> 
+> ->>>>>>>>>>>>>>>>>>>
+> 
+> diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
+> index ee72f1f..78fb42d 100644
+> --- a/drivers/pinctrl/core.h
+> +++ b/drivers/pinctrl/core.h
+> @@ -46,6 +46,7 @@ struct pinctrl_dev {
+>         struct pinctrl *p;
+>         struct pinctrl_state *hog_default;
+>         struct pinctrl_state *hog_sleep;
+> +       bool bits_per_mux;
 
-Thanks for removing plain text sending from gmail web-frontend.. *sigh*
-Sorry for resending this, but HTML mails get rejected by linux mailing lists.
-
-On 04/10/2013 04:48 PM, Michal Bachraty wrote:
-> Hi Sebastian,
-> This driver doesn't work for me. In my case, u-boot initializes si-5351 and
-> power down unused clocks while booting kernel.  there is need for power up
-> clocks as was in previous versions of your driver.
-> See patch, whre the problem is fixed:
->
-> @@ -992,6 +992,10 @@ static long si5351_clkout_round_rate(struct clk_hw *hw,
-> unsigned long rate,
->   		} while (1);
->   	}
->   	rate = *parent_rate>>  rdiv;
-> +	
-> +	/* powerup clkout */
-> +	si5351_set_bits(hwdata->drvdata, SI5351_CLK0_CTRL + hwdata->num,
-> +			SI5351_CLK_POWERDOWN, 0);
->
->   	dev_dbg(&hwdata->drvdata->client->dev,
->   		"%s - %s: rdiv = %u, parent_rate = %lu, rate = %lu\n",
->
-> With this lines, driver works well.
-
-Hmm, is there any driver using the clock output? Does it clk_prepare_enable() the clock?
-I tend not to mess with anything the bootloader or eeprom config left disabled. It works
-for me, but here the driver will prepare/enable the clock prior use.
-
-> Also,
->
->>> +==Example==
->>> +
->>> +/* 25MHz reference crystal */
->>> +ref25: ref25M {
->>> +	compatible = "fixed-clock";
->>> +	#clock-cells =<0>;
->>> +	clock-frequency =<25000000>;
->>> +};
->>> +
->>> +i2c-master-node {
->>> +
->>> +	/* Si5351a msop10 i2c clock generator */
->>> +	si5351a: clock-generator@60 {
->>> +		compatible = "silabs,si5351a-msop";
->>> +		reg =<0x60>;
->>> +		#address-cells =<1>;
->>> +		#size-cells =<0>;
->>> +		#clock-cells =<1>;
->>> +
->>> +		/* connect xtal input to 25MHz reference */
->>> +		clocks =<&ref25>;
->>> +
->>> +		/* connect xtal input as source of pll0 and pll1 */
->>> +		silabs,pll-source =<0 0>,<1 0>;
->>> +
->>> +		/*
->>> +		 * overwrite clkout0 configuration with:
->>> +		 * - 8mA output drive strength
->>> +		 * - pll0 as clock source of multisynth0
->>> +		 * - multisynth0 as clock source of output divider
->>> +		 * - multisynth0 can change pll0
->>> +		 * - set initial clock frequency of 74.25MHz
->>> +		 */
->>> +		clkout0 {
->>> +			reg =<0>;
->>> +			silabs,drive-strength =<8>;
->>> +			silabs,multisynth-source =<0>;
->>> +			silabs,clock-source =<0>;
->>> +			silabs,pll-master;
->>> +			clock-frequency =<74250000>;
->>> +		};
->>> +
->>> +		/*
->>> +		 * overwrite clkout1 configuration with:
->>> +		 * - 4mA output drive strength
->>> +		 * - pll1 as clock source of multisynth1
->>> +		 * - multisynth1 as clock source of output divider
->>> +		 * - multisynth1 can change pll1
->>> +		 */
->>> +		clkout1 {
->>> +			reg =<1>;
->>> +			silabs,drive-strength =<4>;
->>> +			silabs,multisynth-source =<1>;
->>> +			silabs,clock-source =<0>;
->>> +			pll-master;
->>> +		};
->>> +
->   Is definition of pll-master in clkout1 correct? should not be silabs,pll-
-> master ?
-
-Good catch.
-
-Sebastian
+This clearly isn't correct; any change to solve this problem should only
+touch the internals of the pinctrl-single driver, not the pinctrl core.
