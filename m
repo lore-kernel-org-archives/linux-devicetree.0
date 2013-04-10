@@ -1,118 +1,123 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: [RFC 1/2] libfdt: Add node and property realloc functions.
-Date: Wed, 10 Apr 2013 15:33:18 +0100
-Message-ID: <1365604398-18064-1-git-send-email-srinivas.kandagatla@st.com>
-References: <1365604278-17956-1-git-send-email-srinivas.kandagatla@st.com>
+From: Christian Ruppert <christian.ruppert@abilis.com>
+Subject: [PATCH] clk: Add device tree binding to clk-fixed-factor
+Date: Wed, 10 Apr 2013 17:40:43 +0200
+Message-ID: <1365608443-30350-1-git-send-email-christian.ruppert@abilis.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365604278-17956-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: jdl-CYoMK+44s/E@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mike Turquette <mturquette@linaro.org>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Christian Ruppert <christian.ruppert@abilis.com>
 List-Id: devicetree@vger.kernel.org
 
-libfdt has code to add new property or node or extend a property to an
-arbitary value, however it cannot be used because all the library
-functions take preallocated fdt pointer limted to a size.
+This patch adds a device tree binding for the simple fixed factor clock
+divider/multiplier of the common clock tree binding.
 
-Adding realloc function into libfdt can help tools like fdtput to insert
-nodes or properties or extend a property.
-
-Without this patch if we try to add a new node/property to a dtb, the
-libfdt errors with FDT_ERR_NOSPACE.
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
 ---
- libfdt/fdt_rw.c |   39 +++++++++++++++++++++++++++++++++++++++
- libfdt/libfdt.h |    4 ++++
- 2 files changed, 43 insertions(+), 0 deletions(-)
+ .../bindings/clock/fixed-factor-clkdiv.txt         |   24 +++++++++++++++
+ drivers/clk/clk-fixed-factor.c                     |   32 ++++++++++++++++++++
+ include/linux/clk-provider.h                       |    1 +
+ 3 files changed, 57 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/fixed-factor-clkdiv.txt
 
-diff --git a/libfdt/fdt_rw.c b/libfdt/fdt_rw.c
-index fdba618..e7766d0 100644
---- a/libfdt/fdt_rw.c
-+++ b/libfdt/fdt_rw.c
-@@ -52,6 +52,7 @@
+diff --git a/Documentation/devicetree/bindings/clock/fixed-factor-clkdiv.txt b/Documentation/devicetree/bindings/clock/fixed-factor-clkdiv.txt
+new file mode 100644
+index 0000000..352bac4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/fixed-factor-clkdiv.txt
+@@ -0,0 +1,24 @@
++Device Tree Clock bindings for plat-tb10x
++
++This binding uses the common clock binding[1].
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++Required properties:
++- compatible : shall be "fixed-factor-clkdiv"
++- #clock-cells: from common clock binding; shall be set to 0
++- clocks: shall be the input parent clock phandle for the clock.
++- clock-mult: defines the multiplication factor of the output clock frequency
++  wrt. the input clock frequency.
++- clock-div: defines the division factor of the output clock frequency wrt.
++  the input clock frequency.
++
++Example:
++cpu_clk: clkdiv_cpu {	/* CPU clock derived from pll0. 1/2 of pll frequency */
++	compatible = "fixed-factor-clkdiv";
++	#clock-cells = <0>;
++	clocks = <&pll0>;
++	clock-mult = <1>;
++	clock-div = <2>;
++	clock-output-names = "cpu_clk";
++};
+diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
+index 1ef271e..85e45f1 100644
+--- a/drivers/clk/clk-fixed-factor.c
++++ b/drivers/clk/clk-fixed-factor.c
+@@ -11,6 +11,7 @@
+ #include <linux/clk-provider.h>
+ #include <linux/slab.h>
+ #include <linux/err.h>
++#include <linux/of.h>
  
- #include <fdt.h>
- #include <libfdt.h>
-+#include <stdlib.h>
+ /*
+  * DOC: basic fixed multiplier and divider clock that cannot gate
+@@ -96,3 +97,34 @@ struct clk *clk_register_fixed_factor(struct device *dev, const char *name,
  
- #include "libfdt_internal.h"
- 
-@@ -248,6 +249,13 @@ static int _fdt_add_property(void *fdt, int nodeoffset, const char *name,
- 	return 0;
+ 	return clk;
  }
- 
-+static int _fdt_realloc(void **fdt, int newsize)
++
++#ifdef CONFIG_OF
++/**
++ * of_fixed_factor_clkdiv_setup() - Set up simple fixed factor clock divider
++ */
++void of_fixed_factor_clkdiv_setup(struct device_node *node)
 +{
-+	*fdt = realloc(*fdt, newsize);
-+	fdt_set_totalsize(*fdt, newsize);
-+	return 0;
-+}
++	struct clk *clk;
++	const char *clk_name = node->name;
++	const char *parent_name;
++	u32 mult, div;
 +
- int fdt_set_name(void *fdt, int nodeoffset, const char *name)
- {
- 	char *namep;
-@@ -490,3 +498,34 @@ int fdt_pack(void *fdt)
++	if (of_property_read_u32(node, "clock-mult", &mult))
++		return;
++
++	if (of_property_read_u32(node, "clock-div", &div))
++		return;
++
++	parent_name = of_clk_get_parent_name(node, 0);
++
++	of_property_read_string(node, "clock-output-names", &clk_name);
++
++	clk = clk_register_fixed_factor(NULL, clk_name, parent_name, 0,
++					mult, div);
++	if (!IS_ERR(clk))
++		of_clk_add_provider(node, of_clk_src_simple_get, clk);
++}
++EXPORT_SYMBOL_GPL(of_fixed_factor_clkdiv_setup);
++CLK_OF_DECLARE(fixed_clkdiv, "fixed-factor-clkdiv",
++		of_fixed_factor_clkdiv_setup);
++#endif
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index 7f197d7..d4937cf 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -184,6 +184,7 @@ struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
+ 		unsigned long fixed_rate);
  
- 	return 0;
- }
-+
-+int fdt_realloc_node(void **fdt, const char *name)
-+{
-+	int delta = 0;
-+	int newlen = strlen(name);
-+	if (newlen)
-+		delta = sizeof(struct fdt_node_header) +
-+				FDT_TAGALIGN(newlen + 1) + FDT_TAGSIZE;
-+	else
-+		return 0;
-+
-+	return _fdt_realloc(fdt, fdt_totalsize(*fdt) + delta);
-+}
-+
-+int fdt_realloc_property(void **fdt, int nodeoffset,
-+		const char *name, int newlen)
-+{
-+	int delta = 0;
-+	int oldlen;
-+	if (!fdt_get_property(*fdt, nodeoffset, name, &oldlen))
-+		/* strings + property header */
-+		delta = sizeof(struct fdt_property) + strlen(name) + 1;
-+
-+	if (newlen > oldlen)
-+		/* actual value in off_struct */
-+		delta += FDT_TAGALIGN(newlen) - FDT_TAGALIGN(oldlen);
-+	else
-+		return 0;
-+
-+	return _fdt_realloc(fdt, fdt_totalsize(*fdt) + delta);
-+}
-diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
-index 130789a..640c740 100644
---- a/libfdt/libfdt.h
-+++ b/libfdt/libfdt.h
-@@ -1032,6 +1032,10 @@ int fdt_create_empty_tree(void *buf, int bufsize);
- int fdt_open_into(const void *fdt, void *buf, int bufsize);
- int fdt_pack(void *fdt);
+ void of_fixed_clk_setup(struct device_node *np);
++void of_fixed_factor_clkdiv_setup(struct device_node *node);
  
-+int fdt_realloc_property(void **fdt, int nodeoffset,
-+				const char *name, int newlen);
-+int fdt_realloc_node(void **fdt, const char *name);
-+
  /**
-  * fdt_add_mem_rsv - add one memory reserve map entry
-  * @fdt: pointer to the device tree blob
+  * struct clk_gate - gating clock
 -- 
-1.7.6.5
+1.7.1
