@@ -1,59 +1,32 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: Query on pinctrl usage for DT nodes
-Date: Wed, 10 Apr 2013 13:34:09 -0700
-Message-ID: <20130410203408.GP10155@atomide.com>
-References: <CA+V-a8uiPwsAD--OHFAE=i2ed+-wbXm4p2deZXr92+Zv6GDS1w@mail.gmail.com>
- <515C5C76.3080009@wwwdotorg.org>
- <CA+V-a8t3wtP77DdeUoQHKMjAuWmV+ude+1J3UjJmMTqobgStjA@mail.gmail.com>
- <5162FD4A.1030909@wwwdotorg.org>
- <CA+V-a8vwdCkyMqiynj5BodXbjwJ=e4qNb-29FhLweqbjc7DBQA@mail.gmail.com>
- <5165A22B.4070200@wwwdotorg.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 4/5] gpio/omap: force restore if context loss is not detectable
+Date: Wed, 10 Apr 2013 22:47:04 +0200
+Message-ID: <CACRpkdaA2gZBEG73jOgrXPcVW5rD-_SpXTw5z63Q_isWuz-YBg@mail.gmail.com>
+References: <1365106576-31816-1-git-send-email-jon-hunter@ti.com>
+	<1365106576-31816-5-git-send-email-jon-hunter@ti.com>
+	<CACRpkdbeABuFXr0Gt6gRto3Pmo0m88AFn_xKJq14VonGg7Doww@mail.gmail.com>
+	<5165C086.5010105@ti.com>
+	<CACRpkdZciGZkWR-qxT96c9pO9UM4fPh_1BUJP9-b1fhjL6-uDg@mail.gmail.com>
+	<5165C27E.1060704@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <5165A22B.4070200@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Stephen Warren <swarren@nvidia.com>, linus.walleij@linaro.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Prabhakar Lad <prabhakar.csengg@gmail.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, LAK <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5165C27E.1060704@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-* Stephen Warren <swarren@wwwdotorg.org> [130410 10:37]:
-> On 04/10/2013 02:12 AM, Prabhakar Lad wrote:
-> ...
-> > Following is the proposed fix/hack let me know if its OK.
-> > 
-> > Regards,
-> > --Prabhakar
-> > 
-> > ->>>>>>>>>>>>>>>>>>>
-> > 
-> > diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
-> > index ee72f1f..78fb42d 100644
-> > --- a/drivers/pinctrl/core.h
-> > +++ b/drivers/pinctrl/core.h
-> > @@ -46,6 +46,7 @@ struct pinctrl_dev {
-> >         struct pinctrl *p;
-> >         struct pinctrl_state *hog_default;
-> >         struct pinctrl_state *hog_sleep;
-> > +       bool bits_per_mux;
-> 
-> This clearly isn't correct; any change to solve this problem should only
-> touch the internals of the pinctrl-single driver, not the pinctrl core.
+On Wed, Apr 10, 2013 at 9:50 PM, Jon Hunter <jon-hunter@ti.com> wrote:
+> On 04/10/2013 02:44 PM, Linus Walleij wrote:
 
-Yeah how about just change the pintctrl-single,bits register
-naming to be register + bit?  Something like 0xdeadbeef.0 and
-0xdeadbeef.1 and so on.
+>> All patches applied with Kevin's and Santosh's tags!
+>
+> Thanks. Sorry for the confusion!
+>
+> By the way, I am hoping you only took 1-4,
 
-Regards,
+Yeah I only took 1-4, no problem...
 
-Tony
+Yours,
+Linus Walleij
