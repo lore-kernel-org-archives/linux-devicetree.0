@@ -1,64 +1,68 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] watchdog: Revert the AT91RM9200_WATCHDOG dependency
-Date: Wed, 10 Apr 2013 14:36:22 +0200
-Message-ID: <1365597382-15455-1-git-send-email-nicolas.ferre@atmel.com>
-References: <20130409202711.GG7867@spo001.leaseweb.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v5 1/3] of/pci: Unify pci_process_bridge_OF_ranges from
+ Microblaze and PowerPC
+Date: Wed, 10 Apr 2013 08:13:54 -0500
+Message-ID: <51656592.7070806@gmail.com>
+References: <1365578969-30966-1-git-send-email-Andrew.Murray@arm.com> <1365578969-30966-2-git-send-email-Andrew.Murray@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130409202711.GG7867-1F/o1hAF34+bEvaWgpTR7kEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1365578969-30966-2-git-send-email-Andrew.Murray@arm.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andrew Murray <Andrew.Murray@arm.com>
+Cc: rob.herring@calxeda.com, siva.kallam@samsung.com, linux-pci@vger.kernel.org, Liviu.Dudau@arm.com, paulus@samba.org, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, jg1.han@samsung.com, jgunthorpe@obsidianresearch.com, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, suren.reddy@samsung.com, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michal Simek <monstr@monstr.eu>
 List-Id: devicetree@vger.kernel.org
 
-Compiling the at91rm9200_wdt.c driver without at91rm9200
-support was leading to several errors:
+Adding Ben H and Michal...
 
-drivers/built-in.o: In function `at91_wdt_close':
-at91_adc.c:(.text+0xc9fe4): undefined reference to `at91_st_base'
-drivers/built-in.o: In function `at91_wdt_write':
-at91_adc.c:(.text+0xca004): undefined reference to `at91_st_base'
-drivers/built-in.o: In function `at91wdt_shutdown':
-at91_adc.c:(.text+0xca01c): undefined reference to `at91_st_base'
-drivers/built-in.o: In function `at91wdt_suspend':
-at91_adc.c:(.text+0xca038): undefined reference to `at91_st_base'
-drivers/built-in.o: In function `at91_wdt_open':
-at91_adc.c:(.text+0xca0cc): undefined reference to `at91_st_base'
-drivers/built-in.o:at91_adc.c:(.text+0xca2c8): more undefined references to
-`at91_st_base' follow
+On 04/10/2013 02:29 AM, Andrew Murray wrote:
+> The pci_process_bridge_OF_ranges function, used to parse the "ranges"
+> property of a PCI host device, is found in both Microblaze and PowerPC
+> architectures. These implementations are nearly identical. This patch
+> moves this common code to a common place.
+> 
+> Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
 
-So, reverting the modification of the "depends" Kconfig line
-introduced by patch a6a1bcd37 (watchdog: at91rm9200: add DT support)
-seems to be the good solution.
+One comment below. Otherwise,
 
-Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
- drivers/watchdog/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Rob Herring <rob.herring@calxeda.com>
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 9fcc70c..e89fc31 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -117,7 +117,7 @@ config ARM_SP805_WATCHDOG
- 
- config AT91RM9200_WATCHDOG
- 	tristate "AT91RM9200 watchdog"
--	depends on ARCH_AT91
-+	depends on ARCH_AT91RM9200
- 	help
- 	  Watchdog timer embedded into AT91RM9200 chips. This will reboot your
- 	  system when the timeout is reached.
--- 
-1.8.0
+You need also need acks from Ben and Michal.
+
+[...]
+
+> +		/* Act based on address space type */
+> +		res = NULL;
+> +		switch ((pci_space >> 24) & 0x3) {
+> +		case 1:		/* PCI IO space */
+> +			pr_info("  IO 0x%016llx..0x%016llx -> 0x%016llx\n",
+> +			       cpu_addr, cpu_addr + size - 1, pci_addr);
+> +
+> +			/* We support only one IO range */
+> +			if (hose->pci_io_size) {
+> +				pr_info(" \\--> Skipped (too many) !\n");
+> +				continue;
+> +			}
+> +#if defined(CONFIG_PPC32) || defined(CONFIG_MICROBLAZE)
+
+How about "if (!IS_ENABLED(CONFIG_64BIT))" instead.
+
+> +			/* On 32 bits, limit I/O space to 16MB */
+> +			if (size > 0x01000000)
+> +				size = 0x01000000;
+> +
+> +			/* 32 bits needs to map IOs here */
+> +			hose->io_base_virt = ioremap(cpu_addr, size);
+> +
+> +			/* Expect trouble if pci_addr is not 0 */
+> +			if (primary)
+> +				isa_io_base =
+> +					(unsigned long)hose->io_base_virt;
+> +#endif /* CONFIG_PPC32 || CONFIG_MICROBLAZE */
+> +			/* pci_io_size and io_base_phys always represent IO
+> +			 * space starting at 0 so we factor in pci_addr
+> +			 */
+> +			hose->pci_io_size = pci_addr + size;
+> +			hose->io_base_phys = cpu_addr - pci_addr;
