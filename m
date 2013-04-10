@@ -1,56 +1,100 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH v2 08/11] ASoC: fsl-ssi: imx ac97 support
-Date: Wed, 10 Apr 2013 13:33:04 +0200
-Message-ID: <20130410113304.GB16749@pengutronix.de>
-References: <1365362721-3731-1-git-send-email-mpa@pengutronix.de>
- <1365362721-3731-9-git-send-email-mpa@pengutronix.de>
- <5162301F.9090000@tabi.org>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH 07/14] media: soc-camera: support deferred probing of
+ clients
+Date: Wed, 10 Apr 2013 14:06:14 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1304101358490.13557@axis700.grange>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+ <1348754853-28619-8-git-send-email-g.liakhovetski@gmx.de>
+ <CAGsJ_4yUY6PE0NWZ9yaOLFmRb3O-HL55=w7Y6muwL0YbkJtP0Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <5162301F.9090000@tabi.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Timur Tabi <timur@tabi.org>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAGsJ_4yUY6PE0NWZ9yaOLFmRb3O-HL55=w7Y6muwL0YbkJtP0Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Barry Song <21cnbao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "renwei.wu" <renwei.wu-kQvG35nSl+M@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, DL-SHA-WorkGroupLinux <workgroup.linux-kQvG35nSl+M@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, zilong.wu-kQvG35nSl+M@public.gmane.org, xiaomeng.hou-kQvG35nSl+M@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 07, 2013 at 09:49:03PM -0500, Timur Tabi wrote:
-> Markus Pargmann wrote:
-> >This patch copies some parts from imx-ssi to support AC97 on
-> >imx27-pca100 and imx27-pcm043. It is activated with a new fsl,imx-ac97
-> >bool property. It was tested on imx27-pca100.
+Hi Barry
+
+On Wed, 10 Apr 2013, Barry Song wrote:
+
+> Hi Guennadia,
 > 
-> I'm not crazy about this patch -- it seems a bit hackish.  There are
-> too many "if (imx_ac97)" clauses.  Large pieces of code that don't
-> appear to be related to AC97 are indented in an if-clause.  I
-> especially don't like the "If we use AC97, the registers are already
-> setup correctly".
+> 2012/9/27 Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>:
+> > Currently soc-camera doesn't work with independently registered I2C client
+> > devices, it has to register them itself. This patch adds support for such
+> > configurations, in which case client drivers have to request deferred
+> > probing until their host becomes available and enables the data interface.
+> >
+> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+> > ---
+> 
+> it seems deferred probing for i2c camera sensors is a more workaround
+> than a solution.
+> currently,  soc-camera-pdrv is the manager of the whole initilization
+> flow. it all requires the host/client registerred and initilized
+> synchronously. so that results in strange things like that we fill a
+> i2c_board_info structure in arch/arm/mach-xxx but we never call
+> anything like i2c_new_device() to add the i2c client in mach. because
+> we need to do that in the soc-camera-pdrv driver to make all things
+> happen orderly.
+> 
+> but now after we move to DT, all i2c device will be registerred
+> automatically by of_i2c_register_devices() in i2c_host 's probe, that
+> makes the problem much worse and very urgent to get fixed.
+> 
+> returning DEFERRED_PROBE error until getting the private data filled
+> by the manager,
+
+This hasn't been the case since several versions of these patches. We no 
+longer use private data to decide whether subdevices can probe 
+successfully or have to defer probing.
+
+> indirectly, makes the things seem to be asynchronous,
+> but essentially it is still synchronous because the overall timing
+> line is still controller by soc-camera-pdrv.
+
+It isn't. If your subdevice driver doesn't have any dependencies, like 
+e.g. sh_mobile_csi2.c, it will probe asynchronously whenever it's loaded. 
+It is the task of a bridge driver, in our case of the soc-camera core, to 
+register notifiers and a list of expected subdevices with the v4l2-async 
+subsystem. As subdevices complete their probing they signal that to the 
+v4l2-async too, which then calls bridge's notifiers, which then can build 
+the pipeline.
+
+> what about another possible way:
+> we let all host and i2c client driver probed in any order,
+
+This cannot work, because some I2C devices, e.g. sensors, need a clock 
+signal from the camera interface to probe. Before the bridge driver has 
+completed its probing and registered a suitable clock source with the 
+v4l2-clk framework, sensors cannot be probed. And no, we don't want to 
+fake successful probing without actually being able to talk to the 
+hardware.
+
+Thanks
+Guennadi
+
+> but let the
+> final soc-camera-pdrv is the connection of all things. the situation
+> of soc_camera is very similar with ALSA SoC. it turns out ASoC has
+> done that very well.
+> 
+> -barry
 > 
 
-I will try to seperate it a little bit cleaner by using different dai
-ops for ac97 for the two big ifs and perhaps use a seperated register
-setup function so it can be used from ssi startup and ac97_setup.
-
-Regards,
-
-Markus
-
-> -- 
-> Timur Tabi
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
