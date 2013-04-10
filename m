@@ -1,135 +1,97 @@
-From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 10/10] fdtdump: add a debug mode
-Date: Wed, 10 Apr 2013 14:29:15 -0400
-Message-ID: <1365618555-5893-11-git-send-email-vapier@gentoo.org>
-References: <1365618555-5893-1-git-send-email-vapier@gentoo.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCHv8 04/19] of/pci: Add of_pci_get_devfn() function
+Date: Wed, 10 Apr 2013 13:33:37 -0500
+Message-ID: <5165B081.1030105@gmail.com>
+References: <1365541601-14095-1-git-send-email-thomas.petazzoni@free-electrons.com> <1365541601-14095-5-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365618555-5893-1-git-send-email-vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1365541601-14095-5-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Andrew Murray <andrew.murray@arm.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org, Mitch Bradley <wmb@firmworks.com>
 List-Id: devicetree@vger.kernel.org
 
-When hacking raw fdt files, it's useful to know the actual offsets into
-the file each node appears.  Add a --debug mode that includes this.
+On 04/09/2013 04:06 PM, Thomas Petazzoni wrote:
+> From: Thierry Reding <thierry.reding@avionic-design.de>
+> 
+> This function can be used to parse the device and function number from a
+> standard 5-cell PCI resource. PCI_SLOT() and PCI_FUNC() can be used on
+> the returned value obtain the device and function numbers respectively.
+> 
+> Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 
-Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
----
- fdtdump.c | 40 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 36 insertions(+), 4 deletions(-)
+Reviewed-by: Rob Herring <rob.herring@calxeda.com>
 
-diff --git a/fdtdump.c b/fdtdump.c
-index 2b8c194..2c8bff6 100644
---- a/fdtdump.c
-+++ b/fdtdump.c
-@@ -19,8 +19,29 @@
- #define PALIGN(p, a)	((void *)(ALIGN((unsigned long)(p), (a))))
- #define GET_CELL(p)	(p += 4, *((const uint32_t *)(p-4)))
- 
--static void dump_blob(void *blob)
-+static const char *tagname(uint32_t tag)
- {
-+	static const char * const names[] = {
-+#define TN(t) [t] #t
-+		TN(FDT_BEGIN_NODE),
-+		TN(FDT_END_NODE),
-+		TN(FDT_PROP),
-+		TN(FDT_NOP),
-+		TN(FDT_END),
-+#undef TN
-+	};
-+	if (tag < ARRAY_SIZE(names))
-+		if (names[tag])
-+			return names[tag];
-+	return "???";
-+}
-+
-+#define dprintf(fmt, args...) \
-+	do { if (debug) printf("// " fmt, ## args); } while (0)
-+
-+static void dump_blob(void *blob, bool debug)
-+{
-+	uintptr_t blob_off = (uintptr_t)blob;
- 	struct fdt_header *bph = blob;
- 	uint32_t off_mem_rsvmap = fdt32_to_cpu(bph->off_mem_rsvmap);
- 	uint32_t off_dt = fdt32_to_cpu(bph->off_dt_struct);
-@@ -74,7 +95,8 @@ static void dump_blob(void *blob)
- 	p = p_struct;
- 	while ((tag = fdt32_to_cpu(GET_CELL(p))) != FDT_END) {
- 
--		/* printf("tag: 0x%08x (%d)\n", tag, p - p_struct); */
-+		dprintf("%04zx: tag: 0x%08x (%s)\n",
-+		        (uintptr_t)p - blob_off - 4, tag, tagname(tag));
- 
- 		if (tag == FDT_BEGIN_NODE) {
- 			s = p;
-@@ -113,6 +135,8 @@ static void dump_blob(void *blob)
- 
- 		p = PALIGN(p + sz, 4);
- 
-+		dprintf("%04zx: string: %s\n", (uintptr_t)s - blob_off, s);
-+		dprintf("%04zx: value\n", (uintptr_t)t - blob_off);
- 		printf("%*s%s", depth * shift, "", s);
- 		utilfdt_print_data(t, sz);
- 		printf(";\n");
-@@ -121,8 +145,9 @@ static void dump_blob(void *blob)
- 
- /* Usage related data. */
- static const char usage_synopsis[] = "fdtdump [options] <file>";
--static const char usage_short_opts[] = "s" USAGE_COMMON_SHORT_OPTS;
-+static const char usage_short_opts[] = "ds" USAGE_COMMON_SHORT_OPTS;
- static struct option const usage_long_opts[] = {
-+	{"debug",            no_argument, NULL, 'd'},
- 	{"scan",             no_argument, NULL, 's'},
- 	USAGE_COMMON_LONG_OPTS
- };
-@@ -136,6 +161,7 @@ int main(int argc, char *argv[])
- 	int opt;
- 	const char *file;
- 	char *buf;
-+	bool debug = false;
- 	bool scan = false;
- 	off_t len;
- 
-@@ -143,6 +169,9 @@ int main(int argc, char *argv[])
- 		switch (opt) {
- 		case_USAGE_COMMON_FLAGS
- 
-+		case 'd':
-+			debug = true;
-+			break;
- 		case 's':
- 			scan = true;
- 			break;
-@@ -179,6 +208,9 @@ int main(int argc, char *argv[])
- 				    fdt_off_dt_struct(p) < this_len &&
- 					fdt_off_dt_strings(p) < this_len)
- 					break;
-+				if (debug)
-+					printf("%s: skipping fdt magic at offset %#zx\n",
-+						file, p - buf);
- 			}
- 			++p;
- 		}
-@@ -188,7 +220,7 @@ int main(int argc, char *argv[])
- 		buf = p;
- 	}
- 
--	dump_blob(buf);
-+	dump_blob(buf, debug);
- 
- 	return 0;
- }
--- 
-1.8.1.2
+> ---
+>  drivers/of/of_pci.c    |   34 +++++++++++++++++++++++++++++-----
+>  include/linux/of_pci.h |    1 +
+>  2 files changed, 30 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> index ebb408b..b77e8d8 100644
+> --- a/drivers/of/of_pci.c
+> +++ b/drivers/of/of_pci.c
+> @@ -9,14 +9,15 @@
+>  #endif
+>  
+>  static inline int __of_pci_pci_compare(struct device_node *node,
+> -				       unsigned int devfn)
+> +				       unsigned int data)
+>  {
+> -	unsigned int size;
+> -	const __be32 *reg = of_get_property(node, "reg", &size);
+> +	int devfn;
+>  
+> -	if (!reg || size < 5 * sizeof(__be32))
+> +	devfn = of_pci_get_devfn(node);
+> +	if (devfn < 0)
+>  		return 0;
+> -	return ((be32_to_cpup(&reg[0]) >> 8) & 0xff) == devfn;
+> +
+> +	return devfn == data;
+>  }
+>  
+>  struct device_node *of_pci_find_child_device(struct device_node *parent,
+> @@ -208,3 +209,26 @@ void pci_process_bridge_OF_ranges(struct pci_controller *hose,
+>  	}
+>  }
+>  #endif
+> +
+> +/**
+> + * of_pci_get_devfn() - Get device and function numbers for a device node
+> + * @np: device node
+> + *
+> + * Parses a standard 5-cell PCI resource and returns an 8-bit value that can
+> + * be passed to the PCI_SLOT() and PCI_FUNC() macros to extract the device
+> + * and function numbers respectively. On error a negative error code is
+> + * returned.
+> + */
+> +int of_pci_get_devfn(struct device_node *np)
+> +{
+> +	unsigned int size;
+> +	const __be32 *reg;
+> +
+> +	reg = of_get_property(np, "reg", &size);
+> +
+> +	if (!reg || size < 5 * sizeof(__be32))
+> +		return -EINVAL;
+> +
+> +	return (be32_to_cpup(reg) >> 8) & 0xff;
+> +}
+> +EXPORT_SYMBOL_GPL(of_pci_get_devfn);
+> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+> index e56182f..302aca0 100644
+> --- a/include/linux/of_pci.h
+> +++ b/include/linux/of_pci.h
+> @@ -11,6 +11,7 @@ int of_irq_map_pci(const struct pci_dev *pdev, struct of_irq *out_irq);
+>  struct device_node;
+>  struct device_node *of_pci_find_child_device(struct device_node *parent,
+>  					     unsigned int devfn);
+> +int of_pci_get_devfn(struct device_node *np);
+>  
+>  void pci_process_bridge_OF_ranges(struct pci_controller *hose,
+>  			struct device_node *dev, int primary);
+> 
