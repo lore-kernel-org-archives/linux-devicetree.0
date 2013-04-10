@@ -1,120 +1,137 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] documentation: iommu: add description of ARM System MMU
-	binding
-Date: Wed, 10 Apr 2013 18:37:32 +0100
-Message-ID: <20130410173732.GQ26992@mudshark.cambridge.arm.com>
-References: <1365094259-24847-1-git-send-email-will.deacon@arm.com>
-	<515F37C1.4000109@codeaurora.org>
-	<20130408092535.GA17476@mudshark.cambridge.arm.com>
-	<5162F87A.7070409@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5162F87A.7070409-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH] net: mv643xx_eth: add shared clk and cleanup existing clk handling
+Date: Wed, 10 Apr 2013 19:37:44 +0200
+Message-ID: <1365615464-26279-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Lennert Buytenhek <buytenh@wantstofly.org>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Florian Fainelli <florian@openwrt.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 08, 2013 at 06:03:54PM +0100, Olav Haugan wrote:
-> Hi Will,
+This patch adds an optional shared block clock to avoid lockups on
+clock gated controllers. Besides the new clock, clock handling for
+existing clocks is cleaned up and moved to devm_clk_get. Device
+tree binding documentation is updated for the new clocks property.
 
-Hello,
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+---
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: Lennert Buytenhek <buytenh@wantstofly.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Florian Fainelli <florian@openwrt.org>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: netdev@vger.kernel.org
+---
+ Documentation/devicetree/bindings/marvell.txt |    3 +++
+ drivers/net/ethernet/marvell/mv643xx_eth.c    |   27 ++++++++++---------------
+ 2 files changed, 14 insertions(+), 16 deletions(-)
 
-> > Generally, the StreamIDs are fixed in hardware (as a function of various AXI
-> > bits -- see the SMMU integration guide) and cannot be set by software.
-> > Furthermore, when the StreamIDs have an implicit effect on IOMMU domain
-> > configuration, since stream-matching may not be always be able to identify a
-> > master uniquely.
-> 
-> Let me clarify what I mean by "our SMMU driver programs the SMMU SIDs".
-> What I meant to say is that our SMMU driver programs the SID into the
-> Stream Match Register (SMR) to route the transactions to the correct
-> context bank based on the SID.
-
-Ok, but then how does that interact with the IOMMU API in Linux? e.g. if a
-client asks for an iova <-> pa mapping on a device, then you need to lookup
-the StreamIDs for that device, no?
-
-> > This really looks specific to your implementation/integration and I can't
-> > see that we'd want this in the binding to be honest. It would be good to
-> > have PMU support in the future, but I've not thought about that part yet.
-> 
-> Yes, some of this is specific to our implementation. However, the
-> properties related to regulators and PMU are not specific I believe. How
-> do you do handle regulators?
-
-As I said, I'm just using a software model more the moment, so no clocks or
-regulators. We can add these later, since Linux has good support for things
-like that already.
-
-> >> - List of sub nodes, one for each of the translation context banks
-> >> supported.
-> >>   Each sub node has the following required properties:
-> >>
-> >>   - reg : offset and length of the register set for the context bank.
-> > 
-> > Why do you need this? The structure of the context banks is well defined by
-> > the SMMU architecture.
-> 
-> Since we specify the context banks as children of the IOMMU we specify
-> the address of each node. I believe you should be specifying the "reg"
-> property for the nodes when you do this.
-
-It's completely redundant information though!
-
-> >>   - interrupts : should contain the context bank interrupt.
-> >>   - qcom,iommu-ctx-sids : List of stream identifiers associated with
-> >> this translation context.
-> > 
-> > StreamIDs aren't statically associated with a translation context. Why do
-> > you put them here? Also, how do this interact with stream matching?
-> 
-> We put the StreamIDs in the context bank to tell our driver that these
-> StreamIDs should be programmed into the Stream Match Register (SMR) to
-> route the transactions bearing these StreamIDs to this context bank. We
-> don't really change the SID2CB mapping during run-time. It is set during
-> compile time.
-
-Again, I'm struggling to see how this interfaces to the more general-purpose
-IOMMU API.
-
-> >> Optional sub-node properties:
-> >>    - qcom,secure-context : boolean indicating that a context is secure
-> >>  and programmed by the secure environment.
-> > 
-> > Why does Linux care about this?
-> 
-> Linux cares about this because if we are doing content protection using
-> one of the context banks then the context bank is programmed by the
-> secure environment and not accessible/programmable by the HLOS.
-
-Why can't the secure world just hide those context banks by using
-SMMU_SCR1.NSNUMCBO?
-
-> > I'd really rather start off small, and describe precisely what we need to
-> > get architecturally-compliant SMMUs off the ground. Then, as the code grows
-> > to use more features (PM, PMU, ...) then we can extend the binding.
-> > Otherwise, we paint ourselves into a corner with the binding before we've
-> > developed any driver code.
-> 
-> Sure, I did not mean to add implementation specific stuff to upstream
-> bindings. Does it makes sense to you thought the way we modeled context
-> banks as child nodes?
-
-Not really, no. It seems to configure everything up-front, which makes
-dynamic use of the IOMMU difficult afaict. It may suit your use-case (as you
-say, you even set up the mappings at compile-time) but it's not especially
-general.
-
-Will
+diff --git a/Documentation/devicetree/bindings/marvell.txt b/Documentation/devicetree/bindings/marvell.txt
+index f1533d9..f7a0da6 100644
+--- a/Documentation/devicetree/bindings/marvell.txt
++++ b/Documentation/devicetree/bindings/marvell.txt
+@@ -115,6 +115,9 @@ prefixed with the string "marvell,", for Marvell Technology Group Ltd.
+      - compatible : "marvell,mv64360-eth-block"
+      - reg : Offset and length of the register set for this block
+ 
++   Optional properties:
++     - clocks : Phandle to the clock control device and gate bit
++
+    Example Discovery Ethernet block node:
+      ethernet-block@2000 {
+ 	     #address-cells = <1>;
+diff --git a/drivers/net/ethernet/marvell/mv643xx_eth.c b/drivers/net/ethernet/marvell/mv643xx_eth.c
+index aedbd82..bbe6104 100644
+--- a/drivers/net/ethernet/marvell/mv643xx_eth.c
++++ b/drivers/net/ethernet/marvell/mv643xx_eth.c
+@@ -268,7 +268,7 @@ struct mv643xx_eth_shared_private {
+ 	int extended_rx_coal_limit;
+ 	int tx_bw_control;
+ 	int tx_csum_limit;
+-
++	struct clk *clk;
+ };
+ 
+ #define TX_BW_CONTROL_ABSENT		0
+@@ -410,9 +410,7 @@ struct mv643xx_eth_private {
+ 	/*
+ 	 * Hardware-specific parameters.
+ 	 */
+-#if defined(CONFIG_HAVE_CLK)
+ 	struct clk *clk;
+-#endif
+ 	unsigned int t_clk;
+ };
+ 
+@@ -2569,6 +2567,10 @@ static int mv643xx_eth_shared_probe(struct platform_device *pdev)
+ 	if (msp->base == NULL)
+ 		goto out_free;
+ 
++	msp->clk = devm_clk_get(&pdev->dev, NULL);
++	if (!IS_ERR(msp->clk))
++		clk_prepare_enable(msp->clk);
++
+ 	/*
+ 	 * (Re-)program MBUS remapping windows if we are asked to.
+ 	 */
+@@ -2595,6 +2597,8 @@ static int mv643xx_eth_shared_remove(struct platform_device *pdev)
+ 	struct mv643xx_eth_shared_private *msp = platform_get_drvdata(pdev);
+ 
+ 	iounmap(msp->base);
++	if (!IS_ERR(msp->clk))
++		clk_disable_unprepare(msp->clk);
+ 	kfree(msp);
+ 
+ 	return 0;
+@@ -2801,13 +2805,12 @@ static int mv643xx_eth_probe(struct platform_device *pdev)
+ 	 * it to override the default.
+ 	 */
+ 	mp->t_clk = 133000000;
+-#if defined(CONFIG_HAVE_CLK)
+-	mp->clk = clk_get(&pdev->dev, (pdev->id ? "1" : "0"));
++	mp->clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (!IS_ERR(mp->clk)) {
+ 		clk_prepare_enable(mp->clk);
+ 		mp->t_clk = clk_get_rate(mp->clk);
+ 	}
+-#endif
++
+ 	set_params(mp, pd);
+ 	netif_set_real_num_tx_queues(dev, mp->txq_count);
+ 	netif_set_real_num_rx_queues(dev, mp->rxq_count);
+@@ -2889,12 +2892,8 @@ static int mv643xx_eth_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ out:
+-#if defined(CONFIG_HAVE_CLK)
+-	if (!IS_ERR(mp->clk)) {
++	if (!IS_ERR(mp->clk))
+ 		clk_disable_unprepare(mp->clk);
+-		clk_put(mp->clk);
+-	}
+-#endif
+ 	free_netdev(dev);
+ 
+ 	return err;
+@@ -2909,12 +2908,8 @@ static int mv643xx_eth_remove(struct platform_device *pdev)
+ 		phy_detach(mp->phy);
+ 	cancel_work_sync(&mp->tx_timeout_task);
+ 
+-#if defined(CONFIG_HAVE_CLK)
+-	if (!IS_ERR(mp->clk)) {
++	if (!IS_ERR(mp->clk))
+ 		clk_disable_unprepare(mp->clk);
+-		clk_put(mp->clk);
+-	}
+-#endif
+ 
+ 	free_netdev(mp->dev);
+ 
+-- 
+1.7.10.4
