@@ -1,100 +1,75 @@
-From: Michal Bachraty <michal.bachraty@streamunlimited.com>
-Subject: Re: [PATCH v7] clk: add si5351 i2c common clock driver
-Date: Wed, 10 Apr 2013 16:48:25 +0200
-Message-ID: <14854575.YAd2OMKOy9@ganymedes>
-References: <1365439617-18816-1-git-send-email-sebastian.hesselbarth@gmail.com> <1365586810-6752-1-git-send-email-sebastian.hesselbarth@gmail.com> <51653C3E.2020702@gmail.com>
+From: Barry Song <21cnbao@gmail.com>
+Subject: Re: [PATCH 07/14] media: soc-camera: support deferred probing of clients
+Date: Wed, 10 Apr 2013 23:02:08 +0800
+Message-ID: <CAGsJ_4yTZ9F1ryqDbzF-V6VYAMhXtOMUMZCb50he+OT0ihFVKg@mail.gmail.com>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+ <1348754853-28619-8-git-send-email-g.liakhovetski@gmx.de> <CAGsJ_4yUY6PE0NWZ9yaOLFmRb3O-HL55=w7Y6muwL0YbkJtP0Q@mail.gmail.com>
+ <Pine.LNX.4.64.1304101358490.13557@axis700.grange> <CAGsJ_4xn_R7D7Uh0dJB7WuDQG3K_mZkMwYNtMDuHMhX+4oTk=Q@mail.gmail.com>
+ <Pine.LNX.4.64.1304101601160.13557@axis700.grange> <CAGsJ_4z-FnbHtmbi16YD5LmYfpL+=ngke8EgkPHWy_PJ8QBPNg@mail.gmail.com>
+ <Pine.LNX.4.64.1304101637300.13557@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51653C3E.2020702@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Daniel Mack <zonque@gmail.com>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, Jean-Francois Moine <moinejf@free.fr>, Lars-Peter Clausen <lars@metafoo.de>, Guenter Roeck <linux@roeck-us.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1304101637300.13557@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "renwei.wu" <renwei.wu@csr.com>, DL-SHA-WorkGroupLinux <workgroup.linux@csr.com>, xiaomeng.hou@csr.com, zilong.wu@csr.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
-This driver doesn't work for me. In my case, u-boot initializes si-5351 and 
-power down unused clocks while booting kernel.  there is need for power up 
-clocks as was in previous versions of your driver.  
-See patch, whre the problem is fixed:
+2013/4/10 Guennadi Liakhovetski <g.liakhovetski@gmx.de>:
+> On Wed, 10 Apr 2013, Barry Song wrote:
+>
+>> 2013/4/10 Guennadi Liakhovetski <g.liakhovetski@gmx.de>:
+>> > On Wed, 10 Apr 2013, Barry Song wrote:
+>
+> [snip]
+>
+>> >> > This cannot work, because some I2C devices, e.g. sensors, need a clock
+>> >> > signal from the camera interface to probe. Before the bridge driver has
+>> >> > completed its probing and registered a suitable clock source with the
+>> >> > v4l2-clk framework, sensors cannot be probed. And no, we don't want to
+>> >> > fake successful probing without actually being able to talk to the
+>> >> > hardware.
+>> >>
+>> >> i'd say same dependency also exists on ASoC.  a "fake" successful
+>> >> probing doesn't mean it should really begin to work if there is no
+>> >> external trigger source.  ASoC has successfully done that by a machine
+>> >> driver to connect all DAI.
+>> >> a way is we put all things ready in their places, finally we connect
+>> >> them together and launch the whole hardware flow.
+>> >>
+>> >> anyway, if you have maken the things work by some simple hacking and
+>> >> that means minimial changes to current soc-camera, i think we can
+>> >> follow.
+>> >
+>> > If you want to volunteer to step up as a new soc-camera maintainer to
+>> > replace my simple hacking with your comprehencive and advanced designs -
+>> > feel free, I'll ack straight away.
+>>
+>> i am not sure whether you agree the new way or not. if you also agree
+>> this is a better way,
+>
+> In fact I don't.
+>
+>> i think we can do something to move ahead. i
+>> need sync and get input from you expert :-)
+>
+> I suggest you read all the mailing list discussions of these topics over
+> last months / years, conference discussion protocols instead of restarting
+> a beaten to death topic at the v8 time-frame.
 
-@@ -992,6 +992,10 @@ static long si5351_clkout_round_rate(struct clk_hw *hw, 
-unsigned long rate,
- 		} while (1);
- 	}
- 	rate = *parent_rate >> rdiv;
-+	
-+	/* powerup clkout */
-+	si5351_set_bits(hwdata->drvdata, SI5351_CLK0_CTRL + hwdata->num,
-+			SI5351_CLK_POWERDOWN, 0);
- 
- 	dev_dbg(&hwdata->drvdata->client->dev,
- 		"%s - %s: rdiv = %u, parent_rate = %lu, rate = %lu\n",
+you think it has been dead but i think it is still alive since there
+are still sombody like me starting a beaten for that.
+anyway,  it doesn't really matter too much.
+i can definitely follow what you like as you have succefully built a
+good soc-camera system.
 
-With this lines, driver works well.
+>
+> Thanks
+> Guennadi
+> ---
+> Guennadi Liakhovetski, Ph.D.
+> Freelance Open-Source Software Developer
+> http://www.open-technology.de/
 
-Also, 
-
-> > +==Example==
-> > +
-> > +/* 25MHz reference crystal */
-> > +ref25: ref25M {
-> > +	compatible = "fixed-clock";
-> > +	#clock-cells = <0>;
-> > +	clock-frequency = <25000000>;
-> > +};
-> > +
-> > +i2c-master-node {
-> > +
-> > +	/* Si5351a msop10 i2c clock generator */
-> > +	si5351a: clock-generator@60 {
-> > +		compatible = "silabs,si5351a-msop";
-> > +		reg = <0x60>;
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +		#clock-cells = <1>;
-> > +
-> > +		/* connect xtal input to 25MHz reference */
-> > +		clocks = <&ref25>;
-> > +
-> > +		/* connect xtal input as source of pll0 and pll1 */
-> > +		silabs,pll-source = <0 0>, <1 0>;
-> > +
-> > +		/*
-> > +		 * overwrite clkout0 configuration with:
-> > +		 * - 8mA output drive strength
-> > +		 * - pll0 as clock source of multisynth0
-> > +		 * - multisynth0 as clock source of output divider
-> > +		 * - multisynth0 can change pll0
-> > +		 * - set initial clock frequency of 74.25MHz
-> > +		 */
-> > +		clkout0 {
-> > +			reg = <0>;
-> > +			silabs,drive-strength = <8>;
-> > +			silabs,multisynth-source = <0>;
-> > +			silabs,clock-source = <0>;
-> > +			silabs,pll-master;
-> > +			clock-frequency = <74250000>;
-> > +		};
-> > +
-> > +		/*
-> > +		 * overwrite clkout1 configuration with:
-> > +		 * - 4mA output drive strength
-> > +		 * - pll1 as clock source of multisynth1
-> > +		 * - multisynth1 as clock source of output divider
-> > +		 * - multisynth1 can change pll1
-> > +		 */
-> > +		clkout1 {
-> > +			reg = <1>;
-> > +			silabs,drive-strength = <4>;
-> > +			silabs,multisynth-source = <1>;
-> > +			silabs,clock-source = <0>;
-> > +			pll-master;
-> > +		};
-> > +
- Is definition of pll-master in clkout1 correct? should not be silabs,pll-
-master ?
-
-Best regards,
-Michal
+-barry
