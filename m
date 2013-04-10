@@ -1,55 +1,41 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH 4/5] gpio/omap: force restore if context loss is not detectable
-Date: Wed, 10 Apr 2013 14:50:22 -0500
-Message-ID: <5165C27E.1060704@ti.com>
-References: <1365106576-31816-1-git-send-email-jon-hunter@ti.com> <1365106576-31816-5-git-send-email-jon-hunter@ti.com> <CACRpkdbeABuFXr0Gt6gRto3Pmo0m88AFn_xKJq14VonGg7Doww@mail.gmail.com> <5165C086.5010105@ti.com> <CACRpkdZciGZkWR-qxT96c9pO9UM4fPh_1BUJP9-b1fhjL6-uDg@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC][PATCH 1/2] ARM: OMAP4: clock: Add device tree support
+ for AUXCLKs
+Date: Wed, 10 Apr 2013 13:21:21 -0700
+Message-ID: <20130410202121.GM10155@atomide.com>
+References: <20130405155851.GA10155@atomide.com>
+ <5163E589.1040809@ti.com>
+ <20130409164928.GL10155@atomide.com>
+ <20130409174319.GP10155@atomide.com>
+ <20130409204900.GA8815@kahuna>
+ <20130410080630.14359.68178@quantum>
+ <5165453E.6090503@ti.com>
+ <20130410173921.GA31017@kahuna>
+ <20130410184919.GJ10155@atomide.com>
+ <CAGo_u6rqN6YFQ6vX87-Cg28RbiR9UU2JHgLecOU5Nd=B5XPUEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZciGZkWR-qxT96c9pO9UM4fPh_1BUJP9-b1fhjL6-uDg@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kevin Hilman <khilman@linaro.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGo_u6rqN6YFQ6vX87-Cg28RbiR9UU2JHgLecOU5Nd=B5XPUEA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Roger Quadros <rogerq@ti.com>, Mike Turquette <mturquette@linaro.org>, linux-usb@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, lkml <linux-kernel@vger.kernel.org>, balbi@ti.com, grygorii.strashko@ti.com, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+* Nishanth Menon <nm@ti.com> [130410 12:23]:
+> On Wed, Apr 10, 2013 at 1:49 PM, Tony Lindgren <tony@atomide.com> wrote:
+> >
+> > We can avoid the concern of storing the struct clk * and do the
+> > look up lazily on consumer driver probe by setting a dummy struct
+> > clk * here. Then replace of_clk_src_simple_get() with a custom
+> > omap_clk_src_get() that does the lookup and replaces the struct
+> > clk * with the real one.
+> Hmm.. this is interesting. will give it a try. Thanks on the suggestion.
 
-On 04/10/2013 02:44 PM, Linus Walleij wrote:
-> On Wed, Apr 10, 2013 at 9:41 PM, Jon Hunter <jon-hunter@ti.com> wrote:
->> On 04/10/2013 02:39 PM, Linus Walleij wrote:
->>> On Thu, Apr 4, 2013 at 10:16 PM, Jon Hunter <jon-hunter@ti.com> wrote:
->>>
->>>> When booting with device-tree the function pointer for detecting context
->>>> loss is not populated. Ideally, the pm_runtime framework should be
->>>> enhanced to allow a means for reporting context/state loss and we could
->>>> avoid populating such function pointers altogether. In the interim until
->>>> a generic non-device specific solution is in place, force a restore of
->>>> the gpio bank when enabling the gpio controller.
->>>>
->>>> Adds a new device-tree property for the OMAP GPIO controller to indicate
->>>> if the GPIO controller is located in a power-domain that never loses
->>>> power and hence will always maintain its logic state.
->>>>
->>>> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
->>>
->>> In this case it'd be really helpful to get an ACK from somebody else.
->>> I have no clue whether this thing is doing what it should, and if
->>> you were the maintainer I'd apply it but now I'd like to hear from
->>> Kevin or Santosh first...
->>
->> Santosh gave the his ACK for 1-4 (see 0/5) and Kevin added his
->> reviewed-by for 1-4 (again see 0/5).
-> 
-> OK all in patch 0 how confusing #-)
-> 
-> All patches applied with Kevin's and Santosh's tags!
+Setting the struct clk * to NULL initially might work too, but that
+needs to be checked.
 
-Thanks. Sorry for the confusion!
+Regards,
 
-By the way, I am hoping you only took 1-4, per the cover-letter I was
-planning to have Benoit take 5 through his DT branch as there could be
-conflicts if you merge this with Benoit's branch. Again sorry if this is
-even more confusing ;-)
-
-Cheers
-Jon
+Tony
