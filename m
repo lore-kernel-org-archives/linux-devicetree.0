@@ -1,51 +1,65 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 1/3] gpio: gpio-generic: Add 16 and 32 bit big endian
- byte order support
-Date: Wed, 10 Apr 2013 20:27:32 +0200
-Message-ID: <CACRpkdaPGFH9k3ePHpXfKxyowoXMrbnbAgP5qb32CG2NANs8Pw@mail.gmail.com>
-References: <1363355140-28216-1-git-send-email-andreas@gaisler.com>
-	<1363355140-28216-2-git-send-email-andreas@gaisler.com>
-	<20130319004012.GA1004@lizard.gateway.2wire.net>
-	<CACRpkdY6D3hvBm13Y41NTbnAav03guB7LEB4RHnRanFXjj_UJw@mail.gmail.com>
-	<515BDF23.9000508@gaisler.com>
+From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 00/10 v2] usage()/--help clean up & unification
+Date: Wed, 10 Apr 2013 14:29:05 -0400
+Message-ID: <1365618555-5893-1-git-send-email-vapier@gentoo.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <515BDF23.9000508@gaisler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Larson <andreas@gaisler.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Anton Vorontsov <anton@enomsg.org>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, software@gaisler.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 3, 2013 at 9:49 AM, Andreas Larson <andreas@gaisler.com> wrote:
-> On 2013-03-27 09:58, Linus Walleij wrote:
->>
->> On Tue, Mar 19, 2013 at 1:40 AM, Anton Vorontsov <anton@enomsg.org> wrote:
->>>
->>> On Fri, Mar 15, 2013 at 02:45:38PM +0100, Andreas Larsson wrote:
->>>>
->>>> There is no general support for 64-bit big endian accesses, so that is
->>>> left unsupported.
->>>>
->>>> Signed-off-by: Andreas Larsson <andreas@gaisler.com>
->>>
->>>
->>> This looks perfect, thanks a lot!
->>>
->>> Acked-by: Anton Vorontsov <anton@enomsg.org>
->>
->>
->> Looks good to me as well, but since this was discussed with Grant
->> I want his review on this before I merge it.
->
->
-> I take it that you are happy with the other two patches as well?
->
-> Grant, any chance of getting this into the 3.10 merge window?
+Each utility currently open codes how they process options and
+implement usage().  This leads to inconsistent behavior and output
+which sucks.  A bunch also get common things wrong (like sending
+--help to stderr).
 
-Apparently Grant is busy these days, so I took a review of the
-patch and I like it. With Anton's ACK as well I'm certain it's good,
-so patch applied!
+Rather than go through them one by one and fix their bugs, start
+a new mini framework in the util.[ch] code base.  This allows the
+utils to be much more data driven in their approach to options --
+they declare certain structures with the right format, and then
+call usage() as needed.  The new util code takes care of the rest.
 
-Yours,
-Linus Walleij
+I also snuck in a few minor fixes in this patch series that I
+noticed as I was hacking on things.  Really I just wanted a --scan
+option in the fdtdump tool :).
+
+For the v2 series, I fixed a compile/output bug in one of the
+patches and this now passes `make check`.  I also added a --debug
+option to fdtdump.
+
+Mike Frysinger (10):
+  utilfdt_read_err: use xmalloc funcs
+  utilfdt_read: pass back up the length of data read
+  die: constify format string arg
+  util_version: new helper for displaying version info
+  fdtdump: make usage a bit more friendly
+  fdtdump: add a --scan option
+  dtc/fdt{get,put}/convert-dtsv0-lexer: convert to new usage helpers
+  util: drop "long" from usage helpers
+  util: add common ARRAY_SIZE define
+  fdtdump: add a debug mode
+
+ convert-dtsv0-lexer.l |  24 +++++++----
+ dtc.c                 | 116 +++++++++++++++++++++++++-------------------------
+ dtc.h                 |   1 -
+ fdtdump.c             | 109 ++++++++++++++++++++++++++++++++++++++++++-----
+ fdtget.c              |  62 ++++++++++++---------------
+ fdtput.c              |  65 +++++++++++++---------------
+ tests/testutils.c     |   2 +-
+ util.c                |  73 ++++++++++++++++++++++++++++---
+ util.h                |  78 +++++++++++++++++++++++++++++++--
+ 9 files changed, 375 insertions(+), 155 deletions(-)
+
+-- 
+1.8.1.2
