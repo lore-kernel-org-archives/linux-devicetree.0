@@ -1,54 +1,33 @@
-From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 4/5] gpio/omap: force restore if context loss is not
- detectable
-Date: Wed, 10 Apr 2013 14:41:58 -0500
-Message-ID: <5165C086.5010105@ti.com>
-References: <1365106576-31816-1-git-send-email-jon-hunter@ti.com>
- <1365106576-31816-5-git-send-email-jon-hunter@ti.com>
- <CACRpkdbeABuFXr0Gt6gRto3Pmo0m88AFn_xKJq14VonGg7Doww@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4] gpio: mcp23s08: convert driver to DT
+Date: Wed, 10 Apr 2013 21:43:10 +0200
+Message-ID: <CACRpkdY0XjHokUfXWQmgNAwrZOuuyfYcyE-9ihYtxKONEUmjuA@mail.gmail.com>
+References: <1365069722-15408-1-git-send-email-larsi@wh2.tu-dresden.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdbeABuFXr0Gt6gRto3Pmo0m88AFn_xKJq14VonGg7Doww-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1365069722-15408-1-git-send-email-larsi@wh2.tu-dresden.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars Poeschel <larsi@wh2.tu-dresden.de>
+Cc: Lars Poeschel <poeschel@lemonage.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, spi mailing list <spi-devel-general@lists.sourceforge.net>, Peter Korsgaard <jacmet@sunsite.dk>, Mark Brown <broonie@opensource.wolfsonmicro.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Apr 4, 2013 at 12:02 PM, Lars Poeschel <larsi@wh2.tu-dresden.de> wrote:
 
-On 04/10/2013 02:39 PM, Linus Walleij wrote:
-> On Thu, Apr 4, 2013 at 10:16 PM, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org> wrote:
-> 
->> When booting with device-tree the function pointer for detecting context
->> loss is not populated. Ideally, the pm_runtime framework should be
->> enhanced to allow a means for reporting context/state loss and we could
->> avoid populating such function pointers altogether. In the interim until
->> a generic non-device specific solution is in place, force a restore of
->> the gpio bank when enabling the gpio controller.
->>
->> Adds a new device-tree property for the OMAP GPIO controller to indicate
->> if the GPIO controller is located in a power-domain that never loses
->> power and hence will always maintain its logic state.
->>
->> Signed-off-by: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
-> 
-> In this case it'd be really helpful to get an ACK from somebody else.
-> I have no clue whether this thing is doing what it should, and if
-> you were the maintainer I'd apply it but now I'd like to hear from
-> Kevin or Santosh first...
+> From: Lars Poeschel <poeschel@lemonage.de>
+>
+> This converts the mcp23s08 driver to be able to be used with device
+> tree.
+> There is a "spi-present-mask" device tree property, that allows to
+> use multiple of this spi chips on the same chipselect.
+>
+> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+> ---
+> v4:
+> - removed the ability to specify the pullup from device tree
+> - updated binding doc
 
-Santosh gave the his ACK for 1-4 (see 0/5) and Kevin added his
-reviewed-by for 1-4 (again see 0/5).
+Patch applied!
 
-Cheers
-Jon
+Thanks,
+Linus Walleij
