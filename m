@@ -1,56 +1,38 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
-Date: Wed, 10 Apr 2013 23:44:52 +0200
-Message-ID: <1580096.AHFBPvEqBp@wuerfel>
-References: <1329321854-24490-1-git-send-email-b-cousson@ti.com> <CACRpkdYbs4-uudpRUY8e+7icYYkZrfM0kReP3pLL5DMiURJ4dg@mail.gmail.com> <5165CB9D.1090202@wwwdotorg.org>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: linux-next: Tree for Apr 10 (media and OF)
+Date: Thu, 11 Apr 2013 00:00:35 +0200
+Message-ID: <5165E103.3020106@gmail.com>
+References: <20130410184852.92a3a02bbe5c3a040be76365@canb.auug.org.au> <5165DB54.90508@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5165CB9D.1090202@wwwdotorg.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, Javier Martinez Canillas <martinez.javier@gmail.com>, Stephen Warren <swarren@nvidia.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, Alexandre Courbot <acourbot@nvidia.com>, Jon Hunter <jon-hunter@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5165DB54.90508@infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media <linux-media@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 10 April 2013 14:29:17 Stephen Warren wrote:
-> 
-> > If the information is there, whether to convert from IRQ to GPIO
-> > or from GPIO to IRQ is a technicality and any order should be
-> > feasible in some way?
-> 
-> There isn't always a unique 1:1 mapping between GPIOs and IRQs. Put
-> another way, a single GPIO would likely only ever trigger a single IRQ,
-> but a single IRQ might easily be triggered by any number of GPIOs. This
-> is exactly why the function irq_to_gpio() isn't something one should use
-> any more.
+On 04/10/2013 11:36 PM, Randy Dunlap wrote:
+> On 04/10/13 01:48, Stephen Rothwell wrote:
+>> Hi all,
+>>
+>> Changes since 20130409:
+>>
+>
+>
+> on i386:
+>
+> ERROR: "of_get_next_parent" [drivers/media/v4l2-core/videodev.ko] undefined!
+>
+>
+> 'of_get_next_parent()' should be exported for use by modules...?
 
-More importantly, most irqs don't have any GPIO associated with them
-at all. The interface made some sense for simple platforms that had
-a linear range of GPIO IRQs, but that also isn't true these days,
-with arbitrary IRQ domains.
+Yes, there was already a patch submitted for this [1]. Hopefully it gets
+picked soon so we don't see such errors. That's my oversight, sorry 
+about it.
 
-> I think there was an effort to outright remove the API,
-> although it doesn't look like that's entirely complete yet.
+[1] http://www.spinics.net/lists/linux-media/msg61994.html
 
-It's essentially complete. There are a few remnants in areas of the kernel
-that we don't like to look at:
-
-* The blackfin architecture provides the interface and uses it in the
-  pata_rb532_cf driver.
-
-* MIPS provides it on a few older platforms, and it's used on the alchemy
-  pcmcia driver.
-
-* avr32, m68k, sh and unicore32 provide the interface but don't use it.
-
-* On ARM, the interface is provided on iop, gemini, ixp4xx, ks8695
-  and w90x900.  None of these use it, and they rarely see any patches
-  at all these days.
-
-* ARM/davinci provides a stub but always return -ENOSYS.
-
-* One driver for PXA (tosa_battery) still uses this interface, but PXA stopped
-  providing it long ago.
-
-	Arnd
+Thanks,
+Sylwester
