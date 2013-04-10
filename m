@@ -1,7 +1,7 @@
 From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 02/10] utilfdt_read: pass back up the length of data read
-Date: Wed, 10 Apr 2013 14:29:07 -0400
-Message-ID: <1365618555-5893-3-git-send-email-vapier@gentoo.org>
+Subject: [PATCH 04/10] util_version: new helper for displaying version info
+Date: Wed, 10 Apr 2013 14:29:09 -0400
+Message-ID: <1365618555-5893-5-git-send-email-vapier@gentoo.org>
 References: <1365618555-5893-1-git-send-email-vapier@gentoo.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,116 +21,74 @@ Sender: "devicetree-discuss"
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-For a follow up commit, we want to be able to scan the buffer that was
-returned to us.  In order to do that safely, we need to know how big
-the buffer actually is, so pass that back if requested.
+This is so all utilities can have this flag and not just dtc.
 
+Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
 ---
- fdtget.c          | 2 +-
- fdtput.c          | 2 +-
- tests/testutils.c | 2 +-
- util.c            | 8 +++++---
- util.h            | 6 ++++--
- 5 files changed, 12 insertions(+), 8 deletions(-)
+ dtc.c  | 5 +----
+ util.c | 7 +++++++
+ util.h | 5 +++++
+ 3 files changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/fdtget.c b/fdtget.c
-index c2fbab2..374bee2 100644
---- a/fdtget.c
-+++ b/fdtget.c
-@@ -254,7 +254,7 @@ static int do_fdtget(struct display_info *disp, const char *filename,
- 	const char *prop;
- 	int i, node;
+diff --git a/dtc.c b/dtc.c
+index d40e220..e4e1b84 100644
+--- a/dtc.c
++++ b/dtc.c
+@@ -21,8 +21,6 @@
+ #include "dtc.h"
+ #include "srcpos.h"
  
--	blob = utilfdt_read(filename);
-+	blob = utilfdt_read(filename, NULL);
- 	if (!blob)
- 		return -1;
- 
-diff --git a/fdtput.c b/fdtput.c
-index f2197f5..572d6da 100644
---- a/fdtput.c
-+++ b/fdtput.c
-@@ -239,7 +239,7 @@ static int do_fdtput(struct display_info *disp, const char *filename,
- 	char *blob;
- 	int len, ret = 0;
- 
--	blob = utilfdt_read(filename);
-+	blob = utilfdt_read(filename, NULL);
- 	if (!blob)
- 		return -1;
- 
-diff --git a/tests/testutils.c b/tests/testutils.c
-index f185133..67b39b0 100644
---- a/tests/testutils.c
-+++ b/tests/testutils.c
-@@ -160,7 +160,7 @@ int nodename_eq(const char *s1, const char *s2)
- void *load_blob(const char *filename)
- {
- 	char *blob;
--	int ret = utilfdt_read_err(filename, &blob);
-+	int ret = utilfdt_read_err(filename, &blob, NULL);
- 
- 	if (ret)
- 		CONFIG("Couldn't open blob from \"%s\": %s", filename,
+-#include "version_gen.h"
+-
+ /*
+  * Command line options
+  */
+@@ -158,8 +156,7 @@ int main(int argc, char *argv[])
+ 			srcfile_add_search_path(optarg);
+ 			break;
+ 		case 'v':
+-			printf("Version: %s\n", DTC_VERSION);
+-			exit(0);
++			util_version();
+ 		case 'H':
+ 			if (streq(optarg, "legacy"))
+ 				phandle_format = PHANDLE_LEGACY;
 diff --git a/util.c b/util.c
-index 12f0614..c689ea7 100644
+index c689ea7..a9b118c 100644
 --- a/util.c
 +++ b/util.c
-@@ -197,7 +197,7 @@ char get_escape_char(const char *s, int *i)
- 	return val;
- }
+@@ -34,6 +34,7 @@
  
--int utilfdt_read_err(const char *filename, char **buffp)
-+int utilfdt_read_err(const char *filename, char **buffp, off_t *len)
+ #include "libfdt.h"
+ #include "util.h"
++#include "version_gen.h"
+ 
+ char *xstrdup(const char *s)
  {
- 	int fd = 0;	/* assume stdin */
- 	char *buf = NULL;
-@@ -238,13 +238,15 @@ int utilfdt_read_err(const char *filename, char **buffp)
- 		free(buf);
- 	else
- 		*buffp = buf;
-+	if (len)
-+		*len = bufsize;
- 	return ret;
+@@ -374,3 +375,9 @@ void utilfdt_print_data(const char *data, int len)
+ 		printf("]");
+ 	}
  }
- 
--char *utilfdt_read(const char *filename)
-+char *utilfdt_read(const char *filename, off_t *len)
- {
- 	char *buff;
--	int ret = utilfdt_read_err(filename, &buff);
-+	int ret = utilfdt_read_err(filename, &buff, len);
- 
- 	if (ret) {
- 		fprintf(stderr, "Couldn't open blob from '%s': %s\n", filename,
++
++void util_version(void)
++{
++	printf("Version: %s\n", DTC_VERSION);
++	exit(0);
++}
 diff --git a/util.h b/util.h
-index 543a173..3c20b15 100644
+index d856eb9..e09cc25 100644
 --- a/util.h
 +++ b/util.h
-@@ -80,9 +80,10 @@ char get_escape_char(const char *s, int *i);
-  * stderr.
-  *
-  * @param filename	The filename to read, or - for stdin
-+ * @param len		If non-NULL, the amount of data we managed to read
-  * @return Pointer to allocated buffer containing fdt, or NULL on error
+@@ -168,4 +168,9 @@ int utilfdt_decode_type(const char *fmt, int *type, int *size);
   */
--char *utilfdt_read(const char *filename);
-+char *utilfdt_read(const char *filename, off_t *len);
+ void utilfdt_print_data(const char *data, int len);
  
- /**
-  * Read a device tree file into a buffer. Does not report errors, but only
-@@ -91,9 +92,10 @@ char *utilfdt_read(const char *filename);
-  *
-  * @param filename	The filename to read, or - for stdin
-  * @param buffp		Returns pointer to buffer containing fdt
-+ * @param len		If non-NULL, the amount of data we managed to read
-  * @return 0 if ok, else an errno value representing the error
-  */
--int utilfdt_read_err(const char *filename, char **buffp);
-+int utilfdt_read_err(const char *filename, char **buffp, off_t *len);
- 
- 
- /**
++/**
++ * Show source version and exit
++ */
++void util_version(void) __attribute__((noreturn));
++
+ #endif /* _UTIL_H */
 -- 
 1.8.1.2
