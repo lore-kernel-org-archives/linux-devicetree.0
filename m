@@ -1,48 +1,46 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: Query on pinctrl usage for DT nodes
-Date: Wed, 10 Apr 2013 11:32:27 -0600
-Message-ID: <5165A22B.4070200@wwwdotorg.org>
-References: <CA+V-a8uiPwsAD--OHFAE=i2ed+-wbXm4p2deZXr92+Zv6GDS1w@mail.gmail.com>
- <515C5C76.3080009@wwwdotorg.org>
- <CA+V-a8t3wtP77DdeUoQHKMjAuWmV+ude+1J3UjJmMTqobgStjA@mail.gmail.com>
- <5162FD4A.1030909@wwwdotorg.org>
- <CA+V-a8vwdCkyMqiynj5BodXbjwJ=e4qNb-29FhLweqbjc7DBQA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CA+V-a8vwdCkyMqiynj5BodXbjwJ=e4qNb-29FhLweqbjc7DBQA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Tony Lindgren <tony@atomide.com>, linus.walleij@linaro.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, LAK <linux-arm-kernel@lists.infradead.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH] net: mvmdio: add clocks property to binding documentation
+Date: Wed, 10 Apr 2013 19:36:29 +0200
+Message-ID: <1365615391-26244-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "David S. Miller" <davem@davemloft.net>, Florian Fainelli <florian@openwrt.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/10/2013 02:12 AM, Prabhakar Lad wrote:
-...
-> Following is the proposed fix/hack let me know if its OK.
-> 
-> Regards,
-> --Prabhakar
-> 
-> ->>>>>>>>>>>>>>>>>>>
-> 
-> diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
-> index ee72f1f..78fb42d 100644
-> --- a/drivers/pinctrl/core.h
-> +++ b/drivers/pinctrl/core.h
-> @@ -46,6 +46,7 @@ struct pinctrl_dev {
->         struct pinctrl *p;
->         struct pinctrl_state *hog_default;
->         struct pinctrl_state *hog_sleep;
-> +       bool bits_per_mux;
+Patch "net: mvmdio: get and enable optional clock" was missing an
+update of the corresponding device tree binding documentation. This
+patch adds the clocks property to mvmdio binding documentation.
 
-This clearly isn't correct; any change to solve this problem should only
-touch the internals of the pinctrl-single driver, not the pinctrl core.
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+---
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Florian Fainelli <florian@openwrt.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: netdev@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ Documentation/devicetree/bindings/net/marvell-orion-mdio.txt |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/net/marvell-orion-mdio.txt b/Documentation/devicetree/bindings/net/marvell-orion-mdio.txt
+index 052b5f2..9417e54 100644
+--- a/Documentation/devicetree/bindings/net/marvell-orion-mdio.txt
++++ b/Documentation/devicetree/bindings/net/marvell-orion-mdio.txt
+@@ -11,6 +11,7 @@ Required properties:
+ 
+ Optional properties:
+ - interrupts: interrupt line number for the SMI error/done interrupt
++- clocks: Phandle to the clock control device and gate bit
+ 
+ The child nodes of the MDIO driver are the individual PHY devices
+ connected to this MDIO bus. They must have a "reg" property given the
+-- 
+1.7.10.4
