@@ -1,126 +1,368 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC][PATCH 1/2] ARM: OMAP4: clock: Add device tree support for AUXCLKs
-Date: Wed, 10 Apr 2013 14:19:13 -0500
-Message-ID: <CAGo_u6rqN6YFQ6vX87-Cg28RbiR9UU2JHgLecOU5Nd=B5XPUEA@mail.gmail.com>
-References: <20130404164137.GH10155@atomide.com>
-	<515EA9E3.1010409@ti.com>
-	<20130405155851.GA10155@atomide.com>
-	<5163E589.1040809@ti.com>
-	<20130409164928.GL10155@atomide.com>
-	<20130409174319.GP10155@atomide.com>
-	<20130409204900.GA8815@kahuna>
-	<20130410080630.14359.68178@quantum>
-	<5165453E.6090503@ti.com>
-	<20130410173921.GA31017@kahuna>
-	<20130410184919.GJ10155@atomide.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 3/3] gpio: grgpio: Add irq support
+Date: Wed, 10 Apr 2013 21:25:51 +0200
+Message-ID: <CACRpkdZ4AK=3PGQ-3+ffWsH9B-ywrDkMxnePWat1=P7WoqgJWA@mail.gmail.com>
+References: <1363355140-28216-1-git-send-email-andreas@gaisler.com>
+	<1363355140-28216-4-git-send-email-andreas@gaisler.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130410184919.GJ10155-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1363355140-28216-4-git-send-email-andreas@gaisler.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Larsson <andreas@gaisler.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <anton.vorontsov@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
-On Wed, Apr 10, 2013 at 1:49 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> * Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [130410 10:44]:
->> Details in the patch below (Tony, I have added you as collaborator for
->> helping in getting this working-clk_add_alias was'nt needed in the
->> internal patch discussion we had - I have taken a bit of freedom in
->> adding your contributions to the patch below)
->
-> OK thanks. Noticed few minor things, see below.
-Thanks on the checkup
->
->> Folks, this does seem to be the best compromise we can achieve at this
->> point in time. feedback on this approach is much appreciated - if folks
->> are ok, I can post this as an formal patch series.
->>
->> From 130a41821bf57081ca45ef654029175d173135e6 Mon Sep 17 00:00:00 2001
->> From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
->> Date: Tue, 9 Apr 2013 19:26:40 -0500
->> Subject: [RFC PATCH] clk: OMAP: introduce device tree binding to kernel clock
->>  data
->>
->> OMAP clock data is located in arch/arm/mach-omap2/cclockXYZ_data.c.
->> However, this presents an obstacle for using these clock nodes in
->> Device Tree definitions. There are many possible approaches to this
->> problem as discussed in the following thread:
->> http://marc.info/?t=136370325600009&r=1&w=2
->
-> It might be worth clarifying that this is especially for the board
-> specific clocks initially. The fixed clocks are currently found via
-> the clock aliases table.
-Ack.
-[...]
->
->> +Example #2: describing clock node for auxilary clock #3 on OMAP443x platform:
->> +Ref: arch/arm/mach-omap2/cclock44xx_data.c
->> +describes the auxclk3 clock to be as follows:
->> +     CLK(NULL,       "auxclk3_ck",   &auxclk3_ck,    CK_443X),
->> +Corresponding binding will be:
->> +     auxclk3: auxclk3 {
->> +             #clock-cells = <1>;
->> +             compatible = "ti,omap-clock";
->> +     };
->> +And it's usage will be:
->> +     clocks = <&auxclk3>;
->
-> The #clock-cells in the auxclk3 example should also be 0 instead of 1
-> AFAIK. We should only use #clock-cells = <1> when the same physical
-> clock provides multiple outputs. I believe the auxclocks are all separate,
-> but that needs to be verified.
-Oops.. my bad. you are correct here - auxclk is single output. all of them.
-will fix.
-[...]
->> +static int omap_clk_probe(struct platform_device *pdev)
->> +{
->> +     struct clk *clk;
->> +     int res;
->> +
->> +     const struct of_device_id *match;
->> +     struct device_node *np = pdev->dev.of_node;
->> +     char clk_name[32];
->> +
->> +     match = of_match_device(omap_clk_of_match, &pdev->dev);
->> +
->> +     /* Set up things so consumer can call clk_get() with name */
->> +     snprintf(clk_name, 32, "%s_ck", np->name);
->> +     clk = clk_get(NULL, clk_name);
->> +     if (IS_ERR(clk)) {
->> +             res = PTR_ERR(clk);
->> +             dev_err(&pdev->dev, "could not get clock %s (%d)\n",
->> +                     clk_name, res);
->> +             goto out;
->> +     }
->
-> It seems that at least for now we can assume the naming will stay
-> that way, then if we need other rules for finding clocks, we can
-> add omap_match_clock() function or something.
-ack.
->
->> +     /* This allows the driver to of_clk_get() */
->> +     res = of_clk_add_provider(np, of_clk_src_simple_get, clk);
->> +     if (res)
->> +             dev_err(&pdev->dev, "could not add provider for %s (%d)\n",
->> +                     clk_name, res);
->> +
->> +     clk_put(clk);
->> +out:
->> +     return res;
->> +}
->
-> We can avoid the concern of storing the struct clk * and do the
-> look up lazily on consumer driver probe by setting a dummy struct
-> clk * here. Then replace of_clk_src_simple_get() with a custom
-> omap_clk_src_get() that does the lookup and replaces the struct
-> clk * with the real one.
-Hmm.. this is interesting. will give it a try. Thanks on the suggestion.
+On Fri, Mar 15, 2013 at 2:45 PM, Andreas Larsson <andreas@gaisler.com> wrote:
 
-Regards,
-Nishanth Menon
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> The drivers sets up an irq domain and hands out unique virqs to irq
+> capable gpio lines regardless of which underlying irqs maps to which gpio
+> line.
+>
+> Signed-off-by: Andreas Larsson <andreas@gaisler.com>
+(...)
+> +- irqmap : An array with an index for each gpio line. An index is either a valid
+> +       index into the interrupts property array, or 0xffffffff that indicates
+> +       no irq for that line. Driver provides no interrupt support if not
+> +       present.
+
+This looks really complicated.
+
+Can't you just do this with a flag instead?
+
+irq-enabled-mask = <0xf0f0f0f0>;
+
+Like 0xf0f0f0f0 would indicate that lines 0-3, 8-11, 16-19 and 24-27
+have no IRQ, lines 4-7, 12-15, 20-23 and 28-31 does have IRQ.
+
+Then supply the resulting 16 IRQs in the interrupts property.
+
+But you should double-check this with some more DT-aware person
+I guess, there may be precedents. Did you get this idea from
+some other binding?
+
+> +struct grgpio_uirq {
+> +       u8 refcnt; /* Reference counter to manage requesting/freeing of uirq */
+> +       u8 uirq; /* Underlying virq of the gpio driver */
+
+This looks very complicated. But well, maybe there are no
+other ways...
+
+If you do this you will need some spinlock to protect the refcount,
+or make it an atomic type. Another way is to use <linux/kref.h>
+if you refactor around that.
+
+> +};
+> +
+> +struct grgpio_lirq {
+> +       s8 index; /* Index into struct grgpio_priv's uirqs, or -1 */
+> +       u8 virq; /* virq for the gpio line */
+
+Just call it irq. These are Linux irqs, they are not "virtual".
+
+> +       u32 imask; /* irq mask shadow register */
+> +
+> +       /* The grgpio core can have multiple irqs. Severeal gpio lines can
+> +        * potentially be mapped to the same irq. This driver sets up an
+> +        * irq domain and hands out separate virqs to each gpio line
+> +        */
+
+This is very common. Most GPIO controller have something like
+one IRQ line per 32 GPIO lines. It's a bit odd that it can have
+an arbitrary number of non-irq capable GPIOs though.
+
+Note:
+
+/*
+ * I really prefer this comment style, where ther is no text on the
+ * first line of the comment.
+ */
+
+> +       struct irq_domain *domain;
+> +
+> +       /* This array contains information on each underlying irq, each
+> +        * irq of the grgpio core itself.
+> +        */
+> +       struct grgpio_uirq uirqs[GRGPIO_MAX_NGPIO];
+
+So "u" is for "underlying"?
+
+> +
+> +       /* This array contains information for each gpio line on the
+> +        * virtual irqs obtains from this driver. An index value of -1 for
+> +        * a certain gpio line indicates that the line has no
+> +        * irq. Otherwise the index connects the virq to the underlying
+> +        * irq by pointing into the uirqs array.
+> +        */
+> +       struct grgpio_lirq lirqs[GRGPIO_MAX_NGPIO];
+
+Hm, very complex...
+
+> +static void grgpio_set_imask(struct grgpio_priv *priv, unsigned int offset,
+> +                            int val)
+> +{
+> +       struct bgpio_chip *bgc = &priv->bgc;
+> +       unsigned long mask = bgc->pin2mask(bgc, offset);
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&bgc->lock, flags);
+> +
+> +       if (val)
+> +               priv->imask |= mask;
+> +       else
+> +               priv->imask &= ~mask;
+> +       bgc->write_reg(&priv->regs->imask, priv->imask);
+
+I prefer:
+
+#define GRGPIO_IMASK 0xnn
+
+bgc->write_reg(priv->base + GRGPIO_IMASK, priv->imask);
+
+(...)
+
+> +       ipol = priv->bgc.read_reg(&priv->regs->ipol) & ~mask;
+> +       iedge = priv->bgc.read_reg(&priv->regs->iedge) & ~mask;
+> +
+> +       priv->bgc.write_reg(&priv->regs->ipol, ipol | pol);
+> +       priv->bgc.write_reg(&priv->regs->iedge, iedge | edge);
+
+Dito on all these.
+
+> +static irqreturn_t grgpio_irq_handler(int irq, void *dev)
+> +{
+> +       struct grgpio_priv *priv = dev;
+> +       int ngpio = priv->bgc.gc.ngpio;
+> +       int i;
+> +
+> +       for (i = 0; i < ngpio; i++) {
+> +               struct grgpio_lirq *lirq = &priv->lirqs[i];
+> +
+> +               if (priv->imask & BIT(i) && lirq->index >= 0 &&
+> +                   priv->uirqs[lirq->index].uirq == irq) {
+> +                       generic_handle_irq(lirq->virq);
+> +               }
+
+Should there not be an else clause here handling invalid
+interrupts or printing an error or something?
+
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+
+
+(...)
+> +
+> +/* This function will be called as a consequence of the call to
+> + * irq_create_mapping in grgpio_to_irq
+> + */
+> +int grgpio_irq_map(struct irq_domain *d, unsigned int virq,
+> +                  irq_hw_number_t hwirq)
+> +{
+> +       struct grgpio_priv *priv = d->host_data;
+> +       struct grgpio_lirq *lirq;
+> +       struct grgpio_uirq *uirq;
+> +       unsigned long flags;
+> +       int offset = hwirq;
+> +       int ret = 0;
+> +
+> +       if (!priv)
+> +               return -EINVAL;
+> +
+> +       lirq = &priv->lirqs[offset];
+> +       if (lirq->index < 0)
+> +               return -EINVAL;
+> +
+> +       dev_dbg(priv->dev, "Mapping virq %d for gpio line %d\n",
+> +               virq, offset);
+> +
+> +       spin_lock_irqsave(&priv->bgc.lock, flags);
+> +
+> +       /* Request underlying irq if not already requested */
+> +       lirq->virq = virq;
+> +       uirq = &priv->uirqs[lirq->index];
+> +       if (uirq->refcnt == 0) {
+> +               ret = request_irq(uirq->uirq, grgpio_irq_handler, 0,
+> +                                 dev_name(priv->dev), priv);
+
+
+No, please request all present uirqs in probe() before creating the
+irqdomain.
+
+And use devm_request_irq() for that.
+
+> +               if (ret) {
+> +                       dev_err(priv->dev,
+> +                               "Could not request underlying irq %d\n",
+> +                               uirq->uirq);
+> +
+> +                       spin_unlock_irqrestore(&priv->bgc.lock, flags);
+> +
+> +                       return ret;
+> +               }
+> +       }
+> +       uirq->refcnt++;
+> +
+> +       spin_unlock_irqrestore(&priv->bgc.lock, flags);
+> +
+> +       /* Setup virq  */
+> +       irq_set_chip_data(virq, priv);
+> +       irq_set_chip_and_handler(virq, &grgpio_irq_chip,
+> +                                handle_simple_irq);
+> +       irq_clear_status_flags(virq, IRQ_NOREQUEST);
+> +#ifdef CONFIG_ARM
+> +       set_irq_flags(virq, IRQF_VALID);
+> +#else
+> +       irq_set_noprobe(virq);
+> +#endif
+> +
+> +       return ret;
+> +}
+> +
+> +void grgpio_irq_unmap(struct irq_domain *d, unsigned int virq)
+> +{
+> +       struct grgpio_priv *priv = d->host_data;
+> +       int index;
+> +       struct grgpio_lirq *lirq;
+> +       struct grgpio_uirq *uirq;
+> +       unsigned long flags;
+> +       int ngpio = priv->bgc.gc.ngpio;
+> +       int i;
+> +
+> +#ifdef CONFIG_ARM
+> +       set_irq_flags(virq, 0);
+> +#endif
+> +       irq_set_chip_and_handler(virq, NULL, NULL);
+> +       irq_set_chip_data(virq, NULL);
+> +
+> +       spin_lock_irqsave(&priv->bgc.lock, flags);
+> +
+> +       /* Free underlying irq if last user unmapped */
+> +       index = -1;
+> +       for (i = 0; i < ngpio; i++) {
+> +               lirq = &priv->lirqs[i];
+> +               if (lirq->virq == virq) {
+> +                       grgpio_set_imask(priv, i, 0);
+> +                       lirq->virq = 0;
+> +                       index = lirq->index;
+> +                       break;
+> +               }
+> +       }
+> +       WARN_ON(index < 0);
+> +
+> +       if (index >= 0) {
+> +               uirq = &priv->uirqs[lirq->index];
+> +               uirq->refcnt--;
+> +               if (uirq->refcnt == 0)
+> +                       free_irq(uirq->uirq, priv);
+> +       }
+
+
+Don't do that either. devm_request_irq() will free the
+IRQ when the driver unloads. No need for messy code
+trying to cover it up.
+
+> +       spin_unlock_irqrestore(&priv->bgc.lock, flags);
+>  }
+>
+> +static struct irq_domain_ops grgpio_irq_domain_ops = {
+> +       .map    = grgpio_irq_map,
+> +       .unmap  = grgpio_irq_unmap,
+> +};
+> +
+> +/* ------------------------------------------------------------ */
+> +
+>  static int grgpio_probe(struct platform_device *ofdev)
+>  {
+>         struct device_node *np = ofdev->dev.of_node;
+> @@ -75,6 +329,9 @@ static int grgpio_probe(struct platform_device *ofdev)
+>         struct resource *res;
+>         int err;
+>         u32 prop;
+> +       s32 *irqmap;
+> +       int size;
+> +       int i;
+>
+>         priv = devm_kzalloc(&ofdev->dev, sizeof(*priv), GFP_KERNEL);
+>         if (!priv)
+> @@ -94,6 +351,7 @@ static int grgpio_probe(struct platform_device *ofdev)
+>         }
+>
+>         priv->regs = regs;
+> +       priv->imask = bgc->read_reg(&regs->imask);
+>         priv->dev = &ofdev->dev;
+>
+>         gc = &bgc->gc;
+> @@ -119,6 +377,49 @@ static int grgpio_probe(struct platform_device *ofdev)
+>                 gc->ngpio = prop;
+>         }
+>
+> +       /* The irqmap contains the index values indicating which underlying irq,
+> +        * if anyone, is connected to that line
+> +        */
+> +       irqmap = (s32 *)of_get_property(np, "irqmap", &size);
+> +       if (irqmap) {
+> +               if (size < gc->ngpio) {
+> +                       dev_err(&ofdev->dev,
+> +                               "irqmap shorter than ngpio (%d < %d)\n",
+> +                               size, gc->ngpio);
+> +                       return -EINVAL;
+> +               }
+
+
+So devm_request all uirqs somehere like here.
+
+> +               priv->domain = irq_domain_add_linear(np, gc->ngpio,
+> +                                                    &grgpio_irq_domain_ops,
+> +                                                    priv);
+
+Then move this below the loop, so you know you have all uirqs
+when you create the domain.
+
+> +               if (!priv->domain) {
+> +                       dev_err(&ofdev->dev, "Could not add irq domain\n");
+> +                       return -EINVAL;
+> +               }
+> +
+> +               for (i = 0; i < gc->ngpio; i++) {
+> +                       struct grgpio_lirq *lirq;
+> +                       int ret;
+> +
+> +                       lirq = &priv->lirqs[i];
+> +                       lirq->index = irqmap[i];
+> +
+> +                       if (lirq->index < 0)
+> +                               continue;
+> +
+> +                       ret = platform_get_irq(ofdev, lirq->index);
+> +                       if (ret <= 0) {
+> +                               /* Continue without irq functionality for that
+> +                                * gpio line
+> +                                */
+> +                               dev_err(priv->dev,
+> +                                       "Failed to get irq for offset %d\n", i);
+> +                               continue;
+> +                       }
+> +                       priv->uirqs[lirq->index].uirq = ret;
+> +               }
+> +       }
+> +
+>         platform_set_drvdata(ofdev, priv);
+>
+>         err = gpiochip_add(gc);
+> @@ -127,8 +428,8 @@ static int grgpio_probe(struct platform_device *ofdev)
+>                 return err;
+>         }
+>
+> -       dev_info(&ofdev->dev, "regs=0x%p, base=%d, ngpio=%d\n",
+> -                priv->regs, gc->base, gc->ngpio);
+> +       dev_info(&ofdev->dev, "regs=0x%p, base=%d, ngpio=%d, irqs=%s\n",
+> +                priv->regs, gc->base, gc->ngpio, priv->domain ? "on" : "off");
+>
+>         return 0;
+>  }
+(...)
+
+Yours,
+Linus Walleij
