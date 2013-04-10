@@ -1,152 +1,81 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: Query on pinctrl usage for DT nodes
-Date: Wed, 10 Apr 2013 13:42:29 +0530
-Message-ID: <CA+V-a8vwdCkyMqiynj5BodXbjwJ=e4qNb-29FhLweqbjc7DBQA@mail.gmail.com>
-References: <CA+V-a8uiPwsAD--OHFAE=i2ed+-wbXm4p2deZXr92+Zv6GDS1w@mail.gmail.com>
- <515C5C76.3080009@wwwdotorg.org>
- <CA+V-a8t3wtP77DdeUoQHKMjAuWmV+ude+1J3UjJmMTqobgStjA@mail.gmail.com>
- <5162FD4A.1030909@wwwdotorg.org>
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH] of: remove the unnecessary of_node_put for
+ of_parse_phandle_with_args()
+Date: Wed, 10 Apr 2013 19:03:27 +1000
+Message-ID: <20130410190327.a70d4c3798509d664aef2f13@canb.auug.org.au>
+References: <1365490569-32455-1-git-send-email-Yuantian.Tang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5162FD4A.1030909@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, linus.walleij@linaro.org, Stephen Warren <swarren@nvidia.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, LAK <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+ micalg="PGP-SHA256";
+ boundary="Signature=_Wed__10_Apr_2013_19_03_27_+1000_9m892t2Uqn+3AqyV"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1365490569-32455-1-git-send-email-Yuantian.Tang@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yuantian.Tang@freescale.com
+Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,Peter,
+--Signature=_Wed__10_Apr_2013_19_03_27_+1000_9m892t2Uqn+3AqyV
+Content-Type: text/plain; charset=US-ASCII
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 8, 2013 at 10:54 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 04/08/2013 07:12 AM, Prabhakar Lad wrote:
->> On Wed, Apr 3, 2013 at 10:14 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->>> On 04/03/2013 03:16 AM, Prabhakar Lad wrote:
->>>> Hi Linus/Stephen,
->>>>
->>>> I am working adding  DT nodes for DA850.
-> ...
->>>> But while booting I see the following boot log:-
->>>> ...
->>>> cpuidle: using governor menu
->>>> TCP: cubic registered
->>>> NET: Registered protocol family 17
->>>> pinctrl-single 1c14120.pinmux: pin 1c14130 already requested by
->>>> davinci_mdio.0; cannot claim for i2c_davinci.1
->>>> pinctrl-single 1c14120.pinmux: pin-4 (i2c_davinci.1) status -22
->>>> pinctrl-single 1c14120.pinmux: could not request pin 4 on device pinctrl-single
->>>> console [netcon0] enabled
->>>> ....
->>>>
->>>> This is because the mdio and i2c are using same pin 0x10,
->>>
->>> How can two devices use the same pin? I mean physically, in hardware?
->>>
->>> Is this because pinctrl-single uses the register address as the pin
->>> number, whereas you have registers which configure multiple pins at
->>
->> Yes you are correct, we have registers  which configure multiple pins at once.
->> For example for above Pin Multiplexing Control 4 Register (Pinmux4)
->> [1] page(250) : -
->>
->> PINMUX4_31_28 --> SP1_SCS[2]/UART1_TXD/SATA_CP_POD/GP1[0] Control
->> PINMUX4_27_24 --> SPI1_SCS[3]/UART1_RXD/SATA_LED/GP1[1] Control
->> PINMUX4_23_20 --> SPI1_SCS[4]/UART2_TXD/I2C1_SDA/GP1[2] Control
->> PINMUX4_19_16 --> SPI1_SCS[5]/UART2_RXD/I2C1_SCL/GP1[3] Control
->> PINMUX4_15_12 --> SPI1_SCS[6]/I2C0_SDA/TM64P3_OUT12/GP1[4] Control
->> PINMUX4_11_8 --> SPI1_SCS[7]/I2C0_SCL/TM64P2_OUT12/GP1[5] Control
->> PINMUX4_7_4 --> SPI0_SCS[0]/TM64P1_OUT12/GP1[6]/MDIO_D/TM64P1_IN12 Control
->> PINMUX4_3_0 --> SPI0_SCS[1]/TM64P0_OUT12/GP1[7]/MDIO_CLK/TM64P0_IN12 Control
->>
->>> once? If so, your hardware isn't something that can be represented by
->>> pinctrl-single.
->>
->> What is the alternative for such case ? any pointer would be helpful.
->>
->> [1] http://www.ti.com/general/docs/lit/getliterature.tsp?literatureNumber=spruh77a&fileType=pdf
+Hi,
+
+On Tue, 9 Apr 2013 14:56:09 +0800 <Yuantian.Tang@freescale.com> wrote:
 >
-> Tony previously replied:
->
-> Tony wrote:
->> Tony wrote:
->>> ??? wrote:
->>>> Prabhakar wrote:
->>>>> Is there any
->>>>> alternative way to handle if the two node's are using same pins any
->>>>> pointers could be very much helpful ?
->>>
->>> It could also that the mux register(s) follow the one-mux-per-bit
->>> mapping.
->>>
->>> In that case pinctrl-single,bits option as documented in the
->>> Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt.
->>
->> Oh it's already using pinctrl-single,bits option. Maybe there's a
->> bug, adding Peter to cc.
->
-> So I guess you need to debug the code to see why that option isn't
-> working for you.
->
-Following is the proposed fix/hack let me know if its OK.
+> From: Tang Yuantian <yuantian.tang@freescale.com>
+>=20
+> As the function itself says it is caller's responsibility to call the
+> of_node_put().  So, remove it on success to keep the reference count
+> correct.
+>=20
+> Signed-off-by: Tang Yuantian <Yuantian.Tang@freescale.com>
+> ---
+>  drivers/of/base.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>=20
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 321d3ef..e8b4c28 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1168,9 +1168,6 @@ static int __of_parse_phandle_with_args(const struc=
+t device_node *np,
+>  					out_args->args[i] =3D be32_to_cpup(list++);
+>  			}
+> =20
+> -			/* Found it! return success */
+> -			if (node)
+> -				of_node_put(node);
 
-Regards,
---Prabhakar
+Actually, if out_args is NULL, you should do the of_node_put(node), so
+probably the correct fix is to add an "else" before the above "if" (and
+move the comment).
 
-->>>>>>>>>>>>>>>>>>>
+--=20
+Cheers,
+Stephen Rothwell                    sfr@canb.auug.org.au
+http://www.canb.auug.org.au/~sfr/
 
-diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
-index ee72f1f..78fb42d 100644
---- a/drivers/pinctrl/core.h
-+++ b/drivers/pinctrl/core.h
-@@ -46,6 +46,7 @@ struct pinctrl_dev {
-        struct pinctrl *p;
-        struct pinctrl_state *hog_default;
-        struct pinctrl_state *hog_sleep;
-+       bool bits_per_mux;
- #ifdef CONFIG_DEBUG_FS
-        struct dentry *device_root;
- #endif
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-index 5c32e88..d2a91ec 100644
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -974,6 +974,7 @@ static int pcs_probe(struct platform_device *pdev)
-                ret = -EINVAL;
-                goto free;
-        }
-+       pcs->pctl->bits_per_mux = pcs->bits_per_mux;
+--Signature=_Wed__10_Apr_2013_19_03_27_+1000_9m892t2Uqn+3AqyV
+Content-Type: application/pgp-signature
 
-        dev_info(pcs->dev, "%i pins at pa %p size %u\n",
-                 pcs->desc.npins, pcs->base, pcs->size);
-diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
-index 1a00658..4989f01 100644
---- a/drivers/pinctrl/pinmux.c
-+++ b/drivers/pinctrl/pinmux.c
-@@ -110,7 +110,7 @@ static int pin_request(struct pinctrl_dev *pctldev,
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-                desc->gpio_owner = owner;
-        } else {
--               if (desc->mux_usecount && strcmp(desc->mux_owner, owner)) {
-+               if (!pctldev->bits_per_mux && desc->mux_usecount &&
-strcmp(desc->mux_owner, owner)) {
-                        dev_err(pctldev->dev,
-                                "pin %s already requested by %s;
-cannot claim for %s\n",
-                                desc->name, desc->mux_owner, owner);
-@@ -118,7 +118,7 @@ static int pin_request(struct pinctrl_dev *pctldev,
-                }
+iQIbBAEBCAAGBQJRZSrfAAoJEECxmPOUX5FEshsP9j/SviOKe9soG62CzsCGGtr3
+6sIf7zvVuQmdb/AIrhzxwGOdESRn8MWqPjIoAHZUpAnStrkPF5q3dBVUx+aMERJD
+185Dmz3OoU0lpZHwNu5fNYAqVbNc/8hoU+EJc9unh/6zVTcBoxjSg4aTHj/tXbJt
+Z9pfCggA/hiKHrreO8wHLxt4XEYpyp+t6DYhNVM7PBiz21Of7Ve21SWQ4etxjRip
+geleVMs4ruyZ/QmnWld32ac9EwuiD+XeVKtT0fjofG5islE3xwLLPTdpJKB56wNm
+D2UfWu4yaZkXzRXdVdagChKCfCbOBMDfhrnJHQ5hGKJvPEfDBek1UN5tu30CDqJZ
+p9BtjaUbr+k4dKmsBX1sJCmWBuKK+b5N6BwJVu4BJCo5na00xVP8NY/5qyW0oMVL
+7djeLLv0c6NXXWMWRjvBvuTyB63V5/f9vQlksThX2WlJs7h21V56eq4gzjQps3Ur
+TkHFEfB7xtWdPDRmdH1+pKqXwId2lmWFcMlhVKcAC1sY3VMRtc9wUl3t8yb0SDCF
+k3taNF+DycVXb3KAF5+8/PRvs92nk7EhKEXa0ocK+l98R74U9TKSPMMiP5vByQvH
+RIjid/6TmAOPxYHPEl1ZHqam1V69YThHl76SFC+jnbGsiPfTtmrLsVNvS3R6bKnf
+xmU/r+9YRMZZHGH4agw=
+=QBxe
+-----END PGP SIGNATURE-----
 
-                desc->mux_usecount++;
--               if (desc->mux_usecount > 1)
-+               if (desc->mux_usecount > 1 && !pctldev->bits_per_mux)
-                        return 0;
-
-                desc->mux_owner = owner;
+--Signature=_Wed__10_Apr_2013_19_03_27_+1000_9m892t2Uqn+3AqyV--
