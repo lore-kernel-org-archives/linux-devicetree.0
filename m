@@ -1,68 +1,75 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v4 04/14] mfd: Add Samsung PWM/timer master driver
-Date: Thu, 11 Apr 2013 00:35:47 +0200
-Message-ID: <201304110035.47776.arnd@arndb.de>
-References: <1365093431-30621-1-git-send-email-t.figa@samsung.com>
- <2359597.ofbj7Kvioz@flatron> <5357756.gKmBOZlWcd@flatron>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3 07/12] PCI: tegra: Move PCIe driver to drivers/pci/host
+Date: Wed, 10 Apr 2013 16:46:54 -0600
+Message-ID: <5165EBDE.3080202@wwwdotorg.org>
+References: <1365000318-28256-1-git-send-email-thierry.reding@avionic-design.de> <1365000318-28256-8-git-send-email-thierry.reding@avionic-design.de> <515DF096.2000703@wwwdotorg.org> <515DF0D9.40007@wwwdotorg.org> <20130405060351.GA15848@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5357756.gKmBOZlWcd@flatron>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: buserror-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, augulis.darius-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org, sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, kwangwoo.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mcuelenaere-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ghcstop-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, jekhor-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130405060351.GA15848@avionic-0098.mockup.avionic-design.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Bjorn Helgaas <bhelgaas@google.com>, Russell King <linux@arm.linux.org.uk>, Andrew Murray <andrew.murray@arm.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 08 April 2013, Tomasz Figa wrote:
-> On Saturday 06 of April 2013 00:24:18 Tomasz Figa wrote:
-> > On Friday 05 of April 2013 21:54:21 Arnd Bergmann wrote:
-> > > On Friday 05 April 2013, Tomasz Figa wrote:
-> > 
-> > I'm not sure what you mean by a register-level interface. Something like
-> > samsung_pwm_update_reg(reg, mask, val), which modifies bitfields
-> > according to the mask and value with appropriate synchronization? If
-> > yes, this solves only the problem of access to shared registers.
-> > 
-> > The other problems that remain:
-> > 
-> > - negotiation of PWM channels to use for clock source and clock events,
-> >   because each board can use different channels for PWM outputs,
-> > 
-> > - code duplication caused by both of the drivers doing mostly the same
-> >   things and or having to parse the same data from device tree,
-> > 
-> > - both non-DT and DT platforms must be supported,
-> > 
-> > - how to keep the ability to load PWM driver as a module (or not load it
-> > at all when PWM is not used on particular board), while retaining
-> > everything that is needed for the clocksource driver in kernel,
-> > 
-> > - some platforms can't use PWM timers as system clocksources, while on
-> >   others this is the only timekeeping hardware available.
-> > 
+On 04/05/2013 12:03 AM, Thierry Reding wrote:
+> On Thu, Apr 04, 2013 at 03:30:01PM -0600, Stephen Warren wrote:
+>> On 04/04/2013 03:28 PM, Stephen Warren wrote:
+>>> On 04/03/2013 08:45 AM, Thierry Reding wrote:
+>>>> Move the PCIe driver from arch/arm/mach-tegra into the
+>>>> drivers/pci/host directory. The motivation is to collect
+>>>> various host controller drivers in the same location in order
+>>>> to facilitate refactoring.
+>>>> 
+>>>> The Tegra PCIe driver has been largely rewritten, both in
+>>>> order to turn it into a proper platform driver and to add MSI
+>>>> (based on code by Krishna Kishore <kthota@nvidia.com>) as
+>>>> well as device tree support.
+>>> 
+>>>> arch/arm/boot/dts/tegra20.dtsi                     |   53 +
+>>> 
+>>> I guess this has to touch both the driver and the dtsi file so
+>>> that bisectabilty isn't broken? I guess that's OK.
+>> 
+>> Actually, can't you move all the *.dts/*.dtsi changes to the
+>> start of the series, then put the driver conversion patch last,
+>> to avoid any bisectability issues and still keep code and DT
+>> changes separate?
 > 
-> Hmm. Does anybody have an idea of a better way of implementing this PWM 
-> timer support, which solves the above problems?
-> 
-> This series is a dependency for moving Universal C210 board to DT-based 
-> description and it's already almost out of time to get this included for 
-> 3.10...
-> 
+> I'm not sure if that'll work. There's this oddity in the Harmony
+> DTS where the regulator@3 is disabled with a comment that this is a
+> hack required until board-harmony-pcie.c is removed. If we change
+> the DTS before the driver rewrite I think that would break
+> requesting the GPIO in the board file.
 
-Sorry for not replying earlier. My idea for the register level interface
-was to create a platform_device for each PWM, e.g. using the mfd_cell
-infrastructure. You can then pass a "struct regmap" as the platform
-data for each child of the timer node, and all the DT handling code
-can stay in the parent driver.
+Hmm. Well I guess that PCIe doesn't really work right now anyway. I
+mean the enumeration works, but actual instantiation of the Linux
+devices doesn't due to the resource conflict issues, which your new
+driver works around.
 
-	Arnd
+As such, it might be simplest to just submit all the following in a
+single kernel version:
+
+* Delete old Tegra PCI support.
+* Add new driver (add not move); this would just touch drivers/pci/host.
+* Add all the required new DT content.
+
+That would be basically what you've already posted, except that the DT
+changes in this patch can be moved later, and all the arch/arm/*.c
+patches can happen earlier if you want.
+
+Does that sound reasonable?
+
+I think you can do:
+
+* All the DT changes first, except the one-line change to enable the
+regulator. DT additions for the new PCIe controller would be
+status=disabled.
+
+* Add/move the new PCI.
+
+We'd probably still want all this to go through a single tree so (i.e.
+the Tegra tree, and not submit the drivers/pci/host addition through
+the PCI tree) to avoid ever having 2 drivers at once for the Tegra PCI
+controller.
