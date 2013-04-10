@@ -1,53 +1,68 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH 1/2] mfd: wm8994: Add device ID data to WM8994 OF device IDs
-Date: Wed, 10 Apr 2013 15:39:22 +0100
-Message-ID: <1365604763-13122-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH 07/14] media: soc-camera: support deferred probing of
+ clients
+Date: Wed, 10 Apr 2013 16:43:21 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1304101637300.13557@axis700.grange>
+References: <1348754853-28619-1-git-send-email-g.liakhovetski@gmx.de>
+ <1348754853-28619-8-git-send-email-g.liakhovetski@gmx.de>
+ <CAGsJ_4yUY6PE0NWZ9yaOLFmRb3O-HL55=w7Y6muwL0YbkJtP0Q@mail.gmail.com>
+ <Pine.LNX.4.64.1304101358490.13557@axis700.grange>
+ <CAGsJ_4xn_R7D7Uh0dJB7WuDQG3K_mZkMwYNtMDuHMhX+4oTk=Q@mail.gmail.com>
+ <Pine.LNX.4.64.1304101601160.13557@axis700.grange>
+ <CAGsJ_4z-FnbHtmbi16YD5LmYfpL+=ngke8EgkPHWy_PJ8QBPNg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sangbeom Kim <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <CAGsJ_4z-FnbHtmbi16YD5LmYfpL+=ngke8EgkPHWy_PJ8QBPNg@mail.gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Barry Song <21cnbao@gmail.com>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-media@vger.kernel.org, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "renwei.wu" <renwei.wu@csr.com>, DL-SHA-WorkGroupLinux <workgroup.linux@csr.com>, xiaomeng.hou@csr.com, zilong.wu@csr.com
 List-Id: devicetree@vger.kernel.org
 
-We can actually read this back from the device but we use this when
-registered using standard I2C board data registration so make sure
-it's there for OF too.
+On Wed, 10 Apr 2013, Barry Song wrote:
 
-Signed-off-by: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> 2013/4/10 Guennadi Liakhovetski <g.liakhovetski@gmx.de>:
+> > On Wed, 10 Apr 2013, Barry Song wrote:
+
+[snip]
+
+> >> > This cannot work, because some I2C devices, e.g. sensors, need a clock
+> >> > signal from the camera interface to probe. Before the bridge driver has
+> >> > completed its probing and registered a suitable clock source with the
+> >> > v4l2-clk framework, sensors cannot be probed. And no, we don't want to
+> >> > fake successful probing without actually being able to talk to the
+> >> > hardware.
+> >>
+> >> i'd say same dependency also exists on ASoC.  a "fake" successful
+> >> probing doesn't mean it should really begin to work if there is no
+> >> external trigger source.  ASoC has successfully done that by a machine
+> >> driver to connect all DAI.
+> >> a way is we put all things ready in their places, finally we connect
+> >> them together and launch the whole hardware flow.
+> >>
+> >> anyway, if you have maken the things work by some simple hacking and
+> >> that means minimial changes to current soc-camera, i think we can
+> >> follow.
+> >
+> > If you want to volunteer to step up as a new soc-camera maintainer to
+> > replace my simple hacking with your comprehencive and advanced designs -
+> > feel free, I'll ack straight away.
+> 
+> i am not sure whether you agree the new way or not. if you also agree
+> this is a better way,
+
+In fact I don't.
+
+> i think we can do something to move ahead. i
+> need sync and get input from you expert :-)
+
+I suggest you read all the mailing list discussions of these topics over 
+last months / years, conference discussion protocols instead of restarting 
+a beaten to death topic at the v8 time-frame.
+
+Thanks
+Guennadi
 ---
-
-Untested at present.
-
- drivers/mfd/wm8994-core.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
-index cdea84e..3f8d591 100644
---- a/drivers/mfd/wm8994-core.c
-+++ b/drivers/mfd/wm8994-core.c
-@@ -673,9 +673,9 @@ static void wm8994_device_exit(struct wm8994 *wm8994)
- }
- 
- static const struct of_device_id wm8994_of_match[] = {
--	{ .compatible = "wlf,wm1811", },
--	{ .compatible = "wlf,wm8994", },
--	{ .compatible = "wlf,wm8958", },
-+	{ .compatible = "wlf,wm1811", .data = (void *)WM1811 },
-+	{ .compatible = "wlf,wm8994", .data = (void *)WM8994 },
-+	{ .compatible = "wlf,wm8958", .data = (void *)WM8958 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, wm8994_of_match);
--- 
-1.7.10.4
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
