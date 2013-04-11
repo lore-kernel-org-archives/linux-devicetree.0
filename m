@@ -1,97 +1,143 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v5 1/3] of/pci: Unify pci_process_bridge_OF_ranges from
- Microblaze and PowerPC
-Date: Thu, 11 Apr 2013 13:12:42 +0100
-Message-ID: <20130411121242.GB28981@arm.com>
-References: <1365578969-30966-1-git-send-email-Andrew.Murray@arm.com>
- <1365578969-30966-2-git-send-email-Andrew.Murray@arm.com>
- <20130410233330.4e9479b0@skate>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v6 3/8] reset: Add driver for gpio-controlled reset pins
+Date: Thu, 11 Apr 2013 14:37:16 +0200
+Message-ID: <1365683836.4388.54.camel@pizza.hi.pengutronix.de>
+References: <1364488523-20310-1-git-send-email-p.zabel@pengutronix.de>
+	 <1364488523-20310-4-git-send-email-p.zabel@pengutronix.de>
+	 <CAOesGMgo61M=oxG6_6EEGu7kL3Wa+HsdEomCxUnvj-Rbdhujgg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20130410233330.4e9479b0@skate>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: "jg1.han@samsung.com" <jg1.han@samsung.com>, "monstr@monstr.eu" <monstr@monstr.eu>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "arnd@arndb.de" <arnd@arndb.de>, "siva.kallam@samsung.com" <siva.kallam@samsung.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>, Liviu Dudau <Liviu.Dudau@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "paulus@samba.org" <paulus@samba.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "bhelgaas@google.com" <bhelgaa>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMgo61M=oxG6_6EEGu7kL3Wa+HsdEomCxUnvj-Rbdhujgg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, kernel@pengutronix.de, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 10, 2013 at 10:33:30PM +0100, Thomas Petazzoni wrote:
-> Dear Andrew Murray,
+Hi Olof,
+
+Am Donnerstag, den 11.04.2013, 03:35 -0700 schrieb Olof Johansson:
+> Hi,
 > 
-> On Wed, 10 Apr 2013 08:29:26 +0100, Andrew Murray wrote:
-> 
-> > diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-> > index bb115de..6852481 100644
-> > --- a/include/linux/of_pci.h
-> > +++ b/include/linux/of_pci.h
-> > @@ -11,4 +11,7 @@ struct device_node;
-> >  struct device_node *of_pci_find_child_device(struct device_node *parent,
-> >  					     unsigned int devfn);
-> >  
-> > +void pci_process_bridge_OF_ranges(struct pci_controller *hose,
-> > +			struct device_node *dev, int primary);
+> On Thu, Mar 28, 2013 at 9:35 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> > This driver implements a reset controller device that toggles gpios
+> > connected to reset pins of peripheral ICs. The delay between assertion
+> > and de-assertion of the reset signal can be configured.
+> >
+> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > Reviewed-by: Stephen Warren <swarren@nvidia.com>
+> > Reviewed-by: Marek Vasut <marex@denx.de>
+> > Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
+> > ---
+> >  .../devicetree/bindings/reset/gpio-reset.txt       |  37 ++++
+> >  drivers/reset/Kconfig                              |  13 ++
+> >  drivers/reset/Makefile                             |   1 +
+> >  drivers/reset/gpio-reset.c                         | 208 +++++++++++++++++++++
+> >  4 files changed, 259 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/reset/gpio-reset.txt
+> >  create mode 100644 drivers/reset/gpio-reset.c
+> >
+> > diff --git a/Documentation/devicetree/bindings/reset/gpio-reset.txt b/Documentation/devicetree/bindings/reset/gpio-reset.txt
+> > new file mode 100644
+> > index 0000000..1f203eb
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/reset/gpio-reset.txt
+> > @@ -0,0 +1,37 @@
+> > +GPIO reset controller
+> > +=====================
 > > +
-> >  #endif
+> > +A GPIO reset controller controls a number of GPIOs that are connected
+> > +to reset pins of peripheral ICs.
+> > +
+> > +Please also refer to reset.txt in this directory for common reset
+> > +controller binding usage.
+> > +
+> > +Required properties:
+> > +- compatible: Should be "gpio-reset"
+> > +- reset-gpios: List of gpios used as reset lines. The gpio specifier for this
+> > +               property depends on the gpio controller that provides the gpio.
+> > +- #reset-cells: 1, see below
+> > +
+> > +Optional properties:
+> > +- reset-delays: List of delays in microseconds. The corresponding gpio reset
+> > +                line should be asserted for this duration to reset.
+> > +- initially-in-reset: List of integers. Zero if the initial state should be
+> > +                      a deasserted reset line, nonzero if the line should be
+> > +                      kept in reset.
+> > +
+> > +example:
+> > +
+> > +gpio_reset: gpio-reset {
+> > +       compatible = "gpio-reset";
+> > +       reset-gpios = <&gpio5 0 1>; /* active-low */
+> > +       reset-delays = <10000>; /* 10 ms */
+> > +       initially-in-reset: <1>;
+> > +       #reset-cells = <1>;
+> > +};
 > 
-> In this file, 'struct pci_controller' is not defined anywhere, and not
-> in any header file that is included. So I get a warning at compile time
-> when <linux/of_pci.h> is included, but nothing has defined 'struct
-> pci_controller' beforehand. So I think this file should carry a change
-> like:
+> I find this binding that uses an array of GPIOs and their state to be
+> a bit awkward, especially if you compare it to something like the
+> simple gpio regulators that have a simpler one-to-one mapping.
 > 
-> +struct pci_controller;
-> 
-> In my version of the patch I added it, see:
-> 
-> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-> index bb115de..e56182f 100644
-> --- a/include/linux/of_pci.h
-> +++ b/include/linux/of_pci.h
-> @@ -4,6 +4,7 @@
->  #include <linux/pci.h>
->  
->  struct pci_dev;
-> +struct pci_controller;
->  struct of_irq;
->  int of_irq_map_pci(const struct pci_dev *pdev, struct of_irq *out_irq);
->  
-> @@ -11,4 +12,7 @@ struct device_node;
->  struct device_node *of_pci_find_child_device(struct device_node *parent,
->  					     unsigned int devfn);
->  
-> +void pci_process_bridge_OF_ranges(struct pci_controller *hose,
-> +			struct device_node *dev, int primary);
-> +
->  #endif
-> 
-> But otherwise, for PATCH 1/3 and 2/3,
+> Also, if you did one node per gpio you'd have a boolean property for
+> "initially-in-reset" which seems much more logical (i.e. the property
+> is either there, or it's not).
 
-Thanks - I somehow missed this.
+Thank you for your comments. I agree, to a degree.
+The initially-in-reset array is a bit weird, and in principle, there is
+no reason to group different reset gpios into the same platform device.
+The main difference to the gpio regulator is that that one registers
+multiple gpios per regulator, but only one regulator per platform
+device. Do you propose to make the reset-gpio driver strictly control
+only one reset gpio per platform device? In that case, the
+fixed-regulator probably is a better example. How about this:
 
-I've included this change in my next respin - but I've put
-'struct pci_controller' immediately before 'pci_process_bridge_OF_ranges'
-rather than above of_irq_map_pci to be consistent with the rest of the file.
+    resets {
+        compatible = "simple-bus";
 
-Andrew Murray
+        reset1: gpio-reset {
+            compatible = "gpio-reset";
+            reset-gpio = <&gpio5 0 1>; /* active-low */
+            reset-delay = <10000>; /* 10 ms */
+            initially-in-reset;
+            #reset-cells = <0>;
+        };
 
+        reset2: gpio-reset {
+            compatible = "gpio-reset";
+            reset-gpio = <&gpio3 5 0>;
+            /* no reset delay, consumer has to (de)assert manually */
+            #reset-cells = <0>;
+        };
+    };
 
+> A couple of more comments:
 > 
-> Tested-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> > +config RESET_GPIO
+> > +       tristate "GPIO reset controller support"
+> > +       depends on GENERIC_GPIO
+> > +       help
+> > +         This driver provides support for reset lines that are controlled
+> > +         directly by GPIOs.
+> > +         The delay between assertion and de-assertion of the reset signal
+> > +         can be configured.
 > 
-> Thomas
-> -- 
-> Thomas Petazzoni, Free Electrons
-> Kernel, drivers, real-time and embedded Linux
-> development, consulting, training and support.
-> http://free-electrons.com
-> 
+> Can be configured how? And why would I care about that when I'm trying
+> to decide if I need to include this driver in my kernel configuration
+> or not? Seems like misplaced information.
+
+Configured via device tree. I'll just drop the second sentence. The idea
+was to point out once more that it's the reset driver that carries the
+timing information, but this really isn't the best place.
+
+> Since this is a platform driver and not just an OF driver, shouldn't
+> you provide a way to specify the same configuration data through a
+> platform_data structure as well?
+
+Will there be new non-OF platforms for which this is even useful? I can
+add platform data support, if you like.
+
+regards
+Philipp
+
