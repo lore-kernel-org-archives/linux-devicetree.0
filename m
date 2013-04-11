@@ -1,86 +1,131 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 0/8] ARM: at91: atmel_lcdc: add DT support
-Date: Thu, 11 Apr 2013 16:57:41 +0200
-Message-ID: <20130411145741.GB25242@game.jcrosoft.org>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: [PATCH 3/8] video: atmel_lcdfb: pass the pdata as params
+Date: Thu, 11 Apr 2013 17:00:17 +0200
+Message-ID: <1365692422-9565-3-git-send-email-plagnioj@jcrosoft.com>
+References: <20130411145741.GB25242@game.jcrosoft.org>
+ <1365692422-9565-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: inux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1365692422-9565-1-git-send-email-plagnioj@jcrosoft.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-fbdev@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-HI,
+so we can use have list gpio as example (probe via DT)
 
-	The following patch series add the DT support of the Atmel LCDC
-	controler and update the 9263 and 9g45 Atmel Reference board
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: linux-fbdev@vger.kernel.org
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+---
+ arch/arm/mach-at91/board-sam9261ek.c   |    4 ++--
+ arch/arm/mach-at91/board-sam9263ek.c   |    2 +-
+ arch/arm/mach-at91/board-sam9rlek.c    |    2 +-
+ arch/avr32/boards/atngw100/evklcd10x.c |    2 +-
+ drivers/video/atmel_lcdfb.c            |    2 +-
+ include/video/atmel_lcdc.h             |    4 +++-
+ 6 files changed, 9 insertions(+), 7 deletions(-)
 
-	At the same time some cleanup is done on the drivers implementation as
-	we was using the internal data struct as platform data
-
-The following changes since commit d920129d817acc5f7ebfadeb7ecbce70ab161f6c:
-
-  ARM: at91/avr32/atmel_lcdfb: add platform device-id table (2013-04-11 21:00:56 +0800)
-
-are available in the git repository at:
-
-  git://github.com/at91linux/linux-at91.git j/for-3.10_atmel_lcd_dt
-
-for you to fetch changes up to 6354e161060c2d90f0935d14d037e2f126b8c6e5:
-
-  ARM: at91: sam9263ek: add dt lcd support (2013-04-11 21:18:21 +0800)
-
-----------------------------------------------------------------
-Jean-Christophe PLAGNIOL-VILLARD (8):
-      video: atmel_lcdfb: fix platform data struct
-      video: atmel_lcdfb: introduce atmel_lcdfb_power_control
-      video: atmel_lcdfb: pass the pdata as params
-      video: atmel_lcdfb: add device tree suport
-      ARM: at91: sam9g45: add lcd support
-      ARM: at91: sam9263: add fb dt support
-      ARM: at91: at9sam9m10g45ek: add dt lcd support
-      ARM: at91: sam9263ek: add dt lcd support
-
- Documentation/devicetree/bindings/video/atmel,lcdc.txt |   75 +++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/at91sam9263.dtsi                     |   39 ++++++++++++++++++++
- arch/arm/boot/dts/at91sam9263ek.dts                    |   30 +++++++++++++++
- arch/arm/boot/dts/at91sam9g45.dtsi                     |   47 +++++++++++++++++++++++
- arch/arm/boot/dts/at91sam9m10g45ek.dts                 |   29 +++++++++++++++
- arch/arm/mach-at91/at91sam9261_devices.c               |    6 +--
- arch/arm/mach-at91/at91sam9263_devices.c               |    6 +--
- arch/arm/mach-at91/at91sam9g45_devices.c               |    6 +--
- arch/arm/mach-at91/at91sam9rl_devices.c                |    6 +--
- arch/arm/mach-at91/board-sam9261ek.c                   |   10 ++---
- arch/arm/mach-at91/board-sam9263ek.c                   |    6 +--
- arch/arm/mach-at91/board-sam9m10g45ek.c                |    4 +-
- arch/arm/mach-at91/board-sam9rlek.c                    |    6 +--
- arch/arm/mach-at91/board.h                             |    4 +-
- arch/avr32/boards/atngw100/evklcd10x.c                 |    8 ++--
- arch/avr32/boards/atngw100/mrmt.c                      |    4 +-
- arch/avr32/boards/atstk1000/atstk1000.h                |    2 +-
- arch/avr32/boards/atstk1000/setup.c                    |    2 +-
- arch/avr32/boards/favr-32/setup.c                      |    2 +-
- arch/avr32/boards/hammerhead/setup.c                   |    2 +-
- arch/avr32/boards/merisc/display.c                     |    2 +-
- arch/avr32/boards/mimc200/setup.c                      |    4 +-
- arch/avr32/mach-at32ap/at32ap700x.c                    |    8 ++--
- arch/avr32/mach-at32ap/include/mach/board.h            |    4 +-
- drivers/video/Kconfig                                  |    2 +
- drivers/video/atmel_lcdfb.c                            |  342 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---------------------------------
- include/video/atmel_lcdc.h                             |   26 ++-----------
- 27 files changed, 547 insertions(+), 135 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/video/atmel,lcdc.txt
-
-Best Regards,
-J.
+diff --git a/arch/arm/mach-at91/board-sam9261ek.c b/arch/arm/mach-at91/board-sam9261ek.c
+index c819e29..9a6618a 100644
+--- a/arch/arm/mach-at91/board-sam9261ek.c
++++ b/arch/arm/mach-at91/board-sam9261ek.c
+@@ -393,7 +393,7 @@ static struct fb_monspecs at91fb_default_stn_monspecs = {
+ 					| ATMEL_LCDC_IFWIDTH_4 \
+ 					| ATMEL_LCDC_SCANMOD_SINGLE)
+ 
+-static void at91_lcdc_stn_power_control(int on)
++static void at91_lcdc_stn_power_control(struct atmel_lcdfb_pdata *pdata, int on)
+ {
+ 	/* backlight */
+ 	if (on) {	/* power up */
+@@ -452,7 +452,7 @@ static struct fb_monspecs at91fb_default_tft_monspecs = {
+ 					| ATMEL_LCDC_DISTYPE_TFT    \
+ 					| ATMEL_LCDC_CLKMOD_ALWAYSACTIVE)
+ 
+-static void at91_lcdc_tft_power_control(int on)
++static void at91_lcdc_tft_power_control(struct atmel_lcdfb_pdata *pdata, int on)
+ {
+ 	if (on)
+ 		at91_set_gpio_value(AT91_PIN_PA12, 0);	/* power up */
+diff --git a/arch/arm/mach-at91/board-sam9263ek.c b/arch/arm/mach-at91/board-sam9263ek.c
+index 0fdae3f..8b4942c 100644
+--- a/arch/arm/mach-at91/board-sam9263ek.c
++++ b/arch/arm/mach-at91/board-sam9263ek.c
+@@ -275,7 +275,7 @@ static struct fb_monspecs at91fb_default_monspecs = {
+ 					| ATMEL_LCDC_DISTYPE_TFT \
+ 					| ATMEL_LCDC_CLKMOD_ALWAYSACTIVE)
+ 
+-static void at91_lcdc_power_control(int on)
++static void at91_lcdc_power_control(struct atmel_lcdfb_pdata *pdata, int on)
+ {
+ 	at91_set_gpio_value(AT91_PIN_PA30, on);
+ }
+diff --git a/arch/arm/mach-at91/board-sam9rlek.c b/arch/arm/mach-at91/board-sam9rlek.c
+index b77d7a9..604eecf 100644
+--- a/arch/arm/mach-at91/board-sam9rlek.c
++++ b/arch/arm/mach-at91/board-sam9rlek.c
+@@ -170,7 +170,7 @@ static struct fb_monspecs at91fb_default_monspecs = {
+ 					| ATMEL_LCDC_DISTYPE_TFT \
+ 					| ATMEL_LCDC_CLKMOD_ALWAYSACTIVE)
+ 
+-static void at91_lcdc_power_control(int on)
++static void at91_lcdc_power_control(struct atmel_lcdfb_pdata *pdata, int on)
+ {
+ 	if (on)
+ 		at91_set_gpio_value(AT91_PIN_PC1, 0);	/* power up */
+diff --git a/arch/avr32/boards/atngw100/evklcd10x.c b/arch/avr32/boards/atngw100/evklcd10x.c
+index dc42804..64919b0 100644
+--- a/arch/avr32/boards/atngw100/evklcd10x.c
++++ b/arch/avr32/boards/atngw100/evklcd10x.c
+@@ -145,7 +145,7 @@ static struct atmel_lcdfb_pdata __initdata atevklcd10x_lcdc_data = {
+ };
+ #endif
+ 
+-static void atevklcd10x_lcdc_power_control(int on)
++static void atevklcd10x_lcdc_power_control(struct atmel_lcdfb_pdata *pdata, int on)
+ {
+ 	gpio_set_value(GPIO_PIN_PB(15), on);
+ }
+diff --git a/drivers/video/atmel_lcdfb.c b/drivers/video/atmel_lcdfb.c
+index 9574c47..f67e226 100644
+--- a/drivers/video/atmel_lcdfb.c
++++ b/drivers/video/atmel_lcdfb.c
+@@ -288,7 +288,7 @@ static inline void atmel_lcdfb_power_control(struct atmel_lcdfb_info *sinfo, int
+ 	struct atmel_lcdfb_pdata *pdata = &sinfo->pdata;
+ 
+ 	if (pdata->atmel_lcdfb_power_control)
+-		pdata->atmel_lcdfb_power_control(on);
++		pdata->atmel_lcdfb_power_control(pdata, on);
+ }
+ 
+ static struct fb_fix_screeninfo atmel_lcdfb_fix __initdata = {
+diff --git a/include/video/atmel_lcdc.h b/include/video/atmel_lcdc.h
+index 2eb601c..f624c51 100644
+--- a/include/video/atmel_lcdc.h
++++ b/include/video/atmel_lcdc.h
+@@ -40,8 +40,10 @@ struct atmel_lcdfb_pdata {
+ 	u8			lcd_wiring_mode;
+ 	unsigned int		default_lcdcon2;
+ 	unsigned int		default_dmacon;
+-	void (*atmel_lcdfb_power_control)(int on);
++	void (*atmel_lcdfb_power_control)(struct atmel_lcdfb_pdata *pdata, int on);
+ 	struct fb_monspecs	*default_monspecs;
++
++	struct list_head	pwr_gpios;
+ };
+ 
+ #define ATMEL_LCDC_DMABADDR1	0x00
+-- 
+1.7.10.4
