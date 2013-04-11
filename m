@@ -1,30 +1,76 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] net: mvmdio: add clocks property to binding
- documentation
-Date: Wed, 10 Apr 2013 23:27:30 -0400 (EDT)
-Message-ID: <20130410.232730.1645231962260178304.davem@davemloft.net>
-References: <1365615391-26244-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 05/10] fdtdump: make usage a bit more friendly
+Date: Thu, 11 Apr 2013 14:00:14 +1000
+Message-ID: <20130411040014.GA8165@truffula.fritz.box>
+References: <1365618555-5893-1-git-send-email-vapier@gentoo.org>
+ <1365618555-5893-6-git-send-email-vapier@gentoo.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1365615391-26244-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, florian@openwrt.org, thomas.petazzoni@free-electrons.com, gregkh@linuxfoundation.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============6196892250511777070=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1365618555-5893-6-git-send-email-vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Date: Wed, 10 Apr 2013 19:36:29 +0200
 
-> Patch "net: mvmdio: get and enable optional clock" was missing an
-> update of the corresponding device tree binding documentation. This
-> patch adds the clocks property to mvmdio binding documentation.
-> 
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+--===============6196892250511777070==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="obAtV4On+KRLREo5"
+Content-Disposition: inline
 
-Please reference commits by SHA1 ID as well as the commit log
-message header line (the latter of which should be inside
-of parenthesis and double quotes).
 
-Thanks.
+--obAtV4On+KRLREo5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Apr 10, 2013 at 02:29:10PM -0400, Mike Frysinger wrote:
+> This starts a new usage framework and then cuts fdtdump over to it.
+> Now we can do `fdtdump -h` and get something useful back.
+
+Hrm.  The problem is that the new scheme relies on getopt_long(),
+which is a GNU extension.  I'd like to have dtc and associated tools
+compilable on FreeBSD as well as Linux.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--obAtV4On+KRLREo5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlFmNU4ACgkQaILKxv3ab8a4GgCfYWZD/PKu/RoaccpSCffRWTYf
+kioAmgMS+QYw8LlbFJvNuPt3hu4mbU9M
+=CaPg
+-----END PGP SIGNATURE-----
+
+--obAtV4On+KRLREo5--
+
+--===============6196892250511777070==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============6196892250511777070==--
