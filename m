@@ -1,53 +1,51 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 2/2] mfd: wm8994: Add some OF properties
-Date: Thu, 11 Apr 2013 18:11:59 +0100
-Message-ID: <20130411171159.GQ9243@opensource.wolfsonmicro.com>
-References: <1365698223-4684-1-git-send-email-broonie@opensource.wolfsonmicro.com>
- <1365698223-4684-2-git-send-email-broonie@opensource.wolfsonmicro.com>
- <5166EDAD.4060808@samsung.com>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH 1/2] mfd: wm8994: Add device ID data to WM8994 OF device IDs
+Date: Thu, 11 Apr 2013 18:11:50 +0100
+Message-ID: <1365700312-7452-1-git-send-email-broonie@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="NjAZgGx+5kyWce/c"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5166EDAD.4060808@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Kukjin Kim <kgene.kim@samsung.com>, Sangbeom Kim <sbkim73@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Sangbeom Kim <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+We can actually read this back from the device but we use this when
+registered using standard I2C board data registration so make sure
+it's there for OF too.
 
---NjAZgGx+5kyWce/c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Tested-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/mfd/wm8994-core.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-On Thu, Apr 11, 2013 at 07:06:53PM +0200, Sylwester Nawrocki wrote:
-
-> Couple cosmetics remarks below, just in case you happen to resend the patch
-> for some other reason.
-
-Thanks, I've rolled those in and will resend just now.
-
---NjAZgGx+5kyWce/c
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRZu7WAAoJELSic+t+oim9nY0P/iVg6wwRUr7WBOWm/O4J3vke
-d3IE79YeLzJRatgb83MIqi3NVAgikSt+zmpEhW6aRLynpw4rdJNPiuz0BtfiXBr4
-nxef+0RkC13nxgeNGn85y0l59cExTSD93TgzalA4pPTDK3YcLwok6ThzlZW0uqnN
-AAlAFBdb6n74+CpAxAdRoie+ks+HKbEdfhpoLmw2ANozJOgiD8zx2xBtNjptreo/
-qOriz3Y7D/wn5XrKlR1gjOCVh61MUw+rw8dY+y8MCebGY2VWUvxLnzZ5z5APcEXw
-KAIgh3BuP1hOJQ79vgxdpGADg8fnq2vXEsiERmlTI89ZCwJVCfzeTDnypN6rAq+r
-7ShTvsXf7yyUKpYvNz09hZvFPTU2zMoOy9eR/rQd2HzBYI3Nqf9c/GFnCSI95Ufv
-Muz2GRH5+tkI7qggVVVRY73774Lni5Mvv++s+3z1N+ffTWRaRZLHKA6Uat887L7g
-HnmYHnBoFJyi/JGH8HxqbMsBCF0IwQmn/H+osEm8N9h6WGB3iysPTVEfZLsZ0NrV
-mP5vh5A4pYOdz0M6gcPxm//yja5QlSlfVwEqn8IlB9tUcv5RO/2xF8mmVLeeZ+UQ
-DcGgXqA8Lnt5T3fxiD1CWJLkrV3NkXigk6Ov9MPoHBGDijEQCg4YbnvyEJ0cAdLz
-5iu/AbFy1fBvCYoO37np
-=NEBA
------END PGP SIGNATURE-----
-
---NjAZgGx+5kyWce/c--
+diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
+index cdea84e..3f8d591 100644
+--- a/drivers/mfd/wm8994-core.c
++++ b/drivers/mfd/wm8994-core.c
+@@ -673,9 +673,9 @@ static void wm8994_device_exit(struct wm8994 *wm8994)
+ }
+ 
+ static const struct of_device_id wm8994_of_match[] = {
+-	{ .compatible = "wlf,wm1811", },
+-	{ .compatible = "wlf,wm8994", },
+-	{ .compatible = "wlf,wm8958", },
++	{ .compatible = "wlf,wm1811", .data = (void *)WM1811 },
++	{ .compatible = "wlf,wm8994", .data = (void *)WM8994 },
++	{ .compatible = "wlf,wm8958", .data = (void *)WM8958 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, wm8994_of_match);
+-- 
+1.7.10.4
