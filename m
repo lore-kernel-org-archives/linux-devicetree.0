@@ -1,38 +1,86 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v6 3/8] reset: Add driver for gpio-controlled reset pins
-Date: Thu, 11 Apr 2013 09:54:44 -0600
-Message-ID: <5166DCC4.6050206@wwwdotorg.org>
-References: <1364488523-20310-1-git-send-email-p.zabel@pengutronix.de> <1364488523-20310-4-git-send-email-p.zabel@pengutronix.de> <CAOesGMgo61M=oxG6_6EEGu7kL3Wa+HsdEomCxUnvj-Rbdhujgg@mail.gmail.com>
+Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
+Date: Thu, 11 Apr 2013 10:06:49 -0600
+Message-ID: <5166DF99.2000308@wwwdotorg.org>
+References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
+ <20130408171637.98b5ad1f867bcbda883af68b@linux-foundation.org>
+ <2569832.XQDrhUGNaI@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMgo61M=oxG6_6EEGu7kL3Wa+HsdEomCxUnvj-Rbdhujgg@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, kernel@pengutronix.de, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2569832.XQDrhUGNaI@avalon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-fbdev@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Rob Clark <robclark@gmail.com>, linux-rpi-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/2013 04:35 AM, Olof Johansson wrote:
-> On Thu, Mar 28, 2013 at 9:35 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
->> This driver implements a reset controller device that toggles gpios
->> connected to reset pins of peripheral ICs. The delay between assertion
->> and de-assertion of the reset signal can be configured.
-...
-> Since this is a platform driver and not just an OF driver, shouldn't
-> you provide a way to specify the same configuration data through a
-> platform_data structure as well?
+On 04/11/2013 03:56 AM, Laurent Pinchart wrote:
+> On Monday 08 April 2013 17:16:37 Andrew Morton wrote:
+>> On Wed,  3 Apr 2013 20:39:43 -0600 Stephen Warren wrote:
+>>> A simple frame-buffer describes a raw memory region that may be rendered
+>>> to, with the assumption that the display hardware has already been set
+>>> up to scan out from that buffer.
+>>>
+>>> This is useful in cases where a bootloader exists and has set up the
+>>> display hardware, but a Linux driver doesn't yet exist for the display
+>>> hardware.
+>>>
+>>> ...
+>>>
+>>> +config FB_SIMPLE
+>>> +	bool "Simple framebuffer support"
+>>> +	depends on (FB = y) && OF
+>>
+>> It's sad that this simple little thing requires Open Firmware.  Could
+>> it be generalised in some way so that the small amount of setup info
+>> could be provided by other means (eg, module_param) or does the
+>> dependency go deeper than that?
+> 
+> I second that request. I like the idea of a simple framebuffer driver if it 
+> helps deprecating fbdev in the long term, but I don't want it to offer an 
+> excuse not to implement a DRM/KMS driver. In particular adding DT bindings 
+> would force us to keep supporting the ABI for a (too) long time.
 
-I believe the only practical use-cases for this driver are /currently/
-for device-tree platforms. Shouldn't we add the platform_data support
-only when some platform actively uses it?
+The platforms I intend to use this with only support device tree. Adding
+support for platform data right now would just be dead code. If somebody
+wants to use this driver with a board file based system rather than a DT
+based system, it would be trivial do modify the driver to add a platform
+data structure at that time.
 
-In the past when reviewing new drivers, I pushed for platform drivers to
-always implement the platform_data structure up-front, and support using
-that if present rather than "falling back" to DT. However, Grant then
-shot that down saying that there was no point adding dead code...
+Adding support for a platform data structure won't remove the need for
+DT support in the driver; any platform that uses DT will always
+configure this driver through the DT binding irrespective of whether
+some other platform could configure it using platform_data.
 
-(this will also feed into the discussion about simple-framebuffer, which
-also only needs DT support right now, but could in theory be extended to
-support platform_data in the future if somebody wants).
+I don't believe the DT bindings imply that they must be implemented by
+an FB driver rather than a KMS driver. It's just that it's much simpler
+to do so at present. If the whole FB subsystem goes away at some time,
+it should be possible to implement a simplest-possible KMS driver that
+supports the same DT binding. I didn't do it this way because supporting
+a pre-allocated FB in DRM/KMS apparently means implementing a custom
+memory allocator for this in the driver, which would be a lot of code
+overhead when right now the driver can just use the FB subsystem and
+simply return the address directly. The simplest possible FB driver
+appears much simpler (less code size, less maintenance) than the
+simplest possible KMS driver.
 
+My inclination is that for many platforms, the bootloader support for
+graphics output will appear first (before the kernel's), and this driver
+will allow for the kernel to have a graphical console, allowing a more
+complete/useful system to be available earlier. In many cases, that
+window may be small; a DRM/KMS driver may appear soon after the basic
+CPU/board/... support, and then people can switch to using it if they want.
+
+That said, I also don't really see a problem not implementing a DRM/KMS
+driver for a platform; a dumb frame-buffer works perfectly well for my
+needs. Nobody would be forced to continue using it once a better
+alternative existed.
