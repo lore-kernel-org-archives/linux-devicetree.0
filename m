@@ -1,99 +1,30 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
-Date: Thu, 11 Apr 2013 22:06:47 +0200
-Message-ID: <1828875.4dYa7WRt67@avalon>
-References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
- <2569832.XQDrhUGNaI@avalon> <5166DF99.2000308@wwwdotorg.org>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v2] net: mvmdio: add clocks property to binding
+ documentation
+Date: Thu, 11 Apr 2013 16:19:51 -0400 (EDT)
+Message-ID: <20130411.161951.1231563739864529433.davem@davemloft.net>
+References: <1365615391-26244-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1365672288-30932-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5166DF99.2000308@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: linux-fbdev@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Rob Clark <robclark@gmail.com>, linux-rpi-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1365672288-30932-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, florian@openwrt.org, thomas.petazzoni@free-electrons.com, gregkh@linuxfoundation.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Date: Thu, 11 Apr 2013 11:24:48 +0200
 
-On Thursday 11 April 2013 10:06:49 Stephen Warren wrote:
-> On 04/11/2013 03:56 AM, Laurent Pinchart wrote:
-> > On Monday 08 April 2013 17:16:37 Andrew Morton wrote:
-> >> On Wed,  3 Apr 2013 20:39:43 -0600 Stephen Warren wrote:
-> >>> A simple frame-buffer describes a raw memory region that may be rendered
-> >>> to, with the assumption that the display hardware has already been set
-> >>> up to scan out from that buffer.
-> >>> 
-> >>> This is useful in cases where a bootloader exists and has set up the
-> >>> display hardware, but a Linux driver doesn't yet exist for the display
-> >>> hardware.
-> >>> 
-> >>> ...
-> >>> 
-> >>> +config FB_SIMPLE
-> >>> +	bool "Simple framebuffer support"
-> >>> +	depends on (FB = y) && OF
-> >> 
-> >> It's sad that this simple little thing requires Open Firmware.  Could
-> >> it be generalised in some way so that the small amount of setup info
-> >> could be provided by other means (eg, module_param) or does the
-> >> dependency go deeper than that?
-> > 
-> > I second that request. I like the idea of a simple framebuffer driver if
-> > it helps deprecating fbdev in the long term, but I don't want it to offer
-> > an excuse not to implement a DRM/KMS driver. In particular adding DT
-> > bindings would force us to keep supporting the ABI for a (too) long time.
+> Commit 3d604da1e9547c09c9dcc0ee443c306c9ae1a480
+>   ("net: mvmdio: get and enable optional clock")
 > 
-> The platforms I intend to use this with only support device tree. Adding
-> support for platform data right now would just be dead code. If somebody
-> wants to use this driver with a board file based system rather than a DT
-> based system, it would be trivial do modify the driver to add a platform
-> data structure at that time.
-
-What about using module parameters instead of DT bindings and platform data ? 
-As this is a hack designed to work around the lack of a proper display driver 
-the frame buffer address and size could just be passed by the boot loader 
-through the kernel command line, and the device would then be instantiated by 
-the driver.
-
-> Adding support for a platform data structure won't remove the need for
-> DT support in the driver; any platform that uses DT will always
-> configure this driver through the DT binding irrespective of whether
-> some other platform could configure it using platform_data.
+> was missing an update of the corresponding device tree binding
+> documentation. This patch adds the clocks property to mvmdio
+> binding documentation.
 > 
-> I don't believe the DT bindings imply that they must be implemented by
-> an FB driver rather than a KMS driver. It's just that it's much simpler
-> to do so at present. If the whole FB subsystem goes away at some time,
-> it should be possible to implement a simplest-possible KMS driver that
-> supports the same DT binding. I didn't do it this way because supporting
-> a pre-allocated FB in DRM/KMS apparently means implementing a custom
-> memory allocator for this in the driver, which would be a lot of code
-> overhead when right now the driver can just use the FB subsystem and
-> simply return the address directly. The simplest possible FB driver
-> appears much simpler (less code size, less maintenance) than the
-> simplest possible KMS driver.
-> 
-> My inclination is that for many platforms, the bootloader support for
-> graphics output will appear first (before the kernel's), and this driver
-> will allow for the kernel to have a graphical console, allowing a more
-> complete/useful system to be available earlier. In many cases, that
-> window may be small; a DRM/KMS driver may appear soon after the basic
-> CPU/board/... support, and then people can switch to using it if they want.
-> 
-> That said, I also don't really see a problem not implementing a DRM/KMS
-> driver for a platform; a dumb frame-buffer works perfectly well for my
-> needs. Nobody would be forced to continue using it once a better
-> alternative existed.
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 
--- 
-Regards,
-
-Laurent Pinchart
+Applied.
