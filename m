@@ -1,43 +1,89 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v3 4/9] ARM: mvebu: Enable pj4b on LPAE compilations
-Date: Thu, 11 Apr 2013 14:08:44 -0400
-Message-ID: <20130411180844.GO28693@titan.lakedaemon.net>
-References: <1365461538-30702-1-git-send-email-gregory.clement@free-electrons.com>
- <1365461538-30702-5-git-send-email-gregory.clement@free-electrons.com>
+From: Dave Martin <dave.martin@linaro.org>
+Subject: Re: [RFC PATCH 01/11] Documentation: DT: arm: define CPU topology
+ bindings
+Date: Thu, 11 Apr 2013 19:17:10 +0100
+Message-ID: <20130411181710.GC2239@linaro.org>
+References: <1365671562-2403-1-git-send-email-mark.rutland@arm.com>
+ <1365671562-2403-2-git-send-email-mark.rutland@arm.com>
+ <5166D01F.5070404@gmail.com>
+ <20130411155054.GA29509@e102568-lin.cambridge.arm.com>
+ <5166F908.9050503@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1365461538-30702-5-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <5166F908.9050503@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Will Deacon <Will.Deacon@arm.com>, Rob Herring <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 09, 2013 at 12:52:12AM +0200, Gregory CLEMENT wrote:
-> From: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+On Thu, Apr 11, 2013 at 12:55:20PM -0500, Rob Herring wrote:
+> On 04/11/2013 10:50 AM, Lorenzo Pieralisi wrote:
+> > On Thu, Apr 11, 2013 at 04:00:47PM +0100, Rob Herring wrote:
+> >> On 04/11/2013 04:12 AM, Mark Rutland wrote:
+> >>> From: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+
+[...]
+
+> >>> +===========================================
+> >>> +3 - cluster/core/thread node bindings
+> >>> +===========================================
+> >>> +
+> >>> +Bindings for cluster/cpu/thread nodes are defined as follows:
+> >>> +
+> >>> +- cluster node
+> >>> +
+> >>> +	 Description: must be declared within a cpu-map node, one node
+> >>> +		      per cluster. A system can contain several layers of
+> >>> +		      clustering and cluster nodes can be contained in parent
+> >>> +		      cluster nodes.
+> >>> +
+> >>> +	The cluster node name must be "clusterN" as described in 2.1 above.
+> >>> +	A cluster node can not be a leaf node.
+> >>
+> >> Follow standard conventions with "cluster@N" and a reg property with the
+> >> number.
+> > 
+> > We are defining the topology to decouple the cluster/core/thread concept
+> > from the MPIDR. Having a reg property in the cluster (and core) nodes
+> > would complicate things if that reg property must correspond to an MPIDR
+> > bitfield. If it is meant to be just an enumeration at a given device tree
+> > level, I am ok with changing that.
 > 
-> pj4b cpus are LPAE capable so enable them on LPAE compilations
-> 
-> Signed-off-by: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Tested-by: Franklin <flin-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  arch/arm/mm/proc-v7.S |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> Because the cluster itself doesn't really have an id, I'm fine if its
+> not linked to the mpidr. Just don't change that later.
 
-Applied to mvebu/soc
+These enumerations can follow the MPIDR for convenience if the MPIDR
+allocations are sane, but otherwise it would be abstract.  The Architecture
+doesn't specify any kind of an ID for a cluster (indeed, it doesn't really
+specify what a cluster is at all).
 
-thx,
 
-Jason.
+However, we could require a platform or SoC binding to specify the
+enumeration and it how it maps to the actual hardware -- i.e., cluster@1
+on Tuesday should be the same physical cluster as cluster@1 on Monday,
+to the extent that cluster@1 is present in the DT on both days and the
+hardware hasn't been physically modified (i.e., cluster@1 might refer
+to a fixed physical socket on a hypothetical board with physically
+pluggable CPU modules).
+
+Correspondingly, on TC2, cluster@0 would always be the A15 cluster;
+cluster@1 would always be the A7 cluster.  But if the firmware disables
+one of them, that cluster and the relevant CPU nodes should be removed
+from the DT before passing it to the kernel.
+
+Does this make any sense, or is it overkill?
+
+
+Cheers
+---Dave
