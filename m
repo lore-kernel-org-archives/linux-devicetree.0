@@ -1,61 +1,102 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
-Date: Thu, 11 Apr 2013 11:56:31 +0200
-Message-ID: <2569832.XQDrhUGNaI@avalon>
-References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
- <20130408171637.98b5ad1f867bcbda883af68b@linux-foundation.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v6 3/8] reset: Add driver for gpio-controlled reset pins
+Date: Thu, 11 Apr 2013 03:35:37 -0700
+Message-ID: <CAOesGMgo61M=oxG6_6EEGu7kL3Wa+HsdEomCxUnvj-Rbdhujgg@mail.gmail.com>
+References: <1364488523-20310-1-git-send-email-p.zabel@pengutronix.de>
+	<1364488523-20310-4-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130408171637.98b5ad1f867bcbda883af68b-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1364488523-20310-4-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-pm-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, kernel@pengutronix.de, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 08 April 2013 17:16:37 Andrew Morton wrote:
-> On Wed,  3 Apr 2013 20:39:43 -0600 Stephen Warren wrote:
-> > A simple frame-buffer describes a raw memory region that may be rendered
-> > to, with the assumption that the display hardware has already been set
-> > up to scan out from that buffer.
-> > 
-> > This is useful in cases where a bootloader exists and has set up the
-> > display hardware, but a Linux driver doesn't yet exist for the display
-> > hardware.
-> > 
-> > ...
-> > 
-> > +config FB_SIMPLE
-> > +	bool "Simple framebuffer support"
-> > +	depends on (FB = y) && OF
-> 
-> It's sad that this simple little thing requires Open Firmware.  Could
-> it be generalised in some way so that the small amount of setup info
-> could be provided by other means (eg, module_param) or does the
-> dependency go deeper than that?
+Hi,
 
-I second that request. I like the idea of a simple framebuffer driver if it 
-helps deprecating fbdev in the long term, but I don't want it to offer an 
-excuse not to implement a DRM/KMS driver. In particular adding DT bindings 
-would force us to keep supporting the ABI for a (too) long time.
+On Thu, Mar 28, 2013 at 9:35 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> This driver implements a reset controller device that toggles gpios
+> connected to reset pins of peripheral ICs. The delay between assertion
+> and de-assertion of the reset signal can be configured.
+>
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Reviewed-by: Stephen Warren <swarren@nvidia.com>
+> Reviewed-by: Marek Vasut <marex@denx.de>
+> Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
+> ---
+>  .../devicetree/bindings/reset/gpio-reset.txt       |  37 ++++
+>  drivers/reset/Kconfig                              |  13 ++
+>  drivers/reset/Makefile                             |   1 +
+>  drivers/reset/gpio-reset.c                         | 208 +++++++++++++++++++++
+>  4 files changed, 259 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/gpio-reset.txt
+>  create mode 100644 drivers/reset/gpio-reset.c
+>
+> diff --git a/Documentation/devicetree/bindings/reset/gpio-reset.txt b/Documentation/devicetree/bindings/reset/gpio-reset.txt
+> new file mode 100644
+> index 0000000..1f203eb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/gpio-reset.txt
+> @@ -0,0 +1,37 @@
+> +GPIO reset controller
+> +=====================
+> +
+> +A GPIO reset controller controls a number of GPIOs that are connected
+> +to reset pins of peripheral ICs.
+> +
+> +Please also refer to reset.txt in this directory for common reset
+> +controller binding usage.
+> +
+> +Required properties:
+> +- compatible: Should be "gpio-reset"
+> +- reset-gpios: List of gpios used as reset lines. The gpio specifier for this
+> +               property depends on the gpio controller that provides the gpio.
+> +- #reset-cells: 1, see below
+> +
+> +Optional properties:
+> +- reset-delays: List of delays in microseconds. The corresponding gpio reset
+> +                line should be asserted for this duration to reset.
+> +- initially-in-reset: List of integers. Zero if the initial state should be
+> +                      a deasserted reset line, nonzero if the line should be
+> +                      kept in reset.
+> +
+> +example:
+> +
+> +gpio_reset: gpio-reset {
+> +       compatible = "gpio-reset";
+> +       reset-gpios = <&gpio5 0 1>; /* active-low */
+> +       reset-delays = <10000>; /* 10 ms */
+> +       initially-in-reset: <1>;
+> +       #reset-cells = <1>;
+> +};
 
-> > +struct simplefb_format simplefb_formats[] = {
-> > +	{ "r5g6b5", 16, {11, 5}, {5, 6}, {0, 5}, {0, 0} },
-> > +};
-> 
-> I'll make this static.
+I find this binding that uses an array of GPIOs and their state to be
+a bit awkward, especially if you compare it to something like the
+simple gpio regulators that have a simpler one-to-one mapping.
 
--- 
-Regards,
+Also, if you did one node per gpio you'd have a boolean property for
+"initially-in-reset" which seems much more logical (i.e. the property
+is either there, or it's not).
 
-Laurent Pinchart
+A couple of more comments:
+
+> +config RESET_GPIO
+> +       tristate "GPIO reset controller support"
+> +       depends on GENERIC_GPIO
+> +       help
+> +         This driver provides support for reset lines that are controlled
+> +         directly by GPIOs.
+> +         The delay between assertion and de-assertion of the reset signal
+> +         can be configured.
+
+Can be configured how? And why would I care about that when I'm trying
+to decide if I need to include this driver in my kernel configuration
+or not? Seems like misplaced information.
+
+Since this is a platform driver and not just an OF driver, shouldn't
+you provide a way to specify the same configuration data through a
+platform_data structure as well?
+
+
+-Olof
