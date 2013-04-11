@@ -1,16 +1,13 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [GIT PULL] ARM: bcm281xx firmware tags
-Date: Thu, 11 Apr 2013 01:52:33 -0700
-Message-ID: <CAOesGMiiDei3HOop4YkiE2qw1R5opBpRYJEU0Vp3izEyB=r=Mw@mail.gmail.com>
-References: <1362451632-18806-1-git-send-email-csd@broadcom.com>
- <201303060631.03782.arnd@arndb.de> <5136F816.2070909@broadcom.com>
- <201303061128.57127.arnd@arndb.de> <5165A271.6060407@broadcom.com>
- <20130411065227.GA31465@quad.lixom.net>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH] staging: drm/imx: update TODO file
+Date: Thu, 11 Apr 2013 11:04:21 +0200
+Message-ID: <1365671061-10486-1-git-send-email-s.hauer@pengutronix.de>
+References: <20130409231523.GA15722@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130411065227.GA31465-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
+In-Reply-To: <20130409231523.GA15722-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,32 +18,32 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 10, 2013 at 11:52 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> On Wed, Apr 10, 2013 at 10:33:37AM -0700, Christian Daudt wrote:
->> Hi Arnd, Olof,
->>  Please pull the branch below - it contains the BCM281xx l2 cache
->> enabling code.
->>
->>  Thanks,
->>    csd
->>
->>
->> The following changes since commit 07961ac7c0ee8b546658717034fe692fd12eefa9:
->>
->>   Linux 3.9-rc5 (2013-03-31 15:12:43 -0700)
->>
->> are available in the git repository at:
->>
->>   git://github.com/broadcom/bcm11351.git tags/fw-for-3.10
->
-> Thanks, pulled into next/soc (local branch name bcm/smc-l2)
+One of the main things to do to the driver is to support
+the common display famework (CDF) to hit mainline. As this will
+make some changes to the devicetree bindings necessary it makes
+sense to do it before we move out of staging.
 
-Based on later thread about the exynos smc ops, I moved this branch
-over to next/firmware instead.
+Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/staging/imx-drm/TODO | 3 +++
+ 1 file changed, 3 insertions(+)
 
-
--Olof
+diff --git a/drivers/staging/imx-drm/TODO b/drivers/staging/imx-drm/TODO
+index e52adc4..123acbe 100644
+--- a/drivers/staging/imx-drm/TODO
++++ b/drivers/staging/imx-drm/TODO
+@@ -1,5 +1,8 @@
+ TODO:
+ - get DRM Maintainer review for this code
++- Wait for common display framework to hit mainline and update the IPU
++  driver to use it. This will most probably make changes to the devicetree
++  bindings necessary.
+ - Factor out more code to common helper functions
+ - decide where to put the base driver. It is not specific to a subsystem
+   and would be used by DRM/KMS and media/V4L2
+-- 
+1.8.2.rc2
