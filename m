@@ -1,15 +1,15 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/2] input: touchscreen: atmel_mxt_ts: Add Device Tree
- support
-Date: Thu, 11 Apr 2013 22:32:55 +0200
-Message-ID: <3024802.3b8y84VJNf@flatron>
-References: <1365092066-31753-1-git-send-email-t.figa@samsung.com>
- <20130404173040.GB12302@core.coreip.homeip.net>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
+Date: Thu, 11 Apr 2013 14:38:21 -0600
+Message-ID: <51671F3D.5040501@wwwdotorg.org>
+References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
+ <2569832.XQDrhUGNaI@avalon> <5166DF99.2000308@wwwdotorg.org>
+ <1828875.4dYa7WRt67@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130404173040.GB12302-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
+In-Reply-To: <1828875.4dYa7WRt67@avalon>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,34 +20,74 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
-
-On Thursday 04 of April 2013 10:30:40 Dmitry Torokhov wrote:
-> Hi Tomasz,
+On 04/11/2013 02:06 PM, Laurent Pinchart wrote:
+> Hi Stephen,
 > 
-> On Thu, Apr 04, 2013 at 06:14:24PM +0200, Tomasz Figa wrote:
-> > This series is an attempt to add Device Tree support to Atmel maXtouch
-> > touchscreen driver.
-> > 
-> > First patch adds support for VDD voltage regulator to get operating
-> > voltage using regulator API instead of a driver specific field in
-> > platform data.
-> > 
-> > Second patch implements Device Tree bindings for the driver and adds
-> > respective documentation.
-> > 
-> > Tested on Universal C210 board.
+> On Thursday 11 April 2013 10:06:49 Stephen Warren wrote:
+>> On 04/11/2013 03:56 AM, Laurent Pinchart wrote:
+>>> On Monday 08 April 2013 17:16:37 Andrew Morton wrote:
+>>>> On Wed,  3 Apr 2013 20:39:43 -0600 Stephen Warren wrote:
+>>>>> A simple frame-buffer describes a raw memory region that may be rendered
+>>>>> to, with the assumption that the display hardware has already been set
+>>>>> up to scan out from that buffer.
+>>>>>
+>>>>> This is useful in cases where a bootloader exists and has set up the
+>>>>> display hardware, but a Linux driver doesn't yet exist for the display
+>>>>> hardware.
+>>>>>
+>>>>> ...
+>>>>>
+>>>>> +config FB_SIMPLE
+>>>>> +	bool "Simple framebuffer support"
+>>>>> +	depends on (FB = y) && OF
+>>>>
+>>>> It's sad that this simple little thing requires Open Firmware.  Could
+>>>> it be generalised in some way so that the small amount of setup info
+>>>> could be provided by other means (eg, module_param) or does the
+>>>> dependency go deeper than that?
+>>>
+>>> I second that request. I like the idea of a simple framebuffer driver if
+>>> it helps deprecating fbdev in the long term, but I don't want it to offer
+>>> an excuse not to implement a DRM/KMS driver. In particular adding DT
+>>> bindings would force us to keep supporting the ABI for a (too) long time.
+>>
+>> The platforms I intend to use this with only support device tree. Adding
+>> support for platform data right now would just be dead code. If somebody
+>> wants to use this driver with a board file based system rather than a DT
+>> based system, it would be trivial do modify the driver to add a platform
+>> data structure at that time.
 > 
-> Please coordinate this effort with Nick Dyer <nick.dyer-8YpZQSjhsQH10XsdtD+oqA@public.gmane.org>,
-> Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> and Benson Leung
-> <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> as there is a big update to the atmel_mxt_ts in
-> works and I would prefer not to disturb it.
+> What about using module parameters instead of DT bindings and platform data ? 
+> As this is a hack designed to work around the lack of a proper display driver 
+> the frame buffer address and size could just be passed by the boot loader 
+> through the kernel command line, and the device would then be instantiated by 
+> the driver.
 
-OK. Let's hold with my patches until the big update gets merged then.
+I'm afraid I strongly dislike the idea of using module parameters. One
+of the things that I dislike the most about NVIDIA's downstream Android
+kernels is the huge number of random parameters that are required on the
+kernel command-line just to get it to boot.
 
-Best regards,
-Tomasz
+I'd specifically prefer the configuration for this driver to be a device
+tree binding so that it /is/ an ABI. That way, arbitrary software that
+boots the Linux kernel will be able to target a common standard for how
+to pass this information to the kernel. If we move to module parameters
+instead, especially with the specific intent that the format of those
+parameters is no longer an ABI, we run in to issues where a new kernel
+requires a bootloader update in order to generate the new set of module
+parameters that are required by the driver. If we say the module
+parameters will never change except in a backwards-compatible fashion,
+and hence that issue won't arise, then why not just make it a DT binding?
+
+Do module parameters handle the case of multiple device instances?
+
+Also, I really don't see this driver as a hack. It's a perfectly
+reasonable situation to have some other SW set up the frame-buffer, and
+Linux simply continue to use it. Perhaps that other SW even ran on a
+difference CPU, or the parameters are hard-coded in HW design, and so
+there's no HW that Linux ever could drive, so it just isn't possible to
+create any more advanced driver.
