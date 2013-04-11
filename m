@@ -1,13 +1,16 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 09/10] util: add common ARRAY_SIZE define
-Date: Thu, 11 Apr 2013 14:12:45 +1000
-Message-ID: <20130411041245.GC8165@truffula.fritz.box>
-References: <1365618555-5893-1-git-send-email-vapier@gentoo.org>
- <1365618555-5893-10-git-send-email-vapier@gentoo.org>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [GIT PULL] ARM: bcm281xx firmware tags
+Date: Wed, 10 Apr 2013 23:52:27 -0700
+Message-ID: <20130411065227.GA31465@quad.lixom.net>
+References: <1362451632-18806-1-git-send-email-csd@broadcom.com>
+ <201303060631.03782.arnd@arndb.de> <5136F816.2070909@broadcom.com>
+ <201303061128.57127.arnd@arndb.de> <5165A271.6060407@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7413150175457592491=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365618555-5893-10-git-send-email-vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5165A271.6060407-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,59 +21,28 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Apr 10, 2013 at 10:33:37AM -0700, Christian Daudt wrote:
+> Hi Arnd, Olof,
+>  Please pull the branch below - it contains the BCM281xx l2 cache
+> enabling code.
+> 
+>  Thanks,
+>    csd
+> 
+> 
+> The following changes since commit 07961ac7c0ee8b546658717034fe692fd12eefa9:
+> 
+>   Linux 3.9-rc5 (2013-03-31 15:12:43 -0700)
+> 
+> are available in the git repository at:
+> 
+>   git://github.com/broadcom/bcm11351.git tags/fw-for-3.10
 
---===============7413150175457592491==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="52aklQ8BZHJhx2Z3"
-Content-Disposition: inline
+Thanks, pulled into next/soc (local branch name bcm/smc-l2)
 
 
---52aklQ8BZHJhx2Z3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Apr 10, 2013 at 02:29:14PM -0400, Mike Frysinger wrote:
-> I want to use this in more places, so put it in util.h rather than
-> copying & pasting it into another file.
->=20
-> Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-
-Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---52aklQ8BZHJhx2Z3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlFmOD0ACgkQaILKxv3ab8aQ4QCeL9gJey83F4w9WrKdSjJTz026
-ilsAn0ApTXDMVpNYdpaH7eT3CIRVRErx
-=O1qE
------END PGP SIGNATURE-----
-
---52aklQ8BZHJhx2Z3--
-
---===============7413150175457592491==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============7413150175457592491==--
+-Olof
