@@ -1,106 +1,36 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 04/14] mfd: Add Samsung PWM/timer master driver
-Date: Thu, 11 Apr 2013 23:08:13 +0200
-Message-ID: <201304112308.14181.arnd@arndb.de>
-References: <1365093431-30621-1-git-send-email-t.figa@samsung.com>
- <201304110035.47776.arnd@arndb.de> <1718887.H9vPuvORKd@amdc1227>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 1/4] Documentation: Add memory mapped ARM architected
+ timer binding
+Date: Thu, 11 Apr 2013 14:48:03 -0700
+Message-ID: <51672F93.7080109@codeaurora.org>
+References: <1365474623-29181-1-git-send-email-sboyd@codeaurora.org> <1365474623-29181-2-git-send-email-sboyd@codeaurora.org> <20130409090843.GS23725@e106331-lin.cambridge.arm.com> <516444FE.2080200@codeaurora.org> <20130410101336.GB8799@e106331-lin.cambridge.arm.com> <51662584.6070906@codeaurora.org> <20130411112407.GD8259@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1718887.H9vPuvORKd@amdc1227>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: mark.rutland@arm.com, heiko@sntech.de, Tomasz Figa <tomasz.figa@gmail.com>, buserror@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, christer@weinigel.se, sylvester.nawrocki@gmail.com, m.szyprowski@samsung.com, kgene.kim@samsung.com, linux@arm.linux.org.uk, Samuel Ortiz <sameo@linux.intel.com>, kwangwoo.lee@gmail.com, mcuelenaere@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, john.stultz@linaro.org, ghcstop@gmail.com, linux@simtec.co.uk, linux-arm-kernel@lists.infradead.org, broonie@opensource.wolfsonmicro.com, jekhor@gmail.com, kyungmin.park@samsung.com, tglx@linutronix.de
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20130411112407.GD8259@e106331-lin.cambridge.arm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Marc Zyngier <Marc.Zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 11 April 2013, Tomasz Figa wrote:
-> On Thursday 11 of April 2013 00:35:47 Arnd Bergmann wrote:
-> > On Monday 08 April 2013, Tomasz Figa wrote:
-> > > On Saturday 06 of April 2013 00:24:18 Tomasz Figa wrote:
-> > > > On Friday 05 of April 2013 21:54:21 Arnd Bergmann wrote:
-> > > > > On Friday 05 April 2013, Tomasz Figa wrote:
-> > 
-> > Sorry for not replying earlier. My idea for the register level interface
-> > was to create a platform_device for each PWM, e.g. using the mfd_cell
-> > infrastructure. You can then pass a "struct regmap" as the platform
-> > data for each child of the timer node, and all the DT handling code
-> > can stay in the parent driver.
-> 
-> Hmm. As I said, I'm completely fine with using a regmap for sharing registers 
-> between subdrivers. However the clocksource can not be registered as an MFD 
-> cell, because it's needed very early.
-> 
-> I can imagine a solution alternative to my original one, where the MFD cells 
-> would be registered from the clocksource driver. This would mean that 
-> platforms that don't need (and can't use) the PWM clocksource would have to 
-> enable the driver anyway.
+On 04/11/13 04:24, Mark Rutland wrote:
+> Could we say the reg for the second view is optional?
+>
 
-Sounds ok to me. The main part I want to avoid is having two separate device
-nodes in the DT for one physical device, but there are multiple ways to get
-there.
+Yes, that's already covered in the binding.
 
-> Another thing is that I don't see a need to create one cell per PWM channel. 
-> The PWM core is designed in a way that supports multiple channels per PWM 
-> controller and so is the generic PWM DT specifier (<&controller channel period 
-> flags>), so I'd rather see a single cell for all PWM channels.
+> Might we have a hardware / firmware configuration where the kernel can only access
+> the secondary view?
+>
 
-Sure, no problem with that.
+I don't see how this is possible. The CNTACRn register controls secure
+vs. non-secure access for particular registers in a frame regardless of
+which view is used. The CNTPL0ACRn is not a security restricted register
+and it can only restrict access to certain registers in the second view.
+No combination of settings in these registers can restrict access to
+only the second view in a frame with two views.
 
-> So, to summarize this alternative concept:
->  - two drivers:
->    1) clocksource driver - registering clocksource and PWM MFD cell
->    2) PWM driver - handling the PWM MFD cell
-
-Ok. Don't be too tied to the MFD concept though if it causes problems.
-In many cases calling platform_device_register_resndata or similar is
-actually easier than MFD, especially if you only want a single child
-device. Either way is fine though.
-
->  - both drivers would share registers using a regmap with custom lock/unlock 
->    callbacks (using spin_lock_irqsave/spin_unlock_irqrestore, because the 
->    clocksource needs to access PWM registers in IRQ context)
-
-Ok.
-
->  - the clocksource/master driver would have a samsung_time_init function which 
->    would set up the driver early and initialize the clocksource
-
-Right. If you want to use the clocksource_of_init() infratstructure for this
-(which is probably a good idea), please base your series on top of the
-clksrc/cleanup branch in arm-soc.
-
->  - a platform driver would be registered by the clocksource/master driver
->    which would register the PWM MFD cell in its probe.
-
-This seems unnecessary, if the only purpose of the platform driver is to
-export the MFD cell. In that case, I would actually suggest a simpler model
-where the PWM driver registers the main platform driver directly and
-calls a function exported by the clocksource driver to get the regmap
-structure and anything else it may need (possibly initializing the driver
-in the case where it is not used as the clocksource but only provides
-the registers for PWM).
-
->  - MFD cell platform data would contain struct regmap * and variant data
->    (parsed from DT or received from platform code - as in my original version)
-
-Yes, either the MFD cell, or the exported symbol, whichever ends up easier.
-
-> This should indeed work, assuming that I find a solution to make 
-> clocksource_of_init not initialize the PWM clocksource (from PWM DT node) on 
-> platforms that can't use it.
-
-Right. If anything else comes up, I'd suggest we discuss it on IRC (#armlinux
-on irc.freenode.net) tomorrow for faster round-trip, or I can call you on
-the phone if you like. I'm available all day tomorrow, just send me your
-(landline) phone number by private email.
-
-	Arnd.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
