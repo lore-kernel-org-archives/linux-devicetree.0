@@ -1,114 +1,81 @@
-From: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RFC 0/2]  Add node and property realloc functions.
-Date: Thu, 11 Apr 2013 11:44:39 +1000
-Message-ID: <20130411014439.GN8165@truffula.fritz.box>
-References: <1365604278-17956-1-git-send-email-srinivas.kandagatla@st.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 1/4] Documentation: Add memory mapped ARM architected
+ timer binding
+Date: Wed, 10 Apr 2013 19:52:52 -0700
+Message-ID: <51662584.6070906@codeaurora.org>
+References: <1365474623-29181-1-git-send-email-sboyd@codeaurora.org> <1365474623-29181-2-git-send-email-sboyd@codeaurora.org> <20130409090843.GS23725@e106331-lin.cambridge.arm.com> <516444FE.2080200@codeaurora.org> <20130410101336.GB8799@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4716202482808575207=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365604278-17956-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20130410101336.GB8799@e106331-lin.cambridge.arm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Marc Zyngier <Marc.Zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
---===============4716202482808575207==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Vy1A5eXR7jld12ZH"
-Content-Disposition: inline
+On 04/10/13 03:13, Mark Rutland wrote:
+>>>> +
+>>>> +- #size-cells : Must be 1.
+>>>> +
+>>>> +- ranges : Indicates parent and child bus address space are the same.
+>>>> +
+>>> Similarly, what if someone wants to write a more complex mapping for some
+>>> reason?
+>>>
+>>> We should be able to handle it if we use the standard accessors.
+>> Maybe I should just leave this part out? They are standard DT properties
+>> so I could assume DT writers know what to do.
+> I'd be happy with that. It may be worth describing them as "as necessary" or
+> something to that effect.
 
---Vy1A5eXR7jld12ZH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok. I added this and removed the property descriptions:
 
-On Wed, Apr 10, 2013 at 03:31:18PM +0100, Srinivas KANDAGATLA wrote:
-> If you try to insert a new node or extend a property with large value,=20
-> using fdtput you will notice that it always fails.
->=20
-> example:
-> fdtput -v -p -ts ./tst.dtb "/node-1" "property-1" "str10"
-> Error at 'node-1': FDT_ERR_NOSPACE
->=20
-> or
->=20
-> fdtput -v -c ./tst.dtb "/node-1"
-> Error at 'node-1': FDT_ERR_NOSPACE
->=20
->=20
-> fdtput -v  -ts ./tst.dtb "/node" "property" "very big value"
-> Decoding value:
-> 	string: 'very big value'
-> Value size 15
-> Error at 'property': FDT_ERR_NOSPACE
->=20
-> All these error are returned from libfdt, as the size of the fdt passed
-> has not space to accomdate these new properties.
->=20
-> However,
-> libfdt has code to add new property or node or extend a property to an
-> arbitary value, however it cannot be used because all the library
-> functions take preallocated fdt pointer limted to a size.
->=20
-> Adding realloc function into libfdt can help tools like fdtput to insert
-> nodes or properties or extend a property.
+Note that #address-cells, #size-cells, and ranges shall be present to ensure
+the CPU can address a frame's registers.
 
-Nack.
+> I can see why we need to specify secure/non-secure, but I'm not sure why we
+> need to specify hyp/user/kernel usage. Could we not leave this up to the kernel
+> to figure out?
+>
+> A basic overveiew for those that don't know about the memory mapped timers:
+>
+> * There's one control frame CNTCTLBase. Some registers in this frame are only
+>   available for secure accesses, including CNTNSAR which sets whether the
+>   counter frames are accessible from the non-secure side.
+>
+> * There are up to 8 timer frames, which have their own CNTVOFF and
+>   physical/virtual timers. Each frame CNTBaseN is duplicated at CNTPL0BaseN
+>   with CNTVOFF and CNTPL0ACR (which controls PL0 accesses) inaccessible.
+>
+> I can see that we might have frames/registers we can't access (if we were
+> booted on the non-secure side), but I can't see anything limiting whether we
+> use a frame for kernel/hyp/user beyond that. Have I missed something?
+>
+> Could we not have something like the following for each frame:
+>
+> frame0 {
+> 	frame-id = <0>;
+> 	status = "disabled"; /* booted NS, secure firmware has not enabled access */
+> 	reg = <0x... 0x1000>, /* CNTBase0 */
+> 	      <0x... 0x1000>; /* CNTPL0Base0 */
+> };
+>
 
-libfdt deliberately does not use an allocator, to permit embedding in
-weird and limited environments such as bootloaders.
+I don't think you're missing anything. Technically the second view is
+not always implemented though. Using the status property should be
+sufficient I think.
 
-I've thought about adding an optional layer of allocator aware
-functions, but it's not quite as straightforward as you'd think
-because you need to be clear about what the assumptions are on the
-allocation of the given blob - there's no place to put extra context
-to indicate whether it is malloc()ed or part of a larger structure,
-for example.  At the very lease allocating functions would need to
-move to a separate source file from the existing functions.
+>> Also to get the frame number, I was thinking maybe we should expand the
+>> reg property to have two address cells. Then we could have reg = <0
+>> 0xf0001000 0x1000>.
+> We could do that, but then you definitely need a more complex ranges property,
+> and additional parsing code to handle grabbing it out of the reg property. I
+> can't see what it buys us.
 
-I think the correct fix in this case is to make fdtput handle the
-FDT_ERR_NOSPACE by reallocating itself, using fdt_open_into() and
-retrying.
+Ok. It would mandate node names like "frame@0", "frame@1", but I'll drop
+the idea unless someone else finds it useful.
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---Vy1A5eXR7jld12ZH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlFmFYcACgkQaILKxv3ab8YEYQCeN8beeu162wo5IH9F2rrlcd2X
-4dAAnjtB1Nbhqo1RVUUsLmuA7gg+Y1dK
-=RzW1
------END PGP SIGNATURE-----
-
---Vy1A5eXR7jld12ZH--
-
-
---===============4716202482808575207==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============4716202482808575207==--
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
