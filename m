@@ -1,19 +1,18 @@
-From: Dave Martin <dave.martin@linaro.org>
-Subject: Re: [RFC PATCH 01/11] Documentation: DT: arm: define CPU topology
- bindings
-Date: Thu, 11 Apr 2013 19:17:10 +0100
-Message-ID: <20130411181710.GC2239@linaro.org>
-References: <1365671562-2403-1-git-send-email-mark.rutland@arm.com>
- <1365671562-2403-2-git-send-email-mark.rutland@arm.com>
- <5166D01F.5070404@gmail.com>
- <20130411155054.GA29509@e102568-lin.cambridge.arm.com>
- <5166F908.9050503@gmail.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [RFC][PATCH 1/2] ARM: OMAP4: clock: Add device tree support for
+ AUXCLKs
+Date: Thu, 11 Apr 2013 11:46:48 -0700
+Message-ID: <20130411184648.7915.17500@quantum>
+References: <515D2D30.3000306@ti.com> <515EA9E3.1010409@ti.com>
+ <20130405155851.GA10155@atomide.com> <5163E589.1040809@ti.com>
+ <20130409164928.GL10155@atomide.com> <20130409174319.GP10155@atomide.com>
+ <20130409204900.GA8815@kahuna> <20130410080630.14359.68178@quantum>
+ <5165453E.6090503@ti.com> <20130410173921.GA31017@kahuna>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <5166F908.9050503@gmail.com>
+In-Reply-To: <20130410173921.GA31017@kahuna>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,67 +22,40 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Will Deacon <Will.Deacon@arm.com>, Rob Herring <rob.herring@calxeda.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Nishanth Menon <nm@ti.com>, Roger Quadros <rogerq@ti.com>
+Cc: grygorii.strashko@ti.com, linux@arm.linux.org.uk, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 11, 2013 at 12:55:20PM -0500, Rob Herring wrote:
-> On 04/11/2013 10:50 AM, Lorenzo Pieralisi wrote:
-> > On Thu, Apr 11, 2013 at 04:00:47PM +0100, Rob Herring wrote:
-> >> On 04/11/2013 04:12 AM, Mark Rutland wrote:
-> >>> From: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Quoting Nishanth Menon (2013-04-10 10:39:21)
+> diff --git a/drivers/clk/omap/clk.c b/drivers/clk/omap/clk.c
+> new file mode 100644
+> index 0000000..63a4cce
+> --- /dev/null
+> +++ b/drivers/clk/omap/clk.c
+> @@ -0,0 +1,94 @@
+> +/*
+> + * Texas Instruments OMAP Clock driver
+> + *
+> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
+> + *     Nishanth Menon
+> + *     Tony Lindgren <tony@atomide.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> + * kind, whether express or implied; without even the implied warranty
+> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clkdev.h>
+> +#include <linux/clk-private.h>
 
-[...]
+Please use clk-provider.h.  Otherwise this looks like an OK transitional
+solution.  Hopefully this will be replaced with a more legitimate clock
+driver for 3.11.
 
-> >>> +===========================================
-> >>> +3 - cluster/core/thread node bindings
-> >>> +===========================================
-> >>> +
-> >>> +Bindings for cluster/cpu/thread nodes are defined as follows:
-> >>> +
-> >>> +- cluster node
-> >>> +
-> >>> +	 Description: must be declared within a cpu-map node, one node
-> >>> +		      per cluster. A system can contain several layers of
-> >>> +		      clustering and cluster nodes can be contained in parent
-> >>> +		      cluster nodes.
-> >>> +
-> >>> +	The cluster node name must be "clusterN" as described in 2.1 above.
-> >>> +	A cluster node can not be a leaf node.
-> >>
-> >> Follow standard conventions with "cluster@N" and a reg property with the
-> >> number.
-> > 
-> > We are defining the topology to decouple the cluster/core/thread concept
-> > from the MPIDR. Having a reg property in the cluster (and core) nodes
-> > would complicate things if that reg property must correspond to an MPIDR
-> > bitfield. If it is meant to be just an enumeration at a given device tree
-> > level, I am ok with changing that.
-> 
-> Because the cluster itself doesn't really have an id, I'm fine if its
-> not linked to the mpidr. Just don't change that later.
-
-These enumerations can follow the MPIDR for convenience if the MPIDR
-allocations are sane, but otherwise it would be abstract.  The Architecture
-doesn't specify any kind of an ID for a cluster (indeed, it doesn't really
-specify what a cluster is at all).
-
-
-However, we could require a platform or SoC binding to specify the
-enumeration and it how it maps to the actual hardware -- i.e., cluster@1
-on Tuesday should be the same physical cluster as cluster@1 on Monday,
-to the extent that cluster@1 is present in the DT on both days and the
-hardware hasn't been physically modified (i.e., cluster@1 might refer
-to a fixed physical socket on a hypothetical board with physically
-pluggable CPU modules).
-
-Correspondingly, on TC2, cluster@0 would always be the A15 cluster;
-cluster@1 would always be the A7 cluster.  But if the firmware disables
-one of them, that cluster and the relevant CPU nodes should be removed
-from the DT before passing it to the kernel.
-
-Does this make any sense, or is it overkill?
-
-
-Cheers
----Dave
+Regards,
+Mike
