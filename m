@@ -1,52 +1,57 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v6 3/8] reset: Add driver for gpio-controlled reset pins
-Date: Thu, 11 Apr 2013 09:45:43 -0700
-Message-ID: <CAOesGMg8JEntxcOeh667d84_UwS5M3XQpSKJsTiHrPaOkvtwHA@mail.gmail.com>
-References: <1364488523-20310-1-git-send-email-p.zabel@pengutronix.de>
-	<1364488523-20310-4-git-send-email-p.zabel@pengutronix.de>
-	<CAOesGMgo61M=oxG6_6EEGu7kL3Wa+HsdEomCxUnvj-Rbdhujgg@mail.gmail.com>
-	<5166DCC4.6050206@wwwdotorg.org>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 0/5 v2] mv643xx_eth: device tree bindings
+Date: Thu, 11 Apr 2013 12:53:03 -0400
+Message-ID: <20130411165303.GI28693@titan.lakedaemon.net>
+References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <5166DCC4.6050206@wwwdotorg.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, kernel@pengutronix.de, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1365071235-11611-1-git-send-email-florian@openwrt.org>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <florian@openwrt.org>
+Cc: davem@davemloft.net, thomas.petazzoni@free-electrons.com, moinejf@free.fr, andrew@lunn.ch, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jogo@openwrt.org, buytenh@wantstofly.org, jm@lentin.co.uk, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 11, 2013 at 8:54 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 04/11/2013 04:35 AM, Olof Johansson wrote:
->> On Thu, Mar 28, 2013 at 9:35 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
->>> This driver implements a reset controller device that toggles gpios
->>> connected to reset pins of peripheral ICs. The delay between assertion
->>> and de-assertion of the reset signal can be configured.
-> ...
->> Since this is a platform driver and not just an OF driver, shouldn't
->> you provide a way to specify the same configuration data through a
->> platform_data structure as well?
->
-> I believe the only practical use-cases for this driver are /currently/
-> for device-tree platforms. Shouldn't we add the platform_data support
-> only when some platform actively uses it?
+Florian,
 
-Then the Kconfig needs to depend on OF in this case.
+On Thu, Apr 04, 2013 at 12:27:10PM +0200, Florian Fainelli wrote:
+> Hi all,
+> 
+> This patch serie implements mv643xx_eth device tree bindings. I opted for
+> the reuse of the bindings already defined in
+> Documentation/devicetree/bindings/marvell.txt so that we do not create
+> any confusion.
+> 
+> For reference, I have included the mv643xx-eth related nodes in the
+> corresponding Kirkwood, Dove and Orion5x .dtsi files so you can more
+> easily test on your own platforms.
+> 
+> I tested these on a custom 88F6181-based boards.
+> 
+> Florian Fainelli (5):
+>   mv643xx_eth: add Device Tree bindings
+>   mv643xx_eth: update Device Tree bindings documentation
+>   ARM: kirkwood: add device node entries for the gigabit interfaces
+>   ARM: orion5x: add gigabit ethernet device tree node
+>   ARM: dove: add gigabit device tree nodes to dove.dtsi
+> 
+>  Documentation/devicetree/bindings/marvell.txt |   25 +++++-
+>  arch/arm/boot/dts/dove.dtsi                   |   25 ++++++
+>  arch/arm/boot/dts/kirkwood.dtsi               |   46 ++++++++++
+>  arch/arm/boot/dts/orion5x.dtsi                |   23 +++++
+>  drivers/net/ethernet/marvell/mv643xx_eth.c    |  120 ++++++++++++++++++++++++-
+>  5 files changed, 234 insertions(+), 5 deletions(-)
 
-> In the past when reviewing new drivers, I pushed for platform drivers to
-> always implement the platform_data structure up-front, and support using
-> that if present rather than "falling back" to DT. However, Grant then
-> shot that down saying that there was no point adding dead code...
+How is the new version of this looking?  Do you think you'll be able to
+get it up in time for DaveM to take it into v3.10?
 
-Uh, ok. I don't care much either way but it somehow seems like it'll
-be impopular to start adding a lot of new "depends on OF" drivers. I
-might be wrong though.
+With this and Thomas' pci series, we will have Kirkwood fully converted
+to devicetree, can begin removing board files, and finally begin
+migrating everything over to mach-mvebu/.  This will lead to the removal
+of five directories under arch/arm/ (plat-orion, mach-kirkwood,
+mach-orion5x, mach-dove, and mach-mv78xx0).
 
-> (this will also feed into the discussion about simple-framebuffer, which
-> also only needs DT support right now, but could in theory be extended to
-> support platform_data in the future if somebody wants).
+thx,
 
-Yeah, that's turning out to be a color preference discussion for
-sheds, not very surprising.
-
-
--Olof
+Jason.
