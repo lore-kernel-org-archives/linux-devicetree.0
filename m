@@ -1,96 +1,52 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v4 04/14] mfd: Add Samsung PWM/timer master driver
-Date: Thu, 11 Apr 2013 18:44:33 +0200
-Message-ID: <1718887.H9vPuvORKd@amdc1227>
-References: <1365093431-30621-1-git-send-email-t.figa@samsung.com>
- <5357756.gKmBOZlWcd@flatron> <201304110035.47776.arnd@arndb.de>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v6 3/8] reset: Add driver for gpio-controlled reset pins
+Date: Thu, 11 Apr 2013 09:45:43 -0700
+Message-ID: <CAOesGMg8JEntxcOeh667d84_UwS5M3XQpSKJsTiHrPaOkvtwHA@mail.gmail.com>
+References: <1364488523-20310-1-git-send-email-p.zabel@pengutronix.de>
+	<1364488523-20310-4-git-send-email-p.zabel@pengutronix.de>
+	<CAOesGMgo61M=oxG6_6EEGu7kL3Wa+HsdEomCxUnvj-Rbdhujgg@mail.gmail.com>
+	<5166DCC4.6050206@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <201304110035.47776.arnd@arndb.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, kyungmin.park@samsung.com, linux@simtec.co.uk, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, sylvester.nawrocki@gmail.com, buserror@gmail.com, christer@weinigel.se, jekhor@gmail.com, ghcstop@gmail.com, mark.rutland@arm.com, heiko@sntech.de, robherring2@gmail.com, m.szyprowski@samsung.com, john.stultz@linaro.org, tglx@linutronix.de
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <5166DCC4.6050206@wwwdotorg.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, kernel@pengutronix.de, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 11 of April 2013 00:35:47 Arnd Bergmann wrote:
-> On Monday 08 April 2013, Tomasz Figa wrote:
-> > On Saturday 06 of April 2013 00:24:18 Tomasz Figa wrote:
-> > > On Friday 05 of April 2013 21:54:21 Arnd Bergmann wrote:
-> > > > On Friday 05 April 2013, Tomasz Figa wrote:
-> > > I'm not sure what you mean by a register-level interface. Something like
-> > > samsung_pwm_update_reg(reg, mask, val), which modifies bitfields
-> > > according to the mask and value with appropriate synchronization? If
-> > > yes, this solves only the problem of access to shared registers.
-> > > 
-> > > The other problems that remain:
-> > > 
-> > > - negotiation of PWM channels to use for clock source and clock events,
-> > > 
-> > >   because each board can use different channels for PWM outputs,
-> > > 
-> > > - code duplication caused by both of the drivers doing mostly the same
-> > > 
-> > >   things and or having to parse the same data from device tree,
-> > > 
-> > > - both non-DT and DT platforms must be supported,
-> > > 
-> > > - how to keep the ability to load PWM driver as a module (or not load it
-> > > at all when PWM is not used on particular board), while retaining
-> > > everything that is needed for the clocksource driver in kernel,
-> > > 
-> > > - some platforms can't use PWM timers as system clocksources, while on
-> > > 
-> > >   others this is the only timekeeping hardware available.
-> > 
-> > Hmm. Does anybody have an idea of a better way of implementing this PWM
-> > timer support, which solves the above problems?
-> > 
-> > This series is a dependency for moving Universal C210 board to DT-based
-> > description and it's already almost out of time to get this included for
-> > 3.10...
-> 
-> Sorry for not replying earlier. My idea for the register level interface
-> was to create a platform_device for each PWM, e.g. using the mfd_cell
-> infrastructure. You can then pass a "struct regmap" as the platform
-> data for each child of the timer node, and all the DT handling code
-> can stay in the parent driver.
+On Thu, Apr 11, 2013 at 8:54 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 04/11/2013 04:35 AM, Olof Johansson wrote:
+>> On Thu, Mar 28, 2013 at 9:35 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+>>> This driver implements a reset controller device that toggles gpios
+>>> connected to reset pins of peripheral ICs. The delay between assertion
+>>> and de-assertion of the reset signal can be configured.
+> ...
+>> Since this is a platform driver and not just an OF driver, shouldn't
+>> you provide a way to specify the same configuration data through a
+>> platform_data structure as well?
+>
+> I believe the only practical use-cases for this driver are /currently/
+> for device-tree platforms. Shouldn't we add the platform_data support
+> only when some platform actively uses it?
 
-Hmm. As I said, I'm completely fine with using a regmap for sharing registers 
-between subdrivers. However the clocksource can not be registered as an MFD 
-cell, because it's needed very early.
+Then the Kconfig needs to depend on OF in this case.
 
-I can imagine a solution alternative to my original one, where the MFD cells 
-would be registered from the clocksource driver. This would mean that 
-platforms that don't need (and can't use) the PWM clocksource would have to 
-enable the driver anyway.
+> In the past when reviewing new drivers, I pushed for platform drivers to
+> always implement the platform_data structure up-front, and support using
+> that if present rather than "falling back" to DT. However, Grant then
+> shot that down saying that there was no point adding dead code...
 
-Another thing is that I don't see a need to create one cell per PWM channel. 
-The PWM core is designed in a way that supports multiple channels per PWM 
-controller and so is the generic PWM DT specifier (<&controller channel period 
-flags>), so I'd rather see a single cell for all PWM channels.
+Uh, ok. I don't care much either way but it somehow seems like it'll
+be impopular to start adding a lot of new "depends on OF" drivers. I
+might be wrong though.
 
-So, to summarize this alternative concept:
- - two drivers:
-   1) clocksource driver - registering clocksource and PWM MFD cell
-   2) PWM driver - handling the PWM MFD cell
- - both drivers would share registers using a regmap with custom lock/unlock 
-   callbacks (using spin_lock_irqsave/spin_unlock_irqrestore, because the 
-   clocksource needs to access PWM registers in IRQ context)
- - the clocksource/master driver would have a samsung_time_init function which 
-   would set up the driver early and initialize the clocksource
- - a platform driver would be registered by the clocksource/master driver
-   which would register the PWM MFD cell in its probe
- - MFD cell platform data would contain struct regmap * and variant data
-   (parsed from DT or received from platform code - as in my original version)
+> (this will also feed into the discussion about simple-framebuffer, which
+> also only needs DT support right now, but could in theory be extended to
+> support platform_data in the future if somebody wants).
 
-This should indeed work, assuming that I find a solution to make 
-clocksource_of_init not initialize the PWM clocksource (from PWM DT node) on 
-platforms that can't use it.
+Yeah, that's turning out to be a color preference discussion for
+sheds, not very surprising.
 
-Best regards,
--- 
-Tomasz Figa
-Samsung Poland R&D Center
-SW Solution Development, Kernel and System Framework
+
+-Olof
