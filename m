@@ -1,342 +1,317 @@
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: [PATCH] irqchip: Add TB10x interrupt controller driver
-Date: Thu, 11 Apr 2013 15:17:32 +0200
-Message-ID: <1365686252-9828-1-git-send-email-christian.ruppert@abilis.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Christian Ruppert <christian.ruppert@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 2/2] mfd: wm8994: Add some OF properties
+Date: Thu, 11 Apr 2013 15:38:20 +0200
+Message-ID: <5166BCCC.5020307@samsung.com>
+References: <1365604763-13122-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+ <1365604763-13122-2-git-send-email-broonie@opensource.wolfsonmicro.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1365604763-13122-2-git-send-email-broonie@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Kukjin Kim <kgene.kim@samsung.com>, Sangbeom Kim <sbkim73@samsung.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-The SOC interrupt controller driver for the Abilis Systems TB10x series of
-SOCs based on ARC700 CPUs.
+Mark,
 
-Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
-Signed-off-by: Pierrick Hascoet <pierrick.hascoet@abilis.com>
----
- .../interrupt-controller/abilis,tb10x_ictl.txt     |   38 +++
- drivers/irqchip/Makefile                           |    1 +
- drivers/irqchip/irq-tb10x.c                        |  254 ++++++++++++++++++++
- 3 files changed, 293 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x_ictl.txt
- create mode 100644 drivers/irqchip/irq-tb10x.c
+On 04/10/2013 04:39 PM, Mark Brown wrote:
+> Add properties for some of the more important bits of platform data and
+> fill out the binding document.
+> 
+> Not all of the current platform data is suitable for the sort of fixed
+> configuration that is done using DT, some of it should have runtime
+> mechanisms added instead and some is unlikely to ever be used in practical
+> systems.
+> 
+> Signed-off-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+> ---
+> 
+> Untested at present.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x_ictl.txt b/Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x_ictl.txt
-new file mode 100644
-index 0000000..bc292cd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x_ictl.txt
-@@ -0,0 +1,38 @@
-+TB10x Top Level Interrupt Controller
-+====================================
-+
-+The Abilis TB10x SOC contains a custom interrupt controller. It performs
-+one-to-one mapping of external interrupt sources to CPU interrupts and
-+provides support for reconfigurable trigger modes.
-+
-+Required properties
-+-------------------
-+
-+- compatible: Should be "abilis,tb10x_ictl"
-+- reg: specifies physical base address and size of register range.
-+- interrupt-congroller: Identifies the node as an interrupt controller.
-+- #interrupt cells: Specifies the number of cells used to encode an interrupt
-+  source connected to this controller. The value shall be 2.
-+- interrupt-parent: Specifies the parent interrupt controller.
-+- interrupts: Specifies the list of interrupt lines which are handled by
-+  the interrupt controller in the parent controller's notation. Interrupts
-+  are mapped one-to-one to parent interrupts.
-+
-+Example
-+-------
-+
-+intc: interrupt-controller {	/* Parent interrupt controller */
-+	interrupt-controller;
-+	#interrupt-cells = <1>;	/* For example below */
-+	/* ... */
-+};
-+
-+tb10x_ictl: pic@2000 {		/* TB10x interrupt controller */
-+	compatible = "abilis,tb10x_ictl";
-+	reg = <0x2000 0x20>;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+	interrupt-parent = <&intc>;
-+	interrupts = <5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
-+			20 21 22 23 24 25 26 27 28 29 30 31>;
-+};
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 98e3b87..ab64cc2 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -6,6 +6,7 @@ obj-$(CONFIG_METAG)			+= irq-metag-ext.o
- obj-$(CONFIG_METAG_PERFCOUNTER_IRQS)	+= irq-metag.o
- obj-$(CONFIG_ARCH_SUNXI)		+= irq-sunxi.o
- obj-$(CONFIG_ARCH_SPEAR3XX)		+= spear-shirq.o
-+obj-$(CONFIG_ARC_PLAT_TB10X)		+= irq-tb10x.o
- obj-$(CONFIG_ARM_GIC)			+= irq-gic.o
- obj-$(CONFIG_ARM_VIC)			+= irq-vic.o
- obj-$(CONFIG_VERSATILE_FPGA_IRQ)	+= irq-versatile-fpga.o
-diff --git a/drivers/irqchip/irq-tb10x.c b/drivers/irqchip/irq-tb10x.c
-new file mode 100644
-index 0000000..542de1e
---- /dev/null
-+++ b/drivers/irqchip/irq-tb10x.c
-@@ -0,0 +1,254 @@
-+/*
-+ * Abilis Systems interrupt controller driver
-+ *
-+ * Copyright (C) Abilis Systems 2012
-+ *
-+ * Author: Christian Ruppert <christian.ruppert@abilis.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
-+ */
-+
-+#include <linux/interrupt.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <linux/io.h>
-+#include <linux/slab.h>
-+#include "../../drivers/irqchip/irqchip.h"
-+
-+#define AB_IRQCTL_INT_ENABLE   (0x00)
-+#define AB_IRQCTL_INT_STATUS   (0x04)
-+#define AB_IRQCTL_SRC_MODE     (0x08)
-+#define AB_IRQCTL_SRC_POLARITY (0x0C)
-+#define AB_IRQCTL_INT_MODE     (0x10)
-+#define AB_IRQCTL_INT_POLARITY (0x14)
-+#define AB_IRQCTL_INT_FORCE    (0x18)
-+
-+struct tb10x_ictl {
-+	void *base;
-+	struct irq_domain *domain;
-+};
-+
-+static inline void ab_irqctl_writereg(struct tb10x_ictl *ictl, u32 reg,
-+	u32 val)
-+{
-+	iowrite32(val, (u32 *)(ictl->base + reg));
-+}
-+
-+static inline u32 ab_irqctl_readreg(struct tb10x_ictl *ictl, u32 reg)
-+{
-+	return ioread32((u32 *)(ictl->base + reg));
-+}
-+
-+static int tb10x_irq_set_type(struct irq_data *data, unsigned int flow_type)
-+{
-+	struct tb10x_ictl *ictl = irq_data_get_irq_chip_data(data);
-+	unsigned int irq = data->irq;
-+	unsigned int hwirq = irqd_to_hwirq(data);
-+	uint32_t im, mod, pol;
-+
-+	im = 1UL << hwirq;
-+
-+	mod = ab_irqctl_readreg(ictl, AB_IRQCTL_SRC_MODE) | im;
-+	pol = ab_irqctl_readreg(ictl, AB_IRQCTL_SRC_POLARITY) | im;
-+
-+	switch (flow_type & IRQF_TRIGGER_MASK) {
-+	case IRQ_TYPE_EDGE_FALLING:
-+		pol ^= im;
-+		break;
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		mod ^= im;
-+		break;
-+	case IRQ_TYPE_NONE:
-+		flow_type = IRQ_TYPE_LEVEL_LOW;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		mod ^= im;
-+		pol ^= im;
-+		break;
-+	case IRQ_TYPE_EDGE_RISING:
-+		break;
-+	default:
-+		pr_err("%s: Cannot assign multiple trigger modes to IRQ %d.\n",
-+			__func__, irq);
-+		return -EBADR;
-+	}
-+
-+	irqd_set_trigger_type(data, flow_type);
-+
-+	ab_irqctl_writereg(ictl, AB_IRQCTL_SRC_MODE, mod);
-+	ab_irqctl_writereg(ictl, AB_IRQCTL_SRC_POLARITY, pol);
-+	ab_irqctl_writereg(ictl, AB_IRQCTL_INT_STATUS, im);
-+
-+	if (flow_type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_LEVEL_HIGH))
-+		__irq_set_handler_locked(irq, handle_level_irq);
-+	else
-+		__irq_set_handler_locked(irq, handle_edge_irq);
-+
-+	return IRQ_SET_MASK_OK;
-+}
-+
-+static void tb10x_irq_unmask(struct irq_data *data)
-+{
-+	struct tb10x_ictl *ictl = irq_data_get_irq_chip_data(data);
-+	unsigned int hwirq = irqd_to_hwirq(data);
-+
-+	ab_irqctl_writereg(ictl, AB_IRQCTL_INT_ENABLE,
-+		ab_irqctl_readreg(ictl, AB_IRQCTL_INT_ENABLE) | (1 << hwirq));
-+}
-+
-+static void tb10x_irq_mask(struct irq_data *data)
-+{
-+	struct tb10x_ictl *ictl = irq_data_get_irq_chip_data(data);
-+	unsigned int hwirq = irqd_to_hwirq(data);
-+
-+	ab_irqctl_writereg(ictl, AB_IRQCTL_INT_ENABLE,
-+		ab_irqctl_readreg(ictl, AB_IRQCTL_INT_ENABLE) & ~(1 << hwirq));
-+}
-+
-+static void tb10x_irq_ack(struct irq_data *data)
-+{
-+	struct tb10x_ictl *ictl = irq_data_get_irq_chip_data(data);
-+	unsigned int hwirq = irqd_to_hwirq(data);
-+
-+	ab_irqctl_writereg(ictl, AB_IRQCTL_INT_STATUS,
-+			ab_irqctl_readreg(ictl, AB_IRQCTL_SRC_MODE)
-+			& (1 << hwirq));
-+}
-+
-+static struct irq_chip irq_tb10x_chip = {
-+	.name          = "TB10x-ICTL",
-+	.irq_ack       = tb10x_irq_ack,
-+	.irq_mask      = tb10x_irq_mask,
-+	.irq_unmask    = tb10x_irq_unmask,
-+	.irq_set_type  = tb10x_irq_set_type,
-+};
-+
-+static int tb10x_irq_map(struct irq_domain *d, unsigned int irq,
-+				irq_hw_number_t hw)
-+{
-+	irq_set_chip_data(irq, d->host_data);
-+	irq_set_chip_and_handler(irq, &irq_tb10x_chip, handle_level_irq);
-+
-+	return 0;
-+}
-+
-+static int tb10x_irq_xlate(struct irq_domain *d, struct device_node *node,
-+			const u32 *intspec, unsigned int intsize,
-+			unsigned long *out_hwirq, unsigned int *out_type)
-+{
-+	static const unsigned int tb10x_xlate_types[] = {
-+		IRQ_TYPE_EDGE_RISING,
-+		IRQ_TYPE_LEVEL_LOW,
-+		IRQ_TYPE_LEVEL_HIGH,
-+		IRQ_TYPE_EDGE_FALLING,
-+	};
-+
-+	if (WARN_ON(intsize != 2))
-+		return -EINVAL;
-+
-+	if (WARN_ON(intspec[1] >= ARRAY_SIZE(tb10x_xlate_types)))
-+		return -EINVAL;
-+
-+	*out_hwirq = intspec[0];
-+	*out_type = tb10x_xlate_types[intspec[1]];
-+	return 0;
-+}
-+
-+static struct irq_domain_ops irq_tb10x_domain_ops = {
-+	.map	= tb10x_irq_map,
-+	.xlate	= tb10x_irq_xlate,
-+};
-+
-+static void tb10x_irq_cascade(unsigned int irq, struct irq_desc *desc)
-+{
-+	struct tb10x_ictl *ictl = irq_desc_get_handler_data(desc);
-+
-+	generic_handle_irq(irq_find_mapping(ictl->domain, irq));
-+}
-+
-+static int __init of_tb10x_init_irq(struct device_node *ictl,
-+					struct device_node *parent)
-+{
-+	int i;
-+	int ret;
-+	int nrirqs = of_irq_count(ictl);
-+	struct resource mem;
-+	struct tb10x_ictl *ic;
-+
-+	ic = kmalloc(sizeof(struct tb10x_ictl), GFP_KERNEL);
-+	if (!ic)
-+		return -ENOMEM;
-+
-+	ic->domain = irq_domain_add_tree(ictl, &irq_tb10x_domain_ops, ic);
-+	if (!ic->domain) {
-+		ret = -ENOMEM;
-+		goto irq_domain_add_fail;
-+	}
-+
-+	if (of_address_to_resource(ictl, 0, &mem)) {
-+		pr_err("%s: No registers declared in DeviceTree.\n",
-+			ictl->name);
-+		ret = -EINVAL;
-+		goto of_reg_get_fail;
-+	}
-+
-+	if (!request_mem_region(mem.start, resource_size(&mem),
-+		irq_tb10x_chip.name)) {
-+		ret = -EBUSY;
-+		goto reg_request_fail;
-+	}
-+
-+	ic->base = ioremap(mem.start, resource_size(&mem));
-+	if (!ic->base) {
-+		ret = -EBUSY;
-+		goto ioremap_fail;
-+	}
-+
-+	for (i = 0; i < nrirqs; i++) {
-+		unsigned int irq, hwirq;
-+		struct irq_data *irq_data;
-+
-+		irq = irq_of_parse_and_map(ictl, i);
-+		irq_data = irq_get_irq_data(irq);
-+
-+		if (!irq_data)
-+			continue;
-+
-+		hwirq = irqd_to_hwirq(irq_data);
-+
-+		if (irq != hwirq)
-+			panic("IRQ %d maps to hardware IRQ %d.\n", irq, hwirq);
-+
-+		irq_set_handler_data(irq, ic);
-+		irq_set_chained_handler(irq, tb10x_irq_cascade);
-+	}
-+
-+	ab_irqctl_writereg(ic, AB_IRQCTL_INT_ENABLE, 0);
-+	ab_irqctl_writereg(ic, AB_IRQCTL_INT_MODE, 0);
-+	ab_irqctl_writereg(ic, AB_IRQCTL_INT_POLARITY, 0);
-+	ab_irqctl_writereg(ic, AB_IRQCTL_INT_STATUS, ~0UL);
-+
-+	return 0;
-+
-+ioremap_fail:
-+	release_mem_region(mem.start, resource_size(&mem));
-+reg_request_fail:
-+of_reg_get_fail:
-+	irq_domain_remove(ic->domain);
-+irq_domain_add_fail:
-+	kfree(ic);
-+	return ret;
-+}
-+IRQCHIP_DECLARE(tb10x_intc, "abilis,tb10x_ictl", of_tb10x_init_irq);
--- 
-1.7.1
+I've tested it with wm1811 codec and found a few issues/things that are 
+a bit confusing to me.
+ 
+>  Documentation/devicetree/bindings/sound/wm8994.txt |   56 +++++++++++++-
+>  drivers/mfd/wm8994-core.c                          |   81 +++++++++++++++++++-
+>  2 files changed, 134 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/wm8994.txt b/Documentation/devicetree/bindings/sound/wm8994.txt
+> index 7a7eb1e..51edc5f 100644
+> --- a/Documentation/devicetree/bindings/sound/wm8994.txt
+> +++ b/Documentation/devicetree/bindings/sound/wm8994.txt
+> @@ -5,14 +5,68 @@ on the board).
+>  
+>  Required properties:
+>  
+> -  - compatible : "wlf,wm1811", "wlf,wm8994", "wlf,wm8958"
+> +  - compatible : One of "wlf,wm1811", "wlf,wm8994" or "wlf,wm8958"
+>  
+>    - reg : the I2C address of the device for I2C, the chip select
+>            number for SPI.
+>  
+> +  - gpio-controller : Indicates this device is a GPIO controller.
+> +  - #gpio-cells : Must be 2. The first cell is the pin number and the
+> +    second cell is used to specify optional parameters (currently unused).
+> +
+> +  - AVDD2-supply, DBVDD1-supply, DBVDD2-supply, DBVDD3-supply, CPVDD-supply,
+> +    SPKVDD1-supply, SPKVDD2-supply : power supplies for the device, as covered
 
+These capitalized regulator supply names look like standard ones. Sorry, 
+I'm quite new to all this ASoC stuff. I was wondering, what about LDO1, LDO2
+regulators that are present in the wm1811 chip for instance ? Are those
+regulators supposed to be associated with some of the supply names above ?
+
+AFAICS LDO1, LDO2 need to be enabled before we can actually perform any I2C 
+communication.
+
+Besides that, I needed to specify following regulator supplies in order to
+to get the wm8994 codec successfully initialized:
+
+  DCVDD-supply
+  AVDD1-supply
+
+That might be something specific to the sound machine driver though, I'm not
+certain. 
+
+> +    in Documentation/devicetree/bindings/regulator/regulator.txt
+> +
+> +Optional properties:
+> +
+> +  - interrupts : The interrupt line the IRQ signal for the device is
+> +    connected to.  This is optional, if it is not connected then none
+> +    of the interrupt related properties should be specified.
+> +  - interrupt-controller : These devices contain interrupt controllers
+> +    and may provide interrupt services to other devices if they have an
+> +    interrupt line connected.
+> +  - interrupt-parent : The parent interrupt controller.
+> +  - #interrupt-cells: the number of cells to describe an IRQ, this should be 2.
+> +    The first cell is the IRQ number.
+> +    The second cell is the flags, encoded as the trigger masks from
+> +    Documentation/devicetree/bindings/interrupts.txt
+> +
+> +  - gpio-cfg : A list of GPIO configuration register values. If absent,
+> +    no configuration of these registers is performed. If any value is
+> +    over 0xffff then the register will be left as default. If present 11
+> +    values must be supplied.
+> +
+> +  - micbias-cfg : Three MICBIAS register values for WM1811 or
+
+Aren't there just 2 MICBIAS registers ? At least I've found the wm8994 driver
+handles only 2 values.
+
+> +    WM8958.  If absent the register defaults will be used.
+> +
+> +  - ldo1ena : GPIO specifier for control of LDO1ENA input to device.
+> +  - ldo2ena : GPIO specifier for control of LDO2ENA input to device.
+
+Hmm, don't we need to specify the constraints for the regulators as well ?
+AFAICS for wm8994 you choose not to specify functions of this MFD as child
+DT nodes.
+
+I might be missing something, but to make the codec working I have defined 
+regulator as child node of this mfd device node, i.e.
+
+	i2c@138A0000 {
+		...
+		wm1811: wm1811@1a {
+			compatible = "wlf,wm1811";
+			reg = <0x1a>;
+			interrupt-parent = <&gpx3>;
+			interrupts = <6 4>;
+
+			gpio-cfg = <0x3 0x0 0x0 0x0
+				 0x0 0x0 0x0 0x8000
+				 0x0 0x0 0x0>;
+			micbias-cfg = <0x2f 0x2b>;
+
+			lineout2-feedback;
+			lineout1-se;
+			lineout2-se;
+
+			AVDD2-supply = <&vbatt_reg>;
+			DBVDD1-supply = <&ldo3_reg>;
+			DBVDD2-supply = <&wm1811_ldo1_reg>;
+			DBVDD3-supply = <&vbatt_reg>;
+			CPVDD-supply = <&vbatt_reg>;
+			SPKVDD1-supply = <&vbatt_reg>;
+			SPKVDD2-supply = <&vbatt_reg>;
+			DCVDD-supply = <&vbatt_reg>;
+			AVDD1-supply = <&vbatt_reg>;
+
+			wm1811_ldo1_reg: ldo1 {
+				compatible = "wlf,wm8994-ldo";
+
+				regulator-compatible = "LDO1";
+				regulator-name = "WM1811_LDO1";
+				gpio = <&gpj0 4 0>;
+				regulator-always-on;
+			};
+		};
+	};
+
+Then in wm8994_ldo_probe() I made a change as below:
+
+	if (pdata) {
+		config.init_data = pdata->ldo[id].init_data;
+		config.ena_gpio = pdata->ldo[id].enable;
+-	}
++	} else {
++		config.init_data = of_get_regulator_init_data(dev, dev->of_node);
++		config.ena_gpio = of_get_named_gpio(dev->of_node, "gpio", 0);
++		config.of_node = dev->of_node;
++	}
+
+
+Is there any other way to get the LDO1/LDO2 regulators properly registered
+and enabled before any I2C communication is done with the device ?
+
+platform_data (wm8994->dev->platform_data) in wm8994_ldo_probe() is NULL
+when booting from DT. I guess something like this could be done, but then 
+how to associate the voltage regulators with the codec ?
+
+---8<--------------
+diff --git a/drivers/regulator/wm8994-regulator.c b/drivers/regulator/wm8994-regulator.c
+index 1a63261..0235148 100644
+--- a/drivers/regulator/wm8994-regulator.c
++++ b/drivers/regulator/wm8994-regulator.c
+@@ -119,6 +119,9 @@ static int wm8994_ldo_probe(struct platform_device *pdev)
+        int ret;
+ 
++       if (pdev->dev.of_node)
++               pdata = &wm8994->pdata;
++
+        ldo = devm_kzalloc(&pdev->dev, sizeof(struct wm8994_ldo), GFP_KERNEL);
+        if (ldo == NULL) {
+                dev_err(&pdev->dev, "Unable to allocate private data\n");
+---8<--------------
+
+The "only" issue I had was that there are 2 wm8994-ldo mfd cells, and for
+each of them the mfd core iterated over all wm1811 child nodes, trying
+to register each regulator twice. So I temporarily removed one entry from
+the wm8994_regulator_devs array.
+
+> +  - lineout1-se : If present LINEOUT1 is in single ended mode.
+> +  - lineout2-se : If present LINEOUT2 is in single ended mode.
+> +
+> +  - lineout1-feedback : If present LINEOUT1 has common mode feedback connected.
+> +  - lineout2-feedback : If present LINEOUT2 has common mode feedback connected.
+> +
+> +  - ldoena-always-driven : If present LDOENA is always driven
+
+I suppose the custom properties should be prefixed with "wlf,".
+
+>  Example:
+>  
+>  codec: wm8994@1a {
+>  	compatible = "wlf,wm8994";
+>  	reg = <0x1a>;
+> +
+> +	gpio-controoler;
+
+s/controoler/controller ?
+
+> +	#gpio-cells = <2>;
+> +
+> +        lineout1-se;
+> +
+> +	AVDD2-supply = <&regulator>;
+> +	CPVDD-supply = <&regulator>;
+> +	DBVDD1-supply = <&regulator>;
+> +	DBVDD2-supply = <&regulator>;
+> +	DBVDD3-supply = <&regulator>;
+> +	SPKVDD1-supply = <&regulator>;
+> +	SPKVDD2-supply = <&regulator>;
+>  };
+> diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
+> index 3f8d591..3f87f25 100644
+> --- a/drivers/mfd/wm8994-core.c
+> +++ b/drivers/mfd/wm8994-core.c
+> @@ -19,6 +19,9 @@
+>  #include <linux/err.h>
+>  #include <linux/delay.h>
+>  #include <linux/mfd/core.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/regmap.h>
+>  #include <linux/regulator/consumer.h>
+> @@ -396,6 +399,68 @@ static const struct reg_default wm1811_reva_patch[] = {
+>  	{ 0x102, 0x0 },
+>  };
+>  
+> +#ifdef CONFIG_OF
+> +static int wm8994_set_pdata_from_of(struct wm8994 *wm8994)
+> +{
+> +	struct device_node *np = wm8994->dev->of_node;
+> +	struct wm8994_pdata *pdata = &wm8994->pdata;
+> +	int i;
+> +
+> +	if (!np)
+> +		return 0;
+> +
+> +	if (of_property_read_u32_array(np, "gpio-cfg", pdata->gpio_defaults,
+> +				       ARRAY_SIZE(pdata->gpio_defaults)) >= 0) {
+> +		for (i = 0; i < ARRAY_SIZE(pdata->gpio_defaults); i++) {
+> +			if (wm8994->pdata.gpio_defaults[i] == 0) {
+> +				pdata->gpio_defaults[i]
+> +					= WM8994_CONFIGURE_GPIO;
+
+Hmm, that's not obvious from the binding, that 0 is replaced with 0x10000
+by the implementation.
+
+> +			} else if (pdata->gpio_defaults[i] == 0xffffffff) {
+> +				pdata->gpio_defaults[i] = 0;
+> +			} else if (pdata->gpio_defaults[i] > 0xffff) {
+
+And this is not specified as an error condition at the binding. I expected
+in such case the default value of a register would be used.
+
+> +				dev_err(wm8994->dev,
+> +					"Invalid gpio-cfg[%d] %x\n",
+> +					i, pdata->gpio_defaults[i]);
+> +				return -EINVAL;
+> +			}
+> +		}
+> +	}
+> +
+> +	of_property_read_u32_array(np, "micbias-cfg", pdata->micbias,
+> +				   ARRAY_SIZE(pdata->micbias));
+> +
+> +	pdata->lineout1_diff = true;
+> +	pdata->lineout2_diff = true;
+> +	if (of_find_property(np, "lineout1-se", NULL))
+> +		pdata->lineout1_diff = false;
+> +	if (of_find_property(np, "lineout2-se", NULL))
+> +		pdata->lineout2_diff = false;
+
+I guess you preferred it that way, rather than
+
+	pdata->lineout1_diff = !of_property_read_bool(np, "lineout1-se");
+	pdata->lineout2_diff = !of_property_read_bool(np, "lineout2-se");
+
+?
+> +	if (of_find_property(np, "lineout1-feedback", NULL))
+> +		pdata->lineout1fb = true;
+> +	if (of_find_property(np, "lineout2-feedback", NULL))
+> +		pdata->lineout2fb = true;
+> +
+> +	if (of_find_property(np, "ldoena-always-driven", NULL))
+> +		pdata->lineout2fb = true;
+> +
+> +	pdata->ldo[0].enable = of_get_named_gpio(np, "ldo1ena", 0);
+> +	if (pdata->ldo[0].enable < 0)
+> +		pdata->ldo[0].enable = 0;
+> +
+> +	pdata->ldo[1].enable = of_get_named_gpio(np, "ldo2ena", 0);
+> +	if (pdata->ldo[1].enable < 0)
+> +		pdata->ldo[1].enable = 0;
+> +
+> +	return 0;
+> +}
+
+
+Thanks,
+Sylwester
