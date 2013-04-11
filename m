@@ -1,237 +1,96 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH 2/2] mfd: wm8994: Add some OF properties
-Date: Thu, 11 Apr 2013 17:37:03 +0100
-Message-ID: <1365698223-4684-2-git-send-email-broonie@opensource.wolfsonmicro.com>
-References: <1365698223-4684-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v4 04/14] mfd: Add Samsung PWM/timer master driver
+Date: Thu, 11 Apr 2013 18:44:33 +0200
+Message-ID: <1718887.H9vPuvORKd@amdc1227>
+References: <1365093431-30621-1-git-send-email-t.figa@samsung.com>
+ <5357756.gKmBOZlWcd@flatron> <201304110035.47776.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365698223-4684-1-git-send-email-broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Sangbeom Kim <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <201304110035.47776.arnd@arndb.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, kyungmin.park@samsung.com, linux@simtec.co.uk, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, sylvester.nawrocki@gmail.com, buserror@gmail.com, christer@weinigel.se, jekhor@gmail.com, ghcstop@gmail.com, mark.rutland@arm.com, heiko@sntech.de, robherring2@gmail.com, m.szyprowski@samsung.com, john.stultz@linaro.org, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Add properties for some of the more important bits of platform data and
-fill out the binding document.
+On Thursday 11 of April 2013 00:35:47 Arnd Bergmann wrote:
+> On Monday 08 April 2013, Tomasz Figa wrote:
+> > On Saturday 06 of April 2013 00:24:18 Tomasz Figa wrote:
+> > > On Friday 05 of April 2013 21:54:21 Arnd Bergmann wrote:
+> > > > On Friday 05 April 2013, Tomasz Figa wrote:
+> > > I'm not sure what you mean by a register-level interface. Something like
+> > > samsung_pwm_update_reg(reg, mask, val), which modifies bitfields
+> > > according to the mask and value with appropriate synchronization? If
+> > > yes, this solves only the problem of access to shared registers.
+> > > 
+> > > The other problems that remain:
+> > > 
+> > > - negotiation of PWM channels to use for clock source and clock events,
+> > > 
+> > >   because each board can use different channels for PWM outputs,
+> > > 
+> > > - code duplication caused by both of the drivers doing mostly the same
+> > > 
+> > >   things and or having to parse the same data from device tree,
+> > > 
+> > > - both non-DT and DT platforms must be supported,
+> > > 
+> > > - how to keep the ability to load PWM driver as a module (or not load it
+> > > at all when PWM is not used on particular board), while retaining
+> > > everything that is needed for the clocksource driver in kernel,
+> > > 
+> > > - some platforms can't use PWM timers as system clocksources, while on
+> > > 
+> > >   others this is the only timekeeping hardware available.
+> > 
+> > Hmm. Does anybody have an idea of a better way of implementing this PWM
+> > timer support, which solves the above problems?
+> > 
+> > This series is a dependency for moving Universal C210 board to DT-based
+> > description and it's already almost out of time to get this included for
+> > 3.10...
+> 
+> Sorry for not replying earlier. My idea for the register level interface
+> was to create a platform_device for each PWM, e.g. using the mfd_cell
+> infrastructure. You can then pass a "struct regmap" as the platform
+> data for each child of the timer node, and all the DT handling code
+> can stay in the parent driver.
 
-Not all of the current platform data is suitable for the sort of fixed
-configuration that is done using DT, some of it should have runtime
-mechanisms added instead and some is unlikely to ever be used in practical
-systems.
+Hmm. As I said, I'm completely fine with using a regmap for sharing registers 
+between subdrivers. However the clocksource can not be registered as an MFD 
+cell, because it's needed very early.
 
-Signed-off-by: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
----
- Documentation/devicetree/bindings/sound/wm8994.txt |   58 ++++++++++++++-
- drivers/mfd/wm8994-core.c                          |   75 +++++++++++++++++++-
- 2 files changed, 130 insertions(+), 3 deletions(-)
+I can imagine a solution alternative to my original one, where the MFD cells 
+would be registered from the clocksource driver. This would mean that 
+platforms that don't need (and can't use) the PWM clocksource would have to 
+enable the driver anyway.
 
-diff --git a/Documentation/devicetree/bindings/sound/wm8994.txt b/Documentation/devicetree/bindings/sound/wm8994.txt
-index 7a7eb1e..bb731ab 100644
---- a/Documentation/devicetree/bindings/sound/wm8994.txt
-+++ b/Documentation/devicetree/bindings/sound/wm8994.txt
-@@ -5,14 +5,70 @@ on the board).
- 
- Required properties:
- 
--  - compatible : "wlf,wm1811", "wlf,wm8994", "wlf,wm8958"
-+  - compatible : One of "wlf,wm1811", "wlf,wm8994" or "wlf,wm8958"
- 
-   - reg : the I2C address of the device for I2C, the chip select
-           number for SPI.
- 
-+  - gpio-controller : Indicates this device is a GPIO controller.
-+  - #gpio-cells : Must be 2. The first cell is the pin number and the
-+    second cell is used to specify optional parameters (currently unused).
-+
-+  - AVDD2-supply, DBVDD1-supply, DBVDD2-supply, DBVDD3-supply, CPVDD-supply,
-+    SPKVDD1-supply, SPKVDD2-supply : power supplies for the device, as covered
-+    in Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+Optional properties:
-+
-+  - interrupts : The interrupt line the IRQ signal for the device is
-+    connected to.  This is optional, if it is not connected then none
-+    of the interrupt related properties should be specified.
-+  - interrupt-controller : These devices contain interrupt controllers
-+    and may provide interrupt services to other devices if they have an
-+    interrupt line connected.
-+  - interrupt-parent : The parent interrupt controller.
-+  - #interrupt-cells: the number of cells to describe an IRQ, this should be 2.
-+    The first cell is the IRQ number.
-+    The second cell is the flags, encoded as the trigger masks from
-+    Documentation/devicetree/bindings/interrupts.txt
-+
-+  - wlf,gpio-cfg : A list of GPIO configuration register values. If absent,
-+    no configuration of these registers is performed. If any value is
-+    over 0xffff then the register will be left as default. If present 11
-+    values must be supplied.
-+
-+  - wlf,micbias-cfg : Two MICBIAS register values for WM1811 or
-+    WM8958.  If absent the register defaults will be used.
-+
-+  - wlf,ldo1ena : GPIO specifier for control of LDO1ENA input to device.
-+  - wlf,ldo2ena : GPIO specifier for control of LDO2ENA input to device.
-+
-+  - wlf,lineout1-se : If present LINEOUT1 is in single ended mode.
-+  - wlf,lineout2-se : If present LINEOUT2 is in single ended mode.
-+
-+  - wlf,lineout1-feedback : If present LINEOUT1 has common mode feedback
-+    connected.
-+  - wlf,lineout2-feedback : If present LINEOUT2 has common mode feedback
-+    connected.
-+
-+  - wlf,ldoena-always-driven : If present LDOENA is always driven
-+
- Example:
- 
- codec: wm8994@1a {
- 	compatible = "wlf,wm8994";
- 	reg = <0x1a>;
-+
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+
-+        lineout1-se;
-+
-+	AVDD2-supply = <&regulator>;
-+	CPVDD-supply = <&regulator>;
-+	DBVDD1-supply = <&regulator>;
-+	DBVDD2-supply = <&regulator>;
-+	DBVDD3-supply = <&regulator>;
-+	SPKVDD1-supply = <&regulator>;
-+	SPKVDD2-supply = <&regulator>;
- };
-diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
-index 3f8d591..75b8b92 100644
---- a/drivers/mfd/wm8994-core.c
-+++ b/drivers/mfd/wm8994-core.c
-@@ -19,6 +19,9 @@
- #include <linux/err.h>
- #include <linux/delay.h>
- #include <linux/mfd/core.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
- #include <linux/pm_runtime.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
-@@ -396,6 +399,62 @@ static const struct reg_default wm1811_reva_patch[] = {
- 	{ 0x102, 0x0 },
- };
- 
-+#ifdef CONFIG_OF
-+static int wm8994_set_pdata_from_of(struct wm8994 *wm8994)
-+{
-+	struct device_node *np = wm8994->dev->of_node;
-+	struct wm8994_pdata *pdata = &wm8994->pdata;
-+	int i;
-+
-+	if (!np)
-+		return 0;
-+
-+	if (of_property_read_u32_array(np, "wlf,gpio-cfg", pdata->gpio_defaults,
-+				       ARRAY_SIZE(pdata->gpio_defaults)) >= 0) {
-+		for (i = 0; i < ARRAY_SIZE(pdata->gpio_defaults); i++) {
-+			if (wm8994->pdata.gpio_defaults[i] == 0)
-+				pdata->gpio_defaults[i]
-+					= WM8994_CONFIGURE_GPIO;
-+			else
-+				pdata->gpio_defaults[i] = 0;
-+		}
-+	}
-+
-+	of_property_read_u32_array(np, "wlf,micbias-cfg", pdata->micbias,
-+				   ARRAY_SIZE(pdata->micbias));
-+
-+	pdata->lineout1_diff = true;
-+	pdata->lineout2_diff = true;
-+	if (of_find_property(np, "wlf,lineout1-se", NULL))
-+		pdata->lineout1_diff = false;
-+	if (of_find_property(np, "wlf,lineout2-se", NULL))
-+		pdata->lineout2_diff = false;
-+
-+	if (of_find_property(np, "wlf,lineout1-feedback", NULL))
-+		pdata->lineout1fb = true;
-+	if (of_find_property(np, "wlf,lineout2-feedback", NULL))
-+		pdata->lineout2fb = true;
-+
-+	if (of_find_property(np, "wlf,ldoena-always-driven", NULL))
-+		pdata->lineout2fb = true;
-+
-+	pdata->ldo[0].enable = of_get_named_gpio(np, "wlf,ldo1ena", 0);
-+	if (pdata->ldo[0].enable < 0)
-+		pdata->ldo[0].enable = 0;
-+
-+	pdata->ldo[1].enable = of_get_named_gpio(np, "wlf,ldo2ena", 0);
-+	if (pdata->ldo[1].enable < 0)
-+		pdata->ldo[1].enable = 0;
-+
-+	return 0;
-+}
-+#else
-+static int wm8994_set_pdata_from_of(struct wm8994 *wm8994)
-+{
-+	return 0;
-+}
-+#endif
-+
- /*
-  * Instantiate the generic non-control parts of the device.
-  */
-@@ -414,6 +473,10 @@ static int wm8994_device_init(struct wm8994 *wm8994, int irq)
- 	}
- 	pdata = &wm8994->pdata;
- 
-+	ret = wm8994_set_pdata_from_of(wm8994);
-+	if (ret != 0)
-+		return ret;
-+
- 	dev_set_drvdata(wm8994->dev, wm8994);
- 
- 	/* Add the on-chip regulators first for bootstrapping */
-@@ -683,6 +746,7 @@ MODULE_DEVICE_TABLE(of, wm8994_of_match);
- static int wm8994_i2c_probe(struct i2c_client *i2c,
- 				      const struct i2c_device_id *id)
- {
-+	const struct of_device_id *of_id;
- 	struct wm8994 *wm8994;
- 	int ret;
- 
-@@ -693,7 +757,14 @@ static int wm8994_i2c_probe(struct i2c_client *i2c,
- 	i2c_set_clientdata(i2c, wm8994);
- 	wm8994->dev = &i2c->dev;
- 	wm8994->irq = i2c->irq;
--	wm8994->type = id->driver_data;
-+
-+	if (i2c->dev.of_node) {
-+		of_id = of_match_device(wm8994_of_match, &i2c->dev);
-+		if (of_id)
-+			wm8994->type = (int)of_id->data;
-+	} else {
-+		wm8994->type = id->driver_data;
-+	}
- 
- 	wm8994->regmap = devm_regmap_init_i2c(i2c, &wm8994_base_regmap_config);
- 	if (IS_ERR(wm8994->regmap)) {
-@@ -733,7 +804,7 @@ static struct i2c_driver wm8994_i2c_driver = {
- 		.name = "wm8994",
- 		.owner = THIS_MODULE,
- 		.pm = &wm8994_pm_ops,
--		.of_match_table = wm8994_of_match,
-+		.of_match_table = of_match_ptr(wm8994_of_match),
- 	},
- 	.probe = wm8994_i2c_probe,
- 	.remove = wm8994_i2c_remove,
+Another thing is that I don't see a need to create one cell per PWM channel. 
+The PWM core is designed in a way that supports multiple channels per PWM 
+controller and so is the generic PWM DT specifier (<&controller channel period 
+flags>), so I'd rather see a single cell for all PWM channels.
+
+So, to summarize this alternative concept:
+ - two drivers:
+   1) clocksource driver - registering clocksource and PWM MFD cell
+   2) PWM driver - handling the PWM MFD cell
+ - both drivers would share registers using a regmap with custom lock/unlock 
+   callbacks (using spin_lock_irqsave/spin_unlock_irqrestore, because the 
+   clocksource needs to access PWM registers in IRQ context)
+ - the clocksource/master driver would have a samsung_time_init function which 
+   would set up the driver early and initialize the clocksource
+ - a platform driver would be registered by the clocksource/master driver
+   which would register the PWM MFD cell in its probe
+ - MFD cell platform data would contain struct regmap * and variant data
+   (parsed from DT or received from platform code - as in my original version)
+
+This should indeed work, assuming that I find a solution to make 
+clocksource_of_init not initialize the PWM clocksource (from PWM DT node) on 
+platforms that can't use it.
+
+Best regards,
 -- 
-1.7.10.4
+Tomasz Figa
+Samsung Poland R&D Center
+SW Solution Development, Kernel and System Framework
