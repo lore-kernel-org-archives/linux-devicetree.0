@@ -1,131 +1,57 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
 Subject: Re: [PATCH 2/2] mfd: wm8994: Add some OF properties
-Date: Thu, 11 Apr 2013 18:17:32 +0200
-Message-ID: <5166E21C.7080009@samsung.com>
+Date: Thu, 11 Apr 2013 17:23:15 +0100
+Message-ID: <20130411162315.GF9243@opensource.wolfsonmicro.com>
 References: <1365604763-13122-1-git-send-email-broonie@opensource.wolfsonmicro.com>
  <1365604763-13122-2-git-send-email-broonie@opensource.wolfsonmicro.com>
  <5166BCCC.5020307@samsung.com>
  <20130411142100.GA24971@opensource.wolfsonmicro.com>
+ <5166E21C.7080009@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="DHioQtdaSVZskSfq"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20130411142100.GA24971@opensource.wolfsonmicro.com>
+Content-Disposition: inline
+In-Reply-To: <5166E21C.7080009@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Cc: Samuel Ortiz <sameo@linux.intel.com>, Kukjin Kim <kgene.kim@samsung.com>, Sangbeom Kim <sbkim73@samsung.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/2013 04:21 PM, Mark Brown wrote:
-> On Thu, Apr 11, 2013 at 03:38:20PM +0200, Sylwester Nawrocki wrote:
->> On 04/10/2013 04:39 PM, Mark Brown wrote:
-> 
->>> Untested at present.
-> 
->> I've tested it with wm1811 codec and found a few issues/things that are 
->> a bit confusing to me.
-> 
-> Wasn't kidding about the lack of testing!
 
-Anyway it worked pretty well! Just needed to add patches for the regulator
-you pointed out and that small patch:
+--DHioQtdaSVZskSfq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---8<-----------
->From e306f6683d17c3f6aafaae44395548f4703382c8 Mon Sep 17 00:00:00 2001
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Date: Thu, 11 Apr 2013 17:42:51 +0200
-Subject: [PATCH] regulator: wm8994: Use GPIO parsed from DT when registering
- regulators
+On Thu, Apr 11, 2013 at 06:17:32PM +0200, Sylwester Nawrocki wrote:
 
-Ensure the regulators are registered with a GPIO parsed from the device
-tree when available.
+> Anyway it worked pretty well! Just needed to add patches for the regulator
+> you pointed out and that small patch:
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
- drivers/regulator/wm8994-regulator.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Ah, great - just redoing the bindings just now for your other comments,
+hopefully I won't break anything in the process.  Can you post that as a
+normal patch for git am please (or I can fish it out by hand)?
 
-diff --git a/drivers/regulator/wm8994-regulator.c
-b/drivers/regulator/wm8994-regulator.c
-index 086be66..dab41ae 100644
---- a/drivers/regulator/wm8994-regulator.c
-+++ b/drivers/regulator/wm8994-regulator.c
-@@ -149,9 +149,11 @@ static int wm8994_ldo_probe(struct platform_device *pdev)
- 	config.init_data = &ldo->init_data;
- 	if (pdata)
- 		config.ena_gpio = pdata->ldo[id].enable;
-+	else if (wm8994->dev->of_node)
-+		config.ena_gpio = wm8994->pdata.ldo[id].enable;
+--DHioQtdaSVZskSfq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
- 	/* Use default constraints if none set up */
--	if (!pdata || !pdata->ldo[id].init_data) {
-+	if (!pdata || !pdata->ldo[id].init_data || wm8994->dev->of_node) {
- 		dev_dbg(wm8994->dev, "Using default init data, supply %s %s\n",
- 			ldo->supply.dev_name, ldo->supply.supply);
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
--- 
-1.7.9.5
---8<-----------
+iQIcBAEBAgAGBQJRZuNrAAoJELSic+t+oim9O6kP/io+/U2YrEZIcR+mLLITYVQa
+0VkVxrYkYyMfkXujFvYqS5yEK2Jp7eG/AHq5IWLPJ44D+2bs5CArTH2Ix6dPTmR7
+TGH+72Qxy3F9WdZPNCQUX2tLAczShMGBGqXFx38tCNhyMinLyqaPYqMY8E6BVqJe
+DoBskhOMiYI3G8HXYGVHyWVyaWB7/Fbv3nQGtpay6IKoVk44Uc3SaU//XQLUKBfc
+9520qIswhsX0mXvHsVKtKiL1576ep7UV5VMIhEzjWYukEL7y0cxSeh4mJOFbFjO1
+vrdb6wl2BHAnSZyCtyLrrHUWbeclZMNDfcsRGONxXW2x2LsIrF7txu+QzyMxH/ou
+Qygv062x5v20tmXqgvbqG2bVppiBs81uCkEqAy1W9MGLxvTB1M9Z1JmNsncVLITs
+QSqjwnntTec7AqTUySGf0gxCk59PjCpSa0armmUAYr4tbcRi7TaP81G2nu8EQpjZ
+6sxR+/jpuNw4UhAAsZneK1ITLSGxZGAzkuWq0k6v3dteYtDG3FRR5byLbVaDWe3Q
+L5NA6WiM26AMdVBTytHQ0qDO1lh0jqbUFo6aLjtUH1KtYVyrqDEuZZz5BYfckGjy
+H0+fKqOBbAp8F4aQF+jF0DKVnOFkt3UT0T0X3ir9ptgInQ0i76/xim4W7DZl9wFK
+GfBB0iLx5dS9i4JIgs1d
+=kHJ6
+-----END PGP SIGNATURE-----
 
-If needed I can resend it to you. Or do suggest please anything more relevant.
-
->>> +  - AVDD2-supply, DBVDD1-supply, DBVDD2-supply, DBVDD3-supply, CPVDD-supply,
->>> +    SPKVDD1-supply, SPKVDD2-supply : power supplies for the device, as covered
-> 
->> These capitalized regulator supply names look like standard ones. Sorry, 
->> I'm quite new to all this ASoC stuff. I was wondering, what about LDO1, LDO2
->> regulators that are present in the wm1811 chip for instance ? Are those
->> regulators supposed to be associated with some of the supply names above ?
-> 
->> AFAICS LDO1, LDO2 need to be enabled before we can actually perform any I2C 
->> communication.
-> 
-> Since all designs I've ever seen for this chip use the internal
-> regulators in a consistent fashion I've added support for setting up the
-> standard hookup by default so users don't need to specify this by hand
-> since that wound up being repetitive and boring.  This is in -next or
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git topic/wm8994
-> 
-> and should show up in v3.10.  The above list includes the supplies for
-> LDO1 and LDO2.  If someone wants to support other configurations the
-> binding can always be extended with optional properties.
-
-So far I didn't need anything more than this.
-
->> Besides that, I needed to specify following regulator supplies in order to
->> to get the wm8994 codec successfully initialized:
-> 
->>   DCVDD-supply
->>   AVDD1-supply
-> 
->> That might be something specific to the sound machine driver though, I'm not
->> certain. 
-> 
-> No, it's not - it's the above regulator driver changes, those are the
-> supplies normally supplied by the internal regulators.
-
-Ok, I just removed the above two supplies after applying
-"regulator: wm8994: Provide default init data".
-
->>> +	if (of_property_read_u32_array(np, "gpio-cfg", pdata->gpio_defaults,
->>> +				       ARRAY_SIZE(pdata->gpio_defaults)) >= 0) {
->>> +		for (i = 0; i < ARRAY_SIZE(pdata->gpio_defaults); i++) {
->>> +			if (wm8994->pdata.gpio_defaults[i] == 0) {
->>> +				pdata->gpio_defaults[i]
->>> +					= WM8994_CONFIGURE_GPIO;
-> 
->> Hmm, that's not obvious from the binding, that 0 is replaced with 0x10000
->> by the implementation.
-> 
-> This is an implementation detail due to conversion to platform data.
-> Since the idiom for platform data is that zero does nothing for platform
-> data we made the user set an out of range bit (the registers are 16 bit)
-> to set zero, otherwise we left the value untouched.  The result is that
-> we rewrite to 0x10000 in the platform data which is then rewritten to
-> zero.
-
-Alright, I should have really checked what happens further to gpio_defaults[].
-
-Now, when sound more or less works I need to fix up the irq and the gpio
-chip registration.
+--DHioQtdaSVZskSfq--
