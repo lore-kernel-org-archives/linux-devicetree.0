@@ -1,80 +1,73 @@
-From: Johan Hovold <jhovold@gmail.com>
-Subject: Re: [RFC 4/5] RTC: rtc-at91sam9: add device-tree support
-Date: Thu, 11 Apr 2013 14:57:26 +0200
-Message-ID: <20130411125726.GC21305@localhost>
-References: <20130407150938.GA25605@localhost>
- <1365347572-14972-1-git-send-email-jhovold@gmail.com>
- <1365347572-14972-4-git-send-email-jhovold@gmail.com>
- <20130408073807.GQ20693@game.jcrosoft.org>
- <20130408090023.GC25605@localhost> <51629472.3070404@atmel.com>
- <20130408103847.GE25605@localhost>
- <20130408111113.GX20693@game.jcrosoft.org>
+From: Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 2/3] of/pci: Provide support for parsing PCI DT
+ ranges property
+Date: Thu, 11 Apr 2013 14:11:34 +0100
+Message-ID: <20130411131134.GC28981@arm.com>
+References: <1365578969-30966-1-git-send-email-Andrew.Murray@arm.com>
+ <1365578969-30966-3-git-send-email-Andrew.Murray@arm.com>
+ <5165AEBA.7000803@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130408111113.GX20693@game.jcrosoft.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Johan Hovold <jhovold@gmail.com>, dgilbert@interlog.com, Nicolas Ferre <nicolas.ferre@atmel.com>, Robert Nelson <Robert.Nelson@digikey.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <5165AEBA.7000803-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "siva.kallam-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <siva.kallam-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org" <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org" <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "suren.reddy-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <suren.reddy-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 08, 2013 at 01:11:13PM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 12:38 Mon 08 Apr     , Johan Hovold wrote:
-> > On Mon, Apr 08, 2013 at 11:57:06AM +0200, Nicolas Ferre wrote:
-> > > On 04/08/2013 11:00 AM, Johan Hovold :
-> > > > On Mon, Apr 08, 2013 at 09:38:07AM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > > >> On 17:12 Sun 07 Apr     , Johan Hovold wrote:
+On Wed, Apr 10, 2013 at 07:26:02PM +0100, Rob Herring wrote:
+> On 04/10/2013 02:29 AM, Andrew Murray wrote:
+> > This patch factors out common implementation patterns to reduce overall kernel
+> > code and provide a means for host bridge drivers to directly obtain struct
+> > resources from the DT's ranges property without relying on architecture specific
+> > DT handling. This will make it easier to write archiecture independent host bridge
+> > drivers and mitigate against further duplication of DT parsing code.
+> >
+> > This patch can be used in the following way:
+> >
+> >       struct of_pci_range_parser parser;
+> >       struct of_pci_range range;
+> >
+> >       if (of_pci_range_parser(&parser, np))
+> >               ; //no ranges property
+> >
+> >       for_each_of_pci_range(&parser, &range) {
+> >
+> >               /*
+> >                       directly access properties of the address range, e.g.:
+> >                       range.pci_space, range.pci_addr, range.cpu_addr,
+> >                       range.size, range.flags
+> >
+> >                       alternatively obtain a struct resource, e.g.:
+> >                       struct resource res;
+> >                       of_pci_range_to_resource(&range, np, &res);
+> >               */
+> >       }
+> >
+> > Additionally the implementation takes care of adjacent ranges and merges them
+> > into a single range (as was the case with powerpc and microblaze).
+> >
+> > Signed-off-by: Andrew Murray <Andrew.Murray-5wv7dgnIgG8@public.gmane.org>
+> > Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> 
+> A few minor things below, otherwise:
+> 
+> Reviewed-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> 
 
-[...]
+Thanks for the feedback, I've included this in my next spin.
 
-> > > >>> +rtt@fffffd20 {
-> > > >>> +		compatible = "atmel,at91sam9g45-rtt", "atmel,at91sam9260-rtt";
-> > > 
-> > > No, there is no visible difference between the sam9g45 RTT and the
-> > > sam9260 one. So the most precise compatibility string is still sam9260.
-> > > If one day we feel the need for a advanced feature that exists on a more
-> > > recent SoC, we have the possibility to add it at that time...
-> > 
-> > Yes, this should be just "atmel,at91sam9260-rtt" to follow the current
-> > practise in AT91. However, as I mentioned in an earlier mail one could
-> > interpret
-> > 
-> > 	"The first string in the list specifies the exact device that
-> > 	the node represents in the form "<manufacturer>,<model>". The
-> > 	following strings represent other devices that the device is
-> > 	compatible with.
-> > 
-> > 	For example, the Freescale MPC8349 System on Chip (SoC) has a
-> > 	serial device which implements the National Semiconductor
-> > 	ns16550 register interface. The compatible property for the
-> > 	MPC8349 serial device should therefore be: compatible =
-> > 	"fsl,mpc8349-uart", "ns16550". In this case, fsl,mpc8349-uart
-> > 	specifies the exact device, and ns16550 states that it is
-> > 	register-level compatible with a National Semiconductor 16550
-> > 	UART."
-> > 
-> > 	http://www.devicetree.org/Device_Tree_Usage#Understanding_the_compatible_Property
-> > 
-> > to mean that the compatible property should always be exact SoC-IP
-> > followed by the first (most generic) compatible one.
->
-> here you describe compatible IP not drivers implementation
-
-I'm referring to the IP and not drivers.
-
-> they are both usuart IP that are compatible at IP level.
-
-Fair enough, I see how this can be considered to be in accordance with
-the above quotation.
-
-Johan
+Andrew Murray
