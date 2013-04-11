@@ -1,49 +1,106 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v3 5/9] ARM: dts: Add a 64 bits version of the skeleton
- device tree
-Date: Thu, 11 Apr 2013 22:48:27 +0200
-Message-ID: <5167219B.8070404@free-electrons.com>
-References: <1365461538-30702-1-git-send-email-gregory.clement@free-electrons.com> <1365461538-30702-6-git-send-email-gregory.clement@free-electrons.com> <20130411181200.GP28693@titan.lakedaemon.net>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 04/14] mfd: Add Samsung PWM/timer master driver
+Date: Thu, 11 Apr 2013 23:08:13 +0200
+Message-ID: <201304112308.14181.arnd@arndb.de>
+References: <1365093431-30621-1-git-send-email-t.figa@samsung.com>
+ <201304110035.47776.arnd@arndb.de> <1718887.H9vPuvORKd@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130411181200.GP28693@titan.lakedaemon.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Andrew Lunn <andrew@lunn.ch>, Lior Amsalem <alior@marvell.com>, Ike Pan <ike.pan@canonical.com>, Grant Likely <grant.likely@secretlab.ca>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.com>, Nicolas Pitre <nico@fluxnic.net>, linux-kernel@vger.kernel.org, Maen Suleiman <maen@marvell.com>, Nadav Haklai <nadavh@marvell.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1718887.H9vPuvORKd@amdc1227>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: mark.rutland@arm.com, heiko@sntech.de, Tomasz Figa <tomasz.figa@gmail.com>, buserror@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, christer@weinigel.se, sylvester.nawrocki@gmail.com, m.szyprowski@samsung.com, kgene.kim@samsung.com, linux@arm.linux.org.uk, Samuel Ortiz <sameo@linux.intel.com>, kwangwoo.lee@gmail.com, mcuelenaere@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, john.stultz@linaro.org, ghcstop@gmail.com, linux@simtec.co.uk, linux-arm-kernel@lists.infradead.org, broonie@opensource.wolfsonmicro.com, jekhor@gmail.com, kyungmin.park@samsung.com, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
+On Thursday 11 April 2013, Tomasz Figa wrote:
+> On Thursday 11 of April 2013 00:35:47 Arnd Bergmann wrote:
+> > On Monday 08 April 2013, Tomasz Figa wrote:
+> > > On Saturday 06 of April 2013 00:24:18 Tomasz Figa wrote:
+> > > > On Friday 05 of April 2013 21:54:21 Arnd Bergmann wrote:
+> > > > > On Friday 05 April 2013, Tomasz Figa wrote:
+> > 
+> > Sorry for not replying earlier. My idea for the register level interface
+> > was to create a platform_device for each PWM, e.g. using the mfd_cell
+> > infrastructure. You can then pass a "struct regmap" as the platform
+> > data for each child of the timer node, and all the DT handling code
+> > can stay in the parent driver.
+> 
+> Hmm. As I said, I'm completely fine with using a regmap for sharing registers 
+> between subdrivers. However the clocksource can not be registered as an MFD 
+> cell, because it's needed very early.
+> 
+> I can imagine a solution alternative to my original one, where the MFD cells 
+> would be registered from the clocksource driver. This would mean that 
+> platforms that don't need (and can't use) the PWM clocksource would have to 
+> enable the driver anyway.
 
-On 04/11/2013 08:12 PM, Jason Cooper wrote:
-> On Tue, Apr 09, 2013 at 12:52:13AM +0200, Gregory CLEMENT wrote:
->> From: Lior Amsalem <alior@marvell.com>
->>
->> In order to be able to use more than 4GB address-cells and size-cells
->> have to be set to 2
->>
->> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
->> Signed-off-by: Lior Amsalem <alior@marvell.com>
->> ---
->>  arch/arm/boot/dts/skeleton64.dtsi |   13 +++++++++++++
->>  1 file changed, 13 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/skeleton64.dtsi
-> 
-> Applied to mvebu/dt
-> 
-> Gregory,
-> 
-> Once I can pull in Thomas' pci work, you'll just need to rebase patches
-> 1, and 6 - 9 against mvebu/dt.
-> 
+Sounds ok to me. The main part I want to avoid is having two separate device
+nodes in the DT for one physical device, but there are multiple ways to get
+there.
 
-Yes sure! When did you plan to pull the dts part of Thomas' pci work?
-Is there still anything left to prevent to pull this part?
+> Another thing is that I don't see a need to create one cell per PWM channel. 
+> The PWM core is designed in a way that supports multiple channels per PWM 
+> controller and so is the generic PWM DT specifier (<&controller channel period 
+> flags>), so I'd rather see a single cell for all PWM channels.
 
-Thanks,
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Sure, no problem with that.
+
+> So, to summarize this alternative concept:
+>  - two drivers:
+>    1) clocksource driver - registering clocksource and PWM MFD cell
+>    2) PWM driver - handling the PWM MFD cell
+
+Ok. Don't be too tied to the MFD concept though if it causes problems.
+In many cases calling platform_device_register_resndata or similar is
+actually easier than MFD, especially if you only want a single child
+device. Either way is fine though.
+
+>  - both drivers would share registers using a regmap with custom lock/unlock 
+>    callbacks (using spin_lock_irqsave/spin_unlock_irqrestore, because the 
+>    clocksource needs to access PWM registers in IRQ context)
+
+Ok.
+
+>  - the clocksource/master driver would have a samsung_time_init function which 
+>    would set up the driver early and initialize the clocksource
+
+Right. If you want to use the clocksource_of_init() infratstructure for this
+(which is probably a good idea), please base your series on top of the
+clksrc/cleanup branch in arm-soc.
+
+>  - a platform driver would be registered by the clocksource/master driver
+>    which would register the PWM MFD cell in its probe.
+
+This seems unnecessary, if the only purpose of the platform driver is to
+export the MFD cell. In that case, I would actually suggest a simpler model
+where the PWM driver registers the main platform driver directly and
+calls a function exported by the clocksource driver to get the regmap
+structure and anything else it may need (possibly initializing the driver
+in the case where it is not used as the clocksource but only provides
+the registers for PWM).
+
+>  - MFD cell platform data would contain struct regmap * and variant data
+>    (parsed from DT or received from platform code - as in my original version)
+
+Yes, either the MFD cell, or the exported symbol, whichever ends up easier.
+
+> This should indeed work, assuming that I find a solution to make 
+> clocksource_of_init not initialize the PWM clocksource (from PWM DT node) on 
+> platforms that can't use it.
+
+Right. If anything else comes up, I'd suggest we discuss it on IRC (#armlinux
+on irc.freenode.net) tomorrow for faster round-trip, or I can call you on
+the phone if you like. I'm available all day tomorrow, just send me your
+(landline) phone number by private email.
+
+	Arnd.
