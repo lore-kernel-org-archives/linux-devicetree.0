@@ -1,14 +1,14 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PATCH 4/8] video: atmel_lcdfb: add device tree suport
-Date: Thu, 11 Apr 2013 17:00:18 +0200
-Message-ID: <1365692422-9565-4-git-send-email-plagnioj@jcrosoft.com>
-References: <20130411145741.GB25242@game.jcrosoft.org>
- <1365692422-9565-1-git-send-email-plagnioj@jcrosoft.com>
+From: Andrew Murray <Andrew.Murray@arm.com>
+Subject: [PATCH v6 2/3] of/pci: Provide support for parsing PCI DT ranges
+ property
+Date: Thu, 11 Apr 2013 16:26:08 +0100
+Message-ID: <1365693969-23907-3-git-send-email-Andrew.Murray@arm.com>
+References: <1365693969-23907-1-git-send-email-Andrew.Murray@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1365692422-9565-1-git-send-email-plagnioj@jcrosoft.com>
+In-Reply-To: <1365693969-23907-1-git-send-email-Andrew.Murray@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,452 +18,387 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-fbdev@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+To: rob.herring@calxeda.com
+Cc: siva.kallam@samsung.com, linux-pci@vger.kernel.org, linus.walleij@linaro.org, thierry.reding@avionic-design.de, Liviu.Dudau@arm.com, grant.likely@secretlab.ca, paulus@samba.org, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, jg1.han@samsung.com, jgunthorpe@obsidianresearch.com, thomas.abraham@linaro.org, benh@kernel.crashing.org, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, monstr@monstr.eu, linux-kernel@vger.kernel.org, suren.reddy@samsung.com, Andrew Murray <Andrew.Murray@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-get display timings from device tree
-Use videomode helpers to get display timings and configurations from
-device tree
+This patch factors out common implementation patterns to reduce overall kernel
+code and provide a means for host bridge drivers to directly obtain struct
+resources from the DT's ranges property without relying on architecture specific
+DT handling. This will make it easier to write archiecture independent host bridge
+drivers and mitigate against further duplication of DT parsing code.
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: linux-fbdev@vger.kernel.org
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
+This patch can be used in the following way:
+
+	struct of_pci_range_parser parser;
+	struct of_pci_range range;
+
+	if (of_pci_range_parser(&parser, np))
+		; //no ranges property
+
+	for_each_of_pci_range(&parser, &range) {
+
+		/*
+			directly access properties of the address range, e.g.:
+			range.pci_space, range.pci_addr, range.cpu_addr,
+			range.size, range.flags
+
+			alternatively obtain a struct resource, e.g.:
+			struct resource res;
+			of_pci_range_to_resource(&range, np, &res);
+		*/
+	}
+
+Additionally the implementation takes care of adjacent ranges and merges them
+into a single range (as was the case with powerpc and microblaze).
+
+Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
+Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Reviewed-by: Rob Herring <rob.herring@calxeda.com>
+Tested-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
- .../devicetree/bindings/video/atmel,lcdc.txt       |   75 ++++++
- drivers/video/Kconfig                              |    2 +
- drivers/video/atmel_lcdfb.c                        |  244 +++++++++++++++++---
- 3 files changed, 289 insertions(+), 32 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/video/atmel,lcdc.txt
+ drivers/of/address.c       |   66 ++++++++++++++++++++++++++
+ drivers/of/of_pci.c        |  112 ++++++++++++++++----------------------------
+ include/linux/of_address.h |   46 ++++++++++++++++++
+ 3 files changed, 152 insertions(+), 72 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/video/atmel,lcdc.txt b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-new file mode 100644
-index 0000000..1ec175e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-@@ -0,0 +1,75 @@
-+Atmel LCDC Framebuffer
-+-----------------------------------------------------
-+
-+Required properties:
-+- compatible :
-+	"atmel,at91sam9261-lcdc" , 
-+	"atmel,at91sam9263-lcdc" ,
-+	"atmel,at91sam9g10-lcdc" ,
-+	"atmel,at91sam9g45-lcdc" ,
-+	"atmel,at91sam9g45es-lcdc" ,
-+	"atmel,at91sam9rl-lcdc" ,
-+	"atmel,at32ap-lcdc"
-+- reg : Should contain 1 register ranges(address and length)
-+- interrupts : framebuffer controller interrupt
-+- display: a phandle pointing to the display node
-+
-+Required nodes:
-+- display: a display node is required to initialize the lcd panel
-+	This should be in the board dts.
-+- default-mode: a videomode within the display with timing parameters
-+	as specified below.
-+
-+Example:
-+
-+	fb0: fb@0x00500000 {
-+		compatible = "atmel,at91sam9g45-lcdc";
-+		reg = <0x00500000 0x1000>;
-+		interrupts = <23 3 0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_fb>;
-+		display = <&display0>;
-+		status = "okay";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+	};
-+
-+Atmel LCDC Display
-+-----------------------------------------------------
-+Required properties (as per of_videomode_helper):
-+
-+ - atmel,dmacon: dma controler configuration
-+ - atmel,lcdcon2: lcd controler configuration
-+ - atmel,guard-time: lcd guard time (Delay in frame periods)
-+ - bits-per-pixel: lcd panel bit-depth.
-+
-+Optional properties (as per of_videomode_helper):
-+ - atmel,lcdcon-backlight: enable backlight
-+ - atmel,lcd-wiring-mode: lcd wiring mode "RGB" or "BRG"
-+ - atmel,power-control-gpio: gpio to power on or off the LCD (as many as needed)
-+
-+Example:
-+	display0: display {
-+		bits-per-pixel = <32>;
-+		atmel,lcdcon-backlight;
-+		atmel,dmacon = <0x1>;
-+		atmel,lcdcon2 = <0x80008002>;
-+		atmel,guard-time = <9>;
-+		atmel,lcd-wiring-mode = <1>;
-+
-+		display-timings {
-+			native-mode = <&timing0>;
-+			timing0: timing0 {
-+				clock-frequency = <9000000>;
-+				hactive = <480>;
-+				vactive = <272>;
-+				hback-porch = <1>;
-+				hfront-porch = <1>;
-+				vback-porch = <40>;
-+				vfront-porch = <1>;
-+				hsync-len = <45>;
-+				vsync-len = <1>;
-+			};
-+		};
-+	};
-diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
-index 4c1546f..0687482 100644
---- a/drivers/video/Kconfig
-+++ b/drivers/video/Kconfig
-@@ -1018,6 +1018,8 @@ config FB_ATMEL
- 	select FB_CFB_FILLRECT
- 	select FB_CFB_COPYAREA
- 	select FB_CFB_IMAGEBLIT
-+	select FB_MODE_HELPERS
-+	select OF_VIDEOMODE
- 	help
- 	  This enables support for the AT91/AT32 LCD Controller.
- 
-diff --git a/drivers/video/atmel_lcdfb.c b/drivers/video/atmel_lcdfb.c
-index f67e226..4a31570 100644
---- a/drivers/video/atmel_lcdfb.c
-+++ b/drivers/video/atmel_lcdfb.c
-@@ -20,7 +20,11 @@
- #include <linux/gfp.h>
- #include <linux/module.h>
- #include <linux/platform_data/atmel.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
- #include <video/of_display_timing.h>
-+#include <video/videomode.h>
- 
- #include <mach/cpu.h>
- #include <asm/gpio.h>
-@@ -59,6 +63,13 @@ struct atmel_lcdfb_info {
- 	struct atmel_lcdfb_config *config;
- };
- 
-+struct atmel_lcdfb_power_ctrl_gpio {
-+	int gpio;
-+	int active_low;
-+
-+	struct list_head list;
-+};
-+
- #define lcdc_readl(sinfo, reg)		__raw_readl((sinfo)->mmio+(reg))
- #define lcdc_writel(sinfo, reg, val)	__raw_writel((val), (sinfo)->mmio+(reg))
- 
-@@ -945,16 +956,187 @@ static void atmel_lcdfb_stop_clock(struct atmel_lcdfb_info *sinfo)
- 	clk_disable(sinfo->lcdc_clk);
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 04da786..d3c4f2f 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -227,6 +227,72 @@ int of_pci_address_to_resource(struct device_node *dev, int bar,
+ 	return __of_address_to_resource(dev, addrp, size, flags, NULL, r);
  }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id atmel_lcdfb_dt_ids[] = {
-+	{ .compatible = "atmel,at91sam9261-lcdc" , .data = &at91sam9261_config, },
-+	{ .compatible = "atmel,at91sam9263-lcdc" , .data = &at91sam9263_config, },
-+	{ .compatible = "atmel,at91sam9g10-lcdc" , .data = &at91sam9g10_config, },
-+	{ .compatible = "atmel,at91sam9g45-lcdc" , .data = &at91sam9g45_config, },
-+	{ .compatible = "atmel,at91sam9g45es-lcdc" , .data = &at91sam9g45es_config, },
-+	{ .compatible = "atmel,at91sam9rl-lcdc" , .data = &at91sam9rl_config, },
-+	{ .compatible = "atmel,at32ap-lcdc" , .data = &at32ap_config, },
-+	{ /* sentinel */ }
-+};
+ EXPORT_SYMBOL_GPL(of_pci_address_to_resource);
 +
-+MODULE_DEVICE_TABLE(of, atmel_lcdfb_dt_ids);
-+
-+static const char *atmel_lcdfb_wiring_modes[] = {
-+	[ATMEL_LCDC_WIRING_BGR]	= "BRG",
-+	[ATMEL_LCDC_WIRING_RGB]	= "RGB",
-+};
-+
-+const int atmel_lcdfb_get_of_wiring_modes(struct device_node *np)
++int of_pci_range_parser(struct of_pci_range_parser *parser,
++			struct device_node *node)
 +{
-+	const char *mode;
-+	int err, i;
++	const int na = 3, ns = 2;
++	int rlen;
 +
-+	err = of_property_read_string(np, "atmel,lcd-wiring-mode", &mode);
-+	if (err < 0)
-+		return ATMEL_LCDC_WIRING_BGR;
++	parser->node = node;
++	parser->pna = of_n_addr_cells(node);
++	parser->np = parser->pna + na + ns;
 +
-+	for (i = 0; i < ARRAY_SIZE(atmel_lcdfb_wiring_modes); i++)
-+		if (!strcasecmp(mode, atmel_lcdfb_wiring_modes[i]))
-+			return i;
-+
-+	return -ENODEV;
-+}
-+
-+static void atmel_lcdfb_power_control_gpio(struct atmel_lcdfb_pdata *pdata, int on)
-+{
-+	struct atmel_lcdfb_power_ctrl_gpio *og;
-+
-+	list_for_each_entry(og, &pdata->pwr_gpios, list)
-+		gpio_set_value(og->gpio, on);
-+}
-+
-+static int atmel_lcdfb_of_init(struct atmel_lcdfb_info *sinfo)
-+{
-+	struct fb_info *info = sinfo->info;
-+	struct atmel_lcdfb_pdata *pdata = &sinfo->pdata;
-+	struct fb_var_screeninfo *var = &info->var;
-+	struct device *dev = &sinfo->pdev->dev;
-+	struct device_node *np =dev->of_node;
-+	struct device_node *display_np;
-+	struct device_node *timings_np;
-+	struct display_timings *timings;
-+	enum of_gpio_flags flags;
-+	struct atmel_lcdfb_power_ctrl_gpio *og;
-+	bool is_gpio_power = false;
-+	int ret = -ENOENT;
-+	int i, gpio;
-+
-+	sinfo->config = (struct atmel_lcdfb_config*)
-+		of_match_device(atmel_lcdfb_dt_ids, dev)->data;
-+
-+	display_np = of_parse_phandle(np, "display", 0);
-+	if (!display_np) {
-+		dev_err(dev, "failed to find display phandle\n");
++	parser->range = of_get_property(node, "ranges", &rlen);
++	if (parser->range == NULL)
 +		return -ENOENT;
-+	}
 +
-+	ret = of_property_read_u32(display_np, "bits-per-pixel", &var->bits_per_pixel);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to get property bits-per-pixel\n");
-+		goto put_display_node;
-+	}
-+
-+	ret = of_property_read_u32(display_np, "atmel,guard-time", &pdata->guard_time);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to get property atmel,guard-time\n");
-+		goto put_display_node;
-+	}
-+
-+	ret = of_property_read_u32(display_np, "atmel,lcdcon2", &pdata->default_lcdcon2);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to get property atmel,lcdcon2\n");
-+		goto put_display_node;
-+	}
-+
-+	ret = of_property_read_u32(display_np, "atmel,dmacon", &pdata->default_dmacon);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to get property bits-per-pixel\n");
-+		goto put_display_node;
-+	}
-+
-+	ret = -ENOMEM;
-+	for (i = 0; i < of_gpio_named_count(display_np, "atmel,power-control-gpio"); i++) {
-+		gpio = of_get_named_gpio_flags(display_np, "atmel,power-control-gpio",
-+					       i, &flags);
-+		if (gpio < 0)
-+			continue;
-+
-+		og = devm_kzalloc(dev, sizeof(*og), GFP_KERNEL);
-+		if (!og)
-+			goto put_display_node;
-+
-+		og->gpio = gpio;
-+		og->active_low = flags & OF_GPIO_ACTIVE_LOW;
-+		is_gpio_power = true;
-+		ret = devm_gpio_request(dev, gpio, "lcd-power-control-gpio");
-+		if (ret) {
-+			dev_err(dev, "request gpio %d failed\n", gpio);
-+			goto put_display_node;
-+		}
-+
-+		ret = gpio_direction_output(gpio, og->active_low);
-+		if (ret) {
-+			dev_err(dev, "set direction output gpio %d failed\n", gpio);
-+			goto put_display_node;
-+		}
-+	}
-+
-+	if (is_gpio_power)
-+		pdata->atmel_lcdfb_power_control = atmel_lcdfb_power_control_gpio;
-+
-+	ret = atmel_lcdfb_get_of_wiring_modes(display_np);
-+	if (ret < 0) {
-+		dev_err(dev, "invalid atmel,lcd-wiring-mode\n");
-+		goto put_display_node;
-+	}
-+	pdata->lcd_wiring_mode = ret;
-+
-+	pdata->lcdcon_is_backlight = of_property_read_bool(display_np, "atmel,lcdcon-backlight");
-+
-+	timings = of_get_display_timings(display_np);
-+	if (!timings) {
-+		dev_err(dev, "failed to get display timings\n");
-+		goto put_display_node;
-+	}
-+
-+	timings_np = of_find_node_by_name(display_np, "display-timings");
-+	if (!timings_np) {
-+		dev_err(dev, "failed to find display-timings node\n");
-+		goto put_display_node;
-+	}
-+
-+	for (i = 0; i < of_get_child_count(timings_np); i++) {
-+		struct videomode vm;
-+		struct fb_videomode fb_vm;
-+
-+		ret = videomode_from_timing(timings, &vm, i);
-+		if (ret < 0)
-+			goto put_timings_node;
-+		ret = fb_videomode_from_videomode(&vm, &fb_vm);
-+		if (ret < 0)
-+			goto put_timings_node;
-+
-+		fb_add_videomode(&fb_vm, &info->modelist);
-+	}
++	parser->end = parser->range + rlen / sizeof(__be32);
 +
 +	return 0;
-+
-+put_timings_node:
-+	of_node_put(timings_np);
-+put_display_node:
-+	of_node_put(display_np);
-+	return ret;
 +}
-+#else
-+static int atmel_lcdfb_of_init(struct atmel_lcdfb_info *sinfo)
++
++struct of_pci_range *of_pci_process_ranges(struct of_pci_range_parser *parser,
++						struct of_pci_range *range)
 +{
-+	return 0;
++	const int na = 3, ns = 2;
++
++	if (!range)
++		return NULL;
++
++	if (!parser->range || parser->range + parser->np > parser->end)
++		return NULL;
++
++	range->pci_space = parser->range[0];
++	range->flags = of_bus_pci_get_flags(parser->range);
++	range->pci_addr = of_read_number(parser->range + 1, ns);
++	range->cpu_addr = of_translate_address(parser->node,
++				parser->range + na);
++	range->size = of_read_number(parser->range + parser->pna + na, ns);
++
++	parser->range += parser->np;
++
++	/* Now consume following elements while they are contiguous */
++	while (parser->range + parser->np <= parser->end) {
++		u32 flags, pci_space;
++		u64 pci_addr, cpu_addr, size;
++
++		pci_space = be32_to_cpup(parser->range);
++		flags = of_bus_pci_get_flags(parser->range);
++		pci_addr = of_read_number(parser->range + 1, ns);
++		cpu_addr = of_translate_address(parser->node,
++				parser->range + na);
++		size = of_read_number(parser->range + parser->pna + na, ns);
++
++		if (flags != range->flags)
++			break;
++		if (pci_addr != range->pci_addr + range->size ||
++		    cpu_addr != range->cpu_addr + range->size)
++			break;
++
++		range->size += size;
++		parser->range += parser->np;
++	}
++
++	return range;
 +}
-+#endif
++EXPORT_SYMBOL_GPL(of_pci_process_ranges);
++
+ #endif /* CONFIG_PCI */
  
- static int __init atmel_lcdfb_probe(struct platform_device *pdev)
+ /*
+diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+index 1626172..3e428a1 100644
+--- a/drivers/of/of_pci.c
++++ b/drivers/of/of_pci.c
+@@ -82,67 +82,43 @@ EXPORT_SYMBOL_GPL(of_pci_find_child_device);
+ void pci_process_bridge_OF_ranges(struct pci_controller *hose,
+ 				  struct device_node *dev, int primary)
  {
- 	struct device *dev = &pdev->dev;
- 	struct fb_info *info;
- 	struct atmel_lcdfb_info *sinfo;
--	struct atmel_lcdfb_pdata *pdata;
--	struct fb_videomode fbmode;
-+	struct atmel_lcdfb_pdata *pdata = NULL;
- 	struct resource *regs = NULL;
- 	struct resource *map = NULL;
-+	struct fb_modelist *modelist;
- 	int ret;
+-	const u32 *ranges;
+-	int rlen;
+-	int pna = of_n_addr_cells(dev);
+-	int np = pna + 5;
+ 	int memno = 0, isa_hole = -1;
+-	u32 pci_space;
+-	unsigned long long pci_addr, cpu_addr, pci_next, cpu_next, size;
+ 	unsigned long long isa_mb = 0;
+ 	struct resource *res;
++	struct of_pci_range range;
++	struct of_pci_range_parser parser;
++	u32 res_type;
  
- 	dev_dbg(dev, "%s BEGIN\n", __func__);
-@@ -967,17 +1149,35 @@ static int __init atmel_lcdfb_probe(struct platform_device *pdev)
- 	}
+ 	pr_info("PCI host bridge %s %s ranges:\n",
+ 	       dev->full_name, primary ? "(primary)" : "");
  
- 	sinfo = info->par;
-+	sinfo->pdev = pdev;
-+	sinfo->info = info;
-+
-+	INIT_LIST_HEAD(&info->modelist);
+-	/* Get ranges property */
+-	ranges = of_get_property(dev, "ranges", &rlen);
+-	if (ranges == NULL)
++	/* Check for ranges property */
++	if (of_pci_range_parser(&parser, dev))
+ 		return;
  
--	if (dev->platform_data) {
--		pdata = (struct atmel_lcdfb_pdata *)dev->platform_data;
-+	if (pdev->dev.of_node) {
-+		ret = atmel_lcdfb_of_init(sinfo);
-+		if (ret)
-+			goto free_info;
-+	} else if (dev->platform_data) {
-+		struct fb_monspecs *monspecs;
-+		int i;
-+
-+		pdata = dev->platform_data;
-+		monspecs = pdata->default_monspecs;
- 		sinfo->pdata = *pdata;
-+
-+		for (i = 0; i < monspecs->modedb_len; i++)
-+			fb_add_videomode(&monspecs->modedb[i], &info->modelist);
-+
-+		sinfo->config = atmel_lcdfb_get_config(pdev);
-+
-+		info->var.bits_per_pixel = pdata->default_bpp ? pdata->default_bpp : 16;
-+		memcpy(&info->monspecs, pdata->default_monspecs, sizeof(info->monspecs));
- 	} else {
- 		dev_err(dev, "cannot get default configuration\n");
- 		goto free_info;
- 	}
--	sinfo->info = info;
--	sinfo->pdev = pdev;
--	sinfo->config = atmel_lcdfb_get_config(pdev);
-+
- 	if (!sinfo->config)
- 		goto free_info;
- 
-@@ -986,7 +1186,6 @@ static int __init atmel_lcdfb_probe(struct platform_device *pdev)
- 	info->pseudo_palette = sinfo->pseudo_palette;
- 	info->fbops = &atmel_lcdfb_ops;
- 
--	memcpy(&info->monspecs, pdata->default_monspecs, sizeof(info->monspecs));
- 	info->fix = atmel_lcdfb_fix;
- 
- 	/* Enable LCDC Clocks */
-@@ -1002,14 +1201,11 @@ static int __init atmel_lcdfb_probe(struct platform_device *pdev)
- 	}
- 	atmel_lcdfb_start_clock(sinfo);
- 
--	ret = fb_find_mode(&info->var, info, NULL, info->monspecs.modedb,
--			info->monspecs.modedb_len, info->monspecs.modedb,
--			pdata->default_bpp);
--	if (!ret) {
--		dev_err(dev, "no suitable video mode found\n");
--		goto stop_clk;
--	}
-+	modelist = list_first_entry(&info->modelist,
-+			struct fb_modelist, list);
-+	fb_videomode_to_var(&info->var, &modelist->mode);
- 
-+	atmel_lcdfb_check_var(&info->var, info);
- 
- 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!regs) {
-@@ -1093,18 +1289,6 @@ static int __init atmel_lcdfb_probe(struct platform_device *pdev)
- 		goto unregister_irqs;
- 	}
- 
--	/*
--	 * This makes sure that our colour bitfield
--	 * descriptors are correctly initialised.
--	 */
--	atmel_lcdfb_check_var(&info->var, info);
+-	/* Parse it */
+ 	pr_debug("Parsing ranges property...\n");
+-	while ((rlen -= np * 4) >= 0) {
++	for_each_of_pci_range(&parser, &range) {
+ 		/* Read next ranges element */
+-		pci_space = ranges[0];
+-		pci_addr = of_read_number(ranges + 1, 2);
+-		cpu_addr = of_translate_address(dev, ranges + 3);
+-		size = of_read_number(ranges + pna + 3, 2);
 -
--	ret = fb_set_var(info, &info->var);
--	if (ret) {
--		dev_warn(dev, "unable to set display parameters\n");
--		goto free_cmap;
--	}
+-		pr_debug("pci_space: 0x%08x pci_addr:0x%016llx ",
+-				pci_space, pci_addr);
+-		pr_debug("cpu_addr:0x%016llx size:0x%016llx\n",
+-					cpu_addr, size);
 -
- 	dev_set_drvdata(dev, info);
+-		ranges += np;
++		pr_debug("pci_space: 0x%08x pci_addr: 0x%016llx ",
++				range.pci_space, range.pci_addr);
++		pr_debug("cpu_addr: 0x%016llx size: 0x%016llx\n",
++				range.cpu_addr, range.size);
  
- 	/*
-@@ -1116,10 +1300,6 @@ static int __init atmel_lcdfb_probe(struct platform_device *pdev)
- 		goto reset_drvdata;
+ 		/* If we failed translation or got a zero-sized region
+ 		 * (some FW try to feed us with non sensical zero sized regions
+ 		 * such as power3 which look like some kind of attempt
+ 		 * at exposing the VGA memory hole)
+ 		 */
+-		if (cpu_addr == OF_BAD_ADDR || size == 0)
++		if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
+ 			continue;
+ 
+-		/* Now consume following elements while they are contiguous */
+-		for (; rlen >= np * sizeof(u32);
+-		     ranges += np, rlen -= np * 4) {
+-			if (ranges[0] != pci_space)
+-				break;
+-			pci_next = of_read_number(ranges + 1, 2);
+-			cpu_next = of_translate_address(dev, ranges + 3);
+-			if (pci_next != pci_addr + size ||
+-			    cpu_next != cpu_addr + size)
+-				break;
+-			size += of_read_number(ranges + pna + 3, 2);
+-		}
+-
+ 		/* Act based on address space type */
+ 		res = NULL;
+-		switch ((pci_space >> 24) & 0x3) {
+-		case 1:		/* PCI IO space */
++		res_type = range.flags & IORESOURCE_TYPE_BITS;
++		if (res_type == IORESOURCE_IO) {
+ 			pr_info("  IO 0x%016llx..0x%016llx -> 0x%016llx\n",
+-			       cpu_addr, cpu_addr + size - 1, pci_addr);
++				range.cpu_addr, range.cpu_addr + range.size - 1,
++				range.pci_addr);
+ 
+ 			/* We support only one IO range */
+ 			if (hose->pci_io_size) {
+@@ -151,11 +127,12 @@ void pci_process_bridge_OF_ranges(struct pci_controller *hose,
+ 			}
+ #if (!IS_ENABLED(CONFIG_64BIT))
+ 			/* On 32 bits, limit I/O space to 16MB */
+-			if (size > 0x01000000)
+-				size = 0x01000000;
++			if (range.size > 0x01000000)
++				range.size = 0x01000000;
+ 
+ 			/* 32 bits needs to map IOs here */
+-			hose->io_base_virt = ioremap(cpu_addr, size);
++			hose->io_base_virt = ioremap(range.cpu_addr,
++						range.size);
+ 
+ 			/* Expect trouble if pci_addr is not 0 */
+ 			if (primary)
+@@ -165,19 +142,18 @@ void pci_process_bridge_OF_ranges(struct pci_controller *hose,
+ 			/* pci_io_size and io_base_phys always represent IO
+ 			 * space starting at 0 so we factor in pci_addr
+ 			 */
+-			hose->pci_io_size = pci_addr + size;
+-			hose->io_base_phys = cpu_addr - pci_addr;
++			hose->pci_io_size = range.pci_addr + range.size;
++			hose->io_base_phys = range.cpu_addr - range.pci_addr;
+ 
+ 			/* Build resource */
+ 			res = &hose->io_resource;
+-			res->flags = IORESOURCE_IO;
+-			res->start = pci_addr;
+-			break;
+-		case 2:		/* PCI Memory space */
+-		case 3:		/* PCI 64 bits Memory space */
++			range.cpu_addr = range.pci_addr;
++		} else if (res_type == IORESOURCE_MEM) {
+ 			pr_info(" MEM 0x%016llx..0x%016llx -> 0x%016llx %s\n",
+-			       cpu_addr, cpu_addr + size - 1, pci_addr,
+-			       (pci_space & 0x40000000) ? "Prefetch" : "");
++				range.cpu_addr, range.cpu_addr + range.size - 1,
++				range.pci_addr,
++				(range.pci_space & 0x40000000) ?
++				"Prefetch" : "");
+ 
+ 			/* We support only 3 memory ranges */
+ 			if (memno >= 3) {
+@@ -185,13 +161,13 @@ void pci_process_bridge_OF_ranges(struct pci_controller *hose,
+ 				continue;
+ 			}
+ 			/* Handles ISA memory hole space here */
+-			if (pci_addr == 0) {
+-				isa_mb = cpu_addr;
++			if (range.pci_addr == 0) {
++				isa_mb = range.cpu_addr;
+ 				isa_hole = memno;
+ 				if (primary || isa_mem_base == 0)
+-					isa_mem_base = cpu_addr;
+-				hose->isa_mem_phys = cpu_addr;
+-				hose->isa_mem_size = size;
++					isa_mem_base = range.cpu_addr;
++				hose->isa_mem_phys = range.cpu_addr;
++				hose->isa_mem_size = range.size;
+ 			}
+ 
+ 			/* We get the PCI/Mem offset from the first range or
+@@ -199,30 +175,22 @@ void pci_process_bridge_OF_ranges(struct pci_controller *hose,
+ 			 * hole. If they don't match, bugger.
+ 			 */
+ 			if (memno == 0 ||
+-			    (isa_hole >= 0 && pci_addr != 0 &&
++			(isa_hole >= 0 && range.pci_addr != 0 &&
+ 			     hose->pci_mem_offset == isa_mb))
+-				hose->pci_mem_offset = cpu_addr - pci_addr;
+-			else if (pci_addr != 0 &&
+-				 hose->pci_mem_offset != cpu_addr - pci_addr) {
++				hose->pci_mem_offset = range.cpu_addr -
++							range.pci_addr;
++			else if (range.pci_addr != 0 &&
++				hose->pci_mem_offset != range.cpu_addr -
++							range.pci_addr) {
+ 				pr_info(" \\--> Skipped (offset mismatch) !\n");
+ 				continue;
+ 			}
+ 
+ 			/* Build resource */
+ 			res = &hose->mem_resources[memno++];
+-			res->flags = IORESOURCE_MEM;
+-			if (pci_space & 0x40000000)
+-				res->flags |= IORESOURCE_PREFETCH;
+-			res->start = cpu_addr;
+-			break;
+-		}
+-		if (res != NULL) {
+-			res->name = dev->full_name;
+-			res->end = res->start + size - 1;
+-			res->parent = NULL;
+-			res->sibling = NULL;
+-			res->child = NULL;
+ 		}
++		if (res != NULL)
++			of_pci_range_to_resource(&range, dev, res);
  	}
  
--	/* add selected videomode to modelist */
--	fb_var_to_videomode(&fbmode, &info->var);
--	fb_add_videomode(&fbmode, &info->modelist);
--
- 	/* Power up the LCDC screen */
- 	atmel_lcdfb_power_control(sinfo, 1);
+ 	/* If there's an ISA hole and the pci_mem_offset is -not- matching
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 0506eb5..9702255 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -4,6 +4,36 @@
+ #include <linux/errno.h>
+ #include <linux/of.h>
  
-@@ -1130,7 +1310,6 @@ static int __init atmel_lcdfb_probe(struct platform_device *pdev)
++struct of_pci_range_parser {
++	struct device_node *node;
++	const __be32 *range;
++	const __be32 *end;
++	int np;
++	int pna;
++};
++
++struct of_pci_range {
++	u32 pci_space;
++	u64 pci_addr;
++	u64 cpu_addr;
++	u64 size;
++	u32 flags;
++};
++
++#define for_each_of_pci_range(parser, range) \
++	for (; of_pci_process_ranges(parser, range);)
++
++static inline void of_pci_range_to_resource(struct of_pci_range *range,
++					    struct device_node *np,
++					    struct resource *res)
++{
++	res->flags = range->flags;
++	res->start = range->cpu_addr;
++	res->end = range->cpu_addr + range->size - 1;
++	res->parent = res->child = res->sibling = NULL;
++	res->name = np->full_name;
++}
++
+ #ifdef CONFIG_OF_ADDRESS
+ extern u64 of_translate_address(struct device_node *np, const __be32 *addr);
+ extern bool of_can_translate_address(struct device_node *dev);
+@@ -27,6 +57,10 @@ static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
+ #define pci_address_to_pio pci_address_to_pio
+ #endif
  
- reset_drvdata:
- 	dev_set_drvdata(dev, NULL);
--free_cmap:
- 	fb_dealloc_cmap(&info->cmap);
- unregister_irqs:
- 	cancel_work_sync(&sinfo->task);
-@@ -1249,6 +1428,7 @@ static struct platform_driver atmel_lcdfb_driver = {
- 	.driver		= {
- 		.name	= "atmel_lcdfb",
- 		.owner	= THIS_MODULE,
-+		.of_match_table	= of_match_ptr(atmel_lcdfb_dt_ids),
- 	},
- };
++int of_pci_range_parser(struct of_pci_range_parser *parser,
++			struct device_node *node);
++struct of_pci_range *of_pci_process_ranges(struct of_pci_range_parser *parser,
++						struct of_pci_range *range);
+ #else /* CONFIG_OF_ADDRESS */
+ #ifndef of_address_to_resource
+ static inline int of_address_to_resource(struct device_node *dev, int index,
+@@ -53,6 +87,18 @@ static inline const __be32 *of_get_address(struct device_node *dev, int index,
+ {
+ 	return NULL;
+ }
++
++int of_pci_range_parser(struct of_pci_range_parser *parser,
++			struct device_noed *node)
++{
++	return -1;
++}
++
++struct of_pci_range *of_pci_process_ranges(struct of_pci_range_parser *parser,
++						struct of_pci_range *range)
++{
++	return NULL;
++}
+ #endif /* CONFIG_OF_ADDRESS */
+ 
  
 -- 
-1.7.10.4
+1.7.0.4
