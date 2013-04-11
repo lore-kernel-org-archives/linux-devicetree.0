@@ -1,36 +1,78 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 1/4] Documentation: Add memory mapped ARM architected
- timer binding
-Date: Thu, 11 Apr 2013 14:48:03 -0700
-Message-ID: <51672F93.7080109@codeaurora.org>
-References: <1365474623-29181-1-git-send-email-sboyd@codeaurora.org> <1365474623-29181-2-git-send-email-sboyd@codeaurora.org> <20130409090843.GS23725@e106331-lin.cambridge.arm.com> <516444FE.2080200@codeaurora.org> <20130410101336.GB8799@e106331-lin.cambridge.arm.com> <51662584.6070906@codeaurora.org> <20130411112407.GD8259@e106331-lin.cambridge.arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
+Date: Fri, 12 Apr 2013 00:16:55 +0200
+Message-ID: <CACRpkdbf32Ef77GmXk9id9+RRjcDRTr7S+F4nznoeZU8y=BT_Q@mail.gmail.com>
+References: <1329321854-24490-1-git-send-email-b-cousson@ti.com>
+	<4F452484.5080503@gmail.com>
+	<74CDBE0F657A3D45AFBB94109FB122FF17BD8BC6C1@HQMAIL01.nvidia.com>
+	<4F47AD08.4030504@ti.com>
+	<CAAwP0s0cB368R2mtbJpTZJreR-5GSRLfxC+8DJLo5nw3_OwBuA@mail.gmail.com>
+	<512D39DA.7020306@ti.com>
+	<512D3AB1.1080202@wwwdotorg.org>
+	<512D3EC2.6050408@ti.com>
+	<20130302200524.D230F3E1571@localhost>
+	<51391F41.5000303@ti.com>
+	<CAAwP0s1CFRO-rf==p5sYs1n0gigMif7wuT8Yv0N_iLUDMrtcOg@mail.gmail.com>
+	<CACRpkdYHj-rEF3Rk_CWnmmMw_Amr7m8SgQ=-2zsDYuLeuu3azw@mail.gmail.com>
+	<514C79E1.4090106@wwwdotorg.org>
+	<514CE0AB.6060207@ti.com>
+	<CACRpkdZmv-rAoKSQYpkHHSMzKJOn5TixVW_P3=m7ZNagBYCUPw@mail.gmail.com>
+	<515319D5.20105@wwwdotorg.org>
+	<CACRpkdYXVLgCz1Tyu-Ls2V2OTc4R3cGNJhfQJB6Hiz_K9dkZYQ@mail.gmail.com>
+	<5155C902.7080207@wwwdotorg.org>
+	<CACRpkdYbs4-uudpRUY8e+7icYYkZrfM0kReP3pLL5DMiURJ4dg@mail.gmail.com>
+	<5165CB9D.1090202@wwwdotorg.org>
+	<CACRpkdYirFNqmGhA4K9CL4ve4NYhs8Rd3SFt1iwW9vHBkrcz8g@mail.gmail.com>
+	<51671D7B.5060303@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20130411112407.GD8259@e106331-lin.cambridge.arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Marc Zyngier <Marc.Zyngier@arm.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51671D7B.5060303@wwwdotorg.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Jon Hunter <jon-hunter@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Alexandre Courbot <acourbot@nvidia.com>, Javier Martinez Canillas <martinez.javier@gmail.com>, Stephen Warren <swarren@nvidia.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/13 04:24, Mark Rutland wrote:
-> Could we say the reg for the second view is optional?
+On Thu, Apr 11, 2013 at 10:30 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 04/10/2013 03:28 PM, Linus Walleij wrote:
+
+>> So the only reason I'm rambing on about this is that it breaks the
 >
-
-Yes, that's already covered in the binding.
-
-> Might we have a hardware / firmware configuration where the kernel can only access
-> the secondary view?
+> I'm not sure I understand this paragraph; what is "it" in the line above.
 >
+> If "it" is this patch, then should "breaks" be re-establishes?
 
-I don't see how this is possible. The CNTACRn register controls secure
-vs. non-secure access for particular registers in a frame regardless of
-which view is used. The CNTPL0ACRn is not a security restricted register
-and it can only restrict access to certain registers in the second view.
-No combination of settings in these registers can restrict access to
-only the second view in a frame with two views.
+No I'm replying to Javier Martinez Canillas mail in this thread:
+http://marc.info/?l=linux-arm-kernel&m=136334655902407&w=2
+which is stating a question to grand, and contains the below
+hunk:
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+> +static int gpio_irq_request(struct irq_data *d)
+> +{
+> +       struct gpio_bank *bank = irq_data_get_irq_chip_data(d);
+> +
+> +       return gpio_request(irq_to_gpio(bank, d->irq), "gpio-irq");
+> +}
+
+irq_to_gpio(). Notice that. not my_funny_driver_irq_to_gpio().
+
+It's the same thing you mention below:
+
+> If I recall the patch I'm replying to correctly, the idea was to add an
+> "IRQ request" operation that would (internally to the GPIO/IRQ driver
+> itself) map IRQ->GPIO, and call gpio_request(). That would then prevent
+> exactly the situation you mention above.
+
+So the above does not look like it's internal to the driver does it?
+
+I think this is irq_to_gpio sneaking back in, and requiring that every
+driver of this sort follow the same design pattern. And then maybe
+you see my persistance ... are we talking about different things?
+
+So I'd be happy with something local to the driver, foo_irq_to_gpio()
+and that we also back out a bit and see what the subsystem can do
+to avoid this kind of code having to be duplicated everywhere, that's
+all.
+
+Yours,
+Linus Walleij
