@@ -1,47 +1,63 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
-Date: Thu, 11 Apr 2013 16:47:12 -0600
-Message-ID: <51673D70.3010503@wwwdotorg.org>
-References: <1329321854-24490-1-git-send-email-b-cousson@ti.com> <4F47AD08.4030504@ti.com> <CAAwP0s0cB368R2mtbJpTZJreR-5GSRLfxC+8DJLo5nw3_OwBuA@mail.gmail.com> <512D39DA.7020306@ti.com> <512D3AB1.1080202@wwwdotorg.org> <512D3EC2.6050408@ti.com> <20130302200524.D230F3E1571@localhost> <51391F41.5000303@ti.com> <CAAwP0s1CFRO-rf==p5sYs1n0gigMif7wuT8Yv0N_iLUDMrtcOg@mail.gmail.com> <CACRpkdYHj-rEF3Rk_CWnmmMw_Amr7m8SgQ=-2zsDYuLeuu3azw@mail.gmail.com> <514C79E1.4090106@wwwdotorg.org> <514CE0AB.6060207@ti.com> <CACRpkdZmv-rAoKSQYpkHHSMzKJOn5TixVW_P3=m7ZNagBYCUPw@mail.gmail.com> <515319D5.20105@wwwdotorg.org> <CACRpkdYXVLgCz1Tyu-Ls2V2OTc4R3cGNJhfQJB6Hiz_K9dkZYQ@mail.gmail.com> <5155C902.7080207@wwwdotorg.org> <CACRpkdYbs4-uudpRUY8e+7icYYkZrfM0kReP3pLL5DMiURJ4dg@mail.gmail.com> <5165CB9D.1090202@wwwd
- otorg.org> <CACRpkdYirFNqmGhA4K9CL4ve4NYhs8Rd3SFt1iwW9vHBkrcz8g@mail.gmail.com> <51671D7B.5060303@wwwdotorg.org> <CACRpkdbf32Ef77GmXk9id9+RRjcDRTr7S+F4nznoeZU8y=BT_Q@mail.gmail.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v3 4/9] ARM: mvebu: Enable pj4b on LPAE compilations
+Date: Thu, 11 Apr 2013 19:29:30 -0400
+Message-ID: <20130411232930.GQ28693@titan.lakedaemon.net>
+References: <1365461538-30702-1-git-send-email-gregory.clement@free-electrons.com>
+ <1365461538-30702-5-git-send-email-gregory.clement@free-electrons.com>
+ <20130411180844.GO28693@titan.lakedaemon.net>
+ <51671FFE.1010909@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbf32Ef77GmXk9id9+RRjcDRTr7S+F4nznoeZU8y=BT_Q@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Jon Hunter <jon-hunter@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Alexandre Courbot <acourbot@nvidia.com>, Javier Martinez Canillas <martinez.javier@gmail.com>, Stephen Warren <swarren@nvidia.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <51671FFE.1010909@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Grant Likely <grant.likely@secretlab.ca>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.com>, Nicolas Pitre <nico@fluxnic.net>, linux-kernel@vger.kernel.org, Maen Suleiman <maen@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Sh
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/2013 04:16 PM, Linus Walleij wrote:
-> On Thu, Apr 11, 2013 at 10:30 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> On 04/10/2013 03:28 PM, Linus Walleij wrote:
+On Thu, Apr 11, 2013 at 10:41:34PM +0200, Gregory CLEMENT wrote:
+> Hi Jason,
 > 
->>> So the only reason I'm rambing on about this is that it breaks the
->>
->> I'm not sure I understand this paragraph; what is "it" in the line above.
->>
->> If "it" is this patch, then should "breaks" be re-establishes?
+> On 04/11/2013 08:08 PM, Jason Cooper wrote:
+> > On Tue, Apr 09, 2013 at 12:52:12AM +0200, Gregory CLEMENT wrote:
+> >> From: Lior Amsalem <alior@marvell.com>
+> >>
+> >> pj4b cpus are LPAE capable so enable them on LPAE compilations
+> >>
+> >> Signed-off-by: Lior Amsalem <alior@marvell.com>
+> >> Tested-by: Franklin <flin@marvell.com>
+> >> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> >> ---
+> >>  arch/arm/mm/proc-v7.S |    3 ++-
+> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > Applied to mvebu/soc
+> > 
+...
 > 
-> No I'm replying to Javier Martinez Canillas mail in this thread:
-> http://marc.info/?l=linux-arm-kernel&m=136334655902407&w=2
-> which is stating a question to grand, and contains the below
-> hunk:
+> However, this one should go through Russell's git tree.  Or at least
+> you need his acked-by. I have already submit this patch on Russell
+> patch system. Unfortunately Russell told that he will be away for
+> around one week.
 > 
->> +static int gpio_irq_request(struct irq_data *d)
->> +{
->> +       struct gpio_bank *bank = irq_data_get_irq_chip_data(d);
->> +
->> +       return gpio_request(irq_to_gpio(bank, d->irq), "gpio-irq");
->> +}
-> 
-> irq_to_gpio(). Notice that. not my_funny_driver_irq_to_gpio().
+> This patch is needed to have LPAE support, but all the other patches
+> don't depend on it. That means that if you applied all the other
+> patches it won't break anything even if at the end this patch is not
+> merged. But I really hope that Russell will be able to apply this
+> patch to his git tree.
 
-OK, right. sorry for being so confused/confusing.
+ok, thanks for catching this before I sent the PR.  I'll drop it.
 
-Yes, that code should certainly call e.g. omap_gpio__irq_to_gpio() not
-irq_to_gpio(). Probably gpio_irq_request() wants renaming to something
-more like omap_gpio__irq_request() too, so the names don't look like
-they'd clash with global functions. (__ added for clarity but probably
-only one _ at a time)
+thx,
+
+Jason.
