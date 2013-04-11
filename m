@@ -1,45 +1,52 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v7] clk: add si5351 i2c common clock driver
-Date: Thu, 11 Apr 2013 10:22:48 +0200
-Message-ID: <CABJ1b_S_Tz9WBuO1==7ZU-fuAnYRwRZUcLCM=Zq+6tLCZyEevw@mail.gmail.com>
-References: <1365439617-18816-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<14854575.YAd2OMKOy9@ganymedes>
-	<5165A0FD.5030308@gmail.com>
-	<11205025.2MA5VbIUoF@ganymedes>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [GIT PULL] ARM: bcm281xx firmware tags
+Date: Thu, 11 Apr 2013 01:52:33 -0700
+Message-ID: <CAOesGMiiDei3HOop4YkiE2qw1R5opBpRYJEU0Vp3izEyB=r=Mw@mail.gmail.com>
+References: <1362451632-18806-1-git-send-email-csd@broadcom.com>
+ <201303060631.03782.arnd@arndb.de> <5136F816.2070909@broadcom.com>
+ <201303061128.57127.arnd@arndb.de> <5165A271.6060407@broadcom.com>
+ <20130411065227.GA31465@quad.lixom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <11205025.2MA5VbIUoF@ganymedes>
-Sender: linux-doc-owner@vger.kernel.org
-To: Michal Bachraty <michal.bachraty@streamunlimited.com>
-Cc: Daniel Mack <zonque@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, Jean-Francois Moine <moinejf@free.fr>, Lars-Peter Clausen <lars@metafoo.de>, Guenter Roeck <linux@roeck-us.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130411065227.GA31465-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 11, 2013 at 9:44 AM, Michal Bachraty
-<michal.bachraty@streamunlimited.com> wrote:
-> On Wednesday, April 10, 2013 19:27:25 Sebastian Hesselbarth wrote:
->> Hmm, is there any driver using the clock output? Does it
->> clk_prepare_enable() the clock? I tend not to mess with anything the
->> bootloader or eeprom config left disabled. It works for me, but here the
->> driver will prepare/enable the clock prior use.
+On Wed, Apr 10, 2013 at 11:52 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> On Wed, Apr 10, 2013 at 10:33:37AM -0700, Christian Daudt wrote:
+>> Hi Arnd, Olof,
+>>  Please pull the branch below - it contains the BCM281xx l2 cache
+>> enabling code.
+>>
+>>  Thanks,
+>>    csd
+>>
+>>
+>> The following changes since commit 07961ac7c0ee8b546658717034fe692fd12eefa9:
+>>
+>>   Linux 3.9-rc5 (2013-03-31 15:12:43 -0700)
+>>
+>> are available in the git repository at:
+>>
+>>   git://github.com/broadcom/bcm11351.git tags/fw-for-3.10
 >
-> For my case, disabled clock outputs in bootloader are correct. I'm working on
-> module board with lot of purposes. For one I need to tune frequncy, for other
-> not. In some cases I can use  clk_prepare_enable. For now, I need to tune clk,
-> so I can't use clk_prepare_enable. Si5351 chip has no problem with enabling
-> clock output multiple times, when calling clk_set_rate. So if this feature
-> will not be in driver, I need to stay with patch upon driver.
+> Thanks, pulled into next/soc (local branch name bcm/smc-l2)
 
-Michal,
+Based on later thread about the exynos smc ops, I moved this branch
+over to next/firmware instead.
 
-after thinking about it, I will re-add the power-on on rate change.
-Not because I
-want to have a workaround for not using clk_prepare_enable() before
-clk_set_rate(),
-but clkout will remain disabled if you set clock-frequency by DT.
-There will be no
-superfluous writes to i2c resisters anyway, because clk-si5351 is
-using regmap-i2c
-that takes care of caching.
 
-Sebastian
+-Olof
