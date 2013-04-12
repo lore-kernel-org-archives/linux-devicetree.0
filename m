@@ -1,50 +1,55 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCHv8 12/19] arm: mvebu: add PCIe Device Tree informations
- for Armada 370
-Date: Thu, 11 Apr 2013 20:48:21 -0400
-Message-ID: <20130412004821.GT28693@titan.lakedaemon.net>
-References: <1365541601-14095-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1365541601-14095-13-git-send-email-thomas.petazzoni@free-electrons.com>
- <20130412002811.GS28693@titan.lakedaemon.net>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] i2c: imx: use of_alias_get_id to order i2c devices
+Date: Fri, 12 Apr 2013 09:49:39 +0800
+Message-ID: <20130412014937.GB16970@S2101-09.ap.freescale.net>
+References: <1365527379-17786-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130412002811.GS28693-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+In-Reply-To: <1365527379-17786-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 11, 2013 at 08:28:11PM -0400, Jason Cooper wrote:
-> On Tue, Apr 09, 2013 at 11:06:33PM +0200, Thomas Petazzoni wrote:
-> > The Armada 370 SoC has two 1x PCIe 2.0 interfaces, so we add the
-> > necessary Device Tree informations to make these interfaces availabel.
-> > 
-> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/armada-370.dtsi |   51 +++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 51 insertions(+)
+On Tue, Apr 09, 2013 at 07:09:39PM +0200, Philipp Zabel wrote:
+> This allows to order i2c character devices as they are numbered
+> in the reference manual, instead of ordering them by register
+> base address.
 > 
-> Patches 12 through 18 applied to mvebu/dt.  Now Gregory can rebase LPAE
-> :)
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Gregory,
+I'm fine with the patch, but let's see if DT maintainers have an
+opinion.
 
-Hold off for an hour or so.  I just realized that mvebu/fixes contains a
-few more relevant dts changes than I had pulled in to mvebu/dt.  I'll
-let you know once I push an updated branch.
+Shawn
 
-thx,
-
-Jason.
+> ---
+>  drivers/i2c/busses/i2c-imx.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-imx.c b/drivers/i2c/busses/i2c-imx.c
+> index 82f20c6..e5a3f08 100644
+> --- a/drivers/i2c/busses/i2c-imx.c
+> +++ b/drivers/i2c/busses/i2c-imx.c
+> @@ -488,6 +488,7 @@ static struct i2c_algorithm i2c_imx_algo = {
+>  
+>  static int __init i2c_imx_probe(struct platform_device *pdev)
+>  {
+> +	struct device_node *np = pdev->dev.of_node;
+>  	const struct of_device_id *of_id = of_match_device(i2c_imx_dt_ids,
+>  							   &pdev->dev);
+>  	struct imx_i2c_struct *i2c_imx;
+> @@ -531,7 +532,7 @@ static int __init i2c_imx_probe(struct platform_device *pdev)
+>  	i2c_imx->adapter.owner		= THIS_MODULE;
+>  	i2c_imx->adapter.algo		= &i2c_imx_algo;
+>  	i2c_imx->adapter.dev.parent	= &pdev->dev;
+> -	i2c_imx->adapter.nr 		= pdev->id;
+> +	i2c_imx->adapter.nr		= (pdev->id < 0) ? of_alias_get_id(np, "i2c") : pdev->id;
+>  	i2c_imx->adapter.dev.of_node	= pdev->dev.of_node;
+>  	i2c_imx->base			= base;
+>  
+> -- 
+> 1.8.2.rc2
+> 
