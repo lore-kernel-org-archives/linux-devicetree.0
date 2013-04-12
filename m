@@ -1,15 +1,13 @@
-From: Hans-Christian Egtvedt <egtvedt@samfundet.no>
-Subject: Re: [PATCH 1/8] video: atmel_lcdfb: fix platform data struct
-Date: Fri, 12 Apr 2013 11:52:26 +0200
-Message-ID: <20130412095226.GA10028@samfundet.no>
-References: <20130411145741.GB25242@game.jcrosoft.org>
- <1365692422-9565-1-git-send-email-plagnioj@jcrosoft.com>
+From: Christian Ruppert <christian.ruppert@abilis.com>
+Subject: [PATCH] ARC: [TB10x] Adapt device tree to new compatible string
+Date: Fri, 12 Apr 2013 12:36:29 +0200
+Message-ID: <1365762989-31638-1-git-send-email-christian.ruppert@abilis.com>
+References: <5167D7E4.9030206@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1365692422-9565-1-git-send-email-plagnioj@jcrosoft.com>
+In-Reply-To: <5167D7E4.9030206@free-electrons.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,49 +17,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-fbdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Mike Turquette <mturquette@linaro.org>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Christian Ruppert <christian.ruppert@abilis.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Around Thu 11 Apr 2013 17:00:15 +0200 or thereabout, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> Today we mix pdata and drivers data in the struct atmel_lcdfb_info
-> Fix it and introduce a new struct atmel_lcdfb_pdata for platform data only
-> 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Hans-Christian Egtvedt <egtvedt@samfundet.no>
+The original device tree was written using a slightly different
+implementation of the fixed-factor-clock device tree binding. The
+compatible string must be modified in order to be compatible with the
+new implementation.
 
-For the AVR32 bits
+Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
+---
+ arch/arc/boot/dts/abilis_tb10x.dtsi |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
 
-Acked-by: Hans-Christian Egtvedt <egtvedt@samfundet.no>
-
-> ---
->  arch/arm/mach-at91/at91sam9261_devices.c    |    6 +-
->  arch/arm/mach-at91/at91sam9263_devices.c    |    6 +-
->  arch/arm/mach-at91/at91sam9g45_devices.c    |    6 +-
->  arch/arm/mach-at91/at91sam9rl_devices.c     |    6 +-
->  arch/arm/mach-at91/board-sam9261ek.c        |    6 +-
->  arch/arm/mach-at91/board-sam9263ek.c        |    4 +-
->  arch/arm/mach-at91/board-sam9m10g45ek.c     |    4 +-
->  arch/arm/mach-at91/board-sam9rlek.c         |    4 +-
->  arch/arm/mach-at91/board.h                  |    4 +-
->  arch/avr32/boards/atngw100/evklcd10x.c      |    6 +-
->  arch/avr32/boards/atngw100/mrmt.c           |    4 +-
->  arch/avr32/boards/atstk1000/atstk1000.h     |    2 +-
->  arch/avr32/boards/atstk1000/setup.c         |    2 +-
->  arch/avr32/boards/favr-32/setup.c           |    2 +-
->  arch/avr32/boards/hammerhead/setup.c        |    2 +-
->  arch/avr32/boards/merisc/display.c          |    2 +-
->  arch/avr32/boards/mimc200/setup.c           |    4 +-
->  arch/avr32/mach-at32ap/at32ap700x.c         |    8 +--
->  arch/avr32/mach-at32ap/include/mach/board.h |    4 +-
->  drivers/video/atmel_lcdfb.c                 |  104 +++++++++++++++++----------
->  include/video/atmel_lcdc.h                  |   24 +------
->  21 files changed, 109 insertions(+), 101 deletions(-)
-
-<snipp diff>
-
+diff --git a/arch/arc/boot/dts/abilis_tb10x.dtsi b/arch/arc/boot/dts/abilis_tb10x.dtsi
+index 6d80d9c..a6139fc 100644
+--- a/arch/arc/boot/dts/abilis_tb10x.dtsi
++++ b/arch/arc/boot/dts/abilis_tb10x.dtsi
+@@ -53,13 +53,13 @@
+ 			clock-output-names = "pll0";
+ 		};
+ 		cpu_clk: clkdiv_cpu {
+-			compatible = "fixed-factor-clkdiv";
++			compatible = "fixed-factor-clock";
+ 			#clock-cells = <0>;
+ 			clocks = <&pll0>;
+ 			clock-output-names = "cpu_clk";
+ 		};
+ 		ahb_clk: clkdiv_ahb {
+-			compatible = "fixed-factor-clkdiv";
++			compatible = "fixed-factor-clock";
+ 			#clock-cells = <0>;
+ 			clocks = <&pll0>;
+ 			clock-output-names = "ahb_clk";
 -- 
-HcE
+1.7.1
