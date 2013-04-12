@@ -1,120 +1,261 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v3] clk: add device tree fixed-factor-clock binding support
-Date: Fri, 12 Apr 2013 13:57:44 +0200
-Message-ID: <1365767864-7829-2-git-send-email-gregory.clement@free-electrons.com>
-References: <1365767864-7829-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1365767864-7829-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: Shawn Guo <shawn.guo@freescale.com>, Christian Ruppert <christian.ruppert@abilis.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC/PATCH v2 2/2] drivers: dma-contiguous: add initialization
+ from device tree
+Date: Fri, 12 Apr 2013 14:28:59 +0200
+Message-ID: <5167FE0B.80605@samsung.com>
+References: <1365679330-2514-1-git-send-email-m.szyprowski@samsung.com>
+ <1365679330-2514-3-git-send-email-m.szyprowski@samsung.com>
+ <5166F932.9000003@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <5166F932.9000003-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Marc <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for DT "fixed-factor-clock" binding to the common fixed
-factor clock support.
+Hi Laura,
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Tested-by: Christian Ruppert <christian.ruppert@abilis.com>
----
- .../bindings/clock/fixed-factor-clock.txt          |   24 +++++++++++++
- drivers/clk/clk-fixed-factor.c                     |   36 ++++++++++++++++++++
- include/linux/clk-provider.h                       |    2 ++
- 3 files changed, 62 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/fixed-factor-clock.txt
+Thanks for your thorough review! I will fix all the pointed issues once the
+main point of this patch set (using /chosen/contiguous-memory for CMA DT
+bindings) will be agreed and accepted.
 
-diff --git a/Documentation/devicetree/bindings/clock/fixed-factor-clock.txt b/Documentation/devicetree/bindings/clock/fixed-factor-clock.txt
-new file mode 100644
-index 0000000..5757f9a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/fixed-factor-clock.txt
-@@ -0,0 +1,24 @@
-+Binding for simple fixed factor rate clock sources.
-+
-+This binding uses the common clock binding[1].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible : shall be "fixed-factor-clock".
-+- #clock-cells : from common clock binding; shall be set to 0.
-+- clock-div: fixed divider.
-+- clock-mult: fixed multiplier.
-+- clocks: parent clock.
-+
-+Optional properties:
-+- clock-output-names : From common clock binding.
-+
-+Example:
-+	clock {
-+		compatible = "fixed-factor-clock";
-+		clocks = <&parentclk>;
-+		#clock-cells = <0>;
-+		div = <2>;
-+		mult = <1>;
-+	};
-diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
-index 1ef271e..9ff7d51 100644
---- a/drivers/clk/clk-fixed-factor.c
-+++ b/drivers/clk/clk-fixed-factor.c
-@@ -11,6 +11,7 @@
- #include <linux/clk-provider.h>
- #include <linux/slab.h>
- #include <linux/err.h>
-+#include <linux/of.h>
- 
- /*
-  * DOC: basic fixed multiplier and divider clock that cannot gate
-@@ -96,3 +97,38 @@ struct clk *clk_register_fixed_factor(struct device *dev, const char *name,
- 
- 	return clk;
- }
-+#ifdef CONFIG_OF
-+/**
-+ * of_fixed_factor_clk_setup() - Setup function for simple fixed factor clock
-+ */
-+void __init of_fixed_factor_clk_setup(struct device_node *node)
-+{
-+	struct clk *clk;
-+	const char *clk_name = node->name;
-+	const char *parent_name;
-+	u32 div, mult;
-+
-+	if (of_property_read_u32(node, "clock-div", &div)) {
-+		pr_err("%s Fixed factor clock <%s> must have a clock-div property\n",
-+			__func__, node->name);
-+		return;
-+	}
-+
-+	if (of_property_read_u32(node, "clock-mult", &mult)) {
-+		pr_err("%s Fixed factor clock <%s> must have a clokc-mult property\n",
-+			__func__, node->name);
-+		return;
-+	}
-+
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+	parent_name = of_clk_get_parent_name(node, 0);
-+
-+	clk = clk_register_fixed_factor(NULL, clk_name, parent_name, 0,
-+					mult, div);
-+	if (!IS_ERR(clk))
-+		of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+}
-+EXPORT_SYMBOL_GPL(of_fixed_factor_clk_setup);
-+CLK_OF_DECLARE(fixed_factor_clk, "fixed-factor-clock",
-+		of_fixed_factor_clk_setup);
-+#endif
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 7f197d7..7ea501b 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -325,6 +325,8 @@ struct clk *clk_register_fixed_factor(struct device *dev, const char *name,
- 		const char *parent_name, unsigned long flags,
- 		unsigned int mult, unsigned int div);
- 
-+void of_fixed_factor_clk_setup(struct device_node *node);
-+
- /**
-  * clk_register - allocate a new clock, register it and return an opaque cookie
-  * @dev: device that is registering this clock
+On 4/11/2013 7:56 PM, Laura Abbott wrote:
+> Hi,
+>
+> On 4/11/2013 4:22 AM, Marek Szyprowski wrote:
+> ...
+>> +
+>> diff --git a/drivers/base/dma-contiguous.c 
+>> b/drivers/base/dma-contiguous.c
+>> index 01fe743..6a8abab 100644
+>> --- a/drivers/base/dma-contiguous.c
+>> +++ b/drivers/base/dma-contiguous.c
+>> @@ -24,6 +24,9 @@
+>>
+>>   #include <linux/memblock.h>
+>>   #include <linux/err.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_fdt.h>
+>> +#include <linux/of_platform.h>
+>>   #include <linux/mm.h>
+>>   #include <linux/mutex.h>
+>>   #include <linux/page-isolation.h>
+>> @@ -37,6 +40,7 @@ struct cma {
+>>       unsigned long    base_pfn;
+>>       unsigned long    count;
+>>       unsigned long    *bitmap;
+>> +    char        full_name[32];
+>>   };
+>>
+>>   static DEFINE_MUTEX(cma_mutex);
+>> @@ -133,6 +137,53 @@ static __init int cma_activate_area(struct cma 
+>> *cma)
+>>       return 0;
+>>   }
+>>
+>> +/*****************************************************************************/ 
+>>
+>> +
+>> +#ifdef CONFIG_OF
+>> +int __init cma_fdt_scan(unsigned long node, const char *uname,
+>> +                int depth, void *data)
+>> +{
+>> +    static int level;
+>> +    phys_addr_t base, size;
+>> +    unsigned long len;
+>> +    struct cma *cma;
+>> +    __be32 *prop;
+>> +
+>> +    if (depth == 1 && strcmp(uname, "chosen") == 0) {
+>> +        level = depth;
+>> +        return 0;
+>> +    }
+>> +
+>> +    if (depth == 2 && strcmp(uname, "contiguous-memory") == 0) {
+>> +        level = depth;
+>> +        return 0;
+>> +    }
+>> +
+>> +    if (level != 2 || depth != 3 || strncmp(uname, "region@", 7) != 0)
+>> +        return 0;
+>> +
+>
+> Requiring the region@ label does not work if you want two dynamically 
+> placed regions (i.e. two region@0). The devicetree will take the last 
+> region@0 entry and ignore all the other ones
+
+
+Hmm. You are right, I need different solution here to get it working 
+with autoconfigured base address.
+
+>> +    prop = of_get_flat_dt_prop(node, "reg", &len);
+>> +    if (!prop || (len != 2 * sizeof(unsigned long)))
+>> +        return 0;
+>> +
+>> +    base = be32_to_cpu(prop[0]);
+>> +    size = be32_to_cpu(prop[1]);
+>> +
+>> +    pr_info("Found %s, memory base %lx, size %ld MiB\n", uname,
+>> +        (unsigned long)base, (unsigned long)size / SZ_1M);
+>> +
+>> +    dma_contiguous_reserve_area(size, base, 0, &cma);
+>> +
+>
+> Need to check the return of dma_contiguous_reserve_area, else there is 
+> an abort when trying to access cma->name on an error
+>
+>> +    strcpy(cma->full_name, uname);
+>> +
+>> +    if (of_get_flat_dt_prop(node, "linux,default-contiguous-region", 
+>> NULL)) {
+>> +
+>> +        dma_contiguous_default_area = cma;
+>> +    }
+>> +    return 0;
+>> +}
+>> +#endif
+>> +
+>>   /**
+>>    * dma_contiguous_reserve() - reserve area(s) for contiguous memory 
+>> handling
+>>    * @limit: End address of the reserved memory (optional, 0 for any).
+>
+>
+> if the contiguous region isn't set via devicetree, 
+> default_area->full_name needs to be set in dma_contiguous_reserve, 
+> else we get wrong associations in scan_cma_node.
+>
+>> @@ -149,6 +200,10 @@ void __init dma_contiguous_reserve(phys_addr_t 
+>> limit)
+>>
+>>       pr_debug("%s(limit %08lx)\n", __func__, (unsigned long)limit);
+>>
+>> +#ifdef CONFIG_OF
+>> +    of_scan_flat_dt(cma_fdt_scan, NULL);
+>> +#endif
+>> +
+>>       if (size_cmdline != -1) {
+>>           sel_size = size_cmdline;
+>>       } else {
+>> @@ -265,6 +320,71 @@ int __init dma_contiguous_add_device(struct 
+>> device *dev, struct cma *cma)
+>>       return 0;
+>>   }
+>>
+>> +#ifdef CONFIG_OF
+>> +static struct cma_map {
+>> +    struct cma *cma;
+>> +    struct device_node *node;
+>> +} cma_maps[MAX_CMA_AREAS];
+>> +static unsigned cma_map_count;
+>> +
+>> +static void cma_assign_device_from_dt(struct device *dev)
+>> +{
+>> +    int i;
+>> +    for (i=0; i<cma_map_count; i++) {
+>> +        if (cma_maps[i].node == dev->of_node) {
+>> +            dev_set_cma_area(dev, cma_maps[i].cma);
+>> +            pr_info("Assigned CMA %s to %s device\n",
+>> +                cma_maps[i].cma->full_name,
+>> +                dev_name(dev));
+>> +        }
+>> +    }
+>> +}
+>> +
+>> +static int cma_device_init_notifier_call(struct notifier_block *nb,
+>> +                     unsigned long event, void *data)
+>> +{
+>> +    struct device *dev = data;
+>> +    if (event == BUS_NOTIFY_ADD_DEVICE && dev->of_node)
+>> +        cma_assign_device_from_dt(dev);
+>> +    return NOTIFY_DONE;
+>> +}
+>> +
+>> +static struct notifier_block cma_dev_init_nb = {
+>> +    .notifier_call = cma_device_init_notifier_call,
+>> +};
+>> +
+>> +void scan_cma_nodes(void)
+>> +{
+>> +    struct device_node *parent = 
+>> of_find_node_by_path("/chosen/contiguous-memory");
+>> +    struct device_node *child;
+>> +
+>> +    if (!parent)
+>> +        return;
+>> +
+>> +    for_each_child_of_node(parent, child) {
+>> +        struct cma *cma = NULL;
+>> +        int i;
+>> +
+>> +        for (i=0; i<cma_area_count; i++)
+>> +            if (strstr(child->full_name, cma_areas[i].full_name))
+>> +                cma = &cma_areas[i];
+>
+> break out of the loop once the area is found?
+>
+> Also, how will the code deal with region names that are substrings of 
+> each other e.g.
+>
+> region@1000000
+> region@10000000
+>
+
+Thanks for pointing this.
+
+>> +        if (!cma)
+>> +            continue;
+>> +
+>> +        for (i=0;; i++) {
+>> +            struct device_node *node;
+>> +            node = of_parse_phandle(child, "device", i);
+>> +            if (!node)
+>> +                break;
+>> +
+>> +            cma_maps[cma_map_count].cma = cma;
+>> +            cma_maps[cma_map_count].node = node;
+>> +            cma_map_count++;
+>
+> Bounds check cma_map_count against MAX_CMA_AREAS?
+>
+>> +        }
+>> +    }
+>> +}
+>> +#endif
+>> +
+>>   static int __init cma_init_reserved_areas(void)
+>>   {
+>>       int i;
+>> @@ -275,6 +395,10 @@ static int __init cma_init_reserved_areas(void)
+>>               return ret;
+>>       }
+>>
+>> +#ifdef CONFIG_OF
+>> +    scan_cma_nodes();
+>> +    bus_register_notifier(&platform_bus_type, &cma_dev_init_nb);
+>> +#endif
+>>       return 0;
+>>   }
+>>   core_initcall(cma_init_reserved_areas);
+>>
+>
+> Thanks,
+> Laura
+>
+
+Best regards
 -- 
-1.7.9.5
+Marek Szyprowski
+Samsung Poland R&D Center
