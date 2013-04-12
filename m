@@ -1,457 +1,196 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 1/2] video: ssd1307fb: Add support for SSD1306 OLED controller
-Date: Fri, 12 Apr 2013 10:00:02 +0200
-Message-ID: <1365753603-4438-2-git-send-email-maxime.ripard@free-electrons.com>
-References: <1365753603-4438-1-git-send-email-maxime.ripard@free-electrons.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH Resend 1/1] Revert "of/exynos_g2d: Add Bindings for exynos
+	G2D driver"
+Date: Fri, 12 Apr 2013 17:47:06 +0900
+Message-ID: <CAAQKjZMm_vL1vTP3HHDw8W2ZTRgA+4E_ZLSSERKmR1pAx1o07A@mail.gmail.com>
+References: <1365745471-4853-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365753603-4438-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============0522352902=="
+Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
+In-Reply-To: <1365745471-4853-1-git-send-email-sachin.kamat@linaro.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: "patches@linaro.org" <patches@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, rob.herring@calxeda.com, Grant Likely <grant.likely@secretlab.ca>, robherring2@gmail.com, DRI mailing list <dri-devel@lists.freedesktop.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The Solomon SSD1306 OLED controller is very similar to the SSD1307,
-except for the fact that the power is given through an external PWM for
-the 1307, and while the 1306 can generate its own power without any PWM.
+--===============0522352902==
+Content-Type: multipart/alternative; boundary=e89a8f3ba019a5289904da25f24b
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- .../devicetree/bindings/video/ssd1307fb.txt        |   10 +-
- drivers/video/ssd1307fb.c                          |  267 ++++++++++++++------
- 2 files changed, 203 insertions(+), 74 deletions(-)
+--e89a8f3ba019a5289904da25f24b
+Content-Type: text/plain; charset=ISO-8859-1
 
-diff --git a/Documentation/devicetree/bindings/video/ssd1307fb.txt b/Documentation/devicetree/bindings/video/ssd1307fb.txt
-index 3d0060c..7a12542 100644
---- a/Documentation/devicetree/bindings/video/ssd1307fb.txt
-+++ b/Documentation/devicetree/bindings/video/ssd1307fb.txt
-@@ -1,13 +1,17 @@
- * Solomon SSD1307 Framebuffer Driver
- 
- Required properties:
--  - compatible: Should be "solomon,ssd1307fb-<bus>". The only supported bus for
--    now is i2c.
-+  - compatible: Should be "solomon,<chip>fb-<bus>". The only supported bus for
-+    now is i2c, and the supported chips are ssd1306 and ssd1307.
-   - reg: Should contain address of the controller on the I2C bus. Most likely
-          0x3c or 0x3d
-   - pwm: Should contain the pwm to use according to the OF device tree PWM
--         specification [0]
-+         specification [0]. Only required for the ssd1307.
-   - reset-gpios: Should contain the GPIO used to reset the OLED display
-+  - solomon,height: Height in pixel of the screen driven by the controller
-+  - solomon,width: Width in pixel of the screen driven by the controller
-+  - solomon,page-offset: Offset of pages (band of 8 pixels) that the screen is
-+    mapped to.
- 
- Optional properties:
-   - reset-active-low: Is the reset gpio is active on physical low?
-diff --git a/drivers/video/ssd1307fb.c b/drivers/video/ssd1307fb.c
-index 395cb6a..95f76e2 100644
---- a/drivers/video/ssd1307fb.c
-+++ b/drivers/video/ssd1307fb.c
-@@ -16,24 +16,39 @@
- #include <linux/pwm.h>
- #include <linux/delay.h>
- 
--#define SSD1307FB_WIDTH			96
--#define SSD1307FB_HEIGHT		16
--
- #define SSD1307FB_DATA			0x40
- #define SSD1307FB_COMMAND		0x80
- 
- #define SSD1307FB_CONTRAST		0x81
-+#define	SSD1307FB_CHARGE_PUMP		0x8d
- #define SSD1307FB_SEG_REMAP_ON		0xa1
- #define SSD1307FB_DISPLAY_OFF		0xae
-+#define SSD1307FB_SET_MULTIPLEX_RATIO	0xa8
- #define SSD1307FB_DISPLAY_ON		0xaf
- #define SSD1307FB_START_PAGE_ADDRESS	0xb0
-+#define SSD1307FB_SET_DISPLAY_OFFSET	0xd3
-+#define	SSD1307FB_SET_CLOCK_FREQ	0xd5
-+#define	SSD1307FB_SET_PRECHARGE_PERIOD	0xd9
-+#define	SSD1307FB_SET_COM_PINS_CONFIG	0xda
-+#define	SSD1307FB_SET_VCOMH		0xdb
-+
-+struct ssd1307fb_par;
-+
-+struct ssd1307fb_ops {
-+	int (*init)(struct ssd1307fb_par *);
-+	int (*remove)(struct ssd1307fb_par *);
-+};
- 
- struct ssd1307fb_par {
- 	struct i2c_client *client;
-+	u32 height;
- 	struct fb_info *info;
-+	struct ssd1307fb_ops *ops;
-+	u32 page_offset;
- 	struct pwm_device *pwm;
- 	u32 pwm_period;
- 	int reset;
-+	u32 width;
- };
- 
- static struct fb_fix_screeninfo ssd1307fb_fix = {
-@@ -43,15 +58,10 @@ static struct fb_fix_screeninfo ssd1307fb_fix = {
- 	.xpanstep	= 0,
- 	.ypanstep	= 0,
- 	.ywrapstep	= 0,
--	.line_length	= SSD1307FB_WIDTH / 8,
- 	.accel		= FB_ACCEL_NONE,
- };
- 
- static struct fb_var_screeninfo ssd1307fb_var = {
--	.xres		= SSD1307FB_WIDTH,
--	.yres		= SSD1307FB_HEIGHT,
--	.xres_virtual	= SSD1307FB_WIDTH,
--	.yres_virtual	= SSD1307FB_HEIGHT,
- 	.bits_per_pixel	= 1,
- };
- 
-@@ -134,16 +144,16 @@ static void ssd1307fb_update_display(struct ssd1307fb_par *par)
- 	 *  (5) A4 B4 C4 D4 E4 F4 G4 H4
- 	 */
- 
--	for (i = 0; i < (SSD1307FB_HEIGHT / 8); i++) {
--		ssd1307fb_write_cmd(par->client, SSD1307FB_START_PAGE_ADDRESS + (i + 1));
-+	for (i = 0; i < (par->height / 8); i++) {
-+		ssd1307fb_write_cmd(par->client, SSD1307FB_START_PAGE_ADDRESS + i + par->page_offset);
- 		ssd1307fb_write_cmd(par->client, 0x00);
- 		ssd1307fb_write_cmd(par->client, 0x10);
- 
--		for (j = 0; j < SSD1307FB_WIDTH; j++) {
-+		for (j = 0; j < par->width; j++) {
- 			u8 buf = 0;
- 			for (k = 0; k < 8; k++) {
--				u32 page_length = SSD1307FB_WIDTH * i;
--				u32 index = page_length + (SSD1307FB_WIDTH * k + j) / 8;
-+				u32 page_length = par->width * i;
-+				u32 index = page_length + (par->width * k + j) / 8;
- 				u8 byte = *(vmem + index);
- 				u8 bit = byte & (1 << (j % 8));
- 				bit = bit >> (j % 8);
-@@ -227,16 +237,137 @@ static struct fb_deferred_io ssd1307fb_defio = {
- 	.deferred_io	= ssd1307fb_deferred_io,
- };
- 
-+static int ssd1307fb_ssd1307_init(struct ssd1307fb_par *par) {
-+	int ret;
-+
-+	par->pwm = pwm_get(&par->client->dev, NULL);
-+	if (IS_ERR(par->pwm)) {
-+		dev_err(&par->client->dev, "Could not get PWM from device tree!\n");
-+		return PTR_ERR(par->pwm);
-+	}
-+
-+	par->pwm_period = pwm_get_period(par->pwm);
-+	/* Enable the PWM */
-+	pwm_config(par->pwm, par->pwm_period / 2, par->pwm_period);
-+	pwm_enable(par->pwm);
-+
-+	dev_dbg(&par->client->dev, "Using PWM%d with a %dns period.\n", par->pwm->pwm, par->pwm_period);
-+
-+	/* Map column 127 of the OLED to segment 0 */
-+	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SEG_REMAP_ON);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Turn on the display */
-+	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_DISPLAY_ON);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int ssd1307fb_ssd1307_remove(struct ssd1307fb_par *par) {
-+	pwm_disable(par->pwm);
-+	pwm_put(par->pwm);
-+	return 0;
-+}
-+
-+static struct ssd1307fb_ops ssd1307fb_ssd1307_ops = {
-+	.init	= ssd1307fb_ssd1307_init,
-+	.remove	= ssd1307fb_ssd1307_remove,
-+};
-+
-+static int ssd1307fb_ssd1306_init(struct ssd1307fb_par *par) {
-+	int ret;
-+
-+	/* Set initial contrast */
-+	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_CONTRAST);
-+	ret = ret & ssd1307fb_write_cmd(par->client, 0x7f);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set COM direction */
-+	ret = ssd1307fb_write_cmd(par->client, 0xc8);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set segment re-map */
-+	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SEG_REMAP_ON);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set multiplex ratio value */
-+	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_MULTIPLEX_RATIO);
-+	ret = ret & ssd1307fb_write_cmd(par->client, par->height - 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* set display offset value */
-+	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_DISPLAY_OFFSET);
-+	ret = ssd1307fb_write_cmd(par->client, 0x20);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set clock frequency */
-+	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_CLOCK_FREQ);
-+	ret = ret & ssd1307fb_write_cmd(par->client, 0xf0);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set precharge period in number of ticks from the internal clock */
-+	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_PRECHARGE_PERIOD);
-+	ret = ret & ssd1307fb_write_cmd(par->client, 0x22);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set COM pins configuration */
-+	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_COM_PINS_CONFIG);
-+	ret = ret & ssd1307fb_write_cmd(par->client, 0x22);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Set VCOMH */
-+	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_SET_VCOMH);
-+	ret = ret & ssd1307fb_write_cmd(par->client, 0x49);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Turn on the DC-DC Charge Pump */
-+	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_CHARGE_PUMP);
-+	ret = ret & ssd1307fb_write_cmd(par->client, 0x14);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Turn on the display */
-+	ret = ssd1307fb_write_cmd(par->client, SSD1307FB_DISPLAY_ON);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static struct ssd1307fb_ops ssd1307fb_ssd1306_ops = {
-+	.init	= ssd1307fb_ssd1306_init,
-+};
-+
-+static const struct of_device_id ssd1307fb_of_match[] = {
-+	{ .compatible = "solomon,ssd1306fb-i2c", .data = (void*)&ssd1307fb_ssd1306_ops },
-+	{ .compatible = "solomon,ssd1307fb-i2c", .data = (void*)&ssd1307fb_ssd1307_ops },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, ssd1307fb_of_match);
-+
- static int ssd1307fb_probe(struct i2c_client *client,
- 			   const struct i2c_device_id *id)
- {
- 	struct fb_info *info;
--	u32 vmem_size = SSD1307FB_WIDTH * SSD1307FB_HEIGHT / 8;
-+	struct device_node *node = client->dev.of_node;
-+	u32 vmem_size;
- 	struct ssd1307fb_par *par;
- 	u8 *vmem;
- 	int ret;
- 
--	if (!client->dev.of_node) {
-+	if (!node) {
- 		dev_err(&client->dev, "No device tree data found!\n");
- 		return -EINVAL;
- 	}
-@@ -247,6 +378,36 @@ static int ssd1307fb_probe(struct i2c_client *client,
- 		return -ENOMEM;
- 	}
- 
-+	par = info->par;
-+	par->info = info;
-+	par->client = client;
-+
-+	par->ops = (struct ssd1307fb_ops*)of_match_device(ssd1307fb_of_match, &client->dev)->data;
-+
-+	par->reset = of_get_named_gpio(client->dev.of_node,
-+					 "reset-gpios", 0);
-+	if (!gpio_is_valid(par->reset)) {
-+		ret = -EINVAL;
-+		goto fb_alloc_error;
-+	}
-+
-+	if (of_property_read_u32(node, "solomon,width", &par->width))
-+		par->width = 96;
-+
-+	printk("Width\t%u\n", par->width);
-+
-+	if (of_property_read_u32(node, "solomon,height", &par->height))
-+		par->width = 16;
-+
-+	printk("Height\t%u\n", par->height);
-+
-+	if (of_property_read_u32(node, "solomon,page-offset", &par->page_offset))
-+		par->page_offset = 1;
-+
-+	printk("Offset\t%u\n", par->page_offset);
-+
-+	vmem_size = par->width * par->height / 8;
-+
- 	vmem = devm_kzalloc(&client->dev, vmem_size, GFP_KERNEL);
- 	if (!vmem) {
- 		dev_err(&client->dev, "Couldn't allocate graphical memory.\n");
-@@ -256,9 +417,15 @@ static int ssd1307fb_probe(struct i2c_client *client,
- 
- 	info->fbops = &ssd1307fb_ops;
- 	info->fix = ssd1307fb_fix;
-+	info->fix.line_length = par->width / 8;
- 	info->fbdefio = &ssd1307fb_defio;
- 
- 	info->var = ssd1307fb_var;
-+	info->var.xres = par->width;
-+	info->var.xres_virtual = par->width;
-+	info->var.yres = par->height;
-+	info->var.yres_virtual = par->height;
-+
- 	info->var.red.length = 1;
- 	info->var.red.offset = 0;
- 	info->var.green.length = 1;
-@@ -272,17 +439,6 @@ static int ssd1307fb_probe(struct i2c_client *client,
- 
- 	fb_deferred_io_init(info);
- 
--	par = info->par;
--	par->info = info;
--	par->client = client;
--
--	par->reset = of_get_named_gpio(client->dev.of_node,
--					 "reset-gpios", 0);
--	if (!gpio_is_valid(par->reset)) {
--		ret = -EINVAL;
--		goto reset_oled_error;
--	}
--
- 	ret = devm_gpio_request_one(&client->dev, par->reset,
- 				    GPIOF_OUT_INIT_HIGH,
- 				    "oled-reset");
-@@ -293,23 +449,6 @@ static int ssd1307fb_probe(struct i2c_client *client,
- 		goto reset_oled_error;
- 	}
- 
--	par->pwm = pwm_get(&client->dev, NULL);
--	if (IS_ERR(par->pwm)) {
--		dev_err(&client->dev, "Could not get PWM from device tree!\n");
--		ret = PTR_ERR(par->pwm);
--		goto pwm_error;
--	}
--
--	par->pwm_period = pwm_get_period(par->pwm);
--
--	dev_dbg(&client->dev, "Using PWM%d with a %dns period.\n", par->pwm->pwm, par->pwm_period);
--
--	ret = register_framebuffer(info);
--	if (ret) {
--		dev_err(&client->dev, "Couldn't register the framebuffer\n");
--		goto fbreg_error;
--	}
--
- 	i2c_set_clientdata(client, info);
- 
- 	/* Reset the screen */
-@@ -318,34 +457,25 @@ static int ssd1307fb_probe(struct i2c_client *client,
- 	gpio_set_value(par->reset, 1);
- 	udelay(4);
- 
--	/* Enable the PWM */
--	pwm_config(par->pwm, par->pwm_period / 2, par->pwm_period);
--	pwm_enable(par->pwm);
--
--	/* Map column 127 of the OLED to segment 0 */
--	ret = ssd1307fb_write_cmd(client, SSD1307FB_SEG_REMAP_ON);
--	if (ret < 0) {
--		dev_err(&client->dev, "Couldn't remap the screen.\n");
--		goto remap_error;
-+	if (par->ops->init) {
-+		ret = par->ops->init(par);
-+		if (ret)
-+			goto reset_oled_error;
- 	}
- 
--	/* Turn on the display */
--	ret = ssd1307fb_write_cmd(client, SSD1307FB_DISPLAY_ON);
--	if (ret < 0) {
--		dev_err(&client->dev, "Couldn't turn the display on.\n");
--		goto remap_error;
-+	ret = register_framebuffer(info);
-+	if (ret) {
-+		dev_err(&client->dev, "Couldn't register the framebuffer\n");
-+		goto panel_init_error;
- 	}
- 
- 	dev_info(&client->dev, "fb%d: %s framebuffer device registered, using %d bytes of video memory\n", info->node, info->fix.id, vmem_size);
- 
- 	return 0;
- 
--remap_error:
--	unregister_framebuffer(info);
--	pwm_disable(par->pwm);
--fbreg_error:
--	pwm_put(par->pwm);
--pwm_error:
-+panel_init_error:
-+	if (par->ops->remove)
-+		par->ops->remove(par);
- reset_oled_error:
- 	fb_deferred_io_cleanup(info);
- fb_alloc_error:
-@@ -359,8 +489,8 @@ static int ssd1307fb_remove(struct i2c_client *client)
- 	struct ssd1307fb_par *par = info->par;
- 
- 	unregister_framebuffer(info);
--	pwm_disable(par->pwm);
--	pwm_put(par->pwm);
-+	if (par->ops->remove)
-+		par->ops->remove(par);
- 	fb_deferred_io_cleanup(info);
- 	framebuffer_release(info);
- 
-@@ -368,17 +498,12 @@ static int ssd1307fb_remove(struct i2c_client *client)
- }
- 
- static const struct i2c_device_id ssd1307fb_i2c_id[] = {
-+	{ "ssd1306fb", 0 },
- 	{ "ssd1307fb", 0 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, ssd1307fb_i2c_id);
- 
--static const struct of_device_id ssd1307fb_of_match[] = {
--	{ .compatible = "solomon,ssd1307fb-i2c" },
--	{},
--};
--MODULE_DEVICE_TABLE(of, ssd1307fb_of_match);
--
- static struct i2c_driver ssd1307fb_driver = {
- 	.probe = ssd1307fb_probe,
- 	.remove = ssd1307fb_remove,
--- 
-1.7.10.4
+Applied.
+
+Thanks,
+Inki Dae
+
+
+2013/4/12 Sachin Kamat <sachin.kamat@linaro.org>
+
+> This reverts commit 09495dda6a62c74b13412a63528093910ef80edd.
+> The description is incomplete and the location of this file
+> is incorrect. Based on discussion with the Samsung media and DRM subsystem
+> maintainers, the documentaion of Samsung G2D bindings has been placed at:
+> Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+>
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> Cc: Inki Dae <inki.dae@samsung.com>
+> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Cc: Ajay Kumar <ajaykumar.rs@samsung.com>
+> ---
+> The right documentation for G2D bindings has already been merged for
+> 3.10-rc
+> and hence we need this patch for 3.10-rc too, to avoid confusions due to
+> multiple documents.
+> ---
+>  .../devicetree/bindings/drm/exynos/g2d.txt         |   22
+> --------------------
+>  1 file changed, 22 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/drm/exynos/g2d.txt
+>
+> diff --git a/Documentation/devicetree/bindings/drm/exynos/g2d.txt
+> b/Documentation/devicetree/bindings/drm/exynos/g2d.txt
+> deleted file mode 100644
+> index 1eb124d..0000000
+> --- a/Documentation/devicetree/bindings/drm/exynos/g2d.txt
+> +++ /dev/null
+> @@ -1,22 +0,0 @@
+> -Samsung 2D Graphic Accelerator using DRM frame work
+> -
+> -Samsung FIMG2D is a graphics 2D accelerator which supports Bit Block
+> Transfer.
+> -We set the drawing-context registers for configuring rendering parameters
+> and
+> -then start rendering.
+> -This driver is for SOCs which contain G2D IPs with version 4.1.
+> -
+> -Required properties:
+> -       -compatible:
+> -               should be "samsung,exynos-g2d-41".
+> -       -reg:
+> -               physical base address of the controller and length
+> -               of memory mapped region.
+> -       -interrupts:
+> -               interrupt combiner values.
+> -
+> -Example:
+> -       g2d {
+> -               compatible = "samsung,exynos-g2d-41";
+> -               reg = <0x10850000 0x1000>;
+> -               interrupts = <0 91 0>;
+> -       };
+> --
+> 1.7.9.5
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
+
+--e89a8f3ba019a5289904da25f24b
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Applied.<br><br>Thanks,<br>Inki Dae<br></div><div class=3D=
+"gmail_extra"><br><br><div class=3D"gmail_quote">2013/4/12 Sachin Kamat <sp=
+an dir=3D"ltr">&lt;<a href=3D"mailto:sachin.kamat@linaro.org" target=3D"_bl=
+ank">sachin.kamat@linaro.org</a>&gt;</span><br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">This reverts commit 09495dda6a62c74b13412a63=
+528093910ef80edd.<br>
+The description is incomplete and the location of this file<br>
+is incorrect. Based on discussion with the Samsung media and DRM subsystem<=
+br>
+maintainers, the documentaion of Samsung G2D bindings has been placed at:<b=
+r>
+Documentation/devicetree/bindings/gpu/samsung-g2d.txt<br>
+<br>
+Signed-off-by: Sachin Kamat &lt;<a href=3D"mailto:sachin.kamat@linaro.org">=
+sachin.kamat@linaro.org</a>&gt;<br>
+Cc: Inki Dae &lt;<a href=3D"mailto:inki.dae@samsung.com">inki.dae@samsung.c=
+om</a>&gt;<br>
+Cc: Sylwester Nawrocki &lt;<a href=3D"mailto:s.nawrocki@samsung.com">s.nawr=
+ocki@samsung.com</a>&gt;<br>
+Cc: Ajay Kumar &lt;<a href=3D"mailto:ajaykumar.rs@samsung.com">ajaykumar.rs=
+@samsung.com</a>&gt;<br>
+---<br>
+The right documentation for G2D bindings has already been merged for 3.10-r=
+c<br>
+and hence we need this patch for 3.10-rc too, to avoid confusions due to<br=
+>
+multiple documents.<br>
+---<br>
+=A0.../devicetree/bindings/drm/exynos/g2d.txt =A0 =A0 =A0 =A0 | =A0 22 ----=
+----------------<br>
+=A01 file changed, 22 deletions(-)<br>
+=A0delete mode 100644 Documentation/devicetree/bindings/drm/exynos/g2d.txt<=
+br>
+<br>
+diff --git a/Documentation/devicetree/bindings/drm/exynos/g2d.txt b/Documen=
+tation/devicetree/bindings/drm/exynos/g2d.txt<br>
+deleted file mode 100644<br>
+index 1eb124d..0000000<br>
+--- a/Documentation/devicetree/bindings/drm/exynos/g2d.txt<br>
++++ /dev/null<br>
+@@ -1,22 +0,0 @@<br>
+-Samsung 2D Graphic Accelerator using DRM frame work<br>
+-<br>
+-Samsung FIMG2D is a graphics 2D accelerator which supports Bit Block Trans=
+fer.<br>
+-We set the drawing-context registers for configuring rendering parameters =
+and<br>
+-then start rendering.<br>
+-This driver is for SOCs which contain G2D IPs with version 4.1.<br>
+-<br>
+-Required properties:<br>
+- =A0 =A0 =A0 -compatible:<br>
+- =A0 =A0 =A0 =A0 =A0 =A0 =A0 should be &quot;samsung,exynos-g2d-41&quot;.<=
+br>
+- =A0 =A0 =A0 -reg:<br>
+- =A0 =A0 =A0 =A0 =A0 =A0 =A0 physical base address of the controller and l=
+ength<br>
+- =A0 =A0 =A0 =A0 =A0 =A0 =A0 of memory mapped region.<br>
+- =A0 =A0 =A0 -interrupts:<br>
+- =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupt combiner values.<br>
+-<br>
+-Example:<br>
+- =A0 =A0 =A0 g2d {<br>
+- =A0 =A0 =A0 =A0 =A0 =A0 =A0 compatible =3D &quot;samsung,exynos-g2d-41&qu=
+ot;;<br>
+- =A0 =A0 =A0 =A0 =A0 =A0 =A0 reg =3D &lt;0x10850000 0x1000&gt;;<br>
+- =A0 =A0 =A0 =A0 =A0 =A0 =A0 interrupts =3D &lt;0 91 0&gt;;<br>
+- =A0 =A0 =A0 };<br>
+<span class=3D"HOEnZb"><font color=3D"#888888">--<br>
+1.7.9.5<br>
+<br>
+_______________________________________________<br>
+dri-devel mailing list<br>
+<a href=3D"mailto:dri-devel@lists.freedesktop.org">dri-devel@lists.freedesk=
+top.org</a><br>
+<a href=3D"http://lists.freedesktop.org/mailman/listinfo/dri-devel" target=
+=3D"_blank">http://lists.freedesktop.org/mailman/listinfo/dri-devel</a><br>
+</font></span></blockquote></div><br></div>
+
+--e89a8f3ba019a5289904da25f24b--
+
+--===============0522352902==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============0522352902==--
