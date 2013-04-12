@@ -1,66 +1,67 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH] clk: Add device tree binding to clk-fixed-factor
-Date: Fri, 12 Apr 2013 11:46:12 +0200
-Message-ID: <5167D7E4.9030206@free-electrons.com>
-References: <1365608443-30350-1-git-send-email-christian.ruppert@abilis.com> <51658BA9.7030508@free-electrons.com> <20130410162747.GG32603@ab42.lan> <20130411091952.GF8400@ab42.lan> <5166E41F.7060100@free-electrons.com> <20130412065417.GA29291@ab42.lan> <5167CE33.9010403@free-electrons.com> <20130412091234.GC29291@ab42.lan>
+From: Hans-Christian Egtvedt <egtvedt@samfundet.no>
+Subject: Re: [PATCH 1/8] video: atmel_lcdfb: fix platform data struct
+Date: Fri, 12 Apr 2013 11:52:26 +0200
+Message-ID: <20130412095226.GA10028@samfundet.no>
+References: <20130411145741.GB25242@game.jcrosoft.org>
+ <1365692422-9565-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130412091234.GC29291@ab42.lan>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@linaro.org>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1365692422-9565-1-git-send-email-plagnioj@jcrosoft.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-fbdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/12/2013 11:12 AM, Christian Ruppert wrote:
-> On Fri, Apr 12, 2013 at 11:04:51AM +0200, Gregory CLEMENT wrote:
->> On 04/12/2013 08:54 AM, Christian Ruppert wrote:
->>> On Thu, Apr 11, 2013 at 06:26:07PM +0200, Gregory CLEMENT wrote:
->>>> On 04/11/2013 11:19 AM, Christian Ruppert wrote:
->>>>> Hi Gregory,
->>>>>
->>>>> Since there doesn't seem to be anyone opposing this feature I just
->>>>> checked your patch and after adding the CLK_OF_DECLARE macro in the end
->>>>> it works well for us. Tell me if you would like to rebase and resubmit
->>>>> your patch or if I should follow up on our own.
->>>>
->>>> I can rebase and resubmit my patch, it's pretty straightforward.
->>>> The problem was the lack of user in the kernel. And by user I mean
->>>> a driver using these functions. Usually a new function enter in the
->>>> kernel only if there are users for it inside the kernel so if you plan
->>>> to submit a driver using this piece of code, then I see no reason
->>>> to not get it.
->>>
->>> If you add the line
->>>
->>> CLK_OF_DECLARE(fixed_factor_clk, "fixed-factor-clkdiv", 
->>
->> Why did you add the div suffix?
->>
->> There is nothing in the function which prevent to have "mul" greater than
->> "div" and hence having a multiplicative factor.
->>
->> I think that this suffix is misleading.
+Around Thu 11 Apr 2013 17:00:15 +0200 or thereabout, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> Today we mix pdata and drivers data in the struct atmel_lcdfb_info
+> Fix it and introduce a new struct atmel_lcdfb_pdata for platform data only
 > 
-> You are right, let's remove it.
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> Cc: linux-fbdev@vger.kernel.org
+> Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Hans-Christian Egtvedt <egtvedt@samfundet.no>
 
-Great, I am going to send the patch in a couple of minutes.
-That means that you will have to ammend your file
-arch/arc/boot/dts/abilis_tb10x.dtsi
+For the AVR32 bits
 
-and for the clock named cpu_clk and ahb_clk you will have to rename
-fixed-factor-clkdiv to fixed-factor-clock
+Acked-by: Hans-Christian Egtvedt <egtvedt@samfundet.no>
 
-Thanks,
+> ---
+>  arch/arm/mach-at91/at91sam9261_devices.c    |    6 +-
+>  arch/arm/mach-at91/at91sam9263_devices.c    |    6 +-
+>  arch/arm/mach-at91/at91sam9g45_devices.c    |    6 +-
+>  arch/arm/mach-at91/at91sam9rl_devices.c     |    6 +-
+>  arch/arm/mach-at91/board-sam9261ek.c        |    6 +-
+>  arch/arm/mach-at91/board-sam9263ek.c        |    4 +-
+>  arch/arm/mach-at91/board-sam9m10g45ek.c     |    4 +-
+>  arch/arm/mach-at91/board-sam9rlek.c         |    4 +-
+>  arch/arm/mach-at91/board.h                  |    4 +-
+>  arch/avr32/boards/atngw100/evklcd10x.c      |    6 +-
+>  arch/avr32/boards/atngw100/mrmt.c           |    4 +-
+>  arch/avr32/boards/atstk1000/atstk1000.h     |    2 +-
+>  arch/avr32/boards/atstk1000/setup.c         |    2 +-
+>  arch/avr32/boards/favr-32/setup.c           |    2 +-
+>  arch/avr32/boards/hammerhead/setup.c        |    2 +-
+>  arch/avr32/boards/merisc/display.c          |    2 +-
+>  arch/avr32/boards/mimc200/setup.c           |    4 +-
+>  arch/avr32/mach-at32ap/at32ap700x.c         |    8 +--
+>  arch/avr32/mach-at32ap/include/mach/board.h |    4 +-
+>  drivers/video/atmel_lcdfb.c                 |  104 +++++++++++++++++----------
+>  include/video/atmel_lcdc.h                  |   24 +------
+>  21 files changed, 109 insertions(+), 101 deletions(-)
 
-> 
->> [...]
-> 
-
+<snipp diff>
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+HcE
