@@ -1,107 +1,91 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v2] documentation: iommu: add description of ARM System MMU
-	binding
-Date: Fri, 12 Apr 2013 19:02:07 +0100
-Message-ID: <1365789727-5371-1-git-send-email-will.deacon@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: [PATCH 0/2] net: smsc911x: get IRQ flags from chip if not present in IORESOURCE_IRQ
+Date: Fri, 12 Apr 2013 20:05:41 +0200
+Message-ID: <1365789943-3812-1-git-send-email-javier.martinez@collabora.co.uk>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Steve Glendinning <steve.glendinning@shawell.net>
+Cc: David Miller <davem@davemloft.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@secretlab.ca>, Jon Hunter <jon-hunter@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap <linux-omap@vger.kernel.org>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a description of the device tree binding for the ARM
-System MMU architecture.
+Hello,
 
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
----
- .../devicetree/bindings/iommu/arm,smmu.txt         | 66 ++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/arm,smmu.txt
+This is the second attempt to solve the issue that IRQ flags when
+defined  using Device Trees, are not passed to drivers that try
+to obtain them from a IORESOURCE_IRQ struct resource.
 
-diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-new file mode 100644
-index 0000000..56de07c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-@@ -0,0 +1,66 @@
-+* ARM System MMU Architecture Implementation
-+
-+ARM SoCs may contain an implementation of the ARM System Memory
-+Management Unit Architecture, which can be used to provide 1 or 2 stages
-+of address translation to bus masters external to the CPU.
-+
-+The SMMU may also raise interrupts in response to various fault
-+conditions.
-+
-+** System MMU required properties:
-+
-+- compatible    : Should be one of:
-+
-+                        "arm,smmu-v1"
-+                        "arm,smmu-v2"
-+                        "arm,mmu-400"
-+
-+                  depending on the particular implementation and/or the
-+                  version of the architecture implemented.
-+
-+- reg           : Base address and size of the SMMU.
-+
-+- #global-interrupts : The number of global interrupts exposed by the
-+                       device.
-+
-+- interrupts    : Interrupt list, with the first #global-irqs entries
-+                  corresponding to the global interrupts and any
-+                  following entries corresponding to context interrupts,
-+                  specified in order of their indexing by the SMMU.
-+
-+- mmu-masters   : A list of phandles to device nodes representing bus
-+                  masters for which the SMMU can provide a translation.
-+
-+- stream-ids    : A list of 32-bit values corresponding to the StreamIDs
-+                  for the devices listed in the mmu-masters property.
-+                  This list must be same length as mmu-masters, so
-+                  masters with multiple stream-ids will have multiple
-+                  entries in mmu-masters.
-+
-+** System MMU optional properties:
-+
-+- smmu-parent   : When multiple SMMUs are chained together, this
-+                  property can be used to provide a phandle to the
-+                  parent SMMU (that is the next SMMU on the path going
-+                  from the mmu-masters towards memory) node for this
-+                  SMMU.
-+
-+Example:
-+
-+        smmu {
-+                compatible = "arm,smmu-v1";
-+                reg = <0xba5e0000 0x10000>;
-+                #global-interrupts = <2>;
-+                interrupts = <0 32 4>,
-+                             <0 33 4>,
-+                             <0 34 4>, /* This is the first context interrupt */
-+                             <0 35 4>,
-+                             <0 36 4>,
-+                             <0 37 4>;
-+                mmu-masters = <&dma0>,
-+                              <&dma0>,
-+                              <&dma1>;
-+                stream-ids  = <0xd01d>,
-+                              <0xd01e>,
-+                              <0xd11c>;
-+        };
--- 
-1.8.0
+According to Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+the "#interrupt-cells" property of an "interrupt-controller" is used
+to define the number of cells needed to specify a single interrupt.
+
+A commonly used variant is two cell on which #interrupt-cells = <2>
+and the first cell defines the index of the interrupt in the controller
+while the second cell is used to specify any of the following flags:
+
+    - bits[3:0] trigger type and level flags
+        1 = low-to-high edge triggered
+        2 = high-to-low edge triggered
+        4 = active high level-sensitive
+        8 = active low level-sensitive
+
+An example of an interrupt controller which use the two cell format is
+the OMAP GPIO controller that allows GPIO lines to be used as IRQ
+(Documentation/devicetree/bindings/gpio/gpio-omap.txt)
+
+But setting #interrupt-cells = <2> on the OMAP GPIO device node and
+specifying the GPIO-IRQ type and level flags on the second cell does not
+store this value on the populated IORESOURCE_IRQ struct resource.
+
+This is because when using an IRQ from an interrupt controller and
+setting both cells (e.g:)
+
+        interrupt-parent = <&gpio6>;
+        interrupts = <16 8>;
+
+A call to of_irq_to_resource() is made and this function calls to
+irq_of_parse_and_map_type() to get the virtual IRQ mapped to the real
+index for this interrupt controller. This IRQ number is populated on
+the struct resource:
+
+int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
+{
+        int irq = irq_of_parse_and_map(dev, index);
+        ..
+        r->start = r->end = irq;
+}
+
+irq_of_parse_and_map() calls to irq_create_of_mapping() which calls to
+the correct xlate function handler according to "#interrupt-cells"
+(irq_domain_xlate_onecell or irq_domain_xlate_twocell) and to
+irq_set_irq_type() to set the IRQ type.
+
+But the type is never returned so it can't be saved on the IRQ struct
+resource flags member.
+
+This means that drivers that want to get the IRQ edge/level flags
+defined in the Device Tree from a struct resource will not be able
+to get it.
+    
+Drivers can get the IRQ flags by using irq_get_irq_data(irq) and
+irqd_get_trigger_type(irq_data) but this will unnecessary expose
+irq_data to callers and also is more error prone.
+
+This problem was first discussed here [1] and a first approach to
+solved was discussed here [2]. This was by saving the IRQ edge/level
+flags on the struct resource but the feedback was that IORESOURCE_IRQ
+is not supposed to be used with DT but with architectures supporting ACPI/PnP.
+    
+So, this second patch-set is composed of the following patches:
+
+[PATCH 1/2] genirq: add function to get IRQ edge/level flags
+[PATCH 2/2] net: smsc911x: get IRQ flags from chip if not present in IORESOURCE_IRQ
+
+And adds an irq_get_trigger_type() function to obtain the edge/level
+flags for an IRQ and use it as a fallback if a driver does not find
+the flags on an IORESOURCE_IRQ struct resource.
+
+Thanks a lot and best regards,
+Javier
+
+[1]: https://patchwork.kernel.org/patch/2194911/
+[2]: http://permalink.gmane.org/gmane.linux.ports.arm.omap/96908
