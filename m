@@ -1,38 +1,50 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH RFC v6] [media] Add common video interfaces OF bindings documentation
-Date: Sat, 13 Apr 2013 20:17:52 +0100
-Message-ID: <20130413191752.AF4B23E2249@localhost>
-References: <1359652738-1544-2-git-send-email-s.nawrocki@samsung.com> <1359657675-6678-1-git-send-email-s.nawrocki@samsung.com> <5149E1A9.9090506@samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <5149E1A9.9090506@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>, rob.herring@calxeda.com
-Cc: g.liakhovetski@gmx.de, linux-media@vger.kernel.org, hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, kyungmin.park@samsung.com, swarren@wwwdotorg.org, t.figa@samsung.com, myungjoo.ham@samsung.com, sw0312.kim@samsung.com, prabhakar.lad@ti.com, Thomas Abraham <thomas.abraham@linaro.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
+Subject: Re: Heads up on a device tree change
+Date: Sat, 13 Apr 2013 20:26:59 +0100
+Message-ID: <20130413192659.D92973E2249@localhost>
+References: <CACxGe6sCBCGfLDAGVRgP3cnmE+oyXBDdPeVXVCqrsvCh13yPiw@mail.gmail.com> <51125B56.9050407@imgtec.com> <CACxGe6vuZ2H-G7xamS6SAiX_aCbjpO+vKavqCK77ek8tTdOmdA@mail.gmail.com> <511382AD.7030804@imgtec.com>
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <511382AD.7030804@imgtec.com>
+Sender: linux-next-owner@vger.kernel.org
+To: James Hogan <james.hogan@imgtec.com>
+Cc: linux-next <linux-next@vger.kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 20 Mar 2013 17:19:53 +0100, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
-> On 01/31/2013 07:41 PM, Sylwester Nawrocki wrote:
-> > From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+On Thu, 7 Feb 2013 10:32:13 +0000, James Hogan <james.hogan@imgtec.com> wrote:
+> On 06/02/13 14:28, Grant Likely wrote:
+> > On Wed, Feb 6, 2013 at 1:32 PM, James Hogan <james.hogan@imgtec.com> wrote:
+> >> On 06/02/13 13:11, Grant Likely wrote:
+> >>> - Resources on platform_devices get registered so they appear in
+> >>> /proc/iomem and /proc/ioports and so that device drivers get the added
+> >>> protection of request_region. This will cause breakage on device trees
+> >>> nodes with partially overlapping memory regions. (ie. 0x100..0x1ff and
+> >>> 0x180..0x27f). I also have a workaround for this, but I doubt that it
+> >>> will be necessary.
+> >>
+> >> Hi Grant,
+> >>
+> >> If I understand you correctly, the non-overlapping memory regions thing
+> >> could be a problem for me. We have a Meta based SoC that has various SoC
+> >> registers grouped together for doing GPIOs and Pin control things. I'm
+> >> still in the process of converting it to device tree, but the way I've
+> >> been handling it is to provide overlapping registers to both the gpio
+> >> and pinctl DT nodes. Each GPIO bank's registers are also interleaved
+> >> with the others, so I've been providing overlapping register ranges
+> >> (offset by 4 for each bank) to the DT node for each gpio bank too, so
+> >> each bank can function independently and the driver doesn't have to
+> >> worry about multiple banks. Does that sound like a reasonable use case?
+> >>
+> >> I guess I could cheat with the length, or specify each register in it's
+> >> own memory resource, but it seems like overkill.
 > > 
-> > This patch adds a document describing common OF bindings for video
-> > capture, output and video processing devices. It is curently mainly
-> > focused on video capture devices, with data busses defined by
-> > standards like ITU-R BT.656 or MIPI-CSI2.
-> > It also documents a method of describing data links between devices.
-> > 
-> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > ---
-> > 
-> > Changes since v5:
-> >  - added 'ports' node documentation
+> > Note that overlapping regions are fine /provided/ that they are the
+> > same size or one fits nicely inside another. It's partial overlap that
+> > is a problem
 > 
-> Hi Rob, Grant,
-> 
-> there was no more comments on this patch for a relatively long time
-> now. Would you apply it to your tree or could I send it for inclusion
-> in the media tree with your Ack ?
+> It still feels a bit artificial to impose that limitation on something
+> that is supposed to be implementation independent. Having said that it
+> doesn't particularly bother me having to work around it.
 
-For the binding:
+I've backed out on this. It broke too much.
 
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+g.
