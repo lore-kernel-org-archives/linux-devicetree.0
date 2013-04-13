@@ -1,108 +1,41 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCHv2 1/4] Documentation: Add memory mapped ARM architected timer binding
-Date: Fri, 12 Apr 2013 17:27:40 -0700
-Message-ID: <1365812863-5367-2-git-send-email-sboyd@codeaurora.org>
-References: <1365812863-5367-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1365812863-5367-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <Marc.Zyngier@arm.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 1/2] genirq: add function to get IRQ edge/level flags
+Date: Sat, 13 Apr 2013 03:21:26 +0200
+Message-ID: <5168B316.8010801@collabora.co.uk>
+References: <1365789943-3812-1-git-send-email-javier.martinez@collabora.co.uk> <1365789943-3812-2-git-send-email-javier.martinez@collabora.co.uk> <51688310.9040008@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <51688310.9040008@wwwdotorg.org>
+Sender: netdev-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Steve Glendinning <steve.glendinning@shawell.net>, David Miller <davem@davemloft.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Jon Hunter <jon-hunter@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap <linux-omap@vger.kernel.org>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a binding for the arm architected timer hardware's memory
-mapped interface. The mmio timer hardware is made up of one base
-frame and a collection of up to 8 timer frames, where each of the
-8 timer frames can have either one or two views. A frame
-typically maps to a privilege level (user/kernel, hypervisor,
-secure). The first view has full access to the registers within a
-frame, while the second view can be restricted to particular
-registers within a frame. Each frame must support a physical
-timer. It's optional for a frame to support a virtual timer.
+On 04/12/2013 11:56 PM, Stephen Warren wrote:
+> On 04/12/2013 12:05 PM, Javier Martinez Canillas wrote:
+> ...
+>> So, is better to add an irq_get_trigger_type() function to obtain
+>> the edge/level flags for an IRQ.
+> 
+>> diff --git a/include/linux/irq.h b/include/linux/irq.h
+> 
+>> +static inline u32 irq_get_trigger_type(unsigned int irq)
+>> +{
+>> +	struct irq_data *d = irq_get_irq_data(irq);
+>> +	return d ? d->state_use_accessors & IRQD_TRIGGER_MASK : 0;
+> 
+> Should the direct access to d->state_use_accessors be replaced with a
+> call to irqd_get_trigger_type()? Perhaps since this is inside the IRQ
+> code header, there's no need to use the accessor function?
+> 
 
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
----
- .../devicetree/bindings/arm/arch_timer.txt         | 59 ++++++++++++++++++++--
- 1 file changed, 56 insertions(+), 3 deletions(-)
+Yes, it's better to use irqd_get_trigger_type() instead of a direct access to
+d->state_use_accessors since that function is inline so it should be the same
+performance wise and it will be easier to maintain.
 
-diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
-index 20746e5..ac20cde 100644
---- a/Documentation/devicetree/bindings/arm/arch_timer.txt
-+++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
-@@ -1,10 +1,14 @@
- * ARM architected timer
- 
--ARM cores may have a per-core architected timer, which provides per-cpu timers.
-+ARM cores may have a per-core architected timer, which provides per-cpu timers,
-+or a memory mapped architected timer, which provides up to 8 frames with a
-+physical and optional virtual timer per frame.
- 
--The timer is attached to a GIC to deliver its per-processor interrupts.
-+The per-core architected timer is attached to a GIC to deliver its
-+per-processor interrupts via PPIs. The memory mapped timer is attached to a GIC
-+to deliver its interrupts via SPIs.
- 
--** Timer node properties:
-+** CP15 Timer node properties:
- 
- - compatible : Should at least contain one of
- 	"arm,armv7-timer"
-@@ -26,3 +30,52 @@ Example:
- 			     <1 10 0xf08>;
- 		clock-frequency = <100000000>;
- 	};
-+
-+** Memory mapped timer node properties
-+
-+- compatible : Should at least contain "arm,armv7-timer-mem".
-+
-+- clock-frequency : The frequency of the main counter, in Hz. Optional.
-+
-+- reg : The control frame base address.
-+
-+Note that #address-cells, #size-cells, and ranges shall be present to ensure
-+the CPU can address a frame's registers.
-+
-+Frame:
-+
-+- frame-number: 0 to 7.
-+
-+- interrupts : Interrupt list for physical and virtual timers in that order.
-+  The virtual timer interrupt is optional.
-+
-+- reg : The first and second view base addresses in that order. The second view
-+  base address is optional.
-+
-+- status : "disabled" indicates the frame is not available for use.
-+
-+Example:
-+
-+	timer@f0000000 {
-+		compatible = "arm,armv7-timer-mem";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		reg = <0xf0000000 0x1000>;
-+		clock-frequency = <50000000>;
-+
-+		frame@f0001000 {
-+			frame-number = <0>
-+			interrupts = <0 13 0x8>,
-+				     <0 14 0x8>;
-+			reg = <0xf0001000 0x1000>,
-+			      <0xf0002000 0x1000>;
-+		};
-+
-+		frame@f0003000 {
-+			frame-number = <1>
-+			interrupts = <0 15 0x8>;
-+			reg = <0xf0003000 0x1000>;
-+			status = "disabled";
-+		};
-+	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+I'll send a v2 changing that.
+
+Thanks a lot and best regards,
+Javier
