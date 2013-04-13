@@ -1,58 +1,135 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 0/5 v2] mv643xx_eth: device tree bindings
-Date: Sat, 13 Apr 2013 17:21:26 +0200
-Message-ID: <20130413172126.6cca0809@skate>
-References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
-	<20130411165303.GI28693@titan.lakedaemon.net>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH V4 1/6] clk: OMAP: introduce device tree binding to
+ kernel clock data
+Date: Sat, 13 Apr 2013 10:22:10 -0700
+Message-ID: <20130413172210.GM10155@atomide.com>
+References: <1365807278-554-1-git-send-email-nm@ti.com>
+ <1365807278-554-2-git-send-email-nm@ti.com>
+ <20130412233142.GE10155@atomide.com>
+ <20130412233900.GA1599@kahuna>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20130411165303.GI28693@titan.lakedaemon.net>
-Sender: netdev-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Florian Fainelli <florian@openwrt.org>, davem@davemloft.net, moinejf@free.fr, andrew@lunn.ch, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jogo@openwrt.org, buytenh@wantstofly.org, jm@lentin.co.uk, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130412233900.GA1599@kahuna>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <b-cousson@ti.com>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@deeprootsystems.com>, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Jason Cooper,
+* Nishanth Menon <nm@ti.com> [130412 16:43]:
+> Thanks for checking up. Fixed all of them below, will post part of
+> series again, only if I need to address further comments in other
+> patches..
 
-On Thu, 11 Apr 2013 12:53:03 -0400, Jason Cooper wrote:
+Thanks it seems that the other ones are ready to go, just one
+more comment below.
 
-> With this and Thomas' pci series, we will have Kirkwood fully
-> converted to devicetree, can begin removing board files, and finally
-> begin migrating everything over to mach-mvebu/.  This will lead to
-> the removal of five directories under arch/arm/ (plat-orion,
-> mach-kirkwood, mach-orion5x, mach-dove, and mach-mv78xx0).
+> --- /dev/null
+> +++ b/drivers/clk/omap/clk.c
+> @@ -0,0 +1,95 @@
+> +/*
+> + * Texas Instruments OMAP Clock driver
+> + *
+> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
+> + *	Nishanth Menon <nm@ti.com>
+> + *	Tony Lindgren <tony@atomide.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+> + * kind, whether express or implied; without even the implied warranty
+> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clkdev.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/string.h>
+> +
+> +static const struct of_device_id omap_clk_of_match[] = {
+> +	{.compatible = "ti,omap-clock",},
+> +	{},
+> +};
+> +
+> +/**
+> + * omap_clk_src_get() - Get OMAP clock from node name when needed
+> + * @clkspec:	clkspec argument
+> + * @data:	unused
+> + *
+> + * REVISIT: We assume the following:
+> + * 1. omap clock names end with _ck
+> + * 2. omap clock names are under 32 characters in length
+> + */
+> +static struct clk *omap_clk_src_get(struct of_phandle_args *clkspec, void *data)
+> +{
+> +	struct clk *clk;
+> +	char clk_name[32];
+> +	struct device_node *np = clkspec->np;
+> +
+> +	snprintf(clk_name, 32, "%s_ck", np->name);
+> +	clk = clk_get(NULL, clk_name);
+> +	if (IS_ERR(clk)) {
+> +		pr_err("%s: could not get clock %s(%ld)\n", __func__,
+> +		       clk_name, PTR_ERR(clk));
+> +		goto out;
+> +	}
+> +	clk_put(clk);
 
-No, we can't remove mach-orion5x and mach-mv78xx0 for now, they have
-not been converted at all in terms of gpio/pinmux support. I've started
-writing some pinmux code for orion5x but it's not ready.
+It seems that clk_put() is actually wrong here. That's because
+of_clk_get() should boild down to just the look up of the clock 
+and then clk_get() on it, so no double clk_get() is done in this
+case. Once the consumer driver is done, it will just call clk_put()
+on it.
 
-I don't think we should rush in doing this merge into mach-mvebu. I'd
-prefer to have the following conditions be met before a platform gets
-merged into mach-mvebu:
+> +out:
+> +	return clk;
+> +}
+> +
+> +/**
+> + * omap_clk_probe() - create link from DT definition to clock data
+> + * @pdev:	device node
+> + *
+> + * NOTE: we look up the clock lazily when the consumer driver does
+> + * of_clk_get() and initialize a NULL clock here.
+> + */
+> +static int omap_clk_probe(struct platform_device *pdev)
+> +{
+> +	int res;
+> +	struct device_node *np = pdev->dev.of_node;
+> +
+> +	/* This allows the driver to of_clk_get() */
+> +	res = of_clk_add_provider(np, omap_clk_src_get, NULL);
+> +	if (res)
+> +		dev_err(&pdev->dev, "could not add provider(%d)\n", res);
+> +
+> +	return res;
+> +}
+> +
+> +static struct platform_driver omap_clk_driver = {
+> +	.probe = omap_clk_probe,
+> +	.driver = {
+> +		   .name = "omap_clk",
+> +		   .of_match_table = of_match_ptr(omap_clk_of_match),
+> +		   },
+> +};
+> +
+> +static int __init omap_clk_init(void)
+> +{
+> +	return platform_driver_register(&omap_clk_driver);
+> +}
+> +arch_initcall(omap_clk_init);
+> +
+> +MODULE_DESCRIPTION("OMAP Clock driver");
+> +MODULE_AUTHOR("Texas Instruments Inc.");
+> +MODULE_LICENSE("GPL v2");
 
- * The mach-<foo> directory no longer depends on anything in
-   plat-orion. For mach-kirkwood, things are OK (for the DT platforms)
-   for GPIO, MPP and PCIe, but some work remains for the IRQ controller
-   driver and the timer driver.
+Other than that looks OK to me.
 
- * All boards have been converted to the Device Tree. For
-   mach-kirkwood, we're getting closer.
-
-Once a given mach-<foo> platform meets these conditions, it will be a
-clean platform, and we can merge it into mach-mvebu without any
-problem.
-
-So let's continue the cleanup work, conversion to DT, usage of drivers
-in drivers/, improvement of pinmux to support orion5x/mv78xx0, and do
-the move per-platform, once they are ready.
-
-What do you think?
-
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Tony
