@@ -1,90 +1,70 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v5 00/14] ARM: samsung-time: Prepare for multiplatform support
-Date: Sat, 13 Apr 2013 14:28:18 +0200
-Message-ID: <14380521.emfIF6y4Om@flatron>
-References: <1365794250-14436-1-git-send-email-t.figa@samsung.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Device naming based on device tree
+Date: Sat, 13 Apr 2013 13:48:38 +0100
+Message-ID: <20130413124838.EADC63E2249@localhost>
+References: <CAAXf6LVDGC_VszCqz992SmMhM6r2w3_4zLL=NkCuzJ8ep7kiMg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1365794250-14436-1-git-send-email-t.figa@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, kyungmin.park@samsung.com, linux@simtec.co.uk, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, sylvester.nawrocki@gmail.com, buserror@gmail.com, christer@weinigel.se, jekhor@gmail.com, ghcstop@gmail.com, mark.rutland@arm.com, heiko@sntech.de, robherring2@gmail.com, m.szyprowski@samsung.com, arnd@arndb.de, john.stultz@linaro.org, tglx@linutronix.de
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAAXf6LVDGC_VszCqz992SmMhM6r2w3_4zLL=NkCuzJ8ep7kiMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thomas De Schampheleire <patrickdepinguin+devicetree-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Ronny Meeus <Ronny.Meeus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 12 of April 2013 21:17:16 Tomasz Figa wrote:
-> This series is an attempt to make the samsung-time clocksource driver
-> ready for multiplatform kernels. It moves the driver to
-> drivers/clocksource, cleans it up from uses of static platform-specific
-> definitions, simplifies timer interrupt handling and adds Device Tree
-> support.
+On Mon, 21 Jan 2013 11:25:26 +0100, Thomas De Schampheleire <patrickdepinguin+devicetree-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi,
 > 
-> The samsung_pwm clocksource driver is made the master driver, which
-> exposes a single function to the PWM driver to get required data. Only
-> samsung-time driver is reworked to use the master driver at this time,
-> since the PWM driver can be already considered broken at the moment and
-> needs separate series of several patches to fix and clean it up, which
-> I am already working on.
+> I'm trying to find a proper way for userspace to determine which
+> devices to talk to. Say you have 4 SPI devices that are registered
+> against spidev (the userspace SPI handling driver). The device tree
+> obviously knows which device is which (e.g. a temperature sensor, a
+> memory device, an actuator, ...) but userspace does not. In the case
+> of SPI, it sees things like:
+>     /sys/class/spidev/spidev32766.1/
+> or worse
+>     /sys/devices/ffe000000.soc/ffe110000.spi/spi32766.1
+> but these are too specific.
 > 
-> Tested on Universal C210 board with Device Tree. Not tested without
-> Device Tree, since it has been already broken before this series.
-> Compile tested for other related SoCs.
+> The same problem occurs for devices using i2c-dev, uio, mtd, ...
 > 
-> Changes since v4:
-> (http://thread.gmane.org/gmane.linux.kernel.samsung-soc/17464)
->  - Changed the design again - now clocksource driver is considered the
-> master and exports a single function to get access to things like base
-> address, hardware variant information, shared spinlock for register
-> access synchronization and interrupt numbers
->  - Renamed the clocksource driver to samsung_pwm
->  - Cleaned up the code a bit more
->  - Added clocksource_of_init support
+> For uio, it's possible to determine which device i (i.e. the userspace
+> program needs to know that a) the device is an SPI devices which by
+> checking the /sys/class/uio/uioX/name files.
+> For mtd it is possible to do something similar by strategically
+> choosing the mtd partition descriptions and creating device nodes or
+> links based on that information.
 > 
-> Changes since v3:
-> (http://thread.gmane.org/gmane.linux.kernel.samsung-soc/16664/)
->  - Changed the design to use common (master) driver for operations that
->    can be done from both clocksource and PWM drivers (as suggested by
->    Arnd Bergmann) - needed to properly synchronize access to PWM
-> registers - Moved handling of PWM prescaler and divider to master
-> driver
+> Basically, I'm looking for a way to give device tree nodes a name, so
+> that I can easily access or create devices like /dev/tempsensor0,
+> /dev/actuator, /dev/serialnum_memory, etc. Ideally such a mechanism is
+> bus-agnostic: on one board the temperature sensor may be using SPI, on
+> another I2C.
 > 
-> Changes since v2:
-> (http://thread.gmane.org/gmane.linux.kernel.samsung-soc/16158)
->  - Addressed comments from Rob Herring and Mark Rutland
->  - Removed unused register definitions
->  - Replaced samsung,source-timer and samsung,event-timer properties
->    with samsung,pwm-outputs property that defines which PWM channels
->    are reserved for PWM outputs on particular platform
->  - Split non-DT and DT initialization into two functions
->  - Fixed a copy paste error
-> 
-> Changes since v1:
-> (http://thread.gmane.org/gmane.linux.kernel.samsung-soc/16005)
->  - Addressed comments from Mark Rutland
->  - Documented struct samsung_timer_variant
->  - Dropped inactive mail addresses from CC
-> 
-> Tomasz Figa (14):
->   ARM: SAMSUNG: Move samsung-time to drivers/clocksource
->   clocksource: samsung-pwm: Clean up platform header
->   clocksource: samsung-pwm: Add infrastructure to share PWM hardware
->   ARM: SAMSUNG: Unify base address definitions of timer block
->   ARM: SAMSUNG: Add new PWM platform device
->   ARM: SAMSUNG: Set PWM platform data
->   clocksource: samsung-pwm: Use platform data to setup the clocksource
->   clocksource: samsung-pwm: Synchronize register accesses
->   clocksource: samsung-pwm: Move IRQ mask/ack handling to the driver
->   ARM: SAMSUNG: Remove unused PWM timer IRQ chip code
->   clocksource: samsung-pwm: Configure dividers directly
->   clocksource: samsung-pwm: Do not use static mapping of registers
->   clocksource: samsung-pwm: Drop unnecessary includes
->   clocksource: samsung-pwm: Prepare for clocksource_of_init
+> I assume this is what udev is for, but I'm not sure if it fixes my
+> problem. In order to name/rename devices with udev, there need to be
+> rules, and these rules are part of userspace, I cannot dictate them
+> from the device tree. In an embedded world, you may have three boards
+> with the same userspace but with different hardware configurations and
+> thus different device trees.
 
-On S3C6410-based Tiny6410 (Mini6410-compatible) board, both with and 
-without Device Tree:
+Yes, every time a new device is added to /sys/devices, a uevent will be
+issued that lets udev know that a new device is ready to be handled. The
+data associated with the uevent is exported via the 'uevent' attribute
+in the new device.
 
-Tested-by: Tomasz Figa <tomasz.figa@gmail.com>
+The uevent attribute should have enough information to identify which
+dt node is associated with the device. Check the OF_FULLNAME value in
+uevent, and also the OF_ALIAS_* values.
 
-Best regards,
-Tomasz
+g.
