@@ -1,120 +1,75 @@
-From: Christoph Fritz <chf.fritz@googlemail.com>
-Subject: Re: [RFC][BUG] arm/dts: OMAP3: set #interrupt-cells to two
-Date: Sat, 13 Apr 2013 20:59:56 +0200
-Message-ID: <1365879596.3812.118.camel@mars>
-References: <1364631689.3767.7.camel@mars>
-	 <CAAwP0s35J-edpvFv08xjjpwaezQBYNvMNhhXL-UacsuUtSt4ZA@mail.gmail.com>
-	 <1364834508.3939.74.camel@mars>
-	 <CAAwP0s1H9zaBZPMDz9=He-E68UK0Ay3jnxZ2frYH9r1xNeQhxQ@mail.gmail.com>
-	 <1365874936.3812.65.camel@mars>
-	 <CAAwP0s1i16coo78cBChyFK78BQq2CG4KKJLQSqeuneLuhg2WUg@mail.gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 0/5 v2] mv643xx_eth: device tree bindings
+Date: Sat, 13 Apr 2013 15:00:37 -0400
+Message-ID: <20130413190037.GY28693@titan.lakedaemon.net>
+References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
+ <20130411165303.GI28693@titan.lakedaemon.net>
+ <20130413172126.6cca0809@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAAwP0s1i16coo78cBChyFK78BQq2CG4KKJLQSqeuneLuhg2WUg@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <martinez.javier@gmail.com>
-Cc: =?ISO-8859-1?Q?Beno=EEt?= Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Mack <daniel@zonque.org>, "Hans J. Koch" <hjk@hansjkoch.de>, Jon Hunter <jon-hunter@ti.com>, Paul Walmsley <paul@pwsan.com>, Kevin Hilman <khilman@ti.com>, Rajendra Nayak <rnayak@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130413172126.6cca0809@skate>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: moinejf-GANU6spQydw@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, buytenh-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2013-04-13 at 20:30 +0200, Javier Martinez Canillas wrote:
-> On Sat, Apr 13, 2013 at 7:42 PM, Christoph Fritz
-> <chf.fritz@googlemail.com> wrote:
+On Sat, Apr 13, 2013 at 05:21:26PM +0200, Thomas Petazzoni wrote:
+> Dear Jason Cooper,
+> 
+> On Thu, 11 Apr 2013 12:53:03 -0400, Jason Cooper wrote:
+> 
+> > With this and Thomas' pci series, we will have Kirkwood fully
+> > converted to devicetree, can begin removing board files, and finally
+> > begin migrating everything over to mach-mvebu/.  This will lead to
+> > the removal of five directories under arch/arm/ (plat-orion,
+> > mach-kirkwood, mach-orion5x, mach-dove, and mach-mv78xx0).
+> 
+> No, we can't remove mach-orion5x and mach-mv78xx0 for now, they have
+> not been converted at all in terms of gpio/pinmux support. I've started
+> writing some pinmux code for orion5x but it's not ready.
+> 
+> I don't think we should rush in doing this merge into mach-mvebu. I'd
+> prefer to have the following conditions be met before a platform gets
+> merged into mach-mvebu:
+> 
+>  * The mach-<foo> directory no longer depends on anything in
+>    plat-orion. For mach-kirkwood, things are OK (for the DT platforms)
+>    for GPIO, MPP and PCIe, but some work remains for the IRQ controller
+>    driver and the timer driver.
+> 
+>  * All boards have been converted to the Device Tree. For
+>    mach-kirkwood, we're getting closer.
+> 
+> Once a given mach-<foo> platform meets these conditions, it will be a
+> clean platform, and we can merge it into mach-mvebu without any
+> problem.
+> 
+> So let's continue the cleanup work, conversion to DT, usage of drivers
+> in drivers/, improvement of pinmux to support orion5x/mv78xx0, and do
+> the move per-platform, once they are ready.
+> 
+> What do you think?
 
-> Yes, my last approach to solve the IRQ flags not saved on the
-> IORESOURCE_IRQ struct resource issue is to add a new
-> irq_get_trigger_type() function to get the edge/level flags from an
-> IRQ number and use that function on the smsc911x driver probe function
-> to get the IRQ flags.
-> 
-> The patch-set is composed of these patches:
-> 
-> [PATCH v2 1/2] genirq: add function to get IRQ edge/level flags [1]
-> [PATCH 2/2] net: smsc911x: get IRQ flags from chip if not present in
-> IORESOURCE_IRQ [2]
-> 
-> and the cover letter is this [3]
-> 
-> It would be great if you can test these patches and give some feedback.
-> 
-> > For me it works when doing this in the device tree:
-> >
-> > +&omap3_pmx_wkup {
-> > +       pinctrl-names = "default";
-> > +
-> > +       lan9221_pins: pinmux_lan9221_pins {
-> > +               pinctrl-single,pins = <
-> > +                       0x5A 0x104      /* gpio_129, INPUT | MODE4 */
-> > +               >;
-> > +       };
-> > +};
-> > +
-> > <SNIP>
-> > +       lan9221@15000000 {
-> > +               compatible = "smsc,lan9221", "smsc,lan9115";
-> > +               reg = <0x15000000 0x400>;
-> 
-> If I understood correctly your smsc ethernet chip is connected to the
-> OMAP through the GPMC, then you should use a chip-select, base address
-> and size instead of the physical address and size.
+I agree completely.  I was simply restating the longview goal of the
+work we are doing (above and beyond adding armadaXP/370).  I probably
+should have given a time reference for "This will lead to..." :)
 
-Yes, it's connected with GPMC.
+Also, I have a feeling that not all legacy boards will get converted
+over.  If there is no interest or no way to test, certains boards may
+get deprecated.
 
-> Do you have commit 5330dc161 ("ARM: OMAP2+: Add GPMC DT support for
-> Ethernet child nodes") already on your tree? [4]
+thx,
 
-No I haven't.
-
-> 
-> > +               phy-mode = "mii";
-> > +               interrupt-parent = <&gpio5>;
-> > +               interrupts = <1 0x2>;   /* gpio_129, trigger: falling-edge */
-> 
-> I'm confused here, do you get the IRQ_TYPE_EDGE_FALLING (0x2) trigger
-> type flag on the smsc911x driver probe function?
-
-I added printks for irq_res->flags and irq_flags:
-[    1.259857] smsc911x_drv_probe, 2396, irq_res->flags 0x00000400
-[    1.266113] smsc911x_drv_probe, 2397, irq_flags 0x00000000
-
-So the answer is no. But weird that the smsc911x works nevertheless.
-
-> 
-> > +               reg-io-width = <4>;
-> > +               vdd33a-supply = <&reg_vcc3>;
-> > +               vddvario-supply = <&reg_vcc3>;
-> > +               pinctrl-names = "default";
-> > +               pinctrl-0 = <&lan9221_pins>;
-> > +       };
-> >
-> > but in arch/arm/mach-omap2/gpmc.c gpmc_probe_dt() I still need this
-> > hack:
-> >
-> > +       ret = gpio_request_one(129, GPIOF_IN, "lan9221 irq");
-> > +       if (ret) {
-> > +               pr_err("Failed to request IRQ GPIO%d\n", 129);
-> > +               return ret;
-> > +       }
-> >
-> 
-> Yes, this hack is still needed until we figure out how to enable the
-> GPIO bank before a call to request_irq() is made.
-> 
-> > The following patches (already sent mainline) are also applied:
-> >  "arm/dts: OMAP3: fix pinctrl-single configuration"
-> >  "net: smsc911x: adopt pinctrl support"
-> >
-> 
-> Yes, but that patch is not needed anymore from 3.9, look at this [5]
-> 
-> [1]: http://www.mail-archive.com/linux-omap@vger.kernel.org/msg88241.html
-> [2]: http://www.mail-archive.com/linux-omap@vger.kernel.org/msg88225.html
-> [3]: http://www.mail-archive.com/linux-omap@vger.kernel.org/msg88224.html
-> [4]: https://patchwork.kernel.org/patch/2273851/
-> [5]: http://marc.info/?l=linux-kernel&m=135887740715083&w=2
-
-Thanks
- -- Christoph
-
-
+Jason.
