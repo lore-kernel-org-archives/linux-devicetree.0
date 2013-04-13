@@ -1,145 +1,90 @@
-From: John Crispin <blogic@openwrt.org>
-Subject: [PATCH 5/6] DT: MIPS: ralink: add RT3883 dts files
-Date: Sat, 13 Apr 2013 10:50:25 +0200
-Message-ID: <1365843026-11015-5-git-send-email-blogic@openwrt.org>
-References: <1365843026-11015-1-git-send-email-blogic@openwrt.org>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1365843026-11015-1-git-send-email-blogic@openwrt.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org, devicetree-discuss@lists.ozlabs.org, John Crispin <blogic@openwrt.org>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v5 00/14] ARM: samsung-time: Prepare for multiplatform support
+Date: Sat, 13 Apr 2013 14:28:18 +0200
+Message-ID: <14380521.emfIF6y4Om@flatron>
+References: <1365794250-14436-1-git-send-email-t.figa@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1365794250-14436-1-git-send-email-t.figa@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, kyungmin.park@samsung.com, linux@simtec.co.uk, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, sylvester.nawrocki@gmail.com, buserror@gmail.com, christer@weinigel.se, jekhor@gmail.com, ghcstop@gmail.com, mark.rutland@arm.com, heiko@sntech.de, robherring2@gmail.com, m.szyprowski@samsung.com, arnd@arndb.de, john.stultz@linaro.org, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Add a dtsi file for RT3883 SoC and a sample dts file.
+On Friday 12 of April 2013 21:17:16 Tomasz Figa wrote:
+> This series is an attempt to make the samsung-time clocksource driver
+> ready for multiplatform kernels. It moves the driver to
+> drivers/clocksource, cleans it up from uses of static platform-specific
+> definitions, simplifies timer interrupt handling and adds Device Tree
+> support.
+> 
+> The samsung_pwm clocksource driver is made the master driver, which
+> exposes a single function to the PWM driver to get required data. Only
+> samsung-time driver is reworked to use the master driver at this time,
+> since the PWM driver can be already considered broken at the moment and
+> needs separate series of several patches to fix and clean it up, which
+> I am already working on.
+> 
+> Tested on Universal C210 board with Device Tree. Not tested without
+> Device Tree, since it has been already broken before this series.
+> Compile tested for other related SoCs.
+> 
+> Changes since v4:
+> (http://thread.gmane.org/gmane.linux.kernel.samsung-soc/17464)
+>  - Changed the design again - now clocksource driver is considered the
+> master and exports a single function to get access to things like base
+> address, hardware variant information, shared spinlock for register
+> access synchronization and interrupt numbers
+>  - Renamed the clocksource driver to samsung_pwm
+>  - Cleaned up the code a bit more
+>  - Added clocksource_of_init support
+> 
+> Changes since v3:
+> (http://thread.gmane.org/gmane.linux.kernel.samsung-soc/16664/)
+>  - Changed the design to use common (master) driver for operations that
+>    can be done from both clocksource and PWM drivers (as suggested by
+>    Arnd Bergmann) - needed to properly synchronize access to PWM
+> registers - Moved handling of PWM prescaler and divider to master
+> driver
+> 
+> Changes since v2:
+> (http://thread.gmane.org/gmane.linux.kernel.samsung-soc/16158)
+>  - Addressed comments from Rob Herring and Mark Rutland
+>  - Removed unused register definitions
+>  - Replaced samsung,source-timer and samsung,event-timer properties
+>    with samsung,pwm-outputs property that defines which PWM channels
+>    are reserved for PWM outputs on particular platform
+>  - Split non-DT and DT initialization into two functions
+>  - Fixed a copy paste error
+> 
+> Changes since v1:
+> (http://thread.gmane.org/gmane.linux.kernel.samsung-soc/16005)
+>  - Addressed comments from Mark Rutland
+>  - Documented struct samsung_timer_variant
+>  - Dropped inactive mail addresses from CC
+> 
+> Tomasz Figa (14):
+>   ARM: SAMSUNG: Move samsung-time to drivers/clocksource
+>   clocksource: samsung-pwm: Clean up platform header
+>   clocksource: samsung-pwm: Add infrastructure to share PWM hardware
+>   ARM: SAMSUNG: Unify base address definitions of timer block
+>   ARM: SAMSUNG: Add new PWM platform device
+>   ARM: SAMSUNG: Set PWM platform data
+>   clocksource: samsung-pwm: Use platform data to setup the clocksource
+>   clocksource: samsung-pwm: Synchronize register accesses
+>   clocksource: samsung-pwm: Move IRQ mask/ack handling to the driver
+>   ARM: SAMSUNG: Remove unused PWM timer IRQ chip code
+>   clocksource: samsung-pwm: Configure dividers directly
+>   clocksource: samsung-pwm: Do not use static mapping of registers
+>   clocksource: samsung-pwm: Drop unnecessary includes
+>   clocksource: samsung-pwm: Prepare for clocksource_of_init
 
-Signed-off-by: John Crispin <blogic@openwrt.org>
----
- arch/mips/ralink/Kconfig             |    4 +++
- arch/mips/ralink/dts/Makefile        |    1 +
- arch/mips/ralink/dts/rt3883.dtsi     |   58 ++++++++++++++++++++++++++++++++++
- arch/mips/ralink/dts/rt3883_eval.dts |   18 +++++++++++
- 4 files changed, 81 insertions(+)
- create mode 100644 arch/mips/ralink/dts/rt3883.dtsi
- create mode 100644 arch/mips/ralink/dts/rt3883_eval.dts
+On S3C6410-based Tiny6410 (Mini6410-compatible) board, both with and 
+without Device Tree:
 
-diff --git a/arch/mips/ralink/Kconfig b/arch/mips/ralink/Kconfig
-index 2f6fbb8..493411f 100644
---- a/arch/mips/ralink/Kconfig
-+++ b/arch/mips/ralink/Kconfig
-@@ -42,6 +42,10 @@ choice
- 		bool "RT305x eval kit"
- 		depends on SOC_RT305X
- 
-+	config DTB_RT3883_EVAL
-+		bool "RT3883 eval kit"
-+		depends on SOC_RT3883
-+
- endchoice
- 
- endif
-diff --git a/arch/mips/ralink/dts/Makefile b/arch/mips/ralink/dts/Makefile
-index f635a01..040a986 100644
---- a/arch/mips/ralink/dts/Makefile
-+++ b/arch/mips/ralink/dts/Makefile
-@@ -1,2 +1,3 @@
- obj-$(CONFIG_DTB_RT2880_EVAL) := rt2880_eval.dtb.o
- obj-$(CONFIG_DTB_RT305X_EVAL) := rt3052_eval.dtb.o
-+obj-$(CONFIG_DTB_RT3883_EVAL) := rt3883_eval.dtb.o
-diff --git a/arch/mips/ralink/dts/rt3883.dtsi b/arch/mips/ralink/dts/rt3883.dtsi
-new file mode 100644
-index 0000000..3b131dd
---- /dev/null
-+++ b/arch/mips/ralink/dts/rt3883.dtsi
-@@ -0,0 +1,58 @@
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "ralink,rt3883-soc";
-+
-+	cpus {
-+		cpu@0 {
-+			compatible = "mips,mips74Kc";
-+		};
-+	};
-+
-+	cpuintc: cpuintc@0 {
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+		compatible = "mti,cpu-interrupt-controller";
-+	};
-+
-+	palmbus@10000000 {
-+		compatible = "palmbus";
-+		reg = <0x10000000 0x200000>;
-+		ranges = <0x0 0x10000000 0x1FFFFF>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		sysc@0 {
-+			compatible = "ralink,rt3883-sysc", "ralink,rt3050-sysc";
-+			reg = <0x0 0x100>;
-+		};
-+
-+		intc: intc@200 {
-+			compatible = "ralink,rt3883-intc", "ralink,rt2880-intc";
-+			reg = <0x200 0x100>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+
-+			interrupt-parent = <&cpuintc>;
-+			interrupts = <2>;
-+		};
-+
-+		memc@300 {
-+			compatible = "ralink,rt3883-memc", "ralink,rt3050-memc";
-+			reg = <0x300 0x100>;
-+		};
-+
-+		uartlite@c00 {
-+			compatible = "ralink,rt3883-uart", "ralink,rt2880-uart", "ns16550a";
-+			reg = <0xc00 0x100>;
-+
-+			interrupt-parent = <&intc>;
-+			interrupts = <12>;
-+
-+			reg-shift = <2>;
-+		};
-+	};
-+};
-diff --git a/arch/mips/ralink/dts/rt3883_eval.dts b/arch/mips/ralink/dts/rt3883_eval.dts
-new file mode 100644
-index 0000000..0297f20
---- /dev/null
-+++ b/arch/mips/ralink/dts/rt3883_eval.dts
-@@ -0,0 +1,18 @@
-+/dts-v1/;
-+
-+/include/ "rt3883.dtsi"
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "ralink,rt3883-eval-board", "ralink,rt3883-soc";
-+	model = "Ralink RT3883 evaluation board";
-+
-+	memory@0 {
-+		reg = <0x0 0x2000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyS0,57600";
-+	};
-+};
--- 
-1.7.10.4
+Tested-by: Tomasz Figa <tomasz.figa@gmail.com>
+
+Best regards,
+Tomasz
