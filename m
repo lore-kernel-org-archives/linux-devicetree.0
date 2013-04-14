@@ -1,58 +1,58 @@
-From: Anton Vorontsov <anton@enomsg.org>
-Subject: Re: [PATCH v6] pstore/ram: Add ramoops support for the Flattened
- Device Tree.
-Date: Sun, 14 Apr 2013 10:24:58 -0400
-Message-ID: <20130414142441.GA3619@teo>
-References: <1347042576-17675-1-git-send-email-bfreed@chromium.org>
- <20120908052907.GA4724@lizard>
- <20120917062302.GA768@lizard>
- <CAL_JsqK_L9nN6+oxUQzNwFjbFf3+3NroeEwzbMdPS4T6=Mnemg@mail.gmail.com>
- <20130407174313.GA7168@lizard>
- <CAEYUcX0rQKDGD3_pbc7JnDO6WJ_QMd8AWW+X1giNVL313wODyA@mail.gmail.com>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 05/11] ASoC: fsl-ssi: Add support for imx-pcm-fiq
+Date: Sun, 14 Apr 2013 17:20:16 +0200
+Message-ID: <20130414152016.GE27394@pengutronix.de>
+References: <1365362721-3731-1-git-send-email-mpa@pengutronix.de>
+ <1365362721-3731-6-git-send-email-mpa@pengutronix.de>
+ <51620CEA.3010703@tabi.org> <20130414103819.GA27394@pengutronix.de>
+ <516AB111.3000007@tabi.org> <20130414141015.GC27394@pengutronix.de>
+ <516AC305.2000800@tabi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAEYUcX0rQKDGD3_pbc7JnDO6WJ_QMd8AWW+X1giNVL313wODyA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bryan Freed <bfreed@chromium.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robherring2@gmail.com>, Tony Luck <tony.luck@intel.com>, Kees Cook <keescook@chromium.org>, Marco Stornelli <marco.stornelli@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Colin Cross <ccross@android.com>, Olof Johansson <olof@lixom.net>
+In-Reply-To: <516AC305.2000800-N01EOCouUvQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 08, 2013 at 12:54:01PM -0700, Bryan Freed wrote:
-[...]
-> And as a more general question, why should we try not to put
-> configuration in the device tree?  It seems like a great (and
-> portable) place to put this stuff.
-> It certainly seems better to have it there than hardwired in the
-> kernel or tacked onto the kernel command line.
+On Sun, Apr 14, 2013 at 09:53:57AM -0500, Timur Tabi wrote:
+> Markus Pargmann wrote:
+> >In general, imx27 does support SSI with DMA, for example
+> >MACH_IMX27_VISSTRIM_M10 does use SSI with DMA. But there are special
+> >boards like Eukrea TLV320 and phycore-ac97 that have to use FIQ instead.
+> >All of them have a imx27 chip.
+> 
+> Why is the decision to use FIQ board-specific?  All of the hardware
+> is inside the SoC itself.  How could a board make using DMA
+> impossible?
 
-But then we have two in-kernel APIs to pass kernel parameters? So we'll
-have to maintain two ways of passing the options for each driver. That is
-hardly a good solution.
+I only ported the imx-ssi ac97 driver code and tested twice using DMA
+without success. But there is a good description of the problem in
+imx-ssi:
 
-If you would like to see a convenient way to pass kernel/module options
-via the device tree, I would suggest implementing something like this:
+" The WM9712 with which this driver
+was developed with always sends GPIO status data in slot 12 which
+we receive in our (PCM-) data stream. The only chance we have is to
+manually skip this data in the FIQ handler."
 
-chosen {
-	kernel-options {
-		linux,pstore.record-size = 123;
-		linux,foo = "bar";
-	};
-};
+Regards,
 
-And then let the kernel translate all these to module_param_*().
+Markus
 
-I am still not sure about placing the options along with devices layout,
-but if we go this route, then that is also viable:
-
-pstore-node {
-	linux,pstore.record-size = 123;
-};
-
-And translate "linux,*" this to module_param_*().
-
-How does that sound?
-
-Thanks,
-Anton
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
