@@ -1,129 +1,187 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 05/11] ASoC: fsl-ssi: Add support for imx-pcm-fiq
-Date: Sun, 14 Apr 2013 12:38:19 +0200
-Message-ID: <20130414103819.GA27394@pengutronix.de>
-References: <1365362721-3731-1-git-send-email-mpa@pengutronix.de>
- <1365362721-3731-6-git-send-email-mpa@pengutronix.de>
- <51620CEA.3010703@tabi.org>
+From: Gabor Juhos <juhosg@openwrt.org>
+Subject: Re: [PATCH 6/6] DT: MIPS: ralink: add MT7620 dts files
+Date: Sun, 14 Apr 2013 13:41:33 +0200
+Message-ID: <516A95ED.1060801@openwrt.org>
+References: <1365843026-11015-1-git-send-email-blogic@openwrt.org> <1365843026-11015-6-git-send-email-blogic@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51620CEA.3010703-N01EOCouUvQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-2
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1365843026-11015-6-git-send-email-blogic@openwrt.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: John Crispin <blogic@openwrt.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 07, 2013 at 07:18:50PM -0500, Timur Tabi wrote:
-> Markus Pargmann wrote:
-> >Add support for non-dma pcm for imx platforms with imx-pcm-fiq support.
-> >Instead of imx-pcm-audio, in this case imx-pcm-fiq-audio device is added
-> >and the SIER flags are set differently.
-> 
-> So just to be clear, this is interrupt-driven SSI audio?  So you're
-> generating an interrupt every time the transmit FIFO goes below the
-> threshold?
+2013.04.13. 10:50 keltez=E9ssel, John Crispin =EDrta:
+> Add a dtsi file for MT7620 SoC and a sample dts file.
+>=20
+> Signed-off-by: John Crispin <blogic@openwrt.org>
+> ---
+>  arch/mips/ralink/Kconfig             |    4 +++
+>  arch/mips/ralink/dts/Makefile        |    1 +
+>  arch/mips/ralink/dts/mt7620.dtsi     |   58 ++++++++++++++++++++++++=
+++++++++++
+>  arch/mips/ralink/dts/mt7620_eval.dts |   18 +++++++++++
+>  4 files changed, 81 insertions(+)
+>  create mode 100644 arch/mips/ralink/dts/mt7620.dtsi
+>  create mode 100644 arch/mips/ralink/dts/mt7620_eval.dts
+>=20
+> diff --git a/arch/mips/ralink/Kconfig b/arch/mips/ralink/Kconfig
+> index 493411f..8254502 100644
+> --- a/arch/mips/ralink/Kconfig
+> +++ b/arch/mips/ralink/Kconfig
+> @@ -46,6 +46,10 @@ choice
+>  		bool "RT3883 eval kit"
+>  		depends on SOC_RT3883
+> =20
+> +	config DTB_MT7620_EVAL
+> +		bool "MT7620 eval kit"
 
-Yes
+To be precise, this is a MT7620A based evaluation board. Both the confi=
+g symbol
+and the prompt should reflect that IMO.
 
-> I wonder if it makes sense to enable both FIFOs, so that you take
-> half as many interrupts per second.
+> +		depends on SOC_MT7620
+> +
+>  endchoice
+> =20
+>  endif
+> diff --git a/arch/mips/ralink/dts/Makefile b/arch/mips/ralink/dts/Mak=
+efile
+> index 040a986..036603a 100644
+> --- a/arch/mips/ralink/dts/Makefile
+> +++ b/arch/mips/ralink/dts/Makefile
+> @@ -1,3 +1,4 @@
+>  obj-$(CONFIG_DTB_RT2880_EVAL) :=3D rt2880_eval.dtb.o
+>  obj-$(CONFIG_DTB_RT305X_EVAL) :=3D rt3052_eval.dtb.o
+>  obj-$(CONFIG_DTB_RT3883_EVAL) :=3D rt3883_eval.dtb.o
+> +obj-$(CONFIG_DTB_MT7620_EVAL) :=3D mt7620_eval.dtb.o
+> diff --git a/arch/mips/ralink/dts/mt7620.dtsi b/arch/mips/ralink/dts/=
+mt7620.dtsi
+> new file mode 100644
+> index 0000000..5087c57
+> --- /dev/null
+> +++ b/arch/mips/ralink/dts/mt7620.dtsi
+> @@ -0,0 +1,58 @@
+> +/ {
+> +	#address-cells =3D <1>;
+> +	#size-cells =3D <1>;
+> +	compatible =3D "ralink,mtk7620n-soc", "ralink,mt7620-soc";
 
-It looks like imx-pcm-fiq and ssi-fiq.s do not support transmitting
-through two FIFOs at the moment.
+This does not match with the actual MT7620 code. That uses "ralink,mt76=
+20n-soc"
+and "ralink,mt7620a-soc" values. Ideally, we should have separate dtsi =
+files for
+the two SoCs. Additionally, the compatible property of the root node wi=
+ll be
+overwritten in the board specific dts files so adding that to the dtsi =
+file
+seems superfluous.
 
-> 
-> >
-> >Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >---
-> >  sound/soc/fsl/fsl_ssi.c | 70 ++++++++++++++++++++++++++++++++++++++++---------
-> >  1 file changed, 58 insertions(+), 12 deletions(-)
-> >
-> >diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
-> >index 7decbd9..afb5a23 100644
-> >--- a/sound/soc/fsl/fsl_ssi.c
-> >+++ b/sound/soc/fsl/fsl_ssi.c
-> >@@ -120,10 +120,12 @@ struct fsl_ssi_private {
-> >
-> >  	bool new_binding;
-> >  	bool ssi_on_imx;
-> >+	bool dma;
-> 
-> Can you rename this to "use_dma" or something like that?
+> +
+> +	cpus {
+> +		cpu@0 {
+> +			compatible =3D "mips,mips24KEc";
+> +		};
+> +	};
+> +
+> +	cpuintc: cpuintc@0 {
+> +		#address-cells =3D <0>;
+> +		#interrupt-cells =3D <1>;
+> +		interrupt-controller;
+> +		compatible =3D "mti,cpu-interrupt-controller";
+> +	};
+> +
+> +	palmbus@10000000 {
+> +		compatible =3D "palmbus";
+> +		reg =3D <0x10000000 0x200000>;
+> +                ranges =3D <0x0 0x10000000 0x1FFFFF>;
+> +
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <1>;
+> +
+> +		sysc@0 {
+> +			compatible =3D "ralink,mt7620-sysc", "ralink,mt7620n-sysc";
 
-Done.
+The 'mt7620-' prefix is a wildcard, either 'mt7620n-' or 'mt7620a-' sho=
+uld be
+used instead. This applies to the following nodes as well.
 
-> 
-> >  	struct clk *clk;
-> >  	struct platform_device *imx_pcm_pdev;
-> >  	struct imx_pcm_dma_params dma_params_tx;
-> >  	struct imx_pcm_dma_params dma_params_rx;
-> >+	struct imx_pcm_fiq_params fiq_params;
-> >
-> >  	struct {
-> >  		unsigned int rfrc;
-> >@@ -353,7 +355,8 @@ static int fsl_ssi_startup(struct snd_pcm_substream *substream,
-> >  		 */
-> >
-> >  		/* Enable the interrupts and DMA requests */
-> >-		write_ssi(SIER_FLAGS, &ssi->sier);
-> >+		if (ssi_private->dma)
-> >+			write_ssi(SIER_FLAGS, &ssi->sier);
-> >
-> >  		/*
-> >  		 * Set the watermark for transmit FIFI 0 and receive FIFO 0. We
-> >@@ -520,6 +523,18 @@ static int fsl_ssi_trigger(struct snd_pcm_substream *substream, int cmd,
-> >  		return -EINVAL;
-> >  	}
-> >
-> >+	if (!ssi_private->dma) {
-> >+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-> >+			write_ssi(CCSR_SSI_SOR_TX_CLR, &ssi->sor);
-> >+			write_ssi(CCSR_SSI_SIER_TIE | CCSR_SSI_SIER_TFE0_EN,
-> >+					&ssi->sier);
-> >+		} else {
-> >+			write_ssi(CCSR_SSI_SOR_RX_CLR, &ssi->sor);
-> >+			write_ssi(CCSR_SSI_SIER_RIE | CCSR_SSI_SIER_RFF0_EN,
-> >+					&ssi->sier);
-> >+		}
-> >+	}
-> >+
-> >  	return 0;
-> >  }
-> >
-> >@@ -680,6 +695,8 @@ static int fsl_ssi_probe(struct platform_device *pdev)
-> >  	       sizeof(fsl_ssi_dai_template));
-> >  	ssi_private->cpu_dai_drv.name = ssi_private->name;
-> >
-> >+	ssi_private->dma = !of_property_read_bool(np, "fsl,imx-fiq");
-> 
-> Instead of looking for the FIQ property, maybe you should just look
-> for the absence of a DMA property/node, and then default to
-> interrupts if there is no DMA.  That would make it more generic, and
-> even work on non-IMX systems.
+> +			reg =3D <0x0 0x100>;
+> +		};
+> +
+> +		intc: intc@200 {
+> +			compatible =3D "ralink,mt7620-intc", "ralink,rt2880-intc";
+> +			reg =3D <0x200 0x100>;
+> +
+> +			interrupt-controller;
+> +			#interrupt-cells =3D <1>;
+> +
+> +			interrupt-parent =3D <&cpuintc>;
+> +			interrupts =3D <2>;
+> +		};
+> +
+> +		memc@300 {
+> +			compatible =3D "ralink,mt7620-memc", "ralink,rt3050-memc";
+> +			reg =3D <0x300 0x100>;
+> +		};
+> +
+> +		uartlite@c00 {
+> +			compatible =3D "ralink,mt7620-uart", "ralink,rt2880-uart", "ns165=
+50a";
+> +			reg =3D <0xc00 0x100>;
+> +
+> +			interrupt-parent =3D <&intc>;
+> +			interrupts =3D <12>;
+> +
+> +			reg-shift =3D <2>;
+> +		};
+> +	};
+> +};
+> diff --git a/arch/mips/ralink/dts/mt7620_eval.dts b/arch/mips/ralink/=
+dts/mt7620_eval.dts
+> new file mode 100644
+> index 0000000..72dec59
+> --- /dev/null
+> +++ b/arch/mips/ralink/dts/mt7620_eval.dts
 
-I do not think it is possible. For example imx27 ssi does support
-DMA but for specific boards we have to use fiq instead (phycore-ac97).
-So I would prefer to define the DMA in the chip dtsi file and choose
-fiq, if necessary, in the board dts.
+The DTS file describes an evaluation board with a MT7620A SoC, the file=
+ name
+should be changed to reflect that. It would help to avoid confusion if =
+we want
+to add another DTS file for a MT7620N based evaluation board later.
 
-Regards,
+> @@ -0,0 +1,18 @@
+> +/dts-v1/;
+> +
+> +/include/ "mt7620.dtsi"
+> +
+> +/ {
+> +	#address-cells =3D <1>;
+> +	#size-cells =3D <1>;
+> +	compatible =3D "ralink,mt7620a-eval-board", "ralink,mt7620a-soc";
+> +	model =3D "Ralink MT7620 evaluation board";
 
-Markus
+s/MT7620/MT7620A/
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> +
+> +	memory@0 {
+> +		reg =3D <0x0 0x4000000>;
+> +	};
+> +
+> +	chosen {
+> +		bootargs =3D "console=3DttyS0,57600";
+> +	};
+> +};
+>=20
+
+-Gabor
