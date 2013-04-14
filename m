@@ -1,123 +1,52 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v6] net: sh_eth: Add support of device tree probe
-Date: Mon, 15 Apr 2013 00:06:49 +0400
-Message-ID: <516B0C59.3050207@cogentembedded.com>
-References: <1363675196-8940-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com> <51486699.6000908@cogentembedded.com> <514AB0CB.2030808@renesas.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
+Date: Sun, 14 Apr 2013 22:53:05 +0200
+Message-ID: <CACRpkda4h+qXTvsirPAS7E7sjXhMLE62q=VDy53W8UchsYjbNg@mail.gmail.com>
+References: <1329321854-24490-1-git-send-email-b-cousson@ti.com>
+	<4F47AD08.4030504@ti.com>
+	<CAAwP0s0cB368R2mtbJpTZJreR-5GSRLfxC+8DJLo5nw3_OwBuA@mail.gmail.com>
+	<512D39DA.7020306@ti.com>
+	<512D3AB1.1080202@wwwdotorg.org>
+	<512D3EC2.6050408@ti.com>
+	<20130302200524.D230F3E1571@localhost>
+	<51391F41.5000303@ti.com>
+	<CAAwP0s1CFRO-rf==p5sYs1n0gigMif7wuT8Yv0N_iLUDMrtcOg@mail.gmail.com>
+	<CACRpkdYHj-rEF3Rk_CWnmmMw_Amr7m8SgQ=-2zsDYuLeuu3azw@mail.gmail.com>
+	<514C79E1.4090106@wwwdotorg.org>
+	<514CE0AB.6060207@ti.com>
+	<CACRpkdZmv-rAoKSQYpkHHSMzKJOn5TixVW_P3=m7ZNagBYCUPw@mail.gmail.com>
+	<515319D5.20105@wwwdotorg.org>
+	<CACRpkdYXVLgCz1Tyu-Ls2V2OTc4R3cGNJhfQJB6Hiz_K9dkZYQ@mail.gmail.com>
+	<5155C902.7080207@wwwdotorg.org>
+	<CACRpkdYbs4-uudpRUY8e+7icYYkZrfM0kReP3pLL5DMiURJ4dg@mail.gmail.com>
+	<5165CB9D.1090202@wwwdotorg.org>
+	<CACRpkdYirFNqmGhA4K9CL4ve4NYhs8Rd3SFt1iwW9vHBkrcz8g@mail.gmail.com>
+	<51671D7B.5060303@wwwdotorg.org>
+	<CACRpkdbf32Ef77GmXk9id9+RRjcDRTr7S+F4nznoeZU8y=BT_Q@mail.gmail.com>
+	<51673D70.3010503@wwwdotorg.org>
+	<CAAwP0s0e2x33jZQhFRY+Hoo61SFqYKRgWk=1mL2+DNxSDJHz+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <514AB0CB.2030808@renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, magnus.damm@gmail.com, kda@linux-powerpc.org, horms+renesas@verge.net.au, mark.rutland@arm.com, grant.likely@secretlab.ca
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAAwP0s0e2x33jZQhFRY+Hoo61SFqYKRgWk=1mL2+DNxSDJHz+A@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <martinez.javier@gmail.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Jon Hunter <jon-hunter@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Alexandre Courbot <acourbot@nvidia.com>, Stephen Warren <swarren@nvidia.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Sun, Apr 14, 2013 at 3:35 AM, Javier Martinez Canillas
+<martinez.javier@gmail.com> wrote:
 
-On 21-03-2013 11:03, Nobuhiro Iwamatsu wrote:
+> Is the following inlined patch [1] what you were thinking that would
+> be the right approach?
 
-    Sorry, I have noticed your reply only last Friday. I probably should do 
-something with my mail filters, so that they leave the personal mail in my 
-inbox and not toss it to the list folders where I may ignore it...
+This looks sort of OK, but I'm still struggling with the question of
+what we could do to help other implementations facing the same issue.
 
->>> This adds support of device tree probe for Renesas sh-ether driver.
+This is a pretty hard design pattern to properly replicate in every such
+driver is it not?
 
->>> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+Hmmmm
 
->>> V6: - Add renesas,sh-eth-gigabit, renesas,sh-eth-sh4 and
->>> renesas,sh-eth-sh3-sh2 to compatible string.
->>> - Remove sh-eth,register-type. This is supplemented by the
->>> compatible string.
->>> - Use the of_property_read_bool instead of of_find_property.
->>> - Add sanity chheck for of_property_read_u32.
->>> - Update document.
->>> V5: - Rewrite sh_eth_parse_dt().
->>> Remove of_device_is_available() and CONFIG_OF from support OF
->>> checking function and re-add empty sh_eth_parse_dt().
->>> - Add CONFIG_PM to definition of dev_pm_ops.
->>> - Add CONFIG_OF to definition of of_device_id.
->>> V4: - Remove empty sh_eth_parse_dt().
->>> V3: - Remove empty sh_eth_parse_dt().
->>> V3: - Removed sentnece of "needs-init" from document.
->>> V2: - Removed ether_setup().
->>> - Fixed typo from "sh-etn" to "sh-eth".
->>> - Removed "needs-init" and sh-eth,endian from definition of DT.
->>> - Changed "sh-eth,edmac-endian" instead of "sh-eth,edmac-big-endain"
->>> in definition of DT.
->>> ---
-[...]
-
->>> @@ -2391,12 +2451,33 @@ static int sh_eth_drv_probe(struct platform_device
->>> *pdev)
->>> goto out_release;
->>> }
->>>
->>> + if (np) {
->>> + pd = sh_eth_parse_dt(&pdev->dev, ndev, np);
->>> + if (pdev->dev.platform_data && pd) {
->>> + struct sh_eth_plat_data *tmp =
->>> + pdev->dev.platform_data;
->>> + pd->set_mdio_gate = tmp->set_mdio_gate;
->>> + pd->needs_init = tmp->needs_init;
-
->> OK, so we can't fully convert this driver to the device tree due to
->> procedural platform data.
-
->  > I then would advice just using OF_DEV_AUXDATA() in the platform data
-
-    /sdata/code/.
-
-> instead of trying to convert the driver to device tree.
-
-    Convert the platfrom data, I meant. But I already wrote about that I think.
-
-> Yes, I knew about this.
-
-    But still attempted to document and use the data-only device tree 
-properties (which was pointless in the light of procediral platfrom data)?
-
->>> +
->>> +#ifdef CONFIG_OF
->>> +static const struct of_device_id sh_eth_match[] = {
->>> + { .compatible = "renesas,sh-eth-gigabit", },
->>> + { .compatible = "renesas,sh-eth-sh4", },
->>> + { .compatible = "renesas,sh-eth-sh3-sh2", },
-
->> Biut this is not really enough: the driver supports much more variations of
->> the SH and ARM SoCs
->> all of which have difference not only in register layout but also in the
->> registers bits or even
->> presence of the whole register blocks. All this IMO should be reflected in
->> the different values
->> of the compatible "property". BTW, it seems another register layout and
->> instance needs to be added
->> for the R-Car SoCs (instead of the current ugly hack).
-
-    I've already added it now, it's in the 'net-next' tree.
-
-> I see.
-> Latest source code was defined compatible as renesas,sh-eth-gigabit,
-> sh-eth-sh4 and sh-eth-sh3-sh2. I will change ito renesas,<CPU>-sh-eth.
-
-    Yes, this is the step in the right direction. Though I'd drop the '-sh' 
-infix -- the driver is usable not only on SH platforms.
-
-> And I think that we should define the sh7757-sh-eth-gitabit and
-> sh7757-sh-eth-fast for this. Becauase sh7757 is special device.
-> There is a device that supports only devices that support fast
-> ether and gigabit ether on single CPU.
-
-    Yes, I saw that.
-
-> Therefore, the compatible property of this device becomes <CPU>-sh-eth
-> or <CPU>-sh-eth-<ETHER TYPE>.
-
-> How about this?
-
-    Sounds better. I think however that the conversion of this driver to 
-device tree shouldn't be done without getting rid of the current #ifdef mess 
-in it (which is still on my agenda). I think that the 'register_type' field 
-should move from the platform data to the 'struct sh_eth_cpu_data' in the process.
-
-WBR, Sergei
+Yours,
+Linus Walleij
