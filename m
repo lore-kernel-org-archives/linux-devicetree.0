@@ -1,195 +1,126 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 10/10] fdtdump: add a debug mode
-Date: Mon, 15 Apr 2013 15:12:06 +1000
-Message-ID: <20130415051206.GK16400@truffula.fritz.box>
-References: <1365618555-5893-1-git-send-email-vapier@gentoo.org>
- <1365618555-5893-11-git-send-email-vapier@gentoo.org>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: Re: Query on pinctrl usage for DT nodes
+Date: Mon, 15 Apr 2013 12:12:39 +0530
+Message-ID: <CA+V-a8tmOd_r3Ry=udMeioFq3JuNXqNvWmhLhp-2XLyAy+PFCA@mail.gmail.com>
+References: <CA+V-a8uiPwsAD--OHFAE=i2ed+-wbXm4p2deZXr92+Zv6GDS1w@mail.gmail.com>
+ <515C5C76.3080009@wwwdotorg.org>
+ <CA+V-a8t3wtP77DdeUoQHKMjAuWmV+ude+1J3UjJmMTqobgStjA@mail.gmail.com>
+ <5162FD4A.1030909@wwwdotorg.org>
+ <CA+V-a8vwdCkyMqiynj5BodXbjwJ=e4qNb-29FhLweqbjc7DBQA@mail.gmail.com>
+ <5165A22B.4070200@wwwdotorg.org> <20130410203408.GP10155@atomide.com>
+ <CA+V-a8syL4YCddiz5W4dEhAhQjFo07_Hg+J6TN94cuPV7SQGag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8436505076989719560=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365618555-5893-11-git-send-email-vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CA+V-a8syL4YCddiz5W4dEhAhQjFo07_Hg+J6TN94cuPV7SQGag@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>, Stephen Warren <swarren@wwwdotorg.org>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, linus.walleij@linaro.org, Stephen Warren <swarren@nvidia.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, LAK <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Tony,
 
---===============8436505076989719560==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0FM4RQAc0jwHekq5"
-Content-Disposition: inline
+On Mon, Apr 15, 2013 at 10:39 AM, Prabhakar Lad
+<prabhakar.csengg@gmail.com> wrote:
+> Hi Tony,
+>
+> On Thu, Apr 11, 2013 at 2:04 AM, Tony Lindgren <tony@atomide.com> wrote:
+>> * Stephen Warren <swarren@wwwdotorg.org> [130410 10:37]:
+>>> On 04/10/2013 02:12 AM, Prabhakar Lad wrote:
+>>> ...
+>>> > Following is the proposed fix/hack let me know if its OK.
+>>> >
+>>> > Regards,
+>>> > --Prabhakar
+>>> >
+>>> > ->>>>>>>>>>>>>>>>>>>
+>>> >
+>>> > diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
+>>> > index ee72f1f..78fb42d 100644
+>>> > --- a/drivers/pinctrl/core.h
+>>> > +++ b/drivers/pinctrl/core.h
+>>> > @@ -46,6 +46,7 @@ struct pinctrl_dev {
+>>> >         struct pinctrl *p;
+>>> >         struct pinctrl_state *hog_default;
+>>> >         struct pinctrl_state *hog_sleep;
+>>> > +       bool bits_per_mux;
+>>>
+>>> This clearly isn't correct; any change to solve this problem should only
+>>> touch the internals of the pinctrl-single driver, not the pinctrl core.
+>>
+>> Yeah how about just change the pintctrl-single,bits register
+>> naming to be register + bit?  Something like 0xdeadbeef.0 and
+>> 0xdeadbeef.1 and so on.
+>>
+> How and where the changing the register naming would help ?
+>
+No matter we change the register name, it would fail in pin_request()
+function, see the following code snippet
 
+static int pin_request(struct pinctrl_dev *pctldev,
+		       int pin, const char *owner,
+		       struct pinctrl_gpio_range *gpio_range)
+{
+	struct pin_desc *desc;
+	const struct pinmux_ops *ops = pctldev->desc->pmxops;
+	int status = -EINVAL;
 
---0FM4RQAc0jwHekq5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+	desc = pin_desc_get(pctldev, pin);
+	if (desc == NULL) {
+		dev_err(pctldev->dev,
+			"pin %d is not registered so it cannot be requested\n",
+			pin);
+		goto out;
+	}
 
-On Wed, Apr 10, 2013 at 02:29:15PM -0400, Mike Frysinger wrote:
-> When hacking raw fdt files, it's useful to know the actual offsets into
-> the file each node appears.  Add a --debug mode that includes this.
+	dev_dbg(pctldev->dev, "request pin %d (%s) for %s\n",
+		pin, desc->name, owner);
 
-Neat idea.  Few comments on implementation below.
+	if (gpio_range) {
+		/* There's no need to support multiple GPIO requests */
+		if (desc->gpio_owner) {
+			dev_err(pctldev->dev,
+				"pin %s already requested by %s; cannot claim for %s\n",
+				desc->name, desc->gpio_owner, owner);
+			goto out;
+		}
 
-> Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-> ---
->  fdtdump.c | 40 ++++++++++++++++++++++++++++++++++++----
->  1 file changed, 36 insertions(+), 4 deletions(-)
->=20
-> diff --git a/fdtdump.c b/fdtdump.c
-> index 2b8c194..2c8bff6 100644
-> --- a/fdtdump.c
-> +++ b/fdtdump.c
-> @@ -19,8 +19,29 @@
->  #define PALIGN(p, a)	((void *)(ALIGN((unsigned long)(p), (a))))
->  #define GET_CELL(p)	(p +=3D 4, *((const uint32_t *)(p-4)))
-> =20
-> -static void dump_blob(void *blob)
-> +static const char *tagname(uint32_t tag)
->  {
-> +	static const char * const names[] =3D {
-> +#define TN(t) [t] #t
-> +		TN(FDT_BEGIN_NODE),
-> +		TN(FDT_END_NODE),
-> +		TN(FDT_PROP),
-> +		TN(FDT_NOP),
-> +		TN(FDT_END),
-> +#undef TN
-> +	};
-> +	if (tag < ARRAY_SIZE(names))
-> +		if (names[tag])
-> +			return names[tag];
-> +	return "???";
+		desc->gpio_owner = owner;
+	} else {
+		if (desc->mux_usecount && strcmp(desc->mux_owner, owner)) {
+			dev_err(pctldev->dev,
+				"pin %s already requested by %s; cannot claim for %s\n",
+				desc->name, desc->mux_owner, owner);
+			goto out;
+		}
 
-Better to return NULL here, I think.  That way a caller can easily
-check and print the numeric value instead.
+		desc->mux_usecount++;
+		if (desc->mux_usecount > 1)
+			return 0;
 
-Or you could construct a string with the number.  It would leak
-memory, obviously, but in a short-run program like this, it doesn't
-really matter.
+		desc->mux_owner = owner;
+	}
 
-> +}
-> +
-> +#define dprintf(fmt, args...) \
-> +	do { if (debug) printf("// " fmt, ## args); } while (0)
+      ...........
+}
 
-I'd prefer a different function (well, macro) name.  I tend to use
-"dprintf" for debug print functions in the sense of debugging for the
-program they're in, whereas in this case it's for the debug mode which
-is (primarily) for debugging other programs.
+Since desc->mux_owner and owner would obviously differ.
 
-> +static void dump_blob(void *blob, bool debug)
-> +{
-> +	uintptr_t blob_off =3D (uintptr_t)blob;
->  	struct fdt_header *bph =3D blob;
->  	uint32_t off_mem_rsvmap =3D fdt32_to_cpu(bph->off_mem_rsvmap);
->  	uint32_t off_dt =3D fdt32_to_cpu(bph->off_dt_struct);
-> @@ -74,7 +95,8 @@ static void dump_blob(void *blob)
->  	p =3D p_struct;
->  	while ((tag =3D fdt32_to_cpu(GET_CELL(p))) !=3D FDT_END) {
-> =20
-> -		/* printf("tag: 0x%08x (%d)\n", tag, p - p_struct); */
-> +		dprintf("%04zx: tag: 0x%08x (%s)\n",
-> +		        (uintptr_t)p - blob_off - 4, tag, tagname(tag));
-> =20
->  		if (tag =3D=3D FDT_BEGIN_NODE) {
->  			s =3D p;
-> @@ -113,6 +135,8 @@ static void dump_blob(void *blob)
-> =20
->  		p =3D PALIGN(p + sz, 4);
-> =20
-> +		dprintf("%04zx: string: %s\n", (uintptr_t)s - blob_off, s);
-> +		dprintf("%04zx: value\n", (uintptr_t)t - blob_off);
->  		printf("%*s%s", depth * shift, "", s);
->  		utilfdt_print_data(t, sz);
->  		printf(";\n");
-> @@ -121,8 +145,9 @@ static void dump_blob(void *blob)
-> =20
->  /* Usage related data. */
->  static const char usage_synopsis[] =3D "fdtdump [options] <file>";
-> -static const char usage_short_opts[] =3D "s" USAGE_COMMON_SHORT_OPTS;
-> +static const char usage_short_opts[] =3D "ds" USAGE_COMMON_SHORT_OPTS;
->  static struct option const usage_long_opts[] =3D {
-> +	{"debug",            no_argument, NULL, 'd'},
->  	{"scan",             no_argument, NULL, 's'},
->  	USAGE_COMMON_LONG_OPTS
->  };
-> @@ -136,6 +161,7 @@ int main(int argc, char *argv[])
->  	int opt;
->  	const char *file;
->  	char *buf;
-> +	bool debug =3D false;
->  	bool scan =3D false;
->  	off_t len;
-> =20
-> @@ -143,6 +169,9 @@ int main(int argc, char *argv[])
->  		switch (opt) {
->  		case_USAGE_COMMON_FLAGS
-> =20
-> +		case 'd':
-> +			debug =3D true;
-> +			break;
->  		case 's':
->  			scan =3D true;
->  			break;
-> @@ -179,6 +208,9 @@ int main(int argc, char *argv[])
->  				    fdt_off_dt_struct(p) < this_len &&
->  					fdt_off_dt_strings(p) < this_len)
->  					break;
-> +				if (debug)
-> +					printf("%s: skipping fdt magic at offset %#zx\n",
-> +						file, p - buf);
->  			}
->  			++p;
->  		}
-> @@ -188,7 +220,7 @@ int main(int argc, char *argv[])
->  		buf =3D p;
->  	}
-> =20
-> -	dump_blob(buf);
-> +	dump_blob(buf, debug);
-> =20
->  	return 0;
->  }
+Regards,
+--Prabhakar
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---0FM4RQAc0jwHekq5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlFrjCYACgkQaILKxv3ab8aAaACeM9otsd6sxHHC4VWNhc7aBX5i
-vXAAoIzNXAQ+EGrMf9lcdCCJDbloGP+i
-=m0gd
------END PGP SIGNATURE-----
-
---0FM4RQAc0jwHekq5--
-
---===============8436505076989719560==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============8436505076989719560==--
+> Regards,
+> --Prabhakar
+>
+>> Regards,
+>>
+>> Tony
