@@ -1,54 +1,52 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH 0/5 v2] mv643xx_eth: device tree bindings
-Date: Mon, 15 Apr 2013 09:43:25 -0400
-Message-ID: <20130415134325.GB28693@titan.lakedaemon.net>
-References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
- <20130411165303.GI28693@titan.lakedaemon.net>
- <20130413172126.6cca0809@skate>
- <20130413190037.GY28693@titan.lakedaemon.net>
- <1365995234.3566.17.camel@deadeye.wl.decadent.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1365995234.3566.17.camel@deadeye.wl.decadent.org.uk>
-Sender: netdev-owner@vger.kernel.org
-To: Ben Hutchings <ben@decadent.org.uk>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Florian Fainelli <florian@openwrt.org>, davem@davemloft.net, moinejf@free.fr, andrew@lunn.ch, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jogo@openwrt.org, buytenh@wantstofly.org, jm@lentin.co.uk, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v9 RESEND 2/4] misc: Generic on-chip SRAM allocation driver
+Date: Mon, 15 Apr 2013 14:50:47 +0100
+Message-ID: <20130415135047.315D43E0AA8@localhost>
+References: <1363776767-2635-1-git-send-email-p.zabel@pengutronix.de> <1363776767-2635-3-git-send-email-p.zabel@pengutronix.de> <20130327152723.723cd65e884413df405abe2d@linux-foundation.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130327152723.723cd65e884413df405abe2d@linux-foundation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Morton <akpm@linux-foundation.org>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 15, 2013 at 04:07:14AM +0100, Ben Hutchings wrote:
-> On Sat, 2013-04-13 at 15:00 -0400, Jason Cooper wrote:
-> > On Sat, Apr 13, 2013 at 05:21:26PM +0200, Thomas Petazzoni wrote:
-> > > Dear Jason Cooper,
-> > > 
-> > > On Thu, 11 Apr 2013 12:53:03 -0400, Jason Cooper wrote:
-> > > 
-> > > > With this and Thomas' pci series, we will have Kirkwood fully
-> > > > converted to devicetree, can begin removing board files, and finally
-> > > > begin migrating everything over to mach-mvebu/.  This will lead to
-> > > > the removal of five directories under arch/arm/ (plat-orion,
-> > > > mach-kirkwood, mach-orion5x, mach-dove, and mach-mv78xx0).
-> > > 
-> > > No, we can't remove mach-orion5x and mach-mv78xx0 for now, they have
-> > > not been converted at all in terms of gpio/pinmux support. I've started
-> > > writing some pinmux code for orion5x but it's not ready.
-> [...]
-> > Also, I have a feeling that not all legacy boards will get converted
-> > over.  If there is no interest or no way to test, certains boards may
-> > get deprecated.
+On Wed, 27 Mar 2013 15:27:23 -0700, Andrew Morton <akpm@linux-foundation.org> wrote:
+> On Wed, 20 Mar 2013 11:52:45 +0100 Philipp Zabel <p.zabel@pengutronix.de> wrote:
 > 
-> Debian supports many Kirkwood and Orion 5x systems.  A call for testing
-> on the debian-arm@lists.debian.org list might be worthwhile.
+> > This driver requests and remaps a memory region as configured in the
+> > device tree. It serves memory from this region via the genalloc API.
+> > It optionally enables the SRAM clock.
+> > 
+> > Other drivers can retrieve the genalloc pool from a phandle pointing
+> > to this drivers' device node in the device tree.
+> > 
+> > The allocation granularity is hard-coded to 32 bytes for now,
+> > to make the SRAM driver useful for the 6502 remoteproc driver.
+> > There is overhead for bigger SRAMs, where only a much coarser
+> > allocation granularity is needed: At 32 bytes minimum allocation
+> > size, a 256 KiB SRAM needs a 1 KiB bitmap to track allocations.
+> > 
+> >  Documentation/devicetree/bindings/misc/sram.txt |   16 +++
+> >  drivers/misc/Kconfig                            |    9 ++
+> >  drivers/misc/Makefile                           |    1 +
+> >  drivers/misc/sram.c                             |  121 +++++++++++++++++++++++
+> 
+> drivers/misc/sram.c is a pretty generic-sounding thing.  Is it really
+> Linux's One True SRAM driver?  How many different sorts of sram devices
+> do we expect this can be used with?  If I don't use DT?
+> 
+> In other words, perhaps this should have a more specific and accurate
+> name?
 
-definitely.
+Well, it is SRAM. Not a whole lot of variation there, and all the driver
+does is allow bits of it to be carved up so that multiple device drivers
+don't step on each other's toes. I think that is pretty generic. If
+some SRAM comes along that is sufficiently different that it requires a
+different driver, then I'm pretty confident saying it would be the
+oddball, not this driver, and so would need the more specific name.
 
-> I would be very glad to see kirkwood, orion5x and mv78xx0 merged - we
-> build natively and this takes about 8 hours for each configuration.
+All the users at the moment are DT platforms. When a non-DT user comes
+along, it won't be a problem to add a non-DT binding. In the mean time I
+wouldn't borrow trouble about it.
 
-That's the plan, build an armv5 kernel, and dtb's for all the boards.
-Then, an armv7 kernel for the armadaXP/370 boards, etc.
-
-thx,
-
-Jason.
+g.
