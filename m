@@ -1,60 +1,55 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH] ARM: dts: omap3-beagle-xm: Add USB Host support for Rev
- Ax/Bx
-Date: Mon, 15 Apr 2013 15:39:15 +0300
-Message-ID: <516BF4F3.5060904@ti.com>
-References: <1366029306-1824-1-git-send-email-rogerq@ti.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 0/3] regulator: max8998: Add support for Device Tree
+Date: Mon, 15 Apr 2013 14:42:08 +0200
+Message-ID: <1884769.9OL2jLgc2r@amdc1227>
+References: <1365092363-12763-1-git-send-email-t.figa@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1366029306-1824-1-git-send-email-rogerq@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: b-cousson@ti.com, tony@atomide.com
-Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1365092363-12763-1-git-send-email-t.figa@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: broonie@opensource.wolfsonmicro.com
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, lrg@ti.com, m.szyprowski@samsung.com, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMDQvMTUvMjAxMyAwMzozNSBQTSwgUm9nZXIgUXVhZHJvcyB3cm90ZToKPiBQcm92aWRlIFJF
-U0VUIGFuZCBQb3dlciByZWd1bGF0b3JzIGZvciB0aGUgVVNCIFBIWSwKPiB0aGUgVVNCIEhvc3Qg
-cG9ydCBtb2RlIGFuZCB0aGUgUEhZIGRldmljZS4KPiAKPiBBbHNvIHByb3ZpZGUgcGluIG11bHRp
-cGxleGVyIGluZm9ybWF0aW9uIGZvciBVU0IgaG9zdAo+IHBpbnMuCj4gCj4gVGhpcyB3aWxsIG5v
-dCB3b3JrIGZvciBSZXYgQ3ggYm9hcmRzIGJlY2F1c2Ugb2YgcmV2ZXJzZWQgbG9naWMKPiBmb3Ig
-VVNCX1BPV0VSX0VuYWJsZS4KPiAKPiBDQzogQmVub8OudCBDb3Vzc29uIDxiLWNvdXNzb25AdGku
-Y29tPgo+IFNpZ25lZC1vZmYtYnk6IFJvZ2VyIFF1YWRyb3MgPHJvZ2VycUB0aS5jb20+Cj4gLS0t
-Cj4gIGFyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLWJlYWdsZS14bS5kdHMgfCAgIDYyICsrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGVzIGNoYW5nZWQsIDYyIGluc2VydGlv
-bnMoKyksIDAgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L29tYXAzLWJlYWdsZS14bS5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9vbWFwMy1iZWFnbGUteG0u
-ZHRzCj4gaW5kZXggNWEzMTk2NC4uZDM5NGM1MSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290
-L2R0cy9vbWFwMy1iZWFnbGUteG0uZHRzCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMt
-YmVhZ2xlLXhtLmR0cwo+IEBAIC01Nyw2ICs1Nyw2MCBAQAo+ICAJCXRpLG1jYnNwID0gPCZtY2Jz
-cDI+Owo+ICAJCXRpLGNvZGVjID0gPCZ0d2xfYXVkaW8+Owo+ICAJfTsKPiArCj4gKwkvKiBIUyBV
-U0IgUG9ydCAyIFJFU0VUICovCj4gKwloc3VzYjJfcmVzZXQ6IGhzdXNiMl9yZXNldF9yZWcgewo+
-ICsJCWNvbXBhdGlibGUgPSAicmVndWxhdG9yLWZpeGVkIjsKPiArCQlyZWd1bGF0b3ItbmFtZSA9
-ICJoc3VzYjJfcmVzZXQiOwo+ICsJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMzMDAwMDA+
-Owo+ICsJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAwMDA+Owo+ICsJCWdwaW8gPSA8
-JmdwaW81IDE5IDA+OwkvKiBncGlvXzE0NyAqLwo+ICsJCXN0YXJ0dXAtZGVsYXktdXMgPSA8NzAw
-MDA+Owo+ICsJCWVuYWJsZS1hY3RpdmUtaGlnaDsKPiArCX07Cj4gKwo+ICsJLyogSFMgVVNCIFBv
-cnQgMiBQb3dlciAqLwo+ICsJaHN1c2IyX3Bvd2VyOiBoc3VzYjJfcG93ZXJfcmVnIHsKPiArCQlj
-b21wYXRpYmxlID0gInJlZ3VsYXRvci1maXhlZCI7Cj4gKwkJcmVndWxhdG9yLW5hbWUgPSAiaHN1
-c2IyX3ZidXMiOwo+ICsJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMzMDAwMDA+Owo+ICsJ
-CXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAwMDA+Owo+ICsJCWdwaW8gPSA8JnR3bF9n
-cGlvIDE4IDA+OwkvKiBHUElPIExFREEgKi8KPiArCQlzdGFydHVwLWRlbGF5LXVzID0gPDcwMDAw
-PjsKPiArCQllbmFibGUtYWN0aXZlLWhpZ2g7CS8qIEZJWE1FOiBhY3RpdmUtbG93IGZvciBSZXYu
-IEMgKi8KCkJlbm9pdCAmIFRvbnksCgpBbnkgaWRlYXMgaG93IHRvIHRhY2tsZSB0aGUgcmV2ZXJz
-ZWQgbG9naWMgZm9yIFJldi4gQyBib2FyZHM/Cgo+ICsJfTsKPiArCj4gKwkvKiBIUyBVU0IgSG9z
-dCBQSFkgb24gUE9SVCAyICovCj4gKwloc3VzYjJfcGh5OiBoc3VzYjJfcGh5IHsKPiArCQljb21w
-YXRpYmxlID0gInVzYi1ub3AteGNlaXYiOwo+ICsJCXJlc2V0LXN1cHBseSA9IDwmaHN1c2IyX3Jl
-c2V0PjsKPiArCQl2Y2Mtc3VwcGx5ID0gPCZoc3VzYjJfcG93ZXI+Owo+ICsJfTsKPiArCj4gK307
-CgpjaGVlcnMsCi1yb2dlcgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi Mark,
+
+On Thursday 04 of April 2013 18:19:20 Tomasz Figa wrote:
+> This series adds Device Tree support to max8998 MFD driver.
+> 
+> First patch reworks max8998-irq driver to use IRQ domains. Second patch
+> prepares platform data structure to ease generating it at runtime from
+> data parsed from device tree. Third patch implements Device Tree
+> binding and adds necessary documentation.
+> 
+> Tested on Universal C210 board.
+> 
+> Tomasz Figa (3):
+>   mfd: Add irq domain support for max8998 interrupts
+>   regulator: max8998: Use arrays for specifying voltages in platform
+>     data
+>   mfd: max8998: Add support for Device Tree
+> 
+>  Documentation/devicetree/bindings/mfd/max8998.txt | 111 ++++++++++
+>  arch/arm/mach-exynos/mach-universal_c210.c        |   8 +-
+>  arch/arm/mach-s5pv210/mach-aquila.c               |   8 +-
+>  arch/arm/mach-s5pv210/mach-goni.c                 |   8 +-
+>  drivers/mfd/Kconfig                               |   1 +
+>  drivers/mfd/max8998-irq.c                         |  61 +++---
+>  drivers/mfd/max8998.c                             |  76 ++++++-
+>  drivers/regulator/max8998.c                       | 254
+> ++++++++++++++++------ drivers/rtc/rtc-max8998.c                         | 
+> 17 +-
+>  include/linux/mfd/max8998-private.h               |   6 +-
+>  include/linux/mfd/max8998.h                       |  20 +-
+>  11 files changed, 435 insertions(+), 135 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max8998.txt
+
+Any chance to still have this series merged for 3.10?
+
+Best regards,
+-- 
+Tomasz Figa
+Samsung Poland R&D Center
+SW Solution Development, Kernel and System Framework
