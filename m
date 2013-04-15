@@ -1,55 +1,472 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 0/3] regulator: max8998: Add support for Device Tree
-Date: Mon, 15 Apr 2013 14:42:08 +0200
-Message-ID: <1884769.9OL2jLgc2r@amdc1227>
-References: <1365092363-12763-1-git-send-email-t.figa@samsung.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH v3 2/2] video: imxfb: Add DT support
+Date: Mon, 15 Apr 2013 14:43:21 +0200
+Message-ID: <20130415124321.GB15139@game.jcrosoft.org>
+References: <1365157876-1757-1-git-send-email-mpa@pengutronix.de>
+ <1365157876-1757-3-git-send-email-mpa@pengutronix.de>
+ <20130408075742.GR20693@game.jcrosoft.org>
+ <20130414143132.GD27394@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1365092363-12763-1-git-send-email-t.figa@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: broonie@opensource.wolfsonmicro.com
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, lrg@ti.com, m.szyprowski@samsung.com, kgene.kim@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20130414143132.GD27394@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: linux-fbdev@vger.kernel.org, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On 16:31 Sun 14 Apr     , Markus Pargmann wrote:
+> On Mon, Apr 08, 2013 at 09:57:42AM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > On 12:31 Fri 05 Apr     , Markus Pargmann wrote:
+> > > Add devicetree support for imx framebuffer driver. It uses the generic
+> > > display bindings and helper functions.
+> > > 
+> > > Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> > > Cc: Fabio Estevam <festevam@gmail.com>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > ---
+> > >  .../devicetree/bindings/video/fsl,imx-fb.txt       |  49 ++++++
+> > >  drivers/video/imxfb.c                              | 192 +++++++++++++++++----
+> > >  2 files changed, 207 insertions(+), 34 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/video/fsl,imx-fb.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/video/fsl,imx-fb.txt b/Documentation/devicetree/bindings/video/fsl,imx-fb.txt
+> > > new file mode 100644
+> > > index 0000000..bde9c77
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/video/fsl,imx-fb.txt
+> > > @@ -0,0 +1,49 @@
+> > > +Freescale imx21 Framebuffer
+> > > +
+> > > +This framebuffer driver supports devices imx1, imx21, imx25, and imx27.
+> > > +
+> > > +Required properties:
+> > > +- compatible : "fsl,<chip>-fb", chip should be imx1 or imx21
+> > > +- reg : Should contain 1 register ranges(address and length)
+> > > +- interrupts : One interrupt of the fb dev
+> > > +
+> > > +Required nodes:
+> > > +- display: Phandle to a display node as described in
+> > > +	Documentation/devicetree/bindings/video/display-timing.txt
+> > > +	Additional, the display node has to define properties:
+> > > +	- fsl,bpp: Bits per pixel
+> > > +	- fsl,pcr: LCDC PCR value
+> > > +
+> > > +Optional properties:
+> > > +- dmacr-eukrea: Should be set for eukrea boards.
+> > why ?
+> 
+> Because eukrea boards have a different dmacr then all other boards using
+> imxfb. The dmacr address is hardcoded as defaults in the code. I could
+> also search for the board name in the DT, but there are no eukrea boards
+> with DT at the moment, so I thought a bool property may be better for
+> the moment.
+so no if an other board come will have an other property no
 
-On Thursday 04 of April 2013 18:19:20 Tomasz Figa wrote:
-> This series adds Device Tree support to max8998 MFD driver.
+add an optionnal option to pass the dmacr
 > 
-> First patch reworks max8998-irq driver to use IRQ domains. Second patch
-> prepares platform data structure to ease generating it at runtime from
-> data parsed from device tree. Third patch implements Device Tree
-> binding and adds necessary documentation.
+> > 
+> > and This should be prefix by yhe Vendor here Eukrea
 > 
-> Tested on Universal C210 board.
+> Okay.
 > 
-> Tomasz Figa (3):
->   mfd: Add irq domain support for max8998 interrupts
->   regulator: max8998: Use arrays for specifying voltages in platform
->     data
->   mfd: max8998: Add support for Device Tree
+> Regards,
 > 
->  Documentation/devicetree/bindings/mfd/max8998.txt | 111 ++++++++++
->  arch/arm/mach-exynos/mach-universal_c210.c        |   8 +-
->  arch/arm/mach-s5pv210/mach-aquila.c               |   8 +-
->  arch/arm/mach-s5pv210/mach-goni.c                 |   8 +-
->  drivers/mfd/Kconfig                               |   1 +
->  drivers/mfd/max8998-irq.c                         |  61 +++---
->  drivers/mfd/max8998.c                             |  76 ++++++-
->  drivers/regulator/max8998.c                       | 254
-> ++++++++++++++++------ drivers/rtc/rtc-max8998.c                         | 
-> 17 +-
->  include/linux/mfd/max8998-private.h               |   6 +-
->  include/linux/mfd/max8998.h                       |  20 +-
->  11 files changed, 435 insertions(+), 135 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/max8998.txt
-
-Any chance to still have this series merged for 3.10?
-
-Best regards,
--- 
-Tomasz Figa
-Samsung Poland R&D Center
-SW Solution Development, Kernel and System Framework
+> Markus
+> 
+> > > +
+> > > +Example:
+> > > +
+> > > +	imxfb: fb@10021000 {
+> > > +		compatible = "fsl,imx27-fb", "fsl,imx21-fb";
+> > > +		interrupts = <61>;
+> > > +		reg = <0x10021000 0x1000>;
+> > > +		display = <&display0>;
+> > > +	};
+> > > +
+> > > +	...
+> > > +
+> > > +	display0: display0 {
+> > > +		model = "Primeview-PD050VL1";
+> > > +		native-mode = <&timing_disp0>;
+> > > +		fsl,bpp = <16>;		/* non-standard but required */
+> > > +		fsl,pcr = <0xf0c88080>;	/* non-standard but required */
+> > > +		display-timings {
+> > > +			timing_disp0: 640x480 {
+> > > +				hactive = <640>;
+> > > +				vactive = <480>;
+> > > +				hback-porch = <112>;
+> > > +				hfront-porch = <36>;
+> > > +				hsync-len = <32>;
+> > > +				vback-porch = <33>;
+> > > +				vfront-porch = <33>;
+> > > +				vsync-len = <2>;
+> > > +				clock-frequency = <25000000>;
+> > > +			};
+> > > +		};
+> > > +	};
+> > > diff --git a/drivers/video/imxfb.c b/drivers/video/imxfb.c
+> > > index ef2b587..5a9bc598 100644
+> > > --- a/drivers/video/imxfb.c
+> > > +++ b/drivers/video/imxfb.c
+> > > @@ -32,6 +32,12 @@
+> > >  #include <linux/io.h>
+> > >  #include <linux/math64.h>
+> > >  #include <linux/uaccess.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/of_device.h>
+> > > +
+> > > +#include <video/of_display_timing.h>
+> > > +#include <video/of_videomode.h>
+> > > +#include <video/videomode.h>
+> > >  
+> > >  #include <linux/platform_data/video-imxfb.h>
+> > >  
+> > > @@ -117,10 +123,13 @@
+> > >  #define LGWCR_GWAV(alpha)	(((alpha) & 0xff) << 24)
+> > >  #define LGWCR_GWE	(1 << 22)
+> > >  
+> > > +#define IMXFB_LSCR1_DEFAULT 0x00120300
+> > > +#define IMXFB_DMACR_DEFAULT 0x00020010
+> > > +#define IMXFB_DMACR_EUKREA_DEFAULT 0x00040060
+> > > +
+> > >  /* Used fb-mode. Can be set on kernel command line, therefore file-static. */
+> > >  static const char *fb_mode;
+> > >  
+> > > -
+> > >  /*
+> > >   * These are the bitfields for each
+> > >   * display depth that we support.
+> > > @@ -192,6 +201,19 @@ static struct platform_device_id imxfb_devtype[] = {
+> > >  };
+> > >  MODULE_DEVICE_TABLE(platform, imxfb_devtype);
+> > >  
+> > > +static struct of_device_id imxfb_of_dev_id[] = {
+> > > +	{
+> > > +		.compatible = "fsl,imx1-fb",
+> > > +		.data = &imxfb_devtype[IMX1_FB],
+> > > +	}, {
+> > > +		.compatible = "fsl,imx21-fb",
+> > > +		.data = &imxfb_devtype[IMX21_FB],
+> > > +	}, {
+> > > +		/* sentinel */
+> > > +	}
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, imxfb_of_dev_id);
+> > > +
+> > >  static inline int is_imx1_fb(struct imxfb_info *fbi)
+> > >  {
+> > >  	return fbi->devtype == IMX1_FB;
+> > > @@ -324,6 +346,9 @@ static const struct imx_fb_videomode *imxfb_find_mode(struct imxfb_info *fbi)
+> > >  	struct imx_fb_videomode *m;
+> > >  	int i;
+> > >  
+> > > +	if (!fb_mode)
+> > > +		return &fbi->mode[0];
+> > > +
+> > >  	for (i = 0, m = &fbi->mode[0]; i < fbi->num_modes; i++, m++) {
+> > >  		if (!strcmp(m->mode.name, fb_mode))
+> > >  			return m;
+> > > @@ -479,6 +504,9 @@ static int imxfb_bl_update_status(struct backlight_device *bl)
+> > >  	struct imxfb_info *fbi = bl_get_data(bl);
+> > >  	int brightness = bl->props.brightness;
+> > >  
+> > > +	if (!fbi->pwmr)
+> > > +		return 0;
+> > > +
+> > >  	if (bl->props.power != FB_BLANK_UNBLANK)
+> > >  		brightness = 0;
+> > >  	if (bl->props.fb_blank != FB_BLANK_UNBLANK)
+> > > @@ -719,7 +747,8 @@ static int imxfb_activate_var(struct fb_var_screeninfo *var, struct fb_info *inf
+> > >  
+> > >  	writel(fbi->pcr, fbi->regs + LCDC_PCR);
+> > >  #ifndef PWMR_BACKLIGHT_AVAILABLE
+> > > -	writel(fbi->pwmr, fbi->regs + LCDC_PWMR);
+> > > +	if (fbi->pwmr)
+> > > +		writel(fbi->pwmr, fbi->regs + LCDC_PWMR);
+> > >  #endif
+> > >  	writel(fbi->lscr1, fbi->regs + LCDC_LSCR1);
+> > >  	writel(fbi->dmacr, fbi->regs + LCDC_DMACR);
+> > > @@ -758,13 +787,12 @@ static int imxfb_resume(struct platform_device *dev)
+> > >  #define imxfb_resume	NULL
+> > >  #endif
+> > >  
+> > > -static int __init imxfb_init_fbinfo(struct platform_device *pdev)
+> > > +static int imxfb_init_fbinfo(struct platform_device *pdev)
+> > >  {
+> > >  	struct imx_fb_platform_data *pdata = pdev->dev.platform_data;
+> > >  	struct fb_info *info = dev_get_drvdata(&pdev->dev);
+> > >  	struct imxfb_info *fbi = info->par;
+> > > -	struct imx_fb_videomode *m;
+> > > -	int i;
+> > > +	struct device_node *np;
+> > >  
+> > >  	pr_debug("%s\n",__func__);
+> > >  
+> > > @@ -795,41 +823,96 @@ static int __init imxfb_init_fbinfo(struct platform_device *pdev)
+> > >  	info->fbops			= &imxfb_ops;
+> > >  	info->flags			= FBINFO_FLAG_DEFAULT |
+> > >  					  FBINFO_READS_FAST;
+> > > -	info->var.grayscale		= pdata->cmap_greyscale;
+> > > -	fbi->cmap_inverse		= pdata->cmap_inverse;
+> > > -	fbi->cmap_static		= pdata->cmap_static;
+> > > -	fbi->lscr1			= pdata->lscr1;
+> > > -	fbi->dmacr			= pdata->dmacr;
+> > > -	fbi->pwmr			= pdata->pwmr;
+> > > -	fbi->lcd_power			= pdata->lcd_power;
+> > > -	fbi->backlight_power		= pdata->backlight_power;
+> > > -
+> > > -	for (i = 0, m = &pdata->mode[0]; i < pdata->num_modes; i++, m++)
+> > > -		info->fix.smem_len = max_t(size_t, info->fix.smem_len,
+> > > -				m->mode.xres * m->mode.yres * m->bpp / 8);
+> > > +	if (pdata) {
+> > > +		info->var.grayscale		= pdata->cmap_greyscale;
+> > > +		fbi->cmap_inverse		= pdata->cmap_inverse;
+> > > +		fbi->cmap_static		= pdata->cmap_static;
+> > > +		fbi->lscr1			= pdata->lscr1;
+> > > +		fbi->dmacr			= pdata->dmacr;
+> > > +		fbi->pwmr			= pdata->pwmr;
+> > > +		fbi->lcd_power			= pdata->lcd_power;
+> > > +		fbi->backlight_power		= pdata->backlight_power;
+> > > +	} else {
+> > > +		np = pdev->dev.of_node;
+> > > +		info->var.grayscale = of_property_read_bool(np,
+> > > +						"cmap-greyscale");
+> > > +		fbi->cmap_inverse = of_property_read_bool(np, "cmap-inverse");
+> > > +		fbi->cmap_static = of_property_read_bool(np, "cmap-static");
+> > > +
+> > > +		fbi->lscr1 = IMXFB_LSCR1_DEFAULT;
+> > > +		if (of_property_read_bool(np, "dmacr-eukrea"))
+> > > +			fbi->dmacr = IMXFB_DMACR_EUKREA_DEFAULT;
+> > > +		else
+> > > +			fbi->dmacr = IMXFB_DMACR_DEFAULT;
+> > > +
+> > > +		/* These two function pointers could be used by some specific
+> > > +		 * platforms. */
+> > > +		fbi->lcd_power = NULL;
+> > > +		fbi->backlight_power = NULL;
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int imxfb_of_read_mode(struct device *dev, struct device_node *np,
+> > > +		struct imx_fb_videomode *imxfb_mode)
+> > > +{
+> > > +	int ret;
+> > > +	struct fb_videomode *of_mode = &imxfb_mode->mode;
+> > > +	u32 bpp;
+> > > +	u32 pcr;
+> > > +
+> > > +	ret = of_property_read_string(np, "model", &of_mode->name);
+> > > +	if (ret)
+> > > +		of_mode->name = NULL;
+> > > +
+> > > +	ret = of_get_fb_videomode(np, of_mode, OF_USE_NATIVE_MODE);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "Failed to get videomode from DT\n");
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	ret = of_property_read_u32(np, "fsl,bpp", &bpp);
+> > > +	ret |= of_property_read_u32(np, "fsl,pcr", &pcr);
+> > > +
+> > > +	if (ret) {
+> > > +		dev_err(dev, "Failed to read bpp and pcr from DT\n");
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	if (bpp < 1 || bpp > 255) {
+> > > +		dev_err(dev, "Bits per pixel have to be between 1 and 255\n");
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	imxfb_mode->bpp = bpp;
+> > > +	imxfb_mode->pcr = pcr;
+> > >  
+> > >  	return 0;
+> > >  }
+> > >  
+> > > -static int __init imxfb_probe(struct platform_device *pdev)
+> > > +static int imxfb_probe(struct platform_device *pdev)
+> > >  {
+> > >  	struct imxfb_info *fbi;
+> > >  	struct fb_info *info;
+> > >  	struct imx_fb_platform_data *pdata;
+> > >  	struct resource *res;
+> > > +	struct imx_fb_videomode *m;
+> > > +	const struct of_device_id *of_id;
+> > >  	int ret, i;
+> > > +	int bytes_per_pixel;
+> > >  
+> > >  	dev_info(&pdev->dev, "i.MX Framebuffer driver\n");
+> > >  
+> > > +	of_id = of_match_device(imxfb_of_dev_id, &pdev->dev);
+> > > +	if (of_id)
+> > > +		pdev->id_entry = of_id->data;
+> > > +
+> > >  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > >  	if (!res)
+> > >  		return -ENODEV;
+> > >  
+> > >  	pdata = pdev->dev.platform_data;
+> > > -	if (!pdata) {
+> > > -		dev_err(&pdev->dev,"No platform_data available\n");
+> > > -		return -ENOMEM;
+> > > -	}
+> > >  
+> > >  	info = framebuffer_alloc(sizeof(struct imxfb_info), &pdev->dev);
+> > >  	if (!info)
+> > > @@ -837,15 +920,55 @@ static int __init imxfb_probe(struct platform_device *pdev)
+> > >  
+> > >  	fbi = info->par;
+> > >  
+> > > -	if (!fb_mode)
+> > > -		fb_mode = pdata->mode[0].mode.name;
+> > > -
+> > >  	platform_set_drvdata(pdev, info);
+> > >  
+> > >  	ret = imxfb_init_fbinfo(pdev);
+> > >  	if (ret < 0)
+> > >  		goto failed_init;
+> > >  
+> > > +	if (pdata) {
+> > > +		if (!fb_mode)
+> > > +			fb_mode = pdata->mode[0].mode.name;
+> > > +
+> > > +		fbi->mode = pdata->mode;
+> > > +		fbi->num_modes = pdata->num_modes;
+> > > +	} else {
+> > > +		struct device_node *display_np;
+> > > +		fb_mode = NULL;
+> > > +
+> > > +		display_np = of_parse_phandle(pdev->dev.of_node, "display", 0);
+> > > +		if (!display_np) {
+> > > +			dev_err(&pdev->dev, "No display defined in devicetree\n");
+> > > +			ret = -EINVAL;
+> > > +			goto failed_of_parse;
+> > > +		}
+> > > +
+> > > +		/*
+> > > +		 * imxfb does not support more modes, we choose only the native
+> > > +		 * mode.
+> > > +		 */
+> > > +		fbi->num_modes = 1;
+> > > +
+> > > +		fbi->mode = devm_kzalloc(&pdev->dev,
+> > > +				sizeof(struct imx_fb_videomode), GFP_KERNEL);
+> > > +		if (!fbi->mode) {
+> > > +			ret = -ENOMEM;
+> > > +			goto failed_of_parse;
+> > > +		}
+> > > +
+> > > +		ret = imxfb_of_read_mode(&pdev->dev, display_np, fbi->mode);
+> > > +		if (ret)
+> > > +			goto failed_of_parse;
+> > > +	}
+> > > +
+> > > +	/* Calculate maximum bytes used per pixel. In most cases this should
+> > > +	 * be the same as m->bpp/8 */
+> > > +	m = &fbi->mode[0];
+> > > +	bytes_per_pixel = (m->bpp + 7) / 8;
+> > > +	for (i = 0; i < fbi->num_modes; i++, m++)
+> > > +		info->fix.smem_len = max_t(size_t, info->fix.smem_len,
+> > > +				m->mode.xres * m->mode.yres * bytes_per_pixel);
+> > > +
+> > >  	res = request_mem_region(res->start, resource_size(res),
+> > >  				DRIVER_NAME);
+> > >  	if (!res) {
+> > > @@ -878,7 +1001,8 @@ static int __init imxfb_probe(struct platform_device *pdev)
+> > >  		goto failed_ioremap;
+> > >  	}
+> > >  
+> > > -	if (!pdata->fixed_screen_cpu) {
+> > > +	/* Seems not being used by anyone, so no support for oftree */
+> > > +	if (!pdata || !pdata->fixed_screen_cpu) {
+> > >  		fbi->map_size = PAGE_ALIGN(info->fix.smem_len);
+> > >  		fbi->map_cpu = dma_alloc_writecombine(&pdev->dev,
+> > >  				fbi->map_size, &fbi->map_dma, GFP_KERNEL);
+> > > @@ -903,18 +1027,16 @@ static int __init imxfb_probe(struct platform_device *pdev)
+> > >  		info->fix.smem_start = fbi->screen_dma;
+> > >  	}
+> > >  
+> > > -	if (pdata->init) {
+> > > +	if (pdata && pdata->init) {
+> > >  		ret = pdata->init(fbi->pdev);
+> > >  		if (ret)
+> > >  			goto failed_platform_init;
+> > >  	}
+> > >  
+> > > -	fbi->mode = pdata->mode;
+> > > -	fbi->num_modes = pdata->num_modes;
+> > >  
+> > >  	INIT_LIST_HEAD(&info->modelist);
+> > > -	for (i = 0; i < pdata->num_modes; i++)
+> > > -		fb_add_videomode(&pdata->mode[i].mode, &info->modelist);
+> > > +	for (i = 0; i < fbi->num_modes; i++)
+> > > +		fb_add_videomode(&fbi->mode[i].mode, &info->modelist);
+> > >  
+> > >  	/*
+> > >  	 * This makes sure that our colour bitfield
+> > > @@ -944,10 +1066,10 @@ static int __init imxfb_probe(struct platform_device *pdev)
+> > >  failed_register:
+> > >  	fb_dealloc_cmap(&info->cmap);
+> > >  failed_cmap:
+> > > -	if (pdata->exit)
+> > > +	if (pdata && pdata->exit)
+> > >  		pdata->exit(fbi->pdev);
+> > >  failed_platform_init:
+> > > -	if (!pdata->fixed_screen_cpu)
+> > > +	if (pdata && !pdata->fixed_screen_cpu)
+> > >  		dma_free_writecombine(&pdev->dev,fbi->map_size,fbi->map_cpu,
+> > >  			fbi->map_dma);
+> > >  failed_map:
+> > > @@ -956,6 +1078,7 @@ failed_ioremap:
+> > >  failed_getclock:
+> > >  	release_mem_region(res->start, resource_size(res));
+> > >  failed_req:
+> > > +failed_of_parse:
+> > >  	kfree(info->pseudo_palette);
+> > >  failed_init:
+> > >  	platform_set_drvdata(pdev, NULL);
+> > > @@ -980,7 +1103,7 @@ static int imxfb_remove(struct platform_device *pdev)
+> > >  	unregister_framebuffer(info);
+> > >  
+> > >  	pdata = pdev->dev.platform_data;
+> > > -	if (pdata->exit)
+> > > +	if (pdata && pdata->exit)
+> > >  		pdata->exit(fbi->pdev);
+> > >  
+> > >  	fb_dealloc_cmap(&info->cmap);
+> > > @@ -1009,6 +1132,7 @@ static struct platform_driver imxfb_driver = {
+> > >  	.shutdown	= imxfb_shutdown,
+> > >  	.driver		= {
+> > >  		.name	= DRIVER_NAME,
+> > > +		.of_match_table = imxfb_of_dev_id,
+> > >  	},
+> > >  	.id_table	= imxfb_devtype,
+> > >  };
+> > > -- 
+> > > 1.8.1.5
+> > > 
+> > > _______________________________________________
+> > > devicetree-discuss mailing list
+> > > devicetree-discuss@lists.ozlabs.org
+> > > https://lists.ozlabs.org/listinfo/devicetree-discuss
+> > 
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
