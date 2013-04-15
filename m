@@ -1,63 +1,56 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v4 0/5]  LPAE remaining device tree file
-Date: Mon, 15 Apr 2013 17:47:30 +0200
-Message-ID: <516C2112.9060703@free-electrons.com>
-References: <1365776950-30094-1-git-send-email-gregory.clement@free-electrons.com> <20130415154700.GF28693@titan.lakedaemon.net>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [RFC PATCH 1/2] ARM: DT: kernel: move temporary cpu map stack array
+ to static data
+Date: Mon, 15 Apr 2013 17:13:21 +0100
+Message-ID: <1366042402-8987-2-git-send-email-lorenzo.pieralisi@arm.com>
+References: <1366042402-8987-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130415154700.GF28693@titan.lakedaemon.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Andrew Lunn <andrew@lunn.ch>, Lior Amsalem <alior@marvell.com>, Ike Pan <ike.pan@canonical.com>, Grant Likely <grant.likely@secretlab.ca>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.com>, Nicolas Pitre <nico@fluxnic.net>, linux-kernel@vger.kernel.org, Maen Suleiman <maen@marvell.com>, Nadav Haklai <nadavh@marvell.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1366042402-8987-1-git-send-email-lorenzo.pieralisi@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Dave Martin <dave.martin@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>, Sekhar Nori <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Viresh Kumar <viresh.kumar@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Lennert Buytenhek <kernel@wantstofly.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, David Brown <davidb@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>, Simon Horman <horms@verge.net.au>, Bar
 List-Id: devicetree@vger.kernel.org
 
-On 04/15/2013 05:47 PM, Jason Cooper wrote:
-> On Fri, Apr 12, 2013 at 04:29:05PM +0200, Gregory CLEMENT wrote:
->> Hi Jason,
->>
->> I have just rebased the commits that you haven't applied yet. They are
->> rebased on mvebu/dt. I check that all the dtb can be built.
->>
->> Thanks,
->>
->> Gregory CLEMENT (3):
->>   ARM: dts: mvebu: Convert all the mvebu files to use the range
->>     property
->>   ARM: dts: mvebu: introduce internal-regs node
->>   ARM: dts: mvebu: Convert mvebu device tree files to 64 bits
->>
->> Thomas Petazzoni (2):
->>   ARM: dts: mvebu: fix cpus section indentation
->>   ARM: dts: mvebu: move all peripherals inside soc
->>
->>  arch/arm/boot/dts/armada-370-db.dts              |  134 +++---
->>  arch/arm/boot/dts/armada-370-mirabox.dts         |  176 ++++----
->>  arch/arm/boot/dts/armada-370-rd.dts              |   96 ++---
->>  arch/arm/boot/dts/armada-370-xp.dtsi             |  336 +++++++--------
->>  arch/arm/boot/dts/armada-370.dtsi                |  330 +++++++--------
->>  arch/arm/boot/dts/armada-xp-db.dts               |  202 ++++-----
->>  arch/arm/boot/dts/armada-xp-gp.dts               |  222 +++++-----
->>  arch/arm/boot/dts/armada-xp-mv78230.dtsi         |  284 ++++++-------
->>  arch/arm/boot/dts/armada-xp-mv78260.dtsi         |  342 +++++++--------
->>  arch/arm/boot/dts/armada-xp-mv78460.dtsi         |  484 +++++++++++-----------
->>  arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts |  262 ++++++------
->>  arch/arm/boot/dts/armada-xp.dtsi                 |  202 ++++-----
->>  12 files changed, 1549 insertions(+), 1521 deletions(-)
-> 
-> whole series applied to mvebu/dt
-> 
-> thx,
-> 
+As the number of CPUs increase, the temporary array allocated on the
+stack in arm_dt_init_cpu_maps() can become too big and trigger stack
+issues.
+This patch moves the allocated memory to static __initdata so that stack
+data is not used anymore to allocate the temporary array.
+Memory is marked as __initdata since it need not be persistent after boot.
 
-Great, Thanks!
-> Jason.
-> 
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+---
+ arch/arm/kernel/devtree.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-
+diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+index 70f1bde..f149217 100644
+--- a/arch/arm/kernel/devtree.c
++++ b/arch/arm/kernel/devtree.c
+@@ -78,11 +78,12 @@ void __init arm_dt_init_cpu_maps(void)
+ 	 * contain a list of MPIDR[23:0] values where MPIDR[31:24] must
+ 	 * read as 0.
+ 	 */
++	static u32 tmp_map[NR_CPUS] __initdata = {
++				[0 ... NR_CPUS-1] = UINT_MAX };
+ 	struct device_node *cpu, *cpus;
+ 	u32 i, j, cpuidx = 1;
+ 	u32 mpidr = is_smp() ? read_cpuid_mpidr() & MPIDR_HWID_BITMASK : 0;
+ 
+-	u32 tmp_map[NR_CPUS] = { [0 ... NR_CPUS-1] = UINT_MAX };
+ 	bool bootcpu_valid = false;
+ 	cpus = of_find_node_by_path("/cpus");
+ 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+1.7.12
