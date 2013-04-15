@@ -1,14 +1,14 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [U-Boot] dtb vs. kernel command line arguments
-Date: Mon, 15 Apr 2013 14:37:18 +0100
-Message-ID: <20130415133718.E5DEB3E0AA8@localhost>
-References: <5134E855.7070908@cumulusnetworks.com>
- <20130304180323.80ef2597c60455f3a358bd79@freescale.com>
+Subject: Re: HOWTO Undo/Revert of_platform_populate?
+Date: Mon, 15 Apr 2013 14:40:09 +0100
+Message-ID: <20130415134009.0A70E3E0AA8@localhost>
+References: <CAPybu_3LfWLYLSn52dgFDuBTASLvQ0_XWsywH=Avpma+4s921g@mail.gmail.com>
+ <51392BD9.4010209@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130304180323.80ef2597c60455f3a358bd79-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <51392BD9.4010209-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,37 +19,31 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Curt Brune <curt-qUQiAmfTcIp+XZJcv9eMoEEOCMrvLtNR@public.gmane.org>
-Cc: u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ricardo Ribalda Delgado <ricardo.ribalda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 4 Mar 2013 18:03:23 -0600, Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> On Mon, 4 Mar 2013 10:30:45 -0800
-> Curt Brune <curt-qUQiAmfTcIp+XZJcv9eMoEEOCMrvLtNR@public.gmane.org> wrote:
+On Thu, 07 Mar 2013 18:07:53 -0600, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 03/07/2013 04:32 AM, Ricardo Ribalda Delgado wrote:
+> > Hi
+> > 
+> > I have an FPGA attached to the pci bus. The FPGA has an internal bus
+> > with multiple cores that are already supported in the kernel.
+> > 
+> > I have made a driver that populates those cores using a user provided
+> > device tree. I use the function of_platform_populate for that.
+> > 
+> > All this is working fine, but now I need a method to undo what
+> > of_platform_populate does when the fpga is reprogrammed.
+> > 
+> > I haven't found any function that does this in the api.
+> > 
+> > Before implementing my own I would like to know if am I missing something?
 > 
-> > Hello -
-> > 
-> > I want to pass a number of arguments from u-boot to the booted kernel. 
-> > The arguments are needed by user space applications, not the kernel.
-> > 
-> > I can think of two ways:
-> > 
-> > 1. append args by setting "bootargs".
-> > 2. add nodes to the dtb before booting.
-> > 
-> > Is there a preferred way to pass information like this?
-> > 
-> > Like I said the arguments are not needed by the kernel device drivers, 
-> > but by user space applications.
-> > 
-> > I like the structure of nodes in the dtb.
-> 
-> please don't dual-purpose device trees as a mechanism of getting
-> arguments through the kernel into userspace - device trees strictly
-> describe the hardware.
+> It's not possible in the current kernel. You need DT overlay support
+> that was posted recently.
 
-Why not? The chosen node in particular is for software configuration. I
-don't have any problem with passing U-Boot extra data through the chosen
-node. Just don't go crazy and please document it.
+In the mean time you can merely recurse all the children of the parent
+struct device, unregister them from the device model, and release them.
 
 g.
