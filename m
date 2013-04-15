@@ -1,16 +1,15 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmVbMl06IFtQQVRDSCAxLzJdIEdQSU86IGNscHM3MTF4OiBSZXdyaXRlIGRy?=
- =?UTF-8?B?aXZlciBmb3IgdXNpbmcgZ2VuZXJpYyBHUElPIGNvZGU=?=
-Date: Mon, 15 Apr 2013 11:13:33 +0400
-Message-ID: <1366010013.44756903@f279.mail.ru>
-References: <1365826900-30136-1-git-send-email-shc_work@mail.ru>
- <20130415033324.GB10949@quad.lixom.net>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: Query on pinctrl usage for DT nodes
+Date: Mon, 15 Apr 2013 10:19:36 +0200
+Message-ID: <516BB818.3060603@ti.com>
+References: <CA+V-a8uiPwsAD--OHFAE=i2ed+-wbXm4p2deZXr92+Zv6GDS1w@mail.gmail.com>
+ <515C5C76.3080009@wwwdotorg.org> <20130403183803.GA10155@atomide.com>
+ <20130403184202.GB10155@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130415033324.GB10949@quad.lixom.net>
+In-Reply-To: <20130403184202.GB10155@atomide.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,145 +19,23 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?T2xvZiBKb2hhbnNzb24=?= <olof@lixom.net>
-Cc: =?UTF-8?B?QXJuZCBCZXJnbWFubg==?= <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring@calxeda.com>, =?UTF-8?B?R3JhbnQgTGlrZWx5?= <grant.likely@secretlab.ca>, =?UTF-8?B?TGludXMgV2FsbGVpag==?= <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, Stephen Warren <swarren@nvidia.com>, LAK <linux-arm-kernel@lists.infradead.org>, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-> On Sat, Apr 13, 2013 at 08:21:39AM +0400, Alexander Shiyan wrote:
-> > This patch provides rewritten driver for CLPS711X GPIO which uses
-> > generic GPIO code.
-> > 
-> > Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
-> > ---
-> >  arch/arm/configs/clps711x_defconfig            |   1 +
-> >  arch/arm/mach-clps711x/Makefile                |   5 +-
-> >  arch/arm/mach-clps711x/board-autcpu12.c        |   2 +
-> >  arch/arm/mach-clps711x/board-cdb89712.c        |   2 +
-> >  arch/arm/mach-clps711x/board-edb7211.c         |   7 +
-> >  arch/arm/mach-clps711x/board-p720t.c           |  10 +-
-> >  arch/arm/mach-clps711x/devices.c               |  56 ++++++
-> >  arch/arm/mach-clps711x/devices.h               |  12 ++
-> >  arch/arm/mach-clps711x/include/mach/clps711x.h |  23 +--
-> >  drivers/gpio/Kconfig                           |   5 +-
-> >  drivers/gpio/gpio-clps711x.c                   | 228 +++++++------------------
-> >  11 files changed, 164 insertions(+), 187 deletions(-)
-> >  create mode 100644 arch/arm/mach-clps711x/devices.c
-> >  create mode 100644 arch/arm/mach-clps711x/devices.h
-> 
-> It would be nice to see this split up in a short series of patches instead,
-> each patch doing one thing. For example, I'm not sure enabling the GPIO driver
-> in the defconfig really belongs in the rewrite patch, for example.
+Hi,
 
-New driver replaces arch_initcall by pure platform driver, so for keep working
-defconfig should use symbol for driver.
-Of course this change can be split into separate patch, but in this case series
-will be marked not only for GPIO-sybsustem, if this OK, I will do as you say.
+On 04/03/2013 08:42 PM, Tony Lindgren wrote:
+> Oh it's already using pinctrl-single,bits option. Maybe there's a
+> bug, adding Peter to cc.
 
-...
-> >  static void __init edb7211_init(void)
-> >  {
-> > +	clps711x_devices_init();
-> > +}
-> > +
-> > +static void __init edb7211_init_late(void)
-> > +{
-> 
-> It'd be good for people reading the changelog in the future to see why you
-> chose to split this up among two initcalls now.
+I think all boils down to the fact that in pinctrl (single only?) _one_
+register can be only associated with _one_ driver. Even through ,bit type
+would allow us to only change parts of the same register, another device can
+not take the same register with different mask.
+I did noticed this after I have sent the bits-per-mux support.
+Right now I don't have solution for this...
 
-OK. It makes sense.
-We have some drivers (spi, backlight, nand) which depends on GPIO but not
-use deferral probe yet, so at this point I just use separate initcalls for proper
-loading sequence.
+-- =
 
-...
-> > +static void __init clps711x_add_gpio(void)
-> > +{
-> > +	const struct resource clps711x_gpio0_res[] = {
-> > +		DEFINE_RES_MEM(PADR, SZ_1),
-> > +		DEFINE_RES_MEM(PADDR, SZ_1),
-> > +	};
-> > +	const struct resource clps711x_gpio1_res[] = {
-> > +		DEFINE_RES_MEM(PBDR, SZ_1),
-> > +		DEFINE_RES_MEM(PBDDR, SZ_1),
-> > +	};
-> > +	const struct resource clps711x_gpio2_res[] = {
-> > +		DEFINE_RES_MEM(PCDR, SZ_1),
-> > +		DEFINE_RES_MEM(PCDDR, SZ_1),
-> > +	};
-> > +	const struct resource clps711x_gpio3_res[] = {
-> > +		DEFINE_RES_MEM(PDDR, SZ_1),
-> > +		DEFINE_RES_MEM(PDDDR, SZ_1),
-> > +	};
-> > +	const struct resource clps711x_gpio4_res[] = {
-> > +		DEFINE_RES_MEM(PEDR, SZ_1),
-> > +		DEFINE_RES_MEM(PEDDR, SZ_1),
-> > +	};
-> 
-> It's common to have the resources as static globals in the file instead of
-> local const variables, so please move them out to stay common with other
-> platforms.
-
-AFAIK platform_device_add_resources makes a copy of all used resources,
-is resource really need to be a global variable? Or you just mean make these
-variables global and put in "__initconst" section?
-
-...
-> > --- a/arch/arm/mach-clps711x/include/mach/clps711x.h
-> > +++ b/arch/arm/mach-clps711x/include/mach/clps711x.h
-> > @@ -23,16 +23,19 @@
-> >  
-> >  #define CLPS711X_PHYS_BASE	(0x80000000)
-> >  
-> > -#define PADR		(0x0000)
-> > -#define PBDR		(0x0001)
-> > -#define PCDR		(0x0002)
-> > -#define PDDR		(0x0003)
-> > -#define PADDR		(0x0040)
-> > -#define PBDDR		(0x0041)
-> > -#define PCDDR		(0x0042)
-> > -#define PDDDR		(0x0043)
-> > -#define PEDR		(0x0083)
-> > -#define PEDDR		(0x00c3)
-> > +#define CLPS711X_REGS(x)	(CLPS711X_PHYS_BASE + (x))
-> > +
-> > +#define PADR		CLPS711X_REGS(0x0000)
-> > +#define PBDR		CLPS711X_REGS(0x0001)
-> > +#define PCDR		CLPS711X_REGS(0x0002)
-> > +#define PDDR		CLPS711X_REGS(0x0003)
-> > +#define PADDR		CLPS711X_REGS(0x0040)
-> > +#define PBDDR		CLPS711X_REGS(0x0041)
-> > +#define PCDDR		CLPS711X_REGS(0x0042)
-> > +#define PDDDR		CLPS711X_REGS(0x0043)
-> > +#define PEDR		CLPS711X_REGS(0x0083)
-> > +#define PEDDR		CLPS711X_REGS(0x00c3)
-> > +
-> 
-> Are these needed in a shared include file, or could they just be pushed out in
-> the one driver that uses them? There's been a lot of churn moving mach includes
-> out to drivers on multiplatform enabled platforms, it'd be nice to avoid adding
-> more dependencies on it on legacy platforms that haven't yet been enabled (or
-> even if they never will be, it still doesn't hurt).
-
-This just an initial change for avoiding usage CLPS711X_PHYS_BASE in other code.
-No new global users for this header.
-As you can view in GPIO driver, I remove dependency on <mach/hardware.h> completely.
-
-...
-> > diff --git a/drivers/gpio/gpio-clps711x.c b/drivers/gpio/gpio-clps711x.c
-> > index ce63b75..3c71815 100644
-> > --- a/drivers/gpio/gpio-clps711x.c
-> > +++ b/drivers/gpio/gpio-clps711x.c
-...
-> > -#include <linux/io.h>
-> > -#include <linux/slab.h>
-> >  #include <linux/gpio.h>
-> >  #include <linux/module.h>
-> > -#include <linux/spinlock.h>
-> > +#include <linux/basic_mmio_gpio.h>
-> >  #include <linux/platform_device.h>
-> >  
-> > -#include <mach/hardware.h>
-...
-
----
+P=E9ter
