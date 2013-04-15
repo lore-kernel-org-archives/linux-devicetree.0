@@ -1,63 +1,90 @@
-From: Paolo Pisati <paolo.pisati@canonical.com>
-Subject: [PATCH] dma: of-dma: check OF pointer property before dereferencing
-Date: Mon, 15 Apr 2013 10:39:52 +0200
-Message-ID: <1366015193-6627-1-git-send-email-paolo.pisati@canonical.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Dan Williams <djbw@fb.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Paolo Pisati <paolo.pisati@canonical.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: dts: omap4-panda: Add USB Host support
+Date: Mon, 15 Apr 2013 11:48:41 +0300
+Message-ID: <1366015721-25608-1-git-send-email-rogerq@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: b-cousson-l0cyMroinI0@public.gmane.org
+Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Unable to handle kernel NULL pointer dereference at virtual address 00000000
-pgd = c0004000
-[00000000] *pgd=00000000
-Internal error: Oops: 5 [#1] SMP ARM
-CPU: 0    Tainted: G        W     (3.9.0-rc739rc7fix1-dirty #10)
-PC is at of_dma_controller_register+0xb8/0x11c
-LR is at of_find_property+0x44/0x4c
-pc : [<c01adf8c>]    lr : [<c0281754>]    psr: 60000113
-sp : ef043e40  ip : 00000000  fp : c01af774
-r10: ef015550  r9 : c01af5c0  r8 : 00000000
-r7 : c01afb40  r6 : ef120400  r5 : c48613dc  r4 : ef02e900
-r3 : 00000000  r2 : 00000023  r1 : a0000113  r0 : 00000000
-Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment kernel
-Control: 10c5387d  Table: 0000404a  DAC: 00000015
-Process swapper/0 (pid: 1, stack limit = 0xef042238)
-Stack: (0xef043e40 to 0xef044000)
-3e40: ef015550 ef01558c ef120400 c01affe4 00000000 c01af5c0 ef015584 c01b1170
-3e60: 00000000 ef015550 c033ca54 c48613dc c033ca54 0000007c 00041308 ef103d80
-3e80: a0000113 00000000 ef012440 c03bc7d4 ef120400 00000000 c03bc780 c03bc780
-3ea0: c038c000 00000000 00000000 c01ac1f4 c01ac16c ef120400 c03fa67c c03fa684
-3ec0: 00000000 c01d9570 ef120400 c03bc780 ef120434 00000000 0000008b c01d9718
-3ee0: 00000000 c03bc780 c01d968c c01d7ce4 ef0c2558 ef0eefb4 ef02b100 c03bc780
-3f00: c03bc64c c01d8450 c033cfa8 c03bc1e0 c03bc780 c0398e48 c03a0784 c03cab40
-3f20: 0000008b c01d9ce8 00000000 00000006 c0398e48 c03a0784 c03cab40 0000008b
-3f40: 00000000 c0377878 00000006 00000006 c03b25a4 00000006 00000006 c0398e48
-3f60: c03a0784 c03cab40 0000008b c0398e54 c037727c c0377a44 00000006 00000006
-3f80: c037727c 00000000 00000000 c02bb874 00000000 00000000 00000000 00000000
-3fa0: 00000000 c02bb87c 00000000 c000dfd8 00000000 00000000 00000000 00000000
-3fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-3fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
-[<c01adf8c>] (of_dma_controller_register+0xb8/0x11c) from [<c01b1170>] (pl330_probe+0x740/0xa9c)
-[<c01b1170>] (pl330_probe+0x740/0xa9c) from [<c01ac1f4>] (amba_probe+0x88/0xa0)
-[<c01ac1f4>] (amba_probe+0x88/0xa0) from [<c01d9570>] (driver_probe_device+0xf8/0x214)
-[<c01d9570>] (driver_probe_device+0xf8/0x214) from [<c01d9718>] (__driver_attach+0x8c/0x90)
-[<c01d9718>] (__driver_attach+0x8c/0x90) from [<c01d7ce4>] (bus_for_each_dev+0x54/0x88)
-[<c01d7ce4>] (bus_for_each_dev+0x54/0x88) from [<c01d8450>] (bus_add_driver+0xdc/0x230)
-[<c01d8450>] (bus_add_driver+0xdc/0x230) from [<c01d9ce8>] (driver_register+0x78/0x14c)
-[<c01d9ce8>] (driver_register+0x78/0x14c) from [<c0377878>] (do_one_initcall+0x90/0x160)
-[<c0377878>] (do_one_initcall+0x90/0x160) from [<c0377a44>] (kernel_init_freeable+0xfc/0x1c4)
-[<c0377a44>] (kernel_init_freeable+0xfc/0x1c4) from [<c02bb87c>] (kernel_init+0x8/0xe4)
-[<c02bb87c>] (kernel_init+0x8/0xe4) from [<c000dfd8>] (ret_from_fork+0x14/0x3c)
-Code: e1a00008 e8bd87f0 e3a04010 eaffffe0 (e5909000)
----[ end trace 1b75b31a2719ed1e ]---
-Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
-
-Paolo Pisati (1):
-  dma: of-dma: check OF pointer property before dereferencing it
-
- drivers/dma/of-dma.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
--- 
-1.7.10.4
+UHJvdmlkZSB0aGUgUkVTRVQgYW5kIFBvd2VyIHJlZ3VsYXRvcnMgZm9yIHRoZSBVU0IgUEhZLAp0
+aGUgVVNCIEhvc3QgcG9ydCBtb2RlIGFuZCB0aGUgUEhZIGRldmljZS4KClRoZSBVU0IgUEhZIG5l
+ZWRzIEFVWENMSzMgdG8gb3BlcmF0ZS4gUHJvdmlkZSB0aGlzIGluZm9ybWF0aW9uCmFzIHdlbGwu
+CgpBbHNvIHByb3ZpZGUgcGluIG11bHRpcGxleGVyIGluZm9ybWF0aW9uIGZvciB0aGUgVVNCIGhv
+c3QKcGlucy4KClRoaXMgcGF0Y2ggZGVwZW5kcyBvbiBPTUFQIGNsb2NrIGJpbmRpbmcgaW50cm9k
+dWNlZCBpbgpodHRwczovL2xrbWwub3JnL2xrbWwvMjAxMy80LzEyLzQwNwoKQ0M6IEJlbm/DrnQg
+Q291c3NvbiA8Yi1jb3Vzc29uQHRpLmNvbT4KU2lnbmVkLW9mZi1ieTogUm9nZXIgUXVhZHJvcyA8
+cm9nZXJxQHRpLmNvbT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9vbWFwNC1wYW5kYS1jb21tb24u
+ZHRzaSB8ICAgNTggKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKIGFyY2gvYXJtL2Jvb3Qv
+ZHRzL29tYXA0LmR0c2kgICAgICAgICAgICAgIHwgICAgNSArKwogMiBmaWxlcyBjaGFuZ2VkLCA2
+MyBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
+b3QvZHRzL29tYXA0LXBhbmRhLWNvbW1vbi5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDQt
+cGFuZGEtY29tbW9uLmR0c2kKaW5kZXggMDNiZDYwZC4uNjI4Zjc0NCAxMDA2NDQKLS0tIGEvYXJj
+aC9hcm0vYm9vdC9kdHMvb21hcDQtcGFuZGEtY29tbW9uLmR0c2kKKysrIGIvYXJjaC9hcm0vYm9v
+dC9kdHMvb21hcDQtcGFuZGEtY29tbW9uLmR0c2kKQEAgLTU0LDYgKzU0LDM4IEBACiAJCQkiQUZN
+TCIsICJMaW5lIEluIiwKIAkJCSJBRk1SIiwgIkxpbmUgSW4iOwogCX07CisKKwkvKiBIUyBVU0Ig
+UG9ydCAxIFJFU0VUICovCisJaHN1c2IxX3Jlc2V0OiBoc3VzYjFfcmVzZXRfcmVnIHsKKwkJY29t
+cGF0aWJsZSA9ICJyZWd1bGF0b3ItZml4ZWQiOworCQlyZWd1bGF0b3ItbmFtZSA9ICJoc3VzYjFf
+cmVzZXQiOworCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsKKwkJcmVndWxh
+dG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47CisJCWdwaW8gPSA8JmdwaW8yIDMwIDA+Owkv
+KiBncGlvXzYyICovCisJCXN0YXJ0dXAtZGVsYXktdXMgPSA8NzAwMDA+OworCQllbmFibGUtYWN0
+aXZlLWhpZ2g7CisJfTsKKworCS8qIEhTIFVTQiBQb3J0IDEgUG93ZXIgKi8KKwloc3VzYjFfcG93
+ZXI6IGhzdXNiMV9wb3dlcl9yZWcgeworCQljb21wYXRpYmxlID0gInJlZ3VsYXRvci1maXhlZCI7
+CisJCXJlZ3VsYXRvci1uYW1lID0gImhzdXNiMV92YnVzIjsKKwkJcmVndWxhdG9yLW1pbi1taWNy
+b3ZvbHQgPSA8MzMwMDAwMD47CisJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAwMDA+
+OworCQlncGlvID0gPCZncGlvMSAxIDA+OwkvKiBncGlvXzEgKi8KKwkJc3RhcnR1cC1kZWxheS11
+cyA9IDw3MDAwMD47CisJCWVuYWJsZS1hY3RpdmUtaGlnaDsKKwl9OworCisJLyogSFMgVVNCIEhv
+c3QgUEhZIG9uIFBPUlQgMSAqLworCWhzdXNiMV9waHk6IGhzdXNiMV9waHkgeworCQljb21wYXRp
+YmxlID0gInVzYi1ub3AteGNlaXYiOworCQlyZXNldC1zdXBwbHkgPSA8JmhzdXNiMV9yZXNldD47
+CisJCXZjYy1zdXBwbHkgPSA8JmhzdXNiMV9wb3dlcj47CisJCWNsb2NrcyA9IDwmYXV4Y2xrMz47
+CisJCWNsb2NrLW5hbWVzID0gIm1haW5fY2xrIjsKKwkJY2xvY2stZnJlcXVlbmN5ID0gPDE5MjAw
+MDAwPjsKKwl9OwogfTsKIAogJm9tYXA0X3BteF9jb3JlIHsKQEAgLTY0LDYgKzk2LDcgQEAKIAkJ
+CSZtY2JzcDFfcGlucwogCQkJJmRzc19oZG1pX3BpbnMKIAkJCSZ0cGQxMnMwMTVfcGlucworCQkJ
+JmhzdXNiYjFfcGlucwogCT47CiAKIAl0d2w2MDQwX3BpbnM6IHBpbm11eF90d2w2MDQwX3BpbnMg
+ewpAQCAtMTA4LDYgKzE0MSwyMyBAQAogCQk+OwogCX07CiAKKwloc3VzYmIxX3BpbnM6IHBpbm11
+eF9oc3VzYmIxX3BpbnMgeworCQlwaW5jdHJsLXNpbmdsZSxwaW5zID0gPAorCQkJMHg4MiAweDEw
+QwkvKiBVU0JCMV9VTFBJVExMX0NMS19NVVhNT0RFLnVzYmIxX3VscGlwaHlfY2xrIElOUFVUIHwg
+UFVMTERPV04gKi8KKwkJCTB4ODQgMHg0CS8qIFVTQkIxX1VMUElUTExfQ0xLX01VWE1PREUudXNi
+YjFfdWxwaXBoeV9zdHAgT1VUUFVUICovCisJCQkweDg2IDB4MTA0CS8qIFVTQkIxX1VMUElUTExf
+Q0xLX01VWE1PREUudXNiYjFfdWxwaXBoeV9kaXIgSU5QVVQgfCBQVUxMRE9XTiAqLworCQkJMHg4
+OCAweDEwNAkvKiBVU0JCMV9VTFBJVExMX0NMS19NVVhNT0RFLnVzYmIxX3VscGlwaHlfbnh0IElO
+UFVUIHwgUFVMTERPV04gKi8KKwkJCTB4OGEgMHgxMDQJLyogVVNCQjFfVUxQSVRMTF9DTEtfTVVY
+TU9ERS51c2JiMV91bHBpcGh5X2RhdDAgSU5QVVQgfCBQVUxMRE9XTiAqLworCQkJMHg4YyAweDEw
+NAkvKiBVU0JCMV9VTFBJVExMX0NMS19NVVhNT0RFLnVzYmIxX3VscGlwaHlfZGF0MSBJTlBVVCB8
+IFBVTExET1dOICovCisJCQkweDhlIDB4MTA0CS8qIFVTQkIxX1VMUElUTExfQ0xLX01VWE1PREUu
+dXNiYjFfdWxwaXBoeV9kYXQyIElOUFVUIHwgUFVMTERPV04gKi8KKwkJCTB4OTAgMHgxMDQJLyog
+VVNCQjFfVUxQSVRMTF9DTEtfTVVYTU9ERS51c2JiMV91bHBpcGh5X2RhdDMgSU5QVVQgfCBQVUxM
+RE9XTiAqLworCQkJMHg5MiAweDEwNAkvKiBVU0JCMV9VTFBJVExMX0NMS19NVVhNT0RFLnVzYmIx
+X3VscGlwaHlfZGF0NCBJTlBVVCB8IFBVTExET1dOICovCisJCQkweDk0IDB4MTA0CS8qIFVTQkIx
+X1VMUElUTExfQ0xLX01VWE1PREUudXNiYjFfdWxwaXBoeV9kYXQ1IElOUFVUIHwgUFVMTERPV04g
+Ki8KKwkJCTB4OTYgMHgxMDQJLyogVVNCQjFfVUxQSVRMTF9DTEtfTVVYTU9ERS51c2JiMV91bHBp
+cGh5X2RhdDYgSU5QVVQgfCBQVUxMRE9XTiAqLworCQkJMHg5OCAweDEwNAkvKiBVU0JCMV9VTFBJ
+VExMX0NMS19NVVhNT0RFLnVzYmIxX3VscGlwaHlfZGF0NyBJTlBVVCB8IFBVTExET1dOICovCisJ
+CT47CisJfTsKKwogCWkyYzFfcGluczogcGlubXV4X2kyYzFfcGlucyB7CiAJCXBpbmN0cmwtc2lu
+Z2xlLHBpbnMgPSA8CiAJCQkweGUyIDB4MTE4ICAgICAgICAvKiBpMmMxX3NjbCBQVUxMVVAgfCBJ
+TlBVVEVOQUJMRSB8IE1PREUwICovCkBAIC0yNDksMyArMjk5LDExIEBACiAJbW9kZSA9IDwzPjsK
+IAlwb3dlciA9IDw1MD47CiB9OworCismdXNiaHNob3N0IHsKKwlwb3J0MS1tb2RlID0gImVoY2kt
+cGh5IjsKK307CisKKyZ1c2Joc2VoY2kgeworCXBoeXMgPSA8JmhzdXNiMV9waHk+OworfTsKZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXA0LmR0c2kgYi9hcmNoL2FybS9ib290L2R0
+cy9vbWFwNC5kdHNpCmluZGV4IDJhNTY0MjguLmJkNjAzNmUgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJt
+L2Jvb3QvZHRzL29tYXA0LmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDQuZHRzaQpA
+QCAtNjYwLDUgKzY2MCwxMCBAQAogCQkJcmFtLWJpdHMgPSA8MTI+OwogCQkJdGksaGFzLW1haWxi
+b3g7CiAJCX07CisKKwkJYXV4Y2xrMzogYXV4Y2xrMyB7CisJCQkjY2xvY2stY2VsbHMgPSA8MD47
+CisJCQljb21wYXRpYmxlID0gInRpLG9tYXAtY2xvY2siOworCQl9OwogCX07CiB9OwotLSAKMS43
+LjQuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2
+aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3ps
+YWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNj
+dXNzCg==
