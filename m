@@ -1,145 +1,54 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC] DT affinity bindings/representing bus masters with DT
-Date: Mon, 15 Apr 2013 14:43:02 +0100
-Message-ID: <20130415134302.GA4568@e102568-lin.cambridge.arm.com>
-References: <20130215172102.GF3014@e102568-lin.cambridge.arm.com>
- <20130306215714.GC6740@truffula.fritz.box>
- <20130311170657.GD25250@e102568-lin.cambridge.arm.com>
- <20130318030928.GG9402@truffula.fritz.box>
- <20130318094815.GA30116@e102568-lin.cambridge.arm.com>
- <20130319070734.GX9402@truffula.fritz.box>
- <20130325152038.GC27959@e102568-lin.cambridge.arm.com>
- <20130413222448.CAD953E2249@localhost>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 0/5 v2] mv643xx_eth: device tree bindings
+Date: Mon, 15 Apr 2013 09:43:25 -0400
+Message-ID: <20130415134325.GB28693@titan.lakedaemon.net>
+References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
+ <20130411165303.GI28693@titan.lakedaemon.net>
+ <20130413172126.6cca0809@skate>
+ <20130413190037.GY28693@titan.lakedaemon.net>
+ <1365995234.3566.17.camel@deadeye.wl.decadent.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130413222448.CAD953E2249@localhost>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1365995234.3566.17.camel@deadeye.wl.decadent.org.uk>
+Sender: netdev-owner@vger.kernel.org
+To: Ben Hutchings <ben@decadent.org.uk>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Florian Fainelli <florian@openwrt.org>, davem@davemloft.net, moinejf@free.fr, andrew@lunn.ch, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jogo@openwrt.org, buytenh@wantstofly.org, jm@lentin.co.uk, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Thank you for having a look Grant.
-
-On Sat, Apr 13, 2013 at 11:24:48PM +0100, Grant Likely wrote:
-> On Mon, 25 Mar 2013 15:20:39 +0000, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Tue, Mar 19, 2013 at 07:07:34AM +0000, David Gibson wrote:
-> > > On Mon, Mar 18, 2013 at 09:48:16AM +0000, Lorenzo Pieralisi wrote:
-> > > > > > I think we need to post what we have, it is really complex to explain
-> > > > > > the issue without a concrete example. To cut a long story short I
-> > > > > > would not say that the resources sit in different address spaces, it is
-> > > > > > that we need to associate those address ranges with specific bus masters.
-> > > > > > 
-> > > > > > We have to have a way to say:
-> > > > > > 
-> > > > > > "Address range 0x80001000 - 0x80001fff is used to programme the control
-> > > > > > registers associated with the port connected to master X".
-> > > > > > 
-> > > > > > When a CPU wants to programme a control port for a specific master, it
-> > > > > > needs to know what address range should be programmed.
-> > > > > > 
-> > > > > > I mentioned "resources" instead of addresses since the problem we are
-> > > > > > having is the same when it comes to map IRQs to set of CPUS. We need
-> > > > > > to associate a resource (IRQ or address) to a set of cpus (or more in
-> > > > > > general, masters).
-> > > > > 
-> > > > > Hrm.  See, I think I may be misunderstanding the problem again,
-> > > > > because with this description I can see no problem.  It's already up
-> > > > > to the device binding to describe the purpose of each entry in the reg
-> > > > > property.  So what's the problem with it just being part of the
-> > > > > binding to say which reg entry is associated with which master port?
-> > > > 
-> > > > That's exactly what we are trying to do. But to associate the reg
-> > > > property to a master port we need a phandle, how can we pull that off
-> > > > otherwise ?
+On Mon, Apr 15, 2013 at 04:07:14AM +0100, Ben Hutchings wrote:
+> On Sat, 2013-04-13 at 15:00 -0400, Jason Cooper wrote:
+> > On Sat, Apr 13, 2013 at 05:21:26PM +0200, Thomas Petazzoni wrote:
+> > > Dear Jason Cooper,
 > > > 
-> > > Ah, right.  I was meaning that the binding specifies the abstract port
-> > > number that each reg entry is associated with.  I'm fine with adding a
-> > > property to map the port numbers to master devices on the other end.
-> > > I think treating it in two steps like that is better than thinking of
-> > > the master phandles being  directly associated with reg entries,
-> > > because it also handles cases like having a bank of common/global
-> > > registers not associated with any port/master, or cases where the
-> > > ports aren't all identical and some need more resources than others.
-> > 
-> > That's fine by me. Can you provide me with an example of how the bindings
-> > should tie a specific reg property to an abstract port number ? reg properties
-> > ordering (ie index) ? Or port number encoded in the reg property itself ?
+> > > On Thu, 11 Apr 2013 12:53:03 -0400, Jason Cooper wrote:
+> > > 
+> > > > With this and Thomas' pci series, we will have Kirkwood fully
+> > > > converted to devicetree, can begin removing board files, and finally
+> > > > begin migrating everything over to mach-mvebu/.  This will lead to
+> > > > the removal of five directories under arch/arm/ (plat-orion,
+> > > > mach-kirkwood, mach-orion5x, mach-dove, and mach-mv78xx0).
+> > > 
+> > > No, we can't remove mach-orion5x and mach-mv78xx0 for now, they have
+> > > not been converted at all in terms of gpio/pinmux support. I've started
+> > > writing some pinmux code for orion5x but it's not ready.
+> [...]
+> > Also, I have a feeling that not all legacy boards will get converted
+> > over.  If there is no interest or no way to test, certains boards may
+> > get deprecated.
 > 
-> I think I agree with David (assuming I understand his argument
-> correctly). Rather than putting the information into the single node, it
-> is more consistent in DT terms to put that information into each of the
-> 'users' of the device; so for each master, put in a property that
-> associates it with a specific port. Something like this (completely off
-> the top of my head; not at all fully thought out):
-> 
-> cpu@0 {
-> 	cci-port = <&cci1 0>;
-> }
-> 
-> cpu@1 {
-> 	cci-port = <&cci1 1>;
-> }
-> 
-> cpu@2 {
-> 	cci-port = <&cci1 2>;
-> }
-> 
-> gpu@c8010000 {
-> 	cci-port = <&cci1 3>;
-> }
+> Debian supports many Kirkwood and Orion 5x systems.  A call for testing
+> on the debian-arm@lists.debian.org list might be worthwhile.
 
-Nitpicking: the node above is not really a "master", it is a device tree
-node representing GPU resources in the CPU address space since, if I got that
-right, the device tree provides the address space view from a CPU perspective.
+definitely.
 
-I am not saying this is right or wrong, just trying to make up my mind
-myself to understand if this can cause any issues in the future.
+> I would be very glad to see kirkwood, orion5x and mv78xx0 merged - we
+> build natively and this takes about 8 hours for each configuration.
 
-> cci1: cci@c8000000 {
-> 	reg = < ... >;
-> }
-> 
-> An arguement against that would be that it is difficult to determine
-> what all the bus-mastering devices are from looking at the cci node, but
-> in real terms you would have a lookup table in the operating system
-> /anyway/ for matching devices to ports and I would expect that as each
-> device is discovered from the DT data the OS would populate it's lookup
-> table.
+That's the plan, build an armv5 kernel, and dtb's for all the boards.
+Then, an armv7 kernel for the armadaXP/370 boards, etc.
 
-Ok, I am not a big fan of this approach since it does not scale IMHO. I would
-avoid adding a property to a cpu node every given time we need a device
-requiring its resources to be linked to a (possibly set of) cpu(s).
+thx,
 
-If we add the property(ies) in the cci node, at least the changes become
-self contained and the mechanism through which we link a resource to a
-"master" becomes standard (phandle). All bits of info become available
-through the cci node, but again, it is a choice to be made, I do not
-know what's the best approach.
-
-> It may be that Dave Martin's suggestion of using basically a dma-ranges
-> type property with a phandle would be the correct interface. I've not
-> thought enough about it yet to really get my head around it.
-
-What I really really want to avoid is implementing something for CCI and then
-realize that it does not work for other components with similar requirements.
-With Mark and Dave Martin we tried to come up with a solution that can be
-generalized, that was the main goal.
-
-I will review again Dave Martin's suggestion and take into account your
-suggestion (which is what David Gibson would like us to do if I got it
-right, you formalized his proposal).
-
-Thx,
-Lorenzo
+Jason.
