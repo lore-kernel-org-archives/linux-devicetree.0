@@ -1,42 +1,94 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: ux500: Fix intcore regulator name
-Date: Mon, 15 Apr 2013 12:43:40 +0200
-Message-ID: <CACRpkdb2NMdArJcp2niS4=-sbnZtj75itu5Rm5WA0BHMpO7amg@mail.gmail.com>
-References: <1365499016-8348-1-git-send-email-fabio.baltieri@linaro.org>
+From: Christoph Fritz <chf.fritz@googlemail.com>
+Subject: Re: [BUG] omap: mfd/regulator: twl/core: init order
+Date: Mon, 15 Apr 2013 12:56:41 +0200
+Message-ID: <1366023401.957.5.camel@mars>
+References: <1365877659.3812.110.camel@mars>  <516BD479.2020904@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365499016-8348-1-git-send-email-fabio.baltieri-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Fabio Baltieri <fabio.baltieri-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <516BD479.2020904@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Javier Martinez Canillas <martinez.javier@gmail.com>, Liam Girdwood <lrg@ti.com>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <b-cousson@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Samuel Ortiz <sameo@linux.intel.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, Daniel Mack <daniel@zonque.org>, "Hans J. Koch" <hjk@hansjkoch.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 9, 2013 at 11:16 AM, Fabio Baltieri
-<fabio.baltieri-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+On Mon, 2013-04-15 at 13:20 +0300, Grygorii Strashko wrote:
+> On 04/13/2013 09:27 PM, Christoph Fritz wrote:
+> > Hi
+> >
+> >   while testing an omap3 board with device tree support I stumbled upon a
+> > bug which is due to wrong initialization order of twl-core and
+> > twl-regulator (I suppose): In the boot process they get loaded way too
+> > late so that a lot of drivers before where configured wrong or just
+> > refuse to load.
+> >
+> > For example the real time clock driver: The RTC kicks in way before
+> > twl_probe() and due to that it configures its register map wrong
+> > (at this time twl_priv->twl_id isn't configured yet).
+> >
+> > Another example is the omap display subsystem. It (DSS) fails loading
+> > while trying to register some not yet existent regulators and because it
+> > lacks EPROBE_DEFER.
+> >
+> > USB and MMC is also not working and I'm suspicious of the same cause.
+> >
+> > Any ideas?
+> Hi Christoph,
+> 
+> It happens, because I2C probes execution  have been deferred due to
+> "pinctrl-single" driver (, which is not ready at i2c bus initialization 
+> time:
+> 
+> [    0.525939] omap_i2c 48070000.i2c: could not find pctldev for node 
+> /ocp/pinmux@4a100040/pinmux_i2c1_pins, deferring probe
+> [    0.526000] platform 48070000.i2c: Driver omap_i2c requests probe 
+> deferral
+> [    0.526062] omap_i2c 48072000.i2c: could not find pctldev for node 
+> /ocp/pinmux@4a100040/pinmux_i2c2_pins, deferring probe
+> [    0.526092] platform 48072000.i2c: Driver omap_i2c requests probe 
+> deferral
+> [    0.526153] omap_i2c 48060000.i2c: could not find pctldev for node 
+> /ocp/pinmux@4a100040/pinmux_i2c3_pins, deferring probe
+> [    0.526184] platform 48060000.i2c: Driver omap_i2c requests probe 
+> deferral
+> [    0.526245] omap_i2c 48350000.i2c: could not find pctldev for node 
+> /ocp/pinmux@4a100040/pinmux_i2c4_pins, deferring probe
+> [    0.526275] platform 48350000.i2c: Driver omap_i2c requests probe 
+> deferral
+> 
+> I think following change should fix it, could you try it, pls:
+> diff --git a/drivers/pinctrl/pinctrl-single.c 
+> b/drivers/pinctrl/pinctrl-single.c
+> index 5c32e88..b2a9d4b 100644
+> --- a/drivers/pinctrl/pinctrl-single.c
+> +++ b/drivers/pinctrl/pinctrl-single.c
+> @@ -1014,7 +1014,18 @@ static struct platform_driver pcs_driver = {
+>          },
+>   };
+> 
+> -module_platform_driver(pcs_driver);
+> +static int __init pcs_driver_drv_init(void)
+> +{
+> +       return platform_driver_register(&pcs_driver);
+> +}
+> +postcore_initcall(pcs_driver_drv_init);
+> +
+> +static void __exit pcs_driver_drv_exit(void)
+> +{
+> +       platform_driver_unregister(&pcs_driver);
+> +}
+> +module_exit(pcs_driver_drv_exit);
+> +
 
-> Ux500 regulator name for V-INTCORE is misspelled as vinitcore instead of
-> vintcore in some .dts file, causing the AB8500 regulator driver to not
-> bind properly.  Fix this by replacing all occurrences with the right
-> name.
->
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Fabio Baltieri <fabio.baltieri-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi Grygorii,
+ thanks - indeed it does fix the problem. I checked at least the rtc
+which is now configured right and working :-)
 
-I've accumulated the patch in my tree but will not be sending to
-ARM SoC for v3.10 as of now. Currently I have a huge conflict
-between some 4-5 DT patches and ARM SoC and I will just wait
-for -rc1 to happen before trying to clean out the mess.
+Do you consider the patch above as a hack or will it go mainline?
 
-Yours,
-Linus Walleij
+ Thanks
+  -- Christoph
+
+
+
