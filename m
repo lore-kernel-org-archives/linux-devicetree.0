@@ -1,72 +1,54 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFCv2 0/2] Representing interrupt affinity in devicetree
-Date: Mon, 15 Apr 2013 10:09:04 +0100
-Message-ID: <20130415090904.GF8151@e106331-lin.cambridge.arm.com>
-References: <1355417368-6861-1-git-send-email-mark.rutland@arm.com>
- <20130304025115.05D413E17F8@localhost>
- <20130305092849.GA15661@e106331-lin.cambridge.arm.com>
- <20130413213322.7C6193E2249@localhost>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 0/5 v2] mv643xx_eth: device tree bindings
+Date: Mon, 15 Apr 2013 12:00:11 +0200
+Message-ID: <20130415120011.61e4b44c@skate>
+References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
+ <20130411165303.GI28693@titan.lakedaemon.net>
+ <20130413172126.6cca0809@skate>
+ <20130413190037.GY28693@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20130413213322.7C6193E2249@localhost>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Will Deacon <Will.Deacon@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20130413190037.GY28693@titan.lakedaemon.net>
+Sender: netdev-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: Florian Fainelli <florian@openwrt.org>, davem@davemloft.net, moinejf@free.fr, andrew@lunn.ch, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jogo@openwrt.org, buytenh@wantstofly.org, jm@lentin.co.uk, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 13, 2013 at 10:33:22PM +0100, Grant Likely wrote:
-> On Tue, 5 Mar 2013 09:28:49 +0000, Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Mon, Mar 04, 2013 at 02:51:14AM +0000, Grant Likely wrote:
-> > > I could use some more context for how this will be used. Do device
-> > > drivers need to be aware of which CPU can handle an interrupt for a
-> > > device, or is it the sort of thing that can be done in the background
-> > > when an irq is requested? What are some examples of device drivers using
-> > > this interface.
+Dear Jason Cooper,
+
+On Sat, 13 Apr 2013 15:00:37 -0400, Jason Cooper wrote:
+
+> > So let's continue the cleanup work, conversion to DT, usage of
+> > drivers in drivers/, improvement of pinmux to support
+> > orion5x/mv78xx0, and do the move per-platform, once they are ready.
 > > 
-> > The main users I can think of for this would be PMUs in multi-cluster systems,
-> > where we may have differing PMUs in each cluster. The driver for each needs to
-> > know the set of CPUs it's handling, and which CPU each interrupt is affine to.
-> > 
-> > With the above binding scheme, we'd describe the A15x2 A7x3 CoreTile's PMUs
-> > something like:
-> > 
-> > pmu_a15s {
-> > 	compatible = "arm,cortex-a15-pmu";
-> > 	interrupts = <0 68 4>,
-> > 	             <0 69 4>;
-> > 	interrupts-affinity = <0 0x0>,
-> > 	                      <0 0x1>;
-> > };
-> > 
-> > pmu_a7s {
-> > 	compatible = arm,cortex-a7-pmu";
-> > 	interrupts = <0 128 4>,
-> > 	             <0 129 4>,
-> > 	             <0 130 4>;
-> > 	interrupts-affinity = <0 0x100>,
-> > 	                      <0 0x101>,
-> > 	                      <0 0x102>;
-> > };
+> > What do you think?
 > 
-> That does sound an awful lot like what Lorenzo has been trying to solve.
-> I really do think that you need to coordinate with him.
+> I agree completely.  I was simply restating the longview goal of the
+> work we are doing (above and beyond adding armadaXP/370).  I probably
+> should have given a time reference for "This will lead to..." :)
 
-Indeed it does. Lorenzo and I have been working together on this, and having
-realised issues with the above approach, we've put a new series together [1]
-which we both believe has a more workable approach.
+Ok. I definitely agree with the long-term goal.
 
-Mark.
+> Also, I have a feeling that not all legacy boards will get converted
+> over.  If there is no interest or no way to test, certains boards may
+> get deprecated.
 
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2013-April/162457.html
+I think for many of them, we can do a 'blind' conversion to DT, and ask
+the users who have posted patches or even submitted support for those
+boards to test the DT. But I don't think we should move things into
+mach-mvebu if there are still legacy non-DT Kirkwood platforms
+supported in mach-kirkwood. So either we convert them to the DT, or we
+remove the support for them if no-one is really interested. But I
+believe in most cases, converting them to DT should be quite easy.
+
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
