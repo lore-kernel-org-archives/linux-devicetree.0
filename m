@@ -1,49 +1,120 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
-Date: Mon, 15 Apr 2013 10:58:43 -0600
-Message-ID: <516C31C3.9040505@wwwdotorg.org>
-References: <1329321854-24490-1-git-send-email-b-cousson@ti.com> <20130302200524.D230F3E1571@localhost> <51391F41.5000303@ti.com> <CAAwP0s1CFRO-rf==p5sYs1n0gigMif7wuT8Yv0N_iLUDMrtcOg@mail.gmail.com> <CACRpkdYHj-rEF3Rk_CWnmmMw_Amr7m8SgQ=-2zsDYuLeuu3azw@mail.gmail.com> <514C79E1.4090106@wwwdotorg.org> <514CE0AB.6060207@ti.com> <CACRpkdZmv-rAoKSQYpkHHSMzKJOn5TixVW_P3=m7ZNagBYCUPw@mail.gmail.com> <515319D5.20105@wwwdotorg.org> <CACRpkdYXVLgCz1Tyu-Ls2V2OTc4R3cGNJhfQJB6Hiz_K9dkZYQ@mail.gmail.com> <5155C902.7080207@wwwdotorg.org> <CACRpkdYbs4-uudpRUY8e+7icYYkZrfM0kReP3pLL5DMiURJ4dg@mail.gmail.com> <5165CB9D.1090202@wwwdotorg.org> <CACRpkdYirFNqmGhA4K9CL4ve4NYhs8Rd3SFt1iwW9vHBkrcz8g@mail.gmail.com> <51671D7B.5060303@wwwdotorg.org> <CACRpkdbf32Ef77GmXk9id9+RRjcDRTr7S+F4nznoeZU8y=BT_Q@mail.gmail.com
- > <51673D70.3010503@wwwdotorg.org> <CAAwP0s0e2x33jZQhFRY+Hoo61SFqYKRgWk=1mL2+DNxSDJHz+A@mail.gmail.com> <CACRpkda4h+qXTvsirPAS7E7sjXhMLE62q=VDy53W8UchsYjbNg@mail.gmail.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v6 0/3] of/pci: Provide common support for PCI DT parsing
+Date: Mon, 15 Apr 2013 13:56:41 -0400
+Message-ID: <20130415175641.GM28693@titan.lakedaemon.net>
+References: <1365693969-23907-1-git-send-email-Andrew.Murray@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda4h+qXTvsirPAS7E7sjXhMLE62q=VDy53W8UchsYjbNg@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Javier Martinez Canillas <martinez.javier@gmail.com>, Jon Hunter <jon-hunter@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Alexandre Courbot <acourbot@nvidia.com>, Stephen Warren <swarren@nvidia.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1365693969-23907-1-git-send-email-Andrew.Murray@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Murray <Andrew.Murray@arm.com>
+Cc: siva.kallam@samsung.com, linux-pci@vger.kernel.org, linus.walleij@linaro.org, thierry.reding@avionic-design.de, Liviu.Dudau@arm.com, grant.likely@secretlab.ca, paulus@samba.org, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, jg1.han@samsung.com, jgunthorpe@obsidianresearch.com, thomas.abraham@linaro.org, benh@kernel.crashing.org, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, kgene.kim@samsung.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, monstr@monstr.eu, linux-kernel@vger.kernel.org, suren.reddy@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/14/2013 02:53 PM, Linus Walleij wrote:
-> On Sun, Apr 14, 2013 at 3:35 AM, Javier Martinez Canillas
-> <martinez.javier@gmail.com> wrote:
+Andrew Murray, Thomas,
+
+On Thu, Apr 11, 2013 at 04:26:06PM +0100, Andrew Murray wrote:
+> This patchset factors out duplicated code associated with parsing PCI
+> DT "ranges" properties across the architectures and introduces a
+> "ranges" parser. This parser "of_pci_range_parser" can be used directly
+> by ARM host bridge drivers enabling them to obtain ranges from device
+> trees.
 > 
->> Is the following inlined patch [1] what you were thinking that would
->> be the right approach?
+> I've included the Reviewed-by and Tested-by's received from v5 in this
+> patchset, earlier versions of this patchset (v3) have been tested-by:
 > 
-> This looks sort of OK, but I'm still struggling with the question of
-> what we could do to help other implementations facing the same issue.
+> Thierry Reding <thierry.reding@avionic-design.de>
+> Jingoo Han <jg1.han@samsung.com>
 > 
-> This is a pretty hard design pattern to properly replicate in every such
-> driver is it not?
+> I believe a version of this patchset has also been tested through its
+> inclusion in Thomas Petazzoni's Armada 370 and Armada XP SoCs PCIe support by:
+> 
+> Linus Walleij <linus.walleij@linaro.org>
+> 
+> I've tested that this patchset builds and runs on ARM and that it builds on
+> PowerPC.
+> 
+> Compared to the v5 sent by Andrew Murray, the following changes have
+> been made:
+> 
+>  * Use of CONFIG_64BIT instead of CONFIG_[a32bitarch] as suggested by
+>    Rob Herring in drivers/of/of_pci.c
+> 
+>  * Added forward declaration of struct pci_controller in linux/of_pci.h
+>    to prevent compiler warning as suggested by Thomas Petazzoni
+> 
+>  * Improved error checking (!range check), removal of unnecessary be32_to_cpup
+>    call, improved formatting of struct of_pci_range_parser layout and
+>    replacement of macro with a static inline. All suggested by Rob Herring.
+> 
+> Compared to the v4 (incorrectly labelled v3) sent by Andrew Murray,
+> the following changes have been made:
+> 
+>  * Split the patch as suggested by Rob Herring
+> 
+> Compared to the v3 sent by Andrew Murray, the following changes have
+> been made:
+> 
+>  * Unify and move duplicate pci_process_bridge_OF_ranges functions to
+>    drivers/of/of_pci.c as suggested by Rob Herring
+> 
+>  * Fix potential build errors with Microblaze/MIPS
+> 
+> Compared to "[PATCH v5 01/17] of/pci: Provide support for parsing PCI DT
+> ranges property", the following changes have been made:
+> 
+>  * Correct use of IORESOURCE_* as suggested by Russell King
+> 
+>  * Improved interface and naming as suggested by Thierry Reding
+> 
+> Compared to the v2 sent by Andrew Murray, Thomas Petazzoni did:
+> 
+>  * Add a memset() on the struct of_pci_range_iter when starting the
+>    for loop in for_each_pci_range(). Otherwise, with an uninitialized
+>    of_pci_range_iter, of_pci_process_ranges() may crash.
+> 
+>  * Add parenthesis around 'res', 'np' and 'iter' in the
+>    for_each_of_pci_range macro definitions. Otherwise, passing
+>    something like &foobar as 'res' didn't work.
+> 
+>  * Rebased on top of 3.9-rc2, which required fixing a few conflicts in
+>    the Microblaze code.
+> 
+> v2:
+>   This follows on from suggestions made by Grant Likely
+>   (marc.info/?l=linux-kernel&m=136079602806328)
+> 
+> Andrew Murray (3):
+>   of/pci: Unify pci_process_bridge_OF_ranges from Microblaze and
+>     PowerPC
+>   of/pci: Provide support for parsing PCI DT ranges property
+>   of/pci: mips: convert to common of_pci_range_parser
+> 
+>  arch/microblaze/include/asm/pci-bridge.h |    5 +-
+>  arch/microblaze/pci/pci-common.c         |  192 ------------------------------
+>  arch/mips/pci/pci.c                      |   50 +++------
+>  arch/powerpc/include/asm/pci-bridge.h    |    5 +-
+>  arch/powerpc/kernel/pci-common.c         |  192 ------------------------------
+>  drivers/of/address.c                     |   66 ++++++++++
+>  drivers/of/of_pci.c                      |  168 ++++++++++++++++++++++++++
+>  include/linux/of_address.h               |   46 +++++++
+>  include/linux/of_pci.h                   |    4 +
+>  9 files changed, 302 insertions(+), 426 deletions(-)
 
-Well, instead of adding .request_irq() to the irqchip, and then making
-each driver call gpio_request() from the implementation, perhaps you
-could add a .irq_to_gpio() to the irqchip, have the IRQ core call that,
-and if it gets back a non-error response, the IRQ core could call
-gpio_request(). That means that the change to each GPIO+IRQ driver is
-simply to implement a standalone data transformation function
-.irq_to_gpio().
+As agreed with Rob Herring, series applied to mvebu/drivers to support
+mvebu pcie driver.
 
-Now, this does re-introduce irq_to_gpio() in some way, but with the
-following advantages:
+thx,
 
-1) The implementation is per-controller, not a single global function,
-so isn't introducing any kind of centralized mapping scheme again.
-
-2) This irq-chip-specific .irq_to_gpio() would only be implemented for
-IRQ+GPIO chips that actually have a 1:1 mapping between GPIOs and IRQs.
-Its potential existence doesn't imply that all IRQ chips need implement
-this; it would be very specifically be for this one particular case.
-
-So, I think it's reasonable to introduce this.
+Jason.
