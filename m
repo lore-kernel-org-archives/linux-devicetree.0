@@ -1,90 +1,72 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: omap4-panda: Add USB Host support
-Date: Mon, 15 Apr 2013 11:48:41 +0300
-Message-ID: <1366015721-25608-1-git-send-email-rogerq@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFCv2 0/2] Representing interrupt affinity in devicetree
+Date: Mon, 15 Apr 2013 10:09:04 +0100
+Message-ID: <20130415090904.GF8151@e106331-lin.cambridge.arm.com>
+References: <1355417368-6861-1-git-send-email-mark.rutland@arm.com>
+ <20130304025115.05D413E17F8@localhost>
+ <20130305092849.GA15661@e106331-lin.cambridge.arm.com>
+ <20130413213322.7C6193E2249@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: b-cousson-l0cyMroinI0@public.gmane.org
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20130413213322.7C6193E2249@localhost>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Will Deacon <Will.Deacon@arm.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-UHJvdmlkZSB0aGUgUkVTRVQgYW5kIFBvd2VyIHJlZ3VsYXRvcnMgZm9yIHRoZSBVU0IgUEhZLAp0
-aGUgVVNCIEhvc3QgcG9ydCBtb2RlIGFuZCB0aGUgUEhZIGRldmljZS4KClRoZSBVU0IgUEhZIG5l
-ZWRzIEFVWENMSzMgdG8gb3BlcmF0ZS4gUHJvdmlkZSB0aGlzIGluZm9ybWF0aW9uCmFzIHdlbGwu
-CgpBbHNvIHByb3ZpZGUgcGluIG11bHRpcGxleGVyIGluZm9ybWF0aW9uIGZvciB0aGUgVVNCIGhv
-c3QKcGlucy4KClRoaXMgcGF0Y2ggZGVwZW5kcyBvbiBPTUFQIGNsb2NrIGJpbmRpbmcgaW50cm9k
-dWNlZCBpbgpodHRwczovL2xrbWwub3JnL2xrbWwvMjAxMy80LzEyLzQwNwoKQ0M6IEJlbm/DrnQg
-Q291c3NvbiA8Yi1jb3Vzc29uQHRpLmNvbT4KU2lnbmVkLW9mZi1ieTogUm9nZXIgUXVhZHJvcyA8
-cm9nZXJxQHRpLmNvbT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9vbWFwNC1wYW5kYS1jb21tb24u
-ZHRzaSB8ICAgNTggKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKIGFyY2gvYXJtL2Jvb3Qv
-ZHRzL29tYXA0LmR0c2kgICAgICAgICAgICAgIHwgICAgNSArKwogMiBmaWxlcyBjaGFuZ2VkLCA2
-MyBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL29tYXA0LXBhbmRhLWNvbW1vbi5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDQt
-cGFuZGEtY29tbW9uLmR0c2kKaW5kZXggMDNiZDYwZC4uNjI4Zjc0NCAxMDA2NDQKLS0tIGEvYXJj
-aC9hcm0vYm9vdC9kdHMvb21hcDQtcGFuZGEtY29tbW9uLmR0c2kKKysrIGIvYXJjaC9hcm0vYm9v
-dC9kdHMvb21hcDQtcGFuZGEtY29tbW9uLmR0c2kKQEAgLTU0LDYgKzU0LDM4IEBACiAJCQkiQUZN
-TCIsICJMaW5lIEluIiwKIAkJCSJBRk1SIiwgIkxpbmUgSW4iOwogCX07CisKKwkvKiBIUyBVU0Ig
-UG9ydCAxIFJFU0VUICovCisJaHN1c2IxX3Jlc2V0OiBoc3VzYjFfcmVzZXRfcmVnIHsKKwkJY29t
-cGF0aWJsZSA9ICJyZWd1bGF0b3ItZml4ZWQiOworCQlyZWd1bGF0b3ItbmFtZSA9ICJoc3VzYjFf
-cmVzZXQiOworCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsKKwkJcmVndWxh
-dG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47CisJCWdwaW8gPSA8JmdwaW8yIDMwIDA+Owkv
-KiBncGlvXzYyICovCisJCXN0YXJ0dXAtZGVsYXktdXMgPSA8NzAwMDA+OworCQllbmFibGUtYWN0
-aXZlLWhpZ2g7CisJfTsKKworCS8qIEhTIFVTQiBQb3J0IDEgUG93ZXIgKi8KKwloc3VzYjFfcG93
-ZXI6IGhzdXNiMV9wb3dlcl9yZWcgeworCQljb21wYXRpYmxlID0gInJlZ3VsYXRvci1maXhlZCI7
-CisJCXJlZ3VsYXRvci1uYW1lID0gImhzdXNiMV92YnVzIjsKKwkJcmVndWxhdG9yLW1pbi1taWNy
-b3ZvbHQgPSA8MzMwMDAwMD47CisJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAwMDA+
-OworCQlncGlvID0gPCZncGlvMSAxIDA+OwkvKiBncGlvXzEgKi8KKwkJc3RhcnR1cC1kZWxheS11
-cyA9IDw3MDAwMD47CisJCWVuYWJsZS1hY3RpdmUtaGlnaDsKKwl9OworCisJLyogSFMgVVNCIEhv
-c3QgUEhZIG9uIFBPUlQgMSAqLworCWhzdXNiMV9waHk6IGhzdXNiMV9waHkgeworCQljb21wYXRp
-YmxlID0gInVzYi1ub3AteGNlaXYiOworCQlyZXNldC1zdXBwbHkgPSA8JmhzdXNiMV9yZXNldD47
-CisJCXZjYy1zdXBwbHkgPSA8JmhzdXNiMV9wb3dlcj47CisJCWNsb2NrcyA9IDwmYXV4Y2xrMz47
-CisJCWNsb2NrLW5hbWVzID0gIm1haW5fY2xrIjsKKwkJY2xvY2stZnJlcXVlbmN5ID0gPDE5MjAw
-MDAwPjsKKwl9OwogfTsKIAogJm9tYXA0X3BteF9jb3JlIHsKQEAgLTY0LDYgKzk2LDcgQEAKIAkJ
-CSZtY2JzcDFfcGlucwogCQkJJmRzc19oZG1pX3BpbnMKIAkJCSZ0cGQxMnMwMTVfcGlucworCQkJ
-JmhzdXNiYjFfcGlucwogCT47CiAKIAl0d2w2MDQwX3BpbnM6IHBpbm11eF90d2w2MDQwX3BpbnMg
-ewpAQCAtMTA4LDYgKzE0MSwyMyBAQAogCQk+OwogCX07CiAKKwloc3VzYmIxX3BpbnM6IHBpbm11
-eF9oc3VzYmIxX3BpbnMgeworCQlwaW5jdHJsLXNpbmdsZSxwaW5zID0gPAorCQkJMHg4MiAweDEw
-QwkvKiBVU0JCMV9VTFBJVExMX0NMS19NVVhNT0RFLnVzYmIxX3VscGlwaHlfY2xrIElOUFVUIHwg
-UFVMTERPV04gKi8KKwkJCTB4ODQgMHg0CS8qIFVTQkIxX1VMUElUTExfQ0xLX01VWE1PREUudXNi
-YjFfdWxwaXBoeV9zdHAgT1VUUFVUICovCisJCQkweDg2IDB4MTA0CS8qIFVTQkIxX1VMUElUTExf
-Q0xLX01VWE1PREUudXNiYjFfdWxwaXBoeV9kaXIgSU5QVVQgfCBQVUxMRE9XTiAqLworCQkJMHg4
-OCAweDEwNAkvKiBVU0JCMV9VTFBJVExMX0NMS19NVVhNT0RFLnVzYmIxX3VscGlwaHlfbnh0IElO
-UFVUIHwgUFVMTERPV04gKi8KKwkJCTB4OGEgMHgxMDQJLyogVVNCQjFfVUxQSVRMTF9DTEtfTVVY
-TU9ERS51c2JiMV91bHBpcGh5X2RhdDAgSU5QVVQgfCBQVUxMRE9XTiAqLworCQkJMHg4YyAweDEw
-NAkvKiBVU0JCMV9VTFBJVExMX0NMS19NVVhNT0RFLnVzYmIxX3VscGlwaHlfZGF0MSBJTlBVVCB8
-IFBVTExET1dOICovCisJCQkweDhlIDB4MTA0CS8qIFVTQkIxX1VMUElUTExfQ0xLX01VWE1PREUu
-dXNiYjFfdWxwaXBoeV9kYXQyIElOUFVUIHwgUFVMTERPV04gKi8KKwkJCTB4OTAgMHgxMDQJLyog
-VVNCQjFfVUxQSVRMTF9DTEtfTVVYTU9ERS51c2JiMV91bHBpcGh5X2RhdDMgSU5QVVQgfCBQVUxM
-RE9XTiAqLworCQkJMHg5MiAweDEwNAkvKiBVU0JCMV9VTFBJVExMX0NMS19NVVhNT0RFLnVzYmIx
-X3VscGlwaHlfZGF0NCBJTlBVVCB8IFBVTExET1dOICovCisJCQkweDk0IDB4MTA0CS8qIFVTQkIx
-X1VMUElUTExfQ0xLX01VWE1PREUudXNiYjFfdWxwaXBoeV9kYXQ1IElOUFVUIHwgUFVMTERPV04g
-Ki8KKwkJCTB4OTYgMHgxMDQJLyogVVNCQjFfVUxQSVRMTF9DTEtfTVVYTU9ERS51c2JiMV91bHBp
-cGh5X2RhdDYgSU5QVVQgfCBQVUxMRE9XTiAqLworCQkJMHg5OCAweDEwNAkvKiBVU0JCMV9VTFBJ
-VExMX0NMS19NVVhNT0RFLnVzYmIxX3VscGlwaHlfZGF0NyBJTlBVVCB8IFBVTExET1dOICovCisJ
-CT47CisJfTsKKwogCWkyYzFfcGluczogcGlubXV4X2kyYzFfcGlucyB7CiAJCXBpbmN0cmwtc2lu
-Z2xlLHBpbnMgPSA8CiAJCQkweGUyIDB4MTE4ICAgICAgICAvKiBpMmMxX3NjbCBQVUxMVVAgfCBJ
-TlBVVEVOQUJMRSB8IE1PREUwICovCkBAIC0yNDksMyArMjk5LDExIEBACiAJbW9kZSA9IDwzPjsK
-IAlwb3dlciA9IDw1MD47CiB9OworCismdXNiaHNob3N0IHsKKwlwb3J0MS1tb2RlID0gImVoY2kt
-cGh5IjsKK307CisKKyZ1c2Joc2VoY2kgeworCXBoeXMgPSA8JmhzdXNiMV9waHk+OworfTsKZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXA0LmR0c2kgYi9hcmNoL2FybS9ib290L2R0
-cy9vbWFwNC5kdHNpCmluZGV4IDJhNTY0MjguLmJkNjAzNmUgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL29tYXA0LmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDQuZHRzaQpA
-QCAtNjYwLDUgKzY2MCwxMCBAQAogCQkJcmFtLWJpdHMgPSA8MTI+OwogCQkJdGksaGFzLW1haWxi
-b3g7CiAJCX07CisKKwkJYXV4Y2xrMzogYXV4Y2xrMyB7CisJCQkjY2xvY2stY2VsbHMgPSA8MD47
-CisJCQljb21wYXRpYmxlID0gInRpLG9tYXAtY2xvY2siOworCQl9OwogCX07CiB9OwotLSAKMS43
-LjQuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2
-aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3ps
-YWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNj
-dXNzCg==
+On Sat, Apr 13, 2013 at 10:33:22PM +0100, Grant Likely wrote:
+> On Tue, 5 Mar 2013 09:28:49 +0000, Mark Rutland <mark.rutland@arm.com> wrote:
+> > On Mon, Mar 04, 2013 at 02:51:14AM +0000, Grant Likely wrote:
+> > > I could use some more context for how this will be used. Do device
+> > > drivers need to be aware of which CPU can handle an interrupt for a
+> > > device, or is it the sort of thing that can be done in the background
+> > > when an irq is requested? What are some examples of device drivers using
+> > > this interface.
+> > 
+> > The main users I can think of for this would be PMUs in multi-cluster systems,
+> > where we may have differing PMUs in each cluster. The driver for each needs to
+> > know the set of CPUs it's handling, and which CPU each interrupt is affine to.
+> > 
+> > With the above binding scheme, we'd describe the A15x2 A7x3 CoreTile's PMUs
+> > something like:
+> > 
+> > pmu_a15s {
+> > 	compatible = "arm,cortex-a15-pmu";
+> > 	interrupts = <0 68 4>,
+> > 	             <0 69 4>;
+> > 	interrupts-affinity = <0 0x0>,
+> > 	                      <0 0x1>;
+> > };
+> > 
+> > pmu_a7s {
+> > 	compatible = arm,cortex-a7-pmu";
+> > 	interrupts = <0 128 4>,
+> > 	             <0 129 4>,
+> > 	             <0 130 4>;
+> > 	interrupts-affinity = <0 0x100>,
+> > 	                      <0 0x101>,
+> > 	                      <0 0x102>;
+> > };
+> 
+> That does sound an awful lot like what Lorenzo has been trying to solve.
+> I really do think that you need to coordinate with him.
+
+Indeed it does. Lorenzo and I have been working together on this, and having
+realised issues with the above approach, we've put a new series together [1]
+which we both believe has a more workable approach.
+
+Mark.
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2013-April/162457.html
