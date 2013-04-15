@@ -1,305 +1,138 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V4 1/6] clk: OMAP: introduce device tree binding to
- kernel clock data
-Date: Sun, 14 Apr 2013 16:19:17 -0500
-Message-ID: <20130414211917.GA3275@snafu>
-References: <1365807278-554-1-git-send-email-nm@ti.com>
- <1365807278-554-2-git-send-email-nm@ti.com>
- <20130412233142.GE10155@atomide.com> <20130412233900.GA1599@kahuna>
- <20130413172210.GM10155@atomide.com>
+From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+Subject: Re: [PATCH v6] net: sh_eth: Add support of device tree probe
+Date: Mon, 15 Apr 2013 11:17:36 +0900
+Message-ID: <516B6340.9090604@renesas.com>
+References: <1363675196-8940-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com>
+ <51486699.6000908@cogentembedded.com> <514AB0CB.2030808@renesas.com>
+ <516B0C59.3050207@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130413172210.GM10155-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-reply-to: <516B0C59.3050207@cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, magnus.damm@gmail.com, kda@linux-powerpc.org, horms+renesas@verge.net.au, mark.rutland@arm.com, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-On 10:22-20130413, Tony Lindgren wrote:
-> * Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> [130412 16:43]:
-> > Thanks for checking up. Fixed all of them below, will post part of
-> > series again, only if I need to address further comments in other
-> > patches..
-> 
-> Thanks it seems that the other ones are ready to go, just one
-> more comment below.
-> 
-[...]
-> > +static struct clk *omap_clk_src_get(struct of_phandle_args *clkspec, void *data)
-> > +{
-> > +	struct clk *clk;
-> > +	char clk_name[32];
-> > +	struct device_node *np = clkspec->np;
-> > +
-> > +	snprintf(clk_name, 32, "%s_ck", np->name);
-> > +	clk = clk_get(NULL, clk_name);
-> > +	if (IS_ERR(clk)) {
-> > +		pr_err("%s: could not get clock %s(%ld)\n", __func__,
-> > +		       clk_name, PTR_ERR(clk));
-> > +		goto out;
-> > +	}
-> > +	clk_put(clk);
-> 
-> It seems that clk_put() is actually wrong here. That's because
-> of_clk_get() should boild down to just the look up of the clock 
-> and then clk_get() on it, so no double clk_get() is done in this
-> case. Once the consumer driver is done, it will just call clk_put()
-> on it.
-Yep - updated version below.
->From d0bf3fce235cff46feac7f5ef1a40e2fa0f2aa12 Mon Sep 17 00:00:00 2001
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Date: Tue, 9 Apr 2013 19:26:40 -0500
-Subject: [PATCH V5.1 1/6] clk: OMAP: introduce device tree binding to kernel clock
- data
+Hi,
 
-OMAP clock data is located in arch/arm/mach-omap2/cclockXYZ_data.c.
-However, this presents an obstacle for using these clock nodes in
-Device Tree definitions. This is especially true for board specific
-clocks initially. The fixed clocks are currently found via clock
-aliases table. There are many possible approaches to this problem as
-discussed in the following thread:
-http://marc.info/?t=136370325600009&r=1&w=2.
-Highlights of the options:
-a) device specific clk_add_alias:
-   cons: driver handling required
-b) using an generic clk node and indexing to reach the clock required.
-   This is similar in approach taken by tegra and few other platforms.
-   Example usage: clock = <&clk 5>;
-   cons: potential to have mismatches in indexed table and associated
-   dtb data. In addition, managing continued documentation in bindings
-   as clock indexing increases. Even though readability angle could be
-   improved by using preprocessing of DT using macros, indexed
-   approach is inherently risky from cases like the following:
-   clk indexes in kernel:
-   1 - mpu_dpll
-   2 - aux_clk1
-   3 - core_clk
-   DT entry for peripheral X uses <&clk 2> to reach aux_clk1. Now, let's
-   say kernel updates indices to:
-   1 - mpu_dpll
-   2 - per_dpll
-   3 - aux_clk1
-   4 - core_clk
-   using the old dtb(or dts missing an update), on new kernel which
-   has updated indices will result in per_dpll now controlled for
-   peripheral X without warning or any potential error detection.
+(2013/04/15 5:06), Sergei Shtylyov wrote:
+> Hello.
+>
+> On 21-03-2013 11:03, Nobuhiro Iwamatsu wrote:
+>
+> Sorry, I have noticed your reply only last Friday. I probably should do something with my mail filters, so that they leave the personal mail in my inbox and not toss it to the list folders where I may ignore it...
+>
+>>>> This adds support of device tree probe for Renesas sh-ether driver.
+>
+>>>> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+>
+>>>> V6: - Add renesas,sh-eth-gigabit, renesas,sh-eth-sh4 and
+>>>> renesas,sh-eth-sh3-sh2 to compatible string.
+>>>> - Remove sh-eth,register-type. This is supplemented by the
+>>>> compatible string.
+>>>> - Use the of_property_read_bool instead of of_find_property.
+>>>> - Add sanity chheck for of_property_read_u32.
+>>>> - Update document.
+>>>> V5: - Rewrite sh_eth_parse_dt().
+>>>> Remove of_device_is_available() and CONFIG_OF from support OF
+>>>> checking function and re-add empty sh_eth_parse_dt().
+>>>> - Add CONFIG_PM to definition of dev_pm_ops.
+>>>> - Add CONFIG_OF to definition of of_device_id.
+>>>> V4: - Remove empty sh_eth_parse_dt().
+>>>> V3: - Remove empty sh_eth_parse_dt().
+>>>> V3: - Removed sentnece of "needs-init" from document.
+>>>> V2: - Removed ether_setup().
+>>>> - Fixed typo from "sh-etn" to "sh-eth".
+>>>> - Removed "needs-init" and sh-eth,endian from definition of DT.
+>>>> - Changed "sh-eth,edmac-endian" instead of "sh-eth,edmac-big-endain"
+>>>> in definition of DT.
+>>>> ---
+> [...]
+>
+>>>> @@ -2391,12 +2451,33 @@ static int sh_eth_drv_probe(struct platform_device
+>>>> *pdev)
+>>>> goto out_release;
+>>>> }
+>>>>
+>>>> + if (np) {
+>>>> + pd = sh_eth_parse_dt(&pdev->dev, ndev, np);
+>>>> + if (pdev->dev.platform_data && pd) {
+>>>> + struct sh_eth_plat_data *tmp =
+>>>> + pdev->dev.platform_data;
+>>>> + pd->set_mdio_gate = tmp->set_mdio_gate;
+>>>> + pd->needs_init = tmp->needs_init;
+>
+>>> OK, so we can't fully convert this driver to the device tree due to
+>>> procedural platform data.
+>
+>> > I then would advice just using OF_DEV_AUXDATA() in the platform data
+>
+> /sdata/code/.
+>
+>> instead of trying to convert the driver to device tree.
+>
+> Convert the platfrom data, I meant. But I already wrote about that I think.
+>
+>> Yes, I knew about this.
+>
+> But still attempted to document and use the data-only device tree properties (which was pointless in the light of procediral platfrom data)?
+>
 
-   Even though we could claim this is user error, such errors are hard
-   to track down and fix.
+Yes, I added this information to next patch.
 
-An alternate approach introduced here is to introduce device tree
-bindings corresponding to the clock nodes required in DT definition
-for SoC which automatically maps back to the definitions in
-cclockXYZ_data.c.
+>>>> +
+>>>> +#ifdef CONFIG_OF
+>>>> +static const struct of_device_id sh_eth_match[] = {
+>>>> + { .compatible = "renesas,sh-eth-gigabit", },
+>>>> + { .compatible = "renesas,sh-eth-sh4", },
+>>>> + { .compatible = "renesas,sh-eth-sh3-sh2", },
+>
+>>> Biut this is not really enough: the driver supports much more variations of
+>>> the SH and ARM SoCs
+>>> all of which have difference not only in register layout but also in the
+>>> registers bits or even
+>>> presence of the whole register blocks. All this IMO should be reflected in
+>>> the different values
+>>> of the compatible "property". BTW, it seems another register layout and
+>>> instance needs to be added
+>>> for the R-Car SoCs (instead of the current ugly hack).
+>
+> I've already added it now, it's in the 'net-next' tree.
+>
 
-The driver introduced here to do this mapping will eventually be the
-place where the clock handling will migrate to. We need to consider
-this angle as well so that the solution will be an valid transition
-point for moving the clock data out of kernel image (into device tree
-or firmware load etc..).
+Yes, I know. Thank you for this work.
 
-Overall strategy introduced here is simple: a clock node described in
-device tree blob is used to identify the exact clock provided in the
-SoC specific data. This is then linked back using of_clk_add_provider
-to the device node to be accessible by of_clk_get.
+>> I see.
+>> Latest source code was defined compatible as renesas,sh-eth-gigabit,
+>> sh-eth-sh4 and sh-eth-sh3-sh2. I will change ito renesas,<CPU>-sh-eth.
+>
+> Yes, this is the step in the right direction. Though I'd drop the '-sh' infix -- the driver is usable not only on SH platforms.
+>
 
-Based on discussion contributions from Roger Quadros, Grygorii Strashko
-and others.
+OK, I will drop "-sh" from SH platform too.
 
-Cc: Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-[tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org: co-developed]
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
----
- .../devicetree/bindings/clock/omap-clock.txt       |   40 +++++++++
- drivers/clk/Makefile                               |    1 +
- drivers/clk/omap/Makefile                          |    1 +
- drivers/clk/omap/clk.c                             |   91 ++++++++++++++++++++
- 4 files changed, 133 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/omap-clock.txt
- create mode 100644 drivers/clk/omap/Makefile
- create mode 100644 drivers/clk/omap/clk.c
+>> And I think that we should define the sh7757-sh-eth-gitabit and
+>> sh7757-sh-eth-fast for this. Becauase sh7757 is special device.
+>> There is a device that supports only devices that support fast
+>> ether and gigabit ether on single CPU.
+>
+> Yes, I saw that.
+>
+>> Therefore, the compatible property of this device becomes <CPU>-sh-eth
+>> or <CPU>-sh-eth-<ETHER TYPE>.
+>
+>> How about this?
+>
+> Sounds better. I think however that the conversion of this driver to device tree shouldn't be done without getting rid of the current #ifdef mess in it (which is still on my agenda). I think that the 'register_type' field should move from the platform data to the 'struct sh_eth_cpu_data' in the process.
+>
 
-diff --git a/Documentation/devicetree/bindings/clock/omap-clock.txt b/Documentation/devicetree/bindings/clock/omap-clock.txt
-new file mode 100644
-index 0000000..047c1e7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/omap-clock.txt
-@@ -0,0 +1,40 @@
-+Device Tree Clock bindings for Texas Instrument's OMAP compatible platforms
-+
-+This binding is an initial minimal binding that may be enhanced as part of
-+transitioning OMAP clock data out of kernel image.
-+
-+This binding uses the common clock binding[1].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible : shall be "ti,omap-clock"
-+- #clock-cells : from common clock binding; shall be set to 0.
-+NOTE:
-+node name should map to clock database in arch/arm/mach-omap2/cclock<SoC>_data.c
-+Since all clocks are described with _ck, the node name is optimized to drop the
-+usage of _ck. For example, a clock called dpll1_ck will be defined as dpll1.
-+
-+Example #1: describing clock node for CPU on OMAP34xx platform:
-+Ref: arch/arm/mach-omap2/cclock3xxx_data.c
-+describes the CPU clock to be as follows
-+	CLK(NULL,	"dpll1_ck",	&dpll1_ck,	CK_3XXX),
-+Corresponding binding will be:
-+	dpll1: dpll1 {
-+		#clock-cells = <0>;
-+		compatible = "ti,omap-clock";
-+	};
-+And it's usage will be:
-+		clocks = <&dpll1>;
-+
-+Example #2: describing clock node for auxilary clock #3 on OMAP443x platform:
-+Ref: arch/arm/mach-omap2/cclock44xx_data.c
-+describes the auxclk3 clock to be as follows:
-+	CLK(NULL,	"auxclk3_ck",	&auxclk3_ck,	CK_443X),
-+Corresponding binding will be:
-+	auxclk3: auxclk3 {
-+		#clock-cells = <0>;
-+		compatible = "ti,omap-clock";
-+	};
-+And it's usage will be:
-+	clocks = <&auxclk3>;
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index e7f7fe9..dbf9b13 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -29,6 +29,7 @@ obj-$(CONFIG_ARCH_U8500)	+= ux500/
- obj-$(CONFIG_ARCH_VT8500)	+= clk-vt8500.o
- obj-$(CONFIG_ARCH_ZYNQ)		+= clk-zynq.o
- obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
-+obj-$(CONFIG_ARCH_OMAP)		+= omap/
- 
- obj-$(CONFIG_X86)		+= x86/
- 
-diff --git a/drivers/clk/omap/Makefile b/drivers/clk/omap/Makefile
-new file mode 100644
-index 0000000..8195931
---- /dev/null
-+++ b/drivers/clk/omap/Makefile
-@@ -0,0 +1 @@
-+obj-y					+= clk.o
-diff --git a/drivers/clk/omap/clk.c b/drivers/clk/omap/clk.c
-new file mode 100644
-index 0000000..5a3c6d9
---- /dev/null
-+++ b/drivers/clk/omap/clk.c
-@@ -0,0 +1,91 @@
-+/*
-+ * Texas Instruments OMAP Clock driver
-+ *
-+ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-+ *	Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-+ *	Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clkdev.h>
-+#include <linux/clk-provider.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/string.h>
-+
-+static const struct of_device_id omap_clk_of_match[] = {
-+	{.compatible = "ti,omap-clock",},
-+	{},
-+};
-+
-+/**
-+ * omap_clk_src_get() - Get OMAP clock from node name when needed
-+ * @clkspec:	clkspec argument
-+ * @data:	unused
-+ *
-+ * REVISIT: We assume the following:
-+ * 1. omap clock names end with _ck
-+ * 2. omap clock names are under 32 characters in length
-+ */
-+static struct clk *omap_clk_src_get(struct of_phandle_args *clkspec, void *data)
-+{
-+	struct clk *clk;
-+	char clk_name[32];
-+	struct device_node *np = clkspec->np;
-+
-+	snprintf(clk_name, 32, "%s_ck", np->name);
-+	clk = clk_get(NULL, clk_name);
-+	if (IS_ERR(clk))
-+		pr_err("%s: could not get clock %s(%ld)\n", __func__,
-+		       clk_name, PTR_ERR(clk));
-+
-+	return clk;
-+}
-+
-+/**
-+ * omap_clk_probe() - create link from DT definition to clock data
-+ * @pdev:	device node
-+ *
-+ * NOTE: we look up the clock lazily when the consumer driver does
-+ * of_clk_get() and initialize a NULL clock here.
-+ */
-+static int omap_clk_probe(struct platform_device *pdev)
-+{
-+	int res;
-+	struct device_node *np = pdev->dev.of_node;
-+
-+	/* This allows the driver to of_clk_get() */
-+	res = of_clk_add_provider(np, omap_clk_src_get, NULL);
-+	if (res)
-+		dev_err(&pdev->dev, "could not add provider(%d)\n", res);
-+
-+	return res;
-+}
-+
-+static struct platform_driver omap_clk_driver = {
-+	.probe = omap_clk_probe,
-+	.driver = {
-+		   .name = "omap_clk",
-+		   .of_match_table = of_match_ptr(omap_clk_of_match),
-+		   },
-+};
-+
-+static int __init omap_clk_init(void)
-+{
-+	return platform_driver_register(&omap_clk_driver);
-+}
-+arch_initcall(omap_clk_init);
-+
-+MODULE_DESCRIPTION("OMAP Clock driver");
-+MODULE_AUTHOR("Texas Instruments Inc.");
-+MODULE_LICENSE("GPL v2");
--- 
-1.7.9.5
+I see. this problem will fix next step, I think.
 
+> WBR, Sergei
+>
+>
 
--- 
-Regards,
-Nishanth Menon
+Best regards,
+   Nobuhiro
