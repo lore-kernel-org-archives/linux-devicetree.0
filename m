@@ -1,210 +1,130 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: [PATCH v5 6/6] ARM: dts: Add dts file for S3C6410-based Mini6410 board
-Date: Mon, 15 Apr 2013 23:14:43 +0200
-Message-ID: <1366060483-20342-7-git-send-email-tomasz.figa@gmail.com>
-References: <1366060483-20342-1-git-send-email-tomasz.figa@gmail.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1366060483-20342-1-git-send-email-tomasz.figa@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCHv2 1/4] Documentation: Add memory mapped ARM architected
+ timer binding
+Date: Mon, 15 Apr 2013 16:20:18 -0500
+Message-ID: <516C6F12.5020208@gmail.com>
+References: <1365812863-5367-1-git-send-email-sboyd@codeaurora.org> <1365812863-5367-2-git-send-email-sboyd@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1365812863-5367-2-git-send-email-sboyd@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds basic device tree sources for FriendlyARM Mini6410 board
-based on Samsung S3C6410 SoC.
+On Fri, Apr 12, 2013 at 7:27 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> Add a binding for the arm architected timer hardware's memory
+> mapped interface. The mmio timer hardware is made up of one base
+> frame and a collection of up to 8 timer frames, where each of the
+> 8 timer frames can have either one or two views. A frame
+> typically maps to a privilege level (user/kernel, hypervisor,
+> secure). The first view has full access to the registers within a
+> frame, while the second view can be restricted to particular
+> registers within a frame. Each frame must support a physical
+> timer. It's optional for a frame to support a virtual timer.
+>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Marc Zyngier <Marc.Zyngier@arm.com>
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> ---
+>  .../devicetree/bindings/arm/arch_timer.txt         | 59 ++++++++++++++++++++--
+>  1 file changed, 56 insertions(+), 3 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
+> index 20746e5..ac20cde 100644
+> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
+> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
+> @@ -1,10 +1,14 @@
+>  * ARM architected timer
+>
+> -ARM cores may have a per-core architected timer, which provides per-cpu timers.
+> +ARM cores may have a per-core architected timer, which provides per-cpu timers,
+> +or a memory mapped architected timer, which provides up to 8 frames with a
+> +physical and optional virtual timer per frame.
+>
+> -The timer is attached to a GIC to deliver its per-processor interrupts.
+> +The per-core architected timer is attached to a GIC to deliver its
+> +per-processor interrupts via PPIs. The memory mapped timer is attached to a GIC
+> +to deliver its interrupts via SPIs.
+>
+> -** Timer node properties:
+> +** CP15 Timer node properties:
+>
+>  - compatible : Should at least contain one of
+>         "arm,armv7-timer"
+> @@ -26,3 +30,52 @@ Example:
+>                              <1 10 0xf08>;
+>                 clock-frequency = <100000000>;
+>         };
+> +
+> +** Memory mapped timer node properties
+> +
+> +- compatible : Should at least contain "arm,armv7-timer-mem".
 
-Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
----
- arch/arm/boot/dts/Makefile             |   1 +
- arch/arm/boot/dts/s3c6410-mini6410.dts | 168 +++++++++++++++++++++++++++++++++
- 2 files changed, 169 insertions(+)
- create mode 100644 arch/arm/boot/dts/s3c6410-mini6410.dts
+Everything about this timer is architecturally defined? If not, let's
+use a more specific name.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 11fef62..5885c37 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -138,6 +138,7 @@ dtb-$(CONFIG_ARCH_U8500) += snowball.dtb \
- 	hrefprev60.dtb \
- 	hrefv60plus.dtb \
- 	ccu9540.dtb
-+dtb-$(CONFIG_ARCH_S3C64XX) += s3c6410-mini6410.dtb
- dtb-$(CONFIG_ARCH_SHMOBILE) += emev2-kzm9d.dtb \
- 	r8a7740-armadillo800eva.dtb \
- 	sh73a0-kzm9g.dtb \
-diff --git a/arch/arm/boot/dts/s3c6410-mini6410.dts b/arch/arm/boot/dts/s3c6410-mini6410.dts
-new file mode 100644
-index 0000000..679b1bb
---- /dev/null
-+++ b/arch/arm/boot/dts/s3c6410-mini6410.dts
-@@ -0,0 +1,168 @@
-+/*
-+ * Samsung's S3C6410 based Mini6410 board device tree source
-+ *
-+ * Copyright (c) 2013 Tomasz Figa <tomasz.figa@gmail.com>
-+ *
-+ * Device tree source file for FriendlyARM Mini6410 board which is based on
-+ * Samsung's S3C6410 SoC.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+*/
-+
-+/dts-v1/;
-+/include/ "s3c6410.dtsi"
-+
-+/ {
-+	model = "FriendlyARM Mini6410 board based on S3C6410";
-+	compatible = "friendlyarm,mini6410", "samsung,s3c6410";
-+
-+	memory {
-+		reg = <0x50000000 0x10000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttySAC0,115200n8 earlyprintk rootwait root=/dev/mmcblk0p1";
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gpio_keys>;
-+		autorepeat;
-+
-+		button-k1 {
-+			label = "K1";
-+			gpios = <&gpn 0 1>;
-+			linux,code = <2>;
-+			debounce-interval = <20>;
-+		};
-+
-+		button-k2 {
-+			label = "K2";
-+			gpios = <&gpn 1 1>;
-+			linux,code = <3>;
-+			debounce-interval = <20>;
-+		};
-+
-+		button-k3 {
-+			label = "K3";
-+			gpios = <&gpn 2 1>;
-+			linux,code = <4>;
-+			debounce-interval = <20>;
-+		};
-+
-+		button-k4 {
-+			label = "K4";
-+			gpios = <&gpn 3 1>;
-+			linux,code = <5>;
-+			debounce-interval = <20>;
-+		};
-+
-+		button-k5 {
-+			label = "K5";
-+			gpios = <&gpn 4 1>;
-+			linux,code = <6>;
-+			debounce-interval = <20>;
-+		};
-+
-+		button-k6 {
-+			label = "K6";
-+			gpios = <&gpn 5 1>;
-+			linux,code = <7>;
-+			debounce-interval = <20>;
-+		};
-+
-+		button-k7 {
-+			label = "K7";
-+			gpios = <&gpl 11 1>;
-+			linux,code = <8>;
-+			debounce-interval = <20>;
-+		};
-+
-+		button-k8 {
-+			label = "K8";
-+			gpios = <&gpl 12 1>;
-+			linux,code = <9>;
-+			debounce-interval = <20>;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gpio_leds>;
-+
-+		led-1 {
-+			label = "LED1";
-+			gpios = <&gpk 4 1>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		led-2 {
-+			label = "LED2";
-+			gpios = <&gpk 5 1>;
-+			linux,default-trigger = "mmc0";
-+		};
-+
-+		led-3 {
-+			label = "LED3";
-+			gpios = <&gpk 6 1>;
-+		};
-+
-+		led-4 {
-+			label = "LED4";
-+			gpios = <&gpk 7 1>;
-+		};
-+	};
-+};
-+
-+&pinctrl0 {
-+	gpio_leds: gpio-leds {
-+		samsung,pins = "gpk-4", "gpk-5", "gpk-6", "gpk-7";
-+		samsung,pin-function = <1>;
-+		samsung,pin-pud = <0>;
-+	};
-+
-+	gpio_keys: gpio-keys {
-+		samsung,pins = "gpn-0", "gpn-1", "gpn-2", "gpn-3",
-+				"gpn-4", "gpn-5", "gpl-11", "gpl-12";
-+		samsung,pin-pud = <0>;
-+	};
-+};
-+
-+&pwm {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_data>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_data>, <&uart1_fctl>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_data>;
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_data>;
-+	status = "okay";
-+};
-+
-+&sdhci0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd0_clk>, <&sd0_cmd>, <&sd0_cd>, <&sd0_bus4>;
-+	bus-width = <4>;
-+	status = "okay";
-+};
--- 
-1.8.1.5
+> +
+> +- clock-frequency : The frequency of the main counter, in Hz. Optional.
+> +
+> +- reg : The control frame base address.
+> +
+> +Note that #address-cells, #size-cells, and ranges shall be present to ensure
+> +the CPU can address a frame's registers.
+> +
+> +Frame:
+> +
+> +- frame-number: 0 to 7.
+
+I'd really like to get rid of the frame numbers and sub-nodes. Is the
+frame number significant to software?
+
+> +- interrupts : Interrupt list for physical and virtual timers in that order.
+> +  The virtual timer interrupt is optional.
+
+Is that optional per frame?
+
+Rob
+
+> +
+> +- reg : The first and second view base addresses in that order. The second view
+> +  base address is optional.
+> +
+> +- status : "disabled" indicates the frame is not available for use.
+> +
+> +Example:
+> +
+> +       timer@f0000000 {
+> +               compatible = "arm,armv7-timer-mem";
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges;
+> +               reg = <0xf0000000 0x1000>;
+> +               clock-frequency = <50000000>;
+> +
+> +               frame@f0001000 {
+> +                       frame-number = <0>
+> +                       interrupts = <0 13 0x8>,
+> +                                    <0 14 0x8>;
+> +                       reg = <0xf0001000 0x1000>,
+> +                             <0xf0002000 0x1000>;
+> +               };
+> +
+> +               frame@f0003000 {
+> +                       frame-number = <1>
+> +                       interrupts = <0 15 0x8>;
+> +                       reg = <0xf0003000 0x1000>;
+> +                       status = "disabled";
+> +               };
+> +       };
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> hosted by The Linux Foundation
+>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
