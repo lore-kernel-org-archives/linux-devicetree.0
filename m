@@ -1,52 +1,42 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v9 RESEND 2/4] misc: Generic on-chip SRAM allocation driver
-Date: Mon, 15 Apr 2013 14:50:47 +0100
-Message-ID: <20130415135047.315D43E0AA8@localhost>
-References: <1363776767-2635-1-git-send-email-p.zabel@pengutronix.de> <1363776767-2635-3-git-send-email-p.zabel@pengutronix.de> <20130327152723.723cd65e884413df405abe2d@linux-foundation.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130327152723.723cd65e884413df405abe2d@linux-foundation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Morton <akpm@linux-foundation.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: [PATCH v2 0/3] ARM: EXYNOS: DT-enabled support for Universal C210
+Date: Mon, 15 Apr 2013 16:41:59 +0200
+Message-ID: <1366036922-4103-1-git-send-email-t.figa@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, thomas.abraham@linaro.org, arnd@arndb.de, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 27 Mar 2013 15:27:23 -0700, Andrew Morton <akpm@linux-foundation.org> wrote:
-> On Wed, 20 Mar 2013 11:52:45 +0100 Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> 
-> > This driver requests and remaps a memory region as configured in the
-> > device tree. It serves memory from this region via the genalloc API.
-> > It optionally enables the SRAM clock.
-> > 
-> > Other drivers can retrieve the genalloc pool from a phandle pointing
-> > to this drivers' device node in the device tree.
-> > 
-> > The allocation granularity is hard-coded to 32 bytes for now,
-> > to make the SRAM driver useful for the 6502 remoteproc driver.
-> > There is overhead for bigger SRAMs, where only a much coarser
-> > allocation granularity is needed: At 32 bytes minimum allocation
-> > size, a 256 KiB SRAM needs a 1 KiB bitmap to track allocations.
-> > 
-> >  Documentation/devicetree/bindings/misc/sram.txt |   16 +++
-> >  drivers/misc/Kconfig                            |    9 ++
-> >  drivers/misc/Makefile                           |    1 +
-> >  drivers/misc/sram.c                             |  121 +++++++++++++++++++++++
-> 
-> drivers/misc/sram.c is a pretty generic-sounding thing.  Is it really
-> Linux's One True SRAM driver?  How many different sorts of sram devices
-> do we expect this can be used with?  If I don't use DT?
-> 
-> In other words, perhaps this should have a more specific and accurate
-> name?
+This series intends to add support for Universal C210 board using Device
+Tree. Main difference from other boards based on Exynos 4210 is that
+hardware revision of the SoC used on Universal C210 does not support MCT
+timers and legacy PWM timers must be used instead.
 
-Well, it is SRAM. Not a whole lot of variation there, and all the driver
-does is allow bits of it to be carved up so that multiple device drivers
-don't step on each other's toes. I think that is pretty generic. If
-some SRAM comes along that is sufficiently different that it requires a
-different driver, then I'm pretty confident saying it would be the
-oddball, not this driver, and so would need the more specific name.
+First patch adds device tree node for PWM block available on Exynos4 SoCs,
+second patch adds support for Exynos4210 rev0 SoC in exynos_init_time()
+and third patch introduces initial device tree for Universal C210 board.
 
-All the users at the moment are DT platforms. When a non-DT user comes
-along, it won't be a problem to add a non-DT binding. In the mean time I
-wouldn't borrow trouble about it.
+Depends on my series for PWM timers rework:
+[PATCH v5 00/14] ARM: samsung-time: Prepare for multiplatform support
+(http://thread.gmane.org/gmane.linux.kernel.samsung-soc/17864)
 
-g.
+On Universal C210 board:
+
+Tested-by: Tomasz Figa <t.figa@samsung.com>
+
+Tomasz Figa (3):
+  ARM: dts: exynos4: Add node for PWM device
+  ARM: EXYNOS: Fix support of Exynos4210 rev0 SoC
+  ARM: dts: exynos4210: Add basic dts file for universal_c210 board
+
+ arch/arm/boot/dts/Makefile                      |   1 +
+ arch/arm/boot/dts/exynos4.dtsi                  |   8 +
+ arch/arm/boot/dts/exynos4210-universal_c210.dts | 352 ++++++++++++++++++++++++
+ arch/arm/mach-exynos/common.c                   |   6 +-
+ arch/arm/mach-exynos/mach-universal_c210.c      |   2 +-
+ 5 files changed, 367 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/boot/dts/exynos4210-universal_c210.dts
+
+-- 
+1.8.1.5
