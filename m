@@ -1,125 +1,70 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] documentation: iommu: add description of ARM System MMU
-	binding
-Date: Mon, 15 Apr 2013 14:13:41 +0100
-Message-ID: <20130415131341.GG9827@mudshark.cambridge.arm.com>
-References: <1365094259-24847-1-git-send-email-will.deacon@arm.com>
-	<515F37C1.4000109@codeaurora.org>
-	<20130408092535.GA17476@mudshark.cambridge.arm.com>
-	<5162F87A.7070409@codeaurora.org>
-	<20130410173732.GQ26992@mudshark.cambridge.arm.com>
-	<5169C7D1.8070300@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5169C7D1.8070300-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH V4 10/18] ARM: OMAP2+: Add function to read GPMC settings from device-tree
+Date: Mon, 15 Apr 2013 14:27:37 +0100
+Message-ID: <20130415132737.A2A6E3E0AA8@localhost>
+References: <1363710956-26773-1-git-send-email-jon-hunter@ti.com> <1363710956-26773-11-git-send-email-jon-hunter@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1363710956-26773-11-git-send-email-jon-hunter@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Daniel Mack <zonque@gmail.com>, Ezequiel Garcia <elezegarcia@gmail.com>, Mark Jackson <mpfj-list@mimc.co.uk>, Jon Hunter <jon-hunter@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 13, 2013 at 10:02:09PM +0100, Olav Haugan wrote:
-> Hi again Will,
-
-Hello Olav,
-
-> On 4/10/2013 10:37 AM, Will Deacon wrote:
-> > Ok, but then how does that interact with the IOMMU API in Linux? e.g.
-> > if a client asks for an iova <-> pa mapping on a device, then you
-> > need to lookup the StreamIDs for that device, no?
+On Tue, 19 Mar 2013 11:35:48 -0500, Jon Hunter <jon-hunter@ti.com> wrote:
+> Adds a function to read the various GPMC chip-select settings from
+> device-tree and store them in the gpmc_settings structure.
 > 
-> Can you explain this use case a bit more. I am not clear what you mean
-> by a "client"? Are you referring to a client in Linux or are you
-> referring to the client being the core behind an IOMMU (such as a DMA
-> engine or a video core)?
-
-Sure. By `client', I mean any use of the IOMMU API. It could be something
-like your LVD example later on, it could be KVM or it could be indirectly
-via dma-mapping. Basically, any user of <linux/iommu.h>.
-
-> I am not sure how StreamIDs relates to the IOMMU API in Linux :-)
-
-That's the thing; they don't, at least not explicitly. The StreamIDs must
-all be handled inside the driver and it's actually what the driver would
-deal with, rather than devices.
-
-For example, if I create an IOMMU domain containing a DMA controller, that
-means that I have associated a set of StreamIDs (i.e. those configured to
-identify the DMA controller's master ports) with that domain. That may have
-further consequences on which other devices can be put in the same domain
-(stream-matching may require some IDs to sit in the same address space/domain)
-and also effectively parameterises the domain, by pointing those StreamIDs
-at the same context bank.
-
-> I think it helps if I explain my use case to you so you understand how
-> we use the IOMMU and maybe you can explain your use case and how your
-> driver works so that we can get on the same page. BTW, our ARMv1 IOMMU
-> driver can be found @ [1]
+> Update the GPMC device-tree binding documentation to describe these
+> options.
 > 
-> Our use case:
+> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+> Tested-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+> ---
+>  Documentation/devicetree/bindings/bus/ti-gpmc.txt |   23 ++++++++++++
+>  arch/arm/mach-omap2/gpmc.c                        |   40 +++++++++++++++++++++
+>  arch/arm/mach-omap2/gpmc.h                        |    2 ++
+>  3 files changed, 65 insertions(+)
 > 
-> 1) During boot IOMMU HW is probed, devices for each IOMMU and for each
-> context bank are created.
+> diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
+> index 5ddb2e9..6fde1cf 100644
+> --- a/Documentation/devicetree/bindings/bus/ti-gpmc.txt
+> +++ b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
+> @@ -65,6 +65,29 @@ The following are only applicable to OMAP3+ and AM335x:
+>   - gpmc,wr-access
+>   - gpmc,wr-data-mux-bus
+>  
+> +GPMC chip-select settings properties for child nodes. All are optional.
+> +
+> +- gpmc,burst-length	Page/burst length. Must be 4, 8 or 16.
+> +- gpmc,burst-wrap	Enables wrap bursting
+> +- gpmc,burst-read	Enables read page/burst mode
+> +- gpmc,burst-write	Enables write page/burst mode
+> +- gpmc,device-nand	Device is NAND
+> +- gpmc,device-width	Total width of device(s) connected to a GPMC
+> +			chip-select in bytes. The GPMC supports 8-bit
+> +			and 16-bit devices and so this property must be
+> +			1 or 2.
 
-So you create a device for each context bank...
+I would suggest specifying the actual number of bits. ie. 8 or 16. There is some
+precidence for that already in DT bindings.
 
-> 2) Video session starts.
-> 3) Linux Video Driver (LVD) creates one or more domain
-> (iommu_domain_alloc) and calls iommu_attach_device() for each context
-> bank it is going to use.
+> +- gpmc,mux-add-data	Address and data multiplexing configuration.
+> +			Valid values are 1 for address-address-data
+> +			multiplexing mode and 2 for address-data
+> +			multiplexing mode.
+> +- gpmc,sync-read	Enables synchronous read. Defaults to asynchronous
+> +			is this is not set.
 
-...and attach the context bank to the domain dynamically?
+'if'?
 
-If so, doesn't that strongly tie your video driver to the SMMU?
+> +- gpmc,sync-write	Enables synchronous writes. Defaults to asynchronous
+> +			is this is not set.
+> +- gpmc,wait-pin		Wait-pin used by client. Must be less than
+> +			"gpmc,num-waitpins".
+> +- gpmc,wait-on-read	Enables wait monitoring on reads.
+> +- gpmc,wait-on-write	Enables wait monitoring on writes.
 
-> 4) LVD then calls map as needed for the buffers that the video core
-> needs to access.
-> 5) LVD shares IOVA with video core and kicks off video core decoding.
-> 6) Video session ends.
-> 7) LVD unmaps
-> 8) LVD detaches.
-> 
-> The video driver selects context bank to attach to based on the use case
-> and does not know about StreamIDs really.
-> 
-> BTW, when you call iommu_attach_device() what "device" do you pass as
-> argument? Do you pass the IOMMU as a device? How do you specify which
-> Context Bank to attach to?
+Otherwise looks okay to me.
 
-This seems to be where we differ. My anticipated use-case is that a domain
-is allocated, which defines an empty address space. Masters are then
-attached to the domain by passing their struct device, so this may
-correspond to a DMA controller or a video core, in your case. The context
-bank is allocated dynamically when the first device is added to the
-domain, and then it is subsequently shared between all the masters in that
-domain.
+g.
 
-I think this also matches what dma-mapping.c expects.
-
-> > Why can't the secure world just hide those context banks by using 
-> > SMMU_SCR1.NSNUMCBO?
-> 
-> Yes, that is a possibility for context banks. If you have 1 or more
-> "secure" context banks it also means that Linux does not have access
-> (read: can't have) to the global register space and this must be
-> communicated somehow (hence the "secure-id" IOMMU node property. The
-> secure-context property might be redundant. However, there might be use
-> cases were Linux would want to know about the secure context bank. One
-> such use case could be to register for page fault from the secure
-> context bank so that Linux can log a useful page fault message to the
-> kernel log.
-
-Perhaps, but I don't think it's worth complicating the binding based on a
-potential nice-to-have fault message.
-
-Will
