@@ -1,70 +1,41 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH V4 10/18] ARM: OMAP2+: Add function to read GPMC settings from device-tree
-Date: Mon, 15 Apr 2013 14:27:37 +0100
-Message-ID: <20130415132737.A2A6E3E0AA8@localhost>
-References: <1363710956-26773-1-git-send-email-jon-hunter@ti.com> <1363710956-26773-11-git-send-email-jon-hunter@ti.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1363710956-26773-11-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Daniel Mack <zonque@gmail.com>, Ezequiel Garcia <elezegarcia@gmail.com>, Mark Jackson <mpfj-list@mimc.co.uk>, Jon Hunter <jon-hunter@ti.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Options to store device tree blob on NAND Flash
+Date: Mon, 15 Apr 2013 14:28:41 +0100
+Message-ID: <20130415132841.1F8FD3E0AA8@localhost>
+References: <5148812D.4090305@digi.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5148812D.4090305-i7dp0qKlBMg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 19 Mar 2013 11:35:48 -0500, Jon Hunter <jon-hunter@ti.com> wrote:
-> Adds a function to read the various GPMC chip-select settings from
-> device-tree and store them in the gpmc_settings structure.
+On Tue, 19 Mar 2013 16:15:57 +0100, Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org> wrote:
+> Hello,
 > 
-> Update the GPMC device-tree binding documentation to describe these
-> options.
+> For embedded devices where NAND flash is the only storage media, I was wondering what 
+> are the existing approaches on how to store the device tree blob in flash.
+> Searching on the Internet I have found only two approaches:
+>   1. Have a dedicated MTD partition for the device tree blob (raw).
+>   2. Have a UBI volume on a partition and store the device tree blob as a file in a 
+> UBIFS partition (this approach also stores the kernel image as a file in the same or 
+> different volume).
 > 
-> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
-> Tested-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-> ---
->  Documentation/devicetree/bindings/bus/ti-gpmc.txt |   23 ++++++++++++
->  arch/arm/mach-omap2/gpmc.c                        |   40 +++++++++++++++++++++
->  arch/arm/mach-omap2/gpmc.h                        |    2 ++
->  3 files changed, 65 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
-> index 5ddb2e9..6fde1cf 100644
-> --- a/Documentation/devicetree/bindings/bus/ti-gpmc.txt
-> +++ b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
-> @@ -65,6 +65,29 @@ The following are only applicable to OMAP3+ and AM335x:
->   - gpmc,wr-access
->   - gpmc,wr-data-mux-bus
->  
-> +GPMC chip-select settings properties for child nodes. All are optional.
-> +
-> +- gpmc,burst-length	Page/burst length. Must be 4, 8 or 16.
-> +- gpmc,burst-wrap	Enables wrap bursting
-> +- gpmc,burst-read	Enables read page/burst mode
-> +- gpmc,burst-write	Enables write page/burst mode
-> +- gpmc,device-nand	Device is NAND
-> +- gpmc,device-width	Total width of device(s) connected to a GPMC
-> +			chip-select in bytes. The GPMC supports 8-bit
-> +			and 16-bit devices and so this property must be
-> +			1 or 2.
+> Is anybody using other approach for storing the DTB in flash?
+> What method is more widely used in embedded devices?
 
-I would suggest specifying the actual number of bits. ie. 8 or 16. There is some
-precidence for that already in DT bindings.
-
-> +- gpmc,mux-add-data	Address and data multiplexing configuration.
-> +			Valid values are 1 for address-address-data
-> +			multiplexing mode and 2 for address-data
-> +			multiplexing mode.
-> +- gpmc,sync-read	Enables synchronous read. Defaults to asynchronous
-> +			is this is not set.
-
-'if'?
-
-> +- gpmc,sync-write	Enables synchronous writes. Defaults to asynchronous
-> +			is this is not set.
-> +- gpmc,wait-pin		Wait-pin used by client. Must be less than
-> +			"gpmc,num-waitpins".
-> +- gpmc,wait-on-read	Enables wait monitoring on reads.
-> +- gpmc,wait-on-write	Enables wait monitoring on writes.
-
-Otherwise looks okay to me.
+Either if fine providing U-Boot (or whatever) is able to read it. Having
+the data in a filesystem is probably more convenient.
 
 g.
-
