@@ -1,97 +1,100 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [BUG] omap: mfd/regulator: twl/core: init order
-Date: Mon, 15 Apr 2013 13:59:56 +0300
-Message-ID: <516BDDAC.8040905@ti.com>
-References: <1365877659.3812.110.camel@mars>  <516BD479.2020904@ti.com> <1366023401.957.5.camel@mars>
+From: Javier Martinez Canillas <martinez.javier@gmail.com>
+Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
+Date: Mon, 15 Apr 2013 13:25:38 +0200
+Message-ID: <CAAwP0s2tdDGXsWm0b5rHsxcv_qjMSOqE8g_mmyNW3oeXW=VpYA@mail.gmail.com>
+References: <1329321854-24490-1-git-send-email-b-cousson@ti.com>
+ <4F47AD08.4030504@ti.com> <CAAwP0s0cB368R2mtbJpTZJreR-5GSRLfxC+8DJLo5nw3_OwBuA@mail.gmail.com>
+ <512D39DA.7020306@ti.com> <512D3AB1.1080202@wwwdotorg.org>
+ <512D3EC2.6050408@ti.com> <20130302200524.D230F3E1571@localhost>
+ <51391F41.5000303@ti.com> <CAAwP0s1CFRO-rf==p5sYs1n0gigMif7wuT8Yv0N_iLUDMrtcOg@mail.gmail.com>
+ <CACRpkdYHj-rEF3Rk_CWnmmMw_Amr7m8SgQ=-2zsDYuLeuu3azw@mail.gmail.com>
+ <514C79E1.4090106@wwwdotorg.org> <514CE0AB.6060207@ti.com>
+ <CACRpkdZmv-rAoKSQYpkHHSMzKJOn5TixVW_P3=m7ZNagBYCUPw@mail.gmail.com>
+ <515319D5.20105@wwwdotorg.org> <CACRpkdYXVLgCz1Tyu-Ls2V2OTc4R3cGNJhfQJB6Hiz_K9dkZYQ@mail.gmail.com>
+ <5155C902.7080207@wwwdotorg.org> <CACRpkdYbs4-uudpRUY8e+7icYYkZrfM0kReP3pLL5DMiURJ4dg@mail.gmail.com>
+ <5165CB9D.1090202@wwwdotorg.org> <CACRpkdYirFNqmGhA4K9CL4ve4NYhs8Rd3SFt1iwW9vHBkrcz8g@mail.gmail.com>
+ <51671D7B.5060303@wwwdotorg.org> <CACRpkdbf32Ef77GmXk9id9+RRjcDRTr7S+F4nznoeZU8y=BT_Q@mail.gmail.com>
+ <51673D70.3010503@wwwdotorg.org> <CAAwP0s0e2x33jZQhFRY+Hoo61SFqYKRgWk=1mL2+DNxSDJHz+A@mail.gmail.com>
+ <CACRpkda4h+qXTvsirPAS7E7sjXhMLE62q=VDy53W8UchsYjbNg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1366023401.957.5.camel@mars>
+In-Reply-To: <CACRpkda4h+qXTvsirPAS7E7sjXhMLE62q=VDy53W8UchsYjbNg@mail.gmail.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Christoph Fritz <chf.fritz@googlemail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Javier Martinez Canillas <martinez.javier@gmail.com>, Liam Girdwood <lrg@ti.com>, =?UTF-8?B?QmVub8OudCBDb3Vzc29u?= <b-cousson@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Alessandro Zummo <a.zummo@towertech.it>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Samuel Ortiz <sameo@linux.intel.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, Daniel Mack <daniel@zonque.org>, "Hans J. Koch" <hjk@hansjkoch.de>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Jon Hunter <jon-hunter@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Alexandre Courbot <acourbot@nvidia.com>, Stephen Warren <swarren@nvidia.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/15/2013 01:56 PM, Christoph Fritz wrote:
-> On Mon, 2013-04-15 at 13:20 +0300, Grygorii Strashko wrote:
->> On 04/13/2013 09:27 PM, Christoph Fritz wrote:
->>> Hi
->>>
->>>    while testing an omap3 board with device tree support I stumbled upon a
->>> bug which is due to wrong initialization order of twl-core and
->>> twl-regulator (I suppose): In the boot process they get loaded way too
->>> late so that a lot of drivers before where configured wrong or just
->>> refuse to load.
->>>
->>> For example the real time clock driver: The RTC kicks in way before
->>> twl_probe() and due to that it configures its register map wrong
->>> (at this time twl_priv->twl_id isn't configured yet).
->>>
->>> Another example is the omap display subsystem. It (DSS) fails loading
->>> while trying to register some not yet existent regulators and because it
->>> lacks EPROBE_DEFER.
->>>
->>> USB and MMC is also not working and I'm suspicious of the same cause.
->>>
->>> Any ideas?
->> Hi Christoph,
->>
->> It happens, because I2C probes execution  have been deferred due to
->> "pinctrl-single" driver (, which is not ready at i2c bus initialization
->> time:
->>
->> [    0.525939] omap_i2c 48070000.i2c: could not find pctldev for node
->> /ocp/pinmux@4a100040/pinmux_i2c1_pins, deferring probe
->> [    0.526000] platform 48070000.i2c: Driver omap_i2c requests probe
->> deferral
->> [    0.526062] omap_i2c 48072000.i2c: could not find pctldev for node
->> /ocp/pinmux@4a100040/pinmux_i2c2_pins, deferring probe
->> [    0.526092] platform 48072000.i2c: Driver omap_i2c requests probe
->> deferral
->> [    0.526153] omap_i2c 48060000.i2c: could not find pctldev for node
->> /ocp/pinmux@4a100040/pinmux_i2c3_pins, deferring probe
->> [    0.526184] platform 48060000.i2c: Driver omap_i2c requests probe
->> deferral
->> [    0.526245] omap_i2c 48350000.i2c: could not find pctldev for node
->> /ocp/pinmux@4a100040/pinmux_i2c4_pins, deferring probe
->> [    0.526275] platform 48350000.i2c: Driver omap_i2c requests probe
->> deferral
->>
->> I think following change should fix it, could you try it, pls:
->> diff --git a/drivers/pinctrl/pinctrl-single.c
->> b/drivers/pinctrl/pinctrl-single.c
->> index 5c32e88..b2a9d4b 100644
->> --- a/drivers/pinctrl/pinctrl-single.c
->> +++ b/drivers/pinctrl/pinctrl-single.c
->> @@ -1014,7 +1014,18 @@ static struct platform_driver pcs_driver = {
->>           },
->>    };
->>
->> -module_platform_driver(pcs_driver);
->> +static int __init pcs_driver_drv_init(void)
->> +{
->> +       return platform_driver_register(&pcs_driver);
->> +}
->> +postcore_initcall(pcs_driver_drv_init);
->> +
->> +static void __exit pcs_driver_drv_exit(void)
->> +{
->> +       platform_driver_unregister(&pcs_driver);
->> +}
->> +module_exit(pcs_driver_drv_exit);
->> +
-> Hi Grygorii,
->   thanks - indeed it does fix the problem. I checked at least the rtc
-> which is now configured right and working :-)
+On Sun, Apr 14, 2013 at 10:53 PM, Linus Walleij
+<linus.walleij@linaro.org> wrote:
+> On Sun, Apr 14, 2013 at 3:35 AM, Javier Martinez Canillas
+> <martinez.javier@gmail.com> wrote:
 >
-> Do you consider the patch above as a hack or will it go mainline?
-I think, need more opinions on this from community )
-I'm just trying to solve my problem and found similar issue.
+>> Is the following inlined patch [1] what you were thinking that would
+>> be the right approach?
+
+Hi Linus, thanks a lot for your feedback.
+
 >
->   Thanks
->    -- Christoph
->
->
+> This looks sort of OK, but I'm still struggling with the question of
+> what we could do to help other implementations facing the same issue.
 >
 
+Yes, I don't know how we can make it easier to other implementations
+(besides adding the irq_request hook to irq_chip) since the logic is
+GPIO controller specific.
+
+For example I took a look to drivers/gpio/gpio-tegra.c and if I
+understood correctly, the implementation for this driver should be
+something like this:
+
+diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+index 414ad91..a2d5c3d 100644
+--- a/drivers/gpio/gpio-tegra.c
++++ b/drivers/gpio/gpio-tegra.c
+@@ -346,6 +346,11 @@ static int tegra_gpio_wake_enable(struct irq_data
+*d, unsigned int enable)
+ }
+ #endif
+
++static int tegra_gpio_irq_request(struct irq_data *d)
++{
++	tegra_gpio_request(NULL, d->hwirq);
++}
++
+ static struct irq_chip tegra_gpio_irq_chip = {
+ 	.name		= "GPIO",
+ 	.irq_ack	= tegra_gpio_irq_ack,
+@@ -355,6 +360,7 @@ static struct irq_chip tegra_gpio_irq_chip = {
+ #ifdef CONFIG_PM_SLEEP
+ 	.irq_set_wake	= tegra_gpio_wake_enable,
+ #endif
++	.irq_request    = tegra_gpio_irq_request,
+ };
+
+ static const struct dev_pm_ops tegra_gpio_pm_ops = {
+
+This is definitely quite similar to the omap-gpio.c change but not the same.
+
+> This is a pretty hard design pattern to properly replicate in every such
+> driver is it not?
+>
+> Hmmmm
+>
+
+Is indeed a hard design pattern but I couldn't figure out a more
+generic way to handle this.
+
+Maybe we could use [1] for now to solve the issue that we have with
+OMAP GPIO and later when the same issue is found on other GPIO
+controllers and a similar change is made on these drivers we will see
+some form of pattern that emerge allowing us to make a later refactor
+to reduce the code duplication.
+
+Or do you have a better idea on how to solve this?
+
+> Yours,
+> Linus Walleij
+
+Best regards,
+Javier
