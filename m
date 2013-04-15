@@ -1,105 +1,107 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v6] net: sh_eth: Add support of device tree probe
-Date: Mon, 15 Apr 2013 22:52:32 +0400
-Message-ID: <516C4C70.7050802@cogentembedded.com>
-References: <1363675196-8940-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com> <51486699.6000908@cogentembedded.com> <514AB0CB.2030808@renesas.com> <516B0C59.3050207@cogentembedded.com> <516B6340.9090604@renesas.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC PATCH 2/2] ARM: DT: kernel: DT cpu node bindings update
+Date: Mon, 15 Apr 2013 13:26:02 -0600
+Message-ID: <516C544A.4090107@wwwdotorg.org>
+References: <1366042402-8987-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1366042402-8987-3-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <516B6340.9090604@renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, magnus.damm@gmail.com, kda@linux-powerpc.org, horms+renesas@verge.net.au, mark.rutland@arm.com, grant.likely@secretlab.ca
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1366042402-8987-3-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 04/15/2013 10:13 AM, Lorenzo Pieralisi wrote:
+> In order to extend the current cpu nodes bindings to newer CPUs
+> inclusive of AArch64 and to update support for older ARM CPUs this
+> patch updates device tree documentation for the cpu nodes bindings.
+> 
 
-On 15-04-2013 6:17, Nobuhiro Iwamatsu wrote:
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
 
->>>>> This adds support of device tree probe for Renesas sh-ether driver.
+>  http://devicetree.org
+>  
+> -For the ARM architecture every CPU node must contain the following properties:
+> -
+...
+> +with updates for 32-bit and 64-bit ARM systems provided in this document.
+> +
+> +In the bindings below:
 
->>>>> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+That's a slightly odd change, since it removes the statement that a cpus
+node must exist, and "in the bindings below" is not idiomatic for DT
+binding definitions.
 
->>>>> V6: - Add renesas,sh-eth-gigabit, renesas,sh-eth-sh4 and
->>>>> renesas,sh-eth-sh3-sh2 to compatible string.
->>>>> - Remove sh-eth,register-type. This is supplemented by the
->>>>> compatible string.
->>>>> - Use the of_property_read_bool instead of of_find_property.
->>>>> - Add sanity chheck for of_property_read_u32.
->>>>> - Update document.
->>>>> V5: - Rewrite sh_eth_parse_dt().
->>>>> Remove of_device_is_available() and CONFIG_OF from support OF
->>>>> checking function and re-add empty sh_eth_parse_dt().
->>>>> - Add CONFIG_PM to definition of dev_pm_ops.
->>>>> - Add CONFIG_OF to definition of of_device_id.
->>>>> V4: - Remove empty sh_eth_parse_dt().
->>>>> V3: - Remove empty sh_eth_parse_dt().
->>>>> V3: - Removed sentnece of "needs-init" from document.
->>>>> V2: - Removed ether_setup().
->>>>> - Fixed typo from "sh-etn" to "sh-eth".
->>>>> - Removed "needs-init" and sh-eth,endian from definition of DT.
->>>>> - Changed "sh-eth,edmac-endian" instead of "sh-eth,edmac-big-endain"
->>>>> in definition of DT.
->>>>> ---
->> [...]
+Perhaps replace that last list with:
 
->>>>> @@ -2391,12 +2451,33 @@ static int sh_eth_drv_probe(struct platform_device
->>>>> *pdev)
->>>>> goto out_release;
->>>>> }
->>>>>
->>>>> + if (np) {
->>>>> + pd = sh_eth_parse_dt(&pdev->dev, ndev, np);
->>>>> + if (pdev->dev.platform_data && pd) {
->>>>> + struct sh_eth_plat_data *tmp =
->>>>> + pdev->dev.platform_data;
->>>>> + pd->set_mdio_gate = tmp->set_mdio_gate;
->>>>> + pd->needs_init = tmp->needs_init;
+The ARM architecture requires the following properties in the cpus and
+cpu nodes contain the properties described below.
 
->>>> OK, so we can't fully convert this driver to the device tree due to
->>>> procedural platform data.
+> +- square brackets define bitfields, eg reg[7:0] value of the bitfield in
+> +  the reg property contained in bits 7 down to 0
 
->>> > I then would advice just using OF_DEV_AUXDATA() in the platform data
+Isn't that standard enough it's not even worth mentioning? If it is,
+it's certainly not something that should be mentioned in the part of the
+document that describes which properties are requried.
 
->> /sdata/code/.
+> +	- #address-cells
+> +		Usage: required
 
->>> instead of trying to convert the driver to device tree.
+"Usage" sounds more like what it's used for. "Presence" seems better to me.
 
->> Convert the platfrom data, I meant. But I already wrote about that I think.
+> +			# On ARM architecture versions >= 7 based 32-bit
+> +			  systems this property is required and matches the
 
->>> Yes, I knew about this.
+Perhaps "On 32-bit ARMv7 or later systems, this property ..."
 
->> But still attempted to document and use the data-only device tree properties
->> (which was pointless in the light of procediral platfrom data)?
+> +			# On ARM v8 64-bit systems, where the reg property
 
-> Yes, I added this information to next patch.
+Should there be an explicit note here re: 32-bit SW running on a 64-bit
+system?
 
-    WHich information, I didn't understand?
+Perhaps "on ARMv8 systems running 32-bit or 64- bit software, the reg
+property ..."
 
->>>>> +
->>>>> +#ifdef CONFIG_OF
->>>>> +static const struct of_device_id sh_eth_match[] = {
->>>>> + { .compatible = "renesas,sh-eth-gigabit", },
->>>>> + { .compatible = "renesas,sh-eth-sh4", },
->>>>> + { .compatible = "renesas,sh-eth-sh3-sh2", },
+> +			  is made up of two cells to accomodate the 64-bit
+> +			  MPDIR_EL1 register this property is required and
+> +			  matches:
 
->>> Therefore, the compatible property of this device becomes <CPU>-sh-eth
->>> or <CPU>-sh-eth-<ETHER TYPE>.
+s/matches/must contain/
 
->>> How about this?
+> +	- enable-method
+> +		Usage: required on ARM 64-bit systems, optional on ARM 32-bit
+> +		       systems
+> +		Value type: <string>
+> +		Definition: On ARM 64-bit systems must be "spin-table" [1].
 
->> Sounds better. I think however that the conversion of this driver to device
->> tree shouldn't be done without getting rid of the current #ifdef mess in it
->> (which is still on my agenda). I think that the 'register_type' field should
->> move from the platform data to the 'struct sh_eth_cpu_data' in the process.
+Can that be an integer instead? with dtc+cpp support, that shouldn't
+hurt the eyes too much any more.
 
-> I see. this problem will fix next step, I think.
+> +	- cpu-release-addr
+> +		Usage: required on ARM 64-bit systems, optional on ARM 32-bit
+> +		       systems
+> +		Value type: <prop-encoded-array>
+> +		Definition: On ARM 64-bit systems must be a two cell
+> +			    property identifying a 64-bit zero-initialised
+> +			    memory location [1].
 
-    No, not at all. If we don't get rid of the #ifdef mess, adding device tree 
-support will have to add even more of it.
+Presumably that property is required, or not, based on the value of
+enable-method, not based on the ARM architecture or bit-size?
 
-> Best regards,
->    Nobuhiro
+> +[1] ARM Linux kernel documentation
+> +    Documentation/devicetree/bindings/arm64/booting.txt
 
-WBR, Sergei
+Is referencing Linux-specific documentation from a supposedly
+OS-agnostic DT binding definition a good idea?
