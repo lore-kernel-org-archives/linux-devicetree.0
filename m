@@ -1,78 +1,519 @@
-From: Ben Hutchings <ben@decadent.org.uk>
-Subject: Re: [PATCH 0/5 v2] mv643xx_eth: device tree bindings
-Date: Mon, 15 Apr 2013 04:07:14 +0100
-Message-ID: <1365995234.3566.17.camel@deadeye.wl.decadent.org.uk>
-References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
-	 <20130411165303.GI28693@titan.lakedaemon.net>
-	 <20130413172126.6cca0809@skate>
-	 <20130413190037.GY28693@titan.lakedaemon.net>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 1/2] GPIO: clps711x: Rewrite driver for using generic
+ GPIO code
+Date: Sun, 14 Apr 2013 20:33:24 -0700
+Message-ID: <20130415033324.GB10949@quad.lixom.net>
+References: <1365826900-30136-1-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-6NDU4xR1TkIWMLJgzvxg"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20130413190037.GY28693@titan.lakedaemon.net>
-Sender: netdev-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Florian Fainelli <florian@openwrt.org>, davem@davemloft.net, moinejf@free.fr, andrew@lunn.ch, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, jogo@openwrt.org, buytenh@wantstofly.org, jm@lentin.co.uk, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1365826900-30136-1-git-send-email-shc_work@mail.ru>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---=-6NDU4xR1TkIWMLJgzvxg
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Sat, Apr 13, 2013 at 08:21:39AM +0400, Alexander Shiyan wrote:
+> This patch provides rewritten driver for CLPS711X GPIO which uses
+> generic GPIO code.
+> 
+> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+> ---
+>  arch/arm/configs/clps711x_defconfig            |   1 +
+>  arch/arm/mach-clps711x/Makefile                |   5 +-
+>  arch/arm/mach-clps711x/board-autcpu12.c        |   2 +
+>  arch/arm/mach-clps711x/board-cdb89712.c        |   2 +
+>  arch/arm/mach-clps711x/board-edb7211.c         |   7 +
+>  arch/arm/mach-clps711x/board-p720t.c           |  10 +-
+>  arch/arm/mach-clps711x/devices.c               |  56 ++++++
+>  arch/arm/mach-clps711x/devices.h               |  12 ++
+>  arch/arm/mach-clps711x/include/mach/clps711x.h |  23 +--
+>  drivers/gpio/Kconfig                           |   5 +-
+>  drivers/gpio/gpio-clps711x.c                   | 228 +++++++------------------
+>  11 files changed, 164 insertions(+), 187 deletions(-)
+>  create mode 100644 arch/arm/mach-clps711x/devices.c
+>  create mode 100644 arch/arm/mach-clps711x/devices.h
 
-On Sat, 2013-04-13 at 15:00 -0400, Jason Cooper wrote:
-> On Sat, Apr 13, 2013 at 05:21:26PM +0200, Thomas Petazzoni wrote:
-> > Dear Jason Cooper,
-> >=20
-> > On Thu, 11 Apr 2013 12:53:03 -0400, Jason Cooper wrote:
-> >=20
-> > > With this and Thomas' pci series, we will have Kirkwood fully
-> > > converted to devicetree, can begin removing board files, and finally
-> > > begin migrating everything over to mach-mvebu/.  This will lead to
-> > > the removal of five directories under arch/arm/ (plat-orion,
-> > > mach-kirkwood, mach-orion5x, mach-dove, and mach-mv78xx0).
-> >=20
-> > No, we can't remove mach-orion5x and mach-mv78xx0 for now, they have
-> > not been converted at all in terms of gpio/pinmux support. I've started
-> > writing some pinmux code for orion5x but it's not ready.
-[...]
-> Also, I have a feeling that not all legacy boards will get converted
-> over.  If there is no interest or no way to test, certains boards may
-> get deprecated.
+It would be nice to see this split up in a short series of patches instead,
+each patch doing one thing. For example, I'm not sure enabling the GPIO driver
+in the defconfig really belongs in the rewrite patch, for example.
 
-Debian supports many Kirkwood and Orion 5x systems.  A call for testing
-on the debian-arm@lists.debian.org list might be worthwhile.
+> diff --git a/arch/arm/mach-clps711x/board-cdb89712.c b/arch/arm/mach-clps711x/board-cdb89712.c
+> index baab7da..a80ae57 100644
+> --- a/arch/arm/mach-clps711x/board-cdb89712.c
+> +++ b/arch/arm/mach-clps711x/board-cdb89712.c
+> @@ -39,6 +39,7 @@
+>  #include <asm/mach/map.h>
+>  
+>  #include "common.h"
+> +#include "devices.h"
+>  
+>  #define CDB89712_CS8900_BASE	(CS2_PHYS_BASE + 0x300)
+>  #define CDB89712_CS8900_IRQ	(IRQ_EINT3)
+> @@ -127,6 +128,7 @@ static struct platform_device cdb89712_sram_pdev __initdata = {
+>  
+>  static void __init cdb89712_init(void)
+>  {
+> +	clps711x_devices_init();
+>  	platform_device_register(&cdb89712_flash_pdev);
+>  	platform_device_register(&cdb89712_bootrom_pdev);
+>  	platform_device_register(&cdb89712_sram_pdev);
+> diff --git a/arch/arm/mach-clps711x/board-edb7211.c b/arch/arm/mach-clps711x/board-edb7211.c
+> index 5f928e9..e1c5573 100644
+> --- a/arch/arm/mach-clps711x/board-edb7211.c
+> +++ b/arch/arm/mach-clps711x/board-edb7211.c
+> @@ -29,6 +29,7 @@
+>  #include <mach/hardware.h>
+>  
+>  #include "common.h"
+> +#include "devices.h"
+>  
+>  #define VIDEORAM_SIZE		SZ_128K
+>  
+> @@ -151,6 +152,11 @@ fixup_edb7211(struct tag *tags, char **cmdline, struct meminfo *mi)
+>  
+>  static void __init edb7211_init(void)
+>  {
+> +	clps711x_devices_init();
+> +}
+> +
+> +static void __init edb7211_init_late(void)
+> +{
 
-I would be very glad to see kirkwood, orion5x and mv78xx0 merged - we
-build natively and this takes about 8 hours for each configuration.
+It'd be good for people reading the changelog in the future to see why you
+chose to split this up among two initcalls now.
 
-Ben.
+> @@ -199,6 +200,11 @@ static struct gpio_led_platform_data p720t_gpio_led_pdata __initdata = {
+>  
+>  static void __init p720t_init(void)
+>  {
+> +	clps711x_devices_init();
+> +}
+> +
+> +static void __init p720t_init_late(void)
+> +{
+>  	platform_device_register(&p720t_nand_pdev);
+>  	platform_device_register_data(&platform_bus, "platform-lcd", 0,
+>  				      &p720t_lcd_power_pdata,
+> @@ -207,10 +213,6 @@ static void __init p720t_init(void)
+>  				      &p720t_lcd_backlight_pdata,
+>  				      sizeof(p720t_lcd_backlight_pdata));
+>  	platform_device_register_simple("video-clps711x", 0, NULL, 0);
+> -}
+> -
+> -static void __init p720t_init_late(void)
+> -{
+>  	platform_device_register_data(&platform_bus, "leds-gpio", 0,
+>  				      &p720t_gpio_led_pdata,
+>  				      sizeof(p720t_gpio_led_pdata));
 
---=20
-Ben Hutchings
-The first rule of tautology club is the first rule of tautology club.
+Same here.
 
---=-6NDU4xR1TkIWMLJgzvxg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+> diff --git a/arch/arm/mach-clps711x/devices.c b/arch/arm/mach-clps711x/devices.c
+> new file mode 100644
+> index 0000000..100ddec
+> --- /dev/null
+> +++ b/arch/arm/mach-clps711x/devices.c
+> @@ -0,0 +1,56 @@
+> +/*
+> + *  CLPS711X common devices definitions
+> + *
+> + *  Copyright (C) 2013 Alexander Shiyan <shc_work@mail.ru>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/sizes.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include <mach/hardware.h>
+> +
+> +static void __init clps711x_add_gpio(void)
+> +{
+> +	const struct resource clps711x_gpio0_res[] = {
+> +		DEFINE_RES_MEM(PADR, SZ_1),
+> +		DEFINE_RES_MEM(PADDR, SZ_1),
+> +	};
+> +	const struct resource clps711x_gpio1_res[] = {
+> +		DEFINE_RES_MEM(PBDR, SZ_1),
+> +		DEFINE_RES_MEM(PBDDR, SZ_1),
+> +	};
+> +	const struct resource clps711x_gpio2_res[] = {
+> +		DEFINE_RES_MEM(PCDR, SZ_1),
+> +		DEFINE_RES_MEM(PCDDR, SZ_1),
+> +	};
+> +	const struct resource clps711x_gpio3_res[] = {
+> +		DEFINE_RES_MEM(PDDR, SZ_1),
+> +		DEFINE_RES_MEM(PDDDR, SZ_1),
+> +	};
+> +	const struct resource clps711x_gpio4_res[] = {
+> +		DEFINE_RES_MEM(PEDR, SZ_1),
+> +		DEFINE_RES_MEM(PEDDR, SZ_1),
+> +	};
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+It's common to have the resources as static globals in the file instead of
+local const variables, so please move them out to stay common with other
+platforms.
 
-iQIVAwUAUWtu4ue/yOyVhhEJAQoDvw/+IGtHDqlsc21Jwrd/xDsIMew/Ie13LdLl
-+9ZxrigtCBJW4yqbouqcC2lq+WEVW8kjA0mj+oKnl/WJ5umckx63fThH6EcapFLb
-VurNa9OCZOu7ODXoVa+BfN82NcMPdokP6rLGAOYzeoxXMu0VVKObjNx+neA2preW
-PSoO5fffNMQ6ImfRuI26+ju6/R62Xuwa9G3366q2aALqzF/dTnxK9vHwbbMbCnQA
-sptDrVnpdYXgL2LNj6M9GZ0aBtP+pnOMnFR92EAQ2t/87BEv8Aydx/K+DEumpbE0
-CWJpf1qrz4Z18vbZYxGaRNcxEx6LqIbqeLmRnEbLdI9uOEQ4AJQ2S2R1N9uWVzO5
-IpSwcjoRqYrF00n/pLCtwNTfTSWyNgHILWwPlkoQGjA6jb9LNmrT5XGZqaMqItHU
-SdVV/M5pTJ2/Rvv9s2PTgPS7CaYYiQSTfcdftj9vCBAviBXxEFCe0QtBkDTKLC8W
-bs8wATqPF3dRPxIYm0qPs9LO6wns7nhJq0dRMcQD5jB7eiFYJxcONQ9squvCwRjR
-G5K3EmHexJaCE5x0usKrdn95HSbKC/1ZQt7hsa4SZROlCjiNqiokg4GEFhGLz5Oj
-LYFuSc/mN8v6so0amKFueXiGvm2fvJ7FtI56MOMm2S3LuT4yEUW14dLjo835QT0y
-CfBHqd+sN44=
-=kgFk
------END PGP SIGNATURE-----
+> +	platform_device_register_simple("clps711x-gpio", 0, clps711x_gpio0_res,
+> +					ARRAY_SIZE(clps711x_gpio0_res));
+> +	platform_device_register_simple("clps711x-gpio", 1, clps711x_gpio1_res,
+> +					ARRAY_SIZE(clps711x_gpio1_res));
+> +	platform_device_register_simple("clps711x-gpio", 2, clps711x_gpio2_res,
+> +					ARRAY_SIZE(clps711x_gpio2_res));
+> +	platform_device_register_simple("clps711x-gpio", 3, clps711x_gpio3_res,
+> +					ARRAY_SIZE(clps711x_gpio3_res));
+> +	platform_device_register_simple("clps711x-gpio", 4, clps711x_gpio4_res,
+> +					ARRAY_SIZE(clps711x_gpio4_res));
+> +}
+> +
+> +void __init clps711x_devices_init(void)
+> +{
+> +	clps711x_add_gpio();
+> +}
+> diff --git a/arch/arm/mach-clps711x/devices.h b/arch/arm/mach-clps711x/devices.h
+> new file mode 100644
+> index 0000000..a5efc17
+> --- /dev/null
+> +++ b/arch/arm/mach-clps711x/devices.h
+> @@ -0,0 +1,12 @@
+> +/*
+> + *  CLPS711X common devices definitions
+> + *
+> + *  Copyright (C) 2013 Alexander Shiyan <shc_work@mail.ru>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +void clps711x_devices_init(void);
+> diff --git a/arch/arm/mach-clps711x/include/mach/clps711x.h b/arch/arm/mach-clps711x/include/mach/clps711x.h
+> index 01d1b95..9279f0a 100644
+> --- a/arch/arm/mach-clps711x/include/mach/clps711x.h
+> +++ b/arch/arm/mach-clps711x/include/mach/clps711x.h
+> @@ -23,16 +23,19 @@
+>  
+>  #define CLPS711X_PHYS_BASE	(0x80000000)
+>  
+> -#define PADR		(0x0000)
+> -#define PBDR		(0x0001)
+> -#define PCDR		(0x0002)
+> -#define PDDR		(0x0003)
+> -#define PADDR		(0x0040)
+> -#define PBDDR		(0x0041)
+> -#define PCDDR		(0x0042)
+> -#define PDDDR		(0x0043)
+> -#define PEDR		(0x0083)
+> -#define PEDDR		(0x00c3)
+> +#define CLPS711X_REGS(x)	(CLPS711X_PHYS_BASE + (x))
+> +
+> +#define PADR		CLPS711X_REGS(0x0000)
+> +#define PBDR		CLPS711X_REGS(0x0001)
+> +#define PCDR		CLPS711X_REGS(0x0002)
+> +#define PDDR		CLPS711X_REGS(0x0003)
+> +#define PADDR		CLPS711X_REGS(0x0040)
+> +#define PBDDR		CLPS711X_REGS(0x0041)
+> +#define PCDDR		CLPS711X_REGS(0x0042)
+> +#define PDDDR		CLPS711X_REGS(0x0043)
+> +#define PEDR		CLPS711X_REGS(0x0083)
+> +#define PEDDR		CLPS711X_REGS(0x00c3)
+> +
 
---=-6NDU4xR1TkIWMLJgzvxg--
+Are these needed in a shared include file, or could they just be pushed out in
+the one driver that uses them? There's been a lot of churn moving mach includes
+out to drivers on multiplatform enabled platforms, it'd be nice to avoid adding
+more dependencies on it on legacy platforms that haven't yet been enabled (or
+even if they never will be, it still doesn't hurt).
+
+> diff --git a/drivers/gpio/gpio-clps711x.c b/drivers/gpio/gpio-clps711x.c
+> index ce63b75..3c71815 100644
+> --- a/drivers/gpio/gpio-clps711x.c
+> +++ b/drivers/gpio/gpio-clps711x.c
+> @@ -1,7 +1,7 @@
+>  /*
+>   *  CLPS711X GPIO driver
+>   *
+> - *  Copyright (C) 2012 Alexander Shiyan <shc_work@mail.ru>
+> + *  Copyright (C) 2013 Alexander Shiyan <shc_work@mail.ru>
+
+2012-2013?
+
+>   *
+>   * This program is free software; you can redistribute it and/or modify
+>   * it under the terms of the GNU General Public License as published by
+> @@ -9,191 +9,83 @@
+>   * (at your option) any later version.
+>   */
+>  
+> -#include <linux/io.h>
+> -#include <linux/slab.h>
+>  #include <linux/gpio.h>
+>  #include <linux/module.h>
+> -#include <linux/spinlock.h>
+> +#include <linux/basic_mmio_gpio.h>
+>  #include <linux/platform_device.h>
+>  
+> -#include <mach/hardware.h>
+> -
+> -#define CLPS711X_GPIO_PORTS	5
+> -#define CLPS711X_GPIO_NAME	"gpio-clps711x"
+> -
+> -struct clps711x_gpio {
+> -	struct gpio_chip	chip[CLPS711X_GPIO_PORTS];
+> -	spinlock_t		lock;
+> -};
+> -
+> -static void __iomem *clps711x_ports[] = {
+> -	CLPS711X_VIRT_BASE + PADR,
+> -	CLPS711X_VIRT_BASE + PBDR,
+> -	CLPS711X_VIRT_BASE + PCDR,
+> -	CLPS711X_VIRT_BASE + PDDR,
+> -	CLPS711X_VIRT_BASE + PEDR,
+> -};
+> -
+> -static void __iomem *clps711x_pdirs[] = {
+> -	CLPS711X_VIRT_BASE + PADDR,
+> -	CLPS711X_VIRT_BASE + PBDDR,
+> -	CLPS711X_VIRT_BASE + PCDDR,
+> -	CLPS711X_VIRT_BASE + PDDDR,
+> -	CLPS711X_VIRT_BASE + PEDDR,
+> -};
+> -
+> -#define clps711x_port(x)	clps711x_ports[x->base / 8]
+> -#define clps711x_pdir(x)	clps711x_pdirs[x->base / 8]
+> -
+> -static int gpio_clps711x_get(struct gpio_chip *chip, unsigned offset)
+> +static int clps711x_gpio_probe(struct platform_device *pdev)
+>  {
+> -	return !!(readb(clps711x_port(chip)) & (1 << offset));
+> -}
+> +	void __iomem *dat, *dir;
+> +	struct bgpio_chip *bgc;
+> +	struct resource *res;
+> +	int err, id = pdev->id;
+>  
+> -static void gpio_clps711x_set(struct gpio_chip *chip, unsigned offset,
+> -			      int value)
+> -{
+> -	int tmp;
+> -	unsigned long flags;
+> -	struct clps711x_gpio *gpio = dev_get_drvdata(chip->dev);
+> +	if ((id < 0) || (id > 4))
+> +		return -ENODEV;
+>  
+> -	spin_lock_irqsave(&gpio->lock, flags);
+> -	tmp = readb(clps711x_port(chip)) & ~(1 << offset);
+> -	if (value)
+> -		tmp |= 1 << offset;
+> -	writeb(tmp, clps711x_port(chip));
+> -	spin_unlock_irqrestore(&gpio->lock, flags);
+> -}
+> -
+> -static int gpio_clps711x_dir_in(struct gpio_chip *chip, unsigned offset)
+> -{
+> -	int tmp;
+> -	unsigned long flags;
+> -	struct clps711x_gpio *gpio = dev_get_drvdata(chip->dev);
+> -
+> -	spin_lock_irqsave(&gpio->lock, flags);
+> -	tmp = readb(clps711x_pdir(chip)) & ~(1 << offset);
+> -	writeb(tmp, clps711x_pdir(chip));
+> -	spin_unlock_irqrestore(&gpio->lock, flags);
+> -
+> -	return 0;
+> -}
+> -
+> -static int gpio_clps711x_dir_out(struct gpio_chip *chip, unsigned offset,
+> -				 int value)
+> -{
+> -	int tmp;
+> -	unsigned long flags;
+> -	struct clps711x_gpio *gpio = dev_get_drvdata(chip->dev);
+> -
+> -	spin_lock_irqsave(&gpio->lock, flags);
+> -	tmp = readb(clps711x_pdir(chip)) | (1 << offset);
+> -	writeb(tmp, clps711x_pdir(chip));
+> -	tmp = readb(clps711x_port(chip)) & ~(1 << offset);
+> -	if (value)
+> -		tmp |= 1 << offset;
+> -	writeb(tmp, clps711x_port(chip));
+> -	spin_unlock_irqrestore(&gpio->lock, flags);
+> +	bgc = devm_kzalloc(&pdev->dev, sizeof(*bgc), GFP_KERNEL);
+> +	if (!bgc)
+> +		return -ENOMEM;
+>  
+> -	return 0;
+> -}
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	dat = devm_request_and_ioremap(&pdev->dev, res);
+> +	if (!dat)
+> +		return -ENXIO;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	dir = devm_request_and_ioremap(&pdev->dev, res);
+> +	if (!dir)
+> +		return -ENXIO;
+> +
+> +	switch (id) {
+> +	case 3:
+> +		/* PORTD is inverted logic for direction register */
+> +		err = bgpio_init(bgc, &pdev->dev, 1, dat, NULL, NULL,
+> +				 NULL, dir, 0);
+> +		break;
+> +	default:
+> +		err = bgpio_init(bgc, &pdev->dev, 1, dat, NULL, NULL,
+> +				 dir, NULL, 0);
+> +		break;
+> +	}
+>  
+> -static int gpio_clps711x_dir_in_inv(struct gpio_chip *chip, unsigned offset)
+> -{
+> -	int tmp;
+> -	unsigned long flags;
+> -	struct clps711x_gpio *gpio = dev_get_drvdata(chip->dev);
+> +	if (err)
+> +		return err;
+> +
+> +	switch (id) {
+> +	case 4:
+> +		/* PORTE is 3 lines only */
+> +		bgc->gc.ngpio = 3;
+> +		break;
+> +	default:
+> +		bgc->gc.ngpio = 8;
+> +		break;
+> +	}
+>  
+> -	spin_lock_irqsave(&gpio->lock, flags);
+> -	tmp = readb(clps711x_pdir(chip)) | (1 << offset);
+> -	writeb(tmp, clps711x_pdir(chip));
+> -	spin_unlock_irqrestore(&gpio->lock, flags);
+> +	bgc->gc.base = id * 8;
+> +	platform_set_drvdata(pdev, bgc);
+>  
+> -	return 0;
+> +	return gpiochip_add(&bgc->gc);
+>  }
+>  
+> -static int gpio_clps711x_dir_out_inv(struct gpio_chip *chip, unsigned offset,
+> -				     int value)
+> +static int clps711x_gpio_remove(struct platform_device *pdev)
+>  {
+> -	int tmp;
+> -	unsigned long flags;
+> -	struct clps711x_gpio *gpio = dev_get_drvdata(chip->dev);
+> -
+> -	spin_lock_irqsave(&gpio->lock, flags);
+> -	tmp = readb(clps711x_pdir(chip)) & ~(1 << offset);
+> -	writeb(tmp, clps711x_pdir(chip));
+> -	tmp = readb(clps711x_port(chip)) & ~(1 << offset);
+> -	if (value)
+> -		tmp |= 1 << offset;
+> -	writeb(tmp, clps711x_port(chip));
+> -	spin_unlock_irqrestore(&gpio->lock, flags);
+> +	struct bgpio_chip *bgc = platform_get_drvdata(pdev);
+>  
+> -	return 0;
+> +	return bgpio_remove(bgc);
+>  }
+>  
+> -static struct {
+> -	char	*name;
+> -	int	nr;
+> -	int	inv_dir;
+> -} clps711x_gpio_ports[] __initconst = {
+> -	{ "PORTA", 8, 0, },
+> -	{ "PORTB", 8, 0, },
+> -	{ "PORTC", 8, 0, },
+> -	{ "PORTD", 8, 1, },
+> -	{ "PORTE", 3, 0, },
+> +static struct platform_driver clps711x_gpio_driver = {
+> +	.driver	= {
+> +		.name	= "clps711x-gpio",
+> +		.owner	= THIS_MODULE,
+> +	},
+> +	.probe	= clps711x_gpio_probe,
+> +	.remove	= clps711x_gpio_remove,
+>  };
+> +module_platform_driver(clps711x_gpio_driver);
+>  
+> -static int __init gpio_clps711x_init(void)
+> -{
+> -	int i;
+> -	struct platform_device *pdev;
+> -	struct clps711x_gpio *gpio;
+> -
+> -	pdev = platform_device_alloc(CLPS711X_GPIO_NAME, 0);
+> -	if (!pdev) {
+> -		pr_err("Cannot create platform device: %s\n",
+> -		       CLPS711X_GPIO_NAME);
+> -		return -ENOMEM;
+> -	}
+> -
+> -	platform_device_add(pdev);
+> -
+> -	gpio = devm_kzalloc(&pdev->dev, sizeof(struct clps711x_gpio),
+> -			    GFP_KERNEL);
+> -	if (!gpio) {
+> -		dev_err(&pdev->dev, "GPIO allocating memory error\n");
+> -		platform_device_unregister(pdev);
+> -		return -ENOMEM;
+> -	}
+> -
+> -	platform_set_drvdata(pdev, gpio);
+> -
+> -	spin_lock_init(&gpio->lock);
+> -
+> -	for (i = 0; i < CLPS711X_GPIO_PORTS; i++) {
+> -		gpio->chip[i].owner		= THIS_MODULE;
+> -		gpio->chip[i].dev		= &pdev->dev;
+> -		gpio->chip[i].label		= clps711x_gpio_ports[i].name;
+> -		gpio->chip[i].base		= i * 8;
+> -		gpio->chip[i].ngpio		= clps711x_gpio_ports[i].nr;
+> -		gpio->chip[i].get		= gpio_clps711x_get;
+> -		gpio->chip[i].set		= gpio_clps711x_set;
+> -		if (!clps711x_gpio_ports[i].inv_dir) {
+> -			gpio->chip[i].direction_input = gpio_clps711x_dir_in;
+> -			gpio->chip[i].direction_output = gpio_clps711x_dir_out;
+> -		} else {
+> -			gpio->chip[i].direction_input = gpio_clps711x_dir_in_inv;
+> -			gpio->chip[i].direction_output = gpio_clps711x_dir_out_inv;
+> -		}
+> -		WARN_ON(gpiochip_add(&gpio->chip[i]));
+> -	}
+> -
+> -	dev_info(&pdev->dev, "GPIO driver initialized\n");
+> -
+> -	return 0;
+> -}
+> -arch_initcall(gpio_clps711x_init);
+> -
+> -MODULE_LICENSE("GPL v2");
+> +MODULE_LICENSE("GPL");
+>  MODULE_AUTHOR("Alexander Shiyan <shc_work@mail.ru>");
+>  MODULE_DESCRIPTION("CLPS711X GPIO driver");
+
+The way the git generated the diff here made it a bit awkward to follow what
+was actually left after the patch, but it looks reasonable to me. It'd be good
+to see an ack from the gpio maintainers though.
+
+
+-Olof
