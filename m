@@ -1,51 +1,46 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCHv8 00/19] PCIe support for the Armada 370 and Armada XP
- SoCs
-Date: Mon, 15 Apr 2013 12:38:45 -0400
-Message-ID: <20130415163845.GK28693@titan.lakedaemon.net>
-References: <1365541601-14095-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <20130415154620.GE28693@titan.lakedaemon.net>
- <20130415183623.04797912@skate>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: Query on pinctrl usage for DT nodes
+Date: Mon, 15 Apr 2013 10:40:20 -0600
+Message-ID: <516C2D74.2090106@wwwdotorg.org>
+References: <CA+V-a8uiPwsAD--OHFAE=i2ed+-wbXm4p2deZXr92+Zv6GDS1w@mail.gmail.com>
+ <515C5C76.3080009@wwwdotorg.org> <20130403183803.GA10155@atomide.com>
+ <20130403184202.GB10155@atomide.com> <516BB818.3060603@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130415183623.04797912@skate>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Andrew Murray <andrew.murray@arm.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org, Mitch Bradley <wmb@firmworks.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <516BB818.3060603-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 15, 2013 at 06:36:23PM +0200, Thomas Petazzoni wrote:
-> Dear Jason Cooper,
+On 04/15/2013 02:19 AM, Peter Ujfalusi wrote:
+> Hi,
 > 
-> On Mon, 15 Apr 2013 11:46:20 -0400, Jason Cooper wrote:
+> On 04/03/2013 08:42 PM, Tony Lindgren wrote:
+>> Oh it's already using pinctrl-single,bits option. Maybe there's a
+>> bug, adding Peter to cc.
 > 
-> > >  * Patches 1-5 are awaiting a formal Acked-by from the Device Tree
-> > >    maintainers. Patches 1-3 are the new version of the OF PCI range
-> > >    parsing functions from Andrew Murray, which he worked on after the
-> > >    comments from Rob Herring. Patches 4 and 5 are much more trivial
-> > >    and have been around since many versions of this series.
-> > 
-> > Applied to mvebu/drivers
-> 
-> Patches 1-3 have a newer version that has been posted by Andrew Murray
-> recently, see:
-> 
-> Subject: [PATCH v6 0/3] of/pci: Provide common support for PCI DT
-> parsing Date: Thu, 11 Apr 2013 16:26:06 +0100
-> Message-Id: <1365693969-23907-1-git-send-email-Andrew.Murray@arm.com>
-> 
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-April/162558.html
-> 
-> This ones are more recent than the v5 I originally used as a base for
-> my PCIe v8. I can resend a v9 of my PCIe patch set based on the v6 of
-> Andrew, or you can directly use PATCH 1,2,3 from Andrew series to
-> replace PATCH 1,2,3 from my series. Andrew v6 has quite a number of
-> changes compared to v5, so I really recommend using those ones.
+> I think all boils down to the fact that in pinctrl (single only?) _one_
+> register can be only associated with _one_ driver. Even through ,bit type
+> would allow us to only change parts of the same register, another device can
+> not take the same register with different mask.
 
-No need to mess with v9, I'll pull AndrewM's v6.
+pinctrl itself certainly imposes no such restriction that I'm aware of.
+pinctrl is only concerned with the ownership of *pins* (or perhaps
+groups). The mapping of pins to registers is something entirely internal
+to individual pinctrl drivers.
 
-thx,
-
-Jason.
+So, the solution here is for pinctrl-single to create a separate
+pin/group object for each separately controllable entity, and that may
+be each bit in a register rather than each register, depending on HW.
