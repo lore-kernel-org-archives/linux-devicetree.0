@@ -1,63 +1,123 @@
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] clk: si5351: make clk-si5351 depend on CONFIG_OF
-Date: Tue, 16 Apr 2013 10:55:13 +1000
-Message-ID: <20130416105513.913219ac889b1db952876197@canb.auug.org.au>
-References: <1366009214-32234-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 10/10] fdtdump: add a debug mode
+Date: Tue, 16 Apr 2013 09:53:57 +1000
+Message-ID: <20130415235357.GR16400@truffula.fritz.box>
+References: <1365618555-5893-1-git-send-email-vapier@gentoo.org>
+ <1365618555-5893-11-git-send-email-vapier@gentoo.org>
+ <20130415051206.GK16400@truffula.fritz.box>
+ <201304151935.56128.vapier@gentoo.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pgp-signature";
- micalg="PGP-SHA256";
- boundary="Signature=_Tue__16_Apr_2013_10_55_13_+1000_x5Z/EyDV9pgwCeaa"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1366009214-32234-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, Daniel Mack <zonque@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Lars-Peter Clausen <lars@metafoo.de>, Guenter Roeck <linux@roeck-us.net>, Michal Bachraty <michal.bachraty@streamunlimited.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@li
+Content-Type: multipart/mixed; boundary="===============1080125396134343639=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201304151935.56128.vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---Signature=_Tue__16_Apr_2013_10_55_13_+1000_x5Z/EyDV9pgwCeaa
-Content-Type: text/plain; charset=US-ASCII
+
+--===============1080125396134343639==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Hnpg0BSo5EvPlUVi"
+Content-Disposition: inline
+
+
+--Hnpg0BSo5EvPlUVi
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Sebastian,
-
-On Mon, 15 Apr 2013 09:00:14 +0200 Sebastian Hesselbarth <sebastian.hesselb=
-arth@gmail.com> wrote:
->
-> Calling clk-si5351 driver non-OF ready was too early. This patch
-> makes clk-si5351 depend on CONFIG_OF again, until things get sorted out.
+On Mon, Apr 15, 2013 at 07:35:55PM -0400, Mike Frysinger wrote:
+> On Monday 15 April 2013 01:12:06 David Gibson wrote:
+> > On Wed, Apr 10, 2013 at 02:29:15PM -0400, Mike Frysinger wrote:
+> > > -static void dump_blob(void *blob)
+> > > +static const char *tagname(uint32_t tag)
+> > >  {
+> > > +	static const char * const names[] =3D {
+> > > +#define TN(t) [t] #t
+> > > +		TN(FDT_BEGIN_NODE),
+> > > +		TN(FDT_END_NODE),
+> > > +		TN(FDT_PROP),
+> > > +		TN(FDT_NOP),
+> > > +		TN(FDT_END),
+> > > +#undef TN
+> > > +	};
+> > > +	if (tag < ARRAY_SIZE(names))
+> > > +		if (names[tag])
+> > > +			return names[tag];
+> > > +	return "???";
+> >=20
+> > Better to return NULL here, I think.  That way a caller can easily
+> > check and print the numeric value instead.
+> >=20
+> > Or you could construct a string with the number.  It would leak
+> > memory, obviously, but in a short-run program like this, it doesn't
+> > really matter.
 >=20
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> Reported-by: Stephen Rottweil <sfr@canb.auug.org.au>
+> if this were a general func (like in util.c or something), i'd agree with=
+ you. =20
+> but the only consumer also prints out the #, so it'd be redundant:
+>         dprintf("%04zx: tag: 0x%08x (%s)\n",
+>                 (uintptr_t)p - blob_off - 4, tag, tagname(tag));
+>=20
+> the output looks like:
+> 	// 350c: tag: 0x00000003 (FDT_PROP)
+>=20
+> if it was an unknown value, it'd look like:
+> 	// 350c: tag: 0x0000a123 (???)
 
-My name is spelt "Rothwell" (as in the Cc: line below) :-(
+Ah, good point, fair enough.
 
-> ---
-> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > +#define dprintf(fmt, args...) \
+> > > +	do { if (debug) printf("// " fmt, ## args); } while (0)
+> >=20
+> > I'd prefer a different function (well, macro) name.  I tend to use
+> > "dprintf" for debug print functions in the sense of debugging for the
+> > program they're in, whereas in this case it's for the debug mode which
+> > is (primarily) for debugging other programs.
+>=20
+> dumpf() ?
+
+Not great, but nothing better springs to mind, so yeah, that'll do.
 
 --=20
-Cheers,
-Stephen Rothwell                    sfr@canb.auug.org.au
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
---Signature=_Tue__16_Apr_2013_10_55_13_+1000_x5Z/EyDV9pgwCeaa
-Content-Type: application/pgp-signature
+--Hnpg0BSo5EvPlUVi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBCAAGBQJRbKFxAAoJEECxmPOUX5FELx4P/RgbtQw8CwKDVn9ctbFgTb94
-H86QQVYrdlaIYQR6Jd8bZDQ78eWIDyDvh2xD+7Xea576S5NUtd6G6K6ZE7Eikj5D
-VFaOXqwlNiLFCJvGhYtDcXJlCxqG26FAGy/StcrimiX2Z6/6ZC0XsJElpxYRWPZu
-RIePtUrGFLPut4WCy+pAF2Q9l4O7ooz7Vtq9LJkk3mAfDCxfxM4mlGgsWsPwKn3P
-JtZ1dN1Di9Lajg00Yo1slhxJGxruW165fPlyJ6uP4fm0I4/6DLQCVAOtyUZlQ0MO
-Sx0GvNEF8UtAqMvN1uqYNFK77i9yGK5iM7wJKinytl4SvE5zkMqqge/7W1eJmNQG
-IxgAw/GTMRPPcAStcA2AbYyEhy+ZI3dctLzFNabF3zOzcdZ7LQTVyk2yscqDIpa+
-YyvbX74JbA0uvsWnixw9SW/XhFzrVzo/15Tp8AcmbxZEX5DiYv3wEDrlAJI4v5p1
-maty6l+ICaddR99ZQhJOX3cgi096f4XrNOb7NWc8HuFJQ5HfTOinj1PtJaRIvXYa
-dpAi7SCALFry86a0OSqhcalWLEEcIVo9kjHsXloqe9Edft+IsyIhLkc4KJHWxeyT
-rAUmI0sgHF060re1vU4ylCK1bW+oeswkRhSHLw3C+oS2/xRP1TebwKYtUHnMPl9X
-WpMq/Dscm5/Mo3aPkm1+
-=Gl38
+iEYEARECAAYFAlFskxUACgkQaILKxv3ab8Y2cACeObM6X/C2PLV66R0DsmXJk9il
+vk4AnjfbJG4NEyW/vEgi4Y/+dE7qMqJG
+=3ciU
 -----END PGP SIGNATURE-----
 
---Signature=_Tue__16_Apr_2013_10_55_13_+1000_x5Z/EyDV9pgwCeaa--
+--Hnpg0BSo5EvPlUVi--
+
+--===============1080125396134343639==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============1080125396134343639==--
