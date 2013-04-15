@@ -1,39 +1,63 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v5 0/5] Patch enables support for m25p64 SPI flash support
- on da850-EVM.
-Date: Mon, 15 Apr 2013 17:18:59 +0530
-Message-ID: <516BE92B.90002@ti.com>
-References: <1364998150-5980-1-git-send-email-prakash.pm@ti.com> <A73F36158E33644199EB82C5EC81C7BC3EA4C560@DBDE01.ent.ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <A73F36158E33644199EB82C5EC81C7BC3EA4C560@DBDE01.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "hs@denx.de" <hs@denx.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "spi-devel-general@lists.sourceforge.net" <spi-devel-general@lists.sourceforge.net>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v3 0/6] Generic PHY Framework
+Date: Mon, 15 Apr 2013 13:26:34 +0100
+Message-ID: <20130415122634.3A08A3E0AA8@localhost>
+References: <1363770725-13717-1-git-send-email-kishon@ti.com> <20130415102009.D358E3E0AA8@localhost> <516BD835.8060007@ti.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <516BD835.8060007@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-usb@vger.kernel.org, mchehab@redhat.com, linux-doc@vger.kernel.org, tony@atomide.com, linux@arm.linux.org.uk, javier@dowhile0.org, cesarb@cesarb.net, arnd@arndb.de, eballetbo@gmail.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, swarren@nvidia.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b-cousson@ti.com, gregkh@linuxfoundation.org, broonie@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, balbi@ti.com, santosh.shilimkar@ti.com, rob@landley.net, akpm@linux-foundation.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On 4/9/2013 11:14 AM, Manjunathappa, Prakash wrote:
-> Hi Grant,
+On Mon, 15 Apr 2013 16:06:37 +0530, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> Hi,
 > 
-> On Wed, Apr 03, 2013 at 19:39:05, Manjunathappa, Prakash wrote:
->> Testing information:
->> da850-evm comes with partitions specified in DT blob.
->> Able to mount/umount and create/delete files on filesystem partition.
->>
+> On Monday 15 April 2013 03:50 PM, Grant Likely wrote:
+> > On Wed, 20 Mar 2013 14:41:59 +0530, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> >> Added a generic PHY framework that provides a set of APIs for the PHY drivers
+> >> to create/destroy a PHY and APIs for the PHY users to obtain a reference to
+> >> the PHY with or without using phandle. To obtain a reference to the PHY
+> >> without using phandle, the platform specfic intialization code (say from board
+> >> file) should have already called phy_bind with the binding information. The
+> >> binding information consists of phy's device name, phy user device name and an
+> >> index. The index is used when the same phy user binds to mulitple phys.
+> >>
+> >> This framework will be of use only to devices that uses external PHY (PHY
+> >> functionality is not embedded within the controller).
+> >>
+> >> The intention of creating this framework is to bring the phy drivers spread
+> >> all over the Linux kernel to drivers/phy to increase code re-use and to
+> >> increase code maintainability.
+> >>
+> >> Comments to make PHY as bus wasn't done because PHY devices can be part of
+> >> other bus and making a same device attached to multiple bus leads to bad
+> >> design.
+> >>
+> >> Making omap-usb2 and twl4030 to use this framework is provided as a sample.
+> >>
+> >> This patch series is developed on 3.9-rc3. Once the patch series gets finalised
+> >> I'll resend omap-usb2 and twl4030 part based on Felipe's tree.
+> >>
+> >
+> > [...]
+> >
+> >>   drivers/Kconfig                                    |    2 +
+> >>   drivers/Makefile                                   |    2 +
+> >>   drivers/phy/Kconfig                                |   13 +
+> >>   drivers/phy/Makefile                               |    5 +
+> >>   drivers/phy/phy-core.c                             |  574 ++++++++++++++++++++
+> >
+> > This looks to be very specific for USB PHYs. Are you intending it to be
+> > used for other types of PHYs, like Ethernet PHYs? If not, then this
 > 
-> Could you please ack the driver(1/5) and documentation(2/5) changes so
-> that Sekhar can merge the platform changes, he doesn't have any
-> objection on this series.
-> http://marc.info/?l=linux-doc&m=136489750130615&w=1
+> Not really. This can be used by USB, SATA and Sylwester was planning to 
+> use it for video PHY's.
 
-I am planning to queue these patches for ARM-SoC today. Grant has not
-acked these but 1/5 just fixes the binding name to not use wild cards
-and 2/5 just documents existing bindings and is something that should
-have been merge last merge window itself (when the bindings were
-accepted). So, the patches pending on Grant's ack seem very low risk to
-me and we are much delayed already to wait further.
+So what are the common bits that are shared between those phys? Merely
+matching phys to controllers? Besides that, each of those devices have
+very different behaviour. You wouldn't be able to attach any interface
+logic to the generic struct phy. I don't think it makes a whole lot of
+sense to lump them all into the same type of registration.
 
-Thanks,
-Sekhar
+g.
