@@ -1,40 +1,33 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 02/17] of_spi: add generic binding support to specify cs
- gpio
-Date: Mon, 15 Apr 2013 13:55:43 +0100
-Message-ID: <20130415125543.4CB043E0AA8@localhost>
-References: <1363943767-16051-1-git-send-email-wenyou.yang@atmel.com>
- <1363943814-16130-1-git-send-email-wenyou.yang@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1363943814-16130-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, andy.gao-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] rtc: palmas: add dt support
+Date: Mon, 15 Apr 2013 13:57:41 +0100
+Message-ID: <20130415125741.BFD023E0AA8@localhost>
+References: <1363876330-26003-1-git-send-email-ldewangan@nvidia.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1363876330-26003-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: akpm@linux-foundation.org
+Cc: a.zummo@towertech.it, rtc-linux@googlegroups.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, linux-tegra@vger.kernel.org, swarren@nvidia.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 22 Mar 2013 17:16:54 +0800, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
-> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+On Thu, 21 Mar 2013 20:02:10 +0530, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+> Add of_device_id table for Palma RTC to be enable the
+> driver from DT file.
 > 
-> This will allow to use gpio for chip select with no modification in the
-> driver binding
+> The driver can be registered from DT file as:
+> 	palmas: tps65913@58 {
+> 		:::::::::::
+> 		palmas_rtc {
+> 			compatible = "ti,palmas-rtc";
+> 			interrupt-parent = <&palmas>;
+> 			interrupts = <8 0>;
+> 		};
+> 	};
 > 
-> When use the cs-gpios, the gpio number will be passed via the cs_gpio field
-> and the number of chip select will automatically increased.
-> 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 
-This patch has been in mainline since Dec 13
+Pretty trivial...
+
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
 g.
