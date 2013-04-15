@@ -1,146 +1,86 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] Doc: dt: i2c: tegra: add dt binding for i2c-tegra
-Date: Mon, 15 Apr 2013 14:08:44 +0100
-Message-ID: <20130415130844.C26CE3E0AA8@localhost>
-References: <1363599350-25187-1-git-send-email-ldewangan@nvidia.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1363599350-25187-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: swarren@wwwdotorg.org, rob@landley.net, rob.herring@calxeda.com
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+From: Eric =?UTF-8?B?QsOpbmFyZA==?= <eric-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] video: imxfb: Add DT support
+Date: Mon, 15 Apr 2013 15:13:16 +0200
+Message-ID: <20130415151316.4d49e9b2@e6520eb>
+References: <1365157876-1757-1-git-send-email-mpa@pengutronix.de>
+ <1365157876-1757-3-git-send-email-mpa@pengutronix.de>
+ <20130408075742.GR20693@game.jcrosoft.org>
+ <20130414143132.GD27394@pengutronix.de>
+ <20130415124321.GB15139@game.jcrosoft.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130415124321.GB15139-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 18 Mar 2013 15:05:50 +0530, Laxman Dewangan <ldewangan@nvidia.com> wrote:
-> Add documentation for device tree binding of NVIDIA's Tegra i2c
-> controller driver.
-> 
-> Describing all compatible values used for diffenent Tegra SoCs
-> in details in this documentation.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-
-Looks fine by me
-
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
-
-Should be merged with the driver series.
-
-g.
-
-> ---
->  .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt |   99 ++++++++++++++++++++
->  1 files changed, 99 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt
-> new file mode 100644
-> index 0000000..e390ce8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra20-i2c.txt
-> @@ -0,0 +1,99 @@
-> +NVIDIA Tegra20/Tegra30/Tegra114 I2C controller driver.
-> +
-> +Required properties:
-> +- compatible : should be:
-> +	"nvidia,tegra114-i2c"
-> +	"nvidia,tegra30-i2c"
-> +	"nvidia,tegra20-i2c"
-> +	"nvidia,tegra20-i2c-dvc"
-> +
-> + Details of compatible are as follows:
-> +  nvidia,tegra20-i2c-dvc: Tegra20 has specific i2c controller called as DVC I2C
-> +	controller. This only support master mode of I2C communication. Register
-> +	interface/offset and interrupts handling are different than generic I2C
-> +	controller. Driver of DVC I2C controller is only compatible with
-> +	"nvidia,tegra20-i2c-dvc".
-> +  nvidia,tegra20-i2c: Tegra20 has 4 generic I2C controller. This can support
-> +	master and slave mode of I2C communication. The i2c-tegra driver only
-> +	support master mode of I2C communication. Driver of I2C controller is
-> +	only compatible with "nvidia,tegra20-i2c".
-> +  nvidia,tegra30-i2c: Tegra30 has 5 generic I2C controller. This controller is
-> +	very much similar to Tegra20 I2C controller with additional feature:
-> +	Continue Transfer Support. This feature helps to implement M_NO_START
-> +	as per I2C core API transfer flags. Driver of I2C controller is
-> +	compatible with "nvidia,tegra30-i2c" to enable the continue transfer
-> +	support. This is also compatible with "nvidia,tegra20-i2c" without
-> +	continue transfer support.
-> +  nvidia,tegra114-i2c: Tegra114 has 5 generic I2C controller. This controller is
-> +	very much similar to Tegra30 I2C controller with some hardware
-> +	modification:
-> +	 - Tegra30/Tegra20 I2C controller has 2 clock source called div-clk and
-> +	   fast-clk. Tegra114 has only one clock source called as div-clk and
-> +	   hence clock mechanism is changed in I2C controller.
-> +	 - Tegra30/Tegra20 I2C controller has enabled per packet transfer by
-> +	   default and there is no way to disable it. Tegra114 has this
-> +	   interrupt disable by default and SW need to enable explicitly.
-> +	Due to above changes, Tegra114 I2C driver makes incompatible with
-> +	previous hardware driver. Hence, tegra114 I2C controller is compatible
-> +	with "nvidia,tegra114-i2c".
-> +
-> +
-> +- reg: Should contain I2C controller registers physical address and length.
-> +- interrupts: Should contain I2C controller interrupts.
-> +- address-cells: Address cells for I2C device address.
-> +- size-cells: Size of the I2C device address.
-> +- clocks: Clock Id as per
-> +		Documentation/devicetree/bindings/clock/tegra<chip-id>.txt
-> +	for I2C controller.
-> +- clock-names: Name of the clock:
-> +	Tegra20/Tegra30 I2C controller: "div-clk and "fast-clk".
-> +	Tegra114 I2C controller: "div-clk".
-> +
-> +
-> +Typical i2c node for Tegra20:
-> +	i2c@7000c000 {
-> +		compatible = "nvidia,tegra20-i2c";
-> +		reg = <0x7000c000 0x100>;
-> +		interrupts = <0 38 0x04>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		clocks = <&tegra_car 12>, <&tegra_car 124>;
-> +		clock-names = "div-clk", "fast-clk";
-> +		status = "disabled";
-> +	};
-> +
-> +Typical dvc-i2c node for Tegra20:
-> +	i2c@7000d000 {
-> +		compatible = "nvidia,tegra20-i2c-dvc";
-> +		reg = <0x7000d000 0x200>;
-> +		interrupts = <0 53 0x04>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		clocks = <&tegra_car 47>, <&tegra_car 124>;
-> +		clock-names = "div-clk", "fast-clk";
-> +		status = "disabled";
-> +	};
-> +
-> +Typical i2c node for Tegra30:
-> +	i2c@7000c000 {
-> +		compatible =  "nvidia,tegra30-i2c", "nvidia,tegra20-i2c";
-> +		reg = <0x7000c000 0x100>;
-> +		interrupts = <0 38 0x04>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		clocks = <&tegra_car 12>, <&tegra_car 182>;
-> +		clock-names = "div-clk", "fast-clk";
-> +		status = "disabled";
-> +	};
-> +
-> +Typical i2c node for Tegra114:
-> +	i2c@7000c000 {
-> +		compatible = "nvidia,tegra114-i2c";
-> +		reg = <0x7000c000 0x100>;
-> +		interrupts = <0 38 0x04>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		status = "disabled";
-> +		clocks = <&tegra_car 12>;
-> +		clock-names = "div-clk";
-> +	};
-> -- 
-> 1.7.1.1
-> 
-
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+SGksCgpMZSBNb24sIDE1IEFwciAyMDEzIDE0OjQzOjIxICswMjAwLApKZWFuLUNocmlzdG9waGUg
+UExBR05JT0wtVklMTEFSRCA8cGxhZ25pb2pAamNyb3NvZnQuY29tPiBhIMOpY3JpdCA6Cgo+IE9u
+IDE2OjMxIFN1biAxNCBBcHIgICAgICwgTWFya3VzIFBhcmdtYW5uIHdyb3RlOgo+ID4gT24gTW9u
+LCBBcHIgMDgsIDIwMTMgYXQgMDk6NTc6NDJBTSArMDIwMCwgSmVhbi1DaHJpc3RvcGhlIFBMQUdO
+SU9MLVZJTExBUkQgd3JvdGU6Cj4gPiA+IE9uIDEyOjMxIEZyaSAwNSBBcHIgICAgICwgTWFya3Vz
+IFBhcmdtYW5uIHdyb3RlOgo+ID4gPiA+IEFkZCBkZXZpY2V0cmVlIHN1cHBvcnQgZm9yIGlteCBm
+cmFtZWJ1ZmZlciBkcml2ZXIuIEl0IHVzZXMgdGhlIGdlbmVyaWMKPiA+ID4gPiBkaXNwbGF5IGJp
+bmRpbmdzIGFuZCBoZWxwZXIgZnVuY3Rpb25zLgo+ID4gPiA+IAo+ID4gPiA+IFNpZ25lZC1vZmYt
+Ynk6IE1hcmt1cyBQYXJnbWFubiA8bXBhQHBlbmd1dHJvbml4LmRlPgo+ID4gPiA+IENjOiBGYWJp
+byBFc3RldmFtIDxmZXN0ZXZhbUBnbWFpbC5jb20+Cj4gPiA+ID4gQ2M6IE1hcmsgUnV0bGFuZCA8
+bWFyay5ydXRsYW5kQGFybS5jb20+Cj4gPiA+ID4gLS0tCj4gPiA+ID4gIC4uLi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3ZpZGVvL2ZzbCxpbXgtZmIudHh0ICAgICAgIHwgIDQ5ICsrKysrKwo+ID4gPiA+
+ICBkcml2ZXJzL3ZpZGVvL2lteGZiLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDE5
+MiArKysrKysrKysrKysrKysrKy0tLS0KPiA+ID4gPiAgMiBmaWxlcyBjaGFuZ2VkLCAyMDcgaW5z
+ZXJ0aW9ucygrKSwgMzQgZGVsZXRpb25zKC0pCj4gPiA+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZnNsLGlteC1mYi50eHQKPiA+
+ID4gPiAKPiA+ID4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3ZpZGVvL2ZzbCxpbXgtZmIudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3ZpZGVvL2ZzbCxpbXgtZmIudHh0Cj4gPiA+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+
+ID4gPiBpbmRleCAwMDAwMDAwLi5iZGU5Yzc3Cj4gPiA+ID4gLS0tIC9kZXYvbnVsbAo+ID4gPiA+
+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92aWRlby9mc2wsaW14LWZi
+LnR4dAo+ID4gPiA+IEBAIC0wLDAgKzEsNDkgQEAKPiA+ID4gPiArRnJlZXNjYWxlIGlteDIxIEZy
+YW1lYnVmZmVyCj4gPiA+ID4gKwo+ID4gPiA+ICtUaGlzIGZyYW1lYnVmZmVyIGRyaXZlciBzdXBw
+b3J0cyBkZXZpY2VzIGlteDEsIGlteDIxLCBpbXgyNSwgYW5kIGlteDI3Lgo+ID4gPiA+ICsKPiA+
+ID4gPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ID4gPiArLSBjb21wYXRpYmxlIDogImZzbCw8
+Y2hpcD4tZmIiLCBjaGlwIHNob3VsZCBiZSBpbXgxIG9yIGlteDIxCj4gPiA+ID4gKy0gcmVnIDog
+U2hvdWxkIGNvbnRhaW4gMSByZWdpc3RlciByYW5nZXMoYWRkcmVzcyBhbmQgbGVuZ3RoKQo+ID4g
+PiA+ICstIGludGVycnVwdHMgOiBPbmUgaW50ZXJydXB0IG9mIHRoZSBmYiBkZXYKPiA+ID4gPiAr
+Cj4gPiA+ID4gK1JlcXVpcmVkIG5vZGVzOgo+ID4gPiA+ICstIGRpc3BsYXk6IFBoYW5kbGUgdG8g
+YSBkaXNwbGF5IG5vZGUgYXMgZGVzY3JpYmVkIGluCj4gPiA+ID4gKwlEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvdmlkZW8vZGlzcGxheS10aW1pbmcudHh0Cj4gPiA+ID4gKwlBZGRp
+dGlvbmFsLCB0aGUgZGlzcGxheSBub2RlIGhhcyB0byBkZWZpbmUgcHJvcGVydGllczoKPiA+ID4g
+PiArCS0gZnNsLGJwcDogQml0cyBwZXIgcGl4ZWwKPiA+ID4gPiArCS0gZnNsLHBjcjogTENEQyBQ
+Q1IgdmFsdWUKPiA+ID4gPiArCj4gPiA+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gPiA+ID4g
+Ky0gZG1hY3ItZXVrcmVhOiBTaG91bGQgYmUgc2V0IGZvciBldWtyZWEgYm9hcmRzLgo+ID4gPiB3
+aHkgPwo+ID4gCj4gPiBCZWNhdXNlIGV1a3JlYSBib2FyZHMgaGF2ZSBhIGRpZmZlcmVudCBkbWFj
+ciB0aGVuIGFsbCBvdGhlciBib2FyZHMgdXNpbmcKPiA+IGlteGZiLiBUaGUgZG1hY3IgYWRkcmVz
+cyBpcyBoYXJkY29kZWQgYXMgZGVmYXVsdHMgaW4gdGhlIGNvZGUuIEkgY291bGQKPiA+IGFsc28g
+c2VhcmNoIGZvciB0aGUgYm9hcmQgbmFtZSBpbiB0aGUgRFQsIGJ1dCB0aGVyZSBhcmUgbm8gZXVr
+cmVhIGJvYXJkcwo+ID4gd2l0aCBEVCBhdCB0aGUgbW9tZW50LCBzbyBJIHRob3VnaHQgYSBib29s
+IHByb3BlcnR5IG1heSBiZSBiZXR0ZXIgZm9yCj4gPiB0aGUgbW9tZW50Lgo+IHNvIG5vIGlmIGFu
+IG90aGVyIGJvYXJkIGNvbWUgd2lsbCBoYXZlIGFuIG90aGVyIHByb3BlcnR5IG5vCj4gCj4gYWRk
+IGFuIG9wdGlvbm5hbCBvcHRpb24gdG8gcGFzcyB0aGUgZG1hY3IKCkkgZGlkbid0IGZvbGxvdyB0
+aGUgdGhyZWFkIGJ1dCBkbWFjciBpcyBub3Qgc3BlY2lmaWMgdG8gb3VyIGJvYXJkcyA6CiQgZ3Jl
+cCAtcm4gZG1hY3IgYXJjaC9hcm0vbWFjaC1pbXgvCmFyY2gvYXJtL21hY2gtaW14L21hY2gtbXgy
+N18zZHMuYzo0NDY6CS5kbWFjcgkJPSAweDAwMDIwMDEwLAphcmNoL2FybS9tYWNoLWlteC9tYWNo
+LW14MjFhZHMuYzoyMzE6CS5kbWFjcgkJPSAweDAwMDIwMDA4LAphcmNoL2FybS9tYWNoLWlteC9t
+YWNoLW14dF90ZDYwLmM6MjEwOgkuZG1hY3IJCT0gMHgwMDAyMDAxMCwKYXJjaC9hcm0vbWFjaC1p
+bXgvZXVrcmVhX21iaW14MjctYmFzZWJvYXJkLmM6MTkyOgkuZG1hY3IJCT0gMHgwMDA0MDA2MCwK
+YXJjaC9hcm0vbWFjaC1pbXgvZXVrcmVhX21iaW14c2QyNS1iYXNlYm9hcmQuYzoxNjU6CS5kbWFj
+cgkJPSAweDAwMDQwMDYwLAphcmNoL2FybS9tYWNoLWlteC9tYWNoLW14MjdhZHMuYzoyNDE6CS5k
+bWFjcgkJPSAweDAwMDIwMDEwLAphcmNoL2FybS9tYWNoLWlteC9tYWNoLXBjYTEwMC5jOjM1MToJ
+LmRtYWNyCQk9IDB4MDAwMjAwMTAsCmFyY2gvYXJtL21hY2gtaW14L3BjbTk3MC1iYXNlYm9hcmQu
+YzoxODU6CS5kbWFjcgkJPSAweDAwMDIwMDEwLAphcmNoL2FybS9tYWNoLWlteC9tYWNoLW14MjVf
+M2RzLmM6MTczOgkuZG1hY3IJCT0gMHgwMDAyMDAxMCwKCkJlc3QgcmVnYXJkcywKRXJpYwpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRp
+c2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0
+dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
