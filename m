@@ -1,77 +1,235 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: omap3-beagle-xm: Add USB Host support for Rev Ax/Bx
-Date: Mon, 15 Apr 2013 15:35:06 +0300
-Message-ID: <1366029306-1824-1-git-send-email-rogerq@ti.com>
+From: Andreas Larson <andreas@gaisler.com>
+Subject: Re: [PATCH v5 2/3] gpio: grgpio: Add device driver for GRGPIO cores
+Date: Mon, 15 Apr 2013 14:38:42 +0200
+Message-ID: <516BF4D2.8060901@gaisler.com>
+References: <1363355140-28216-1-git-send-email-andreas@gaisler.com> <1363355140-28216-3-git-send-email-andreas@gaisler.com> <CACRpkdYf7U=YY92Pma8+mWGALJvQDPU=d3x7Z6rX+rWkhuBANg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: b-cousson-l0cyMroinI0@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYf7U=YY92Pma8+mWGALJvQDPU=d3x7Z6rX+rWkhuBANg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <anton.vorontsov@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
-UHJvdmlkZSBSRVNFVCBhbmQgUG93ZXIgcmVndWxhdG9ycyBmb3IgdGhlIFVTQiBQSFksCnRoZSBV
-U0IgSG9zdCBwb3J0IG1vZGUgYW5kIHRoZSBQSFkgZGV2aWNlLgoKQWxzbyBwcm92aWRlIHBpbiBt
-dWx0aXBsZXhlciBpbmZvcm1hdGlvbiBmb3IgVVNCIGhvc3QKcGlucy4KClRoaXMgd2lsbCBub3Qg
-d29yayBmb3IgUmV2IEN4IGJvYXJkcyBiZWNhdXNlIG9mIHJldmVyc2VkIGxvZ2ljCmZvciBVU0Jf
-UE9XRVJfRW5hYmxlLgoKQ0M6IEJlbm/DrnQgQ291c3NvbiA8Yi1jb3Vzc29uQHRpLmNvbT4KU2ln
-bmVkLW9mZi1ieTogUm9nZXIgUXVhZHJvcyA8cm9nZXJxQHRpLmNvbT4KLS0tCiBhcmNoL2FybS9i
-b290L2R0cy9vbWFwMy1iZWFnbGUteG0uZHRzIHwgICA2MiArKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysKIDEgZmlsZXMgY2hhbmdlZCwgNjIgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlv
-bnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9vbWFwMy1iZWFnbGUteG0uZHRz
-IGIvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtYmVhZ2xlLXhtLmR0cwppbmRleCA1YTMxOTY0Li5k
-Mzk0YzUxIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9vbWFwMy1iZWFnbGUteG0uZHRz
-CisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLWJlYWdsZS14bS5kdHMKQEAgLTU3LDYgKzU3
-LDYwIEBACiAJCXRpLG1jYnNwID0gPCZtY2JzcDI+OwogCQl0aSxjb2RlYyA9IDwmdHdsX2F1ZGlv
-PjsKIAl9OworCisJLyogSFMgVVNCIFBvcnQgMiBSRVNFVCAqLworCWhzdXNiMl9yZXNldDogaHN1
-c2IyX3Jlc2V0X3JlZyB7CisJCWNvbXBhdGlibGUgPSAicmVndWxhdG9yLWZpeGVkIjsKKwkJcmVn
-dWxhdG9yLW5hbWUgPSAiaHN1c2IyX3Jlc2V0IjsKKwkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQg
-PSA8MzMwMDAwMD47CisJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAwMDA+OworCQln
-cGlvID0gPCZncGlvNSAxOSAwPjsJLyogZ3Bpb18xNDcgKi8KKwkJc3RhcnR1cC1kZWxheS11cyA9
-IDw3MDAwMD47CisJCWVuYWJsZS1hY3RpdmUtaGlnaDsKKwl9OworCisJLyogSFMgVVNCIFBvcnQg
-MiBQb3dlciAqLworCWhzdXNiMl9wb3dlcjogaHN1c2IyX3Bvd2VyX3JlZyB7CisJCWNvbXBhdGli
-bGUgPSAicmVndWxhdG9yLWZpeGVkIjsKKwkJcmVndWxhdG9yLW5hbWUgPSAiaHN1c2IyX3ZidXMi
-OworCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsKKwkJcmVndWxhdG9yLW1h
-eC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47CisJCWdwaW8gPSA8JnR3bF9ncGlvIDE4IDA+OwkvKiBH
-UElPIExFREEgKi8KKwkJc3RhcnR1cC1kZWxheS11cyA9IDw3MDAwMD47CisJCWVuYWJsZS1hY3Rp
-dmUtaGlnaDsJLyogRklYTUU6IGFjdGl2ZS1sb3cgZm9yIFJldi4gQyAqLworCX07CisKKwkvKiBI
-UyBVU0IgSG9zdCBQSFkgb24gUE9SVCAyICovCisJaHN1c2IyX3BoeTogaHN1c2IyX3BoeSB7CisJ
-CWNvbXBhdGlibGUgPSAidXNiLW5vcC14Y2VpdiI7CisJCXJlc2V0LXN1cHBseSA9IDwmaHN1c2Iy
-X3Jlc2V0PjsKKwkJdmNjLXN1cHBseSA9IDwmaHN1c2IyX3Bvd2VyPjsKKwl9OworCit9OworCism
-b21hcDNfcG14X2NvcmUgeworCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJcGluY3RybC0w
-ID0gPAorCQkJJmhzdXNiYjJfcGlucworCT47CisKKwloc3VzYmIyX3BpbnM6IHBpbm11eF9oc3Vz
-YmIyX3BpbnMgeworCQlwaW5jdHJsLXNpbmdsZSxwaW5zID0gPAorCQkJMHg1YzAgMHgzICAvKiBV
-U0JCMl9VTFBJVExMX0NMS19NVVhNT0RFLnVzYmIxX3VscGlwaHlfY2xrIE9VVFBVVCAqLworCQkJ
-MHg1YzIgMHgzICAvKiBVU0JCMl9VTFBJVExMX0NMS19NVVhNT0RFLnVzYmIxX3VscGlwaHlfc3Rw
-IE9VVFBVVCAqLworCQkJMHg1YzQgMHgxMGIgIC8qIFVTQkIyX1VMUElUTExfQ0xLX01VWE1PREUu
-dXNiYjFfdWxwaXBoeV9kaXIgSU5QVVQgfCBQVUxMRE9XTiAqLworCQkJMHg1YzYgMHgxMGIgIC8q
-IFVTQkIyX1VMUElUTExfQ0xLX01VWE1PREUudXNiYjFfdWxwaXBoeV9ueHQgSU5QVVQgfCBQVUxM
-RE9XTiAqLworCQkJMHg1YzggMHgxMGIgIC8qIFVTQkIyX1VMUElUTExfQ0xLX01VWE1PREUudXNi
-YjFfdWxwaXBoeV9kYXQwIElOUFVUIHwgUFVMTERPV04gKi8KKwkJCTB4NWNBIDB4MTBiICAvKiBV
-U0JCMl9VTFBJVExMX0NMS19NVVhNT0RFLnVzYmIxX3VscGlwaHlfZGF0MSBJTlBVVCB8IFBVTExE
-T1dOICovCisJCQkweDFhNCAweDEwYiAgLyogVVNCQjJfVUxQSVRMTF9DTEtfTVVYTU9ERS51c2Ji
-MV91bHBpcGh5X2RhdDIgSU5QVVQgfCBQVUxMRE9XTiAqLworCQkJMHgxYTYgMHgxMGIgIC8qIFVT
-QkIyX1VMUElUTExfQ0xLX01VWE1PREUudXNiYjFfdWxwaXBoeV9kYXQzIElOUFVUIHwgUFVMTERP
-V04gKi8KKwkJCTB4MWE4IDB4MTBiICAvKiBVU0JCMl9VTFBJVExMX0NMS19NVVhNT0RFLnVzYmIx
-X3VscGlwaHlfZGF0NCBJTlBVVCB8IFBVTExET1dOICovCisJCQkweDFhYSAweDEwYiAgLyogVVNC
-QjJfVUxQSVRMTF9DTEtfTVVYTU9ERS51c2JiMV91bHBpcGh5X2RhdDUgSU5QVVQgfCBQVUxMRE9X
-TiAqLworCQkJMHgxYWMgMHgxMGIgIC8qIFVTQkIyX1VMUElUTExfQ0xLX01VWE1PREUudXNiYjFf
-dWxwaXBoeV9kYXQ2IElOUFVUIHwgUFVMTERPV04gKi8KKwkJCTB4MWFlIDB4MTBiICAvKiBVU0JC
-Ml9VTFBJVExMX0NMS19NVVhNT0RFLnVzYmIxX3VscGlwaHlfZGF0NyBJTlBVVCB8IFBVTExET1dO
-ICovCisJCT47CisJfTsKIH07CiAKICZpMmMxIHsKQEAgLTEyNSwzICsxNzksMTEgQEAKIAltb2Rl
-ID0gPDM+OwogCXBvd2VyID0gPDUwPjsKIH07CisKKyZ1c2Joc2hvc3QgeworCXBvcnQyLW1vZGUg
-PSAiZWhjaS1waHkiOworfTsKKworJnVzYmhzZWhjaSB7CisJcGh5cyA9IDwwICZoc3VzYjJfcGh5
-PjsKK307Ci0tIAoxLjcuNC4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlz
-Y3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9k
-ZXZpY2V0cmVlLWRpc2N1c3MK
+On 2013-04-10 20:50, Linus Walleij wrote:
+> On Fri, Mar 15, 2013 at 2:45 PM, Andreas Larsson <andreas@gaisler.com> wrote:
+>
+>> This driver supports GRGPIO gpio cores available in the GRLIB VHDL IP
+>> core library from Aeroflex Gaisler.
+>>
+>> Signed-off-by: Andreas Larsson <andreas@gaisler.com>
+>> ---
+>>   .../devicetree/bindings/gpio/gpio-grgpio.txt       |   24 +++
+>>   drivers/gpio/Kconfig                               |    9 ++
+>>   drivers/gpio/Makefile                              |    1 +
+>>   drivers/gpio/gpio-grgpio.c                         |  164 ++++++++++++++++++++
+>>   4 files changed, 198 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-grgpio.txt
+>>   create mode 100644 drivers/gpio/gpio-grgpio.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-grgpio.txt b/Documentation/devicetree/bindings/gpio/gpio-grgpio.txt
+>> new file mode 100644
+>> index 0000000..1050dc8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio-grgpio.txt
+>> @@ -0,0 +1,24 @@
+>> +Aeroflex Gaisler GRGPIO General Purpose I/O cores.
+>> +
+>> +The GRGPIO GPIO core is available in the GRLIB VHDL IP core library.
+>> +
+>> +Note: In the ordinary environment for the GRGPIO core, a Leon SPARC system,
+>> +these properties are built from information in the AMBA plug&play.
+>> +
+>> +Required properties:
+>> +
+>> +- name : Should be "GAISLER_GPIO" or "01_01a"
+>
+> What is this? Don't we usually use a .compatible string for this?
+> Name? Que? Is that something legacy?
+
+Regarding using name, this is standard for SPARC. The names in the
+device tree originates from the PROM.
+
+The name field is the actually the first field checked for a match in
+of_match_node, followed by type then compatible. See
+http://lxr.free-electrons.com/source/drivers/of/base.c#L572
+
+Examples can be found among many others in:
+- drivers/watchdog/riowd.c
+- drivers/watchdog/cpwd.c
+- drivers/mtd/maps/sun_uflash.c
+- drivers/input/misc/sparcspkr.c
+- drivers/input/serio/i8042-sparcio.h
+- drivers/hwmon/ultra45_env.c
+
+As for the "01_01a", the LEON SPARC systems uses a plug&play to identify
+different IP cores in the system. When the PROM is unaware of the name
+of a certain core, the name field presented from the prom will be on
+this form. This is standard handling for LEON SPARC drivers.
+
+Examples of this can be found in:
+- drivers/gpio/gpio-grgpio.c
+- drivers/usb/host/uhci-grlib.c
+- drivers/usb/host/ehci-grlib.c
+- drivers/video/grvga.c
+- drivers/net/can/grcan.c
+- drivers/net/ethernet/aeroflex/greth.c
+- drivers/tty/serial/apbuart.c
+
+
+> I would prefer:
+>
+> - Add you vendor prefix to Documentation/devicetree/bindings/vendor-prefixes.txt
+> - Use a compatible string like this "gaisler,gpio"
+>
+>> +- reg : Address and length of the register set for the device
+>> +
+>> +- interrupts : Interrupt numbers for this device
+>> +
+>> +Optional properties:
+>> +
+>> +- base : The base gpio number for the core. A dynamic base is used if not
+>> +       present
+>
+> This has to go. We don't hardcode numbers from the global GPIO
+> space into the device tree, beacause as you soon realize this is
+> Linux-specific and the device tree shall be OS agnostic.
+>
+> The discussion has come up a number of times, review the mailing
+> lists for suggestions on how to get around this.
+>
+> (...)
+>> +++ b/drivers/gpio/gpio-grgpio.c
+>
+>> +struct grgpio_regs {
+>> +       u32 data;       /* 0x00 */
+>> +       u32 output;     /* 0x04 */
+>> +       u32 dir;        /* 0x08 */
+>> +       u32 imask;      /* 0x0c */
+>> +       u32 ipol;       /* 0x10  */
+>> +       u32 iedge;      /* 0x14 */
+>> +       u32 bypass;     /* 0x18 */
+>> +       u32 __reserved; /* 0x1c */
+>> +       u32 imap[8];    /* 0x20-0x3c */
+>> +};
+>
+> Um... Why are you doing this?
+>
+>> +struct grgpio_priv {
+>> +       struct bgpio_chip bgc;
+>> +       struct grgpio_regs __iomem *regs;
+>
+> And that's tagged as __iomem * as well, that is very unorthodox.
+> The usual practice is to have a base pointer void __iomem *base
+> and offset from that.
+>
+>> +       struct device *dev;
+>> +};
+>> +
+>> +static inline struct grgpio_priv *grgpio_gc_to_priv(struct gpio_chip *gc)
+>> +{
+>> +       struct bgpio_chip *bgc = to_bgpio_chip(gc);
+>> +
+>> +       return container_of(bgc, struct grgpio_priv, bgc);
+>> +}
+>> +
+>> +static int grgpio_to_irq(struct gpio_chip *gc, unsigned offset)
+>> +{
+>> +       return -ENXIO;
+>> +}
+>
+> The gpiolib core already returns -ENXIO if this function is
+> not assigned so just delete this function and leave that
+> function pointer as NULL.
+
+Sure, the second patch should add it from scratch.
+
+>> +static int grgpio_probe(struct platform_device *ofdev)
+>> +{
+>> +       struct device_node *np = ofdev->dev.of_node;
+>> +       struct grgpio_regs __iomem *regs;
+>
+> Prefer void __iomem *base;
+>
+>> +       struct gpio_chip *gc;
+>> +       struct bgpio_chip *bgc;
+>> +       struct grgpio_priv *priv;
+>> +       struct resource *res;
+>> +       int err;
+>> +       u32 prop;
+>> +
+>> +       priv = devm_kzalloc(&ofdev->dev, sizeof(*priv), GFP_KERNEL);
+>> +       if (!priv)
+>> +               return -ENOMEM;
+>> +
+>> +       res = platform_get_resource(ofdev, IORESOURCE_MEM, 0);
+>> +       regs = devm_ioremap_resource(&ofdev->dev, res);
+>> +       if (IS_ERR(regs))
+>> +               return PTR_ERR(regs);
+>> +
+>> +       bgc = &priv->bgc;
+>> +       err = bgpio_init(bgc, &ofdev->dev, 4, &regs->data, &regs->output, NULL,
+>> +                        &regs->dir, NULL, BGPIOF_BIG_ENDIAN_BYTE_ORDER);
+>
+> So I would prefer if you did:
+>
+> #define GRGPIO_DATA 0x00
+> #define GRGPIO_OUTPUT 0x04
+> #define GRGPIO_DIR 0x08
+> (...)
+
+Sure, I'll change it, either way works for me, although I don't see a 
+problem with the original approach.
+
+
+> err = bgpio_init(bgc, &ofdev->dev, 4, base + GRGPIO_DATA, base +
+> GRGPIO_OUTPUT, NULL,
+>                         base + GRGPIO_DIR, NULL, BGPIOF_BIG_ENDIAN_BYTE_ORDER);
+>
+>> +       if (err) {
+>> +               dev_err(&ofdev->dev, "bgpio_init() failed\n");
+>> +               return err;
+>> +       }
+>> +
+>> +       priv->regs = regs;
+>> +       priv->dev = &ofdev->dev;
+>> +
+>> +       gc = &bgc->gc;
+>> +       gc->of_node = np;
+>> +       gc->owner = THIS_MODULE;
+>> +       gc->to_irq = grgpio_to_irq;
+>> +       gc->label = np->full_name;
+>> +
+>> +       err = of_property_read_u32(np, "base", &prop);
+>> +       if (err) {
+>> +               dev_dbg(&ofdev->dev, "No base property: use dynamic base\n");
+>> +               gc->base = -1;
+>> +       } else {
+>> +               gc->base = prop;
+>> +       }
+>
+> Over my dead body ;-)
+
+Removed
+
+> (...)
+>> +static struct of_device_id grgpio_match[] = {
+>> +       {.name = "GAISLER_GPIO"},
+>> +       {.name = "01_01a"},
+>> +       {},
+>> +};
+>
+> This is very weird. Especially "01_01a" needs a real good explanation
+> if it is to be kept.
+>
+> Alas, I don't really know what the .name field in the of_device_id is for...
+
+Treated above.
+
+
+Thanks for the feedback!
+
+Cheers,
+Andreas Larsson
