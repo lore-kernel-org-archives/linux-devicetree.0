@@ -1,43 +1,44 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: Query on pinctrl usage for DT nodes
-Date: Mon, 15 Apr 2013 10:26:07 +0200
-Message-ID: <516BB99F.2080502@ti.com>
-References: <CA+V-a8uiPwsAD--OHFAE=i2ed+-wbXm4p2deZXr92+Zv6GDS1w@mail.gmail.com>
- <515C5C76.3080009@wwwdotorg.org>
- <CA+V-a8t3wtP77DdeUoQHKMjAuWmV+ude+1J3UjJmMTqobgStjA@mail.gmail.com>
- <5162FD4A.1030909@wwwdotorg.org>
- <CA+V-a8vwdCkyMqiynj5BodXbjwJ=e4qNb-29FhLweqbjc7DBQA@mail.gmail.com>
- <5165A22B.4070200@wwwdotorg.org> <20130410203408.GP10155@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130410203408.GP10155@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Prabhakar Lad <prabhakar.csengg@gmail.com>, linus.walleij@linaro.org, LAK <linux-arm-kernel@lists.infradead.org>
+From: Paolo Pisati <paolo.pisati@canonical.com>
+Subject: [PATCH] dma: of-dma: check OF pointer property before dereferencing it
+Date: Mon, 15 Apr 2013 10:39:53 +0200
+Message-ID: <1366015193-6627-2-git-send-email-paolo.pisati@canonical.com>
+References: <1366015193-6627-1-git-send-email-paolo.pisati@canonical.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1366015193-6627-1-git-send-email-paolo.pisati@canonical.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Dan Williams <djbw@fb.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Paolo Pisati <paolo.pisati@canonical.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/10/2013 10:34 PM, Tony Lindgren wrote:
-> Yeah how about just change the pintctrl-single,bits register
-> naming to be register + bit?  Something like 0xdeadbeef.0 and
-> 0xdeadbeef.1 and so on.
+Signed-off-by: Paolo Pisati <paolo.pisati@canonical.com>
+---
+ drivers/dma/of-dma.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Something like this might work I think. It is going to be a bit tricky IMHO
-since we might need span out new 'register' every time a device requests fo=
-r a
-new pinctrl-single,bits for already used register in the
-pinctrl-single,bit-per-mux area. In this way we still can make sure that
-certain bit are only used by a single driver.
-
--- =
-
-P=E9ter
+diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+index 69d04d2..9628298 100644
+--- a/drivers/dma/of-dma.c
++++ b/drivers/dma/of-dma.c
+@@ -91,6 +91,7 @@ int of_dma_controller_register(struct device_node *np,
+ 				(struct of_phandle_args *, struct of_dma *),
+ 				void *data)
+ {
++	void 	*parent;
+ 	struct of_dma	*ofdma;
+ 	int		nbcells;
+ 
+@@ -103,8 +104,10 @@ int of_dma_controller_register(struct device_node *np,
+ 	if (!ofdma)
+ 		return -ENOMEM;
+ 
+-	nbcells = be32_to_cpup(of_get_property(np, "#dma-cells", NULL));
+-	if (!nbcells) {
++	parent = of_get_property(np, "#dma-cells", NULL);
++	if (parent)
++		nbcells = be32_to_cpup(parent);
++	if (!parent || !nbcells) {
+ 		pr_err("%s: #dma-cells property is missing or invalid\n",
+ 		       __func__);
+ 		kfree(ofdma);
+-- 
+1.7.10.4
