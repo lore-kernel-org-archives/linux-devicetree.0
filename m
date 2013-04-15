@@ -1,75 +1,105 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V4 1/6] clk: OMAP: introduce device tree binding to kernel
- clock data
-Date: Mon, 15 Apr 2013 13:43:52 -0500
-Message-ID: <CAGo_u6oHLxu2zqb_5e3pbnHU7Rp+ReXM9nEeHBw6_d8__aoVxQ@mail.gmail.com>
-References: <1365807278-554-1-git-send-email-nm@ti.com>
-	<1365807278-554-2-git-send-email-nm@ti.com>
-	<516C294D.6070700@wwwdotorg.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v6] net: sh_eth: Add support of device tree probe
+Date: Mon, 15 Apr 2013 22:52:32 +0400
+Message-ID: <516C4C70.7050802@cogentembedded.com>
+References: <1363675196-8940-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com> <51486699.6000908@cogentembedded.com> <514AB0CB.2030808@renesas.com> <516B0C59.3050207@cogentembedded.com> <516B6340.9090604@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <516C294D.6070700@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Paul Walmsley <paul@pwsan.com>, Mike Turquette <mturquette@linaro.org>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, lkml <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@deeprootsystems.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <516B6340.9090604@renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, magnus.damm@gmail.com, kda@linux-powerpc.org, horms+renesas@verge.net.au, mark.rutland@arm.com, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 15, 2013 at 11:22 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 04/12/2013 04:54 PM, Nishanth Menon wrote:
->> OMAP clock data is located in arch/arm/mach-omap2/cclockXYZ_data.c.
->> However, this presents an obstacle for using these clock nodes in
->> Device Tree definitions. This is especially true for board specific
->> clocks initially. The fixed clocks are currently found via clock
->> aliases table. There are many possible approaches to this problem as
->> discussed in the following thread:
->> http://marc.info/?t=136370325600009&r=1&w=2.
->> Highlights of the options:
->> a) device specific clk_add_alias:
->>    cons: driver handling required
->> b) using an generic clk node and indexing to reach the clock required.
->>    This is similar in approach taken by tegra and few other platforms.
->>    Example usage: clock = <&clk 5>;
->>    cons: potential to have mismatches in indexed table and associated
->>    dtb data. In addition, managing continued documentation in bindings
->>    as clock indexing increases. Even though readability angle could be
->>    improved by using preprocessing of DT using macros, indexed
->>    approach is inherently risky from cases like the following:
->>    clk indexes in kernel:
->>    1 - mpu_dpll
->>    2 - aux_clk1
->>    3 - core_clk
->>    DT entry for peripheral X uses <&clk 2> to reach aux_clk1. Now, let's
->>    say kernel updates indices to:
->>    1 - mpu_dpll
->>    2 - per_dpll
->>    3 - aux_clk1
->>    4 - core_clk
->>    using the old dtb(or dts missing an update), on new kernel which
->>    has updated indices will result in per_dpll now controlled for
->>    peripheral X without warning or any potential error detection.
->>
->>    Even though we could claim this is user error, such errors are hard
->>    to track down and fix.
->
-> The error in case (b) is that you shouldn't be changing the DT bindings
-> after they've first been created. That would avoid the problem
-> situation. The person using the old DTB with the new kernel didn't
-> commit user error.
-That is what we'd like folks to follow, but when code is in
-development, or productization, there is no saying the type of
-mistakes people end up doing.
->
->> An alternate approach introduced here is to introduce device tree
->> bindings corresponding to the clock nodes required in DT definition
->> for SoC which automatically maps back to the definitions in
->> cclockXYZ_data.c.
->
-> Well, I haven't read the patches, but isn't that exactly what the "2" is
-> in <&clk 2>?
-partly so. yes: it indexes back to the right clock node - at that
-point the comparison stops. we just point back on naming as needed and
-introduce nodes purely for the ones that we need.
+Hello.
 
-Regards,
-Nishanth Menon
+On 15-04-2013 6:17, Nobuhiro Iwamatsu wrote:
+
+>>>>> This adds support of device tree probe for Renesas sh-ether driver.
+
+>>>>> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+
+>>>>> V6: - Add renesas,sh-eth-gigabit, renesas,sh-eth-sh4 and
+>>>>> renesas,sh-eth-sh3-sh2 to compatible string.
+>>>>> - Remove sh-eth,register-type. This is supplemented by the
+>>>>> compatible string.
+>>>>> - Use the of_property_read_bool instead of of_find_property.
+>>>>> - Add sanity chheck for of_property_read_u32.
+>>>>> - Update document.
+>>>>> V5: - Rewrite sh_eth_parse_dt().
+>>>>> Remove of_device_is_available() and CONFIG_OF from support OF
+>>>>> checking function and re-add empty sh_eth_parse_dt().
+>>>>> - Add CONFIG_PM to definition of dev_pm_ops.
+>>>>> - Add CONFIG_OF to definition of of_device_id.
+>>>>> V4: - Remove empty sh_eth_parse_dt().
+>>>>> V3: - Remove empty sh_eth_parse_dt().
+>>>>> V3: - Removed sentnece of "needs-init" from document.
+>>>>> V2: - Removed ether_setup().
+>>>>> - Fixed typo from "sh-etn" to "sh-eth".
+>>>>> - Removed "needs-init" and sh-eth,endian from definition of DT.
+>>>>> - Changed "sh-eth,edmac-endian" instead of "sh-eth,edmac-big-endain"
+>>>>> in definition of DT.
+>>>>> ---
+>> [...]
+
+>>>>> @@ -2391,12 +2451,33 @@ static int sh_eth_drv_probe(struct platform_device
+>>>>> *pdev)
+>>>>> goto out_release;
+>>>>> }
+>>>>>
+>>>>> + if (np) {
+>>>>> + pd = sh_eth_parse_dt(&pdev->dev, ndev, np);
+>>>>> + if (pdev->dev.platform_data && pd) {
+>>>>> + struct sh_eth_plat_data *tmp =
+>>>>> + pdev->dev.platform_data;
+>>>>> + pd->set_mdio_gate = tmp->set_mdio_gate;
+>>>>> + pd->needs_init = tmp->needs_init;
+
+>>>> OK, so we can't fully convert this driver to the device tree due to
+>>>> procedural platform data.
+
+>>> > I then would advice just using OF_DEV_AUXDATA() in the platform data
+
+>> /sdata/code/.
+
+>>> instead of trying to convert the driver to device tree.
+
+>> Convert the platfrom data, I meant. But I already wrote about that I think.
+
+>>> Yes, I knew about this.
+
+>> But still attempted to document and use the data-only device tree properties
+>> (which was pointless in the light of procediral platfrom data)?
+
+> Yes, I added this information to next patch.
+
+    WHich information, I didn't understand?
+
+>>>>> +
+>>>>> +#ifdef CONFIG_OF
+>>>>> +static const struct of_device_id sh_eth_match[] = {
+>>>>> + { .compatible = "renesas,sh-eth-gigabit", },
+>>>>> + { .compatible = "renesas,sh-eth-sh4", },
+>>>>> + { .compatible = "renesas,sh-eth-sh3-sh2", },
+
+>>> Therefore, the compatible property of this device becomes <CPU>-sh-eth
+>>> or <CPU>-sh-eth-<ETHER TYPE>.
+
+>>> How about this?
+
+>> Sounds better. I think however that the conversion of this driver to device
+>> tree shouldn't be done without getting rid of the current #ifdef mess in it
+>> (which is still on my agenda). I think that the 'register_type' field should
+>> move from the platform data to the 'struct sh_eth_cpu_data' in the process.
+
+> I see. this problem will fix next step, I think.
+
+    No, not at all. If we don't get rid of the #ifdef mess, adding device tree 
+support will have to add even more of it.
+
+> Best regards,
+>    Nobuhiro
+
+WBR, Sergei
