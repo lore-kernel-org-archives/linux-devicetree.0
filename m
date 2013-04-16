@@ -1,38 +1,49 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [BUG] omap: mfd/regulator: twl/core: init order
-Date: Tue, 16 Apr 2013 09:45:40 +0200
-Message-ID: <516D01A4.8080301@ti.com>
-References: <1365877659.3812.110.camel@mars> <516BD479.2020904@ti.com>
- <1366023401.957.5.camel@mars> <516BDDAC.8040905@ti.com>
- <20130415162541.GO10155@atomide.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH v3 00/15] ASoC: fsl-ssi: ac97-slave support
+Date: Tue, 16 Apr 2013 10:06:26 +0200
+Message-ID: <516D0682.5010309@metafoo.de>
+References: <1365939779-4507-1-git-send-email-mpa@pengutronix.de>
+ <516A9D5B.2070707@metafoo.de> <516C9A87.4090307@tabi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130415162541.GO10155-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Javier Martinez Canillas <martinez.javier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <516C9A87.4090307@tabi.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Timur Tabi <timur@tabi.org>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Markus Pargmann <mpa@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/15/2013 06:25 PM, Tony Lindgren wrote:
-> This fix should not be needed. It just means the real
-> problem is somewhere else. Pinctrl is already before the i2c
-> in drivers/Makefile. Maybe one of the MFD drivers has
-> a wrong initcall level?
+On 04/16/2013 02:25 AM, Timur Tabi wrote:
+> Lars-Peter Clausen wrote:
+>>> >@Lars:
+>>> >There are 4 new patches at the beginning of the series that fix some
+>>> problems
+>>> >of your cleanups. I think they were in the changes you posted. If not,
+>>> could you
+>>> >please add them to your branch?
+>> Hi,
+>>
+>> I had already fixed them localy. I'm in the process of polishing the last
+>> bits
+>> and pieces of my generic dmaengine PCM driver series right now and will
+>> submit
+>> it later today.
+> 
+> So which repository should I apply these patches to?  I want to make sure
+> they don't break PowerPC.
+> 
 
-FYI; I just sent a patch which I believe is the correct way to fix this iss=
-ue.
+You can use
+https://github.com/lclausen-adi/linux-2.6/tree/asoc-dmaengine-cleanups, but
+make sure to skip the first 4 patches from this series.
 
--- =
-
-P=E9ter
+- Lars
