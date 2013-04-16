@@ -1,16 +1,17 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RFC PATCH 2/2] ARM: DT: kernel: DT cpu node bindings update
-Date: Tue, 16 Apr 2013 12:00:41 +0100
-Message-ID: <20130416110040.GB19837@e102568-lin.cambridge.arm.com>
-References: <1366042402-8987-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1366042402-8987-3-git-send-email-lorenzo.pieralisi@arm.com>
- <20130416024146.GG28660@verge.net.au>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v6 0/3] of/pci: Provide common support for PCI DT parsing
+Date: Tue, 16 Apr 2013 07:29:51 -0400
+Message-ID: <20130416112951.GZ28693@titan.lakedaemon.net>
+References: <1365693969-23907-1-git-send-email-Andrew.Murray@arm.com>
+ <20130415175641.GM28693@titan.lakedaemon.net>
+ <CACRpkdbSd8pRG5pUS0ymqXDSp=ZhoQa2ctVuRA0cCmUcX5qFAA@mail.gmail.com>
+ <1366096361.24994.49.camel@pasglop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130416024146.GG28660@verge.net.au>
 Content-Disposition: inline
+In-Reply-To: <1366096361.24994.49.camel@pasglop>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,65 +21,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Dave Martin <dave.martin@linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>, Sekhar Nori <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Rutland <Mark.Rutland@arm.com>, Lennert Buytenhek <kernel@wantstofly.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, David Brown <davidb@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: siva.kallam@samsung.com, linux-pci@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@avionic-design.de>, Liviu.Dudau@arm.com, Grant Likely <grant.likely@secretlab.ca>, Paul Mackerras <paulus@samba.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Abraham <thomas.abraham@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Kukjin Kim <kgene.kim@samsung.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Michal Simek <monstr@monstr.eu>linux-
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 16, 2013 at 03:41:46AM +0100, Simon Horman wrote:
-> On Mon, Apr 15, 2013 at 05:13:22PM +0100, Lorenzo Pieralisi wrote:
-> > In order to extend the current cpu nodes bindings to newer CPUs
-> > inclusive of AArch64 and to update support for older ARM CPUs this
-> > patch updates device tree documentation for the cpu nodes bindings.
-> >
-> > Main changes:
-> >
-> > - adds 64-bit bindings (inclusive of cpus node #address-cells updates)
-> > - defines behaviour on pre and post v7 uniprocessor systems
-> > - adds ARM 11MPcore specific reg property definition
-> >
-> > DT cpu map parsing code must be made compliant with the latest bindings
-> > updates, hence this patch also updates the arm_dt_init_cpu_maps() function
-> > with checks and additional parsing rules.
-> >
-> > Uniprocessor systems predating v7 do not parse the cpus node at all
-> > since the reg property is meaningless on those systems.
-> >
-> > Device trees for 64-bit systems can be taken as device tree input also
-> > for 64-bit CPUs running in 32-bit mode. The code checks that the reg entries
-> > are zeroed as required in the respective fields and detects automatically
-> > the cpus node #address-cells value so that device tree written for
-> > 64-bit ARM platforms (cpus #address-cells == 2) can still be taken as
-> > input. The correct device tree entries are to be set up by the boot
-> > loader, kernel code just checks that device tree entries in the cpus
-> > node are as expected for a 32-bit CPU (reg[63:24] == 0).
-> >
-> > cpu node entries with invalid reg property or containing duplicates are
-> > ignored and the device tree parsing is not stopped anymore when such
-> > entries are encountered, the device tree cpu entry is just skipped.
-> >
-> > A device tree with cpu nodes missing the boot CPU MPIDR is considered a
-> > hard error and the kernel flags this up as a bug to force firmware updates.
-> >
-> > The updates to cpus/cpu node bindings for ARM require all in-kernel dts files
-> > present in the mainline to be made compliant to the latest specification.
-> >
-> > This patch also updates ARM in-kernel non-compliant dts files to the latest
-> > cpus/cpu nodes bindings specification.
-> >
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/cpus.txt | 335 +++++++++++++++++++++----
-> >  arch/arm/boot/dts/exynos5440.dtsi              |   7 +
-> >  arch/arm/boot/dts/omap3.dtsi                   |   4 +
-> >  arch/arm/boot/dts/omap4.dtsi                   |   5 +
-> >  arch/arm/boot/dts/omap5.dtsi                   |   5 +
-> >  arch/arm/boot/dts/r8a7740.dtsi                 |   3 +
-> >  arch/arm/boot/dts/sh7372.dtsi                  |   4 +
+On Tue, Apr 16, 2013 at 09:12:41AM +0200, Benjamin Herrenschmidt wrote:
+> On Mon, 2013-04-15 at 20:29 +0200, Linus Walleij wrote:
+> > > As agreed with Rob Herring, series applied to mvebu/drivers to
+> > support
+> > > mvebu pcie driver.
+> > 
+> > Will this hit ARM SoC soon-ish so I can base a pull request for the
+> > Integrator on this stuff as well?
 > 
-> I would prefer if the SoC updates, in particular the sh7372 portion,
-> was a separate patch.
+> Do not send this series upstream (or even in -next) until it has been at
+> least build-tested and acked by the affected architectures. AFAIK it
+> breaks microblaze build (simple missing #include) and isn't yet tested
+> on powerpc (I'm on vacation, maybe somebody else on linuxppc-dev can do
+> it though).
 
-Ok, I will split the patch accordingly.
+I added the missing include reference by Michal Simek for the branch at
+mvebu/drivers.
 
-Thanks,
-Lorenzo
+thx,
+
+Jason.
