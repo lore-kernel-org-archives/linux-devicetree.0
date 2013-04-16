@@ -1,50 +1,83 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v6 1/3] of/pci: Unify pci_process_bridge_OF_ranges from
- Microblaze and PowerPC
-Date: Tue, 16 Apr 2013 12:49:03 +0100
-Message-ID: <20130416114903.GA13259@arm.com>
-References: <1365693969-23907-1-git-send-email-Andrew.Murray@arm.com>
- <1365693969-23907-2-git-send-email-Andrew.Murray@arm.com>
- <20130415145741.4e4c362b@skate> <516C2FEF.7080006@monstr.eu>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 05/15] ASoC: phycore-ac97: Add DT support
+Date: Tue, 16 Apr 2013 12:59:43 +0100
+Message-ID: <20130416115942.GG26958@opensource.wolfsonmicro.com>
+References: <1365939779-4507-1-git-send-email-mpa@pengutronix.de>
+ <1365939779-4507-6-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <516C2FEF.7080006@monstr.eu>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: "siva.kallam@samsung.com" <siva.kallam@samsung.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>, Liviu Dudau <Liviu.Dudau@arm.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "paulus@samba.org" <paulus@samba.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "jg1.han@samsung.com" <jg1.han@samsung.com>, "jgunthorpe@obsidianresearch.com" <jgunthorpe@obsidianresearch.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Content-Type: multipart/mixed; boundary="===============5915629319957508138=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1365939779-4507-6-git-send-email-mpa@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 15, 2013 at 05:50:55PM +0100, Michal Simek wrote:
-> That's why please add this header to this patch.
-> 
-> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> index 3e428a1..f30887e 100644
-> --- a/drivers/of/of_pci.c
-> +++ b/drivers/of/of_pci.c
-> @@ -1,6 +1,7 @@
->  #include <linux/kernel.h>
->  #include <linux/export.h>
->  #include <linux/of.h>
-> +#include <linux/of_address.h>
->  #include <linux/of_pci.h>
->  #include <asm/prom.h>
-> 
-> 
-> When you fix it:
-> Acked-by: Michal Simek <monstr@monstr.eu>
 
-I've added this fix to the latest patchset (v7) and also your Ack - thanks for
-your feedback (and the robot...).
+--===============5915629319957508138==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fCcDWlUEdh43YKr8"
+Content-Disposition: inline
 
-Andrew Murray
+
+--fCcDWlUEdh43YKr8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Sun, Apr 14, 2013 at 01:42:49PM +0200, Markus Pargmann wrote:
+
+> +	/*
+> +	 * This driver doesn't need to know which actual hardware is used.
+> +	 * The audmux driver has knowledge about it's type, and returns
+> +	 * an error if executed on the wrong type of hardware.
+> +	 */
+> +	ret = phycore_ac97_pca100_audmux();
+> +	if (!ret)
+> +		return 0;
+> +
+> +	ret = phycore_ac97_pcm043_audmux();
+
+The DT really ought to be able to give enough information to figure out
+the audmux configuration.  If we can't do that it rather defeats the
+point of moving to DT...
+
+--fCcDWlUEdh43YKr8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRbT0nAAoJELSic+t+oim9AUYP/2KCKO1ef2r3pCJBeILkP9Ia
+1pHyI5WI1EmflW3MMBn2KOzOaWYn7xn9a8Dhozi1WR/PDxOkOkIEJyRWgcnYIk3c
+K/QKB4PKPKR/xESyuyEZ4Tr2owi22PXhAFs5b2i5iSfTyVzkIieqBq53Z9k+FbT9
+vjM4kzV6IeJH9JhvnJ/s7fr28vOpgKxfUUVNv2IB/8XTnTh9nbqeYAvX6Z/uf9/+
+g6Ur2wY01sp6p0PnNav7YfQgQupdt5C74Cqpdm8BNHqLlbSOtEyaMYcpeKC8rKYW
+JLIVbja9nq8wt9whhJtdxaCEW+OzBWCNLwG/7EqabD7uCy+ANzbHNuxyUAaOFhgm
+7cjh0H3WkcXM+8bIiNkw0LmuoTHGxCryumzLIw7pA0PnMGpdnQLYP++YxShUUwUc
+Qg+2VE15XMWiR4TtN0I5rVWPAqog2LCNuqCY6YjHpWf94bJvqqt73zRLmNL3IE8W
+gfxLkyLXGc1VhO73t6lxZbDFQhGdliQOJYCjQbOszB0BNA+6yMVdUCHRl/BepQVU
+PQSWsQYWMPtWOdWGQEASNVQ1sSF4Gti3lZZIsdNMeJdm/A9J8zsqexdKvRoEynmJ
+7/Za+Pgp7SMWOhjPKxkMbJG6zZoRkmoiTldeQS85sDUTj90/NvWRo4zl1o/nu8q5
+70eq2KLF8Uwfh7hXXo1Y
+=EjLn
+-----END PGP SIGNATURE-----
+
+--fCcDWlUEdh43YKr8--
+
+--===============5915629319957508138==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============5915629319957508138==--
