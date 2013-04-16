@@ -1,40 +1,57 @@
-From: Timur Tabi <timur@tabi.org>
-Subject: Re: [PATCH v3 00/15] ASoC: fsl-ssi: ac97-slave support
-Date: Mon, 15 Apr 2013 19:25:43 -0500
-Message-ID: <516C9A87.4090307@tabi.org>
-References: <1365939779-4507-1-git-send-email-mpa@pengutronix.de>
- <516A9D5B.2070707@metafoo.de>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] libfdt: Add function to find regions in an FDT
+Date: Mon, 15 Apr 2013 17:50:40 -0700
+Message-ID: <CAPnjgZ0GxyyL_JgKm7WPka0rhJiVW3RONmy8px4qihye9kY2_w@mail.gmail.com>
+References: <1360968578-18443-1-git-send-email-sjg@chromium.org>
+ <1360968578-18443-2-git-send-email-sjg@chromium.org>
+ <CAPnjgZ2uPRtDZXt1AwtAnp702sEya6OxtDpEy1kUD=Wox=0CfA@mail.gmail.com>
+ <20130322131849.GH13838@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <516A9D5B.2070707@metafoo.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lars-Peter Clausen <lars@metafoo.de>, Markus Pargmann <mpa@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130322131849.GH13838-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Lars-Peter Clausen wrote:
->> >@Lars:
->> >There are 4 new patches at the beginning of the series that fix some problems
->> >of your cleanups. I think they were in the changes you posted. If not, could you
->> >please add them to your branch?
-> Hi,
+Hi David,
+
+On Fri, Mar 22, 2013 at 6:18 AM, David Gibson
+<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> On Tue, Mar 12, 2013 at 08:46:12PM -0700, Simon Glass wrote:
+>> Hi,
+>>
+>> On Fri, Feb 15, 2013 at 2:49 PM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>> > Given a set of nodes and properties, find the regions of the device tree
+>> > which describe those parts.
+>> >
+>> > A test is provided which builds a tree while tracking where the regions
+>> > should be, then calls fdt_first/next_region() to make sure that it agrees.
+>> >
+>> > Further tests will come as part of fdtgrep.
+>> >
+>> > Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>>
+>> I just wondered if there any any comments on this new version?
 >
-> I had already fixed them localy. I'm in the process of polishing the last bits
-> and pieces of my generic dmaengine PCM driver series right now and will submit
-> it later today.
+> Ugh, sorry.  I've been tied up.  From the little I've glanced over it,
+> I'm still having trouble getting a coherent feel for the overall
+> concept :/
 
-So which repository should I apply these patches to?  I want to make sure 
-they don't break PowerPC.
+OK I can perhaps write a summary if you give me an idea what I need to
+address. Perhaps it is best to look at this by playing with 'fdtgrep'
+and seeing how it behaves?
 
--- 
-Timur Tabi
+Regards,
+Simon
