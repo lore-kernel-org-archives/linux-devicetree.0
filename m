@@ -1,7 +1,8 @@
 From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 05/10] fdtdump: make usage a bit more friendly
-Date: Mon, 15 Apr 2013 22:13:12 -0400
-Message-ID: <1366078397-14889-6-git-send-email-vapier@gentoo.org>
+Subject: [PATCH 07/10] dtc/fdt{get,
+ put}/convert-dtsv0-lexer: convert to new usage helpers
+Date: Mon, 15 Apr 2013 22:13:14 -0400
+Message-ID: <1366078397-14889-8-git-send-email-vapier@gentoo.org>
 References: <1366078397-14889-1-git-send-email-vapier@gentoo.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,27 +22,36 @@ Sender: "devicetree-discuss"
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This starts a new usage framework and then cuts fdtdump over to it.
-Now we can do `fdtdump -h` and get something useful back.
+This helps standardize the flag processing and the usage screens.
+
+Only lightly tested; would be great if someone who uses these utils
+could double check.
 
 Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
 ---
- fdtdump.c | 31 +++++++++++++++++++++++--------
- util.c    | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- util.h    | 61 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 138 insertions(+), 8 deletions(-)
+ convert-dtsv0-lexer.l |  22 +++++++---
+ dtc.c                 | 111 ++++++++++++++++++++++++++------------------------
+ fdtget.c              |  60 ++++++++++++---------------
+ fdtput.c              |  63 +++++++++++++---------------
+ util.h                |   2 +-
+ 5 files changed, 131 insertions(+), 127 deletions(-)
 
-diff --git a/fdtdump.c b/fdtdump.c
-index 03ea429..a6e522c 100644
---- a/fdtdump.c
-+++ b/fdtdump.c
-@@ -117,21 +117,36 @@ static void dump_blob(void *blob)
- 	}
- }
+diff --git a/convert-dtsv0-lexer.l b/convert-dtsv0-lexer.l
+index 89d540a..e62d27a 100644
+--- a/convert-dtsv0-lexer.l
++++ b/convert-dtsv0-lexer.l
+@@ -194,11 +194,15 @@ const struct {
+ 		}
  
+ %%
+-static void usage(void)
+-{
+-	fprintf(stderr, "convert-dtsv0 <v0 dts file>...\n");
+-	exit(3);
+-}
 +/* Usage related data. */
-+static const char usage_synopsis[] = "fdtdump [options] <file>";
-+static const char usage_short_opts[] = USAGE_COMMON_SHORT_OPTS;
++static const char usage_synopsis[] = "convert-dtsv0 [options] <v0 dts file>...";
++static const char usage_short_opts[] = "" USAGE_COMMON_SHORT_OPTS;
 +static struct option const usage_long_opts[] = {
 +	USAGE_COMMON_LONG_OPTS
 +};
@@ -49,175 +59,397 @@ index 03ea429..a6e522c 100644
 +	USAGE_COMMON_OPTS_HELP
 +};
  
+ static void convert_file(const char *fname)
+ {
+@@ -226,10 +230,16 @@ static void convert_file(const char *fname)
+ 
  int main(int argc, char *argv[])
  {
 +	int opt;
-+	const char *file;
- 	char *buf;
+ 	int i;
  
--	if (argc < 2) {
--		fprintf(stderr, "supply input filename\n");
--		return 5;
 +	while ((opt = util_getopt_long()) != EOF) {
 +		switch (opt) {
 +		case_USAGE_COMMON_FLAGS
 +		}
++	}
+ 	if (argc < 2)
+-		usage();
++		long_usage("missing filename");
+ 
+ 	for (i = 1; i < argc; i++) {
+ 		fprintf(stderr, "Converting %s from dts v0 to dts v1\n", argv[i]);
+diff --git a/dtc.c b/dtc.c
+index e4e1b84..d0a1f2d 100644
+--- a/dtc.c
++++ b/dtc.c
+@@ -47,55 +47,60 @@ static void fill_fullpaths(struct node *tree, const char *prefix)
+ 		fill_fullpaths(child, tree->fullpath);
+ }
+ 
+-static void  __attribute__ ((noreturn)) usage(void)
+-{
+-	fprintf(stderr, "Usage:\n");
+-	fprintf(stderr, "\tdtc [options] <input file>\n");
+-	fprintf(stderr, "\nOptions:\n");
+-	fprintf(stderr, "\t-h\n");
+-	fprintf(stderr, "\t\tThis help text\n");
+-	fprintf(stderr, "\t-q\n");
+-	fprintf(stderr, "\t\tQuiet: -q suppress warnings, -qq errors, -qqq all\n");
+-	fprintf(stderr, "\t-I <input format>\n");
+-	fprintf(stderr, "\t\tInput formats are:\n");
+-	fprintf(stderr, "\t\t\tdts - device tree source text\n");
+-	fprintf(stderr, "\t\t\tdtb - device tree blob\n");
+-	fprintf(stderr, "\t\t\tfs - /proc/device-tree style directory\n");
+-	fprintf(stderr, "\t-o <output file>\n");
+-	fprintf(stderr, "\t-O <output format>\n");
+-	fprintf(stderr, "\t\tOutput formats are:\n");
+-	fprintf(stderr, "\t\t\tdts - device tree source text\n");
+-	fprintf(stderr, "\t\t\tdtb - device tree blob\n");
+-	fprintf(stderr, "\t\t\tasm - assembler source\n");
+-	fprintf(stderr, "\t-V <output version>\n");
+-	fprintf(stderr, "\t\tBlob version to produce, defaults to %d (relevant for dtb\n\t\tand asm output only)\n", DEFAULT_FDT_VERSION);
+-	fprintf(stderr, "\t-d <output dependency file>\n");
+-	fprintf(stderr, "\t-R <number>\n");
+-	fprintf(stderr, "\t\tMake space for <number> reserve map entries (relevant for \n\t\tdtb and asm output only)\n");
+-	fprintf(stderr, "\t-S <bytes>\n");
+-	fprintf(stderr, "\t\tMake the blob at least <bytes> long (extra space)\n");
+-	fprintf(stderr, "\t-p <bytes>\n");
+-	fprintf(stderr, "\t\tAdd padding to the blob of <bytes> long (extra space)\n");
+-	fprintf(stderr, "\t-b <number>\n");
+-	fprintf(stderr, "\t\tSet the physical boot cpu\n");
+-	fprintf(stderr, "\t-f\n");
+-	fprintf(stderr, "\t\tForce - try to produce output even if the input tree has errors\n");
+-	fprintf(stderr, "\t-i\n");
+-	fprintf(stderr, "\t\tAdd a path to search for include files\n");
+-	fprintf(stderr, "\t-s\n");
+-	fprintf(stderr, "\t\tSort nodes and properties before outputting (only useful for\n\t\tcomparing trees)\n");
+-	fprintf(stderr, "\t-v\n");
+-	fprintf(stderr, "\t\tPrint DTC version and exit\n");
+-	fprintf(stderr, "\t-H <phandle format>\n");
+-	fprintf(stderr, "\t\tphandle formats are:\n");
+-	fprintf(stderr, "\t\t\tlegacy - \"linux,phandle\" properties only\n");
+-	fprintf(stderr, "\t\t\tepapr - \"phandle\" properties only\n");
+-	fprintf(stderr, "\t\t\tboth - Both \"linux,phandle\" and \"phandle\" properties\n");
+-	fprintf(stderr, "\t-W [no-]<checkname>\n");
+-	fprintf(stderr, "\t-E [no-]<checkname>\n");
+-	fprintf(stderr, "\t\t\tenable or disable warnings and errors\n");
+-	exit(3);
+-}
++/* Usage related data. */
++static const char usage_synopsis[] = "dtc [options] <input file>";
++static const char usage_short_opts[] = "qI:O:o:V:d:R:S:p:fb:i:H:sW:E:hv";
++static struct option const usage_long_opts[] = {
++	{"quiet",            no_argument, NULL, 'q'},
++	{"in-format",         a_argument, NULL, 'I'},
++	{"out",               a_argument, NULL, 'o'},
++	{"out-format",        a_argument, NULL, 'O'},
++	{"out-version",       a_argument, NULL, 'V'},
++	{"out-dependency",    a_argument, NULL, 'd'},
++	{"reserve",           a_argument, NULL, 'R'},
++	{"space",             a_argument, NULL, 'S'},
++	{"pad",               a_argument, NULL, 'p'},
++	{"boot-cpu",          a_argument, NULL, 'b'},
++	{"force",            no_argument, NULL, 'f'},
++	{"include",           a_argument, NULL, 'i'},
++	{"sort",             no_argument, NULL, 's'},
++	{"phandle",           a_argument, NULL, 'H'},
++	{"warning",           a_argument, NULL, 'W'},
++	{"error",             a_argument, NULL, 'E'},
++	{"help",             no_argument, NULL, 'h'},
++	{"version",          no_argument, NULL, 'v'},
++	{NULL,               no_argument, NULL, 0x0},
++};
++static const char * const usage_opts_help[] = {
++	"\n\tQuiet: -q suppress warnings, -qq errors, -qqq all",
++	"\n\tInput formats are:\n"
++	 "\t\tdts - device tree source text\n"
++	 "\t\tdtb - device tree blob\n"
++	 "\t\tfs  - /proc/device-tree style directory",
++	"\n\tOutput file",
++	"\n\tOutput formats are:\n"
++	 "\t\tdts - device tree source text\n"
++	 "\t\tdtb - device tree blob\n"
++	 "\t\tasm - assembler source",
++	"\n\tBlob version to produce, defaults to %d (for dtb and asm output)", //, DEFAULT_FDT_VERSION);
++	"\n\tOutput dependency file",
++	"\n\ttMake space for <number> reserve map entries (for dtb and asm output)",
++	"\n\tMake the blob at least <bytes> long (extra space)",
++	"\n\tAdd padding to the blob of <bytes> long (extra space)",
++	"\n\tSet the physical boot cpu",
++	"\n\tTry to produce output even if the input tree has errors",
++	"\n\tAdd a path to search for include files",
++	"\n\tSort nodes and properties before outputting (useful for comparing trees)",
++	"\n\tValid phandle formats are:\n"
++	 "\t\tlegacy - \"linux,phandle\" properties only\n"
++	 "\t\tepapr  - \"phandle\" properties only\n"
++	 "\t\tboth   - Both \"linux,phandle\" and \"phandle\" properties",
++	"\n\tEnable/disable warnings (prefix with \"no-\")",
++	"\n\tEnable/disable errors (prefix with \"no-\")",
++	"\n\tPrint this help and exit",
++	"\n\tPrint version and exit",
++	NULL,
++};
+ 
+ int main(int argc, char *argv[])
+ {
+@@ -116,8 +121,7 @@ int main(int argc, char *argv[])
+ 	minsize    = 0;
+ 	padsize    = 0;
+ 
+-	while ((opt = getopt(argc, argv, "hI:O:o:V:d:R:S:p:fqb:i:vH:sW:E:"))
+-			!= EOF) {
++	while ((opt = util_getopt_long()) != EOF) {
+ 		switch (opt) {
+ 		case 'I':
+ 			inform = optarg;
+@@ -182,13 +186,14 @@ int main(int argc, char *argv[])
+ 			break;
+ 
+ 		case 'h':
++			long_usage(NULL);
+ 		default:
+-			usage();
++			long_usage("unknown option");
+ 		}
  	}
-+	if (optind != argc - 1)
-+		long_usage("missing input filename");
-+	file = argv[optind];
-+
-+	buf = utilfdt_read(file);
-+	if (!buf)
-+		die("could not read: %s\n", file);
  
--	buf = utilfdt_read(argv[1]);
--	if (buf)
--		dump_blob(buf);
--	else
--		return 10;
-+	dump_blob(buf);
- 
+ 	if (argc > (optind+1))
+-		usage();
++		long_usage("missing files");
+ 	else if (argc < (optind+1))
+ 		arg = "-";
+ 	else
+diff --git a/fdtget.c b/fdtget.c
+index c2fbab2..5008cc1 100644
+--- a/fdtget.c
++++ b/fdtget.c
+@@ -277,33 +277,33 @@ static int do_fdtget(struct display_info *disp, const char *filename,
  	return 0;
  }
-diff --git a/util.c b/util.c
-index 350cf8b..d9a823a 100644
---- a/util.c
-+++ b/util.c
-@@ -392,3 +392,57 @@ void util_version(void)
- 	printf("Version: %s\n", DTC_VERSION);
- 	exit(0);
+ 
+-static const char *usage_msg =
+-	"fdtget - read values from device tree\n"
+-	"\n"
+-	"Each value is printed on a new line.\n\n"
+-	"Usage:\n"
++/* Usage related data. */
++static const char usage_synopsis[] =
++	"read values from device tree\n"
+ 	"	fdtget <options> <dt file> [<node> <property>]...\n"
+ 	"	fdtget -p <options> <dt file> [<node> ]...\n"
+-	"Options:\n"
+-	"\t-t <type>\tType of data\n"
+-	"\t-p\t\tList properties for each node\n"
+-	"\t-l\t\tList subnodes for each node\n"
+-	"\t-d\t\tDefault value to display when the property is "
+-			"missing\n"
+-	"\t-h\t\tPrint this help\n\n"
++	"\n"
++	"Each value is printed on a new line.\n"
+ 	USAGE_TYPE_MSG;
+-
+-static void usage(const char *msg)
+-{
+-	if (msg)
+-		fprintf(stderr, "Error: %s\n\n", msg);
+-
+-	fprintf(stderr, "%s", usage_msg);
+-	exit(2);
+-}
++static const char usage_short_opts[] = "t:pld:" USAGE_COMMON_SHORT_OPTS;
++static struct option const usage_long_opts[] = {
++	{"type",              a_argument, NULL, 't'},
++	{"properties",       no_argument, NULL, 'p'},
++	{"list",             no_argument, NULL, 'l'},
++	{"default",           a_argument, NULL, 'd'},
++	USAGE_COMMON_LONG_OPTS,
++};
++static const char * const usage_opts_help[] = {
++	"Type of data",
++	"List properties for each node",
++	"List subnodes for each node",
++	"Default value to display when the property is missing",
++	USAGE_COMMON_OPTS_HELP
++};
+ 
+ int main(int argc, char *argv[])
+ {
++	int opt;
+ 	char *filename = NULL;
+ 	struct display_info disp;
+ 	int args_per_step = 2;
+@@ -312,20 +312,14 @@ int main(int argc, char *argv[])
+ 	memset(&disp, '\0', sizeof(disp));
+ 	disp.size = -1;
+ 	disp.mode = MODE_SHOW_VALUE;
+-	for (;;) {
+-		int c = getopt(argc, argv, "d:hlpt:");
+-		if (c == -1)
+-			break;
+-
+-		switch (c) {
+-		case 'h':
+-		case '?':
+-			usage(NULL);
++	while ((opt = util_getopt_long()) != EOF) {
++		switch (opt) {
++		case_USAGE_COMMON_FLAGS
+ 
+ 		case 't':
+ 			if (utilfdt_decode_type(optarg, &disp.type,
+ 					&disp.size))
+-				usage("Invalid type string");
++				long_usage("invalid type string");
+ 			break;
+ 
+ 		case 'p':
+@@ -347,7 +341,7 @@ int main(int argc, char *argv[])
+ 	if (optind < argc)
+ 		filename = argv[optind++];
+ 	if (!filename)
+-		usage("Missing filename");
++		long_usage("missing filename");
+ 
+ 	argv += optind;
+ 	argc -= optind;
+@@ -358,7 +352,7 @@ int main(int argc, char *argv[])
+ 
+ 	/* Check for node, property arguments */
+ 	if (args_per_step == 2 && (argc % 2))
+-		usage("Must have an even number of arguments");
++		long_usage("must have an even number of arguments");
+ 
+ 	if (do_fdtget(&disp, filename, argv, argc, args_per_step))
+ 		return 1;
+diff --git a/fdtput.c b/fdtput.c
+index f2197f5..f7bf56e 100644
+--- a/fdtput.c
++++ b/fdtput.c
+@@ -272,44 +272,40 @@ static int do_fdtput(struct display_info *disp, const char *filename,
+ 	return ret;
  }
+ 
+-static const char *usage_msg =
+-	"fdtput - write a property value to a device tree\n"
+-	"\n"
+-	"The command line arguments are joined together into a single value.\n"
+-	"\n"
+-	"Usage:\n"
++/* Usage related data. */
++static const char usage_synopsis[] =
++	"write a property value to a device tree\n"
+ 	"	fdtput <options> <dt file> <node> <property> [<value>...]\n"
+ 	"	fdtput -c <options> <dt file> [<node>...]\n"
+-	"Options:\n"
+-	"\t-c\t\tCreate nodes if they don't already exist\n"
+-	"\t-p\t\tAutomatically create nodes as needed for the node path\n"
+-	"\t-t <type>\tType of data\n"
+-	"\t-v\t\tVerbose: display each value decoded from command line\n"
+-	"\t-h\t\tPrint this help\n\n"
++	"\n"
++	"The command line arguments are joined together into a single value.\n"
+ 	USAGE_TYPE_MSG;
+-
+-static void usage(const char *msg)
+-{
+-	if (msg)
+-		fprintf(stderr, "Error: %s\n\n", msg);
+-
+-	fprintf(stderr, "%s", usage_msg);
+-	exit(2);
+-}
++static const char usage_short_opts[] = "cpt:v" USAGE_COMMON_SHORT_OPTS;
++static struct option const usage_long_opts[] = {
++	{"create",           no_argument, NULL, 'c'},
++	{"auto-path",        no_argument, NULL, 'p'},
++	{"type",              a_argument, NULL, 't'},
++	{"verbose",          no_argument, NULL, 'v'},
++	USAGE_COMMON_LONG_OPTS,
++};
++static const char * const usage_opts_help[] = {
++	"Create nodes if they don't already exist",
++	"Automatically create nodes as needed for the node path",
++	"Type of data",
++	"Display each value decoded from command line",
++	USAGE_COMMON_OPTS_HELP
++};
+ 
+ int main(int argc, char *argv[])
+ {
++	int opt;
+ 	struct display_info disp;
+ 	char *filename = NULL;
+ 
+ 	memset(&disp, '\0', sizeof(disp));
+ 	disp.size = -1;
+ 	disp.oper = OPER_WRITE_PROP;
+-	for (;;) {
+-		int c = getopt(argc, argv, "chpt:v");
+-		if (c == -1)
+-			break;
+-
++	while ((opt = util_getopt_long()) != EOF) {
+ 		/*
+ 		 * TODO: add options to:
+ 		 * - delete property
+@@ -319,20 +315,19 @@ int main(int argc, char *argv[])
+ 		 * - set amount of free space when writing
+ 		 * - expand fdt if value doesn't fit
+ 		 */
+-		switch (c) {
++		switch (opt) {
++		case_USAGE_COMMON_FLAGS
 +
-+void util_long_usage(const char *errmsg, const char *synopsis,
-+		     const char *short_opts, struct option const long_opts[],
-+		     const char * const opts_help[])
-+{
-+	FILE *fp = errmsg ? stderr : stdout;
-+	const char a_arg[] = "<arg>";
-+	size_t a_arg_len = strlen(a_arg) + 1;
-+	size_t i;
-+	int optlen;
-+
-+	fprintf(fp,
-+		"Usage: %s\n"
-+		"\n"
-+		"Options: -[%s]\n", synopsis, short_opts);
-+
-+	/* prescan the --long opt length to auto-align */
-+	optlen = 0;
-+	for (i = 0; long_opts[i].name; ++i) {
-+		/* +1 is for space between --opt and help text */
-+		int l = strlen(long_opts[i].name) + 1;
-+		if (long_opts[i].has_arg == a_argument)
-+			l += a_arg_len;
-+		if (optlen < l)
-+			optlen = l;
-+	}
-+
-+	for (i = 0; long_opts[i].name; ++i) {
-+		/* helps when adding new applets or options */
-+		assert(opts_help[i] != NULL);
-+
-+		/* first output the short flag if it has one */
-+		if (long_opts[i].val > '~')
-+			fprintf(fp, "      ");
-+		else
-+			fprintf(fp, "  -%c, ", long_opts[i].val);
-+
-+		/* then the long flag */
-+		if (long_opts[i].has_arg == no_argument)
-+			fprintf(fp, "--%-*s", optlen, long_opts[i].name);
-+		else
-+			fprintf(fp, "--%s %s%*s", long_opts[i].name, a_arg,
-+				(int)(optlen - strlen(long_opts[i].name) - a_arg_len), "");
-+
-+		/* finally the help text */
-+		fprintf(fp, "%s\n", opts_help[i]);
-+	}
-+
-+	if (errmsg) {
-+		fprintf(fp, "\nError: %s\n", errmsg);
-+		exit(EXIT_FAILURE);
-+	} else
-+		exit(EXIT_SUCCESS);
-+}
+ 		case 'c':
+ 			disp.oper = OPER_CREATE_NODE;
+ 			break;
+-		case 'h':
+-		case '?':
+-			usage(NULL);
+ 		case 'p':
+ 			disp.auto_path = 1;
+ 			break;
+ 		case 't':
+ 			if (utilfdt_decode_type(optarg, &disp.type,
+ 					&disp.size))
+-				usage("Invalid type string");
++				long_usage("invalid type string");
+ 			break;
+ 
+ 		case 'v':
+@@ -344,16 +339,16 @@ int main(int argc, char *argv[])
+ 	if (optind < argc)
+ 		filename = argv[optind++];
+ 	if (!filename)
+-		usage("Missing filename");
++		long_usage("missing filename");
+ 
+ 	argv += optind;
+ 	argc -= optind;
+ 
+ 	if (disp.oper == OPER_WRITE_PROP) {
+ 		if (argc < 1)
+-			usage("Missing node");
++			long_usage("missing node");
+ 		if (argc < 2)
+-			usage("Missing property");
++			long_usage("missing property");
+ 	}
+ 
+ 	if (do_fdtput(&disp, filename, argv, argc))
 diff --git a/util.h b/util.h
-index 95ae531..1da3bd3 100644
+index 1da3bd3..439b2b3 100644
 --- a/util.h
 +++ b/util.h
-@@ -2,6 +2,7 @@
- #define _UTIL_H
+@@ -164,7 +164,7 @@ int utilfdt_decode_type(const char *fmt, int *type, int *size);
+ #define USAGE_TYPE_MSG \
+ 	"<type>\ts=string, i=int, u=unsigned, x=hex\n" \
+ 	"\tOptional modifier prefix:\n" \
+-	"\t\thh or b=byte, h=2 byte, l=4 byte (default)\n";
++	"\t\thh or b=byte, h=2 byte, l=4 byte (default)";
  
- #include <stdarg.h>
-+#include <getopt.h>
- 
- /*
-  * Copyright 2011 The Chromium Authors, All Rights Reserved.
-@@ -184,4 +185,64 @@ void utilfdt_print_data(const char *data, int len);
-  */
- void util_version(void) __attribute__((noreturn));
- 
-+/**
-+ * Show usage and exit
-+ *
-+ * This helps standardize the output of various utils.  You most likely want
-+ * to use the long_usage() helper below rather than call this.
-+ *
-+ * @param errmsg	If non-NULL, an error message to display
-+ * @param synopsis	The initial example usage text (and possible examples)
-+ * @param short_opts	The string of short options
-+ * @param long_opts	The structure of long options
-+ * @param opts_help	An array of help strings (should align with long_opts)
-+ */
-+void util_long_usage(const char *errmsg, const char *synopsis,
-+		     const char *short_opts, struct option const long_opts[],
-+		     const char * const opts_help[]) __attribute__((noreturn));
-+
-+/**
-+ * Show usage and exit
-+ *
-+ * If you name all your usage variables with usage_xxx, then you can call this
-+ * help macro rather than expanding all arguments yourself.
-+ *
-+ * @param errmsg	If non-NULL, an error message to display
-+ */
-+#define long_usage(errmsg) \
-+	util_long_usage(errmsg, usage_synopsis, usage_short_opts, \
-+			usage_long_opts, usage_opts_help)
-+
-+/**
-+ * Call getopt_long() with standard options
-+ *
-+ * Since all util code runs getopt in the same way, provide a helper.
-+ */
-+#define util_getopt_long() getopt_long(argc, argv, usage_short_opts, \
-+				       usage_long_opts, NULL)
-+
-+/* Helper for aligning long_opts array */
-+#define a_argument required_argument
-+
-+/* Helper for usage_short_opts string constant */
-+#define USAGE_COMMON_SHORT_OPTS "hV"
-+
-+/* Helper for usage_long_opts option array */
-+#define USAGE_COMMON_LONG_OPTS \
-+	{"help",      no_argument, NULL, 'h'}, \
-+	{"version",   no_argument, NULL, 'V'}, \
-+	{NULL,        no_argument, NULL, 0x0}
-+
-+/* Helper for usage_opts_help array */
-+#define USAGE_COMMON_OPTS_HELP \
-+	"Print this help and exit", \
-+	"Print version and exit", \
-+	NULL
-+
-+/* Helper for getopt case statements */
-+#define case_USAGE_COMMON_FLAGS \
-+	case 'h': long_usage(NULL); \
-+	case 'V': util_version(); \
-+	case '?': long_usage("unknown option");
-+
- #endif /* _UTIL_H */
+ /**
+  * Print property data in a readable format to stdout
 -- 
 1.8.1.2
