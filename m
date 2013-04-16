@@ -1,14 +1,16 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v7 0/3] of/pci: Provide common support for PCI DT parsing
-Date: Tue, 16 Apr 2013 11:05:37 -0400
-Message-ID: <20130416150537.GC28693@titan.lakedaemon.net>
-References: <1366107508-12672-1-git-send-email-Andrew.Murray@arm.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH 6/8] ARM: at91: sam9263: add fb dt support
+Date: Tue, 16 Apr 2013 17:11:35 +0200
+Message-ID: <516D6A27.6070202@atmel.com>
+References: <20130411145741.GB25242@game.jcrosoft.org>
+ <1365692422-9565-1-git-send-email-plagnioj@jcrosoft.com>
+ <1365692422-9565-6-git-send-email-plagnioj@jcrosoft.com>
+ <516D5C06.1050807@atmel.com> <20130416141326.GB4998@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1366107508-12672-1-git-send-email-Andrew.Murray@arm.com>
+In-Reply-To: <20130416141326.GB4998@game.jcrosoft.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,43 +20,111 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Murray <Andrew.Murray@arm.com>
-Cc: linux-mips@linux-mips.org, siva.kallam@samsung.com, linux-pci@vger.kernel.org, linus.walleij@linaro.org, thierry.reding@avionic-design.de, Liviu.Dudau@arm.com, grant.likely@secretlab.ca, paulus@samba.org, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, jg1.han@samsung.com, jgunthorpe@obsidianresearch.com, thomas.abraham@linaro.org, benh@kernel.crashing.org, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, kgene.kim@samsung.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, monstr@monstr.eu, linux-kernel@vger.kernel.org, suren.reddy@samsung.com, linuxppc-dev@lists.ozlabs.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 16, 2013 at 11:18:25AM +0100, Andrew Murray wrote:
-> This patchset factors out duplicated code associated with parsing PCI
-> DT "ranges" properties across the architectures and introduces a
-> "ranges" parser. This parser "of_pci_range_parser" can be used directly
-> by ARM host bridge drivers enabling them to obtain ranges from device
-> trees.
+On 04/16/2013 04:13 PM, Jean-Christophe PLAGNIOL-VILLARD :
+> On 16:11 Tue 16 Apr     , Nicolas Ferre wrote:
+>> On 04/11/2013 05:00 PM, Jean-Christophe PLAGNIOL-VILLARD :
+>>> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+>>> Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+>>> ---
+>>>  arch/arm/boot/dts/at91sam9263.dtsi |   39 ++++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 39 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+>>> index 271d4de..3d0effa 100644
+>>> --- a/arch/arm/boot/dts/at91sam9263.dtsi
+>>> +++ b/arch/arm/boot/dts/at91sam9263.dtsi
+>>> @@ -303,6 +303,34 @@
+>>>  					};
+>>>  				};
+>>>  
+>>> +				fb {
+>>> +					pinctrl_fb: fb-0 {
+>>> +						atmel,pins =
+>>> +							<2 1 0x1 0x0	/* PC1 periph A */
+>>> +							 2 2 0x1 0x0	/* PC2 periph A */
+>>> +							 2 3 0x1 0x0	/* PC3 periph A */
+>>> +							 1 9 0x2 0x0	/* PB9 periph B */
+>>> +							 2 6 0x1 0x0	/* PC6 periph A */
+>>> +							 2 7 0x1 0x0	/* PC7 periph A */
+>>> +							 2 8 0x1 0x0	/* PC8 periph A */
+>>> +							 2 9 0x1 0x0	/* PC9 periph A */
+>>> +							 2 10 0x1 0x0	/* PC10 periph A */
+>>> +							 2 11 0x1 0x0	/* PC11 periph A */
+>>> +							 2 14 0x1 0x0	/* PC14 periph A */
+>>> +							 2 15 0x1 0x0	/* PC15 periph A */
+>>> +							 2 16 0x1 0x0	/* PC16 periph A */
+>>> +							 2 12 0x2 0x0	/* PC12 periph B */
+>>> +							 2 18 0x1 0x0	/* PC18 periph A */
+>>> +							 2 19 0x1 0x0	/* PC19 periph A */
+>>> +							 2 22 0x1 0x0	/* PC22 periph A */
+>>> +							 2 23 0x1 0x0	/* PC23 periph A */
+>>> +							 2 24 0x1 0x0	/* PC24 periph A */
+>>> +							 2 17 0x2 0x0	/* PC17 periph B */
+>>> +							 2 26 0x1 0x0	/* PC26 periph A */
+>>> +							 2 27 0x1 0x0>;	/* PC27 periph A */
+>>
+>> Verified, okay.
+>>
+>>> +					};
+>>> +				};
+>>> +
+>>>  				pioA: gpio@fffff200 {
+>>>  					compatible = "atmel,at91rm9200-gpio";
+>>>  					reg = <0xfffff200 0x200>;
+>>> @@ -464,6 +492,17 @@
+>>>  			};
+>>>  		};
+>>>  
+>>> +		fb0: fb@0x00500000 {
+>>
+>> No, it is 0x700000
+>>
+>>> +			compatible = "atmel,at91sam9263-lcdc";
+>>> +			reg = <0x00700000 0x1000>;
+>>
+>> Ditto.
+>>
+>>> +			interrupts = <26 3 0>;
+>>
+>> <26 4 0> here.
+> no lcd is 3 even in c
 > 
-> I've included the Reviewed-by and Tested-by's received from v5/v6 in this
-> patchset, earlier versions of this patchset (v3) have been tested-by:
-> 
-> Thierry Reding <thierry.reding@avionic-design.de>
-> Jingoo Han <jg1.han@samsung.com>
-> 
-> I've tested that this patchset builds and runs on ARM and that it builds on
-> PowerPC and x86_64.
+> and even 3 could be slow in some big lcd case
 
-Series replaces v6 in mvebu/drivers
+No, you mean the priority, but priority is encoded as the 3rd cell. So,
+we end up with:
 
-thx,
+<26 4 3>
 
-Jason.
+(I agree with the 3)
 
+
+>>
+>>
+>>> +			pinctrl-names = "default";
+>>> +			pinctrl-0 = <&pinctrl_fb>;
+>>> +			status = "disabled";
+>>> +			#address-cells = <1>;
+>>> +			#size-cells = <1>;
+>>
+>> Ditto in 9g45 case.
+>>
+>>> +		};
+>>> +
+>>>  		nand0: nand@40000000 {
+>>>  			compatible = "atmel,at91rm9200-nand";
+>>>  			#address-cells = <1>;
+>>>
+>>
+>>
+>> -- 
+>> Nicolas Ferre
 > 
-> Compared to the v6 sent by Andrew Murray, the following changes have
-> been made in response to build errors/warnings:
-> 
->  * Inclusion of linux/of_address.h in of_pci.c as suggested by Michal
->    Simek to prevent compilation failures on Microblaze (and others) and his
->    ack.
-> 
->  * Use of externs, static inlines and a typo in linux/of_address.h in response
->    to linker errors (multiple defination) on x86_64 as spotted by a kbuild test
->    robot on (jcooper/linux.git mvebu/drivers)
-> 
->  * Add EXPORT_SYMBOL_GPL to of_pci_range_parser function to be consistent
->    with of_pci_process_ranges function
+
+Bye,
+-- 
+Nicolas Ferre
