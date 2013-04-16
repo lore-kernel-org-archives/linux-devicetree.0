@@ -1,30 +1,77 @@
-From: Peter Korsgaard <jacmet@sunsite.dk>
-Subject: Re: [PATCH v5 1/3] i2c: mux: Add i2c-arb-gpio-challenge 'mux' driver
-Date: Tue, 16 Apr 2013 11:44:56 +0200
-Message-ID: <87wqs2kdwn.fsf@dell.be.48ers.dk>
-References: <1363192583-26363-1-git-send-email-dianders@chromium.org>
-	<1365543270-10736-1-git-send-email-dianders@chromium.org>
-	<20130416093633.GC16978@the-dreams.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130416093633.GC16978@the-dreams.de> (Wolfram Sang's message of
-	"Tue, 16 Apr 2013 11:36:33 +0200")
-Sender: linux-doc-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Doug Anderson <dianders@chromium.org>, Kukjin Kim <kgene.kim@samsung.com>, Simon Glass <sjg@chromium.org>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, grant.likely@secretlab.ca, yuvaraj.cd@gmail.com, ben.dooks@codethink.co.uk, u.kleine-koenig@pengutronix.de, broonie@opensource.wolfsonmicro.com, girish.shivananjappa@linaro.org, bhushan.r@samsung.com, sreekumar.c@samsung.com, prashanth.g@samsung.com, olof@lixom.net, djkurtz@chromium.org, swarren@wwwdotorg.org, linux@roeck-us.net, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, Stephen Warren <swarren@nvidia.com>, Jean Delvare <khali@linux-fr.org>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <guenter.roeck@ericsson.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.orglinux-
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] Documentation: dt: update properties in TI GPMC NAND example
+Date: Tue, 16 Apr 2013 11:01:24 +0100
+Message-ID: <20130416100124.78A3B3E14C0@localhost>
+References: <1365528215-5030-1-git-send-email-jon-hunter@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1365528215-5030-1-git-send-email-jon-hunter@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, Jon Hunter <jon-hunter@ti.com>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Wolfram" == Wolfram Sang <wsa@the-dreams.de> writes:
+On Tue, 9 Apr 2013 12:23:35 -0500, Jon Hunter <jon-hunter@ti.com> wrote:
+> The GPMC timing properties for device-tree have been updated
+> by adding a "-ns" or "-ps" suffix to indicate the units of
+> time the property represents. Therefore, update the timing
+> property names for TI GPMC NAND example.
+> 
+> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
 
-Hi,
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
- >> +- their-claim-gpios: The GPIOs that the other sides use the claim the bus.
- >> +  Note that some implementations may only support a single other master.
-
- Wolfram> Stronger? "Currently, only one other master is supported"?
-
-Also there's a typo: s/use the claim/use to claim/
+> ---
+>  .../devicetree/bindings/mtd/gpmc-nand.txt          |   28 ++++++++++----------
+>  1 file changed, 14 insertions(+), 14 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> index e7f8d7e..6a983c1 100644
+> --- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> @@ -56,20 +56,20 @@ Example for an AM33xx board:
+>  			nand-bus-width = <16>;
+>  			ti,nand-ecc-opt = "bch8";
+>  
+> -			gpmc,sync-clk = <0>;
+> -			gpmc,cs-on = <0>;
+> -			gpmc,cs-rd-off = <44>;
+> -			gpmc,cs-wr-off = <44>;
+> -			gpmc,adv-on = <6>;
+> -			gpmc,adv-rd-off = <34>;
+> -			gpmc,adv-wr-off = <44>;
+> -			gpmc,we-off = <40>;
+> -			gpmc,oe-off = <54>;
+> -			gpmc,access = <64>;
+> -			gpmc,rd-cycle = <82>;
+> -			gpmc,wr-cycle = <82>;
+> -			gpmc,wr-access = <40>;
+> -			gpmc,wr-data-mux-bus = <0>;
+> +			gpmc,sync-clk-ps = <0>;
+> +			gpmc,cs-on-ns = <0>;
+> +			gpmc,cs-rd-off-ns = <44>;
+> +			gpmc,cs-wr-off-ns = <44>;
+> +			gpmc,adv-on-ns = <6>;
+> +			gpmc,adv-rd-off-ns = <34>;
+> +			gpmc,adv-wr-off-ns = <44>;
+> +			gpmc,we-off-ns = <40>;
+> +			gpmc,oe-off-ns = <54>;
+> +			gpmc,access-ns = <64>;
+> +			gpmc,rd-cycle-ns = <82>;
+> +			gpmc,wr-cycle-ns = <82>;
+> +			gpmc,wr-access-ns = <40>;
+> +			gpmc,wr-data-mux-bus-ns = <0>;
+>  
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+> -- 
+> 1.7.10.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 -- 
-Bye, Peter Korsgaard
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
