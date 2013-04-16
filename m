@@ -1,15 +1,14 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH 7/8] ARM: at91: at9sam9m10g45ek: add dt lcd support
-Date: Tue, 16 Apr 2013 16:56:43 +0200
-Message-ID: <516D66AB.7050804@atmel.com>
-References: <20130411145741.GB25242@game.jcrosoft.org>
- <1365692422-9565-1-git-send-email-plagnioj@jcrosoft.com>
- <1365692422-9565-7-git-send-email-plagnioj@jcrosoft.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v7 0/3] of/pci: Provide common support for PCI DT parsing
+Date: Tue, 16 Apr 2013 11:05:37 -0400
+Message-ID: <20130416150537.GC28693@titan.lakedaemon.net>
+References: <1366107508-12672-1-git-send-email-Andrew.Murray@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1365692422-9565-7-git-send-email-plagnioj@jcrosoft.com>
+Content-Disposition: inline
+In-Reply-To: <1366107508-12672-1-git-send-email-Andrew.Murray@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,62 +18,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Andrew Murray <Andrew.Murray@arm.com>
+Cc: linux-mips@linux-mips.org, siva.kallam@samsung.com, linux-pci@vger.kernel.org, linus.walleij@linaro.org, thierry.reding@avionic-design.de, Liviu.Dudau@arm.com, grant.likely@secretlab.ca, paulus@samba.org, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, jg1.han@samsung.com, jgunthorpe@obsidianresearch.com, thomas.abraham@linaro.org, benh@kernel.crashing.org, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, kgene.kim@samsung.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, monstr@monstr.eu, linux-kernel@vger.kernel.org, suren.reddy@samsung.com, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/2013 05:00 PM, Jean-Christophe PLAGNIOL-VILLARD :
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
-> ---
->  arch/arm/boot/dts/at91sam9m10g45ek.dts |   29 +++++++++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
+On Tue, Apr 16, 2013 at 11:18:25AM +0100, Andrew Murray wrote:
+> This patchset factors out duplicated code associated with parsing PCI
+> DT "ranges" properties across the architectures and introduces a
+> "ranges" parser. This parser "of_pci_range_parser" can be used directly
+> by ARM host bridge drivers enabling them to obtain ranges from device
+> trees.
 > 
-> diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> index 20c3191..79dc034 100644
-> --- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> +++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-> @@ -104,6 +104,35 @@
->  			};
->  		};
->  
-> +		fb0: fb@0x00500000 {
-> +			display = <&display0>;
-> +			status = "okay";
-> +
-> +			display0: display {
-> +				bits-per-pixel = <32>;
-> +				atmel,lcdcon-backlight;
-> +				atmel,dmacon = <0x1>;
-> +				atmel,lcdcon2 = <0x80008002>;
-> +				atmel,guard-time = <9>;
-> +				atmel,lcd-wiring-mode = "RGB";
-> +
-> +				display-timings {
-> +					native-mode = <&timing0>;
-> +					timing0: timing0 {
-> +						clock-frequency = <9000000>;
-> +						hactive = <480>;
-> +						vactive = <272>;
-> +						hback-porch = <1>;
-> +						hfront-porch = <1>;
-> +						vback-porch = <40>;
-> +						vfront-porch = <1>;
-> +						hsync-len = <45>;
-> +						vsync-len = <1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-
-Seems good.
-
->  		nand0: nand@40000000 {
->  			nand-bus-width = <8>;
->  			nand-ecc-mode = "soft";
+> I've included the Reviewed-by and Tested-by's received from v5/v6 in this
+> patchset, earlier versions of this patchset (v3) have been tested-by:
 > 
+> Thierry Reding <thierry.reding@avionic-design.de>
+> Jingoo Han <jg1.han@samsung.com>
+> 
+> I've tested that this patchset builds and runs on ARM and that it builds on
+> PowerPC and x86_64.
 
+Series replaces v6 in mvebu/drivers
 
--- 
-Nicolas Ferre
+thx,
+
+Jason.
+
+> 
+> Compared to the v6 sent by Andrew Murray, the following changes have
+> been made in response to build errors/warnings:
+> 
+>  * Inclusion of linux/of_address.h in of_pci.c as suggested by Michal
+>    Simek to prevent compilation failures on Microblaze (and others) and his
+>    ack.
+> 
+>  * Use of externs, static inlines and a typo in linux/of_address.h in response
+>    to linker errors (multiple defination) on x86_64 as spotted by a kbuild test
+>    robot on (jcooper/linux.git mvebu/drivers)
+> 
+>  * Add EXPORT_SYMBOL_GPL to of_pci_range_parser function to be consistent
+>    with of_pci_process_ranges function
