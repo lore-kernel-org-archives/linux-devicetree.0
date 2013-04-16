@@ -1,7 +1,7 @@
 From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 04/10] util_version: new helper for displaying version info
-Date: Mon, 15 Apr 2013 22:13:11 -0400
-Message-ID: <1366078397-14889-5-git-send-email-vapier@gentoo.org>
+Subject: [PATCH 06/10] fdtdump: add a --scan option
+Date: Mon, 15 Apr 2013 22:13:13 -0400
+Message-ID: <1366078397-14889-7-git-send-email-vapier@gentoo.org>
 References: <1366078397-14889-1-git-send-email-vapier@gentoo.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,74 +21,111 @@ Sender: "devicetree-discuss"
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is so all utilities can have this flag and not just dtc.
+Often times, fdts get embedded in other larger files.  Rather than force
+people to `dd` the blob out themselves, make the fdtdump file smarter.
 
-Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+It can now scan the blob looking for the fdt magic.  Once locate, it does
+a little validation on the main struct to make sure we didn't hit random
+binary data.
+
 Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
 ---
- dtc.c  | 5 +----
- util.c | 7 +++++++
- util.h | 5 +++++
- 3 files changed, 13 insertions(+), 4 deletions(-)
+ fdtdump.c | 46 ++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 44 insertions(+), 2 deletions(-)
 
-diff --git a/dtc.c b/dtc.c
-index d40e220..e4e1b84 100644
---- a/dtc.c
-+++ b/dtc.c
-@@ -21,8 +21,6 @@
- #include "dtc.h"
- #include "srcpos.h"
- 
--#include "version_gen.h"
--
- /*
-  * Command line options
+diff --git a/fdtdump.c b/fdtdump.c
+index a6e522c..c8a3ee7 100644
+--- a/fdtdump.c
++++ b/fdtdump.c
+@@ -2,12 +2,14 @@
+  * fdtdump.c - Contributed by Pantelis Antoniou <pantelis.antoniou AT gmail.com>
   */
-@@ -158,8 +156,7 @@ int main(int argc, char *argv[])
- 			srcfile_add_search_path(optarg);
- 			break;
- 		case 'v':
--			printf("Version: %s\n", DTC_VERSION);
--			exit(0);
-+			util_version();
- 		case 'H':
- 			if (streq(optarg, "legacy"))
- 				phandle_format = PHANDLE_LEGACY;
-diff --git a/util.c b/util.c
-index 0367df6..350cf8b 100644
---- a/util.c
-+++ b/util.c
-@@ -34,6 +34,7 @@
  
- #include "libfdt.h"
- #include "util.h"
-+#include "version_gen.h"
++#include <stdbool.h>
+ #include <stdint.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <ctype.h>
  
- char *xstrdup(const char *s)
- {
-@@ -385,3 +386,9 @@ void utilfdt_print_data(const char *data, int len)
- 		printf("]");
++#include <libfdt.h>
+ #include <libfdt_env.h>
+ #include <fdt.h>
+ 
+@@ -119,11 +121,13 @@ static void dump_blob(void *blob)
+ 
+ /* Usage related data. */
+ static const char usage_synopsis[] = "fdtdump [options] <file>";
+-static const char usage_short_opts[] = USAGE_COMMON_SHORT_OPTS;
++static const char usage_short_opts[] = "s" USAGE_COMMON_SHORT_OPTS;
+ static struct option const usage_long_opts[] = {
++	{"scan",             no_argument, NULL, 's'},
+ 	USAGE_COMMON_LONG_OPTS
+ };
+ static const char * const usage_opts_help[] = {
++	"Scan for an embedded fdt in file",
+ 	USAGE_COMMON_OPTS_HELP
+ };
+ 
+@@ -132,20 +136,58 @@ int main(int argc, char *argv[])
+ 	int opt;
+ 	const char *file;
+ 	char *buf;
++	bool scan = false;
++	off_t len;
+ 
+ 	while ((opt = util_getopt_long()) != EOF) {
+ 		switch (opt) {
+ 		case_USAGE_COMMON_FLAGS
++
++		case 's':
++			scan = true;
++			break;
+ 		}
  	}
- }
-+
-+void util_version(void)
-+{
-+	printf("Version: %s\n", DTC_VERSION);
-+	exit(0);
-+}
-diff --git a/util.h b/util.h
-index b9c6d7e..95ae531 100644
---- a/util.h
-+++ b/util.h
-@@ -179,4 +179,9 @@ int utilfdt_decode_type(const char *fmt, int *type, int *size);
-  */
- void utilfdt_print_data(const char *data, int len);
+ 	if (optind != argc - 1)
+ 		long_usage("missing input filename");
+ 	file = argv[optind];
  
-+/**
-+ * Show source version and exit
-+ */
-+void util_version(void) __attribute__((noreturn));
+-	buf = utilfdt_read(file);
++	buf = utilfdt_read_len(file, &len);
+ 	if (!buf)
+ 		die("could not read: %s\n", file);
+ 
++	/* try and locate an embedded fdt in a bigger blob */
++	if (scan) {
++		unsigned char smagic[4];
++		char *p = buf;
++		char *endp = buf + len;
 +
- #endif /* _UTIL_H */
++		fdt_set_magic(smagic, FDT_MAGIC);
++
++		/* poor man's memmem */
++		while (true) {
++			p = memchr(p, smagic[0], endp - p - 4);
++			if (!p)
++				break;
++			if (fdt_magic(p) == FDT_MAGIC) {
++				/* try and validate the main struct */
++				off_t this_len = endp - p;
++				fdt32_t max_version = 17;
++				if (fdt_version(p) <= max_version &&
++				    fdt_last_comp_version(p) < max_version &&
++				    fdt_totalsize(p) < this_len &&
++				    fdt_off_dt_struct(p) < this_len &&
++					fdt_off_dt_strings(p) < this_len)
++					break;
++			}
++			++p;
++		}
++		if (!p)
++			die("%s: could not locate fdt magic\n", file);
++		printf("%s: found fdt at offset %#zx\n", file, p - buf);
++		buf = p;
++	}
++
+ 	dump_blob(buf);
+ 
+ 	return 0;
 -- 
 1.8.1.2
