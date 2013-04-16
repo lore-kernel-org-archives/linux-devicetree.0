@@ -1,49 +1,19 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v6 0/3] of/pci: Provide common support for PCI DT
- parsing
-Date: Tue, 16 Apr 2013 13:31:40 +0200
-Message-ID: <20130416133140.7de24c89@skate>
-References: <1365693969-23907-1-git-send-email-Andrew.Murray@arm.com>
-	<20130415175641.GM28693@titan.lakedaemon.net>
-	<CACRpkdbSd8pRG5pUS0ymqXDSp=ZhoQa2ctVuRA0cCmUcX5qFAA@mail.gmail.com>
-	<1366096361.24994.49.camel@pasglop>
-	<20130416112951.GZ28693@titan.lakedaemon.net>
+From: Timur Tabi <timur@tabi.org>
+Subject: Re: [PATCH v2] of/base: release the node correctly in of_parse_phandle_with_args()
+Date: Tue, 16 Apr 2013 06:37:21 -0500
+Message-ID: <CAOZdJXW8qKccGKic3R4o1aqJdbfHcBoAp62B4HPFnF=sUAEvuQ@mail.gmail.com>
+References: <1365564999-24427-1-git-send-email-Yuantian.Tang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20130416112951.GZ28693@titan.lakedaemon.net>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>, Andrew Murray <Andrew.Murray@arm.com>, Rob Herring <rob.herring@calxeda.com>, siva.kallam@samsung.com, linux-pci@vger.kernel.org, Thierry Reding <thierry.reding@avionic-design.de>, Liviu.Dudau@arm.com, Grant Likely <grant.likely@secretlab.ca>, Paul Mackerras <paulus@samba.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Abraham <thomas.abraham@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kukjin Kim <kgene.kim@samsung.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1365564999-24427-1-git-send-email-Yuantian.Tang@freescale.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yuantian.Tang@freescale.com
+Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Jason Cooper,
+On Tue, Apr 9, 2013 at 10:36 PM,  <Yuantian.Tang@freescale.com> wrote:
+>
+> +                       /* Found it! return success */
 
-On Tue, 16 Apr 2013 07:29:51 -0400, Jason Cooper wrote:
-
-> > Do not send this series upstream (or even in -next) until it has been at
-> > least build-tested and acked by the affected architectures. AFAIK it
-> > breaks microblaze build (simple missing #include) and isn't yet tested
-> > on powerpc (I'm on vacation, maybe somebody else on linuxppc-dev can do
-> > it though).
-> 
-> I added the missing include reference by Michal Simek for the branch at
-> mvebu/drivers.
-
-Some other build issues were reported on x86 during the night (thanks
-to automated build tests), and Andrew Murray has just sent a new
-version v7 of the patch set addressing those issues, as well as the
-missing include.
-
-Also, please note that Andrew's patch set contains three patches, but
-the Marvell PCIe driver only requires PATCH 1/3 and PATCH 2/3.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+I'm pretty sure this comment is in the wrong place.
