@@ -1,7 +1,7 @@
 From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 08/10] util: drop "long" from usage helpers
-Date: Mon, 15 Apr 2013 22:13:15 -0400
-Message-ID: <1366078397-14889-9-git-send-email-vapier@gentoo.org>
+Subject: [PATCH 09/10] util: add common ARRAY_SIZE define
+Date: Mon, 15 Apr 2013 22:13:16 -0400
+Message-ID: <1366078397-14889-10-git-send-email-vapier@gentoo.org>
 References: <1366078397-14889-1-git-send-email-vapier@gentoo.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,198 +21,54 @@ Sender: "devicetree-discuss"
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now that all utils have converted to the new usage framework, we can
-rename to just plain "usage()" and avoid naming conflicts.
+I want to use this in more places, so put it in util.h rather than
+copying & pasting it into another file.
 
+Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
 ---
- convert-dtsv0-lexer.l |  2 +-
- dtc.c                 |  6 +++---
- fdtdump.c             |  2 +-
- fdtget.c              |  6 +++---
- fdtput.c              |  8 ++++----
- util.c                |  6 +++---
- util.h                | 18 +++++++++---------
- 7 files changed, 24 insertions(+), 24 deletions(-)
+ convert-dtsv0-lexer.l | 2 --
+ dtc.h                 | 1 -
+ util.h                | 2 ++
+ 3 files changed, 2 insertions(+), 3 deletions(-)
 
 diff --git a/convert-dtsv0-lexer.l b/convert-dtsv0-lexer.l
-index e62d27a..8902648 100644
+index 8902648..548e719 100644
 --- a/convert-dtsv0-lexer.l
 +++ b/convert-dtsv0-lexer.l
-@@ -239,7 +239,7 @@ int main(int argc, char *argv[])
- 		}
- 	}
- 	if (argc < 2)
--		long_usage("missing filename");
-+		usage("missing filename");
+@@ -50,8 +50,6 @@ static int saw_hyphen; /* = 0 */
+ static unsigned long long last_val;
+ static char *last_name; /* = NULL */
  
- 	for (i = 1; i < argc; i++) {
- 		fprintf(stderr, "Converting %s from dts v0 to dts v1\n", argv[i]);
-diff --git a/dtc.c b/dtc.c
-index d0a1f2d..e3c9653 100644
---- a/dtc.c
-+++ b/dtc.c
-@@ -186,14 +186,14 @@ int main(int argc, char *argv[])
- 			break;
+-#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+-
+ const struct {
+ 	const char *pattern;
+ 	int obase, width;
+diff --git a/dtc.h b/dtc.h
+index 3e42a07..264a20c 100644
+--- a/dtc.h
++++ b/dtc.h
+@@ -66,7 +66,6 @@ typedef uint32_t cell_t;
+ #define strneq(a, b, n)	(strncmp((a), (b), (n)) == 0)
  
- 		case 'h':
--			long_usage(NULL);
-+			usage(NULL);
- 		default:
--			long_usage("unknown option");
-+			usage("unknown option");
- 		}
- 	}
+ #define ALIGN(x, a)	(((x) + (a) - 1) & ~((a) - 1))
+-#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
  
- 	if (argc > (optind+1))
--		long_usage("missing files");
-+		usage("missing files");
- 	else if (argc < (optind+1))
- 		arg = "-";
- 	else
-diff --git a/fdtdump.c b/fdtdump.c
-index c8a3ee7..c2f16ea 100644
---- a/fdtdump.c
-+++ b/fdtdump.c
-@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
- 		}
- 	}
- 	if (optind != argc - 1)
--		long_usage("missing input filename");
-+		usage("missing input filename");
- 	file = argv[optind];
- 
- 	buf = utilfdt_read_len(file, &len);
-diff --git a/fdtget.c b/fdtget.c
-index 5008cc1..4377419 100644
---- a/fdtget.c
-+++ b/fdtget.c
-@@ -319,7 +319,7 @@ int main(int argc, char *argv[])
- 		case 't':
- 			if (utilfdt_decode_type(optarg, &disp.type,
- 					&disp.size))
--				long_usage("invalid type string");
-+				usage("invalid type string");
- 			break;
- 
- 		case 'p':
-@@ -341,7 +341,7 @@ int main(int argc, char *argv[])
- 	if (optind < argc)
- 		filename = argv[optind++];
- 	if (!filename)
--		long_usage("missing filename");
-+		usage("missing filename");
- 
- 	argv += optind;
- 	argc -= optind;
-@@ -352,7 +352,7 @@ int main(int argc, char *argv[])
- 
- 	/* Check for node, property arguments */
- 	if (args_per_step == 2 && (argc % 2))
--		long_usage("must have an even number of arguments");
-+		usage("must have an even number of arguments");
- 
- 	if (do_fdtget(&disp, filename, argv, argc, args_per_step))
- 		return 1;
-diff --git a/fdtput.c b/fdtput.c
-index f7bf56e..ac1d98c 100644
---- a/fdtput.c
-+++ b/fdtput.c
-@@ -327,7 +327,7 @@ int main(int argc, char *argv[])
- 		case 't':
- 			if (utilfdt_decode_type(optarg, &disp.type,
- 					&disp.size))
--				long_usage("invalid type string");
-+				usage("invalid type string");
- 			break;
- 
- 		case 'v':
-@@ -339,16 +339,16 @@ int main(int argc, char *argv[])
- 	if (optind < argc)
- 		filename = argv[optind++];
- 	if (!filename)
--		long_usage("missing filename");
-+		usage("missing filename");
- 
- 	argv += optind;
- 	argc -= optind;
- 
- 	if (disp.oper == OPER_WRITE_PROP) {
- 		if (argc < 1)
--			long_usage("missing node");
-+			usage("missing node");
- 		if (argc < 2)
--			long_usage("missing property");
-+			usage("missing property");
- 	}
- 
- 	if (do_fdtput(&disp, filename, argv, argc))
-diff --git a/util.c b/util.c
-index d9a823a..3055c16 100644
---- a/util.c
-+++ b/util.c
-@@ -393,9 +393,9 @@ void util_version(void)
- 	exit(0);
- }
- 
--void util_long_usage(const char *errmsg, const char *synopsis,
--		     const char *short_opts, struct option const long_opts[],
--		     const char * const opts_help[])
-+void util_usage(const char *errmsg, const char *synopsis,
-+		const char *short_opts, struct option const long_opts[],
-+		const char * const opts_help[])
- {
- 	FILE *fp = errmsg ? stderr : stdout;
- 	const char a_arg[] = "<arg>";
+ /* Data blobs */
+ enum markertype {
 diff --git a/util.h b/util.h
-index 439b2b3..7b9a840 100644
+index 7b9a840..8f40b44 100644
 --- a/util.h
 +++ b/util.h
-@@ -189,7 +189,7 @@ void util_version(void) __attribute__((noreturn));
-  * Show usage and exit
-  *
-  * This helps standardize the output of various utils.  You most likely want
-- * to use the long_usage() helper below rather than call this.
-+ * to use the usage() helper below rather than call this.
-  *
-  * @param errmsg	If non-NULL, an error message to display
-  * @param synopsis	The initial example usage text (and possible examples)
-@@ -197,9 +197,9 @@ void util_version(void) __attribute__((noreturn));
-  * @param long_opts	The structure of long options
-  * @param opts_help	An array of help strings (should align with long_opts)
+@@ -24,6 +24,8 @@
+  *                                                                   USA
   */
--void util_long_usage(const char *errmsg, const char *synopsis,
--		     const char *short_opts, struct option const long_opts[],
--		     const char * const opts_help[]) __attribute__((noreturn));
-+void util_usage(const char *errmsg, const char *synopsis,
-+		const char *short_opts, struct option const long_opts[],
-+		const char * const opts_help[]) __attribute__((noreturn));
  
- /**
-  * Show usage and exit
-@@ -209,9 +209,9 @@ void util_long_usage(const char *errmsg, const char *synopsis,
-  *
-  * @param errmsg	If non-NULL, an error message to display
-  */
--#define long_usage(errmsg) \
--	util_long_usage(errmsg, usage_synopsis, usage_short_opts, \
--			usage_long_opts, usage_opts_help)
-+#define usage(errmsg) \
-+	util_usage(errmsg, usage_synopsis, usage_short_opts, \
-+		   usage_long_opts, usage_opts_help)
- 
- /**
-  * Call getopt_long() with standard options
-@@ -241,8 +241,8 @@ void util_long_usage(const char *errmsg, const char *synopsis,
- 
- /* Helper for getopt case statements */
- #define case_USAGE_COMMON_FLAGS \
--	case 'h': long_usage(NULL); \
-+	case 'h': usage(NULL); \
- 	case 'V': util_version(); \
--	case '?': long_usage("unknown option");
-+	case '?': usage("unknown option");
- 
- #endif /* _UTIL_H */
++#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
++
+ static inline void __attribute__((noreturn)) die(const char *str, ...)
+ {
+ 	va_list ap;
 -- 
 1.8.1.2
