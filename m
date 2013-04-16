@@ -1,57 +1,150 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH V2 5/6] DT: MIPS: ralink: add RT3883 dts files
-Date: Tue, 16 Apr 2013 17:00:45 +0400
-Message-ID: <516D4B7D.1030302@cogentembedded.com>
-References: <1366103562-21463-1-git-send-email-blogic@openwrt.org> <1366103562-21463-5-git-send-email-blogic@openwrt.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v5 5/6] ARM: dts: Add basic dts include files for Samsung
+ S3C64xx SoCs
+Date: Tue, 16 Apr 2013 08:09:10 -0500
+Message-ID: <516D4D76.2010409@gmail.com>
+References: <1366060483-20342-1-git-send-email-tomasz.figa@gmail.com> <1366060483-20342-6-git-send-email-tomasz.figa@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1366103562-21463-5-git-send-email-blogic@openwrt.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: John Crispin <blogic@openwrt.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1366060483-20342-6-git-send-email-tomasz.figa@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 04/15/2013 04:14 PM, Tomasz Figa wrote:
+> This patch adds basic device tree definitions for Samsung S3C64xx SoCs.
+> 
+> Since all the SoCs in the series are very similar, the files are created
+> hierarchically - one file for the whole series and then separate files
+> for particular SoCs including the common one.
+> 
+> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+> ---
+>  arch/arm/boot/dts/s3c6400.dtsi         |  33 ++
+>  arch/arm/boot/dts/s3c6410.dtsi         |  33 ++
+>  arch/arm/boot/dts/s3c64xx-pinctrl.dtsi | 683 +++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/s3c64xx.dtsi         | 136 +++++++
+>  4 files changed, 885 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/s3c6400.dtsi
+>  create mode 100644 arch/arm/boot/dts/s3c6410.dtsi
+>  create mode 100644 arch/arm/boot/dts/s3c64xx-pinctrl.dtsi
+>  create mode 100644 arch/arm/boot/dts/s3c64xx.dtsi
+> 
 
-On 16-04-2013 13:12, John Crispin wrote:
-
-> Add a dtsi file for RT3883 SoC and a sample dts file.
-
-> Signed-off-by: John Crispin <blogic@openwrt.org>
 [...]
 
-> diff --git a/arch/mips/ralink/dts/rt3883.dtsi b/arch/mips/ralink/dts/rt3883.dtsi
-> new file mode 100644
-> index 0000000..3b131dd
-> --- /dev/null
-> +++ b/arch/mips/ralink/dts/rt3883.dtsi
-> @@ -0,0 +1,58 @@
-[...]
-> +	cpuintc: cpuintc@0 {
-> +		#address-cells = <0>;
+> +
+> +	vic0: interrupt-controller@71200000 {
 
-    There's no subnodes?
+These nodes should be off a "simple-bus" node.
 
-> +		#interrupt-cells = <1>;
+Rob
+
+> +		compatible = "arm,pl192-vic";
 > +		interrupt-controller;
-> +		compatible = "mti,cpu-interrupt-controller";
+> +		reg = <0x71200000 0x1000>;
+> +		#interrupt-cells = <1>;
 > +	};
 > +
-> +	palmbus@10000000 {
-> +		compatible = "palmbus";
-> +		reg = <0x10000000 0x200000>;
-> +		ranges = <0x0 0x10000000 0x1FFFFF>;
-
-    Why the last cell is not 0x200000?
-
-WBR, Sergei
+> +	vic1: interrupt-controller@71300000 {
+> +		compatible = "arm,pl192-vic";
+> +		interrupt-controller;
+> +		reg = <0x71300000 0x1000>;
+> +		#interrupt-cells = <1>;
+> +	};
+> +
+> +	pinctrl0: pinctrl@7f008000 {
+> +		compatible = "samsung,s3c64xx-pinctrl";
+> +		reg = <0x7f008000 0x1000>;
+> +		interrupt-parent = <&vic1>;
+> +		interrupts = <21>;
+> +
+> +		pctrl_int_map: pinctrl-interrupt-map {
+> +			interrupt-map = <0 &vic0 0>,
+> +					<1 &vic0 1>,
+> +					<2 &vic1 0>,
+> +					<3 &vic1 1>;
+> +			#address-cells = <0>;
+> +			#size-cells = <0>;
+> +			#interrupt-cells = <1>;
+> +		};
+> +
+> +		wakeup-interrupt-controller {
+> +			compatible = "samsung,s3c64xx-wakeup-eint";
+> +			interrupts = <0>, <1>, <2>, <3>;
+> +			interrupt-parent = <&pctrl_int_map>;
+> +		};
+> +	};
+> +
+> +	pwm: pwm@7f006000 {
+> +		compatible = "samsung,s3c6400-pwm";
+> +		reg = <0x7f006000 0x1000>;
+> +		interrupt-parent = <&vic0>;
+> +		interrupts = <23>, <24>, <25>, <27>, <28>;
+> +		samsung,pwm-outputs = <0>, <1>;
+> +		#pwm-cells = <3>;
+> +		status = "disabled";
+> +	};
+> +
+> +	uart0: serial@7f005000 {
+> +		compatible = "samsung,s3c6400-uart";
+> +		reg = <0x7f005000 0x100>;
+> +		interrupt-parent = <&vic1>;
+> +		interrupts = <5>;
+> +		status = "disabled";
+> +	};
+> +
+> +	uart1: serial@7f005400 {
+> +		compatible = "samsung,s3c6400-uart";
+> +		reg = <0x7f005400 0x100>;
+> +		interrupt-parent = <&vic1>;
+> +		interrupts = <6>;
+> +		status = "disabled";
+> +	};
+> +
+> +	uart2: serial@7f005800 {
+> +		compatible = "samsung,s3c6400-uart";
+> +		reg = <0x7f005800 0x100>;
+> +		interrupt-parent = <&vic1>;
+> +		interrupts = <7>;
+> +		status = "disabled";
+> +	};
+> +
+> +	uart3: serial@7f005c00 {
+> +		compatible = "samsung,s3c6400-uart";
+> +		reg = <0x7f005c00 0x100>;
+> +		interrupt-parent = <&vic1>;
+> +		interrupts = <8>;
+> +		status = "disabled";
+> +	};
+> +
+> +	sdhci0: sdhci@7c200000 {
+> +		compatible = "samsung,s3c6410-sdhci";
+> +		reg = <0x7c200000 0x100>;
+> +		interrupt-parent = <&vic1>;
+> +		interrupts = <24>;
+> +		status = "disabled";
+> +	};
+> +
+> +	sdhci1: sdhci@7c300000 {
+> +		compatible = "samsung,s3c6410-sdhci";
+> +		reg = <0x7c300000 0x100>;
+> +		interrupt-parent = <&vic1>;
+> +		interrupts = <25>;
+> +		status = "disabled";
+> +	};
+> +
+> +	sdhci2: sdhci@7c400000 {
+> +		compatible = "samsung,s3c6410-sdhci";
+> +		reg = <0x7c400000 0x100>;
+> +		interrupt-parent = <&vic1>;
+> +		interrupts = <17>;
+> +		status = "disabled";
+> +	};
+> +};
+> +
+> +/include/ "s3c64xx-pinctrl.dtsi"
+> 
