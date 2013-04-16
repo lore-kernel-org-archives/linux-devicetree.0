@@ -1,148 +1,165 @@
-From: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH V2 6/6] DT: MIPS: ralink: add MT7620A dts files
-Date: Tue, 16 Apr 2013 11:12:42 +0200
-Message-ID: <1366103562-21463-6-git-send-email-blogic@openwrt.org>
-References: <1366103562-21463-1-git-send-email-blogic@openwrt.org>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v5 1/3] i2c: mux: Add i2c-arb-gpio-challenge 'mux' driver
+Date: Tue, 16 Apr 2013 11:36:33 +0200
+Message-ID: <20130416093633.GC16978@the-dreams.de>
+References: <1363192583-26363-1-git-send-email-dianders@chromium.org>
+ <1365543270-10736-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366103562-21463-1-git-send-email-blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1365543270-10736-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <guenter.roeck-IzeFyvvaP7pWk0Htik3J/w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a dtsi file for MT7620A SoC and a sample dts file.
+Doug,
 
-Signed-off-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
----
- arch/mips/ralink/Kconfig              |    4 +++
- arch/mips/ralink/dts/Makefile         |    1 +
- arch/mips/ralink/dts/mt7620a.dtsi     |   58 +++++++++++++++++++++++++++++++++
- arch/mips/ralink/dts/mt7620a_eval.dts |   16 +++++++++
- 4 files changed, 79 insertions(+)
- create mode 100644 arch/mips/ralink/dts/mt7620a.dtsi
- create mode 100644 arch/mips/ralink/dts/mt7620a_eval.dts
+On Tue, Apr 09, 2013 at 02:34:28PM -0700, Doug Anderson wrote:
+> The i2c-arb-gpio-challenge driver implements an I2C arbitration scheme
+> where masters need to claim the bus with a GPIO before they can start
+> a transcation.  This should generally only be used when standard I2C
+> multimaster isn't appropriate for some reason (errata/bugs).
+> 
+> This driver is based on code that Simon Glass added to the i2c-s3c2410
+> driver in the Chrome OS kernel 3.4 tree.  The current incarnation as a
+> mux driver is as suggested by Grant Likely.  See
+> <https://patchwork.kernel.org/patch/1877311/> for some history.
+> 
+> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-diff --git a/arch/mips/ralink/Kconfig b/arch/mips/ralink/Kconfig
-index 493411f..026e823 100644
---- a/arch/mips/ralink/Kconfig
-+++ b/arch/mips/ralink/Kconfig
-@@ -46,6 +46,10 @@ choice
- 		bool "RT3883 eval kit"
- 		depends on SOC_RT3883
- 
-+	config DTB_MT7620A_EVAL
-+		bool "MT7620A eval kit"
-+		depends on SOC_MT7620
-+
- endchoice
- 
- endif
-diff --git a/arch/mips/ralink/dts/Makefile b/arch/mips/ralink/dts/Makefile
-index 040a986..18194fa 100644
---- a/arch/mips/ralink/dts/Makefile
-+++ b/arch/mips/ralink/dts/Makefile
-@@ -1,3 +1,4 @@
- obj-$(CONFIG_DTB_RT2880_EVAL) := rt2880_eval.dtb.o
- obj-$(CONFIG_DTB_RT305X_EVAL) := rt3052_eval.dtb.o
- obj-$(CONFIG_DTB_RT3883_EVAL) := rt3883_eval.dtb.o
-+obj-$(CONFIG_DTB_MT7620A_EVAL) := mt7620a_eval.dtb.o
-diff --git a/arch/mips/ralink/dts/mt7620a.dtsi b/arch/mips/ralink/dts/mt7620a.dtsi
-new file mode 100644
-index 0000000..08bf24f
---- /dev/null
-+++ b/arch/mips/ralink/dts/mt7620a.dtsi
-@@ -0,0 +1,58 @@
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "ralink,mtk7620a-soc";
-+
-+	cpus {
-+		cpu@0 {
-+			compatible = "mips,mips24KEc";
-+		};
-+	};
-+
-+	cpuintc: cpuintc@0 {
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+		compatible = "mti,cpu-interrupt-controller";
-+	};
-+
-+	palmbus@10000000 {
-+		compatible = "palmbus";
-+		reg = <0x10000000 0x200000>;
-+                ranges = <0x0 0x10000000 0x1FFFFF>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		sysc@0 {
-+			compatible = "ralink,mt7620a-sysc";
-+			reg = <0x0 0x100>;
-+		};
-+
-+		intc: intc@200 {
-+			compatible = "ralink,mt7620a-intc", "ralink,rt2880-intc";
-+			reg = <0x200 0x100>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+
-+			interrupt-parent = <&cpuintc>;
-+			interrupts = <2>;
-+		};
-+
-+		memc@300 {
-+			compatible = "ralink,mt7620a-memc", "ralink,rt3050-memc";
-+			reg = <0x300 0x100>;
-+		};
-+
-+		uartlite@c00 {
-+			compatible = "ralink,mt7620a-uart", "ralink,rt2880-uart", "ns16550a";
-+			reg = <0xc00 0x100>;
-+
-+			interrupt-parent = <&intc>;
-+			interrupts = <12>;
-+
-+			reg-shift = <2>;
-+		};
-+	};
-+};
-diff --git a/arch/mips/ralink/dts/mt7620a_eval.dts b/arch/mips/ralink/dts/mt7620a_eval.dts
-new file mode 100644
-index 0000000..35eb874
---- /dev/null
-+++ b/arch/mips/ralink/dts/mt7620a_eval.dts
-@@ -0,0 +1,16 @@
-+/dts-v1/;
-+
-+/include/ "mt7620a.dtsi"
-+
-+/ {
-+	compatible = "ralink,mt7620a-eval-board", "ralink,mt7620a-soc";
-+	model = "Ralink MT7620A evaluation board";
-+
-+	memory@0 {
-+		reg = <0x0 0x2000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyS0,57600";
-+	};
-+};
--- 
-1.7.10.4
+Mostly good, except for some documentation updates.
+
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-arb-gpio-challenge.txt b/Documentation/devicetree/bindings/i2c/i2c-arb-gpio-challenge.txt
+> new file mode 100644
+> index 0000000..726e099
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-arb-gpio-challenge.txt
+> @@ -0,0 +1,80 @@
+> +GPIO-based I2C Arbitration
+> +==========================
+> +This uses GPIO lines to arbitrate who is the master of an I2C bus in a
+> +multimaster situation.
+
+"uses GPIO lines and a challange & response mechanism" or something like
+that. There might be other GPIO based arbitrations in the future (though
+I hope there won't).
+
+> +
+> +In many cases using GPIOs to arbitrate is not needed and a design can use
+> +the standard I2C multi-master rules.  Using GPIOs is generally useful in
+> +the case where there is a device on the bus that has errata and/or bugs
+> +that makes standard multimaster mode not feasible.
+
+I like this paragraph!
+
+...
+
+> +- their-claim-gpios: The GPIOs that the other sides use the claim the bus.
+> +  Note that some implementations may only support a single other master.
+
+Stronger? "Currently, only one other master is supported"?
+
+...
+
+> diff --git a/drivers/i2c/muxes/Kconfig b/drivers/i2c/muxes/Kconfig
+> index 0be5b83..ab4dcaf 100644
+> --- a/drivers/i2c/muxes/Kconfig
+> +++ b/drivers/i2c/muxes/Kconfig
+> @@ -5,6 +5,17 @@
+>  menu "Multiplexer I2C Chip support"
+>  	depends on I2C_MUX
+>  
+> +config I2C_ARB_GPIO_CHALLENGE
+> +	tristate "GPIO-based I2C arbitration"
+> +	depends on GENERIC_GPIO && OF
+> +	help
+> +	  If you say yes to this option, support will be included for an
+> +	  I2C multimaster arbitration scheme using GPIOs where masters have
+> +	  to claim the bus by asserting a GPIO.
+
+"callenge & response"?
+
+...
+
+> diff --git a/drivers/i2c/muxes/i2c-arb-gpio-challenge.c b/drivers/i2c/muxes/i2c-arb-gpio-challenge.c
+> new file mode 100644
+> index 0000000..bda020a
+> --- /dev/null
+> +++ b/drivers/i2c/muxes/i2c-arb-gpio-challenge.c
+> @@ -0,0 +1,252 @@
+> +/*
+> + * GPIO-based I2C Arbitration
+
+"callenge & response"?
+
+...
+
+> + *
+> + * Copyright (C) 2012 Google, Inc
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/gpio.h>
+> +#include <linux/kernel.h>
+> +#include <linux/i2c.h>
+> +#include <linux/i2c-mux.h>
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/of_i2c.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +
+> +/**
+> + * struct i2c_arbitrator_data - Driver data for I2C arbitrator
+> + *
+> + * @parent: Parent adapter
+> + * @child: Child bus
+> + * @our_gpio: GPIO we'll use to claim.
+> + * @our_gpio_release: 0 if active high; 1 if active low; AKA if the GPIO ==
+> + *   this then consider it released.
+> + * @their_gpio: GPIO that the other side will use to claim.
+> + * @their_gpio_release: 0 if active high; 1 if active low; AKA if the GPIO ==
+> + *   this then consider it released.
+> + * @slew_delay_us: microseconds to wait for a GPIO to go high.
+> + * @wait_retry_us: we'll attempt another claim after this many microseconds.
+> + * @wait_free_us: we'll give up after this many microseconds.
+> + */
+> +
+> +struct i2c_arbitrator_data {
+> +	struct i2c_adapter *parent;
+> +	struct i2c_adapter *child;
+> +
+
+No empty line.
+
+> +	int		our_gpio;
+> +	int		our_gpio_release;
+> +	int		their_gpio;
+> +	int		their_gpio_release;
+> +	unsigned int	slew_delay_us;
+> +	unsigned int	wait_retry_us;
+> +	unsigned int	wait_free_us;
+> +};
+
+Single space as indentaion after "int".
+
+Other than that, looks fine to me.
+
+Thanks!
