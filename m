@@ -1,41 +1,228 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH] clk: si5351: make clk-si5351 depend on CONFIG_OF
-Date: Mon, 15 Apr 2013 21:45:14 -0700
-Message-ID: <20130416044514.19887.93969@quantum>
-References: <1366009214-32234-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <20130416105513.913219ac889b1db952876197@canb.auug.org.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130416105513.913219ac889b1db952876197@canb.auug.org.au>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, Daniel Mack <zonque@gmail.com>, Jean-Francois Moine <moinejf@free.fr>, Lars-Peter Clausen <lars@metafoo.de>, Guenter Roeck <linux@roeck-us.net>, Michal Bachraty <michal.bachraty@streamunlimited.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] of_mdio: Remove flags argument from of_phy_connect
+Date: Tue, 16 Apr 2013 07:47:38 +0100
+Message-ID: <20130416064738.3C38D3E14C0@localhost>
+References: <E1UJ1fR-0004hv-8a@swissweb.swissdisk.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <E1UJ1fR-0004hv-8a@swissweb.swissdisk.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ben Collins <ben.c@servergy.com>, linux-kernel@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Stephen Rothwell (2013-04-15 17:55:13)
-> Hi Sebastian,
+On Mon, 18 Mar 2013 19:49:04 -0400, Ben Collins <ben.c@servergy.com> wrote:
+> of_phy_connect() only required a flags argument in order to pass it down to
+> to phy_connect(). Since that argument was removed, it is of no use in this
+> function either (confirmed by checking all callers in kernel tree as well).
 > 
-> On Mon, 15 Apr 2013 09:00:14 +0200 Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
-> >
-> > Calling clk-si5351 driver non-OF ready was too early. This patch
-> > makes clk-si5351 depend on CONFIG_OF again, until things get sorted out.
-> > 
-> > Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> > Reported-by: Stephen Rottweil <sfr@canb.auug.org.au>
-> 
-> My name is spelt "Rothwell" (as in the Cc: line below) :-(
-> 
+> Signed-off-by: Ben Collins <ben.c@servergy.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: devicetree-discuss@lists.ozlabs.org
 
-It's fixed in the merged version.
+Acked-by: Grant Likely <grant.likely@secrettlab.ca>
 
-Regards,
-Mike
+This would be best merged through David Millers networking tree.
 
-> > ---
-> > Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+g.
+
+>  drivers/net/ethernet/freescale/fec_mpc52xx.c          | 2 +-
+>  drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c | 2 +-
+>  drivers/net/ethernet/freescale/gianfar.c              | 2 +-
+>  drivers/net/ethernet/freescale/ucc_geth.c             | 2 +-
+>  drivers/net/ethernet/marvell/mvneta.c                 | 2 +-
+>  drivers/net/ethernet/octeon/octeon_mgmt.c             | 2 +-
+>  drivers/net/ethernet/pasemi/pasemi_mac.c              | 2 +-
+>  drivers/net/ethernet/xilinx/ll_temac_main.c           | 2 +-
+>  drivers/net/ethernet/xilinx/xilinx_axienet_main.c     | 2 +-
+>  drivers/net/ethernet/xilinx/xilinx_emaclite.c         | 2 +-
+>  drivers/of/of_mdio.c                                  | 2 +-
+>  drivers/staging/octeon/ethernet-mdio.c                | 2 +-
+>  include/linux/of_mdio.h                               | 4 ++--
+>  13 files changed, 14 insertions(+), 14 deletions(-)
 > 
+> diff --git a/drivers/net/ethernet/freescale/fec_mpc52xx.c b/drivers/net/ethernet/freescale/fec_mpc52xx.c
+> index 77943a6..ea01dcd 100644
+> --- a/drivers/net/ethernet/freescale/fec_mpc52xx.c
+> +++ b/drivers/net/ethernet/freescale/fec_mpc52xx.c
+> @@ -217,7 +217,7 @@ static int mpc52xx_fec_open(struct net_device *dev)
+>  
+>  	if (priv->phy_node) {
+>  		priv->phydev = of_phy_connect(priv->ndev, priv->phy_node,
+> -					      mpc52xx_fec_adjust_link, 0, 0);
+> +					      mpc52xx_fec_adjust_link, 0);
+>  		if (!priv->phydev) {
+>  			dev_err(&dev->dev, "of_phy_connect failed\n");
+>  			return -ENODEV;
+> diff --git a/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c b/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
+> index 46df288..5523fc0 100644
+> --- a/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
+> +++ b/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
+> @@ -799,7 +799,7 @@ static int fs_init_phy(struct net_device *dev)
+>  	iface = fep->fpi->use_rmii ?
+>  		PHY_INTERFACE_MODE_RMII : PHY_INTERFACE_MODE_MII;
+>  
+> -	phydev = of_phy_connect(dev, fep->fpi->phy_node, &fs_adjust_link, 0,
+> +	phydev = of_phy_connect(dev, fep->fpi->phy_node, &fs_adjust_link,
+>  				iface);
+>  	if (!phydev) {
+>  		phydev = of_phy_connect_fixed_link(dev, &fs_adjust_link,
+> diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
+> index d2c5441..383d302 100644
+> --- a/drivers/net/ethernet/freescale/gianfar.c
+> +++ b/drivers/net/ethernet/freescale/gianfar.c
+> @@ -1467,7 +1467,7 @@ static int init_phy(struct net_device *dev)
+>  
+>  	interface = gfar_get_interface(dev);
+>  
+> -	priv->phydev = of_phy_connect(dev, priv->phy_node, &adjust_link, 0,
+> +	priv->phydev = of_phy_connect(dev, priv->phy_node, &adjust_link,
+>  				      interface);
+>  	if (!priv->phydev)
+>  		priv->phydev = of_phy_connect_fixed_link(dev, &adjust_link,
+> diff --git a/drivers/net/ethernet/freescale/ucc_geth.c b/drivers/net/ethernet/freescale/ucc_geth.c
+> index 0a70bb5..fb9a573 100644
+> --- a/drivers/net/ethernet/freescale/ucc_geth.c
+> +++ b/drivers/net/ethernet/freescale/ucc_geth.c
+> @@ -1745,7 +1745,7 @@ static int init_phy(struct net_device *dev)
+>  	priv->oldspeed = 0;
+>  	priv->oldduplex = -1;
+>  
+> -	phydev = of_phy_connect(dev, ug_info->phy_node, &adjust_link, 0,
+> +	phydev = of_phy_connect(dev, ug_info->phy_node, &adjust_link,
+>  				priv->phy_interface);
+>  	if (!phydev)
+>  		phydev = of_phy_connect_fixed_link(dev, &adjust_link,
+> diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
+> index cd345b8..dcb865e8 100644
+> --- a/drivers/net/ethernet/marvell/mvneta.c
+> +++ b/drivers/net/ethernet/marvell/mvneta.c
+> @@ -2344,7 +2344,7 @@ static int mvneta_mdio_probe(struct mvneta_port *pp)
+>  {
+>  	struct phy_device *phy_dev;
+>  
+> -	phy_dev = of_phy_connect(pp->dev, pp->phy_node, mvneta_adjust_link, 0,
+> +	phy_dev = of_phy_connect(pp->dev, pp->phy_node, mvneta_adjust_link,
+>  				 pp->phy_interface);
+>  	if (!phy_dev) {
+>  		netdev_err(pp->dev, "could not find the PHY\n");
+> diff --git a/drivers/net/ethernet/octeon/octeon_mgmt.c b/drivers/net/ethernet/octeon/octeon_mgmt.c
+> index 921729f..c2d281e 100644
+> --- a/drivers/net/ethernet/octeon/octeon_mgmt.c
+> +++ b/drivers/net/ethernet/octeon/octeon_mgmt.c
+> @@ -970,7 +970,7 @@ static int octeon_mgmt_init_phy(struct net_device *netdev)
+>  	}
+>  
+>  	p->phydev = of_phy_connect(netdev, p->phy_np,
+> -				   octeon_mgmt_adjust_link, 0,
+> +				   octeon_mgmt_adjust_link,
+>  				   PHY_INTERFACE_MODE_MII);
+>  
+>  	if (!p->phydev)
+> diff --git a/drivers/net/ethernet/pasemi/pasemi_mac.c b/drivers/net/ethernet/pasemi/pasemi_mac.c
+> index b1cfbb7..aad29d1 100644
+> --- a/drivers/net/ethernet/pasemi/pasemi_mac.c
+> +++ b/drivers/net/ethernet/pasemi/pasemi_mac.c
+> @@ -1100,7 +1100,7 @@ static int pasemi_mac_phy_init(struct net_device *dev)
+>  	mac->speed = 0;
+>  	mac->duplex = -1;
+>  
+> -	phydev = of_phy_connect(dev, phy_dn, &pasemi_adjust_link, 0,
+> +	phydev = of_phy_connect(dev, phy_dn, &pasemi_adjust_link,
+>  				PHY_INTERFACE_MODE_SGMII);
+>  
+>  	if (!phydev) {
+> diff --git a/drivers/net/ethernet/xilinx/ll_temac_main.c b/drivers/net/ethernet/xilinx/ll_temac_main.c
+> index 9fc2ada..4c5e0a9 100644
+> --- a/drivers/net/ethernet/xilinx/ll_temac_main.c
+> +++ b/drivers/net/ethernet/xilinx/ll_temac_main.c
+> @@ -857,7 +857,7 @@ static int temac_open(struct net_device *ndev)
+>  
+>  	if (lp->phy_node) {
+>  		lp->phy_dev = of_phy_connect(lp->ndev, lp->phy_node,
+> -					     temac_adjust_link, 0, 0);
+> +					     temac_adjust_link, 0);
+>  		if (!lp->phy_dev) {
+>  			dev_err(lp->dev, "of_phy_connect() failed\n");
+>  			return -ENODEV;
+> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> index 278c9db..7f2afdd 100644
+> --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> @@ -935,7 +935,7 @@ static int axienet_open(struct net_device *ndev)
+>  
+>  	if (lp->phy_node) {
+>  		lp->phy_dev = of_phy_connect(lp->ndev, lp->phy_node,
+> -					     axienet_adjust_link, 0,
+> +					     axienet_adjust_link,
+>  					     PHY_INTERFACE_MODE_GMII);
+>  		if (!lp->phy_dev) {
+>  			dev_err(lp->dev, "of_phy_connect() failed\n");
+> diff --git a/drivers/net/ethernet/xilinx/xilinx_emaclite.c b/drivers/net/ethernet/xilinx/xilinx_emaclite.c
+> index 919b983..bccb064 100644
+> --- a/drivers/net/ethernet/xilinx/xilinx_emaclite.c
+> +++ b/drivers/net/ethernet/xilinx/xilinx_emaclite.c
+> @@ -931,7 +931,7 @@ static int xemaclite_open(struct net_device *dev)
+>  		u32 bmcr;
+>  
+>  		lp->phy_dev = of_phy_connect(lp->ndev, lp->phy_node,
+> -					     xemaclite_adjust_link, 0,
+> +					     xemaclite_adjust_link,
+>  					     PHY_INTERFACE_MODE_MII);
+>  		if (!lp->phy_dev) {
+>  			dev_err(&lp->ndev->dev, "of_phy_connect() failed\n");
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index e3a8b22..199b7f2 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -149,7 +149,7 @@ EXPORT_SYMBOL(of_phy_find_device);
+>   */
+>  struct phy_device *of_phy_connect(struct net_device *dev,
+>  				  struct device_node *phy_np,
+> -				  void (*hndlr)(struct net_device *), u32 flags,
+> +				  void (*hndlr)(struct net_device *),
+>  				  phy_interface_t iface)
+>  {
+>  	struct phy_device *phy = of_phy_find_device(phy_np);
+> diff --git a/drivers/staging/octeon/ethernet-mdio.c b/drivers/staging/octeon/ethernet-mdio.c
+> index 83b1030..37897e3 100644
+> --- a/drivers/staging/octeon/ethernet-mdio.c
+> +++ b/drivers/staging/octeon/ethernet-mdio.c
+> @@ -171,7 +171,7 @@ int cvm_oct_phy_setup_device(struct net_device *dev)
+>  	if (!phy_node)
+>  		return 0;
+>  
+> -	priv->phydev = of_phy_connect(dev, phy_node, cvm_oct_adjust_link, 0,
+> +	priv->phydev = of_phy_connect(dev, phy_node, cvm_oct_adjust_link,
+>  				      PHY_INTERFACE_MODE_GMII);
+>  
+>  	if (priv->phydev == NULL)
+> diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
+> index 8163107..cdc62c9 100644
+> --- a/include/linux/of_mdio.h
+> +++ b/include/linux/of_mdio.h
+> @@ -18,7 +18,7 @@ extern struct phy_device *of_phy_find_device(struct device_node *phy_np);
+>  extern struct phy_device *of_phy_connect(struct net_device *dev,
+>  					 struct device_node *phy_np,
+>  					 void (*hndlr)(struct net_device *),
+> -					 u32 flags, phy_interface_t iface);
+> +					 phy_interface_t iface);
+>  extern struct phy_device *of_phy_connect_fixed_link(struct net_device *dev,
+>  					 void (*hndlr)(struct net_device *),
+>  					 phy_interface_t iface);
+> @@ -39,7 +39,7 @@ static inline struct phy_device *of_phy_find_device(struct device_node *phy_np)
+>  static inline struct phy_device *of_phy_connect(struct net_device *dev,
+>  						struct device_node *phy_np,
+>  						void (*hndlr)(struct net_device *),
+> -						u32 flags, phy_interface_t iface)
+> +						phy_interface_t iface)
+>  {
+>  	return NULL;
+>  }
 > -- 
-> Cheers,
-> Stephen Rothwell                    sfr@canb.auug.org.au
+> 1.8.1.2
+> 
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
