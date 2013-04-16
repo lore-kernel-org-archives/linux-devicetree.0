@@ -1,95 +1,55 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] i2c: mux: Add i2c-arb-gpio-challenge 'mux' driver
-Date: Tue, 16 Apr 2013 09:25:26 -0700
-Message-ID: <CAD=FV=WaRVP-imd2-es6101yaXf0P-hQktuJO_=MkuXZcVqp_A@mail.gmail.com>
-References: <1363192583-26363-1-git-send-email-dianders@chromium.org>
- <1365543270-10736-1-git-send-email-dianders@chromium.org>
- <20130416093633.GC16978@the-dreams.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 2/6] ARM: s3c64xx: Skip legacy EINT setup if
+ pinctrl-s3c64xx driver is present
+Date: Tue, 16 Apr 2013 17:26:43 +0100
+Message-ID: <20130416162642.GN26958@opensource.wolfsonmicro.com>
+References: <1366060483-20342-1-git-send-email-tomasz.figa@gmail.com>
+ <1366060483-20342-3-git-send-email-tomasz.figa@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130416093633.GC16978-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Guenter Roeck <guenter.roeck-IzeFyvvaP7pWk0Htik3J/w@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Girish Shivananjappa <girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bhushan.r" <bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sreekumar.c" <sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Yuvaraj Kumar <yuvaraj.cd>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="p1Od3smaOkJqivj4"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1366060483-20342-3-git-send-email-tomasz.figa@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Wolfram / Guenter / Stephen,
 
-Thanks for your reviews.  New version on its way...
+--p1Od3smaOkJqivj4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, Apr 16, 2013 at 2:36 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
-> "uses GPIO lines and a challange & response mechanism" or something like
-> that. There might be other GPIO based arbitrations in the future (though
-> I hope there won't).
+On Mon, Apr 15, 2013 at 11:14:39PM +0200, Tomasz Figa wrote:
 
-Done (including fixing spelling of challenge).  Stephen: I think the
-new paragraph is still high-level enough even with Wolfram's requested
-addition.
+> +	* This gpio driver includes support for device tree support and there
+> +	* are platforms using it. In order to maintain compatibility with those
+> +	* platforms, and to allow non-dt Exynos4210 platforms to use this
+> +	* gpiolib support, a check is added to find out if there is a active
 
+Cut'n'paste error here.
 
->> +- their-claim-gpios: The GPIOs that the other sides use the claim the bus.
->> +  Note that some implementations may only support a single other master.
->
-> Stronger? "Currently, only one other master is supported"?
+--p1Od3smaOkJqivj4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-As per Stephen Warren, I didn't touch this.  He says:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-The DT binding documentation, which should be OS-/driver-agnostic,
-should describe the binding, not the implementation. The limitation that
-Linux imposes is OS-specific and hence should not be mentioned here as
-an absolute, or perhaps even at all.
+iQIcBAEBAgAGBQJRbXu1AAoJELSic+t+oim9y/8P/224LMQfrOik+F9mutaNRheZ
+x//GsxFncIGULQeAMCZ6CGw6y/AHVIVDfdABuTlBLwyQ2yiE97PmagTeVzVZvU28
+O7Ln6EH27ipNUu7xg1mzP2CaowGFjKD1fgSY5S+zUbU5nksdrmhAdSNKD10Vyyj2
+MJdb3VrYfQngHNWs81AOMWwQsJgkuAcEatlzFEWBkIrJW/6VuXc2otGbBTRwxxDx
+VDIZtylsR9c+1okZ19S8ksvlUy+Sc8p86fTo2EntYYe6G5vykHMekiJGuSEvgky8
+QJ6dm9YoV5TfmoKY/yNUD3Ilb4koc4BgzSXGRWyJPFOMjKQm2LotmPfNSlxbpToN
+tX9DpGYKyLoxnKo84wgMu2I6nd7NENK4FVotaoej04fq96p84twj+Kd/bL8GyCu4
+4YEm7+KyFLYDjsIoVttseOUcJ8Kf0uD9MGF4lH+/XaOOtqyuv5XqV6TlBeK2hUzH
+3aLkqfBSRd6XGPbKStRZzUszNkhbRnsULkdfRk/GXGpbT+u//hd+Wo9USqysiUUB
+wiMAomC7C6y8D17anwc6/8JQGoaTj/KT9IuPOB4/DJlRr7sHfTdX7VKHjCCHuyN8
+QYEFflLLcWLEIXn0v94Q9yftJ3/dihrHhClXv7Acmj1qLlle0fGjNhVenMHEQCoz
+/Q4Qd9L7i6B7uTjBDwRa
+=mIH1
+-----END PGP SIGNATURE-----
 
-I think the current wording about "may only support a single other
-master" is a compromise and would at least give some a clue that they
-should check the Linux driver for details.
-
-
->> +       If you say yes to this option, support will be included for an
->> +       I2C multimaster arbitration scheme using GPIOs where masters have
->> +       to claim the bus by asserting a GPIO.
->
-> "callenge & response"?
-
-Done (including fixing spelling of challenge).
-
-
->> + * GPIO-based I2C Arbitration
->
-> "callenge & response"?
-
-Done (including fixing spelling of challenge).
-
-
->> +struct i2c_arbitrator_data {
->> +     struct i2c_adapter *parent;
->> +     struct i2c_adapter *child;
->> +
->
-> No empty line.
-
-Done.
-
-
->> +     int             our_gpio;
->> +     int             our_gpio_release;
->> +     int             their_gpio;
->> +     int             their_gpio_release;
->> +     unsigned int    slew_delay_us;
->> +     unsigned int    wait_retry_us;
->> +     unsigned int    wait_free_us;
->> +};
->
-> Single space as indentaion after "int".
-
-Done.
+--p1Od3smaOkJqivj4--
