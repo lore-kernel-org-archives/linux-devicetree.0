@@ -1,142 +1,58 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/8] video: atmel_lcdfb: pass the pdata as params
-Date: Tue, 16 Apr 2013 14:38:44 +0200
-Message-ID: <516D4654.3060109@atmel.com>
-References: <20130411145741.GB25242@game.jcrosoft.org>
- <1365692422-9565-1-git-send-email-plagnioj@jcrosoft.com>
- <1365692422-9565-3-git-send-email-plagnioj@jcrosoft.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH V2 6/6] DT: MIPS: ralink: add MT7620A dts files
+Date: Tue, 16 Apr 2013 16:59:01 +0400
+Message-ID: <516D4B15.406@cogentembedded.com>
+References: <1366103562-21463-1-git-send-email-blogic@openwrt.org> <1366103562-21463-6-git-send-email-blogic@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365692422-9565-3-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1366103562-21463-6-git-send-email-blogic@openwrt.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: John Crispin <blogic@openwrt.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/2013 05:00 PM, Jean-Christophe PLAGNIOL-VILLARD :
-> so we can use have list gpio as example (probe via DT)
+Hello.
 
-Please refine the commit message: I do not understand.
+On 16-04-2013 13:12, John Crispin wrote:
 
-After reading the patch, it seems obvious that more explanations are
-needed in the message.
+> Add a dtsi file for MT7620A SoC and a sample dts file.
 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-> ---
->  arch/arm/mach-at91/board-sam9261ek.c   |    4 ++--
->  arch/arm/mach-at91/board-sam9263ek.c   |    2 +-
->  arch/arm/mach-at91/board-sam9rlek.c    |    2 +-
->  arch/avr32/boards/atngw100/evklcd10x.c |    2 +-
->  drivers/video/atmel_lcdfb.c            |    2 +-
->  include/video/atmel_lcdc.h             |    4 +++-
->  6 files changed, 9 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm/mach-at91/board-sam9261ek.c b/arch/arm/mach-at91/board-sam9261ek.c
-> index c819e29..9a6618a 100644
-> --- a/arch/arm/mach-at91/board-sam9261ek.c
-> +++ b/arch/arm/mach-at91/board-sam9261ek.c
-> @@ -393,7 +393,7 @@ static struct fb_monspecs at91fb_default_stn_monspecs = {
->  					| ATMEL_LCDC_IFWIDTH_4 \
->  					| ATMEL_LCDC_SCANMOD_SINGLE)
->  
-> -static void at91_lcdc_stn_power_control(int on)
-> +static void at91_lcdc_stn_power_control(struct atmel_lcdfb_pdata *pdata, int on)
->  {
->  	/* backlight */
->  	if (on) {	/* power up */
-> @@ -452,7 +452,7 @@ static struct fb_monspecs at91fb_default_tft_monspecs = {
->  					| ATMEL_LCDC_DISTYPE_TFT    \
->  					| ATMEL_LCDC_CLKMOD_ALWAYSACTIVE)
->  
-> -static void at91_lcdc_tft_power_control(int on)
-> +static void at91_lcdc_tft_power_control(struct atmel_lcdfb_pdata *pdata, int on)
->  {
->  	if (on)
->  		at91_set_gpio_value(AT91_PIN_PA12, 0);	/* power up */
-> diff --git a/arch/arm/mach-at91/board-sam9263ek.c b/arch/arm/mach-at91/board-sam9263ek.c
-> index 0fdae3f..8b4942c 100644
-> --- a/arch/arm/mach-at91/board-sam9263ek.c
-> +++ b/arch/arm/mach-at91/board-sam9263ek.c
-> @@ -275,7 +275,7 @@ static struct fb_monspecs at91fb_default_monspecs = {
->  					| ATMEL_LCDC_DISTYPE_TFT \
->  					| ATMEL_LCDC_CLKMOD_ALWAYSACTIVE)
->  
-> -static void at91_lcdc_power_control(int on)
-> +static void at91_lcdc_power_control(struct atmel_lcdfb_pdata *pdata, int on)
->  {
->  	at91_set_gpio_value(AT91_PIN_PA30, on);
->  }
-> diff --git a/arch/arm/mach-at91/board-sam9rlek.c b/arch/arm/mach-at91/board-sam9rlek.c
-> index b77d7a9..604eecf 100644
-> --- a/arch/arm/mach-at91/board-sam9rlek.c
-> +++ b/arch/arm/mach-at91/board-sam9rlek.c
-> @@ -170,7 +170,7 @@ static struct fb_monspecs at91fb_default_monspecs = {
->  					| ATMEL_LCDC_DISTYPE_TFT \
->  					| ATMEL_LCDC_CLKMOD_ALWAYSACTIVE)
->  
-> -static void at91_lcdc_power_control(int on)
-> +static void at91_lcdc_power_control(struct atmel_lcdfb_pdata *pdata, int on)
->  {
->  	if (on)
->  		at91_set_gpio_value(AT91_PIN_PC1, 0);	/* power up */
-> diff --git a/arch/avr32/boards/atngw100/evklcd10x.c b/arch/avr32/boards/atngw100/evklcd10x.c
-> index dc42804..64919b0 100644
-> --- a/arch/avr32/boards/atngw100/evklcd10x.c
-> +++ b/arch/avr32/boards/atngw100/evklcd10x.c
-> @@ -145,7 +145,7 @@ static struct atmel_lcdfb_pdata __initdata atevklcd10x_lcdc_data = {
->  };
->  #endif
->  
-> -static void atevklcd10x_lcdc_power_control(int on)
-> +static void atevklcd10x_lcdc_power_control(struct atmel_lcdfb_pdata *pdata, int on)
->  {
->  	gpio_set_value(GPIO_PIN_PB(15), on);
->  }
-> diff --git a/drivers/video/atmel_lcdfb.c b/drivers/video/atmel_lcdfb.c
-> index 9574c47..f67e226 100644
-> --- a/drivers/video/atmel_lcdfb.c
-> +++ b/drivers/video/atmel_lcdfb.c
-> @@ -288,7 +288,7 @@ static inline void atmel_lcdfb_power_control(struct atmel_lcdfb_info *sinfo, int
->  	struct atmel_lcdfb_pdata *pdata = &sinfo->pdata;
->  
->  	if (pdata->atmel_lcdfb_power_control)
-> -		pdata->atmel_lcdfb_power_control(on);
-> +		pdata->atmel_lcdfb_power_control(pdata, on);
->  }
->  
->  static struct fb_fix_screeninfo atmel_lcdfb_fix __initdata = {
-> diff --git a/include/video/atmel_lcdc.h b/include/video/atmel_lcdc.h
-> index 2eb601c..f624c51 100644
-> --- a/include/video/atmel_lcdc.h
-> +++ b/include/video/atmel_lcdc.h
-> @@ -40,8 +40,10 @@ struct atmel_lcdfb_pdata {
->  	u8			lcd_wiring_mode;
->  	unsigned int		default_lcdcon2;
->  	unsigned int		default_dmacon;
-> -	void (*atmel_lcdfb_power_control)(int on);
-> +	void (*atmel_lcdfb_power_control)(struct atmel_lcdfb_pdata *pdata, int on);
->  	struct fb_monspecs	*default_monspecs;
+> Signed-off-by: John Crispin <blogic@openwrt.org>
+[...]
+
+> diff --git a/arch/mips/ralink/dts/mt7620a.dtsi b/arch/mips/ralink/dts/mt7620a.dtsi
+> new file mode 100644
+> index 0000000..08bf24f
+> --- /dev/null
+> +++ b/arch/mips/ralink/dts/mt7620a.dtsi
+> @@ -0,0 +1,58 @@
+[...]
+> +	cpuintc: cpuintc@0 {
+> +		#address-cells = <0>;
+
+    Why? There's no subnodes.
+
+> +		#interrupt-cells = <1>;
+> +		interrupt-controller;
+> +		compatible = "mti,cpu-interrupt-controller";
+> +	};
 > +
-> +	struct list_head	pwr_gpios;
->  };
->  
->  #define ATMEL_LCDC_DMABADDR1	0x00
-> 
+> +	palmbus@10000000 {
+> +		compatible = "palmbus";
+> +		reg = <0x10000000 0x200000>;
+> +                ranges = <0x0 0x10000000 0x1FFFFF>;
 
+    This line is indented with spaces. And the last cell should probably be 
+0x200000.
 
--- 
-Nicolas Ferre
+WBR, Sergei
