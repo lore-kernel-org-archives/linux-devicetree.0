@@ -1,128 +1,169 @@
-From: Olav Haugan <ohaugan@codeaurora.org>
-Subject: Re: [PATCH] documentation: iommu: add description of ARM System MMU
- binding
-Date: Tue, 16 Apr 2013 11:18:42 -0700
-Message-ID: <516D9602.2010404@codeaurora.org>
-References: <1365094259-24847-1-git-send-email-will.deacon@arm.com> <515F37C1.4000109@codeaurora.org> <20130408092535.GA17476@mudshark.cambridge.arm.com> <5162F87A.7070409@codeaurora.org> <20130410173732.GQ26992@mudshark.cambridge.arm.com> <5169C7D1.8070300@codeaurora.org> <20130415131341.GG9827@mudshark.cambridge.arm.com>
+From: David Howells <dhowells@redhat.com>
+Subject: [PATCH 09/28] proc: Move some bits from linux/proc_fs.h to
+ linux/{of.h, signal.h, tty.h} [RFC]
+Date: Tue, 16 Apr 2013 19:26:26 +0100
+Message-ID: <20130416182626.27773.48524.stgit@warthog.procyon.org.uk>
+References: <20130416182550.27773.89310.stgit@warthog.procyon.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20130415131341.GG9827@mudshark.cambridge.arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Andreas Herrmann <andreas.herrmann@calxeda.com>, "tzeng@codeaurora.org" <tzeng@codeaurora.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130416182550.27773.89310.stgit@warthog.procyon.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-arch@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org, Jri Slaby <jslaby@suse.cz>
 List-Id: devicetree@vger.kernel.org
 
-On 4/15/2013 6:13 AM, Will Deacon wrote:
-> On Sat, Apr 13, 2013 at 10:02:09PM +0100, Olav Haugan wrote:
->> On 4/10/2013 10:37 AM, Will Deacon wrote:
->>> Ok, but then how does that interact with the IOMMU API in Linux? e.g.
->>> if a client asks for an iova <-> pa mapping on a device, then you
->>> need to lookup the StreamIDs for that device, no?
->>
->> Can you explain this use case a bit more. I am not clear what you mean
->> by a "client"? Are you referring to a client in Linux or are you
->> referring to the client being the core behind an IOMMU (such as a DMA
->> engine or a video core)?
-> 
-> Sure. By `client', I mean any use of the IOMMU API. It could be something
-> like your LVD example later on, it could be KVM or it could be indirectly
-> via dma-mapping. Basically, any user of <linux/iommu.h>.
+Move some bits from linux/proc_fs.h to linux/of.h, signal.h and tty.h.
 
-Ok, so if I do a VA2PA on a domain (calling iommu_iova_to_phys()) you
-don't need any information about StreamID (no need to look up the
-StreamID). You would just walk the page table of the domain and find the
-address (or use ATS on the IOMMU if supported by the HW).
+Also move proc_tty_init() and proc_device_tree_init() to fs/proc/internal.h as
+they're internal to procfs.
 
->> I am not sure how StreamIDs relates to the IOMMU API in Linux :-)
-> 
-> That's the thing; they don't, at least not explicitly. The StreamIDs must
-> all be handled inside the driver and it's actually what the driver would
-> deal with, rather than devices.
-> 
-> For example, if I create an IOMMU domain containing a DMA controller, that
-> means that I have associated a set of StreamIDs (i.e. those configured to
-> identify the DMA controller's master ports) with that domain. That may have
-> further consequences on which other devices can be put in the same domain
-> (stream-matching may require some IDs to sit in the same address space/domain)
-> and also effectively parameterises the domain, by pointing those StreamIDs
-> at the same context bank.
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: devicetree-discuss@lists.ozlabs.org
+cc: linux-arch@vger.kernel.org
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+cc: Jri Slaby <jslaby@suse.cz>
+---
 
-Yes, this is clear to me.
+ fs/proc/internal.h      |   16 ++++++++++++++++
+ include/linux/of.h      |   10 ++++++++++
+ include/linux/proc_fs.h |   37 -------------------------------------
+ include/linux/signal.h  |    5 +++++
+ include/linux/tty.h     |    7 +++++++
+ 5 files changed, 38 insertions(+), 37 deletions(-)
 
->> I think it helps if I explain my use case to you so you understand how
->> we use the IOMMU and maybe you can explain your use case and how your
->> driver works so that we can get on the same page. BTW, our ARMv1 IOMMU
->> driver can be found @ [1]
->>
->> Our use case:
->>
->> 1) During boot IOMMU HW is probed, devices for each IOMMU and for each
->> context bank are created.
-> 
-> So you create a device for each context bank...
-> 
->> 2) Video session starts.
->> 3) Linux Video Driver (LVD) creates one or more domain
->> (iommu_domain_alloc) and calls iommu_attach_device() for each context
->> bank it is going to use.
-> 
-> ...and attach the context bank to the domain dynamically?
-
-Yes
-
-> If so, doesn't that strongly tie your video driver to the SMMU?
-
-Isn't this more or less what you are doing in DT where you associate
-specific devices with an IOMMU (mmu-masters)?
-
->> The video driver selects context bank to attach to based on the use case
->> and does not know about StreamIDs really.
->>
->> BTW, when you call iommu_attach_device() what "device" do you pass as
->> argument? Do you pass the IOMMU as a device? How do you specify which
->> Context Bank to attach to?
-> 
-> This seems to be where we differ. My anticipated use-case is that a domain
-> is allocated, which defines an empty address space. Masters are then
-> attached to the domain by passing their struct device, so this may
-> correspond to a DMA controller or a video core, in your case. The context
-> bank is allocated dynamically when the first device is added to the
-> domain, and then it is subsequently shared between all the masters in that
-> domain.
-
-I feel that there are some limitation with this. Maybe you can address
-the following:
-
-1) What if you want two context banks in one domain (shared page table)?
-2) What if a master (device) needs to use 2 or more context banks?
-
->>> Why can't the secure world just hide those context banks by using 
->>> SMMU_SCR1.NSNUMCBO?
->>
->> Yes, that is a possibility for context banks. If you have 1 or more
->> "secure" context banks it also means that Linux does not have access
->> (read: can't have) to the global register space and this must be
->> communicated somehow (hence the "secure-id" IOMMU node property. The
->> secure-context property might be redundant. However, there might be use
->> cases were Linux would want to know about the secure context bank. One
->> such use case could be to register for page fault from the secure
->> context bank so that Linux can log a useful page fault message to the
->> kernel log.
-> 
-> Perhaps, but I don't think it's worth complicating the binding based on a
-> potential nice-to-have fault message.
-> 
-
-However, global register space (including Stream Match Registers [SMR])
-needs to be programmed by the secure environment for security or by
-hyper-visor if you are in such an environment.
-
-Thanks,
-
-Olav Haugan
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+diff --git a/fs/proc/internal.h b/fs/proc/internal.h
+index 32d8f51..c529b5f 100644
+--- a/fs/proc/internal.h
++++ b/fs/proc/internal.h
+@@ -198,3 +198,19 @@ extern const struct inode_operations proc_ns_dir_inode_operations;
+ extern const struct file_operations proc_ns_dir_operations;
+ 
+ extern int proc_setup_self(struct super_block *);
++
++/*
++ * proc_devtree.c
++ */
++#ifdef CONFIG_PROC_DEVICETREE
++extern void proc_device_tree_init(void);
++#endif /* CONFIG_PROC_DEVICETREE */
++
++/*
++ * proc_tty.c
++ */
++#ifdef CONFIG_TTY
++extern void proc_tty_init(void);
++#else
++static inline void proc_tty_init(void) {}
++#endif
+diff --git a/include/linux/of.h b/include/linux/of.h
+index a0f1292..2d25ff8 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -540,4 +540,14 @@ static inline int of_property_read_u32(const struct device_node *np,
+ 	return of_property_read_u32_array(np, propname, out_value, 1);
+ }
+ 
++#if defined(CONFIG_PROC_FS) && defined(CONFIG_PROC_DEVICETREE)
++extern void proc_device_tree_add_node(struct device_node *, struct proc_dir_entry *);
++extern void proc_device_tree_add_prop(struct proc_dir_entry *pde, struct property *prop);
++extern void proc_device_tree_remove_prop(struct proc_dir_entry *pde,
++					 struct property *prop);
++extern void proc_device_tree_update_prop(struct proc_dir_entry *pde,
++					 struct property *newprop,
++					 struct property *oldprop);
++#endif
++
+ #endif /* _LINUX_OF_H */
+diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+index 3377224..80d9e24 100644
+--- a/include/linux/proc_fs.h
++++ b/include/linux/proc_fs.h
+@@ -70,36 +70,6 @@ struct proc_dir_entry *proc_create_data(const char *name, umode_t mode,
+ extern void remove_proc_entry(const char *name, struct proc_dir_entry *parent);
+ extern int remove_proc_subtree(const char *name, struct proc_dir_entry *parent);
+ 
+-
+-/*
+- * proc_tty.c
+- */
+-struct tty_driver;
+-#ifdef CONFIG_TTY
+-extern void proc_tty_init(void);
+-#else
+-static inline void proc_tty_init(void)
+-{ }
+-#endif
+-extern void proc_tty_register_driver(struct tty_driver *driver);
+-extern void proc_tty_unregister_driver(struct tty_driver *driver);
+-
+-/*
+- * proc_devtree.c
+- */
+-#ifdef CONFIG_PROC_DEVICETREE
+-struct device_node;
+-struct property;
+-extern void proc_device_tree_init(void);
+-extern void proc_device_tree_add_node(struct device_node *, struct proc_dir_entry *);
+-extern void proc_device_tree_add_prop(struct proc_dir_entry *pde, struct property *prop);
+-extern void proc_device_tree_remove_prop(struct proc_dir_entry *pde,
+-					 struct property *prop);
+-extern void proc_device_tree_update_prop(struct proc_dir_entry *pde,
+-					 struct property *newprop,
+-					 struct property *oldprop);
+-#endif /* CONFIG_PROC_DEVICETREE */
+-
+ extern struct proc_dir_entry *proc_symlink(const char *,
+ 		struct proc_dir_entry *, const char *);
+ extern struct proc_dir_entry *proc_mkdir(const char *,struct proc_dir_entry *);
+@@ -143,10 +113,6 @@ static inline struct proc_dir_entry *proc_mkdir_mode(const char *name,
+ static inline void proc_set_size(struct proc_dir_entry *de, loff_t size) {}
+ static inline void proc_set_user(struct proc_dir_entry *de, kuid_t uid, kgid_t gid) {}
+ 
+-struct tty_driver;
+-static inline void proc_tty_register_driver(struct tty_driver *driver) {};
+-static inline void proc_tty_unregister_driver(struct tty_driver *driver) {};
+-
+ #endif /* CONFIG_PROC_FS */
+ 
+ 
+@@ -187,7 +153,4 @@ static inline void *PDE_DATA(const struct inode *inode)
+ 	return PROC_I(inode)->pde->data;
+ }
+ 
+-#include <linux/signal.h>
+-
+-void render_sigset_t(struct seq_file *m, const char *header, sigset_t *set);
+ #endif /* _LINUX_PROC_FS_H */
+diff --git a/include/linux/signal.h b/include/linux/signal.h
+index a2dcb94..1135e36 100644
+--- a/include/linux/signal.h
++++ b/include/linux/signal.h
+@@ -434,4 +434,9 @@ void signals_init(void);
+ int restore_altstack(const stack_t __user *);
+ int __save_altstack(stack_t __user *, unsigned long);
+ 
++#ifdef CONFIG_PROC_FS
++struct seq_file;
++extern void render_sigset_t(struct seq_file *, const char *, sigset_t *);
++#endif
++
+ #endif /* _LINUX_SIGNAL_H */
+diff --git a/include/linux/tty.h b/include/linux/tty.h
+index c75d886..e34605b 100644
+--- a/include/linux/tty.h
++++ b/include/linux/tty.h
+@@ -658,5 +658,12 @@ do {									\
+ 	finish_wait(&wq, &__wait);					\
+ } while (0)
+ 
++#ifdef CONFIG_PROC_FS
++extern void proc_tty_register_driver(struct tty_driver *);
++extern void proc_tty_unregister_driver(struct tty_driver *);
++#else
++static inline void proc_tty_register_driver(struct tty_driver *) {}
++static inline void proc_tty_unregister_driver(struct tty_driver *) {}
++#endif
+ 
+ #endif
