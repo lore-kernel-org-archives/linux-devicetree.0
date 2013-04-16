@@ -1,60 +1,36 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v5 0/6] Initial Device Tree support for S3C64xx
-Date: Tue, 16 Apr 2013 17:33:32 +0100
-Message-ID: <20130416163331.GP26958@opensource.wolfsonmicro.com>
-References: <1366060483-20342-1-git-send-email-tomasz.figa@gmail.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v6 1/3] i2c: mux: Add i2c-arb-gpio-challenge 'mux' driver
+Date: Tue, 16 Apr 2013 09:34:58 -0700
+Message-ID: <20130416163458.GA4918@quad.lixom.net>
+References: <1365543270-10736-1-git-send-email-dianders@chromium.org>
+ <1366129742-16048-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vzUQzca511KWT6Hk"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1366060483-20342-1-git-send-email-tomasz.figa@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <1366129742-16048-1-git-send-email-dianders@chromium.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Kukjin Kim <kgene.kim@samsung.com>, Simon Glass <sjg@chromium.org>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, grant.likely@secretlab.ca, yuvaraj.cd@gmail.com, ben.dooks@codethink.co.uk, u.kleine-koenig@pengutronix.de, broonie@opensource.wolfsonmicro.com, girish.shivananjappa@linaro.org, bhushan.r@samsung.com, sreekumar.c@samsung.com, prashanth.g@samsung.com, djkurtz@chromium.org, swarren@wwwdotorg.org, linux@roeck-us.net, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, Stephen Warren <swarren@nvidia.com>, Jean Delvare <khali@linux-fr.org>, Peter Korsgaard <peter.korsgaard@barco.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Overdue, should have added a few iterations ago: :)
 
---vzUQzca511KWT6Hk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Apr 16, 2013 at 09:29:00AM -0700, Doug Anderson wrote:
+> The i2c-arb-gpio-challenge driver implements an I2C arbitration scheme
+> where masters need to claim the bus with a GPIO before they can start
+> a transcation.  This should generally only be used when standard I2C
+> multimaster isn't appropriate for some reason (errata/bugs).
+> 
+> This driver is based on code that Simon Glass added to the i2c-s3c2410
+> driver in the Chrome OS kernel 3.4 tree.  The current incarnation as a
+> mux driver is as suggested by Grant Likely.  See
+> <https://patchwork.kernel.org/patch/1877311/> for some history.
+> 
+> Signed-off-by: Doug Anderson <dianders@chromium.org>
+> Signed-off-by: Simon Glass <sjg@chromium.org>
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> Reviewed-by: Stephen Warren <swarren@nvidia.com>
 
-On Mon, Apr 15, 2013 at 11:14:37PM +0200, Tomasz Figa wrote:
-> This series adds Device Tree support for Samsung S3C64xx SoC series.
->=20
-> It fixes several problems preventing from booting an S3C64xx-based system
-> using Device Tree, adds all the infrastructure for Device Tree-based board
-> support, including mach-s3c64xx-dt and dts include files for S3C64xx SoCs,
-> and basic device tree source for FriendlyARM Mini6410 board.
+Acked-by: Olof Johansson <olof@lixom.net>
 
-I tried to test this but the pinctrl driver doesn't build in -next
-(drivers/pinctrl/pinctrl-s3c64xx.c:418:9: error: undefined identifier
-'chained_irq_enter') - will check properly tomorrow, need to leave now.
-But that's separate anyway. :P
-
-Reviewed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
-
---vzUQzca511KWT6Hk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRbX1QAAoJELSic+t+oim9QIcP/ih4mRAa5H0sqkPSE6rKC9qH
-BP6HvUdLVxGoPUPU1n+YwbCVQneOInPmBojfiWAo8IlFm7daK3X90ki+RQQlND+U
-SGKfw0mxVcvIQUJM/UJmnJPKSnZBLkWUePQv+QpON9M0dMnqTRg8dHdLPDAU/lgq
-C0aysXU9dZOM4qALX31GVzCMx5udxmLLtcLBb84NlnipOiCRE/zMePn7PBe46xZr
-t6UtIIBYx9q3WYtB2wvlzVI1R+3XDJj7wVWppayXwYrzgPhJWr91zwJari0ujxhX
-YlXchZ3FcTorgxvhIEbPBnHlUlwh7C9cmEPEd0EiGO3Y2A6TXEYi0nVnCzBIwUYH
-SrDh/p3S1awPUEGfO363C7KQUj4suAk8aW664rGxj4qTwNMW90N0MLWQxWxeIDA9
-JwhJwVV7KHkuVPuOIYk2+mqMrPHD+0MrqWR6zk2X2j4yK6tCvSVIa9/N9wN8StvZ
-d1HRmlsmOcx2aN6v9y/ZSE16bopl775D5I3mmg38MYTuhCdqc8FR/5rr/Tw1ROjP
-qwh0CVNXTu10BcSBUURWO5ZcMYxLhag6Y+yUtpspSOh+ChmfWDvmbEysVLfIf9pt
-T+h6MEG1FwHkkUFQ/0jeWZx3YB1fBp0ReQc7F1nLxxOWoQMBtL8pDOYHLkYJ0Q4D
-21ivNy65KiJweTQW1pCC
-=Exoq
------END PGP SIGNATURE-----
-
---vzUQzca511KWT6Hk--
