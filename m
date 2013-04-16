@@ -1,184 +1,75 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH 1/2] gpio: samsung: Remove OF support for s3c24xx
-Date: Tue, 16 Apr 2013 19:41:34 +0200
-Message-ID: <1366134094-23140-1-git-send-email-s.nawrocki@samsung.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [BUG] omap: mfd/regulator: twl/core: init order
+Date: Tue, 16 Apr 2013 10:54:39 -0700
+Message-ID: <20130416175438.GR10155@atomide.com>
+References: <1365877659.3812.110.camel@mars>
+ <516BD479.2020904@ti.com>
+ <1366023401.957.5.camel@mars>
+ <516BDDAC.8040905@ti.com>
+ <20130415162541.GO10155@atomide.com>
+ <516D01A4.8080301@ti.com>
+ <516D0CEC.2060306@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, grant.likely@secretlab.ca
-Cc: kyungmin.park@samsung.com, kgene.kim@samsung.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <516D0CEC.2060306@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Christoph Fritz <chf.fritz@googlemail.com>, Javier Martinez Canillas <martinez.javier@gmail.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <b-cousson@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Alessandro Zummo <a.zummo@towertech.it>, Samuel Ortiz <sameo@linux.intel.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, Daniel Mack <daniel@zonque.org>, "Hans J. Koch" <hjk@hansjkoch.de>
 List-Id: devicetree@vger.kernel.org
 
-There is no users of this code and there is already a pinctrl
-driver written for s3c24xx which is going to be used on any
-s3c24xx DT platforms. Hence this has been effectively a dead
-code in mainline.
+* Grygorii Strashko <grygorii.strashko@ti.com> [130416 01:39]:
+> On 04/16/2013 10:45 AM, Peter Ujfalusi wrote:
+> >On 04/15/2013 06:25 PM, Tony Lindgren wrote:
+> >>This fix should not be needed. It just means the real
+> >>problem is somewhere else. Pinctrl is already before the i2c
+> >>in drivers/Makefile. Maybe one of the MFD drivers has
+> >>a wrong initcall level?
+> >FYI; I just sent a patch which I believe is the correct way to fix this issue.
+> >
+> Hi Tony, Peter
+> 
+> OMAP i2c/pin-control initialization isn't controlled by Makefiles now (:
+> - i2c initialized at subsys_initcall(omap_i2c_init_driver);
 
-This reverts commit 172c6a13653ac8cd6a231293b87c93821e90c1d6
-gpio: samsung: add devicetree init for s3c24xx arches
+AFAIK there should be no reason to have this as subsys_initcall
+any longer. It should be just regular module init.
 
-Cc: Heiko St=C3=BCbner <heiko@sntech.de>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
----
+> - pinctrl-single at module_platform_driver(pcs_driver) =>
+> module_init => device_initcall (if built-in)
 
-The pinctrl driver patch can be found at:
-http://www.spinics.net/lists/linux-samsung-soc/msg17624.html
----
- .../devicetree/bindings/gpio/gpio-samsung.txt      |   43 ------------=
--
- drivers/gpio/gpio-samsung.c                        |   63 ------------=
---------
- 2 files changed, 106 deletions(-)
+Yes but still, the deferred probe should handle this case too,
+I wonder why we're not seeing this issue on omap4 for example?
+ 
+> And pls, pay attention on overall BUG description - twl-regulators
+> initialization has been delayed as result all Regulators consumers
+> (drivers which use regulators) will need to defer it's probe correctly too.
+> For now it isn't true for many drivers and, for example,
+> omap_hsmmc driver's probe will just fail if it can't get regulator.
+> (+ problems with DSS - most probably Panel/DSI driver probe can't
+> handle pin configuration)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-samsung.txt b/=
-Documentation/devicetree/bindings/gpio/gpio-samsung.txt
-index f1e5dfe..5375625 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-samsung.txt
-@@ -39,46 +39,3 @@ Example:
- 		#gpio-cells =3D <4>;
- 		gpio-controller;
- 	};
--
--
--Samsung S3C24XX GPIO Controller
--
--Required properties:
--- compatible: Compatible property value should be "samsung,s3c24xx-gpi=
-o".
--
--- reg: Physical base address of the controller and length of memory ma=
-pped
--  region.
--
--- #gpio-cells: Should be 3. The syntax of the gpio specifier used by c=
-lient nodes
--  should be the following with values derived from the SoC user manual=
-=2E
--     <[phandle of the gpio controller node]
--      [pin number within the gpio controller]
--      [mux function]
--      [flags and pull up/down]
--
--  Values for gpio specifier:
--  - Pin number: depending on the controller a number from 0 up to 15.
--  - Mux function: Depending on the SoC and the gpio bank the gpio can =
-be set
--                  as input, output or a special function
--  - Flags and Pull Up/Down: the values to use differ for the individua=
-l SoCs
--                    example S3C2416/S3C2450:
--                            0 - Pull Up/Down Disabled.
--                            1 - Pull Down Enabled.
--                            2 - Pull Up Enabled.
--          Bit 16 (0x00010000) - Input is active low.
--  Consult the user manual for the correct values of Mux and Pull Up/Do=
-wn.
--
--- gpio-controller: Specifies that the node is a gpio controller.
--- #address-cells: should be 1.
--- #size-cells: should be 1.
--
--Example:
--
--	gpa: gpio-controller@56000000 {
--		#address-cells =3D <1>;
--		#size-cells =3D <1>;
--		compatible =3D "samsung,s3c24xx-gpio";
--		reg =3D <0x56000000 0x10>;
--		#gpio-cells =3D <3>;
--		gpio-controller;
--	};
-diff --git a/drivers/gpio/gpio-samsung.c b/drivers/gpio/gpio-samsung.c
-index c4b51d8..4fecfb8 100644
---- a/drivers/gpio/gpio-samsung.c
-+++ b/drivers/gpio/gpio-samsung.c
-@@ -933,67 +933,6 @@ static void __init samsung_gpiolib_add(struct sams=
-ung_gpio_chip *chip)
- 		s3c_gpiolib_track(chip);
- }
-=20
--#if defined(CONFIG_PLAT_S3C24XX) && defined(CONFIG_OF)
--static int s3c24xx_gpio_xlate(struct gpio_chip *gc,
--			const struct of_phandle_args *gpiospec, u32 *flags)
--{
--	unsigned int pin;
--
--	if (WARN_ON(gc->of_gpio_n_cells < 3))
--		return -EINVAL;
--
--	if (WARN_ON(gpiospec->args_count < gc->of_gpio_n_cells))
--		return -EINVAL;
--
--	if (gpiospec->args[0] > gc->ngpio)
--		return -EINVAL;
--
--	pin =3D gc->base + gpiospec->args[0];
--
--	if (s3c_gpio_cfgpin(pin, S3C_GPIO_SFN(gpiospec->args[1])))
--		pr_warn("gpio_xlate: failed to set pin function\n");
--	if (s3c_gpio_setpull(pin, gpiospec->args[2] & 0xffff))
--		pr_warn("gpio_xlate: failed to set pin pull up/down\n");
--
--	if (flags)
--		*flags =3D gpiospec->args[2] >> 16;
--
--	return gpiospec->args[0];
--}
--
--static const struct of_device_id s3c24xx_gpio_dt_match[] __initdata =3D=
- {
--	{ .compatible =3D "samsung,s3c24xx-gpio", },
--	{}
--};
--
--static __init void s3c24xx_gpiolib_attach_ofnode(struct samsung_gpio_c=
-hip *chip,
--						 u64 base, u64 offset)
--{
--	struct gpio_chip *gc =3D  &chip->chip;
--	u64 address;
--
--	if (!of_have_populated_dt())
--		return;
--
--	address =3D chip->base ? base + ((u32)chip->base & 0xfff) : base + of=
-fset;
--	gc->of_node =3D of_find_matching_node_by_address(NULL,
--			s3c24xx_gpio_dt_match, address);
--	if (!gc->of_node) {
--		pr_info("gpio: device tree node not found for gpio controller"
--			" with base address %08llx\n", address);
--		return;
--	}
--	gc->of_gpio_n_cells =3D 3;
--	gc->of_xlate =3D s3c24xx_gpio_xlate;
--}
--#else
--static __init void s3c24xx_gpiolib_attach_ofnode(struct samsung_gpio_c=
-hip *chip,
--						 u64 base, u64 offset)
--{
--	return;
--}
--#endif /* defined(CONFIG_PLAT_S3C24XX) && defined(CONFIG_OF) */
--
- static void __init s3c24xx_gpiolib_add_chips(struct samsung_gpio_chip =
-*chip,
- 					     int nr_chips, void __iomem *base)
- {
-@@ -1018,8 +957,6 @@ static void __init s3c24xx_gpiolib_add_chips(struc=
-t samsung_gpio_chip *chip,
- 			gc->direction_output =3D samsung_gpiolib_2bit_output;
-=20
- 		samsung_gpiolib_add(chip);
--
--		s3c24xx_gpiolib_attach_ofnode(chip, S3C24XX_PA_GPIO, i * 0x10);
- 	}
- }
-=20
---=20
-1.7.9.5
+Sounds like there are a few places to fix. Got something available
+for these?
+ 
+> Before, on early kernel versions, the OMAP pinmux was ready to work
+> at arch_initcall time
+> and most of the code has been created with this assumption.
+
+Yes. In general we've been moving to initializing things later
+on rather than earlier so we have a real console available for
+error messages instead of earlyprintk if something goes wrong.
+
+BTW, the legacy omap pinmux code will be going away as soon as
+we have moved platforms to use DT only booting. I think we can
+make omap4 DT only after v3.10, omap3 later on.
+ 
+> Unfortunately, RTC is just a small part of problem.
+
+Can you try just setting the related drivers to be regular
+module initcalls and see if that solves the problem?
+
+Regards,
+
+Tony
