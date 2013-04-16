@@ -1,36 +1,49 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v5 00/14] ARM: samsung-time: Prepare for multiplatform
- support
-Date: Tue, 16 Apr 2013 22:51:35 +0200
-Message-ID: <516DB9D7.1070705@gmail.com>
-References: <1365794250-14436-1-git-send-email-t.figa@samsung.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Query on pinctrl usage for DT nodes
+Date: Tue, 16 Apr 2013 14:32:33 -0700
+Message-ID: <20130416213232.GU10155@atomide.com>
+References: <CA+V-a8uiPwsAD--OHFAE=i2ed+-wbXm4p2deZXr92+Zv6GDS1w@mail.gmail.com>
+ <515C5C76.3080009@wwwdotorg.org>
+ <CA+V-a8t3wtP77DdeUoQHKMjAuWmV+ude+1J3UjJmMTqobgStjA@mail.gmail.com>
+ <5162FD4A.1030909@wwwdotorg.org>
+ <CA+V-a8vwdCkyMqiynj5BodXbjwJ=e4qNb-29FhLweqbjc7DBQA@mail.gmail.com>
+ <5165A22B.4070200@wwwdotorg.org>
+ <20130410203408.GP10155@atomide.com> <516BB99F.2080502@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1365794250-14436-1-git-send-email-t.figa@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, kyungmin.park@samsung.com, linux@simtec.co.uk, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, sylvester.nawrocki@gmail.com, buserror@gmail.com, christer@weinigel.se, jekhor@gmail.com, ghcstop@gmail.com, mark.rutland@arm.com, tomasz.figa@gmail.com, heiko@sntech.de, robherring2@gmail.com, m.szyprowski@samsung.com, arnd@arndb.de, john.stultz@linaro.org, tglx@linutronix.de
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <516BB99F.2080502-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/12/2013 09:17 PM, Tomasz Figa wrote:
-> This series is an attempt to make the samsung-time clocksource driver ready
-> for multiplatform kernels. It moves the driver to drivers/clocksource, cleans
-> it up from uses of static platform-specific definitions, simplifies timer
-> interrupt handling and adds Device Tree support.
->
-> The samsung_pwm clocksource driver is made the master driver, which
-> exposes a single function to the PWM driver to get required data. Only
-> samsung-time driver is reworked to use the master driver at this time,
-> since the PWM driver can be already considered broken at the moment and
-> needs separate series of several patches to fix and clean it up, which
-> I am already working on.
->
-> Tested on Universal C210 board with Device Tree. Not tested without
-> Device Tree, since it has been already broken before this series.
-> Compile tested for other related SoCs.
+* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [130415 01:30]:
+> On 04/10/2013 10:34 PM, Tony Lindgren wrote:
+> > Yeah how about just change the pintctrl-single,bits register
+> > naming to be register + bit?  Something like 0xdeadbeef.0 and
+> > 0xdeadbeef.1 and so on.
+> 
+> Something like this might work I think. It is going to be a bit tricky IMHO
+> since we might need span out new 'register' every time a device requests for a
+> new pinctrl-single,bits for already used register in the
+> pinctrl-single,bit-per-mux area. In this way we still can make sure that
+> certain bit are only used by a single driver.
 
-On s3c2440 based board
+OK. If it's one bit per mux type register we should be able to create
+the right amount of entries based on the submask in pinctrs-single,bit?
 
-Tested-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Regards,
+
+Tony
