@@ -1,83 +1,65 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 05/15] ASoC: phycore-ac97: Add DT support
-Date: Tue, 16 Apr 2013 12:59:43 +0100
-Message-ID: <20130416115942.GG26958@opensource.wolfsonmicro.com>
-References: <1365939779-4507-1-git-send-email-mpa@pengutronix.de>
- <1365939779-4507-6-git-send-email-mpa@pengutronix.de>
+From: Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 0/3] of/pci: Provide common support for PCI DT parsing
+Date: Tue, 16 Apr 2013 12:59:29 +0100
+Message-ID: <20130416115929.GB13259@arm.com>
+References: <1365693969-23907-1-git-send-email-Andrew.Murray@arm.com>
+ <20130415175641.GM28693@titan.lakedaemon.net>
+ <CACRpkdbSd8pRG5pUS0ymqXDSp=ZhoQa2ctVuRA0cCmUcX5qFAA@mail.gmail.com>
+ <1366096361.24994.49.camel@pasglop>
+ <20130416112951.GZ28693@titan.lakedaemon.net>
+ <20130416133140.7de24c89@skate>
+ <20130416113727.GA28693@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5915629319957508138=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1365939779-4507-6-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130416113727.GA28693-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: "siva.kallam-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <siva.kallam-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "suren.reddy-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <suren.reddy-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 16, 2013 at 12:37:27PM +0100, Jason Cooper wrote:
+> On Tue, Apr 16, 2013 at 01:31:40PM +0200, Thomas Petazzoni wrote:
+> > Dear Jason Cooper,
+> > 
+> > On Tue, 16 Apr 2013 07:29:51 -0400, Jason Cooper wrote:
+> > 
+> > > > Do not send this series upstream (or even in -next) until it has been at
+> > > > least build-tested and acked by the affected architectures. AFAIK it
+> > > > breaks microblaze build (simple missing #include) and isn't yet tested
+> > > > on powerpc (I'm on vacation, maybe somebody else on linuxppc-dev can do
+> > > > it though).
+> > > 
+> > > I added the missing include reference by Michal Simek for the branch at
+> > > mvebu/drivers.
+> > 
+> > Some other build issues were reported on x86 during the night (thanks
+> > to automated build tests), and Andrew Murray has just sent a new
+> > version v7 of the patch set addressing those issues, as well as the
+> > missing include.
+> > 
+> > Also, please note that Andrew's patch set contains three patches, but
+> > the Marvell PCIe driver only requires PATCH 1/3 and PATCH 2/3.
+> 
+> Ok.  Thanks Andrew!  Do you (AndrewM) want me to keep the series
+> together?  Or drop 3/3 from my tree?  I can do either, I just need to
+> know.
 
---===============5915629319957508138==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fCcDWlUEdh43YKr8"
-Content-Disposition: inline
+Patch 1 has an ack from Microblaze but not yet from PowerPC, it probably needs
+an ack from both of these before moving upwards.
 
+Patch 3 is awaiting feedback from Mips, ideally all three patches could stay
+together but if feedback blocks this then I guess it could go alone later.
 
---fCcDWlUEdh43YKr8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Sun, Apr 14, 2013 at 01:42:49PM +0200, Markus Pargmann wrote:
-
-> +	/*
-> +	 * This driver doesn't need to know which actual hardware is used.
-> +	 * The audmux driver has knowledge about it's type, and returns
-> +	 * an error if executed on the wrong type of hardware.
-> +	 */
-> +	ret = phycore_ac97_pca100_audmux();
-> +	if (!ret)
-> +		return 0;
-> +
-> +	ret = phycore_ac97_pcm043_audmux();
-
-The DT really ought to be able to give enough information to figure out
-the audmux configuration.  If we can't do that it rather defeats the
-point of moving to DT...
-
---fCcDWlUEdh43YKr8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRbT0nAAoJELSic+t+oim9AUYP/2KCKO1ef2r3pCJBeILkP9Ia
-1pHyI5WI1EmflW3MMBn2KOzOaWYn7xn9a8Dhozi1WR/PDxOkOkIEJyRWgcnYIk3c
-K/QKB4PKPKR/xESyuyEZ4Tr2owi22PXhAFs5b2i5iSfTyVzkIieqBq53Z9k+FbT9
-vjM4kzV6IeJH9JhvnJ/s7fr28vOpgKxfUUVNv2IB/8XTnTh9nbqeYAvX6Z/uf9/+
-g6Ur2wY01sp6p0PnNav7YfQgQupdt5C74Cqpdm8BNHqLlbSOtEyaMYcpeKC8rKYW
-JLIVbja9nq8wt9whhJtdxaCEW+OzBWCNLwG/7EqabD7uCy+ANzbHNuxyUAaOFhgm
-7cjh0H3WkcXM+8bIiNkw0LmuoTHGxCryumzLIw7pA0PnMGpdnQLYP++YxShUUwUc
-Qg+2VE15XMWiR4TtN0I5rVWPAqog2LCNuqCY6YjHpWf94bJvqqt73zRLmNL3IE8W
-gfxLkyLXGc1VhO73t6lxZbDFQhGdliQOJYCjQbOszB0BNA+6yMVdUCHRl/BepQVU
-PQSWsQYWMPtWOdWGQEASNVQ1sSF4Gti3lZZIsdNMeJdm/A9J8zsqexdKvRoEynmJ
-7/Za+Pgp7SMWOhjPKxkMbJG6zZoRkmoiTldeQS85sDUTj90/NvWRo4zl1o/nu8q5
-70eq2KLF8Uwfh7hXXo1Y
-=EjLn
------END PGP SIGNATURE-----
-
---fCcDWlUEdh43YKr8--
-
---===============5915629319957508138==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============5915629319957508138==--
+Andrew Murray
