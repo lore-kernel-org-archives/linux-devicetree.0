@@ -1,114 +1,56 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/8] ARM: at91: sam9g45: add lcd support
-Date: Tue, 16 Apr 2013 17:12:59 +0200
-Message-ID: <516D6A7B.8050503@atmel.com>
-References: <20130411145741.GB25242@game.jcrosoft.org>
- <1365692422-9565-1-git-send-email-plagnioj@jcrosoft.com>
- <1365692422-9565-5-git-send-email-plagnioj@jcrosoft.com>
- <516D5991.8020603@atmel.com>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH v3 05/15] ASoC: phycore-ac97: Add DT support
+Date: Tue, 16 Apr 2013 17:23:05 +0200
+Message-ID: <20130416152305.GE13272@pengutronix.de>
+References: <1365939779-4507-1-git-send-email-mpa@pengutronix.de>
+ <1365939779-4507-6-git-send-email-mpa@pengutronix.de>
+ <20130416115942.GG26958@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <516D5991.8020603-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20130416115942.GG26958@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/16/2013 04:00 PM, Nicolas Ferre :
-> On 04/11/2013 05:00 PM, Jean-Christophe PLAGNIOL-VILLARD :
->> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
->> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/at91sam9g45.dtsi |   47 ++++++++++++++++++++++++++++++++++++
->>  1 file changed, 47 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
->> index 6b1d4ca..ab8a8fc 100644
->> --- a/arch/arm/boot/dts/at91sam9g45.dtsi
->> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
->> @@ -322,6 +322,42 @@
->>  					};
->>  				};
->>  
->> +				fb {
->> +					pinctrl_fb: fb-0 {
->> +						atmel,pins =
->> +							<4 0 0x1 0x0	/* PE0 periph A */
->> +							 4 2 0x1 0x0	/* PE2 periph A */
->> +							 4 3 0x1 0x0	/* PE3 periph A */
->> +							 4 4 0x1 0x0	/* PE4 periph A */
->> +							 4 5 0x1 0x0	/* PE5 periph A */
->> +							 4 6 0x1 0x0	/* PE6 periph A */
->> +							 4 7 0x1 0x0	/* PE7 periph A */
->> +							 4 8 0x1 0x0	/* PE8 periph A */
->> +							 4 9 0x1 0x0	/* PE9 periph A */
->> +							 4 10 0x1 0x0	/* PE10 periph A */
->> +							 4 11 0x1 0x0	/* PE11 periph A */
->> +							 4 12 0x1 0x0	/* PE12 periph A */
->> +							 4 13 0x1 0x0	/* PE13 periph A */
->> +							 4 14 0x1 0x0	/* PE14 periph A */
->> +							 4 15 0x1 0x0	/* PE15 periph A */
->> +							 4 16 0x1 0x0	/* PE16 periph A */
->> +							 4 17 0x1 0x0	/* PE17 periph A */
->> +							 4 18 0x1 0x0	/* PE18 periph A */
->> +							 4 19 0x1 0x0	/* PE19 periph A */
->> +							 4 20 0x1 0x0	/* PE20 periph A */
->> +							 4 21 0x1 0x0	/* PE21 periph A */
->> +							 4 22 0x1 0x0	/* PE22 periph A */
->> +							 4 23 0x1 0x0	/* PE23 periph A */
->> +							 4 24 0x1 0x0	/* PE24 periph A */
->> +							 4 25 0x1 0x0	/* PE25 periph A */
->> +							 4 26 0x1 0x0	/* PE26 periph A */
->> +							 4 27 0x1 0x0	/* PE27 periph A */
->> +							 4 28 0x1 0x0	/* PE28 periph A */
->> +							 4 29 0x1 0x0	/* PE29 periph A */
->> +							 4 30 0x1 0x0>;	/* PE30 periph A */
->> +					};
->> +				};
->> +
->>  				pioA: gpio@fffff200 {
->>  					compatible = "atmel,at91rm9200-gpio";
->>  					reg = <0xfffff200 0x200>;
->> @@ -533,6 +569,17 @@
->>  			};
->>  		};
->>  
->> +		fb0: fb@0x00500000 {
->> +			compatible = "atmel,at91sam9g45-lcdc";
->> +			reg = <0x00500000 0x1000>;
->> +			interrupts = <23 3 0>;
+On Tue, Apr 16, 2013 at 12:59:43PM +0100, Mark Brown wrote:
+> On Sun, Apr 14, 2013 at 01:42:49PM +0200, Markus Pargmann wrote:
 > 
-> Error: here, it is <23 4 0>
-
-Collecting all the remarks, we end-up with:
-
-<23 4 3>
-
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&pinctrl_fb>;
->> +			status = "disabled";
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +		};
->> +
->>  		nand0: nand@40000000 {
->>  			compatible = "atmel,at91rm9200-nand";
->>  			#address-cells = <1>;
->>
+> > +	/*
+> > +	 * This driver doesn't need to know which actual hardware is used.
+> > +	 * The audmux driver has knowledge about it's type, and returns
+> > +	 * an error if executed on the wrong type of hardware.
+> > +	 */
+> > +	ret = phycore_ac97_pca100_audmux();
+> > +	if (!ret)
+> > +		return 0;
+> > +
+> > +	ret = phycore_ac97_pcm043_audmux();
 > 
-> 
+> The DT really ought to be able to give enough information to figure out
+> the audmux configuration.  If we can't do that it rather defeats the
+> point of moving to DT...
 
+Yes you are right, I added a phandle "phytec,audmux" to check which
+audmux setup function we have to use.
+
+Regards,
+
+Markus
 
 -- 
-Nicolas Ferre
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
