@@ -1,7 +1,7 @@
 From: Pawel Moll <pawel.moll@arm.com>
-Subject: [RFC 02/10] video: display: Update the display with the video mode data
-Date: Wed, 17 Apr 2013 16:17:14 +0100
-Message-ID: <1366211842-21497-3-git-send-email-pawel.moll@arm.com>
+Subject: [RFC 04/10] video: display: Add generic TFT display type
+Date: Wed, 17 Apr 2013 16:17:16 +0100
+Message-ID: <1366211842-21497-5-git-send-email-pawel.moll@arm.com>
 References: <1366211842-21497-1-git-send-email-pawel.moll@arm.com>
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -12,61 +12,48 @@ To: linux-fbdev@vger.kernel.org, linux-media@vger.kernel.org, dri-devel@lists.fr
 Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linus Walleij <linus.walleij@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The display entity (sink) may need to know about the mode being
-changed, eg. to update timings.
+TFT panels may be interfaced via a simple parallel interface
+carrying RGB data, pixel clock and synchronisation signals.
+>From the video generator point of view the width of the data
+channels (number of bits per R/G/B components) may be an
+important factor in setting up the display model.
 
-Alternatively there could be a separate set_mode() operation...
+Above information is based on the presentations by Dave Anders
+available here: http://elinux.org/Elc-lcd
+
+This patch adds the parallel TFT display type and basic parameters
+structure. Maybe it should be split into a separate header, eg.
+include/video/tft.h? Or maybe it's just the INTERFACE_DPI I'm
+talking about?
 
 Signed-off-by: Pawel Moll <pawel.moll@arm.com>
 ---
- drivers/video/display/display-core.c |    5 +++--
- include/video/display.h              |    6 ++++--
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ include/video/display.h |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/video/display/display-core.c b/drivers/video/display/d=
-isplay-core.c
-index d2daa15..4b8e45a 100644
---- a/drivers/video/display/display-core.c
-+++ b/drivers/video/display/display-core.c
-@@ -69,12 +69,13 @@ EXPORT_SYMBOL_GPL(display_entity_set_state);
-  *
-  * Return 0 on success or a negative error code otherwise.
-  */
--int display_entity_update(struct display_entity *entity)
-+int display_entity_update(struct display_entity *entity,
-+=09=09=09     const struct videomode *mode)
- {
- =09if (!entity->ops.ctrl || !entity->ops.ctrl->update)
- =09=09return 0;
-=20
--=09return entity->ops.ctrl->update(entity);
-+=09return entity->ops.ctrl->update(entity, mode);
- }
- EXPORT_SYMBOL_GPL(display_entity_update);
-=20
 diff --git a/include/video/display.h b/include/video/display.h
-index 90d18ca..64f84d5 100644
+index 7fe8b2f..875e230 100644
 --- a/include/video/display.h
 +++ b/include/video/display.h
-@@ -77,7 +77,8 @@ struct display_entity_interface_params {
- struct display_entity_control_ops {
- =09int (*set_state)(struct display_entity *ent,
- =09=09=09 enum display_entity_state state);
--=09int (*update)(struct display_entity *ent);
-+=09int (*update)(struct display_entity *ent,
-+=09=09=09 const struct videomode *mode);
- =09int (*get_modes)(struct display_entity *ent,
- =09=09=09 const struct videomode **modes);
- =09int (*get_params)(struct display_entity *ent,
-@@ -111,7 +112,8 @@ struct display_entity {
+@@ -69,10 +69,19 @@ enum display_entity_stream_state {
 =20
- int display_entity_set_state(struct display_entity *entity,
- =09=09=09     enum display_entity_state state);
--int display_entity_update(struct display_entity *entity);
-+int display_entity_update(struct display_entity *entity,
-+=09=09=09     const struct videomode *mode);
- int display_entity_get_modes(struct display_entity *entity,
- =09=09=09     const struct videomode **modes);
- int display_entity_get_params(struct display_entity *entity,
+ enum display_entity_interface_type {
+ =09DISPLAY_ENTITY_INTERFACE_DPI,
++=09DISPLAY_ENTITY_INTERFACE_TFT_PARALLEL,
++};
++
++struct tft_parallel_interface_params {
++=09int r_bits, g_bits, b_bits;
++=09int r_b_swapped;
+ };
+=20
+ struct display_entity_interface_params {
+ =09enum display_entity_interface_type type;
++=09union {
++=09=09struct tft_parallel_interface_params tft_parallel;
++=09} p;
+ };
+=20
+ struct display_entity_control_ops {
 --=20
 1.7.10.4
