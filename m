@@ -1,30 +1,15 @@
-From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
-Date: Wed, 17 Apr 2013 08:52:55 -0500
-Message-ID: <516EA937.8060201@ti.com>
-References: <1329321854-24490-1-git-send-email-b-cousson@ti.com>
- <CACRpkdYbs4-uudpRUY8e+7icYYkZrfM0kReP3pLL5DMiURJ4dg@mail.gmail.com>
- <5165CB9D.1090202@wwwdotorg.org>
- <CACRpkdYirFNqmGhA4K9CL4ve4NYhs8Rd3SFt1iwW9vHBkrcz8g@mail.gmail.com>
- <51671D7B.5060303@wwwdotorg.org>
- <CACRpkdbf32Ef77GmXk9id9+RRjcDRTr7S+F4nznoeZU8y=BT_Q@mail.gmail.com>
- <51673D70.3010503@wwwdotorg.org>
- <CAAwP0s0e2x33jZQhFRY+Hoo61SFqYKRgWk=1mL2+DNxSDJHz+A@mail.gmail.com>
- <CACRpkda4h+qXTvsirPAS7E7sjXhMLE62q=VDy53W8UchsYjbNg@mail.gmail.com>
- <516C31C3.9040505@wwwdotorg.org> <516C7C43.3040105@wwwdotorg.org>
- <516C8760.2050500@ti.com> <516D9B05.1000501@wwwdotorg.org>
- <516DA60A.5070000@ti.com> <516DCCA8.3070108@wwwdotorg.org>
- <516DDB4D.9020500@ti.com>
- <CAAwP0s0-VNUoeSKaGbvoDeD7m7kZRdp5rCJ7iVpFoFAaQtXcmQ@mail.gmail.com>
- <516E022F.5050708@ti.com>
- <CAAwP0s2M2pnSydyDvh_rejFO=w8bCo4WE5PkxrYuk0HQDixc-Q@mail.gmail.com>
- <516EA2B1.3070201@ti.com>
- <CAAwP0s2DsJAWuXWvPAkzCT0T0AG_OvMEw2sADW6LqSi1Ofd_Zw@mail.gmail.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] i2c: mux: Add i2c-arb-gpio-challenge 'mux' driver
+Date: Wed, 17 Apr 2013 06:57:14 -0700
+Message-ID: <CAOesGMioZjFnx49YrBdxxQq2=ipx4HNCq-BT06PfT4qJoAsW+Q@mail.gmail.com>
+References: <1365543270-10736-1-git-send-email-dianders@chromium.org>
+ <1366129742-16048-1-git-send-email-dianders@chromium.org>
+ <20130416163458.GA4918@quad.lixom.net>
+ <20130417093424.GC4508@the-dreams.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============5196900014340544625=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAAwP0s2DsJAWuXWvPAkzCT0T0AG_OvMEw2sADW6LqSi1Ofd_Zw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20130417093424.GC4508-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -35,45 +20,59 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Javier Martinez Canillas <martinez.javier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+--===============5196900014340544625==
+Content-Type: multipart/alternative; boundary=f46d044271940028fa04da8edd39
 
-On 04/17/2013 08:42 AM, Javier Martinez Canillas wrote:
-> On Wed, Apr 17, 2013 at 3:25 PM, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org> wrote:
->>
->> On 04/17/2013 02:55 AM, Javier Martinez Canillas wrote:
->>
->> ...
->>
->>> There are so many patches flying around in this thread that I missed it :-)
->>>
->>> Sorry about that...
->>
->> No problem.
->>
->>>> I was trying to see if we could find a common solution that everyone
->>>> could use as it seems that ideally we should all be requesting the gpio.
->>>>
->>>> Cheers
->>>> Jon
->>>>
->>>> [1] http://marc.info/?l=linux-arm-kernel&m=136606204823845&w=1
->>>
->>> btw, I shared the latest patch with only build testing it, but today I
->>> gave a try and I found a problem with this approach. The .xlate
->>> function is being called twice for each GPIO-IRQ so the first time
->>> gpio_request_one() succeeds but the second time it fails returning
->>> -EBUSY.
->>
->> I tried it and I did not see that. I don't see the below warning either.
->>
-> 
-> weird, I wonder what's different here.
+--f46d044271940028fa04da8edd39
+Content-Type: text/plain; charset=ISO-8859-1
 
-I am testing on an omap4-sdp which uses a spi based ethernet device.
-However, I could try with the omap3430-sdp which uses gpmc.
+On Apr 17, 2013 2:35 AM, "Wolfram Sang" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+>
+> On Tue, Apr 16, 2013 at 09:34:58AM -0700, Olof Johansson wrote:
+>
+> > Overdue, should have added a few iterations ago: :)
+>
+> Why is that? Is the current iteration too generic for your taste?
 
-Cheers
-Jon
+No, nothing like that.
+
+I've been talking to Doug and others offlist (at work) about this but never
+acked the patches on the list. I've been happy with them for a while and
+I'm glad you've reached that point too :)
+
+-Olof
+
+--f46d044271940028fa04da8edd39
+Content-Type: text/html; charset=ISO-8859-1
+
+<p dir="ltr"><br>
+On Apr 17, 2013 2:35 AM, &quot;Wolfram Sang&quot; &lt;<a href="mailto:wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org">wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org</a>&gt; wrote:<br>
+&gt;<br>
+&gt; On Tue, Apr 16, 2013 at 09:34:58AM -0700, Olof Johansson wrote:<br>
+&gt;<br>
+&gt; &gt; Overdue, should have added a few iterations ago: :)<br>
+&gt;<br>
+&gt; Why is that? Is the current iteration too generic for your taste?</p>
+<p dir="ltr">No, nothing like that.</p>
+<p dir="ltr">I&#39;ve been talking to Doug and others offlist (at work) about this but never acked the patches on the list. I&#39;ve been happy with them for a while and I&#39;m glad you&#39;ve reached that point too :)<br>
+</p>
+<p dir="ltr">-Olof</p>
+
+--f46d044271940028fa04da8edd39--
+
+--===============5196900014340544625==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============5196900014340544625==--
