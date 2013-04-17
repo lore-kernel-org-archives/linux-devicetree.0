@@ -1,42 +1,67 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: Compilation breakage on drivers/media due to OF patches - was: Re: [PATCH] DT: export of_get_next_parent() for use by modules: fix modular V4L2
-Date: Wed, 17 Apr 2013 16:08:43 +0100
-Message-ID: <20130417150843.5A5A63E2B73@localhost>
-References: <Pine.LNX.4.64.1304021825130.31999@axis700.grange> <201304021630.13371.arnd@arndb.de> <Pine.LNX.4.64.1304021840590.31999@axis700.grange> <Pine.LNX.4.64.1304171555140.16330@axis700.grange> <20130417115357.0b0f31ae@redhat.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20130417115357.0b0f31ae@redhat.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@redhat.com>, Rob Herring <rob.herring@calxeda.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Linux Media Mailing List <linux-media@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] spi: spi-omap2-mcspi.c: Add dts for slave device
+ configuration.
+Date: Wed, 17 Apr 2013 16:11:24 +0100
+Message-ID: <20130417151124.GY13687@opensource.wolfsonmicro.com>
+References: <1364252415-3613-1-git-send-email-matthias.bgg@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="iRaAnoDFBoP0sW/E"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1364252415-3613-1-git-send-email-matthias.bgg@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Daniel Mack <zonque@gmail.com>, Enric Balletbo Serra <eballetbo@gmail.com>, Javier Martinez Canillas <martinez.javier@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, linux-omap@vger.kernel.org, ezequiel.garcia@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 17 Apr 2013 11:53:57 -0300, Mauro Carvalho Chehab <mchehab@redhat.com> wrote:
-> Hi Grant/Rob,
-> 
-> Our tree is currently _broken_ with OT, because of the lack of 
-> exporting of_get_next_parent. The developer that submitted the patches 
-> that added V4L2 OF support forgot to test to compilation with MODULES
-> support enabled.
-> 
-> So, we're now having:
-> 	ERROR: "of_get_next_parent" [drivers/media/v4l2-core/videodev.ko] undefined!
-> 
-> if compiled with OF enabled and media as module.
-> 
-> As those patches were applied at my master branch and there are lots of
-> other patches on the top of the patches that added V4L2 OF support, 
-> I prefer to avoid reverting those patches. 
-> 
-> On the other hand, I can't send the patches upstream next week (assuming 
-> that -rc7 is the final one), without having this patch applying before 
-> the media tree.
 
-The fix needs to be applied to your tree then. Go ahead and apply it with my ack:
+--iRaAnoDFBoP0sW/E
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Acked-by: Grant Likely <grant.likely@linaro.org>
+On Tue, Mar 26, 2013 at 12:00:15AM +0100, Matthias Brugger wrote:
 
-It is no good to apply it to the devicetree -next branch because that
-will still leave your branch broken, even if device tree gets merged
-first.
+> +- The spi slave nodes can provide the following information which is used
+> +  by the spi controller.
 
-g.
+> +- ti,spi-cs-per-word: Set chipselect to be toggled on every word send.
+
+Why is this part of the DT binding for the SPI controller?  Surely if
+the devices attached to the SPI bus want to configure this they should
+be setting things up appropriately in the transfers?  There might be
+devices that both want and do not want this on the same bus for example,
+and this isn't something that should depend on controller support.
+
+> +- ti,spi-turbo-mode: Set turbo mode for this device.
+
+> +		controller-data {
+> +			ti,spi-cs-per-word = <1>;
+> +			ti,spi-turbo-mode = <0>;
+
+Better to use a boolean property here - check with of_find_property() to
+see if the property is defined at all rather than using a value.
+
+--iRaAnoDFBoP0sW/E
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRbrt9AAoJELSic+t+oim9mNgP/1Ur05zvRjGfz4+puXCqslo1
+qgYOwUFXI4KFBCem64s4zcNAgSzhyqVpESO+2n1sVOWGKhQRft6m70Gdjvs+2RfD
+xCwaQFe0bcstFoO6bF+imE3QqId9W2tPTDDAmBxv5qqqZLgdKQ4Ub8niX9RbvMdu
+lqoSEmZiIrm2cFFFhB2JxT65UeZMYtrR9BoTuUpH7OV2fEXffb6Vxa8LBjswK2RP
+ndw7s53HEewXpdWHdWE6mqvlhYlhPYYJG85ql/SjuBBuFlmLiludsAFRl1zVaWx1
+uwRszVptPvREYDYOd27zAzrTlk8tJ14o1TfoCVu1m06Ea3lqDWymRys+jwhbOLN6
+JfVVrzYv+Zy3Yuy5peEuNOmkbTNav9VLLsKjucQcOZ0EjxZPosLZGDWuVINBXmTA
+X07FeJ7wzYUEu5TOfgIDm7TdjczpFW2sGYVr3+994I5el/dTdeovBfaYIqPgqMm5
+YBACrqcfbjLfRoUVuJt2zxmQO7+ECkdC0DvXbQ0Htg8TiD0TIAKydo1D29kGjGpS
+SN/rpNqLOCYJPM++5IS9n9IQjLFn9eoAU3C5/WsT48EoVS1xXF+VtW3jej3xivp9
+RKU97m+RwlM//0kQkEeGMaVvNTUx24rD65OxUeFRCxTIN6wjhNDmjk0PEW6W1dKa
+62eWBTZdzPYqYC69riXx
+=HRwu
+-----END PGP SIGNATURE-----
+
+--iRaAnoDFBoP0sW/E--
