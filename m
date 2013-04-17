@@ -1,28 +1,40 @@
-From: Timur Tabi <timur@tabi.org>
-Subject: Re: [PATCH v2] of/base: release the node correctly in of_parse_phandle_with_args()
-Date: Tue, 16 Apr 2013 22:30:43 -0500
-Message-ID: <516E1763.7040206@tabi.org>
-References: <1365564999-24427-1-git-send-email-Yuantian.Tang@freescale.com> <CAOZdJXW8qKccGKic3R4o1aqJdbfHcBoAp62B4HPFnF=sUAEvuQ@mail.gmail.com> <D07C73A334FF604B95B3CBD2A545D07B0B1456B8@039-SN2MPN1-013.039d.mgd.msft.net>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 2/3] drm/exynos: Rework fimc clocks handling
+Date: Wed, 17 Apr 2013 09:32:41 +0530
+Message-ID: <CAK9yfHw=V+5AgM9i+Cc7cr9TJqgsYigQApSJehNFwv=cFU2bCg@mail.gmail.com>
+References: <1366133486-22973-1-git-send-email-s.nawrocki@samsung.com>
+	<1366133486-22973-3-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <D07C73A334FF604B95B3CBD2A545D07B0B1456B8@039-SN2MPN1-013.039d.mgd.msft.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tang Yuantian-B29983 <B29983@freescale.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1366133486-22973-3-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: inki.dae@samsung.com, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Tang Yuantian-B29983 wrote:
->> >On Tue, Apr 9, 2013 at 10:36 PM,<Yuantian.Tang@freescale.com>  wrote:
->>> > >
->>> > >+                       /* Found it! return success */
->> >
->> >I'm pretty sure this comment is in the wrong place.
+Hi Sylwester,
 
-> It is not perfect, but acceptable.
+On 16 April 2013 23:01, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
+> @@ -1835,16 +1859,19 @@ static int fimc_probe(struct platform_device *pdev)
+>         ret = exynos_drm_ippdrv_register(ippdrv);
+>         if (ret < 0) {
+>                 dev_err(dev, "failed to register drm fimc device.\n");
+> -               goto err_ippdrv_register;
+> +               goto err_pm_dis;
+>         }
+>
+>         dev_info(&pdev->dev, "drm fimc registered successfully.\n");
+>
+>         return 0;
+>
+> -err_ippdrv_register:
+> +err_pm_dis:
+> +       devm_kfree(dev, ippdrv->prop_list);
 
-Like I said, I'm pretty sure it's in the wrong place.
+devm_kfree was removed in patch1 of this series. Do we need it back?
+
 
 -- 
-Timur Tabi
+With warm regards,
+Sachin
