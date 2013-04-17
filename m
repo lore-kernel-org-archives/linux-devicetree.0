@@ -1,170 +1,53 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v3 3/3] ARM: OMAP2+: Add GPMC DT support for Ethernet
- child nodes
-Date: Wed, 17 Apr 2013 16:07:55 +0200
-Message-ID: <516EACBB.9020607@collabora.co.uk>
-References: <1363298051-24574-1-git-send-email-javier.martinez@collabora.co.uk> <201304171140.52529.poeschel@lemonage.de> <516E9026.8070804@collabora.co.uk> <516EA838.3010003@ti.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH] DT: export of_get_next_parent() for use by modules: fix
+ modular V4L2
+Date: Wed, 17 Apr 2013 16:07:49 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1304171555140.16330@axis700.grange>
+References: <Pine.LNX.4.64.1304021825130.31999@axis700.grange>
+ <201304021630.13371.arnd@arndb.de> <Pine.LNX.4.64.1304021840590.31999@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <516EA838.3010003@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Lars Poeschel <poeschel@lemonage.de>, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1304021840590.31999@axis700.grange>
+Sender: linux-media-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree-discuss@lists.ozlabs.org, Linux Media Mailing List <linux-media@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 04/17/2013 03:48 PM, Jon Hunter wrote:
+Hi all
+
+On Tue, 2 Apr 2013, Guennadi Liakhovetski wrote:
+
+> On Tue, 2 Apr 2013, Arnd Bergmann wrote:
 > 
-> On 04/17/2013 07:05 AM, Javier Martinez Canillas wrote:
+> > On Tuesday 02 April 2013, Guennadi Liakhovetski wrote:
+> > > Currently modular V4L2 build with enabled OF is broken dur to the
+> > > of_get_next_parent() function being unavailable to modules. Export it to
+> > > fix the build.
+> > > 
+> > > Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> > > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> > 
+> > Looks good to me, but shouldn't this be EXPORT_SYMBOL_GPL?
 > 
-> ...
-> 
->> Yes, in fact I just realized that for_each_node_by_name() expand to:
->> 
->> #define for_each_node_by_name(dn, name) \
->>         for (dn = of_find_node_by_name(NULL, name); dn; \
->>              dn = of_find_node_by_name(dn, name))
->> 
->> which means that it will search for a node with "name" on the complete
->> DeviceTree and this is wrong. It should only search on GPMC childs.
-> 
-> Good catch. I guess we could have flash & ethernet devices connected to
-> other interfaces such as SPI.
-> 
+> "grep EXPORT_SYMBOL drivers/of/base.c" doesn't give a certain answer, but 
+> it seems to fit other of_get_* functions pretty well:
 
-Yes, in fact this is the case for omap4-sdp.dts which has an ethernet controller
-connected through SPI:
+Ping, could this patch be pushed to -next asap, please? Without it the 
+current V4L2 -next doesn't compile. Also, I think, ro avoid breaking the 
+mainline, we should try to have this patch pulled in before the media 
+tree, could that be done?
 
-&mcspi1 {
-        eth@0 {
-                compatible = "ks8851";
-                spi-max-frequency = <24000000>;
-                reg = <0>;
-                interrupt-parent = <&gpio2>;
-                interrupts = <2>; /* gpio line 34 */
-                vdd-supply = <&vdd_eth>;
-        };
-};
+Thanks
+Guennadi
 
-it just didn't fail because the device node name is "eth" and not "ethernet".
+>  EXPORT_SYMBOL(of_get_parent);
+> +EXPORT_SYMBOL(of_get_next_parent);
+>  EXPORT_SYMBOL(of_get_next_child);
+>  EXPORT_SYMBOL(of_get_next_available_child);
+>  EXPORT_SYMBOL(of_get_child_by_name);
 
-which makes me wonder if is OK to rely on a device node name or we should use
-compatible properties instead such as "ti,gpmc-{eth,nand,nor,onenand}" and do
-something like:
-
-for_each_compatible_node(pdev->dev.of_node, NULL, "ti,gpmc-eth") and so on.
-
->> Could you please test the following patch? If it works for you I'll add a proper
->> description and submit it as a PATCH.
->> 
->> Thanks a lot and best regards,
->> Javier
->> 
->> From d8dab9ae9a0284f17553875c2fddd806d9f6ab2e Mon Sep 17 00:00:00 2001
->> From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->> Date: Wed, 17 Apr 2013 13:50:30 +0200
->> Subject: [PATCH] ARM: OMAP2+: only search for GPMC DT child nodes on
->>  probe
->> 
->> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->> ---
->>  arch/arm/mach-omap2/gpmc.c |   51 ++++++++++++++++++++-----------------------
->>  1 files changed, 24 insertions(+), 27 deletions(-)
->> 
->> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
->> index ed946df..58e2415 100644
->> --- a/arch/arm/mach-omap2/gpmc.c
->> +++ b/arch/arm/mach-omap2/gpmc.c
->> @@ -1520,35 +1520,32 @@ static int gpmc_probe_dt(struct platform_device *pdev)
->>  		return ret;
->>  	}
->> 
->> -	for_each_node_by_name(child, "nand") {
->> -		ret = gpmc_probe_nand_child(pdev, child);
->> -		if (ret < 0) {
->> -			of_node_put(child);
->> -			return ret;
->> -		}
->> -	}
->> -
->> -	for_each_node_by_name(child, "onenand") {
->> -		ret = gpmc_probe_onenand_child(pdev, child);
->> -		if (ret < 0) {
->> -			of_node_put(child);
->> -			return ret;
->> -		}
->> -	}
->> +	for_each_child_of_node(pdev->dev.of_node, child) {
->> +		if (child->name) {
-> 
-> Minor nit ... how about ...
-> 
-> +		if (!child->name)
-> 			continue;
->
-
-Yes, much better. I just cooked a quick patch so Lars could test it ;-)
- 		
->> +			if (of_node_cmp(child->name, "nand") == 0) {
->> +				ret = gpmc_probe_nand_child(pdev, child);
->> +				if (ret < 0) {
->> +					of_node_put(child);
->> +					return ret;
->> +				}
->> +			}
->> 
->> -	for_each_node_by_name(child, "nor") {
->> -		ret = gpmc_probe_generic_child(pdev, child);
->> -		if (ret < 0) {
->> -			of_node_put(child);
->> -			return ret;
->> -		}
->> -	}
->> +			if (of_node_cmp(child->name, "onenand") == 0) {
->> +				ret = gpmc_probe_onenand_child(pdev, child);
->> +				if (ret < 0) {
->> +					of_node_put(child);
->> +					return ret;
->> +				}
->> +			}
->> 
->> -	for_each_node_by_name(child, "ethernet") {
->> -		ret = gpmc_probe_generic_child(pdev, child);
->> -		if (ret < 0) {
->> -			of_node_put(child);
->> -			return ret;
->> +			if (of_node_cmp(child->name, "ethernet") == 0 ||
->> +			    of_node_cmp(child->name, "nor") == 0) {
->> +				ret = gpmc_probe_generic_child(pdev, child);
->> +				if (ret < 0) {
->> +					of_node_put(child);
->> +					return ret;
->> +				}
->> +			}
->>  		}
->>  	}
-> 
-> I am also wondering if the probe should fail if one of its children
-> fails. The panic that Lars reported occurred because the nand
-> successfully probed and so the nand device was registered, but because
-> the ethernet device probe failed, the gpmc probe fails, and then when
-> the nand device is probed by the mtd driver the kernel panics. I wonder
-> if it would be better to WARN on child devices that fail to probe but
-> not return error from the gpmc probe.
-> 
-
-I wonder the same. Probably is better to just WARN so a user could at lest use
-some of the peripherals connected to the GPMC. This is specially important for
-flash memory devices since the rootfs could have to be mounted from there.
-
-Do you want me to split the child node search and the WARN_ON() replacement in
-two different patchs or should I send both changes in one patch?
-
-> Cheers
-> Jon
-> 
-
-Best regards,
-Javier
-
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
