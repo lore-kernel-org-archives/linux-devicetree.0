@@ -1,47 +1,60 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Call for testing: device nodes as kobjects
-Date: Wed, 17 Apr 2013 18:22:17 +0100
-Message-ID: <CACxGe6uNWZNSYxAGy47FKwsSrAXBnQswon7BY05e2efQdXF_QQ@mail.gmail.com>
-References: <CACxGe6vPsGK1PwF6xOkkTB5LD8DqgB+Ym7daCMoPbMbVMVBQtQ@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v5 5/6] ARM: dts: Add basic dts include files for Samsung
+ S3C64xx SoCs
+Date: Wed, 17 Apr 2013 12:46:43 -0500
+Message-ID: <CAL_JsqL_i-5SDCsGZCrsxMehLVMGoLO1s_V3R-H6Oa5ff16dEQ@mail.gmail.com>
+References: <1366060483-20342-1-git-send-email-tomasz.figa@gmail.com>
+	<1366060483-20342-6-git-send-email-tomasz.figa@gmail.com>
+	<516D4D76.2010409@gmail.com>
+	<1829212.6niSeTsyIU@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACxGe6vPsGK1PwF6xOkkTB5LD8DqgB+Ym7daCMoPbMbVMVBQtQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, Michal Simek <michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1829212.6niSeTsyIU@amdc1227>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kukjin Kim <kgene.kim@samsung.com>, "Mark Brown (broonie@opensource.wolfsonmicro.com)" <broonie@opensource.wolfsonmicro.com>, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, Russell King - ARM Linux <linux@arm.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 17, 2013 at 4:48 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> Hi folks,
+On Tue, Apr 16, 2013 at 8:19 AM, Tomasz Figa <t.figa@samsung.com> wrote:
+> On Tuesday 16 of April 2013 08:09:10 Rob Herring wrote:
+>> On 04/15/2013 04:14 PM, Tomasz Figa wrote:
+>> > This patch adds basic device tree definitions for Samsung S3C64xx SoCs.
+>> >
+>> > Since all the SoCs in the series are very similar, the files are created
+>> > hierarchically - one file for the whole series and then separate files
+>> > for particular SoCs including the common one.
+>> >
+>> > Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+>> > ---
+>> >
+>> >  arch/arm/boot/dts/s3c6400.dtsi         |  33 ++
+>> >  arch/arm/boot/dts/s3c6410.dtsi         |  33 ++
+>> >  arch/arm/boot/dts/s3c64xx-pinctrl.dtsi | 683
+>> >  +++++++++++++++++++++++++++++++++ arch/arm/boot/dts/s3c64xx.dtsi
+>> >  | 136 +++++++
+>> >  4 files changed, 885 insertions(+)
+>> >  create mode 100644 arch/arm/boot/dts/s3c6400.dtsi
+>> >  create mode 100644 arch/arm/boot/dts/s3c6410.dtsi
+>> >  create mode 100644 arch/arm/boot/dts/s3c64xx-pinctrl.dtsi
+>> >  create mode 100644 arch/arm/boot/dts/s3c64xx.dtsi
+>>
+>> [...]
+>>
+>> > +
+>> > +   vic0: interrupt-controller@71200000 {
+>>
+>> These nodes should be off a "simple-bus" node.
 >
-> Could I get some testing support please? I've applied the patch that
-> makes device nodes into kobjects into the following branch and build
-> tested it on a bunch of platforms. What I need now is boot testing on
-> different architectures.
+> Hmm, is there any reason behind it?
 >
-> If you can build this tree and make sure it doesn't break your
-> platforms with OF support I would greatly appreciate it.
->
-> Also, if you turn off CONFIG_PROC_DEVICETREE, a symlink will be
-> created to the /sys/firmware  representation which should be
-> functionally identical. For those of you using tools that read
-> /proc/device-tree (like kexec), I would also appreciate if you can
-> test that those tools still work with CONFIG_PROC_DEVICETREE turned
-> off.
->
-> git://git.secretlab.ca/git/linux devicetree/experimental
+> I thought simple bus was just a convenient helper to represent hierarchical
+> bus structures if one has a need to do so.
 
-Note; I just updated the branch with a build fix for PowerPC
+No. The DT should reflect the bus structure of the chip. How
+accurately it is done is up to you and the information available, but
+you have to have a bus of some sort.
 
-g.
+There's obvious examples that don't follow this, but I'd like to not have more.
+
+Rob
