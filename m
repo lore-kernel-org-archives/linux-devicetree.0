@@ -1,36 +1,124 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2] of/base: release the node correctly in of_parse_phandle_with_args()
-Date: Wed, 17 Apr 2013 23:00:22 +0100
-Message-ID: <CACxGe6usVnOdcxELXWcqtuW-YVvDJmyyW+Ds8UQ1xpoCY+_WAg@mail.gmail.com>
-References: <1365564999-24427-1-git-send-email-Yuantian.Tang@freescale.com>
- <D07C73A334FF604B95B3CBD2A545D07B0B144FD3@039-SN2MPN1-013.039d.mgd.msft.net>
- <20130417145719.F194E3E2B73@localhost> <CAOZdJXVnppPczrJi8jcNWLvabHFWP++Ex1QiEadbyLfApCR85g@mail.gmail.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v2 1/2] ARM: OMAP2+: only search for GPMC DT child nodes
+ on probe
+Date: Thu, 18 Apr 2013 00:10:16 +0200
+Message-ID: <516F1DC8.2000707@collabora.co.uk>
+References: <1366230852-2440-1-git-send-email-javier.martinez@collabora.co.uk> <516F13B8.20601@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOZdJXVnppPczrJi8jcNWLvabHFWP++Ex1QiEadbyLfApCR85g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Timur Tabi <timur@tabi.org>
-Cc: Tang Yuantian-B29983 <B29983@freescale.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <516F13B8.20601@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Lars Poeschel <poeschel@lemonage.de>, devicetree-discuss@lists.ozlabs.org, linux-omap <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 17, 2013 at 10:52 PM, Timur Tabi <timur@tabi.org> wrote:
-> On Wed, Apr 17, 2013 at 9:57 AM, Grant Likely <grant.likely@secretlab.ca> wrote:
->>
->>> I really preciate if you can spend some times to review this patch.
->>
->> Applied, thanks.
+On 04/17/2013 11:27 PM, Jon Hunter wrote:
+> 
+> On 04/17/2013 03:34 PM, Javier Martinez Canillas wrote:
+>> The GPMC DT probe function use for_each_node_by_name() to search
+>> child device nodes of the GPMC controller. But this function does
+>> not use the GPMC device node as the root of the search and instead
+>> search across the complete Device Tree.
+>> 
+>> This means that any device node on the DT that is using any of the
+>> GPMC child nodes names searched for will be returned even if they
+>> are not connected to the GPMC, making the gpmc_probe_xxx_child()
+>> function to fail.
+>> 
+>> Fix this by using the GPMC device node as the search root so the
+>> search will be restricted to its children.
+>> 
+>> Reported-by: Lars Poeschel <poeschel@lemonage.de>
+>> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+>> ---
+>> 
+>> Changes since v1 (suggested by Jon Hunter):
+>>   - Split the search for GPMC child nodes and only warn if a
+>>     child probe fails on two different patches
+>>   - Don't probe all childs unnecesary if a previous matched
+>> 
+>>  arch/arm/mach-omap2/gpmc.c |   33 ++++++++++-----------------------
+>>  1 files changed, 10 insertions(+), 23 deletions(-)
+>> 
+>> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+>> index ed946df..6166847 100644
+>> --- a/arch/arm/mach-omap2/gpmc.c
+>> +++ b/arch/arm/mach-omap2/gpmc.c
+>> @@ -1520,32 +1520,19 @@ static int gpmc_probe_dt(struct platform_device *pdev)
+>>  		return ret;
+>>  	}
+>>  
+>> -	for_each_node_by_name(child, "nand") {
+>> -		ret = gpmc_probe_nand_child(pdev, child);
+>> -		if (ret < 0) {
+>> -			of_node_put(child);
+>> -			return ret;
+>> -		}
+>> -	}
+>> +	for_each_child_of_node(pdev->dev.of_node, child) {
+>>  
+>> -	for_each_node_by_name(child, "onenand") {
+>> -		ret = gpmc_probe_onenand_child(pdev, child);
+>> -		if (ret < 0) {
+>> -			of_node_put(child);
+>> -			return ret;
+>> -		}
+>> -	}
+>> +		if (!child->name)
+>> +			continue;
+>>  
+>> -	for_each_node_by_name(child, "nor") {
+>> -		ret = gpmc_probe_generic_child(pdev, child);
+>> -		if (ret < 0) {
+>> -			of_node_put(child);
+>> -			return ret;
+>> -		}
+>> -	}
+>> +		if (of_node_cmp(child->name, "nand") == 0)
+>> +			ret = gpmc_probe_nand_child(pdev, child);
+>> +		else if (of_node_cmp(child->name, "onenand") == 0)
+>> +			ret = gpmc_probe_onenand_child(pdev, child);
+>> +		else if (of_node_cmp(child->name, "ethernet") == 0 ||
+>> +			 of_node_cmp(child->name, "nor") == 0)
+>> +			ret = gpmc_probe_generic_child(pdev, child);
+>>  
+>> -	for_each_node_by_name(child, "ethernet") {
+>> -		ret = gpmc_probe_generic_child(pdev, child);
+>>  		if (ret < 0) {
+> 
+> I think that we need to make sure that "ret" is initialised to 0 at the
+> beginning of the function. We should not have a case where the child
+
+Hi Jon,
+
+I didn't set ret  to 0 at the beginning of the function since it is assigned the
+return value of a previous call to of_property_read_u32(). So ret should be 0
+when execution reaches the for loop.
+
+> name does not match but who knows. Actually that raises another point,
+> should we have an "else" clause at the end that WARNs on
+> "unknown/unsupported child" device?
 >
-> Pff.  Why do I bother?
 
-Relax Timur:
+Actually I thought about it when I was writing that patch and then I decided to
+not add a WARN for that case since nothing really fail in that case.
 
-http://git.secretlab.ca/?p=linux.git;a=commitdiff;h=b855f16b05a697ac1863adabe99bfba56e6d3199
+I mean if we want to check that a DT is well formed then I think we will need to
+add much more checks and I don't know if is worth it.
 
-g.
+But I don't have a strong opinion on this so if you want I can add it an send a v3.
 
+>>  			of_node_put(child);
+>>  			return ret;
+>> 
+> 
+> Otherwise looks great.
+> 
+> Cheers
+> Jon
+> 
 
-
---
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Best regards,
+Javier
