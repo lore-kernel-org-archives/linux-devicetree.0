@@ -1,40 +1,35 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH 2/3] drm/exynos: Rework fimc clocks handling
-Date: Wed, 17 Apr 2013 09:32:41 +0530
-Message-ID: <CAK9yfHw=V+5AgM9i+Cc7cr9TJqgsYigQApSJehNFwv=cFU2bCg@mail.gmail.com>
-References: <1366133486-22973-1-git-send-email-s.nawrocki@samsung.com>
-	<1366133486-22973-3-git-send-email-s.nawrocki@samsung.com>
+From: Tang Yuantian-B29983 <B29983@freescale.com>
+Subject: RE: [PATCH v2] of/base: release the node correctly in
+ of_parse_phandle_with_args()
+Date: Wed, 17 Apr 2013 04:49:20 +0000
+Message-ID: <D07C73A334FF604B95B3CBD2A545D07B0B1457D2@039-SN2MPN1-013.039d.mgd.msft.net>
+References: <1365564999-24427-1-git-send-email-Yuantian.Tang@freescale.com>
+ <CAOZdJXW8qKccGKic3R4o1aqJdbfHcBoAp62B4HPFnF=sUAEvuQ@mail.gmail.com>
+ <D07C73A334FF604B95B3CBD2A545D07B0B1456B8@039-SN2MPN1-013.039d.mgd.msft.net>
+ <516E1763.7040206@tabi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1366133486-22973-3-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: inki.dae@samsung.com, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <516E1763.7040206@tabi.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Timur Tabi <timur@tabi.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
-
-On 16 April 2013 23:01, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
-> @@ -1835,16 +1859,19 @@ static int fimc_probe(struct platform_device *pdev)
->         ret = exynos_drm_ippdrv_register(ippdrv);
->         if (ret < 0) {
->                 dev_err(dev, "failed to register drm fimc device.\n");
-> -               goto err_ippdrv_register;
-> +               goto err_pm_dis;
->         }
->
->         dev_info(&pdev->dev, "drm fimc registered successfully.\n");
->
->         return 0;
->
-> -err_ippdrv_register:
-> +err_pm_dis:
-> +       devm_kfree(dev, ippdrv->prop_list);
-
-devm_kfree was removed in patch1 of this series. Do we need it back?
-
-
--- 
-With warm regards,
-Sachin
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogVGltdXIgVGFiaSBbbWFp
+bHRvOnRpbXVyQHRhYmkub3JnXQ0KPiBTZW50OiAyMDEzxOo01MIxN8jVIDExOjMxDQo+IFRvOiBU
+YW5nIFl1YW50aWFuLUIyOTk4Mw0KPiBDYzogR3JhbnQgTGlrZWx5OyBkZXZpY2V0cmVlLWRpc2N1
+c3M7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBsa21sOw0KPiBSb2IgSGVycmluZw0K
+PiBTdWJqZWN0OiBSZTogW1BBVENIIHYyXSBvZi9iYXNlOiByZWxlYXNlIHRoZSBub2RlIGNvcnJl
+Y3RseSBpbg0KPiBvZl9wYXJzZV9waGFuZGxlX3dpdGhfYXJncygpDQo+IA0KPiBUYW5nIFl1YW50
+aWFuLUIyOTk4MyB3cm90ZToNCj4gPj4gPk9uIFR1ZSwgQXByIDksIDIwMTMgYXQgMTA6MzYgUE0s
+PFl1YW50aWFuLlRhbmdAZnJlZXNjYWxlLmNvbT4gIHdyb3RlOg0KPiA+Pj4gPiA+DQo+ID4+PiA+
+ID4rICAgICAgICAgICAgICAgICAgICAgICAvKiBGb3VuZCBpdCEgcmV0dXJuIHN1Y2Nlc3MgKi8N
+Cj4gPj4gPg0KPiA+PiA+SSdtIHByZXR0eSBzdXJlIHRoaXMgY29tbWVudCBpcyBpbiB0aGUgd3Jv
+bmcgcGxhY2UuDQo+IA0KPiA+IEl0IGlzIG5vdCBwZXJmZWN0LCBidXQgYWNjZXB0YWJsZS4NCj4g
+DQo+IExpa2UgSSBzYWlkLCBJJ20gcHJldHR5IHN1cmUgaXQncyBpbiB0aGUgd3JvbmcgcGxhY2Uu
+DQo+IA0KDQpJdCB3YXMgcGxhY2VkIG9uIEVMU0Ugc3RhdGVtZW50IG9yaWdpbmFsbHksIEkgbW92
+ZWQgaXQgdG8gSUYgc3RhdGVtZW50Lg0KV2h5IGlzIGl0IHNvIHdyb25nPw0KDQpUaGFua3MsDQpZ
+dWFudGlhbg0K
