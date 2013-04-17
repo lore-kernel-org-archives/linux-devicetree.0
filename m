@@ -1,98 +1,215 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RFC PATCH 2/2] ARM: DT: kernel: DT cpu node bindings update
-Date: Wed, 17 Apr 2013 12:02:04 +0100
-Message-ID: <20130417110203.GB29188@e102568-lin.cambridge.arm.com>
-References: <1366042402-8987-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1366042402-8987-3-git-send-email-lorenzo.pieralisi@arm.com>
- <201304171148.57146.arnd@arndb.de>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH RFC 2/2] gpio: samsung: Remove OF support for Exynos4/5
+Date: Wed, 17 Apr 2013 13:06:08 +0200
+Message-ID: <1366196768-19015-1-git-send-email-s.nawrocki@samsung.com>
+References: <1366134094-23140-1-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201304171148.57146.arnd@arndb.de>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Dave Martin <dave.martin@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>, Sekhar Nori <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Viresh Kumar <viresh.kumar@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, Lennert Buytenhek <kernel@wantstofly.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <Catalin.Marinas@arm.com>, David Brown <davidb@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Simon Horman <horms@verge>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <1366134094-23140-1-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 17, 2013 at 10:48:56AM +0100, Arnd Bergmann wrote:
-> On Monday 15 April 2013, Lorenzo Pieralisi wrote:
-> > -               "arm,cortex-a9"
-> > -               "arm,cortex-a15"
-> > -               "arm,arm1136"
-> > -               "arm,arm1156"
-> > -               "arm,arm1176"
-> > -               "arm,arm11mpcore"
-> > -               "faraday,fa526"
-> > -               "intel,sa110"
-> > -               "intel,sa1100"
-> > -               "marvell,feroceon"
-> > -               "marvell,mohawk"
-> > -               "marvell,xsc3"
-> > -               "marvell,xscale"
-> 
-> > +                           "arm,cortex-a9"
-> > +                           "arm,cortex-a15"
-> > +                           "arm,cortex-a57"
-> > +                           "arm,arm1136"
-> > +                           "arm,arm1156"
-> > +                           "arm,arm1176"
-> > +                           "arm,arm11mpcore"
-> > +                           "faraday,fa526"
-> > +                           "intel,sa110"
-> > +                           "intel,sa1100"
-> > +                           "marvell,feroceon"
-> > +                           "marvell,mohawk"
-> > +                           "marvell,xsc3"
-> > +                           "marvell,xscale"
-> 
-> I see you are adding cortex-a57 here, but there are actually a couple
-> of other cores that we could add here. It also makes sense to sort these
-> alphanumerically I think, and move arm10 after arm9, as well as arm11
-> before cortex.
+Now when Exynos4 and Exynos5 SoC DT platforms use the pinctrl API
+we can remove the interim OF support from this GPIO driver. There
+should be no need any more to check the compatible property and to
+find out if initialization of the GPIO driver should be skipped
+we just check if OF tree is available.
 
-Ok, I will do that.
+Cc: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/gpio/gpio-samsung.c |  106 +++----------------------------------------
+ 1 file changed, 6 insertions(+), 100 deletions(-)
 
-> The ones that I find missing but actually used are:
-> 
-> 	"arm,cortex-a53"
-> 	"arm,cortex-m0"
-> 	"arm,cortex-m0+"
-> 	"arm,cortex-m1"
-> 	"arm,cortex-m3"
-> 	"arm,cortex-m4"
-> 	"arm,cortex-r4"
-> 	"arm,cortex-r5"
-> 	"arm,cortex-r7"
-> 	"marvell,pj4"
-> 	"qcom,scorpion"
-> 	"qcom,krait"
+diff --git a/drivers/gpio/gpio-samsung.c b/drivers/gpio/gpio-samsung.c
+index 4fecfb8..e1c59c0 100644
+--- a/drivers/gpio/gpio-samsung.c
++++ b/drivers/gpio/gpio-samsung.c
+@@ -2658,70 +2658,6 @@ static struct samsung_gpio_chip exynos5_gpios_4[] = {
+ };
+ #endif
 
-Ok, I will add them, but we should probably enforce a policy regulating
-how this binding should be updated in the future.
+-
+-#if defined(CONFIG_ARCH_EXYNOS) && defined(CONFIG_OF)
+-static int exynos_gpio_xlate(struct gpio_chip *gc,
+-			const struct of_phandle_args *gpiospec, u32 *flags)
+-{
+-	unsigned int pin;
+-
+-	if (WARN_ON(gc->of_gpio_n_cells < 4))
+-		return -EINVAL;
+-
+-	if (WARN_ON(gpiospec->args_count < gc->of_gpio_n_cells))
+-		return -EINVAL;
+-
+-	if (gpiospec->args[0] > gc->ngpio)
+-		return -EINVAL;
+-
+-	pin = gc->base + gpiospec->args[0];
+-
+-	if (s3c_gpio_cfgpin(pin, S3C_GPIO_SFN(gpiospec->args[1])))
+-		pr_warn("gpio_xlate: failed to set pin function\n");
+-	if (s3c_gpio_setpull(pin, gpiospec->args[2] & 0xffff))
+-		pr_warn("gpio_xlate: failed to set pin pull up/down\n");
+-	if (s5p_gpio_set_drvstr(pin, gpiospec->args[3]))
+-		pr_warn("gpio_xlate: failed to set pin drive strength\n");
+-
+-	if (flags)
+-		*flags = gpiospec->args[2] >> 16;
+-
+-	return gpiospec->args[0];
+-}
+-
+-static const struct of_device_id exynos_gpio_dt_match[] __initdata = {
+-	{ .compatible = "samsung,exynos4-gpio", },
+-	{}
+-};
+-
+-static __init void exynos_gpiolib_attach_ofnode(struct samsung_gpio_chip *chip,
+-						u64 base, u64 offset)
+-{
+-	struct gpio_chip *gc =  &chip->chip;
+-	u64 address;
+-
+-	if (!of_have_populated_dt())
+-		return;
+-
+-	address = chip->base ? base + ((u32)chip->base & 0xfff) : base + offset;
+-	gc->of_node = of_find_matching_node_by_address(NULL,
+-			exynos_gpio_dt_match, address);
+-	if (!gc->of_node) {
+-		pr_info("gpio: device tree node not found for gpio controller"
+-			" with base address %08llx\n", address);
+-		return;
+-	}
+-	gc->of_gpio_n_cells = 4;
+-	gc->of_xlate = exynos_gpio_xlate;
+-}
+-#elif defined(CONFIG_ARCH_EXYNOS)
+-static __init void exynos_gpiolib_attach_ofnode(struct samsung_gpio_chip *chip,
+-						u64 base, u64 offset)
+-{
+-	return;
+-}
+-#endif /* defined(CONFIG_ARCH_EXYNOS) && defined(CONFIG_OF) */
+-
+ static __init void exynos4_gpiolib_init(void)
+ {
+ #ifdef CONFIG_CPU_EXYNOS4210
+@@ -2746,8 +2682,6 @@ static __init void exynos4_gpiolib_init(void)
+ 			chip->config = &exynos_gpio_cfg;
+ 			chip->group = group++;
+ 		}
+-		exynos_gpiolib_attach_ofnode(chip,
+-				EXYNOS4_PA_GPIO1, i * 0x20);
+ 	}
+ 	samsung_gpiolib_add_4bit_chips(exynos4_gpios_1,
+ 				       nr_chips, gpio_base1);
+@@ -2773,8 +2707,6 @@ static __init void exynos4_gpiolib_init(void)
+ 			chip->config = &exynos_gpio_cfg;
+ 			chip->group = group++;
+ 		}
+-		exynos_gpiolib_attach_ofnode(chip,
+-				EXYNOS4_PA_GPIO2, i * 0x20);
+ 	}
+ 	samsung_gpiolib_add_4bit_chips(exynos4_gpios_2,
+ 				       nr_chips, gpio_base2);
+@@ -2794,8 +2726,6 @@ static __init void exynos4_gpiolib_init(void)
+ 			chip->config = &exynos_gpio_cfg;
+ 			chip->group = group++;
+ 		}
+-		exynos_gpiolib_attach_ofnode(chip,
+-				EXYNOS4_PA_GPIO3, i * 0x20);
+ 	}
+ 	samsung_gpiolib_add_4bit_chips(exynos4_gpios_3,
+ 				       nr_chips, gpio_base3);
+@@ -2849,8 +2779,6 @@ static __init void exynos5_gpiolib_init(void)
+ 			chip->config = &exynos_gpio_cfg;
+ 			chip->group = group++;
+ 		}
+-		exynos_gpiolib_attach_ofnode(chip,
+-				EXYNOS5_PA_GPIO1, i * 0x20);
+ 	}
+ 	samsung_gpiolib_add_4bit_chips(exynos5_gpios_1,
+ 				       nr_chips, gpio_base1);
+@@ -2870,8 +2798,6 @@ static __init void exynos5_gpiolib_init(void)
+ 			chip->config = &exynos_gpio_cfg;
+ 			chip->group = group++;
+ 		}
+-		exynos_gpiolib_attach_ofnode(chip,
+-				EXYNOS5_PA_GPIO2, i * 0x20);
+ 	}
+ 	samsung_gpiolib_add_4bit_chips(exynos5_gpios_2,
+ 				       nr_chips, gpio_base2);
+@@ -2898,8 +2824,6 @@ static __init void exynos5_gpiolib_init(void)
+ 			chip->config = &exynos_gpio_cfg;
+ 			chip->group = group++;
+ 		}
+-		exynos_gpiolib_attach_ofnode(chip,
+-				EXYNOS5_PA_GPIO3, i * 0x20);
+ 	}
+ 	samsung_gpiolib_add_4bit_chips(exynos5_gpios_3,
+ 				       nr_chips, gpio_base3);
+@@ -2919,8 +2843,6 @@ static __init void exynos5_gpiolib_init(void)
+ 			chip->config = &exynos_gpio_cfg;
+ 			chip->group = group++;
+ 		}
+-		exynos_gpiolib_attach_ofnode(chip,
+-				EXYNOS5_PA_GPIO4, i * 0x20);
+ 	}
+ 	samsung_gpiolib_add_4bit_chips(exynos5_gpios_4,
+ 				       nr_chips, gpio_base4);
+@@ -2945,29 +2867,13 @@ static __init int samsung_gpiolib_init(void)
+ 	int i, nr_chips;
+ 	int group = 0;
 
-> 
-> There are also a number of faraday cores that we don't support in
-> Linux (fa626, fa626te, fa726te, ...), not sure if we should attempt to
-> list them all here. The only one that is being worked on at the moment
-> is based on fa526.
+-#if defined(CONFIG_PINCTRL_EXYNOS) || defined(CONFIG_PINCTRL_EXYNOS5440)
+ 	/*
+-	* This gpio driver includes support for device tree support and there
+-	* are platforms using it. In order to maintain compatibility with those
+-	* platforms, and to allow non-dt Exynos4210 platforms to use this
+-	* gpiolib support, a check is added to find out if there is a active
+-	* pin-controller driver support available. If it is available, this
+-	* gpiolib support is ignored and the gpiolib support available in
+-	* pin-controller driver is used. This is a temporary check and will go
+-	* away when all of the Exynos4210 platforms have switched to using
+-	* device tree and the pin-ctrl driver.
+-	*/
+-	struct device_node *pctrl_np;
+-	static const struct of_device_id exynos_pinctrl_ids[] = {
+-		{ .compatible = "samsung,exynos4210-pinctrl", },
+-		{ .compatible = "samsung,exynos4x12-pinctrl", },
+-		{ .compatible = "samsung,exynos5440-pinctrl", },
+-		{ }
+-	};
+-	for_each_matching_node(pctrl_np, exynos_pinctrl_ids)
+-		if (pctrl_np && of_device_is_available(pctrl_np))
+-			return -ENODEV;
+-#endif
++	 * All Samsung platforms that support device tree will use the pinctrl
++	 * driver, hence we skip initialization of this driver if the OF tree
++	 * is available.
++	 */
++	if (of_have_populated_dt())
++		return -ENODEV;
 
-That's why it is the only one in the list, not sure what we should do either.
+ 	samsung_gpiolib_set_cfg(samsung_gpio_cfgs, ARRAY_SIZE(samsung_gpio_cfgs));
 
-> There are also a number of 64 bit cores that other companies have announced,
-> but I'm not sure if the names are final yet.
-
-On a side note, as far as the in-kernel dts updates are concerned, how would
-you like me to split them ? per-mach ? per-SoC ?
-
-Thank you very much,
-Lorenzo
+--
+1.7.9.5
