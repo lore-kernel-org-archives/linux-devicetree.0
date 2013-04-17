@@ -1,72 +1,191 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/2] GPIO: Add TB10x GPIO driver
-Date: Wed, 17 Apr 2013 12:37:35 -0600
-Message-ID: <516EEBEF.9010003@wwwdotorg.org>
-References: <1365608728-30494-1-git-send-email-christian.ruppert@abilis.com> <1365608728-30494-2-git-send-email-christian.ruppert@abilis.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v3 3/3] ARM: OMAP2+: Add GPMC DT support for Ethernet
+ child nodes
+Date: Wed, 17 Apr 2013 20:50:36 +0200
+Message-ID: <516EEEFC.3080102@collabora.co.uk>
+References: <1363298051-24574-1-git-send-email-javier.martinez@collabora.co.uk> <201304171140.52529.poeschel@lemonage.de> <516E9026.8070804@collabora.co.uk> <516EA838.3010003@ti.com> <516EACBB.9020607@collabora.co.uk> <516EEAE3.5060007@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1365608728-30494-2-git-send-email-christian.ruppert@abilis.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <516EEAE3.5060007@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Lars Poeschel <poeschel@lemonage.de>, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/10/2013 09:45 AM, Christian Ruppert wrote:
-> The GPIO driver for the Abilis Systems TB10x series of SOCs based on ARC700
-> CPUs. It supports GPIO control and GPIO interrupt generation. This driver
-> works in conjunction with the TB10x pinctrl driver.
+On 04/17/2013 08:33 PM, Jon Hunter wrote:
+> 
+> On 04/17/2013 09:07 AM, Javier Martinez Canillas wrote:
+>> On 04/17/2013 03:48 PM, Jon Hunter wrote:
+>>>
+>>> On 04/17/2013 07:05 AM, Javier Martinez Canillas wrote:
+>>>
+>>> ...
+>>>
+>>>> Yes, in fact I just realized that for_each_node_by_name() expand to:
+>>>>
+>>>> #define for_each_node_by_name(dn, name) \
+>>>>         for (dn = of_find_node_by_name(NULL, name); dn; \
+>>>>              dn = of_find_node_by_name(dn, name))
+>>>>
+>>>> which means that it will search for a node with "name" on the complete
+>>>> DeviceTree and this is wrong. It should only search on GPMC childs.
+>>>
+>>> Good catch. I guess we could have flash & ethernet devices connected to
+>>> other interfaces such as SPI.
+>>>
+>> 
+>> Yes, in fact this is the case for omap4-sdp.dts which has an ethernet controller
+>> connected through SPI:
+>> 
+>> &mcspi1 {
+>>         eth@0 {
+>>                 compatible = "ks8851";
+>>                 spi-max-frequency = <24000000>;
+>>                 reg = <0>;
+>>                 interrupt-parent = <&gpio2>;
+>>                 interrupts = <2>; /* gpio line 34 */
+>>                 vdd-supply = <&vdd_eth>;
+>>         };
+>> };
+>> 
+>> it just didn't fail because the device node name is "eth" and not "ethernet".
+> 
+> Yes we got lucky here or unlucky as this would have tripped us up
+> earlier ;-)
+> 
 
-I have a couple comments beyond what Linus already said,
+indeed :)
 
-> diff --git a/Documentation/devicetree/bindings/gpio/abilis,tb10x-gpio.txt b/Documentation/devicetree/bindings/gpio/abilis,tb10x-gpio.txt
+>> which makes me wonder if is OK to rely on a device node name or we should use
+>> compatible properties instead such as "ti,gpmc-{eth,nand,nor,onenand}" and do
+>> something like:
+>> 
+>> for_each_compatible_node(pdev->dev.of_node, NULL, "ti,gpmc-eth") and so on.
+> 
+> Yes I was wondering about that too. However, it does seem simpler to
+> just search through the child devices and that would be an easier fix.
+> 
 
-> +Required Properties:
-> +- compatible: Should be "abilis,tb10x-gpio"
-> +- reg: Address and length of the register set for the device
-> +- gpio-controller: Marks the device node as a gpio controller.
-> +- #gpio-cells: Should be <1>;
+agreed
 
-I think this value should be at least two. The extra cell should be used
-to represent flags. Bit 0 of that cell is customarily used to represent
-"active low", which is information for SW to use to interpret the port,
-so it doesn't matter if your HW supports that or not. See for example:
+>>>> Could you please test the following patch? If it works for you I'll add a proper
+>>>> description and submit it as a PATCH.
+>>>>
+>>>> Thanks a lot and best regards,
+>>>> Javier
+>>>>
+>>>> From d8dab9ae9a0284f17553875c2fddd806d9f6ab2e Mon Sep 17 00:00:00 2001
+>>>> From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+>>>> Date: Wed, 17 Apr 2013 13:50:30 +0200
+>>>> Subject: [PATCH] ARM: OMAP2+: only search for GPMC DT child nodes on
+>>>>  probe
+>>>>
+>>>> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+>>>> ---
+>>>>  arch/arm/mach-omap2/gpmc.c |   51 ++++++++++++++++++++-----------------------
+>>>>  1 files changed, 24 insertions(+), 27 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+>>>> index ed946df..58e2415 100644
+>>>> --- a/arch/arm/mach-omap2/gpmc.c
+>>>> +++ b/arch/arm/mach-omap2/gpmc.c
+>>>> @@ -1520,35 +1520,32 @@ static int gpmc_probe_dt(struct platform_device *pdev)
+>>>>  		return ret;
+>>>>  	}
+>>>>
+>>>> -	for_each_node_by_name(child, "nand") {
+>>>> -		ret = gpmc_probe_nand_child(pdev, child);
+>>>> -		if (ret < 0) {
+>>>> -			of_node_put(child);
+>>>> -			return ret;
+>>>> -		}
+>>>> -	}
+>>>> -
+>>>> -	for_each_node_by_name(child, "onenand") {
+>>>> -		ret = gpmc_probe_onenand_child(pdev, child);
+>>>> -		if (ret < 0) {
+>>>> -			of_node_put(child);
+>>>> -			return ret;
+>>>> -		}
+>>>> -	}
+>>>> +	for_each_child_of_node(pdev->dev.of_node, child) {
+>>>> +		if (child->name) {
+>>>
+>>> Minor nit ... how about ...
+>>>
+>>> +		if (!child->name)
+>>> 			continue;
+>>>
+>> 
+>> Yes, much better. I just cooked a quick patch so Lars could test it ;-)
+>>  		
+>>>> +			if (of_node_cmp(child->name, "nand") == 0) {
+>>>> +				ret = gpmc_probe_nand_child(pdev, child);
+>>>> +				if (ret < 0) {
+>>>> +					of_node_put(child);
+>>>> +					return ret;
+>>>> +				}
+>>>> +			}
+>>>>
+>>>> -	for_each_node_by_name(child, "nor") {
+>>>> -		ret = gpmc_probe_generic_child(pdev, child);
+>>>> -		if (ret < 0) {
+>>>> -			of_node_put(child);
+>>>> -			return ret;
+>>>> -		}
+>>>> -	}
+>>>> +			if (of_node_cmp(child->name, "onenand") == 0) {
+>>>> +				ret = gpmc_probe_onenand_child(pdev, child);
+>>>> +				if (ret < 0) {
+>>>> +					of_node_put(child);
+>>>> +					return ret;
+>>>> +				}
+>>>> +			}
+>>>>
+>>>> -	for_each_node_by_name(child, "ethernet") {
+>>>> -		ret = gpmc_probe_generic_child(pdev, child);
+>>>> -		if (ret < 0) {
+>>>> -			of_node_put(child);
+>>>> -			return ret;
+>>>> +			if (of_node_cmp(child->name, "ethernet") == 0 ||
+>>>> +			    of_node_cmp(child->name, "nor") == 0) {
+>>>> +				ret = gpmc_probe_generic_child(pdev, child);
+>>>> +				if (ret < 0) {
+>>>> +					of_node_put(child);
+>>>> +					return ret;
+>>>> +				}
+>>>> +			}
+>>>>  		}
+>>>>  	}
+>>>
+>>> I am also wondering if the probe should fail if one of its children
+>>> fails. The panic that Lars reported occurred because the nand
+>>> successfully probed and so the nand device was registered, but because
+>>> the ethernet device probe failed, the gpmc probe fails, and then when
+>>> the nand device is probed by the mtd driver the kernel panics. I wonder
+>>> if it would be better to WARN on child devices that fail to probe but
+>>> not return error from the gpmc probe.
+>>>
+>> 
+>> I wonder the same. Probably is better to just WARN so a user could at lest use
+>> some of the peripherals connected to the GPMC. This is specially important for
+>> flash memory devices since the rootfs could have to be mounted from there.
+>> 
+>> Do you want me to split the child node search and the WARN_ON() replacement in
+>> two different patchs or should I send both changes in one patch?
+> 
+> Probably best to make these two separate patches as I think that will be
+> clearer.
+>
 
-Documentation/devicetree/bindings/gpio/nvidia,tegra20-gpio.txt
+OK, I had already sent it as one patch as "[PATCH] ARM: OMAP2+: only search for
+GPMC DT child nodes on probe" but I'll split it and send as two different patches.
 
-- #gpio-cells : Should be two. The first cell is the pin number and the
-  second cell is used to specify optional parameters:
-  - bit 0 specifies polarity (0 for normal, 1 for inverted)
+> Cheers
+> Jon
+> 
 
-> +Optional Properties:
-> +- interrupt-controller: Marks the device node as an interrupt controller.
-> +- #interrupt-cells: Should be <1>.
-
-Equally here, I imagine you want 2 here not 1, so that IRQ flags can be
-defined. For the customary values in the second cell, see:
-Documentation/devicetree/bindings/interrupt-controller/interrupts.txt's
-"two cells" description. Of course, if your HW can't configure this,
-then ignore this comment.
-
-> +Example:
-> +
-> +gpioa: gpio@FF140000 {
-> +	compatible = "abilis,tb10x-gpio";
-> +	interrupt-controller;
-> +	#interrupt-cells = <1>;
-> +	interrupt-parent = <&tb10x_ictl>;
-> +	interrupts = <27 1>;
-> +	reg = <0xFF140000 0x1000>;
-> +	gpio-controller;
-> +	#gpio-cells = <1>;
-> +	gpio-count = <3>;
-
-The gpio-count property isn't defined above.
-
-> +	gpio-base  = <0>;
-> +	gpio-pins = <&pctl_gpio_a>;
-> +};
-
-Finally, Documentation/devicetree/bindings/vendor-prefixes.txt should be
-updated to define the abilis vendor prefix.
+Thanks a lot and best regards,
+Javier
