@@ -1,109 +1,81 @@
 From: Pawel Moll <pawel.moll@arm.com>
-Subject: [RFC 00/10] Versatile Express CLCD DVI output support
-Date: Wed, 17 Apr 2013 16:17:12 +0100
-Message-ID: <1366211842-21497-1-git-send-email-pawel.moll@arm.com>
+Subject: [RFC 05/10] fbmon: Add extra video helper
+Date: Wed, 17 Apr 2013 16:17:17 +0100
+Message-ID: <1366211842-21497-6-git-send-email-pawel.moll@arm.com>
+References: <1366211842-21497-1-git-send-email-pawel.moll@arm.com>
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1366211842-21497-1-git-send-email-pawel.moll@arm.com>
 Sender: linux-media-owner@vger.kernel.org
 To: linux-fbdev@vger.kernel.org, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linus Walleij <linus.walleij@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello All,
+This function converts the fb_var_screeninfo to the videomode
+structure, to be used in fbdev drivers working with the
+Common Display Framework.
 
-This series implements support for the Versatile Express
-video output pipeline, which is not the simplest one available...
+Signed-off-by: Pawel Moll <pawel.moll@arm.com>
+---
+ drivers/video/fbmon.c |   29 +++++++++++++++++++++++++++++
+ include/linux/fb.h    |    3 +++
+ 2 files changed, 32 insertions(+)
 
-It is meant as a RFC only and I'm hoping to attract all possible
-feedback (*including* naming ;-).
-
-The VE's "MultiMedia Bus" [1] comprises three video signal sources
-(motherboard's CLCD cell and a implementation-specific driver
-on each of the daugtherboards) and a FPGA multiplexer routing
-data from one of the sources to DVI/HDMI formatter chip (Sii9022).
-
-+-----+
-| DB1 |>--+                         DVI connector
-+-----+   |   +------+                   +--+
-          +-->|      |                   |oo|
-+-----+       | mux  |    +---------+    |oo|
-| DB2 |>----->|      |>-->| sii9022 |>-->|oo|
-+-----+       | FPGA |    +---------+    |oo|
-          +-->|      |                   |oo|
-+-----+   |   +------+                   +--+
-| MB  |>--+
-+-----+
-
-The series is based on Laurent Pinchart's Common Display Framework
-patch (not in mainline yet, v2 discussed here: [2]) and extends it
-by adding DT bindings and basic support for TFT panels.
-
-The CLCD driver has been adapted to work with the framework and
-the Device Tree information.
-
-Also a set of drivers for the VE-specific components is included
-(note that the sii9022 is now driven via the moterboard firmware;
-this is intended to be replaced by a proper I2C driver for the
-chip).
-
-It is worth mentioning that the CDF caters for both fbdev and DRM
-so the solution should be suitable for all potential DRM-driven
-display controllers.
-
-[1] http://infocenter.arm.com/help/topic/com.arm.doc.dui0447h/CHDEHEAA.html=
-#CACGIGGC
-[2] http://thread.gmane.org/gmane.linux.drivers.video-input-infrastructure/=
-57298
-
-
-Laurent Pinchart (1):
-  video: Add generic display entity core
-
-Pawel Moll (9):
-  video: display: Update the display with the video mode data
-  video: display: Add Device Tree bindings
-  video: display: Add generic TFT display type
-  fbmon: Add extra video helper
-  video: ARM CLCD: Add DT & CDF support
-  mfd: vexpress: Allow external drivers to parse site ids
-  video: Versatile Express MUXFPGA driver
-  video: Versatile Express DVI mode driver
-  ARM: vexpress: Add CLCD Device Tree properties
-
- .../testing/sysfs-driver-video-vexpress-muxfpga    |    5 +
- .../devicetree/bindings/video/arm,pl11x.txt        |   35 ++
- .../devicetree/bindings/video/display-bindings.txt |   75 ++++
- arch/arm/boot/dts/vexpress-v2m-rs1.dtsi            |   17 +-
- arch/arm/boot/dts/vexpress-v2m.dtsi                |   17 +-
- arch/arm/boot/dts/vexpress-v2p-ca9.dts             |    5 +
- drivers/mfd/vexpress-sysreg.c                      |    5 +
- drivers/video/Kconfig                              |    2 +
- drivers/video/Makefile                             |    5 +
- drivers/video/amba-clcd.c                          |  244 +++++++++++
- drivers/video/display/Kconfig                      |    4 +
- drivers/video/display/Makefile                     |    1 +
- drivers/video/display/display-core.c               |  447 ++++++++++++++++=
-++++
- drivers/video/fbmon.c                              |   29 ++
- drivers/video/vexpress-dvimode.c                   |  158 +++++++
- drivers/video/vexpress-muxfpga.c                   |  228 ++++++++++
- include/linux/amba/clcd.h                          |    2 +
- include/linux/fb.h                                 |    3 +
- include/linux/vexpress.h                           |    2 +
- include/video/display.h                            |  172 ++++++++
- 20 files changed, 1448 insertions(+), 8 deletions(-)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-video-vexpress-m=
-uxfpga
- create mode 100644 Documentation/devicetree/bindings/video/arm,pl11x.txt
- create mode 100644 Documentation/devicetree/bindings/video/display-binding=
-s.txt
- create mode 100644 drivers/video/display/Kconfig
- create mode 100644 drivers/video/display/Makefile
- create mode 100644 drivers/video/display/display-core.c
- create mode 100644 drivers/video/vexpress-dvimode.c
- create mode 100644 drivers/video/vexpress-muxfpga.c
- create mode 100644 include/video/display.h
-
+diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
+index 7f67099..f0ff2bf 100644
+--- a/drivers/video/fbmon.c
++++ b/drivers/video/fbmon.c
+@@ -1424,6 +1424,35 @@ int fb_videomode_from_videomode(const struct videomo=
+de *vm,
+ =09return 0;
+ }
+ EXPORT_SYMBOL_GPL(fb_videomode_from_videomode);
++
++void videomode_from_fb_var_screeninfo(const struct fb_var_screeninfo *var,
++=09=09=09=09      struct videomode *vm)
++{
++=09vm->pixelclock =3D PICOS2KHZ(var->pixclock) * 1000;
++
++=09vm->hactive =3D var->xres;
++=09vm->hfront_porch =3D var->right_margin;
++=09vm->hback_porch =3D var->left_margin;
++=09vm->hsync_len =3D var->hsync_len;
++
++=09vm->vactive =3D var->yres;
++=09vm->vfront_porch =3D var->lower_margin;
++=09vm->vback_porch =3D var->upper_margin;
++=09vm->vsync_len =3D var->vsync_len;
++
++=09vm->dmt_flags =3D 0;
++=09if (var->sync & FB_SYNC_HOR_HIGH_ACT)
++=09=09vm->dmt_flags |=3D VESA_DMT_HSYNC_HIGH;
++=09if (var->sync & FB_SYNC_VERT_HIGH_ACT)
++=09=09vm->dmt_flags |=3D VESA_DMT_VSYNC_HIGH;
++
++=09vm->data_flags =3D 0;
++=09if (var->vmode & FB_VMODE_INTERLACED)
++=09=09vm->data_flags |=3D DISPLAY_FLAGS_INTERLACED;
++=09if (var->vmode & FB_VMODE_DOUBLE)
++=09=09vm->data_flags |=3D DISPLAY_FLAGS_DOUBLESCAN;
++}
++EXPORT_SYMBOL_GPL(videomode_from_fb_var_screeninfo);
+ #endif
+=20
+ #if IS_ENABLED(CONFIG_OF_VIDEOMODE)
+diff --git a/include/linux/fb.h b/include/linux/fb.h
+index 58b9860..aae2ed3 100644
+--- a/include/linux/fb.h
++++ b/include/linux/fb.h
+@@ -721,6 +721,9 @@ extern int of_get_fb_videomode(struct device_node *np,
+ =09=09=09       int index);
+ extern int fb_videomode_from_videomode(const struct videomode *vm,
+ =09=09=09=09       struct fb_videomode *fbmode);
++extern void videomode_from_fb_var_screeninfo(
++=09=09=09=09const struct fb_var_screeninfo *var,
++=09=09=09=09struct videomode *vm);
+=20
+ /* drivers/video/modedb.c */
+ #define VESA_MODEDB_SIZE 34
 --=20
 1.7.10.4
