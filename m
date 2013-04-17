@@ -1,64 +1,31 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: omap3-beagle-xm: Add USB Host support for
- Rev Ax/Bx
-Date: Tue, 16 Apr 2013 17:52:32 -0700
-Message-ID: <20130417005232.GV10155@atomide.com>
-References: <1366029306-1824-1-git-send-email-rogerq@ti.com>
- <516BF4F3.5060904@ti.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 09/28] proc: Move some bits from linux/proc_fs.h to
+ linux/{of.h, signal.h, tty.h} [RFC]
+Date: Tue, 16 Apr 2013 17:57:53 -0700
+Message-ID: <20130417005753.GB11541@kroah.com>
+References: <20130416182550.27773.89310.stgit@warthog.procyon.org.uk>
+ <20130416182626.27773.48524.stgit@warthog.procyon.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <516BF4F3.5060904-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20130416182626.27773.48524.stgit@warthog.procyon.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Howells <dhowells@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org, Jri Slaby <jslaby@suse.cz>
 List-Id: devicetree@vger.kernel.org
 
-KiBSb2dlciBRdWFkcm9zIDxyb2dlcnFAdGkuY29tPiBbMTMwNDE1IDA1OjQ0XToKPiBPbiAwNC8x
-NS8yMDEzIDAzOjM1IFBNLCBSb2dlciBRdWFkcm9zIHdyb3RlOgo+ID4gUHJvdmlkZSBSRVNFVCBh
-bmQgUG93ZXIgcmVndWxhdG9ycyBmb3IgdGhlIFVTQiBQSFksCj4gPiB0aGUgVVNCIEhvc3QgcG9y
-dCBtb2RlIGFuZCB0aGUgUEhZIGRldmljZS4KPiA+IAo+ID4gQWxzbyBwcm92aWRlIHBpbiBtdWx0
-aXBsZXhlciBpbmZvcm1hdGlvbiBmb3IgVVNCIGhvc3QKPiA+IHBpbnMuCj4gPiAKPiA+IFRoaXMg
-d2lsbCBub3Qgd29yayBmb3IgUmV2IEN4IGJvYXJkcyBiZWNhdXNlIG9mIHJldmVyc2VkIGxvZ2lj
-Cj4gPiBmb3IgVVNCX1BPV0VSX0VuYWJsZS4KPiA+IAo+ID4gQ0M6IEJlbm/DrnQgQ291c3NvbiA8
-Yi1jb3Vzc29uQHRpLmNvbT4KPiA+IFNpZ25lZC1vZmYtYnk6IFJvZ2VyIFF1YWRyb3MgPHJvZ2Vy
-cUB0aS5jb20+Cj4gPiAtLS0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9vbWFwMy1iZWFnbGUteG0u
-ZHRzIHwgICA2MiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiA+ICAxIGZpbGVz
-IGNoYW5nZWQsIDYyIGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pCj4gPiAKPiA+IGRpZmYg
-LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9vbWFwMy1iZWFnbGUteG0uZHRzIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvb21hcDMtYmVhZ2xlLXhtLmR0cwo+ID4gaW5kZXggNWEzMTk2NC4uZDM5NGM1MSAx
-MDA2NDQKPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLWJlYWdsZS14bS5kdHMKPiA+
-ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLWJlYWdsZS14bS5kdHMKPiA+IEBAIC01Nyw2
-ICs1Nyw2MCBAQAo+ID4gIAkJdGksbWNic3AgPSA8Jm1jYnNwMj47Cj4gPiAgCQl0aSxjb2RlYyA9
-IDwmdHdsX2F1ZGlvPjsKPiA+ICAJfTsKPiA+ICsKPiA+ICsJLyogSFMgVVNCIFBvcnQgMiBSRVNF
-VCAqLwo+ID4gKwloc3VzYjJfcmVzZXQ6IGhzdXNiMl9yZXNldF9yZWcgewo+ID4gKwkJY29tcGF0
-aWJsZSA9ICJyZWd1bGF0b3ItZml4ZWQiOwo+ID4gKwkJcmVndWxhdG9yLW5hbWUgPSAiaHN1c2Iy
-X3Jlc2V0IjsKPiA+ICsJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMzMDAwMDA+Owo+ID4g
-KwkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47Cj4gPiArCQlncGlvID0gPCZn
-cGlvNSAxOSAwPjsJLyogZ3Bpb18xNDcgKi8KPiA+ICsJCXN0YXJ0dXAtZGVsYXktdXMgPSA8NzAw
-MDA+Owo+ID4gKwkJZW5hYmxlLWFjdGl2ZS1oaWdoOwo+ID4gKwl9Owo+ID4gKwo+ID4gKwkvKiBI
-UyBVU0IgUG9ydCAyIFBvd2VyICovCj4gPiArCWhzdXNiMl9wb3dlcjogaHN1c2IyX3Bvd2VyX3Jl
-ZyB7Cj4gPiArCQljb21wYXRpYmxlID0gInJlZ3VsYXRvci1maXhlZCI7Cj4gPiArCQlyZWd1bGF0
-b3ItbmFtZSA9ICJoc3VzYjJfdmJ1cyI7Cj4gPiArCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9
-IDwzMzAwMDAwPjsKPiA+ICsJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAwMDA+Owo+
-ID4gKwkJZ3BpbyA9IDwmdHdsX2dwaW8gMTggMD47CS8qIEdQSU8gTEVEQSAqLwo+ID4gKwkJc3Rh
-cnR1cC1kZWxheS11cyA9IDw3MDAwMD47Cj4gPiArCQllbmFibGUtYWN0aXZlLWhpZ2g7CS8qIEZJ
-WE1FOiBhY3RpdmUtbG93IGZvciBSZXYuIEMgKi8KPiAKPiBCZW5vaXQgJiBUb255LAo+IAo+IEFu
-eSBpZGVhcyBob3cgdG8gdGFja2xlIHRoZSByZXZlcnNlZCBsb2dpYyBmb3IgUmV2LiBDIGJvYXJk
-cz8KClNvdW5kcyBsaWtlIHdlIG5lZWQgYSBzaGFyZWQgb21hcDMtYmVhZ2UuZHRzaSwgdGhlbiBv
-bWFwMy1iZWFnbGUteG0uZHRzCmFuZCBvbWFwMy1iZWFnbGUtcmV2LWMuZHRzLiBUaGVuIHhtIGFu
-ZCByZXYtYyBjYW4gYm90aCBpbmNsdWRlIHRoZQpjb21tb24gLmR0c2kuCgpSZWdhcmRzLAoKVG9u
-eQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0
-cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMu
-b3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+On Tue, Apr 16, 2013 at 07:26:26PM +0100, David Howells wrote:
+> Move some bits from linux/proc_fs.h to linux/of.h, signal.h and tty.h.
+> 
+> Also move proc_tty_init() and proc_device_tree_init() to fs/proc/internal.h as
+> they're internal to procfs.
+> 
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: devicetree-discuss@lists.ozlabs.org
+> cc: linux-arch@vger.kernel.org
+> cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> cc: Jri Slaby <jslaby@suse.cz>
+> ---
+
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
