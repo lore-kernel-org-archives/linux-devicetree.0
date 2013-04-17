@@ -1,59 +1,121 @@
-From: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Subject: RE: [PATCH 0/4] ARM: davinci: fix UART clock enabling
-Date: Wed, 17 Apr 2013 06:32:46 +0000
-Message-ID: <A73F36158E33644199EB82C5EC81C7BC3EA4DCC9@DBDE01.ent.ti.com>
-References: <1365510481-32129-1-git-send-email-prakash.pm@ti.com>
+From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+Subject: Re: [PATCH v6] net: sh_eth: Add support of device tree probe
+Date: Wed, 17 Apr 2013 16:54:02 +0900
+Message-ID: <516E551A.1030804@renesas.com>
+References: <1363675196-8940-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com>
+ <51486699.6000908@cogentembedded.com> <514AB0CB.2030808@renesas.com>
+ <516B0C59.3050207@cogentembedded.com> <516B6340.9090604@renesas.com>
+ <516C4C70.7050802@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1365510481-32129-1-git-send-email-prakash.pm@ti.com>
-Content-Language: en-US
-Sender: linux-serial-owner@vger.kernel.org
-To: "Manjunathappa, Prakash" <prakash.pm@ti.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
-Cc: "Nori, Sekhar" <nsekhar@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "hs@denx.de" <hs@denx.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-reply-to: <516C4C70.7050802@cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, magnus.damm@gmail.com, kda@linux-powerpc.org, horms+renesas@verge.net.au, mark.rutland@arm.com, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-Hi Sekhar,
+Hi,
 
-On Tue, Apr 09, 2013 at 17:57:57, Manjunathappa, Prakash wrote:
-> Patch series addresses below issues:
-> 1) Do clk_get on dev_id when there is single clock for a module
-> 2) Fix garbled UART log with DT kernel on da850-evm.
-> 
+(2013/04/16 3:52), Sergei Shtylyov wrote:
+> Hello.
+>
+> On 15-04-2013 6:17, Nobuhiro Iwamatsu wrote:
+>
+>>>>>> This adds support of device tree probe for Renesas sh-ether driver.
+>
+>>>>>> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+>
+>>>>>> V6: - Add renesas,sh-eth-gigabit, renesas,sh-eth-sh4 and
+>>>>>> renesas,sh-eth-sh3-sh2 to compatible string.
+>>>>>> - Remove sh-eth,register-type. This is supplemented by the
+>>>>>> compatible string.
+>>>>>> - Use the of_property_read_bool instead of of_find_property.
+>>>>>> - Add sanity chheck for of_property_read_u32.
+>>>>>> - Update document.
+>>>>>> V5: - Rewrite sh_eth_parse_dt().
+>>>>>> Remove of_device_is_available() and CONFIG_OF from support OF
+>>>>>> checking function and re-add empty sh_eth_parse_dt().
+>>>>>> - Add CONFIG_PM to definition of dev_pm_ops.
+>>>>>> - Add CONFIG_OF to definition of of_device_id.
+>>>>>> V4: - Remove empty sh_eth_parse_dt().
+>>>>>> V3: - Remove empty sh_eth_parse_dt().
+>>>>>> V3: - Removed sentnece of "needs-init" from document.
+>>>>>> V2: - Removed ether_setup().
+>>>>>> - Fixed typo from "sh-etn" to "sh-eth".
+>>>>>> - Removed "needs-init" and sh-eth,endian from definition of DT.
+>>>>>> - Changed "sh-eth,edmac-endian" instead of "sh-eth,edmac-big-endain"
+>>>>>> in definition of DT.
+>>>>>> ---
+>>> [...]
+>
+>>>>>> @@ -2391,12 +2451,33 @@ static int sh_eth_drv_probe(struct platform_device
+>>>>>> *pdev)
+>>>>>> goto out_release;
+>>>>>> }
+>>>>>>
+>>>>>> + if (np) {
+>>>>>> + pd = sh_eth_parse_dt(&pdev->dev, ndev, np);
+>>>>>> + if (pdev->dev.platform_data && pd) {
+>>>>>> + struct sh_eth_plat_data *tmp =
+>>>>>> + pdev->dev.platform_data;
+>>>>>> + pd->set_mdio_gate = tmp->set_mdio_gate;
+>>>>>> + pd->needs_init = tmp->needs_init;
+>
+>>>>> OK, so we can't fully convert this driver to the device tree due to
+>>>>> procedural platform data.
+>
+>>>> > I then would advice just using OF_DEV_AUXDATA() in the platform data
+>
+>>> /sdata/code/.
+>
+>>>> instead of trying to convert the driver to device tree.
+>
+>>> Convert the platfrom data, I meant. But I already wrote about that I think.
+>
+>>>> Yes, I knew about this.
+>
+>>> But still attempted to document and use the data-only device tree properties
+>>> (which was pointless in the light of procediral platfrom data)?
+>
+>> Yes, I added this information to next patch.
+>
+> WHich information, I didn't understand?
 
-Could you please accept this series if you do not have review comments?
+sorry, I was not understand your mail by mistake.
+You believe that without OF_DEV_AUXDATA, that it should be fully migrated to the DT from platformdata. right?
 
-Thanks,
-Prakash
+>
+>>>>>> +
+>>>>>> +#ifdef CONFIG_OF
+>>>>>> +static const struct of_device_id sh_eth_match[] = {
+>>>>>> + { .compatible = "renesas,sh-eth-gigabit", },
+>>>>>> + { .compatible = "renesas,sh-eth-sh4", },
+>>>>>> + { .compatible = "renesas,sh-eth-sh3-sh2", },
+>
+>>>> Therefore, the compatible property of this device becomes <CPU>-sh-eth
+>>>> or <CPU>-sh-eth-<ETHER TYPE>.
+>
+>>>> How about this?
+>
+>>> Sounds better. I think however that the conversion of this driver to device
+>>> tree shouldn't be done without getting rid of the current #ifdef mess in it
+>>> (which is still on my agenda). I think that the 'register_type' field should
+>>> move from the platform data to the 'struct sh_eth_cpu_data' in the process.
+>
+>> I see. this problem will fix next step, I think.
+>
+> No, not at all. If we don't get rid of the #ifdef mess, adding device tree support will have to add even more of it.
+>
 
-> Applies on top of v3.9-rc9 of Linus's.
-> Tested on da850-evm. Able to see proper bootup log and console on UART2.
-> 
-> Manjunathappa, Prakash (4):
->   ARM: davinci: uart: move to devid based clk_get
->   ARM: davinci: da850: override device name of UART in DT kernel
->   ARM: davinci: da850: do not specify clock_frequency for UART DT node
->   ARM: davinci: da8xx: remove da8xx_uart_clk_enable
-> 
->  arch/arm/boot/dts/da850.dtsi                   |    3 -
->  arch/arm/mach-davinci/da830.c                  |    8 ++--
->  arch/arm/mach-davinci/da850.c                  |    8 ++--
->  arch/arm/mach-davinci/da8xx-dt.c               |   11 +----
->  arch/arm/mach-davinci/devices-da8xx.c          |   40 ++++++++++++++++---
->  arch/arm/mach-davinci/devices-tnetv107x.c      |   35 ++++++++++++++---
->  arch/arm/mach-davinci/dm355.c                  |   48 ++++++++++++++++++-----
->  arch/arm/mach-davinci/dm365.c                  |   35 ++++++++++++----
->  arch/arm/mach-davinci/dm644x.c                 |   48 ++++++++++++++++++-----
->  arch/arm/mach-davinci/dm646x.c                 |   49 +++++++++++++++++++-----
->  arch/arm/mach-davinci/include/mach/da8xx.h     |    2 +-
->  arch/arm/mach-davinci/include/mach/tnetv107x.h |    2 +-
->  arch/arm/mach-davinci/serial.c                 |   19 ++++++---
->  arch/arm/mach-davinci/tnetv107x.c              |    8 ++--
->  14 files changed, 233 insertions(+), 83 deletions(-)
-> 
-> --
-> 1.7.4.1
-> 
-> 
+But sh-eth was used by SH and sh-mobile.
+I think we can migrate to DT.
+However, I think it is not possible to remove idfef completely immediately.
 
+>> Best regards,
+>> Nobuhiro
+>
+> WBR, Sergei
+>
+>
