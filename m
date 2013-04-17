@@ -1,110 +1,36 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: [PATCH] ARM: dts: omap3-igep0020: Add SMSC911x LAN chip support
-Date: Wed, 17 Apr 2013 18:32:09 +0200
-Message-ID: <1366216329-10677-1-git-send-email-javier.martinez@collabora.co.uk>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jon Hunter <jon-hunter@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap <linux-omap@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] gpio: samsung: Remove OF support for s3c24xx
+Date: Wed, 17 Apr 2013 18:33:40 +0200
+Message-ID: <CACRpkdYPwkaW2nUBFe71Yoz=P823H24=pUH7cFgswxCmPHneqA@mail.gmail.com>
+References: <1366134094-23140-1-git-send-email-s.nawrocki@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1366134094-23140-1-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-The IGEPv2 board has an SMSC LAN9221i ethernet chip connected to
-the OMAP3 processor though the General-Purpose Memory Controller.
+On Tue, Apr 16, 2013 at 7:41 PM, Sylwester Nawrocki
+<s.nawrocki@samsung.com> wrote:
 
-This patch adds a device node for the ethernet chip as a GPMC child
-and all its dependencies (regulators, GPIO and pin muxs).
+> There is no users of this code and there is already a pinctrl
+> driver written for s3c24xx which is going to be used on any
+> s3c24xx DT platforms. Hence this has been effectively a dead
+> code in mainline.
+>
+> This reverts commit 172c6a13653ac8cd6a231293b87c93821e90c1d6
+> gpio: samsung: add devicetree init for s3c24xx arches
+>
+> Cc: Heiko St=FCbner <heiko@sntech.de>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
----
- arch/arm/boot/dts/omap3-igep.dtsi    |    6 ++++
- arch/arm/boot/dts/omap3-igep0020.dts |   53 ++++++++++++++++++++++++++++++++++
- 2 files changed, 59 insertions(+), 0 deletions(-)
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/arch/arm/boot/dts/omap3-igep.dtsi b/arch/arm/boot/dts/omap3-igep.dtsi
-index f8fe3b7..d5cd504 100644
---- a/arch/arm/boot/dts/omap3-igep.dtsi
-+++ b/arch/arm/boot/dts/omap3-igep.dtsi
-@@ -62,6 +62,12 @@
- 			0x126 0x0100	/* sdmmc1_dat7.sdmmc1_dat7 INPUT | MODE 0 */
- 		>;
- 	};
-+
-+	smsc911x_pins: pinmux_smsc911x_pins {
-+		pinctrl-single,pins = <
-+                        0x1a2 0x0104    /* mcspi1_cs2.gpio_176 INPUT | MODE4 */
-+		>;
-+	};
- };
- 
- &i2c1 {
-diff --git a/arch/arm/boot/dts/omap3-igep0020.dts b/arch/arm/boot/dts/omap3-igep0020.dts
-index e2b9849..4bac32e 100644
---- a/arch/arm/boot/dts/omap3-igep0020.dts
-+++ b/arch/arm/boot/dts/omap3-igep0020.dts
-@@ -40,6 +40,18 @@
- 			gpios = <&twl_gpio 19 1>;
- 		};
- 	};
-+
-+	vddvario: regulator-vddvario {
-+		  compatible = "regulator-fixed";
-+		  regulator-name = "vddvario";
-+		  regulator-always-on;
-+	};
-+
-+	vdd33a: regulator-vdd33a {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd33a";
-+		regulator-always-on;
-+	};
- };
- 
- &i2c3 {
-@@ -54,3 +66,44 @@
- 		reg = <0x50>;
- 	};
- };
-+
-+&gpmc {
-+	ranges = <5 0 0x2c000000 0x1000000>;
-+	ethernet@5,0 {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&smsc911x_pins>;
-+		compatible = "smsc,lan9221", "smsc,lan9115";
-+		reg = <5 0 0xff>;
-+		bank-width = <2>;
-+
-+		gpmc,mux-add-data;
-+		gpmc,cs-on-ns = <0>;
-+		gpmc,cs-rd-off-ns = <186>;
-+		gpmc,cs-wr-off-ns = <186>;
-+		gpmc,adv-on-ns = <12>;
-+		gpmc,adv-rd-off-ns = <48>;
-+		gpmc,adv-wr-off-ns = <48>;
-+		gpmc,oe-on-ns = <54>;
-+		gpmc,oe-off-ns = <168>;
-+		gpmc,we-on-ns = <54>;
-+		gpmc,we-off-ns = <168>;
-+		gpmc,rd-cycle-ns = <186>;
-+		gpmc,wr-cycle-ns = <186>;
-+		gpmc,access-ns = <114>;
-+		gpmc,page-burst-access-ns = <6>;
-+		gpmc,bus-turnaround-ns = <12>;
-+		gpmc,cycle2cycle-delay-ns = <18>;
-+		gpmc,wr-data-mux-bus-ns = <90>;
-+		gpmc,wr-access-ns = <186>;
-+		gpmc,cycle2cycle-samecsen;
-+		gpmc,cycle2cycle-diffcsen;
-+
-+		interrupt-parent = <&gpio6>;
-+		interrupts = <16 8>;
-+		vmmc-supply = <&vddvario>;
-+		vmmc_aux-supply = <&vdd33a>;
-+		reg-io-width = <4>;
-+
-+		smsc,save-mac-address;
-+	};
-+};
--- 
-1.7.7.6
+I guess this goes to go into the Samsung tree too.
 
+Yours,
+Linus Walleij
