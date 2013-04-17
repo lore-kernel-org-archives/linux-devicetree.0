@@ -1,270 +1,42 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v2 3/3] drm/exynos: Add device tree support for fimc ipp driver
-Date: Wed, 17 Apr 2013 11:53:04 +0200
-Message-ID: <1366192384-18829-4-git-send-email-s.nawrocki@samsung.com>
-References: <1366192384-18829-1-git-send-email-s.nawrocki@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1366192384-18829-1-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: inki.dae@samsung.com
-Cc: kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 0/4] ARM: davinci: fix UART clock enabling
+Date: Wed, 17 Apr 2013 15:45:12 +0530
+Message-ID: <516E7630.7020906@ti.com>
+References: <1365510481-32129-1-git-send-email-prakash.pm@ti.com>
+ <A73F36158E33644199EB82C5EC81C7BC3EA4DCC9@DBDE01.ent.ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <A73F36158E33644199EB82C5EC81C7BC3EA4DCC9@DBDE01.ent.ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
+Cc: "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "hs@denx.de" <hs@denx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds OF initialization support for the FIMC driver.
-The binding documentation can be found at Documentation/devicetree/
-bindings/media/samsung-fimc.txt.
 
-The syscon regmap interface is used to serialize access to the
-shared CAMBLK registers from within the V4L2 FIMC-IS and the DRM
-FIMC drivers. The DRM driver uses this interface for setting up
-the FIFO data link between FIMD and FIMC IP blocks, while the V4L2
-one for setting up a data link between the camera ISP and FIMC for
-camera capture. The CAMBLK registers are not accessed any more
-through a statically mapped IO. Synchronized access to these
-registers is required for simultaneous operation of the camera
-ISP and the DRM IPP on Exynos4x12.
 
-Exynos4 is going to be a dt-only platform since 3.10, thus the
-driver data and driver_ids static data structures are removed.
+On 4/17/2013 12:02 PM, Manjunathappa, Prakash wrote:
+> Hi Sekhar,
+> 
+> On Tue, Apr 09, 2013 at 17:57:57, Manjunathappa, Prakash wrote:
+>> Patch series addresses below issues:
+>> 1) Do clk_get on dev_id when there is single clock for a module
+>> 2) Fix garbled UART log with DT kernel on da850-evm.
+>>
+> 
+> Could you please accept this series if you do not have review comments?
 
-Camera input signal polarities are not currently parsed from the
-device tree.
+I have not yet gotten to reviewing this. Its unlikely it will get
+reviewed and accepted for v3.10 so this will have to wait for v3.11.
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- drivers/gpu/drm/exynos/Kconfig           |    2 +-
- drivers/gpu/drm/exynos/exynos_drm_fimc.c |  101 +++++++++++++++---------------
- drivers/gpu/drm/exynos/regs-fimc.h       |    7 +--
- 3 files changed, 53 insertions(+), 57 deletions(-)
-
-diff --git a/drivers/gpu/drm/exynos/Kconfig b/drivers/gpu/drm/exynos/Kconfig
-index 406f32a..5c4be2a 100644
---- a/drivers/gpu/drm/exynos/Kconfig
-+++ b/drivers/gpu/drm/exynos/Kconfig
-@@ -56,7 +56,7 @@ config DRM_EXYNOS_IPP
- 
- config DRM_EXYNOS_FIMC
- 	bool "Exynos DRM FIMC"
--	depends on DRM_EXYNOS_IPP
-+	depends on DRM_EXYNOS_IPP && MFD_SYSCON && OF
- 	help
- 	  Choose this option if you want to use Exynos FIMC for DRM.
- 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimc.c b/drivers/gpu/drm/exynos/exynos_drm_fimc.c
-index bc8411a..2e182ba 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_fimc.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_fimc.c
-@@ -12,11 +12,12 @@
-  *
-  */
- #include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/regmap.h>
- #include <linux/clk.h>
- #include <linux/pm_runtime.h>
--#include <plat/map-base.h>
- 
- #include <drm/drmP.h>
- #include <drm/exynos_drm.h>
-@@ -140,15 +141,6 @@ struct fimc_capability {
- };
- 
- /*
-- * A structure of fimc driver data.
-- *
-- * @parent_clk: name of parent clock.
-- */
--struct fimc_driverdata {
--	char	*parent_clk;
--};
--
--/*
-  * A structure of fimc context.
-  *
-  * @ippdrv: prepare initialization using ippdrv.
-@@ -158,6 +150,7 @@ struct fimc_driverdata {
-  * @lock: locking of operations.
-  * @clocks: fimc clocks.
-  * @clk_frequency: LCLK clock frequency.
-+ * @sysreg: handle to SYSREG block regmap.
-  * @sc: scaler infomations.
-  * @pol: porarity of writeback.
-  * @id: fimc id.
-@@ -172,8 +165,8 @@ struct fimc_context {
- 	struct mutex	lock;
- 	struct clk	*clocks[FIMC_CLKS_MAX];
- 	u32		clk_frequency;
-+	struct regmap	*sysreg;
- 	struct fimc_scaler	sc;
--	struct fimc_driverdata	*ddata;
- 	struct exynos_drm_ipp_pol	pol;
- 	int	id;
- 	int	irq;
-@@ -217,17 +210,13 @@ static void fimc_sw_reset(struct fimc_context *ctx)
- 	fimc_write(0x0, EXYNOS_CIFCNTSEQ);
- }
- 
--static void fimc_set_camblk_fimd0_wb(struct fimc_context *ctx)
-+static int fimc_set_camblk_fimd0_wb(struct fimc_context *ctx)
- {
--	u32 camblk_cfg;
--
- 	DRM_DEBUG_KMS("%s\n", __func__);
- 
--	camblk_cfg = readl(SYSREG_CAMERA_BLK);
--	camblk_cfg &= ~(SYSREG_FIMD0WB_DEST_MASK);
--	camblk_cfg |= ctx->id << (SYSREG_FIMD0WB_DEST_SHIFT);
--
--	writel(camblk_cfg, SYSREG_CAMERA_BLK);
-+	return regmap_update_bits(ctx->sysreg, SYSREG_CAMERA_BLK,
-+				  SYSREG_FIMD0WB_DEST_MASK,
-+				  ctx->id << SYSREG_FIMD0WB_DEST_SHIFT);
- }
- 
- static void fimc_set_type_ctrl(struct fimc_context *ctx, enum fimc_wb wb)
-@@ -1628,7 +1617,9 @@ static int fimc_ippdrv_start(struct device *dev, enum drm_exynos_ipp_cmd cmd)
- 		fimc_handle_lastend(ctx, true);
- 
- 		/* setup FIMD */
--		fimc_set_camblk_fimd0_wb(ctx);
-+		ret = fimc_set_camblk_fimd0_wb(ctx);
-+		if (ret < 0)
-+			return ret;
- 
- 		set_wb.enable = 1;
- 		set_wb.refresh = property->refresh_rate;
-@@ -1784,26 +1775,50 @@ e_clk_free:
- 	return ret;
- }
- 
-+static int fimc_parse_dt(struct fimc_context *ctx)
-+{
-+	struct device_node *node = ctx->dev->of_node;
-+
-+	if (!of_property_read_bool(node, "samsung,lcd-wb"))
-+		return -ENODEV;
-+
-+	if (of_property_read_u32(node, "clock-frequency",
-+					&ctx->clk_frequency))
-+		ctx->clk_frequency = FIMC_DEFAULT_LCLK_FREQUENCY;
-+
-+	ctx->id = of_alias_get_id(node, "fimc");
-+	if (ctx->id < 0)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
- static int fimc_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct fimc_context *ctx;
- 	struct resource *res;
- 	struct exynos_drm_ippdrv *ippdrv;
--	struct exynos_drm_fimc_pdata *pdata;
--	struct fimc_driverdata *ddata;
- 	int ret;
- 
--	pdata = pdev->dev.platform_data;
--	if (!pdata) {
--		dev_err(dev, "no platform data specified.\n");
--		return -EINVAL;
--	}
-+	if (!dev->of_node)
-+		return -ENODEV;
- 
- 	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
- 	if (!ctx)
- 		return -ENOMEM;
- 
-+	ctx->dev = dev;
-+
-+	ret = fimc_parse_dt(ctx);
-+	if (ret < 0)
-+		return ret;
-+
-+	ctx->sysreg = syscon_regmap_lookup_by_phandle(dev->of_node,
-+						"samsung,sysreg");
-+	if (IS_ERR(ctx->sysreg))
-+		return PTR_ERR(ctx->sysreg);
-+
- 	/* resource memory */
- 	ctx->regs_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	ctx->regs = devm_ioremap_resource(dev, ctx->regs_res);
-@@ -1828,10 +1843,6 @@ static int fimc_probe(struct platform_device *pdev)
- 	ret = fimc_setup_clocks(ctx);
- 	if (ret < 0)
- 		goto err_free_irq;
--	/* context initailization */
--	ctx->id = pdev->id;
--	ctx->pol = pdata->pol;
--	ctx->ddata = ddata;
- 
- 	ippdrv = &ctx->ippdrv;
- 	ippdrv->dev = dev;
-@@ -1940,36 +1951,22 @@ static int fimc_runtime_resume(struct device *dev)
- }
- #endif
- 
--static struct fimc_driverdata exynos4210_fimc_data = {
--	.parent_clk = "mout_mpll",
--};
--
--static struct fimc_driverdata exynos4410_fimc_data = {
--	.parent_clk = "mout_mpll_user",
--};
--
--static struct platform_device_id fimc_driver_ids[] = {
--	{
--		.name		= "exynos4210-fimc",
--		.driver_data	= (unsigned long)&exynos4210_fimc_data,
--	}, {
--		.name		= "exynos4412-fimc",
--		.driver_data	= (unsigned long)&exynos4410_fimc_data,
--	},
--	{},
--};
--MODULE_DEVICE_TABLE(platform, fimc_driver_ids);
--
- static const struct dev_pm_ops fimc_pm_ops = {
- 	SET_SYSTEM_SLEEP_PM_OPS(fimc_suspend, fimc_resume)
- 	SET_RUNTIME_PM_OPS(fimc_runtime_suspend, fimc_runtime_resume, NULL)
- };
- 
-+static const struct of_device_id fimc_of_match[] = {
-+	{ .compatible = "samsung,exynos4210-fimc" },
-+	{ .compatible = "samsung,exynos4212-fimc" },
-+	{ },
-+};
-+
- struct platform_driver fimc_driver = {
- 	.probe		= fimc_probe,
- 	.remove		= fimc_remove,
--	.id_table	= fimc_driver_ids,
- 	.driver		= {
-+		.of_match_table = fimc_of_match,
- 		.name	= "exynos-drm-fimc",
- 		.owner	= THIS_MODULE,
- 		.pm	= &fimc_pm_ops,
-diff --git a/drivers/gpu/drm/exynos/regs-fimc.h b/drivers/gpu/drm/exynos/regs-fimc.h
-index b4f9ca1..3049613 100644
---- a/drivers/gpu/drm/exynos/regs-fimc.h
-+++ b/drivers/gpu/drm/exynos/regs-fimc.h
-@@ -661,9 +661,8 @@
- #define EXYNOS_CLKSRC_SCLK				(1 << 1)
- 
- /* SYSREG for FIMC writeback */
--#define SYSREG_CAMERA_BLK			(S3C_VA_SYS + 0x0218)
--#define SYSREG_ISP_BLK				(S3C_VA_SYS + 0x020c)
--#define SYSREG_FIMD0WB_DEST_MASK	(0x3 << 23)
--#define SYSREG_FIMD0WB_DEST_SHIFT	23
-+#define SYSREG_CAMERA_BLK			(0x0218)
-+#define SYSREG_FIMD0WB_DEST_MASK		(0x3 << 23)
-+#define SYSREG_FIMD0WB_DEST_SHIFT		23
- 
- #endif /* EXYNOS_REGS_FIMC_H */
--- 
-1.7.9.5
+Thanks,
+Sekhar
