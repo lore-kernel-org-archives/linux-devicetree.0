@@ -1,144 +1,451 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RFC PATCH 2/2] ARM: DT: kernel: DT cpu node bindings update
-Date: Wed, 17 Apr 2013 12:44:27 +0100
-Message-ID: <20130417114427.GC29188@e102568-lin.cambridge.arm.com>
-References: <1366042402-8987-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1366042402-8987-3-git-send-email-lorenzo.pieralisi@arm.com>
- <516E6CDC.9010005@atmel.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v3 3/3] ARM: OMAP2+: Add GPMC DT support for Ethernet
+ child nodes
+Date: Wed, 17 Apr 2013 14:05:58 +0200
+Message-ID: <516E9026.8070804@collabora.co.uk>
+References: <1363298051-24574-1-git-send-email-javier.martinez@collabora.co.uk> <201304171140.52529.poeschel@lemonage.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <516E6CDC.9010005@atmel.com>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Viresh Kumar <viresh.kumar@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Barry Song <baohua.song@csr.com>, Sekhar Nori <nsekhar@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Simon Horman <horms@verge.net.au>, Amit Kucheria <amit.kucheria@linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, David Brown <davidb@codeaurora.org>, Lennert Buytenhek <kernel@wantstofly.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <201304171140.52529.poeschel@lemonage.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lars Poeschel <poeschel@lemonage.de>
+Cc: Jon Hunter <jon-hunter@ti.com>, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 17, 2013 at 10:35:24AM +0100, Nicolas Ferre wrote:
-> On 04/15/2013 06:13 PM, Lorenzo Pieralisi :
-> > In order to extend the current cpu nodes bindings to newer CPUs
-> > inclusive of AArch64 and to update support for older ARM CPUs this
-> > patch updates device tree documentation for the cpu nodes bindings.
-> > 
-> > Main changes:
-> > 
-> > - adds 64-bit bindings (inclusive of cpus node #address-cells updates)
-> > - defines behaviour on pre and post v7 uniprocessor systems
-> > - adds ARM 11MPcore specific reg property definition
-> > 
-> > DT cpu map parsing code must be made compliant with the latest bindings
-> > updates, hence this patch also updates the arm_dt_init_cpu_maps() function
-> > with checks and additional parsing rules.
-> > 
-> > Uniprocessor systems predating v7 do not parse the cpus node at all
-> > since the reg property is meaningless on those systems.
-> > 
-> > Device trees for 64-bit systems can be taken as device tree input also
-> > for 64-bit CPUs running in 32-bit mode. The code checks that the reg entries
-> > are zeroed as required in the respective fields and detects automatically
-> > the cpus node #address-cells value so that device tree written for
-> > 64-bit ARM platforms (cpus #address-cells == 2) can still be taken as
-> > input. The correct device tree entries are to be set up by the boot
-> > loader, kernel code just checks that device tree entries in the cpus
-> > node are as expected for a 32-bit CPU (reg[63:24] == 0).
-> > 
-> > cpu node entries with invalid reg property or containing duplicates are
-> > ignored and the device tree parsing is not stopped anymore when such
-> > entries are encountered, the device tree cpu entry is just skipped.
-> > 
-> > A device tree with cpu nodes missing the boot CPU MPIDR is considered a
-> > hard error and the kernel flags this up as a bug to force firmware updates.
-> > 
-> > The updates to cpus/cpu node bindings for ARM require all in-kernel dts files
-> > present in the mainline to be made compliant to the latest specification.
-> > 
-> > This patch also updates ARM in-kernel non-compliant dts files to the latest
-> > cpus/cpu nodes bindings specification.
-> > 
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/cpus.txt | 335 +++++++++++++++++++++----
-> >  arch/arm/boot/dts/exynos5440.dtsi              |   7 +
-> >  arch/arm/boot/dts/omap3.dtsi                   |   4 +
-> >  arch/arm/boot/dts/omap4.dtsi                   |   5 +
-> >  arch/arm/boot/dts/omap5.dtsi                   |   5 +
-> >  arch/arm/boot/dts/r8a7740.dtsi                 |   3 +
-> >  arch/arm/boot/dts/sh7372.dtsi                  |   4 +
-> >  arch/arm/boot/dts/sunxi.dtsi                   |   4 +
+On 04/17/2013 11:40 AM, Lars Poeschel wrote:
+> Hi Javier!
 > 
-> Hi,
+> On Thursday 14 March 2013 at 22:54:11, Javier Martinez Canillas wrote:
+>> Besides being used to interface with external memory devices,
+>> the General-Purpose Memory Controller can be used to connect
+>> Pseudo-SRAM devices such as ethernet controllers to OMAP2+
+>> processors using the TI GPMC as a data bus.
+>> 
+>> This patch allows an ethernet chip to be defined as an GPMC
+>> child device node.
+>> 
+>> Signed-off-by: Javier Martinez Canillas
+>> <javier.martinez@collabora.co.uk>
+>> 
+>> ---
+>> Changes since v2:
+>>   - remove optional #address-cells and #size-cells since are not
+>> relevant for ethernet chips; suggested by Jon Hunter.
+>> 
+>> Changes since v1:
+>>   - Improve the DT binding documentation explaining that even when the
+>> GPMC maximum bus address width is 16-bit, it supports devices with
+>> 32-bit registers address width and the device property especifying this
+>> has to be set accordingly; suggested by Jon Hunter.
+>> 
+>>  Documentation/devicetree/bindings/net/gpmc-eth.txt |   97
+>> ++++++++++++++++++++ arch/arm/mach-omap2/gpmc.c                        
+>> |    8 ++
+>>  2 files changed, 105 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/net/gpmc-eth.txt
+>> 
+>> diff --git a/Documentation/devicetree/bindings/net/gpmc-eth.txt
+>> b/Documentation/devicetree/bindings/net/gpmc-eth.txt new file mode
+>> 100644
+>> index 0000000..24cb4e4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/gpmc-eth.txt
+>> @@ -0,0 +1,97 @@
+>> +Device tree bindings for Ethernet chip connected to TI GPMC
+>> +
+>> +Besides being used to interface with external memory devices, the
+>> +General-Purpose Memory Controller can be used to connect Pseudo-SRAM
+>> devices +such as ethernet controllers to processors using the TI GPMC
+>> as a data bus. +
+>> +Ethernet controllers connected to TI GPMC are represented as child
+>> nodes of +the GPMC controller with an "ethernet" name.
+>> +
+>> +All timing relevant properties as well as generic GPMC child properties
+>> are +explained in a separate documents. Please refer to
+>> +Documentation/devicetree/bindings/bus/ti-gpmc.txt
+>> +
+>> +For the properties relevant to the ethernet controller connected to the
+>> GPMC +refer to the binding documentation of the device. For example,
+>> the documentation +for the SMSC 911x is
+>> Documentation/devicetree/bindings/net/smsc911x.txt +
+>> +Child nodes need to specify the GPMC bus address width using the
+>> "bank-width" +property but is possible that an ethernet controller also
+>> has a property to +specify the I/O registers address width. Even when
+>> the GPMC has a maximum 16-bit +address width, it supports devices with
+>> 32-bit word registers. +For example with an SMSC LAN911x/912x
+>> controller connected to the TI GPMC on an +OMAP2+ board, "bank-width =
+>> <2>;" and "reg-io-width = <4>;".
+>> +
+>> +Required properties:
+>> +- bank-width: 		Address width of the device in bytes. GPMC supports
+>> 8-bit +			and 16-bit devices and so must be either 1 or 2 bytes.
+>> +- compatible:		Compatible string property for the ethernet child
+>> device. +- gpmc,cs-on:		Chip-select assertion time
+>> +- gpmc,cs-rd-off:	Chip-select de-assertion time for reads
+>> +- gpmc,cs-wr-off:	Chip-select de-assertion time for writes
+>> +- gpmc,oe-on:		Output-enable assertion time
+>> +- gpmc,oe-off		Output-enable de-assertion time
+>> +- gpmc,we-on:		Write-enable assertion time
+>> +- gpmc,we-off:		Write-enable de-assertion time
+>> +- gpmc,access:		Start cycle to first data capture (read access)
+>> +- gpmc,rd-cycle:	Total read cycle time
+>> +- gpmc,wr-cycle:	Total write cycle time
+>> +- reg:			Chip-select, base address (relative to chip-select)
+>> +			and size of the memory mapped for the device.
+>> +			Note that base address will be typically 0 as this
+>> +			is the start of the chip-select.
+>> +
+>> +Optional properties:
+>> +- gpmc,XXX		Additional GPMC timings and settings parameters. See
+>> +			Documentation/devicetree/bindings/bus/ti-gpmc.txt
+>> +
+>> +Example:
+>> +
+>> +gpmc: gpmc@6e000000 {
+>> +	compatible = "ti,omap3430-gpmc";
+>> +	ti,hwmods = "gpmc";
+>> +	reg = <0x6e000000 0x1000>;
+>> +	interrupts = <20>;
+>> +	gpmc,num-cs = <8>;
+>> +	gpmc,num-waitpins = <4>;
+>> +	#address-cells = <2>;
+>> +	#size-cells = <1>;
+>> +
+>> +	ranges = <5 0 0x2c000000 0x1000000>;
+>> +
+>> +	ethernet@5,0 {
+>> +		compatible = "smsc,lan9221", "smsc,lan9115";
+>> +		reg = <5 0 0xff>;
+>> +		bank-width = <2>;
+>> +
+>> +		gpmc,mux-add-data;
+>> +		gpmc,cs-on = <0>;
+>> +		gpmc,cs-rd-off = <186>;
+>> +		gpmc,cs-wr-off = <186>;
+>> +		gpmc,adv-on = <12>;
+>> +		gpmc,adv-rd-off = <48>;
+>> +		gpmc,adv-wr-off = <48>;
+>> +		gpmc,oe-on = <54>;
+>> +		gpmc,oe-off = <168>;
+>> +		gpmc,we-on = <54>;
+>> +		gpmc,we-off = <168>;
+>> +		gpmc,rd-cycle = <186>;
+>> +		gpmc,wr-cycle = <186>;
+>> +		gpmc,access = <114>;
+>> +		gpmc,page-burst-access = <6>;
+>> +		gpmc,bus-turnaround = <12>;
+>> +		gpmc,cycle2cycle-delay = <18>;
+>> +		gpmc,wr-data-mux-bus = <90>;
+>> +		gpmc,wr-access = <186>;
+>> +		gpmc,cycle2cycle-samecsen;
+>> +		gpmc,cycle2cycle-diffcsen;
+>> +
+>> +		interrupt-parent = <&gpio6>;
+>> +		interrupts = <16>;
+>> +		vmmc-supply = <&vddvario>;
+>> +		vmmc_aux-supply = <&vdd33a>;
+>> +		reg-io-width = <4>;
+>> +
+>> +		smsc,save-mac-address;
+>> +	};
+>> +};
+>> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+>> index 898b44d..2bc276b 100644
+>> --- a/arch/arm/mach-omap2/gpmc.c
+>> +++ b/arch/arm/mach-omap2/gpmc.c
+>> @@ -1559,6 +1559,14 @@ static int gpmc_probe_dt(struct platform_device
+>> *pdev) }
+>>  	}
+>> 
+>> +	for_each_node_by_name(child, "ethernet") {
+>> +		ret = gpmc_probe_generic_child(pdev, child);
+>> +		if (ret < 0) {
+>> +			of_node_put(child);
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+>>  	return 0;
+>>  }
+>>  #else
 > 
-> If it can be done easily, can you please consider the upcoming (3.10)
-> cortex-a5 SoC:
+> I did a little testing on my am335x based device and this patch does 
+> introduce a problem for me. I am not sure if it is indeed related to this 
+> patch or if I created my device tree the wrong way. Maybe you can help a 
+> bit. Here are the relevant parts of kernel booting up:
 > 
-> arch/arm/boot/dts/sama5d3.dtsi
+> ...
 > 
-> It is in linux-next through arm-soc/at91/at91/soc
+> [    0.136054] OMAP GPIO hardware version 0.1
+> [    0.139081] platform 481cc000.d_can: alias fck already exists
+> [    0.141593] omap-gpmc 50000000.gpmc: GPMC revision 6.0
+> [    0.141978] omap-gpmc 50000000.gpmc: cannot request GPMC CS 1242562560
+> [    0.141997] omap-gpmc 50000000.gpmc: failed to probe DT parameters
+> [    0.147869] bio: create slab <bio-0> at 0
+> [    0.162814] omap-dma-engine omap-dma-engine: OMAP DMA engine driver
+> 
+> ...
+> 
+> [    1.013897] brd: module loaded
+> [    1.020964] loop: module loaded
+> [    1.024535] at24 0-0056: 512 byte 24c04 EEPROM, writable, 128 
+> bytes/write
+> [    1.049607] Unable to handle kernel NULL pointer dereference at virtual 
+> address 000001a4
+> [    1.058086] pgd = c0004000
+> [    1.060942] [000001a4] *pgd=00000000
+> [    1.064700] Internal error: Oops: 805 [#1] ARM
+> [    1.069350] Modules linked in:
+> [    1.072557] CPU: 0    Not tainted  (3.9.0-rc1 #27)
+> [    1.077600] PC is at omap_hwcontrol+0x44/0x4c
+> [    1.082173] LR is at nand_command+0x64/0x204
+> [    1.086650] pc : [<c0297430>]    lr : [<c0293294>]    psr: 00000113
+> [    1.086650] sp : df059db8  ip : 00000000  fp : 00000001
+> [    1.098680] r10: c05dffe0  r9 : df059e10  r8 : ffffffff
+> [    1.104183] r7 : df25ea38  r6 : 00000005  r5 : 00000090  r4 : df25e810
+> [    1.111024] r3 : 000001a4  r2 : 00000085  r1 : 00000000  r0 : df25e800
+> [    1.117858] Flags: nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment 
+> kernel
+> [    1.125514] Control: 10c5387d  Table: 80004019  DAC: 00000015
+> [    1.131532] Process swapper (pid: 1, stack limit = 0xdf058238)
+> [    1.137637] Stack: (0xdf059db8 to 0xdf05a000)
+> [    1.142213] 9da0:                                                       
+> df25ea38 df25e810
+> [    1.150788] 9dc0: 00000000 00000000 00000000 df059e10 c05dffe0 c0293764 
+> 00000000 e0832000
+> [    1.159357] 9de0: 08000000 00001000 00000000 c05c85d4 08000fff c0015308 
+> 00000000 00000004
+> [    1.167928] 9e00: 00000000 c05dffd0 df0d5ed0 00000000 0000008f c05dffe0 
+> 00000000 df25e800
+> [    1.176500] 9e20: c062b78c df25e810 df0d5ed0 00000000 0000008f c05dffe0 
+> 00000000 c0297944
+> [    1.185070] 9e40: 00000000 00000000 df059e70 df25d848 00000001 c00fee28 
+> c05dffe0 00000003
+> [    1.193637] 9e60: df00a62c c004f8cc 00000000 00000000 00000000 00000000 
+> c05e0014 c05dffe0
+> [    1.202209] 9e80: c05dffe8 c05dffe0 c062b170 c05e0014 00000000 c05f7c8c 
+> c05a40d8 c024da78
+> [    1.210783] 9ea0: c05dffe0 c024c78c c05dffe0 c05f7c8c c05e0014 00000000 
+> c0588360 c024c9ac
+> [    1.219354] 9ec0: c05f7c8c c024c920 df059ed0 c024b2ac df00a60c df0cf970 
+> df2585c0 c05f7c8c
+> [    1.227925] 9ee0: c05f25c0 df2585c0 00000000 c024b9c8 c0513f20 c062b788 
+> c05ae958 c05ae958
+> [    1.236495] 9f00: c05f7c8c df058000 00000000 c024cf90 c05ae958 c06049c0 
+> df058000 00000000
+> [    1.245070] 9f20: c0588360 c0008698 c0567ee4 c0a3cbe1 c0a3cbdc c05a40d8 
+> 00000000 c04db534
+> [    1.253650] 9f40: c05675f4 00000006 c0a3cbe6 00000006 00000000 c05ae958 
+> c05bac60 c06049c0
+> [    1.262227] 9f60: 00000007 c0588360 0000008f c05ae960 00000000 c0588290 
+> 00000006 00000006
+> [    1.270795] 9f80: c0588360 ff5c5cfb 00000000 c03ff488 00000000 00000000 
+> 00000000 00000000
+> [    1.279378] 9fa0: 00000000 c03ff490 00000000 c000e078 00000000 00000000 
+> 00000000 00000000
+> [    1.287944] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 
+> 00000000 00000000
+> [    1.296529] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000 
+> dd5f5ddf 3d6ffed6
+> [    1.305120] [<c0297430>] (omap_hwcontrol+0x44/0x4c) from [<c0293294>] 
+> (nand_command+0x64/0x204)
+> [    1.314246] [<c0293294>] (nand_command+0x64/0x204) from [<c0293764>] 
+> (nand_scan_ident+0x70/0xc8c)
+> [    1.323553] [<c0293764>] (nand_scan_ident+0x70/0xc8c) from [<c0297944>] 
+> (omap_nand_probe+0x1dc/0x638)
+> [    1.333234] [<c0297944>] (omap_nand_probe+0x1dc/0x638) from [<c024da78>] 
+> (platform_drv_probe+0x18/0x1c)
+> [    1.343095] [<c024da78>] (platform_drv_probe+0x18/0x1c) from 
+> [<c024c78c>] (driver_probe_device+0x90/0x224)
+> [    1.353216] [<c024c78c>] (driver_probe_device+0x90/0x224) from 
+> [<c024c9ac>] (__driver_attach+0x8c/0x90)
+> [    1.363072] [<c024c9ac>] (__driver_attach+0x8c/0x90) from [<c024b2ac>] 
+> (bus_for_each_dev+0x68/0x8c)
+> [    1.372562] [<c024b2ac>] (bus_for_each_dev+0x68/0x8c) from [<c024b9c8>] 
+> (bus_add_driver+0x1bc/0x228)
+> [    1.382135] [<c024b9c8>] (bus_add_driver+0x1bc/0x228) from [<c024cf90>] 
+> (driver_register+0x78/0x14c)
+> [    1.391718] [<c024cf90>] (driver_register+0x78/0x14c) from [<c0008698>] 
+> (do_one_initcall+0x34/0x17c)
+> [    1.401304] [<c0008698>] (do_one_initcall+0x34/0x17c) from [<c0588290>] 
+> (kernel_init_freeable+0xdc/0x1ac)
+> [    1.411350] [<c0588290>] (kernel_init_freeable+0xdc/0x1ac) from 
+> [<c03ff490>] (kernel_init+0x8/0xe4)
+> [    1.420843] [<c03ff490>] (kernel_init+0x8/0xe4) from [<c000e078>] 
+> (ret_from_fork+0x14/0x3c)
+> [    1.429600] Code: e5c31000 e12fff1e f57ff04f e590349c (e5c31000) 
+> [    1.436070] ---[ end trace 2af83d33cc671cfa ]---
+> [    1.440961] Kernel panic - not syncing: Attempted to kill init! 
+> exitcode=0x0000000b
+> 
+> As you can see above, gpmc_probe fails. I digged a bit into it and this is 
+> because gpmc_probe_dt fails which in turn fails because 
+> gpmc_probe_generic_child in the "ethernet" part fails.
+> The interesting part is that it finds an "ethernet" node. I did not 
+> configure one in the gpmc. am335x based devices include am33xx.dtsi in 
+> their device tree source. This file contains an "ethernet" node for the on-
+> chip ethernet controller. Your code grabs this node and obviously fails to 
+> probe it. This is also where the strange CS value in the kernel output 
+> comes from (0x4a100000 == 1242562560). So I am not able to use the gpmc on 
+> any am33xx device because probing childs always fails.
+> For reference here is the gpmc part of my device tree source:
+> 
+> ocp {
+> 
+> ...
+> 
+> 	gpmc: gpmc@50000000 {
+> 		compatible = "ti,am3352-gpmc";
+> 		ti,hwmods = "gpmc";
+> 		reg = <0x50000000 0x1000000>;
+> 		interrupts = <100>;
+> 
+> 		gpmc,num-cs = <7>;
+> 		gpmc,num-waitpins = <2>;
+> 		#address-cells = <2>;
+> 		#size-cells = <1>;
+> 		ranges = <0 0 0x08000000 0x20000000>; /* CS0 @addr 0x8000000, size 
+> 512MiB */
+> 
+> 		nand@0,0 {
+> 			reg = <0 0 0>; /* CS0, offset 0 */
+> 			nand-bus-width = <8>;
+> 			ti,nand-ecc-opt = "sw";
+> 
+> 			gpmc,sync-clk = <0>;
+> 			gpmc,cs-on = <0>;
+> 			gpmc,cs-rd-off = <44>;
+> 			gpmc,cs-wr-off = <44>;
+> 			gpmc,adv-on = <6>;
+> 			gpmc,adv-rd-off = <34>;
+> 			gpmc,adv-wr-off = <44>;
+> 			gpmc,we-off = <40>;
+> 			gpmc,oe-off = <54>;
+> 			gpmc,access = <64>;
+> 			gpmc,rd-cycle = <82>;
+> 			gpmc,wr-cycle = <82>;
+> 			gpmc,wr-access = <40>;
+> 			gpmc,wr-data-mux-bus = <0>;
+> 
+> 			#address-cells = <1>;
+> 			#size-cells = <1>;
+> 
+> 			/* partitions go here */
+> 			partition@0 {
+> 				label = "u-boot";
+> 				reg = <0x0000000 0x100000>;
+> 				read-only;
+> 			};
+> 		
+> 			uimage@100000 {
+> 				label = "uImage";
+> 				reg = <0x0100000 0x200000>;
+> 			};
+> 		};
+> 	};
+> };
+> 
+> Is this a problem of my device tree ? If you need further information or if 
+> I can help debugging, let me know.
+> 
+> Regards,
+> Lars
+> 
 
-I will do that at the same time this set gets merged.
+Hi Lars,
 
-> >  arch/arm/kernel/devtree.c                      |  82 +++---
-> >  9 files changed, 377 insertions(+), 72 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> > index f32494d..b1ef3d8 100644
-> > --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> > +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> > @@ -1,4 +1,6 @@
-> > -* ARM CPUs binding description
-> > +=============================
-> > +ARM CPUs bindings description
-> > +=============================
-> >  
-> >  The device tree allows to describe the layout of CPUs in a system through
-> >  the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
-> > @@ -8,70 +10,317 @@ Bindings for CPU nodes follow the ePAPR standard, available from:
-> >  
-> >  http://devicetree.org
-> >  
-> > -For the ARM architecture every CPU node must contain the following properties:
-> > -
-> > -- device_type:	must be "cpu"
-> > -- reg:		property matching the CPU MPIDR[23:0] register bits
-> > -		reg[31:24] bits must be set to 0
-> > -- compatible:	should be one of:
-> > -		"arm,arm1020"
-> > -		"arm,arm1020e"
-> > -		"arm,arm1022"
-> > -		"arm,arm1026"
-> > -		"arm,arm720"
-> > -		"arm,arm740"
-> > -		"arm,arm7tdmi"
-> > -		"arm,arm920"
-> 
-> Here we have: "arm,arm920t" for at91rm9200.dtsi
+Yes, in fact I just realized that for_each_node_by_name() expand to:
 
-I will update it.
+#define for_each_node_by_name(dn, name) \
+        for (dn = of_find_node_by_name(NULL, name); dn; \
+             dn = of_find_node_by_name(dn, name))
 
-> > -		"arm,arm922"
-> > -		"arm,arm925"
-> > -		"arm,arm926"
-> 
-> Oh, I missed this one: the strange thing is that *all* arm926 variants
-> have a compatible string of this form: "arm,arm926ejs"
-> 
-> (using: git grep "arm,arm9" next/master)
-> 
-> Should we change? Is there a rule for this naming?
+which means that it will search for a node with "name" on the complete
+DeviceTree and this is wrong. It should only search on GPMC childs.
 
-We decided to keep the compatible property as the base processor
-names, leaving out variants, so I think answer is: the rule for the
-naming is this document, and yes we should change it, if we all agree
-on the approach.
+Could you please test the following patch? If it works for you I'll add a proper
+description and submit it as a PATCH.
 
-Lorenzo
+Thanks a lot and best regards,
+Javier
+
+>From d8dab9ae9a0284f17553875c2fddd806d9f6ab2e Mon Sep 17 00:00:00 2001
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Date: Wed, 17 Apr 2013 13:50:30 +0200
+Subject: [PATCH] ARM: OMAP2+: only search for GPMC DT child nodes on
+ probe
+
+Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+---
+ arch/arm/mach-omap2/gpmc.c |   51 ++++++++++++++++++++-----------------------
+ 1 files changed, 24 insertions(+), 27 deletions(-)
+
+diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+index ed946df..58e2415 100644
+--- a/arch/arm/mach-omap2/gpmc.c
++++ b/arch/arm/mach-omap2/gpmc.c
+@@ -1520,35 +1520,32 @@ static int gpmc_probe_dt(struct platform_device *pdev)
+ 		return ret;
+ 	}
+
+-	for_each_node_by_name(child, "nand") {
+-		ret = gpmc_probe_nand_child(pdev, child);
+-		if (ret < 0) {
+-			of_node_put(child);
+-			return ret;
+-		}
+-	}
+-
+-	for_each_node_by_name(child, "onenand") {
+-		ret = gpmc_probe_onenand_child(pdev, child);
+-		if (ret < 0) {
+-			of_node_put(child);
+-			return ret;
+-		}
+-	}
++	for_each_child_of_node(pdev->dev.of_node, child) {
++		if (child->name) {
++			if (of_node_cmp(child->name, "nand") == 0) {
++				ret = gpmc_probe_nand_child(pdev, child);
++				if (ret < 0) {
++					of_node_put(child);
++					return ret;
++				}
++			}
+
+-	for_each_node_by_name(child, "nor") {
+-		ret = gpmc_probe_generic_child(pdev, child);
+-		if (ret < 0) {
+-			of_node_put(child);
+-			return ret;
+-		}
+-	}
++			if (of_node_cmp(child->name, "onenand") == 0) {
++				ret = gpmc_probe_onenand_child(pdev, child);
++				if (ret < 0) {
++					of_node_put(child);
++					return ret;
++				}
++			}
+
+-	for_each_node_by_name(child, "ethernet") {
+-		ret = gpmc_probe_generic_child(pdev, child);
+-		if (ret < 0) {
+-			of_node_put(child);
+-			return ret;
++			if (of_node_cmp(child->name, "ethernet") == 0 ||
++			    of_node_cmp(child->name, "nor") == 0) {
++				ret = gpmc_probe_generic_child(pdev, child);
++				if (ret < 0) {
++					of_node_put(child);
++					return ret;
++				}
++			}
+ 		}
+ 	}
+
+-- 
+1.7.7.6
+
