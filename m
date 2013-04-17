@@ -1,84 +1,50 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: [PATCH v2 1/2] ARM: OMAP2+: only search for GPMC DT child nodes on probe
-Date: Wed, 17 Apr 2013 22:34:11 +0200
-Message-ID: <1366230852-2440-1-git-send-email-javier.martinez@collabora.co.uk>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-Cc: Jon Hunter <jon-hunter@ti.com>, Tony Lindgren <tony@atomide.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Lars Poeschel <poeschel@lemonage.de>, devicetree-discuss@lists.ozlabs.org, linux-omap <linux-omap@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: [PATCH 0/3] arm: omap: add ti bandap device on DT entries
+Date: Wed, 17 Apr 2013 16:35:59 -0400
+Message-ID: <1366230959-31694-1-git-send-email-eduardo.valentin@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: b-cousson@ti.com
+Cc: Eduardo Valentin <eduardo.valentin@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The GPMC DT probe function use for_each_node_by_name() to search
-child device nodes of the GPMC controller. But this function does
-not use the GPMC device node as the root of the search and instead
-search across the complete Device Tree.
+Benoit, Tony,
 
-This means that any device node on the DT that is using any of the
-GPMC child nodes names searched for will be returned even if they
-are not connected to the GPMC, making the gpmc_probe_xxx_child()
-function to fail.
+This is a small series, based on linux-next, that adds
+ti bandgap device. This is based on previous reviews this
+driver got.
 
-Fix this by using the GPMC device node as the search root so the
-search will be restricted to its children.
+The driver is still under staging, I believe it is in a good
+shape to be enabled and start broader tests.
 
-Reported-by: Lars Poeschel <poeschel@lemonage.de>
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
----
+I have tested this driver on OMAP4430/60 and OMAP5430.
 
-Changes since v1 (suggested by Jon Hunter):
-  - Split the search for GPMC child nodes and only warn if a
-    child probe fails on two different patches
-  - Don't probe all childs unnecesary if a previous matched
+This series will contain only the part that is required to
+add its device tree node entry.
 
- arch/arm/mach-omap2/gpmc.c |   33 ++++++++++-----------------------
- 1 files changed, 10 insertions(+), 23 deletions(-)
+All best,
 
-diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
-index ed946df..6166847 100644
---- a/arch/arm/mach-omap2/gpmc.c
-+++ b/arch/arm/mach-omap2/gpmc.c
-@@ -1520,32 +1520,19 @@ static int gpmc_probe_dt(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	for_each_node_by_name(child, "nand") {
--		ret = gpmc_probe_nand_child(pdev, child);
--		if (ret < 0) {
--			of_node_put(child);
--			return ret;
--		}
--	}
-+	for_each_child_of_node(pdev->dev.of_node, child) {
- 
--	for_each_node_by_name(child, "onenand") {
--		ret = gpmc_probe_onenand_child(pdev, child);
--		if (ret < 0) {
--			of_node_put(child);
--			return ret;
--		}
--	}
-+		if (!child->name)
-+			continue;
- 
--	for_each_node_by_name(child, "nor") {
--		ret = gpmc_probe_generic_child(pdev, child);
--		if (ret < 0) {
--			of_node_put(child);
--			return ret;
--		}
--	}
-+		if (of_node_cmp(child->name, "nand") == 0)
-+			ret = gpmc_probe_nand_child(pdev, child);
-+		else if (of_node_cmp(child->name, "onenand") == 0)
-+			ret = gpmc_probe_onenand_child(pdev, child);
-+		else if (of_node_cmp(child->name, "ethernet") == 0 ||
-+			 of_node_cmp(child->name, "nor") == 0)
-+			ret = gpmc_probe_generic_child(pdev, child);
- 
--	for_each_node_by_name(child, "ethernet") {
--		ret = gpmc_probe_generic_child(pdev, child);
- 		if (ret < 0) {
- 			of_node_put(child);
- 			return ret;
+Eduardo Valentin (3):
+  arm: dts: introduce config HAS_BANDGAP
+  arm: dts: add bandgap entry for OMAP443x devices
+  arm: add bandgap entry for OMAP4460 devices
+
+ arch/arm/Kconfig                | 3 +++
+ arch/arm/boot/dts/omap443x.dtsi | 4 ++++
+ arch/arm/boot/dts/omap4460.dtsi | 9 +++++++++
+ arch/arm/mach-omap2/Kconfig     | 1 +
+ 4 files changed, 17 insertions(+)
+
 -- 
-1.7.7.6
-
+1.8.2.1.342.gfa7285d
