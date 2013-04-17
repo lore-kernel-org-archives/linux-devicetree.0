@@ -1,78 +1,170 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] i2c: mux: Add i2c-arb-gpio-challenge 'mux' driver
-Date: Wed, 17 Apr 2013 06:57:14 -0700
-Message-ID: <CAOesGMioZjFnx49YrBdxxQq2=ipx4HNCq-BT06PfT4qJoAsW+Q@mail.gmail.com>
-References: <1365543270-10736-1-git-send-email-dianders@chromium.org>
- <1366129742-16048-1-git-send-email-dianders@chromium.org>
- <20130416163458.GA4918@quad.lixom.net>
- <20130417093424.GC4508@the-dreams.de>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v3 3/3] ARM: OMAP2+: Add GPMC DT support for Ethernet
+ child nodes
+Date: Wed, 17 Apr 2013 16:07:55 +0200
+Message-ID: <516EACBB.9020607@collabora.co.uk>
+References: <1363298051-24574-1-git-send-email-javier.martinez@collabora.co.uk> <201304171140.52529.poeschel@lemonage.de> <516E9026.8070804@collabora.co.uk> <516EA838.3010003@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5196900014340544625=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130417093424.GC4508-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <516EA838.3010003@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Lars Poeschel <poeschel@lemonage.de>, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
---===============5196900014340544625==
-Content-Type: multipart/alternative; boundary=f46d044271940028fa04da8edd39
+On 04/17/2013 03:48 PM, Jon Hunter wrote:
+> 
+> On 04/17/2013 07:05 AM, Javier Martinez Canillas wrote:
+> 
+> ...
+> 
+>> Yes, in fact I just realized that for_each_node_by_name() expand to:
+>> 
+>> #define for_each_node_by_name(dn, name) \
+>>         for (dn = of_find_node_by_name(NULL, name); dn; \
+>>              dn = of_find_node_by_name(dn, name))
+>> 
+>> which means that it will search for a node with "name" on the complete
+>> DeviceTree and this is wrong. It should only search on GPMC childs.
+> 
+> Good catch. I guess we could have flash & ethernet devices connected to
+> other interfaces such as SPI.
+> 
 
---f46d044271940028fa04da8edd39
-Content-Type: text/plain; charset=ISO-8859-1
+Yes, in fact this is the case for omap4-sdp.dts which has an ethernet controller
+connected through SPI:
 
-On Apr 17, 2013 2:35 AM, "Wolfram Sang" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+&mcspi1 {
+        eth@0 {
+                compatible = "ks8851";
+                spi-max-frequency = <24000000>;
+                reg = <0>;
+                interrupt-parent = <&gpio2>;
+                interrupts = <2>; /* gpio line 34 */
+                vdd-supply = <&vdd_eth>;
+        };
+};
+
+it just didn't fail because the device node name is "eth" and not "ethernet".
+
+which makes me wonder if is OK to rely on a device node name or we should use
+compatible properties instead such as "ti,gpmc-{eth,nand,nor,onenand}" and do
+something like:
+
+for_each_compatible_node(pdev->dev.of_node, NULL, "ti,gpmc-eth") and so on.
+
+>> Could you please test the following patch? If it works for you I'll add a proper
+>> description and submit it as a PATCH.
+>> 
+>> Thanks a lot and best regards,
+>> Javier
+>> 
+>> From d8dab9ae9a0284f17553875c2fddd806d9f6ab2e Mon Sep 17 00:00:00 2001
+>> From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+>> Date: Wed, 17 Apr 2013 13:50:30 +0200
+>> Subject: [PATCH] ARM: OMAP2+: only search for GPMC DT child nodes on
+>>  probe
+>> 
+>> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+>> ---
+>>  arch/arm/mach-omap2/gpmc.c |   51 ++++++++++++++++++++-----------------------
+>>  1 files changed, 24 insertions(+), 27 deletions(-)
+>> 
+>> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+>> index ed946df..58e2415 100644
+>> --- a/arch/arm/mach-omap2/gpmc.c
+>> +++ b/arch/arm/mach-omap2/gpmc.c
+>> @@ -1520,35 +1520,32 @@ static int gpmc_probe_dt(struct platform_device *pdev)
+>>  		return ret;
+>>  	}
+>> 
+>> -	for_each_node_by_name(child, "nand") {
+>> -		ret = gpmc_probe_nand_child(pdev, child);
+>> -		if (ret < 0) {
+>> -			of_node_put(child);
+>> -			return ret;
+>> -		}
+>> -	}
+>> -
+>> -	for_each_node_by_name(child, "onenand") {
+>> -		ret = gpmc_probe_onenand_child(pdev, child);
+>> -		if (ret < 0) {
+>> -			of_node_put(child);
+>> -			return ret;
+>> -		}
+>> -	}
+>> +	for_each_child_of_node(pdev->dev.of_node, child) {
+>> +		if (child->name) {
+> 
+> Minor nit ... how about ...
+> 
+> +		if (!child->name)
+> 			continue;
 >
-> On Tue, Apr 16, 2013 at 09:34:58AM -0700, Olof Johansson wrote:
->
-> > Overdue, should have added a few iterations ago: :)
->
-> Why is that? Is the current iteration too generic for your taste?
 
-No, nothing like that.
+Yes, much better. I just cooked a quick patch so Lars could test it ;-)
+ 		
+>> +			if (of_node_cmp(child->name, "nand") == 0) {
+>> +				ret = gpmc_probe_nand_child(pdev, child);
+>> +				if (ret < 0) {
+>> +					of_node_put(child);
+>> +					return ret;
+>> +				}
+>> +			}
+>> 
+>> -	for_each_node_by_name(child, "nor") {
+>> -		ret = gpmc_probe_generic_child(pdev, child);
+>> -		if (ret < 0) {
+>> -			of_node_put(child);
+>> -			return ret;
+>> -		}
+>> -	}
+>> +			if (of_node_cmp(child->name, "onenand") == 0) {
+>> +				ret = gpmc_probe_onenand_child(pdev, child);
+>> +				if (ret < 0) {
+>> +					of_node_put(child);
+>> +					return ret;
+>> +				}
+>> +			}
+>> 
+>> -	for_each_node_by_name(child, "ethernet") {
+>> -		ret = gpmc_probe_generic_child(pdev, child);
+>> -		if (ret < 0) {
+>> -			of_node_put(child);
+>> -			return ret;
+>> +			if (of_node_cmp(child->name, "ethernet") == 0 ||
+>> +			    of_node_cmp(child->name, "nor") == 0) {
+>> +				ret = gpmc_probe_generic_child(pdev, child);
+>> +				if (ret < 0) {
+>> +					of_node_put(child);
+>> +					return ret;
+>> +				}
+>> +			}
+>>  		}
+>>  	}
+> 
+> I am also wondering if the probe should fail if one of its children
+> fails. The panic that Lars reported occurred because the nand
+> successfully probed and so the nand device was registered, but because
+> the ethernet device probe failed, the gpmc probe fails, and then when
+> the nand device is probed by the mtd driver the kernel panics. I wonder
+> if it would be better to WARN on child devices that fail to probe but
+> not return error from the gpmc probe.
+> 
 
-I've been talking to Doug and others offlist (at work) about this but never
-acked the patches on the list. I've been happy with them for a while and
-I'm glad you've reached that point too :)
+I wonder the same. Probably is better to just WARN so a user could at lest use
+some of the peripherals connected to the GPMC. This is specially important for
+flash memory devices since the rootfs could have to be mounted from there.
 
--Olof
+Do you want me to split the child node search and the WARN_ON() replacement in
+two different patchs or should I send both changes in one patch?
 
---f46d044271940028fa04da8edd39
-Content-Type: text/html; charset=ISO-8859-1
+> Cheers
+> Jon
+> 
 
-<p dir="ltr"><br>
-On Apr 17, 2013 2:35 AM, &quot;Wolfram Sang&quot; &lt;<a href="mailto:wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org">wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org</a>&gt; wrote:<br>
-&gt;<br>
-&gt; On Tue, Apr 16, 2013 at 09:34:58AM -0700, Olof Johansson wrote:<br>
-&gt;<br>
-&gt; &gt; Overdue, should have added a few iterations ago: :)<br>
-&gt;<br>
-&gt; Why is that? Is the current iteration too generic for your taste?</p>
-<p dir="ltr">No, nothing like that.</p>
-<p dir="ltr">I&#39;ve been talking to Doug and others offlist (at work) about this but never acked the patches on the list. I&#39;ve been happy with them for a while and I&#39;m glad you&#39;ve reached that point too :)<br>
-</p>
-<p dir="ltr">-Olof</p>
+Best regards,
+Javier
 
---f46d044271940028fa04da8edd39--
-
---===============5196900014340544625==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============5196900014340544625==--
