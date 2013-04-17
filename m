@@ -1,81 +1,69 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v7 1/3] of/pci: Unify pci_process_bridge_OF_ranges from
- Microblaze and PowerPC
-Date: Wed, 17 Apr 2013 12:22:23 -0400
-Message-ID: <20130417162223.GC27197@titan.lakedaemon.net>
-References: <1366107508-12672-1-git-send-email-Andrew.Murray@arm.com>
- <1366107508-12672-2-git-send-email-Andrew.Murray@arm.com>
- <20130416103005.GB12726@arm.com>
- <20130417160015.777453E2B73@localhost>
- <20130417161036.GB27197@titan.lakedaemon.net>
- <CACxGe6sNk=wNinTcMHbJa5o-56Tyh=0CnFSEW+Hk-ujpjeg2gQ@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC PATCH 2/2] ARM: DT: kernel: DT cpu node bindings update
+Date: Wed, 17 Apr 2013 10:23:38 -0600
+Message-ID: <516ECC8A.2070508@wwwdotorg.org>
+References: <1366042402-8987-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1366042402-8987-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <516C544A.4090107@wwwdotorg.org>
+ <20130417091457.GB5012@e106331-lin.cambridge.arm.com>
+ <516EBC66.20508@wwwdotorg.org>
+ <alpine.LFD.2.03.1304171146530.17375@syhkavp.arg>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Content-Disposition: inline
-In-Reply-To: <CACxGe6sNk=wNinTcMHbJa5o-56Tyh=0CnFSEW+Hk-ujpjeg2gQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "siva.kallam@samsung.com" <siva.kallam@samsung.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>, Liviu Dudau <Liviu.Dudau@arm.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, "paulus@samba.org" <paulus@samba.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "jg1.han@samsung.com" <jg1.han@samsung.com>, "jgunthorpe@obsidianresearch.com" <jgunthorpe@obsidianresearch.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.03.1304171146530.17375-hIgblCxmbi8OMTOF05IoTw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 17, 2013 at 05:17:48PM +0100, Grant Likely wrote:
-> On Wed, Apr 17, 2013 at 5:10 PM, Jason Cooper <jason@lakedaemon.net> wrote:
-> > On Wed, Apr 17, 2013 at 05:00:15PM +0100, Grant Likely wrote:
-> >> On Tue, 16 Apr 2013 11:30:06 +0100, Andrew Murray <andrew.murray@arm.com> wrote:
-> >> > On Tue, Apr 16, 2013 at 11:18:26AM +0100, Andrew Murray wrote:
-> >> > > The pci_process_bridge_OF_ranges function, used to parse the "ranges"
-> >> > > property of a PCI host device, is found in both Microblaze and PowerPC
-> >> > > architectures. These implementations are nearly identical. This patch
-> >> > > moves this common code to a common place.
-> >> > >
-> >> > > Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
-> >> > > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> >> > > Reviewed-by: Rob Herring <rob.herring@calxeda.com>
-> >> > > Tested-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> >> > > Tested-by: Linus Walleij <linus.walleij@linaro.org>
-> >> > > Acked-by: Michal Simek <monstr@monstr.eu>
-> >> > > ---
-> >> > >  arch/microblaze/include/asm/pci-bridge.h |    5 +-
-> >> > >  arch/microblaze/pci/pci-common.c         |  192 ----------------------------
-> >> > >  arch/powerpc/include/asm/pci-bridge.h    |    5 +-
-> >> > >  arch/powerpc/kernel/pci-common.c         |  192 ----------------------------
-> >> >
-> >> > Is there anyone on linuxppc-dev/linux-mips that can help test this patchset?
-> >> >
-> >> > I've tested that it builds on powerpc with a variety of configs (some which
-> >> > include fsl_pci.c implementation). Though I don't have hardware to verify that
-> >> > it works.
-> >> >
-> >> > I haven't tested this builds or runs on MIPS.
-> >> >
-> >> > You shouldn't see any difference in behaviour or new warnings and PCI devices
-> >> > should continue to operate as before.
-> >>
-> >> I've got through a line-by-line comparison between powerpc, microblaze,
-> >> and then new code. The differences are purely cosmetic, so I have
-> >> absolutely no concerns about this patch. I've applied it to my tree.
-> >
-> > oops.  Due to the number of dependencies the mvebu-pcie series has (this
-> > being one of them, we (arm-soc/mvebu) asked if we could take this
-> > through our tree.  Rob Herring agreed to this several days ago.  Is this
-> > a problem for you?
-> >
-> > It would truly (dogs and cats living together) upset the apple cart for
-> > us at this stage to pipe these through a different tree...
+On 04/17/2013 10:02 AM, Nicolas Pitre wrote:
+> On Wed, 17 Apr 2013, Stephen Warren wrote:
 > 
-> Not a problem at all. I'll drop it.
+>> On 04/17/2013 03:14 AM, Mark Rutland wrote:
+>>> Hi Stephen,
+>>>
+>>>>> +	- enable-method
+>>>>> +		Usage: required on ARM 64-bit systems, optional on ARM 32-bit
+>>>>> +		       systems
+>>>>> +		Value type: <string>
+>>>>> +		Definition: On ARM 64-bit systems must be "spin-table" [1].
+>>>>
+>>>> Can that be an integer instead? with dtc+cpp support, that shouldn't
+>>>> hurt the eyes too much any more.
+>>>
+>>> The "enable-method" property is described as a stringlist by ePAPR, and is
+>>> currently in use on arm64 as such. It *must* remain a string(list) for arm64.
+>>>
+>>> Having it as an integer for arm is only going to cause us additional work,
+>>> makes it impossible to share a common dt between 64bit and 32bit, and goes
+>>> against the standard. I think it should be a stringlist for arm.
+>>
+>> OK, that's a great reason for this case.
+>>
+>> I hope we don't introduce any more standards that use strings, but that
+>> may just be my personal preference...
+> 
+> I think in any standard, strings are far easier to deal with.  
+> Especially with config stuff which is far from being performance 
+> critical. Strings are much less prone to conflicts.  It is too easy to 
+> "extend" a standard by assigning meanings to free numerical values just 
+> to discover that someone else did use the same numbers for other 
+> meanings.
+> 
+> In order to avoid this issue, a central authority has to be established 
+> to assign numbers out while strings are fine without that most of the 
+> time.
 
-Great!  Thanks.
-
-Jason.
+For DT, all strings or numbers must always be documented in the DT
+binding, so there's no risk of conflict there.
