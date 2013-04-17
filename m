@@ -1,191 +1,98 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC] DT affinity bindings/representing bus masters with DT
-Date: Wed, 17 Apr 2013 11:49:38 +0100
-Message-ID: <20130417104937.GA29188@e102568-lin.cambridge.arm.com>
-References: <20130215172102.GF3014@e102568-lin.cambridge.arm.com>
- <20130306215714.GC6740@truffula.fritz.box>
- <20130311170657.GD25250@e102568-lin.cambridge.arm.com>
- <20130318030928.GG9402@truffula.fritz.box>
- <20130318094815.GA30116@e102568-lin.cambridge.arm.com>
- <20130319070734.GX9402@truffula.fritz.box>
- <20130325152038.GC27959@e102568-lin.cambridge.arm.com>
- <20130413222448.CAD953E2249@localhost>
- <20130415134302.GA4568@e102568-lin.cambridge.arm.com>
- <20130416155518.GA2234@linaro.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC PATCH 2/2] ARM: DT: kernel: DT cpu node bindings update
+Date: Wed, 17 Apr 2013 12:02:04 +0100
+Message-ID: <20130417110203.GB29188@e102568-lin.cambridge.arm.com>
+References: <1366042402-8987-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1366042402-8987-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <201304171148.57146.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130416155518.GA2234-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201304171148.57146.arnd@arndb.de>
 Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Dave Martin <dave.martin@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>, Sekhar Nori <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Viresh Kumar <viresh.kumar@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, Lennert Buytenhek <kernel@wantstofly.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <Catalin.Marinas@arm.com>, David Brown <davidb@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Simon Horman <horms@verge>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 16, 2013 at 04:55:43PM +0100, Dave Martin wrote:
-> On Mon, Apr 15, 2013 at 02:43:02PM +0100, Lorenzo Pieralisi wrote:
-> > Thank you for having a look Grant.
-> > 
-> > On Sat, Apr 13, 2013 at 11:24:48PM +0100, Grant Likely wrote:
-> > > On Mon, 25 Mar 2013 15:20:39 +0000, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
-> > > > On Tue, Mar 19, 2013 at 07:07:34AM +0000, David Gibson wrote:
-> > > > > On Mon, Mar 18, 2013 at 09:48:16AM +0000, Lorenzo Pieralisi wrote:
-> > > > > > > > I think we need to post what we have, it is really complex to explain
-> > > > > > > > the issue without a concrete example. To cut a long story short I
-> > > > > > > > would not say that the resources sit in different address spaces, it is
-> > > > > > > > that we need to associate those address ranges with specific bus masters.
-> > > > > > > > 
-> > > > > > > > We have to have a way to say:
-> > > > > > > > 
-> > > > > > > > "Address range 0x80001000 - 0x80001fff is used to programme the control
-> > > > > > > > registers associated with the port connected to master X".
-> > > > > > > > 
-> > > > > > > > When a CPU wants to programme a control port for a specific master, it
-> > > > > > > > needs to know what address range should be programmed.
-> > > > > > > > 
-> > > > > > > > I mentioned "resources" instead of addresses since the problem we are
-> > > > > > > > having is the same when it comes to map IRQs to set of CPUS. We need
-> > > > > > > > to associate a resource (IRQ or address) to a set of cpus (or more in
-> > > > > > > > general, masters).
-> > > > > > > 
-> > > > > > > Hrm.  See, I think I may be misunderstanding the problem again,
-> > > > > > > because with this description I can see no problem.  It's already up
-> > > > > > > to the device binding to describe the purpose of each entry in the reg
-> > > > > > > property.  So what's the problem with it just being part of the
-> > > > > > > binding to say which reg entry is associated with which master port?
-> > > > > > 
-> > > > > > That's exactly what we are trying to do. But to associate the reg
-> > > > > > property to a master port we need a phandle, how can we pull that off
-> > > > > > otherwise ?
-> > > > > 
-> > > > > Ah, right.  I was meaning that the binding specifies the abstract port
-> > > > > number that each reg entry is associated with.  I'm fine with adding a
-> > > > > property to map the port numbers to master devices on the other end.
-> > > > > I think treating it in two steps like that is better than thinking of
-> > > > > the master phandles being  directly associated with reg entries,
-> > > > > because it also handles cases like having a bank of common/global
-> > > > > registers not associated with any port/master, or cases where the
-> > > > > ports aren't all identical and some need more resources than others.
-> > > > 
-> > > > That's fine by me. Can you provide me with an example of how the bindings
-> > > > should tie a specific reg property to an abstract port number ? reg properties
-> > > > ordering (ie index) ? Or port number encoded in the reg property itself ?
-> > > 
-> > > I think I agree with David (assuming I understand his argument
-> > > correctly). Rather than putting the information into the single node, it
-> > > is more consistent in DT terms to put that information into each of the
-> > > 'users' of the device; so for each master, put in a property that
-> > > associates it with a specific port. Something like this (completely off
-> > > the top of my head; not at all fully thought out):
-> > > 
-> > > cpu@0 {
-> > > 	cci-port = <&cci1 0>;
-> > > }
-> > > 
-> > > cpu@1 {
-> > > 	cci-port = <&cci1 1>;
-> > > }
-> > > 
-> > > cpu@2 {
-> > > 	cci-port = <&cci1 2>;
-> > > }
-> > > 
-> > > gpu@c8010000 {
-> > > 	cci-port = <&cci1 3>;
-> > > }
-> > 
-> > Nitpicking: the node above is not really a "master", it is a device tree
-> > node representing GPU resources in the CPU address space since, if I got that
-> > right, the device tree provides the address space view from a CPU perspective.
-> > 
-> > I am not saying this is right or wrong, just trying to make up my mind
-> > myself to understand if this can cause any issues in the future.
-> > 
-> > > cci1: cci@c8000000 {
-> > > 	reg = < ... >;
-> > > }
-> > > 
-> > > An arguement against that would be that it is difficult to determine
-> > > what all the bus-mastering devices are from looking at the cci node, but
-> > > in real terms you would have a lookup table in the operating system
-> > > /anyway/ for matching devices to ports and I would expect that as each
-> > > device is discovered from the DT data the OS would populate it's lookup
-> > > table.
-> > 
-> > Ok, I am not a big fan of this approach since it does not scale IMHO. I would
-> > avoid adding a property to a cpu node every given time we need a device
-> > requiring its resources to be linked to a (possibly set of) cpu(s).
+On Wed, Apr 17, 2013 at 10:48:56AM +0100, Arnd Bergmann wrote:
+> On Monday 15 April 2013, Lorenzo Pieralisi wrote:
+> > -               "arm,cortex-a9"
+> > -               "arm,cortex-a15"
+> > -               "arm,arm1136"
+> > -               "arm,arm1156"
+> > -               "arm,arm1176"
+> > -               "arm,arm11mpcore"
+> > -               "faraday,fa526"
+> > -               "intel,sa110"
+> > -               "intel,sa1100"
+> > -               "marvell,feroceon"
+> > -               "marvell,mohawk"
+> > -               "marvell,xsc3"
+> > -               "marvell,xscale"
 > 
-> I think that putting the cci-port references in the relevant cluster node
-> (assuming that we agree to have cluster nodes) would be the logical
-> analogy.  This also correctly describes the system.  Putting those
-> properties in the cpu nodes directly makes it harder to describe/figure
-> out what topoogical level the coherency controls apply to, and that
-> really matters if we want to abstract this properly.
-
-This would mean that cluster nodes becomes "HW" entities and would be
-treated as cpu nodes are at the moment. That was not my intent, the
-idea was to use nodes within cpu-map just to describe topology, that was it,
-no property attached to those nodes. We need to figure out what we are
-doing with cluster nodes, and then make a decision on CCI.
-
-> Most things in DT point in a master->slave direction, so the proposed CCI
-> binding looks a bit unusual in that its references currently point the
-> opposite way.  (Some references go the other way: for clocks and power,
-> we tend to refer backwards -- i.e., from the thing controlled to the
-> controller, just as in the current CCI proposal.)
+> > +                           "arm,cortex-a9"
+> > +                           "arm,cortex-a15"
+> > +                           "arm,cortex-a57"
+> > +                           "arm,arm1136"
+> > +                           "arm,arm1156"
+> > +                           "arm,arm1176"
+> > +                           "arm,arm11mpcore"
+> > +                           "faraday,fa526"
+> > +                           "intel,sa110"
+> > +                           "intel,sa1100"
+> > +                           "marvell,feroceon"
+> > +                           "marvell,mohawk"
+> > +                           "marvell,xsc3"
+> > +                           "marvell,xscale"
 > 
-> I guess we'd need to figure out whether representing things master->slave
-> would be excessively painful for handling the CCI, and if so, why.
+> I see you are adding cortex-a57 here, but there are actually a couple
+> of other cores that we could add here. It also makes sense to sort these
+> alphanumerically I think, and move arm10 after arm9, as well as arm11
+> before cortex.
 
-I would say we need to figure out how the device tree should describe
-this kind of dependencies, and try to tackle the problem in a generic way,
-not on a case-by-case one.
+Ok, I will do that.
 
-I had a look at dma bindings and they seem to follow your suggestion
-(David's initial suggestion), I will try to follow it as well (but first
-topology bindings have to be finalized).
-
-> > If we add the property(ies) in the cci node, at least the changes become
-> > self contained and the mechanism through which we link a resource to a
-> > "master" becomes standard (phandle). All bits of info become available
-> > through the cci node, but again, it is a choice to be made, I do not
-> > know what's the best approach.
-> > 
-> > > It may be that Dave Martin's suggestion of using basically a dma-ranges
-> > > type property with a phandle would be the correct interface. I've not
-> > > thought enough about it yet to really get my head around it.
-> > 
-> > What I really really want to avoid is implementing something for CCI and then
-> > realize that it does not work for other components with similar requirements.
-> > With Mark and Dave Martin we tried to come up with a solution that can be
-> > generalized, that was the main goal.
+> The ones that I find missing but actually used are:
 > 
-> I still think we don't describe that fact that CCI really is a bus, and
-> controlling the ports on there is related to attaching and detaching
-> devices on that bus.
+> 	"arm,cortex-a53"
+> 	"arm,cortex-m0"
+> 	"arm,cortex-m0+"
+> 	"arm,cortex-m1"
+> 	"arm,cortex-m3"
+> 	"arm,cortex-m4"
+> 	"arm,cortex-r4"
+> 	"arm,cortex-r5"
+> 	"arm,cortex-r7"
+> 	"marvell,pj4"
+> 	"qcom,scorpion"
+> 	"qcom,krait"
+
+Ok, I will add them, but we should probably enforce a policy regulating
+how this binding should be updated in the future.
+
 > 
-> That could allow for a more general abstraction, but I'm still not clear
-> on how it would be described, and whether it would be a step too far...
+> There are also a number of faraday cores that we don't support in
+> Linux (fa626, fa626te, fa726te, ...), not sure if we should attempt to
+> list them all here. The only one that is being worked on at the moment
+> is based on fa526.
 
-I think CCI should be described as a bus, but this does not change much
-wrt its ports programming interfaces. It can be seen as a device in that
-respect, and the problem we are facing would be indentical with an IP
-block whose programming address space is allocated per-bus-master (ie
-every bus master using that IP has a specific programming address range).
+That's why it is the only one in the list, not sure what we should do either.
 
-I might be wrong, but I have a feeling the two problems should be tackled
-separately.
+> There are also a number of 64 bit cores that other companies have announced,
+> but I'm not sure if the names are final yet.
 
-Cheers,
+On a side note, as far as the in-kernel dts updates are concerned, how would
+you like me to split them ? per-mach ? per-SoC ?
+
+Thank you very much,
 Lorenzo
