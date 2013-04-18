@@ -1,72 +1,60 @@
-From: Padma Venkat <padma.kvr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Regarding dtc+cpp support
-Date: Thu, 18 Apr 2013 14:42:18 +0530
-Message-ID: <CAAgF-BeFKxK4=myPjHHWt9VxsyYQFen8c5c_9mQkbPo3n1oqJw@mail.gmail.com>
+From: =?ISO-8859-1?Q?Vincent_Stehl=E9?= <v-stehle@ti.com>
+Subject: Re: [PATCHv2] ARM:dts:omap4-panda:Update the LED support for the
+ panda DTS
+Date: Thu, 18 Apr 2013 11:30:00 +0200
+Message-ID: <516FBD18.3060501@ti.com>
+References: <1366229760-4808-1-git-send-email-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1366229760-4808-1-git-send-email-dmurphy@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: linux@arm.linux.org.uk, b-cousson@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On 04/17/2013 10:16 PM, Dan Murphy wrote:
+> The GPIO for LED D1 on the omap4-panda a1-a3 rev and the omap4-panda-es
+> are different.
+(..)
+> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dt=
+s/omap4-panda-common.dtsi
+> index 03bd60d..0c48f6b 100644
+> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
+> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+(..)
+> @@ -135,6 +136,25 @@
+>  			0xf0 0x118     /* i2c4_sda PULLUP | INPUTENABLE | MODE0 */
+>  		>;
+>  	};
+> +
+> +	led_gpio_pins: pinmux_leds_pins {
+> +		pinctrl-single,pins =3D <
+> +		>;
+> +	};
+> +};
 
-I am trying to add a header file for samsung audio subsystem clk
-definitions, which can be used in kernel and dt files.
-I applied following patches posted by you in my working tree.
+Hi,
 
+FYI, there was a recent discussion precisely on this topic, where Tomy
+suggested to remove the empty section:
+http://marc.info/?l=3Dlinux-omap&m=3D136546635409232&w=3D2
 
-[1/7] kbuild: create an "include chroot" for DT bindings
-[2/7] kbuild: fixdep: support concatenated dep files
-[3/7] kbuild: cmd_dtc_cpp: extract deps from both gcc -E and dtc
-[4/7] kbuild: always run gcc -E on *.dts, remove cmd_dtc_cpp
-[5/7] ARM: dt: add header to define GPIO flags
-[6/7] ARM: dt: add header to define IRQ flags
-[7/7] ARM: dt: create a DT header for the GIC
+Apart from that, I just tested your patch on top of Tomy's
+omap-for-v3.10/dt branch and it is working fine for me on PandaBoards
+EA3, A4 and ES.
 
-I created a header file in
-arch/arm/boot/dts/include/clk/samsung-audss-clk.h and I included this
-header in driver and dtsi files
+Tested-by: Vincent Stehl=E9 <v-stehle@ti.com>
 
-Please see the code snippet in dtsi below.
+Best regards,
 
-#include <dt-bindings/clk/samsung-audss-clk.h>
-/include/ "skeleton.dtsi"
-/include/ "exynos5250-pinctrl.dtsi
-
-In driver it is compiling successfully but in dtsi files I am getting
-the follwing compilation error.
-
-Error: arch/arm/boot/dts/exynos5250.dtsi:21.1-9 syntax error
-FATAL ERROR: Unable to parse input tree
-make[1]: *** [arch/arm/boot/dts/exynos5250-arndale.dtb] Error 1
-make[1]: *** Waiting for unfinished jobs....
-  DTC     arch/arm/boot/dts/exynos5250-snow.dtb
-Error: arch/arm/boot/dts/exynos5250.dtsi:21.1-9 syntax error
-FATAL ERROR: Unable to parse input tree
-make[1]: *** [arch/arm/boot/dts/exynos5250-smdk5250.dtb] Error 1
-Error: arch/arm/boot/dts/exynos5250.dtsi:21.1-9 syntax error
-FATAL ERROR: Unable to parse input tree
-make[1]: *** [arch/arm/boot/dts/exynos5250-snow.dtb] Error 1
-make: *** [dtbs] Error 2
-make: *** Waiting for unfinished jobs....
-
-where "#include <dt-bindings/clk/samsung-audss-clk.h>" is the 21st
-line in the dtsi file.
-
-Please let me know if any extra patches are required to solve this
-compilation error?
-
-Best Regards
-Padma
+V.
