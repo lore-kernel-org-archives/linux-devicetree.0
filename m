@@ -1,39 +1,54 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [RFC 06/10] video: ARM CLCD: Add DT & CDF support
-Date: Thu, 18 Apr 2013 11:24:44 +0100
-Message-ID: <20130418102444.GL14496@n2100.arm.linux.org.uk>
-References: <1366211842-21497-1-git-send-email-pawel.moll@arm.com> <1366211842-21497-7-git-send-email-pawel.moll@arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH -next] spi: omap2-mcspi: fix error return code in
+ omap2_mcspi_probe()
+Date: Thu, 18 Apr 2013 12:07:40 +0100
+Message-ID: <20130418110740.GC13687@opensource.wolfsonmicro.com>
+References: <CAPgLHd8qt3o285vskc-JzNOh0Yorehgxy+SEUoJ_kccy3cjcMQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ZQ93ZA/51YEIDw4/"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1366211842-21497-7-git-send-email-pawel.moll@arm.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Pawel Moll <pawel.moll@arm.com>
-Cc: linux-fbdev@vger.kernel.org, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linus Walleij <linus.walleij@linaro.org>
+In-Reply-To: <CAPgLHd8qt3o285vskc-JzNOh0Yorehgxy+SEUoJ_kccy3cjcMQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wei Yongjun <weiyj.lk@gmail.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 17, 2013 at 04:17:18PM +0100, Pawel Moll wrote:
-> +#if defined(CONFIG_OF)
-> +static int clcdfb_of_get_tft_parallel_panel(struct clcd_panel *panel,
-> +		struct display_entity_interface_params *params)
-> +{
-> +	int r = params->p.tft_parallel.r_bits;
-> +	int g = params->p.tft_parallel.g_bits;
-> +	int b = params->p.tft_parallel.b_bits;
-> +
-> +	/* Bypass pixel clock divider, data output on the falling edge */
-> +	panel->tim2 = TIM2_BCD | TIM2_IPC;
-> +
-> +	/* TFT display, vert. comp. interrupt at the start of the back porch */
-> +	panel->cntl |= CNTL_LCDTFT | CNTL_LCDVCOMP(1);
-> +
-> +	if (params->p.tft_parallel.r_b_swapped)
-> +		panel->cntl |= CNTL_BGR;
 
-NAK.  Do not set this explicitly.  Note the driver talks about this being
-"the old way" - this should not be used with the panel capabilities - and
-in fact it will be overwritten.
+--ZQ93ZA/51YEIDw4/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Instead, you need to encode this into the capabilities by masking the
-below with CLCD_CAP_RGB or CLCD_CAP_BGR depending on the ordering.
+On Thu, Apr 18, 2013 at 11:14:59AM +0800, Wei Yongjun wrote:
+> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+>=20
+> Fix to return a negative error code from the error handling
+> case instead of 0, as returned elsewhere in this function.
+
+Applied, thanks.
+
+--ZQ93ZA/51YEIDw4/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRb9O4AAoJELSic+t+oim9ZIoP/jlWNK2J3IybzIohiYYiauMa
+n2wFFG7n0aL1kP2ZoUFV23MUSHHL8toca77E+BOXSuSQ9O/louh7G4I3KiVJ4OSR
+PkB2sSXwo2Zaqtwv1HaHzxcKD8KSxqwtFaVq1Xg5PRcjEQfSxj+jnzay4/LhJwQH
+pkZIji5fMmt4Q2DtarHloGAyHIzriXTTEh68tsIkUZ4GC2+s2KWbnzRwKxIkDW30
+dnDqpJ3BTteTZhu8rLXQ+Io7MF0Q3Y+NT8ciSG4hZI6Ln6tJOTwswiHNVokCFmas
+fKOaSr5E+3YBS5EV4r08e59TjszJtoRVte/JWPsi2WiMV2fmCfDtqJ/fAnW4H96Y
+7eoDzSFIL3ROM4dZw12psiubbwT9w/s8S7WAKYYj6Byhryu0xTW8z9UzlxLnEiYV
+ujofQ4jl343BUQgNMI6PR8QIo3FOz9rCJ2u/M9hBzlQnUBTZU4ugZ4MCwYuXl8n4
+cVp8b65DlmdLY1qTv5SpxYLV8IKwjtXiJETAwDfKOlyGo6KK+XuVbYDXbfYSGQek
+eDvX+mzbiOtSWmRBABjb4ndbUc/15gJNzcDm+of3XcTQrUwig/0opd0U36KcuxIe
+35qABPXwjSe5XkmcWwZd1cmE9ZS0R5yzOA59hpF4fYrFMokS42C87mwp9A6eRZhG
+Mb+1jjLNK6Vx0SgF8Tvn
+=1Bvx
+-----END PGP SIGNATURE-----
+
+--ZQ93ZA/51YEIDw4/--
