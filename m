@@ -1,54 +1,43 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH -next] spi: omap2-mcspi: fix error return code in
- omap2_mcspi_probe()
-Date: Thu, 18 Apr 2013 12:07:40 +0100
-Message-ID: <20130418110740.GC13687@opensource.wolfsonmicro.com>
-References: <CAPgLHd8qt3o285vskc-JzNOh0Yorehgxy+SEUoJ_kccy3cjcMQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ZQ93ZA/51YEIDw4/"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPgLHd8qt3o285vskc-JzNOh0Yorehgxy+SEUoJ_kccy3cjcMQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH 5/5] ARM: dts: Update G2D documentation for clock entries
+Date: Thu, 18 Apr 2013 16:45:19 +0530
+Message-ID: <1366283719-9615-5-git-send-email-sachin.kamat@linaro.org>
+References: <1366283719-9615-1-git-send-email-sachin.kamat@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1366283719-9615-1-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, sachin.kamat@linaro.org, patches@linaro.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+Added clock entry definitions to G2D bindings document.
 
---ZQ93ZA/51YEIDw4/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org
+---
+ .../devicetree/bindings/gpu/samsung-g2d.txt        |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-On Thu, Apr 18, 2013 at 11:14:59AM +0800, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->=20
-> Fix to return a negative error code from the error handling
-> case instead of 0, as returned elsewhere in this function.
-
-Applied, thanks.
-
---ZQ93ZA/51YEIDw4/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRb9O4AAoJELSic+t+oim9ZIoP/jlWNK2J3IybzIohiYYiauMa
-n2wFFG7n0aL1kP2ZoUFV23MUSHHL8toca77E+BOXSuSQ9O/louh7G4I3KiVJ4OSR
-PkB2sSXwo2Zaqtwv1HaHzxcKD8KSxqwtFaVq1Xg5PRcjEQfSxj+jnzay4/LhJwQH
-pkZIji5fMmt4Q2DtarHloGAyHIzriXTTEh68tsIkUZ4GC2+s2KWbnzRwKxIkDW30
-dnDqpJ3BTteTZhu8rLXQ+Io7MF0Q3Y+NT8ciSG4hZI6Ln6tJOTwswiHNVokCFmas
-fKOaSr5E+3YBS5EV4r08e59TjszJtoRVte/JWPsi2WiMV2fmCfDtqJ/fAnW4H96Y
-7eoDzSFIL3ROM4dZw12psiubbwT9w/s8S7WAKYYj6Byhryu0xTW8z9UzlxLnEiYV
-ujofQ4jl343BUQgNMI6PR8QIo3FOz9rCJ2u/M9hBzlQnUBTZU4ugZ4MCwYuXl8n4
-cVp8b65DlmdLY1qTv5SpxYLV8IKwjtXiJETAwDfKOlyGo6KK+XuVbYDXbfYSGQek
-eDvX+mzbiOtSWmRBABjb4ndbUc/15gJNzcDm+of3XcTQrUwig/0opd0U36KcuxIe
-35qABPXwjSe5XkmcWwZd1cmE9ZS0R5yzOA59hpF4fYrFMokS42C87mwp9A6eRZhG
-Mb+1jjLNK6Vx0SgF8Tvn
-=1Bvx
------END PGP SIGNATURE-----
-
---ZQ93ZA/51YEIDw4/--
+diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+index 2b14a94..3f454ff 100644
+--- a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
++++ b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+@@ -10,11 +10,16 @@ Required properties:
+ 	  mapped region.
+ 
+   - interrupts : G2D interrupt number to the CPU.
++  - clocks : from common clock binding: handle to G2D clocks.
++  - clock-names : from common clock binding: must contain "sclk_fimg2d" and
++		  "fimg2d", corresponding to entries in the clocks property.
+ 
+ Example:
+ 	g2d@12800000 {
+ 		compatible = "samsung,s5pv210-g2d";
+ 		reg = <0x12800000 0x1000>;
+ 		interrupts = <0 89 0>;
++		clocks = <&clock 177>, <&clock 277>;
++		clock-names = "sclk_fimg2d", "fimg2d";
+ 		status = "disabled";
+ 	};
+-- 
+1.7.9.5
