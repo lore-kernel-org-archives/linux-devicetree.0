@@ -1,158 +1,75 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH 2/3] ARM: mxs: cfa10049: Switch bus i2c1 to bitbanging
-Date: Thu, 18 Apr 2013 17:38:55 +0200
-Message-ID: <1366299536-18353-3-git-send-email-alexandre.belloni@free-electrons.com>
-References: <1366299536-18353-1-git-send-email-alexandre.belloni@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1366299536-18353-1-git-send-email-alexandre.belloni@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>, Grant Likely <grant.likely@secretlab.ca>
-Cc: jimwall@q.com, brian@crystalfontz.com, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Jonathan Cameron <jic23@cam.ac.uk>, Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH RESEND v5 1/2] dma: imx-dma: Add oftree support
+Date: Thu, 18 Apr 2013 18:02:08 +0200
+Message-ID: <20130418160208.GB4307@pengutronix.de>
+References: <1366291298-30004-1-git-send-email-mpa@pengutronix.de>
+ <1366291298-30004-2-git-send-email-mpa@pengutronix.de>
+ <51700DDD.1060801@metafoo.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <51700DDD.1060801-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
+On Thu, Apr 18, 2013 at 05:14:37PM +0200, Lars-Peter Clausen wrote:
+> Hi,
+> 
+> On 04/18/2013 03:21 PM, Markus Pargmann wrote:
+> [...]
+> > +static struct dma_chan *imxdma_xlate(struct of_phandle_args *dma_spec,
+> > +						struct of_dma *ofdma)
+> > +{
+> > +	int count = dma_spec->args_count;
+> > +	struct imxdma_engine *imxdma = ofdma->of_dma_data;
+> > +	struct imxdma_filter_data fdata = {
+> > +		.imxdma = imxdma,
+> > +		.request = *(unsigned *)&dma_spec->args[0],
+> 
+> This cast looks rather bogus and shouldn't be necessary.
 
-The ADCs connected to this bus have been experiencing some timeout
-issues when using the iMX28 i2c controller. Switching back to bitbanging
-solves this.
+Ah right, I was assuming "args" is void*.
 
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- arch/arm/boot/dts/imx28-cfa10049.dts |  108 ++++++++++++++++++++--------------
- 1 file changed, 65 insertions(+), 43 deletions(-)
+> 
+> > +	};
+> > +
+> > +	if (count != 1)
+> > +		return NULL;
+> 
+> I think you need to check count before you access dma_spec->args[0]
 
-diff --git a/arch/arm/boot/dts/imx28-cfa10049.dts b/arch/arm/boot/dts/imx28-cfa10049.dts
-index 79a2007..a333dbf 100644
---- a/arch/arm/boot/dts/imx28-cfa10049.dts
-+++ b/arch/arm/boot/dts/imx28-cfa10049.dts
-@@ -138,6 +138,17 @@
- 					fsl,voltage = <1>;
- 					fsl,pull-up = <0>; /* 0 will enable the keeper */
- 				};
-+
-+				i2c1_pins_cfa10049: i2c1@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						0x3103 /* MX28_PAD_PWM0__GPIO */
-+						0x3113 /* MX28_PAD_PWM1__I2C1_SDA */
-+					>;
-+					fsl,drive-strength = <1>;
-+					fsl,voltage = <1>;
-+					fsl,pull-up = <1>;
-+				};
- 			};
- 
- 			lcdif@80030000 {
-@@ -155,49 +166,6 @@
- 				status = "okay";
- 			};
- 
--			i2c1: i2c@8005a000 {
--				pinctrl-names = "default";
--				pinctrl-0 = <&i2c1_pins_a>;
--				status = "okay";
--			};
--
--			i2cmux {
--				compatible = "i2c-mux-gpio";
--				#address-cells = <1>;
--				#size-cells = <0>;
--				mux-gpios = <&gpio1 22 0 &gpio1 23 0>;
--				i2c-parent = <&i2c1>;
--
--				i2c@0 {
--					reg = <0>;
--				};
--
--				i2c@1 {
--					reg = <1>;
--				};
--
--				i2c@2 {
--					reg = <2>;
--				};
--
--				i2c@3 {
--					reg = <3>;
--					#address-cells = <1>;
--					#size-cells = <0>;
--
--					pca9555: pca9555@20 {
--						compatible = "nxp,pca9555";
--						interrupt-parent = <&gpio2>;
--						interrupts = <19 0x2>;
--						gpio-controller;
--						#gpio-cells = <2>;
--						interrupt-controller;
--						#interrupt-cells = <2>;
--						reg = <0x20>;
--					};
--				};
--			};
--
- 			usbphy1: usbphy@8007e000 {
- 				status = "okay";
- 			};
-@@ -322,6 +290,60 @@
- 		rotary-encoder,relative-axis;
- 	};
- 
-+	i2c1gpio: i2c@0 {
-+		compatible = "i2c-gpio";
-+		pinctrl-0 = <&i2c1_pins_cfa10049>;
-+		pinctrl-names = "default";
-+		gpios = <
-+			&gpio3 17 0 /* sda */
-+			&gpio3 16 0 /* scl */
-+			 >;
-+		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
-+	};
-+
-+	i2cmux {
-+		compatible = "i2c-mux-gpio";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		mux-gpios = <&gpio1 22 0 &gpio1 23 0>;
-+		i2c-parent = <&i2c1gpio>;
-+
-+		i2c@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c@1 {
-+			reg = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c@2 {
-+			reg = <2>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		i2c@3 {
-+			reg = <3>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			pca9555: pca9555@20 {
-+				compatible = "nxp,pca9555";
-+				interrupt-parent = <&gpio2>;
-+				interrupts = <19 0x2>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				reg = <0x20>;
-+			};
-+		};
-+	};
-+
- 	backlight {
- 		compatible = "pwm-backlight";
- 		pwms = <&pwm 3 5000000>;
+dma_spec->args is actually a static array of size MAX_PHANDLE_ARGS.
+However it is probably cleaner after the check, so I changed both.
+
+Thanks,
+
+Markus
+
+> 
+> > +
+> > +	return dma_request_channel(imxdma->dma_device.cap_mask,
+> > +					imxdma_filter_fn, &fdata);
+> > +}
+> > +
+> [...]
+> 
+> 
+
 -- 
-1.7.10.4
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
