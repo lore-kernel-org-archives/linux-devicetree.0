@@ -1,63 +1,36 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH 1/2] ARM: dts: OMAP5: add PWM capability to timer nodes
- missing it
-Date: Wed, 17 Apr 2013 18:56:06 -0500
-Message-ID: <516F3696.9080008@ti.com>
-References: <1366240995-53538-1-git-send-email-s-anna@ti.com>
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Subject: [PATCH -next] spi: omap2-mcspi: fix error return code in omap2_mcspi_probe()
+Date: Thu, 18 Apr 2013 11:14:59 +0800
+Message-ID: <CAPgLHd8qt3o285vskc-JzNOh0Yorehgxy+SEUoJ_kccy3cjcMQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1366240995-53538-1-git-send-email-s-anna@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, device-tree <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: grant.likely@secretlab.ca, broonie@kernel.org, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-On 04/17/2013 06:23 PM, Suman Anna wrote:
-> OMAP5 has 6 timers (GPTimers 5, 6, 8 to 11) that are capable of PWM.
-> The PWM capability property is missing from the node definitions of
-> couple of timers, and this has been fixed.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
->  arch/arm/boot/dts/omap5.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-> index 790bb2a..0d155f5 100644
-> --- a/arch/arm/boot/dts/omap5.dtsi
-> +++ b/arch/arm/boot/dts/omap5.dtsi
-> @@ -422,6 +422,7 @@
->  			interrupts = <0 41 0x4>;
->  			ti,hwmods = "timer5";
->  			ti,timer-dsp;
-> +			ti,timer-pwm;
->  		};
->  
->  		timer6: timer@4013a000 {
-> @@ -458,6 +459,7 @@
->  			reg = <0x4803e000 0x80>;
->  			interrupts = <0 45 0x4>;
->  			ti,hwmods = "timer9";
-> +			ti,timer-pwm;
->  		};
->  
->  		timer10: timer@48086000 {
-> @@ -465,6 +467,7 @@
->  			reg = <0x48086000 0x80>;
->  			interrupts = <0 46 0x4>;
->  			ti,hwmods = "timer10";
-> +			ti,timer-pwm;
->  		};
->  
->  		timer11: timer@48088000 {
+Fix to return a negative error code from the error handling
+case instead of 0, as returned elsewhere in this function.
 
-Make sure you copy the linux-arm and device-tree mailing lists.
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+---
+ drivers/spi/spi-omap2-mcspi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Acked-by: Jon Hunter <jon-hunter@ti.com>
-
-Thanks!
-Jon
-
+diff --git a/drivers/spi/spi-omap2-mcspi.c b/drivers/spi/spi-omap2-mcspi.c
+index 893c3d7..c31a1c0 100644
+--- a/drivers/spi/spi-omap2-mcspi.c
++++ b/drivers/spi/spi-omap2-mcspi.c
+@@ -1277,7 +1277,8 @@ static int omap2_mcspi_probe(struct platform_device *pdev)
+ 	pm_runtime_set_autosuspend_delay(&pdev->dev, SPI_AUTOSUSPEND_TIMEOUT);
+ 	pm_runtime_enable(&pdev->dev);
+ 
+-	if (status || omap2_mcspi_master_setup(mcspi) < 0)
++	status = omap2_mcspi_master_setup(mcspi);
++	if (status < 0)
+ 		goto disable_pm;
+ 
+ 	status = spi_register_master(master);
