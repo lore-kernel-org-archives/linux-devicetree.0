@@ -1,11 +1,17 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v4 00/10] ASoC: fsl-ssi: ac97-slave support
-Date: Thu, 18 Apr 2013 14:33:34 +0200
-Message-ID: <1366288424-7660-1-git-send-email-mpa@pengutronix.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [RFC PATCH 2/2] ARM: DT: kernel: DT cpu node bindings update
+Date: Thu, 18 Apr 2013 13:40:21 +0100
+Message-ID: <20130418124021.DE4C63E118C@localhost>
+References: <1366042402-8987-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1366042402-8987-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <516C544A.4090107@wwwdotorg.org>
+ <20130417091457.GB5012@e106331-lin.cambridge.arm.com>
+ <516EBC66.20508@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <516EBC66.20508-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,54 +22,35 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel@lists>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, ".infradead.org"@ozlabs.org, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, 17 Apr 2013 09:14:46 -0600, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 04/17/2013 03:14 AM, Mark Rutland wrote:
+> > Hi Stephen,
+> > 
+> >>> +	- enable-method
+> >>> +		Usage: required on ARM 64-bit systems, optional on ARM 32-bit
+> >>> +		       systems
+> >>> +		Value type: <string>
+> >>> +		Definition: On ARM 64-bit systems must be "spin-table" [1].
+> >>
+> >> Can that be an integer instead? with dtc+cpp support, that shouldn't
+> >> hurt the eyes too much any more.
+> > 
+> > The "enable-method" property is described as a stringlist by ePAPR, and is
+> > currently in use on arm64 as such. It *must* remain a string(list) for arm64.
+> > 
+> > Having it as an integer for arm is only going to cause us additional work,
+> > makes it impossible to share a common dt between 64bit and 32bit, and goes
+> > against the standard. I think it should be a stringlist for arm.
+> 
+> OK, that's a great reason for this case.
+> 
+> I hope we don't introduce any more standards that use strings, but that
+> may just be my personal preference...
 
-This series adds DT support for phycore-ac97. It is now based on the pcm dma
-cleanups from Lars. Beside ac97 support, the series adds fsl-ssi imx-pcm-fiq
-and generic DMA binding handling.
+We've got lots of bindings using strings like this. I don't really see any problem with it.
 
-Regards,
-
-Markus
-
-Changes in v4:
- - phycore-ac97 uses the iomux functions based on audmux phandle now.
- - fsl-ssi imx-pcm-fiq got some new comments about problems with imx-ssi and
-   incompatible codecs
-
-Changes in v3:
- - Rebased onto pcm dma cleanup patches
- - A lot of cleanups for the fsl-ssi ac97 integration
- - Some small changes which are listed in the notes of the patches.
-
-Markus Pargmann (10):
-      ASoC: phycore-ac97: Add DT support
-      ASoC: imx-pcm-dma: DT support
-      ASoC: imx-pcm-fiq: Introduce pcm-fiq-params
-      ASoC: fsl-ssi: Add support for imx-pcm-fiq
-      ASoC: fsl-ssi: Use generic DMA bindings if possible
-      ARM: imx: Export ac97 reset functions
-      ASoC: fsl-ssi: imx ac97 support
-      ASoC: fsl: Kconfig: Use fsl-ssi for phycore-ac97
-      ASoC: fsl: Move fsl-ssi binding doc to sound/
-      ASoC: fsl: Update fsl-ssi binding doc
-
- Documentation/devicetree/bindings/{powerpc/fsl/ssi.txt => sound/fsl,ssi.txt} |  10 ++
- Documentation/devicetree/bindings/sound/phytec,phycore-ac97.txt              |  14 ++
- arch/arm/mach-imx/mach-pca100.c                                              |   7 +-
- arch/arm/mach-imx/mach-pcm043.c                                              |   7 +-
- sound/soc/fsl/Kconfig                                                        |   2 +-
- sound/soc/fsl/fsl_ssi.c                                                      | 512 ++++++++++++++++++++++++++++++++++++++++++++++++----------
- sound/soc/fsl/imx-pcm-dma.c                                                  |   4 +-
- sound/soc/fsl/imx-pcm-fiq.c                                                  |  16 +-
- sound/soc/fsl/imx-pcm.h                                                      |   9 ++
- sound/soc/fsl/imx-ssi.c                                                      |   7 +-
- sound/soc/fsl/imx-ssi.h                                                      |   1 +
- sound/soc/fsl/phycore-ac97.c                                                 | 166 ++++++++++++++++---
- 12 files changed, 633 insertions(+), 122 deletions(-)
- rename Documentation/devicetree/bindings/{powerpc/fsl/ssi.txt => sound/fsl,ssi.txt} (88%)
- create mode 100644 Documentation/devicetree/bindings/sound/phytec,phycore-ac97.txt
+g.
