@@ -1,60 +1,39 @@
-From: =?ISO-8859-1?Q?Vincent_Stehl=E9?= <v-stehle@ti.com>
-Subject: Re: [PATCHv2] ARM:dts:omap4-panda:Update the LED support for the
- panda DTS
-Date: Thu, 18 Apr 2013 11:30:00 +0200
-Message-ID: <516FBD18.3060501@ti.com>
-References: <1366229760-4808-1-git-send-email-dmurphy@ti.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [RFC 06/10] video: ARM CLCD: Add DT & CDF support
+Date: Thu, 18 Apr 2013 11:24:44 +0100
+Message-ID: <20130418102444.GL14496@n2100.arm.linux.org.uk>
+References: <1366211842-21497-1-git-send-email-pawel.moll@arm.com> <1366211842-21497-7-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1366229760-4808-1-git-send-email-dmurphy@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: linux@arm.linux.org.uk, b-cousson@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1366211842-21497-7-git-send-email-pawel.moll@arm.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Pawel Moll <pawel.moll@arm.com>
+Cc: linux-fbdev@vger.kernel.org, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/17/2013 10:16 PM, Dan Murphy wrote:
-> The GPIO for LED D1 on the omap4-panda a1-a3 rev and the omap4-panda-es
-> are different.
-(..)
-> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dt=
-s/omap4-panda-common.dtsi
-> index 03bd60d..0c48f6b 100644
-> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
-> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
-(..)
-> @@ -135,6 +136,25 @@
->  			0xf0 0x118     /* i2c4_sda PULLUP | INPUTENABLE | MODE0 */
->  		>;
->  	};
+On Wed, Apr 17, 2013 at 04:17:18PM +0100, Pawel Moll wrote:
+> +#if defined(CONFIG_OF)
+> +static int clcdfb_of_get_tft_parallel_panel(struct clcd_panel *panel,
+> +		struct display_entity_interface_params *params)
+> +{
+> +	int r = params->p.tft_parallel.r_bits;
+> +	int g = params->p.tft_parallel.g_bits;
+> +	int b = params->p.tft_parallel.b_bits;
 > +
-> +	led_gpio_pins: pinmux_leds_pins {
-> +		pinctrl-single,pins =3D <
-> +		>;
-> +	};
-> +};
+> +	/* Bypass pixel clock divider, data output on the falling edge */
+> +	panel->tim2 = TIM2_BCD | TIM2_IPC;
+> +
+> +	/* TFT display, vert. comp. interrupt at the start of the back porch */
+> +	panel->cntl |= CNTL_LCDTFT | CNTL_LCDVCOMP(1);
+> +
+> +	if (params->p.tft_parallel.r_b_swapped)
+> +		panel->cntl |= CNTL_BGR;
 
-Hi,
+NAK.  Do not set this explicitly.  Note the driver talks about this being
+"the old way" - this should not be used with the panel capabilities - and
+in fact it will be overwritten.
 
-FYI, there was a recent discussion precisely on this topic, where Tomy
-suggested to remove the empty section:
-http://marc.info/?l=3Dlinux-omap&m=3D136546635409232&w=3D2
-
-Apart from that, I just tested your patch on top of Tomy's
-omap-for-v3.10/dt branch and it is working fine for me on PandaBoards
-EA3, A4 and ES.
-
-Tested-by: Vincent Stehl=E9 <v-stehle@ti.com>
-
-Best regards,
-
-V.
+Instead, you need to encode this into the capabilities by masking the
+below with CLCD_CAP_RGB or CLCD_CAP_BGR depending on the ordering.
