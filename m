@@ -1,77 +1,65 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v2 2/2] ARM: dts: omap3-beagle-xm: Add USB host supprot for Rev. Ax/Bx
-Date: Thu, 18 Apr 2013 14:44:34 +0300
-Message-ID: <1366285474-19967-2-git-send-email-rogerq@ti.com>
-References: <1366285474-19967-1-git-send-email-rogerq@ti.com>
+From: Javier Martinez Canillas <martinez.javier@gmail.com>
+Subject: Re: [PATCH 1/1] of/irq: store IRQ trigger/level in struct resource flags
+Date: Thu, 18 Apr 2013 14:17:32 +0200
+Message-ID: <CAAwP0s2pvCgQALJb_XcNo3HE_zS9mOjB-ZnGR4yPYR1-ESpaVg@mail.gmail.com>
+References: <1365148088-11175-1-git-send-email-javier.martinez@collabora.co.uk>
+ <51633F26.7000400@gmail.com> <516341AF.7030207@wwwdotorg.org>
+ <51634B1F.4030408@collabora.co.uk> <516380D7.3060000@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1366285474-19967-1-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: b-cousson@ti.com, tony@atomide.com
-Cc: robertcnelson@gmail.com, grinberg@compulab.co.il, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <516380D7.3060000@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Stephen Warren <swarren@wwwdotorg.org>, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, linux-omap <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Rev. Ax/Bx boards have reversed polarity for USBHOST_PWR_ENable
-signal when compared to Rev. C boards.
+On Tue, Apr 9, 2013 at 4:45 AM, Rob Herring <robherring2@gmail.com> wrote:
+> On 04/08/2013 05:56 PM, Javier Martinez Canillas wrote:
+>> On 04/09/2013 12:16 AM, Stephen Warren wrote:
+>>> On 04/08/2013 04:05 PM, Rob Herring wrote:
+>>>> On 04/05/2013 02:48 AM, Javier Martinez Canillas wrote:
+>>>>> According to Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>>>>> the "#interrupt-cells" property of an "interrupt-controller" is used
+>>>>> to define the number of cells needed to specify a single interrupt.
+>>> ...
+>>>>> But the type is never returned so it can't be saved on the IRQ struct
+>>>>> resource flags member.
+>>>>>
+>>>>> This means that drivers that need the IRQ type/level flags defined in
+>>>>> the DT won't be able to get it.
+>>>>
+>>>> But the interrupt controllers that need the information should be able
+>>>> to get to it via irqd_get_trigger_type. What problem exactly are you
+>>>> trying to fix? What driver would use this?
+>>>
+>>> FYI, that is indeed what I did in sound/soc/codecs/wm8903.c. Thinking
+>>> back, I'm not sure if that was the right thing or whether I should have
+>>> sent this same patch:-)
+>>>
+>>
+>> Hi Stephen,
+>>
+>> I'm glad you agree :-)
+>>
+>> I could change drivers/net/ethernet/smsc/smsc911x.c to get the type flags for
+>> the IRQ with irqd_get_trigger_type() but I prefer $subject because:
+>
+> irqd_get_trigger_type probably is not meant for outside of irqchips.
+> Creating an irq_get_irq_type function which takes an irq number would be
+> the right function as that does not expose struct irq_data.
+>
 
-We create a new dts file for Ax/Bx boards.
+Hi Rob,
 
-Also update model and compatible flags for Rev. C board.
+I sent a patch-set a few days ago that adds an irq_get_irq_type()
+function [1] as you suggested and this function is used on the
+smsc911x driver probe function to get the edge/level flags [2].
 
-CC: Beno=C3=AEt Cousson <b-cousson@ti.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- arch/arm/boot/dts/omap3-beagle-xm-ab.dts |   19 +++++++++++++++++++
- arch/arm/boot/dts/omap3-beagle-xm.dts    |    4 ++--
- 2 files changed, 21 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm/boot/dts/omap3-beagle-xm-ab.dts
+It would be great if I can get your feedback on this.
 
-diff --git a/arch/arm/boot/dts/omap3-beagle-xm-ab.dts b/arch/arm/boot/d=
-ts/omap3-beagle-xm-ab.dts
-new file mode 100644
-index 0000000..041b40e
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-beagle-xm-ab.dts
-@@ -0,0 +1,19 @@
-+/*
-+ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.c=
-om/
-+ *
-+ * This program is free software; you can redistribute it and/or modif=
-y
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/include/ "omap3-beagle-xm.dts"
-+
-+/ {
-+        model =3D "TI OMAP3 BeagleBoard xM Rev: Ax/Bx";
-+        compatible =3D "ti,omap3-beagle-xm-ab", "ti,omap3-beagle", "ti=
-,omap3";
-+};
-+
-+/* On Rev A/B USBHOST_PWR_EN is active high */
-+&hsusb2_power {
-+	enable-active-high;
-+};
-diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/=
-omap3-beagle-xm.dts
-index 04376a6..8a46dc5 100644
---- a/arch/arm/boot/dts/omap3-beagle-xm.dts
-+++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
-@@ -10,8 +10,8 @@
- /include/ "omap36xx.dtsi"
-=20
- / {
--	model =3D "TI OMAP3 BeagleBoard xM";
--	compatible =3D "ti,omap3-beagle-xm, ti,omap3-beagle", "ti,omap3";
-+	model =3D "TI OMAP3 BeagleBoard xM Rev: C";
-+	compatible =3D "ti,omap3-beagle-xm-c", "ti,omap3-beagle", "ti,omap3";
-=20
- 	cpus {
- 		cpu@0 {
---=20
-1.7.4.1
+Thanks a lot and best regards,
+Javier
+
+[1]: http://permalink.gmane.org/gmane.linux.ports.arm.omap/97117
+[2]: http://permalink.gmane.org/gmane.linux.network/265587
