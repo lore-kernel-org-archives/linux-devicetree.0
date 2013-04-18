@@ -1,85 +1,81 @@
-From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
-Subject: Re: Regarding dtc+cpp support
-Date: Thu, 18 Apr 2013 09:49:26 -0500
-Message-ID: <517007F6.3010107@ti.com>
-References: <CAAgF-BeFKxK4=myPjHHWt9VxsyYQFen8c5c_9mQkbPo3n1oqJw@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 02/10] ASoC: imx-pcm-dma: DT support
+Date: Thu, 18 Apr 2013 15:56:02 +0100
+Message-ID: <20130418145602.GL13687@opensource.wolfsonmicro.com>
+References: <1366288424-7660-1-git-send-email-mpa@pengutronix.de>
+ <1366288424-7660-3-git-send-email-mpa@pengutronix.de>
+ <5170069F.4030200@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAAgF-BeFKxK4=myPjHHWt9VxsyYQFen8c5c_9mQkbPo3n1oqJw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Padma Venkat <padma.kvr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============8408910823354031386=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <5170069F.4030200@metafoo.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Timur Tabi <timur@tabi.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Markus Pargmann <mpa@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 04/18/2013 04:12 AM, Padma Venkat wrote:
-> Hi Stephen,
-> 
-> I am trying to add a header file for samsung audio subsystem clk
-> definitions, which can be used in kernel and dt files.
-> I applied following patches posted by you in my working tree.
-> 
-> 
-> [1/7] kbuild: create an "include chroot" for DT bindings
-> [2/7] kbuild: fixdep: support concatenated dep files
-> [3/7] kbuild: cmd_dtc_cpp: extract deps from both gcc -E and dtc
-> [4/7] kbuild: always run gcc -E on *.dts, remove cmd_dtc_cpp
-> [5/7] ARM: dt: add header to define GPIO flags
-> [6/7] ARM: dt: add header to define IRQ flags
-> [7/7] ARM: dt: create a DT header for the GIC
-> 
-> I created a header file in
-> arch/arm/boot/dts/include/clk/samsung-audss-clk.h and I included this
-> header in driver and dtsi files
-> 
-> Please see the code snippet in dtsi below.
-> 
-> #include <dt-bindings/clk/samsung-audss-clk.h>
-> /include/ "skeleton.dtsi"
-> /include/ "exynos5250-pinctrl.dtsi
+--===============8408910823354031386==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cW0eHRJ76X8TDo3d"
+Content-Disposition: inline
 
-Try making all of the above "#include" ...
 
-#include <dt-bindings/clk/samsung-audss-clk.h>
-#include "skeleton.dtsi"
-#include "exynos5250-pinctrl.dtsi
+--cW0eHRJ76X8TDo3d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> In driver it is compiling successfully but in dtsi files I am getting
-> the follwing compilation error.
-> 
-> Error: arch/arm/boot/dts/exynos5250.dtsi:21.1-9 syntax error
-> FATAL ERROR: Unable to parse input tree
-> make[1]: *** [arch/arm/boot/dts/exynos5250-arndale.dtb] Error 1
-> make[1]: *** Waiting for unfinished jobs....
->   DTC     arch/arm/boot/dts/exynos5250-snow.dtb
-> Error: arch/arm/boot/dts/exynos5250.dtsi:21.1-9 syntax error
-> FATAL ERROR: Unable to parse input tree
-> make[1]: *** [arch/arm/boot/dts/exynos5250-smdk5250.dtb] Error 1
-> Error: arch/arm/boot/dts/exynos5250.dtsi:21.1-9 syntax error
-> FATAL ERROR: Unable to parse input tree
-> make[1]: *** [arch/arm/boot/dts/exynos5250-snow.dtb] Error 1
-> make: *** [dtbs] Error 2
-> make: *** Waiting for unfinished jobs....
-> 
-> where "#include <dt-bindings/clk/samsung-audss-clk.h>" is the 21st
-> line in the dtsi file.
-> 
-> Please let me know if any extra patches are required to solve this
-> compilation error?
+On Thu, Apr 18, 2013 at 04:43:43PM +0200, Lars-Peter Clausen wrote:
+> On 04/18/2013 02:33 PM, Markus Pargmann wrote:
 
-I was seeing some compile errors when I had a mixture of /include/ and
-#include.
+> > +	if (pdev->dev.platform_data)
+> > +		pdev->dev.of_node = pdev->dev.platform_data;
 
-Cheers
-Jon
+> In my opinion it's better to use pdev->dev.parent->of_node here. In the ssi
+> driver you use platform_device_register_data, which will create a copy of
+> the of_node you pass in as platform data. I'm not quite sure how well this
+> will work. If you want to continue to use platform_data you should at least
+> change the code in the ssi driver to not make a copy of the of_node.
+
+If nothing else the above code just looks wrong and confusing.
+
+--cW0eHRJ76X8TDo3d
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRcAlTAAoJELSic+t+oim9r0EP/3uVVhDqP28BfB8bvqLeCkSA
+mrugRLtP8B4VTIRBlNTTBTwB8l70auA4GjEhSpL5Lyu02paHeJF0ppfLVezs5R5n
+TFz0nnmqQmeQe7OXu/swLCjQLzGRULk24hl0kQMvNucn/76oq4og5S9QP5NWyzBH
+y0kYtIvSUPO3fRw3rfAmHQCafBsvr10v/bD5dMpAZqeZS5UuRa7uM2yL+g0wXQzE
+pAP/ecM1KR2/RgDoWZea7GxzBphA8hjFqXDskvwDTWc00TKkKDNsQJkAKrivWgzr
+5zYdI2FtDPQglBI8w3xRcJhFYNglXHspSQxyjQ1mCyk+LPeO5XgKBvUpiLQIF5cv
+SP9ZqG+htAbG6W+BtHowUcyVSiKrCIuiSn7H/3KvUnQiDwHi/iWAYOEYJ2guPPK8
+6lu0IyG7/ifiWON1QZOkQDIrjvtb+Z6IrTTGSNokm7qqcsMgsJ9wsmMhQ+8aNAym
+LPF+9op2Je23qVcTnjWXEPNQWhZhlVjIR4CJH+JCFtNdIMLsefn0ciyw89dsJbn3
+xB0QRH/BDGyGehOwHzeYd8jgMpKNRot3BPf4dFEc6RvGo0vJllX896DZxqq1iyOI
+9Sh/Z1UFmv6gLQfE0SMCU6kY8zZDbXNL/yx/72rD0Rv8SOgSPaWyM0RPZ0nCXRg8
+1+FLoyeeMMOsYr1SbBXz
+=WFo8
+-----END PGP SIGNATURE-----
+
+--cW0eHRJ76X8TDo3d--
+
+--===============8408910823354031386==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============8408910823354031386==--
