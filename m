@@ -1,81 +1,44 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] documentation: iommu: add description of ARM System MMU
-	binding
-Date: Thu, 18 Apr 2013 20:01:31 +0100
-Message-ID: <20130418190131.GA12344@mudshark.cambridge.arm.com>
-References: <1365094259-24847-1-git-send-email-will.deacon@arm.com>
-	<515F37C1.4000109@codeaurora.org>
-	<20130408092535.GA17476@mudshark.cambridge.arm.com>
-	<5162F87A.7070409@codeaurora.org>
-	<20130410173732.GQ26992@mudshark.cambridge.arm.com>
-	<5169C7D1.8070300@codeaurora.org>
-	<20130415131341.GG9827@mudshark.cambridge.arm.com>
-	<516D9602.2010404@codeaurora.org>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH RFC 2/2] gpio: samsung: Remove OF support for Exynos4/5
+Date: Thu, 18 Apr 2013 21:57:25 +0200
+Message-ID: <51705025.4000107@gmail.com>
+References: <1366134094-23140-1-git-send-email-s.nawrocki@samsung.com> <1366196768-19015-1-git-send-email-s.nawrocki@samsung.com> <CACRpkdZfZtfp5U4-Ab1ufbwBWVSvpDX_F=d-utokDXP7FbQmKw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <516D9602.2010404-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZfZtfp5U4-Ab1ufbwBWVSvpDX_F=d-utokDXP7FbQmKw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Olav,
+On 04/17/2013 06:35 PM, Linus Walleij wrote:
+> On Wed, Apr 17, 2013 at 1:06 PM, Sylwester Nawrocki
+> <s.nawrocki@samsung.com>  wrote:
+>
+>> -#endif
+>> +        * All Samsung platforms that support device tree will use the pinctrl
+>> +        * driver, hence we skip initialization of this driver if the OF tree
+>> +        * is available.
+>> +        */
+>> +       if (of_have_populated_dt())
+>> +               return -ENODEV;
+>>
+>>          samsung_gpiolib_set_cfg(samsung_gpio_cfgs, ARRAY_SIZE(samsung_gpio_cfgs));
+>
+> Oh is that how you do it? It looks fragile.
+>
+> Can't you check if you have the pinctrl node atleast?
 
-On Tue, Apr 16, 2013 at 07:18:42PM +0100, Olav Haugan wrote:
-> On 4/15/2013 6:13 AM, Will Deacon wrote:
-> > If so, doesn't that strongly tie your video driver to the SMMU?
-> 
-> Isn't this more or less what you are doing in DT where you associate
-> specific devices with an IOMMU (mmu-masters)?
+But this driver won't help if there is no pinctrl node found anyway, since
+any OF support is removed from it.
 
-No. The device-tree describes the *hardware*, as per usual. The StreamIDs
-are fixed properties of the SoC and we can't change them from Linux, so we
-describe all of the StreamIDs upstream of each SMMU so that we can program
-the thing. There's no way to generic way to discover them.
+This way there is no need for any additional DT parsing, just to skip 
+probing
+of this legacy GPIO driver.
 
-> > This seems to be where we differ. My anticipated use-case is that a domain
-> > is allocated, which defines an empty address space. Masters are then
-> > attached to the domain by passing their struct device, so this may
-> > correspond to a DMA controller or a video core, in your case. The context
-> > bank is allocated dynamically when the first device is added to the
-> > domain, and then it is subsequently shared between all the masters in that
-> > domain.
-> 
-> I feel that there are some limitation with this. Maybe you can address
-> the following:
-> 
-> 1) What if you want two context banks in one domain (shared page table)?
+There might be something that could have gone wrong and I am missing though.
 
-Why would a page table shared between devices require multiple context
-banks? Multiple SMRs and S2CRs, sure, but they would ultimately point at the
-same context bank (and hence same address space).
-
-> 2) What if a master (device) needs to use 2 or more context banks?
-
-If a master needs to be in two address spaces at once, then it will need to
-attach it's StreamIDs to different domains. You can't place a single
-StreamID in two address spaces (this is an architectural constraint).
-
-> > Perhaps, but I don't think it's worth complicating the binding based on a
-> > potential nice-to-have fault message.
-> > 
-> 
-> However, global register space (including Stream Match Registers [SMR])
-> needs to be programmed by the secure environment for security or by
-> hyper-visor if you are in such an environment.
-
-Of course, but that's not Linux (and KVM would likely have some additional
-code if it wanted to do device passthrough, for example).
-
-Will
+Thanks,
+Sylwester
