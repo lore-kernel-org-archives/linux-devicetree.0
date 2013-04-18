@@ -1,59 +1,85 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH v4 02/10] ASoC: imx-pcm-dma: DT support
-Date: Thu, 18 Apr 2013 16:43:43 +0200
-Message-ID: <5170069F.4030200@metafoo.de>
-References: <1366288424-7660-1-git-send-email-mpa@pengutronix.de>
- <1366288424-7660-3-git-send-email-mpa@pengutronix.de>
+From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
+Subject: Re: Regarding dtc+cpp support
+Date: Thu, 18 Apr 2013 09:49:26 -0500
+Message-ID: <517007F6.3010107@ti.com>
+References: <CAAgF-BeFKxK4=myPjHHWt9VxsyYQFen8c5c_9mQkbPo3n1oqJw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1366288424-7660-3-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Timur Tabi <timur@tabi.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAAgF-BeFKxK4=myPjHHWt9VxsyYQFen8c5c_9mQkbPo3n1oqJw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Padma Venkat <padma.kvr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/18/2013 02:33 PM, Markus Pargmann wrote:
-> This patch adds the possibility to pass a of_node as platform_data which
-> is used by generic-pcm-dma to request a DMA slave channel.
+
+On 04/18/2013 04:12 AM, Padma Venkat wrote:
+> Hi Stephen,
 > 
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> ---
->  sound/soc/fsl/imx-pcm-dma.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> I am trying to add a header file for samsung audio subsystem clk
+> definitions, which can be used in kernel and dt files.
+> I applied following patches posted by you in my working tree.
 > 
-> diff --git a/sound/soc/fsl/imx-pcm-dma.c b/sound/soc/fsl/imx-pcm-dma.c
-> index c246fb5..8945d22 100644
-> --- a/sound/soc/fsl/imx-pcm-dma.c
-> +++ b/sound/soc/fsl/imx-pcm-dma.c
-> @@ -62,9 +62,11 @@ static const struct snd_dmaengine_pcm_config imx_dmaengine_pcm_config = {
->  
->  int imx_pcm_dma_init(struct platform_device *pdev)
->  {
-> +	if (pdev->dev.platform_data)
-> +		pdev->dev.of_node = pdev->dev.platform_data;
+> 
+> [1/7] kbuild: create an "include chroot" for DT bindings
+> [2/7] kbuild: fixdep: support concatenated dep files
+> [3/7] kbuild: cmd_dtc_cpp: extract deps from both gcc -E and dtc
+> [4/7] kbuild: always run gcc -E on *.dts, remove cmd_dtc_cpp
+> [5/7] ARM: dt: add header to define GPIO flags
+> [6/7] ARM: dt: add header to define IRQ flags
+> [7/7] ARM: dt: create a DT header for the GIC
+> 
+> I created a header file in
+> arch/arm/boot/dts/include/clk/samsung-audss-clk.h and I included this
+> header in driver and dtsi files
+> 
+> Please see the code snippet in dtsi below.
+> 
+> #include <dt-bindings/clk/samsung-audss-clk.h>
+> /include/ "skeleton.dtsi"
+> /include/ "exynos5250-pinctrl.dtsi
 
-In my opinion it's better to use pdev->dev.parent->of_node here. In the ssi
-driver you use platform_device_register_data, which will create a copy of
-the of_node you pass in as platform data. I'm not quite sure how well this
-will work. If you want to continue to use platform_data you should at least
-change the code in the ssi driver to not make a copy of the of_node.
+Try making all of the above "#include" ...
 
-- Lars
+#include <dt-bindings/clk/samsung-audss-clk.h>
+#include "skeleton.dtsi"
+#include "exynos5250-pinctrl.dtsi
 
-> +
->  	return snd_dmaengine_pcm_register(&pdev->dev, &imx_dmaengine_pcm_config,
->  		SND_DMAENGINE_PCM_FLAG_NO_RESIDUE |
-> -		SND_DMAENGINE_PCM_FLAG_NO_DT |
->  		SND_DMAENGINE_PCM_FLAG_COMPAT);
->  }
->  
+> In driver it is compiling successfully but in dtsi files I am getting
+> the follwing compilation error.
+> 
+> Error: arch/arm/boot/dts/exynos5250.dtsi:21.1-9 syntax error
+> FATAL ERROR: Unable to parse input tree
+> make[1]: *** [arch/arm/boot/dts/exynos5250-arndale.dtb] Error 1
+> make[1]: *** Waiting for unfinished jobs....
+>   DTC     arch/arm/boot/dts/exynos5250-snow.dtb
+> Error: arch/arm/boot/dts/exynos5250.dtsi:21.1-9 syntax error
+> FATAL ERROR: Unable to parse input tree
+> make[1]: *** [arch/arm/boot/dts/exynos5250-smdk5250.dtb] Error 1
+> Error: arch/arm/boot/dts/exynos5250.dtsi:21.1-9 syntax error
+> FATAL ERROR: Unable to parse input tree
+> make[1]: *** [arch/arm/boot/dts/exynos5250-snow.dtb] Error 1
+> make: *** [dtbs] Error 2
+> make: *** Waiting for unfinished jobs....
+> 
+> where "#include <dt-bindings/clk/samsung-audss-clk.h>" is the 21st
+> line in the dtsi file.
+> 
+> Please let me know if any extra patches are required to solve this
+> compilation error?
+
+I was seeing some compile errors when I had a mixture of /include/ and
+#include.
+
+Cheers
+Jon
