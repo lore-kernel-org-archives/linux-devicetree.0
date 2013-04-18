@@ -1,47 +1,79 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v7 2/3] of/pci: Provide support for parsing PCI DT ranges
- property
-Date: Thu, 18 Apr 2013 16:29:54 +0100
-Message-ID: <CACxGe6u7yoecyTR2r-EzpcRxLuSw-p9KC7jA12wEQZs4of3vFA@mail.gmail.com>
-References: <1366107508-12672-1-git-send-email-Andrew.Murray@arm.com>
- <1366107508-12672-3-git-send-email-Andrew.Murray@arm.com>
- <20130418134401.84AEE3E1319@localhost>
- <20130418142434.GA18881@arm.com>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v4 02/10] ASoC: imx-pcm-dma: DT support
+Date: Thu, 18 Apr 2013 17:35:12 +0200
+Message-ID: <20130418153512.GA4307@pengutronix.de>
+References: <1366288424-7660-1-git-send-email-mpa@pengutronix.de>
+ <1366288424-7660-3-git-send-email-mpa@pengutronix.de>
+ <5170069F.4030200@metafoo.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130418142434.GA18881@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Murray <andrew.murray@arm.com>
-Cc: "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "siva.kallam@samsung.com" <siva.kallam@samsung.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "thierry.reding@avionic-design.de" <thierry.reding@avionic-design.de>, Liviu Dudau <Liviu.Dudau@arm.com>, "paulus@samba.org" <paulus@samba.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "jg1.han@samsung.com" <jg1.han@samsung.com>, "jgunthorpe@obsidianresearch.com" <jgunthorpe@obsidianresearch.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5170069F.4030200-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 18, 2013 at 3:24 PM, Andrew Murray <andrew.murray@arm.com> wrote:
-> On Thu, Apr 18, 2013 at 02:44:01PM +0100, Grant Likely wrote:
->> On Tue, 16 Apr 2013 11:18:27 +0100, Andrew Murray <Andrew.Murray@arm.com> wrote:
->> >             /* Act based on address space type */
->> >             res = NULL;
->> > -           switch ((pci_space >> 24) & 0x3) {
->> > -           case 1:         /* PCI IO space */
->> > +           res_type = range.flags & IORESOURCE_TYPE_BITS;
->> > +           if (res_type == IORESOURCE_IO) {
->>
->> Why the change from switch() to an if/else if sequence?
->
-> Russell King suggested this change - see
-> https://patchwork.kernel.org/patch/2323941/
+On Thu, Apr 18, 2013 at 04:43:43PM +0200, Lars-Peter Clausen wrote:
+> On 04/18/2013 02:33 PM, Markus Pargmann wrote:
+> > This patch adds the possibility to pass a of_node as platform_data which
+> > is used by generic-pcm-dma to request a DMA slave channel.
+> > 
+> > Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> >  sound/soc/fsl/imx-pcm-dma.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/sound/soc/fsl/imx-pcm-dma.c b/sound/soc/fsl/imx-pcm-dma.c
+> > index c246fb5..8945d22 100644
+> > --- a/sound/soc/fsl/imx-pcm-dma.c
+> > +++ b/sound/soc/fsl/imx-pcm-dma.c
+> > @@ -62,9 +62,11 @@ static const struct snd_dmaengine_pcm_config imx_dmaengine_pcm_config = {
+> >  
+> >  int imx_pcm_dma_init(struct platform_device *pdev)
+> >  {
+> > +	if (pdev->dev.platform_data)
+> > +		pdev->dev.of_node = pdev->dev.platform_data;
+> 
+> In my opinion it's better to use pdev->dev.parent->of_node here. In the ssi
+> driver you use platform_device_register_data, which will create a copy of
+> the of_node you pass in as platform data. I'm not quite sure how well this
+> will work. If you want to continue to use platform_data you should at least
+> change the code in the ssi driver to not make a copy of the of_node.
 
-Umm, that isn't what that link shows. That link shows the patch
-already changing to an if/else if construct, and rmk is commenting on
-that.
+Thanks, I did not think about using the parent, that is much easier. I
+changed it for the next version.
 
-g.
+Regards,
+
+Markus
+
+> 
+> - Lars
+> 
+> > +
+> >  	return snd_dmaengine_pcm_register(&pdev->dev, &imx_dmaengine_pcm_config,
+> >  		SND_DMAENGINE_PCM_FLAG_NO_RESIDUE |
+> > -		SND_DMAENGINE_PCM_FLAG_NO_DT |
+> >  		SND_DMAENGINE_PCM_FLAG_COMPAT);
+> >  }
+> >  
+> 
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
