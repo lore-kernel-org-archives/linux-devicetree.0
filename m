@@ -1,81 +1,53 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 02/10] ASoC: imx-pcm-dma: DT support
-Date: Thu, 18 Apr 2013 15:56:02 +0100
-Message-ID: <20130418145602.GL13687@opensource.wolfsonmicro.com>
-References: <1366288424-7660-1-git-send-email-mpa@pengutronix.de>
- <1366288424-7660-3-git-send-email-mpa@pengutronix.de>
- <5170069F.4030200@metafoo.de>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH RESEND v5 1/2] dma: imx-dma: Add oftree support
+Date: Thu, 18 Apr 2013 17:14:37 +0200
+Message-ID: <51700DDD.1060801@metafoo.de>
+References: <1366291298-30004-1-git-send-email-mpa@pengutronix.de>
+ <1366291298-30004-2-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8408910823354031386=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <5170069F.4030200@metafoo.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Lars-Peter Clausen <lars@metafoo.de>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Timur Tabi <timur@tabi.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Markus Pargmann <mpa@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1366291298-30004-2-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---===============8408910823354031386==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cW0eHRJ76X8TDo3d"
-Content-Disposition: inline
+On 04/18/2013 03:21 PM, Markus Pargmann wrote:
+[...]
+> +static struct dma_chan *imxdma_xlate(struct of_phandle_args *dma_spec,
+> +						struct of_dma *ofdma)
+> +{
+> +	int count = dma_spec->args_count;
+> +	struct imxdma_engine *imxdma = ofdma->of_dma_data;
+> +	struct imxdma_filter_data fdata = {
+> +		.imxdma = imxdma,
+> +		.request = *(unsigned *)&dma_spec->args[0],
 
+This cast looks rather bogus and shouldn't be necessary.
 
---cW0eHRJ76X8TDo3d
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> +	};
+> +
+> +	if (count != 1)
+> +		return NULL;
 
-On Thu, Apr 18, 2013 at 04:43:43PM +0200, Lars-Peter Clausen wrote:
-> On 04/18/2013 02:33 PM, Markus Pargmann wrote:
+I think you need to check count before you access dma_spec->args[0]
 
-> > +	if (pdev->dev.platform_data)
-> > +		pdev->dev.of_node = pdev->dev.platform_data;
-
-> In my opinion it's better to use pdev->dev.parent->of_node here. In the ssi
-> driver you use platform_device_register_data, which will create a copy of
-> the of_node you pass in as platform data. I'm not quite sure how well this
-> will work. If you want to continue to use platform_data you should at least
-> change the code in the ssi driver to not make a copy of the of_node.
-
-If nothing else the above code just looks wrong and confusing.
-
---cW0eHRJ76X8TDo3d
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRcAlTAAoJELSic+t+oim9r0EP/3uVVhDqP28BfB8bvqLeCkSA
-mrugRLtP8B4VTIRBlNTTBTwB8l70auA4GjEhSpL5Lyu02paHeJF0ppfLVezs5R5n
-TFz0nnmqQmeQe7OXu/swLCjQLzGRULk24hl0kQMvNucn/76oq4og5S9QP5NWyzBH
-y0kYtIvSUPO3fRw3rfAmHQCafBsvr10v/bD5dMpAZqeZS5UuRa7uM2yL+g0wXQzE
-pAP/ecM1KR2/RgDoWZea7GxzBphA8hjFqXDskvwDTWc00TKkKDNsQJkAKrivWgzr
-5zYdI2FtDPQglBI8w3xRcJhFYNglXHspSQxyjQ1mCyk+LPeO5XgKBvUpiLQIF5cv
-SP9ZqG+htAbG6W+BtHowUcyVSiKrCIuiSn7H/3KvUnQiDwHi/iWAYOEYJ2guPPK8
-6lu0IyG7/ifiWON1QZOkQDIrjvtb+Z6IrTTGSNokm7qqcsMgsJ9wsmMhQ+8aNAym
-LPF+9op2Je23qVcTnjWXEPNQWhZhlVjIR4CJH+JCFtNdIMLsefn0ciyw89dsJbn3
-xB0QRH/BDGyGehOwHzeYd8jgMpKNRot3BPf4dFEc6RvGo0vJllX896DZxqq1iyOI
-9Sh/Z1UFmv6gLQfE0SMCU6kY8zZDbXNL/yx/72rD0Rv8SOgSPaWyM0RPZ0nCXRg8
-1+FLoyeeMMOsYr1SbBXz
-=WFo8
------END PGP SIGNATURE-----
-
---cW0eHRJ76X8TDo3d--
-
---===============8408910823354031386==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============8408910823354031386==--
+> +
+> +	return dma_request_channel(imxdma->dma_device.cap_mask,
+> +					imxdma_filter_fn, &fdata);
+> +}
+> +
+[...]
