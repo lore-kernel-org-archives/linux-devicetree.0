@@ -1,65 +1,86 @@
-From: Javier Martinez Canillas <martinez.javier@gmail.com>
-Subject: Re: [PATCH 1/1] of/irq: store IRQ trigger/level in struct resource flags
-Date: Thu, 18 Apr 2013 14:17:32 +0200
-Message-ID: <CAAwP0s2pvCgQALJb_XcNo3HE_zS9mOjB-ZnGR4yPYR1-ESpaVg@mail.gmail.com>
-References: <1365148088-11175-1-git-send-email-javier.martinez@collabora.co.uk>
- <51633F26.7000400@gmail.com> <516341AF.7030207@wwwdotorg.org>
- <51634B1F.4030408@collabora.co.uk> <516380D7.3060000@gmail.com>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: [PATCH v4 05/10] ASoC: fsl-ssi: Use generic DMA bindings if possible
+Date: Thu, 18 Apr 2013 14:33:39 +0200
+Message-ID: <1366288424-7660-6-git-send-email-mpa@pengutronix.de>
+References: <1366288424-7660-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <516380D7.3060000@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Stephen Warren <swarren@wwwdotorg.org>, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, linux-omap <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1366288424-7660-1-git-send-email-mpa@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Timur Tabi <timur@tabi.org>, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Markus Pargmann <mpa@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 9, 2013 at 4:45 AM, Rob Herring <robherring2@gmail.com> wrote:
-> On 04/08/2013 05:56 PM, Javier Martinez Canillas wrote:
->> On 04/09/2013 12:16 AM, Stephen Warren wrote:
->>> On 04/08/2013 04:05 PM, Rob Herring wrote:
->>>> On 04/05/2013 02:48 AM, Javier Martinez Canillas wrote:
->>>>> According to Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->>>>> the "#interrupt-cells" property of an "interrupt-controller" is used
->>>>> to define the number of cells needed to specify a single interrupt.
->>> ...
->>>>> But the type is never returned so it can't be saved on the IRQ struct
->>>>> resource flags member.
->>>>>
->>>>> This means that drivers that need the IRQ type/level flags defined in
->>>>> the DT won't be able to get it.
->>>>
->>>> But the interrupt controllers that need the information should be able
->>>> to get to it via irqd_get_trigger_type. What problem exactly are you
->>>> trying to fix? What driver would use this?
->>>
->>> FYI, that is indeed what I did in sound/soc/codecs/wm8903.c. Thinking
->>> back, I'm not sure if that was the right thing or whether I should have
->>> sent this same patch:-)
->>>
->>
->> Hi Stephen,
->>
->> I'm glad you agree :-)
->>
->> I could change drivers/net/ethernet/smsc/smsc911x.c to get the type flags for
->> the IRQ with irqd_get_trigger_type() but I prefer $subject because:
->
-> irqd_get_trigger_type probably is not meant for outside of irqchips.
-> Creating an irq_get_irq_type function which takes an irq number would be
-> the right function as that does not expose struct irq_data.
->
+There may be some platforms using fsl-ssi that do not have a DMA driver
+with generic DMA bindings. So this patch adds support for the generic
+DMA bindings, while still using the old "fsl,dma-events" property if
+"dmas" is not found.
 
-Hi Rob,
+Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+---
 
-I sent a patch-set a few days ago that adds an irq_get_irq_type()
-function [1] as you suggested and this function is used on the
-smsc911x driver probe function to get the edge/level flags [2].
+Notes:
+    Changes in v4:
+     - Change TODO comment to a FIXME, to remove the old dma-events property as soon
+       as all dma drivers support the generic DMA bindings.
 
-It would be great if I can get your feedback on this.
+ sound/soc/fsl/fsl_ssi.c | 26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
-Thanks a lot and best regards,
-Javier
-
-[1]: http://permalink.gmane.org/gmane.linux.ports.arm.omap/97117
-[2]: http://permalink.gmane.org/gmane.linux.network/265587
+diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
+index 5165d41..d2afda1 100644
+--- a/sound/soc/fsl/fsl_ssi.c
++++ b/sound/soc/fsl/fsl_ssi.c
+@@ -796,15 +796,19 @@ static int fsl_ssi_probe(struct platform_device *pdev)
+ 			&ssi_private->filter_data_tx;
+ 		ssi_private->dma_params_rx.filter_data =
+ 			&ssi_private->filter_data_rx;
+-		/*
+-		 * TODO: This is a temporary solution and should be changed
+-		 * to use generic DMA binding later when the helplers get in.
+-		 */
+-		ret = of_property_read_u32_array(pdev->dev.of_node,
++		if (!of_property_read_bool(pdev->dev.of_node, "dmas") &&
++				ssi_private->use_dma) {
++			/*
++			 * FIXME: This is a temporary solution until all
++			 * necessary dma drivers support the generic dma
++			 * bindings.
++			 */
++			ret = of_property_read_u32_array(pdev->dev.of_node,
+ 					"fsl,ssi-dma-events", dma_events, 2);
+-		if (ret && !ssi_private->use_dma) {
+-			dev_err(&pdev->dev, "could not get dma events\n");
+-			goto error_clk;
++			if (ret && ssi_private->use_dma) {
++				dev_err(&pdev->dev, "could not get dma events but fsl-ssi is configured to use DMA\n");
++				goto error_clk;
++			}
+ 		}
+ 
+ 		shared = of_device_is_compatible(of_get_parent(np),
+@@ -875,8 +879,10 @@ static int fsl_ssi_probe(struct platform_device *pdev)
+ 			}
+ 		} else {
+ 			ssi_private->imx_pcm_pdev =
+-				platform_device_register_simple("imx-pcm-audio",
+-							-1, NULL, 0);
++				platform_device_register_data(&pdev->dev,
++						"imx-pcm-audio", -1,
++						pdev->dev.of_node,
++						sizeof(*pdev->dev.of_node));
+ 			if (IS_ERR(ssi_private->imx_pcm_pdev)) {
+ 				ret = PTR_ERR(ssi_private->imx_pcm_pdev);
+ 				goto error_dev;
+-- 
+1.8.1.5
