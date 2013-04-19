@@ -1,44 +1,37 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 0/4] ARM: dts: Add USB host support for Panda and
- Beagle-xm
-Date: Fri, 19 Apr 2013 08:43:22 -0700
-Message-ID: <20130419154321.GG10155@atomide.com>
-References: <1366365457-28972-1-git-send-email-rogerq@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1366365457-28972-1-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: b-cousson@ti.com, nm@ti.com, paul@pwsan.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: [PATCH 0/6] thermal:exynos4: Thermal Measurement Unit fixes for
+ Samsung SoCs
+Date: Fri, 19 Apr 2013 18:38:07 +0200
+Message-ID: <1366389493-8239-1-git-send-email-l.majewski@samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: Mike Turquette <mturquette@linaro.org>, Zhang Rui <rui.zhang@intel.com>, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Linux PM list <linux-pm@vger.kernel.org>, Amit Daniel Kachhap <amit.kachhap@linaro.org>, Lukasz Majewski <l.majewski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [130419 03:02]:
-> Hi Benoit/Tony
-> 
-> I've consolidated all the USB host device tree patches for Panda and Beagles
-> to one place and addressed Tony's comments.
-> 
-> NOTE: patch 1 depends on OMAP clock binding introduced in
-> https://lkml.org/lkml/2013/4/12/407
-> 
-> v3:
-> - updated mux mode to use pulldowns on panda as non-DT boot uses pulldowns.
-> - fixed usb pin naming for panda, beagle and beagle-xm
+This patch series provide various fixes for TMU block.
+Namely, support for common clock framework and proper regulator VDD_TS has been 
+added.
+Moreover device tree definitions and documentation entry are now in place.
 
-Cool. Sounds like we should be able to make omap4 DT only for v3.11
-then. For that we also need USB on 4430-sdp working, but it now
-does:
+Lukasz Majewski (6):
+  clk:exynos4:TMU Thermal Measurement Unit clock added to common clock
+    framework
+  thermal:exynos4: TMU Common clock framework support for TMU (Thermal
+    Monitoring Unit)
+  thermal:exynos4: TMU device tree support for Exynos4412 targets
+  thermal: Support for TMU regulator defined at device tree
+  thermal:exynos4: Enable support for Exynos4412 SoCs
+  thermal:exynos4: Add documentation for Exynos SoC thermal bindings
 
-ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
-ehci-omap 4a064c00.ehci: failed to get phys phandle in /ocp/usbhshost@4a064000/ehci@4a064c00 node
-ehci-omap 4a064c00.ehci: failed to get phys phandle in /ocp/usbhshost@4a064000/ehci@4a064c00 node
-...
+ .../devicetree/bindings/clock/exynos4-clock.txt    |    1 +
+ .../devicetree/bindings/thermal/exynos-thermal.txt |   22 +++++++++++
+ arch/arm/boot/dts/exynos4x12.dtsi                  |   10 +++++
+ drivers/clk/samsung/clk-exynos4.c                  |    6 ++-
+ drivers/thermal/exynos_thermal.c                   |   41 +++++++++++++++-----
+ 5 files changed, 70 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/exynos-thermal.txt
 
-As I have mine in a rack I don't have anything plugged into the
-USB port there though, but sounds like the phy is not initialized?
+-- 
+1.7.10.4
 
-Regards,
-
-Tony
