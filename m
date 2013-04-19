@@ -1,13 +1,12 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 04/10] util_version: new helper for displaying version info
-Date: Fri, 19 Apr 2013 10:50:46 +1000
-Message-ID: <20130419005046.GL16400@truffula.fritz.box>
-References: <1366078397-14889-1-git-send-email-vapier@gentoo.org>
- <1366078397-14889-5-git-send-email-vapier@gentoo.org>
+From: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] fdtput: expand fdt if value does not fit.
+Date: Fri, 19 Apr 2013 10:56:30 +1000
+Message-ID: <20130419005630.GM16400@truffula.fritz.box>
+References: <1366007810-17881-1-git-send-email-srinivas.kandagatla@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5208389938960700013=="
+Content-Type: multipart/mixed; boundary="===============2945448573467840128=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366078397-14889-5-git-send-email-vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1366007810-17881-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,32 +17,61 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---===============5208389938960700013==
+--===============2945448573467840128==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1WqHV5/jCvFSwawE"
+	protocol="application/pgp-signature"; boundary="oMYUQGQaTbnds07l"
 Content-Disposition: inline
 
-
---1WqHV5/jCvFSwawE
+--oMYUQGQaTbnds07l
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 15, 2013 at 10:13:11PM -0400, Mike Frysinger wrote:
-> This is so all utilities can have this flag and not just dtc.
+On Mon, Apr 15, 2013 at 07:36:50AM +0100, Srinivas KANDAGATLA wrote:
+> From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 >=20
-> Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-> Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+> If you try to insert a new node or extend a property with large value,
+> using fdtput you will notice that it always fails.
+>=20
+> example:
+> fdtput -v -p -ts ./tst.dtb "/node-1" "property-1" "value-1
+> Error at 'node-1': FDT_ERR_NOSPACE
+>=20
+> or
+>=20
+> fdtput -v -c ./tst.dtb "/node-1"
+> Error at 'node-1': FDT_ERR_NOSPACE
+>=20
+> or
+>=20
+> fdtput -v  -ts ./tst.dtb "/node" "property" "very big value"
+> Decoding value:
+> 	string: 'very big value'
+> Value size 15
+> Error at 'property': FDT_ERR_NOSPACE
+>=20
+> All these error are returned from libfdt, as the size of the fdt passed
+> has no space to accomdate these new properties.
+>=20
+> This patch adds realloc functions in fdtput to allocate new space in fdt
+> when it detects a shortage in space for new value or node. With this
+> patch, fdtput can insert a new node or property or extend a property
+> with new value greater than original size.
+>=20
+> Without this patch fdtput tool complains with FDT_ERR_NOSPACE when we
+> try to add a node/property or extend the value of a property.
+>=20
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
 
-Jon,
+Your realloc functions could overestimate the required size in some
+cases, so you should put an fdt_pack() before you write the final blob
+out to clean up any extra padding.
 
-Please apply these first 4 patches, regardless of the rest of the
-series.
+Other than that, looks good.
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -51,21 +79,22 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---1WqHV5/jCvFSwawE
+--oMYUQGQaTbnds07l
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iEYEARECAAYFAlFwlOYACgkQaILKxv3ab8ZRHgCfWiw1gy59SiTJMU5fmc4/zhz9
-t44An3jGtI18FYr8GIa4eTtkzmK+ZPnW
-=XMGm
+iEYEARECAAYFAlFwlj4ACgkQaILKxv3ab8bLPQCeJT7PzGlLc8JUmoxLp8yw/Les
+c0IAnR9q63UcbqQs5Ug7K+X1C1Hsrb/K
+=VueU
 -----END PGP SIGNATURE-----
 
---1WqHV5/jCvFSwawE--
+--oMYUQGQaTbnds07l--
 
---===============5208389938960700013==
+
+--===============2945448573467840128==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -76,4 +105,4 @@ devicetree-discuss mailing list
 devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---===============5208389938960700013==--
+--===============2945448573467840128==--
