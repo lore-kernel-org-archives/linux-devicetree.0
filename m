@@ -1,55 +1,99 @@
-From: Michal Bachraty <michal.bachraty@streamunlimited.com>
-Subject: [PATCH 2/2] ALSA: ASoC: spdif_receiver: Add DT support
-Date: Fri, 19 Apr 2013 15:39:19 +0200
-Message-ID: <1366378759-14517-1-git-send-email-michal.bachraty@streamunlimited.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: perex@perex.cz, tiwai@suse.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: lgirdwood@gmail.com, marek.belisko@streamunlimited.com, broonie@opensource.wolfsonmicro.com, Michal Bachraty <michal.bachraty@streamunlimited.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 1/2] GPIO: clps711x: Rewrite driver for using generic
+ GPIO code
+Date: Fri, 19 Apr 2013 15:03:57 +0100
+Message-ID: <20130419140357.GR14496@n2100.arm.linux.org.uk>
+References: <1365826900-30136-1-git-send-email-shc_work@mail.ru>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1365826900-30136-1-git-send-email-shc_work@mail.ru>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Olof Johansson <olof@lixom.net>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree support for this dummy audio soc driver.
+On Sat, Apr 13, 2013 at 08:21:39AM +0400, Alexander Shiyan wrote:
+> +static void __init clps711x_add_gpio(void)
+> +{
+> +	const struct resource clps711x_gpio0_res[] = {
+> +		DEFINE_RES_MEM(PADR, SZ_1),
+> +		DEFINE_RES_MEM(PADDR, SZ_1),
+> +	};
+> +	const struct resource clps711x_gpio1_res[] = {
+> +		DEFINE_RES_MEM(PBDR, SZ_1),
+> +		DEFINE_RES_MEM(PBDDR, SZ_1),
+> +	};
+> +	const struct resource clps711x_gpio2_res[] = {
+> +		DEFINE_RES_MEM(PCDR, SZ_1),
+> +		DEFINE_RES_MEM(PCDDR, SZ_1),
+> +	};
+> +	const struct resource clps711x_gpio3_res[] = {
+> +		DEFINE_RES_MEM(PDDR, SZ_1),
+> +		DEFINE_RES_MEM(PDDDR, SZ_1),
+> +	};
+> +	const struct resource clps711x_gpio4_res[] = {
+> +		DEFINE_RES_MEM(PEDR, SZ_1),
+> +		DEFINE_RES_MEM(PEDDR, SZ_1),
+> +	};
 
-Signed-off-by: Michal Bachraty <michal.bachraty@streamunlimited.com>
----
- sound/soc/codecs/spdif_receiver.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Don't do this - this is incredibly wasteful.
 
-diff --git a/sound/soc/codecs/spdif_receiver.c b/sound/soc/codecs/spdif_receiver.c
-index dd8d856..5d469c7 100644
---- a/sound/soc/codecs/spdif_receiver.c
-+++ b/sound/soc/codecs/spdif_receiver.c
-@@ -21,6 +21,9 @@
- #include <sound/soc.h>
- #include <sound/pcm.h>
- #include <sound/initval.h>
-+#include <linux/of.h>
-+
-+#define DRV_NAME "spdif-dir"
- 
- #define STUB_RATES	SNDRV_PCM_RATE_8000_192000
- #define STUB_FORMATS	(SNDRV_PCM_FMTBIT_S16_LE | \
-@@ -51,12 +54,21 @@ static int spdif_dir_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id spdif_dit_dt_ids[] = {
-+	{ .compatible = DRV_NAME, },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, spdif_dits_dt_ids);
-+#endif
-+
- static struct platform_driver spdif_dir_driver = {
- 	.probe		= spdif_dir_probe,
- 	.remove		= spdif_dir_remove,
- 	.driver		= {
- 		.name	= "spdif-dir",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(spdif_dit_dt_ids),
- 	},
- };
- 
--- 
-1.7.9.5
+C lesson 1: do not put unmodified initialised structures onto the stack.
+
+What the C compiler will do with the above is exactly the same as this
+for each structure:
+
+static const struct resource private_clps711x_gpio4_res[] = {
+	DEFINE_RES_MEM(PEDR, SZ_1),
+	DEFINE_RES_MEM(PEDDR, SZ_1),
+};
+
+static void __init clps711x_add_gpio(void)
+{
+	const struct resource clps711x_gpio4_res[] = private_clps711x_gpio4_res;
+	...
+
+which will in itself be a call out to memcpy, or an inlined memcpy.  Now
+do you see why it's wasteful?  You might as well write the thing in that
+way to start with and safe the additional code to copy the structures.
+
+The other way to do this, which will probably be far more space efficient:
+
+static phys_addr_t gpio_addrs[][2] = {
+	{ PADR, PADDR },
+	{ PBDR, PBDDR },
+...
+};
+
+static void __init clps711x_add_gpio(void)
+{
+	struct resource gpio_res[2];
+	unsigned i;
+
+	gpio_res[0].flags = IORESOURCE_MEM;
+	gpio_res[1].flags = IORESOURCE_MEM;
+
+	for (i = 0; i < ARRAY_SIZE(gpio_addrs); i++) {
+		gpio_res[0].start = gpio_addrs[i][0];
+		gpio_res[0].end = gpio_res[0].start;
+		gpio_res[1].start = gpio_addrs[i][1];
+		gpio_res[1].end = gpio_res[1].start;
+
+		platform_device_register_simple("clps711x-gpio", i,
+					gpio_res, ARRAY_SIZE(gpio_res));
+	}
+}
+
+which results in smaller storage and most probably also smaller code size
+too.
