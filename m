@@ -1,82 +1,31 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: Re: [PATCH 1/2] ALSA: ASoc: spdif_transciever: Add DT
-	support
-Date: Fri, 19 Apr 2013 19:36:11 +0200
-Message-ID: <5171808B.1010209@gmail.com>
-References: <1366378725-14471-1-git-send-email-michal.bachraty@streamunlimited.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 2/6] thermal:exynos4: TMU Common clock framework support
+ for TMU (Thermal Monitoring Unit)
+Date: Fri, 19 Apr 2013 23:38:04 +0530
+Message-ID: <CAK9yfHxWq5CrhY=A2HMZnH3SQww2sPTBM_zQ9hoinyk1zger7g@mail.gmail.com>
+References: <1366389493-8239-1-git-send-email-l.majewski@samsung.com>
+	<1366389493-8239-3-git-send-email-l.majewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1366378725-14471-1-git-send-email-michal.bachraty@streamunlimited.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Michal Bachraty <michal.bachraty@streamunlimited.com>
-Cc: alsa-devel@alsa-project.org, lgirdwood@gmail.com, tiwai@suse.de, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, marek.belisko@streamunlimited.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1366389493-8239-3-git-send-email-l.majewski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@samsung.com>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Zhang Rui <rui.zhang@intel.com>, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Linux PM list <linux-pm@vger.kernel.org>, Amit Daniel Kachhap <amit.kachhap@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, eduardo.valentin@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Michal,
-
-On 19.04.2013 15:38, Michal Bachraty wrote:
-> Add devicetree support for this dummy audio soc driver.
-
-I think Mark wants to see only "ASoC:" in the patch subjects now.
-
-> 
-> Signed-off-by: Michal Bachraty <michal.bachraty@streamunlimited.com>
+On 19 April 2013 22:08, Lukasz Majewski <l.majewski@samsung.com> wrote:
+> This patch modifies exynos_thermal.c file to use clk_disable_unprepare()
+> and clk_prepare_enable() instead of clk_{enable|disable}.
+>
+> Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 > ---
->  sound/soc/codecs/spdif_transciever.c |   10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/sound/soc/codecs/spdif_transciever.c b/sound/soc/codecs/spdif_transciever.c
-> index 112a49d..4c8c295 100644
-> --- a/sound/soc/codecs/spdif_transciever.c
-> +++ b/sound/soc/codecs/spdif_transciever.c
-> @@ -20,6 +20,7 @@
->  #include <sound/soc.h>
->  #include <sound/pcm.h>
->  #include <sound/initval.h>
-> +#include <linux/of.h>
->  
->  #define DRV_NAME "spdif-dit"
->  
-> @@ -52,12 +53,21 @@ static int spdif_dit_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id spdif_dit_dt_ids[] = {
-> +	{ .compatible = DRV_NAME, },
 
-I think this needs a "linux," prefix. Just put the whole string here.
-
-Same goes for the patch against the spdif_receiver driver.
+I have already submitted a similar patch for this:
+http://permalink.gmane.org/gmane.linux.power-management.general/33310
 
 
-Thanks,
-Daniel
-
-
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, spdif_dits_dt_ids);
-> +#endif
-> +
->  static struct platform_driver spdif_dit_driver = {
->  	.probe		= spdif_dit_probe,
->  	.remove		= spdif_dit_remove,
->  	.driver		= {
->  		.name	= DRV_NAME,
->  		.owner	= THIS_MODULE,
-> +		.of_match_table = of_match_ptr(spdif_dit_dt_ids),
->  	},
->  };
->  
-> 
+-- 
+With warm regards,
+Sachin
