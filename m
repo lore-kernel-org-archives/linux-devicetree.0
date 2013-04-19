@@ -1,73 +1,20 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 3/4] ARM: dts: omap3-beagle-xm: Add USB Host support
-Date: Fri, 19 Apr 2013 12:57:36 +0300
-Message-ID: <1366365457-28972-4-git-send-email-rogerq@ti.com>
-References: <1366365457-28972-1-git-send-email-rogerq@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366365457-28972-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: b-cousson-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH V2 1/7] kbuild: create an "include chroot" for DT bindings
+Date: Fri, 19 Apr 2013 11:01:32 +0100
+Message-ID: <20130419100132.72DD23E116D@localhost>
+References: <1365032098-22825-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1365032098-22825-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Michal Marek <mmarek@suse.cz>, Grant Likely <glikely@secretlab.ca>, Rob Herring <robherring2@gmail.com>
+Cc: arm@kernel.org, Shawn Guo <shawn.guo@linaro.org>, Hiroshi Doyu <hdoyu@nvidia.com>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-UHJvdmlkZSBSRVNFVCBhbmQgUG93ZXIgcmVndWxhdG9ycyBmb3IgdGhlIFVTQiBQSFksCnRoZSBV
-U0IgSG9zdCBwb3J0IG1vZGUgYW5kIHRoZSBQSFkgZGV2aWNlLgoKQWxzbyBwcm92aWRlIHBpbiBt
-dWx0aXBsZXhlciBpbmZvcm1hdGlvbiBmb3IgVVNCIGhvc3QKcGlucy4KCkNDOiBCZW5vw650IENv
-dXNzb24gPGItY291c3NvbkB0aS5jb20+ClNpZ25lZC1vZmYtYnk6IFJvZ2VyIFF1YWRyb3MgPHJv
-Z2VycUB0aS5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtYmVhZ2xlLXhtLmR0cyB8
-ICAgNjEgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGVzIGNoYW5nZWQs
-IDYxIGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvb21hcDMtYmVhZ2xlLXhtLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLWJl
-YWdsZS14bS5kdHMKaW5kZXggNWEzMTk2NC4uMTlhOGNjYiAxMDA2NDQKLS0tIGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvb21hcDMtYmVhZ2xlLXhtLmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9vbWFw
-My1iZWFnbGUteG0uZHRzCkBAIC01Nyw2ICs1Nyw1OSBAQAogCQl0aSxtY2JzcCA9IDwmbWNic3Ay
-PjsKIAkJdGksY29kZWMgPSA8JnR3bF9hdWRpbz47CiAJfTsKKworCS8qIEhTIFVTQiBQb3J0IDIg
-UkVTRVQgKi8KKwloc3VzYjJfcmVzZXQ6IGhzdXNiMl9yZXNldF9yZWcgeworCQljb21wYXRpYmxl
-ID0gInJlZ3VsYXRvci1maXhlZCI7CisJCXJlZ3VsYXRvci1uYW1lID0gImhzdXNiMl9yZXNldCI7
-CisJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMzMDAwMDA+OworCQlyZWd1bGF0b3ItbWF4
-LW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsKKwkJZ3BpbyA9IDwmZ3BpbzUgMTkgMD47CS8qIGdwaW9f
-MTQ3ICovCisJCXN0YXJ0dXAtZGVsYXktdXMgPSA8NzAwMDA+OworCQllbmFibGUtYWN0aXZlLWhp
-Z2g7CisJfTsKKworCS8qIEhTIFVTQiBQb3J0IDIgUG93ZXIgKi8KKwloc3VzYjJfcG93ZXI6IGhz
-dXNiMl9wb3dlcl9yZWcgeworCQljb21wYXRpYmxlID0gInJlZ3VsYXRvci1maXhlZCI7CisJCXJl
-Z3VsYXRvci1uYW1lID0gImhzdXNiMl92YnVzIjsKKwkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQg
-PSA8MzMwMDAwMD47CisJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAwMDA+OworCQln
-cGlvID0gPCZ0d2xfZ3BpbyAxOCAwPjsJLyogR1BJTyBMRURBICovCisJCXN0YXJ0dXAtZGVsYXkt
-dXMgPSA8NzAwMDA+OworCX07CisKKwkvKiBIUyBVU0IgSG9zdCBQSFkgb24gUE9SVCAyICovCisJ
-aHN1c2IyX3BoeTogaHN1c2IyX3BoeSB7CisJCWNvbXBhdGlibGUgPSAidXNiLW5vcC14Y2VpdiI7
-CisJCXJlc2V0LXN1cHBseSA9IDwmaHN1c2IyX3Jlc2V0PjsKKwkJdmNjLXN1cHBseSA9IDwmaHN1
-c2IyX3Bvd2VyPjsKKwl9OworCit9OworCismb21hcDNfcG14X2NvcmUgeworCXBpbmN0cmwtbmFt
-ZXMgPSAiZGVmYXVsdCI7CisJcGluY3RybC0wID0gPAorCQkJJmhzdXNiYjJfcGlucworCT47CisK
-Kwloc3VzYmIyX3BpbnM6IHBpbm11eF9oc3VzYmIyX3BpbnMgeworCQlwaW5jdHJsLXNpbmdsZSxw
-aW5zID0gPAorCQkJMHg1YzAgMHgzCS8qIGV0a19kMTAuaHN1c2IyX2NsayBPVVRQVVQgfCBNT0RF
-MyAqLworCQkJMHg1YzIgMHgzCS8qIGV0a19kMTEuaHN1c2IyX3N0cCBPVVRQVVQgfCBNT0RFMyAq
-LworCQkJMHg1YzQgMHgxMGIJLyogZXRrX2QxMi5oc3VzYjJfZGlyIElOUFVUX1BVTExET1dOIHwg
-TU9ERTMgKi8KKwkJCTB4NWM2IDB4MTBiCS8qIGV0a19kMTMuaHN1c2IyX254dCBJTlBVVF9QVUxM
-RE9XTiB8IE1PREUzICovCisJCQkweDVjOCAweDEwYgkvKiBldGtfZDE0LmhzdXNiMl9kYXRhMCBJ
-TlBVVF9QVUxMRE9XTiB8IE1PREUzKi8KKwkJCTB4NWNBIDB4MTBiCS8qIGV0a19kMTUuaHN1c2Iy
-X2RhdGExIElOUFVUX1BVTExET1dOIHwgTU9ERTMgKi8KKwkJCTB4MWE0IDB4MTBiCS8qIG1jc3Bp
-MV9jczMuaHN1c2IyX2RhdGEyIElOUFVUX1BVTExET1dOIHwgTU9ERTMgKi8KKwkJCTB4MWE2IDB4
-MTBiCS8qIG1jc3BpMl9jczEuaHN1c2IyX2RhdGEzIElOUFVUX1BVTExET1dOIHwgTU9ERTMgKi8K
-KwkJCTB4MWE4IDB4MTBiCS8qIG1jc3BpMl9zaW1vLmhzdXNiMl9kYXRhNCBJTlBVVF9QVUxMRE9X
-TiB8IE1PREUzICovCisJCQkweDFhYSAweDEwYgkvKiBtY3NwaTJfc29taS5oc3VzYjJfZGF0YTUg
-SU5QVVRfUFVMTERPV04gfCBNT0RFMyAqLworCQkJMHgxYWMgMHgxMGIJLyogbWNzcGkyX2NzMC5o
-c3VzYjJfZGF0YTYgSU5QVVRfUFVMTERPV04gfCBNT0RFMyAqLworCQkJMHgxYWUgMHgxMGIJLyog
-bWNzcGkyX2Nsay5oc3VzYjJfZGF0YTcgSU5QVVRfUFVMTERPV04gfCBNT0RFMyAqLworCQk+Owor
-CX07CiB9OwogCiAmaTJjMSB7CkBAIC0xMjUsMyArMTc4LDExIEBACiAJbW9kZSA9IDwzPjsKIAlw
-b3dlciA9IDw1MD47CiB9OworCismdXNiaHNob3N0IHsKKwlwb3J0Mi1tb2RlID0gImVoY2ktcGh5
-IjsKK307CisKKyZ1c2Joc2VoY2kgeworCXBoeXMgPSA8MCAmaHN1c2IyX3BoeT47Cit9OwotLSAK
-MS43LjQuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMu
-b3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1k
-aXNjdXNzCg==
+On Wed,  3 Apr 2013 17:34:52 -0600, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> Grant, Rob, Michal, I'm hoping for acks or comments from you so this
+> series can be placed into a topic branch in the arm-soc repo, for others
+> to build on during the 3.10 kernel cycle. Thanks.
+
+Thanks for doing all this work Stephen. It looks really good.
+
+g.
