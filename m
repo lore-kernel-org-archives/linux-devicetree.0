@@ -1,74 +1,93 @@
-From: Padma Venkat <padma.kvr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Regarding dtc+cpp support
-Date: Fri, 19 Apr 2013 11:26:47 +0530
-Message-ID: <CAAgF-BeOF4f1hTqFw3n=J4NfZpbcSecN83uKtFvs6XjKLn5o6g@mail.gmail.com>
-References: <CAAgF-BeFKxK4=myPjHHWt9VxsyYQFen8c5c_9mQkbPo3n1oqJw@mail.gmail.com>
- <517007F6.3010107@ti.com>
- <CAAgF-BefLWjRz3TXb6ESVQVA1Xno-z-WW2QVg6pNa+6_YW7AUg@mail.gmail.com>
- <5170260C.4000700@ti.com>
+From: Jean Delvare <khali@linux-fr.org>
+Subject: Re: [PATCH 1/3] Add support for GMT G72/G763 PWM fan controller
+Date: Fri, 19 Apr 2013 08:05:08 +0200
+Message-ID: <20130419080508.4866db90@endymion.delvare>
+References: <cover.1366322287.git.arno@natisbad.org>
+	<4f4a821bbc61e2da28fd70553fd717ada255097d.1366322287.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5170260C.4000700-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <4f4a821bbc61e2da28fd70553fd717ada255097d.1366322287.git.arno@natisbad.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnaud Ebalard <arno@natisbad.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Simon Guinot <simon.guinot@sequanux.org>, Olivier Mouchet <olivier.mouchet@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 18, 2013 at 10:27 PM, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org> wrote:
->
-> On 04/18/2013 11:21 AM, Padma Venkat wrote:
->> Hi,
->>
->> On Thu, Apr 18, 2013 at 8:19 PM, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org> wrote:
->>>
->>> On 04/18/2013 04:12 AM, Padma Venkat wrote:
->>>> Hi Stephen,
->>>>
->>>> I am trying to add a header file for samsung audio subsystem clk
->>>> definitions, which can be used in kernel and dt files.
->>>> I applied following patches posted by you in my working tree.
->>>>
->>>>
->>>> [1/7] kbuild: create an "include chroot" for DT bindings
->>>> [2/7] kbuild: fixdep: support concatenated dep files
->>>> [3/7] kbuild: cmd_dtc_cpp: extract deps from both gcc -E and dtc
->>>> [4/7] kbuild: always run gcc -E on *.dts, remove cmd_dtc_cpp
->>>> [5/7] ARM: dt: add header to define GPIO flags
->>>> [6/7] ARM: dt: add header to define IRQ flags
->>>> [7/7] ARM: dt: create a DT header for the GIC
->>>>
->>>> I created a header file in
->>>> arch/arm/boot/dts/include/clk/samsung-audss-clk.h and I included this
->>>> header in driver and dtsi files
->>>>
->>>> Please see the code snippet in dtsi below.
->>>>
->>>> #include <dt-bindings/clk/samsung-audss-clk.h>
->>>> /include/ "skeleton.dtsi"
->>>> /include/ "exynos5250-pinctrl.dtsi
->>>
->>> Try making all of the above "#include" ...
->>
->> I haven't changed all dts files but I tried below with no success.
->
-> I should mentioned that you should also make any /include/ in the *.dtsi
-> above #include too.
+Hi Arnaud,
 
-It is working after all dtsi files modified.
+Just a few things I noticed...
 
-Thanks
-Padma
->
-> Cheers
-> Jon
+Typo in subject line: G762, not G72.
+
+On Fri, 19 Apr 2013 00:28:21 +0200, Arnaud Ebalard wrote:
+> 
+> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
+> Tested-by: Arnaud Ebalard <arno@natisbad.org>
+> ---
+>  drivers/hwmon/Kconfig  |   10 +
+>  drivers/hwmon/Makefile |    1 +
+>  drivers/hwmon/g762.c   | 1159 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1170 insertions(+)
+>  create mode 100644 drivers/hwmon/g762.c
+> 
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 89ac1cb..0c6ddee 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -423,6 +423,16 @@ config SENSORS_G760A
+>  	  This driver can also be built as a module.  If so, the module
+>  	  will be called g760a.
+>  
+> +config SENSORS_G762
+> +	tristate "GMT G762"
+> +	depends on I2C
+> +	help
+> +	  If you say yes here you get support for Global Mixed-mode
+> +	  Technology Inc G762 fan speed PWM controller chips.
+
+If your driver also supports the G763 it should be mentioned here.
+
+> +
+> +	  This driver can also be built as a module.  If so, the module
+> +	  will be called g762a.
+
+This is not how your driver is actually named.
+
+> +
+>  config SENSORS_GL518SM
+>  	tristate "Genesys Logic GL518SM"
+>  	depends on I2C
+> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> index 8d6d97e..4b49504 100644
+> --- a/drivers/hwmon/Makefile
+> +++ b/drivers/hwmon/Makefile
+> @@ -57,6 +57,7 @@ obj-$(CONFIG_SENSORS_F75375S)	+= f75375s.o
+>  obj-$(CONFIG_SENSORS_FAM15H_POWER) += fam15h_power.o
+>  obj-$(CONFIG_SENSORS_FSCHMD)	+= fschmd.o
+>  obj-$(CONFIG_SENSORS_G760A)	+= g760a.o
+> +obj-$(CONFIG_SENSORS_G762)	+= g762.o
+>  obj-$(CONFIG_SENSORS_GL518SM)	+= gl518sm.o
+>  obj-$(CONFIG_SENSORS_GL520SM)	+= gl520sm.o
+>  obj-$(CONFIG_SENSORS_GPIO_FAN)	+= gpio-fan.o
+> diff --git a/drivers/hwmon/g762.c b/drivers/hwmon/g762.c
+> new file mode 100644
+> index 0000000..8c4cb39
+> --- /dev/null
+> +++ b/drivers/hwmon/g762.c
+> (...)
+> +#define DRVNAME "g762"
+> +
+> +static const struct i2c_device_id g762_id[] = {
+> +	{ DRVNAME, 0 },
+
+No, this is a list of device names, nor driver names, so the use of
+DRVNAME is inappropriate. Also, again, if your driver supports the g763
+it should be listed here too.
+
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, g762_id);
+
+-- 
+Jean Delvare
