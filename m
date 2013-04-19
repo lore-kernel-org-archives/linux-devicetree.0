@@ -1,12 +1,15 @@
-From: Zhao Chenhui <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org: [linuxppc-release] [PATCH v2 04/15] pm:
- add power node to dts]
-Date: Fri, 19 Apr 2013 18:58:29 +0800
-Message-ID: <20130419105829.GA29421@localhost.localdomain>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH] drivers: bus: add ARM CCI support
+Date: Fri, 19 Apr 2013 12:21:45 +0100
+Message-ID: <20130419112145.GB8719@e102568-lin.cambridge.arm.com>
+References: <1365691679-28674-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1365691679-28674-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <51702B70.9000908@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51702B70.9000908-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
@@ -18,338 +21,137 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
------ Forwarded message from Zhao Chenhui <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org> -----
+Thanks for the review Stephen.
 
-Date: Fri, 19 Apr 2013 18:47:37 +0800
-From: Zhao Chenhui <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-CC: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Subject: [linuxppc-release] [PATCH v2 04/15] pm: add power node to dts
-X-Mailer: git-send-email 1.7.3
+On Thu, Apr 18, 2013 at 06:20:48PM +0100, Stephen Boyd wrote:
+> On 04/11/13 07:47, Lorenzo Pieralisi wrote:
+> > diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
+> > new file mode 100644
+> > index 0000000..81953de
+> > --- /dev/null
+> > +++ b/drivers/bus/arm-cci.c
+> [...]
+> > +static void notrace cci_port_control(unsigned int port, bool enable)
+> > +{
+> > +	void __iomem *base = ports[port].base;
+> > +
+> > +	if (!base)
+> > +		return;
+> > +
+> > +	writel_relaxed(enable, base + CCI_PORT_CTRL);
+> > +	while (readl_relaxed(cci_ctrl_base + CCI_CTRL_STATUS) & 0x1)
+> > +			;
+> 
+> cpu_relax()?
 
-The Power Management device tree stub indicated that the platform
-supports Power Management feature.
+Nico explained the reason why I did not add a cpu_relax() here, actually
+having this function in C is already a moot point.
 
-Signed-off-by: Zhao Chenhui <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi |   14 ++++++-
- arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi |    2 +
- arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi |    2 +
- arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi |    2 +
- arch/powerpc/boot/dts/fsl/p1010si-post.dtsi   |    8 ++++
- arch/powerpc/boot/dts/fsl/p1020si-post.dtsi   |    5 +++
- arch/powerpc/boot/dts/fsl/p1021si-post.dtsi   |    5 +++
- arch/powerpc/boot/dts/fsl/p1022si-post.dtsi   |   11 ++++--
- arch/powerpc/boot/dts/fsl/p2020si-post.dtsi   |   14 +++++++
- arch/powerpc/boot/dts/fsl/pq3-power.dtsi      |   48 +++++++++++++++++++++++++
- 10 files changed, 106 insertions(+), 5 deletions(-)
- create mode 100644 arch/powerpc/boot/dts/fsl/pq3-power.dtsi
+> > +}
+> [...]
+> > +int notrace __cci_control_port_by_device(struct device_node *np, bool enable)
+> > +{
+> > +	int port = cci_ace_lite_port(np);
+> > +	if (WARN_ONCE(port < 0,
+> > +		      "ACE lite port look-up failure, node %p\n", np))
+> > +		return -ENODEV;
+> > +	cci_port_control(port, enable);
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL_GPL(__cci_control_port_by_device);
+> > +
+> > +static const struct of_device_id arm_cci_matches[];
+> 
+> Why not just put the definition here then?
 
-diff --git a/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi b/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi
-index c8b2daa..900f117 100644
---- a/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/mpc8536si-post.dtsi
-@@ -199,6 +199,10 @@
- 
- /include/ "pq3-dma-0.dtsi"
- /include/ "pq3-etsec1-0.dtsi"
-+	enet0: ethernet@24000 {
-+		fsl,wake-on-filer;
-+		fsl,pmc-handle = <&etsec1_clk>;
-+	};
- /include/ "pq3-etsec1-timer-0.dtsi"
- 
- 	usb@22000 {
-@@ -222,9 +226,10 @@
- 	};
- 
- /include/ "pq3-etsec1-2.dtsi"
--
--	ethernet@26000 {
-+	enet2: ethernet@26000 {
- 		cell-index = <1>;
-+		fsl,wake-on-filer;
-+		fsl,pmc-handle = <&etsec3_clk>;
- 	};
- 
- 	usb@2b000 {
-@@ -249,4 +254,9 @@
- 		reg = <0xe0000 0x1000>;
- 		fsl,has-rstcr;
- 	};
-+
-+/include/ "pq3-power.dtsi"
-+	power@e0070 {
-+		compatible = "fsl,mpc8536-pmc", "fsl,mpc8548-pmc";
-+	};
- };
-diff --git a/arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi b/arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi
-index b68eb11..ea7416a 100644
---- a/arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/mpc8544si-post.dtsi
-@@ -188,4 +188,6 @@
- 		reg = <0xe0000 0x1000>;
- 		fsl,has-rstcr;
- 	};
-+
-+/include/ "pq3-power.dtsi"
- };
-diff --git a/arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi b/arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi
-index 579d76c..dddb737 100644
---- a/arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/mpc8548si-post.dtsi
-@@ -156,4 +156,6 @@
- 		reg = <0xe0000 0x1000>;
- 		fsl,has-rstcr;
- 	};
-+
-+/include/ "pq3-power.dtsi"
- };
-diff --git a/arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi b/arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi
-index d44e25a..7313351 100644
---- a/arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/mpc8572si-post.dtsi
-@@ -193,4 +193,6 @@
- 		reg = <0xe0000 0x1000>;
- 		fsl,has-rstcr;
- 	};
-+
-+/include/ "pq3-power.dtsi"
- };
-diff --git a/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi
-index af12ead..01c8c33 100644
---- a/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p1010si-post.dtsi
-@@ -171,6 +171,8 @@
- 
- /include/ "pq3-etsec2-0.dtsi"
- 	enet0: ethernet@b0000 {
-+		fsl,pmc-handle = <&etsec1_clk>;
-+
- 		queue-group@b0000 {
- 			fsl,rx-bit-map = <0xff>;
- 			fsl,tx-bit-map = <0xff>;
-@@ -179,6 +181,8 @@
- 
- /include/ "pq3-etsec2-1.dtsi"
- 	enet1: ethernet@b1000 {
-+		fsl,pmc-handle = <&etsec2_clk>;
-+
- 		queue-group@b1000 {
- 			fsl,rx-bit-map = <0xff>;
- 			fsl,tx-bit-map = <0xff>;
-@@ -187,6 +191,8 @@
- 
- /include/ "pq3-etsec2-2.dtsi"
- 	enet2: ethernet@b2000 {
-+		fsl,pmc-handle = <&etsec3_clk>;
-+
- 		queue-group@b2000 {
- 			fsl,rx-bit-map = <0xff>;
- 			fsl,tx-bit-map = <0xff>;
-@@ -199,4 +205,6 @@
- 		reg = <0xe0000 0x1000>;
- 		fsl,has-rstcr;
- 	};
-+
-+/include/ "pq3-power.dtsi"
- };
-diff --git a/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi
-index 68cc5e7..410e6e5 100644
---- a/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p1020si-post.dtsi
-@@ -162,14 +162,17 @@
- 
- /include/ "pq3-etsec2-0.dtsi"
- 	enet0: enet0_grp2: ethernet@b0000 {
-+		fsl,pmc-handle = <&etsec1_clk>;
- 	};
- 
- /include/ "pq3-etsec2-1.dtsi"
- 	enet1: enet1_grp2: ethernet@b1000 {
-+		fsl,pmc-handle = <&etsec2_clk>;
- 	};
- 
- /include/ "pq3-etsec2-2.dtsi"
- 	enet2: enet2_grp2: ethernet@b2000 {
-+		fsl,pmc-handle = <&etsec3_clk>;
- 	};
- 
- 	global-utilities@e0000 {
-@@ -177,6 +180,8 @@
- 		reg = <0xe0000 0x1000>;
- 		fsl,has-rstcr;
- 	};
-+
-+/include/ "pq3-power.dtsi"
- };
- 
- /include/ "pq3-etsec2-grp2-0.dtsi"
-diff --git a/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi
-index adb82fd..02df574 100644
---- a/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p1021si-post.dtsi
-@@ -158,14 +158,17 @@
- 
- /include/ "pq3-etsec2-0.dtsi"
- 	enet0: enet0_grp2: ethernet@b0000 {
-+		fsl,pmc-handle = <&etsec1_clk>;
- 	};
- 
- /include/ "pq3-etsec2-1.dtsi"
- 	enet1: enet1_grp2: ethernet@b1000 {
-+		fsl,pmc-handle = <&etsec2_clk>;
- 	};
- 
- /include/ "pq3-etsec2-2.dtsi"
- 	enet2: enet2_grp2: ethernet@b2000 {
-+		fsl,pmc-handle = <&etsec3_clk>;
- 	};
- 
- 	global-utilities@e0000 {
-@@ -173,6 +176,8 @@
- 		reg = <0xe0000 0x1000>;
- 		fsl,has-rstcr;
- 	};
-+
-+/include/ "pq3-power.dtsi"
- };
- 
- &qe {
-diff --git a/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi
-index e179803..c5343e7 100644
---- a/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p1022si-post.dtsi
-@@ -223,10 +223,14 @@
- 
- /include/ "pq3-etsec2-0.dtsi"
- 	enet0: enet0_grp2: ethernet@b0000 {
-+		fsl,wake-on-filer;
-+		fsl,pmc-handle = <&etsec1_clk>;
- 	};
- 
- /include/ "pq3-etsec2-1.dtsi"
- 	enet1: enet1_grp2: ethernet@b1000 {
-+		fsl,wake-on-filer;
-+		fsl,pmc-handle = <&etsec2_clk>;
- 	};
- 
- 	global-utilities@e0000 {
-@@ -235,9 +239,10 @@
- 		fsl,has-rstcr;
- 	};
- 
--	power@e0070{
--		compatible = "fsl,mpc8536-pmc", "fsl,mpc8548-pmc";
--		reg = <0xe0070 0x20>;
-+/include/ "pq3-power.dtsi"
-+	power@e0070 {
-+		compatible = "fsl,p1022-pmc", "fsl,mpc8536-pmc",
-+				"fsl,mpc8548-pmc";
- 	};
- 
- };
-diff --git a/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi b/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi
-index 884e01b..2c4787c 100644
---- a/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p2020si-post.dtsi
-@@ -175,6 +175,10 @@
- 		compatible = "fsl-usb2-dr-v1.6", "fsl-usb2-dr";
- 	};
- /include/ "pq3-etsec1-0.dtsi"
-+	enet0: ethernet@24000 {
-+		fsl,pmc-handle = <&etsec1_clk>;
-+
-+	};
- /include/ "pq3-etsec1-timer-0.dtsi"
- 
- 	ptp_clock@24e00 {
-@@ -183,7 +187,15 @@
- 
- 
- /include/ "pq3-etsec1-1.dtsi"
-+	enet1: ethernet@25000 {
-+		fsl,pmc-handle = <&etsec2_clk>;
-+	};
-+
- /include/ "pq3-etsec1-2.dtsi"
-+	enet2: ethernet@26000 {
-+		fsl,pmc-handle = <&etsec3_clk>;
-+	};
-+
- /include/ "pq3-esdhc-0.dtsi"
- 	sdhc@2e000 {
- 		compatible = "fsl,p2020-esdhc", "fsl,esdhc";
-@@ -198,4 +210,6 @@
- 		reg = <0xe0000 0x1000>;
- 		fsl,has-rstcr;
- 	};
-+
-+/include/ "pq3-power.dtsi"
- };
-diff --git a/arch/powerpc/boot/dts/fsl/pq3-power.dtsi b/arch/powerpc/boot/dts/fsl/pq3-power.dtsi
-new file mode 100644
-index 0000000..5a760b3
---- /dev/null
-+++ b/arch/powerpc/boot/dts/fsl/pq3-power.dtsi
-@@ -0,0 +1,48 @@
-+/*
-+ * PQ3 Power Management device tree stub
-+ *
-+ * Copyright 2012-2013 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *     * Redistributions of source code must retain the above copyright
-+ *       notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyright
-+ *       notice, this list of conditions and the following disclaimer in the
-+ *       documentation and/or other materials provided with the distribution.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *       names of its contributors may be used to endorse or promote products
-+ *       derived from this software without specific prior written permission.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of the
-+ * GNU General Public License ("GPL") as published by the Free Software
-+ * Foundation, either version 2 of that License or (at your option) any
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+power@e0070 {
-+	compatible = "fsl,mpc8548-pmc";
-+	reg = <0xe0070 0x20>;
-+
-+	etsec1_clk: soc-clk@24 {
-+		fsl,pmcdr-mask = <0x00000080>;
-+	};
-+	etsec2_clk: soc-clk@25 {
-+		fsl,pmcdr-mask = <0x00000040>;
-+	};
-+	etsec3_clk: soc-clk@26 {
-+		fsl,pmcdr-mask = <0x00000020>;
-+	};
-+};
--- 
-1.7.3
+Bah, absolutely.
 
-_______________________________________________
-linuxppc-release mailing list
-linuxppc-release-50dRxjG7WBCY5r8RbUyfqNHuzzzSOjJt@public.gmane.org
-http://linux.freescale.net/mailman/listinfo/linuxppc-release
+> > +
+> > +static int __init cci_driver_probe(struct platform_device *pdev)
+> 
+> You probably want to drop the __init considering device hotplug is not
+> optional anymore.
 
------ End forwarded message -----
+I will rework the driver to make it non-hotpluggable compliant (ie use
+platform_driver_probe()) honestly hotplug should be strictly prohibited
+for CCI, it is a bus tied to CPU clusters I can hardly see any reason to
+allow that.
+
+> > +{
+> > +	const struct of_device_id *match;
+> > +	struct cci_nb_ports const *cci_config;
+> > +	int ret, j, i, nb_ace = 0, nb_ace_lite = 0;
+> > +	struct device_node *np, *cp;
+> > +	const char *match_str;
+> > +
+> > +	match = of_match_device(arm_cci_matches, &pdev->dev);
+> > +
+> > +	if (!match)
+> > +		return -ENODEV;
+> 
+> It would be nice if we could get the data field from the of_device_id
+> without doing the search again. Can we update the of_platform code to
+> assign some field that you can get from the platform device?
+
+I guess there is a reason why it has not been implemented, I will have
+a look to check that though.
+
+> > +
+> > +	cci_config = (struct cci_nb_ports const *)match->data;
+> > +	nb_cci_ports = cci_config->nb_ace + cci_config->nb_ace_lite;
+> > +	ports = kzalloc(sizeof(*ports) * nb_cci_ports, GFP_KERNEL);
+> 
+> kcalloc()?
+
+Absolutely.
+
+> > +	if (!ports)
+> > +		return -ENOMEM;
+> > +
+> > +	np = pdev->dev.of_node;
+> > +	cci_ctrl_base = of_iomap(np, 0);
+> 
+> This is a platform driver so we should use non-of functions to map,
+> platform_get_resource()/ioremap(), etc.
+
+Well, it has a strict dependency on DT though. Point taken anyway, I
+will think about this.
+
+> > +}
+> > +
+> > +static int __exit cci_driver_remove(struct platform_device *pdev)
+> > +{
+> 
+> You probably want to drop the __exit here too.
+
+See above.
+
+> > diff --git a/include/linux/arm-cci.h b/include/linux/arm-cci.h
+> > new file mode 100644
+> > index 0000000..e9514a2
+> > --- /dev/null
+> > +++ b/include/linux/arm-cci.h
+> > @@ -0,0 +1,44 @@
+> > +
+> > +#ifndef __LINUX_ARM_CCI_H
+> > +#define __LINUX_ARM_CCI_H
+> > +
+> > +#include <linux/errno.h>
+> > +#include <linux/of.h>
+> > +#include <linux/types.h>
+> 
+> You can declare
+> 
+> struct device_node;
+> 
+> here to avoid including linux/of.h. Less includes means less circular
+> dependencies.
+
+Ok.
+
+Thanks,
+Lorenzo
