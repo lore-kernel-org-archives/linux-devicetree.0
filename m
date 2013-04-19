@@ -1,99 +1,34 @@
 From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 1/2] GPIO: clps711x: Rewrite driver for using generic
- GPIO code
-Date: Fri, 19 Apr 2013 15:03:57 +0100
-Message-ID: <20130419140357.GR14496@n2100.arm.linux.org.uk>
-References: <1365826900-30136-1-git-send-email-shc_work@mail.ru>
+Subject: Re: [PATCHv8 07/19] arm: pci: add a align_resource hook
+Date: Fri, 19 Apr 2013 15:33:31 +0100
+Message-ID: <20130419143331.GV14496@n2100.arm.linux.org.uk>
+References: <1365541601-14095-1-git-send-email-thomas.petazzoni@free-electrons.com> <1365541601-14095-8-git-send-email-thomas.petazzoni@free-electrons.com> <20130415163609.GJ28693@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1365826900-30136-1-git-send-email-shc_work@mail.ru>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Olof Johansson <olof@lixom.net>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20130415163609.GJ28693@titan.lakedaemon.net>
+Sender: linux-pci-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Andrew Murray <andrew.murray@arm.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org, Mitch Bradley <wmb@firmworks.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 13, 2013 at 08:21:39AM +0400, Alexander Shiyan wrote:
-> +static void __init clps711x_add_gpio(void)
-> +{
-> +	const struct resource clps711x_gpio0_res[] = {
-> +		DEFINE_RES_MEM(PADR, SZ_1),
-> +		DEFINE_RES_MEM(PADDR, SZ_1),
-> +	};
-> +	const struct resource clps711x_gpio1_res[] = {
-> +		DEFINE_RES_MEM(PBDR, SZ_1),
-> +		DEFINE_RES_MEM(PBDDR, SZ_1),
-> +	};
-> +	const struct resource clps711x_gpio2_res[] = {
-> +		DEFINE_RES_MEM(PCDR, SZ_1),
-> +		DEFINE_RES_MEM(PCDDR, SZ_1),
-> +	};
-> +	const struct resource clps711x_gpio3_res[] = {
-> +		DEFINE_RES_MEM(PDDR, SZ_1),
-> +		DEFINE_RES_MEM(PDDDR, SZ_1),
-> +	};
-> +	const struct resource clps711x_gpio4_res[] = {
-> +		DEFINE_RES_MEM(PEDR, SZ_1),
-> +		DEFINE_RES_MEM(PEDDR, SZ_1),
-> +	};
+On Mon, Apr 15, 2013 at 12:36:09PM -0400, Jason Cooper wrote:
+> Russell,
+> 
+> Thanks for applying this patch (7683/1) to your tree.  I see it's in
+> your for-next, which I understand *isn't* stable.
 
-Don't do this - this is incredibly wasteful.
+That is correct.
 
-C lesson 1: do not put unmodified initialised structures onto the stack.
+>   029baf1 ARM: 7683/1: pci: add a align_resource hook
+> 
+> Is there a stable branch I could depend on for the rest of this series
+> (particularly, patch 10)?  It looks like you applied it to your misc
+> branch, but that's not currently available.
 
-What the C compiler will do with the above is exactly the same as this
-for each structure:
-
-static const struct resource private_clps711x_gpio4_res[] = {
-	DEFINE_RES_MEM(PEDR, SZ_1),
-	DEFINE_RES_MEM(PEDDR, SZ_1),
-};
-
-static void __init clps711x_add_gpio(void)
-{
-	const struct resource clps711x_gpio4_res[] = private_clps711x_gpio4_res;
-	...
-
-which will in itself be a call out to memcpy, or an inlined memcpy.  Now
-do you see why it's wasteful?  You might as well write the thing in that
-way to start with and safe the additional code to copy the structures.
-
-The other way to do this, which will probably be far more space efficient:
-
-static phys_addr_t gpio_addrs[][2] = {
-	{ PADR, PADDR },
-	{ PBDR, PBDDR },
-...
-};
-
-static void __init clps711x_add_gpio(void)
-{
-	struct resource gpio_res[2];
-	unsigned i;
-
-	gpio_res[0].flags = IORESOURCE_MEM;
-	gpio_res[1].flags = IORESOURCE_MEM;
-
-	for (i = 0; i < ARRAY_SIZE(gpio_addrs); i++) {
-		gpio_res[0].start = gpio_addrs[i][0];
-		gpio_res[0].end = gpio_res[0].start;
-		gpio_res[1].start = gpio_addrs[i][1];
-		gpio_res[1].end = gpio_res[1].start;
-
-		platform_device_register_simple("clps711x-gpio", i,
-					gpio_res, ARRAY_SIZE(gpio_res));
-	}
-}
-
-which results in smaller storage and most probably also smaller code size
-too.
+I will have to look at that; as I'm still catching up with mail three
+days after having returned and there's still quite an amount outstanding,
+it's going to be a while before I can look at this.  Given that we're at
+-rc7 and the amount of outstanding mail, it's likely that may happen
+after the merge window has opened.
