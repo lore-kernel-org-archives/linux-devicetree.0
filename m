@@ -1,157 +1,342 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH] drivers: bus: add ARM CCI support
-Date: Fri, 19 Apr 2013 12:21:45 +0100
-Message-ID: <20130419112145.GB8719@e102568-lin.cambridge.arm.com>
-References: <1365691679-28674-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1365691679-28674-2-git-send-email-lorenzo.pieralisi@arm.com>
- <51702B70.9000908@codeaurora.org>
+From: Eunchul Kim <chulspro.kim@samsung.com>
+Subject: Re: [PATCH v2 2/3] drm/exynos: Rework fimc clocks handling
+Date: Fri, 19 Apr 2013 20:26:53 +0900
+Message-ID: <517129FD.5040603@samsung.com>
+References: <1366192384-18829-1-git-send-email-s.nawrocki@samsung.com>
+ <1366192384-18829-3-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51702B70.9000908-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1366192384-18829-3-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: inki.dae@samsung.com, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, chulspro.kim@samsung.com, jaejoon.seo@samsung.com, jmock.shin@samsung.com, jy0.jeon@samsung.com, th908.kim@samsung.com, lsmin.lee@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review Stephen.
+Dear Sylwester Nawrocki
 
-On Thu, Apr 18, 2013 at 06:20:48PM +0100, Stephen Boyd wrote:
-> On 04/11/13 07:47, Lorenzo Pieralisi wrote:
-> > diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
-> > new file mode 100644
-> > index 0000000..81953de
-> > --- /dev/null
-> > +++ b/drivers/bus/arm-cci.c
-> [...]
-> > +static void notrace cci_port_control(unsigned int port, bool enable)
-> > +{
-> > +	void __iomem *base = ports[port].base;
-> > +
-> > +	if (!base)
-> > +		return;
-> > +
-> > +	writel_relaxed(enable, base + CCI_PORT_CTRL);
-> > +	while (readl_relaxed(cci_ctrl_base + CCI_CTRL_STATUS) & 0x1)
-> > +			;
-> 
-> cpu_relax()?
+Thank you for your update. I have some question of your patch.
+please give your information to me.
 
-Nico explained the reason why I did not add a cpu_relax() here, actually
-having this function in C is already a moot point.
+Thank's
+BR
+Eunchul Kim.
 
-> > +}
-> [...]
-> > +int notrace __cci_control_port_by_device(struct device_node *np, bool enable)
-> > +{
-> > +	int port = cci_ace_lite_port(np);
-> > +	if (WARN_ONCE(port < 0,
-> > +		      "ACE lite port look-up failure, node %p\n", np))
-> > +		return -ENODEV;
-> > +	cci_port_control(port, enable);
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(__cci_control_port_by_device);
-> > +
-> > +static const struct of_device_id arm_cci_matches[];
-> 
-> Why not just put the definition here then?
+On 04/17/2013 06:53 PM, Sylwester Nawrocki wrote:
+> The clocks handling is refactored and a "mux" clock handling is
+> added to account for changes in the clocks driver. After switching
+> to the common clock framework the sclk_fimc clock is now split
+> into two clocks: a gate and a mux clock. In order to retain the
+> exisiting functionality two additional consumer clocks are passed
+> to the driver from device tree: "mux" and "parent". Then the driver
+> sets "parent" clock as a parent clock of the "mux" clock. These two
+> additional clocks are optional, and should go away when there is a
+> standard way of setting up parent clocks on DT platforms.
+>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>   drivers/gpu/drm/exynos/exynos_drm_fimc.c |  167 +++++++++++++++++-------------
+>   1 file changed, 97 insertions(+), 70 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimc.c b/drivers/gpu/drm/exynos/exynos_drm_fimc.c
+> index d812c57..bc8411a 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_fimc.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_fimc.c
+> @@ -76,6 +76,27 @@ enum fimc_wb {
+>   	FIMC_WB_B,
+>   };
+>
+> +enum {
+> +	FIMC_CLK_LCLK,
+> +	FIMC_CLK_GATE,
+> +	FIMC_CLK_WB_A,
+> +	FIMC_CLK_WB_B,
+> +	FIMC_CLK_MUX,
+> +	FIMC_CLK_PARENT,
 
-Bah, absolutely.
+- What is MUX, PARENT ?
 
-> > +
-> > +static int __init cci_driver_probe(struct platform_device *pdev)
-> 
-> You probably want to drop the __init considering device hotplug is not
-> optional anymore.
+> +	FIMC_CLKS_MAX
+> +};
+> +
+> +static const char * fimc_clock_names[] = {
+> +	[FIMC_CLK_LCLK]   = "sclk_fimc",
+> +	[FIMC_CLK_GATE]   = "fimc",
+> +	[FIMC_CLK_WB_A]   = "pxl_async0",
+> +	[FIMC_CLK_WB_B]   = "pxl_async1",
+> +	[FIMC_CLK_MUX]    = "mux",
+> +	[FIMC_CLK_PARENT] = "parent",
 
-I will rework the driver to make it non-hotpluggable compliant (ie use
-platform_driver_probe()) honestly hotplug should be strictly prohibited
-for CCI, it is a bus tied to CPU clusters I can hardly see any reason to
-allow that.
 
-> > +{
-> > +	const struct of_device_id *match;
-> > +	struct cci_nb_ports const *cci_config;
-> > +	int ret, j, i, nb_ace = 0, nb_ace_lite = 0;
-> > +	struct device_node *np, *cp;
-> > +	const char *match_str;
-> > +
-> > +	match = of_match_device(arm_cci_matches, &pdev->dev);
-> > +
-> > +	if (!match)
-> > +		return -ENODEV;
-> 
-> It would be nice if we could get the data field from the of_device_id
-> without doing the search again. Can we update the of_platform code to
-> assign some field that you can get from the platform device?
+- How can I get "mux", "parent" clock information ?
+   Normally we are using "mout_mpll" in exynos4210, "mout_mpll_user" in 
+  exynos 4412. I want to get this two kind of clock name information.
 
-I guess there is a reason why it has not been implemented, I will have
-a look to check that though.
 
-> > +
-> > +	cci_config = (struct cci_nb_ports const *)match->data;
-> > +	nb_cci_ports = cci_config->nb_ace + cci_config->nb_ace_lite;
-> > +	ports = kzalloc(sizeof(*ports) * nb_cci_ports, GFP_KERNEL);
-> 
-> kcalloc()?
+> +};
+> +
+> +#define FIMC_DEFAULT_LCLK_FREQUENCY 133000000UL
 
-Absolutely.
 
-> > +	if (!ports)
-> > +		return -ENOMEM;
-> > +
-> > +	np = pdev->dev.of_node;
-> > +	cci_ctrl_base = of_iomap(np, 0);
-> 
-> This is a platform driver so we should use non-of functions to map,
-> platform_get_resource()/ioremap(), etc.
+- When do I use this value in the patch ?
+   If not use. please remove this macro. If you want to use this value.
+   please use platform data instead of macro.
 
-Well, it has a strict dependency on DT though. Point taken anyway, I
-will think about this.
 
-> > +}
-> > +
-> > +static int __exit cci_driver_remove(struct platform_device *pdev)
-> > +{
-> 
-> You probably want to drop the __exit here too.
+> +
+>   /*
+>    * A structure of scaler.
+>    *
+> @@ -132,15 +153,12 @@ struct fimc_driverdata {
+>    *
+>    * @ippdrv: prepare initialization using ippdrv.
+>    * @regs_res: register resources.
+> + * @dev: pointer to the fimc device structure.
 
-See above.
 
-> > diff --git a/include/linux/arm-cci.h b/include/linux/arm-cci.h
-> > new file mode 100644
-> > index 0000000..e9514a2
-> > --- /dev/null
-> > +++ b/include/linux/arm-cci.h
-> > @@ -0,0 +1,44 @@
-> > +
-> > +#ifndef __LINUX_ARM_CCI_H
-> > +#define __LINUX_ARM_CCI_H
-> > +
-> > +#include <linux/errno.h>
-> > +#include <linux/of.h>
-> > +#include <linux/types.h>
-> 
-> You can declare
-> 
-> struct device_node;
-> 
-> here to avoid including linux/of.h. Less includes means less circular
-> dependencies.
+- We already set the dev information in ippdrv structure.
+   I think this value is duplicated value.
 
-Ok.
 
-Thanks,
-Lorenzo
+>    * @regs: memory mapped io registers.
+>    * @lock: locking of operations.
+> - * @sclk_fimc_clk: fimc source clock.
+> - * @fimc_clk: fimc clock.
+> - * @wb_clk: writeback a clock.
+> - * @wb_b_clk: writeback b clock.
+> + * @clocks: fimc clocks.
+> + * @clk_frequency: LCLK clock frequency.
+>    * @sc: scaler infomations.
+> - * @odr: ordering of YUV.
+> - * @ver: fimc version.
+>    * @pol: porarity of writeback.
+>    * @id: fimc id.
+>    * @irq: irq number.
+> @@ -148,13 +166,12 @@ struct fimc_driverdata {
+>    */
+>   struct fimc_context {
+>   	struct exynos_drm_ippdrv	ippdrv;
+> +	struct device	*dev;
+
+- please check this value about really need ?
+
+>   	struct resource	*regs_res;
+>   	void __iomem	*regs;
+>   	struct mutex	lock;
+> -	struct clk	*sclk_fimc_clk;
+> -	struct clk	*fimc_clk;
+> -	struct clk	*wb_clk;
+> -	struct clk	*wb_b_clk;
+> +	struct clk	*clocks[FIMC_CLKS_MAX];
+> +	u32		clk_frequency;
+>   	struct fimc_scaler	sc;
+>   	struct fimc_driverdata	*ddata;
+>   	struct exynos_drm_ipp_pol	pol;
+> @@ -1301,14 +1318,12 @@ static int fimc_clk_ctrl(struct fimc_context *ctx, bool enable)
+>   	DRM_DEBUG_KMS("%s:enable[%d]\n", __func__, enable);
+>
+>   	if (enable) {
+> -		clk_enable(ctx->sclk_fimc_clk);
+> -		clk_enable(ctx->fimc_clk);
+> -		clk_enable(ctx->wb_clk);
+> +		clk_prepare_enable(ctx->clocks[FIMC_CLK_GATE]);
+> +		clk_prepare_enable(ctx->clocks[FIMC_CLK_WB_A]);
+>   		ctx->suspended = false;
+>   	} else {
+> -		clk_disable(ctx->sclk_fimc_clk);
+> -		clk_disable(ctx->fimc_clk);
+> -		clk_disable(ctx->wb_clk);
+> +		clk_disable_unprepare(ctx->clocks[FIMC_CLK_GATE]);
+> +		clk_disable_unprepare(ctx->clocks[FIMC_CLK_WB_A]);
+>   		ctx->suspended = true;
+>   	}
+>
+> @@ -1713,11 +1728,66 @@ static void fimc_ippdrv_stop(struct device *dev, enum drm_exynos_ipp_cmd cmd)
+>   	fimc_write(cfg, EXYNOS_CIGCTRL);
+>   }
+>
+> +static void fimc_put_clocks(struct fimc_context *ctx)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < FIMC_CLKS_MAX; i++) {
+> +		if (IS_ERR(ctx->clocks[i]))
+> +			continue;
+> +		clk_put(ctx->clocks[i]);
+> +		ctx->clocks[i] = ERR_PTR(-EINVAL);
+> +	}
+> +}
+> +
+> +static int fimc_setup_clocks(struct fimc_context *ctx)
+> +{
+> +	struct device *dev;
+> +	int ret, i;
+> +
+> +	for (i = 0; i < FIMC_CLKS_MAX; i++)
+> +		ctx->clocks[i] = ERR_PTR(-EINVAL);
+> +
+> +	for (i = 0; i < FIMC_CLKS_MAX; i++) {
+> +		if (i == FIMC_CLK_WB_A || i == FIMC_CLK_WB_B)
+> +			dev = ctx->dev->parent;
+> +		else
+> +			dev = ctx->dev;
+> +
+> +		ctx->clocks[i] = clk_get(dev, fimc_clock_names[i]);
+> +		if (IS_ERR(ctx->clocks[i])) {
+> +			if (i >= FIMC_CLK_MUX)
+> +				break;
+> +			ret = PTR_ERR(ctx->clocks[i]);
+> +			goto e_clk_free;
+> +		}
+> +	}
+> +
+> +	if (!IS_ERR(ctx->clocks[FIMC_CLK_PARENT])) {
+> +		ret = clk_set_parent(ctx->clocks[FIMC_CLK_MUX],
+> +				     ctx->clocks[FIMC_CLK_PARENT]);
+
+
+- I can't review this code.
+
+
+> +		if (ret < 0) {
+> +			dev_err(ctx->dev, "failed to set parent: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	ret = clk_set_rate(ctx->clocks[FIMC_CLK_LCLK], ctx->clk_frequency);
+
+
+- When do I set clk_frequency value ? and why doesn't use pdata->clk_rate ?
+
+
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return clk_prepare_enable(ctx->clocks[FIMC_CLK_LCLK]);
+> +
+> +e_clk_free:
+> +	dev_err(ctx->dev, "failed to get clock: %s\n", fimc_clock_names[i]);
+> +	fimc_put_clocks(ctx);
+> +	return ret;
+> +}
+> +
+>   static int fimc_probe(struct platform_device *pdev)
+>   {
+>   	struct device *dev = &pdev->dev;
+>   	struct fimc_context *ctx;
+> -	struct clk	*parent_clk;
+>   	struct resource *res;
+>   	struct exynos_drm_ippdrv *ippdrv;
+>   	struct exynos_drm_fimc_pdata *pdata;
+> @@ -1734,55 +1804,6 @@ static int fimc_probe(struct platform_device *pdev)
+>   	if (!ctx)
+>   		return -ENOMEM;
+>
+> -	ddata = (struct fimc_driverdata *)
+> -		platform_get_device_id(pdev)->driver_data;
+> -
+> -	/* clock control */
+> -	ctx->sclk_fimc_clk = devm_clk_get(dev, "sclk_fimc");
+> -	if (IS_ERR(ctx->sclk_fimc_clk)) {
+> -		dev_err(dev, "failed to get src fimc clock.\n");
+> -		return PTR_ERR(ctx->sclk_fimc_clk);
+> -	}
+> -	clk_enable(ctx->sclk_fimc_clk);
+> -
+> -	ctx->fimc_clk = devm_clk_get(dev, "fimc");
+> -	if (IS_ERR(ctx->fimc_clk)) {
+> -		dev_err(dev, "failed to get fimc clock.\n");
+> -		clk_disable(ctx->sclk_fimc_clk);
+> -		return PTR_ERR(ctx->fimc_clk);
+> -	}
+> -
+> -	ctx->wb_clk = devm_clk_get(dev, "pxl_async0");
+> -	if (IS_ERR(ctx->wb_clk)) {
+> -		dev_err(dev, "failed to get writeback a clock.\n");
+> -		clk_disable(ctx->sclk_fimc_clk);
+> -		return PTR_ERR(ctx->wb_clk);
+> -	}
+> -
+> -	ctx->wb_b_clk = devm_clk_get(dev, "pxl_async1");
+> -	if (IS_ERR(ctx->wb_b_clk)) {
+> -		dev_err(dev, "failed to get writeback b clock.\n");
+> -		clk_disable(ctx->sclk_fimc_clk);
+> -		return PTR_ERR(ctx->wb_b_clk);
+> -	}
+> -
+> -	parent_clk = devm_clk_get(dev, ddata->parent_clk);
+> -
+> -	if (IS_ERR(parent_clk)) {
+> -		dev_err(dev, "failed to get parent clock.\n");
+> -		clk_disable(ctx->sclk_fimc_clk);
+> -		return PTR_ERR(parent_clk);
+> -	}
+> -
+> -	if (clk_set_parent(ctx->sclk_fimc_clk, parent_clk)) {
+> -		dev_err(dev, "failed to set parent.\n");
+> -		clk_disable(ctx->sclk_fimc_clk);
+> -		return -EINVAL;
+> -	}
+> -
+> -	devm_clk_put(dev, parent_clk);
+> -	clk_set_rate(ctx->sclk_fimc_clk, pdata->clk_rate);
+> -
+>   	/* resource memory */
+>   	ctx->regs_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>   	ctx->regs = devm_ioremap_resource(dev, ctx->regs_res);
+> @@ -1804,6 +1825,9 @@ static int fimc_probe(struct platform_device *pdev)
+>   		return ret;
+>   	}
+>
+> +	ret = fimc_setup_clocks(ctx);
+> +	if (ret < 0)
+> +		goto err_free_irq;
+
+- please blank line and error log.
+
+>   	/* context initailization */
+>   	ctx->id = pdev->id;
+>   	ctx->pol = pdata->pol;
+> @@ -1820,7 +1844,7 @@ static int fimc_probe(struct platform_device *pdev)
+>   	ret = fimc_init_prop_list(ippdrv);
+>   	if (ret < 0) {
+>   		dev_err(dev, "failed to init property list.\n");
+> -		goto err_get_irq;
+> +		goto err_put_clk;
+>   	}
+>
+>   	DRM_DEBUG_KMS("%s:id[%d]ippdrv[0x%x]\n", __func__, ctx->id,
+> @@ -1835,16 +1859,18 @@ static int fimc_probe(struct platform_device *pdev)
+>   	ret = exynos_drm_ippdrv_register(ippdrv);
+>   	if (ret < 0) {
+>   		dev_err(dev, "failed to register drm fimc device.\n");
+> -		goto err_ippdrv_register;
+> +		goto err_pm_dis;
+>   	}
+>
+>   	dev_info(&pdev->dev, "drm fimc registered successfully.\n");
+>
+>   	return 0;
+>
+> -err_ippdrv_register:
+> +err_pm_dis:
+>   	pm_runtime_disable(dev);
+> -err_get_irq:
+> +err_put_clk:
+> +	fimc_put_clocks(ctx);
+> +err_free_irq:
+>   	free_irq(ctx->irq, ctx);
+>
+>   	return ret;
+> @@ -1859,6 +1885,7 @@ static int fimc_remove(struct platform_device *pdev)
+>   	exynos_drm_ippdrv_unregister(ippdrv);
+>   	mutex_destroy(&ctx->lock);
+>
+> +	fimc_put_clocks(ctx);
+>   	pm_runtime_set_suspended(dev);
+>   	pm_runtime_disable(dev);
+>
+>
