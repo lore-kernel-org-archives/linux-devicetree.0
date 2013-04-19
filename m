@@ -1,93 +1,56 @@
-From: Jean Delvare <khali@linux-fr.org>
-Subject: Re: [PATCH 1/3] Add support for GMT G72/G763 PWM fan controller
-Date: Fri, 19 Apr 2013 08:05:08 +0200
-Message-ID: <20130419080508.4866db90@endymion.delvare>
-References: <cover.1366322287.git.arno@natisbad.org>
-	<4f4a821bbc61e2da28fd70553fd717ada255097d.1366322287.git.arno@natisbad.org>
+From: Gabor Juhos <juhosg@openwrt.org>
+Subject: Re: [PATCH v7 3/3] of/pci: mips: convert to common of_pci_range_parser
+Date: Fri, 19 Apr 2013 09:19:50 +0200
+Message-ID: <5170F016.6050502@openwrt.org>
+References: <1366107508-12672-1-git-send-email-Andrew.Murray@arm.com>
+ <1366107508-12672-4-git-send-email-Andrew.Murray@arm.com>
+ <CACRpkdbBaT1OKr5t8HW4+8y_wSDmGxmewAyVMekx8S-K9s3K8Q@mail.gmail.com>
+ <20130418125910.GA17128@arm.com>
+ <20130418130919.GI27197@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <4f4a821bbc61e2da28fd70553fd717ada255097d.1366322287.git.arno@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnaud Ebalard <arno@natisbad.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Simon Guinot <simon.guinot@sequanux.org>, Olivier Mouchet <olivier.mouchet@gmail.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130418130919.GI27197@titan.lakedaemon.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "siva.kallam@samsung.com" <siva.kallam@samsung.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@avionic-design.de>, Liviu Dudau <Liviu.Dudau@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Paul Mackerras <paulus@samba.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jingoo Han <jg1.han@samsung.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Abraham <thomas.abraham@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Kukjin Kim <kgene.kim@samsung.com>"bhelgaas@google.com" <b>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnaud,
+2013.04.18. 15:09 keltez=E9ssel, Jason Cooper =EDrta:
+> On Thu, Apr 18, 2013 at 01:59:10PM +0100, Andrew Murray wrote:
+>> On Wed, Apr 17, 2013 at 04:42:48PM +0100, Linus Walleij wrote:
+>>> On Tue, Apr 16, 2013 at 12:18 PM, Andrew Murray <Andrew.Murray@arm.com>=
+ wrote:
+>>>
+>>>> This patch converts the pci_load_of_ranges function to use the new com=
+mon
+>>>> of_pci_range_parser.
+>>>>
+>>>> Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
+>>>> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+>>>> Reviewed-by: Rob Herring <rob.herring@calxeda.com>
+>>>
+>>> Tested-by: Linus Walleij <linus.walleij@linaro.org>
+>>
+>> Jason - you may not have seen this, but here (Linus Walleij) is another =
+Tested-by
+>> to add to this patch in your tree (if you can).
+> =
 
-Just a few things I noticed...
+> Thanks, I saw it.  Unfortunately, the PR was already sent, and the branch
+> is now pulled into arm-soc.
 
-Typo in subject line: G762, not G72.
+Sorry I had no time earlier, but I have tested this now on MIPS. The patch
+causes build errors unfortunately. Given the fact that this has been merged
+already, I will send a fixup patch.
 
-On Fri, 19 Apr 2013 00:28:21 +0200, Arnaud Ebalard wrote:
-> 
-> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
-> Tested-by: Arnaud Ebalard <arno@natisbad.org>
-> ---
->  drivers/hwmon/Kconfig  |   10 +
->  drivers/hwmon/Makefile |    1 +
->  drivers/hwmon/g762.c   | 1159 ++++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 1170 insertions(+)
->  create mode 100644 drivers/hwmon/g762.c
-> 
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 89ac1cb..0c6ddee 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -423,6 +423,16 @@ config SENSORS_G760A
->  	  This driver can also be built as a module.  If so, the module
->  	  will be called g760a.
->  
-> +config SENSORS_G762
-> +	tristate "GMT G762"
-> +	depends on I2C
-> +	help
-> +	  If you say yes here you get support for Global Mixed-mode
-> +	  Technology Inc G762 fan speed PWM controller chips.
-
-If your driver also supports the G763 it should be mentioned here.
-
-> +
-> +	  This driver can also be built as a module.  If so, the module
-> +	  will be called g762a.
-
-This is not how your driver is actually named.
-
-> +
->  config SENSORS_GL518SM
->  	tristate "Genesys Logic GL518SM"
->  	depends on I2C
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index 8d6d97e..4b49504 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -57,6 +57,7 @@ obj-$(CONFIG_SENSORS_F75375S)	+= f75375s.o
->  obj-$(CONFIG_SENSORS_FAM15H_POWER) += fam15h_power.o
->  obj-$(CONFIG_SENSORS_FSCHMD)	+= fschmd.o
->  obj-$(CONFIG_SENSORS_G760A)	+= g760a.o
-> +obj-$(CONFIG_SENSORS_G762)	+= g762.o
->  obj-$(CONFIG_SENSORS_GL518SM)	+= gl518sm.o
->  obj-$(CONFIG_SENSORS_GL520SM)	+= gl520sm.o
->  obj-$(CONFIG_SENSORS_GPIO_FAN)	+= gpio-fan.o
-> diff --git a/drivers/hwmon/g762.c b/drivers/hwmon/g762.c
-> new file mode 100644
-> index 0000000..8c4cb39
-> --- /dev/null
-> +++ b/drivers/hwmon/g762.c
-> (...)
-> +#define DRVNAME "g762"
-> +
-> +static const struct i2c_device_id g762_id[] = {
-> +	{ DRVNAME, 0 },
-
-No, this is a list of device names, nor driver names, so the use of
-DRVNAME is inappropriate. Also, again, if your driver supports the g763
-it should be listed here too.
-
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, g762_id);
-
--- 
-Jean Delvare
+-Gabor
