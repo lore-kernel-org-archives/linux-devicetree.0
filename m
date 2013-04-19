@@ -1,342 +1,83 @@
-From: Eunchul Kim <chulspro.kim@samsung.com>
-Subject: Re: [PATCH v2 2/3] drm/exynos: Rework fimc clocks handling
-Date: Fri, 19 Apr 2013 20:26:53 +0900
-Message-ID: <517129FD.5040603@samsung.com>
-References: <1366192384-18829-1-git-send-email-s.nawrocki@samsung.com>
- <1366192384-18829-3-git-send-email-s.nawrocki@samsung.com>
+From: arno@natisbad.org (Arnaud Ebalard)
+Subject: Re: [PATCH 1/3] Add support for GMT G72/G763 PWM fan controller
+Date: Fri, 19 Apr 2013 13:30:51 +0200
+Message-ID: <87y5ceahas.fsf@natisbad.org>
+References: <cover.1366322287.git.arno@natisbad.org>
+ <4f4a821bbc61e2da28fd70553fd717ada255097d.1366322287.git.arno@natisbad.org>
+ <20130419055054.GD18115@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1366192384-18829-3-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: inki.dae@samsung.com, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, chulspro.kim@samsung.com, jaejoon.seo@samsung.com, jmock.shin@samsung.com, jy0.jeon@samsung.com, th908.kim@samsung.com, lsmin.lee@samsung.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Guenter Roeck <linux@roeck-us.net>, Simon Guinot <simon.guinot@sequanux.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Sylwester Nawrocki
+Hi,
 
-Thank you for your update. I have some question of your patch.
-please give your information to me.
+Andrew Lunn <andrew@lunn.ch> writes:
 
-Thank's
-BR
-Eunchul Kim.
-
-On 04/17/2013 06:53 PM, Sylwester Nawrocki wrote:
-> The clocks handling is refactored and a "mux" clock handling is
-> added to account for changes in the clocks driver. After switching
-> to the common clock framework the sclk_fimc clock is now split
-> into two clocks: a gate and a mux clock. In order to retain the
-> exisiting functionality two additional consumer clocks are passed
-> to the driver from device tree: "mux" and "parent". Then the driver
-> sets "parent" clock as a parent clock of the "mux" clock. These two
-> additional clocks are optional, and should go away when there is a
-> standard way of setting up parent clocks on DT platforms.
+> Hi Arnaud
 >
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->   drivers/gpu/drm/exynos/exynos_drm_fimc.c |  167 +++++++++++++++++-------------
->   1 file changed, 97 insertions(+), 70 deletions(-)
+>> +static DEVICE_ATTR(pwm1, S_IWUSR | S_IRUGO, get_pwm, set_pwm);
+>> +static DEVICE_ATTR(pwm1_polarity, S_IWUSR | S_IRUGO,
+>> +		   get_pwm_polarity, set_pwm_polarity);
+>> +static DEVICE_ATTR(pwm1_mode, S_IWUSR | S_IRUGO,
+>> +		   get_pwm_mode, set_pwm_mode);
+>> +static DEVICE_ATTR(pwm1_enable, S_IWUSR | S_IRUGO,
+>> +		   get_speed_control_mode, set_speed_control_mode);
+>> +static DEVICE_ATTR(pwm1_freq, S_IWUSR | S_IRUGO,
+>> +		   get_pwm_freq, set_pwm_freq);
+>> +
+>> +static DEVICE_ATTR(fan1_input, S_IRUGO, get_fan_rpm, NULL);
+>> +static DEVICE_ATTR(fan1_alarm, S_IRUGO, get_fan_ooc, NULL);
+>> +static DEVICE_ATTR(fan1_alarm_detection, S_IWUSR | S_IRUGO,
+>> +		   get_fan_ooc_detection, set_fan_ooc_detection);
+>> +static DEVICE_ATTR(fan1_fault, S_IRUGO, get_fan_failure, NULL);
+>> +static DEVICE_ATTR(fan1_fault_detection, S_IWUSR | S_IRUGO,
+>> +		   get_fan_failure_detection, set_fan_failure_detection);
+>> +static DEVICE_ATTR(fan1_target, S_IWUSR | S_IRUGO,
+>> +		   get_fan_target, set_fan_target);
+>> +static DEVICE_ATTR(fan1_pulses, S_IWUSR | S_IRUGO,
+>> +		   get_fan_pulses, set_fan_pulses);
+>> +static DEVICE_ATTR(fan1_div, S_IWUSR | S_IRUGO,
+>> +		   get_fan_clk_div, set_fan_clk_div);
+>> +static DEVICE_ATTR(fan1_gear_mode, S_IWUSR | S_IRUGO,
+>> +		   get_fan_gear_mode, set_fan_gear_mode);
+>> +static DEVICE_ATTR(fan1_startup_voltage, S_IWUSR | S_IRUGO,
+>> +		   get_fan_startup_voltage, set_fan_startup_voltage);
 >
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimc.c b/drivers/gpu/drm/exynos/exynos_drm_fimc.c
-> index d812c57..bc8411a 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_fimc.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_fimc.c
-> @@ -76,6 +76,27 @@ enum fimc_wb {
->   	FIMC_WB_B,
->   };
->
-> +enum {
-> +	FIMC_CLK_LCLK,
-> +	FIMC_CLK_GATE,
-> +	FIMC_CLK_WB_A,
-> +	FIMC_CLK_WB_B,
-> +	FIMC_CLK_MUX,
-> +	FIMC_CLK_PARENT,
+> It is normal to use SENSOR_ATTR, not DEVICE_ATTR. Take a look at the
+> existing fan drivers.
 
-- What is MUX, PARENT ?
+I will take a look and use SENSOR_ATTR if it is the expected way. For
+the records, the g760a.c which I used as basis uses DEVICE_ATTR ;-)
 
-> +	FIMC_CLKS_MAX
-> +};
-> +
-> +static const char * fimc_clock_names[] = {
-> +	[FIMC_CLK_LCLK]   = "sclk_fimc",
-> +	[FIMC_CLK_GATE]   = "fimc",
-> +	[FIMC_CLK_WB_A]   = "pxl_async0",
-> +	[FIMC_CLK_WB_B]   = "pxl_async1",
-> +	[FIMC_CLK_MUX]    = "mux",
-> +	[FIMC_CLK_PARENT] = "parent",
+> I also think a lot of these are not needed. They are fixed properties
+> of the board and cannot change dynamically. They are set once using DT
+> and user space does not need to care.
 
+I added those knobs for a simple reason: I don't have all the various
+characteristics of the target platform I am working on (Netgear
+ReadyNAS Duo v2) and needed to be able to test various values w/o
+rebooting to get those rights. I thought this knobs would be useful for
+people with the same issue (for instance, the new ReadyNAS 102 also has
+a G762) and would not hurt.
 
-- How can I get "mux", "parent" clock information ?
-   Normally we are using "mout_mpll" in exynos4210, "mout_mpll_user" in 
-  exynos 4412. I want to get this two kind of clock name information.
+Anyway, I will split the patch in two parts and keep the useless knobs
+on my side.
 
+Thanks for your feedback,
 
-> +};
-> +
-> +#define FIMC_DEFAULT_LCLK_FREQUENCY 133000000UL
+Cheers,
 
-
-- When do I use this value in the patch ?
-   If not use. please remove this macro. If you want to use this value.
-   please use platform data instead of macro.
-
-
-> +
->   /*
->    * A structure of scaler.
->    *
-> @@ -132,15 +153,12 @@ struct fimc_driverdata {
->    *
->    * @ippdrv: prepare initialization using ippdrv.
->    * @regs_res: register resources.
-> + * @dev: pointer to the fimc device structure.
-
-
-- We already set the dev information in ippdrv structure.
-   I think this value is duplicated value.
-
-
->    * @regs: memory mapped io registers.
->    * @lock: locking of operations.
-> - * @sclk_fimc_clk: fimc source clock.
-> - * @fimc_clk: fimc clock.
-> - * @wb_clk: writeback a clock.
-> - * @wb_b_clk: writeback b clock.
-> + * @clocks: fimc clocks.
-> + * @clk_frequency: LCLK clock frequency.
->    * @sc: scaler infomations.
-> - * @odr: ordering of YUV.
-> - * @ver: fimc version.
->    * @pol: porarity of writeback.
->    * @id: fimc id.
->    * @irq: irq number.
-> @@ -148,13 +166,12 @@ struct fimc_driverdata {
->    */
->   struct fimc_context {
->   	struct exynos_drm_ippdrv	ippdrv;
-> +	struct device	*dev;
-
-- please check this value about really need ?
-
->   	struct resource	*regs_res;
->   	void __iomem	*regs;
->   	struct mutex	lock;
-> -	struct clk	*sclk_fimc_clk;
-> -	struct clk	*fimc_clk;
-> -	struct clk	*wb_clk;
-> -	struct clk	*wb_b_clk;
-> +	struct clk	*clocks[FIMC_CLKS_MAX];
-> +	u32		clk_frequency;
->   	struct fimc_scaler	sc;
->   	struct fimc_driverdata	*ddata;
->   	struct exynos_drm_ipp_pol	pol;
-> @@ -1301,14 +1318,12 @@ static int fimc_clk_ctrl(struct fimc_context *ctx, bool enable)
->   	DRM_DEBUG_KMS("%s:enable[%d]\n", __func__, enable);
->
->   	if (enable) {
-> -		clk_enable(ctx->sclk_fimc_clk);
-> -		clk_enable(ctx->fimc_clk);
-> -		clk_enable(ctx->wb_clk);
-> +		clk_prepare_enable(ctx->clocks[FIMC_CLK_GATE]);
-> +		clk_prepare_enable(ctx->clocks[FIMC_CLK_WB_A]);
->   		ctx->suspended = false;
->   	} else {
-> -		clk_disable(ctx->sclk_fimc_clk);
-> -		clk_disable(ctx->fimc_clk);
-> -		clk_disable(ctx->wb_clk);
-> +		clk_disable_unprepare(ctx->clocks[FIMC_CLK_GATE]);
-> +		clk_disable_unprepare(ctx->clocks[FIMC_CLK_WB_A]);
->   		ctx->suspended = true;
->   	}
->
-> @@ -1713,11 +1728,66 @@ static void fimc_ippdrv_stop(struct device *dev, enum drm_exynos_ipp_cmd cmd)
->   	fimc_write(cfg, EXYNOS_CIGCTRL);
->   }
->
-> +static void fimc_put_clocks(struct fimc_context *ctx)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < FIMC_CLKS_MAX; i++) {
-> +		if (IS_ERR(ctx->clocks[i]))
-> +			continue;
-> +		clk_put(ctx->clocks[i]);
-> +		ctx->clocks[i] = ERR_PTR(-EINVAL);
-> +	}
-> +}
-> +
-> +static int fimc_setup_clocks(struct fimc_context *ctx)
-> +{
-> +	struct device *dev;
-> +	int ret, i;
-> +
-> +	for (i = 0; i < FIMC_CLKS_MAX; i++)
-> +		ctx->clocks[i] = ERR_PTR(-EINVAL);
-> +
-> +	for (i = 0; i < FIMC_CLKS_MAX; i++) {
-> +		if (i == FIMC_CLK_WB_A || i == FIMC_CLK_WB_B)
-> +			dev = ctx->dev->parent;
-> +		else
-> +			dev = ctx->dev;
-> +
-> +		ctx->clocks[i] = clk_get(dev, fimc_clock_names[i]);
-> +		if (IS_ERR(ctx->clocks[i])) {
-> +			if (i >= FIMC_CLK_MUX)
-> +				break;
-> +			ret = PTR_ERR(ctx->clocks[i]);
-> +			goto e_clk_free;
-> +		}
-> +	}
-> +
-> +	if (!IS_ERR(ctx->clocks[FIMC_CLK_PARENT])) {
-> +		ret = clk_set_parent(ctx->clocks[FIMC_CLK_MUX],
-> +				     ctx->clocks[FIMC_CLK_PARENT]);
-
-
-- I can't review this code.
-
-
-> +		if (ret < 0) {
-> +			dev_err(ctx->dev, "failed to set parent: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	ret = clk_set_rate(ctx->clocks[FIMC_CLK_LCLK], ctx->clk_frequency);
-
-
-- When do I set clk_frequency value ? and why doesn't use pdata->clk_rate ?
-
-
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return clk_prepare_enable(ctx->clocks[FIMC_CLK_LCLK]);
-> +
-> +e_clk_free:
-> +	dev_err(ctx->dev, "failed to get clock: %s\n", fimc_clock_names[i]);
-> +	fimc_put_clocks(ctx);
-> +	return ret;
-> +}
-> +
->   static int fimc_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
->   	struct fimc_context *ctx;
-> -	struct clk	*parent_clk;
->   	struct resource *res;
->   	struct exynos_drm_ippdrv *ippdrv;
->   	struct exynos_drm_fimc_pdata *pdata;
-> @@ -1734,55 +1804,6 @@ static int fimc_probe(struct platform_device *pdev)
->   	if (!ctx)
->   		return -ENOMEM;
->
-> -	ddata = (struct fimc_driverdata *)
-> -		platform_get_device_id(pdev)->driver_data;
-> -
-> -	/* clock control */
-> -	ctx->sclk_fimc_clk = devm_clk_get(dev, "sclk_fimc");
-> -	if (IS_ERR(ctx->sclk_fimc_clk)) {
-> -		dev_err(dev, "failed to get src fimc clock.\n");
-> -		return PTR_ERR(ctx->sclk_fimc_clk);
-> -	}
-> -	clk_enable(ctx->sclk_fimc_clk);
-> -
-> -	ctx->fimc_clk = devm_clk_get(dev, "fimc");
-> -	if (IS_ERR(ctx->fimc_clk)) {
-> -		dev_err(dev, "failed to get fimc clock.\n");
-> -		clk_disable(ctx->sclk_fimc_clk);
-> -		return PTR_ERR(ctx->fimc_clk);
-> -	}
-> -
-> -	ctx->wb_clk = devm_clk_get(dev, "pxl_async0");
-> -	if (IS_ERR(ctx->wb_clk)) {
-> -		dev_err(dev, "failed to get writeback a clock.\n");
-> -		clk_disable(ctx->sclk_fimc_clk);
-> -		return PTR_ERR(ctx->wb_clk);
-> -	}
-> -
-> -	ctx->wb_b_clk = devm_clk_get(dev, "pxl_async1");
-> -	if (IS_ERR(ctx->wb_b_clk)) {
-> -		dev_err(dev, "failed to get writeback b clock.\n");
-> -		clk_disable(ctx->sclk_fimc_clk);
-> -		return PTR_ERR(ctx->wb_b_clk);
-> -	}
-> -
-> -	parent_clk = devm_clk_get(dev, ddata->parent_clk);
-> -
-> -	if (IS_ERR(parent_clk)) {
-> -		dev_err(dev, "failed to get parent clock.\n");
-> -		clk_disable(ctx->sclk_fimc_clk);
-> -		return PTR_ERR(parent_clk);
-> -	}
-> -
-> -	if (clk_set_parent(ctx->sclk_fimc_clk, parent_clk)) {
-> -		dev_err(dev, "failed to set parent.\n");
-> -		clk_disable(ctx->sclk_fimc_clk);
-> -		return -EINVAL;
-> -	}
-> -
-> -	devm_clk_put(dev, parent_clk);
-> -	clk_set_rate(ctx->sclk_fimc_clk, pdata->clk_rate);
-> -
->   	/* resource memory */
->   	ctx->regs_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->   	ctx->regs = devm_ioremap_resource(dev, ctx->regs_res);
-> @@ -1804,6 +1825,9 @@ static int fimc_probe(struct platform_device *pdev)
->   		return ret;
->   	}
->
-> +	ret = fimc_setup_clocks(ctx);
-> +	if (ret < 0)
-> +		goto err_free_irq;
-
-- please blank line and error log.
-
->   	/* context initailization */
->   	ctx->id = pdev->id;
->   	ctx->pol = pdata->pol;
-> @@ -1820,7 +1844,7 @@ static int fimc_probe(struct platform_device *pdev)
->   	ret = fimc_init_prop_list(ippdrv);
->   	if (ret < 0) {
->   		dev_err(dev, "failed to init property list.\n");
-> -		goto err_get_irq;
-> +		goto err_put_clk;
->   	}
->
->   	DRM_DEBUG_KMS("%s:id[%d]ippdrv[0x%x]\n", __func__, ctx->id,
-> @@ -1835,16 +1859,18 @@ static int fimc_probe(struct platform_device *pdev)
->   	ret = exynos_drm_ippdrv_register(ippdrv);
->   	if (ret < 0) {
->   		dev_err(dev, "failed to register drm fimc device.\n");
-> -		goto err_ippdrv_register;
-> +		goto err_pm_dis;
->   	}
->
->   	dev_info(&pdev->dev, "drm fimc registered successfully.\n");
->
->   	return 0;
->
-> -err_ippdrv_register:
-> +err_pm_dis:
->   	pm_runtime_disable(dev);
-> -err_get_irq:
-> +err_put_clk:
-> +	fimc_put_clocks(ctx);
-> +err_free_irq:
->   	free_irq(ctx->irq, ctx);
->
->   	return ret;
-> @@ -1859,6 +1885,7 @@ static int fimc_remove(struct platform_device *pdev)
->   	exynos_drm_ippdrv_unregister(ippdrv);
->   	mutex_destroy(&ctx->lock);
->
-> +	fimc_put_clocks(ctx);
->   	pm_runtime_set_suspended(dev);
->   	pm_runtime_disable(dev);
->
->
+a+
