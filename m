@@ -1,86 +1,42 @@
-From: Mark Jackson <mpfj-list@newflow.co.uk>
-Subject: [PATCH] ARM: OMAP2+: Allow NAND transfer mode to be specified in
- DT
-Date: Fri, 19 Apr 2013 21:08:28 +0100
-Message-ID: <5171A43C.7040602@newflow.co.uk>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 0/5] dmaengine: convert dw_dmac/spear13xx to generic
+ binding
+Date: Fri, 19 Apr 2013 22:38:58 +0200
+Message-ID: <201304192238.58704.arnd@arndb.de>
+References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
-Cc: b-cousson@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1359395857-1235-1-git-send-email-arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-OMAP devices support various NAND transfer modes.
+On Monday 28 January 2013, Arnd Bergmann wrote:
+> Hi everyone,
+> 
+> This is my attempt to convert the spear platform and the dw_dmac to
+> the generic device tree binding for DMA, so that we don't get
+> a release with the broken version. I'm pretty sure that this
+> has bugs, but it's as good as I could do without access to
+> hardware or specs.
 
-Currently all device-tree definitions will use the default "prefetch
-polled" mode, so this patch enables the transfer mode to be specified
-in the device-tree.
----
- .../devicetree/bindings/mtd/gpmc-nand.txt          |    8 ++++++++
- arch/arm/mach-omap2/gpmc.c                         |   14 ++++++++++++++
- 2 files changed, 22 insertions(+)
+I noticed now that I forgot to put the arch/arm changes into the for-next
+branch for 3.9. I'm putting it into late/cleanup now, as this is a cleanup
+removing unnecessary definitions from spear13xx.
 
-diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-index e7f8d7e..cd4a19b 100644
---- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-@@ -29,6 +29,13 @@ Optional properties:
- 		"bch4"		4-bit BCH ecc code
- 		"bch8"		8-bit BCH ecc code
+All the patches for the drivers/dma were already merged by Vinod in 3.9, so
+this has no impact on his subsystem.
 
-+ - ti,nand-xfer-type:		A string setting the data transfer type. One of:
-+
-+		"prefetch-polled"	Prefetch polled mode (default)
-+		"polled"		Polled mode, without prefetch
-+		"prefetch-dma"		Prefetch enabled sDMA mode
-+		"prefetch-irq"		Prefetch enabled irq mode
-+
-  - elm_id:	Specifies elm device node. This is required to support BCH
-  		error correction using ELM module.
-
-@@ -55,6 +62,7 @@ Example for an AM33xx board:
- 			reg = <0 0 0>; /* CS0, offset 0 */
- 			nand-bus-width = <16>;
- 			ti,nand-ecc-opt = "bch8";
-+			ti,nand-xfer-type = "polled";
-
- 			gpmc,sync-clk = <0>;
- 			gpmc,cs-on = <0>;
-diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
-index 410e1ba..2f47f76 100644
---- a/arch/arm/mach-omap2/gpmc.c
-+++ b/arch/arm/mach-omap2/gpmc.c
-@@ -1212,6 +1212,13 @@ static const char * const nand_ecc_opts[] = {
- 	[OMAP_ECC_BCH8_CODE_HW]			= "bch8",
- };
-
-+static const char * const nand_xfer_types[] = {
-+	[NAND_OMAP_PREFETCH_POLLED]		= "prefetch-polled",
-+	[NAND_OMAP_POLLED]			= "polled",
-+	[NAND_OMAP_PREFETCH_DMA]		= "prefetch-dma",
-+	[NAND_OMAP_PREFETCH_IRQ]		= "prefetch-irq",
-+};
-+
- static int gpmc_probe_nand_child(struct platform_device *pdev,
- 				 struct device_node *child)
- {
-@@ -1241,6 +1248,13 @@ static int gpmc_probe_nand_child(struct
-platform_device *pdev,
- 				break;
- 			}
-
-+	if (!of_property_read_string(child, "ti,nand-xfer-type", &s))
-+		for (val = 0; val < ARRAY_SIZE(nand_xfer_types); val++)
-+			if (!strcasecmp(s, nand_xfer_types[val])) {
-+				gpmc_nand_data->xfer_type = val;
-+				break;
-+			}
-+
- 	val = of_get_nand_bus_width(child);
- 	if (val == 16)
- 		gpmc_nand_data->devsize = NAND_BUSWIDTH_16;
--- 
-1.7.9.5
+	Arnd
