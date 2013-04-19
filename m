@@ -1,54 +1,74 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 1/3] Add support for GMT G72/G763 PWM fan controller
-Date: Fri, 19 Apr 2013 07:50:54 +0200
-Message-ID: <20130419055054.GD18115@lunn.ch>
-References: <cover.1366322287.git.arno@natisbad.org>
- <4f4a821bbc61e2da28fd70553fd717ada255097d.1366322287.git.arno@natisbad.org>
+From: Padma Venkat <padma.kvr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Regarding dtc+cpp support
+Date: Fri, 19 Apr 2013 11:26:47 +0530
+Message-ID: <CAAgF-BeOF4f1hTqFw3n=J4NfZpbcSecN83uKtFvs6XjKLn5o6g@mail.gmail.com>
+References: <CAAgF-BeFKxK4=myPjHHWt9VxsyYQFen8c5c_9mQkbPo3n1oqJw@mail.gmail.com>
+ <517007F6.3010107@ti.com>
+ <CAAgF-BefLWjRz3TXb6ESVQVA1Xno-z-WW2QVg6pNa+6_YW7AUg@mail.gmail.com>
+ <5170260C.4000700@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4f4a821bbc61e2da28fd70553fd717ada255097d.1366322287.git.arno@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnaud Ebalard <arno@natisbad.org>
-Cc: Jean Delvare <khali@linux-fr.org>, Guenter Roeck <linux@roeck-us.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Simon Guinot <simon.guinot@sequanux.org>, Olivier Mouchet <olivier.mouchet@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5170260C.4000700-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnaud
+On Thu, Apr 18, 2013 at 10:27 PM, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org> wrote:
+>
+> On 04/18/2013 11:21 AM, Padma Venkat wrote:
+>> Hi,
+>>
+>> On Thu, Apr 18, 2013 at 8:19 PM, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org> wrote:
+>>>
+>>> On 04/18/2013 04:12 AM, Padma Venkat wrote:
+>>>> Hi Stephen,
+>>>>
+>>>> I am trying to add a header file for samsung audio subsystem clk
+>>>> definitions, which can be used in kernel and dt files.
+>>>> I applied following patches posted by you in my working tree.
+>>>>
+>>>>
+>>>> [1/7] kbuild: create an "include chroot" for DT bindings
+>>>> [2/7] kbuild: fixdep: support concatenated dep files
+>>>> [3/7] kbuild: cmd_dtc_cpp: extract deps from both gcc -E and dtc
+>>>> [4/7] kbuild: always run gcc -E on *.dts, remove cmd_dtc_cpp
+>>>> [5/7] ARM: dt: add header to define GPIO flags
+>>>> [6/7] ARM: dt: add header to define IRQ flags
+>>>> [7/7] ARM: dt: create a DT header for the GIC
+>>>>
+>>>> I created a header file in
+>>>> arch/arm/boot/dts/include/clk/samsung-audss-clk.h and I included this
+>>>> header in driver and dtsi files
+>>>>
+>>>> Please see the code snippet in dtsi below.
+>>>>
+>>>> #include <dt-bindings/clk/samsung-audss-clk.h>
+>>>> /include/ "skeleton.dtsi"
+>>>> /include/ "exynos5250-pinctrl.dtsi
+>>>
+>>> Try making all of the above "#include" ...
+>>
+>> I haven't changed all dts files but I tried below with no success.
+>
+> I should mentioned that you should also make any /include/ in the *.dtsi
+> above #include too.
 
-> +static DEVICE_ATTR(pwm1, S_IWUSR | S_IRUGO, get_pwm, set_pwm);
-> +static DEVICE_ATTR(pwm1_polarity, S_IWUSR | S_IRUGO,
-> +		   get_pwm_polarity, set_pwm_polarity);
-> +static DEVICE_ATTR(pwm1_mode, S_IWUSR | S_IRUGO,
-> +		   get_pwm_mode, set_pwm_mode);
-> +static DEVICE_ATTR(pwm1_enable, S_IWUSR | S_IRUGO,
-> +		   get_speed_control_mode, set_speed_control_mode);
-> +static DEVICE_ATTR(pwm1_freq, S_IWUSR | S_IRUGO,
-> +		   get_pwm_freq, set_pwm_freq);
-> +
-> +static DEVICE_ATTR(fan1_input, S_IRUGO, get_fan_rpm, NULL);
-> +static DEVICE_ATTR(fan1_alarm, S_IRUGO, get_fan_ooc, NULL);
-> +static DEVICE_ATTR(fan1_alarm_detection, S_IWUSR | S_IRUGO,
-> +		   get_fan_ooc_detection, set_fan_ooc_detection);
-> +static DEVICE_ATTR(fan1_fault, S_IRUGO, get_fan_failure, NULL);
-> +static DEVICE_ATTR(fan1_fault_detection, S_IWUSR | S_IRUGO,
-> +		   get_fan_failure_detection, set_fan_failure_detection);
-> +static DEVICE_ATTR(fan1_target, S_IWUSR | S_IRUGO,
-> +		   get_fan_target, set_fan_target);
-> +static DEVICE_ATTR(fan1_pulses, S_IWUSR | S_IRUGO,
-> +		   get_fan_pulses, set_fan_pulses);
-> +static DEVICE_ATTR(fan1_div, S_IWUSR | S_IRUGO,
-> +		   get_fan_clk_div, set_fan_clk_div);
-> +static DEVICE_ATTR(fan1_gear_mode, S_IWUSR | S_IRUGO,
-> +		   get_fan_gear_mode, set_fan_gear_mode);
-> +static DEVICE_ATTR(fan1_startup_voltage, S_IWUSR | S_IRUGO,
-> +		   get_fan_startup_voltage, set_fan_startup_voltage);
+It is working after all dtsi files modified.
 
-It is normal to use SENSOR_ATTR, not DEVICE_ATTR. Take a look at the
-existing fan drivers.
-
-I also think a lot of these are not needed. They are fixed properties
-of the board and cannot change dynamically. They are set once using DT
-and user space does not need to care.
-
-	 Andrew
+Thanks
+Padma
+>
+> Cheers
+> Jon
