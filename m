@@ -1,14 +1,19 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH 1/3] iio: Add Nuvoton NAU7802 ADC driver
-Date: Sat, 20 Apr 2013 18:49:40 +0200
-Message-ID: <5172C724.4070605@metafoo.de>
-References: <1366299536-18353-1-git-send-email-alexandre.belloni@free-electrons.com>
- <1366299536-18353-2-git-send-email-alexandre.belloni@free-electrons.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v7 3/3] of/pci: mips: convert to common of_pci_range_parser
+Date: Sat, 20 Apr 2013 18:33:43 -0400
+Message-ID: <20130420223343.GB25724@titan.lakedaemon.net>
+References: <1366107508-12672-1-git-send-email-Andrew.Murray@arm.com>
+ <1366107508-12672-4-git-send-email-Andrew.Murray@arm.com>
+ <CACRpkdbBaT1OKr5t8HW4+8y_wSDmGxmewAyVMekx8S-K9s3K8Q@mail.gmail.com>
+ <20130418125910.GA17128@arm.com>
+ <20130418130919.GI27197@titan.lakedaemon.net>
+ <5170F016.6050502@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366299536-18353-2-git-send-email-alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5170F016.6050502-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,210 +24,45 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: brian-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jimwall@q.com, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "siva.kallam-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <siva.kallam-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "suren.reddy-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <suren.reddy-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, linuxp
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Apr 19, 2013 at 09:19:50AM +0200, Gabor Juhos wrote:
+> 2013.04.18. 15:09 keltez=E9ssel, Jason Cooper =EDrta:
+> > On Thu, Apr 18, 2013 at 01:59:10PM +0100, Andrew Murray wrote:
+> >> On Wed, Apr 17, 2013 at 04:42:48PM +0100, Linus Walleij wrote:
+> >>> On Tue, Apr 16, 2013 at 12:18 PM, Andrew Murray <Andrew.Murray-AbSShOkvfpQ@public.gmane.org=
+m> wrote:
+> >>>
+> >>>> This patch converts the pci_load_of_ranges function to use the new c=
+ommon
+> >>>> of_pci_range_parser.
+> >>>>
+> >>>> Signed-off-by: Andrew Murray <Andrew.Murray-5wv7dgnIgG8@public.gmane.org>
+> >>>> Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+> >>>> Reviewed-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> >>>
+> >>> Tested-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>
+> >> Jason - you may not have seen this, but here (Linus Walleij) is anothe=
+r Tested-by
+> >> to add to this patch in your tree (if you can).
+> > =
 
-Some comments on top of what Jonathan said.
+> > Thanks, I saw it.  Unfortunately, the PR was already sent, and the bran=
+ch
+> > is now pulled into arm-soc.
+> =
 
-On 04/18/2013 05:38 PM, Alexandre Belloni wrote:
-[...]
-> diff --git a/drivers/iio/adc/nau7802.c b/drivers/iio/adc/nau7802.c
-> new file mode 100644
-> index 0000000..0148fd8
-> --- /dev/null
-> +++ b/drivers/iio/adc/nau7802.c
-> @@ -0,0 +1,644 @@
-[...]
+> Sorry I had no time earlier, but I have tested this now on MIPS. The patch
+> causes build errors unfortunately. Given the fact that this has been merg=
+ed
+> already, I will send a fixup patch.
 
-> +static int nau7802_read_raw(struct iio_dev *idev,
-> +			    struct iio_chan_spec const *chan,
-> +			    int *val, int *val2, long mask)
-> +{
-> +	struct nau7802_state *st = iio_priv(idev);
-> +	u8 data;
-> +	int ret;
-> +
-> +	switch (mask) {
-> +
-[...]
-> +	case IIO_CHAN_INFO_SCALE:
-> +		ret = nau7802_i2c_read(st, NAU7802_REG_CTRL1, &data);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		*val = 0;
-> +		*val2 = (((u64)st->vref_mv) * 1000000000ULL) >>
-> +			(chan->scan_type.realbits +
-> +			 (data & NAU7802_CTRL1_GAINS_BITS));
+Olof has dropped this branch from arm-soc, plase post the build error
+and fix here so that it can be included in this series.
 
-If you use IIO_VAL_FRACTIONAL_LOG2 this becomes much more readable.
+thx,
 
-		*val = st->vref_mv;
-		*val2 = chan->scan_type.realbits +
-				(data & NAU7802_CTRL1_GAINS_BITS);
-
-
-> +		return IIO_VAL_INT_PLUS_MICRO;
-> +	default:
-> +		break;
-> +	}
-> +	return -EINVAL;
-> +}
-[...]
-
-> +static int nau7802_probe(struct i2c_client *client,
-> +			const struct i2c_device_id *id)
-> +{
-> +	struct iio_dev *idev;
-> +	struct nau7802_state *st;
-> +	struct device_node *np = client->dev.of_node;
-> +	int ret;
-> +	u8 data;
-> +	u32 tmp;
-> +
-> +	if (!client->dev.of_node) {
-> +		dev_err(&client->dev, "No device tree node available.\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	/*
-> +	 * If we have some interrupts declared, use them, if not, fall back
-> +	 * on polling.
-> +	 */
-> +	if (of_find_property(np, "interrupts", NULL)) {
-> +		if (client->irq <= 0) {
-> +			client->irq = irq_of_parse_and_map(np, 0);
-> +			if (client->irq <= 0)
-> +				return -EPROBE_DEFER;
-> +		}
-> +	} else
-> +		client->irq = 0;
-
-This looks like something that could go into the of_i2c.c code.
-
-> +
-> +	idev = iio_device_alloc(sizeof(struct nau7802_state));
-> +	if (idev == NULL)
-> +		return -ENOMEM;
-> +
-> +	st = iio_priv(idev);
-> +
-> +	i2c_set_clientdata(client, idev);
-> +
-> +	idev->dev.parent = &client->dev;
-> +	idev->name = dev_name(&client->dev);
-> +	idev->modes = INDIO_DIRECT_MODE;
-> +	idev->info = &nau7802_info;
-> +
-> +	st->client = client;
-> +
-> +	/* Reset the device */
-> +	nau7802_i2c_write(st, NAU7802_REG_PUCTRL, NAU7802_PUCTRL_RR_BIT);
-> +
-> +	/* Enter normal operation mode */
-> +	nau7802_i2c_write(st, NAU7802_REG_PUCTRL, NAU7802_PUCTRL_PUD_BIT);
-> +
-> +	/*
-> +	 * After about 200 usecs, the device should be ready and then
-> +	 * the Power Up bit will be set to 1. If not, wait for it.
-> +	 */
-> +	do {
-> +		udelay(200);
-> +		ret = nau7802_i2c_read(st, NAU7802_REG_PUCTRL, &data);
-> +		if (ret)
-> +			return -ENODEV;
-> +	} while (!(data & NAU7802_PUCTRL_PUR_BIT));
-> +
-> +	of_property_read_u32(np, "nuvoton,vldo", &tmp);
-> +	st->vref_mv = tmp;
-
-We've standardized on using the regulator framework for providing voltages.
-You should use it here as well.
-
-> +
-> +	data = NAU7802_PUCTRL_PUD_BIT | NAU7802_PUCTRL_PUA_BIT |
-> +		NAU7802_PUCTRL_CS_BIT;
-> +	if (tmp >= 2400)
-> +		data |= NAU7802_PUCTRL_AVDDS_BIT;
-> +
-> +	nau7802_i2c_write(st, NAU7802_REG_PUCTRL, data);
-> +	nau7802_i2c_write(st, NAU7802_REG_ADC_CTRL, 0x30);
-> +
-> +	if (tmp >= 2400) {
-> +		data = NAU7802_CTRL1_VLDO((4500 - tmp) / 300);
-> +		nau7802_i2c_write(st, NAU7802_REG_CTRL1, data);
-> +	}
-> +
-> +	st->min_conversions = 6;
-> +
-> +	/*
-> +	 * The ADC fires continuously and we can't do anything about
-> +	 * it. So we need to have the IRQ disabled by default, and we
-> +	 * will enable them back when we will need them..
-> +	 */
-> +	if (client->irq) {
-> +		irq_set_status_flags(client->irq, IRQ_NOAUTOEN);
-
-No driver should be messing with a IRQs flags. Basically if you need irq.h
-for your device driver its probably wrong. The proper solution is to
-introduce a IRQF_NOAUTOEN.
-
-> +		ret = request_threaded_irq(client->irq,
-> +				NULL,
-> +				nau7802_eoc_trigger,
-> +				IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
-> +				client->dev.driver->name,
-> +				idev);
-> +		if (ret) {
-> +			/*
-> +			 * What may happen here is that our IRQ controller is
-> +			 * not able to get level interrupt but this is required
-> +			 * by this ADC as when going over 40 sample per second,
-> +			 * the interrupt line may stay high between conversions.
-> +			 * So, we continue no matter what but we switch to
-> +			 * polling mode.
-> +			 */
-> +			dev_info(&client->dev,
-> +				"Failed to allocate IRQ, using polling mode\n");
-> +			client->irq = 0;
-> +			/*
-> +			 * We are polling, use the fastest sample rate by
-> +			 * default
-> +			 */
-> +			st->sample_rate = 0x7;
-> +			nau7802_i2c_write(st, NAU7802_REG_CTRL2,
-> +					NAU7802_CTRL2_CRS(st->sample_rate));
-> +		}
-> +	}
-> +
-> +	/* Setup the ADC channels available on the board */
-> +	ret = nau7802_channel_init(idev);
-> +	if (ret < 0) {
-> +		dev_err(&client->dev, "Couldn't initialize the channels.\n");
-> +		goto error_channel_init;
-> +	}
-> +
-> +	init_completion(&st->value_ok);
-> +	mutex_init(&st->lock);
-> +	mutex_init(&st->data_lock);
-> +
-> +	ret = iio_device_register(idev);
-> +	if (ret < 0) {
-> +		dev_err(&client->dev, "Couldn't register the device.\n");
-> +		goto error_device_register;
-> +	}
-> +
-> +	return 0;
-> +
-> +error_device_register:
-> +	mutex_destroy(&st->lock);
-> +error_channel_init:
-> +	if (client->irq)
-> +		free_irq(client->irq, idev);
-> +	iio_device_free(idev);
-> +	return ret;
-> +}
-[...]
+Jason.
