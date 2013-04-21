@@ -1,54 +1,59 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v6 2/2] DMA: imx-dma: imxdma->dev used uninitialized
-Date: Sun, 21 Apr 2013 11:08:23 +0200
-Message-ID: <1366535303-31223-3-git-send-email-mpa@pengutronix.de>
-References: <1366535303-31223-1-git-send-email-mpa@pengutronix.de>
+From: Ming Lei <ming.lei@canonical.com>
+Subject: Re: [PATCH] of: export of_get_next_parent
+Date: Sun, 21 Apr 2013 20:11:58 +0800
+Message-ID: <CACVXFVMuUn=0LLWxJO62gp6uugNej-kwC0k_LMGWozGRxcx6Vg@mail.gmail.com>
+References: <1365587227-26137-1-git-send-email-ming.lei@canonical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366535303-31223-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1365587227-26137-1-git-send-email-ming.lei@canonical.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Ming Lei <ming.lei@canonical.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-imxdma->dev is used for dev_warn before it was set.
+Hi,
 
-Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Reviewed-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/dma/imx-dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, Apr 10, 2013 at 5:47 PM, Ming Lei <ming.lei@canonical.com> wrote:
+> The function is called by at least three drivers now:
+>
+>         pinctrl
+>         mfd/vexpress
+>         v4l2-core
+>
+> The 3rd one can be built as module, so export the function to
+> avoid build failure.
+>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Signed-off-by: Ming Lei <ming.lei@canonical.com>
+> ---
+>  drivers/of/base.c |    1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index c6443de..a2a0ddc 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -382,6 +382,7 @@ struct device_node *of_get_next_parent(struct device_node *node)
+>         raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>         return parent;
+>  }
+> +EXPORT_SYMBOL(of_get_next_parent);
 
-diff --git a/drivers/dma/imx-dma.c b/drivers/dma/imx-dma.c
-index b74b249..b9aa549 100644
---- a/drivers/dma/imx-dma.c
-+++ b/drivers/dma/imx-dma.c
-@@ -1068,6 +1068,7 @@ static int __init imxdma_probe(struct platform_device *pdev)
- 	if (!imxdma)
- 		return -ENOMEM;
- 
-+	imxdma->dev = &pdev->dev;
- 	imxdma->devtype = pdev->id_entry->driver_data;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -1172,7 +1173,6 @@ static int __init imxdma_probe(struct platform_device *pdev)
- 			      &imxdma->dma_device.channels);
- 	}
- 
--	imxdma->dev = &pdev->dev;
- 	imxdma->dma_device.dev = &pdev->dev;
- 
- 	imxdma->dma_device.device_alloc_chan_resources = imxdma_alloc_chan_resources;
--- 
-1.8.1.5
+Gentle ping.
+
+Without the patch, the below build failure is produced every time on -next tree:
+
+  Building modules, stage 2.
+  MODPOST 72 modules
+ERROR: "of_get_next_parent" [drivers/media/v4l2-core/videodev.ko] undefined!
+make[1]: *** [__modpost] Error 1
+make: *** [modules] Error 2
+install kernel and modules
+
+
+Thanks,
+--
+Ming Lei
