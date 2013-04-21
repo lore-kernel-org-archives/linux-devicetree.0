@@ -1,60 +1,42 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH] of: export of_get_next_parent
-Date: Sun, 21 Apr 2013 20:56:38 +0200
-Message-ID: <51743666.2070006@gmail.com>
-References: <1365587227-26137-1-git-send-email-ming.lei@canonical.com> <CACVXFVMuUn=0LLWxJO62gp6uugNej-kwC0k_LMGWozGRxcx6Vg@mail.gmail.com>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH 04/10] util_version: new helper for displaying version info
+Date: Sun, 21 Apr 2013 14:26:03 -0500
+Message-ID: <E1UTztj-0006SA-F8@jdl.com>
+References: <1366078397-14889-1-git-send-email-vapier@gentoo.org>
+ <1366078397-14889-5-git-send-email-vapier@gentoo.org>
+ <20130419005046.GL16400@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACVXFVMuUn=0LLWxJO62gp6uugNej-kwC0k_LMGWozGRxcx6Vg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ming Lei <ming.lei@canonical.com>
-Cc: linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <20130419005046.GL16400-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+> 
+> On Mon, Apr 15, 2013 at 10:13:11PM -0400, Mike Frysinger wrote:
+> > This is so all utilities can have this flag and not just dtc.
+> >=20
+> > Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+> > Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+> 
+> Jon,
+> 
+> Please apply these first 4 patches, regardless of the rest of the
+> series.
 
-On 04/21/2013 02:11 PM, Ming Lei wrote:
-> On Wed, Apr 10, 2013 at 5:47 PM, Ming Lei<ming.lei@canonical.com>  wrote:
->> The function is called by at least three drivers now:
->>
->>          pinctrl
->>          mfd/vexpress
->>          v4l2-core
->>
->> The 3rd one can be built as module, so export the function to
->> avoid build failure.
->>
->> Cc: Grant Likely<grant.likely@secretlab.ca>
->> Cc: Rob Herring<rob.herring@calxeda.com>
->> Cc: devicetree-discuss@lists.ozlabs.org
->> Signed-off-by: Ming Lei<ming.lei@canonical.com>
->> ---
->>   drivers/of/base.c |    1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/of/base.c b/drivers/of/base.c
->> index c6443de..a2a0ddc 100644
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -382,6 +382,7 @@ struct device_node *of_get_next_parent(struct device_node *node)
->>          raw_spin_unlock_irqrestore(&devtree_lock, flags);
->>          return parent;
->>   }
->> +EXPORT_SYMBOL(of_get_next_parent);
->
-> Gentle ping.
->
-> Without the patch, the below build failure is produced every time on -next tree:
-
-A similar patch has been queued in the media tree [1]. It should soon 
-appear in -next.
-
-[1] 
-http://git.linuxtv.org/mchehab/media-next.git/commitdiff/6695be6863b75620ffa6d422965680ce785cb7c8
-
-Sorry for the trouble.
+Done.
 
 Thanks,
-Sylwester
+jdl
