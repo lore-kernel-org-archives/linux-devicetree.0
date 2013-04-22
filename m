@@ -1,202 +1,498 @@
-From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 04/10] util_version: new helper for displaying version info
-Date: Mon, 22 Apr 2013 11:54:06 -0400
-Message-ID: <201304221154.08100.vapier@gentoo.org>
-References: <1366078397-14889-1-git-send-email-vapier@gentoo.org>
- <201304212025.47665.vapier@gentoo.org> <E1UUIno-0004Ox-Dd@jdl.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH v4 2/2] video: imxfb: Add DT support
+Date: Mon, 22 Apr 2013 17:51:25 +0200
+Message-ID: <20130422155125.GI4998@game.jcrosoft.org>
+References: <1366290183-367-1-git-send-email-mpa@pengutronix.de>
+ <1366290183-367-3-git-send-email-mpa@pengutronix.de>
+ <20130418160614.GF4998@game.jcrosoft.org>
+ <20130421081115.GA31179@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3255741390937044697=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <E1UUIno-0004Ox-Dd-CYoMK+44s/E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20130421081115.GA31179@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-fbdev@vger.kernel.org, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============3255741390937044697==
-Content-Type: multipart/signed;
-  boundary="nextPart2098417.ygRZLkGhAC";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+On 10:11 Sun 21 Apr     , Markus Pargmann wrote:
+> On Thu, Apr 18, 2013 at 06:06:14PM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > On 15:03 Thu 18 Apr     , Markus Pargmann wrote:
+> > > Add devicetree support for imx framebuffer driver. It uses the generic
+> > > display bindings and helper functions.
+> > > 
+> > > Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> > > Cc: Fabio Estevam <festevam@gmail.com>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > ---
+> > > 
+> > > Notes:
+> > >     Changes in v4:
+> > >     - Remove eukrea specific dmacr property.
+> > >     - Add optional dmacr property. If not present, the dmacr reset value is not
+> > >       changed.
+> > >     
+> > >     Changes in v3:
+> > >     - Fix returncodes of of_read_mode function and print error messages
+> > >     - Introduce a lower bound check for bits per pixel
+> > >     - Calculate correct bytes per pixel value before using it for the calculation of
+> > >     	memory size
+> > >     - Change DT property names
+> > >     
+> > >     Changes in v2:
+> > >     - Removed pwmr register property
+> > >     - Cleanup of devicetree binding documentation
+> > >     - Use default values for pwmr and lscr1
+> > > 
+> > >  .../devicetree/bindings/video/fsl,imx-fb.txt       |  51 ++++++
+> > >  drivers/video/imxfb.c                              | 194 +++++++++++++++++----
+> > >  2 files changed, 210 insertions(+), 35 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/video/fsl,imx-fb.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/video/fsl,imx-fb.txt b/Documentation/devicetree/bindings/video/fsl,imx-fb.txt
+> > > new file mode 100644
+> > > index 0000000..aff16a4
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/video/fsl,imx-fb.txt
+> > > @@ -0,0 +1,51 @@
+> > > +Freescale imx21 Framebuffer
+> > > +
+> > > +This framebuffer driver supports devices imx1, imx21, imx25, and imx27.
+> > > +
+> > > +Required properties:
+> > > +- compatible : "fsl,<chip>-fb", chip should be imx1 or imx21
+> > > +- reg : Should contain 1 register ranges(address and length)
+> > > +- interrupts : One interrupt of the fb dev
+> > > +
+> > > +Required nodes:
+> > > +- display: Phandle to a display node as described in
+> > > +	Documentation/devicetree/bindings/video/display-timing.txt
+> > > +	Additional, the display node has to define properties:
+> > > +	- fsl,bpp: Bits per pixel
+> > > +	- fsl,pcr: LCDC PCR value
+> > > +
+> > > +Optional properties:
+> > > +- fsl,dmacr: DMA Control Register value. This is optional. By default, the
+> > > +	register is not modified as recommended by the datasheet.
+> > > +- fsl,lscr1: LCDC Sharp Configuration Register value.
+> > > +
+> > > +Example:
+> > > +
+> > > +	imxfb: fb@10021000 {
+> > > +		compatible = "fsl,imx27-fb", "fsl,imx21-fb";
+> > you put both when in the doc you request one
+> 
+> Thanks, fixed.
+> 
+> > > +		interrupts = <61>;
+> > > +		reg = <0x10021000 0x1000>;
+> > > +		display = <&display0>;
+> > > +	};
+> > > +
+> > > +	...
+> > > +
+> > > +	display0: display0 {
+> > > +		model = "Primeview-PD050VL1";
+> > > +		native-mode = <&timing_disp0>;
+> > > +		fsl,bpp = <16>;		/* non-standard but required */
+> > there is a generic binding bit-per-pixel use a cross other IP
+> 
+> I can't find a generic binding for that. There are only 2 other drivers
+> using a "bpp" property, but they both use it within different contexts.
+> tilcdc panel uses it within a "panel-info" property and via,vt8500-fb
+> within modes. So I think it would be better to use a clear distinction
+> because there is no generic binding. That was also suggested in comments
+> on version 2 of this patch:
+> https://patchwork.kernel.org/patch/2220511/
 
---nextPart2098417.ygRZLkGhAC
-Content-Type: multipart/mixed;
-  boundary="Boundary-01=_f0VdRrHueQF7xCF"
-Content-Transfer-Encoding: 7bit
+via use bits-per-pixel
+atmel ditto
+mxs ditto IIRC
 
-
---Boundary-01=_f0VdRrHueQF7xCF
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
-
-On Monday 22 April 2013 11:37:12 Jon Loeliger wrote:
-> > hmm, looks like patch #2 (utilfdt_read and handling of the len argument)
-> > was taken from the first patch series rather than the 3rd ?
-> >=20
-> > i'd suggest reverting it and applying instead the one from this series
-> > ... Message-Id: <1366078397-14889-3-git-send-email-vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
->=20
-> Please send me the version you want applied.
-
-attached
-=2Dmike
-
---Boundary-01=_f0VdRrHueQF7xCF
-Content-Type: text/x-patch;
-  charset="utf-8";
-  name="0001-utilfdt_read-pass-back-up-the-length-of-data-read.patch"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline;
-	filename="0001-utilfdt_read-pass-back-up-the-length-of-data-read.patch"
-
-=46rom 7a0e8d370b62b902ccf3defb41e9af2d3d34e177 Mon Sep 17 00:00:00 2001
-=46rom: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Date: Mon, 8 Apr 2013 00:56:54 -0400
-Subject: [PATCH] utilfdt_read: pass back up the length of data read
-
-=46or a follow up commit, we want to be able to scan the buffer that was
-returned to us.  In order to do that safely, we need to know how big
-the buffer actually is, so create a new set of funcs to pass that back.
-
-Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-=2D--
- util.c | 19 ++++++++++++++++---
- util.h | 13 +++++++++++++
- 2 files changed, 29 insertions(+), 3 deletions(-)
-
-diff --git a/util.c b/util.c
-index 12f0614..0367df6 100644
-=2D-- a/util.c
-+++ b/util.c
-@@ -197,7 +197,7 @@ char get_escape_char(const char *s, int *i)
- 	return val;
- }
-=20
-=2Dint utilfdt_read_err(const char *filename, char **buffp)
-+int utilfdt_read_err_len(const char *filename, char **buffp, off_t *len)
- {
- 	int fd =3D 0;	/* assume stdin */
- 	char *buf =3D NULL;
-@@ -238,13 +238,20 @@ int utilfdt_read_err(const char *filename, char **buf=
-fp)
- 		free(buf);
- 	else
- 		*buffp =3D buf;
-+	*len =3D bufsize;
- 	return ret;
- }
-=20
-=2Dchar *utilfdt_read(const char *filename)
-+int utilfdt_read_err(const char *filename, char **buffp)
-+{
-+	off_t len;
-+	return utilfdt_read_err_len(filename, buffp, &len);
-+}
-+
-+char *utilfdt_read_len(const char *filename, off_t *len)
- {
- 	char *buff;
-=2D	int ret =3D utilfdt_read_err(filename, &buff);
-+	int ret =3D utilfdt_read_err_len(filename, &buff, len);
-=20
- 	if (ret) {
- 		fprintf(stderr, "Couldn't open blob from '%s': %s\n", filename,
-@@ -255,6 +262,12 @@ char *utilfdt_read(const char *filename)
- 	return buff;
- }
-=20
-+char *utilfdt_read(const char *filename)
-+{
-+	off_t len;
-+	return utilfdt_read_len(filename, &len);
-+}
-+
- int utilfdt_write_err(const char *filename, const void *blob)
- {
- 	int fd =3D 1;	/* assume stdout */
-diff --git a/util.h b/util.h
-index 543a173..1f0ef47 100644
-=2D-- a/util.h
-+++ b/util.h
-@@ -85,6 +85,13 @@ char get_escape_char(const char *s, int *i);
- char *utilfdt_read(const char *filename);
-=20
- /**
-+ * Like utilfdt_read(), but also passes back the size of the file read.
-+ *
-+ * @param len		If non-NULL, the amount of data we managed to read
-+ */
-+char *utilfdt_read_len(const char *filename, off_t *len);
-+
-+/**
-  * Read a device tree file into a buffer. Does not report errors, but only
-  * returns them. The value returned can be passed to strerror() to obtain
-  * an error message for the user.
-@@ -95,6 +102,12 @@ char *utilfdt_read(const char *filename);
-  */
- int utilfdt_read_err(const char *filename, char **buffp);
-=20
-+/**
-+ * Like utilfdt_read_err(), but also passes back the size of the file read.
-+ *
-+ * @param len		If non-NULL, the amount of data we managed to read
-+ */
-+int utilfdt_read_err_len(const char *filename, char **buffp, off_t *len);
-=20
- /**
-  * Write a device tree buffer to a file. This will report any errors on
-=2D-=20
-1.8.2.1
-
-
---Boundary-01=_f0VdRrHueQF7xCF--
-
---nextPart2098417.ygRZLkGhAC
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.17 (GNU/Linux)
-
-iQIcBAABAgAGBQJRdV0fAAoJEEFjO5/oN/WB5EEP/iUzoyrkcxr/C8rRghf95jji
-jyJMfzeq2CmEqiHBpf3UQ9h6U0OYzKKCVQ0wwPZ9x1UZDP6e04V1w1fTs8ggnXsQ
-lbzWjb/FUpUNYjp+J5YDR6PQq5e5V2pTWtZ+C/f+cgHiJ7sSiGF4QWiawkSfGzn0
-4f8dcXw9RO31C7fHw+CZsNhZpKr9n/aBGa+oI6zxi9rsgqrcdZbkHomwZLeuRDw1
-qRlo4sTkektxvesezUO0Jr04PoxhYzpFHYgQQG6aKJcD8C7PnDgvxTtkL9RPq8Wv
-FclUx1u4MH/dgYwjeIFZGe6hCcUayg3G1Xbps1CPLcwZkSoyawXJ5hhOXs80Ymdm
-jDn4CSY4lDiEVwk0NhW5v6PQRMTAo0qexzwC2fNXqBsA6fGACT4VOPyDfoDaNrhv
-zxhAxk4R/VvhN0uBNURfRqOEb5Sk1UkbN5BKEMrMPjNUjGqWGp/ijRMW9BrO+azs
-z9vCSYdEyYw3pfie37qce86WVB241JSiS/e70z7f87QDKcYdnJHI5MUA4MV12Kgb
-M/PCTAEqJ/K1PTXJsCjuMWWZnb9qzcfyoy+UTBR3RSNbQ+5Jgdmy1FLatLpRAE8s
-XzlZU7lp3QMZ0xJA6ye8Ks+lxiaSm4u0EF6KT7CsKfVa9wXct6lKNuy7koOpDWbs
-mpqEdN5OxTWS7rfwPAIB
-=FHl0
------END PGP SIGNATURE-----
-
---nextPart2098417.ygRZLkGhAC--
-
---===============3255741390937044697==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============3255741390937044697==--
+Best Regards,
+J.
+> 
+> Regards,
+> 
+> Markus
+> 
+> > > +		fsl,pcr = <0xf0c88080>;	/* non-standard but required */
+> > > +		display-timings {
+> > > +			timing_disp0: 640x480 {
+> > > +				hactive = <640>;
+> > > +				vactive = <480>;
+> > > +				hback-porch = <112>;
+> > > +				hfront-porch = <36>;
+> > > +				hsync-len = <32>;
+> > > +				vback-porch = <33>;
+> > > +				vfront-porch = <33>;
+> > > +				vsync-len = <2>;
+> > > +				clock-frequency = <25000000>;
+> > > +			};
+> > > +		};
+> > > +	};
+> > > diff --git a/drivers/video/imxfb.c b/drivers/video/imxfb.c
+> > > index ef2b587..e0230f8 100644
+> > > --- a/drivers/video/imxfb.c
+> > > +++ b/drivers/video/imxfb.c
+> > > @@ -32,6 +32,12 @@
+> > >  #include <linux/io.h>
+> > >  #include <linux/math64.h>
+> > >  #include <linux/uaccess.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/of_device.h>
+> > > +
+> > > +#include <video/of_display_timing.h>
+> > > +#include <video/of_videomode.h>
+> > > +#include <video/videomode.h>
+> > >  
+> > >  #include <linux/platform_data/video-imxfb.h>
+> > >  
+> > > @@ -117,10 +123,11 @@
+> > >  #define LGWCR_GWAV(alpha)	(((alpha) & 0xff) << 24)
+> > >  #define LGWCR_GWE	(1 << 22)
+> > >  
+> > > +#define IMXFB_LSCR1_DEFAULT 0x00120300
+> > > +
+> > >  /* Used fb-mode. Can be set on kernel command line, therefore file-static. */
+> > >  static const char *fb_mode;
+> > >  
+> > > -
+> > >  /*
+> > >   * These are the bitfields for each
+> > >   * display depth that we support.
+> > > @@ -192,6 +199,19 @@ static struct platform_device_id imxfb_devtype[] = {
+> > >  };
+> > >  MODULE_DEVICE_TABLE(platform, imxfb_devtype);
+> > >  
+> > > +static struct of_device_id imxfb_of_dev_id[] = {
+> > > +	{
+> > > +		.compatible = "fsl,imx1-fb",
+> > > +		.data = &imxfb_devtype[IMX1_FB],
+> > > +	}, {
+> > > +		.compatible = "fsl,imx21-fb",
+> > > +		.data = &imxfb_devtype[IMX21_FB],
+> > > +	}, {
+> > > +		/* sentinel */
+> > > +	}
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, imxfb_of_dev_id);
+> > > +
+> > >  static inline int is_imx1_fb(struct imxfb_info *fbi)
+> > >  {
+> > >  	return fbi->devtype == IMX1_FB;
+> > > @@ -324,6 +344,9 @@ static const struct imx_fb_videomode *imxfb_find_mode(struct imxfb_info *fbi)
+> > >  	struct imx_fb_videomode *m;
+> > >  	int i;
+> > >  
+> > > +	if (!fb_mode)
+> > > +		return &fbi->mode[0];
+> > > +
+> > >  	for (i = 0, m = &fbi->mode[0]; i < fbi->num_modes; i++, m++) {
+> > >  		if (!strcmp(m->mode.name, fb_mode))
+> > >  			return m;
+> > > @@ -479,6 +502,9 @@ static int imxfb_bl_update_status(struct backlight_device *bl)
+> > >  	struct imxfb_info *fbi = bl_get_data(bl);
+> > >  	int brightness = bl->props.brightness;
+> > >  
+> > > +	if (!fbi->pwmr)
+> > > +		return 0;
+> > > +
+> > >  	if (bl->props.power != FB_BLANK_UNBLANK)
+> > >  		brightness = 0;
+> > >  	if (bl->props.fb_blank != FB_BLANK_UNBLANK)
+> > > @@ -719,10 +745,14 @@ static int imxfb_activate_var(struct fb_var_screeninfo *var, struct fb_info *inf
+> > >  
+> > >  	writel(fbi->pcr, fbi->regs + LCDC_PCR);
+> > >  #ifndef PWMR_BACKLIGHT_AVAILABLE
+> > > -	writel(fbi->pwmr, fbi->regs + LCDC_PWMR);
+> > > +	if (fbi->pwmr)
+> > > +		writel(fbi->pwmr, fbi->regs + LCDC_PWMR);
+> > >  #endif
+> > >  	writel(fbi->lscr1, fbi->regs + LCDC_LSCR1);
+> > > -	writel(fbi->dmacr, fbi->regs + LCDC_DMACR);
+> > > +
+> > > +	/* dmacr = 0 is no valid value, as we need DMA control marks. */
+> > > +	if (fbi->dmacr)
+> > > +		writel(fbi->dmacr, fbi->regs + LCDC_DMACR);
+> > >  
+> > >  	return 0;
+> > >  }
+> > > @@ -758,13 +788,12 @@ static int imxfb_resume(struct platform_device *dev)
+> > >  #define imxfb_resume	NULL
+> > >  #endif
+> > >  
+> > > -static int __init imxfb_init_fbinfo(struct platform_device *pdev)
+> > > +static int imxfb_init_fbinfo(struct platform_device *pdev)
+> > >  {
+> > >  	struct imx_fb_platform_data *pdata = pdev->dev.platform_data;
+> > >  	struct fb_info *info = dev_get_drvdata(&pdev->dev);
+> > >  	struct imxfb_info *fbi = info->par;
+> > > -	struct imx_fb_videomode *m;
+> > > -	int i;
+> > > +	struct device_node *np;
+> > >  
+> > >  	pr_debug("%s\n",__func__);
+> > >  
+> > > @@ -795,41 +824,95 @@ static int __init imxfb_init_fbinfo(struct platform_device *pdev)
+> > >  	info->fbops			= &imxfb_ops;
+> > >  	info->flags			= FBINFO_FLAG_DEFAULT |
+> > >  					  FBINFO_READS_FAST;
+> > > -	info->var.grayscale		= pdata->cmap_greyscale;
+> > > -	fbi->cmap_inverse		= pdata->cmap_inverse;
+> > > -	fbi->cmap_static		= pdata->cmap_static;
+> > > -	fbi->lscr1			= pdata->lscr1;
+> > > -	fbi->dmacr			= pdata->dmacr;
+> > > -	fbi->pwmr			= pdata->pwmr;
+> > > -	fbi->lcd_power			= pdata->lcd_power;
+> > > -	fbi->backlight_power		= pdata->backlight_power;
+> > > -
+> > > -	for (i = 0, m = &pdata->mode[0]; i < pdata->num_modes; i++, m++)
+> > > -		info->fix.smem_len = max_t(size_t, info->fix.smem_len,
+> > > -				m->mode.xres * m->mode.yres * m->bpp / 8);
+> > > +	if (pdata) {
+> > > +		info->var.grayscale		= pdata->cmap_greyscale;
+> > > +		fbi->cmap_inverse		= pdata->cmap_inverse;
+> > > +		fbi->cmap_static		= pdata->cmap_static;
+> > > +		fbi->lscr1			= pdata->lscr1;
+> > > +		fbi->dmacr			= pdata->dmacr;
+> > > +		fbi->pwmr			= pdata->pwmr;
+> > > +		fbi->lcd_power			= pdata->lcd_power;
+> > > +		fbi->backlight_power		= pdata->backlight_power;
+> > > +	} else {
+> > > +		np = pdev->dev.of_node;
+> > > +		info->var.grayscale = of_property_read_bool(np,
+> > > +						"cmap-greyscale");
+> > > +		fbi->cmap_inverse = of_property_read_bool(np, "cmap-inverse");
+> > > +		fbi->cmap_static = of_property_read_bool(np, "cmap-static");
+> > > +
+> > > +		fbi->lscr1 = IMXFB_LSCR1_DEFAULT;
+> > > +		of_property_read_u32(np, "fsl,lscr1", &fbi->lscr1);
+> > > +
+> > > +		of_property_read_u32(np, "fsl,dmacr", &fbi->dmacr);
+> > > +
+> > > +		/* These two function pointers could be used by some specific
+> > > +		 * platforms. */
+> > > +		fbi->lcd_power = NULL;
+> > > +		fbi->backlight_power = NULL;
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int imxfb_of_read_mode(struct device *dev, struct device_node *np,
+> > > +		struct imx_fb_videomode *imxfb_mode)
+> > > +{
+> > > +	int ret;
+> > > +	struct fb_videomode *of_mode = &imxfb_mode->mode;
+> > > +	u32 bpp;
+> > > +	u32 pcr;
+> > > +
+> > > +	ret = of_property_read_string(np, "model", &of_mode->name);
+> > > +	if (ret)
+> > > +		of_mode->name = NULL;
+> > > +
+> > > +	ret = of_get_fb_videomode(np, of_mode, OF_USE_NATIVE_MODE);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "Failed to get videomode from DT\n");
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	ret = of_property_read_u32(np, "fsl,bpp", &bpp);
+> > > +	ret |= of_property_read_u32(np, "fsl,pcr", &pcr);
+> > > +
+> > > +	if (ret) {
+> > > +		dev_err(dev, "Failed to read bpp and pcr from DT\n");
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	if (bpp < 1 || bpp > 255) {
+> > > +		dev_err(dev, "Bits per pixel have to be between 1 and 255\n");
+> > > +		return -EINVAL;
+> > > +	}
+> > > +
+> > > +	imxfb_mode->bpp = bpp;
+> > > +	imxfb_mode->pcr = pcr;
+> > >  
+> > >  	return 0;
+> > >  }
+> > >  
+> > > -static int __init imxfb_probe(struct platform_device *pdev)
+> > > +static int imxfb_probe(struct platform_device *pdev)
+> > >  {
+> > >  	struct imxfb_info *fbi;
+> > >  	struct fb_info *info;
+> > >  	struct imx_fb_platform_data *pdata;
+> > >  	struct resource *res;
+> > > +	struct imx_fb_videomode *m;
+> > > +	const struct of_device_id *of_id;
+> > >  	int ret, i;
+> > > +	int bytes_per_pixel;
+> > >  
+> > >  	dev_info(&pdev->dev, "i.MX Framebuffer driver\n");
+> > >  
+> > > +	of_id = of_match_device(imxfb_of_dev_id, &pdev->dev);
+> > > +	if (of_id)
+> > > +		pdev->id_entry = of_id->data;
+> > > +
+> > >  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > >  	if (!res)
+> > >  		return -ENODEV;
+> > >  
+> > >  	pdata = pdev->dev.platform_data;
+> > > -	if (!pdata) {
+> > > -		dev_err(&pdev->dev,"No platform_data available\n");
+> > > -		return -ENOMEM;
+> > > -	}
+> > >  
+> > >  	info = framebuffer_alloc(sizeof(struct imxfb_info), &pdev->dev);
+> > >  	if (!info)
+> > > @@ -837,15 +920,55 @@ static int __init imxfb_probe(struct platform_device *pdev)
+> > >  
+> > >  	fbi = info->par;
+> > >  
+> > > -	if (!fb_mode)
+> > > -		fb_mode = pdata->mode[0].mode.name;
+> > > -
+> > >  	platform_set_drvdata(pdev, info);
+> > >  
+> > >  	ret = imxfb_init_fbinfo(pdev);
+> > >  	if (ret < 0)
+> > >  		goto failed_init;
+> > >  
+> > > +	if (pdata) {
+> > > +		if (!fb_mode)
+> > > +			fb_mode = pdata->mode[0].mode.name;
+> > > +
+> > > +		fbi->mode = pdata->mode;
+> > > +		fbi->num_modes = pdata->num_modes;
+> > > +	} else {
+> > > +		struct device_node *display_np;
+> > > +		fb_mode = NULL;
+> > > +
+> > > +		display_np = of_parse_phandle(pdev->dev.of_node, "display", 0);
+> > > +		if (!display_np) {
+> > > +			dev_err(&pdev->dev, "No display defined in devicetree\n");
+> > > +			ret = -EINVAL;
+> > > +			goto failed_of_parse;
+> > > +		}
+> > > +
+> > > +		/*
+> > > +		 * imxfb does not support more modes, we choose only the native
+> > > +		 * mode.
+> > > +		 */
+> > > +		fbi->num_modes = 1;
+> > > +
+> > > +		fbi->mode = devm_kzalloc(&pdev->dev,
+> > > +				sizeof(struct imx_fb_videomode), GFP_KERNEL);
+> > > +		if (!fbi->mode) {
+> > > +			ret = -ENOMEM;
+> > > +			goto failed_of_parse;
+> > > +		}
+> > > +
+> > > +		ret = imxfb_of_read_mode(&pdev->dev, display_np, fbi->mode);
+> > > +		if (ret)
+> > > +			goto failed_of_parse;
+> > > +	}
+> > > +
+> > > +	/* Calculate maximum bytes used per pixel. In most cases this should
+> > > +	 * be the same as m->bpp/8 */
+> > > +	m = &fbi->mode[0];
+> > > +	bytes_per_pixel = (m->bpp + 7) / 8;
+> > > +	for (i = 0; i < fbi->num_modes; i++, m++)
+> > > +		info->fix.smem_len = max_t(size_t, info->fix.smem_len,
+> > > +				m->mode.xres * m->mode.yres * bytes_per_pixel);
+> > > +
+> > >  	res = request_mem_region(res->start, resource_size(res),
+> > >  				DRIVER_NAME);
+> > >  	if (!res) {
+> > > @@ -878,7 +1001,8 @@ static int __init imxfb_probe(struct platform_device *pdev)
+> > >  		goto failed_ioremap;
+> > >  	}
+> > >  
+> > > -	if (!pdata->fixed_screen_cpu) {
+> > > +	/* Seems not being used by anyone, so no support for oftree */
+> > > +	if (!pdata || !pdata->fixed_screen_cpu) {
+> > >  		fbi->map_size = PAGE_ALIGN(info->fix.smem_len);
+> > >  		fbi->map_cpu = dma_alloc_writecombine(&pdev->dev,
+> > >  				fbi->map_size, &fbi->map_dma, GFP_KERNEL);
+> > > @@ -903,18 +1027,16 @@ static int __init imxfb_probe(struct platform_device *pdev)
+> > >  		info->fix.smem_start = fbi->screen_dma;
+> > >  	}
+> > >  
+> > > -	if (pdata->init) {
+> > > +	if (pdata && pdata->init) {
+> > >  		ret = pdata->init(fbi->pdev);
+> > >  		if (ret)
+> > >  			goto failed_platform_init;
+> > >  	}
+> > >  
+> > > -	fbi->mode = pdata->mode;
+> > > -	fbi->num_modes = pdata->num_modes;
+> > >  
+> > >  	INIT_LIST_HEAD(&info->modelist);
+> > > -	for (i = 0; i < pdata->num_modes; i++)
+> > > -		fb_add_videomode(&pdata->mode[i].mode, &info->modelist);
+> > > +	for (i = 0; i < fbi->num_modes; i++)
+> > > +		fb_add_videomode(&fbi->mode[i].mode, &info->modelist);
+> > >  
+> > >  	/*
+> > >  	 * This makes sure that our colour bitfield
+> > > @@ -944,10 +1066,10 @@ static int __init imxfb_probe(struct platform_device *pdev)
+> > >  failed_register:
+> > >  	fb_dealloc_cmap(&info->cmap);
+> > >  failed_cmap:
+> > > -	if (pdata->exit)
+> > > +	if (pdata && pdata->exit)
+> > >  		pdata->exit(fbi->pdev);
+> > >  failed_platform_init:
+> > > -	if (!pdata->fixed_screen_cpu)
+> > > +	if (pdata && !pdata->fixed_screen_cpu)
+> > >  		dma_free_writecombine(&pdev->dev,fbi->map_size,fbi->map_cpu,
+> > >  			fbi->map_dma);
+> > >  failed_map:
+> > > @@ -956,6 +1078,7 @@ failed_ioremap:
+> > >  failed_getclock:
+> > >  	release_mem_region(res->start, resource_size(res));
+> > >  failed_req:
+> > > +failed_of_parse:
+> > >  	kfree(info->pseudo_palette);
+> > >  failed_init:
+> > >  	platform_set_drvdata(pdev, NULL);
+> > > @@ -980,7 +1103,7 @@ static int imxfb_remove(struct platform_device *pdev)
+> > >  	unregister_framebuffer(info);
+> > >  
+> > >  	pdata = pdev->dev.platform_data;
+> > > -	if (pdata->exit)
+> > > +	if (pdata && pdata->exit)
+> > >  		pdata->exit(fbi->pdev);
+> > >  
+> > >  	fb_dealloc_cmap(&info->cmap);
+> > > @@ -1009,6 +1132,7 @@ static struct platform_driver imxfb_driver = {
+> > >  	.shutdown	= imxfb_shutdown,
+> > >  	.driver		= {
+> > >  		.name	= DRIVER_NAME,
+> > > +		.of_match_table = imxfb_of_dev_id,
+> > >  	},
+> > >  	.id_table	= imxfb_devtype,
+> > >  };
+> > > -- 
+> > > 1.8.1.5
+> > > 
+> > 
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
