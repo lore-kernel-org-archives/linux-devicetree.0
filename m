@@ -1,53 +1,44 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v3 0/4] ARM: dts: Add USB host support for Panda and Beagle-xm
-Date: Mon, 22 Apr 2013 10:10:51 +0300
-Message-ID: <5174E27B.5090808@ti.com>
-References: <1366365457-28972-1-git-send-email-rogerq@ti.com> <20130419154321.GG10155@atomide.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 1/3] iio: Add Nuvoton NAU7802 ADC driver
+Date: Mon, 22 Apr 2013 09:58:02 +0200
+Message-ID: <5174ED8A.5090802@free-electrons.com>
+References: <1366299536-18353-1-git-send-email-alexandre.belloni@free-electrons.com> <1366299536-18353-2-git-send-email-alexandre.belloni@free-electrons.com> <51726541.6060304@kernel.org> <5172B68B.4010506@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130419154321.GG10155@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: b-cousson@ti.com, nm@ti.com, paul@pwsan.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, "B, Ravi" <ravibabu@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5172B68B.4010506@free-electrons.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Shawn Guo <shawn.guo@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, jimwall@q.com, brian@crystalfontz.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Jonathan Cameron <jic23@cam.ac.uk>, Rob Landley <rob@landley.net>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/19/2013 06:43 PM, Tony Lindgren wrote:
-> * Roger Quadros <rogerq@ti.com> [130419 03:02]:
->> Hi Benoit/Tony
->>
->> I've consolidated all the USB host device tree patches for Panda and Beagles
->> to one place and addressed Tony's comments.
->>
->> NOTE: patch 1 depends on OMAP clock binding introduced in
->> https://lkml.org/lkml/2013/4/12/407
->>
->> v3:
->> - updated mux mode to use pulldowns on panda as non-DT boot uses pulldowns.
->> - fixed usb pin naming for panda, beagle and beagle-xm
-> 
-> Cool. Sounds like we should be able to make omap4 DT only for v3.11
+Hi Alexandre, Jonathan,
 
-when we say DT only for 3.11, does this mean getting rid of hwmod dependency?
+Le 20/04/2013 17:38, Alexandre Belloni a =E9crit :
+> On 20/04/2013 11:52, Jonathan Cameron wrote:
+>>> +	&iio_dev_attr_gain.dev_attr.attr,
+>>> +	&iio_const_attr_gain_available.dev_attr.attr,
+>>> +	&iio_dev_attr_min_conversions.dev_attr.attr,
+>> What governs this?  Looks to me more like it should be hidden away
+>> in the device tree than be here.
+>=20
+> I guess it will depend on what you connect to your adc. Do we want to
+> fix that in the DT or to be able to change it at runtime ?
 
-> then. For that we also need USB on 4430-sdp working, but it now
-> does:
-> 
-> ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
-> ehci-omap 4a064c00.ehci: failed to get phys phandle in /ocp/usbhshost@4a064000/ehci@4a064c00 node
-> ehci-omap 4a064c00.ehci: failed to get phys phandle in /ocp/usbhshost@4a064000/ehci@4a064c00 node
-> ...
+I don't think so. Unless I misunderstood it, this attribute is the
+number of conversions that must occur when switching from one channel t=
+o
+another to get a good-enough precision for the ADC, right?
 
-4430-sdp (Blaze) does not have EHCI USB Host port. It should be using the 
-MUSB OTG port.
-> 
-> As I have mine in a rack I don't have anything plugged into the
-> USB port there though, but sounds like the phy is not initialized?
-> 
+So I don't really see 1) why it could be changed by the user through
+sysfs in the first place 2) this is not hardware configuration at all,
+more some black magic within the driver, so it shouldn't be at all in
+the device tree anyway.
 
-+Ravi B.
-He might have some clues.
+Maxime
 
-cheers,
--roger
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
