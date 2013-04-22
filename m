@@ -1,63 +1,37 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [RFC PATCH] drivers: bus: add ARM CCI support
-Date: Mon, 22 Apr 2013 15:24:57 +0100
-Message-ID: <20130422142457.GM14496@n2100.arm.linux.org.uk>
-References: <1365691679-28674-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1365691679-28674-2-git-send-email-lorenzo.pieralisi@arm.com>
- <51702B70.9000908@codeaurora.org>
- <alpine.LFD.2.03.1304181341020.17375@syhkavp.arg>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [RFC v2] video: ARM CLCD: Add DT & CDF support
+Date: Mon, 22 Apr 2013 15:28:45 +0100
+Message-ID: <20130422142845.GO14496@n2100.arm.linux.org.uk>
+References: <20130418102444.GL14496@n2100.arm.linux.org.uk> <1366306402-21651-1-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.03.1304181341020.17375-hIgblCxmbi8OMTOF05IoTw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1366306402-21651-1-git-send-email-pawel.moll@arm.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Pawel Moll <pawel.moll@arm.com>
+Cc: linux-fbdev@vger.kernel.org, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 18, 2013 at 01:54:04PM -0400, Nicolas Pitre wrote:
-> On Thu, 18 Apr 2013, Stephen Boyd wrote:
+On Thu, Apr 18, 2013 at 06:33:21PM +0100, Pawel Moll wrote:
+> This patch adds basic DT bindings for the PL11x CLCD cells
+> and make their fbdev driver use them, together with the
+> Common Display Framework.
 > 
-> > On 04/11/13 07:47, Lorenzo Pieralisi wrote:
-> > > diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
-> > > new file mode 100644
-> > > index 0000000..81953de
-> > > --- /dev/null
-> > > +++ b/drivers/bus/arm-cci.c
-> > [...]
-> > > +static void notrace cci_port_control(unsigned int port, bool enable)
-> > > +{
-> > > +	void __iomem *base = ports[port].base;
-> > > +
-> > > +	if (!base)
-> > > +		return;
-> > > +
-> > > +	writel_relaxed(enable, base + CCI_PORT_CTRL);
-> > > +	while (readl_relaxed(cci_ctrl_base + CCI_CTRL_STATUS) & 0x1)
-> > > +			;
-> > 
-> > cpu_relax()?
+> The DT provides information about the hardware configuration
+> and limitations (eg. the largest supported resolution)
+> but the video modes come exclusively from the Common
+> Display Framework drivers, referenced to by the standard CDF
+> binding.
 > 
-> In some cases there is no more cache coherence when this is called and 
-> the hardware might not be in a good state to cope with whatever action 
-> people might be tempted to insert into cpu_relax().  After the CCI is 
-> disabled it is important to keep a low profile and not touch anything 
-> global. With some early hardware revision, even a DMB here was harmful.
+> Signed-off-by: Pawel Moll <pawel.moll@arm.com>
 
-It would be useful if there was a comment in the code explaining this.
-As it stands, you _will_ get a stream of patches from kernel janitors
-itching to add cpu_relax() there.
+Much better.
 
-If you're going to do something different from the norm, it _needs_ to
-definitely be commented and explained.
+I will point out though that there be all sorts of worms here when you
+come to the previous ARM evaluation boards (which is why the capabilities
+stuff got written in the first place) where there's a horrid mixture of
+BGR/RGB ordering at various levels of the system - some of which must be
+set correctly because the CLCD output isn't strictly used as R bits
+G bits and B bits (to support different formats from the CLCD's native
+formats.)
