@@ -1,108 +1,67 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v7 2/3] of/pci: Provide support for parsing PCI DT
- ranges property
-Date: Mon, 22 Apr 2013 11:57:24 +0100
-Message-ID: <20130422105724.GB17007@arm.com>
-References: <1366107508-12672-1-git-send-email-Andrew.Murray@arm.com>
- <1366107508-12672-3-git-send-email-Andrew.Murray@arm.com>
- <20130418134401.84AEE3E1319@localhost>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH 18/23] dma: coh901318: add devicetree support
+Date: Mon, 22 Apr 2013 16:04:37 +0530
+Message-ID: <20130422103437.GX24632@intel.com>
+References: <1366624770-6786-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-mips-bounce@linux-mips.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20130418134401.84AEE3E1319@localhost>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "jgunthorpe@obsidianresearch.com" <jgunthorpe@obsidianresearch.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "siva.kallam@samsung.com" <siva.kallam@samsung.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "jg1.han@samsung.com" <jg1.han@samsung.com>, Liviu Dudau <Liviu.Dudau@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "bhelgaas@google.com" <bhel>
+In-Reply-To: <1366624770-6786-1-git-send-email-linus.walleij@stericsson.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@stericsson.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, Dan Williams <djbw@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 18, 2013 at 02:44:01PM +0100, Grant Likely wrote:
-> On Tue, 16 Apr 2013 11:18:27 +0100, Andrew Murray <Andrew.Murray@arm.com> wrote:
-
+On Mon, Apr 22, 2013 at 11:59:30AM +0200, Linus Walleij wrote:
+> From: Linus Walleij <linus.walleij@linaro.org>
 > 
-> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> This adds support for probing the COH 901 318 DMA controller
+> from the device tree.
 > 
-> But comments below...
+> Cc: Vinod Koul <vinod.koul@intel.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Vinod Koul <vinod.koul@intel.com>
+
+--
+~Vinod
+> ---
+> Hi Vinod, I'm seeking an ACK on this patch to take it through
+> the ARM SoC tree.
+> ---
+>  drivers/dma/coh901318.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-
-I've updated the patchset (now v8) to reflect your feedback, after a closer
-look...
-
-> > -
-> > -		pr_debug("pci_space: 0x%08x pci_addr:0x%016llx ",
-> > -				pci_space, pci_addr);
-> > -		pr_debug("cpu_addr:0x%016llx size:0x%016llx\n",
-> > -					cpu_addr, size);
-> > -
-> > -		ranges += np;
-> > +		pr_debug("pci_space: 0x%08x pci_addr: 0x%016llx ",
-> > +				range.pci_space, range.pci_addr);
-> > +		pr_debug("cpu_addr: 0x%016llx size: 0x%016llx\n",
-> > +				range.cpu_addr, range.size);
+> diff --git a/drivers/dma/coh901318.c b/drivers/dma/coh901318.c
+> index 797940e..2855646 100644
+> --- a/drivers/dma/coh901318.c
+> +++ b/drivers/dma/coh901318.c
+> @@ -2758,11 +2758,16 @@ static int __exit coh901318_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct of_device_id coh901318_dt_match[] = {
+> +	{ .compatible = "stericsson,coh901318" },
+> +	{},
+> +};
+>  
+>  static struct platform_driver coh901318_driver = {
+>  	.remove = __exit_p(coh901318_remove),
+>  	.driver = {
+>  		.name	= "coh901318",
+> +		.of_match_table = coh901318_dt_match,
+>  	},
+>  };
+>  
+> -- 
+> 1.7.11.3
 > 
-> Nit: the patch changed whitespace on the pr_debug() statements, so even
-> though the first line of each is identical, they look different in the
-> patch.
-> 
-
-Actually the first line isn't identical, the original file was inconsistent
-with its use of spaces between ':' and '0x%0' - my patch ensured that there
-was always a space. I guess this could have been done as a separate patch.
-
-> >  
-> >  		/* If we failed translation or got a zero-sized region
-> >  		 * (some FW try to feed us with non sensical zero sized regions
-> >  		 * such as power3 which look like some kind of attempt
-> >  		 * at exposing the VGA memory hole)
-> >  		 */
-> > -		if (cpu_addr == OF_BAD_ADDR || size == 0)
-> > +		if (range.cpu_addr == OF_BAD_ADDR || range.size == 0)
-> >  			continue;
-> 
-> Can this also be rolled into the parsing iterator?
-> 
-
-I decided not to do this. Mainly because ARM drivers use the parser directly
-(instead of pci_process_bridge_OF_ranges function) and it seemed perfectly
-valid for the parser to return a range of size 0 if that is what was present in
-the DT.
-
-> >  
-> > -		/* Now consume following elements while they are contiguous */
-> > -		for (; rlen >= np * sizeof(u32);
-> > -		     ranges += np, rlen -= np * 4) {
-> > -			if (ranges[0] != pci_space)
-> > -				break;
-> > -			pci_next = of_read_number(ranges + 1, 2);
-> > -			cpu_next = of_translate_address(dev, ranges + 3);
-> > -			if (pci_next != pci_addr + size ||
-> > -			    cpu_next != cpu_addr + size)
-> > -				break;
-> > -			size += of_read_number(ranges + pna + 3, 2);
-> > -		}
-> > -
-> >  		/* Act based on address space type */
-> >  		res = NULL;
-> > -		switch ((pci_space >> 24) & 0x3) {
-> > -		case 1:		/* PCI IO space */
-> > +		res_type = range.flags & IORESOURCE_TYPE_BITS;
-> > +		if (res_type == IORESOURCE_IO) {
-> 
-> Why the change from switch() to an if/else if sequence?
-
-I think this was an artifact of the patches evolution, I've reverted back to
-the switch.
-
-> 
-> But those are mostly nitpicks. If this is deferred to v3.10 then I would
-> suggest fixing them up and posting for another round of review.
-
-Andrew Murray
