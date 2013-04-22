@@ -1,35 +1,57 @@
 From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH v2 0/2] ARM: Exynos: Add DT based I/O mapping for Chip-ID
+Subject: Re: [PATCH 0/2] ARM: Exynos: Add DT based I/O mapping for Chip-ID
  controller
-Date: Tue, 23 Apr 2013 01:45:37 +0900
-Message-ID: <51756931.9080506@samsung.com>
-References: <1366630508-26101-1-git-send-email-thomas.abraham@linaro.org>
+Date: Tue, 23 Apr 2013 01:47:46 +0900
+Message-ID: <517569B2.7040302@samsung.com>
+References: <1361174099-18749-1-git-send-email-thomas.abraham@linaro.org>	<27ea01ce3101$a8dae850$fa90b8f0$%kim@samsung.com> <CAJuYYwTV5U8-wqNhet4ZEdgRSnbok6-ziE-qkx4ee9j84z8xdg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1366630508-26101-1-git-send-email-thomas.abraham@linaro.org>
+In-Reply-To: <CAJuYYwTV5U8-wqNhet4ZEdgRSnbok6-ziE-qkx4ee9j84z8xdg@mail.gmail.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, t.figa@samsung.com, arnd@arndb.de
+Cc: Kukjin Kim <kgene.kim@samsung.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, arm-linux <linux-arm-kernel@lists.infradead.org>, Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 04/22/13 20:35, Thomas Abraham wrote:
-> Changes since v1:
-> - Rebased to v3.9-rc8
+On 04/22/13 20:20, Thomas Abraham wrote:
+> On 4 April 2013 12:27, Kukjin Kim<kgene.kim@samsung.com>  wrote:
+>> Thomas Abraham wrote:
+>>>
+>>> This patch series allows device tree enabled platforms to setup a runtime
+>>> I/O mapping for the chip-id controller. This helps to remove statically
+>>> defined I/O mapping for the Chip-ID controller.
+>>>
+>>> Thomas Abraham (2):
+>>>    ARM: Exynos: Create virtual I/O mapping for Chip-ID controller using
+>>> device tree
+>>>    ARM: dts: Add chip-id controller node on Exynos4/5 SoC
+>>>
+>>>   .../arm/samsung/samsung,exynos4210-chipid.txt      |   15 ++++++
+>>>   arch/arm/boot/dts/exynos4.dtsi                     |    5 ++
+>>>   arch/arm/boot/dts/exynos5250.dtsi                  |    5 ++
+>>>   arch/arm/mach-exynos/common.c                      |   53
+>> +++++++++++---------
+>>>   arch/arm/mach-exynos/include/mach/map.h            |    1 -
+>>>   5 files changed, 55 insertions(+), 24 deletions(-)
+>>>   create mode 100644
+>>> Documentation/devicetree/bindings/arm/samsung/samsung,exynos4210-
+>>> chipid.txt
+>>>
+>>> --
+>>> 1.7.5.4
+>>
+>> Thomas,
+>>
+>> Can you update this series can support exynos5440 as well? It should be done
+>> together.
 >
-> This patch series allows device tree enabled platforms to setup a runtime
-> I/O mapping for the chip-id controller. This helps to remove statically
-> defined I/O mapping for the Chip-ID controller. This series is based on
-> linux-next master branch and tested for Exynos4210, Exynos5250 and
-> Exynos5440.
+> Hi Mr. Kim,
 >
-> Thomas Abraham (2):
->    ARM: Exynos: Create virtual I/O mapping for Chip-ID controller using device tree
->    ARM: dts: Add chip-id controller node on Exynos4/5 SoC
+> Sorry for the delayed reply. This patch series is supported for
+> Exynos5440 as well. The v2 version of this patch series has been
+> submitted.
 >
-Looks good to me, applied.
-
-Thanks.
+OK, thanks.
 
 - Kukjin
