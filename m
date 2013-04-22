@@ -1,27 +1,53 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 0/5] of_platform_driver and OF_DEVICE removal
-Date: Mon, 22 Apr 2013 09:03:54 +0200
-Message-ID: <201304220903.54788.arnd@arndb.de>
-References: <1366596798-9457-1-git-send-email-robherring2@gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v3 0/4] ARM: dts: Add USB host support for Panda and Beagle-xm
+Date: Mon, 22 Apr 2013 10:10:51 +0300
+Message-ID: <5174E27B.5090808@ti.com>
+References: <1366365457-28972-1-git-send-email-rogerq@ti.com> <20130419154321.GG10155@atomide.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1366596798-9457-1-git-send-email-robherring2@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christoph Raisch <raisch@de.ibm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hal Rosenstock <hal.rosenstock@gmail.com>, Hoang-Nam Nguyen <hnguyen@de.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-rdma@vger.kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Roland Dreier <roland@kernel.org>, Sean Hefty <sean.hefty@intel.com>, Thadeu Lima de Souza Cascardo <cascardo@linux.vnet.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130419154321.GG10155@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: b-cousson@ti.com, nm@ti.com, paul@pwsan.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, "B, Ravi" <ravibabu@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 22 April 2013, Rob Herring wrote:
-> From: Rob Herring <rob.herring@calxeda.com>
+On 04/19/2013 06:43 PM, Tony Lindgren wrote:
+> * Roger Quadros <rogerq@ti.com> [130419 03:02]:
+>> Hi Benoit/Tony
+>>
+>> I've consolidated all the USB host device tree patches for Panda and Beagles
+>> to one place and addressed Tony's comments.
+>>
+>> NOTE: patch 1 depends on OMAP clock binding introduced in
+>> https://lkml.org/lkml/2013/4/12/407
+>>
+>> v3:
+>> - updated mux mode to use pulldowns on panda as non-DT boot uses pulldowns.
+>> - fixed usb pin naming for panda, beagle and beagle-xm
 > 
-> This series is a relatively straight-forward removal of the last remaining
-> user of of_platform_driver (ibmebus) and removal of CONFIG_OF_DEVICE which
-> is always enabled when CONFIG_OF is enabled.
+> Cool. Sounds like we should be able to make omap4 DT only for v3.11
+
+when we say DT only for 3.11, does this mean getting rid of hwmod dependency?
+
+> then. For that we also need USB on 4430-sdp working, but it now
+> does:
 > 
-> Compile tested on powerpc and sparc.
+> ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+> ehci-omap 4a064c00.ehci: failed to get phys phandle in /ocp/usbhshost@4a064000/ehci@4a064c00 node
+> ehci-omap 4a064c00.ehci: failed to get phys phandle in /ocp/usbhshost@4a064000/ehci@4a064c00 node
+> ...
+
+4430-sdp (Blaze) does not have EHCI USB Host port. It should be using the 
+MUSB OTG port.
+> 
+> As I have mine in a rack I don't have anything plugged into the
+> USB port there though, but sounds like the phy is not initialized?
 > 
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
++Ravi B.
+He might have some clues.
+
+cheers,
+-roger
