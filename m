@@ -1,13 +1,13 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 03/23] ARM: u300: device tree support for the timer
-Date: Mon, 22 Apr 2013 13:36:21 +0200
-Message-ID: <201304221336.21921.arnd@arndb.de>
-References: <1366624304-6190-1-git-send-email-linus.walleij@stericsson.com>
+Subject: Re: [PATCH 05/23] pinctrl: coh901: add device tree support
+Date: Mon, 22 Apr 2013 13:40:17 +0200
+Message-ID: <201304221340.18080.arnd@arndb.de>
+References: <1366624326-6259-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366624304-6190-1-git-send-email-linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+In-Reply-To: <1366624326-6259-1-git-send-email-linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,20 +23,15 @@ Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel
 List-Id: devicetree@vger.kernel.org
 
 On Monday 22 April 2013, Linus Walleij wrote:
-> +#ifdef CONFIG_OF
-> +       struct device_node *timer = NULL;
+> +Required properties:
+> +- compatible: Compatible property value should be "stericsson,gpio-coh901"
+> +- reg: Physical base address of the controller and length of memory mapped
+> +  region.
+> +- interrupts: the 0...n interrupts assigned to the different GPIO ports/banks.
+> +- interrupt-names: name the interrupts after port/bank, "gpio0", "gpio1" etc.
 > +
-> +       timer = of_find_node_by_path("/timer0@c0014000");
-> +       if (timer) {
-> +               struct resource irq_res;
-> +
-> +               u300_timer_base = of_iomap(timer, 0);
-> +               /* Get the IRQ for the GP1 timer */
-> +               irq = of_irq_to_resource(timer, 2, &irq_res);
-> +       }
-> +#endif
 
-Do you need the #ifdef? The functions should be defined in a way that
-removes this code if CONFIG_OF is not defined.
+I think it would be better to leave out the interrupt-names in this case, since
+the name directly corresponds to the index, so there is no ambiguity.
 
 	Arnd
