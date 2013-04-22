@@ -1,96 +1,42 @@
-From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 04/10] util_version: new helper for displaying version info
-Date: Sun, 21 Apr 2013 20:25:46 -0400
-Message-ID: <201304212025.47665.vapier@gentoo.org>
-References: <1366078397-14889-1-git-send-email-vapier@gentoo.org>
- <20130419005046.GL16400@truffula.fritz.box> <E1UTztj-0006SA-F8@jdl.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3986083748496895432=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <E1UTztj-0006SA-F8-CYoMK+44s/E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Rob Herring <robherring2@gmail.com>
+Subject: [PATCH 0/5] of_platform_driver and OF_DEVICE removal
+Date: Sun, 21 Apr 2013 21:13:13 -0500
+Message-ID: <1366596798-9457-1-git-send-email-robherring2@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christoph Raisch <raisch@de.ibm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hal Rosenstock <hal.rosenstock@gmail.com>, Hoang-Nam Nguyen <hnguyen@de.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-rdma@vger.kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Roland Dreier <roland@kernel.org>, Sean Hefty <sean.hefty@intel.com>, Thadeu Lima de Souza Cascardo <cascardo@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
---===============3986083748496895432==
-Content-Type: multipart/signed;
-  boundary="nextPart2623112.KsVrhO4pi1";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
+From: Rob Herring <rob.herring@calxeda.com>
 
---nextPart2623112.KsVrhO4pi1
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+This series is a relatively straight-forward removal of the last remaining
+user of of_platform_driver (ibmebus) and removal of CONFIG_OF_DEVICE which
+is always enabled when CONFIG_OF is enabled.
 
-On Sunday 21 April 2013 15:26:03 Jon Loeliger wrote:
-> > On Mon, Apr 15, 2013 at 10:13:11PM -0400, Mike Frysinger wrote:
-> > > This is so all utilities can have this flag and not just dtc.
-> > >
-> > >=3D20
-> > >
-> > > Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-> > > Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-> >=20
-> > Jon,
-> >=20
-> > Please apply these first 4 patches, regardless of the rest of the
-> > series.
->=20
-> Done.
+Compile tested on powerpc and sparc.
 
-hmm, looks like patch #2 (utilfdt_read and handling of the len argument) wa=
-s=20
-taken from the first patch series rather than the 3rd ?
+Rob
 
-i'd suggest reverting it and applying instead the one from this series ...
-Message-Id: <1366078397-14889-3-git-send-email-vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-=2Dmike
+Rob Herring (5):
+  ibmebus: convert of_platform_driver to platform_driver
+  driver core: move to_platform_driver to platform_device.h
+  of: remove of_platform_driver
+  usb: chipidea: depend on CONFIG_OF instead of CONFIG_OF_DEVICE
+  of: remove CONFIG_OF_DEVICE
 
---nextPart2623112.KsVrhO4pi1
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
+ arch/powerpc/include/asm/ibmebus.h        |    4 ++--
+ arch/powerpc/kernel/ibmebus.c             |   22 ++++++++++-----------
+ drivers/base/platform.c                   |    3 ---
+ drivers/infiniband/hw/ehca/ehca_main.c    |    5 ++---
+ drivers/net/ethernet/ibm/ehea/ehea_main.c |    8 +++-----
+ drivers/of/Kconfig                        |    3 ---
+ drivers/of/Makefile                       |    3 +--
+ drivers/usb/chipidea/Makefile             |    2 +-
+ include/linux/of_device.h                 |    6 +++---
+ include/linux/of_platform.h               |   30 +----------------------------
+ include/linux/platform_device.h           |    3 +++
+ 11 files changed, 26 insertions(+), 63 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.17 (GNU/Linux)
-
-iQIcBAABAgAGBQJRdIOLAAoJEEFjO5/oN/WBMgAP/2E499NxK3xPPvaewUohulj9
-/QmJR5iIZKyJ08Q9/CiCqeRii7yz8n821aE+yHy1Fzu/WuQmwtoMorG4XPhorT4h
-CJNfK+oaoY2AmOq/sjHil4gvdOKJmPhUgAsmZZxNdkbiNbIp6GuIsIwkcC8LNHmw
-igBslX6I6nxbb4RWCVPoP2VG0R/W6pbYtCHM61C2LikOfC5WbHPRtlEns8wr9NAw
-ZsSq1C/WxJfO5mXIUIqV7b//sZAx0WZPQx45X4dSmZgW9FIp8phncQ+q2JyXoST7
-2tU/BBoIPL2XJjPYqxksVJ0btni6vYCFvz98Qu4a/zR8OlGBRWg8sKsl4gltDvB2
-sJjMaAuEIEdkv1ic8ZgTS4X/Kty/jMc21dSrVDroX2YJuFl2l4gGl300RItztiQ9
-Y6B4iOsbMJAavJf52iYAIsMtMWU87B6Gr1hRWO3J6MuvZOmrZtc4c+Fr57F/H/FS
-jH7lfOeED0nzvoRGKvJxlV3qtWw2PFNfhn1M1E9rvjFVAI96b7lDu6rUVi0xyEUY
-t1irtZ0YyBrob+i67XMXa0qU1rXk7vTidqj/gkdrunQlIicFjGm222eh/dXuPqJW
-ZyP9ZjCaFr028pG5bz9Ltvqs19y83I5GzFvmVFYNR2MJLvit9ddT7Cw1XGb6CvC2
-OWSr5mzwti4jwGABx/Ps
-=CCWG
------END PGP SIGNATURE-----
-
---nextPart2623112.KsVrhO4pi1--
-
---===============3986083748496895432==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============3986083748496895432==--
+-- 
+1.7.10.4
