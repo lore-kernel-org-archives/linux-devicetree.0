@@ -1,63 +1,47 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: [net-next PATCH 3/3] ARM: dts: AM33XX: add phy fixup for evm and evmsk boards
-Date: Mon, 22 Apr 2013 23:50:38 +0530
-Message-ID: <1366654838-26479-4-git-send-email-mugunthanvnm@ti.com>
-References: <1366654838-26479-1-git-send-email-mugunthanvnm@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH v2 00/13] ARM: DT cpu bindings updates
+Date: Mon, 22 Apr 2013 21:18:41 +0200
+Message-ID: <201304222118.41262.arnd@arndb.de>
+References: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <20130422164112.GB3076@mudshark.cambridge.arm.com>
+ <20130422180057.GB17071@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1366654838-26479-1-git-send-email-mugunthanvnm@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130422180057.GB17071@e102568-lin.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Dave Martin <dave.martin@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Amit Kucheria <amit.kucheria@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, Lennert Buytenhek <kernel@wantstofly.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, David Brown <davidb@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Stephen Warren <swarren@wwwdotorg.org>, Sekhar Nori <nsekhar@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-As RGMII tx clock internal delay is not supported in AM335x, the same has
-to be enabled in phy. This patch adds support for enabling tx clock internal
-delay via phy debug registers
+On Monday 22 April 2013, Lorenzo Pieralisi wrote:
+> > Thoughts? I notice Catalin has some patches queued for arm64 which
+> > unconditionally use of_property_read_u64, but I have a patch to honour the
+> > #address-cells property instead.
+> 
+> Basically you want me to rule out passing a dtb with cpus node having
+> #address-cells == 2 to a 32-bit kernel, correct ? Or put it another way:
+> 
+> - a 32-bit kernel must always get passed a dtb with cpus node
+>   #address-cells == 1. 
 
-Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
----
- arch/arm/boot/dts/am335x-evm.dts   |   10 ++++++++++
- arch/arm/boot/dts/am335x-evmsk.dts |   10 ++++++++++
- 2 files changed, 20 insertions(+)
+Why that? For other registers, we allow leading zeroes. This is
+already required for MMIO registers on LPAE capable machines.
 
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index d649644..72805c5 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -244,3 +244,13 @@
- &cpsw_emac1 {
- 	phy_id = <&davinci_mdio>, <1>;
- };
-+
-+&davinci_mdio {
-+	phy-fixup-registers = <&atheros_txclk_delay_fixup>;
-+
-+	atheros_txclk_delay_fixup: atheros_txclk_delay_fixup {
-+		phy-id = <0x4dd074>;
-+		phy-mask = <0xfffffffe>;
-+		fixup-registers = <0x1d 0x5 0x1e 0x100>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-index f297b85..f398cb3 100644
---- a/arch/arm/boot/dts/am335x-evmsk.dts
-+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-@@ -256,3 +256,13 @@
- &cpsw_emac1 {
- 	phy_id = <&davinci_mdio>, <1>;
- };
-+
-+&davinci_mdio {
-+	phy-fixup-registers = <&atheros_txclk_delay_fixup>;
-+
-+	atheros_txclk_delay_fixup: atheros_txclk_delay_fixup {
-+		phy-id = <0x4dd074>;
-+		phy-mask = <0xfffffffe>;
-+		fixup-registers = <0x1d 0x5 0x1e 0x100>;
-+	};
-+};
--- 
-1.7.9.5
+>   If the system is ARMv8 with CPUs having
+>   MPIDR_EL1[63:32] != 0x0, well, running 32-bit kernel on it is not
+>   the safest thing to do anyway.
 
+I would assume the hypervisor to provide a virtual MPIDR_EL1 for
+a 32 bit kernel in that case.
+
+	Arnd
