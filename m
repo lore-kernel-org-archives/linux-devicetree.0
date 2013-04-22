@@ -1,31 +1,27 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/5] driver core: move to_platform_driver to platform_device.h
-Date: Mon, 22 Apr 2013 09:03:07 +0200
-Message-ID: <201304220903.07824.arnd@arndb.de>
-References: <1366596798-9457-1-git-send-email-robherring2@gmail.com> <1366596798-9457-3-git-send-email-robherring2@gmail.com>
+Subject: Re: [PATCH 0/5] of_platform_driver and OF_DEVICE removal
+Date: Mon, 22 Apr 2013 09:03:54 +0200
+Message-ID: <201304220903.54788.arnd@arndb.de>
+References: <1366596798-9457-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
   charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1366596798-9457-3-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1366596798-9457-1-git-send-email-robherring2@gmail.com>
+Sender: netdev-owner@vger.kernel.org
 To: Rob Herring <robherring2@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christoph Raisch <raisch@de.ibm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hal Rosenstock <hal.rosenstock@gmail.com>, Hoang-Nam Nguyen <hnguyen@de.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-rdma@vger.kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Roland Dreier <roland@kernel.org>, Sean Hefty <sean.hefty@intel.com>, Thadeu Lima de Souza Cascardo <cascardo@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
 On Monday 22 April 2013, Rob Herring wrote:
 > From: Rob Herring <rob.herring@calxeda.com>
 > 
-> In converting the last remaining of_platform_driver (ibmebus) to a regular
-> platform driver, to_platform_driver is needed to replace
-> to_of_platform_driver.
+> This series is a relatively straight-forward removal of the last remaining
+> user of of_platform_driver (ibmebus) and removal of CONFIG_OF_DEVICE which
+> is always enabled when CONFIG_OF is enabled.
 > 
-> Signed-off-by: Rob Herring <rob.herring@calxeda.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Grant Likely <grant.likely@linaro.org>
+> Compile tested on powerpc and sparc.
+> 
 
-It sounds like this patch is needed first, so you should swap the first
-two patches in the series.
-
-	Arnd
+Acked-by: Arnd Bergmann <arnd@arndb.de>
