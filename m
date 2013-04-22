@@ -1,110 +1,56 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 3/3] drm/exynos: Add device tree support for fimc ipp driver
-Date: Mon, 22 Apr 2013 17:57:13 +0200
-Message-ID: <51755DD9.4010004@samsung.com>
-References: <1366133486-22973-1-git-send-email-s.nawrocki@samsung.com>
- <1366133486-22973-4-git-send-email-s.nawrocki@samsung.com>
- <51712CA5.4030206@samsung.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [RFC PATCH v2 00/13] ARM: DT cpu bindings updates
+Date: Mon, 22 Apr 2013 17:41:12 +0100
+Message-ID: <20130422164112.GB3076@mudshark.cambridge.arm.com>
+References: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <51712CA5.4030206@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Eunchul Kim <chulspro.kim@samsung.com>
-Cc: inki.dae@samsung.com, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, jaejoon.seo@samsung.com, jmock.shin@samsung.com, jy0.jeon@samsung.com, th908.kim@samsung.com, lsmin.lee@samsung.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Dave Martin <dave.martin@linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>, Sekhar Nori <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Rutland <Mark.Rutland@arm.com>, Lennert Buytenhek <kernel@wantstofly.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, David Brown <davidb@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, rob.
 List-Id: devicetree@vger.kernel.org
 
-On 04/19/2013 01:38 PM, Eunchul Kim wrote:
->>   static void fimc_set_type_ctrl(struct fimc_context *ctx, enum fimc_wb wb)
->> @@ -1628,7 +1617,9 @@ static int fimc_ippdrv_start(struct device *dev, enum
->> drm_exynos_ipp_cmd cmd)
->>           fimc_handle_lastend(ctx, true);
->>
->>           /* setup FIMD */
->> -        fimc_set_camblk_fimd0_wb(ctx);
->> +        ret = fimc_set_camblk_fimd0_wb(ctx);
->> +        if (ret < 0)
-> 
-> - please adds error log information for indicating error.
+Hi Lorenzo,
 
-OK, I'll add it.
+On Mon, Apr 22, 2013 at 04:27:22PM +0100, Lorenzo Pieralisi wrote:
+> Code relying on the reg property size to be 4-bytes will break when
+> dtb compiled for 64-bit kernels are used to boot a 32-bit system so
+> kernel code relying on that (bogus) assumption must be updated properly.
 
->> +            return ret;
->>
->>           set_wb.enable = 1;
->>           set_wb.refresh = property->refresh_rate;
->> @@ -1784,26 +1775,50 @@ e_clk_free:
->>       return ret;
->>   }
->>
->> +static int fimc_parse_dt(struct fimc_context *ctx)
->> +{
->> +    struct device_node *node = ctx->dev->of_node;
->> +
->> +    if (!of_property_read_bool(node, "samsung,lcd-wb"))
-> 
-> - It also need error log ?
+So that code currently includes kvmtool, and I think it's unfair to break
+it:
 
-No, but it definitely deserves some comment why it is done like this.
-Please see my other reply to Inki.
+	- kvmtool can boot either 32-bit or 64-bit guests under a 64-bit
+	  kernel and only AFF0 is exposed by the KVM host (containing the
+	  vcpu id). This allows us to use a single cell for the reg
+	  property, regardless of the guest payload.
 
->> +        return -ENODEV;
->> +
->> +    if (of_property_read_u32(node, "clock-frequency",
->> +                    &ctx->clk_frequency))
->> +        ctx->clk_frequency = FIMC_DEFAULT_LCLK_FREQUENCY;
-> 
-> - We have many kind of H/W version of FIMC device. I think we need to use pdata
-> instead of static value.
+	- It always sets the #address-cells property correctly, so if it
+	  passes a 32-bit reg property, then #address-cells will be 0x1
 
-This is just a fallback value that will be used when "clock-frequency"
-property is not found in fimc node in the device tree.
+	- This scheme worked fine with older kernels
 
->> +    ctx->id = of_alias_get_id(node, "fimc");
->> +    if (ctx->id < 0)
->> +        return -EINVAL;
->> +
->> +    return 0;
->> +}
->> +
->>   static int fimc_probe(struct platform_device *pdev)
->>   {
->>       struct device *dev = &pdev->dev;
->>       struct fimc_context *ctx;
->>       struct resource *res;
->>       struct exynos_drm_ippdrv *ippdrv;
->> -    struct exynos_drm_fimc_pdata *pdata;
->> -    struct fimc_driverdata *ddata;
->>       int ret;
->>
->> -    pdata = pdev->dev.platform_data;
->> -    if (!pdata) {
->> -        dev_err(dev, "no platform data specified.\n");
->> -        return -EINVAL;
->> -    }
->> +    if (!dev->of_node)
-> 
-> - ditto.(error log)
+Why can't we instead allow the kernel to zero extend single-cell CPU reg
+properies on 64-bit systems? We can always check them against the logical
+map and barf if they don't match what's sitting in the hardware, without
+penalising machines which don't make use of the upper bits. Given that
+people *will* run 32-bit OSs on 64-bit CPUs (a use-case which we allow), I
+don't think penalising 64-bit software is the right thing to do.
 
-Probably won't hurt, I'll add it.
+Thoughts? I notice Catalin has some patches queued for arm64 which
+unconditionally use of_property_read_u64, but I have a patch to honour the
+#address-cells property instead.
 
->> +        return -ENODEV;
->>
->>       ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
->>       if (!ctx)
->>           return -ENOMEM;
->>
->> +    ctx->dev = dev;
->> +
->> +    ret = fimc_parse_dt(ctx);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    ctx->sysreg = syscon_regmap_lookup_by_phandle(dev->of_node,
->> +                        "samsung,sysreg");
->> +    if (IS_ERR(ctx->sysreg))
-> 
-> - ditto.(error log)
-
-OK. Will add here as well.
+Will
