@@ -1,67 +1,40 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH] drivers: bus: add ARM CCI support
-Date: Mon, 22 Apr 2013 11:18:58 -0400 (EDT)
-Message-ID: <alpine.LFD.2.03.1304221118100.17375@syhkavp.arg>
-References: <1365691679-28674-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1365691679-28674-2-git-send-email-lorenzo.pieralisi@arm.com>
- <51702B70.9000908@codeaurora.org>
- <alpine.LFD.2.03.1304181341020.17375@syhkavp.arg>
- <20130422142457.GM14496@n2100.arm.linux.org.uk>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v2 0/3] drm/exynos: Add device tree support for IPP driver
+Date: Mon, 22 Apr 2013 17:23:41 +0200
+Message-ID: <517555FD.7020909@samsung.com>
+References: <1366192384-18829-1-git-send-email-s.nawrocki@samsung.com>
+ <CAAQKjZOWQpNbEf+VA2oYCp1s3BG3zC7FVU9xj7zdKNQmJpGN8w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130422142457.GM14496-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAAQKjZOWQpNbEf+VA2oYCp1s3BG3zC7FVU9xj7zdKNQmJpGN8w@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, linux-samsung-soc@vger.kernel.org, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, DRI mailing list <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 22 Apr 2013, Russell King - ARM Linux wrote:
+Hi Inki,
 
-> On Thu, Apr 18, 2013 at 01:54:04PM -0400, Nicolas Pitre wrote:
-> > On Thu, 18 Apr 2013, Stephen Boyd wrote:
-> > 
-> > > On 04/11/13 07:47, Lorenzo Pieralisi wrote:
-> > > > diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
-> > > > new file mode 100644
-> > > > index 0000000..81953de
-> > > > --- /dev/null
-> > > > +++ b/drivers/bus/arm-cci.c
-> > > [...]
-> > > > +static void notrace cci_port_control(unsigned int port, bool enable)
-> > > > +{
-> > > > +	void __iomem *base = ports[port].base;
-> > > > +
-> > > > +	if (!base)
-> > > > +		return;
-> > > > +
-> > > > +	writel_relaxed(enable, base + CCI_PORT_CTRL);
-> > > > +	while (readl_relaxed(cci_ctrl_base + CCI_CTRL_STATUS) & 0x1)
-> > > > +			;
-> > > 
-> > > cpu_relax()?
-> > 
-> > In some cases there is no more cache coherence when this is called and 
-> > the hardware might not be in a good state to cope with whatever action 
-> > people might be tempted to insert into cpu_relax().  After the CCI is 
-> > disabled it is important to keep a low profile and not touch anything 
-> > global. With some early hardware revision, even a DMB here was harmful.
+On 04/20/2013 06:11 PM, Inki Dae wrote:
+> Hi Sylwester,
 > 
-> It would be useful if there was a comment in the code explaining this.
-> As it stands, you _will_ get a stream of patches from kernel janitors
-> itching to add cpu_relax() there.
+> DRM FIMC driver could be more cleaned up with this patch series. And your third
+> patch
+> And just minor issue. The second patch has build warnings like below,
+> 
+> WARNING: static const char * array should probably be static const char * const
+> #111: FILE: drivers/gpu/drm/exynos/exynos_drm_fimc.c:89:
+> +static const char * fimc_clock_names[] = {
+> 
+> ERROR: "foo * bar" should be "foo *bar"
+> #111: FILE: drivers/gpu/drm/exynos/exynos_drm_fimc.c:89:
 
-Absolutely right.
+Oops, sorry. I'll fix those for v3.
 
+> This is a minor issue so I can fix them. And as you already know, now drm fimc
+> driver should be more cleaned up. Your patch set looks good to me but I'd like
+> to take more opinions from others.
 
-Nicolas
+Thanks,
+Sylwester
