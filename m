@@ -1,47 +1,74 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFC PATCH v2 06/13] ARM: mach-lpc32xx: cpus/cpu nodes dts updates
-Date: Mon, 22 Apr 2013 16:27:28 +0100
-Message-ID: <1366644455-16550-7-git-send-email-lorenzo.pieralisi@arm.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [RFC PATCH v2 04/13] ARM: mach-exynos: cpus/cpu nodes dts updates
+Date: Mon, 22 Apr 2013 16:27:26 +0100
+Message-ID: <1366644455-16550-5-git-send-email-lorenzo.pieralisi@arm.com>
 References: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366644455-16550-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Dave Martin <dave.martin@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>, Sekhar Nori <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Viresh Kumar <viresh.kumar@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Lennert Buytenhek <kernel@wantstofly.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, David Brown <davidb@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
 This patch updates the in-kernel dts files according to the latest cpus
 and cpu bindings updates for ARM.
 
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 ---
- arch/arm/boot/dts/lpc32xx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/exynos5440.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index 1582f48..c376975 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -19,7 +19,7 @@
- 
- 	cpus {
- 		cpu@0 {
--			compatible = "arm,arm926ejs";
-+			compatible = "arm,arm926";
- 		};
+diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
+index 5f3562a..eda21d5 100644
+--- a/arch/arm/boot/dts/exynos5440.dtsi
++++ b/arch/arm/boot/dts/exynos5440.dtsi
+@@ -24,8 +24,12 @@
  	};
  
+ 	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
+ 		cpu@0 {
+ 			compatible = "arm,cortex-a15";
++			reg = <0x0>;
+ 			timer {
+ 				compatible = "arm,armv7-timer";
+ 				interrupts = <1 13 0xf08>;
+@@ -34,6 +38,7 @@
+ 		};
+ 		cpu@1 {
+ 			compatible = "arm,cortex-a15";
++			reg = <0x1>;
+ 			timer {
+ 				compatible = "arm,armv7-timer";
+ 				interrupts = <1 14 0xf08>;
+@@ -42,6 +47,7 @@
+ 		};
+ 		cpu@2 {
+ 			compatible = "arm,cortex-a15";
++			reg = <0x2>;
+ 			timer {
+ 				compatible = "arm,armv7-timer";
+ 				interrupts = <1 14 0xf08>;
+@@ -50,6 +56,7 @@
+ 		};
+ 		cpu@3 {
+ 			compatible = "arm,cortex-a15";
++			reg = <0x3>;
+ 			timer {
+ 				compatible = "arm,armv7-timer";
+ 				interrupts = <1 14 0xf08>;
 -- 
 1.7.12
