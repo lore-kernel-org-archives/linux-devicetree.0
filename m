@@ -1,715 +1,169 @@
-From: Andrew Murray <Andrew.Murray@arm.com>
-Subject: [PATCH v8 1/3] of/pci: Unify pci_process_bridge_OF_ranges from Microblaze and PowerPC
-Date: Mon, 22 Apr 2013 11:41:33 +0100
-Message-ID: <1366627295-16964-2-git-send-email-Andrew.Murray@arm.com>
-References: <1366627295-16964-1-git-send-email-Andrew.Murray@arm.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1366627295-16964-1-git-send-email-Andrew.Murray@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-mips@linux-mips.org, linuxppc-dev@lists.ozlabs.org
-Cc: rob.herring@calxeda.com, jgunthorpe@obsidianresearch.com, linux@arm.linux.org.uk, siva.kallam@samsung.com, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, jg1.han@samsung.com, Liviu.Dudau@arm.com, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, bhelgaas@google.com, suren.reddy@samsung.com, linux-arm-kernel@lists.infradead.org, monstr@monstr.eu, benh@kernel.crashing.org, paulus@samba.org, grant.likely@secretlab.ca, thomas.petazzoni@free-electrons.com, thierry.reding@avionic-design.de, thomas.abraham@linaro.org, arnd@arndb.de, linus.walleij@linaro.org, juhosg@openwrt.org, Andrew Murray <Andrew.Murray@arm.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 14/23] regulator: ab3100: device tree support
+Date: Mon, 22 Apr 2013 11:47:36 +0100
+Message-ID: <20130422104736.GM3432@gmail.com>
+References: <1366624645-6614-1-git-send-email-linus.walleij@stericsson.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1366624645-6614-1-git-send-email-linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The pci_process_bridge_OF_ranges function, used to parse the "ranges"
-property of a PCI host device, is found in both Microblaze and PowerPC
-architectures. These implementations are nearly identical. This patch
-moves this common code to a common place.
-
-Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
-Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-Reviewed-by: Rob Herring <rob.herring@calxeda.com>
-Tested-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Tested-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Michal Simek <monstr@monstr.eu>
-Acked-by: Grant Likely <grant.likely@linaro.org>
----
- arch/microblaze/include/asm/pci-bridge.h |    5 +-
- arch/microblaze/pci/pci-common.c         |  192 ----------------------------
- arch/powerpc/include/asm/pci-bridge.h    |    5 +-
- arch/powerpc/kernel/pci-common.c         |  192 ----------------------------
- drivers/of/of_pci.c                      |  200 ++++++++++++++++++++++++++++++
- include/linux/of_pci.h                   |    4 +
- 6 files changed, 206 insertions(+), 392 deletions(-)
-
-diff --git a/arch/microblaze/include/asm/pci-bridge.h b/arch/microblaze/include/asm/pci-bridge.h
-index cb5d397..5783cd6 100644
---- a/arch/microblaze/include/asm/pci-bridge.h
-+++ b/arch/microblaze/include/asm/pci-bridge.h
-@@ -10,6 +10,7 @@
- #include <linux/pci.h>
- #include <linux/list.h>
- #include <linux/ioport.h>
-+#include <linux/of_pci.h>
- 
- struct device_node;
- 
-@@ -132,10 +133,6 @@ extern void setup_indirect_pci(struct pci_controller *hose,
- extern struct pci_controller *pci_find_hose_for_OF_device(
- 			struct device_node *node);
- 
--/* Fill up host controller resources from the OF node */
--extern void pci_process_bridge_OF_ranges(struct pci_controller *hose,
--			struct device_node *dev, int primary);
--
- /* Allocate & free a PCI host bridge structure */
- extern struct pci_controller *pcibios_alloc_controller(struct device_node *dev);
- extern void pcibios_free_controller(struct pci_controller *phb);
-diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
-index 9ea521e..2735ad9 100644
---- a/arch/microblaze/pci/pci-common.c
-+++ b/arch/microblaze/pci/pci-common.c
-@@ -622,198 +622,6 @@ void pci_resource_to_user(const struct pci_dev *dev, int bar,
- 	*end = rsrc->end - offset;
- }
- 
--/**
-- * pci_process_bridge_OF_ranges - Parse PCI bridge resources from device tree
-- * @hose: newly allocated pci_controller to be setup
-- * @dev: device node of the host bridge
-- * @primary: set if primary bus (32 bits only, soon to be deprecated)
-- *
-- * This function will parse the "ranges" property of a PCI host bridge device
-- * node and setup the resource mapping of a pci controller based on its
-- * content.
-- *
-- * Life would be boring if it wasn't for a few issues that we have to deal
-- * with here:
-- *
-- *   - We can only cope with one IO space range and up to 3 Memory space
-- *     ranges. However, some machines (thanks Apple !) tend to split their
-- *     space into lots of small contiguous ranges. So we have to coalesce.
-- *
-- *   - We can only cope with all memory ranges having the same offset
-- *     between CPU addresses and PCI addresses. Unfortunately, some bridges
-- *     are setup for a large 1:1 mapping along with a small "window" which
-- *     maps PCI address 0 to some arbitrary high address of the CPU space in
-- *     order to give access to the ISA memory hole.
-- *     The way out of here that I've chosen for now is to always set the
-- *     offset based on the first resource found, then override it if we
-- *     have a different offset and the previous was set by an ISA hole.
-- *
-- *   - Some busses have IO space not starting at 0, which causes trouble with
-- *     the way we do our IO resource renumbering. The code somewhat deals with
-- *     it for 64 bits but I would expect problems on 32 bits.
-- *
-- *   - Some 32 bits platforms such as 4xx can have physical space larger than
-- *     32 bits so we need to use 64 bits values for the parsing
-- */
--void pci_process_bridge_OF_ranges(struct pci_controller *hose,
--				  struct device_node *dev, int primary)
--{
--	const u32 *ranges;
--	int rlen;
--	int pna = of_n_addr_cells(dev);
--	int np = pna + 5;
--	int memno = 0, isa_hole = -1;
--	u32 pci_space;
--	unsigned long long pci_addr, cpu_addr, pci_next, cpu_next, size;
--	unsigned long long isa_mb = 0;
--	struct resource *res;
--
--	pr_info("PCI host bridge %s %s ranges:\n",
--	       dev->full_name, primary ? "(primary)" : "");
--
--	/* Get ranges property */
--	ranges = of_get_property(dev, "ranges", &rlen);
--	if (ranges == NULL)
--		return;
--
--	/* Parse it */
--	pr_debug("Parsing ranges property...\n");
--	while ((rlen -= np * 4) >= 0) {
--		/* Read next ranges element */
--		pci_space = ranges[0];
--		pci_addr = of_read_number(ranges + 1, 2);
--		cpu_addr = of_translate_address(dev, ranges + 3);
--		size = of_read_number(ranges + pna + 3, 2);
--
--		pr_debug("pci_space: 0x%08x pci_addr:0x%016llx ",
--				pci_space, pci_addr);
--		pr_debug("cpu_addr:0x%016llx size:0x%016llx\n",
--					cpu_addr, size);
--
--		ranges += np;
--
--		/* If we failed translation or got a zero-sized region
--		 * (some FW try to feed us with non sensical zero sized regions
--		 * such as power3 which look like some kind of attempt
--		 * at exposing the VGA memory hole)
--		 */
--		if (cpu_addr == OF_BAD_ADDR || size == 0)
--			continue;
--
--		/* Now consume following elements while they are contiguous */
--		for (; rlen >= np * sizeof(u32);
--		     ranges += np, rlen -= np * 4) {
--			if (ranges[0] != pci_space)
--				break;
--			pci_next = of_read_number(ranges + 1, 2);
--			cpu_next = of_translate_address(dev, ranges + 3);
--			if (pci_next != pci_addr + size ||
--			    cpu_next != cpu_addr + size)
--				break;
--			size += of_read_number(ranges + pna + 3, 2);
--		}
--
--		/* Act based on address space type */
--		res = NULL;
--		switch ((pci_space >> 24) & 0x3) {
--		case 1:		/* PCI IO space */
--			pr_info("  IO 0x%016llx..0x%016llx -> 0x%016llx\n",
--			       cpu_addr, cpu_addr + size - 1, pci_addr);
--
--			/* We support only one IO range */
--			if (hose->pci_io_size) {
--				pr_info(" \\--> Skipped (too many) !\n");
--				continue;
--			}
--			/* On 32 bits, limit I/O space to 16MB */
--			if (size > 0x01000000)
--				size = 0x01000000;
--
--			/* 32 bits needs to map IOs here */
--			hose->io_base_virt = ioremap(cpu_addr, size);
--
--			/* Expect trouble if pci_addr is not 0 */
--			if (primary)
--				isa_io_base =
--					(unsigned long)hose->io_base_virt;
--			/* pci_io_size and io_base_phys always represent IO
--			 * space starting at 0 so we factor in pci_addr
--			 */
--			hose->pci_io_size = pci_addr + size;
--			hose->io_base_phys = cpu_addr - pci_addr;
--
--			/* Build resource */
--			res = &hose->io_resource;
--			res->flags = IORESOURCE_IO;
--			res->start = pci_addr;
--			break;
--		case 2:		/* PCI Memory space */
--		case 3:		/* PCI 64 bits Memory space */
--			pr_info(" MEM 0x%016llx..0x%016llx -> 0x%016llx %s\n",
--			       cpu_addr, cpu_addr + size - 1, pci_addr,
--			       (pci_space & 0x40000000) ? "Prefetch" : "");
--
--			/* We support only 3 memory ranges */
--			if (memno >= 3) {
--				pr_info(" \\--> Skipped (too many) !\n");
--				continue;
--			}
--			/* Handles ISA memory hole space here */
--			if (pci_addr == 0) {
--				isa_mb = cpu_addr;
--				isa_hole = memno;
--				if (primary || isa_mem_base == 0)
--					isa_mem_base = cpu_addr;
--				hose->isa_mem_phys = cpu_addr;
--				hose->isa_mem_size = size;
--			}
--
--			/* We get the PCI/Mem offset from the first range or
--			 * the, current one if the offset came from an ISA
--			 * hole. If they don't match, bugger.
--			 */
--			if (memno == 0 ||
--			    (isa_hole >= 0 && pci_addr != 0 &&
--			     hose->pci_mem_offset == isa_mb))
--				hose->pci_mem_offset = cpu_addr - pci_addr;
--			else if (pci_addr != 0 &&
--				 hose->pci_mem_offset != cpu_addr - pci_addr) {
--				pr_info(" \\--> Skipped (offset mismatch) !\n");
--				continue;
--			}
--
--			/* Build resource */
--			res = &hose->mem_resources[memno++];
--			res->flags = IORESOURCE_MEM;
--			if (pci_space & 0x40000000)
--				res->flags |= IORESOURCE_PREFETCH;
--			res->start = cpu_addr;
--			break;
--		}
--		if (res != NULL) {
--			res->name = dev->full_name;
--			res->end = res->start + size - 1;
--			res->parent = NULL;
--			res->sibling = NULL;
--			res->child = NULL;
--		}
--	}
--
--	/* If there's an ISA hole and the pci_mem_offset is -not- matching
--	 * the ISA hole offset, then we need to remove the ISA hole from
--	 * the resource list for that brige
--	 */
--	if (isa_hole >= 0 && hose->pci_mem_offset != isa_mb) {
--		unsigned int next = isa_hole + 1;
--		pr_info(" Removing ISA hole at 0x%016llx\n", isa_mb);
--		if (next < memno)
--			memmove(&hose->mem_resources[isa_hole],
--				&hose->mem_resources[next],
--				sizeof(struct resource) * (memno - next));
--		hose->mem_resources[--memno].flags = 0;
--	}
--}
--
- /* Decide whether to display the domain number in /proc */
- int pci_proc_domain(struct pci_bus *bus)
- {
-diff --git a/arch/powerpc/include/asm/pci-bridge.h b/arch/powerpc/include/asm/pci-bridge.h
-index 025a130..205bfba 100644
---- a/arch/powerpc/include/asm/pci-bridge.h
-+++ b/arch/powerpc/include/asm/pci-bridge.h
-@@ -10,6 +10,7 @@
- #include <linux/pci.h>
- #include <linux/list.h>
- #include <linux/ioport.h>
-+#include <linux/of_pci.h>
- #include <asm-generic/pci-bridge.h>
- 
- struct device_node;
-@@ -231,10 +232,6 @@ extern int pcibios_map_io_space(struct pci_bus *bus);
- extern struct pci_controller *pci_find_hose_for_OF_device(
- 			struct device_node* node);
- 
--/* Fill up host controller resources from the OF node */
--extern void pci_process_bridge_OF_ranges(struct pci_controller *hose,
--			struct device_node *dev, int primary);
--
- /* Allocate & free a PCI host bridge structure */
- extern struct pci_controller *pcibios_alloc_controller(struct device_node *dev);
- extern void pcibios_free_controller(struct pci_controller *phb);
-diff --git a/arch/powerpc/kernel/pci-common.c b/arch/powerpc/kernel/pci-common.c
-index fa12ae4..6edf396 100644
---- a/arch/powerpc/kernel/pci-common.c
-+++ b/arch/powerpc/kernel/pci-common.c
-@@ -640,198 +640,6 @@ void pci_resource_to_user(const struct pci_dev *dev, int bar,
- 	*end = rsrc->end - offset;
- }
- 
--/**
-- * pci_process_bridge_OF_ranges - Parse PCI bridge resources from device tree
-- * @hose: newly allocated pci_controller to be setup
-- * @dev: device node of the host bridge
-- * @primary: set if primary bus (32 bits only, soon to be deprecated)
-- *
-- * This function will parse the "ranges" property of a PCI host bridge device
-- * node and setup the resource mapping of a pci controller based on its
-- * content.
-- *
-- * Life would be boring if it wasn't for a few issues that we have to deal
-- * with here:
-- *
-- *   - We can only cope with one IO space range and up to 3 Memory space
-- *     ranges. However, some machines (thanks Apple !) tend to split their
-- *     space into lots of small contiguous ranges. So we have to coalesce.
-- *
-- *   - We can only cope with all memory ranges having the same offset
-- *     between CPU addresses and PCI addresses. Unfortunately, some bridges
-- *     are setup for a large 1:1 mapping along with a small "window" which
-- *     maps PCI address 0 to some arbitrary high address of the CPU space in
-- *     order to give access to the ISA memory hole.
-- *     The way out of here that I've chosen for now is to always set the
-- *     offset based on the first resource found, then override it if we
-- *     have a different offset and the previous was set by an ISA hole.
-- *
-- *   - Some busses have IO space not starting at 0, which causes trouble with
-- *     the way we do our IO resource renumbering. The code somewhat deals with
-- *     it for 64 bits but I would expect problems on 32 bits.
-- *
-- *   - Some 32 bits platforms such as 4xx can have physical space larger than
-- *     32 bits so we need to use 64 bits values for the parsing
-- */
--void pci_process_bridge_OF_ranges(struct pci_controller *hose,
--				  struct device_node *dev, int primary)
--{
--	const u32 *ranges;
--	int rlen;
--	int pna = of_n_addr_cells(dev);
--	int np = pna + 5;
--	int memno = 0, isa_hole = -1;
--	u32 pci_space;
--	unsigned long long pci_addr, cpu_addr, pci_next, cpu_next, size;
--	unsigned long long isa_mb = 0;
--	struct resource *res;
--
--	printk(KERN_INFO "PCI host bridge %s %s ranges:\n",
--	       dev->full_name, primary ? "(primary)" : "");
--
--	/* Get ranges property */
--	ranges = of_get_property(dev, "ranges", &rlen);
--	if (ranges == NULL)
--		return;
--
--	/* Parse it */
--	while ((rlen -= np * 4) >= 0) {
--		/* Read next ranges element */
--		pci_space = ranges[0];
--		pci_addr = of_read_number(ranges + 1, 2);
--		cpu_addr = of_translate_address(dev, ranges + 3);
--		size = of_read_number(ranges + pna + 3, 2);
--		ranges += np;
--
--		/* If we failed translation or got a zero-sized region
--		 * (some FW try to feed us with non sensical zero sized regions
--		 * such as power3 which look like some kind of attempt at exposing
--		 * the VGA memory hole)
--		 */
--		if (cpu_addr == OF_BAD_ADDR || size == 0)
--			continue;
--
--		/* Now consume following elements while they are contiguous */
--		for (; rlen >= np * sizeof(u32);
--		     ranges += np, rlen -= np * 4) {
--			if (ranges[0] != pci_space)
--				break;
--			pci_next = of_read_number(ranges + 1, 2);
--			cpu_next = of_translate_address(dev, ranges + 3);
--			if (pci_next != pci_addr + size ||
--			    cpu_next != cpu_addr + size)
--				break;
--			size += of_read_number(ranges + pna + 3, 2);
--		}
--
--		/* Act based on address space type */
--		res = NULL;
--		switch ((pci_space >> 24) & 0x3) {
--		case 1:		/* PCI IO space */
--			printk(KERN_INFO
--			       "  IO 0x%016llx..0x%016llx -> 0x%016llx\n",
--			       cpu_addr, cpu_addr + size - 1, pci_addr);
--
--			/* We support only one IO range */
--			if (hose->pci_io_size) {
--				printk(KERN_INFO
--				       " \\--> Skipped (too many) !\n");
--				continue;
--			}
--#ifdef CONFIG_PPC32
--			/* On 32 bits, limit I/O space to 16MB */
--			if (size > 0x01000000)
--				size = 0x01000000;
--
--			/* 32 bits needs to map IOs here */
--			hose->io_base_virt = ioremap(cpu_addr, size);
--
--			/* Expect trouble if pci_addr is not 0 */
--			if (primary)
--				isa_io_base =
--					(unsigned long)hose->io_base_virt;
--#endif /* CONFIG_PPC32 */
--			/* pci_io_size and io_base_phys always represent IO
--			 * space starting at 0 so we factor in pci_addr
--			 */
--			hose->pci_io_size = pci_addr + size;
--			hose->io_base_phys = cpu_addr - pci_addr;
--
--			/* Build resource */
--			res = &hose->io_resource;
--			res->flags = IORESOURCE_IO;
--			res->start = pci_addr;
--			break;
--		case 2:		/* PCI Memory space */
--		case 3:		/* PCI 64 bits Memory space */
--			printk(KERN_INFO
--			       " MEM 0x%016llx..0x%016llx -> 0x%016llx %s\n",
--			       cpu_addr, cpu_addr + size - 1, pci_addr,
--			       (pci_space & 0x40000000) ? "Prefetch" : "");
--
--			/* We support only 3 memory ranges */
--			if (memno >= 3) {
--				printk(KERN_INFO
--				       " \\--> Skipped (too many) !\n");
--				continue;
--			}
--			/* Handles ISA memory hole space here */
--			if (pci_addr == 0) {
--				isa_mb = cpu_addr;
--				isa_hole = memno;
--				if (primary || isa_mem_base == 0)
--					isa_mem_base = cpu_addr;
--				hose->isa_mem_phys = cpu_addr;
--				hose->isa_mem_size = size;
--			}
--
--			/* We get the PCI/Mem offset from the first range or
--			 * the, current one if the offset came from an ISA
--			 * hole. If they don't match, bugger.
--			 */
--			if (memno == 0 ||
--			    (isa_hole >= 0 && pci_addr != 0 &&
--			     hose->pci_mem_offset == isa_mb))
--				hose->pci_mem_offset = cpu_addr - pci_addr;
--			else if (pci_addr != 0 &&
--				 hose->pci_mem_offset != cpu_addr - pci_addr) {
--				printk(KERN_INFO
--				       " \\--> Skipped (offset mismatch) !\n");
--				continue;
--			}
--
--			/* Build resource */
--			res = &hose->mem_resources[memno++];
--			res->flags = IORESOURCE_MEM;
--			if (pci_space & 0x40000000)
--				res->flags |= IORESOURCE_PREFETCH;
--			res->start = cpu_addr;
--			break;
--		}
--		if (res != NULL) {
--			res->name = dev->full_name;
--			res->end = res->start + size - 1;
--			res->parent = NULL;
--			res->sibling = NULL;
--			res->child = NULL;
--		}
--	}
--
--	/* If there's an ISA hole and the pci_mem_offset is -not- matching
--	 * the ISA hole offset, then we need to remove the ISA hole from
--	 * the resource list for that brige
--	 */
--	if (isa_hole >= 0 && hose->pci_mem_offset != isa_mb) {
--		unsigned int next = isa_hole + 1;
--		printk(KERN_INFO " Removing ISA hole at 0x%016llx\n", isa_mb);
--		if (next < memno)
--			memmove(&hose->mem_resources[isa_hole],
--				&hose->mem_resources[next],
--				sizeof(struct resource) * (memno - next));
--		hose->mem_resources[--memno].flags = 0;
--	}
--}
--
- /* Decide whether to display the domain number in /proc */
- int pci_proc_domain(struct pci_bus *bus)
- {
-diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-index 13e37e2..1626172 100644
---- a/drivers/of/of_pci.c
-+++ b/drivers/of/of_pci.c
-@@ -4,6 +4,10 @@
- #include <linux/of_pci.h>
- #include <asm/prom.h>
- 
-+#if defined(CONFIG_PPC32) || defined(CONFIG_PPC64) || defined(CONFIG_MICROBLAZE)
-+#include <asm/pci-bridge.h>
-+#endif
-+
- static inline int __of_pci_pci_compare(struct device_node *node,
- 				       unsigned int devfn)
- {
-@@ -40,3 +44,199 @@ struct device_node *of_pci_find_child_device(struct device_node *parent,
- 	return NULL;
- }
- EXPORT_SYMBOL_GPL(of_pci_find_child_device);
-+
-+/**
-+ * pci_process_bridge_OF_ranges - Parse PCI bridge resources from device tree
-+ * @hose: newly allocated pci_controller to be setup
-+ * @dev: device node of the host bridge
-+ * @primary: set if primary bus (32 bits only, soon to be deprecated)
-+ *
-+ * This function will parse the "ranges" property of a PCI host bridge device
-+ * node and setup the resource mapping of a pci controller based on its
-+ * content.
-+ *
-+ * Life would be boring if it wasn't for a few issues that we have to deal
-+ * with here:
-+ *
-+ *   - We can only cope with one IO space range and up to 3 Memory space
-+ *     ranges. However, some machines (thanks Apple !) tend to split their
-+ *     space into lots of small contiguous ranges. So we have to coalesce.
-+ *
-+ *   - We can only cope with all memory ranges having the same offset
-+ *     between CPU addresses and PCI addresses. Unfortunately, some bridges
-+ *     are setup for a large 1:1 mapping along with a small "window" which
-+ *     maps PCI address 0 to some arbitrary high address of the CPU space in
-+ *     order to give access to the ISA memory hole.
-+ *     The way out of here that I've chosen for now is to always set the
-+ *     offset based on the first resource found, then override it if we
-+ *     have a different offset and the previous was set by an ISA hole.
-+ *
-+ *   - Some busses have IO space not starting at 0, which causes trouble with
-+ *     the way we do our IO resource renumbering. The code somewhat deals with
-+ *     it for 64 bits but I would expect problems on 32 bits.
-+ *
-+ *   - Some 32 bits platforms such as 4xx can have physical space larger than
-+ *     32 bits so we need to use 64 bits values for the parsing
-+ */
-+#if defined(CONFIG_PPC32) || defined(CONFIG_PPC64) || defined(CONFIG_MICROBLAZE)
-+void pci_process_bridge_OF_ranges(struct pci_controller *hose,
-+				  struct device_node *dev, int primary)
-+{
-+	const u32 *ranges;
-+	int rlen;
-+	int pna = of_n_addr_cells(dev);
-+	int np = pna + 5;
-+	int memno = 0, isa_hole = -1;
-+	u32 pci_space;
-+	unsigned long long pci_addr, cpu_addr, pci_next, cpu_next, size;
-+	unsigned long long isa_mb = 0;
-+	struct resource *res;
-+
-+	pr_info("PCI host bridge %s %s ranges:\n",
-+	       dev->full_name, primary ? "(primary)" : "");
-+
-+	/* Get ranges property */
-+	ranges = of_get_property(dev, "ranges", &rlen);
-+	if (ranges == NULL)
-+		return;
-+
-+	/* Parse it */
-+	pr_debug("Parsing ranges property...\n");
-+	while ((rlen -= np * 4) >= 0) {
-+		/* Read next ranges element */
-+		pci_space = ranges[0];
-+		pci_addr = of_read_number(ranges + 1, 2);
-+		cpu_addr = of_translate_address(dev, ranges + 3);
-+		size = of_read_number(ranges + pna + 3, 2);
-+
-+		pr_debug("pci_space: 0x%08x pci_addr:0x%016llx ",
-+				pci_space, pci_addr);
-+		pr_debug("cpu_addr:0x%016llx size:0x%016llx\n",
-+					cpu_addr, size);
-+
-+		ranges += np;
-+
-+		/* If we failed translation or got a zero-sized region
-+		 * (some FW try to feed us with non sensical zero sized regions
-+		 * such as power3 which look like some kind of attempt
-+		 * at exposing the VGA memory hole)
-+		 */
-+		if (cpu_addr == OF_BAD_ADDR || size == 0)
-+			continue;
-+
-+		/* Now consume following elements while they are contiguous */
-+		for (; rlen >= np * sizeof(u32);
-+		     ranges += np, rlen -= np * 4) {
-+			if (ranges[0] != pci_space)
-+				break;
-+			pci_next = of_read_number(ranges + 1, 2);
-+			cpu_next = of_translate_address(dev, ranges + 3);
-+			if (pci_next != pci_addr + size ||
-+			    cpu_next != cpu_addr + size)
-+				break;
-+			size += of_read_number(ranges + pna + 3, 2);
-+		}
-+
-+		/* Act based on address space type */
-+		res = NULL;
-+		switch ((pci_space >> 24) & 0x3) {
-+		case 1:		/* PCI IO space */
-+			pr_info("  IO 0x%016llx..0x%016llx -> 0x%016llx\n",
-+			       cpu_addr, cpu_addr + size - 1, pci_addr);
-+
-+			/* We support only one IO range */
-+			if (hose->pci_io_size) {
-+				pr_info(" \\--> Skipped (too many) !\n");
-+				continue;
-+			}
-+#if (!IS_ENABLED(CONFIG_64BIT))
-+			/* On 32 bits, limit I/O space to 16MB */
-+			if (size > 0x01000000)
-+				size = 0x01000000;
-+
-+			/* 32 bits needs to map IOs here */
-+			hose->io_base_virt = ioremap(cpu_addr, size);
-+
-+			/* Expect trouble if pci_addr is not 0 */
-+			if (primary)
-+				isa_io_base =
-+					(unsigned long)hose->io_base_virt;
-+#endif /* !CONFIG_64BIT */
-+			/* pci_io_size and io_base_phys always represent IO
-+			 * space starting at 0 so we factor in pci_addr
-+			 */
-+			hose->pci_io_size = pci_addr + size;
-+			hose->io_base_phys = cpu_addr - pci_addr;
-+
-+			/* Build resource */
-+			res = &hose->io_resource;
-+			res->flags = IORESOURCE_IO;
-+			res->start = pci_addr;
-+			break;
-+		case 2:		/* PCI Memory space */
-+		case 3:		/* PCI 64 bits Memory space */
-+			pr_info(" MEM 0x%016llx..0x%016llx -> 0x%016llx %s\n",
-+			       cpu_addr, cpu_addr + size - 1, pci_addr,
-+			       (pci_space & 0x40000000) ? "Prefetch" : "");
-+
-+			/* We support only 3 memory ranges */
-+			if (memno >= 3) {
-+				pr_info(" \\--> Skipped (too many) !\n");
-+				continue;
-+			}
-+			/* Handles ISA memory hole space here */
-+			if (pci_addr == 0) {
-+				isa_mb = cpu_addr;
-+				isa_hole = memno;
-+				if (primary || isa_mem_base == 0)
-+					isa_mem_base = cpu_addr;
-+				hose->isa_mem_phys = cpu_addr;
-+				hose->isa_mem_size = size;
-+			}
-+
-+			/* We get the PCI/Mem offset from the first range or
-+			 * the, current one if the offset came from an ISA
-+			 * hole. If they don't match, bugger.
-+			 */
-+			if (memno == 0 ||
-+			    (isa_hole >= 0 && pci_addr != 0 &&
-+			     hose->pci_mem_offset == isa_mb))
-+				hose->pci_mem_offset = cpu_addr - pci_addr;
-+			else if (pci_addr != 0 &&
-+				 hose->pci_mem_offset != cpu_addr - pci_addr) {
-+				pr_info(" \\--> Skipped (offset mismatch) !\n");
-+				continue;
-+			}
-+
-+			/* Build resource */
-+			res = &hose->mem_resources[memno++];
-+			res->flags = IORESOURCE_MEM;
-+			if (pci_space & 0x40000000)
-+				res->flags |= IORESOURCE_PREFETCH;
-+			res->start = cpu_addr;
-+			break;
-+		}
-+		if (res != NULL) {
-+			res->name = dev->full_name;
-+			res->end = res->start + size - 1;
-+			res->parent = NULL;
-+			res->sibling = NULL;
-+			res->child = NULL;
-+		}
-+	}
-+
-+	/* If there's an ISA hole and the pci_mem_offset is -not- matching
-+	 * the ISA hole offset, then we need to remove the ISA hole from
-+	 * the resource list for that brige
-+	 */
-+	if (isa_hole >= 0 && hose->pci_mem_offset != isa_mb) {
-+		unsigned int next = isa_hole + 1;
-+		pr_info(" Removing ISA hole at 0x%016llx\n", isa_mb);
-+		if (next < memno)
-+			memmove(&hose->mem_resources[isa_hole],
-+				&hose->mem_resources[next],
-+				sizeof(struct resource) * (memno - next));
-+		hose->mem_resources[--memno].flags = 0;
-+	}
-+}
-+#endif
-diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-index bb115de..33e8ead 100644
---- a/include/linux/of_pci.h
-+++ b/include/linux/of_pci.h
-@@ -11,4 +11,8 @@ struct device_node;
- struct device_node *of_pci_find_child_device(struct device_node *parent,
- 					     unsigned int devfn);
- 
-+struct pci_controller;
-+void pci_process_bridge_OF_ranges(struct pci_controller *hose,
-+			struct device_node *dev, int primary);
-+
- #endif
--- 
-1.7.0.4
+T24gTW9uLCAyMiBBcHIgMjAxMywgTGludXMgV2FsbGVpaiB3cm90ZToKCj4gRnJvbTogTGludXMg
+V2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPgo+IAo+IFRoaXMgaW1wbGVtZW50cyBk
+ZXZpY2UgdHJlZSBzdXBwb3J0IGZvciB0aGUgQUIzMTAwIHJlZ3VsYXRvcnMKPiBkcml2ZXIuIFRo
+ZSBpbml0aWFsIHNldHRpbmdzIGFyZSBtb3ZlZCBvdXQgb2YgcGxhdGZvcm0gZGF0YQo+IGFuZCBp
+bnRvIHRoZSBkcml2ZXIgZm9yIHRoZSBkZXZpY2UgdHJlZSBjYXNlLCBhcyBpdCBhcHBlYXJzCj4g
+dGhhdCB0aGVyZSBpcyBubyB3YXkgdG8gc3VwcGx5IHRoaXMgYXMgQVVYREFUQSBmb3IgYW4gSTJD
+Cj4gZGV2aWNlLiBUaGUgc3R5bGUgYW5kIGJpbmRpbmdzIGFyZSBoZWF2aWx5IGluc3BpcmVkIGJ5
+Cj4gTGVlIEpvbmVzJyBzdHlsZSBmb3IgQUI4NTAwLgo+IAo+IENjOiBMZWUgSm9uZXMgPGxlZS5q
+b25lc0BsaW5hcm8ub3JnPgo+IENjOiBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+Cj4g
+U2lnbmVkLW9mZi1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPgoK
+SSBkb24ndCBzZWUgYW55IGlzc3VlcyB3aXRoIGl0LgoKQWNrZWQtYnk6IExlZSBKb25lcyA8bGVl
+LmpvbmVzQGxpbmFyby5vcmc+Cgo+IC0tLQo+IEhpIE1hcmssIHNlZWtpbmcgYW4gQUNLIG9uIHRo
+aXMgdG8gdGFrZSBpdCB0aHJvdWdoIHRoZSBBUk0KPiBTb0MgdHJlZS4KPiAtLS0KPiAgZHJpdmVy
+cy9tZmQvYWIzMTAwLWNvcmUuYyAgfCAgIDEgKwo+ICBkcml2ZXJzL3JlZ3VsYXRvci9hYjMxMDAu
+YyB8IDEyMyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0KPiAg
+MiBmaWxlcyBjaGFuZ2VkLCAxMTggaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkKPiAKPiBk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvYWIzMTAwLWNvcmUuYyBiL2RyaXZlcnMvbWZkL2FiMzEw
+MC1jb3JlLmMKPiBpbmRleCAyZWM3NzI1Li5hOWJiMTQwIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMv
+bWZkL2FiMzEwMC1jb3JlLmMKPiArKysgYi9kcml2ZXJzL21mZC9hYjMxMDAtY29yZS5jCj4gQEAg
+LTc1Myw2ICs3NTMsNyBAQCBzdGF0aWMgc3RydWN0IG1mZF9jZWxsIGFiMzEwMF9kZXZzW10gPSB7
+Cj4gIAl9LAo+ICAJewo+ICAJCS5uYW1lID0gImFiMzEwMC1yZWd1bGF0b3JzIiwKPiArCQkub2Zf
+Y29tcGF0aWJsZSA9ICJzdGVyaWNzc29uLGFiMzEwMC1yZWd1bGF0b3JzIiwKPiAgCQkuaWQgPSAt
+MSwKPiAgCX0sCj4gIAl7Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcmVndWxhdG9yL2FiMzEwMC5j
+IGIvZHJpdmVycy9yZWd1bGF0b3IvYWIzMTAwLmMKPiBpbmRleCA3NDA3MzVkLi5iZTFlNmFkIDEw
+MDY0NAo+IC0tLSBhL2RyaXZlcnMvcmVndWxhdG9yL2FiMzEwMC5jCj4gKysrIGIvZHJpdmVycy9y
+ZWd1bGF0b3IvYWIzMTAwLmMKPiBAQCAtMTcsNiArMTcsOCBAQAo+ICAjaW5jbHVkZSA8bGludXgv
+cmVndWxhdG9yL2RyaXZlci5oPgo+ICAjaW5jbHVkZSA8bGludXgvbWZkL2FiMzEwMC5oPgo+ICAj
+aW5jbHVkZSA8bGludXgvbWZkL2FieDUwMC5oPgo+ICsjaW5jbHVkZSA8bGludXgvb2YuaD4KPiAr
+I2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9vZl9yZWd1bGF0b3IuaD4KPiAgCj4gIC8qIExETyBy
+ZWdpc3RlcnMgYW5kIHNvbWUgaGFuZHkgbWFza2luZyBkZWZpbml0aW9ucyBmb3IgQUIzMTAwICov
+Cj4gICNkZWZpbmUgQUIzMTAwX0xET19BCQkweDQwCj4gQEAgLTM0NSw3ICszNDcsMTEgQEAgc3Rh
+dGljIGludCBhYjMxMDBfZ2V0X3ZvbHRhZ2VfcmVndWxhdG9yX2V4dGVybmFsKHN0cnVjdCByZWd1
+bGF0b3JfZGV2ICpyZWcpCj4gIHsKPiAgCXN0cnVjdCBhYjMxMDBfcmVndWxhdG9yICphYnJlZyA9
+IHJkZXZfZ2V0X2RydmRhdGEocmVnKTsKPiAgCj4gLQlyZXR1cm4gYWJyZWctPnBsZmRhdGEtPmV4
+dGVybmFsX3ZvbHRhZ2U7Cj4gKwlpZiAoYWJyZWctPnBsZmRhdGEpCj4gKwkJcmV0dXJuIGFicmVn
+LT5wbGZkYXRhLT5leHRlcm5hbF92b2x0YWdlOwo+ICsJZWxzZQo+ICsJCS8qIFRPRE86IGVuY29k
+ZSBleHRlcm5hbCB2b2x0YWdlIGludG8gZGV2aWNlIHRyZWUgKi8KPiArCQlyZXR1cm4gMDsKPiAg
+fQo+ICAKPiAgc3RhdGljIHN0cnVjdCByZWd1bGF0b3Jfb3BzIHJlZ3VsYXRvcl9vcHNfZml4ZWQg
+PSB7Cj4gQEAgLTQ5MCw2ICs0OTYsOCBAQCBhYjMxMDBfcmVndWxhdG9yX2Rlc2NbQUIzMTAwX05V
+TV9SRUdVTEFUT1JTXSA9IHsKPiAgCj4gIHN0YXRpYyBpbnQgYWIzMTAwX3JlZ3VsYXRvcl9yZWdp
+c3RlcihzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LAo+ICAJCQkJICAgICBzdHJ1Y3QgYWIz
+MTAwX3BsYXRmb3JtX2RhdGEgKnBsZmRhdGEsCj4gKwkJCQkgICAgIHN0cnVjdCByZWd1bGF0b3Jf
+aW5pdF9kYXRhICppbml0X2RhdGEsCj4gKwkJCQkgICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAs
+Cj4gIAkJCQkgICAgIGludCBpZCkKPiAgewo+ICAJc3RydWN0IHJlZ3VsYXRvcl9kZXNjICpkZXNj
+Owo+IEBAIC01MTgsOSArNTI2LDExIEBAIHN0YXRpYyBpbnQgYWIzMTAwX3JlZ3VsYXRvcl9yZWdp
+c3RlcihzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LAo+ICAJICovCj4gIAlyZWctPmRldiA9
+ICZwZGV2LT5kZXY7Cj4gIAlpZiAocGxmZGF0YSkgewo+IC0JCS8qIFRoaXMgd2lsbCBiZSByZXBs
+YWNlZCBieSBkZXZpY2UgdHJlZSBkYXRhICovCj4gIAkJcmVnLT5wbGZkYXRhID0gcGxmZGF0YTsK
+PiAgCQljb25maWcuaW5pdF9kYXRhID0gJnBsZmRhdGEtPnJlZ19jb25zdHJhaW50c1tpXTsKPiAr
+CX0gZWxzZSBpZiAobnApIHsKPiArCQljb25maWcub2Zfbm9kZSA9IG5wOwo+ICsJCWNvbmZpZy5p
+bml0X2RhdGEgPSBpbml0X2RhdGE7Cj4gIAl9Cj4gIAljb25maWcuZGV2ID0gJnBkZXYtPmRldjsK
+PiAgCWNvbmZpZy5kcml2ZXJfZGF0YSA9IHJlZzsKPiBAQCAtNTQwLDE1ICs1NTAsMTAzIEBAIHN0
+YXRpYyBpbnQgYWIzMTAwX3JlZ3VsYXRvcl9yZWdpc3RlcihzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
+ICpwZGV2LAo+ICAJcmV0dXJuIDA7Cj4gIH0KPiAgCj4gK3N0YXRpYyBzdHJ1Y3Qgb2ZfcmVndWxh
+dG9yX21hdGNoIGFiMzEwMF9yZWd1bGF0b3JfbWF0Y2hlc1tdID0gewo+ICsJeyAubmFtZSA9ICJh
+YjMxMDBfbGRvX2EiLCAuZHJpdmVyX2RhdGEgPSAodm9pZCAqKSBBQjMxMDBfTERPX0EsIH0sCj4g
+Kwl7IC5uYW1lID0gImFiMzEwMF9sZG9fYyIsIC5kcml2ZXJfZGF0YSA9ICh2b2lkICopIEFCMzEw
+MF9MRE9fQywgfSwKPiArCXsgLm5hbWUgPSAiYWIzMTAwX2xkb19kIiwgLmRyaXZlcl9kYXRhID0g
+KHZvaWQgKikgQUIzMTAwX0xET19ELCB9LAo+ICsJeyAubmFtZSA9ICJhYjMxMDBfbGRvX2UiLCAu
+ZHJpdmVyX2RhdGEgPSAodm9pZCAqKSBBQjMxMDBfTERPX0UsIH0sCj4gKwl7IC5uYW1lID0gImFi
+MzEwMF9sZG9fZiIsIC5kcml2ZXJfZGF0YSA9ICh2b2lkICopIEFCMzEwMF9MRE9fRiB9LAo+ICsJ
+eyAubmFtZSA9ICJhYjMxMDBfbGRvX2ciLCAuZHJpdmVyX2RhdGEgPSAodm9pZCAqKSBBQjMxMDBf
+TERPX0cgfSwKPiArCXsgLm5hbWUgPSAiYWIzMTAwX2xkb19oIiwgLmRyaXZlcl9kYXRhID0gKHZv
+aWQgKikgQUIzMTAwX0xET19IIH0sCj4gKwl7IC5uYW1lID0gImFiMzEwMF9sZG9fayIsIC5kcml2
+ZXJfZGF0YSA9ICh2b2lkICopIEFCMzEwMF9MRE9fSyB9LAo+ICsJeyAubmFtZSA9ICJhYjMxMDBf
+ZXh0IiwgLmRyaXZlcl9kYXRhID0gKHZvaWQgKikgQUIzMTAwX0xET19FWFQgfSwKPiArCXsgLm5h
+bWUgPSAiYWIzMTAwX2J1Y2siLCAuZHJpdmVyX2RhdGEgPSAodm9pZCAqKSBBQjMxMDBfQlVDSyB9
+LAo+ICt9Owo+ICsKPiAgLyoKPiAtICogTk9URTogdGhlIGZvbGxvd2luZyBmdW5jdGlvbnMgYXJl
+IHJlZ3VsYXRvcnMgcGx1cmFsaXMgLSBpdCBpcyB0aGUKPiAtICogYmluZGluZyB0byB0aGUgQUIz
+MTAwIGNvcmUgZHJpdmVyIGFuZCB0aGUgcGFyZW50IHBsYXRmb3JtIGRldmljZQo+IC0gKiBmb3Ig
+YWxsIHRoZSBkaWZmZXJlbnQgcmVndWxhdG9ycy4KPiArICogSW5pdGlhbCBzZXR0aW5ncyBvZiBh
+YjMxMDAgcmVnaXN0ZXJzLgo+ICsgKiBDb21tb24gZm9yIGJlbG93IExETyByZWd1bGF0b3Igc2V0
+dGluZ3MgYXJlIHRoYXQKPiArICogYml0IDctNSBjb250cm9scyB2b2x0YWdlLiBCaXQgNCB0dXJu
+cyByZWd1bGF0b3IgT04oMSkgb3IgT0ZGKDApLgo+ICsgKiBCaXQgMy0yIGNvbnRyb2xzIHNsZWVw
+IGVuYWJsZSBhbmQgYml0IDEtMCBjb250cm9scyBzbGVlcCBtb2RlLgo+ICAgKi8KPiArLyogTERP
+X0EgMHgxNjogMi43NVYsIE9OLCBTTEVFUF9BLCBTTEVFUCBPRkYgR05EICovCj4gKyNkZWZpbmUg
+TERPX0FfU0VUVElORwkJMHgxNgo+ICsvKiBMRE9fQyAweDEwOiAyLjY1ViwgT04sIFNMRUVQX0Eg
+b3IgQiwgU0xFRVAgZnVsbCBwb3dlciAqLwo+ICsjZGVmaW5lIExET19DX1NFVFRJTkcJCTB4MTAK
+PiArLyogTERPX0QgMHgxMDogMi42NVYsIE9OLCBzbGVlcCBtb2RlIG5vdCB1c2VkICovCj4gKyNk
+ZWZpbmUgTERPX0RfU0VUVElORwkJMHgxMAo+ICsvKiBMRE9fRSAweDEwOiAxLjhWLCBPTiwgU0xF
+RVBfQSBvciBCLCBTTEVFUCBmdWxsIHBvd2VyICovCj4gKyNkZWZpbmUgTERPX0VfU0VUVElORwkJ
+MHgxMAo+ICsvKiBMRE9fRSBTTEVFUCAweDAwOiAxLjhWLCBub3QgdXNlZCwgU0xFRVBfQSBvciBC
+LCBub3QgdXNlZCAqLwo+ICsjZGVmaW5lIExET19FX1NMRUVQX1NFVFRJTkcJMHgwMAo+ICsvKiBM
+RE9fRiAweEQwOiAyLjVWLCBPTiwgU0xFRVBfQSBvciBCLCBTTEVFUCBmdWxsIHBvd2VyICovCj4g
+KyNkZWZpbmUgTERPX0ZfU0VUVElORwkJMHhEMAo+ICsvKiBMRE9fRyAweDAwOiAyLjg1ViwgT0ZG
+LCBTTEVFUF9BIG9yIEIsIFNMRUVQIGZ1bGwgcG93ZXIgKi8KPiArI2RlZmluZSBMRE9fR19TRVRU
+SU5HCQkweDAwCj4gKy8qIExET19IIDB4MTg6IDIuNzVWLCBPTiwgU0xFRVBfQiwgU0xFRVAgZnVs
+bCBwb3dlciAqLwo+ICsjZGVmaW5lIExET19IX1NFVFRJTkcJCTB4MTgKPiArLyogTERPX0sgMHgw
+MDogMi43NVYsIE9GRiwgU0xFRVBfQSBvciBCLCBTTEVFUCBmdWxsIHBvd2VyICovCj4gKyNkZWZp
+bmUgTERPX0tfU0VUVElORwkJMHgwMAo+ICsvKiBMRE9fRVhUIDB4MDA6IFZvbHRhZ2Ugbm90IHNl
+dCwgT0ZGLCBub3QgdXNlZCwgbm90IHVzZWQgKi8KPiArI2RlZmluZSBMRE9fRVhUX1NFVFRJTkcJ
+CTB4MDAKPiArLyogQlVDSyAweDdEOiAxLjJWLCBPTiwgU0xFRVBfQSBhbmQgQiwgU0xFRVAgbG93
+IHBvd2VyICovCj4gKyNkZWZpbmUgQlVDS19TRVRUSU5HCTB4N0QKPiArLyogQlVDSyBTTEVFUCAw
+eEFDOiAxLjA1ViwgTm90IHVzZWQsIFNMRUVQX0EgYW5kIEIsIE5vdCB1c2VkICovCj4gKyNkZWZp
+bmUgQlVDS19TTEVFUF9TRVRUSU5HCTB4QUMKPiArCj4gK3N0YXRpYyBjb25zdCB1OCBhYjMxMDBf
+cmVnX2luaXR2YWxzW10gPSB7Cj4gKwlMRE9fQV9TRVRUSU5HLAo+ICsJTERPX0NfU0VUVElORywK
+PiArCUxET19FX1NFVFRJTkcsCj4gKwlMRE9fRV9TTEVFUF9TRVRUSU5HLAo+ICsJTERPX0ZfU0VU
+VElORywKPiArCUxET19HX1NFVFRJTkcsCj4gKwlMRE9fSF9TRVRUSU5HLAo+ICsJTERPX0tfU0VU
+VElORywKPiArCUxET19FWFRfU0VUVElORywKPiArCUJVQ0tfU0VUVElORywKPiArCUJVQ0tfU0xF
+RVBfU0VUVElORywKPiArCUxET19EX1NFVFRJTkcsCj4gK307Cj4gKwo+ICtzdGF0aWMgaW50Cj4g
+K2FiMzEwMF9yZWd1bGF0b3Jfb2ZfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiwg
+c3RydWN0IGRldmljZV9ub2RlICpucCkKPiArewo+ICsJaW50IGVyciwgaTsKPiArCj4gKwkvKgo+
+ICsJICogU2V0IHVwIHRoZSByZWd1bGF0b3IgcmVnaXN0ZXJzLCBhcyB3YXMgcHJldmlvdXNseSBk
+b25lIHdpdGgKPiArCSAqIHBsYXRmb3JtIGRhdGEuCj4gKwkgKi8KPiArCS8qIFNldCB1cCByZWd1
+bGF0b3JzICovCj4gKwlmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShhYjMxMDBfcmVnX2luaXRf
+b3JkZXIpOyBpKyspIHsKPiArCQllcnIgPSBhYng1MDBfc2V0X3JlZ2lzdGVyX2ludGVycnVwdGli
+bGUoJnBkZXYtPmRldiwgMCwKPiArCQkJCQlhYjMxMDBfcmVnX2luaXRfb3JkZXJbaV0sCj4gKwkJ
+CQkJYWIzMTAwX3JlZ19pbml0dmFsc1tpXSk7Cj4gKwkJaWYgKGVycikgewo+ICsJCQlkZXZfZXJy
+KCZwZGV2LT5kZXYsICJyZWd1bGF0b3IgaW5pdGlhbGl6YXRpb24gZmFpbGVkIHdpdGggZXJyb3Ig
+JWRcbiIsCj4gKwkJCQllcnIpOwo+ICsJCQlyZXR1cm4gZXJyOwo+ICsJCX0KPiArCX0KPiArCj4g
+Kwlmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShhYjMxMDBfcmVndWxhdG9yX21hdGNoZXMpOyBp
+KyspIHsKPiArCQllcnIgPSBhYjMxMDBfcmVndWxhdG9yX3JlZ2lzdGVyKAo+ICsJCQlwZGV2LCBO
+VUxMLCBhYjMxMDBfcmVndWxhdG9yX21hdGNoZXNbaV0uaW5pdF9kYXRhLAo+ICsJCQlhYjMxMDBf
+cmVndWxhdG9yX21hdGNoZXNbaV0ub2Zfbm9kZSwKPiArCQkJKGludCkgYWIzMTAwX3JlZ3VsYXRv
+cl9tYXRjaGVzW2ldLmRyaXZlcl9kYXRhKTsKPiArCQlpZiAoZXJyKQo+ICsJCQlyZXR1cm4gZXJy
+Owo+ICsJfQo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICAKPiAgc3RhdGljIGludCBhYjMx
+MDBfcmVndWxhdG9yc19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICB7Cj4g
+IAlzdHJ1Y3QgYWIzMTAwX3BsYXRmb3JtX2RhdGEgKnBsZmRhdGEgPSBwZGV2LT5kZXYucGxhdGZv
+cm1fZGF0YTsKPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBwZGV2LT5kZXYub2Zfbm9kZTsK
+PiAgCWludCBlcnIgPSAwOwo+ICAJdTggZGF0YTsKPiAgCWludCBpOwo+IEBAIC01NjcsNiArNjY1
+LDE4IEBAIHN0YXRpYyBpbnQgYWIzMTAwX3JlZ3VsYXRvcnNfcHJvYmUoc3RydWN0IHBsYXRmb3Jt
+X2RldmljZSAqcGRldikKPiAgCQlkZXZfbm90aWNlKCZwZGV2LT5kZXYsCj4gIAkJCSAgICJjaGlw
+IGlzIGluIGluYWN0aXZlIG1vZGUgKENvbGQgc3RhcnQpXG4iKTsKPiAgCj4gKwlpZiAobnApIHsK
+PiArCQllcnIgPSBvZl9yZWd1bGF0b3JfbWF0Y2goJnBkZXYtPmRldiwgbnAsCj4gKwkJCQkJIGFi
+MzEwMF9yZWd1bGF0b3JfbWF0Y2hlcywKPiArCQkJCQkgQVJSQVlfU0laRShhYjMxMDBfcmVndWxh
+dG9yX21hdGNoZXMpKTsKPiArCQlpZiAoZXJyIDwgMCkgewo+ICsJCQlkZXZfZXJyKCZwZGV2LT5k
+ZXYsCj4gKwkJCQkiRXJyb3IgcGFyc2luZyByZWd1bGF0b3IgaW5pdCBkYXRhOiAlZFxuIiwgZXJy
+KTsKPiArCQkJcmV0dXJuIGVycjsKPiArCQl9Cj4gKwkJcmV0dXJuIGFiMzEwMF9yZWd1bGF0b3Jf
+b2ZfcHJvYmUocGRldiwgbnApOwo+ICsJfQo+ICsKPiAgCS8qIFNldCB1cCByZWd1bGF0b3JzICov
+Cj4gIAlmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShhYjMxMDBfcmVnX2luaXRfb3JkZXIpOyBp
+KyspIHsKPiAgCQllcnIgPSBhYng1MDBfc2V0X3JlZ2lzdGVyX2ludGVycnVwdGlibGUoJnBkZXYt
+PmRldiwgMCwKPiBAQCAtNTgzLDcgKzY5Myw4IEBAIHN0YXRpYyBpbnQgYWIzMTAwX3JlZ3VsYXRv
+cnNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCWZvciAoaSA9IDA7IGkg
+PCBBQjMxMDBfTlVNX1JFR1VMQVRPUlM7IGkrKykgewo+ICAJCXN0cnVjdCByZWd1bGF0b3JfZGVz
+YyAqZGVzYyA9ICZhYjMxMDBfcmVndWxhdG9yX2Rlc2NbaV07Cj4gIAo+IC0JCWVyciA9IGFiMzEw
+MF9yZWd1bGF0b3JfcmVnaXN0ZXIocGRldiwgcGxmZGF0YSwgZGVzYy0+aWQpOwo+ICsJCWVyciA9
+IGFiMzEwMF9yZWd1bGF0b3JfcmVnaXN0ZXIocGRldiwgcGxmZGF0YSwgTlVMTCwgTlVMTCwKPiAr
+CQkJCQkJZGVzYy0+aWQpOwo+ICAJCWlmIChlcnIpCj4gIAkJCXJldHVybiBlcnI7Cj4gIAl9Cgot
+LSAKTGVlIEpvbmVzCkxpbmFybyBTVC1Fcmljc3NvbiBMYW5kaW5nIFRlYW0gTGVhZApMaW5hcm8u
+b3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKRm9sbG93IExpbmFybzog
+RmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRy
+ZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0
+aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
