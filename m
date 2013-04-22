@@ -1,68 +1,63 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 09/23] watchdog: coh901327: devicetree support
-Date: Mon, 22 Apr 2013 06:44:08 -0700
-Message-ID: <20130422134408.GA28711@roeck-us.net>
-References: <1366624505-6437-1-git-send-email-linus.walleij@stericsson.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [RFC PATCH] drivers: bus: add ARM CCI support
+Date: Mon, 22 Apr 2013 15:24:57 +0100
+Message-ID: <20130422142457.GM14496@n2100.arm.linux.org.uk>
+References: <1365691679-28674-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1365691679-28674-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <51702B70.9000908@codeaurora.org>
+ <alpine.LFD.2.03.1304181341020.17375@syhkavp.arg>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1366624505-6437-1-git-send-email-linus.walleij@stericsson.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@stericsson.com>
-Cc: linux-watchdog@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Wim Van Sebroeck <wim@iguana.be>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <alpine.LFD.2.03.1304181341020.17375-hIgblCxmbi8OMTOF05IoTw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 22, 2013 at 11:55:05AM +0200, Linus Walleij wrote:
-> From: Linus Walleij <linus.walleij@linaro.org>
+On Thu, Apr 18, 2013 at 01:54:04PM -0400, Nicolas Pitre wrote:
+> On Thu, 18 Apr 2013, Stephen Boyd wrote:
 > 
-> This adds support for probing the COH 901 327 watchdog from
-> the device tree and also adds associated bindings.
+> > On 04/11/13 07:47, Lorenzo Pieralisi wrote:
+> > > diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
+> > > new file mode 100644
+> > > index 0000000..81953de
+> > > --- /dev/null
+> > > +++ b/drivers/bus/arm-cci.c
+> > [...]
+> > > +static void notrace cci_port_control(unsigned int port, bool enable)
+> > > +{
+> > > +	void __iomem *base = ports[port].base;
+> > > +
+> > > +	if (!base)
+> > > +		return;
+> > > +
+> > > +	writel_relaxed(enable, base + CCI_PORT_CTRL);
+> > > +	while (readl_relaxed(cci_ctrl_base + CCI_CTRL_STATUS) & 0x1)
+> > > +			;
+> > 
+> > cpu_relax()?
 > 
-> Cc: Wim Van Sebroeck <wim@iguana.be>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Hi Wim, I'm seeking an ACK on this patch to take it into
-> ARM SoC along with the patches making use of this new
-> binding.
-> ---
->  .../devicetree/bindings/watchdog/stericsson-coh901327.txt | 15 +++++++++++++++
->  drivers/watchdog/coh901327_wdt.c                          |  6 ++++++
->  2 files changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/stericsson-coh901327.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/stericsson-coh901327.txt b/Documentation/devicetree/bindings/watchdog/stericsson-coh901327.txt
-> new file mode 100644
-> index 0000000..3d7c958
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/stericsson-coh901327.txt
-> @@ -0,0 +1,15 @@
-> +ST-Ericsson COH 901 327 Watchdog timer
-> +
-> +Required properties:
-> +- compatible: must be "stericsson,coh901327".
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +- interrupts: the interrupt used for the watchdog timeout warning.
-> +
-> +Example:
-> +
-> +watchdog: watchdog@c0012000 {
-> +	compatible = "stericsson,coh901327";
-> +	reg = <0xc0012000 0x1000>;
-> +	interrupts = <3>;
-> +};
+> In some cases there is no more cache coherence when this is called and 
+> the hardware might not be in a good state to cope with whatever action 
+> people might be tempted to insert into cpu_relax().  After the CCI is 
+> disabled it is important to keep a low profile and not touch anything 
+> global. With some early hardware revision, even a DMB here was harmful.
 
-If you add a call to watchdog_init_timeout(), it would also support
-setting the timeout through the timeout-sec property.
+It would be useful if there was a comment in the code explaining this.
+As it stands, you _will_ get a stream of patches from kernel janitors
+itching to add cpu_relax() there.
 
-Guenter
+If you're going to do something different from the norm, it _needs_ to
+definitely be commented and explained.
