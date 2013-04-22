@@ -1,47 +1,53 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH v2 00/13] ARM: DT cpu bindings updates
-Date: Mon, 22 Apr 2013 21:18:41 +0200
-Message-ID: <201304222118.41262.arnd@arndb.de>
-References: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
- <20130422164112.GB3076@mudshark.cambridge.arm.com>
- <20130422180057.GB17071@e102568-lin.cambridge.arm.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v5 00/14] ARM: samsung-time: Prepare for multiplatform support
+Date: Mon, 22 Apr 2013 21:21:05 +0200
+Message-ID: <8994400.x1JqGELAnV@flatron>
+References: <1365794250-14436-1-git-send-email-t.figa@samsung.com> <201304122251.41393.arnd@arndb.de> <5175755D.20305@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130422180057.GB17071@e102568-lin.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Dave Martin <dave.martin@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Amit Kucheria <amit.kucheria@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, Lennert Buytenhek <kernel@wantstofly.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, David Brown <davidb@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Stephen Warren <swarren@wwwdotorg.org>, Sekhar Nori <nsekhar@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5175755D.20305@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Tomasz Figa <t.figa@samsung.com>, mark.rutland@arm.com, heiko@sntech.de, buserror@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, christer@weinigel.se, sylvester.nawrocki@gmail.com, m.szyprowski@samsung.com, linux@arm.linux.org.uk, kwangwoo.lee@gmail.com, mcuelenaere@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, john.stultz@linaro.org, ghcstop@gmail.com, linux@simtec.co.uk, linux-arm-kernel@lists.infradead.org, broonie@opensource.wolfsonmicro.com, jekhor@gmail.com, kyungmin.park@samsung.com, tglx@linutronix.de, olof@lixom.net
 List-Id: devicetree@vger.kernel.org
 
-On Monday 22 April 2013, Lorenzo Pieralisi wrote:
-> > Thoughts? I notice Catalin has some patches queued for arm64 which
-> > unconditionally use of_property_read_u64, but I have a patch to honour the
-> > #address-cells property instead.
+On Tuesday 23 of April 2013 02:37:33 Kukjin Kim wrote:
+> On 04/13/13 05:51, Arnd Bergmann wrote:
+> > On Friday 12 April 2013, Tomasz Figa wrote:
+> >> This series is an attempt to make the samsung-time clocksource driver
+> >> ready for multiplatform kernels. It moves the driver to
+> >> drivers/clocksource, cleans it up from uses of static
+> >> platform-specific definitions, simplifies timer interrupt handling
+> >> and adds Device Tree support.
+> >> 
+> >> The samsung_pwm clocksource driver is made the master driver, which
+> >> exposes a single function to the PWM driver to get required data.
+> >> Only
+> >> samsung-time driver is reworked to use the master driver at this
+> >> time,
+> >> since the PWM driver can be already considered broken at the moment
+> >> and
+> >> needs separate series of several patches to fix and clean it up,
+> >> which
+> >> I am already working on.
+> >> 
+> >> Tested on Universal C210 board with Device Tree. Not tested without
+> >> Device Tree, since it has been already broken before this series.
+> >> Compile tested for other related SoCs.
+> > 
+> > Acked-by: Arnd Bergmann<arnd@arndb.de>
 > 
-> Basically you want me to rule out passing a dtb with cpus node having
-> #address-cells == 2 to a 32-bit kernel, correct ? Or put it another way:
-> 
-> - a 32-bit kernel must always get passed a dtb with cpus node
->   #address-cells == 1. 
+> Applied, this whole series.
 
-Why that? For other registers, we allow leading zeroes. This is
-already required for MMIO registers on LPAE capable machines.
+It would be nice if we could still get this for 3.10, but AFAIK it is 
+already much too late.
 
->   If the system is ARMv8 with CPUs having
->   MPIDR_EL1[63:32] != 0x0, well, running 32-bit kernel on it is not
->   the safest thing to do anyway.
+I've discussed this matter with Arnd and the solution that can be accepted 
+by arm-soc maintainers is to send a subset of this series, like in the 
+patch sent by Arnd (clocksource: add samsung pwm timer driver; it needs 
+additional fixes, though.).
 
-I would assume the hypervisor to provide a virtual MPIDR_EL1 for
-a 32 bit kernel in that case.
-
-	Arnd
+Best regards,
+Tomasz
