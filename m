@@ -1,7 +1,7 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFC PATCH v2 08/13] ARM: mach-picoxcell: cpus/cpu nodes dts updates
-Date: Mon, 22 Apr 2013 16:27:30 +0100
-Message-ID: <1366644455-16550-9-git-send-email-lorenzo.pieralisi@arm.com>
+Subject: [RFC PATCH v2 11/13] ARM: mach-sunxi: cpus/cpu nodes dts updates
+Date: Mon, 22 Apr 2013 16:27:33 +0100
+Message-ID: <1366644455-16550-12-git-send-email-lorenzo.pieralisi@arm.com>
 References: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,38 +22,30 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetr
 Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch updates the in-kernel dts files according to the latest cpus
+and cpu bindings updates for ARM.
 
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 ---
- arch/arm/boot/dts/picoxcell-pc3x2.dtsi | 2 +-
- arch/arm/boot/dts/picoxcell-pc3x3.dtsi | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sunxi.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/picoxcell-pc3x2.dtsi b/arch/arm/boot/dts/picoxcell-pc3x2.dtsi
-index f0a8c20..978dbdf 100644
---- a/arch/arm/boot/dts/picoxcell-pc3x2.dtsi
-+++ b/arch/arm/boot/dts/picoxcell-pc3x2.dtsi
-@@ -22,7 +22,7 @@
- 		#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/sunxi.dtsi b/arch/arm/boot/dts/sunxi.dtsi
+index 8b36abe..447a0f0 100644
+--- a/arch/arm/boot/dts/sunxi.dtsi
++++ b/arch/arm/boot/dts/sunxi.dtsi
+@@ -17,8 +17,12 @@
+ 	interrupt-parent = <&intc>;
  
+ 	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
  		cpu@0 {
--			compatible = "arm,1176jz-s";
-+			compatible = "arm,arm1176";
- 			clock-frequency = <400000000>;
- 			reg = <0>;
- 			d-cache-line-size = <32>;
-diff --git a/arch/arm/boot/dts/picoxcell-pc3x3.dtsi b/arch/arm/boot/dts/picoxcell-pc3x3.dtsi
-index daa962d..5fa309e 100644
---- a/arch/arm/boot/dts/picoxcell-pc3x3.dtsi
-+++ b/arch/arm/boot/dts/picoxcell-pc3x3.dtsi
-@@ -22,7 +22,7 @@
- 		#size-cells = <0>;
+ 			compatible = "arm,cortex-a8";
++			reg = <0x0>;
+ 		};
+ 	};
  
- 		cpu@0 {
--			compatible = "arm,1176jz-s";
-+			compatible = "arm,arm1176;
- 			cpu-clock = <&arm_clk>, "cpu";
- 			reg = <0>;
- 			d-cache-line-size = <32>;
 -- 
 1.7.12
