@@ -1,7 +1,7 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFC PATCH v2 03/13] ARM: mach-at91: cpus/cpu node dts updates
-Date: Mon, 22 Apr 2013 16:27:25 +0100
-Message-ID: <1366644455-16550-4-git-send-email-lorenzo.pieralisi@arm.com>
+Subject: [RFC PATCH v2 10/13] ARM: mach-spear: cpus/cpu nodes dts updates
+Date: Mon, 22 Apr 2013 16:27:32 +0100
+Message-ID: <1366644455-16550-11-git-send-email-lorenzo.pieralisi@arm.com>
 References: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -27,18 +27,16 @@ and cpu bindings updates for ARM.
 
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 ---
- arch/arm/boot/dts/at91sam9260.dtsi | 2 +-
- arch/arm/boot/dts/at91sam9263.dtsi | 2 +-
- arch/arm/boot/dts/at91sam9g45.dtsi | 2 +-
- arch/arm/boot/dts/at91sam9n12.dtsi | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/spear3xx.dtsi | 2 +-
+ arch/arm/boot/dts/spear600.dtsi | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-index cb7bcc5..2e9de85 100644
---- a/arch/arm/boot/dts/at91sam9260.dtsi
-+++ b/arch/arm/boot/dts/at91sam9260.dtsi
-@@ -33,7 +33,7 @@
- 	};
+diff --git a/arch/arm/boot/dts/spear3xx.dtsi b/arch/arm/boot/dts/spear3xx.dtsi
+index c2a852d..485d4d8 100644
+--- a/arch/arm/boot/dts/spear3xx.dtsi
++++ b/arch/arm/boot/dts/spear3xx.dtsi
+@@ -18,7 +18,7 @@
+ 
  	cpus {
  		cpu@0 {
 -			compatible = "arm,arm926ejs";
@@ -46,38 +44,12 @@ index cb7bcc5..2e9de85 100644
  		};
  	};
  
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index 271d4de..25c4725 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -30,7 +30,7 @@
- 	};
- 	cpus {
- 		cpu@0 {
--			compatible = "arm,arm926ejs";
-+			compatible = "arm,arm926";
- 		};
- 	};
+diff --git a/arch/arm/boot/dts/spear600.dtsi b/arch/arm/boot/dts/spear600.dtsi
+index 19f99dc..0498700 100644
+--- a/arch/arm/boot/dts/spear600.dtsi
++++ b/arch/arm/boot/dts/spear600.dtsi
+@@ -16,7 +16,7 @@
  
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index 6b1d4ca..cf647d1 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -36,7 +36,7 @@
- 	};
- 	cpus {
- 		cpu@0 {
--			compatible = "arm,arm926ejs";
-+			compatible = "arm,arm926";
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-index 7750f98..d531ae3 100644
---- a/arch/arm/boot/dts/at91sam9n12.dtsi
-+++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-@@ -32,7 +32,7 @@
- 	};
  	cpus {
  		cpu@0 {
 -			compatible = "arm,arm926ejs";
