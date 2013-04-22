@@ -1,42 +1,40 @@
 From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH 1/4] ARM: dts: Add TMU clock entries to exynos4210.dtsi
-Date: Tue, 23 Apr 2013 01:55:40 +0900
-Message-ID: <51756B8C.5080705@samsung.com>
-References: <1366605175-19161-1-git-send-email-sachin.kamat@linaro.org>
+Subject: Re: [PATCH v5 00/14] ARM: samsung-time: Prepare for multiplatform
+ support
+Date: Tue, 23 Apr 2013 02:37:33 +0900
+Message-ID: <5175755D.20305@samsung.com>
+References: <1365794250-14436-1-git-send-email-t.figa@samsung.com> <201304122251.41393.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1366605175-19161-1-git-send-email-sachin.kamat@linaro.org>
+In-Reply-To: <201304122251.41393.arnd@arndb.de>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, patches@linaro.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Tomasz Figa <t.figa@samsung.com>, mark.rutland@arm.com, heiko@sntech.de, tomasz.figa@gmail.com, buserror@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, christer@weinigel.se, sylvester.nawrocki@gmail.com, m.szyprowski@samsung.com, kgene.kim@samsung.com, linux@arm.linux.org.uk, kwangwoo.lee@gmail.com, mcuelenaere@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, john.stultz@linaro.org, ghcstop@gmail.com, linux@simtec.co.uk, linux-arm-kernel@lists.infradead.org, broonie@opensource.wolfsonmicro.com, jekhor@gmail.com, kyungmin.park@samsung.com, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 04/22/13 13:32, Sachin Kamat wrote:
-> Adds TMU clock entries to exynos4210.dtsi file.
+On 04/13/13 05:51, Arnd Bergmann wrote:
+> On Friday 12 April 2013, Tomasz Figa wrote:
+>> This series is an attempt to make the samsung-time clocksource driver ready
+>> for multiplatform kernels. It moves the driver to drivers/clocksource, cleans
+>> it up from uses of static platform-specific definitions, simplifies timer
+>> interrupt handling and adds Device Tree support.
+>>
+>> The samsung_pwm clocksource driver is made the master driver, which
+>> exposes a single function to the PWM driver to get required data. Only
+>> samsung-time driver is reworked to use the master driver at this time,
+>> since the PWM driver can be already considered broken at the moment and
+>> needs separate series of several patches to fix and clean it up, which
+>> I am already working on.
+>>
+>> Tested on Universal C210 board with Device Tree. Not tested without
+>> Device Tree, since it has been already broken before this series.
+>> Compile tested for other related SoCs.
 >
-> Signed-off-by: Sachin Kamat<sachin.kamat@linaro.org>
-> ---
->   arch/arm/boot/dts/exynos4210.dtsi |    3 +++
->   1 file changed, 3 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
-> index 50ab9d4..53654c4 100644
-> --- a/arch/arm/boot/dts/exynos4210.dtsi
-> +++ b/arch/arm/boot/dts/exynos4210.dtsi
-> @@ -111,6 +111,9 @@
->   		interrupt-parent =<&combiner>;
->   		reg =<0x100C0000 0x100>;
->   		interrupts =<2 4>;
-> +		clocks =<&clock 383>;
-> +		clock-names = "tmu_apbif";
-> +		status = "disabled";
->   	};
->
->   	g2d@12800000 {
+> Acked-by: Arnd Bergmann<arnd@arndb.de>
 
-Applied 1st and 2nd patches.
+Applied, this whole series.
 
 Thanks.
 
