@@ -1,121 +1,194 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 5/5] of: remove CONFIG_OF_DEVICE
-Date: Sun, 21 Apr 2013 21:13:18 -0500
-Message-ID: <1366596798-9457-6-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 1/5] ibmebus: convert of_platform_driver to platform_driver
+Date: Sun, 21 Apr 2013 21:13:14 -0500
+Message-ID: <1366596798-9457-2-git-send-email-robherring2@gmail.com>
 References: <1366596798-9457-1-git-send-email-robherring2@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1366596798-9457-1-git-send-email-robherring2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Hoang-Nam Nguyen <hnguyen@de.ibm.com>, Christoph Raisch <raisch@de.ibm.com>, Roland Dreier <roland@kernel.org>, Sean Hefty <sean.hefty@intel.com>, Hal Rosenstock <hal.rosenstock@gmail.com>, Thadeu Lima de Souza Cascardo <cascardo@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-rdma@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <rob.herring@calxeda.com>
 
-CONFIG_OF_DEVICE is always selected when CONFIG_OF is enabled, so remove
-it and simplify of_platform.h and of_device.h headers. This also fixes
-!OF compiles using of_platform_populate.
+ibmebus is the last remaining user of of_platform_driver and the
+conversion to a regular platform driver is trivial.
 
 Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Hoang-Nam Nguyen <hnguyen@de.ibm.com>
+Cc: Christoph Raisch <raisch@de.ibm.com>
+Cc: Roland Dreier <roland@kernel.org>
+Cc: Sean Hefty <sean.hefty@intel.com>
+Cc: Hal Rosenstock <hal.rosenstock@gmail.com>
+Cc: Thadeu Lima de Souza Cascardo <cascardo@linux.vnet.ibm.com>
 Cc: Grant Likely <grant.likely@linaro.org>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-rdma@vger.kernel.org
+Cc: netdev@vger.kernel.org
 ---
- drivers/of/Kconfig          |    3 ---
- drivers/of/Makefile         |    3 +--
- include/linux/of_device.h   |    6 +++---
- include/linux/of_platform.h |    9 +--------
- 4 files changed, 5 insertions(+), 16 deletions(-)
+ arch/powerpc/include/asm/ibmebus.h        |    4 ++--
+ arch/powerpc/kernel/ibmebus.c             |   22 ++++++++++------------
+ drivers/infiniband/hw/ehca/ehca_main.c    |    5 ++---
+ drivers/net/ethernet/ibm/ehea/ehea_main.c |    8 +++-----
+ 4 files changed, 17 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index d37bfcf..80e5c13 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -48,9 +48,6 @@ config OF_IRQ
- 	def_bool y
- 	depends on !SPARC
+diff --git a/arch/powerpc/include/asm/ibmebus.h b/arch/powerpc/include/asm/ibmebus.h
+index 1a9d9ae..088f95b 100644
+--- a/arch/powerpc/include/asm/ibmebus.h
++++ b/arch/powerpc/include/asm/ibmebus.h
+@@ -48,8 +48,8 @@
  
--config OF_DEVICE
--	def_bool y
--
- config OF_I2C
- 	def_tristate I2C
- 	depends on I2C
-diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-index e027f44..1f9c0c4 100644
---- a/drivers/of/Makefile
-+++ b/drivers/of/Makefile
-@@ -1,9 +1,8 @@
--obj-y = base.o
-+obj-y = base.o device.o platform.o
- obj-$(CONFIG_OF_FLATTREE) += fdt.o
- obj-$(CONFIG_OF_PROMTREE) += pdt.o
- obj-$(CONFIG_OF_ADDRESS)  += address.o
- obj-$(CONFIG_OF_IRQ)    += irq.o
--obj-$(CONFIG_OF_DEVICE) += device.o platform.o
- obj-$(CONFIG_OF_I2C)	+= of_i2c.o
- obj-$(CONFIG_OF_NET)	+= of_net.o
- obj-$(CONFIG_OF_SELFTEST) += selftest.o
-diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-index 901b743..9d27475 100644
---- a/include/linux/of_device.h
-+++ b/include/linux/of_device.h
-@@ -4,12 +4,12 @@
- #include <linux/platform_device.h>
- #include <linux/of_platform.h> /* temporary until merge */
+ extern struct bus_type ibmebus_bus_type;
  
--#ifdef CONFIG_OF_DEVICE
- #include <linux/of.h>
- #include <linux/mod_devicetable.h>
+-int ibmebus_register_driver(struct of_platform_driver *drv);
+-void ibmebus_unregister_driver(struct of_platform_driver *drv);
++int ibmebus_register_driver(struct platform_driver *drv);
++void ibmebus_unregister_driver(struct platform_driver *drv);
  
- struct device;
- 
-+#ifdef CONFIG_OF
- extern const struct of_device_id *of_match_device(
- 	const struct of_device_id *matches, const struct device *dev);
- extern void of_device_make_bus_id(struct device *dev);
-@@ -43,7 +43,7 @@ static inline void of_device_node_put(struct device *dev)
- 	of_node_put(dev->of_node);
+ int ibmebus_request_irq(u32 ist, irq_handler_t handler,
+ 			unsigned long irq_flags, const char *devname,
+diff --git a/arch/powerpc/kernel/ibmebus.c b/arch/powerpc/kernel/ibmebus.c
+index 8220baa..16a7c23 100644
+--- a/arch/powerpc/kernel/ibmebus.c
++++ b/arch/powerpc/kernel/ibmebus.c
+@@ -205,7 +205,7 @@ static int ibmebus_create_devices(const struct of_device_id *matches)
+ 	return ret;
  }
  
--#else /* CONFIG_OF_DEVICE */
-+#else /* CONFIG_OF */
- 
- static inline int of_driver_match_device(struct device *dev,
- 					 struct device_driver *drv)
-@@ -67,6 +67,6 @@ static inline const struct of_device_id *of_match_device(
+-int ibmebus_register_driver(struct of_platform_driver *drv)
++int ibmebus_register_driver(struct platform_driver *drv)
  {
- 	return NULL;
+ 	/* If the driver uses devices that ibmebus doesn't know, add them */
+ 	ibmebus_create_devices(drv->driver.of_match_table);
+@@ -215,7 +215,7 @@ int ibmebus_register_driver(struct of_platform_driver *drv)
  }
--#endif /* CONFIG_OF_DEVICE */
-+#endif /* CONFIG_OF */
+ EXPORT_SYMBOL(ibmebus_register_driver);
  
- #endif /* _LINUX_OF_DEVICE_H */
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index aa7eb02..6b840f0 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -13,8 +13,6 @@
+-void ibmebus_unregister_driver(struct of_platform_driver *drv)
++void ibmebus_unregister_driver(struct platform_driver *drv)
+ {
+ 	driver_unregister(&drv->driver);
+ }
+@@ -338,11 +338,10 @@ static int ibmebus_bus_bus_match(struct device *dev, struct device_driver *drv)
+ static int ibmebus_bus_device_probe(struct device *dev)
+ {
+ 	int error = -ENODEV;
+-	struct of_platform_driver *drv;
++	struct platform_driver *drv;
+ 	struct platform_device *of_dev;
+-	const struct of_device_id *match;
  
- #include <linux/device.h>
- #include <linux/mod_devicetable.h>
--
--#ifdef CONFIG_OF_DEVICE
- #include <linux/pm.h>
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
-@@ -74,13 +72,8 @@ extern int of_platform_populate(struct device_node *root,
- 				const struct of_device_id *matches,
- 				const struct of_dev_auxdata *lookup,
- 				struct device *parent);
--#endif /* CONFIG_OF_ADDRESS */
--
--#endif /* CONFIG_OF_DEVICE */
-+#else
+-	drv = to_of_platform_driver(dev->driver);
++	drv = to_platform_driver(dev->driver);
+ 	of_dev = to_platform_device(dev);
  
--#if !defined(CONFIG_OF_ADDRESS)
--struct of_dev_auxdata;
--struct device_node;
- static inline int of_platform_populate(struct device_node *root,
- 					const struct of_device_id *matches,
- 					const struct of_dev_auxdata *lookup,
+ 	if (!drv->probe)
+@@ -350,9 +349,8 @@ static int ibmebus_bus_device_probe(struct device *dev)
+ 
+ 	of_dev_get(of_dev);
+ 
+-	match = of_match_device(drv->driver.of_match_table, dev);
+-	if (match)
+-		error = drv->probe(of_dev, match);
++	if (of_driver_match_device(dev, dev->driver))
++		error = drv->probe(of_dev);
+ 	if (error)
+ 		of_dev_put(of_dev);
+ 
+@@ -362,7 +360,7 @@ static int ibmebus_bus_device_probe(struct device *dev)
+ static int ibmebus_bus_device_remove(struct device *dev)
+ {
+ 	struct platform_device *of_dev = to_platform_device(dev);
+-	struct of_platform_driver *drv = to_of_platform_driver(dev->driver);
++	struct platform_driver *drv = to_platform_driver(dev->driver);
+ 
+ 	if (dev->driver && drv->remove)
+ 		drv->remove(of_dev);
+@@ -372,7 +370,7 @@ static int ibmebus_bus_device_remove(struct device *dev)
+ static void ibmebus_bus_device_shutdown(struct device *dev)
+ {
+ 	struct platform_device *of_dev = to_platform_device(dev);
+-	struct of_platform_driver *drv = to_of_platform_driver(dev->driver);
++	struct platform_driver *drv = to_platform_driver(dev->driver);
+ 
+ 	if (dev->driver && drv->shutdown)
+ 		drv->shutdown(of_dev);
+@@ -419,7 +417,7 @@ struct device_attribute ibmebus_bus_device_attrs[] = {
+ static int ibmebus_bus_legacy_suspend(struct device *dev, pm_message_t mesg)
+ {
+ 	struct platform_device *of_dev = to_platform_device(dev);
+-	struct of_platform_driver *drv = to_of_platform_driver(dev->driver);
++	struct platform_driver *drv = to_platform_driver(dev->driver);
+ 	int ret = 0;
+ 
+ 	if (dev->driver && drv->suspend)
+@@ -430,7 +428,7 @@ static int ibmebus_bus_legacy_suspend(struct device *dev, pm_message_t mesg)
+ static int ibmebus_bus_legacy_resume(struct device *dev)
+ {
+ 	struct platform_device *of_dev = to_platform_device(dev);
+-	struct of_platform_driver *drv = to_of_platform_driver(dev->driver);
++	struct platform_driver *drv = to_platform_driver(dev->driver);
+ 	int ret = 0;
+ 
+ 	if (dev->driver && drv->resume)
+diff --git a/drivers/infiniband/hw/ehca/ehca_main.c b/drivers/infiniband/hw/ehca/ehca_main.c
+index f8a6291..982e3ef 100644
+--- a/drivers/infiniband/hw/ehca/ehca_main.c
++++ b/drivers/infiniband/hw/ehca/ehca_main.c
+@@ -713,8 +713,7 @@ static struct attribute_group ehca_dev_attr_grp = {
+ 	.attrs = ehca_dev_attrs
+ };
+ 
+-static int ehca_probe(struct platform_device *dev,
+-		      const struct of_device_id *id)
++static int ehca_probe(struct platform_device *dev)
+ {
+ 	struct ehca_shca *shca;
+ 	const u64 *handle;
+@@ -937,7 +936,7 @@ static struct of_device_id ehca_device_table[] =
+ };
+ MODULE_DEVICE_TABLE(of, ehca_device_table);
+ 
+-static struct of_platform_driver ehca_driver = {
++static struct platform_driver ehca_driver = {
+ 	.probe       = ehca_probe,
+ 	.remove      = ehca_remove,
+ 	.driver = {
+diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+index 328f47c..c6ecf70 100644
+--- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
++++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+@@ -98,8 +98,7 @@ static struct ehea_fw_handle_array ehea_fw_handles;
+ static struct ehea_bcmc_reg_array ehea_bcmc_regs;
+ 
+ 
+-static int ehea_probe_adapter(struct platform_device *dev,
+-			      const struct of_device_id *id);
++static int ehea_probe_adapter(struct platform_device *dev);
+ 
+ static int ehea_remove(struct platform_device *dev);
+ 
+@@ -112,7 +111,7 @@ static struct of_device_id ehea_device_table[] = {
+ };
+ MODULE_DEVICE_TABLE(of, ehea_device_table);
+ 
+-static struct of_platform_driver ehea_driver = {
++static struct platform_driver ehea_driver = {
+ 	.driver = {
+ 		.name = "ehea",
+ 		.owner = THIS_MODULE,
+@@ -3255,8 +3254,7 @@ static void ehea_remove_device_sysfs(struct platform_device *dev)
+ 	device_remove_file(&dev->dev, &dev_attr_remove_port);
+ }
+ 
+-static int ehea_probe_adapter(struct platform_device *dev,
+-			      const struct of_device_id *id)
++static int ehea_probe_adapter(struct platform_device *dev)
+ {
+ 	struct ehea_adapter *adapter;
+ 	const u64 *adapter_handle;
 -- 
 1.7.10.4
