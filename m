@@ -1,13 +1,12 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 19/23] ARM: u300: add the COH 901 318 DMAC to device tree
-Date: Mon, 22 Apr 2013 14:32:47 +0200
-Message-ID: <201304221432.47444.arnd@arndb.de>
-References: <1366624779-6820-1-git-send-email-linus.walleij@stericsson.com>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH 13/23] regulator: ab3100: refactor probe to use IDs
+Date: Mon, 22 Apr 2013 13:37:49 +0100
+Message-ID: <20130422123749.GJ30351@opensource.wolfsonmicro.com>
+References: <1366624634-6579-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============0291490296007375961=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366624779-6820-1-git-send-email-linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+In-Reply-To: <1366624634-6579-1-git-send-email-linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,97 +18,61 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 22 April 2013, Linus Walleij wrote:
-> From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> This adds the COH 901 318 DMA controller to the U300
-> device tree. All devices now converted to device tree
-> so far will start to find their DMA channels.
-> 
-> Note that the U300 is not yet using the device tree
-> to obtain DMA channels, but this is a first step.
 
-I think you definitely should implement the entire binding at once.
-It should be really trivial for this driver, see the patch below.
-I did not even build test it, but I'm sure you'll figure out the rest.
+--===============0291490296007375961==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="rwgQ89ZNnFUwFHTC"
+Content-Disposition: inline
 
-8<-----
-Subject: dma: coh901318: implement of_dma_controller API
 
-This provides a simple xlate and filter function pair for the coh901318
-dma engine. Every request line is tied to one channel here, so this is
-really trivial: the only information we need to pass is the channel number.
+--rwgQ89ZNnFUwFHTC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+On Mon, Apr 22, 2013 at 11:57:14AM +0200, Linus Walleij wrote:
 
----
-diff --git a/drivers/dma/coh901318.c b/drivers/dma/coh901318.c
-index 797940e..a90ba74 100644
---- a/drivers/dma/coh901318.c
-+++ b/drivers/dma/coh901318.c
-@@ -1788,6 +1788,35 @@ bool coh901318_filter_id(struct dma_chan *chan, void *chan_id)
- }
- EXPORT_SYMBOL(coh901318_filter_id);
- 
-+struct coh901318_filter_args {
-+	struct coh901318_base *base;
-+	unsigned int ch_nr;
-+};
-+
-+static bool coh901318_filter_base_and_id(struct dma_chan *chan, void *data)
-+{
-+	struct coh901318_filter_args *args = data;
-+
-+	if (&args->base->dma_slave == chan->device &&
-+	    args->ch_nr == to_coh901318_chan(chan)->id)
-+		return true;
-+
-+	return false;
-+}
-+
-+static struct dma_chan *coh901318_xlate(struct of_phandle_args *dma_spec,
-+					struct of_dma *ofdma)
-+{
-+	struct coh901318_filter_args args = {
-+		.base = ofdma->of_dma_data,
-+		.ch_nr = dma_spec->args[0],
-+	};
-+	dma_cap_mask_t cap;
-+	dma_cap_zero(cap);
-+	dma_cap_set(DMA_SLAVE, cap);
-+
-+	return dma_request_channel(cap, coh901318_filter_base_and_id, args);
-+}
- /*
-  * DMA channel allocation
-  */
-@@ -2735,12 +2764,18 @@ static int __init coh901318_probe(struct platform_device *pdev)
- 	if (err)
- 		goto err_register_memcpy;
- 
-+	ret = of_dma_controller_register(pdev->dev.of_node, coh901318_xlate, base);
-+	if (err)
-+		goto err_register_of_dma;
-+
- 	platform_set_drvdata(pdev, base);
- 	dev_info(&pdev->dev, "Initialized COH901318 DMA on virtual base 0x%08x\n",
- 		(u32) base->virtbase);
- 
- 	return err;
- 
-+ err_register_of_dma:
-+	dma_async_device_unregister(&base->dma_memcpy);
-  err_register_memcpy:
- 	dma_async_device_unregister(&base->dma_slave);
-  err_register_slave:
-@@ -2752,6 +2787,7 @@ static int __exit coh901318_remove(struct platform_device *pdev)
- {
- 	struct coh901318_base *base = platform_get_drvdata(pdev);
- 
-+	of_dma_controller_free(pdev->dev.of_node);
- 	dma_async_device_unregister(&base->dma_memcpy);
- 	dma_async_device_unregister(&base->dma_slave);
- 	coh901318_pool_destroy(&base->pool);
+> Hi Mark, seeking an ACK on this to take it through the
+> ARM SoC tree.
+
+Since the arm-soc tree is locked down now I may as well just apply it so
+it shows up in the merge window?
+
+--rwgQ89ZNnFUwFHTC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRdS7ZAAoJELSic+t+oim9SBkQAJJgwteVwBhzOH3PEpoe7jze
++/8HoRceVw1s71vhzZpEDJ5OM7Imwjmy3PgL34G6evZkC/7r+7gQBKR95+vd9sKf
+NrRPZ2aWFD2PL9E6ET8MXjP3ybf/wYhbHPQ5RPwBLRWCb6vfg1pkWnV+HsDiC4a/
+yTE2zo4e4S3RYB0T7WgMnj+C6rtRKYGvnhi9O2FnQOXMUUt023j2KfHRC79C70Pj
+4yDo/DFKFI/z9T4x/Am+l+LN2slr6RDFDSIrgHAYOOLXgwpagWv2EAffL1CihIyA
+SsOa0ASqjiA4tTUNkxIszm1FN5lteL7ysegfa9D+YYIxBu0D3rETVW3ZUXp5tfF0
+JQhLwQLqPxaEJSy/ucybbtm9GkvN+1tVwh1sDKbfMETTAoPcr6a9V5fgWUz+tonH
+lI4SklcW0dQggbedcHVuPj1YPFSicwO4kJBEHF6EkVHjtCtNOZjiQ13s18b7t6rr
+tR7EAM9TWYgYvfIUl6zYYil4nJKmxYRCv7QtOKRe5bHDtIxS4eRe3U6vKNaWPFEw
+BmSI+zL4MqQqKVdruvdl74VI9VtuoY3WN+Ee35ZlVyFQ0GOCHsril4GkfVkQxxza
+rqBc4EKGToiTU9oppMQtiX7vGLgPEsDdXeB8q36oNU4YCfmx66ATf3O3SdPFa0jr
+87RITjOgEMGRKdGiaPEL
+=DdYj
+-----END PGP SIGNATURE-----
+
+--rwgQ89ZNnFUwFHTC--
+
+--===============0291490296007375961==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============0291490296007375961==--
