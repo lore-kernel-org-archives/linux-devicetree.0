@@ -1,37 +1,74 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 05/23] pinctrl: coh901: add device tree support
-Date: Mon, 22 Apr 2013 13:40:17 +0200
-Message-ID: <201304221340.18080.arnd@arndb.de>
-References: <1366624326-6259-1-git-send-email-linus.walleij@stericsson.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 06/23] ARM: u300: basic device tree support
+Date: Mon, 22 Apr 2013 13:44:00 +0200
+Message-ID: <201304221344.00422.arnd@arndb.de>
+References: <1366624340-6293-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366624326-6259-1-git-send-email-linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1366624340-6293-1-git-send-email-linus.walleij@stericsson.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@stericsson.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 On Monday 22 April 2013, Linus Walleij wrote:
-> +Required properties:
-> +- compatible: Compatible property value should be "stericsson,gpio-coh901"
-> +- reg: Physical base address of the controller and length of memory mapped
-> +  region.
-> +- interrupts: the 0...n interrupts assigned to the different GPIO ports/banks.
-> +- interrupt-names: name the interrupts after port/bank, "gpio0", "gpio1" etc.
-> +
+> +/ {
 
-I think it would be better to leave out the interrupt-names in this case, since
-the name directly corresponds to the index, so there is no ambiguity.
+We don't really care about the device node names in Linux, but please use the
+common ones, without any trailing digits:
+
+> +	timer: timer0@c0014000 {
+> +		compatible = "stericsson,u300-apptimer";
+> +		reg = <0xc0014000 0x1000>;
+> +		interrupt-parent = <&vica>;
+> +		interrupts = <24 25 26 27>;
+> +	};
+
+timer@c0014000
+
+> +
+> +	gpio: gpio0@c0016000 {
+> +		compatible = "stericsson,gpio-coh901";
+> +		reg = <0xc0016000 0x1000>;
+
+
+gpio@c0016000
+
+> +	pinctrl: pinctrl0@c0011000 {
+> +		compatible = "stericsson,pinctrl-u300";
+> +		reg = <0xc0011000 0x1000>;
+> +	};
+
+pinctrl@c0011000
+
+> +		vica: intc@0xa0001000 {
+> +			compatible = "arm,versatile-vic";
+> +			interrupt-controller;
+> +			#interrupt-cells = <1>;
+> +			reg = <0xa0001000 0x20>;
+> +		};
+
+interrupt-controller@a0001000
+
+Note also the erroneous 0x part you have in the name here.
+
+> +		uart0: uart@c0013000 {
+> +			compatible = "arm,pl011", "arm,primecell";
+> +			reg = <0xc0013000 0x1000>;
+> +			interrupt-parent = <&vica>;
+> +			interrupts = <22>;
+> +		};
+
+serial@c0013000
 
 	Arnd
