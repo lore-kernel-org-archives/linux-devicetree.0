@@ -1,7 +1,7 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFC PATCH v2 09/13] ARM: mach-shmobile: cpus/cpu nodes dts updates
-Date: Mon, 22 Apr 2013 16:27:31 +0100
-Message-ID: <1366644455-16550-10-git-send-email-lorenzo.pieralisi@arm.com>
+Subject: [RFC PATCH v2 03/13] ARM: mach-at91: cpus/cpu node dts updates
+Date: Mon, 22 Apr 2013 16:27:25 +0100
+Message-ID: <1366644455-16550-4-git-send-email-lorenzo.pieralisi@arm.com>
 References: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -27,42 +27,63 @@ and cpu bindings updates for ARM.
 
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 ---
- arch/arm/boot/dts/r8a7740.dtsi | 3 +++
- arch/arm/boot/dts/sh7372.dtsi  | 4 ++++
- 2 files changed, 7 insertions(+)
+ arch/arm/boot/dts/at91sam9260.dtsi | 2 +-
+ arch/arm/boot/dts/at91sam9263.dtsi | 2 +-
+ arch/arm/boot/dts/at91sam9g45.dtsi | 2 +-
+ arch/arm/boot/dts/at91sam9n12.dtsi | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
-index 798fa35..b47bb36 100644
---- a/arch/arm/boot/dts/r8a7740.dtsi
-+++ b/arch/arm/boot/dts/r8a7740.dtsi
-@@ -14,8 +14,11 @@
- 	compatible = "renesas,r8a7740";
- 
+diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
+index cb7bcc5..2e9de85 100644
+--- a/arch/arm/boot/dts/at91sam9260.dtsi
++++ b/arch/arm/boot/dts/at91sam9260.dtsi
+@@ -33,7 +33,7 @@
+ 	};
  	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
  		cpu@0 {
- 			compatible = "arm,cortex-a9";
-+			reg = <0x0>;
+-			compatible = "arm,arm926ejs";
++			compatible = "arm,arm926";
  		};
  	};
- };
-diff --git a/arch/arm/boot/dts/sh7372.dtsi b/arch/arm/boot/dts/sh7372.dtsi
-index 677fc60..78478af 100644
---- a/arch/arm/boot/dts/sh7372.dtsi
-+++ b/arch/arm/boot/dts/sh7372.dtsi
-@@ -14,8 +14,12 @@
- 	compatible = "renesas,sh7372";
  
+diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+index 271d4de..25c4725 100644
+--- a/arch/arm/boot/dts/at91sam9263.dtsi
++++ b/arch/arm/boot/dts/at91sam9263.dtsi
+@@ -30,7 +30,7 @@
+ 	};
  	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
  		cpu@0 {
- 			compatible = "arm,cortex-a8";
-+			reg = <0x0>;
+-			compatible = "arm,arm926ejs";
++			compatible = "arm,arm926";
  		};
  	};
- };
+ 
+diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+index 6b1d4ca..cf647d1 100644
+--- a/arch/arm/boot/dts/at91sam9g45.dtsi
++++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+@@ -36,7 +36,7 @@
+ 	};
+ 	cpus {
+ 		cpu@0 {
+-			compatible = "arm,arm926ejs";
++			compatible = "arm,arm926";
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
+index 7750f98..d531ae3 100644
+--- a/arch/arm/boot/dts/at91sam9n12.dtsi
++++ b/arch/arm/boot/dts/at91sam9n12.dtsi
+@@ -32,7 +32,7 @@
+ 	};
+ 	cpus {
+ 		cpu@0 {
+-			compatible = "arm,arm926ejs";
++			compatible = "arm,arm926";
+ 		};
+ 	};
+ 
 -- 
 1.7.12
