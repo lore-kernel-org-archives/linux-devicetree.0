@@ -1,45 +1,57 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 4/5] usb: chipidea: depend on CONFIG_OF instead of CONFIG_OF_DEVICE
-Date: Sun, 21 Apr 2013 21:13:17 -0500
-Message-ID: <1366596798-9457-5-git-send-email-robherring2@gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [PATCH 3/5] of: remove of_platform_driver
+Date: Sun, 21 Apr 2013 21:13:16 -0500
+Message-ID: <1366596798-9457-4-git-send-email-robherring2@gmail.com>
 References: <1366596798-9457-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1366596798-9457-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1366596798-9457-1-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Rob Herring <rob.herring@calxeda.com>
 
-CONFIG_OF_DEVICE is going away, so use CONFIG_OF instead. It does not
-appear that CONFIG_OF_DEVICE was the correct dependency either.
+The last user of of_platform_driver is converted to a regular
+platform_driver, so of_platform_driver can be removed now.
 
-Signed-off-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+Cc: Grant Likely <grant.likely@linaro.org>
 ---
- drivers/usb/chipidea/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/of_platform.h |   21 ---------------------
+ 1 file changed, 21 deletions(-)
 
-diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
-index d92ca32..0895e3e 100644
---- a/drivers/usb/chipidea/Makefile
-+++ b/drivers/usb/chipidea/Makefile
-@@ -16,6 +16,6 @@ ifneq ($(CONFIG_PCI),)
- 	obj-$(CONFIG_USB_CHIPIDEA)	+= ci13xxx_pci.o
- endif
+diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+index 2a93b64..aa7eb02 100644
+--- a/include/linux/of_platform.h
++++ b/include/linux/of_platform.h
+@@ -53,27 +53,6 @@ struct of_dev_auxdata {
+ 	{ .compatible = _compat, .phys_addr = _phys, .name = _name, \
+ 	  .platform_data = _pdata }
  
--ifneq ($(CONFIG_OF_DEVICE),)
-+ifneq ($(CONFIG_OF),)
- 	obj-$(CONFIG_USB_CHIPIDEA)	+= ci13xxx_imx.o usbmisc_imx6q.o
- endif
+-/**
+- * of_platform_driver - Legacy of-aware driver for platform devices.
+- *
+- * An of_platform_driver driver is attached to a basic platform_device on
+- * the ibm ebus (ibmebus_bus_type).
+- */
+-struct of_platform_driver
+-{
+-	int	(*probe)(struct platform_device* dev,
+-			 const struct of_device_id *match);
+-	int	(*remove)(struct platform_device* dev);
+-
+-	int	(*suspend)(struct platform_device* dev, pm_message_t state);
+-	int	(*resume)(struct platform_device* dev);
+-	int	(*shutdown)(struct platform_device* dev);
+-
+-	struct device_driver	driver;
+-};
+-#define	to_of_platform_driver(drv) \
+-	container_of(drv,struct of_platform_driver, driver)
+-
+ extern const struct of_device_id of_default_bus_match_table[];
+ 
+ /* Platform drivers register/unregister */
 -- 
 1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
