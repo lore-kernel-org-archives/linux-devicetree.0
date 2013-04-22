@@ -1,53 +1,50 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v5 00/14] ARM: samsung-time: Prepare for multiplatform support
-Date: Mon, 22 Apr 2013 21:21:05 +0200
-Message-ID: <8994400.x1JqGELAnV@flatron>
-References: <1365794250-14436-1-git-send-email-t.figa@samsung.com> <201304122251.41393.arnd@arndb.de> <5175755D.20305@samsung.com>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH 04/10] util_version: new helper for displaying version info
+Date: Mon, 22 Apr 2013 15:44:54 -0500
+Message-ID: <E1UUNba-0005oJ-Ur@jdl.com>
+References: <1366078397-14889-1-git-send-email-vapier@gentoo.org>
+ <201304212025.47665.vapier@gentoo.org> <E1UUIno-0004Ox-Dd@jdl.com>
+ <201304221154.08100.vapier@gentoo.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5175755D.20305@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Tomasz Figa <t.figa@samsung.com>, mark.rutland@arm.com, heiko@sntech.de, buserror@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, christer@weinigel.se, sylvester.nawrocki@gmail.com, m.szyprowski@samsung.com, linux@arm.linux.org.uk, kwangwoo.lee@gmail.com, mcuelenaere@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, john.stultz@linaro.org, ghcstop@gmail.com, linux@simtec.co.uk, linux-arm-kernel@lists.infradead.org, broonie@opensource.wolfsonmicro.com, jekhor@gmail.com, kyungmin.park@samsung.com, tglx@linutronix.de, olof@lixom.net
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <201304221154.08100.vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 23 of April 2013 02:37:33 Kukjin Kim wrote:
-> On 04/13/13 05:51, Arnd Bergmann wrote:
-> > On Friday 12 April 2013, Tomasz Figa wrote:
-> >> This series is an attempt to make the samsung-time clocksource driver
-> >> ready for multiplatform kernels. It moves the driver to
-> >> drivers/clocksource, cleans it up from uses of static
-> >> platform-specific definitions, simplifies timer interrupt handling
-> >> and adds Device Tree support.
-> >> 
-> >> The samsung_pwm clocksource driver is made the master driver, which
-> >> exposes a single function to the PWM driver to get required data.
-> >> Only
-> >> samsung-time driver is reworked to use the master driver at this
-> >> time,
-> >> since the PWM driver can be already considered broken at the moment
-> >> and
-> >> needs separate series of several patches to fix and clean it up,
-> >> which
-> >> I am already working on.
-> >> 
-> >> Tested on Universal C210 board with Device Tree. Not tested without
-> >> Device Tree, since it has been already broken before this series.
-> >> Compile tested for other related SoCs.
-> > 
-> > Acked-by: Arnd Bergmann<arnd@arndb.de>
+> On Monday 22 April 2013 11:37:12 Jon Loeliger wrote:
+> > > hmm, looks like patch #2 (utilfdt_read and handling of the len argument)
+> > > was taken from the first patch series rather than the 3rd ?
+> > >
+> > > i'd suggest reverting it and applying instead the one from this series
+> > > ... Message-Id: <1366078397-14889-3-git-send-email-vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+> >
+> > Please send me the version you want applied.
 > 
-> Applied, this whole series.
+> attached
+> Dmike
 
-It would be nice if we could still get this for 3.10, but AFAIK it is 
-already much too late.
+...and re-applied.  Sorry about that.
 
-I've discussed this matter with Arnd and the solution that can be accepted 
-by arm-soc maintainers is to send a subset of this series, like in the 
-patch sent by Arnd (clocksource: add samsung pwm timer driver; it needs 
-additional fixes, though.).
-
-Best regards,
-Tomasz
+a6d55e0 utilfdt_read: pass back up the length of data read
+5543b88 Revert "utilfdt_read: pass back up the length of data read"
+31be4ce util_version: new helper for displaying version info
+97c122e die: constify format string arg
+cc2c178 utilfdt_read: pass back up the length of data read
+f8cb5dd utilfdt_read_err: use xmalloc funcs
+27cdc1b Added license header to dtc/libfdt/fdt.h and libfdt_env.h
+cc11e52 Fix typo
+b7aa300 Export fdt_stringlist_contains()
+d59b807 .gitignore: Add rule for *.patch
