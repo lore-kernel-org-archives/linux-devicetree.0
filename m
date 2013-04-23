@@ -1,92 +1,78 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: Query on pinctrl usage for DT nodes
-Date: Tue, 23 Apr 2013 09:42:51 +0200
-Message-ID: <51763B7B.707@ti.com>
-References: <CA+V-a8uiPwsAD--OHFAE=i2ed+-wbXm4p2deZXr92+Zv6GDS1w@mail.gmail.com>
- <515C5C76.3080009@wwwdotorg.org>
- <CA+V-a8t3wtP77DdeUoQHKMjAuWmV+ude+1J3UjJmMTqobgStjA@mail.gmail.com>
- <5162FD4A.1030909@wwwdotorg.org>
- <CA+V-a8vwdCkyMqiynj5BodXbjwJ=e4qNb-29FhLweqbjc7DBQA@mail.gmail.com>
- <5165A22B.4070200@wwwdotorg.org> <20130410203408.GP10155@atomide.com>
- <516BB99F.2080502@ti.com> <20130416213232.GU10155@atomide.com>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: Re: [PATCH 0/6] thermal:exynos4: Thermal Measurement Unit fixes for
+ Samsung SoCs
+Date: Tue, 23 Apr 2013 10:01:54 +0200
+Message-ID: <20130423100154.5e2b09a4@amdc308.digital.local>
+References: <1366389493-8239-1-git-send-email-l.majewski@samsung.com>
+ <51756AA6.3000906@samsung.com> <20130423082608.2d163140@amdc308.digital.local>
+ <CAK9yfHyQ7JWKTK9zB2ppp=F4YXv_LF_6AU0WEUf1B98-MCb5mA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130416213232.GU10155@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Prabhakar Lad <prabhakar.csengg@gmail.com>, linus.walleij@linaro.org, LAK <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAK9yfHyQ7JWKTK9zB2ppp=F4YXv_LF_6AU0WEUf1B98-MCb5mA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Zhang Rui <rui.zhang@intel.com>, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/16/2013 11:32 PM, Tony Lindgren wrote:
-> * Peter Ujfalusi <peter.ujfalusi@ti.com> [130415 01:30]:
->> On 04/10/2013 10:34 PM, Tony Lindgren wrote:
->>> Yeah how about just change the pintctrl-single,bits register
->>> naming to be register + bit?  Something like 0xdeadbeef.0 and
->>> 0xdeadbeef.1 and so on.
->>
->> Something like this might work I think. It is going to be a bit tricky I=
-MHO
->> since we might need span out new 'register' every time a device requests=
- for a
->> new pinctrl-single,bits for already used register in the
->> pinctrl-single,bit-per-mux area. In this way we still can make sure that
->> certain bit are only used by a single driver.
-> =
+Hi Sachin,
 
-> OK. If it's one bit per mux type register we should be able to create
-> the right amount of entries based on the submask in pinctrs-single,bit?
+> Hi Lukasz,
+> 
+> On 23 April 2013 11:56, Lukasz Majewski <l.majewski@samsung.com>
+> wrote:
+> > Hi Kukjin,
+> >
+> >> On 04/20/13 01:38, Lukasz Majewski wrote:
+> >> > This patch series provide various fixes for TMU block.
+> >> > Namely, support for common clock framework and proper regulator
+> >> > VDD_TS has been added.
+> >> > Moreover device tree definitions and documentation entry are now
+> >> > in place.
+> >> >
+> >> > Lukasz Majewski (6):
+> >> >    clk:exynos4:TMU Thermal Measurement Unit clock added to common
+> >> > clock framework
+> >> >    thermal:exynos4: TMU Common clock framework support for TMU
+> >> > (Thermal Monitoring Unit)
+> >> >    thermal:exynos4: TMU device tree support for Exynos4412
+> >> > targets thermal: Support for TMU regulator defined at device tree
+> >> >    thermal:exynos4: Enable support for Exynos4412 SoCs
+> >> >    thermal:exynos4: Add documentation for Exynos SoC thermal
+> >> > bindings
+> >> >
+> >> >   .../devicetree/bindings/clock/exynos4-clock.txt    |    1 +
+> >> >   .../devicetree/bindings/thermal/exynos-thermal.txt |   22
+> >> > +++++++++++ arch/arm/boot/dts/exynos4x12.dtsi                  |
+> >> > 10 +++++ drivers/clk/samsung/clk-exynos4.c                  |
+> >> > 6 ++- drivers/thermal/exynos_thermal.c                   |   41
+> >> > +++++++++++++++----- 5 files changed, 70 insertions(+), 10
+> >> > deletions(-) create mode 100644
+> >> > Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+> >> >
+> >> Lukasz, please address comments from ml.
+> >>
+> >
+> > Ok. I'm going to prepare v2
+> 
+> Please respin your v2 on top of my 3 patches to avoid merge conflicts.
+> 
 
-Right now it seams to be true that we have one bit per mux (in DEVCONF0 on
-OMAP3 for example). So that would work fine, but There could be different
-registers around with more than one bit per mux.
+No problem.
 
-Another way to deal with this is to:
-in case of pinctrl-single,bit-per-mux we assume one bit per mux and create
-entries based on the pinctrl-single,function-mask's bits.
+Yours patches to be applied:
 
-In case we have more than one bit for the mux in the register we could have
-optional property stating the number of different muxes handled by the regi=
-ster.
+[PATCH 1/1] clk: exynos4: Add clock entries for TMU
+[PATCH 1/2] Thermal: exynos: Add clk_{un}prepare APIs
+[PATCH 2/2] Thermal: exynos: Add compatible string for exynos4412
 
-One bit per mux type:
+Thanks for information.
 
-control_devconf0: pinmux@48002274 {
-        compatible =3D "pinctrl-single";
-        reg =3D <0x48002274 4>;   /* Single register */
-        #address-cells =3D <1>;
-        #size-cells =3D <0>;
-        pinctrl-single,bit-per-mux;
-        pinctrl-single,register-width =3D <32>;
-        pinctrl-single,function-mask =3D <0x5F>;
-};
 
-Results six entries.
+-- 
+Best regards,
 
-control_devconf0: pinmux@48002274 {
-        compatible =3D "pinctrl-single";
-        reg =3D <0x48002274 4>;   /* Single register */
-        #address-cells =3D <1>;
-        #size-cells =3D <0>;
-        pinctrl-single,bit-per-mux;
-        pinctrl-single,functions-in-register =3D <3>;
-        pinctrl-single,register-width =3D <32>;
-        pinctrl-single,function-mask =3D <0x5F>;
-};
+Lukasz Majewski
 
-Will results three entries.
-
-In both cases we still need to test overlaps in the handled bits.
-
--- =
-
-P=E9ter
+Samsung R&D Poland (SRPOL) | Linux Platform Group
