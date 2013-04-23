@@ -1,152 +1,257 @@
 From: James Hogan <james.hogan@imgtec.com>
-Subject: [PATCH 4/8] metag: tz1090: add <asm/soc-tz1090/gpio.h>
-Date: Tue, 23 Apr 2013 15:33:23 +0100
-Message-ID: <1366727607-27444-5-git-send-email-james.hogan@imgtec.com>
+Subject: [PATCH 2/8] metag: minimal TZ1090 (Comet) SoC infrastructure
+Date: Tue, 23 Apr 2013 15:33:21 +0100
+Message-ID: <1366727607-27444-3-git-send-email-james.hogan@imgtec.com>
 References: <1366727607-27444-1-git-send-email-james.hogan@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1366727607-27444-1-git-send-email-james.hogan@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-doc-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, James Hogan <james.hogan@imgtec.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, James Hogan <james.hogan@imgtec.com>, Rob Landley <rob@landley.net>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add <asm/soc-tz1090/gpio.h> with definitions to number all the GPIOs
-available on-chip. This is for use by the pinctrl and GPIO drivers.
+Add really minimal support for Toumaz Xenif TZ1090 SoC (A.K.A. Comet).
+This consists of minimal build infrastructure, device tree files, a
+machine definition, and a defconfig based on meta2_defconfig.
+
+This SoC contains a 2-threaded HTP (Meta 2) as the main application
+processor, and is found in a number of development boards and digital
+radios, such as the Minimorph Development Platform.
 
 Signed-off-by: James Hogan <james.hogan@imgtec.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-doc@vger.kernel.org
 ---
- arch/metag/include/asm/soc-tz1090/gpio.h | 121 +++++++++++++++++++++++++++++++
- 1 file changed, 121 insertions(+)
- create mode 100644 arch/metag/include/asm/soc-tz1090/gpio.h
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ arch/metag/Kconfig.soc                             |  9 +++++
+ arch/metag/Makefile                                |  8 ++++-
+ arch/metag/boot/dts/Makefile                       |  2 ++
+ arch/metag/boot/dts/tz1090.dtsi                    | 29 +++++++++++++++
+ arch/metag/boot/dts/tz1090_generic.dts             | 10 ++++++
+ arch/metag/configs/tz1090_defconfig                | 41 ++++++++++++++++++++++
+ arch/metag/soc/tz1090/Makefile                     |  5 +++
+ arch/metag/soc/tz1090/setup.c                      | 21 +++++++++++
+ 9 files changed, 125 insertions(+), 1 deletion(-)
+ create mode 100644 arch/metag/boot/dts/tz1090.dtsi
+ create mode 100644 arch/metag/boot/dts/tz1090_generic.dts
+ create mode 100644 arch/metag/configs/tz1090_defconfig
+ create mode 100644 arch/metag/soc/tz1090/Makefile
+ create mode 100644 arch/metag/soc/tz1090/setup.c
 
-diff --git a/arch/metag/include/asm/soc-tz1090/gpio.h b/arch/metag/include/asm/soc-tz1090/gpio.h
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 19e1ef7..4366623 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -54,6 +54,7 @@ snps 	Synopsys, Inc.
+ st	STMicroelectronics
+ ste	ST-Ericsson
+ stericsson	ST-Ericsson
++toumaz	Toumaz
+ ti	Texas Instruments
+ toshiba	Toshiba Corporation
+ via	VIA Technologies, Inc.
+diff --git a/arch/metag/Kconfig.soc b/arch/metag/Kconfig.soc
+index ec079cf..653b479 100644
+--- a/arch/metag/Kconfig.soc
++++ b/arch/metag/Kconfig.soc
+@@ -14,6 +14,15 @@ config META21_FPGA
+ 	help
+ 	  This is a Meta 2.1 FPGA bitstream, just a bare CPU.
+ 
++config SOC_TZ1090
++	bool "Toumaz Xenif TZ1090 SoC (Comet)"
++	select METAG_LNKGET_AROUND_CACHE
++	select METAG_META21
++	select METAG_SMP_WRITE_REORDERING
++	help
++	  This is a Toumaz Technology Xenif TZ1090 (A.K.A. Comet) SoC containing
++	  a 2-threaded HTP.
++
+ endchoice
+ 
+ menu "SoC configuration"
+diff --git a/arch/metag/Makefile b/arch/metag/Makefile
+index b566116..7f8cf4c 100644
+--- a/arch/metag/Makefile
++++ b/arch/metag/Makefile
+@@ -20,7 +20,7 @@ checkflags-$(CONFIG_METAG_META12)	+= -DMETAC_1_2
+ checkflags-$(CONFIG_METAG_META21)	+= -DMETAC_2_1
+ CHECKFLAGS				+= -D__metag__ $(checkflags-y)
+ 
+-KBUILD_DEFCONFIG			:= meta2_defconfig
++KBUILD_DEFCONFIG			:= tz1090_defconfig
+ 
+ sflags-$(CONFIG_METAG_META12)		+= -mmetac=1.2
+ ifeq ($(CONFIG_METAG_META12),y)
+@@ -46,6 +46,12 @@ core-y					+= arch/metag/boot/dts/
+ core-y					+= arch/metag/kernel/
+ core-y					+= arch/metag/mm/
+ 
++# SoCs
++socdir-$(CONFIG_SOC_TZ1090)		+= tz1090
++
++socdirs		:= $(filter-out ., $(patsubst %,%/,$(socdir-y)))
++core-y		+= $(addprefix arch/metag/soc/, $(socdirs))
++
+ libs-y					+= arch/metag/lib/
+ libs-y					+= arch/metag/tbx/
+ 
+diff --git a/arch/metag/boot/dts/Makefile b/arch/metag/boot/dts/Makefile
+index dbd9521..72c1218 100644
+--- a/arch/metag/boot/dts/Makefile
++++ b/arch/metag/boot/dts/Makefile
+@@ -1,7 +1,9 @@
+ dtb-y	+= skeleton.dtb
++dtb-y	+= tz1090_generic.dtb
+ 
+ # Built-in dtb
+ builtindtb-y				:= skeleton
++builtindtb-$(CONFIG_SOC_TZ1090)		:= tz1090_generic
+ 
+ ifneq ($(CONFIG_METAG_BUILTIN_DTB_NAME),"")
+ 	builtindtb-y			:= $(patsubst "%",%,$(CONFIG_METAG_BUILTIN_DTB_NAME))
+diff --git a/arch/metag/boot/dts/tz1090.dtsi b/arch/metag/boot/dts/tz1090.dtsi
 new file mode 100644
-index 0000000..d19fe02
+index 0000000..ca057f0
 --- /dev/null
-+++ b/arch/metag/include/asm/soc-tz1090/gpio.h
-@@ -0,0 +1,121 @@
-+#ifndef _TZ1090_GPIO_H_
-+#define _TZ1090_GPIO_H_
++++ b/arch/metag/boot/dts/tz1090.dtsi
+@@ -0,0 +1,29 @@
++/*
++ * Copyright (C) 2012 Imagination Technologies Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
 +
-+/* TZ1090 has 90 main GPIOs, in 3 banks of 30. */
-+#define NR_BUILTIN_GPIO		90
-+/* Plus 7 PDC GPIOs */
-+#define NR_PDC_GPIO		7
++/include/ "skeleton.dtsi"
 +
-+#define GPIO_0_BASE	0
-+#define GPIO_0_PIN(x)	(GPIO_0_BASE + (x))
++/ {
++	compatible = "toumaz,tz1090", "img,meta";
 +
-+#define GPIO_1_BASE	30
-+#define GPIO_1_PIN(x)	(GPIO_1_BASE + (x))
++	interrupt-parent = <&intc>;
 +
-+#define GPIO_2_BASE	60
-+#define GPIO_2_PIN(x)	(GPIO_2_BASE + (x))
++	intc: interrupt-controller {
++		compatible = "img,meta-intc";
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		num-banks = <2>;
++	};
 +
-+#define GPIO_PDC_BASE	NR_BUILTIN_GPIO
-+#define GPIO_PDC_PIN(x)	(GPIO_PDC_BASE + (x))
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++	};
++};
+diff --git a/arch/metag/boot/dts/tz1090_generic.dts b/arch/metag/boot/dts/tz1090_generic.dts
+new file mode 100644
+index 0000000..aa826cb
+--- /dev/null
++++ b/arch/metag/boot/dts/tz1090_generic.dts
+@@ -0,0 +1,10 @@
++/*
++ * Copyright (C) 2012 Imagination Technologies Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++/dts-v1/;
 +
-+#define GPIO_SDIO_CLK		GPIO_0_PIN(0)
-+#define GPIO_SDIO_CMD		GPIO_0_PIN(1)
-+#define GPIO_SDIO_D0		GPIO_0_PIN(2)
-+#define GPIO_SDIO_D1		GPIO_0_PIN(3)
-+#define GPIO_SDIO_D2		GPIO_0_PIN(4)
-+#define GPIO_SDIO_D3		GPIO_0_PIN(5)
-+#define GPIO_SDH_CD		GPIO_0_PIN(6)
-+#define GPIO_SDH_WP		GPIO_0_PIN(7)
-+#define GPIO_SPI0_MCLK		GPIO_0_PIN(8)
-+#define GPIO_SPI0_CS0		GPIO_0_PIN(9)
-+#define GPIO_SPI0_CS1		GPIO_0_PIN(10)
-+#define GPIO_SPI0_CS2		GPIO_0_PIN(11)
-+#define GPIO_SPI0_DOUT		GPIO_0_PIN(12)
-+#define GPIO_SPI0_DIN		GPIO_0_PIN(13)
-+#define GPIO_SPI1_MCLK		GPIO_0_PIN(14)
-+#define GPIO_SPI1_CS0		GPIO_0_PIN(15)
-+#define GPIO_SPI1_CS1		GPIO_0_PIN(16)
-+#define GPIO_SPI1_CS2		GPIO_0_PIN(17)
-+#define GPIO_SPI1_DOUT		GPIO_0_PIN(18)
-+#define GPIO_SPI1_DIN		GPIO_0_PIN(19)
-+#define GPIO_UART0_RXD		GPIO_0_PIN(20)
-+#define GPIO_UART0_TXD		GPIO_0_PIN(21)
-+#define GPIO_UART0_CTS		GPIO_0_PIN(22)
-+#define GPIO_UART0_RTS		GPIO_0_PIN(23)
-+#define GPIO_UART1_RXD		GPIO_0_PIN(24)
-+#define GPIO_UART1_TXD		GPIO_0_PIN(25)
-+#define GPIO_SCB0_SDAT		GPIO_0_PIN(26)
-+#define GPIO_SCB0_SCLK		GPIO_0_PIN(27)
-+#define GPIO_SCB1_SDAT		GPIO_0_PIN(28)
-+#define GPIO_SCB1_SCLK		GPIO_0_PIN(29)
-+#define GPIO_SCB2_SDAT		GPIO_1_PIN(0)
-+#define GPIO_SCB2_SCLK		GPIO_1_PIN(1)
-+#define GPIO_I2S_MCLK		GPIO_1_PIN(2)
-+#define GPIO_I2S_BCLK_OUT	GPIO_1_PIN(3)
-+#define GPIO_I2S_LRCLK_OUT	GPIO_1_PIN(4)
-+#define GPIO_I2S_DOUT0		GPIO_1_PIN(5)
-+#define GPIO_I2S_DOUT1		GPIO_1_PIN(6)
-+#define GPIO_I2S_DOUT2		GPIO_1_PIN(7)
-+#define GPIO_I2S_DIN		GPIO_1_PIN(8)
-+#define GPIO_PDM_A		GPIO_1_PIN(9)
-+#define GPIO_PDM_B		GPIO_1_PIN(10)
-+#define GPIO_PDM_C		GPIO_1_PIN(11)
-+#define GPIO_PDM_D		GPIO_1_PIN(12)
-+#define GPIO_TFT_RED0		GPIO_1_PIN(13)
-+#define GPIO_TFT_RED1		GPIO_1_PIN(14)
-+#define GPIO_TFT_RED2		GPIO_1_PIN(15)
-+#define GPIO_TFT_RED3		GPIO_1_PIN(16)
-+#define GPIO_TFT_RED4		GPIO_1_PIN(17)
-+#define GPIO_TFT_RED5		GPIO_1_PIN(18)
-+#define GPIO_TFT_RED6		GPIO_1_PIN(19)
-+#define GPIO_TFT_RED7		GPIO_1_PIN(20)
-+#define GPIO_TFT_GREEN0		GPIO_1_PIN(21)
-+#define GPIO_TFT_GREEN1		GPIO_1_PIN(22)
-+#define GPIO_TFT_GREEN2		GPIO_1_PIN(23)
-+#define GPIO_TFT_GREEN3		GPIO_1_PIN(24)
-+#define GPIO_TFT_GREEN4		GPIO_1_PIN(25)
-+#define GPIO_TFT_GREEN5		GPIO_1_PIN(26)
-+#define GPIO_TFT_GREEN6		GPIO_1_PIN(27)
-+#define GPIO_TFT_GREEN7		GPIO_1_PIN(28)
-+#define GPIO_TFT_BLUE0		GPIO_1_PIN(29)
-+#define GPIO_TFT_BLUE1		GPIO_2_PIN(0)
-+#define GPIO_TFT_BLUE2		GPIO_2_PIN(1)
-+#define GPIO_TFT_BLUE3		GPIO_2_PIN(2)
-+#define GPIO_TFT_BLUE4		GPIO_2_PIN(3)
-+#define GPIO_TFT_BLUE5		GPIO_2_PIN(4)
-+#define GPIO_TFT_BLUE6		GPIO_2_PIN(5)
-+#define GPIO_TFT_BLUE7		GPIO_2_PIN(6)
-+#define GPIO_TFT_VDDEN_GD	GPIO_2_PIN(7)
-+#define GPIO_TFT_PANELCLK	GPIO_2_PIN(8)
-+#define GPIO_TFT_BLANK_LS	GPIO_2_PIN(9)
-+#define GPIO_TFT_VSYNC_NS	GPIO_2_PIN(10)
-+#define GPIO_TFT_HSYNC_NR	GPIO_2_PIN(11)
-+#define GPIO_TFT_VD12ACB	GPIO_2_PIN(12)
-+#define GPIO_TFT_PWRSAVE	GPIO_2_PIN(13)
-+#define GPIO_TX_ON		GPIO_2_PIN(14)
-+#define GPIO_RX_ON		GPIO_2_PIN(15)
-+#define GPIO_PLL_ON		GPIO_2_PIN(16)
-+#define GPIO_PA_ON		GPIO_2_PIN(17)
-+#define GPIO_RX_HP		GPIO_2_PIN(18)
-+#define GPIO_GAIN0		GPIO_2_PIN(19)
-+#define GPIO_GAIN1		GPIO_2_PIN(20)
-+#define GPIO_GAIN2		GPIO_2_PIN(21)
-+#define GPIO_GAIN3		GPIO_2_PIN(22)
-+#define GPIO_GAIN4		GPIO_2_PIN(23)
-+#define GPIO_GAIN5		GPIO_2_PIN(24)
-+#define GPIO_GAIN6		GPIO_2_PIN(25)
-+#define GPIO_GAIN7		GPIO_2_PIN(26)
-+#define GPIO_ANT_SEL0		GPIO_2_PIN(27)
-+#define GPIO_ANT_SEL1		GPIO_2_PIN(28)
-+#define GPIO_SDH_CLK_IN		GPIO_2_PIN(29)
++/include/ "tz1090.dtsi"
+diff --git a/arch/metag/configs/tz1090_defconfig b/arch/metag/configs/tz1090_defconfig
+new file mode 100644
+index 0000000..4794094
+--- /dev/null
++++ b/arch/metag/configs/tz1090_defconfig
+@@ -0,0 +1,41 @@
++# CONFIG_LOCALVERSION_AUTO is not set
++# CONFIG_SWAP is not set
++CONFIG_SYSVIPC=y
++CONFIG_SYSFS_DEPRECATED=y
++CONFIG_SYSFS_DEPRECATED_V2=y
++CONFIG_KALLSYMS_ALL=y
++# CONFIG_ELF_CORE is not set
++CONFIG_SLAB=y
++# CONFIG_BLK_DEV_BSG is not set
++CONFIG_PARTITION_ADVANCED=y
++# CONFIG_MSDOS_PARTITION is not set
++# CONFIG_IOSCHED_DEADLINE is not set
++# CONFIG_IOSCHED_CFQ is not set
++CONFIG_FLATMEM_MANUAL=y
++CONFIG_SOC_TZ1090=y
++CONFIG_METAG_HALT_ON_PANIC=y
++# CONFIG_METAG_FPU is not set
++CONFIG_METAG_DA=y
++CONFIG_HZ_100=y
++CONFIG_DEVTMPFS=y
++# CONFIG_STANDALONE is not set
++# CONFIG_PREVENT_FIRMWARE_BUILD is not set
++# CONFIG_FW_LOADER is not set
++CONFIG_BLK_DEV_RAM=y
++CONFIG_BLK_DEV_RAM_COUNT=1
++CONFIG_BLK_DEV_RAM_SIZE=16384
++# CONFIG_INPUT is not set
++# CONFIG_SERIO is not set
++# CONFIG_VT is not set
++# CONFIG_LEGACY_PTYS is not set
++CONFIG_DA_TTY=y
++CONFIG_DA_CONSOLE=y
++# CONFIG_DEVKMEM is not set
++# CONFIG_HW_RANDOM is not set
++# CONFIG_HWMON is not set
++# CONFIG_USB_SUPPORT is not set
++# CONFIG_DNOTIFY is not set
++CONFIG_TMPFS=y
++# CONFIG_MISC_FILESYSTEMS is not set
++# CONFIG_SCHED_DEBUG is not set
++CONFIG_DEBUG_INFO=y
+diff --git a/arch/metag/soc/tz1090/Makefile b/arch/metag/soc/tz1090/Makefile
+new file mode 100644
+index 0000000..954dd76
+--- /dev/null
++++ b/arch/metag/soc/tz1090/Makefile
+@@ -0,0 +1,5 @@
++#
++# Makefile for TZ1090 platform setup.
++#
 +
-+/* PDC GPIOs */
-+#define GPIO_PDC_GPIO0		GPIO_PDC_PIN(0)
-+#define GPIO_PDC_GPIO1		GPIO_PDC_PIN(1)
-+#define GPIO_SYS_WAKE0		GPIO_PDC_PIN(2)
-+#define GPIO_SYS_WAKE1		GPIO_PDC_PIN(3)
-+#define GPIO_SYS_WAKE2		GPIO_PDC_PIN(4)
-+#define GPIO_IR_DATA		GPIO_PDC_PIN(5)
-+#define GPIO_EXT_POWER		GPIO_PDC_PIN(6)
++obj-y	+= setup.o
+diff --git a/arch/metag/soc/tz1090/setup.c b/arch/metag/soc/tz1090/setup.c
+new file mode 100644
+index 0000000..fbd7074
+--- /dev/null
++++ b/arch/metag/soc/tz1090/setup.c
+@@ -0,0 +1,21 @@
++/*
++ * setup.c
++ *
++ * Copyright (C) 2009-2013 Imagination Technologies Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
 +
-+#endif
++#include <linux/init.h>
++#include <asm/mach/arch.h>
++
++static const char *tz1090_boards_compat[] __initdata = {
++	"toumaz,tz1090",
++	NULL,
++};
++
++MACHINE_START(TZ1090, "Generic TZ1090")
++	.dt_compat	= tz1090_boards_compat,
++MACHINE_END
 -- 
 1.8.1.2
+
+
