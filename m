@@ -1,51 +1,40 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 3/3] gpio: grgpio: Add irq support
-Date: Tue, 23 Apr 2013 13:14:51 +0200
-Message-ID: <CACRpkdbXFBBetC9uh=AWVNV86oA1S2Ls1dNCMOj8iAur7V2E3w@mail.gmail.com>
-References: <1363355140-28216-1-git-send-email-andreas@gaisler.com>
-	<1363355140-28216-4-git-send-email-andreas@gaisler.com>
-	<CACRpkdZ4AK=3PGQ-3+ffWsH9B-ywrDkMxnePWat1=P7WoqgJWA@mail.gmail.com>
-	<516BF4DA.6000204@gaisler.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <516BF4DA.6000204@gaisler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Larson <andreas@gaisler.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <anton.vorontsov@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, software@gaisler.com
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH v3 0/3] drm/exynos: Add device tree support for IPP driver
+Date: Tue, 23 Apr 2013 13:34:35 +0200
+Message-ID: <1366716878-5692-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: inki.dae@samsung.com
+Cc: linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, sw0312.kim@samsung.com, chulspro.kim@samsung.com, jaejoon.seo@samsung.com, jmock.shin@samsung.com, jy0.jeon@samsung.com, th908.kim@samsung.com, lsmin.lee@samsung.com, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 15, 2013 at 2:38 PM, Andreas Larson <andreas@gaisler.com> wrote:
+Hi,
 
-> On 2013-04-10 21:25, Linus Walleij wrote:
->>> +int grgpio_irq_map(struct irq_domain *d, unsigned int virq,
-(...)
->>> +       /* Request underlying irq if not already requested */
->>> +       lirq->virq = virq;
->>> +       uirq = &priv->uirqs[lirq->index];
->>> +       if (uirq->refcnt == 0) {
->>> +               ret = request_irq(uirq->uirq, grgpio_irq_handler, 0,
->>> +                                 dev_name(priv->dev), priv);
->>
->>
->> No, please request all present uirqs in probe() before creating the
->> irqdomain.
->
->
-> The reason for doing it at irq_map and not in probe is that one
-> typical hardware setup for this core is that it has irqs that are shared
-> with pretty much all other cores in the system. Therefore, if this
-> drivers requests all its irqs in the probe function, pretty much all the
-> drivers for the other cores in the system that were not lucky enough to
-> request their irq before this driver will fail their probes in such a
-> hardware setup. This driver can not share irq:s so even if the other
-> drivers can handle shared irqs they are out of luck if this driver is
-> probed first.
->
-> That is why only the irqs that are actually used should be requested and
-> thus why the driver does it on demand instead of in the probe.
+This small patch series adds device tree support for the DRM FIMC driver.
+The binding documentation can be found in -next at Documentation/devicetree/
+bindings/media/samsung-fimc.txt.
 
-OK I buy that explanation...
+Changes since v2:
+ - dropped addition of 'dev' field to struct fimc_context,
+ - added more error logs and comments,
+ - fixed error paths in fimc_setup_clocks() function.
+
+Changes since v1:
+ - removed devm_kfree() that got erroneously re-added in patch 2/3 during
+   rebase.
 
 Thanks,
-Linus Walleij
+Sylwester
+
+Sylwester Nawrocki (3):
+  drm/exynos: remove redundant devm_kfree()
+  drm/exynos: rework fimc clocks handling
+  drm/exynos: add device tree support for fimc ipp driver
+
+ drivers/gpu/drm/exynos/Kconfig           |    2 +-
+ drivers/gpu/drm/exynos/exynos_drm_fimc.c |  273 +++++++++++++++++-------------
+ drivers/gpu/drm/exynos/regs-fimc.h       |    7 +-
+ 3 files changed, 157 insertions(+), 125 deletions(-)
+
+--
+1.7.9.5
