@@ -1,48 +1,71 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [net-next PATCH 0/3] Adding phy register fixup in DT
-Date: Tue, 23 Apr 2013 10:02:57 +0200
-Message-ID: <20130423080257.GQ32299@pengutronix.de>
-References: <1366654838-26479-1-git-send-email-mugunthanvnm@ti.com>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: Re: [PATCH 2/6] thermal:exynos4: TMU Common clock framework support
+ for TMU (Thermal Monitoring Unit)
+Date: Tue, 23 Apr 2013 10:06:47 +0200
+Message-ID: <20130423100647.20d80c73@amdc308.digital.local>
+References: <1366389493-8239-1-git-send-email-l.majewski@samsung.com>
+ <1366389493-8239-3-git-send-email-l.majewski@samsung.com>
+ <CAK9yfHxWq5CrhY=A2HMZnH3SQww2sPTBM_zQ9hoinyk1zger7g@mail.gmail.com>
+ <20130423081724.03b3b422@amdc308.digital.local>
+ <CAK9yfHwx_3Lkt_xnzttvBK=0xGqdxL+f=QfdYjuo3mHV8NtNQA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1366654838-26479-1-git-send-email-mugunthanvnm@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: Mugunthan V N <mugunthanvnm@ti.com>
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, davem@davemloft.net
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <CAK9yfHwx_3Lkt_xnzttvBK=0xGqdxL+f=QfdYjuo3mHV8NtNQA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Zhang Rui <rui.zhang@intel.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Amit Daniel Kachhap <amit.kachhap@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, "eduardo.valentin@ti.com" <eduardo.valentin@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 22, 2013 at 11:50:35PM +0530, Mugunthan V N wrote:
-> In earlier days phy fixup was added to phy frame work in board files.
-> As there won't be any board files here after the same has to be done in DT
-> This patch series adds the following features
-> * support for adding phy resigter fixup via DT
-> * adds phy id for EVMsk n DTS file
-> * adds phy fixup for AM335x EVM and EVMsk
+Hi Sachin,
+
+> Hi Lukasz,
 > 
-> Mugunthan V N (3):
->   drivers: of: add phy fixup support in DT
->   ARM: dts: AM33XX: Add CPSW phy_id device tree data to am335x-evmsk
->   ARM: dts: AM33XX: add phy fixup for evm and evmsk boards
+> On 23 April 2013 11:47, Lukasz Majewski <l.majewski@samsung.com>
+> wrote:
+> > Hi Sachin,
+> >
+> >> On 19 April 2013 22:08, Lukasz Majewski <l.majewski@samsung.com>
+> >> wrote:
+> >> > This patch modifies exynos_thermal.c file to use
+> >> > clk_disable_unprepare() and clk_prepare_enable() instead of
+> >> > clk_{enable|disable}.
+> >> >
+> >> > Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+> >> > Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> >> > ---
+> >>
+> >> I have already submitted a similar patch for this:
+> >> http://permalink.gmane.org/gmane.linux.power-management.general/33310
+> >>
+> >>
+> >
+> > Thanks for pointing to the correct patch.
+> >
+> > However, I've got a question:
+> >
+> > The patch only changes clock names at exynos_tmu_{probe|remove}.
+> >
+> > Correct me if I'm wrong, but shouldn't we also change clock_enable
+> > to clk_prepare_enable at exynos_tmu_read()? (Are we guaranteed,
+> > that we will NOT sleep there?)
+> 
+> Since clk_prepare does not do anything, i thought it was sufficient to
+> have it once in probe and then unprepare in remove.
+> Do you see a real problem in this implementation. If so I can update
+> it to use clk_prepare_enable at other places as well.
+> 
+I just wanted to stick to the common clock new API. It seems to me that
+exynos_tmu_read() might sleep, but I'm quite novice at TMU :-).
 
-I generally do not offend to phy fixups from the devicetree. I see
-though that becomes more and more common that we have to configure
-the tx delays in phys.
+If yours patches work, then we shall apply them.
 
-The current way seems to be to hardcode register values for each board
-which seems not very flexible and forces us to read phy datasheets
-each time for a new board.
-
-Wouldn't it make more sense to configure the actual delays (in ns) and
-let the phy drivers figure out how to turn this into register values?
-
-Not that I volunteer to write such things... :-/
-
-Sascha
+I will do my best to test yours three patches ASAP on my setup.
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Best regards,
+
+Lukasz Majewski
+
+Samsung R&D Poland (SRPOL) | Linux Platform Group
