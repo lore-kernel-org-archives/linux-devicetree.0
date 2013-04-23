@@ -1,15 +1,16 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v8 0/3] of/pci: Provide common support for PCI DT parsing
-Date: Mon, 22 Apr 2013 19:02:51 -0400
-Message-ID: <20130422230251.GL25724@titan.lakedaemon.net>
-References: <1366627295-16964-1-git-send-email-Andrew.Murray@arm.com>
- <20130422165343.GE25724@titan.lakedaemon.net>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [RFC PATCH v2 09/13] ARM: mach-shmobile: cpus/cpu nodes dts
+ updates
+Date: Tue, 23 Apr 2013 10:55:11 +0900
+Message-ID: <20130423015511.GK12017@verge.net.au>
+References: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1366644455-16550-10-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20130422165343.GE25724@titan.lakedaemon.net>
+In-Reply-To: <1366644455-16550-10-git-send-email-lorenzo.pieralisi@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,47 +20,57 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Murray <Andrew.Murray@arm.com>
-Cc: linux-mips@linux-mips.org, siva.kallam@samsung.com, linux-pci@vger.kernel.org, linus.walleij@linaro.org, thierry.reding@avionic-design.de, Liviu.Dudau@arm.com, grant.likely@secretlab.ca, juhosg@openwrt.org, paulus@samba.org, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, jg1.han@samsung.com, jgunthorpe@obsidianresearch.com, thomas.abraham@linaro.org, benh@kernel.crashing.org, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, kgene.kim@samsung.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, monstr@monstr.eu, linux-kernel@vger.kernel.org, suren.reddy@samsung.com, linuxppc-dev@lists.ozlabs.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Dave Martin <dave.martin@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>, Sekhar Nori <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Viresh Kumar <viresh.kumar@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Lennert Buytenhek <kernel@wantstofly.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, David Brown <davidb@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Barry
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 22, 2013 at 12:53:43PM -0400, Jason Cooper wrote:
-> On Mon, Apr 22, 2013 at 11:41:32AM +0100, Andrew Murray wrote:
-> > This patchset factors out duplicated code associated with parsing PCI
-> > DT "ranges" properties across the architectures and introduces a
-> > "ranges" parser. This parser "of_pci_range_parser" can be used directly
-> > by ARM host bridge drivers enabling them to obtain ranges from device
-> > trees.
-> > 
-> > I've included the Reviewed-by, Tested-by and Acked-by's received from v5/v6/v7
-> > in this patchset, earlier versions of this patchset (v3) have been tested-by:
-> > 
-> > Thierry Reding <thierry.reding@avionic-design.de>
-> > Jingoo Han <jg1.han@samsung.com>
-> > 
-> > I've tested that this patchset builds and runs on ARM and that it builds on
-> > PowerPC, x86_64 and MIPS.
-> 
-> Andrew,
-> 
-> Unfortunately, the mvebu/drivers branch containing your series had to be
-> dropped from arm-soc for v3.10.  This was not due to your series, but
-> since arm-soc's granularity is branches, your series was caught in the
-> drop.
-> 
-> As the mvebu-pcie driver is now v3.11 material, I have taken the
-> opportunity to upgrade from your v7 patchset to v8.  You can find the
-> whole branch at mvebu-next/pcie.
-> 
-> mvebu-next/pcie *will* be rebased onto v3.9 once it drops.  Several
-> dependencies will be removed (since they will have been merged into
-> v3.9).
+On Mon, Apr 22, 2013 at 04:27:31PM +0100, Lorenzo Pieralisi wrote:
+> This patch updates the in-kernel dts files according to the latest cpus
+> and cpu bindings updates for ARM.
 
-s/v3.9/v3.10-rc1/g  :)
+Sorry to be a pain, but I would appreciate two separate patches,
+one per-Soc.
 
-> Once the rebase is done, I'll send a pull request to Arnd and Olof so we
-> can get as many cycles on -next as possible.
-
-thx,
-
-Jason.
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> ---
+>  arch/arm/boot/dts/r8a7740.dtsi | 3 +++
+>  arch/arm/boot/dts/sh7372.dtsi  | 4 ++++
+>  2 files changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+> index 798fa35..b47bb36 100644
+> --- a/arch/arm/boot/dts/r8a7740.dtsi
+> +++ b/arch/arm/boot/dts/r8a7740.dtsi
+> @@ -14,8 +14,11 @@
+>  	compatible = "renesas,r8a7740";
+>  
+>  	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+>  		cpu@0 {
+>  			compatible = "arm,cortex-a9";
+> +			reg = <0x0>;
+>  		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/sh7372.dtsi b/arch/arm/boot/dts/sh7372.dtsi
+> index 677fc60..78478af 100644
+> --- a/arch/arm/boot/dts/sh7372.dtsi
+> +++ b/arch/arm/boot/dts/sh7372.dtsi
+> @@ -14,8 +14,12 @@
+>  	compatible = "renesas,sh7372";
+>  
+>  	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+>  		cpu@0 {
+>  			compatible = "arm,cortex-a8";
+> +			reg = <0x0>;
+>  		};
+>  	};
+>  };
+> -- 
+> 1.7.12
+> 
+> 
