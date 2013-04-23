@@ -1,131 +1,140 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Query on pinctrl usage for DT nodes
-Date: Tue, 23 Apr 2013 11:17:54 -0700
-Message-ID: <20130423181753.GK10155@atomide.com>
-References: <CA+V-a8uiPwsAD--OHFAE=i2ed+-wbXm4p2deZXr92+Zv6GDS1w@mail.gmail.com>
- <515C5C76.3080009@wwwdotorg.org>
- <CA+V-a8t3wtP77DdeUoQHKMjAuWmV+ude+1J3UjJmMTqobgStjA@mail.gmail.com>
- <5162FD4A.1030909@wwwdotorg.org>
- <CA+V-a8vwdCkyMqiynj5BodXbjwJ=e4qNb-29FhLweqbjc7DBQA@mail.gmail.com>
- <5165A22B.4070200@wwwdotorg.org>
- <20130410203408.GP10155@atomide.com> <516BB99F.2080502@ti.com>
- <20130416213232.GU10155@atomide.com> <51763B7B.707@ti.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [RFC PATCH v2 03/13] ARM: mach-at91: cpus/cpu node dts updates
+Date: Tue, 23 Apr 2013 21:52:59 +0200
+Message-ID: <20130423195259.GJ4998@game.jcrosoft.org>
+References: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1366644455-16550-4-git-send-email-lorenzo.pieralisi@arm.com>
+ <51768892.7060807@gmail.com>
+ <20130423135304.GG22946@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <51763B7B.707-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20130423135304.GG22946@e102568-lin.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Viresh Kumar <viresh.kumar@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Sekhar Nori <nsekhar@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Simon Horman <horms@verge.net.au>, Amit Kucheria <amit.kucheria@linaro.org>, Barry Song <baohua.song@csr.com>, David Brown <davidb@codeaurora.org>, Vinayak Kale <vkale@apm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Lennert Buytenhek <kernel@wantstofly.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [130423 00:47]:
-> On 04/16/2013 11:32 PM, Tony Lindgren wrote:
-> > * Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [130415 01:30]:
-> >> On 04/10/2013 10:34 PM, Tony Lindgren wrote:
-> >>> Yeah how about just change the pintctrl-single,bits register
-> >>> naming to be register + bit?  Something like 0xdeadbeef.0 and
-> >>> 0xdeadbeef.1 and so on.
-> >>
-> >> Something like this might work I think. It is going to be a bit tricky IMHO
-> >> since we might need span out new 'register' every time a device requests for a
-> >> new pinctrl-single,bits for already used register in the
-> >> pinctrl-single,bit-per-mux area. In this way we still can make sure that
-> >> certain bit are only used by a single driver.
+On 14:53 Tue 23 Apr     , Lorenzo Pieralisi wrote:
+> On Tue, Apr 23, 2013 at 02:11:46PM +0100, Rob Herring wrote:
+> > On 04/22/2013 10:27 AM, Lorenzo Pieralisi wrote:
+> > > This patch updates the in-kernel dts files according to the latest cpus
+> > > and cpu bindings updates for ARM.
+> > > 
+> > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > > ---
+> > >  arch/arm/boot/dts/at91sam9260.dtsi | 2 +-
+> > >  arch/arm/boot/dts/at91sam9263.dtsi | 2 +-
+> > >  arch/arm/boot/dts/at91sam9g45.dtsi | 2 +-
+> > >  arch/arm/boot/dts/at91sam9n12.dtsi | 2 +-
+> > >  4 files changed, 4 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
+> > > index cb7bcc5..2e9de85 100644
+> > > --- a/arch/arm/boot/dts/at91sam9260.dtsi
+> > > +++ b/arch/arm/boot/dts/at91sam9260.dtsi
+> > > @@ -33,7 +33,7 @@
+> > >  	};
+> > >  	cpus {
+> > >  		cpu@0 {
+> > > -			compatible = "arm,arm926ejs";
+> > > +			compatible = "arm,arm926";
 > > 
-> > OK. If it's one bit per mux type register we should be able to create
-> > the right amount of entries based on the submask in pinctrs-single,bit?
+> > I don't understand why you are doing this. If this does not match the
+> > documentation, fix the documentation. We can't continue on changing dts
+> > files without reqard to breaking compatibility.
 > 
-> Right now it seams to be true that we have one bit per mux (in DEVCONF0 on
-> OMAP3 for example). So that would work fine, but There could be different
-> registers around with more than one bit per mux.
-
-Yes you are right, we should cover that case too. But maybe we
-can wait until we have such an example :)
- 
-> Another way to deal with this is to:
-> in case of pinctrl-single,bit-per-mux we assume one bit per mux and create
-> entries based on the pinctrl-single,function-mask's bits.
+> IMHO compatibility is already broken. There are a number of dts in the
+> kernel missing cpus and cpu nodes, others with cpu nodes missing
+> device_type = "cpu", missing cpu nodes compatible properties and the list
+> goes on and on. Those files got merged in the kernel before bindings were
+> properly defined for ARM so at that point in time the only reference was the
+> ePAPR and still, it was not followed (eg my broken patch above fails to add
+> device_type = "cpu" to the cpu node, should I change the documentation (ePAPR)
+> to make the dts above compliant ? I do not think so, I reckon we should fix
+> all dts and force them to comply with the ePAPR and the in-kernel bindings).
 > 
-> In case we have more than one bit for the mux in the register we could have
-> optional property stating the number of different muxes handled by the register.
-
-Yes that's doable.
- 
-> One bit per mux type:
+> If we do not set in stone the bindings and draw a line now, this stuff will
+> go wild, it is already in a state that I do not like much.
 > 
-> control_devconf0: pinmux@48002274 {
->         compatible = "pinctrl-single";
->         reg = <0x48002274 4>;   /* Single register */
->         #address-cells = <1>;
->         #size-cells = <0>;
->         pinctrl-single,bit-per-mux;
->         pinctrl-single,register-width = <32>;
->         pinctrl-single,function-mask = <0x5F>;
-> };
+> The reason we are patching the compatible property above is to avoid having
+> compatible properties containing suffixes for CPUs, we do not deem that
+> necessary, see:
 > 
-> Results six entries.
-
-Yup, I think this is the way to go for now, see below..
- 
-> control_devconf0: pinmux@48002274 {
->         compatible = "pinctrl-single";
->         reg = <0x48002274 4>;   /* Single register */
->         #address-cells = <1>;
->         #size-cells = <0>;
->         pinctrl-single,bit-per-mux;
->         pinctrl-single,functions-in-register = <3>;
->         pinctrl-single,register-width = <32>;
->         pinctrl-single,function-mask = <0x5F>;
-> };
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/145305.html
 > 
-> Will results three entries.
+> That's just my opinion, open to change it to find a proper solution to this
+> issue as long as we make progress.
 
-..but let's not add this. The reason why I'd like to postpone adding
-pinctrl-single,functions-in-register is because we may be able to
-do it automatically.
+I do not agree when you set the compatible you need to be preceise the cpu is
+a arm926ejs not a arm926
 
-If it was just the naming is the issue, we could use the submask
-for the naming the bits with something like 0x0x48002274-3-1 and
-0x0x48002274-1-1.
-
-But I think currently the pinctrl framework expects a static pin
-table, so we can't create these entries dynamically when the
-consumer driver starts using the bits. So the right fix there
-would be to improve the pinctrl framework to allow adding pins
-dynamically, see some of the REVISIT comments in pinctrl-single.c.
-
-> In both cases we still need to test overlaps in the handled bits.
-
-Yes that's missing too.
-
-So how about we do the following for now:
-
-1. Fix the pinctrl-single,bits naming to use 0x0x48002274-1-1 to
-   represent the bit range
-
-2. Automatically create entries for each bit and don't yet support
-   bit ranges except in the naming for future use
-
-3. Add something to check the overlaps in the submasks
-
-4. Assume we have one-bit-per-mux until we have a real example,
-   then improve the pinctrl framework to allow adding pins 
-   dynamically as the consumer driver probes. Or if there are
-   other issues, add the pinctrl-single,functions-in-register
-   property at that point.
-
-Regards,
-
-Tony
+Best Regards,
+J/
+> 
+> Thanks for the review,
+> Lorenzo
+> 
+> > 
+> > Rob
+> > 
+> > >  		};
+> > >  	};
+> > >  
+> > > diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+> > > index 271d4de..25c4725 100644
+> > > --- a/arch/arm/boot/dts/at91sam9263.dtsi
+> > > +++ b/arch/arm/boot/dts/at91sam9263.dtsi
+> > > @@ -30,7 +30,7 @@
+> > >  	};
+> > >  	cpus {
+> > >  		cpu@0 {
+> > > -			compatible = "arm,arm926ejs";
+> > > +			compatible = "arm,arm926";
+> > >  		};
+> > >  	};
+> > >  
+> > > diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+> > > index 6b1d4ca..cf647d1 100644
+> > > --- a/arch/arm/boot/dts/at91sam9g45.dtsi
+> > > +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+> > > @@ -36,7 +36,7 @@
+> > >  	};
+> > >  	cpus {
+> > >  		cpu@0 {
+> > > -			compatible = "arm,arm926ejs";
+> > > +			compatible = "arm,arm926";
+> > >  		};
+> > >  	};
+> > >  
+> > > diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
+> > > index 7750f98..d531ae3 100644
+> > > --- a/arch/arm/boot/dts/at91sam9n12.dtsi
+> > > +++ b/arch/arm/boot/dts/at91sam9n12.dtsi
+> > > @@ -32,7 +32,7 @@
+> > >  	};
+> > >  	cpus {
+> > >  		cpu@0 {
+> > > -			compatible = "arm,arm926ejs";
+> > > +			compatible = "arm,arm926";
+> > >  		};
+> > >  	};
+> > >  
+> > > 
+> > 
+> > 
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
