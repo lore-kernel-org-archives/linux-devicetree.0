@@ -1,89 +1,97 @@
-From: Mark Jackson <mpfj-list@newflow.co.uk>
-Subject: [PATCH v2] ARM: OMAP2+: Allow NAND transfer mode to be specified
- in DT
-Date: Tue, 23 Apr 2013 13:23:37 +0100
-Message-ID: <51767D49.1010909@newflow.co.uk>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH v2 03/13] ARM: mach-at91: cpus/cpu node dts updates
+Date: Tue, 23 Apr 2013 08:11:46 -0500
+Message-ID: <51768892.7060807@gmail.com>
+References: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1366644455-16550-4-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
-Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, device-tree <devicetree-discuss@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1366644455-16550-4-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-OMAP devices support various NAND transfer modes.
+On 04/22/2013 10:27 AM, Lorenzo Pieralisi wrote:
+> This patch updates the in-kernel dts files according to the latest cpus
+> and cpu bindings updates for ARM.
+> 
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/at91sam9260.dtsi | 2 +-
+>  arch/arm/boot/dts/at91sam9263.dtsi | 2 +-
+>  arch/arm/boot/dts/at91sam9g45.dtsi | 2 +-
+>  arch/arm/boot/dts/at91sam9n12.dtsi | 2 +-
+>  4 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
+> index cb7bcc5..2e9de85 100644
+> --- a/arch/arm/boot/dts/at91sam9260.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9260.dtsi
+> @@ -33,7 +33,7 @@
+>  	};
+>  	cpus {
+>  		cpu@0 {
+> -			compatible = "arm,arm926ejs";
+> +			compatible = "arm,arm926";
 
-Currently all device-tree definitions will use the default "prefetch
-polled" mode, so this patch enables the transfer mode to be specified
-in the device-tree.
+I don't understand why you are doing this. If this does not match the
+documentation, fix the documentation. We can't continue on changing dts
+files without reqard to breaking compatibility.
 
-Signed-off-by: Mark Jackson <mpfj@newflow.co.uk>
----
-Changes in v2:
-- Fixed line wrapping
+Rob
 
- .../devicetree/bindings/mtd/gpmc-nand.txt          |    8 ++++++++
- arch/arm/mach-omap2/gpmc.c                         |   14 ++++++++++++++
- 2 files changed, 22 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-index e7f8d7e..cd4a19b 100644
---- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-@@ -29,6 +29,13 @@ Optional properties:
- 		"bch4"		4-bit BCH ecc code
- 		"bch8"		8-bit BCH ecc code
- 
-+ - ti,nand-xfer-type:		A string setting the data transfer type. One of:
-+
-+		"prefetch-polled"	Prefetch polled mode (default)
-+		"polled"		Polled mode, without prefetch
-+		"prefetch-dma"		Prefetch enabled sDMA mode
-+		"prefetch-irq"		Prefetch enabled irq mode
-+
-  - elm_id:	Specifies elm device node. This is required to support BCH
-  		error correction using ELM module.
- 
-@@ -55,6 +62,7 @@ Example for an AM33xx board:
- 			reg = <0 0 0>; /* CS0, offset 0 */
- 			nand-bus-width = <16>;
- 			ti,nand-ecc-opt = "bch8";
-+			ti,nand-xfer-type = "polled";
- 
- 			gpmc,sync-clk = <0>;
- 			gpmc,cs-on = <0>;
-diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
-index 410e1ba..2f47f76 100644
---- a/arch/arm/mach-omap2/gpmc.c
-+++ b/arch/arm/mach-omap2/gpmc.c
-@@ -1212,6 +1212,13 @@ static const char * const nand_ecc_opts[] = {
- 	[OMAP_ECC_BCH8_CODE_HW]			= "bch8",
- };
- 
-+static const char * const nand_xfer_types[] = {
-+	[NAND_OMAP_PREFETCH_POLLED]		= "prefetch-polled",
-+	[NAND_OMAP_POLLED]			= "polled",
-+	[NAND_OMAP_PREFETCH_DMA]		= "prefetch-dma",
-+	[NAND_OMAP_PREFETCH_IRQ]		= "prefetch-irq",
-+};
-+
- static int gpmc_probe_nand_child(struct platform_device *pdev,
- 				 struct device_node *child)
- {
-@@ -1241,6 +1248,13 @@ static int gpmc_probe_nand_child(struct platform_device *pdev,
- 				break;
- 			}
- 
-+	if (!of_property_read_string(child, "ti,nand-xfer-type", &s))
-+		for (val = 0; val < ARRAY_SIZE(nand_xfer_types); val++)
-+			if (!strcasecmp(s, nand_xfer_types[val])) {
-+				gpmc_nand_data->xfer_type = val;
-+				break;
-+			}
-+
- 	val = of_get_nand_bus_width(child);
- 	if (val == 16)
- 		gpmc_nand_data->devsize = NAND_BUSWIDTH_16;
--- 
-1.7.9.5
+>  		};
+>  	};
+>  
+> diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
+> index 271d4de..25c4725 100644
+> --- a/arch/arm/boot/dts/at91sam9263.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9263.dtsi
+> @@ -30,7 +30,7 @@
+>  	};
+>  	cpus {
+>  		cpu@0 {
+> -			compatible = "arm,arm926ejs";
+> +			compatible = "arm,arm926";
+>  		};
+>  	};
+>  
+> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
+> index 6b1d4ca..cf647d1 100644
+> --- a/arch/arm/boot/dts/at91sam9g45.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
+> @@ -36,7 +36,7 @@
+>  	};
+>  	cpus {
+>  		cpu@0 {
+> -			compatible = "arm,arm926ejs";
+> +			compatible = "arm,arm926";
+>  		};
+>  	};
+>  
+> diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
+> index 7750f98..d531ae3 100644
+> --- a/arch/arm/boot/dts/at91sam9n12.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9n12.dtsi
+> @@ -32,7 +32,7 @@
+>  	};
+>  	cpus {
+>  		cpu@0 {
+> -			compatible = "arm,arm926ejs";
+> +			compatible = "arm,arm926";
+>  		};
+>  	};
+>  
+> 
