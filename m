@@ -1,62 +1,131 @@
-From: Dave Martin <dave.martin@linaro.org>
-Subject: Re: [RFC PATCH] drivers: bus: add ARM CCI support
-Date: Tue, 23 Apr 2013 17:28:07 +0100
-Message-ID: <20130423162807.GA2461@linaro.org>
-References: <1365691679-28674-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1365691679-28674-2-git-send-email-lorenzo.pieralisi@arm.com>
- <1366725128.8473.21.camel@computer5.home>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: Query on pinctrl usage for DT nodes
+Date: Tue, 23 Apr 2013 11:17:54 -0700
+Message-ID: <20130423181753.GK10155@atomide.com>
+References: <CA+V-a8uiPwsAD--OHFAE=i2ed+-wbXm4p2deZXr92+Zv6GDS1w@mail.gmail.com>
+ <515C5C76.3080009@wwwdotorg.org>
+ <CA+V-a8t3wtP77DdeUoQHKMjAuWmV+ude+1J3UjJmMTqobgStjA@mail.gmail.com>
+ <5162FD4A.1030909@wwwdotorg.org>
+ <CA+V-a8vwdCkyMqiynj5BodXbjwJ=e4qNb-29FhLweqbjc7DBQA@mail.gmail.com>
+ <5165A22B.4070200@wwwdotorg.org>
+ <20130410203408.GP10155@atomide.com> <516BB99F.2080502@ti.com>
+ <20130416213232.GU10155@atomide.com> <51763B7B.707@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1366725128.8473.21.camel@computer5.home>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Jon Medhurst (Tixy)" <tixy@linaro.org>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Amit Kucheria <amit.kucheria@linaro.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org, David Gibson <david@gibson.dropbear.id.au>
+In-Reply-To: <51763B7B.707-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 23, 2013 at 02:52:08PM +0100, Jon Medhurst (Tixy) wrote:
-> On Thu, 2013-04-11 at 15:47 +0100, Lorenzo Pieralisi wrote:
-> [...]
-
-[...]
-
-> > diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
-> > +/*
-> > + * cci_port_control()
-> > + *	@port = index of the port to setup
-> > + *	@enable = if true enables the port, if false disables it
-> > + */
-> > +static void notrace cci_port_control(unsigned int port, bool enable)
-> > +{
-> > +	void __iomem *base = ports[port].base;
-> > +
-> > +	if (!base)
-> > +		return;
-> > +
-> > +	writel_relaxed(enable, base + CCI_PORT_CTRL);
+* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [130423 00:47]:
+> On 04/16/2013 11:32 PM, Tony Lindgren wrote:
+> > * Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [130415 01:30]:
+> >> On 04/10/2013 10:34 PM, Tony Lindgren wrote:
+> >>> Yeah how about just change the pintctrl-single,bits register
+> >>> naming to be register + bit?  Something like 0xdeadbeef.0 and
+> >>> 0xdeadbeef.1 and so on.
+> >>
+> >> Something like this might work I think. It is going to be a bit tricky IMHO
+> >> since we might need span out new 'register' every time a device requests for a
+> >> new pinctrl-single,bits for already used register in the
+> >> pinctrl-single,bit-per-mux area. In this way we still can make sure that
+> >> certain bit are only used by a single driver.
+> > 
+> > OK. If it's one bit per mux type register we should be able to create
+> > the right amount of entries based on the submask in pinctrs-single,bit?
 > 
-> If enable is bool (0 or 1) then this is going to set snoops as specified
-> but is always going to clear DVM broadcast as that is controlled by bit1
-> of the register. So, does the API need specifying different to allow the
-> caller to choose DVM state as well, or does this function need to assume
-> DVM and snoops state should be equal? I.e.
+> Right now it seams to be true that we have one bit per mux (in DEVCONF0 on
+> OMAP3 for example). So that would work fine, but There could be different
+> registers around with more than one bit per mux.
+
+Yes you are right, we should cover that case too. But maybe we
+can wait until we have such an example :)
+ 
+> Another way to deal with this is to:
+> in case of pinctrl-single,bit-per-mux we assume one bit per mux and create
+> entries based on the pinctrl-single,function-mask's bits.
 > 
-> 	writel_relaxed(enable ? 0x3 : 0x0, base + CCI_PORT_CTRL);
+> In case we have more than one bit for the mux in the register we could have
+> optional property stating the number of different muxes handled by the register.
 
-Some #defines for that magic "3" would be a good idea too.  Ultimately we
-may want independent control over snoops and DVM, but I think that could
-be done later as an extension to the code, if needed.  We don't expect
-there to be a large number of callers for this code...
+Yes that's doable.
+ 
+> One bit per mux type:
+> 
+> control_devconf0: pinmux@48002274 {
+>         compatible = "pinctrl-single";
+>         reg = <0x48002274 4>;   /* Single register */
+>         #address-cells = <1>;
+>         #size-cells = <0>;
+>         pinctrl-single,bit-per-mux;
+>         pinctrl-single,register-width = <32>;
+>         pinctrl-single,function-mask = <0x5F>;
+> };
+> 
+> Results six entries.
 
-Cheers
----Dave
+Yup, I think this is the way to go for now, see below..
+ 
+> control_devconf0: pinmux@48002274 {
+>         compatible = "pinctrl-single";
+>         reg = <0x48002274 4>;   /* Single register */
+>         #address-cells = <1>;
+>         #size-cells = <0>;
+>         pinctrl-single,bit-per-mux;
+>         pinctrl-single,functions-in-register = <3>;
+>         pinctrl-single,register-width = <32>;
+>         pinctrl-single,function-mask = <0x5F>;
+> };
+> 
+> Will results three entries.
+
+..but let's not add this. The reason why I'd like to postpone adding
+pinctrl-single,functions-in-register is because we may be able to
+do it automatically.
+
+If it was just the naming is the issue, we could use the submask
+for the naming the bits with something like 0x0x48002274-3-1 and
+0x0x48002274-1-1.
+
+But I think currently the pinctrl framework expects a static pin
+table, so we can't create these entries dynamically when the
+consumer driver starts using the bits. So the right fix there
+would be to improve the pinctrl framework to allow adding pins
+dynamically, see some of the REVISIT comments in pinctrl-single.c.
+
+> In both cases we still need to test overlaps in the handled bits.
+
+Yes that's missing too.
+
+So how about we do the following for now:
+
+1. Fix the pinctrl-single,bits naming to use 0x0x48002274-1-1 to
+   represent the bit range
+
+2. Automatically create entries for each bit and don't yet support
+   bit ranges except in the naming for future use
+
+3. Add something to check the overlaps in the submasks
+
+4. Assume we have one-bit-per-mux until we have a real example,
+   then improve the pinctrl framework to allow adding pins 
+   dynamically as the consumer driver probes. Or if there are
+   other issues, add the pinctrl-single,functions-in-register
+   property at that point.
+
+Regards,
+
+Tony
