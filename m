@@ -1,59 +1,69 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH 0/6] thermal:exynos4: Thermal Measurement Unit fixes for
- Samsung SoCs
-Date: Tue, 23 Apr 2013 12:49:26 +0530
-Message-ID: <CAK9yfHyQ7JWKTK9zB2ppp=F4YXv_LF_6AU0WEUf1B98-MCb5mA@mail.gmail.com>
-References: <1366389493-8239-1-git-send-email-l.majewski@samsung.com>
-	<51756AA6.3000906@samsung.com>
-	<20130423082608.2d163140@amdc308.digital.local>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v2 05/13] ARM: mach-imx: cpus/cpu nodes dts updates
+Date: Tue, 23 Apr 2013 15:34:26 +0800
+Message-ID: <20130423073425.GB27475@S2101-09.ap.freescale.net>
+References: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1366644455-16550-6-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20130423082608.2d163140@amdc308.digital.local>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Zhang Rui <rui.zhang@intel.com>, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Linux PM list <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1366644455-16550-6-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
+On Mon, Apr 22, 2013 at 04:27:27PM +0100, Lorenzo Pieralisi wrote:
+> This patch updates the in-kernel dts files according to the latest cpus
+> and cpu bindings updates for ARM.
+> 
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 
-On 23 April 2013 11:56, Lukasz Majewski <l.majewski@samsung.com> wrote:
-> Hi Kukjin,
->
->> On 04/20/13 01:38, Lukasz Majewski wrote:
->> > This patch series provide various fixes for TMU block.
->> > Namely, support for common clock framework and proper regulator
->> > VDD_TS has been added.
->> > Moreover device tree definitions and documentation entry are now in
->> > place.
->> >
->> > Lukasz Majewski (6):
->> >    clk:exynos4:TMU Thermal Measurement Unit clock added to common
->> > clock framework
->> >    thermal:exynos4: TMU Common clock framework support for TMU
->> > (Thermal Monitoring Unit)
->> >    thermal:exynos4: TMU device tree support for Exynos4412 targets
->> >    thermal: Support for TMU regulator defined at device tree
->> >    thermal:exynos4: Enable support for Exynos4412 SoCs
->> >    thermal:exynos4: Add documentation for Exynos SoC thermal
->> > bindings
->> >
->> >   .../devicetree/bindings/clock/exynos4-clock.txt    |    1 +
->> >   .../devicetree/bindings/thermal/exynos-thermal.txt |   22
->> > +++++++++++ arch/arm/boot/dts/exynos4x12.dtsi                  |
->> > 10 +++++ drivers/clk/samsung/clk-exynos4.c                  |    6
->> > ++- drivers/thermal/exynos_thermal.c                   |   41
->> > +++++++++++++++----- 5 files changed, 70 insertions(+), 10
->> > deletions(-) create mode 100644
->> > Documentation/devicetree/bindings/thermal/exynos-thermal.txt
->> >
->> Lukasz, please address comments from ml.
->>
->
-> Ok. I'm going to prepare v2
+Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Please respin your v2 on top of my 3 patches to avoid merge conflicts.
-
--- 
-With warm regards,
-Sachin
+> ---
+>  arch/arm/boot/dts/imx23.dtsi | 2 +-
+>  arch/arm/boot/dts/imx28.dtsi | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx23.dtsi b/arch/arm/boot/dts/imx23.dtsi
+> index 56afcf4..d98330c 100644
+> --- a/arch/arm/boot/dts/imx23.dtsi
+> +++ b/arch/arm/boot/dts/imx23.dtsi
+> @@ -24,7 +24,7 @@
+>  
+>  	cpus {
+>  		cpu@0 {
+> -			compatible = "arm,arm926ejs";
+> +			compatible = "arm,arm926";
+>  		};
+>  	};
+>  
+> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+> index 7ba4966..8c5a3ba 100644
+> --- a/arch/arm/boot/dts/imx28.dtsi
+> +++ b/arch/arm/boot/dts/imx28.dtsi
+> @@ -33,7 +33,7 @@
+>  
+>  	cpus {
+>  		cpu@0 {
+> -			compatible = "arm,arm926ejs";
+> +			compatible = "arm,arm926";
+>  		};
+>  	};
+>  
+> -- 
+> 1.7.12
+> 
+> 
