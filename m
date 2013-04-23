@@ -1,17 +1,14 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [RFC PATCH v2 03/13] ARM: mach-at91: cpus/cpu node dts updates
-Date: Tue, 23 Apr 2013 21:52:59 +0200
-Message-ID: <20130423195259.GJ4998@game.jcrosoft.org>
-References: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1366644455-16550-4-git-send-email-lorenzo.pieralisi@arm.com>
- <51768892.7060807@gmail.com>
- <20130423135304.GG22946@e102568-lin.cambridge.arm.com>
+From: arno@natisbad.org (Arnaud Ebalard)
+Subject: [PATCHv1 0/3] hwmon: GMT G72/G763 PWM fan controller
+Date: Wed, 24 Apr 2013 00:05:43 +0200
+Message-ID: <cover.1366753420.git.arno@natisbad.org>
+References: <cover.1366322287.git.arno@natisbad.org>
+ <4f4a821bbc61e2da28fd70553fd717ada255097d.1366322287.git.arno@natisbad.org>
+ <20130419043555.GA14124@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20130423135304.GG22946@e102568-lin.cambridge.arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,120 +18,78 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Viresh Kumar <viresh.kumar@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Sekhar Nori <nsekhar@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Simon Horman <horms@verge.net.au>, Amit Kucheria <amit.kucheria@linaro.org>, Barry Song <baohua.song@csr.com>, David Brown <davidb@codeaurora.org>, Vinayak Kale <vkale@apm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Lennert Buytenhek <kernel@wantstofly.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Simon Guinot <simon.guinot@sequanux.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14:53 Tue 23 Apr     , Lorenzo Pieralisi wrote:
-> On Tue, Apr 23, 2013 at 02:11:46PM +0100, Rob Herring wrote:
-> > On 04/22/2013 10:27 AM, Lorenzo Pieralisi wrote:
-> > > This patch updates the in-kernel dts files according to the latest cpus
-> > > and cpu bindings updates for ARM.
-> > > 
-> > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > ---
-> > >  arch/arm/boot/dts/at91sam9260.dtsi | 2 +-
-> > >  arch/arm/boot/dts/at91sam9263.dtsi | 2 +-
-> > >  arch/arm/boot/dts/at91sam9g45.dtsi | 2 +-
-> > >  arch/arm/boot/dts/at91sam9n12.dtsi | 2 +-
-> > >  4 files changed, 4 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-> > > index cb7bcc5..2e9de85 100644
-> > > --- a/arch/arm/boot/dts/at91sam9260.dtsi
-> > > +++ b/arch/arm/boot/dts/at91sam9260.dtsi
-> > > @@ -33,7 +33,7 @@
-> > >  	};
-> > >  	cpus {
-> > >  		cpu@0 {
-> > > -			compatible = "arm,arm926ejs";
-> > > +			compatible = "arm,arm926";
-> > 
-> > I don't understand why you are doing this. If this does not match the
-> > documentation, fix the documentation. We can't continue on changing dts
-> > files without reqard to breaking compatibility.
-> 
-> IMHO compatibility is already broken. There are a number of dts in the
-> kernel missing cpus and cpu nodes, others with cpu nodes missing
-> device_type = "cpu", missing cpu nodes compatible properties and the list
-> goes on and on. Those files got merged in the kernel before bindings were
-> properly defined for ARM so at that point in time the only reference was the
-> ePAPR and still, it was not followed (eg my broken patch above fails to add
-> device_type = "cpu" to the cpu node, should I change the documentation (ePAPR)
-> to make the dts above compliant ? I do not think so, I reckon we should fix
-> all dts and force them to comply with the ePAPR and the in-kernel bindings).
-> 
-> If we do not set in stone the bindings and draw a line now, this stuff will
-> go wild, it is already in a state that I do not like much.
-> 
-> The reason we are patching the compatible property above is to avoid having
-> compatible properties containing suffixes for CPUs, we do not deem that
-> necessary, see:
-> 
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/145305.html
-> 
-> That's just my opinion, open to change it to find a proper solution to this
-> issue as long as we make progress.
+Hi,
 
-I do not agree when you set the compatible you need to be preceise the cpu is
-a arm926ejs not a arm926
+This series adds support for GMT G762/G763. This work is based on a
+basic version for 2.6.31 kernel developed Olivier Mouchet (kept as
+author for this reason in g762.c) for LaCie NAS. Updates have been
+performed to run on recent kernels. Supported has been completed and
+additional features added: ability to configure various characteristics
+from .dts file, better initialization, alarms and error reporting
+support, gear mode, polarity, fan pulse per revolution, fan startup
+voltage control. The following detailed datasheet has been used as a
+basis for this work:
 
-Best Regards,
-J/
-> 
-> Thanks for the review,
-> Lorenzo
-> 
-> > 
-> > Rob
-> > 
-> > >  		};
-> > >  	};
-> > >  
-> > > diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-> > > index 271d4de..25c4725 100644
-> > > --- a/arch/arm/boot/dts/at91sam9263.dtsi
-> > > +++ b/arch/arm/boot/dts/at91sam9263.dtsi
-> > > @@ -30,7 +30,7 @@
-> > >  	};
-> > >  	cpus {
-> > >  		cpu@0 {
-> > > -			compatible = "arm,arm926ejs";
-> > > +			compatible = "arm,arm926";
-> > >  		};
-> > >  	};
-> > >  
-> > > diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-> > > index 6b1d4ca..cf647d1 100644
-> > > --- a/arch/arm/boot/dts/at91sam9g45.dtsi
-> > > +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-> > > @@ -36,7 +36,7 @@
-> > >  	};
-> > >  	cpus {
-> > >  		cpu@0 {
-> > > -			compatible = "arm,arm926ejs";
-> > > +			compatible = "arm,arm926";
-> > >  		};
-> > >  	};
-> > >  
-> > > diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-> > > index 7750f98..d531ae3 100644
-> > > --- a/arch/arm/boot/dts/at91sam9n12.dtsi
-> > > +++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-> > > @@ -32,7 +32,7 @@
-> > >  	};
-> > >  	cpus {
-> > >  		cpu@0 {
-> > > -			compatible = "arm,arm926ejs";
-> > > +			compatible = "arm,arm926";
-> > >  		};
-> > >  	};
-> > >  
-> > > 
-> > 
-> > 
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+  http://natisbad.org/NAS/refs/GMT_EDS-762_763-080710-0.2.pdf
+
+The patch was developed for and tested against the GMT G762 fan
+controller used in a Netgear ReadyNAS Duo v2 (kirkwood 88F6282-based
+NAS). This is the main reason for the device tree bindings provided in
+first patch. The patches are against current ARM tree; tell me if you
+need me to rebase it against something else.
+
+Patch 2 and 3 provides documentation for the driver and DT bindings, 
+respectively.
+
+I hope the comments provided on v0 have all been correctly taken into
+account. A list of changes is provided below.
+
+Comments welcome,
+
+Cheers,
+
+a+
+
+Changes since v0:
+    Removed forward declaration 
+    Used bool for 'valid' field instead of bit field.
+    Protected macro args
+    Fixed typo in subject line
+    Added mention for G763 support in Kconfig
+    Fixed typo in driver name in Kconfig
+    Do not use DRVNAME in i2c_device_id g762_id[] 
+    Following discussions, kept DEVICE_ATTR (i.e. no switch to SENSOR_DEVICE_ATTR)
+    Removed useless casts when flipping bit values
+    Sanity check user input value (e.g. to prevent 256 to silenty become 0)
+    Added extra lines for multiline comments when needed
+    Removed various testing knobs
+    Make removed knobs available via DT
+    Passed checkpatch script on the patch
+    Removed useless lock protection againt clk setting
+    Moved all setter at the beginning of the file
+    Removed bad (u16) casts in g762_write_value() calls
+    Added config structure and helpers
+    Provide specific helper to overload config from dts
+
+
+Arnaud Ebalard (3):
+  Add support for GMT G762/G763 PWM fan controller
+  Add documentation for g762 driver
+  Add DT documentation for g762 driver
+
+ Documentation/devicetree/bindings/hwmon/g762.txt |   57 ++
+ Documentation/hwmon/g762                         |   67 ++
+ drivers/hwmon/Kconfig                            |   10 +
+ drivers/hwmon/Makefile                           |    1 +
+ drivers/hwmon/g762.c                             | 1058 ++++++++++++++++++++++
+ 5 files changed, 1193 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/g762.txt
+ create mode 100644 Documentation/hwmon/g762
+ create mode 100644 drivers/hwmon/g762.c
+
+-- 
+1.7.10.4
