@@ -1,69 +1,92 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v2 05/13] ARM: mach-imx: cpus/cpu nodes dts updates
-Date: Tue, 23 Apr 2013 15:34:26 +0800
-Message-ID: <20130423073425.GB27475@S2101-09.ap.freescale.net>
-References: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1366644455-16550-6-git-send-email-lorenzo.pieralisi@arm.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: Query on pinctrl usage for DT nodes
+Date: Tue, 23 Apr 2013 09:42:51 +0200
+Message-ID: <51763B7B.707@ti.com>
+References: <CA+V-a8uiPwsAD--OHFAE=i2ed+-wbXm4p2deZXr92+Zv6GDS1w@mail.gmail.com>
+ <515C5C76.3080009@wwwdotorg.org>
+ <CA+V-a8t3wtP77DdeUoQHKMjAuWmV+ude+1J3UjJmMTqobgStjA@mail.gmail.com>
+ <5162FD4A.1030909@wwwdotorg.org>
+ <CA+V-a8vwdCkyMqiynj5BodXbjwJ=e4qNb-29FhLweqbjc7DBQA@mail.gmail.com>
+ <5165A22B.4070200@wwwdotorg.org> <20130410203408.GP10155@atomide.com>
+ <516BB99F.2080502@ti.com> <20130416213232.GU10155@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1366644455-16550-6-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130416213232.GU10155@atomide.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Stephen Warren <swarren@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Prabhakar Lad <prabhakar.csengg@gmail.com>, linus.walleij@linaro.org, LAK <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 22, 2013 at 04:27:27PM +0100, Lorenzo Pieralisi wrote:
-> This patch updates the in-kernel dts files according to the latest cpus
-> and cpu bindings updates for ARM.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+On 04/16/2013 11:32 PM, Tony Lindgren wrote:
+> * Peter Ujfalusi <peter.ujfalusi@ti.com> [130415 01:30]:
+>> On 04/10/2013 10:34 PM, Tony Lindgren wrote:
+>>> Yeah how about just change the pintctrl-single,bits register
+>>> naming to be register + bit?  Something like 0xdeadbeef.0 and
+>>> 0xdeadbeef.1 and so on.
+>>
+>> Something like this might work I think. It is going to be a bit tricky I=
+MHO
+>> since we might need span out new 'register' every time a device requests=
+ for a
+>> new pinctrl-single,bits for already used register in the
+>> pinctrl-single,bit-per-mux area. In this way we still can make sure that
+>> certain bit are only used by a single driver.
+> =
 
-Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> OK. If it's one bit per mux type register we should be able to create
+> the right amount of entries based on the submask in pinctrs-single,bit?
 
-> ---
->  arch/arm/boot/dts/imx23.dtsi | 2 +-
->  arch/arm/boot/dts/imx28.dtsi | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx23.dtsi b/arch/arm/boot/dts/imx23.dtsi
-> index 56afcf4..d98330c 100644
-> --- a/arch/arm/boot/dts/imx23.dtsi
-> +++ b/arch/arm/boot/dts/imx23.dtsi
-> @@ -24,7 +24,7 @@
->  
->  	cpus {
->  		cpu@0 {
-> -			compatible = "arm,arm926ejs";
-> +			compatible = "arm,arm926";
->  		};
->  	};
->  
-> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-> index 7ba4966..8c5a3ba 100644
-> --- a/arch/arm/boot/dts/imx28.dtsi
-> +++ b/arch/arm/boot/dts/imx28.dtsi
-> @@ -33,7 +33,7 @@
->  
->  	cpus {
->  		cpu@0 {
-> -			compatible = "arm,arm926ejs";
-> +			compatible = "arm,arm926";
->  		};
->  	};
->  
-> -- 
-> 1.7.12
-> 
-> 
+Right now it seams to be true that we have one bit per mux (in DEVCONF0 on
+OMAP3 for example). So that would work fine, but There could be different
+registers around with more than one bit per mux.
+
+Another way to deal with this is to:
+in case of pinctrl-single,bit-per-mux we assume one bit per mux and create
+entries based on the pinctrl-single,function-mask's bits.
+
+In case we have more than one bit for the mux in the register we could have
+optional property stating the number of different muxes handled by the regi=
+ster.
+
+One bit per mux type:
+
+control_devconf0: pinmux@48002274 {
+        compatible =3D "pinctrl-single";
+        reg =3D <0x48002274 4>;   /* Single register */
+        #address-cells =3D <1>;
+        #size-cells =3D <0>;
+        pinctrl-single,bit-per-mux;
+        pinctrl-single,register-width =3D <32>;
+        pinctrl-single,function-mask =3D <0x5F>;
+};
+
+Results six entries.
+
+control_devconf0: pinmux@48002274 {
+        compatible =3D "pinctrl-single";
+        reg =3D <0x48002274 4>;   /* Single register */
+        #address-cells =3D <1>;
+        #size-cells =3D <0>;
+        pinctrl-single,bit-per-mux;
+        pinctrl-single,functions-in-register =3D <3>;
+        pinctrl-single,register-width =3D <32>;
+        pinctrl-single,function-mask =3D <0x5F>;
+};
+
+Will results three entries.
+
+In both cases we still need to test overlaps in the handled bits.
+
+-- =
+
+P=E9ter
