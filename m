@@ -1,50 +1,89 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 2/2] pinctrl: samsung: Fix link error with
- CONFIG_PINCTRL_EXYNOS disabled
-Date: Tue, 23 Apr 2013 14:09:46 +0200
-Message-ID: <6940961.67Lk2axxPL@amdc1227>
-References: <1366060483-20342-1-git-send-email-tomasz.figa@gmail.com>
- <1398545.9FqHoC0WZW@flatron>
- <CACRpkdbJj9Newk+sCTvJzxA4V2cmJ3hzuQELv7t1wFMhd_Y8+Q@mail.gmail.com>
+From: Mark Jackson <mpfj-list@newflow.co.uk>
+Subject: [PATCH v2] ARM: OMAP2+: Allow NAND transfer mode to be specified
+ in DT
+Date: Tue, 23 Apr 2013 13:23:37 +0100
+Message-ID: <51767D49.1010909@newflow.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CACRpkdbJj9Newk+sCTvJzxA4V2cmJ3hzuQELv7t1wFMhd_Y8+Q@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Mark Brown <broonie@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kukjin Kim <kgene.kim@samsung.com>, kwangwoo.lee@gmail.com, Peter Korsgaard <jacmet@sunsite.dk>, augulis.darius@gmail.com, mcuelenaere@gmail.com, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Abraham <thomas.abraham@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, device-tree <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+OMAP devices support various NAND transfer modes.
 
-On Tuesday 23 of April 2013 14:03:12 Linus Walleij wrote:
-> On Wed, Apr 17, 2013 at 12:24 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> > Commit f67faf487 added driver data for Exynos5250, which is available
-> > only if CONFIG_PINCTRL_EXYNOS is enabled. However probably due to merge
-> > error, the reference to this driver data structure was located outside
-> > of relevant ifdef and compiled unconditionally, leading to link error
-> > with CONFIG_PINCTRL_EXYNOS.
-> > 
-> > This patch fixes mentioned link error by moving driver data entry under
-> > ifdef CONFIG_PINCTRL_EXYNOS.
-> > 
-> > Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-> 
-> This does not apply to my "devel" branch in the pinctrl tree.
-> 
-> Could you rebase it on that branch?
-> 
-> Or is the error not even in my tree?
+Currently all device-tree definitions will use the default "prefetch
+polled" mode, so this patch enables the transfer mode to be specified
+in the device-tree.
 
-This one got sent incorrectly due to my mistake. Please try the correct 
-version:
+Signed-off-by: Mark Jackson <mpfj@newflow.co.uk>
+---
+Changes in v2:
+- Fixed line wrapping
 
-[PATCH RESEND 2/2] pinctrl: samsung: Fix link error with CONFIG_PINCTRL_EXYNOS 
-disabled
+ .../devicetree/bindings/mtd/gpmc-nand.txt          |    8 ++++++++
+ arch/arm/mach-omap2/gpmc.c                         |   14 ++++++++++++++
+ 2 files changed, 22 insertions(+)
 
-Best regards,
+diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+index e7f8d7e..cd4a19b 100644
+--- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+@@ -29,6 +29,13 @@ Optional properties:
+ 		"bch4"		4-bit BCH ecc code
+ 		"bch8"		8-bit BCH ecc code
+ 
++ - ti,nand-xfer-type:		A string setting the data transfer type. One of:
++
++		"prefetch-polled"	Prefetch polled mode (default)
++		"polled"		Polled mode, without prefetch
++		"prefetch-dma"		Prefetch enabled sDMA mode
++		"prefetch-irq"		Prefetch enabled irq mode
++
+  - elm_id:	Specifies elm device node. This is required to support BCH
+  		error correction using ELM module.
+ 
+@@ -55,6 +62,7 @@ Example for an AM33xx board:
+ 			reg = <0 0 0>; /* CS0, offset 0 */
+ 			nand-bus-width = <16>;
+ 			ti,nand-ecc-opt = "bch8";
++			ti,nand-xfer-type = "polled";
+ 
+ 			gpmc,sync-clk = <0>;
+ 			gpmc,cs-on = <0>;
+diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+index 410e1ba..2f47f76 100644
+--- a/arch/arm/mach-omap2/gpmc.c
++++ b/arch/arm/mach-omap2/gpmc.c
+@@ -1212,6 +1212,13 @@ static const char * const nand_ecc_opts[] = {
+ 	[OMAP_ECC_BCH8_CODE_HW]			= "bch8",
+ };
+ 
++static const char * const nand_xfer_types[] = {
++	[NAND_OMAP_PREFETCH_POLLED]		= "prefetch-polled",
++	[NAND_OMAP_POLLED]			= "polled",
++	[NAND_OMAP_PREFETCH_DMA]		= "prefetch-dma",
++	[NAND_OMAP_PREFETCH_IRQ]		= "prefetch-irq",
++};
++
+ static int gpmc_probe_nand_child(struct platform_device *pdev,
+ 				 struct device_node *child)
+ {
+@@ -1241,6 +1248,13 @@ static int gpmc_probe_nand_child(struct platform_device *pdev,
+ 				break;
+ 			}
+ 
++	if (!of_property_read_string(child, "ti,nand-xfer-type", &s))
++		for (val = 0; val < ARRAY_SIZE(nand_xfer_types); val++)
++			if (!strcasecmp(s, nand_xfer_types[val])) {
++				gpmc_nand_data->xfer_type = val;
++				break;
++			}
++
+ 	val = of_get_nand_bus_width(child);
+ 	if (val == 16)
+ 		gpmc_nand_data->devsize = NAND_BUSWIDTH_16;
 -- 
-Tomasz Figa
-Samsung Poland R&D Center
-SW Solution Development, Kernel and System Framework
+1.7.9.5
