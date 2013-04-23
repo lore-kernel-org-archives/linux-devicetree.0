@@ -1,242 +1,70 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 3/8] irq-imgpdc: add ImgTec PDC irqchip driver
-Date: Tue, 23 Apr 2013 17:09:51 +0200 (CEST)
-Message-ID: <alpine.LFD.2.02.1304231647400.21884@ionos>
-References: <1366727607-27444-1-git-send-email-james.hogan@imgtec.com> <1366727607-27444-4-git-send-email-james.hogan@imgtec.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/8] metag: minimal TZ1090 (Comet) SoC infrastructure
+Date: Tue, 23 Apr 2013 17:25:34 +0200
+Message-ID: <201304231725.34826.arnd@arndb.de>
+References: <1366727607-27444-1-git-send-email-james.hogan@imgtec.com> <1366727607-27444-3-git-send-email-james.hogan@imgtec.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1366727607-27444-4-git-send-email-james.hogan@imgtec.com>
+In-Reply-To: <1366727607-27444-3-git-send-email-james.hogan@imgtec.com>
 Sender: linux-doc-owner@vger.kernel.org
 To: James Hogan <james.hogan@imgtec.com>
 Cc: linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 Apr 2013, James Hogan wrote:
-> +/**
-> + * struct pdc_intc_priv - private pdc interrupt data.
-> + * @nr_perips:		Number of peripheral interrupt signals.
-> + * @nr_syswakes:	Number of syswake signals.
-> + * @perip_irqs:		List of peripheral IRQ numbers handled.
-> + * @syswake_irq:	Shared PDC syswake IRQ number.
-> + * @domain:		IRQ domain for PDC peripheral and syswake IRQs.
-> + * @pdc_base:		Base of PDC registers.
-> + * @lock:		Lock to protect the PDC syswake registers.
-> + */
-> +struct pdc_intc_priv {
-> +	unsigned int		nr_perips;
-> +	unsigned int		nr_syswakes;
-> +	unsigned int		*perip_irqs;
-> +	unsigned int		syswake_irq;
-> +	struct irq_domain	*domain;
-> +	void __iomem		*pdc_base;
-> +
-> +	spinlock_t		lock;
+On Tuesday 23 April 2013, James Hogan wrote:
 
-  raw_spinlock_t please
-
-> +/* Generic IRQ callbacks */
+> @@ -46,6 +46,12 @@ core-y					+= arch/metag/boot/dts/
+>  core-y					+= arch/metag/kernel/
+>  core-y					+= arch/metag/mm/
+>  
+> +# SoCs
+> +socdir-$(CONFIG_SOC_TZ1090)		+= tz1090
 > +
-> +#define SYS0_HWIRQ	8
-> +
-> +static unsigned int hwirq_is_syswake(irq_hw_number_t hw)
-> +{
-> +	return hw >= SYS0_HWIRQ;
-> +}
-> +
-> +static unsigned int hwirq_to_syswake(irq_hw_number_t hw)
-> +{
-> +	return hw - SYS0_HWIRQ;
-> +}
-> +
-> +static irq_hw_number_t syswake_to_hwirq(unsigned int syswake)
-> +{
-> +	return SYS0_HWIRQ + syswake;
-> +}
-> +
-> +static struct pdc_intc_priv *irqd_to_priv(struct irq_data *data)
-> +{
-> +	return (struct pdc_intc_priv *)data->domain->host_data;
-> +}
-> +
-> +static void perip_irq_mask(struct irq_data *data)
-> +{
-> +	struct pdc_intc_priv *priv = irqd_to_priv(data);
-> +	unsigned int irq_route;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&priv->lock, flags);
-
-This is always called with interrupts disabled.
-
-> +	irq_route = pdc_read(priv, PDC_IRQ_ROUTE);
-> +	irq_route &= ~(1 << data->hwirq);
-
-Why not cache the mask value ?
-
-> +	pdc_write(priv, PDC_IRQ_ROUTE, irq_route);
-
-> +	spin_unlock_irqrestore(&priv->lock, flags);
-> +}
-> +
-> +static void perip_irq_unmask(struct irq_data *data)
-> +{
-> +	struct pdc_intc_priv *priv = irqd_to_priv(data);
-> +	unsigned int irq_route;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&priv->lock, flags);
-> +	irq_route = pdc_read(priv, PDC_IRQ_ROUTE);
-> +	irq_route |= 1 << data->hwirq;
-> +	pdc_write(priv, PDC_IRQ_ROUTE, irq_route);
-
-This code is another slightly different copy of stuff which is
-available in kernel/irq/generic-chip.c
-
-Can we please stop the code duplication and reuse existing
-infrastructure? Don't tell me it does not work for you.  I sent out a
-patch yesterday which makes the code suitable for irq domains.
-
-> +static int syswake_irq_set_type(struct irq_data *data, unsigned int flow_type)
-> +{
-> +	struct pdc_intc_priv *priv = irqd_to_priv(data);
-> +	unsigned int syswake = hwirq_to_syswake(data->hwirq);
-> +	unsigned int irq_mode;
-> +	unsigned int soc_sys_wake_regoff, soc_sys_wake;
-> +	unsigned long flags;
-> +
-> +	/* translate to syswake IRQ mode */
-> +	switch (flow_type) {
-> +	case IRQ_TYPE_EDGE_BOTH:
-> +		irq_mode = PDC_SYS_WAKE_INT_CHANGE;
-> +		break;
-> +	case IRQ_TYPE_EDGE_RISING:
-> +		irq_mode = PDC_SYS_WAKE_INT_UP;
-> +		break;
-> +	case IRQ_TYPE_EDGE_FALLING:
-> +		irq_mode = PDC_SYS_WAKE_INT_DOWN;
-> +		break;
-> +	case IRQ_TYPE_LEVEL_HIGH:
-> +		irq_mode = PDC_SYS_WAKE_INT_HIGH;
-> +		break;
-> +	case IRQ_TYPE_LEVEL_LOW:
-> +		irq_mode = PDC_SYS_WAKE_INT_LOW;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	spin_lock_irqsave(&priv->lock, flags);
-
-All irqchip callbacks are called with interrupts disabled.
-
-> +static void pdc_intc_perip_isr(unsigned int irq, struct irq_desc *desc)
-> +{
-> +	struct pdc_intc_priv *priv;
-> +	unsigned int i, irq_no;
-> +
-> +	priv = (struct pdc_intc_priv *)irq_desc_get_handler_data(desc);
-> +
-> +	/* find the peripheral number */
-> +	for (i = 0; i < priv->nr_perips; ++i)
-> +		if (irq == priv->perip_irqs[i])
-> +			goto found;
-
-Whee. Aren't these numbers linear ?
-
-> +	/* should never get here */
-> +	return;
-> +found:
-> +
-> +	/* pass on the interrupt */
-> +	irq_no = irq_linear_revmap(priv->domain, i);
-> +	generic_handle_irq(irq_no);
-> +}
-> +
-> +static void pdc_intc_syswake_isr(unsigned int irq, struct irq_desc *desc)
-> +{
-> +	struct pdc_intc_priv *priv;
-> +	unsigned int syswake, irq_no;
-> +	unsigned int status;
-> +
-> +	priv = (struct pdc_intc_priv *)irq_desc_get_handler_data(desc);
-> +
-> +	spin_lock(&priv->lock);
-> +	status = pdc_read(priv, PDC_IRQ_STATUS);
-> +	status &= pdc_read(priv, PDC_IRQ_ENABLE);
-> +	spin_unlock(&priv->lock);
-> +
-> +	status &= (1 << priv->nr_syswakes) - 1;
-> +
-> +	for (syswake = 0; status; status >>= 1, ++syswake) {
-> +		/* Has this sys_wake triggered? */
-> +		if (!(status & 1))
-> +			continue;
-> +
-> +		irq_no = irq_linear_revmap(priv->domain,
-> +					   syswake_to_hwirq(syswake));
-> +		generic_handle_irq(irq_no);
-> +	}
-> +}
+> +socdirs		:= $(filter-out ., $(patsubst %,%/,$(socdir-y)))
+> +core-y		+= $(addprefix arch/metag/soc/, $(socdirs))
 > +
 
+Does it actually make sense to have subdirectories per soc? I would 
+suggest you copy from arm64 rather from arm for the platform support and
+do it as minimal as possible. Any code you need can go into a shared directory
+as a start, and if you end up needing more of a hierarchical structure,
+you can add that later. Hopefully we've come to the point now where almost
+everything can live in drivers/* though.
 
-> +static int pdc_intc_probe(struct platform_device *pdev)
-> +{
-> +	struct pdc_intc_priv *priv;
-> +	struct device_node *node = pdev->dev.of_node;
-> +	struct resource *res_regs;
-> +	unsigned int i;
-> +	int irq, ret;
-> +	u32 val;
+> diff --git a/arch/metag/configs/tz1090_defconfig b/arch/metag/configs/tz1090_defconfig
+> new file mode 100644
+> index 0000000..4794094
+> --- /dev/null
+> +++ b/arch/metag/configs/tz1090_defconfig
+
+Also, if this is compatible with your previous platform, I would recommend just
+having a single defconfig that runs on all supported hardware. It's easy enough
+for users to turn off the drivers and platforms they don't need.
+
+> diff --git a/arch/metag/soc/tz1090/setup.c b/arch/metag/soc/tz1090/setup.c
+> new file mode 100644
+> index 0000000..fbd7074
+> --- /dev/null
+> +++ b/arch/metag/soc/tz1090/setup.c
 > +
-> +	if (!node)
-> +		return -ENOENT;
+> +#include <linux/init.h>
+> +#include <asm/mach/arch.h>
 > +
-> +	/* Get registers */
-> +	res_regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (res_regs == NULL) {
-> +		dev_err(&pdev->dev, "cannot find registers resource\n");
-> +		return -ENOENT;
-> +	}
+> +static const char *tz1090_boards_compat[] __initdata = {
+> +	"toumaz,tz1090",
+> +	NULL,
+> +};
 > +
-> +	/* Allocate driver data */
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv) {
-> +		dev_err(&pdev->dev, "cannot allocate device data\n");
-> +		return -ENOMEM;
-> +	}
-> +	spin_lock_init(&priv->lock);
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	/* Ioremap the registers */
-> +	priv->pdc_base = devm_ioremap(&pdev->dev, res_regs->start,
-> +				      res_regs->end - res_regs->start);
-> +	if (!priv->pdc_base)
-> +		return -EIO;
+> +MACHINE_START(TZ1090, "Generic TZ1090")
+> +	.dt_compat	= tz1090_boards_compat,
+> +MACHINE_END
 
-Leaks priv.
+Have you looked at the patch I sent for default platform code on ARM?
+The idea is to default to an empty machine descriptor if nothing matches
+the root compatible entry of the DT. The same would work here to allow
+you to run without any board code at all.
 
-> +	/* Get number of peripherals */
-> +	ret = of_property_read_u32(node, "num-perips", &val);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "No num-perips node property found\n");
-> +		return -EINVAL;
-
-Leaks priv and mapping
-
-> +	}
-> +	if (val > SYS0_HWIRQ) {
-> +		dev_err(&pdev->dev, "num-perips (%u) out of range\n", val);
-> +		return -EINVAL;
-
-Error handling is optional, right?
-
-> +static int pdc_intc_remove(struct platform_device *pdev)
-> +{
-> +	struct pdc_intc_priv *priv = platform_get_drvdata(pdev);
-> +
-> +	irq_domain_remove(priv->domain);
-
-And the rest of the resources is still there?
-
+	Arnd
