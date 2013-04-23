@@ -1,14 +1,14 @@
 From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Subject: Re: [RFC PATCH v2 12/13] ARM: mach-vt8500: cpus/cpu nodes dts updates
-Date: Tue, 23 Apr 2013 14:43:48 +1200
-Message-ID: <5175F564.8030405@prisktech.co.nz>
+Subject: Re: [RFC PATCH v2 13/13] ARM: DT: kernel: DT cpu node bindings update
+Date: Tue, 23 Apr 2013 14:46:36 +1200
+Message-ID: <5175F60C.1070508@prisktech.co.nz>
 References: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1366644455-16550-13-git-send-email-lorenzo.pieralisi@arm.com>
+ <1366644455-16550-14-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366644455-16550-13-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1366644455-16550-14-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,67 +24,44 @@ Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon M
 List-Id: devicetree@vger.kernel.org
 
 On 23/04/13 03:27, Lorenzo Pieralisi wrote:
-> This patch updates the in-kernel dts files according to the latest cpus
-> and cpu bindings updates for ARM.
->
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> ---
->   arch/arm/boot/dts/wm8505.dtsi | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/wm8505.dtsi b/arch/arm/boot/dts/wm8505.dtsi
-> index e74a1c0..a470808 100644
-> --- a/arch/arm/boot/dts/wm8505.dtsi
-> +++ b/arch/arm/boot/dts/wm8505.dtsi
-> @@ -13,7 +13,7 @@
->   
->   	cpus {
->   		cpu@0 {
-> -			compatible = "arm,arm926ejs";
-> +			compatible = "arm,arm926";
->   		};
->   	};
->   
-The more I look at this, the more wrong it is :/
-
- From the new binding documentation,
-
-+	A cpus node must define the following properties:
-+
-+	- #address-cells
-+		Usage: required
-+		Value type: <u32>
-+		Definition: must be set to 1 for 32-bit systems and 2 for
-+			    64-bit systems
-+	- #size-cells
-+		Usage: required
-+		Value type: <u32>
-+		Definition: must be set to 0
-
+> +
+> +=====================================
+> +cpus and cpu node bindings definition
+> +=====================================
+> +
+> +The ARM architecture, in accordance with the ePAPR, requires the cpus and cpu
+> +nodes to be present and contain the properties described below.
+> +
+> +- cpus node
+> +
+> +	Description: Container of cpu nodes
+> +
+> +	The node name must be "cpus".
+> +
+> +	A cpus node must define the following properties:
+> +
+> +	- #address-cells
+> +		Usage: required
+> +		Value type: <u32>
+> +		Definition: must be set to 1 for 32-bit systems and 2 for
+> +			    64-bit systems
+> +	- #size-cells
+> +		Usage: required
+> +		Value type: <u32>
+> +		Definition: must be set to 0
+> +
 ...
-
-+- cpu node
-+
-+	Description: Describes a CPU in an ARM based system
-+
-+	PROPERTIES
-+
-+	- device_type
-+		Usage: required
-+		Value type: <string>
-+		Definition: must be "cpu"
-
-Three required properties that aren't present in the patch.
-
-cpus {
-     #size-cells = <0>;
-     #address-cells = <1>;
-
-     cpu {
-         device_type = "cpu"
-         compatible = "arm,arm926";
-     };
-};
+> +Example 3 (ARM 1176 uniprocessor 32-bit system):
+> +
+> +	cpus {
+> +		cpu {
+> +			device_type = "cpu";
+> +			compatible = "arm,arm1176";
+> +		};
+> +	};
+> +
+This example is missing the required #size-cells and #address-cells 
+properties.
 
 Regards
 Tony P
