@@ -1,60 +1,51 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 2/3] gpio: grgpio: Add device driver for GRGPIO cores
-Date: Tue, 23 Apr 2013 13:09:28 +0200
-Message-ID: <CACRpkdYDBuXcPDzkpL2DeaWYBXJM78cUNQkw3Uga1MyGobMayw@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 3/3] gpio: grgpio: Add irq support
+Date: Tue, 23 Apr 2013 13:14:51 +0200
+Message-ID: <CACRpkdbXFBBetC9uh=AWVNV86oA1S2Ls1dNCMOj8iAur7V2E3w@mail.gmail.com>
 References: <1363355140-28216-1-git-send-email-andreas@gaisler.com>
- <1363355140-28216-3-git-send-email-andreas@gaisler.com>
- <CACRpkdYf7U=YY92Pma8+mWGALJvQDPU=d3x7Z6rX+rWkhuBANg@mail.gmail.com>
- <516BF4D2.8060901@gaisler.com>
+	<1363355140-28216-4-git-send-email-andreas@gaisler.com>
+	<CACRpkdZ4AK=3PGQ-3+ffWsH9B-ywrDkMxnePWat1=P7WoqgJWA@mail.gmail.com>
+	<516BF4DA.6000204@gaisler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <516BF4D2.8060901-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andreas Larson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-Cc: software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Anton Vorontsov <anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <516BF4DA.6000204@gaisler.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Larson <andreas@gaisler.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <anton.vorontsov@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 15, 2013 at 2:38 PM, Andreas Larson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org> wrote:
-> On 2013-04-10 20:50, Linus Walleij wrote:
+On Mon, Apr 15, 2013 at 2:38 PM, Andreas Larson <andreas@gaisler.com> wrote:
 
->>> +Required properties:
->>> +
->>> +- name : Should be "GAISLER_GPIO" or "01_01a"
->>
->> What is this? Don't we usually use a .compatible string for this?
->> Name? Que? Is that something legacy?
->
-> Regarding using name, this is standard for SPARC. The names in the
-> device tree originates from the PROM.
->
-> The name field is the actually the first field checked for a match in
-> of_match_node, followed by type then compatible. See
-> http://lxr.free-electrons.com/source/drivers/of/base.c#L572
->
+> On 2013-04-10 21:25, Linus Walleij wrote:
+>>> +int grgpio_irq_map(struct irq_domain *d, unsigned int virq,
 (...)
-> As for the "01_01a", the LEON SPARC systems uses a plug&play to identify
-> different IP cores in the system. When the PROM is unaware of the name
-> of a certain core, the name field presented from the prom will be on
-> this form. This is standard handling for LEON SPARC drivers.
+>>> +       /* Request underlying irq if not already requested */
+>>> +       lirq->virq = virq;
+>>> +       uirq = &priv->uirqs[lirq->index];
+>>> +       if (uirq->refcnt == 0) {
+>>> +               ret = request_irq(uirq->uirq, grgpio_irq_handler, 0,
+>>> +                                 dev_name(priv->dev), priv);
+>>
+>>
+>> No, please request all present uirqs in probe() before creating the
+>> irqdomain.
+>
+>
+> The reason for doing it at irq_map and not in probe is that one
+> typical hardware setup for this core is that it has irqs that are shared
+> with pretty much all other cores in the system. Therefore, if this
+> drivers requests all its irqs in the probe function, pretty much all the
+> drivers for the other cores in the system that were not lucky enough to
+> request their irq before this driver will fail their probes in such a
+> hardware setup. This driver can not share irq:s so even if the other
+> drivers can handle shared irqs they are out of luck if this driver is
+> probed first.
+>
+> That is why only the irqs that are actually used should be requested and
+> thus why the driver does it on demand instead of in the probe.
 
-Thanks for detailing this! There is such a big world out there sometimes.
+OK I buy that explanation...
 
-I'm sort of wondering why we do things the way we do in the ARM DT
-world sometimes. Specifically I suspect that we should be using
-name or type rather than compatible for the ARM PrimeCells, which
-are a sort of plug-n-play type devices, but I guess it's too late
-to change that now...
-
-Yours,
+Thanks,
 Linus Walleij
