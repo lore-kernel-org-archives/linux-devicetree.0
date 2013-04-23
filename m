@@ -1,403 +1,108 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: [PATCH v3 13/13] ARM: dts: exynos4210: Add basic dts file for
- universal_c210 board
-Date: Tue, 23 Apr 2013 17:46:34 +0200
-Message-ID: <1366731994-7478-14-git-send-email-t.figa@samsung.com>
-References: <1366731994-7478-1-git-send-email-t.figa@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1366731994-7478-1-git-send-email-t.figa@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, kyungmin.park@samsung.com, tomasz.figa@gmail.com, m.szyprowski@samsung.com, arnd@arndb.de, john.stultz@linaro.org, tglx@linutronix.de, olof@lixom.net, ben-linux@fluff.org, thomas.abraham@linaro.org, Tomasz Figa <t.figa@samsung.com>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: [PATCH 2/8] metag: minimal TZ1090 (Comet) SoC infrastructure
+Date: Tue, 23 Apr 2013 17:06:11 +0100
+Message-ID: <5176B173.40107@imgtec.com>
+References: <1366727607-27444-1-git-send-email-james.hogan@imgtec.com> <1366727607-27444-3-git-send-email-james.hogan@imgtec.com> <201304231725.34826.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201304231725.34826.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds basic device tree sources for Universal C210 board.
+Thanks for reviewing Arnd.
 
-Currently support includes:
-- eMMC
-- serial
-- max8952 and max8998 voltage regulators.
-- gpio-keys
+On 23/04/13 16:25, Arnd Bergmann wrote:
+> On Tuesday 23 April 2013, James Hogan wrote:
+> 
+>> @@ -46,6 +46,12 @@ core-y					+= arch/metag/boot/dts/
+>>  core-y					+= arch/metag/kernel/
+>>  core-y					+= arch/metag/mm/
+>>  
+>> +# SoCs
+>> +socdir-$(CONFIG_SOC_TZ1090)		+= tz1090
+>> +
+>> +socdirs		:= $(filter-out ., $(patsubst %,%/,$(socdir-y)))
+>> +core-y		+= $(addprefix arch/metag/soc/, $(socdirs))
+>> +
+> 
+> Does it actually make sense to have subdirectories per soc? I would 
+> suggest you copy from arm64 rather from arm for the platform support and
+> do it as minimal as possible. Any code you need can go into a shared directory
+> as a start, and if you end up needing more of a hierarchical structure,
+> you can add that later. Hopefully we've come to the point now where almost
+> everything can live in drivers/* though.
 
-More support will be added in further patches.
+Where is the shared directory for arm64 platforms? (arch/arm64 is
+looking pretty bare).
 
-Signed-off-by: Tomasz Figa <t.figa@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- arch/arm/boot/dts/Makefile                      |   1 +
- arch/arm/boot/dts/exynos4210-universal_c210.dts | 352 ++++++++++++++++++++++++
- 2 files changed, 353 insertions(+)
- create mode 100644 arch/arm/boot/dts/exynos4210-universal_c210.dts
+It's certainly heading in that direction a lot. For this patchset I
+could get away with dropping arch/metag/soc/*, and deal with anything
+that really requires something like it later.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 8fd41b3..6647274 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -49,6 +49,7 @@ dtb-$(CONFIG_ARCH_DOVE) += dove-cm-a510.dtb \
- dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
- 	exynos4210-smdkv310.dtb \
- 	exynos4210-trats.dtb \
-+	exynos4210-universal_c210.dtb \
- 	exynos4412-odroidx.dtb \
- 	exynos4412-smdk4412.dtb \
- 	exynos4412-origen.dtb \
-diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-new file mode 100644
-index 0000000..345cdb5
---- /dev/null
-+++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-@@ -0,0 +1,352 @@
-+/*
-+ * Samsung's Exynos4210 based Universal C210 board device tree source
-+ *
-+ * Copyright (c) 2012-2013 Samsung Electronics Co., Ltd.
-+ *		http://www.samsung.com
-+ *
-+ * Device tree source file for Samsung's Universal C210 board which is based on
-+ * Samsung's Exynos4210 rev0 SoC.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+*/
-+
-+/dts-v1/;
-+/include/ "exynos4210.dtsi"
-+
-+/ {
-+	model = "Samsung Universal C210 based on Exynos4210 rev0";
-+	compatible = "samsung,universal_c210", "samsung,exynos4210";
-+
-+	memory {
-+		reg =  <0x40000000 0x10000000
-+			0x50000000 0x10000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttySAC2,115200N8 root=/dev/mmcblk0p5 rw rootwait earlyprintk panic=5 maxcpus=1";
-+	};
-+
-+	mct@10050000 {
-+		compatible = "none";
-+	};
-+
-+	fixed-rate-clocks {
-+		xxti {
-+			compatible = "samsung,clock-xxti";
-+			clock-frequency = <0>;
-+		};
-+
-+		xusbxti {
-+			compatible = "samsung,clock-xusbxti";
-+			clock-frequency = <24000000>;
-+		};
-+	};
-+
-+	vemmc_reg: voltage-regulator {
-+	        compatible = "regulator-fixed";
-+		regulator-name = "VMEM_VDD_2_8V";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		gpio = <&gpe1 3 0>;
-+		enable-active-high;
-+	};
-+
-+	sdhci_emmc: sdhci@12510000 {
-+		bus-width = <8>;
-+		non-removable;
-+		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus8>;
-+		pinctrl-names = "default";
-+		vmmc-supply = <&vemmc_reg>;
-+		status = "okay";
-+	};
-+
-+	serial@13800000 {
-+		status = "okay";
-+	};
-+
-+	serial@13810000 {
-+		status = "okay";
-+	};
-+
-+	serial@13820000 {
-+		status = "okay";
-+	};
-+
-+	serial@13830000 {
-+		status = "okay";
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		vol-up-key {
-+			gpios = <&gpx2 0 1>;
-+			linux,code = <115>;
-+			label = "volume up";
-+			debounce-interval = <1>;
-+		};
-+
-+		vol-down-key {
-+			gpios = <&gpx2 1 1>;
-+			linux,code = <114>;
-+			label = "volume down";
-+			debounce-interval = <1>;
-+		};
-+
-+		config-key {
-+			gpios = <&gpx2 2 1>;
-+			linux,code = <171>;
-+			label = "config";
-+			debounce-interval = <1>;
-+			gpio-key,wakeup;
-+		};
-+
-+		camera-key {
-+			gpios = <&gpx2 3 1>;
-+			linux,code = <212>;
-+			label = "camera";
-+			debounce-interval = <1>;
-+		};
-+
-+		power-key {
-+			gpios = <&gpx2 7 1>;
-+			linux,code = <116>;
-+			label = "power";
-+			debounce-interval = <1>;
-+			gpio-key,wakeup;
-+		};
-+
-+		ok-key {
-+			gpios = <&gpx3 5 1>;
-+			linux,code = <352>;
-+			label = "ok";
-+			debounce-interval = <1>;
-+		};
-+	};
-+
-+	tsp_reg: voltage-regulator {
-+	        compatible = "regulator-fixed";
-+		regulator-name = "TSP_2_8V";
-+		regulator-min-microvolt = <2800000>;
-+		regulator-max-microvolt = <2800000>;
-+		gpio = <&gpe2 3 0>;
-+		enable-active-high;
-+	};
-+
-+	i2c@13890000 {
-+		samsung,i2c-sda-delay = <100>;
-+		samsung,i2c-slave-addr = <0x10>;
-+		samsung,i2c-max-bus-freq = <100000>;
-+		pinctrl-0 = <&i2c3_bus>;
-+		pinctrl-names = "default";
-+		status = "okay";
-+
-+		tsp@4a {
-+			/* TBD: Atmel maXtouch touchscreen */
-+			reg = <0x4a>;
-+		};
-+	};
-+
-+	i2c@138B0000 {
-+		samsung,i2c-sda-delay = <100>;
-+		samsung,i2c-slave-addr = <0x10>;
-+		samsung,i2c-max-bus-freq = <100000>;
-+		pinctrl-0 = <&i2c5_bus>;
-+		pinctrl-names = "default";
-+		status = "okay";
-+
-+		vdd_arm_reg: pmic@60 {
-+			compatible = "maxim,max8952";
-+			reg = <0x60>;
-+
-+			max8952,vid-gpios = <&gpx0 3 0>, <&gpx0 4 0>;
-+			max8952,default-mode = <0>;
-+			max8952,dvs-mode-microvolt = <1250000>, <1200000>,
-+							<1050000>, <950000>;
-+			max8952,sync-freq = <0>;
-+			max8952,ramp-speed = <0>;
-+
-+			regulator-name = "vdd_arm";
-+			regulator-min-microvolt = <770000>;
-+			regulator-max-microvolt = <1400000>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
-+
-+		pmic@66 {
-+			compatible = "national,lp3974";
-+			reg = <0x66>;
-+
-+			max8998,pmic-buck1-default-dvs-idx = <0>;
-+			max8998,pmic-buck1-dvs-gpios = <&gpx0 5 0>,
-+							<&gpx0 6 0>;
-+			max8998,pmic-buck1-dvs-voltage = <1100000>, <1000000>,
-+							<1100000>, <1000000>;
-+
-+			max8998,pmic-buck2-default-dvs-idx = <0>;
-+			max8998,pmic-buck2-dvs-gpio = <&gpe2 0 0>;
-+			max8998,pmic-buck2-dvs-voltage = <1200000>, <1100000>;
-+
-+			regulators {
-+				ldo2_reg: LDO2 {
-+					regulator-name = "VALIVE_1.2V";
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1200000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo3_reg: LDO3 {
-+					regulator-name = "VUSB+MIPI_1.1V";
-+					regulator-min-microvolt = <1100000>;
-+					regulator-max-microvolt = <1100000>;
-+				};
-+
-+				ldo4_reg: LDO4 {
-+					regulator-name = "VADC_3.3V";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+				};
-+
-+				ldo5_reg: LDO5 {
-+					regulator-name = "VTF_2.8V";
-+					regulator-min-microvolt = <2800000>;
-+					regulator-max-microvolt = <2800000>;
-+				};
-+
-+				ldo6_reg: LDO6 {
-+					regulator-name = "LDO6";
-+					regulator-min-microvolt = <2000000>;
-+					regulator-max-microvolt = <2000000>;
-+				};
-+
-+				ldo7_reg: LDO7 {
-+					regulator-name = "VLCD+VMIPI_1.8V";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+				};
-+
-+				ldo8_reg: LDO8 {
-+					regulator-name = "VUSB+VDAC_3.3V";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+				};
-+
-+				ldo9_reg: LDO9 {
-+					regulator-name = "VCC_2.8V";
-+					regulator-min-microvolt = <2800000>;
-+					regulator-max-microvolt = <2800000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo10_reg: LDO10 {
-+					regulator-name = "VPLL_1.1V";
-+					regulator-min-microvolt = <1100000>;
-+					regulator-max-microvolt = <1100000>;
-+					regulator-boot-on;
-+					regulator-always-on;
-+				};
-+
-+				ldo11_reg: LDO11 {
-+					regulator-name = "CAM_AF_3.3V";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+				};
-+
-+				ldo12_reg: LDO12 {
-+					regulator-name = "PS_2.8V";
-+					regulator-min-microvolt = <2800000>;
-+					regulator-max-microvolt = <2800000>;
-+				};
-+
-+				ldo13_reg: LDO13 {
-+					regulator-name = "VHIC_1.2V";
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1200000>;
-+				};
-+
-+				ldo14_reg: LDO14 {
-+					regulator-name = "CAM_I_HOST_1.8V";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+				};
-+
-+				ldo15_reg: LDO15 {
-+					regulator-name = "CAM_S_DIG+FM33_CORE_1.2V";
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1200000>;
-+				};
-+
-+				ldo16_reg: LDO16 {
-+					regulator-name = "CAM_S_ANA_2.8V";
-+					regulator-min-microvolt = <2800000>;
-+					regulator-max-microvolt = <2800000>;
-+				};
-+
-+				ldo17_reg: LDO17 {
-+					regulator-name = "VCC_3.0V_LCD";
-+					regulator-min-microvolt = <3000000>;
-+					regulator-max-microvolt = <3000000>;
-+				};
-+
-+				buck1_reg: BUCK1 {
-+					regulator-name = "VINT_1.1V";
-+					regulator-min-microvolt = <750000>;
-+					regulator-max-microvolt = <1500000>;
-+					regulator-boot-on;
-+					regulator-always-on;
-+				};
-+
-+				buck2_reg: BUCK2 {
-+					regulator-name = "VG3D_1.1V";
-+					regulator-min-microvolt = <750000>;
-+					regulator-max-microvolt = <1500000>;
-+					regulator-boot-on;
-+				};
-+
-+				buck3_reg: BUCK3 {
-+					regulator-name = "VCC_1.8V";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+				};
-+
-+				buck4_reg: BUCK4 {
-+					regulator-name = "VMEM_1.2V";
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1200000>;
-+					regulator-always-on;
-+				};
-+
-+				ap32khz_reg: EN32KHz-AP {
-+					regulator-name = "32KHz AP";
-+					regulator-always-on;
-+				};
-+
-+				cp32khz_reg: EN32KHz-CP {
-+					regulator-name = "32KHz CP";
-+				};
-+
-+				vichg_reg: ENVICHG {
-+					regulator-name = "VICHG";
-+				};
-+
-+				safeout1_reg: ESAFEOUT1 {
-+					regulator-name = "SAFEOUT1";
-+					regulator-always-on;
-+				};
-+
-+				safeout2_reg: ESAFEOUT2 {
-+					regulator-name = "SAFEOUT2";
-+					regulator-boot-on;
-+				};
-+			};
-+		};
-+	};
-+
-+	pwm@139D0000 {
-+		compatible = "samsung,s5p6440-pwm";
-+		status = "okay";
-+	};
-+};
--- 
-1.8.2.1
+The machine callbacks I was planning on using in future patches are:
+* init_time() for calling into the appropriate common clock driver from
+time_init(), prior to setting up the timer so that the right frequency
+can be reported based on the clock hierarchy specified in DT. I guess
+this could be made more general, allowing any enabled clock component to
+be initialised at this time.
+* init_irq(), for dynamically detecting evaluation silicon and if so
+telling the interrupt controller that there are no mask registers (easy
+to drop tbh since nobody uses TZ1090 evaluation silicon any longer).
+* probably something for setting up power management (suspend to ram /
+standby and associated asm code), which would also be used by some
+TZ1090 based boards requiring their own power management variations.
+
+> 
+>> diff --git a/arch/metag/configs/tz1090_defconfig b/arch/metag/configs/tz1090_defconfig
+>> new file mode 100644
+>> index 0000000..4794094
+>> --- /dev/null
+>> +++ b/arch/metag/configs/tz1090_defconfig
+> 
+> Also, if this is compatible with your previous platform, I would recommend just
+> having a single defconfig that runs on all supported hardware. It's easy enough
+> for users to turn off the drivers and platforms they don't need.
+
+Unfortunately the selects in the SOC_TZ1090 are important as they enable
+workarounds for hardware quirks which would have a performance impact on
+newer cores without those quirks. At the moment (i.e. without doing
+dynamic fixups of kernel code like I believe x86 does, and without an
+updated compiler that can support fast jump labels), we can probably
+only achieve single-SoC multi-board support in a given kernel, at least
+when it comes to the TZ1090.
+
+> 
+>> diff --git a/arch/metag/soc/tz1090/setup.c b/arch/metag/soc/tz1090/setup.c
+>> new file mode 100644
+>> index 0000000..fbd7074
+>> --- /dev/null
+>> +++ b/arch/metag/soc/tz1090/setup.c
+>> +
+>> +#include <linux/init.h>
+>> +#include <asm/mach/arch.h>
+>> +
+>> +static const char *tz1090_boards_compat[] __initdata = {
+>> +	"toumaz,tz1090",
+>> +	NULL,
+>> +};
+>> +
+>> +MACHINE_START(TZ1090, "Generic TZ1090")
+>> +	.dt_compat	= tz1090_boards_compat,
+>> +MACHINE_END
+> 
+> Have you looked at the patch I sent for default platform code on ARM?
+> The idea is to default to an empty machine descriptor if nothing matches
+> the root compatible entry of the DT. The same would work here to allow
+> you to run without any board code at all.
+
+No I hadn't seen that. I'll look into it. This was meant as a stub to
+later be extended, and at the moment without this we would fall back to
+an almost identical definition in arch/metag/kernel/machines.c which
+wouldn't do any harm at this stage.
+
+Thanks
+James
