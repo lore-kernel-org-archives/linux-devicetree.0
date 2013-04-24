@@ -1,16 +1,18 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [RFC PATCH v3 02/17] Documentation: devicetree: arm: cpus/cpu
- nodes bindings updates
-Date: Wed, 24 Apr 2013 21:58:20 +0200
-Message-ID: <20130424195820.GM4998@game.jcrosoft.org>
-References: <1366824502-19729-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1366824502-19729-3-git-send-email-lorenzo.pieralisi@arm.com>
+From: arno@natisbad.org (Arnaud Ebalard)
+Subject: Re: [PATCHv1 1/3] hwmon: Add support for GMT G762/G763 PWM fan
+ controller
+Date: Wed, 24 Apr 2013 22:28:47 +0200
+Message-ID: <87li878ygw.fsf@natisbad.org>
+References: <cover.1366753420.git.arno@natisbad.org>
+ <63961d39aee9db94767f28fd441312bec2029473.1366753420.git.arno@natisbad.org>
+ <20130424053758.GC8710@lunn.ch> <87obd4wb4e.fsf@natisbad.org>
+ <20130424133856.GA18851@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1366824502-19729-3-git-send-email-lorenzo.pieralisi@arm.com>
+In-Reply-To: <20130424133856.GA18851@roeck-us.net> (Guenter Roeck's message of
+ "Wed, 24 Apr 2013 06:38:56 -0700")
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,524 +22,58 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Dave Martin <dave.martin@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Lennert Buytenhek <kernel@wantstofly.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Grant Likely <grant.likely@linaro.org>, David Brown <davidb@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Sekhar Nori <nsekhar@ti.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>Simon Horman <h>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Simon Guinot <simon.guinot@sequanux.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18:28 Wed 24 Apr     , Lorenzo Pieralisi wrote:
-> In order to extend the current cpu nodes bindings to newer CPUs
-> inclusive of AArch64 and to update support for older ARM CPUs this
-> patch updates device tree documentation for the cpu nodes bindings.
-> 
-> Main changes:
->     - adds 64-bit bindings
->     - define usage of #address-cells
->     - define 32/64 dts compatibility settings
->     - defines behaviour on pre and post v7 uniprocessor systems
->     - adds ARM 11MPcore specific reg property definition
-> 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> ---
->  Documentation/devicetree/bindings/arm/cpus.txt | 457 ++++++++++++++++++++++---
->  1 file changed, 410 insertions(+), 47 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index f32494d..00badea 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -1,77 +1,440 @@
-> -* ARM CPUs binding description
-> +=================
-> +ARM CPUs bindings
-> +=================
->  
->  The device tree allows to describe the layout of CPUs in a system through
->  the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
->  defining properties for every cpu.
->  
-> -Bindings for CPU nodes follow the ePAPR standard, available from:
-> -
-> -http://devicetree.org
-> -
-> -For the ARM architecture every CPU node must contain the following properties:
-> -
-> -- device_type:	must be "cpu"
-> -- reg:		property matching the CPU MPIDR[23:0] register bits
-> -		reg[31:24] bits must be set to 0
-> -- compatible:	should be one of:
-> -		"arm,arm1020"
-> -		"arm,arm1020e"
-> -		"arm,arm1022"
-> -		"arm,arm1026"
-> -		"arm,arm720"
-> -		"arm,arm740"
-> -		"arm,arm7tdmi"
-> -		"arm,arm920"
-> -		"arm,arm922"
-> -		"arm,arm925"
-> -		"arm,arm926"
-> -		"arm,arm940"
-> -		"arm,arm946"
-> -		"arm,arm9tdmi"
-> -		"arm,cortex-a5"
-> -		"arm,cortex-a7"
-> -		"arm,cortex-a8"
-> -		"arm,cortex-a9"
-> -		"arm,cortex-a15"
-> -		"arm,arm1136"
-> -		"arm,arm1156"
-> -		"arm,arm1176"
-> -		"arm,arm11mpcore"
-> -		"faraday,fa526"
-> -		"intel,sa110"
-> -		"intel,sa1100"
-> -		"marvell,feroceon"
-> -		"marvell,mohawk"
-> -		"marvell,xsc3"
-> -		"marvell,xscale"
-> -
-> -Example:
-> +Bindings for CPU nodes follow the ePAPR v1.1 standard, available from:
-> +
-> +https://www.power.org/documentation/epapr-version-1-1/
-> +
-> +with updates for 32-bit and 64-bit ARM systems provided in this document.
-> +
-> +================================
-> +Convention used in this document
-> +================================
-> +
-> +This document follows the conventions described in the ePAPR v1.1, with
-> +the addition:
-> +
-> +- square brackets define bitfields, eg reg[7:0] value of the bitfield in
-> +  the reg property contained in bits 7 down to 0
-> +
-> +=====================================
-> +cpus and cpu node bindings definition
-> +=====================================
-> +
-> +The ARM architecture, in accordance with the ePAPR, requires the cpus and cpu
-> +nodes to be present and contain the properties described below.
-> +
-> +- cpus node
-> +
-> +	Description: Container of cpu nodes
-> +
-> +	The node name must be "cpus".
-> +
-> +	A cpus node must define the following properties:
-> +
-> +	- #address-cells
-> +		Usage: required
-> +		Value type: <u32>
-> +
-> +		Definition depends on ARM architecture version and
-> +		configuration:
-> +
-> +			# On uniprocessor ARM architectures previous to v7
-> +			  value must be 0.
-> +			# On 32-bit ARM 11 MPcore, ARM v7 or later systems
-> +			  value must be 1.
-> +			# On ARM v8 64-bit systems value must be set to 1
-> +			  or 2. Refer to the cpu node's reg property
-> +			  description for allowed configurations.
-> +
-> +	- #size-cells
-> +		Usage: required
-> +		Value type: <u32>
-> +		Definition: must be set to 0
-> +
-> +- cpu node
-> +
-> +	Description: Describes a CPU in an ARM based system
-> +
-> +	PROPERTIES
-> +
-> +	- device_type
-> +		Usage: required
-> +		Value type: <string>
-> +		Definition: must be "cpu"
-> +	- reg
-> +		Usage and definition depend on ARM architecture version and
-> +		configuration:
-> +
-> +			# On uniprocessor ARM architectures previous to v7
-> +			  this property is optional since they do not define
-> +			  any register that provides a CPU identifier.
-> +			  Any value set in the reg property for these CPUs
-> +			  should be ignored.
-> +
-> +			# On ARM 11 MPcore based systems this property is
-> +			  required and matches the CPUID[11:0] register bits.
-> +
-> +			  Bits [11:0] in the reg cell must be set to
-> +			  bits [11:0] in CPU ID register.
-> +
-> +			  All other bits in the reg cell must be set to 0.
-> +
-> +			# On 32-bit ARM v7 or later systems this property is
-> +			  required and matches the CPU MPIDR[23:0] register
-> +			  bits.
-> +
-> +			  Bits [23:0] in the reg cell must be set to
-> +			  bits [23:0] in MPIDR.
-> +
-> +			  All other bits in the reg cell must be set to 0.
-> +
-> +			# On ARM v8 64-bit systems, where the reg property
-> +			  size can be 1 or 2 cells (as defined by cpus node's
-> +			  #address-cells property), this property is
-> +			  required and matches:
-> +
-> +			  - On systems running the OS in AArch32:
-> +
-> +			    * If the cpus node's #address-cells value is 2:
-> +
-> +			      The first reg cell must be set to 0.
-> +
-> +			      The second reg cell bits [23:0] must be set to
-> +			      bits [23:0] of MPIDR_EL1.
-> +
-> +			      All other bits in the reg cells must be set to 0.
-> +
-> +			    * If the cpus node's #address-cells value is 1:
-> +
-> +			      Bits [23:0] in the reg cell must be set to
-> +			      bits [23:0] in MPIDR_EL1.
-> +
-> +			      All other bits in the reg cell must be 0.
-> +
-> +			  - On systems running the OS in AArch64:
-> +
-> +			    * If the cpus node's #address-cells value is 2:
-> +
-> +			      The first reg cell bits [7:0] must be set to
-> +			      bits [39:32] of MPIDR_EL1.
-> +
-> +			      The second reg cell bits [23:0] must be set to
-> +			      bits [23:0] of MPIDR_EL1.
-> +
-> +			      All other bits in the reg cells must be set to 0.
-> +
-> +			    * If the cpus node's #address-cells value is 1:
-> +
-> +			      MPIDR_EL1[63:32] is 0 on all processors in the
-> +			      system.
-> +
-> +			      The reg cell bits [23:0] must be set to
-> +			      bits [23:0] of MPIDR_EL1.
-> +
-> +			      All other bits in the reg cell must be set to 0.
-> +
-> +	- compatible:
-> +		Usage: required
-> +		Value type: <string>
-> +		Definition: should be one of:
-> +			    "arm,arm710t"
-> +			    "arm,arm720t"
-> +			    "arm,arm740t"
-> +			    "arm,arm7ej-s"
-> +			    "arm,arm7tdmi"
-> +			    "arm,arm7tdmi-s"
-> +			    "arm,arm9es"
-> +			    "arm,arm9ej-s"
-> +			    "arm,arm920t"
-> +			    "arm,arm922t"
-> +			    "arm,arm925"
-> +			    "arm,arm926e-s"
-> +			    "arm,arm926ej-s"
-> +			    "arm,arm940t"
-> +			    "arm,arm946e-s"
-> +			    "arm,arm966e-s"
-> +			    "arm,arm968e-s"
-> +			    "arm,arm9tdmi"
-> +			    "arm,arm1020e"
-> +			    "arm,arm1020t"
-> +			    "arm,arm1022e"
-> +			    "arm,arm1026ej-s"
-the common name is arm926ejs / arm1026ejs & co
+Hi,
 
-Best Regards,
-J.
-> +			    "arm,arm1136j-s"
-> +			    "arm,arm1136jf-s"
-> +			    "arm,arm1156t2-s"
-> +			    "arm,arm1156t2f-s"
-> +			    "arm,arm1176jzf"
-> +			    "arm,arm1176jz-s"
-> +			    "arm,arm1176jzf-s"
-> +			    "arm,arm11mpcore"
-> +			    "arm,cortex-a5"
-> +			    "arm,cortex-a7"
-> +			    "arm,cortex-a8"
-> +			    "arm,cortex-a9"
-> +			    "arm,cortex-a15"
-> +			    "arm,cortex-a53"
-> +			    "arm,cortex-a57"
-> +			    "arm,cortex-m0"
-> +			    "arm,cortex-m0+"
-> +			    "arm,cortex-m1"
-> +			    "arm,cortex-m3"
-> +			    "arm,cortex-m4"
-> +			    "arm,cortex-r4"
-> +			    "arm,cortex-r5"
-> +			    "arm,cortex-r7"
-> +			    "faraday,fa526"
-> +			    "intel,sa110"
-> +			    "intel,sa1100"
-> +			    "marvell,feroceon"
-> +			    "marvell,mohawk"
-> +			    "marvell,pj4"
-> +			    "marvell,sheeva-v7"
-> +			    "marvell,xsc3"
-> +			    "marvell,xscale"
-> +			    "qcom,krait"
-> +			    "qcom,scorpion"
-> +	- enable-method
-> +		Value type: <stringlist>
-> +		Usage and definition depend on ARM architecture version and
-> +		configuration:
-> +			# On ARM v8 64-bit systems running the OS in AArch64,
-> +			  this property is required and must be "spin-table".
-> +			# On ARM 32-bit systems or ARM v8 systems running
-> +			  the OS in AArch32 this property is prohibited.
-> +
-> +	- cpu-release-addr
-> +		Usage: required for systems that have an "enable-method"
-> +		       property value of "spin-table".
-> +		Value type: <prop-encoded-array>
-> +		Definition:
-> +			# On ARM v8 64-bit systems must be a two cell
-> +			  property identifying a 64-bit zero-initialised
-> +			  memory location.
-> +
-> +Example 1 (dual-cluster big.LITTLE system 32-bit):
->  
->  	cpus {
->  		#size-cells = <0>;
->  		#address-cells = <1>;
->  
-> -		CPU0: cpu@0 {
-> +		cpu@0 {
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a15";
->  			reg = <0x0>;
->  		};
->  
-> -		CPU1: cpu@1 {
-> +		cpu@1 {
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a15";
->  			reg = <0x1>;
->  		};
->  
-> -		CPU2: cpu@100 {
-> +		cpu@100 {
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a7";
->  			reg = <0x100>;
->  		};
->  
-> -		CPU3: cpu@101 {
-> +		cpu@101 {
->  			device_type = "cpu";
->  			compatible = "arm,cortex-a7";
->  			reg = <0x101>;
->  		};
->  	};
-> +
-> +Example 2 (Cortex-A8 uniprocessor 32-bit system):
-> +
-> +	cpus {
-> +		#size-cells = <0>;
-> +		#address-cells = <1>;
-> +
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a8";
-> +			reg = <0x0>;
-> +		};
-> +	};
-> +
-> +Example 3 (ARM 926EJ-S uniprocessor 32-bit system):
-> +
-> +	cpus {
-> +		#size-cells = <0>;
-> +		#address-cells = <0>;
-> +
-> +		cpu {
-> +			device_type = "cpu";
-> +			compatible = "arm,arm926ej-s";
-> +		};
-> +	};
-> +
-> +Example 4 (ARM Cortex-A57 64-bit system running OS in AArch64):
-> +
-> +cpus {
-> +	#size-cells = <0>;
-> +	#address-cells = <2>;
-> +
-> +	cpu@0 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x0 0x0>;
-> +		enable-method = "spin-table";
-> +		cpu-release-addr = <0 0x20000000>;
-> +	};
-> +
-> +	cpu@1 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x0 0x1>;
-> +		enable-method = "spin-table";
-> +		cpu-release-addr = <0 0x20000000>;
-> +	};
-> +
-> +	cpu@100 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x0 0x100>;
-> +		enable-method = "spin-table";
-> +		cpu-release-addr = <0 0x20000000>;
-> +	};
-> +
-> +	cpu@101 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x0 0x101>;
-> +		enable-method = "spin-table";
-> +		cpu-release-addr = <0 0x20000000>;
-> +	};
-> +
-> +	cpu@10000 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x0 0x10000>;
-> +		enable-method = "spin-table";
-> +		cpu-release-addr = <0 0x20000000>;
-> +	};
-> +
-> +	cpu@10001 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x0 0x10001>;
-> +		enable-method = "spin-table";
-> +		cpu-release-addr = <0 0x20000000>;
-> +	};
-> +
-> +	cpu@10100 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x0 0x10100>;
-> +		enable-method = "spin-table";
-> +		cpu-release-addr = <0 0x20000000>;
-> +	};
-> +
-> +	cpu@10101 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x0 0x10101>;
-> +		enable-method = "spin-table";
-> +		cpu-release-addr = <0 0x20000000>;
-> +	};
-> +
-> +	cpu@100000000 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x1 0x0>;
-> +		enable-method = "spin-table";
-> +		cpu-release-addr = <0 0x20000000>;
-> +	};
-> +
-> +	cpu@100000001 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x1 0x1>;
-> +		enable-method = "spin-table";
-> +		cpu-release-addr = <0 0x20000000>;
-> +	};
-> +
-> +	cpu@100000100 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x1 0x100>;
-> +		enable-method = "spin-table";
-> +		cpu-release-addr = <0 0x20000000>;
-> +	};
-> +
-> +	cpu@100000101 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x1 0x101>;
-> +		enable-method = "spin-table";
-> +		cpu-release-addr = <0 0x20000000>;
-> +	};
-> +
-> +	cpu@100010000 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x1 0x10000>;
-> +		enable-method = "spin-table";
-> +		cpu-release-addr = <0 0x20000000>;
-> +	};
-> +
-> +	cpu@100010001 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x1 0x10001>;
-> +		enable-method = "spin-table";
-> +		cpu-release-addr = <0 0x20000000>;
-> +	};
-> +
-> +	cpu@100010100 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x1 0x10100>;
-> +		enable-method = "spin-table";
-> +		cpu-release-addr = <0 0x20000000>;
-> +	};
-> +
-> +	cpu@100010101 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x1 0x10101>;
-> +		enable-method = "spin-table";
-> +		cpu-release-addr = <0 0x20000000>;
-> +	};
-> +};
-> +
-> +Example 5 (ARM Cortex-A57 64-bit system running OS in AArch32):
-> +
-> +cpus {
-> +	#size-cells = <0>;
-> +	#address-cells = <2>;
-> +
-> +	cpu@0 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x0 0x0>;
-> +	};
-> +
-> +	cpu@1 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x0 0x1>;
-> +	};
-> +
-> +	cpu@100 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x0 0x100>;
-> +	};
-> +
-> +	cpu@101 {
-> +		device_type = "cpu";
-> +		compatible = "arm,cortex-a57";
-> +		reg = <0x0 0x101>;
-> +	};
-> +};
-> -- 
-> 1.7.12
-> 
-> 
+Guenter Roeck <linux@roeck-us.net> writes:
+
+>> > You could consider using regmap for holding this cache.
+>> >
+>> > http://elceurope2012.sched.org/event/100619b669ce5767341624253aa03659?iframe=no&w=900&sidebar=yes&bg=no#.UXdspHLQ5jM
+>> >
+>> > http://elinux.org/ELCE_Europe_2012_Presentations
+>> 
+>> Interesting. As I am not yet familiar w/ regmap I would prefer having
+>> the driver accepted during merge window with current data structure and
+>> then convert it to regmap. But I will take a look (e.g. will study
+>> fca1dd03 for instance). Thanks for the pointers. 
+>> 
+> I have not had time for a detailed review, but adding regmap support
+> will not be a requirement.
+>
+> Note that it is too late for 3.10, so the driver will have to wait for
+> 3.11.
+
+Well, I think I can live with it; The only bad thing is that it kills my
+excuses not to spend time on regmap ;-)
+
+
+>> >> +/*
+>> >> + * Helpers to import hardware characteristics from .dts file and overload
+>> >> + * default config values.
+>> >> + */
+>> >> +
+>> >> +#ifdef CONFIG_OF
+>> >
+>> > Can the driver be used without device tree? Would it be simpler to
+>> >  just add depends OF in the Kconfig entry?
+>> 
+>> It can be used if the default params (or those configured by u-boot I
+>> guess) fit your needs. I think it would be fairly easy to extend the
+>> driver later to expose g762_config struct to allow parameters to be set
+>> w/o using OF. If someone wants to do that, I think it is better to not
+>> depend on OF in Kconfig at the moment but I have not strong argument
+>> other that that one. I'll let you decide.
+>> 
+> Agreed. As long as there are major platforms not supporting device tree,
+> and as long as device tree overlays are not supported, it must not be made
+> mandatory. Especially for I2C and SPI devices I reserve the right to be able
+> test the hardware on an X86 system and not require a reboot to do so.
+
+Understood. Following Simon's post, I think it's useful to implement
+some init function for non DT-enabled platforms. 
+
+a+
