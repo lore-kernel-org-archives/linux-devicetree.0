@@ -1,51 +1,64 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC PATCH v2 11/13] ARM: mach-sunxi: cpus/cpu nodes dts updates
-Date: Wed, 24 Apr 2013 09:15:03 +0200
-Message-ID: <51778677.908@free-electrons.com>
-References: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1366644455-16550-12-git-send-email-lorenzo.pieralisi@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366644455-16550-12-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Subject: [RFC v2 0/6] Adding media device driver for Exynos5 imaging subsystem
+Date: Wed, 24 Apr 2013 13:11:07 +0530
+Message-ID: <1366789273-30184-1-git-send-email-shaik.ameer@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
+Cc: s.nawrocki@samsung.com, shaik.samsung@gmail.com, arunkk.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
+The following patchset features:
 
-Le 22/04/2013 17:27, Lorenzo Pieralisi a =E9crit :
-> This patch updates the in-kernel dts files according to the latest cpus
-> and cpu bindings updates for ARM.
-> =
+1] Creating a common pipeline framework which can be used by all
+Exynos series SoCs for developing media device drivers.
+2] Modified the existing fimc-mdevice for exynos4 to use the common
+pipeline framework.
+3] Adding of media device driver for Exynos5 Imaging subsystem.
+4] Upgrading mipi-csis and fimc-lite drivers for Exynos5 SoCs.
 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sunxi.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
+Current changes are not tested on exynos4 series SoCs. Current media
+device driver only support one pipeline (pipeline0) which consists of
+        Sensor --> MIPI-CSIS --> FIMC-LITE
+        Sensor --> FIMC-LITE
+G-Scaler support to pipeline0 will be added later.
 
-Just to let you know, this file won't exist anymore in 3.10, and has
-been split out in sun4i-a10.dtsi and sun5i-a13.dtsi. You'll obviously
-need to change both when rebasing.
+Once the fimc-is device driver is posted, one more pipeline (pipeline1)
+will be added for exynos5 media device driver for fimc-is sub-devices.
 
-Other than that,
-Acked-By: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+This patchset is rebased on:
+git://linuxtv.org/snawrocki/samsung.git:for_v3.10_2
 
-Maxime
+Shaik Ameer Basha (6):
+  media: exynos4-is: modify existing mdev to use common pipeline
+  fimc-lite: Adding Exynos5 compatibility to fimc-lite driver
+  media: fimc-lite: Adding support for Exynos5
+  media: fimc-lite: Fix for DMA output corruption
+  media: s5p-csis: Adding Exynos5250 compatibility
+  media: exynos5-is: Adding media device driver for exynos5
 
--- =
+ .../devicetree/bindings/media/exynos5-mdev.txt     |  153 +++
+ drivers/media/platform/Kconfig                     |    1 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/exynos4-is/fimc-capture.c   |   47 +-
+ drivers/media/platform/exynos4-is/fimc-lite-reg.c  |   16 +-
+ drivers/media/platform/exynos4-is/fimc-lite-reg.h  |   41 +-
+ drivers/media/platform/exynos4-is/fimc-lite.c      |   45 +-
+ drivers/media/platform/exynos4-is/fimc-lite.h      |    4 +-
+ drivers/media/platform/exynos4-is/media-dev.c      |  179 +++-
+ drivers/media/platform/exynos4-is/media-dev.h      |   16 +
+ drivers/media/platform/exynos4-is/mipi-csis.c      |    3 +-
+ drivers/media/platform/exynos5-is/Kconfig          |    7 +
+ drivers/media/platform/exynos5-is/Makefile         |    4 +
+ drivers/media/platform/exynos5-is/exynos5-mdev.c   | 1131 ++++++++++++++++++++
+ drivers/media/platform/exynos5-is/exynos5-mdev.h   |  120 +++
+ include/media/s5p_fimc.h                           |   46 +-
+ 16 files changed, 1757 insertions(+), 57 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/exynos5-mdev.txt
+ create mode 100644 drivers/media/platform/exynos5-is/Kconfig
+ create mode 100644 drivers/media/platform/exynos5-is/Makefile
+ create mode 100644 drivers/media/platform/exynos5-is/exynos5-mdev.c
+ create mode 100644 drivers/media/platform/exynos5-is/exynos5-mdev.h
 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+-- 
+1.7.9.5
