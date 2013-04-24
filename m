@@ -1,15 +1,18 @@
-From: Francesco Lavra <francescolavra.fl@gmail.com>
-Subject: Re: [Linaro-mm-sig] [RFC/PATCH v2 2/2] drivers: dma-contiguous: add
- initialization from device tree
-Date: Wed, 24 Apr 2013 12:30:49 +0200
-Message-ID: <5177B459.1080009@gmail.com>
-References: <1365679330-2514-1-git-send-email-m.szyprowski@samsung.com>
- <1365679330-2514-3-git-send-email-m.szyprowski@samsung.com>
+From: arno@natisbad.org (Arnaud Ebalard)
+Subject: Re: [PATCHv1 1/3] hwmon: Add support for GMT G762/G763 PWM fan
+ controller
+Date: Wed, 24 Apr 2013 12:50:12 +0200
+Message-ID: <87ehe06w4b.fsf@natisbad.org>
+References: <cover.1366753420.git.arno@natisbad.org>
+ <63961d39aee9db94767f28fd441312bec2029473.1366753420.git.arno@natisbad.org>
+ <20130424053758.GC8710@lunn.ch> <87obd4wb4e.fsf@natisbad.org>
+ <20130424100458.GA17771@kw.sim.vm.gnt>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1365679330-2514-3-git-send-email-m.szyprowski@samsung.com>
+In-Reply-To: <20130424100458.GA17771@kw.sim.vm.gnt> (Simon Guinot's message of
+ "Wed, 24 Apr 2013 12:04:59 +0200")
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,54 +22,27 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <s.hauer@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Tomasz Figa <t.figa@samsung.com>, Michal Nazarewicz <mina86@mina86.com>, linaro-mm-sig@lists.linaro.org, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Olof Johansson <olof@lixom.net>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Simon Guinot <simon.guinot@sequanux.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Guenter Roeck <linux@roeck-us.net>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/2013 01:22 PM, Marek Szyprowski wrote:
-> diff --git a/drivers/base/dma-contiguous.c b/drivers/base/dma-contiguous.c
-> index 01fe743..6a8abab 100644
-> --- a/drivers/base/dma-contiguous.c
-> +++ b/drivers/base/dma-contiguous.c
-[...]
-> +void scan_cma_nodes(void)
+Hi Simon,
 
-Should be declared static.
+Simon Guinot <simon.guinot@sequanux.org> writes:
 
-> +{
-> +	struct device_node *parent = of_find_node_by_path("/chosen/contiguous-memory");
-> +	struct device_node *child;
-> +
-> +	if (!parent)
-> +		return;
-> +
-> +	for_each_child_of_node(parent, child) {
-> +		struct cma *cma = NULL;
-> +		int i;
-> +
-> +		for (i=0; i<cma_area_count; i++)
-> +			if (strstr(child->full_name, cma_areas[i].full_name))
-> +				cma = &cma_areas[i];
-> +		if (!cma)
-> +			continue;
-> +
-> +		for (i=0;; i++) {
-> +			struct device_node *node;
-> +			node = of_parse_phandle(child, "device", i);
-> +			if (!node)
-> +				break;
-> +
-> +			cma_maps[cma_map_count].cma = cma;
-> +			cma_maps[cma_map_count].node = node;
-> +			cma_map_count++;
-> +		}
+>> It can be used if the default params (or those configured by u-boot I
+>> guess) fit your needs. I think it would be fairly easy to extend the
+>> driver later to expose g762_config struct to allow parameters to be set
+>> w/o using OF. If someone wants to do that, I think it is better to not
+>> depend on OF in Kconfig at the moment but I have not strong argument
+>> other that that one. I'll let you decide.
+>
+> A g762 device is embedded on the 2Big Network v2 board (net2big_v2),
+> which is not DT compliant. Then, I think it could be nice to allow
+> device registration from board setup files.
 
-of_parse_phandle() requires of_node_put() to be called when done with
-the device node.
-Also, of_node_put() should be called on the parent node as well.
+ok, I will try and provide that for v2 then. :-)
 
-> +	}
-> +}
+Cheers,
 
---
-Francesco
+a+
