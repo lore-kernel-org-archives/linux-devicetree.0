@@ -1,7 +1,7 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFC PATCH v3 14/17] ARM: dts: sh7372: cpus/cpu nodes dts updates
-Date: Wed, 24 Apr 2013 18:28:19 +0100
-Message-ID: <1366824502-19729-15-git-send-email-lorenzo.pieralisi@arm.com>
+Subject: [RFC PATCH v3 16/17] ARM: dts: sunxi: cpus/cpu nodes dts updates
+Date: Wed, 24 Apr 2013 18:28:21 +0100
+Message-ID: <1366824502-19729-17-git-send-email-lorenzo.pieralisi@arm.com>
 References: <1366824502-19729-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -27,15 +27,15 @@ and cpu bindings updates for ARM.
 
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 ---
- arch/arm/boot/dts/sh7372.dtsi | 5 +++++
+ arch/arm/boot/dts/sunxi.dtsi | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sh7372.dtsi b/arch/arm/boot/dts/sh7372.dtsi
-index 677fc60..7bf020e 100644
---- a/arch/arm/boot/dts/sh7372.dtsi
-+++ b/arch/arm/boot/dts/sh7372.dtsi
-@@ -14,8 +14,13 @@
- 	compatible = "renesas,sh7372";
+diff --git a/arch/arm/boot/dts/sunxi.dtsi b/arch/arm/boot/dts/sunxi.dtsi
+index 8b36abe..9f45ecf 100644
+--- a/arch/arm/boot/dts/sunxi.dtsi
++++ b/arch/arm/boot/dts/sunxi.dtsi
+@@ -17,8 +17,13 @@
+ 	interrupt-parent = <&intc>;
  
  	cpus {
 +		#address-cells = <1>;
@@ -47,6 +47,6 @@ index 677fc60..7bf020e 100644
 +			reg = <0x0>;
  		};
  	};
- };
+ 
 -- 
 1.7.12
