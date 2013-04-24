@@ -1,105 +1,202 @@
-From: arno@natisbad.org (Arnaud Ebalard)
-Subject: Re: [PATCHv1 1/3] hwmon: Add support for GMT G762/G763 PWM fan
- controller
-Date: Wed, 24 Apr 2013 11:06:57 +0200
-Message-ID: <87obd4wb4e.fsf@natisbad.org>
-References: <cover.1366753420.git.arno@natisbad.org>
- <63961d39aee9db94767f28fd441312bec2029473.1366753420.git.arno@natisbad.org>
- <20130424053758.GC8710@lunn.ch>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: [PATCH 3/8] irq-imgpdc: add ImgTec PDC irqchip driver
+Date: Wed, 24 Apr 2013 10:14:10 +0100
+Message-ID: <5177A262.1000004@imgtec.com>
+References: <1366727607-27444-1-git-send-email-james.hogan@imgtec.com> <1366727607-27444-4-git-send-email-james.hogan@imgtec.com> <alpine.LFD.2.02.1304231647400.21884@ionos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Guenter Roeck <linux@roeck-us.net>, Simon Guinot <simon.guinot@sequanux.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <alpine.LFD.2.02.1304231647400.21884@ionos>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+Thanks for the review Thomas!
 
-Andrew Lunn <andrew@lunn.ch> writes:
-
->> +struct g762_data {
->> +	struct i2c_client *client;
->> +	struct device *hwmon_dev;
->> +
->> +	/* update mutex */
->> +	struct mutex update_lock;
->> +
->> +	/* board specific parameters. */
->> +	u32 clk; /* default 32kHz */
->> +
->> +	/* g762 register cache */
->> +	bool valid;
->> +	unsigned long last_updated; /* in jiffies */
->> +
->> +	u8 set_cnt;  /* RPM cmd in close loop control */
->> +	u8 act_cnt;  /* formula: cnt = (CLK * 30)/(rpm * P) */
->> +	u8 fan_sta;  /* bit 0: set when actual fan speed is more than
->> +		      *        25% outside requested fan speed
->> +		      * bit 1: set when no transition occurs on fan
->> +		      *        pin for 0.7s
->> +		      */
->> +	u8 set_out;  /* output voltage/PWM duty in open loop control */
->> +	u8 fan_cmd1; /*   0: FG_PLS_ID0 FG pulses count per revolution
->> +		      *      0: 2 counts per revolution
->> +		      *      1: 4 counts per revolution
->> +		      *   1: PWM_POLARITY 1: negative_duty
->> +		      *                   0: positive_duty
->> +		      * 2,3: [FG_CLOCK_ID0, FG_CLK_ID1]
->> +		      *         00: Divide fan clock by 1
->> +		      *         01: Divide fan clock by 2
->> +		      *         10: Divide fan clock by 4
->> +		      *         11: Divide fan clock by 8
->> +		      *   4: FAN_MODE 1:close-loop, 0:open-loop
->> +		      *   5: OUT_MODE 1:PWM, 0:DAC
->> +		      *   6: DET_FAN_OOC enable "fan ooc" status
->> +		      *   7: DET_FAN_FAIL enable "fan fail" status
->> +		      */
->> +	u8 fan_cmd2; /* 0,1: FAN_STARTV 0,1,2,3 -> 0,32,64,96 dac_code
->> +		      * 2,3: FG_GEAR_MODE
->> +		      *         00: div = 1
->> +		      *         01: div = 2
->> +		      *         10: div = 4
->> +		      *   4: Mask ALERT# (g763 only)
->> +		      */
->
-> You could consider using regmap for holding this cache.
->
-> http://elceurope2012.sched.org/event/100619b669ce5767341624253aa03659?iframe=no&w=900&sidebar=yes&bg=no#.UXdspHLQ5jM
->
-> http://elinux.org/ELCE_Europe_2012_Presentations
-
-Interesting. As I am not yet familiar w/ regmap I would prefer having
-the driver accepted during merge window with current data structure and
-then convert it to regmap. But I will take a look (e.g. will study
-fca1dd03 for instance). Thanks for the pointers. 
-
->> +/*
->> + * Helpers to import hardware characteristics from .dts file and overload
->> + * default config values.
+On 23/04/13 16:09, Thomas Gleixner wrote:
+> On Tue, 23 Apr 2013, James Hogan wrote:
+>> +/**
+>> + * struct pdc_intc_priv - private pdc interrupt data.
+>> + * @nr_perips:		Number of peripheral interrupt signals.
+>> + * @nr_syswakes:	Number of syswake signals.
+>> + * @perip_irqs:		List of peripheral IRQ numbers handled.
+>> + * @syswake_irq:	Shared PDC syswake IRQ number.
+>> + * @domain:		IRQ domain for PDC peripheral and syswake IRQs.
+>> + * @pdc_base:		Base of PDC registers.
+>> + * @lock:		Lock to protect the PDC syswake registers.
 >> + */
+>> +struct pdc_intc_priv {
+>> +	unsigned int		nr_perips;
+>> +	unsigned int		nr_syswakes;
+>> +	unsigned int		*perip_irqs;
+>> +	unsigned int		syswake_irq;
+>> +	struct irq_domain	*domain;
+>> +	void __iomem		*pdc_base;
 >> +
->> +#ifdef CONFIG_OF
->
-> Can the driver be used without device tree? Would it be simpler to
->  just add depends OF in the Kconfig entry?
+>> +	spinlock_t		lock;
+> 
+>   raw_spinlock_t please
 
-It can be used if the default params (or those configured by u-boot I
-guess) fit your needs. I think it would be fairly easy to extend the
-driver later to expose g762_config struct to allow parameters to be set
-w/o using OF. If someone wants to do that, I think it is better to not
-depend on OF in Kconfig at the moment but I have not strong argument
-other that that one. I'll let you decide.
+Okay.
 
-Cheers,
+If I understand right, this would be because on RT, spinlock_t becomes a
+mutex and won't work correctly with irqs actually disabled for the irq
+callbacks below, is that right?
 
-a+
+>> +static void perip_irq_mask(struct irq_data *data)
+>> +{
+>> +	struct pdc_intc_priv *priv = irqd_to_priv(data);
+>> +	unsigned int irq_route;
+>> +	unsigned long flags;
+>> +
+>> +	spin_lock_irqsave(&priv->lock, flags);
+> 
+> This is always called with interrupts disabled.
+
+Okay, I'll switch to raw_spin_lock
+
+>> +	irq_route = pdc_read(priv, PDC_IRQ_ROUTE);
+>> +	irq_route &= ~(1 << data->hwirq);
+> 
+> Why not cache the mask value ?
+
+Yes, caching PDC_IRQ_ROUTE should be possible since it should only be
+used by this driver (hence the driver local spinlock).
+
+> 
+>> +	pdc_write(priv, PDC_IRQ_ROUTE, irq_route);
+> 
+>> +	spin_unlock_irqrestore(&priv->lock, flags);
+>> +}
+>> +
+>> +static void perip_irq_unmask(struct irq_data *data)
+>> +{
+>> +	struct pdc_intc_priv *priv = irqd_to_priv(data);
+>> +	unsigned int irq_route;
+>> +	unsigned long flags;
+>> +
+>> +	spin_lock_irqsave(&priv->lock, flags);
+>> +	irq_route = pdc_read(priv, PDC_IRQ_ROUTE);
+>> +	irq_route |= 1 << data->hwirq;
+>> +	pdc_write(priv, PDC_IRQ_ROUTE, irq_route);
+> 
+> This code is another slightly different copy of stuff which is
+> available in kernel/irq/generic-chip.c
+> 
+> Can we please stop the code duplication and reuse existing
+> infrastructure? Don't tell me it does not work for you.  I sent out a
+> patch yesterday which makes the code suitable for irq domains.
+
+I'll look into this. kernel/irq/generic-chip.c was added after this
+driver was written.
+
+>> +static void pdc_intc_perip_isr(unsigned int irq, struct irq_desc *desc)
+>> +{
+>> +	struct pdc_intc_priv *priv;
+>> +	unsigned int i, irq_no;
+>> +
+>> +	priv = (struct pdc_intc_priv *)irq_desc_get_handler_data(desc);
+>> +
+>> +	/* find the peripheral number */
+>> +	for (i = 0; i < priv->nr_perips; ++i)
+>> +		if (irq == priv->perip_irqs[i])
+>> +			goto found;
+> 
+> Whee. Aren't these numbers linear ?
+
+Not necessarily as they're virtual irq numbers obtained via
+platform_get_irq(), which come individually from device tree. Even their
+hardware irq numbers aren't linear as they're not wired to their irqchip
+in the same order:
+> pdc: pdc@0x02006000 {
+> 	interrupt-controller;
+> 	#interrupt-cells = <3>;
+> 
+> 	reg = <0x02006000 0x1000>;
+> 	compatible = "img,pdc-intc";
+> 
+> 	num-perips = <3>;
+> 	num-syswakes = <3>;
+> 
+> 	interrupts = <18 4 /* level */>, /* Syswakes */
+> 	             <30 4 /* level */>, /* Perip 0 (RTC) */
+> 	             <29 4 /* level */>, /* Perip 1 (IR) */
+> 	             <31 4 /* level */>; /* Perip 2 (WDT) */
+> };
+
+>> +static int pdc_intc_probe(struct platform_device *pdev)
+>> +{
+>> +	struct pdc_intc_priv *priv;
+>> +	struct device_node *node = pdev->dev.of_node;
+>> +	struct resource *res_regs;
+>> +	unsigned int i;
+>> +	int irq, ret;
+>> +	u32 val;
+>> +
+>> +	if (!node)
+>> +		return -ENOENT;
+>> +
+>> +	/* Get registers */
+>> +	res_regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	if (res_regs == NULL) {
+>> +		dev_err(&pdev->dev, "cannot find registers resource\n");
+>> +		return -ENOENT;
+>> +	}
+>> +
+>> +	/* Allocate driver data */
+>> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+>> +	if (!priv) {
+>> +		dev_err(&pdev->dev, "cannot allocate device data\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +	spin_lock_init(&priv->lock);
+>> +	platform_set_drvdata(pdev, priv);
+>> +
+>> +	/* Ioremap the registers */
+>> +	priv->pdc_base = devm_ioremap(&pdev->dev, res_regs->start,
+>> +				      res_regs->end - res_regs->start);
+>> +	if (!priv->pdc_base)
+>> +		return -EIO;
+> 
+> Leaks priv.
+> 
+>> +	/* Get number of peripherals */
+>> +	ret = of_property_read_u32(node, "num-perips", &val);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "No num-perips node property found\n");
+>> +		return -EINVAL;
+> 
+> Leaks priv and mapping
+> 
+>> +	}
+>> +	if (val > SYS0_HWIRQ) {
+>> +		dev_err(&pdev->dev, "num-perips (%u) out of range\n", val);
+>> +		return -EINVAL;
+> 
+> Error handling is optional, right?
+> 
+>> +static int pdc_intc_remove(struct platform_device *pdev)
+>> +{
+>> +	struct pdc_intc_priv *priv = platform_get_drvdata(pdev);
+>> +
+>> +	irq_domain_remove(priv->domain);
+> 
+> And the rest of the resources is still there?
+
+I was under the impression devm_kzalloc and devm_ioremap took care of
+that in both the probe error case and the remove case:
+
+>  * devm_kzalloc - Resource-managed kzalloc
+>  * Managed kzalloc.  Memory allocated with this function is
+>  * automatically freed on driver detach. 
+
+>  * devm_ioremap - Managed ioremap()
+>  * Managed ioremap().  Map is automatically unmapped on driver detach.
+
+I may have misunderstood the whole point of their existence though?
+
+Thanks
+James
+
