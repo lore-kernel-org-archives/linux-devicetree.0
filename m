@@ -1,89 +1,98 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH v2 03/13] ARM: mach-at91: cpus/cpu node dts updates
-Date: Wed, 24 Apr 2013 10:29:14 +0100
-Message-ID: <20130424092914.GA1561@e102568-lin.cambridge.arm.com>
-References: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1366644455-16550-4-git-send-email-lorenzo.pieralisi@arm.com>
- <51768892.7060807@gmail.com>
- <20130423135304.GG22946@e102568-lin.cambridge.arm.com>
- <20130423195259.GJ4998@game.jcrosoft.org>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 3/8] irq-imgpdc: add ImgTec PDC irqchip driver
+Date: Wed, 24 Apr 2013 11:32:30 +0200 (CEST)
+Message-ID: <alpine.LFD.2.02.1304241128320.21884@ionos>
+References: <1366727607-27444-1-git-send-email-james.hogan@imgtec.com> <1366727607-27444-4-git-send-email-james.hogan@imgtec.com> <alpine.LFD.2.02.1304231647400.21884@ionos> <5177A262.1000004@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130423195259.GJ4998-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5177A262.1000004@imgtec.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: James Hogan <james.hogan@imgtec.com>
+Cc: linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 23, 2013 at 08:52:59PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> On 14:53 Tue 23 Apr     , Lorenzo Pieralisi wrote:
-> > On Tue, Apr 23, 2013 at 02:11:46PM +0100, Rob Herring wrote:
-> > > On 04/22/2013 10:27 AM, Lorenzo Pieralisi wrote:
-> > > > This patch updates the in-kernel dts files according to the latest cpus
-> > > > and cpu bindings updates for ARM.
-> > > > 
-> > > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> > > > ---
-> > > >  arch/arm/boot/dts/at91sam9260.dtsi | 2 +-
-> > > >  arch/arm/boot/dts/at91sam9263.dtsi | 2 +-
-> > > >  arch/arm/boot/dts/at91sam9g45.dtsi | 2 +-
-> > > >  arch/arm/boot/dts/at91sam9n12.dtsi | 2 +-
-> > > >  4 files changed, 4 insertions(+), 4 deletions(-)
-> > > > 
-> > > > diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-> > > > index cb7bcc5..2e9de85 100644
-> > > > --- a/arch/arm/boot/dts/at91sam9260.dtsi
-> > > > +++ b/arch/arm/boot/dts/at91sam9260.dtsi
-> > > > @@ -33,7 +33,7 @@
-> > > >  	};
-> > > >  	cpus {
-> > > >  		cpu@0 {
-> > > > -			compatible = "arm,arm926ejs";
-> > > > +			compatible = "arm,arm926";
-> > > 
-> > > I don't understand why you are doing this. If this does not match the
-> > > documentation, fix the documentation. We can't continue on changing dts
-> > > files without reqard to breaking compatibility.
-> > 
-> > IMHO compatibility is already broken. There are a number of dts in the
-> > kernel missing cpus and cpu nodes, others with cpu nodes missing
-> > device_type = "cpu", missing cpu nodes compatible properties and the list
-> > goes on and on. Those files got merged in the kernel before bindings were
-> > properly defined for ARM so at that point in time the only reference was the
-> > ePAPR and still, it was not followed (eg my broken patch above fails to add
-> > device_type = "cpu" to the cpu node, should I change the documentation (ePAPR)
-> > to make the dts above compliant ? I do not think so, I reckon we should fix
-> > all dts and force them to comply with the ePAPR and the in-kernel bindings).
-> > 
-> > If we do not set in stone the bindings and draw a line now, this stuff will
-> > go wild, it is already in a state that I do not like much.
-> > 
-> > The reason we are patching the compatible property above is to avoid having
-> > compatible properties containing suffixes for CPUs, we do not deem that
-> > necessary, see:
-> > 
-> > http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/145305.html
-> > 
-> > That's just my opinion, open to change it to find a proper solution to this
-> > issue as long as we make progress.
+On Wed, 24 Apr 2013, James Hogan wrote:
+> Thanks for the review Thomas!
 > 
-> I do not agree when you set the compatible you need to be preceise the cpu is
-> a arm926ejs not a arm926
+> On 23/04/13 16:09, Thomas Gleixner wrote:
+> > On Tue, 23 Apr 2013, James Hogan wrote:
+ >> +	spinlock_t		lock;
+> > 
+> >   raw_spinlock_t please
+> 
+> Okay.
+> 
+> If I understand right, this would be because on RT, spinlock_t becomes a
+> mutex and won't work correctly with irqs actually disabled for the irq
+> callbacks below, is that right?
 
-I updated the bindings with all processor variants so that we will all
-be happy again (I hope). My comments still stand though and these dts need
-patching, I am posting the required changes in v3.
+Yep.
+ 
+> I'll look into this. kernel/irq/generic-chip.c was added after this
+> driver was written.
 
-Lorenzo
+Fair enough.
+ 
+> >> +static void pdc_intc_perip_isr(unsigned int irq, struct irq_desc *desc)
+> >> +{
+> >> +	struct pdc_intc_priv *priv;
+> >> +	unsigned int i, irq_no;
+> >> +
+> >> +	priv = (struct pdc_intc_priv *)irq_desc_get_handler_data(desc);
+> >> +
+> >> +	/* find the peripheral number */
+> >> +	for (i = 0; i < priv->nr_perips; ++i)
+> >> +		if (irq == priv->perip_irqs[i])
+> >> +			goto found;
+> > 
+> > Whee. Aren't these numbers linear ?
+> 
+> Not necessarily as they're virtual irq numbers obtained via
+> platform_get_irq(), which come individually from device tree. Even their
+> hardware irq numbers aren't linear as they're not wired to their irqchip
+> in the same order:
+> > pdc: pdc@0x02006000 {
+> > 	interrupt-controller;
+> > 	#interrupt-cells = <3>;
+> > 
+> > 	reg = <0x02006000 0x1000>;
+> > 	compatible = "img,pdc-intc";
+> > 
+> > 	num-perips = <3>;
+> > 	num-syswakes = <3>;
+> > 
+> > 	interrupts = <18 4 /* level */>, /* Syswakes */
+> > 	             <30 4 /* level */>, /* Perip 0 (RTC) */
+> > 	             <29 4 /* level */>, /* Perip 1 (IR) */
+> > 	             <31 4 /* level */>; /* Perip 2 (WDT) */
+> > };
+
+Interesting. 
+
+> >> +static int pdc_intc_remove(struct platform_device *pdev)
+> >> +{
+> >> +	struct pdc_intc_priv *priv = platform_get_drvdata(pdev);
+> >> +
+> >> +	irq_domain_remove(priv->domain);
+> > 
+> > And the rest of the resources is still there?
+> 
+> I was under the impression devm_kzalloc and devm_ioremap took care of
+> that in both the probe error case and the remove case:
+ 
+> >  * devm_kzalloc - Resource-managed kzalloc
+> >  * Managed kzalloc.  Memory allocated with this function is
+> >  * automatically freed on driver detach. 
+> > 
+> >  * devm_ioremap - Managed ioremap()
+> >  * Managed ioremap().  Map is automatically unmapped on driver detach.
+> 
+> I may have misunderstood the whole point of their existence though?
+
+No, that was just me missing the devm_ in front of
+kzalloc/ioremap. So you're good.
+
+Thanks,
+
+	tglx
