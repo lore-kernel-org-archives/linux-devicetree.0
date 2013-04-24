@@ -1,7 +1,8 @@
 From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Subject: [PATCH 1/3] dts: vt8500: Fix invalid/missing cpu nodes for soc files.
-Date: Wed, 24 Apr 2013 17:38:20 +1200
-Message-ID: <1366781902-13025-2-git-send-email-linux@prisktech.co.nz>
+Subject: [PATCH 3/3] dts: vt8500: Update serial nodes and disable by default
+ in SoC files
+Date: Wed, 24 Apr 2013 17:38:22 +1200
+Message-ID: <1366781902-13025-4-git-send-email-linux@prisktech.co.nz>
 References: <1366781902-13025-1-git-send-email-linux@prisktech.co.nz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,100 +23,371 @@ To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: vt8500-wm8505-linux-kernel-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-vt8500, wm8650 and wm8850 have no cpu node specified.
-wm8505 has a cpu node which contains an invalid compatible string, and
-is missing the other required properties.
+Missing aliases for uarts on vt8500, wm8505, wm8650 added.
+Nodes incorrectly labelled uart@.., changed to serial@... on all SoCs.
+Set each uarts default status = "disabled" as they generally don't exist.
+
+For each board file, we only need to enable uart0 as no other uarts are
+physically present on any of these boards.
 
 Signed-off-by: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
 ---
- arch/arm/boot/dts/vt8500.dtsi |   10 ++++++++++
- arch/arm/boot/dts/wm8505.dtsi |    8 ++++++--
- arch/arm/boot/dts/wm8650.dtsi |   10 ++++++++++
- arch/arm/boot/dts/wm8850.dtsi |   11 +++++++++++
- 4 files changed, 37 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/vt8500-bv07.dts    |    4 ++++
+ arch/arm/boot/dts/vt8500.dtsi        |   19 +++++++++++++++----
+ arch/arm/boot/dts/wm8505-ref.dts     |    4 ++++
+ arch/arm/boot/dts/wm8505.dtsi        |   27 +++++++++++++++++++++------
+ arch/arm/boot/dts/wm8650-mid.dts     |    4 ++++
+ arch/arm/boot/dts/wm8650.dtsi        |   11 +++++++++--
+ arch/arm/boot/dts/wm8750-apc8750.dts |    4 ++++
+ arch/arm/boot/dts/wm8750.dtsi        |   18 ++++++++++++------
+ arch/arm/boot/dts/wm8850-w70v2.dts   |    4 ++++
+ arch/arm/boot/dts/wm8850.dtsi        |   12 ++++++++----
+ 10 files changed, 85 insertions(+), 22 deletions(-)
 
+diff --git a/arch/arm/boot/dts/vt8500-bv07.dts b/arch/arm/boot/dts/vt8500-bv07.dts
+index 567cf4e..faabc9c 100644
+--- a/arch/arm/boot/dts/vt8500-bv07.dts
++++ b/arch/arm/boot/dts/vt8500-bv07.dts
+@@ -34,3 +34,7 @@
+ 		};
+ 	};
+ };
++
++&uart0 {
++	status = "okay";
++};
 diff --git a/arch/arm/boot/dts/vt8500.dtsi b/arch/arm/boot/dts/vt8500.dtsi
-index cf31ced..e35590e 100644
+index e35590e..4908222 100644
 --- a/arch/arm/boot/dts/vt8500.dtsi
 +++ b/arch/arm/boot/dts/vt8500.dtsi
-@@ -11,6 +11,16 @@
- / {
- 	compatible = "via,vt8500";
- 
-+	cpus {
-+		#size-cells = <0>;
-+		#address-cells = <1>;
-+
-+		cpu {
-+			device_type = "cpu";
-+			compatible = "arm,arm926";
-+		};
-+	};
-+
- 	soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/wm8505.dtsi b/arch/arm/boot/dts/wm8505.dtsi
-index e74a1c0..dc21d13 100644
---- a/arch/arm/boot/dts/wm8505.dtsi
-+++ b/arch/arm/boot/dts/wm8505.dtsi
-@@ -12,8 +12,12 @@
- 	compatible = "wm,wm8505";
- 
- 	cpus {
--		cpu@0 {
--			compatible = "arm,arm926ejs";
-+		#size-cells = <0>;
-+		#address-cells = <1>;
-+
-+		cpu {
-+			device_type = "cpu";
-+			compatible = "arm,arm926";
+@@ -21,6 +21,13 @@
  		};
  	};
  
-diff --git a/arch/arm/boot/dts/wm8650.dtsi b/arch/arm/boot/dts/wm8650.dtsi
-index db3c0a1..f4cd55e 100644
---- a/arch/arm/boot/dts/wm8650.dtsi
-+++ b/arch/arm/boot/dts/wm8650.dtsi
-@@ -11,6 +11,16 @@
- / {
- 	compatible = "wm,wm8650";
- 
-+	cpus {
-+		#size-cells = <0>;
-+		#address-cells = <1>;
-+
-+		cpu {
-+			device_type = "cpu";
-+			compatible = "arm,arm926";
-+		};
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++		serial2 = &uart2;
++		serial3 = &uart3;
 +	};
 +
  	soc {
  		#address-cells = <1>;
  		#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/wm8850.dtsi b/arch/arm/boot/dts/wm8850.dtsi
-index e8cbfdc..4b56aa0 100644
---- a/arch/arm/boot/dts/wm8850.dtsi
-+++ b/arch/arm/boot/dts/wm8850.dtsi
-@@ -11,6 +11,17 @@
- / {
- 	compatible = "wm,wm8850";
+@@ -121,32 +128,36 @@
+ 			reg = <0xd8050400 0x100>;
+ 		};
  
-+	cpus {
-+		#size-cells = <0>;
-+		#address-cells = <1>;
+-		uart@d8200000 {
++		uart0: serial@d8200000 {
+ 			compatible = "via,vt8500-uart";
+ 			reg = <0xd8200000 0x1040>;
+ 			interrupts = <32>;
+ 			clocks = <&clkuart0>;
++			status = "disabled";
+ 		};
+ 
+-		uart@d82b0000 {
++		uart1: serial@d82b0000 {
+ 			compatible = "via,vt8500-uart";
+ 			reg = <0xd82b0000 0x1040>;
+ 			interrupts = <33>;
+ 			clocks = <&clkuart1>;
++			status = "disabled";
+ 		};
+ 
+-		uart@d8210000 {
++		uart2: serial@d8210000 {
+ 			compatible = "via,vt8500-uart";
+ 			reg = <0xd8210000 0x1040>;
+ 			interrupts = <47>;
+ 			clocks = <&clkuart2>;
++			status = "disabled";
+ 		};
+ 
+-		uart@d82c0000 {
++		uart3: serial@d82c0000 {
+ 			compatible = "via,vt8500-uart";
+ 			reg = <0xd82c0000 0x1040>;
+ 			interrupts = <50>;
+ 			clocks = <&clkuart3>;
++			status = "disabled";
+ 		};
+ 
+ 		rtc@d8100000 {
+diff --git a/arch/arm/boot/dts/wm8505-ref.dts b/arch/arm/boot/dts/wm8505-ref.dts
+index fd4e248..acb996f 100644
+--- a/arch/arm/boot/dts/wm8505-ref.dts
++++ b/arch/arm/boot/dts/wm8505-ref.dts
+@@ -34,3 +34,7 @@
+ 		};
+ 	};
+ };
 +
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <0x0>;
-+		};
++&uart0 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/wm8505.dtsi b/arch/arm/boot/dts/wm8505.dtsi
+index dc21d13..e5076d5 100644
+--- a/arch/arm/boot/dts/wm8505.dtsi
++++ b/arch/arm/boot/dts/wm8505.dtsi
+@@ -21,6 +21,15 @@
+ 		};
+ 	};
+ 
++ 	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++		serial2 = &uart2;
++		serial3 = &uart3;
++		serial4 = &uart4;
++		serial5 = &uart5;
++ 	};
++
+ 	soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -144,46 +153,52 @@
+ 			reg = <0xd8050400 0x100>;
+ 		};
+ 
+-		uart@d8200000 {
++		uart0: serial@d8200000 {
+ 			compatible = "via,vt8500-uart";
+ 			reg = <0xd8200000 0x1040>;
+ 			interrupts = <32>;
+ 			clocks = <&clkuart0>;
++			status = "disabled";
+ 		};
+ 
+-		uart@d82b0000 {
++		uart1: serial@d82b0000 {
+ 			compatible = "via,vt8500-uart";
+ 			reg = <0xd82b0000 0x1040>;
+ 			interrupts = <33>;
+ 			clocks = <&clkuart1>;
++			status = "disabled";
+ 		};
+ 
+-		uart@d8210000 {
++		uart2: serial@d8210000 {
+ 			compatible = "via,vt8500-uart";
+ 			reg = <0xd8210000 0x1040>;
+ 			interrupts = <47>;
+ 			clocks = <&clkuart2>;
++			status = "disabled";
+ 		};
+ 
+-		uart@d82c0000 {
++		uart3: serial@d82c0000 {
+ 			compatible = "via,vt8500-uart";
+ 			reg = <0xd82c0000 0x1040>;
+ 			interrupts = <50>;
+ 			clocks = <&clkuart3>;
++			status = "disabled";
+ 		};
+ 
+-		uart@d8370000 {
++		uart4: serial@d8370000 {
+ 			compatible = "via,vt8500-uart";
+ 			reg = <0xd8370000 0x1040>;
+ 			interrupts = <31>;
+ 			clocks = <&clkuart4>;
++			status = "disabled";
+ 		};
+ 
+-		uart@d8380000 {
++		uart5: serial@d8380000 {
+ 			compatible = "via,vt8500-uart";
+ 			reg = <0xd8380000 0x1040>;
+ 			interrupts = <30>;
+ 			clocks = <&clkuart5>;
++			status = "disabled";
+ 		};
+ 
+ 		rtc@d8100000 {
+diff --git a/arch/arm/boot/dts/wm8650-mid.dts b/arch/arm/boot/dts/wm8650-mid.dts
+index cefd938..fec12f1 100644
+--- a/arch/arm/boot/dts/wm8650-mid.dts
++++ b/arch/arm/boot/dts/wm8650-mid.dts
+@@ -34,3 +34,7 @@
+ 		};
+ 	};
+ };
++
++&uart0 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/wm8650.dtsi b/arch/arm/boot/dts/wm8650.dtsi
+index f4cd55e..8e099a8 100644
+--- a/arch/arm/boot/dts/wm8650.dtsi
++++ b/arch/arm/boot/dts/wm8650.dtsi
+@@ -21,6 +21,11 @@
+ 		};
+ 	};
+ 
++ 	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
 +	};
 +
- 	aliases {
- 		serial0 = &uart0;
- 		serial1 = &uart1;
+ 	soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -150,18 +155,20 @@
+ 			reg = <0xd8050400 0x100>;
+ 		};
+ 
+-		uart@d8200000 {
++		uart0: serial@d8200000 {
+ 			compatible = "via,vt8500-uart";
+ 			reg = <0xd8200000 0x1040>;
+ 			interrupts = <32>;
+ 			clocks = <&clkuart0>;
++			status = "disabled";
+ 		};
+ 
+-		uart@d82b0000 {
++		uart1: serial@d82b0000 {
+ 			compatible = "via,vt8500-uart";
+ 			reg = <0xd82b0000 0x1040>;
+ 			interrupts = <33>;
+ 			clocks = <&clkuart1>;
++			status = "disabled";
+ 		};
+ 
+ 		rtc@d8100000 {
+diff --git a/arch/arm/boot/dts/wm8750-apc8750.dts b/arch/arm/boot/dts/wm8750-apc8750.dts
+index 62675eb..37e4a40 100644
+--- a/arch/arm/boot/dts/wm8750-apc8750.dts
++++ b/arch/arm/boot/dts/wm8750-apc8750.dts
+@@ -24,3 +24,7 @@
+ 		wm,pull = <2>;	/* pull-up */
+ 	};
+ };
++
++&uart0 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/wm8750.dtsi b/arch/arm/boot/dts/wm8750.dtsi
+index 81683fa..c048c04 100644
+--- a/arch/arm/boot/dts/wm8750.dtsi
++++ b/arch/arm/boot/dts/wm8750.dtsi
+@@ -273,46 +273,52 @@
+ 			interrupts = <26>;
+ 		};
+ 
+-		uart0: uart@d8200000 {
++		uart0: serial@d8200000 {
+ 			compatible = "via,vt8500-uart";
+ 			reg = <0xd8200000 0x1040>;
+ 			interrupts = <32>;
+ 			clocks = <&clkuart0>;
++			status = "disabled";
+ 		};
+ 
+-		uart1: uart@d82b0000 {
++		uart1: serial@d82b0000 {
+ 			compatible = "via,vt8500-uart";
+ 			reg = <0xd82b0000 0x1040>;
+ 			interrupts = <33>;
+ 			clocks = <&clkuart1>;
++			status = "disabled";
+ 		};
+ 
+-                uart2: uart@d8210000 {
++                uart2: serial@d8210000 {
+                         compatible = "via,vt8500-uart";
+                         reg = <0xd8210000 0x1040>;
+                         interrupts = <47>;
+                         clocks = <&clkuart2>;
++			status = "disabled";
+                 };
+ 
+-                uart3: uart@d82c0000 {
++                uart3: serial@d82c0000 {
+                         compatible = "via,vt8500-uart";
+                         reg = <0xd82c0000 0x1040>;
+                         interrupts = <50>;
+                         clocks = <&clkuart3>;
++			status = "disabled";
+                 };
+ 
+-                uart4: uart@d8370000 {
++                uart4: serial@d8370000 {
+                         compatible = "via,vt8500-uart";
+                         reg = <0xd8370000 0x1040>;
+                         interrupts = <30>;
+                         clocks = <&clkuart4>;
++			status = "disabled";
+                 };
+ 
+-                uart5: uart@d8380000 {
++                uart5: serial@d8380000 {
+                         compatible = "via,vt8500-uart";
+                         reg = <0xd8380000 0x1040>;
+                         interrupts = <43>;
+                         clocks = <&clkuart5>;
++			status = "disabled";
+                 };
+ 
+ 		rtc@d8100000 {
+diff --git a/arch/arm/boot/dts/wm8850-w70v2.dts b/arch/arm/boot/dts/wm8850-w70v2.dts
+index fcc660c..5b96ba2 100644
+--- a/arch/arm/boot/dts/wm8850-w70v2.dts
++++ b/arch/arm/boot/dts/wm8850-w70v2.dts
+@@ -45,3 +45,7 @@
+ 		default-brightness-level = <5>;
+ 	};
+ };
++
++&uart0 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/wm8850.dtsi b/arch/arm/boot/dts/wm8850.dtsi
+index 4b56aa0..b5d36e1 100644
+--- a/arch/arm/boot/dts/wm8850.dtsi
++++ b/arch/arm/boot/dts/wm8850.dtsi
+@@ -189,32 +189,36 @@
+ 			interrupts = <26>;
+ 		};
+ 
+-		uart0: uart@d8200000 {
++		uart0: serial@d8200000 {
+ 			compatible = "via,vt8500-uart";
+ 			reg = <0xd8200000 0x1040>;
+ 			interrupts = <32>;
+ 			clocks = <&clkuart0>;
++			status = "disabled";
+ 		};
+ 
+-		uart1: uart@d82b0000 {
++		uart1: serial@d82b0000 {
+ 			compatible = "via,vt8500-uart";
+ 			reg = <0xd82b0000 0x1040>;
+ 			interrupts = <33>;
+ 			clocks = <&clkuart1>;
++			status = "disabled";
+ 		};
+ 
+-                uart2: uart@d8210000 {
++                uart2: serial@d8210000 {
+                         compatible = "via,vt8500-uart";
+                         reg = <0xd8210000 0x1040>;
+                         interrupts = <47>;
+                         clocks = <&clkuart2>;
++			status = "disabled";
+                 };
+ 
+-                uart3: uart@d82c0000 {
++                uart3: serial@d82c0000 {
+                         compatible = "via,vt8500-uart";
+                         reg = <0xd82c0000 0x1040>;
+                         interrupts = <50>;
+                         clocks = <&clkuart3>;
++			status = "disabled";
+                 };
+ 
+ 		rtc@d8100000 {
 -- 
 1.7.9.5
