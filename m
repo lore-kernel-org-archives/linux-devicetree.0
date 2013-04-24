@@ -1,70 +1,113 @@
-From: arno@natisbad.org (Arnaud Ebalard)
-Subject: Re: [PATCHv1 2/3] hwmon: Add documentation for g762 driver
-Date: Wed, 24 Apr 2013 22:33:24 +0200
-Message-ID: <87haiv8y97.fsf@natisbad.org>
-References: <cover.1366753420.git.arno@natisbad.org>
- <24acd174f829d211f5d4c1b8631ffc3f8dd97910.1366753420.git.arno@natisbad.org>
- <20130424173216.GA1073@roeck-us.net>
+From: Javier Martinez Canillas <martinez.javier@gmail.com>
+Subject: Re: [PATCH v2 1/2] genirq: add function to get IRQ edge/level flags
+Date: Thu, 25 Apr 2013 00:10:44 +0200
+Message-ID: <CAAwP0s3cV55XY7RyoPpT_BYeeuHXivqjd_2_25qJBwdgCP5DNA@mail.gmail.com>
+References: <1365816094-31568-1-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130424173216.GA1073@roeck-us.net> (Guenter Roeck's message of
- "Wed, 24 Apr 2013 10:32:16 -0700")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Simon Guinot <simon.guinot@sequanux.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1365816094-31568-1-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Steve Glendinning <steve.glendinning@shawell.net>, David Miller <davem@davemloft.net>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@secretlab.ca>, Jon Hunter <jon-hunter@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap <linux-omap@vger.kernel.org>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Guenter Roeck <linux@roeck-us.net> writes:
-
-> On Wed, Apr 24, 2013 at 12:06:08AM +0200, Arnaud Ebalard wrote:
->> 
->> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
->> ---
->>  Documentation/hwmon/g762 |   67 ++++++++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 67 insertions(+)
->>  create mode 100644 Documentation/hwmon/g762
->> 
->> diff --git a/Documentation/hwmon/g762 b/Documentation/hwmon/g762
->> new file mode 100644
->> index 0000000..5015829
->> --- /dev/null
->> +++ b/Documentation/hwmon/g762
->> @@ -0,0 +1,67 @@
->> +Kernel driver g762
->> +==================
->> +
->> +This documentation is based on G760a one, GMT G762 datasheet available
+On Sat, Apr 13, 2013 at 3:21 AM, Javier Martinez Canillas
+<javier.martinez@collabora.co.uk> wrote:
+> According to Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> the "#interrupt-cells" property of an "interrupt-controller" is used
+> to define the number of cells needed to specify a single interrupt.
 >
-> G760a ? If this refers to Documentation/hwmon/g760a, I think it is just
-> confusing.
+> A commonly used variant is two cell on which #interrupt-cells = <2>
+> and the first cell defines the index of the interrupt in the controller
+> while the second cell is used to specify any of the following flags:
 >
->> +at http://natisbad.org/NAS/ref/GMT_EDS-762_763-080710-0.2.pdf (used
->> +for the development of the driver) and sysfs bindings described in
+>     - bits[3:0] trigger type and level flags
+>         1 = low-to-high edge triggered
+>         2 = high-to-low edge triggered
+>         4 = active high level-sensitive
+>         8 = active low level-sensitive
 >
-> I would hope that you used the data sheet for the driver ;), but that
-> information does not add much if any value here. I would suggest
-> to drop it. Just point to the data sheet.
+> An example of an interrupt controller which use the two cell format is
+> the OMAP GPIO controller that allows GPIO lines to be used as IRQ
+> (Documentation/devicetree/bindings/gpio/gpio-omap.txt)
 >
->> +  fan1_gear_mode: fan gear mode. Supported values are 0, 1 and 2. Default
->> +            value is 0. The value is a characteristic of the system
->> +            and a higher value can be set for more precisely control
->> +            fans with a high rotation speed. Note that this affects the
->> +            measurable speed range, not the read value.
->> +
-> This attribute no longer exists.
+> But setting #interrupt-cells = <2> on the OMAP GPIO device node and
+> specifying the GPIO-IRQ type and level flags on the second cell does not
+> store this value on the populated IORESOURCE_IRQ struct resource.
+>
+> This is because when using an IRQ from an interrupt controller and
+> setting both cells (e.g:)
+>
+>         interrupt-parent = <&gpio6>;
+>         interrupts = <16 8>;
+>
+> A call to of_irq_to_resource() is made and this function calls
+> irq_of_parse_and_map_type() to get the virtual IRQ mapped to the real
+> index for this interrupt controller. This IRQ number is populated on
+> the struct resource:
+>
+> int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
+> {
+>         int irq = irq_of_parse_and_map(dev, index);
+>         ..
+>         r->start = r->end = irq;
+> }
+>
+> irq_of_parse_and_map() calls to irq_create_of_mapping() which calls to
+> the correct xlate function handler according to "#interrupt-cells"
+> (irq_domain_xlate_onecell or irq_domain_xlate_twocell) and to
+> irq_set_irq_type() to set the IRQ type.
+>
+> But the type is never returned so it can't be saved on the IRQ struct
+> resource flags member.
+>
+> This means that drivers that want to get the IRQ edge/level flags
+> defined in the Device Tree from a struct resource will not be able
+> to get it.
+>
+> Drivers can get the IRQ flags by using irq_get_irq_data(irq) and
+> irqd_get_trigger_type(irq_data) but this will unnecessary expose
+> irq_data to callers and also is more error prone.
+>
+> So, is better to add an irq_get_trigger_type() function to obtain
+> the edge/level flags for an IRQ.
+>
+> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> ---
+>
+> Changes since v1:
+>   - use irqd_get_trigger_type() instead of a direct access to
+>     d->state_use_accessors as suggested by Stephen Warren.
+>
+>  include/linux/irq.h |    6 ++++++
+>  1 files changed, 6 insertions(+), 0 deletions(-)
+>
+> diff --git a/include/linux/irq.h b/include/linux/irq.h
+> index bc4e066..0e8e3a6 100644
+> --- a/include/linux/irq.h
+> +++ b/include/linux/irq.h
+> @@ -579,6 +579,12 @@ static inline struct msi_desc *irq_data_get_msi(struct irq_data *d)
+>         return d->msi_desc;
+>  }
+>
+> +static inline u32 irq_get_trigger_type(unsigned int irq)
+> +{
+> +       struct irq_data *d = irq_get_irq_data(irq);
+> +       return d ? irqd_get_trigger_type(d) : 0;
+> +}
+> +
+>  int __irq_alloc_descs(int irq, unsigned int from, unsigned int cnt, int node,
+>                 struct module *owner);
+>
+> --
+> 1.7.7.6
+>
+> --
 
-All thoses will be fixed in v2.
+Hello,
 
-a+
+Any comments about this patch?
+
+Thanks a lot and best regards,
+Javier
