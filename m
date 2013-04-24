@@ -1,48 +1,46 @@
-From: arno@natisbad.org (Arnaud Ebalard)
-Subject: Re: [PATCHv1 1/3] hwmon: Add support for GMT G762/G763 PWM fan
- controller
-Date: Wed, 24 Apr 2013 12:50:12 +0200
-Message-ID: <87ehe06w4b.fsf@natisbad.org>
-References: <cover.1366753420.git.arno@natisbad.org>
- <63961d39aee9db94767f28fd441312bec2029473.1366753420.git.arno@natisbad.org>
- <20130424053758.GC8710@lunn.ch> <87obd4wb4e.fsf@natisbad.org>
- <20130424100458.GA17771@kw.sim.vm.gnt>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/7] ARM: i.MX53: dts: add Ka-Ro tx53
+Date: Wed, 24 Apr 2013 19:57:54 +0800
+Message-ID: <20130424115753.GB2736@S2101-09.ap.freescale.net>
+References: <1366796486-10641-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130424100458.GA17771@kw.sim.vm.gnt> (Simon Guinot's message of
- "Wed, 24 Apr 2013 12:04:59 +0200")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Guinot <simon.guinot@sequanux.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Guenter Roeck <linux@roeck-us.net>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1366796486-10641-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On Wed, Apr 24, 2013 at 11:41:19AM +0200, Steffen Trumtrar wrote:
+> Hi!
+> 
+> This series adds a dtsi for the Ka-Ro TX53 System-On-Module and all necessary
+> pinctrls that are not already in the imx53.dtsi.
+> I tested this on 3.9-rc8 with a custom baseboard, but rebased everything to
+> Shawns imx/dt-3.11, which I presume is the correct base for future dts.
+> 
+> Regards,
+> Steffen
+> 
+> Steffen Trumtrar (7):
+>   ARM: i.MX53: add audmux pinctrl
+>   ARM: i.MX53: add csi pinctrl
+>   ARM: i.MX53: add ecspi pinctrl
+>   ARM: i.MX53: add pwm2 pinctrl
+>   ARM: i.MX53: add uart1 pinctrl
+>   ARM: i.MX53: add uart2 pinctrl
+>   ARM: dts: add Ka-Ro tx53 devicetree
 
-Simon Guinot <simon.guinot@sequanux.org> writes:
-
->> It can be used if the default params (or those configured by u-boot I
->> guess) fit your needs. I think it would be fairly easy to extend the
->> driver later to expose g762_config struct to allow parameters to be set
->> w/o using OF. If someone wants to do that, I think it is better to not
->> depend on OF in Kconfig at the moment but I have not strong argument
->> other that that one. I'll let you decide.
->
-> A g762 device is embedded on the 2Big Network v2 board (net2big_v2),
-> which is not DT compliant. Then, I think it could be nice to allow
-> device registration from board setup files.
-
-ok, I will try and provide that for v2 then. :-)
-
-Cheers,
-
-a+
+All applied, thanks.
