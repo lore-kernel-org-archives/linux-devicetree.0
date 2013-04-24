@@ -1,59 +1,44 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH -next v3] gpu: host1x: gr2d: fix error return code in
- gr2d_submit()
-Date: Wed, 24 Apr 2013 09:41:58 +0200
-Message-ID: <20130424074158.GB2833@avionic-0098.mockup.avionic-design.de>
-References: <CAPgLHd8cEvvxnRYK3H6FbykXsiyHRWFxV2LtSyayzp2gNejhFw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="s/l3CgOIzMHHjg/5"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPgLHd8cEvvxnRYK3H6FbykXsiyHRWFxV2LtSyayzp2gNejhFw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: grant.likely@linaro.org, rob.herring@calxeda.com, tbergstrom@nvidia.com, amerilainen@nvidia.com, yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Subject: [RFC v2 5/6] media: s5p-csis: Adding Exynos5250 compatibility
+Date: Wed, 24 Apr 2013 13:11:12 +0530
+Message-ID: <1366789273-30184-6-git-send-email-shaik.ameer@samsung.com>
+References: <1366789273-30184-1-git-send-email-shaik.ameer@samsung.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1366789273-30184-1-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
+Cc: s.nawrocki@samsung.com, shaik.samsung@gmail.com, arunkk.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+FIMC-IS firmware needs all the MIPI-CSIS interrupts to be enabled.
+This patch enables all those MIPI interrupts and adds the Exynos5
+compatible string.
 
---s/l3CgOIzMHHjg/5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+---
+ drivers/media/platform/exynos4-is/mipi-csis.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-On Wed, Apr 24, 2013 at 02:50:51PM +0800, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->=20
-> Fix to return -ENOENT in the host1x_bo lookup error handling
-> case instead of 0, as done elsewhere in this function.
->=20
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
-
-I've applied this to my fixes branch with the same modifications as for
-the other patch.
-
-Thanks,
-Thierry
-
---s/l3CgOIzMHHjg/5
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRd4zGAAoJEN0jrNd/PrOhiOwQAKTXH6i7p1rOqZoYUcuYKVaO
-swvU9nyttTRn70UGLcYKSd5TtYYDIjjMYBjTfaO6d/O04Uss0DPAS2cD+mhjNgcf
-YNHZTGTtTLuzAJA7sSu/xPEXuWtNh+z0EbZcdbmSfAHYihhOvSjhdNkXjEPsDNuP
-Q2TI9wI5SCRKtS82egpYtesCBeIMq04enuXNw59TRUIMDvpRqRJ46oGnjsXY0YeV
-NFstSKwYTCszle+DHsK5wy6APpvyGO8X/X3IdYSznOQDZ1yD6AiVqOFB87EeMiFl
-cel72CSaRw17pspSMUsnwcOHLvO/muKW5Ad2Qci+Jx5ILjSqV/UuGhXxmD6014bu
-7riBxYH6A0t06jnjDFqZAaCoUuiQ9FHqpQc550DY7PdFYYm/hMtnTrpXfjjZ0yIk
-8A/va1gVB0dT9m21TAbmOPWaEnEuY6tAnUARbVULbqHrbnKzC0cSNlxSoJxQhjwq
-ZOcgAhahNufaq7S6ofGD3kA9NlyRCUBD8JQhiq36hf4TluhUKtAYJnlKyUnQZGH5
-gSx2bEcLGHkBi4u+qEjPot7oq9qwJBBzQ8fkIiVExhiEQIb3ND3GwCIsxci/VIHi
-kOfpaZpMMHGelxKHd1CO8/nE0FfrCfjURoX3Fguv28Pxtfu/Jh7tBFN29C0r0Top
-uwdkaRKia3MLTSGTUrG0
-=tkHf
------END PGP SIGNATURE-----
-
---s/l3CgOIzMHHjg/5--
+diff --git a/drivers/media/platform/exynos4-is/mipi-csis.c b/drivers/media/platform/exynos4-is/mipi-csis.c
+index 8636bcd..51ad9b2 100644
+--- a/drivers/media/platform/exynos4-is/mipi-csis.c
++++ b/drivers/media/platform/exynos4-is/mipi-csis.c
+@@ -66,7 +66,7 @@ MODULE_PARM_DESC(debug, "Debug level (0-2)");
+ 
+ /* Interrupt mask */
+ #define S5PCSIS_INTMSK			0x10
+-#define S5PCSIS_INTMSK_EN_ALL		0xf000103f
++#define S5PCSIS_INTMSK_EN_ALL		0xfc00103f
+ #define S5PCSIS_INTMSK_EVEN_BEFORE	(1 << 31)
+ #define S5PCSIS_INTMSK_EVEN_AFTER	(1 << 30)
+ #define S5PCSIS_INTMSK_ODD_BEFORE	(1 << 29)
+@@ -1003,6 +1003,7 @@ static const struct dev_pm_ops s5pcsis_pm_ops = {
+ static const struct of_device_id s5pcsis_of_match[] = {
+ 	{ .compatible = "samsung,s5pv210-csis" },
+ 	{ .compatible = "samsung,exynos4210-csis" },
++	{ .compatible = "samsung,exynos5250-csis" },
+ 	{ /* sentinel */ },
+ };
+ MODULE_DEVICE_TABLE(of, s5pcsis_of_match);
+-- 
+1.7.9.5
