@@ -1,122 +1,39 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v5 1/2] imxfb: Set alpha value of the framebuffer
-Date: Wed, 24 Apr 2013 15:39:10 +0200
-Message-ID: <1366810751-26860-2-git-send-email-mpa@pengutronix.de>
-References: <1366810751-26860-1-git-send-email-mpa@pengutronix.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/2] pinctrl: samsung: Fix link error with
+ CONFIG_PINCTRL_EXYNOS disabled
+Date: Wed, 24 Apr 2013 16:27:09 +0200
+Message-ID: <CACRpkdZmSj-AqUA9kd7NMN6cL2Nxa0EaKoSVkwQSrxhcWEeQtg@mail.gmail.com>
+References: <1366060483-20342-1-git-send-email-tomasz.figa@gmail.com>
+	<1398545.9FqHoC0WZW@flatron>
+	<CACRpkdbJj9Newk+sCTvJzxA4V2cmJ3hzuQELv7t1wFMhd_Y8+Q@mail.gmail.com>
+	<6940961.67Lk2axxPL@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366810751-26860-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Christian Hemp <c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <6940961.67Lk2axxPL@amdc1227>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Mark Brown <broonie@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kukjin Kim <kgene.kim@samsung.com>, Kwangwoo LEE <kwangwoo.lee@gmail.com>, Peter Korsgaard <jacmet@sunsite.dk>, Darius Augulis <augulis.darius@gmail.com>, Maurus Cuelenaere <mcuelenaere@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Abraham <thomas.abraham@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Christian Hemp <c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+On Tue, Apr 23, 2013 at 2:09 PM, Tomasz Figa <t.figa@samsung.com> wrote:
+> On Tuesday 23 of April 2013 14:03:12 Linus Walleij wrote:
 
-Based on Sascha Hauer's patch i.MX27 clock: Do not disable lcd clocks during
-startup.
-This patch gives a interface to chance the alphavalue of the framebuffer.
+>> This does not apply to my "devel" branch in the pinctrl tree.
+>>
+>> Could you rebase it on that branch?
+>>
+>> Or is the error not even in my tree?
+>
+> This one got sent incorrectly due to my mistake. Please try the correct
+> version:
+>
+> [PATCH RESEND 2/2] pinctrl: samsung: Fix link error with CONFIG_PINCTRL_EXYNOS
+> disabled
 
-Signed-off-by: Christian Hemp <c.hemp-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+This does not apply either.
 
-rebased to 3.7
-Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- drivers/video/imxfb.c                     | 35 +++++++++++++++++++++++++++++++
- include/linux/platform_data/video-imxfb.h |  3 +++
- 2 files changed, 38 insertions(+)
+Can you please test against the "devel" branch in the pinctrl tree?
 
-diff --git a/drivers/video/imxfb.c b/drivers/video/imxfb.c
-index 0abf2bf..ef2b587 100644
---- a/drivers/video/imxfb.c
-+++ b/drivers/video/imxfb.c
-@@ -31,6 +31,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/io.h>
- #include <linux/math64.h>
-+#include <linux/uaccess.h>
- 
- #include <linux/platform_data/video-imxfb.h>
- 
-@@ -112,6 +113,10 @@
- #define LCDISR_EOF	(1<<1)
- #define LCDISR_BOF	(1<<0)
- 
-+#define LCDC_LGWCR	0x64
-+#define LGWCR_GWAV(alpha)	(((alpha) & 0xff) << 24)
-+#define LGWCR_GWE	(1 << 22)
-+
- /* Used fb-mode. Can be set on kernel command line, therefore file-static. */
- static const char *fb_mode;
- 
-@@ -610,6 +615,35 @@ static int imxfb_blank(int blank, struct fb_info *info)
- 	return 0;
- }
- 
-+static int imxfb_ioctl(struct fb_info *info, unsigned int cmd,
-+			unsigned long arg)
-+{
-+	struct imxfb_info *fbi = info->par;
-+	int alpha, ret = 0;
-+	unsigned int tmp;
-+
-+	switch (cmd) {
-+	case IMXFB_ALPHA:
-+		if (get_user(alpha, (int __user *)arg)) {
-+			ret = -EFAULT;
-+		} else {
-+			tmp = readl(fbi->regs + LCDC_LGWCR);
-+			tmp &= ~LGWCR_GWAV(0xff);
-+			tmp |= LGWCR_GWAV(alpha);
-+			if (!alpha)
-+				tmp &= ~LGWCR_GWE;
-+			else
-+				tmp |= LGWCR_GWE;
-+			writel(tmp , fbi->regs + LCDC_LGWCR);
-+		}
-+		break;
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
- static struct fb_ops imxfb_ops = {
- 	.owner		= THIS_MODULE,
- 	.fb_check_var	= imxfb_check_var,
-@@ -619,6 +653,7 @@ static struct fb_ops imxfb_ops = {
- 	.fb_copyarea	= cfb_copyarea,
- 	.fb_imageblit	= cfb_imageblit,
- 	.fb_blank	= imxfb_blank,
-+	.fb_ioctl	= imxfb_ioctl,
- };
- 
- /*
-diff --git a/include/linux/platform_data/video-imxfb.h b/include/linux/platform_data/video-imxfb.h
-index 9de8f06..ce3875f 100644
---- a/include/linux/platform_data/video-imxfb.h
-+++ b/include/linux/platform_data/video-imxfb.h
-@@ -51,6 +51,9 @@
- #define DMACR_HM(x)	(((x) & 0xf) << 16)
- #define DMACR_TM(x)	((x) & 0xf)
- 
-+#define IMXFB_IOW(num, dtype)	_IOW('I', num, dtype)
-+#define IMXFB_ALPHA		IMXFB_IOW(31, int)
-+
- struct imx_fb_videomode {
- 	struct fb_videomode mode;
- 	u32 pcr;
--- 
-1.8.1.5
+Yours,
+Linus Walleij
