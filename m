@@ -1,82 +1,72 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 15/23] ARM: u300: set up board power from device tree
-Date: Wed, 24 Apr 2013 11:21:13 +0100
-Message-ID: <20130424102113.GI5019@opensource.wolfsonmicro.com>
-References: <1366624656-6648-1-git-send-email-linus.walleij@stericsson.com>
+From: Francesco Lavra <francescolavra.fl@gmail.com>
+Subject: Re: [Linaro-mm-sig] [RFC/PATCH v2 2/2] drivers: dma-contiguous: add
+ initialization from device tree
+Date: Wed, 24 Apr 2013 12:30:49 +0200
+Message-ID: <5177B459.1080009@gmail.com>
+References: <1365679330-2514-1-git-send-email-m.szyprowski@samsung.com>
+ <1365679330-2514-3-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3821623810778298194=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366624656-6648-1-git-send-email-linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1365679330-2514-3-git-send-email-m.szyprowski@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <s.hauer@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Tomasz Figa <t.figa@samsung.com>, Michal Nazarewicz <mina86@mina86.com>, linaro-mm-sig@lists.linaro.org, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Olof Johansson <olof@lixom.net>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 04/11/2013 01:22 PM, Marek Szyprowski wrote:
+> diff --git a/drivers/base/dma-contiguous.c b/drivers/base/dma-contiguous.c
+> index 01fe743..6a8abab 100644
+> --- a/drivers/base/dma-contiguous.c
+> +++ b/drivers/base/dma-contiguous.c
+[...]
+> +void scan_cma_nodes(void)
 
---===============3821623810778298194==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Yvzb+MHGXtbPBi5F"
-Content-Disposition: inline
+Should be declared static.
 
+> +{
+> +	struct device_node *parent = of_find_node_by_path("/chosen/contiguous-memory");
+> +	struct device_node *child;
+> +
+> +	if (!parent)
+> +		return;
+> +
+> +	for_each_child_of_node(parent, child) {
+> +		struct cma *cma = NULL;
+> +		int i;
+> +
+> +		for (i=0; i<cma_area_count; i++)
+> +			if (strstr(child->full_name, cma_areas[i].full_name))
+> +				cma = &cma_areas[i];
+> +		if (!cma)
+> +			continue;
+> +
+> +		for (i=0;; i++) {
+> +			struct device_node *node;
+> +			node = of_parse_phandle(child, "device", i);
+> +			if (!node)
+> +				break;
+> +
+> +			cma_maps[cma_map_count].cma = cma;
+> +			cma_maps[cma_map_count].node = node;
+> +			cma_map_count++;
+> +		}
 
---Yvzb+MHGXtbPBi5F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+of_parse_phandle() requires of_node_put() to be called when done with
+the device node.
+Also, of_node_put() should be called on the parent node as well.
 
-On Mon, Apr 22, 2013 at 11:57:36AM +0200, Linus Walleij wrote:
+> +	}
+> +}
 
-> Hi Mark, this was especially tricky due to the absence of a
-> function to get a named regulator without a device node. After
-> some cleverness introducing a node for the board akin to the
-> solution I did for Nomadik, this seems to be an acceptable way
-> forward, any other suggestions welcome.
-
-I would expect this to be bound based on the board name that appears in
-the device tree which (given the way this stuff mostly works) I'd expect
-to have a device node available.
-
---Yvzb+MHGXtbPBi5F
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRd7ITAAoJELSic+t+oim9ZigQAIOwTW/lQRtAGDzCQbdvmsVV
-Q8oCehdi1O07DJWR5jcB2Vd5cKZCIqHmbAMEisrmoof0PTh3yUZNu4P00Yevn6/B
-YIK57eSshcmWi5N+j7Ul83RYhu34UwhM1sxzkz+4BqLeJvLJd8RKxUFd3tbuXEH9
-VWmB9S+Mxfo8/rC1ZMTQPbj8AEYDj1HO5I+T8+QNwabmil+xuP0tw3wsQorKgpE0
-/N1AzurPlwdoB2wFxRLxu8btNTtTxzqXB2lntPdGsqtQkKdBHwtzyc4GuA2vdax+
-MIr0384S+vLwq5EXPWpthNQbcf5/IScxB/RjfxpJGtJTCZwjI13q1PIC/ePkWwSv
-a2CkDbY/nYHUxITsTats/77U0CwAstXzxhjoZT5QTalrdkdjPoiLHdOduNvetmSC
-7nogrfOZoOtUOHbPtmpRCiYccYZYkRfFpmsAfPiO1cQcm6U3VsqBQfg0Tpf11BzJ
-72//0R+XOcnKK45QIX1HEb566bDovD6p4OYVnw9BKOZKTyuntZ4gupXuJFbGPtD0
-PXp4J25JGO6MBOOFUSXowSd+ol+/HiUJPM4giKjMsk+cz0g0E22+gaLBtEkFUd+9
-lQQzkiyWUNvTGJQenD1VzVK/CQsgxYe0spVni/uM7Q/dGsIkUEQxr8ABAIYSVc4q
-hE698zLtv4AVI4RzUNsi
-=aKbe
------END PGP SIGNATURE-----
-
---Yvzb+MHGXtbPBi5F--
-
---===============3821623810778298194==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============3821623810778298194==--
+--
+Francesco
