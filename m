@@ -1,52 +1,52 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH -next v2] gpu: host1x: gr2d: fix error return code in gr2d_submit()
-Date: Wed, 24 Apr 2013 10:44:08 +0800
-Message-ID: <CAPgLHd8zemyHf9j18qUrB4DUD8Qfn5PNj+KM7YVqL0RxHSVbzw@mail.gmail.com>
+From: Tony Prisk <linux@prisktech.co.nz>
+Subject: [PATCH 0/3] dts: v8500: Cleanups for 3.10
+Date: Wed, 24 Apr 2013 17:38:19 +1200
+Message-ID: <1366781902-13025-1-git-send-email-linux@prisktech.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@linaro.org, rob.herring@calxeda.com, thierry.reding@avionic-design.de, tbergstrom@nvidia.com, amerilainen@nvidia.com
-Cc: yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: vt8500-wm8505-linux-kernel@googlegroups.com, olof@lixom.net, Tony Prisk <linux@prisktech.co.nz>, arnd@arndb.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+Arnd, Olof,
 
-Fix to return -EINVAL in the host1x_bo lookup error handling
-case instead of 0, as done elsewhere in this function.
+This is probably a bit late for 3.10 now but its just a bunch of cleanups for
+the arch-vt8500 devicetree SoC and board files, and the addition of a new
+dts for the VIA APC8750.
 
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
----
-v1 -> v2: fix the patch subject
----
- drivers/gpu/host1x/drm/gr2d.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Regards
+Tony P
 
-diff --git a/drivers/gpu/host1x/drm/gr2d.c b/drivers/gpu/host1x/drm/gr2d.c
-index 6a45ae0..146cd64 100644
---- a/drivers/gpu/host1x/drm/gr2d.c
-+++ b/drivers/gpu/host1x/drm/gr2d.c
-@@ -135,8 +135,10 @@ static int gr2d_submit(struct host1x_drm_context *context,
- 			goto fail;
- 
- 		bo = host1x_bo_lookup(drm, file, cmdbuf.handle);
--		if (!bo)
-+		if (!bo) {
-+			err = -EINVAL;
- 			goto fail;
-+		}
- 
- 		host1x_job_add_gather(job, bo, cmdbuf.words, cmdbuf.offset);
- 		num_cmdbufs--;
-@@ -158,8 +160,10 @@ static int gr2d_submit(struct host1x_drm_context *context,
- 		reloc->cmdbuf = cmdbuf;
- 		reloc->target = target;
- 
--		if (!reloc->target || !reloc->cmdbuf)
-+		if (!reloc->target || !reloc->cmdbuf) {
-+			err = -EINVAL;
- 			goto fail;
-+		}
- 	}
- 
- 	err = copy_from_user(job->waitchk, waitchks,
+Tony Prisk (3):
+  dts: vt8500: Fix invalid/missing cpu nodes for soc files.
+  dts: vt8500: Add devicetree support for WM8750 SoC and APC8750 board
+  dts: vt8500: Update serial nodes and disable by default in SoC files
+
+ arch/arm/boot/dts/Makefile           |    1 +
+ arch/arm/boot/dts/vt8500-bv07.dts    |    4 +
+ arch/arm/boot/dts/vt8500.dtsi        |   29 ++-
+ arch/arm/boot/dts/wm8505-ref.dts     |    4 +
+ arch/arm/boot/dts/wm8505.dtsi        |   35 +++-
+ arch/arm/boot/dts/wm8650-mid.dts     |    4 +
+ arch/arm/boot/dts/wm8650.dtsi        |   21 +-
+ arch/arm/boot/dts/wm8750-apc8750.dts |   30 +++
+ arch/arm/boot/dts/wm8750.dtsi        |  355 ++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/wm8850-w70v2.dts   |    4 +
+ arch/arm/boot/dts/wm8850.dtsi        |   23 ++-
+ 11 files changed, 492 insertions(+), 18 deletions(-)
+ create mode 100644 arch/arm/boot/dts/wm8750-apc8750.dts
+ create mode 100644 arch/arm/boot/dts/wm8750.dtsi
+
+-- 
+1.7.9.5
