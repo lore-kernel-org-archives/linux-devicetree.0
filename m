@@ -1,79 +1,91 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 14/23] regulator: ab3100: device tree support
-Date: Wed, 24 Apr 2013 10:54:51 +0100
-Message-ID: <20130424095451.GB5019@opensource.wolfsonmicro.com>
-References: <1366624645-6614-1-git-send-email-linus.walleij@stericsson.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] documentation: iommu: add description of ARM System MMU
+	binding
+Date: Wed, 24 Apr 2013 10:55:01 +0100
+Message-ID: <20130424095501.GC21850@mudshark.cambridge.arm.com>
+References: <1365094259-24847-1-git-send-email-will.deacon@arm.com>
+	<515F37C1.4000109@codeaurora.org>
+	<20130408092535.GA17476@mudshark.cambridge.arm.com>
+	<5162F87A.7070409@codeaurora.org>
+	<20130410173732.GQ26992@mudshark.cambridge.arm.com>
+	<5169C7D1.8070300@codeaurora.org>
+	<20130415131341.GG9827@mudshark.cambridge.arm.com>
+	<516D9602.2010404@codeaurora.org>
+	<20130418190131.GA12344@mudshark.cambridge.arm.com>
+	<5177113D.7060300@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1608922887216961326=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366624645-6614-1-git-send-email-linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5177113D.7060300-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 23, 2013 at 11:54:53PM +0100, Olav Haugan wrote:
+> Hi Will,
 
---===============1608922887216961326==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9Wosya/OiUJZ+2ov"
-Content-Disposition: inline
+Hello again,
 
+> On 4/18/2013 12:01 PM, Will Deacon wrote:
+> > No. The device-tree describes the *hardware*, as per usual. The StreamIDs
+> > are fixed properties of the SoC and we can't change them from Linux, so we
+> > describe all of the StreamIDs upstream of each SMMU so that we can program
+> > the thing. There's no way to generic way to discover them.
+> 
+> I meant that you are putting phandles to bus masters in the device tree
+> that use/need the SMMU for VA2PA translation. Doesn't this put a
+> dependency on the bus master devices? How will this work? Lets say that
+> we have a device during bootup that needs to use the SMMU (such as a
+> display processor [DP]). Don't you have cyclic dependency? The SMMU
+> device needs the DP device (phandle) but the DP device needs the SMMU to
+> initialize its device driver?
 
---9Wosya/OiUJZ+2ov
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That's a problem you have with the driver model anyway. The SMMU must be
+registered on the same bus as the device before it can be used and the
+devices must be added to that bus before they can be attached to a domain.
 
-On Mon, Apr 22, 2013 at 11:57:25AM +0200, Linus Walleij wrote:
-> From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->=20
-> This implements device tree support for the AB3100 regulators
-> driver. The initial settings are moved out of platform data
+Getting phandles has no dependencies on anything -- the only dependency is
+that the device is added to the bus on which the SMMU sits, just like every
+other IOMMU driver.
 
-Applied, thanks.
+> > Why would a page table shared between devices require multiple context
+> > banks? Multiple SMRs and S2CRs, sure, but they would ultimately point at the
+> > same context bank (and hence same address space).
+> 
+> What if you want to have 2 different VMID's being generated? Also, what
+> about TLB management? If I have two context banks I can invalidate only
+> entries associated with 1 of the context banks (if VMID differ for the
+> two context banks).
 
---9Wosya/OiUJZ+2ov
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Huh? We allocate one VMID per domain. If you want more VMIDs, use more
+domains. TLB invalidation is per-domain, so there's no issue there.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+> > If a master needs to be in two address spaces at once, then it will need to
+> > attach it's StreamIDs to different domains. You can't place a single
+> > StreamID in two address spaces (this is an architectural constraint).
+> 
+> Yes, you would have a separate domain. I am just wondering how I would
+> model this in DT using the bindings that you are proposing? How does it
+> work? The bindings specify bus masters to StreamIDs. So if I call attach
+> with the master device you will allocate a context bank and program the
+> StreamIDs as specified in the DT. So now if I want to have another
+> context bank associated with the same master device what do I do? I call
+> into attach with a new domain but with the same master device but the
+> master device is already attached to a context/domain.
 
-iQIcBAEBAgAGBQJRd6vdAAoJELSic+t+oim9yLUP/RBy5qt1HpYra9DB8+DhlpGA
-cYTTlQzGk+moSu31T9rY4LyKiOWtO2bO05kaGqcyQyrvtjoDGHQhFPQXqdyjcIJi
-kdxR1uSJltHBacerl9CqwDMT08mgR1+bFsNB5U7gJIzDqvZVTr0DesFW4cluE0LI
-6R62J/LadH1ZlyqgSTwD3sNI4O+HjLLd+O7sHAI3WBm21mpNk2I39iBNCxTBaLXa
-G7c44ySxGydldhWD1pM/KXIcqRc34QQkAaNwVd82UwGvTcH0iOMAK3YRd+e5RhhH
-FYhP2mVBahjj3ewzoreGgtKfZZlVEiGkuHVn92Xskp7PrSxirzGnBYOaX9i9FW+A
-zWoP//vAZS85ELOuxovqOYoYbCzcnKNK8NGyJoaIP+DBDTbeVXiIfkeosbFg2phu
-7FQxKChWQXipnKJRGJQlO8vV3Q5y1M5WLCCs/vxF2agQGZbHoLKjjB/yeaXJ0V56
-yKxtuIOAWmp8N77jNd235iWW/UWDs11tLNFnaFcJICzZMGmxYfyeqrf2NuJx90Gg
-D2ZWFuDngeAy01VkTsjH0E0Jbz27109s+GIrsVv2lFb18B88W4gwCx5ozJwaZZtH
-StO+KXCXfukeMb/50d2Il85rW+YGP3Zm+iwDXmI7XbJCu33RkCwdA1LlnovFvBzm
-/8javyfFkNuvEVVu7ql6
-=yCEX
------END PGP SIGNATURE-----
+Why would you want to place a StreamID into two domains? That doesn't make
+any sense and isn't even supported by the architecture (things like
+conflicting SMR entries may not even be reported).
 
---9Wosya/OiUJZ+2ov--
-
---===============1608922887216961326==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============1608922887216961326==--
+Will
