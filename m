@@ -1,7 +1,7 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFC PATCH v3 05/17] ARM: dts: at91: cpus/cpu node dts updates
-Date: Wed, 24 Apr 2013 18:28:10 +0100
-Message-ID: <1366824502-19729-6-git-send-email-lorenzo.pieralisi@arm.com>
+Subject: [RFC PATCH v3 03/17] ARM: dts: am33xx: cpus/cpu nodes dts updates
+Date: Wed, 24 Apr 2013 18:28:08 +0100
+Message-ID: <1366824502-19729-4-git-send-email-lorenzo.pieralisi@arm.com>
 References: <1366824502-19729-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -27,126 +27,25 @@ and cpu bindings updates for ARM.
 
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 ---
- arch/arm/boot/dts/at91rm9200.dtsi  | 6 +++++-
- arch/arm/boot/dts/at91sam9260.dtsi | 8 ++++++--
- arch/arm/boot/dts/at91sam9263.dtsi | 8 ++++++--
- arch/arm/boot/dts/at91sam9g45.dtsi | 8 ++++++--
- arch/arm/boot/dts/at91sam9n12.dtsi | 8 ++++++--
- arch/arm/boot/dts/at91sam9x5.dtsi  | 8 ++++++--
- 6 files changed, 35 insertions(+), 11 deletions(-)
+ arch/arm/boot/dts/am33xx.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/at91rm9200.dtsi b/arch/arm/boot/dts/at91rm9200.dtsi
-index b0268a5..f16b3d4 100644
---- a/arch/arm/boot/dts/at91rm9200.dtsi
-+++ b/arch/arm/boot/dts/at91rm9200.dtsi
-@@ -34,8 +34,12 @@
- 		ssc2 = &ssc2;
- 	};
- 	cpus {
--		cpu@0 {
-+		#address-cells = <0>;
-+		#size-cells = <0>;
-+
-+		cpu {
- 			compatible = "arm,arm920t";
-+			device_type = "cpu";
- 		};
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index 0957645..ab1bcf2 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -24,8 +24,12 @@
  	};
  
-diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-index cb7bcc5..c4eeef7 100644
---- a/arch/arm/boot/dts/at91sam9260.dtsi
-+++ b/arch/arm/boot/dts/at91sam9260.dtsi
-@@ -32,8 +32,12 @@
- 		ssc0 = &ssc0;
- 	};
  	cpus {
--		cpu@0 {
--			compatible = "arm,arm926ejs";
-+		#address-cells = <0>;
++		#address-cells = <1>;
 +		#size-cells = <0>;
-+
-+		cpu {
-+			compatible = "arm,arm926ej-s";
+ 		cpu@0 {
+ 			compatible = "arm,cortex-a8";
 +			device_type = "cpu";
- 		};
- 	};
++			reg = <0>;
  
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index 271d4de..f3b5c2a 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -29,8 +29,12 @@
- 		ssc1 = &ssc1;
- 	};
- 	cpus {
--		cpu@0 {
--			compatible = "arm,arm926ejs";
-+		#address-cells = <0>;
-+		#size-cells = <0>;
-+
-+		cpu {
-+			compatible = "arm,arm926ej-s";
-+			device_type = "cpu";
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index 6b1d4ca..6c18bd3 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -35,8 +35,12 @@
- 		ssc1 = &ssc1;
- 	};
- 	cpus {
--		cpu@0 {
--			compatible = "arm,arm926ejs";
-+		#address-cells = <0>;
-+		#size-cells = <0>;
-+
-+		cpu {
-+			compatible = "arm,arm926ej-s";
-+			device_type = "cpu";
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-index 7750f98..c3b11af 100644
---- a/arch/arm/boot/dts/at91sam9n12.dtsi
-+++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-@@ -31,8 +31,12 @@
- 		ssc0 = &ssc0;
- 	};
- 	cpus {
--		cpu@0 {
--			compatible = "arm,arm926ejs";
-+		#address-cells = <0>;
-+		#size-cells = <0>;
-+
-+		cpu {
-+			compatible = "arm,arm926ej-s";
-+			device_type = "cpu";
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index aa98e64..6c39d0f 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -33,8 +33,12 @@
- 		ssc0 = &ssc0;
- 	};
- 	cpus {
--		cpu@0 {
--			compatible = "arm,arm926ejs";
-+		#address-cells = <0>;
-+		#size-cells = <0>;
-+
-+		cpu {
-+			compatible = "arm,arm926ej-s";
-+			device_type = "cpu";
- 		};
- 	};
- 
+ 			/*
+ 			 * To consider voltage drop between PMIC and SoC,
 -- 
 1.7.12
