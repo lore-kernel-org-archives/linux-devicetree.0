@@ -1,53 +1,61 @@
-From: Laura Abbott <lauraa@codeaurora.org>
-Subject: [PATCH] of: Set the DMA mask to 64 bits on ARM LPAE systems
-Date: Tue, 23 Apr 2013 17:50:49 -0700
-Message-ID: <1366764649-10342-1-git-send-email-lauraa@codeaurora.org>
+From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH -next] gpu: host1x: gr2d drivers/gpu/host1x/drm/gr2d.c: fix
+ error return code in gr2d_submit()
+Date: Wed, 24 Apr 2013 10:19:27 +0800
+Message-ID: <CAPgLHd8Nj-K4X8gX4_bMFcYjCBU=XzFnGidhvfF0ZtoCXCv0qg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: Laura Abbott <lauraa@codeaurora.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org, tbergstrom-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, amerilainen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-By default on ARM systems, the coherent DMA mask (lowest
-address) is set to ~0 or 0xFFFFFFFFFFFFFFFF. Currently,
-of_platform_device_create_pdata sets the coherent DMA mask to
-32 bits. This prevents coherent dma allocations from working by default
-without clients setting the DMA mask. Rather than make every client
-on an LPAE system set the mask, set the mask to a 64 bit value on
-ARM LPAE systems.
+From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 
-Signed-off-by: Laura Abbott <lauraa@codeaurora.org>
+Fix to return a negative error code from the error handling
+case instead of 0, as done elsewhere in this function.
+
+Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 ---
- drivers/of/platform.c |    4 ++++
- 1 files changed, 4 insertions(+), 0 deletions(-)
+ drivers/gpu/host1x/drm/gr2d.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 0970505..18b69c1 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -214,7 +214,11 @@ struct platform_device *of_platform_device_create_pdata(
- #if defined(CONFIG_MICROBLAZE)
- 	dev->archdata.dma_mask = 0xffffffffUL;
- #endif
-+#ifdef CONFIG_ARM_LPAE
-+	dev->dev.coherent_dma_mask = DMA_BIT_MASK(64);
-+#else
- 	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
-+#endif
- 	dev->dev.bus = &platform_bus_type;
- 	dev->dev.platform_data = platform_data;
+diff --git a/drivers/gpu/host1x/drm/gr2d.c b/drivers/gpu/host1x/drm/gr2d.c
+index 6a45ae0..146cd64 100644
+--- a/drivers/gpu/host1x/drm/gr2d.c
++++ b/drivers/gpu/host1x/drm/gr2d.c
+@@ -135,8 +135,10 @@ static int gr2d_submit(struct host1x_drm_context *context,
+ 			goto fail;
  
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+ 		bo = host1x_bo_lookup(drm, file, cmdbuf.handle);
+-		if (!bo)
++		if (!bo) {
++			err = -EINVAL;
+ 			goto fail;
++		}
+ 
+ 		host1x_job_add_gather(job, bo, cmdbuf.words, cmdbuf.offset);
+ 		num_cmdbufs--;
+@@ -158,8 +160,10 @@ static int gr2d_submit(struct host1x_drm_context *context,
+ 		reloc->cmdbuf = cmdbuf;
+ 		reloc->target = target;
+ 
+-		if (!reloc->target || !reloc->cmdbuf)
++		if (!reloc->target || !reloc->cmdbuf) {
++			err = -EINVAL;
+ 			goto fail;
++		}
+ 	}
+ 
+ 	err = copy_from_user(job->waitchk, waitchks,
