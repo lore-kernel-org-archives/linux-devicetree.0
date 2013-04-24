@@ -1,7 +1,7 @@
 From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 5/7] ARM: i.MX53: add uart1 pinctrl
-Date: Wed, 24 Apr 2013 11:41:24 +0200
-Message-ID: <1366796486-10641-6-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCH 4/7] ARM: i.MX53: add pwm2 pinctrl
+Date: Wed, 24 Apr 2013 11:41:23 +0200
+Message-ID: <1366796486-10641-5-git-send-email-s.trumtrar@pengutronix.de>
 References: <1366796486-10641-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,30 +22,31 @@ To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a group to the uart1 pinctrl.
+Add pinctrl for pwm2.
 
 Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- arch/arm/boot/dts/imx53.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/imx53.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index 8a7b1a5..da75b6f 100644
+index a311cdf..8a7b1a5 100644
 --- a/arch/arm/boot/dts/imx53.dtsi
 +++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -660,6 +660,13 @@
- 							MX53_PAD_PATA_DMACK__UART1_RXD_MUX 0x1c5
- 						>;
+@@ -638,6 +638,14 @@
  					};
-+
-+					pinctrl_uart1_3: uart1grp-3 {
-+						fsl,pins = <
-+							MX53_PAD_PATA_RESET_B__UART1_CTS 0x1c5
-+							MX53_PAD_PATA_IORDY__UART1_RTS	 0x1c5
-+						>;
-+					};
  				};
  
- 				uart2 {
++				pwm2 {
++					pinctrl_pwm2_1: pwm2grp-1 {
++						fsl,pins = <
++							MX53_PAD_GPIO_1__PWM2_PWMO	0x80000000
++						>;
++					};
++				};
++
+ 				uart1 {
+ 					pinctrl_uart1_1: uart1grp-1 {
+ 						fsl,pins = <
 -- 
 1.8.2.rc2
