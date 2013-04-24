@@ -1,59 +1,105 @@
-From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [net-next PATCH 0/3] Adding phy register fixup in DT
-Date: Wed, 24 Apr 2013 14:12:30 +0530
-Message-ID: <51779AF6.8060808@ti.com>
-References: <1366654838-26479-1-git-send-email-mugunthanvnm@ti.com>
- <20130423080257.GQ32299@pengutronix.de>
+From: arno@natisbad.org (Arnaud Ebalard)
+Subject: Re: [PATCHv1 1/3] hwmon: Add support for GMT G762/G763 PWM fan
+ controller
+Date: Wed, 24 Apr 2013 11:06:57 +0200
+Message-ID: <87obd4wb4e.fsf@natisbad.org>
+References: <cover.1366753420.git.arno@natisbad.org>
+ <63961d39aee9db94767f28fd441312bec2029473.1366753420.git.arno@natisbad.org>
+ <20130424053758.GC8710@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130423080257.GQ32299-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Guenter Roeck <linux@roeck-us.net>, Simon Guinot <simon.guinot@sequanux.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4/23/2013 1:32 PM, Sascha Hauer wrote:
-> On Mon, Apr 22, 2013 at 11:50:35PM +0530, Mugunthan V N wrote:
->> In earlier days phy fixup was added to phy frame work in board files.
->> As there won't be any board files here after the same has to be done in DT
->> This patch series adds the following features
->> * support for adding phy resigter fixup via DT
->> * adds phy id for EVMsk n DTS file
->> * adds phy fixup for AM335x EVM and EVMsk
->>
->> Mugunthan V N (3):
->>    drivers: of: add phy fixup support in DT
->>    ARM: dts: AM33XX: Add CPSW phy_id device tree data to am335x-evmsk
->>    ARM: dts: AM33XX: add phy fixup for evm and evmsk boards
-> I generally do not offend to phy fixups from the devicetree. I see
-> though that becomes more and more common that we have to configure
-> the tx delays in phys.
->
-> The current way seems to be to hardcode register values for each board
-> which seems not very flexible and forces us to read phy datasheets
-> each time for a new board.
->
-> Wouldn't it make more sense to configure the actual delays (in ns) and
-> let the phy drivers figure out how to turn this into register values?
->
-> Not that I volunteer to write such things... :-/
->
-There is no calculation done for enabling RGMII Tx internal delay. Its all
-pre-calculated in Hardware (Either in Phy or EMAC)
-In this patch as CPSW IP in AM335x doesn't support internal delay inside
-SoC, so enabling the same in Phy and it is just a bit set in the phy debug
-registers
+Hi Andrew,
 
-Regards
-Mugunthan V N
+Andrew Lunn <andrew@lunn.ch> writes:
+
+>> +struct g762_data {
+>> +	struct i2c_client *client;
+>> +	struct device *hwmon_dev;
+>> +
+>> +	/* update mutex */
+>> +	struct mutex update_lock;
+>> +
+>> +	/* board specific parameters. */
+>> +	u32 clk; /* default 32kHz */
+>> +
+>> +	/* g762 register cache */
+>> +	bool valid;
+>> +	unsigned long last_updated; /* in jiffies */
+>> +
+>> +	u8 set_cnt;  /* RPM cmd in close loop control */
+>> +	u8 act_cnt;  /* formula: cnt = (CLK * 30)/(rpm * P) */
+>> +	u8 fan_sta;  /* bit 0: set when actual fan speed is more than
+>> +		      *        25% outside requested fan speed
+>> +		      * bit 1: set when no transition occurs on fan
+>> +		      *        pin for 0.7s
+>> +		      */
+>> +	u8 set_out;  /* output voltage/PWM duty in open loop control */
+>> +	u8 fan_cmd1; /*   0: FG_PLS_ID0 FG pulses count per revolution
+>> +		      *      0: 2 counts per revolution
+>> +		      *      1: 4 counts per revolution
+>> +		      *   1: PWM_POLARITY 1: negative_duty
+>> +		      *                   0: positive_duty
+>> +		      * 2,3: [FG_CLOCK_ID0, FG_CLK_ID1]
+>> +		      *         00: Divide fan clock by 1
+>> +		      *         01: Divide fan clock by 2
+>> +		      *         10: Divide fan clock by 4
+>> +		      *         11: Divide fan clock by 8
+>> +		      *   4: FAN_MODE 1:close-loop, 0:open-loop
+>> +		      *   5: OUT_MODE 1:PWM, 0:DAC
+>> +		      *   6: DET_FAN_OOC enable "fan ooc" status
+>> +		      *   7: DET_FAN_FAIL enable "fan fail" status
+>> +		      */
+>> +	u8 fan_cmd2; /* 0,1: FAN_STARTV 0,1,2,3 -> 0,32,64,96 dac_code
+>> +		      * 2,3: FG_GEAR_MODE
+>> +		      *         00: div = 1
+>> +		      *         01: div = 2
+>> +		      *         10: div = 4
+>> +		      *   4: Mask ALERT# (g763 only)
+>> +		      */
+>
+> You could consider using regmap for holding this cache.
+>
+> http://elceurope2012.sched.org/event/100619b669ce5767341624253aa03659?iframe=no&w=900&sidebar=yes&bg=no#.UXdspHLQ5jM
+>
+> http://elinux.org/ELCE_Europe_2012_Presentations
+
+Interesting. As I am not yet familiar w/ regmap I would prefer having
+the driver accepted during merge window with current data structure and
+then convert it to regmap. But I will take a look (e.g. will study
+fca1dd03 for instance). Thanks for the pointers. 
+
+>> +/*
+>> + * Helpers to import hardware characteristics from .dts file and overload
+>> + * default config values.
+>> + */
+>> +
+>> +#ifdef CONFIG_OF
+>
+> Can the driver be used without device tree? Would it be simpler to
+>  just add depends OF in the Kconfig entry?
+
+It can be used if the default params (or those configured by u-boot I
+guess) fit your needs. I think it would be fairly easy to extend the
+driver later to expose g762_config struct to allow parameters to be set
+w/o using OF. If someone wants to do that, I think it is better to not
+depend on OF in Kconfig at the moment but I have not strong argument
+other that that one. I'll let you decide.
+
+Cheers,
+
+a+
