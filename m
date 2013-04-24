@@ -1,7 +1,7 @@
 From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 1/7] ARM: i.MX53: add audmux pinctrl
-Date: Wed, 24 Apr 2013 11:41:20 +0200
-Message-ID: <1366796486-10641-2-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCH 3/7] ARM: i.MX53: add ecspi pinctrl
+Date: Wed, 24 Apr 2013 11:41:22 +0200
+Message-ID: <1366796486-10641-4-git-send-email-s.trumtrar@pengutronix.de>
 References: <1366796486-10641-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,32 +22,34 @@ To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a group to the audmux pinctrl.
+Add a group to the ecspi pinctrl.
 
 Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- arch/arm/boot/dts/imx53.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/imx53.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index ca8458d..d9275f6 100644
+index ffa4ee2..a311cdf 100644
 --- a/arch/arm/boot/dts/imx53.dtsi
 +++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -310,6 +310,15 @@
- 							MX53_PAD_SD2_DATA0__AUDMUX_AUD4_RXD	0x80000000
+@@ -400,6 +400,17 @@
+ 							MX53_PAD_EIM_D18__ECSPI1_MOSI 0x80000000
  						>;
  					};
 +
-+					pinctrl_audmux_3: audmuxgrp-3 {
++					pinctrl_ecspi1_2: ecspi1grp-2 {
 +						fsl,pins = <
-+							MX53_PAD_CSI0_DAT4__AUDMUX_AUD3_TXC	0x80000000
-+							MX53_PAD_CSI0_DAT5__AUDMUX_AUD3_TXD	0x80000000
-+							MX53_PAD_CSI0_DAT6__AUDMUX_AUD3_TXFS	0x80000000
-+							MX53_PAD_CSI0_DAT7__AUDMUX_AUD3_RXD	0x80000000
++							MX53_PAD_GPIO_19__ECSPI1_RDY	0x80000000
++							MX53_PAD_EIM_EB2__ECSPI1_SS0	0x80000000
++							MX53_PAD_EIM_D16__ECSPI1_SCLK	0x80000000
++							MX53_PAD_EIM_D17__ECSPI1_MISO	0x80000000
++							MX53_PAD_EIM_D18__ECSPI1_MOSI	0x80000000
++							MX53_PAD_EIM_D19__ECSPI1_SS1	0x80000000
 +						>;
 +					};
  				};
  
- 				fec {
+ 				esdhc1 {
 -- 
 1.8.2.rc2
