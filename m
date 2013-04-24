@@ -1,144 +1,48 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v5 03/10] ASoC: imx-pcm-fiq: Introduce pcm-fiq-params
-Date: Wed, 24 Apr 2013 16:36:32 +0200
-Message-ID: <1366814199-14827-4-git-send-email-mpa@pengutronix.de>
-References: <1366814199-14827-1-git-send-email-mpa@pengutronix.de>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 2/2] pinctrl: samsung: Fix link error with
+ CONFIG_PINCTRL_EXYNOS disabled
+Date: Wed, 24 Apr 2013 16:47:08 +0200
+Message-ID: <2113989.KXXvDDhnMa@amdc1227>
+References: <1366060483-20342-1-git-send-email-tomasz.figa@gmail.com>
+ <6940961.67Lk2axxPL@amdc1227>
+ <CACRpkdZmSj-AqUA9kd7NMN6cL2Nxa0EaKoSVkwQSrxhcWEeQtg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366814199-14827-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CACRpkdZmSj-AqUA9kd7NMN6cL2Nxa0EaKoSVkwQSrxhcWEeQtg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Mark Brown <broonie@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kukjin Kim <kgene.kim@samsung.com>, Kwangwoo LEE <kwangwoo.lee@gmail.com>, Peter Korsgaard <jacmet@sunsite.dk>, Darius Augulis <augulis.darius@gmail.com>, Maurus Cuelenaere <mcuelenaere@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Abraham <thomas.abraham@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Cleaner parameter passing for imx-pcm-fiq. Create a seperated fiq-params
-struct to pass all arguments.
+On Wednesday 24 of April 2013 16:27:09 Linus Walleij wrote:
+> On Tue, Apr 23, 2013 at 2:09 PM, Tomasz Figa <t.figa@samsung.com> wrote:
+> > On Tuesday 23 of April 2013 14:03:12 Linus Walleij wrote:
+> >> This does not apply to my "devel" branch in the pinctrl tree.
+> >> 
+> >> Could you rebase it on that branch?
+> >> 
+> >> Or is the error not even in my tree?
+> > 
+> > This one got sent incorrectly due to my mistake. Please try the correct
+> > version:
+> > 
+> > [PATCH RESEND 2/2] pinctrl: samsung: Fix link error with
+> > CONFIG_PINCTRL_EXYNOS disabled
+> 
+> This does not apply either.
+> 
+> Can you please test against the "devel" branch in the pinctrl tree?
 
-Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
+Right, it does not apply.
 
-Notes:
-    Changes in v3:
-     - Using snd_dmaengine_dai_dma_data for dma_params after rebasing onto
-       dmaengine cleanups.
+Well, actually it does with git am -3, but it is incorrect, since the problem 
+it intends to fix is not present in your tree, but rather is a merge error in 
+linux-next in a merge of Kgene's and your tree...
 
- sound/soc/fsl/imx-pcm-fiq.c | 16 +++++++++-------
- sound/soc/fsl/imx-pcm.h     |  9 +++++++++
- sound/soc/fsl/imx-ssi.c     |  7 ++++++-
- sound/soc/fsl/imx-ssi.h     |  1 +
- 4 files changed, 25 insertions(+), 8 deletions(-)
-
-diff --git a/sound/soc/fsl/imx-pcm-fiq.c b/sound/soc/fsl/imx-pcm-fiq.c
-index 670b96b..c3fdb2f 100644
---- a/sound/soc/fsl/imx-pcm-fiq.c
-+++ b/sound/soc/fsl/imx-pcm-fiq.c
-@@ -22,6 +22,7 @@
- #include <linux/slab.h>
- 
- #include <sound/core.h>
-+#include <sound/dmaengine_pcm.h>
- #include <sound/initval.h>
- #include <sound/pcm.h>
- #include <sound/pcm_params.h>
-@@ -32,6 +33,7 @@
- #include <linux/platform_data/asoc-imx-ssi.h>
- 
- #include "imx-ssi.h"
-+#include "imx-pcm.h"
- 
- struct imx_pcm_runtime_data {
- 	unsigned int period;
-@@ -283,7 +285,7 @@ static struct snd_soc_platform_driver imx_soc_platform_fiq = {
- 
- int imx_pcm_fiq_init(struct platform_device *pdev)
- {
--	struct imx_ssi *ssi = platform_get_drvdata(pdev);
-+	struct imx_pcm_fiq_params *params = platform_get_drvdata(pdev);
- 	int ret;
- 
- 	ret = claim_fiq(&fh);
-@@ -292,15 +294,15 @@ int imx_pcm_fiq_init(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	mxc_set_irq_fiq(ssi->irq, 1);
--	ssi_irq = ssi->irq;
-+	mxc_set_irq_fiq(params->irq, 1);
-+	ssi_irq = params->irq;
- 
--	imx_pcm_fiq = ssi->irq;
-+	imx_pcm_fiq = params->irq;
- 
--	imx_ssi_fiq_base = (unsigned long)ssi->base;
-+	imx_ssi_fiq_base = (unsigned long)params->base;
- 
--	ssi->dma_params_tx.maxburst = 4;
--	ssi->dma_params_rx.maxburst = 6;
-+	params->dma_params_tx->maxburst = 4;
-+	params->dma_params_rx->maxburst = 6;
- 
- 	ret = snd_soc_register_platform(&pdev->dev, &imx_soc_platform_fiq);
- 	if (ret)
-diff --git a/sound/soc/fsl/imx-pcm.h b/sound/soc/fsl/imx-pcm.h
-index b7fa0d7..f592f23 100644
---- a/sound/soc/fsl/imx-pcm.h
-+++ b/sound/soc/fsl/imx-pcm.h
-@@ -32,6 +32,15 @@ imx_pcm_dma_params_init_data(struct imx_dma_data *dma_data,
- 		dma_data->peripheral_type = IMX_DMATYPE_SSI;
- }
- 
-+struct imx_pcm_fiq_params {
-+	int irq;
-+	void __iomem *base;
-+
-+	/* Pointer to original ssi driver to setup tx rx sizes */
-+	struct snd_dmaengine_dai_dma_data *dma_params_rx;
-+	struct snd_dmaengine_dai_dma_data *dma_params_tx;
-+};
-+
- int snd_imx_pcm_mmap(struct snd_pcm_substream *substream,
- 		     struct vm_area_struct *vma);
- int imx_pcm_new(struct snd_soc_pcm_runtime *rtd);
-diff --git a/sound/soc/fsl/imx-ssi.c b/sound/soc/fsl/imx-ssi.c
-index 902fab0..f80f4c7 100644
---- a/sound/soc/fsl/imx-ssi.c
-+++ b/sound/soc/fsl/imx-ssi.c
-@@ -601,7 +601,12 @@ static int imx_ssi_probe(struct platform_device *pdev)
- 		goto failed_pdev_fiq_alloc;
- 	}
- 
--	platform_set_drvdata(ssi->soc_platform_pdev_fiq, ssi);
-+	ssi->fiq_params.irq = ssi->irq;
-+	ssi->fiq_params.base = ssi->base;
-+	ssi->fiq_params.dma_params_rx = &ssi->dma_params_rx;
-+	ssi->fiq_params.dma_params_tx = &ssi->dma_params_tx;
-+
-+	platform_set_drvdata(ssi->soc_platform_pdev_fiq, &ssi->fiq_params);
- 	ret = platform_device_add(ssi->soc_platform_pdev_fiq);
- 	if (ret) {
- 		dev_err(&pdev->dev, "failed to add platform device\n");
-diff --git a/sound/soc/fsl/imx-ssi.h b/sound/soc/fsl/imx-ssi.h
-index bb6b3db..20ce7ca 100644
---- a/sound/soc/fsl/imx-ssi.h
-+++ b/sound/soc/fsl/imx-ssi.h
-@@ -209,6 +209,7 @@ struct imx_ssi {
- 	struct snd_dmaengine_dai_dma_data dma_params_tx;
- 	struct imx_dma_data filter_data_tx;
- 	struct imx_dma_data filter_data_rx;
-+	struct imx_pcm_fiq_params fiq_params;
- 
- 	int enabled;
- 
+Best regards,
 -- 
-1.8.1.5
+Tomasz Figa
+Samsung Poland R&D Center
+SW Solution Development, Kernel and System Framework
