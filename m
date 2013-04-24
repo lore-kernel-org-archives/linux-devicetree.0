@@ -1,7 +1,7 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFC PATCH v3 11/17] ARM: dts: prima2: cpus/cpu node dts updates
-Date: Wed, 24 Apr 2013 18:28:16 +0100
-Message-ID: <1366824502-19729-12-git-send-email-lorenzo.pieralisi@arm.com>
+Subject: [RFC PATCH v3 06/17] ARM: dts: exynos5440: cpus/cpu nodes dts updates
+Date: Wed, 24 Apr 2013 18:28:11 +0100
+Message-ID: <1366824502-19729-7-git-send-email-lorenzo.pieralisi@arm.com>
 References: <1366824502-19729-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -27,21 +27,53 @@ and cpu bindings updates for ARM.
 
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 ---
- arch/arm/boot/dts/prima2.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/exynos5440.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm/boot/dts/prima2.dtsi b/arch/arm/boot/dts/prima2.dtsi
-index 3329719..02edd89 100644
---- a/arch/arm/boot/dts/prima2.dtsi
-+++ b/arch/arm/boot/dts/prima2.dtsi
-@@ -18,6 +18,8 @@
- 		#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
+index 5f3562a..fd0966f 100644
+--- a/arch/arm/boot/dts/exynos5440.dtsi
++++ b/arch/arm/boot/dts/exynos5440.dtsi
+@@ -24,8 +24,13 @@
+ 	};
  
+ 	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
  		cpu@0 {
-+			compatible = "arm,cortex-a9";
+ 			compatible = "arm,cortex-a15";
 +			device_type = "cpu";
- 			reg = <0x0>;
- 			d-cache-line-size = <32>;
- 			i-cache-line-size = <32>;
++			reg = <0x0>;
+ 			timer {
+ 				compatible = "arm,armv7-timer";
+ 				interrupts = <1 13 0xf08>;
+@@ -34,6 +39,8 @@
+ 		};
+ 		cpu@1 {
+ 			compatible = "arm,cortex-a15";
++			device_type = "cpu";
++			reg = <0x1>;
+ 			timer {
+ 				compatible = "arm,armv7-timer";
+ 				interrupts = <1 14 0xf08>;
+@@ -42,6 +49,8 @@
+ 		};
+ 		cpu@2 {
+ 			compatible = "arm,cortex-a15";
++			device_type = "cpu";
++			reg = <0x2>;
+ 			timer {
+ 				compatible = "arm,armv7-timer";
+ 				interrupts = <1 14 0xf08>;
+@@ -50,6 +59,8 @@
+ 		};
+ 		cpu@3 {
+ 			compatible = "arm,cortex-a15";
++			device_type = "cpu";
++			reg = <0x3>;
+ 			timer {
+ 				compatible = "arm,armv7-timer";
+ 				interrupts = <1 14 0xf08>;
 -- 
 1.7.12
