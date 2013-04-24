@@ -1,52 +1,51 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH -next v3] gpu: host1x: gr2d: fix error return code in gr2d_submit()
-Date: Wed, 24 Apr 2013 14:50:51 +0800
-Message-ID: <CAPgLHd8cEvvxnRYK3H6FbykXsiyHRWFxV2LtSyayzp2gNejhFw@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RFC PATCH v2 11/13] ARM: mach-sunxi: cpus/cpu nodes dts updates
+Date: Wed, 24 Apr 2013 09:15:03 +0200
+Message-ID: <51778677.908@free-electrons.com>
+References: <1366644455-16550-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1366644455-16550-12-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@linaro.org, rob.herring@calxeda.com, thierry.reding@avionic-design.de, tbergstrom@nvidia.com, amerilainen@nvidia.com
-Cc: yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1366644455-16550-12-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+Hi Lorenzo,
 
-Fix to return -ENOENT in the host1x_bo lookup error handling
-case instead of 0, as done elsewhere in this function.
+Le 22/04/2013 17:27, Lorenzo Pieralisi a =E9crit :
+> This patch updates the in-kernel dts files according to the latest cpus
+> and cpu bindings updates for ARM.
+> =
 
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
----
-v1 -> v2: fix the patch subject
----
- drivers/gpu/host1x/drm/gr2d.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sunxi.dtsi | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/host1x/drm/gr2d.c b/drivers/gpu/host1x/drm/gr2d.c
-index 6a45ae0..146cd64 100644
---- a/drivers/gpu/host1x/drm/gr2d.c
-+++ b/drivers/gpu/host1x/drm/gr2d.c
-@@ -135,8 +135,10 @@ static int gr2d_submit(struct host1x_drm_context *context,
- 			goto fail;
- 
- 		bo = host1x_bo_lookup(drm, file, cmdbuf.handle);
--		if (!bo)
-+		if (!bo) {
-+			err = -ENOENT;
- 			goto fail;
-+		}
- 
- 		host1x_job_add_gather(job, bo, cmdbuf.words, cmdbuf.offset);
- 		num_cmdbufs--;
-@@ -158,8 +160,10 @@ static int gr2d_submit(struct host1x_drm_context *context,
- 		reloc->cmdbuf = cmdbuf;
- 		reloc->target = target;
- 
--		if (!reloc->target || !reloc->cmdbuf)
-+		if (!reloc->target || !reloc->cmdbuf) {
-+			err = -ENOENT;
- 			goto fail;
-+		}
- 	}
- 
- 	err = copy_from_user(job->waitchk, waitchks,
+Just to let you know, this file won't exist anymore in 3.10, and has
+been split out in sun4i-a10.dtsi and sun5i-a13.dtsi. You'll obviously
+need to change both when rebasing.
+
+Other than that,
+Acked-By: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Maxime
+
+-- =
+
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
