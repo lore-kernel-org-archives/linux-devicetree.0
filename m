@@ -1,96 +1,73 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 0/3] ARM: at91: dt: switch to pre-processor
-Date: Wed, 24 Apr 2013 16:56:27 +0200
-Message-ID: <20130424145627.GL4998@game.jcrosoft.org>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: [PATCH 1/3] ARM: at91: dt: add pinctrl pre-processor define
+Date: Wed, 24 Apr 2013 16:58:06 +0200
+Message-ID: <1366815488-27976-1-git-send-email-plagnioj@jcrosoft.com>
+References: <20130424145627.GL4998@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130424145627.GL4998@game.jcrosoft.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 List-Id: devicetree@vger.kernel.org
 
-HI,
-
-	The follow patch series switch the at91 to DT pre-processor
-
-	So we can use macro for AIC and Pinctrl instead of magic
-
-  ARM: at91: dt: switch to pre-processor (2013-04-24 22:54:39 +0800)
-
-----------------------------------------------------------------
-Jean-Christophe PLAGNIOL-VILLARD (3):
-      ARM: at91: dt: add pinctrl pre-processor define
-      ARM: at91: dt: add AIC pre-processor define
-      ARM: at91: dt: switch to pre-processor
-
- arch/arm/boot/dts/aks-cdu.dts               |   12 +--
- arch/arm/boot/dts/animeo_ip.dts             |   19 ++--
- arch/arm/boot/dts/at91-aic.h                |   19 ++++
- arch/arm/boot/dts/at91-ariag25.dts          |    6 +-
- arch/arm/boot/dts/at91-pinctrl.h            |   35 ++++++
- arch/arm/boot/dts/at91rm9200.dtsi           |  162 ++++++++++++++--------------
- arch/arm/boot/dts/at91rm9200ek.dts          |   10 +-
- arch/arm/boot/dts/at91sam9260.dtsi          |  195 ++++++++++++++++-----------------
- arch/arm/boot/dts/at91sam9263.dtsi          |  187 ++++++++++++++++----------------
- arch/arm/boot/dts/at91sam9263ek.dts         |   25 ++---
- arch/arm/boot/dts/at91sam9g15.dtsi          |    2 +-
- arch/arm/boot/dts/at91sam9g15ek.dts         |    4 +-
- arch/arm/boot/dts/at91sam9g20.dtsi          |    2 +-
- arch/arm/boot/dts/at91sam9g20ek.dts         |    7 +-
- arch/arm/boot/dts/at91sam9g20ek_2mmc.dts    |   11 +-
- arch/arm/boot/dts/at91sam9g20ek_common.dtsi |   29 +++--
- arch/arm/boot/dts/at91sam9g25.dtsi          |    2 +-
- arch/arm/boot/dts/at91sam9g25ek.dts         |    4 +-
- arch/arm/boot/dts/at91sam9g35.dtsi          |    2 +-
- arch/arm/boot/dts/at91sam9g35ek.dts         |    4 +-
- arch/arm/boot/dts/at91sam9g45.dtsi          |  201 +++++++++++++++++-----------------
- arch/arm/boot/dts/at91sam9m10g45ek.dts      |   38 +++----
- arch/arm/boot/dts/at91sam9n12.dtsi          |  125 +++++++++++-----------
- arch/arm/boot/dts/at91sam9n12ek.dts         |   14 +--
- arch/arm/boot/dts/at91sam9x25.dtsi          |   22 ++--
- arch/arm/boot/dts/at91sam9x25ek.dts         |    4 +-
- arch/arm/boot/dts/at91sam9x35.dtsi          |    2 +-
- arch/arm/boot/dts/at91sam9x35ek.dts         |    4 +-
- arch/arm/boot/dts/at91sam9x5.dtsi           |  263 +++++++++++++++++++++++----------------------
- arch/arm/boot/dts/at91sam9x5cm.dtsi         |    8 +-
- arch/arm/boot/dts/at91sam9x5ek.dtsi         |   15 +--
- arch/arm/boot/dts/ethernut5.dts             |    7 +-
- arch/arm/boot/dts/evk-pro3.dts              |    6 +-
- arch/arm/boot/dts/ge863-pro3.dtsi           |    2 +-
- arch/arm/boot/dts/kizbox.dts                |   17 +--
- arch/arm/boot/dts/mpa1600.dts               |    5 +-
- arch/arm/boot/dts/pm9g45.dts                |   22 ++--
- arch/arm/boot/dts/sama5d3.dtsi              |  451 +++++++++++++++++++++++++++++++++++++++--------------------------------------
- arch/arm/boot/dts/sama5d31ek.dts            |    6 +-
- arch/arm/boot/dts/sama5d33ek.dts            |    4 +-
- arch/arm/boot/dts/sama5d34ek.dts            |    6 +-
- arch/arm/boot/dts/sama5d35ek.dts            |    4 +-
- arch/arm/boot/dts/sama5d3xcm.dtsi           |    4 +-
- arch/arm/boot/dts/sama5d3xdm.dtsi           |    2 +-
- arch/arm/boot/dts/sama5d3xmb.dtsi           |   26 ++---
- arch/arm/boot/dts/tny_a9260.dts             |    5 +-
- arch/arm/boot/dts/tny_a9263.dts             |    5 +-
- arch/arm/boot/dts/tny_a9g20.dts             |    5 +-
- arch/arm/boot/dts/usb_a9260.dts             |    5 +-
- arch/arm/boot/dts/usb_a9260_common.dtsi     |    6 +-
- arch/arm/boot/dts/usb_a9263.dts             |    9 +-
- arch/arm/boot/dts/usb_a9g20-dab-mmx.dtsi    |   22 ++--
- arch/arm/boot/dts/usb_a9g20.dts             |    5 +-
- 53 files changed, 1071 insertions(+), 986 deletions(-)
- create mode 100644 arch/arm/boot/dts/at91-aic.h
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+---
+ arch/arm/boot/dts/at91-pinctrl.h |   35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
  create mode 100644 arch/arm/boot/dts/at91-pinctrl.h
 
-Best Regards,
-J.
+diff --git a/arch/arm/boot/dts/at91-pinctrl.h b/arch/arm/boot/dts/at91-pinctrl.h
+new file mode 100644
+index 0000000..d7988b4
+--- /dev/null
++++ b/arch/arm/boot/dts/at91-pinctrl.h
+@@ -0,0 +1,35 @@
++/*
++ * This header provides constants for most at91 pinctrl bindings.
++ *
++ * Copyright (C) 2013 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
++ *
++ * GPLv2 only
++ */
++
++#ifndef __DT_BINDINGS_AT91_PINCTRL_H__
++#define __DT_BINDINGS_AT91_PINCTRL_H__
++
++#define AT91_PINCTRL_NONE		(0 << 0)
++#define AT91_PINCTRL_PULL_UP		(1 << 0)
++#define AT91_PINCTRL_MULTI_DRIVE	(1 << 1)
++#define AT91_PINCTRL_DEGLITCH		(1 << 2)
++#define AT91_PINCTRL_PULL_DOWN		(1 << 3)
++#define AT91_PINCTRL_DIS_SCHMIT		(1 << 4)
++#define AT91_PINCTRL_DEBOUNCE		(1 << 16)
++#define AT91_PINCTRL_DEBOUNCE_VA(x)	(x << 17)
++
++#define AT91_PINCTRL_PULL_UP_DEGLITCH	(AT91_PINCTRL_PULL_UP | AT91_PINCTRL_DEGLITCH)
++
++#define AT91_PIOA	0
++#define AT91_PIOB	1
++#define AT91_PIOC	2
++#define AT91_PIOD	3
++#define AT91_PIOE	4
++
++#define AT91_PERIPH_GPIO	0
++#define AT91_PERIPH_A		1
++#define AT91_PERIPH_B		2
++#define AT91_PERIPH_C		3
++#define AT91_PERIPH_D		4
++
++#endif /* __DT_BINDINGS_AT91_PINCTRL_H__ */
+-- 
+1.7.10.4
