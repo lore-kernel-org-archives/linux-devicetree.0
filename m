@@ -1,152 +1,82 @@
-From: Simon Guinot <simon.guinot@sequanux.org>
-Subject: Re: [PATCHv1 1/3] hwmon: Add support for GMT G762/G763 PWM fan
- controller
-Date: Wed, 24 Apr 2013 12:04:59 +0200
-Message-ID: <20130424100458.GA17771@kw.sim.vm.gnt>
-References: <cover.1366753420.git.arno@natisbad.org>
- <63961d39aee9db94767f28fd441312bec2029473.1366753420.git.arno@natisbad.org>
- <20130424053758.GC8710@lunn.ch> <87obd4wb4e.fsf@natisbad.org>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH 15/23] ARM: u300: set up board power from device tree
+Date: Wed, 24 Apr 2013 11:21:13 +0100
+Message-ID: <20130424102113.GI5019@opensource.wolfsonmicro.com>
+References: <1366624656-6648-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2061902118216740654=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87obd4wb4e.fsf@natisbad.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnaud Ebalard <arno@natisbad.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Guenter Roeck <linux@roeck-us.net>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============3821623810778298194=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1366624656-6648-1-git-send-email-linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============2061902118216740654==
+--===============3821623810778298194==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
+	protocol="application/pgp-signature"; boundary="Yvzb+MHGXtbPBi5F"
 Content-Disposition: inline
 
 
---IJpNTDwzlM2Ie8A6
+--Yvzb+MHGXtbPBi5F
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 24, 2013 at 11:06:57AM +0200, Arnaud Ebalard wrote:
-> Hi Andrew,
->=20
-> Andrew Lunn <andrew@lunn.ch> writes:
->=20
-> >> +struct g762_data {
-> >> +	struct i2c_client *client;
-> >> +	struct device *hwmon_dev;
-> >> +
-> >> +	/* update mutex */
-> >> +	struct mutex update_lock;
-> >> +
-> >> +	/* board specific parameters. */
-> >> +	u32 clk; /* default 32kHz */
-> >> +
-> >> +	/* g762 register cache */
-> >> +	bool valid;
-> >> +	unsigned long last_updated; /* in jiffies */
-> >> +
-> >> +	u8 set_cnt;  /* RPM cmd in close loop control */
-> >> +	u8 act_cnt;  /* formula: cnt =3D (CLK * 30)/(rpm * P) */
-> >> +	u8 fan_sta;  /* bit 0: set when actual fan speed is more than
-> >> +		      *        25% outside requested fan speed
-> >> +		      * bit 1: set when no transition occurs on fan
-> >> +		      *        pin for 0.7s
-> >> +		      */
-> >> +	u8 set_out;  /* output voltage/PWM duty in open loop control */
-> >> +	u8 fan_cmd1; /*   0: FG_PLS_ID0 FG pulses count per revolution
-> >> +		      *      0: 2 counts per revolution
-> >> +		      *      1: 4 counts per revolution
-> >> +		      *   1: PWM_POLARITY 1: negative_duty
-> >> +		      *                   0: positive_duty
-> >> +		      * 2,3: [FG_CLOCK_ID0, FG_CLK_ID1]
-> >> +		      *         00: Divide fan clock by 1
-> >> +		      *         01: Divide fan clock by 2
-> >> +		      *         10: Divide fan clock by 4
-> >> +		      *         11: Divide fan clock by 8
-> >> +		      *   4: FAN_MODE 1:close-loop, 0:open-loop
-> >> +		      *   5: OUT_MODE 1:PWM, 0:DAC
-> >> +		      *   6: DET_FAN_OOC enable "fan ooc" status
-> >> +		      *   7: DET_FAN_FAIL enable "fan fail" status
-> >> +		      */
-> >> +	u8 fan_cmd2; /* 0,1: FAN_STARTV 0,1,2,3 -> 0,32,64,96 dac_code
-> >> +		      * 2,3: FG_GEAR_MODE
-> >> +		      *         00: div =3D 1
-> >> +		      *         01: div =3D 2
-> >> +		      *         10: div =3D 4
-> >> +		      *   4: Mask ALERT# (g763 only)
-> >> +		      */
-> >
-> > You could consider using regmap for holding this cache.
-> >
-> > http://elceurope2012.sched.org/event/100619b669ce5767341624253aa03659?i=
-frame=3Dno&w=3D900&sidebar=3Dyes&bg=3Dno#.UXdspHLQ5jM
-> >
-> > http://elinux.org/ELCE_Europe_2012_Presentations
->=20
-> Interesting. As I am not yet familiar w/ regmap I would prefer having
-> the driver accepted during merge window with current data structure and
-> then convert it to regmap. But I will take a look (e.g. will study
-> fca1dd03 for instance). Thanks for the pointers.=20
->=20
-> >> +/*
-> >> + * Helpers to import hardware characteristics from .dts file and over=
-load
-> >> + * default config values.
-> >> + */
-> >> +
-> >> +#ifdef CONFIG_OF
-> >
-> > Can the driver be used without device tree? Would it be simpler to
-> >  just add depends OF in the Kconfig entry?
->=20
-> It can be used if the default params (or those configured by u-boot I
-> guess) fit your needs. I think it would be fairly easy to extend the
-> driver later to expose g762_config struct to allow parameters to be set
-> w/o using OF. If someone wants to do that, I think it is better to not
-> depend on OF in Kconfig at the moment but I have not strong argument
-> other that that one. I'll let you decide.
+On Mon, Apr 22, 2013 at 11:57:36AM +0200, Linus Walleij wrote:
 
-A g762 device is embedded on the 2Big Network v2 board (net2big_v2),
-which is not DT compliant. Then, I think it could be nice to allow
-device registration from board setup files.
+> Hi Mark, this was especially tricky due to the absence of a
+> function to get a named regulator without a device node. After
+> some cleverness introducing a node for the board akin to the
+> solution I did for Nomadik, this seems to be an acceptable way
+> forward, any other suggestions welcome.
 
-Regards,
+I would expect this to be bound based on the board name that appears in
+the device tree which (given the way this stuff mostly works) I'd expect
+to have a device node available.
 
-Simon
-
---IJpNTDwzlM2Ie8A6
+--Yvzb+MHGXtbPBi5F
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iEYEARECAAYFAlF3rkoACgkQgtp0PDeOcDrSswCfRgpnpFRNFMYNaP+5DUQLowW7
-wp8AmwYoSfFoCQmpeYxJfia6FILbzZu0
-=lSLD
+iQIcBAEBAgAGBQJRd7ITAAoJELSic+t+oim9ZigQAIOwTW/lQRtAGDzCQbdvmsVV
+Q8oCehdi1O07DJWR5jcB2Vd5cKZCIqHmbAMEisrmoof0PTh3yUZNu4P00Yevn6/B
+YIK57eSshcmWi5N+j7Ul83RYhu34UwhM1sxzkz+4BqLeJvLJd8RKxUFd3tbuXEH9
+VWmB9S+Mxfo8/rC1ZMTQPbj8AEYDj1HO5I+T8+QNwabmil+xuP0tw3wsQorKgpE0
+/N1AzurPlwdoB2wFxRLxu8btNTtTxzqXB2lntPdGsqtQkKdBHwtzyc4GuA2vdax+
+MIr0384S+vLwq5EXPWpthNQbcf5/IScxB/RjfxpJGtJTCZwjI13q1PIC/ePkWwSv
+a2CkDbY/nYHUxITsTats/77U0CwAstXzxhjoZT5QTalrdkdjPoiLHdOduNvetmSC
+7nogrfOZoOtUOHbPtmpRCiYccYZYkRfFpmsAfPiO1cQcm6U3VsqBQfg0Tpf11BzJ
+72//0R+XOcnKK45QIX1HEb566bDovD6p4OYVnw9BKOZKTyuntZ4gupXuJFbGPtD0
+PXp4J25JGO6MBOOFUSXowSd+ol+/HiUJPM4giKjMsk+cz0g0E22+gaLBtEkFUd+9
+lQQzkiyWUNvTGJQenD1VzVK/CQsgxYe0spVni/uM7Q/dGsIkUEQxr8ABAIYSVc4q
+hE698zLtv4AVI4RzUNsi
+=aKbe
 -----END PGP SIGNATURE-----
 
---IJpNTDwzlM2Ie8A6--
+--Yvzb+MHGXtbPBi5F--
 
-
---===============2061902118216740654==
+--===============3821623810778298194==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
 _______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---===============2061902118216740654==--
+--===============3821623810778298194==--
