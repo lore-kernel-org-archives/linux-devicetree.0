@@ -1,123 +1,96 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 24/32 v3] dmaengine: ste_dma40: Supply full Device Tree
- parsing support
-Date: Thu, 25 Apr 2013 13:33:41 +0200
-Message-ID: <CACRpkdZiTCpkhLWiOU3yKJkHgg=od5qc-UemWRB07f7OE+RZ0A@mail.gmail.com>
-References: <1366279934-30761-1-git-send-email-lee.jones@linaro.org>
-	<1366279934-30761-25-git-send-email-lee.jones@linaro.org>
-	<20130418121253.GF27903@gmail.com>
-	<20130418141752.GC3959@gmail.com>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v5 07/10] ASoC: fsl-ssi: imx ac97 support
+Date: Thu, 25 Apr 2013 13:37:16 +0200
+Message-ID: <20130425113716.GB27763@pengutronix.de>
+References: <1366814199-14827-1-git-send-email-mpa@pengutronix.de>
+ <1366814199-14827-8-git-send-email-mpa@pengutronix.de>
+ <20130425035029.GB1276@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130418141752.GC3959@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus WALLEIJ <linus.walleij@stericsson.com>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <djbw@fb.com>, Per Forlin <per.forlin@stericsson.com>, Rabin Vincent <rabin@rab.in>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130425035029.GB1276-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 18, 2013 at 4:17 PM, Lee Jones <lee.jones@linaro.org> wrote:
+On Thu, Apr 25, 2013 at 11:50:30AM +0800, Shawn Guo wrote:
+> On Wed, Apr 24, 2013 at 04:36:36PM +0200, Markus Pargmann wrote:
+> > +/*
+> > + * Pointer to AC97 reset functions for specific boards
+> > + */
+> > +#if IS_ENABLED(CONFIG_MACH_PCA100)
+> > +extern void pca100_ac97_cold_reset(struct snd_ac97 *ac97);
+> > +extern void pca100_ac97_warm_reset(struct snd_ac97 *ac97);
+> > +#else
+> > +void pca100_ac97_cold_reset(struct snd_ac97 *ac97) { }
+> > +void pca100_ac97_warm_reset(struct snd_ac97 *ac97) { }
+> > +#endif
+> > +
+> > +#if IS_ENABLED(CONFIG_MACH_PCM043)
+> > +extern void pcm043_ac97_cold_reset(struct snd_ac97 *ac97);
+> > +extern void pcm043_ac97_warm_reset(struct snd_ac97 *ac97);
+> > +#else
+> > +void pcm043_ac97_cold_reset(struct snd_ac97 *ac97) { }
+> > +void pcm043_ac97_warm_reset(struct snd_ac97 *ac97) { }
+> > +#endif
+> ...
+> > @@ -717,13 +956,39 @@ static int fsl_ssi_probe(struct platform_device *pdev)
+> >  
+> >  	strcpy(ssi_private->name, p);
+> >  
+> > -	/* Initialize this copy of the CPU DAI driver structure */
+> > -	memcpy(&ssi_private->cpu_dai_drv, &fsl_ssi_dai_template,
+> > -	       sizeof(fsl_ssi_dai_template));
+> > -	ssi_private->cpu_dai_drv.name = ssi_private->name;
+> > -
+> >  	ssi_private->use_dma = !of_property_read_bool(np, "fsl,imx-fiq");
+> >  
+> > +	if (ac97) {
+> > +		sprop = of_get_property(of_find_node_by_path("/"), "compatible",
+> > +				NULL);
+> > +		p = strrchr(sprop, ',');
+> > +		if (p)
+> > +			sprop = p + 1;
+> > +
+> > +		if (!strcmp(sprop, "imx27-pca100")) {
+> > +			ssi_private->ac97_reset = pca100_ac97_cold_reset;
+> > +			ssi_private->ac97_warm_reset = pca100_ac97_warm_reset;
+> > +		} else if (!strcmp(sprop, "imx27-pcm043")) {
+> > +			ssi_private->ac97_reset = pcm043_ac97_cold_reset;
+> > +			ssi_private->ac97_warm_reset = pcm043_ac97_warm_reset;
+> > +		} else {
+> > +			dev_err(&pdev->dev, "Failed to enable ssi AC97 mode, unknown board.\n");
+> > +			ret = -EINVAL;
+> > +			goto error_kmalloc;
+> > +		}
+> 
+> I do not like these board specific hooks show up in an IP driver
+> in such way.  Can we work it out in other ways, notification or even
+> platform_data with auxdata?
 
-> Using the new DMA DT bindings and API, we can register the DMA40 driver
-> as Device Tree capable. Now, when a client attempts to allocate a
-> channel using the DMA DT bindings via its own node, we are able to parse
-> the request and allocate a channel in the correct manner.
->
-> Cc: Vinod Koul <vinod.koul@intel.com>
-> Cc: Dan Williams <djbw@fb.com>
-> Cc: Per Forlin <per.forlin@stericsson.com>
-> Cc: Rabin Vincent <rabin@rab.in>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+soc_ac97_ops is a global symbol, so we could setup soc_ac97_ops.reset
+and warm_reset in board specific ac97 drivers. For this patch I would
+move the assignment of reset functions to phycore-ac97.c which already
+is specifically for this codec-ssi combination on the two boards.
 
+Regards,
 
-This needs to be CC: to devicetree-discussed so it can be checked for OS
-independence and such... Also consider including Rob Herring on posts.
+Markus
 
-> diff --git a/Documentation/devicetree/bindings/dma/ste-dma40.txt b/Documentation/devicetree/bindings/dma/ste-dma40.txt
-> new file mode 100644
-> index 0000000..2679a87
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/ste-dma40.txt
-> @@ -0,0 +1,62 @@
-> +* DMA40 DMA Controller
-> +
-> +Required properties:
-> +- compatible: "stericsson,dma40"
-> +- reg: Address range of the DMAC registers
-> +- reg-names: Names of the above areas to use during resource look-up
-> +- interrupt: Should contain the DMAC interrupt number
-> +- #dma-cells: must be <3>
-> +
-> +Optional properties:
-> +- dma-channels: Number of channels supported by hardware - if not present
-> +               the driver will attempt to obtain the information from H/W
-
-I want you to define the memcpy channels in device tree as well.
-Right now these are hardcoded into the driver and there is no way
-to check whether they happen to overlap with other channels from the
-device tree, i.e. a source of confusion.
-
-Please add configuration for the static memcpy channels here.
-
-> +#define D40_DT_FLAGS_MODE(flags)       ((flags >> 0) & 0x1)
-> +#define D40_DT_FLAGS_DIR(flags)        ((flags >> 1) & 0x1)
-> +#define D40_DT_FLAGS_BIG_ENDIAN(flags) ((flags >> 2) & 0x1)
-> +#define D40_DT_FLAGS_FIXED_CHAN(flags) ((flags >> 3) & 0x1)
-> +
-> +static struct dma_chan *d40_xlate(struct of_phandle_args *dma_spec,
-> +                                 struct of_dma *ofdma)
-> +{
-> +       struct stedma40_chan_cfg cfg;
-> +       dma_cap_mask_t cap;
-> +       u32 flags;
-> +
-> +       memset(&cfg, 0, sizeof(struct stedma40_chan_cfg));
-> +
-> +       dma_cap_zero(cap);
-> +       dma_cap_set(DMA_SLAVE, cap);
-> +
-> +       cfg.dev_type = dma_spec->args[0];
-> +       flags = dma_spec->args[2];
-> +
-> +       switch (D40_DT_FLAGS_MODE(flags)) {
-> +       case 0: cfg.mode = STEDMA40_MODE_LOGICAL; break;
-> +       case 1: cfg.mode = STEDMA40_MODE_PHYSICAL; break;
-> +       }
-> +
-> +       switch (D40_DT_FLAGS_DIR(flags)) {
-> +       case 0:
-> +               cfg.dir = STEDMA40_MEM_TO_PERIPH;
-> +               cfg.dst_info.big_endian = D40_DT_FLAGS_BIG_ENDIAN(flags);
-> +               break;
-> +       case 1:
-> +               cfg.dir = STEDMA40_PERIPH_TO_MEM;
-> +               cfg.src_info.big_endian = D40_DT_FLAGS_BIG_ENDIAN(flags);
-> +               break;
-> +       }
-> +
-> +       if (D40_DT_FLAGS_FIXED_CHAN(flags)) {
-> +               cfg.phy_channel = dma_spec->args[1];
-> +               cfg.use_fixed_channel = true;
-> +       }
-> +
-> +       return dma_request_channel(cap, stedma40_filter, &cfg);
-> +}
-
-Nice! But please include handling of the memcpy channels.
-(Unclear to me how to do that, but now i becomes your problem ;-)
-
-> +       if (np) {
-> +               err = of_dma_controller_register(np, d40_xlate, NULL);
-> +               if (err && err != -ENODEV)
-> +                       dev_err(&pdev->dev,
-> +                               "could not register of_dma_controller\n");
-> +       }
-> +
->         dev_info(base->dev, "initialized\n");
->         return 0;
-
-Is it really OK to just fall through after failing to register the controller
-from the device tree?
-
-Yours,
-Linus Walleij
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
