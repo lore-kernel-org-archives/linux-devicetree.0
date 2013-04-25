@@ -1,38 +1,51 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 13/23] regulator: ab3100: refactor probe to use IDs
-Date: Thu, 25 Apr 2013 15:40:39 +0200
-Message-ID: <CACRpkdZkP57POYViehqvfWpn-TrrcYRzgLetdteFzANmw8exBg@mail.gmail.com>
-References: <1366624634-6579-1-git-send-email-linus.walleij@stericsson.com>
- <20130422123749.GJ30351@opensource.wolfsonmicro.com>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: [PATCH 2/2] thermal: db8500_cpufreq_cooling: remove usage of IS_ERR_OR_NULL()
+Date: Thu, 25 Apr 2013 10:13:34 -0400
+Message-ID: <1366899214-22639-3-git-send-email-eduardo.valentin@ti.com>
+References: <1366899214-22639-1-git-send-email-eduardo.valentin@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130422123749.GJ30351-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1366899214-22639-1-git-send-email-eduardo.valentin@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>, Russell King <rmk@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Hongbo Zhang <hongbo.zhang@stericsson.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 22, 2013 at 2:37 PM, Mark Brown
-<broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
-> On Mon, Apr 22, 2013 at 11:57:14AM +0200, Linus Walleij wrote:
->
->> Hi Mark, seeking an ACK on this to take it through the
->> ARM SoC tree.
->
-> Since the arm-soc tree is locked down now I may as well just apply it so
-> it shows up in the merge window?
+This patch changes the driver to avoid the usage of IS_ERR_OR_NULL()
+macro. This macro can lead to dangerous results, like returning
+success (0) during a failure scenario (NULL pointer handling).
 
-Yep, saw you picked in these two, thanks!
+The case present in this driver can be translated to a simple
+check for IS_ERR(), as the cpufreq_cooling_register() returns
+either a valid pointer or an ERR_PTR().
 
-Linus Walleij
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: Russell King <rmk@arm.linux.org.uk>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Hongbo Zhang <hongbo.zhang@stericsson.com>
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org
+Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+---
+ drivers/thermal/db8500_cpufreq_cooling.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/thermal/db8500_cpufreq_cooling.c b/drivers/thermal/db8500_cpufreq_cooling.c
+index 21419851..786d192 100644
+--- a/drivers/thermal/db8500_cpufreq_cooling.c
++++ b/drivers/thermal/db8500_cpufreq_cooling.c
+@@ -37,7 +37,7 @@ static int db8500_cpufreq_cooling_probe(struct platform_device *pdev)
+ 	cpumask_set_cpu(0, &mask_val);
+ 	cdev = cpufreq_cooling_register(&mask_val);
+ 
+-	if (IS_ERR_OR_NULL(cdev)) {
++	if (IS_ERR(cdev)) {
+ 		dev_err(&pdev->dev, "Failed to register cooling device\n");
+ 		return PTR_ERR(cdev);
+ 	}
+-- 
+1.8.2.1.342.gfa7285d
+
