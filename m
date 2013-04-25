@@ -1,37 +1,39 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCH 2/2] thermal: db8500_cpufreq_cooling: remove usage of
- IS_ERR_OR_NULL()
-Date: Thu, 25 Apr 2013 16:17:21 -0400
-Message-ID: <51798F51.9010401@ti.com>
-References: <1366899214-22639-1-git-send-email-eduardo.valentin@ti.com> <1366899214-22639-3-git-send-email-eduardo.valentin@ti.com> <20130425174635.GB25783@flint.arm.linux.org.uk>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/5] ibmebus: convert of_platform_driver to platform_driver
+Date: Thu, 25 Apr 2013 15:45:04 -0500
+Message-ID: <517995D0.8020307@gmail.com>
+References: <1366596798-9457-1-git-send-email-robherring2@gmail.com>  <1366596798-9457-2-git-send-email-robherring2@gmail.com>  <CAL_JsqKDF=hPEM0Jz-zZSXBCXBZ=gBjLWL6QDvq+nFWkqY3DMw@mail.gmail.com>  <1366911329.2869.31.camel@pasglop> <517980B0.3000401@gmail.com> <1366920741.2869.32.camel@pasglop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20130425174635.GB25783@flint.arm.linux.org.uk>
-Sender: linux-pm-owner@vger.kernel.org
-To: Russell King <rmk@arm.linux.org.uk>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Hongbo Zhang <hongbo.zhang@stericsson.com>, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-rdma-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1366920741.2869.32.camel@pasglop>
+Sender: linux-rdma-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Hoang-Nam Nguyen <hnguyen-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>, Christoph Raisch <raisch-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>, Roland Dreier <roland-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Hefty <sean.hefty-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Hal Rosenstock <hal.rosenstock-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thadeu Lima de Souza Cascardo <cascardo-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-rdma-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 25-04-2013 13:46, Russell King wrote:
-> On Thu, Apr 25, 2013 at 10:13:34AM -0400, Eduardo Valentin wrote:
->> diff --git a/drivers/thermal/db8500_cpufreq_cooling.c b/drivers/thermal/db8500_cpufreq_cooling.c
->> index 21419851..786d192 100644
->> --- a/drivers/thermal/db8500_cpufreq_cooling.c
->> +++ b/drivers/thermal/db8500_cpufreq_cooling.c
->> @@ -37,7 +37,7 @@ static int db8500_cpufreq_cooling_probe(struct platform_device *pdev)
->>   	cpumask_set_cpu(0, &mask_val);
->>   	cdev = cpufreq_cooling_register(&mask_val);
+On 04/25/2013 03:12 PM, Benjamin Herrenschmidt wrote:
+> On Thu, 2013-04-25 at 14:14 -0500, Rob Herring wrote:
+>> On 04/25/2013 12:35 PM, Benjamin Herrenschmidt wrote:
+
+[...]
+
+>> You need patch 2 of this series to fix this:
 >>
->> -	if (IS_ERR_OR_NULL(cdev)) {
->> +	if (IS_ERR(cdev)) {
->>   		dev_err(&pdev->dev, "Failed to register cooling device\n");
->>   		return PTR_ERR(cdev);
->
-> Correct.  cpufreq_cooling_register() returns either an error-pointer or
-> a valid pointer.
->
+>> driver core: move to_platform_driver to platform_device.h
+>>
+>> which as Arnd pointed out needs to come first. I've fixed that in my
+>> tree, but I don't think it warrants another post.
+> 
+> Can I pull you tree from somewhere to test ?
 
-Thanks for your review!
+Here you go:
 
+git://sources.calxeda.com/kernel/linux.git of-platform-removal
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-rdma" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
