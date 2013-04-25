@@ -1,52 +1,30 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Documentation/devicetree: make semantic of initrd-end
- more explicit
-Date: Thu, 25 Apr 2013 16:48:15 -0500
-Message-ID: <5179A49F.2080400@gmail.com>
-References: <1366892877-30912-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 4/8] metag: tz1090: add <asm/soc-tz1090/gpio.h>
+Date: Thu, 25 Apr 2013 23:52:00 +0200
+Message-ID: <CACRpkda3_G3B-QYOKNSTk6jk3764RF_hAtOEiE_ep7xmRnek-Q@mail.gmail.com>
+References: <1366727607-27444-1-git-send-email-james.hogan@imgtec.com>
+	<1366727607-27444-5-git-send-email-james.hogan@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366892877-30912-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1366727607-27444-5-git-send-email-james.hogan@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: James Hogan <james.hogan@imgtec.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDQvMjUvMjAxMyAwNzoyNyBBTSwgVXdlIEtsZWluZS1Lw7ZuaWcgd3JvdGU6Cj4gU2lnbmVk
-LW9mZi1ieTogVXdlIEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5k
-ZT4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL3VzYWdlLW1vZGVsLnR4dCB8IDgg
-KysrKystLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMo
-LSkKCkFwcGxpZWQuCgpUaGFua3MsClJvYgoKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL3VzYWdlLW1vZGVsLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS91
-c2FnZS1tb2RlbC50eHQKPiBpbmRleCBlZjlkMDZjLi4wZWZlZGFhIDEwMDY0NAo+IC0tLSBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS91c2FnZS1tb2RlbC50eHQKPiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvdXNhZ2UtbW9kZWwudHh0Cj4gQEAgLTE5MSw5ICsxOTEsMTEgQEAgTGlu
-dXggaXQgd2lsbCBsb29rIHNvbWV0aGluZyBsaWtlIHRoaXM6Cj4gIAl9Owo+ICAKPiAgVGhlIGJv
-b3RhcmdzIHByb3BlcnR5IGNvbnRhaW5zIHRoZSBrZXJuZWwgYXJndW1lbnRzLCBhbmQgdGhlIGlu
-aXRyZC0qCj4gLXByb3BlcnRpZXMgZGVmaW5lIHRoZSBhZGRyZXNzIGFuZCBzaXplIG9mIGFuIGlu
-aXRyZCBibG9iLiAgVGhlCj4gLWNob3NlbiBub2RlIG1heSBhbHNvIG9wdGlvbmFsbHkgY29udGFp
-biBhbiBhcmJpdHJhcnkgbnVtYmVyIG9mCj4gLWFkZGl0aW9uYWwgcHJvcGVydGllcyBmb3IgcGxh
-dGZvcm0tc3BlY2lmaWMgY29uZmlndXJhdGlvbiBkYXRhLgo+ICtwcm9wZXJ0aWVzIGRlZmluZSB0
-aGUgYWRkcmVzcyBhbmQgc2l6ZSBvZiBhbiBpbml0cmQgYmxvYi4gIE5vdGUgdGhhdAo+ICtpbml0
-cmQtZW5kIGlzIHRoZSBmaXJzdCBhZGRyZXNzIGFmdGVyIHRoZSBpbml0cmQgaW1hZ2UsIHNvIHRo
-aXMgZG9lc24ndAo+ICttYXRjaCB0aGUgdXN1YWwgc2VtYW50aWMgb2Ygc3RydWN0IHJlc291cmNl
-LiAgVGhlIGNob3NlbiBub2RlIG1heSBhbHNvCj4gK29wdGlvbmFsbHkgY29udGFpbiBhbiBhcmJp
-dHJhcnkgbnVtYmVyIG9mIGFkZGl0aW9uYWwgcHJvcGVydGllcyBmb3IKPiArcGxhdGZvcm0tc3Bl
-Y2lmaWMgY29uZmlndXJhdGlvbiBkYXRhLgo+ICAKPiAgRHVyaW5nIGVhcmx5IGJvb3QsIHRoZSBh
-cmNoaXRlY3R1cmUgc2V0dXAgY29kZSBjYWxscyBvZl9zY2FuX2ZsYXRfZHQoKQo+ICBzZXZlcmFs
-IHRpbWVzIHdpdGggZGlmZmVyZW50IGhlbHBlciBjYWxsYmFja3MgdG8gcGFyc2UgZGV2aWNlIHRy
-ZWUKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRl
-dmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96
-bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlz
-Y3Vzcwo=
+On Tue, Apr 23, 2013 at 4:33 PM, James Hogan <james.hogan@imgtec.com> wrote:
+
+> Add <asm/soc-tz1090/gpio.h> with definitions to number all the GPIOs
+> available on-chip. This is for use by the pinctrl and GPIO drivers.
+>
+> Signed-off-by: James Hogan <james.hogan@imgtec.com>
+
+Usually the specific pins and names is a pecularity best contained
+in the GPIO or pinctrl subsystem.
+
+Please try to push this down into the driver, and only use a simple number
+to access the GPIOs.
+
+Yours,
+Linus Walleij
