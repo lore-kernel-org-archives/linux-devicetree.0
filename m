@@ -1,45 +1,84 @@
-From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] ARM: at91: dt: switch to pre-processor
-Date: Thu, 25 Apr 2013 11:10:50 +0200
-Message-ID: <CACQ1gAg1FO001k5ZsW80Bp_j66AD6mO5BcGLHGPa1kJBHUcS4A@mail.gmail.com>
-References: <20130424145627.GL4998@game.jcrosoft.org>
+From: Simon Guinot <simon.guinot@sequanux.org>
+Subject: Re: [PATCHv1 1/3] hwmon: Add support for GMT G762/G763 PWM fan
+ controller
+Date: Thu, 25 Apr 2013 11:58:16 +0200
+Message-ID: <20130425095816.GC17771@kw.sim.vm.gnt>
+References: <cover.1366753420.git.arno@natisbad.org>
+ <63961d39aee9db94767f28fd441312bec2029473.1366753420.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130424145627.GL4998-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="WplhKdTI2c8ulnbP"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <63961d39aee9db94767f28fd441312bec2029473.1366753420.git.arno@natisbad.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnaud Ebalard <arno@natisbad.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, Jean Delvare <khali@linux-fr.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Olivier Mouchet <olivier.mouchet@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-2013/4/24 Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>:
-> HI,
->
->         The follow patch series switch the at91 to DT pre-processor
->
->         So we can use macro for AIC and Pinctrl instead of magic
->
->   ARM: at91: dt: switch to pre-processor (2013-04-24 22:54:39 +0800)
->
-> ----------------------------------------------------------------
-> Jean-Christophe PLAGNIOL-VILLARD (3):
->       ARM: at91: dt: add pinctrl pre-processor define
->       ARM: at91: dt: add AIC pre-processor define
->       ARM: at91: dt: switch to pre-processor
 
-I can't find your 3rd patch "ARM: at91: dt: switch to pre-processor"
-on the lists.
-This is too much suspens ! Bring it on !
+--WplhKdTI2c8ulnbP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+Hi Arnaud,
 
-Richard.
+On Wed, Apr 24, 2013 at 12:05:56AM +0200, Arnaud Ebalard wrote:
+> diff --git a/drivers/hwmon/g762.c b/drivers/hwmon/g762.c
+> new file mode 100644
+> index 0000000..810b019
+> --- /dev/null
+> +++ b/drivers/hwmon/g762.c
+
+Snip
+
+> +
+> +/*
+> + * Configuration-related definitions
+> + */
+> +
+> +struct g762_config {
+> +	u32 fan_startv;
+> +	u32 fan_gear_mode;
+> +	u32 fan_div;
+> +	u32 fan_pulses;
+> +	u32 fan_target;
+> +	u32 pwm_polarity;
+> +	u32 pwm_enable;
+> +	u32 pwm_freq;
+> +	u32 pwm_mode;
+> +};
+> +
+> +/*
+> + * g762 default values: it is assumed that the fan is set for a 32KHz clock
+> + * source, a fan clock divisor of 1 and two pulses per revolution. Default
+> + * fan driving mode is linear mode (g762/g763 also support PWM mode). Note
+> + * the specific init value for properties which may be left unmodified.
+> + */
+> +#define G762_DEFAULT_CLK            32768
+> +#define G762_DEFAULT_FAN_DIV        1
+> +#define G762_DEFAULT_FAN_PULSES     2
+> +#define G762_DEFAULT_OUT_MODE       0
+> +#define G762_DEFAULT_FAN_MODE       2
+
+Maybe you could use here the same macros as the ones used in the
+do_set_* functions:
+
+#define G762_DEFAULT_OUT_MODE		OUT_MODE_DAC
+#define G762_DEFAULT_FAN_MODE		FAN_MODE_CLOSED_LOOP
+
+Simon
+
+--WplhKdTI2c8ulnbP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlF4/jgACgkQgtp0PDeOcDq62wCgl7iGqcPj31z3fECbIstxru8g
+K30AmQGv5qYx32uLi12DzfzwA4SLfgyY
+=4Mcw
+-----END PGP SIGNATURE-----
+
+--WplhKdTI2c8ulnbP--
