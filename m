@@ -1,56 +1,81 @@
-From: Lukasz Majewski <l.majewski@samsung.com>
-Subject: Re: [PATCH v2 2/4] Thermal: exynos: Support for TMU regulator defined
- at device tree
-Date: Thu, 25 Apr 2013 18:29:41 +0200
-Message-ID: <20130425182941.63ecff30@amdc308.digital.local>
-References: <1366389493-8239-1-git-send-email-l.majewski@samsung.com>
- <1366893045-31586-1-git-send-email-l.majewski@samsung.com>
- <1366893045-31586-3-git-send-email-l.majewski@samsung.com>
- <CADGdYn6g5Lggkcbq9WMMfbqN-NBb_14_b1bfcd=7+CJrxJcquA@mail.gmail.com>
- <20130425152934.5041cc98@amdc308.digital.local> <51794F48.5040401@ti.com>
+From: Laura Abbott <lauraa@codeaurora.org>
+Subject: Re: [PATCH] of: Set the DMA mask to 64 bits on ARM LPAE systems
+Date: Thu, 25 Apr 2013 10:09:57 -0700
+Message-ID: <51796365.5030405@codeaurora.org>
+References: <1366764649-10342-1-git-send-email-lauraa@codeaurora.org>
+ <20130425133315.GA7157@localhost.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <51794F48.5040401@ti.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: amit daniel kachhap <amit.daniel@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Zhang Rui <rui.zhang@intel.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, t.figa@samsung.com, Sachin Kamat <sachin.kamat@linaro.org>, Myungjoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130425133315.GA7157@localhost.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eduardo,
+On 4/25/2013 6:33 AM, Catalin Marinas wrote:
+> On Wed, Apr 24, 2013 at 01:50:49AM +0100, Laura Abbott wrote:
+>> By default on ARM systems, the coherent DMA mask (lowest
+>> address) is set to ~0 or 0xFFFFFFFFFFFFFFFF. Currently,
+>> of_platform_device_create_pdata sets the coherent DMA mask to
+>> 32 bits. This prevents coherent dma allocations from working by default
+>> without clients setting the DMA mask. Rather than make every client
+>> on an LPAE system set the mask, set the mask to a 64 bit value on
+>> ARM LPAE systems.
+>>
+>> Signed-off-by: Laura Abbott <lauraa@codeaurora.org>
+>> ---
+>>   drivers/of/platform.c |    4 ++++
+>>   1 files changed, 4 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>> index 0970505..18b69c1 100644
+>> --- a/drivers/of/platform.c
+>> +++ b/drivers/of/platform.c
+>> @@ -214,7 +214,11 @@ struct platform_device *of_platform_device_create_pdata(
+>>   #if defined(CONFIG_MICROBLAZE)
+>>   	dev->archdata.dma_mask = 0xffffffffUL;
+>>   #endif
+>> +#ifdef CONFIG_ARM_LPAE
+>> +	dev->dev.coherent_dma_mask = DMA_BIT_MASK(64);
+>> +#else
+>>   	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+>> +#endif
+>
+> I wouldn't add CONFIG_ARM_LPAE checks in here, you can use
+> CONFIG_ARCH_DMA_ADDR_T_64BIT (types.h uses this for the dma_addr_t
+> definition).
+>
 
-> Amit, Lukasz,
-> 
-> On 25-04-2013 09:29, Lukasz Majewski wrote:
-> > Hi Amit,
-> >  
-> >> Hi Lukasz Majewski,
-> >>
-> >> Sorry for late review but I am currently working on restructuring
-> >> the whole exynos thermal driver and this support of LDO can be
-> >> added as feature as not all socs support this. This is also
-> >> suggested by Eduardo. All your other patches looks fine.  
-> >
-> > But this is how it is already done. The VDD_TS is optional, so
-> > Exynos5440 and Exynos4210 will not be broken.
-> >
-> > This shall preserve the correct behavior of the thermal driver.
-> >  
-> 
-> If you guys plan to move to feature based approach, like suggested in 
-> V1, then Id recommend adding a /* TODO: */ entry in your driver.
+I thought about this as well but in arch/arm/mm/mm.h:
 
-Ok, nice idea.
+#ifdef CONFIG_ZONE_DMA
+extern phys_addr_t arm_dma_limit;
+#else
+#define arm_dma_limit ((phys_addr_t)~0)
+#endif
 
-> 
-> Amit, are you including this LDO support on your rework?
+arm_dma_limit is explicitly cast to phys_addr_t, which means that 
+arm_dma_limit will be always be sizeof(phys_addr_t) regardless of 
+sizeof(dma_addr_t). Is it safe to assume that 
+CONFIG_ARCH_DMA_ADDR_T_64BIT will always be selected if 
+sizeof(phys_addr_t) == 8? If not, we've defeated the point of the patch.
 
+Alternatively, should the type of arm_dma_limit be dma_addr_t instead of 
+phys_addr_t?
 
+Thanks,
+Laura
 
 -- 
-Best regards,
-
-Lukasz Majewski
-
-Samsung R&D Poland (SRPOL) | Linux Platform Group
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
