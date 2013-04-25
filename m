@@ -1,39 +1,46 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/5] ibmebus: convert of_platform_driver to platform_driver
-Date: Thu, 25 Apr 2013 15:45:04 -0500
-Message-ID: <517995D0.8020307@gmail.com>
-References: <1366596798-9457-1-git-send-email-robherring2@gmail.com>  <1366596798-9457-2-git-send-email-robherring2@gmail.com>  <CAL_JsqKDF=hPEM0Jz-zZSXBCXBZ=gBjLWL6QDvq+nFWkqY3DMw@mail.gmail.com>  <1366911329.2869.31.camel@pasglop> <517980B0.3000401@gmail.com> <1366920741.2869.32.camel@pasglop>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: Call for testing: device nodes as kobjects
+Date: Thu, 25 Apr 2013 22:35:24 +0100
+Message-ID: <CACxGe6uiXdWSkG3E+QzV=eETyBSH1ML6iH2uQAH+J2NVYXAHBQ@mail.gmail.com>
+References: <CACxGe6vPsGK1PwF6xOkkTB5LD8DqgB+Ym7daCMoPbMbVMVBQtQ@mail.gmail.com>
+ <517963BB.5030308@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rdma-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1366920741.2869.32.camel@pasglop>
-Sender: linux-rdma-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Hoang-Nam Nguyen <hnguyen-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>, Christoph Raisch <raisch-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>, Roland Dreier <roland-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Hefty <sean.hefty-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Hal Rosenstock <hal.rosenstock-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thadeu Lima de Souza Cascardo <cascardo-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-rdma-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <517963BB.5030308-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Michal Simek <michal.simek-g5w7nrANp4BDPfheJLI6IQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/25/2013 03:12 PM, Benjamin Herrenschmidt wrote:
-> On Thu, 2013-04-25 at 14:14 -0500, Rob Herring wrote:
->> On 04/25/2013 12:35 PM, Benjamin Herrenschmidt wrote:
+On Thu, Apr 25, 2013 at 6:11 PM, Nathan Fontenot
+<nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> wrote:
+> Hi Grant,
+>
+> I finally got some time to play around with this on powerpc/pseries.
+> Everything looks the same in the device tree, though I am seeing an
+> issue with of_property_update(). The routine appears to work and update
+> the property but when you read the file from userspace you still get
+> the same content that was present before the update.
+>
+> The root cause appears to be that of_update_property adds the new
+> property to the property list on the device node but does not update
+> the binary attribute for the file created for that property.
+>
+> I tried to poke around a bit but couldn't get anything to work that
+> would resolve the issue. I'll try to look around some more and send
+> something your way if I can get it to work.
 
-[...]
+Great, thanks for the testing Nathan. I'll take a look also.
 
->> You need patch 2 of this series to fix this:
->>
->> driver core: move to_platform_driver to platform_device.h
->>
->> which as Arnd pointed out needs to come first. I've fixed that in my
->> tree, but I don't think it warrants another post.
-> 
-> Can I pull you tree from somewhere to test ?
-
-Here you go:
-
-git://sources.calxeda.com/kernel/linux.git of-platform-removal
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe linux-rdma" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+g.
