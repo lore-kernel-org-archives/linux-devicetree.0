@@ -1,48 +1,43 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH] Documentation/devicetree: make semantic of initrd-end more
- explicit
-Date: Thu, 25 Apr 2013 14:27:57 +0200
-Message-ID: <1366892877-30912-1-git-send-email-u.kleine-koenig@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Lukasz Majewski <l.majewski@samsung.com>
+Subject: [PATCH v2 0/4] Thermal:exynos: Thermal Measurement Unit fix and
+ Samsung SoCs support
+Date: Thu, 25 Apr 2013 14:30:41 +0200
+Message-ID: <1366893045-31586-1-git-send-email-l.majewski@samsung.com>
+References: <1366389493-8239-1-git-send-email-l.majewski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1366389493-8239-1-git-send-email-l.majewski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Zhang Rui <rui.zhang@intel.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Amit Daniel Kachhap <amit.kachhap@linaro.org>, Lukasz Majewski <l.majewski@samsung.com>, t.figa@samsung.com, Sachin Kamat <sachin.kamat@linaro.org>, Myungjoo Ham <myungjoo.ham@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogVXdlIEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRy
-b25peC5kZT4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvdXNhZ2UtbW9kZWwudHh0IHwg
-OCArKysrKy0tLQogMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMo
-LSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvdXNhZ2UtbW9kZWwudHh0
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL3VzYWdlLW1vZGVsLnR4dAppbmRleCBlZjlkMDZj
-Li4wZWZlZGFhIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvdXNhZ2UtbW9k
-ZWwudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS91c2FnZS1tb2RlbC50eHQKQEAg
-LTE5MSw5ICsxOTEsMTEgQEAgTGludXggaXQgd2lsbCBsb29rIHNvbWV0aGluZyBsaWtlIHRoaXM6
-CiAJfTsKIAogVGhlIGJvb3RhcmdzIHByb3BlcnR5IGNvbnRhaW5zIHRoZSBrZXJuZWwgYXJndW1l
-bnRzLCBhbmQgdGhlIGluaXRyZC0qCi1wcm9wZXJ0aWVzIGRlZmluZSB0aGUgYWRkcmVzcyBhbmQg
-c2l6ZSBvZiBhbiBpbml0cmQgYmxvYi4gIFRoZQotY2hvc2VuIG5vZGUgbWF5IGFsc28gb3B0aW9u
-YWxseSBjb250YWluIGFuIGFyYml0cmFyeSBudW1iZXIgb2YKLWFkZGl0aW9uYWwgcHJvcGVydGll
-cyBmb3IgcGxhdGZvcm0tc3BlY2lmaWMgY29uZmlndXJhdGlvbiBkYXRhLgorcHJvcGVydGllcyBk
-ZWZpbmUgdGhlIGFkZHJlc3MgYW5kIHNpemUgb2YgYW4gaW5pdHJkIGJsb2IuICBOb3RlIHRoYXQK
-K2luaXRyZC1lbmQgaXMgdGhlIGZpcnN0IGFkZHJlc3MgYWZ0ZXIgdGhlIGluaXRyZCBpbWFnZSwg
-c28gdGhpcyBkb2Vzbid0CittYXRjaCB0aGUgdXN1YWwgc2VtYW50aWMgb2Ygc3RydWN0IHJlc291
-cmNlLiAgVGhlIGNob3NlbiBub2RlIG1heSBhbHNvCitvcHRpb25hbGx5IGNvbnRhaW4gYW4gYXJi
-aXRyYXJ5IG51bWJlciBvZiBhZGRpdGlvbmFsIHByb3BlcnRpZXMgZm9yCitwbGF0Zm9ybS1zcGVj
-aWZpYyBjb25maWd1cmF0aW9uIGRhdGEuCiAKIER1cmluZyBlYXJseSBib290LCB0aGUgYXJjaGl0
-ZWN0dXJlIHNldHVwIGNvZGUgY2FsbHMgb2Zfc2Nhbl9mbGF0X2R0KCkKIHNldmVyYWwgdGltZXMg
-d2l0aCBkaWZmZXJlbnQgaGVscGVyIGNhbGxiYWNrcyB0byBwYXJzZSBkZXZpY2UgdHJlZQotLSAK
-MS44LjIucmMyCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0
-cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVl
-LWRpc2N1c3MK
+This patch series provide various fixes for TMU block.
+First of all it fixes a problem with get_cpu_frequency() lockup at cpu_cooling.c. 
+
+Secondly a proper regulator definition (VDD_TS) has been added.
+Moreover device tree definitions and documentation entry are now in place.
+
+Dependencies (those patches shall be applied on top of):
+- "clk: exynos4: Add clock entries for TMU"
+- "Thermal: exynos: Add clk_{un}prepare APIs"
+- "Thermal: exynos: Add compatible string for exynos4412"
+
+
+Lukasz Majewski (4):
+  ARM: dts: thermal: exynos4: TMU device tree support for Exynos4412
+    targets
+  Thermal: exynos: Support for TMU regulator defined at device tree
+  ARM: dts: thermal: exynos4: Add documentation for Exynos SoC thermal
+    bindings
+  ARM:TMU:fix: Avoid lockup when first frequency table entry is
+    CPUFREQ_ENTRY_INVALID
+
+ .../devicetree/bindings/thermal/exynos-thermal.txt |   25 ++++++++++++++++++++
+ arch/arm/boot/dts/exynos4x12.dtsi                  |   10 ++++++++
+ drivers/thermal/cpu_cooling.c                      |    3 +--
+ drivers/thermal/exynos_thermal.c                   |   19 +++++++++++++++
+ 4 files changed, 55 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+
+-- 
+1.7.10.4
