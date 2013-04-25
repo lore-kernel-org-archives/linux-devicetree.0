@@ -1,54 +1,48 @@
-From: Marek Belisko <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 1/3] ASoC: spdif_transceiver: Change driver filename to
- spdif_transmitter.c.
-Date: Thu, 25 Apr 2013 15:13:12 +0200
-Message-ID: <1366895594-19596-2-git-send-email-marek.belisko@streamunlimited.com>
-References: <1366895594-19596-1-git-send-email-marek.belisko@streamunlimited.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/2] pinctrl: samsung: Fix link error with
+ CONFIG_PINCTRL_EXYNOS disabled
+Date: Thu, 25 Apr 2013 15:26:05 +0200
+Message-ID: <CACRpkdY61h-H14QYHhADnAz1JRa=8Wbi0aYKSRW21xm4WHOHGA@mail.gmail.com>
+References: <1366060483-20342-1-git-send-email-tomasz.figa@gmail.com>
+	<6940961.67Lk2axxPL@amdc1227>
+	<CACRpkdZmSj-AqUA9kd7NMN6cL2Nxa0EaKoSVkwQSrxhcWEeQtg@mail.gmail.com>
+	<2113989.KXXvDDhnMa@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366895594-19596-1-git-send-email-marek.belisko-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Marek Belisko <marek.belisko-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>, perex-/Fr2/VpizcU@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <2113989.KXXvDDhnMa@amdc1227>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Mark Brown <broonie@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kukjin Kim <kgene.kim@samsung.com>, Kwangwoo LEE <kwangwoo.lee@gmail.com>, Peter Korsgaard <jacmet@sunsite.dk>, Darius Augulis <augulis.darius@gmail.com>, Maurus Cuelenaere <mcuelenaere@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Abraham <thomas.abraham@linaro.org>, "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Transceiver usually means receiver + transmitter. This codec can do only
-transmit. Update driver accordingly.
+On Wed, Apr 24, 2013 at 4:47 PM, Tomasz Figa <t.figa@samsung.com> wrote:
+> On Wednesday 24 of April 2013 16:27:09 Linus Walleij wrote:
+>> On Tue, Apr 23, 2013 at 2:09 PM, Tomasz Figa <t.figa@samsung.com> wrote:
+>> > On Tuesday 23 of April 2013 14:03:12 Linus Walleij wrote:
+>> >> This does not apply to my "devel" branch in the pinctrl tree.
+>> >>
+>> >> Could you rebase it on that branch?
+>> >>
+>> >> Or is the error not even in my tree?
+>> >
+>> > This one got sent incorrectly due to my mistake. Please try the correct
+>> > version:
+>> >
+>> > [PATCH RESEND 2/2] pinctrl: samsung: Fix link error with
+>> > CONFIG_PINCTRL_EXYNOS disabled
+>>
+>> This does not apply either.
+>>
+>> Can you please test against the "devel" branch in the pinctrl tree?
+>
+> Right, it does not apply.
+>
+> Well, actually it does with git am -3, but it is incorrect, since the problem
+> it intends to fix is not present in your tree, but rather is a merge error in
+> linux-next in a merge of Kgene's and your tree...
 
-Signed-off-by: Marek Belisko <marek.belisko-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>
----
- sound/soc/codecs/Makefile                          |    2 +-
- .../{spdif_transciever.c => spdif_transmitter.c}   |    0
- 2 files changed, 1 insertion(+), 1 deletion(-)
- rename sound/soc/codecs/{spdif_transciever.c => spdif_transmitter.c} (100%)
+Oh. Then you have to send the patch to Stephen Rothwell.
 
-diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
-index 8cf5951..4252c35 100644
---- a/sound/soc/codecs/Makefile
-+++ b/sound/soc/codecs/Makefile
-@@ -51,7 +51,7 @@ snd-soc-alc5632-objs := alc5632.o
- snd-soc-sigmadsp-objs := sigmadsp.o
- snd-soc-si476x-objs := si476x.o
- snd-soc-sn95031-objs := sn95031.o
--snd-soc-spdif-tx-objs := spdif_transciever.o
-+snd-soc-spdif-tx-objs := spdif_transmitter.o
- snd-soc-spdif-rx-objs := spdif_receiver.o
- snd-soc-ssm2602-objs := ssm2602.o
- snd-soc-sta32x-objs := sta32x.o
-diff --git a/sound/soc/codecs/spdif_transciever.c b/sound/soc/codecs/spdif_transmitter.c
-similarity index 100%
-rename from sound/soc/codecs/spdif_transciever.c
-rename to sound/soc/codecs/spdif_transmitter.c
--- 
-1.7.9.5
+Yours,
+Linus Walleij
