@@ -1,26 +1,35 @@
 From: David Miller <davem@davemloft.net>
-Subject: Re: [patch -next] net: calxedaxgmac: fix condition in
- xgmac_set_features()
-Date: Thu, 25 Apr 2013 03:50:48 -0400 (EDT)
-Message-ID: <20130425.035048.266657036340116086.davem@davemloft.net>
-References: <20130425074420.GA11880@elgon.mountain>
+Subject: Re: [net-next PATCH 1/3] drivers: of: add phy fixup support in DT
+Date: Thu, 25 Apr 2013 03:56:49 -0400 (EDT)
+Message-ID: <20130425.035649.1109561373283256109.davem@davemloft.net>
+References: <1366654838-26479-1-git-send-email-mugunthanvnm@ti.com>
+	<1366654838-26479-2-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20130425074420.GA11880@elgon.mountain>
+In-Reply-To: <1366654838-26479-2-git-send-email-mugunthanvnm@ti.com>
 Sender: netdev-owner@vger.kernel.org
-To: dan.carpenter@oracle.com
-Cc: grant.likely@linaro.org, rob.herring@calxeda.com, edumazet@google.com, fabio.estevam@freescale.com, jiri@resnulli.us, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org
+To: mugunthanvnm@ti.com
+Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Date: Thu, 25 Apr 2013 10:44:20 +0300
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Date: Mon, 22 Apr 2013 23:50:36 +0530
 
-> The "changed" variable should be a 64 bit type, otherwise it can't store
-> all the features.  The way the code is now the test for whether
-> NETIF_F_RXCSUM changed is always false and we return immediately.
+> In earlier case phy fixup are added in board file as this is no more the case
+> so adding support for phy register fixup in Device Tree
 > 
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
 
-Applied, thanks Dan.
+When people put a series of undocumented PHY register writes using
+constants, we tell them it's firmware.
+
+If these PHY registers are actually documented in the driver, write a
+function in that driver which does the programming sequence, then add
+a property that the driver looks for in order to determine whether to
+call that sequence or not.
+
+I don't want people putting random PHY raw programming sequences and
+other crap like that into the OF device nodes.  It's extremely
+inelegant and inviting abuse.
