@@ -1,117 +1,65 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v3 07/17] ARM: dts: imx: cpus/cpu nodes dts updates
-Date: Thu, 25 Apr 2013 13:44:28 +0800
-Message-ID: <20130425054426.GG1389@S2101-09.ap.freescale.net>
-References: <1366824502-19729-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1366824502-19729-8-git-send-email-lorenzo.pieralisi@arm.com>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: Re: [PATCH V4 1/6] clk: OMAP: introduce device tree binding to kernel
+ clock data
+Date: Thu, 25 Apr 2013 12:31:22 +0530
+Message-ID: <5178D4C2.7080400@ti.com>
+References: <1365807278-554-1-git-send-email-nm@ti.com>
+ <1365807278-554-2-git-send-email-nm@ti.com>
+ <20130412233142.GE10155@atomide.com> <20130412233900.GA1599@kahuna>
+ <20130413172210.GM10155@atomide.com> <20130414211917.GA3275@snafu>
+ <20130424162847.8998.73264@quantum>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1366824502-19729-8-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130424162847.8998.73264@quantum>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Nishanth Menon <nm@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@deeprootsystems.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 24, 2013 at 06:28:12PM +0100, Lorenzo Pieralisi wrote:
-> This patch updates the in-kernel dts files according to the latest cpus
-> and cpu bindings updates for ARM.
+On Wednesday 24 April 2013 09:58 PM, Mike Turquette wrote:
+> Quoting Nishanth Menon (2013-04-14 14:19:17)
+>> Overall strategy introduced here is simple: a clock node described in
+>> device tree blob is used to identify the exact clock provided in the
+>> SoC specific data. This is then linked back using of_clk_add_provider
+>> to the device node to be accessible by of_clk_get.
+>>
+>> Based on discussion contributions from Roger Quadros, Grygorii Strashko
+>> and others.
+>>
+>> Cc: Kevin Hilman <khilman@deeprootsystems.com>
+>> Cc: Mike Turquette <mturquette@linaro.org>
+>> Cc: Paul Walmsley <paul@pwsan.com>
+>> [tony@atomide.com: co-developed]
+>> Signed-off-by: Tony Lindgren <tony@atomide.com>
+>> Signed-off-by: Nishanth Menon <nm@ti.com>
 > 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx23.dtsi  | 8 ++++++--
->  arch/arm/boot/dts/imx28.dtsi  | 8 ++++++--
->  arch/arm/boot/dts/imx6dl.dtsi | 2 ++
->  arch/arm/boot/dts/imx6q.dtsi  | 1 +
->  4 files changed, 15 insertions(+), 4 deletions(-)
+> I can take this into clk-next after the merge window.  Please refresh it
+> for -rc1 as we discussed on irc.
 > 
-> diff --git a/arch/arm/boot/dts/imx23.dtsi b/arch/arm/boot/dts/imx23.dtsi
-> index 56afcf4..0aae18b 100644
-> --- a/arch/arm/boot/dts/imx23.dtsi
-> +++ b/arch/arm/boot/dts/imx23.dtsi
-> @@ -23,8 +23,12 @@
->  	};
->  
->  	cpus {
-> -		cpu@0 {
-> -			compatible = "arm,arm926ejs";
-> +		#address-cells = <0>;
-> +		#size-cells = <0>;
-> +
-> +		cpu {
-> +			compatible = "arm,arm926ej-s";
-> +			device_type = "cpu";
->  		};
->  	};
->  
-> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-> index 7ba4966..07f131fc 100644
-> --- a/arch/arm/boot/dts/imx28.dtsi
-> +++ b/arch/arm/boot/dts/imx28.dtsi
-> @@ -32,8 +32,12 @@
->  	};
->  
->  	cpus {
-> -		cpu@0 {
-> -			compatible = "arm,arm926ejs";
-> +		#address-cells = <0>;
-> +		#size-cells = <0>;
-> +
-> +		cpu {
-> +			compatible = "arm,arm926ej-s";
-> +			device_type = "cpu";
->  		};
->  	};
->  
-> diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-> index 63fafe2..b76d85e 100644
-> --- a/arch/arm/boot/dts/imx6dl.dtsi
-> +++ b/arch/arm/boot/dts/imx6dl.dtsi
-> @@ -16,12 +16,14 @@
->  
->  		cpu@0 {
->  			compatible = "arm,cortex-a9";
-> +			device_type = "cpu";
->  			reg = <0>;
->  			next-level-cache = <&L2>;
->  		};
->  
->  		cpu@1 {
->  			compatible = "arm,cortex-a9";
-> +			device_type = "cpu";
->  			reg = <1>;
->  			next-level-cache = <&L2>;
->  		};
-> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-> index cba021e..65c1b62 100644
-> --- a/arch/arm/boot/dts/imx6q.dtsi
-> +++ b/arch/arm/boot/dts/imx6q.dtsi
-> @@ -17,6 +17,7 @@
->  
->  		cpu@0 {
->  			compatible = "arm,cortex-a9";
-> +			device_type = "cpu";
+> As an aside, will Tero's series for migrating to drivers/clk/omap[1] and
+> Rajendra's patch for registering clocks late[2] be refreshed after the
 
-Shouldn't this line be added for cpu@1, cpu@2 and cpu@3 too?  Other than
-that,
+[2] is already in mainline.
 
-Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
->  			reg = <0>;
->  			next-level-cache = <&L2>;
->  			operating-points = <
-> -- 
-> 1.7.12
+> merge window?  It would be nice to combine these efforts.
 > 
+> Thanks,
+> Mike
+> 
+> [1] http://article.gmane.org/gmane.linux.ports.arm.omap/95948
+> [2] http://www.spinics.net/lists/arm-kernel/msg231288.html
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
 > 
