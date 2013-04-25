@@ -1,63 +1,45 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RFC PATCH v3 02/17] Documentation: devicetree: arm: cpus/cpu
- nodes bindings updates
-Date: Thu, 25 Apr 2013 10:09:32 +0100
-Message-ID: <20130425090931.GB25870@e102568-lin.cambridge.arm.com>
-References: <1366824502-19729-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1366824502-19729-3-git-send-email-lorenzo.pieralisi@arm.com>
- <20130424195820.GM4998@game.jcrosoft.org>
+From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/3] ARM: at91: dt: switch to pre-processor
+Date: Thu, 25 Apr 2013 11:10:50 +0200
+Message-ID: <CACQ1gAg1FO001k5ZsW80Bp_j66AD6mO5BcGLHGPa1kJBHUcS4A@mail.gmail.com>
+References: <20130424145627.GL4998@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130424195820.GM4998@game.jcrosoft.org>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Dave Martin <dave.martin@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <Will.Deacon@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, Lennert Buytenhek <kernel@wantstofly.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, David Brown <davidb@codeaurora.org>, Dinh Nguyen <dinguyen@altera.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Sekhar Nori <nsekhar@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130424145627.GL4998-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 24, 2013 at 08:58:20PM +0100, Jean-Christophe PLAGNIOL-VILLARD wrote:
+2013/4/24 Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>:
+> HI,
+>
+>         The follow patch series switch the at91 to DT pre-processor
+>
+>         So we can use macro for AIC and Pinctrl instead of magic
+>
+>   ARM: at91: dt: switch to pre-processor (2013-04-24 22:54:39 +0800)
+>
+> ----------------------------------------------------------------
+> Jean-Christophe PLAGNIOL-VILLARD (3):
+>       ARM: at91: dt: add pinctrl pre-processor define
+>       ARM: at91: dt: add AIC pre-processor define
+>       ARM: at91: dt: switch to pre-processor
 
-[...]
+I can't find your 3rd patch "ARM: at91: dt: switch to pre-processor"
+on the lists.
+This is too much suspens ! Bring it on !
 
-> > +     - compatible:
-> > +             Usage: required
-> > +             Value type: <string>
-> > +             Definition: should be one of:
-> > +                         "arm,arm710t"
-> > +                         "arm,arm720t"
-> > +                         "arm,arm740t"
-> > +                         "arm,arm7ej-s"
-> > +                         "arm,arm7tdmi"
-> > +                         "arm,arm7tdmi-s"
-> > +                         "arm,arm9es"
-> > +                         "arm,arm9ej-s"
-> > +                         "arm,arm920t"
-> > +                         "arm,arm922t"
-> > +                         "arm,arm925"
-> > +                         "arm,arm926e-s"
-> > +                         "arm,arm926ej-s"
-> > +                         "arm,arm940t"
-> > +                         "arm,arm946e-s"
-> > +                         "arm,arm966e-s"
-> > +                         "arm,arm968e-s"
-> > +                         "arm,arm9tdmi"
-> > +                         "arm,arm1020e"
-> > +                         "arm,arm1020t"
-> > +                         "arm,arm1022e"
-> > +                         "arm,arm1026ej-s"
-> the common name is arm926ejs / arm1026ejs & co
 
-The TRMs names are arm926ej-s/arm1026ej-s/... and other machs are using that
-nomenclature already in dts files, time to consolidate.
-
-Lorenzo
+Richard.
