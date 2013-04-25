@@ -1,82 +1,52 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCHv2 1/4] Documentation: Add memory mapped ARM architected
- timer binding
-Date: Thu, 25 Apr 2013 16:47:52 -0500
-Message-ID: <5179A488.5050102@gmail.com>
-References: <1365812863-5367-1-git-send-email-sboyd@codeaurora.org> <1365812863-5367-2-git-send-email-sboyd@codeaurora.org> <516C6F12.5020208@gmail.com> <516C7231.6060305@codeaurora.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Documentation/devicetree: make semantic of initrd-end
+ more explicit
+Date: Thu, 25 Apr 2013 16:48:15 -0500
+Message-ID: <5179A49F.2080400@gmail.com>
+References: <1366892877-30912-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <516C7231.6060305@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1366892877-30912-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: =?UTF-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/15/2013 04:33 PM, Stephen Boyd wrote:
-> On 04/15/13 14:20, Rob Herring wrote:
->> On Fri, Apr 12, 2013 at 7:27 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
->>> @@ -26,3 +30,52 @@ Example:
->>>                              <1 10 0xf08>;
->>>                 clock-frequency = <100000000>;
->>>         };
->>> +
->>> +** Memory mapped timer node properties
->>> +
->>> +- compatible : Should at least contain "arm,armv7-timer-mem".
->> Everything about this timer is architecturally defined? If not, let's
->> use a more specific name.
-> 
-> I'm not sure I'm following you, but everything described here is part of
-> the ARM definition. What would be a more specific name?
-
-Something that corresponds to the particular implementation like
-cortex-a15 (obviously not an example that has this). I'm fine with
-leaving this for now, but would like to see that added when specific SOC
-dts are added. Better to be specific in case we need to use it for
-something like errata work-arounds. Of course we haven't done that so
-far with the arch timer bindings...
-
->>> +
->>> +- clock-frequency : The frequency of the main counter, in Hz. Optional.
->>> +
->>> +- reg : The control frame base address.
->>> +
->>> +Note that #address-cells, #size-cells, and ranges shall be present to ensure
->>> +the CPU can address a frame's registers.
->>> +
->>> +Frame:
->>> +
->>> +- frame-number: 0 to 7.
->> I'd really like to get rid of the frame numbers and sub-nodes. Is the
->> frame number significant to software?
-> 
-> We need the frame number to read and write registers in the control
-> frame (the first base in the parent node). We currently use it to
-> determine if a frame has support for the virtual timer by reading the
-> CNTTIDR (a register with 4 bits per frame describing capabilities). If
-> we wanted to control access to the second view of a frame we would also
-> need to configure the CNTPL0ACRn register that pertains to the frame
-> we're controlling. Without a frame number we wouldn't know which
-> register to write.
-
-I've gone thru the memory mapped part of the spec now, so I think I
-understand things better. I see how the frame number is needed, but...
-
-The control base is only accessible in secure or hyp mode. How does a
-guest know that it is a guest and can't map the control base? Seems like
-we need to allow a subset of the binding that is just a reg and
-interrupts properties without the frame sub nodes.
-
-Rob
-
-> 
->>
->>> +- interrupts : Interrupt list for physical and virtual timers in that order.
->>> +  The virtual timer interrupt is optional.
->> Is that optional per frame?
-> 
-> Yes the virtual and physical timer interrupt is per-frame and the
-> virtual interrupt is optional.
-> 
+T24gMDQvMjUvMjAxMyAwNzoyNyBBTSwgVXdlIEtsZWluZS1Lw7ZuaWcgd3JvdGU6Cj4gU2lnbmVk
+LW9mZi1ieTogVXdlIEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRyb25peC5k
+ZT4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL3VzYWdlLW1vZGVsLnR4dCB8IDgg
+KysrKystLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMo
+LSkKCkFwcGxpZWQuCgpUaGFua3MsClJvYgoKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL3VzYWdlLW1vZGVsLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS91
+c2FnZS1tb2RlbC50eHQKPiBpbmRleCBlZjlkMDZjLi4wZWZlZGFhIDEwMDY0NAo+IC0tLSBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS91c2FnZS1tb2RlbC50eHQKPiArKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvdXNhZ2UtbW9kZWwudHh0Cj4gQEAgLTE5MSw5ICsxOTEsMTEgQEAgTGlu
+dXggaXQgd2lsbCBsb29rIHNvbWV0aGluZyBsaWtlIHRoaXM6Cj4gIAl9Owo+ICAKPiAgVGhlIGJv
+b3RhcmdzIHByb3BlcnR5IGNvbnRhaW5zIHRoZSBrZXJuZWwgYXJndW1lbnRzLCBhbmQgdGhlIGlu
+aXRyZC0qCj4gLXByb3BlcnRpZXMgZGVmaW5lIHRoZSBhZGRyZXNzIGFuZCBzaXplIG9mIGFuIGlu
+aXRyZCBibG9iLiAgVGhlCj4gLWNob3NlbiBub2RlIG1heSBhbHNvIG9wdGlvbmFsbHkgY29udGFp
+biBhbiBhcmJpdHJhcnkgbnVtYmVyIG9mCj4gLWFkZGl0aW9uYWwgcHJvcGVydGllcyBmb3IgcGxh
+dGZvcm0tc3BlY2lmaWMgY29uZmlndXJhdGlvbiBkYXRhLgo+ICtwcm9wZXJ0aWVzIGRlZmluZSB0
+aGUgYWRkcmVzcyBhbmQgc2l6ZSBvZiBhbiBpbml0cmQgYmxvYi4gIE5vdGUgdGhhdAo+ICtpbml0
+cmQtZW5kIGlzIHRoZSBmaXJzdCBhZGRyZXNzIGFmdGVyIHRoZSBpbml0cmQgaW1hZ2UsIHNvIHRo
+aXMgZG9lc24ndAo+ICttYXRjaCB0aGUgdXN1YWwgc2VtYW50aWMgb2Ygc3RydWN0IHJlc291cmNl
+LiAgVGhlIGNob3NlbiBub2RlIG1heSBhbHNvCj4gK29wdGlvbmFsbHkgY29udGFpbiBhbiBhcmJp
+dHJhcnkgbnVtYmVyIG9mIGFkZGl0aW9uYWwgcHJvcGVydGllcyBmb3IKPiArcGxhdGZvcm0tc3Bl
+Y2lmaWMgY29uZmlndXJhdGlvbiBkYXRhLgo+ICAKPiAgRHVyaW5nIGVhcmx5IGJvb3QsIHRoZSBh
+cmNoaXRlY3R1cmUgc2V0dXAgY29kZSBjYWxscyBvZl9zY2FuX2ZsYXRfZHQoKQo+ICBzZXZlcmFs
+IHRpbWVzIHdpdGggZGlmZmVyZW50IGhlbHBlciBjYWxsYmFja3MgdG8gcGFyc2UgZGV2aWNlIHRy
+ZWUKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRl
+dmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96
+bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlz
+Y3Vzcwo=
