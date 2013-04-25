@@ -1,16 +1,17 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v5 07/10] ASoC: fsl-ssi: imx ac97 support
-Date: Thu, 25 Apr 2013 13:37:16 +0200
-Message-ID: <20130425113716.GB27763@pengutronix.de>
-References: <1366814199-14827-1-git-send-email-mpa@pengutronix.de>
- <1366814199-14827-8-git-send-email-mpa@pengutronix.de>
- <20130425035029.GB1276@S2101-09.ap.freescale.net>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] GPIO: clps711x: Rewrite driver for using generic
+ GPIO code
+Date: Thu, 25 Apr 2013 12:40:41 +0100
+Message-ID: <20130425114041.GC14496@n2100.arm.linux.org.uk>
+References: <1365826900-30136-1-git-send-email-shc_work@mail.ru>
+ <20130419140357.GR14496@n2100.arm.linux.org.uk>
+ <1366889467.845096985@f366.mail.ru>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130425035029.GB1276-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <1366889467.845096985-i8J/Zv46+dgedp2WBT/QOw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,76 +22,82 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 25, 2013 at 11:50:30AM +0800, Shawn Guo wrote:
-> On Wed, Apr 24, 2013 at 04:36:36PM +0200, Markus Pargmann wrote:
-> > +/*
-> > + * Pointer to AC97 reset functions for specific boards
-> > + */
-> > +#if IS_ENABLED(CONFIG_MACH_PCA100)
-> > +extern void pca100_ac97_cold_reset(struct snd_ac97 *ac97);
-> > +extern void pca100_ac97_warm_reset(struct snd_ac97 *ac97);
-> > +#else
-> > +void pca100_ac97_cold_reset(struct snd_ac97 *ac97) { }
-> > +void pca100_ac97_warm_reset(struct snd_ac97 *ac97) { }
-> > +#endif
-> > +
-> > +#if IS_ENABLED(CONFIG_MACH_PCM043)
-> > +extern void pcm043_ac97_cold_reset(struct snd_ac97 *ac97);
-> > +extern void pcm043_ac97_warm_reset(struct snd_ac97 *ac97);
-> > +#else
-> > +void pcm043_ac97_cold_reset(struct snd_ac97 *ac97) { }
-> > +void pcm043_ac97_warm_reset(struct snd_ac97 *ac97) { }
-> > +#endif
+On Thu, Apr 25, 2013 at 03:31:07PM +0400, Alexander Shiyan wrote:
+> > On Sat, Apr 13, 2013 at 08:21:39AM +0400, Alexander Shiyan wrote:
+> > > +static void __init clps711x_add_gpio(void)
+> > > +{
+> > > +	const struct resource clps711x_gpio0_res[] = {
+> > > +		DEFINE_RES_MEM(PADR, SZ_1),
+> > > +		DEFINE_RES_MEM(PADDR, SZ_1),
+> > > +	};
 > ...
-> > @@ -717,13 +956,39 @@ static int fsl_ssi_probe(struct platform_device *pdev)
-> >  
-> >  	strcpy(ssi_private->name, p);
-> >  
-> > -	/* Initialize this copy of the CPU DAI driver structure */
-> > -	memcpy(&ssi_private->cpu_dai_drv, &fsl_ssi_dai_template,
-> > -	       sizeof(fsl_ssi_dai_template));
-> > -	ssi_private->cpu_dai_drv.name = ssi_private->name;
-> > -
-> >  	ssi_private->use_dma = !of_property_read_bool(np, "fsl,imx-fiq");
-> >  
-> > +	if (ac97) {
-> > +		sprop = of_get_property(of_find_node_by_path("/"), "compatible",
-> > +				NULL);
-> > +		p = strrchr(sprop, ',');
-> > +		if (p)
-> > +			sprop = p + 1;
-> > +
-> > +		if (!strcmp(sprop, "imx27-pca100")) {
-> > +			ssi_private->ac97_reset = pca100_ac97_cold_reset;
-> > +			ssi_private->ac97_warm_reset = pca100_ac97_warm_reset;
-> > +		} else if (!strcmp(sprop, "imx27-pcm043")) {
-> > +			ssi_private->ac97_reset = pcm043_ac97_cold_reset;
-> > +			ssi_private->ac97_warm_reset = pcm043_ac97_warm_reset;
-> > +		} else {
-> > +			dev_err(&pdev->dev, "Failed to enable ssi AC97 mode, unknown board.\n");
-> > +			ret = -EINVAL;
-> > +			goto error_kmalloc;
-> > +		}
+> > Don't do this - this is incredibly wasteful.
+> > 
+> > C lesson 1: do not put unmodified initialised structures onto the stack.
+> > 
+> > What the C compiler will do with the above is exactly the same as this
+> > for each structure:
+> > 
+> > static const struct resource private_clps711x_gpio4_res[] = {
+> > 	DEFINE_RES_MEM(PEDR, SZ_1),
+> > 	DEFINE_RES_MEM(PEDDR, SZ_1),
+> > };
+> > 
+> > static void __init clps711x_add_gpio(void)
+> > {
+> > 	const struct resource clps711x_gpio4_res[] = private_clps711x_gpio4_res;
+> > 	...
+> > 
+> > which will in itself be a call out to memcpy, or an inlined memcpy.  Now
+> > do you see why it's wasteful?  You might as well write the thing in that
+> > way to start with and safe the additional code to copy the structures.
+> > 
+> > The other way to do this, which will probably be far more space efficient:
+> > 
+> > static phys_addr_t gpio_addrs[][2] = {
+> > 	{ PADR, PADDR },
+> > 	{ PBDR, PBDDR },
+> > ...
+> > };
+> > 
+> > static void __init clps711x_add_gpio(void)
+> > {
+> > 	struct resource gpio_res[2];
+> > 	unsigned i;
+> > 
+> > 	gpio_res[0].flags = IORESOURCE_MEM;
+> > 	gpio_res[1].flags = IORESOURCE_MEM;
+> > 
+> > 	for (i = 0; i < ARRAY_SIZE(gpio_addrs); i++) {
+> > 		gpio_res[0].start = gpio_addrs[i][0];
+> > 		gpio_res[0].end = gpio_res[0].start;
+> > 		gpio_res[1].start = gpio_addrs[i][1];
+> > 		gpio_res[1].end = gpio_res[1].start;
+> > 
+> > 		platform_device_register_simple("clps711x-gpio", i,
+> > 					gpio_res, ARRAY_SIZE(gpio_res));
+> > 	}
+> > }
+> > 
+> > which results in smaller storage and most probably also smaller code size
+> > too.
 > 
-> I do not like these board specific hooks show up in an IP driver
-> in such way.  Can we work it out in other ways, notification or even
-> platform_data with auxdata?
+> Very strange results with this change.
+> So, I add a debug output before "platform_device_register_simple" for
+> print resource and in "__request_resource" for print parent.
+> This is output.
+> gpio 0 [mem 0x80000000] [mem 0x80000040]
+> resource: root [??? 0xe3a0f000-0x00000000 flags 0xb00000]
+> clps711x-gpio.0: failed to claim resource 0
+> 
+> The first line is seems correct. But I do not understand why
+> parent is wrong here. Normally it should be as:
+> resource: root [mem 0x00000000-0xffffffff].
+> And it shows normal with my first version.
+> Have anyone any ideas?
 
-soc_ac97_ops is a global symbol, so we could setup soc_ac97_ops.reset
-and warm_reset in board specific ac97 drivers. For this patch I would
-move the assignment of reset functions to phycore-ac97.c which already
-is specifically for this codec-ssi combination on the two boards.
-
-Regards,
-
-Markus
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+memset(&gpio_res, 0, sizeof(gpio_res));
