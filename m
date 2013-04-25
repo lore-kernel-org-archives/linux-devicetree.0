@@ -1,51 +1,45 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: [PATCH 2/2] thermal: db8500_cpufreq_cooling: remove usage of IS_ERR_OR_NULL()
-Date: Thu, 25 Apr 2013 10:13:34 -0400
-Message-ID: <1366899214-22639-3-git-send-email-eduardo.valentin@ti.com>
-References: <1366899214-22639-1-git-send-email-eduardo.valentin@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 00/13] ARM: EXYNOS: Fix Universal C210 support
+Date: Thu, 25 Apr 2013 16:46:27 +0200
+Message-ID: <201304251646.28026.arnd@arndb.de>
+References: <1366731994-7478-1-git-send-email-t.figa@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1366899214-22639-1-git-send-email-eduardo.valentin@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>, Russell King <rmk@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Hongbo Zhang <hongbo.zhang@stericsson.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1366731994-7478-1-git-send-email-t.figa@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, kyungmin.park@samsung.com, tomasz.figa@gmail.com, m.szyprowski@samsung.com, john.stultz@linaro.org, tglx@linutronix.de, olof@lixom.net, ben-linux@fluff.org, thomas.abraham@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-This patch changes the driver to avoid the usage of IS_ERR_OR_NULL()
-macro. This macro can lead to dangerous results, like returning
-success (0) during a failure scenario (NULL pointer handling).
+On Tuesday 23 April 2013, Tomasz Figa wrote:
+> This series intends to fix support for Universal C210 board in mainline.
+> Main difference from other boards based on Exynos 4210 is that hardware
+> revision of the SoC used on Universal C210 does not support MCT timers
+> and legacy PWM timers must be used instead.
+> 
+> First (and the biggest) part of the series deals with cleaning up and
+> fixing the samsung_pwm_timer clocksource driver, that was posted
+> recently by Arnd. In addition the driver is prepared to share the
+> hardware with PWM driver that will be reworked later, since it is not
+> a component crucial for system operation.
+> 
+> Second part fixes ATAGS support of Exynos 4210 rev0 SoC, which needs
+> different timer initialization, using the new samsung_pwm_timer driver.
+> 
+> Third and last part adds Device Tree-based support for Universal C210
+> board by providing device tree sources for it.
+> 
+> On Universal C210 board, both with and without DT:
+> 
+> Tested-by: Tomasz Figa <t.figa@samsung.com>
 
-The case present in this driver can be translated to a simple
-check for IS_ERR(), as the cpufreq_cooling_register() returns
-either a valid pointer or an ERR_PTR().
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Russell King <rmk@arm.linux.org.uk>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Hongbo Zhang <hongbo.zhang@stericsson.com>
-Cc: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org
-Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
----
- drivers/thermal/db8500_cpufreq_cooling.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Olof, Kgene, I think we should have this one in 3.10 since it fixes
+a regression. It looks bigger than it really is because I asked Tomasz
+to do small patches rather than a single combined patch.
 
-diff --git a/drivers/thermal/db8500_cpufreq_cooling.c b/drivers/thermal/db8500_cpufreq_cooling.c
-index 21419851..786d192 100644
---- a/drivers/thermal/db8500_cpufreq_cooling.c
-+++ b/drivers/thermal/db8500_cpufreq_cooling.c
-@@ -37,7 +37,7 @@ static int db8500_cpufreq_cooling_probe(struct platform_device *pdev)
- 	cpumask_set_cpu(0, &mask_val);
- 	cdev = cpufreq_cooling_register(&mask_val);
- 
--	if (IS_ERR_OR_NULL(cdev)) {
-+	if (IS_ERR(cdev)) {
- 		dev_err(&pdev->dev, "Failed to register cooling device\n");
- 		return PTR_ERR(cdev);
- 	}
--- 
-1.8.2.1.342.gfa7285d
-
+	Arnd
