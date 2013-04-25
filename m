@@ -1,66 +1,91 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 0/4] ARM: dts: Add USB host support for Panda and
- Beagle-xm
-Date: Thu, 25 Apr 2013 08:34:17 -0700
-Message-ID: <20130425153417.GI5184@atomide.com>
-References: <1366365457-28972-1-git-send-email-rogerq@ti.com>
- <20130419154321.GG10155@atomide.com>
- <5174E27B.5090808@ti.com>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: Re: [PATCH v2 4/4] ARM:TMU:fix: Avoid lockup when first frequency
+ table entry is CPUFREQ_ENTRY_INVALID
+Date: Thu, 25 Apr 2013 11:39:12 -0400
+Message-ID: <51794E20.9010107@ti.com>
+References: <1366389493-8239-1-git-send-email-l.majewski@samsung.com> <1366893045-31586-1-git-send-email-l.majewski@samsung.com> <1366893045-31586-5-git-send-email-l.majewski@samsung.com> <51794785.6090406@ti.com> <20130425172246.2143525e@amdc308.digital.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5174E27B.5090808@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: b-cousson@ti.com, nm@ti.com, paul@pwsan.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, "B, Ravi" <ravibabu@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130425172246.2143525e@amdc308.digital.local>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@samsung.com>
+Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Zhang Rui <rui.zhang@intel.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Amit Daniel Kachhap <amit.kachhap@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Myungjoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [130422 00:15]:
-> On 04/19/2013 06:43 PM, Tony Lindgren wrote:
-> > * Roger Quadros <rogerq@ti.com> [130419 03:02]:
-> >> Hi Benoit/Tony
-> >>
-> >> I've consolidated all the USB host device tree patches for Panda and Beagles
-> >> to one place and addressed Tony's comments.
-> >>
-> >> NOTE: patch 1 depends on OMAP clock binding introduced in
-> >> https://lkml.org/lkml/2013/4/12/407
-> >>
-> >> v3:
-> >> - updated mux mode to use pulldowns on panda as non-DT boot uses pulldowns.
-> >> - fixed usb pin naming for panda, beagle and beagle-xm
-> > 
-> > Cool. Sounds like we should be able to make omap4 DT only for v3.11
-> 
-> when we say DT only for 3.11, does this mean getting rid of hwmod dependency?
+On 25-04-2013 11:22, Lukasz Majewski wrote:
+> Hi Eduardo,
+>
+>> Lukasz,
+>>
+>> On 25-04-2013 08:30, Lukasz Majewski wrote:
+>>> With the while loop, when i=0 and first entry in the frequency
+>>> table is CPUFREQ_ENTRY_INVALID, the code results in an endless loop
+>>> (since i is not incremented).
+>>>
+>>> To fix this problem the for loop has been chosen. Incrementing i in
+>>> the for end block solves the problem.
+>>>
+>>> Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
+>>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+>>> ---
+>>> Changes for v2:
+>>> - New in v2
+>>
+>> This patch wont apply on Rui's tree.
+>>
+>> I believe this has been already fixed on Rui's tree (next branch).
+>> Could you please check if the commit below fix your issue:
+>> git.kernel.org/cgit/linux/kernel/git/rzhang/linux.git/commit/?h=thermal&id=fc35b35cbe24ef021ea9acfba21e54da958df747
+>>
+>> commit fc35b35cbe24ef021ea9acfba21e54da958df747
+>> Author: Zhang Rui <rui.zhang@intel.com>
+>> Date:   Fri Feb 8 13:09:32 2013 +0800
+>>
+>>       Thermal: cpufreq cooling: fix parsing per_cpu
+>> cpufreq_frequency_table
+>>
+>
+> Thanks for pointing out. It seems, that this function fixes this
+> problem.
 
-That too, but mostly getting rid of the board-*.c files and platform data
-init for omap4 :) So a saving of about 5000 lines of code and data
-with the legacy mux data dropped. I have some patches to do that but have
-not yet posted them as we need to get the boards working well enough
-with DT first.
- 
-> > then. For that we also need USB on 4430-sdp working, but it now
-> > does:
-> > 
-> > ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
-> > ehci-omap 4a064c00.ehci: failed to get phys phandle in /ocp/usbhshost@4a064000/ehci@4a064c00 node
-> > ehci-omap 4a064c00.ehci: failed to get phys phandle in /ocp/usbhshost@4a064000/ehci@4a064c00 node
-> > ...
-> 
-> 4430-sdp (Blaze) does not have EHCI USB Host port. It should be using the 
-> MUSB OTG port.
-> > 
-> > As I have mine in a rack I don't have anything plugged into the
-> > USB port there though, but sounds like the phy is not initialized?
-> > 
-> 
-> +Ravi B.
-> He might have some clues.
+OK.
 
-Yes please check.
+>
+> As a side note, is this problem fixed at stable kernels?
 
-Regards,
+Good question, probably not!
 
-Tony
+>
+>>
+>>
+>>> ---
+>>>    drivers/thermal/cpu_cooling.c |    3 +--
+>>>    1 file changed, 1 insertion(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/thermal/cpu_cooling.c
+>>> b/drivers/thermal/cpu_cooling.c index 8dc44cb..df79f5e8 100644
+>>> --- a/drivers/thermal/cpu_cooling.c
+>>> +++ b/drivers/thermal/cpu_cooling.c
+>>> @@ -124,7 +124,7 @@ static unsigned int get_cpu_frequency(unsigned
+>>> int cpu, unsigned long level) if (!table)
+>>>    		return ret;
+>>>
+>>> -	while (table[i].frequency != CPUFREQ_TABLE_END) {
+>>> +	for (; table[i].frequency != CPUFREQ_TABLE_END; i++) {
+>>>    		if (table[i].frequency == CPUFREQ_ENTRY_INVALID)
+>>>    			continue;
+>>>
+>>> @@ -138,7 +138,6 @@ static unsigned int get_cpu_frequency(unsigned
+>>> int cpu, unsigned long level) /*return if level matched and table
+>>> in descending order*/ if (descend && i == level)
+>>>    			return table[i].frequency;
+>>> -		i++;
+>>>    	}
+>>>    	i--;
+>>>
+>>>
+>
+>
+>
