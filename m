@@ -1,54 +1,33 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH] tty: serial: mpc5xxx: fix error handing in mpc52xx_uart_init()
-Date: Thu, 25 Apr 2013 15:34:27 +0800
-Message-ID: <CAPgLHd_nFRt_QwQbHwW5U=gWAhrFBg7645NgASW8=CQESDsHKA@mail.gmail.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [patch -next] net: calxedaxgmac: fix condition in
+ xgmac_set_features()
+Date: Thu, 25 Apr 2013 10:44:20 +0300
+Message-ID: <20130425074420.GA11880@elgon.mountain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-serial-owner@vger.kernel.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: netdev-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Fabio Estevam <fabio.estevam@freescale.com>, Jiri Pirko <jiri@resnulli.us>, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel-janitors@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+The "changed" variable should be a 64 bit type, otherwise it can't store
+all the features.  The way the code is now the test for whether
+NETIF_F_RXCSUM changed is always false and we return immediately.
 
-Add the missing uart_unregister_driver() and uninit before return
-from mpc52xx_uart_init() in the error handling case.
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
----
- drivers/tty/serial/mpc52xx_uart.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/tty/serial/mpc52xx_uart.c b/drivers/tty/serial/mpc52xx_uart.c
-index 018bad9..43a6c0a 100644
---- a/drivers/tty/serial/mpc52xx_uart.c
-+++ b/drivers/tty/serial/mpc52xx_uart.c
-@@ -1497,18 +1497,23 @@ mpc52xx_uart_init(void)
- 	if (psc_ops && psc_ops->fifoc_init) {
- 		ret = psc_ops->fifoc_init();
- 		if (ret)
--			return ret;
-+			goto err_init;
- 	}
+diff --git a/drivers/net/ethernet/calxeda/xgmac.c b/drivers/net/ethernet/calxeda/xgmac.c
+index 791e5ff..4a1f2fa 100644
+--- a/drivers/net/ethernet/calxeda/xgmac.c
++++ b/drivers/net/ethernet/calxeda/xgmac.c
+@@ -1482,7 +1482,7 @@ static int xgmac_set_features(struct net_device *dev, netdev_features_t features
+ 	u32 ctrl;
+ 	struct xgmac_priv *priv = netdev_priv(dev);
+ 	void __iomem *ioaddr = priv->base;
+-	u32 changed = dev->features ^ features;
++	netdev_features_t changed = dev->features ^ features;
  
- 	ret = platform_driver_register(&mpc52xx_uart_of_driver);
- 	if (ret) {
- 		printk(KERN_ERR "%s: platform_driver_register failed (%i)\n",
- 		       __FILE__, ret);
--		uart_unregister_driver(&mpc52xx_uart_driver);
--		return ret;
-+		goto err_reg;
- 	}
- 
- 	return 0;
-+err_reg:
-+	if (psc_ops && psc_ops->fifoc_uninit)
-+		psc_ops->fifoc_uninit();
-+err_init:
-+	uart_unregister_driver(&mpc52xx_uart_driver);
-+	return ret;
- }
- 
- static void __exit
-
+ 	if (!(changed & NETIF_F_RXCSUM))
+ 		return 0;
