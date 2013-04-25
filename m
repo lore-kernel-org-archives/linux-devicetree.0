@@ -1,291 +1,73 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH] libfdt: Add fdt_next_subnode() to permit easy subnode
- iteration
-Date: Thu, 25 Apr 2013 11:22:56 -0700
-Message-ID: <1366914176-28684-1-git-send-email-sjg@chromium.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCHv2 1/4] Documentation: Add memory mapped ARM architected
+ timer binding
+Date: Thu, 25 Apr 2013 11:35:12 -0700
+Message-ID: <51797760.4040906@codeaurora.org>
+References: <1365812863-5367-1-git-send-email-sboyd@codeaurora.org> <1365812863-5367-2-git-send-email-sboyd@codeaurora.org> <516C6F12.5020208@gmail.com> <516C7231.6060305@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <516C7231.6060305@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Iterating through subnodes with libfdt is a little painful to write as we
-need something like this:
+Rob,
 
-for (depth = 0, count = 0,
-	offset = fdt_next_node(fdt, parent_offset, &depth);
-     (offset >= 0) && (depth > 0);
-     offset = fdt_next_node(fdt, offset, &depth)) {
-	if (depth == 1) {
-		/* code body */
-	}
-}
+Can I get your ack on this binding or do you think we need to change
+something?
 
-Using fdt_next_subnode() we can instead write this, which is shorter and
-easier to get right:
+Thanks,
+Stephen
 
-for (depth = 0, offset = fdt_next_subnode(fdt, parent_offset, &depth);
-     offset >= 0;
-     offset = fdt_next_subnode(fdt, offset, &depth)) {
-	/* code body */
-}
+On 04/15/13 14:33, Stephen Boyd wrote:
+> On 04/15/13 14:20, Rob Herring wrote:
+>> On Fri, Apr 12, 2013 at 7:27 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>>> @@ -26,3 +30,52 @@ Example:
+>>>                              <1 10 0xf08>;
+>>>                 clock-frequency = <100000000>;
+>>>         };
+>>> +
+>>> +** Memory mapped timer node properties
+>>> +
+>>> +- compatible : Should at least contain "arm,armv7-timer-mem".
+>> Everything about this timer is architecturally defined? If not, let's
+>> use a more specific name.
+> I'm not sure I'm following you, but everything described here is part of
+> the ARM definition. What would be a more specific name?
+>
+>>> +
+>>> +- clock-frequency : The frequency of the main counter, in Hz. Optional.
+>>> +
+>>> +- reg : The control frame base address.
+>>> +
+>>> +Note that #address-cells, #size-cells, and ranges shall be present to ensure
+>>> +the CPU can address a frame's registers.
+>>> +
+>>> +Frame:
+>>> +
+>>> +- frame-number: 0 to 7.
+>> I'd really like to get rid of the frame numbers and sub-nodes. Is the
+>> frame number significant to software?
+> We need the frame number to read and write registers in the control
+> frame (the first base in the parent node). We currently use it to
+> determine if a frame has support for the virtual timer by reading the
+> CNTTIDR (a register with 4 bits per frame describing capabilities). If
+> we wanted to control access to the second view of a frame we would also
+> need to configure the CNTPL0ACRn register that pertains to the frame
+> we're controlling. Without a frame number we wouldn't know which
+> register to write.
+>
+>>> +- interrupts : Interrupt list for physical and virtual timers in that order.
+>>> +  The virtual timer interrupt is optional.
+>> Is that optional per frame?
+> Yes the virtual and physical timer interrupt is per-frame and the
+> virtual interrupt is optional.
+>
 
-Also, it doesn't require two levels of indentation for the loop body.
 
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- libfdt/fdt.c              | 12 ++++++
- libfdt/libfdt.h           | 17 +++++++++
- tests/Makefile.tests      |  3 +-
- tests/run_tests.sh        |  3 ++
- tests/subnode_iterate.c   | 97 +++++++++++++++++++++++++++++++++++++++++++++++
- tests/subnode_iterate.dts | 44 +++++++++++++++++++++
- 6 files changed, 175 insertions(+), 1 deletion(-)
- create mode 100644 tests/subnode_iterate.c
- create mode 100644 tests/subnode_iterate.dts
-
-diff --git a/libfdt/fdt.c b/libfdt/fdt.c
-index 57faba3..9433f38 100644
---- a/libfdt/fdt.c
-+++ b/libfdt/fdt.c
-@@ -198,6 +198,18 @@ int fdt_next_node(const void *fdt, int offset, int *depth)
- 	return offset;
- }
- 
-+int fdt_next_subnode(const void *fdt, int offset, int *depth)
-+{
-+	/* Loop until we find a direct child of the parent (depth == 1) */
-+	do {
-+		offset = fdt_next_node(fdt, offset, depth);
-+		if (offset < 0 || *depth < 1)
-+			return -FDT_ERR_NOTFOUND;
-+	} while (*depth > 1);
-+
-+	return offset;
-+}
-+
- const char *_fdt_find_string(const char *strtab, int tabsize, const char *s)
- {
- 	int len = strlen(s) + 1;
-diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
-index 130789a..edd5488 100644
---- a/libfdt/libfdt.h
-+++ b/libfdt/libfdt.h
-@@ -136,6 +136,23 @@ uint32_t fdt_next_tag(const void *fdt, int offset, int *nextoffset);
- 
- int fdt_next_node(const void *fdt, int offset, int *depth);
- 
-+/**
-+ * fdt_next_subnode() - get offset of next direct subnode
-+ *
-+ * Set depth to 0, offset to parent, then call this function repeatedly
-+ * to get direct subnodes of a parent node.
-+ *
-+ * @fdt:	FDT blob
-+ * @offset:	Set this to offset of parent for the first call. For
-+ *		subsquent calls, pass in the value returns from the last
-+ *		call.
-+ * @depth:	Used internally to monitor depth - set this to 0 for the
-+ *		first call.
-+ * @return offset of next subnode, or -FDT_ERR_NOTFOUND if there are no more
-+ * subnodes
-+ */
-+int fdt_next_subnode(const void *fdt, int offset, int *depth);
-+
- /**********************************************************************/
- /* General functions                                                  */
- /**********************************************************************/
-diff --git a/tests/Makefile.tests b/tests/Makefile.tests
-index d59bff8..dafb618 100644
---- a/tests/Makefile.tests
-+++ b/tests/Makefile.tests
-@@ -20,7 +20,8 @@ LIB_TESTS_L = get_mem_rsv \
- 	dtb_reverse dtbs_equal_unordered \
- 	add_subnode_with_nops path_offset_aliases \
- 	utilfdt_test \
--	integer-expressions
-+	integer-expressions \
-+	subnode_iterate
- LIB_TESTS = $(LIB_TESTS_L:%=$(TESTS_PREFIX)%)
- 
- LIBTREE_TESTS_L = truncated_property
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index b56b626..b013761 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -241,6 +241,9 @@ libfdt_tests () {
- 	tree1_tests_rw noppy.$basetree
-     done
- 
-+    run_dtc_test -I dts -O dtb -o subnode_iterate.dtb subnode_iterate.dts
-+    run_test subnode_iterate subnode_iterate.dtb
-+
-     # Tests for behaviour on various sorts of corrupted trees
-     run_test truncated_property
- 
-diff --git a/tests/subnode_iterate.c b/tests/subnode_iterate.c
-new file mode 100644
-index 0000000..9a36bb6
---- /dev/null
-+++ b/tests/subnode_iterate.c
-@@ -0,0 +1,97 @@
-+/*
-+ * libfdt - Flat Device Tree manipulation
-+ *	Tests that fdt_next_subnode() works as expected
-+ *
-+ * Copyright (C) 2013 Google, Inc
-+ *
-+ * Copyright (C) 2007 David Gibson, IBM Corporation.
-+ *
-+ * This library is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU Lesser General Public License
-+ * as published by the Free Software Foundation; either version 2.1 of
-+ * the License, or (at your option) any later version.
-+ *
-+ * This library is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * Lesser General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU Lesser General Public
-+ * License along with this library; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-+ */
-+
-+#include <stdlib.h>
-+#include <stdio.h>
-+#include <string.h>
-+#include <stdint.h>
-+
-+#include <libfdt.h>
-+
-+#include "tests.h"
-+#include "testdata.h"
-+
-+static void test_node(void *fdt, int parent_offset)
-+{
-+	fdt32_t subnodes;
-+	const fdt32_t *prop;
-+	int offset;
-+	int depth;
-+	int count;
-+	int len;
-+
-+	/* This property indicates the number of subnodes to expect */
-+	prop = fdt_getprop(fdt, parent_offset, "subnodes", &len);
-+	if (!prop || len != sizeof(fdt32_t)) {
-+		FAIL("Missing/invalid subnodes property at '%s'",
-+		     fdt_get_name(fdt, parent_offset, NULL));
-+	}
-+	subnodes = cpu_to_fdt32(*prop);
-+
-+	count = 0;
-+	for (depth = 0, offset = fdt_next_subnode(fdt, parent_offset, &depth);
-+	     offset >= 0;
-+	     offset = fdt_next_subnode(fdt, offset, &depth)) {
-+		count++;
-+	}
-+
-+	if (count != subnodes) {
-+		FAIL("Node '%s': Expected %d subnodes, got %d\n",
-+		     fdt_get_name(fdt, parent_offset, NULL), subnodes,
-+		     count);
-+	}
-+}
-+
-+static void check_fdt_next_subnode(void *fdt)
-+{
-+	int depth;
-+	int offset;
-+	int count = 0;
-+
-+	for (depth = 0, offset = fdt_next_subnode(fdt, 0, &depth);
-+	     offset >= 0;
-+	     offset = fdt_next_subnode(fdt, offset, &depth)) {
-+		test_node(fdt, offset);
-+		count++;
-+	}
-+
-+	if (count != 2)
-+		FAIL("Expected %d tests, got %d\n", 2, count);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	void *fdt;
-+
-+	test_init(argc, argv);
-+	if (argc != 2)
-+		CONFIG("Usage: %s <dtb file>", argv[0]);
-+
-+	fdt = load_blob(argv[1]);
-+	if (!fdt)
-+		FAIL("No device tree available");
-+
-+	check_fdt_next_subnode(fdt);
-+
-+	PASS();
-+}
-diff --git a/tests/subnode_iterate.dts b/tests/subnode_iterate.dts
-new file mode 100644
-index 0000000..14a0d3a
---- /dev/null
-+++ b/tests/subnode_iterate.dts
-@@ -0,0 +1,44 @@
-+/dts-v1/;
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	test1 {
-+		subnodes = <2>;
-+		linux,phandle = <0x1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		PowerPC,970@0 {
-+			name = "PowerPC,970";
-+			device_type = "cpu";
-+			reg = <0x00000000>;
-+			clock-frequency = <1600000000>;
-+			timebase-frequency = <33333333>;
-+			linux,boot-cpu;
-+			i-cache-size = <65536>;
-+			d-cache-size = <32768>;
-+			another-sub-node {
-+				should-be-ignored;
-+				yet-another {
-+					should-also-be-ignored;
-+				};
-+			};
-+		};
-+
-+		PowerPC,970@1 {
-+			name = "PowerPC,970";
-+			device_type = "cpu";
-+			reg = <0x00000001>;
-+			clock-frequency = <1600000000>;
-+			timebase-frequency = <33333333>;
-+			i-cache-size = <65536>;
-+			d-cache-size = <32768>;
-+		};
-+	};
-+
-+	test2 {
-+		subnodes = <0>;
-+	};
-+};
-+
 -- 
-1.8.2.1
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
