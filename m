@@ -1,59 +1,102 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH 3/8] irq-imgpdc: add ImgTec PDC irqchip driver
-Date: Thu, 25 Apr 2013 12:25:37 +0100
-Message-ID: <517912B1.3030109@imgtec.com>
-References: <1366727607-27444-1-git-send-email-james.hogan@imgtec.com> <1366727607-27444-4-git-send-email-james.hogan@imgtec.com> <alpine.LFD.2.02.1304231647400.21884@ionos>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: =?UTF-8?B?UmVbMl06IFtQQVRDSCAxLzJdIEdQSU86IGNscHM3MTF4OiBSZXdyaXRlIGRy?=
+ =?UTF-8?B?aXZlciBmb3IgdXNpbmcgZ2VuZXJpYyBHUElPIGNvZGU=?=
+Date: Thu, 25 Apr 2013 15:31:07 +0400
+Message-ID: <1366889467.845096985@f366.mail.ru>
+References: <1365826900-30136-1-git-send-email-shc_work@mail.ru>
+ <20130419140357.GR14496@n2100.arm.linux.org.uk>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <alpine.LFD.2.02.1304231647400.21884@ionos>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130419140357.GR14496-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: =?UTF-8?B?UnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4?= <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
-
-On 23/04/13 16:09, Thomas Gleixner wrote:
-> On Tue, 23 Apr 2013, James Hogan wrote:
->> +	pdc_write(priv, PDC_IRQ_ROUTE, irq_route);
+> On Sat, Apr 13, 2013 at 08:21:39AM +0400, Alexander Shiyan wrote:
+> > +static void __init clps711x_add_gpio(void)
+> > +{
+> > +	const struct resource clps711x_gpio0_res[] = {
+> > +		DEFINE_RES_MEM(PADR, SZ_1),
+> > +		DEFINE_RES_MEM(PADDR, SZ_1),
+> > +	};
+...
+> Don't do this - this is incredibly wasteful.
 > 
->> +	spin_unlock_irqrestore(&priv->lock, flags);
->> +}
->> +
->> +static void perip_irq_unmask(struct irq_data *data)
->> +{
->> +	struct pdc_intc_priv *priv = irqd_to_priv(data);
->> +	unsigned int irq_route;
->> +	unsigned long flags;
->> +
->> +	spin_lock_irqsave(&priv->lock, flags);
->> +	irq_route = pdc_read(priv, PDC_IRQ_ROUTE);
->> +	irq_route |= 1 << data->hwirq;
->> +	pdc_write(priv, PDC_IRQ_ROUTE, irq_route);
+> C lesson 1: do not put unmodified initialised structures onto the stack.
 > 
-> This code is another slightly different copy of stuff which is
-> available in kernel/irq/generic-chip.c
+> What the C compiler will do with the above is exactly the same as this
+> for each structure:
 > 
-> Can we please stop the code duplication and reuse existing
-> infrastructure? Don't tell me it does not work for you.  I sent out a
-> patch yesterday which makes the code suitable for irq domains.
+> static const struct resource private_clps711x_gpio4_res[] = {
+> 	DEFINE_RES_MEM(PEDR, SZ_1),
+> 	DEFINE_RES_MEM(PEDDR, SZ_1),
+> };
+> 
+> static void __init clps711x_add_gpio(void)
+> {
+> 	const struct resource clps711x_gpio4_res[] = private_clps711x_gpio4_res;
+> 	...
+> 
+> which will in itself be a call out to memcpy, or an inlined memcpy.  Now
+> do you see why it's wasteful?  You might as well write the thing in that
+> way to start with and safe the additional code to copy the structures.
+> 
+> The other way to do this, which will probably be far more space efficient:
+> 
+> static phys_addr_t gpio_addrs[][2] = {
+> 	{ PADR, PADDR },
+> 	{ PBDR, PBDDR },
+> ...
+> };
+> 
+> static void __init clps711x_add_gpio(void)
+> {
+> 	struct resource gpio_res[2];
+> 	unsigned i;
+> 
+> 	gpio_res[0].flags = IORESOURCE_MEM;
+> 	gpio_res[1].flags = IORESOURCE_MEM;
+> 
+> 	for (i = 0; i < ARRAY_SIZE(gpio_addrs); i++) {
+> 		gpio_res[0].start = gpio_addrs[i][0];
+> 		gpio_res[0].end = gpio_res[0].start;
+> 		gpio_res[1].start = gpio_addrs[i][1];
+> 		gpio_res[1].end = gpio_res[1].start;
+> 
+> 		platform_device_register_simple("clps711x-gpio", i,
+> 					gpio_res, ARRAY_SIZE(gpio_res));
+> 	}
+> }
+> 
+> which results in smaller storage and most probably also smaller code size
+> too.
 
-If you're referring to the one that adds the IRQ_GC_MASK_FROM_HWIRQ
-flag, as far as I can tell this means I'd have to call
-irq_setup_generic_chip on each individual irq (since virqs may not be
-linear), or else resort to creating a legacy irqdomain (which I thought
-was... well for legacy use).
+Very strange results with this change.
+So, I add a debug output before "platform_device_register_simple" for
+print resource and in "__request_resource" for print parent.
+This is output.
+gpio 0 [mem 0x80000000] [mem 0x80000040]
+resource: root [??? 0xe3a0f000-0x00000000 flags 0xb00000]
+clps711x-gpio.0: failed to claim resource 0
 
-It feels a bit convoluted, and wrong given that it adds itself to
-gc_list. Did I misunderstand how you were expecting me to make use of
-the generic chip functions with a linear irqdomain?
+The first line is seems correct. But I do not understand why
+parent is wrong here. Normally it should be as:
+resource: root [mem 0x00000000-0xffffffff].
+And it shows normal with my first version.
+Have anyone any ideas?
+Thanks.
 
-Given that your patch presumably isn't upstream yet anyway, is it
-acceptable to go with the current version (other fixes applied) and
-update it later if necessary?
-
-Thanks
-James
-
+---
