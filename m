@@ -1,58 +1,38 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH] of: Set the DMA mask to 64 bits on ARM LPAE systems
-Date: Thu, 25 Apr 2013 14:33:15 +0100
-Message-ID: <20130425133315.GA7157@localhost.cambridge.arm.com>
-References: <1366764649-10342-1-git-send-email-lauraa@codeaurora.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 13/23] regulator: ab3100: refactor probe to use IDs
+Date: Thu, 25 Apr 2013 15:40:39 +0200
+Message-ID: <CACRpkdZkP57POYViehqvfWpn-TrrcYRzgLetdteFzANmw8exBg@mail.gmail.com>
+References: <1366624634-6579-1-git-send-email-linus.walleij@stericsson.com>
+ <20130422123749.GJ30351@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1366764649-10342-1-git-send-email-lauraa@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Laura Abbott <lauraa@codeaurora.org>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130422123749.GJ30351-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 24, 2013 at 01:50:49AM +0100, Laura Abbott wrote:
-> By default on ARM systems, the coherent DMA mask (lowest
-> address) is set to ~0 or 0xFFFFFFFFFFFFFFFF. Currently,
-> of_platform_device_create_pdata sets the coherent DMA mask to
-> 32 bits. This prevents coherent dma allocations from working by default
-> without clients setting the DMA mask. Rather than make every client
-> on an LPAE system set the mask, set the mask to a 64 bit value on
-> ARM LPAE systems.
-> 
-> Signed-off-by: Laura Abbott <lauraa@codeaurora.org>
-> ---
->  drivers/of/platform.c |    4 ++++
->  1 files changed, 4 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 0970505..18b69c1 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -214,7 +214,11 @@ struct platform_device *of_platform_device_create_pdata(
->  #if defined(CONFIG_MICROBLAZE)
->  	dev->archdata.dma_mask = 0xffffffffUL;
->  #endif
-> +#ifdef CONFIG_ARM_LPAE
-> +	dev->dev.coherent_dma_mask = DMA_BIT_MASK(64);
-> +#else
->  	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
-> +#endif
+On Mon, Apr 22, 2013 at 2:37 PM, Mark Brown
+<broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+> On Mon, Apr 22, 2013 at 11:57:14AM +0200, Linus Walleij wrote:
+>
+>> Hi Mark, seeking an ACK on this to take it through the
+>> ARM SoC tree.
+>
+> Since the arm-soc tree is locked down now I may as well just apply it so
+> it shows up in the merge window?
 
-I wouldn't add CONFIG_ARM_LPAE checks in here, you can use
-CONFIG_ARCH_DMA_ADDR_T_64BIT (types.h uses this for the dma_addr_t
-definition).
+Yep, saw you picked in these two, thanks!
 
--- 
-Catalin
+Linus Walleij
