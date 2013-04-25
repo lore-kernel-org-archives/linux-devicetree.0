@@ -1,89 +1,59 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH v5 01/10] ASoC: phycore-ac97: Add DT support
-Date: Thu, 25 Apr 2013 13:02:43 +0200
-Message-ID: <20130425110243.GA27763@pengutronix.de>
-References: <1366814199-14827-1-git-send-email-mpa@pengutronix.de>
- <1366814199-14827-2-git-send-email-mpa@pengutronix.de>
- <20130424194540.GF32299@pengutronix.de>
- <20130425033517.GA1276@S2101-09.ap.freescale.net>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: [PATCH 3/8] irq-imgpdc: add ImgTec PDC irqchip driver
+Date: Thu, 25 Apr 2013 12:25:37 +0100
+Message-ID: <517912B1.3030109@imgtec.com>
+References: <1366727607-27444-1-git-send-email-james.hogan@imgtec.com> <1366727607-27444-4-git-send-email-james.hogan@imgtec.com> <alpine.LFD.2.02.1304231647400.21884@ionos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20130425033517.GA1276@S2101-09.ap.freescale.net>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Sascha Hauer <s.hauer@pengutronix.de>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <alpine.LFD.2.02.1304231647400.21884@ionos>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 25, 2013 at 11:35:20AM +0800, Shawn Guo wrote:
-> On Wed, Apr 24, 2013 at 09:45:40PM +0200, Sascha Hauer wrote:
-> > Hi Markus,
-> > 
-> > On Wed, Apr 24, 2013 at 04:36:30PM +0200, Markus Pargmann wrote:
-> > > Add devicetree support for this audio soc fabric driver.
-> > > 
-> > > @@ -32,8 +35,12 @@ static struct snd_soc_dai_link imx_phycore_dai_ac97[] = {
-> > >  		.stream_name	= "HiFi",
-> > >  		.codec_dai_name		= "wm9712-hifi",
-> > >  		.codec_name	= "wm9712-codec",
-> > > +#ifdef CONFIG_MACH_IMX27_DT
-> > > +		.platform_name	= "imx-fiq-pcm-audio",
-> > > +#else
-> > >  		.cpu_dai_name	= "imx-ssi.0",
-> > >  		.platform_name	= "imx-fiq-pcm-audio.0",
-> > > +#endif
-> > 
-> > This doesn't work properly. Compiling the kernel with IMX27_DT enabled
-> > does not necessarily mean that it also started with dt support.
-> > 
-> Right, we should run-time check pdev->dev.of_node to see if it's a DT
-> boot and set .platform_of_node rather than .platform_name if it is.  But
-> it's only possible with the cleanup series "ASoC: fsl: imx-pcm driver
-> cleanup" I just sent being the base.  I hope you can rebase your series
-> on that :)
+Hi Thomas,
 
-The current version of phycore-ac97.c is not a driver, it is just a late
-init call. So run-time check is not possible unless I modify the old
-part to be a driver and add a device to all board init functions using
-ac97. (I would prefer dropping the non-DT part in this case ;) )
-
-Yes I rebased this series onto your cleanups, looks good so far and
-platform_of_node works finally.
-
-Thanks,
-
-Markus
-
+On 23/04/13 16:09, Thomas Gleixner wrote:
+> On Tue, 23 Apr 2013, James Hogan wrote:
+>> +	pdc_write(priv, PDC_IRQ_ROUTE, irq_route);
 > 
-> Shawn
+>> +	spin_unlock_irqrestore(&priv->lock, flags);
+>> +}
+>> +
+>> +static void perip_irq_unmask(struct irq_data *data)
+>> +{
+>> +	struct pdc_intc_priv *priv = irqd_to_priv(data);
+>> +	unsigned int irq_route;
+>> +	unsigned long flags;
+>> +
+>> +	spin_lock_irqsave(&priv->lock, flags);
+>> +	irq_route = pdc_read(priv, PDC_IRQ_ROUTE);
+>> +	irq_route |= 1 << data->hwirq;
+>> +	pdc_write(priv, PDC_IRQ_ROUTE, irq_route);
 > 
-> > Personally I am fine with removing platform based support for this
-> > driver if it's too much effort to fix it properly, but we shouldn't
-> > start working with ifdefs here.
-> > 
-> > Sascha
-> > 
-> > 
-> > -- 
-> > Pengutronix e.K.                           |                             |
-> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> This code is another slightly different copy of stuff which is
+> available in kernel/irq/generic-chip.c
 > 
-> 
+> Can we please stop the code duplication and reuse existing
+> infrastructure? Don't tell me it does not work for you.  I sent out a
+> patch yesterday which makes the code suitable for irq domains.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+If you're referring to the one that adds the IRQ_GC_MASK_FROM_HWIRQ
+flag, as far as I can tell this means I'd have to call
+irq_setup_generic_chip on each individual irq (since virqs may not be
+linear), or else resort to creating a legacy irqdomain (which I thought
+was... well for legacy use).
+
+It feels a bit convoluted, and wrong given that it adds itself to
+gc_list. Did I misunderstand how you were expecting me to make use of
+the generic chip functions with a linear irqdomain?
+
+Given that your patch presumably isn't upstream yet anyway, is it
+acceptable to go with the current version (other fixes applied) and
+update it later if necessary?
+
+Thanks
+James
+
