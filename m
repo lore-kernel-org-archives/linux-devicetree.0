@@ -1,73 +1,51 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCH v2 4/4] ARM:TMU:fix: Avoid lockup when first frequency
- table entry is CPUFREQ_ENTRY_INVALID
-Date: Thu, 25 Apr 2013 11:11:01 -0400
-Message-ID: <51794785.6090406@ti.com>
-References: <1366389493-8239-1-git-send-email-l.majewski@samsung.com> <1366893045-31586-1-git-send-email-l.majewski@samsung.com> <1366893045-31586-5-git-send-email-l.majewski@samsung.com>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: [PATCH 2/8] metag: minimal TZ1090 (Comet) SoC infrastructure
+Date: Thu, 25 Apr 2013 16:21:24 +0100
+Message-ID: <517949F4.9090106@imgtec.com>
+References: <1366727607-27444-1-git-send-email-james.hogan@imgtec.com> <1366727607-27444-3-git-send-email-james.hogan@imgtec.com> <201304231725.34826.arnd@arndb.de> <5176B173.40107@imgtec.com> <CAHkRjk4A5bM=Xsf=DA+OMt0M_e4Y-3XkLPyJirxV4MQOWf25gQ@mail.gmail.com> <5177F182.8050200@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1366893045-31586-5-git-send-email-l.majewski@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Zhang Rui <rui.zhang@intel.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Amit Daniel Kachhap <amit.kachhap@linaro.org>, t.figa@samsung.com, Sachin Kamat <sachin.kamat@linaro.org>, Myungjoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, eduardo.valentin@ti.com
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5177F182.8050200@imgtec.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Lukasz,
+On 24/04/13 15:51, James Hogan wrote:
+> On 24/04/13 14:26, Catalin Marinas wrote:
+>> On 23 April 2013 17:06, James Hogan <james.hogan@imgtec.com> wrote:
+>>> It's certainly heading in that direction a lot. For this patchset I
+>>> could get away with dropping arch/metag/soc/*, and deal with anything
+>>> that really requires something like it later.
+>>>
+>>> The machine callbacks I was planning on using in future patches are:
+>>> * init_time() for calling into the appropriate common clock driver from
+>>> time_init(), prior to setting up the timer so that the right frequency
+>>> can be reported based on the clock hierarchy specified in DT. I guess
+>>> this could be made more general, allowing any enabled clock component to
+>>> be initialised at this time.
+>>
+>> This is driven by DT on arm64, no need for platform callback (see
+>> drivers/clocksource/arch_arm_timer.c).
+> 
+> Right. The problem is that the frequency of the core clock in TZ1090
+> (and hence the arch timer that is derived from it) isn't discoverable in
+> an arch generic way. I can do something similar to tegra (see
+> tegra_clocks_init()) to init the common clk stuff early and then do:
+> 
+> node = of_find_compatible_node(NULL, NULL, "img,meta");
+> clk_core = of_clk_get_by_name(node, "core");
+> rate = clk_get_rate(clk_core);
+> 
+> From time_init prior to setting up the arch timer, but I need a platform
+> callback for that.
 
-On 25-04-2013 08:30, Lukasz Majewski wrote:
-> With the while loop, when i=0 and first entry in the frequency table is
-> CPUFREQ_ENTRY_INVALID, the code results in an endless loop (since i is not
-> incremented).
->
-> To fix this problem the for loop has been chosen. Incrementing i in the for
-> end block solves the problem.
->
-> Signed-off-by: Lukasz Majewski <l.majewski@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
-> Changes for v2:
-> - New in v2
+I take that back, I've just noticed commit
+f2f6c2556dcc432e50003bc8fa4d62d95906f149 which makes clock setup
+callbacks automatic using section cunningness. :-)
 
-This patch wont apply on Rui's tree.
-
-I believe this has been already fixed on Rui's tree (next branch).
-Could you please check if the commit below fix your issue:
-git.kernel.org/cgit/linux/kernel/git/rzhang/linux.git/commit/?h=thermal&id=fc35b35cbe24ef021ea9acfba21e54da958df747
-
-commit fc35b35cbe24ef021ea9acfba21e54da958df747
-Author: Zhang Rui <rui.zhang@intel.com>
-Date:   Fri Feb 8 13:09:32 2013 +0800
-
-     Thermal: cpufreq cooling: fix parsing per_cpu cpufreq_frequency_table
-
-
-
-> ---
->   drivers/thermal/cpu_cooling.c |    3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
-> index 8dc44cb..df79f5e8 100644
-> --- a/drivers/thermal/cpu_cooling.c
-> +++ b/drivers/thermal/cpu_cooling.c
-> @@ -124,7 +124,7 @@ static unsigned int get_cpu_frequency(unsigned int cpu, unsigned long level)
->   	if (!table)
->   		return ret;
->
-> -	while (table[i].frequency != CPUFREQ_TABLE_END) {
-> +	for (; table[i].frequency != CPUFREQ_TABLE_END; i++) {
->   		if (table[i].frequency == CPUFREQ_ENTRY_INVALID)
->   			continue;
->
-> @@ -138,7 +138,6 @@ static unsigned int get_cpu_frequency(unsigned int cpu, unsigned long level)
->   		/*return if level matched and table in descending order*/
->   		if (descend && i == level)
->   			return table[i].frequency;
-> -		i++;
->   	}
->   	i--;
->
->
+Cheers
+James
 
