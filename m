@@ -1,17 +1,12 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] GPIO: clps711x: Rewrite driver for using generic
- GPIO code
-Date: Thu, 25 Apr 2013 12:40:41 +0100
-Message-ID: <20130425114041.GC14496@n2100.arm.linux.org.uk>
-References: <1365826900-30136-1-git-send-email-shc_work@mail.ru>
- <20130419140357.GR14496@n2100.arm.linux.org.uk>
- <1366889467.845096985@f366.mail.ru>
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH] Documentation/devicetree: make semantic of initrd-end more
+ explicit
+Date: Thu, 25 Apr 2013 14:27:57 +0200
+Message-ID: <1366892877-30912-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1366889467.845096985-i8J/Zv46+dgedp2WBT/QOw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,82 +17,32 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 25, 2013 at 03:31:07PM +0400, Alexander Shiyan wrote:
-> > On Sat, Apr 13, 2013 at 08:21:39AM +0400, Alexander Shiyan wrote:
-> > > +static void __init clps711x_add_gpio(void)
-> > > +{
-> > > +	const struct resource clps711x_gpio0_res[] = {
-> > > +		DEFINE_RES_MEM(PADR, SZ_1),
-> > > +		DEFINE_RES_MEM(PADDR, SZ_1),
-> > > +	};
-> ...
-> > Don't do this - this is incredibly wasteful.
-> > 
-> > C lesson 1: do not put unmodified initialised structures onto the stack.
-> > 
-> > What the C compiler will do with the above is exactly the same as this
-> > for each structure:
-> > 
-> > static const struct resource private_clps711x_gpio4_res[] = {
-> > 	DEFINE_RES_MEM(PEDR, SZ_1),
-> > 	DEFINE_RES_MEM(PEDDR, SZ_1),
-> > };
-> > 
-> > static void __init clps711x_add_gpio(void)
-> > {
-> > 	const struct resource clps711x_gpio4_res[] = private_clps711x_gpio4_res;
-> > 	...
-> > 
-> > which will in itself be a call out to memcpy, or an inlined memcpy.  Now
-> > do you see why it's wasteful?  You might as well write the thing in that
-> > way to start with and safe the additional code to copy the structures.
-> > 
-> > The other way to do this, which will probably be far more space efficient:
-> > 
-> > static phys_addr_t gpio_addrs[][2] = {
-> > 	{ PADR, PADDR },
-> > 	{ PBDR, PBDDR },
-> > ...
-> > };
-> > 
-> > static void __init clps711x_add_gpio(void)
-> > {
-> > 	struct resource gpio_res[2];
-> > 	unsigned i;
-> > 
-> > 	gpio_res[0].flags = IORESOURCE_MEM;
-> > 	gpio_res[1].flags = IORESOURCE_MEM;
-> > 
-> > 	for (i = 0; i < ARRAY_SIZE(gpio_addrs); i++) {
-> > 		gpio_res[0].start = gpio_addrs[i][0];
-> > 		gpio_res[0].end = gpio_res[0].start;
-> > 		gpio_res[1].start = gpio_addrs[i][1];
-> > 		gpio_res[1].end = gpio_res[1].start;
-> > 
-> > 		platform_device_register_simple("clps711x-gpio", i,
-> > 					gpio_res, ARRAY_SIZE(gpio_res));
-> > 	}
-> > }
-> > 
-> > which results in smaller storage and most probably also smaller code size
-> > too.
-> 
-> Very strange results with this change.
-> So, I add a debug output before "platform_device_register_simple" for
-> print resource and in "__request_resource" for print parent.
-> This is output.
-> gpio 0 [mem 0x80000000] [mem 0x80000040]
-> resource: root [??? 0xe3a0f000-0x00000000 flags 0xb00000]
-> clps711x-gpio.0: failed to claim resource 0
-> 
-> The first line is seems correct. But I do not understand why
-> parent is wrong here. Normally it should be as:
-> resource: root [mem 0x00000000-0xffffffff].
-> And it shows normal with my first version.
-> Have anyone any ideas?
-
-memset(&gpio_res, 0, sizeof(gpio_res));
+U2lnbmVkLW9mZi1ieTogVXdlIEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtvZW5pZ0BwZW5ndXRy
+b25peC5kZT4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvdXNhZ2UtbW9kZWwudHh0IHwg
+OCArKysrKy0tLQogMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMo
+LSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvdXNhZ2UtbW9kZWwudHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL3VzYWdlLW1vZGVsLnR4dAppbmRleCBlZjlkMDZj
+Li4wZWZlZGFhIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvdXNhZ2UtbW9k
+ZWwudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS91c2FnZS1tb2RlbC50eHQKQEAg
+LTE5MSw5ICsxOTEsMTEgQEAgTGludXggaXQgd2lsbCBsb29rIHNvbWV0aGluZyBsaWtlIHRoaXM6
+CiAJfTsKIAogVGhlIGJvb3RhcmdzIHByb3BlcnR5IGNvbnRhaW5zIHRoZSBrZXJuZWwgYXJndW1l
+bnRzLCBhbmQgdGhlIGluaXRyZC0qCi1wcm9wZXJ0aWVzIGRlZmluZSB0aGUgYWRkcmVzcyBhbmQg
+c2l6ZSBvZiBhbiBpbml0cmQgYmxvYi4gIFRoZQotY2hvc2VuIG5vZGUgbWF5IGFsc28gb3B0aW9u
+YWxseSBjb250YWluIGFuIGFyYml0cmFyeSBudW1iZXIgb2YKLWFkZGl0aW9uYWwgcHJvcGVydGll
+cyBmb3IgcGxhdGZvcm0tc3BlY2lmaWMgY29uZmlndXJhdGlvbiBkYXRhLgorcHJvcGVydGllcyBk
+ZWZpbmUgdGhlIGFkZHJlc3MgYW5kIHNpemUgb2YgYW4gaW5pdHJkIGJsb2IuICBOb3RlIHRoYXQK
+K2luaXRyZC1lbmQgaXMgdGhlIGZpcnN0IGFkZHJlc3MgYWZ0ZXIgdGhlIGluaXRyZCBpbWFnZSwg
+c28gdGhpcyBkb2Vzbid0CittYXRjaCB0aGUgdXN1YWwgc2VtYW50aWMgb2Ygc3RydWN0IHJlc291
+cmNlLiAgVGhlIGNob3NlbiBub2RlIG1heSBhbHNvCitvcHRpb25hbGx5IGNvbnRhaW4gYW4gYXJi
+aXRyYXJ5IG51bWJlciBvZiBhZGRpdGlvbmFsIHByb3BlcnRpZXMgZm9yCitwbGF0Zm9ybS1zcGVj
+aWZpYyBjb25maWd1cmF0aW9uIGRhdGEuCiAKIER1cmluZyBlYXJseSBib290LCB0aGUgYXJjaGl0
+ZWN0dXJlIHNldHVwIGNvZGUgY2FsbHMgb2Zfc2Nhbl9mbGF0X2R0KCkKIHNldmVyYWwgdGltZXMg
+d2l0aCBkaWZmZXJlbnQgaGVscGVyIGNhbGxiYWNrcyB0byBwYXJzZSBkZXZpY2UgdHJlZQotLSAK
+MS44LjIucmMyCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0
+cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVl
+LWRpc2N1c3MK
