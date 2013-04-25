@@ -1,80 +1,117 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v5 07/10] ASoC: fsl-ssi: imx ac97 support
-Date: Thu, 25 Apr 2013 11:50:30 +0800
-Message-ID: <20130425035029.GB1276@S2101-09.ap.freescale.net>
-References: <1366814199-14827-1-git-send-email-mpa@pengutronix.de>
- <1366814199-14827-8-git-send-email-mpa@pengutronix.de>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v3 07/17] ARM: dts: imx: cpus/cpu nodes dts updates
+Date: Thu, 25 Apr 2013 13:44:28 +0800
+Message-ID: <20130425054426.GG1389@S2101-09.ap.freescale.net>
+References: <1366824502-19729-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1366824502-19729-8-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1366814199-14827-8-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1366824502-19729-8-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 24, 2013 at 04:36:36PM +0200, Markus Pargmann wrote:
-> +/*
-> + * Pointer to AC97 reset functions for specific boards
-> + */
-> +#if IS_ENABLED(CONFIG_MACH_PCA100)
-> +extern void pca100_ac97_cold_reset(struct snd_ac97 *ac97);
-> +extern void pca100_ac97_warm_reset(struct snd_ac97 *ac97);
-> +#else
-> +void pca100_ac97_cold_reset(struct snd_ac97 *ac97) { }
-> +void pca100_ac97_warm_reset(struct snd_ac97 *ac97) { }
-> +#endif
+On Wed, Apr 24, 2013 at 06:28:12PM +0100, Lorenzo Pieralisi wrote:
+> This patch updates the in-kernel dts files according to the latest cpus
+> and cpu bindings updates for ARM.
+> 
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx23.dtsi  | 8 ++++++--
+>  arch/arm/boot/dts/imx28.dtsi  | 8 ++++++--
+>  arch/arm/boot/dts/imx6dl.dtsi | 2 ++
+>  arch/arm/boot/dts/imx6q.dtsi  | 1 +
+>  4 files changed, 15 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx23.dtsi b/arch/arm/boot/dts/imx23.dtsi
+> index 56afcf4..0aae18b 100644
+> --- a/arch/arm/boot/dts/imx23.dtsi
+> +++ b/arch/arm/boot/dts/imx23.dtsi
+> @@ -23,8 +23,12 @@
+>  	};
+>  
+>  	cpus {
+> -		cpu@0 {
+> -			compatible = "arm,arm926ejs";
+> +		#address-cells = <0>;
+> +		#size-cells = <0>;
 > +
-> +#if IS_ENABLED(CONFIG_MACH_PCM043)
-> +extern void pcm043_ac97_cold_reset(struct snd_ac97 *ac97);
-> +extern void pcm043_ac97_warm_reset(struct snd_ac97 *ac97);
-> +#else
-> +void pcm043_ac97_cold_reset(struct snd_ac97 *ac97) { }
-> +void pcm043_ac97_warm_reset(struct snd_ac97 *ac97) { }
-> +#endif
-...
-> @@ -717,13 +956,39 @@ static int fsl_ssi_probe(struct platform_device *pdev)
+> +		cpu {
+> +			compatible = "arm,arm926ej-s";
+> +			device_type = "cpu";
+>  		};
+>  	};
 >  
->  	strcpy(ssi_private->name, p);
+> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+> index 7ba4966..07f131fc 100644
+> --- a/arch/arm/boot/dts/imx28.dtsi
+> +++ b/arch/arm/boot/dts/imx28.dtsi
+> @@ -32,8 +32,12 @@
+>  	};
 >  
-> -	/* Initialize this copy of the CPU DAI driver structure */
-> -	memcpy(&ssi_private->cpu_dai_drv, &fsl_ssi_dai_template,
-> -	       sizeof(fsl_ssi_dai_template));
-> -	ssi_private->cpu_dai_drv.name = ssi_private->name;
-> -
->  	ssi_private->use_dma = !of_property_read_bool(np, "fsl,imx-fiq");
->  
-> +	if (ac97) {
-> +		sprop = of_get_property(of_find_node_by_path("/"), "compatible",
-> +				NULL);
-> +		p = strrchr(sprop, ',');
-> +		if (p)
-> +			sprop = p + 1;
+>  	cpus {
+> -		cpu@0 {
+> -			compatible = "arm,arm926ejs";
+> +		#address-cells = <0>;
+> +		#size-cells = <0>;
 > +
-> +		if (!strcmp(sprop, "imx27-pca100")) {
-> +			ssi_private->ac97_reset = pca100_ac97_cold_reset;
-> +			ssi_private->ac97_warm_reset = pca100_ac97_warm_reset;
-> +		} else if (!strcmp(sprop, "imx27-pcm043")) {
-> +			ssi_private->ac97_reset = pcm043_ac97_cold_reset;
-> +			ssi_private->ac97_warm_reset = pcm043_ac97_warm_reset;
-> +		} else {
-> +			dev_err(&pdev->dev, "Failed to enable ssi AC97 mode, unknown board.\n");
-> +			ret = -EINVAL;
-> +			goto error_kmalloc;
-> +		}
+> +		cpu {
+> +			compatible = "arm,arm926ej-s";
+> +			device_type = "cpu";
+>  		};
+>  	};
+>  
+> diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
+> index 63fafe2..b76d85e 100644
+> --- a/arch/arm/boot/dts/imx6dl.dtsi
+> +++ b/arch/arm/boot/dts/imx6dl.dtsi
+> @@ -16,12 +16,14 @@
+>  
+>  		cpu@0 {
+>  			compatible = "arm,cortex-a9";
+> +			device_type = "cpu";
+>  			reg = <0>;
+>  			next-level-cache = <&L2>;
+>  		};
+>  
+>  		cpu@1 {
+>  			compatible = "arm,cortex-a9";
+> +			device_type = "cpu";
+>  			reg = <1>;
+>  			next-level-cache = <&L2>;
+>  		};
+> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+> index cba021e..65c1b62 100644
+> --- a/arch/arm/boot/dts/imx6q.dtsi
+> +++ b/arch/arm/boot/dts/imx6q.dtsi
+> @@ -17,6 +17,7 @@
+>  
+>  		cpu@0 {
+>  			compatible = "arm,cortex-a9";
+> +			device_type = "cpu";
 
-I do not like these board specific hooks show up in an IP driver
-in such way.  Can we work it out in other ways, notification or even
-platform_data with auxdata?
+Shouldn't this line be added for cpu@1, cpu@2 and cpu@3 too?  Other than
+that,
 
-Shawn
+Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+>  			reg = <0>;
+>  			next-level-cache = <&L2>;
+>  			operating-points = <
+> -- 
+> 1.7.12
+> 
+> 
