@@ -1,121 +1,89 @@
-From: Simon Guinot <simon.guinot@sequanux.org>
-Subject: Re: [PATCHv1 1/3] hwmon: Add support for GMT G762/G763 PWM fan
- controller
-Date: Thu, 25 Apr 2013 12:14:50 +0200
-Message-ID: <20130425101450.GD17771@kw.sim.vm.gnt>
-References: <cover.1366753420.git.arno@natisbad.org>
- <63961d39aee9db94767f28fd441312bec2029473.1366753420.git.arno@natisbad.org>
- <20130424053758.GC8710@lunn.ch>
- <87obd4wb4e.fsf@natisbad.org>
- <20130424133856.GA18851@roeck-us.net>
- <87li878ygw.fsf@natisbad.org>
- <20130424224731.GB7767@roeck-us.net>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH v5 01/10] ASoC: phycore-ac97: Add DT support
+Date: Thu, 25 Apr 2013 13:02:43 +0200
+Message-ID: <20130425110243.GA27763@pengutronix.de>
+References: <1366814199-14827-1-git-send-email-mpa@pengutronix.de>
+ <1366814199-14827-2-git-send-email-mpa@pengutronix.de>
+ <20130424194540.GF32299@pengutronix.de>
+ <20130425033517.GA1276@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VMt1DrMGOVs3KQwf"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <20130424224731.GB7767@roeck-us.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Arnaud Ebalard <arno@natisbad.org>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20130425033517.GA1276@S2101-09.ap.freescale.net>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, Sascha Hauer <s.hauer@pengutronix.de>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Apr 25, 2013 at 11:35:20AM +0800, Shawn Guo wrote:
+> On Wed, Apr 24, 2013 at 09:45:40PM +0200, Sascha Hauer wrote:
+> > Hi Markus,
+> > 
+> > On Wed, Apr 24, 2013 at 04:36:30PM +0200, Markus Pargmann wrote:
+> > > Add devicetree support for this audio soc fabric driver.
+> > > 
+> > > @@ -32,8 +35,12 @@ static struct snd_soc_dai_link imx_phycore_dai_ac97[] = {
+> > >  		.stream_name	= "HiFi",
+> > >  		.codec_dai_name		= "wm9712-hifi",
+> > >  		.codec_name	= "wm9712-codec",
+> > > +#ifdef CONFIG_MACH_IMX27_DT
+> > > +		.platform_name	= "imx-fiq-pcm-audio",
+> > > +#else
+> > >  		.cpu_dai_name	= "imx-ssi.0",
+> > >  		.platform_name	= "imx-fiq-pcm-audio.0",
+> > > +#endif
+> > 
+> > This doesn't work properly. Compiling the kernel with IMX27_DT enabled
+> > does not necessarily mean that it also started with dt support.
+> > 
+> Right, we should run-time check pdev->dev.of_node to see if it's a DT
+> boot and set .platform_of_node rather than .platform_name if it is.  But
+> it's only possible with the cleanup series "ASoC: fsl: imx-pcm driver
+> cleanup" I just sent being the base.  I hope you can rebase your series
+> on that :)
 
---VMt1DrMGOVs3KQwf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The current version of phycore-ac97.c is not a driver, it is just a late
+init call. So run-time check is not possible unless I modify the old
+part to be a driver and add a device to all board init functions using
+ac97. (I would prefer dropping the non-DT part in this case ;) )
 
-On Wed, Apr 24, 2013 at 03:47:31PM -0700, Guenter Roeck wrote:
-> On Wed, Apr 24, 2013 at 10:28:47PM +0200, Arnaud Ebalard wrote:
-> > Hi,
-> >=20
-> > Guenter Roeck <linux@roeck-us.net> writes:
-> >=20
-> > >> > You could consider using regmap for holding this cache.
-> > >> >
-> > >> > http://elceurope2012.sched.org/event/100619b669ce5767341624253aa03=
-659?iframe=3Dno&w=3D900&sidebar=3Dyes&bg=3Dno#.UXdspHLQ5jM
-> > >> >
-> > >> > http://elinux.org/ELCE_Europe_2012_Presentations
-> > >>=20
-> > >> Interesting. As I am not yet familiar w/ regmap I would prefer having
-> > >> the driver accepted during merge window with current data structure =
-and
-> > >> then convert it to regmap. But I will take a look (e.g. will study
-> > >> fca1dd03 for instance). Thanks for the pointers.=20
-> > >>=20
-> > > I have not had time for a detailed review, but adding regmap support
-> > > will not be a requirement.
-> > >
-> > > Note that it is too late for 3.10, so the driver will have to wait for
-> > > 3.11.
-> >=20
-> > Well, I think I can live with it; The only bad thing is that it kills my
-> > excuses not to spend time on regmap ;-)
-> >=20
-> Your call.
->=20
-> >=20
-> > >> >> +/*
-> > >> >> + * Helpers to import hardware characteristics from .dts file and=
- overload
-> > >> >> + * default config values.
-> > >> >> + */
-> > >> >> +
-> > >> >> +#ifdef CONFIG_OF
-> > >> >
-> > >> > Can the driver be used without device tree? Would it be simpler to
-> > >> >  just add depends OF in the Kconfig entry?
-> > >>=20
-> > >> It can be used if the default params (or those configured by u-boot I
-> > >> guess) fit your needs. I think it would be fairly easy to extend the
-> > >> driver later to expose g762_config struct to allow parameters to be =
-set
-> > >> w/o using OF. If someone wants to do that, I think it is better to n=
-ot
-> > >> depend on OF in Kconfig at the moment but I have not strong argument
-> > >> other that that one. I'll let you decide.
-> > >>=20
-> > > Agreed. As long as there are major platforms not supporting device tr=
-ee,
-> > > and as long as device tree overlays are not supported, it must not be=
- made
-> > > mandatory. Especially for I2C and SPI devices I reserve the right to =
-be able
-> > > test the hardware on an X86 system and not require a reboot to do so.
-> >=20
-> > Understood. Following Simon's post, I think it's useful to implement
-> > some init function for non DT-enabled platforms.=20
-> >=20
-> Sure, as long as Simon commits to test it and - if possible - to provide
-> the necessary platform code.
+Yes I rebased this series onto your cleanups, looks good so far and
+platform_of_node works finally.
 
-Hi Guenter,
+Thanks,
 
-I commit to do whatever needed to have g762 support on the 2Big Network
-v2 and 2Big NAS boards.
+Markus
 
-But note that I am can't test the options "pwm_enable" and "fan_target".
-As we are using a two wire fan on this boards, this options are not
-relevant.
+> 
+> Shawn
+> 
+> > Personally I am fine with removing platform based support for this
+> > driver if it's too much effort to fix it properly, but we shouldn't
+> > start working with ifdefs here.
+> > 
+> > Sascha
+> > 
+> > 
+> > -- 
+> > Pengutronix e.K.                           |                             |
+> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+> 
 
-Moreover except for the out_mode/pwm_mode setting, I am rather happy
-with the default configuration.
-
-Simon
-
---VMt1DrMGOVs3KQwf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlF5AhoACgkQgtp0PDeOcDokAACdH2YGjFo/91YwNyozDTBGQ4fh
-1XsAn0V+HMH2KdZsxWC/KVcfQDyqgrcR
-=x6Ca
------END PGP SIGNATURE-----
-
---VMt1DrMGOVs3KQwf--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
