@@ -1,261 +1,103 @@
-From: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-Subject: [PATCH 06/23 v2] ARM: u300: basic device tree support
-Date: Fri, 26 Apr 2013 16:05:22 +0200
-Message-ID: <1366985122-28479-1-git-send-email-linus.walleij@stericsson.com>
+From: Linus Walleij <linus.walleij@stericsson.com>
+Subject: [PATCH 09/23 v2] watchdog: coh901327: devicetree support
+Date: Fri, 26 Apr 2013 16:33:53 +0200
+Message-ID: <1366986833-7158-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@iguana.be>
+Cc: devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-This register the most basic peripherals and makes the
-U300 boot to prompt from a device tree.
+This adds support for probing the COH 901 327 watchdog from
+the device tree and also adds associated bindings.
 
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Wim Van Sebroeck <wim@iguana.be>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-ChangeLog v1->v2:
-- Rename nodes in accordance with review comments from Arnd:
-  - timer0@x -> timer@x
-  - gpioN@x -> gpio@x
-  - pinctrl0@x -> pinctrl@x
-  - intc@0xx -> interrupt-controller@x
-  - uart@x -> serial@x
----
- Documentation/devicetree/bindings/arm/ste-u300.txt |  9 +++
- arch/arm/boot/dts/Makefile                         |  1 +
- arch/arm/boot/dts/ste-u300.dts                     | 86 ++++++++++++++++++++++
- arch/arm/mach-u300/core.c                          | 80 ++++++++++++++++++++
- 4 files changed, 176 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/ste-u300.txt
- create mode 100644 arch/arm/boot/dts/ste-u300.dts
+ChangeLog v1->v2: augment driver to call watchdog_init_timeout()
+ so we can also set the timeout from the device tree, as per
+ suggestion from Guenter Roeck.
 
-diff --git a/Documentation/devicetree/bindings/arm/ste-u300.txt b/Documentation/devicetree/bindings/arm/ste-u300.txt
+Hi Wim, I'm seeking an ACK on this patch to take it into
+ARM SoC along with the patches making use of this new
+binding.
+---
+ .../bindings/watchdog/stericsson-coh901327.txt        | 19 +++++++++++++++++++
+ drivers/watchdog/coh901327_wdt.c                      | 12 +++++++++---
+ 2 files changed, 28 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/stericsson-coh901327.txt
+
+diff --git a/Documentation/devicetree/bindings/watchdog/stericsson-coh901327.txt b/Documentation/devicetree/bindings/watchdog/stericsson-coh901327.txt
 new file mode 100644
-index 0000000..222dca5
+index 0000000..8ffb88e
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/ste-u300.txt
-@@ -0,0 +1,9 @@
-+ST-Ericsson U300 Device Tree Bindings
++++ b/Documentation/devicetree/bindings/watchdog/stericsson-coh901327.txt
+@@ -0,0 +1,19 @@
++ST-Ericsson COH 901 327 Watchdog timer
 +
-+For various board the "board" node may contain specific properties
-+that pertain to this particular board, such as board-specific GPIOs
-+or board power regulator supplies.
++Required properties:
++- compatible: must be "stericsson,coh901327".
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- interrupts: the interrupt used for the watchdog timeout warning.
 +
-+Required root node property:
++Optional properties:
++- timeout-sec: contains the watchdog timeout in seconds.
 +
-+compatible="stericsson,u300";
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 9c62558..369fba7 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -165,6 +165,7 @@ dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb \
- 	tegra30-cardhu-a04.dtb \
- 	tegra114-dalmore.dtb \
- 	tegra114-pluto.dtb
-+dtb-$(CONFIG_ARCH_U300) += ste-u300.dtb
- dtb-$(CONFIG_ARCH_VEXPRESS) += vexpress-v2p-ca5s.dtb \
- 	vexpress-v2p-ca9.dtb \
- 	vexpress-v2p-ca15-tc1.dtb \
-diff --git a/arch/arm/boot/dts/ste-u300.dts b/arch/arm/boot/dts/ste-u300.dts
-new file mode 100644
-index 0000000..9e423eb
---- /dev/null
-+++ b/arch/arm/boot/dts/ste-u300.dts
-@@ -0,0 +1,86 @@
-+/*
-+ * Device Tree for the ST-Ericsson U300 Machine and SoC
-+ */
++Example:
 +
-+/dts-v1/;
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	model = "ST-Ericsson U300";
-+	compatible = "stericsson,u300";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	chosen {
-+		bootargs = "root=/dev/ram0 console=ttyAMA0,115200n8 earlyprintk";
-+	};
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+        };
-+
-+	memory {
-+		reg = <0x48000000 0x03c00000>;
-+	};
-+
-+	timer: timer@c0014000 {
-+		compatible = "stericsson,u300-apptimer";
-+		reg = <0xc0014000 0x1000>;
-+		interrupt-parent = <&vica>;
-+		interrupts = <24 25 26 27>;
-+	};
-+
-+	gpio: gpio@c0016000 {
-+		compatible = "stericsson,gpio-coh901";
-+		reg = <0xc0016000 0x1000>;
-+		interrupt-parent = <&vicb>;
-+		interrupts = <0 1 2 18 21 22 23>;
-+		interrupt-names = "gpio0", "gpio1", "gpio2", "gpio3",
-+				"gpio4", "gpio5", "gpio6";
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
-+
-+	pinctrl: pinctrl@c0011000 {
-+		compatible = "stericsson,pinctrl-u300";
-+		reg = <0xc0011000 0x1000>;
-+	};
-+
-+	amba {
-+		compatible = "arm,amba-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		vica: interrupt-controller@a0001000 {
-+			compatible = "arm,versatile-vic";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			reg = <0xa0001000 0x20>;
-+		};
-+
-+		vicb: interrupt-controller@a0002000 {
-+			compatible = "arm,versatile-vic";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			reg = <0xa0002000 0x20>;
-+		};
-+
-+		uart0: serial@c0013000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0xc0013000 0x1000>;
-+			interrupt-parent = <&vica>;
-+			interrupts = <22>;
-+		};
-+
-+		uart1: serial@c0007000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0xc0007000 0x1000>;
-+			interrupt-parent = <&vicb>;
-+			interrupts = <20>;
-+		};
-+	};
++watchdog: watchdog@c0012000 {
++	compatible = "stericsson,coh901327";
++	reg = <0xc0012000 0x1000>;
++	interrupts = <3>;
++	timeout-sec = <60>;
 +};
-diff --git a/arch/arm/mach-u300/core.c b/arch/arm/mach-u300/core.c
-index a683d17..5b42983 100644
---- a/arch/arm/mach-u300/core.c
-+++ b/arch/arm/mach-u300/core.c
-@@ -33,6 +33,8 @@
- #include <linux/platform_data/pinctrl-coh901.h>
- #include <linux/platform_data/dma-coh901318.h>
- #include <linux/irqchip/arm-vic.h>
-+#include <linux/irqchip.h>
-+#include <linux/of_platform.h>
+diff --git a/drivers/watchdog/coh901327_wdt.c b/drivers/watchdog/coh901327_wdt.c
+index b9b8a8b..4bd070f 100644
+--- a/drivers/watchdog/coh901327_wdt.c
++++ b/drivers/watchdog/coh901327_wdt.c
+@@ -354,9 +354,9 @@ static int __init coh901327_probe(struct platform_device *pdev)
  
- #include <asm/types.h>
- #include <asm/setup.h>
-@@ -698,3 +700,81 @@ MACHINE_START(U300, "Ericsson AB U335 S335/B335 Prototype Board")
- 	.init_machine	= u300_init_machine,
- 	.restart	= u300_restart,
- MACHINE_END
-+
-+#ifdef CONFIG_OF
-+
-+/* These are mostly to get the right device names for the clock lookups */
-+static struct of_dev_auxdata u300_auxdata_lookup[] __initdata = {
-+	OF_DEV_AUXDATA("stericsson,pinctrl-u300", U300_SYSCON_BASE,
-+		"pinctrl-u300", NULL),
-+	OF_DEV_AUXDATA("stericsson,gpio-coh901", U300_GPIO_BASE,
-+		"u300-gpio", &u300_gpio_plat),
-+	OF_DEV_AUXDATA("arm,primecell", U300_UART0_BASE,
-+		"uart0", &uart0_plat_data),
-+	OF_DEV_AUXDATA("arm,primecell", U300_UART1_BASE,
-+		"uart1", &uart1_plat_data),
-+	OF_DEV_AUXDATA("arm,primecell", U300_MMCSD_BASE,
-+		"mmci", &mmcsd_platform_data),
-+	{ /* sentinel */ },
+ 	clk_disable(clk);
+ 
+-	if (margin < 1 || margin > 327)
+-		margin = 60;
+-	coh901327_wdt.timeout = margin;
++	ret = watchdog_init_timeout(&coh901327_wdt, margin, &pdev->dev);
++	if (ret < 0)
++		coh901327_wdt.timeout = 60;
+ 
+ 	ret = watchdog_register_device(&coh901327_wdt);
+ 	if (ret == 0)
+@@ -441,10 +441,16 @@ void coh901327_watchdog_reset(void)
+ 	/* Return and await doom */
+ }
+ 
++static const struct of_device_id coh901327_dt_match[] = {
++	{ .compatible = "stericsson,coh901327" },
++	{},
 +};
 +
-+static void __init u300_init_irq_dt(void)
-+{
-+	struct clk *clk;
-+
-+	/* initialize clocking early, we want to clock the INTCON */
-+	u300_clk_init(U300_SYSCON_VBASE);
-+
-+	/* Bootstrap EMIF and SEMI clocks */
-+	clk = clk_get_sys("pl172", NULL);
-+	BUG_ON(IS_ERR(clk));
-+	clk_prepare_enable(clk);
-+	clk = clk_get_sys("semi", NULL);
-+	BUG_ON(IS_ERR(clk));
-+	clk_prepare_enable(clk);
-+
-+	/* Clock the interrupt controller */
-+	clk = clk_get_sys("intcon", NULL);
-+	BUG_ON(IS_ERR(clk));
-+	clk_prepare_enable(clk);
-+
-+	irqchip_init();
-+}
-+
-+static void __init u300_init_machine_dt(void)
-+{
-+	u16 val;
-+
-+	/* Check what platform we run and print some status information */
-+	u300_init_check_chip();
-+
-+	u300_assign_physmem();
-+
-+	/* Initialize pinmuxing */
-+	pinctrl_register_mappings(u300_pinmux_map,
-+				  ARRAY_SIZE(u300_pinmux_map));
-+
-+	of_platform_populate(NULL, of_default_bus_match_table,
-+			u300_auxdata_lookup, NULL);
-+
-+	/* Enable SEMI self refresh */
-+	val = readw(U300_SYSCON_VBASE + U300_SYSCON_SMCR) |
-+		U300_SYSCON_SMCR_SEMI_SREFREQ_ENABLE;
-+	writew(val, U300_SYSCON_VBASE + U300_SYSCON_SMCR);
-+}
-+
-+static const char * u300_board_compat[] = {
-+	"stericsson,u300",
-+	NULL,
-+};
-+
-+DT_MACHINE_START(U300_DT, "U300 S335/B335 (Device Tree)")
-+	.map_io		= u300_map_io,
-+	.init_irq	= u300_init_irq_dt,
-+	.init_time	= u300_timer_init,
-+	.init_machine	= u300_init_machine_dt,
-+	.restart	= u300_restart,
-+	.dt_compat      = u300_board_compat,
-+MACHINE_END
-+
-+#endif /* CONFIG_OF */
+ static struct platform_driver coh901327_driver = {
+ 	.driver = {
+ 		.owner	= THIS_MODULE,
+ 		.name	= "coh901327_wdog",
++		.of_match_table = coh901327_dt_match,
+ 	},
+ 	.remove		= __exit_p(coh901327_remove),
+ 	.suspend	= coh901327_suspend,
 -- 
 1.7.11.3
