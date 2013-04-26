@@ -1,98 +1,105 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH] libfdt: Add fdt_next_subnode() to permit easy subnode
- iteration
-Date: Fri, 26 Apr 2013 21:59:51 +1000
-Message-ID: <20130426115951.GD4360@truffula.fritz.box>
-References: <1366914176-28684-1-git-send-email-sjg@chromium.org>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [RFC PATCH v3 02/17] Documentation: devicetree: arm: cpus/cpu
+ nodes bindings updates
+Date: Fri, 26 Apr 2013 13:16:12 +0100
+Message-ID: <517A700C.2030102@arm.com>
+References: <1366824502-19729-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1366824502-19729-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <CAL_JsqL2QOjTffogB6g7VK7oRUwDAmJpr=36uvFXjd+hpBL89A@mail.gmail.com>
+ <20130426101839.GA3093@e102568-lin.cambridge.arm.com>
+ <20130426114811.GD11648@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1569129078464350104=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366914176-28684-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130426114811.GD11648@e106331-lin.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Viresh Kumar <viresh.kumar@linaro.org>, Will Deacon <Will.Deacon@arm.com>, Kukjin Kim <kgene.kim@samsung.com>, Lennert Buytenhek <kernel@wantstofly.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, David Brown <davidb@codeaurora.org>, Sekhar Nori <nsekhar@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Simon Horman <horms@verge.net.au>, Barry Song <baohua.song@csr.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vinayak Kale <vkale>
 List-Id: devicetree@vger.kernel.org
 
+On 26/04/13 12:48, Mark Rutland wrote:
+> On Fri, Apr 26, 2013 at 11:18:40AM +0100, Lorenzo Pieralisi wrote:
+>> On Fri, Apr 26, 2013 at 03:51:10AM +0100, Rob Herring wrote:
+>>> On Wed, Apr 24, 2013 at 12:28 PM, Lorenzo Pieralisi
+>>> <lorenzo.pieralisi@arm.com> wrote:
+>>>> In order to extend the current cpu nodes bindings to newer CPUs
+>>>> inclusive of AArch64 and to update support for older ARM CPUs this
+>>>> patch updates device tree documentation for the cpu nodes bindings.
+>>>>
+>>>> Main changes:
+>>>>     - adds 64-bit bindings
+>>>>     - define usage of #address-cells
+>>>>     - define 32/64 dts compatibility settings
+>>>>     - defines behaviour on pre and post v7 uniprocessor systems
+>>>>     - adds ARM 11MPcore specific reg property definition
+>>>>
+>>>> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+>>>> ---
+>>>
+>>> [...]
+>>>
+>>>> +       - enable-method
+>>>> +               Value type: <stringlist>
+>>>> +               Usage and definition depend on ARM architecture version and
+>>>> +               configuration:
+>>>> +                       # On ARM v8 64-bit systems running the OS in AArch64,
+>>>> +                         this property is required and must be "spin-table".
+>>>
+>>> What about PSCI?
+>>
+>> I should add it, at least for ARM v8.
+> 
+> It's worth noting KVM uses it on v7 too, so it should be available for CPUs
+> that are v7+.
+> 
+>>
+>>> I don't think the ePAPR spin-table definition is sufficient for ARM.
+>>> How do you define wake up by SGI or sev instruction.
+>>
+>> I think Will described the wfe/sev mechanism in:
+>>
+>> Documentation/arm64/booting.txt
+>>
+>> and the ePAPR does the same in 5.5.2.2/5.5.2.3. Since this is a document
+>> describing cpus/cpu nodes bindings I assume that description does not
+>> belong here. Question is: do we need to specify an ARM implementation
+>> specific enable-method to describe SGI/sev wake-up (ePAPR 5.5.3) ?
+>>
+>>>> +                       # On ARM 32-bit systems or ARM v8 systems running
+>>>> +                         the OS in AArch32 this property is prohibited.
+>>>
+>>> Why?
+>>
+>> Because if we define it optional with no possible set of values basically
+>> it can be whatever string. I could define it optional with the same
+>> allowed values as ARM v8 even if it is currently ignored, at least in Linux,
+>> until PSCI implementations get merged.
+> 
+> I believe kvmtool sets the enable-method to "psci" on v7, though I may be
+> mistaken. Adding Marc to Cc as he knows better.
 
---===============1569129078464350104==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VMt1DrMGOVs3KQwf"
-Content-Disposition: inline
+Indeed, kvmtool feeds the exact same DT to an ARMv7 guest:
 
+[...]
+		cpu@1 {
+			device_type = "cpu";
+			compatible = "arm,cortex-a15";
+			enable-method = "psci";
+			reg = <0x1>;
+		};
+[...]
 
---VMt1DrMGOVs3KQwf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The 32bit kernel doesn't check it, though.
 
-On Thu, Apr 25, 2013 at 11:22:56AM -0700, Simon Glass wrote:
-> Iterating through subnodes with libfdt is a little painful to write as we
-> need something like this:
->=20
-> for (depth =3D 0, count =3D 0,
-> 	offset =3D fdt_next_node(fdt, parent_offset, &depth);
->      (offset >=3D 0) && (depth > 0);
->      offset =3D fdt_next_node(fdt, offset, &depth)) {
-> 	if (depth =3D=3D 1) {
-> 		/* code body */
-> 	}
-> }
->=20
-> Using fdt_next_subnode() we can instead write this, which is shorter and
-> easier to get right:
->=20
-> for (depth =3D 0, offset =3D fdt_next_subnode(fdt, parent_offset, &depth);
->      offset >=3D 0;
->      offset =3D fdt_next_subnode(fdt, offset, &depth)) {
-> 	/* code body */
-> }
->=20
-> Also, it doesn't require two levels of indentation for the loop
-> body.
-
-I like the idea in principle.  But if you split this into
-find_first_subnode() and find_next_subnode() functions, you should be
-able to get rid of the requirement for the caller to provide the depth
-variable.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---VMt1DrMGOVs3KQwf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlF6bDcACgkQaILKxv3ab8YKNACeKWou75WPtPC/88LACl34M77n
-4rwAni18LcHjFQY2vcrwkOgvy2P10g81
-=E0eH
------END PGP SIGNATURE-----
-
---VMt1DrMGOVs3KQwf--
-
---===============1569129078464350104==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============1569129078464350104==--
+	M.
+-- 
+Jazz is not dead. It just smells funny...
