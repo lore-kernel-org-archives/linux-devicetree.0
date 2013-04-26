@@ -1,55 +1,38 @@
-From: Laura Abbott <lauraa@codeaurora.org>
-Subject: [PATCH v2] of: Set the DMA mask to 64 bits when dma_addr_t is 64-bits
-Date: Fri, 26 Apr 2013 11:06:05 -0700
-Message-ID: <1366999565-19498-1-git-send-email-lauraa@codeaurora.org>
+From: Simon Glass <sjg@chromium.org>
+Subject: Re: [PATCH v8 0/3] Runtime Interpreted Power Sequences
+Date: Fri, 26 Apr 2013 11:55:35 -0700
+Message-ID: <CAPnjgZ1P6dmRB0sO2qBUtd=WBiNcY339NAit2faaotAfEqQDeQ@mail.gmail.com>
+References: <1353047903-14363-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Catalin Marinas <catalin.marinas@arm.com>, Rob Herring <robherring2@gmail.com>
-Cc: Laura Abbott <lauraa@codeaurora.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1353047903-14363-1-git-send-email-acourbot@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Anton Vorontsov <cbouatmailru@gmail.com>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Mark Zhang <markz@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, David Woodhouse <dwmw2@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Leela Krishna Amudala <l.krishna@samsung.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, lk <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, linux-pm@vger.kernel.org, Alexandre Courbot <gnurou@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Currently, of_platform_device_create_pdata always sets the
-coherent DMA mask to 32 bits. On ARM systems without CONFIG_ZONE_DMA,
-arm_dma_limit gets set to ~0 or 0xFFFFFFFFFFFFFFFF on LPAE based
-systems. Since arm_dma_limit represents the smallest dma_mask
-on the system, the default of 32 bits prevents any dma_coherent
-allocation from succeeding unless clients manually set the
-dma mask first. Rather than make every client on an LPAE system set
-the mask, set the mask to a 64 bit value on systems with 64-bit
-dma addresses.
+Hi,
 
-Signed-off-by: Laura Abbott <lauraa@codeaurora.org>
----
- drivers/of/platform.c |    4 ++++
- 1 files changed, 4 insertions(+), 0 deletions(-)
+On Thu, Nov 15, 2012 at 10:38 PM, Alexandre Courbot <acourbot@nvidia.com> wrote:
+> Hopefully the final series before the feature gets merged. Anton Vorontsov
+> kindly accepted to take it into his tree, so this series is mostly a call for
+> acks, tests and reviews notices before the merge window for 3.8 opens. If you
+> are interested in seeing this feature, please add your name.
+>
+> This series also adds an entry for the subsystem into MAINTAINERS, setting me as
+> the person in charge.
+>
+> Changes from v7:
+> - fix bug reported by Tony Prisk
+> - add MAINTAINERS entry
+>
+> Alexandre Courbot (3):
+>   Runtime Interpreted Power Sequences
+>   pwm_backlight: use power sequences
+>   Take maintainership of power sequences
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 0970505..c669ab4 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -214,7 +214,11 @@ struct platform_device *of_platform_device_create_pdata(
- #if defined(CONFIG_MICROBLAZE)
- 	dev->archdata.dma_mask = 0xffffffffUL;
- #endif
-+#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
-+	dev->dev.coherent_dma_mask = DMA_BIT_MASK(64);
-+#else
- 	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
-+#endif
- 	dev->dev.bus = &platform_bus_type;
- 	dev->dev.platform_data = platform_data;
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Did this actually land? I can't see it in linux-next.
+
+Regards,
+Simon
