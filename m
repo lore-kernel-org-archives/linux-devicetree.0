@@ -1,15 +1,11 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 03/23] ARM: u300: device tree support for the timer
-Date: Fri, 26 Apr 2013 08:44:06 -0500
-Message-ID: <517A84A6.4090108@gmail.com>
-References: <1366624304-6190-1-git-send-email-linus.walleij@stericsson.com>
- <201304221336.21921.arnd@arndb.de>
- <CACRpkdbfDwhKA77aUbXhk5sZ0prxR-ic5dntCaAiNjKNBGo_wg@mail.gmail.com>
+From: Linus Walleij <linus.walleij@stericsson.com>
+Subject: [PATCH 05/23 v2] pinctrl: coh901: add device tree support
+Date: Fri, 26 Apr 2013 15:56:45 +0200
+Message-ID: <1366984605-23951-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdbfDwhKA77aUbXhk5sZ0prxR-ic5dntCaAiNjKNBGo_wg@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,66 +15,82 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Linus Walleij <linus.walleij@stericsson.com>, Arnd Bergmann <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/26/2013 08:38 AM, Linus Walleij wrote:
-> On Mon, Apr 22, 2013 at 1:36 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> On Monday 22 April 2013, Linus Walleij wrote:
->>> +#ifdef CONFIG_OF
->>> +       struct device_node *timer = NULL;
->>> +
->>> +       timer = of_find_node_by_path("/timer0@c0014000");
->>> +       if (timer) {
->>> +               struct resource irq_res;
->>> +
->>> +               u300_timer_base = of_iomap(timer, 0);
->>> +               /* Get the IRQ for the GP1 timer */
->>> +               irq = of_irq_to_resource(timer, 2, &irq_res);
->>> +       }
->>> +#endif
->>
->> Do you need the #ifdef? The functions should be defined in a way that
->> removes this code if CONFIG_OF is not defined.
-> 
-> Actually not, this happens without CONFIG_OF:
-> 
->   CC      arch/arm/mach-u300/timer.o
-> /home/elinwal/linux-stericsson/arch/arm/mach-u300/timer.c: In function
-> 'u300_timer_init':
-> /home/elinwal/linux-stericsson/arch/arm/mach-u300/timer.c:371:2:
-> error: implicit declaration of function 'of_find_node_by_path'
-> [-Werror=implicit-function-declaration]
-> /home/elinwal/linux-stericsson/arch/arm/mach-u300/timer.c:371:8:
-> warning: assignment makes pointer from integer without a cast [enabled
-> by default]
-> /home/elinwal/linux-stericsson/arch/arm/mach-u300/timer.c:377:3:
-> error: implicit declaration of function 'of_irq_to_resource'
-> [-Werror=implicit-function-declaration]
-> cc1: some warnings being treated as errors
-> 
-> make[3]: *** [arch/arm/mach-u300/timer.o] Error 1
-> make[2]: *** [arch/arm/mach-u300] Error 2
-> make[2]: *** Waiting for unfinished jobs....
-> 
-> Maybe it's just a bug that these don't have the proper stubs in <linux/of.h>?
-> 
-> Or is there a deeper idea behind this? (CC some OF ppl.)
+From: Linus Walleij <linus.walleij@linaro.org>
 
-Yes, you could add empty function, but searching by path is probably not
-the right thing to do. Why not use clocksource_of_init? That's what all
-the cool kids are doing now. Is there some special feature of the timer
-at this address? If so, then add a property to describe that feature and
-key off of that plus the compatible prop.
+This makes it possible to probe the COH901 pinctrl driver from
+the device tree, and assigned the device tree node in the
+gpio_chip so we can look up cross-references from the device
+tree. Start grabbing the per-port (bank) IRQs by index instead
+of by name so we don't have to look up the IRQs by name going
+forward.
 
-Rob
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v1->v2:
+- Alter the driver to look up IRQ by index.
+- Alter the bindings accordingly.
+---
+ .../devicetree/bindings/gpio/gpio-stericsson-coh901.txt      |  7 +++++++
+ drivers/pinctrl/pinctrl-coh901.c                             | 12 ++++++++++--
+ 2 files changed, 17 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-stericsson-coh901.txt
 
-> 
-> Yours,
-> Linus Walleij
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-stericsson-coh901.txt b/Documentation/devicetree/bindings/gpio/gpio-stericsson-coh901.txt
+new file mode 100644
+index 0000000..fd665b4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-stericsson-coh901.txt
+@@ -0,0 +1,7 @@
++ST-Ericsson COH 901 571/3 GPIO controller
++
++Required properties:
++- compatible: Compatible property value should be "stericsson,gpio-coh901"
++- reg: Physical base address of the controller and length of memory mapped
++  region.
++- interrupts: the 0...n interrupts assigned to the different GPIO ports/banks.
+diff --git a/drivers/pinctrl/pinctrl-coh901.c b/drivers/pinctrl/pinctrl-coh901.c
+index 8b7e7bc..4152ca2 100644
+--- a/drivers/pinctrl/pinctrl-coh901.c
++++ b/drivers/pinctrl/pinctrl-coh901.c
+@@ -770,8 +770,7 @@ static int __init u300_gpio_probe(struct platform_device *pdev)
+ 		port->number = portno;
+ 		port->gpio = gpio;
+ 
+-		port->irq = platform_get_irq_byname(pdev,
+-						    port->name);
++		port->irq = platform_get_irq(pdev, portno);
+ 
+ 		dev_dbg(gpio->dev, "register IRQ %d for port %s\n", port->irq,
+ 			port->name);
+@@ -808,6 +807,9 @@ static int __init u300_gpio_probe(struct platform_device *pdev)
+ 	}
+ 	dev_dbg(gpio->dev, "initialized %d GPIO ports\n", portno);
+ 
++#ifdef CONFIG_OF_GPIO
++	gpio->chip.of_node = pdev->dev.of_node;
++#endif
+ 	err = gpiochip_add(&gpio->chip);
+ 	if (err) {
+ 		dev_err(gpio->dev, "unable to add gpiochip: %d\n", err);
+@@ -861,9 +863,15 @@ static int __exit u300_gpio_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id u300_gpio_match[] = {
++	{ .compatible = "stericsson,gpio-coh901" },
++	{},
++};
++
+ static struct platform_driver u300_gpio_driver = {
+ 	.driver		= {
+ 		.name	= "u300-gpio",
++		.of_match_table = u300_gpio_match,
+ 	},
+ 	.remove		= __exit_p(u300_gpio_remove),
+ };
+-- 
+1.7.11.3
