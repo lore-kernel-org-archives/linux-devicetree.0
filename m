@@ -1,42 +1,58 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH] drm/exynos: fix multiple definition build error
-Date: Fri, 26 Apr 2013 22:00:27 +0200
-Message-ID: <517ADCDB.3040101@gmail.com>
-References: <1366952590-11652-1-git-send-email-inki.dae@samsung.com> <CAAQKjZPQ4LWTka0rfgPypsh+a-B5gzBv5hEbRYdkrry_C5J6Hg@mail.gmail.com> <517A4D82.8010306@samsung.com> <4121004.exzbXa8F0p@flatron>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] of: Set the DMA mask to 64 bits when dma_addr_t is
+ 64-bits
+Date: Fri, 26 Apr 2013 15:03:53 -0500
+Message-ID: <517ADDA9.7020701@gmail.com>
+References: <1366999565-19498-1-git-send-email-lauraa@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <4121004.exzbXa8F0p@flatron>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Inki Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, linux-samsung-soc@vger.kernel.org, Seung-Woo Kim <sw0312.kim@samsung.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1366999565-19498-1-git-send-email-lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/26/2013 09:42 PM, Tomasz Figa wrote:
-> On Friday 26 of April 2013 11:48:50 Sylwester Nawrocki wrote:
->> On 04/26/2013 10:20 AM, Inki Dae wrote:
->>> Exactly right. it's my mistake. But now it seems that
->>> __mode_of_device_table is multi defined at fimd and g2d side so there
->>> still is module build error. :(
->> Since all drivers seem to be linked into single a single module, you
->> likely need to create a separate table of struct of_device_id just for
->> the purpose of MODULE_DEVICE_TABLE(of, ...). This table would contain
->> 'compatible' strings for all devices. Or choose of_device_id for just
->> one device and define MODULE_DEVICE_TABLE() for it in some common place,
->> e.g. exynos_drm_drv.c. I believe all devices should be listed though.
->
-> IMHO, the most proper solution would be to split the module into parent
-> exynos_drm module and per-device submodules, which would depend on the
-> parent module.
->
-> This way you would be able to load dynamically any submodule you want,
-> without recompiling the modules.
+On 04/26/2013 01:06 PM, Laura Abbott wrote:
+> Currently, of_platform_device_create_pdata always sets the
+> coherent DMA mask to 32 bits. On ARM systems without CONFIG_ZONE_DMA,
+> arm_dma_limit gets set to ~0 or 0xFFFFFFFFFFFFFFFF on LPAE based
+> systems. Since arm_dma_limit represents the smallest dma_mask
+> on the system, the default of 32 bits prevents any dma_coherent
+> allocation from succeeding unless clients manually set the
+> dma mask first. Rather than make every client on an LPAE system set
+> the mask, set the mask to a 64 bit value on systems with 64-bit
+> dma addresses.
+> 
+> Signed-off-by: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  drivers/of/platform.c |    4 ++++
+>  1 files changed, 4 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 0970505..c669ab4 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -214,7 +214,11 @@ struct platform_device *of_platform_device_create_pdata(
+>  #if defined(CONFIG_MICROBLAZE)
+>  	dev->archdata.dma_mask = 0xffffffffUL;
+>  #endif
+> +#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
+> +	dev->dev.coherent_dma_mask = DMA_BIT_MASK(64);
+> +#else
+>  	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+> +#endif
 
-Yes, this is how it would have been in a perfect world. Probably something
-worth to consider for the future, it likely implies a lot of work.
+How about "DMA_BIT_MASK(sizeof(dma_addr_t) * 8))" and avoid the ifdef.
 
-OTOH if there is one device for which the driver will always be present
-in the main module it should be enough to make a single entry
-MODULE_DEVICE_TABLE including its compatible string to ensure the driver
-is properly loaded, shouldn't it ?
+Rob
