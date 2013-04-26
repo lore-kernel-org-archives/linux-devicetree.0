@@ -1,189 +1,68 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 1/4] ARM: davinci: uart: move to dev_id based clk_get
-Date: Fri, 26 Apr 2013 12:31:53 +0530
-Message-ID: <517A2661.3000605@ti.com>
-References: <1365510481-32129-1-git-send-email-prakash.pm@ti.com> <1365510664-1394-2-git-send-email-prakash.pm@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
+Date: Fri, 26 Apr 2013 09:11:09 +0200
+Message-ID: <CACRpkdaDmnDTE_jfz8cvFOrkAUv0mt3mkULGh71HxpRHGz0qJw@mail.gmail.com>
+References: <1329321854-24490-1-git-send-email-b-cousson@ti.com>
+	<51391F41.5000303@ti.com>
+	<CAAwP0s1CFRO-rf==p5sYs1n0gigMif7wuT8Yv0N_iLUDMrtcOg@mail.gmail.com>
+	<CACRpkdYHj-rEF3Rk_CWnmmMw_Amr7m8SgQ=-2zsDYuLeuu3azw@mail.gmail.com>
+	<514C79E1.4090106@wwwdotorg.org>
+	<514CE0AB.6060207@ti.com>
+	<CACRpkdZmv-rAoKSQYpkHHSMzKJOn5TixVW_P3=m7ZNagBYCUPw@mail.gmail.com>
+	<515319D5.20105@wwwdotorg.org>
+	<CACRpkdYXVLgCz1Tyu-Ls2V2OTc4R3cGNJhfQJB6Hiz_K9dkZYQ@mail.gmail.com>
+	<5155C902.7080207@wwwdotorg.org>
+	<CACRpkdYbs4-uudpRUY8e+7icYYkZrfM0kReP3pLL5DMiURJ4dg@mail.gmail.com>
+	<5165CB9D.1090202@wwwdotorg.org>
+	<CACRpkdYirFNqmGhA4K9CL4ve4NYhs8Rd3SFt1iwW9vHBkrcz8g@mail.gmail.com>
+	<51671D7B.5060303@wwwdotorg.org>
+	<CACRpkdbf32Ef77GmXk9id9+RRjcDRTr7S+F4nznoeZU8y=BT_Q@mail.gmail.com>
+	<51673D70.3010503@wwwdotorg.org>
+	<CAAwP0s0e2x33jZQhFRY+Hoo61SFqYKRgWk=1mL2+DNxSDJHz+A@mail.gmail.com>
+	<CACRpkda4h+qXTvsirPAS7E7sjXhMLE62q=VDy53W8UchsYjbNg@mail.gmail.com>
+	<516C31C3.9040505@wwwdotorg.org>
+	<516C73C6.5050409@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1365510664-1394-2-git-send-email-prakash.pm@ti.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Cc: davinci-linux-open-source@linux.davincidsp.com, linux-serial@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux@arm.linux.org.uk, hs@denx.de, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <516C73C6.5050409@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <martinez.javier@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Alexandre Courbot <acourbot@nvidia.com>, Stephen Warren <swarren@nvidia.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Prakash,
+On Mon, Apr 15, 2013 at 11:40 PM, Jon Hunter <jon-hunter@ti.com> wrote:
 
-On 4/9/2013 6:01 PM, Manjunathappa, Prakash wrote:
-> For modules having single clock, clk_get should be done with dev_id.
-> But current davinci implementation handles multiple instances
-> of the UART devices with single platform_device_register. Hence clk_get
-> is based on con_id rather than dev_id, this is not correct. Do
-> platform_device_register for each instance and clk_get on dev_id.
-> 
-> Signed-off-by: Manjunathappa, Prakash <prakash.pm@ti.com>
-> ---
->  arch/arm/mach-davinci/da830.c                  |    8 ++--
->  arch/arm/mach-davinci/da850.c                  |    8 ++--
->  arch/arm/mach-davinci/devices-da8xx.c          |   40 ++++++++++++++++---
->  arch/arm/mach-davinci/devices-tnetv107x.c      |   35 ++++++++++++++---
->  arch/arm/mach-davinci/dm355.c                  |   48 ++++++++++++++++++-----
->  arch/arm/mach-davinci/dm365.c                  |   35 ++++++++++++----
->  arch/arm/mach-davinci/dm644x.c                 |   48 ++++++++++++++++++-----
->  arch/arm/mach-davinci/dm646x.c                 |   49 +++++++++++++++++++-----
->  arch/arm/mach-davinci/include/mach/da8xx.h     |    2 +-
->  arch/arm/mach-davinci/include/mach/tnetv107x.h |    2 +-
->  arch/arm/mach-davinci/serial.c                 |   19 ++++++---
->  arch/arm/mach-davinci/tnetv107x.c              |    8 ++--
->  12 files changed, 230 insertions(+), 72 deletions(-)
+> I am still concerned about the case where a driver may have already
+> called gpio_request() and then calls request_irq(). I think that the
+> solution needs to handle cases where the driver may or may not call
+> gpio_request() to allocate the gpio.
 
-[...]
+So take a step back and you see that this is my actual fear and why
+I'm so hesitant about this patch to begin with.
 
-> diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
-> index fc50243..eec7132 100644
-> --- a/arch/arm/mach-davinci/devices-da8xx.c
-> +++ b/arch/arm/mach-davinci/devices-da8xx.c
-> @@ -67,7 +67,7 @@
->  void __iomem *da8xx_syscfg0_base;
->  void __iomem *da8xx_syscfg1_base;
->  
-> -static struct plat_serial8250_port da8xx_serial_pdata[] = {
-> +static struct plat_serial8250_port da8xx_serial_pdata0[] = {
+I wanted drivers to follow the sequence:
+gpio_request(), gpio_to_irq(), request_irq()
 
-da8xx_serial0_pdata is more appropriate. Likewise for other entries below.
+Now if request_irq() can implicitly perform gpio_request(), we end
+up with a semantic confusing mess like this where we are
+uncertain as to whether we should use the irq we obtain elsewhere
+(like from a resource on the platform device)) or maybe use
+gpio_to_irq() to convert it into an IRQ or not or ...
 
->  	{
->  		.mapbase	= DA8XX_UART0_BASE,
->  		.irq		= IRQ_DA8XX_UARTINT0,
-> @@ -77,6 +77,11 @@ static struct plat_serial8250_port da8xx_serial_pdata[] = {
->  		.regshift	= 2,
->  	},
->  	{
-> +		.flags	= 0,
-> +	},
+It is certainly true that for some devices we don't want to know if
+the IRQ comes from a hard-wired IRQ line or from a GPIO line
+playing the r=F4le of IRQ controller, so we need to handle that.
 
-No need of trailing ',' on sentinel. No need of the zero initialization.
-Here and other places below.
+But then the drivers need to be consistent, and relying solely on
+code review to stop people from doing mixtures like the described
+is not working, the subsystem must enforce a proper policy.
 
-> +};
-> +static struct plat_serial8250_port da8xx_serial_pdata1[] = {
-> +	{
->  		.mapbase	= DA8XX_UART1_BASE,
->  		.irq		= IRQ_DA8XX_UARTINT1,
->  		.flags		= UPF_BOOT_AUTOCONF | UPF_SKIP_TEST |
-> @@ -85,6 +90,11 @@ static struct plat_serial8250_port da8xx_serial_pdata[] = {
->  		.regshift	= 2,
->  	},
->  	{
-> +		.flags	= 0,
-> +	},
-> +};
-> +static struct plat_serial8250_port da8xx_serial_pdata2[] = {
-> +	{
->  		.mapbase	= DA8XX_UART2_BASE,
->  		.irq		= IRQ_DA8XX_UARTINT2,
->  		.flags		= UPF_BOOT_AUTOCONF | UPF_SKIP_TEST |
-> @@ -97,11 +107,29 @@ static struct plat_serial8250_port da8xx_serial_pdata[] = {
->  	},
->  };
->  
-> -struct platform_device da8xx_serial_device = {
-> -	.name	= "serial8250",
-> -	.id	= PLAT8250_DEV_PLATFORM,
-> -	.dev	= {
-> -		.platform_data	= da8xx_serial_pdata,
-> +struct platform_device da8xx_serial_device[] = {
-> +	{
-> +		.name	= "serial8250",
-> +		.id	= PLAT8250_DEV_PLATFORM,
-> +		.dev	= {
-> +			.platform_data	= da8xx_serial_pdata0,
-> +		},
-> +	},
-> +	{
-> +		.name	= "serial8250",
-> +		.id	= PLAT8250_DEV_PLATFORM1,
-> +		.dev	= {
-> +			.platform_data	= da8xx_serial_pdata1,
-> +		},
-> +	},
-> +	{
-> +		.name	= "serial8250",
-> +		.id	= PLAT8250_DEV_PLATFORM2,
-> +		.dev	= {
-> +			.platform_data	= da8xx_serial_pdata2,
-> +		},
-> +	},
-> +	{
->  	},
->  };
-
-[...]
-
-> diff --git a/arch/arm/mach-davinci/serial.c b/arch/arm/mach-davinci/serial.c
-> index f262581..57e6150 100644
-> --- a/arch/arm/mach-davinci/serial.c
-> +++ b/arch/arm/mach-davinci/serial.c
-> @@ -76,7 +76,7 @@ int __init davinci_serial_setup_clk(unsigned instance, unsigned int *rate)
->  	char name[16];
->  	struct clk *clk;
->  	struct davinci_soc_info *soc_info = &davinci_soc_info;
-> -	struct device *dev = &soc_info->serial_dev->dev;
-> +	struct device *dev = &soc_info->serial_dev[instance].dev;
->  
->  	sprintf(name, "uart%d", instance);
->  	clk = clk_get(dev, name);
-
-Why not pass con_id = NULL now?
-
-> @@ -96,19 +96,25 @@ int __init davinci_serial_setup_clk(unsigned instance, unsigned int *rate)
->  
->  int __init davinci_serial_init(struct davinci_uart_config *info)
->  {
-> -	int i, ret;
-> +	int i, ret = 0;
->  	struct davinci_soc_info *soc_info = &davinci_soc_info;
-> -	struct device *dev = &soc_info->serial_dev->dev;
-> -	struct plat_serial8250_port *p = dev->platform_data;
-> +	struct device *dev;
-> +	struct plat_serial8250_port *p;
->  
->  	/*
->  	 * Make sure the serial ports are muxed on at this point.
->  	 * You have to mux them off in device drivers later on if not needed.
->  	 */
-> -	for (i = 0; p->flags; i++, p++) {
-> +	for (i = 0; soc_info->serial_dev[i].dev.platform_data != NULL; i++) {
-> +		dev = &soc_info->serial_dev[i].dev;
-> +		p = dev->platform_data;
->  		if (!(info->enabled_uarts & (1 << i)))
->  			continue;
->  
-> +		ret = platform_device_register(&soc_info->serial_dev[i]);
-> +		if (ret)
-> +			continue;
-> +
->  		ret = davinci_serial_setup_clk(i, &p->uartclk);
->  		if (ret)
->  			continue;
-> @@ -125,6 +131,5 @@ int __init davinci_serial_init(struct davinci_uart_config *info)
->  		if (p->membase && p->type != PORT_AR7)
->  			davinci_serial_reset(p);
->  	}
-> -
-> -	return platform_device_register(soc_info->serial_dev);
-> +	return ret;
->  }
-
-Now that we are overhauling this part of code, some improvements can be
-done. First, get rid of struct davinci_uart_config. None of the board
-files use it meaningfully and we know we are not going to have more
-board files. Second, make davinci_serial_init() take pointer to serial
-platform device directly. This eliminates need for serial_dev in the
-soc_info structure (yay!). You might also find that
-davinci_serial_setup_clk() can be eliminated as well since there is not
-much to do there now.
-
-Thanks,
-Sekhar
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
