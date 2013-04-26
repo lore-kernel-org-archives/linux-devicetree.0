@@ -1,61 +1,101 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC PATCH v3 02/17] Documentation: devicetree: arm: cpus/cpu
- nodes bindings updates
-Date: Thu, 25 Apr 2013 21:51:10 -0500
-Message-ID: <CAL_JsqL2QOjTffogB6g7VK7oRUwDAmJpr=36uvFXjd+hpBL89A@mail.gmail.com>
-References: <1366824502-19729-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1366824502-19729-3-git-send-email-lorenzo.pieralisi@arm.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 1/3] ARM: OMAP2+: Legacy support for wl12xx when booted with
+ devicetree
+Date: Thu, 25 Apr 2013 20:52:10 -0700
+Message-ID: <20130426035210.26065.39995.stgit@muffinssi.local>
+References: <20130426034858.26065.65118.stgit@muffinssi.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1366824502-19729-3-git-send-email-lorenzo.pieralisi@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Viresh Kumar <viresh.kumar@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Barry Song <baohua.song@csr.com>, Will Deacon <will.deacon@arm.com>, Sekhar Nori <nsekhar@ti.com>, Simon Horman <horms@verge.net.au>, Rob Herring <rob.herring@calxeda.com>, Amit Kucheria <amit.kucheria@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Grant Likely <grant.likely@linaro.org>, David Brown <davidb@codeaurora.org>, Vinayak Kale <vkale@apm.com>, Lennert Buytenhek <kernel@wantstofly.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130426034858.26065.65118.stgit@muffinssi.local>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Luciano Coelho <coelho@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, Benoit Cousson <b-cousson@ti.com>, Rajendra Nayak <rnayak@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 24, 2013 at 12:28 PM, Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
-> In order to extend the current cpu nodes bindings to newer CPUs
-> inclusive of AArch64 and to update support for older ARM CPUs this
-> patch updates device tree documentation for the cpu nodes bindings.
->
-> Main changes:
->     - adds 64-bit bindings
->     - define usage of #address-cells
->     - define 32/64 dts compatibility settings
->     - defines behaviour on pre and post v7 uniprocessor systems
->     - adds ARM 11MPcore specific reg property definition
->
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> ---
+Without WLAN we cannot switch omap4 to use device tree
+only booting. This patch can be reverted when the
+binding for wl12xx is added.
 
-[...]
+Cc: Luciano Coelho <coelho@ti.com>
+Cc: Benoit Cousson <b-cousson@ti.com>
+Cc: Rajendra Nayak <rnayak@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/mach-omap2/devices.c |   39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-> +       - enable-method
-> +               Value type: <stringlist>
-> +               Usage and definition depend on ARM architecture version and
-> +               configuration:
-> +                       # On ARM v8 64-bit systems running the OS in AArch64,
-> +                         this property is required and must be "spin-table".
+diff --git a/arch/arm/mach-omap2/devices.c b/arch/arm/mach-omap2/devices.c
+index 73762ac..69c520e 100644
+--- a/arch/arm/mach-omap2/devices.c
++++ b/arch/arm/mach-omap2/devices.c
+@@ -15,6 +15,7 @@
+ #include <linux/io.h>
+ #include <linux/clk.h>
+ #include <linux/err.h>
++#include <linux/gpio.h>
+ #include <linux/slab.h>
+ #include <linux/of.h>
+ #include <linux/pinctrl/machine.h>
+@@ -22,6 +23,7 @@
+ #include <linux/platform_data/omap_ocp2scp.h>
+ #include <linux/platform_data/mailbox-omap.h>
+ #include <linux/usb/omap_control_usb.h>
++#include <linux/wl12xx.h>
+ 
+ #include <asm/mach-types.h>
+ #include <asm/mach/map.h>
+@@ -640,6 +642,40 @@ static void __init omap_init_ocp2scp(void)
+ static inline void omap_init_ocp2scp(void) { }
+ #endif
+ 
++#if IS_ENABLED(CONFIG_WL12XX)
++
++static struct wl12xx_platform_data wl12xx __initdata;
++
++void __init omap_init_wl12xx_of(void)
++{
++	int ret;
++
++	if (!of_have_populated_dt())
++		return;
++
++	if (of_machine_is_compatible("ti,omap4-sdp")) {
++		wl12xx.board_ref_clock = WL12XX_REFCLOCK_26;
++		wl12xx.board_tcxo_clock = WL12XX_TCXOCLOCK_26;
++		wl12xx.irq = gpio_to_irq(53);
++	} else if (of_machine_is_compatible("ti,omap4-panda")) {
++		wl12xx.board_ref_clock = WL12XX_REFCLOCK_38;
++		wl12xx.irq = gpio_to_irq(53);
++	} else {
++		return;
++	}
++
++	ret = wl12xx_set_platform_data(&wl12xx);
++	if (ret) {
++		pr_err("error setting wl12xx data: %d\n", ret);
++		return;
++	}
++}
++#else
++static inline omap_init_wl12xx_of(void)
++{
++}
++#endif
++
+ /*-------------------------------------------------------------------------*/
+ 
+ static int __init omap2_init_devices(void)
+@@ -664,6 +700,9 @@ static int __init omap2_init_devices(void)
+ 		omap_init_mcspi();
+ 		omap_init_sham();
+ 		omap_init_aes();
++	} else {
++		/* These can be removed when bindings are done */
++		omap_init_wl12xx_of();
+ 	}
+ 	omap_init_sti();
+ 	omap_init_rng();
 
-What about PSCI?
-
-I don't think the ePAPR spin-table definition is sufficient for ARM.
-How do you define wake up by SGI or sev instruction.
-
-> +                       # On ARM 32-bit systems or ARM v8 systems running
-> +                         the OS in AArch32 this property is prohibited.
-
-Why?
-
-Rob
