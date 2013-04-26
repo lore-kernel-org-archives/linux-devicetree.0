@@ -1,105 +1,314 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [RFC PATCH v3 02/17] Documentation: devicetree: arm: cpus/cpu
- nodes bindings updates
-Date: Fri, 26 Apr 2013 13:16:12 +0100
-Message-ID: <517A700C.2030102@arm.com>
-References: <1366824502-19729-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1366824502-19729-3-git-send-email-lorenzo.pieralisi@arm.com>
- <CAL_JsqL2QOjTffogB6g7VK7oRUwDAmJpr=36uvFXjd+hpBL89A@mail.gmail.com>
- <20130426101839.GA3093@e102568-lin.cambridge.arm.com>
- <20130426114811.GD11648@e106331-lin.cambridge.arm.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2] libfdt: Add fdt_next_subnode() to permit easy subnode
+ iteration
+Date: Fri, 26 Apr 2013 05:43:31 -0700
+Message-ID: <1366980211-30077-1-git-send-email-sjg@chromium.org>
+References: <1366914176-28684-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130426114811.GD11648@e106331-lin.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Viresh Kumar <viresh.kumar@linaro.org>, Will Deacon <Will.Deacon@arm.com>, Kukjin Kim <kgene.kim@samsung.com>, Lennert Buytenhek <kernel@wantstofly.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <Catalin.Marinas@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, David Brown <davidb@codeaurora.org>, Sekhar Nori <nsekhar@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Simon Horman <horms@verge.net.au>, Barry Song <baohua.song@csr.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vinayak Kale <vkale>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1366914176-28684-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26/04/13 12:48, Mark Rutland wrote:
-> On Fri, Apr 26, 2013 at 11:18:40AM +0100, Lorenzo Pieralisi wrote:
->> On Fri, Apr 26, 2013 at 03:51:10AM +0100, Rob Herring wrote:
->>> On Wed, Apr 24, 2013 at 12:28 PM, Lorenzo Pieralisi
->>> <lorenzo.pieralisi@arm.com> wrote:
->>>> In order to extend the current cpu nodes bindings to newer CPUs
->>>> inclusive of AArch64 and to update support for older ARM CPUs this
->>>> patch updates device tree documentation for the cpu nodes bindings.
->>>>
->>>> Main changes:
->>>>     - adds 64-bit bindings
->>>>     - define usage of #address-cells
->>>>     - define 32/64 dts compatibility settings
->>>>     - defines behaviour on pre and post v7 uniprocessor systems
->>>>     - adds ARM 11MPcore specific reg property definition
->>>>
->>>> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
->>>> ---
->>>
->>> [...]
->>>
->>>> +       - enable-method
->>>> +               Value type: <stringlist>
->>>> +               Usage and definition depend on ARM architecture version and
->>>> +               configuration:
->>>> +                       # On ARM v8 64-bit systems running the OS in AArch64,
->>>> +                         this property is required and must be "spin-table".
->>>
->>> What about PSCI?
->>
->> I should add it, at least for ARM v8.
-> 
-> It's worth noting KVM uses it on v7 too, so it should be available for CPUs
-> that are v7+.
-> 
->>
->>> I don't think the ePAPR spin-table definition is sufficient for ARM.
->>> How do you define wake up by SGI or sev instruction.
->>
->> I think Will described the wfe/sev mechanism in:
->>
->> Documentation/arm64/booting.txt
->>
->> and the ePAPR does the same in 5.5.2.2/5.5.2.3. Since this is a document
->> describing cpus/cpu nodes bindings I assume that description does not
->> belong here. Question is: do we need to specify an ARM implementation
->> specific enable-method to describe SGI/sev wake-up (ePAPR 5.5.3) ?
->>
->>>> +                       # On ARM 32-bit systems or ARM v8 systems running
->>>> +                         the OS in AArch32 this property is prohibited.
->>>
->>> Why?
->>
->> Because if we define it optional with no possible set of values basically
->> it can be whatever string. I could define it optional with the same
->> allowed values as ARM v8 even if it is currently ignored, at least in Linux,
->> until PSCI implementations get merged.
-> 
-> I believe kvmtool sets the enable-method to "psci" on v7, though I may be
-> mistaken. Adding Marc to Cc as he knows better.
+Iterating through subnodes with libfdt is a little painful to write as we
+need something like this:
 
-Indeed, kvmtool feeds the exact same DT to an ARMv7 guest:
+for (depth = 0, count = 0,
+	offset = fdt_next_node(fdt, parent_offset, &depth);
+     (offset >= 0) && (depth > 0);
+     offset = fdt_next_node(fdt, offset, &depth)) {
+	if (depth == 1) {
+		/* code body */
+	}
+}
 
-[...]
-		cpu@1 {
-			device_type = "cpu";
-			compatible = "arm,cortex-a15";
-			enable-method = "psci";
-			reg = <0x1>;
-		};
-[...]
+Using fdt_next_subnode() we can instead write this, which is shorter and
+easier to get right:
 
-The 32bit kernel doesn't check it, though.
+for (offset = fdt_first_subnode(fdt, parent_offset);
+     offset >= 0;
+     offset = fdt_next_subnode(fdt, offset)) {
+	/* code body */
+}
 
-	M.
+Also, it doesn't require two levels of indentation for the loop body.
+
+Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+Changes in v2:
+- Use first/next pattern to avoid needing a depth parameter
+
+ libfdt/fdt.c              | 28 ++++++++++++++
+ libfdt/libfdt.h           | 22 +++++++++++
+ tests/Makefile.tests      |  3 +-
+ tests/run_tests.sh        |  3 ++
+ tests/subnode_iterate.c   | 94 +++++++++++++++++++++++++++++++++++++++++++++++
+ tests/subnode_iterate.dts | 44 ++++++++++++++++++++++
+ 6 files changed, 193 insertions(+), 1 deletion(-)
+ create mode 100644 tests/subnode_iterate.c
+ create mode 100644 tests/subnode_iterate.dts
+
+diff --git a/libfdt/fdt.c b/libfdt/fdt.c
+index 57faba3..2ce6a44 100644
+--- a/libfdt/fdt.c
++++ b/libfdt/fdt.c
+@@ -198,6 +198,34 @@ int fdt_next_node(const void *fdt, int offset, int *depth)
+ 	return offset;
+ }
+ 
++int fdt_first_subnode(const void *fdt, int offset)
++{
++	int depth = 0;
++
++	offset = fdt_next_node(fdt, offset, &depth);
++	if (offset < 0 || depth != 1)
++		return -FDT_ERR_NOTFOUND;
++
++	return offset;
++}
++
++int fdt_next_subnode(const void *fdt, int offset)
++{
++	int depth = 1;
++
++	/*
++	 * With respect to the parent, the depth of the next subnode will be
++	 * the same as the last.
++	 */
++	do {
++		offset = fdt_next_node(fdt, offset, &depth);
++		if (offset < 0 || depth < 1)
++			return -FDT_ERR_NOTFOUND;
++	} while (depth > 1);
++
++	return offset;
++}
++
+ const char *_fdt_find_string(const char *strtab, int tabsize, const char *s)
+ {
+ 	int len = strlen(s) + 1;
+diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
+index 130789a..02baa84 100644
+--- a/libfdt/libfdt.h
++++ b/libfdt/libfdt.h
+@@ -136,6 +136,28 @@ uint32_t fdt_next_tag(const void *fdt, int offset, int *nextoffset);
+ 
+ int fdt_next_node(const void *fdt, int offset, int *depth);
+ 
++/**
++ * fdt_first_subnode() - get offset of first direct subnode
++ *
++ * @fdt:	FDT blob
++ * @offset:	Offset of node to check
++ * @return offset of first subnode, or -FDT_ERR_NOTFOUND if there is none
++ */
++int fdt_first_subnode(const void *fdt, int offset);
++
++/**
++ * fdt_next_subnode() - get offset of next direct subnode
++ *
++ * After first calling fdt_first_subnode(), call this function repeatedly to
++ * get direct subnodes of a parent node.
++ *
++ * @fdt:	FDT blob
++ * @offset:	Offset of previous subnode
++ * @return offset of next subnode, or -FDT_ERR_NOTFOUND if there are no more
++ * subnodes
++ */
++int fdt_next_subnode(const void *fdt, int offset);
++
+ /**********************************************************************/
+ /* General functions                                                  */
+ /**********************************************************************/
+diff --git a/tests/Makefile.tests b/tests/Makefile.tests
+index d59bff8..dafb618 100644
+--- a/tests/Makefile.tests
++++ b/tests/Makefile.tests
+@@ -20,7 +20,8 @@ LIB_TESTS_L = get_mem_rsv \
+ 	dtb_reverse dtbs_equal_unordered \
+ 	add_subnode_with_nops path_offset_aliases \
+ 	utilfdt_test \
+-	integer-expressions
++	integer-expressions \
++	subnode_iterate
+ LIB_TESTS = $(LIB_TESTS_L:%=$(TESTS_PREFIX)%)
+ 
+ LIBTREE_TESTS_L = truncated_property
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index b56b626..b013761 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -241,6 +241,9 @@ libfdt_tests () {
+ 	tree1_tests_rw noppy.$basetree
+     done
+ 
++    run_dtc_test -I dts -O dtb -o subnode_iterate.dtb subnode_iterate.dts
++    run_test subnode_iterate subnode_iterate.dtb
++
+     # Tests for behaviour on various sorts of corrupted trees
+     run_test truncated_property
+ 
+diff --git a/tests/subnode_iterate.c b/tests/subnode_iterate.c
+new file mode 100644
+index 0000000..b9f379d
+--- /dev/null
++++ b/tests/subnode_iterate.c
+@@ -0,0 +1,94 @@
++/*
++ * libfdt - Flat Device Tree manipulation
++ *	Tests that fdt_next_subnode() works as expected
++ *
++ * Copyright (C) 2013 Google, Inc
++ *
++ * Copyright (C) 2007 David Gibson, IBM Corporation.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public License
++ * as published by the Free Software Foundation; either version 2.1 of
++ * the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
++ */
++
++#include <stdlib.h>
++#include <stdio.h>
++#include <string.h>
++#include <stdint.h>
++
++#include <libfdt.h>
++
++#include "tests.h"
++#include "testdata.h"
++
++static void test_node(void *fdt, int parent_offset)
++{
++	fdt32_t subnodes;
++	const fdt32_t *prop;
++	int offset;
++	int count;
++	int len;
++
++	/* This property indicates the number of subnodes to expect */
++	prop = fdt_getprop(fdt, parent_offset, "subnodes", &len);
++	if (!prop || len != sizeof(fdt32_t)) {
++		FAIL("Missing/invalid subnodes property at '%s'",
++		     fdt_get_name(fdt, parent_offset, NULL));
++	}
++	subnodes = cpu_to_fdt32(*prop);
++
++	count = 0;
++	for (offset = fdt_first_subnode(fdt, parent_offset);
++	     offset >= 0;
++	     offset = fdt_next_subnode(fdt, offset))
++		count++;
++
++	if (count != subnodes) {
++		FAIL("Node '%s': Expected %d subnodes, got %d\n",
++		     fdt_get_name(fdt, parent_offset, NULL), subnodes,
++		     count);
++	}
++}
++
++static void check_fdt_next_subnode(void *fdt)
++{
++	int offset;
++	int count = 0;
++
++	for (offset = fdt_first_subnode(fdt, 0);
++	     offset >= 0;
++	     offset = fdt_next_subnode(fdt, offset)) {
++		test_node(fdt, offset);
++		count++;
++	}
++
++	if (count != 2)
++		FAIL("Expected %d tests, got %d\n", 2, count);
++}
++
++int main(int argc, char *argv[])
++{
++	void *fdt;
++
++	test_init(argc, argv);
++	if (argc != 2)
++		CONFIG("Usage: %s <dtb file>", argv[0]);
++
++	fdt = load_blob(argv[1]);
++	if (!fdt)
++		FAIL("No device tree available");
++
++	check_fdt_next_subnode(fdt);
++
++	PASS();
++}
+diff --git a/tests/subnode_iterate.dts b/tests/subnode_iterate.dts
+new file mode 100644
+index 0000000..14a0d3a
+--- /dev/null
++++ b/tests/subnode_iterate.dts
+@@ -0,0 +1,44 @@
++/dts-v1/;
++
++/ {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	test1 {
++		subnodes = <2>;
++		linux,phandle = <0x1>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		PowerPC,970@0 {
++			name = "PowerPC,970";
++			device_type = "cpu";
++			reg = <0x00000000>;
++			clock-frequency = <1600000000>;
++			timebase-frequency = <33333333>;
++			linux,boot-cpu;
++			i-cache-size = <65536>;
++			d-cache-size = <32768>;
++			another-sub-node {
++				should-be-ignored;
++				yet-another {
++					should-also-be-ignored;
++				};
++			};
++		};
++
++		PowerPC,970@1 {
++			name = "PowerPC,970";
++			device_type = "cpu";
++			reg = <0x00000001>;
++			clock-frequency = <1600000000>;
++			timebase-frequency = <33333333>;
++			i-cache-size = <65536>;
++			d-cache-size = <32768>;
++		};
++	};
++
++	test2 {
++		subnodes = <0>;
++	};
++};
++
 -- 
-Jazz is not dead. It just smells funny...
+1.8.2.1
