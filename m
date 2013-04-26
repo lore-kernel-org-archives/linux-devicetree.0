@@ -1,43 +1,46 @@
-From: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 0/3] Runtime Interpreted Power Sequences
-Date: Fri, 26 Apr 2013 11:30:39 -0700
-Message-ID: <20130426183038.GA26373@teo>
-References: <1353047903-14363-1-git-send-email-acourbot@nvidia.com>
- <CAPnjgZ1P6dmRB0sO2qBUtd=WBiNcY339NAit2faaotAfEqQDeQ@mail.gmail.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v2 2/3] ASoC: spdif_transmitter: Add DT support.
+Date: Fri, 26 Apr 2013 21:24:26 +0200
+Message-ID: <517AD46A.2020402@gmail.com>
+References: <1366895594-19596-1-git-send-email-marek.belisko@streamunlimited.com> <1366895594-19596-3-git-send-email-marek.belisko@streamunlimited.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPnjgZ1P6dmRB0sO2qBUtd=WBiNcY339NAit2faaotAfEqQDeQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lk <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1366895594-19596-3-git-send-email-marek.belisko@streamunlimited.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Marek Belisko <marek.belisko@gmail.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, alsa-devel@alsa-project.org, Michal Bachraty <michal.bachraty@streamunlimited.com>, linux-doc@vger.kernel.org, tiwai@suse.de, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, broonie@kernel.org, Marek Belisko <marek.belisko@streamunlimited.com>, perex@perex.cz
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 26, 2013 at 11:55:35AM -0700, Simon Glass wrote:
-> On Thu, Nov 15, 2012 at 10:38 PM, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> > Hopefully the final series before the feature gets merged. Anton Vorontsov
-> > kindly accepted to take it into his tree, so this series is mostly a call for
-> > acks, tests and reviews notices before the merge window for 3.8 opens. If you
-> > are interested in seeing this feature, please add your name.
-> >
-> > This series also adds an entry for the subsystem into MAINTAINERS, setting me as
-> > the person in charge.
-> >
-> > Changes from v7:
-> > - fix bug reported by Tony Prisk
-> > - add MAINTAINERS entry
-> >
-> > Alexandre Courbot (3):
-> >   Runtime Interpreted Power Sequences
-> >   pwm_backlight: use power sequences
-> >   Take maintainership of power sequences
-> 
-> Did this actually land?
+On 04/25/2013 03:13 PM, Marek Belisko wrote:
+> Add devicetree support for this dummy audio soc driver.
+>
+> Signed-off-by: Michal Bachraty<michal.bachraty@streamunlimited.com>
+> Signed-off-by: Marek Belisko<marek.belisko@streamunlimited.com>
+> ---
+>   .../bindings/sound/spdif-transmitter.txt           |   10 ++++++++++
+>   sound/soc/codecs/spdif_transmitter.c               |   10 ++++++++++
+>   2 files changed, 20 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/sound/spdif-transmitter.txt
+>
+> diff --git a/Documentation/devicetree/bindings/sound/spdif-transmitter.txt b/Documentation/devicetree/bindings/sound/spdif-transmitter.txt
+> new file mode 100644
+> index 0000000..55a8584
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/spdif-transmitter.txt
+> @@ -0,0 +1,10 @@
+> +Device-Tree bindings for dummy spdif transmitter
+> +
+> +Required properties:
+> +	- compatible: should be "linux,spdif-dit".
 
-At least not through my tree. I saw a huge discussion, and I am not sure
-how it ended and whether there was a consensus.
+Marek,
 
-Thanks,
+I remember Daniel commenting on the name already, but
+what about "spdif-transmitter" and "spdif-receiver" respectively?
+That is very generic and should allow to remove "linux," prefix.
+And there is a lot of drivers using more informative compatible
+strings compared to the driver name.
 
-Anton
+Sebastian
