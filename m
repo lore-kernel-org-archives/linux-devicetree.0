@@ -1,67 +1,43 @@
-From: Luciano Coelho <coelho@ti.com>
-Subject: Re: [PATCH 2/3] ARM: dts: Add muxing for wl12xx on the SDIO bus for
- pandaboard
-Date: Fri, 26 Apr 2013 16:23:23 +0300
-Message-ID: <1366982603.4029.42.camel@cumari.coelho.fi>
-References: <20130426034858.26065.65118.stgit@muffinssi.local>
-	 <20130426035213.26065.63243.stgit@muffinssi.local>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/23] ARM: u300: fix ages old copy/paste bug
+Date: Fri, 26 Apr 2013 15:28:37 +0200
+Message-ID: <CACRpkdYnk1L3z19yQUJciKOOLUGV_rj3f231-jFKYjcE41kRsw@mail.gmail.com>
+References: <1366624283-6122-1-git-send-email-linus.walleij@stericsson.com>
+ <201304221334.04160.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130426035213.26065.63243.stgit@muffinssi.local>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, Benoit Cousson <b-cousson@ti.com>, Rajendra Nayak <rnayak@ti.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201304221334.04160.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2013-04-25 at 20:52 -0700, Tony Lindgren wrote:
-> This is needed to get wl12xx working with device tree based
-> booting.
-> 
-> Note that we claim the various GPIO inputs in the regulator
-> as the proper muxing is needed to enable and disable the
-> regulator.
-> 
-> Also, we want to use non-removable instead of ti,non-removable
-> as the ti,non-removable also sets no_regulator_off_init which
-> is really not what we want as then wl12xx won't get powered
-> up and down which is needed for resetting it.
-> 
-> Cc: Luciano Coelho <coelho@ti.com>
-> Cc: Benoit Cousson <b-cousson@ti.com>
-> Cc: Rajendra Nayak <rnayak@ti.com>
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
+On Mon, Apr 22, 2013 at 1:34 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Monday 22 April 2013, Linus Walleij wrote:
+>> From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> The UART1 is on the fast AHB bridge, not on the slow bus.
+>>
+>> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> Do you want to mark this for stable?
+>
+> While there are not a lot of people that would need the fix, I think
+> we should do it by habit in cases that fit the stable rules.
 
-I tried this now and it seems to work fine too.  So:
+OK you're right. I'm sending this one separately to
+arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org as a fix and marked as stable.
 
-Tested-by: Luciano Coelho <coelho@ti.com>
-
-Except that with linux-next I'm getting some problems with the
-interrupts when trying to use wl12xx.  It's not related to this patch
-though, and I'm investigating it right now.
-
-Also, I found one small whitespace problem in this patch:
-
-[...]
-> +	/* wl12xx GPIO inputs and SDIO pins */
-> +	wl12xx_pins: pinmux_wl12xx_pins {
-> +		pinctrl-single,pins = <
-> +			0x38 0x103	/* gpmc_ncs2.gpio_52 INPUT | MODE3 */
-> +			0x3a 0x103	/* gpmc_ncs3.gpio_53 INPUT | MODE3 */
-> +			0x108 0x118	/* sdmmc5_clk.sdmmc5_clk INPUT_PULLUP | MODE0 */
-> +			0x10a 0x118	/* sdmmc5_cmd.sdmmc5_cmd INPUT_PULLUP | MODE0 */
-> +			0x10c 0x118	/* sdmmc5_dat0.sdmmc5_dat0 INPUT_PULLUP | MODE0 */
-> +			0x10e 0x118	/* sdmmc5_dat1.sdmmc5_dat1 INPUT_PULLUP | MODE0 */
-> +			0x110 0x118	/* sdmmc5_dat2.sdmmc5_dat2 INPUT_PULLUP | MODE0 */
-> +			0x112 0x118	/* sdmmc5_dat3.sdmmc5_dat3 INPUT_PULLUP | MODE0 */
-> +      		>;
-
-git am reports a "space before tab in indent" here.
-
-
--- 
-Luca.
-
+Yours,
+Linus Walleij
