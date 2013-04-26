@@ -1,105 +1,82 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH] of: Set the DMA mask to 64 bits on ARM LPAE systems
-Date: Fri, 26 Apr 2013 11:00:02 +0100
-Message-ID: <20130426100001.GB5007@localhost.cambridge.arm.com>
-References: <1366764649-10342-1-git-send-email-lauraa@codeaurora.org>
- <20130425133315.GA7157@localhost.cambridge.arm.com>
- <51796365.5030405@codeaurora.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH v3 02/17] Documentation: devicetree: arm: cpus/cpu
+ nodes bindings updates
+Date: Fri, 26 Apr 2013 11:18:40 +0100
+Message-ID: <20130426101839.GA3093@e102568-lin.cambridge.arm.com>
+References: <1366824502-19729-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1366824502-19729-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <CAL_JsqL2QOjTffogB6g7VK7oRUwDAmJpr=36uvFXjd+hpBL89A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAL_JsqL2QOjTffogB6g7VK7oRUwDAmJpr=36uvFXjd+hpBL89A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <51796365.5030405@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Laura Abbott <lauraa@codeaurora.org>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 25, 2013 at 06:09:57PM +0100, Laura Abbott wrote:
-> On 4/25/2013 6:33 AM, Catalin Marinas wrote:
-> > On Wed, Apr 24, 2013 at 01:50:49AM +0100, Laura Abbott wrote:
-> >> By default on ARM systems, the coherent DMA mask (lowest
-> >> address) is set to ~0 or 0xFFFFFFFFFFFFFFFF. Currently,
-> >> of_platform_device_create_pdata sets the coherent DMA mask to
-> >> 32 bits. This prevents coherent dma allocations from working by default
-> >> without clients setting the DMA mask. Rather than make every client
-> >> on an LPAE system set the mask, set the mask to a 64 bit value on
-> >> ARM LPAE systems.
-> >>
-> >> Signed-off-by: Laura Abbott <lauraa@codeaurora.org>
-> >> ---
-> >>   drivers/of/platform.c |    4 ++++
-> >>   1 files changed, 4 insertions(+), 0 deletions(-)
-> >>
-> >> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> >> index 0970505..18b69c1 100644
-> >> --- a/drivers/of/platform.c
-> >> +++ b/drivers/of/platform.c
-> >> @@ -214,7 +214,11 @@ struct platform_device *of_platform_device_create_pdata(
-> >>   #if defined(CONFIG_MICROBLAZE)
-> >>   	dev->archdata.dma_mask = 0xffffffffUL;
-> >>   #endif
-> >> +#ifdef CONFIG_ARM_LPAE
-> >> +	dev->dev.coherent_dma_mask = DMA_BIT_MASK(64);
-> >> +#else
-> >>   	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
-> >> +#endif
+On Fri, Apr 26, 2013 at 03:51:10AM +0100, Rob Herring wrote:
+> On Wed, Apr 24, 2013 at 12:28 PM, Lorenzo Pieralisi
+> <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+> > In order to extend the current cpu nodes bindings to newer CPUs
+> > inclusive of AArch64 and to update support for older ARM CPUs this
+> > patch updates device tree documentation for the cpu nodes bindings.
 > >
-> > I wouldn't add CONFIG_ARM_LPAE checks in here, you can use
-> > CONFIG_ARCH_DMA_ADDR_T_64BIT (types.h uses this for the dma_addr_t
-> > definition).
+> > Main changes:
+> >     - adds 64-bit bindings
+> >     - define usage of #address-cells
+> >     - define 32/64 dts compatibility settings
+> >     - defines behaviour on pre and post v7 uniprocessor systems
+> >     - adds ARM 11MPcore specific reg property definition
 > >
+> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> > ---
 > 
-> I thought about this as well but in arch/arm/mm/mm.h:
+> [...]
 > 
-> #ifdef CONFIG_ZONE_DMA
-> extern phys_addr_t arm_dma_limit;
-> #else
-> #define arm_dma_limit ((phys_addr_t)~0)
-> #endif
+> > +       - enable-method
+> > +               Value type: <stringlist>
+> > +               Usage and definition depend on ARM architecture version and
+> > +               configuration:
+> > +                       # On ARM v8 64-bit systems running the OS in AArch64,
+> > +                         this property is required and must be "spin-table".
+> 
+> What about PSCI?
 
-Russell replied already on the meaning of this variable, so I don't
-think its type is relevant here. It is also used when calling
-dma_contiguous_reserve() which takes a phys_addr_t.
+I should add it, at least for ARM v8.
 
-> arm_dma_limit is explicitly cast to phys_addr_t, which means that 
-> arm_dma_limit will be always be sizeof(phys_addr_t) regardless of 
-> sizeof(dma_addr_t). Is it safe to assume that 
-> CONFIG_ARCH_DMA_ADDR_T_64BIT will always be selected if 
-> sizeof(phys_addr_t) == 8? If not, we've defeated the point of the patch.
+> I don't think the ePAPR spin-table definition is sufficient for ARM.
+> How do you define wake up by SGI or sev instruction.
 
-sizeof(dma_addr_t) <= sizeof(phys_addr_t). I had this discussion with
-Russell when upstreaming the LPAE patches and the conclusion was that
-while the phys_addr_t is 64-bit with LPAE, the dma_addr_t size is a
-feature of the SoC and must be selected independently. However, I think
-with multi-platform support and LPAE enabled, we should probably set the
-dma_addr_t to 64-bit.
+I think Will described the wfe/sev mechanism in:
 
-> Alternatively, should the type of arm_dma_limit be dma_addr_t instead of 
-> phys_addr_t?
+Documentation/arm64/booting.txt
 
-arm_dma_limit should be phys_addr_t since this is an address as seen by
-the CPU. dma_addr_t OTOH is a bus address as seen by the device. You can
-in theory have a DMA buffer with physical address beyond 32-bit (from a
-CPU perspective) but with a bus address withing 32-bit as seen by the
-device.
+and the ePAPR does the same in 5.5.2.2/5.5.2.3. Since this is a document
+describing cpus/cpu nodes bindings I assume that description does not
+belong here. Question is: do we need to specify an ARM implementation
+specific enable-method to describe SGI/sev wake-up (ePAPR 5.5.3) ?
 
-There is some confusion in the kernel (you can google for past
-discussions) around the meaning of the DMA mask. If your RAM starts at
-0, it doesn't matter much and there are several such assumptions in the
-kernel.
+> > +                       # On ARM 32-bit systems or ARM v8 systems running
+> > +                         the OS in AArch32 this property is prohibited.
+> 
+> Why?
 
-So I still consider that you should use #ifdef
-CONFIG_ARCH_DMA_ADDR_T_64BIT and select this option on your platform.
+Because if we define it optional with no possible set of values basically
+it can be whatever string. I could define it optional with the same
+allowed values as ARM v8 even if it is currently ignored, at least in Linux,
+until PSCI implementations get merged.
 
--- 
-Catalin
+Thanks,
+Lorenzo
