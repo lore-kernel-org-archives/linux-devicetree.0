@@ -1,54 +1,128 @@
-From: Russell King <rmk@arm.linux.org.uk>
-Subject: Re: [PATCH 2/2] thermal: db8500_cpufreq_cooling: remove usage of
-	IS_ERR_OR_NULL()
-Date: Fri, 26 Apr 2013 12:03:34 +0100
-Message-ID: <20130426110334.GB4862@flint.arm.linux.org.uk>
-References: <1366899214-22639-1-git-send-email-eduardo.valentin@ti.com> <1366899214-22639-3-git-send-email-eduardo.valentin@ti.com> <20130425174635.GB25783@flint.arm.linux.org.uk> <20130426101908.GA23032@balto.lan>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCHv2 1/4] Documentation: Add memory mapped ARM architected
+ timer binding
+Date: Fri, 26 Apr 2013 12:09:29 +0100
+Message-ID: <20130426110929.GB11648@e106331-lin.cambridge.arm.com>
+References: <1365812863-5367-1-git-send-email-sboyd@codeaurora.org>
+ <1365812863-5367-2-git-send-email-sboyd@codeaurora.org>
+ <516C6F12.5020208@gmail.com>
+ <516C7231.6060305@codeaurora.org>
+ <5179A488.5050102@gmail.com>
+ <5179B2B2.8000201@codeaurora.org>
+ <5179B6ED.9000301@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130426101908.GA23032@balto.lan>
-Sender: linux-pm-owner@vger.kernel.org
-To: Fabio Baltieri <fabio.baltieri@linaro.org>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Hongbo Zhang <hongbo.zhang@stericsson.com>, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>
+In-Reply-To: <5179B6ED.9000301@gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 26, 2013 at 12:19:08PM +0200, Fabio Baltieri wrote:
-> On Thu, Apr 25, 2013 at 06:46:35PM +0100, Russell King wrote:
-> > On Thu, Apr 25, 2013 at 10:13:34AM -0400, Eduardo Valentin wrote:
-> > > diff --git a/drivers/thermal/db8500_cpufreq_cooling.c b/drivers/thermal/db8500_cpufreq_cooling.c
-> > > index 21419851..786d192 100644
-> > > --- a/drivers/thermal/db8500_cpufreq_cooling.c
-> > > +++ b/drivers/thermal/db8500_cpufreq_cooling.c
-> > > @@ -37,7 +37,7 @@ static int db8500_cpufreq_cooling_probe(struct platform_device *pdev)
-> > >  	cpumask_set_cpu(0, &mask_val);
-> > >  	cdev = cpufreq_cooling_register(&mask_val);
-> > >  
-> > > -	if (IS_ERR_OR_NULL(cdev)) {
-> > > +	if (IS_ERR(cdev)) {
-> > >  		dev_err(&pdev->dev, "Failed to register cooling device\n");
-> > >  		return PTR_ERR(cdev);
+On Fri, Apr 26, 2013 at 12:06:21AM +0100, Rob Herring wrote:
+> On 04/25/2013 05:48 PM, Stephen Boyd wrote:
+> > On 04/25/13 14:47, Rob Herring wrote:
+> >> On 04/15/2013 04:33 PM, Stephen Boyd wrote:
+> >>> On 04/15/13 14:20, Rob Herring wrote:
+> >>>> On Fri, Apr 12, 2013 at 7:27 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> >>>>> @@ -26,3 +30,52 @@ Example:
+> >>>>>                              <1 10 0xf08>;
+> >>>>>                 clock-frequency = <100000000>;
+> >>>>>         };
+> >>>>> +
+> >>>>> +** Memory mapped timer node properties
+> >>>>> +
+> >>>>> +- compatible : Should at least contain "arm,armv7-timer-mem".
+> >>>> Everything about this timer is architecturally defined? If not, let's
+> >>>> use a more specific name.
+> >>> I'm not sure I'm following you, but everything described here is part of
+> >>> the ARM definition. What would be a more specific name?
+> >> Something that corresponds to the particular implementation like
+> >> cortex-a15 (obviously not an example that has this). I'm fine with
+> >> leaving this for now, but would like to see that added when specific SOC
+> >> dts are added. Better to be specific in case we need to use it for
+> >> something like errata work-arounds. Of course we haven't done that so
+> >> far with the arch timer bindings...
 > > 
-> > Correct.  cpufreq_cooling_register() returns either an error-pointer or
-> > a valid pointer.
+> > Agreed. I'm under the impression that most of our compatible fields
+> > should be more specific than they currently are so we can workaround hw
+> > bugs like you say. Perhaps the catch all generic one should just be
+> > "arm,arm-timer-mem" since it isn't tied to any particular CPU type?
+> > 
+> >>
+> >>>>> +
+> >>>>> +- clock-frequency : The frequency of the main counter, in Hz. Optional.
+> >>>>> +
+> >>>>> +- reg : The control frame base address.
+> >>>>> +
+> >>>>> +Note that #address-cells, #size-cells, and ranges shall be present to ensure
+> >>>>> +the CPU can address a frame's registers.
+> >>>>> +
+> >>>>> +Frame:
+> >>>>> +
+> >>>>> +- frame-number: 0 to 7.
+> >>>> I'd really like to get rid of the frame numbers and sub-nodes. Is the
+> >>>> frame number significant to software?
+> >>> We need the frame number to read and write registers in the control
+> >>> frame (the first base in the parent node). We currently use it to
+> >>> determine if a frame has support for the virtual timer by reading the
+> >>> CNTTIDR (a register with 4 bits per frame describing capabilities). If
+> >>> we wanted to control access to the second view of a frame we would also
+> >>> need to configure the CNTPL0ACRn register that pertains to the frame
+> >>> we're controlling. Without a frame number we wouldn't know which
+> >>> register to write.
+> >> I've gone thru the memory mapped part of the spec now, so I think I
+> >> understand things better. I see how the frame number is needed, but...
+> >>
+> >> The control base is only accessible in secure or hyp mode. How does a
+> >> guest know that it is a guest and can't map the control base? Seems like
+> >> we need to allow a subset of the binding that is just a reg and
+> >> interrupts properties without the frame sub nodes.
+> > 
+> > I don't see that part. My understanding is that the control base is
+> > accessible in non-secure mode and by the guests. There are certain
+> > registers within that base that are only accessible in secure mode
+> > though: CNTFRQ and CNTNSAR. Also some registers are configurable:
+> > CNTACRn and CNTVOFFN. CNTVOFFN is only accessible in the hypervisor.
 > 
-> Acked-by: Fabio Baltieri <fabio.baltieri@linaro.org>
+> The example is section E.8 seems to say otherwise. Perhaps Mark R can
+> comment further.
+
+I believe E.8 is an example system, not the general case.
+
+However, I don't see anything limiting accesses to CNTVOFFn to the hypervisor.
+As far as I can see, if the guest has access to the CNTCTLBase frame, it has
+the same access privileges as the host (and hypervisor).
+
+CNTACRn and CNTVOFFn only seem to be configurable with regard to
+secure/non-secure accesses.
+
 > 
-> ...but more of these are going to appear forever, was the proposed
-> removal of IS_ERR_OR_NULL rejected?  Can't find any new message about
-> that on the list.
+> > We don't really care about CNTFRQ because it's duplicated into each
+> > view. We do care about CNTNSAR. Luckily the spec "just works" there in
+> > the sense that we can use CNTTIDR in conjunction with CNTACRn and
+> > determine if we have access to a frame we're interested in if the
+> > CNTTIDR bits say the frame is present and the CNTACRn register says we
+> > can access it. If not then it must be locked down for secure users.
+> > 
+> > Unfortunately hardware doesn't have a way to say that a particular frame
+> > is reserved for the hypervisor or the guest kernel/userspace. We need
+> > some help from software, so we have the status property express that a
+> > particular frame is available. We have to assume the DT is going to be
+> > different depending on if you're the hypervisor or the guest. That's a
+> > valid assumption right? Otherwise I hope we can do some trapping of the
+> > guest's mapping to the control base and then rewrite what they read so
+> > that they only see the frame that we want to be available to them.
+> 
+> Yeah, I believe the only way to prevent access within non-secure world
+> is with the MMU. So I guess the example is just policy that the
+> hypervisor would/may not create a stage2 mapping. You still have the
+> same issue that the guest should not be passed the control base. You
+> could make the reg property optional, but then what do you do with the
+> node name?
 
-We first need to get rid of the existing users of it - I've got rid of
-most of those in arch/arm - but it seems that I never pushed that in the
-last merge window.
+I'm not sure on if and how we'd want to expose this to guests. I'm adding Marc
+Zyngier to Cc, he may have some relevant thoughts.
 
-Really it needs the cooperation of everyone to make it happen across the
-tree with everyone removing IS_ERR_OR_NULL() in their subsystem.  There
-are currently 366 instances of this macro being used in the entire tree
-which is far too many to even mark it as deprecated.
-
--- 
-Russell King
- Linux kernel    2.6 ARM Linux   - http://www.arm.linux.org.uk/
- maintainer of:
+Mark.
