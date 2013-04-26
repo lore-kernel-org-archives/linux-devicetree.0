@@ -1,43 +1,55 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH 0/2] ARM: dts: OMAP36xx/OMAP4460 Fix CPU OPP voltages
-Date: Fri, 26 Apr 2013 12:39:31 -0500
-Message-ID: <1366997973-19120-1-git-send-email-nm@ti.com>
+From: Laura Abbott <lauraa@codeaurora.org>
+Subject: [PATCH v2] of: Set the DMA mask to 64 bits when dma_addr_t is 64-bits
+Date: Fri, 26 Apr 2013 11:06:05 -0700
+Message-ID: <1366999565-19498-1-git-send-email-lauraa@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Catalin Marinas <catalin.marinas@arm.com>, Rob Herring <robherring2@gmail.com>
+Cc: Laura Abbott <lauraa@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-It seems that I have not been paying close attention to
-actual voltage value seen on scope to map it back to verify the validity
-of the voltage value. Even though I did verify[1] that voltage did scale to
-values in DT entries, the values in the case of 3630 and 4460 were lower than
-what the spec voltage was as per opp_data files.
+Currently, of_platform_device_create_pdata always sets the
+coherent DMA mask to 32 bits. On ARM systems without CONFIG_ZONE_DMA,
+arm_dma_limit gets set to ~0 or 0xFFFFFFFFFFFFFFFF on LPAE based
+systems. Since arm_dma_limit represents the smallest dma_mask
+on the system, the default of 32 bits prevents any dma_coherent
+allocation from succeeding unless clients manually set the
+dma mask first. Rather than make every client on an LPAE system set
+the mask, set the mask to a 64 bit value on systems with 64-bit
+dma addresses.
 
-This series is based off Benoit's tree here:
-http://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.10/dts
+Signed-off-by: Laura Abbott <lauraa@codeaurora.org>
+---
+ drivers/of/platform.c |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
 
-Commit ID's in the patches to indicate regressions are from there as well.
-Would be good to have this fix merged to 3.10 dts entries.
-I have cross verified that OMAP3430,3630,4430 and 4460 entries now match that
-of corresponding opp*_data.c
-
-My sincere apologies on the oversight.
-
-Nishanth Menon (2):
-  ARM: dts: OMAP36xx: Fix CPU OPP voltages
-  ARM: dts: OMAP4460: Fix CPU OPP voltages
-
- arch/arm/boot/dts/omap36xx.dtsi |    6 +++---
- arch/arm/boot/dts/omap4460.dtsi |    6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
-
-[1] http://marc.info/?l=linux-arm-kernel&m=136580742724210&w=2
-Regards,
-Nishanth Menon
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 0970505..c669ab4 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -214,7 +214,11 @@ struct platform_device *of_platform_device_create_pdata(
+ #if defined(CONFIG_MICROBLAZE)
+ 	dev->archdata.dma_mask = 0xffffffffUL;
+ #endif
++#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
++	dev->dev.coherent_dma_mask = DMA_BIT_MASK(64);
++#else
+ 	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
++#endif
+ 	dev->dev.bus = &platform_bus_type;
+ 	dev->dev.platform_data = platform_data;
+ 
 -- 
-1.7.9.5
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
