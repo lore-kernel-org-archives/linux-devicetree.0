@@ -1,100 +1,77 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 3/3] ARM: dts: Add muxing for wl12xx on the SDIO bus for
- blaze
-Date: Thu, 25 Apr 2013 20:52:16 -0700
-Message-ID: <20130426035216.26065.32776.stgit@muffinssi.local>
-References: <20130426034858.26065.65118.stgit@muffinssi.local>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH v2 0/4] Thermal:exynos: Thermal Measurement Unit fix and
+ Samsung SoCs support
+Date: Fri, 26 Apr 2013 10:35:21 +0530
+Message-ID: <CAK9yfHz63uGH+HwpmGQ9gzsqa4AsKEQ47QR8TrfJ4joUP2kZYw@mail.gmail.com>
+References: <1366389493-8239-1-git-send-email-l.majewski@samsung.com>
+	<1366893045-31586-1-git-send-email-l.majewski@samsung.com>
+	<51794E3A.10009@ti.com>
+	<20130425182843.70a2d7d3@amdc308.digital.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130426034858.26065.65118.stgit@muffinssi.local>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Luciano Coelho <coelho@ti.com>, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Ruslan Bilovol <ruslan.bilovol@ti.com>, Rajendra Nayak <rnayak@ti.com>, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130425182843.70a2d7d3@amdc308.digital.local>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lukasz Majewski <l.majewski@samsung.com>
+Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Zhang Rui <rui.zhang@intel.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, t.figa@samsung.com, Myungjoo Ham <myungjoo.ham@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This should work assuming the board-4430sdp.c works, but it seems
-that I don't have the "1283 PG 2.21 connectivity device" on
-my blaze. Anybody got a spare connectivity device for blaze?
+ Hi Eduardo,
 
-Also, if somebody has the schematics, please provide a patch
-for the missing GPIO muxes for blaze, see the the panda for
-what's currently missing.
+On 25 April 2013 21:58, Lukasz Majewski <l.majewski@samsung.com> wrote:
+> Hi Eduardo,
+>
+>> Hello Lukasz,
+>>
+>> On 25-04-2013 08:30, Lukasz Majewski wrote:
+>> > This patch series provide various fixes for TMU block.
+>> > First of all it fixes a problem with get_cpu_frequency() lockup at
+>> > cpu_cooling.c.
+>> >
+>> > Secondly a proper regulator definition (VDD_TS) has been added.
+>> > Moreover device tree definitions and documentation entry are now in
+>> > place.
+>> >
+>> > Dependencies (those patches shall be applied on top of):
+>> > - "clk: exynos4: Add clock entries for TMU"
+>>
+>> Is this one same as  [1/6] clk:exynos4:TMU Thermal Measurement Unit
+>> clock added to common clock framework in your previous series?
 
-Cc: Luciano Coelho <coelho@ti.com>
-Cc: Benoit Cousson <b-cousson@ti.com>
-Cc: Rajendra Nayak <rnayak@ti.com>
-Cc: Ruslan Bilovol <ruslan.bilovol@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/omap4-sdp.dts |   39 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
+The one sent by Lukasz has been dropped as an equivalent patch sent by
+me is already under review.
 
-diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-index a35d9cd..c13c483 100644
---- a/arch/arm/boot/dts/omap4-sdp.dts
-+++ b/arch/arm/boot/dts/omap4-sdp.dts
-@@ -140,6 +140,19 @@
- 			"DMic", "Digital Mic",
- 			"Digital Mic", "Digital Mic1 Bias";
- 	};
-+
-+	/* regulator for wl12xx on sdio5 */
-+	wl12xx_vmmc: wl12xx_vmmc {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wl12xx_gpio>;
-+		compatible = "regulator-fixed";
-+		regulator-name = "vwl1271";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		gpio = <&gpio2 22 0>;
-+		startup-delay-us = <70000>;
-+		enable-active-high;
-+	};
- };
- 
- &omap4_pmx_core {
-@@ -275,6 +288,26 @@
- 			0xf0 0x118     /* i2c4_sda PULLUP | INPUTENABLE | MODE0 */
- 		>;
- 	};
-+
-+	/* wl12xx GPIO output for WLAN_EN */
-+	wl12xx_gpio: pinmux_wl12xx_gpio {
-+		pinctrl-single,pins = <
-+			0x3c 0x3	/* gpmc_nwp.gpio_54 OUTPUT | MODE3 */
-+		>;
-+	};
-+
-+	/* wl12xx GPIO inputs and SDIO pins */
-+	wl12xx_pins: pinmux_wl12xx_pins {
-+		pinctrl-single,pins = <
-+			0x3a 0x103	/* gpmc_ncs3.gpio_53 INPUT | MODE3 */
-+			0x108 0x118	/* sdmmc5_clk.sdmmc5_clk INPUT_PULLUP | MODE0 */
-+			0x10a 0x118	/* sdmmc5_cmd.sdmmc5_cmd INPUT_PULLUP | MODE0 */
-+			0x10c 0x118	/* sdmmc5_dat0.sdmmc5_dat0 INPUT_PULLUP | MODE0 */
-+			0x10e 0x118	/* sdmmc5_dat1.sdmmc5_dat1 INPUT_PULLUP | MODE0 */
-+			0x110 0x118	/* sdmmc5_dat2.sdmmc5_dat2 INPUT_PULLUP | MODE0 */
-+			0x112 0x118	/* sdmmc5_dat3.sdmmc5_dat3 INPUT_PULLUP | MODE0 */
-+      		>;
-+	};
- };
- 
- &i2c1 {
-@@ -400,8 +433,12 @@
- };
- 
- &mmc5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&wl12xx_pins>;
-+	vmmc-supply = <&wl12xx_vmmc>;
-+	non-removable;
- 	bus-width = <4>;
--	ti,non-removable;
-+	cap-power-off-card;
- };
- 
- &emif1 {
+>
+> Yes, this is a similar patch. However I've changed more clocks to
+> clk_prepare_enable (clk_unprepare_disable). I've spoken about this with
+> Sachin recently.
 
+The above description is actually for the below patch. Lukasz will
+test and see if additional changes are needed.
+If so he will send an incremental patch to address it.
+
+>
+>>
+>> > - "Thermal: exynos: Add clk_{un}prepare APIs"
+>> Same as
+>> thermal:exynos4: TMU Common clock framework support for TMU (Thermal
+>> Monitoring Unit)
+>> in your previous series?
+>
+
+>
+>>
+>> > - "Thermal: exynos: Add compatible string for exynos4412"
+
+These 2 have been merged in the thermal next tree.
+
+>> >
+>> This should be same as thermal:exynos4: Enable support for Exynos4412
+>> SoCs in your previous series?
+>
+> Yes.
+>
+
+-- 
+With warm regards,
+Sachin
