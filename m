@@ -1,35 +1,54 @@
-From: Luciano Coelho <coelho@ti.com>
-Subject: Re: [PATCH 1/3] ARM: OMAP2+: Legacy support for wl12xx when booted
- with devicetree
-Date: Fri, 26 Apr 2013 14:00:32 +0300
-Message-ID: <1366974032.4029.31.camel@cumari.coelho.fi>
-References: <20130426034858.26065.65118.stgit@muffinssi.local>
-	 <20130426035210.26065.39995.stgit@muffinssi.local>
-	 <0104F687-1726-476D-B2DF-7E72223B127A@dominion.thruhere.net>
+From: Russell King <rmk@arm.linux.org.uk>
+Subject: Re: [PATCH 2/2] thermal: db8500_cpufreq_cooling: remove usage of
+	IS_ERR_OR_NULL()
+Date: Fri, 26 Apr 2013 12:03:34 +0100
+Message-ID: <20130426110334.GB4862@flint.arm.linux.org.uk>
+References: <1366899214-22639-1-git-send-email-eduardo.valentin@ti.com> <1366899214-22639-3-git-send-email-eduardo.valentin@ti.com> <20130425174635.GB25783@flint.arm.linux.org.uk> <20130426101908.GA23032@balto.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <0104F687-1726-476D-B2DF-7E72223B127A@dominion.thruhere.net>
-Sender: linux-omap-owner@vger.kernel.org
-To: Koen Kooi <koen@dominion.thruhere.net>
-Cc: Tony Lindgren <tony@atomide.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, "linux-omap@vger.kernel.org List" <linux-omap@vger.kernel.org>, Benoit Cousson <b-cousson@ti.com>, Rajendra Nayak <rnayak@ti.com>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, Jason Kridner <jkridner@beagleboard.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130426101908.GA23032@balto.lan>
+Sender: linux-pm-owner@vger.kernel.org
+To: Fabio Baltieri <fabio.baltieri@linaro.org>
+Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Hongbo Zhang <hongbo.zhang@stericsson.com>, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Koen,
-
-On Fri, 2013-04-26 at 11:33 +0200, Koen Kooi wrote:
-> Op 26 apr. 2013, om 05:52 heeft Tony Lindgren <tony@atomide.com> het volgende geschreven:
+On Fri, Apr 26, 2013 at 12:19:08PM +0200, Fabio Baltieri wrote:
+> On Thu, Apr 25, 2013 at 06:46:35PM +0100, Russell King wrote:
+> > On Thu, Apr 25, 2013 at 10:13:34AM -0400, Eduardo Valentin wrote:
+> > > diff --git a/drivers/thermal/db8500_cpufreq_cooling.c b/drivers/thermal/db8500_cpufreq_cooling.c
+> > > index 21419851..786d192 100644
+> > > --- a/drivers/thermal/db8500_cpufreq_cooling.c
+> > > +++ b/drivers/thermal/db8500_cpufreq_cooling.c
+> > > @@ -37,7 +37,7 @@ static int db8500_cpufreq_cooling_probe(struct platform_device *pdev)
+> > >  	cpumask_set_cpu(0, &mask_val);
+> > >  	cdev = cpufreq_cooling_register(&mask_val);
+> > >  
+> > > -	if (IS_ERR_OR_NULL(cdev)) {
+> > > +	if (IS_ERR(cdev)) {
+> > >  		dev_err(&pdev->dev, "Failed to register cooling device\n");
+> > >  		return PTR_ERR(cdev);
+> > 
+> > Correct.  cpufreq_cooling_register() returns either an error-pointer or
+> > a valid pointer.
 > 
-> > Without WLAN we cannot switch omap4 to use device tree
-> > only booting. This patch can be reverted when the
-> > binding for wl12xx is added.
+> Acked-by: Fabio Baltieri <fabio.baltieri@linaro.org>
 > 
-> How much boards am I allowed to add to this? I need to get the wl12xx wifi expansionboards for beagleboard, beagleboard xM and beaglebone working with DT :)
+> ...but more of these are going to appear forever, was the proposed
+> removal of IS_ERR_OR_NULL rejected?  Can't find any new message about
+> that on the list.
 
-Do you know where I can get a wl12xx wifi expansion board for
-beaglebone?
+We first need to get rid of the existing users of it - I've got rid of
+most of those in arch/arm - but it seems that I never pushed that in the
+last merge window.
+
+Really it needs the cooperation of everyone to make it happen across the
+tree with everyone removing IS_ERR_OR_NULL() in their subsystem.  There
+are currently 366 instances of this macro being used in the entire tree
+which is far too many to even mark it as deprecated.
 
 -- 
-Luca.
-
+Russell King
+ Linux kernel    2.6 ARM Linux   - http://www.arm.linux.org.uk/
+ maintainer of:
