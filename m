@@ -1,194 +1,91 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: [PATCH] media: i2c: tvp514x: add OF support
-Date: Fri, 26 Apr 2013 16:53:50 +0530
-Message-ID: <1366975430-31806-1-git-send-email-prabhakar.csengg@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: LMML <linux-media@vger.kernel.org>
-Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH v3 02/17] Documentation: devicetree: arm: cpus/cpu
+ nodes bindings updates
+Date: Fri, 26 Apr 2013 12:48:11 +0100
+Message-ID: <20130426114811.GD11648@e106331-lin.cambridge.arm.com>
+References: <1366824502-19729-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1366824502-19729-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <CAL_JsqL2QOjTffogB6g7VK7oRUwDAmJpr=36uvFXjd+hpBL89A@mail.gmail.com>
+ <20130426101839.GA3093@e102568-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130426101839.GA3093-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+On Fri, Apr 26, 2013 at 11:18:40AM +0100, Lorenzo Pieralisi wrote:
+> On Fri, Apr 26, 2013 at 03:51:10AM +0100, Rob Herring wrote:
+> > On Wed, Apr 24, 2013 at 12:28 PM, Lorenzo Pieralisi
+> > <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+> > > In order to extend the current cpu nodes bindings to newer CPUs
+> > > inclusive of AArch64 and to update support for older ARM CPUs this
+> > > patch updates device tree documentation for the cpu nodes bindings.
+> > >
+> > > Main changes:
+> > >     - adds 64-bit bindings
+> > >     - define usage of #address-cells
+> > >     - define 32/64 dts compatibility settings
+> > >     - defines behaviour on pre and post v7 uniprocessor systems
+> > >     - adds ARM 11MPcore specific reg property definition
+> > >
+> > > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> > > ---
+> > 
+> > [...]
+> > 
+> > > +       - enable-method
+> > > +               Value type: <stringlist>
+> > > +               Usage and definition depend on ARM architecture version and
+> > > +               configuration:
+> > > +                       # On ARM v8 64-bit systems running the OS in AArch64,
+> > > +                         this property is required and must be "spin-table".
+> > 
+> > What about PSCI?
+> 
+> I should add it, at least for ARM v8.
 
-add OF support for the tvp514x driver.
+It's worth noting KVM uses it on v7 too, so it should be available for CPUs
+that are v7+.
 
-Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: davinci-linux-open-source@linux.davincidsp.com
----
- RFC v1: https://patchwork.kernel.org/patch/2030061/
- RFC v2: https://patchwork.kernel.org/patch/2061811/
+> 
+> > I don't think the ePAPR spin-table definition is sufficient for ARM.
+> > How do you define wake up by SGI or sev instruction.
+> 
+> I think Will described the wfe/sev mechanism in:
+> 
+> Documentation/arm64/booting.txt
+> 
+> and the ePAPR does the same in 5.5.2.2/5.5.2.3. Since this is a document
+> describing cpus/cpu nodes bindings I assume that description does not
+> belong here. Question is: do we need to specify an ARM implementation
+> specific enable-method to describe SGI/sev wake-up (ePAPR 5.5.3) ?
+> 
+> > > +                       # On ARM 32-bit systems or ARM v8 systems running
+> > > +                         the OS in AArch32 this property is prohibited.
+> > 
+> > Why?
+> 
+> Because if we define it optional with no possible set of values basically
+> it can be whatever string. I could define it optional with the same
+> allowed values as ARM v8 even if it is currently ignored, at least in Linux,
+> until PSCI implementations get merged.
 
- Changes for current version from RFC v2:
- 1: Fixed review comments pointed by Sylwester.
+I believe kvmtool sets the enable-method to "psci" on v7, though I may be
+mistaken. Adding Marc to Cc as he knows better.
 
- .../devicetree/bindings/media/i2c/tvp514x.txt      |   38 +++++++++++
- drivers/media/i2c/tvp514x.c                        |   67 +++++++++++++++++--
- 2 files changed, 98 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp514x.txt
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
-new file mode 100644
-index 0000000..618640a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
-@@ -0,0 +1,38 @@
-+* Texas Instruments TVP514x video decoder
-+
-+The TVP5146/TVP5146m2/TVP5147/TVP5147m1 device is high quality, single-chip
-+digital video decoder that digitizes and decodes all popular baseband analog
-+video formats into digital video component. The tvp514x decoder supports analog-
-+to-digital (A/D) conversion of component RGB and YPbPr signals as well as A/D
-+conversion and decoding of NTSC, PAL and SECAM composite and S-video into
-+component YCbCr.
-+
-+Required Properties :
-+- compatible: Must be "ti,tvp514x-decoder"
-+- hsync-active: HSYNC Polarity configuration for current interface.
-+- vsync-active: VSYNC Polarity configuration for current interface.
-+- pclk-sample: Clock polarity of the current interface.
-+
-+Example:
-+
-+i2c0@1c22000 {
-+	...
-+	...
-+
-+	tvp514x@5c {
-+		compatible = "ti,tvp514x-decoder";
-+		reg = <0x5c>;
-+
-+		port {
-+			tvp514x_1: endpoint {
-+				/* Active high (Defaults to 0) */
-+				hsync-active = <1>;
-+				/* Active high (Defaults to 0) */
-+				vsync-active = <1>;
-+				/* Active low (Defaults to 0) */
-+				pclk-sample = <0>;
-+			};
-+		};
-+	};
-+	...
-+};
-diff --git a/drivers/media/i2c/tvp514x.c b/drivers/media/i2c/tvp514x.c
-index 887bd93..d37b85e 100644
---- a/drivers/media/i2c/tvp514x.c
-+++ b/drivers/media/i2c/tvp514x.c
-@@ -35,7 +35,9 @@
- #include <linux/videodev2.h>
- #include <linux/module.h>
- #include <linux/v4l2-mediabus.h>
-+#include <linux/of_device.h>
- 
-+#include <media/v4l2-of.h>
- #include <media/v4l2-async.h>
- #include <media/v4l2-device.h>
- #include <media/v4l2-common.h>
-@@ -1056,6 +1058,58 @@ static struct tvp514x_decoder tvp514x_dev = {
- 
- };
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id tvp514x_of_match[] = {
-+	{.compatible = "ti,tvp5146-decoder", },
-+	{.compatible = "ti,tvp5146m2-decoder", },
-+	{.compatible = "ti,tvp5147-decoder", },
-+	{.compatible = "ti,tvp5147m1-decoder", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, tvp514x_of_match);
-+
-+static void tvp514x_get_pdata(struct i2c_client *client,
-+			      struct tvp514x_decoder *decoder)
-+{
-+	if (!client->dev.platform_data && client->dev.of_node) {
-+		struct device_node *endpoint;
-+
-+		endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
-+		if (endpoint) {
-+			struct tvp514x_platform_data *pdata;
-+			struct v4l2_of_endpoint bus_cfg;
-+			unsigned int flags;
-+
-+			pdata =
-+			   devm_kzalloc(&client->dev,
-+					sizeof(struct tvp514x_platform_data),
-+					GFP_KERNEL);
-+			if (!pdata)
-+				return;
-+
-+			v4l2_of_parse_endpoint(endpoint, &bus_cfg);
-+			flags = bus_cfg.bus.parallel.flags;
-+
-+			if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
-+				pdata->hs_polarity = 1;
-+			if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
-+				pdata->vs_polarity = 1;
-+			if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
-+				pdata->clk_polarity = 1;
-+			decoder->pdata = pdata;
-+		}
-+	}
-+}
-+#else
-+#define tvp514x_of_match NULL
-+
-+static void tvp514x_get_pdata(struct i2c_client *client,
-+			      struct tvp514x_decoder *decoder)
-+{
-+	decoder->pdata = client->dev.platform_data;
-+}
-+#endif
-+
- /**
-  * tvp514x_probe() - decoder driver i2c probe handler
-  * @client: i2c driver client device structure
-@@ -1075,11 +1129,6 @@ tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
- 		return -EIO;
- 
--	if (!client->dev.platform_data) {
--		v4l2_err(client, "No platform data!!\n");
--		return -ENODEV;
--	}
--
- 	decoder = devm_kzalloc(&client->dev, sizeof(*decoder), GFP_KERNEL);
- 	if (!decoder)
- 		return -ENOMEM;
-@@ -1090,8 +1139,11 @@ tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	memcpy(decoder->tvp514x_regs, tvp514x_reg_list_default,
- 			sizeof(tvp514x_reg_list_default));
- 
--	/* Copy board specific information here */
--	decoder->pdata = client->dev.platform_data;
-+	tvp514x_get_pdata(client, decoder);
-+	if (!decoder->pdata) {
-+		v4l2_err(client, "No platform data!!\n");
-+		return -EPROBE_DEFER;
-+	}
- 
- 	/**
- 	 * Fetch platform specific data, and configure the
-@@ -1242,6 +1294,7 @@ MODULE_DEVICE_TABLE(i2c, tvp514x_id);
- 
- static struct i2c_driver tvp514x_driver = {
- 	.driver = {
-+		.of_match_table = tvp514x_of_match,
- 		.owner = THIS_MODULE,
- 		.name = TVP514X_MODULE_NAME,
- 	},
--- 
-1.7.4.1
-
+Cheers,
+Mark.
