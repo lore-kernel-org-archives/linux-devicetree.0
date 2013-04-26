@@ -1,96 +1,261 @@
-From: Linus Walleij <linus.walleij@stericsson.com>
-Subject: [PATCH 05/23 v2] pinctrl: coh901: add device tree support
-Date: Fri, 26 Apr 2013 15:56:45 +0200
-Message-ID: <1366984605-23951-1-git-send-email-linus.walleij@stericsson.com>
+From: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Subject: [PATCH 06/23 v2] ARM: u300: basic device tree support
+Date: Fri, 26 Apr 2013 16:05:22 +0200
+Message-ID: <1366985122-28479-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-This makes it possible to probe the COH901 pinctrl driver from
-the device tree, and assigned the device tree node in the
-gpio_chip so we can look up cross-references from the device
-tree. Start grabbing the per-port (bank) IRQs by index instead
-of by name so we don't have to look up the IRQs by name going
-forward.
+This register the most basic peripherals and makes the
+U300 boot to prompt from a device tree.
 
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
 ChangeLog v1->v2:
-- Alter the driver to look up IRQ by index.
-- Alter the bindings accordingly.
+- Rename nodes in accordance with review comments from Arnd:
+  - timer0@x -> timer@x
+  - gpioN@x -> gpio@x
+  - pinctrl0@x -> pinctrl@x
+  - intc@0xx -> interrupt-controller@x
+  - uart@x -> serial@x
 ---
- .../devicetree/bindings/gpio/gpio-stericsson-coh901.txt      |  7 +++++++
- drivers/pinctrl/pinctrl-coh901.c                             | 12 ++++++++++--
- 2 files changed, 17 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-stericsson-coh901.txt
+ Documentation/devicetree/bindings/arm/ste-u300.txt |  9 +++
+ arch/arm/boot/dts/Makefile                         |  1 +
+ arch/arm/boot/dts/ste-u300.dts                     | 86 ++++++++++++++++++++++
+ arch/arm/mach-u300/core.c                          | 80 ++++++++++++++++++++
+ 4 files changed, 176 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/ste-u300.txt
+ create mode 100644 arch/arm/boot/dts/ste-u300.dts
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-stericsson-coh901.txt b/Documentation/devicetree/bindings/gpio/gpio-stericsson-coh901.txt
+diff --git a/Documentation/devicetree/bindings/arm/ste-u300.txt b/Documentation/devicetree/bindings/arm/ste-u300.txt
 new file mode 100644
-index 0000000..fd665b4
+index 0000000..222dca5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-stericsson-coh901.txt
-@@ -0,0 +1,7 @@
-+ST-Ericsson COH 901 571/3 GPIO controller
++++ b/Documentation/devicetree/bindings/arm/ste-u300.txt
+@@ -0,0 +1,9 @@
++ST-Ericsson U300 Device Tree Bindings
 +
-+Required properties:
-+- compatible: Compatible property value should be "stericsson,gpio-coh901"
-+- reg: Physical base address of the controller and length of memory mapped
-+  region.
-+- interrupts: the 0...n interrupts assigned to the different GPIO ports/banks.
-diff --git a/drivers/pinctrl/pinctrl-coh901.c b/drivers/pinctrl/pinctrl-coh901.c
-index 8b7e7bc..4152ca2 100644
---- a/drivers/pinctrl/pinctrl-coh901.c
-+++ b/drivers/pinctrl/pinctrl-coh901.c
-@@ -770,8 +770,7 @@ static int __init u300_gpio_probe(struct platform_device *pdev)
- 		port->number = portno;
- 		port->gpio = gpio;
++For various board the "board" node may contain specific properties
++that pertain to this particular board, such as board-specific GPIOs
++or board power regulator supplies.
++
++Required root node property:
++
++compatible="stericsson,u300";
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 9c62558..369fba7 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -165,6 +165,7 @@ dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb \
+ 	tegra30-cardhu-a04.dtb \
+ 	tegra114-dalmore.dtb \
+ 	tegra114-pluto.dtb
++dtb-$(CONFIG_ARCH_U300) += ste-u300.dtb
+ dtb-$(CONFIG_ARCH_VEXPRESS) += vexpress-v2p-ca5s.dtb \
+ 	vexpress-v2p-ca9.dtb \
+ 	vexpress-v2p-ca15-tc1.dtb \
+diff --git a/arch/arm/boot/dts/ste-u300.dts b/arch/arm/boot/dts/ste-u300.dts
+new file mode 100644
+index 0000000..9e423eb
+--- /dev/null
++++ b/arch/arm/boot/dts/ste-u300.dts
+@@ -0,0 +1,86 @@
++/*
++ * Device Tree for the ST-Ericsson U300 Machine and SoC
++ */
++
++/dts-v1/;
++/include/ "skeleton.dtsi"
++
++/ {
++	model = "ST-Ericsson U300";
++	compatible = "stericsson,u300";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	chosen {
++		bootargs = "root=/dev/ram0 console=ttyAMA0,115200n8 earlyprintk";
++	};
++
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++        };
++
++	memory {
++		reg = <0x48000000 0x03c00000>;
++	};
++
++	timer: timer@c0014000 {
++		compatible = "stericsson,u300-apptimer";
++		reg = <0xc0014000 0x1000>;
++		interrupt-parent = <&vica>;
++		interrupts = <24 25 26 27>;
++	};
++
++	gpio: gpio@c0016000 {
++		compatible = "stericsson,gpio-coh901";
++		reg = <0xc0016000 0x1000>;
++		interrupt-parent = <&vicb>;
++		interrupts = <0 1 2 18 21 22 23>;
++		interrupt-names = "gpio0", "gpio1", "gpio2", "gpio3",
++				"gpio4", "gpio5", "gpio6";
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	pinctrl: pinctrl@c0011000 {
++		compatible = "stericsson,pinctrl-u300";
++		reg = <0xc0011000 0x1000>;
++	};
++
++	amba {
++		compatible = "arm,amba-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		vica: interrupt-controller@a0001000 {
++			compatible = "arm,versatile-vic";
++			interrupt-controller;
++			#interrupt-cells = <1>;
++			reg = <0xa0001000 0x20>;
++		};
++
++		vicb: interrupt-controller@a0002000 {
++			compatible = "arm,versatile-vic";
++			interrupt-controller;
++			#interrupt-cells = <1>;
++			reg = <0xa0002000 0x20>;
++		};
++
++		uart0: serial@c0013000 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0xc0013000 0x1000>;
++			interrupt-parent = <&vica>;
++			interrupts = <22>;
++		};
++
++		uart1: serial@c0007000 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0xc0007000 0x1000>;
++			interrupt-parent = <&vicb>;
++			interrupts = <20>;
++		};
++	};
++};
+diff --git a/arch/arm/mach-u300/core.c b/arch/arm/mach-u300/core.c
+index a683d17..5b42983 100644
+--- a/arch/arm/mach-u300/core.c
++++ b/arch/arm/mach-u300/core.c
+@@ -33,6 +33,8 @@
+ #include <linux/platform_data/pinctrl-coh901.h>
+ #include <linux/platform_data/dma-coh901318.h>
+ #include <linux/irqchip/arm-vic.h>
++#include <linux/irqchip.h>
++#include <linux/of_platform.h>
  
--		port->irq = platform_get_irq_byname(pdev,
--						    port->name);
-+		port->irq = platform_get_irq(pdev, portno);
- 
- 		dev_dbg(gpio->dev, "register IRQ %d for port %s\n", port->irq,
- 			port->name);
-@@ -808,6 +807,9 @@ static int __init u300_gpio_probe(struct platform_device *pdev)
- 	}
- 	dev_dbg(gpio->dev, "initialized %d GPIO ports\n", portno);
- 
-+#ifdef CONFIG_OF_GPIO
-+	gpio->chip.of_node = pdev->dev.of_node;
-+#endif
- 	err = gpiochip_add(&gpio->chip);
- 	if (err) {
- 		dev_err(gpio->dev, "unable to add gpiochip: %d\n", err);
-@@ -861,9 +863,15 @@ static int __exit u300_gpio_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id u300_gpio_match[] = {
-+	{ .compatible = "stericsson,gpio-coh901" },
-+	{},
+ #include <asm/types.h>
+ #include <asm/setup.h>
+@@ -698,3 +700,81 @@ MACHINE_START(U300, "Ericsson AB U335 S335/B335 Prototype Board")
+ 	.init_machine	= u300_init_machine,
+ 	.restart	= u300_restart,
+ MACHINE_END
++
++#ifdef CONFIG_OF
++
++/* These are mostly to get the right device names for the clock lookups */
++static struct of_dev_auxdata u300_auxdata_lookup[] __initdata = {
++	OF_DEV_AUXDATA("stericsson,pinctrl-u300", U300_SYSCON_BASE,
++		"pinctrl-u300", NULL),
++	OF_DEV_AUXDATA("stericsson,gpio-coh901", U300_GPIO_BASE,
++		"u300-gpio", &u300_gpio_plat),
++	OF_DEV_AUXDATA("arm,primecell", U300_UART0_BASE,
++		"uart0", &uart0_plat_data),
++	OF_DEV_AUXDATA("arm,primecell", U300_UART1_BASE,
++		"uart1", &uart1_plat_data),
++	OF_DEV_AUXDATA("arm,primecell", U300_MMCSD_BASE,
++		"mmci", &mmcsd_platform_data),
++	{ /* sentinel */ },
 +};
 +
- static struct platform_driver u300_gpio_driver = {
- 	.driver		= {
- 		.name	= "u300-gpio",
-+		.of_match_table = u300_gpio_match,
- 	},
- 	.remove		= __exit_p(u300_gpio_remove),
- };
++static void __init u300_init_irq_dt(void)
++{
++	struct clk *clk;
++
++	/* initialize clocking early, we want to clock the INTCON */
++	u300_clk_init(U300_SYSCON_VBASE);
++
++	/* Bootstrap EMIF and SEMI clocks */
++	clk = clk_get_sys("pl172", NULL);
++	BUG_ON(IS_ERR(clk));
++	clk_prepare_enable(clk);
++	clk = clk_get_sys("semi", NULL);
++	BUG_ON(IS_ERR(clk));
++	clk_prepare_enable(clk);
++
++	/* Clock the interrupt controller */
++	clk = clk_get_sys("intcon", NULL);
++	BUG_ON(IS_ERR(clk));
++	clk_prepare_enable(clk);
++
++	irqchip_init();
++}
++
++static void __init u300_init_machine_dt(void)
++{
++	u16 val;
++
++	/* Check what platform we run and print some status information */
++	u300_init_check_chip();
++
++	u300_assign_physmem();
++
++	/* Initialize pinmuxing */
++	pinctrl_register_mappings(u300_pinmux_map,
++				  ARRAY_SIZE(u300_pinmux_map));
++
++	of_platform_populate(NULL, of_default_bus_match_table,
++			u300_auxdata_lookup, NULL);
++
++	/* Enable SEMI self refresh */
++	val = readw(U300_SYSCON_VBASE + U300_SYSCON_SMCR) |
++		U300_SYSCON_SMCR_SEMI_SREFREQ_ENABLE;
++	writew(val, U300_SYSCON_VBASE + U300_SYSCON_SMCR);
++}
++
++static const char * u300_board_compat[] = {
++	"stericsson,u300",
++	NULL,
++};
++
++DT_MACHINE_START(U300_DT, "U300 S335/B335 (Device Tree)")
++	.map_io		= u300_map_io,
++	.init_irq	= u300_init_irq_dt,
++	.init_time	= u300_timer_init,
++	.init_machine	= u300_init_machine_dt,
++	.restart	= u300_restart,
++	.dt_compat      = u300_board_compat,
++MACHINE_END
++
++#endif /* CONFIG_OF */
 -- 
 1.7.11.3
