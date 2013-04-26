@@ -1,40 +1,194 @@
-From: Luciano Coelho <coelho@ti.com>
-Subject: Re: [PATCH 1/3] ARM: OMAP2+: Legacy support for wl12xx when booted
- with devicetree
-Date: Fri, 26 Apr 2013 14:16:26 +0300
-Message-ID: <1366974986.4029.32.camel@cumari.coelho.fi>
-References: <20130426034858.26065.65118.stgit@muffinssi.local>
-	 <20130426035210.26065.39995.stgit@muffinssi.local>
-	 <0104F687-1726-476D-B2DF-7E72223B127A@dominion.thruhere.net>
-	 <1366974032.4029.31.camel@cumari.coelho.fi>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1366974032.4029.31.camel@cumari.coelho.fi>
-Sender: linux-omap-owner@vger.kernel.org
-To: Koen Kooi <koen@dominion.thruhere.net>
-Cc: Tony Lindgren <tony@atomide.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, "linux-omap@vger.kernel.org List" <linux-omap@vger.kernel.org>, Benoit Cousson <b-cousson@ti.com>, Rajendra Nayak <rnayak@ti.com>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, Jason Kridner <jkridner@beagleboard.org>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: [PATCH] media: i2c: tvp514x: add OF support
+Date: Fri, 26 Apr 2013 16:53:50 +0530
+Message-ID: <1366975430-31806-1-git-send-email-prabhakar.csengg@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: LMML <linux-media@vger.kernel.org>
+Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2013-04-26 at 14:00 +0300, Luciano Coelho wrote:
-> Hi Koen,
-> 
-> On Fri, 2013-04-26 at 11:33 +0200, Koen Kooi wrote:
-> > Op 26 apr. 2013, om 05:52 heeft Tony Lindgren <tony@atomide.com> het volgende geschreven:
-> > 
-> > > Without WLAN we cannot switch omap4 to use device tree
-> > > only booting. This patch can be reverted when the
-> > > binding for wl12xx is added.
-> > 
-> > How much boards am I allowed to add to this? I need to get the wl12xx wifi expansionboards for beagleboard, beagleboard xM and beaglebone working with DT :)
-> 
-> Do you know where I can get a wl12xx wifi expansion board for
-> beaglebone?
+From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 
-Uhmmm, never mind.  I somehow thought this was with the WiLink 8 chip,
-but you said wl12xx, so it's not. ;)
+add OF support for the tvp514x driver.
 
+Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: davinci-linux-open-source@linux.davincidsp.com
+---
+ RFC v1: https://patchwork.kernel.org/patch/2030061/
+ RFC v2: https://patchwork.kernel.org/patch/2061811/
+
+ Changes for current version from RFC v2:
+ 1: Fixed review comments pointed by Sylwester.
+
+ .../devicetree/bindings/media/i2c/tvp514x.txt      |   38 +++++++++++
+ drivers/media/i2c/tvp514x.c                        |   67 +++++++++++++++++--
+ 2 files changed, 98 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+new file mode 100644
+index 0000000..618640a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+@@ -0,0 +1,38 @@
++* Texas Instruments TVP514x video decoder
++
++The TVP5146/TVP5146m2/TVP5147/TVP5147m1 device is high quality, single-chip
++digital video decoder that digitizes and decodes all popular baseband analog
++video formats into digital video component. The tvp514x decoder supports analog-
++to-digital (A/D) conversion of component RGB and YPbPr signals as well as A/D
++conversion and decoding of NTSC, PAL and SECAM composite and S-video into
++component YCbCr.
++
++Required Properties :
++- compatible: Must be "ti,tvp514x-decoder"
++- hsync-active: HSYNC Polarity configuration for current interface.
++- vsync-active: VSYNC Polarity configuration for current interface.
++- pclk-sample: Clock polarity of the current interface.
++
++Example:
++
++i2c0@1c22000 {
++	...
++	...
++
++	tvp514x@5c {
++		compatible = "ti,tvp514x-decoder";
++		reg = <0x5c>;
++
++		port {
++			tvp514x_1: endpoint {
++				/* Active high (Defaults to 0) */
++				hsync-active = <1>;
++				/* Active high (Defaults to 0) */
++				vsync-active = <1>;
++				/* Active low (Defaults to 0) */
++				pclk-sample = <0>;
++			};
++		};
++	};
++	...
++};
+diff --git a/drivers/media/i2c/tvp514x.c b/drivers/media/i2c/tvp514x.c
+index 887bd93..d37b85e 100644
+--- a/drivers/media/i2c/tvp514x.c
++++ b/drivers/media/i2c/tvp514x.c
+@@ -35,7 +35,9 @@
+ #include <linux/videodev2.h>
+ #include <linux/module.h>
+ #include <linux/v4l2-mediabus.h>
++#include <linux/of_device.h>
+ 
++#include <media/v4l2-of.h>
+ #include <media/v4l2-async.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-common.h>
+@@ -1056,6 +1058,58 @@ static struct tvp514x_decoder tvp514x_dev = {
+ 
+ };
+ 
++#if defined(CONFIG_OF)
++static const struct of_device_id tvp514x_of_match[] = {
++	{.compatible = "ti,tvp5146-decoder", },
++	{.compatible = "ti,tvp5146m2-decoder", },
++	{.compatible = "ti,tvp5147-decoder", },
++	{.compatible = "ti,tvp5147m1-decoder", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, tvp514x_of_match);
++
++static void tvp514x_get_pdata(struct i2c_client *client,
++			      struct tvp514x_decoder *decoder)
++{
++	if (!client->dev.platform_data && client->dev.of_node) {
++		struct device_node *endpoint;
++
++		endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
++		if (endpoint) {
++			struct tvp514x_platform_data *pdata;
++			struct v4l2_of_endpoint bus_cfg;
++			unsigned int flags;
++
++			pdata =
++			   devm_kzalloc(&client->dev,
++					sizeof(struct tvp514x_platform_data),
++					GFP_KERNEL);
++			if (!pdata)
++				return;
++
++			v4l2_of_parse_endpoint(endpoint, &bus_cfg);
++			flags = bus_cfg.bus.parallel.flags;
++
++			if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
++				pdata->hs_polarity = 1;
++			if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
++				pdata->vs_polarity = 1;
++			if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
++				pdata->clk_polarity = 1;
++			decoder->pdata = pdata;
++		}
++	}
++}
++#else
++#define tvp514x_of_match NULL
++
++static void tvp514x_get_pdata(struct i2c_client *client,
++			      struct tvp514x_decoder *decoder)
++{
++	decoder->pdata = client->dev.platform_data;
++}
++#endif
++
+ /**
+  * tvp514x_probe() - decoder driver i2c probe handler
+  * @client: i2c driver client device structure
+@@ -1075,11 +1129,6 @@ tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
+ 		return -EIO;
+ 
+-	if (!client->dev.platform_data) {
+-		v4l2_err(client, "No platform data!!\n");
+-		return -ENODEV;
+-	}
+-
+ 	decoder = devm_kzalloc(&client->dev, sizeof(*decoder), GFP_KERNEL);
+ 	if (!decoder)
+ 		return -ENOMEM;
+@@ -1090,8 +1139,11 @@ tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	memcpy(decoder->tvp514x_regs, tvp514x_reg_list_default,
+ 			sizeof(tvp514x_reg_list_default));
+ 
+-	/* Copy board specific information here */
+-	decoder->pdata = client->dev.platform_data;
++	tvp514x_get_pdata(client, decoder);
++	if (!decoder->pdata) {
++		v4l2_err(client, "No platform data!!\n");
++		return -EPROBE_DEFER;
++	}
+ 
+ 	/**
+ 	 * Fetch platform specific data, and configure the
+@@ -1242,6 +1294,7 @@ MODULE_DEVICE_TABLE(i2c, tvp514x_id);
+ 
+ static struct i2c_driver tvp514x_driver = {
+ 	.driver = {
++		.of_match_table = tvp514x_of_match,
+ 		.owner = THIS_MODULE,
+ 		.name = TVP514X_MODULE_NAME,
+ 	},
 -- 
-Luca.
+1.7.4.1
 
