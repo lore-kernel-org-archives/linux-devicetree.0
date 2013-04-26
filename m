@@ -1,314 +1,225 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2] libfdt: Add fdt_next_subnode() to permit easy subnode
- iteration
-Date: Fri, 26 Apr 2013 05:43:31 -0700
-Message-ID: <1366980211-30077-1-git-send-email-sjg@chromium.org>
-References: <1366914176-28684-1-git-send-email-sjg@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366914176-28684-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: [PATCH] media: i2c: adv7343: add OF support
+Date: Fri, 26 Apr 2013 18:48:06 +0530
+Message-ID: <1366982286-22950-1-git-send-email-prabhakar.csengg@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: LMML <linux-media@vger.kernel.org>
+Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com
 List-Id: devicetree@vger.kernel.org
 
-Iterating through subnodes with libfdt is a little painful to write as we
-need something like this:
+From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 
-for (depth = 0, count = 0,
-	offset = fdt_next_node(fdt, parent_offset, &depth);
-     (offset >= 0) && (depth > 0);
-     offset = fdt_next_node(fdt, offset, &depth)) {
-	if (depth == 1) {
-		/* code body */
-	}
-}
+add OF support for the adv7343 driver.
 
-Using fdt_next_subnode() we can instead write this, which is shorter and
-easier to get right:
-
-for (offset = fdt_first_subnode(fdt, parent_offset);
-     offset >= 0;
-     offset = fdt_next_subnode(fdt, offset)) {
-	/* code body */
-}
-
-Also, it doesn't require two levels of indentation for the loop body.
-
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: davinci-linux-open-source@linux.davincidsp.com
 ---
-Changes in v2:
-- Use first/next pattern to avoid needing a depth parameter
+ .../devicetree/bindings/media/i2c/adv7343.txt      |   69 ++++++++++++++++++
+ drivers/media/i2c/adv7343.c                        |   75 +++++++++++++++++++-
+ 2 files changed, 142 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7343.txt
 
- libfdt/fdt.c              | 28 ++++++++++++++
- libfdt/libfdt.h           | 22 +++++++++++
- tests/Makefile.tests      |  3 +-
- tests/run_tests.sh        |  3 ++
- tests/subnode_iterate.c   | 94 +++++++++++++++++++++++++++++++++++++++++++++++
- tests/subnode_iterate.dts | 44 ++++++++++++++++++++++
- 6 files changed, 193 insertions(+), 1 deletion(-)
- create mode 100644 tests/subnode_iterate.c
- create mode 100644 tests/subnode_iterate.dts
-
-diff --git a/libfdt/fdt.c b/libfdt/fdt.c
-index 57faba3..2ce6a44 100644
---- a/libfdt/fdt.c
-+++ b/libfdt/fdt.c
-@@ -198,6 +198,34 @@ int fdt_next_node(const void *fdt, int offset, int *depth)
- 	return offset;
- }
- 
-+int fdt_first_subnode(const void *fdt, int offset)
-+{
-+	int depth = 0;
-+
-+	offset = fdt_next_node(fdt, offset, &depth);
-+	if (offset < 0 || depth != 1)
-+		return -FDT_ERR_NOTFOUND;
-+
-+	return offset;
-+}
-+
-+int fdt_next_subnode(const void *fdt, int offset)
-+{
-+	int depth = 1;
-+
-+	/*
-+	 * With respect to the parent, the depth of the next subnode will be
-+	 * the same as the last.
-+	 */
-+	do {
-+		offset = fdt_next_node(fdt, offset, &depth);
-+		if (offset < 0 || depth < 1)
-+			return -FDT_ERR_NOTFOUND;
-+	} while (depth > 1);
-+
-+	return offset;
-+}
-+
- const char *_fdt_find_string(const char *strtab, int tabsize, const char *s)
- {
- 	int len = strlen(s) + 1;
-diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
-index 130789a..02baa84 100644
---- a/libfdt/libfdt.h
-+++ b/libfdt/libfdt.h
-@@ -136,6 +136,28 @@ uint32_t fdt_next_tag(const void *fdt, int offset, int *nextoffset);
- 
- int fdt_next_node(const void *fdt, int offset, int *depth);
- 
-+/**
-+ * fdt_first_subnode() - get offset of first direct subnode
-+ *
-+ * @fdt:	FDT blob
-+ * @offset:	Offset of node to check
-+ * @return offset of first subnode, or -FDT_ERR_NOTFOUND if there is none
-+ */
-+int fdt_first_subnode(const void *fdt, int offset);
-+
-+/**
-+ * fdt_next_subnode() - get offset of next direct subnode
-+ *
-+ * After first calling fdt_first_subnode(), call this function repeatedly to
-+ * get direct subnodes of a parent node.
-+ *
-+ * @fdt:	FDT blob
-+ * @offset:	Offset of previous subnode
-+ * @return offset of next subnode, or -FDT_ERR_NOTFOUND if there are no more
-+ * subnodes
-+ */
-+int fdt_next_subnode(const void *fdt, int offset);
-+
- /**********************************************************************/
- /* General functions                                                  */
- /**********************************************************************/
-diff --git a/tests/Makefile.tests b/tests/Makefile.tests
-index d59bff8..dafb618 100644
---- a/tests/Makefile.tests
-+++ b/tests/Makefile.tests
-@@ -20,7 +20,8 @@ LIB_TESTS_L = get_mem_rsv \
- 	dtb_reverse dtbs_equal_unordered \
- 	add_subnode_with_nops path_offset_aliases \
- 	utilfdt_test \
--	integer-expressions
-+	integer-expressions \
-+	subnode_iterate
- LIB_TESTS = $(LIB_TESTS_L:%=$(TESTS_PREFIX)%)
- 
- LIBTREE_TESTS_L = truncated_property
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index b56b626..b013761 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -241,6 +241,9 @@ libfdt_tests () {
- 	tree1_tests_rw noppy.$basetree
-     done
- 
-+    run_dtc_test -I dts -O dtb -o subnode_iterate.dtb subnode_iterate.dts
-+    run_test subnode_iterate subnode_iterate.dtb
-+
-     # Tests for behaviour on various sorts of corrupted trees
-     run_test truncated_property
- 
-diff --git a/tests/subnode_iterate.c b/tests/subnode_iterate.c
+diff --git a/Documentation/devicetree/bindings/media/i2c/adv7343.txt b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
 new file mode 100644
-index 0000000..b9f379d
+index 0000000..8426f8d
 --- /dev/null
-+++ b/tests/subnode_iterate.c
-@@ -0,0 +1,94 @@
-+/*
-+ * libfdt - Flat Device Tree manipulation
-+ *	Tests that fdt_next_subnode() works as expected
-+ *
-+ * Copyright (C) 2013 Google, Inc
-+ *
-+ * Copyright (C) 2007 David Gibson, IBM Corporation.
-+ *
-+ * This library is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU Lesser General Public License
-+ * as published by the Free Software Foundation; either version 2.1 of
-+ * the License, or (at your option) any later version.
-+ *
-+ * This library is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * Lesser General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU Lesser General Public
-+ * License along with this library; if not, write to the Free Software
-+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-+ */
++++ b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
+@@ -0,0 +1,69 @@
++* Analog Devices adv7343 video encoder
 +
-+#include <stdlib.h>
-+#include <stdio.h>
-+#include <string.h>
-+#include <stdint.h>
++The ADV7343 are high speed, digital-to-analog video encoders in a 64-lead LQFP
++package. Six high speed, 3.3 V, 11-bit video DACs provide support for composite
++(CVBS), S-Video (Y-C), and component (YPrPb/RGB) analog outputs in standard
++definition (SD), enhanced definition (ED), or high definition (HD) video
++formats.
 +
-+#include <libfdt.h>
++The ADV7343 have a 24-bit pixel input port that can be configured in a variety
++of ways. SD video formats are supported over an SDR interface, and ED/HD video
++formats are supported over SDR and DDR interfaces. Pixel data can be supplied
++in either the YCrCb or RGB color spaces.
 +
-+#include "tests.h"
-+#include "testdata.h"
++Required Properties :
++- compatible: Must be "ad,adv7343-encoder"
 +
-+static void test_node(void *fdt, int parent_offset)
-+{
-+	fdt32_t subnodes;
-+	const fdt32_t *prop;
-+	int offset;
-+	int count;
-+	int len;
++Optional Properties :
++- ad-adv7343-power-mode-sleep-mode: on enable the current consumption is
++                                    reduced to micro ampere level. All DACs and
++                                    the internal PLL circuit are disabled.
++- ad-adv7343-power-mode-pll-ctrl: PLL and oversampling control. This control
++                                  allows internal PLL 1 circuit to be powered
++                                  down and the oversampling to beswitched off.
++- ad-adv7343-power-mode-dac-1: power on/off DAC 1.
++- ad-adv7343-power-mode-dac-2: power on/off DAC 2.
++- ad-adv7343-power-mode-dac-3: power on/off DAC 3.
++- ad-adv7343-power-mode-dac-4: power on/off DAC 4.
++- ad-adv7343-power-mode-dac-5: power on/off DAC 5.
++- ad-adv7343-power-mode-dac-6: power on/off DAC 6.
++- ad-adv7343-sd-config-dac-out-1: Configure SD DAC Output 1.
++- ad-adv7343-sd-config-dac-out-2: Configure SD DAC Output 2.
 +
-+	/* This property indicates the number of subnodes to expect */
-+	prop = fdt_getprop(fdt, parent_offset, "subnodes", &len);
-+	if (!prop || len != sizeof(fdt32_t)) {
-+		FAIL("Missing/invalid subnodes property at '%s'",
-+		     fdt_get_name(fdt, parent_offset, NULL));
-+	}
-+	subnodes = cpu_to_fdt32(*prop);
++Example:
 +
-+	count = 0;
-+	for (offset = fdt_first_subnode(fdt, parent_offset);
-+	     offset >= 0;
-+	     offset = fdt_next_subnode(fdt, offset))
-+		count++;
++i2c0@1c22000 {
++	...
++	...
 +
-+	if (count != subnodes) {
-+		FAIL("Node '%s': Expected %d subnodes, got %d\n",
-+		     fdt_get_name(fdt, parent_offset, NULL), subnodes,
-+		     count);
-+	}
-+}
++	adv7343@2a {
++		compatible = "ad,adv7343-encoder";
++		reg = <0x2a>;
 +
-+static void check_fdt_next_subnode(void *fdt)
-+{
-+	int offset;
-+	int count = 0;
-+
-+	for (offset = fdt_first_subnode(fdt, 0);
-+	     offset >= 0;
-+	     offset = fdt_next_subnode(fdt, offset)) {
-+		test_node(fdt, offset);
-+		count++;
-+	}
-+
-+	if (count != 2)
-+		FAIL("Expected %d tests, got %d\n", 2, count);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	void *fdt;
-+
-+	test_init(argc, argv);
-+	if (argc != 2)
-+		CONFIG("Usage: %s <dtb file>", argv[0]);
-+
-+	fdt = load_blob(argv[1]);
-+	if (!fdt)
-+		FAIL("No device tree available");
-+
-+	check_fdt_next_subnode(fdt);
-+
-+	PASS();
-+}
-diff --git a/tests/subnode_iterate.dts b/tests/subnode_iterate.dts
-new file mode 100644
-index 0000000..14a0d3a
---- /dev/null
-+++ b/tests/subnode_iterate.dts
-@@ -0,0 +1,44 @@
-+/dts-v1/;
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	test1 {
-+		subnodes = <2>;
-+		linux,phandle = <0x1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		PowerPC,970@0 {
-+			name = "PowerPC,970";
-+			device_type = "cpu";
-+			reg = <0x00000000>;
-+			clock-frequency = <1600000000>;
-+			timebase-frequency = <33333333>;
-+			linux,boot-cpu;
-+			i-cache-size = <65536>;
-+			d-cache-size = <32768>;
-+			another-sub-node {
-+				should-be-ignored;
-+				yet-another {
-+					should-also-be-ignored;
-+				};
++		port {
++			adv7343_1: endpoint {
++					/* Active high (Defaults to false) */
++					ad-adv7343-power-mode-sleep-mode;
++					/* Active high (Defaults to false) */
++					ad-adv7343-power-mode-pll-ctrl;
++					/* Active high (Defaults to false) */
++					ad-adv7343-power-mode-dac-1;
++					/* Active high (Defaults to false) */
++					ad-adv7343-power-mode-dac-2;
++					/* Active high (Defaults to false) */
++					ad-adv7343-power-mode-dac-3;
++					/* Active high (Defaults to false) */
++					ad-adv7343-power-mode-dac-4;
++					/* Active high (Defaults to false) */
++					ad-adv7343-power-mode-dac-5;
++					/* Active high (Defaults to false) */
++					ad-adv7343-power-mode-dac-6;
++					/* Active high (Defaults to false) */
++					ad-adv7343-sd-config-dac-out-1;
++					/* Active high (Defaults to false) */
++					ad-adv7343-sd-config-dac-out-2 = <0>;
 +			};
 +		};
-+
-+		PowerPC,970@1 {
-+			name = "PowerPC,970";
-+			device_type = "cpu";
-+			reg = <0x00000001>;
-+			clock-frequency = <1600000000>;
-+			timebase-frequency = <33333333>;
-+			i-cache-size = <65536>;
-+			d-cache-size = <32768>;
-+		};
 +	};
-+
-+	test2 {
-+		subnodes = <0>;
-+	};
++	...
 +};
+diff --git a/drivers/media/i2c/adv7343.c b/drivers/media/i2c/adv7343.c
+index 469e262..eb12d1a 100644
+--- a/drivers/media/i2c/adv7343.c
++++ b/drivers/media/i2c/adv7343.c
+@@ -25,12 +25,14 @@
+ #include <linux/module.h>
+ #include <linux/videodev2.h>
+ #include <linux/uaccess.h>
++#include <linux/of_device.h>
+ 
+ #include <media/adv7343.h>
+ #include <media/v4l2-async.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-chip-ident.h>
+ #include <media/v4l2-ctrls.h>
++#include <media/v4l2-of.h>
+ 
+ #include "adv7343_regs.h"
+ 
+@@ -409,6 +411,75 @@ static int adv7343_initialize(struct v4l2_subdev *sd)
+ 	return err;
+ }
+ 
++#if defined(CONFIG_OF)
++static const struct of_device_id adv7343_of_match[] = {
++	{.compatible = "ad,adv7343-encoder", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, adv7343_of_match);
 +
++static void adv7343_get_pdata(struct i2c_client *client,
++			      struct adv7343_state *decoder)
++{
++	if (!client->dev.platform_data && client->dev.of_node) {
++		struct device_node *np;
++		struct adv7343_platform_data *pdata;
++
++		np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
++		if (!np)
++			return;
++
++		pdata = devm_kzalloc(&client->dev,
++				     sizeof(struct adv7343_platform_data),
++				     GFP_KERNEL);
++		if (!pdata) {
++			pr_warn("adv7343 failed allocate memeory\n");
++			return;
++		}
++
++		pdata->mode_config.sleep_mode =
++		  of_property_read_bool(np, "ad-adv7343-power-mode-sleep-mode");
++
++		pdata->mode_config.pll_control =
++		    of_property_read_bool(np, "ad-adv7343-power-mode-pll-ctrl");
++
++		pdata->mode_config.dac_1 =
++		       of_property_read_bool(np, "ad-adv7343-power-mode-dac-1");
++
++		pdata->mode_config.dac_2 =
++		       of_property_read_bool(np, "ad-adv7343-power-mode-dac-2");
++
++		pdata->mode_config.dac_3 =
++		       of_property_read_bool(np, "ad-adv7343-power-mode-dac-3");
++
++		pdata->mode_config.dac_4 =
++		       of_property_read_bool(np, "ad-adv7343-power-mode-dac-4");
++
++		pdata->mode_config.dac_5 =
++		       of_property_read_bool(np, "ad-adv7343-power-mode-dac-5");
++
++		pdata->mode_config.dac_6 =
++		       of_property_read_bool(np, "ad-adv7343-power-mode-dac-6");
++
++		pdata->sd_config.sd_dac_out1 =
++		    of_property_read_bool(np, "ad-adv7343-sd-config-dac-out-1");
++
++		pdata->sd_config.sd_dac_out2 =
++		    of_property_read_bool(np, "ad-adv7343-sd-config-dac-out-2");
++
++		decoder->pdata = pdata;
++	}
++}
++#else
++#define adv7343_of_match NULL
++
++static void adv7343_get_pdata(struct i2c_client *client,
++			      struct adv7343_state *decoder)
++{
++	decoder->pdata = client->dev.platform_data;
++}
++#endif
++
+ static int adv7343_probe(struct i2c_client *client,
+ 				const struct i2c_device_id *id)
+ {
+@@ -426,8 +497,7 @@ static int adv7343_probe(struct i2c_client *client,
+ 	if (state == NULL)
+ 		return -ENOMEM;
+ 
+-	/* Copy board specific information here */
+-	state->pdata = client->dev.platform_data;
++	adv7343_get_pdata(client, state);
+ 
+ 	state->reg00	= 0x80;
+ 	state->reg01	= 0x00;
+@@ -496,6 +566,7 @@ MODULE_DEVICE_TABLE(i2c, adv7343_id);
+ 
+ static struct i2c_driver adv7343_driver = {
+ 	.driver = {
++		.of_match_table = adv7343_of_match,
+ 		.owner	= THIS_MODULE,
+ 		.name	= "adv7343",
+ 	},
 -- 
-1.8.2.1
+1.7.4.1
+
