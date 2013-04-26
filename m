@@ -1,115 +1,44 @@
-From: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] of: Set the DMA mask to 64 bits on ARM LPAE systems
-Date: Fri, 26 Apr 2013 09:58:59 -0700
-Message-ID: <517AB253.1090607@codeaurora.org>
-References: <1366764649-10342-1-git-send-email-lauraa@codeaurora.org>
- <20130425133315.GA7157@localhost.cambridge.arm.com>
- <51796365.5030405@codeaurora.org>
- <20130426100001.GB5007@localhost.cambridge.arm.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH 1/2] ARM: dts: OMAP36xx: Fix CPU OPP voltages
+Date: Fri, 26 Apr 2013 12:39:32 -0500
+Message-ID: <1366997973-19120-2-git-send-email-nm@ti.com>
+References: <1366997973-19120-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130426100001.GB5007-bi+AKbBUZKZEOHzHbR49IE74JuZQtDDkQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1366997973-19120-1-git-send-email-nm@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 4/26/2013 3:00 AM, Catalin Marinas wrote:
-> On Thu, Apr 25, 2013 at 06:09:57PM +0100, Laura Abbott wrote:
->> On 4/25/2013 6:33 AM, Catalin Marinas wrote:
->>> On Wed, Apr 24, 2013 at 01:50:49AM +0100, Laura Abbott wrote:
->>>> By default on ARM systems, the coherent DMA mask (lowest
->>>> address) is set to ~0 or 0xFFFFFFFFFFFFFFFF. Currently,
->>>> of_platform_device_create_pdata sets the coherent DMA mask to
->>>> 32 bits. This prevents coherent dma allocations from working by default
->>>> without clients setting the DMA mask. Rather than make every client
->>>> on an LPAE system set the mask, set the mask to a 64 bit value on
->>>> ARM LPAE systems.
->>>>
->>>> Signed-off-by: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>>> ---
->>>>    drivers/of/platform.c |    4 ++++
->>>>    1 files changed, 4 insertions(+), 0 deletions(-)
->>>>
->>>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
->>>> index 0970505..18b69c1 100644
->>>> --- a/drivers/of/platform.c
->>>> +++ b/drivers/of/platform.c
->>>> @@ -214,7 +214,11 @@ struct platform_device *of_platform_device_create_pdata(
->>>>    #if defined(CONFIG_MICROBLAZE)
->>>>    	dev->archdata.dma_mask = 0xffffffffUL;
->>>>    #endif
->>>> +#ifdef CONFIG_ARM_LPAE
->>>> +	dev->dev.coherent_dma_mask = DMA_BIT_MASK(64);
->>>> +#else
->>>>    	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
->>>> +#endif
->>>
->>> I wouldn't add CONFIG_ARM_LPAE checks in here, you can use
->>> CONFIG_ARCH_DMA_ADDR_T_64BIT (types.h uses this for the dma_addr_t
->>> definition).
->>>
->>
->> I thought about this as well but in arch/arm/mm/mm.h:
->>
->> #ifdef CONFIG_ZONE_DMA
->> extern phys_addr_t arm_dma_limit;
->> #else
->> #define arm_dma_limit ((phys_addr_t)~0)
->> #endif
->
-> Russell replied already on the meaning of this variable, so I don't
-> think its type is relevant here. It is also used when calling
-> dma_contiguous_reserve() which takes a phys_addr_t.
->
->> arm_dma_limit is explicitly cast to phys_addr_t, which means that
->> arm_dma_limit will be always be sizeof(phys_addr_t) regardless of
->> sizeof(dma_addr_t). Is it safe to assume that
->> CONFIG_ARCH_DMA_ADDR_T_64BIT will always be selected if
->> sizeof(phys_addr_t) == 8? If not, we've defeated the point of the patch.
->
-> sizeof(dma_addr_t) <= sizeof(phys_addr_t). I had this discussion with
-> Russell when upstreaming the LPAE patches and the conclusion was that
-> while the phys_addr_t is 64-bit with LPAE, the dma_addr_t size is a
-> feature of the SoC and must be selected independently. However, I think
-> with multi-platform support and LPAE enabled, we should probably set the
-> dma_addr_t to 64-bit.
->
->> Alternatively, should the type of arm_dma_limit be dma_addr_t instead of
->> phys_addr_t?
->
-> arm_dma_limit should be phys_addr_t since this is an address as seen by
-> the CPU. dma_addr_t OTOH is a bus address as seen by the device. You can
-> in theory have a DMA buffer with physical address beyond 32-bit (from a
-> CPU perspective) but with a bus address withing 32-bit as seen by the
-> device.
->
-> There is some confusion in the kernel (you can google for past
-> discussions) around the meaning of the DMA mask. If your RAM starts at
-> 0, it doesn't matter much and there are several such assumptions in the
-> kernel.
->
-> So I still consider that you should use #ifdef
-> CONFIG_ARCH_DMA_ADDR_T_64BIT and select this option on your platform.
->
+commit 3027e26 (ARM: dts: OMAP36xx: Add CPU OPP table)
+introduced wrong OPP voltages per OPP by mistake. Sync the OPP
+tables with existing OMAP36xx OPP data in
+arch/arm/mach-omap2/opp3xxx_data.c
 
-Thanks for the clarification on all this. It's non-obvious but I see why 
-things are set up the way they are. I'll re-submit with 
-CONFIG_ARCH_DMA_ADDR_T_64BIT.
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+ arch/arm/boot/dts/omap36xx.dtsi |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Laura
-
+diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
+index b89233e..f3447bc 100644
+--- a/arch/arm/boot/dts/omap36xx.dtsi
++++ b/arch/arm/boot/dts/omap36xx.dtsi
+@@ -20,9 +20,9 @@
+ 		cpu@0 {
+ 			operating-points = <
+ 				/* kHz    uV */
+-				300000   975000
+-				600000  1075000
+-				800000  1200000
++				300000  1012500
++				600000  1200000
++				800000  1325000
+ 			>;
+ 			clock-latency = <300000>; /* From legacy driver */
+ 		};
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+1.7.9.5
+
