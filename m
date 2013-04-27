@@ -1,42 +1,41 @@
-From: Jean Delvare <khali@linux-fr.org>
-Subject: Re: [PATCHv1 1/3] hwmon: Add support for GMT G762/G763 PWM fan
- controller
-Date: Sat, 27 Apr 2013 16:12:04 +0200
-Message-ID: <20130427161204.3957686c@endymion.delvare>
-References: <cover.1366753420.git.arno@natisbad.org>
-	<63961d39aee9db94767f28fd441312bec2029473.1366753420.git.arno@natisbad.org>
-	<20130427140331.GL17771@kw.sim.vm.gnt>
+From: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Subject: Re: [PATCH -next] xen/arm: remove duplicated include from
+ enlighten.c
+Date: Sat, 27 Apr 2013 15:35:39 +0100
+Message-ID: <alpine.DEB.2.02.1304271535210.4180@kaball.uk.xensource.com>
+References: <CAPgLHd95AtzEDXUMHryWmmVAkBfkh42hgeLKdSLFYwkO_JB-ZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130427140331.GL17771@kw.sim.vm.gnt>
-Sender: linux-doc-owner@vger.kernel.org
-To: Simon Guinot <simon.guinot@sequanux.org>
-Cc: Arnaud Ebalard <arno@natisbad.org>, Guenter Roeck <linux@roeck-us.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Olivier Mouchet <olivier.mouchet@gmail.com>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPgLHd95AtzEDXUMHryWmmVAkBfkh42hgeLKdSLFYwkO_JB-ZA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wei Yongjun <weiyj.lk@gmail.com>
+Cc: Stefano Stabellini <Stefano.Stabellini@eu.citrix.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "yongjun_wei@trendmicro.com.cn" <yongjun_wei@trendmicro.com.cn>, "xen-devel@lists.xensource.com" <xen-devel@lists.xensource.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 27 Apr 2013 16:03:31 +0200, Simon Guinot wrote:
-> On Wed, Apr 24, 2013 at 12:05:56AM +0200, Arnaud Ebalard wrote:
-> > +	/*
-> > +	 * Set default configuration values before passing the structure
-> > +	 * to OF helpers to overload them using those provided by .dts
-> > +	 * file (if any). Final config is then commited.
-> > +	 */
-> > +	g762_config_init(&conf);
-> > +	g762_config_of_overload(client, &conf);
-> > +	err = g762_config_commit(client, &conf);
-> > +	if (err)
-> > +		goto out;
+On Sat, 27 Apr 2013, Wei Yongjun wrote:
+> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 > 
-> One more comment... Sorry for the multiple replies :)
+> Remove duplicated include.
 > 
-> I am not sure that applying a configuration anyway is a good idea.
-> I think it could be best to stick with the bootloader configuration if
-> no platform data nor device tree data are given.
+> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-FWIW, the common policy for hwmon drivers is actually to not change the
-device configuration unless they really have to.
+Acked-by: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
 
--- 
-Jean Delvare
+
+>  arch/arm/xen/enlighten.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+> index 9a0a917..d30042e 100644
+> --- a/arch/arm/xen/enlighten.c
+> +++ b/arch/arm/xen/enlighten.c
+> @@ -10,7 +10,6 @@
+>  #include <xen/platform_pci.h>
+>  #include <xen/xenbus.h>
+>  #include <xen/page.h>
+> -#include <xen/xen.h>
+>  #include <xen/interface/sched.h>
+>  #include <xen/xen-ops.h>
+>  #include <asm/xen/hypervisor.h>
+> 
