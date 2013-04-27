@@ -1,45 +1,51 @@
-From: Stepan Moskovchenko <stepanm@codeaurora.org>
-Subject: Reusing DTSI files across trees with differing numbers of address-cells
-Date: Fri, 26 Apr 2013 16:17:52 -0700
-Message-ID: <517B0B20.3000305@codeaurora.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v3 00/13] ARM: EXYNOS: Fix Universal C210 support
+Date: Fri, 26 Apr 2013 17:34:13 -0700
+Message-ID: <20130427003413.GA2350@quad.lixom.net>
+References: <1366731994-7478-1-git-send-email-t.figa@samsung.com>
+ <201304251646.28026.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201304251646.28026.arnd@arndb.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Tomasz Figa <t.figa@samsung.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, kyungmin.park@samsung.com, tomasz.figa@gmail.com, m.szyprowski@samsung.com, john.stultz@linaro.org, tglx@linutronix.de, ben-linux@fluff.org, thomas.abraham@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Apr 25, 2013 at 04:46:27PM +0200, Arnd Bergmann wrote:
+> On Tuesday 23 April 2013, Tomasz Figa wrote:
+> > This series intends to fix support for Universal C210 board in mainline.
+> > Main difference from other boards based on Exynos 4210 is that hardware
+> > revision of the SoC used on Universal C210 does not support MCT timers
+> > and legacy PWM timers must be used instead.
+> > 
+> > First (and the biggest) part of the series deals with cleaning up and
+> > fixing the samsung_pwm_timer clocksource driver, that was posted
+> > recently by Arnd. In addition the driver is prepared to share the
+> > hardware with PWM driver that will be reworked later, since it is not
+> > a component crucial for system operation.
+> > 
+> > Second part fixes ATAGS support of Exynos 4210 rev0 SoC, which needs
+> > different timer initialization, using the new samsung_pwm_timer driver.
+> > 
+> > Third and last part adds Device Tree-based support for Universal C210
+> > board by providing device tree sources for it.
+> > 
+> > On Universal C210 board, both with and without DT:
+> > 
+> > Tested-by: Tomasz Figa <t.figa@samsung.com>
+> 
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> Olof, Kgene, I think we should have this one in 3.10 since it fixes
+> a regression. It looks bigger than it really is because I asked Tomasz
+> to do small patches rather than a single combined patch.
 
-Hello. I am creating a DTS file for an ARM (Qualcomm MSM) target which 
-supports LPAE, meaning that the target is capable of addressing memory 
-beyond the standard 4GB boundary. To account for the fact that the 
-memory node can contain reg addresses that exceed 32 bits, I am setting 
-#address-cells and #size-cells to 2 at the top level of my tree, since 
-this is what the kernel will use when parsing the memory node.
-
-However, my internal tree contains multiple DTSI files with definitions 
-for some hardware blocks that are used across multiple MSM targets, 
-including ones that have #address-cells and #size-cells set to 1 at the 
-top level, I would like to re-use some of these files in the tree for my 
-LPAE-based target. Additionally, most MSM I/O devices are declared at 
-the top level of the tree, rather than on a dedicated simple-bus.
-
-To allow reuse of common hardware block definitions, I am considering 
-moving all the MSM memory-mapped I/O devices to a dedicated /soc node 
-(per the Power spec), declaring this node as a simple-bus with 
-#address-cells and #size-cells of 1, and using the ranges property to 
-map this bus into the top-level address space. Since MSM I/O devices are 
-located at addresses below 4GB, I believe it is okay to keep them on a 
-simple-bus with #address-cells=1.
-
-Does this seem like a reasonable approach?
-
-Thanks
-Steve
+Ok. Kukjin, I don't mind collecting this in a late/* branch even though time is
+running late, since it's a regression. Do you want to send it to me or should
+I just pick up the patches?
 
 
--- 
-  The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-  hosted by The Linux Foundation
+-Olof
