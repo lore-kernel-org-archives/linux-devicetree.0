@@ -1,56 +1,42 @@
-From: Simon Guinot <simon.guinot@sequanux.org>
+From: Jean Delvare <khali@linux-fr.org>
 Subject: Re: [PATCHv1 1/3] hwmon: Add support for GMT G762/G763 PWM fan
  controller
-Date: Sat, 27 Apr 2013 16:03:31 +0200
-Message-ID: <20130427140331.GL17771@kw.sim.vm.gnt>
+Date: Sat, 27 Apr 2013 16:12:04 +0200
+Message-ID: <20130427161204.3957686c@endymion.delvare>
 References: <cover.1366753420.git.arno@natisbad.org>
- <63961d39aee9db94767f28fd441312bec2029473.1366753420.git.arno@natisbad.org>
+	<63961d39aee9db94767f28fd441312bec2029473.1366753420.git.arno@natisbad.org>
+	<20130427140331.GL17771@kw.sim.vm.gnt>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6Mt39TZj+HFMr11E"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <63961d39aee9db94767f28fd441312bec2029473.1366753420.git.arno@natisbad.org>
+In-Reply-To: <20130427140331.GL17771@kw.sim.vm.gnt>
 Sender: linux-doc-owner@vger.kernel.org
-To: Arnaud Ebalard <arno@natisbad.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, Jean Delvare <khali@linux-fr.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Olivier Mouchet <olivier.mouchet@gmail.com>
+To: Simon Guinot <simon.guinot@sequanux.org>
+Cc: Arnaud Ebalard <arno@natisbad.org>, Guenter Roeck <linux@roeck-us.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Olivier Mouchet <olivier.mouchet@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, 27 Apr 2013 16:03:31 +0200, Simon Guinot wrote:
+> On Wed, Apr 24, 2013 at 12:05:56AM +0200, Arnaud Ebalard wrote:
+> > +	/*
+> > +	 * Set default configuration values before passing the structure
+> > +	 * to OF helpers to overload them using those provided by .dts
+> > +	 * file (if any). Final config is then commited.
+> > +	 */
+> > +	g762_config_init(&conf);
+> > +	g762_config_of_overload(client, &conf);
+> > +	err = g762_config_commit(client, &conf);
+> > +	if (err)
+> > +		goto out;
+> 
+> One more comment... Sorry for the multiple replies :)
+> 
+> I am not sure that applying a configuration anyway is a good idea.
+> I think it could be best to stick with the bootloader configuration if
+> no platform data nor device tree data are given.
 
---6Mt39TZj+HFMr11E
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+FWIW, the common policy for hwmon drivers is actually to not change the
+device configuration unless they really have to.
 
-On Wed, Apr 24, 2013 at 12:05:56AM +0200, Arnaud Ebalard wrote:
-> +	/*
-> +	 * Set default configuration values before passing the structure
-> +	 * to OF helpers to overload them using those provided by .dts
-> +	 * file (if any). Final config is then commited.
-> +	 */
-> +	g762_config_init(&conf);
-> +	g762_config_of_overload(client, &conf);
-> +	err = g762_config_commit(client, &conf);
-> +	if (err)
-> +		goto out;
-
-One more comment... Sorry for the multiple replies :)
-
-I am not sure that applying a configuration anyway is a good idea.
-I think it could be best to stick with the bootloader configuration if
-no platform data nor device tree data are given.
-
-Simon
-
---6Mt39TZj+HFMr11E
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlF72rMACgkQgtp0PDeOcDqKzgCgoxI3Ogt80RkVuIrkdTOJl0xh
-BbUAn0iI1jre5g5VzWZbeJxgB7Uk6DF9
-=Ch3z
------END PGP SIGNATURE-----
-
---6Mt39TZj+HFMr11E--
+-- 
+Jean Delvare
