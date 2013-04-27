@@ -1,33 +1,38 @@
 From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH -next] xen/arm: remove duplicated include from enlighten.c
-Date: Sat, 27 Apr 2013 15:45:30 +0800
-Message-ID: <CAPgLHd95AtzEDXUMHryWmmVAkBfkh42hgeLKdSLFYwkO_JB-ZA@mail.gmail.com>
+Subject: [PATCH] serial: sunsu: add missing platform_driver_unregister() when
+ module exit
+Date: Sat, 27 Apr 2013 18:13:16 +0800
+Message-ID: <CAPgLHd_4TH7Ur2VWtqHD3puc9eCkfHKEP9dA-ZwnxE8MtpGLww@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: stefano.stabellini@eu.citrix.com, linux@arm.linux.org.uk, grant.likely@linaro.org, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, xen-devel@lists.xensource.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: davem@davemloft.net, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, sparclinux@vger.kernel.org, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-Remove duplicated include.
+We have registered platform driver when module init, and
+need unregister it when module exit.
 
 Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 ---
- arch/arm/xen/enlighten.c | 1 -
- 1 file changed, 1 deletion(-)
+no compile test.
+---
+ drivers/tty/serial/sunsu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
-index 9a0a917..d30042e 100644
---- a/arch/arm/xen/enlighten.c
-+++ b/arch/arm/xen/enlighten.c
-@@ -10,7 +10,6 @@
- #include <xen/platform_pci.h>
- #include <xen/xenbus.h>
- #include <xen/page.h>
--#include <xen/xen.h>
- #include <xen/interface/sched.h>
- #include <xen/xen-ops.h>
- #include <asm/xen/hypervisor.h>
+diff --git a/drivers/tty/serial/sunsu.c b/drivers/tty/serial/sunsu.c
+index 451687c..0d84657 100644
+--- a/drivers/tty/serial/sunsu.c
++++ b/drivers/tty/serial/sunsu.c
+@@ -1592,6 +1592,7 @@ static int __init sunsu_init(void)
+ 
+ static void __exit sunsu_exit(void)
+ {
++	platform_driver_unregister(&su_driver);
+ 	if (sunsu_reg.nr)
+ 		sunserial_unregister_minors(&sunsu_reg, sunsu_reg.nr);
+ }
+
