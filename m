@@ -1,50 +1,77 @@
-From: arno@natisbad.org (Arnaud Ebalard)
-Subject: Re: [PATCHv1 1/3] hwmon: Add support for GMT G762/G763 PWM fan controller
-Date: Sat, 27 Apr 2013 20:55:50 +0200
-Message-ID: <87vc77247d.fsf@natisbad.org>
-References: <cover.1366753420.git.arno@natisbad.org>
-	<63961d39aee9db94767f28fd441312bec2029473.1366753420.git.arno@natisbad.org>
-	<20130427140331.GL17771@kw.sim.vm.gnt>
-	<20130427165650.GA26415@roeck-us.net>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 1/2] regulator: mc13xxx: Add warning of incorrect
+ names of regulators
+Date: Sun, 28 Apr 2013 02:10:31 +0100
+Message-ID: <20130428011031.GB20197@sirena.org.uk>
+References: <1367044165-6373-1-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130427165650.GA26415@roeck-us.net> (Guenter Roeck's message of
-	"Sat, 27 Apr 2013 09:56:51 -0700")
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Simon Guinot <simon.guinot@sequanux.org>, Andrew Lunn <andrew@lunn.ch>, Olivier Mouchet <olivier.mouchet@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============1630133597166979642=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1367044165-6373-1-git-send-email-shc_work@mail.ru>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter, Jean, Simon,
 
-Guenter Roeck <linux@roeck-us.net> writes:
+--===============1630133597166979642==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="O5XBE6gyVG5Rl6Rj"
+Content-Disposition: inline
 
-> On Sat, Apr 27, 2013 at 04:03:31PM +0200, Simon Guinot wrote:
->> On Wed, Apr 24, 2013 at 12:05:56AM +0200, Arnaud Ebalard wrote:
->> > +	/*
->> > +	 * Set default configuration values before passing the structure
->> > +	 * to OF helpers to overload them using those provided by .dts
->> > +	 * file (if any). Final config is then commited.
->> > +	 */
->> > +	g762_config_init(&conf);
->> > +	g762_config_of_overload(client, &conf);
->> > +	err = g762_config_commit(client, &conf);
->> > +	if (err)
->> > +		goto out;
->> 
->> One more comment... Sorry for the multiple replies :)
->> 
->> I am not sure that applying a configuration anyway is a good idea.
->> I think it could be best to stick with the bootloader configuration if
->> no platform data nor device tree data are given.
->> 
-> Yes, good point. You are absolutely right.
 
-Thanks you all for your feedback. I will take all your comments into
-account and work on a new version. I am somewhat unavailable next week
-so may not be able to push something before next week end.
+--O5XBE6gyVG5Rl6Rj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Cheers,
+On Sat, Apr 27, 2013 at 10:29:24AM +0400, Alexander Shiyan wrote:
+> This patch adds a warning about incorrect regulators instead of
+> printing the names of non-information message about the wrong amount.
 
-a+
+Applied both, thanks.
+
+--O5XBE6gyVG5Rl6Rj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRfHcEAAoJELSic+t+oim9AwwP/jBC4PGPZa0oLo2cYY8LI6jo
+1L3lkdjTVlWgBeT2cojLI9LzOm/rupZlZ3kaU5tDnhRKe6WI+1YgFEelk+SWFGIf
+SbxU204VPkOKA4ulJZPqvc0QD94ZWYwe9OOHE0h7sO7+0YtyaTaL44ezvqXCr9Y5
+NpSeT8HZm89MtpfcyCdABrAQOfmjoZGykE4IlrWCWlIKeAskYJUR1fSPBptY9f9u
+74hdGrwovip6cwm2nSZ5sHWbIiFm0s6dLDa69yadwSI3mg7XOgPG7tGH8FKQOYC/
+Z1m7BW38jxwExv2+4XGLWlto1aB841TzU0i8I8nNhwE/DLZUU9kCTw4v1RrvWSDf
+fMuLT7fCtl7iTzPB/9vBPHp44RkTk5QM6mCuJ5OxBeGir7Sn7S6TfcU595JMkB0U
+OCajFYfxH/9ms+Cybiy3aMu1n1SWw5QkSZvXIc8uTOZzuA2wQSWJmxV24UP7sF7F
+dPVRP/NPH3ugZTnM7VLGcDdUCWX6xJOzQ9EA5m0r7CaXuPg/DdEqNZrQeEVTV+Uu
+iwYfORinoippIGtNkEbgfOMxGTFIeNI0/2J9Rry5ebLriNYHtpH1KdAvzlJMIeMB
+qgz7bWwY/h5jK5S5+lBKexZ1Cvv+x4jDuOst3ijQ+F7lFwIWRhONngw6stAbE3Uu
+r9ONcQiwnx35o9DDMnOx
+=f88+
+-----END PGP SIGNATURE-----
+
+--O5XBE6gyVG5Rl6Rj--
+
+
+--===============1630133597166979642==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1630133597166979642==--
