@@ -1,213 +1,75 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH RFC] media: i2c: mt9p031: add OF support
-Date: Mon, 29 Apr 2013 10:21:28 +0200
-Message-ID: <20130429082128.GG32299@pengutronix.de>
-References: <1367222401-26649-1-git-send-email-prabhakar.csengg@gmail.com>
+From: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] fdtput: expand fdt if value does not fit (v2).
+Date: Mon, 29 Apr 2013 19:08:54 +1000
+Message-ID: <20130429090854.GI20202@truffula.fritz.box>
+References: <1366360596-18968-1-git-send-email-srinivas.kandagatla@st.com>
+ <517E15BE.1090708@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1367222401-26649-1-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: LMML <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Content-Type: multipart/mixed; boundary="===============7976953126951599316=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <517E15BE.1090708-qxv4g6HH51o@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 29, 2013 at 01:30:01PM +0530, Prabhakar Lad wrote:
-> From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> 
-> add OF support for the mt9p031 sensor driver.
-> 
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> Cc: Hans Verkuil <hans.verkuil@cisco.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
-> Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Cc: Sakari Ailus <sakari.ailus@iki.fi>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Rob Landley <rob@landley.net>
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  .../devicetree/bindings/media/i2c/mt9p031.txt      |   43 ++++++++++++++
->  drivers/media/i2c/mt9p031.c                        |   61 +++++++++++++++++++-
->  2 files changed, 103 insertions(+), 1 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/mt9p031.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/mt9p031.txt b/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
-> new file mode 100644
-> index 0000000..b985e63
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
-> @@ -0,0 +1,43 @@
-> +* Aptina 1/2.5-Inch 5Mp CMOS Digital Image Sensor
-> +
-> +The Aptina MT9P031 is a 1/2.5-inch CMOS active pixel digital image sensor with
-> +an active imaging pixel array of 2592H x 1944V. It incorporates sophisticated
-> +camera functions on-chip such as windowing, column and row skip mode, and
-> +snapshot mode. It is programmable through a simple two-wire serial interface.
-> +
-> +The MT9P031 is a progressive-scan sensor that generates a stream of pixel data
-> +at a constant frame rate. It uses an on-chip, phase-locked loop (PLL) to
-> +generate all internal clocks from a single master input clock running between 6
-> +and 27 MHz. The maximum pixel rate is 96 Mp/s, corresponding to a clock rate of
-> +96 MHz.
-> +
-> +Required Properties :
-> +- compatible : value should be either one among the following
-> +	(a) "aptina,mt9p031-sensor" for mt9p031 sensor
-> +	(b) "aptina,mt9p031m-sensor" for mt9p031m sensor
-> +
-> +- ext_freq: Input clock frequency.
-> +
-> +- target_freq:  Pixel clock frequency.
+--===============7976953126951599316==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XjbSsFHOHxvQpKib"
+Content-Disposition: inline
 
-For devicetree properties '-' is preferred over '_'. Most devicetree
-bindings we already have suggest that we shoud use 'frequency' and no
-abbreviation. probably 'clock-frequency' should be used.
+--XjbSsFHOHxvQpKib
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +
-> +Optional Properties :
-> +-reset: Chip reset GPIO (If not specified defaults to -1)
+On Mon, Apr 29, 2013 at 07:39:58AM +0100, Srinivas KANDAGATLA wrote:
+> Hi David/Jon,
+>=20
+> Are there any plans to take this patch?
 
-gpios must be specified as phandles, see of_get_named_gpio().
+Sorry, been sidetracked by other things.  Just sent another round of
+comments.
 
-> +
-> +Example:
-> +
-> +i2c0@1c22000 {
-> +	...
-> +	...
-> +	mt9p031@5d {
-> +		compatible = "aptina,mt9p031-sensor";
-> +		reg = <0x5d>;
-> +
-> +		port {
-> +			mt9p031_1: endpoint {
-> +				ext_freq = <6000000>;
-> +				target_freq = <96000000>;
-> +			};
-> +		};
-> +	};
-> +	...
-> +};
-> \ No newline at end of file
-> diff --git a/drivers/media/i2c/mt9p031.c b/drivers/media/i2c/mt9p031.c
-> index 28cf95b..66078a6 100644
-> --- a/drivers/media/i2c/mt9p031.c
-> +++ b/drivers/media/i2c/mt9p031.c
-> @@ -23,11 +23,13 @@
->  #include <linux/regulator/consumer.h>
->  #include <linux/slab.h>
->  #include <linux/videodev2.h>
-> +#include <linux/of_device.h>
->  
->  #include <media/mt9p031.h>
->  #include <media/v4l2-chip-ident.h>
->  #include <media/v4l2-ctrls.h>
->  #include <media/v4l2-device.h>
-> +#include <media/v4l2-of.h>
->  #include <media/v4l2-subdev.h>
->  
->  #include "aptina-pll.h"
-> @@ -928,10 +930,66 @@ static const struct v4l2_subdev_internal_ops mt9p031_subdev_internal_ops = {
->   * Driver initialization and probing
->   */
->  
-> +#if defined(CONFIG_OF)
-> +static const struct of_device_id mt9p031_of_match[] = {
-> +	{.compatible = "aptina,mt9p031-sensor", },
-> +	{.compatible = "aptina,mt9p031m-sensor", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, mt9p031_of_match);
-> +
-> +static struct mt9p031_platform_data
-> +	*mt9p031_get_pdata(struct i2c_client *client)
-> +
-> +{
-> +	if (!client->dev.platform_data && client->dev.of_node) {
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
-Just because the Kernel is compiled with devicetree support does not
-necessarily mean you actually boot from devicetree. You must still
-handle platform data properly.
+--XjbSsFHOHxvQpKib
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +		struct device_node *np;
-> +		struct mt9p031_platform_data *pdata;
-> +		int ret;
-> +
-> +		np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
-> +		if (!np)
-> +			return NULL;
-> +
-> +		pdata = devm_kzalloc(&client->dev,
-> +				     sizeof(struct mt9p031_platform_data),
-> +				     GFP_KERNEL);
-> +		if (!pdata) {
-> +			pr_warn("mt9p031 failed allocate memeory\n");
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-Use dev_* for messages inside drivers.
+iEYEARECAAYFAlF+OKYACgkQaILKxv3ab8ZcmgCcCCTir06abCH1R/Sh/qB90uQ3
+wJEAn08QN0xys+OTfbs7gqthOYS7iAzx
+=YExQ
+-----END PGP SIGNATURE-----
 
-> +			return NULL;
-> +		}
-> +		ret = of_property_read_u32(np, "reset", &pdata->reset);
-> +		if (ret == -EINVAL)
-> +			pdata->reset = -1;
-> +		else if (ret == -ENODATA)
-> +			return NULL;
-> +
-> +		if (of_property_read_u32(np, "ext_freq", &pdata->ext_freq))
-> +			return NULL;
-> +
-> +		if (of_property_read_u32(np, "target_freq",
-> +					 &pdata->target_freq))
-> +			return NULL;
-> +
-> +		return pdata;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +#else
-> +#define mt9p031_of_match NULL
-> +
-> +static struct mt9p031_platform_data
-> +	*mt9p031_get_pdata(struct i2c_client *client)
-> +{
-> +	return client->dev.platform_data;
-> +}
-> +#endif
-> +
->  static int mt9p031_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *did)
->  {
-> -	struct mt9p031_platform_data *pdata = client->dev.platform_data;
-> +	struct mt9p031_platform_data *pdata = mt9p031_get_pdata(client);
->  	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
->  	struct mt9p031 *mt9p031;
->  	unsigned int i;
-> @@ -1072,6 +1130,7 @@ MODULE_DEVICE_TABLE(i2c, mt9p031_id);
->  
->  static struct i2c_driver mt9p031_i2c_driver = {
->  	.driver = {
-> +		.of_match_table = mt9p031_of_match,
->  		.name = "mt9p031",
->  	},
->  	.probe          = mt9p031_probe,
-> -- 
-> 1.7.4.1
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+--XjbSsFHOHxvQpKib--
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--===============7976953126951599316==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============7976953126951599316==--
