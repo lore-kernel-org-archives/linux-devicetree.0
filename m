@@ -1,81 +1,108 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/3] ASoC: spdif_transmitter: Add DT
-	support.
-Date: Mon, 29 Apr 2013 21:10:14 +0100
-Message-ID: <20130429201014.GF3270@sirena.org.uk>
-References: <1366895594-19596-1-git-send-email-marek.belisko@streamunlimited.com>
- <1366895594-19596-3-git-send-email-marek.belisko@streamunlimited.com>
- <517AD46A.2020402@gmail.com> <517E64A1.4020402@streamunlimited.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
+Date: Mon, 29 Apr 2013 22:56:56 +0200
+Message-ID: <1803841.rv79ElYKi3@avalon>
+References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
+ <1828875.4dYa7WRt67@avalon> <51671F3D.5040501@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3589552766148606702=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <517E64A1.4020402@streamunlimited.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Marek Belisko <marek.belisko@streamunlimited.com>
-Cc: alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, tiwai@suse.de, Marek Belisko <marek.belisko@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, rob@landley.net, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51671F3D.5040501-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Stephen,
 
---===============3589552766148606702==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ChQOR20MqfxkMJg9"
-Content-Disposition: inline
+Sorry for the late reply.
 
+On Thursday 11 April 2013 14:38:21 Stephen Warren wrote:
+> On 04/11/2013 02:06 PM, Laurent Pinchart wrote:
+> > On Thursday 11 April 2013 10:06:49 Stephen Warren wrote:
+> >> On 04/11/2013 03:56 AM, Laurent Pinchart wrote:
+> >>> On Monday 08 April 2013 17:16:37 Andrew Morton wrote:
+> >>>> On Wed,  3 Apr 2013 20:39:43 -0600 Stephen Warren wrote:
+> >>>>> A simple frame-buffer describes a raw memory region that may be
+> >>>>> rendered to, with the assumption that the display hardware has already
+> >>>>> been set up to scan out from that buffer.
+> >>>>> 
+> >>>>> This is useful in cases where a bootloader exists and has set up the
+> >>>>> display hardware, but a Linux driver doesn't yet exist for the display
+> >>>>> hardware.
+> >>>>> 
+> >>>>> ...
+> >>>>> 
+> >>>>> +config FB_SIMPLE
+> >>>>> +	bool "Simple framebuffer support"
+> >>>>> +	depends on (FB = y) && OF
+> >>>> 
+> >>>> It's sad that this simple little thing requires Open Firmware.  Could
+> >>>> it be generalised in some way so that the small amount of setup info
+> >>>> could be provided by other means (eg, module_param) or does the
+> >>>> dependency go deeper than that?
+> >>> 
+> >>> I second that request. I like the idea of a simple framebuffer driver if
+> >>> it helps deprecating fbdev in the long term, but I don't want it to
+> >>> offer an excuse not to implement a DRM/KMS driver. In particular adding
+> >>> DT bindings would force us to keep supporting the ABI for a (too) long
+> >>> time.
+> >> 
+> >> The platforms I intend to use this with only support device tree. Adding
+> >> support for platform data right now would just be dead code. If somebody
+> >> wants to use this driver with a board file based system rather than a DT
+> >> based system, it would be trivial do modify the driver to add a platform
+> >> data structure at that time.
+> > 
+> > What about using module parameters instead of DT bindings and platform
+> > data ? As this is a hack designed to work around the lack of a proper
+> > display driver the frame buffer address and size could just be passed by
+> > the boot loader through the kernel command line, and the device would
+> > then be instantiated by the driver.
+> 
+> I'm afraid I strongly dislike the idea of using module parameters. One
+> of the things that I dislike the most about NVIDIA's downstream Android
+> kernels is the huge number of random parameters that are required on the
+> kernel command-line just to get it to boot.
+> 
+> I'd specifically prefer the configuration for this driver to be a device
+> tree binding so that it /is/ an ABI. That way, arbitrary software that
+> boots the Linux kernel will be able to target a common standard for how
+> to pass this information to the kernel. If we move to module parameters
+> instead, especially with the specific intent that the format of those
+> parameters is no longer an ABI, we run in to issues where a new kernel
+> requires a bootloader update in order to generate the new set of module
+> parameters that are required by the driver. If we say the module
+> parameters will never change except in a backwards-compatible fashion,
+> and hence that issue won't arise, then why not just make it a DT binding?
+> 
+> Do module parameters handle the case of multiple device instances?
 
---ChQOR20MqfxkMJg9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Not well. It can be handled manually by using parameter arrays, but that's a 
+bit hackish.
 
-On Mon, Apr 29, 2013 at 02:16:33PM +0200, Marek Belisko wrote:
-> Dear Sebastian Hesselbarth,
+> Also, I really don't see this driver as a hack. It's a perfectly reasonable
+> situation to have some other SW set up the frame-buffer, and Linux simply
+> continue to use it. Perhaps that other SW even ran on a difference CPU, or
+> the parameters are hard-coded in HW design, and so there's no HW that Linux
+> ever could drive, so it just isn't possible to create any more advanced
+> driver.
 
-> >That is very generic and should allow to remove "linux," prefix.
+I totally agree that this driver would be very useful during board bring-up. 
+My concern is that it would also give an incentive to vendors not to develop a 
+proper KMS driver (or rather remove an incentive to develop one).
 
-> Not sure if linux, prefix can be removed. I believe (at least what
-> documentation said) is that <manufacturer>,<model> must be format
-> for compatible.
+-- 
+Regards,
 
-Yeah, you're supposed to have some prefix.  I guess for stuff that we're
-really happy is totally generic we could use "generic" or something but
-it doesn't make much practical difference.
-
---ChQOR20MqfxkMJg9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRftOjAAoJELSic+t+oim9blkP/2E/DYIxp22J+jhTM0RlpPpx
-byIIJ7j0AswDo/cn2qFA8ojvncHHMV8Ow5q3cb1qUfAGJCo3zwJDgkgyd8ERL1Mj
-pFfKxkoo6ItsVWQDQEOzrrOti3pUqb4rV34P7QiuvaKybw7LNy1QLuw6reLTjsFX
-qH/WLkwFtDzPNLXSY8RdPoFCqmT7+NAec4w/BXFQ8+kY1THkpb36FyIiURECpTY3
-RCDGLrNffIVZT3lfZdBSHQbmP8pZ6tBPguugKhd7Iq4xZjneojhzaTnzKsF9/tNF
-LX9pCSM3FknOfQKydDIEIIBJxUHNN3W/WSObD6nyaLjBPNi/Gj83leMuA/TvIo4B
-QYg0zYddrS36osoGihCZBpY45o3gM9ryd1g5VQrlyuQ2biDJc6ZZu7kRm6rH9HPb
-lQAmPV3lDuzqxXN7PwaRKyzac6NuLP9H9AQnS3r78iX0eJQnQF97ql0La0Hg24hz
-ph1ZT27+0r4BOd0bsEsEBQWFM6+3BNx+t1mk4lJyZuPfFLzPs/GtHKTLJ7v2yasY
-dlap1wi6HODgLC29l0nrB4tKcN30BA2y/Os/+xoV1Gx3TK+EndXIzIa/K2aILRmL
-rRDDqdC5cjoZzNlUkAD401CN+l64u9MsYoNRaqA49A6NYTu0Kt3j39FpEvTZeIcj
-7HKRltDeI4ruM8uNBTzS
-=s4kH
------END PGP SIGNATURE-----
-
---ChQOR20MqfxkMJg9--
-
---===============3589552766148606702==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3589552766148606702==--
+Laurent Pinchart
