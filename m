@@ -1,79 +1,70 @@
-From: Marek Belisko <marek.belisko@streamunlimited.com>
-Subject: Re: [PATCH v2 2/3] ASoC: spdif_transmitter: Add DT support.
-Date: Mon, 29 Apr 2013 14:16:33 +0200
-Message-ID: <517E64A1.4020402@streamunlimited.com>
-References: <1366895594-19596-1-git-send-email-marek.belisko@streamunlimited.com> <1366895594-19596-3-git-send-email-marek.belisko@streamunlimited.com> <517AD46A.2020402@gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] ARM: dts: Add USB host support for Panda and
+ Beagle-xm
+Date: Mon, 29 Apr 2013 15:32:18 +0300
+Message-ID: <517E6852.5010001@ti.com>
+References: <1366365457-28972-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <517AD46A.2020402@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Marek Belisko <marek.belisko@gmail.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, tiwai@suse.de, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, broonie@kernel.org, perex@perex.cz
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1366365457-28972-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: b-cousson-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Sebastian Hesselbarth,
+On 04/19/2013 12:57 PM, Roger Quadros wrote:
+> Hi Benoit/Tony
+> 
+> I've consolidated all the USB host device tree patches for Panda and Beagles
+> to one place and addressed Tony's comments.
+> 
+> NOTE: patch 1 depends on OMAP clock binding introduced in
+> https://lkml.org/lkml/2013/4/12/407
 
-On 04/26/2013 09:24 PM, Sebastian Hesselbarth wrote:
-> On 04/25/2013 03:13 PM, Marek Belisko wrote:
->> Add devicetree support for this dummy audio soc driver.
->>
->> Signed-off-by: Michal Bachraty<michal.bachraty@streamunlimited.com>
->> Signed-off-by: Marek Belisko<marek.belisko@streamunlimited.com>
->> ---
->>   .../bindings/sound/spdif-transmitter.txt           |   10 ++++++++++
->>   sound/soc/codecs/spdif_transmitter.c               |   10 ++++++++++
->>   2 files changed, 20 insertions(+)
->>   create mode 100644
->> Documentation/devicetree/bindings/sound/spdif-transmitter.txt
->>
->> diff --git
->> a/Documentation/devicetree/bindings/sound/spdif-transmitter.txt
->> b/Documentation/devicetree/bindings/sound/spdif-transmitter.txt
->> new file mode 100644
->> index 0000000..55a8584
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/spdif-transmitter.txt
->> @@ -0,0 +1,10 @@
->> +Device-Tree bindings for dummy spdif transmitter
->> +
->> +Required properties:
->> +    - compatible: should be "linux,spdif-dit".
->
-> Marek,
->
-> I remember Daniel commenting on the name already, but
-> what about "spdif-transmitter" and "spdif-receiver" respectively?
-Agree.
-> That is very generic and should allow to remove "linux," prefix.
-Not sure if linux, prefix can be removed. I believe (at least what 
-documentation said) is that <manufacturer>,<model> must be format for 
-compatible.
-> And there is a lot of drivers using more informative compatible
-> strings compared to the driver name.
->
-> Sebastian
->
+Tony, Benoit,
 
-Cheers,
+Just FYI, the patch [1] that is needed will probably not get in
+until 3.10 rc1. However, this series need not wait till that happens.
 
-	~marek
--- 
-Marek Belisko
+[1] https://lkml.org/lkml/2013/4/12/407
 
-Software Developer
-StreamUnlimited Engineering GmbH
-Gutheil Schodergasse 8-12
-A-1100 Vienna, Austria
+cheers,
+-roger
 
-Office: +421 267200087
-
-e-mail: marek.belisko@streamunlimited.com
-http://www.streamunlimited.com
-
-Meet us at:
-
-High End - Munich, 09 - 12 May, Hall 4/F05
-IFA - Berlin, 6-11 September
-CEDIA - Denver, 25-28 September
+> 
+> v3:
+> - updated mux mode to use pulldowns on panda as non-DT boot uses pulldowns.
+> - fixed usb pin naming for panda, beagle and beagle-xm
+> 
+> The following changes since commit 1fac4fffa719a98ec1047eaece236244333c9afe:
+> 
+>   ARM: dts: Add OMAP3430 SDP NOR flash memory binding (2013-04-09 00:21:35 +0200)
+> 
+> are available in the git repository at:
+>   git://github.com/rogerq/linux.git usbhost-omap-dts
+> 
+> Roger Quadros (4):
+>       ARM: dts: omap4-panda: Add USB Host support
+>       ARM: dts: omap3-beagle: Make USB host pin naming consistent
+>       ARM: dts: omap3-beagle-xm: Add USB Host support
+>       ARM: dts: omap3-beagle-xm: Add USB host supprot for Rev. Ax/Bx
+> 
+>  arch/arm/boot/dts/omap3-beagle-xm-ab.dts  |   19 ++++++++
+>  arch/arm/boot/dts/omap3-beagle-xm.dts     |   65 ++++++++++++++++++++++++++++-
+>  arch/arm/boot/dts/omap3-beagle.dts        |   25 ++++++-----
+>  arch/arm/boot/dts/omap4-panda-common.dtsi |   58 +++++++++++++++++++++++++
+>  arch/arm/boot/dts/omap4.dtsi              |    5 ++
+>  5 files changed, 158 insertions(+), 14 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/omap3-beagle-xm-ab.dts
+> 
