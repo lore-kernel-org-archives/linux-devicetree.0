@@ -1,108 +1,160 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 04/10] util_version: new helper for displaying version info
-Date: Mon, 29 Apr 2013 20:55:16 +1000
-Message-ID: <20130429105516.GK20202@truffula.fritz.box>
-References: <1366078397-14889-1-git-send-email-vapier@gentoo.org>
- <1366078397-14889-5-git-send-email-vapier@gentoo.org>
- <20130419005046.GL16400@truffula.fritz.box>
- <201304221719.42982.vapier@gentoo.org>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH RFC] media: i2c: mt9p031: add OF support
+Date: Mon, 29 Apr 2013 16:41:07 +0530
+Message-ID: <CA+V-a8uM61Rzqa2y9b6FZVin2FWHg6o9kO7fqHupqq2dcBT3SA@mail.gmail.com>
+References: <1367222401-26649-1-git-send-email-prabhakar.csengg@gmail.com> <20130429082128.GG32299@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1133229733071458179=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201304221719.42982.vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130429082128.GG32299@pengutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: LMML <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
+Hi Sascha,
 
---===============1133229733071458179==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zROEGoKAXsG5UqGB"
-Content-Disposition: inline
+Thanks for the quick review.
 
+On Mon, Apr 29, 2013 at 1:51 PM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+<Snip>
 
---zROEGoKAXsG5UqGB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>> +Required Properties :
+>> +- compatible : value should be either one among the following
+>> +     (a) "aptina,mt9p031-sensor" for mt9p031 sensor
+>> +     (b) "aptina,mt9p031m-sensor" for mt9p031m sensor
+>> +
+>> +- ext_freq: Input clock frequency.
+>> +
+>> +- target_freq:  Pixel clock frequency.
+>
+> For devicetree properties '-' is preferred over '_'. Most devicetree
+> bindings we already have suggest that we shoud use 'frequency' and no
+> abbreviation. probably 'clock-frequency' should be used.
+>
+Yeah i missed it..  following is the proposed bindings,
+let me know if something is wrong with it.
 
-On Mon, Apr 22, 2013 at 05:19:41PM -0400, Mike Frysinger wrote:
-> On Thursday 18 April 2013 20:50:46 David Gibson wrote:
-> > On Mon, Apr 15, 2013 at 10:13:11PM -0400, Mike Frysinger wrote:
-> > > This is so all utilities can have this flag and not just dtc.
-> > >=20
-> > > Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-> > > Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
-> >=20
-> > Please apply these first 4 patches, regardless of the rest of the
-> > series.
->=20
-> on the subject of the other patches, is there a way i could split them up=
-=20
-> that'd make things more palatable ?  the usage clean up ones could be mer=
-ged=20
-> independently of the new fdtdump options.
+Required Properties :
+- compatible : value should be either one among the following
+	(a) "aptina,mt9p031-sensor" for mt9p031 sensor
+	(b) "aptina,mt9p031m-sensor" for mt9p031m sensor
 
-I don't think there's anything really wrong with the split - it's just
-they're a little more involved, and so it's taken me longer to look
-through them properly.  In particular I've taken a bid of a sidetrack
-working out what is broken for our build on freebsd at the moment and
-fixing that to see how these patches affect it.
+- input-clock-frequency: Input clock frequency.
 
-> clean up series:
-> fdtdump: make usage a bit more friendly
-> dtc/fdt{get,put}/convert-dtsv0-lexer: convert to new usage helpers
-> util: drop "long" from usage helpers
-> util: add common ARRAY_SIZE define
->=20
-> new functionality series:
-> fdtdump: add a --scan option
-> fdtdump: add a debug mode
+- pixel-clock-frequency: Pixel clock frequency.
 
-I don't think it makes a big difference, and two series kind of
-complicates things.  That order is a bit better than the original, at
-least if you pull ARRAY_SIZE out to the front (I'd like to see that go
-in right now, actually).
+Optional Properties :
+-gpio-reset: Chip reset GPIO (If not specified defaults to -1)
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Example:
 
---zROEGoKAXsG5UqGB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+i2c0@1c22000 {
+	...
+	...
+	mt9p031@5d {
+		compatible = "aptina,mt9p031-sensor";
+		reg = <0x5d>;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+		port {
+			mt9p031_1: endpoint {
+				input-clock-frequency = <6000000>;
+				pixel-clock-frequency = <96000000>;
+				gpio-reset = <&gpio3 30 0>;
+			};
+		};
+	};
+	...
+};
 
-iEYEARECAAYFAlF+UZQACgkQaILKxv3ab8ZzYwCgjGm2HxzsHktqbA7JhgqZPvl+
-Zy8An0KEMKpkkOWy+jpHk7itL74uYkkz
-=yiMF
------END PGP SIGNATURE-----
+>> +
+>> +Optional Properties :
+>> +-reset: Chip reset GPIO (If not specified defaults to -1)
+>
+> gpios must be specified as phandles, see of_get_named_gpio().
+>
+Fixed it.
 
---zROEGoKAXsG5UqGB--
+>> +
+>> +Example:
+>> +
+>> +i2c0@1c22000 {
+>> +     ...
+>> +     ...
+>> +     mt9p031@5d {
+>> +             compatible = "aptina,mt9p031-sensor";
+>> +             reg = <0x5d>;
+>> +
+>> +             port {
+>> +                     mt9p031_1: endpoint {
+>> +                             ext_freq = <6000000>;
+>> +                             target_freq = <96000000>;
+>> +                     };
+>> +             };
+>> +     };
+>> +     ...
+>> +};
+>> \ No newline at end of file
+>> diff --git a/drivers/media/i2c/mt9p031.c b/drivers/media/i2c/mt9p031.c
+>> index 28cf95b..66078a6 100644
+>> --- a/drivers/media/i2c/mt9p031.c
+>> +++ b/drivers/media/i2c/mt9p031.c
+>> @@ -23,11 +23,13 @@
+>>  #include <linux/regulator/consumer.h>
+>>  #include <linux/slab.h>
+>>  #include <linux/videodev2.h>
+>> +#include <linux/of_device.h>
+>>
+>>  #include <media/mt9p031.h>
+>>  #include <media/v4l2-chip-ident.h>
+>>  #include <media/v4l2-ctrls.h>
+>>  #include <media/v4l2-device.h>
+>> +#include <media/v4l2-of.h>
+>>  #include <media/v4l2-subdev.h>
+>>
+>>  #include "aptina-pll.h"
+>> @@ -928,10 +930,66 @@ static const struct v4l2_subdev_internal_ops mt9p031_subdev_internal_ops = {
+>>   * Driver initialization and probing
+>>   */
+>>
+>> +#if defined(CONFIG_OF)
+>> +static const struct of_device_id mt9p031_of_match[] = {
+>> +     {.compatible = "aptina,mt9p031-sensor", },
+>> +     {.compatible = "aptina,mt9p031m-sensor", },
+>> +     {},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, mt9p031_of_match);
+>> +
+>> +static struct mt9p031_platform_data
+>> +     *mt9p031_get_pdata(struct i2c_client *client)
+>> +
+>> +{
+>> +     if (!client->dev.platform_data && client->dev.of_node) {
+>
+> Just because the Kernel is compiled with devicetree support does not
+> necessarily mean you actually boot from devicetree. You must still
+> handle platform data properly.
+>
+OK. which one should be given higher preference  client->dev.of_node
+or the client->dev.platform_data ?
 
---===============1133229733071458179==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+>> +             struct device_node *np;
+>> +             struct mt9p031_platform_data *pdata;
+>> +             int ret;
+>> +
+>> +             np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
+>> +             if (!np)
+>> +                     return NULL;
+>> +
+>> +             pdata = devm_kzalloc(&client->dev,
+>> +                                  sizeof(struct mt9p031_platform_data),
+>> +                                  GFP_KERNEL);
+>> +             if (!pdata) {
+>> +                     pr_warn("mt9p031 failed allocate memeory\n");
+>
+> Use dev_* for messages inside drivers.
+>
+Fixed it.
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============1133229733071458179==--
+Regards,
+--Prabhakar Lad
