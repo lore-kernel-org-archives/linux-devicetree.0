@@ -1,69 +1,182 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH RFC] media: i2c: mt9p031: add OF support
-Date: Mon, 29 Apr 2013 16:12:57 +0200
-Message-ID: <1699729.OjpLK67acQ@avalon>
-References: <1367222401-26649-1-git-send-email-prabhakar.csengg@gmail.com> <3228007.esFOONCu9m@avalon> <CA+V-a8ubM9NXA4XNACjXiO1RKRzVmaXOdoM4EyPx96m7S=ffVw@mail.gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [RFC v2 3/6] media: fimc-lite: Adding support for Exynos5
+Date: Mon, 29 Apr 2013 17:13:35 +0200
+Message-ID: <517E8E1F.4080807@samsung.com>
+References: <1366789273-30184-1-git-send-email-shaik.ameer@samsung.com>
+ <1366789273-30184-4-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CA+V-a8ubM9NXA4XNACjXiO1RKRzVmaXOdoM4EyPx96m7S=ffVw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1366789273-30184-4-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, shaik.samsung@gmail.com, arunkk.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Monday 29 April 2013 17:18:02 Prabhakar Lad wrote:
-> On Mon, Apr 29, 2013 at 5:05 PM, Laurent Pinchart wrote:
-> > Hi Prabhakar,
-> > 
-> > Thank you for the patch. Please see below for a couple of comments in
-> > addition to the ones I've just sent (in reply to Sascha's e-mail).
+On 04/24/2013 09:41 AM, Shaik Ameer Basha wrote:
+> FIMC-LITE supports multiple DMA shadow registers from Exynos5 onwards.
+> This patch adds the functionality of using shadow registers by
+> checking the driver data.
 > 
-> Yep fixed them all.
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> ---
+>  drivers/media/platform/exynos4-is/fimc-lite-reg.c |   13 +++++++
+>  drivers/media/platform/exynos4-is/fimc-lite-reg.h |   41 ++++++++++++++++++++-
+>  drivers/media/platform/exynos4-is/fimc-lite.c     |   12 ++++--
+>  3 files changed, 60 insertions(+), 6 deletions(-)
 > 
->  [snip]
-> 
-> >> ---
-> >> 
-> >>  .../devicetree/bindings/media/i2c/mt9p031.txt      |   43 ++++++++++++++
-> >>  drivers/media/i2c/mt9p031.c                        |   61 +++++++++++++-
-> >>  2 files changed, 103 insertions(+), 1 deletions(-)
-> >>  create mode 100644
-> >>  Documentation/devicetree/bindings/media/i2c/mt9p031.txt
-> >> 
-> >> diff --git a/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
-> >> b/Documentation/devicetree/bindings/media/i2c/mt9p031.txt new file mode
-> >> 100644
-> >> index 0000000..b985e63
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
-> >> @@ -0,0 +1,43 @@
-> >> +* Aptina 1/2.5-Inch 5Mp CMOS Digital Image Sensor
-> >> +
-> >> +The Aptina MT9P031 is a 1/2.5-inch CMOS active pixel digital image
-> >> +sensor with an active imaging pixel array of 2592H x 1944V. It
-> >> +incorporates sophisticated camera functions on-chip such as windowing,
-> >> +column and row skip mode, and snapshot mode. It is programmable through
-> >> +a simple two-wire serial interface.
-> >> +The MT9P031 is a progressive-scan sensor that generates a stream of
-> >> +pixel data at a constant frame rate. It uses an on-chip, phase-locked
-> >> +loop (PLL) to generate all internal clocks from a single master input
-> >> +clock running between 6 and 27 MHz. The maximum pixel rate is 96 Mp/s,
-> >> +corresponding to a clock rate of 96 MHz.
-> > 
-> > Isn't this text (directly copied from the datasheet) under Aptina's
-> > copyright ?
-> 
-> hmm :) do you want me change it ?
+> diff --git a/drivers/media/platform/exynos4-is/fimc-lite-reg.c b/drivers/media/platform/exynos4-is/fimc-lite-reg.c
+> index 8cc0d39..a1d566a 100644
+> --- a/drivers/media/platform/exynos4-is/fimc-lite-reg.c
+> +++ b/drivers/media/platform/exynos4-is/fimc-lite-reg.c
+> @@ -215,6 +215,18 @@ void flite_hw_set_camera_bus(struct fimc_lite *dev,
+>  	flite_hw_set_camera_port(dev, si->mux_id);
+>  }
+>  
+> +static void flite_hw_set_pack12(struct fimc_lite *dev, int on)
+> +{
+> +	u32 cfg = readl(dev->regs + FLITE_REG_CIODMAFMT);
+> +
+> +	cfg &= ~FLITE_REG_CIODMAFMT_PACK12;
+> +
+> +	if (on)
+> +		cfg |= FLITE_REG_CIODMAFMT_PACK12;
+> +
+> +	writel(cfg, dev->regs + FLITE_REG_CIODMAFMT);
+> +}
+> +
+>  static void flite_hw_set_out_order(struct fimc_lite *dev, struct flite_frame *f)
+>  {
+>  	static const u32 pixcode[4][2] = {
+> @@ -267,6 +279,7 @@ void flite_hw_set_output_dma(struct fimc_lite *dev, struct flite_frame *f,
+>  
+>  	flite_hw_set_out_order(dev, f);
+>  	flite_hw_set_dma_window(dev, f);
+> +	flite_hw_set_pack12(dev, 0);
 
->From a personal point of view I don't care much, and I don't think Aptina 
-would either, but I'd rather be safe than sorry on such matters, so it would 
-probably be a good idea to change the text. One or two sentences should be 
-enough.
+Are you planning to use this function with the second argument's different
+value than 0 ? FLITE_REG_CIODMAFMT_PACK12 default value after reset is 0. 
+I'm not opposed to keeping this code, just was wondering if it is not needed 
+only when support for some packed media bus formats is added and we actually
+set the PACK12 bit to 1 ?
 
--- 
+>  }
+>  
+>  void flite_hw_dump_regs(struct fimc_lite *dev, const char *label)
+> diff --git a/drivers/media/platform/exynos4-is/fimc-lite-reg.h b/drivers/media/platform/exynos4-is/fimc-lite-reg.h
+> index 3903839..8e57e7a 100644
+> --- a/drivers/media/platform/exynos4-is/fimc-lite-reg.h
+> +++ b/drivers/media/platform/exynos4-is/fimc-lite-reg.h
+> @@ -120,6 +120,10 @@
+>  /* b0: 1 - camera B, 0 - camera A */
+>  #define FLITE_REG_CIGENERAL_CAM_B		(1 << 0)
+>  
+> +
+> +#define FLITE_REG_CIFCNTSEQ			0x100
+> +#define FLITE_REG_CIOSAN(x)			(0x200 + (4 * (x)))
+> +
+>  /* ----------------------------------------------------------------------------
+>   * Function declarations
+>   */
+> @@ -143,8 +147,41 @@ void flite_hw_set_dma_window(struct fimc_lite *dev, struct flite_frame *f);
+>  void flite_hw_set_test_pattern(struct fimc_lite *dev, bool on);
+>  void flite_hw_dump_regs(struct fimc_lite *dev, const char *label);
+>  
+> -static inline void flite_hw_set_output_addr(struct fimc_lite *dev, u32 paddr)
+> +static inline void flite_hw_set_output_addr(struct fimc_lite *dev,
+> +	u32 paddr, u32 index)
+> +{
+> +	u32 config;
+> +
+> +	/* FLITE in EXYNOS4 has only one DMA register */
+> +	if (!dev->dd->support_multi_dma_buf)
+> +		index = 0;
+> +
+> +	config = readl(dev->regs + FLITE_REG_CIFCNTSEQ);
+> +	config |= 1 << index;
+
+nit: Could be also written more explicitly:
+
+config |= BIT(index);
+
+(needs #include <linux/bitops.h>)
+
+> +static inline void flite_hw_set_output_addr(struct fimc_lite *dev,
+> +	u32 paddr, u32 index)
+
+> +	writel(config, dev->regs + FLITE_REG_CIFCNTSEQ);
+> +
+> +	if (index == 0)
+> +		writel(paddr, dev->regs + FLITE_REG_CIOSA);
+> +	else
+> +		writel(paddr, dev->regs + FLITE_REG_CIOSAN(index-1));
+> +}
+> +
+> +static inline void flite_hw_clear_output_addr(struct fimc_lite *dev, u32 index)
+>  {
+> -	writel(paddr, dev->regs + FLITE_REG_CIOSA);
+> +	u32 config;
+> +
+> +	/* FLITE in EXYNOS4 has only one DMA register */
+> +	if (!dev->dd->support_multi_dma_buf)
+> +		index = 0;
+> +
+> +	config = readl(dev->regs + FLITE_REG_CIFCNTSEQ);
+> +	config &= ~(1 << index);
+> +	writel(config, dev->regs + FLITE_REG_CIFCNTSEQ);
+>  }
+> +
+> +static inline void flite_hw_clear_output_index(struct fimc_lite *dev)
+> +{
+> +	writel(0, dev->regs + FLITE_REG_CIFCNTSEQ);
+> +}
+> +
+>  #endif /* FIMC_LITE_REG_H */
+> diff --git a/drivers/media/platform/exynos4-is/fimc-lite.c b/drivers/media/platform/exynos4-is/fimc-lite.c
+> index cb173ec..1b12ea8 100644
+> --- a/drivers/media/platform/exynos4-is/fimc-lite.c
+> +++ b/drivers/media/platform/exynos4-is/fimc-lite.c
+> @@ -166,6 +166,8 @@ static int fimc_lite_hw_init(struct fimc_lite *fimc, bool isp_output)
+>  	if (fimc->inp_frame.fmt == NULL || fimc->out_frame.fmt == NULL)
+>  		return -EINVAL;
+>  
+> +	flite_hw_clear_output_index(fimc);
+> +
+>  	/* Get sensor configuration data from the sensor subdev */
+>  	si = v4l2_get_subdev_hostdata(fimc->sensor);
+>  	if (!si)
+> @@ -307,11 +309,12 @@ static irqreturn_t flite_irq_handler(int irq, void *priv)
+>  		tv->tv_sec = ts.tv_sec;
+>  		tv->tv_usec = ts.tv_nsec / NSEC_PER_USEC;
+>  		vbuf->vb.v4l2_buf.sequence = fimc->frame_count++;
+> +		flite_hw_clear_output_addr(fimc, vbuf->vb.v4l2_buf.index);
+
+This patch looks OK except that it might not be a good idea to use v4l2_buf.index
+in the kernel to control how frame buffers are queued in the hardware.
+I think it can break with USERPTR buffers, when user space is free to re-assign
+memory buffer address to a v4l2_buffer with given index.
+So IMO the kernel should maintain it's own id of a buffer in hardware, 
+associated with a buffer in e.g. buffer_queue op.
+
+> @@ -643,7 +647,7 @@ static int fimc_vidioc_querycap_capture(struct file *file, void *priv,
+>  	strlcpy(cap->driver, FIMC_LITE_DRV_NAME, sizeof(cap->driver));
+>  	cap->bus_info[0] = 0;
+>  	cap->card[0] = 0;
+> -	cap->capabilities = V4L2_CAP_STREAMING;
+> +	cap->capabilities = V4L2_CAP_STREAMING | V4L2_CAP_VIDEO_CAPTURE_MPLANE;
+
+The FIMC-LITE video nodes require some subdevices to be configured and video
+capture will not work if user space skips these steps. Hence it cannot be
+assumed at user space that this video node is a standard V4L2 video capture
+device and V4L2_CAP_VIDEO_CAPTURE_MPLANE must not be set for it.
+
+I have tested patches 2...4/6 on Exynos4412 SoC and a side effect is that 
+frame rate seems to be twice lower. In addition, there is twice as many
+FIMC-LITE interrupts, since you have turned on FRAME_END interrupt 
+permanently. With two additional interrupts from the MIPI-CSI receiver per 
+each frame it's a bit worrying. I'll comment on that at patch 5/6.
+
+
 Regards,
-
-Laurent Pinchart
-
+Sylwester
