@@ -1,143 +1,94 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH RFC] media: i2c: mt9p031: add OF support
-Date: Mon, 29 Apr 2013 17:18:02 +0530
-Message-ID: <CA+V-a8ubM9NXA4XNACjXiO1RKRzVmaXOdoM4EyPx96m7S=ffVw@mail.gmail.com>
-References: <1367222401-26649-1-git-send-email-prabhakar.csengg@gmail.com> <3228007.esFOONCu9m@avalon>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [RFC v2 2/6] fimc-lite: Adding Exynos5 compatibility to fimc-lite
+ driver
+Date: Mon, 29 Apr 2013 14:08:37 +0200
+Message-ID: <517E62C5.8030207@samsung.com>
+References: <1366789273-30184-1-git-send-email-shaik.ameer@samsung.com>
+ <1366789273-30184-3-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <3228007.esFOONCu9m@avalon>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1366789273-30184-3-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, shaik.samsung@gmail.com, arunkk.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+On 04/24/2013 09:41 AM, Shaik Ameer Basha wrote:
+> This patch adds,
+> 1] Exynos5 soc compatibility to the fimc-lite driver
+> 2] Multiple dma output buffer support as from Exynos5 onwards,
+>    fimc-lite h/w ip supports multiple dma buffers.
+> 
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> ---
+>  drivers/media/platform/exynos4-is/fimc-lite.c |   19 ++++++++++++++++++-
+>  drivers/media/platform/exynos4-is/fimc-lite.h |    4 +++-
+>  2 files changed, 21 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/exynos4-is/fimc-lite.c b/drivers/media/platform/exynos4-is/fimc-lite.c
+> index 4878089..cb173ec 100644
+> --- a/drivers/media/platform/exynos4-is/fimc-lite.c
+> +++ b/drivers/media/platform/exynos4-is/fimc-lite.c
+> @@ -1467,7 +1467,7 @@ static int fimc_lite_probe(struct platform_device *pdev)
+>  		fimc->index = pdev->id;
+>  	}
+>  
+> -	if (!drv_data || fimc->index < 0 || fimc->index >= FIMC_LITE_MAX_DEVS)
+> +	if (!drv_data || fimc->index < 0 || fimc->index >= drv_data->num_devs)
+>  		return -EINVAL;
+>  
+>  	fimc->dd = drv_data;
+> @@ -1625,6 +1625,19 @@ static struct flite_drvdata fimc_lite_drvdata_exynos4 = {
+>  	.out_width_align	= 8,
+>  	.win_hor_offs_align	= 2,
+>  	.out_hor_offs_align	= 8,
+> +	.support_multi_dma_buf	= false,
+> +	.num_devs = 2,
+> +};
 
-On Mon, Apr 29, 2013 at 5:05 PM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> Hi Prabhakar,
->
-> Thank you for the patch. Please see below for a couple of comments in addition
-> to the ones I've just sent (in reply to Sascha's e-mail).
->
-Yep fixed them all.
+Could you include this in your patch:
 
- [snip]
->
->> ---
->>  .../devicetree/bindings/media/i2c/mt9p031.txt      |   43 ++++++++++++++
->>  drivers/media/i2c/mt9p031.c                        |   61 ++++++++++++++++-
->>  2 files changed, 103 insertions(+), 1 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/media/i2c/mt9p031.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
->> b/Documentation/devicetree/bindings/media/i2c/mt9p031.txt new file mode
->> 100644
->> index 0000000..b985e63
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
->> @@ -0,0 +1,43 @@
->> +* Aptina 1/2.5-Inch 5Mp CMOS Digital Image Sensor
->> +
->> +The Aptina MT9P031 is a 1/2.5-inch CMOS active pixel digital image sensor
->> +with an active imaging pixel array of 2592H x 1944V. It incorporates
->> +sophisticated camera functions on-chip such as windowing, column and row
->> +skip mode, and snapshot mode. It is programmable through a simple two-wire
->> +serial interface.
->> +The MT9P031 is a progressive-scan sensor that generates a stream of pixel
->> +data at a constant frame rate. It uses an on-chip, phase-locked loop (PLL)
->> +to generate all internal clocks from a single master input clock running
->> +between 6 and 27 MHz. The maximum pixel rate is 96 Mp/s, corresponding to
->> +a clock rate of 96 MHz.
->
-> Isn't this text (directly copied from the datasheet) under Aptina's copyright
-> ?
->
-hmm :) do you want me change it ?
+/**
+ * struct flite_drvdata - FIMC-LITE IP variant data structure
+ * @max_width: maximum camera interface input width in pixels
+ * @max_height: maximum camera interface input height in pixels
+ * @out_width_align: minimum output width alignment in pixels
+ * @win_hor_offs_align: minimum camera interface crop window horizontal
+ * 			offset alignment in pixels
+ * @out_hor_offs_align: minimum output DMA compose rectangle horizontal
+ * 			offset alignment in pixels
+ * @num_out_dma_bufs: number of output DMA buffer start address registers
+ */
+?
+> +/* EXYNOS5250 */
+> +static struct flite_drvdata fimc_lite_drvdata_exynos5 = {
+> +	.max_width		= 8192,
+> +	.max_height		= 8192,
+> +	.out_width_align	= 8,
+> +	.win_hor_offs_align	= 2,
+> +	.out_hor_offs_align	= 8,
+> +	.support_multi_dma_buf	= true,
 
->> +Required Properties :
->> +- compatible : value should be either one among the following
->> +     (a) "aptina,mt9p031-sensor" for mt9p031 sensor
->> +     (b) "aptina,mt9p031m-sensor" for mt9p031m sensor
->> +
->> +- ext_freq: Input clock frequency.
->> +
->> +- target_freq:  Pixel clock frequency.
->> +
->> +Optional Properties :
->> +-reset: Chip reset GPIO (If not specified defaults to -1)
->> +
->> +Example:
->> +
->> +i2c0@1c22000 {
->> +     ...
->> +     ...
->> +     mt9p031@5d {
->> +             compatible = "aptina,mt9p031-sensor";
->> +             reg = <0x5d>;
->> +
->> +             port {
->> +                     mt9p031_1: endpoint {
->> +                             ext_freq = <6000000>;
->> +                             target_freq = <96000000>;
->> +                     };
->> +             };
->> +     };
->> +     ...
->> +};
->> \ No newline at end of file
->> diff --git a/drivers/media/i2c/mt9p031.c b/drivers/media/i2c/mt9p031.c
->> index 28cf95b..66078a6 100644
->> --- a/drivers/media/i2c/mt9p031.c
->> +++ b/drivers/media/i2c/mt9p031.c
->> @@ -23,11 +23,13 @@
->>  #include <linux/regulator/consumer.h>
->>  #include <linux/slab.h>
->>  #include <linux/videodev2.h>
->> +#include <linux/of_device.h>
->>
->>  #include <media/mt9p031.h>
->>  #include <media/v4l2-chip-ident.h>
->>  #include <media/v4l2-ctrls.h>
->>  #include <media/v4l2-device.h>
->> +#include <media/v4l2-of.h>
->>  #include <media/v4l2-subdev.h>
->>
->>  #include "aptina-pll.h"
->> @@ -928,10 +930,66 @@ static const struct v4l2_subdev_internal_ops
->> mt9p031_subdev_internal_ops = { * Driver initialization and probing
->>   */
->>
->> +#if defined(CONFIG_OF)
->> +static const struct of_device_id mt9p031_of_match[] = {
->> +     {.compatible = "aptina,mt9p031-sensor", },
->> +     {.compatible = "aptina,mt9p031m-sensor", },
->
-> As you'll need to resubmit anyway, please add a space between '{' and '.'
->
-OK
+How about changing it to 'num_out_dma_bufs' ? And instead of
 
->> +     {},
->> +};
->> +MODULE_DEVICE_TABLE(of, mt9p031_of_match);
->> +
-[Snip]
->> -     struct mt9p031_platform_data *pdata = client->dev.platform_data;
->> +     struct mt9p031_platform_data *pdata = mt9p031_get_pdata(client);
->>       struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
->>       struct mt9p031 *mt9p031;
->>       unsigned int i;
->> @@ -1072,6 +1130,7 @@ MODULE_DEVICE_TABLE(i2c, mt9p031_id);
->>
->>  static struct i2c_driver mt9p031_i2c_driver = {
->>       .driver = {
->> +             .of_match_table = mt9p031_of_match,
->
-> You can use the of_match_ptr() macro instead of defining mt9p031_of_match as
-> NULL above.
->
-Ok
+if (dd->support_multi_dma_buf)
 
-Regards,
---Prabhakar Lad
+having
+
+if (dd->num_out_dma_bufs > 1)
+
+?
+
+Otherwise the patch looks good to me. I will make a separate patch
+to update the binding documentation.
+
+I've found there is a mistake in the compatible property's documentation.
+I would like to fix it in the 3.10-rc cycle, I'm not 100% sure if it
+qualifies as the -rc material, but having kernel released with wrongly
+documented compatible property would have been bad I think.
+
+
+Thanks,
+Sylwester
