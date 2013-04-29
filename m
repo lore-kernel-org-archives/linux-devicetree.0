@@ -1,161 +1,136 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [RFC PATCH v3 05/17] ARM: dts: at91: cpus/cpu node dts updates
-Date: Mon, 29 Apr 2013 11:54:46 +0200
-Message-ID: <517E4366.4040209@atmel.com>
-References: <1366824502-19729-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1366824502-19729-6-git-send-email-lorenzo.pieralisi@arm.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v6 6/9] ARM: dts: omap: update usb_otg_hs data
+Date: Mon, 29 Apr 2013 15:33:29 +0530
+Message-ID: <1367229812-30574-7-git-send-email-kishon@ti.com>
+References: <1367229812-30574-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1366824502-19729-6-git-send-email-lorenzo.pieralisi@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Dave Martin <dave.martin@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Lennert Buytenhek <kernel@wantstofly.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Grant Likely <grant.likely@linaro.org>, David Brown <davidb@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Dinh Nguyen <dinguyen@altera.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Sekhar Nori <nsekhar@ti.com>, devicetree-discuss@lists.ozlabs.o
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1367229812-30574-1-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: grant.likely@linaro.org, tony@atomide.com, balbi@ti.com, kishon@ti.com, arnd@arndb.de, swarren@nvidia.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, sylvester.nawrocki@gmail.com
+Cc: rob.herring@calxeda.com, rob@landley.net, b-cousson@ti.com, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, benoit.cousson@linaro.org, mchehab@redhat.com, akpm@linux-foundation.org, cesarb@cesarb.net, davem@davemloft.net, rnayak@ti.com, shawn.guo@linaro.org, santosh.shilimkar@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/24/2013 07:28 PM, Lorenzo Pieralisi :
-> This patch updates the in-kernel dts files according to the latest cpus
-> and cpu bindings updates for ARM.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Updated the usb_otg_hs dt data to include the *phy* and *phy-names*
+binding in order for the driver to use the new generic PHY framework.
+Also updated the Documentation to include the binding information.
+The PHY binding information can be found at
+Documentation/devicetree/bindings/phy/phy-bindings.txt
 
-With changes in compatible string... ok then.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ Documentation/devicetree/bindings/usb/omap-usb.txt |    5 +++++
+ Documentation/devicetree/bindings/usb/usb-phy.txt  |    6 ++++++
+ arch/arm/boot/dts/omap3.dtsi                       |    2 ++
+ arch/arm/boot/dts/omap4.dtsi                       |    3 +++
+ arch/arm/boot/dts/twl4030.dtsi                     |    1 +
+ 5 files changed, 17 insertions(+)
 
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-
-> ---
->  arch/arm/boot/dts/at91rm9200.dtsi  | 6 +++++-
->  arch/arm/boot/dts/at91sam9260.dtsi | 8 ++++++--
->  arch/arm/boot/dts/at91sam9263.dtsi | 8 ++++++--
->  arch/arm/boot/dts/at91sam9g45.dtsi | 8 ++++++--
->  arch/arm/boot/dts/at91sam9n12.dtsi | 8 ++++++--
->  arch/arm/boot/dts/at91sam9x5.dtsi  | 8 ++++++--
->  6 files changed, 35 insertions(+), 11 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/at91rm9200.dtsi b/arch/arm/boot/dts/at91rm9200.dtsi
-> index b0268a5..f16b3d4 100644
-> --- a/arch/arm/boot/dts/at91rm9200.dtsi
-> +++ b/arch/arm/boot/dts/at91rm9200.dtsi
-> @@ -34,8 +34,12 @@
->  		ssc2 = &ssc2;
->  	};
->  	cpus {
-> -		cpu@0 {
-> +		#address-cells = <0>;
-> +		#size-cells = <0>;
-> +
-> +		cpu {
->  			compatible = "arm,arm920t";
-> +			device_type = "cpu";
->  		};
->  	};
->  
-> diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-> index cb7bcc5..c4eeef7 100644
-> --- a/arch/arm/boot/dts/at91sam9260.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9260.dtsi
-> @@ -32,8 +32,12 @@
->  		ssc0 = &ssc0;
->  	};
->  	cpus {
-> -		cpu@0 {
-> -			compatible = "arm,arm926ejs";
-> +		#address-cells = <0>;
-> +		#size-cells = <0>;
-> +
-> +		cpu {
-> +			compatible = "arm,arm926ej-s";
-> +			device_type = "cpu";
->  		};
->  	};
->  
-> diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-> index 271d4de..f3b5c2a 100644
-> --- a/arch/arm/boot/dts/at91sam9263.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9263.dtsi
-> @@ -29,8 +29,12 @@
->  		ssc1 = &ssc1;
->  	};
->  	cpus {
-> -		cpu@0 {
-> -			compatible = "arm,arm926ejs";
-> +		#address-cells = <0>;
-> +		#size-cells = <0>;
-> +
-> +		cpu {
-> +			compatible = "arm,arm926ej-s";
-> +			device_type = "cpu";
->  		};
->  	};
->  
-> diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-> index 6b1d4ca..6c18bd3 100644
-> --- a/arch/arm/boot/dts/at91sam9g45.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-> @@ -35,8 +35,12 @@
->  		ssc1 = &ssc1;
->  	};
->  	cpus {
-> -		cpu@0 {
-> -			compatible = "arm,arm926ejs";
-> +		#address-cells = <0>;
-> +		#size-cells = <0>;
-> +
-> +		cpu {
-> +			compatible = "arm,arm926ej-s";
-> +			device_type = "cpu";
->  		};
->  	};
->  
-> diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-> index 7750f98..c3b11af 100644
-> --- a/arch/arm/boot/dts/at91sam9n12.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-> @@ -31,8 +31,12 @@
->  		ssc0 = &ssc0;
->  	};
->  	cpus {
-> -		cpu@0 {
-> -			compatible = "arm,arm926ejs";
-> +		#address-cells = <0>;
-> +		#size-cells = <0>;
-> +
-> +		cpu {
-> +			compatible = "arm,arm926ej-s";
-> +			device_type = "cpu";
->  		};
->  	};
->  
-> diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-> index aa98e64..6c39d0f 100644
-> --- a/arch/arm/boot/dts/at91sam9x5.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-> @@ -33,8 +33,12 @@
->  		ssc0 = &ssc0;
->  	};
->  	cpus {
-> -		cpu@0 {
-> -			compatible = "arm,arm926ejs";
-> +		#address-cells = <0>;
-> +		#size-cells = <0>;
-> +
-> +		cpu {
-> +			compatible = "arm,arm926ej-s";
-> +			device_type = "cpu";
->  		};
->  	};
->  
-> 
-
-
+diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
+index d4769f3..c0871a7 100644
+--- a/Documentation/devicetree/bindings/usb/omap-usb.txt
++++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
+@@ -19,6 +19,9 @@ OMAP MUSB GLUE
+  - power : Should be "50". This signifies the controller can supply upto
+    100mA when operating in host mode.
+  - usb-phy : the phandle for the PHY device
++ - phys : the phandle for the PHY device (used by generic PHY framework)
++ - phy-names : the names of the PHY corresponding to the PHYs present in the
++   *phy* phandle.
+ 
+ Optional properties:
+  - ctrl-module : phandle of the control module this glue uses to write to
+@@ -33,6 +36,8 @@ usb_otg_hs: usb_otg_hs@4a0ab000 {
+ 	num-eps = <16>;
+ 	ram-bits = <12>;
+ 	ctrl-module = <&omap_control_usb>;
++	phys = <&usb2_phy>;
++	phy-names = "usb2-phy";
+ };
+ 
+ Board specific device node entry
+diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt b/Documentation/devicetree/bindings/usb/usb-phy.txt
+index 61496f5..c0245c8 100644
+--- a/Documentation/devicetree/bindings/usb/usb-phy.txt
++++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
+@@ -5,6 +5,8 @@ OMAP USB2 PHY
+ Required properties:
+  - compatible: Should be "ti,omap-usb2"
+  - reg : Address and length of the register set for the device.
++ - #phy-cells: determine the number of cells that should be given in the
++   phandle while referencing this phy.
+ 
+ Optional properties:
+  - ctrl-module : phandle of the control module used by PHY driver to power on
+@@ -16,6 +18,7 @@ usb2phy@4a0ad080 {
+ 	compatible = "ti,omap-usb2";
+ 	reg = <0x4a0ad080 0x58>;
+ 	ctrl-module = <&omap_control_usb>;
++	#phy-cells = <0>;
+ };
+ 
+ OMAP USB3 PHY
+@@ -25,6 +28,8 @@ Required properties:
+  - reg : Address and length of the register set for the device.
+  - reg-names: The names of the register addresses corresponding to the registers
+    filled in "reg".
++ - #phy-cells: determine the number of cells that should be given in the
++   phandle while referencing this phy.
+ 
+ Optional properties:
+  - ctrl-module : phandle of the control module used by PHY driver to power on
+@@ -39,4 +44,5 @@ usb3phy@4a084400 {
+ 	      <0x4a084c00 0x40>;
+ 	reg-names = "phy_rx", "phy_tx", "pll_ctrl";
+ 	ctrl-module = <&omap_control_usb>;
++	#phy-cells = <0>;
+ };
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+index 4ad03d9..51b4bee 100644
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -520,6 +520,8 @@
+ 			interrupt-names = "mc", "dma";
+ 			ti,hwmods = "usb_otg_hs";
+ 			usb-phy = <&usb2_phy>;
++			phys = <&usb2_phy>;
++			phy-names = "usb2-phy";
+ 			multipoint = <1>;
+ 			num-eps = <16>;
+ 			ram-bits = <12>;
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 2a56428..dae620b 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -517,6 +517,7 @@
+ 				compatible = "ti,omap-usb2";
+ 				reg = <0x4a0ad080 0x58>;
+ 				ctrl-module = <&omap_control_usb>;
++				#phy-cells = <0>;
+ 			};
+ 		};
+ 
+@@ -655,6 +656,8 @@
+ 			interrupt-names = "mc", "dma";
+ 			ti,hwmods = "usb_otg_hs";
+ 			usb-phy = <&usb2_phy>;
++			phys = <&usb2_phy>;
++			phy-names = "usb2-phy";
+ 			multipoint = <1>;
+ 			num-eps = <16>;
+ 			ram-bits = <12>;
+diff --git a/arch/arm/boot/dts/twl4030.dtsi b/arch/arm/boot/dts/twl4030.dtsi
+index b3034da..ce4cd6f 100644
+--- a/arch/arm/boot/dts/twl4030.dtsi
++++ b/arch/arm/boot/dts/twl4030.dtsi
+@@ -80,6 +80,7 @@
+ 		usb1v8-supply = <&vusb1v8>;
+ 		usb3v1-supply = <&vusb3v1>;
+ 		usb_mode = <1>;
++		#phy-cells = <0>;
+ 	};
+ 
+ 	twl_pwm: pwm {
 -- 
-Nicolas Ferre
+1.7.10.4
