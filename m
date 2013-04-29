@@ -1,70 +1,245 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] ARM: dts: Add USB host support for Panda and
- Beagle-xm
-Date: Mon, 29 Apr 2013 15:32:18 +0300
-Message-ID: <517E6852.5010001@ti.com>
-References: <1366365457-28972-1-git-send-email-rogerq@ti.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] media: i2c: tvp514x: add OF support
+Date: Mon, 29 Apr 2013 15:57:34 +0200
+Message-ID: <7684541.nmKBKd3EoN@avalon>
+References: <1366975430-31806-1-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1366365457-28972-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: b-cousson-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1366975430-31806-1-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/19/2013 12:57 PM, Roger Quadros wrote:
-> Hi Benoit/Tony
-> 
-> I've consolidated all the USB host device tree patches for Panda and Beagles
-> to one place and addressed Tony's comments.
-> 
-> NOTE: patch 1 depends on OMAP clock binding introduced in
-> https://lkml.org/lkml/2013/4/12/407
+Hi Prabhakar,
 
-Tony, Benoit,
+Thank you for the patch. Please see below for a couple of comments. Most of 
+them apply to your adv7343 patch as well.
 
-Just FYI, the patch [1] that is needed will probably not get in
-until 3.10 rc1. However, this series need not wait till that happens.
+On Friday 26 April 2013 16:53:50 Prabhakar Lad wrote:
+> From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> 
+> add OF support for the tvp514x driver.
+> 
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> Cc: Hans Verkuil <hans.verkuil@cisco.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+> Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Cc: Sakari Ailus <sakari.ailus@iki.fi>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Rob Landley <rob@landley.net>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: davinci-linux-open-source@linux.davincidsp.com
+> ---
+>  RFC v1: https://patchwork.kernel.org/patch/2030061/
+>  RFC v2: https://patchwork.kernel.org/patch/2061811/
+> 
+>  Changes for current version from RFC v2:
+>  1: Fixed review comments pointed by Sylwester.
+> 
+>  .../devicetree/bindings/media/i2c/tvp514x.txt      |   38 +++++++++++
+>  drivers/media/i2c/tvp514x.c                        |   67 +++++++++++++++--
+>  2 files changed, 98 insertions(+), 7 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+> b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt new file mode
+> 100644
+> index 0000000..618640a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+> @@ -0,0 +1,38 @@
+> +* Texas Instruments TVP514x video decoder
+> +
+> +The TVP5146/TVP5146m2/TVP5147/TVP5147m1 device is high quality, single-chip
+> +digital video decoder that digitizes and decodes all popular baseband
+> +analog video formats into digital video component. The tvp514x decoder
+> +supports analog-to-digital (A/D) conversion of component RGB and YPbPr
+> +signals as well as A/D conversion and decoding of NTSC, PAL and SECAM
+> +composite and S-video into component YCbCr.
+> +
+> +Required Properties :
+> +- compatible: Must be "ti,tvp514x-decoder"
 
-[1] https://lkml.org/lkml/2013/4/12/407
+According to the code below, it must be one of
 
-cheers,
--roger
+        "ti,tvp5146-decoder"
+        "ti,tvp5146m2-decoder"
+        "ti,tvp5147-decoder"
+        "ti,tvp5147m1-decoder"
 
+Couldn't you remove "-decoder" ?
+
+You should add a reference to the V4L2 DT bindings documentation to explain 
+what the port and endpoint nodes are for.
+
+> +- hsync-active: HSYNC Polarity configuration for current interface.
+> +- vsync-active: VSYNC Polarity configuration for current interface.
+> +- pclk-sample: Clock polarity of the current interface.
+
+s/current interface/endpoint/ ?
+
+> +Example:
+> +
+> +i2c0@1c22000 {
+> +	...
+> +	...
+> +
+> +	tvp514x@5c {
+> +		compatible = "ti,tvp514x-decoder";
+> +		reg = <0x5c>;
+> +
+> +		port {
+> +			tvp514x_1: endpoint {
+> +				/* Active high (Defaults to 0) */
+> +				hsync-active = <1>;
+> +				/* Active high (Defaults to 0) */
+> +				vsync-active = <1>;
+> +				/* Active low (Defaults to 0) */
+> +				pclk-sample = <0>;
+> +			};
+> +		};
+> +	};
+> +	...
+> +};
+> diff --git a/drivers/media/i2c/tvp514x.c b/drivers/media/i2c/tvp514x.c
+> index 887bd93..d37b85e 100644
+> --- a/drivers/media/i2c/tvp514x.c
+> +++ b/drivers/media/i2c/tvp514x.c
+> @@ -35,7 +35,9 @@
+>  #include <linux/videodev2.h>
+>  #include <linux/module.h>
+>  #include <linux/v4l2-mediabus.h>
+> +#include <linux/of_device.h>
 > 
-> v3:
-> - updated mux mode to use pulldowns on panda as non-DT boot uses pulldowns.
-> - fixed usb pin naming for panda, beagle and beagle-xm
+> +#include <media/v4l2-of.h>
+>  #include <media/v4l2-async.h>
+>  #include <media/v4l2-device.h>
+>  #include <media/v4l2-common.h>
+> @@ -1056,6 +1058,58 @@ static struct tvp514x_decoder tvp514x_dev = {
 > 
-> The following changes since commit 1fac4fffa719a98ec1047eaece236244333c9afe:
+>  };
 > 
->   ARM: dts: Add OMAP3430 SDP NOR flash memory binding (2013-04-09 00:21:35 +0200)
+> +#if defined(CONFIG_OF)
+> +static const struct of_device_id tvp514x_of_match[] = {
+> +	{.compatible = "ti,tvp5146-decoder", },
+> +	{.compatible = "ti,tvp5146m2-decoder", },
+> +	{.compatible = "ti,tvp5147-decoder", },
+> +	{.compatible = "ti,tvp5147m1-decoder", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, tvp514x_of_match);
+> +
+> +static void tvp514x_get_pdata(struct i2c_client *client,
+> +			      struct tvp514x_decoder *decoder)
+> +{
+> +	if (!client->dev.platform_data && client->dev.of_node) {
+> +		struct device_node *endpoint;
+> +
+> +		endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
+> +		if (endpoint) {
+> +			struct tvp514x_platform_data *pdata;
+> +			struct v4l2_of_endpoint bus_cfg;
+> +			unsigned int flags;
+> +
+> +			pdata =
+> +			   devm_kzalloc(&client->dev,
+> +					sizeof(struct tvp514x_platform_data),
+
+sizeof(*pdata) ? That's the preferred style, as it makes sure that you will 
+still allocate the right amount of memory if the type of the pdata variable 
+changes (that's pretty unlikely here of course, but the general principle 
+holds true).
+
+> +					GFP_KERNEL);
+> +			if (!pdata)
+> +				return;
+> +
+> +			v4l2_of_parse_endpoint(endpoint, &bus_cfg);
+> +			flags = bus_cfg.bus.parallel.flags;
+> +
+> +			if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
+> +				pdata->hs_polarity = 1;
+> +			if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
+> +				pdata->vs_polarity = 1;
+> +			if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
+> +				pdata->clk_polarity = 1;
+> +			decoder->pdata = pdata;
+> +		}
+> +	}
+
+As pointed out by Sascha in his review of your mt9p031 patch, you need to use 
+client->dev.platform_data if client->dev.of_node is NULL.
+
+> +}
+> +#else
+> +#define tvp514x_of_match NULL
+> +
+> +static void tvp514x_get_pdata(struct i2c_client *client,
+> +			      struct tvp514x_decoder *decoder)
+> +{
+> +	decoder->pdata = client->dev.platform_data;
+> +}
+> +#endif
+> +
+>  /**
+>   * tvp514x_probe() - decoder driver i2c probe handler
+>   * @client: i2c driver client device structure
+> @@ -1075,11 +1129,6 @@ tvp514x_probe(struct i2c_client *client, const struct
+> i2c_device_id *id) if (!i2c_check_functionality(client->adapter,
+> I2C_FUNC_SMBUS_BYTE_DATA)) return -EIO;
 > 
-> are available in the git repository at:
->   git://github.com/rogerq/linux.git usbhost-omap-dts
+> -	if (!client->dev.platform_data) {
+> -		v4l2_err(client, "No platform data!!\n");
+> -		return -ENODEV;
+> -	}
+> -
+>  	decoder = devm_kzalloc(&client->dev, sizeof(*decoder), GFP_KERNEL);
+>  	if (!decoder)
+>  		return -ENOMEM;
+> @@ -1090,8 +1139,11 @@ tvp514x_probe(struct i2c_client *client, const struct
+> i2c_device_id *id) memcpy(decoder->tvp514x_regs, tvp514x_reg_list_default,
+>  			sizeof(tvp514x_reg_list_default));
 > 
-> Roger Quadros (4):
->       ARM: dts: omap4-panda: Add USB Host support
->       ARM: dts: omap3-beagle: Make USB host pin naming consistent
->       ARM: dts: omap3-beagle-xm: Add USB Host support
->       ARM: dts: omap3-beagle-xm: Add USB host supprot for Rev. Ax/Bx
+> -	/* Copy board specific information here */
+> -	decoder->pdata = client->dev.platform_data;
+> +	tvp514x_get_pdata(client, decoder);
+
+Getter functions usually return a value. The code would (at least in my 
+opinion) be clearer if you modifieid tvp514x_get_pdata() to return a pointer 
+to the pdata instead of assigning it directly to decoder->pdata inside the 
+function.
+
+> +	if (!decoder->pdata) {
+> +		v4l2_err(client, "No platform data!!\n");
+> +		return -EPROBE_DEFER;
+
+Why EPROBE_DEFER ? If there's no pdata now you won't magically get it later 
+:-)
+
+> +	}
 > 
->  arch/arm/boot/dts/omap3-beagle-xm-ab.dts  |   19 ++++++++
->  arch/arm/boot/dts/omap3-beagle-xm.dts     |   65 ++++++++++++++++++++++++++++-
->  arch/arm/boot/dts/omap3-beagle.dts        |   25 ++++++-----
->  arch/arm/boot/dts/omap4-panda-common.dtsi |   58 +++++++++++++++++++++++++
->  arch/arm/boot/dts/omap4.dtsi              |    5 ++
->  5 files changed, 158 insertions(+), 14 deletions(-)
->  create mode 100644 arch/arm/boot/dts/omap3-beagle-xm-ab.dts
+>  	/**
+>  	 * Fetch platform specific data, and configure the
+> @@ -1242,6 +1294,7 @@ MODULE_DEVICE_TABLE(i2c, tvp514x_id);
 > 
+>  static struct i2c_driver tvp514x_driver = {
+>  	.driver = {
+> +		.of_match_table = tvp514x_of_match,
+
+Please use of_match_ptr() instead of defining tvp514x_of_match as NULL above.
+
+>  		.owner = THIS_MODULE,
+>  		.name = TVP514X_MODULE_NAME,
+>  	},
+-- 
+Regards,
+
+Laurent Pinchart
