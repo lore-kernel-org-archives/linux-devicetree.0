@@ -1,94 +1,79 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [RFC v2 2/6] fimc-lite: Adding Exynos5 compatibility to fimc-lite
- driver
-Date: Mon, 29 Apr 2013 14:08:37 +0200
-Message-ID: <517E62C5.8030207@samsung.com>
-References: <1366789273-30184-1-git-send-email-shaik.ameer@samsung.com>
- <1366789273-30184-3-git-send-email-shaik.ameer@samsung.com>
+From: Marek Belisko <marek.belisko@streamunlimited.com>
+Subject: Re: [PATCH v2 2/3] ASoC: spdif_transmitter: Add DT support.
+Date: Mon, 29 Apr 2013 14:16:33 +0200
+Message-ID: <517E64A1.4020402@streamunlimited.com>
+References: <1366895594-19596-1-git-send-email-marek.belisko@streamunlimited.com> <1366895594-19596-3-git-send-email-marek.belisko@streamunlimited.com> <517AD46A.2020402@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1366789273-30184-3-git-send-email-shaik.ameer@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, shaik.samsung@gmail.com, arunkk.samsung@gmail.com
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <517AD46A.2020402@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Marek Belisko <marek.belisko@gmail.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, tiwai@suse.de, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, broonie@kernel.org, perex@perex.cz
 List-Id: devicetree@vger.kernel.org
 
-On 04/24/2013 09:41 AM, Shaik Ameer Basha wrote:
-> This patch adds,
-> 1] Exynos5 soc compatibility to the fimc-lite driver
-> 2] Multiple dma output buffer support as from Exynos5 onwards,
->    fimc-lite h/w ip supports multiple dma buffers.
-> 
-> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
-> ---
->  drivers/media/platform/exynos4-is/fimc-lite.c |   19 ++++++++++++++++++-
->  drivers/media/platform/exynos4-is/fimc-lite.h |    4 +++-
->  2 files changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/platform/exynos4-is/fimc-lite.c b/drivers/media/platform/exynos4-is/fimc-lite.c
-> index 4878089..cb173ec 100644
-> --- a/drivers/media/platform/exynos4-is/fimc-lite.c
-> +++ b/drivers/media/platform/exynos4-is/fimc-lite.c
-> @@ -1467,7 +1467,7 @@ static int fimc_lite_probe(struct platform_device *pdev)
->  		fimc->index = pdev->id;
->  	}
->  
-> -	if (!drv_data || fimc->index < 0 || fimc->index >= FIMC_LITE_MAX_DEVS)
-> +	if (!drv_data || fimc->index < 0 || fimc->index >= drv_data->num_devs)
->  		return -EINVAL;
->  
->  	fimc->dd = drv_data;
-> @@ -1625,6 +1625,19 @@ static struct flite_drvdata fimc_lite_drvdata_exynos4 = {
->  	.out_width_align	= 8,
->  	.win_hor_offs_align	= 2,
->  	.out_hor_offs_align	= 8,
-> +	.support_multi_dma_buf	= false,
-> +	.num_devs = 2,
-> +};
+Dear Sebastian Hesselbarth,
 
-Could you include this in your patch:
+On 04/26/2013 09:24 PM, Sebastian Hesselbarth wrote:
+> On 04/25/2013 03:13 PM, Marek Belisko wrote:
+>> Add devicetree support for this dummy audio soc driver.
+>>
+>> Signed-off-by: Michal Bachraty<michal.bachraty@streamunlimited.com>
+>> Signed-off-by: Marek Belisko<marek.belisko@streamunlimited.com>
+>> ---
+>>   .../bindings/sound/spdif-transmitter.txt           |   10 ++++++++++
+>>   sound/soc/codecs/spdif_transmitter.c               |   10 ++++++++++
+>>   2 files changed, 20 insertions(+)
+>>   create mode 100644
+>> Documentation/devicetree/bindings/sound/spdif-transmitter.txt
+>>
+>> diff --git
+>> a/Documentation/devicetree/bindings/sound/spdif-transmitter.txt
+>> b/Documentation/devicetree/bindings/sound/spdif-transmitter.txt
+>> new file mode 100644
+>> index 0000000..55a8584
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/sound/spdif-transmitter.txt
+>> @@ -0,0 +1,10 @@
+>> +Device-Tree bindings for dummy spdif transmitter
+>> +
+>> +Required properties:
+>> +    - compatible: should be "linux,spdif-dit".
+>
+> Marek,
+>
+> I remember Daniel commenting on the name already, but
+> what about "spdif-transmitter" and "spdif-receiver" respectively?
+Agree.
+> That is very generic and should allow to remove "linux," prefix.
+Not sure if linux, prefix can be removed. I believe (at least what 
+documentation said) is that <manufacturer>,<model> must be format for 
+compatible.
+> And there is a lot of drivers using more informative compatible
+> strings compared to the driver name.
+>
+> Sebastian
+>
 
-/**
- * struct flite_drvdata - FIMC-LITE IP variant data structure
- * @max_width: maximum camera interface input width in pixels
- * @max_height: maximum camera interface input height in pixels
- * @out_width_align: minimum output width alignment in pixels
- * @win_hor_offs_align: minimum camera interface crop window horizontal
- * 			offset alignment in pixels
- * @out_hor_offs_align: minimum output DMA compose rectangle horizontal
- * 			offset alignment in pixels
- * @num_out_dma_bufs: number of output DMA buffer start address registers
- */
-?
-> +/* EXYNOS5250 */
-> +static struct flite_drvdata fimc_lite_drvdata_exynos5 = {
-> +	.max_width		= 8192,
-> +	.max_height		= 8192,
-> +	.out_width_align	= 8,
-> +	.win_hor_offs_align	= 2,
-> +	.out_hor_offs_align	= 8,
-> +	.support_multi_dma_buf	= true,
+Cheers,
 
-How about changing it to 'num_out_dma_bufs' ? And instead of
+	~marek
+-- 
+Marek Belisko
 
-if (dd->support_multi_dma_buf)
+Software Developer
+StreamUnlimited Engineering GmbH
+Gutheil Schodergasse 8-12
+A-1100 Vienna, Austria
 
-having
+Office: +421 267200087
 
-if (dd->num_out_dma_bufs > 1)
+e-mail: marek.belisko@streamunlimited.com
+http://www.streamunlimited.com
 
-?
+Meet us at:
 
-Otherwise the patch looks good to me. I will make a separate patch
-to update the binding documentation.
-
-I've found there is a mistake in the compatible property's documentation.
-I would like to fix it in the 3.10-rc cycle, I'm not 100% sure if it
-qualifies as the -rc material, but having kernel released with wrongly
-documented compatible property would have been bad I think.
-
-
-Thanks,
-Sylwester
+High End - Munich, 09 - 12 May, Hall 4/F05
+IFA - Berlin, 6-11 September
+CEDIA - Denver, 25-28 September
