@@ -1,278 +1,183 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [RFC v2 6/6] media: exynos5-is: Adding media device driver for
- exynos5
-Date: Mon, 29 Apr 2013 18:09:50 +0200
-Message-ID: <517E9B4E.3080004@samsung.com>
-References: <1366789273-30184-1-git-send-email-shaik.ameer@samsung.com>
- <1366789273-30184-7-git-send-email-shaik.ameer@samsung.com>
+From: Christian Ruppert <christian.ruppert@abilis.com>
+Subject: Re: [PATCH 1/2] pinmux: Add TB10x pinmux driver
+Date: Mon, 29 Apr 2013 18:17:27 +0200
+Message-ID: <20130429161725.GB30136@ab42.lan>
+References: <1365608728-30494-1-git-send-email-christian.ruppert@abilis.com>
+ <516EEAA0.10906@wwwdotorg.org>
+ <20130418090310.GA17636@ab42.lan>
+ <CACRpkdZd0_W432od5565phhUcJMRWiV9vXX4QVF4osKkxstC0Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1366789273-30184-7-git-send-email-shaik.ameer@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, shaik.samsung@gmail.com, arunkk.samsung@gmail.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZd0_W432od5565phhUcJMRWiV9vXX4QVF4osKkxstC0Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Patrice CHOTARD <patrice.chotard@st.com>, Stephen Warren <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/24/2013 09:41 AM, Shaik Ameer Basha wrote:
-> This patch adds support for media device for EXYNOS5 SoCs.
-> The current media device supports the following ips to connect
-> through the media controller framework.
+Hello Linus,
 
-> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
-> ---
->  .../devicetree/bindings/media/exynos5-mdev.txt     |  153 +++
->  drivers/media/platform/Kconfig                     |    1 +
->  drivers/media/platform/Makefile                    |    1 +
->  drivers/media/platform/exynos5-is/Kconfig          |    7 +
->  drivers/media/platform/exynos5-is/Makefile         |    4 +
->  drivers/media/platform/exynos5-is/exynos5-mdev.c   | 1131 ++++++++++++++++++++
->  drivers/media/platform/exynos5-is/exynos5-mdev.h   |  120 +++
->  7 files changed, 1417 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/exynos5-mdev.txt
->  create mode 100644 drivers/media/platform/exynos5-is/Kconfig
->  create mode 100644 drivers/media/platform/exynos5-is/Makefile
->  create mode 100644 drivers/media/platform/exynos5-is/exynos5-mdev.c
->  create mode 100644 drivers/media/platform/exynos5-is/exynos5-mdev.h
-> 
-> diff --git a/Documentation/devicetree/bindings/media/exynos5-mdev.txt b/Documentation/devicetree/bindings/media/exynos5-mdev.txt
-> new file mode 100644
-> index 0000000..d7d419b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/exynos5-mdev.txt
-> @@ -0,0 +1,153 @@
-> +Samsung EXYNOS5 SoC Camera Subsystem (FIMC)
-> +----------------------------------------------
-> +
-> +The Exynos5 SoC Camera subsystem comprises of multiple sub-devices
-> +represented by separate device tree nodes. Currently this includes: FIMC-LITE,
-> +MIPI CSIS and FIMC-IS.
-> +
-> +The sub-subdevices are defined as child nodes of the common 'camera' node which
-> +also includes common properties of the whole subsystem not really specific to
-> +any single sub-device, like common camera port pins or the CAMCLK clock outputs
-> +for external image sensors attached to an SoC.
-> +
-> +Common 'camera' node
-> +--------------------
-> +
-> +Required properties:
-> +
-> +- compatible	: must be "samsung,exynos5-fimc", "simple-bus"
-> +- clocks	: list of clock specifiers, corresponding to entries in
-> +		  the clock-names property;
-> +- clock-names	: must contain "sclk_cam0", "sclk_cam1" entries,
-> +		  matching entries in the clocks property.
-> +
-> +The pinctrl bindings defined in ../pinctrl/pinctrl-bindings.txt must be used
-> +to define a required pinctrl state named "default" and optional pinctrl states:
-> +"idle", "active-a", active-b". These optional states can be used to switch the
-> +camera port pinmux at runtime. The "idle" state should configure both the camera
-> +ports A and B into high impedance state, especially the CAMCLK clock output
-> +should be inactive. For the "active-a" state the camera port A must be activated
-> +and the port B deactivated and for the state "active-b" it should be the other
-> +way around.
-> +
-> +The 'camera' node must include at least one 'fimc-lite' child node.
+On Fri, Apr 26, 2013 at 09:47:16AM +0200, Linus Walleij wrote:
+> On Thu, Apr 18, 2013 at 11:03 AM, Christian Ruppert
+> <christian.ruppert@abilis.com> wrote:
+>=20
+> > We would like to avoid the use of Linux pin numbers in the device t=
+ree.
+> > Customers are used to physical pin numbers and exposing the logical
+> > Linux-internal numbering scheme through the device tree would gener=
+ate
+> > quite some confusion. There are two reasons why we cannot align the=
+ two:
+> >   - Not all products supported by these drivers have the same pin o=
+uts.
+> >   - GPIO ranges must be consecutive in the Linux pin numbering spac=
+e
+> >     which is generally not the case in physical pin numbering.
+>=20
+> If you are talking about the pin numbers really, i.e. the number we
+> put into
+>=20
+> struct pinctrl_pin_desc {
+>         unsigned number; <- this
+>         const char *name;
+> };
+>=20
+> Then are you aware that this is a sparse number space?
+>=20
+> I.e. you can choose whatever number you want. You do not have
+> to offset numbers from zero or anything like that. You just
+> need to make sure the numbers do not overlap (no two pins
+> have the same number).
+>=20
+> So if this is what you want to achieve, just use the same number
+> as in your datasheet in the pin number -> problem solved.
 
-Why such a restriction ? Still you could have a valid video capture pipeline
-using Gscaler, couldn't you ? 
+The problem is that we must support several products which are basicall=
+y
+different packaging options of the same chip (or simplified versions
+thereof). Not all of those products will have the same number of pins
+and as a consequence, data sheet pin numbering will also be different.
+The port names are going to remain the same for all products, however.
+Some of the ports are just not going to be physically available in some
+or the products. Sorry if that wasn't clear from my previous mail.
 
-> +'parallel-ports' node
-> +---------------------
-> +
-> +This node should contain child 'port' nodes specifying active parallel video
-> +input ports. It includes camera A and camera B inputs. 'reg' property in the
-> +port nodes specifies data input - 0, 1 indicates input A, B respectively.
-> +
-> +Optional properties
-> +
-> +- samsung,camclk-out : specifies clock output for remote sensor,
-> +		       0 - CAM_A_CLKOUT, 1 - CAM_B_CLKOUT;
+> This may lead to some offsetting in your driver etc, and some
+> struggle do to that. Inspect drivers/pinctrl/pinctrl-abx500.c
+> for example. Here the datasheet offsets the pins from 1 rather
+> than from zero, so Patrice had to struggle when cross-mapping
+> these numbers, but it can surely be done.
 
-I think with this driver we should try to start using the asynchronous subdev
-registration API and the clock bindings right from the beginning, so the
-above property would become unnecessary.
+This driver seems to avoid many of our problems by integrating both GPI=
+O
+and pinctrl driver in the same module. It would not be very difficult t=
+o
+integrate our separate TB10x GPiO and pinctrl drivers in the same way:
+The cross-calling would disappear and the GPIO-base specification could
+also easily be removed from device tree. We would still use the named
+pingroups scheme in device tree instead of Linux internal pin numbering=
+,
+however.
+Is this the way to go? I was a bit reluctant from doing this since I'm
+not a big fan of huge mega-drivers. Maybe in this particular case such =
+a
+driver may be justified?
 
-> +Image sensor nodes
-> +------------------
-> +
-> +The sensor device nodes should be added to their control bus controller (e.g.
-> +I2C0) nodes and linked to a port node in the csis or the parallel-ports node,
-> +using the common video interfaces bindings, defined in video-interfaces.txt.
-> +The implementation of this bindings requires clock-frequency property to be
-> +present in the sensor device nodes.
-> +
-> +Example:
-> +
-> +	aliases {
-> +		fimc-lite0 = &fimc_lite_0
-> +	};
-> +
-> +	/* Parallel bus IF sensor */
-> +	i2c_0: i2c@13860000 {
-> +		s5k6aa: sensor@3c {
-> +			compatible = "samsung,s5k6aafx";
-> +			reg = <0x3c>;
-> +			vddio-supply = <...>;
-> +
-> +			clock-frequency = <24000000>;
-> +			clocks = <...>;
-> +			clock-names = "mclk";
-> +
-> +			port {
-> +				s5k6aa_ep: endpoint {
-> +					remote-endpoint = <&fimc0_ep>;
-> +					bus-width = <8>;
-> +					hsync-active = <0>;
-> +					vsync-active = <1>;
-> +					pclk-sample = <1>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	/* MIPI CSI-2 bus IF sensor */
-> +	s5c73m3: sensor@0x1a {
+>[...]
+> > I am well aware of the problem but I haven't found any documentatio=
+n,
+> > core functions or examples which solve this. The most elegant way w=
+ould
+> > be some core functionality allowing to define GPIO ranges by direct=
+ly
+> > querying the pin data base (or to preregister GPIO ranges in the pi=
+n
+> > controller to which GPIO drivers can then "attach"). Is there somet=
+hing
+> > like this I have missed?
+>=20
+> The current preferred pattern is to have the GPIO portions register
+> the ranges referring to the pin controller pin numbers.
+>=20
+> This is because it enables us to only use controller-local
+> number spaces in both cases.
 
-This node should be off some I2C bus controller node, e.g. be child node of
-the i2c@13860000 node. 
+Agree. The only place in the TB10x drivers where non-local number space
+is required is when preparing the GPIO range. I am wondering if some
+generic interface in the framework could help us avoid the driver
+cross-calls.
 
-I realise a similar issue is in Documentation/devicetree/bindings/media/
-samsung-fimc.txt. And nobody pointed it out... :P
+> > As a side note, the same argument does not apply to gpio-base, btw,=
+ for
+> > two reasons:
+> >   - Our customer documentation does not talk about a global GPIO
+> >     numbering scheme. In our products, GPIOs are organised in banks=
+ and
+> >     there is no risk of confusion.
+>=20
+> This is the local numbering used when registering ranges from
+> the GPIOlib side referred to above.
+>=20
+> >   - The Linux-internal GPIO numbering is already exposed to custome=
+rs
+> >     through the /sys/class/gpio interface.
+>=20
+> Yeah this sucks but we have to live with it forever.
+>=20
+> > That said, if we solve the cross-calling issue I can still move it =
+to
+> > the pin data base in the next patch set since you are right that th=
+ere
+> > is no real reason to make it "user-configurable" through DT.
+>=20
+> I don't understand this.
 
-> +		compatible = "samsung,s5c73m3";
-> +		reg = <0x1a>;
-> +		vddio-supply = <...>;
-> +
-> +		clock-frequency = <24000000>;
-> +		clocks = <...>;
-> +		clock-names = "mclk";
-> +
-> +		port {
-> +			s5c73m3_1: endpoint {
-> +				data-lanes = <1 2 3 4>;
-> +				remote-endpoint = <&csis0_ep>;
-> +			};
-> +		};
-> +	};
+Actually, I am thinking of removing the need of specifying gpio-base in
+the device tree and assigning a constant gpio-base to each functional
+GPIO pin group in pinctrl-tb10x.c. This would also enforce some
+coherence in the GPIO numbering between different product variants whic=
+h
+is probably a very good thing. Again, the issue here is that the pin
+data base is in the pinctrl driver and the GPIO range is registered in
+the GPIO driver but if I integrate the drivers into the same module wit=
+h
+a shared pin data base this issue will disappear.
 
-> diff --git a/drivers/media/platform/exynos5-is/exynos5-mdev.c b/drivers/media/platform/exynos5-is/exynos5-mdev.c
-> new file mode 100644
-> index 0000000..ac3e85e
-> --- /dev/null
-> +++ b/drivers/media/platform/exynos5-is/exynos5-mdev.c
-> @@ -0,0 +1,1131 @@
-> +/*
-> + * EXYNOS5 SoC series camera host interface media device driver
-> + *
-> + * Copyright (C) 2013 Samsung Electronics Co., Ltd.
-> + * Shaik Ameer Basha <shaik.ameer@samsung.com>
-> + *
-> + * This driver is based on exynos4-is media device driver developed by
+> >> Perhaps this "abilis,simple-default" thing is intended to represen=
+t some
+> >> specific default configuration? If so, I don't think that's the ri=
+ght
+> >> way to go. Also, the DT binding should be as complete as possible =
+from
+> >> the start, rather than planning to define/implement part of it now=
+ and
+> >> then keep adding to it later. This all implies that some extra
+> >> properties really should be defined here.
+> >
+> > The abilis,simple-default thing is simply there because I missed co=
+mmit
+> > ab78029ecc347debbd737f06688d788bd9d60c1d and followed
+> > Documentation/pinctrl.txt a bit too closely. ("So if possible, hand=
+le
+> > the pin control in platform code or some other place where you have
+> > access to all the affected struct device * pointers.") Currently, o=
+ur
+> > platform code iterates through nodes compatible with
+> > abilis,simple-pinctrl and sets up the pin controller accordingly. I=
+'ll
+> > happily remove this mechanism.
 
-s/developed/written ?
+Thanks a lot for your guidance.
 
-> + * Sylwester Nawrocki <s.nawrocki@samsung.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published
-> + * by the Free Software Foundation, either version 2 of the License,
-> + * or (at your option) any later version.
-> + */
+Best regards,
+  Christian
 
-> +static void fimc_md_unregister_entities(struct fimc_md *fmd)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < FIMC_LITE_MAX_DEVS; i++) {
-> +		if (fmd->fimc_lite[i] == NULL)
-> +			continue;
-> +		v4l2_device_unregister_subdev(&fmd->fimc_lite[i]->subdev);
-> +		fmd->fimc_lite[i]->pipeline_ops = NULL;
-> +		fmd->fimc_lite[i] = NULL;
-> +	}
-> +	for (i = 0; i < CSIS_MAX_ENTITIES; i++) {
-> +		if (fmd->csis[i].sd == NULL)
-> +			continue;
-> +		v4l2_device_unregister_subdev(fmd->csis[i].sd);
-> +		module_put(fmd->csis[i].sd->owner);
-
-This module_put() call needs to be removed.
-
-> +		fmd->csis[i].sd = NULL;
-> +	}
-> +	for (i = 0; i < fmd->num_sensors; i++) {
-> +		if (fmd->sensor[i].subdev == NULL)
-> +			continue;
-> +		v4l2_device_unregister_subdev(fmd->sensor[i].subdev);
-> +		fmd->sensor[i].subdev = NULL;
-> +	}
-> +	v4l2_info(&fmd->v4l2_dev, "Unregistered all entities\n");
-> +}
-
-> +static struct platform_device_id fimc_driver_ids[] __always_unused = {
-> +	{ .name = "exynos5-fimc-md" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(platform, fimc_driver_ids);
-
-This table is not used, you can remove it.
-
-> +static const struct of_device_id fimc_md_of_match[] = {
-> +	{ .compatible = "samsung,exynos5-fimc" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, fimc_md_of_match);
-> +
-> +static struct platform_driver fimc_md_driver = {
-> +	.probe		= fimc_md_probe,
-> +	.remove		= fimc_md_remove,
-> +	.driver = {
-> +		.of_match_table = fimc_md_of_match,
-> +		.name		= "exynos5-fimc-md",
-> +		.owner		= THIS_MODULE,
-> +	}
-> +};
-
-> +MODULE_AUTHOR("Shaik Ameer Basha <shaik.ameer@samsung.com>");
-> +MODULE_DESCRIPTION("EXYNOS5 FIMC media device driver");
-
-Perhaps "EXYNOS5 SoC camera subsystem media device driver" ?
-
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/media/platform/exynos5-is/exynos5-mdev.h b/drivers/media/platform/exynos5-is/exynos5-mdev.h
-> new file mode 100644
-> index 0000000..43621b6
-> --- /dev/null
-> +++ b/drivers/media/platform/exynos5-is/exynos5-mdev.h
-> @@ -0,0 +1,120 @@
-
-> +#include <media/s5p_fimc.h>
-
-> +/* Group IDs of sensor, MIPI-CSIS, FIMC-LITE and the writeback subdevs. */
-> +#define GRP_ID_SENSOR		(1 << 8)
-> +#define GRP_ID_FIMC_IS_SENSOR	(1 << 9)
-> +#define GRP_ID_WRITEBACK	(1 << 10)
-> +#define GRP_ID_CSIS		(1 << 11)
-> +#define GRP_ID_FLITE		(1 << 13)
-> +#define GRP_ID_FIMC_IS		(1 << 14)
-
-You are re-defining these constants third time now ;-)
-
-> +struct exynos5_pipeline0 {
-
-How is going struct exynos5_pipeline1 to look like ? Why do you need 
-multiple video pipeline data structures ? Couldn't one be designed 
-for exynos5 to cover all cases ?
-
-> +	int is_init;
-> +	struct fimc_md *fmd;
-> +	struct v4l2_subdev *subdevs[IDX_MAX];
-> +	void (*sensor_notify)(struct v4l2_subdev *sd,
-> +			unsigned int notification, void *arg);
-> +};
-
-Regards,
-Sylwester
+--=20
+  Christian Ruppert              ,          <christian.ruppert@abilis.c=
+om>
+                                /|
+  Tel: +41/(0)22 816 19-42     //|                 3, Chemin du Pr=E9-F=
+leuri
+                             _// | bilis Systems   CH-1228 Plan-les-Oua=
+tes
