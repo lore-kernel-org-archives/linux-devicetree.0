@@ -1,90 +1,53 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: [PATCH] ARM: dts: OMAP2+: Simplify NAND support
-Date: Tue, 30 Apr 2013 09:11:22 -0500
-Message-ID: <1367331082-27944-1-git-send-email-jon-hunter@ti.com>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmVbMl06IFtQQVRDSCBWMl0gdmlkZW86IGltcGxlbWVudCBhIHNpbXBsZSBm?=
+ =?UTF-8?B?cmFtZWJ1ZmZlciBkcml2ZXI=?=
+Date: Tue, 30 Apr 2013 18:38:05 +0400
+Message-ID: <1367332685.945287573@f287.mail.ru>
+References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
+ <517F753F.5090909@ti.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Jon Hunter <jon-hunter@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <517F753F.5090909@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?VG9taSBWYWxrZWluZW4=?= <tomi.valkeinen@ti.com>
+Cc: linux-fbdev@vger.kernel.org, =?UTF-8?B?QXJuZCBCZXJnbWFubg==?= <arnd@arndb.de>, =?UTF-8?B?U3RlcGhlbiBXYXJyZW4=?= <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, =?UTF-8?B?Um9iIENsYXJr?= <robclark@gmail.com>, linux-rpi-kernel@lists.infradead.org, =?UTF-8?B?T2xvZiBKb2hhbnNzb24=?= <olof@lixom.net>, =?UTF-8?B?QW5kcmV3IE1vcnRvbg==?= <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Commit 8c8a777 (ARM: OMAP2+: Add function to read GPMC settings from
-device-tree) added a device-tree property "gpmc,device-nand" to indicate
-is the GPMC child device is NAND. This commit should have updated the
-GPMC NAND documentation (Documentation/devicetree/bindings/mtd/gpmc-nand.txt)
-to list the property "gpmc,device-nand" as a required property and also
-updated the example. However, this property is redundant and not needed
-because the GPMC child device node for NAND is called "nand". Therefore,
-remove this property.
+> On 04/04/2013 05:39 AM, Stephen Warren wrote:
+> > A simple frame-buffer describes a raw memory region that may be rendered
+> > to, with the assumption that the display hardware has already been set
+> > up to scan out from that buffer.
+> > 
+> > This is useful in cases where a bootloader exists and has set up the
+> > display hardware, but a Linux driver doesn't yet exist for the display
+> > hardware.
+> > 
+> > Signed-off-by: Stephen Warren <swarren@wwwdotorg.org>
+...
+> > +	framebuffer {
+> > +		compatible = "simple-framebuffer";
+> > +		reg = <0x1d385000 (1600 * 1200 * 2)>;
+> > +		width = <1600>;
+> > +		height = <1200>;
+> > +		stride = <(1600 * 2)>;
+> > +		format = "r5g6b5";
+> > +	};
+> 
+> I'm not an expert on DT, but I think the point of DT is to describe the
+> hardware. This doesn't describe the hardware at all.
 
-Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+On my incompetent opinion, "bpp" parameter can replace size of
+framebuffer and "stride". Is not it?
+
 ---
- Documentation/devicetree/bindings/bus/ti-gpmc.txt |    1 -
- arch/arm/boot/dts/omap3430-sdp.dts                |    1 -
- arch/arm/mach-omap2/gpmc-nand.c                   |    4 ++--
- arch/arm/mach-omap2/gpmc.c                        |    1 -
- 4 files changed, 2 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
-index 4b87ea1..704be93 100644
---- a/Documentation/devicetree/bindings/bus/ti-gpmc.txt
-+++ b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
-@@ -95,7 +95,6 @@ GPMC chip-select settings properties for child nodes. All are optional.
- - gpmc,burst-wrap	Enables wrap bursting
- - gpmc,burst-read	Enables read page/burst mode
- - gpmc,burst-write	Enables write page/burst mode
--- gpmc,device-nand	Device is NAND
- - gpmc,device-width	Total width of device(s) connected to a GPMC
- 			chip-select in bytes. The GPMC supports 8-bit
- 			and 16-bit devices and so this property must be
-diff --git a/arch/arm/boot/dts/omap3430-sdp.dts b/arch/arm/boot/dts/omap3430-sdp.dts
-index 144ae43..6076d01 100644
---- a/arch/arm/boot/dts/omap3430-sdp.dts
-+++ b/arch/arm/boot/dts/omap3430-sdp.dts
-@@ -105,7 +105,6 @@
- 		nand-bus-width = <8>;
- 
- 		ti,nand-ecc-opt = "sw";
--		gpmc,device-nand;
- 		gpmc,cs-on-ns = <0>;
- 		gpmc,cs-rd-off-ns = <36>;
- 		gpmc,cs-wr-off-ns = <36>;
-diff --git a/arch/arm/mach-omap2/gpmc-nand.c b/arch/arm/mach-omap2/gpmc-nand.c
-index c8044b0..662c7fd 100644
---- a/arch/arm/mach-omap2/gpmc-nand.c
-+++ b/arch/arm/mach-omap2/gpmc-nand.c
-@@ -102,8 +102,6 @@ int gpmc_nand_init(struct omap_nand_platform_data *gpmc_nand_data,
- 		if (gpmc_nand_data->of_node) {
- 			gpmc_read_settings_dt(gpmc_nand_data->of_node, &s);
- 		} else {
--			s.device_nand = true;
--
- 			/* Enable RD PIN Monitoring Reg */
- 			if (gpmc_nand_data->dev_ready) {
- 				s.wait_on_read = true;
-@@ -111,6 +109,8 @@ int gpmc_nand_init(struct omap_nand_platform_data *gpmc_nand_data,
- 			}
- 		}
- 
-+		s.device_nand = true;
-+
- 		if (gpmc_nand_data->devsize == NAND_BUSWIDTH_16)
- 			s.device_width = GPMC_DEVWIDTH_16BIT;
- 		else
-diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
-index 6c4da12..6f1beb4 100644
---- a/arch/arm/mach-omap2/gpmc.c
-+++ b/arch/arm/mach-omap2/gpmc.c
-@@ -1245,7 +1245,6 @@ void gpmc_read_settings_dt(struct device_node *np, struct gpmc_settings *p)
- 
- 	p->sync_read = of_property_read_bool(np, "gpmc,sync-read");
- 	p->sync_write = of_property_read_bool(np, "gpmc,sync-write");
--	p->device_nand = of_property_read_bool(np, "gpmc,device-nand");
- 	of_property_read_u32(np, "gpmc,device-width", &p->device_width);
- 	of_property_read_u32(np, "gpmc,mux-add-data", &p->mux_add_data);
- 
--- 
-1.7.10.4
-
