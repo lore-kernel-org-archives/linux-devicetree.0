@@ -1,93 +1,42 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
-Date: Tue, 30 Apr 2013 13:49:28 +0200
-Message-ID: <124304591.tbnLlR41q2@avalon>
-References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
- <1547536.Us4pVspuI2@avalon> <517FAF78.1010306@ti.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH 7/6] DMA: shdma: add DT binding documentation
+Date: Tue, 30 Apr 2013 14:04:14 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1304301403130.1489@axis700.grange>
+References: <Pine.LNX.4.64.1304260823050.30844@axis700.grange>
+ <20130430104028.GE1960@intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5573838928152039871=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <517FAF78.1010306-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20130430104028.GE1960@intel.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 30 Apr 2013, Vinod Koul wrote:
 
---===============5573838928152039871==
-Content-Type: multipart/signed; boundary="nextPart2710109.8gOsri3Y4h"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-
-
---nextPart2710109.8gOsri3Y4h
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-
-On Tuesday 30 April 2013 14:48:08 Tomi Valkeinen wrote:
-> On 04/30/2013 02:42 PM, Laurent Pinchart wrote:
-> > On Tuesday 30 April 2013 12:28:42 Arnd Bergmann wrote:
-> >> On Tuesday 30 April 2013, Tomi Valkeinen wrote:
-> >>> The bootloader would init the display hardware, the bootfb would give an
-> >>> early /dev/fb0 for the kernel and userspace, and when the real display
-> >>> driver is loaded, the bootfb would be unbound and the real driver would
-> >>> take over.
+> On Fri, Apr 26, 2013 at 08:26:16AM +0200, Guennadi Liakhovetski wrote:
+> > SHDMA uses only standard DMA Device Tree bindings. This patch adds
+> > documentation, exactly describing the use of the bindings and providing
+> > examples.
 > > 
-> > This could be done with a KMS driver as well ;-)
+> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+> > ---
+> > 
+> > This patch adds the missing documentation to the patch series "DMA: shdma: 
+> > add Device Tree support"
+> > http://thread.gmane.org/gmane.linux.ports.sh.devel/21972
+> > Arnd, Vinod, I hope, now this series can be applied :)
+> Yes, but where is the rest of series. I got only the 7th of 6 (huh)...
 > 
-> Right, I forgot to mention that. I had it in mind also =).
-> 
-> DRM has the same problem as fbdev with multi-arch and lots of display
-> and panel drivers.
-> 
-> Probably the same bootfb could be used for DRM also. Or do you see any
-> benefit of having a "bootkms" driver, or such?
+> Can you please resend entire one...
 
-As part of the (long term) effort to deprecate fbdev I would of course prefer 
-a bootkms driver. The KMS fbdev emulation layer would provide fbdev 
-compatibility for free during the transition.
+You were CCed on it and you even commented to it, asking Arnd to review... 
+But sure, np, I'll re-send them to you privately again.
 
--- 
-Regards,
-
-Laurent Pinchart
-
---nextPart2710109.8gOsri3Y4h
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQEcBAABAgAGBQJRf6/NAAoJEIkPb2GL7hl1c3sIAIZZdaRLBo+Hus0WbLtABrCK
-CkCYelaTN4BDe25gcBeCx4Ns/7+9d0GS1O1Zbe6EWZDwi31ZrU7d8bpqvsfHqbjC
-5EOOemg9tBaYBirrM1Mip7CKUK1dD/BJjwgHhK5HUIzASlLcPO4jfUHUF5CBn9Q1
-bj6po94j4RDQ1eq0andgRSIO/5KwHtHCo4anXYLYQm/hz6bTByEVQ3uTPwZZSUBH
-CtpLobbpnmfdupfZlFE2coFpLYg2ssbtxhAfQMiV5YSfjtDVuIh3z2MIytsSEjIZ
-GIcOwhMULf6tHq82UYTllbddTwjXEIyChgSCVRkk3Hlj2Owy3I9P11bboR9JAZI=
-=D52O
------END PGP SIGNATURE-----
-
---nextPart2710109.8gOsri3Y4h--
-
-
---===============5573838928152039871==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============5573838928152039871==--
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
