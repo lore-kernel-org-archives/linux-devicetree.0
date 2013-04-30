@@ -1,64 +1,53 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/1] ASoC: McASP: Add device tree binding for defining
- separate clock and sync used by tx and rx.
-Date: Tue, 30 Apr 2013 19:40:51 +0100
-Message-ID: <20130430184051.GF26160@sirena.org.uk>
-References: <1367316438-20267-1-git-send-email-marek.belisko@streamunlimited.com>
+Subject: Re: [PATCH v2 0/3] ASoC: Add devicetree support for spdif dummy
+ codecs.
+Date: Tue, 30 Apr 2013 19:43:27 +0100
+Message-ID: <20130430184327.GH26160@sirena.org.uk>
+References: <1366895594-19596-1-git-send-email-marek.belisko@streamunlimited.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rWhLK7VZz0iBluhq"
+	protocol="application/pgp-signature"; boundary="tcC6YSqBgqqkz7Sb"
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1367316438-20267-1-git-send-email-marek.belisko@streamunlimited.com>
+In-Reply-To: <1366895594-19596-1-git-send-email-marek.belisko@streamunlimited.com>
 Sender: linux-doc-owner@vger.kernel.org
 To: Marek Belisko <marek.belisko@gmail.com>
-Cc: lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, zonque@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Belisko <marek.belisko@streamunlimited.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, perex@perex.cz, tiwai@suse.de, zonque@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, Marek Belisko <marek.belisko@streamunlimited.com>
 List-Id: devicetree@vger.kernel.org
 
 
---rWhLK7VZz0iBluhq
+--tcC6YSqBgqqkz7Sb
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Apr 30, 2013 at 12:07:18PM +0200, Marek Belisko wrote:
-> Add new property tx-rx-clk-separate which we can distinquish between common
-> and separate clock for tx and rx blocks.
+On Thu, Apr 25, 2013 at 03:13:11PM +0200, Marek Belisko wrote:
+> changes from v1 (for patch 2 and 3):
+> - add prefix linux for compatible property (for both tx and rx)
+> - rename spdif_transceiver.c to spdif_transmitter.c
+> - add bindings documentation
 
-So, this is a sensible thing to have and in fact the core already has
-the symmetric_rates flag for this.  This says two things to me.  One is
-that this patch ought to at least set the symmetric_rates flag so that
-the core can tell applications that we can't set different rates in each
-direction.  The other is that this probably ought to be a generic
-property for dai_links so that we can just set this for any driver -
-even if the driver doesn't need to do anything it still matters to the
-application layer.
+Applied all, thanks.
 
-What I'd suggest is adding code to check if symmetric_rates is set for
-the DAI link and then key off that and then a generic DT thing (or just
-set it in the machine driver for now if that makes sense) to enable that
-for your board or boards.
-machine driver).
-
---rWhLK7VZz0iBluhq
+--tcC6YSqBgqqkz7Sb
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJRgBAvAAoJELSic+t+oim9S90P/R1EmxZ8DEBivkgVdoTtQAF2
-3LS5uPU77DIRvi+9+hxfk/E1+5RIsSyzXd+qEqFMWhtcof8NKfWatjnL9C2loPNj
-zh5dqKKN1Ra2WMqzfuu8ftsao0iKA5RNYEfdrMFtH0ipqIIEExESo85DUrC3NLDJ
-GtWJSn85oI2IPDmEZQ2QLeaJC1TKrTuixRyxSRffmSMTTOr1PLoOxS2O9Oxlu/r5
-o6urXcTKTBSDwnTjsrT9pQgjujFvkC/Yz4DW9dSOpwLyqgqwVdiLORtDfp3meX4w
-Oc6juxq2esw4q2EcSZWMGXXRCj+xi9j1/fT+Pp1/MhCjZDB9tc24iaEBtjGhMEZn
-3xSEldRexZ56F4aZ5mp4lzkd8QD2TG8xWOo38JWs1LEidWDU+Tcl7u5e3VbOmBhV
-IPMSz1WR9Jbcqzj/TLK1w9WTL9scB0Km/7c1jT92bOCf7eAwCuDYsFYq9NDizuzE
-VsoQzX2Zy8NATTz5CxpCbm4RNmTqEsVGAPr2ztUN5kswOQ2vs6z97ZujHe9K5DAU
-QAXTPihV0/GQcGlusMRwYXADzPFhOnmF4DfcT44jD9uKePecTMXncfyk7OLIH6e+
-fcG/tNDKDzvLusYMrFYd8WaO3fDecuzAPcKy0zb6gOmENzL2/tCydV5fI2KZx7We
-TLLfZZksCFqtEyN15xLC
-=OjKI
+iQIcBAEBAgAGBQJRgBDMAAoJELSic+t+oim9LT8P/0gu46HYkMNAlAY1ydtPd4nr
+N6ihpptezgcXh9AVJXIMOwP4N9mofeeE7Fv8iCLbSc2nsTVRKbQV4oZNW+pAw+89
+72a19Yzw8gnddaz33RqSUYo9uPKJGYIKHdj1H8imUq9Xab9j7gv0kW16jv3kRoU9
+sr2Zj1/U8YuYbfxwKTLK/qlF2F4+0xl+0hyPQoijUQ+vlK6lxJHsKCrZMM7NEXDf
+O0UtbGN/6uwgUTRfHZMV36pNRt5tAhWpT+NskNImOCbEDK3U5XWTxfDFCRuhGUNr
+2h3fH3DRftEuvSw65EFELROKdfB+3drB0R0+wnFbBLscs7XPA7ncG6ZeYIF0whTe
+gqKS9hp17yt9xHAGbaziJAp/me3pFtdVtFJwr1WoeYkUimdFAuJcxjOn2yYLeSSy
+p+rroe7db0TAYjPb023/TTmA1zlYpv4Et/2d2dFjmz8+kBEs9NhJgSf7fuqfeOHW
+ekzDXyHUPpoaubhCGN48UVPVYXDoPT6CaUI3Hd/qt+H9zOlljVUrFe0P1r5H0iq5
+ylcx9f16rsppcaf/TpuZq2cWtNqKLUm8pGqMaS4brqPUykI54jnaZjt3gBYsjrfg
+PJYWoxaI894+8M8i+lTPBLBVwSA396fOG7jlkbmng7AJjOD+LuwMWwNrzwTl1n67
+BbAHMV7VS82dTQPkv+q7
+=amvf
 -----END PGP SIGNATURE-----
 
---rWhLK7VZz0iBluhq--
+--tcC6YSqBgqqkz7Sb--
