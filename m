@@ -1,84 +1,396 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
-Date: Tue, 30 Apr 2013 11:50:38 +0200
-Message-ID: <2567859.E04yremImW@avalon>
-References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
- <2040099.REU8D4ds1g@avalon>
- <CAOesGMiCvBwck0Z6Nyo9zW=1=J=wjhJW68qNGMrN_8iim=8Srg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAOesGMiCvBwck0Z6Nyo9zW=1=J=wjhJW68qNGMrN_8iim=8Srg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH 1/2] clk: sun5i: Add compatibles for Allwinner A13
+Date: Tue, 30 Apr 2013 11:56:22 +0200
+Message-ID: <1367315783-21345-2-git-send-email-maxime.ripard@free-electrons.com>
+References: <1367315783-21345-1-git-send-email-maxime.ripard@free-electrons.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1367315783-21345-1-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Emilio Lopez <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
+The A13 has a lot less clocks than the one found in the Allwinner A10.
+Add these stripped down clocks to the clock driver and in the
+documentation.
 
-On Monday 29 April 2013 15:40:44 Olof Johansson wrote:
-> On Mon, Apr 29, 2013 at 3:23 PM, Laurent Pinchart wrote:
-> > On Tuesday 30 April 2013 00:04:20 Arnd Bergmann wrote:
-> >> On Monday 29 April 2013, Laurent Pinchart wrote:
-> >> > On Monday 29 April 2013 23:31:30 Tomasz Figa wrote:
-> >> > > Good point. Stephen, would it be a problem to make this a KMS driver
-> >> > > instead? Old fbdev API could be emulated on top of it, until it goes
-> >> > > out of use, couldn't it?
-> >> > 
-> >> > There's already an fbdev emulation layer in KMS, for such a simple use
-> >> > case it will work fine.
-> >> 
-> >> I suggested the same to Stephen when he first brought up this driver.
-> >> Unfortunately his attempt to create a simple KMS driver resulted in a
-> >> significantly larger driver than the one he did for the framebuffer
-> >> interface. This means that either Stephen did something really wrong in
-> >> his attempt, or the KMS interface isn't as good as it should be if we
-> >> want to move people away from frame buffer drivers.
-> > 
-> > Implementing a KMS driver requires a fair amount of code. The DRM/KMS
-> > subsystem provides helpers that significantly reduce the driver size.
-> > Those helpers have been designed around common use cases found in existing
-> > KMS drivers.
-> > 
-> > I'm pretty sure we will be able to add useful helpers for existing fbdev
-> > drivers that will make porting them to KMS pretty easy, but that first
-> > requires starting to port drivers to find out what common code could be
-> > factored out.
-> 
-> Meanwhile this tiny driver will allow us to use hardware that can't
-> otherwise be used (because the proper graphics drivers for said hardware is
-> _also_ stuck behind large reworks, i.e. common display framework, which has
-> uncertain progress at this time).
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+---
+ Documentation/devicetree/bindings/clock/sunxi.txt  | 117 +++------------------
+ .../bindings/clock/sunxi/sun4i-a10-gates.txt       |  93 ++++++++++++++++
+ .../bindings/clock/sunxi/sun5i-a13-gates.txt       |  58 ++++++++++
+ drivers/clk/sunxi/clk-sunxi.c                      |  31 ++++--
+ 4 files changed, 187 insertions(+), 112 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/sunxi/sun4i-a10-gates.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/sunxi/sun5i-a13-gates.txt
 
-Point taken :-)
-
-> As Stephen mentioned in the original patch, this particular driver is very
-> useful for Raspberry Pi. But it is also the best way forward (right now) for
-> getting basic upstream usability out of the Samsung ARM-based Chromebook. As
-> a matter of fact, as of this weekend linux-next boots on that platform with
-> keyboard, trackpad, framebuffer and USB2.0 without a single out-of-tree
-> patch. Getting the same functionality out of 3.10 would be very desirable.
-> 
-> So, I clearly understand the desire to move over to a more modern framework.
-> At the same time, there's definite value in merging this small driver while
-> that's happening. Holding useful code hostage isn't always very productive.
-
-I want to be clear about this, even though I believe we should put as much 
-effort as possible behind KMS drivers, I won't nack this patch. It has real 
-use cases and is useful, I'm just concerned it will get abused (but it's far 
-from being the only piece of code that could be subject to abuse).
-
+diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+index 729f524..d495521 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+@@ -12,22 +12,30 @@ Required properties:
+ 	"allwinner,sun4i-axi-clk" - for the AXI clock
+ 	"allwinner,sun4i-axi-gates-clk" - for the AXI gates
+ 	"allwinner,sun4i-ahb-clk" - for the AHB clock
+-	"allwinner,sun4i-ahb-gates-clk" - for the AHB gates
++	"allwinner,sun4i-ahb-gates-clk" - for the AHB gates on A10
++	"allwinner,sun5i-a13-ahb-gates-clk" - for the AHB gates on A13
+ 	"allwinner,sun4i-apb0-clk" - for the APB0 clock
+-	"allwinner,sun4i-apb0-gates-clk" - for the APB0 gates
++	"allwinner,sun4i-apb0-gates-clk" - for the APB0 gates on A10
++	"allwinner,sun5i-a13-apb0-gates-clk" - for the APB0 gates on A13
+ 	"allwinner,sun4i-apb1-clk" - for the APB1 clock
+ 	"allwinner,sun4i-apb1-mux-clk" - for the APB1 clock muxing
+-	"allwinner,sun4i-apb1-gates-clk" - for the APB1 gates
++	"allwinner,sun4i-apb1-gates-clk" - for the APB1 gates on A10
++	"allwinner,sun5i-a13-apb1-gates-clk" - for the APB1 gates on A13
+ 
+ Required properties for all clocks:
+ - reg : shall be the control register address for the clock.
+ - clocks : shall be the input parent clock(s) phandle for the clock
+ - #clock-cells : from common clock binding; shall be set to 0 except for
+-	"allwinner,sun4i-*-gates-clk" where it shall be set to 1
++	"allwinner,*-gates-clk" where it shall be set to 1
+ 
+-Additionally, "allwinner,sun4i-*-gates-clk" clocks require:
++Additionally, "allwinner,*-gates-clk" clocks require:
+ - clock-output-names : the corresponding gate names that the clock controls
+ 
++Clock consumers should specify the desired clocks they use with a
++"clocks" phandle cell. Consumers that are using a gated clock should
++provide an additional ID in their clock property. The values of this
++ID are documented in sunxi/<soc>-gates.txt.
++
+ For example:
+ 
+ osc24M: osc24M@01c20050 {
+@@ -50,102 +58,3 @@ cpu: cpu@01c20054 {
+ 	reg = <0x01c20054 0x4>;
+ 	clocks = <&osc32k>, <&osc24M>, <&pll1>;
+ };
+-
+-
+-
+-Gate clock outputs
+-
+-The "allwinner,sun4i-*-gates-clk" clocks provide several gatable outputs;
+-their corresponding offsets as present on sun4i are listed below. Note that
+-some of these gates are not present on sun5i.
+-
+-  * AXI gates ("allwinner,sun4i-axi-gates-clk")
+-
+-    DRAM                                                                0
+-
+-  * AHB gates ("allwinner,sun4i-ahb-gates-clk")
+-
+-    USB0                                                                0
+-    EHCI0                                                               1
+-    OHCI0                                                               2*
+-    EHCI1                                                               3
+-    OHCI1                                                               4*
+-    SS                                                                  5
+-    DMA                                                                 6
+-    BIST                                                                7
+-    MMC0                                                                8
+-    MMC1                                                                9
+-    MMC2                                                                10
+-    MMC3                                                                11
+-    MS                                                                  12**
+-    NAND                                                                13
+-    SDRAM                                                               14
+-
+-    ACE                                                                 16
+-    EMAC                                                                17
+-    TS                                                                  18
+-
+-    SPI0                                                                20
+-    SPI1                                                                21
+-    SPI2                                                                22
+-    SPI3                                                                23
+-    PATA                                                                24
+-    SATA                                                                25**
+-    GPS                                                                 26*
+-
+-    VE                                                                  32
+-    TVD                                                                 33
+-    TVE0                                                                34
+-    TVE1                                                                35
+-    LCD0                                                                36
+-    LCD1                                                                37
+-
+-    CSI0                                                                40
+-    CSI1                                                                41
+-
+-    HDMI                                                                43
+-    DE_BE0                                                              44
+-    DE_BE1                                                              45
+-    DE_FE0                                                              46
+-    DE_FE1                                                              47
+-
+-    MP                                                                  50
+-
+-    MALI400                                                             52
+-
+-  * APB0 gates ("allwinner,sun4i-apb0-gates-clk")
+-
+-    CODEC                                                               0
+-    SPDIF                                                               1*
+-    AC97                                                                2
+-    IIS                                                                 3
+-
+-    PIO                                                                 5
+-    IR0                                                                 6
+-    IR1                                                                 7
+-
+-    KEYPAD                                                              10
+-
+-  * APB1 gates ("allwinner,sun4i-apb1-gates-clk")
+-
+-    I2C0                                                                0
+-    I2C1                                                                1
+-    I2C2                                                                2
+-
+-    CAN                                                                 4
+-    SCR                                                                 5
+-    PS20                                                                6
+-    PS21                                                                7
+-
+-    UART0                                                               16
+-    UART1                                                               17
+-    UART2                                                               18
+-    UART3                                                               19
+-    UART4                                                               20
+-    UART5                                                               21
+-    UART6                                                               22
+-    UART7                                                               23
+-
+-Notation:
+- [*]:  The datasheet didn't mention these, but they are present on AW code
+- [**]: The datasheet had this marked as "NC" but they are used on AW code
+diff --git a/Documentation/devicetree/bindings/clock/sunxi/sun4i-a10-gates.txt b/Documentation/devicetree/bindings/clock/sunxi/sun4i-a10-gates.txt
+new file mode 100644
+index 0000000..6a03475
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/sunxi/sun4i-a10-gates.txt
+@@ -0,0 +1,93 @@
++Gate clock outputs
++------------------
++
++  * AXI gates ("allwinner,sun4i-axi-gates-clk")
++
++    DRAM					0
++
++  * AHB gates ("allwinner,sun4i-ahb-gates-clk")
++
++    USB0					0
++    EHCI0					1
++    OHCI0					2*
++    EHCI1					3
++    OHCI1					4*
++    SS						5
++    DMA						6
++    BIST					7
++    MMC0					8
++    MMC1					9
++    MMC2					10
++    MMC3					11
++    MS						12**
++    NAND					13
++    SDRAM					14
++
++    ACE						16
++    EMAC					17
++    TS						18
++
++    SPI0					20
++    SPI1					21
++    SPI2					22
++    SPI3					23
++    PATA					24
++    SATA					25**
++    GPS						26*
++
++    VE						32
++    TVD						33
++    TVE0					34
++    TVE1					35
++    LCD0					36
++    LCD1					37
++
++    CSI0					40
++    CSI1					41
++
++    HDMI					43
++    DE_BE0					44
++    DE_BE1					45
++    DE_FE1					46
++    DE_FE1					47
++
++    MP						50
++
++    MALI400					52
++
++  * APB0 gates ("allwinner,sun4i-apb0-gates-clk")
++
++    CODEC					0
++    SPDIF					1*
++    AC97					2
++    IIS						3
++
++    PIO						5
++    IR0						6
++    IR1						7
++
++    KEYPAD					10
++
++  * APB1 gates ("allwinner,sun4i-apb1-gates-clk")
++
++    I2C0					0
++    I2C1					1
++    I2C2					2
++
++    CAN						4
++    SCR						5
++    PS20					6
++    PS21					7
++
++    UART0					16
++    UART1					17
++    UART2					18
++    UART3					19
++    UART4					20
++    UART5					21
++    UART6					22
++    UART7					23
++
++Notation:
++ [*]:  The datasheet didn't mention these, but they are present on AW code
++ [**]: The datasheet had this marked as "NC" but they are used on AW code
+diff --git a/Documentation/devicetree/bindings/clock/sunxi/sun5i-a13-gates.txt b/Documentation/devicetree/bindings/clock/sunxi/sun5i-a13-gates.txt
+new file mode 100644
+index 0000000..006b6df
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/sunxi/sun5i-a13-gates.txt
+@@ -0,0 +1,58 @@
++Gate clock outputs
++------------------
++
++  * AXI gates ("allwinner,sun4i-axi-gates-clk")
++
++    DRAM					0
++
++  * AHB gates ("allwinner,sun5i-a13-ahb-gates-clk")
++
++    USBOTG					0
++    EHCI					1
++    OHCI					2
++
++    SS						5
++    DMA						6
++    BIST					7
++    MMC0					8
++    MMC1					9
++    MMC2					10
++
++    NAND					13
++    SDRAM					14
++
++    SPI0					20
++    SPI1					21
++    SPI2					22
++
++    STIMER					28
++
++    VE						32
++
++    LCD						36
++
++    CSI						40
++
++    DE_BE					44
++
++    DE_FE					46
++
++    IEP						51
++    MALI400					52
++
++  * APB0 gates ("allwinner,sun5i-a13-apb0-gates-clk")
++
++    CODEC					0
++
++    PIO						5
++    IR						6
++
++  * APB1 gates ("allwinner,sun5i-a13-apb1-gates-clk")
++
++    I2C0					0
++    I2C1					1
++    I2C2					2
++
++    UART1					17
++
++    UART3					19
+diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+index 8492ad1..930d36f 100644
+--- a/drivers/clk/sunxi/clk-sunxi.c
++++ b/drivers/clk/sunxi/clk-sunxi.c
+@@ -333,22 +333,34 @@ struct gates_data {
+ 	DECLARE_BITMAP(mask, SUNXI_GATES_MAX_SIZE);
+ };
+ 
+-static const __initconst struct gates_data axi_gates_data = {
++static const __initconst struct gates_data sun4i_axi_gates_data = {
+ 	.mask = {1},
+ };
+ 
+-static const __initconst struct gates_data ahb_gates_data = {
++static const __initconst struct gates_data sun4i_ahb_gates_data = {
+ 	.mask = {0x7F77FFF, 0x14FB3F},
+ };
+ 
+-static const __initconst struct gates_data apb0_gates_data = {
++static const __initconst struct gates_data sun5i_a13_ahb_gates_data = {
++	.mask = {0x107067e7, 0x185111},
++};
++
++static const __initconst struct gates_data sun4i_apb0_gates_data = {
+ 	.mask = {0x4EF},
+ };
+ 
+-static const __initconst struct gates_data apb1_gates_data = {
++static const __initconst struct gates_data sun5i_a13_apb0_gates_data = {
++	.mask = {0x61},
++};
++
++static const __initconst struct gates_data sun4i_apb1_gates_data = {
+ 	.mask = {0xFF00F7},
+ };
+ 
++static const __initconst struct gates_data sun5i_a13_apb1_gates_data = {
++	.mask = {0xa0007},
++};
++
+ static void __init sunxi_gates_clk_setup(struct device_node *node,
+ 					 struct gates_data *data)
+ {
+@@ -428,10 +440,13 @@ static const __initconst struct of_device_id clk_mux_match[] = {
+ 
+ /* Matches for gate clocks */
+ static const __initconst struct of_device_id clk_gates_match[] = {
+-	{.compatible = "allwinner,sun4i-axi-gates-clk", .data = &axi_gates_data,},
+-	{.compatible = "allwinner,sun4i-ahb-gates-clk", .data = &ahb_gates_data,},
+-	{.compatible = "allwinner,sun4i-apb0-gates-clk", .data = &apb0_gates_data,},
+-	{.compatible = "allwinner,sun4i-apb1-gates-clk", .data = &apb1_gates_data,},
++	{.compatible = "allwinner,sun4i-axi-gates-clk", .data = &sun4i_axi_gates_data,},
++	{.compatible = "allwinner,sun4i-ahb-gates-clk", .data = &sun4i_ahb_gates_data,},
++	{.compatible = "allwinner,sun5i-a13-ahb-gates-clk", .data = &sun5i_a13_ahb_gates_data,},
++	{.compatible = "allwinner,sun4i-apb0-gates-clk", .data = &sun4i_apb0_gates_data,},
++	{.compatible = "allwinner,sun5i-a13-apb0-gates-clk", .data = &sun5i_a13_apb0_gates_data,},
++	{.compatible = "allwinner,sun4i-apb1-gates-clk", .data = &sun4i_apb1_gates_data,},
++	{.compatible = "allwinner,sun5i-a13-apb1-gates-clk", .data = &sun5i_a13_apb1_gates_data,},
+ 	{}
+ };
+ 
 -- 
-Regards,
+1.8.1.2
 
-Laurent Pinchart
