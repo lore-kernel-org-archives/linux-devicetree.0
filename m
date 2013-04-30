@@ -1,109 +1,44 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH/RFC 0/4] dmaengine: add DT support for DMA multiplexers
-Date: Tue, 30 Apr 2013 14:17:13 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1304301405510.1489@axis700.grange>
-References: <1367305883-2997-1-git-send-email-g.liakhovetski@gmx.de>
- <20130430104354.GF1960@intel.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: [GIT PULL] ARM: OMAP2+: GPMC fixes for v3.10
+Date: Tue, 30 Apr 2013 08:53:52 -0500
+Message-ID: <517FCCF0.1030105@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20130430104354.GF1960@intel.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, device-tree <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-(added Russell to CC, sorry for not including initially)
+The following changes since commit aecb65a34a780cd07fbaa652cc5d640f13f3ed5f:
 
-Hi Vinod
+  Merge branch 'omap-gpmc-for-v3.10-take2' of git://github.com/jonhunter/linux into omap-for-v3.10/gpmc (2013-04-04 11:22:33 -0700)
 
-On Tue, 30 Apr 2013, Vinod Koul wrote:
+are available in the git repository at:
 
-> On Tue, Apr 30, 2013 at 09:11:19AM +0200, Guennadi Liakhovetski wrote:
-> > Previously an issue has been discussed, arising on sh-/r-mobile ARM-based 
-> > systems. There we typically have multiple DMA controller instances with 
-> > exactly equal or very similar capabilities. Each of them can serve the same 
-> > slaves, using the same slave identifiers (request line IDs). With the 
-> > present DMA DT implementation _each_ such DMA slave would have to reference 
-> > _each_ of those DMA controllers in its DMA bindings, e.g.
-> But why... if that is the case then we havent define DT-bindings clearly enough
+  git://github.com/jonhunter/linux.git omap-gpmc-fixes-for-v3.10
 
-Sorry, what do you mean "why?" Why each slave has to reference each DMA 
-controller? We have discussed this A LOT before... My understanding is, 
-that we decided, that the sh-/r-mobile case of multiple equal DMA 
-controllers is an exception and that we don't want to punish everyone for 
-it. So, the design includes only explicit requesting of specific DMA 
-request lines on specific DMA controllers, no wild-cards. If a slave DMA 
-channel can be provided by several DMA controllers we decided to list them 
-all explicitly too. And for the sh-/r-mobile case a DMA-mux DT node has 
-been proposed. This is exactly what this patch series is implementing. Is 
-my understanding wrong?
+for you to fetch changes up to b327b3627bb428eb7d98f25224532425a673d89e:
 
-> And we havent merged that yet, so why not fix that in first set itself
+  ARM: OMAP2+: only WARN if a GPMC child probe function fail (2013-04-30 08:43:05 -0500)
 
-Sorry, don't understand. The series isn't merged yet, that's right. That's 
-why I explicitly mention this dependency here. But this isn't a fix. This 
-is a new feature. The first patch-series only touches a specific DMA 
-controller driver and relevant platforms. No core changes, so, it's not 
-that intrusive and can be applied quickly. Whereas this series affects the 
-core and might need a more careful consideration, discussion, etc.
+----------------------------------------------------------------
+GPMC fixes for v3.10. Main fix is to only search the GPMC node
+for GPMC child devices and not the entire device-tree (which was
+breaking ethernet support on some boards where the GPMC does not
+interface with the ethernet chip). This branch is based upon
+Tony's omap-for-v3.10/gpmc branch.
+----------------------------------------------------------------
+Javier Martinez Canillas (3):
+      Documentation: dt: update TI GPMC ethernet binding properties
+      ARM: OMAP2+: only search for GPMC DT child nodes on probe
+      ARM: OMAP2+: only WARN if a GPMC child probe function fail
 
-Thanks
-Guennadi
+Jon Hunter (1):
+      Documentation: dt: update properties in TI GPMC NAND example
 
-> --
-> ~Vinod
-> > 
-> > 	mmc0: mmc@10000000 {
-> > 		...
-> > 		dmas = <&dma0 0x10
-> > 			&dma1 0x10
-> > 			&dma2 0x10
-> > 			&dma3 0x10
-> > 			&dma0 0x11
-> > 			&dma1 0x11
-> > 			&dma2 0x11
-> > 			&dma3 0x11>;
-> > 		dma-names = "tx", "tx", "tx", "tx",
-> > 			"rx", "rx", "rx", "rx";
-> > 	};
-> > 
-> > Which certainly isn't pretty. To avoid such redundancy it has been proposed 
-> > to implement a DMA multiplexer DT node. That way slaves would just 
-> > reference the multiplexer and one of DMA controller instances in it would 
-> > be picked up automatically to provide DMA channels to slaves. Patches 1-3 
-> > in this series propose such an implementation. Patch 4 is just a minor 
-> > clean up, can be applied independently.
-> > 
-> > Cc: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
-> > 
-> > Guennadi Liakhovetski (4):
-> >   OF: add a new phandle parsing function for grouped nodes
-> >   dmaengine: add support for DMA multiplexer DT nodes
-> >   ARM: shmobile: move r8a7740 DMA controller DT node under a "dma-mux"
-> >     node
-> >   OF: modify function stubs to match proper function declarations.
-> > 
-> >  Documentation/devicetree/bindings/dma/dma.txt      |   44 ++++++++++++++++++++
-> >  .../boot/dts/r8a7740-armadillo800eva-reference.dts |   12 +++---
-> >  arch/arm/boot/dts/r8a7740.dtsi                     |   43 +++++++++++--------
-> >  drivers/dma/of-dma.c                               |   39 +++++++++++++----
-> >  drivers/of/base.c                                  |   28 +++++++++++-
-> >  include/linux/of.h                                 |   20 ++++++++-
-> >  6 files changed, 147 insertions(+), 39 deletions(-)
-> > 
-> > -- 
-> > 1.7.2.5
-> > 
-> > Thanks
-> > Guennadi
-> > ---
-> > Guennadi Liakhovetski, Ph.D.
-> > Freelance Open-Source Software Developer
-> > http://www.open-technology.de/
-> 
-
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+ .../devicetree/bindings/mtd/gpmc-nand.txt          |   28 +++++-----
+ Documentation/devicetree/bindings/net/gpmc-eth.txt |   56 ++++++++++----------
+ arch/arm/mach-omap2/gpmc.c                         |   38 +++++--------
+ 3 files changed, 54 insertions(+), 68 deletions(-)
