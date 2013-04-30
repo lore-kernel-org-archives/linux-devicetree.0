@@ -1,61 +1,75 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [v2, 3/3] ARM: dts: AM33XX: Add NAND flash device tree data to
- am335x-evm
-Date: Tue, 30 Apr 2013 10:35:42 +0530
-Message-ID: <517F5126.5000509@ti.com>
-References: <ebfab3e9123b3e50b9a9678c1480191addd86d59.1359007746.git.avinashphilip@ti.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH RFC] media: i2c: mt9p031: add OF support
+Date: Tue, 30 Apr 2013 08:16:25 +0200
+Message-ID: <20130430061625.GC16843@pengutronix.de>
+References: <1367222401-26649-1-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <ebfab3e9123b3e50b9a9678c1480191addd86d59.1359007746.git.avinashphilip@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: "Gupta, Pekon" <pekon@ti.com>
-Cc: linux@arm.linux.org.uk, b-cousson@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, hvaibhav@ti.com, gururaja.hebbar@ti.com, zonque@gmail.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1367222401-26649-1-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-On 4/29/2013 1:25 PM, Gupta, Pekon wrote:
-> From: avinash philip <avinashphilip@ti.com>
-> 
-> NAND flash connected in am335x-evm on GPMC controller. This patch adds
-> device tree node in am3355-evm with GPMC contoller timing for NAND flash
-> interface, NAND partition table, ECC scheme, elm handle id.
-> 
-> Signed-off-by: Philip Avinash <avinashphilip@ti.com>
-> Tested-by: Pekon Gupta <pekon@ti.com>
-> 
-> ---
-> arch/arm/boot/dts/am335x-evm.dts |   98 +++++++++++++++++++++++++++++++++++++-
->  1 file changed, 97 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-> index 0423298..1c2fd89 100644
-> --- a/arch/arm/boot/dts/am335x-evm.dts
-> +++ b/arch/arm/boot/dts/am335x-evm.dts
-> @@ -26,7 +26,8 @@
->  
->  	am33xx_pinmux: pinmux@44e10800 {
->  		pinctrl-names = "default";
-> -		pinctrl-0 = <&matrix_keypad_s0 &volume_keys_s0>;
-> +		pinctrl-0 = <&matrix_keypad_s0 &volume_keys_s0
-> +			&nandflash_pins_s0>;
+One more point for your devicetree conversions,
 
-Why add this to the board level fallback (called pinctrl hogs, I think)?
-This can be part of nand node you added below so that the pinctrl will
-take effect when nand gets probed instead of all the time.
+On Mon, Apr 29, 2013 at 01:30:01PM +0530, Prabhakar Lad wrote:
+> From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> 
+> add OF support for the mt9p031 sensor driver.
+> 
+> +static struct mt9p031_platform_data
+> +	*mt9p031_get_pdata(struct i2c_client *client)
+> +
+> +{
+> +	if (!client->dev.platform_data && client->dev.of_node) {
+> +		struct device_node *np;
+> +		struct mt9p031_platform_data *pdata;
+> +		int ret;
+> +
+> +		np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
+> +		if (!np)
+> +			return NULL;
+> +
+> +		pdata = devm_kzalloc(&client->dev,
+> +				     sizeof(struct mt9p031_platform_data),
+> +				     GFP_KERNEL);
+> +		if (!pdata) {
+> +			pr_warn("mt9p031 failed allocate memeory\n");
+> +			return NULL;
+> +		}
+> +		ret = of_property_read_u32(np, "reset", &pdata->reset);
+> +		if (ret == -EINVAL)
+> +			pdata->reset = -1;
+> +		else if (ret == -ENODATA)
+> +			return NULL;
+> +
+> +		if (of_property_read_u32(np, "ext_freq", &pdata->ext_freq))
+> +			return NULL;
+> +
+> +		if (of_property_read_u32(np, "target_freq",
+> +					 &pdata->target_freq))
+> +			return NULL;
+> +
+> +		return pdata;
+> +	}
 
-Thanks,
-Sekhar
+I don't know how the others see this, but IMO it would be cleaner to
+first add a duplicate of the members of pdata in struct mt9p031 and then
+initialize them either from pdata or from devicetree data. The
+(artificial) creation of platform_data for the devicetree case adds a
+new level of indirection. This may not be a problem here, but there are
+cases where there is no 1:1 transcription between pdata and devicetree
+possible.
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
