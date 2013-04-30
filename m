@@ -1,151 +1,64 @@
 From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: [PATCH 2/4] dmaengine: add support for DMA multiplexer DT nodes
-Date: Tue, 30 Apr 2013 09:11:21 +0200
-Message-ID: <1367305883-2997-3-git-send-email-g.liakhovetski@gmx.de>
-References: <1367305883-2997-1-git-send-email-g.liakhovetski@gmx.de>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1367305883-2997-1-git-send-email-g.liakhovetski@gmx.de>
-Sender: linux-sh-owner@vger.kernel.org
+Subject: [PATCH/RFC 0/4] dmaengine: add DT support for DMA multiplexers
+Date: Tue, 30 Apr 2013 09:11:19 +0200
+Message-ID: <1367305883-2997-1-git-send-email-g.liakhovetski@gmx.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-sh@vger.kernel.org
 Cc: Magnus Damm <magnus.damm@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-If a slave can use any of several DMA controllers on the system, multiple
-DMA descriptors can be listed in its "dmas" DT property with the same
-channel name and different DMA controller phandles. However, if multiple
-such slaves can use any of a set of DMA controllers on the system, listing
-them all in each slave's "dmas" property becomes counterproductive. This
-patch adds support for a "dma-mux" DT node, whose sole purpose is to group
-such DMA controller DT nodes. Slaves can then specify the group's phandle
-in their "dmas" property. DMA controllers, belonging to the same group
-must have the same #dma-cells number and use the same slave IDs.
+Previously an issue has been discussed, arising on sh-/r-mobile ARM-based 
+systems. There we typically have multiple DMA controller instances with 
+exactly equal or very similar capabilities. Each of them can serve the same 
+slaves, using the same slave identifiers (request line IDs). With the 
+present DMA DT implementation _each_ such DMA slave would have to reference 
+_each_ of those DMA controllers in its DMA bindings, e.g.
 
-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
----
- Documentation/devicetree/bindings/dma/dma.txt |   44 +++++++++++++++++++++++++
- drivers/dma/of-dma.c                          |   39 ++++++++++++++++------
- 2 files changed, 73 insertions(+), 10 deletions(-)
+	mmc0: mmc@10000000 {
+		...
+		dmas = <&dma0 0x10
+			&dma1 0x10
+			&dma2 0x10
+			&dma3 0x10
+			&dma0 0x11
+			&dma1 0x11
+			&dma2 0x11
+			&dma3 0x11>;
+		dma-names = "tx", "tx", "tx", "tx",
+			"rx", "rx", "rx", "rx";
+	};
 
-diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
-index 8f504e6..a861298 100644
---- a/Documentation/devicetree/bindings/dma/dma.txt
-+++ b/Documentation/devicetree/bindings/dma/dma.txt
-@@ -31,6 +31,50 @@ Example:
- 		dma-requests = <127>;
- 	};
- 
-+* DMA multiplexer
-+
-+Several DMA controllers with the same #dma-cells number and the same request
-+line IDs can be grouped under a DMA multiplexer super-node, if slaves can use
-+DMA channels on any of them.
-+
-+Required property:
-+- compatible:		Must include "dma-mux".
-+
-+Some standard optional properties can be helpful:
-+
-+Optional properties:
-+- compatible:		You will probably also want to include compatibility
-+			with "simple-bus" to automatically create platform
-+			devices from subnodes.
-+- ranges:		Map DMA controller memory areas in the parent address
-+			space.
-+- #address-cells:	Number of address cells in case automatic propagation
-+			with the help of "ranges" doesn't work.
-+- #size-cells:		Number of size cells.
-+
-+Example:
-+
-+	dmac: dma-mux {
-+		compatible = "simple-bus", "dma-mux";
-+		ranges;
-+
-+		dma0: dma@10000000 {
-+			#dma-cells = <1>;
-+			...
-+		};
-+
-+		dma1: dma@20000000 {
-+			#dma-cells = <1>;
-+			...
-+		};
-+	};
-+
-+	mmc0: mmc@30000000 {
-+			dmas = <&dmac 1
-+				&dmac 2>;
-+			dma-names = "tx", "rx";
-+			...
-+	};
- 
- * DMA client
- 
-diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
-index 69d04d2..bd7652b 100644
---- a/drivers/dma/of-dma.c
-+++ b/drivers/dma/of-dma.c
-@@ -183,8 +183,8 @@ static int of_dma_match_channel(struct device_node *np, char *name, int index,
- 	if (strcmp(name, s))
- 		return -ENODEV;
- 
--	if (of_parse_phandle_with_args(np, "dmas", "#dma-cells", index,
--				       dma_spec))
-+	if (of_parse_phandle_with_child_args(np, "dmas", "#dma-cells", index,
-+					     dma_spec, "dma-mux"))
- 		return -ENODEV;
- 
- 	return 0;
-@@ -217,22 +217,41 @@ struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
- 	}
- 
- 	for (i = 0; i < count; i++) {
-+		struct device_node *dma = NULL, *parent;
-+		bool is_mux;
-+
- 		if (of_dma_match_channel(np, name, i, &dma_spec))
- 			continue;
- 
--		ofdma = of_dma_get_controller(&dma_spec);
-+		parent = of_node_get(dma_spec.np->parent);
-+		is_mux = of_device_is_compatible(parent, "dma-mux");
- 
--		if (!ofdma)
--			continue;
-+		do {
-+			if (is_mux) {
-+				dma = of_get_next_available_child(parent, dma);
-+				if (!dma)
-+					break;
-+				dma_spec.np = dma;
-+			}
-+
-+			ofdma = of_dma_get_controller(&dma_spec);
- 
--		chan = ofdma->of_dma_xlate(&dma_spec, ofdma);
-+			if (!ofdma)
-+				continue;
- 
--		of_dma_put_controller(ofdma);
-+			chan = ofdma->of_dma_xlate(&dma_spec, ofdma);
- 
--		of_node_put(dma_spec.np);
-+			of_dma_put_controller(ofdma);
-+
-+			of_node_put(dma_spec.np);
-+
-+			if (chan) {
-+				of_node_put(parent);
-+				return chan;
-+			}
-+		} while (dma);
- 
--		if (chan)
--			return chan;
-+		of_node_put(parent);
- 	}
- 
- 	return NULL;
+Which certainly isn't pretty. To avoid such redundancy it has been proposed 
+to implement a DMA multiplexer DT node. That way slaves would just 
+reference the multiplexer and one of DMA controller instances in it would 
+be picked up automatically to provide DMA channels to slaves. Patches 1-3 
+in this series propose such an implementation. Patch 4 is just a minor 
+clean up, can be applied independently.
+
+Cc: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+
+Guennadi Liakhovetski (4):
+  OF: add a new phandle parsing function for grouped nodes
+  dmaengine: add support for DMA multiplexer DT nodes
+  ARM: shmobile: move r8a7740 DMA controller DT node under a "dma-mux"
+    node
+  OF: modify function stubs to match proper function declarations.
+
+ Documentation/devicetree/bindings/dma/dma.txt      |   44 ++++++++++++++++++++
+ .../boot/dts/r8a7740-armadillo800eva-reference.dts |   12 +++---
+ arch/arm/boot/dts/r8a7740.dtsi                     |   43 +++++++++++--------
+ drivers/dma/of-dma.c                               |   39 +++++++++++++----
+ drivers/of/base.c                                  |   28 +++++++++++-
+ include/linux/of.h                                 |   20 ++++++++-
+ 6 files changed, 147 insertions(+), 39 deletions(-)
+
 -- 
 1.7.2.5
 
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
