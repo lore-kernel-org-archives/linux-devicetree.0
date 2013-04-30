@@ -1,97 +1,37 @@
-From: Marek Belisko <marek.belisko@gmail.com>
-Subject: [PATCH 1/1] ASoC: McASP: Add device tree binding for defining separate clock and sync used by tx and rx.
-Date: Tue, 30 Apr 2013 12:07:18 +0200
-Message-ID: <1367316438-20267-1-git-send-email-marek.belisko@streamunlimited.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.de
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, zonque@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Marek Belisko <marek.belisko@streamunlimited.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
+Date: Tue, 30 Apr 2013 12:28:42 +0200
+Message-ID: <201304301228.42245.arnd@arndb.de>
+References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
+ <517F7245.2050606@iki.fi>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <517F7245.2050606-X3B1VOXEql0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tomi Valkeinen <tomi.valkeinen-X3B1VOXEql0@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add new property tx-rx-clk-separate which we can distinquish between common
-and separate clock for tx and rx blocks.
+On Tuesday 30 April 2013, Tomi Valkeinen wrote:
 
-Signed-off-by: Marek Belisko <marek.belisko@streamunlimited.com>
----
- .../bindings/sound/davinci-mcasp-audio.txt         |    2 ++
- include/linux/platform_data/davinci_asp.h          |    1 +
- sound/soc/davinci/davinci-mcasp.c                  |   11 ++++++++++-
- sound/soc/davinci/davinci-mcasp.h                  |    1 +
- 4 files changed, 14 insertions(+), 1 deletion(-)
+> The bootloader would init the display hardware, the bootfb would give an
+> early /dev/fb0 for the kernel and userspace, and when the real display
+> driver is loaded, the bootfb would be unbound and the real driver would
+> take over.
 
-diff --git a/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt b/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
-index 374e145..9afd2a0 100644
---- a/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
-+++ b/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
-@@ -23,6 +23,8 @@ Optional properties:
- - rx-num-evt : FIFO levels.
- - sram-size-playback : size of sram to be allocated during playback
- - sram-size-capture  : size of sram to be allocated during capture
-+- tx-rx-clk-separate : separate clock and frame sync used by transmit and
-+				receive sections
- 
- Example:
- 
-diff --git a/include/linux/platform_data/davinci_asp.h b/include/linux/platform_data/davinci_asp.h
-index 8db5ae0..da3099b 100644
---- a/include/linux/platform_data/davinci_asp.h
-+++ b/include/linux/platform_data/davinci_asp.h
-@@ -84,6 +84,7 @@ struct snd_platform_data {
- 	u8 version;
- 	u8 txnumevt;
- 	u8 rxnumevt;
-+	u8 tx_rx_clk_separate;
- };
- 
- enum {
-diff --git a/sound/soc/davinci/davinci-mcasp.c b/sound/soc/davinci/davinci-mcasp.c
-index 2953c55..849a187 100644
---- a/sound/soc/davinci/davinci-mcasp.c
-+++ b/sound/soc/davinci/davinci-mcasp.c
-@@ -771,7 +771,12 @@ static void davinci_hw_param(struct davinci_audio_dev *dev, int stream)
- 	for (i = 0; i < active_slots; i++)
- 		mask |= (1 << i);
- 
--	mcasp_clr_bits(dev->base + DAVINCI_MCASP_ACLKXCTL_REG, TX_ASYNC);
-+	if (dev->tx_rx_clk_separate == 1)
-+		mcasp_set_bits(dev->base + DAVINCI_MCASP_ACLKXCTL_REG,
-+				TX_ASYNC);
-+	else
-+		mcasp_clr_bits(dev->base + DAVINCI_MCASP_ACLKXCTL_REG,
-+				TX_ASYNC);
- 
- 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
- 		/* bit stream is MSB first  with no delay */
-@@ -1121,6 +1126,9 @@ static struct snd_platform_data *davinci_mcasp_set_pdata_from_of(
- 	if (ret >= 0)
- 		pdata->sram_size_capture = val;
- 
-+	if (of_find_property(np, "tx-rx-clk-separate", NULL))
-+		pdata->tx_rx_clk_separate = 1;
-+
- 	return  pdata;
- 
- nodata:
-@@ -1191,6 +1199,7 @@ static int davinci_mcasp_probe(struct platform_device *pdev)
- 	dev->version = pdata->version;
- 	dev->txnumevt = pdata->txnumevt;
- 	dev->rxnumevt = pdata->rxnumevt;
-+	dev->tx_rx_clk_separate = pdata->tx_rx_clk_separate;
- 	dev->dev = &pdev->dev;
- 
- 	dma_data = &dev->dma_params[SNDRV_PCM_STREAM_PLAYBACK];
-diff --git a/sound/soc/davinci/davinci-mcasp.h b/sound/soc/davinci/davinci-mcasp.h
-index a9ac0c1..4440666 100644
---- a/sound/soc/davinci/davinci-mcasp.h
-+++ b/sound/soc/davinci/davinci-mcasp.h
-@@ -39,6 +39,7 @@ struct davinci_audio_dev {
- 	u8	*serial_dir;
- 	u8	version;
- 	u16	bclk_lrclk_ratio;
-+	u8	tx_rx_clk_separate;
- 
- 	/* McASP FIFO related */
- 	u8	txnumevt;
--- 
-1.7.9.5
+I think that's a great idea. What I'm not sure about is how that
+infrastructure for switching frame buffers would work and how hard
+it's to write.
 
+	Arnd
