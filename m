@@ -1,75 +1,118 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH RFC] media: i2c: mt9p031: add OF support
-Date: Tue, 30 Apr 2013 13:45:31 +0200
-Message-ID: <2667885.kq9SiOBOqS@avalon>
-References: <1367222401-26649-1-git-send-email-prabhakar.csengg@gmail.com> <20130430061625.GC16843@pengutronix.de>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
+Date: Tue, 30 Apr 2013 14:46:20 +0300
+Message-ID: <517FAF0C.1060901@ti.com>
+References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
+ <517F7245.2050606@iki.fi> <201304301228.42245.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130430061625.GC16843@pengutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============7020614465832849727=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201304301228.42245.arnd@arndb.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-fbdev@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, Tomasz Figa <tomasz.figa@gmail.com>, Rob Clark <robclark@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-rpi-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
+--===============7020614465832849727==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="----enig2SSNGBLWECRASEISUWXSU"
 
-On Tuesday 30 April 2013 08:16:25 Sascha Hauer wrote:
-> On Mon, Apr 29, 2013 at 01:30:01PM +0530, Prabhakar Lad wrote:
-> > From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> > 
-> > add OF support for the mt9p031 sensor driver.
-> > 
-> > +static struct mt9p031_platform_data
-> > +	*mt9p031_get_pdata(struct i2c_client *client)
-> > +
-> > +{
-> > +	if (!client->dev.platform_data && client->dev.of_node) {
-> > +		struct device_node *np;
-> > +		struct mt9p031_platform_data *pdata;
-> > +		int ret;
-> > +
-> > +		np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
-> > +		if (!np)
-> > +			return NULL;
-> > +
-> > +		pdata = devm_kzalloc(&client->dev,
-> > +				     sizeof(struct mt9p031_platform_data),
-> > +				     GFP_KERNEL);
-> > +		if (!pdata) {
-> > +			pr_warn("mt9p031 failed allocate memeory\n");
-> > +			return NULL;
-> > +		}
-> > +		ret = of_property_read_u32(np, "reset", &pdata->reset);
-> > +		if (ret == -EINVAL)
-> > +			pdata->reset = -1;
-> > +		else if (ret == -ENODATA)
-> > +			return NULL;
-> > +
-> > +		if (of_property_read_u32(np, "ext_freq", &pdata->ext_freq))
-> > +			return NULL;
-> > +
-> > +		if (of_property_read_u32(np, "target_freq",
-> > +					 &pdata->target_freq))
-> > +			return NULL;
-> > +
-> > +		return pdata;
-> > +	}
-> 
-> I don't know how the others see this, but IMO it would be cleaner to
-> first add a duplicate of the members of pdata in struct mt9p031 and then
-> initialize them either from pdata or from devicetree data. The
-> (artificial) creation of platform_data for the devicetree case adds a
-> new level of indirection. This may not be a problem here, but there are
-> cases where there is no 1:1 transcription between pdata and devicetree
-> possible.
+------enig2SSNGBLWECRASEISUWXSU
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-I have no strong opinion on this. In the mt9p031 case it won't matter much, 
-but it's probably a good idea in general.
+On 04/30/2013 01:28 PM, Arnd Bergmann wrote:
+> On Tuesday 30 April 2013, Tomi Valkeinen wrote:
+>=20
+>> The bootloader would init the display hardware, the bootfb would give =
+an
+>> early /dev/fb0 for the kernel and userspace, and when the real display=
 
--- 
-Regards,
+>> driver is loaded, the bootfb would be unbound and the real driver woul=
+d
+>> take over.
+>=20
+> I think that's a great idea. What I'm not sure about is how that
+> infrastructure for switching frame buffers would work and how hard
+> it's to write.
 
-Laurent Pinchart
+I don't have any clear ideas either, just some vague ones:
 
+I think the simplest option would be for the userspace to just unbind
+the fbcon, then the bootfb device/driver, and then load the real driver.
+I don't see why that would not work, but it's far from optimal. The fb
+memory would become unallocated for a while, and the user could see
+garbage on the display.
+
+A proper hand-over would be more complex. So, I don't know... Maybe the
+bootfb driver could have custom API for this. When the real driver is
+loaded, it'd call the bootfb to get the fb memory, and to unbind the boot=
+fb.
+
+Would there be issues with passing the fb memory? If one uses dma_alloc,
+the device is linked to the allocated memory, so I presume you can't
+just pass that around and remove the original device.
+
+Then again, dma_alloc would not be used here, as bootfb needs the fb
+memory from a particular location, so I guess bootmem is needed here.
+
+I think it would be reasonable to have a restriction of only a single
+bootfb instance, so one could just use static global variables/funcs to
+manage the hand-over.
+
+All this, of course, presumes that nobody else than fbcon is using the
+fb. But I think it's also a reasonable restriction that the fb device is
+not used (mmapped) by anyone.
+
+ Tomi
+
+
+
+------enig2SSNGBLWECRASEISUWXSU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJRf68MAAoJEPo9qoy8lh71+uoQALJjgPJLhXiltM/VfFcXRXg+
+KszaL4x5v18AvbpXulFtHPry4+hKyli0lObMFluEM3mSnmVCmBer5BzaR80sGDj/
+S8hf8Z8hCiRgVFM1HmVZMUN2eJXIkqGSRKIqn8FznsnnZtAFps+VpfO8eJqFQHYn
+tVfZcmQ4a7P3Pvyuk8Cp37jmcO6cjRLtBj+N4eDIwX8J8Z5Y8mCnBowmX+7L1ZFV
+7IU4+yP11e9wL5lC/TQWvM0ap8gryxoun207GPgajrzjpY4wmvjJlwtpqnaXNN++
+0D9zTv9wtwUQaTc5YhvdaaNMqjywY/MGYPS3trbEHuwW/qnOClKofp4o2KAgxxTH
+/U1GsyEU3gE+HpEI++tEp8Z/gZjBfi1c7QuiTYDTba/XreSh4at1HmmTapEvYQgB
+ms7ulWyt0UHAobE1Ykowwdf1dztCCOl8V+v7r9H7MfQNdlHa8qu/iLYH/1+KyEZD
+GnUKhdVOYHUOtcXANH3z1mFy7lFooVL3pxXFmVAy/XGM+nWXRmJ97ZUt3WXyFc0J
+awvvL8c+mR57NEkY3WHrL2qsJXvj/RF95zLlLe8W5Uei2hr3OVRxl+E2iaBKuPDN
+yOAVBidkoOt1J34b0nZ1VEGNEITpuHSCRJ+6q5v4NbwR26p2PSj6Fzcq9+L1NR46
+smDIOixjOZeNHCurjzo2
+=Un5v
+-----END PGP SIGNATURE-----
+
+------enig2SSNGBLWECRASEISUWXSU--
+
+
+--===============7020614465832849727==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============7020614465832849727==--
