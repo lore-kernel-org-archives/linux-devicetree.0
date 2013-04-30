@@ -1,75 +1,267 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH RFC] media: i2c: mt9p031: add OF support
-Date: Tue, 30 Apr 2013 08:16:25 +0200
-Message-ID: <20130430061625.GC16843@pengutronix.de>
-References: <1367222401-26649-1-git-send-email-prabhakar.csengg@gmail.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v2] fdtput: expand fdt if value does not fit (v2).
+Date: Tue, 30 Apr 2013 07:49:16 +0100
+Message-ID: <517F696C.3000603@st.com>
+References: <1366360596-18968-1-git-send-email-srinivas.kandagatla@st.com>
+ <20130429090835.GH20202@truffula.fritz.box>
+Reply-To: srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1367222401-26649-1-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130429090835.GH20202-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 29/04/13 10:08, David Gibson wrote:
+> On Fri, Apr 19, 2013 at 09:36:36AM +0100, Srinivas KANDAGATLA wrote:
+>> From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+>>
+>> If you try to insert a new node or extend a property with large value,
+>> using fdtput you will notice that it always fails.
+>>
+>> example:
+>> fdtput -v -p -ts ./tst.dtb "/node-1" "property-1" "value-1
+>> Error at 'node-1': FDT_ERR_NOSPACE
+>>
+>> or
+>>
+>> fdtput -v -c ./tst.dtb "/node-1"
+>> Error at 'node-1': FDT_ERR_NOSPACE
+>>
+>> or
+>>
+>> fdtput -v  -ts ./tst.dtb "/node" "property" "very big value"
+>> Decoding value:
+>> 	string: 'very big value'
+>> Value size 15
+>> Error at 'property': FDT_ERR_NOSPACE
+>>
+>> All these error are returned from libfdt, as the size of the fdt passed
+>> has no space to accomdate these new properties.
+>> This patch adds realloc functions in fdtput to allocate new space in fdt
+>> when it detects a shortage in space for new value or node. With this
+>> patch, fdtput can insert a new node or property or extend a property
+>> with new value greater than original size. Also it packs the final blob
+>> to clean up any extra padding.
+>>
+>> Without this patch fdtput tool complains with FDT_ERR_NOSPACE when we
+>> try to add a node/property or extend the value of a property.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+>> CC: David Gibson <dwg-8fk3Idey6ehBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  fdtput.c |   87 +++++++++++++++++++++++++++++++++++++++++++++++++++----------
+>>  1 files changed, 72 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/fdtput.c b/fdtput.c
+>> index f2197f5..3e17977 100644
+>> --- a/fdtput.c
+>> +++ b/fdtput.c
+>> @@ -131,19 +131,72 @@ static int encode_value(struct display_info *disp, char **arg, int arg_count,
+>>  	return 0;
+>>  }
+>>  
+>> -static int store_key_value(void *blob, const char *node_name,
+>> +#define ALIGN(x)		(((x) + (FDT_TAGSIZE) - 1) & ~((FDT_TAGSIZE) - 1))
+>> +
+>> +static char *_realloc_fdt(char *fdt, int delta)
+>> +{
+>> +	int new_sz;
+>> +	char *new_fdt;
+>> +
+>> +	if (!delta)
+>> +		return fdt;
+>> +
+>> +	new_sz = fdt_totalsize(fdt) + delta;
+>> +	new_fdt = malloc(new_sz);
+> Might as well use realloc() here.  fdt_open_into() is (by design) safe
+> in both the overlapping and non-overlapping cases.
+>
+> Also, use xrealloc()/xmalloc() instead of plain realloc()/malloc().
+> Your caller doesn't actually handle the failure case here when this
+> returns NULL, and there's not a whole lot you can do, so the abort()
+> is about the best you can do, and simplifies the code here.
+Yes, you are right, we should about if we fail to allocate memory.
+>> +	if (!new_fdt) {
+>> +		fprintf(stderr, "Unable to allocate memory to new fdt\n");
+>> +		return fdt;
+>> +	}
+>> +	fdt_open_into(fdt, new_fdt, new_sz);
+>> +	free(fdt);
+>> +	return new_fdt;
+>> +}
+>> +
+>> +static char *realloc_node(char *fdt, const char *name)
+>> +{
+>> +	int delta = 0;
+>> +	int newlen = strlen(name);
+>> +	if (newlen)
+> I don't see any point to this test.  Adding a node named "" would be
+> an error in other ways, but it would still require 8 bytes of extra
+> space.
+Ok.
+>
+>> +		delta = sizeof(struct fdt_node_header) +
+>> +				ALIGN(newlen + 1) + FDT_TAGSIZE;
+> struct fdt_node_header already includes the FDT_BEGIN_NODE tag, so
+> you've allocated space for the tag twice.
+Here am allocating space for FDT_BEGIN_NODE + node name in off_struct +
+FDT_END_NODE.
+So am not allocating space for the tag twice.
+Am I missing something?
 
-One more point for your devicetree conversions,
-
-On Mon, Apr 29, 2013 at 01:30:01PM +0530, Prabhakar Lad wrote:
-> From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> 
-> add OF support for the mt9p031 sensor driver.
-> 
-> +static struct mt9p031_platform_data
-> +	*mt9p031_get_pdata(struct i2c_client *client)
-> +
-> +{
-> +	if (!client->dev.platform_data && client->dev.of_node) {
-> +		struct device_node *np;
-> +		struct mt9p031_platform_data *pdata;
-> +		int ret;
-> +
-> +		np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
-> +		if (!np)
-> +			return NULL;
-> +
-> +		pdata = devm_kzalloc(&client->dev,
-> +				     sizeof(struct mt9p031_platform_data),
-> +				     GFP_KERNEL);
-> +		if (!pdata) {
-> +			pr_warn("mt9p031 failed allocate memeory\n");
-> +			return NULL;
-> +		}
-> +		ret = of_property_read_u32(np, "reset", &pdata->reset);
-> +		if (ret == -EINVAL)
-> +			pdata->reset = -1;
-> +		else if (ret == -ENODATA)
-> +			return NULL;
-> +
-> +		if (of_property_read_u32(np, "ext_freq", &pdata->ext_freq))
-> +			return NULL;
-> +
-> +		if (of_property_read_u32(np, "target_freq",
-> +					 &pdata->target_freq))
-> +			return NULL;
-> +
-> +		return pdata;
-> +	}
-
-I don't know how the others see this, but IMO it would be cleaner to
-first add a duplicate of the members of pdata in struct mt9p031 and then
-initialize them either from pdata or from devicetree data. The
-(artificial) creation of platform_data for the devicetree case adds a
-new level of indirection. This may not be a problem here, but there are
-cases where there is no 1:1 transcription between pdata and devicetree
-possible.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+thanks,
+srini
+>
+>> +
+>> +	return _realloc_fdt(fdt, delta);
+>> +}
+>> +
+>> +static char *realloc_property(char *fdt, int nodeoffset,
+>> +		const char *name, int newlen)
+>> +{
+>> +	int delta = 0;
+>> +	int oldlen = 0;
+>> +
+>> +	if (!fdt_get_property(fdt, nodeoffset, name, &oldlen))
+>> +		/* strings + property header */
+>> +		delta = sizeof(struct fdt_property) + strlen(name) + 1;
+>> +
+>> +	if (newlen > oldlen)
+>> +		/* actual value in off_struct */
+>> +		delta += ALIGN(newlen) - ALIGN(oldlen);
+>> +
+>> +	return _realloc_fdt(fdt, delta);
+>> +}
+>> +
+>> +static int store_key_value(char **blob, const char *node_name,
+>>  		const char *property, const char *buf, int len)
+>>  {
+>>  	int node;
+>>  	int err;
+>>  
+>> -	node = fdt_path_offset(blob, node_name);
+>> +	node = fdt_path_offset(*blob, node_name);
+>>  	if (node < 0) {
+>>  		report_error(node_name, -1, node);
+>>  		return -1;
+>>  	}
+>>  
+>> -	err = fdt_setprop(blob, node, property, buf, len);
+>> +	err = fdt_setprop(*blob, node, property, buf, len);
+>> +	if (err == -FDT_ERR_NOSPACE) {
+>> +		*blob = realloc_property(*blob, node, property, len);
+>> +		err = fdt_setprop(*blob, node, property, buf, len);
+>> +	}
+>>  	if (err) {
+>>  		report_error(property, -1, err);
+>>  		return -1;
+>> @@ -161,7 +214,7 @@ static int store_key_value(void *blob, const char *node_name,
+>>   * @param in_path	Path to process
+>>   * @return 0 if ok, -1 on error
+>>   */
+>> -static int create_paths(void *blob, const char *in_path)
+>> +static int create_paths(char **blob, const char *in_path)
+>>  {
+>>  	const char *path = in_path;
+>>  	const char *sep;
+>> @@ -177,10 +230,11 @@ static int create_paths(void *blob, const char *in_path)
+>>  		if (!sep)
+>>  			sep = path + strlen(path);
+>>  
+>> -		node = fdt_subnode_offset_namelen(blob, offset, path,
+>> +		node = fdt_subnode_offset_namelen(*blob, offset, path,
+>>  				sep - path);
+>>  		if (node == -FDT_ERR_NOTFOUND) {
+>> -			node = fdt_add_subnode_namelen(blob, offset, path,
+>> +			*blob = realloc_node(*blob, path);
+>> +			node = fdt_add_subnode_namelen(*blob, offset, path,
+>>  						       sep - path);
+>>  		}
+>>  		if (node < 0) {
+>> @@ -203,7 +257,7 @@ static int create_paths(void *blob, const char *in_path)
+>>   * @param node_name	Name of node to create
+>>   * @return new node offset if found, or -1 on failure
+>>   */
+>> -static int create_node(void *blob, const char *node_name)
+>> +static int create_node(char **blob, const char *node_name)
+>>  {
+>>  	int node = 0;
+>>  	char *p;
+>> @@ -215,15 +269,17 @@ static int create_node(void *blob, const char *node_name)
+>>  	}
+>>  	*p = '\0';
+>>  
+>> +	*blob = realloc_node(*blob, p + 1);
+>> +
+>>  	if (p > node_name) {
+>> -		node = fdt_path_offset(blob, node_name);
+>> +		node = fdt_path_offset(*blob, node_name);
+>>  		if (node < 0) {
+>>  			report_error(node_name, -1, node);
+>>  			return -1;
+>>  		}
+>>  	}
+>>  
+>> -	node = fdt_add_subnode(blob, node, p + 1);
+>> +	node = fdt_add_subnode(*blob, node, p + 1);
+>>  	if (node < 0) {
+>>  		report_error(p + 1, -1, node);
+>>  		return -1;
+>> @@ -250,23 +306,25 @@ static int do_fdtput(struct display_info *disp, const char *filename,
+>>  		 * store them into the property.
+>>  		 */
+>>  		assert(arg_count >= 2);
+>> -		if (disp->auto_path && create_paths(blob, *arg))
+>> +		if (disp->auto_path && create_paths(&blob, *arg))
+>>  			return -1;
+>>  		if (encode_value(disp, arg + 2, arg_count - 2, &value, &len) ||
+>> -			store_key_value(blob, *arg, arg[1], value, len))
+>> +			store_key_value(&blob, *arg, arg[1], value, len))
+>>  			ret = -1;
+>>  		break;
+>>  	case OPER_CREATE_NODE:
+>>  		for (; ret >= 0 && arg_count--; arg++) {
+>>  			if (disp->auto_path)
+>> -				ret = create_paths(blob, *arg);
+>> +				ret = create_paths(&blob, *arg);
+>>  			else
+>> -				ret = create_node(blob, *arg);
+>> +				ret = create_node(&blob, *arg);
+>>  		}
+>>  		break;
+>>  	}
+>> -	if (ret >= 0)
+>> +	if (ret >= 0) {
+>> +		fdt_pack(blob);
+>>  		ret = utilfdt_write(filename, blob);
+>> +	}
+>>  
+>>  	free(blob);
+>>  	return ret;
+>> @@ -317,7 +375,6 @@ int main(int argc, char *argv[])
+>>  		 * - rename node
+>>  		 * - pack fdt before writing
+>>  		 * - set amount of free space when writing
+>> -		 * - expand fdt if value doesn't fit
+>>  		 */
+>>  		switch (c) {
+>>  		case 'c':
+>
+>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
