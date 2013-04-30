@@ -1,97 +1,93 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
-Date: Tue, 30 Apr 2013 14:48:08 +0300
-Message-ID: <517FAF78.1010306@ti.com>
+Date: Tue, 30 Apr 2013 13:49:28 +0200
+Message-ID: <124304591.tbnLlR41q2@avalon>
 References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
- <517F7245.2050606@iki.fi> <201304301228.42245.arnd@arndb.de>
- <1547536.Us4pVspuI2@avalon>
+ <1547536.Us4pVspuI2@avalon> <517FAF78.1010306@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1866101953312983653=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1547536.Us4pVspuI2@avalon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-fbdev@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, Tomasz Figa <tomasz.figa@gmail.com>, Rob Clark <robclark@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-rpi-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============5573838928152039871=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <517FAF78.1010306-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============1866101953312983653==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="----enig2CRIFEWGKIWTFXMNTKPOF"
 
-------enig2CRIFEWGKIWTFXMNTKPOF
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-On 04/30/2013 02:42 PM, Laurent Pinchart wrote:
-> On Tuesday 30 April 2013 12:28:42 Arnd Bergmann wrote:
->> On Tuesday 30 April 2013, Tomi Valkeinen wrote:
->>> The bootloader would init the display hardware, the bootfb would give=
- an
->>> early /dev/fb0 for the kernel and userspace, and when the real displa=
-y
->>> driver is loaded, the bootfb would be unbound and the real driver wou=
-ld
->>> take over.
->=20
-> This could be done with a KMS driver as well ;-)
-
-Right, I forgot to mention that. I had it in mind also =3D).
-
-DRM has the same problem as fbdev with multi-arch and lots of display
-and panel drivers.
-
-Probably the same bootfb could be used for DRM also. Or do you see any
-benefit of having a "bootkms" driver, or such?
-
- Tomi
+--===============5573838928152039871==
+Content-Type: multipart/signed; boundary="nextPart2710109.8gOsri3Y4h"; micalg="pgp-sha1"; protocol="application/pgp-signature"
 
 
+--nextPart2710109.8gOsri3Y4h
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-------enig2CRIFEWGKIWTFXMNTKPOF
+On Tuesday 30 April 2013 14:48:08 Tomi Valkeinen wrote:
+> On 04/30/2013 02:42 PM, Laurent Pinchart wrote:
+> > On Tuesday 30 April 2013 12:28:42 Arnd Bergmann wrote:
+> >> On Tuesday 30 April 2013, Tomi Valkeinen wrote:
+> >>> The bootloader would init the display hardware, the bootfb would give an
+> >>> early /dev/fb0 for the kernel and userspace, and when the real display
+> >>> driver is loaded, the bootfb would be unbound and the real driver would
+> >>> take over.
+> > 
+> > This could be done with a KMS driver as well ;-)
+> 
+> Right, I forgot to mention that. I had it in mind also =).
+> 
+> DRM has the same problem as fbdev with multi-arch and lots of display
+> and panel drivers.
+> 
+> Probably the same bootfb could be used for DRM also. Or do you see any
+> benefit of having a "bootkms" driver, or such?
+
+As part of the (long term) effort to deprecate fbdev I would of course prefer 
+a bootkms driver. The KMS fbdev emulation layer would provide fbdev 
+compatibility for free during the transition.
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+--nextPart2710109.8gOsri3Y4h
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJRf694AAoJEPo9qoy8lh71SxAP/AtK73Kf9PR7DSxO5/a2aaU1
-jA+Ow8icBJNu9QVHkYyXy+jhTEMAakD1nYfsNHAE/IBLXkxXMOfFI2cox7bp8K+D
-oO0hTfAOvmaQO6OwUE6D1JCC3xzUE6ssiCR9vkliCMrstoNoMXKRU+QzlP1uLNP3
-+qjfphlraaoJoZS1Tr7NvvsPg2vqbI36jUiSXa9yPt+BdU+nE5zhFwEENZ6EhKs1
-Ggit8JmE/to2nltjfTHGd4OPzLdmV7QwGpQMrvcYWDoARa7hzXDh9oEnc11UCdYB
-RFja9eRBKFLPsuXZr/rIMp6iYgg3Hx+HBHxZFp97NSliDWM2hqkEnBmJxyoj8Cmt
-QHXX4B9XEUmJqefKn1StR69kf7S/jr7rgT8C5dFdtzOW6dW+OP4CuqgeOVCakG//
-OTGD54r1oaG/oBfClZMwLGUHDZQwEqrNwc1vHcvaQrIfUsBuuM7Mr414QJAeMg7Z
-xskLZ0lR/AHP2OmLGaGdfKliIHO4ybZQsHzAiEyPWCDzr+SDrYPTWXkY9dmMAYo5
-3sVVeV+HxGDBUfiyV3KoXP2YI8oxRWURsi/icp68MnKB+72PL6GWCFgkRfAKtmtk
-E/fvf7XrMG3XDjDtXTJDlts9ebWrXfdYrJ1iYIkd1AiPZ6X2LvOqyibxvFkz89Fj
-643CtzbRnfS1Yg4BCt2J
-=Mozz
+iQEcBAABAgAGBQJRf6/NAAoJEIkPb2GL7hl1c3sIAIZZdaRLBo+Hus0WbLtABrCK
+CkCYelaTN4BDe25gcBeCx4Ns/7+9d0GS1O1Zbe6EWZDwi31ZrU7d8bpqvsfHqbjC
+5EOOemg9tBaYBirrM1Mip7CKUK1dD/BJjwgHhK5HUIzASlLcPO4jfUHUF5CBn9Q1
+bj6po94j4RDQ1eq0andgRSIO/5KwHtHCo4anXYLYQm/hz6bTByEVQ3uTPwZZSUBH
+CtpLobbpnmfdupfZlFE2coFpLYg2ssbtxhAfQMiV5YSfjtDVuIh3z2MIytsSEjIZ
+GIcOwhMULf6tHq82UYTllbddTwjXEIyChgSCVRkk3Hlj2Owy3I9P11bboR9JAZI=
+=D52O
 -----END PGP SIGNATURE-----
 
-------enig2CRIFEWGKIWTFXMNTKPOF--
+--nextPart2710109.8gOsri3Y4h--
 
 
---===============1866101953312983653==
+--===============5573838928152039871==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
 _______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---===============1866101953312983653==--
+--===============5573838928152039871==--
