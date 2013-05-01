@@ -1,52 +1,125 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 2/2] PM / OPP: check for existing OPP list when
- initialising from device tree
-Date: Wed, 1 May 2013 11:51:36 -0500
-Message-ID: <20130501165136.GB21171@kahuna>
-References: <1367406679-21603-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
- <1367406679-21603-3-git-send-email-Sudeep.KarkadaNagesha@arm.com>
- <20130501150403.GA20488@kahuna>
- <518143EF.3010900@arm.com>
+From: "Christian Daudt" <csd@broadcom.com>
+Subject: Re: [PATCH] ARM: bcm281xx: Add L2 support for Rev A2 chips
+Date: Wed, 1 May 2013 11:09:55 -0700
+Message-ID: <51815A73.9000705@broadcom.com>
+References: <1367347089-23788-1-git-send-email-csd@broadcom.com>
+ <20130501103718.GC22796@mudshark.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain;
+ charset=iso-8859-1;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <518143EF.3010900@arm.com>
+In-Reply-To: <20130501103718.GC22796@mudshark.cambridge.arm.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "Rafael J. Wysocki" <rjw@sisk.pl>, Shawn Guo <shawn.guo@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+To: Will Deacon <will.deacon@arm.com>
+Cc: Russell King <linux@arm.linux.org.uk>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, "arm@kernel.org" <arm@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "csd_b@daudt.org" <csd_b@daudt.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Josh Cartwright <josh.cartwright@ni.com>, Yehuda Yitschak <yehuday@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>John Stultz <john.stultz@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17:33-20130501, Sudeep KarkadaNagesha wrote:
-> On 01/05/13 16:04, Nishanth Menon wrote:
-> > On 12:11-20130501, Sudeep.KarkadaNagesha@arm.com wrote:
-> >> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
-[...]
-> >> diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
-> >> index 4dfdc01..66d52d2 100644
-> >> --- a/drivers/base/power/opp.c
-> >> +++ b/drivers/base/power/opp.c
-> >> @@ -706,6 +706,11 @@ static int of_init_opp_table_from_ofnode(struct device *dev,
-> >>  	const __be32 *val;
-> >>  	int nr;
-> >>  
-> >> +	/* Check for existing list for 'dev' */
-> >> +	dev_opp = find_device_opp(dev);
-> >> +	if (!IS_ERR(dev_opp))
-> >> +		return 0; /* Device OPP already initialized */
-> >> +
-> > It gets a little touchy here -> the normal expectation is for the OPP
-> > entries to be populated onetime at boot.
-> > For example - driver bug where same device was attempted twice Vs the
-> > usecase you mention here - how'd we differentiate between the two?
-> 
-> Do we really need to differentiate ? How about returning -EEXIST ?
-We have tried to provide enough debug information for developers to
-detect and fix their mistakes, error value is one part of the story for
-callers, error messages emphasis on top of it for the developer.. But,
-for some reason I might be led to believe probe and hotplug are separate
-usecases - probe of a device indicates it's presence, and hotplug of a
-device should ideally be a power state.. But that is just me.
--- 
-Regards,
-Nishanth Menon
+Hi Will,
+  Thanks for your feedback. See below for answers.
+
+On 13-05-01 03:37 AM, Will Deacon wrote:
+> Hi Christian,
+>
+> Thanks for CC'ing me.
+>
+> On Tue, Apr 30, 2013 at 07:38:09PM +0100, Christian Daudt wrote:
+>> Rev A2 SoCs have an unorthodox memory re-mapping and this needs
+>> to be reflected in the cache operations.
+>> This patch adds new outer cache functions for the l2x0 driver
+>> to support this SoC revision. It also adds a new compatible
+>> value for the cache to enable this functionality.
+> This is a pretty weird thing you've managed to build here...
+No argument here.
+>> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+>> index c465fac..6edba13 100644
+>> --- a/arch/arm/mm/cache-l2x0.c
+>> +++ b/arch/arm/mm/cache-l2x0.c
+>> @@ -523,6 +523,162 @@ static void aurora_flush_range(unsigned long start, unsigned long end)
+>>   	}
+>>   }
+>>   
+>> +/*
+>> + * For certain Broadcom SoCs, depending on the address range, different offsets
+>> + * need to be added to the address before passing it to L2 for
+>> + * invalidation/clean/flush
+>> + *
+>> + * Section Address Range              Offset        EMI
+>> + *   1     0x00000000 - 0x3FFFFFFF    0x80000000    VC
+>> + *   2     0x40000000 - 0xBFFFFFFF    0x40000000    SYS
+>> + *   3     0xC0000000 - 0xFFFFFFFF    0x80000000    VC
+> Hmm, so am I right in thinking that the `Broadcom addresses' for section 1
+> and 2 overlap? It would also be worth describing which physical addresses
+> Linux actually wants to use; where is the memory in the physical memory map
+> for devices with this L2 controller?
+I've clarified this internally. Yes, there is an overlap, and because of 
+that section 1 can't actually be used. I'm going to clear up the patch 
+to remove the section one calculations to simplify it.
+>> + * When the start and end addresses have crossed two different sections, we
+>> + * need to break the L2 operation into two, each within its own section.
+>> + * For example, if we need to invalidate addresses starts at 0xBFFF0000 and
+>> + * ends at 0xC0001000, we need do invalidate 1) 0xBFFF0000 - 0xBFFFFFFF and 2)
+>> + * 0xC0000000 - 0xC0001000
+>> + *
+>> + * Note 1:
+>> + * By breaking a single L2 operation into two, we may potentially suffer some
+>> + * performance hit, but keep in mind the cross section case is very rare
+>> + *
+>> + * Note 2:
+>> + * We do not need to handle the case when the start address is in
+>> + * Section 1 and the end address is in Section 3, since it is not a valid use
+>> + * case
+>> + */
+>> +
+>> +#define BCM_VC_EMI_SEC1_START_ADDR    0x00000000UL
+>> +#define BCM_VC_EMI_SEC1_END_ADDR      0x3FFFFFFFUL
+>> +#define BCM_SYS_EMI_START_ADDR        0x40000000UL
+>> +#define BCM_SYS_EMI_END_ADDR          0xBFFFFFFFUL
+>> +#define BCM_VC_EMI_SEC3_START_ADDR    0xC0000000UL
+>> +#define BCM_VC_EMI_SEC3_END_ADDR      0xFFFFFFFFUL
+> Seems a bit odd defining the END_ADDRs here, I'd just use strict '<' against
+> the start of the next section in your code.
+Makes sense. Removed.
+>> +#define BCM_SYS_EMI_OFFSET            0x40000000UL
+>> +#define BCM_VC_EMI_OFFSET             0x80000000UL
+>> +
+>> +static inline int bcm_addr_is_sys_emi(unsigned long addr)
+>> +{
+>> +	return (addr >= BCM_SYS_EMI_START_ADDR) &&
+>> +		(addr <= BCM_SYS_EMI_END_ADDR);
+>> +}
+>> +
+>> +static inline unsigned long bcm_l2_phys_addr(unsigned long addr)
+>> +{
+>> +	if (bcm_addr_is_sys_emi(addr))
+>> +		return addr + BCM_SYS_EMI_OFFSET;
+>> +	else
+>> +		return addr + BCM_VC_EMI_OFFSET;
+>> +}
+>> +
+>> +static void bcm_inv_range(unsigned long start, unsigned long end)
+>> +{
+>> +	unsigned long new_start, new_end;
+>> +
+>> +	if (unlikely(end <= start))
+>> +		return;
+>> +
+>> +	new_start = bcm_l2_phys_addr(start);
+>> +	new_end = bcm_l2_phys_addr(end);
+>> +
+>> +	/* normal case, no cross section between start and end */
+>> +	if (likely((bcm_addr_is_sys_emi(start) && bcm_addr_is_sys_emi(end)) ||
+>> +		(!bcm_addr_is_sys_emi(start) && !bcm_addr_is_sys_emi(end)))) {
+> You could avoid evaluating bcm_addr_is_sys_emi twice for each address. In
+> fact, you know start < end, so you just need to check start >= EMI_START and
+> end < EMI_END.
+This test is to confirm that the range is completely within 1 section, 
+so a single test won't do that - with the test as-is, the code after 
+this 'if' already knows that there is section overlap. But I'll be 
+removing section 1 handling and that will simplify things.
+
+  thanks,
+    csd
+
+
