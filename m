@@ -1,71 +1,86 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 2/2] PM / OPP: check for existing OPP list when
- initialising from device tree
-Date: Wed, 1 May 2013 10:04:03 -0500
-Message-ID: <20130501150403.GA20488@kahuna>
-References: <1367406679-21603-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
- <1367406679-21603-3-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [RFC PATCH v2] ARM CCI support
+Date: Wed,  1 May 2013 17:18:27 +0100
+Message-ID: <1367425108-4698-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1367406679-21603-3-git-send-email-Sudeep.KarkadaNagesha@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sudeep.KarkadaNagesha@arm.com
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "Rafael J. Wysocki" <rjw@sisk.pl>, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Dave Martin <dave.martin@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Stephen Boyd <sboyd@codeaurora.org>, Javi Merino <javi.merino@arm.com>, Rob Herring <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Amit Kucheria <amit.kucheria@linaro.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, David Gibson <david@gibson.dropbear.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On 12:11-20130501, Sudeep.KarkadaNagesha@arm.com wrote:
-> From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
-> 
-> CPUs are registered as devices and their OPPs can be initialised from
-> the device tree. Whenever CPUs can be hotplugged out, the corresponding
-> cpu devices are not removed. As a result all their OPPs remain intact
-> even when they are offlined.
-> 
-> But when they are hotplugged back-in, the cpufreq along with other cpu
-> related subsystem gets re-initialised. Since its almost same as secondary
-> cpu being brought up, no special consideration is taken in the hotplug
-> path. As a result of this the cpufreq will try to initialise the OPPs
-> again though the cpu device already contains the OPPs.
-> 
-> This patch checks if there exist an OPP list associated with the device,
-> before attempting to initialise it.
-> 
-> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
-> ---
->  drivers/base/power/opp.c |    5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
-> index 4dfdc01..66d52d2 100644
-> --- a/drivers/base/power/opp.c
-> +++ b/drivers/base/power/opp.c
-> @@ -706,6 +706,11 @@ static int of_init_opp_table_from_ofnode(struct device *dev,
->  	const __be32 *val;
->  	int nr;
->  
-> +	/* Check for existing list for 'dev' */
-> +	dev_opp = find_device_opp(dev);
-> +	if (!IS_ERR(dev_opp))
-> +		return 0; /* Device OPP already initialized */
-> +
-It gets a little touchy here -> the normal expectation is for the OPP
-entries to be populated onetime at boot.
-For example - driver bug where same device was attempted twice Vs the
-usecase you mention here - how'd we differentiate between the two?
->  	prop = of_find_property(of_node, "operating-points", NULL);
->  	if (!prop)
->  		return -ENODEV;
-> -- 
-> 1.7.10.4
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This patch is an updated of a previous posting:
+
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-April/162539.html
+
+Patch depends on commit:
+
+id: 0c91e7e07ebf08092bf8e28d8cd8d420732fc716
+
+"ARM: cacheflush: add synchronization helpers for mixed cache state accesses"
+
+in RMK tree:
+
+http://ftp.arm.linux.org.uk/pub/linux/arm/kernel/git-cur/linux-arm.git
+
+branch: devel-stable
+
+main changes in v2:
+ - Changed way masters are connected to CCI slave ports in DT
+   # now every master has to declare a phandle to a CCI control IF
+ - Fixed warning split on different lines
+ - Added comments to disable function
+ - Moved driver to non-hotpluggable API (registration and probing bundled
+   together)
+ - Upgraded cache flushing API
+ - Reworked the driver to use devm primitives
+ - Added disable/enable by index API
+ - Fixed port enable and added macro for snoops/DVM control
+
+ARM multi-cluster systems rely on the cache coherent interconnect (CCI) to
+support inter-cluster cache coherency and distributed virtual memory (DVM)
+messaging.
+
+CCI kernel driver requires tweaks to the kernel and device tree
+bindings in order to link specific resources to groups of logical CPUs
+so that resources can be associated to specific cpu sets (slave ports can
+be associated with a set of CPUs which are part of a cluster).
+
+CCI slave ports must be associated with specific bus masters in the system so
+that whenever a CCI operation is requested for a specific master (ie disable
+its CCI slave port, read its PMU counters) the association can be carried out
+dynamically in the OS through dynamically built data structures.
+Bus masters in the system connected to CCI ports must define device tree
+properties, as described in the documentation contained in the patch, in order
+to explicitly connect ports and allow the OS to build up the required data
+structures.
+
+The current CCI DT bindings define the CCI address space as the same one
+as the root device tree node, which means that the CCI bus can address the
+entire address space visible to CPUs.
+
+Lorenzo Pieralisi (1):
+  drivers: bus: add ARM CCI support
+
+ Documentation/devicetree/bindings/arm/cci.txt | 161 +++++++++++
+ drivers/bus/Kconfig                           |   7 +
+ drivers/bus/Makefile                          |   2 +
+ drivers/bus/arm-cci.c                         | 372 ++++++++++++++++++++++++++
+ include/linux/arm-cci.h                       |  59 ++++
+ 5 files changed, 601 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/cci.txt
+ create mode 100644 drivers/bus/arm-cci.c
+ create mode 100644 include/linux/arm-cci.h
 
 -- 
-Regards,
-Nishanth Menon
+1.8.2.2
