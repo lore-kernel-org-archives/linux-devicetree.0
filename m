@@ -1,113 +1,39 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH] ARM: bcm281xx: Add L2 support for Rev A2 chips
-Date: Wed, 1 May 2013 11:37:18 +0100
-Message-ID: <20130501103718.GC22796@mudshark.cambridge.arm.com>
-References: <1367347089-23788-1-git-send-email-csd@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1367347089-23788-1-git-send-email-csd@broadcom.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Daudt <csd@broadcom.com>
-Cc: Russell King <linux@arm.linux.org.uk>, John Stultz <johnstul@us.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, "arm@kernel.org" <arm@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "csd_b@daudt.org" <csd_b@daudt.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Josh Cartwright <josh.cartwright@ni.com>, Yehuda Yitschak <yehuday@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, John Stultz <john.stultz@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Sudeep.KarkadaNagesha@arm.com
+Subject: [PATCH 0/2] PM / OPP: updates to enable sharing OPPs info
+Date: Wed,  1 May 2013 12:11:17 +0100
+Message-ID: <1367406679-21603-1-git-send-email-Sudeep.KarkadaNagesha@arm.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "Rafael J. Wysocki" <rjw@sisk.pl>, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Christian,
+From: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
 
-Thanks for CC'ing me.
+These are couple of updates to existing PM/OPP library to support
+sharing of OPPs between different device nodes.
 
-On Tue, Apr 30, 2013 at 07:38:09PM +0100, Christian Daudt wrote:
-> Rev A2 SoCs have an unorthodox memory re-mapping and this needs
-> to be reflected in the cache operations.
-> This patch adds new outer cache functions for the l2x0 driver
-> to support this SoC revision. It also adds a new compatible
-> value for the cache to enable this functionality.
+Currently all the cpu nodes are parsed until the OPPs are found. This
+is essential to support cpuhotplug without having to replicate OPP
+information in all the cpu nodes.
 
-This is a pretty weird thing you've managed to build here...
+However in systems with multiple cpu power domain, its better to have
+OPP entry for each cpu. To avoid replication, phandle can be specified
+to the node which contains the full OPP information.
 
-> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-> index c465fac..6edba13 100644
-> --- a/arch/arm/mm/cache-l2x0.c
-> +++ b/arch/arm/mm/cache-l2x0.c
-> @@ -523,6 +523,162 @@ static void aurora_flush_range(unsigned long start, unsigned long end)
->  	}
->  }
->  
-> +/*
-> + * For certain Broadcom SoCs, depending on the address range, different offsets
-> + * need to be added to the address before passing it to L2 for
-> + * invalidation/clean/flush
-> + *
-> + * Section Address Range              Offset        EMI
-> + *   1     0x00000000 - 0x3FFFFFFF    0x80000000    VC
-> + *   2     0x40000000 - 0xBFFFFFFF    0x40000000    SYS
-> + *   3     0xC0000000 - 0xFFFFFFFF    0x80000000    VC
+Sudeep KarkadaNagesha (2):
+  PM / OPP: add support to specify phandle of another node for OPP
+  PM / OPP: check for existing OPP list when initialising from device
+    tree
 
-Hmm, so am I right in thinking that the `Broadcom addresses' for section 1
-and 2 overlap? It would also be worth describing which physical addresses
-Linux actually wants to use; where is the memory in the physical memory map
-for devices with this L2 controller?
+ Documentation/devicetree/bindings/power/opp.txt |   41 +++++++++++++++++++=
+++++
+ drivers/base/power/opp.c                        |   35 ++++++++++++++-----
+ 2 files changed, 68 insertions(+), 8 deletions(-)
 
-> + * When the start and end addresses have crossed two different sections, we
-> + * need to break the L2 operation into two, each within its own section.
-> + * For example, if we need to invalidate addresses starts at 0xBFFF0000 and
-> + * ends at 0xC0001000, we need do invalidate 1) 0xBFFF0000 - 0xBFFFFFFF and 2)
-> + * 0xC0000000 - 0xC0001000
-> + *
-> + * Note 1:
-> + * By breaking a single L2 operation into two, we may potentially suffer some
-> + * performance hit, but keep in mind the cross section case is very rare
-> + *
-> + * Note 2:
-> + * We do not need to handle the case when the start address is in
-> + * Section 1 and the end address is in Section 3, since it is not a valid use
-> + * case
-> + */
-> +
-> +#define BCM_VC_EMI_SEC1_START_ADDR    0x00000000UL
-> +#define BCM_VC_EMI_SEC1_END_ADDR      0x3FFFFFFFUL
-> +#define BCM_SYS_EMI_START_ADDR        0x40000000UL
-> +#define BCM_SYS_EMI_END_ADDR          0xBFFFFFFFUL
-> +#define BCM_VC_EMI_SEC3_START_ADDR    0xC0000000UL
-> +#define BCM_VC_EMI_SEC3_END_ADDR      0xFFFFFFFFUL
+--=20
+1.7.10.4
 
-Seems a bit odd defining the END_ADDRs here, I'd just use strict '<' against
-the start of the next section in your code.
 
-> +#define BCM_SYS_EMI_OFFSET            0x40000000UL
-> +#define BCM_VC_EMI_OFFSET             0x80000000UL
-> +
-> +static inline int bcm_addr_is_sys_emi(unsigned long addr)
-> +{
-> +	return (addr >= BCM_SYS_EMI_START_ADDR) &&
-> +		(addr <= BCM_SYS_EMI_END_ADDR);
-> +}
-> +
-> +static inline unsigned long bcm_l2_phys_addr(unsigned long addr)
-> +{
-> +	if (bcm_addr_is_sys_emi(addr))
-> +		return addr + BCM_SYS_EMI_OFFSET;
-> +	else
-> +		return addr + BCM_VC_EMI_OFFSET;
-> +}
-> +
-> +static void bcm_inv_range(unsigned long start, unsigned long end)
-> +{
-> +	unsigned long new_start, new_end;
-> +
-> +	if (unlikely(end <= start))
-> +		return;
-> +
-> +	new_start = bcm_l2_phys_addr(start);
-> +	new_end = bcm_l2_phys_addr(end);
-> +
-> +	/* normal case, no cross section between start and end */
-> +	if (likely((bcm_addr_is_sys_emi(start) && bcm_addr_is_sys_emi(end)) ||
-> +		(!bcm_addr_is_sys_emi(start) && !bcm_addr_is_sys_emi(end)))) {
-
-You could avoid evaluating bcm_addr_is_sys_emi twice for each address. In
-fact, you know start < end, so you just need to check start >= EMI_START and
-end < EMI_END.
-
-Will
