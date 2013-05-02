@@ -1,71 +1,41 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: Fwd: [PATCH v7] i2c: exynos5: add High Speed I2C controller
- driver
-Date: Thu, 2 May 2013 13:27:21 +0200
-Message-ID: <20130502112721.GA7309@the-dreams.de>
-References: <1354021236-28596-2-git-send-email-ch.naveen@samsung.com>
- <1365137521-31187-1-git-send-email-naveenkrishna.ch@gmail.com>
- <20130416102902.GE16978@the-dreams.de>
- <CAHfPSqCe_VJMeH3oCDc0CfcmpawMj0hN7_b3ngHDFtDUsPJLsA@mail.gmail.com>
- <CAHfPSqC0E42+-oRfLoFCEe6CbV08fJQdkagvVYHaer4pJAU6pg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHfPSqC0E42+-oRfLoFCEe6CbV08fJQdkagvVYHaer4pJAU6pg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-Cc: linux-i2c@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, sjg@chromium.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+From: Laurent Navet <laurent.navet@gmail.com>
+Subject: [PATCH] staging: imx-drm: use devm_ioremap_resource()
+Date: Thu,  2 May 2013 13:41:41 +0200
+Message-ID: <1367494901-2036-1-git-send-email-laurent.navet@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, grant.likely@linaro.org, rob.herring@calxeda.com
+Cc: p.zabel@pengutronix.de, devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laurent Navet <laurent.navet@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Replace a call to deprecated devm_request_and_ioremap by devm_ioremap_resource.
 
-> >> +  - Samsung GPIO variant (deprecated):
-> >> +    - gpios: The order of the gpios should be the following: <SDA, SCL>.
-> >> +      The gpio specifier depends on the gpio controller.
-> >
-> > Huh? Why should we support a deprecated method with a new driver?
-> >
+Found with coccicheck and this semantic patch:
+ scripts/coccinelle/api/devm_request_and_ioremap.cocci.
 
-This was left unanswered. I am curious.
+Signed-off-by: Laurent Navet <laurent.navet@gmail.com>
+---
+ drivers/staging/imx-drm/imx-tve.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-> >> +Optional properties:
-> >> +  - samsung,hs-mode: Mode of operation, High speed or Fast speed mode. If not
-> >> +    specified, default value is 0.
-> >> +  - samsung,hs-clock-freq: Desired operating frequency in Hz of the bus.
-> >> +    If not specified, the default value in Hz is 100000.
-> >> +  - samsung,fs-clock-freq: Desired operarting frequency in Hz of the bus.
-> >> +    If not specified, the default value in Hz is 100000.
-> >
-> > NACK! We have a generic binding for defining the bus speed. And
-> > shouldn't hs-mode be set depending on the bus speed?
-
-Please use "clock-frequency" here, like other drivers do.
-
-> >> +     /* In auto mode the length of xfer cannot be 0 */
-> >> +     if (i2c->msg->len == 0)
-> >> +             i2c_auto_conf |= 0x1;
-> >
-> > So you send some byte then? Why not reject the message?
-> This is to support the probing the devices (i2cdetect cases)
-
-No! This is not a proper SMBUS_QUICK if you send a byte! If it doesn't
-work without sending data, then your device does not support it. This is
-not uncommon. Please check the smbus specs if you are unsure.
-
-> >> +     i2c->regs = of_iomap(np, 0);
-> >
-> > devm_ioremap_resource()
-> This was a comment from Thomas on v1.
-> https://lkml.org/lkml/2012/11/27/264
-> 
-> Kindly, suggest me which one is more optimal in this case.
-
-"Optimal" is difficult here, but devm_* has momentum and I prefer
-consistency.
-
-> Thanks for your valuable time and comments
-
-You're welcome! Thanks for the submission.
-
-   Wolfram
+diff --git a/drivers/staging/imx-drm/imx-tve.c b/drivers/staging/imx-drm/imx-tve.c
+index ac16344..a6efa8f6 100644
+--- a/drivers/staging/imx-drm/imx-tve.c
++++ b/drivers/staging/imx-drm/imx-tve.c
+@@ -638,11 +638,9 @@ static int imx_tve_probe(struct platform_device *pdev)
+ 		return -ENOENT;
+ 	}
+ 
+-	base = devm_request_and_ioremap(&pdev->dev, res);
+-	if (!base) {
+-		dev_err(&pdev->dev, "failed to remap memory region\n");
+-		return -ENOENT;
+-	}
++	base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
+ 
+ 	tve_regmap_config.lock_arg = tve;
+ 	tve->regmap = devm_regmap_init_mmio_clk(&pdev->dev, "tve", base,
+-- 
+1.7.10.4
