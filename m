@@ -1,8 +1,7 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: [v3,
- 3/3] ARM: dts: AM33XX: Add NAND flash device tree data to am335x-evm
-Date: Thu, 2 May 2013 14:18:21 +0530
-Message-ID: <1367484501-3623-1-git-send-email-pekon@ti.com>
+From: Linus Walleij <linus.walleij@stericsson.com>
+Subject: [PATCH 18/23 v2] dma: coh901318: add devicetree support
+Date: Thu, 2 May 2013 11:06:08 +0200
+Message-ID: <1367485568-6116-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -16,134 +15,160 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: pekon@ti.com, b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk
-Cc: devicetree-discuss@lists.ozlabs.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, hvaibhav@ti.com, gururaja.hebbar@ti.com, zonque@gmail.com, avinash philip <avinashphilip@ti.com>, jacmet@sunsite.dk, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, Vinod Koul <vinod.koul@intel.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, Dan Williams <djbw@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-From: avinash philip <avinashphilip@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-NAND flash connected in am335x-evm on GPMC controller. This patch adds
-device tree node in am3355-evm with GPMC contoller timing for NAND flash
-interface, NAND partition table, ECC scheme, elm handle id.
+This adds support for probing the COH 901 318 DMA controller
+and channels from the device tree.
 
-Signed-off-by: Philip Avinash <avinashphilip@ti.com>
-Signed-off-by: Gupta, Pekon <pekon@ti.com>
+Contains portions of a sketch patch from Arnd Bergmann.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Vinod Koul <vinod.koul@intel.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/boot/dts/am335x-evm.dts | 95 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 95 insertions(+)
+ChangeLog v1->v2:
+- Folded in channel translation, request and filtering from
+  the device tree based on a patch by Arnd Bergmann.
+- Added device tree binding documentation.
+---
+ .../devicetree/bindings/dma/ste-coh901318.txt      | 32 ++++++++++++++++
+ drivers/dma/coh901318.c                            | 43 ++++++++++++++++++++++
+ 2 files changed, 75 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/ste-coh901318.txt
 
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index d649644..07761fd 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -44,6 +44,26 @@
- 				0x154 0x27	/* spi0_d0.gpio0_3, INPUT | MODE7 */
- 			>;
- 		};
+diff --git a/Documentation/devicetree/bindings/dma/ste-coh901318.txt b/Documentation/devicetree/bindings/dma/ste-coh901318.txt
+new file mode 100644
+index 0000000..091ad05
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/ste-coh901318.txt
+@@ -0,0 +1,32 @@
++ST-Ericsson COH 901 318 DMA Controller
 +
-+		nandflash_pins_s0: nandflash_pins_s0 {
-+			pinctrl-single,pins = <
-+				0x0 0x30	/* gpmc_ad0.gpmc_ad0, INPUT | PULLUP | MODE0 */
-+				0x4 0x30	/* gpmc_ad1.gpmc_ad1, INPUT | PULLUP | MODE0 */
-+				0x8 0x30	/* gpmc_ad2.gpmc_ad2, INPUT | PULLUP | MODE0 */
-+				0xc 0x30	/* gpmc_ad3.gpmc_ad3, INPUT | PULLUP | MODE0 */
-+				0x10 0x30	/* gpmc_ad4.gpmc_ad4, INPUT | PULLUP | MODE0 */
-+				0x14 0x30	/* gpmc_ad5.gpmc_ad5, INPUT | PULLUP | MODE0 */
-+				0x18 0x30	/* gpmc_ad6.gpmc_ad6, INPUT | PULLUP | MODE0 */
-+				0x1c 0x30	/* gpmc_ad7.gpmc_ad7, INPUT | PULLUP | MODE0 */
-+				0x70 0x30	/* gpmc_wait0.gpmc_wait0, INPUT | PULLUP | MODE0 */
-+				0x74 0x37	/* gpmc_wpn.gpio0_30, INPUT | PULLUP | MODE7 */
-+				0x7c 0x8	/* gpmc_csn0.gpmc_csn0,  PULL DISA */
-+				0x90 0x8	/* gpmc_advn_ale.gpmc_advn_ale, PULL DISA */
-+				0x94 0x8	/* gpmc_oen_ren.gpmc_oen_ren, PULL DISA */
-+				0x98 0x8	/* gpmc_wen.gpmc_wen, PULL DISA */
-+				0x9c 0x8	/* gpmc_be0n_cle.gpmc_be0n_cle, PULL DISA */
-+			>;
-+		};
- 	};
++This is a DMA controller which has begun as a fork of the
++ARM PL08x PrimeCell VHDL code.
++
++Required properties:
++- compatible: should be "stericsson,coh901318"
++- reg: register locations and length
++- interrupts: the single DMA IRQ
++- #dma-cells: must be set to <1>, as the channels on the
++  COH 901 318 are simple and identified by a single number
++- dma-channels: the number of DMA channels handled
++
++Example:
++
++dmac: dma-controller@c00020000 {
++	compatible = "stericsson,coh901318";
++	reg = <0xc0020000 0x1000>;
++	interrupt-parent = <&vica>;
++	interrupts = <2>;
++	#dma-cells = <1>;
++	dma-channels = <40>;
++};
++
++Consumers example:
++
++uart0: serial@c0013000 {
++	compatible = "...";
++	(...)
++	dmas = <&dmac 17 &dmac 18>;
++	dma-names = "tx", "rx";
++};
+diff --git a/drivers/dma/coh901318.c b/drivers/dma/coh901318.c
+index 797940e..8b22f56 100644
+--- a/drivers/dma/coh901318.c
++++ b/drivers/dma/coh901318.c
+@@ -22,6 +22,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/debugfs.h>
+ #include <linux/platform_data/dma-coh901318.h>
++#include <linux/of_dma.h>
  
- 	ocp {
-@@ -102,6 +122,81 @@
- 				reg = <0x48>;
- 			};
- 		};
-+
-+		elm: elm@48080000 {
-+			status = "okay";
-+		};
-+
-+		gpmc: gpmc@50000000 {
-+			status = "okay";
-+			pinctrl-0 = <&nandflash_pins_s0>;
-+			ranges = <0 0 0x08000000 0x10000000>;	/* CS0: NAND */
-+			nand@0,0 {
-+				reg = <0 0 0>; /* CS0, offset 0 */
-+				nand-bus-width = <8>;
-+				ti,nand-ecc-opt = "bch8";
-+
-+				gpmc,sync-clk = <0>;
-+				gpmc,cs-on = <0>;
-+				gpmc,cs-rd-off = <44>;
-+				gpmc,cs-wr-off = <44>;
-+				gpmc,adv-on = <6>;
-+				gpmc,adv-rd-off = <34>;
-+				gpmc,adv-wr-off = <44>;
-+				gpmc,we-off = <40>;
-+				gpmc,oe-off = <54>;
-+				gpmc,access = <64>;
-+				gpmc,rd-cycle = <82>;
-+				gpmc,wr-cycle = <82>;
-+				gpmc,wr-access = <40>;
-+				gpmc,wr-data-mux-bus = <0>;
-+
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				elm_id = <&elm>;
-+
-+				/* MTD partition table */
-+				partition@0 {
-+					label = "SPL1";
-+					reg = <0x00000000 0x000020000>;
-+				};
-+
-+				partition@1 {
-+					label = "SPL2";
-+					reg = <0x00020000 0x00020000>;
-+				};
-+
-+				partition@2 {
-+					label = "SPL3";
-+					reg = <0x00040000 0x00020000>;
-+				};
-+
-+				partition@3 {
-+					label = "SPL4";
-+					reg = <0x00060000 0x00020000>;
-+				};
-+
-+				partition@4 {
-+					label = "U-boot";
-+					reg = <0x00080000 0x001e0000>;
-+				};
-+
-+				partition@5 {
-+					label = "environment";
-+					reg = <0x00260000 0x00020000>;
-+				};
-+
-+				partition@6 {
-+					label = "Kernel";
-+					reg = <0x00280000 0x00500000>;
-+				};
-+
-+				partition@7 {
-+					label = "File-System";
-+					reg = <0x00780000 0x0F880000>;
-+				};
-+			};
-+		};
- 	};
+ #include "coh901318.h"
+ #include "dmaengine.h"
+@@ -1788,6 +1789,35 @@ bool coh901318_filter_id(struct dma_chan *chan, void *chan_id)
+ }
+ EXPORT_SYMBOL(coh901318_filter_id);
  
- 	vbat: fixedregulator@0 {
++struct coh901318_filter_args {
++	struct coh901318_base *base;
++	unsigned int ch_nr;
++};
++
++static bool coh901318_filter_base_and_id(struct dma_chan *chan, void *data)
++{
++	struct coh901318_filter_args *args = data;
++
++	if (&args->base->dma_slave == chan->device &&
++	    args->ch_nr == to_coh901318_chan(chan)->id)
++		return true;
++
++	return false;
++}
++
++static struct dma_chan *coh901318_xlate(struct of_phandle_args *dma_spec,
++					struct of_dma *ofdma)
++{
++	struct coh901318_filter_args args = {
++		.base = ofdma->of_dma_data,
++		.ch_nr = dma_spec->args[0],
++	};
++	dma_cap_mask_t cap;
++	dma_cap_zero(cap);
++	dma_cap_set(DMA_SLAVE, cap);
++
++	return dma_request_channel(cap, coh901318_filter_base_and_id, &args);
++}
+ /*
+  * DMA channel allocation
+  */
+@@ -2735,12 +2765,19 @@ static int __init coh901318_probe(struct platform_device *pdev)
+ 	if (err)
+ 		goto err_register_memcpy;
+ 
++	err = of_dma_controller_register(pdev->dev.of_node, coh901318_xlate,
++					 base);
++	if (err)
++		goto err_register_of_dma;
++
+ 	platform_set_drvdata(pdev, base);
+ 	dev_info(&pdev->dev, "Initialized COH901318 DMA on virtual base 0x%08x\n",
+ 		(u32) base->virtbase);
+ 
+ 	return err;
+ 
++ err_register_of_dma:
++	dma_async_device_unregister(&base->dma_memcpy);
+  err_register_memcpy:
+ 	dma_async_device_unregister(&base->dma_slave);
+  err_register_slave:
+@@ -2752,17 +2789,23 @@ static int __exit coh901318_remove(struct platform_device *pdev)
+ {
+ 	struct coh901318_base *base = platform_get_drvdata(pdev);
+ 
++	of_dma_controller_free(pdev->dev.of_node);
+ 	dma_async_device_unregister(&base->dma_memcpy);
+ 	dma_async_device_unregister(&base->dma_slave);
+ 	coh901318_pool_destroy(&base->pool);
+ 	return 0;
+ }
+ 
++static const struct of_device_id coh901318_dt_match[] = {
++	{ .compatible = "stericsson,coh901318" },
++	{},
++};
+ 
+ static struct platform_driver coh901318_driver = {
+ 	.remove = __exit_p(coh901318_remove),
+ 	.driver = {
+ 		.name	= "coh901318",
++		.of_match_table = coh901318_dt_match,
+ 	},
+ };
+ 
 -- 
-1.8.1
+1.7.11.3
