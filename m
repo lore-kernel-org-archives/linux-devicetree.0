@@ -1,174 +1,67 @@
-From: Linus Walleij <linus.walleij@stericsson.com>
-Subject: [PATCH 18/23 v2] dma: coh901318: add devicetree support
-Date: Thu, 2 May 2013 11:06:08 +0200
-Message-ID: <1367485568-6116-1-git-send-email-linus.walleij@stericsson.com>
+From: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Subject: [PATCH] ARM: u300: augment device tree with DMA channels
+Date: Thu, 2 May 2013 11:06:49 +0200
+Message-ID: <1367485609-6154-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, Vinod Koul <vinod.koul@intel.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, Dan Williams <djbw@fb.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-This adds support for probing the COH 901 318 DMA controller
-and channels from the device tree.
+This adds DMA channel assignments to the MMC/SD-controller
+and the two UARTs already in the U300 device tree, as we
+have now defined a way to obtain DMA channels from the
+device tree.
 
-Contains portions of a sketch patch from Arnd Bergmann.
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Vinod Koul <vinod.koul@intel.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
-ChangeLog v1->v2:
-- Folded in channel translation, request and filtering from
-  the device tree based on a patch by Arnd Bergmann.
-- Added device tree binding documentation.
----
- .../devicetree/bindings/dma/ste-coh901318.txt      | 32 ++++++++++++++++
- drivers/dma/coh901318.c                            | 43 ++++++++++++++++++++++
- 2 files changed, 75 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/ste-coh901318.txt
+ arch/arm/boot/dts/ste-u300.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/dma/ste-coh901318.txt b/Documentation/devicetree/bindings/dma/ste-coh901318.txt
-new file mode 100644
-index 0000000..091ad05
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/ste-coh901318.txt
-@@ -0,0 +1,32 @@
-+ST-Ericsson COH 901 318 DMA Controller
-+
-+This is a DMA controller which has begun as a fork of the
-+ARM PL08x PrimeCell VHDL code.
-+
-+Required properties:
-+- compatible: should be "stericsson,coh901318"
-+- reg: register locations and length
-+- interrupts: the single DMA IRQ
-+- #dma-cells: must be set to <1>, as the channels on the
-+  COH 901 318 are simple and identified by a single number
-+- dma-channels: the number of DMA channels handled
-+
-+Example:
-+
-+dmac: dma-controller@c00020000 {
-+	compatible = "stericsson,coh901318";
-+	reg = <0xc0020000 0x1000>;
-+	interrupt-parent = <&vica>;
-+	interrupts = <2>;
-+	#dma-cells = <1>;
-+	dma-channels = <40>;
-+};
-+
-+Consumers example:
-+
-+uart0: serial@c0013000 {
-+	compatible = "...";
-+	(...)
-+	dmas = <&dmac 17 &dmac 18>;
-+	dma-names = "tx", "rx";
-+};
-diff --git a/drivers/dma/coh901318.c b/drivers/dma/coh901318.c
-index 797940e..8b22f56 100644
---- a/drivers/dma/coh901318.c
-+++ b/drivers/dma/coh901318.c
-@@ -22,6 +22,7 @@
- #include <linux/uaccess.h>
- #include <linux/debugfs.h>
- #include <linux/platform_data/dma-coh901318.h>
-+#include <linux/of_dma.h>
+diff --git a/arch/arm/boot/dts/ste-u300.dts b/arch/arm/boot/dts/ste-u300.dts
+index ae51dd1..6be932b 100644
+--- a/arch/arm/boot/dts/ste-u300.dts
++++ b/arch/arm/boot/dts/ste-u300.dts
+@@ -185,6 +185,8 @@
+ 			reg = <0xc0013000 0x1000>;
+ 			interrupt-parent = <&vica>;
+ 			interrupts = <22>;
++			dmas = <&dmac 17 &dmac 18>;
++			dma-names = "tx", "rx";
+ 		};
  
- #include "coh901318.h"
- #include "dmaengine.h"
-@@ -1788,6 +1789,35 @@ bool coh901318_filter_id(struct dma_chan *chan, void *chan_id)
- }
- EXPORT_SYMBOL(coh901318_filter_id);
+ 		uart1: serial@c0007000 {
+@@ -192,6 +194,8 @@
+ 			reg = <0xc0007000 0x1000>;
+ 			interrupt-parent = <&vicb>;
+ 			interrupts = <20>;
++			dmas = <&dmac 38 &dmac 39>;
++			dma-names = "tx", "rx";
+ 		};
  
-+struct coh901318_filter_args {
-+	struct coh901318_base *base;
-+	unsigned int ch_nr;
-+};
-+
-+static bool coh901318_filter_base_and_id(struct dma_chan *chan, void *data)
-+{
-+	struct coh901318_filter_args *args = data;
-+
-+	if (&args->base->dma_slave == chan->device &&
-+	    args->ch_nr == to_coh901318_chan(chan)->id)
-+		return true;
-+
-+	return false;
-+}
-+
-+static struct dma_chan *coh901318_xlate(struct of_phandle_args *dma_spec,
-+					struct of_dma *ofdma)
-+{
-+	struct coh901318_filter_args args = {
-+		.base = ofdma->of_dma_data,
-+		.ch_nr = dma_spec->args[0],
-+	};
-+	dma_cap_mask_t cap;
-+	dma_cap_zero(cap);
-+	dma_cap_set(DMA_SLAVE, cap);
-+
-+	return dma_request_channel(cap, coh901318_filter_base_and_id, &args);
-+}
- /*
-  * DMA channel allocation
-  */
-@@ -2735,12 +2765,19 @@ static int __init coh901318_probe(struct platform_device *pdev)
- 	if (err)
- 		goto err_register_memcpy;
- 
-+	err = of_dma_controller_register(pdev->dev.of_node, coh901318_xlate,
-+					 base);
-+	if (err)
-+		goto err_register_of_dma;
-+
- 	platform_set_drvdata(pdev, base);
- 	dev_info(&pdev->dev, "Initialized COH901318 DMA on virtual base 0x%08x\n",
- 		(u32) base->virtbase);
- 
- 	return err;
- 
-+ err_register_of_dma:
-+	dma_async_device_unregister(&base->dma_memcpy);
-  err_register_memcpy:
- 	dma_async_device_unregister(&base->dma_slave);
-  err_register_slave:
-@@ -2752,17 +2789,23 @@ static int __exit coh901318_remove(struct platform_device *pdev)
- {
- 	struct coh901318_base *base = platform_get_drvdata(pdev);
- 
-+	of_dma_controller_free(pdev->dev.of_node);
- 	dma_async_device_unregister(&base->dma_memcpy);
- 	dma_async_device_unregister(&base->dma_slave);
- 	coh901318_pool_destroy(&base->pool);
- 	return 0;
- }
- 
-+static const struct of_device_id coh901318_dt_match[] = {
-+	{ .compatible = "stericsson,coh901318" },
-+	{},
-+};
- 
- static struct platform_driver coh901318_driver = {
- 	.remove = __exit_p(coh901318_remove),
- 	.driver = {
- 		.name	= "coh901318",
-+		.of_match_table = coh901318_dt_match,
- 	},
+ 		mmcsd: mmcsd@c0001000 {
+@@ -206,6 +210,8 @@
+ 			cd-gpios = <&gpio 12 0x4>;
+ 			cd-inverted;
+ 			vmmc-supply = <&ab3100_ldo_g_reg>;
++			dmas = <&dmac 14>;
++			dma-names = "rx";
+ 		};
+ 	};
  };
- 
 -- 
 1.7.11.3
