@@ -1,73 +1,59 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH/RFC 0/4] dmaengine: add DT support for DMA multiplexers
-Date: Thu, 2 May 2013 22:46:17 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1305022157580.23970@axis700.grange>
-References: <1367305883-2997-1-git-send-email-g.liakhovetski@gmx.de>
- <20130430104354.GF1960@intel.com> <Pine.LNX.4.64.1304301405510.1489@axis700.grange>
- <20130502162837.GM1960@intel.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] irqchip: add support for Marvell Orion SoCs
+Date: Thu, 2 May 2013 23:34:49 +0200 (CEST)
+Message-ID: <alpine.LFD.2.02.1305022324371.2891@ionos>
+References: <1367519104-19677-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20130502162837.GM1960@intel.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1367519104-19677-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Jean-Francois Moine <moinejf@free.fr>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2 May 2013, Vinod Koul wrote:
+Sebastian,
 
-> On Tue, Apr 30, 2013 at 02:17:13PM +0200, Guennadi Liakhovetski wrote:
-> > (added Russell to CC, sorry for not including initially)
-> > 
-> > Hi Vinod
-> > 
-> > On Tue, 30 Apr 2013, Vinod Koul wrote:
-> > 
-> > > On Tue, Apr 30, 2013 at 09:11:19AM +0200, Guennadi Liakhovetski wrote:
-> > > > Previously an issue has been discussed, arising on sh-/r-mobile ARM-based 
-> > > > systems. There we typically have multiple DMA controller instances with 
-> > > > exactly equal or very similar capabilities. Each of them can serve the same 
-> > > > slaves, using the same slave identifiers (request line IDs). With the 
-> > > > present DMA DT implementation _each_ such DMA slave would have to reference 
-> > > > _each_ of those DMA controllers in its DMA bindings, e.g.
-> > > But why... if that is the case then we havent define DT-bindings clearly enough
-> > 
-> > Sorry, what do you mean "why?" Why each slave has to reference each DMA 
-> > controller? We have discussed this A LOT before... My understanding is, 
-> > that we decided, that the sh-/r-mobile case of multiple equal DMA 
-> > controllers is an exception and that we don't want to punish everyone for 
-> > it. So, the design includes only explicit requesting of specific DMA 
-> > request lines on specific DMA controllers, no wild-cards. If a slave DMA 
-> > channel can be provided by several DMA controllers we decided to list them 
-> > all explicitly too. And for the sh-/r-mobile case a DMA-mux DT node has 
-> > been proposed. This is exactly what this patch series is implementing. Is 
-> > my understanding wrong?
-> > 
-> > > And we havent merged that yet, so why not fix that in first set itself
-> > 
-> > Sorry, don't understand. The series isn't merged yet, that's right. That's 
-> > why I explicitly mention this dependency here. But this isn't a fix. This 
-> > is a new feature. The first patch-series only touches a specific DMA 
-> > controller driver and relevant platforms. No core changes, so, it's not 
-> > that intrusive and can be applied quickly. Whereas this series affects the 
-> > core and might need a more careful consideration, discussion, etc.
-> What i mean from above is if we were already defining the sh-DT binding then why
-> wasnt this taken care in the orignal definition?
-> 
-> It would make sense to have proper binding which works well for both of these
-> case, why a two shot approach?
+please do not take the rant below personally. You just happen to
+trigger it.
 
-In the first patch-series we implement DT support in shdma according to 
-the existing API and add DT nodes to a platform. This is already a 
-functioning implementation. The second patch-set is a new feature. It adds 
-a new API - a DMA multiplexer and implementation examples. This way we can 
-clearly show how the new API shall be used - what _changes_ are required 
-to existing DMA DT implementations to support it. I think it makes sense 
-to do this in two steps.
+On Thu, 2 May 2013, Sebastian Hesselbarth wrote:
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+> +static void orion_irq_mask(struct irq_data *irqd)
+> +{
+> +	unsigned int irq = irqd_to_hwirq(irqd);
+> +	unsigned int irq_off = irq % 32;
+> +	int reg = irq / 32;
+> +	u32 val;
+> +
+> +	val = readl(orion_irq_base[reg] + ORION_IRQ_MASK);
+> +	writel(val & ~(1 << irq_off), orion_irq_base[reg] + ORION_IRQ_MASK);
+> +}
+> +
+> +static void orion_irq_unmask(struct irq_data *irqd)
+> +{
+> +	unsigned int irq = irqd_to_hwirq(irqd);
+> +	unsigned int irq_off = irq % 32;
+> +	int reg = irq / 32;
+> +	u32 val;
+> +
+> +	val = readl(orion_irq_base[reg] + ORION_IRQ_MASK);
+> +	writel(val | (1 << irq_off), orion_irq_base[reg] + ORION_IRQ_MASK);
+> +}
+
+I'm really tired of looking at the next incarnation of an OF/DT irq
+chip driver, which reimplements stuff which I have consolidated in the
+generic irq chip implementation with a lot of effort.
+
+Just look at the various implementations in drivers/irqchip/ and find
+out how similar they are. Moving code to drivers/irqchip/ does not
+make an excuse for reestablishing the mess which was addressed by the
+generic irq chip implementation.
+
+Can you - and that means all of you ARM folks - please get your gear
+together and add the missing features to the generic irq chip
+implementation? I'm not going to accept more of that OF/DT frenzy.
+
+Thanks,
+
+	tglx
