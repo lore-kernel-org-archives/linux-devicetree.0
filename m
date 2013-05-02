@@ -1,14 +1,14 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] pinmux: Add TB10x pinmux driver
-Date: Thu, 02 May 2013 12:52:33 -0600
-Message-ID: <5182B5F1.7090800@wwwdotorg.org>
-References: <1365608728-30494-1-git-send-email-christian.ruppert@abilis.com>
- <516EEAA0.10906@wwwdotorg.org> <20130418090310.GA17636@ab42.lan>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH] irqchip: add support for Marvell Orion SoCs
+Date: Thu, 2 May 2013 12:53:22 -0600
+Message-ID: <20130502185322.GA29333@obsidianresearch.com>
+References: <1367519104-19677-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130418090310.GA17636-7oYq3qWSd+k@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1367519104-19677-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,36 +19,55 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-Cc: Sascha Leuenberger <sascha.leuenberger-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/18/2013 03:03 AM, Christian Ruppert wrote:
-> Dear Stephen and Linus,
-> 
-> I am responding to this message because it touches the core issue I was
-> wondering about when integrating pinctrl with GPIO. I think all
-> unrelated comments in your other messages are valid and will be
-> addressed in the next iteration of both drivers.
-> 
-> On Wed, Apr 17, 2013 at 12:32:00PM -0600, Stephen Warren wrote:
->> On 04/10/2013 09:45 AM, Christian Ruppert wrote:
->>> The pinmux driver of the Abilis Systems TB10x platform based on ARC700 CPUs.
->>> Used to control the pinmux and is a prerequisite for the GPIO driver.
->>
->> Linus already did a review of this, but I have a few extra comments:
->>
->>> diff --git a/Documentation/devicetree/bindings/pinctrl/abilis,tb10x-iomux.txt b/Documentation/devicetree/bindings/pinctrl/abilis,tb10x-iomux.txt
-...
->> * A list of pins/groups to apply the settings to.
-> 
-> This is what the pingrp string refers to. We really don't want to expose
-> Linux internal pin numbers!
+On Thu, May 02, 2013 at 08:25:04PM +0200, Sebastian Hesselbarth wrote:
+> +
+> +static void __iomem *orion_irq_base[ORION_MAX_IRQREG];
+> +static unsigned int orion_irq_regs;
+> +static struct irq_domain *orion_irq_domain;
+> +
+> +asmlinkage void __exception_irq_entry orion_handle_irq(struct
+> pt_regs *regs)
 
-I wasn't suggesting a particular naming/numbering scheme for the pins,
-but simply that the document has to state what that naming/numbering
-scheme is, so that people know how to fill in the DT. If the
-naming/numbering scheme exactly matches some HW manual, then it should
-be enough to say e.g. "see section X in Foo manual", to avoid
-duplicating the information. If not, then the valid values should be
-listed in the binding document.
+This can be static?
+
+> +static int __init orion_of_init(struct device_node *np,
+> +				struct device_node *parent)
+> +{
+> +	int n;
+> +
+> +	for (n = 0; n < ORION_MAX_IRQREG; n++) {
+> +		orion_irq_base[n] = of_iomap(np, n);
+
+Is it possible to also reserve the resources for these registers at
+this point in the boot sequence?
+
+> +static struct of_device_id orion_irq_dt_ids[] __initconst = {
+> +	{ .compatible = "marvell,orion-mpic", .data = orion_of_init },
+> +	{ }
+
+Is there a strong reason to change the compatible string? Looks to me
+like either the new driver or the old driver will bind depending on
+what is in the machine description. No need for a new string?
+
+> +};
+> +
+> +void __init orion_init_irq(void)
+> +{
+> +	of_irq_init(orion_irq_dt_ids);
+> +}
+
+Shouldn't this use the new IRQCHIP_DECLARE mechanism?
+
+> diff --git a/include/linux/irqchip/orion.h b/include/linux/irqchip/orion.h
+
+> +extern void orion_init_irq(void);
+
+.. which lets this go away, use the generic irqchip_init instead of
+orion_init_irq.
+
+Regards,
+Jason
