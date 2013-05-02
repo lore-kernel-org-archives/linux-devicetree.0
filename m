@@ -1,50 +1,60 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 20/23 v2] ARM: u300: add SPI PL022 to the device tree
-Date: Thu, 2 May 2013 18:21:30 +0200
-Message-ID: <CACRpkdbO1H4tpRG5rABVZDDOP0uHFs2Fc4+66TD9kyZauUrkLg@mail.gmail.com>
-References: <1367485952-6212-1-git-send-email-linus.walleij@stericsson.com>
- <201305021726.49729.arnd@arndb.de>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH/RFC 0/4] dmaengine: add DT support for DMA multiplexers
+Date: Thu, 2 May 2013 21:58:37 +0530
+Message-ID: <20130502162837.GM1960@intel.com>
+References: <1367305883-2997-1-git-send-email-g.liakhovetski@gmx.de>
+ <20130430104354.GF1960@intel.com>
+ <Pine.LNX.4.64.1304301405510.1489@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201305021726.49729.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.64.1304301405510.1489@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 2, 2013 at 5:26 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Thursday 02 May 2013, Linus Walleij wrote:
->> From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>
->> This registers the PL022 PrimeCell from the U300 device
->> tree. We make a new copy of the platform data for the
->> device tree boot path, as the old platform data is in an
->> older file which will be going away.
->>
->> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> Why do you need both the platform data and the DT description?
+On Tue, Apr 30, 2013 at 02:17:13PM +0200, Guennadi Liakhovetski wrote:
+> (added Russell to CC, sorry for not including initially)
+> 
+> Hi Vinod
+> 
+> On Tue, 30 Apr 2013, Vinod Koul wrote:
+> 
+> > On Tue, Apr 30, 2013 at 09:11:19AM +0200, Guennadi Liakhovetski wrote:
+> > > Previously an issue has been discussed, arising on sh-/r-mobile ARM-based 
+> > > systems. There we typically have multiple DMA controller instances with 
+> > > exactly equal or very similar capabilities. Each of them can serve the same 
+> > > slaves, using the same slave identifiers (request line IDs). With the 
+> > > present DMA DT implementation _each_ such DMA slave would have to reference 
+> > > _each_ of those DMA controllers in its DMA bindings, e.g.
+> > But why... if that is the case then we havent define DT-bindings clearly enough
+> 
+> Sorry, what do you mean "why?" Why each slave has to reference each DMA 
+> controller? We have discussed this A LOT before... My understanding is, 
+> that we decided, that the sh-/r-mobile case of multiple equal DMA 
+> controllers is an exception and that we don't want to punish everyone for 
+> it. So, the design includes only explicit requesting of specific DMA 
+> request lines on specific DMA controllers, no wild-cards. If a slave DMA 
+> channel can be provided by several DMA controllers we decided to list them 
+> all explicitly too. And for the sh-/r-mobile case a DMA-mux DT node has 
+> been proposed. This is exactly what this patch series is implementing. Is 
+> my understanding wrong?
+> 
+> > And we havent merged that yet, so why not fix that in first set itself
+> 
+> Sorry, don't understand. The series isn't merged yet, that's right. That's 
+> why I explicitly mention this dependency here. But this isn't a fix. This 
+> is a new feature. The first patch-series only touches a specific DMA 
+> controller driver and relevant platforms. No core changes, so, it's not 
+> that intrusive and can be applied quickly. Whereas this series affects the 
+> core and might need a more careful consideration, discussion, etc.
+What i mean from above is if we were already defining the sh-DT binding then why
+wasnt this taken care in the orignal definition?
 
-This is because the device-tree DMA support for PL022 has
-not yet been merged upstream, so it still has to come from
-platform data instead.
+It would make sense to have proper binding which works well for both of these
+case, why a two shot approach?
 
-If/when there is a branch in ARM SoC that has that patch in place
-(and I remember reviewing and ACKing it) I can rebase on that
-and drop the platform data.
-
-The same goes for PL011 and MMCI platform data actually...
-
-Yours,
-Linus Walleij
+--
+~Vinod
