@@ -1,31 +1,73 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH] irqchip: add support for Marvell Orion SoCs
-Date: Thu, 02 May 2013 22:08:51 +0200
-Message-ID: <5182C7D3.3040308@free-electrons.com>
-References: <1367519104-19677-1-git-send-email-sebastian.hesselbarth@gmail.com> <20130502185322.GA29333@obsidianresearch.com> <5182B902.7040908@gmail.com> <20130502193510.GA29522@obsidianresearch.com> <5182C322.3030304@gmail.com> <20130502200204.GA24965@lunn.ch>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH/RFC 0/4] dmaengine: add DT support for DMA multiplexers
+Date: Thu, 2 May 2013 22:46:17 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1305022157580.23970@axis700.grange>
+References: <1367305883-2997-1-git-send-email-g.liakhovetski@gmx.de>
+ <20130430104354.GF1960@intel.com> <Pine.LNX.4.64.1304301405510.1489@axis700.grange>
+ <20130502162837.GM1960@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130502200204.GA24965@lunn.ch>
-Sender: linux-doc-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Jean-Francois Moine <moinejf@free.fr>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20130502162837.GM1960@intel.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 05/02/2013 10:02 PM, Andrew Lunn wrote:
-> On Thu, May 02, 2013 at 09:48:50PM +0200, Sebastian Hesselbarth wrote:
->> On 05/02/2013 09:35 PM, Jason Gunthorpe wrote:
->>> I have kirkwood HW but I haven't had time to make newer kernels run on
->>> it, otherwise I'd test it too :(
->>
->> I also have kirkwood HW but that will cut me from email as I use it as
->> relay server ;) Maybe I can turn it into a test bed for a while.
->>
->> There is also Orion5x and Discovery Innovation (mv78xx0) to be tested.
+On Thu, 2 May 2013, Vinod Koul wrote:
+
+> On Tue, Apr 30, 2013 at 02:17:13PM +0200, Guennadi Liakhovetski wrote:
+> > (added Russell to CC, sorry for not including initially)
+> > 
+> > Hi Vinod
+> > 
+> > On Tue, 30 Apr 2013, Vinod Koul wrote:
+> > 
+> > > On Tue, Apr 30, 2013 at 09:11:19AM +0200, Guennadi Liakhovetski wrote:
+> > > > Previously an issue has been discussed, arising on sh-/r-mobile ARM-based 
+> > > > systems. There we typically have multiple DMA controller instances with 
+> > > > exactly equal or very similar capabilities. Each of them can serve the same 
+> > > > slaves, using the same slave identifiers (request line IDs). With the 
+> > > > present DMA DT implementation _each_ such DMA slave would have to reference 
+> > > > _each_ of those DMA controllers in its DMA bindings, e.g.
+> > > But why... if that is the case then we havent define DT-bindings clearly enough
+> > 
+> > Sorry, what do you mean "why?" Why each slave has to reference each DMA 
+> > controller? We have discussed this A LOT before... My understanding is, 
+> > that we decided, that the sh-/r-mobile case of multiple equal DMA 
+> > controllers is an exception and that we don't want to punish everyone for 
+> > it. So, the design includes only explicit requesting of specific DMA 
+> > request lines on specific DMA controllers, no wild-cards. If a slave DMA 
+> > channel can be provided by several DMA controllers we decided to list them 
+> > all explicitly too. And for the sh-/r-mobile case a DMA-mux DT node has 
+> > been proposed. This is exactly what this patch series is implementing. Is 
+> > my understanding wrong?
+> > 
+> > > And we havent merged that yet, so why not fix that in first set itself
+> > 
+> > Sorry, don't understand. The series isn't merged yet, that's right. That's 
+> > why I explicitly mention this dependency here. But this isn't a fix. This 
+> > is a new feature. The first patch-series only touches a specific DMA 
+> > controller driver and relevant platforms. No core changes, so, it's not 
+> > that intrusive and can be applied quickly. Whereas this series affects the 
+> > core and might need a more careful consideration, discussion, etc.
+> What i mean from above is if we were already defining the sh-DT binding then why
+> wasnt this taken care in the orignal definition?
 > 
-> I can test kirkwood and Orion5x.
+> It would make sense to have proper binding which works well for both of these
+> case, why a two shot approach?
 
-And I can test mv78xx0
+In the first patch-series we implement DT support in shdma according to 
+the existing API and add DT nodes to a platform. This is already a 
+functioning implementation. The second patch-set is a new feature. It adds 
+a new API - a DMA multiplexer and implementation examples. This way we can 
+clearly show how the new API shall be used - what _changes_ are required 
+to existing DMA DT implementations to support it. I think it makes sense 
+to do this in two steps.
 
-Gregory
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
