@@ -1,59 +1,80 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH] irqchip: add support for Marvell Orion SoCs
-Date: Fri, 03 May 2013 00:37:20 +0200
-Message-ID: <5182EAA0.9070208@gmail.com>
-References: <1367519104-19677-1-git-send-email-sebastian.hesselbarth@gmail.com> <alpine.LFD.2.02.1305022324371.2891@ionos> <5182E11E.5010103@gmail.com> <201305030009.57041.arnd@arndb.de>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/5] ARM: orion: add orion irqchip driver
+Date: Fri,  3 May 2013 01:48:34 +0200
+Message-ID: <1367538519-23940-1-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1367519104-19677-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <201305030009.57041.arnd@arndb.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Jean-Francois Moine <moinejf@free.fr>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1367519104-19677-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/03/2013 12:09 AM, Arnd Bergmann wrote:
-> On Thursday 02 May 2013, Sebastian Hesselbarth wrote:
->>> Just look at the various implementations in drivers/irqchip/ and find
->>> out how similar they are. Moving code to drivers/irqchip/ does not
->>> make an excuse for reestablishing the mess which was addressed by the
->>> generic irq chip implementation.
->>>
->>> Can you - and that means all of you ARM folks - please get your gear
->>> together and add the missing features to the generic irq chip
->>> implementation? I'm not going to accept more of that OF/DT frenzy.
->>
->> So you are suggesting to have a "linux,generic-intc" or you want me
->> to have "marvell,orion-intc" make use of generic irq chip again?
->>
->> The second is easy, the first will take me a while to think about
->> proper DT properties how to encode mask/unmask/ack/.. availability
->> and offsets.
->
-> I think it should not be "linux,..." since the description can
-> well be OS independent. I don't have a good idea for a generic
-> name, but it's not very important.
->
-> The main missing piece in the generic irqchip code at the moment
-> is support for the linear irqdomain. Once we have that, a lot of
-> code can be simplified significantly.
+This patch set adds an irqchip driver for the main interrupt controller
+found on Marvell Orion SoCs (Kirkwood, Dove, Orion5x, Discovery Innovation)
+and the corresponding device tree documentation.
 
-Arnd, Thomas,
+It also moves Dove as the first Orion SoC to this irqchip driver. 
+As legacy non-DT drivers don't know about virtual irqs provided by irqchip
+drivers, init code for timer and mv643xx_eth is added until true DT enabled
+drivers are available. Finally, DT enabled boards for Dove are moved to the
+orion irqchip driver.
 
-I still don't get it completely. Are you requesting a full blown
-DT-enabled generic irq chip driver that can be setup by DT properties?
+*Note:*
+This patch set is _not_ feature complete. There has been a request for
+irqdomain support for generic irq and perhaps even a DT enabled generic
+irq chip driver.
 
-Or is it just to have current generic irq chip play with linear
-irqdomain?
+The patch set still can be used to port other Orion SoCs as I did with Dove.
+It also merges irqchip driver patches with Dove patches to use this driver.
 
-If it is just linear irqdomain, then I can have a look at it
-now. I would first send v2 to allow the others to integrate
-Kirkwood, Orion5x, and Discovery Innovation. Then v3 will
-touch generic irq and merge that with orion irqchip.
+Sebastian Hesselbarth (5):
+  irqchip: add support for Marvell Orion SoCs
+  ARM: dove: add DT parsing for legacy mv643xx_eth
+  ARM: dove: add DT parsing for legacy timer
+  ARM: dove: move DT boards to orion irqchip driver
+  ARM: dove: add DT nodes for irqchip conversion
 
-(@Jason C: Are you sure that I should merge dove and orion
-irqchip patches? I doubt that anything touching generic irq
-will not go through irq tree.)
-
-Sebastian
+ .../interrupt-controller/marvell,orion-intc.txt    |   22 ++++
+ arch/arm/boot/dts/dove.dtsi                        |   16 ++-
+ arch/arm/mach-dove/Kconfig                         |    1 +
+ arch/arm/mach-dove/Makefile                        |    4 +-
+ arch/arm/mach-dove/board-dt.c                      |   77 ++++++++++--
+ drivers/irqchip/Kconfig                            |    5 +
+ drivers/irqchip/Makefile                           |    1 +
+ drivers/irqchip/irq-orion.c                        |  133 ++++++++++++++++++++
+ 8 files changed, 247 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,orion-intc.txt
+ create mode 100644 drivers/irqchip/irq-orion.c
+---
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+-- 
+1.7.10.4
