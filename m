@@ -1,7 +1,7 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/3] ARM: dove: add DT parsing for legacy mv643xx_eth
-Date: Thu,  2 May 2013 20:25:38 +0200
-Message-ID: <1367519140-19716-2-git-send-email-sebastian.hesselbarth@gmail.com>
+Subject: [PATCH 2/3] ARM: dove: add DT parsing for legacy timer
+Date: Thu,  2 May 2013 20:25:39 +0200
+Message-ID: <1367519140-19716-3-git-send-email-sebastian.hesselbarth@gmail.com>
 References: <1367519140-19716-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,10 +22,10 @@ Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/p
 List-Id: devicetree@vger.kernel.org
 
 To allow to move to orion irqchip driver, existing legacy devices
-have to map their irqs. This patch adds a node for mv643xx_eth and
+have to map their irqs. This patch adds a node for orion timer and
 some init code to map the corresponding irqs. While the device tree
 node can stay, the init code will vanish as soon as there is true
-device tree support for mv643xx_eth.
+device tree support for orion timer.
 
 Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
@@ -46,83 +46,112 @@ Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- arch/arm/boot/dts/dove.dtsi   |    7 +++++++
- arch/arm/mach-dove/board-dt.c |   31 ++++++++++++++++++++++++++++++-
- 2 files changed, 37 insertions(+), 1 deletions(-)
+ arch/arm/boot/dts/dove.dtsi   |    7 ++++++
+ arch/arm/mach-dove/board-dt.c |   42 +++++++++++++++++++++++++++++++++++-----
+ 2 files changed, 43 insertions(+), 6 deletions(-)
 
 diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-index f7509ca..ea7c5da 100644
+index ea7c5da..433cca1 100644
 --- a/arch/arm/boot/dts/dove.dtsi
 +++ b/arch/arm/boot/dts/dove.dtsi
-@@ -197,6 +197,13 @@
- 			status = "disabled";
+@@ -30,6 +30,13 @@
+ 			marvell,tauros2-cache-features = <0>;
  		};
  
-+		gbe: ethernet-controller {
-+			compatible = "marvell,mv643xx-eth-block";
-+			reg = <0x72000 0x4000>;
-+			interrupts = <29>, <30>;
-+			status = "disabled";
++		timer: timer {
++			compatible = "marvell,orion-timer";
++			reg = <0x20300 0x20>;
++			interrupts = <0>;
++			clocks = <&core_clk 0>;
 +		};
 +
- 		rtc@d8500 {
- 			compatible = "marvell,orion-rtc";
- 			reg = <0xd8500 0x20>;
+ 		intc: interrupt-controller {
+ 			compatible = "marvell,orion-intc";
+ 			interrupt-controller;
 diff --git a/arch/arm/mach-dove/board-dt.c b/arch/arm/mach-dove/board-dt.c
-index fbde1dd..9df6dd7 100644
+index 9df6dd7..cea65b7 100644
 --- a/arch/arm/mach-dove/board-dt.c
 +++ b/arch/arm/mach-dove/board-dt.c
 @@ -12,6 +12,7 @@
  #include <linux/clk-provider.h>
  #include <linux/clk/mvebu.h>
  #include <linux/of.h>
-+#include <linux/of_irq.h>
++#include <linux/of_address.h>
+ #include <linux/of_irq.h>
  #include <linux/of_platform.h>
  #include <linux/platform_data/usb-ehci-orion.h>
- #include <asm/hardware/cache-tauros2.h>
-@@ -57,6 +58,34 @@ static struct mv643xx_eth_platform_data dove_dt_ge00_data = {
- 	.phy_addr = MV643XX_ETH_PHY_ADDR_DEFAULT,
- };
+@@ -20,6 +21,7 @@
+ #include <mach/pm.h>
+ #include <plat/common.h>
+ #include <plat/irq.h>
++#include <plat/time.h>
+ #include "common.h"
  
-+#define DOVE_GE00_PHYS_BASE	0xf1070000
+ /*
+@@ -48,10 +50,42 @@ static void __init dove_legacy_clk_init(void)
+ 			 of_clk_get_from_provider(&clkspec));
+ }
+ 
+-static void __init dove_of_clk_init(void)
++#define BRIDGE_INT_TIMER1_CLR	(~0x0004)
 +
-+static void __init dove_legacy_ge00_init(void)
-+{
++static void __init dove_legacy_timer_init(void)
+ {
 +	struct device_node *np = of_find_compatible_node(NULL, NULL,
-+					 "marvell,mv643xx-eth-block");
-+	int irq_sum, irq_err;
++					 "marvell,orion-timer");
++	struct clk *clk;
++	void __iomem *base;
++	unsigned int tclk, irq;
++
++	/* Setup root of clk tree */
+ 	mvebu_clocks_init();
+ 	dove_legacy_clk_init();
 +
 +	if (!np)
-+		return;
++		panic("missing timer node\n");
 +
-+	irq_sum = irq_of_parse_and_map(np, 0);
-+	if (!irq_sum) {
-+		pr_err("%s: missing sum irq\n", np->full_name);
-+		return;
-+	}
++	base = of_iomap(np, 0);
++	if (!base)
++		panic("%s: missing reg base for timer\n", np->full_name);
 +
-+	irq_err = irq_of_parse_and_map(np, 1);
-+	if (!irq_err) {
-+		pr_err("%s: missing err irq\n", np->full_name);
-+		return;
-+	}
++	irq = irq_of_parse_and_map(np, 0);
++	if (!irq)
++		panic("%s: missing irq for timer\n", np->full_name);
 +
-+	/* legacy ge00_init wants phys base */
-+	orion_ge00_init(&dove_dt_ge00_data, DOVE_GE00_PHYS_BASE,
-+			irq_sum, irq_err, 1600);
-+}
++	clk = of_clk_get(np, 0);
++	if (IS_ERR(clk))
++		panic("%s: missing clock for timer\n", np->full_name);
 +
- static void __init dove_dt_init(void)
- {
- 	pr_info("Dove 88AP510 SoC\n");
-@@ -70,7 +99,7 @@ static void __init dove_dt_init(void)
- 	dove_of_clk_init();
++	clk_prepare_enable(clk);
++	tclk = clk_get_rate(clk);
++	clk_put(clk);
++
++	orion_time_set_base(base);
++	/* legacy timer init gets bridge reg base */
++	orion_time_init(base - 0x300, BRIDGE_INT_TIMER1_CLR, irq, tclk);
+ }
  
+ static struct mv643xx_eth_platform_data dove_dt_ge00_data = {
+@@ -95,9 +129,6 @@ static void __init dove_dt_init(void)
+ #endif
+ 	dove_setup_cpu_mbus();
+ 
+-	/* Setup root of clk tree */
+-	dove_of_clk_init();
+-
  	/* Internal devices not ported to DT yet */
--	dove_ge00_init(&dove_dt_ge00_data);
-+	dove_legacy_ge00_init();
+ 	dove_legacy_ge00_init();
  	dove_pcie_init(1, 1);
+@@ -112,9 +143,8 @@ static const char * const dove_dt_board_compat[] = {
  
- 	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+ DT_MACHINE_START(DOVE_DT, "Marvell Dove (Flattened Device Tree)")
+ 	.map_io		= dove_map_io,
+-	.init_early	= dove_init_early,
+ 	.init_irq	= orion_dt_init_irq,
+-	.init_time	= dove_timer_init,
++	.init_time	= dove_legacy_timer_init,
+ 	.init_machine	= dove_dt_init,
+ 	.restart	= dove_restart,
+ 	.dt_compat	= dove_dt_board_compat,
 -- 
 1.7.2.5
