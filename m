@@ -1,253 +1,232 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH] media: i2c: adv7343: add OF support
-Date: Thu, 2 May 2013 12:23:45 +0530
-Message-ID: <CA+V-a8tTr_rWgdE3d7H=QWBfCYzT_g4h_rDk7s77+QDp_2zSSA@mail.gmail.com>
-References: <1366982286-22950-1-git-send-email-prabhakar.csengg@gmail.com> <517EA519.4040202@samsung.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH RFC v2] media: i2c: mt9p031: add OF support
+Date: Thu, 2 May 2013 08:55:18 +0200
+Message-ID: <20130502065518.GN32299@pengutronix.de>
+References: <1367475754-19477-1-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <517EA519.4040202@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: LMML <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1367475754-19477-1-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, LKML <linux-kernel@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+On Thu, May 02, 2013 at 11:52:34AM +0530, Prabhakar Lad wrote:
+> From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> 
+> add OF support for the mt9p031 sensor driver.
+> Alongside this patch sorts the header inclusion alphabetically.
+> 
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> Cc: Hans Verkuil <hans.verkuil@cisco.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+> Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Cc: Sakari Ailus <sakari.ailus@iki.fi>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Rob Landley <rob@landley.net>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: davinci-linux-open-source@linux.davincidsp.com
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  Changes for v2:
+>  1: Used '-' instead of '_' for device properties.
+>  2: Specified gpio reset pin as phandle in device node.
+>  3: Handle platform data properly even if kernel is compiled with
+>     devicetree support.
+>  4: Used dev_* for messages in drivers instead of pr_*.
+>  5: Changed compatible property to "aptina,mt9p031" and "aptina,mt9p031m".
+>  6: Sorted the header inclusion alphabetically and fixed some minor code nits.
+> 
+>  .../devicetree/bindings/media/i2c/mt9p031.txt      |   37 ++++++++++++
+>  drivers/media/i2c/mt9p031.c                        |   62 +++++++++++++++++++-
+>  2 files changed, 97 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/mt9p031.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/mt9p031.txt b/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
+> new file mode 100644
+> index 0000000..cbe352b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
+> @@ -0,0 +1,37 @@
+> +* Aptina 1/2.5-Inch 5Mp CMOS Digital Image Sensor
+> +
+> +The Aptina MT9P031 is a 1/2.5-inch CMOS active pixel digital image sensor with
+> +an active array size of 2592H x 1944V. It is programmable through a simple
+> +two-wire serial interface.
+> +
+> +Required Properties :
+> +- compatible : value should be either one among the following
+> +	(a) "aptina,mt9p031" for mt9p031 sensor
+> +	(b) "aptina,mt9p031m" for mt9p031m sensor
+> +
+> +- input-clock-frequency : Input clock frequency.
+> +
+> +- pixel-clock-frequency : Pixel clock frequency.
+> +
+> +Optional Properties :
+> +-gpio-reset: Chip reset GPIO
+> +
+> +Example:
+> +
+> +i2c0@1c22000 {
+> +	...
+> +	...
+> +	mt9p031@5d {
+> +		compatible = "aptina,mt9p031";
+> +		reg = <0x5d>;
+> +		gpio-reset = <&gpio3 30 0>;
+> +
+> +		port {
+> +			mt9p031_1: endpoint {
+> +				input-clock-frequency = <6000000>;
+> +				pixel-clock-frequency = <96000000>;
+> +			};
+> +		};
+> +	};
+> +	...
+> +};
+> diff --git a/drivers/media/i2c/mt9p031.c b/drivers/media/i2c/mt9p031.c
+> index 28cf95b..8ce3561 100644
+> --- a/drivers/media/i2c/mt9p031.c
+> +++ b/drivers/media/i2c/mt9p031.c
+> @@ -16,9 +16,11 @@
+>  #include <linux/delay.h>
+>  #include <linux/device.h>
+>  #include <linux/gpio.h>
+> -#include <linux/module.h>
+>  #include <linux/i2c.h>
+>  #include <linux/log2.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/pm.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/slab.h>
+> @@ -28,6 +30,7 @@
+>  #include <media/v4l2-chip-ident.h>
+>  #include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-device.h>
+> +#include <media/v4l2-of.h>
+>  #include <media/v4l2-subdev.h>
+>  
+>  #include "aptina-pll.h"
+> @@ -928,10 +931,57 @@ static const struct v4l2_subdev_internal_ops mt9p031_subdev_internal_ops = {
+>   * Driver initialization and probing
+>   */
+>  
+> +#if defined(CONFIG_OF)
+> +static struct mt9p031_platform_data *
+> +	mt9p031_get_pdata(struct i2c_client *client)
+> +
+> +{
+> +	if (client->dev.of_node) {
 
-Thanks for the review.
+By inverting the logic here and returning immediately you can safe an
+indention level for the bulk of this function.
 
-On Mon, Apr 29, 2013 at 10:21 PM, Sylwester Nawrocki
-<s.nawrocki@samsung.com> wrote:
-> Hi,
->
-> On 04/26/2013 03:18 PM, Prabhakar Lad wrote:
->> From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
->>
->> add OF support for the adv7343 driver.
->
->> +++ b/Documentation/devicetree/bindings/media/i2c/adv7343.txt
->> @@ -0,0 +1,69 @@
->> +* Analog Devices adv7343 video encoder
->> +
->> +The ADV7343 are high speed, digital-to-analog video encoders in a 6=
-4-lead LQFP
->> +package. Six high speed, 3.3 V, 11-bit video DACs provide support f=
-or composite
->> +(CVBS), S-Video (Y-C), and component (YPrPb/RGB) analog outputs in =
-standard
->> +definition (SD), enhanced definition (ED), or high definition (HD) =
-video
->> +formats.
->> +
->> +The ADV7343 have a 24-bit pixel input port that can be configured i=
-n a variety
->> +of ways. SD video formats are supported over an SDR interface, and =
-ED/HD video
->> +formats are supported over SDR and DDR interfaces. Pixel data can b=
-e supplied
->> +in either the YCrCb or RGB color spaces.
->> +
->> +Required Properties :
->> +- compatible: Must be "ad,adv7343-encoder"
->
-> As Laurent pointed out, "-encoder" is probably not necessary, since
-> there is nothing else in the ADV7343 chip than the video encoder ?
->
-OK agreed upon.
+> +		struct device_node *np;
+> +		struct mt9p031_platform_data *pdata;
+> +
+> +		np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
+> +		if (!np)
+> +			return NULL;
+> +
+> +		pdata = devm_kzalloc(&client->dev,
+> +				     sizeof(struct mt9p031_platform_data),
+> +				     GFP_KERNEL);
+> +		if (!pdata) {
+> +			dev_err(&client->dev,
+> +				"mt9p031 failed allocate memeory\n");
+> +			return NULL;
 
->> +Optional Properties :
->> +- ad-adv7343-power-mode-sleep-mode: on enable the current consumpti=
-on is
->> +                                    reduced to micro ampere level. =
-All DACs and
->> +                                    the internal PLL circuit are di=
-sabled.
->
-> Why this needs to be specified in the device tree ? How will the hard=
-ware
-> be switched over to normal state if this property is set ?
-> Couldn't it be a default state by the driver ? And how is it related =
-to
-> ad-adv7343-power-mode-dac-? properties ?
->
-well this is the entire register "power mode", hmm as of  now there isn=
-t any way
-to get back to normal state, this needs to be implemented as part of
-suspend/resume
-callbacks. Its not related to dac properties.
+s/memeory/memory/
 
-> As pointed out earlier, vendor name in the property names should be s=
-eparated
-> with commas, rather than dashes.
->
-OK
+Better drop this message completely. If you are really out of memory
+you'll notice it quite fast anyway.
 
->> +- ad-adv7343-power-mode-pll-ctrl: PLL and oversampling control. Thi=
-s control
->> +                                  allows internal PLL 1 circuit to =
-be powered
->> +                                  down and the oversampling to besw=
-itched off.
->
->> +- ad-adv7343-power-mode-dac-1: power on/off DAC 1.
->> +- ad-adv7343-power-mode-dac-2: power on/off DAC 2.
->> +- ad-adv7343-power-mode-dac-3: power on/off DAC 3.
->> +- ad-adv7343-power-mode-dac-4: power on/off DAC 4.
->> +- ad-adv7343-power-mode-dac-5: power on/off DAC 5.
->> +- ad-adv7343-power-mode-dac-6: power on/off DAC 6.
->
-> Is this somehow related to actual wiring on a PCB ? It's also not rea=
-lly
-> explicit what value corresponds to which state.
->
-No not related to the wiring on PCB. 0 corresponds to OFF state and 1
-corresponds
-to ON state.
+> +		}
+> +		pdata->reset = of_get_named_gpio(client->dev.of_node,
+> +						 "gpio-reset", 0);
+> +		if (!gpio_is_valid(pdata->reset))
+> +			pdata->reset = -1;
+> +
+> +		if (of_property_read_u32(np, "input-clock-frequency",
+> +					 &pdata->ext_freq))
+> +			return NULL;
+> +
+> +		if (of_property_read_u32(np, "pixel-clock-frequency",
+> +					 &pdata->target_freq))
+> +			return NULL;
 
->> +- ad-adv7343-sd-config-dac-out-1: Configure SD DAC Output 1.
->> +- ad-adv7343-sd-config-dac-out-2: Configure SD DAC Output 2.
->
-> What are valid values and their meaning ?
->
->> +Example:
->> +
->> +i2c0@1c22000 {
->
->> +     adv7343@2a {
->> +             compatible =3D "ad,adv7343-encoder";
->> +             reg =3D <0x2a>;
->> +
->> +             port {
->> +                     adv7343_1: endpoint {
->> +                                     /* Active high (Defaults to fa=
-lse) */
->> +                                     ad-adv7343-power-mode-sleep-mo=
-de;
->> +                                     /* Active high (Defaults to fa=
-lse) */
->
-> Isn't it obvious that if property is not listed it will default to fa=
-lse ?
->
-Yes
+returning NULL here means that when these properties are missing the
+driver bails out with the message "No platform data\n" which is not
+very helpful for users. How about just ignoring this here and return
+pdata? The driver will probably print a more useful message later when
+it notices that the clock params are invalid.
 
->> +                                     ad-adv7343-power-mode-pll-ctrl=
-;
->> +                                     /* Active high (Defaults to fa=
-lse) */
->> +                                     ad-adv7343-power-mode-dac-1;
->> +                                     /* Active high (Defaults to fa=
-lse) */
->> +                                     ad-adv7343-power-mode-dac-2;
->> +                                     /* Active high (Defaults to fa=
-lse) */
->> +                                     ad-adv7343-power-mode-dac-3;
->> +                                     /* Active high (Defaults to fa=
-lse) */
->> +                                     ad-adv7343-power-mode-dac-4;
->> +                                     /* Active high (Defaults to fa=
-lse) */
->> +                                     ad-adv7343-power-mode-dac-5;
->> +                                     /* Active high (Defaults to fa=
-lse) */
->> +                                     ad-adv7343-power-mode-dac-6;
->> +                                     /* Active high (Defaults to fa=
-lse) */
->> +                                     ad-adv7343-sd-config-dac-out-1=
-;
->> +                                     /* Active high (Defaults to fa=
-lse) */
->> +                                     ad-adv7343-sd-config-dac-out-2=
- =3D <0>;
->> +                     };
->> +             };
->> +     };
->> +     ...
->> +};
->> diff --git a/drivers/media/i2c/adv7343.c b/drivers/media/i2c/adv7343=
-=2Ec
->> index 469e262..eb12d1a 100644
->
->> +static void adv7343_get_pdata(struct i2c_client *client,
->> +                           struct adv7343_state *decoder)
->> +{
->> +     if (!client->dev.platform_data && client->dev.of_node) {
->> +             struct device_node *np;
->> +             struct adv7343_platform_data *pdata;
->> +
->> +             np =3D v4l2_of_get_next_endpoint(client->dev.of_node, =
-NULL);
->> +             if (!np)
->> +                     return;
->> +
->> +             pdata =3D devm_kzalloc(&client->dev,
->> +                                  sizeof(struct adv7343_platform_da=
-ta),
->> +                                  GFP_KERNEL);
->> +             if (!pdata) {
->> +                     pr_warn("adv7343 failed allocate memeory\n");
->
-> Note that (devm_)k*alloc() functions already log any errors. If this =
-function
-> would be returning pointer to platform data this error message would =
-not be
-> needed for sure.
->
-OK
+> +
+> +		return pdata;
+> +	}
+> +
+> +	return client->dev.platform_data;
+> +}
+> +#else
+> +static struct mt9p031_platform_data *
+> +	mt9p031_get_pdata(struct i2c_client *client)
+> +{
+> +	return client->dev.platform_data;
+> +}
+> +#endif
+> +
+>  static int mt9p031_probe(struct i2c_client *client,
+>  			 const struct i2c_device_id *did)
+>  {
+> -	struct mt9p031_platform_data *pdata = client->dev.platform_data;
+> +	struct mt9p031_platform_data *pdata = mt9p031_get_pdata(client);
+>  	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
+>  	struct mt9p031 *mt9p031;
+>  	unsigned int i;
+> @@ -1070,8 +1120,16 @@ static const struct i2c_device_id mt9p031_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, mt9p031_id);
+>  
+> +static const struct of_device_id mt9p031_of_match[] = {
+> +	{ .compatible = "aptina,mt9p031", },
+> +	{ .compatible = "aptina,mt9p031m", },
+> +	{},
+> +};
 
->> +                     return;
->> +             }
->> +
->> +             pdata->mode_config.sleep_mode =3D
->> +               of_property_read_bool(np, "ad-adv7343-power-mode-sle=
-ep-mode");
->> +
->> +             pdata->mode_config.pll_control =3D
->> +                 of_property_read_bool(np, "ad-adv7343-power-mode-p=
-ll-ctrl");
->> +
->> +             pdata->mode_config.dac_1 =3D
->> +                    of_property_read_bool(np, "ad-adv7343-power-mod=
-e-dac-1");
->> +
->> +             pdata->mode_config.dac_2 =3D
->> +                    of_property_read_bool(np, "ad-adv7343-power-mod=
-e-dac-2");
->> +
->> +             pdata->mode_config.dac_3 =3D
->> +                    of_property_read_bool(np, "ad-adv7343-power-mod=
-e-dac-3");
->> +
->> +             pdata->mode_config.dac_4 =3D
->> +                    of_property_read_bool(np, "ad-adv7343-power-mod=
-e-dac-4");
->> +
->> +             pdata->mode_config.dac_5 =3D
->> +                    of_property_read_bool(np, "ad-adv7343-power-mod=
-e-dac-5");
->> +
->> +             pdata->mode_config.dac_6 =3D
->> +                    of_property_read_bool(np, "ad-adv7343-power-mod=
-e-dac-6");
->
-> Looks like you transformed the platform data structure directly into =
-device
-> tree properties, which in most cases is a wrong approach. I wonder ho=
-w these
-> properties are related to actual hardware architecture and if there a=
-re no
-> more hardware specific properties from which these DAC power modes co=
-uld be
-> derived.
->
-yes  the platform data is transformed into the device properties.
+I would have expected something like:
 
-> If you need to always configure all DACs, wouldn't an array property =
-be a
-> better option ?
->
-yes that=92s a good idea I'll have array instead.
+static const struct of_device_id mt9p031_of_match[] = {
+	{
+		.compatible = "aptina,mt9p031-sensor",
+		.data = (void *)MT9P031_MODEL_COLOR,
+	}, {
+		.compatible = "aptina,mt9p031m-sensor",
+		.data = (void *)MT9P031_MODEL_MONOCHROME,
+	}, {
+		/* sentinel */
+	},
+};
 
-Regards,
---Prabhakar Lad
+	of_id = of_match_device(mt9p031_of_match, &client->dev);
+	if (of_id)
+		mt9p031->model = (enum mt9p031_model)of_id->data;
+
+To handle monochrome sensors.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
