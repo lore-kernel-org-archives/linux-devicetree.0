@@ -1,47 +1,31 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 Subject: Re: [PATCH] irqchip: add support for Marvell Orion SoCs
-Date: Thu, 02 May 2013 21:39:24 +0200
-Message-ID: <5182C0EC.7040008@gmail.com>
-References: <1367519104-19677-1-git-send-email-sebastian.hesselbarth@gmail.com> <20130502185322.GA29333@obsidianresearch.com> <201305022111.41043.arnd@arndb.de> <5182BFC6.3070709@gmail.com>
+Date: Thu, 02 May 2013 21:48:50 +0200
+Message-ID: <5182C322.3030304@gmail.com>
+References: <1367519104-19677-1-git-send-email-sebastian.hesselbarth@gmail.com> <20130502185322.GA29333@obsidianresearch.com> <5182B902.7040908@gmail.com> <20130502193510.GA29522@obsidianresearch.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5182BFC6.3070709@gmail.com>
+In-Reply-To: <20130502193510.GA29522@obsidianresearch.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Jean-Francois Moine <moinejf@free.fr>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Jean-Francois Moine <moinejf@free.fr>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/02/2013 09:34 PM, Sebastian Hesselbarth wrote:
-> On 05/02/2013 09:11 PM, Arnd Bergmann wrote:
->> On Thursday 02 May 2013, Jason Gunthorpe wrote:
->>>> +static struct of_device_id orion_irq_dt_ids[] __initconst = {
->>>> + { .compatible = "marvell,orion-mpic", .data = orion_of_init },
->>>> + { }
->>>
->>> Is there a strong reason to change the compatible string? Looks to me
->>> like either the new driver or the old driver will bind depending on
->>> what is in the machine description. No need for a new string?
->>>
->>
->> The compatible string should change if the binding changes in an
->> incomptible way, and we should try not to change it unless it's
->> fundamentally flawed.
->
-> Well, there is no _fundamental_ change in the binding syntax as it
-> is only reg, interrupts, and clocks. But there is a semantic change
-> in reg properties, as current orion irq controller wants the mask
-> registers (0x04,0x08) only while this also needs cause register
-> (0x00).
->
-> Nothing that couldn't be handled while moving Orion arch to irqchip
-> but if there are no further objections, I'd like to stick with the new
-> compatible string - also having orion-spic in mind.
+On 05/02/2013 09:35 PM, Jason Gunthorpe wrote:
+> I have kirkwood HW but I haven't had time to make newer kernels run on
+> it, otherwise I'd test it too :(
 
-Taking Jason Gunthorpe's last reply, I will stick to the _old_
-compatible string and name the bridge irq handler as Jason suggested.
+I also have kirkwood HW but that will cut me from email as I use it as
+relay server ;) Maybe I can turn it into a test bed for a while.
 
-I will send a v2 soon.
+There is also Orion5x and Discovery Innovation (mv78xx0) to be tested.
+
+@Jason Cooper: I will merge both irqchip and dove patches into one
+patch set. I wasn't earlier because I didn't want the above SoCs to
+slow down patch integration. And I will split dtsi changes into
+separate patches as requested.
 
 Sebastian
+
