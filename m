@@ -1,72 +1,53 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
-Date: Thu, 2 May 2013 20:35:45 +0200
-Message-ID: <CAMuHMdV9nv3FA8J4MPPyUjb1T_nDttV_X-KCSKP==K4g9sXj5w@mail.gmail.com>
-References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
- <1556968.7tR6KuEIWb@flatron> <6607610.omg016OAvj@avalon>
- <201304300004.20320.arnd@arndb.de> <5182AF83.4080705@wwwdotorg.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH] irqchip: add support for Marvell Orion SoCs
+Date: Thu, 2 May 2013 19:45:14 +0100
+Message-ID: <20130502184514.GE14496@n2100.arm.linux.org.uk>
+References: <1367519104-19677-1-git-send-email-sebastian.hesselbarth@gmail.com> <5182B18C.4080404@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5182AF83.4080705@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Tomasz Figa <tomasz.figa@gmail.com>, Rob Clark <robclark@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-rpi-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5182B18C.4080404@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Jean-Francois Moine <moinejf@free.fr>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 2, 2013 at 8:25 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 04/29/2013 04:04 PM, Arnd Bergmann wrote:
->> On Monday 29 April 2013, Laurent Pinchart wrote:
->>> On Monday 29 April 2013 23:31:30 Tomasz Figa wrote:
->>>
->>>> Good point. Stephen, would it be a problem to make this a KMS driver
->>>> instead? Old fbdev API could be emulated on top of it, until it goes out
->>>> of use, couldn't it?
->>>
->>> There's already an fbdev emulation layer in KMS, for such a simple use case it
->>> will work fine.
+On Thu, May 02, 2013 at 08:33:48PM +0200, Sebastian Hesselbarth wrote:
+> On 05/02/2013 08:25 PM, Sebastian Hesselbarth wrote:
+>> This patch adds an irqchip driver for the main interrupt controller found
+>> on Marvell Orion SoCs (Kirkwood, Dove, Orion5x, Discovery Innovation).
+>> Corresponding device tree documentation is also added.
 >>
->> I suggested the same to Stephen when he first brought up this driver.
->> Unfortunately his attempt to create a simple KMS driver resulted in a
->> significantly larger driver than the one he did for the framebuffer
->> interface. This means that either Stephen did something really wrong
->> in his attempt, or the KMS interface isn't as good as it should be
->> if we want to move people away from frame buffer drivers.
+>> Signed-off-by: Sebastian Hesselbarth<sebastian.hesselbarth@gmail.com>
+>> ---
+>> Note: This patch triggers a checkpatch warning for
+>>    WARNING: Avoid CamelCase:<handle_IRQ>
+>>
+> [...]
+>> diff --git a/include/linux/irqchip/orion.h b/include/linux/irqchip/orion.h
+>> new file mode 100644
+>> index 0000000..04f7bab
+>> --- /dev/null
+>> +++ b/include/linux/irqchip/orion.h
+>> @@ -0,0 +1,18 @@
+>> +/*
+>> + * Marvell Orion SoCs IRQ chip driver header.
+>> + *
+>> + * Sebastian Hesselbarth<sebastian.hesselbarth@gmail.com>
+>> + *
+>> + * This file is licensed under the terms of the GNU General Public
+>> + * License version 2.  This program is licensed "as is" without any
+>> + * warranty of any kind, whether express or implied.
+>> + */
+>> +
+>> +#ifndef __LINUX_IRQCHIP_ORION_H
+>> +#define __LINUX_IRQCHIP_ORION_H
+>> +
+>> +#include<asm/exception.h>
 >
-> Well, I didn't actually attempt to write the KMS driver; I simply took a
-> look at existing KMS drivers (and perhaps some stub KMS driver; I forget
-> right now) to see what it'd take, and it looked quite scary.
->
-> The other issue is that the KMS semantics appear to desire that the
-> driver allocate FB memory from some pool, and then point the display
-> scanout at the allocated memory. However, this driver's semantics are
-> that some other entity has allocated and reserved some memory region for
-> scanout, and the simple FB driver exists solely to scribble to that
-> memory region. Rob Clark said the thought this could be handled by
-> writing a custom memory allocator to support this, but it seemed a
-> little pointless to write a whole memory allocator when the existing FB
-> interface allows the driver to just set a struct member to the address
-> and be done with it.
+> First review by myself. The above include is a left-over and
+> will be removed in a v2.
 
-I'm also curious to see the code for the first real simplekms/vesakms/ofkms/...
-driver...
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+You still need your first level IRQ handlers marked with __exception_irq_entry
+which is defined in the above file.
