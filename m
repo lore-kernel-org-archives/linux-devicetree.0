@@ -1,7 +1,7 @@
 From: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-Subject: [PATCH] ARM: u300: augment device tree with DMA channels
-Date: Thu, 2 May 2013 11:06:49 +0200
-Message-ID: <1367485609-6154-1-git-send-email-linus.walleij@stericsson.com>
+Subject: [PATCH 20/23 v2] ARM: u300: add SPI PL022 to the device tree
+Date: Thu, 2 May 2013 11:12:32 +0200
+Message-ID: <1367485952-6212-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -16,52 +16,90 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-This adds DMA channel assignments to the MMC/SD-controller
-and the two UARTs already in the U300 device tree, as we
-have now defined a way to obtain DMA channels from the
-device tree.
+This registers the PL022 PrimeCell from the U300 device
+tree. We make a new copy of the platform data for the
+device tree boot path, as the old platform data is in an
+older file which will be going away.
 
 Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/ste-u300.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+ChangeLog v1->v2:
+- Add DMA channels.
+---
+ arch/arm/boot/dts/ste-u300.dts | 11 +++++++++++
+ arch/arm/mach-u300/core.c      | 19 +++++++++++++++++++
+ 2 files changed, 30 insertions(+)
 
 diff --git a/arch/arm/boot/dts/ste-u300.dts b/arch/arm/boot/dts/ste-u300.dts
-index ae51dd1..6be932b 100644
+index 4dc9f26..46c0785 100644
 --- a/arch/arm/boot/dts/ste-u300.dts
 +++ b/arch/arm/boot/dts/ste-u300.dts
-@@ -185,6 +185,8 @@
- 			reg = <0xc0013000 0x1000>;
- 			interrupt-parent = <&vica>;
- 			interrupts = <22>;
-+			dmas = <&dmac 17 &dmac 18>;
+@@ -222,5 +222,16 @@
+ 			dmas = <&dmac 14>;
+ 			dma-names = "rx";
+ 		};
++
++		spi: ssp@c0006000 {
++			compatible = "arm,pl022", "arm,primecell";
++			reg = <0xc0006000 0x1000>;
++			interrupt-parent = <&vica>;
++			interrupts = <23>;
++			dmas = <&dmac 27 &dmac 28>;
 +			dma-names = "tx", "rx";
- 		};
- 
- 		uart1: serial@c0007000 {
-@@ -192,6 +194,8 @@
- 			reg = <0xc0007000 0x1000>;
- 			interrupt-parent = <&vicb>;
- 			interrupts = <20>;
-+			dmas = <&dmac 38 &dmac 39>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		mmcsd: mmcsd@c0001000 {
-@@ -206,6 +210,8 @@
- 			cd-gpios = <&gpio 12 0x4>;
- 			cd-inverted;
- 			vmmc-supply = <&ab3100_ldo_g_reg>;
-+			dmas = <&dmac 14>;
-+			dma-names = "rx";
- 		};
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
  	};
  };
+diff --git a/arch/arm/mach-u300/core.c b/arch/arm/mach-u300/core.c
+index 98d4dbe..9467ffe 100644
+--- a/arch/arm/mach-u300/core.c
++++ b/arch/arm/mach-u300/core.c
+@@ -19,6 +19,7 @@
+ #include <linux/dmaengine.h>
+ #include <linux/amba/bus.h>
+ #include <linux/amba/mmci.h>
++#include <linux/amba/pl022.h>
+ #include <linux/amba/serial.h>
+ #include <linux/platform_device.h>
+ #include <linux/gpio.h>
+@@ -703,6 +704,22 @@ MACHINE_END
+ 
+ #ifdef CONFIG_OF
+ 
++static struct pl022_ssp_controller spi_plat_data = {
++	/* If you have several SPI buses this varies, we have only bus 0 */
++	.bus_id = 0,
++	/*
++	 * On the APP CPU GPIO 4, 5 and 6 are connected as generic
++	 * chip selects for SPI. (Same on U330, U335 and U365.)
++	 * TODO: make sure the GPIO driver can select these properly
++	 * and do padmuxing accordingly too.
++	 */
++	.num_chipselect = 3,
++	.enable_dma = 1,
++	.dma_filter = coh901318_filter_id,
++	.dma_rx_param = (void *) U300_DMA_SPI_RX,
++	.dma_tx_param = (void *) U300_DMA_SPI_TX,
++};
++
+ /* These are mostly to get the right device names for the clock lookups */
+ static struct of_dev_auxdata u300_auxdata_lookup[] __initdata = {
+ 	OF_DEV_AUXDATA("stericsson,pinctrl-u300", U300_SYSCON_BASE,
+@@ -719,6 +736,8 @@ static struct of_dev_auxdata u300_auxdata_lookup[] __initdata = {
+ 		"uart0", &uart0_plat_data),
+ 	OF_DEV_AUXDATA("arm,primecell", U300_UART1_BASE,
+ 		"uart1", &uart1_plat_data),
++	OF_DEV_AUXDATA("arm,primecell", U300_SPI_BASE,
++		"pl022", &spi_plat_data),
+ 	OF_DEV_AUXDATA("st,ddci2c", U300_I2C0_BASE,
+ 		"stu300.0", NULL),
+ 	OF_DEV_AUXDATA("st,ddci2c", U300_I2C1_BASE,
 -- 
 1.7.11.3
