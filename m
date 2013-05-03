@@ -1,122 +1,60 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v2 1/5] irqchip: add support for Marvell Orion SoCs
-Date: Fri, 03 May 2013 15:13:17 +0200
-Message-ID: <5183B7ED.7030800@gmail.com>
-References: <1367519104-19677-1-git-send-email-sebastian.hesselbarth@gmail.com> <1367538519-23940-1-git-send-email-sebastian.hesselbarth@gmail.com> <1367538519-23940-2-git-send-email-sebastian.hesselbarth@gmail.com> <20130503125527.GE18614@n2100.arm.linux.org.uk>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] powerpc: Make Book E watchdog reset type configurable
+Date: Fri, 3 May 2013 06:46:10 -0700
+Message-ID: <20130503134610.GA31037@roeck-us.net>
+References: <1367505913-18970-1-git-send-email-dirk.eibach@gdsys.cc>
+ <20130502161720.GA7797@roeck-us.net>
+ <429ec64cf7c30a139db40eb20fd3e682@gdsys.cc>
+ <20130503011741.GA23266@roeck-us.net>
+ <7be2cb3417615ff206270a756c6422d6@gdsys.cc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130503125527.GE18614@n2100.arm.linux.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Arnd Bergmann <arnd@arndb.de>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Jean-Francois Moine <moinejf@free.fr>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <7be2cb3417615ff206270a756c6422d6@gdsys.cc>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dirk Eibach <dirk.eibach@gdsys.cc>
+Cc: linux-kernel@vger.kernel.org, Kumar Gala <galak@kernel.crashing.org>, Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/03/13 14:55, Russell King - ARM Linux wrote:
-> On Fri, May 03, 2013 at 01:48:35AM +0200, Sebastian Hesselbarth wrote:
->> This patch adds an irqchip driver for the main interrupt controller found
->> on Marvell Orion SoCs (Kirkwood, Dove, Orion5x, Discovery Innovation).
->> Corresponding device tree documentation is also added.
->>
->> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
->> ---
->> Note: This patch triggers a checkpatch warning for
->>    WARNING: Avoid CamelCase: <handle_IRQ>
->>
->> Changelog:
->> v1->v2:
->> - rename compatible string to "marvell,orion-intc" (Suggested by Jason Gunthorpe)
->> - request mem regions for irq base registers (Suggested by Jason Gunthorpe)
->> - make orion_handle_irq static (Suggested by Jason Gunthorpe)
->> - make use of IRQCHIP_DECLARE (Suggested by Jason Gunthorpe)
->
-> It would still be a good idea to convert this to use the generic chip
-> stuff which Thomas created, though exactly how is hard to see at the
-> moment.
+On Fri, May 03, 2013 at 10:33:13AM +0200, Dirk Eibach wrote:
+> Hi Guenter,
+> 
+> >>>>diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> >>>>index e89fc31..6048593 100644
+> >>>>--- a/drivers/watchdog/Kconfig
+> >>>>+++ b/drivers/watchdog/Kconfig
+> >>>>@@ -1172,6 +1172,38 @@ config BOOKE_WDT_DEFAULT_TIMEOUT
+> >>>>
+> >>>>	  The value can be overridden by the wdt_period command-line
+> >>>>parameter.
+> >>>>
+> >>>>+choice
+> >>>>+	prompt "PowerPC Book-E Watchdog reset type"
+> >>>>+	depends on BOOKE_WDT
+> >>>>+	default BOOKE_WDT_RESET_CHIP
+> >>>>+	help
+> >>>>+	  Specify what kind of reset will be executed on watchdog
+> >>>>timeout.
+> >>>>+
+> >>>Seems to me it would be much better to make this configurable via
+> >>>platform data
+> >>>and/or device tree.
+> >>
+> >>good catch. What do the device-tree gurus think to be a nice
+> >>property name?
+> 
+> having a closer look, I realized booke_wdt is not device-tree based
+> yet. Migrating it would come close to a rewrite, breaking
+> compatibility for all current users. Sorry, this is way beyond the
 
-Russel,
+Really ? I don't think making it a platform driver would be that hard,
+or break anything.
 
-that is the plan and that's why the whole patch set is preliminary.
-Maybe it would have been more precise to call it RFC instead.
+> time I have for this project. So I suggest merging the change the
+> way it is, as it is clearly an improvement.
+> 
+That will be up to Wim to decide.
 
->> +static void orion_irq_mask(struct irq_data *irqd)
->> +{
->> +	unsigned int irq = irqd_to_hwirq(irqd);
->> +	unsigned int irq_off = irq % 32;
->> +	int reg = irq / 32;
->> +	u32 val;
->> +
->> +	val = readl(orion_irq_base[reg] + ORION_IRQ_MASK);
->> +	writel(val & ~(1 << irq_off), orion_irq_base[reg] + ORION_IRQ_MASK);
->> +}
->
-> This could be replaced with irq_gc_mask_clr_bit().
->
->> +
->> +static void orion_irq_unmask(struct irq_data *irqd)
->> +{
->> +	unsigned int irq = irqd_to_hwirq(irqd);
->> +	unsigned int irq_off = irq % 32;
->> +	int reg = irq / 32;
->> +	u32 val;
->> +
->> +	val = readl(orion_irq_base[reg] + ORION_IRQ_MASK);
->> +	writel(val | (1 << irq_off), orion_irq_base[reg] + ORION_IRQ_MASK);
->> +}
->
-> This with irq_gc_mask_set_bit().
->
->> +
->> +static struct irq_chip orion_irq_chip = {
->> +	.name		= "orion_irq",
->> +	.irq_mask	= orion_irq_mask,
->> +	.irq_unmask	= orion_irq_unmask,
->> +};
->> +
->> +static int orion_irq_map(struct irq_domain *d, unsigned int virq,
->> +			 irq_hw_number_t hw)
->> +{
->> +	irq_set_chip_and_handler(virq, &orion_irq_chip,
->> +				 handle_level_irq);
->> +	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
->
-> This is where it starts to get tricky, because I can't see how you'd
-> merge the irq_alloc_generic_chip() and irq_setup_generic_chip() with
-> this.  Maybe you don't need to do anything here and just do all that
-> in orion_of_init() instead?  But then you seem to need to know the
-> virq range before hand, and I can't see how that's known.  Maybe Thomas
-> can provide some enlightenment about how the gc irqchip stuff works
-> with the irq domain stuff...
-
-Exactly, and that is what I am looking into right now. But hell, I am
-not an expert in linux irq yet. Moreover, I am not even sure if it is
-okay to rely on irqdomain or at least irq_data->hw_irq at all.
-
-My current impression is, that generic chip knowns nothing about irq
-domains. But my first modification of it was to use irqd_to_hwirq(d)
-where ever it uses d->irq instead. This should allow to abstract from
-virtual irqs and retain compatibility (_if_ hw_irq is also set on
-!CONFIG_IRQ_DOMAIN).
-
-To add more juice: IRQF_VALID and IRQF_PROBE are ARM only flags. I
-tried to find out what they are good for, but stopped googl'ing after
-a while. (I know you explained that before somewhere)
-
-> However, you wouldn't need the statically defined orion_irq_chip nor
-> orion_irq_base[] either, because those would be held within the gc
-> irqchip stuff and stored in the upper layer.
-
-Yeah, that would be very nice. But the current limitation to one
-register set with max 32 irqs of generic chip would still require to
-keep a list of primary generic irq chips to flip through in the
-irq_handler.
-
-This also raises the question, how to check if an generic irq chip
-flow handler has to be called. Current irq_chip_regs don't know nothing
-about a cause/status register. And actually you don't even know if it
-is high/low active and how to mask it with the high/low active mask
-register or mask_cache.
-
-Sebastian
-
+Thanks,
+Guenter
