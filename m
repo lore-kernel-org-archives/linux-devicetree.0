@@ -1,53 +1,84 @@
-From: Dirk Eibach <dirk.eibach@gdsys.cc>
-Subject: Re: [PATCH] powerpc: Make Book E watchdog reset type configurable
-Date: Fri, 03 May 2013 10:33:13 +0200
-Message-ID: <7be2cb3417615ff206270a756c6422d6@gdsys.cc>
-References: <1367505913-18970-1-git-send-email-dirk.eibach@gdsys.cc>
- <20130502161720.GA7797@roeck-us.net>
- <429ec64cf7c30a139db40eb20fd3e682@gdsys.cc>
- <20130503011741.GA23266@roeck-us.net>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 6/8] gpio-tz1090: add TZ1090 gpio driver
+Date: Fri, 3 May 2013 10:49:40 +0200
+Message-ID: <CACRpkdZzfegengBJ4n1Yc1WQU9TT7+-n3VoHiBA+AG68CJEyiw@mail.gmail.com>
+References: <1366727607-27444-1-git-send-email-james.hogan@imgtec.com>
+	<1366727607-27444-7-git-send-email-james.hogan@imgtec.com>
+	<CACRpkdbzYpQqe4yabAwFSAG2rPstT8jM_--LssHi=ttUYtu1ug@mail.gmail.com>
+	<517A475D.8060606@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130503011741.GA23266@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: linux-kernel@vger.kernel.org, Kumar Gala <galak@kernel.crashing.org>, Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <517A475D.8060606@imgtec.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: James Hogan <james.hogan@imgtec.com>, "arm@kernel.org" <arm@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
+On Fri, Apr 26, 2013 at 11:22 AM, James Hogan <james.hogan@imgtec.com> wrote:
+>> On Tue, Apr 23, 2013 at 4:33 PM, James Hogan <james.hogan@imgtec.com> wrote:
 
->>>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
->>>> index e89fc31..6048593 100644
->>>> --- a/drivers/watchdog/Kconfig
->>>> +++ b/drivers/watchdog/Kconfig
->>>> @@ -1172,6 +1172,38 @@ config BOOKE_WDT_DEFAULT_TIMEOUT
->>>> 
->>>> 	  The value can be overridden by the wdt_period command-line
->>>> parameter.
->>>> 
->>>> +choice
->>>> +	prompt "PowerPC Book-E Watchdog reset type"
->>>> +	depends on BOOKE_WDT
->>>> +	default BOOKE_WDT_RESET_CHIP
->>>> +	help
->>>> +	  Specify what kind of reset will be executed on watchdog 
->>>> timeout.
->>>> +
->>> Seems to me it would be much better to make this configurable via
->>> platform data
->>> and/or device tree.
->> 
->> good catch. What do the device-tree gurus think to be a nice
->> property name?
+>> So when someone using this device tree for Symbian or Windows
+>> Mobile start to work, what does "standard Linux gpio flags" tell them?
+>
+> well this is what of_gpio.h says:
+>> /*
+>>  * This is Linux-specific flags. By default controllers' and Linux' mapping
+>>  * match, but GPIO controllers are free to translate their own flags to
+>>  * Linux-specific in their .xlate callback. Though, 1:1 mapping is recommended.
+>>  */
+>> enum of_gpio_flags {
+>>       OF_GPIO_ACTIVE_LOW = 0x1,
+>> };
+>
+> So do you mean that the bindings docs should just explicitly state those
+> flag values rather than referring to Linux?
 
-having a closer look, I realized booke_wdt is not device-tree based 
-yet. Migrating it would come close to a rewrite, breaking compatibility 
-for all current users. Sorry, this is way beyond the time I have for 
-this project. So I suggest merging the change the way it is, as it is 
-clearly an improvement.
+Yes, without mentioning Linux.
 
-Cheers
-Dirk
+"setting bit 0 means active low".
+
+> So basically a bunch of global registers (e.g. pinctrl and gpio) are
+> shared between all 3 cores (up to 4 OSes). The __global_lock2 should do
+> all that is required to ensure exclusive access to the register (as long
+> as the other OSes do something similar when they access the same
+> registers). This is one of the reasons why there are 3 gpio banks with
+> separate interrupts, and each bank's interrupt is optional in this driver.
+
+OK I get it ...
+
+I think this platform will never ever work with single zImage
+though, that seems very unlikely given these constraints.
+
+Well you will have to fight this out with the ARM SoC maintainers
+anyway. If they are OK with it I will live with it.
+
+(CC ARM SoC for this.)
+
+>>> +/* caller must hold LOCK2 */
+>>> +static inline void _tz1090_gpio_mod_bit(struct tz1090_gpio_bank *bank,
+>>> +                                       unsigned int reg_offs,
+>>> +                                       unsigned int offset,
+>>> +                                       int val)
+>>
+>> If val is used as it is, make it a bool.
+>>
+>>> +{
+>>> +       u32 value;
+>>> +
+>>> +       value = tz1090_gpio_read(bank, reg_offs);
+>>> +       value &= ~(0x1 << offset);
+>>> +       value |= !!val << offset;
+>>
+>> You're claming val to [0,1] obviously it's a bool.
+>
+> It's often simply passing on things like the int output_value from the
+> direction_output and set callbacks. Is it necessary to confuse things by
+> making it a bool and then turning it back into an int to write into the
+> register?
+
+Nah no big deal. Keep it like this if it's convenient.
+Mainly pointing it out...
+
+Yours,
+Linus Walleij
