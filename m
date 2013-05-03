@@ -1,84 +1,54 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 6/8] gpio-tz1090: add TZ1090 gpio driver
-Date: Fri, 3 May 2013 10:49:40 +0200
-Message-ID: <CACRpkdZzfegengBJ4n1Yc1WQU9TT7+-n3VoHiBA+AG68CJEyiw@mail.gmail.com>
-References: <1366727607-27444-1-git-send-email-james.hogan@imgtec.com>
-	<1366727607-27444-7-git-send-email-james.hogan@imgtec.com>
-	<CACRpkdbzYpQqe4yabAwFSAG2rPstT8jM_--LssHi=ttUYtu1ug@mail.gmail.com>
-	<517A475D.8060606@imgtec.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH V2] ARM: bcm281xx: Add L2 support for Rev A2 chips
+Date: Fri, 3 May 2013 09:51:00 +0100
+Message-ID: <20130503085100.GA6188@mudshark.cambridge.arm.com>
+References: <1367542653-955-1-git-send-email-csd@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <517A475D.8060606@imgtec.com>
+Content-Disposition: inline
+In-Reply-To: <1367542653-955-1-git-send-email-csd@broadcom.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: James Hogan <james.hogan@imgtec.com>, "arm@kernel.org" <arm@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+To: Christian Daudt <csd@broadcom.com>
+Cc: Russell King <linux@arm.linux.org.uk>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, "arm@kernel.org" <arm@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "csd_b@daudt.org" <csd_b@daudt.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Josh Cartwright <josh.cartwright@ni.com>, Yehuda Yitschak <yehuday@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 26, 2013 at 11:22 AM, James Hogan <james.hogan@imgtec.com> wrote:
->> On Tue, Apr 23, 2013 at 4:33 PM, James Hogan <james.hogan@imgtec.com> wrote:
+Hi Christian,
 
->> So when someone using this device tree for Symbian or Windows
->> Mobile start to work, what does "standard Linux gpio flags" tell them?
->
-> well this is what of_gpio.h says:
->> /*
->>  * This is Linux-specific flags. By default controllers' and Linux' mapping
->>  * match, but GPIO controllers are free to translate their own flags to
->>  * Linux-specific in their .xlate callback. Though, 1:1 mapping is recommended.
->>  */
->> enum of_gpio_flags {
->>       OF_GPIO_ACTIVE_LOW = 0x1,
->> };
->
-> So do you mean that the bindings docs should just explicitly state those
-> flag values rather than referring to Linux?
+On Fri, May 03, 2013 at 01:57:33AM +0100, Christian Daudt wrote:
+> Rev A2 SoCs have an unorthodox memory re-mapping and this needs
+> to be reflected in the cache operations.
+> This patch adds new outer cache functions for the l2x0 driver
+> to support this SoC revision. It also adds a new compatible
+> value for the cache to enable this functionality.
+> 
+> Updates from V1:
+> - remove section 1 altogether and note that in comments
+> - simplify section selection caused by section 1 removal
+> - BUG_ON just in case section 1 shows up
 
-Yes, without mentioning Linux.
+Looking much better now :)
 
-"setting bit 0 means active low".
+> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+> index c465fac..d70e0ab 100644
+> --- a/arch/arm/mm/cache-l2x0.c
+> +++ b/arch/arm/mm/cache-l2x0.c
+> @@ -523,6 +523,147 @@ static void aurora_flush_range(unsigned long start, unsigned long end)
+>  	}
+>  }
+>  
+> +/*
+> + * For certain Broadcom SoCs, depending on the address range, different offsets
+> + * need to be added to the address before passing it to L2 for
+> + * invalidation/clean/flush
+> + *
+> + * Section Address Range              Offset        EMI
+> + *   1     0x00000000 - 0x3FFFFFFF    0x80000000    VC
+> + *   2     0x40000000 - 0xBFFFFFFF    0x40000000    SYS
+> + *   3     0xC0000000 - 0xFFFFFFFF    0x80000000    VC
 
-> So basically a bunch of global registers (e.g. pinctrl and gpio) are
-> shared between all 3 cores (up to 4 OSes). The __global_lock2 should do
-> all that is required to ensure exclusive access to the register (as long
-> as the other OSes do something similar when they access the same
-> registers). This is one of the reasons why there are 3 gpio banks with
-> separate interrupts, and each bank's interrupt is optional in this driver.
+I don't think you answered last time (or I missed it) but where is the RAM
+in the physical memory map for boards with this L2 controller? Do you
+actually have 3GB@0x40000000?
 
-OK I get it ...
-
-I think this platform will never ever work with single zImage
-though, that seems very unlikely given these constraints.
-
-Well you will have to fight this out with the ARM SoC maintainers
-anyway. If they are OK with it I will live with it.
-
-(CC ARM SoC for this.)
-
->>> +/* caller must hold LOCK2 */
->>> +static inline void _tz1090_gpio_mod_bit(struct tz1090_gpio_bank *bank,
->>> +                                       unsigned int reg_offs,
->>> +                                       unsigned int offset,
->>> +                                       int val)
->>
->> If val is used as it is, make it a bool.
->>
->>> +{
->>> +       u32 value;
->>> +
->>> +       value = tz1090_gpio_read(bank, reg_offs);
->>> +       value &= ~(0x1 << offset);
->>> +       value |= !!val << offset;
->>
->> You're claming val to [0,1] obviously it's a bool.
->
-> It's often simply passing on things like the int output_value from the
-> direction_output and set callbacks. Is it necessary to confuse things by
-> making it a bool and then turning it back into an int to write into the
-> register?
-
-Nah no big deal. Keep it like this if it's convenient.
-Mainly pointing it out...
-
-Yours,
-Linus Walleij
+Will
