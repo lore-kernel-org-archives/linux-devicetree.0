@@ -1,110 +1,125 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH 5/8] pinctrl-tz1090: add TZ1090 pinctrl driver
-Date: Fri, 3 May 2013 16:06:10 +0100
-Message-ID: <5183D262.7000107@imgtec.com>
-References: <1366727607-27444-1-git-send-email-james.hogan@imgtec.com> <1366727607-27444-6-git-send-email-james.hogan@imgtec.com> <CACRpkdbYwDvF=gNurLzc+wE0BYpoqog7sPdRTY59BGS7yn3n9Q@mail.gmail.com> <517A6B01.5000708@imgtec.com> <CACRpkdYooPNgJuA-fZOiGJV03R_783uAOmR=QgYOahYdHcad9w@mail.gmail.com> <5183AC54.30503@imgtec.com> <CACRpkdYYhsY-2vQnxpM-rB9_6yXiY4XBNhb4eyNvK=eD=dxK5w@mail.gmail.com>
+From: Javi Merino <javi.merino@arm.com>
+Subject: Re: [RFC PATCH v2] drivers: bus: add ARM CCI support
+Date: Fri, 3 May 2013 16:17:07 +0100
+Message-ID: <20130503151706.GB2756@e102654-lin.cambridge.arm.com>
+References: <1367425108-4698-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1367425108-4698-2-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYYhsY-2vQnxpM-rB9_6yXiY4XBNhb4eyNvK=eD=dxK5w@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1367425108-4698-2-git-send-email-lorenzo.pieralisi@arm.com>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Dave Martin <dave.martin@linaro.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Stephen Boyd <sboyd@codeaurora.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Amit Kucheria <amit.kucheria@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Gibson <david@gibson.dropbear.id.au>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Hi Lorenzo,
 
-On 03/05/13 14:03, Linus Walleij wrote:
-> On Fri, May 3, 2013 at 2:23 PM, James Hogan <james.hogan@imgtec.com> wrote:
->> [Me]
->>> If what you need is to set the pin into "GPIO mode" to drive it
->>> to some default state then from pinconf-generic.h you should use
->>> one of the existing defines like PIN_CONFIG_OUTPUT
->>> to actively drive it to high or low as default, or
->>> PIN_CONFIG_BIAS_HIGH_IMPEDANCE for some default
->>> GPIO input mode.
->>>
->>> Read the new section named "GPIO mode pitfalls" in
->>> Documentation/pinctrl.txt
->>
->> Thanks, that was interesting. I've had a think about this (and done some
->> experiments with a multimeter), and the problem is these generic
->> pinconfs already have meanings which don't match what the SELECT
->> register does. For example, having a pin be tristate and not controlled
->> by the peripheral, and having it tristate as far as the gpio hardware is
->> concerned (e.g. no pull-up) but still controlled by the peripheral, are
->> two very different things that need disambiguation.
+On Wed, May 01, 2013 at 05:18:28PM +0100, Lorenzo Pieralisi wrote:
+> On ARM multi-cluster systems coherency between cores running on
+> different clusters is managed by the cache-coherent interconnect (CCI).
+> It allows broadcasting of TLB invalidates and memory barriers and it
+> guarantees cache coherency at system level through snooping of slave
+> interfaces connected to it.
 > 
-> I don't know if that is necessary.
+> This patch enables the basic infrastructure required in Linux to handle and
+> programme the CCI component.
 > 
-> While I do recognize that it is possible that we need to put
-> pins into "GPIO mode", i.e. drive them actively low or high,
-> as PIN_CONFIG_OUTPUT does, I'm not convinced that
-> pin config should handle the case where a signal is passed
-> through from a peripheral.
+> Non-local variables used by the CCI management functions called by power
+> down function calls after disabling the cache must be flushed out to main
+> memory in advance, otherwise incoherency of those values may occur if they
+> are sitting in the cache of some other CPU when power down functions
+> execute. Driver code ensures that relevant data structures are flushed
+> from inner and outer caches after the driver probe is completed.
 > 
-> I think that for every pin that is put to use for a peripheral
-> you must anyway at some point call .enable() on the
-> struct pinmux_ops of the pin controller.
+> CCI slave port resources are linked to set of CPUs through bus masters
+> phandle properties that link the interface resources to masters node in
+> the device tree.
 > 
-> Thus this part of the problem (poking that "select" bit)
-> should be handled by the pinmux part of the driver.
+> Documentation describing the CCI DT bindings is provided with the patch.
 > 
-> The pinconf part does not need to know about it.
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> ---
 
-Okay, so how would you recommend handling the case of a pin in a muxing
-pingroup that shouldn't be put into peripheral mode?
+[...]
 
-E.g. imagine an 18bit display is wired to the (24bit) tft pins (which
-are muxed as a group to "tft" function), and the least significant tft
-pins are used as GPIOs to control something like board power supplies.
+> diff --git a/include/linux/arm-cci.h b/include/linux/arm-cci.h
+> new file mode 100644
+> index 0000000..0e70942
+> --- /dev/null
+> +++ b/include/linux/arm-cci.h
+> @@ -0,0 +1,59 @@
+> +/*
+> + * CCI cache coherent interconnect support
+> + *
+> + * Copyright (C) 2013 ARM Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program; if not, write to the Free Software
+> + * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+> + */
+> +
+> +#ifndef __LINUX_ARM_CCI_H
+> +#define __LINUX_ARM_CCI_H
+> +
+> +#include <linux/errno.h>
+> +#include <linux/types.h>
+> +
+> +struct device_node;
+> +
+> +#ifdef CONFIG_ARM_CCI
+> +extern int cci_ace_get_port(struct device_node *dn);
+> +extern int cci_disable_port_by_cpu(u64 mpidr);
+> +extern int __cci_control_port_by_device(struct device_node *dn, bool enable);
+> +extern int __cci_control_port_by_index(u32 port, bool enable);
+> +#else
+> +static inline int cci_ace_get_port(struct device_node *dn, bool cpu)
 
-Without using pinconf I think the muxing pingroups would have to overlap
-like below (is that acceptable?):
+Builds with !CONFIG_ARM_CCI fail because this definition of
+cci_ace_get_port() takes two arguments whereas the one for
+CONFIG_ARM_CCI takes only one.
 
-pingroup "tft_pins"
-	pins:      "red0"..."red7"
-	functions: "tft", "lcd"
-
-pingroup "red0"
-	pins:      "red0"
-	functions: "peripheral" (OR "none")
-...
-pingroup "red7"
-	pins:      "red7"
-	functions: "peripheral" (OR "none")
-
-and then do something like this?
-
-map {
-	tft_mux {
-		pins = "tft_pins";
-		function = "tft";
-		/* mux tft pins to tft panel interface */
-	};
-	tft_pins {
-		pins = "red7", "red6", "red5", "red4", "red2";
-		function = "peripheral";
-		/* mux pins to peripherals */
-	};
-};
-
-or maybe this:
-
-map {
-	tft_mux {
-		pins = "tft_pins";
-		function = "tft";
-		/* auto sets individual pins to peripheral */
-	};
-	tft_pins {
-		pins = "red1", "red0";
-		function = "none";
-		/* set individual pins to !peripheral */
-	};
-};
-
-Cheers
-James
-
+> +{
+> +       return -ENODEV;
+> +}
+> +static inline int cci_disable_port_by_cpu(u64 mpidr) { return -ENODEV; }
+> +static inline int __cci_control_port_by_device(struct device_node *dn,
+> +                                              bool enable)
+> +{
+> +       return -ENODEV;
+> +}
+> +static inline int __cci_control_port_by_index(u32 port, bool enable)
+> +{
+> +       return -ENODEV;
+> +}
+> +#endif
+> +#define cci_disable_port_by_device(dev) \
+> +       __cci_control_port_by_device(dev, false)
+> +#define cci_enable_port_by_device(dev) \
+> +       __cci_control_port_by_device(dev, true)
+> +#define cci_disable_port_by_index(dev) \
+> +       __cci_control_port_by_index(dev, false)
+> +#define cci_enable_port_by_index(dev) \
+> +       __cci_control_port_by_index(dev, true)
+> +
+> +#endif
