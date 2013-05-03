@@ -1,185 +1,191 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v2 1/5] irqchip: add support for Marvell Orion SoCs
-Date: Fri, 3 May 2013 16:09:46 +0200 (CEST)
-Message-ID: <alpine.LFD.2.02.1305031514230.2886@ionos>
-References: <1367519104-19677-1-git-send-email-sebastian.hesselbarth@gmail.com> <1367538519-23940-1-git-send-email-sebastian.hesselbarth@gmail.com> <1367538519-23940-2-git-send-email-sebastian.hesselbarth@gmail.com> <20130503125527.GE18614@n2100.arm.linux.org.uk>
- <5183B7ED.7030800@gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 26/63] dmaengine: ste_dma40: Supply full Device Tree parsing
+ support
+Date: Fri,  3 May 2013 15:32:12 +0100
+Message-ID: <1367591569-32197-27-git-send-email-lee.jones@linaro.org>
+References: <1367591569-32197-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5183B7ED.7030800@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Arnd Bergmann <arnd@arndb.de>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Jean-Francois Moine <moinejf@free.fr>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1367591569-32197-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, srinidhi.kasagar-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Per Forlin <per.forlin-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 3 May 2013, Sebastian Hesselbarth wrote:
-> On 05/03/13 14:55, Russell King - ARM Linux wrote:
-> > This is where it starts to get tricky, because I can't see how you'd
-> > merge the irq_alloc_generic_chip() and irq_setup_generic_chip() with
-> > this.  Maybe you don't need to do anything here and just do all that
-> > in orion_of_init() instead?  But then you seem to need to know the
-> > virq range before hand, and I can't see how that's known.  Maybe Thomas
-> > can provide some enlightenment about how the gc irqchip stuff works
-> > with the irq domain stuff...
-> 
-> Exactly, and that is what I am looking into right now. But hell, I am
-> not an expert in linux irq yet. Moreover, I am not even sure if it is
-> okay to rely on irqdomain or at least irq_data->hw_irq at all.
+Using the new DMA DT bindings and API, we can register the DMA40 driver
+as Device Tree capable. Now, when a client attempts to allocate a
+channel using the DMA DT bindings via its own node, we are able to parse
+the request and allocate a channel in the correct manner.
 
-Here is a solution to that problem.
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>
+Cc: Per Forlin <per.forlin-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Cc: Rabin Vincent <rabin-66gdRtMMWGc@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/dma/ste-dma40.txt          |   62 ++++++++++++++++++++
+ drivers/dma/ste_dma40.c                            |   52 ++++++++++++++++
+ 2 files changed, 114 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/ste-dma40.txt
 
-1) It adds a mask field to irq_data so we dont have to compute the
-   mask over and over
-
-2) For compability with existing users it populates the mask with 
-   1 << (d->irq - gc->irq_base)
-
-3) It gives you the option to disable that mask setup or let it
-   generate from d->hwirq
-
-I'm still looking into a way how to proper support the generic chip /
-linear domain mapping in the setup path. Will send you a draft patch
-to play with later.
-
-Thanks,
-
-	tglx
-
-
-Index: linux-2.6/include/linux/irq.h
-===================================================================
---- linux-2.6.orig/include/linux/irq.h
-+++ linux-2.6/include/linux/irq.h
-@@ -119,6 +119,7 @@ struct irq_domain;
- 
- /**
-  * struct irq_data - per irq and irq chip data passed down to chip functions
-+ * @mask:		precomputed bitmask for accessing the chip registers
-  * @irq:		interrupt number
-  * @hwirq:		hardware interrupt number, local to the interrupt domain
-  * @node:		node index useful for balancing
-@@ -138,6 +139,7 @@ struct irq_domain;
-  * irq_data.
-  */
- struct irq_data {
-+	u32			mask;
- 	unsigned int		irq;
- 	unsigned long		hwirq;
- 	unsigned int		node;
-@@ -700,10 +702,14 @@ struct irq_chip_generic {
-  * @IRQ_GC_INIT_NESTED_LOCK:	Set the lock class of the irqs to nested for
-  *				irq chips which need to call irq_set_wake() on
-  *				the parent irq. Usually GPIO implementations
-+ * @IRQ_GC_NO_MASK:		Do not calculate irq_data->mask
-+ * @IRQ_GC_MASK_FROM_HWIRQ:	Calculate irq_data->mask from the hwirq number
-  */
- enum irq_gc_flags {
- 	IRQ_GC_INIT_MASK_CACHE		= 1 << 0,
- 	IRQ_GC_INIT_NESTED_LOCK		= 1 << 1,
-+	IRQ_GC_NO_MASK			= 1 << 2,
-+	IRQ_GC_MASK_FROM_HWIRQ		= 1 << 4,
- };
- 
- /* Generic chip callback functions */
-Index: linux-2.6/kernel/irq/generic-chip.c
-===================================================================
---- linux-2.6.orig/kernel/irq/generic-chip.c
-+++ linux-2.6/kernel/irq/generic-chip.c
-@@ -39,7 +39,7 @@ void irq_gc_noop(struct irq_data *d)
- void irq_gc_mask_disable_reg(struct irq_data *d)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
--	u32 mask = 1 << (d->irq - gc->irq_base);
-+	u32 mask = d->mask;
- 
- 	irq_gc_lock(gc);
- 	irq_reg_writel(mask, gc->reg_base + cur_regs(d)->disable);
-@@ -57,7 +57,7 @@ void irq_gc_mask_disable_reg(struct irq_
- void irq_gc_mask_set_bit(struct irq_data *d)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
--	u32 mask = 1 << (d->irq - gc->irq_base);
-+	u32 mask = d->mask;
- 
- 	irq_gc_lock(gc);
- 	gc->mask_cache |= mask;
-@@ -75,7 +75,7 @@ void irq_gc_mask_set_bit(struct irq_data
- void irq_gc_mask_clr_bit(struct irq_data *d)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
--	u32 mask = 1 << (d->irq - gc->irq_base);
-+	u32 mask = d->mask;
- 
- 	irq_gc_lock(gc);
- 	gc->mask_cache &= ~mask;
-@@ -93,7 +93,7 @@ void irq_gc_mask_clr_bit(struct irq_data
- void irq_gc_unmask_enable_reg(struct irq_data *d)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
--	u32 mask = 1 << (d->irq - gc->irq_base);
-+	u32 mask = d->mask;
- 
- 	irq_gc_lock(gc);
- 	irq_reg_writel(mask, gc->reg_base + cur_regs(d)->enable);
-@@ -108,7 +108,7 @@ void irq_gc_unmask_enable_reg(struct irq
- void irq_gc_ack_set_bit(struct irq_data *d)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
--	u32 mask = 1 << (d->irq - gc->irq_base);
-+	u32 mask = d->mask;
- 
- 	irq_gc_lock(gc);
- 	irq_reg_writel(mask, gc->reg_base + cur_regs(d)->ack);
-@@ -122,7 +122,7 @@ void irq_gc_ack_set_bit(struct irq_data 
- void irq_gc_ack_clr_bit(struct irq_data *d)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
--	u32 mask = ~(1 << (d->irq - gc->irq_base));
-+	u32 mask = ~d->mask;
- 
- 	irq_gc_lock(gc);
- 	irq_reg_writel(mask, gc->reg_base + cur_regs(d)->ack);
-@@ -136,7 +136,7 @@ void irq_gc_ack_clr_bit(struct irq_data 
- void irq_gc_mask_disable_reg_and_ack(struct irq_data *d)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
--	u32 mask = 1 << (d->irq - gc->irq_base);
-+	u32 mask = d->mask;
- 
- 	irq_gc_lock(gc);
- 	irq_reg_writel(mask, gc->reg_base + cur_regs(d)->mask);
-@@ -151,7 +151,7 @@ void irq_gc_mask_disable_reg_and_ack(str
- void irq_gc_eoi(struct irq_data *d)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
--	u32 mask = 1 << (d->irq - gc->irq_base);
-+	u32 mask = d->mask;
- 
- 	irq_gc_lock(gc);
- 	irq_reg_writel(mask, gc->reg_base + cur_regs(d)->eoi);
-@@ -169,7 +169,7 @@ void irq_gc_eoi(struct irq_data *d)
- int irq_gc_set_wake(struct irq_data *d, unsigned int on)
- {
- 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
--	u32 mask = 1 << (d->irq - gc->irq_base);
-+	u32 mask = d->mask;
- 
- 	if (!(mask & gc->wake_enabled))
- 		return -EINVAL;
-@@ -254,6 +254,15 @@ void irq_setup_generic_chip(struct irq_c
- 		if (flags & IRQ_GC_INIT_NESTED_LOCK)
- 			irq_set_lockdep_class(i, &irq_nested_lock_class);
- 
-+		if (!(flags & IRQ_GC_NO_MASK)) {
-+			struct irq_data *d = irq_get_irq_data(i);
-+			u32 mask;
+diff --git a/Documentation/devicetree/bindings/dma/ste-dma40.txt b/Documentation/devicetree/bindings/dma/ste-dma40.txt
+new file mode 100644
+index 0000000..2679a87
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/ste-dma40.txt
+@@ -0,0 +1,62 @@
++* DMA40 DMA Controller
 +
-+			if (flags & IRQ_GC_MASK_FROM_HWIRQ)
-+				d->mask = 1 << (d->hwirq % 32);
-+			else
-+				d->mask = 1 << (i - gc->irq_base);
-+		}
- 		irq_set_chip_and_handler(i, &ct->chip, ct->handler);
- 		irq_set_chip_data(i, gc);
- 		irq_modify_status(i, clr, set);
++Required properties:
++- compatible: "stericsson,dma40"
++- reg: Address range of the DMAC registers
++- reg-names: Names of the above areas to use during resource look-up
++- interrupt: Should contain the DMAC interrupt number
++- #dma-cells: must be <3>
++
++Optional properties:
++- dma-channels: Number of channels supported by hardware - if not present
++		the driver will attempt to obtain the information from H/W
++
++Example:
++
++	dma: dma-controller@801C0000 {
++		compatible = "stericsson,db8500-dma40", "stericsson,dma40";
++		reg = <0x801C0000 0x1000  0x40010000 0x800>;
++		reg-names = "base", "lcpa";
++		interrupt-parent = <&intc>;
++		interrupts = <0 25 0x4>;
++
++		#dma-cells = <2>;
++		dma-channels = <8>;
++	};
++
++Clients
++Required properties:
++- dmas: Comma separated list of dma channel requests
++- dma-names: Names of the aforementioned requested channels
++
++Each dmas request consists of 4 cells:
++  1. A phandle pointing to the DMA controller
++  2. Device Type
++  3. The DMA request line number (only when 'use fixed channel' is set)
++  4. A 32bit mask specifying; mode, direction and endianess [NB: This list will grow]
++        0x00000001: Mode:
++                Logical channel when unset
++                Physical channel when set
++        0x00000002: Direction:
++                Memory to Device when unset
++                Device to Memory when set
++        0x00000004: Endianess:
++                Little endian when unset
++                Big endian when set
++        0x00000008: Use fixed channel:
++                Use automatic channel selection when unset
++                Use DMA request line number when set
++
++Example:
++
++	uart@80120000 {
++		compatible = "arm,pl011", "arm,primecell";
++		reg = <0x80120000 0x1000>;
++		interrupts = <0 11 0x4>;
++
++		dmas = <&dma 13 0 0x2>, /* Logical - DevToMem */
++		       <&dma 13 0 0x0>; /* Logical - MemToDev */
++		dma-names = "rx", "rx";
++
++		status = "disabled";
++	};
+diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
+index d7c2397..b77d508 100644
+--- a/drivers/dma/ste_dma40.c
++++ b/drivers/dma/ste_dma40.c
+@@ -18,6 +18,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/err.h>
+ #include <linux/of.h>
++#include <linux/of_dma.h>
+ #include <linux/amba/bus.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/platform_data/dma-ste-dma40.h>
+@@ -2419,6 +2420,50 @@ static void d40_set_prio_realtime(struct d40_chan *d40c)
+ 		__d40_set_prio_rt(d40c, d40c->dma_cfg.dev_type, false);
+ }
+ 
++#define D40_DT_FLAGS_MODE(flags)       ((flags >> 0) & 0x1)
++#define D40_DT_FLAGS_DIR(flags)        ((flags >> 1) & 0x1)
++#define D40_DT_FLAGS_BIG_ENDIAN(flags) ((flags >> 2) & 0x1)
++#define D40_DT_FLAGS_FIXED_CHAN(flags) ((flags >> 3) & 0x1)
++
++static struct dma_chan *d40_xlate(struct of_phandle_args *dma_spec,
++				  struct of_dma *ofdma)
++{
++	struct stedma40_chan_cfg cfg;
++	dma_cap_mask_t cap;
++	u32 flags;
++
++	memset(&cfg, 0, sizeof(struct stedma40_chan_cfg));
++
++	dma_cap_zero(cap);
++	dma_cap_set(DMA_SLAVE, cap);
++
++	cfg.dev_type = dma_spec->args[0];
++	flags = dma_spec->args[2];
++
++	switch (D40_DT_FLAGS_MODE(flags)) {
++	case 0: cfg.mode = STEDMA40_MODE_LOGICAL; break;
++	case 1: cfg.mode = STEDMA40_MODE_PHYSICAL; break;
++	}
++
++	switch (D40_DT_FLAGS_DIR(flags)) {
++	case 0:
++		cfg.dir = STEDMA40_MEM_TO_PERIPH;
++		cfg.dst_info.big_endian = D40_DT_FLAGS_BIG_ENDIAN(flags);
++		break;
++	case 1:
++		cfg.dir = STEDMA40_PERIPH_TO_MEM;
++		cfg.src_info.big_endian = D40_DT_FLAGS_BIG_ENDIAN(flags);
++		break;
++	}
++
++	if (D40_DT_FLAGS_FIXED_CHAN(flags)) {
++		cfg.phy_channel = dma_spec->args[1];
++		cfg.use_fixed_channel = true;
++	}
++
++	return dma_request_channel(cap, stedma40_filter, &cfg);
++}
++
+ /* DMA ENGINE functions */
+ static int d40_alloc_chan_resources(struct dma_chan *chan)
+ {
+@@ -3632,6 +3677,13 @@ static int __init d40_probe(struct platform_device *pdev)
+ 
+ 	d40_hw_init(base);
+ 
++	if (np) {
++		err = of_dma_controller_register(np, d40_xlate, NULL);
++		if (err && err != -ENODEV)
++			dev_err(&pdev->dev,
++				"could not register of_dma_controller\n");
++	}
++
+ 	dev_info(base->dev, "initialized\n");
+ 	return 0;
+ 
+-- 
+1.7.10.4
