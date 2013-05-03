@@ -1,67 +1,64 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] pinmux: Add TB10x pinmux driver
-Date: Fri, 3 May 2013 20:03:27 +0200
-Message-ID: <CACRpkdaxO0q_P2wJFy3zv4F-QM9dZk54qW8ft350XqcBt1Gr1w@mail.gmail.com>
-References: <1365608728-30494-1-git-send-email-christian.ruppert@abilis.com>
-	<516EEAA0.10906@wwwdotorg.org>
-	<20130418090310.GA17636@ab42.lan>
-	<CACRpkdZd0_W432od5565phhUcJMRWiV9vXX4QVF4osKkxstC0Q@mail.gmail.com>
-	<20130429161725.GB30136@ab42.lan>
-	<5182B557.4040804@wwwdotorg.org>
+From: Dirk Eibach <dirk.eibach@gdsys.cc>
+Subject: Re: [PATCH] powerpc: Make Book E watchdog reset type configurable
+Date: Fri, 03 May 2013 20:30:03 +0200
+Message-ID: <d735c13abccd6ba75fd65658ab94654d@gdsys.cc>
+References: <1367505913-18970-1-git-send-email-dirk.eibach@gdsys.cc>
+ <20130502161720.GA7797@roeck-us.net>
+ <429ec64cf7c30a139db40eb20fd3e682@gdsys.cc>
+ <20130503011741.GA23266@roeck-us.net>
+ <7be2cb3417615ff206270a756c6422d6@gdsys.cc>
+ <20130503134610.GA31037@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5182B557.4040804@wwwdotorg.org>
+In-Reply-To: <20130503134610.GA31037@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org, Kumar Gala <galak@kernel.crashing.org>, Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 2, 2013 at 8:49 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 04/29/2013 10:17 AM, Christian Ruppert wrote:
->>>
->>> So if this is what you want to achieve, just use the same number
->>> as in your datasheet in the pin number -> problem solved.
->>
->> The problem is that we must support several products which are basically
->> different packaging options of the same chip (or simplified versions
->> thereof). Not all of those products will have the same number of pins
->> and as a consequence, data sheet pin numbering will also be different.
->> The port names are going to remain the same for all products, however.
->> Some of the ports are just not going to be physically available in some
->> or the products. Sorry if that wasn't clear from my previous mail.
->
-> It sounds like you can use the exact same numbering scheme for all the
-> different packaging options; it's just that some of the pin numbers
-> simply won't exist on some of the packaging options, so while defined by
-> the DT binding, it simply won't make sense to use them?
->
-> Certainly, Tegra20 has two packaging options, and the pinctrl driver for
-> it has zero knowledge of this. Perhaps we're just lucky though. I guess
-> the Tegra TRM doesn't define any "Pin number" (just "pin name") for the
-> pins, so there's no possibility of the same "number" meaning different
-> things in the two packages, so perhaps we're just getting lucky here.
 
-I am certain it must be possible to come up with something reasonable
-here, especially since this is using the device tree.
 
-In U300 we had something like 4 different packaging types, all with
-different names on the pins, however I could avoid the entire
-issue by using pad numbers instead, i.e. the numbers of the pads/fingers
-on the silicon die inside the chip.
-(Documentation/pinctrl.txt contains hints on this.)
+Am 03.05.2013 15:46, schrieb Guenter Roeck:
+> On Fri, May 03, 2013 at 10:33:13AM +0200, Dirk Eibach wrote:
+>> Hi Guenter,
+>> 
+>>>>>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+>>>>>> index e89fc31..6048593 100644
+>>>>>> --- a/drivers/watchdog/Kconfig
+>>>>>> +++ b/drivers/watchdog/Kconfig
+>>>>>> @@ -1172,6 +1172,38 @@ config BOOKE_WDT_DEFAULT_TIMEOUT
+>>>>>> 
+>>>>>> 	  The value can be overridden by the wdt_period command-line
+>>>>>> parameter.
+>>>>>> 
+>>>>>> +choice
+>>>>>> +	prompt "PowerPC Book-E Watchdog reset type"
+>>>>>> +	depends on BOOKE_WDT
+>>>>>> +	default BOOKE_WDT_RESET_CHIP
+>>>>>> +	help
+>>>>>> +	  Specify what kind of reset will be executed on watchdog
+>>>>>> timeout.
+>>>>>> +
+>>>>> Seems to me it would be much better to make this configurable via
+>>>>> platform data
+>>>>> and/or device tree.
+>>>> 
+>>>> good catch. What do the device-tree gurus think to be a nice
+>>>> property name?
+>> 
+>> having a closer look, I realized booke_wdt is not device-tree based
+>> yet. Migrating it would come close to a rewrite, breaking
+>> compatibility for all current users. Sorry, this is way beyond the
+> 
+> Really ? I don't think making it a platform driver would be that hard,
+> or break anything.
 
-It seems like your situation is similar.
+Maybe I am missing something, but wouldn't making it a device-tree 
+driver mean, that I would have to identify all users of BOOKE_WDT and 
+add it to their device trees?
 
-And since you work for Abilis I assume you can access such low-level
-documentation and come up with a numbering scheme based on
-something that does not vary with packaging.
-
-And if you can't, and since you're using device tree, come up with
-a per-packainging pin numbering, put it into a special .dtsi file that
-you layer over the core SoC .dtsi file just to get these numbers,
-and then use the apropriate packaging .dtsi in yout eventual
-machine .dts file.
-
-Yours,
-Linus Walleij
+Cheers
+Dirk
