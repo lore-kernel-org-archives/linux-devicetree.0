@@ -1,159 +1,103 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: [RFC patch 8/8] irqchip: sun4i: Convert to generic irq chip
-Date: Fri, 03 May 2013 21:50:55 -0000
-Message-ID: <20130503214629.880345092@linutronix.de>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: [RFC patch 3/8] genirq: generic chip: Handle separate mask registers
+Date: Fri, 03 May 2013 21:50:48 -0000
+Message-ID: <20130503214629.536981253@linutronix.de>
 References: <alpine.LFD.2.02.1305031514230.2886@ionos>
  <20130503212258.385818955@linutronix.de>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline; filename=irqchip-convert-sun4i.patch
-Sender: linux-doc-owner@vger.kernel.org
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Arnd Bergmann <arnd@arndb.de>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jean-Francois Moine <moinejf@free.fr>, Gerlando Falauto <gerlando.falauto@keymile.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline;
+ filename=genirq-handle-separate-mask-registers.patch
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joey Oravec <joravec-Vf0cVmJFnCtWk0Htik3J/w@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Holger Brunck <Holger.Brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Simon Guinot <simon-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Proof of concept patch to demonstrate the new irqdomain support for
-the generic irq chip. Untested !!
+From: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+There are cases where all irq_chip_type instances have separate mask
+registers, making a shared mask register cache unsuitable for the
+purpose.
+
+Introduce a new flag IRQ_GC_MASK_CACHE_PER_TYPE. If set, point the per
+chip mask pointer to the per chip private mask cache instead.
+
+[ tglx: Simplified code, renamed flag and massaged changelog ]
+
+Signed-off-by: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Cc: Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>
+Cc: Simon Guinot <simon-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
+Cc: Joey Oravec <joravec-Vf0cVmJFnCtWk0Htik3J/w@public.gmane.org>
+Cc: Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Cc: Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Holger Brunck <Holger.Brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Signed-off-by: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 ---
- drivers/irqchip/irq-sun4i.c |  100 ++++++++++++--------------------------------
- 1 file changed, 29 insertions(+), 71 deletions(-)
+ include/linux/irq.h       |    2 ++
+ kernel/irq/generic-chip.c |   17 ++++++++++-------
+ 2 files changed, 12 insertions(+), 7 deletions(-)
 
-Index: linux-2.6/drivers/irqchip/irq-sun4i.c
+Index: linux-2.6/include/linux/irq.h
 ===================================================================
---- linux-2.6.orig/drivers/irqchip/irq-sun4i.c
-+++ linux-2.6/drivers/irqchip/irq-sun4i.c
-@@ -32,70 +32,43 @@
- #define SUN4I_IRQ_FIQ_PENDING_REG(x)	(0x20 + 0x4 * x)
- #define SUN4I_IRQ_ENABLE_REG(x)		(0x40 + 0x4 * x)
- #define SUN4I_IRQ_MASK_REG(x)		(0x50 + 0x4 * x)
-+#define SUN4I_NUM_CHIPS			3
-+#define SUN4I_IRQS_PER_CHIP		32
+--- linux-2.6.orig/include/linux/irq.h
++++ linux-2.6/include/linux/irq.h
+@@ -704,10 +704,12 @@ struct irq_chip_generic {
+  * @IRQ_GC_INIT_NESTED_LOCK:	Set the lock class of the irqs to nested for
+  *				irq chips which need to call irq_set_wake() on
+  *				the parent irq. Usually GPIO implementations
++ * @IRQ_GC_MASK_CACHE_PER_TYPE:	Mask cache is chip type private
+  */
+ enum irq_gc_flags {
+ 	IRQ_GC_INIT_MASK_CACHE		= 1 << 0,
+ 	IRQ_GC_INIT_NESTED_LOCK		= 1 << 1,
++	IRQ_GC_MASK_CACHE_PER_TYPE	= 1 << 2,
+ };
  
- static void __iomem *sun4i_irq_base;
- static struct irq_domain *sun4i_irq_domain;
- 
- static asmlinkage void __exception_irq_entry sun4i_handle_irq(struct pt_regs *regs);
- 
--void sun4i_irq_ack(struct irq_data *irqd)
-+static int __init sun4i_init_domain_chips(void)
+ /* Generic chip callback functions */
+Index: linux-2.6/kernel/irq/generic-chip.c
+===================================================================
+--- linux-2.6.orig/kernel/irq/generic-chip.c
++++ linux-2.6/kernel/irq/generic-chip.c
+@@ -241,18 +241,21 @@ void irq_setup_generic_chip(struct irq_c
  {
--	unsigned int irq = irqd_to_hwirq(irqd);
--	unsigned int irq_off = irq % 32;
--	int reg = irq / 32;
--	u32 val;
+ 	struct irq_chip_type *ct = gc->chip_types;
+ 	unsigned int i;
++	u32 *mskptr = &gc->mask_cache, mskreg = ct->regs.mask;
+ 
+ 	raw_spin_lock(&gc_lock);
+ 	list_add_tail(&gc->list, &gc_list);
+ 	raw_spin_unlock(&gc_lock);
+ 
+-	/* Init mask cache ? */
+-	if (flags & IRQ_GC_INIT_MASK_CACHE)
+-		gc->mask_cache = irq_reg_readl(gc->reg_base + ct->regs.mask);
 -
--	val = readl(sun4i_irq_base + SUN4I_IRQ_PENDING_REG(reg));
--	writel(val | (1 << irq_off),
--	       sun4i_irq_base + SUN4I_IRQ_PENDING_REG(reg));
--}
--
--static void sun4i_irq_mask(struct irq_data *irqd)
--{
--	unsigned int irq = irqd_to_hwirq(irqd);
--	unsigned int irq_off = irq % 32;
--	int reg = irq / 32;
--	u32 val;
--
--	val = readl(sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
--	writel(val & ~(1 << irq_off),
--	       sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
--}
--
--static void sun4i_irq_unmask(struct irq_data *irqd)
--{
--	unsigned int irq = irqd_to_hwirq(irqd);
--	unsigned int irq_off = irq % 32;
--	int reg = irq / 32;
--	u32 val;
--
--	val = readl(sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
--	writel(val | (1 << irq_off),
--	       sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
--}
--
--static struct irq_chip sun4i_irq_chip = {
--	.name		= "sun4i_irq",
--	.irq_ack	= sun4i_irq_ack,
--	.irq_mask	= sun4i_irq_mask,
--	.irq_unmask	= sun4i_irq_unmask,
--};
--
--static int sun4i_irq_map(struct irq_domain *d, unsigned int virq,
--			 irq_hw_number_t hw)
--{
--	irq_set_chip_and_handler(virq, &sun4i_irq_chip,
--				 handle_level_irq);
--	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
--
-+	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
-+	struct irq_chip_generic *gc;
-+	int i, ret, base = 0;
-+
-+	ret = irq_alloc_domain_generic_chips(d, SUN4I_IRQS_PER_CHIP, 1,
-+					     "sun4i_irq", handle_level_irq,
-+					     clr, 0, IRQ_GC_INIT_MASK_CACHE);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < SUN4I_NUM_CHIPS; i++, base += SUN4I_IRQS_PER_CHIP) {
-+		gc = irq_get_domain_generic_chip(sun4i_irq_domain, base);
-+		gc->reg_base = sun4i_irq_base;
-+		gc->chip_types[0].regs.mask = SUN4I_IRQ_ENABLE_REG(i);
-+		gc->chip_types[0].regs.ack = SUN4I_IRQ_PENDING_REG(i);
-+		gc->chip_types[0].chip.mask = irq_gc_mask_clr_bit;
-+		gc->chip_types[0].chip.ack = irq_gc_ack_set_bit;
-+		gc->chip_types[0].chip.unmask = irq_gc_mask_set_bit;
-+
-+		/* Disable, mask and clear all pending interrupts */
-+		writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(i));
-+		writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(i));
-+		writel(0xffffffff, sun4i_irq_base + SUN4I_IRQ_PENDING_REG(i));
+-	/* Initialize mask cache pointer */
+-	for (i = 0; i < gc->num_ct; i++)
+-		ct[i].mask_cache = &gc->mask_cache;
++	for (i = 0; i < gc->num_ct; i++) {
++		if (flags & IRQ_GC_MASK_CACHE_PER_TYPE) {
++			mskptr = &ct[i].mask_cache_priv;
++			mskreg = ct[i].regs.mask;
++		}
++		ct[i].mask_cache = mskptr;
++		if (flags & IRQ_GC_INIT_MASK_CACHE)
++			*mskptr = irq_reg_readl(gc->reg_base + mskreg);
 +	}
- 	return 0;
- }
  
--static struct irq_domain_ops sun4i_irq_ops = {
--	.map = sun4i_irq_map,
--	.xlate = irq_domain_xlate_onecell,
--};
--
- static int __init sun4i_of_init(struct device_node *node,
- 				struct device_node *parent)
- {
-@@ -104,21 +77,6 @@ static int __init sun4i_of_init(struct d
- 		panic("%s: unable to map IC registers\n",
- 			node->full_name);
- 
--	/* Disable all interrupts */
--	writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(0));
--	writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(1));
--	writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(2));
--
--	/* Mask all the interrupts */
--	writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(0));
--	writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(1));
--	writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(2));
--
--	/* Clear all the pending interrupts */
--	writel(0xffffffff, sun4i_irq_base + SUN4I_IRQ_PENDING_REG(0));
--	writel(0xffffffff, sun4i_irq_base + SUN4I_IRQ_PENDING_REG(1));
--	writel(0xffffffff, sun4i_irq_base + SUN4I_IRQ_PENDING_REG(2));
--
- 	/* Enable protection mode */
- 	writel(0x01, sun4i_irq_base + SUN4I_IRQ_PROTECTION_REG);
- 
-@@ -126,8 +84,8 @@ static int __init sun4i_of_init(struct d
- 	writel(0x00, sun4i_irq_base + SUN4I_IRQ_NMI_CTRL_REG);
- 
- 	sun4i_irq_domain = irq_domain_add_linear(node, 3 * 32,
--						 &sun4i_irq_ops, NULL);
--	if (!sun4i_irq_domain)
-+						 &irq_generic_chip_ops, NULL);
-+	if (!sun4i_irq_domain || sun4i_init_domain_chips())
- 		panic("%s: unable to create IRQ domain\n", node->full_name);
- 
- 	set_handle_irq(sun4i_handle_irq);
-
-
+ 	for (i = gc->irq_base; msk; msk >>= 1, i++) {
+ 		if (!(msk & 0x01))
