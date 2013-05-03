@@ -1,125 +1,57 @@
-From: Javi Merino <javi.merino@arm.com>
-Subject: Re: [RFC PATCH v2] drivers: bus: add ARM CCI support
-Date: Fri, 3 May 2013 16:17:07 +0100
-Message-ID: <20130503151706.GB2756@e102654-lin.cambridge.arm.com>
-References: <1367425108-4698-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1367425108-4698-2-git-send-email-lorenzo.pieralisi@arm.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH] powerpc: Make Book E watchdog reset type configurable
+Date: Fri, 3 May 2013 08:59:27 -0700
+Message-ID: <20130503155927.GA8695@roeck-us.net>
+References: <1367505913-18970-1-git-send-email-dirk.eibach@gdsys.cc>
+ <20130502161720.GA7797@roeck-us.net>
+ <429ec64cf7c30a139db40eb20fd3e682@gdsys.cc>
+ <20130503011741.GA23266@roeck-us.net>
+ <7be2cb3417615ff206270a756c6422d6@gdsys.cc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1367425108-4698-2-git-send-email-lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Dave Martin <dave.martin@linaro.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Stephen Boyd <sboyd@codeaurora.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Amit Kucheria <amit.kucheria@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Gibson <david@gibson.dropbear.id.au>
+In-Reply-To: <7be2cb3417615ff206270a756c6422d6@gdsys.cc>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dirk Eibach <dirk.eibach@gdsys.cc>
+Cc: linux-kernel@vger.kernel.org, Kumar Gala <galak@kernel.crashing.org>, Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
-
-On Wed, May 01, 2013 at 05:18:28PM +0100, Lorenzo Pieralisi wrote:
-> On ARM multi-cluster systems coherency between cores running on
-> different clusters is managed by the cache-coherent interconnect (CCI).
-> It allows broadcasting of TLB invalidates and memory barriers and it
-> guarantees cache coherency at system level through snooping of slave
-> interfaces connected to it.
+On Fri, May 03, 2013 at 10:33:13AM +0200, Dirk Eibach wrote:
+> Hi Guenter,
 > 
-> This patch enables the basic infrastructure required in Linux to handle and
-> programme the CCI component.
+> >>>>diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> >>>>index e89fc31..6048593 100644
+> >>>>--- a/drivers/watchdog/Kconfig
+> >>>>+++ b/drivers/watchdog/Kconfig
+> >>>>@@ -1172,6 +1172,38 @@ config BOOKE_WDT_DEFAULT_TIMEOUT
+> >>>>
+> >>>>	  The value can be overridden by the wdt_period command-line
+> >>>>parameter.
+> >>>>
+> >>>>+choice
+> >>>>+	prompt "PowerPC Book-E Watchdog reset type"
+> >>>>+	depends on BOOKE_WDT
+> >>>>+	default BOOKE_WDT_RESET_CHIP
+> >>>>+	help
+> >>>>+	  Specify what kind of reset will be executed on watchdog
+> >>>>timeout.
+> >>>>+
+> >>>Seems to me it would be much better to make this configurable via
+> >>>platform data
+> >>>and/or device tree.
+> >>
+> >>good catch. What do the device-tree gurus think to be a nice
+> >>property name?
 > 
-> Non-local variables used by the CCI management functions called by power
-> down function calls after disabling the cache must be flushed out to main
-> memory in advance, otherwise incoherency of those values may occur if they
-> are sitting in the cache of some other CPU when power down functions
-> execute. Driver code ensures that relevant data structures are flushed
-> from inner and outer caches after the driver probe is completed.
+> having a closer look, I realized booke_wdt is not device-tree based
+> yet. Migrating it would come close to a rewrite, breaking
+> compatibility for all current users. Sorry, this is way beyond the
+> time I have for this project. So I suggest merging the change the
+> way it is, as it is clearly an improvement.
 > 
-> CCI slave port resources are linked to set of CPUs through bus masters
-> phandle properties that link the interface resources to masters node in
-> the device tree.
-> 
-> Documentation describing the CCI DT bindings is provided with the patch.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> ---
+I sent a couple of RFC patches converting the driver to a platform driver and
+adding of support to linux-watchdog and linux-kernel mailing lists.
+Compile tested only, and missing is automatic driver instantiation.
 
-[...]
-
-> diff --git a/include/linux/arm-cci.h b/include/linux/arm-cci.h
-> new file mode 100644
-> index 0000000..0e70942
-> --- /dev/null
-> +++ b/include/linux/arm-cci.h
-> @@ -0,0 +1,59 @@
-> +/*
-> + * CCI cache coherent interconnect support
-> + *
-> + * Copyright (C) 2013 ARM Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program; if not, write to the Free Software
-> + * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-> + */
-> +
-> +#ifndef __LINUX_ARM_CCI_H
-> +#define __LINUX_ARM_CCI_H
-> +
-> +#include <linux/errno.h>
-> +#include <linux/types.h>
-> +
-> +struct device_node;
-> +
-> +#ifdef CONFIG_ARM_CCI
-> +extern int cci_ace_get_port(struct device_node *dn);
-> +extern int cci_disable_port_by_cpu(u64 mpidr);
-> +extern int __cci_control_port_by_device(struct device_node *dn, bool enable);
-> +extern int __cci_control_port_by_index(u32 port, bool enable);
-> +#else
-> +static inline int cci_ace_get_port(struct device_node *dn, bool cpu)
-
-Builds with !CONFIG_ARM_CCI fail because this definition of
-cci_ace_get_port() takes two arguments whereas the one for
-CONFIG_ARM_CCI takes only one.
-
-> +{
-> +       return -ENODEV;
-> +}
-> +static inline int cci_disable_port_by_cpu(u64 mpidr) { return -ENODEV; }
-> +static inline int __cci_control_port_by_device(struct device_node *dn,
-> +                                              bool enable)
-> +{
-> +       return -ENODEV;
-> +}
-> +static inline int __cci_control_port_by_index(u32 port, bool enable)
-> +{
-> +       return -ENODEV;
-> +}
-> +#endif
-> +#define cci_disable_port_by_device(dev) \
-> +       __cci_control_port_by_device(dev, false)
-> +#define cci_enable_port_by_device(dev) \
-> +       __cci_control_port_by_device(dev, true)
-> +#define cci_disable_port_by_index(dev) \
-> +       __cci_control_port_by_index(dev, false)
-> +#define cci_enable_port_by_index(dev) \
-> +       __cci_control_port_by_index(dev, true)
-> +
-> +#endif
+Guenter
