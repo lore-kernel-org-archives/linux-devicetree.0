@@ -1,101 +1,246 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH v2 4/5] ARM: dove: move DT boards to orion irqchip driver
-Date: Fri,  3 May 2013 01:48:38 +0200
-Message-ID: <1367538519-23940-5-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1367519104-19677-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1367538519-23940-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1367538519-23940-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Jean-Francois Moine <moinejf@free.fr>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: "Christian Daudt" <csd@broadcom.com>
+Subject: [PATCH V2] ARM: bcm281xx: Add L2 support for Rev A2 chips
+Date: Thu, 2 May 2013 17:57:33 -0700
+Message-ID: <1367542653-955-1-git-send-email-csd@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Russell King <linux@arm.linux.org.uk>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Will Deacon <will.deacon@arm.com>
+Cc: Christian Daudt <csd@broadcom.com>, "arm@kernel.org" <arm@kernel.org>, linux-arm-kernel@lists.infradead.org, csd_b@daudt.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Josh Cartwright <josh.cartwright@ni.com>, Yehuda Yitschak <yehuday@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-With legacy devices mapping their irqs, we can now switch DT enabled
-boards to orion irqchip driver.
+Rev A2 SoCs have an unorthodox memory re-mapping and this needs
+to be reflected in the cache operations.
+This patch adds new outer cache functions for the l2x0 driver
+to support this SoC revision. It also adds a new compatible
+value for the cache to enable this functionality.
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
----
-Changelog:
-v1->v2:
-- split off DT changes (Suggested by Jason Cooper)
-- use irqchip_init (Suggested by Jason Gunthorpe)
+Updates from V1:
+- remove section 1 altogether and note that in comments
+- simplify section selection caused by section 1 removal
+- BUG_ON just in case section 1 shows up
 
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Gregory Clement <gregory.clement@free-electrons.com>
-Cc: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: Jean-Francois Moine <moinejf@free.fr>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/arm/mach-dove/Kconfig    |    1 +
- arch/arm/mach-dove/Makefile   |    4 ++--
- arch/arm/mach-dove/board-dt.c |    4 ++--
- 3 files changed, 5 insertions(+), 4 deletions(-)
+Signed-off-by: Christian Daudt <csd@broadcom.com>
 
-diff --git a/arch/arm/mach-dove/Kconfig b/arch/arm/mach-dove/Kconfig
-index 36469d8..60d72b4 100644
---- a/arch/arm/mach-dove/Kconfig
-+++ b/arch/arm/mach-dove/Kconfig
-@@ -22,6 +22,7 @@ config MACH_CM_A510
+diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+index cbef09b..69ddf9f 100644
+--- a/Documentation/devicetree/bindings/arm/l2cc.txt
++++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+@@ -16,6 +16,9 @@ Required properties:
+      performs the same operation).
+ 	"marvell,"aurora-outer-cache: Marvell Controller designed to be
+ 	 compatible with the ARM one with outer cache mode.
++	"bcm,bcm11351-a2-pl310-cache": For Broadcom bcm11351 chipset where an
++	offset needs to be added to the address before passing down to the L2
++	cache controller
+ - cache-unified : Specifies the cache is a unified cache.
+ - cache-level : Should be set to 2 for a level 2 cache.
+ - reg : Physical base address and size of cache controller's memory mapped
+diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
+index 41b2c6c..5e48c85 100644
+--- a/arch/arm/boot/dts/bcm11351.dtsi
++++ b/arch/arm/boot/dts/bcm11351.dtsi
+@@ -47,10 +47,10 @@
+ 	};
  
- config MACH_DOVE_DT
- 	bool "Marvell Dove Flattened Device Tree"
-+	select IRQCHIP_ORION
- 	select MVEBU_CLK_CORE
- 	select MVEBU_CLK_GATING
- 	select REGULATOR
-diff --git a/arch/arm/mach-dove/Makefile b/arch/arm/mach-dove/Makefile
-index 3f0a858..4780f78 100644
---- a/arch/arm/mach-dove/Makefile
-+++ b/arch/arm/mach-dove/Makefile
-@@ -1,5 +1,5 @@
--obj-y				+= common.o addr-map.o irq.o
--obj-$(CONFIG_DOVE_LEGACY)	+= mpp.o
-+obj-y				+= common.o addr-map.o
-+obj-$(CONFIG_DOVE_LEGACY)	+= irq.o mpp.o
- obj-$(CONFIG_PCI)		+= pcie.o
- obj-$(CONFIG_MACH_DOVE_DB)	+= dove-db-setup.o
- obj-$(CONFIG_MACH_DOVE_DT)	+= board-dt.o
-diff --git a/arch/arm/mach-dove/board-dt.c b/arch/arm/mach-dove/board-dt.c
-index cea65b7..404c993 100644
---- a/arch/arm/mach-dove/board-dt.c
-+++ b/arch/arm/mach-dove/board-dt.c
-@@ -11,6 +11,7 @@
- #include <linux/init.h>
- #include <linux/clk-provider.h>
- #include <linux/clk/mvebu.h>
-+#include <linux/irqchip.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
-@@ -20,7 +21,6 @@
- #include <asm/mach/arch.h>
- #include <mach/pm.h>
- #include <plat/common.h>
--#include <plat/irq.h>
- #include <plat/time.h>
- #include "common.h"
+ 	L2: l2-cache {
+-		    compatible = "arm,pl310-cache";
+-		    reg = <0x3ff20000 0x1000>;
+-		    cache-unified;
+-		    cache-level = <2>;
++		compatible = "bcm,bcm11351-a2-pl310-cache";
++		reg = <0x3ff20000 0x1000>;
++		cache-unified;
++		cache-level = <2>;
+ 	};
  
-@@ -143,7 +143,7 @@ static const char * const dove_dt_board_compat[] = {
+ 	timer@35006000 {
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index c465fac..d70e0ab 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -523,6 +523,147 @@ static void aurora_flush_range(unsigned long start, unsigned long end)
+ 	}
+ }
  
- DT_MACHINE_START(DOVE_DT, "Marvell Dove (Flattened Device Tree)")
- 	.map_io		= dove_map_io,
--	.init_irq	= orion_dt_init_irq,
-+	.init_irq	= irqchip_init,
- 	.init_time	= dove_legacy_timer_init,
- 	.init_machine	= dove_dt_init,
- 	.restart	= dove_restart,
++/*
++ * For certain Broadcom SoCs, depending on the address range, different offsets
++ * need to be added to the address before passing it to L2 for
++ * invalidation/clean/flush
++ *
++ * Section Address Range              Offset        EMI
++ *   1     0x00000000 - 0x3FFFFFFF    0x80000000    VC
++ *   2     0x40000000 - 0xBFFFFFFF    0x40000000    SYS
++ *   3     0xC0000000 - 0xFFFFFFFF    0x80000000    VC
++ *
++ * When the start and end addresses have crossed two different sections, we
++ * need to break the L2 operation into two, each within its own section.
++ * For example, if we need to invalidate addresses starts at 0xBFFF0000 and
++ * ends at 0xC0001000, we need do invalidate 1) 0xBFFF0000 - 0xBFFFFFFF and 2)
++ * 0xC0000000 - 0xC0001000
++ *
++ * Note 1:
++ * By breaking a single L2 operation into two, we may potentially suffer some
++ * performance hit, but keep in mind the cross section case is very rare
++ *
++ * Note 2:
++ * We do not need to handle the case when the start address is in
++ * Section 1 and the end address is in Section 3, since it is not a valid use
++ * case
++ *
++ * Note 3:
++ * Section 1 in practical terms can no longer be used on rev A2. Because of
++ * that the code does not need to handle section 1 at all.
++ *
++ */
++#define BCM_SYS_EMI_START_ADDR        0x40000000UL
++#define BCM_VC_EMI_SEC3_START_ADDR    0xC0000000UL
++
++#define BCM_SYS_EMI_OFFSET            0x40000000UL
++#define BCM_VC_EMI_OFFSET             0x80000000UL
++
++static inline int bcm_addr_is_sys_emi(unsigned long addr)
++{
++	return (addr >= BCM_SYS_EMI_START_ADDR) &&
++		(addr < BCM_VC_EMI_SEC3_START_ADDR);
++}
++
++static inline unsigned long bcm_l2_phys_addr(unsigned long addr)
++{
++	if (bcm_addr_is_sys_emi(addr))
++		return addr + BCM_SYS_EMI_OFFSET;
++	else
++		return addr + BCM_VC_EMI_OFFSET;
++}
++
++static void bcm_inv_range(unsigned long start, unsigned long end)
++{
++	unsigned long new_start, new_end;
++
++	BUG_ON(start < BCM_SYS_EMI_START_ADDR);
++
++	if (unlikely(end <= start))
++		return;
++
++	new_start = bcm_l2_phys_addr(start);
++	new_end = bcm_l2_phys_addr(end);
++
++	/* normal case, no cross section between start and end */
++	if (likely(bcm_addr_is_sys_emi(end) || !bcm_addr_is_sys_emi(start))) {
++		l2x0_inv_range(new_start, new_end);
++		return;
++	}
++
++	/* They cross sections, so it can only be a cross from section
++	 * 2 to section 3
++	 */
++	l2x0_inv_range(new_start,
++		bcm_l2_phys_addr(BCM_VC_EMI_SEC3_START_ADDR-1));
++	l2x0_inv_range(bcm_l2_phys_addr(BCM_VC_EMI_SEC3_START_ADDR),
++		new_end);
++}
++
++static void bcm_clean_range(unsigned long start, unsigned long end)
++{
++	unsigned long new_start, new_end;
++
++	BUG_ON(start < BCM_SYS_EMI_START_ADDR);
++
++	if (unlikely(end <= start))
++		return;
++
++	if ((end - start) >= l2x0_size) {
++		l2x0_clean_all();
++		return;
++	}
++
++	new_start = bcm_l2_phys_addr(start);
++	new_end = bcm_l2_phys_addr(end);
++
++	/* normal case, no cross section between start and end */
++	if (likely(bcm_addr_is_sys_emi(end) || !bcm_addr_is_sys_emi(start))) {
++		l2x0_clean_range(new_start, new_end);
++		return;
++	}
++
++	/* They cross sections, so it can only be a cross from section
++	 * 2 to section 3
++	 */
++	l2x0_clean_range(new_start,
++		bcm_l2_phys_addr(BCM_VC_EMI_SEC3_START_ADDR-1));
++	l2x0_clean_range(bcm_l2_phys_addr(BCM_VC_EMI_SEC3_START_ADDR),
++		new_end);
++}
++
++static void bcm_flush_range(unsigned long start, unsigned long end)
++{
++	unsigned long new_start, new_end;
++
++	BUG_ON(start < BCM_SYS_EMI_START_ADDR);
++
++	if (unlikely(end <= start))
++		return;
++
++	if ((end - start) >= l2x0_size) {
++		l2x0_flush_all();
++		return;
++	}
++
++	new_start = bcm_l2_phys_addr(start);
++	new_end = bcm_l2_phys_addr(end);
++
++	/* normal case, no cross section between start and end */
++	if (likely(bcm_addr_is_sys_emi(end) || !bcm_addr_is_sys_emi(start))) {
++		l2x0_flush_range(new_start, new_end);
++		return;
++	}
++
++	/* They cross sections, so it can only be a cross from section
++	 * 2 to section 3
++	 */
++	l2x0_flush_range(new_start,
++		bcm_l2_phys_addr(BCM_VC_EMI_SEC3_START_ADDR-1));
++	l2x0_flush_range(bcm_l2_phys_addr(BCM_VC_EMI_SEC3_START_ADDR),
++		new_end);
++}
++
+ static void __init l2x0_of_setup(const struct device_node *np,
+ 				 u32 *aux_val, u32 *aux_mask)
+ {
+@@ -765,6 +906,21 @@ static const struct l2x0_of_data aurora_no_outer_data = {
+ 	},
+ };
+ 
++static const struct l2x0_of_data bcm_l2x0_data = {
++	.setup = pl310_of_setup,
++	.save  = pl310_save,
++	.outer_cache = {
++		.resume      = pl310_resume,
++		.inv_range   = bcm_inv_range,
++		.clean_range = bcm_clean_range,
++		.flush_range = bcm_flush_range,
++		.sync        = l2x0_cache_sync,
++		.flush_all   = l2x0_flush_all,
++		.inv_all     = l2x0_inv_all,
++		.disable     = l2x0_disable,
++	},
++};
++
+ static const struct of_device_id l2x0_ids[] __initconst = {
+ 	{ .compatible = "arm,pl310-cache", .data = (void *)&pl310_data },
+ 	{ .compatible = "arm,l220-cache", .data = (void *)&l2x0_data },
+@@ -773,6 +929,8 @@ static const struct of_device_id l2x0_ids[] __initconst = {
+ 	  .data = (void *)&aurora_no_outer_data},
+ 	{ .compatible = "marvell,aurora-outer-cache",
+ 	  .data = (void *)&aurora_with_outer_data},
++	{ .compatible = "bcm,bcm11351-a2-pl310-cache",
++	  .data = (void *)&bcm_l2x0_data},
+ 	{}
+ };
+ 
 -- 
 1.7.10.4
+
+
