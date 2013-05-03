@@ -1,71 +1,36 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] powerpc: Make Book E watchdog reset type configurable
-Date: Fri, 3 May 2013 13:33:35 -0700
-Message-ID: <20130503203335.GA13417@roeck-us.net>
-References: <1367505913-18970-1-git-send-email-dirk.eibach@gdsys.cc>
- <20130502161720.GA7797@roeck-us.net>
- <429ec64cf7c30a139db40eb20fd3e682@gdsys.cc>
- <20130503011741.GA23266@roeck-us.net>
- <7be2cb3417615ff206270a756c6422d6@gdsys.cc>
- <20130503134610.GA31037@roeck-us.net>
- <d735c13abccd6ba75fd65658ab94654d@gdsys.cc>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 26/63] dmaengine: ste_dma40: Supply full Device Tree
+ parsing support
+Date: Fri, 3 May 2013 22:59:52 +0200
+Message-ID: <CACRpkdaj0RcZUJ9DX8D1v-MKecFs6ZwGjqD2gqaSFvP9QCbgGA@mail.gmail.com>
+References: <1367591569-32197-1-git-send-email-lee.jones@linaro.org>
+	<1367591569-32197-27-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d735c13abccd6ba75fd65658ab94654d@gdsys.cc>
+In-Reply-To: <1367591569-32197-27-git-send-email-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dirk Eibach <dirk.eibach@gdsys.cc>
-Cc: linux-kernel@vger.kernel.org, Kumar Gala <galak@kernel.crashing.org>, Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linus WALLEIJ <linus.walleij@stericsson.com>, Srinidhi KASAGAR <srinidhi.kasagar@stericsson.com>, Vinod Koul <vinod.koul@intel.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Per Forlin <per.forlin@stericsson.com>, Dan Williams <djbw@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 03, 2013 at 08:30:03PM +0200, Dirk Eibach wrote:
-> 
-> 
-> Am 03.05.2013 15:46, schrieb Guenter Roeck:
-> >On Fri, May 03, 2013 at 10:33:13AM +0200, Dirk Eibach wrote:
-> >>Hi Guenter,
-> >>
-> >>>>>>diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> >>>>>>index e89fc31..6048593 100644
-> >>>>>>--- a/drivers/watchdog/Kconfig
-> >>>>>>+++ b/drivers/watchdog/Kconfig
-> >>>>>>@@ -1172,6 +1172,38 @@ config BOOKE_WDT_DEFAULT_TIMEOUT
-> >>>>>>
-> >>>>>>	  The value can be overridden by the wdt_period command-line
-> >>>>>>parameter.
-> >>>>>>
-> >>>>>>+choice
-> >>>>>>+	prompt "PowerPC Book-E Watchdog reset type"
-> >>>>>>+	depends on BOOKE_WDT
-> >>>>>>+	default BOOKE_WDT_RESET_CHIP
-> >>>>>>+	help
-> >>>>>>+	  Specify what kind of reset will be executed on watchdog
-> >>>>>>timeout.
-> >>>>>>+
-> >>>>>Seems to me it would be much better to make this configurable via
-> >>>>>platform data
-> >>>>>and/or device tree.
-> >>>>
-> >>>>good catch. What do the device-tree gurus think to be a nice
-> >>>>property name?
-> >>
-> >>having a closer look, I realized booke_wdt is not device-tree based
-> >>yet. Migrating it would come close to a rewrite, breaking
-> >>compatibility for all current users. Sorry, this is way beyond the
-> >
-> >Really ? I don't think making it a platform driver would be that hard,
-> >or break anything.
-> 
-> Maybe I am missing something, but wouldn't making it a device-tree
-> driver mean, that I would have to identify all users of BOOKE_WDT
-> and add it to their device trees?
-> 
-Not necessarily; only if the platform driver doesn't auto-instantiate.
-I'll play with it and see if I can get it working.
+On Fri, May 3, 2013 at 4:32 PM, Lee Jones <lee.jones@linaro.org> wrote:
 
-On the other side, that wouldn't be too bad either. As far as I can see
-from a quick search, there is no default configuration in the upstream kernel
-which has BOOKE_WDT enabled.
+> Using the new DMA DT bindings and API, we can register the DMA40 driver
+> as Device Tree capable. Now, when a client attempts to allocate a
+> channel using the DMA DT bindings via its own node, we are able to parse
+> the request and allocate a channel in the correct manner.
+>
+> Cc: Vinod Koul <vinod.koul@intel.com>
+> Cc: Dan Williams <djbw@fb.com>
+> Cc: Per Forlin <per.forlin@stericsson.com>
+> Cc: Rabin Vincent <rabin@rab.in>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-Guenter
+Applied to my ux500-dma40 branch.
+
+Thanks!
+Linus Walleij
