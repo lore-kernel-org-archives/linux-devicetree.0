@@ -1,60 +1,67 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH V2] ARM: bcm281xx: Add L2 support for Rev A2 chips
-Date: Fri, 3 May 2013 18:30:55 +0100
-Message-ID: <20130503173055.GA19154@mudshark.cambridge.arm.com>
-References: <1367542653-955-1-git-send-email-csd@broadcom.com>
- <20130503085100.GA6188@mudshark.cambridge.arm.com>
- <5183F046.9020802@broadcom.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] pinmux: Add TB10x pinmux driver
+Date: Fri, 3 May 2013 20:03:27 +0200
+Message-ID: <CACRpkdaxO0q_P2wJFy3zv4F-QM9dZk54qW8ft350XqcBt1Gr1w@mail.gmail.com>
+References: <1365608728-30494-1-git-send-email-christian.ruppert@abilis.com>
+	<516EEAA0.10906@wwwdotorg.org>
+	<20130418090310.GA17636@ab42.lan>
+	<CACRpkdZd0_W432od5565phhUcJMRWiV9vXX4QVF4osKkxstC0Q@mail.gmail.com>
+	<20130429161725.GB30136@ab42.lan>
+	<5182B557.4040804@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5183F046.9020802@broadcom.com>
+In-Reply-To: <5182B557.4040804@wwwdotorg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Daudt <csd@broadcom.com>
-Cc: Russell King <linux@arm.linux.org.uk>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, "arm@kernel.org" <arm@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "csd_b@daudt.org" <csd_b@daudt.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Josh Cartwright <josh.cartwright@ni.com>, Yehuda Yitschak <yehuday@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 03, 2013 at 06:13:42PM +0100, Christian Daudt wrote:
-> On 13-05-03 01:51 AM, Will Deacon wrote:
-> > On Fri, May 03, 2013 at 01:57:33AM +0100, Christian Daudt wrote:
-> >> Rev A2 SoCs have an unorthodox memory re-mapping and this needs
-> >> to be reflected in the cache operations.
-> >> This patch adds new outer cache functions for the l2x0 driver
-> >> to support this SoC revision. It also adds a new compatible
-> >> value for the cache to enable this functionality.
-> >>
-> >> Updates from V1:
-> >> - remove section 1 altogether and note that in comments
-> >> - simplify section selection caused by section 1 removal
-> >> - BUG_ON just in case section 1 shows up
-> > Looking much better now :)
-> >
-> >> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-> >> index c465fac..d70e0ab 100644
-> >> --- a/arch/arm/mm/cache-l2x0.c
-> >> +++ b/arch/arm/mm/cache-l2x0.c
-> >> @@ -523,6 +523,147 @@ static void aurora_flush_range(unsigned long start, unsigned long end)
-> >>   	}
-> >>   }
-> >>   
-> >> +/*
-> >> + * For certain Broadcom SoCs, depending on the address range, different offsets
-> >> + * need to be added to the address before passing it to L2 for
-> >> + * invalidation/clean/flush
-> >> + *
-> >> + * Section Address Range              Offset        EMI
-> >> + *   1     0x00000000 - 0x3FFFFFFF    0x80000000    VC
-> >> + *   2     0x40000000 - 0xBFFFFFFF    0x40000000    SYS
-> >> + *   3     0xC0000000 - 0xFFFFFFFF    0x80000000    VC
-> > I don't think you answered last time (or I missed it) but where is the RAM
-> > in the physical memory map for boards with this L2 controller? Do you
-> > actually have 3GB@0x40000000?
-> There can be up to 1G for VC and 1G for SYS. Usually that translates to 
-> 0x80000000-0xFFFFFFFF
+On Thu, May 2, 2013 at 8:49 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 04/29/2013 10:17 AM, Christian Ruppert wrote:
+>>>
+>>> So if this is what you want to achieve, just use the same number
+>>> as in your datasheet in the pin number -> problem solved.
+>>
+>> The problem is that we must support several products which are basically
+>> different packaging options of the same chip (or simplified versions
+>> thereof). Not all of those products will have the same number of pins
+>> and as a consequence, data sheet pin numbering will also be different.
+>> The port names are going to remain the same for all products, however.
+>> Some of the ports are just not going to be physically available in some
+>> or the products. Sorry if that wasn't clear from my previous mail.
+>
+> It sounds like you can use the exact same numbering scheme for all the
+> different packaging options; it's just that some of the pin numbers
+> simply won't exist on some of the packaging options, so while defined by
+> the DT binding, it simply won't make sense to use them?
+>
+> Certainly, Tegra20 has two packaging options, and the pinctrl driver for
+> it has zero knowledge of this. Perhaps we're just lucky though. I guess
+> the Tegra TRM doesn't define any "Pin number" (just "pin name") for the
+> pins, so there's no possibility of the same "number" meaning different
+> things in the two packages, so perhaps we're just getting lucky here.
 
-Ok, in which case:
+I am certain it must be possible to come up with something reasonable
+here, especially since this is using the device tree.
 
-  Reviewed-by: Will Deacon <will.deacon@arm.com>
+In U300 we had something like 4 different packaging types, all with
+different names on the pins, however I could avoid the entire
+issue by using pad numbers instead, i.e. the numbers of the pads/fingers
+on the silicon die inside the chip.
+(Documentation/pinctrl.txt contains hints on this.)
 
-Will
+It seems like your situation is similar.
+
+And since you work for Abilis I assume you can access such low-level
+documentation and come up with a numbering scheme based on
+something that does not vary with packaging.
+
+And if you can't, and since you're using device tree, come up with
+a per-packainging pin numbering, put it into a special .dtsi file that
+you layer over the core SoC .dtsi file just to get these numbers,
+and then use the apropriate packaging .dtsi in yout eventual
+machine .dts file.
+
+Yours,
+Linus Walleij
