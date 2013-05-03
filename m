@@ -1,13 +1,13 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH RFC v3] media: i2c: mt9p031: add OF support
-Date: Fri, 3 May 2013 16:34:38 +0200
-Message-ID: <201305031634.39129.arnd@arndb.de>
-References: <1367563919-2880-1-git-send-email-prabhakar.csengg@gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 49/63] usb: musb: ux500: add device tree probing support
+Date: Fri,  3 May 2013 15:32:35 +0100
+Message-ID: <1367591569-32197-50-git-send-email-lee.jones@linaro.org>
+References: <1367591569-32197-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1367563919-2880-1-git-send-email-prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1367591569-32197-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,60 +18,178 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Mauro Carvalho Chehab <mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, srinidhi.kasagar-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 03 May 2013, Prabhakar Lad wrote:
-> 
-> +static struct mt9p031_platform_data *
-> +mt9p031_get_pdata(struct i2c_client *client)
-> +{
-> +       struct device_node *np;
-> +       struct mt9p031_platform_data *pdata;
-> +
-> +       if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
-> +               return client->dev.platform_data;
-> +
-> +       np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
-> +       if (!np)
-> +               return NULL;
-> +
-> +       pdata = devm_kzalloc(&client->dev, sizeof(struct mt9p031_platform_data),
-> +                            GFP_KERNEL);
-> +       if (!pdata)
-> +               return NULL;
-> +
-> +       pdata->reset = of_get_named_gpio(client->dev.of_node, "gpio-reset", 0);
-> +       of_property_read_u32(np, "input-clock-frequency", &pdata->ext_freq);
-> +       of_property_read_u32(np, "pixel-clock-frequency", &pdata->target_freq);
-> +
-> +       return pdata;
-> +}
+This patch will allow ux500-musb to be probed and configured solely from
+configuration found in Device Tree.
 
-Ok, good.
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Fabio Baltieri <fabio.baltieri-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/usb/ux500-usb.txt          |   50 +++++++++++++++++++
+ drivers/usb/musb/ux500.c                           |   51 ++++++++++++++++++++
+ 2 files changed, 101 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/ux500-usb.txt
 
-> @@ -955,7 +998,17 @@ static int mt9p031_probe(struct i2c_client *client,
->         mt9p031->pdata = pdata;
->         mt9p031->output_control = MT9P031_OUTPUT_CONTROL_DEF;
->         mt9p031->mode2 = MT9P031_READ_MODE_2_ROW_BLC;
-> -       mt9p031->model = did->driver_data;
-> +
-> +       if (!client->dev.of_node) {
-> +               mt9p031->model = (enum mt9p031_model)did->driver_data;
-> +       } else {
-> +               const struct of_device_id *of_id;
-> +
-> +               of_id = of_match_device(of_match_ptr(mt9p031_of_match),
-> +                                       &client->dev);
-> +               if (of_id)
-> +                       mt9p031->model = (enum mt9p031_model)of_id->data;
-> +       }
->         mt9p031->reset = -1;
-
-Is this actually required? I thought the i2c core just compared the
-part of the "compatible" value after the first comma to the string, so
-"mt9p031->model = (enum mt9p031_model)did->driver_data" should work
-in both cases.
-
-	Arnd
+diff --git a/Documentation/devicetree/bindings/usb/ux500-usb.txt b/Documentation/devicetree/bindings/usb/ux500-usb.txt
+new file mode 100644
+index 0000000..330d6ec
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/ux500-usb.txt
+@@ -0,0 +1,50 @@
++Ux500 MUSB
++
++Required properties:
++ - compatible : Should be "stericsson,db8500-musb"
++ - reg        : Offset and length of registers
++ - interrupts : Interrupt; mode, number and trigger
++ - dr_mode    : Dual-role; either host mode "host", peripheral mode "peripheral"
++                or both "otg"
++
++Optional properties:
++ - dmas       : A list of dma channels;
++                dma-controller, event-line, fixed-channel, flags
++ - dma-names  : An ordered list of channel names affiliated to the above
++
++Example:
++
++usb_per5@a03e0000 {
++	compatible = "stericsson,db8500-musb", "mentor,musb";
++	reg = <0xa03e0000 0x10000>;
++	interrupts = <0 23 0x4>;
++	interrupt-names = "mc";
++
++	dr_mode = "otg";
++
++	dmas = <&dma 38 0 0x2>, /* Logical - DevToMem */
++	       <&dma 38 0 0x0>, /* Logical - MemToDev */
++	       <&dma 37 0 0x2>, /* Logical - DevToMem */
++	       <&dma 37 0 0x0>, /* Logical - MemToDev */
++	       <&dma 36 0 0x2>, /* Logical - DevToMem */
++	       <&dma 36 0 0x0>, /* Logical - MemToDev */
++	       <&dma 19 0 0x2>, /* Logical - DevToMem */
++	       <&dma 19 0 0x0>, /* Logical - MemToDev */
++	       <&dma 18 0 0x2>, /* Logical - DevToMem */
++	       <&dma 18 0 0x0>, /* Logical - MemToDev */
++	       <&dma 17 0 0x2>, /* Logical - DevToMem */
++	       <&dma 17 0 0x0>, /* Logical - MemToDev */
++	       <&dma 16 0 0x2>, /* Logical - DevToMem */
++	       <&dma 16 0 0x0>, /* Logical - MemToDev */
++	       <&dma 39 0 0x2>, /* Logical - DevToMem */
++	       <&dma 39 0 0x0>; /* Logical - MemToDev */
++
++	dma-names = "iep_1_9",  "oep_1_9",
++		    "iep_2_10", "oep_2_10",
++		    "iep_3_11", "oep_3_11",
++		    "iep_4_12", "oep_4_12",
++		    "iep_5_13", "oep_5_13",
++		    "iep_6_14", "oep_6_14",
++		    "iep_7_15", "oep_7_15",
++		    "iep_8",    "oep_8";
++};
+diff --git a/drivers/usb/musb/ux500.c b/drivers/usb/musb/ux500.c
+index 7ddb132..5ff304c 100644
+--- a/drivers/usb/musb/ux500.c
++++ b/drivers/usb/musb/ux500.c
+@@ -25,6 +25,7 @@
+ #include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/io.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ 
+ #include "musb_core.h"
+@@ -88,14 +89,57 @@ static const struct musb_platform_ops ux500_ops = {
+ 	.exit		= ux500_musb_exit,
+ };
+ 
++static struct musb_hdrc_platform_data *
++ux500_of_probe(struct platform_device *pdev, struct device_node *np)
++{
++	struct musb_hdrc_platform_data *pdata;
++	const char *mode;
++	int strlen;
++
++	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return NULL;
++
++	mode = of_get_property(np, "dr_mode", &strlen);
++	if (!mode) {
++		dev_err(&pdev->dev, "No 'dr_mode' property found\n");
++		return NULL;
++	}
++
++	if (strlen > 0) {
++		if (!strcmp(mode, "host"))
++			pdata->mode = MUSB_HOST;
++		if (!strcmp(mode, "otg"))
++			pdata->mode = MUSB_OTG;
++		if (!strcmp(mode, "peripheral"))
++			pdata->mode = MUSB_PERIPHERAL;
++	}
++
++	return pdata;
++}
++
+ static int ux500_probe(struct platform_device *pdev)
+ {
+ 	struct musb_hdrc_platform_data	*pdata = pdev->dev.platform_data;
++	struct device_node		*np = pdev->dev.of_node;
+ 	struct platform_device		*musb;
+ 	struct ux500_glue		*glue;
+ 	struct clk			*clk;
+ 	int				ret = -ENOMEM;
+ 
++	if (!pdata) {
++		if (np) {
++			pdata = ux500_of_probe(pdev, np);
++			if (!pdata)
++				goto err0;
++
++			pdev->dev.platform_data = pdata;
++		} else {
++			dev_err(&pdev->dev, "no pdata or device tree found\n");
++			goto err0;
++		}
++	}
++
+ 	glue = kzalloc(sizeof(*glue), GFP_KERNEL);
+ 	if (!glue) {
+ 		dev_err(&pdev->dev, "failed to allocate glue context\n");
+@@ -124,6 +168,7 @@ static int ux500_probe(struct platform_device *pdev)
+ 	musb->dev.parent		= &pdev->dev;
+ 	musb->dev.dma_mask		= &pdev->dev.coherent_dma_mask;
+ 	musb->dev.coherent_dma_mask	= pdev->dev.coherent_dma_mask;
++	musb->dev.of_node		= pdev->dev.of_node;
+ 
+ 	glue->dev			= &pdev->dev;
+ 	glue->musb			= musb;
+@@ -222,12 +267,18 @@ static const struct dev_pm_ops ux500_pm_ops = {
+ #define DEV_PM_OPS	NULL
+ #endif
+ 
++static const struct of_device_id ux500_match[] = {
++        { .compatible = "stericsson,db8500-musb", },
++        {}
++};
++
+ static struct platform_driver ux500_driver = {
+ 	.probe		= ux500_probe,
+ 	.remove		= ux500_remove,
+ 	.driver		= {
+ 		.name	= "musb-ux500",
+ 		.pm	= DEV_PM_OPS,
++		.of_match_table = ux500_match,
+ 	},
+ };
+ 
+-- 
+1.7.10.4
