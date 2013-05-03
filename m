@@ -1,13 +1,30 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 49/63] usb: musb: ux500: add device tree probing support
-Date: Fri,  3 May 2013 15:32:35 +0100
-Message-ID: <1367591569-32197-50-git-send-email-lee.jones@linaro.org>
-References: <1367591569-32197-1-git-send-email-lee.jones@linaro.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
+Date: Fri, 3 May 2013 16:35:28 +0200
+Message-ID: <CACRpkdbSjKaeAreG02Q4c3bZ3-Zzg6d=qUKfm4WTQKWsX8B_Xg@mail.gmail.com>
+References: <1329321854-24490-1-git-send-email-b-cousson@ti.com>
+ <515319D5.20105@wwwdotorg.org>
+ <CACRpkdYXVLgCz1Tyu-Ls2V2OTc4R3cGNJhfQJB6Hiz_K9dkZYQ@mail.gmail.com>
+ <5155C902.7080207@wwwdotorg.org>
+ <CACRpkdYbs4-uudpRUY8e+7icYYkZrfM0kReP3pLL5DMiURJ4dg@mail.gmail.com>
+ <5165CB9D.1090202@wwwdotorg.org>
+ <CACRpkdYirFNqmGhA4K9CL4ve4NYhs8Rd3SFt1iwW9vHBkrcz8g@mail.gmail.com>
+ <51671D7B.5060303@wwwdotorg.org>
+ <CACRpkdbf32Ef77GmXk9id9+RRjcDRTr7S+F4nznoeZU8y=BT_Q@mail.gmail.com>
+ <51673D70.3010503@wwwdotorg.org>
+ <CAAwP0s0e2x33jZQhFRY+Hoo61SFqYKRgWk=1mL2+DNxSDJHz+A@mail.gmail.com>
+ <CACRpkda4h+qXTvsirPAS7E7sjXhMLE62q=VDy53W8UchsYjbNg@mail.gmail.com>
+ <516C31C3.9040505@wwwdotorg.org> <516C7C43.3040105@wwwdotorg.org>
+ <516C8760.2050500@ti.com> <516D9B05.1000501@wwwdotorg.org>
+ <516DA60A.5070000@ti.com> <516DCCA8.3070108@wwwdotorg.org>
+ <516DDB4D.9020500@ti.com> <516EC2AF.9090905@wwwdotorg.org>
+ <CACRpkdaOOrooK7kff2Y-7gH6L6m-MsiU7PfHnqBkPpc=tk_iWA@mail.gmail.com>
+ <517AF0C1.60009@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1367591569-32197-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <517AF0C1.60009-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,178 +35,64 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, srinidhi.kasagar-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
+Cc: Javier Martinez Canillas <martinez.javier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kevin Hilman <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch will allow ux500-musb to be probed and configured solely from
-configuration found in Device Tree.
+On Fri, Apr 26, 2013 at 11:25 PM, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org> wrote:
+> On 04/26/2013 02:27 AM, Linus Walleij wrote:
 
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Fabio Baltieri <fabio.baltieri-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/usb/ux500-usb.txt          |   50 +++++++++++++++++++
- drivers/usb/musb/ux500.c                           |   51 ++++++++++++++++++++
- 2 files changed, 101 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ux500-usb.txt
+>> You will just have to give the xlate function information about which
+>> GPIOs are used as IRQs only, and only request the GPIO on these.
+>
+> That should not be necessary. The xlate is only called in the case where
+> the gpio controller is declared as the interrupt controller in the
+> device tree source ...
 
-diff --git a/Documentation/devicetree/bindings/usb/ux500-usb.txt b/Documentation/devicetree/bindings/usb/ux500-usb.txt
-new file mode 100644
-index 0000000..330d6ec
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ux500-usb.txt
-@@ -0,0 +1,50 @@
-+Ux500 MUSB
-+
-+Required properties:
-+ - compatible : Should be "stericsson,db8500-musb"
-+ - reg        : Offset and length of registers
-+ - interrupts : Interrupt; mode, number and trigger
-+ - dr_mode    : Dual-role; either host mode "host", peripheral mode "peripheral"
-+                or both "otg"
-+
-+Optional properties:
-+ - dmas       : A list of dma channels;
-+                dma-controller, event-line, fixed-channel, flags
-+ - dma-names  : An ordered list of channel names affiliated to the above
-+
-+Example:
-+
-+usb_per5@a03e0000 {
-+	compatible = "stericsson,db8500-musb", "mentor,musb";
-+	reg = <0xa03e0000 0x10000>;
-+	interrupts = <0 23 0x4>;
-+	interrupt-names = "mc";
-+
-+	dr_mode = "otg";
-+
-+	dmas = <&dma 38 0 0x2>, /* Logical - DevToMem */
-+	       <&dma 38 0 0x0>, /* Logical - MemToDev */
-+	       <&dma 37 0 0x2>, /* Logical - DevToMem */
-+	       <&dma 37 0 0x0>, /* Logical - MemToDev */
-+	       <&dma 36 0 0x2>, /* Logical - DevToMem */
-+	       <&dma 36 0 0x0>, /* Logical - MemToDev */
-+	       <&dma 19 0 0x2>, /* Logical - DevToMem */
-+	       <&dma 19 0 0x0>, /* Logical - MemToDev */
-+	       <&dma 18 0 0x2>, /* Logical - DevToMem */
-+	       <&dma 18 0 0x0>, /* Logical - MemToDev */
-+	       <&dma 17 0 0x2>, /* Logical - DevToMem */
-+	       <&dma 17 0 0x0>, /* Logical - MemToDev */
-+	       <&dma 16 0 0x2>, /* Logical - DevToMem */
-+	       <&dma 16 0 0x0>, /* Logical - MemToDev */
-+	       <&dma 39 0 0x2>, /* Logical - DevToMem */
-+	       <&dma 39 0 0x0>; /* Logical - MemToDev */
-+
-+	dma-names = "iep_1_9",  "oep_1_9",
-+		    "iep_2_10", "oep_2_10",
-+		    "iep_3_11", "oep_3_11",
-+		    "iep_4_12", "oep_4_12",
-+		    "iep_5_13", "oep_5_13",
-+		    "iep_6_14", "oep_6_14",
-+		    "iep_7_15", "oep_7_15",
-+		    "iep_8",    "oep_8";
-+};
-diff --git a/drivers/usb/musb/ux500.c b/drivers/usb/musb/ux500.c
-index 7ddb132..5ff304c 100644
---- a/drivers/usb/musb/ux500.c
-+++ b/drivers/usb/musb/ux500.c
-@@ -25,6 +25,7 @@
- #include <linux/clk.h>
- #include <linux/err.h>
- #include <linux/io.h>
-+#include <linux/of.h>
- #include <linux/platform_device.h>
- 
- #include "musb_core.h"
-@@ -88,14 +89,57 @@ static const struct musb_platform_ops ux500_ops = {
- 	.exit		= ux500_musb_exit,
- };
- 
-+static struct musb_hdrc_platform_data *
-+ux500_of_probe(struct platform_device *pdev, struct device_node *np)
-+{
-+	struct musb_hdrc_platform_data *pdata;
-+	const char *mode;
-+	int strlen;
-+
-+	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return NULL;
-+
-+	mode = of_get_property(np, "dr_mode", &strlen);
-+	if (!mode) {
-+		dev_err(&pdev->dev, "No 'dr_mode' property found\n");
-+		return NULL;
-+	}
-+
-+	if (strlen > 0) {
-+		if (!strcmp(mode, "host"))
-+			pdata->mode = MUSB_HOST;
-+		if (!strcmp(mode, "otg"))
-+			pdata->mode = MUSB_OTG;
-+		if (!strcmp(mode, "peripheral"))
-+			pdata->mode = MUSB_PERIPHERAL;
-+	}
-+
-+	return pdata;
-+}
-+
- static int ux500_probe(struct platform_device *pdev)
- {
- 	struct musb_hdrc_platform_data	*pdata = pdev->dev.platform_data;
-+	struct device_node		*np = pdev->dev.of_node;
- 	struct platform_device		*musb;
- 	struct ux500_glue		*glue;
- 	struct clk			*clk;
- 	int				ret = -ENOMEM;
- 
-+	if (!pdata) {
-+		if (np) {
-+			pdata = ux500_of_probe(pdev, np);
-+			if (!pdata)
-+				goto err0;
-+
-+			pdev->dev.platform_data = pdata;
-+		} else {
-+			dev_err(&pdev->dev, "no pdata or device tree found\n");
-+			goto err0;
-+		}
-+	}
-+
- 	glue = kzalloc(sizeof(*glue), GFP_KERNEL);
- 	if (!glue) {
- 		dev_err(&pdev->dev, "failed to allocate glue context\n");
-@@ -124,6 +168,7 @@ static int ux500_probe(struct platform_device *pdev)
- 	musb->dev.parent		= &pdev->dev;
- 	musb->dev.dma_mask		= &pdev->dev.coherent_dma_mask;
- 	musb->dev.coherent_dma_mask	= pdev->dev.coherent_dma_mask;
-+	musb->dev.of_node		= pdev->dev.of_node;
- 
- 	glue->dev			= &pdev->dev;
- 	glue->musb			= musb;
-@@ -222,12 +267,18 @@ static const struct dev_pm_ops ux500_pm_ops = {
- #define DEV_PM_OPS	NULL
- #endif
- 
-+static const struct of_device_id ux500_match[] = {
-+        { .compatible = "stericsson,db8500-musb", },
-+        {}
-+};
-+
- static struct platform_driver ux500_driver = {
- 	.probe		= ux500_probe,
- 	.remove		= ux500_remove,
- 	.driver		= {
- 		.name	= "musb-ux500",
- 		.pm	= DEV_PM_OPS,
-+		.of_match_table = ux500_match,
- 	},
- };
- 
--- 
-1.7.10.4
+Sorry I don't understand this. Irqdomains are not device tree
+concepts. Why would it only be called if it was declared such
+or such in the device tree?
+
+> eth@0 {
+>         compatible = "ks8851";
+>         ...
+>         interrupt-parent = <&gpio2>;
+>         interrupts = <2 8>; /* gpio line 34, low triggered */
+>         ...
+> };
+>
+> So in the case where you have a driver call gpio_request() and then
+> request_irq(), in the device tree source, the gpio controller will not
+> be declared as an interrupt controller. It will just list the gpios ...
+
+And how do you get from there to the conclusion that
+gpio_to_irq() will not ever be called, maybe by
+some other driver than the ethernet?
+
+> sdhci@c8000200 {
+>         ...
+>         cd-gpios = <&gpio 69 0>; /* gpio PI5 */
+>         wp-gpios = <&gpio 57 0>; /* gpio PH1 */
+>         ...
+> };
+
+Like if this driver wants to set up an IRQ?
+
+>> It all comes back to this: keep all applicable knowledge in the
+>> system, so it can make proper decisions, don't try to create
+>> mechanisms that will half-guess things.
+>
+> Agreed. However the xlate looks like a good place to request the gpio
+> without needing to add these "input-hogs" or any other platform code. So
+> if this is not considered abuse of the xlate, then it seems like an
+> ideal solution. I have been also implementing a generic xlate so that we
+> don't need to have a xlate for each platform as well.
+
+I'm still not following. Maybe I'm just too stupid...
+
+How do you *avoid* requesting the GPIO in the translation
+for a certain IRQ if the driver first issues gpio_request() and
+then goes on to perform gpio_to_irq() itself?
+
+Yours,
+Linus Walleij
