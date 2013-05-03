@@ -1,39 +1,74 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v2] clk: si5351: Allow user to define disabled state for
- every clock output
-Date: Fri, 03 May 2013 12:02:02 +0200
-Message-ID: <51838B1A.4010803@gmail.com>
-References: <1367559207-20086-1-git-send-email-marek.belisko@streamunlimited.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
+Date: Fri, 03 May 2013 12:06:24 +0200
+Message-ID: <1956593.M6NmITdEKh@avalon>
+References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
+ <201304300004.20320.arnd@arndb.de> <5182AF83.4080705@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1367559207-20086-1-git-send-email-marek.belisko@streamunlimited.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Marek Belisko <marek.belisko@gmail.com>
-Cc: mturquette@linaro.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, daniel@zonque.org, vladimir.koutny@streamunlimited.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Marek Belisko <marek.belisko@streamunlimited.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5182AF83.4080705-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/03/2013 07:33 AM, Marek Belisko wrote:
-> From: Sebastian Hesselbarth<sebastian.hesselbarth@gmail.com>
->
-> This patch adds platform data and DT bindings to allow to overwrite
-> the stored disabled state for each clock output.
->
-> Signed-off-by: Marek Belisko<marek.belisko@streamunlimited.com>
-> Signed-off-by: Sebastian Hesselbarth<sebastian.hesselbarth@gmail.com>
-> ---
-> Changes from v1->v2:
-> Sebastian Hesselbarth send me updated version of patch which was based
-> on v1. Resending with updates.
+Hi Stephen,
 
-Marek,
+On Thursday 02 May 2013 12:25:07 Stephen Warren wrote:
+> On 04/29/2013 04:04 PM, Arnd Bergmann wrote:
+> > On Monday 29 April 2013, Laurent Pinchart wrote:
+> >> On Monday 29 April 2013 23:31:30 Tomasz Figa wrote:
+> >>> Good point. Stephen, would it be a problem to make this a KMS driver
+> >>> instead? Old fbdev API could be emulated on top of it, until it goes out
+> >>> of use, couldn't it?
+> >> 
+> >> There's already an fbdev emulation layer in KMS, for such a simple use
+> >> case it will work fine.
+> > 
+> > I suggested the same to Stephen when he first brought up this driver.
+> > Unfortunately his attempt to create a simple KMS driver resulted in a
+> > significantly larger driver than the one he did for the framebuffer
+> > interface. This means that either Stephen did something really wrong
+> > in his attempt, or the KMS interface isn't as good as it should be
+> > if we want to move people away from frame buffer drivers.
+> 
+> Well, I didn't actually attempt to write the KMS driver; I simply took a
+> look at existing KMS drivers (and perhaps some stub KMS driver; I forget
+> right now) to see what it'd take, and it looked quite scary.
+> 
+> The other issue is that the KMS semantics appear to desire that the
+> driver allocate FB memory from some pool, and then point the display
+> scanout at the allocated memory. However, this driver's semantics are
+> that some other entity has allocated and reserved some memory region for
+> scanout, and the simple FB driver exists solely to scribble to that
+> memory region. Rob Clark said the thought this could be handled by
+> writing a custom memory allocator to support this, but it seemed a
+> little pointless to write a whole memory allocator when the existing FB
+> interface allows the driver to just set a struct member to the address
+> and be done with it.
 
-it is ok to be a little bit more noisy about changes. But as I took
-your v1 and did it, here is the Changelog:
+KMS handles frame buffers through two objects, a GEM object that represents a 
+piece of memory and a frame buffer object that represents, well, a frame 
+buffer :-)
 
-- add helper to set disabled state for clkout
-- make disabled-state property behave like other properties, i.e.
-   only overwrite disabled state when set through platform_data or DT
+GEM objects management requires an allocator, and frame buffers reference one 
+or more GEM objects to model the frame buffer memory. As allocating new GEM 
+objects isn't possible in this case, the driver could create a GEM object and 
+a frame buffer at initialization time, and implement GEM allocation stubs that 
+would simply return an error unconditionally.
 
-Sebastian
+-- 
+Regards,
+
+Laurent Pinchart
