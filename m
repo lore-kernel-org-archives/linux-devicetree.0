@@ -1,14 +1,13 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 26/63] dmaengine: ste_dma40: Supply full Device Tree parsing
- support
-Date: Fri,  3 May 2013 15:32:12 +0100
-Message-ID: <1367591569-32197-27-git-send-email-lee.jones@linaro.org>
-References: <1367591569-32197-1-git-send-email-lee.jones@linaro.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH RFC v3] media: i2c: mt9p031: add OF support
+Date: Fri, 3 May 2013 16:34:38 +0200
+Message-ID: <201305031634.39129.arnd@arndb.de>
+References: <1367563919-2880-1-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1367591569-32197-1-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1367563919-2880-1-git-send-email-prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,173 +18,60 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, srinidhi.kasagar-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Per Forlin <per.forlin-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Mauro Carvalho Chehab <mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Using the new DMA DT bindings and API, we can register the DMA40 driver
-as Device Tree capable. Now, when a client attempts to allocate a
-channel using the DMA DT bindings via its own node, we are able to parse
-the request and allocate a channel in the correct manner.
+On Friday 03 May 2013, Prabhakar Lad wrote:
+> 
+> +static struct mt9p031_platform_data *
+> +mt9p031_get_pdata(struct i2c_client *client)
+> +{
+> +       struct device_node *np;
+> +       struct mt9p031_platform_data *pdata;
+> +
+> +       if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
+> +               return client->dev.platform_data;
+> +
+> +       np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
+> +       if (!np)
+> +               return NULL;
+> +
+> +       pdata = devm_kzalloc(&client->dev, sizeof(struct mt9p031_platform_data),
+> +                            GFP_KERNEL);
+> +       if (!pdata)
+> +               return NULL;
+> +
+> +       pdata->reset = of_get_named_gpio(client->dev.of_node, "gpio-reset", 0);
+> +       of_property_read_u32(np, "input-clock-frequency", &pdata->ext_freq);
+> +       of_property_read_u32(np, "pixel-clock-frequency", &pdata->target_freq);
+> +
+> +       return pdata;
+> +}
 
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>
-Cc: Per Forlin <per.forlin-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-Cc: Rabin Vincent <rabin-66gdRtMMWGc@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/dma/ste-dma40.txt          |   62 ++++++++++++++++++++
- drivers/dma/ste_dma40.c                            |   52 ++++++++++++++++
- 2 files changed, 114 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/ste-dma40.txt
+Ok, good.
 
-diff --git a/Documentation/devicetree/bindings/dma/ste-dma40.txt b/Documentation/devicetree/bindings/dma/ste-dma40.txt
-new file mode 100644
-index 0000000..2679a87
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/ste-dma40.txt
-@@ -0,0 +1,62 @@
-+* DMA40 DMA Controller
-+
-+Required properties:
-+- compatible: "stericsson,dma40"
-+- reg: Address range of the DMAC registers
-+- reg-names: Names of the above areas to use during resource look-up
-+- interrupt: Should contain the DMAC interrupt number
-+- #dma-cells: must be <3>
-+
-+Optional properties:
-+- dma-channels: Number of channels supported by hardware - if not present
-+		the driver will attempt to obtain the information from H/W
-+
-+Example:
-+
-+	dma: dma-controller@801C0000 {
-+		compatible = "stericsson,db8500-dma40", "stericsson,dma40";
-+		reg = <0x801C0000 0x1000  0x40010000 0x800>;
-+		reg-names = "base", "lcpa";
-+		interrupt-parent = <&intc>;
-+		interrupts = <0 25 0x4>;
-+
-+		#dma-cells = <2>;
-+		dma-channels = <8>;
-+	};
-+
-+Clients
-+Required properties:
-+- dmas: Comma separated list of dma channel requests
-+- dma-names: Names of the aforementioned requested channels
-+
-+Each dmas request consists of 4 cells:
-+  1. A phandle pointing to the DMA controller
-+  2. Device Type
-+  3. The DMA request line number (only when 'use fixed channel' is set)
-+  4. A 32bit mask specifying; mode, direction and endianess [NB: This list will grow]
-+        0x00000001: Mode:
-+                Logical channel when unset
-+                Physical channel when set
-+        0x00000002: Direction:
-+                Memory to Device when unset
-+                Device to Memory when set
-+        0x00000004: Endianess:
-+                Little endian when unset
-+                Big endian when set
-+        0x00000008: Use fixed channel:
-+                Use automatic channel selection when unset
-+                Use DMA request line number when set
-+
-+Example:
-+
-+	uart@80120000 {
-+		compatible = "arm,pl011", "arm,primecell";
-+		reg = <0x80120000 0x1000>;
-+		interrupts = <0 11 0x4>;
-+
-+		dmas = <&dma 13 0 0x2>, /* Logical - DevToMem */
-+		       <&dma 13 0 0x0>; /* Logical - MemToDev */
-+		dma-names = "rx", "rx";
-+
-+		status = "disabled";
-+	};
-diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
-index d7c2397..b77d508 100644
---- a/drivers/dma/ste_dma40.c
-+++ b/drivers/dma/ste_dma40.c
-@@ -18,6 +18,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/err.h>
- #include <linux/of.h>
-+#include <linux/of_dma.h>
- #include <linux/amba/bus.h>
- #include <linux/regulator/consumer.h>
- #include <linux/platform_data/dma-ste-dma40.h>
-@@ -2419,6 +2420,50 @@ static void d40_set_prio_realtime(struct d40_chan *d40c)
- 		__d40_set_prio_rt(d40c, d40c->dma_cfg.dev_type, false);
- }
- 
-+#define D40_DT_FLAGS_MODE(flags)       ((flags >> 0) & 0x1)
-+#define D40_DT_FLAGS_DIR(flags)        ((flags >> 1) & 0x1)
-+#define D40_DT_FLAGS_BIG_ENDIAN(flags) ((flags >> 2) & 0x1)
-+#define D40_DT_FLAGS_FIXED_CHAN(flags) ((flags >> 3) & 0x1)
-+
-+static struct dma_chan *d40_xlate(struct of_phandle_args *dma_spec,
-+				  struct of_dma *ofdma)
-+{
-+	struct stedma40_chan_cfg cfg;
-+	dma_cap_mask_t cap;
-+	u32 flags;
-+
-+	memset(&cfg, 0, sizeof(struct stedma40_chan_cfg));
-+
-+	dma_cap_zero(cap);
-+	dma_cap_set(DMA_SLAVE, cap);
-+
-+	cfg.dev_type = dma_spec->args[0];
-+	flags = dma_spec->args[2];
-+
-+	switch (D40_DT_FLAGS_MODE(flags)) {
-+	case 0: cfg.mode = STEDMA40_MODE_LOGICAL; break;
-+	case 1: cfg.mode = STEDMA40_MODE_PHYSICAL; break;
-+	}
-+
-+	switch (D40_DT_FLAGS_DIR(flags)) {
-+	case 0:
-+		cfg.dir = STEDMA40_MEM_TO_PERIPH;
-+		cfg.dst_info.big_endian = D40_DT_FLAGS_BIG_ENDIAN(flags);
-+		break;
-+	case 1:
-+		cfg.dir = STEDMA40_PERIPH_TO_MEM;
-+		cfg.src_info.big_endian = D40_DT_FLAGS_BIG_ENDIAN(flags);
-+		break;
-+	}
-+
-+	if (D40_DT_FLAGS_FIXED_CHAN(flags)) {
-+		cfg.phy_channel = dma_spec->args[1];
-+		cfg.use_fixed_channel = true;
-+	}
-+
-+	return dma_request_channel(cap, stedma40_filter, &cfg);
-+}
-+
- /* DMA ENGINE functions */
- static int d40_alloc_chan_resources(struct dma_chan *chan)
- {
-@@ -3632,6 +3677,13 @@ static int __init d40_probe(struct platform_device *pdev)
- 
- 	d40_hw_init(base);
- 
-+	if (np) {
-+		err = of_dma_controller_register(np, d40_xlate, NULL);
-+		if (err && err != -ENODEV)
-+			dev_err(&pdev->dev,
-+				"could not register of_dma_controller\n");
-+	}
-+
- 	dev_info(base->dev, "initialized\n");
- 	return 0;
- 
--- 
-1.7.10.4
+> @@ -955,7 +998,17 @@ static int mt9p031_probe(struct i2c_client *client,
+>         mt9p031->pdata = pdata;
+>         mt9p031->output_control = MT9P031_OUTPUT_CONTROL_DEF;
+>         mt9p031->mode2 = MT9P031_READ_MODE_2_ROW_BLC;
+> -       mt9p031->model = did->driver_data;
+> +
+> +       if (!client->dev.of_node) {
+> +               mt9p031->model = (enum mt9p031_model)did->driver_data;
+> +       } else {
+> +               const struct of_device_id *of_id;
+> +
+> +               of_id = of_match_device(of_match_ptr(mt9p031_of_match),
+> +                                       &client->dev);
+> +               if (of_id)
+> +                       mt9p031->model = (enum mt9p031_model)of_id->data;
+> +       }
+>         mt9p031->reset = -1;
+
+Is this actually required? I thought the i2c core just compared the
+part of the "compatible" value after the first comma to the string, so
+"mt9p031->model = (enum mt9p031_model)did->driver_data" should work
+in both cases.
+
+	Arnd
