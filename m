@@ -1,74 +1,40 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
-Date: Fri, 03 May 2013 12:06:24 +0200
-Message-ID: <1956593.M6NmITdEKh@avalon>
-References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
- <201304300004.20320.arnd@arndb.de> <5182AF83.4080705@wwwdotorg.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH v3 1/5] regulator: Introduce TI Adaptive Body Bias(ABB)
+ on-chip LDO driver
+Date: Fri, 3 May 2013 07:03:50 -0500
+Message-ID: <20130503120349.GA2735@snafu>
+References: <1367515215-30753-1-git-send-email-nm@ti.com>
+ <1367515215-30753-2-git-send-email-nm@ti.com>
+ <20130503090258.GG4945@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5182AF83.4080705-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130503090258.GG4945@sirena.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Kevin Hilman <khilman@linaro.org>, Mike Turquette <mturquette@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "Andrii.Tseglytskyi" <andrii.tseglytskyi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-On Thursday 02 May 2013 12:25:07 Stephen Warren wrote:
-> On 04/29/2013 04:04 PM, Arnd Bergmann wrote:
-> > On Monday 29 April 2013, Laurent Pinchart wrote:
-> >> On Monday 29 April 2013 23:31:30 Tomasz Figa wrote:
-> >>> Good point. Stephen, would it be a problem to make this a KMS driver
-> >>> instead? Old fbdev API could be emulated on top of it, until it goes out
-> >>> of use, couldn't it?
-> >> 
-> >> There's already an fbdev emulation layer in KMS, for such a simple use
-> >> case it will work fine.
+Hi Mark,
+On 10:02-20130503, Mark Brown wrote:
+> On Thu, May 02, 2013 at 12:20:10PM -0500, Nishanth Menon wrote:
+> > From: "Andrii.Tseglytskyi" <andrii.tseglytskyi@ti.com>
 > > 
-> > I suggested the same to Stephen when he first brought up this driver.
-> > Unfortunately his attempt to create a simple KMS driver resulted in a
-> > significantly larger driver than the one he did for the framebuffer
-> > interface. This means that either Stephen did something really wrong
-> > in his attempt, or the KMS interface isn't as good as it should be
-> > if we want to move people away from frame buffer drivers.
+> > Adaptive Body Biasing (ABB) modulates transistor bias voltages
+> > dynamically in order to optimize switching speed versus leakage.
 > 
-> Well, I didn't actually attempt to write the KMS driver; I simply took a
-> look at existing KMS drivers (and perhaps some stub KMS driver; I forget
-> right now) to see what it'd take, and it looked quite scary.
-> 
-> The other issue is that the KMS semantics appear to desire that the
-> driver allocate FB memory from some pool, and then point the display
-> scanout at the allocated memory. However, this driver's semantics are
-> that some other entity has allocated and reserved some memory region for
-> scanout, and the simple FB driver exists solely to scribble to that
-> memory region. Rob Clark said the thought this could be handled by
-> writing a custom memory allocator to support this, but it seemed a
-> little pointless to write a whole memory allocator when the existing FB
-> interface allows the driver to just set a struct member to the address
-> and be done with it.
+> I've applied this but please note that I still have deep concerns about
+> some of the discussion about controlling this from other regulators.
+Thanks for the merge.
 
-KMS handles frame buffers through two objects, a GEM object that represents a 
-piece of memory and a frame buffer object that represents, well, a frame 
-buffer :-)
-
-GEM objects management requires an allocator, and frame buffers reference one 
-or more GEM objects to model the frame buffer memory. As allocating new GEM 
-objects isn't possible in this case, the driver could create a GEM object and 
-a frame buffer at initialization time, and implement GEM allocation stubs that 
-would simply return an error unconditionally.
+We don't have any further plans of pursuing the concept of regulator
+chaining for upstream. After an off-line chat with Mike T, we are
+planning on introducing OMAP specific notifier hooks to clock
+framework. This should allow us to do the appropriate sequencing
+necessary to control AVS, regulators for ABB and PMIC in the right
+sequence.
 
 -- 
 Regards,
-
-Laurent Pinchart
+Nishanth Menon
