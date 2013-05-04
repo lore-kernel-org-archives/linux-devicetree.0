@@ -1,15 +1,15 @@
 From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dove: add DT parsing for legacy mv643xx_eth
-Date: Sat, 4 May 2013 14:35:33 -0400
-Message-ID: <20130504183533.GQ31290@titan.lakedaemon.net>
+Subject: Re: [PATCH 2/3] ARM: dove: add DT parsing for legacy timer
+Date: Sat, 4 May 2013 14:36:24 -0400
+Message-ID: <20130504183624.GR31290@titan.lakedaemon.net>
 References: <1367519140-19716-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1367519140-19716-2-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1367519140-19716-3-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1367519140-19716-2-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1367519140-19716-3-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,12 +24,12 @@ To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.g
 Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 02, 2013 at 08:25:38PM +0200, Sebastian Hesselbarth wrote:
+On Thu, May 02, 2013 at 08:25:39PM +0200, Sebastian Hesselbarth wrote:
 > To allow to move to orion irqchip driver, existing legacy devices
-> have to map their irqs. This patch adds a node for mv643xx_eth and
+> have to map their irqs. This patch adds a node for orion timer and
 > some init code to map the corresponding irqs. While the device tree
 > node can stay, the init code will vanish as soon as there is true
-> device tree support for mv643xx_eth.
+> device tree support for orion timer.
 > 
 > Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
@@ -50,12 +50,11 @@ On Thu, May 02, 2013 at 08:25:38PM +0200, Sebastian Hesselbarth wrote:
 > Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 > Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > ---
->  arch/arm/boot/dts/dove.dtsi   |    7 +++++++
->  arch/arm/mach-dove/board-dt.c |   31 ++++++++++++++++++++++++++++++-
->  2 files changed, 37 insertions(+), 1 deletions(-)
+>  arch/arm/boot/dts/dove.dtsi   |    7 ++++++
+>  arch/arm/mach-dove/board-dt.c |   42 +++++++++++++++++++++++++++++++++++-----
+>  2 files changed, 43 insertions(+), 6 deletions(-)
 
-Please break this into two patches, dtsi in one, board-dt.c in the
-other.
+Same for the rest of these, please.
 
 thx,
 
