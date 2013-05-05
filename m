@@ -1,42 +1,59 @@
-From: chenlibo.3@gmail.com
-Subject: [PATCH] bestcomm: no need to free when kzalloc fail
-Date: Sun,  5 May 2013 01:38:24 -0700
-Message-ID: <1367743104-3448-1-git-send-email-libo.chen@huawei.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@linaro.org, rob.herring@calxeda.com
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Libo Chen <libo.chen@huawei.com>
+From: Nishanth Menon <menon.nishanth@gmail.com>
+Subject: Re: [PATCH 0/2] ARM: dts: OMAP36xx/OMAP4460 Fix CPU OPP voltages
+Date: Sun, 05 May 2013 10:04:52 -0500
+Message-ID: <51867514.9030803@gmail.com>
+References: <1366997973-19120-1-git-send-email-nm@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1366997973-19120-1-git-send-email-nm@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?ISO-8859-1?Q?Beno=EEt_Cousson?= <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc: Nishanth Menon <nm@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Libo Chen <libo.chen@huawei.com>
-
-There is no need to free bcom_eng if kzalloc fail
-
-Signed-off-by: Libo Chen <libo.chen@huawei.com>
----
- drivers/dma/bestcomm/bestcomm.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/dma/bestcomm/bestcomm.c b/drivers/dma/bestcomm/bestcomm.c
-index a8c2e29..300ee2d 100644
---- a/drivers/dma/bestcomm/bestcomm.c
-+++ b/drivers/dma/bestcomm/bestcomm.c
-@@ -400,7 +400,7 @@ static int mpc52xx_bcom_probe(struct platform_device *op)
- 		printk(KERN_ERR DRIVER_NAME ": "
- 			"Can't allocate state structure\n");
- 		rv = -ENOMEM;
--		goto error_sramclean;
-+		goto error_kzalloc;
- 	}
- 
- 	/* Save the node */
-@@ -449,6 +449,7 @@ error_release:
- 	release_mem_region(res_bcom.start, sizeof(struct mpc52xx_sdma));
- error_sramclean:
- 	kfree(bcom_eng);
-+error_kzalloc:
- 	bcom_sram_cleanup();
- error_ofput:
- 	of_node_put(op->dev.of_node);
--- 
-1.8.1.2
+Tony/Benoit,
+gentle offline ping for this series?
+https://patchwork.kernel.org/patch/2494481/
+https://patchwork.kernel.org/patch/2494491/
+Regards,
+Nishanth Menon
+On 04/26/2013 12:39 PM, Nishanth Menon wrote:
+> Hi,
+> It seems that I have not been paying close attention to
+> actual voltage value seen on scope to map it back to verify the validity
+> of the voltage value. Even though I did verify[1] that voltage did scale to
+> values in DT entries, the values in the case of 3630 and 4460 were lower than
+> what the spec voltage was as per opp_data files.
+>
+> This series is based off Benoit's tree here:
+> http://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.10/dts
+>
+> Commit ID's in the patches to indicate regressions are from there as well.
+> Would be good to have this fix merged to 3.10 dts entries.
+> I have cross verified that OMAP3430,3630,4430 and 4460 entries now match that
+> of corresponding opp*_data.c
+>
+> My sincere apologies on the oversight.
+>
+> Nishanth Menon (2):
+>    ARM: dts: OMAP36xx: Fix CPU OPP voltages
+>    ARM: dts: OMAP4460: Fix CPU OPP voltages
+>
+>   arch/arm/boot/dts/omap36xx.dtsi |    6 +++---
+>   arch/arm/boot/dts/omap4460.dtsi |    6 +++---
+>   2 files changed, 6 insertions(+), 6 deletions(-)
+>
+> [1] http://marc.info/?l=linux-arm-kernel&m=136580742724210&w=2
+> Regards,
+> Nishanth Menon
+>
