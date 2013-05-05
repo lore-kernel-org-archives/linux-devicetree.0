@@ -1,27 +1,58 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] serial: sunsu: add missing
- platform_driver_unregister() when module exit
-Date: Sat, 04 May 2013 21:32:55 -0400 (EDT)
-Message-ID: <20130504.213255.347200760283293043.davem@davemloft.net>
-References: <CAPgLHd_4TH7Ur2VWtqHD3puc9eCkfHKEP9dA-ZwnxE8MtpGLww@mail.gmail.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v8 1/3] of/pci: Unify pci_process_bridge_OF_ranges from
+ Microblaze and PowerPC
+Date: Sun, 05 May 2013 12:41:49 +1000
+Message-ID: <1367721709.11982.37.camel@pasglop>
+References: <1366627295-16964-1-git-send-email-Andrew.Murray@arm.com>
+         <1366627295-16964-2-git-send-email-Andrew.Murray@arm.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <CAPgLHd_4TH7Ur2VWtqHD3puc9eCkfHKEP9dA-ZwnxE8MtpGLww@mail.gmail.com>
-Sender: sparclinux-owner@vger.kernel.org
-To: weiyj.lk@gmail.com
-Cc: gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, sparclinux@vger.kernel.org, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1366627295-16964-2-git-send-email-Andrew.Murray@arm.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Andrew Murray <Andrew.Murray@arm.com>
+Cc: linux-mips@linux-mips.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, jgunthorpe@obsidianresearch.com, linux@arm.linux.org.uk, siva.kallam@samsung.com, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, jg1.han@samsung.com, Liviu.Dudau@arm.com, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, bhelgaas@google.com, suren.reddy@samsung.com, linux-arm-kernel@lists.infradead.org, monstr@monstr.eu, paulus@samba.org, thomas.petazzoni@free-electrons.com, thierry.reding@avionic-design.de, thomas.abraham@linaro.org, arnd@arndb.de, linus.walleij@linaro.org, juhosg@openwrt.org, grant.likely@linaro.org, Rob Herring <robherring2@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Date: Sat, 27 Apr 2013 18:13:16 +0800
+On Mon, 2013-04-22 at 11:41 +0100, Andrew Murray wrote:
+> The pci_process_bridge_OF_ranges function, used to parse the "ranges"
+> property of a PCI host device, is found in both Microblaze and PowerPC
+> architectures. These implementations are nearly identical. This patch
+> moves this common code to a common place.
 
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
-> 
-> We have registered platform driver when module init, and
-> need unregister it when module exit.
-> 
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+What's happening with this ? I'd like to avoid that patch for now
+as I'm doing some changes to pci_process_bridge_OF_ranges
+which are fairly urgent (I might even stick them in the current
+merge window) to deal with memory windows having separate offsets.
 
-Applied.
+There's also a few hacks in there that are really ppc specific...
+
+I think the right long term approach is to change the way powerpc
+(and microblaze ?) initializes PCI host bridges. Move it away from
+setup_arch() (which is a PITA anyway since it's way too early) to
+an early init call of some sort, and encapsulate the new struct
+pci_host_bridge.
+
+We can then directly configure the host bridge windows rather
+than having this "intermediary" set of resources in our pci_controller
+and in fact move most of the fields from pci_controller to
+pci_host_bridge to the point where the former can remain as a
+simple platform specific wrapper if needed.
+
+So for new stuff (hint: DT based ARM PCI) or stuff that has to deal with
+a lot less archaic platforms (hint: Microblaze), I'd recommend going
+straight for that approach rather than perpetuating the PowerPC code
+which I'll try to deal with in the next few monthes.
+
+Cheers,
+Ben.
+ 
