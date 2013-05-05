@@ -1,58 +1,42 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v8 1/3] of/pci: Unify pci_process_bridge_OF_ranges from
- Microblaze and PowerPC
-Date: Sun, 05 May 2013 12:41:49 +1000
-Message-ID: <1367721709.11982.37.camel@pasglop>
-References: <1366627295-16964-1-git-send-email-Andrew.Murray@arm.com>
-         <1366627295-16964-2-git-send-email-Andrew.Murray@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1366627295-16964-2-git-send-email-Andrew.Murray@arm.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Andrew Murray <Andrew.Murray@arm.com>
-Cc: linux-mips@linux-mips.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, jgunthorpe@obsidianresearch.com, linux@arm.linux.org.uk, siva.kallam@samsung.com, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, jg1.han@samsung.com, Liviu.Dudau@arm.com, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, bhelgaas@google.com, suren.reddy@samsung.com, linux-arm-kernel@lists.infradead.org, monstr@monstr.eu, paulus@samba.org, thomas.petazzoni@free-electrons.com, thierry.reding@avionic-design.de, thomas.abraham@linaro.org, arnd@arndb.de, linus.walleij@linaro.org, juhosg@openwrt.org, grant.likely@linaro.org, Rob Herring <robherring2@gmail.com>
+From: chenlibo.3@gmail.com
+Subject: [PATCH] bestcomm: no need to free when kzalloc fail
+Date: Sun,  5 May 2013 01:38:24 -0700
+Message-ID: <1367743104-3448-1-git-send-email-libo.chen@huawei.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: grant.likely@linaro.org, rob.herring@calxeda.com
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Libo Chen <libo.chen@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2013-04-22 at 11:41 +0100, Andrew Murray wrote:
-> The pci_process_bridge_OF_ranges function, used to parse the "ranges"
-> property of a PCI host device, is found in both Microblaze and PowerPC
-> architectures. These implementations are nearly identical. This patch
-> moves this common code to a common place.
+From: Libo Chen <libo.chen@huawei.com>
 
-What's happening with this ? I'd like to avoid that patch for now
-as I'm doing some changes to pci_process_bridge_OF_ranges
-which are fairly urgent (I might even stick them in the current
-merge window) to deal with memory windows having separate offsets.
+There is no need to free bcom_eng if kzalloc fail
 
-There's also a few hacks in there that are really ppc specific...
+Signed-off-by: Libo Chen <libo.chen@huawei.com>
+---
+ drivers/dma/bestcomm/bestcomm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-I think the right long term approach is to change the way powerpc
-(and microblaze ?) initializes PCI host bridges. Move it away from
-setup_arch() (which is a PITA anyway since it's way too early) to
-an early init call of some sort, and encapsulate the new struct
-pci_host_bridge.
-
-We can then directly configure the host bridge windows rather
-than having this "intermediary" set of resources in our pci_controller
-and in fact move most of the fields from pci_controller to
-pci_host_bridge to the point where the former can remain as a
-simple platform specific wrapper if needed.
-
-So for new stuff (hint: DT based ARM PCI) or stuff that has to deal with
-a lot less archaic platforms (hint: Microblaze), I'd recommend going
-straight for that approach rather than perpetuating the PowerPC code
-which I'll try to deal with in the next few monthes.
-
-Cheers,
-Ben.
+diff --git a/drivers/dma/bestcomm/bestcomm.c b/drivers/dma/bestcomm/bestcomm.c
+index a8c2e29..300ee2d 100644
+--- a/drivers/dma/bestcomm/bestcomm.c
++++ b/drivers/dma/bestcomm/bestcomm.c
+@@ -400,7 +400,7 @@ static int mpc52xx_bcom_probe(struct platform_device *op)
+ 		printk(KERN_ERR DRIVER_NAME ": "
+ 			"Can't allocate state structure\n");
+ 		rv = -ENOMEM;
+-		goto error_sramclean;
++		goto error_kzalloc;
+ 	}
  
+ 	/* Save the node */
+@@ -449,6 +449,7 @@ error_release:
+ 	release_mem_region(res_bcom.start, sizeof(struct mpc52xx_sdma));
+ error_sramclean:
+ 	kfree(bcom_eng);
++error_kzalloc:
+ 	bcom_sram_cleanup();
+ error_ofput:
+ 	of_node_put(op->dev.of_node);
+-- 
+1.8.1.2
