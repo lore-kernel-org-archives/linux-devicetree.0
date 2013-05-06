@@ -1,71 +1,118 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: [patch 5/8] genirq: Add a mask calculation function
-Date: Mon, 06 May 2013 14:30:24 -0000
-Message-ID: <20130506142539.302898834@linutronix.de>
-References: <20130503212258.385818955@linutronix.de>
- <20130506142348.321859745@linutronix.de>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH v4] extcon: Palmas Extcon Driver
+Date: Mon, 6 May 2013 19:56:55 +0530
+Message-ID: <5187BDAF.2040303@nvidia.com>
+References: <1362662506-14823-4-git-send-email-kishon@ti.com> <1367846225-15685-1-git-send-email-kishon@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline;
- filename=genirq-generic-chip-add-mask-calculation-function.patch
+In-Reply-To: <1367846225-15685-1-git-send-email-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Arnd Bergmann <arnd@arndb.de>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jean-Francois Moine <moinejf@free.fr>, Gerlando Falauto <gerlando.falauto@keymile.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "balbi@ti.com" <balbi@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "ruchika@ti.com" <ruchika@ti.com>, "tony@atomide.com" <tony@atomide.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>
 List-Id: devicetree@vger.kernel.org
 
-Some chips have weird bit mask access patterns instead of the linear
-you expect. Allow them to calculate the cached mask themself.
+On Monday 06 May 2013 06:47 PM, Kishon Vijay Abraham I wrote:
+> +
+> +static irqreturn_t palmas_vbus_wakeup_irq(int irq, void *_palmas_usb)
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- include/linux/irq.h       |    3 +++
- kernel/irq/generic-chip.c |    8 ++++++--
- 2 files changed, 9 insertions(+), 2 deletions(-)
+Can we name the function to palams_vbus_irq_handler() for better 
+understanding? Reserve the wakeup word for the suspend-wakeups.
 
-Index: linux-2.6/include/linux/irq.h
-===================================================================
---- linux-2.6.orig/include/linux/irq.h
-+++ linux-2.6/include/linux/irq.h
-@@ -296,6 +296,7 @@ static inline irq_hw_number_t irqd_to_hw
-  * @irq_suspend:	function called from core code on suspend once per chip
-  * @irq_resume:		function called from core code on resume once per chip
-  * @irq_pm_shutdown:	function called from core code on shutdown once per chip
-+ * @irq_calc_mask:	Optional function to set irq_data.mask for special cases
-  * @irq_print_chip:	optional to print special chip info in show_interrupts
-  * @flags:		chip specific flags
-  */
-@@ -327,6 +328,8 @@ struct irq_chip {
- 	void		(*irq_resume)(struct irq_data *data);
- 	void		(*irq_pm_shutdown)(struct irq_data *data);
- 
-+	void		(*irq_calc_mask)(struct irq_data *data);
-+
- 	void		(*irq_print_chip)(struct irq_data *data, struct seq_file *p);
- 
- 	unsigned long	flags;
-Index: linux-2.6/kernel/irq/generic-chip.c
-===================================================================
---- linux-2.6.orig/kernel/irq/generic-chip.c
-+++ linux-2.6/kernel/irq/generic-chip.c
-@@ -240,6 +240,7 @@ void irq_setup_generic_chip(struct irq_c
- 			    unsigned int set)
- {
- 	struct irq_chip_type *ct = gc->chip_types;
-+	struct irq_chip *chip = &ct->chip;
- 	unsigned int i;
- 	u32 *mskptr = &gc->mask_cache, mskreg = ct->regs.mask;
- 
-@@ -267,9 +268,12 @@ void irq_setup_generic_chip(struct irq_c
- 		if (!(flags & IRQ_GC_NO_MASK)) {
- 			struct irq_data *d = irq_get_irq_data(i);
- 
--			d->mask = 1 << (i - gc->irq_base);
-+			if (chip->irq_calc_mask)
-+				chip->irq_calc_mask(d);
-+			else
-+				d->mask = 1 << (i - gc->irq_base);
- 		}
--		irq_set_chip_and_handler(i, &ct->chip, ct->handler);
-+		irq_set_chip_and_handler(i, chip, ct->handler);
- 		irq_set_chip_data(i, gc);
- 		irq_modify_status(i, clr, set);
- 	}
+
+> +
+> +
+> +static irqreturn_t palmas_id_wakeup_irq(int irq, void *_palmas_usb)
+
+Same here for better name.
+
+
+> +
+> +static void palmas_set_vbus_work(struct work_struct *data)
+> +{
+> +       int ret;
+> +       struct palmas_usb *palmas_usb = container_of(data, struct palmas_usb,
+> +                                                               set_vbus_work);
+> +
+> +       if (IS_ERR_OR_NULL(palmas_usb->vbus_reg)) {
+> +               dev_err(palmas_usb->dev, "invalid regulator\n");
+> +               return;
+> +       }
+
+This error will keep coming if the vbus is not require as workqueue get 
+scheduled always. I think we should remove it.
+
+
+> +
+
+> +static void palmas_dt_to_pdata(struct device_node *node,
+> +               struct palmas_usb_platform_data *pdata)
+> +{
+> +       pdata->no_control_vbus = of_property_read_bool(node,
+> +                                       "ti,no_control_vbus");
+
+
+Can we change the variable names to enable_control_bus and logic 
+accordingly as it looks more appropriate and easy to understand?
+
+
+> +
+> +       palmas_usb->irq1 = regmap_irq_get_virq(palmas->irq_data,
+> +                                               PALMAS_ID_OTG_IRQ);
+> +       palmas_usb->irq2 = regmap_irq_get_virq(palmas->irq_data,
+> +                                               PALMAS_ID_IRQ);
+> +       palmas_usb->irq3 = regmap_irq_get_virq(palmas->irq_data,
+> +                                               PALMAS_VBUS_OTG_IRQ);
+> +       palmas_usb->irq4 = regmap_irq_get_virq(palmas->irq_data,
+> +                                               PALMAS_VBUS_IRQ);
+> +
+
+Better to name irq1, irq2 in more logical names for easy understanding.
+
+
+> +
+> +       if (device_create_file(&pdev->dev, &dev_attr_vbus))
+> +               dev_warn(&pdev->dev, "could not create sysfs file\n");
+> +
+> +       palmas_usb->edev.name = "palmas_usb";
+> +       palmas_usb->edev.supported_cable = palmas_extcon_cable;
+> +       palmas_usb->edev.mutually_exclusive = mutually_exclusive;
+> +
+> +       ret = extcon_dev_register(&palmas_usb->edev, palmas_usb->dev);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "failed to register extcon device\n");
+> +               return ret;
+
+It need to destroy sysfs also.
+
+> +       }
+> +
+> +       /* init spinlock for workqueue */
+> +       spin_lock_init(&palmas_usb->lock);
+
+It is already done above.
+
+> +
+> +       INIT_WORK(&palmas_usb->set_vbus_work, palmas_set_vbus_work);
+
+Better to create the workqueu when control_vbus is require.
+
+
+> +
+> +
+> diff --git a/include/linux/extcon/extcon_palmas.h b/include/linux/extcon/extcon_palmas.h
+> new file mode 100644
+> index 0000000..a5119c9
+> --- /dev/null
+> +++ b/include/linux/extcon/extcon_palmas.h
+
+I think it can be use palama.h only. No need to have one more header for 
+this.
+
+> @@ -0,0 +1,26 @@
+>
+>
+> -       u8 linkstat;
+> +       int mailboxstat;
+Do we really require mailboxstat?
