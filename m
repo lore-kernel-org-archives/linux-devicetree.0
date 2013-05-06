@@ -1,59 +1,88 @@
-From: Nishanth Menon <menon.nishanth@gmail.com>
-Subject: Re: [PATCH 0/2] ARM: dts: OMAP36xx/OMAP4460 Fix CPU OPP voltages
-Date: Sun, 05 May 2013 10:04:52 -0500
-Message-ID: <51867514.9030803@gmail.com>
-References: <1366997973-19120-1-git-send-email-nm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1366997973-19120-1-git-send-email-nm@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?ISO-8859-1?Q?Beno=EEt_Cousson?= <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: Nishanth Menon <nm@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: [RFC 0/2] V4L2 API for exposing flash subdevs as LED class device
+Date: Mon, 06 May 2013 11:33:46 +0200
+Message-ID: <1367832828-30771-1-git-send-email-a.hajda@samsung.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Kyungmin Park <kyungmin.park@samsung.com>, hj210.choi@samsung.com, sw0312.kim@samsung.com, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Andrzej Hajda <a.hajda@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Tony/Benoit,
-gentle offline ping for this series?
-https://patchwork.kernel.org/patch/2494481/
-https://patchwork.kernel.org/patch/2494491/
-Regards,
-Nishanth Menon
-On 04/26/2013 12:39 PM, Nishanth Menon wrote:
-> Hi,
-> It seems that I have not been paying close attention to
-> actual voltage value seen on scope to map it back to verify the validity
-> of the voltage value. Even though I did verify[1] that voltage did scale to
-> values in DT entries, the values in the case of 3630 and 4460 were lower than
-> what the spec voltage was as per opp_data files.
->
-> This series is based off Benoit's tree here:
-> http://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.10/dts
->
-> Commit ID's in the patches to indicate regressions are from there as well.
-> Would be good to have this fix merged to 3.10 dts entries.
-> I have cross verified that OMAP3430,3630,4430 and 4460 entries now match that
-> of corresponding opp*_data.c
->
-> My sincere apologies on the oversight.
->
-> Nishanth Menon (2):
->    ARM: dts: OMAP36xx: Fix CPU OPP voltages
->    ARM: dts: OMAP4460: Fix CPU OPP voltages
->
->   arch/arm/boot/dts/omap36xx.dtsi |    6 +++---
->   arch/arm/boot/dts/omap4460.dtsi |    6 +++---
->   2 files changed, 6 insertions(+), 6 deletions(-)
->
-> [1] http://marc.info/?l=linux-arm-kernel&m=136580742724210&w=2
-> Regards,
-> Nishanth Menon
->
+This RFC proposes generic API for exposing flash subdevices via LED framework.
+
+Rationale
+
+Currently there are two frameworks which are used for exposing LED flash to
+user space:
+- V4L2 flash controls,
+- LED framework(with custom sysfs attributes).
+
+The list below shows flash drivers in mainline kernel with initial commit date
+and typical chip application (according to producer):
+
+LED API:
+    lm3642: 2012-09-12, Cameras
+    lm355x: 2012-09-05, Cameras
+    max8997: 2011-12-14, Cameras (?)
+    lp3944: 2009-06-19, Cameras, Lights, Indicators, Toys
+    pca955x: 2008-07-16, Cameras, Indicators (?)
+V4L2 API:
+    as3645a:  2011-05-05, Cameras
+    adp1653: 2011-05-05, Cameras
+
+V4L2 provides richest functionality, but there is often demand from application
+developers to provide already established LED API.
+We would like to have an unified user interface for flash devices. Some of
+devices already have the LED API driver exposing limited set of a Flash IC
+functionality. In order to support all required features the LED API would
+have to be extended or the V4L2 API would need to be used. However when
+switching from a LED to a V4L2 Flash driver existing LED API interface would
+need to be retained.
+
+Proposed solution
+
+This patch adds V4L2 helper functions to register existing V4L2 flash subdev
+as LED class device.
+After registration via v4l2_leddev_register appropriate entry in
+/sys/class/leds/ is created.
+During registration all V4L2 flash controls are enumerated and corresponding
+attributes are added.
+
+I have attached also patch with new max77693-led driver using v4l2_leddev.
+This patch requires presence of the patch "max77693: added device tree support":
+https://patchwork.kernel.org/patch/2414351/ .
+
+Additional features
+
+- simple API to access all V4L2 flash controls via sysfs,
+- V4L2 subdevice should not be registered by V4L2 device to use it,
+- LED triggers API can be used to control the device,
+- LED device is optional - it will be created only if V4L2_LEDDEV configuration
+  option is enabled and the subdev driver calls v4l2_leddev_register.
+
+Doubts
+
+This RFC is a result of a uncertainty which API developers should expose by
+their flash drivers. It is a try to gluing together both APIs.
+I am not sure if it is the best solution, but I hope there will be some
+discussion and hopefully some decisions will be taken which way we should follow.
+
+Regards
+Andrzej Hajda
+
+Andrzej Hajda (2):
+  v4l2-leddev: added LED class support for V4L2 flash subdevices
+  media: added max77693-led driver
+
+ drivers/media/i2c/max77693-led.c      |  650 +++++++++++++++++++++++++++++++++
+ drivers/media/v4l2-core/Kconfig       |    7 +
+ drivers/media/v4l2-core/Makefile      |    1 +
+ drivers/media/v4l2-core/v4l2-leddev.c |  269 ++++++++++++++
+ include/media/v4l2-leddev.h           |   49 +++
+ 5 files changed, 976 insertions(+)
+ create mode 100644 drivers/media/i2c/max77693-led.c
+ create mode 100644 drivers/media/v4l2-core/v4l2-leddev.c
+ create mode 100644 include/media/v4l2-leddev.h
+
+-- 
+1.7.10.4
