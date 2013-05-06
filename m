@@ -1,159 +1,152 @@
 From: Thomas Gleixner <tglx@linutronix.de>
-Subject: [patch 8/8] irqchip: sun4i: Convert to generic irq chip
-Date: Mon, 06 May 2013 14:30:28 -0000
-Message-ID: <20130506142539.523110430@linutronix.de>
+Subject: [patch 4/8] genirq: generic chip: Cache per irq bit mask
+Date: Mon, 06 May 2013 14:30:22 -0000
+Message-ID: <20130506142539.227119865@linutronix.de>
 References: <20130503212258.385818955@linutronix.de>
  <20130506142348.321859745@linutronix.de>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline; filename=irqchip-convert-sun4i.patch
-Sender: linux-doc-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline; filename=genirq-generic-chip-cache-mask.patch
+Sender: linux-kernel-owner@vger.kernel.org
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Arnd Bergmann <arnd@arndb.de>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jean-Francois Moine <moinejf@free.fr>, Gerlando Falauto <gerlando.falauto@keymile.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Proof of concept patch to demonstrate the new irqdomain support for
-the generic irq chip. Untested !!
+Cache the per irq bit mask instead of recalculating it over and over.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- drivers/irqchip/irq-sun4i.c |  100 ++++++++++++--------------------------------
- 1 file changed, 29 insertions(+), 71 deletions(-)
+ include/linux/irq.h       |    4 ++++
+ kernel/irq/generic-chip.c |   23 ++++++++++++++---------
+ 2 files changed, 18 insertions(+), 9 deletions(-)
 
-Index: linux-2.6/drivers/irqchip/irq-sun4i.c
+Index: linux-2.6/include/linux/irq.h
 ===================================================================
---- linux-2.6.orig/drivers/irqchip/irq-sun4i.c
-+++ linux-2.6/drivers/irqchip/irq-sun4i.c
-@@ -32,70 +32,43 @@
- #define SUN4I_IRQ_FIQ_PENDING_REG(x)	(0x20 + 0x4 * x)
- #define SUN4I_IRQ_ENABLE_REG(x)		(0x40 + 0x4 * x)
- #define SUN4I_IRQ_MASK_REG(x)		(0x50 + 0x4 * x)
-+#define SUN4I_NUM_CHIPS			3
-+#define SUN4I_IRQS_PER_CHIP		32
+--- linux-2.6.orig/include/linux/irq.h
++++ linux-2.6/include/linux/irq.h
+@@ -119,6 +119,7 @@ struct irq_domain;
  
- static void __iomem *sun4i_irq_base;
- static struct irq_domain *sun4i_irq_domain;
+ /**
+  * struct irq_data - per irq and irq chip data passed down to chip functions
++ * @mask:		precomputed bitmask for accessing the chip registers
+  * @irq:		interrupt number
+  * @hwirq:		hardware interrupt number, local to the interrupt domain
+  * @node:		node index useful for balancing
+@@ -138,6 +139,7 @@ struct irq_domain;
+  * irq_data.
+  */
+ struct irq_data {
++	u32			mask;
+ 	unsigned int		irq;
+ 	unsigned long		hwirq;
+ 	unsigned int		node;
+@@ -705,11 +707,13 @@ struct irq_chip_generic {
+  *				irq chips which need to call irq_set_wake() on
+  *				the parent irq. Usually GPIO implementations
+  * @IRQ_GC_MASK_CACHE_PER_TYPE:	Mask cache is chip type private
++ * @IRQ_GC_NO_MASK:		Do not calculate irq_data->mask
+  */
+ enum irq_gc_flags {
+ 	IRQ_GC_INIT_MASK_CACHE		= 1 << 0,
+ 	IRQ_GC_INIT_NESTED_LOCK		= 1 << 1,
+ 	IRQ_GC_MASK_CACHE_PER_TYPE	= 1 << 2,
++	IRQ_GC_NO_MASK			= 1 << 3,
+ };
  
- static asmlinkage void __exception_irq_entry sun4i_handle_irq(struct pt_regs *regs);
- 
--void sun4i_irq_ack(struct irq_data *irqd)
-+static int __init sun4i_init_domain_chips(void)
+ /* Generic chip callback functions */
+Index: linux-2.6/kernel/irq/generic-chip.c
+===================================================================
+--- linux-2.6.orig/kernel/irq/generic-chip.c
++++ linux-2.6/kernel/irq/generic-chip.c
+@@ -35,7 +35,7 @@ void irq_gc_mask_disable_reg(struct irq_
  {
--	unsigned int irq = irqd_to_hwirq(irqd);
--	unsigned int irq_off = irq % 32;
--	int reg = irq / 32;
--	u32 val;
--
--	val = readl(sun4i_irq_base + SUN4I_IRQ_PENDING_REG(reg));
--	writel(val | (1 << irq_off),
--	       sun4i_irq_base + SUN4I_IRQ_PENDING_REG(reg));
--}
--
--static void sun4i_irq_mask(struct irq_data *irqd)
--{
--	unsigned int irq = irqd_to_hwirq(irqd);
--	unsigned int irq_off = irq % 32;
--	int reg = irq / 32;
--	u32 val;
--
--	val = readl(sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
--	writel(val & ~(1 << irq_off),
--	       sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
--}
--
--static void sun4i_irq_unmask(struct irq_data *irqd)
--{
--	unsigned int irq = irqd_to_hwirq(irqd);
--	unsigned int irq_off = irq % 32;
--	int reg = irq / 32;
--	u32 val;
--
--	val = readl(sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
--	writel(val | (1 << irq_off),
--	       sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
--}
--
--static struct irq_chip sun4i_irq_chip = {
--	.name		= "sun4i_irq",
--	.irq_ack	= sun4i_irq_ack,
--	.irq_mask	= sun4i_irq_mask,
--	.irq_unmask	= sun4i_irq_unmask,
--};
--
--static int sun4i_irq_map(struct irq_domain *d, unsigned int virq,
--			 irq_hw_number_t hw)
--{
--	irq_set_chip_and_handler(virq, &sun4i_irq_chip,
--				 handle_level_irq);
--	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
--
-+	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
-+	struct irq_chip_generic *gc;
-+	int i, ret, base = 0;
-+
-+	ret = irq_alloc_domain_generic_chips(d, SUN4I_IRQS_PER_CHIP, 1,
-+					     "sun4i_irq", handle_level_irq,
-+					     clr, 0, IRQ_GC_INIT_MASK_CACHE);
-+	if (ret)
-+		return ret;
-+
-+	for (i = 0; i < SUN4I_NUM_CHIPS; i++, base += SUN4I_IRQS_PER_CHIP) {
-+		gc = irq_get_domain_generic_chip(sun4i_irq_domain, base);
-+		gc->reg_base = sun4i_irq_base;
-+		gc->chip_types[0].regs.mask = SUN4I_IRQ_ENABLE_REG(i);
-+		gc->chip_types[0].regs.ack = SUN4I_IRQ_PENDING_REG(i);
-+		gc->chip_types[0].chip.mask = irq_gc_mask_clr_bit;
-+		gc->chip_types[0].chip.ack = irq_gc_ack_set_bit;
-+		gc->chip_types[0].chip.unmask = irq_gc_mask_set_bit;
-+
-+		/* Disable, mask and clear all pending interrupts */
-+		writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(i));
-+		writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(i));
-+		writel(0xffffffff, sun4i_irq_base + SUN4I_IRQ_PENDING_REG(i));
-+	}
- 	return 0;
- }
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+ 	struct irq_chip_type *ct = irq_data_get_chip_type(d);
+-	u32 mask = 1 << (d->irq - gc->irq_base);
++	u32 mask = d->mask;
  
--static struct irq_domain_ops sun4i_irq_ops = {
--	.map = sun4i_irq_map,
--	.xlate = irq_domain_xlate_onecell,
--};
--
- static int __init sun4i_of_init(struct device_node *node,
- 				struct device_node *parent)
+ 	irq_gc_lock(gc);
+ 	irq_reg_writel(mask, gc->reg_base + ct->regs.disable);
+@@ -54,7 +54,7 @@ void irq_gc_mask_set_bit(struct irq_data
  {
-@@ -104,21 +77,6 @@ static int __init sun4i_of_init(struct d
- 		panic("%s: unable to map IC registers\n",
- 			node->full_name);
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+ 	struct irq_chip_type *ct = irq_data_get_chip_type(d);
+-	u32 mask = 1 << (d->irq - gc->irq_base);
++	u32 mask = d->mask;
  
--	/* Disable all interrupts */
--	writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(0));
--	writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(1));
--	writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(2));
--
--	/* Mask all the interrupts */
--	writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(0));
--	writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(1));
--	writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(2));
--
--	/* Clear all the pending interrupts */
--	writel(0xffffffff, sun4i_irq_base + SUN4I_IRQ_PENDING_REG(0));
--	writel(0xffffffff, sun4i_irq_base + SUN4I_IRQ_PENDING_REG(1));
--	writel(0xffffffff, sun4i_irq_base + SUN4I_IRQ_PENDING_REG(2));
--
- 	/* Enable protection mode */
- 	writel(0x01, sun4i_irq_base + SUN4I_IRQ_PROTECTION_REG);
+ 	irq_gc_lock(gc);
+ 	*ct->mask_cache |= mask;
+@@ -73,7 +73,7 @@ void irq_gc_mask_clr_bit(struct irq_data
+ {
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+ 	struct irq_chip_type *ct = irq_data_get_chip_type(d);
+-	u32 mask = 1 << (d->irq - gc->irq_base);
++	u32 mask = d->mask;
  
-@@ -126,8 +84,8 @@ static int __init sun4i_of_init(struct d
- 	writel(0x00, sun4i_irq_base + SUN4I_IRQ_NMI_CTRL_REG);
+ 	irq_gc_lock(gc);
+ 	*ct->mask_cache &= ~mask;
+@@ -92,7 +92,7 @@ void irq_gc_unmask_enable_reg(struct irq
+ {
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+ 	struct irq_chip_type *ct = irq_data_get_chip_type(d);
+-	u32 mask = 1 << (d->irq - gc->irq_base);
++	u32 mask = d->mask;
  
- 	sun4i_irq_domain = irq_domain_add_linear(node, 3 * 32,
--						 &sun4i_irq_ops, NULL);
--	if (!sun4i_irq_domain)
-+						 &irq_generic_chip_ops, NULL);
-+	if (!sun4i_irq_domain || sun4i_init_domain_chips())
- 		panic("%s: unable to create IRQ domain\n", node->full_name);
+ 	irq_gc_lock(gc);
+ 	irq_reg_writel(mask, gc->reg_base + ct->regs.enable);
+@@ -108,7 +108,7 @@ void irq_gc_ack_set_bit(struct irq_data 
+ {
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+ 	struct irq_chip_type *ct = irq_data_get_chip_type(d);
+-	u32 mask = 1 << (d->irq - gc->irq_base);
++	u32 mask = d->mask;
  
- 	set_handle_irq(sun4i_handle_irq);
-
-
+ 	irq_gc_lock(gc);
+ 	irq_reg_writel(mask, gc->reg_base + ct->regs.ack);
+@@ -123,7 +123,7 @@ void irq_gc_ack_clr_bit(struct irq_data 
+ {
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+ 	struct irq_chip_type *ct = irq_data_get_chip_type(d);
+-	u32 mask = ~(1 << (d->irq - gc->irq_base));
++	u32 mask = ~d->mask;
+ 
+ 	irq_gc_lock(gc);
+ 	irq_reg_writel(mask, gc->reg_base + ct->regs.ack);
+@@ -138,7 +138,7 @@ void irq_gc_mask_disable_reg_and_ack(str
+ {
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+ 	struct irq_chip_type *ct = irq_data_get_chip_type(d);
+-	u32 mask = 1 << (d->irq - gc->irq_base);
++	u32 mask = d->mask;
+ 
+ 	irq_gc_lock(gc);
+ 	irq_reg_writel(mask, gc->reg_base + ct->regs.mask);
+@@ -154,7 +154,7 @@ void irq_gc_eoi(struct irq_data *d)
+ {
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+ 	struct irq_chip_type *ct = irq_data_get_chip_type(d);
+-	u32 mask = 1 << (d->irq - gc->irq_base);
++	u32 mask = d->mask;
+ 
+ 	irq_gc_lock(gc);
+ 	irq_reg_writel(mask, gc->reg_base + ct->regs.eoi);
+@@ -172,7 +172,7 @@ void irq_gc_eoi(struct irq_data *d)
+ int irq_gc_set_wake(struct irq_data *d, unsigned int on)
+ {
+ 	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+-	u32 mask = 1 << (d->irq - gc->irq_base);
++	u32 mask = d->mask;
+ 
+ 	if (!(mask & gc->wake_enabled))
+ 		return -EINVAL;
+@@ -264,6 +264,11 @@ void irq_setup_generic_chip(struct irq_c
+ 		if (flags & IRQ_GC_INIT_NESTED_LOCK)
+ 			irq_set_lockdep_class(i, &irq_nested_lock_class);
+ 
++		if (!(flags & IRQ_GC_NO_MASK)) {
++			struct irq_data *d = irq_get_irq_data(i);
++
++			d->mask = 1 << (i - gc->irq_base);
++		}
+ 		irq_set_chip_and_handler(i, &ct->chip, ct->handler);
+ 		irq_set_chip_data(i, gc);
+ 		irq_modify_status(i, clr, set);
