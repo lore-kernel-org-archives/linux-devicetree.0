@@ -1,57 +1,56 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4] extcon: Palmas Extcon Driver
-Date: Mon, 6 May 2013 15:40:10 +0100
-Message-ID: <20130506144010.GF13472@opensource.wolfsonmicro.com>
-References: <1362662506-14823-4-git-send-email-kishon@ti.com>
- <1367846225-15685-1-git-send-email-kishon@ti.com>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH RFC v3] media: i2c: mt9p031: add OF support
+Date: Mon, 6 May 2013 20:29:22 +0530
+Message-ID: <CA+V-a8vxhedos6cQbxAbMAwiXOmjrqh0TVp8Rhc_Ou4y9tSaoQ@mail.gmail.com>
+References: <1367563919-2880-1-git-send-email-prabhakar.csengg@gmail.com> <201305031634.39129.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EgVrEAR5UttbsTXg"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1367846225-15685-1-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: myungjoo.ham@samsung.com, cw00.choi@samsung.com, balbi@ti.com, ldewangan@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, gg@slimlogic.co.uk, ruchika@ti.com, tony@atomide.com, sameo@linux.intel.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <201305031634.39129.arnd@arndb.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sascha Hauer <s.hauer@pengutronix.de>
+Cc: LMML <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Hans Verkuil <hans.verkuil@cisco.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, LKML <linux-kernel@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Arnd,
 
---EgVrEAR5UttbsTXg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri, May 3, 2013 at 8:04 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Friday 03 May 2013, Prabhakar Lad wrote:
+>>
+[snip]
+>> +}
+>
+> Ok, good.
+>
+>> @@ -955,7 +998,17 @@ static int mt9p031_probe(struct i2c_client *client,
+>>         mt9p031->pdata = pdata;
+>>         mt9p031->output_control = MT9P031_OUTPUT_CONTROL_DEF;
+>>         mt9p031->mode2 = MT9P031_READ_MODE_2_ROW_BLC;
+>> -       mt9p031->model = did->driver_data;
+>> +
+>> +       if (!client->dev.of_node) {
+>> +               mt9p031->model = (enum mt9p031_model)did->driver_data;
+>> +       } else {
+>> +               const struct of_device_id *of_id;
+>> +
+>> +               of_id = of_match_device(of_match_ptr(mt9p031_of_match),
+>> +                                       &client->dev);
+>> +               if (of_id)
+>> +                       mt9p031->model = (enum mt9p031_model)of_id->data;
+>> +       }
+>>         mt9p031->reset = -1;
+>
+> Is this actually required? I thought the i2c core just compared the
+> part of the "compatible" value after the first comma to the string, so
+> "mt9p031->model = (enum mt9p031_model)did->driver_data" should work
+> in both cases.
+>
+I am OK with "mt9p031->model = (enum mt9p031_model)did->driver_data"
+but I see still few drivers doing this, I am not sure for what reason.
+If everyone is
+OK with it I can drop the above change.
 
-On Mon, May 06, 2013 at 06:47:04PM +0530, Kishon Vijay Abraham I wrote:
+Laurent, Sascha what do you suggest ?
 
-> +		if (palmas_usb->linkstat != PALMAS_USB_STATE_VBUS) {
-> +			if (palmas_usb->vbus_reg) {
-> +				ret = regulator_enable(palmas_usb->vbus_reg);
-> +				if (ret) {
-> +					dev_dbg(palmas_usb->dev,
-> +						"regulator enable failed\n");
-> +					goto ret0;
-
-This is very bad karma, why is the regulator optional?
-
---EgVrEAR5UttbsTXg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRh8DDAAoJELSic+t+oim9YbIP+QEW3AJx/61YFE4SuyeCbGOM
-Gcq5lxBXzoBFWjclWeBUIZu3jLyGGausejqUmF8PfJ/DF/f47hcc423vwyHw4618
-QoZTo+SZg+y5sr/L9Hgh4g9tI607kaFd1dZCTH8gzuTKZ474uxzQ+IlIebO9INca
-SIvzcEjO770RsF9MNM1Cr5rLLlji70GvjLtcMn+GQPo674E3+jNc4R2W4fobAGSJ
-9XB8cCMxaf4KgMgKDcUtLBTKefcRFsdvv143JW1yEzOnkw6qZLfBmabtlmzmBXZx
-C0+XkvS2uY1w1LPgv/VGK8EXubEQ+0UoKTnswJhjgvwTsRjkaXNQiH09s8/CQR/X
-G1YagjZMet4BUPH8eBKNQfpCjBKy20UxRbAHAiqv0HVu/eCkBaFpVIHRyoJFDGWl
-S1nI7EmPeC/+Y/CLwwtezVPUo2buubRZpzx5V5RK+ULMjVc6CStu9+U9NpbPmSZy
-QNi5B3tJRQOZ8YSz61QuSni11BQjkoL8d5xgdAIwMNSJA/4HQKDS6giLX0fjejI4
-JXaG2GLu9jPf/STcw4YMooqIQJwy7ew9pilg4loMVxvxAm+DghlhdqB5U7S5QkXm
-HLR96OX4Dja5zCAsaTyNvB1W58BurPOU2eY70rezEFVsFRr+A+WBlmyenR6hAxpv
-KnT6qrDgg1NJWMThe0uN
-=BZqL
------END PGP SIGNATURE-----
-
---EgVrEAR5UttbsTXg--
+Regards,
+--Prabhakar Lad
