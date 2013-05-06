@@ -1,176 +1,127 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [patch 8/8] irqchip: sun4i: Convert to generic irq chip
-Date: Mon, 06 May 2013 10:18:05 -0500
-Message-ID: <5187C9AD.3080409@gmail.com>
-References: <20130503212258.385818955@linutronix.de> <20130506142348.321859745@linutronix.de> <20130506142539.523110430@linutronix.de>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/7] mv643xx_eth: device tree bindings
+Date: Mon,  6 May 2013 17:33:33 +0200
+Message-ID: <1367854420-8006-1-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130506142539.523110430@linutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Jean-Francois Moine <moinejf@free.fr>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Gerlando Falauto <gerlando.falauto@keymile.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1365071235-11611-1-git-send-email-florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nigel Roberts <nigel-BZPLJ9//LnDby3iVrkZq2A@public.gmane.org>, Arnaud Patard <arnaud.patard-dQbF7i+pzddAfugRpC6u6w@public.gmane.org>, Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lennert Buytenhek <buytenh-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Eric Hutter <hutter.eric-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Joshua Coombs <josh.coombs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan M Butler <alanbutty12-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Willy Tarreau <w@1wt.eu>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/06/2013 09:30 AM, Thomas Gleixner wrote:
-> Proof of concept patch to demonstrate the new irqdomain support for
-> the generic irq chip. Untested !!
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-> ---
->  drivers/irqchip/irq-sun4i.c |  100 ++++++++++++--------------------------------
->  1 file changed, 29 insertions(+), 71 deletions(-)
-> 
-> Index: linux-2.6/drivers/irqchip/irq-sun4i.c
-> ===================================================================
-> --- linux-2.6.orig/drivers/irqchip/irq-sun4i.c
-> +++ linux-2.6/drivers/irqchip/irq-sun4i.c
-> @@ -32,70 +32,43 @@
->  #define SUN4I_IRQ_FIQ_PENDING_REG(x)	(0x20 + 0x4 * x)
->  #define SUN4I_IRQ_ENABLE_REG(x)		(0x40 + 0x4 * x)
->  #define SUN4I_IRQ_MASK_REG(x)		(0x50 + 0x4 * x)
-> +#define SUN4I_NUM_CHIPS			3
-> +#define SUN4I_IRQS_PER_CHIP		32
->  
->  static void __iomem *sun4i_irq_base;
->  static struct irq_domain *sun4i_irq_domain;
->  
->  static asmlinkage void __exception_irq_entry sun4i_handle_irq(struct pt_regs *regs);
->  
-> -void sun4i_irq_ack(struct irq_data *irqd)
-> +static int __init sun4i_init_domain_chips(void)
->  {
-> -	unsigned int irq = irqd_to_hwirq(irqd);
-> -	unsigned int irq_off = irq % 32;
-> -	int reg = irq / 32;
-> -	u32 val;
-> -
-> -	val = readl(sun4i_irq_base + SUN4I_IRQ_PENDING_REG(reg));
-> -	writel(val | (1 << irq_off),
-> -	       sun4i_irq_base + SUN4I_IRQ_PENDING_REG(reg));
-> -}
-> -
-> -static void sun4i_irq_mask(struct irq_data *irqd)
-> -{
-> -	unsigned int irq = irqd_to_hwirq(irqd);
-> -	unsigned int irq_off = irq % 32;
-> -	int reg = irq / 32;
-> -	u32 val;
-> -
-> -	val = readl(sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
-> -	writel(val & ~(1 << irq_off),
-> -	       sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
-> -}
-> -
-> -static void sun4i_irq_unmask(struct irq_data *irqd)
-> -{
-> -	unsigned int irq = irqd_to_hwirq(irqd);
-> -	unsigned int irq_off = irq % 32;
-> -	int reg = irq / 32;
-> -	u32 val;
-> -
-> -	val = readl(sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
-> -	writel(val | (1 << irq_off),
-> -	       sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(reg));
-> -}
-> -
-> -static struct irq_chip sun4i_irq_chip = {
-> -	.name		= "sun4i_irq",
-> -	.irq_ack	= sun4i_irq_ack,
-> -	.irq_mask	= sun4i_irq_mask,
-> -	.irq_unmask	= sun4i_irq_unmask,
-> -};
-> -
-> -static int sun4i_irq_map(struct irq_domain *d, unsigned int virq,
-> -			 irq_hw_number_t hw)
-> -{
-> -	irq_set_chip_and_handler(virq, &sun4i_irq_chip,
-> -				 handle_level_irq);
-> -	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
-> -
-> +	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
-> +	struct irq_chip_generic *gc;
-> +	int i, ret, base = 0;
-> +
-> +	ret = irq_alloc_domain_generic_chips(d, SUN4I_IRQS_PER_CHIP, 1,
+This patch set picks up work by Florian Fainelli bringing full DT
+support to mv643xx_eth and Marvell SoCs using it.
 
-1 should be SUN4I_NUM_CHIPS.
+The current patch set drops Florian's device tree conversions for
+Kirkwood, Dove, and Orion5x in favour of split patches for board
+files and board descriptor files.
 
-> +					     "sun4i_irq", handle_level_irq,
-> +					     clr, 0, IRQ_GC_INIT_MASK_CACHE);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (i = 0; i < SUN4I_NUM_CHIPS; i++, base += SUN4I_IRQS_PER_CHIP) {
-> +		gc = irq_get_domain_generic_chip(sun4i_irq_domain, base);
+Device tree conversion for Dove and Kirkwood is added. Dove has
+been fully tested, while Kirkwood is compile-tested only.
 
-Perhaps this could be an iterator macro.
+Florian Fainelli (2):
+  net: mv643xx_eth: add Device Tree bindings
+  net: mv643xx_eth: update Device Tree bindings documentation
 
-> +		gc->reg_base = sun4i_irq_base;
-> +		gc->chip_types[0].regs.mask = SUN4I_IRQ_ENABLE_REG(i);
-> +		gc->chip_types[0].regs.ack = SUN4I_IRQ_PENDING_REG(i);
-> +		gc->chip_types[0].chip.mask = irq_gc_mask_clr_bit;
-> +		gc->chip_types[0].chip.ack = irq_gc_ack_set_bit;
-> +		gc->chip_types[0].chip.unmask = irq_gc_mask_set_bit;
-> +
-> +		/* Disable, mask and clear all pending interrupts */
-> +		writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(i));
-> +		writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(i));
-> +		writel(0xffffffff, sun4i_irq_base + SUN4I_IRQ_PENDING_REG(i));
-> +	}
->  	return 0;
->  }
->  
-> -static struct irq_domain_ops sun4i_irq_ops = {
-> -	.map = sun4i_irq_map,
-> -	.xlate = irq_domain_xlate_onecell,
-> -};
-> -
->  static int __init sun4i_of_init(struct device_node *node,
->  				struct device_node *parent)
->  {
-> @@ -104,21 +77,6 @@ static int __init sun4i_of_init(struct d
->  		panic("%s: unable to map IC registers\n",
->  			node->full_name);
->  
-> -	/* Disable all interrupts */
-> -	writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(0));
-> -	writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(1));
-> -	writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(2));
-> -
-> -	/* Mask all the interrupts */
-> -	writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(0));
-> -	writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(1));
-> -	writel(0, sun4i_irq_base + SUN4I_IRQ_MASK_REG(2));
-> -
-> -	/* Clear all the pending interrupts */
-> -	writel(0xffffffff, sun4i_irq_base + SUN4I_IRQ_PENDING_REG(0));
-> -	writel(0xffffffff, sun4i_irq_base + SUN4I_IRQ_PENDING_REG(1));
-> -	writel(0xffffffff, sun4i_irq_base + SUN4I_IRQ_PENDING_REG(2));
-> -
->  	/* Enable protection mode */
->  	writel(0x01, sun4i_irq_base + SUN4I_IRQ_PROTECTION_REG);
->  
-> @@ -126,8 +84,8 @@ static int __init sun4i_of_init(struct d
->  	writel(0x00, sun4i_irq_base + SUN4I_IRQ_NMI_CTRL_REG);
->  
->  	sun4i_irq_domain = irq_domain_add_linear(node, 3 * 32,
+Sebastian Hesselbarth (5):
+  ARM: dove: remove legacy mv643xx_eth setup
+  ARM: dove: add gigabit ethernet and mvmdio device tree nodes
+  ARM: kirkwood: remove legacy mv643xx_eth board setup
+  ARM: kirkwood: add gigabit ethernet and mvmdio device tree nodes
+  ARM: kirkwood: remove legacy clk alias for mv643xx_eth
 
-s/3 * 32/SUN4I_NUM_CHIPS * SUN4I_IRQS_PER_CHIP/
-
-> -						 &sun4i_irq_ops, NULL);
-> -	if (!sun4i_irq_domain)
-> +						 &irq_generic_chip_ops, NULL);
-> +	if (!sun4i_irq_domain || sun4i_init_domain_chips())
->  		panic("%s: unable to create IRQ domain\n", node->full_name);
->  
->  	set_handle_irq(sun4i_handle_irq);
-> 
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-
+ Documentation/devicetree/bindings/marvell.txt      |   22 ++++-
+ arch/arm/boot/dts/dove-cubox.dts                   |    8 ++
+ arch/arm/boot/dts/dove.dtsi                        |   35 +++++++
+ arch/arm/boot/dts/kirkwood-cloudbox.dts            |   15 +++
+ arch/arm/boot/dts/kirkwood-dnskw.dtsi              |   15 +++
+ arch/arm/boot/dts/kirkwood-dockstar.dts            |   15 +++
+ arch/arm/boot/dts/kirkwood-dreamplug.dts           |   26 +++++
+ arch/arm/boot/dts/kirkwood-goflexnet.dts           |   15 +++
+ .../arm/boot/dts/kirkwood-guruplug-server-plus.dts |   26 +++++
+ arch/arm/boot/dts/kirkwood-ib62x0.dts              |   15 +++
+ arch/arm/boot/dts/kirkwood-iconnect.dts            |   15 +++
+ arch/arm/boot/dts/kirkwood-iomega_ix2_200.dts      |   22 ++++
+ arch/arm/boot/dts/kirkwood-is2.dts                 |    2 +
+ arch/arm/boot/dts/kirkwood-km_kirkwood.dts         |   15 +++
+ arch/arm/boot/dts/kirkwood-lsxl.dtsi               |   26 +++++
+ arch/arm/boot/dts/kirkwood-mplcec4.dts             |   25 +++++
+ .../boot/dts/kirkwood-netgear_readynas_duo_v2.dts  |   15 +++
+ arch/arm/boot/dts/kirkwood-ns2-common.dtsi         |   15 +++
+ arch/arm/boot/dts/kirkwood-ns2.dts                 |    2 +
+ arch/arm/boot/dts/kirkwood-ns2lite.dts             |    2 +
+ arch/arm/boot/dts/kirkwood-ns2max.dts              |    2 +
+ arch/arm/boot/dts/kirkwood-ns2mini.dts             |    2 +
+ arch/arm/boot/dts/kirkwood-openblocks_a6.dts       |   15 +++
+ arch/arm/boot/dts/kirkwood-topkick.dts             |   15 +++
+ arch/arm/boot/dts/kirkwood-ts219-6281.dts          |    4 +-
+ arch/arm/boot/dts/kirkwood-ts219-6282.dts          |    4 +-
+ arch/arm/boot/dts/kirkwood-ts219.dtsi              |   15 +++
+ arch/arm/boot/dts/kirkwood.dtsi                    |   52 ++++++++++
+ arch/arm/mach-dove/board-dt.c                      |    5 -
+ arch/arm/mach-kirkwood/board-dnskw.c               |    7 --
+ arch/arm/mach-kirkwood/board-dockstar.c            |    9 --
+ arch/arm/mach-kirkwood/board-dreamplug.c           |   14 ---
+ arch/arm/mach-kirkwood/board-dt.c                  |   16 ---
+ arch/arm/mach-kirkwood/board-goflexnet.c           |    9 --
+ arch/arm/mach-kirkwood/board-guruplug.c            |   14 ---
+ arch/arm/mach-kirkwood/board-ib62x0.c              |    9 --
+ arch/arm/mach-kirkwood/board-iconnect.c            |    6 -
+ arch/arm/mach-kirkwood/board-iomega_ix2_200.c      |   16 ---
+ arch/arm/mach-kirkwood/board-km_kirkwood.c         |    7 --
+ arch/arm/mach-kirkwood/board-lsxl.c                |   12 --
+ arch/arm/mach-kirkwood/board-mplcec4.c             |   11 --
+ arch/arm/mach-kirkwood/board-ns2.c                 |   13 ---
+ arch/arm/mach-kirkwood/board-openblocks_a6.c       |    9 --
+ arch/arm/mach-kirkwood/board-readynas.c            |    6 -
+ arch/arm/mach-kirkwood/board-ts219.c               |   13 ---
+ arch/arm/mach-kirkwood/board-usi_topkick.c         |    9 --
+ drivers/net/ethernet/marvell/mv643xx_eth.c         |  108 +++++++++++++++++++-
+ include/linux/mv643xx_eth.h                        |    3 +
+ 48 files changed, 544 insertions(+), 192 deletions(-)
+---
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: Lennert Buytenhek <buytenh-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>
+Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: Arnaud Patard <arnaud.patard-dQbF7i+pzddAfugRpC6u6w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
+Cc: Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>
+Cc: Michael Walle <michael-QKn5cuLxLXY@public.gmane.org>
+Cc: Eric Hutter <hutter.eric-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Joshua Coombs <josh.coombs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Willy Tarreau <w@1wt.eu>
+Cc: Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alan M Butler <alanbutty12-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Nigel Roberts <nigel-BZPLJ9//LnDby3iVrkZq2A@public.gmane.org>
+Cc: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Cc: Stefan Peter <s.peter-R0yVo0h44Ow@public.gmane.org>
+Cc: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+Cc: Nobuhiro Iwamatsu <iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+-- 
+1.7.2.5
