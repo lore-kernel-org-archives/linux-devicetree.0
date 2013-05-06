@@ -1,61 +1,138 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [RFC patch 0/8] genirq: Support for irq domains in generic irq
- chip
-Date: Mon, 6 May 2013 11:48:51 +0200
-Message-ID: <20130506094851.GI23285@pengutronix.de>
-References: <alpine.LFD.2.02.1305031514230.2886@ionos>
- <20130503212258.385818955@linutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130503212258.385818955@linutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Jean-Francois Moine <moinejf@free.fr>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Gregory Clement <gregory.clement@free-electrons.com>, Gerlando Falauto <gerlando.falauto@keymile.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [RFC patch 7/8] fixup 1/2: genirq: generic chip: Add linear irq domain support
+Date: Mon,  6 May 2013 14:32:12 +0200
+Message-ID: <1367843533-7117-1-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <20130503214629.810207749@linutronix.de>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130503214629.810207749@linutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Arnd Bergmann <arnd@arndb.de>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jean-Francois Moine <moinejf@free.fr>, Gerlando Falauto <gerlando.falauto@keymile.com>, Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+irq_domain_chip_generic is allocating and indexing irq_chip_generic
+itself. However, the size of irq_chip_generic varies with number of
+irq_chip_types. This fixup moves irq_chip_generic helt by
+irq_domain_chip_generic to array of ptr and fixes the pointer arith
+used by irq_alloc_domain_generic_chip.
 
-On Fri, May 03, 2013 at 09:50:43PM -0000, Thomas Gleixner wrote:
-> The ongoing device tree support for ARM is creating new irq chip
-> drivers in drivers/irqchip/ in a frenzy. Quite some of them are
-> ripping out the generic irq chip implementation from arch/arm/* and
-> just creating the same mess of duplicated code again, which was
-> cleaned up with the generic irq chip implementation with a lot of
-> effort. Sigh!
->=20
-> I already prodded a few people in reviews to tackle that issue with n=
-o
-> outcome. Even more sigh!
->=20
-> Poor Sebastian triggered me into rant mode, but he ad hoc
-> volunteered to give it a try. YAY!
->=20
-> Though he asked for a bit of kickstart help. So I squeezed out a few
-> spare cycles and implemented the basics as far as I think that they
-> should work.
->=20
-> The following series contains the missing bits and pieces including a
-> somehow forgotten and now slightly modified series from Gerlando
-> adding support for irq chips which need separate mask caches for
-> different chip (control flow) types.
->=20
-> At the moment this supports only linear irq domains, but it could be
-> extended to other types as well if the need arises. Though the ARM
-> chips are pretty much all about linear domains AFAICT.
-Is there a tree/set of patches that have already fixed the issues
-pointed out by Russell and Sebastian? I'd like to use it to get forward
-with my nvic patch and want to avert double work and merging different
-approaches.
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+---
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Gregory Clement <gregory.clement@free-electrons.com>
+Cc: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Jean-Francois Moine <moinejf@free.fr>
+Cc: Gerlando Falauto <gerlando.falauto@keymile.com>
+Cc: Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ include/linux/irq.h       |    4 ++--
+ kernel/irq/generic-chip.c |   20 +++++++++++++-------
+ 2 files changed, 15 insertions(+), 9 deletions(-)
 
-Best regards
-Uwe
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 7315155..fd2d7cb 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -730,7 +730,7 @@ enum irq_gc_flags {
+  * @irq_flags_to_set:	IRQ* flags to set on irq setup
+  * @irq_flags_to_clear:	IRQ* flags to clear on irq setup
+  * @gc_flags:		Generic chip specific setup flags
+- * @gc:			Array of generic interrupt chips
++ * @gc:			Array of pointer to generic interrupt chips
+  */
+ struct irq_domain_chip_generic {
+ 	unsigned int		irqs_per_chip;
+@@ -738,7 +738,7 @@ struct irq_domain_chip_generic {
+ 	unsigned int		irq_flags_to_clear;
+ 	unsigned int		irq_flags_to_set;
+ 	enum irq_gc_flags	gc_flags;
+-	struct irq_chip_generic	gc[0];
++	struct irq_chip_generic	*gc[0];
+ };
+ 
+ /* Generic chip callback functions */
+diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
+index e212b26..3dbfe2e 100644
+--- a/kernel/irq/generic-chip.c
++++ b/kernel/irq/generic-chip.c
+@@ -247,6 +247,7 @@ int irq_alloc_domain_generic_chips(struct irq_domain *d, int irqs_per_chip,
+ 	struct irq_chip_generic *gc;
+ 	int numchips, sz, i;
+ 	unsigned long flags;
++	void *p;
+ 
+ 	if (d->gc)
+ 		return -EBUSY;
+@@ -260,9 +261,9 @@ int irq_alloc_domain_generic_chips(struct irq_domain *d, int irqs_per_chip,
+ 
+ 	sz = sizeof(*gc) + num_ct * sizeof(struct irq_chip_type);
+ 	sz *= numchips;
+-	sz += sizeof(*dgc);
++	sz += sizeof(*dgc) + numchips * sizeof(void *);
+ 
+-	dgc = kzalloc(sz, GFP_KERNEL);
++	p = dgc = kzalloc(sz, GFP_KERNEL);
+ 	if (!dgc)
+ 		return -ENOMEM;
+ 	dgc->irqs_per_chip = irqs_per_chip;
+@@ -270,17 +271,22 @@ int irq_alloc_domain_generic_chips(struct irq_domain *d, int irqs_per_chip,
+ 	dgc->irq_flags_to_set = set;
+ 	dgc->irq_flags_to_clear = clr;
+ 	dgc->gc_flags = gcflags;
+-	gc = dgc->gc;
++	d->gc = dgc;
+ 
+-	for (i = 0; i < numchips; i++, gc++) {
++	p += sizeof(*dgc) + numchips * sizeof(void *);
++	for (i = 0; i < numchips; i++) {
++		gc = (struct irq_chip_generic *)p;
++		dgc->gc[i] = gc;
+ 		irq_init_generic_chip(gc, name, num_ct, i * irqs_per_chip,
+ 				      NULL, handler);
+ 		gc->domain = d;
++
+ 		raw_spin_lock_irqsave(&gc_lock, flags);
+ 		list_add_tail(&gc->list, &gc_list);
+ 		raw_spin_unlock_irqrestore(&gc_lock, flags);
++
++		p += sizeof(*gc) + num_ct * sizeof(struct irq_chip_type);
+ 	}
+-	d->gc = dgc;
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(irq_alloc_domain_generic_chips);
+@@ -301,7 +307,7 @@ irq_get_domain_generic_chip(struct irq_domain *d, unsigned int hw_irq)
+ 	idx = hw_irq / dgc->irqs_per_chip;
+ 	if (idx >= dgc->num_chips)
+ 		return NULL;
+-	return &dgc->gc[idx];
++	return dgc->gc[idx];
+ }
+ EXPORT_SYMBOL_GPL(irq_get_domain_generic_chip);
+ 
+@@ -331,7 +337,7 @@ static int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
+ 	idx = hw_irq / dgc->irqs_per_chip;
+ 	if (idx >= dgc->num_chips)
+ 		return -EINVAL;
+-	gc = &dgc->gc[idx];
++	gc = dgc->gc[idx];
+ 
+ 	idx = hw_irq % dgc->irqs_per_chip;
+ 
+-- 
+1.7.2.5
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
