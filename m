@@ -1,107 +1,50 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/7] mv643xx_eth: device tree bindings
-Date: Mon, 06 May 2013 18:21:54 +0200
-Message-ID: <5187D8A2.5060604@gmail.com>
-References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
- <1367854420-8006-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <20130506160743.GV31290@titan.lakedaemon.net>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: [RESEND][PATCH 3/3] arm: add bandgap entry for OMAP4460 devices
+Date: Mon, 6 May 2013 17:00:58 -0400
+Message-ID: <1367874058-2378-4-git-send-email-eduardo.valentin@ti.com>
+References: <1367874058-2378-1-git-send-email-eduardo.valentin@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130506160743.GV31290-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jamie Lentin <jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nigel Roberts <nigel-BZPLJ9//LnDby3iVrkZq2A@public.gmane.org>, Arnaud Patard <arnaud.patard-dQbF7i+pzddAfugRpC6u6w@public.gmane.org>, Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lennert Buytenhek <buytenh-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Eric Hutter <hutter.eric-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Joshua Coombs <josh.coombs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan M Butler <alanbutty12-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Willy Tarreau <w@1wt.eu>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Stefan Peter <s.peter-R0yVo0h44Ow@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1367874058-2378-1-git-send-email-eduardo.valentin@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com
+Cc: linux-omap@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/06/13 18:07, Jason Cooper wrote:
-> Sebastian,
->
-> Thanks for picking this up!  A few comments about merging strategy:
->
-> On Mon, May 06, 2013 at 05:33:33PM +0200, Sebastian Hesselbarth wrote:
->> This patch set picks up work by Florian Fainelli bringing full DT
->> support to mv643xx_eth and Marvell SoCs using it.
->>
->> The current patch set drops Florian's device tree conversions for
->> Kirkwood, Dove, and Orion5x in favour of split patches for board
->> files and board descriptor files.
->>
->> Device tree conversion for Dove and Kirkwood is added. Dove has
->> been fully tested, while Kirkwood is compile-tested only.
->>
->> Florian Fainelli (2):
->>    net: mv643xx_eth: add Device Tree bindings
->>    net: mv643xx_eth: update Device Tree bindings documentation
->
-> Obviously, these will go through -net once the submission window opens.
->
->> Sebastian Hesselbarth (5):
-> (reordered for clarity)
->
->>    ARM: dove: remove legacy mv643xx_eth setup
->>    ARM: kirkwood: remove legacy mv643xx_eth board setup
->>    ARM: kirkwood: remove legacy clk alias for mv643xx_eth
->
-> mvebu/boards or /soc.
->
->>    ARM: kirkwood: add gigabit ethernet and mvmdio device tree nodes
->>    ARM: dove: add gigabit ethernet and mvmdio device tree nodes
->
-> mvebu/dt
->
->
-> mvebu/dt and -net are fine.  They have no dependencies.  The problem is
-> mvebu/boards.  To boot with networking, it needs -net *and* mvebu/dt.
-> Otherwise, the board needs to do legacy init.
->
-> I'd like to attempt to remove this dependency-hell with code.  eg some
-> quick pseudo-code:
->
-> 	if (!dt_node_present("marvell,mv643xx_eth") ||
-> 	    !mvebu_dt_bindings_present())
-> 		kirkwood_ge00_init();
->
-> The advantages of figuring this out are:
->   - *no* branch dependencies
->   - whole conversion done in one merge window
->
-> The drawbacks:
->   - need to remember to do a follow-on patch if all branches are
->     successfuly merged, removing the unneeded logic (after -rc1)
->   - considered churn?
->
-> The easy answer is to merge mvebu/dt, and -net, wait one cycle, and
-> merge the board stuff as you have it now (with Thomas' comment).
->
-> If we can figure this out, I'd like to do the same for the kirkwood-pcie
-> series.
+Include bandgap devices for OMAP4460 devices.
 
-Jason,
+Cc: "Beno=C3=AEt Cousson" <b-cousson@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: linux-omap@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+---
+ arch/arm/boot/dts/omap4460.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-I suggest to take the "easy answer", i.e. merge mvebu/dt and -net and
-take all board merges one cycle later.
-
-Waiting for -net will stall irqchip but will give us enough time to
-add DT timer and get rid of any legacy init code introduced for irqchip.
-Also orion5x and mv78x00 can be added to mv643xx_eth conversion.
-
-I am preparing empty board files removal as Thomas suggested.
-
-Sebastian
-
-P.S.: I was hoping that adding all people scripts/get_maintainers.pl
-throws out, will notice all kirkwood board users ever committed to
-mainline kernel. But as David Miller pointed out, it will not go through
-SPAM filters that way. So have an eye open for v4 on mailing lists as
-soon as -net merge window re-opens.
+diff --git a/arch/arm/boot/dts/omap4460.dtsi b/arch/arm/boot/dts/omap44=
+60.dtsi
+index 7c2c23c..3808b5c 100644
+--- a/arch/arm/boot/dts/omap4460.dtsi
++++ b/arch/arm/boot/dts/omap4460.dtsi
+@@ -29,4 +29,13 @@
+ 			     <0 55 0x4>;
+ 		ti,hwmods =3D "debugss";
+ 	};
++
++	bandgap {
++		reg =3D <0x4a002260 0x4
++			0x4a00232C 0x4
++			0x4a002378 0x18>;
++		compatible =3D "ti,omap4460-bandgap";
++		interrupts =3D <0 126 4>; /* talert */
++		ti,tshut-gpio =3D <86>;
++	};
+ };
+--=20
+1.8.2.1.342.gfa7285d
