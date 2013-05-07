@@ -1,49 +1,36 @@
-From: Haojian Zhuang <haojian.zhuang@linaro.org>
-Subject: Re: [PATCH] pinctrl: single: fix error return code in pcs_parse_one_pinctrl_entry()
-Date: Tue, 7 May 2013 20:11:13 +0800
-Message-ID: <CAD6h2NQRqcZ7RW=cCcATD2g3Vi0nszYnjppsX-VQmQgT1se+3w@mail.gmail.com>
-References: <CAPgLHd-av2Yg44ARcSGr_zOajO-U611y3N4_Sn7J5Z+=OfVFcg@mail.gmail.com>
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Subject: [PATCH] net/spider_net: fix error return code in spider_net_open()
+Date: Tue, 7 May 2013 20:16:00 +0800
+Message-ID: <CAPgLHd9kSJdv+gdKr6OBcG2h0RmjnWFscELHGEPQwT1kbD5FSQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPgLHd-av2Yg44ARcSGr_zOajO-U611y3N4_Sn7J5Z+=OfVFcg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, grant.likely@linaro.org, Rob Herring <rob.herring@calxeda.com>, yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: kou.ishizaki@toshiba.co.jp, jens@de.ibm.com, grant.likely@linaro.org, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 7 May 2013 20:06, Wei Yongjun <weiyj.lk@gmail.com> wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->
-> Fix to return a negative error code from the error handling
-> case instead of 0, as done elsewhere in this function.
->
-> Introduced by commit 9dddb4df90d136429b6d6ddefceb49a9b93f6cd1
-> (pinctrl: single: support generic pinconf)
->
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
-> ---
->  drivers/pinctrl/pinctrl-single.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-> index 5f2d2bf..b9fa046 100644
-> --- a/drivers/pinctrl/pinctrl-single.c
-> +++ b/drivers/pinctrl/pinctrl-single.c
-> @@ -1166,7 +1166,8 @@ static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
->         (*map)->data.mux.function = np->name;
->
->         if (pcs->is_pinconf) {
-> -               if (pcs_parse_pinconf(pcs, np, function, map))
-> +               res = pcs_parse_pinconf(pcs, np, function, map);
-> +               if (res)
->                         goto free_pingroups;
->                 *num_maps = 2;
->         } else {
->
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-It seems that you don't change anything. pcs_parse_pinconf() returns
-either 0 or negative value.
+Fix to return a negative error code from the error handling
+case instead of 0, as done elsewhere in this function.
 
-If it returns negative value, it will goto free_pingroups label w/wo
-your change. So I don't understand why your change is necessary.
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+---
+ drivers/net/ethernet/toshiba/spider_net.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/toshiba/spider_net.c b/drivers/net/ethernet/toshiba/spider_net.c
+index c655fe6..5734480 100644
+--- a/drivers/net/ethernet/toshiba/spider_net.c
++++ b/drivers/net/ethernet/toshiba/spider_net.c
+@@ -1990,7 +1990,8 @@ spider_net_open(struct net_device *netdev)
+ 		goto alloc_rx_failed;
+ 
+ 	/* Allocate rx skbs */
+-	if (spider_net_alloc_rx_skbs(card))
++	result = spider_net_alloc_rx_skbs(card);
++	if (result)
+ 		goto alloc_skbs_failed;
+ 
+ 	spider_net_set_multi(netdev);
