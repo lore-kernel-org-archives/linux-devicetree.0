@@ -1,41 +1,81 @@
 From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 0/2 V2] iio: magnetometer: ak8975: Add support for DT and
- interrupt handling
-Date: Tue, 07 May 2013 12:41:37 +0200
-Message-ID: <1367923299-30594-1-git-send-email-j.anaszewski@samsung.com>
+Subject: [PATCH 1/2 V2] iio:ak8975 Add support for gpios DT property
+Date: Tue, 07 May 2013 12:41:38 +0200
+Message-ID: <1367923299-30594-2-git-send-email-j.anaszewski@samsung.com>
+References: <1367923299-30594-1-git-send-email-j.anaszewski@samsung.com>
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1367923299-30594-1-git-send-email-j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, achew-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, achew-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-These patches add 'data ready' interrupt handling for AK8975
-magnetometer, so as to provide more efficient alternative of
-waiting for the end of conversion. This short series adds also
-support for parsing 'gpios' property when initializing from oftree.
+Add support for parsing 'gpios' property when initializing
+from oftree.
+This patch adds also the binding documentation file.
 
-This is a follow-up of the previous patchset and it includes
-following improvements:
-
-- replaced NULL with 'data' in the second argument of the free_irq calls,
-  which fixes problem on the module removal
-- changed the order of checking for the platform_data and added
-  checking for the -EPROBE_DEFER as spotted by Lars-Peter Clausen
-- moved ak8975.txt out of staging as spotted by Jonathan Cameron
-- modified header description in ak8975.txt
-- renamed '0C' to '0c' in the examplary device node in ak8975.txt
-
-Thanks,
-Jacek Anaszewski
-
-Jacek Anaszewski (2):
-  iio:ak8975 Add support for gpios DT property
-  iio:ak8975 Implement data ready interrupt handling
-
- .../bindings/iio/magnetometer/ak8975.txt           |   18 ++++
- drivers/iio/magnetometer/ak8975.c                  |  103 +++++++++++++++++++-
- 2 files changed, 116 insertions(+), 5 deletions(-)
+Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ .../bindings/iio/magnetometer/ak8975.txt           |   18 ++++++++++++++++++
+ drivers/iio/magnetometer/ak8975.c                  |   12 +++++++++---
+ 2 files changed, 27 insertions(+), 3 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
 
+diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+new file mode 100644
+index 0000000..011679f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+@@ -0,0 +1,18 @@
++* AsahiKASEI AK8975 magnetometer sensor
++
++Required properties:
++
++  - compatible : should be "asahi-kasei,ak8975"
++  - reg : the I2C address of the magnetometer
++
++Optional properties:
++
++  - gpios : should be device tree identifier of the magnetometer DRDY pin
++
++Example:
++
++ak8975@0c {
++        compatible = "asahi-kasei,ak8975";
++        reg = <0x0c>;
++        gpios = <&gpj0 7 0>;
++};
+diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
+index af6c320..d75cc23 100644
+--- a/drivers/iio/magnetometer/ak8975.c
++++ b/drivers/iio/magnetometer/ak8975.c
+@@ -29,6 +29,7 @@
+ #include <linux/delay.h>
+ 
+ #include <linux/gpio.h>
++#include <linux/of_gpio.h>
+ 
+ #include <linux/iio/iio.h>
+ #include <linux/iio/sysfs.h>
+@@ -384,10 +385,15 @@ static int ak8975_probe(struct i2c_client *client,
+ 	int err;
+ 
+ 	/* Grab and set up the supplied GPIO. */
+-	if (client->dev.platform_data == NULL)
+-		eoc_gpio = -1;
+-	else
++	if (client->dev.platform_data)
+ 		eoc_gpio = *(int *)(client->dev.platform_data);
++	else if (client->dev.of_node)
++		eoc_gpio = of_get_gpio(client->dev.of_node, 0);
++	else
++		eoc_gpio = -1;
++
++	if (eoc_gpio == -EPROBE_DEFER)
++		return -EPROBE_DEFER;
+ 
+ 	/* We may not have a GPIO based IRQ to scan, that is fine, we will
+ 	   poll if so */
 -- 
 1.7.5.4
