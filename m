@@ -1,353 +1,105 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH v2] drivers: bus: add ARM CCI support
-Date: Tue, 7 May 2013 14:49:44 +0100
-Message-ID: <20130507134943.GB19477@e102568-lin.cambridge.arm.com>
-References: <1367425108-4698-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1367425108-4698-2-git-send-email-lorenzo.pieralisi@arm.com>
- <alpine.LFD.2.03.1305011239240.11070@syhkavp.arg>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC 0/2] V4L2 API for exposing flash subdevs as LED class device
+Date: Tue, 07 May 2013 17:07:20 +0200
+Message-ID: <1958801.k4UEk5OhXt@avalon>
+References: <1367832828-30771-1-git-send-email-a.hajda@samsung.com> <A874F61F95741C4A9BA573A70FE3998F82E5C879@DQHE06.ent.ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.03.1305011239240.11070-hIgblCxmbi8OMTOF05IoTw@public.gmane.org>
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javi Merino <Javi.Merino-5wv7dgnIgG8@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <A874F61F95741C4A9BA573A70FE3998F82E5C879@DQHE06.ent.ti.com>
+Sender: linux-media-owner@vger.kernel.org
+To: "Kim, Milo" <Milo.Kim@ti.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Kyungmin Park <kyungmin.park@samsung.com>, "hj210.choi@samsung.com" <hj210.choi@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 06, 2013 at 04:05:28PM +0100, Nicolas Pitre wrote:
-> Review comments below.
-
-Thanks Nico.
-
-> On Wed, 1 May 2013, Lorenzo Pieralisi wrote:
+On Tuesday 07 May 2013 02:11:27 Kim, Milo wrote:
+> On Monday, May 06, 2013 6:34 PM Andrzej Hajda wrote:
+> > 
+> > This RFC proposes generic API for exposing flash subdevices via LED
+> > framework.
+> > 
+> > Rationale
+> > 
+> > Currently there are two frameworks which are used for exposing LED
+> > flash to user space:
+> > - V4L2 flash controls,
+> > - LED framework(with custom sysfs attributes).
+> > 
+> > The list below shows flash drivers in mainline kernel with initial
+> > commit date and typical chip application (according to producer):
+> > 
+> > LED API:
+> >     lm3642: 2012-09-12, Cameras
+> >     lm355x: 2012-09-05, Cameras
+> >     max8997: 2011-12-14, Cameras (?)
+> >     lp3944: 2009-06-19, Cameras, Lights, Indicators, Toys
+> >     pca955x: 2008-07-16, Cameras, Indicators (?)
+> > 
+> > V4L2 API:
+> >     as3645a:  2011-05-05, Cameras
+> >     adp1653: 2011-05-05, Cameras
+> > 
+> > V4L2 provides richest functionality, but there is often demand from
+> > application developers to provide already established LED API. We would
+> > like to have an unified user interface for flash devices. Some of devices
+> > already have the LED API driver exposing limited set of a Flash IC
+> > functionality. In order to support all required features the LED API
+> > would have to be extended or the V4L2 API would need to be used. However
+> > when switching from a LED to a V4L2 Flash driver existing LED API
+> > interface would need to be retained.
+> > 
+> > Proposed solution
+> > 
+> > This patch adds V4L2 helper functions to register existing V4L2 flash
+> > subdev as LED class device. After registration via v4l2_leddev_register
+> > appropriate entry in /sys/class/leds/ is created. During registration all
+> > V4L2 flash controls are enumerated and corresponding attributes are added.
+> > 
+> > I have attached also patch with new max77693-led driver using v4l2_leddev.
+> > This patch requires presence of the patch "max77693: added device tree
+> > support": https://patchwork.kernel.org/patch/2414351/ .
+> > 
+> > Additional features
+> > 
+> > - simple API to access all V4L2 flash controls via sysfs,
+> > - V4L2 subdevice should not be registered by V4L2 device to use it,
+> > - LED triggers API can be used to control the device,
+> > - LED device is optional - it will be created only if V4L2_LEDDEV
+> >   configuration option is enabled and the subdev driver calls
+> >   v4l2_leddev_register.
+> > 
+> > Doubts
+> > 
+> > This RFC is a result of a uncertainty which API developers should expose
+> > by their flash drivers. It is a try to gluing together both APIs. I am not
+> > sure if it is the best solution, but I hope there will be some discussion
+> > and hopefully some decisions will be taken which way we should follow.
 > 
-> > index 0000000..fb9e8e0
-> > --- /dev/null
-> > +++ b/drivers/bus/arm-cci.c
-> > @@ -0,0 +1,372 @@
-> > +/*
-> > + * CCI cache coherent interconnect driver
-> > + *
-> > + * Copyright (C) 2013 ARM Ltd.
-> > + * Author: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> > + * kind, whether express or implied; without even the implied warranty
-> > + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + */
-> > +
-> > +#include <linux/arm-cci.h>
-> > +#include <linux/device.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_device.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/slab.h>
-> > +
-> > +#include <asm/cacheflush.h>
-> > +#include <asm/dt_affinity.h>
-> > +#include <asm/outercache.h>
+> The LED subsystem provides similar APIs for the Camera driver.
+> With LED trigger event, flash and torch are enabled/disabled.
+> I'm not sure this is applicable for you.
+> Could you take a look at LED camera trigger feature?
 > 
-> You don't need this include anymore.
-
-True.
-
-> > +#include <asm/smp_plat.h>
-> > +
-> > +#define DRIVER_NAME          "CCI"
-> > +
-> > +#define CCI_PORT_CTRL                0x0
-> > +#define CCI_CTRL_STATUS              0xc
-> > +
-> > +#define CCI_ENABLE_SNOOP_REQ 0x1
-> > +#define CCI_ENABLE_DVM_REQ   0x2
-> > +#define CCI_ENABLE_REQ               (CCI_ENABLE_SNOOP_REQ | CCI_ENABLE_DVM_REQ)
-> > +
-> > +struct cci_nb_ports {
-> > +     unsigned int nb_ace;
-> > +     unsigned int nb_ace_lite;
-> > +};
-> > +
-> > +enum cci_ace_port_type {
-> > +     ACE_INVALID_PORT = 0x0,
-> > +     ACE_PORT,
-> > +     ACE_LITE_PORT,
-> > +};
-> > +
-> > +struct cci_ace_port {
-> > +     void __iomem *base;
-> > +     int type;
+> For the camera LED trigger,
+> https://git.kernel.org/cgit/linux/kernel/git/cooloney/linux-leds.git/commit/
+> ?h=f or-next&id=48a1d032c954b9b06c3adbf35ef4735dd70ab757
 > 
-> You could use: enum cci_ace_port_type type;
+> Example of camera flash driver,
+> https://git.kernel.org/cgit/linux/kernel/git/cooloney/linux-leds.git/commit/
+> ?h=f or-next&id=313bf0b1a0eaeaac17ea8c4b748f16e28fce8b7a
 
-Ok.
+I think we should decide on one API. Implementing two APIs for a single device 
+is usually messy, and will result in different feature sets (and different 
+bugs) being implemented through each API, depending on the driver. 
+Interactions between the APIs are also a pain point on the kernel side to 
+properly synchronize calls.
 
-[...]
+The LED API is too limited for torch and flash usage, but I'm definitely open 
+to moving flash devices to the LED API is we can extend it in a way that it 
+covers all the use cases.
 
-> > + * Disabling a CCI port for a CPU implies disabling the CCI port
-> > + * controlling that CPU cluster. Code disabling CPU CCI ports
-> > + * must make sure that the CPU running the code is the last active CPU
-> > + * in the cluster ie all other CPUs are quiescent in a low power state.
-> > + */
-> > +int notrace cci_disable_port_by_cpu(u64 mpidr)
-> > +{
-> > +     int cpu = get_logical_index(mpidr & MPIDR_HWID_BITMASK);
-> 
-> This is dangerous.  Same reasoning for not using cpu_relax() above
-> should apply here too.  Better avoid any external calls and cache things
-> locally by marking cpu_port[] entries with MPIDR values directly.
+-- 
+Regards,
 
-Ok, I will stash them at boot.
-
-> Furthermore, get_logical_index() might not be reliable when the cache or
-> local coherency is off.  We'd have to flush all the data it might access
-> to RAM just like it is done for our very own data structures in this
-> code, but starting doing that outside of this driver would become rather
-> ugly.
-
-That's correct.
-
-> > +     if (cpu < 0 || cpu_port[cpu] == INVALID_PORT_IDX)
-> > +             return -ENODEV;
-> > +     cci_port_control(cpu_port[cpu], false);
-> > +     return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(cci_disable_port_by_cpu);
-> > +
-> > +/*
-> > + * __cci_control_port_by_device()
-> > + *   @dn = device node pointer of the device whose CCI port should be
-> > + *         controlled
-> > + *   @enable = if true enables the port, if false disables it
-> > + *   Returns:
-> > + *           0 on success
-> > + *           -ENODEV on port look-up failure
-> > + */
-> > +int notrace __cci_control_port_by_device(struct device_node *dn, bool enable)
-> > +{
-> > +     int port;
-> > +
-> > +     if (!dn)
-> > +             return -ENODEV;
-> > +
-> > +     port = __cci_ace_get_port(dn, ACE_LITE_PORT);
-> > +     if (WARN_ONCE(port < 0, "node %s ACE lite port look-up failure\n",
-> > +                             dn->full_name))
-> > +             return -ENODEV;
-> > +     cci_port_control(port, enable);
-> > +     return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(__cci_control_port_by_device);
-> > +
-> > +/*
-> > + * __cci_control_port_by_index()
-> > + *   @port = port index previously retrieved with cci_ace_get_port()
-> > + *   @enable = if true enables the port, if false disables it
-> > + *   Returns:
-> > + *           0 on success
-> > + *           -ENODEV on port index out of range
-> > + *           -EPERM if operation carried out on an ACE PORT
-> > + */
-> > +int notrace __cci_control_port_by_index(u32 port, bool enable)
-> > +{
-> > +     if (port >= nb_cci_ports || ports[port].type == ACE_INVALID_PORT)
-> > +             return -ENODEV;
-> > +     /*
-> > +      * CCI control for ports connected to CPUS is extremely fragile
-> > +      * and must be made to go through a specific and controlled
-> > +      * interface (ie cci_disable_port_by_cpu(); control by general purpose
-> > +      * indexing is therefore disabled for ACE ports.
-> > +      */
-> > +     if (ports[port].type == ACE_PORT)
-> > +             return -EPERM;
-> > +
-> > +     cci_port_control(port, enable);
-> > +     return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(__cci_control_port_by_index);
-> > +
-> > +static const struct cci_nb_ports cci400_ports = {
-> > +     .nb_ace = 2,
-> > +     .nb_ace_lite = 3
-> > +};
-> > +
-> > +static const struct of_device_id arm_cci_matches[] = {
-> > +     {.compatible = "arm,cci-400", .data = &cci400_ports },
-> > +     {},
-> > +};
-> > +
-> > +static int __init cci_driver_probe(struct platform_device *pdev)
-> > +{
-> > +     const struct of_device_id *match;
-> > +     struct cci_nb_ports const *cci_config;
-> > +     int ret, i, nb_ace = 0, nb_ace_lite = 0;
-> > +     struct device_node *np, *cp;
-> > +     const char *match_str;
-> > +     struct resource *res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +
-> > +     match = of_match_device(arm_cci_matches, &pdev->dev);
-> > +
-> > +     if (!match)
-> > +             return -ENODEV;
-> > +
-> > +     cci_config = (struct cci_nb_ports const *)match->data;
-> > +     nb_cci_ports = cci_config->nb_ace + cci_config->nb_ace_lite;
-> > +     ports = kcalloc(sizeof(*ports), nb_cci_ports, GFP_KERNEL);
-> > +     if (!ports)
-> > +             return -ENOMEM;
-> > +
-> > +     np = pdev->dev.of_node;
-> > +
-> > +     cci_ctrl_base = devm_request_and_ioremap(&pdev->dev, res);
-> > +
-> > +     if (!cci_ctrl_base) {
-> > +             dev_err(&pdev->dev, "unable to ioremap CCI ctrl\n");
-> > +             ret = -ENXIO;
-> > +             goto memalloc_err;
-> > +     }
-> > +
-> > +     for_each_child_of_node(np, cp) {
-> > +             i = nb_ace + nb_ace_lite;
-> > +
-> > +             if (i >= nb_cci_ports)
-> > +                     break;
-> > +
-> > +             if (of_property_read_string(cp, "interface-type",
-> > +                                         &match_str)) {
-> > +                     dev_err(&pdev->dev, "node %s missing interface-type property\n",
-> > +                               cp->full_name);
-> > +                     continue;
-> > +             }
-> > +
-> > +             if (strcmp(match_str, "ace")
-> > +                             && strcmp(match_str, "ace-lite")) {
-> > +                     dev_err(&pdev->dev, "node %s containing invalid interface-type property, skipping it\n",
-> > +                                     cp->full_name);
-> > +                     continue;
-> > +             }
-> > +
-> > +             if (of_address_to_resource(cp, 0, res)) {
-> > +                     dev_err(&pdev->dev, "node %s failure in retrieving resources\n",
-> > +                             cp->full_name);
-> > +                     continue;
-> > +             }
-> > +
-> > +             ports[i].base = devm_request_and_ioremap(&pdev->dev, res);
-> > +
-> > +             if (!ports[i].base) {
-> > +                     dev_err(&pdev->dev, "unable to ioremap CCI port %d\n",
-> > +                                         i);
-> > +                     continue;
-> > +             }
-> > +
-> > +             if (!strcmp(match_str, "ace")) {
-> > +                     if (WARN_ON(nb_ace >= cci_config->nb_ace))
-> > +                             continue;
-> > +                     ports[i].type = ACE_PORT;
-> > +                     ++nb_ace;
-> > +             } else if (!strcmp(match_str, "ace-lite")) {
-> > +                     if (WARN_ON(nb_ace_lite >= cci_config->nb_ace_lite))
-> > +                             continue;
-> > +                     ports[i].type = ACE_LITE_PORT;
-> > +                     ++nb_ace_lite;
-> > +             }
-> > +             ports[i].dn = cp;
-> > +     }
-> > +      /* initialize a stashed array of ACE ports to speed-up look-up */
-> > +     cci_ace_init_ports();
-> > +
-> > +     /*
-> > +      * Multi-cluster systems may need this data when non-coherent, during
-> > +      * cluster power-up/power-down. Make sure it reaches main memory.
-> > +      */
-> > +     sync_cache_w(&cci_ctrl_base);
-> > +     __sync_cache_range_w(ports, sizeof(*ports) * nb_cci_ports);
-> 
-> This is not enough to flush the cache for the memory referenced by the
-> ports pointer.  The pointer value itself has to be flushed to RAM as
-> well.
-
-Gah, you are right.
-
-> > +     __sync_cache_range_w(cpu_port, sizeof cpu_port);
-> 
-> You might be able to use sync_cache_w(&cpu_port) here instead given it
-> is a fixed size array object.
-
-Yes.
-
-> > +     dev_info(&pdev->dev, "ARM CCI driver probed\n");
-> > +     return 0;
-> > +
-> > +memalloc_err:
-> > +
-> > +     kfree(ports);
-> > +     return ret;
-> > +}
-> > +
-> > +static struct platform_driver cci_platform_driver = {
-> > +     .driver = {
-> > +                .owner = THIS_MODULE,
-> > +                .name = DRIVER_NAME,
-> > +                .of_match_table = arm_cci_matches,
-> > +     },
-> > +};
-> > +/*
-> > + * CCI is inherently a non-hotpluggable device, since it represents
-> > + * the CPUs access point to the interconnect system.
-> > + */
-> > +static int __init cci_init(void)
-> > +{
-> > +     return platform_driver_probe(&cci_platform_driver, cci_driver_probe);
-> > +}
-> > +
-> > +module_init(cci_init);
-> 
-> When compiled in, module_init() is translated into device_initcall().
-> This is way too late for bringing up secondary CPUs during boot via the
-> MCPM layer.  That is not an issue as far as the code presented here is
-> concerned since there is no integration with MCPM yet, but eventually
-> we'd want the MCPM power_up_setup method to integrate with the port
-> discovery performed here instead of having them hardcoded in the
-> assembly code.  This means it would have to become early_initcall()
-> instead.  And at that point the driver infrastructure isn't fully
-> operational, meaning that driver_probe() won't be usable either (looking
-> at what we did to the TC2 spc init code is a good example of what I mean
-> here).
-
-Yes, I thought about that. This means that CCI driver should not rely on
-platform device structs, and yes I can mirror SPC probing code to take care
-of ordering issues. I am quite tempted to remove the platform device/driver
-infrastructure altogether and just rely on the DT layer (as GIC, PL310
-do) to initialize CCI. What do you think ? I think I will leave the
-platform driver infrastructure, and at probe it will check if data
-structures have already been initialized by an exported function, say:
-
-cci_of_init()
-
-if the data structures are already initialized basically the probe
-function will do precious little and just succeeds otherwise it will
-initialize the driver as it does now.
-
-Is there really a point in having the CCI driver represented as a
-platform driver ? Not sure at all.
-
-Thanks,
-Lorenzo
+Laurent Pinchart
