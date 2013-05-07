@@ -1,72 +1,379 @@
-From: Olav Haugan <ohaugan@codeaurora.org>
-Subject: Re: [PATCH] documentation: iommu: add description of ARM System MMU
- binding
-Date: Tue, 07 May 2013 13:26:02 -0700
-Message-ID: <5189635A.8090504@codeaurora.org>
-References: <1365094259-24847-1-git-send-email-will.deacon@arm.com> <515F37C1.4000109@codeaurora.org> <20130408092535.GA17476@mudshark.cambridge.arm.com> <5162F87A.7070409@codeaurora.org> <20130410173732.GQ26992@mudshark.cambridge.arm.com> <5169C7D1.8070300@codeaurora.org> <20130415131341.GG9827@mudshark.cambridge.arm.com> <516D9602.2010404@codeaurora.org> <20130418190131.GA12344@mudshark.cambridge.arm.com> <5177113D.7060300@codeaurora.org> <20130424095501.GC21850@mudshark.cambridge.arm.com>
+From: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
+Date: Tue, 7 May 2013 14:33:38 -0700
+Message-ID: <20130507143338.79b3d893fcdc3bd79fbe9a57@linux-foundation.org>
+References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
+ <201304300004.20320.arnd@arndb.de> <5182AF83.4080705@wwwdotorg.org>
+ <1956593.M6NmITdEKh@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20130424095501.GC21850@mudshark.cambridge.arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Andreas Herrmann <andreas.herrmann@calxeda.com>, "tzeng@codeaurora.org" <tzeng@codeaurora.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1956593.M6NmITdEKh@avalon>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Will,
 
-On 4/24/2013 2:55 AM, Will Deacon wrote:
-> On Tue, Apr 23, 2013 at 11:54:53PM +0100, Olav Haugan wrote:
->> On 4/18/2013 12:01 PM, Will Deacon wrote:
-> Getting phandles has no dependencies on anything -- the only dependency is
-> that the device is added to the bus on which the SMMU sits, just like every
-> other IOMMU driver.
-> 
->>> Why would a page table shared between devices require multiple context
->>> banks? Multiple SMRs and S2CRs, sure, but they would ultimately point at the
->>> same context bank (and hence same address space).
->>
->> What if you want to have 2 different VMID's being generated? Also, what
->> about TLB management? If I have two context banks I can invalidate only
->> entries associated with 1 of the context banks (if VMID differ for the
->> two context banks).
-> 
-> Huh? We allocate one VMID per domain. If you want more VMIDs, use more
-> domains. TLB invalidation is per-domain, so there's no issue there.
+We don't seem to have a well-defined path to travel here, and I don't
+get the feeling that anyone has signed up to walk it?
 
-If we allocate a new domain you would have another address space (page
-table), no? I was just trying to figure out if your binding proposal
-would allow for 2 context banks in one domain which it does not seem to
-support.
+So I'm inclined to merge Stephen's patch as-is into 3.10.  It's pretty
+simple and standalone.  Any strenuous objections?
 
->>> If a master needs to be in two address spaces at once, then it will need to
->>> attach it's StreamIDs to different domains. You can't place a single
->>> StreamID in two address spaces (this is an architectural constraint).
->>
->> Yes, you would have a separate domain. I am just wondering how I would
->> model this in DT using the bindings that you are proposing? How does it
->> work? The bindings specify bus masters to StreamIDs. So if I call attach
->> with the master device you will allocate a context bank and program the
->> StreamIDs as specified in the DT. So now if I want to have another
->> context bank associated with the same master device what do I do? I call
->> into attach with a new domain but with the same master device but the
->> master device is already attached to a context/domain.
-> 
-> Why would you want to place a StreamID into two domains? That doesn't make
-> any sense and isn't even supported by the architecture (things like
-> conflicting SMR entries may not even be reported).
+BTW, Olof told me off-list that this patch is a "critical piece" for
+running mainline Linux on ARM Chromebooks.  That was important
+information - more important than anything else we were told about this
+patch!
 
-I think you misunderstood me. I am talking about having for example 1
-master with two (2) context banks so that StreamID "1" goes to CB0 and
-StreamID "2" goes to CB1. This means that the master device is attached
-to two different domains. How do I model this with the the device tree
-bindings?
+So Stephen, could I please have a new changelog for this patch which
+explains this application, and any other interesting/important things
+which were left out?  Quickly, please.
 
 
 
-Olav Haugan
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: drivers/video: implement a simple framebuffer driver
+
+A simple frame-buffer describes a raw memory region that may be rendered
+to, with the assumption that the display hardware has already been set up
+to scan out from that buffer.
+
+This is useful in cases where a bootloader exists and has set up the
+display hardware, but a Linux driver doesn't yet exist for the display
+hardware.
+
+[akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org: make simplefb_formats[] static]
+Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>
+Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Signed-off-by: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+---
+
+ Documentation/devicetree/bindings/video/simple-framebuffer.txt |   25 +
+ drivers/video/Kconfig                                          |   17 
+ drivers/video/Makefile                                         |    1 
+ drivers/video/simplefb.c                                       |  234 ++++++++++
+ 4 files changed, 277 insertions(+)
+
+diff -puN /dev/null Documentation/devicetree/bindings/video/simple-framebuffer.txt
+--- /dev/null
++++ a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+@@ -0,0 +1,25 @@
++Simple Framebuffer
++
++A simple frame-buffer describes a raw memory region that may be rendered to,
++with the assumption that the display hardware has already been set up to scan
++out from that buffer.
++
++Required properties:
++- compatible: "simple-framebuffer"
++- reg: Should contain the location and size of the framebuffer memory.
++- width: The width of the framebuffer in pixels.
++- height: The height of the framebuffer in pixels.
++- stride: The number of bytes in each line of the framebuffer.
++- format: The format of the framebuffer surface. Valid values are:
++  - r5g6b5 (16-bit pixels, d[15:11]=r, d[10:5]=g, d[4:0]=b).
++
++Example:
++
++	framebuffer {
++		compatible = "simple-framebuffer";
++		reg = <0x1d385000 (1600 * 1200 * 2)>;
++		width = <1600>;
++		height = <1200>;
++		stride = <(1600 * 2)>;
++		format = "r5g6b5";
++	};
+diff -puN drivers/video/Kconfig~drivers-video-implement-a-simple-framebuffer-driver drivers/video/Kconfig
+--- a/drivers/video/Kconfig~drivers-video-implement-a-simple-framebuffer-driver
++++ a/drivers/video/Kconfig
+@@ -2453,6 +2453,23 @@ config FB_HYPERV
+ 	help
+ 	  This framebuffer driver supports Microsoft Hyper-V Synthetic Video.
+ 
++config FB_SIMPLE
++	bool "Simple framebuffer support"
++	depends on (FB = y) && OF
++	select FB_CFB_FILLRECT
++	select FB_CFB_COPYAREA
++	select FB_CFB_IMAGEBLIT
++	help
++	  Say Y if you want support for a simple frame-buffer.
++
++	  This driver assumes that the display hardware has been initialized
++	  before the kernel boots, and the kernel will simply render to the
++	  pre-allocated frame buffer surface.
++
++	  Configuration re: surface address, size, and format must be provided
++	  through device tree, or potentially plain old platform data in the
++	  future.
++
+ source "drivers/video/omap/Kconfig"
+ source "drivers/video/omap2/Kconfig"
+ source "drivers/video/exynos/Kconfig"
+diff -puN drivers/video/Makefile~drivers-video-implement-a-simple-framebuffer-driver drivers/video/Makefile
+--- a/drivers/video/Makefile~drivers-video-implement-a-simple-framebuffer-driver
++++ a/drivers/video/Makefile
+@@ -166,6 +166,7 @@ obj-$(CONFIG_FB_MX3)		  += mx3fb.o
+ obj-$(CONFIG_FB_DA8XX)		  += da8xx-fb.o
+ obj-$(CONFIG_FB_MXS)		  += mxsfb.o
+ obj-$(CONFIG_FB_SSD1307)	  += ssd1307fb.o
++obj-$(CONFIG_FB_SIMPLE)           += simplefb.o
+ 
+ # the test framebuffer is last
+ obj-$(CONFIG_FB_VIRTUAL)          += vfb.o
+diff -puN /dev/null drivers/video/simplefb.c
+--- /dev/null
++++ a/drivers/video/simplefb.c
+@@ -0,0 +1,234 @@
++/*
++ * Simplest possible simple frame-buffer driver, as a platform device
++ *
++ * Copyright (c) 2013, Stephen Warren
++ *
++ * Based on q40fb.c, which was:
++ * Copyright (C) 2001 Richard Zidlicky <rz-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
++ *
++ * Also based on offb.c, which was:
++ * Copyright (C) 1997 Geert Uytterhoeven
++ * Copyright (C) 1996 Paul Mackerras
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#include <linux/errno.h>
++#include <linux/fb.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++
++static struct fb_fix_screeninfo simplefb_fix = {
++	.id		= "simple",
++	.type		= FB_TYPE_PACKED_PIXELS,
++	.visual		= FB_VISUAL_TRUECOLOR,
++	.accel		= FB_ACCEL_NONE,
++};
++
++static struct fb_var_screeninfo simplefb_var = {
++	.height		= -1,
++	.width		= -1,
++	.activate	= FB_ACTIVATE_NOW,
++	.vmode		= FB_VMODE_NONINTERLACED,
++};
++
++static int simplefb_setcolreg(u_int regno, u_int red, u_int green, u_int blue,
++			      u_int transp, struct fb_info *info)
++{
++	u32 *pal = info->pseudo_palette;
++	u32 cr = red >> (16 - info->var.red.length);
++	u32 cg = green >> (16 - info->var.green.length);
++	u32 cb = blue >> (16 - info->var.blue.length);
++	u32 value;
++
++	if (regno >= 16)
++		return -EINVAL;
++
++	value = (cr << info->var.red.offset) |
++		(cg << info->var.green.offset) |
++		(cb << info->var.blue.offset);
++	if (info->var.transp.length > 0) {
++		u32 mask = (1 << info->var.transp.length) - 1;
++		mask <<= info->var.transp.offset;
++		value |= mask;
++	}
++	pal[regno] = value;
++
++	return 0;
++}
++
++static struct fb_ops simplefb_ops = {
++	.owner		= THIS_MODULE,
++	.fb_setcolreg	= simplefb_setcolreg,
++	.fb_fillrect	= cfb_fillrect,
++	.fb_copyarea	= cfb_copyarea,
++	.fb_imageblit	= cfb_imageblit,
++};
++
++struct simplefb_format {
++	const char *name;
++	u32 bits_per_pixel;
++	struct fb_bitfield red;
++	struct fb_bitfield green;
++	struct fb_bitfield blue;
++	struct fb_bitfield transp;
++};
++
++static struct simplefb_format simplefb_formats[] = {
++	{ "r5g6b5", 16, {11, 5}, {5, 6}, {0, 5}, {0, 0} },
++};
++
++struct simplefb_params {
++	u32 width;
++	u32 height;
++	u32 stride;
++	struct simplefb_format *format;
++};
++
++static int simplefb_parse_dt(struct platform_device *pdev,
++			   struct simplefb_params *params)
++{
++	struct device_node *np = pdev->dev.of_node;
++	int ret;
++	const char *format;
++	int i;
++
++	ret = of_property_read_u32(np, "width", &params->width);
++	if (ret) {
++		dev_err(&pdev->dev, "Can't parse width property\n");
++		return ret;
++	}
++
++	ret = of_property_read_u32(np, "height", &params->height);
++	if (ret) {
++		dev_err(&pdev->dev, "Can't parse height property\n");
++		return ret;
++	}
++
++	ret = of_property_read_u32(np, "stride", &params->stride);
++	if (ret) {
++		dev_err(&pdev->dev, "Can't parse stride property\n");
++		return ret;
++	}
++
++	ret = of_property_read_string(np, "format", &format);
++	if (ret) {
++		dev_err(&pdev->dev, "Can't parse format property\n");
++		return ret;
++	}
++	params->format = NULL;
++	for (i = 0; i < ARRAY_SIZE(simplefb_formats); i++) {
++		if (strcmp(format, simplefb_formats[i].name))
++			continue;
++		params->format = &simplefb_formats[i];
++		break;
++	}
++	if (!params->format) {
++		dev_err(&pdev->dev, "Invalid format value\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int simplefb_probe(struct platform_device *pdev)
++{
++	int ret;
++	struct simplefb_params params;
++	struct fb_info *info;
++	struct resource *mem;
++
++	if (fb_get_options("simplefb", NULL))
++		return -ENODEV;
++
++	ret = simplefb_parse_dt(pdev, &params);
++	if (ret)
++		return ret;
++
++	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!mem) {
++		dev_err(&pdev->dev, "No memory resource\n");
++		return -EINVAL;
++	}
++
++	info = framebuffer_alloc(sizeof(u32) * 16, &pdev->dev);
++	if (!info)
++		return -ENOMEM;
++	platform_set_drvdata(pdev, info);
++
++	info->fix = simplefb_fix;
++	info->fix.smem_start = mem->start;
++	info->fix.smem_len = resource_size(mem);
++	info->fix.line_length = params.stride;
++
++	info->var = simplefb_var;
++	info->var.xres = params.width;
++	info->var.yres = params.height;
++	info->var.xres_virtual = params.width;
++	info->var.yres_virtual = params.height;
++	info->var.bits_per_pixel = params.format->bits_per_pixel;
++	info->var.red = params.format->red;
++	info->var.green = params.format->green;
++	info->var.blue = params.format->blue;
++	info->var.transp = params.format->transp;
++
++	info->fbops = &simplefb_ops;
++	info->flags = FBINFO_DEFAULT;
++	info->screen_base = devm_ioremap(&pdev->dev, info->fix.smem_start,
++					 info->fix.smem_len);
++	if (!info->screen_base) {
++		framebuffer_release(info);
++		return -ENODEV;
++	}
++	info->pseudo_palette = (void *)(info + 1);
++
++	ret = register_framebuffer(info);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Unable to register simplefb: %d\n", ret);
++		framebuffer_release(info);
++		return ret;
++	}
++
++	dev_info(&pdev->dev, "fb%d: simplefb registered!\n", info->node);
++
++	return 0;
++}
++
++static int simplefb_remove(struct platform_device *pdev)
++{
++	struct fb_info *info = platform_get_drvdata(pdev);
++
++	unregister_framebuffer(info);
++	framebuffer_release(info);
++
++	return 0;
++}
++
++static const struct of_device_id simplefb_of_match[] = {
++	{ .compatible = "simple-framebuffer", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, simplefb_of_match);
++
++static struct platform_driver simplefb_driver = {
++	.driver = {
++		.name = "simple-framebuffer",
++		.owner = THIS_MODULE,
++		.of_match_table = simplefb_of_match,
++	},
++	.probe = simplefb_probe,
++	.remove = simplefb_remove,
++};
++module_platform_driver(simplefb_driver);
++
++MODULE_AUTHOR("Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>");
++MODULE_DESCRIPTION("Simple framebuffer driver");
++MODULE_LICENSE("GPL v2");
+_
