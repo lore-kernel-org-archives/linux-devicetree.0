@@ -1,201 +1,66 @@
-From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/2 V2] iio:ak8975 Implement data ready interrupt handling
-Date: Tue, 07 May 2013 12:41:39 +0200
-Message-ID: <1367923299-30594-3-git-send-email-j.anaszewski@samsung.com>
-References: <1367923299-30594-1-git-send-email-j.anaszewski@samsung.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1367923299-30594-1-git-send-email-j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, achew-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4] extcon: Palmas Extcon Driver
+Date: Tue, 7 May 2013 11:45:02 +0100
+Message-ID: <20130507104502.GQ7478@sirena.org.uk>
+References: <1362662506-14823-4-git-send-email-kishon@ti.com>
+ <1367846225-15685-1-git-send-email-kishon@ti.com>
+ <20130506144010.GF13472@opensource.wolfsonmicro.com>
+ <51888D55.3090907@ti.com>
+ <20130507075824.GM7478@sirena.org.uk>
+ <5188CD9C.6010602@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="V2tfspbppmK1TQo2"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5188CD9C.6010602@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: gg@slimlogic.co.uk, myungjoo.ham@samsung.com, cw00.choi@samsung.com, balbi@ti.com, ldewangan@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, ruchika@ti.com, tony@atomide.com, sameo@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-Implement "data ready" interrupt handling in addition to the
-two existing read modes - DRDY GPIO polling and ST1 register
-DRDY bit polling.
 
-Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- drivers/iio/magnetometer/ak8975.c |   91 ++++++++++++++++++++++++++++++++++++-
- 1 files changed, 89 insertions(+), 2 deletions(-)
+--V2tfspbppmK1TQo2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
-index d75cc23..7105f22 100644
---- a/drivers/iio/magnetometer/ak8975.c
-+++ b/drivers/iio/magnetometer/ak8975.c
-@@ -24,10 +24,11 @@
- #include <linux/kernel.h>
- #include <linux/slab.h>
- #include <linux/i2c.h>
-+#include <linux/interrupt.h>
- #include <linux/err.h>
- #include <linux/mutex.h>
- #include <linux/delay.h>
--
-+#include <linux/bitops.h>
- #include <linux/gpio.h>
- #include <linux/of_gpio.h>
- 
-@@ -83,6 +84,7 @@
-  */
- #define AK8975_MAX_CONVERSION_TIMEOUT	500
- #define AK8975_CONVERSION_DONE_POLL_TIME 10
-+#define AK8975_DATA_READY_TIMEOUT	((100*HZ)/1000)
- 
- /*
-  * Per-instance context data for the device.
-@@ -95,6 +97,9 @@ struct ak8975_data {
- 	long			raw_to_gauss[3];
- 	u8			reg_cache[AK8975_MAX_REGS];
- 	int			eoc_gpio;
-+	int			eoc_irq;
-+	wait_queue_head_t	data_ready_queue;
-+	unsigned long		flags;
- };
- 
- static const int ak8975_index_to_reg[] = {
-@@ -124,6 +129,51 @@ static int ak8975_write_data(struct i2c_client *client,
- }
- 
- /*
-+ * Handle data ready irq
-+ */
-+static irqreturn_t ak8975_irq_handler(int irq, void *data)
-+{
-+	struct ak8975_data *ak8975 = data;
-+
-+	set_bit(0, &ak8975->flags);
-+	wake_up(&ak8975->data_ready_queue);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/*
-+ * Install data ready interrupt handler
-+ */
-+static int ak8975_setup_irq(struct ak8975_data *data)
-+{
-+	struct i2c_client *client = data->client;
-+	int rc;
-+	int irq;
-+
-+	if (client->irq)
-+		irq = client->irq;
-+	else
-+		irq = gpio_to_irq(data->eoc_gpio);
-+
-+	rc = request_irq(irq, ak8975_irq_handler,
-+			 IRQF_TRIGGER_RISING | IRQF_ONESHOT,
-+			 dev_name(&client->dev), data);
-+	if (rc < 0) {
-+		dev_err(&client->dev,
-+			"irq %d request failed, (gpio %d): %d\n",
-+			irq, data->eoc_gpio, rc);
-+		return rc;
-+	}
-+
-+	init_waitqueue_head(&data->data_ready_queue);
-+	clear_bit(0, &data->flags);
-+	data->eoc_irq = irq;
-+
-+	return rc;
-+}
-+
-+
-+/*
-  * Perform some start-of-day setup, including reading the asa calibration
-  * values and caching them.
-  */
-@@ -171,6 +221,16 @@ static int ak8975_setup(struct i2c_client *client)
- 				AK8975_REG_CNTL_MODE_POWER_DOWN,
- 				AK8975_REG_CNTL_MODE_MASK,
- 				AK8975_REG_CNTL_MODE_SHIFT);
-+
-+	if (data->eoc_gpio > 0 || client->irq) {
-+		ret = ak8975_setup_irq(data);
-+		if (ret < 0) {
-+			dev_err(&client->dev,
-+				"Error setting data ready interrupt\n");
-+			return ret;
-+		}
-+	}
-+
- 	if (ret < 0) {
- 		dev_err(&client->dev, "Error in setting power-down mode\n");
- 		return ret;
-@@ -267,9 +327,23 @@ static int wait_conversion_complete_polled(struct ak8975_data *data)
- 		dev_err(&client->dev, "Conversion timeout happened\n");
- 		return -EINVAL;
- 	}
-+
- 	return read_status;
- }
- 
-+/* Returns 0 if the end of conversion interrupt occured or -ETIME otherwise */
-+static int wait_conversion_complete_interrupt(struct ak8975_data *data)
-+{
-+	int ret;
-+
-+	ret = wait_event_timeout(data->data_ready_queue,
-+				 test_bit(0, &data->flags),
-+				 AK8975_DATA_READY_TIMEOUT);
-+	clear_bit(0, &data->flags);
-+
-+	return ret > 0 ? 0 : -ETIME;
-+}
-+
- /*
-  * Emits the raw flux value for the x, y, or z axis.
-  */
-@@ -295,13 +369,16 @@ static int ak8975_read_axis(struct iio_dev *indio_dev, int index, int *val)
- 	}
- 
- 	/* Wait for the conversion to complete. */
--	if (gpio_is_valid(data->eoc_gpio))
-+	if (data->eoc_irq)
-+		ret = wait_conversion_complete_interrupt(data);
-+	else if (gpio_is_valid(data->eoc_gpio))
- 		ret = wait_conversion_complete_gpio(data);
- 	else
- 		ret = wait_conversion_complete_polled(data);
- 	if (ret < 0)
- 		goto exit;
- 
-+	/* This will be executed only for non-interrupt based waiting case */
- 	if (ret & AK8975_REG_ST1_DRDY_MASK) {
- 		ret = i2c_smbus_read_byte_data(client, AK8975_REG_ST2);
- 		if (ret < 0) {
-@@ -415,6 +492,11 @@ static int ak8975_probe(struct i2c_client *client,
- 	}
- 	data = iio_priv(indio_dev);
- 	i2c_set_clientdata(client, indio_dev);
-+
-+	data->client = client;
-+	data->eoc_gpio = eoc_gpio;
-+	data->eoc_irq = 0;
-+
- 	/* Perform some basic start-of-day setup of the device. */
- 	err = ak8975_setup(client);
- 	if (err < 0) {
-@@ -439,6 +521,8 @@ static int ak8975_probe(struct i2c_client *client,
- 
- exit_free_iio:
- 	iio_device_free(indio_dev);
-+	if (data->eoc_irq)
-+		free_irq(data->eoc_irq, data);
- exit_gpio:
- 	if (gpio_is_valid(eoc_gpio))
- 		gpio_free(eoc_gpio);
-@@ -453,6 +537,9 @@ static int ak8975_remove(struct i2c_client *client)
- 
- 	iio_device_unregister(indio_dev);
- 
-+	if (data->eoc_irq)
-+		free_irq(data->eoc_irq, data);
-+
- 	if (gpio_is_valid(data->eoc_gpio))
- 		gpio_free(data->eoc_gpio);
- 
--- 
-1.7.5.4
+On Tue, May 07, 2013 at 03:17:08PM +0530, Kishon Vijay Abraham I wrote:
+> On Tuesday 07 May 2013 01:28 PM, Mark Brown wrote:
+
+> >>The platform can provide it's own vbus control in which case this is
+> >>not needed.
+
+> >So why is there no interaction with this external VBUS control and how
+> >does the driver distinguish between that and an error getting the
+> >regulator?
+
+> The platform specifies if it provides its own VBUS control by the dt
+> property ti,no_control_vbus. So the driver will give an error only
+> when *ti,no_control_vbus* is not set. Graeme?
+
+That doesn't answer the question about why there's no interaction with
+the external control...
+
+--V2tfspbppmK1TQo2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRiNsrAAoJELSic+t+oim9qssP/3toUma31SzGARXn8T40l8xy
+sKVqci35ErrhapClrJUupVjmd7fOGaTrY86AF+ZHisKjwFc6HYjvGF4BfqAxjVtv
+/u12U7xN6e16lsj3coH8l3BdYo1LLDHaixZMlRAZ9+Z2i5CGShij5KzfDjA2nVGe
+De1s96eTnbi8yV9eceFpcSqsHhlxEOUugmlgbv3ZMCczOfVIdVBMxz5y89J2Jdjf
+D4ePYT7KsH/uJpx6BwWjnja2j2fu0gyyqWte2niWf+lfhXCwNf9n8Ed9RCQcED8e
+1+6D1UL/dHFruc+LGlHwQrHzxRlmNha5Ug22DEmCTFHIvJ0W3oqA5GpaCgccNfWL
+xE3ELvcZzqSvQKOnuAynRO5MFb5KvbwSVOBQPnMBpcQrTFIr4gqxaL7/bTmy2P7Z
+P07G35MpGooqp3fdJXFcpG9BEKEwXnGdJstC5NeWIyLR5+mcBBCONcz6lqQktlel
+9OFc4gv/rivjr1rJxuOWXZqmELJ38SjNAjWQLVq2RzfZsIDcL+ic5HYtvseThOoL
+LN3kOBIH6MnQUqr6UWWoyDRvfP4ew6xFUbMTtA0Zdg3dB4b2DzLxsgJWWebJifeq
+Vm3rJTu9aZL+1Nyyg+fv2RGGv5vmYRI5repayHIYW0f69r15yfu0UxeuxekjkI/7
+iOboRMf+NLENGsHkzQme
+=jwqy
+-----END PGP SIGNATURE-----
+
+--V2tfspbppmK1TQo2--
