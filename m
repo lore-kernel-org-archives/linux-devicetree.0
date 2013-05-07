@@ -1,16 +1,16 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH v2] drivers: bus: add ARM CCI support
-Date: Tue, 7 May 2013 11:59:55 +0100
-Message-ID: <20130507105955.GA19477@e102568-lin.cambridge.arm.com>
-References: <1367425108-4698-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1367425108-4698-2-git-send-email-lorenzo.pieralisi@arm.com>
- <20130503151706.GB2756@e102654-lin.cambridge.arm.com>
+From: Padma Venkat <padma.kvr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2 2/3] ARM: dts: add Exynos audio subsystem clock
+ controller node
+Date: Tue, 7 May 2013 16:44:03 +0530
+Message-ID: <CAAgF-BdJK9oEVj2fBHTCN5VoGa7eZceW4w=yMMrjnDSdy=P0rA@mail.gmail.com>
+References: <1367909016-19657-1-git-send-email-padma.v@samsung.com>
+ <1367909016-19657-3-git-send-email-padma.v@samsung.com>
+ <2829319.bZPJnVErnQ@amdc1227>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130503151706.GB2756-hBfBd/Xtra/ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Content-Disposition: inline
+In-Reply-To: <2829319.bZPJnVErnQ@amdc1227>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,88 +21,54 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Javi Merino <Javi.Merino-5wv7dgnIgG8@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Padmavathi Venna <padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sangbeom Kim <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 03, 2013 at 04:17:07PM +0100, Javi Merino wrote:
-> Hi Lorenzo,
-> 
-> On Wed, May 01, 2013 at 05:18:28PM +0100, Lorenzo Pieralisi wrote:
-> > On ARM multi-cluster systems coherency between cores running on
-> > different clusters is managed by the cache-coherent interconnect (CCI).
-> > It allows broadcasting of TLB invalidates and memory barriers and it
-> > guarantees cache coherency at system level through snooping of slave
-> > interfaces connected to it.
-> > 
-> > This patch enables the basic infrastructure required in Linux to handle and
-> > programme the CCI component.
-> > 
-> > Non-local variables used by the CCI management functions called by power
-> > down function calls after disabling the cache must be flushed out to main
-> > memory in advance, otherwise incoherency of those values may occur if they
-> > are sitting in the cache of some other CPU when power down functions
-> > execute. Driver code ensures that relevant data structures are flushed
-> > from inner and outer caches after the driver probe is completed.
-> > 
-> > CCI slave port resources are linked to set of CPUs through bus masters
-> > phandle properties that link the interface resources to masters node in
-> > the device tree.
-> > 
-> > Documentation describing the CCI DT bindings is provided with the patch.
-> > 
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> > ---
-> 
-> [...]
-> 
-> > diff --git a/include/linux/arm-cci.h b/include/linux/arm-cci.h
-> > new file mode 100644
-> > index 0000000..0e70942
-> > --- /dev/null
-> > +++ b/include/linux/arm-cci.h
-> > @@ -0,0 +1,59 @@
-> > +/*
-> > + * CCI cache coherent interconnect support
-> > + *
-> > + * Copyright (C) 2013 ARM Ltd.
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License as published by
-> > + * the Free Software Foundation; either version 2 of the License, or
-> > + * (at your option) any later version.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + *
-> > + * You should have received a copy of the GNU General Public License
-> > + * along with this program; if not, write to the Free Software
-> > + * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-> > + */
-> > +
-> > +#ifndef __LINUX_ARM_CCI_H
-> > +#define __LINUX_ARM_CCI_H
-> > +
-> > +#include <linux/errno.h>
-> > +#include <linux/types.h>
-> > +
-> > +struct device_node;
-> > +
-> > +#ifdef CONFIG_ARM_CCI
-> > +extern int cci_ace_get_port(struct device_node *dn);
-> > +extern int cci_disable_port_by_cpu(u64 mpidr);
-> > +extern int __cci_control_port_by_device(struct device_node *dn, bool enable);
-> > +extern int __cci_control_port_by_index(u32 port, bool enable);
-> > +#else
-> > +static inline int cci_ace_get_port(struct device_node *dn, bool cpu)
-> 
-> Builds with !CONFIG_ARM_CCI fail because this definition of
-> cci_ace_get_port() takes two arguments whereas the one for
-> CONFIG_ARM_CCI takes only one.
+Hi Tomasz,
 
-Yes, sorry, I missed that while refactoring the interface.
+On Tue, May 7, 2013 at 3:24 PM, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Hi Padmavathi,
+>
+> On Tuesday 07 of May 2013 12:13:35 Padmavathi Venna wrote:
+>> Audio subsystem introduced in s5pv210 and exynos platforms
+>> which has a internal clock controller. This patch adds a node
+>> for the same on exynos5250.
+>>
+>> Signed-off-by: Padmavathi Venna <padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/exynos5250.dtsi |    6 ++++++
+>>  1 files changed, 6 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+>> b/arch/arm/boot/dts/exynos5250.dtsi index 36c9d8d..7026de0 100644
+>> --- a/arch/arm/boot/dts/exynos5250.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+>> @@ -72,6 +72,12 @@
+>>               #clock-cells = <1>;
+>>       };
+>>
+>> +     clock_audss: audss-clock-controller@0x03810000 {
+>
+> Just a nitpick: this should be @3810000, without the 0x and leading zeroes.
 
-Thanks,
-Lorenzo
+Okey. I will change this.
+
+>
+> Best regards,
+> --
+> Tomasz Figa
+> Samsung Poland R&D Center
+> SW Solution Development, Kernel and System Framework
+>
+>> +             compatible = "samsung,exynos5250-audss-clock";
+>> +             reg = <0x03810000 0x0C>;
+>> +             #clock-cells = <1>;
+>> +     };
+>> +
+>>       gic:interrupt-controller@10481000 {
+>>               compatible = "arm,cortex-a15-gic", "arm,cortex-a9-gic";
+>>               #interrupt-cells = <3>;
+>
+Thanks
+Padma
