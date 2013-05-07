@@ -1,53 +1,63 @@
-From: Graeme Gregory <gg@slimlogic.co.uk>
-Subject: Re: [PATCH v4] extcon: Palmas Extcon Driver
-Date: Tue, 07 May 2013 10:49:42 +0100
-Message-ID: <5188CE36.9010602@slimlogic.co.uk>
-References: <1362662506-14823-4-git-send-email-kishon@ti.com> <1367846225-15685-1-git-send-email-kishon@ti.com> <20130506144010.GF13472@opensource.wolfsonmicro.com> <51888D55.3090907@ti.com> <20130507075824.GM7478@sirena.org.uk> <5188CD9C.6010602@ti.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] net: of_mdio: fix behavior on missing phy device
+Date: Tue,  7 May 2013 11:49:31 +0200
+Message-ID: <1367920171-20264-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5188CD9C.6010602@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Mark Brown <broonie@kernel.org>, myungjoo.ham@samsung.com, cw00.choi@samsung.com, balbi@ti.com, ldewangan@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, ruchika@ti.com, tony@atomide.com, sameo@linux.intel.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/05/13 10:47, Kishon Vijay Abraham I wrote:
-> Hi,
->
-> On Tuesday 07 May 2013 01:28 PM, Mark Brown wrote:
->> On Tue, May 07, 2013 at 10:42:53AM +0530, Kishon Vijay Abraham I wrote:
->>> On Monday 06 May 2013 08:10 PM, Mark Brown wrote:
->>>> On Mon, May 06, 2013 at 06:47:04PM +0530, Kishon Vijay Abraham I
->>>> wrote:
->>>>
->>>>> +        if (palmas_usb->linkstat != PALMAS_USB_STATE_VBUS) {
->>>>> +            if (palmas_usb->vbus_reg) {
->>>>> +                ret = regulator_enable(palmas_usb->vbus_reg);
->>>>> +                if (ret) {
->>>>> +                    dev_dbg(palmas_usb->dev,
->>>>> +                        "regulator enable failed\n");
->>>>> +                    goto ret0;
->>
->>>> This is very bad karma, why is the regulator optional?
->>
->>> The platform can provide it's own vbus control in which case this is
->>> not needed.
->>
->> So why is there no interaction with this external VBUS control and how
->> does the driver distinguish between that and an error getting the
->> regulator?
->
-> The platform specifies if it provides its own VBUS control by the dt
-> property ti,no_control_vbus. So the driver will give an error only
-> when *ti,no_control_vbus* is not set. Graeme?
->
-> Thanks
-> Kishon
-That is correct, but as currently there are only two users I guess this
-depends on Laxmans usecase. If he doesn't need this extra complexity I
-would remove it for now. It was originally done with another SoC in mind!
+of_mdiobus_register creates a phy_device even if get_phy_device failed
+to create it previously. This causes indefinite polling on non-existent
+PHYs. This fix makes of_mdio_register rely on get_phy_device to
+properly create the device or fail otherwise.
 
-Graeme
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ drivers/of/of_mdio.c |   11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 23049ae..d5a57a9 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -84,13 +84,10 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+ 		phy = get_phy_device(mdio, addr, is_c45);
+ 
+ 		if (!phy || IS_ERR(phy)) {
+-			phy = phy_device_create(mdio, addr, 0, false, NULL);
+-			if (!phy || IS_ERR(phy)) {
+-				dev_err(&mdio->dev,
+-					"error creating PHY at address %i\n",
+-					addr);
+-				continue;
+-			}
++			dev_err(&mdio->dev,
++				"cannot get PHY at address %i\n",
++				addr);
++			continue;
+ 		}
+ 
+ 		/* Associate the OF node with the device structure so it
+-- 
+1.7.10.4
