@@ -1,63 +1,55 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] net: of_mdio: fix behavior on missing phy device
-Date: Tue,  7 May 2013 11:49:31 +0200
-Message-ID: <1367920171-20264-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH V2 2/3] ARM: dts: add Exynos audio subsystem clock
+ controller node
+Date: Tue, 07 May 2013 11:54:20 +0200
+Message-ID: <2829319.bZPJnVErnQ@amdc1227>
+References: <1367909016-19657-1-git-send-email-padma.v@samsung.com>
+ <1367909016-19657-3-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1367909016-19657-3-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.kvr@gmail.com, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, s.nawrocki@samsung.com, thomas.abraham@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-of_mdiobus_register creates a phy_device even if get_phy_device failed
-to create it previously. This causes indefinite polling on non-existent
-PHYs. This fix makes of_mdio_register rely on get_phy_device to
-properly create the device or fail otherwise.
+Hi Padmavathi,
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- drivers/of/of_mdio.c |   11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+On Tuesday 07 of May 2013 12:13:35 Padmavathi Venna wrote:
+> Audio subsystem introduced in s5pv210 and exynos platforms
+> which has a internal clock controller. This patch adds a node
+> for the same on exynos5250.
+> 
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5250.dtsi |    6 ++++++
+>  1 files changed, 6 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+> b/arch/arm/boot/dts/exynos5250.dtsi index 36c9d8d..7026de0 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -72,6 +72,12 @@
+>  		#clock-cells = <1>;
+>  	};
+> 
+> +	clock_audss: audss-clock-controller@0x03810000 {
 
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index 23049ae..d5a57a9 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -84,13 +84,10 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
- 		phy = get_phy_device(mdio, addr, is_c45);
- 
- 		if (!phy || IS_ERR(phy)) {
--			phy = phy_device_create(mdio, addr, 0, false, NULL);
--			if (!phy || IS_ERR(phy)) {
--				dev_err(&mdio->dev,
--					"error creating PHY at address %i\n",
--					addr);
--				continue;
--			}
-+			dev_err(&mdio->dev,
-+				"cannot get PHY at address %i\n",
-+				addr);
-+			continue;
- 		}
- 
- 		/* Associate the OF node with the device structure so it
+Just a nitpick: this should be @3810000, without the 0x and leading zeroes.
+
+Best regards,
 -- 
-1.7.10.4
+Tomasz Figa
+Samsung Poland R&D Center
+SW Solution Development, Kernel and System Framework
+
+> +		compatible = "samsung,exynos5250-audss-clock";
+> +		reg = <0x03810000 0x0C>;
+> +		#clock-cells = <1>;
+> +	};
+> +
+>  	gic:interrupt-controller@10481000 {
+>  		compatible = "arm,cortex-a15-gic", "arm,cortex-a9-gic";
+>  		#interrupt-cells = <3>;
