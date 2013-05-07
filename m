@@ -1,63 +1,45 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH RFC v3] media: i2c: mt9p031: add OF support
-Date: Tue, 7 May 2013 15:10:36 +0530
-Message-ID: <CA+V-a8tXZrh68_T=VAOTB23sFfOCOA+GafueWuH6cFFmKz7cvA@mail.gmail.com>
-References: <1367563919-2880-1-git-send-email-prabhakar.csengg@gmail.com>
- <201305031634.39129.arnd@arndb.de> <CA+V-a8vxhedos6cQbxAbMAwiXOmjrqh0TVp8Rhc_Ou4y9tSaoQ@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v4] extcon: Palmas Extcon Driver
+Date: Tue, 7 May 2013 15:17:08 +0530
+Message-ID: <5188CD9C.6010602@ti.com>
+References: <1362662506-14823-4-git-send-email-kishon@ti.com> <1367846225-15685-1-git-send-email-kishon@ti.com> <20130506144010.GF13472@opensource.wolfsonmicro.com> <51888D55.3090907@ti.com> <20130507075824.GM7478@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CA+V-a8vxhedos6cQbxAbMAwiXOmjrqh0TVp8Rhc_Ou4y9tSaoQ@mail.gmail.com>
+In-Reply-To: <20130507075824.GM7478@sirena.org.uk>
 Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sascha Hauer <s.hauer@pengutronix.de>
-Cc: LMML <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Hans Verkuil <hans.verkuil@cisco.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, LKML <linux-kernel@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, gg@slimlogic.co.uk
+Cc: myungjoo.ham@samsung.com, cw00.choi@samsung.com, balbi@ti.com, ldewangan@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, ruchika@ti.com, tony@atomide.com, sameo@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi,
 
-On Mon, May 6, 2013 at 8:29 PM, Prabhakar Lad
-<prabhakar.csengg@gmail.com> wrote:
-> Hi Arnd,
->
-> On Fri, May 3, 2013 at 8:04 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> On Friday 03 May 2013, Prabhakar Lad wrote:
+On Tuesday 07 May 2013 01:28 PM, Mark Brown wrote:
+> On Tue, May 07, 2013 at 10:42:53AM +0530, Kishon Vijay Abraham I wrote:
+>> On Monday 06 May 2013 08:10 PM, Mark Brown wrote:
+>>> On Mon, May 06, 2013 at 06:47:04PM +0530, Kishon Vijay Abraham I wrote:
 >>>
-> [snip]
->>> +}
->>
->> Ok, good.
->>
->>> @@ -955,7 +998,17 @@ static int mt9p031_probe(struct i2c_client *client,
->>>         mt9p031->pdata = pdata;
->>>         mt9p031->output_control = MT9P031_OUTPUT_CONTROL_DEF;
->>>         mt9p031->mode2 = MT9P031_READ_MODE_2_ROW_BLC;
->>> -       mt9p031->model = did->driver_data;
->>> +
->>> +       if (!client->dev.of_node) {
->>> +               mt9p031->model = (enum mt9p031_model)did->driver_data;
->>> +       } else {
->>> +               const struct of_device_id *of_id;
->>> +
->>> +               of_id = of_match_device(of_match_ptr(mt9p031_of_match),
->>> +                                       &client->dev);
->>> +               if (of_id)
->>> +                       mt9p031->model = (enum mt9p031_model)of_id->data;
->>> +       }
->>>         mt9p031->reset = -1;
->>
->> Is this actually required? I thought the i2c core just compared the
->> part of the "compatible" value after the first comma to the string, so
->> "mt9p031->model = (enum mt9p031_model)did->driver_data" should work
->> in both cases.
->>
-> I am OK with "mt9p031->model = (enum mt9p031_model)did->driver_data"
-> but I see still few drivers doing this, I am not sure for what reason.
-> If everyone is
-> OK with it I can drop the above change.
+>>>> +		if (palmas_usb->linkstat != PALMAS_USB_STATE_VBUS) {
+>>>> +			if (palmas_usb->vbus_reg) {
+>>>> +				ret = regulator_enable(palmas_usb->vbus_reg);
+>>>> +				if (ret) {
+>>>> +					dev_dbg(palmas_usb->dev,
+>>>> +						"regulator enable failed\n");
+>>>> +					goto ret0;
 >
-My bad, while booting with DT the i2c_device_id ie did in this case
-will be NULL,
-so the above changes are required :-)
+>>> This is very bad karma, why is the regulator optional?
+>
+>> The platform can provide it's own vbus control in which case this is
+>> not needed.
+>
+> So why is there no interaction with this external VBUS control and how
+> does the driver distinguish between that and an error getting the
+> regulator?
 
-Regards,
---Prabhakar Lad
+The platform specifies if it provides its own VBUS control by the dt 
+property ti,no_control_vbus. So the driver will give an error only when 
+*ti,no_control_vbus* is not set. Graeme?
+
+Thanks
+Kishon
