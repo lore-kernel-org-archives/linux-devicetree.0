@@ -1,52 +1,63 @@
-From: Valentin Longchamp <valentin.longchamp@keymile.com>
-Subject: Re: [PATCH 0/7] mv643xx_eth: device tree bindings
-Date: Tue, 07 May 2013 11:10:24 +0200
-Message-ID: <5188C500.8010209@keymile.com>
-References: <1365071235-11611-1-git-send-email-florian@openwrt.org>
- <1367854420-8006-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH RFC v3] media: i2c: mt9p031: add OF support
+Date: Tue, 7 May 2013 15:10:36 +0530
+Message-ID: <CA+V-a8tXZrh68_T=VAOTB23sFfOCOA+GafueWuH6cFFmKz7cvA@mail.gmail.com>
+References: <1367563919-2880-1-git-send-email-prabhakar.csengg@gmail.com>
+ <201305031634.39129.arnd@arndb.de> <CA+V-a8vxhedos6cQbxAbMAwiXOmjrqh0TVp8Rhc_Ou4y9tSaoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1367854420-8006-1-git-send-email-sebastian.hesselbarth@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CA+V-a8vxhedos6cQbxAbMAwiXOmjrqh0TVp8Rhc_Ou4y9tSaoQ@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sascha Hauer <s.hauer@pengutronix.de>
+Cc: LMML <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Hans Verkuil <hans.verkuil@cisco.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, LKML <linux-kernel@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sebastian,
+Hi Arnd,
 
-On 05/06/2013 05:33 PM, Sebastian Hesselbarth wrote:
-> This patch set picks up work by Florian Fainelli bringing full DT
-> support to mv643xx_eth and Marvell SoCs using it.
-> 
-> The current patch set drops Florian's device tree conversions for
-> Kirkwood, Dove, and Orion5x in favour of split patches for board
-> files and board descriptor files.
-> 
-> Device tree conversion for Dove and Kirkwood is added. Dove has
-> been fully tested, while Kirkwood is compile-tested only.
-> 
-> Florian Fainelli (2):
->   net: mv643xx_eth: add Device Tree bindings
->   net: mv643xx_eth: update Device Tree bindings documentation
-> 
-> Sebastian Hesselbarth (5):
->   ARM: dove: remove legacy mv643xx_eth setup
->   ARM: dove: add gigabit ethernet and mvmdio device tree nodes
->   ARM: kirkwood: remove legacy mv643xx_eth board setup
->   ARM: kirkwood: add gigabit ethernet and mvmdio device tree nodes
->   ARM: kirkwood: remove legacy clk alias for mv643xx_eth
-> 
+On Mon, May 6, 2013 at 8:29 PM, Prabhakar Lad
+<prabhakar.csengg@gmail.com> wrote:
+> Hi Arnd,
+>
+> On Fri, May 3, 2013 at 8:04 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Friday 03 May 2013, Prabhakar Lad wrote:
+>>>
+> [snip]
+>>> +}
+>>
+>> Ok, good.
+>>
+>>> @@ -955,7 +998,17 @@ static int mt9p031_probe(struct i2c_client *client,
+>>>         mt9p031->pdata = pdata;
+>>>         mt9p031->output_control = MT9P031_OUTPUT_CONTROL_DEF;
+>>>         mt9p031->mode2 = MT9P031_READ_MODE_2_ROW_BLC;
+>>> -       mt9p031->model = did->driver_data;
+>>> +
+>>> +       if (!client->dev.of_node) {
+>>> +               mt9p031->model = (enum mt9p031_model)did->driver_data;
+>>> +       } else {
+>>> +               const struct of_device_id *of_id;
+>>> +
+>>> +               of_id = of_match_device(of_match_ptr(mt9p031_of_match),
+>>> +                                       &client->dev);
+>>> +               if (of_id)
+>>> +                       mt9p031->model = (enum mt9p031_model)of_id->data;
+>>> +       }
+>>>         mt9p031->reset = -1;
+>>
+>> Is this actually required? I thought the i2c core just compared the
+>> part of the "compatible" value after the first comma to the string, so
+>> "mt9p031->model = (enum mt9p031_model)did->driver_data" should work
+>> in both cases.
+>>
+> I am OK with "mt9p031->model = (enum mt9p031_model)did->driver_data"
+> but I see still few drivers doing this, I am not sure for what reason.
+> If everyone is
+> OK with it I can drop the above change.
+>
+My bad, while booting with DT the i2c_device_id ie did in this case
+will be NULL,
+so the above changes are required :-)
 
-I have successfully tested these patches on km_kirkwood, you can add my tested-by:
-
-Tested-by: Valentin Longchamp<valentin.longchamp@keymile.com>
+Regards,
+--Prabhakar Lad
