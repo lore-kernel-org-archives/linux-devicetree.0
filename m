@@ -1,15 +1,11 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] clk: mvebu: add gate ctrl for Prestera kirkwood
- variants
-Date: Tue, 07 May 2013 18:11:44 +0200
-Message-ID: <518927C0.6070600@free-electrons.com>
-References: <1367941941-19152-1-git-send-email-valentin.longchamp@keymile.com>
- <1367941941-19152-2-git-send-email-valentin.longchamp@keymile.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v4 0/19] Allow images to work on sandbox
+Date: Tue,  7 May 2013 09:11:44 -0700
+Message-ID: <1367943123-16013-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1367941941-19152-2-git-send-email-valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,110 +16,83 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Cc: andrew-g2DYL2Zd6BY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
+Cc: u-boot-review-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Joe Hershberger <joe.hershberger-acOepvfBmUk@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tom Rini <trini-l0cyMroinI0@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/2013 05:52 PM, Valentin Longchamp wrote:
-> The kirkwood device found in the Prestera SoCs does not have all the
-> peripherals of its the usual kirkwood SoCs. There are hence missing
-> clocks in the SoCs.
-> 
-> This patch registers another gate controller for the kirkwood that
-> registers only the available clocks of this kirkwood variant.
+This series adjusts the image code to work with sandbox and prepares it for
+verified boot to come later.
 
-Hi Valentin,
+The primary goal here is to get image loading to work on sandbox, which is
+mostly a set of fairly minor changes such as using map_sysmem() instead of
+just a cast when converting from a U-Boot address to a pointer. Since
+common/image.c runs to over 3000 lines and half of it is FIT-related code
+behind an #ifdef, this code is moved into a new image-fit.c file.
 
-Overall the patch set looks OK, however I don't understand why you need
-to declare a new gate controller. The list you delcared seemed to be
-just a subset of the Kirkwood one, why can't you use this one?
+Changes in v4:
+- Bring in upstream version of fdt_first/next_subnode()
+- Use new upstream fdt_first/next_subnode()
 
-Note that I am not an expert for the kirkwood hardware, so maybe I
-missed something.
+Changes in v3:
+- Split out image improvements into a separate series
+- Update notes to note that generic board support has now landed
 
-Regards,
+Changes in v2:
+- Add IMAGE_ENABLE_IGNORE to avoid #ifdef around ignore property handling
+- Change hash_block() to use an unsigned int len
+- Clarify use of output_size parameter to hash_block()
+- Fix checkpatch checks about parenthesis alignment
+- Fix line continuation problem
+- Put err_msgp strings on a single line
+- Put params before description in fit_conf_get_prop_node() comment
+- Rebase on previous patches
+- Rename commit message to say "function" instead of "function"
 
-> 
-> Signed-off-by: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/clock/mvebu-gated-clock.txt   | 17 +++++++++++++++++
->  drivers/clk/mvebu/clk-gating-ctrl.c                   | 19 +++++++++++++++++++
->  2 files changed, 36 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
-> index cffc93d..7f494e90 100644
-> --- a/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
-> @@ -92,10 +92,27 @@ ID	Clock	Peripheral
->  19	ge1	Gigabit Ethernet 1
->  20	tdm	Time Division Mplx
->  
-> +The following is a list of provided IDs for Kirkwood Prestera variant:
-> +ID	Clock	Peripheral
-> +-----------------------------------
-> +0	ge0	Gigabit Ethernet 0
-> +2	pex0	PCIe Cntrl 0
-> +3	usb0	USB Host 0
-> +4	sdio	SDIO Cntrl
-> +5	tsu	Transp. Stream Unit
-> +6	dunit	SDRAM Cntrl
-> +7	runit	Runit
-> +8	xor0	XOR DMA 0
-> +16	xor1	XOR DMA 1
-> +17	crypto	CESA engine
-> +19	ge1	Gigabit Ethernet 1
-> +
-> +
->  Required properties:
->  - compatible : shall be one of the following:
->  	"marvell,dove-gating-clock" - for Dove SoC clock gating
->  	"marvell,kirkwood-gating-clock" - for Kirkwood SoC clock gating
-> +	"marvell,prestera-kw-gating-clock" - for Preseta SoC clock gating
->  - reg : shall be the register address of the Clock Gating Control register
->  - #clock-cells : from common clock binding; shall be set to 1
->  
-> diff --git a/drivers/clk/mvebu/clk-gating-ctrl.c b/drivers/clk/mvebu/clk-gating-ctrl.c
-> index ebf141d..ba37802 100644
-> --- a/drivers/clk/mvebu/clk-gating-ctrl.c
-> +++ b/drivers/clk/mvebu/clk-gating-ctrl.c
-> @@ -203,6 +203,21 @@ static const struct mvebu_soc_descr __initconst kirkwood_gating_descr[] = {
->  	{ "tdm", NULL, 20 },
->  	{ }
->  };
-> +
-> +static const struct mvebu_soc_descr __initconst prestera_kw_gating_descr[] = {
-> +	{ "ge0", NULL, 0 },
-> +	{ "pex0", NULL, 2 },
-> +	{ "usb0", NULL, 3 },
-> +	{ "sdio", NULL, 4 },
-> +	{ "tsu", NULL, 5 },
-> +	{ "runit", NULL, 7 },
-> +	{ "xor0", NULL, 8 },
-> +	{ "powersave", "cpuclk", 11 },
-> +	{ "xor1", NULL, 16 },
-> +	{ "crypto", NULL, 17 },
-> +	{ "ge1", NULL, 19 },
-> +	{ }
-> +};
->  #endif
->  
->  static const __initdata struct of_device_id clk_gating_match[] = {
-> @@ -232,6 +247,10 @@ static const __initdata struct of_device_id clk_gating_match[] = {
->  		.compatible = "marvell,kirkwood-gating-clock",
->  		.data = kirkwood_gating_descr,
->  	},
-> +	{
-> +		.compatible = "marvell,prestera-kw-gating-clock",
-> +		.data = prestera_kw_gating_descr,
-> +	},
->  #endif
->  
->  	{ }
-> 
+Simon Glass (19):
+  env: Fix minor comment typos in cmd_nvedit
+  Add minor updates to README.fdt-control
+  hash: Add a way to calculate a hash for any algortihm
+  bootstage: Don't build for HOSTCC
+  mkimage: Move ARRAY_SIZE to header file
+  libfdt: Add fdt_next_subnode() to permit easy subnode iteration
+  image: Move timestamp #ifdefs to header file
+  image: Export fit_check_ramdisk()
+  image: Split FIT code into new image-fit.c
+  image: Move HOSTCC image code to tools/
+  image: Split hash node processing into its own function
+  image: Convert fit_image_hash_set_value() to static, and rename
+  image: Rename fit_image_check_hashes() to fit_image_verify()
+  image: Move hash checking into its own function
+  image: Move error! string to common place
+  image: Export fit_conf_get_prop_node()
+  image: Rename fit_add_hashes() to fit_add_verification_data()
+  image: Rename hash printing to fit_image_print_verification_data()
+  sandbox: image: Add support for booting images in sandbox
 
+ common/Makefile        |    1 +
+ common/cmd_bootm.c     |   25 +-
+ common/cmd_fpga.c      |    2 +-
+ common/cmd_nvedit.c    |    4 +-
+ common/cmd_source.c    |    2 +-
+ common/cmd_ximg.c      |    2 +-
+ common/hash.c          |   23 +
+ common/image-fit.c     | 1495 ++++++++++++++++++++++++++++++++++++++++++
+ common/image.c         | 1679 ++----------------------------------------------
+ common/update.c        |    2 +-
+ doc/README.fdt-control |    9 +-
+ include/bootstage.h    |    5 +-
+ include/hash.h         |   22 +
+ include/image.h        |   55 +-
+ include/libfdt.h       |   22 +
+ lib/libfdt/fdt.c       |   28 +
+ tools/Makefile         |    4 +
+ tools/aisimage.c       |    1 -
+ tools/fit_image.c      |    2 +-
+ tools/image-host.c     |  208 ++++++
+ tools/mkimage.h        |    2 +
+ 21 files changed, 1917 insertions(+), 1676 deletions(-)
+ create mode 100644 common/image-fit.c
+ create mode 100644 tools/image-host.c
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+1.8.2.1
