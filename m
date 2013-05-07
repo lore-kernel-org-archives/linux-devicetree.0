@@ -1,7 +1,7 @@
 From: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/2 V2] iio:ak8975 Add support for gpios DT property
-Date: Tue, 07 May 2013 12:41:38 +0200
-Message-ID: <1367923299-30594-2-git-send-email-j.anaszewski@samsung.com>
+Subject: [PATCH 2/2 V2] iio:ak8975 Implement data ready interrupt handling
+Date: Tue, 07 May 2013 12:41:39 +0200
+Message-ID: <1367923299-30594-3-git-send-email-j.anaszewski@samsung.com>
 References: <1367923299-30594-1-git-send-email-j.anaszewski@samsung.com>
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-reply-to: <1367923299-30594-1-git-send-email-j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
@@ -10,72 +10,192 @@ To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, achew-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for parsing 'gpios' property when initializing
-from oftree.
-This patch adds also the binding documentation file.
+Implement "data ready" interrupt handling in addition to the
+two existing read modes - DRDY GPIO polling and ST1 register
+DRDY bit polling.
 
 Signed-off-by: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
- .../bindings/iio/magnetometer/ak8975.txt           |   18 ++++++++++++++++++
- drivers/iio/magnetometer/ak8975.c                  |   12 +++++++++---
- 2 files changed, 27 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+ drivers/iio/magnetometer/ak8975.c |   91 ++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 89 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-new file mode 100644
-index 0000000..011679f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-@@ -0,0 +1,18 @@
-+* AsahiKASEI AK8975 magnetometer sensor
-+
-+Required properties:
-+
-+  - compatible : should be "asahi-kasei,ak8975"
-+  - reg : the I2C address of the magnetometer
-+
-+Optional properties:
-+
-+  - gpios : should be device tree identifier of the magnetometer DRDY pin
-+
-+Example:
-+
-+ak8975@0c {
-+        compatible = "asahi-kasei,ak8975";
-+        reg = <0x0c>;
-+        gpios = <&gpj0 7 0>;
-+};
 diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
-index af6c320..d75cc23 100644
+index d75cc23..7105f22 100644
 --- a/drivers/iio/magnetometer/ak8975.c
 +++ b/drivers/iio/magnetometer/ak8975.c
-@@ -29,6 +29,7 @@
+@@ -24,10 +24,11 @@
+ #include <linux/kernel.h>
+ #include <linux/slab.h>
+ #include <linux/i2c.h>
++#include <linux/interrupt.h>
+ #include <linux/err.h>
+ #include <linux/mutex.h>
  #include <linux/delay.h>
- 
+-
++#include <linux/bitops.h>
  #include <linux/gpio.h>
-+#include <linux/of_gpio.h>
+ #include <linux/of_gpio.h>
  
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
-@@ -384,10 +385,15 @@ static int ak8975_probe(struct i2c_client *client,
- 	int err;
+@@ -83,6 +84,7 @@
+  */
+ #define AK8975_MAX_CONVERSION_TIMEOUT	500
+ #define AK8975_CONVERSION_DONE_POLL_TIME 10
++#define AK8975_DATA_READY_TIMEOUT	((100*HZ)/1000)
  
- 	/* Grab and set up the supplied GPIO. */
--	if (client->dev.platform_data == NULL)
--		eoc_gpio = -1;
--	else
-+	if (client->dev.platform_data)
- 		eoc_gpio = *(int *)(client->dev.platform_data);
-+	else if (client->dev.of_node)
-+		eoc_gpio = of_get_gpio(client->dev.of_node, 0);
-+	else
-+		eoc_gpio = -1;
+ /*
+  * Per-instance context data for the device.
+@@ -95,6 +97,9 @@ struct ak8975_data {
+ 	long			raw_to_gauss[3];
+ 	u8			reg_cache[AK8975_MAX_REGS];
+ 	int			eoc_gpio;
++	int			eoc_irq;
++	wait_queue_head_t	data_ready_queue;
++	unsigned long		flags;
+ };
+ 
+ static const int ak8975_index_to_reg[] = {
+@@ -124,6 +129,51 @@ static int ak8975_write_data(struct i2c_client *client,
+ }
+ 
+ /*
++ * Handle data ready irq
++ */
++static irqreturn_t ak8975_irq_handler(int irq, void *data)
++{
++	struct ak8975_data *ak8975 = data;
 +
-+	if (eoc_gpio == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
++	set_bit(0, &ak8975->flags);
++	wake_up(&ak8975->data_ready_queue);
++
++	return IRQ_HANDLED;
++}
++
++/*
++ * Install data ready interrupt handler
++ */
++static int ak8975_setup_irq(struct ak8975_data *data)
++{
++	struct i2c_client *client = data->client;
++	int rc;
++	int irq;
++
++	if (client->irq)
++		irq = client->irq;
++	else
++		irq = gpio_to_irq(data->eoc_gpio);
++
++	rc = request_irq(irq, ak8975_irq_handler,
++			 IRQF_TRIGGER_RISING | IRQF_ONESHOT,
++			 dev_name(&client->dev), data);
++	if (rc < 0) {
++		dev_err(&client->dev,
++			"irq %d request failed, (gpio %d): %d\n",
++			irq, data->eoc_gpio, rc);
++		return rc;
++	}
++
++	init_waitqueue_head(&data->data_ready_queue);
++	clear_bit(0, &data->flags);
++	data->eoc_irq = irq;
++
++	return rc;
++}
++
++
++/*
+  * Perform some start-of-day setup, including reading the asa calibration
+  * values and caching them.
+  */
+@@ -171,6 +221,16 @@ static int ak8975_setup(struct i2c_client *client)
+ 				AK8975_REG_CNTL_MODE_POWER_DOWN,
+ 				AK8975_REG_CNTL_MODE_MASK,
+ 				AK8975_REG_CNTL_MODE_SHIFT);
++
++	if (data->eoc_gpio > 0 || client->irq) {
++		ret = ak8975_setup_irq(data);
++		if (ret < 0) {
++			dev_err(&client->dev,
++				"Error setting data ready interrupt\n");
++			return ret;
++		}
++	}
++
+ 	if (ret < 0) {
+ 		dev_err(&client->dev, "Error in setting power-down mode\n");
+ 		return ret;
+@@ -267,9 +327,23 @@ static int wait_conversion_complete_polled(struct ak8975_data *data)
+ 		dev_err(&client->dev, "Conversion timeout happened\n");
+ 		return -EINVAL;
+ 	}
++
+ 	return read_status;
+ }
  
- 	/* We may not have a GPIO based IRQ to scan, that is fine, we will
- 	   poll if so */
++/* Returns 0 if the end of conversion interrupt occured or -ETIME otherwise */
++static int wait_conversion_complete_interrupt(struct ak8975_data *data)
++{
++	int ret;
++
++	ret = wait_event_timeout(data->data_ready_queue,
++				 test_bit(0, &data->flags),
++				 AK8975_DATA_READY_TIMEOUT);
++	clear_bit(0, &data->flags);
++
++	return ret > 0 ? 0 : -ETIME;
++}
++
+ /*
+  * Emits the raw flux value for the x, y, or z axis.
+  */
+@@ -295,13 +369,16 @@ static int ak8975_read_axis(struct iio_dev *indio_dev, int index, int *val)
+ 	}
+ 
+ 	/* Wait for the conversion to complete. */
+-	if (gpio_is_valid(data->eoc_gpio))
++	if (data->eoc_irq)
++		ret = wait_conversion_complete_interrupt(data);
++	else if (gpio_is_valid(data->eoc_gpio))
+ 		ret = wait_conversion_complete_gpio(data);
+ 	else
+ 		ret = wait_conversion_complete_polled(data);
+ 	if (ret < 0)
+ 		goto exit;
+ 
++	/* This will be executed only for non-interrupt based waiting case */
+ 	if (ret & AK8975_REG_ST1_DRDY_MASK) {
+ 		ret = i2c_smbus_read_byte_data(client, AK8975_REG_ST2);
+ 		if (ret < 0) {
+@@ -415,6 +492,11 @@ static int ak8975_probe(struct i2c_client *client,
+ 	}
+ 	data = iio_priv(indio_dev);
+ 	i2c_set_clientdata(client, indio_dev);
++
++	data->client = client;
++	data->eoc_gpio = eoc_gpio;
++	data->eoc_irq = 0;
++
+ 	/* Perform some basic start-of-day setup of the device. */
+ 	err = ak8975_setup(client);
+ 	if (err < 0) {
+@@ -439,6 +521,8 @@ static int ak8975_probe(struct i2c_client *client,
+ 
+ exit_free_iio:
+ 	iio_device_free(indio_dev);
++	if (data->eoc_irq)
++		free_irq(data->eoc_irq, data);
+ exit_gpio:
+ 	if (gpio_is_valid(eoc_gpio))
+ 		gpio_free(eoc_gpio);
+@@ -453,6 +537,9 @@ static int ak8975_remove(struct i2c_client *client)
+ 
+ 	iio_device_unregister(indio_dev);
+ 
++	if (data->eoc_irq)
++		free_irq(data->eoc_irq, data);
++
+ 	if (gpio_is_valid(data->eoc_gpio))
+ 		gpio_free(data->eoc_gpio);
+ 
 -- 
 1.7.5.4
