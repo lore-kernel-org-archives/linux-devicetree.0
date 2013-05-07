@@ -1,66 +1,108 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4] extcon: Palmas Extcon Driver
-Date: Tue, 7 May 2013 11:45:02 +0100
-Message-ID: <20130507104502.GQ7478@sirena.org.uk>
-References: <1362662506-14823-4-git-send-email-kishon@ti.com>
- <1367846225-15685-1-git-send-email-kishon@ti.com>
- <20130506144010.GF13472@opensource.wolfsonmicro.com>
- <51888D55.3090907@ti.com>
- <20130507075824.GM7478@sirena.org.uk>
- <5188CD9C.6010602@ti.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH v2] drivers: bus: add ARM CCI support
+Date: Tue, 7 May 2013 11:59:55 +0100
+Message-ID: <20130507105955.GA19477@e102568-lin.cambridge.arm.com>
+References: <1367425108-4698-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1367425108-4698-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <20130503151706.GB2756@e102654-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="V2tfspbppmK1TQo2"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130503151706.GB2756-hBfBd/Xtra/ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5188CD9C.6010602@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: gg@slimlogic.co.uk, myungjoo.ham@samsung.com, cw00.choi@samsung.com, balbi@ti.com, ldewangan@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, ruchika@ti.com, tony@atomide.com, sameo@linux.intel.com
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Javi Merino <Javi.Merino-5wv7dgnIgG8@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, May 03, 2013 at 04:17:07PM +0100, Javi Merino wrote:
+> Hi Lorenzo,
+> 
+> On Wed, May 01, 2013 at 05:18:28PM +0100, Lorenzo Pieralisi wrote:
+> > On ARM multi-cluster systems coherency between cores running on
+> > different clusters is managed by the cache-coherent interconnect (CCI).
+> > It allows broadcasting of TLB invalidates and memory barriers and it
+> > guarantees cache coherency at system level through snooping of slave
+> > interfaces connected to it.
+> > 
+> > This patch enables the basic infrastructure required in Linux to handle and
+> > programme the CCI component.
+> > 
+> > Non-local variables used by the CCI management functions called by power
+> > down function calls after disabling the cache must be flushed out to main
+> > memory in advance, otherwise incoherency of those values may occur if they
+> > are sitting in the cache of some other CPU when power down functions
+> > execute. Driver code ensures that relevant data structures are flushed
+> > from inner and outer caches after the driver probe is completed.
+> > 
+> > CCI slave port resources are linked to set of CPUs through bus masters
+> > phandle properties that link the interface resources to masters node in
+> > the device tree.
+> > 
+> > Documentation describing the CCI DT bindings is provided with the patch.
+> > 
+> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> 
+> [...]
+> 
+> > diff --git a/include/linux/arm-cci.h b/include/linux/arm-cci.h
+> > new file mode 100644
+> > index 0000000..0e70942
+> > --- /dev/null
+> > +++ b/include/linux/arm-cci.h
+> > @@ -0,0 +1,59 @@
+> > +/*
+> > + * CCI cache coherent interconnect support
+> > + *
+> > + * Copyright (C) 2013 ARM Ltd.
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License as published by
+> > + * the Free Software Foundation; either version 2 of the License, or
+> > + * (at your option) any later version.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + *
+> > + * You should have received a copy of the GNU General Public License
+> > + * along with this program; if not, write to the Free Software
+> > + * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+> > + */
+> > +
+> > +#ifndef __LINUX_ARM_CCI_H
+> > +#define __LINUX_ARM_CCI_H
+> > +
+> > +#include <linux/errno.h>
+> > +#include <linux/types.h>
+> > +
+> > +struct device_node;
+> > +
+> > +#ifdef CONFIG_ARM_CCI
+> > +extern int cci_ace_get_port(struct device_node *dn);
+> > +extern int cci_disable_port_by_cpu(u64 mpidr);
+> > +extern int __cci_control_port_by_device(struct device_node *dn, bool enable);
+> > +extern int __cci_control_port_by_index(u32 port, bool enable);
+> > +#else
+> > +static inline int cci_ace_get_port(struct device_node *dn, bool cpu)
+> 
+> Builds with !CONFIG_ARM_CCI fail because this definition of
+> cci_ace_get_port() takes two arguments whereas the one for
+> CONFIG_ARM_CCI takes only one.
 
---V2tfspbppmK1TQo2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, sorry, I missed that while refactoring the interface.
 
-On Tue, May 07, 2013 at 03:17:08PM +0530, Kishon Vijay Abraham I wrote:
-> On Tuesday 07 May 2013 01:28 PM, Mark Brown wrote:
-
-> >>The platform can provide it's own vbus control in which case this is
-> >>not needed.
-
-> >So why is there no interaction with this external VBUS control and how
-> >does the driver distinguish between that and an error getting the
-> >regulator?
-
-> The platform specifies if it provides its own VBUS control by the dt
-> property ti,no_control_vbus. So the driver will give an error only
-> when *ti,no_control_vbus* is not set. Graeme?
-
-That doesn't answer the question about why there's no interaction with
-the external control...
-
---V2tfspbppmK1TQo2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRiNsrAAoJELSic+t+oim9qssP/3toUma31SzGARXn8T40l8xy
-sKVqci35ErrhapClrJUupVjmd7fOGaTrY86AF+ZHisKjwFc6HYjvGF4BfqAxjVtv
-/u12U7xN6e16lsj3coH8l3BdYo1LLDHaixZMlRAZ9+Z2i5CGShij5KzfDjA2nVGe
-De1s96eTnbi8yV9eceFpcSqsHhlxEOUugmlgbv3ZMCczOfVIdVBMxz5y89J2Jdjf
-D4ePYT7KsH/uJpx6BwWjnja2j2fu0gyyqWte2niWf+lfhXCwNf9n8Ed9RCQcED8e
-1+6D1UL/dHFruc+LGlHwQrHzxRlmNha5Ug22DEmCTFHIvJ0W3oqA5GpaCgccNfWL
-xE3ELvcZzqSvQKOnuAynRO5MFb5KvbwSVOBQPnMBpcQrTFIr4gqxaL7/bTmy2P7Z
-P07G35MpGooqp3fdJXFcpG9BEKEwXnGdJstC5NeWIyLR5+mcBBCONcz6lqQktlel
-9OFc4gv/rivjr1rJxuOWXZqmELJ38SjNAjWQLVq2RzfZsIDcL+ic5HYtvseThOoL
-LN3kOBIH6MnQUqr6UWWoyDRvfP4ew6xFUbMTtA0Zdg3dB4b2DzLxsgJWWebJifeq
-Vm3rJTu9aZL+1Nyyg+fv2RGGv5vmYRI5repayHIYW0f69r15yfu0UxeuxekjkI/7
-iOboRMf+NLENGsHkzQme
-=jwqy
------END PGP SIGNATURE-----
-
---V2tfspbppmK1TQo2--
+Thanks,
+Lorenzo
