@@ -1,58 +1,59 @@
-From: Andrew Lunn <andrew@lunn.ch>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH 1/3] clk: mvebu: add gate ctrl for Prestera kirkwood
  variants
-Date: Tue, 7 May 2013 18:32:44 +0200
-Message-ID: <20130507163244.GD9994@lunn.ch>
+Date: Tue, 07 May 2013 18:36:29 +0200
+Message-ID: <51892D8D.4060704@gmail.com>
 References: <1367941941-19152-1-git-send-email-valentin.longchamp@keymile.com>
  <1367941941-19152-2-git-send-email-valentin.longchamp@keymile.com>
  <518927C0.6070600@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <518927C0.6070600@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Valentin Longchamp <valentin.longchamp@keymile.com>, jason@lakedaemon.net, andrew@lunn.ch, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <518927C0.6070600-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 07, 2013 at 06:11:44PM +0200, Gregory CLEMENT wrote:
+On 05/07/2013 06:11 PM, Gregory CLEMENT wrote:
 > On 05/07/2013 05:52 PM, Valentin Longchamp wrote:
-> > The kirkwood device found in the Prestera SoCs does not have all the
-> > peripherals of its the usual kirkwood SoCs. There are hence missing
-> > clocks in the SoCs.
-> > 
-> > This patch registers another gate controller for the kirkwood that
-> > registers only the available clocks of this kirkwood variant.
-> 
+>> The kirkwood device found in the Prestera SoCs does not have all the
+>> peripherals of its the usual kirkwood SoCs. There are hence missing
+>> clocks in the SoCs.
+>>
+>> This patch registers another gate controller for the kirkwood that
+>> registers only the available clocks of this kirkwood variant.
+>
 > Hi Valentin,
-> 
+>
 > Overall the patch set looks OK, however I don't understand why you need
 > to declare a new gate controller. The list you delcared seemed to be
 > just a subset of the Kirkwood one, why can't you use this one?
+>
+> Note that I am not an expert for the kirkwood hardware, so maybe I
+> missed something.
 
-Hi Gregory
+I just checked my mails from late 2012 and there Valentin and I agreed,
+that not the missing bits in clock gating control registers was the root
+cause of km_kirkwood to hang. It was rather the phy gates (that do not/
+not yet exist on DT) that caused it to hang, i.e. when accessing SATA
+PHY registers.
 
-Take a look at the code which gets deleted in patch 3/3.
+Valentin, I am not against an extra clock-gating-ctrl for Prestera but
+maybe having an kirkwood.dtsi fork without SATA and other peripherals
+will also help?
 
-       /*
-        * Our variant of kirkwood (integrated in the Bobcat) hangs on accessing
-        * SATA bits (14-15) of the Clock Gating Control Register. Since these
-        * devices are also not present in this variant, their clocks get
-        * disabled because unused when clk_disable_unused() gets called.
-        * That's why we change the flags to these clocks to CLK_IGNORE_UNUSED
-        */
+And: Does DT-enabled km_kirkwood ever hang without the hack in it's
+board setup? There should be no PHY gates on DT boards..
 
-By not defining these clocks in the first place, they never get turned
-off...
-
-	Andrew
+Sebastian
