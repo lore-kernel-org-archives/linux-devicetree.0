@@ -1,105 +1,71 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC 0/2] V4L2 API for exposing flash subdevs as LED class device
-Date: Tue, 07 May 2013 17:07:20 +0200
-Message-ID: <1958801.k4UEk5OhXt@avalon>
-References: <1367832828-30771-1-git-send-email-a.hajda@samsung.com> <A874F61F95741C4A9BA573A70FE3998F82E5C879@DQHE06.ent.ti.com>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v2] drivers: bus: add ARM CCI support
+Date: Tue, 7 May 2013 11:20:42 -0400 (EDT)
+Message-ID: <alpine.LFD.2.03.1305071113310.13109@syhkavp.arg>
+References: <1367425108-4698-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1367425108-4698-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <alpine.LFD.2.03.1305011239240.11070@syhkavp.arg>
+ <20130507134943.GB19477@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <A874F61F95741C4A9BA573A70FE3998F82E5C879@DQHE06.ent.ti.com>
-Sender: linux-media-owner@vger.kernel.org
-To: "Kim, Milo" <Milo.Kim@ti.com>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Kyungmin Park <kyungmin.park@samsung.com>, "hj210.choi@samsung.com" <hj210.choi@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130507134943.GB19477-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javi Merino <Javi.Merino-5wv7dgnIgG8@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 07 May 2013 02:11:27 Kim, Milo wrote:
-> On Monday, May 06, 2013 6:34 PM Andrzej Hajda wrote:
-> > 
-> > This RFC proposes generic API for exposing flash subdevices via LED
-> > framework.
-> > 
-> > Rationale
-> > 
-> > Currently there are two frameworks which are used for exposing LED
-> > flash to user space:
-> > - V4L2 flash controls,
-> > - LED framework(with custom sysfs attributes).
-> > 
-> > The list below shows flash drivers in mainline kernel with initial
-> > commit date and typical chip application (according to producer):
-> > 
-> > LED API:
-> >     lm3642: 2012-09-12, Cameras
-> >     lm355x: 2012-09-05, Cameras
-> >     max8997: 2011-12-14, Cameras (?)
-> >     lp3944: 2009-06-19, Cameras, Lights, Indicators, Toys
-> >     pca955x: 2008-07-16, Cameras, Indicators (?)
-> > 
-> > V4L2 API:
-> >     as3645a:  2011-05-05, Cameras
-> >     adp1653: 2011-05-05, Cameras
-> > 
-> > V4L2 provides richest functionality, but there is often demand from
-> > application developers to provide already established LED API. We would
-> > like to have an unified user interface for flash devices. Some of devices
-> > already have the LED API driver exposing limited set of a Flash IC
-> > functionality. In order to support all required features the LED API
-> > would have to be extended or the V4L2 API would need to be used. However
-> > when switching from a LED to a V4L2 Flash driver existing LED API
-> > interface would need to be retained.
-> > 
-> > Proposed solution
-> > 
-> > This patch adds V4L2 helper functions to register existing V4L2 flash
-> > subdev as LED class device. After registration via v4l2_leddev_register
-> > appropriate entry in /sys/class/leds/ is created. During registration all
-> > V4L2 flash controls are enumerated and corresponding attributes are added.
-> > 
-> > I have attached also patch with new max77693-led driver using v4l2_leddev.
-> > This patch requires presence of the patch "max77693: added device tree
-> > support": https://patchwork.kernel.org/patch/2414351/ .
-> > 
-> > Additional features
-> > 
-> > - simple API to access all V4L2 flash controls via sysfs,
-> > - V4L2 subdevice should not be registered by V4L2 device to use it,
-> > - LED triggers API can be used to control the device,
-> > - LED device is optional - it will be created only if V4L2_LEDDEV
-> >   configuration option is enabled and the subdev driver calls
-> >   v4l2_leddev_register.
-> > 
-> > Doubts
-> > 
-> > This RFC is a result of a uncertainty which API developers should expose
-> > by their flash drivers. It is a try to gluing together both APIs. I am not
-> > sure if it is the best solution, but I hope there will be some discussion
-> > and hopefully some decisions will be taken which way we should follow.
+On Tue, 7 May 2013, Lorenzo Pieralisi wrote:
+
+> On Mon, May 06, 2013 at 04:05:28PM +0100, Nicolas Pitre wrote:
+> > When compiled in, module_init() is translated into device_initcall().
+> > This is way too late for bringing up secondary CPUs during boot via the
+> > MCPM layer.  That is not an issue as far as the code presented here is
+> > concerned since there is no integration with MCPM yet, but eventually
+> > we'd want the MCPM power_up_setup method to integrate with the port
+> > discovery performed here instead of having them hardcoded in the
+> > assembly code.  This means it would have to become early_initcall()
+> > instead.  And at that point the driver infrastructure isn't fully
+> > operational, meaning that driver_probe() won't be usable either (looking
+> > at what we did to the TC2 spc init code is a good example of what I mean
+> > here).
 > 
-> The LED subsystem provides similar APIs for the Camera driver.
-> With LED trigger event, flash and torch are enabled/disabled.
-> I'm not sure this is applicable for you.
-> Could you take a look at LED camera trigger feature?
+> Yes, I thought about that. This means that CCI driver should not rely on
+> platform device structs, and yes I can mirror SPC probing code to take care
+> of ordering issues. I am quite tempted to remove the platform device/driver
+> infrastructure altogether and just rely on the DT layer (as GIC, PL310
+> do) to initialize CCI. What do you think ?
+
+I think that's probably the best approach.  That's what we ended up 
+doing to the spc code for the same reasons.
+
+> I think I will leave the
+> platform driver infrastructure, and at probe it will check if data
+> structures have already been initialized by an exported function, say:
 > 
-> For the camera LED trigger,
-> https://git.kernel.org/cgit/linux/kernel/git/cooloney/linux-leds.git/commit/
-> ?h=f or-next&id=48a1d032c954b9b06c3adbf35ef4735dd70ab757
+> cci_of_init()
+
+Please let's try to avoid propagating the "of" acronym further.  We 
+don't use Open Firmware here.  Using "dt" is more appropriate IMHO.
+
+> if the data structures are already initialized basically the probe
+> function will do precious little and just succeeds otherwise it will
+> initialize the driver as it does now.
 > 
-> Example of camera flash driver,
-> https://git.kernel.org/cgit/linux/kernel/git/cooloney/linux-leds.git/commit/
-> ?h=f or-next&id=313bf0b1a0eaeaac17ea8c4b748f16e28fce8b7a
+> Is there really a point in having the CCI driver represented as a
+> platform driver ? Not sure at all.
 
-I think we should decide on one API. Implementing two APIs for a single device 
-is usually messy, and will result in different feature sets (and different 
-bugs) being implemented through each API, depending on the driver. 
-Interactions between the APIs are also a pain point on the kernel side to 
-properly synchronize calls.
+I'm not sure either.
 
-The LED API is too limited for torch and flash usage, but I'm definitely open 
-to moving flash devices to the LED API is we can extend it in a way that it 
-covers all the use cases.
 
--- 
-Regards,
-
-Laurent Pinchart
+Nicolas
