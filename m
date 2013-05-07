@@ -1,59 +1,94 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] clk: mvebu: add gate ctrl for Prestera kirkwood
- variants
-Date: Tue, 07 May 2013 18:36:29 +0200
-Message-ID: <51892D8D.4060704@gmail.com>
-References: <1367941941-19152-1-git-send-email-valentin.longchamp@keymile.com>
- <1367941941-19152-2-git-send-email-valentin.longchamp@keymile.com>
- <518927C0.6070600@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <518927C0.6070600-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: [PATCH RESEND] genirq: add function to get IRQ edge/level flags
+Date: Tue,  7 May 2013 18:48:08 +0200
+Message-ID: <1367945288-5625-1-git-send-email-javier@dowhile0.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>, Alexander Gordeev <agordeev@redhat.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@secretlab.ca>, Jon Hunter <jon-hunter@ti.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-omap <linux-omap@vger.kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, Javier Martinez Canillas <javier.martinez@dowhile0.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/2013 06:11 PM, Gregory CLEMENT wrote:
-> On 05/07/2013 05:52 PM, Valentin Longchamp wrote:
->> The kirkwood device found in the Prestera SoCs does not have all the
->> peripherals of its the usual kirkwood SoCs. There are hence missing
->> clocks in the SoCs.
->>
->> This patch registers another gate controller for the kirkwood that
->> registers only the available clocks of this kirkwood variant.
->
-> Hi Valentin,
->
-> Overall the patch set looks OK, however I don't understand why you need
-> to declare a new gate controller. The list you delcared seemed to be
-> just a subset of the Kirkwood one, why can't you use this one?
->
-> Note that I am not an expert for the kirkwood hardware, so maybe I
-> missed something.
+According to Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+the "#interrupt-cells" property of an "interrupt-controller" is used
+to define the number of cells needed to specify a single interrupt.
 
-I just checked my mails from late 2012 and there Valentin and I agreed,
-that not the missing bits in clock gating control registers was the root
-cause of km_kirkwood to hang. It was rather the phy gates (that do not/
-not yet exist on DT) that caused it to hang, i.e. when accessing SATA
-PHY registers.
+A commonly used variant is two cell on which #interrupt-cells = <2>
+and the first cell defines the index of the interrupt in the controller
+while the second cell is used to specify any of the following flags:
 
-Valentin, I am not against an extra clock-gating-ctrl for Prestera but
-maybe having an kirkwood.dtsi fork without SATA and other peripherals
-will also help?
+    - bits[3:0] trigger type and level flags
+        1 = low-to-high edge triggered
+        2 = high-to-low edge triggered
+        4 = active high level-sensitive
+        8 = active low level-sensitive
 
-And: Does DT-enabled km_kirkwood ever hang without the hack in it's
-board setup? There should be no PHY gates on DT boards..
+An example of an interrupt controller which use the two cell format is
+the OMAP GPIO controller that allows GPIO lines to be used as IRQ
+(Documentation/devicetree/bindings/gpio/gpio-omap.txt)
 
-Sebastian
+But setting #interrupt-cells = <2> on the OMAP GPIO device node and
+specifying the GPIO-IRQ type and level flags on the second cell does not
+store this value on the populated IORESOURCE_IRQ struct resource.
+
+This is because when using an IRQ from an interrupt controller and
+setting both cells (e.g:)
+
+        interrupt-parent = <&gpio6>;
+        interrupts = <16 8>;
+
+A call to of_irq_to_resource() is made and this function calls
+irq_of_parse_and_map_type() to get the virtual IRQ mapped to the real
+index for this interrupt controller. This IRQ number is populated on
+the struct resource:
+
+int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
+{
+        int irq = irq_of_parse_and_map(dev, index);
+        ..
+        r->start = r->end = irq;
+}
+
+irq_of_parse_and_map() calls to irq_create_of_mapping() which calls to
+the correct xlate function handler according to "#interrupt-cells"
+(irq_domain_xlate_onecell or irq_domain_xlate_twocell) and to
+irq_set_irq_type() to set the IRQ type.
+
+But the type is never returned so it can't be saved on the IRQ struct
+resource flags member.
+
+This means that drivers that want to get the IRQ edge/level flags
+defined in the Device Tree from a struct resource will not be able
+to get it.
+
+Drivers can get the IRQ flags by using irq_get_irq_data(irq) and
+irqd_get_trigger_type(irq_data) but this will unnecessary expose
+irq_data to callers and also is more error prone.
+
+So, is better to add an irq_get_trigger_type() function to obtain
+the edge/level flags for an IRQ.
+
+Signed-off-by: Javier Martinez Canillas <javier.martinez@dowhile0.org>
+---
+ include/linux/irq.h |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
+
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index bc4e066..0e8e3a6 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -579,6 +579,12 @@ static inline struct msi_desc *irq_data_get_msi(struct irq_data *d)
+ 	return d->msi_desc;
+ }
+ 
++static inline u32 irq_get_trigger_type(unsigned int irq)
++{
++	struct irq_data *d = irq_get_irq_data(irq);
++	return d ? irqd_get_trigger_type(d) : 0;
++}
++
+ int __irq_alloc_descs(int irq, unsigned int from, unsigned int cnt, int node,
+ 		struct module *owner);
+ 
+-- 
+1.7.7.6
+
