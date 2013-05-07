@@ -1,94 +1,91 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v8 1/3] of/pci: Unify pci_process_bridge_OF_ranges from
- Microblaze and PowerPC
-Date: Tue, 7 May 2013 09:01:42 +0100
-Message-ID: <20130507080142.GA8808@arm.com>
-References: <1366627295-16964-1-git-send-email-Andrew.Murray@arm.com>
- <1366627295-16964-2-git-send-email-Andrew.Murray@arm.com>
- <1367721709.11982.37.camel@pasglop>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4] extcon: Palmas Extcon Driver
+Date: Tue, 7 May 2013 13:47:45 +0530
+Message-ID: <5188B8A9.9040709@ti.com>
+References: <1362662506-14823-4-git-send-email-kishon@ti.com>
+ <1367846225-15685-1-git-send-email-kishon@ti.com>
+ <51889AD9.9030902@samsung.com> <51889E55.8090306@ti.com>
+ <5188A5EC.8020705@samsung.com> <5188A7BE.4080509@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-mips-bounce@linux-mips.org>
-Content-Disposition: inline
-In-Reply-To: <1367721709.11982.37.camel@pasglop>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "jgunthorpe@obsidianresearch.com" <jgunthorpe@obsidianresearch.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "siva.kallam@samsung.com" <siva.kallam@samsung.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "jg1.han@samsung.com" <jg1.han@samsung.com>, Liviu Dudau <Liviu.Dudau@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "suren.reddy@samsung.com" <suren.reddy@samsung.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5188A7BE.4080509-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ruchika-l0cyMroinI0@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 05, 2013 at 03:41:49AM +0100, Benjamin Herrenschmidt wrote:
-> On Mon, 2013-04-22 at 11:41 +0100, Andrew Murray wrote:
-> > The pci_process_bridge_OF_ranges function, used to parse the "ranges"
-> > property of a PCI host device, is found in both Microblaze and PowerPC
-> > architectures. These implementations are nearly identical. This patch
-> > moves this common code to a common place.
-> 
-> What's happening with this ? I'd like to avoid that patch for now
-> as I'm doing some changes to pci_process_bridge_OF_ranges
-> which are fairly urgent (I might even stick them in the current
-> merge window) to deal with memory windows having separate offsets.
+On Tuesday 07 May 2013 12:35 PM, Chanwoo Choi wrote:
+> On 05/07/2013 03:57 PM, Chanwoo Choi wrote:
+>> diff --git a/include/linux/extcon/extcon_palmas.h b/include/linux/extcon/extcon_palmas.h
+>> new file mode 100644
+>> index 0000000..a5119c9
+>> --- /dev/null
+>> +++ b/include/linux/extcon/extcon_palmas.h
+>> @@ -0,0 +1,26 @@
+>> +/*
+>> + * extcon_palmas.h - palmas extcon driver to detect VBUS or ID events
+>> + *
+>> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + * Author: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + *
+>> + */
+>> +
+>> +#ifndef __EXTCON_PALMAS_H__
+>> +#define __EXTCON_PALMAS_H__
+>> +
+>> +#define    PALMAS_USB_STATE_DISCONNECT    0x0
+>> +#define    PALMAS_USB_STATE_VBUS        BIT(0)
+>> +#define    PALMAS_USB_STATE_ID        BIT(1)
+>> +
+>>>> The defined variable in extcon_palmas.h is used only on extcon-palmas.c.
+>>>> So, I would like to move definition from extcon_palmas.h to extcon-palmas.c
+>>>> and remove extcon_palmas.h header file.
+>>> Actually it has to be used in dwc3-omap.c (that was in a different patch).
+>>>
+>> Should detect the state of USB/USB-HOST on dwc3-omap driver?
+>>
+>> If yes, dwc3-omap driver can immediately detect the changed state of USB/USB-HOST
+>> by using excon_register_interest() function which is defined in extcon-class.c
+>>
+>> I explain simple usage of extcon_register_interest()
+>> to receive newly state of USB cable on dwc3-omap driver.
+>> -----------
+>>      struct extcon_specific_cable_nb extcon_notifier
+>>      struct notifier_block extcon_notifier;
+>>
+>>       /* ... */
+>>
+>>      extcon_notifier.notifier_call = omap_extcon_notifier;
+>>      ret = extcon_register_interest(&extcon_dev, "USB", &extcon_notifier);
+>      Fix usage of extcon_register_interest() as following:
+>
+>      ret = extcon_register_interest(&extcon_dev, NULL, "USB", &extcon_notifier); or
+>      ret = extcon_register_interest(&extcon_dev, "palmas-usb", "USB", &extcon_notifier);
 
-There were no objections to this latest revision until now and it is
-currently sitting with Jason Cooper (mvebu-next/pcie). [1]
+By this we have to define 2 notifiers (one for USB and the other for 
+USB-HOST). I thought of having a single notifier and handling it using 
+states. It was something like this http://pastebin.com/Nv7q9swz.
 
-> 
-> There's also a few hacks in there that are really ppc specific...
-> 
-> I think the right long term approach is to change the way powerpc
-> (and microblaze ?) initializes PCI host bridges. Move it away from
-> setup_arch() (which is a PITA anyway since it's way too early) to
-> an early init call of some sort, and encapsulate the new struct
-> pci_host_bridge.
-> 
-> We can then directly configure the host bridge windows rather
-> than having this "intermediary" set of resources in our pci_controller
-> and in fact move most of the fields from pci_controller to
-> pci_host_bridge to the point where the former can remain as a
-> simple platform specific wrapper if needed.
-
-This is a view that was also shared by Bjorn [2] when I attempted to
-submit a patchset which moves struct pci_controller to asm-generic.
-
-> 
-> So for new stuff (hint: DT based ARM PCI) or stuff that has to deal with
-> a lot less archaic platforms (hint: Microblaze), I'd recommend going
-> straight for that approach rather than perpetuating the PowerPC code
-> which I'll try to deal with in the next few monthes.
-
-The motativation for my patchsets were to give a way for ARM PCI host
-bridge drivers to parse the DT ranges property, but this snow-balled into
-unifying pci_process_bridge_OF_ranges.
-
-My v8 patchset provides a of_pci_range_parser which is used directly by a
-few ARM PCI DT host bridge drivers, this has been generally accepted and
-tested. I don't see why this can't remain and so I'd really like to keep this
-around. 
-
-Grant, Benjamin would you be happy for me to resubmit this series which provides
-the of_pci_range_parser which will be used by the separate implementations of
-pci_process_bridge_OF_ranges in PowerPC/Microblaze?
-
-Benjamin are you able to still use of_pci_range_parser in your
-'Support per-aperture memory offset' patch?
-
-Thanks,
-
-Andrew Murray
-
-[1] https://lkml.org/lkml/2013/4/22/505
-[2] https://patchwork.kernel.org/patch/2487671
-
-> 
-> Cheers,
-> Ben.
->  
-> 
-> 
+Thanks
+Kishon
