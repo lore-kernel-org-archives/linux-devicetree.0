@@ -1,63 +1,55 @@
-From: Haojian Zhuang <haojian.zhuang@linaro.org>
-Subject: Re: [PATCH] pinctrl: single: fix error return code in pcs_parse_one_pinctrl_entry()
-Date: Tue, 7 May 2013 21:30:30 +0800
-Message-ID: <CAD6h2NT8VHrV8i=W7gi_EtJkNUgkH+MtAAdA6K1ydqwEpnPaoQ@mail.gmail.com>
-References: <CAPgLHd-av2Yg44ARcSGr_zOajO-U611y3N4_Sn7J5Z+=OfVFcg@mail.gmail.com>
-	<CAD6h2NQRqcZ7RW=cCcATD2g3Vi0nszYnjppsX-VQmQgT1se+3w@mail.gmail.com>
-	<CAPgLHd_kpAVzcq4uP2a9qBaWoUbBhC1mfqb2++wQ06Tf67yB2A@mail.gmail.com>
+From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] powerpc/fsl_msi: fix error return code in fsl_of_msi_probe()
+Date: Tue, 7 May 2013 21:46:36 +0800
+Message-ID: <CAPgLHd_AKxWd1bOKF9afGLKsQzyfueYV6b3SrAf_V7ut2bUQzQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPgLHd_kpAVzcq4uP2a9qBaWoUbBhC1mfqb2++wQ06Tf67yB2A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, grant.likely@linaro.org, Rob Herring <rob.herring@calxeda.com>, yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, agraf-l3A5Bk7waGM@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 7 May 2013 20:57, Wei Yongjun <weiyj.lk@gmail.com> wrote:
-> On 05/07/2013 08:11 PM, Haojian Zhuang wrote:
->> On 7 May 2013 20:06, Wei Yongjun <weiyj.lk@gmail.com> wrote:
->>> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->>>
->>> Fix to return a negative error code from the error handling
->>> case instead of 0, as done elsewhere in this function.
->>>
->>> Introduced by commit 9dddb4df90d136429b6d6ddefceb49a9b93f6cd1
->>> (pinctrl: single: support generic pinconf)
->>>
->>> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->>> ---
->>>  drivers/pinctrl/pinctrl-single.c | 3 ++-
->>>  1 file changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
->>> index 5f2d2bf..b9fa046 100644
->>> --- a/drivers/pinctrl/pinctrl-single.c
->>> +++ b/drivers/pinctrl/pinctrl-single.c
->>> @@ -1166,7 +1166,8 @@ static int pcs_parse_one_pinctrl_entry(struct pcs_device *pcs,
->>>         (*map)->data.mux.function = np->name;
->>>
->>>         if (pcs->is_pinconf) {
->>> -               if (pcs_parse_pinconf(pcs, np, function, map))
->>> +               res = pcs_parse_pinconf(pcs, np, function, map);
->>> +               if (res)
->>>                         goto free_pingroups;
->>>                 *num_maps = 2;
->>>         } else {
->>>
->> It seems that you don't change anything. pcs_parse_pinconf() returns
->> either 0 or negative value.
->>
->> If it returns negative value, it will goto free_pingroups label w/wo
->> your change. So I don't understand why your change is necessary.
->
-> return res as the error code. before this change, 0 will be return
-> in this case.
->
->
-Yes, I didn't return the error code.
+From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 
-Acked-by: Haojian Zhuang <haojian.zhuang@linaro.org>
+Fix to return a negative error code in the MSI bitmap alloc error
+handling case instead of 0, as done elsewhere in this function.
 
-Regards
-Haojian
+Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+---
+ arch/powerpc/sysdev/fsl_msi.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/arch/powerpc/sysdev/fsl_msi.c b/arch/powerpc/sysdev/fsl_msi.c
+index ab02db3..f45556a 100644
+--- a/arch/powerpc/sysdev/fsl_msi.c
++++ b/arch/powerpc/sysdev/fsl_msi.c
+@@ -370,7 +370,6 @@ static int fsl_of_msi_probe(struct platform_device *dev)
+ 	struct fsl_msi *msi;
+ 	struct resource res;
+ 	int err, i, j, irq_index, count;
+-	int rc;
+ 	const u32 *p;
+ 	const struct fsl_msi_feature *features;
+ 	int len;
+@@ -431,8 +430,8 @@ static int fsl_of_msi_probe(struct platform_device *dev)
+ 	 */
+ 	msi->phandle = dev->dev.of_node->phandle;
+ 
+-	rc = fsl_msi_init_allocator(msi);
+-	if (rc) {
++	err = fsl_msi_init_allocator(msi);
++	if (err) {
+ 		dev_err(&dev->dev, "Error allocating MSI bitmap\n");
+ 		goto error_out;
+ 	}
