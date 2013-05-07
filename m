@@ -1,94 +1,63 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: [PATCH RESEND] genirq: add function to get IRQ edge/level flags
-Date: Tue,  7 May 2013 18:48:08 +0200
-Message-ID: <1367945288-5625-1-git-send-email-javier@dowhile0.org>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>, Alexander Gordeev <agordeev@redhat.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@secretlab.ca>, Jon Hunter <jon-hunter@ti.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-omap <linux-omap@vger.kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, Javier Martinez Canillas <javier.martinez@dowhile0.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] net: of_mdio: fix behavior on missing phy device
+Date: Tue, 07 May 2013 21:55:45 +0400
+Message-ID: <51894021.1070900@cogentembedded.com>
+References: <1367920171-20264-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1367920171-20264-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, David Miller <davem@davemloft.net>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-According to Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-the "#interrupt-cells" property of an "interrupt-controller" is used
-to define the number of cells needed to specify a single interrupt.
+Hello.
 
-A commonly used variant is two cell on which #interrupt-cells = <2>
-and the first cell defines the index of the interrupt in the controller
-while the second cell is used to specify any of the following flags:
+On 07-05-2013 13:49, Sebastian Hesselbarth wrote:
 
-    - bits[3:0] trigger type and level flags
-        1 = low-to-high edge triggered
-        2 = high-to-low edge triggered
-        4 = active high level-sensitive
-        8 = active low level-sensitive
+> of_mdiobus_register creates a phy_device even if get_phy_device failed
+> to create it previously. This causes indefinite polling on non-existent
+> PHYs. This fix makes of_mdio_register rely on get_phy_device to
+> properly create the device or fail otherwise.
 
-An example of an interrupt controller which use the two cell format is
-the OMAP GPIO controller that allows GPIO lines to be used as IRQ
-(Documentation/devicetree/bindings/gpio/gpio-omap.txt)
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> ---
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: David Miller <davem@davemloft.net>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> ---
+>   drivers/of/of_mdio.c |   11 ++++-------
+>   1 file changed, 4 insertions(+), 7 deletions(-)
 
-But setting #interrupt-cells = <2> on the OMAP GPIO device node and
-specifying the GPIO-IRQ type and level flags on the second cell does not
-store this value on the populated IORESOURCE_IRQ struct resource.
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index 23049ae..d5a57a9 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -84,13 +84,10 @@ int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+>   		phy = get_phy_device(mdio, addr, is_c45);
+>
 
-This is because when using an IRQ from an interrupt controller and
-setting both cells (e.g:)
+    This empty line is not needed -- would be good to drop it, while at 
+this.
 
-        interrupt-parent = <&gpio6>;
-        interrupts = <16 8>;
-
-A call to of_irq_to_resource() is made and this function calls
-irq_of_parse_and_map_type() to get the virtual IRQ mapped to the real
-index for this interrupt controller. This IRQ number is populated on
-the struct resource:
-
-int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
-{
-        int irq = irq_of_parse_and_map(dev, index);
-        ..
-        r->start = r->end = irq;
-}
-
-irq_of_parse_and_map() calls to irq_create_of_mapping() which calls to
-the correct xlate function handler according to "#interrupt-cells"
-(irq_domain_xlate_onecell or irq_domain_xlate_twocell) and to
-irq_set_irq_type() to set the IRQ type.
-
-But the type is never returned so it can't be saved on the IRQ struct
-resource flags member.
-
-This means that drivers that want to get the IRQ edge/level flags
-defined in the Device Tree from a struct resource will not be able
-to get it.
-
-Drivers can get the IRQ flags by using irq_get_irq_data(irq) and
-irqd_get_trigger_type(irq_data) but this will unnecessary expose
-irq_data to callers and also is more error prone.
-
-So, is better to add an irq_get_trigger_type() function to obtain
-the edge/level flags for an IRQ.
-
-Signed-off-by: Javier Martinez Canillas <javier.martinez@dowhile0.org>
----
- include/linux/irq.h |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
-
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index bc4e066..0e8e3a6 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -579,6 +579,12 @@ static inline struct msi_desc *irq_data_get_msi(struct irq_data *d)
- 	return d->msi_desc;
- }
- 
-+static inline u32 irq_get_trigger_type(unsigned int irq)
-+{
-+	struct irq_data *d = irq_get_irq_data(irq);
-+	return d ? irqd_get_trigger_type(d) : 0;
-+}
-+
- int __irq_alloc_descs(int irq, unsigned int from, unsigned int cnt, int node,
- 		struct module *owner);
- 
--- 
-1.7.7.6
-
+>   		if (!phy || IS_ERR(phy)) {
+> -			phy = phy_device_create(mdio, addr, 0, false, NULL);
+> -			if (!phy || IS_ERR(phy)) {
+> -				dev_err(&mdio->dev,
+> -					"error creating PHY at address %i\n",
+> -					addr);
+> -				continue;
+> -			}
+> +			dev_err(&mdio->dev,
+> +				"cannot get PHY at address %i\n",
+> +				addr);
+> +			continue;
+>   		}
+>
+>   		/* Associate the OF node with the device structure so it
+>
