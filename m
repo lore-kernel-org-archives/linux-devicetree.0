@@ -1,17 +1,17 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
-Date: Wed, 8 May 2013 12:28:28 -0700
-Message-ID: <CAOesGMhTu_eO564LCyWa2wL1VfposvsK1fxAu1RXCXLZJ0DSfQ@mail.gmail.com>
-References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
- <201304300004.20320.arnd@arndb.de> <5182AF83.4080705@wwwdotorg.org>
- <1956593.M6NmITdEKh@avalon>
- <20130507143338.79b3d893fcdc3bd79fbe9a57@linux-foundation.org>
- <5189BA36.9000105@wwwdotorg.org>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: =?UTF-8?B?UmVbMl06IFtSRkMgMy84XSBtZmQ6c3lzY29uOiBJbnRyb2R1Y2UgY2xhaW0v?=
+ =?UTF-8?B?cmVhZC93cml0ZS9yZWxlYXNlIEFQSXM=?=
+Date: Wed, 08 May 2013 23:41:17 +0400
+Message-ID: <1368042077.83893040@f59.mail.ru>
+References: <1368022187-1633-1-git-send-email-srinivas.kandagatla@st.com>
+ <1368022272-2241-1-git-send-email-srinivas.kandagatla@st.com>
+ <201305081650.23264.arnd@arndb.de>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5189BA36.9000105-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <201305081650.23264.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,70 +22,44 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: =?UTF-8?B?QXJuZCBCZXJnbWFubg==?= <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?VmlyZXNoIEt1bWFy?= <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?V2lsbCBEZWFjb24=?= <will.deacon-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?SmlyaSBTbGFieQ==?= <jslaby-AlSwsSmVLrQ@public.gmane.org>, =?UTF-8?B?UnVzc2VsbCBLaW5n?= <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, =?UTF-8?B?Tmljb2xhcyBQaXRyZQ==?= <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?U3Jpbml2YXMgS0FOREFHQVRMQQ==?= <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?SmFzb24gQ29vcGVy?= <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?U3R1YXJ0IE1lbmVmeQ==?= <stuart.menefy-qxv4g6HH51o@public.gmane.org>, =?UTF-8?B?U3RlcGhlbiBXYXJyZW4=?= <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?B?R3JlZyBLcm9haC1IYXJ0bWFu?= <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, =?UTF-8?B?TWFyayBCcm93bg==?= <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kerne
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 7, 2013 at 7:36 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 05/07/2013 03:33 PM, Andrew Morton wrote:
->>
->> We don't seem to have a well-defined path to travel here, and I don't
->> get the feeling that anyone has signed up to walk it?
->>
->> So I'm inclined to merge Stephen's patch as-is into 3.10.  It's pretty
->> simple and standalone.  Any strenuous objections?
->>
->> BTW, Olof told me off-list that this patch is a "critical piece" for
->> running mainline Linux on ARM Chromebooks.  That was important
->> information - more important than anything else we were told about this
->> patch!
->>
->> So Stephen, could I please have a new changelog for this patch which
->> explains this application, and any other interesting/important things
->> which were left out?  Quickly, please.
->
-> OK, how about the version below:
->
-> ----------
-> Subject: drivers/video: implement a simple framebuffer driver
->
-> A simple frame-buffer describes a raw memory region that may be rendered
-> to, with the assumption that the display hardware has already been set
-> up to scan out from that buffer.
->
-> This is useful in cases where a bootloader exists and has set up the
-> display hardware, but a Linux driver doesn't yet exist for the display
-> hardware.
->
-> Examples use-cases include:
->
-> * The built-in LCD panels on the Samsung ARM chromebook, and Tegra
-> devices, and likely many other ARM or embedded systems. These cannot yet
-> be supported using a full graphics driver, since the panel control
-> should be provided by the CDF (Common Display Framework), which has been
-> stuck in design/review for quite some time. One could support these
-> panels using custom SoC-specific code, but there is a desire to use
-> common infra-structure rather than having each SoC vendor invent their
-> own code, hence the desire to wait for CDF.
->
-> * Hardware for which a full graphics driver is not yet available, and
-> the path to obtain one upstream isn't yet clear. For example, the
-> Raspberry Pi.
->
-> * Any hardware in early stages of upstreaming, before a full graphics
-> driver has been tackled. This driver can provide a graphical boot
-> console (even full X support) much earlier in the upstreaming process,
-> thus making new SoC or board support more generally useful earlier.
-> ----------
->
-> I assume you can just edit the patch you have and don't need me to
-> resend with the adjusted description.
+> On Wednesday 08 May 2013, Srinivas KANDAGATLA wrote:
+> > From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+> > 
+> > This patch introduces syscon_claim, syscon_read, syscon_write,
+> > syscon_release APIs to help drivers to use syscon registers in much more
+> > flexible way.
+> > 
+> > With this patch, a driver can claim few/all bits in the syscon registers
+> > and do read/write and then release them when its totally finished with
+> > them, in the mean time if another driver requests same bits or registers
+> > the API will detect conflit and return error to the second request.
+> > 
+> > Reason to introduce this API.
+> > System configuration/control registers are very basic configuration
+> > registers arranged in groups across ST Settop Box parts. These registers
+> > are independent of IP itself. Many IPs, clock, pad and other functions
+> > are wired up to these registers.
+> > 
+> > In many cases a single syconf register contains bits related to multiple
+> > devices, and therefore it need to be shared across multiple drivers at
+> > bit level. The same IP block can have different syscon mappings on
+> > different SOCs.
+> > 
+> > Typically in a SOC there will be more than hundreds of these registers,
+> > which are again divided into groups.
+> > 
+> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+> > CC: Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>
+> 
+> My feeling is that syscon is the wrong place for this functionality,
+> since regmap already handles (some of?) these issues. If you need
+> additional synchronization, it's probably best to extend regmap
+> as needed so other code besides syscon can take advantage of that
+> as well.
++1
 
-Oh, looks like it never got a:
-
-Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-
-Either. Feel free to add, Andrew.
-
-
--Olof
+---
