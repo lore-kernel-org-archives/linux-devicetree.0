@@ -1,124 +1,48 @@
-From: Javier Martinez Canillas <martinez.javier@gmail.com>
-Subject: Re: [PATCH] ARM: dts: omap3-igep0020: Add SMSC911x LAN chip support
-Date: Thu, 9 May 2013 00:37:07 +0200
-Message-ID: <CAAwP0s2M7WOva27-viWjZq9CrjsZStn6cJZ8KhJVWTxHkKdP7A@mail.gmail.com>
-References: <1366216329-10677-1-git-send-email-javier.martinez@collabora.co.uk>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/2] ARM: dts: OMAP36xx/OMAP4460 Fix CPU OPP voltages
+Date: Wed, 8 May 2013 16:14:46 -0700
+Message-ID: <20130508231445.GQ32546@atomide.com>
+References: <1366997973-19120-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1366216329-10677-1-git-send-email-javier.martinez@collabora.co.uk>
+Content-Disposition: inline
+In-Reply-To: <1366997973-19120-1-git-send-email-nm@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Tony Lindgren <tony@atomide.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jon Hunter <jon-hunter@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap <linux-omap@vger.kernel.org>
+To: Nishanth Menon <nm@ti.com>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <b-cousson@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 17, 2013 at 6:32 PM, Javier Martinez Canillas
-<javier.martinez@collabora.co.uk> wrote:
-> The IGEPv2 board has an SMSC LAN9221i ethernet chip connected to
-> the OMAP3 processor though the General-Purpose Memory Controller.
->
-> This patch adds a device node for the ethernet chip as a GPMC child
-> and all its dependencies (regulators, GPIO and pin muxs).
->
-> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-> ---
->  arch/arm/boot/dts/omap3-igep.dtsi    |    6 ++++
->  arch/arm/boot/dts/omap3-igep0020.dts |   53 ++++++++++++++++++++++++++++++++++
->  2 files changed, 59 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/omap3-igep.dtsi b/arch/arm/boot/dts/omap3-igep.dtsi
-> index f8fe3b7..d5cd504 100644
-> --- a/arch/arm/boot/dts/omap3-igep.dtsi
-> +++ b/arch/arm/boot/dts/omap3-igep.dtsi
-> @@ -62,6 +62,12 @@
->                         0x126 0x0100    /* sdmmc1_dat7.sdmmc1_dat7 INPUT | MODE 0 */
->                 >;
->         };
-> +
-> +       smsc911x_pins: pinmux_smsc911x_pins {
-> +               pinctrl-single,pins = <
-> +                        0x1a2 0x0104    /* mcspi1_cs2.gpio_176 INPUT | MODE4 */
-> +               >;
-> +       };
->  };
->
->  &i2c1 {
-> diff --git a/arch/arm/boot/dts/omap3-igep0020.dts b/arch/arm/boot/dts/omap3-igep0020.dts
-> index e2b9849..4bac32e 100644
-> --- a/arch/arm/boot/dts/omap3-igep0020.dts
-> +++ b/arch/arm/boot/dts/omap3-igep0020.dts
-> @@ -40,6 +40,18 @@
->                         gpios = <&twl_gpio 19 1>;
->                 };
->         };
-> +
-> +       vddvario: regulator-vddvario {
-> +                 compatible = "regulator-fixed";
-> +                 regulator-name = "vddvario";
-> +                 regulator-always-on;
-> +       };
-> +
-> +       vdd33a: regulator-vdd33a {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "vdd33a";
-> +               regulator-always-on;
-> +       };
->  };
->
->  &i2c3 {
-> @@ -54,3 +66,44 @@
->                 reg = <0x50>;
->         };
->  };
-> +
-> +&gpmc {
-> +       ranges = <5 0 0x2c000000 0x1000000>;
-> +       ethernet@5,0 {
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&smsc911x_pins>;
-> +               compatible = "smsc,lan9221", "smsc,lan9115";
-> +               reg = <5 0 0xff>;
-> +               bank-width = <2>;
-> +
-> +               gpmc,mux-add-data;
-> +               gpmc,cs-on-ns = <0>;
-> +               gpmc,cs-rd-off-ns = <186>;
-> +               gpmc,cs-wr-off-ns = <186>;
-> +               gpmc,adv-on-ns = <12>;
-> +               gpmc,adv-rd-off-ns = <48>;
-> +               gpmc,adv-wr-off-ns = <48>;
-> +               gpmc,oe-on-ns = <54>;
-> +               gpmc,oe-off-ns = <168>;
-> +               gpmc,we-on-ns = <54>;
-> +               gpmc,we-off-ns = <168>;
-> +               gpmc,rd-cycle-ns = <186>;
-> +               gpmc,wr-cycle-ns = <186>;
-> +               gpmc,access-ns = <114>;
-> +               gpmc,page-burst-access-ns = <6>;
-> +               gpmc,bus-turnaround-ns = <12>;
-> +               gpmc,cycle2cycle-delay-ns = <18>;
-> +               gpmc,wr-data-mux-bus-ns = <90>;
-> +               gpmc,wr-access-ns = <186>;
-> +               gpmc,cycle2cycle-samecsen;
-> +               gpmc,cycle2cycle-diffcsen;
-> +
-> +               interrupt-parent = <&gpio6>;
-> +               interrupts = <16 8>;
-> +               vmmc-supply = <&vddvario>;
-> +               vmmc_aux-supply = <&vdd33a>;
-> +               reg-io-width = <4>;
-> +
-> +               smsc,save-mac-address;
-> +       };
-> +};
-> --
-> 1.7.7.6
->
-> --
+* Nishanth Menon <nm@ti.com> [130426 10:44]:
+> Hi,
+> It seems that I have not been paying close attention to
+> actual voltage value seen on scope to map it back to verify the validity
+> of the voltage value. Even though I did verify[1] that voltage did scale to
+> values in DT entries, the values in the case of 3630 and 4460 were lower than
+> what the spec voltage was as per opp_data files.
+> 
+> This series is based off Benoit's tree here:
+> http://git.kernel.org/cgit/linux/kernel/git/bcousson/linux-omap-dt.git/log/?h=for_3.10/dts
+> 
+> Commit ID's in the patches to indicate regressions are from there as well.
+> Would be good to have this fix merged to 3.10 dts entries.
+> I have cross verified that OMAP3430,3630,4430 and 4460 entries now match that
+> of corresponding opp*_data.c
+> 
+> My sincere apologies on the oversight.
+> 
+> Nishanth Menon (2):
+>   ARM: dts: OMAP36xx: Fix CPU OPP voltages
+>   ARM: dts: OMAP4460: Fix CPU OPP voltages
+> 
+>  arch/arm/boot/dts/omap36xx.dtsi |    6 +++---
+>  arch/arm/boot/dts/omap4460.dtsi |    6 +++---
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> [1] http://marc.info/?l=linux-arm-kernel&m=136580742724210&w=2
 
-Hi Benoit,
+Thanks applying both into omap-for-v3.10/dt-fixes.
 
-Any comments on this patch?
+Regards,
 
-Thanks a lot and best regards,
-Javier
+Tony
