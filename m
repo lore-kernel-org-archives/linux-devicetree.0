@@ -1,70 +1,80 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH RFC v3] media: i2c: mt9p031: add OF support
-Date: Wed, 08 May 2013 04:02:12 +0200
-Message-ID: <124364082.ILKsvVk9ro@avalon>
-References: <1367563919-2880-1-git-send-email-prabhakar.csengg@gmail.com> <CA+V-a8vxhedos6cQbxAbMAwiXOmjrqh0TVp8Rhc_Ou4y9tSaoQ@mail.gmail.com> <CA+V-a8tXZrh68_T=VAOTB23sFfOCOA+GafueWuH6cFFmKz7cvA@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
+Date: Tue, 07 May 2013 20:36:38 -0600
+Message-ID: <5189BA36.9000105@wwwdotorg.org>
+References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
+ <201304300004.20320.arnd@arndb.de> <5182AF83.4080705@wwwdotorg.org>
+ <1956593.M6NmITdEKh@avalon>
+ <20130507143338.79b3d893fcdc3bd79fbe9a57@linux-foundation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CA+V-a8tXZrh68_T=VAOTB23sFfOCOA+GafueWuH6cFFmKz7cvA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <s.hauer@pengutronix.de>, LMML <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Hans Verkuil <hans.verkuil@cisco.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, LKML <linux-kernel@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130507143338.79b3d893fcdc3bd79fbe9a57-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Prabhakar,
-
-On Tuesday 07 May 2013 15:10:36 Prabhakar Lad wrote:
-> On Mon, May 6, 2013 at 8:29 PM, Prabhakar Lad wrote:
-> > On Fri, May 3, 2013 at 8:04 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> On Friday 03 May 2013, Prabhakar Lad wrote:
-> > [snip]
-> > 
-> >>> +}
-> >> 
-> >> Ok, good.
-> >> 
-> >>> @@ -955,7 +998,17 @@ static int mt9p031_probe(struct i2c_client *client,
-> >>> 
-> >>>         mt9p031->pdata = pdata;
-> >>>         mt9p031->output_control = MT9P031_OUTPUT_CONTROL_DEF;
-> >>>         mt9p031->mode2 = MT9P031_READ_MODE_2_ROW_BLC;
-> >>> 
-> >>> -       mt9p031->model = did->driver_data;
-> >>> +
-> >>> +       if (!client->dev.of_node) {
-> >>> +               mt9p031->model = (enum mt9p031_model)did->driver_data;
-> >>> +       } else {
-> >>> +               const struct of_device_id *of_id;
-> >>> +
-> >>> +               of_id = of_match_device(of_match_ptr(mt9p031_of_match),
-> >>> +                                       &client->dev);
-> >>> +               if (of_id)
-> >>> +                       mt9p031->model = (enum
-> >>> mt9p031_model)of_id->data;
-> >>> +       }
-> >>> 
-> >>>         mt9p031->reset = -1;
-> >> 
-> >> Is this actually required? I thought the i2c core just compared the
-> >> part of the "compatible" value after the first comma to the string, so
-> >> "mt9p031->model = (enum mt9p031_model)did->driver_data" should work
-> >> in both cases.
-> > 
-> > I am OK with "mt9p031->model = (enum mt9p031_model)did->driver_data"
-> > but I see still few drivers doing this, I am not sure for what reason.
-> > If everyone is
-> > OK with it I can drop the above change.
+On 05/07/2013 03:33 PM, Andrew Morton wrote:
 > 
-> My bad, while booting with DT the i2c_device_id ie did in this case will be
-> NULL, so the above changes are required :-)
+> We don't seem to have a well-defined path to travel here, and I don't
+> get the feeling that anyone has signed up to walk it?
+> 
+> So I'm inclined to merge Stephen's patch as-is into 3.10.  It's pretty
+> simple and standalone.  Any strenuous objections?
+> 
+> BTW, Olof told me off-list that this patch is a "critical piece" for
+> running mainline Linux on ARM Chromebooks.  That was important
+> information - more important than anything else we were told about this
+> patch!
+> 
+> So Stephen, could I please have a new changelog for this patch which
+> explains this application, and any other interesting/important things
+> which were left out?  Quickly, please.
 
-I've just tested your patch, and did isn't NULL when booting my Beagleboard 
-with DT (on v3.9-rc5).
+OK, how about the version below:
 
--- 
-Regards,
+----------
+Subject: drivers/video: implement a simple framebuffer driver
 
-Laurent Pinchart
+A simple frame-buffer describes a raw memory region that may be rendered
+to, with the assumption that the display hardware has already been set
+up to scan out from that buffer.
 
+This is useful in cases where a bootloader exists and has set up the
+display hardware, but a Linux driver doesn't yet exist for the display
+hardware.
+
+Examples use-cases include:
+
+* The built-in LCD panels on the Samsung ARM chromebook, and Tegra
+devices, and likely many other ARM or embedded systems. These cannot yet
+be supported using a full graphics driver, since the panel control
+should be provided by the CDF (Common Display Framework), which has been
+stuck in design/review for quite some time. One could support these
+panels using custom SoC-specific code, but there is a desire to use
+common infra-structure rather than having each SoC vendor invent their
+own code, hence the desire to wait for CDF.
+
+* Hardware for which a full graphics driver is not yet available, and
+the path to obtain one upstream isn't yet clear. For example, the
+Raspberry Pi.
+
+* Any hardware in early stages of upstreaming, before a full graphics
+driver has been tackled. This driver can provide a graphical boot
+console (even full X support) much earlier in the upstreaming process,
+thus making new SoC or board support more generally useful earlier.
+----------
+
+I assume you can just edit the patch you have and don't need me to
+resend with the adjusted description.
