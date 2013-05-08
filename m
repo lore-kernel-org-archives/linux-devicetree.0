@@ -1,83 +1,91 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH RFC v3] media: i2c: mt9p031: add OF support
-Date: Wed, 8 May 2013 18:13:03 +0530
-Message-ID: <CA+V-a8sfPSEWJz1XAuGv7aPTWDjUpPTmU_Z8372tqjS8O0CCWQ@mail.gmail.com>
-References: <1367563919-2880-1-git-send-email-prabhakar.csengg@gmail.com>
- <124364082.ILKsvVk9ro@avalon> <CA+V-a8sknnoq7M-HJUW6aW8jtf7T0qxA8OpPjsXdmxO22ic7og@mail.gmail.com>
- <5750435.WVYuIYMX2V@avalon>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 1/3] clk: mvebu: add gate ctrl for Prestera kirkwood
+ variants
+Date: Wed, 8 May 2013 09:25:53 -0400
+Message-ID: <20130508132553.GB31290@titan.lakedaemon.net>
+References: <1367941941-19152-1-git-send-email-valentin.longchamp@keymile.com>
+ <1367941941-19152-2-git-send-email-valentin.longchamp@keymile.com>
+ <518927C0.6070600@free-electrons.com> <51892D8D.4060704@gmail.com>
+ <5189F900.6020809@keymile.com> <5189FD04.8090308@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5750435.WVYuIYMX2V@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <s.hauer@pengutronix.de>, LMML <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Hans Verkuil <hans.verkuil@cisco.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, LKML <linux-kernel@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5189FD04.8090308-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+On Wed, May 08, 2013 at 09:21:40AM +0200, Sebastian Hesselbarth wrote:
+> On 05/08/2013 09:04 AM, Valentin Longchamp wrote:
+> >On 05/07/2013 06:36 PM, Sebastian Hesselbarth wrote:
+> >>I just checked my mails from late 2012 and there Valentin and I agreed,
+> >>that not the missing bits in clock gating control registers was the root
+> >>cause of km_kirkwood to hang. It was rather the phy gates (that do not/
+> >>not yet exist on DT) that caused it to hang, i.e. when accessing SATA
+> >>PHY registers.
+> >
+> >Yeah you are right, I had forgotten about this test. I just had a look at the
+> >board-km_kirkwood.c and I tried to figure out a way to make sure the clock gates
+> >bits never get read/written, so never get initialized. But as you say, that's
+> >not the real cause of the hang but
+> >
+> >>Valentin, I am not against an extra clock-gating-ctrl for Prestera but
+> >>maybe having an kirkwood.dtsi fork without SATA and other peripherals
+> >>will also help?
+> >
+> >Since it's not the real problem having the extra clock-gating-ctrl would me more
+> >consistent with the real Prestera HW, but maybe it's better to keep only one
+> >that works for both as it's already the case, it's less code to maintain.
+> >
+> >A better approach would be to work on the kirkwood.dtsi as you mention it. The
+> >SATA node in kirkwood.dtsi is by default disabled, is this enough or should it
+> >be moved to kirkwood-6281.dtsi for instance ?
+> 
+> Valentin,
+> 
+> I guess for the long run, we will re-introduce phy gates either by
+> abusing clk gates or some other way. But they will depend on existing
+> OF nodes.
+> 
+> Considering this, it would be best to fork kirkwood.dtsi for Prestera
+> and leave out all OF nodes that are not implemented there. We could
+> have
+> 
+> kirkwood.dtsi -+-> kirkwood-kirkwood.dtsi -+-> kirkwood-6281.dtsi
+>                +-> kirkwood-prestera.dtsi  +-> kirkwood-6282.dtsi
 
-On Wed, May 8, 2013 at 4:07 PM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> Hi Prabhakar,
->
-> On Wednesday 08 May 2013 10:19:57 Prabhakar Lad wrote:
->> On Wed, May 8, 2013 at 7:32 AM, Laurent Pinchart wrote:
->> > On Tuesday 07 May 2013 15:10:36 Prabhakar Lad wrote:
->> >> On Mon, May 6, 2013 at 8:29 PM, Prabhakar Lad wrote:
->> >> > On Fri, May 3, 2013 at 8:04 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> >> >> On Friday 03 May 2013, Prabhakar Lad wrote:
->> >> > [snip]
->> >> >
->> >> >>> +}
->> >> >>
->> >> >> Ok, good.
->> >> >>
->> >> >>> @@ -955,7 +998,17 @@ static int mt9p031_probe(struct i2c_client
->> >> >>> *client,
->> >> >>>
->> >> >>>         mt9p031->pdata = pdata;
->> >> >>>         mt9p031->output_control = MT9P031_OUTPUT_CONTROL_DEF;
->> >> >>>         mt9p031->mode2 = MT9P031_READ_MODE_2_ROW_BLC;
->> >> >>>
->> >> >>> -       mt9p031->model = did->driver_data;
->> >> >>> +
->> >> >>> +       if (!client->dev.of_node) {
->> >> >>> +               mt9p031->model = (enum
->> >> >>> mt9p031_model)did->driver_data;
->> >> >>> +       } else {
->> >> >>> +               const struct of_device_id *of_id;
->> >> >>> +
->> >> >>> +               of_id =
->> >> >>> of_match_device(of_match_ptr(mt9p031_of_match),
->> >> >>> +                                       &client->dev);
->> >> >>> +               if (of_id)
->> >> >>> +                       mt9p031->model = (enum
->> >> >>> mt9p031_model)of_id->data;
->> >> >>> +       }
->> >> >>>
->> >> >>>         mt9p031->reset = -1;
->> >> >>
->> >> >> Is this actually required? I thought the i2c core just compared the
->> >> >> part of the "compatible" value after the first comma to the string, so
->> >> >> "mt9p031->model = (enum mt9p031_model)did->driver_data" should work
->> >> >> in both cases.
->> >> >
->> >> > I am OK with "mt9p031->model = (enum mt9p031_model)did->driver_data"
->> >> > but I see still few drivers doing this, I am not sure for what reason.
->> >> > If everyone is OK with it I can drop the above change.
->> >>
->> >> My bad, while booting with DT the i2c_device_id ie did in this case will
->> >> be NULL, so the above changes are required :-)
->> >
->> > I've just tested your patch, and did isn't NULL when booting my
->> > Beagleboard with DT (on v3.9-rc5).
->>
->> I am pretty much sure you tested it compatible property as "aptina,mt9p031"
->> if the compatible property is set to "aptina,mt9p031m" the did will be NULL.
->
-> I've tested both :-)
->
-Thanks for the testing :-) I'll remove this changes in the next version.
+or,
 
-Regards,
---Prabhakar Lad
+kirkwood.dtsi
+prestera.dtsi
+
+-pinctrl-
+kirkwood-98dx4122.dtsi (should rename to prestera-, but seems churn-ish)
+kirkwood-6281.dtsi
+kirkwood-6282.dtsi
+
+-dts-
+kirkwood-km_kirkwood.dts (rename/churn prestera-?)
+  |-prestera.dtsi
+  \-kirkwood-98dx4122.dtsi
+
+or, honestly, how many boards are going to be based on prestera?  If
+it's just the one, why not combine all the nodes into
+kirkwood-km_kirkwood.dts?
+
+
+thx,
+
+Jason.
