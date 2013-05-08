@@ -1,49 +1,124 @@
-From: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
-Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
-Date: Wed, 08 May 2013 15:58:30 -0500
-Message-ID: <1368046710.18069.217@driftwood>
-References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
- <201304300004.20320.arnd@arndb.de> <5182AF83.4080705@wwwdotorg.org>
- <1956593.M6NmITdEKh@avalon>
- <20130507143338.79b3d893fcdc3bd79fbe9a57@linux-foundation.org>
- <5189BA36.9000105@wwwdotorg.org>
+From: Javier Martinez Canillas <martinez.javier@gmail.com>
+Subject: Re: [PATCH] ARM: dts: omap3-igep0020: Add SMSC911x LAN chip support
+Date: Thu, 9 May 2013 00:37:07 +0200
+Message-ID: <CAAwP0s2M7WOva27-viWjZq9CrjsZStn6cJZ8KhJVWTxHkKdP7A@mail.gmail.com>
+References: <1366216329-10677-1-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="Flowed"; DelSp="Yes"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5189BA36.9000105-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> (from swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org on
- Tue May  7 21:36:38 2013)
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1366216329-10677-1-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Tony Lindgren <tony@atomide.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Jon Hunter <jon-hunter@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/2013 09:36:38 PM, Stephen Warren wrote:
-> On 05/07/2013 03:33 PM, Andrew Morton wrote:
-...
-> Subject: drivers/video: implement a simple framebuffer driver
-> 
-> A simple frame-buffer describes a raw memory region that may be  
-> rendered
-> to, with the assumption that the display hardware has already been set
-> up to scan out from that buffer.
-> 
-> This is useful in cases where a bootloader exists and has set up the
-> display hardware, but a Linux driver doesn't yet exist for the display
-> hardware.
-> 
-> Examples use-cases include:
+On Wed, Apr 17, 2013 at 6:32 PM, Javier Martinez Canillas
+<javier.martinez@collabora.co.uk> wrote:
+> The IGEPv2 board has an SMSC LAN9221i ethernet chip connected to
+> the OMAP3 processor though the General-Purpose Memory Controller.
+>
+> This patch adds a device node for the ethernet chip as a GPMC child
+> and all its dependencies (regulators, GPIO and pin muxs).
+>
+> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> ---
+>  arch/arm/boot/dts/omap3-igep.dtsi    |    6 ++++
+>  arch/arm/boot/dts/omap3-igep0020.dts |   53 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 59 insertions(+), 0 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/omap3-igep.dtsi b/arch/arm/boot/dts/omap3-igep.dtsi
+> index f8fe3b7..d5cd504 100644
+> --- a/arch/arm/boot/dts/omap3-igep.dtsi
+> +++ b/arch/arm/boot/dts/omap3-igep.dtsi
+> @@ -62,6 +62,12 @@
+>                         0x126 0x0100    /* sdmmc1_dat7.sdmmc1_dat7 INPUT | MODE 0 */
+>                 >;
+>         };
+> +
+> +       smsc911x_pins: pinmux_smsc911x_pins {
+> +               pinctrl-single,pins = <
+> +                        0x1a2 0x0104    /* mcspi1_cs2.gpio_176 INPUT | MODE4 */
+> +               >;
+> +       };
+>  };
+>
+>  &i2c1 {
+> diff --git a/arch/arm/boot/dts/omap3-igep0020.dts b/arch/arm/boot/dts/omap3-igep0020.dts
+> index e2b9849..4bac32e 100644
+> --- a/arch/arm/boot/dts/omap3-igep0020.dts
+> +++ b/arch/arm/boot/dts/omap3-igep0020.dts
+> @@ -40,6 +40,18 @@
+>                         gpios = <&twl_gpio 19 1>;
+>                 };
+>         };
+> +
+> +       vddvario: regulator-vddvario {
+> +                 compatible = "regulator-fixed";
+> +                 regulator-name = "vddvario";
+> +                 regulator-always-on;
+> +       };
+> +
+> +       vdd33a: regulator-vdd33a {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "vdd33a";
+> +               regulator-always-on;
+> +       };
+>  };
+>
+>  &i2c3 {
+> @@ -54,3 +66,44 @@
+>                 reg = <0x50>;
+>         };
+>  };
+> +
+> +&gpmc {
+> +       ranges = <5 0 0x2c000000 0x1000000>;
+> +       ethernet@5,0 {
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&smsc911x_pins>;
+> +               compatible = "smsc,lan9221", "smsc,lan9115";
+> +               reg = <5 0 0xff>;
+> +               bank-width = <2>;
+> +
+> +               gpmc,mux-add-data;
+> +               gpmc,cs-on-ns = <0>;
+> +               gpmc,cs-rd-off-ns = <186>;
+> +               gpmc,cs-wr-off-ns = <186>;
+> +               gpmc,adv-on-ns = <12>;
+> +               gpmc,adv-rd-off-ns = <48>;
+> +               gpmc,adv-wr-off-ns = <48>;
+> +               gpmc,oe-on-ns = <54>;
+> +               gpmc,oe-off-ns = <168>;
+> +               gpmc,we-on-ns = <54>;
+> +               gpmc,we-off-ns = <168>;
+> +               gpmc,rd-cycle-ns = <186>;
+> +               gpmc,wr-cycle-ns = <186>;
+> +               gpmc,access-ns = <114>;
+> +               gpmc,page-burst-access-ns = <6>;
+> +               gpmc,bus-turnaround-ns = <12>;
+> +               gpmc,cycle2cycle-delay-ns = <18>;
+> +               gpmc,wr-data-mux-bus-ns = <90>;
+> +               gpmc,wr-access-ns = <186>;
+> +               gpmc,cycle2cycle-samecsen;
+> +               gpmc,cycle2cycle-diffcsen;
+> +
+> +               interrupt-parent = <&gpio6>;
+> +               interrupts = <16 8>;
+> +               vmmc-supply = <&vddvario>;
+> +               vmmc_aux-supply = <&vdd33a>;
+> +               reg-io-width = <4>;
+> +
+> +               smsc,save-mac-address;
+> +       };
+> +};
+> --
+> 1.7.7.6
+>
+> --
 
-Virtual environments such as QEMU.
+Hi Benoit,
 
-Rob
+Any comments on this patch?
+
+Thanks a lot and best regards,
+Javier
