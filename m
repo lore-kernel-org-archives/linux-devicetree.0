@@ -1,80 +1,97 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
-Date: Tue, 07 May 2013 20:36:38 -0600
-Message-ID: <5189BA36.9000105@wwwdotorg.org>
-References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
- <201304300004.20320.arnd@arndb.de> <5182AF83.4080705@wwwdotorg.org>
- <1956593.M6NmITdEKh@avalon>
- <20130507143338.79b3d893fcdc3bd79fbe9a57@linux-foundation.org>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH RFC v3] media: i2c: mt9p031: add OF support
+Date: Wed, 8 May 2013 10:17:51 +0530
+Message-ID: <CA+V-a8tcDi3sTyyLvjcX87ZaKSqUU8fWc07LkRgRsAiDS+ov2g@mail.gmail.com>
+References: <1367563919-2880-1-git-send-email-prabhakar.csengg@gmail.com> <2799899.cTq52i3x0Z@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130507143338.79b3d893fcdc3bd79fbe9a57-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <2799899.cTq52i3x0Z@avalon>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: LMML <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Hans Verkuil <hans.verkuil@cisco.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, LKML <linux-kernel@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/2013 03:33 PM, Andrew Morton wrote:
-> 
-> We don't seem to have a well-defined path to travel here, and I don't
-> get the feeling that anyone has signed up to walk it?
-> 
-> So I'm inclined to merge Stephen's patch as-is into 3.10.  It's pretty
-> simple and standalone.  Any strenuous objections?
-> 
-> BTW, Olof told me off-list that this patch is a "critical piece" for
-> running mainline Linux on ARM Chromebooks.  That was important
-> information - more important than anything else we were told about this
-> patch!
-> 
-> So Stephen, could I please have a new changelog for this patch which
-> explains this application, and any other interesting/important things
-> which were left out?  Quickly, please.
+HI Laurent,
 
-OK, how about the version below:
+On Wed, May 8, 2013 at 7:31 AM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+> Hi Prabhakar,
+>
+> Thank you for the patch.
+>
+> On Friday 03 May 2013 12:21:59 Prabhakar Lad wrote:
+>> From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+>>
+>> add OF support for the mt9p031 sensor driver.
+>> Alongside this patch sorts the header inclusion alphabetically.
+>>
+>> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+>> Cc: Hans Verkuil <hans.verkuil@cisco.com>
+>> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>> Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+>> Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+>> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> Cc: Sakari Ailus <sakari.ailus@iki.fi>
+>> Cc: Grant Likely <grant.likely@secretlab.ca>
+>> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+>> Cc: Rob Herring <rob.herring@calxeda.com>
+>> Cc: Rob Landley <rob@landley.net>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Cc: devicetree-discuss@lists.ozlabs.org
+>> Cc: davinci-linux-open-source@linux.davincidsp.com
+>> Cc: linux-doc@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> ---
+>>  Changes for v2:
+>>  1: Used '-' instead of '_' for device properties.
+>>  2: Specified gpio reset pin as phandle in device node.
+>>  3: Handle platform data properly even if kernel is compiled with
+>>     devicetree support.
+>>  4: Used dev_* for messages in drivers instead of pr_*.
+>>  5: Changed compatible property to "aptina,mt9p031" and "aptina,mt9p031m".
+>>  6: Sorted the header inclusion alphabetically and fixed some minor code
+>> nits.
+>>
+>> Changes for v3:
+>>  1: Dropped check if gpio-reset is valid.
+>>  2: Fixed some code nits.
+>>  3: Included a reference to the V4L2 DT bindings documentation.
+>>
+>>  .../devicetree/bindings/media/i2c/mt9p031.txt      |   40 +++++++++++++
+>>  drivers/media/i2c/mt9p031.c                        |   60 ++++++++++++++++-
+>>  2 files changed, 97 insertions(+), 3 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/mt9p031.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
+>> b/Documentation/devicetree/bindings/media/i2c/mt9p031.txt new file mode
+>> 100644
+>> index 0000000..e740541
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
+>> @@ -0,0 +1,40 @@
+>> +* Aptina 1/2.5-Inch 5Mp CMOS Digital Image Sensor
+>> +
+>> +The Aptina MT9P031 is a 1/2.5-inch CMOS active pixel digital image sensor
+>> with +an active array size of 2592H x 1944V. It is programmable through a
+>> simple +two-wire serial interface.
+>> +
+>> +Required Properties :
+>> +- compatible : value should be either one among the following
+>> +     (a) "aptina,mt9p031" for mt9p031 sensor
+>> +     (b) "aptina,mt9p031m" for mt9p031m sensor
+>> +
+>> +- input-clock-frequency : Input clock frequency.
+>> +
+>> +- pixel-clock-frequency : Pixel clock frequency.
+>> +
+>> +Optional Properties :
+>> +-gpio-reset: Chip reset GPIO
+>
+> According to Documentation/devicetree/bindings/gpio/gpio.txt, this should be
+> "gpios" or "reset-gpios".
+>
+OK I'll make it as "reset-gpios"
 
-----------
-Subject: drivers/video: implement a simple framebuffer driver
-
-A simple frame-buffer describes a raw memory region that may be rendered
-to, with the assumption that the display hardware has already been set
-up to scan out from that buffer.
-
-This is useful in cases where a bootloader exists and has set up the
-display hardware, but a Linux driver doesn't yet exist for the display
-hardware.
-
-Examples use-cases include:
-
-* The built-in LCD panels on the Samsung ARM chromebook, and Tegra
-devices, and likely many other ARM or embedded systems. These cannot yet
-be supported using a full graphics driver, since the panel control
-should be provided by the CDF (Common Display Framework), which has been
-stuck in design/review for quite some time. One could support these
-panels using custom SoC-specific code, but there is a desire to use
-common infra-structure rather than having each SoC vendor invent their
-own code, hence the desire to wait for CDF.
-
-* Hardware for which a full graphics driver is not yet available, and
-the path to obtain one upstream isn't yet clear. For example, the
-Raspberry Pi.
-
-* Any hardware in early stages of upstreaming, before a full graphics
-driver has been tackled. This driver can provide a graphical boot
-console (even full X support) much earlier in the upstreaming process,
-thus making new SoC or board support more generally useful earlier.
-----------
-
-I assume you can just edit the patch you have and don't need me to
-resend with the adjusted description.
+Regards,
+--Prabhakar Lad
