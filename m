@@ -1,79 +1,110 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] clk: mvebu: add gate ctrl for Prestera kirkwood
- variants
-Date: Wed, 08 May 2013 09:21:40 +0200
-Message-ID: <5189FD04.8090308@gmail.com>
-References: <1367941941-19152-1-git-send-email-valentin.longchamp@keymile.com>
- <1367941941-19152-2-git-send-email-valentin.longchamp@keymile.com>
- <518927C0.6070600@free-electrons.com> <51892D8D.4060704@gmail.com>
- <5189F900.6020809@keymile.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [RFC 0/2] V4L2 API for exposing flash subdevs as LED class device
+Date: Wed, 08 May 2013 09:32:17 +0200
+Message-ID: <5189FF81.5030405@samsung.com>
+References: <1367832828-30771-1-git-send-email-a.hajda@samsung.com>
+ <A874F61F95741C4A9BA573A70FE3998F82E5C879@DQHE06.ent.ti.com>
+ <1958801.k4UEk5OhXt@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5189F900.6020809-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Cc: "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <1958801.k4UEk5OhXt@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: "Kim, Milo" <Milo.Kim@ti.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Kyungmin Park <kyungmin.park@samsung.com>, "hj210.choi@samsung.com" <hj210.choi@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/08/2013 09:04 AM, Valentin Longchamp wrote:
-> On 05/07/2013 06:36 PM, Sebastian Hesselbarth wrote:
->> I just checked my mails from late 2012 and there Valentin and I agreed,
->> that not the missing bits in clock gating control registers was the root
->> cause of km_kirkwood to hang. It was rather the phy gates (that do not/
->> not yet exist on DT) that caused it to hang, i.e. when accessing SATA
->> PHY registers.
+On 07.05.2013 17:07, Laurent Pinchart wrote:
+> On Tuesday 07 May 2013 02:11:27 Kim, Milo wrote:
+>> On Monday, May 06, 2013 6:34 PM Andrzej Hajda wrote:
+>>> This RFC proposes generic API for exposing flash subdevices via LED
+>>> framework.
+>>>
+>>> Rationale
+>>>
+>>> Currently there are two frameworks which are used for exposing LED
+>>> flash to user space:
+>>> - V4L2 flash controls,
+>>> - LED framework(with custom sysfs attributes).
+>>>
+>>> The list below shows flash drivers in mainline kernel with initial
+>>> commit date and typical chip application (according to producer):
+>>>
+>>> LED API:
+>>>     lm3642: 2012-09-12, Cameras
+>>>     lm355x: 2012-09-05, Cameras
+>>>     max8997: 2011-12-14, Cameras (?)
+>>>     lp3944: 2009-06-19, Cameras, Lights, Indicators, Toys
+>>>     pca955x: 2008-07-16, Cameras, Indicators (?)
+>>>
+>>> V4L2 API:
+>>>     as3645a:  2011-05-05, Cameras
+>>>     adp1653: 2011-05-05, Cameras
+>>>
+>>> V4L2 provides richest functionality, but there is often demand from
+>>> application developers to provide already established LED API. We would
+>>> like to have an unified user interface for flash devices. Some of devices
+>>> already have the LED API driver exposing limited set of a Flash IC
+>>> functionality. In order to support all required features the LED API
+>>> would have to be extended or the V4L2 API would need to be used. However
+>>> when switching from a LED to a V4L2 Flash driver existing LED API
+>>> interface would need to be retained.
+>>>
+>>> Proposed solution
+>>>
+>>> This patch adds V4L2 helper functions to register existing V4L2 flash
+>>> subdev as LED class device. After registration via v4l2_leddev_register
+>>> appropriate entry in /sys/class/leds/ is created. During registration all
+>>> V4L2 flash controls are enumerated and corresponding attributes are added.
+>>>
+>>> I have attached also patch with new max77693-led driver using v4l2_leddev.
+>>> This patch requires presence of the patch "max77693: added device tree
+>>> support": https://patchwork.kernel.org/patch/2414351/ .
+>>>
+>>> Additional features
+>>>
+>>> - simple API to access all V4L2 flash controls via sysfs,
+>>> - V4L2 subdevice should not be registered by V4L2 device to use it,
+>>> - LED triggers API can be used to control the device,
+>>> - LED device is optional - it will be created only if V4L2_LEDDEV
+>>>   configuration option is enabled and the subdev driver calls
+>>>   v4l2_leddev_register.
+>>>
+>>> Doubts
+>>>
+>>> This RFC is a result of a uncertainty which API developers should expose
+>>> by their flash drivers. It is a try to gluing together both APIs. I am not
+>>> sure if it is the best solution, but I hope there will be some discussion
+>>> and hopefully some decisions will be taken which way we should follow.
+>> The LED subsystem provides similar APIs for the Camera driver.
+>> With LED trigger event, flash and torch are enabled/disabled.
+>> I'm not sure this is applicable for you.
+>> Could you take a look at LED camera trigger feature?
+>>
+>> For the camera LED trigger,
+>> https://git.kernel.org/cgit/linux/kernel/git/cooloney/linux-leds.git/commit/
+>> ?h=f or-next&id=48a1d032c954b9b06c3adbf35ef4735dd70ab757
+>>
+>> Example of camera flash driver,
+>> https://git.kernel.org/cgit/linux/kernel/git/cooloney/linux-leds.git/commit/
+>> ?h=f or-next&id=313bf0b1a0eaeaac17ea8c4b748f16e28fce8b7a
+> I think we should decide on one API. Implementing two APIs for a single device 
+> is usually messy, and will result in different feature sets (and different 
+> bugs) being implemented through each API, depending on the driver. 
+> Interactions between the APIs are also a pain point on the kernel side to 
+> properly synchronize calls.
 >
-> Yeah you are right, I had forgotten about this test. I just had a look at the
-> board-km_kirkwood.c and I tried to figure out a way to make sure the clock gates
-> bits never get read/written, so never get initialized. But as you say, that's
-> not the real cause of the hang but
+> The LED API is too limited for torch and flash usage, but I'm definitely open 
+> to moving flash devices to the LED API is we can extend it in a way that it 
+> covers all the use cases.
 >
->> Valentin, I am not against an extra clock-gating-ctrl for Prestera but
->> maybe having an kirkwood.dtsi fork without SATA and other peripherals
->> will also help?
->
-> Since it's not the real problem having the extra clock-gating-ctrl would me more
-> consistent with the real Prestera HW, but maybe it's better to keep only one
-> that works for both as it's already the case, it's less code to maintain.
->
-> A better approach would be to work on the kirkwood.dtsi as you mention it. The
-> SATA node in kirkwood.dtsi is by default disabled, is this enough or should it
-> be moved to kirkwood-6281.dtsi for instance ?
+Extending LED API IMHO seems to be quite straightforward - by adding
+attributes for supported functionalities. We just need a specification for
+standard flash/torch attributes.
+I could prepare an RFC about it if there is a will to explore this
+direction.
 
-Valentin,
-
-I guess for the long run, we will re-introduce phy gates either by
-abusing clk gates or some other way. But they will depend on existing
-OF nodes.
-
-Considering this, it would be best to fork kirkwood.dtsi for Prestera
-and leave out all OF nodes that are not implemented there. We could
-have
-
-kirkwood.dtsi -+-> kirkwood-kirkwood.dtsi -+-> kirkwood-6281.dtsi
-                +-> kirkwood-prestera.dtsi  +-> kirkwood-6282.dtsi
-
-or any other naming scheme. Maybe Andrew or Jason can comment on this.
-
->> And: Does DT-enabled km_kirkwood ever hang without the hack in it's
->> board setup? There should be no PHY gates on DT boards..
->
-> I have just tested it and it does not hang, so I will submit and patch that
-> simply removes this workaround since the PHY gates are not accessed anymore
-> (thanks to DT clock gates and that km_kirkwood does not enable the sata of node).
-
-Great! I suggest to also submit the dtsi changes above within the same
-patch set.
-
-Sebastian
+--
+Regards
+Andrzej Hajda <a.hajda@samsung.com>
