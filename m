@@ -1,15 +1,17 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC 1/8] serial:st-asc: Add ST ASC driver.
-Date: Wed, 8 May 2013 20:35:56 +0200
-Message-ID: <201305082035.57154.arnd@arndb.de>
-References: <1368022187-1633-1-git-send-email-srinivas.kandagatla@st.com>
- <201305081831.48566.arnd@arndb.de>
- <alpine.LFD.2.03.1305081239260.13109@syhkavp.arg>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
+Date: Wed, 8 May 2013 12:28:28 -0700
+Message-ID: <CAOesGMhTu_eO564LCyWa2wL1VfposvsK1fxAu1RXCXLZJ0DSfQ@mail.gmail.com>
+References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
+ <201304300004.20320.arnd@arndb.de> <5182AF83.4080705@wwwdotorg.org>
+ <1956593.M6NmITdEKh@avalon>
+ <20130507143338.79b3d893fcdc3bd79fbe9a57@linux-foundation.org>
+ <5189BA36.9000105@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.03.1305081239260.13109-hIgblCxmbi8OMTOF05IoTw@public.gmane.org>
+In-Reply-To: <5189BA36.9000105-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,30 +22,70 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stephen Gallimore <stephen.gallimore-qxv4g6HH51o@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jslaby-AlSwsSmVLrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 08 May 2013, Nicolas Pitre wrote:
-> I tried to fix this up over 10 years ago.  RMK tried as well. This 
-> failed because X86 people insisted on always having COM1 as /dev/ttyS0, 
-> COM3 as /dev/ttyS2 and so on, even when some of them weren't present.
-> 
-> A common and dynamic namespace eventually succeeded for hard disks.
-> Maybe people are ready to accept it for serial ports as well now?
+On Tue, May 7, 2013 at 7:36 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 05/07/2013 03:33 PM, Andrew Morton wrote:
+>>
+>> We don't seem to have a well-defined path to travel here, and I don't
+>> get the feeling that anyone has signed up to walk it?
+>>
+>> So I'm inclined to merge Stephen's patch as-is into 3.10.  It's pretty
+>> simple and standalone.  Any strenuous objections?
+>>
+>> BTW, Olof told me off-list that this patch is a "critical piece" for
+>> running mainline Linux on ARM Chromebooks.  That was important
+>> information - more important than anything else we were told about this
+>> patch!
+>>
+>> So Stephen, could I please have a new changelog for this patch which
+>> explains this application, and any other interesting/important things
+>> which were left out?  Quickly, please.
+>
+> OK, how about the version below:
+>
+> ----------
+> Subject: drivers/video: implement a simple framebuffer driver
+>
+> A simple frame-buffer describes a raw memory region that may be rendered
+> to, with the assumption that the display hardware has already been set
+> up to scan out from that buffer.
+>
+> This is useful in cases where a bootloader exists and has set up the
+> display hardware, but a Linux driver doesn't yet exist for the display
+> hardware.
+>
+> Examples use-cases include:
+>
+> * The built-in LCD panels on the Samsung ARM chromebook, and Tegra
+> devices, and likely many other ARM or embedded systems. These cannot yet
+> be supported using a full graphics driver, since the panel control
+> should be provided by the CDF (Common Display Framework), which has been
+> stuck in design/review for quite some time. One could support these
+> panels using custom SoC-specific code, but there is a desire to use
+> common infra-structure rather than having each SoC vendor invent their
+> own code, hence the desire to wait for CDF.
+>
+> * Hardware for which a full graphics driver is not yet available, and
+> the path to obtain one upstream isn't yet clear. For example, the
+> Raspberry Pi.
+>
+> * Any hardware in early stages of upstreaming, before a full graphics
+> driver has been tackled. This driver can provide a graphical boot
+> console (even full X support) much earlier in the upstreaming process,
+> thus making new SoC or board support more generally useful earlier.
+> ----------
+>
+> I assume you can just edit the patch you have and don't need me to
+> resend with the adjusted description.
 
-Unfortunately it only worked for hard disks because the old name
-space was abandoned entirely. It also caused a lot of surprises
-for people upgrading their kernels, which is something we probably
-don't want to repeat.
+Oh, looks like it never got a:
 
-Now we could add a new dynamic registration facility to the tty
-layer for drivers that don't already have a name and dev_t
-associated with the driver, and then use it for all new drivers
-as well as those that intentionally want to convert.
+Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 
-With DT aliases, we already have a way to enumerate serial ports
-across device drivers, so if we are going to do something new,
-we should make sure it works with the numbers defined there.
+Either. Feel free to add, Andrew.
 
-	Arnd
+
+-Olof
