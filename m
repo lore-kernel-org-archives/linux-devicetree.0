@@ -1,79 +1,60 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH RFC v3] media: i2c: mt9p031: add OF support
-Date: Wed, 08 May 2013 12:37:29 +0200
-Message-ID: <5750435.WVYuIYMX2V@avalon>
-References: <1367563919-2880-1-git-send-email-prabhakar.csengg@gmail.com> <124364082.ILKsvVk9ro@avalon> <CA+V-a8sknnoq7M-HJUW6aW8jtf7T0qxA8OpPjsXdmxO22ic7og@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CA+V-a8sknnoq7M-HJUW6aW8jtf7T0qxA8OpPjsXdmxO22ic7og@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <s.hauer@pengutronix.de>, LMML <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Hans Verkuil <hans.verkuil@cisco.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, LKML <linux-kernel@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+From: Matthijs Kooijman <matthijs@stdin.nl>
+Subject: [PATCH] kbuild: Don't assume dts files live in arch/*/boot/dts
+Date: Wed,  8 May 2013 12:59:04 +0200
+Message-ID: <1368010744-11281-1-git-send-email-matthijs@stdin.nl>
+Return-path: <linux-mips-bounce@linux-mips.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Michal Marek <mmarek@suse.cz>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+Cc: linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Stephen Warren <swarren@nvidia.com>, Matthijs Kooijman <matthijs@stdin.nl>
 List-Id: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+In commit b40b25ff (kbuild: always run gcc -E on *.dts, remove cmd_dtc_cpp),
+dts building was changed to always use the C preprocessor. This meant
+that the .dts file passed to dtc is not the original, but the
+preprocessed one.
 
-On Wednesday 08 May 2013 10:19:57 Prabhakar Lad wrote:
-> On Wed, May 8, 2013 at 7:32 AM, Laurent Pinchart wrote:
-> > On Tuesday 07 May 2013 15:10:36 Prabhakar Lad wrote:
-> >> On Mon, May 6, 2013 at 8:29 PM, Prabhakar Lad wrote:
-> >> > On Fri, May 3, 2013 at 8:04 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> >> On Friday 03 May 2013, Prabhakar Lad wrote:
-> >> > [snip]
-> >> > 
-> >> >>> +}
-> >> >> 
-> >> >> Ok, good.
-> >> >> 
-> >> >>> @@ -955,7 +998,17 @@ static int mt9p031_probe(struct i2c_client
-> >> >>> *client,
-> >> >>> 
-> >> >>>         mt9p031->pdata = pdata;
-> >> >>>         mt9p031->output_control = MT9P031_OUTPUT_CONTROL_DEF;
-> >> >>>         mt9p031->mode2 = MT9P031_READ_MODE_2_ROW_BLC;
-> >> >>> 
-> >> >>> -       mt9p031->model = did->driver_data;
-> >> >>> +
-> >> >>> +       if (!client->dev.of_node) {
-> >> >>> +               mt9p031->model = (enum
-> >> >>> mt9p031_model)did->driver_data;
-> >> >>> +       } else {
-> >> >>> +               const struct of_device_id *of_id;
-> >> >>> +
-> >> >>> +               of_id =
-> >> >>> of_match_device(of_match_ptr(mt9p031_of_match),
-> >> >>> +                                       &client->dev);
-> >> >>> +               if (of_id)
-> >> >>> +                       mt9p031->model = (enum
-> >> >>> mt9p031_model)of_id->data;
-> >> >>> +       }
-> >> >>> 
-> >> >>>         mt9p031->reset = -1;
-> >> >> 
-> >> >> Is this actually required? I thought the i2c core just compared the
-> >> >> part of the "compatible" value after the first comma to the string, so
-> >> >> "mt9p031->model = (enum mt9p031_model)did->driver_data" should work
-> >> >> in both cases.
-> >> > 
-> >> > I am OK with "mt9p031->model = (enum mt9p031_model)did->driver_data"
-> >> > but I see still few drivers doing this, I am not sure for what reason.
-> >> > If everyone is OK with it I can drop the above change.
-> >> 
-> >> My bad, while booting with DT the i2c_device_id ie did in this case will
-> >> be NULL, so the above changes are required :-)
-> > 
-> > I've just tested your patch, and did isn't NULL when booting my
-> > Beagleboard with DT (on v3.9-rc5).
-> 
-> I am pretty much sure you tested it compatible property as "aptina,mt9p031"
-> if the compatible property is set to "aptina,mt9p031m" the did will be NULL.
+When compiling with a separate build directory (i.e., with O=), this
+preprocessed file will not live in the same directory as the original.
+When the .dts file includes .dtsi files, dtc will look for them in the
+build directory, not in the source directory and compilation will fail.
 
-I've tested both :-)
+The commit referenced above tried to fix this by passing arch/*/boot/dts
+as an include path to dtc. However, for mips, the .dts files are not in
+this directory, so dts compilation on mips breaks for some targets.
 
+Instead of hardcoding this particular include path, this commit just
+uses the directory of the .dts file that is being compiled, which
+effectively restores the previous behaviour wrt includes. For most .dts
+files, this path is just the same as the previous hardcoded
+arch/*/boot/dts path.
+
+This was tested on a mips (rt3052) and an arm (bcm2835) target.
+
+Signed-off-by: Matthijs Kooijman <matthijs@stdin.nl>
+---
+ scripts/Makefile.lib | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 51bb3de..8337663 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -264,7 +264,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb
+ quiet_cmd_dtc = DTC     $@
+ cmd_dtc = $(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+ 	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 \
+-		-i $(srctree)/arch/$(SRCARCH)/boot/dts $(DTC_FLAGS) \
++		-i $(dir $<) $(DTC_FLAGS) \
+ 		-d $(depfile).dtc $(dtc-tmp) ; \
+ 	cat $(depfile).pre $(depfile).dtc > $(depfile)
+ 
 -- 
-Regards,
-
-Laurent Pinchart
-
+1.8.0
