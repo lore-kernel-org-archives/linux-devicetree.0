@@ -1,82 +1,41 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [RFC 2/8] ARM:global_timer: Add ARM global timer support.
-Date: Wed, 8 May 2013 16:51:24 +0200
-Message-ID: <20130508145124.GA29391@pengutronix.de>
-References: <1368022187-1633-1-git-send-email-srinivas.kandagatla@st.com>
- <1368022260-2197-1-git-send-email-srinivas.kandagatla@st.com>
- <201305081638.23100.arnd@arndb.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] kbuild: Don't assume dts files live in arch/*/boot/dts
+Date: Wed, 08 May 2013 08:50:49 -0600
+Message-ID: <518A6649.1020501@wwwdotorg.org>
+References: <1368010744-11281-1-git-send-email-matthijs@stdin.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201305081638.23100.arnd@arndb.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, linux-doc@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, will.deacon@arm.com, Jiri Slaby <jslaby@suse.cz>, linux@arm.linux.org.uk, Samuel Ortiz <sameo@linux.intel.com>, Nicolas Pitre <nico@linaro.org>, linux-serial@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Stuart Menefy <stuart.menefy@st.com>, Stephen Warren <swarren@nvidia.com>, Dong Aisheng <dong.aisheng@linaro.org>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1368010744-11281-1-git-send-email-matthijs@stdin.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthijs Kooijman <matthijs@stdin.nl>
+Cc: Michal Marek <mmarek@suse.cz>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 08, 2013 at 04:38:22PM +0200, Arnd Bergmann wrote:
-> On Wednesday 08 May 2013, Srinivas KANDAGATLA wrote:
-> > From: Stuart Menefy <stuart.menefy@st.com>
-> > 
-> > This is a simple driver for the global timer module found in the Cortex
-> > A9-MP cores from revision r1p0 onwards. This should be able to perform
-> > the functions of the system timer and the local timer in an SMP system.
-> > 
-> > The global timer has the following features:
-> >     The global timer is a 64-bit incrementing counter with an
-> > auto-incrementing feature. It continues incrementing after sending
-> > interrupts. The global timer is memory mapped in the private memory
-> > region.
-> >     The global timer is accessible to all Cortex-A9 processors in the
-> > cluster. Each Cortex-A9 processor has a private 64-bit comparator that
-> > is used to assert a private interrupt when the global timer has reached
-> > the comparator value. All the Cortex-A9 processors in a design use the
-> > banked ID, ID27, for this interrupt. ID27 is sent to the Interrupt
-> > Controller as a Private Peripheral Interrupt. The global timer is
-> > clocked by PERIPHCLK.
-> > 
-> > Signed-off-by: Stuart Menefy <stuart.menefy@st.com>
-> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-> >
+On 05/08/2013 04:59 AM, Matthijs Kooijman wrote:
+> In commit b40b25ff (kbuild: always run gcc -E on *.dts, remove cmd_dtc_cpp),
+> dts building was changed to always use the C preprocessor. This meant
+> that the .dts file passed to dtc is not the original, but the
+> preprocessed one.
 > 
-> Are you sure we don't already have a driver for this? It sounds unlikely
-> that you are the first one to do this when the hardware is so common.
+> When compiling with a separate build directory (i.e., with O=), this
+> preprocessed file will not live in the same directory as the original.
+> When the .dts file includes .dtsi files, dtc will look for them in the
+> build directory, not in the source directory and compilation will fail.
 > 
+> The commit referenced above tried to fix this by passing arch/*/boot/dts
+> as an include path to dtc. However, for mips, the .dts files are not in
+> this directory, so dts compilation on mips breaks for some targets.
+> 
+> Instead of hardcoding this particular include path, this commit just
+> uses the directory of the .dts file that is being compiled, which
+> effectively restores the previous behaviour wrt includes. For most .dts
+> files, this path is just the same as the previous hardcoded
+> arch/*/boot/dts path.
+> 
+> This was tested on a mips (rt3052) and an arm (bcm2835) target.
 
-Isn't this the same as arch/arm/kernel/smp_twd.c ?
-That is atleast the timer I used with Cortex-A9. I don't think the core
-has another one. But maybe I'm wrong.
+Reviewed-by: Stephen Warren <swarren@nvidia.com>
 
-> >  Documentation/devicetree/bindings/arm/gt.txt |   21 ++
-> >  arch/arm/Kconfig                             |    6 +
-> >  arch/arm/include/asm/global_timer.h          |   12 +
-> >  arch/arm/kernel/Makefile                     |    1 +
-> >  arch/arm/kernel/global_timer.c               |  325 ++++++++++++++++++++++++++
-> >  5 files changed, 365 insertions(+), 0 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/gt.txt
-> >  create mode 100644 arch/arm/include/asm/global_timer.h
-> >  create mode 100644 arch/arm/kernel/global_timer.c
-> 
-> Move it into drivers/clocksource?
->  
-> > diff --git a/arch/arm/include/asm/global_timer.h b/arch/arm/include/asm/global_timer.h
-> > new file mode 100644
-> > index 0000000..46f9188
-> > --- /dev/null
-> > +++ b/arch/arm/include/asm/global_timer.h
-> > @@ -0,0 +1,12 @@
-> > +int __init global_timer_init(void __iomem *base, unsigned int timer_irq);
-> 
-> I don't see a need to call this from platform code for non-DT platforms, it
-> can easily be used with CLOCKSOURCE_OF_DECLARE() all the time I think.
-> 
-
-Regards,
-Steffen
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+(although I wonder if the .dts files shouldn't be in a standard location?)
