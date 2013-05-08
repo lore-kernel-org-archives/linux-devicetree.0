@@ -1,60 +1,486 @@
-From: Matthijs Kooijman <matthijs@stdin.nl>
-Subject: [PATCH] kbuild: Don't assume dts files live in arch/*/boot/dts
-Date: Wed,  8 May 2013 12:59:04 +0200
-Message-ID: <1368010744-11281-1-git-send-email-matthijs@stdin.nl>
-Return-path: <linux-mips-bounce@linux-mips.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Michal Marek <mmarek@suse.cz>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
-Cc: linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Stephen Warren <swarren@nvidia.com>, Matthijs Kooijman <matthijs@stdin.nl>
+From: Tien Hock Loh <thloh@altera.com>
+Subject: [PATCH 1/1] drivers/gpio: Altera soft IP GPIO driver
+Date: Wed, 8 May 2013 10:39:00 +0800
+Message-ID: <1367980740-5716-1-git-send-email-thloh@altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linus.walleij@linaro.org, rob.herring@calxeda.com, rob@landley.net
+Cc: linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, thloh85@gmail.com, thloh@altera.com
 List-Id: devicetree@vger.kernel.org
 
-In commit b40b25ff (kbuild: always run gcc -E on *.dts, remove cmd_dtc_cpp),
-dts building was changed to always use the C preprocessor. This meant
-that the .dts file passed to dtc is not the original, but the
-preprocessed one.
+Add driver support for Altera GPIO soft IP, including interrupts and I/O.
+Tested on Altera CV SoC board.
 
-When compiling with a separate build directory (i.e., with O=), this
-preprocessed file will not live in the same directory as the original.
-When the .dts file includes .dtsi files, dtc will look for them in the
-build directory, not in the source directory and compilation will fail.
-
-The commit referenced above tried to fix this by passing arch/*/boot/dts
-as an include path to dtc. However, for mips, the .dts files are not in
-this directory, so dts compilation on mips breaks for some targets.
-
-Instead of hardcoding this particular include path, this commit just
-uses the directory of the .dts file that is being compiled, which
-effectively restores the previous behaviour wrt includes. For most .dts
-files, this path is just the same as the previous hardcoded
-arch/*/boot/dts path.
-
-This was tested on a mips (rt3052) and an arm (bcm2835) target.
-
-Signed-off-by: Matthijs Kooijman <matthijs@stdin.nl>
+Signed-off-by: Tien Hock Loh <thloh@altera.com>
 ---
- scripts/Makefile.lib | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/gpio/gpio-altera.txt       |  40 +++
+ drivers/gpio/Kconfig                               |   7 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-altera.c                         | 375 +++++++++++++++++++++
+ 4 files changed, 423 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-altera.txt
+ create mode 100644 drivers/gpio/gpio-altera.c
 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 51bb3de..8337663 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -264,7 +264,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb
- quiet_cmd_dtc = DTC     $@
- cmd_dtc = $(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
- 	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 \
--		-i $(srctree)/arch/$(SRCARCH)/boot/dts $(DTC_FLAGS) \
-+		-i $(dir $<) $(DTC_FLAGS) \
- 		-d $(depfile).dtc $(dtc-tmp) ; \
- 	cat $(depfile).pre $(depfile).dtc > $(depfile)
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-altera.txt b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+new file mode 100644
+index 0000000..b4a5c24
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
+@@ -0,0 +1,40 @@
++Altera GPIO controller bindings
++
++Required properties:
++- compatible:
++  - "altr,pio-1.0"
++- reg: Physical base address and length of the controller's registers.
++- #gpio-cells : Should be two.
++  - first cell is the gpio offset number
++  - second cell is used to specify optional parameters (unused)
++- gpio-controller : Marks the device node as a GPIO controller.
++- #interrupt-cells : Should be 1.
++- interrupts: Specify the interrupt.
++- interrupt-controller: Mark the device node as an interrupt controller
++  The first cell is the GPIO number.
++
++Altera GPIO specific properties:
++- width: Width of the GPIO bank, range from 1-32
++- level_trigger: Specifies whether the GPIO interrupt is level trigger.
++  This field is required if the Altera GPIO controller used has IRQ enabled.
++  Note: This field is does not specify whether Altera GPIO controller is
++  level or edge trigger. It is used to detect internally how the trigger is
++  handled.
++
++Note: If the Altera GPIO is set to be built as a module, peripherals that uses
++Altera GPIO as interrupt-parent should be a module so that the peripheral
++doesn't get initialized before Altera GPIO is initialized.
++
++Example:
++
++gpio_altr: gpio_altr {
++    compatible = "altr,pio-1.0";
++    reg = <0xff200000 0x10>;
++    interrupts = <0 45 4>;
++    width = <32>;
++    level_trigger = <0>;
++    #gpio-cells = <2>;
++    gpio-controller;
++    #interrupt-cells = <1>;
++    interrupt-controller;
++};
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index c22eed9..8861c65 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -119,6 +119,13 @@ config GPIO_GENERIC_PLATFORM
+ 	help
+ 	  Say yes here to support basic platform_device memory-mapped GPIO controllers.
  
++config GPIO_ALTERA
++       tristate "Altera GPIO"
++       select IRQ_DOMAIN
++       depends on OF_GPIO
++       help
++         Say yes here to support the Altera PIO device.
++
+ config GPIO_IT8761E
+ 	tristate "IT8761E GPIO support"
+ 	depends on X86  # unconditional access to IO space.
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 0cb2d65..695b954 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -14,6 +14,7 @@ obj-$(CONFIG_GPIO_74X164)	+= gpio-74x164.o
+ obj-$(CONFIG_GPIO_ADNP)		+= gpio-adnp.o
+ obj-$(CONFIG_GPIO_ADP5520)	+= gpio-adp5520.o
+ obj-$(CONFIG_GPIO_ADP5588)	+= gpio-adp5588.o
++obj-$(CONFIG_GPIO_ALTERA)  	+= gpio-altera.o
+ obj-$(CONFIG_GPIO_AMD8111)	+= gpio-amd8111.o
+ obj-$(CONFIG_GPIO_ARIZONA)	+= gpio-arizona.o
+ obj-$(CONFIG_GPIO_BT8XX)	+= gpio-bt8xx.o
+diff --git a/drivers/gpio/gpio-altera.c b/drivers/gpio/gpio-altera.c
+new file mode 100644
+index 0000000..0cb0049
+--- /dev/null
++++ b/drivers/gpio/gpio-altera.c
+@@ -0,0 +1,375 @@
++/*
++ * Copyright (C) 2013 Altera Corporation
++ * Based on gpio-mpc8xxx.c
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++#include <linux/gpio.h>
++#include <linux/kernel.h>
++#include <linux/slab.h>
++#include <linux/module.h>
++#include <linux/io.h>
++#include <linux/irq.h>
++#include <linux/of_irq.h>
++#include <linux/irqdomain.h>
++#include <linux/interrupt.h>
++#include <linux/of_gpio.h>
++#include <linux/platform_device.h>
++
++#define ALTERA_GPIO_DATA		0x0
++#define ALTERA_GPIO_DIR			0x4
++#define ALTERA_GPIO_IRQ_MASK		0x8
++#define ALTERA_GPIO_EDGE_CAP		0xc
++#define ALTERA_GPIO_OUTSET		0x10
++#define ALTERA_GPIO_OUTCLEAR		0x14
++
++#define ALTERA_TRIGGER_EDGE_RISING	0
++#define ALTERA_TRIGGER_LEVEL_HIGH	1
++#define ALTERA_TRIGGER_EDGE_FALLING	2
++#define ALTERA_TRIGGER_EDGE_BOTH	3
++
++struct altera_gpio_chip {
++	struct of_mm_gpio_chip mmchip;
++	struct irq_domain *irq;	/* GPIO controller IRQ number */
++	spinlock_t gpio_lock;	/* Lock used for synchronization */
++	bool level_trigger;
++	int hwirq;
++};
++
++static void altera_gpio_irq_unmask(struct irq_data *d)
++{
++	struct altera_gpio_chip *altera_gc = irq_data_get_irq_chip_data(d);
++	struct of_mm_gpio_chip *mm_gc = &altera_gc->mmchip;
++	unsigned long flags;
++	unsigned int intmask;
++
++	spin_lock_irqsave(&altera_gc->gpio_lock, flags);
++	intmask = readl(mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
++	/* Set ALTERA_GPIO_IRQ_MASK bit to unmask */
++	intmask |= (1 << irqd_to_hwirq(d));
++	writel(intmask, mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
++	spin_unlock_irqrestore(&altera_gc->gpio_lock, flags);
++}
++
++static void altera_gpio_irq_mask(struct irq_data *d)
++{
++	struct altera_gpio_chip *altera_gc = irq_data_get_irq_chip_data(d);
++	struct of_mm_gpio_chip *mm_gc = &altera_gc->mmchip;
++	unsigned long flags;
++	unsigned int intmask;
++
++	spin_lock_irqsave(&altera_gc->gpio_lock, flags);
++	intmask = readl(mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
++	/* Clear ALTERA_GPIO_IRQ_MASK bit to mask */
++	intmask &= ~(1 << irqd_to_hwirq(d));
++	writel(intmask, mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
++	spin_unlock_irqrestore(&altera_gc->gpio_lock, flags);
++}
++
++static int altera_gpio_irq_set_type(struct irq_data *d,
++				unsigned int type)
++{
++	/* There is no way to know the soft IP configuration,
++	   so we accept any interrupt types that are supported by the soft
++	   IP. Nothing to do here since it is hardware defined. Just return
++	   OK status to the caller. */
++	if (type == IRQ_TYPE_EDGE_RISING ||
++		type == IRQ_TYPE_EDGE_FALLING ||
++		type == IRQ_TYPE_EDGE_BOTH ||
++		type == IRQ_TYPE_NONE) {
++		return 0;
++	}
++
++	return -EINVAL;
++}
++
++static struct irq_chip altera_irq_chip = {
++	.name		= "altera-gpio",
++	.irq_mask	= altera_gpio_irq_mask,
++	.irq_unmask	= altera_gpio_irq_unmask,
++	.irq_set_type	= altera_gpio_irq_set_type,
++};
++
++static int altera_gpio_get(struct gpio_chip *gc, unsigned offset)
++{
++	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
++
++	return (readl(mm_gc->regs + ALTERA_GPIO_DATA) >> offset) & 1;
++}
++
++static void altera_gpio_set(struct gpio_chip *gc, unsigned offset, int value)
++{
++	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
++	struct altera_gpio_chip *chip = container_of(mm_gc,
++				struct altera_gpio_chip, mmchip);
++	unsigned long flags;
++	unsigned int data_reg;
++
++	spin_lock_irqsave(&chip->gpio_lock, flags);
++	data_reg = readl(mm_gc->regs + ALTERA_GPIO_DATA);
++	data_reg = (data_reg & ~(1 << offset)) | (value << offset);
++	writel(data_reg, mm_gc->regs + ALTERA_GPIO_DATA);
++	spin_unlock_irqrestore(&chip->gpio_lock, flags);
++}
++
++static int altera_gpio_direction_input(struct gpio_chip *gc, unsigned offset)
++{
++	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
++	struct altera_gpio_chip *chip = container_of(mm_gc,
++				struct altera_gpio_chip, mmchip);
++	unsigned long flags;
++	unsigned int gpio_ddr;
++
++	spin_lock_irqsave(&chip->gpio_lock, flags);
++	/* Set pin as input, assumes software controlled IP */
++	gpio_ddr = readl(mm_gc->regs + ALTERA_GPIO_DIR);
++	gpio_ddr &= ~(1 << offset);
++	writel(gpio_ddr, mm_gc->regs + ALTERA_GPIO_DIR);
++	spin_unlock_irqrestore(&chip->gpio_lock, flags);
++
++	return 0;
++}
++
++static int altera_gpio_direction_output(struct gpio_chip *gc,
++		unsigned offset, int value)
++{
++	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
++	struct altera_gpio_chip *chip = container_of(mm_gc,
++				struct altera_gpio_chip, mmchip);
++	unsigned long flags;
++	unsigned int data_reg, gpio_ddr;
++
++	spin_lock_irqsave(&chip->gpio_lock, flags);
++	/* Sets the GPIO value */
++	data_reg = readl(mm_gc->regs + ALTERA_GPIO_DATA);
++	data_reg = (data_reg & ~(1 << offset)) | (value << offset);
++	writel(data_reg, mm_gc->regs + ALTERA_GPIO_DATA);
++
++	/* Set pin as output, assumes software controlled IP */
++	gpio_ddr = readl(mm_gc->regs + ALTERA_GPIO_DIR);
++	gpio_ddr |= (1 << offset);
++	writel(gpio_ddr, mm_gc->regs + ALTERA_GPIO_DIR);
++	spin_unlock_irqrestore(&chip->gpio_lock, flags);
++
++	return 0;
++}
++
++static int altera_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
++{
++	struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
++	struct altera_gpio_chip *altera_gc = container_of(mm_gc,
++				struct altera_gpio_chip, mmchip);
++
++	if (altera_gc->irq == 0)
++		return -ENXIO;
++	if ((altera_gc->irq && offset) < altera_gc->mmchip.gc.ngpio)
++		return irq_create_mapping(altera_gc->irq, offset);
++	else
++		return -ENXIO;
++}
++
++static void altera_gpio_irq_handler(unsigned int irq, struct irq_desc *desc)
++{
++	struct altera_gpio_chip *altera_gc = irq_desc_get_handler_data(desc);
++	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct of_mm_gpio_chip *mm_gc = &altera_gc->mmchip;
++	unsigned long status;
++
++	int base;
++	chip->irq_mask(&desc->irq_data);
++
++	if (altera_gc->level_trigger == ALTERA_TRIGGER_LEVEL_HIGH) {
++		status = readl(mm_gc->regs + ALTERA_GPIO_DATA);
++		status &= readl(mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
++
++		for (base = 0; base < mm_gc->gc.ngpio; base++) {
++			if ((1 << base) & status) {
++				generic_handle_irq(irq_linear_revmap(
++					altera_gc->irq,	base));
++			}
++		}
++	} else {
++		while ((status = (readl(mm_gc->regs + ALTERA_GPIO_EDGE_CAP) &
++			readl(mm_gc->regs + ALTERA_GPIO_IRQ_MASK)))) {
++			writel(status, mm_gc->regs + ALTERA_GPIO_EDGE_CAP);
++			for (base = 0; base < mm_gc->gc.ngpio; base++) {
++				if ((1 << base) & status) {
++					generic_handle_irq(irq_linear_revmap(
++						altera_gc->irq,	base));
++				}
++			}
++		}
++	}
++
++	chip->irq_eoi(irq_desc_get_irq_data(desc));
++	chip->irq_unmask(&desc->irq_data);
++}
++
++static int altera_gpio_irq_map(struct irq_domain *h, unsigned int virq,
++				irq_hw_number_t hw_irq_num)
++{
++	irq_set_chip_data(virq, h->host_data);
++	irq_set_chip_and_handler(virq, &altera_irq_chip, handle_level_irq);
++	irq_set_irq_type(virq, IRQ_TYPE_NONE);
++
++	return 0;
++}
++
++static struct irq_domain_ops altera_gpio_irq_ops = {
++	.map	= altera_gpio_irq_map,
++	.xlate = irq_domain_xlate_twocell,
++};
++
++int altera_gpio_probe(struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++	int id, reg, ret;
++	struct altera_gpio_chip *altera_gc = devm_kzalloc(&pdev->dev,
++				sizeof(*altera_gc), GFP_KERNEL);
++	if (altera_gc == NULL) {
++		ret = -ENOMEM;
++		pr_err("%s: registration failed with status %d\n",
++			node->full_name, ret);
++		return ret;
++	}
++	altera_gc->irq = 0;
++
++	spin_lock_init(&altera_gc->gpio_lock);
++
++	id = pdev->id;
++
++	if (of_property_read_u32(node, "width", &reg))
++		/*By default assume full GPIO controller*/
++		altera_gc->mmchip.gc.ngpio = 32;
++	else
++		altera_gc->mmchip.gc.ngpio = reg;
++
++	if (altera_gc->mmchip.gc.ngpio > 32) {
++		pr_warn("%s: ngpio is greater than 32, defaulting to 32\n",
++			node->full_name);
++		altera_gc->mmchip.gc.ngpio = 32;
++	}
++
++	altera_gc->mmchip.gc.direction_input	= altera_gpio_direction_input;
++	altera_gc->mmchip.gc.direction_output	= altera_gpio_direction_output;
++	altera_gc->mmchip.gc.get		= altera_gpio_get;
++	altera_gc->mmchip.gc.set		= altera_gpio_set;
++	altera_gc->mmchip.gc.to_irq		= altera_gpio_to_irq;
++	altera_gc->mmchip.gc.owner		= THIS_MODULE;
++
++	ret = of_mm_gpiochip_add(node, &altera_gc->mmchip);
++	if (ret)
++		goto err;
++
++	platform_set_drvdata(pdev, altera_gc);
++
++	if (of_get_property(node, "interrupts", &reg) == NULL)
++		goto skip_irq;
++	altera_gc->hwirq = irq_of_parse_and_map(node, 0);
++
++	if (altera_gc->hwirq == NO_IRQ)
++		goto skip_irq;
++
++	altera_gc->irq = irq_domain_add_linear(node, altera_gc->mmchip.gc.ngpio,
++				&altera_gpio_irq_ops, altera_gc);
++
++	if (!altera_gc->irq) {
++		ret = -ENODEV;
++		goto dispose_irq;
++	}
++
++	if (of_property_read_u32(node, "level_trigger", &reg)) {
++		ret = -EINVAL;
++		pr_err("%s: level_trigger value not set in device tree\n",
++			node->full_name);
++		goto teardown;
++	}
++	altera_gc->level_trigger = reg;
++
++	irq_set_handler_data(altera_gc->hwirq, altera_gc);
++	irq_set_chained_handler(altera_gc->hwirq, altera_gpio_irq_handler);
++
++	return 0;
++
++teardown:
++	irq_domain_remove(altera_gc->irq);
++dispose_irq:
++	irq_dispose_mapping(altera_gc->hwirq);
++	WARN_ON(gpiochip_remove(&altera_gc->mmchip.gc) < 0);
++
++err:
++	pr_err("%s: registration failed with status %d\n",
++		node->full_name, ret);
++	devm_kfree(&pdev->dev, altera_gc);
++
++	return ret;
++skip_irq:
++	return 0;
++}
++
++static int altera_gpio_remove(struct platform_device *pdev)
++{
++	unsigned int irq, i;
++	int status;
++	struct altera_gpio_chip *altera_gc = platform_get_drvdata(pdev);
++
++	status = gpiochip_remove(&altera_gc->mmchip.gc);
++
++	if (status < 0)
++		return status;
++
++	if (altera_gc->irq) {
++		irq_dispose_mapping(altera_gc->hwirq);
++
++		for (i = 0; i < altera_gc->mmchip.gc.ngpio; i++) {
++			irq = irq_find_mapping(altera_gc->irq, i);
++			if (irq > 0)
++				irq_dispose_mapping(irq);
++		}
++
++		irq_domain_remove(altera_gc->irq);
++	}
++
++	irq_set_handler_data(altera_gc->hwirq, NULL);
++	irq_set_chained_handler(altera_gc->hwirq, NULL);
++	devm_kfree(&pdev->dev, altera_gc);
++	return -EIO;
++}
++
++#ifdef CONFIG_OF
++static struct of_device_id altera_gpio_of_match[] = {
++	{ .compatible = "altr,pio-1.0", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, altera_gpio_of_match);
++#else
++#define altera_gpio_of_match NULL
++#endif
++
++static struct platform_driver altera_gpio_driver = {
++	.driver = {
++		.name	= "altera_gpio",
++		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(altera_gpio_of_match),
++	},
++	.probe		= altera_gpio_probe,
++	.remove		= altera_gpio_remove,
++};
++
++static int __init altera_gpio_init(void)
++{
++	return platform_driver_register(&altera_gpio_driver);
++}
++subsys_initcall(altera_gpio_init);
++
++static void __exit altera_gpio_exit(void)
++{
++	platform_driver_unregister(&altera_gpio_driver);
++}
++module_exit(altera_gpio_exit);
++
++MODULE_DESCRIPTION("Altera GPIO driver");
++MODULE_LICENSE("GPL");
 -- 
-1.8.0
+1.7.11.GIT
+
+
