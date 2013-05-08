@@ -1,110 +1,79 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [RFC 0/2] V4L2 API for exposing flash subdevs as LED class device
-Date: Wed, 08 May 2013 09:32:17 +0200
-Message-ID: <5189FF81.5030405@samsung.com>
-References: <1367832828-30771-1-git-send-email-a.hajda@samsung.com>
- <A874F61F95741C4A9BA573A70FE3998F82E5C879@DQHE06.ent.ti.com>
- <1958801.k4UEk5OhXt@avalon>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH RFC v3] media: i2c: mt9p031: add OF support
+Date: Wed, 08 May 2013 12:37:29 +0200
+Message-ID: <5750435.WVYuIYMX2V@avalon>
+References: <1367563919-2880-1-git-send-email-prabhakar.csengg@gmail.com> <124364082.ILKsvVk9ro@avalon> <CA+V-a8sknnoq7M-HJUW6aW8jtf7T0qxA8OpPjsXdmxO22ic7og@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1958801.k4UEk5OhXt@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: "Kim, Milo" <Milo.Kim@ti.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Kyungmin Park <kyungmin.park@samsung.com>, "hj210.choi@samsung.com" <hj210.choi@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CA+V-a8sknnoq7M-HJUW6aW8jtf7T0qxA8OpPjsXdmxO22ic7og@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <s.hauer@pengutronix.de>, LMML <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Hans Verkuil <hans.verkuil@cisco.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, LKML <linux-kernel@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07.05.2013 17:07, Laurent Pinchart wrote:
-> On Tuesday 07 May 2013 02:11:27 Kim, Milo wrote:
->> On Monday, May 06, 2013 6:34 PM Andrzej Hajda wrote:
->>> This RFC proposes generic API for exposing flash subdevices via LED
->>> framework.
->>>
->>> Rationale
->>>
->>> Currently there are two frameworks which are used for exposing LED
->>> flash to user space:
->>> - V4L2 flash controls,
->>> - LED framework(with custom sysfs attributes).
->>>
->>> The list below shows flash drivers in mainline kernel with initial
->>> commit date and typical chip application (according to producer):
->>>
->>> LED API:
->>>     lm3642: 2012-09-12, Cameras
->>>     lm355x: 2012-09-05, Cameras
->>>     max8997: 2011-12-14, Cameras (?)
->>>     lp3944: 2009-06-19, Cameras, Lights, Indicators, Toys
->>>     pca955x: 2008-07-16, Cameras, Indicators (?)
->>>
->>> V4L2 API:
->>>     as3645a:  2011-05-05, Cameras
->>>     adp1653: 2011-05-05, Cameras
->>>
->>> V4L2 provides richest functionality, but there is often demand from
->>> application developers to provide already established LED API. We would
->>> like to have an unified user interface for flash devices. Some of devices
->>> already have the LED API driver exposing limited set of a Flash IC
->>> functionality. In order to support all required features the LED API
->>> would have to be extended or the V4L2 API would need to be used. However
->>> when switching from a LED to a V4L2 Flash driver existing LED API
->>> interface would need to be retained.
->>>
->>> Proposed solution
->>>
->>> This patch adds V4L2 helper functions to register existing V4L2 flash
->>> subdev as LED class device. After registration via v4l2_leddev_register
->>> appropriate entry in /sys/class/leds/ is created. During registration all
->>> V4L2 flash controls are enumerated and corresponding attributes are added.
->>>
->>> I have attached also patch with new max77693-led driver using v4l2_leddev.
->>> This patch requires presence of the patch "max77693: added device tree
->>> support": https://patchwork.kernel.org/patch/2414351/ .
->>>
->>> Additional features
->>>
->>> - simple API to access all V4L2 flash controls via sysfs,
->>> - V4L2 subdevice should not be registered by V4L2 device to use it,
->>> - LED triggers API can be used to control the device,
->>> - LED device is optional - it will be created only if V4L2_LEDDEV
->>>   configuration option is enabled and the subdev driver calls
->>>   v4l2_leddev_register.
->>>
->>> Doubts
->>>
->>> This RFC is a result of a uncertainty which API developers should expose
->>> by their flash drivers. It is a try to gluing together both APIs. I am not
->>> sure if it is the best solution, but I hope there will be some discussion
->>> and hopefully some decisions will be taken which way we should follow.
->> The LED subsystem provides similar APIs for the Camera driver.
->> With LED trigger event, flash and torch are enabled/disabled.
->> I'm not sure this is applicable for you.
->> Could you take a look at LED camera trigger feature?
->>
->> For the camera LED trigger,
->> https://git.kernel.org/cgit/linux/kernel/git/cooloney/linux-leds.git/commit/
->> ?h=f or-next&id=48a1d032c954b9b06c3adbf35ef4735dd70ab757
->>
->> Example of camera flash driver,
->> https://git.kernel.org/cgit/linux/kernel/git/cooloney/linux-leds.git/commit/
->> ?h=f or-next&id=313bf0b1a0eaeaac17ea8c4b748f16e28fce8b7a
-> I think we should decide on one API. Implementing two APIs for a single device 
-> is usually messy, and will result in different feature sets (and different 
-> bugs) being implemented through each API, depending on the driver. 
-> Interactions between the APIs are also a pain point on the kernel side to 
-> properly synchronize calls.
->
-> The LED API is too limited for torch and flash usage, but I'm definitely open 
-> to moving flash devices to the LED API is we can extend it in a way that it 
-> covers all the use cases.
->
-Extending LED API IMHO seems to be quite straightforward - by adding
-attributes for supported functionalities. We just need a specification for
-standard flash/torch attributes.
-I could prepare an RFC about it if there is a will to explore this
-direction.
+Hi Prabhakar,
 
---
-Regards
-Andrzej Hajda <a.hajda@samsung.com>
+On Wednesday 08 May 2013 10:19:57 Prabhakar Lad wrote:
+> On Wed, May 8, 2013 at 7:32 AM, Laurent Pinchart wrote:
+> > On Tuesday 07 May 2013 15:10:36 Prabhakar Lad wrote:
+> >> On Mon, May 6, 2013 at 8:29 PM, Prabhakar Lad wrote:
+> >> > On Fri, May 3, 2013 at 8:04 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> >> >> On Friday 03 May 2013, Prabhakar Lad wrote:
+> >> > [snip]
+> >> > 
+> >> >>> +}
+> >> >> 
+> >> >> Ok, good.
+> >> >> 
+> >> >>> @@ -955,7 +998,17 @@ static int mt9p031_probe(struct i2c_client
+> >> >>> *client,
+> >> >>> 
+> >> >>>         mt9p031->pdata = pdata;
+> >> >>>         mt9p031->output_control = MT9P031_OUTPUT_CONTROL_DEF;
+> >> >>>         mt9p031->mode2 = MT9P031_READ_MODE_2_ROW_BLC;
+> >> >>> 
+> >> >>> -       mt9p031->model = did->driver_data;
+> >> >>> +
+> >> >>> +       if (!client->dev.of_node) {
+> >> >>> +               mt9p031->model = (enum
+> >> >>> mt9p031_model)did->driver_data;
+> >> >>> +       } else {
+> >> >>> +               const struct of_device_id *of_id;
+> >> >>> +
+> >> >>> +               of_id =
+> >> >>> of_match_device(of_match_ptr(mt9p031_of_match),
+> >> >>> +                                       &client->dev);
+> >> >>> +               if (of_id)
+> >> >>> +                       mt9p031->model = (enum
+> >> >>> mt9p031_model)of_id->data;
+> >> >>> +       }
+> >> >>> 
+> >> >>>         mt9p031->reset = -1;
+> >> >> 
+> >> >> Is this actually required? I thought the i2c core just compared the
+> >> >> part of the "compatible" value after the first comma to the string, so
+> >> >> "mt9p031->model = (enum mt9p031_model)did->driver_data" should work
+> >> >> in both cases.
+> >> > 
+> >> > I am OK with "mt9p031->model = (enum mt9p031_model)did->driver_data"
+> >> > but I see still few drivers doing this, I am not sure for what reason.
+> >> > If everyone is OK with it I can drop the above change.
+> >> 
+> >> My bad, while booting with DT the i2c_device_id ie did in this case will
+> >> be NULL, so the above changes are required :-)
+> > 
+> > I've just tested your patch, and did isn't NULL when booting my
+> > Beagleboard with DT (on v3.9-rc5).
+> 
+> I am pretty much sure you tested it compatible property as "aptina,mt9p031"
+> if the compatible property is set to "aptina,mt9p031m" the did will be NULL.
+
+I've tested both :-)
+
+-- 
+Regards,
+
+Laurent Pinchart
+
