@@ -1,26 +1,27 @@
 From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] net: of_mdio: fix behavior on missing phy device
-Date: Wed, 08 May 2013 13:14:48 -0700 (PDT)
-Message-ID: <20130508.131448.594837732354914619.davem@davemloft.net>
-References: <1367920171-20264-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH] net/spider_net: fix error return code in
+ spider_net_open()
+Date: Wed, 08 May 2013 13:15:03 -0700 (PDT)
+Message-ID: <20130508.131503.1942281191347393009.davem@davemloft.net>
+References: <CAPgLHd9kSJdv+gdKr6OBcG2h0RmjnWFscELHGEPQwT1kbD5FSQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1367920171-20264-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com
-Cc: grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAPgLHd9kSJdv+gdKr6OBcG2h0RmjnWFscELHGEPQwT1kbD5FSQ@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: weiyj.lk@gmail.com
+Cc: kou.ishizaki@toshiba.co.jp, jens@de.ibm.com, grant.likely@linaro.org, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Date: Tue,  7 May 2013 11:49:31 +0200
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Date: Tue, 7 May 2013 20:16:00 +0800
 
-> of_mdiobus_register creates a phy_device even if get_phy_device failed
-> to create it previously. This causes indefinite polling on non-existent
-> PHYs. This fix makes of_mdio_register rely on get_phy_device to
-> properly create the device or fail otherwise.
+> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 > 
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> Fix to return a negative error code from the error handling
+> case instead of 0, as done elsewhere in this function.
+> 
+> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
 Applied.
