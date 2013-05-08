@@ -1,27 +1,49 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH] net/spider_net: fix error return code in
- spider_net_open()
-Date: Wed, 08 May 2013 13:15:03 -0700 (PDT)
-Message-ID: <20130508.131503.1942281191347393009.davem@davemloft.net>
-References: <CAPgLHd9kSJdv+gdKr6OBcG2h0RmjnWFscELHGEPQwT1kbD5FSQ@mail.gmail.com>
+From: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
+Date: Wed, 08 May 2013 15:58:30 -0500
+Message-ID: <1368046710.18069.217@driftwood>
+References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
+ <201304300004.20320.arnd@arndb.de> <5182AF83.4080705@wwwdotorg.org>
+ <1956593.M6NmITdEKh@avalon>
+ <20130507143338.79b3d893fcdc3bd79fbe9a57@linux-foundation.org>
+ <5189BA36.9000105@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"; Format="Flowed"; DelSp="Yes"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAPgLHd9kSJdv+gdKr6OBcG2h0RmjnWFscELHGEPQwT1kbD5FSQ@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: weiyj.lk@gmail.com
-Cc: kou.ishizaki@toshiba.co.jp, jens@de.ibm.com, grant.likely@linaro.org, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5189BA36.9000105-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> (from swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org on
+ Tue May  7 21:36:38 2013)
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Date: Tue, 7 May 2013 20:16:00 +0800
-
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+On 05/07/2013 09:36:38 PM, Stephen Warren wrote:
+> On 05/07/2013 03:33 PM, Andrew Morton wrote:
+...
+> Subject: drivers/video: implement a simple framebuffer driver
 > 
-> Fix to return a negative error code from the error handling
-> case instead of 0, as done elsewhere in this function.
+> A simple frame-buffer describes a raw memory region that may be  
+> rendered
+> to, with the assumption that the display hardware has already been set
+> up to scan out from that buffer.
 > 
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> This is useful in cases where a bootloader exists and has set up the
+> display hardware, but a Linux driver doesn't yet exist for the display
+> hardware.
+> 
+> Examples use-cases include:
 
-Applied.
+Virtual environments such as QEMU.
+
+Rob
