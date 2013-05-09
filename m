@@ -1,81 +1,34 @@
 From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH] s5p-jpeg: Enable instantiation from device tree
-Date: Thu, 09 May 2013 14:39:58 +0200
-Message-ID: <1368103198-16485-1-git-send-email-s.nawrocki@samsung.com>
+Subject: [PATCH] exynos4-is: Correct fimc-lite compatible property description
+Date: Thu, 09 May 2013 14:43:34 +0200
+Message-ID: <1368103414-16645-1-git-send-email-s.nawrocki@samsung.com>
 Return-path: <linux-media-owner@vger.kernel.org>
 Sender: linux-media-owner@vger.kernel.org
 To: linux-media@vger.kernel.org
-Cc: a.hajda@samsung.com, hj210.choi@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Andrzej Pietrasiewicz <andrzej.p@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
+Cc: a.hajda@samsung.com, hj210.choi@samsung.com, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree support for the S5P/Exynos SoC
-JPEG codec IP block.
+Ensure the compatible property for FIMC-LITE IP blocks is properly
+documented, a cut&paste error fix.
 
-Cc: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
 Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 ---
- .../devicetree/bindings/media/samsung-s5p-jpeg.txt |   12 ++++++++++++
- drivers/media/platform/s5p-jpeg/jpeg-core.c        |   13 ++++++++++++-
- 2 files changed, 24 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/media/samsung-s5p-jpeg.txt
+ .../devicetree/bindings/media/exynos-fimc-lite.txt |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/media/samsung-s5p-jpeg.txt b/Documentation/devicetree/bindings/media/samsung-s5p-jpeg.txt
-new file mode 100644
-index 0000000..bc0938a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/samsung-s5p-jpeg.txt
-@@ -0,0 +1,12 @@
-+Samsung S5P/EXYNOS SoC series JPEG codec
-+
-+Required properties:
-+
-+- compatible	: "samsung,<soc_name>-jpeg", must be one of:
-+		  "samsung,s5pv210-jpeg", "samsung,exynos4210-jpeg",
-+		  "samsung,exynos4212-jpeg";
-+- reg		: address and length of the JPEG codec register set;
-+- interrupts	: should contain the JPEG codec interrupt; format of the
-+		  interrupt specifier depends on the interrupt controller;
-+- clocks	: jpeg clock specifier, as covered by common clock bindings.
-+- clock-names	: must contain "jpeg" entry.
-diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
-index 15d2396..cd4461c 100644
---- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
-+++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
-@@ -17,6 +17,7 @@
- #include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/slab.h>
-@@ -1513,10 +1514,21 @@ static const struct dev_pm_ops s5p_jpeg_pm_ops = {
- 	.runtime_resume	 = s5p_jpeg_runtime_resume,
- };
+diff --git a/Documentation/devicetree/bindings/media/exynos-fimc-lite.txt b/Documentation/devicetree/bindings/media/exynos-fimc-lite.txt
+index 3f62adf..de9f6b7 100644
+--- a/Documentation/devicetree/bindings/media/exynos-fimc-lite.txt
++++ b/Documentation/devicetree/bindings/media/exynos-fimc-lite.txt
+@@ -2,7 +2,7 @@ Exynos4x12/Exynos5 SoC series camera host interface (FIMC-LITE)
  
-+#ifdef CONFIG_OF
-+static const struct of_device_id s5p_jpeg_of_match[] = {
-+	{ .compatible = "samsung,s5pv210-jpeg" },
-+	{ .compatible = "samsung,exynos4210-jpeg" },
-+	{ .compatible = "samsung,exynos4212-jpeg" },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, s5p_jpeg_of_match);
-+#endif
-+
- static struct platform_driver s5p_jpeg_driver = {
- 	.probe = s5p_jpeg_probe,
- 	.remove = s5p_jpeg_remove,
- 	.driver = {
-+		.of_match_table = of_match_ptr(s5p_jpeg_of_match),
- 		.owner = THIS_MODULE,
- 		.name = S5P_JPEG_M2M_NAME,
- 		.pm = &s5p_jpeg_pm_ops,
-@@ -1528,4 +1540,3 @@ module_platform_driver(s5p_jpeg_driver);
- MODULE_AUTHOR("Andrzej Pietrasiewicz <andrzej.p@samsung.com>");
- MODULE_DESCRIPTION("Samsung JPEG codec driver");
- MODULE_LICENSE("GPL");
--
+ Required properties:
+ 
+-- compatible	: should be "samsung,exynos4212-fimc" for Exynos4212 and
++- compatible	: should be "samsung,exynos4212-fimc-lite" for Exynos4212 and
+ 		  Exynos4412 SoCs;
+ - reg		: physical base address and size of the device memory mapped
+ 		  registers;
 -- 
 1.7.9.5
