@@ -1,167 +1,98 @@
-From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Subject: RE: [PATCH V2 1/2] tps6507x-ts: Add DT support
-Date: Thu, 9 May 2013 07:38:29 +0000
-Message-ID: <A4887BF146CD57468F700B415D2F47015924D0@DBDE04.ent.ti.com>
-References: <1367665951-29848-1-git-send-email-manishv.b@ti.com>
- <1367665951-29848-2-git-send-email-manishv.b@ti.com>
- <CA+V-a8ty3CEz5QZKkphD=_Hyjet31Ya59H9nW1nDd1Y1asRbmw@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 3/8] mfd:syscon: Introduce claim/read/write/release APIs
+Date: Thu, 9 May 2013 10:51:43 +0100
+Message-ID: <20130509095143.GB7478@sirena.org.uk>
+References: <1368022187-1633-1-git-send-email-srinivas.kandagatla@st.com>
+ <1368022272-2241-1-git-send-email-srinivas.kandagatla@st.com>
+ <201305081650.23264.arnd@arndb.de>
+ <20130508150141.GA5057@opensource.wolfsonmicro.com>
+ <518A8E6C.6070907@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CA+V-a8ty3CEz5QZKkphD=_Hyjet31Ya59H9nW1nDd1Y1asRbmw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "rob@landley.net" <rob@landley.net>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>
+Content-Type: multipart/mixed; boundary="===============0730921491666076171=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <518A8E6C.6070907-qxv4g6HH51o@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Prabhakar,
 
-On Tue, May 07, 2013 at 11:11:21, Prabhakar Lad wrote:
-> Hi Manish,
-> 
-> Thanks for the patch, below are few nits.
-> 
-> On Sat, May 4, 2013 at 4:42 PM, Vishwanathrao Badarkhe, Manish <manishv.b@ti.com> wrote:
-> > Add device tree based support for TI's tps6507x touchscreen.
-> [Snip]
-> 
-> > +- tsc: This node specifies touch screen data.
-> > +       ti,poll_period : Time at which touch input is getting sampled in ms.
-> > +       ti,min_pressure: Minimum pressure value to trigger touch.
-> For devicetree properties '-' is preferred over '_'.
-
-Ok, I will use '-' hence forward for device tree properties.
-> 
-> > +       ti,vref        : voltage reference for ADC.
-> > +                     0: Reference voltage for ADC is disabled.
-> > +                     1: Reference voltage for ADC is enabled.
-> >
-> >  Regulator Optional properties:
-> >  - defdcdc_default: It's property of DCDC2 and DCDC3 regulators.
-> > @@ -30,6 +40,14 @@ Regulator Optional properties:
-> >                         1: If defdcdc pin of DCDC2/DCDC3 is driven HIGH.
-> >    If this property is not defined, it defaults to 0 (not enabled).
-> >
-> > +Touchscreen Optional properties:
-> > +- ti,vendor : Touchscreen vendor id to poppulate
-> > +             in sysclass interface.
-> > +- ti,product: Touchscreen product id to poppulate
-> > +             in sysclass interface.
-> > +- ti,version: Touchscreen version id to poppulate
-> > +             in sysclass interface.
-> > +
-> s/poppulate/populate
-
-Ok, I will correct this.
-> 
-> >  Example:
-> >
-> >         pmu: tps6507x@48 {
-> > @@ -88,4 +106,12 @@ Example:
-> >                         };
-> >                 };
-> >
-> > +               tsc {
-> > +                       ti,poll_period = <30>;
-> > +                       ti,min_pressure = <0x30>;
-> > +                       ti,vref = <0>;
-> > +                       ti,vendor = <0>;
-> > +                       ti,product = <65070>;
-> > +                       ti,version = <0x100>;
-> > +               };
-> >         };
-> > diff --git a/drivers/input/touchscreen/tps6507x-ts.c 
-> > b/drivers/input/touchscreen/tps6507x-ts.c
-> > index 65e0f9a..d5433d0 100644
-> > --- a/drivers/input/touchscreen/tps6507x-ts.c
-> > +++ b/drivers/input/touchscreen/tps6507x-ts.c
-> > @@ -21,6 +21,8 @@
-> >  #include <linux/mfd/tps6507x.h>
-> >  #include <linux/input/tps6507x-ts.h>
-> >  #include <linux/delay.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> >
-> >  #define TSC_DEFAULT_POLL_PERIOD 30 /* ms */  #define 
-> > TPS_DEFAULT_MIN_PRESSURE 0x30 @@ -231,36 +233,83 @@ done:
-> >         ret = tps6507x_adc_standby(tsc);  }
-> >
-> > +static int tsc_init_data(struct tps6507x_dev *tps6507x_dev,
-> > +               struct input_dev *input_dev) {
-> > +       struct device_node *node = tps6507x_dev->dev->of_node;
-> > +       struct tps6507x_board *tps_board =
-> > +               (struct tps6507x_board *)tps6507x_dev->dev->platform_data;
-> > +       struct touchscreen_init_data *init_data = NULL;
-> > +       u32 val32;
-> > +       int err;
-> > +
-> > +       if (node)
-> > +               node = of_find_node_by_name(node, "tsc");
-> > +       if (tps_board)
-> > +               init_data = tps_board->tps6507x_ts_init_data;
-> > +
-> > +       if (init_data) {
-> > +               tps6507x_dev->ts->poll_period = init_data->poll_period;
-> > +               tps6507x_dev->ts->min_pressure = init_data->min_pressure;
-> > +               tps6507x_dev->ts->vref = init_data->vref;
-> > +               input_dev->id.vendor = init_data->vendor;
-> > +               input_dev->id.product = init_data->product;
-> > +               input_dev->id.version = init_data->version;
-> > +       } else if (node) {
-> > +               err = of_property_read_u32(node, "ti,poll_period", 
-> > + &val32);
-> why not pass tps6507x_dev->ts->poll_period instead of val32 and similarly below that would avoid else case.
-
-Agreed, that will reduce some code.
-> 
-> > +               if (err < 0)
-> > +                       goto error_ret;
-> > +               else
-> > +                       tps6507x_dev->ts->poll_period = val32;
-> > +
-> > +               err = of_property_read_u32(node, "ti,min_pressure", &val32);
-> > +               if (err < 0)
-> > +                       goto error_ret;
-> > +               else
-> > +                       tps6507x_dev->ts->min_pressure = val32;
-> > +
-> > +               err = of_property_read_u32(node, "ti,vref", &val32);
-> > +               if (err < 0)
-> > +                       goto error_ret;
-> > +               else
-> > +                       tps6507x_dev->ts->vref = val32;
-> > +
-> > +               err = of_property_read_u32(node, "ti,vendor", &val32);
-> > +               if (err < 0)
-> > +                       goto error_ret;
-> > +               else
-> > +                       input_dev->id.vendor = val32;
-> > +
-> > +               err = of_property_read_u32(node, "ti,product", &val32);
-> > +               if (err < 0)
-> > +                       goto error_ret;
-> > +               else
-> > +                       input_dev->id.product = val32;
-> > +
-> > +               err = of_property_read_u32(node, "ti,version", &val32);
-> > +               if (err < 0)
-> > +                       goto error_ret;
-> > +               else
-> > +                       input_dev->id.version = val32;
-> > +       } else {
-> > +               err = -EINVAL;
-> > +               goto error_ret;
-> > +       }
-> you can move this check at the top when both are NULL.
-
-Ok, I will move this check at the top.
-> 
-> Regards,
-> --Prabhakar Lad
-> 
+--===============0730921491666076171==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="67nA0I2t09EExhkH"
+Content-Disposition: inline
 
 
-Regards, 
-Manish
+--67nA0I2t09EExhkH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, May 08, 2013 at 06:42:04PM +0100, Srinivas KANDAGATLA wrote:
+
+Fix your mailer to word wrap within paragraphs.
+
+> Ultimately the syscon_write use the regmap_update_bits, however we
+> really want is the flexibility in using/referring the syscon
+> registers/bits in both device-trees and non-device tree cases.
+
+So what you're looking for here is some way to offload discovery of
+register fields from the driver?
+
+> The reason for these APIs, is the extent of syscon usage is very high
+> in ST set-top-box parts.
+
+> Without these new APIs, its very difficult to pass this information to
+> the drivers.
+
+I'm not 100% convinced that putting all this information into DT is a
+good idea, and to the extent that it is sensible it feels like something
+which might be useful with any device using register maps, not just
+syscon.  For example many MFDs have similar needs - essentially the
+system controllers are just a particular kind of MFD.  To me that says
+that this should be outside syscon so other things can use it.
+
+--67nA0I2t09EExhkH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRi3GrAAoJELSic+t+oim9IWoQAJHvNeQZZXveXmlB1koA35Uf
+gPsYkfgFvkD/EaS9Rr7OO3kd5RfavgeoOQu7CMrn5k4Cm4AXHDBW15YI6ZgBacvU
+mP34x1IJh93o2AUtspBxWAGebGO+KahFKv+t5kag9mvfVjXE1QUnLQbOucWYBr/S
+059Z5+WO8sPbcpuRAIfr3qYFwqrztYz6LcBmOK0XOpkgp/0to9W5wvUzG6xFgywz
+YWCZfjh+vn7FUFR2U8mifUp48SHrKUqEu1EFDTG0u69yk5olnwSD1C71ga4LADau
+O+N0/p6MtJe9V9r9/kxHTJYRfZqvB927ta8awZqCpCsuhepi1Tfihx0KcvefvJKU
+2RL+LJhChs0jVwHCAmaFcE5D4xyT3EGrTiPWn+AaKrg17aHaz2qonQJTtpDuUBPC
+K40ebQMzxlbXDh/1R71ZxPP3R+Kd5DdWKzG5SILYak0qTEVlcHiUpFhv/UIhsw4E
+D8qQuxcELQkNMHAa6B3nuXCDUgYMNpot4cJiXLvKZbeRjZ4tLSnrzen4skkDZt7e
+HMUf39XiYm2gfrPbcMb1GY1vrNUHrbMfpbkArvbRVa6l5tbh9Q972uk8Q0G2fQjb
+r3dgXUGkooco4d5ruQVopj9m5bxTlQy3nG2U/SvEYC6NffkZHs42LLDrw+wzcCGZ
+w6FS6DNQPrxLMbvrQT5I
+=vpYd
+-----END PGP SIGNATURE-----
+
+--67nA0I2t09EExhkH--
+
+--===============0730921491666076171==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============0730921491666076171==--
