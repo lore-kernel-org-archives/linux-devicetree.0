@@ -1,60 +1,40 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH] exynos4-is: Fix example dts in .../bindings/samsung-fimc.txt
-Date: Thu, 09 May 2013 14:45:17 +0200
-Message-ID: <1368103517-16710-1-git-send-email-s.nawrocki@samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: a.hajda@samsung.com, hj210.choi@samsung.com, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: [PATCH] serial: 8250_dw: set clock rate
+Date: Thu, 9 May 2013 13:58:09 +0100
+Message-ID: <518B9D61.4090406@imgtec.com>
+References: <1368095356-21081-1-git-send-email-james.hogan@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1368095356-21081-1-git-send-email-james.hogan@imgtec.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: James Hogan <james.hogan@imgtec.com>, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jiri Slaby <jslaby@suse.cz>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Alan Cox <alan@linux.intel.com>, Jamie Iles <jamie@jamieiles.com>, Bill Pemberton <wfp5p@virginia.edu>
 List-Id: devicetree@vger.kernel.org
 
-The s5c73m3 sensor node should be off an I2C bus controller node.
+On 09/05/13 11:29, James Hogan wrote:
+> If the uart clock provided to the 8250_dw driver is adjustable it may
+> not be set to the desired rate. Therefore if both a uart clock and a
+> clock frequency is specified (e.g. via device tree), try and update the
+> clock to match the frequency.
+> 
+> Unfortunately if the resulting frequency is rounded down (which is the
+> default behaviour of the generic clk-divider), the 8250 core won't allow
+> the highest baud rate to be used, so if an explicit frequency is
+> specified we always report that to the 8250 core.
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- .../devicetree/bindings/media/samsung-fimc.txt     |   26 ++++++++++----------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
-index 51c776b..96312f6 100644
---- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
-+++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
-@@ -127,22 +127,22 @@ Example:
- 				};
- 			};
- 		};
--	};
- 
--	/* MIPI CSI-2 bus IF sensor */
--	s5c73m3: sensor@0x1a {
--		compatible = "samsung,s5c73m3";
--		reg = <0x1a>;
--		vddio-supply = <...>;
-+		/* MIPI CSI-2 bus IF sensor */
-+		s5c73m3: sensor@0x1a {
-+			compatible = "samsung,s5c73m3";
-+			reg = <0x1a>;
-+			vddio-supply = <...>;
- 
--		clock-frequency = <24000000>;
--		clocks = <...>;
--		clock-names = "mclk";
-+			clock-frequency = <24000000>;
-+			clocks = <...>;
-+			clock-names = "mclk";
- 
--		port {
--			s5c73m3_1: endpoint {
--				data-lanes = <1 2 3 4>;
--				remote-endpoint = <&csis0_ep>;
-+			port {
-+				s5c73m3_1: endpoint {
-+					data-lanes = <1 2 3 4>;
-+					remote-endpoint = <&csis0_ep>;
-+				};
- 			};
- 		};
- 	};
--- 
-1.7.9.5
+Sorry, please ignore this patch.
+
+I've realised that a larger (e.g. non-divided) source clock can just be
+provided directly to the uart and it appears to have enough of an
+internal divider for the driver to do the right thing without changing
+the input clock rate, although of course that clock rate still needs
+setting somewhere. I'm not sure why we didn't do this all along as it
+gives a closer frequency anyway.
+
+Thanks
+James
+
