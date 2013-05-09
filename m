@@ -1,28 +1,41 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: Re: [RFC 2/8] ARM:global_timer: Add ARM global timer support.
-Date: Thu, 09 May 2013 15:51:17 +0100
-Message-ID: <518BB7E5.4070402@st.com>
-References: <1368022187-1633-1-git-send-email-srinivas.kandagatla@st.com> <201305081638.23100.arnd@arndb.de> <518BADBF.4070303@st.com> <201305091651.13896.arnd@arndb.de>
-Reply-To: srinivas.kandagatla@st.com
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH] s5p-jpeg: Enable instantiation from device tree
+Date: Thu, 09 May 2013 17:51:58 +0200
+Message-ID: <518BC61E.3040202@samsung.com>
+References: <1368103198-16485-1-git-send-email-s.nawrocki@samsung.com>
+ <CAK9yfHx-o-3oYj8hMKzQK7N3CD7=tUwbxcHG-9gA25yfRjky2Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <201305091651.13896.arnd@arndb.de>
-Sender: linux-serial-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Dave Martin <dave.martin@linaro.org>, linux-doc@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, will.deacon@arm.com, Grant Likely <grant.likely@secretlab.ca>, Jiri Slaby <jslaby@suse.cz>, linux@arm.linux.org.uk, Samuel Ortiz <sameo@linux.intel.com>, Nicolas Pitre <nico@linaro.org>, linux-serial@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Stuart Menefy <stuart.menefy@st.com>, Stephen Warren <swarren@nvidia.com>, Dong Aisheng <dong.aisheng@linaro.org>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org, Rob Landley <rob@landley.net>, Olof Johansson <olof@lixom.net>Maxime Ripard <ma>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <CAK9yfHx-o-3oYj8hMKzQK7N3CD7=tUwbxcHG-9gA25yfRjky2Q@mail.gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: linux-media@vger.kernel.org, a.hajda@samsung.com, hj210.choi@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, Andrzej Pietrasiewicz <andrzej.p@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, George Joseph <george.jp@samsung.com>, "aditya.ps" <aditya.ps@samsung.com>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/05/13 15:51, Arnd Bergmann wrote:
-> It won't.
-> 
->> > Looking at the code in clocksource_of_init it just goes through the
->> > of_device_id table, which is not used in case of non-DT.
-> All new platforms are DT-only, and none of the old platforms use this
-> driver, so it does not matter.
-> 
-It makes sense, I will remove the header file.
-> 	Arnd
-> 
+Hi Sachin,
 
+On 05/09/2013 04:50 PM, Sachin Kamat wrote:
+> George from my team is working on adding JPEG IP support for 4412 and
+> 5250 SoCs which is quite different from 4210.
+> In this regard he has refactored the driver to accomodate the changes
+> required for the new IP and also added DT support.
+> The patches are almost ready and would be submitted in the next couple
+> of days. This is FYI :)
+
+That's greats news, since on our side currently nobody has been working
+on the Exynos4x12+ JPEG codec support. I just prepared a patch adding
+DT matching table and checked the driver gets initialized on Exynos4x12.
+So it is at least usable on Exynos4210 in 3.11. I should not have listed
+"samsung,exynos4212-jpeg" in the driver, since it is missing adaptations
+for Exynos4x12 SoCs.
+
+We have plenty time to add proper support for the JPEG IP in 3.11. I'm
+looking forward to review and test your patches. Can you use the $subject
+patch as a base of your work ? ;-) Or is it rather useless ?
+
+FYI, I will be mostly offline for next 2 weeks.
+
+Thanks,
+Sylwester
