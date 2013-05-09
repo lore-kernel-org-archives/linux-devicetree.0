@@ -1,113 +1,81 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: Re: [RFC 3/8] mfd:syscon: Introduce claim/read/write/release APIs
-Date: Thu, 09 May 2013 12:58:01 +0100
-Message-ID: <518B8F49.5020902@st.com>
-References: <1368022187-1633-1-git-send-email-srinivas.kandagatla@st.com> <1368022272-2241-1-git-send-email-srinivas.kandagatla@st.com> <201305081650.23264.arnd@arndb.de> <20130508150141.GA5057@opensource.wolfsonmicro.com> <518A8E6C.6070907@st.com> <20130509095143.GB7478@sirena.org.uk>
-Reply-To: srinivas.kandagatla@st.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130509095143.GB7478@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, dong.aisheng@linaro.org, sameo@linux.intel.com, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Stuart Menefy <stuart.menefy@st.com>, Shawn Guo <shawn.guo@linaro.org>, Olof Johansson <olof@lixom.net>, Jason Cooper <jason@lakedaemon.net>, Stephen Warren <swarren@nvidia.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Nicolas Pitre <nico@linaro.org>, Will Deacon <will.deacon@arm.com>, Dave Martin <dave.martin@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@li
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH] s5p-jpeg: Enable instantiation from device tree
+Date: Thu, 09 May 2013 14:39:58 +0200
+Message-ID: <1368103198-16485-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: a.hajda@samsung.com, hj210.choi@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Andrzej Pietrasiewicz <andrzej.p@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/05/13 10:51, Mark Brown wrote:
-> On Wed, May 08, 2013 at 06:42:04PM +0100, Srinivas KANDAGATLA wrote:
-> 
-> Fix your mailer to word wrap within paragraphs.
-> 
-Sorry about that.
->> Ultimately the syscon_write use the regmap_update_bits, however we
->> really want is the flexibility in using/referring the syscon
->> registers/bits in both device-trees and non-device tree cases.
-> 
-> So what you're looking for here is some way to offload discovery of
-> register fields from the driver?
+This patch adds device tree support for the S5P/Exynos SoC
+JPEG codec IP block.
 
-Exactly,
+Cc: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ .../devicetree/bindings/media/samsung-s5p-jpeg.txt |   12 ++++++++++++
+ drivers/media/platform/s5p-jpeg/jpeg-core.c        |   13 ++++++++++++-
+ 2 files changed, 24 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/samsung-s5p-jpeg.txt
 
-As the System configuration registers change per each SOC, and the
-logic/code to drive still remain same across SOCs.
-
-It makes sense to abstract the information of sysconf register and its
-offsets from the driver, as we do not want to change the driver per each
-SOC.
-
-> 
->> The reason for these APIs, is the extent of syscon usage is very high
->> in ST set-top-box parts.
-> 
->> Without these new APIs, its very difficult to pass this information to
->> the drivers.
-> 
-> I'm not 100% convinced that putting all this information into DT is a
-> good idea,
-
-Currently, we have two bits of information which come from device trees.
-1> The syscon bank/group definition itself.
-2> syscon register offsets and bits information to the drivers.
-
-These are the 2 things which keep changing per each SOC.
-
-There is no other way to pass this information to the drivers other than
-passing them as part of their own device node and syscon node.
-
->  and to the extent that it is sensible it feels like something
-> which might be useful with any device using register maps, not just
-> syscon.
-
-If you think this is going to be useful for other drivers, Am happy to
-move this out of syscon to regmap something like adding
-of_regmap_field_claim/regmap_field_claim/regmap_field_read/regmap_field_write/regmap_field_release
-functions.
-
-so any exiting drivers can still use the old syscon API to get the
-regmap instance.
-Alternatively they can use the new regmap APIs directly.
-
-regmap_field_claim to claim bits of the register
-of_regmap_field_claim DT version of reg_map_field_claim.
-regmap_field_write to write to bits of register
-regmap_field_read to bit of the register.
-regmap_field_release to release the bits of the register.
-
-For DT version it might involve adding new member to struct
-regmap_config to lookup regmap by phandle, so that regmap can get hold
-of regmap instance from device tree phandle.
-syscon driver already does this in syscon_regmap_lookup_by_phandle()
-
-On the device tree side it will look like:
-syscfg_sbc:syscon@fe600000{
-	compatible	= "syscon";
-	reg		= <0xfe600000 0x1000>;
-};
-
-node {
-	property-1 = <&syscfg_sbc 10 0 31>;
-};
-
-property has "phandle", register_offset, lsb, msb.
-
-On the driver side, it can just use the API's like
-
-field = of_regmap_field_claim(np, "property-1");
-regmap_field_write(field, val);
-regmap_field_release(field);
-
-All this involves is very minimal code change in syscon and a new APIs
-and DT awareness into regmap.
-
-What do you think?
-
-Thanks,
-srini
-
->  For example many MFDs have similar needs - essentially the
-> system controllers are just a particular kind of MFD.  To me that says
-> that this should be outside syscon so other things can use it.
-
-> 
-
+diff --git a/Documentation/devicetree/bindings/media/samsung-s5p-jpeg.txt b/Documentation/devicetree/bindings/media/samsung-s5p-jpeg.txt
+new file mode 100644
+index 0000000..bc0938a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/samsung-s5p-jpeg.txt
+@@ -0,0 +1,12 @@
++Samsung S5P/EXYNOS SoC series JPEG codec
++
++Required properties:
++
++- compatible	: "samsung,<soc_name>-jpeg", must be one of:
++		  "samsung,s5pv210-jpeg", "samsung,exynos4210-jpeg",
++		  "samsung,exynos4212-jpeg";
++- reg		: address and length of the JPEG codec register set;
++- interrupts	: should contain the JPEG codec interrupt; format of the
++		  interrupt specifier depends on the interrupt controller;
++- clocks	: jpeg clock specifier, as covered by common clock bindings.
++- clock-names	: must contain "jpeg" entry.
+diff --git a/drivers/media/platform/s5p-jpeg/jpeg-core.c b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+index 15d2396..cd4461c 100644
+--- a/drivers/media/platform/s5p-jpeg/jpeg-core.c
++++ b/drivers/media/platform/s5p-jpeg/jpeg-core.c
+@@ -17,6 +17,7 @@
+ #include <linux/io.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/slab.h>
+@@ -1513,10 +1514,21 @@ static const struct dev_pm_ops s5p_jpeg_pm_ops = {
+ 	.runtime_resume	 = s5p_jpeg_runtime_resume,
+ };
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id s5p_jpeg_of_match[] = {
++	{ .compatible = "samsung,s5pv210-jpeg" },
++	{ .compatible = "samsung,exynos4210-jpeg" },
++	{ .compatible = "samsung,exynos4212-jpeg" },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, s5p_jpeg_of_match);
++#endif
++
+ static struct platform_driver s5p_jpeg_driver = {
+ 	.probe = s5p_jpeg_probe,
+ 	.remove = s5p_jpeg_remove,
+ 	.driver = {
++		.of_match_table = of_match_ptr(s5p_jpeg_of_match),
+ 		.owner = THIS_MODULE,
+ 		.name = S5P_JPEG_M2M_NAME,
+ 		.pm = &s5p_jpeg_pm_ops,
+@@ -1528,4 +1540,3 @@ module_platform_driver(s5p_jpeg_driver);
+ MODULE_AUTHOR("Andrzej Pietrasiewicz <andrzej.p@samsung.com>");
+ MODULE_DESCRIPTION("Samsung JPEG codec driver");
+ MODULE_LICENSE("GPL");
+-
+-- 
+1.7.9.5
