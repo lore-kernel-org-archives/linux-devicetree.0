@@ -1,64 +1,36 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC 3/8] mfd:syscon: Introduce claim/read/write/release APIs
-Date: Thu, 9 May 2013 15:40:55 +0100
-Message-ID: <20130509144055.GF3200@sirena.org.uk>
-References: <1368022187-1633-1-git-send-email-srinivas.kandagatla@st.com>
- <1368022272-2241-1-git-send-email-srinivas.kandagatla@st.com>
- <201305081650.23264.arnd@arndb.de>
- <20130508150141.GA5057@opensource.wolfsonmicro.com>
- <518A8E6C.6070907@st.com>
- <20130509095143.GB7478@sirena.org.uk>
- <518B8F49.5020902@st.com>
- <20130509132600.GA3200@sirena.org.uk>
- <518BABF0.7040201@st.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH] s5p-jpeg: Enable instantiation from device tree
+Date: Thu, 9 May 2013 20:20:36 +0530
+Message-ID: <CAK9yfHx-o-3oYj8hMKzQK7N3CD7=tUwbxcHG-9gA25yfRjky2Q@mail.gmail.com>
+References: <1368103198-16485-1-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="E7i4zwmWs5DOuDSH"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <518BABF0.7040201@st.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, dong.aisheng@linaro.org, sameo@linux.intel.com, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Stuart Menefy <stuart.menefy@st.com>, Shawn Guo <shawn.guo@linaro.org>, Olof Johansson <olof@lixom.net>, Jason Cooper <jason@lakedaemon.net>, Stephen Warren <swarren@nvidia.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Nicolas Pitre <nico@linaro.org>, Will Deacon <will.deacon@arm.com>, Dave Martin <dave.martin@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@li
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1368103198-16485-1-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: linux-media@vger.kernel.org, a.hajda@samsung.com, hj210.choi@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, Andrzej Pietrasiewicz <andrzej.p@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, George Joseph <george.jp@samsung.com>, "aditya.ps" <aditya.ps@samsung.com>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Sylwester,
 
---E7i4zwmWs5DOuDSH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+George from my team is working on adding JPEG IP support for 4412 and
+5250 SoCs which is quite different from 4210.
+In this regard he has refactored the driver to accomodate the changes
+required for the new IP and also added DT support.
+The patches are almost ready and would be submitted in the next couple
+of days. This is FYI :)
 
-On Thu, May 09, 2013 at 03:00:16PM +0100, Srinivas KANDAGATLA wrote:
 
-> Some of layouts of the sysconf registers are totally changed for each SOC.
 
-> Looking at driver by driver maybe some drivers can take advantage of the
-> patterns, but Am not sure if this will be a sustainable solution for all
-> the drivers.
+On 9 May 2013 18:09, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
+> This patch adds device tree support for the S5P/Exynos SoC
+> JPEG codec IP block.
+>
+> Cc: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 
-So what exactly is the driver doing then?  If the register maps look
-nothing like each other then what's the common functionality the driver
-is providing?
-
---E7i4zwmWs5DOuDSH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRi7V0AAoJELSic+t+oim9QEsP/3PYTETaOGDXGkLb5WdAC/6K
-SvMEIrDDS3EjA9oc8PED996LqrB0X3KfzDjKI4dV62g+0syOEuMbLu4QvyLjB83v
-Vsq6VsO0wZ9p++4QljCBThb1opO4Ot+VkLtQuavEHTjd2ejxigxpG0wBQkNxwiYu
-MmXVVXgO+HqEAcjwLyy1Uz26Y46VupNkaKmNNF/IW50h2+dSkH5vMZBQEl9UTfkg
-yadmMVbtep9MFRRUrt4gZ5uY59/15CXgjnaO/bUJq/23ycTwaSsh0YYb+6MV7A6X
-VRXEWSpz0d8b+BbKMtZl/iwWN4Raoi+fOamwFz1rJ1BslEXekK6g4ydE/ODtb0Vx
-JavId06SA+YZ+DNGiLGXSe6XrLGDlXQesiH8EMPXYiDxtDkDmDalFlksmfWgFuu0
-UvjJGe2zqaYPFvWBTyFqxagDNC+FkZOkcRqzWq5ka3Q39bNsFiuAO86kxKKxisX5
-e7/RbskUxqddaQZmtWJj0zrU8dZ+hY2YA5a1j+Nx/m9+PrRbMsIQ6wA6DZZJIooX
-6+qccSLZlxTm1MtCVbupWqorWDWcpPdw9u+a+bpkbjZITrqe8X9jKOXzbg6BWsb8
-cgQi30E2YhO1NdLz1TgyPNt2vA4HqE9fZLNg2DK4PDXZMeMFEncmtZeaQYV8dtQj
-udqBvOSjKXhsRrb82mCb
-=SzXK
------END PGP SIGNATURE-----
-
---E7i4zwmWs5DOuDSH--
+-- 
+With warm regards,
+Sachin
