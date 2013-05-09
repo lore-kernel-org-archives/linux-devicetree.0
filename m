@@ -1,41 +1,89 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH] s5p-jpeg: Enable instantiation from device tree
-Date: Thu, 09 May 2013 17:51:58 +0200
-Message-ID: <518BC61E.3040202@samsung.com>
-References: <1368103198-16485-1-git-send-email-s.nawrocki@samsung.com>
- <CAK9yfHx-o-3oYj8hMKzQK7N3CD7=tUwbxcHG-9gA25yfRjky2Q@mail.gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCHv2] ARM:dts:omap4-panda:Update the LED support for the
+ panda DTS
+Date: Thu, 9 May 2013 13:08:23 -0500
+Message-ID: <518BE617.1080509@ti.com>
+References: <1366229760-4808-1-git-send-email-dmurphy@ti.com> <516FBD18.3060501@ti.com> <51703BEF.6050804@ti.com> <20130508234745.GV32546@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <CAK9yfHx-o-3oYj8hMKzQK7N3CD7=tUwbxcHG-9gA25yfRjky2Q@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: linux-media@vger.kernel.org, a.hajda@samsung.com, hj210.choi@samsung.com, sw0312.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, Andrzej Pietrasiewicz <andrzej.p@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, George Joseph <george.jp@samsung.com>, "aditya.ps" <aditya.ps@samsung.com>, sunil joshi <joshi@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130508234745.GV32546@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: =?UTF-8?B?VmluY2VudCBTdGVobMOp?= <v-stehle@ti.com>, b-cousson@ti.com, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sachin,
+Tony
+On 05/08/2013 06:47 PM, Tony Lindgren wrote:
+> * Dan Murphy <dmurphy@ti.com> [130418 11:35]:
+>> On 04/18/2013 04:30 AM, Vincent Stehl=C3=A9 wrote:
+>>> On 04/17/2013 10:16 PM, Dan Murphy wrote:
+>>>> The GPIO for LED D1 on the omap4-panda a1-a3 rev and the omap4-pan=
+da-es
+>>>> are different.
+>>> (..)
+>>>> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/=
+boot/dts/omap4-panda-common.dtsi
+>>>> index 03bd60d..0c48f6b 100644
+>>>> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>> (..)
+>>>> @@ -135,6 +136,25 @@
+>>>>  			0xf0 0x118     /* i2c4_sda PULLUP | INPUTENABLE | MODE0 */
+>>>>  		>;
+>>>>  	};
+>>>> +
+>>>> +	led_gpio_pins: pinmux_leds_pins {
+>>>> +		pinctrl-single,pins =3D <
+>>>> +		>;
+>>>> +	};
+>>>> +};
+>>> Hi,
+>>>
+>>> FYI, there was a recent discussion precisely on this topic, where T=
+omy
+>>> suggested to remove the empty section:
+>>> http://marc.info/?l=3Dlinux-omap&m=3D136546635409232&w=3D2
+>>>
+>>> Apart from that, I just tested your patch on top of Tomy's
+>>> omap-for-v3.10/dt branch and it is working fine for me on PandaBoar=
+ds
+>>> EA3, A4 and ES.
+>>>
+>>> Tested-by: Vincent Stehl=C3=A9 <v-stehle@ti.com>
+>>>
+>>> Best regards,
+>>>
+>>> V.
+>>>
+>> Thanks for testing Vincent
+>>
+>> Is there a way to append the data to an already existing node?
+>> I do not see a clean way.
+> If you have something in omap4-panda-common.dtsi and the same entry
+> in the omap4-panda-es.dts, the entries in omap4-panda-es.dts will
+> override and append the entries in omap4-panda-common.dtsi.
+>
+> So I think you can avoid the empty entry that way.
+>
+> Regards,
+>
+> Tony
+Thanks but the issue is the led entry would not appear in the common fi=
+le so there is nothing to override.
+Can we cleanly append to omap4_pmx_core without overriding the whole no=
+de?
+I don't want to recreate the pmx_core node in the es file.
 
-On 05/09/2013 04:50 PM, Sachin Kamat wrote:
-> George from my team is working on adding JPEG IP support for 4412 and
-> 5250 SoCs which is quite different from 4210.
-> In this regard he has refactored the driver to accomodate the changes
-> required for the new IP and also added DT support.
-> The patches are almost ready and would be submitted in the next couple
-> of days. This is FYI :)
+Dan
 
-That's greats news, since on our side currently nobody has been working
-on the Exynos4x12+ JPEG codec support. I just prepared a patch adding
-DT matching table and checked the driver gets initialized on Exynos4x12.
-So it is at least usable on Exynos4210 in 3.11. I should not have listed
-"samsung,exynos4212-jpeg" in the driver, since it is missing adaptations
-for Exynos4x12 SoCs.
+--=20
+------------------
+Dan Murphy
 
-We have plenty time to add proper support for the JPEG IP in 3.11. I'm
-looking forward to review and test your patches. Can you use the $subject
-patch as a base of your work ? ;-) Or is it rather useless ?
-
-FYI, I will be mostly offline for next 2 weeks.
-
-Thanks,
-Sylwester
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
