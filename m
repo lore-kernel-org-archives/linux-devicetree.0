@@ -1,149 +1,85 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: [PATCH] serial: 8250_dw: set clock rate
-Date: Thu, 9 May 2013 11:29:16 +0100
-Message-ID: <1368095356-21081-1-git-send-email-james.hogan@imgtec.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: [RFC PATCH v3] ARM CCI support
+Date: Thu,  9 May 2013 11:33:59 +0100
+Message-ID: <1368095640-3675-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-serial-owner@vger.kernel.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, James Hogan <james.hogan@imgtec.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jiri Slaby <jslaby@suse.cz>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Alan Cox <alan@linux.intel.com>, Jamie Iles <jamie@jamieiles.com>, Bill Pemberton <wfp5p@virginia.edu>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javi Merino <javi.merino-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-If the uart clock provided to the 8250_dw driver is adjustable it may
-not be set to the desired rate. Therefore if both a uart clock and a
-clock frequency is specified (e.g. via device tree), try and update the
-clock to match the frequency.
+This patch is an updated of a previous posting:
 
-Unfortunately if the resulting frequency is rounded down (which is the
-default behaviour of the generic clk-divider), the 8250 core won't allow
-the highest baud rate to be used, so if an explicit frequency is
-specified we always report that to the 8250 core.
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-May/166173.html
 
-The device tree bindings document is also updated accordingly.
+main changes in v3:
+ - Changed init to early_initcall and added code to deal with init calls
+   ordering issues
+ - Removed platform driver infrastructure, replaced with DT layer
+ - Added missing pointer flushing
+ - Removed useless includes
+ - Implemented MPIDR stashing
+ - Added basic functions to initialize and carry out CPU ports look-ups
+ - fixed !CONFIG_ARM_CCI compile issue
 
-Signed-off-by: James Hogan <james.hogan@imgtec.com>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.cz>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Alan Cox <alan@linux.intel.com>
-Cc: Jamie Iles <jamie@jamieiles.com>
-Cc: Bill Pemberton <wfp5p@virginia.edu>
----
- .../bindings/tty/serial/snps-dw-apb-uart.txt       |  4 +-
- drivers/tty/serial/8250/8250_dw.c                  | 47 +++++++++++++++++-----
- 2 files changed, 39 insertions(+), 12 deletions(-)
+main changes in v2:
+ - Changed way masters are connected to CCI slave ports in DT
+   # now every master has to declare a phandle to a CCI control IF
+ - Fixed warning split on different lines
+ - Added comments to disable function
+ - Moved driver to non-hotpluggable API (registration and probing bundled
+   together)
+ - Upgraded cache flushing API
+ - Reworked the driver to use devm primitives
+ - Added disable/enable by index API
+ - Fixed port enable and added macro for snoops/DVM control
 
-diff --git a/Documentation/devicetree/bindings/tty/serial/snps-dw-apb-uart.txt b/Documentation/devicetree/bindings/tty/serial/snps-dw-apb-uart.txt
-index f13f1c5..e0cfc47 100644
---- a/Documentation/devicetree/bindings/tty/serial/snps-dw-apb-uart.txt
-+++ b/Documentation/devicetree/bindings/tty/serial/snps-dw-apb-uart.txt
-@@ -4,9 +4,11 @@ Required properties:
- - compatible : "snps,dw-apb-uart"
- - reg : offset and length of the register set for the device.
- - interrupts : should contain uart interrupt.
--- clock-frequency : the input clock frequency for the UART.
- 
- Optional properties:
-+- clock-frequency : the input clock frequency for the UART. If specified in
-+  addition to clocks, the clock rate will be set to this frequency.
-+- clocks : the input clock specifier for the UART.
- - reg-shift : quantity to shift the register offsets by.  If this property is
-   not present then the register offsets are not shifted.
- - reg-io-width : the size (in bytes) of the IO accesses that should be
-diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
-index beaa283..85b3b63 100644
---- a/drivers/tty/serial/8250/8250_dw.c
-+++ b/drivers/tty/serial/8250/8250_dw.c
-@@ -128,6 +128,7 @@ dw8250_do_pm(struct uart_port *port, unsigned int state, unsigned int old)
- static int dw8250_probe_of(struct uart_port *p)
- {
- 	struct device_node	*np = p->dev->of_node;
-+	struct dw8250_data	*d = p->private_data;
- 	u32			val;
- 
- 	if (!of_property_read_u32(np, "reg-io-width", &val)) {
-@@ -148,16 +149,13 @@ static int dw8250_probe_of(struct uart_port *p)
- 	if (!of_property_read_u32(np, "reg-shift", &val))
- 		p->regshift = val;
- 
--	/* clock got configured through clk api, all done */
--	if (p->uartclk)
--		return 0;
--
--	/* try to find out clock frequency from DT as fallback */
--	if (of_property_read_u32(np, "clock-frequency", &val)) {
-+	/* try to find out clock frequency from DT */
-+	if (!of_property_read_u32(np, "clock-frequency", &val)) {
-+		p->uartclk = val;
-+	} else if (IS_ERR(d->clk)) {
- 		dev_err(p->dev, "clk or clock-frequency not defined\n");
- 		return -EINVAL;
- 	}
--	p->uartclk = val;
- 
- 	return 0;
- }
-@@ -235,6 +233,7 @@ static int dw8250_probe(struct platform_device *pdev)
- 	struct resource *irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
- 	struct dw8250_data *data;
- 	int err;
-+	unsigned long clk_rate;
- 
- 	if (!regs || !irq) {
- 		dev_err(&pdev->dev, "no registers/irq defined\n");
-@@ -260,10 +259,6 @@ static int dw8250_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	data->clk = devm_clk_get(&pdev->dev, NULL);
--	if (!IS_ERR(data->clk)) {
--		clk_prepare_enable(data->clk);
--		uart.port.uartclk = clk_get_rate(data->clk);
--	}
- 
- 	uart.port.iotype = UPIO_MEM;
- 	uart.port.serial_in = dw8250_serial_in;
-@@ -284,6 +279,36 @@ static int dw8250_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
-+	/* Read the clock rate from the clock */
-+	if (!IS_ERR(data->clk)) {
-+		clk_prepare_enable(data->clk);
-+		clk_rate = clk_get_rate(data->clk);
-+		/*
-+		 * If uartclk hasn't been explicitly specified (e.g. from device
-+		 * tree), use the rate from the clock instead.
-+		 */
-+		if (!uart.port.uartclk)
-+			uart.port.uartclk = clk_rate;
-+		/*
-+		 * If the current clock rate differs from the rate specified,
-+		 * try and set the clock rate.
-+		 */
-+		if (uart.port.uartclk != clk_rate) {
-+			if (!clk_set_rate(data->clk, uart.port.uartclk))
-+				clk_rate = clk_get_rate(data->clk);
-+			dev_info(&pdev->dev,
-+				 "uartclk at %lu Hz (%u Hz requested)\n",
-+				 clk_rate, uart.port.uartclk);
-+			/*
-+			 * Don't update uartclk. If the rate was rounded down by
-+			 * clk_set_rate() the 8250 core won't allow the highest
-+			 * baud rate to be used.
-+			 */
-+		} else {
-+			dev_info(&pdev->dev, "uartclk at %lu Hz\n", clk_rate);
-+		}
-+	}
-+
- 	data->line = serial8250_register_8250_port(&uart);
- 	if (data->line < 0)
- 		return data->line;
+ARM multi-cluster systems rely on the cache coherent interconnect (CCI) to
+support inter-cluster cache coherency and distributed virtual memory (DVM)
+messaging.
+
+CCI kernel driver requires tweaks to the kernel and device tree
+bindings in order to link specific resources to groups of logical CPUs
+so that resources can be associated to specific cpu sets (slave ports can
+be associated with a set of CPUs which are part of a cluster).
+
+CCI slave ports must be associated with specific bus masters in the system so
+that whenever a CCI operation is requested for a specific master (ie disable
+its CCI slave port, read its PMU counters) the association can be carried out
+dynamically in the OS through dynamically built data structures.
+Bus masters in the system connected to CCI ports must define device tree
+properties, as described in the documentation contained in the patch, in order
+to explicitly connect ports and allow the OS to build up the required data
+structures.
+
+The current CCI DT bindings define the CCI address space as the same one
+as the root device tree node, which means that the CCI bus can address the
+entire address space visible to CPUs.
+
+Lorenzo Pieralisi (1):
+  drivers: bus: add ARM CCI support
+
+ Documentation/devicetree/bindings/arm/cci.txt | 161 ++++++++++
+ drivers/bus/Kconfig                           |   7 +
+ drivers/bus/Makefile                          |   2 +
+ drivers/bus/arm-cci.c                         | 420 ++++++++++++++++++++++++++
+ include/linux/arm-cci.h                       |  61 ++++
+ 5 files changed, 651 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/cci.txt
+ create mode 100644 drivers/bus/arm-cci.c
+ create mode 100644 include/linux/arm-cci.h
+
 -- 
-1.8.1.2
-
-
+1.8.2.2
