@@ -1,249 +1,357 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH] ARM: mmc: bcm281xx SDHCI driver
-Date: Fri, 10 May 2013 12:26:58 +0200
-Message-ID: <20130510102658.GK3041@game.jcrosoft.org>
-References: <1368078942-31265-1-git-send-email-csd@broadcom.com>
- <20130509063503.GF3041@game.jcrosoft.org>
- <518CA1DF.5050008@broadcom.com>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: [PATCH] clk: add specified-rate clock
+Date: Fri, 10 May 2013 13:44:22 +0100
+Message-ID: <1368189862-17119-1-git-send-email-james.hogan@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <518CA1DF.5050008@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Daudt <csd@broadcom.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Stephen Warren <swarren@nvidia.com>, Olof Johansson <olof@lixom.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wei WANG <wei_wang@realsil.com.cn>, Ludovic Desroches <ludovic.desroches@atmel.com>, Arnd Bergmann <arnd@arndb.de>, "Mike A. Chan" <mikechan@google.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, csd_b@daudt.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, James Hogan <james.hogan@imgtec.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Lars-Peter Clausen <lars@metafoo.de>
 List-Id: devicetree@vger.kernel.org
 
-On 00:29 Fri 10 May     , Christian Daudt wrote:
-> Thanks for the feedback.
-> 
-> On 13-05-08 11:35 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> >On 22:55 Wed 08 May     , Christian Daudt wrote:
-> >>Add SDHCI driver for the Broadcom 281xx SoCs. Also
-> >>add bindings for it into bcm281xx dts files.
-> >>Still missing:
-> >>  - power managemement
-> >split the dts/dtsi in an other patch
-> ok.
-> >>Signed-off-by: Christian Daudt <csd@broadcom.com>
-> >>
-> >>diff --git a/arch/arm/configs/bcm_defconfig b/arch/arm/configs/bcm_defconfig
-> >>index e3bf2d6..65edf6d 100644
-> >>--- a/arch/arm/configs/bcm_defconfig
-> >>+++ b/arch/arm/configs/bcm_defconfig
-> >>@@ -78,6 +78,13 @@ CONFIG_BACKLIGHT_LCD_SUPPORT=y
-> >>  CONFIG_LCD_CLASS_DEVICE=y
-> >>  CONFIG_BACKLIGHT_CLASS_DEVICE=y
-> >>  # CONFIG_USB_SUPPORT is not set
-> >>+CONFIG_MMC=y
-> >>+CONFIG_MMC_UNSAFE_RESUME=y
-> >>+CONFIG_MMC_BLOCK_MINORS=32
-> >>+CONFIG_MMC_TEST=y
-> >>+CONFIG_MMC_SDHCI=y
-> >>+CONFIG_MMC_SDHCI_PLTFM=y
-> >>+CONFIG_MMC_SDHCI_BCM_KONA=y
-> >>  CONFIG_NEW_LEDS=y
-> >>  CONFIG_LEDS_CLASS=y
-> >>  CONFIG_LEDS_TRIGGERS=y
-> >>diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> >>index d88219e..e067c5a 100644
-> >>--- a/drivers/mmc/host/Kconfig
-> >>+++ b/drivers/mmc/host/Kconfig
-> >>@@ -238,6 +238,16 @@ config MMC_SDHCI_S3C_DMA
-> >>  	  YMMV.
-> >>+config MMC_SDHCI_BCM_KONA
-> >>+	tristate "SDHCI support on Broadcom KONA platform"
-> >>+	depends on ARCH_BCM && MMC_SDHCI_PLTFM
-> >select MMC_SDHCI_PLTFM
-> >will be better
-> Ok - changed it. Why is the select is better than the depends ?
-> >>+
-> >>+static int sdhci_bcm_kona_sd_reset(struct sdhci_host *host)
-> >>+{
-> >>+	unsigned int val;
-> >>+	unsigned long timeout;
-> >>+
-> >>+	/* This timeout should be sufficent for core to reset */
-> >>+	timeout = jiffies + msecs_to_jiffies(100);
-> >>+
-> >>+	/* reset the host using the top level reset */
-> >>+	val = sdhci_readl(host, KONA_SDHOST_CORECTRL);
-> >>+	val |= KONA_SDHOST_RESET;
-> >>+	sdhci_writel(host, val, KONA_SDHOST_CORECTRL);
-> >>+
-> >>+	while (!(sdhci_readl(host, KONA_SDHOST_CORECTRL) & KONA_SDHOST_RESET)) {
-> >>+		if (time_is_before_jiffies(timeout)) {
-> >>+			pr_err("Error: sd host is stuck in reset!!!\n");
-> >>+			return -EFAULT;
-> >>+		}
-> >>+	}
-> >>+
-> >>+	/* bring the host out of reset */
-> >>+	val = sdhci_readl(host, KONA_SDHOST_CORECTRL);
-> >>+	val &= ~KONA_SDHOST_RESET;
-> >>+
-> >>+	/*
-> >>+	 * Back-to-Back register write needs a delay of 1ms at bootup (min 10uS)
-> >>+	 * Back-to-Back writes to same register needs delay when SD bus clock
-> >>+	 * is very low w.r.t AHB clock, mainly during boot-time and during card
-> >>+	 * insert-removal.
-> >>+	 */
-> >>+	udelay(1000);
-> >really a udelay of 1ms
-> I'm trying to clarify on whether this is really necessary but it
-> does seem that this is the case. I'll send a follow-up patch if I
-> manage to get confirmation on a smaller safe number.
+The frequency of some SoC's external oscillators (for example TZ1090's
+XTAL1) are configured by the board using pull-ups/pull-downs of
+configuration pins, the logic values of which are automatically latched
+on reset and available in an SoC register. Add a generic clock component
+and DT bindings to handle this.
 
-a smaller delay will be better otherwise a msleep(1)
+It behaves similar to a fixed rate clock (read-only), except it needs
+information about a register field (reg, shift, width), and the
+clock-frequency is a mapping from register field values to clock
+frequencies.
 
-Best Regards,
-J.
-> 
-> >>+	sdhci_writel(host, val, KONA_SDHOST_CORECTRL);
-> >>+
-> >>+	return 0;
-> >>+}
-> >>+
-> >>+static void sdhci_bcm_kona_sd_init(struct sdhci_host *host)
-> >>+{
-> >>+	unsigned int val;
-> >>+
-> >>+	/* enable the interrupt from the IP core */
-> >>+	val = sdhci_readl(host, KONA_SDHOST_COREIMR);
-> >>+	val |= KONA_SDHOST_IP;
-> >>+	sdhci_writel(host, val, KONA_SDHOST_COREIMR);
-> >>+
-> >>+	/* Enable the AHB clock gating module to the host */
-> >>+	val = sdhci_readl(host, KONA_SDHOST_CORECTRL);
-> >>+	val |= KONA_SDHOST_EN;
-> >>+
-> >>+	/*
-> >>+	 * Back-to-Back register write needs a delay of 1ms at bootup (min 10uS)
-> >>+	 * Back-to-Back writes to same register needs delay when SD bus clock
-> >>+	 * is very low w.r.t AHB clock, mainly during boot-time and during card
-> >>+	 * insert-removal.
-> >>+	 */
-> >>+	udelay(1000);
-> >ditto
-> see above
-> >>+	sdhci_writel(host, val, KONA_SDHOST_CORECTRL);
-> >>+}
-> >>+
-> >>+/*
-> >>+ * Software emulation of the SD card insertion/removal. Set insert=1 for insert
-> >>+ * and insert=0 for removal. The card detection is done by GPIO. For Broadcom
-> >>+ * IP to function properly the bit 0 of CORESTAT register needs to be set/reset
-> >>+ * to generate the CD IRQ handled in sdhci.c which schedules card_tasklet.
-> >>+ */
-> >>+static int sdhci_bcm_kona_sd_card_emulate(struct sdhci_host *host, int insert)
-> >>+{
-> >>+	struct sdhci_pltfm_host *pltfm_priv = sdhci_priv(host);
-> >>+	struct sdhci_bcm_kona_dev *kona_dev = pltfm_priv->priv;
-> >>+	u32 val;
-> >>+	unsigned long flags;
-> >>+
-> >>+	/* this function can be called from various contexts including ISR */
-> >>+	spin_lock_irqsave(&host->lock, flags);
-> >>+	/* Ensure SD bus scanning to detect media change */
-> >>+	host->mmc->rescan_disable = 0;
-> >>+
-> >>+	/*
-> >>+	 * Back-to-Back register write needs a delay of min 10uS.
-> >>+	 * Back-to-Back writes to same register needs delay when SD bus clock
-> >>+	 * is very low w.r.t AHB clock, mainly during boot-time and during card
-> >>+	 * insert-removal.
-> >>+	 * We keep 20uS
-> >>+	 */
-> >>+	udelay(20);
-> >>+	val = sdhci_readl(host, KONA_SDHOST_CORESTAT);
-> >>+
-> >>+	if (insert) {
-> >>+		if (kona_dev->cfg->wp_gpio >= 0) {
-> >gpio_is_valid
-> done
-> >>+			int wp_status = gpio_get_value(kona_dev->cfg->wp_gpio);
-> >>+
-> >>+			if (wp_status)
-> >>+				val |= KONA_SDHOST_WP;
-> >>+			else
-> >>+				val &= ~KONA_SDHOST_WP;
-> >>+		}
-> >>+
-> >>+		val |= KONA_SDHOST_CD_SW;
-> >>+		sdhci_writel(host, val, KONA_SDHOST_CORESTAT);
-> >>+	} else {
-> >>+		val &= ~KONA_SDHOST_CD_SW;
-> >>+		sdhci_writel(host, val, KONA_SDHOST_CORESTAT);
-> >>+	}
-> >>+	spin_unlock_irqrestore(&host->lock, flags);
-> >>+
-> >>+	return 0;
-> >>+}
-> >>+
-> >>+/*
-> >>+ * SD card detection interrupt handler
-> >>+ */
-> >>+static irqreturn_t sdhci_bcm_kona_pltfm_cd_interrupt(int irq, void *host)
-> >>+{
-> >>+	struct sdhci_pltfm_host *pltfm_priv = sdhci_priv(host);
-> >>+	struct sdhci_bcm_kona_dev *kona_dev = pltfm_priv->priv;
-> >>+
-> >>+	if (gpio_get_value_cansleep(kona_dev->cfg->cd_gpio) == 0) {
-> >>+		pr_debug("card inserted\n");
-> >dev_dbg
-> done
-> >>+		sdhci_bcm_kona_sd_card_emulate(host, 1);
-> >>+	} else {
-> >>+		pr_debug("card removed\n");
-> >ditto
-> done
-> >>+static struct sdhci_bcm_kona_cfg * __init sdhci_bcm_kona_parse_dt(
-> >>+			struct platform_device *pdev)
-> >>+{
-> >>+	struct sdhci_bcm_kona_cfg *cfg;
-> >>+	struct device_node *np = pdev->dev.of_node;
-> >>+	u32 temp;
-> >>+
-> >>+	if (!np)
-> >>+		return NULL;
-> >>+
-> >>+	cfg = devm_kzalloc(&pdev->dev, sizeof(*cfg), GFP_KERNEL);
-> >>+	if (!cfg) {
-> >>+		dev_err(&pdev->dev, "Can't allocate platform cfg\n");
-> >>+		return NULL;
-> >>+	}
-> >>+
-> >>+	cfg->cd_gpio = of_get_named_gpio(np, "cd-gpios", 0);
-> >>+	cfg->wp_gpio = of_get_named_gpio(np, "wp-gpios", 0);
-> >>+	if (of_get_property(np, "non-removable", NULL))
-> >>+		cfg->non_removable = 1;
-> >use of_property_read_bool
-> done
-> >>+		/* Sleep for 128ms to allow debounce to stabilize */
-> >>+		msleep(SD_DETECT_GPIO_DEBOUNCE_128MS);
-> >>+		/* request irq for cd_gpio after the gpio debounce is
-> >>+		 * stabilized, otherwise, some bogus gpio interrupts might be
-> >>+		 * triggered.
-> >>+		 */
-> >>+		irq = gpio_to_irq(kona_dev->cfg->cd_gpio);
-> >>+		ret = devm_request_threaded_irq(dev,
-> >>+				irq,
-> >>+				NULL,
-> >>+				sdhci_bcm_kona_pltfm_cd_interrupt,
-> >>+				IRQF_TRIGGER_FALLING|
-> >>+				IRQF_TRIGGER_RISING |
-> >>+				IRQF_ONESHOT |
-> >>+				IRQF_NO_SUSPEND, "sdio cd", host);
-> >>+		if (ret) {
-> >>+			dev_err(kona_dev->dev,
-> >>+				"Unable to request card detection irq=%d"
-> >>+				" for gpio=%d  ret=%d\n",
-> >put the sting of the dev_err on one line so we can grep
-> merged it into single line
-> 
-> 
->  Thanks,
->    csd
-> 
-> 
+Signed-off-by: James Hogan <james.hogan@imgtec.com>
+Cc: Mike Turquette <mturquette@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+---
+ .../devicetree/bindings/clock/specified-clock.txt  |  39 ++++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-specified-rate.c                   | 201 +++++++++++++++++++++
+ include/linux/clk-provider.h                       |  37 ++++
+ 4 files changed, 278 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/specified-clock.txt
+ create mode 100644 drivers/clk/clk-specified-rate.c
+
+diff --git a/Documentation/devicetree/bindings/clock/specified-clock.txt b/Documentation/devicetree/bindings/clock/specified-clock.txt
+new file mode 100644
+index 0000000..b36ccf9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/specified-clock.txt
+@@ -0,0 +1,39 @@
++Binding for fixed-rate clock sources with readable configuration.
++
++This binding uses the common clock binding[1].
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++Required properties:
++- compatible         : Shall be "specified-clock".
++- #clock-cells       : From common clock binding; shall be set to 0.
++- reg                : Address of configuration register.
++- shift              : Shift of config value field in configuration register.
++- width              : Width of config value field in configuration register.
++- clock-frequency    : Frequency mapping of clock. Consecutive pairs of cells
++                       represent the config value to match and the clock
++                       frequency in Hz for that config value.
++
++Optional properties:
++- clock-output-names : From common clock binding.
++
++Example:
++	clock {
++		compatible = "specified-clock";
++		#clock-cells = <0>;
++		reg = <0x02004004 0x4>;	/* CR_PERIP_RESET_CFG */
++		shift = <8>;		/* FXTAL */
++		width = <4>;
++		clock-frequency =
++		/*	 FXTAL	Frequency */
++			<0	16384000>,
++			<1	19200000>,
++			<2	24000000>,
++			<3	24576000>,
++			<4	26000000>,
++			<5	36000000>,
++			<6	36864000>,
++			<7	38400000>,
++			<8	40000000>;
++		clock-output-names = "xtal1";
++	};
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index e7f7fe9..1343179 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -8,6 +8,7 @@ obj-$(CONFIG_COMMON_CLK)	+= clk-fixed-rate.o
+ obj-$(CONFIG_COMMON_CLK)	+= clk-gate.o
+ obj-$(CONFIG_COMMON_CLK)	+= clk-mux.o
+ obj-$(CONFIG_COMMON_CLK)	+= clk-composite.o
++obj-$(CONFIG_COMMON_CLK)	+= clk-specified-rate.o
+ 
+ # SoCs specific
+ obj-$(CONFIG_ARCH_BCM2835)	+= clk-bcm2835.o
+diff --git a/drivers/clk/clk-specified-rate.c b/drivers/clk/clk-specified-rate.c
+new file mode 100644
+index 0000000..8f78033
+--- /dev/null
++++ b/drivers/clk/clk-specified-rate.c
+@@ -0,0 +1,201 @@
++/*
++ * Copyright (C) 2010-2011 Canonical Ltd <jeremy.kerr@canonical.com>
++ * Copyright (C) 2011-2012 Mike Turquette, Linaro Ltd <mturquette@linaro.org>
++ * Copyright (C) 2013 Imagination Technologies Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * Fixed rate clock implementation with rate specified in a register field.
++ * Based on fixed rate clock implementation.
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/slab.h>
++
++/*
++ * DOC: basic specified-rate clock that cannot gate
++ *
++ * Traits of this clock:
++ * prepare - clk_(un)prepare only ensures parents are prepared
++ * enable - clk_enable only ensures parents are enabled
++ * rate - rate is always a fixed value.  No clk_set_rate support
++ * parent - fixed parent.  No clk_set_parent support
++ */
++
++#define to_clk_specified_rate(_hw) \
++	container_of(_hw, struct clk_specified_rate, hw)
++
++static unsigned long clk_specified_rate_recalc_rate(struct clk_hw *hw,
++		unsigned long parent_rate)
++{
++	struct clk_specified_rate *specified = to_clk_specified_rate(hw);
++	struct clk_specified_rate_entry *entry;
++	u32 val;
++	unsigned int i;
++
++	/* read configuration field */
++	val = readl(specified->reg);
++	val >>= specified->shift;
++	val &= (1 << specified->width) - 1;
++
++	/* match the value in the mapping */
++	for (i = 0; i < specified->num_rates; ++i) {
++		entry = &specified->rates[i];
++		if (val == entry->value)
++			return entry->rate;
++	}
++
++	/* unknown rate! */
++	return 0;
++}
++
++const struct clk_ops clk_specified_rate_ops = {
++	.recalc_rate = clk_specified_rate_recalc_rate,
++};
++EXPORT_SYMBOL_GPL(clk_specified_rate_ops);
++
++/**
++ * clk_register_specified_rate - register specified-rate clock
++ * @dev:		device that is registering this clock
++ * @name:		name of this clock
++ * @parent_name:	name of clock's parent
++ * @flags:		framework-specific flags
++ * @reg:		config register
++ * @shift:		shift into config register of frequency field
++ * @width:		width of frequency field in config register
++ * @rates:		value->rate mapping entries
++ * @num_rates:		number of rates in @rates
++ */
++struct clk *clk_register_specified_rate(struct device *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		void __iomem *reg, u8 shift, u8 width,
++		struct clk_specified_rate_entry *rates,
++		unsigned long num_rates)
++{
++	struct clk_specified_rate *specified;
++	struct clk *clk;
++	struct clk_init_data init;
++
++	/* allocate specified-rate clock */
++	specified = kzalloc(sizeof(struct clk_specified_rate), GFP_KERNEL);
++	if (!specified) {
++		pr_err("%s(%s): could not allocate specified clk\n",
++		       __func__, name);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	init.name = name;
++	init.ops = &clk_specified_rate_ops;
++	init.flags = flags | CLK_IS_BASIC;
++	init.parent_names = (parent_name ? &parent_name : NULL);
++	init.num_parents = (parent_name ? 1 : 0);
++
++	/* struct clk_specified_rate assignments */
++	specified->reg = reg;
++	specified->shift = shift;
++	specified->width = width;
++	specified->rates = rates;
++	specified->num_rates = num_rates;
++	specified->hw.init = &init;
++
++	/* register the clock */
++	clk = clk_register(dev, &specified->hw);
++
++	if (IS_ERR(clk))
++		kfree(specified);
++
++	return clk;
++}
++
++#ifdef CONFIG_OF
++/**
++ * of_specified_clk_setup() - Setup function for specified fixed rate clock
++ */
++void __init of_specified_clk_setup(struct device_node *node)
++{
++	struct clk *clk;
++	const char *clk_name = node->name;
++	u32 shift, width, rate;
++	void __iomem *reg;
++	int len, num_rates, i;
++	struct property *prop;
++	struct clk_specified_rate_entry *rates;
++	const __be32 *p;
++
++	of_property_read_string(node, "clock-output-names", &clk_name);
++
++	if (of_property_read_u32(node, "shift", &shift)) {
++		pr_err("%s(%s): could not read shift property\n",
++		       __func__, clk_name);
++		return;
++	}
++
++	if (of_property_read_u32(node, "width", &width)) {
++		pr_err("%s(%s): could not read width property\n",
++		       __func__, clk_name);
++		return;
++	}
++
++	reg = of_iomap(node, 0);
++	if (!reg) {
++		pr_err("%s(%s): of_iomap failed\n",
++		       __func__, clk_name);
++		return;
++	}
++
++	/* check clock-frequency exists */
++	prop = of_find_property(node, "clock-frequency", &len);
++	if (!prop) {
++		pr_err("%s(%s): could not find clock-frequency property\n",
++		       __func__, clk_name);
++		goto err_iounmap;
++	}
++
++	if (len & (sizeof(u32)*2 - 1)) {
++		pr_err("%s(%s): clock-frequency has invalid size of %d bytes\n",
++		       __func__, clk_name, len);
++		goto err_iounmap;
++	}
++	num_rates = len / (sizeof(*rates)*2);
++
++	rates = kzalloc(sizeof(*rates)*num_rates, GFP_KERNEL);
++	if (!rates) {
++		pr_err("%s(%s): could not allocate %d rate mapping entries\n",
++		       __func__, clk_name, num_rates);
++		goto err_iounmap;
++	}
++
++	/* extract rate mapping */
++	for (i = 0, p = of_prop_next_u32(prop, NULL, &rates[0].value);
++	     p;
++	     ++i, p = of_prop_next_u32(prop, p, &rates[i].value)) {
++		p = of_prop_next_u32(prop, p, &rate);
++		rates[i].rate = rate;
++		pr_debug("%s(%s): map %u -> %lu Hz\n",
++			 __func__, clk_name, rates[i].value, rates[i].rate);
++	}
++
++	clk = clk_register_specified_rate(NULL, clk_name, NULL, CLK_IS_ROOT,
++					  reg, shift, width, rates, num_rates);
++	if (IS_ERR(clk))
++		goto err_kfree;
++
++	of_clk_add_provider(node, of_clk_src_simple_get, clk);
++
++	return;
++
++err_kfree:
++	kfree(rates);
++err_iounmap:
++	iounmap(reg);
++}
++EXPORT_SYMBOL_GPL(of_specified_clk_setup);
++CLK_OF_DECLARE(specified_clk, "specified-clock", of_specified_clk_setup);
++#endif
+diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+index 1186098..218a406 100644
+--- a/include/linux/clk-provider.h
++++ b/include/linux/clk-provider.h
+@@ -196,6 +196,43 @@ struct clk *clk_register_fixed_rate(struct device *dev, const char *name,
+ void of_fixed_clk_setup(struct device_node *np);
+ 
+ /**
++ * struct clk_specified_rate_entry - a single possible specified rate
++ * @value:	value to match in config register
++ * @rate:	rate to use when config register matches @value
++ */
++struct clk_specified_rate_entry {
++	u32		value;
++	unsigned long	rate;
++};
++
++/**
++ * struct clk_specified_rate - specified-rate clock
++ * @hw:		handle between common and hardware-specific interfaces
++ * @reg:	register containing rate specifier field
++ * @shift:	shift to rate specifier field
++ * @width:	width of rate specifier field
++ * @rates:	mapping of specified frequencies
++ * @num_rates:	number of rates in array
++ */
++struct clk_specified_rate {
++	struct		clk_hw hw;
++	void __iomem	*reg;
++	u8		shift;
++	u8		width;
++	struct clk_specified_rate_entry	*rates;
++	unsigned int	num_rates;
++};
++
++extern const struct clk_ops clk_specified_rate_ops;
++struct clk *clk_register_specified_rate(struct device *dev, const char *name,
++		const char *parent_names, unsigned long flags,
++		void __iomem *reg, u8 shift, u8 width,
++		struct clk_specified_rate_entry *rates,
++		unsigned long num_rates);
++
++void of_specified_clk_setup(struct device_node *np);
++
++/**
+  * struct clk_gate - gating clock
+  *
+  * @hw:		handle between common and hardware-specific interfaces
+-- 
+1.8.1.2
+
+
