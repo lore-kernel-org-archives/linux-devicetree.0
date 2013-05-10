@@ -1,42 +1,93 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH V2] ARM: bcm281xx: Add L2 support for Rev A2 chips
-Date: Fri, 10 May 2013 18:43:44 +0100
-Message-ID: <20130510174344.GX18614@n2100.arm.linux.org.uk>
-References: <1367542653-955-1-git-send-email-csd@broadcom.com> <20130509204434.GA16724@quad.lixom.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130509204434.GA16724@quad.lixom.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Christian Daudt <csd@broadcom.com>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Will Deacon <will.deacon@arm.com>, "arm@kernel.org" <arm@kernel.org>, linux-arm-kernel@lists.infradead.org, csd_b@daudt.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Josh Cartwright <josh.cartwright@ni.com>, Yehuda Yitschak <yehuday@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: [PATCH 1/2] ARM: dts: omap3-igep0020: Add NAND flash support
+Date: Fri, 10 May 2013 21:31:10 +0200
+Message-ID: <1368214271-22780-1-git-send-email-javier.martinez@collabora.co.uk>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <b-cousson@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 09, 2013 at 01:44:34PM -0700, Olof Johansson wrote:
-> On Thu, May 02, 2013 at 05:57:33PM -0700, Christian Daudt wrote:
-> > Rev A2 SoCs have an unorthodox memory re-mapping and this needs
-> > to be reflected in the cache operations.
-> > This patch adds new outer cache functions for the l2x0 driver
-> > to support this SoC revision. It also adds a new compatible
-> > value for the cache to enable this functionality.
-> > 
-> > Updates from V1:
-> > - remove section 1 altogether and note that in comments
-> > - simplify section selection caused by section 1 removal
-> > - BUG_ON just in case section 1 shows up
-> > 
-> > Signed-off-by: Christian Daudt <csd@broadcom.com>
-> 
-> This patch mostly covers code that is on Russells plate, so please feed
-> this to his tracker to be picked up by him. Feel free to add:
+The IGEPv2 board has an 512MB NAND flash memory.
 
-Yes, but there's a problem.  I don't have bcm11351.dtsi to apply this
-patch to.  This is one of the problems of splitting the SoC stuff
-from core stuff - either I start doing cross-merges (which cause Linus
-and everyone else pain as we've seen this time around) or we have to
-stuff everything through a single tree.
+Add a device node for this NAND and its parition layout.
 
-Not happy.
+Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+---
 
-Not applying until after -rc1.
+Benoit,
+
+This patch depends on a previous posted patch:
+
+[PATCH] ARM: dts: omap3-igep0020: Add SMSC911x LAN chip support
+
+Best regards,
+Javier
+
+ arch/arm/boot/dts/omap3-igep0020.dts |   50 +++++++++++++++++++++++++++++++++-
+ 1 files changed, 49 insertions(+), 1 deletions(-)
+
+diff --git a/arch/arm/boot/dts/omap3-igep0020.dts b/arch/arm/boot/dts/omap3-igep0020.dts
+index 4bac32e..0ba4313 100644
+--- a/arch/arm/boot/dts/omap3-igep0020.dts
++++ b/arch/arm/boot/dts/omap3-igep0020.dts
+@@ -68,7 +68,55 @@
+ };
+ 
+ &gpmc {
+-	ranges = <5 0 0x2c000000 0x1000000>;
++	ranges = <0 0 0x00000000 0x20000000>,
++		 <5 0 0x2c000000 0x01000000>;
++
++	nand@0,0 {
++		linux,mtd-name= "micron,mt29c4g96maz";
++		reg = <0 0 0>;
++		nand-bus-width = <16>;
++		ti,nand-ecc-opt = "bch8";
++
++		gpmc,sync-clk-ps = <0>;
++		gpmc,cs-on-ns = <0>;
++		gpmc,cs-rd-off-ns = <44>;
++		gpmc,cs-wr-off-ns = <44>;
++		gpmc,adv-on-ns = <6>;
++		gpmc,adv-rd-off-ns = <34>;
++		gpmc,adv-wr-off-ns = <44>;
++		gpmc,we-off-ns = <40>;
++		gpmc,oe-off-ns = <54>;
++		gpmc,access-ns = <64>;
++		gpmc,rd-cycle-ns = <82>;
++		gpmc,wr-cycle-ns = <82>;
++		gpmc,wr-access-ns = <40>;
++		gpmc,wr-data-mux-bus-ns = <0>;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		partition@0 {
++			label = "SPL";
++			reg = <0 0x100000>;
++		};
++		partition@0x80000 {
++			label = "U-Boot";
++			reg = <0x100000 0x180000>;
++		};
++		partition@0x1c0000 {
++			label = "Environment";
++			reg = <0x280000 0x100000>;
++		};
++		partition@0x280000 {
++			label = "Kernel";
++			reg = <0x380000 0x300000>;
++		};
++		partition@0x780000 {
++			label = "Filesystem";
++			reg = <0x680000 0x1f980000>;
++		};
++	};
++
+ 	ethernet@5,0 {
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&smsc911x_pins>;
+-- 
+1.7.7.6
+
