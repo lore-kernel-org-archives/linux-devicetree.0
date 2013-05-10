@@ -1,51 +1,302 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [U-Boot] [PATCH v4 0/19] Allow images to work on sandbox
-Date: Thu, 9 May 2013 17:17:03 -0700
-Message-ID: <CAPnjgZ2vZL79dxupWJu4-JYf+fYiNB_qFyh-ZSO4Fzqcb2UCKQ@mail.gmail.com>
-References: <1367943123-16013-1-git-send-email-sjg@chromium.org>
- <20130509193647.GR6931@bill-the-cat>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH V2 1/3] clk: samsung: register audio subsystem clocks using common clock framework
+Date: Fri, 10 May 2013 02:21:19 +0200
+Message-ID: <1730722.Al2EYiRntt@flatron>
+References: <1367909016-19657-1-git-send-email-padma.v@samsung.com> <1367909016-19657-2-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130509193647.GR6931@bill-the-cat>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tom Rini <trini-l0cyMroinI0@public.gmane.org>
-Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, u-boot-review <u-boot-review-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Joe Hershberger <joe.hershberger-acOepvfBmUk@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1367909016-19657-2-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, padma.kvr@gmail.com, sbkim73@samsung.com, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, thomas.abraham@linaro.org, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Tom,
+Hi Padmavathi,
 
-On Thu, May 9, 2013 at 12:36 PM, Tom Rini <trini-l0cyMroinI0@public.gmane.org> wrote:
-> On Tue, May 07, 2013 at 09:11:44AM -0700, Simon Glass wrote:
->
->> This series adjusts the image code to work with sandbox and prepares it for
->> verified boot to come later.
->>
->> The primary goal here is to get image loading to work on sandbox, which is
->> mostly a set of fairly minor changes such as using map_sysmem() instead of
->> just a cast when converting from a U-Boot address to a pointer. Since
->> common/image.c runs to over 3000 lines and half of it is FIT-related code
->> behind an #ifdef, this code is moved into a new image-fit.c file.
->>
->> Changes in v4:
->> - Bring in upstream version of fdt_first/next_subnode()
->> - Use new upstream fdt_first/next_subnode()
->
-> Everything looks fine to me, barring further comments I'll pick this up
-> around next Tuesday.
+I managed to review the patch a bit more thoroughly and I had few more 
+comments. You can find them inline.
 
-Thanks, The next series to hopefully improve image support is queued
-up, and I will get the final one done also.
+On Tuesday 07 of May 2013 12:13:34 Padmavathi Venna wrote:
+> Audio subsystem is introduced in s5pv210 and exynos platforms.
+> This has seperate clock controller which can control i2s0 and
+> pcm0 clocks. This patch registers the audio subsystem clocks
+> with the common clock framework.
+> 
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+> ---
+>  .../bindings/clock/clk-samsung-audss.txt           |   64 +++++++++
+>  drivers/clk/samsung/Makefile                       |    1 +
+>  drivers/clk/samsung/clk-samsung-audss.c            |  137
+> ++++++++++++++++++++ include/dt-bindings/clk/samsung-audss-clk.h       
+> |   25 ++++ 4 files changed, 227 insertions(+), 0 deletions(-)
+>  create mode 100644
+> Documentation/devicetree/bindings/clock/clk-samsung-audss.txt create
+> mode 100644 drivers/clk/samsung/clk-samsung-audss.c
+>  create mode 100644 include/dt-bindings/clk/samsung-audss-clk.h
+> 
+> diff --git
+> a/Documentation/devicetree/bindings/clock/clk-samsung-audss.txt
+> b/Documentation/devicetree/bindings/clock/clk-samsung-audss.txt new
+> file mode 100644
+> index 0000000..ec2cd0b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/clk-samsung-audss.txt
+> @@ -0,0 +1,64 @@
+> +* Samsung Audio Subsystem Clock Controller
+> +
+> +The Samsung Audio Subsystem clock controller generates and supplies
+> clocks +to Audio Subsystem block available in the S5PV210 and Exynos
+> SoCs. The clock +binding described here is applicable to all SoC's in
+> the S5PV210 and Exynos +family.
+> +
+> +Required Properties:
+> +
+> +- compatible: should be one of the following:
+> +  - "samsung,s5pv210-audss-clock" - controller compatible with all
+> S5PV210 SoCs. +  - "samsung,exynos4210-audss-clock" - controller
+> compatible with all Exynos4 SoCs. +  - "samsung,exynos5250-audss-clock"
+> - controller compatible with all Exynos5 SoCs. +
+> +- reg: physical base address and length of the controller's register
+> set. +
+> +- #clock-cells: should be 1.
+> +
+> +The following is the list of clocks generated by the controller. Each
+> clock is +assigned an identifier and client nodes use this identifier
+> to specify the +clock which they consume. Some of the clocks are
+> available only on a particular +Exynos4 SoC and this is specified where
+> applicable.
+> +
+> +Provided clocks:
+> +
+> +Clock           ID      SoC (if specific)
+> +-----------------------------------------------
+> +
+> +mout_audss      0
+> +mout_i2s        1
+> +dout_srp        2
+> +dout_bus        3
+> +dout_i2s        4
+> +srp_clk         5
+> +i2s_bus         6
+> +sclk_i2s        7
+> +pcm_bus         8
+> +sclk_pcm        9
+> +
+> +Example 1: An example of a clock controller node is listed below.
+> +
+> +clock_audss: audss-clock-controller@03810000 {
+> +	compatible = "samsung,exynos5250-audss-clock";
+> +	reg = <0x03810000 0x0C>;
+> +	#clock-cells = <1>;
+> +};
+> +
+> +Example 2: I2S controller node that consumes the clock generated by the
+> clock +           controller. Refer to the standard clock bindings for
+> information +           about 'clocks' and 'clock-names' property.
+> +
+> + i2s0: i2s@03830000 {
+> +		compatible = "samsung,i2s-v5";
+> +		reg = <0x03830000 0x100>;
+> +		dmas = <&pdma0 10
+> +			&pdma0 9
+> +			&pdma0 8>;
+> +		dma-names = "tx", "rx", "tx-sec";
+> +		clocks = <&clock_audss SAMSUNG_I2S_BUS>,
+> +			<&clock_audss SAMSUNG_I2S_BUS>,
+> +			<&clock_audss SAMSUNG_SCLK_I2S>;
+> +		clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
+> +};
+> +
+> diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makefile
+> index b7c232e..5425fa8 100644
+> --- a/drivers/clk/samsung/Makefile
+> +++ b/drivers/clk/samsung/Makefile
+> @@ -6,3 +6,4 @@ obj-$(CONFIG_COMMON_CLK)	+= clk.o clk-pll.o
+>  obj-$(CONFIG_ARCH_EXYNOS4)	+= clk-exynos4.o
+>  obj-$(CONFIG_SOC_EXYNOS5250)	+= clk-exynos5250.o
+>  obj-$(CONFIG_SOC_EXYNOS5440)	+= clk-exynos5440.o
+> +obj-$(CONFIG_PLAT_SAMSUNG)	+= clk-samsung-audss.o
+> diff --git a/drivers/clk/samsung/clk-samsung-audss.c
+> b/drivers/clk/samsung/clk-samsung-audss.c new file mode 100644
+> index 0000000..97526b7
+> --- /dev/null
+> +++ b/drivers/clk/samsung/clk-samsung-audss.c
+> @@ -0,0 +1,137 @@
+> +/*
+> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
+> + * Author: Padmavathi Venna <padma.v@samsung.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as +
+> * published by the Free Software Foundation.
+> + *
+> + * Common Clock Framework support for Audio Subsystem Clock Controller.
+> +*/
+> +
+> +#include <linux/clkdev.h>
+> +#include <linux/io.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/of_address.h>
+> +#include <linux/syscore_ops.h>
+> +
+> +#include <dt-bindings/clk/samsung-audss-clk.h>
+> +
+> +static DEFINE_SPINLOCK(lock);
+> +static struct clk **clk_table;
+> +static void __iomem *reg_base;
+> +static struct clk_onecell_data clk_data;
+> +
+> +#define ASS_CLK_SRC 0x0
+> +#define ASS_CLK_DIV 0x4
+> +#define ASS_CLK_GATE 0x8
+> +
+> +static unsigned long reg_save[][2] = {
+> +	{ASS_CLK_SRC,  0},
+> +	{ASS_CLK_DIV,  0},
+> +	{ASS_CLK_GATE, 0},
+> +};
+> +
+> +/* list of all parent clock list */
+> +static const char *mout_audss_p[] = { "fin_pll", "fout_epll" };
+> +static const char *mout_i2s_p[] = { "mout_audss", "cdclk0",
+> "sclk_audio0" }; +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int samsung_audss_clk_suspend(void)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < 3; i++)
+> +		reg_save[i][1] = readl(reg_base + reg_save[i][0]);
+> +
+> +	return 0;
+> +}
+> +
+> +static void samsung_audss_clk_resume(void)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < 3; i++)
+> +		writel(reg_save[i][1], reg_base + reg_save[i][0]);
+> +}
+> +
+> +static struct syscore_ops samsung_audss_clk_syscore_ops = {
+> +	.suspend	= samsung_audss_clk_suspend,
+> +	.resume		= samsung_audss_clk_resume,
+> +};
+> +#endif /* CONFIG_PM_SLEEP */
+> +
+> +/* register samsung_audss clocks */
+> +void __init samsung_audss_clk_init(struct device_node *np)
+> +{
+> +	reg_base = of_iomap(np, 0);
+> +	if (!reg_base) {
+> +		pr_err("%s: failed to map audss registers\n", __func__);
+> +		return;
+> +	}
+> +
+> +	clk_table = kzalloc(sizeof(struct clk *) * SAMSUNG_AUDSS_MAX_CLKS,
+> +				GFP_KERNEL);
+> +	if (!clk_table) {
+> +		pr_err("%s: could not allocate clock lookup table\n", 
+__func__);
+> +		return;
+> +	}
+> +
+> +	clk_data.clks = clk_table;
+> +	clk_data.clk_num = SAMSUNG_AUDSS_MAX_CLKS;
+> +	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
+> +
+> +	clk_table[SAMSUNG_MOUT_AUDSS] = clk_register_mux(NULL, 
+"mout_audss",
+> +				mout_audss_p, ARRAY_SIZE(mout_audss_p), 0,
+> +				reg_base + ASS_CLK_SRC, 0, 1, 0, &lock);
+> +	clk_register_clkdev(clk_table[SAMSUNG_MOUT_AUDSS], "mout_audss",
+> NULL); +
 
-Regards,
-Simon
+Is there are a reason for this clkdev lookup to be registered?
+
+This driver seems to be used only in DT-case, so DT-based lookup should be 
+enough.
+
+> +	clk_table[SAMSUNG_MOUT_I2S] = clk_register_mux(NULL, "mout_i2s",
+> +				mout_i2s_p, ARRAY_SIZE(mout_i2s_p), 0,
+> +				reg_base + ASS_CLK_SRC, 2, 2, 0, &lock);
+> +	clk_register_clkdev(clk_table[SAMSUNG_MOUT_I2S], "mout_i2s", 
+NULL);
+
+Same here.
+
+> +
+> +	clk_table[SAMSUNG_DOUT_SRP] = clk_register_divider(NULL, 
+"dout_srp",
+> +				"mout_audss", 0, reg_base + ASS_CLK_DIV, 
+0, 4,
+> +				0, &lock);
+> +
+> +	clk_table[SAMSUNG_DOUT_BUS] = clk_register_divider(NULL, 
+"dout_bus",
+> +				"dout_srp", 0, reg_base + ASS_CLK_DIV, 4, 
+4, 0,
+> +				&lock);
+> +
+> +	clk_table[SAMSUNG_DOUT_I2S] = clk_register_divider(NULL, 
+"dout_i2s",
+> +				"mout_i2s", 0, reg_base + ASS_CLK_DIV, 8, 
+4, 0,
+> +				&lock);
+> +
+> +	clk_table[SAMSUNG_SRP_CLK] = clk_register_gate(NULL, "srp_clk",
+> +				"dout_srp", CLK_SET_RATE_PARENT,
+> +				reg_base + ASS_CLK_GATE, 0, 0, &lock);
+> +
+> +	clk_table[SAMSUNG_I2S_BUS] = clk_register_gate(NULL, "i2s_bus",
+> +				"dout_bus", CLK_SET_RATE_PARENT,
+> +				reg_base + ASS_CLK_GATE, 2, 0, &lock);
+> +
+> +	clk_table[SAMSUNG_SCLK_I2S] = clk_register_gate(NULL, "sclk_i2s",
+> +				"dout_i2s", CLK_SET_RATE_PARENT,
+> +				reg_base + ASS_CLK_GATE, 3, 0, &lock);
+> +
+> +	clk_table[SAMSUNG_PCM_BUS] = clk_register_gate(NULL, "pcm_bus",
+> +				 "sclk_pcm", CLK_SET_RATE_PARENT,
+> +				reg_base + ASS_CLK_GATE, 4, 0, &lock);
+> +
+> +	clk_table[SAMSUNG_SCLK_PCM] = clk_register_gate(NULL, "sclk_pcm",
+> +				"div_pcm0", CLK_SET_RATE_PARENT,
+> +				reg_base + ASS_CLK_GATE, 5, 0, &lock);
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +	register_syscore_ops(&samsung_audss_clk_syscore_ops);
+> +#endif
+> +
+> +	pr_info("Exynos: Audss: clock setup completed\n");
+> +}
+> +CLK_OF_DECLARE(s5pv210_audss_clk, "samsung,s5pv210-audss-clock",
+> +		samsung_audss_clk_init);
+
+I'm wondering if this driver in its current state is really compatible 
+with S5PV210. Quick look at documentation shows that CLK_GATE and CLK_DIV 
+registers on this SoC have different layout than on Exynos SoCs.
+
+I guess that for now the best choice would be to remove any mentions about 
+S5PV210 from the patch and add them back after the driver gets proper 
+support for this SoC.
+
+> +CLK_OF_DECLARE(exynos4210_audss_clk, "samsung,exynos4210-audss-clock",
+> +		samsung_audss_clk_init);
+> +CLK_OF_DECLARE(exynos5250_audss_clk, "samsung,exynos5250-audss-clock",
+> +		samsung_audss_clk_init);
+
+Also if both Exynos4210 and Exynos5250 have exactly the same audss clock 
+layout, there is no reason to have two compatibles for them - the 
+convention is that just the first model that had this hardware is enough - 
+in this case Exynos4210.
+
+Having two different compatibles suggests that those two SoCs differ in a 
+way that needs special handling, which is misleading, based on the fact 
+that there is no such special handling in the driver.
+
+Best regards,
+Tomasz
