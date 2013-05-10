@@ -1,7 +1,7 @@
 From: "Christian Daudt" <csd@broadcom.com>
 Subject: Re: [PATCH] ARM: mmc: bcm281xx SDHCI driver
-Date: Fri, 10 May 2013 00:23:12 -0700
-Message-ID: <518CA060.5090802@broadcom.com>
+Date: Fri, 10 May 2013 00:45:00 -0700
+Message-ID: <518CA57C.3000302@broadcom.com>
 References: <1368078942-31265-1-git-send-email-csd@broadcom.com>
  <20130509063503.GF3041@game.jcrosoft.org>
 Mime-Version: 1.0
@@ -9,9 +9,9 @@ Content-Type: text/plain;
  charset=iso-8859-1;
  format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
 In-Reply-To: <20130509063503.GF3041@game.jcrosoft.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mmc-owner@vger.kernel.org
 To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Stephen Warren <swarren@nvidia.com>, Olof Johansson <olof@lixom.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wei WANG <wei_wang@realsil.com.cn>, Ludovic Desroches <ludovic.desroches@atmel.com>, Arnd Bergmann <arnd@arndb.de>, "Mike A. Chan" <mikechan@google.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, csd_b@daudt.org
 List-Id: devicetree@vger.kernel.org
@@ -51,9 +51,9 @@ ok.
 >> --- a/drivers/mmc/host/Kconfig
 >> +++ b/drivers/mmc/host/Kconfig
 >> @@ -238,6 +238,16 @@ config MMC_SDHCI_S3C_DMA
->>   
+>>
 >>   	  YMMV.
->>   
+>>
 >> +config MMC_SDHCI_BCM_KONA
 >> +	tristate "SDHCI support on Broadcom KONA platform"
 >> +	depends on ARCH_BCM && MMC_SDHCI_PLTFM
@@ -242,3 +242,5 @@ merged it into single line
 
   Thanks,
     csd
+
+
