@@ -1,84 +1,46 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: [PATCH v2 2/2] ARM: dts: omap3-igep0030: Add NAND flash support
-Date: Fri, 10 May 2013 21:40:59 +0200
-Message-ID: <1368214859-23558-1-git-send-email-javier.martinez@collabora.co.uk>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <b-cousson@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [RFC 1/8] serial:st-asc: Add ST ASC driver.
+Date: Sat, 11 May 2013 00:29:55 +0100
+Message-ID: <20130510232955.GY18614@n2100.arm.linux.org.uk>
+References: <1368022187-1633-1-git-send-email-srinivas.kandagatla@st.com> <B5A00B86-5332-427E-A82A-5B71EC0979A8@jcrosoft.com> <20130508161527.GA28080@kroah.com> <201305081831.48566.arnd@arndb.de> <20130508163613.GA13761@kroah.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130508163613.GA13761@kroah.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Viresh Kumar <viresh.kumar@linaro.org>, Will Deacon <will.deacon@arm.com>, jslaby@suse.cz, Samuel Ortiz <sameo@linux.intel.com>, Nicolas Pitre <nico@linaro.org>, linux-doc@vger.kernel.org, Stephen Gallimore <stephen.gallimore@st.com>, linux-serial@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Stuart Menefy <stuart.menefy@st.com>, Stephen Warren <swarren@nvidia.com>, Dong Aisheng <dong.aisheng@linaro.org>, linux-arm-kernel@lists.infradead.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The IGEP COM Module has an 512MB NAND flash memory.
+On Wed, May 08, 2013 at 09:36:13AM -0700, Greg KH wrote:
+> On Wed, May 08, 2013 at 06:31:48PM +0200, Arnd Bergmann wrote:
+> > On Wednesday 08 May 2013, Greg KH wrote:
+> > > > just mention there is not hardware reason to not use the generic ttySx
+> > > > in place of ttyAS as we have only one IP that handle serial on this
+> > > > family of SoC
+> > > > 
+> > > > personally I'll switch to ttySx
+> > > 
+> > > Great, then you can use the same major/minor range as well, so there's
+> > > no more objection from me about this :)
+> > 
+> > Does that work these days when you have kernel with multiple built-in
+> > uart drivers?
+> 
+> It "should", as the major/minor registration should only happen when the
+> hardware is found, but I haven't tested it out, so I can't say for sure.
 
-Add a device node for this NAND and its parition layout.
+serial stuff has never operated like that.  More specifically, it's a
+limitation with the tty stuff that the way stuff works is that a
+tty driver can only drive a single bunch of contiguous minor numbers.
+No interleaving is allowed.
 
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
----
+That limitation has existed for years, and I don't see it going away.
+As long as that limitation exists, you can only ever have one serial
+driver driving a set of contiguous minor numbers.
 
-Changes since v1:
- - I just realized that sent a wrong version of the patch, sorry for the noise
-
- arch/arm/boot/dts/omap3-igep0030.dts |   50 ++++++++++++++++++++++++++++++++++
- 1 files changed, 50 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/omap3-igep0030.dts b/arch/arm/boot/dts/omap3-igep0030.dts
-index 9dc48d2..f65bc3a 100644
---- a/arch/arm/boot/dts/omap3-igep0030.dts
-+++ b/arch/arm/boot/dts/omap3-igep0030.dts
-@@ -42,3 +42,53 @@
- 		};
- 	};
- };
-+
-+&gpmc {
-+	ranges = <0 0 0x00000000 0x20000000>;
-+
-+	nand@0,0 {
-+		linux,mtd-name= "micron,mt29c4g96maz";
-+		reg = <0 0 0>;
-+		nand-bus-width = <16>;
-+		ti,nand-ecc-opt = "bch8";
-+
-+		gpmc,sync-clk-ps = <0>;
-+		gpmc,cs-on-ns = <0>;
-+		gpmc,cs-rd-off-ns = <44>;
-+		gpmc,cs-wr-off-ns = <44>;
-+		gpmc,adv-on-ns = <6>;
-+		gpmc,adv-rd-off-ns = <34>;
-+		gpmc,adv-wr-off-ns = <44>;
-+		gpmc,we-off-ns = <40>;
-+		gpmc,oe-off-ns = <54>;
-+		gpmc,access-ns = <64>;
-+		gpmc,rd-cycle-ns = <82>;
-+		gpmc,wr-cycle-ns = <82>;
-+		gpmc,wr-access-ns = <40>;
-+		gpmc,wr-data-mux-bus-ns = <0>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		partition@0 {
-+			label = "SPL";
-+			reg = <0 0x100000>;
-+		};
-+		partition@0x80000 {
-+			label = "U-Boot";
-+			reg = <0x100000 0x180000>;
-+		};
-+		partition@0x1c0000 {
-+			label = "Environment";
-+			reg = <0x280000 0x100000>;
-+		};
-+		partition@0x280000 {
-+			label = "Kernel";
-+			reg = <0x380000 0x300000>;
-+		};
-+		partition@0x780000 {
-+			label = "Filesystem";
-+			reg = <0x680000 0x1f980000>;
-+		};
-+	};
-+};
--- 
-1.7.7.6
-
+There has been an attempt to "work around" this by making the 8250
+driver "special" which was a complete hack to get it to work.  That
+was while I maintained this stuff and I outright refused to make one
+serial driver magically special.
