@@ -1,40 +1,79 @@
-From: Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [patch] mtd: denali_dt: harmless case of testing the wrong
- variable
-Date: Fri, 10 May 2013 16:11:54 +0300
-Message-ID: <1368191514.26780.164.camel@sauron.fi.intel.com>
-References: <20130401062151.GA5197@longonot.mountain>
-Reply-To: artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH] ARM: mmc: bcm281xx SDHCI driver
+Date: Fri, 10 May 2013 16:37:01 +0200
+Message-ID: <20130510143701.GC22508@game.jcrosoft.org>
+References: <1368078942-31265-1-git-send-email-csd@broadcom.com>
+ <20130509063503.GF3041@game.jcrosoft.org>
+ <518CA1DF.5050008@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130401062151.GA5197-dZEljifmRObu9KfB+GxooP8+0UxHXcjY@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Bill Pemberton <wfp5p-4Ng6DfrEGID2fBVCVOL8/A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <518CA1DF.5050008@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Christian Daudt <csd@broadcom.com>
+Cc: csd_b@daudt.org, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Wei WANG <wei_wang@realsil.com.cn>, Ludovic Desroches <ludovic.desroches@atmel.com>, "Mike A. Chan" <mikechan@google.com>, Rob Landley <rob@landley.net>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2013-04-01 at 09:21 +0300, Dan Carpenter wrote:
-> There is a warning message that can't be printed because we test the
-> wrong variable.
+On 00:29 Fri 10 May     , Christian Daudt wrote:
+> Thanks for the feedback.
 > 
-> Signed-off-by: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+> On 13-05-08 11:35 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> >On 22:55 Wed 08 May     , Christian Daudt wrote:
+> >>Add SDHCI driver for the Broadcom 281xx SoCs. Also
+> >>add bindings for it into bcm281xx dts files.
+> >>Still missing:
+> >>  - power managemement
+> >split the dts/dtsi in an other patch
+> ok.
+> >>Signed-off-by: Christian Daudt <csd@broadcom.com>
+> >>
+> >>diff --git a/arch/arm/configs/bcm_defconfig b/arch/arm/configs/bcm_defconfig
+> >>index e3bf2d6..65edf6d 100644
+> >>--- a/arch/arm/configs/bcm_defconfig
+> >>+++ b/arch/arm/configs/bcm_defconfig
+> >>@@ -78,6 +78,13 @@ CONFIG_BACKLIGHT_LCD_SUPPORT=y
+> >>  CONFIG_LCD_CLASS_DEVICE=y
+> >>  CONFIG_BACKLIGHT_CLASS_DEVICE=y
+> >>  # CONFIG_USB_SUPPORT is not set
+> >>+CONFIG_MMC=y
+> >>+CONFIG_MMC_UNSAFE_RESUME=y
+> >>+CONFIG_MMC_BLOCK_MINORS=32
+> >>+CONFIG_MMC_TEST=y
+> >>+CONFIG_MMC_SDHCI=y
+> >>+CONFIG_MMC_SDHCI_PLTFM=y
+> >>+CONFIG_MMC_SDHCI_BCM_KONA=y
+> >>  CONFIG_NEW_LEDS=y
+> >>  CONFIG_LEDS_CLASS=y
+> >>  CONFIG_LEDS_TRIGGERS=y
+> >>diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+> >>index d88219e..e067c5a 100644
+> >>--- a/drivers/mmc/host/Kconfig
+> >>+++ b/drivers/mmc/host/Kconfig
+> >>@@ -238,6 +238,16 @@ config MMC_SDHCI_S3C_DMA
+> >>  	  YMMV.
+> >>+config MMC_SDHCI_BCM_KONA
+> >>+	tristate "SDHCI support on Broadcom KONA platform"
+> >>+	depends on ARCH_BCM && MMC_SDHCI_PLTFM
+> >select MMC_SDHCI_PLTFM
+> >will be better
+> Ok - changed it. Why is the select is better than the depends ?
 
-Thanks Dan, but there is already a similar fix for this in upstream:
+so you do not need to enable MMC_SDHCI_PLTFM
 
-commit 6c67050ab108bcce2576fa1d7a0557eb0376520a
-Author: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+and you can drop one line in the savdefconfig
 
--- 
+if tomorrow you need regulator select it so a old defconfig will continue to
+work
+
 Best Regards,
-Artem Bityutskiy
+J.
