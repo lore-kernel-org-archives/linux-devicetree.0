@@ -1,76 +1,40 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: Re: [RFC 3/8] mfd:syscon: Introduce claim/read/write/release APIs
-Date: Fri, 10 May 2013 13:51:14 +0100
-Message-ID: <518CED42.7010700@st.com>
-References: <1368022187-1633-1-git-send-email-srinivas.kandagatla@st.com> <1368022272-2241-1-git-send-email-srinivas.kandagatla@st.com> <201305081650.23264.arnd@arndb.de> <20130508150141.GA5057@opensource.wolfsonmicro.com> <518A8E6C.6070907@st.com> <20130509095143.GB7478@sirena.org.uk>
-Reply-To: srinivas.kandagatla@st.com
+From: Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [patch] mtd: denali_dt: harmless case of testing the wrong
+ variable
+Date: Fri, 10 May 2013 16:11:54 +0300
+Message-ID: <1368191514.26780.164.camel@sauron.fi.intel.com>
+References: <20130401062151.GA5197@longonot.mountain>
+Reply-To: artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130509095143.GB7478@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, dong.aisheng@linaro.org, sameo@linux.intel.com, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Stuart Menefy <stuart.menefy@st.com>, Shawn Guo <shawn.guo@linaro.org>, Olof Johansson <olof@lixom.net>, Jason Cooper <jason@lakedaemon.net>, Stephen Warren <swarren@nvidia.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Nicolas Pitre <nico@linaro.org>, Will Deacon <will.deacon@arm.com>, Dave Martin <dave.martin@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@li
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130401062151.GA5197-dZEljifmRObu9KfB+GxooP8+0UxHXcjY@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Bill Pemberton <wfp5p-4Ng6DfrEGID2fBVCVOL8/A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
-
-I would like to explain you bit more about "ST System Configuration
-registers".
-
-The SOCs are assembled from existing IP blocks, which don't change very
-often. However these blocks are assembled in different configurations to
-meet the device requirements. So most IP blocks as well as having a bus
-interface through which their own registers are accessible, will also
-have a number of bristles(wires) which are signals that are going in and
-out of the IP for configuration and status. To make these signals
-accessible to software they are wired to "System Configuration Registers".
-
-Drivers target the IP blocks, which don't change much. Where as the
-mapping of IP specific bristles(wires) to "System Configuration
-Registers" do change per each SOC, and therefore we do not want this
-information to be part of the driver.
-
-Having a System Configuration infrastructure gives much flexibility and
-abstraction to drivers to configure them.
-
-Given the comments on the patch, I am inclined not to use syscon for ST
-specific "System Configuration Registers", alternatively I would like to
-create a separate mfd system configuration driver specific to ST.
-
-This is how we did it initially in the out-of-tree kernel.
-http://git.stlinux.com/?p=stm/linux-stm.git;a=blob;f=drivers/stm/sysconf.c
-
-Any suggestions?
-
-
-thanks,
-srini
-
-On 09/05/13 10:51, Mark Brown wrote:
-> On Wed, May 08, 2013 at 06:42:04PM +0100, Srinivas KANDAGATLA wrote:
+On Mon, 2013-04-01 at 09:21 +0300, Dan Carpenter wrote:
+> There is a warning message that can't be printed because we test the
+> wrong variable.
 > 
-> Fix your mailer to word wrap within paragraphs.
-> 
->> Ultimately the syscon_write use the regmap_update_bits, however we
->> really want is the flexibility in using/referring the syscon
->> registers/bits in both device-trees and non-device tree cases.
-> 
-> So what you're looking for here is some way to offload discovery of
-> register fields from the driver?
-> 
->> The reason for these APIs, is the extent of syscon usage is very high
->> in ST set-top-box parts.
-> 
->> Without these new APIs, its very difficult to pass this information to
->> the drivers.
-> 
-> I'm not 100% convinced that putting all this information into DT is a
-> good idea, and to the extent that it is sensible it feels like something
-> which might be useful with any device using register maps, not just
-> syscon.  For example many MFDs have similar needs - essentially the
-> system controllers are just a particular kind of MFD.  To me that says
-> that this should be outside syscon so other things can use it.
-> 
+> Signed-off-by: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
 
+Thanks Dan, but there is already a similar fix for this in upstream:
+
+commit 6c67050ab108bcce2576fa1d7a0557eb0376520a
+Author: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+-- 
+Best Regards,
+Artem Bityutskiy
