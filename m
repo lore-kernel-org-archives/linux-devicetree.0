@@ -1,38 +1,55 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH V2] ARM: bcm281xx: Add L2 support for Rev A2 chips
-Date: Thu, 9 May 2013 13:44:34 -0700
-Message-ID: <20130509204434.GA16724@quad.lixom.net>
-References: <1367542653-955-1-git-send-email-csd@broadcom.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 3/3] ARM: dts: Add display timing node to exynos5250-arndale.dts
+Date: Fri, 10 May 2013 02:05:42 +0200
+Message-ID: <4212940.hYf2k9NPUY@flatron>
+References: <1367992894-20198-1-git-send-email-vikas.sajjan@linaro.org> <1367992894-20198-4-git-send-email-vikas.sajjan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1367542653-955-1-git-send-email-csd@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Daudt <csd@broadcom.com>
-Cc: Russell King <linux@arm.linux.org.uk>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Will Deacon <will.deacon@arm.com>, "arm@kernel.org" <arm@kernel.org>, linux-arm-kernel@lists.infradead.org, csd_b@daudt.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Josh Cartwright <josh.cartwright@ni.com>, Yehuda Yitschak <yehuday@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1367992894-20198-4-git-send-email-vikas.sajjan@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vikas Sajjan <vikas.sajjan@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, linaro-kernel@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 02, 2013 at 05:57:33PM -0700, Christian Daudt wrote:
-> Rev A2 SoCs have an unorthodox memory re-mapping and this needs
-> to be reflected in the cache operations.
-> This patch adds new outer cache functions for the l2x0 driver
-> to support this SoC revision. It also adds a new compatible
-> value for the cache to enable this functionality.
+Hi Vikas,
+
+On Wednesday 08 of May 2013 11:31:34 Vikas Sajjan wrote:
+> Adds display timing node for a DP panel to Arndale Board DTS file
 > 
-> Updates from V1:
-> - remove section 1 altogether and note that in comments
-> - simplify section selection caused by section 1 removal
-> - BUG_ON just in case section 1 shows up
+> Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
+> ---
+>  arch/arm/boot/dts/exynos5250-arndale.dts |   16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
-> Signed-off-by: Christian Daudt <csd@broadcom.com>
+> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts
+> b/arch/arm/boot/dts/exynos5250-arndale.dts index f68b820..c831a5c
+> 100644
+> --- a/arch/arm/boot/dts/exynos5250-arndale.dts
+> +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+> @@ -459,4 +459,20 @@
+>  		samsung,lane-count = <4>;
+>  	};
+> 
+> +	display-timings {
+> +		native-mode = <&timing0>;
+> +		timing0: timing@0 {
+> +			/* 2560x1600 DP panel */
+> +			clock-frequency = <50000>;
+> +			hactive = <2560>;
+> +			vactive = <1600>;
+> +			hfront-porch = <48>;
+> +			hback-porch = <80>;
+> +			hsync-len = <32>;
+> +			vback-porch = <16>;
+> +			vfront-porch = <8>;
+> +			vsync-len = <6>;
+> +		};
+> +	};
 
-This patch mostly covers code that is on Russells plate, so please feed
-this to his tracker to be picked up by him. Feel free to add:
+What display are those timings used for? Shouldn't they be placed inside 
+node of that display?
 
-Acked-by: Olof Johansson <olof@lixom.net>
-
-
-Thanks,
-
--Olof
+Best regards,
+Tomasz
