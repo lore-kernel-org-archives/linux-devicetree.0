@@ -1,55 +1,51 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: Add display timing node to exynos5250-arndale.dts
-Date: Fri, 10 May 2013 02:05:42 +0200
-Message-ID: <4212940.hYf2k9NPUY@flatron>
-References: <1367992894-20198-1-git-send-email-vikas.sajjan@linaro.org> <1367992894-20198-4-git-send-email-vikas.sajjan@linaro.org>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [U-Boot] [PATCH v4 0/19] Allow images to work on sandbox
+Date: Thu, 9 May 2013 17:17:03 -0700
+Message-ID: <CAPnjgZ2vZL79dxupWJu4-JYf+fYiNB_qFyh-ZSO4Fzqcb2UCKQ@mail.gmail.com>
+References: <1367943123-16013-1-git-send-email-sjg@chromium.org>
+ <20130509193647.GR6931@bill-the-cat>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1367992894-20198-4-git-send-email-vikas.sajjan@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vikas Sajjan <vikas.sajjan@linaro.org>
-Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, linaro-kernel@lists.linaro.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130509193647.GR6931@bill-the-cat>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tom Rini <trini-l0cyMroinI0@public.gmane.org>
+Cc: U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, u-boot-review <u-boot-review-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Joe Hershberger <joe.hershberger-acOepvfBmUk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vikas,
+Hi Tom,
 
-On Wednesday 08 of May 2013 11:31:34 Vikas Sajjan wrote:
-> Adds display timing node for a DP panel to Arndale Board DTS file
-> 
-> Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
-> ---
->  arch/arm/boot/dts/exynos5250-arndale.dts |   16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts
-> b/arch/arm/boot/dts/exynos5250-arndale.dts index f68b820..c831a5c
-> 100644
-> --- a/arch/arm/boot/dts/exynos5250-arndale.dts
-> +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-> @@ -459,4 +459,20 @@
->  		samsung,lane-count = <4>;
->  	};
-> 
-> +	display-timings {
-> +		native-mode = <&timing0>;
-> +		timing0: timing@0 {
-> +			/* 2560x1600 DP panel */
-> +			clock-frequency = <50000>;
-> +			hactive = <2560>;
-> +			vactive = <1600>;
-> +			hfront-porch = <48>;
-> +			hback-porch = <80>;
-> +			hsync-len = <32>;
-> +			vback-porch = <16>;
-> +			vfront-porch = <8>;
-> +			vsync-len = <6>;
-> +		};
-> +	};
+On Thu, May 9, 2013 at 12:36 PM, Tom Rini <trini-l0cyMroinI0@public.gmane.org> wrote:
+> On Tue, May 07, 2013 at 09:11:44AM -0700, Simon Glass wrote:
+>
+>> This series adjusts the image code to work with sandbox and prepares it for
+>> verified boot to come later.
+>>
+>> The primary goal here is to get image loading to work on sandbox, which is
+>> mostly a set of fairly minor changes such as using map_sysmem() instead of
+>> just a cast when converting from a U-Boot address to a pointer. Since
+>> common/image.c runs to over 3000 lines and half of it is FIT-related code
+>> behind an #ifdef, this code is moved into a new image-fit.c file.
+>>
+>> Changes in v4:
+>> - Bring in upstream version of fdt_first/next_subnode()
+>> - Use new upstream fdt_first/next_subnode()
+>
+> Everything looks fine to me, barring further comments I'll pick this up
+> around next Tuesday.
 
-What display are those timings used for? Shouldn't they be placed inside 
-node of that display?
+Thanks, The next series to hopefully improve image support is queued
+up, and I will get the final one done also.
 
-Best regards,
-Tomasz
+Regards,
+Simon
