@@ -1,320 +1,161 @@
-From: Vikas Sajjan <vikas.sajjan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: Add display timing node to
- exynos5250-arndale.dts
-Date: Fri, 10 May 2013 13:45:27 +0530
-Message-ID: <CAD025ySqUpGRpx0J61gsjKE_JPa+Mu444ETpd2USyikrNWj71w@mail.gmail.com>
-References: <1367992894-20198-1-git-send-email-vikas.sajjan@linaro.org>
- <CAD025yQ+vnNc1RqoqoBw9JqYUp6aAY2wTowhVyV+zoDZq9sJ6g@mail.gmail.com>
- <CAD025ySx39kOphk3BNrnM+i7-9KHQr607cRYZXKa7uJ6GBXSiA@mail.gmail.com>
- <1853757.ubr759t9No@flatron>
+From: Christian Ruppert <christian.ruppert@abilis.com>
+Subject: Re: [PATCH 1/2] pinmux: Add TB10x pinmux driver
+Date: Fri, 10 May 2013 10:25:23 +0200
+Message-ID: <20130510082521.GA2125@ab42.lan>
+References: <1365608728-30494-1-git-send-email-christian.ruppert@abilis.com>
+ <516EEAA0.10906@wwwdotorg.org>
+ <20130418090310.GA17636@ab42.lan>
+ <CACRpkdZd0_W432od5565phhUcJMRWiV9vXX4QVF4osKkxstC0Q@mail.gmail.com>
+ <20130429161725.GB30136@ab42.lan>
+ <5182B557.4040804@wwwdotorg.org>
+ <CACRpkdaxO0q_P2wJFy3zv4F-QM9dZk54qW8ft350XqcBt1Gr1w@mail.gmail.com>
+ <20130508164123.GA10248@ab42.lan>
+ <518AAF31.8080502@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2144475363372547759=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1853757.ubr759t9No@flatron>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, InKi Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "kgene.kim" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <518AAF31.8080502@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---===============2144475363372547759==
-Content-Type: multipart/alternative; boundary=089e01494164311b4b04dc58c605
+On Wed, May 08, 2013 at 02:01:53PM -0600, Stephen Warren wrote:
+> On 05/08/2013 10:41 AM, Christian Ruppert wrote:
+> ...
+> > What do you think about the following modification to the pinctrl/G=
+PIO
+> > frameworks instead (not yet a formal patch, more a request for comm=
+ent
+> > to illustrate what I mean. If you agree, I will clean it up and sub=
+mit a
+> > proper patch after discussion).
+> >=20
+> > It adds a dt_gpiorange_xlate function to the pinctrl callbacks whic=
+h
+> > defaults to the conventional behaviour using kernel logical pin num=
+bers.
+> > However, pin controllers which provide more complex mechanisms can
+> > define #gpio-range-cells and provide this callback in order to keep
+> > Linux pin numbering inside the kernel.
+>=20
+> Can you provide an example of the DT content, and explain exactly wha=
+t
+> this patch does with it; what effect it has on the existing GPIO or
+> pinctrl code?
 
---089e01494164311b4b04dc58c605
-Content-Type: text/plain; charset=ISO-8859-1
+The patch does not change the default behaviour of the kernel: In case
+no dt_gpiorange_xlate callback is defined for a given driver (e.g. for
+pre-existing drivers), the default function simply interprets the first
+argument as Linux pin number and the second as pin count, same as now.
+New drivers can use the callback to translate device specific pin
+references to Linux pin numbers (in the idea of of_xlate in the GPIO
+framework or xlate in the irqchip framework).
 
-HI Tomasz,
+In the case of TB10x, I was thinking of something in the lines of
 
+iomux: iomux@FF10601c {
+	#gpio-range-cells =3D <1>;   /* one cell used for gpiorange phandle */
+	compatible =3D "abilis,tb10x-iomux";
+	reg =3D <0xFF10601c 0x4>;
+	pctl_gpio_a: pctl-gpio-a { /* define phandle to GPIOA I/O function */
+		pingrp =3D "gpioa_pins";
+	};
+	pctl_gpio_b: pctl-gpio-b { /* define phandle to GPIOB I/O function */
+		pingrp =3D "gpiob_pins";
+	};
+	pctl_uart0: pctl-uart0 {   /* define phandle to UART0 I/O function */
+		pingrp =3D "uart0_pins";
+	};
+};
+uart@FF100000 {
+	compatible =3D "snps,dw-apb-uart";
+	reg =3D <0xFF100000 0x100>;
+	clock-frequency =3D <166666666>;
+	interrupts =3D <25 1>;
+	reg-shift =3D <2>;
+	reg-io-width =3D <4>;
+	pinctrl-names =3D "default";  /* For non-GPIO modules, request I/O */
+	pinctrl-0 =3D <&pctl_uart0>;  /* functions normally */
+};
+gpioa: gpio@FF140000 {
+	compatible =3D "abilis,tb10x-gpio";
+	reg =3D <0xFF140000 0x1000>;
+	gpio-controller;
+	#gpio-cells =3D <2>;
+	gpio-ranges =3D <&iomux &pctl_gpio_a>; /* (*1) */
+};
 
-On 10 May 2013 13:03, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+gpioa: gpio@FF140000 {
+	compatible =3D "abilis,tb10x-gpio";
+	reg =3D <0xFF140000 0x1000>;
+	gpio-controller;
+	#gpio-cells =3D <2>;
+	pinctrl-names =3D "default"   /* here the GPIO controller requests */
+	pinctrl-0 =3D <&pctl_gpio_b>; /* the entire GPIOB port explicitly */
+	gpio-ranges =3D <&iomux &pctl_gpio_b>; /* (*2) */
+};
 
-> On Friday 10 of May 2013 11:57:34 Vikas Sajjan wrote:
-> > Hi Olof,
-> >
-> > On 10 May 2013 11:51, Vikas Sajjan <vikas.sajjan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > > Hi Olof,
-> > >
-> > > On 10 May 2013 11:08, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> > >> On Thu, May 9, 2013 at 7:55 PM, Vikas Sajjan
-> > >> <vikas.sajjan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > >>
-> > >> wrote:
-> > >> > Hi Tomasz,
-> > >> >
-> > >> > On 10 May 2013 05:35, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > >> >> Hi Vikas,
-> > >> >>
-> > >> >> On Wednesday 08 of May 2013 11:31:34 Vikas Sajjan wrote:
-> > >> >> > Adds display timing node for a DP panel to Arndale Board DTS
-> > >> >> > file
-> > >> >> >
-> > >> >> > Signed-off-by: Vikas Sajjan <vikas.sajjan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > >> >> > ---
-> > >> >> >
-> > >> >> >  arch/arm/boot/dts/exynos5250-arndale.dts |   16
-> > >> >> >  ++++++++++++++++
-> > >> >> >  1 file changed, 16 insertions(+)
-> > >> >> >
-> > >> >> > diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts
-> > >> >> > b/arch/arm/boot/dts/exynos5250-arndale.dts index
-> > >> >> > f68b820..c831a5c
-> > >> >> > 100644
-> > >> >> > --- a/arch/arm/boot/dts/exynos5250-arndale.dts
-> > >> >> > +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-> > >> >> > @@ -459,4 +459,20 @@
-> > >> >> >
-> > >> >> >               samsung,lane-count = <4>;
-> > >> >> >
-> > >> >> >       };
-> > >> >> >
-> > >> >> > +     display-timings {
-> > >> >> > +             native-mode = <&timing0>;
-> > >> >> > +             timing0: timing@0 {
-> > >> >> > +                     /* 2560x1600 DP panel */
-> > >> >> > +                     clock-frequency = <50000>;
-> > >> >> > +                     hactive = <2560>;
-> > >> >> > +                     vactive = <1600>;
-> > >> >> > +                     hfront-porch = <48>;
-> > >> >> > +                     hback-porch = <80>;
-> > >> >> > +                     hsync-len = <32>;
-> > >> >> > +                     vback-porch = <16>;
-> > >> >> > +                     vfront-porch = <8>;
-> > >> >> > +                     vsync-len = <6>;
-> > >> >> > +             };
-> > >> >> > +     };
-> > >> >>
-> > >> >> What display are those timings used for? Shouldn't they be placed
-> > >>
-> > >> inside
-> > >>
-> > >> >> node of that display?
-> > >> >
-> > >> > This timing information will be used parsed by the FIMD probe with
-> > >> > the
-> > >>
-> > >> help
-> > >>
-> > >> > of "Video Helper function"  as done in this link
-> > >>
-> > >> https://git.kernel.org/cgit/linux/kernel/git/daeinki/drm-exynos.git/c
-> > >> ommit/?h=exynos-drm-next&id=7f4596f4aebcc9fcf2d50d3fe398508d710c4dd0
-> > >>
-> > >> That function passes in a device node pointer to the FIMD device
-> > >> node,
-> > >> and only looks for a display-timings node under there. Tomasz is
-> > >> right, as far as I can tell.
-> > >>
-> > >> Placing display timings at the root of the device tree seems
-> > >> completely
-> > >> wrong.
-> > >>
-> > >>         I referred this "
-> >
-> > Documentation/devicetree/bindings/video/display-timing.txt" for example
-> >
-> >             here it dosen't mention about whether display timings node
-> > can be placed at the root of the device tree or NOT.
-> >  Not sure how we should be placing the node then.
->
-> I think this is pretty obvious.
->
-> Imagine a bit more complex case: a board has two video outputs (let's say
-> FIMD0 and FIMD1), each connected to a completely different display. This
-> means that each display needs different timings.
->
-> How would you know which timings to use if all of them were be placed
-> under the root node?
->
->     so what do you think, how  should we modify this patch so that it
-belongs to a specific video outputs.
+(*1) TB100 GPIO ranges are defined as a phandle to the I/O function
+     which provides all pins of a given GPIO port. This function is not
+     necessarily requested from pinctrl and GPIO ports may overlap with
+     other functions. The pin controller knows about this and provides
+     whatever GPIO pin is available after mapping other requested
+     functions.
+(*2) Here, the entire GPIOB port is explicitly requested by the GPIO
+     module, i.e. all pins of the port are made available as GPIOs.
 
-Best regards,
-> Tomasz
->
->
+The xlate function in pinctrl-tb10x.c would look something like this:
 
+static int tb10x_dt_gpiorange_xlate(struct pinctrl_dev *pctldev,
+					struct device_node *np,
+					u32 *rangespec, int rangespecsize,
+					u32 *pin_offset, u32 *npins)
+{
+	const char *name;
+	int ret;
+	struct tb10x_pinfuncgrp *pfg;
+	struct device_node *dn;
 
--- 
-Thanks and Regards
- Vikas Sajjan
+	if (rangespecsize !=3D 1)
+		return -EINVAL;
 
---089e01494164311b4b04dc58c605
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+	dn =3D of_find_node_by_phandle(rangespec[0]);
+	if (!dn)
+		return -EINVAL;
+	of_node_put(dn);
 
-<div dir=3D"ltr">HI Tomasz,<br><div class=3D"gmail_extra"><br><br><div clas=
-s=3D"gmail_quote">On 10 May 2013 13:03, Tomasz Figa <span dir=3D"ltr">&lt;<=
-a href=3D"mailto:tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" target=3D"_blank">tomasz.figa@gmail=
-.com</a>&gt;</span> wrote:<br>
+	ret =3D of_property_read_string(dn, "pingrp", &name);
+	if (ret)
+		return ret;
 
-<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
-left:1px solid rgb(204,204,204);padding-left:1ex"><div class=3D""><div clas=
-s=3D"h5">On Friday 10 of May 2013 11:57:34 Vikas Sajjan wrote:<br>
-&gt; Hi Olof,<br>
-&gt;<br>
-&gt; On 10 May 2013 11:51, Vikas Sajjan &lt;<a href=3D"mailto:vikas.sajjan@=
-linaro.org">vikas.sajjan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org</a>&gt; wrote:<br>
-&gt; &gt; Hi Olof,<br>
-&gt; &gt;<br>
-&gt; &gt; On 10 May 2013 11:08, Olof Johansson &lt;<a href=3D"mailto:olof@l=
-ixom.net">olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org</a>&gt; wrote:<br>
-&gt; &gt;&gt; On Thu, May 9, 2013 at 7:55 PM, Vikas Sajjan<br>
-&gt; &gt;&gt; &lt;<a href=3D"mailto:vikas.sajjan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org">vikas.sajjan@l=
-inaro.org</a>&gt;<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt; wrote:<br>
-&gt; &gt;&gt; &gt; Hi Tomasz,<br>
-&gt; &gt;&gt; &gt;<br>
-&gt; &gt;&gt; &gt; On 10 May 2013 05:35, Tomasz Figa &lt;<a href=3D"mailto:=
-tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org">tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org</a>&gt; wrote:<br>
-&gt; &gt;&gt; &gt;&gt; Hi Vikas,<br>
-&gt; &gt;&gt; &gt;&gt;<br>
-&gt; &gt;&gt; &gt;&gt; On Wednesday 08 of May 2013 11:31:34 Vikas Sajjan wr=
-ote:<br>
-&gt; &gt;&gt; &gt;&gt; &gt; Adds display timing node for a DP panel to Arnd=
-ale Board DTS<br>
-&gt; &gt;&gt; &gt;&gt; &gt; file<br>
-&gt; &gt;&gt; &gt;&gt; &gt;<br>
-&gt; &gt;&gt; &gt;&gt; &gt; Signed-off-by: Vikas Sajjan &lt;<a href=3D"mail=
-to:vikas.sajjan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org">vikas.sajjan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org</a>&gt;<br>
-&gt; &gt;&gt; &gt;&gt; &gt; ---<br>
-&gt; &gt;&gt; &gt;&gt; &gt;<br>
-&gt; &gt;&gt; &gt;&gt; &gt; =A0arch/arm/boot/dts/exynos5250-arndale.dts | =
-=A0 16<br>
-&gt; &gt;&gt; &gt;&gt; &gt; =A0++++++++++++++++<br>
-&gt; &gt;&gt; &gt;&gt; &gt; =A01 file changed, 16 insertions(+)<br>
-&gt; &gt;&gt; &gt;&gt; &gt;<br>
-&gt; &gt;&gt; &gt;&gt; &gt; diff --git a/arch/arm/boot/dts/exynos5250-arnda=
-le.dts<br>
-&gt; &gt;&gt; &gt;&gt; &gt; b/arch/arm/boot/dts/exynos5250-arndale.dts inde=
-x<br>
-&gt; &gt;&gt; &gt;&gt; &gt; f68b820..c831a5c<br>
-&gt; &gt;&gt; &gt;&gt; &gt; 100644<br>
-&gt; &gt;&gt; &gt;&gt; &gt; --- a/arch/arm/boot/dts/exynos5250-arndale.dts<=
-br>
-&gt; &gt;&gt; &gt;&gt; &gt; +++ b/arch/arm/boot/dts/exynos5250-arndale.dts<=
-br>
-&gt; &gt;&gt; &gt;&gt; &gt; @@ -459,4 +459,20 @@<br>
-&gt; &gt;&gt; &gt;&gt; &gt;<br>
-&gt; &gt;&gt; &gt;&gt; &gt; =A0 =A0 =A0 =A0 =A0 =A0 =A0 samsung,lane-count =
-=3D &lt;4&gt;;<br>
-&gt; &gt;&gt; &gt;&gt; &gt;<br>
-&gt; &gt;&gt; &gt;&gt; &gt; =A0 =A0 =A0 };<br>
-&gt; &gt;&gt; &gt;&gt; &gt;<br>
-&gt; &gt;&gt; &gt;&gt; &gt; + =A0 =A0 display-timings {<br>
-&gt; &gt;&gt; &gt;&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 native-mode =3D &lt;&=
-amp;timing0&gt;;<br>
-&gt; &gt;&gt; &gt;&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 timing0: timing@0 {<b=
-r>
-&gt; &gt;&gt; &gt;&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 /* 25=
-60x1600 DP panel */<br>
-&gt; &gt;&gt; &gt;&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 clock=
--frequency =3D &lt;50000&gt;;<br>
-&gt; &gt;&gt; &gt;&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 hacti=
-ve =3D &lt;2560&gt;;<br>
-&gt; &gt;&gt; &gt;&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 vacti=
-ve =3D &lt;1600&gt;;<br>
-&gt; &gt;&gt; &gt;&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 hfron=
-t-porch =3D &lt;48&gt;;<br>
-&gt; &gt;&gt; &gt;&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 hback=
--porch =3D &lt;80&gt;;<br>
-&gt; &gt;&gt; &gt;&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 hsync=
--len =3D &lt;32&gt;;<br>
-&gt; &gt;&gt; &gt;&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 vback=
--porch =3D &lt;16&gt;;<br>
-&gt; &gt;&gt; &gt;&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 vfron=
-t-porch =3D &lt;8&gt;;<br>
-&gt; &gt;&gt; &gt;&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 vsync=
--len =3D &lt;6&gt;;<br>
-&gt; &gt;&gt; &gt;&gt; &gt; + =A0 =A0 =A0 =A0 =A0 =A0 };<br>
-&gt; &gt;&gt; &gt;&gt; &gt; + =A0 =A0 };<br>
-&gt; &gt;&gt; &gt;&gt;<br>
-&gt; &gt;&gt; &gt;&gt; What display are those timings used for? Shouldn&#39=
-;t they be placed<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt; inside<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt; &gt;&gt; node of that display?<br>
-&gt; &gt;&gt; &gt;<br>
-&gt; &gt;&gt; &gt; This timing information will be used parsed by the FIMD =
-probe with<br>
-&gt; &gt;&gt; &gt; the<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt; help<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt; &gt; of &quot;Video Helper function&quot; =A0as done in this =
-link<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt; <a href=3D"https://git.kernel.org/cgit/linux/kernel/git/daein=
-ki/drm-exynos.git/c" target=3D"_blank">https://git.kernel.org/cgit/linux/ke=
-rnel/git/daeinki/drm-exynos.git/c</a><br>
-&gt; &gt;&gt; ommit/?h=3Dexynos-drm-next&amp;id=3D7f4596f4aebcc9fcf2d50d3fe=
-398508d710c4dd0<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt; That function passes in a device node pointer to the FIMD dev=
-ice<br>
-&gt; &gt;&gt; node,<br>
-&gt; &gt;&gt; and only looks for a display-timings node under there. Tomasz=
- is<br>
-&gt; &gt;&gt; right, as far as I can tell.<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt; Placing display timings at the root of the device tree seems<=
-br>
-&gt; &gt;&gt; completely<br>
-&gt; &gt;&gt; wrong.<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt; =A0 =A0 =A0 =A0 I referred this &quot;<br>
-&gt;<br>
-&gt; Documentation/devicetree/bindings/video/display-timing.txt&quot; for e=
-xample<br>
-&gt;<br>
-&gt; =A0 =A0 =A0 =A0 =A0 =A0 here it dosen&#39;t mention about whether disp=
-lay timings node<br>
-&gt; can be placed at the root of the device tree or NOT.<br>
-&gt; =A0Not sure how we should be placing the node then.<br>
-<br>
-</div></div>I think this is pretty obvious.<br>
-<br>
-Imagine a bit more complex case: a board has two video outputs (let&#39;s s=
-ay<br>
-FIMD0 and FIMD1), each connected to a completely different display. This<br=
->
-means that each display needs different timings.<br>
-<br>
-How would you know which timings to use if all of them were be placed<br>
-under the root node?<br>
-<br></blockquote><div>=A0 =A0 so what do you think, how=A0 should we modify=
- this patch so that it belongs to a specific video outputs.<br><br></div><b=
-lockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-le=
-ft:1px solid rgb(204,204,204);padding-left:1ex">
+	pfg =3D tb10x_get_pinfuncgrp(name);
+	if (IS_ERR(pfg))
+		return PTR_ERR(pfg);
 
+	if (!pfg->isgpio)
+		return -EINVAL;
 
-Best regards,<br>
-Tomasz<br>
-<br>
-</blockquote></div><br><br clear=3D"all"><br>-- <br>Thanks and Regards<div>=
-=A0Vikas Sajjan</div>
-</div></div>
+	*pin_offset =3D pfg->pins[0];
+	*npins      =3D pfg->pincnt;
 
---089e01494164311b4b04dc58c605--
+	return 0;
+}
 
---===============2144475363372547759==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Other drivers may use physical pin numbers, assign integer identifiers
+to each GPIO bank or use some other numbering scheme documented in
+Documentation/devicetree/bindings.
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
+Greetings,
+  Christian
 
---===============2144475363372547759==--
+--=20
+  Christian Ruppert              ,          <christian.ruppert@abilis.c=
+om>
+                                /|
+  Tel: +41/(0)22 816 19-42     //|                 3, Chemin du Pr=E9-F=
+leuri
+                             _// | bilis Systems   CH-1228 Plan-les-Oua=
+tes
