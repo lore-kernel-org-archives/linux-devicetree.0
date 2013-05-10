@@ -1,16 +1,15 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH] ARM: mmc: bcm281xx SDHCI driver
-Date: Fri, 10 May 2013 16:37:01 +0200
-Message-ID: <20130510143701.GC22508@game.jcrosoft.org>
-References: <1368078942-31265-1-git-send-email-csd@broadcom.com>
- <20130509063503.GF3041@game.jcrosoft.org>
- <518CA1DF.5050008@broadcom.com>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [RFC 1/8] serial:st-asc: Add ST ASC driver.
+Date: Fri, 10 May 2013 16:45:15 +0200
+Message-ID: <518D07FB.7010606@codethink.co.uk>
+References: <1368022187-1633-1-git-send-email-srinivas.kandagatla@st.com>
+ <1368022248-2153-1-git-send-email-srinivas.kandagatla@st.com>
+ <201305081634.43498.arnd@arndb.de> <20130508153459.GA17186@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <518CA1DF.5050008@broadcom.com>
+In-Reply-To: <20130508153459.GA17186@kroah.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,60 +19,26 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Christian Daudt <csd@broadcom.com>
-Cc: csd_b@daudt.org, Stephen Warren <swarren@nvidia.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Wei WANG <wei_wang@realsil.com.cn>, Ludovic Desroches <ludovic.desroches@atmel.com>, "Mike A. Chan" <mikechan@google.com>, Rob Landley <rob@landley.net>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, linux-arm-kernel@lists.infradead.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Dave Martin <dave.martin@linaro.org>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Viresh Kumar <viresh.kumar@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, jslaby@suse.cz, Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, Nicolas Pitre <nico@linaro.org>, linux-doc@vger.kernel.org, Stephen Gallimore <stephen.gallimore@st.com>, linux-serial@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Marc Zyngier <marc.zyngier@arm.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Stuart Menefy <stuart.menefy@st.com>, Stephen Warren <swarren@nvidia.com>, Dong Aisheng <dong.aisheng@linaro.org>, linux-arm-kernel@lists.infradead.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kerne
 List-Id: devicetree@vger.kernel.org
 
-On 00:29 Fri 10 May     , Christian Daudt wrote:
-> Thanks for the feedback.
-> 
-> On 13-05-08 11:35 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> >On 22:55 Wed 08 May     , Christian Daudt wrote:
-> >>Add SDHCI driver for the Broadcom 281xx SoCs. Also
-> >>add bindings for it into bcm281xx dts files.
-> >>Still missing:
-> >>  - power managemement
-> >split the dts/dtsi in an other patch
-> ok.
-> >>Signed-off-by: Christian Daudt <csd@broadcom.com>
-> >>
-> >>diff --git a/arch/arm/configs/bcm_defconfig b/arch/arm/configs/bcm_defconfig
-> >>index e3bf2d6..65edf6d 100644
-> >>--- a/arch/arm/configs/bcm_defconfig
-> >>+++ b/arch/arm/configs/bcm_defconfig
-> >>@@ -78,6 +78,13 @@ CONFIG_BACKLIGHT_LCD_SUPPORT=y
-> >>  CONFIG_LCD_CLASS_DEVICE=y
-> >>  CONFIG_BACKLIGHT_CLASS_DEVICE=y
-> >>  # CONFIG_USB_SUPPORT is not set
-> >>+CONFIG_MMC=y
-> >>+CONFIG_MMC_UNSAFE_RESUME=y
-> >>+CONFIG_MMC_BLOCK_MINORS=32
-> >>+CONFIG_MMC_TEST=y
-> >>+CONFIG_MMC_SDHCI=y
-> >>+CONFIG_MMC_SDHCI_PLTFM=y
-> >>+CONFIG_MMC_SDHCI_BCM_KONA=y
-> >>  CONFIG_NEW_LEDS=y
-> >>  CONFIG_LEDS_CLASS=y
-> >>  CONFIG_LEDS_TRIGGERS=y
-> >>diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> >>index d88219e..e067c5a 100644
-> >>--- a/drivers/mmc/host/Kconfig
-> >>+++ b/drivers/mmc/host/Kconfig
-> >>@@ -238,6 +238,16 @@ config MMC_SDHCI_S3C_DMA
-> >>  	  YMMV.
-> >>+config MMC_SDHCI_BCM_KONA
-> >>+	tristate "SDHCI support on Broadcom KONA platform"
-> >>+	depends on ARCH_BCM && MMC_SDHCI_PLTFM
-> >select MMC_SDHCI_PLTFM
-> >will be better
-> Ok - changed it. Why is the select is better than the depends ?
+On 08/05/13 17:34, Greg KH wrote:
+> On Wed, May 08, 2013 at 04:34:43PM +0200, Arnd Bergmann wrote:
+>>> +#define ASC_MAJOR		204
+>>> +#define ASC_MINOR_START		40
+>>
+>> I don't know what the current policy is on allocating major/minor numbers,
+>> but I'm sure you cannot just reuse one that is already used.
+>
+> I agree, why are you trying to create a new tty device name?  Can't you
+> use the existing ttyS name and minor number as you will not have any
+> other type of serial device on this system?
 
-so you do not need to enable MMC_SDHCI_PLTFM
+This would be an issue on systems that either accept plug-in cards
+such as PCMCIA/CardBus/PCI or have additional off SoC IO spaces
+where 8250 compatible UARTS could live.
 
-and you can drop one line in the savdefconfig
-
-if tomorrow you need regulator select it so a old defconfig will continue to
-work
-
-Best Regards,
-J.
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
