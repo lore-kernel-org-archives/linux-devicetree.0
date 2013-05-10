@@ -1,161 +1,244 @@
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: Re: [PATCH 1/2] pinmux: Add TB10x pinmux driver
-Date: Fri, 10 May 2013 10:25:23 +0200
-Message-ID: <20130510082521.GA2125@ab42.lan>
-References: <1365608728-30494-1-git-send-email-christian.ruppert@abilis.com>
- <516EEAA0.10906@wwwdotorg.org>
- <20130418090310.GA17636@ab42.lan>
- <CACRpkdZd0_W432od5565phhUcJMRWiV9vXX4QVF4osKkxstC0Q@mail.gmail.com>
- <20130429161725.GB30136@ab42.lan>
- <5182B557.4040804@wwwdotorg.org>
- <CACRpkdaxO0q_P2wJFy3zv4F-QM9dZk54qW8ft350XqcBt1Gr1w@mail.gmail.com>
- <20130508164123.GA10248@ab42.lan>
- <518AAF31.8080502@wwwdotorg.org>
+From: "Christian Daudt" <csd@broadcom.com>
+Subject: Re: [PATCH] ARM: mmc: bcm281xx SDHCI driver
+Date: Fri, 10 May 2013 00:29:35 -0700
+Message-ID: <518CA1DF.5050008@broadcom.com>
+References: <1368078942-31265-1-git-send-email-csd@broadcom.com>
+ <20130509063503.GF3041@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain;
+ charset=iso-8859-1;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <518AAF31.8080502@wwwdotorg.org>
+In-Reply-To: <20130509063503.GF3041@game.jcrosoft.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Stephen Warren <swarren@nvidia.com>, Olof Johansson <olof@lixom.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wei WANG <wei_wang@realsil.com.cn>, Ludovic Desroches <ludovic.desroches@atmel.com>, Arnd Bergmann <arnd@arndb.de>, "Mike A. Chan" <mikechan@google.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, csd_b@daudt.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 08, 2013 at 02:01:53PM -0600, Stephen Warren wrote:
-> On 05/08/2013 10:41 AM, Christian Ruppert wrote:
-> ...
-> > What do you think about the following modification to the pinctrl/G=
-PIO
-> > frameworks instead (not yet a formal patch, more a request for comm=
-ent
-> > to illustrate what I mean. If you agree, I will clean it up and sub=
-mit a
-> > proper patch after discussion).
-> >=20
-> > It adds a dt_gpiorange_xlate function to the pinctrl callbacks whic=
-h
-> > defaults to the conventional behaviour using kernel logical pin num=
-bers.
-> > However, pin controllers which provide more complex mechanisms can
-> > define #gpio-range-cells and provide this callback in order to keep
-> > Linux pin numbering inside the kernel.
->=20
-> Can you provide an example of the DT content, and explain exactly wha=
-t
-> this patch does with it; what effect it has on the existing GPIO or
-> pinctrl code?
+Thanks for the feedback.
 
-The patch does not change the default behaviour of the kernel: In case
-no dt_gpiorange_xlate callback is defined for a given driver (e.g. for
-pre-existing drivers), the default function simply interprets the first
-argument as Linux pin number and the second as pin count, same as now.
-New drivers can use the callback to translate device specific pin
-references to Linux pin numbers (in the idea of of_xlate in the GPIO
-framework or xlate in the irqchip framework).
+On 13-05-08 11:35 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 22:55 Wed 08 May     , Christian Daudt wrote:
+>> Add SDHCI driver for the Broadcom 281xx SoCs. Also
+>> add bindings for it into bcm281xx dts files.
+>> Still missing:
+>>   - power managemement
+> split the dts/dtsi in an other patch
+ok.
+>> Signed-off-by: Christian Daudt <csd@broadcom.com>
+>>
+>> diff --git a/arch/arm/configs/bcm_defconfig b/arch/arm/configs/bcm_defconfig
+>> index e3bf2d6..65edf6d 100644
+>> --- a/arch/arm/configs/bcm_defconfig
+>> +++ b/arch/arm/configs/bcm_defconfig
+>> @@ -78,6 +78,13 @@ CONFIG_BACKLIGHT_LCD_SUPPORT=y
+>>   CONFIG_LCD_CLASS_DEVICE=y
+>>   CONFIG_BACKLIGHT_CLASS_DEVICE=y
+>>   # CONFIG_USB_SUPPORT is not set
+>> +CONFIG_MMC=y
+>> +CONFIG_MMC_UNSAFE_RESUME=y
+>> +CONFIG_MMC_BLOCK_MINORS=32
+>> +CONFIG_MMC_TEST=y
+>> +CONFIG_MMC_SDHCI=y
+>> +CONFIG_MMC_SDHCI_PLTFM=y
+>> +CONFIG_MMC_SDHCI_BCM_KONA=y
+>>   CONFIG_NEW_LEDS=y
+>>   CONFIG_LEDS_CLASS=y
+>>   CONFIG_LEDS_TRIGGERS=y
+>> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+>> index d88219e..e067c5a 100644
+>> --- a/drivers/mmc/host/Kconfig
+>> +++ b/drivers/mmc/host/Kconfig
+>> @@ -238,6 +238,16 @@ config MMC_SDHCI_S3C_DMA
+>>   
+>>   	  YMMV.
+>>   
+>> +config MMC_SDHCI_BCM_KONA
+>> +	tristate "SDHCI support on Broadcom KONA platform"
+>> +	depends on ARCH_BCM && MMC_SDHCI_PLTFM
+> select MMC_SDHCI_PLTFM
+> will be better
+Ok - changed it. Why is the select is better than the depends ?
+>> +
+>> +static int sdhci_bcm_kona_sd_reset(struct sdhci_host *host)
+>> +{
+>> +	unsigned int val;
+>> +	unsigned long timeout;
+>> +
+>> +	/* This timeout should be sufficent for core to reset */
+>> +	timeout = jiffies + msecs_to_jiffies(100);
+>> +
+>> +	/* reset the host using the top level reset */
+>> +	val = sdhci_readl(host, KONA_SDHOST_CORECTRL);
+>> +	val |= KONA_SDHOST_RESET;
+>> +	sdhci_writel(host, val, KONA_SDHOST_CORECTRL);
+>> +
+>> +	while (!(sdhci_readl(host, KONA_SDHOST_CORECTRL) & KONA_SDHOST_RESET)) {
+>> +		if (time_is_before_jiffies(timeout)) {
+>> +			pr_err("Error: sd host is stuck in reset!!!\n");
+>> +			return -EFAULT;
+>> +		}
+>> +	}
+>> +
+>> +	/* bring the host out of reset */
+>> +	val = sdhci_readl(host, KONA_SDHOST_CORECTRL);
+>> +	val &= ~KONA_SDHOST_RESET;
+>> +
+>> +	/*
+>> +	 * Back-to-Back register write needs a delay of 1ms at bootup (min 10uS)
+>> +	 * Back-to-Back writes to same register needs delay when SD bus clock
+>> +	 * is very low w.r.t AHB clock, mainly during boot-time and during card
+>> +	 * insert-removal.
+>> +	 */
+>> +	udelay(1000);
+> really a udelay of 1ms
+I'm trying to clarify on whether this is really necessary but it does 
+seem that this is the case. I'll send a follow-up patch if I manage to 
+get confirmation on a smaller safe number.
 
-In the case of TB10x, I was thinking of something in the lines of
+>> +	sdhci_writel(host, val, KONA_SDHOST_CORECTRL);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void sdhci_bcm_kona_sd_init(struct sdhci_host *host)
+>> +{
+>> +	unsigned int val;
+>> +
+>> +	/* enable the interrupt from the IP core */
+>> +	val = sdhci_readl(host, KONA_SDHOST_COREIMR);
+>> +	val |= KONA_SDHOST_IP;
+>> +	sdhci_writel(host, val, KONA_SDHOST_COREIMR);
+>> +
+>> +	/* Enable the AHB clock gating module to the host */
+>> +	val = sdhci_readl(host, KONA_SDHOST_CORECTRL);
+>> +	val |= KONA_SDHOST_EN;
+>> +
+>> +	/*
+>> +	 * Back-to-Back register write needs a delay of 1ms at bootup (min 10uS)
+>> +	 * Back-to-Back writes to same register needs delay when SD bus clock
+>> +	 * is very low w.r.t AHB clock, mainly during boot-time and during card
+>> +	 * insert-removal.
+>> +	 */
+>> +	udelay(1000);
+> ditto
+see above
+>> +	sdhci_writel(host, val, KONA_SDHOST_CORECTRL);
+>> +}
+>> +
+>> +/*
+>> + * Software emulation of the SD card insertion/removal. Set insert=1 for insert
+>> + * and insert=0 for removal. The card detection is done by GPIO. For Broadcom
+>> + * IP to function properly the bit 0 of CORESTAT register needs to be set/reset
+>> + * to generate the CD IRQ handled in sdhci.c which schedules card_tasklet.
+>> + */
+>> +static int sdhci_bcm_kona_sd_card_emulate(struct sdhci_host *host, int insert)
+>> +{
+>> +	struct sdhci_pltfm_host *pltfm_priv = sdhci_priv(host);
+>> +	struct sdhci_bcm_kona_dev *kona_dev = pltfm_priv->priv;
+>> +	u32 val;
+>> +	unsigned long flags;
+>> +
+>> +	/* this function can be called from various contexts including ISR */
+>> +	spin_lock_irqsave(&host->lock, flags);
+>> +	/* Ensure SD bus scanning to detect media change */
+>> +	host->mmc->rescan_disable = 0;
+>> +
+>> +	/*
+>> +	 * Back-to-Back register write needs a delay of min 10uS.
+>> +	 * Back-to-Back writes to same register needs delay when SD bus clock
+>> +	 * is very low w.r.t AHB clock, mainly during boot-time and during card
+>> +	 * insert-removal.
+>> +	 * We keep 20uS
+>> +	 */
+>> +	udelay(20);
+>> +	val = sdhci_readl(host, KONA_SDHOST_CORESTAT);
+>> +
+>> +	if (insert) {
+>> +		if (kona_dev->cfg->wp_gpio >= 0) {
+> gpio_is_valid
+done
+>> +			int wp_status = gpio_get_value(kona_dev->cfg->wp_gpio);
+>> +
+>> +			if (wp_status)
+>> +				val |= KONA_SDHOST_WP;
+>> +			else
+>> +				val &= ~KONA_SDHOST_WP;
+>> +		}
+>> +
+>> +		val |= KONA_SDHOST_CD_SW;
+>> +		sdhci_writel(host, val, KONA_SDHOST_CORESTAT);
+>> +	} else {
+>> +		val &= ~KONA_SDHOST_CD_SW;
+>> +		sdhci_writel(host, val, KONA_SDHOST_CORESTAT);
+>> +	}
+>> +	spin_unlock_irqrestore(&host->lock, flags);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +/*
+>> + * SD card detection interrupt handler
+>> + */
+>> +static irqreturn_t sdhci_bcm_kona_pltfm_cd_interrupt(int irq, void *host)
+>> +{
+>> +	struct sdhci_pltfm_host *pltfm_priv = sdhci_priv(host);
+>> +	struct sdhci_bcm_kona_dev *kona_dev = pltfm_priv->priv;
+>> +
+>> +	if (gpio_get_value_cansleep(kona_dev->cfg->cd_gpio) == 0) {
+>> +		pr_debug("card inserted\n");
+> dev_dbg
+done
+>> +		sdhci_bcm_kona_sd_card_emulate(host, 1);
+>> +	} else {
+>> +		pr_debug("card removed\n");
+> ditto
+done
+>> +static struct sdhci_bcm_kona_cfg * __init sdhci_bcm_kona_parse_dt(
+>> +			struct platform_device *pdev)
+>> +{
+>> +	struct sdhci_bcm_kona_cfg *cfg;
+>> +	struct device_node *np = pdev->dev.of_node;
+>> +	u32 temp;
+>> +
+>> +	if (!np)
+>> +		return NULL;
+>> +
+>> +	cfg = devm_kzalloc(&pdev->dev, sizeof(*cfg), GFP_KERNEL);
+>> +	if (!cfg) {
+>> +		dev_err(&pdev->dev, "Can't allocate platform cfg\n");
+>> +		return NULL;
+>> +	}
+>> +
+>> +	cfg->cd_gpio = of_get_named_gpio(np, "cd-gpios", 0);
+>> +	cfg->wp_gpio = of_get_named_gpio(np, "wp-gpios", 0);
+>> +	if (of_get_property(np, "non-removable", NULL))
+>> +		cfg->non_removable = 1;
+> use of_property_read_bool
+done
+>> +		/* Sleep for 128ms to allow debounce to stabilize */
+>> +		msleep(SD_DETECT_GPIO_DEBOUNCE_128MS);
+>> +		/* request irq for cd_gpio after the gpio debounce is
+>> +		 * stabilized, otherwise, some bogus gpio interrupts might be
+>> +		 * triggered.
+>> +		 */
+>> +		irq = gpio_to_irq(kona_dev->cfg->cd_gpio);
+>> +		ret = devm_request_threaded_irq(dev,
+>> +				irq,
+>> +				NULL,
+>> +				sdhci_bcm_kona_pltfm_cd_interrupt,
+>> +				IRQF_TRIGGER_FALLING|
+>> +				IRQF_TRIGGER_RISING |
+>> +				IRQF_ONESHOT |
+>> +				IRQF_NO_SUSPEND, "sdio cd", host);
+>> +		if (ret) {
+>> +			dev_err(kona_dev->dev,
+>> +				"Unable to request card detection irq=%d"
+>> +				" for gpio=%d  ret=%d\n",
+> put the sting of the dev_err on one line so we can grep
+merged it into single line
 
-iomux: iomux@FF10601c {
-	#gpio-range-cells =3D <1>;   /* one cell used for gpiorange phandle */
-	compatible =3D "abilis,tb10x-iomux";
-	reg =3D <0xFF10601c 0x4>;
-	pctl_gpio_a: pctl-gpio-a { /* define phandle to GPIOA I/O function */
-		pingrp =3D "gpioa_pins";
-	};
-	pctl_gpio_b: pctl-gpio-b { /* define phandle to GPIOB I/O function */
-		pingrp =3D "gpiob_pins";
-	};
-	pctl_uart0: pctl-uart0 {   /* define phandle to UART0 I/O function */
-		pingrp =3D "uart0_pins";
-	};
-};
-uart@FF100000 {
-	compatible =3D "snps,dw-apb-uart";
-	reg =3D <0xFF100000 0x100>;
-	clock-frequency =3D <166666666>;
-	interrupts =3D <25 1>;
-	reg-shift =3D <2>;
-	reg-io-width =3D <4>;
-	pinctrl-names =3D "default";  /* For non-GPIO modules, request I/O */
-	pinctrl-0 =3D <&pctl_uart0>;  /* functions normally */
-};
-gpioa: gpio@FF140000 {
-	compatible =3D "abilis,tb10x-gpio";
-	reg =3D <0xFF140000 0x1000>;
-	gpio-controller;
-	#gpio-cells =3D <2>;
-	gpio-ranges =3D <&iomux &pctl_gpio_a>; /* (*1) */
-};
 
-gpioa: gpio@FF140000 {
-	compatible =3D "abilis,tb10x-gpio";
-	reg =3D <0xFF140000 0x1000>;
-	gpio-controller;
-	#gpio-cells =3D <2>;
-	pinctrl-names =3D "default"   /* here the GPIO controller requests */
-	pinctrl-0 =3D <&pctl_gpio_b>; /* the entire GPIOB port explicitly */
-	gpio-ranges =3D <&iomux &pctl_gpio_b>; /* (*2) */
-};
-
-(*1) TB100 GPIO ranges are defined as a phandle to the I/O function
-     which provides all pins of a given GPIO port. This function is not
-     necessarily requested from pinctrl and GPIO ports may overlap with
-     other functions. The pin controller knows about this and provides
-     whatever GPIO pin is available after mapping other requested
-     functions.
-(*2) Here, the entire GPIOB port is explicitly requested by the GPIO
-     module, i.e. all pins of the port are made available as GPIOs.
-
-The xlate function in pinctrl-tb10x.c would look something like this:
-
-static int tb10x_dt_gpiorange_xlate(struct pinctrl_dev *pctldev,
-					struct device_node *np,
-					u32 *rangespec, int rangespecsize,
-					u32 *pin_offset, u32 *npins)
-{
-	const char *name;
-	int ret;
-	struct tb10x_pinfuncgrp *pfg;
-	struct device_node *dn;
-
-	if (rangespecsize !=3D 1)
-		return -EINVAL;
-
-	dn =3D of_find_node_by_phandle(rangespec[0]);
-	if (!dn)
-		return -EINVAL;
-	of_node_put(dn);
-
-	ret =3D of_property_read_string(dn, "pingrp", &name);
-	if (ret)
-		return ret;
-
-	pfg =3D tb10x_get_pinfuncgrp(name);
-	if (IS_ERR(pfg))
-		return PTR_ERR(pfg);
-
-	if (!pfg->isgpio)
-		return -EINVAL;
-
-	*pin_offset =3D pfg->pins[0];
-	*npins      =3D pfg->pincnt;
-
-	return 0;
-}
-
-Other drivers may use physical pin numbers, assign integer identifiers
-to each GPIO bank or use some other numbering scheme documented in
-Documentation/devicetree/bindings.
-
-Greetings,
-  Christian
-
---=20
-  Christian Ruppert              ,          <christian.ruppert@abilis.c=
-om>
-                                /|
-  Tel: +41/(0)22 816 19-42     //|                 3, Chemin du Pr=E9-F=
-leuri
-                             _// | bilis Systems   CH-1228 Plan-les-Oua=
-tes
+  Thanks,
+    csd
