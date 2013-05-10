@@ -1,43 +1,45 @@
 From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: [PATCH 1/2] ARM: dts: omap3-igep0020: Add NAND flash support
-Date: Fri, 10 May 2013 21:31:10 +0200
-Message-ID: <1368214271-22780-1-git-send-email-javier.martinez@collabora.co.uk>
+Subject: [PATCH 2/2] ARM: dts: omap3-igep0030: Add NAND flash support
+Date: Fri, 10 May 2013 21:31:11 +0200
+Message-ID: <1368214271-22780-2-git-send-email-javier.martinez@collabora.co.uk>
+References: <1368214271-22780-1-git-send-email-javier.martinez@collabora.co.uk>
 Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1368214271-22780-1-git-send-email-javier.martinez@collabora.co.uk>
 Sender: linux-omap-owner@vger.kernel.org
 To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <b-cousson@ti.com>
 Cc: Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-The IGEPv2 board has an 512MB NAND flash memory.
+The IGEP COM Module has an 512MB NAND flash memory.
 
 Add a device node for this NAND and its parition layout.
 
 Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 ---
-
-Benoit,
-
-This patch depends on a previous posted patch:
-
-[PATCH] ARM: dts: omap3-igep0020: Add SMSC911x LAN chip support
-
-Best regards,
-Javier
-
- arch/arm/boot/dts/omap3-igep0020.dts |   50 +++++++++++++++++++++++++++++++++-
- 1 files changed, 49 insertions(+), 1 deletions(-)
+ arch/arm/boot/dts/omap3-igep0020.dts |    1 +
+ arch/arm/boot/dts/omap3-igep0030.dts |   50 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 51 insertions(+), 0 deletions(-)
 
 diff --git a/arch/arm/boot/dts/omap3-igep0020.dts b/arch/arm/boot/dts/omap3-igep0020.dts
-index 4bac32e..0ba4313 100644
+index 0ba4313..6f0ecf4 100644
 --- a/arch/arm/boot/dts/omap3-igep0020.dts
 +++ b/arch/arm/boot/dts/omap3-igep0020.dts
-@@ -68,7 +68,55 @@
+@@ -155,3 +155,4 @@
+ 		smsc,save-mac-address;
+ 	};
  };
- 
- &gpmc {
--	ranges = <5 0 0x2c000000 0x1000000>;
-+	ranges = <0 0 0x00000000 0x20000000>,
-+		 <5 0 0x2c000000 0x01000000>;
++
+diff --git a/arch/arm/boot/dts/omap3-igep0030.dts b/arch/arm/boot/dts/omap3-igep0030.dts
+index 9dc48d2..6b71656 100644
+--- a/arch/arm/boot/dts/omap3-igep0030.dts
++++ b/arch/arm/boot/dts/omap3-igep0030.dts
+@@ -42,3 +42,53 @@
+ 		};
+ 	};
+ };
++
++&gpmc {
++	ranges = <0 0 0x00000000 0x20000000>;
 +
 +	nand@0,0 {
 +		linux,mtd-name= "micron,mt29c4g96maz";
@@ -84,10 +86,8 @@ index 4bac32e..0ba4313 100644
 +			reg = <0x680000 0x1f980000>;
 +		};
 +	};
-+
- 	ethernet@5,0 {
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&smsc911x_pins>;
++};
+\ No newline at end of file
 -- 
 1.7.7.6
 
