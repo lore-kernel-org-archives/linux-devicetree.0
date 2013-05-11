@@ -1,37 +1,52 @@
-From: Stephen Warren <swarren@nvidia.com>
-Subject: Re: [PATCH] ARM: mmc: bcm281xx SDHCI driver
-Date: Fri, 10 May 2013 22:28:22 -0600
-Message-ID: <518DC8E6.5000606@nvidia.com>
-References: <1368078942-31265-1-git-send-email-csd@broadcom.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/2 V2] iio: magnetometer: ak8975: Add support for DT
+ and interrupt handling
+Date: Sat, 11 May 2013 11:00:11 +0100
+Message-ID: <518E16AB.6010809@kernel.org>
+References: <1367923299-30594-1-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1368078942-31265-1-git-send-email-csd@broadcom.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Daudt <csd@broadcom.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Olof Johansson <olof@lixom.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wei WANG <wei_wang@realsil.com.cn>, Ludovic Desroches <ludovic.desroches@atmel.com>, Arnd Bergmann <arnd@arndb.de>, "Mike A. Chan" <mikechan@google.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, csd_b@daudt.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1367923299-30594-1-git-send-email-j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, achew-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/08/2013 11:55 PM, Christian Daudt wrote:
-> Add SDHCI driver for the Broadcom 281xx SoCs. Also
-> add bindings for it into bcm281xx dts files.
-> Still missing:
->  - power managemement
+Applied to togreg branch of iio.git.
+I'll send upstream after merge window has closed
+(so if anyone else wants to take a look at this, you have
+a couple of days)
 
-> diff --git a/drivers/mmc/host/sdhci-bcm-kona.c b/drivers/mmc/host/sdhci-bcm-kona.c
+Thanks,
 
-> +	/*
-> +	 * Back-to-Back register write needs a delay of 1ms at bootup (min 10uS)
-> +	 * Back-to-Back writes to same register needs delay when SD bus clock
-> +	 * is very low w.r.t AHB clock, mainly during boot-time and during card
-> +	 * insert-removal.
-> +	 */
-> +	udelay(1000);
-> +	sdhci_writel(host, val, KONA_SDHOST_CORECTRL);
-
-This sounds very similar to the workaround in
-drivers/mmc/host/sdhci-bcm2835.c. Is this the same IP block supported by
-that driver? Perhaps not, since bcm2835 apparently needs other WARs such
-as always using 32-bit IO and hence needing custom read/write w/b
-functions to do read-modify-write which isn't here?
+On 05/07/2013 11:41 AM, Jacek Anaszewski wrote:
+> These patches add 'data ready' interrupt handling for AK8975
+> magnetometer, so as to provide more efficient alternative of
+> waiting for the end of conversion. This short series adds also
+> support for parsing 'gpios' property when initializing from oftree.
+> 
+> This is a follow-up of the previous patchset and it includes
+> following improvements:
+> 
+> - replaced NULL with 'data' in the second argument of the free_irq calls,
+>   which fixes problem on the module removal
+> - changed the order of checking for the platform_data and added
+>   checking for the -EPROBE_DEFER as spotted by Lars-Peter Clausen
+> - moved ak8975.txt out of staging as spotted by Jonathan Cameron
+> - modified header description in ak8975.txt
+> - renamed '0C' to '0c' in the examplary device node in ak8975.txt
+> 
+> Thanks,
+> Jacek Anaszewski
+> 
+> Jacek Anaszewski (2):
+>   iio:ak8975 Add support for gpios DT property
+>   iio:ak8975 Implement data ready interrupt handling
+> 
+>  .../bindings/iio/magnetometer/ak8975.txt           |   18 ++++
+>  drivers/iio/magnetometer/ak8975.c                  |  103 +++++++++++++++++++-
+>  2 files changed, 116 insertions(+), 5 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+> 
