@@ -1,38 +1,47 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [patch 8/8] irqchip: sun4i: Convert to generic irq chip
-Date: Sun, 12 May 2013 16:14:19 +0200
-Message-ID: <518FA3BB.7060806@free-electrons.com>
-References: <20130503212258.385818955@linutronix.de> <20130506142348.321859745@linutronix.de> <20130506142539.523110430@linutronix.de> <518FA24D.80203@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <518FA24D.80203@free-electrons.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Arnd Bergmann <arnd@arndb.de>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Jean-Francois Moine <moinejf@free.fr>, Gerlando Falauto <gerlando.falauto@keymile.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Dolev Raviv <draviv@codeaurora.org>
+Subject: [PATCH V1 1/8] Documentation: devicetree: Add DT bindings for UFS host controller
+Date: Sun, 12 May 2013 17:23:53 +0300
+Message-ID: <1368368640-10167-2-git-send-email-draviv@codeaurora.org>
+References: <1368368640-10167-1-git-send-email-draviv@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1368368640-10167-1-git-send-email-draviv@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-scsi@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, Dolev Raviv <draviv@codeaurora.org>, Sujit Reddy Thumma <sthumma@codeaurora.org>, "moderated list:OPEN FIRMWARE
+	AND..." <devicetree-discuss@lists.ozlabs.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 12/05/2013 16:08, Maxime Ripard a =E9crit :
-> Hi Thomas,
->=20
-> Le 06/05/2013 16:30, Thomas Gleixner a =E9crit :
->> Proof of concept patch to demonstrate the new irqdomain support for
->> the generic irq chip. Untested !!
->>
->> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
->=20
-> I just tested it, and with the minor patch I sent, it's working fine.
->=20
-> You can add my
-> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Compatible list is used in commit 03b1781 but is not documented.
+Add necessary device tree bindings to describe on-chip UFS host
+controllers.
 
-After addressing the comments RobH already made that is.
+Signed-off-by: Sujit Reddy Thumma <sthumma@codeaurora.org>
 
-Maxime
+diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+new file mode 100644
+index 0000000..20468b2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+@@ -0,0 +1,16 @@
++* Universal Flash Storage (UFS) Host Controller
++
++UFSHC nodes are defined to describe on-chip UFS host controllers.
++Each UFS controller instance should have its own node.
++
++Required properties:
++- compatible        : compatible list, contains "jedec,ufs-1.1"
++- interrupts        : <interrupt mapping for UFS host controller IRQ>
++- reg               : <registers mapping>
++
++Example:
++	ufshc@0xfc598000 {
++		compatible = "jedec,ufs-1.1";
++		reg = <0xfc598000 0x800>;
++		interrupts = <0 28 0>;
++	};
+-- 
+1.7.6
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+-- 
+QUALCOMM ISRAEL, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
