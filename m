@@ -1,52 +1,67 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH V2 1/3] clk: samsung: register audio subsystem clocks
- using common clock framework
-Date: Sat, 11 May 2013 13:42:11 +0200
-Message-ID: <518E2E93.7030104@gmail.com>
-References: <1367909016-19657-1-git-send-email-padma.v@samsung.com> <1367909016-19657-2-git-send-email-padma.v@samsung.com> <1730722.Al2EYiRntt@flatron> <CAAgF-BfeCZn8-_W-QxXw1QhU-Day-TEMtApiykw1mr7_aA=qTQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAAgF-BfeCZn8-_W-QxXw1QhU-Day-TEMtApiykw1mr7_aA=qTQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padma Venkat <padma.kvr@gmail.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Sangbeom Kim <sbkim73@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Thomas Abraham <thomas.abraham@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH] irq-sun4i: Fix trivial build errors
+Date: Sun, 12 May 2013 16:05:14 +0200
+Message-ID: <1368367514-21782-1-git-send-email-maxime.ripard@free-electrons.com>
+References: <20130506142539.523110430@linutronix.de>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130506142539.523110430@linutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Arnd Bergmann <arnd@arndb.de>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Jean-Francois Moine <moinejf@free.fr>, Gerlando Falauto <gerlando.falauto@keymile.com>, Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jiri Kosina <trivial@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Gregory Clement <gregory.clement@free-electrons.com>
+Cc: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Jean-Francois Moine <moinejf@free.fr>
+Cc: Gerlando Falauto <gerlando.falauto@keymile.com>
+Cc: Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/irqchip/irq-sun4i.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-On 05/11/2013 12:13 PM, Padma Venkat wrote:
->>> +CLK_OF_DECLARE(exynos4210_audss_clk, "samsung,exynos4210-audss-clock",
->>> >>  +             samsung_audss_clk_init);
->>> >>  +CLK_OF_DECLARE(exynos5250_audss_clk, "samsung,exynos5250-audss-clock",
->>> >>  +             samsung_audss_clk_init);
->> >
->> >  Also if both Exynos4210 and Exynos5250 have exactly the same audss clock
->> >  layout, there is no reason to have two compatibles for them - the
->> >  convention is that just the first model that had this hardware is enough -
->> >  in this case Exynos4210.
->> >
->> >  Having two different compatibles suggests that those two SoCs differ in a
->> >  way that needs special handling, which is misleading, based on the fact
->> >  that there is no such special handling in the driver.
->
-> There is only one difference between Exynos4 and Exynos5 is bit 1 of
-> CLK_GATE register where in Exynos5 it is reserved and Exynos4 it is
-> gate to IntMEM. I am not sure if we use this bit some where? So is it
-> okey to have same compatible with this diff?
+diff --git a/drivers/irqchip/irq-sun4i.c b/drivers/irqchip/irq-sun4i.c
+index 0191f2c..cab36b1 100644
+--- a/drivers/irqchip/irq-sun4i.c
++++ b/drivers/irqchip/irq-sun4i.c
+@@ -46,7 +46,8 @@ static int __init sun4i_init_domain_chips(void)
+ 	struct irq_chip_generic *gc;
+ 	int i, ret, base = 0;
+ 
+-	ret = irq_alloc_domain_generic_chips(d, SUN4I_IRQS_PER_CHIP, 1,
++	ret = irq_alloc_domain_generic_chips(sun4i_irq_domain,
++					     SUN4I_IRQS_PER_CHIP, 1,
+ 					     "sun4i_irq", handle_level_irq,
+ 					     clr, 0, IRQ_GC_INIT_MASK_CACHE);
+ 	if (ret)
+@@ -57,9 +58,9 @@ static int __init sun4i_init_domain_chips(void)
+ 		gc->reg_base = sun4i_irq_base;
+ 		gc->chip_types[0].regs.mask = SUN4I_IRQ_ENABLE_REG(i);
+ 		gc->chip_types[0].regs.ack = SUN4I_IRQ_PENDING_REG(i);
+-		gc->chip_types[0].chip.mask = irq_gc_mask_clr_bit;
+-		gc->chip_types[0].chip.ack = irq_gc_ack_set_bit;
+-		gc->chip_types[0].chip.unmask = irq_gc_mask_set_bit;
++		gc->chip_types[0].chip.irq_mask = irq_gc_mask_clr_bit;
++		gc->chip_types[0].chip.irq_ack = irq_gc_ack_set_bit;
++		gc->chip_types[0].chip.irq_unmask = irq_gc_mask_set_bit;
+ 
+ 		/* Disable, mask and clear all pending interrupts */
+ 		writel(0, sun4i_irq_base + SUN4I_IRQ_ENABLE_REG(i));
+-- 
+1.8.1.2
 
-I think such difference warrants separate compatible properties, as 
-Exynos5250
-seems to be not compatible with Exynos4210 in that case. Reserved bits 
-should
-be left untouched.
-
-I wouldn't be surprised to see more differences we might be overlooking 
-now.
-IMHO it's better to be save than sorry, keeping both 'compatible' 
-strings as
-they are now.
-
-Regards,
-Sylwester
