@@ -1,126 +1,88 @@
-From: Simon Baatz <gmbnomis@gmail.com>
-Subject: [PATCH V2 10/10] ARM: Kirkwood: add DT support for Sheevaplug and Sheevaplug eSATA
-Date: Mon, 13 May 2013 23:19:01 +0200
-Message-ID: <1368479941-10084-11-git-send-email-gmbnomis@gmail.com>
-References: <1368479941-10084-1-git-send-email-gmbnomis@gmail.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1368479941-10084-1-git-send-email-gmbnomis@gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Chris Ball <cjb@laptop.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+From: Andreas Herrmann <andreas.herrmann@calxeda.com>
+Subject: Re: [PATCH v2] documentation: iommu: add description of ARM System
+ MMU binding
+Date: Mon, 13 May 2013 12:41:47 +0200
+Message-ID: <20130513104147.GF10369@alberich>
+References: <1365789727-5371-1-git-send-email-will.deacon@arm.com>
+ <20130513095020.GB10369@alberich>
+ <20130513095846.GC29814@mudshark.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20130513095846.GC29814@mudshark.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Olav Haugan <ohaugan@codeaurora.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, May 13, 2013 at 05:58:46AM -0400, Will Deacon wrote:
+> On Mon, May 13, 2013 at 10:50:20AM +0100, Andreas Herrmann wrote:
+> > Hi Will,
+> 
+> Hi Andreas,
+> 
+> > so far, I thought, that this proposal is fine. After I have tried to
+> > make use of the binding I have some points that might need further
+> > disucssion.
+> 
+> Sure, although I've been using the binding without issues so it would be
+> interesting to understand your use-case and why it's raising problems.
+> 
+> > Olav already asked (in another thread) how to model the mapping of
+> > stream IDs to contexts for master devices that support multiple
+> > contexts.  I doubt that this is fully covered yet.
+> 
+> Yeah, I've been meaning to reply to that. Given the way that the IOMMU API
+> is structure in Linux, I don't think having multiple stream IDs per (struct)
+> device, where each StreamID points at a different context (and therefore
+> address space) makes much sense. It also doesn't solve the more general
+> problem where StreamIDs for a device might have different SMMUs downstream.
+> 
+> To solve this, I think it is better to treat the device as having multiple
+> struct device instances, and managing the mappings in the device driver.
 
-Signed-off-by: Simon Baatz <gmbnomis@gmail.com>
----
- arch/arm/mach-kirkwood/Kconfig            |    7 +++++++
- arch/arm/mach-kirkwood/Makefile           |    1 +
- arch/arm/mach-kirkwood/board-dt.c         |    4 ++++
- arch/arm/mach-kirkwood/board-sheevaplug.c |   27 +++++++++++++++++++++++++++
- arch/arm/mach-kirkwood/common.h           |    5 +++++
- 5 files changed, 44 insertions(+)
- create mode 100644 arch/arm/mach-kirkwood/board-sheevaplug.c
+Ok.
 
-diff --git a/arch/arm/mach-kirkwood/Kconfig b/arch/arm/mach-kirkwood/Kconfig
-index 7509a89..58518a2 100644
---- a/arch/arm/mach-kirkwood/Kconfig
-+++ b/arch/arm/mach-kirkwood/Kconfig
-@@ -296,6 +296,13 @@ config MACH_READYNAS_DT
- 	  Say 'Y' here if you want your kernel to support the
- 	  NETGEAR ReadyNAS Duo v2 using Fattened Device Tree.
- 
-+config MACH_SHEEVAPLUG_DT
-+	bool "Marvell (eSATA) SheevaPlug (Flattened Device Tree)"
-+	select ARCH_KIRKWOOD_DT
-+	help
-+	  Say 'Y' here if you want your kernel to support the
-+	  Marvell (eSATA) SheevaPlug (Flattened Device Tree).
-+
- config MACH_TOPKICK_DT
- 	bool "USI Topkick (Flattened Device Tree)"
- 	select ARCH_KIRKWOOD_DT
-diff --git a/arch/arm/mach-kirkwood/Makefile b/arch/arm/mach-kirkwood/Makefile
-index e1f3735..8846abf 100644
---- a/arch/arm/mach-kirkwood/Makefile
-+++ b/arch/arm/mach-kirkwood/Makefile
-@@ -40,5 +40,6 @@ obj-$(CONFIG_MACH_NETSPACE_V2_DT)	+= board-ns2.o
- obj-$(CONFIG_MACH_NSA310_DT)		+= board-nsa310.o
- obj-$(CONFIG_MACH_OPENBLOCKS_A6_DT)	+= board-openblocks_a6.o
- obj-$(CONFIG_MACH_READYNAS_DT)		+= board-readynas.o
-+obj-$(CONFIG_MACH_SHEEVAPLUG_DT)	+= board-sheevaplug.o
- obj-$(CONFIG_MACH_TOPKICK_DT)		+= board-usi_topkick.o
- obj-$(CONFIG_MACH_TS219_DT)		+= board-ts219.o tsx1x-common.o
-diff --git a/arch/arm/mach-kirkwood/board-dt.c b/arch/arm/mach-kirkwood/board-dt.c
-index e9647b8..a09dbac 100644
---- a/arch/arm/mach-kirkwood/board-dt.c
-+++ b/arch/arm/mach-kirkwood/board-dt.c
-@@ -112,6 +112,9 @@ static void __init kirkwood_dt_init(void)
- 	if (of_machine_is_compatible("globalscale,guruplug"))
- 		guruplug_dt_init();
- 
-+	if (of_machine_is_compatible("globalscale,sheevaplug"))
-+		sheevaplug_dt_init();
-+
- 	if (of_machine_is_compatible("dlink,dns-kirkwood"))
- 		dnskw_init();
- 
-@@ -165,6 +168,7 @@ static void __init kirkwood_dt_init(void)
- static const char * const kirkwood_dt_board_compat[] = {
- 	"globalscale,dreamplug",
- 	"globalscale,guruplug",
-+	"globalscale,sheevaplug",
- 	"dlink,dns-320",
- 	"dlink,dns-325",
- 	"iom,iconnect",
-diff --git a/arch/arm/mach-kirkwood/board-sheevaplug.c b/arch/arm/mach-kirkwood/board-sheevaplug.c
-new file mode 100644
-index 0000000..fa38937
---- /dev/null
-+++ b/arch/arm/mach-kirkwood/board-sheevaplug.c
-@@ -0,0 +1,27 @@
-+/*
-+ * arch/arm/mach-kirkwood/board-sheevaplug.c
-+ *
-+ * Marvell Sheevaplug Reference Board Init for drivers not converted to
-+ * flattened device tree yet.
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/mv643xx_eth.h>
-+#include "common.h"
-+
-+static struct mv643xx_eth_platform_data sheevaplug_ge00_data = {
-+	.phy_addr	= MV643XX_ETH_PHY_ADDR(0),
-+};
-+
-+void __init sheevaplug_dt_init(void)
-+{
-+	/*
-+	 * Basic setup. Needs to be called early.
-+	 */
-+	kirkwood_ge00_init(&sheevaplug_ge00_data);
-+}
-diff --git a/arch/arm/mach-kirkwood/common.h b/arch/arm/mach-kirkwood/common.h
-index 21da3b1..974442e 100644
---- a/arch/arm/mach-kirkwood/common.h
-+++ b/arch/arm/mach-kirkwood/common.h
-@@ -65,6 +65,11 @@ void guruplug_dt_init(void);
- #else
- static inline void guruplug_dt_init(void) {};
- #endif
-+#ifdef CONFIG_MACH_SHEEVAPLUG_DT
-+void sheevaplug_dt_init(void);
-+#else
-+static inline void sheevaplug_dt_init(void) {};
-+#endif
- #ifdef CONFIG_MACH_TS219_DT
- void qnap_dt_ts219_init(void);
- #else
--- 
-1.7.9.5
+> For most devices, I'd expect a single context to be enough. This is
+> certainly the case for device virtualisation at stage-2 and DMA at stage-1.
 
+Yep, that's the usual case.
+(Just thought what other scenarios there are.)
+
+So the DT binding is for the most common (single-context) use case only.
+(And everything else needs special device driver treatment.)
+
+> > I also think that it is more useful to move the stream-id property to
+> > the device node of a master device. (It's a characteristic of the
+> > master device not of the SMMU.) Currently with multiple stream IDs per
+> > master device you have repeated entries in the mmu-master property.
+> 
+> The problem with that approach is how to handle StreamID remastering. This
+> can and will happen, so the StreamID for a device is actually a property of
+> both the device *and* a particular point in the bus topology. Putting this
+> information in the device nodes will drag topology information all over the
+> place and I don't think it will make things clearer to read or easier to parse.
+
+Ok, good point, didn't think about that.
+And agreed, adding remastered StreamIDs as a property to a device node is odd.
+
+> > But all that is needed is to point (once) to each mmu-master in the
+> > SMMU device node. Then you should be able to look up the corresponding
+> > stream IDs in the device node for each mmu-master.
+> 
+> Again, you also need to tie in topology information if you go down this
+> route.
+
+
+Thanks,
+Andreas
