@@ -1,89 +1,185 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 05/10] fdtdump: make usage a bit more friendly
-Date: Mon, 13 May 2013 11:45:53 +1000
-Message-ID: <20130513014553.GA14944@truffula.fritz.box>
-References: <1366078397-14889-1-git-send-email-vapier@gentoo.org>
- <1366078397-14889-6-git-send-email-vapier@gentoo.org>
- <20130430081219.GF20202@truffula.fritz.box>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2319822400065700723=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130430081219.GF20202-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH RFC V4 FINAL] media: i2c: mt9p031: add OF support
+Date: Mon, 13 May 2013 10:47:04 +0530
+Message-ID: <1368422224-19590-1-git-send-email-prabhakar.csengg@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: LMML <linux-media@vger.kernel.org>
+Cc: DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 
---===============2319822400065700723==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
-Content-Disposition: inline
+add OF support for the mt9p031 sensor driver.
+Alongside this patch sorts the header inclusion alphabetically.
 
+Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: davinci-linux-open-source@linux.davincidsp.com
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ Changes for v4:
+ 1: Renamed "gpio-reset" property to "reset-gpios".
+ 2: Dropped assigning the driver data from the of node.
 
---SLDf9lqlvOQaIe6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ Changes for v3:
+ 1: Dropped check if gpio-reset is valid.
+ 2: Fixed some code nits.
+ 3: Included a reference to the V4L2 DT bindings documentation.
 
-On Tue, Apr 30, 2013 at 06:12:19PM +1000, David Gibson wrote:
-> On Mon, Apr 15, 2013 at 10:13:12PM -0400, Mike Frysinger wrote:
-> > This starts a new usage framework and then cuts fdtdump over to it.
-> > Now we can do `fdtdump -h` and get something useful back.
-> >=20
-> > Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
->=20
-> Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
->=20
-> So, I did some testing that convinced me these won't make it any
-> harder to fix the current bugs with the freebsd build (and might even
-> make it a little easier).  So:
->=20
-> Jon, please apply all the remainder of this series.
+ Changes for v2:
+ 1: Used '-' instead of '_' for device properties.
+ 2: Specified gpio reset pin as phandle in device node.
+ 3: Handle platform data properly even if kernel is compiled with
+    devicetree support.
+ 4: Used dev_* for messages in drivers instead of pr_*.
+ 5: Changed compatible property to "aptina,mt9p031" and "aptina,mt9p031m".
+ 6: Sorted the header inclusion alphabetically and fixed some minor code nits.
 
-Jon?
+ .../devicetree/bindings/media/i2c/mt9p031.txt      |   40 +++++++++++++++++++
+ drivers/media/i2c/mt9p031.c                        |   42 +++++++++++++++++++-
+ 2 files changed, 80 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/mt9p031.txt
 
-This series and also at least one other patch is still waiting for
-merge..
+diff --git a/Documentation/devicetree/bindings/media/i2c/mt9p031.txt b/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
+new file mode 100644
+index 0000000..59d613c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
+@@ -0,0 +1,40 @@
++* Aptina 1/2.5-Inch 5Mp CMOS Digital Image Sensor
++
++The Aptina MT9P031 is a 1/2.5-inch CMOS active pixel digital image sensor with
++an active array size of 2592H x 1944V. It is programmable through a simple
++two-wire serial interface.
++
++Required Properties :
++- compatible : value should be either one among the following
++	(a) "aptina,mt9p031" for mt9p031 sensor
++	(b) "aptina,mt9p031m" for mt9p031m sensor
++
++- input-clock-frequency : Input clock frequency.
++
++- pixel-clock-frequency : Pixel clock frequency.
++
++Optional Properties :
++- reset-gpios: Chip reset GPIO
++
++For further reading of port node refer Documentation/devicetree/bindings/media/
++video-interfaces.txt.
++
++Example:
++
++	i2c0@1c22000 {
++		...
++		...
++		mt9p031@5d {
++			compatible = "aptina,mt9p031";
++			reg = <0x5d>;
++			reset-gpios = <&gpio3 30 0>;
++
++			port {
++				mt9p031_1: endpoint {
++					input-clock-frequency = <6000000>;
++					pixel-clock-frequency = <96000000>;
++				};
++			};
++		};
++		...
++	};
+diff --git a/drivers/media/i2c/mt9p031.c b/drivers/media/i2c/mt9p031.c
+index 28cf95b..a58207c 100644
+--- a/drivers/media/i2c/mt9p031.c
++++ b/drivers/media/i2c/mt9p031.c
+@@ -16,9 +16,11 @@
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/gpio.h>
+-#include <linux/module.h>
+ #include <linux/i2c.h>
+ #include <linux/log2.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
+ #include <linux/pm.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/slab.h>
+@@ -28,6 +30,7 @@
+ #include <media/v4l2-chip-ident.h>
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-device.h>
++#include <media/v4l2-of.h>
+ #include <media/v4l2-subdev.h>
+ 
+ #include "aptina-pll.h"
+@@ -928,10 +931,35 @@ static const struct v4l2_subdev_internal_ops mt9p031_subdev_internal_ops = {
+  * Driver initialization and probing
+  */
+ 
++static struct mt9p031_platform_data *
++mt9p031_get_pdata(struct i2c_client *client)
++{
++	struct device_node *np;
++	struct mt9p031_platform_data *pdata;
++
++	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
++		return client->dev.platform_data;
++
++	np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
++	if (!np)
++		return NULL;
++
++	pdata = devm_kzalloc(&client->dev, sizeof(struct mt9p031_platform_data),
++			     GFP_KERNEL);
++	if (!pdata)
++		return NULL;
++
++	pdata->reset = of_get_named_gpio(client->dev.of_node, "reset-gpios", 0);
++	of_property_read_u32(np, "input-clock-frequency", &pdata->ext_freq);
++	of_property_read_u32(np, "pixel-clock-frequency", &pdata->target_freq);
++
++	return pdata;
++}
++
+ static int mt9p031_probe(struct i2c_client *client,
+ 			 const struct i2c_device_id *did)
+ {
+-	struct mt9p031_platform_data *pdata = client->dev.platform_data;
++	struct mt9p031_platform_data *pdata = mt9p031_get_pdata(client);
+ 	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
+ 	struct mt9p031 *mt9p031;
+ 	unsigned int i;
+@@ -1070,8 +1098,18 @@ static const struct i2c_device_id mt9p031_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, mt9p031_id);
+ 
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id mt9p031_of_match[] = {
++	{ .compatible = "aptina,mt9p031", },
++	{ .compatible = "aptina,mt9p031m", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, mt9p031_of_match);
++#endif
++
+ static struct i2c_driver mt9p031_i2c_driver = {
+ 	.driver = {
++		.of_match_table = of_match_ptr(mt9p031_of_match),
+ 		.name = "mt9p031",
+ 	},
+ 	.probe          = mt9p031_probe,
+-- 
+1.7.4.1
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---SLDf9lqlvOQaIe6s
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlGQRdEACgkQaILKxv3ab8Z1fACfdwbr8iW2AZ+ewGJJ0TSsPh+I
-nhUAn1p5ancYDRqidMOrdZR72MYy4/ql
-=kNl5
------END PGP SIGNATURE-----
-
---SLDf9lqlvOQaIe6s--
-
---===============2319822400065700723==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============2319822400065700723==--
