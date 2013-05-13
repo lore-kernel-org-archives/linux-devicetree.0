@@ -1,88 +1,103 @@
-From: Andreas Herrmann <andreas.herrmann@calxeda.com>
-Subject: Re: [PATCH v2] documentation: iommu: add description of ARM System
- MMU binding
-Date: Mon, 13 May 2013 12:41:47 +0200
-Message-ID: <20130513104147.GF10369@alberich>
-References: <1365789727-5371-1-git-send-email-will.deacon@arm.com>
- <20130513095020.GB10369@alberich>
- <20130513095846.GC29814@mudshark.cambridge.arm.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH RFC v3] media: i2c: mt9p031: add OF support
+Date: Tue, 14 May 2013 00:59:27 +0200
+Message-ID: <2897565.OjqREpRvoz@avalon>
+References: <1367563919-2880-1-git-send-email-prabhakar.csengg@gmail.com> <5750435.WVYuIYMX2V@avalon> <20130513104604.GU20989@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20130513095846.GC29814@mudshark.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Olav Haugan <ohaugan@codeaurora.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130513104604.GU20989@pengutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, Arnd Bergmann <arnd@arndb.de>, LMML <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Hans Verkuil <hans.verkuil@cisco.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, LKML <linux-kernel@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 13, 2013 at 05:58:46AM -0400, Will Deacon wrote:
-> On Mon, May 13, 2013 at 10:50:20AM +0100, Andreas Herrmann wrote:
-> > Hi Will,
+Hi Sascha,
+
+On Monday 13 May 2013 12:46:04 Sascha Hauer wrote:
+> On Wed, May 08, 2013 at 12:37:29PM +0200, Laurent Pinchart wrote:
+> > Hi Prabhakar,
+> > 
+> > On Wednesday 08 May 2013 10:19:57 Prabhakar Lad wrote:
+> > > On Wed, May 8, 2013 at 7:32 AM, Laurent Pinchart wrote:
+> > > > On Tuesday 07 May 2013 15:10:36 Prabhakar Lad wrote:
+> > > >> On Mon, May 6, 2013 at 8:29 PM, Prabhakar Lad wrote:
+> > > >> > On Fri, May 3, 2013 at 8:04 PM, Arnd Bergmann wrote:
+> > > >> >> On Friday 03 May 2013, Prabhakar Lad wrote:
+> > > >> > [snip]
+> > > >> > 
+> > > >> >>> +}
+> > > >> >> 
+> > > >> >> Ok, good.
+> > > >> >> 
+> > > >> >>> @@ -955,7 +998,17 @@ static int mt9p031_probe(struct i2c_client
+> > > >> >>> *client,
+> > > >> >>> 
+> > > >> >>>         mt9p031->pdata = pdata;
+> > > >> >>>         mt9p031->output_control = MT9P031_OUTPUT_CONTROL_DEF;
+> > > >> >>>         mt9p031->mode2 = MT9P031_READ_MODE_2_ROW_BLC;
+> > > >> >>> 
+> > > >> >>> -       mt9p031->model = did->driver_data;
+> > > >> >>> +
+> > > >> >>> +       if (!client->dev.of_node) {
+> > > >> >>> +               mt9p031->model = (enum
+> > > >> >>> mt9p031_model)did->driver_data;
+> > > >> >>> +       } else {
+> > > >> >>> +               const struct of_device_id *of_id;
+> > > >> >>> +
+> > > >> >>> +               of_id =
+> > > >> >>> of_match_device(of_match_ptr(mt9p031_of_match),
+> > > >> >>> +                                       &client->dev);
+> > > >> >>> +               if (of_id)
+> > > >> >>> +                       mt9p031->model = (enum
+> > > >> >>> mt9p031_model)of_id->data;
+> > > >> >>> +       }
+> > > >> >>> 
+> > > >> >>>         mt9p031->reset = -1;
+> > > >> >> 
+> > > >> >> Is this actually required? I thought the i2c core just compared
+> > > >> >> the
+> > > >> >> part of the "compatible" value after the first comma to the
+> > > >> >> string, so
+> > > >> >> "mt9p031->model = (enum mt9p031_model)did->driver_data" should
+> > > >> >> work
+> > > >> >> in both cases.
 > 
-> Hi Andreas,
+> At least on v3.8 I just checked that 'did' is indeed NULL for the
+> devicetree case. Also I see no indication that i2c starts comparing
+> after the first comma in the string.
 > 
-> > so far, I thought, that this proposal is fine. After I have tried to
-> > make use of the binding I have some points that might need further
-> > disucssion.
+> > > >> > I am OK with "mt9p031->model = (enum
+> > > >> > mt9p031_model)did->driver_data"
+> > > >> > but I see still few drivers doing this, I am not sure for what
+> > > >> > reason.
+> > > >> > If everyone is OK with it I can drop the above change.
+> > > >> 
+> > > >> My bad, while booting with DT the i2c_device_id ie did in this case
+> > > >> will
+> > > >> be NULL, so the above changes are required :-)
+> > > > 
+> > > > I've just tested your patch, and did isn't NULL when booting my
+> > > > Beagleboard with DT (on v3.9-rc5).
+> > > 
+> > > I am pretty much sure you tested it compatible property as
+> > > "aptina,mt9p031"
+> > > if the compatible property is set to "aptina,mt9p031m" the did will be
+> > > NULL.> 
+> > I've tested both :-)
 > 
-> Sure, although I've been using the binding without issues so it would be
-> interesting to understand your use-case and why it's raising problems.
-> 
-> > Olav already asked (in another thread) how to model the mapping of
-> > stream IDs to contexts for master devices that support multiple
-> > contexts.  I doubt that this is fully covered yet.
-> 
-> Yeah, I've been meaning to reply to that. Given the way that the IOMMU API
-> is structure in Linux, I don't think having multiple stream IDs per (struct)
-> device, where each StreamID points at a different context (and therefore
-> address space) makes much sense. It also doesn't solve the more general
-> problem where StreamIDs for a device might have different SMMUs downstream.
-> 
-> To solve this, I think it is better to treat the device as having multiple
-> struct device instances, and managing the mappings in the device driver.
+> Sorry to nag, but did you use "aptina,mt9p031[m]" as a compatible string or
+> did you use "mt9p031[m]". With "aptina,..." 'did' should really be NULL.
 
-Ok.
+I've used "aptina,mt9p031[m]".
 
-> For most devices, I'd expect a single context to be enough. This is
-> certainly the case for device virtualisation at stage-2 and DMA at stage-1.
+Please see the of_modalias_node() call in of_i2c_register_devices() 
+(drivers/of/of-i2c.c), that's where the I2C device type name should be 
+initialized.
 
-Yep, that's the usual case.
-(Just thought what other scenarios there are.)
+-- 
+Regards,
 
-So the DT binding is for the most common (single-context) use case only.
-(And everything else needs special device driver treatment.)
+Laurent Pinchart
 
-> > I also think that it is more useful to move the stream-id property to
-> > the device node of a master device. (It's a characteristic of the
-> > master device not of the SMMU.) Currently with multiple stream IDs per
-> > master device you have repeated entries in the mmu-master property.
-> 
-> The problem with that approach is how to handle StreamID remastering. This
-> can and will happen, so the StreamID for a device is actually a property of
-> both the device *and* a particular point in the bus topology. Putting this
-> information in the device nodes will drag topology information all over the
-> place and I don't think it will make things clearer to read or easier to parse.
-
-Ok, good point, didn't think about that.
-And agreed, adding remastered StreamIDs as a property to a device node is odd.
-
-> > But all that is needed is to point (once) to each mmu-master in the
-> > SMMU device node. Then you should be able to look up the corresponding
-> > stream IDs in the device node for each mmu-master.
-> 
-> Again, you also need to tie in topology information if you go down this
-> route.
-
-
-Thanks,
-Andreas
