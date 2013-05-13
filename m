@@ -1,185 +1,44 @@
-From: Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH RFC V4 FINAL] media: i2c: mt9p031: add OF support
-Date: Mon, 13 May 2013 10:47:04 +0530
-Message-ID: <1368422224-19590-1-git-send-email-prabhakar.csengg@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: LMML <linux-media@vger.kernel.org>
-Cc: DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] mtd: fsmc_nand: fix error return code in fsmc_nand_probe()
+Date: Mon, 13 May 2013 14:55:52 +0800
+Message-ID: <CAPgLHd_ETnhT-YQgyPKJJ5meTF_mibYipShRO2GPGMhpdGOuyw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vipin.kumar-qxv4g6HH51o@public.gmane.org
+Cc: yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 
-add OF support for the mt9p031 sensor driver.
-Alongside this patch sorts the header inclusion alphabetically.
+Fix to return -ENODEV in the dma channel request error handling
+case instead of 0, as done elsewhere in this function.
 
-Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: davinci-linux-open-source@linux.davincidsp.com
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 ---
- Changes for v4:
- 1: Renamed "gpio-reset" property to "reset-gpios".
- 2: Dropped assigning the driver data from the of node.
+ drivers/mtd/nand/fsmc_nand.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- Changes for v3:
- 1: Dropped check if gpio-reset is valid.
- 2: Fixed some code nits.
- 3: Included a reference to the V4L2 DT bindings documentation.
-
- Changes for v2:
- 1: Used '-' instead of '_' for device properties.
- 2: Specified gpio reset pin as phandle in device node.
- 3: Handle platform data properly even if kernel is compiled with
-    devicetree support.
- 4: Used dev_* for messages in drivers instead of pr_*.
- 5: Changed compatible property to "aptina,mt9p031" and "aptina,mt9p031m".
- 6: Sorted the header inclusion alphabetically and fixed some minor code nits.
-
- .../devicetree/bindings/media/i2c/mt9p031.txt      |   40 +++++++++++++++++++
- drivers/media/i2c/mt9p031.c                        |   42 +++++++++++++++++++-
- 2 files changed, 80 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/mt9p031.txt
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/mt9p031.txt b/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
-new file mode 100644
-index 0000000..59d613c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
-@@ -0,0 +1,40 @@
-+* Aptina 1/2.5-Inch 5Mp CMOS Digital Image Sensor
-+
-+The Aptina MT9P031 is a 1/2.5-inch CMOS active pixel digital image sensor with
-+an active array size of 2592H x 1944V. It is programmable through a simple
-+two-wire serial interface.
-+
-+Required Properties :
-+- compatible : value should be either one among the following
-+	(a) "aptina,mt9p031" for mt9p031 sensor
-+	(b) "aptina,mt9p031m" for mt9p031m sensor
-+
-+- input-clock-frequency : Input clock frequency.
-+
-+- pixel-clock-frequency : Pixel clock frequency.
-+
-+Optional Properties :
-+- reset-gpios: Chip reset GPIO
-+
-+For further reading of port node refer Documentation/devicetree/bindings/media/
-+video-interfaces.txt.
-+
-+Example:
-+
-+	i2c0@1c22000 {
-+		...
-+		...
-+		mt9p031@5d {
-+			compatible = "aptina,mt9p031";
-+			reg = <0x5d>;
-+			reset-gpios = <&gpio3 30 0>;
-+
-+			port {
-+				mt9p031_1: endpoint {
-+					input-clock-frequency = <6000000>;
-+					pixel-clock-frequency = <96000000>;
-+				};
-+			};
-+		};
-+		...
-+	};
-diff --git a/drivers/media/i2c/mt9p031.c b/drivers/media/i2c/mt9p031.c
-index 28cf95b..a58207c 100644
---- a/drivers/media/i2c/mt9p031.c
-+++ b/drivers/media/i2c/mt9p031.c
-@@ -16,9 +16,11 @@
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/gpio.h>
--#include <linux/module.h>
- #include <linux/i2c.h>
- #include <linux/log2.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
- #include <linux/pm.h>
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
-@@ -28,6 +30,7 @@
- #include <media/v4l2-chip-ident.h>
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-device.h>
-+#include <media/v4l2-of.h>
- #include <media/v4l2-subdev.h>
- 
- #include "aptina-pll.h"
-@@ -928,10 +931,35 @@ static const struct v4l2_subdev_internal_ops mt9p031_subdev_internal_ops = {
-  * Driver initialization and probing
-  */
- 
-+static struct mt9p031_platform_data *
-+mt9p031_get_pdata(struct i2c_client *client)
-+{
-+	struct device_node *np;
-+	struct mt9p031_platform_data *pdata;
-+
-+	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
-+		return client->dev.platform_data;
-+
-+	np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
-+	if (!np)
-+		return NULL;
-+
-+	pdata = devm_kzalloc(&client->dev, sizeof(struct mt9p031_platform_data),
-+			     GFP_KERNEL);
-+	if (!pdata)
-+		return NULL;
-+
-+	pdata->reset = of_get_named_gpio(client->dev.of_node, "reset-gpios", 0);
-+	of_property_read_u32(np, "input-clock-frequency", &pdata->ext_freq);
-+	of_property_read_u32(np, "pixel-clock-frequency", &pdata->target_freq);
-+
-+	return pdata;
-+}
-+
- static int mt9p031_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *did)
- {
--	struct mt9p031_platform_data *pdata = client->dev.platform_data;
-+	struct mt9p031_platform_data *pdata = mt9p031_get_pdata(client);
- 	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
- 	struct mt9p031 *mt9p031;
- 	unsigned int i;
-@@ -1070,8 +1098,18 @@ static const struct i2c_device_id mt9p031_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, mt9p031_id);
- 
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id mt9p031_of_match[] = {
-+	{ .compatible = "aptina,mt9p031", },
-+	{ .compatible = "aptina,mt9p031m", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, mt9p031_of_match);
-+#endif
-+
- static struct i2c_driver mt9p031_i2c_driver = {
- 	.driver = {
-+		.of_match_table = of_match_ptr(mt9p031_of_match),
- 		.name = "mt9p031",
- 	},
- 	.probe          = mt9p031_probe,
--- 
-1.7.4.1
-
+diff --git a/drivers/mtd/nand/fsmc_nand.c b/drivers/mtd/nand/fsmc_nand.c
+index 911e243..6988fc8 100644
+--- a/drivers/mtd/nand/fsmc_nand.c
++++ b/drivers/mtd/nand/fsmc_nand.c
+@@ -1032,6 +1032,7 @@ static int __init fsmc_nand_probe(struct platform_device *pdev)
+ 	case USE_DMA_ACCESS:
+ 		dma_cap_zero(mask);
+ 		dma_cap_set(DMA_MEMCPY, mask);
++		ret = -ENODEV;
+ 		host->read_dma_chan = dma_request_channel(mask, filter,
+ 				pdata->read_dma_priv);
+ 		if (!host->read_dma_chan) {
