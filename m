@@ -1,61 +1,67 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] documentation: iommu: add description of ARM System MMU
-	binding
-Date: Mon, 13 May 2013 11:04:11 +0100
-Message-ID: <20130513100411.GD29814@mudshark.cambridge.arm.com>
-References: <5162F87A.7070409@codeaurora.org>
-	<20130410173732.GQ26992@mudshark.cambridge.arm.com>
-	<5169C7D1.8070300@codeaurora.org>
-	<20130415131341.GG9827@mudshark.cambridge.arm.com>
-	<516D9602.2010404@codeaurora.org>
-	<20130418190131.GA12344@mudshark.cambridge.arm.com>
-	<5177113D.7060300@codeaurora.org>
-	<20130424095501.GC21850@mudshark.cambridge.arm.com>
-	<5189635A.8090504@codeaurora.org> <20130513090724.GA10369@alberich>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] i2c: core: make it possible to match a pure device tree driver
+Date: Mon, 13 May 2013 11:30:57 +0100
+Message-ID: <CANogLNjcPZ5ThyDE3X1GeZ_kJit=w=r6XXyABqOVRZ23R0jzcg@mail.gmail.com>
+References: <1368397583-22769-1-git-send-email-linus.walleij@linaro.org>
+	<20130513071637.GD32299@pengutronix.de>
+	<CACRpkdawcx-AZhKGWffj0WFAWfbAEAw6XPmJo5Te0NaUcrF79g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130513090724.GA10369@alberich>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdawcx-AZhKGWffj0WFAWfbAEAw6XPmJo5Te0NaUcrF79g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 13, 2013 at 10:07:24AM +0100, Andreas Herrmann wrote:
-> On Tue, May 07, 2013 at 04:26:02PM -0400, Olav Haugan wrote:
-> > I think you misunderstood me. I am talking about having for example 1
-> > master with two (2) context banks so that StreamID "1" goes to CB0 and
-> > StreamID "2" goes to CB1. This means that the master device is attached
-> > to two different domains. How do I model this with the the device tree
-> > bindings?
-> 
-> Hi Olav,
-> 
-> I think with the proposed device tree binding you can't model this.
-> 
-> Do we have such use cases already? Or what future use cases would
-> require this?
-> 
-> I can imagine of multiple contexts per device for stuff similar to
-> what PASID in PCI Express are used for.
-> 
-> But in such a case you probably want to have some configurable bits in
-> the StreamID (that should be set by an SMMU driver). And the DT
-> binding should contain the number of contexts that a master device can
-> support.
+On 13 May 2013 10:26, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, May 13, 2013 at 9:16 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>
+>>> -     status = driver->probe(client, i2c_match_id(driver->id_table, client));
+>>> +     if (dev->driver->of_match_table)
+>>> +             /* Device tree matching */
+>>> +             status = driver->probe(client, NULL);
+>>> +     else
+>>> +             /* Fall back to matching the id_table */
+>>> +             status = driver->probe(client, i2c_match_id(driver->id_table, client));
+>>
+>> If you correctly register a device with "vendor,product" in the devicetree
+>> the driver can already fetch the of_device_id using of_match_device(dt_ids, &client->dev)
+>> just like a platform driver would do aswell.
+>
+> Yes, this is what I write in the commit message:
+>
+>   "(...) If the driver wants to deduce secondary info
+>   from the struct of_device_id .data field, it has to call
+>   of_match_device() on its own match table in the probe function
+>   device tree probe path."
+>
+>> i2c_match_id will return a NULL pointer if called with "vendor,product",
+>> because nothing matches in the drivers id_table, so for this case you
+>> change nothing.
+>>
+>> If anything, you introduce the problem that a devicetree capable driver
+>> no longer gets a i2c_device_id if the device was instantiated with
+>> i2c_board_info.
+>
+> Hm, you're right there, what about this:
+>
+> +     if (dev->of_node)
+> +             /* Device tree matching */
+> +             status = driver->probe(client, NULL);
+> +     else
+> +             /* Fall back to matching the id_table */
+> +             status = driver->probe(client,
+> i2c_match_id(driver->id_table, client));
+>
+> If the device has an of_node it surely should not be using the
+> id_table and it'd be correct to pass NULL, right?
 
-See my reply to your other thread, but I don't think this should be solved
-in the SMMU driver. I really think that the device/domain configuration
-should be driven by the master device drivers, rather than the device-tree.
+That will break anything described in the device tree, but the driver
+currently using the heuristic and depending on the data field. You
+would instead need to test for an of_match_device() hit when
+suppressing the data field.
 
-Will
+
+
+g.
