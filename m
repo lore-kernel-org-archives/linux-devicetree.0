@@ -1,122 +1,48 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCHv3 1/4] Documentation: Add memory mapped ARM architected timer
- binding
-Date: Mon, 13 May 2013 12:56:34 -0700
-Message-ID: <1368474997-10859-2-git-send-email-sboyd@codeaurora.org>
-References: <1368474997-10859-1-git-send-email-sboyd@codeaurora.org>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH] pinctrl: dove: add PMU functions to pinctrl
+Date: Mon, 13 May 2013 16:00:02 -0400
+Message-ID: <20130513200002.GY31290@titan.lakedaemon.net>
+References: <1367883368-27889-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1368474997-10859-1-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1367883368-27889-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Stephen Warren <swarren@wwwdotorg.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add a binding for the arm architected timer hardware's memory
-mapped interface. The mmio timer hardware is made up of one base
-frame and a collection of up to 8 timer frames, where each of the
-8 timer frames can have either one or two views. A frame
-typically maps to a privilege level (user/kernel, hypervisor,
-secure). The first view has full access to the registers within a
-frame, while the second view can be restricted to particular
-registers within a frame. Each frame must support a physical
-timer. It's optional for a frame to support a virtual timer.
+On Tue, May 07, 2013 at 01:36:08AM +0200, Sebastian Hesselbarth wrote:
+> Dove power management unit can mux some special functions to mpp0-15.
+> This patch adds support to set/get the current PMU function mapped
+> to the corresponding mpp pins. The device tree documentation is also
+> updated accordingly.
+> 
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> ---
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Rob Landley <rob@landley.net>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  .../bindings/pinctrl/marvell,dove-pinctrl.txt      |   49 ++--
+>  drivers/pinctrl/mvebu/pinctrl-dove.c               |  244 +++++++++++++++++---
+>  2 files changed, 249 insertions(+), 44 deletions(-)
 
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- .../devicetree/bindings/arm/arch_timer.txt         | 59 ++++++++++++++++++++--
- 1 file changed, 56 insertions(+), 3 deletions(-)
+Sebastian,
 
-diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
-index 20746e5..06fc760 100644
---- a/Documentation/devicetree/bindings/arm/arch_timer.txt
-+++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
-@@ -1,10 +1,14 @@
- * ARM architected timer
- 
--ARM cores may have a per-core architected timer, which provides per-cpu timers.
-+ARM cores may have a per-core architected timer, which provides per-cpu timers,
-+or a memory mapped architected timer, which provides up to 8 frames with a
-+physical and optional virtual timer per frame.
- 
--The timer is attached to a GIC to deliver its per-processor interrupts.
-+The per-core architected timer is attached to a GIC to deliver its
-+per-processor interrupts via PPIs. The memory mapped timer is attached to a GIC
-+to deliver its interrupts via SPIs.
- 
--** Timer node properties:
-+** CP15 Timer node properties:
- 
- - compatible : Should at least contain one of
- 	"arm,armv7-timer"
-@@ -26,3 +30,52 @@ Example:
- 			     <1 10 0xf08>;
- 		clock-frequency = <100000000>;
- 	};
-+
-+** Memory mapped timer node properties:
-+
-+- compatible : Should at least contain "arm,armv7-timer-mem".
-+
-+- clock-frequency : The frequency of the main counter, in Hz. Optional.
-+
-+- reg : The control frame base address.
-+
-+Note that #address-cells, #size-cells, and ranges shall be present to ensure
-+the CPU can address a frame's registers.
-+
-+A timer node has up to 8 frame sub-nodes, each with the following properties:
-+
-+- frame-number: 0 to 7.
-+
-+- interrupts : Interrupt list for physical and virtual timers in that order.
-+  The virtual timer interrupt is optional.
-+
-+- reg : The first and second view base addresses in that order. The second view
-+  base address is optional.
-+
-+- status : "disabled" indicates the frame is not available for use. Optional.
-+
-+Example:
-+
-+	timer@f0000000 {
-+		compatible = "arm,armv7-timer-mem";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		reg = <0xf0000000 0x1000>;
-+		clock-frequency = <50000000>;
-+
-+		frame@f0001000 {
-+			frame-number = <0>
-+			interrupts = <0 13 0x8>,
-+				     <0 14 0x8>;
-+			reg = <0xf0001000 0x1000>,
-+			      <0xf0002000 0x1000>;
-+		};
-+
-+		frame@f0003000 {
-+			frame-number = <1>
-+			interrupts = <0 15 0x8>;
-+			reg = <0xf0003000 0x1000>;
-+			status = "disabled";
-+		};
-+	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+Do you intend to have anything depending on these changes in this merge
+window?
+
+thx,
+
+Jason.
