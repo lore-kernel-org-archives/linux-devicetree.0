@@ -1,56 +1,89 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH 2/3] ARM: dts: Add clock provider information for DP
- controller in Exynos5250 SoC
-Date: Mon, 13 May 2013 10:21:59 +0900
-Message-ID: <000801ce4f78$442ef140$cc8cd3c0$@samsung.com>
-References: <1367992894-20198-1-git-send-email-vikas.sajjan@linaro.org>
- <1367992894-20198-3-git-send-email-vikas.sajjan@linaro.org>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 05/10] fdtdump: make usage a bit more friendly
+Date: Mon, 13 May 2013 11:45:53 +1000
+Message-ID: <20130513014553.GA14944@truffula.fritz.box>
+References: <1366078397-14889-1-git-send-email-vapier@gentoo.org>
+ <1366078397-14889-6-git-send-email-vapier@gentoo.org>
+ <20130430081219.GF20202@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1367992894-20198-3-git-send-email-vikas.sajjan@linaro.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Vikas Sajjan' <vikas.sajjan@linaro.org>, linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, linaro-kernel@lists.linaro.org, Jingoo Han <jg1.han@samsung.com>
+Content-Type: multipart/mixed; boundary="===============2319822400065700723=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130430081219.GF20202-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, May 08, 2013 3:02 PM, Vikas Sajjan wrote:
-> 
-> Adds clock provider information for DP controller required by CCF.
-> 
-> Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
-> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
 
-Hi Vikas Sajjan,
+--===============2319822400065700723==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+Content-Disposition: inline
 
-Acked-by: Jingoo Han <jg1.han@samsung.com>
 
-Best regards,
-Jingoo Han
+--SLDf9lqlvOQaIe6s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> ---
->  arch/arm/boot/dts/exynos5250.dtsi |    2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index 4bd9e9c..2773d22 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -651,6 +651,8 @@
->  		reg = <0x145b0000 0x1000>;
->  		interrupts = <10 3>;
->  		interrupt-parent = <&combiner>;
-> +		clocks = <&clock 342>;
-> +		clock-names = "dp";
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> 
-> --
-> 1.7.9.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, Apr 30, 2013 at 06:12:19PM +1000, David Gibson wrote:
+> On Mon, Apr 15, 2013 at 10:13:12PM -0400, Mike Frysinger wrote:
+> > This starts a new usage framework and then cuts fdtdump over to it.
+> > Now we can do `fdtdump -h` and get something useful back.
+> >=20
+> > Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+>=20
+> Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+>=20
+> So, I did some testing that convinced me these won't make it any
+> harder to fix the current bugs with the freebsd build (and might even
+> make it a little easier).  So:
+>=20
+> Jon, please apply all the remainder of this series.
+
+Jon?
+
+This series and also at least one other patch is still waiting for
+merge..
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--SLDf9lqlvOQaIe6s
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlGQRdEACgkQaILKxv3ab8Z1fACfdwbr8iW2AZ+ewGJJ0TSsPh+I
+nhUAn1p5ancYDRqidMOrdZR72MYy4/ql
+=kNl5
+-----END PGP SIGNATURE-----
+
+--SLDf9lqlvOQaIe6s--
+
+--===============2319822400065700723==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============2319822400065700723==--
