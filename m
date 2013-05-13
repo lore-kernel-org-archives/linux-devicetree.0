@@ -1,102 +1,87 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2] i2c: core: make it possible to match a pure device tree driver
-Date: Mon, 13 May 2013 22:18:21 +0200
-Message-ID: <1368476301-10495-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Simon Baatz <gmbnomis@gmail.com>
+Subject: [PATCH V2 00/10] mmc_of_parse() adaptations, DT support for Sheevaplugs
+Date: Mon, 13 May 2013 23:18:51 +0200
+Message-ID: <1368479941-10084-1-git-send-email-gmbnomis@gmail.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Chris Ball <cjb@laptop.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-This tries to address an issue found when writing an MFD driver
-for the Nomadik STw481x PMICs: as the platform is using device
-tree exclusively I want to specify the driver matching like
-this:
+While adding DT support for the Sheevaplugs by Globalscale Technologies
+(Kirkwood), it turned out that the DT binding of mvsdio lacked features to
+properly support the hardware (active high/low of CD and WP pins could not
+be described in DT).
 
-static const struct of_device_id stw481x_match[] = {
-	{ .compatible = "st,stw4810", },
-	{ .compatible = "st,stw4811", },
-	{},
-};
+This is standard functionality provided by the mmc_of_parse() helper
+function.  However, mmc_of_parse() may allocate GPIO lines.  If the
+allocation fails, it outputs an error, but does not return an error to its
+caller.  Therefore, a proposal to handle errors in mmc_of_parse() is made.
 
-static struct i2c_driver stw481x_driver = {
-	.driver = {
-		.name	= "stw481x",
-		.of_match_table = stw481x_match,
-	},
-	.probe		= stw481x_probe,
-	.remove		= stw481x_remove,
-};
+The patch set is structured as follows:
 
-However that turns out not to be possible: the I2C probe code
-is written so that the probe() call is always passed a match
-from i2c_match_id() using non-devicetree matches.
+1   Adapt mmc_of_parse() to return errors
+2-6 Handle errors in current drivers using mmc_of_parse() (compile tested
+    only)
+7-8 Convert mvsdio and respective dts files to mmc_of_parse() (tested on
+    kirkwood)
+9   Add dts files for (eSATA) Sheevaplug
+10  Add DT support for (eSATA) Sheevaplug
 
-This is probably why most devices using device tree for I2C
-clients currently will pass no .of_match_table *at all* but
-instead just use .id_table from struct i2c_driver to match
-the device. As you realize that means that the whole idea with
-compatible strings is discarded, and that is why we find strange
-device tree I2C device compatible strings like "product" instead
-of "vendor,product" as you could expect.
 
-Let's figure out how to fix this before the mess spreads. This
-patch will allow probeing devices with only an of_match_table
-as per above, and will pass NULL as the second argument to the
-probe() function. If the driver wants to deduce secondary info
-from the struct of_device_id .data field, it has to call
-of_match_device() on its own match table in the probe function
-device tree probe path.
+I could only test on an eSATA Sheevaplug. I found patches with
+different LEDs for the Sheevaplug.  Thus, I would highly appreciate if
+someone with the hardware could give this a spin on a non-eSATA
+version.  Some additional testing of the change detect and write
+protect behaviour for mvsdio can't hurt either.  I hope that there aren't
+board revisions with different CD/WP pins out there.
 
-If drivers define both an .of_match_table *AND* a i2c_driver
-.id_table, the .of_match_table will take precedence, just
-as is done in the i2c_device_match() function in i2c-core.c.
+Simon Baatz (10):
+  mmc: return mmc_of_parse() errors to caller
+  mmc: sh_mmcif: handle mmc_of_parse() errors during probe
+  mmc: tmio-mmc: handle mmc_of_parse() errors during probe
+  mmc: mxcmmc: handle mmc_of_parse() errors during probe
+  mmc: sdhi-pxav3: handle mmc_of_parse() errors during probe
+  mmc: tegra: handle mmc_of_parse() errors during probe
+  ARM: mvebu: Use standard MMC binding for all users of mvsdio
+  mmc: mvsdio: use standard MMC device-tree binding parser
+    mmc_of_parse()
+  ARM: Kirkwood: Add dts files for Sheevaplug and eSATA Sheevaplug
+  ARM: Kirkwood: add DT support for Sheevaplug and Sheevaplug eSATA
 
-I2C devices probed from device tree should subsequently be
-fixed to handle the case where of_match_table() is
-used (I think none of them do that today), and platforms should
-fix their device trees to use compatible strings for I2C devices
-instead of setting the name to Linux device driver names as is
-done in multiple cases today.
+ arch/arm/boot/dts/Makefile                         |    2 +
+ arch/arm/boot/dts/armada-370-db.dts                |    1 +
+ arch/arm/boot/dts/armada-370-mirabox.dts           |    1 +
+ arch/arm/boot/dts/armada-370-rd.dts                |    1 +
+ arch/arm/boot/dts/armada-370-xp.dtsi               |    4 +
+ arch/arm/boot/dts/armada-xp-db.dts                 |    1 +
+ arch/arm/boot/dts/kirkwood-dreamplug.dts           |    1 +
+ .../arm/boot/dts/kirkwood-guruplug-server-plus.dts |    2 +
+ arch/arm/boot/dts/kirkwood-mplcec4.dts             |    2 +-
+ arch/arm/boot/dts/kirkwood-sheevaplug-common.dtsi  |   97 ++++++++++++++++++++
+ arch/arm/boot/dts/kirkwood-sheevaplug-esata.dts    |   40 ++++++++
+ arch/arm/boot/dts/kirkwood-sheevaplug.dts          |   45 +++++++++
+ arch/arm/boot/dts/kirkwood-topkick.dts             |    1 +
+ arch/arm/boot/dts/kirkwood.dtsi                    |    4 +
+ arch/arm/mach-kirkwood/Kconfig                     |    7 ++
+ arch/arm/mach-kirkwood/Makefile                    |    1 +
+ arch/arm/mach-kirkwood/board-dt.c                  |    4 +
+ arch/arm/mach-kirkwood/board-sheevaplug.c          |   27 ++++++
+ arch/arm/mach-kirkwood/common.h                    |    5 +
+ drivers/mmc/core/host.c                            |   24 ++++-
+ drivers/mmc/host/mvsdio.c                          |   73 ++++++++-------
+ drivers/mmc/host/mxcmmc.c                          |    4 +-
+ drivers/mmc/host/sdhci-pxav3.c                     |    7 +-
+ drivers/mmc/host/sdhci-tegra.c                     |    9 +-
+ drivers/mmc/host/sh_mmcif.c                        |    7 +-
+ drivers/mmc/host/tmio_mmc_pio.c                    |    4 +-
+ include/linux/mmc/host.h                           |    2 +-
+ 27 files changed, 328 insertions(+), 48 deletions(-)
+ create mode 100644 arch/arm/boot/dts/kirkwood-sheevaplug-common.dtsi
+ create mode 100644 arch/arm/boot/dts/kirkwood-sheevaplug-esata.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-sheevaplug.dts
+ create mode 100644 arch/arm/mach-kirkwood/board-sheevaplug.c
 
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v1->v2:
-- Use of_match_device() to determine if there is a DT match in
-  the probe code. If there is a match we pass NULL for the
-  id_table match parameter.
----
- drivers/i2c/i2c-core.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-index 6b63cc7..17cd22a 100644
---- a/drivers/i2c/i2c-core.c
-+++ b/drivers/i2c/i2c-core.c
-@@ -240,7 +240,7 @@ static int i2c_device_probe(struct device *dev)
- 		return 0;
- 
- 	driver = to_i2c_driver(dev->driver);
--	if (!driver->probe || !driver->id_table)
-+	if (!driver->probe || (!driver->id_table && !dev->driver->of_match_table))
- 		return -ENODEV;
- 	client->driver = driver;
- 	if (!device_can_wakeup(&client->dev))
-@@ -248,7 +248,12 @@ static int i2c_device_probe(struct device *dev)
- 					client->flags & I2C_CLIENT_WAKE);
- 	dev_dbg(dev, "probe\n");
- 
--	status = driver->probe(client, i2c_match_id(driver->id_table, client));
-+	if (of_match_device(dev->driver->of_match_table, dev))
-+		/* Device tree matching */
-+		status = driver->probe(client, NULL);
-+	else
-+		/* Fall back to matching the id_table */
-+		status = driver->probe(client, i2c_match_id(driver->id_table, client));
- 	if (status) {
- 		client->driver = NULL;
- 		i2c_set_clientdata(client, NULL);
 -- 
-1.8.1.4
+1.7.9.5
+
