@@ -1,67 +1,93 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] i2c: core: make it possible to match a pure device tree driver
-Date: Mon, 13 May 2013 11:30:57 +0100
-Message-ID: <CANogLNjcPZ5ThyDE3X1GeZ_kJit=w=r6XXyABqOVRZ23R0jzcg@mail.gmail.com>
-References: <1368397583-22769-1-git-send-email-linus.walleij@linaro.org>
-	<20130513071637.GD32299@pengutronix.de>
-	<CACRpkdawcx-AZhKGWffj0WFAWfbAEAw6XPmJo5Te0NaUcrF79g@mail.gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH RFC v3] media: i2c: mt9p031: add OF support
+Date: Mon, 13 May 2013 12:46:04 +0200
+Message-ID: <20130513104604.GU20989@pengutronix.de>
+References: <1367563919-2880-1-git-send-email-prabhakar.csengg@gmail.com>
+ <124364082.ILKsvVk9ro@avalon>
+ <CA+V-a8sknnoq7M-HJUW6aW8jtf7T0qxA8OpPjsXdmxO22ic7og@mail.gmail.com>
+ <5750435.WVYuIYMX2V@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdawcx-AZhKGWffj0WFAWfbAEAw6XPmJo5Te0NaUcrF79g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5750435.WVYuIYMX2V@avalon>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, Arnd Bergmann <arnd@arndb.de>, LMML <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Hans Verkuil <hans.verkuil@cisco.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, LKML <linux-kernel@vger.kernel.org>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 13 May 2013 10:26, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, May 13, 2013 at 9:16 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->
->>> -     status = driver->probe(client, i2c_match_id(driver->id_table, client));
->>> +     if (dev->driver->of_match_table)
->>> +             /* Device tree matching */
->>> +             status = driver->probe(client, NULL);
->>> +     else
->>> +             /* Fall back to matching the id_table */
->>> +             status = driver->probe(client, i2c_match_id(driver->id_table, client));
->>
->> If you correctly register a device with "vendor,product" in the devicetree
->> the driver can already fetch the of_device_id using of_match_device(dt_ids, &client->dev)
->> just like a platform driver would do aswell.
->
-> Yes, this is what I write in the commit message:
->
->   "(...) If the driver wants to deduce secondary info
->   from the struct of_device_id .data field, it has to call
->   of_match_device() on its own match table in the probe function
->   device tree probe path."
->
->> i2c_match_id will return a NULL pointer if called with "vendor,product",
->> because nothing matches in the drivers id_table, so for this case you
->> change nothing.
->>
->> If anything, you introduce the problem that a devicetree capable driver
->> no longer gets a i2c_device_id if the device was instantiated with
->> i2c_board_info.
->
-> Hm, you're right there, what about this:
->
-> +     if (dev->of_node)
-> +             /* Device tree matching */
-> +             status = driver->probe(client, NULL);
-> +     else
-> +             /* Fall back to matching the id_table */
-> +             status = driver->probe(client,
-> i2c_match_id(driver->id_table, client));
->
-> If the device has an of_node it surely should not be using the
-> id_table and it'd be correct to pass NULL, right?
+On Wed, May 08, 2013 at 12:37:29PM +0200, Laurent Pinchart wrote:
+> Hi Prabhakar,
+> 
+> On Wednesday 08 May 2013 10:19:57 Prabhakar Lad wrote:
+> > On Wed, May 8, 2013 at 7:32 AM, Laurent Pinchart wrote:
+> > > On Tuesday 07 May 2013 15:10:36 Prabhakar Lad wrote:
+> > >> On Mon, May 6, 2013 at 8:29 PM, Prabhakar Lad wrote:
+> > >> > On Fri, May 3, 2013 at 8:04 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > >> >> On Friday 03 May 2013, Prabhakar Lad wrote:
+> > >> > [snip]
+> > >> > 
+> > >> >>> +}
+> > >> >> 
+> > >> >> Ok, good.
+> > >> >> 
+> > >> >>> @@ -955,7 +998,17 @@ static int mt9p031_probe(struct i2c_client
+> > >> >>> *client,
+> > >> >>> 
+> > >> >>>         mt9p031->pdata = pdata;
+> > >> >>>         mt9p031->output_control = MT9P031_OUTPUT_CONTROL_DEF;
+> > >> >>>         mt9p031->mode2 = MT9P031_READ_MODE_2_ROW_BLC;
+> > >> >>> 
+> > >> >>> -       mt9p031->model = did->driver_data;
+> > >> >>> +
+> > >> >>> +       if (!client->dev.of_node) {
+> > >> >>> +               mt9p031->model = (enum
+> > >> >>> mt9p031_model)did->driver_data;
+> > >> >>> +       } else {
+> > >> >>> +               const struct of_device_id *of_id;
+> > >> >>> +
+> > >> >>> +               of_id =
+> > >> >>> of_match_device(of_match_ptr(mt9p031_of_match),
+> > >> >>> +                                       &client->dev);
+> > >> >>> +               if (of_id)
+> > >> >>> +                       mt9p031->model = (enum
+> > >> >>> mt9p031_model)of_id->data;
+> > >> >>> +       }
+> > >> >>> 
+> > >> >>>         mt9p031->reset = -1;
+> > >> >> 
+> > >> >> Is this actually required? I thought the i2c core just compared the
+> > >> >> part of the "compatible" value after the first comma to the string, so
+> > >> >> "mt9p031->model = (enum mt9p031_model)did->driver_data" should work
+> > >> >> in both cases.
 
-That will break anything described in the device tree, but the driver
-currently using the heuristic and depending on the data field. You
-would instead need to test for an of_match_device() hit when
-suppressing the data field.
+At least on v3.8 I just checked that 'did' is indeed NULL for the
+devicetree case. Also I see no indication that i2c starts comparing
+after the first comma in the string.
 
+> > >> > 
+> > >> > I am OK with "mt9p031->model = (enum mt9p031_model)did->driver_data"
+> > >> > but I see still few drivers doing this, I am not sure for what reason.
+> > >> > If everyone is OK with it I can drop the above change.
+> > >> 
+> > >> My bad, while booting with DT the i2c_device_id ie did in this case will
+> > >> be NULL, so the above changes are required :-)
+> > > 
+> > > I've just tested your patch, and did isn't NULL when booting my
+> > > Beagleboard with DT (on v3.9-rc5).
+> > 
+> > I am pretty much sure you tested it compatible property as "aptina,mt9p031"
+> > if the compatible property is set to "aptina,mt9p031m" the did will be NULL.
+> 
+> I've tested both :-)
 
+Sorry to nag, but did you use "aptina,mt9p031[m]" as a compatible string or did
+you use "mt9p031[m]". With "aptina,..." 'did' should really be NULL.
 
-g.
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
