@@ -1,269 +1,294 @@
-From: Dongjin Kim <tobetter@gmail.com>
-Subject: [PATCH] usb: phy: samsung: adding usbphy for Exynos4X12
-Date: Tue, 14 May 2013 03:25:53 +0900
-Message-ID: <1368469557-8625-1-git-send-email-tobetter@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-Cc: Dongjin Kim <tobetter@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kukjin Kim <kgene.kim@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, Praveen Paneri <p.paneri@samsung.com>, Heiko Stuebner <heiko@sntech.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 2/8] ARM:global_timer: Add ARM global timer support.
+Date: Mon, 13 May 2013 21:05:00 +0200
+Message-ID: <CACRpkdZCP=w=4Q3bnuMQxm=Oe-uZke+Cc5NgddM5vsQbgr9E-Q@mail.gmail.com>
+References: <1368022187-1633-1-git-send-email-srinivas.kandagatla@st.com>
+ <1368022260-2197-1-git-send-email-srinivas.kandagatla@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1368022260-2197-1-git-send-email-srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds usb host phy (USB 2.0 PHY) support for Samsung Exynos4X12 SoC.
-New functions, samsung_exynos4x12_usb2phy_enable/_disable and selecting
-reference clock, for Exynos4X12 are added. Since it has different register
-set up with Exynos4210 or Exynos5250, "samsung,exynos4x12-usb2phy" is added.
+On Wed, May 8, 2013 at 4:11 PM, Srinivas KANDAGATLA
+<srinivas.kandagatla-qxv4g6HH51o@public.gmane.org> wrote:
 
-Signed-off-by: Dongjin Kim <tobetter@gmail.com>
----
- .../devicetree/bindings/usb/samsung-usbphy.txt     |    5 ++
- drivers/usb/phy/phy-samsung-usb.c                  |   30 ++++++-
- drivers/usb/phy/phy-samsung-usb.h                  |   18 ++++
- drivers/usb/phy/phy-samsung-usb2.c                 |   90 ++++++++++++++++++++
- 4 files changed, 140 insertions(+), 3 deletions(-)
+Thomas Gleixner and John Stultz should always be included on timer code review.
 
-diff --git a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
-index 33fd354..f805878 100644
---- a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
-+++ b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
-@@ -18,6 +18,11 @@ Exynos4210:
- - clock-names: names of clock correseponding IDs clock property as requested
- 	       by the controller driver.
- 
-+Exynos4x12:
-+- compatible : should be "samsung,exynos4x12-usb2phy"
-+- reg : base physical address of the phy registers and length of memory mapped
-+	region.
-+
- Exynos5250:
- - compatible : should be "samsung,exynos5250-usb2phy"
- - reg : base physical address of the phy registers and length of memory mapped
-diff --git a/drivers/usb/phy/phy-samsung-usb.c b/drivers/usb/phy/phy-samsung-usb.c
-index 7b118ee5..efb26de 100644
---- a/drivers/usb/phy/phy-samsung-usb.c
-+++ b/drivers/usb/phy/phy-samsung-usb.c
-@@ -91,10 +91,11 @@ void samsung_usbphy_set_isolation(struct samsung_usbphy *sphy, bool on)
- 		 */
- 		break;
- 	case TYPE_EXYNOS4210:
-+	case TYPE_EXYNOS4X12:
- 		/*
--		 * Fall through since exynos4210 and exynos5250 have similar
--		 * register architecture: two separate registers for host and
--		 * device phy control with enable bit at position 0.
-+		 * Fall through since exynos4210/4x12 and exynos5250 have
-+		 * similar register architecture: two separateregistersfor
-+		 * host and device phy control with enable bit at position 0.
- 		 */
- 	case TYPE_EXYNOS5250:
- 		if (sphy->phy_type == USB_PHY_TYPE_DEVICE) {
-@@ -210,6 +211,29 @@ int samsung_usbphy_get_refclk_freq(struct samsung_usbphy *sphy)
- 			refclk_freq = FSEL_CLKSEL_24M;
- 			break;
- 		}
-+	} else if (sphy->drv_data->cpu_type == TYPE_EXYNOS4X12) {
-+		switch (clk_get_rate(ref_clk)) {
-+		case 9600 * KHZ:
-+			refclk_freq = FSEL_CLKSEL_9600K;
-+			break;
-+		case 10 * MHZ:
-+			refclk_freq = FSEL_CLKSEL_10M;
-+			break;
-+		case 12 * MHZ:
-+			refclk_freq = FSEL_CLKSEL_12M;
-+			break;
-+		case 19200 * KHZ:
-+			refclk_freq = FSEL_CLKSEL_19200K;
-+			break;
-+		case 20 * MHZ:
-+			refclk_freq = FSEL_CLKSEL_20M;
-+			break;
-+		case 24 * MHZ:
-+		default:
-+			/* default reference clock */
-+			refclk_freq = FSEL_CLKSEL_24M;
-+			break;
-+		}
- 	} else {
- 		switch (clk_get_rate(ref_clk)) {
- 		case 12 * MHZ:
-diff --git a/drivers/usb/phy/phy-samsung-usb.h b/drivers/usb/phy/phy-samsung-usb.h
-index 70a9cae..ad86bce 100644
---- a/drivers/usb/phy/phy-samsung-usb.h
-+++ b/drivers/usb/phy/phy-samsung-usb.h
-@@ -47,6 +47,23 @@
- #define RSTCON_HLINK_SWRST			(0x1 << 1)
- #define RSTCON_SWRST				(0x1 << 0)
- 
-+/* For Exynos4x12 */
-+#define PHYCLK_COMMON_ON_N_PHY0			(0x1 << 4)
-+#define PHYCLK_COMMON_ON_N_PHY1			(0x1 << 7)
-+
-+#define PHYPWR_NORMAL_MASK_HSIC1		(0x7 << 12)
-+#define PHYPWR_NORMAL_MASK_HSIC0		(0x7 << 9)
-+#define PHYPWR_NORMAL_MASK_PHY1			(0x7 << 6)
-+
-+#define PHYPWR_ANALOG_POWERDOWN_PHY1		(0x1 << 7)
-+
-+#define RSTCON_HLINK_SWRST_MASK			(0xf << 7)
-+#define RSTCON_PHY1_SWRST_MASK			(0xf << 3)
-+#define RSTCON_PHY0_SWRST_MASK			(0x7 << 0)
-+
-+#define EXYNOS4X12_PHY_HSIC_CTRL0		(0x04)
-+#define EXYNOS4X12_PHY_HSIC_CTRL1		(0x08)
-+
- /* EXYNOS5 */
- #define EXYNOS5_PHY_HOST_CTRL0			(0x00)
- 
-@@ -241,6 +258,7 @@
- enum samsung_cpu_type {
- 	TYPE_S3C64XX,
- 	TYPE_EXYNOS4210,
-+	TYPE_EXYNOS4X12,
- 	TYPE_EXYNOS5250,
- };
- 
-diff --git a/drivers/usb/phy/phy-samsung-usb2.c b/drivers/usb/phy/phy-samsung-usb2.c
-index 45ffe03..b95d05d 100644
---- a/drivers/usb/phy/phy-samsung-usb2.c
-+++ b/drivers/usb/phy/phy-samsung-usb2.c
-@@ -158,6 +158,59 @@ static void samsung_exynos5_usb2phy_enable(struct samsung_usbphy *sphy)
- 	writel(ohcictrl, regs + EXYNOS5_PHY_HOST_OHCICTRL);
- }
- 
-+static bool exynos4_phyhost_is_on(void *regs)
-+{
-+	u32 reg;
-+
-+	reg = readl(regs + SAMSUNG_PHYPWR);
-+
-+	return !(reg & PHYPWR_ANALOG_POWERDOWN_PHY1);
-+}
-+
-+static void samsung_exynos4x12_usb2phy_enable(struct samsung_usbphy *sphy)
-+{
-+	void __iomem *regs = sphy->regs;
-+	u32 phypwr;
-+	u32 phyclk;
-+	u32 rstcon;
-+
-+	/*
-+	 * phy_usage helps in keeping usage count for phy
-+	 * so that the first consumer enabling the phy is also
-+	 * the last consumer to disable it.
-+	 */
-+
-+	atomic_inc(&sphy->phy_usage);
-+
-+	if (exynos4_phyhost_is_on(regs)) {
-+		dev_info(sphy->dev, "Already power on PHY\n");
-+		return;
-+	}
-+
-+	writel(EXYNOS_USBPHY_ENABLE, sphy->pmuregs + EXYNOS4X12_PHY_HSIC_CTRL0);
-+	writel(EXYNOS_USBPHY_ENABLE, sphy->pmuregs + EXYNOS4X12_PHY_HSIC_CTRL1);
-+
-+	/* Common block configuration during suspend */
-+	phyclk = sphy->ref_clk_freq
-+		& ~(PHYCLK_COMMON_ON_N_PHY1);
-+	writel(phyclk, regs + SAMSUNG_PHYCLK);
-+
-+	/* Enable normal mode of Host */
-+	phypwr = readl(regs + SAMSUNG_PHYPWR);
-+	phypwr &= ~(PHYPWR_NORMAL_MASK_HSIC0 | PHYPWR_NORMAL_MASK_HSIC1
-+			| PHYPWR_NORMAL_MASK_PHY1);
-+	writel(phypwr, regs + SAMSUNG_PHYPWR);
-+
-+	/* Reset both PHY and Link of Host */
-+	rstcon = readl(regs + SAMSUNG_RSTCON)
-+		| (RSTCON_HLINK_SWRST_MASK | RSTCON_PHY1_SWRST_MASK);
-+	writel(rstcon, regs + SAMSUNG_RSTCON);
-+	udelay(10);
-+	rstcon &= ~(RSTCON_HLINK_SWRST_MASK | RSTCON_PHY1_SWRST_MASK);
-+	writel(rstcon, regs + SAMSUNG_RSTCON);
-+	udelay(80);
-+}
-+
- static void samsung_usb2phy_enable(struct samsung_usbphy *sphy)
- {
- 	void __iomem *regs = sphy->regs;
-@@ -228,6 +281,27 @@ static void samsung_exynos5_usb2phy_disable(struct samsung_usbphy *sphy)
- 	writel(phyotg, regs + EXYNOS5_PHY_OTG_SYS);
- }
- 
-+static void samsung_exynos4x12_usb2phy_disable(struct samsung_usbphy *sphy)
-+{
-+	void __iomem *regs = sphy->regs;
-+	u32 phypwr;
-+
-+	if (atomic_dec_return(&sphy->phy_usage) > 0) {
-+		dev_info(sphy->dev, "still being used\n");
-+		return;
-+	}
-+
-+	/* unset to normal of Host and Device */
-+	phypwr = readl(regs + SAMSUNG_PHYPWR)
-+		| (PHYPWR_NORMAL_MASK_PHY1
-+				| PHYPWR_NORMAL_MASK_HSIC1
-+				| PHYPWR_NORMAL_MASK_HSIC0);
-+	writel(phypwr, regs + SAMSUNG_PHYPWR);
-+
-+	writel(0, sphy->pmuregs + EXYNOS4X12_PHY_HSIC_CTRL0);
-+	writel(0, sphy->pmuregs + EXYNOS4X12_PHY_HSIC_CTRL1);
-+}
-+
- static void samsung_usb2phy_disable(struct samsung_usbphy *sphy)
- {
- 	void __iomem *regs = sphy->regs;
-@@ -293,6 +367,8 @@ static int samsung_usb2phy_init(struct usb_phy *phy)
- 	/* Initialize usb phy registers */
- 	if (sphy->drv_data->cpu_type == TYPE_EXYNOS5250)
- 		samsung_exynos5_usb2phy_enable(sphy);
-+	else if (sphy->drv_data->cpu_type == TYPE_EXYNOS4X12)
-+		samsung_exynos4x12_usb2phy_enable(sphy);
- 	else
- 		samsung_usb2phy_enable(sphy);
- 
-@@ -336,6 +412,8 @@ static void samsung_usb2phy_shutdown(struct usb_phy *phy)
- 	/* De-initialize usb phy registers */
- 	if (sphy->drv_data->cpu_type == TYPE_EXYNOS5250)
- 		samsung_exynos5_usb2phy_disable(sphy);
-+	if (sphy->drv_data->cpu_type == TYPE_EXYNOS4X12)
-+		samsung_exynos4x12_usb2phy_disable(sphy);
- 	else
- 		samsung_usb2phy_disable(sphy);
- 
-@@ -451,6 +529,12 @@ static const struct samsung_usbphy_drvdata usb2phy_exynos4 = {
- 	.hostphy_en_mask	= EXYNOS_USBPHY_ENABLE,
- };
- 
-+static const struct samsung_usbphy_drvdata usb2phy_exynos4x12 = {
-+	.cpu_type		= TYPE_EXYNOS4X12,
-+	.devphy_en_mask		= EXYNOS_USBPHY_ENABLE,
-+	.hostphy_en_mask	= EXYNOS_USBPHY_ENABLE,
-+};
-+
- static struct samsung_usbphy_drvdata usb2phy_exynos5 = {
- 	.cpu_type		= TYPE_EXYNOS5250,
- 	.hostphy_en_mask	= EXYNOS_USBPHY_ENABLE,
-@@ -466,6 +550,9 @@ static const struct of_device_id samsung_usbphy_dt_match[] = {
- 		.compatible = "samsung,exynos4210-usb2phy",
- 		.data = &usb2phy_exynos4,
- 	}, {
-+		.compatible = "samsung,exynos4x12-usb2phy",
-+		.data = &usb2phy_exynos4x12,
-+	}, {
- 		.compatible = "samsung,exynos5250-usb2phy",
- 		.data = &usb2phy_exynos5
- 	},
-@@ -482,6 +569,9 @@ static struct platform_device_id samsung_usbphy_driver_ids[] = {
- 		.name		= "exynos4210-usb2phy",
- 		.driver_data	= (unsigned long)&usb2phy_exynos4,
- 	}, {
-+		.name		= "exynos4x12-usb2phy",
-+		.driver_data	= (unsigned long)&usb2phy_exynos4x12,
-+	}, {
- 		.name		= "exynos5250-usb2phy",
- 		.driver_data	= (unsigned long)&usb2phy_exynos5,
- 	},
--- 
-1.7.9.5
+This is one reason I really like to move the clocksource/clockevent/etc code out
+of arch/arm, so that people can get their To: line right from MAINTAINERS.
+(Whether it goes to drivers/clocksource or not is another issue.)
 
+> diff --git a/arch/arm/include/asm/global_timer.h b/arch/arm/include/asm/global_timer.h
+
+Using CLKSRC_OF_INIT() this header goes away entirely I guess.
+
+> diff --git a/arch/arm/kernel/global_timer.c b/arch/arm/kernel/global_timer.c
+
+> +#define GT_COUNTER0    0x00
+> +#define GT_COUNTER1    0x04
+
+So two counters, nice.
+
+> +union gt_counter {
+> +       cycle_t cycles;
+> +       struct {
+> +               uint32_t lower;
+> +               uint32_t upper;
+
+Just u32 is fine.
+
+> +       };
+> +};
+> +
+> +static union gt_counter gt_counter_read(void)
+> +{
+> +       union gt_counter res;
+> +       uint32_t upper;
+
+u32
+
+> +
+> +       upper = readl(gt_base + GT_COUNTER1);
+> +       do {
+> +               res.upper = upper;
+> +               res.lower = readl(gt_base + GT_COUNTER0);
+> +               upper = readl(gt_base + GT_COUNTER1);
+> +       } while (upper != res.upper);
+> +
+> +       return res;
+> +}
+
+I guess this is some cleverness to avoid wrap-around...
+A comment stating what's going on wouldn't hurt.
+
+But why on earth do you need this complicated union
+to hold the result? Have two local u32 variables and return
+a u64 from this function.
+
+Since this will be performance critical, isn't readl_relaxed() suffient
+here, or what's the rationale for just using readl()?
+
+> +static void gt_compare_set(unsigned long delta, int periodic)
+> +{
+> +       union gt_counter counter = gt_counter_read();
+
+So here you get something easy to read like
+
+u64 counter = gt_counter_read();
+
+> +       unsigned long ctrl = readl(gt_base + GT_CONTROL);
+> +
+> +       BUG_ON(!(ctrl & GT_CONTROL_TIMER_ENABLE));
+> +       BUG_ON(ctrl & (GT_CONTROL_COMP_ENABLE |
+> +                      GT_CONTROL_IRQ_ENABLE |
+> +                      GT_CONTROL_AUTO_INC));
+
+Do you really have to check this *whenever the counter is set*?
+
+Will it not suffice to do this once during initialization?
+
+It looks like some leftover debug code. It also looks kind of clock
+dangerous, can you explain exactly why this check is here?
+
+> +
+> +       counter.cycles += delta;
+> +       writel(counter.lower, gt_base + GT_COMP0);
+> +       writel(counter.upper, gt_base + GT_COMP1);
+
+This is another instance of the union struct making things
+complicated. With a u64 just:
+
+counter += delta;
+writel(lower_32_bits(counter), gt_base + GT_COMP0);
+writel(upper_32_bits(counter), gt_base + GT_COMP1);
+
+As you can see <linux/kernel.h> has really nice helpers in place
+to deal with 64 bit arithmetics.
+
+> +
+> +       ctrl |= GT_CONTROL_COMP_ENABLE | GT_CONTROL_IRQ_ENABLE;
+> +
+> +       if (periodic) {
+> +               writel(delta, gt_base + GT_AUTO_INC);
+> +               ctrl |= GT_CONTROL_AUTO_INC;
+> +       }
+> +
+> +       writel(ctrl, gt_base + GT_CONTROL);
+> +}
+> +
+> +static void gt_clockevent_set_mode(enum clock_event_mode mode,
+> +                                  struct clock_event_device *clk)
+> +{
+> +       switch (mode) {
+> +       case CLOCK_EVT_MODE_PERIODIC:
+> +               gt_compare_set(gt_clk_rate/HZ, 1);
+
+Use
+gt_compare_set(DIV_ROUND_CLOSEST(gt_clk_rate, HZ), 1);
+to get integer arithmetics right.
+
+> +               break;
+> +       case CLOCK_EVT_MODE_ONESHOT:
+> +               /* period set, and timer enabled in 'next_event' hook */
+> +               BUG_ON(readl(gt_base + GT_CONTROL) &
+> +                      (GT_CONTROL_COMP_ENABLE |
+> +                       GT_CONTROL_IRQ_ENABLE |
+> +                       GT_CONTROL_AUTO_INC));
+
+Here is another one of these checks. Why aren't you just
+zeroing these flags if you don't want them, especially since
+you're writing the register at the end of the function? Now it
+looks like instead of setting up the timer the way you want it
+you bug out if it isn't already set up as you want it (hint,
+the name of this function).
+
+> +               /* Fall through */
+> +       case CLOCK_EVT_MODE_UNUSED:
+> +       case CLOCK_EVT_MODE_SHUTDOWN:
+> +       default:
+> +               writel(GT_CONTROL_TIMER_ENABLE, gt_base + GT_CONTROL);
+
+Why are you enabling the timer in unused and shutdown mode?
+
+This doesn't make sense.
+
+> +               break;
+> +       }
+> +}
+> +
+> +static int gt_clockevent_set_next_event(unsigned long evt,
+> +                                       struct clock_event_device *unused)
+> +{
+> +       gt_compare_set(evt, 0);
+> +       return 0;
+> +}
+> +
+> +static irqreturn_t gt_clockevent_interrupt(int irq, void *dev_id)
+> +{
+> +       struct clock_event_device *evt = *(struct clock_event_device **)dev_id;
+> +
+> +       writel(GT_INT_STATUS_EVENT_FLAG, gt_base + GT_INT_STATUS);
+
+You're clearing the flag before checking if it was set. What happens
+if this was a spurious interrupt that should be disregarded?
+
+> +       evt->event_handler(evt);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +static int __cpuinit gt_clockevents_init(struct clock_event_device *clk)
+> +{
+> +       struct clock_event_device **this_cpu_clk;
+> +       int cpu = smp_processor_id();
+> +
+> +       clk->name = "Global Timer CE";
+
+Name it after the hardware feature. "ARM global timer clock event"
+there is no need to abbreviate randomly.
+
+> +       clk->features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
+> +       clk->set_mode = gt_clockevent_set_mode;
+> +       clk->set_next_event = gt_clockevent_set_next_event;
+> +       this_cpu_clk = __this_cpu_ptr(gt_evt);
+> +       *this_cpu_clk = clk;
+> +       clk->irq = gt_ppi;
+> +       clockevents_config_and_register(clk, gt_clk_rate,
+> +                                       0xf, 0xffffffff);
+
+Why can't this clock event handle anything lower than 0xf?
+Does that come from the datasheet or have you just copied some
+code?
+
+Further, since this clock event hardware *most definately* supports
+using a delta upper bound *beyond* 32 bits, I think the clock event
+core code should be altered to allow for registereing such clock
+events, but TGLX may have some idea here. This will work but will
+not expose the full potential of this 64-bit counter hardware.
+
+> +       per_cpu(percpu_init_called, cpu) = true;
+> +       enable_percpu_irq(clk->irq, IRQ_TYPE_NONE);
+> +       return 0;
+> +}
+> +
+> +static void gt_clockevents_stop(struct clock_event_device *clk)
+> +{
+> +       gt_clockevent_set_mode(CLOCK_EVT_MODE_UNUSED, clk);
+> +       disable_percpu_irq(clk->irq);
+> +}
+> +
+> +static int __cpuinit gt_clockevents_setup(struct clock_event_device *clk)
+> +{
+> +       int cpu = smp_processor_id();
+> +
+> +       /* Use existing clock_event for boot cpu */
+> +       if (per_cpu(percpu_init_called, cpu))
+> +               return 0;
+> +
+> +       writel(0, gt_base + GT_CONTROL);
+> +       writel(0, gt_base + GT_COUNTER0);
+> +       writel(0, gt_base + GT_COUNTER1);
+> +       writel(GT_CONTROL_TIMER_ENABLE, gt_base + GT_CONTROL);
+> +
+> +       return gt_clockevents_init(clk);
+> +}
+> +
+> +static cycle_t gt_clocksource_read(struct clocksource *cs)
+> +{
+> +       union gt_counter res = gt_counter_read();
+> +       return res.cycles;
+> +}
+> +
+> +static struct clocksource gt_clocksource = {
+> +       .name   = "Global Timer CS",
+
+"ARM global timer clock source"
+
+> +       .rating = 300,
+> +       .read   = gt_clocksource_read,
+> +       .mask   = CLOCKSOURCE_MASK(64),
+> +       .flags  = CLOCK_SOURCE_IS_CONTINUOUS,
+> +};
+> +
+> +static void __init gt_clocksource_init(void)
+> +{
+> +       writel(0, gt_base + GT_CONTROL);
+> +       writel(0, gt_base + GT_COUNTER0);
+> +       writel(0, gt_base + GT_COUNTER1);
+> +       writel(GT_CONTROL_TIMER_ENABLE, gt_base + GT_CONTROL);
+> +
+> +       gt_clocksource.shift = 20;
+
+So how did you come up with that?
+
+> +       gt_clocksource.mult =
+> +               clocksource_hz2mult(gt_clk_rate, gt_clocksource.shift);
+> +       clocksource_register(&gt_clocksource);
+
+Why don't you just replace all of this hazzle with:
+
+clocksource_register_hz(&gt_clocksource, gt_clk_rate);
+
+That will calculate mult and shift for you? (Leave these
+unassigned.)
+
+Since the hpet timer does this it's pretty well tested...
+
+No more comments right now...
+
+Yours,
+Linus Walleij
