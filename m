@@ -1,109 +1,61 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 9/9] mfd: ab8500-core: Pass GPADC compatible string to
- MFD core
-Date: Tue, 14 May 2013 12:34:26 +0100
-Message-ID: <20130514113426.GB28781@gmail.com>
-References: <1368019749-19455-1-git-send-email-lee.jones@linaro.org>
- <1368019749-19455-10-git-send-email-lee.jones@linaro.org>
- <CACRpkdY8SLRR0HQvD5AFUeNeeHRVt3XM-MOkwJs_h_EfeRctKw@mail.gmail.com>
- <20130514092614.GH3297@gmail.com>
- <CACRpkdaiZNeh9u_e7wSkHPmrxfaFQLeQEpZXEV4f+rXCCpW_eg@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/8] pinctrl-tz1090: add TZ1090 pinctrl driver
+Date: Tue, 14 May 2013 13:52:34 +0200
+Message-ID: <CACRpkdbJpnpZwoCqtFk+U9fsJXPLw+AhPBSCxawS2-QwAjBftA@mail.gmail.com>
+References: <1366727607-27444-1-git-send-email-james.hogan@imgtec.com>
+ <1366727607-27444-6-git-send-email-james.hogan@imgtec.com>
+ <CACRpkdbYwDvF=gNurLzc+wE0BYpoqog7sPdRTY59BGS7yn3n9Q@mail.gmail.com>
+ <517A6B01.5000708@imgtec.com>
+ <CACRpkdYooPNgJuA-fZOiGJV03R_783uAOmR=QgYOahYdHcad9w@mail.gmail.com>
+ <5183AC54.30503@imgtec.com>
+ <CACRpkdYYhsY-2vQnxpM-rB9_6yXiY4XBNhb4eyNvK=eD=dxK5w@mail.gmail.com>
+ <5183D262.7000107@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaiZNeh9u_e7wSkHPmrxfaFQLeQEpZXEV4f+rXCCpW_eg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus WALLEIJ <linus.walleij@stericsson.com>, Srinidhi KASAGAR <srinidhi.kasagar@stericsson.com>, Samuel Ortiz <sameo@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5183D262.7000107-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> >> probing and does not have an .of_match_table defined in it's
-> >> driver struct? I mean, what could possibly match that
-> >> compatible string? The .name field will take care of naming
-> >> the device does it not?
-> >
-> > You only need that stuff if you require _extra_ bindings. Things li=
-ke
-> > regulators and interrupt numbers are configured behind the scenes.
->=20
-> Sure, but isn't the idea with of_match_table that this should be
-> used in drivers when probing from device tree?
+On Fri, May 3, 2013 at 5:06 PM, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org> wrote:
+> [me]
+>> Thus this part of the problem (poking that "select" bit)
+>> should be handled by the pinmux part of the driver.
+>>
+>> The pinconf part does not need to know about it.
+>
+> Okay, so how would you recommend handling the case of a pin in a muxing
+> pingroup that shouldn't be put into peripheral mode?
+>
+> E.g. imagine an 18bit display is wired to the (24bit) tft pins (which
+> are muxed as a group to "tft" function), and the least significant tft
+> pins are used as GPIOs to control something like board power supplies.
+>
+> Without using pinconf I think the muxing pingroups would have to overlap
+> like below (is that acceptable?):
 
-We're not probing from Device Tree. We're registering from MFD.
+I don't know if I understand your example correctly but are you after
+this part of the documentation from Documentation/pinctrl.txt:
 
-> Surely it *works* with other schemes but I always thought about
-> them as some kind of rough fallback hacks. I would be way more
-> convenient with the patch if it added an of_match_table to
-> the ADC driver as well, because then I understand what is
-> going on.
+Pinmux conventions
+==================
+(...)
+  It is possible to map several groups to the same combination of device,
+  pin controller and function. This is for cases where a certain function on
+  a certain pin controller may use different sets of pins in different
+  configurations.
 
-They're not full-back hacks. All drivers obtain their interrupts this
-way when using Device Tree.
-
-> >> For non-emergency merging though:
-> >> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > If we don't put this into v3.10-rcX, then the GPADC driver will be
-> > broken in v3.10 when booting with DT.
->=20
-> OK I think I understand why now...
->=20
-> >> But for this to make sense the AB8500 ADC driver needs
-> >> to be augmented for DT probing and preferrably also moved
-> >> to drivers/adc and made to utilize that subsystem.
-> >
-> > Not sure I understand the reasoning for this. It works well as a pl=
-ain
-> > MFD device.
->=20
-> The commit message says:
->  "Without it, the driver won't be able to interrogate the Device Tree=
- or
->   locate suitable regulators and will most likely fail to probe."
->=20
-> That commit message makes it sound like the driver is
-> interrogating (hm is that the right term...) the device tree, but
-> now you say it isn't (as you say it is a plain MFD device).
-> Of course the MFD core and drivers/of/platform.c is doing
-> all sorts of magic based on the device tree, and that is
-> what the patch fixes, right? Nothing to do with the driver
-> really?
-
-I guess you're kind of correct. Yes, it's not the actual driver that's
-interrogating (yes it's the right term) the Device Tree, other
-subsystems are doing it on the driver's behalf. But the driver's node
-is being used, which is why we need the compatible string.
-
-> I suspect the missing regulators due to how the OF core or
-> MFD core uses the device tree is the actual problem
-> solved by the patch?
->=20
-> Anyway I think I was after this:
->=20
-> Isn't the idea that all devices that get probed from a device tree
-> shall have corresponding bindings documented under
-> Documentation/devicetree/bindings/*?
-
-It has an entry in  Documentation/devicetree/bindings/mfd/ab8500.txt.
-
-> And this driver is definately in the wrong subsystem (not your
-> fault) so I suspect the binding doc should be in
-> Documentation/devicetree/bindings/adc/ab8500.txt or
-> something.
-
-All of the AB8500 devices are covered in the aforementioned file and
-to my knowledge none of them are represented in their respective
-'real' driver type's binding doc folders (except Power).
-
-> I'm not pointing that out as a problem in this
-> patch, I'm just discussing the mess we're in ...
-
-Sure.
-
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Yours,
+Linus Walleij
