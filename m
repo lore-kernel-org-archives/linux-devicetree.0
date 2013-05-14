@@ -1,41 +1,114 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 1/2] video: exynos_dp: Add parsing of gpios pins to
- exynos-dp driver
-Date: Tue, 14 May 2013 16:16:38 +0200
-Message-ID: <1528008.HgBKZQmFTy@amdc1227>
-References: <1368536152-13370-1-git-send-email-vikas.sajjan@linaro.org>
- <1368536152-13370-2-git-send-email-vikas.sajjan@linaro.org>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v3] ARM:dts:omap4-panda:Update the LED support for the panda DTS
+Date: Tue, 14 May 2013 09:17:56 -0500
+Message-ID: <1368541076-6854-1-git-send-email-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1368536152-13370-2-git-send-email-vikas.sajjan@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vikas Sajjan <vikas.sajjan@linaro.org>
-Cc: jg1.han@samsung.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, linaro-kernel@lists.linaro.org, rpurdie@rpsys.net, FlorianSchandinat@gmx.de, linux-fbdev@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk
+Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vikas,
+The GPIO for LED D1 on the omap4-panda a1-a3 rev and the omap4-panda-es
+are different.
 
-On Tuesday 14 of May 2013 18:25:51 Vikas Sajjan wrote:
->  Adds GPIO parsing functionality for "LCD backlight" and "LCD enable"
->  GPIO pins of exynos dp controller.
-> 
-> Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
-> ---
->  drivers/video/exynos/exynos_dp_core.c |   45
-> +++++++++++++++++++++++++++++++++ 1 file changed, 45 insertions(+)
-> 
+A1-A3 = gpio_wk7
+ES = gpio_110
 
-I don't think that Exynos DP driver is right place for such code. Backlight 
-and LCD drivers are responsible for backlight and LCD power control using 
-backlight and LCD subsystems.
+There is no change to LED D2
 
-IMHO the correct solution would be to either extend existing backlight/lcd 
-drivers found in drivers/video/backlight to support direct GPIO control and 
-parse GPIO pins from device tree or create new gpio_bl and gpio_lcd drivers.
+Abstract away the pinmux and the LED definitions for the two boards into
+the respective DTS files.
 
-CCing Richard, Florian and linux-fbdev.
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ arch/arm/boot/dts/omap4-panda-common.dtsi |   16 +++++++++++-
+ arch/arm/boot/dts/omap4-panda-es.dts      |   40 +++++++++++++++++++++++++++++
+ 2 files changed, 55 insertions(+), 1 deletion(-)
 
-Best regards,
-Tomasz
+diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+index 03bd60d..2b516af 100644
+--- a/arch/arm/boot/dts/omap4-panda-common.dtsi
++++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+@@ -16,7 +16,7 @@
+ 		reg = <0x80000000 0x40000000>; /* 1 GB */
+ 	};
+ 
+-	leds {
++	leds: leds {
+ 		compatible = "gpio-leds";
+ 		heartbeat {
+ 			label = "pandaboard::status1";
+@@ -137,6 +137,20 @@
+ 	};
+ };
+ 
++&omap4_pmx_wkup {
++	pinctrl-names = "default";
++	pinctrl-0 = <
++		&led_wkgpio_pins
++	>;
++
++	led_wkgpio_pins: pinmux_leds_wkpins {
++		pinctrl-single,pins = <
++			0x1a 0x3	/* gpio_wk7 OUTPUT | MODE 3 */
++			0x1c 0x3	/* gpio_wk8 OUTPUT | MODE 3 */
++		>;
++	};
++};
++
+ &i2c1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c1_pins>;
+diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts/omap4-panda-es.dts
+index f1d8c21..8d1ba03 100644
+--- a/arch/arm/boot/dts/omap4-panda-es.dts
++++ b/arch/arm/boot/dts/omap4-panda-es.dts
+@@ -34,3 +34,43 @@
+ 		0x5e 0x100	/* hdmi_sda.hdmi_sda INPUT | MODE 0 */
+ 		>;
+ };
++
++&leds {
++	compatible = "gpio-leds";
++	heartbeat {
++		label = "pandaboard::status1";
++		gpios = <&gpio4 14 0>;
++		linux,default-trigger = "heartbeat";
++	};
++	mmc {
++		label = "pandaboard::status2";
++		gpios = <&gpio1 8 0>;
++		linux,default-trigger = "gpio";
++	};
++};
++
++&omap4_pmx_core {
++	pinctrl-names = "default";
++	pinctrl-0 = <
++		&led_gpio_pins
++	>;
++
++	led_gpio_pins: gpio_led_pmx {
++		pinctrl-single,pins = <
++			0xb6 0x3	/* gpio_110 OUTPUT | MODE 3 */
++		>;
++	};
++};
++
++&omap4_pmx_wkup {
++	pinctrl-names = "default";
++	pinctrl-0 = <
++		&led_wkgpio_pins
++	>;
++
++	led_wkgpio_pins: pinmux_leds_wkpins {
++		pinctrl-single,pins = <
++			0x1c 0x3	/* gpio_wk8 OUTPUT | MODE 3 */
++		>;
++	};
++};
+-- 
+1.7.9.5
+
