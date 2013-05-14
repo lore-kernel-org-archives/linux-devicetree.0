@@ -1,51 +1,42 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH V2 2/9] Documentation: devicetree: Add DT bindings for UFS
- host controller
-Date: Tue, 14 May 2013 11:08:49 -0700
-Message-ID: <CAOesGMij6oKDr0BCRAnmz-r48S5FzzMcU_iyCyCyqkafWsmyNA@mail.gmail.com>
-References: <1368515328-31535-1-git-send-email-draviv@codeaurora.org>
-	<1368515328-31535-3-git-send-email-draviv@codeaurora.org>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH v4] extcon: Palmas Extcon Driver
+Date: Wed, 15 May 2013 00:13:02 +0530
+Message-ID: <519285B6.2090701@nvidia.com>
+References: <1362662506-14823-4-git-send-email-kishon@ti.com> <1367846225-15685-1-git-send-email-kishon@ti.com> <20130506144010.GF13472@opensource.wolfsonmicro.com> <51888D55.3090907@ti.com> <20130507075824.GM7478@sirena.org.uk> <5188CD9C.6010602@ti.com> <20130507104502.GQ7478@sirena.org.uk> <5192017D.6060108@ti.com> <20130514095402.GA9721@xora-build.xora.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1368515328-31535-3-git-send-email-draviv@codeaurora.org>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Dolev Raviv <draviv@codeaurora.org>
-Cc: linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, Sujit Reddy Thumma <sthumma@codeaurora.org>, "moderated list:OPEN FIRMWARE AND..." <devicetree-discuss@lists.ozlabs.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130514095402.GA9721@xora-build.xora.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Graeme Gregory <gg@slimlogic.co.uk>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Brown <broonie@kernel.org>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "balbi@ti.com" <balbi@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "ruchika@ti.com" <ruchika@ti.com>, "tony@atomide.com" <tony@atomide.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 14, 2013 at 12:08 AM, Dolev Raviv <draviv@codeaurora.org> wrote:
-> Compatible list is used in commit 03b1781 but is not documented.
-> Add necessary device tree bindings to describe on-chip UFS host
-> controllers.
+On Tuesday 14 May 2013 03:24 PM, Graeme Gregory wrote:
+> On Tue, May 14, 2013 at 02:48:53PM +0530, Kishon Vijay Abraham I wrote:
+>> On Tuesday 07 May 2013 04:15 PM, Mark Brown wrote:
+>>> On Tue, May 07, 2013 at 03:17:08PM +0530, Kishon Vijay Abraham I wrote:
+>>>> On Tuesday 07 May 2013 01:28 PM, Mark Brown wrote:
+>>>>>> The platform can provide it's own vbus control in which case this is
+>>>>>> not needed.
+>>>>> So why is there no interaction with this external VBUS control and how
+>>>>> does the driver distinguish between that and an error getting the
+>>>>> regulator?
+>>>> The platform specifies if it provides its own VBUS control by the dt
+>>>> property ti,no_control_vbus. So the driver will give an error only
+>>>> when *ti,no_control_vbus* is not set. Graeme?
+>>> That doesn't answer the question about why there's no interaction with
+>>> the external control...
+>>>
+>> Graeme?
+>>
+> I already partially answered this, it was written for a SoC where VBUS
+> generation was in hardware on the SoC with no information.
 >
-> Signed-off-by: Sujit Reddy Thumma <sthumma@codeaurora.org>
->
-> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> new file mode 100644
-> index 0000000..20468b2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> @@ -0,0 +1,16 @@
-> +* Universal Flash Storage (UFS) Host Controller
-> +
-> +UFSHC nodes are defined to describe on-chip UFS host controllers.
-> +Each UFS controller instance should have its own node.
-> +
-> +Required properties:
-> +- compatible        : compatible list, contains "jedec,ufs-1.1"
-> +- interrupts        : <interrupt mapping for UFS host controller IRQ>
-> +- reg               : <registers mapping>
-> +
-> +Example:
-> +       ufshc@0xfc598000 {
-> +               compatible = "jedec,ufs-1.1";
+> I would say if nvidia/Laxman do not need this remove it, if someone ever
+> uses it then they can re-add it easy enough!
 
-Hmm.
-
-Does jedec really specify the programming interface of this type of
-device, register layout and meaning? It seems to be more about the
-command set and electrical/connectivity specifications, no?
-
-
--Olof
+I think we really do not require this. Just we need the notification 
+through extcon about the cable connection. We should remove it for 
+avoiding complexity for now.
