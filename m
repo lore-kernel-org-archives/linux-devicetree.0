@@ -1,16 +1,11 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH V2 07/10] ARM: mvebu: Use standard MMC binding for all
- users of mvsdio
-Date: Mon, 13 May 2013 19:09:18 -0400
-Message-ID: <20130513230918.GG31290@titan.lakedaemon.net>
-References: <1368479941-10084-1-git-send-email-gmbnomis@gmail.com>
- <1368479941-10084-8-git-send-email-gmbnomis@gmail.com>
+From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] mtd: fsmc_nand: fix error return code in fsmc_nand_probe()
+Date: Tue, 14 May 2013 10:30:19 +0800
+Message-ID: <CAPgLHd_DjX-Bfdf9p6k2t_fy+SjgQanuJjX_WxA1tqewwRe1HA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1368479941-10084-8-git-send-email-gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,31 +16,38 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vipin.kumar-qxv4g6HH51o@public.gmane.org
+Cc: yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 13, 2013 at 11:18:58PM +0200, Simon Baatz wrote:
-> In order to prepare the switch to the standard MMC device tree parser
-> for mvsdio, adapt all current uses of mvsdio in the dts files to the
-> standard format.
-> 
-> Signed-off-by: Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-...
-> diff --git a/arch/arm/boot/dts/kirkwood-mplcec4.dts b/arch/arm/boot/dts/kirkwood-mplcec4.dts
-> index 7588241..bf3a58c 100644
-> --- a/arch/arm/boot/dts/kirkwood-mplcec4.dts
-> +++ b/arch/arm/boot/dts/kirkwood-mplcec4.dts
-> @@ -136,7 +136,7 @@
->  			pinctrl-0 = <&pmx_sdio &pmx_sdio_cd>;
->  			pinctrl-names = "default";
->  			status = "okay";
-> -			cd-gpios = <&gpio1 15 0>;
-> +			cd-gpios = <&gpio1 15 1>;
+From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 
-Is this a bugfix that should be backported?
+Fix to return -ENODEV in the dma channel request error handling
+case instead of 0, as done elsewhere in this function.
 
-thx,
+Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+---
+v1 -> v2: set ret for error cases only
+---
+ drivers/mtd/nand/fsmc_nand.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Jason.
+diff --git a/drivers/mtd/nand/fsmc_nand.c b/drivers/mtd/nand/fsmc_nand.c
+index 0e5a1d9..95e1768 100644
+--- a/drivers/mtd/nand/fsmc_nand.c
++++ b/drivers/mtd/nand/fsmc_nand.c
+@@ -1035,12 +1035,14 @@ static int __init fsmc_nand_probe(struct platform_device *pdev)
+ 		host->read_dma_chan = dma_request_channel(mask, filter,
+ 				pdata->read_dma_priv);
+ 		if (!host->read_dma_chan) {
++			ret = -ENODEV;
+ 			dev_err(&pdev->dev, "Unable to get read dma channel\n");
+ 			goto err_req_read_chnl;
+ 		}
+ 		host->write_dma_chan = dma_request_channel(mask, filter,
+ 				pdata->write_dma_priv);
+ 		if (!host->write_dma_chan) {
++			ret = -ENODEV;
+ 			dev_err(&pdev->dev, "Unable to get write dma channel\n");
+ 			goto err_req_write_chnl;
+ 		}
