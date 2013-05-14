@@ -1,222 +1,534 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] clk: si5351: Allow user to define disabled state for
- every clock output
-Date: Tue, 14 May 2013 12:13:50 -0700
-Message-ID: <20130514191350.10068.22100@quantum>
-References: <1367559207-20086-1-git-send-email-marek.belisko@streamunlimited.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH 1/2] clk: sun5i: Add compatibles for Allwinner A13
+Date: Tue, 14 May 2013 12:26:02 -0700
+Message-ID: <20130514192602.10068.53237@quantum>
+References: <1367315783-21345-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1367315783-21345-2-git-send-email-maxime.ripard@free-electrons.com>
+ <517FA8F7.1080609@elopez.com.ar>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1367559207-20086-1-git-send-email-marek.belisko-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Marek Belisko <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, vladimir.koutny-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marek Belisko <marek.belisko-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>, daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <517FA8F7.1080609@elopez.com.ar>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, Emilio Lopez <emilio@elopez.com.ar>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Marek Belisko (2013-05-02 22:33:27)
-> From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> This patch adds platform data and DT bindings to allow to overwrite
-> the stored disabled state for each clock output.
-> 
-> Signed-off-by: Marek Belisko <marek.belisko-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Quoting Emilio L=C3=B3pez (2013-04-30 04:20:23)
+> Hi Maxime,
+>=20
+> El 30/04/13 06:56, Maxime Ripard escribi=C3=B3:
+> > The A13 has a lot less clocks than the one found in the Allwinner A=
+10.
+> > Add these stripped down clocks to the clock driver and in the
+> > documentation.
+> >=20
+> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+>=20
+> This patch looks good to me.
+>=20
+> Acked-by: Emilio L=C3=B3pez <emilio@elopez.com.ar>
+>=20
 
-Taken into clk-next.
+I've taken patch #1 into clk-next.
 
-Thanks,
+Thanks!
 Mike
 
-> ---
-> Changes from v1->v2:
-> Sebastian Hesselbarth send me updated version of patch which was based
-> on v1. Resending with updates.
-> 
->  .../devicetree/bindings/clock/silabs,si5351.txt    |    5 ++
->  drivers/clk/clk-si5351.c                           |   74 +++++++++++++++++++-
->  drivers/clk/clk-si5351.h                           |    1 +
->  include/linux/platform_data/si5351.h               |   18 +++++
->  4 files changed, 95 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/silabs,si5351.txt b/Documentation/devicetree/bindings/clock/silabs,si5351.txt
-> index cc37465..66c75b2 100644
-> --- a/Documentation/devicetree/bindings/clock/silabs,si5351.txt
-> +++ b/Documentation/devicetree/bindings/clock/silabs,si5351.txt
-> @@ -44,6 +44,11 @@ Optional child node properties:
->  - silabs,multisynth-source: source pll A(0) or B(1) of corresponding multisynth
->    divider.
->  - silabs,pll-master: boolean, multisynth can change pll frequency.
-> +- silabs,disable-state : clock output disable state, shall be
-> +  0 = clock output is driven LOW when disabled
-> +  1 = clock output is driven HIGH when disabled
-> +  2 = clock output is FLOATING (HIGH-Z) when disabled
-> +  3 = clock output is NEVER disabled
->  
->  ==Example==
->  
-> diff --git a/drivers/clk/clk-si5351.c b/drivers/clk/clk-si5351.c
-> index 8323c31..098f28b 100644
-> --- a/drivers/clk/clk-si5351.c
-> +++ b/drivers/clk/clk-si5351.c
-> @@ -851,6 +851,41 @@ static int _si5351_clkout_set_drive_strength(
->         return 0;
->  }
->  
-> +static int _si5351_clkout_set_disable_state(
-> +       struct si5351_driver_data *drvdata, int num,
-> +       enum si5351_disable_state state)
-> +{
-> +       u8 reg = (num < 4) ? SI5351_CLK3_0_DISABLE_STATE :
-> +               SI5351_CLK7_4_DISABLE_STATE;
-> +       u8 shift = (num < 4) ? (2 * num) : (2 * (num-4));
-> +       u8 mask = SI5351_CLK_DISABLE_STATE_MASK << shift;
-> +       u8 val;
-> +
-> +       if (num > 8)
-> +               return -EINVAL;
-> +
-> +       switch (state) {
-> +       case SI5351_DISABLE_LOW:
-> +               val = SI5351_CLK_DISABLE_STATE_LOW;
-> +               break;
-> +       case SI5351_DISABLE_HIGH:
-> +               val = SI5351_CLK_DISABLE_STATE_HIGH;
-> +               break;
-> +       case SI5351_DISABLE_FLOATING:
-> +               val = SI5351_CLK_DISABLE_STATE_FLOAT;
-> +               break;
-> +       case SI5351_DISABLE_NEVER:
-> +               val = SI5351_CLK_DISABLE_STATE_NEVER;
-> +               break;
-> +       default:
-> +               return 0;
-> +       }
-> +
-> +       si5351_set_bits(drvdata, reg, mask, val << shift);
-> +
-> +       return 0;
-> +}
-> +
->  static int si5351_clkout_prepare(struct clk_hw *hw)
->  {
->         struct si5351_hw_data *hwdata =
-> @@ -1225,6 +1260,33 @@ static int si5351_dt_parse(struct i2c_client *client)
->                         }
->                 }
->  
-> +               if (!of_property_read_u32(child, "silabs,disable-state",
-> +                                         &val)) {
-> +                       switch (val) {
-> +                       case 0:
-> +                               pdata->clkout[num].disable_state =
-> +                                       SI5351_DISABLE_LOW;
-> +                               break;
-> +                       case 1:
-> +                               pdata->clkout[num].disable_state =
-> +                                       SI5351_DISABLE_HIGH;
-> +                               break;
-> +                       case 2:
-> +                               pdata->clkout[num].disable_state =
-> +                                       SI5351_DISABLE_FLOATING;
-> +                               break;
-> +                       case 3:
-> +                               pdata->clkout[num].disable_state =
-> +                                       SI5351_DISABLE_NEVER;
-> +                               break;
-> +                       default:
-> +                               dev_err(&client->dev,
-> +                                       "invalid disable state %d for clkout %d\n",
-> +                                       val, num);
-> +                               return -EINVAL;
-> +                       }
-> +               }
-> +
->                 if (!of_property_read_u32(child, "clock-frequency", &val))
->                         pdata->clkout[num].rate = val;
->  
-> @@ -1281,9 +1343,6 @@ static int si5351_i2c_probe(struct i2c_client *client,
->  
->         /* Disable interrupts */
->         si5351_reg_write(drvdata, SI5351_INTERRUPT_MASK, 0xf0);
-> -       /* Set disabled output drivers to drive low */
-> -       si5351_reg_write(drvdata, SI5351_CLK3_0_DISABLE_STATE, 0x00);
-> -       si5351_reg_write(drvdata, SI5351_CLK7_4_DISABLE_STATE, 0x00);
->         /* Ensure pll select is on XTAL for Si5351A/B */
->         if (drvdata->variant != SI5351_VARIANT_C)
->                 si5351_set_bits(drvdata, SI5351_PLL_INPUT_SOURCE,
-> @@ -1327,6 +1386,15 @@ static int si5351_i2c_probe(struct i2c_client *client,
->                                 n, pdata->clkout[n].drive);
->                         return ret;
->                 }
-> +
-> +               ret = _si5351_clkout_set_disable_state(drvdata, n,
-> +                                               pdata->clkout[n].disable_state);
-> +               if (ret) {
-> +                       dev_err(&client->dev,
-> +                               "failed set disable state of clkout%d to %d\n",
-> +                               n, pdata->clkout[n].disable_state);
-> +                       return ret;
-> +               }
->         }
->  
->         /* register xtal input clock gate */
-> diff --git a/drivers/clk/clk-si5351.h b/drivers/clk/clk-si5351.h
-> index af41b50..c0dbf26 100644
-> --- a/drivers/clk/clk-si5351.h
-> +++ b/drivers/clk/clk-si5351.h
-> @@ -81,6 +81,7 @@
->  
->  #define SI5351_CLK3_0_DISABLE_STATE            24
->  #define SI5351_CLK7_4_DISABLE_STATE            25
-> +#define  SI5351_CLK_DISABLE_STATE_MASK         3
->  #define  SI5351_CLK_DISABLE_STATE_LOW          0
->  #define  SI5351_CLK_DISABLE_STATE_HIGH         1
->  #define  SI5351_CLK_DISABLE_STATE_FLOAT                2
-> diff --git a/include/linux/platform_data/si5351.h b/include/linux/platform_data/si5351.h
-> index 92dabca..5433439 100644
-> --- a/include/linux/platform_data/si5351.h
-> +++ b/include/linux/platform_data/si5351.h
-> @@ -79,6 +79,23 @@ enum si5351_drive_strength {
->  };
->  
->  /**
-> + * enum si5351_disable_state - Si5351 clock output disable state
-> + * @SI5351_DISABLE_DEFAULT: default, do not change eeprom config
-> + * @SI5351_DISABLE_LOW: CLKx is set to a LOW state when disabled
-> + * @SI5351_DISABLE_HIGH: CLKx is set to a HIGH state when disabled
-> + * @SI5351_DISABLE_FLOATING: CLKx is set to a FLOATING state when
-> + *                             disabled
-> + * @SI5351_DISABLE_NEVER: CLKx is NEVER disabled
-> + */
-> +enum si5351_disable_state {
-> +       SI5351_DISABLE_DEFAULT = 0,
-> +       SI5351_DISABLE_LOW,
-> +       SI5351_DISABLE_HIGH,
-> +       SI5351_DISABLE_FLOATING,
-> +       SI5351_DISABLE_NEVER,
-> +};
-> +
-> +/**
->   * struct si5351_clkout_config - Si5351 clock output configuration
->   * @clkout: clkout number
->   * @multisynth_src: multisynth source clock
-> @@ -91,6 +108,7 @@ struct si5351_clkout_config {
->         enum si5351_multisynth_src multisynth_src;
->         enum si5351_clkout_src clkout_src;
->         enum si5351_drive_strength drive;
-> +       enum si5351_disable_state disable_state;
->         bool pll_master;
->         unsigned long rate;
->  };
-> -- 
-> 1.7.9.5
+> > ---
+> >  Documentation/devicetree/bindings/clock/sunxi.txt  | 117 +++------=
+------------
+> >  .../bindings/clock/sunxi/sun4i-a10-gates.txt       |  93 +++++++++=
++++++++
+> >  .../bindings/clock/sunxi/sun5i-a13-gates.txt       |  58 +++++++++=
++
+> >  drivers/clk/sunxi/clk-sunxi.c                      |  31 ++++--
+> >  4 files changed, 187 insertions(+), 112 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/sunxi/s=
+un4i-a10-gates.txt
+> >  create mode 100644 Documentation/devicetree/bindings/clock/sunxi/s=
+un5i-a13-gates.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Do=
+cumentation/devicetree/bindings/clock/sunxi.txt
+> > index 729f524..d495521 100644
+> > --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+> > +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+> > @@ -12,22 +12,30 @@ Required properties:
+> >       "allwinner,sun4i-axi-clk" - for the AXI clock
+> >       "allwinner,sun4i-axi-gates-clk" - for the AXI gates
+> >       "allwinner,sun4i-ahb-clk" - for the AHB clock
+> > -     "allwinner,sun4i-ahb-gates-clk" - for the AHB gates
+> > +     "allwinner,sun4i-ahb-gates-clk" - for the AHB gates on A10
+> > +     "allwinner,sun5i-a13-ahb-gates-clk" - for the AHB gates on A1=
+3
+> >       "allwinner,sun4i-apb0-clk" - for the APB0 clock
+> > -     "allwinner,sun4i-apb0-gates-clk" - for the APB0 gates
+> > +     "allwinner,sun4i-apb0-gates-clk" - for the APB0 gates on A10
+> > +     "allwinner,sun5i-a13-apb0-gates-clk" - for the APB0 gates on =
+A13
+> >       "allwinner,sun4i-apb1-clk" - for the APB1 clock
+> >       "allwinner,sun4i-apb1-mux-clk" - for the APB1 clock muxing
+> > -     "allwinner,sun4i-apb1-gates-clk" - for the APB1 gates
+> > +     "allwinner,sun4i-apb1-gates-clk" - for the APB1 gates on A10
+> > +     "allwinner,sun5i-a13-apb1-gates-clk" - for the APB1 gates on =
+A13
+> > =20
+> >  Required properties for all clocks:
+> >  - reg : shall be the control register address for the clock.
+> >  - clocks : shall be the input parent clock(s) phandle for the cloc=
+k
+> >  - #clock-cells : from common clock binding; shall be set to 0 exce=
+pt for
+> > -     "allwinner,sun4i-*-gates-clk" where it shall be set to 1
+> > +     "allwinner,*-gates-clk" where it shall be set to 1
+> > =20
+> > -Additionally, "allwinner,sun4i-*-gates-clk" clocks require:
+> > +Additionally, "allwinner,*-gates-clk" clocks require:
+> >  - clock-output-names : the corresponding gate names that the clock=
+ controls
+> > =20
+> > +Clock consumers should specify the desired clocks they use with a
+> > +"clocks" phandle cell. Consumers that are using a gated clock shou=
+ld
+> > +provide an additional ID in their clock property. The values of th=
+is
+> > +ID are documented in sunxi/<soc>-gates.txt.
+> > +
+> >  For example:
+> > =20
+> >  osc24M: osc24M@01c20050 {
+> > @@ -50,102 +58,3 @@ cpu: cpu@01c20054 {
+> >       reg =3D <0x01c20054 0x4>;
+> >       clocks =3D <&osc32k>, <&osc24M>, <&pll1>;
+> >  };
+> > -
+> > -
+> > -
+> > -Gate clock outputs
+> > -
+> > -The "allwinner,sun4i-*-gates-clk" clocks provide several gatable o=
+utputs;
+> > -their corresponding offsets as present on sun4i are listed below. =
+Note that
+> > -some of these gates are not present on sun5i.
+> > -
+> > -  * AXI gates ("allwinner,sun4i-axi-gates-clk")
+> > -
+> > -    DRAM                                                          =
+      0
+> > -
+> > -  * AHB gates ("allwinner,sun4i-ahb-gates-clk")
+> > -
+> > -    USB0                                                          =
+      0
+> > -    EHCI0                                                         =
+      1
+> > -    OHCI0                                                         =
+      2*
+> > -    EHCI1                                                         =
+      3
+> > -    OHCI1                                                         =
+      4*
+> > -    SS                                                            =
+      5
+> > -    DMA                                                           =
+      6
+> > -    BIST                                                          =
+      7
+> > -    MMC0                                                          =
+      8
+> > -    MMC1                                                          =
+      9
+> > -    MMC2                                                          =
+      10
+> > -    MMC3                                                          =
+      11
+> > -    MS                                                            =
+      12**
+> > -    NAND                                                          =
+      13
+> > -    SDRAM                                                         =
+      14
+> > -
+> > -    ACE                                                           =
+      16
+> > -    EMAC                                                          =
+      17
+> > -    TS                                                            =
+      18
+> > -
+> > -    SPI0                                                          =
+      20
+> > -    SPI1                                                          =
+      21
+> > -    SPI2                                                          =
+      22
+> > -    SPI3                                                          =
+      23
+> > -    PATA                                                          =
+      24
+> > -    SATA                                                          =
+      25**
+> > -    GPS                                                           =
+      26*
+> > -
+> > -    VE                                                            =
+      32
+> > -    TVD                                                           =
+      33
+> > -    TVE0                                                          =
+      34
+> > -    TVE1                                                          =
+      35
+> > -    LCD0                                                          =
+      36
+> > -    LCD1                                                          =
+      37
+> > -
+> > -    CSI0                                                          =
+      40
+> > -    CSI1                                                          =
+      41
+> > -
+> > -    HDMI                                                          =
+      43
+> > -    DE_BE0                                                        =
+      44
+> > -    DE_BE1                                                        =
+      45
+> > -    DE_FE0                                                        =
+      46
+> > -    DE_FE1                                                        =
+      47
+> > -
+> > -    MP                                                            =
+      50
+> > -
+> > -    MALI400                                                       =
+      52
+> > -
+> > -  * APB0 gates ("allwinner,sun4i-apb0-gates-clk")
+> > -
+> > -    CODEC                                                         =
+      0
+> > -    SPDIF                                                         =
+      1*
+> > -    AC97                                                          =
+      2
+> > -    IIS                                                           =
+      3
+> > -
+> > -    PIO                                                           =
+      5
+> > -    IR0                                                           =
+      6
+> > -    IR1                                                           =
+      7
+> > -
+> > -    KEYPAD                                                        =
+      10
+> > -
+> > -  * APB1 gates ("allwinner,sun4i-apb1-gates-clk")
+> > -
+> > -    I2C0                                                          =
+      0
+> > -    I2C1                                                          =
+      1
+> > -    I2C2                                                          =
+      2
+> > -
+> > -    CAN                                                           =
+      4
+> > -    SCR                                                           =
+      5
+> > -    PS20                                                          =
+      6
+> > -    PS21                                                          =
+      7
+> > -
+> > -    UART0                                                         =
+      16
+> > -    UART1                                                         =
+      17
+> > -    UART2                                                         =
+      18
+> > -    UART3                                                         =
+      19
+> > -    UART4                                                         =
+      20
+> > -    UART5                                                         =
+      21
+> > -    UART6                                                         =
+      22
+> > -    UART7                                                         =
+      23
+> > -
+> > -Notation:
+> > - [*]:  The datasheet didn't mention these, but they are present on=
+ AW code
+> > - [**]: The datasheet had this marked as "NC" but they are used on =
+AW code
+> > diff --git a/Documentation/devicetree/bindings/clock/sunxi/sun4i-a1=
+0-gates.txt b/Documentation/devicetree/bindings/clock/sunxi/sun4i-a10-g=
+ates.txt
+> > new file mode 100644
+> > index 0000000..6a03475
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/sunxi/sun4i-a10-gates=
+=2Etxt
+> > @@ -0,0 +1,93 @@
+> > +Gate clock outputs
+> > +------------------
+> > +
+> > +  * AXI gates ("allwinner,sun4i-axi-gates-clk")
+> > +
+> > +    DRAM                                     0
+> > +
+> > +  * AHB gates ("allwinner,sun4i-ahb-gates-clk")
+> > +
+> > +    USB0                                     0
+> > +    EHCI0                                    1
+> > +    OHCI0                                    2*
+> > +    EHCI1                                    3
+> > +    OHCI1                                    4*
+> > +    SS                                               5
+> > +    DMA                                              6
+> > +    BIST                                     7
+> > +    MMC0                                     8
+> > +    MMC1                                     9
+> > +    MMC2                                     10
+> > +    MMC3                                     11
+> > +    MS                                               12**
+> > +    NAND                                     13
+> > +    SDRAM                                    14
+> > +
+> > +    ACE                                              16
+> > +    EMAC                                     17
+> > +    TS                                               18
+> > +
+> > +    SPI0                                     20
+> > +    SPI1                                     21
+> > +    SPI2                                     22
+> > +    SPI3                                     23
+> > +    PATA                                     24
+> > +    SATA                                     25**
+> > +    GPS                                              26*
+> > +
+> > +    VE                                               32
+> > +    TVD                                              33
+> > +    TVE0                                     34
+> > +    TVE1                                     35
+> > +    LCD0                                     36
+> > +    LCD1                                     37
+> > +
+> > +    CSI0                                     40
+> > +    CSI1                                     41
+> > +
+> > +    HDMI                                     43
+> > +    DE_BE0                                   44
+> > +    DE_BE1                                   45
+> > +    DE_FE1                                   46
+> > +    DE_FE1                                   47
+> > +
+> > +    MP                                               50
+> > +
+> > +    MALI400                                  52
+> > +
+> > +  * APB0 gates ("allwinner,sun4i-apb0-gates-clk")
+> > +
+> > +    CODEC                                    0
+> > +    SPDIF                                    1*
+> > +    AC97                                     2
+> > +    IIS                                              3
+> > +
+> > +    PIO                                              5
+> > +    IR0                                              6
+> > +    IR1                                              7
+> > +
+> > +    KEYPAD                                   10
+> > +
+> > +  * APB1 gates ("allwinner,sun4i-apb1-gates-clk")
+> > +
+> > +    I2C0                                     0
+> > +    I2C1                                     1
+> > +    I2C2                                     2
+> > +
+> > +    CAN                                              4
+> > +    SCR                                              5
+> > +    PS20                                     6
+> > +    PS21                                     7
+> > +
+> > +    UART0                                    16
+> > +    UART1                                    17
+> > +    UART2                                    18
+> > +    UART3                                    19
+> > +    UART4                                    20
+> > +    UART5                                    21
+> > +    UART6                                    22
+> > +    UART7                                    23
+> > +
+> > +Notation:
+> > + [*]:  The datasheet didn't mention these, but they are present on=
+ AW code
+> > + [**]: The datasheet had this marked as "NC" but they are used on =
+AW code
+> > diff --git a/Documentation/devicetree/bindings/clock/sunxi/sun5i-a1=
+3-gates.txt b/Documentation/devicetree/bindings/clock/sunxi/sun5i-a13-g=
+ates.txt
+> > new file mode 100644
+> > index 0000000..006b6df
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/sunxi/sun5i-a13-gates=
+=2Etxt
+> > @@ -0,0 +1,58 @@
+> > +Gate clock outputs
+> > +------------------
+> > +
+> > +  * AXI gates ("allwinner,sun4i-axi-gates-clk")
+> > +
+> > +    DRAM                                     0
+> > +
+> > +  * AHB gates ("allwinner,sun5i-a13-ahb-gates-clk")
+> > +
+> > +    USBOTG                                   0
+> > +    EHCI                                     1
+> > +    OHCI                                     2
+> > +
+> > +    SS                                               5
+> > +    DMA                                              6
+> > +    BIST                                     7
+> > +    MMC0                                     8
+> > +    MMC1                                     9
+> > +    MMC2                                     10
+> > +
+> > +    NAND                                     13
+> > +    SDRAM                                    14
+> > +
+> > +    SPI0                                     20
+> > +    SPI1                                     21
+> > +    SPI2                                     22
+> > +
+> > +    STIMER                                   28
+> > +
+> > +    VE                                               32
+> > +
+> > +    LCD                                              36
+> > +
+> > +    CSI                                              40
+> > +
+> > +    DE_BE                                    44
+> > +
+> > +    DE_FE                                    46
+> > +
+> > +    IEP                                              51
+> > +    MALI400                                  52
+> > +
+> > +  * APB0 gates ("allwinner,sun5i-a13-apb0-gates-clk")
+> > +
+> > +    CODEC                                    0
+> > +
+> > +    PIO                                              5
+> > +    IR                                               6
+> > +
+> > +  * APB1 gates ("allwinner,sun5i-a13-apb1-gates-clk")
+> > +
+> > +    I2C0                                     0
+> > +    I2C1                                     1
+> > +    I2C2                                     2
+> > +
+> > +    UART1                                    17
+> > +
+> > +    UART3                                    19
+> > diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-=
+sunxi.c
+> > index 8492ad1..930d36f 100644
+> > --- a/drivers/clk/sunxi/clk-sunxi.c
+> > +++ b/drivers/clk/sunxi/clk-sunxi.c
+> > @@ -333,22 +333,34 @@ struct gates_data {
+> >       DECLARE_BITMAP(mask, SUNXI_GATES_MAX_SIZE);
+> >  };
+> > =20
+> > -static const __initconst struct gates_data axi_gates_data =3D {
+> > +static const __initconst struct gates_data sun4i_axi_gates_data =3D=
+ {
+> >       .mask =3D {1},
+> >  };
+> > =20
+> > -static const __initconst struct gates_data ahb_gates_data =3D {
+> > +static const __initconst struct gates_data sun4i_ahb_gates_data =3D=
+ {
+> >       .mask =3D {0x7F77FFF, 0x14FB3F},
+> >  };
+> > =20
+> > -static const __initconst struct gates_data apb0_gates_data =3D {
+> > +static const __initconst struct gates_data sun5i_a13_ahb_gates_dat=
+a =3D {
+> > +     .mask =3D {0x107067e7, 0x185111},
+>=20
+> If you send a v2 please use uppercase e and a below for consistency.
+>=20
+> > +};
+> > +
+> > +static const __initconst struct gates_data sun4i_apb0_gates_data =3D=
+ {
+> >       .mask =3D {0x4EF},
+> >  };
+> > =20
+> > -static const __initconst struct gates_data apb1_gates_data =3D {
+> > +static const __initconst struct gates_data sun5i_a13_apb0_gates_da=
+ta =3D {
+> > +     .mask =3D {0x61},
+> > +};
+> > +
+> > +static const __initconst struct gates_data sun4i_apb1_gates_data =3D=
+ {
+> >       .mask =3D {0xFF00F7},
+> >  };
+> > =20
+> > +static const __initconst struct gates_data sun5i_a13_apb1_gates_da=
+ta =3D {
+> > +     .mask =3D {0xa0007},
+>=20
+> > +};
+> > +
+> >  static void __init sunxi_gates_clk_setup(struct device_node *node,
+> >                                        struct gates_data *data)
+> >  {
+> > @@ -428,10 +440,13 @@ static const __initconst struct of_device_id =
+clk_mux_match[] =3D {
+> > =20
+> >  /* Matches for gate clocks */
+> >  static const __initconst struct of_device_id clk_gates_match[] =3D=
+ {
+> > -     {.compatible =3D "allwinner,sun4i-axi-gates-clk", .data =3D &=
+axi_gates_data,},
+> > -     {.compatible =3D "allwinner,sun4i-ahb-gates-clk", .data =3D &=
+ahb_gates_data,},
+> > -     {.compatible =3D "allwinner,sun4i-apb0-gates-clk", .data =3D =
+&apb0_gates_data,},
+> > -     {.compatible =3D "allwinner,sun4i-apb1-gates-clk", .data =3D =
+&apb1_gates_data,},
+> > +     {.compatible =3D "allwinner,sun4i-axi-gates-clk", .data =3D &=
+sun4i_axi_gates_data,},
+> > +     {.compatible =3D "allwinner,sun4i-ahb-gates-clk", .data =3D &=
+sun4i_ahb_gates_data,},
+> > +     {.compatible =3D "allwinner,sun5i-a13-ahb-gates-clk", .data =3D=
+ &sun5i_a13_ahb_gates_data,},
+> > +     {.compatible =3D "allwinner,sun4i-apb0-gates-clk", .data =3D =
+&sun4i_apb0_gates_data,},
+> > +     {.compatible =3D "allwinner,sun5i-a13-apb0-gates-clk", .data =
+=3D &sun5i_a13_apb0_gates_data,},
+> > +     {.compatible =3D "allwinner,sun4i-apb1-gates-clk", .data =3D =
+&sun4i_apb1_gates_data,},
+> > +     {.compatible =3D "allwinner,sun5i-a13-apb1-gates-clk", .data =
+=3D &sun5i_a13_apb1_gates_data,},
+> >       {}
+> >  };
+> > =20
+> >=20
+>=20
+> Thanks!
+>=20
+> Emilio
