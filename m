@@ -1,51 +1,65 @@
-From: Graeme Gregory <gg@slimlogic.co.uk>
-Subject: Re: [PATCH v4] extcon: Palmas Extcon Driver
-Date: Tue, 14 May 2013 10:54:02 +0100
-Message-ID: <20130514095402.GA9721@xora-build.xora.org.uk>
-References: <1362662506-14823-4-git-send-email-kishon@ti.com>
- <1367846225-15685-1-git-send-email-kishon@ti.com>
- <20130506144010.GF13472@opensource.wolfsonmicro.com>
- <51888D55.3090907@ti.com>
- <20130507075824.GM7478@sirena.org.uk>
- <5188CD9C.6010602@ti.com>
- <20130507104502.GQ7478@sirena.org.uk>
- <5192017D.6060108@ti.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [RFC 2/8] ARM:global_timer: Add ARM global timer support.
+Date: Tue, 14 May 2013 11:26:26 +0100
+Message-ID: <51921152.1000600@st.com>
+References: <1368022187-1633-1-git-send-email-srinivas.kandagatla@st.com>
+ <1368022260-2197-1-git-send-email-srinivas.kandagatla@st.com>
+ <CACRpkdZCP=w=4Q3bnuMQxm=Oe-uZke+Cc5NgddM5vsQbgr9E-Q@mail.gmail.com>
+ <5191F9EE.6070008@st.com>
+ <CACRpkdYh72hQHSK-a9r8R9qfnQv06412YqVNeYpc_rZhMeiXww@mail.gmail.com>
+Reply-To: srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5192017D.6060108@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Mark Brown <broonie@kernel.org>, myungjoo.ham@samsung.com, cw00.choi@samsung.com, balbi@ti.com, ldewangan@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, ruchika@ti.com, tony@atomide.com, sameo@linux.intel.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACRpkdYh72hQHSK-a9r8R9qfnQv06412YqVNeYpc_rZhMeiXww-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel@v
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 14, 2013 at 02:48:53PM +0530, Kishon Vijay Abraham I wrote:
-> On Tuesday 07 May 2013 04:15 PM, Mark Brown wrote:
-> >On Tue, May 07, 2013 at 03:17:08PM +0530, Kishon Vijay Abraham I wrote:
-> >>On Tuesday 07 May 2013 01:28 PM, Mark Brown wrote:
-> >
-> >>>>The platform can provide it's own vbus control in which case this is
-> >>>>not needed.
-> >
-> >>>So why is there no interaction with this external VBUS control and how
-> >>>does the driver distinguish between that and an error getting the
-> >>>regulator?
-> >
-> >>The platform specifies if it provides its own VBUS control by the dt
-> >>property ti,no_control_vbus. So the driver will give an error only
-> >>when *ti,no_control_vbus* is not set. Graeme?
-> >
-> >That doesn't answer the question about why there's no interaction with
-> >the external control...
-> >
+On 14/05/13 10:23, Linus Walleij wrote:
+> On Tue, May 14, 2013 at 10:46 AM, Srinivas KANDAGATLA
+> <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org> wrote:
+>> On 13/05/13 20:05, Linus Walleij wrote:
 > 
-> Graeme?
+>>> Why are you enabling the timer in unused and shutdown mode?
+>>>
+>>> This doesn't make sense.
+>>
+>> It is because we are using the global-timer block for both clocksource
+>> and clockevents and we do not want the clocksource to disappear when
+>> clockevent is unused/shutdown.
 > 
-I already partially answered this, it was written for a SoC where VBUS
-generation was in hardware on the SoC with no information.
+> As this is clearly a per-cpu timer (correct? atleast the driver is
+> written that way) and say you have 4 CPUs, why would you not shut down
+> the timer on cores 1,2,3 and only leave the timer on core 0 on?
+> 
+I think it makes sense to shutdown the timer on other cores on request.
+I will fix this.
 
-I would say if nvidia/Laxman do not need this remove it, if someone ever
-uses it then they can re-add it easy enough!
+> The kernel will by necessity not shut down the clock event on core
+> 0 anyway.
+> 
+> On a related note: don't you want to use the counter in this block as
+> sched_clock() as well? (I guess so, as you do not seem to have
+> anything else on this system.) It'd probably need to be a separate
+> Kconfig option and can surely be done later but keep it in mind.
+Thankyou for the advice,
+I will definitely try to implement this.
 
-Graeme
+Thanks,
+srini
+> 
+> Yours,
+> Linus Walleij
+> 
