@@ -1,125 +1,235 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V2 01/10] mmc: return mmc_of_parse() errors to caller
-Date: Tue, 14 May 2013 09:20:14 +0200
-Message-ID: <CAPDyKFoyVCYDFkXWrj8zL8uGCTx4EYk=rM2i7rKx1+aA7LCbPg@mail.gmail.com>
-References: <1368479941-10084-1-git-send-email-gmbnomis@gmail.com>
-	<1368479941-10084-2-git-send-email-gmbnomis@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1368479941-10084-2-git-send-email-gmbnomis@gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Simon Baatz <gmbnomis@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Chris Ball <cjb@laptop.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+From: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH v2] media: i2c: tvp514x: add OF support
+Date: Tue, 14 May 2013 13:36:31 +0530
+Message-ID: <1368518791-26332-1-git-send-email-prabhakar.csengg@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: LMML <linux-media@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 13 May 2013 23:18, Simon Baatz <gmbnomis@gmail.com> wrote:
-> In addition to just logging errors encountered during DT parsing or
-> allocating GPIO slots for CD/WP, mmc_of_parse() now returns with an
-> error.
->
-> Signed-off-by: Simon Baatz <gmbnomis@gmail.com>
-> ---
->  drivers/mmc/core/host.c  |   24 +++++++++++++++++++-----
->  include/linux/mmc/host.h |    2 +-
->  2 files changed, 20 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-> index 2a3593d..45122cc 100644
-> --- a/drivers/mmc/core/host.c
-> +++ b/drivers/mmc/core/host.c
-> @@ -306,7 +306,7 @@ static inline void mmc_host_clk_sysfs_init(struct mmc_host *host)
->   * parse the properties and set respective generic mmc-host flags and
->   * parameters.
->   */
-> -void mmc_of_parse(struct mmc_host *host)
-> +int mmc_of_parse(struct mmc_host *host)
->  {
->         struct device_node *np;
->         u32 bus_width;
-> @@ -315,7 +315,7 @@ void mmc_of_parse(struct mmc_host *host)
->         int len, ret, gpio;
->
->         if (!host->parent || !host->parent->of_node)
-> -               return;
-> +               return 0;
->
->         np = host->parent->of_node;
->
-> @@ -338,6 +338,7 @@ void mmc_of_parse(struct mmc_host *host)
->         default:
->                 dev_err(host->parent,
->                         "Invalid \"bus-width\" value %ud!\n", bus_width);
-> +               return -EINVAL;
->         }
->
->         /* f_max is obtained from the optional "max-frequency" property */
-> @@ -372,13 +373,15 @@ void mmc_of_parse(struct mmc_host *host)
->                                 gpio_inv_cd = true;
->
->                         ret = mmc_gpio_request_cd(host, gpio);
-> -                       if (ret < 0)
-> +                       if (ret < 0) {
->                                 dev_err(host->parent,
->                                         "Failed to request CD GPIO #%d: %d!\n",
->                                         gpio, ret);
-> -                       else
-> +                               return ret;
-> +                       } else {
->                                 dev_info(host->parent, "Got CD GPIO #%d.\n",
->                                          gpio);
-> +                       }
->                 }
->
->                 if (explicit_inv_cd ^ gpio_inv_cd)
-> @@ -394,9 +397,14 @@ void mmc_of_parse(struct mmc_host *host)
->                         gpio_inv_wp = true;
->
->                 ret = mmc_gpio_request_ro(host, gpio);
-> -               if (ret < 0)
-> +               if (ret < 0) {
->                         dev_err(host->parent,
->                                 "Failed to request WP GPIO: %d!\n", ret);
-> +                       goto out;
-> +               } else {
-> +                               dev_info(host->parent, "Got WP GPIO #%d.\n",
-> +                                        gpio);
-> +               }
->         }
->         if (explicit_inv_wp ^ gpio_inv_wp)
->                 host->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
-> @@ -413,6 +421,12 @@ void mmc_of_parse(struct mmc_host *host)
->                 host->pm_caps |= MMC_PM_KEEP_POWER;
->         if (of_find_property(np, "enable-sdio-wakeup", &len))
->                 host->pm_caps |= MMC_PM_WAKE_SDIO_IRQ;
-> +
-> +       return 0;
-> +
-> +out:
-> +       mmc_gpio_free_cd(host);
-> +       return ret;
->  }
->
->  EXPORT_SYMBOL(mmc_of_parse);
-> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-> index e326ae2..c8c4fbc 100644
-> --- a/include/linux/mmc/host.h
-> +++ b/include/linux/mmc/host.h
-> @@ -369,7 +369,7 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *);
->  int mmc_add_host(struct mmc_host *);
->  void mmc_remove_host(struct mmc_host *);
->  void mmc_free_host(struct mmc_host *);
-> -void mmc_of_parse(struct mmc_host *host);
-> +int mmc_of_parse(struct mmc_host *host);
->
->  static inline void *mmc_priv(struct mmc_host *host)
->  {
-> --
-> 1.7.9.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+add OF support for the tvp514x driver. Alongside this patch
+removes unnecessary header file inclusion and sorts them alphabetically.
+
+Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: davinci-linux-open-source@linux.davincidsp.com
+---
+ Tested on da850-evm.
+
+ RFC v1: https://patchwork.kernel.org/patch/2030061/
+ RFC v2: https://patchwork.kernel.org/patch/2061811/
+
+ Changes for current version from RFC v2:
+ 1: Fixed review comments pointed by Sylwester.
+
+ Changes for v2:
+ 1: Listed all the compatible property values in the documentation text file.
+ 2: Removed "-decoder" from compatible property values.
+ 3: Added a reference to the V4L2 DT bindings documentation to explain
+    what the port and endpoint nodes are for.
+ 4: Fixed some Nits pointed by Laurent.
+ 5: Removed unnecessary header file includes and sort them alphabetically.
+
+ .../devicetree/bindings/media/i2c/tvp514x.txt      |   45 ++++++++++++
+ drivers/media/i2c/tvp514x.c                        |   76 +++++++++++++++----
+ 2 files changed, 105 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+new file mode 100644
+index 0000000..cc09424
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+@@ -0,0 +1,45 @@
++* Texas Instruments TVP514x video decoder
++
++The TVP5146/TVP5146m2/TVP5147/TVP5147m1 device is high quality, single-chip
++digital video decoder that digitizes and decodes all popular baseband analog
++video formats into digital video component. The tvp514x decoder supports analog-
++to-digital (A/D) conversion of component RGB and YPbPr signals as well as A/D
++conversion and decoding of NTSC, PAL and SECAM composite and S-video into
++component YCbCr.
++
++Required Properties :
++- compatible : value should be either one among the following
++	(a) "ti,tvp5146" for tvp5146 decoder.
++	(b) "ti,tvp5146m2" for tvp5146m2 decoder.
++	(c) "ti,tvp5147" for tvp5147 decoder.
++	(d) "ti,tvp5147m1" for tvp5147m1 decoder.
++
++- hsync-active: HSYNC Polarity configuration for endpoint.
++
++- vsync-active: VSYNC Polarity configuration for endpoint.
++
++- pclk-sample: Clock polarity of the endpoint.
++
++
++For further reading of port node refer Documentation/devicetree/bindings/media/
++video-interfaces.txt.
++
++Example:
++
++	i2c0@1c22000 {
++		...
++		...
++		tvp514x@5c {
++			compatible = "ti,tvp5146";
++			reg = <0x5c>;
++
++			port {
++				tvp514x_1: endpoint {
++					hsync-active = <1>;
++					vsync-active = <1>;
++					pclk-sample = <0>;
++				};
++			};
++		};
++		...
++	};
+diff --git a/drivers/media/i2c/tvp514x.c b/drivers/media/i2c/tvp514x.c
+index 887bd93..252fe9f 100644
+--- a/drivers/media/i2c/tvp514x.c
++++ b/drivers/media/i2c/tvp514x.c
+@@ -29,21 +29,18 @@
+  *
+  */
+ 
+-#include <linux/i2c.h>
+-#include <linux/slab.h>
+ #include <linux/delay.h>
+-#include <linux/videodev2.h>
++#include <linux/i2c.h>
+ #include <linux/module.h>
+-#include <linux/v4l2-mediabus.h>
++#include <linux/of_device.h>
++#include <linux/slab.h>
+ 
++#include <media/media-entity.h>
++#include <media/tvp514x.h>
+ #include <media/v4l2-async.h>
+-#include <media/v4l2-device.h>
+-#include <media/v4l2-common.h>
+-#include <media/v4l2-mediabus.h>
+-#include <media/v4l2-chip-ident.h>
+ #include <media/v4l2-ctrls.h>
+-#include <media/tvp514x.h>
+-#include <media/media-entity.h>
++#include <media/v4l2-device.h>
++#include <media/v4l2-of.h>
+ 
+ #include "tvp514x_regs.h"
+ 
+@@ -1056,6 +1053,40 @@ static struct tvp514x_decoder tvp514x_dev = {
+ 
+ };
+ 
++static struct tvp514x_platform_data *
++tvp514x_get_pdata(struct i2c_client *client)
++{
++	struct tvp514x_platform_data *pdata;
++	struct v4l2_of_endpoint bus_cfg;
++	struct device_node *endpoint;
++	unsigned int flags;
++
++	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
++		return client->dev.platform_data;
++
++	endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
++	if (!endpoint)
++		return NULL;
++
++	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return NULL;
++
++	v4l2_of_parse_endpoint(endpoint, &bus_cfg);
++	flags = bus_cfg.bus.parallel.flags;
++
++	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
++		pdata->hs_polarity = 1;
++
++	if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
++		pdata->vs_polarity = 1;
++
++	if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
++		pdata->clk_polarity = 1;
++
++	return pdata;
++}
++
+ /**
+  * tvp514x_probe() - decoder driver i2c probe handler
+  * @client: i2c driver client device structure
+@@ -1067,19 +1098,20 @@ static struct tvp514x_decoder tvp514x_dev = {
+ static int
+ tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ {
++	struct tvp514x_platform_data *pdata = tvp514x_get_pdata(client);
+ 	struct tvp514x_decoder *decoder;
+ 	struct v4l2_subdev *sd;
+ 	int ret;
+ 
++	if (pdata == NULL) {
++		dev_err(&client->dev, "No platform data\n");
++		return -EINVAL;
++	}
++
+ 	/* Check if the adapter supports the needed features */
+ 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
+ 		return -EIO;
+ 
+-	if (!client->dev.platform_data) {
+-		v4l2_err(client, "No platform data!!\n");
+-		return -ENODEV;
+-	}
+-
+ 	decoder = devm_kzalloc(&client->dev, sizeof(*decoder), GFP_KERNEL);
+ 	if (!decoder)
+ 		return -ENOMEM;
+@@ -1091,7 +1123,7 @@ tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 			sizeof(tvp514x_reg_list_default));
+ 
+ 	/* Copy board specific information here */
+-	decoder->pdata = client->dev.platform_data;
++	decoder->pdata = pdata;
+ 
+ 	/**
+ 	 * Fetch platform specific data, and configure the
+@@ -1240,8 +1272,20 @@ static const struct i2c_device_id tvp514x_id[] = {
+ 
+ MODULE_DEVICE_TABLE(i2c, tvp514x_id);
+ 
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id tvp514x_of_match[] = {
++	{ .compatible = "ti,tvp5146", },
++	{ .compatible = "ti,tvp5146m2", },
++	{ .compatible = "ti,tvp5147", },
++	{ .compatible = "ti,tvp5147m1", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, tvp514x_of_match);
++#endif
++
+ static struct i2c_driver tvp514x_driver = {
+ 	.driver = {
++		.of_match_table = of_match_ptr(tvp514x_of_match),
+ 		.owner = THIS_MODULE,
+ 		.name = TVP514X_MODULE_NAME,
+ 	},
+-- 
+1.7.4.1
+
