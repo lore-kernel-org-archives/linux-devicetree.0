@@ -1,65 +1,204 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [RFC 2/8] ARM:global_timer: Add ARM global timer support.
-Date: Tue, 14 May 2013 11:26:26 +0100
-Message-ID: <51921152.1000600@st.com>
-References: <1368022187-1633-1-git-send-email-srinivas.kandagatla@st.com>
- <1368022260-2197-1-git-send-email-srinivas.kandagatla@st.com>
- <CACRpkdZCP=w=4Q3bnuMQxm=Oe-uZke+Cc5NgddM5vsQbgr9E-Q@mail.gmail.com>
- <5191F9EE.6070008@st.com>
- <CACRpkdYh72hQHSK-a9r8R9qfnQv06412YqVNeYpc_rZhMeiXww@mail.gmail.com>
-Reply-To: srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdYh72hQHSK-a9r8R9qfnQv06412YqVNeYpc_rZhMeiXww-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel@v
+From: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH 5/5] media: i2c: tvp7002: add OF support
+Date: Tue, 14 May 2013 16:15:34 +0530
+Message-ID: <1368528334-13595-6-git-send-email-prabhakar.csengg@gmail.com>
+References: <1368528334-13595-1-git-send-email-prabhakar.csengg@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1368528334-13595-1-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: LMML <linux-media@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 14/05/13 10:23, Linus Walleij wrote:
-> On Tue, May 14, 2013 at 10:46 AM, Srinivas KANDAGATLA
-> <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org> wrote:
->> On 13/05/13 20:05, Linus Walleij wrote:
-> 
->>> Why are you enabling the timer in unused and shutdown mode?
->>>
->>> This doesn't make sense.
->>
->> It is because we are using the global-timer block for both clocksource
->> and clockevents and we do not want the clocksource to disappear when
->> clockevent is unused/shutdown.
-> 
-> As this is clearly a per-cpu timer (correct? atleast the driver is
-> written that way) and say you have 4 CPUs, why would you not shut down
-> the timer on cores 1,2,3 and only leave the timer on core 0 on?
-> 
-I think it makes sense to shutdown the timer on other cores on request.
-I will fix this.
+From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 
-> The kernel will by necessity not shut down the clock event on core
-> 0 anyway.
-> 
-> On a related note: don't you want to use the counter in this block as
-> sched_clock() as well? (I guess so, as you do not seem to have
-> anything else on this system.) It'd probably need to be a separate
-> Kconfig option and can surely be done later but keep it in mind.
-Thankyou for the advice,
-I will definitely try to implement this.
+add OF support for the tvp7002 driver.
 
-Thanks,
-srini
-> 
-> Yours,
-> Linus Walleij
-> 
+Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: davinci-linux-open-source@linux.davincidsp.com
+---
+ .../devicetree/bindings/media/i2c/tvp7002.txt      |   42 +++++++++++++
+ drivers/media/i2c/tvp7002.c                        |   64 +++++++++++++++++--
+ 2 files changed, 99 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+new file mode 100644
+index 0000000..1ebd8b1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+@@ -0,0 +1,42 @@
++* Texas Instruments TV7002 video decoder
++
++The TVP7002 device supports digitizing of video and graphics signal in RGB and
++YPbPr color space.
++
++Required Properties :
++- compatible : Must be "ti,tvp7002"
++
++- hsync-active: HSYNC Polarity configuration for endpoint.
++
++- vsync-active: VSYNC Polarity configuration for endpoint.
++
++- pclk-sample: Clock polarity of the endpoint.
++
++- ti,tvp7002-fid-polarity: Active-high Field ID polarity of the endpoint.
++
++- ti,tvp7002-sog-polarity: Sync on Green output polarity of the endpoint.
++
++For further reading of port node refer Documentation/devicetree/bindings/media/
++video-interfaces.txt.
++
++Example:
++
++	i2c0@1c22000 {
++		...
++		...
++		tvp7002@5c {
++			compatible = "ti,tvp7002";
++			reg = <0x5c>;
++
++			port {
++				tvp7002_1: endpoint {
++					hsync-active = <1>;
++					vsync-active = <1>;
++					pclk-sample = <0>;
++					ti,tvp7002-fid-polarity;
++					ti,tvp7002-sog-polarity;
++				};
++			};
++		};
++		...
++	};
+diff --git a/drivers/media/i2c/tvp7002.c b/drivers/media/i2c/tvp7002.c
+index d5113d1..942e0d8 100644
+--- a/drivers/media/i2c/tvp7002.c
++++ b/drivers/media/i2c/tvp7002.c
+@@ -35,6 +35,7 @@
+ #include <media/v4l2-chip-ident.h>
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-device.h>
++#include <media/v4l2-of.h>
+ 
+ #include "tvp7002_reg.h"
+ 
+@@ -976,6 +977,46 @@ static const struct v4l2_subdev_ops tvp7002_ops = {
+ 	.pad = &tvp7002_pad_ops,
+ };
+ 
++static struct tvp7002_config *
++tvp7002_get_pdata(struct i2c_client *client)
++{
++	struct v4l2_of_endpoint bus_cfg;
++	struct tvp7002_config *pdata;
++	struct device_node *endpoint;
++	unsigned int flags;
++
++	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
++		return client->dev.platform_data;
++
++	endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
++	if (!endpoint)
++		return NULL;
++
++	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return NULL;
++
++	v4l2_of_parse_endpoint(endpoint, &bus_cfg);
++	flags = bus_cfg.bus.parallel.flags;
++
++	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
++		pdata->hs_polarity = 1;
++
++	if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
++		pdata->vs_polarity = 1;
++
++	if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
++		pdata->clk_polarity = 1;
++
++	pdata->fid_polarity = of_property_read_bool(endpoint,
++						    "ti,tvp7002-fid-polarity");
++
++	pdata->sog_polarity = of_property_read_bool(endpoint,
++						    "ti,tvp7002-sog-polarity");
++
++	return pdata;
++}
++
+ /*
+  * tvp7002_probe - Probe a TVP7002 device
+  * @c: ptr to i2c_client struct
+@@ -987,32 +1028,32 @@ static const struct v4l2_subdev_ops tvp7002_ops = {
+  */
+ static int tvp7002_probe(struct i2c_client *c, const struct i2c_device_id *id)
+ {
++	struct tvp7002_config *pdata = tvp7002_get_pdata(c);
+ 	struct v4l2_subdev *sd;
+ 	struct tvp7002 *device;
+ 	struct v4l2_dv_timings timings;
+ 	int polarity_a;
+ 	int polarity_b;
+ 	u8 revision;
+-
+ 	int error;
+ 
++	if (pdata == NULL) {
++		dev_err(&c->dev, "No platform data\n");
++		return -EINVAL;
++	}
++
+ 	/* Check if the adapter supports the needed features */
+ 	if (!i2c_check_functionality(c->adapter,
+ 		I2C_FUNC_SMBUS_READ_BYTE | I2C_FUNC_SMBUS_WRITE_BYTE_DATA))
+ 		return -EIO;
+ 
+-	if (!c->dev.platform_data) {
+-		v4l_err(c, "No platform data!!\n");
+-		return -ENODEV;
+-	}
+-
+ 	device = devm_kzalloc(&c->dev, sizeof(struct tvp7002), GFP_KERNEL);
+ 
+ 	if (!device)
+ 		return -ENOMEM;
+ 
+ 	sd = &device->sd;
+-	device->pdata = c->dev.platform_data;
++	device->pdata = pdata;
+ 	device->current_timings = tvp7002_timings;
+ 
+ 	/* Tell v4l2 the device is ready */
+@@ -1119,9 +1160,18 @@ static const struct i2c_device_id tvp7002_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, tvp7002_id);
+ 
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id tvp7002_of_match[] = {
++	{ .compatible = "ti,tvp7002", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, tvp7002_of_match);
++#endif
++
+ /* I2C driver data */
+ static struct i2c_driver tvp7002_driver = {
+ 	.driver = {
++		.of_match_table = of_match_ptr(tvp7002_of_match),
+ 		.owner = THIS_MODULE,
+ 		.name = TVP7002_MODULE_NAME,
+ 	},
+-- 
+1.7.4.1
