@@ -1,236 +1,132 @@
-From: Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH v3] media: i2c: tvp514x: add OF support
-Date: Tue, 14 May 2013 16:30:36 +0530
-Message-ID: <1368529236-18199-1-git-send-email-prabhakar.csengg@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: LMML <linux-media@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+From: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v7] i2c-designware: make SDA hold time configurable
+Date: Tue, 14 May 2013 14:07:45 +0300
+Message-ID: <20130514110745.GA10906@intel.com>
+References: <20130327084158.GB11010@ab42.lan>
+ <1364373760-12469-1-git-send-email-christian.ruppert@abilis.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1364373760-12469-1-git-send-email-christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+On Tue, Apr 09, 2013 at 12:59:54PM +0200, Christian Ruppert wrote:
+> This patch makes the SDA hold time configurable through device tree.
+> 
+> Signed-off-by: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
 
-add OF support for the tvp514x driver. Alongside this patch
-removes unnecessary header file inclusion and sorts them alphabetically.
+Hi Wolfram,
 
-Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: davinci-linux-open-source@linux.davincidsp.com
----
-Tested on da850-evm.
+What happened to this patch? I don't see it merged for 3.10.
 
- RFC v1: https://patchwork.kernel.org/patch/2030061/
- RFC v2: https://patchwork.kernel.org/patch/2061811/
+The reason I'm asking is that I would like to add ACPI support for the SDA
+hold time parameter analogous to the DT version.
 
- Changes for current version from RFC v2:
- 1: Fixed review comments pointed by Sylwester.
+Thanks.
 
- Changes for v2:
- 1: Listed all the compatible property values in the documentation text file.
- 2: Removed "-decoder" from compatible property values.
- 3: Added a reference to the V4L2 DT bindings documentation to explain
-    what the port and endpoint nodes are for.
- 4: Fixed some Nits pointed by Laurent.
- 5: Removed unnecessary header file includes and sort them alphabetically.
-
- Changes for v3:
- 1: Rebased on patch https://patchwork.kernel.org/patch/2539411/
-
- .../devicetree/bindings/media/i2c/tvp514x.txt      |   45 ++++++++++++
- drivers/media/i2c/tvp514x.c                        |   74 +++++++++++++++----
- 2 files changed, 103 insertions(+), 16 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp514x.txt
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
-new file mode 100644
-index 0000000..cc09424
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
-@@ -0,0 +1,45 @@
-+* Texas Instruments TVP514x video decoder
-+
-+The TVP5146/TVP5146m2/TVP5147/TVP5147m1 device is high quality, single-chip
-+digital video decoder that digitizes and decodes all popular baseband analog
-+video formats into digital video component. The tvp514x decoder supports analog-
-+to-digital (A/D) conversion of component RGB and YPbPr signals as well as A/D
-+conversion and decoding of NTSC, PAL and SECAM composite and S-video into
-+component YCbCr.
-+
-+Required Properties :
-+- compatible : value should be either one among the following
-+	(a) "ti,tvp5146" for tvp5146 decoder.
-+	(b) "ti,tvp5146m2" for tvp5146m2 decoder.
-+	(c) "ti,tvp5147" for tvp5147 decoder.
-+	(d) "ti,tvp5147m1" for tvp5147m1 decoder.
-+
-+- hsync-active: HSYNC Polarity configuration for endpoint.
-+
-+- vsync-active: VSYNC Polarity configuration for endpoint.
-+
-+- pclk-sample: Clock polarity of the endpoint.
-+
-+
-+For further reading of port node refer Documentation/devicetree/bindings/media/
-+video-interfaces.txt.
-+
-+Example:
-+
-+	i2c0@1c22000 {
-+		...
-+		...
-+		tvp514x@5c {
-+			compatible = "ti,tvp5146";
-+			reg = <0x5c>;
-+
-+			port {
-+				tvp514x_1: endpoint {
-+					hsync-active = <1>;
-+					vsync-active = <1>;
-+					pclk-sample = <0>;
-+				};
-+			};
-+		};
-+		...
-+	};
-diff --git a/drivers/media/i2c/tvp514x.c b/drivers/media/i2c/tvp514x.c
-index 01d9757..202c8cb 100644
---- a/drivers/media/i2c/tvp514x.c
-+++ b/drivers/media/i2c/tvp514x.c
-@@ -29,21 +29,16 @@
-  *
-  */
- 
--#include <linux/i2c.h>
--#include <linux/slab.h>
- #include <linux/delay.h>
--#include <linux/videodev2.h>
-+#include <linux/i2c.h>
- #include <linux/module.h>
--#include <linux/v4l2-mediabus.h>
- 
-+#include <media/media-entity.h>
-+#include <media/tvp514x.h>
- #include <media/v4l2-async.h>
--#include <media/v4l2-device.h>
--#include <media/v4l2-common.h>
--#include <media/v4l2-mediabus.h>
--#include <media/v4l2-chip-ident.h>
- #include <media/v4l2-ctrls.h>
--#include <media/tvp514x.h>
--#include <media/media-entity.h>
-+#include <media/v4l2-device.h>
-+#include <media/v4l2-of.h>
- 
- #include "tvp514x_regs.h"
- 
-@@ -1056,6 +1051,40 @@ static struct tvp514x_decoder tvp514x_dev = {
- 
- };
- 
-+static struct tvp514x_platform_data *
-+tvp514x_get_pdata(struct i2c_client *client)
-+{
-+	struct tvp514x_platform_data *pdata;
-+	struct v4l2_of_endpoint bus_cfg;
-+	struct device_node *endpoint;
-+	unsigned int flags;
-+
-+	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
-+		return client->dev.platform_data;
-+
-+	endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
-+	if (!endpoint)
-+		return NULL;
-+
-+	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return NULL;
-+
-+	v4l2_of_parse_endpoint(endpoint, &bus_cfg);
-+	flags = bus_cfg.bus.parallel.flags;
-+
-+	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
-+		pdata->hs_polarity = 1;
-+
-+	if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
-+		pdata->vs_polarity = 1;
-+
-+	if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
-+		pdata->clk_polarity = 1;
-+
-+	return pdata;
-+}
-+
- /**
-  * tvp514x_probe() - decoder driver i2c probe handler
-  * @client: i2c driver client device structure
-@@ -1067,19 +1096,20 @@ static struct tvp514x_decoder tvp514x_dev = {
- static int
- tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
- {
-+	struct tvp514x_platform_data *pdata = tvp514x_get_pdata(client);
- 	struct tvp514x_decoder *decoder;
- 	struct v4l2_subdev *sd;
- 	int ret;
- 
-+	if (pdata == NULL) {
-+		dev_err(&client->dev, "No platform data\n");
-+		return -EINVAL;
-+	}
-+
- 	/* Check if the adapter supports the needed features */
- 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
- 		return -EIO;
- 
--	if (!client->dev.platform_data) {
--		v4l2_err(client, "No platform data!!\n");
--		return -ENODEV;
--	}
--
- 	decoder = devm_kzalloc(&client->dev, sizeof(*decoder), GFP_KERNEL);
- 	if (!decoder)
- 		return -ENOMEM;
-@@ -1091,7 +1121,7 @@ tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 			sizeof(tvp514x_reg_list_default));
- 
- 	/* Copy board specific information here */
--	decoder->pdata = client->dev.platform_data;
-+	decoder->pdata = pdata;
- 
- 	/**
- 	 * Fetch platform specific data, and configure the
-@@ -1239,8 +1269,20 @@ static const struct i2c_device_id tvp514x_id[] = {
- 
- MODULE_DEVICE_TABLE(i2c, tvp514x_id);
- 
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id tvp514x_of_match[] = {
-+	{ .compatible = "ti,tvp5146", },
-+	{ .compatible = "ti,tvp5146m2", },
-+	{ .compatible = "ti,tvp5147", },
-+	{ .compatible = "ti,tvp5147m1", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, tvp514x_of_match);
-+#endif
-+
- static struct i2c_driver tvp514x_driver = {
- 	.driver = {
-+		.of_match_table = of_match_ptr(tvp514x_of_match),
- 		.owner = THIS_MODULE,
- 		.name = TVP514X_MODULE_NAME,
- 	},
--- 
-1.7.4.1
-
+> ---
+>  .../devicetree/bindings/i2c/i2c-designware.txt     |   14 ++++++++++++++
+>  drivers/i2c/busses/i2c-designware-core.c           |    5 +++++
+>  drivers/i2c/busses/i2c-designware-core.h           |    1 +
+>  drivers/i2c/busses/i2c-designware-platdrv.c        |    9 +++++++++
+>  4 files changed, 29 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> index e42a2ee..21fabe7 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> @@ -10,6 +10,9 @@ Recommended properties :
+>  
+>   - clock-frequency : desired I2C bus clock frequency in Hz.
+>  
+> +Optional properties :
+> + - sda-hold-time : should contain the SDA hold time in nanoseconds.
+> +
+>  Example :
+>  
+>  	i2c@f0000 {
+> @@ -20,3 +23,14 @@ Example :
+>  		interrupts = <11>;
+>  		clock-frequency = <400000>;
+>  	};
+> +
+> +	i2c@1120000 {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		compatible = "snps,designware-i2c";
+> +		reg = <0x1120000 0x1000>;
+> +		interrupt-parent = <&ictl>;
+> +		interrupts = <12 1>;
+> +		clock-frequency = <400000>;
+> +		sda-hold-time = <300>;
+> +	};
+> diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busses/i2c-designware-core.c
+> index 94fd818..ba40e14 100644
+> --- a/drivers/i2c/busses/i2c-designware-core.c
+> +++ b/drivers/i2c/busses/i2c-designware-core.c
+> @@ -67,6 +67,7 @@
+>  #define DW_IC_STATUS		0x70
+>  #define DW_IC_TXFLR		0x74
+>  #define DW_IC_RXFLR		0x78
+> +#define DW_IC_SDA_HOLD		0x7c
+>  #define DW_IC_TX_ABRT_SOURCE	0x80
+>  #define DW_IC_COMP_PARAM_1	0xf4
+>  #define DW_IC_COMP_TYPE		0xfc
+> @@ -310,6 +311,10 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
+>  	dw_writel(dev, lcnt, DW_IC_FS_SCL_LCNT);
+>  	dev_dbg(dev->dev, "Fast-mode HCNT:LCNT = %d:%d\n", hcnt, lcnt);
+>  
+> +	/* Configure SDA Hold Time if required */
+> +	if (dev->sda_hold_time)
+> +		dw_writel(dev, dev->sda_hold_time, DW_IC_SDA_HOLD);
+> +
+>  	/* Configure Tx/Rx FIFO threshold levels */
+>  	dw_writel(dev, dev->tx_fifo_depth - 1, DW_IC_TX_TL);
+>  	dw_writel(dev, 0, DW_IC_RX_TL);
+> diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
+> index 9c1840e..33dfec3 100644
+> --- a/drivers/i2c/busses/i2c-designware-core.h
+> +++ b/drivers/i2c/busses/i2c-designware-core.h
+> @@ -88,6 +88,7 @@ struct dw_i2c_dev {
+>  	u32			master_cfg;
+>  	unsigned int		tx_fifo_depth;
+>  	unsigned int		rx_fifo_depth;
+> +	u32			sda_hold_time;
+>  };
+>  
+>  #define ACCESS_SWAP		0x00000001
+> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+> index 0ceb6e1..0a6e29b 100644
+> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
+> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+> @@ -34,6 +34,7 @@
+>  #include <linux/sched.h>
+>  #include <linux/err.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/of.h>
+>  #include <linux/of_i2c.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm.h>
+> @@ -136,6 +137,14 @@ static int dw_i2c_probe(struct platform_device *pdev)
+>  	}
+>  	clk_prepare_enable(dev->clk);
+>  
+> +	if (pdev->dev.of_node) {
+> +		u32 ht;
+> +		u32 ic_clk = dev->get_clk_rate_khz(dev);
+> +
+> +		of_property_read_u32(pdev->dev.of_node, "sda-hold-time", &ht);
+> +		dev->sda_hold_time = ((u64)ic_clk * ht + 500000) / 1000000;
+> +	}
+> +
+>  	dev->functionality =
+>  		I2C_FUNC_I2C |
+>  		I2C_FUNC_10BIT_ADDR |
+> -- 
+> 1.7.1
+> 
