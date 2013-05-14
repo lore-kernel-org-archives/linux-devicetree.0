@@ -1,46 +1,44 @@
-From: Simon Baatz <gmbnomis@gmail.com>
-Subject: Re: [PATCH V2 07/10] ARM: mvebu: Use standard MMC binding for all
- users of mvsdio
-Date: Tue, 14 May 2013 07:37:06 +0200
-Message-ID: <20130514053706.GA29922@schnuecks.de>
-References: <1368479941-10084-1-git-send-email-gmbnomis@gmail.com>
- <1368479941-10084-8-git-send-email-gmbnomis@gmail.com>
- <20130513230918.GG31290@titan.lakedaemon.net>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: tegra20: create a DT header defining CLK IDs
+Date: Tue, 14 May 2013 07:59:40 +0200
+Message-ID: <20130514.085940.1807211932170883314.hdoyu@nvidia.com>
+References: <1368443225-16978-1-git-send-email-hdoyu@nvidia.com><1368443225-16978-2-git-send-email-hdoyu@nvidia.com><519118E3.4060907@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130513230918.GG31290@titan.lakedaemon.net>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Andrew Lunn <andrew@lunn.ch>, Chris Ball <cjb@laptop.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <519118E3.4060907-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
+Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Mon, 13 May 2013 18:46:27 +0200:
 
-On Mon, May 13, 2013 at 07:09:18PM -0400, Jason Cooper wrote:
-> On Mon, May 13, 2013 at 11:18:58PM +0200, Simon Baatz wrote:
-> > In order to prepare the switch to the standard MMC device tree parser
-> > for mvsdio, adapt all current uses of mvsdio in the dts files to the
-> > standard format.
-> > 
-> > Signed-off-by: Simon Baatz <gmbnomis@gmail.com>
-> > ---
-> ...
-> > diff --git a/arch/arm/boot/dts/kirkwood-mplcec4.dts b/arch/arm/boot/dts/kirkwood-mplcec4.dts
-> > index 7588241..bf3a58c 100644
-> > --- a/arch/arm/boot/dts/kirkwood-mplcec4.dts
-> > +++ b/arch/arm/boot/dts/kirkwood-mplcec4.dts
-> > @@ -136,7 +136,7 @@
-> >  			pinctrl-0 = <&pmx_sdio &pmx_sdio_cd>;
-> >  			pinctrl-names = "default";
-> >  			status = "okay";
-> > -			cd-gpios = <&gpio1 15 0>;
-> > +			cd-gpios = <&gpio1 15 1>;
+> I'm not sure exactly how these patches will get merged. For you
+> reference, I anticipate one of two things happening:
 > 
-> Is this a bugfix that should be backported?
+> 1)
+> 
+> * Patches 1, 3, 5 get put into a topic branch, and merged into both the
+> clk tree and the Tegra tree.
+> 
+> * Patches 2, 4, 6 get merged into the Tegra tree.
+> 
+> * The patches you're going to create for the drivers/clk code get merged
+> into Mike's clk tree
+> 
+> 2)
+> 
+> * Mike ack's the patches you're going to create for the drivers/clk code.
+> 
+> * Everything gets merged through the Tegra tree.
+> 
+> This shouldn't impact you much, but just be aware that the drivers/clk
+> changes you create shouldn't depend on anything beyond patches 1, 3, 5
+> here and 3.10-rc1, then I can work out the merging with Mike without any
+> constraints.
 
-No, that should not be necessary. The old code implicitly used "1"
-here regardless of the actual flag value.
-
-- Simon
+Either way would work. Once Venu's USB patches are merged, mentioned
+in [2/6], I'll resend the update version of this series.
+drivers/clk/tegra replacement will follow, then.
