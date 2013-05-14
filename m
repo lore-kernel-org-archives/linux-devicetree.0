@@ -1,36 +1,28 @@
-From: Vikas Sajjan <vikas.sajjan@linaro.org>
-Subject: [PATCH 2/2] ARM: dts: Add LCD backlight and LCD enable gpios pins to dp-controller DT node
-Date: Tue, 14 May 2013 18:25:52 +0530
-Message-ID: <1368536152-13370-3-git-send-email-vikas.sajjan@linaro.org>
-References: <1368536152-13370-1-git-send-email-vikas.sajjan@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1368536152-13370-1-git-send-email-vikas.sajjan@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: jg1.han@samsung.com, linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, linaro-kernel@lists.linaro.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] pinctrl: dove: add PMU functions to pinctrl
+Date: Tue, 14 May 2013 14:59:01 +0200
+Message-ID: <CACRpkdZVBiTJCPaSmPGTPs+aaRf2VQt+Zz=odL47ysg4a1c0RQ@mail.gmail.com>
+References: <1367883368-27889-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1367883368-27889-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jason Cooper <jason@lakedaemon.net>, Stephen Warren <swarren@wwwdotorg.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds gpios pins for LCD backlight and LCD enable for dp-controller DT
-node in exynos5250-smdk5250.dts
+On Tue, May 7, 2013 at 1:36 AM, Sebastian Hesselbarth
+<sebastian.hesselbarth@gmail.com> wrote:
 
-Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
----
- arch/arm/boot/dts/exynos5250-smdk5250.dts |    3 +++
- 1 file changed, 3 insertions(+)
+> Dove power management unit can mux some special functions to mpp0-15.
+> This patch adds support to set/get the current PMU function mapped
+> to the corresponding mpp pins. The device tree documentation is also
+> updated accordingly.
+>
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index 26d856b..82e7621 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -224,6 +224,9 @@
- 		samsung,color-depth = <1>;
- 		samsung,link-rate = <0x0a>;
- 		samsung,lane-count = <4>;
-+
-+		lcd_bl_gpio = <&gpb2 0 1>;
-+		lcd_en_gpio = <&gpx1 5 1>;
- 	};
- 
- 	display-timings {
--- 
-1.7.9.5
+Patch applied with Jason's ACK.
+
+Thanks!
+LInus Walleij
