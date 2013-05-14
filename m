@@ -1,165 +1,38 @@
-From: Javi Merino <javi.merino@arm.com>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [RFC PATCH v3] drivers: bus: add ARM CCI support
-Date: Tue, 14 May 2013 14:00:07 +0100
-Message-ID: <20130514130005.GD29592@e102654-lin.cambridge.arm.com>
+Date: Tue, 14 May 2013 18:21:32 -0400 (EDT)
+Message-ID: <alpine.LFD.2.03.1305141820280.31158@syhkavp.arg>
 References: <1368095640-3675-1-git-send-email-lorenzo.pieralisi@arm.com>
  <1368095640-3675-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <20130514130005.GD29592@e102654-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1368095640-3675-2-git-send-email-lorenzo.pieralisi@arm.com>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Dave Martin <dave.martin@linaro.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Stephen Boyd <sboyd@codeaurora.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Olof Johansson <olof@lixom.net>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Amit Kucheria <amit.kucheria@linaro.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Mark Rutland <Mark.Rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, David Gibson <david@gibson.dropbear.id.au>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130514130005.GD29592-hBfBd/Xtra/ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Javi Merino <javi.merino-5wv7dgnIgG8@public.gmane.org>
+Cc: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 09, 2013 at 11:34:00AM +0100, Lorenzo Pieralisi wrote:
-> On ARM multi-cluster systems coherency between cores running on
-> different clusters is managed by the cache-coherent interconnect (CCI).
-> It allows broadcasting of TLB invalidates and memory barriers and it
-> guarantees cache coherency at system level through snooping of slave
-> interfaces connected to it.
+On Tue, 14 May 2013, Javi Merino wrote:
+
+> On Thu, May 09, 2013 at 11:34:00AM +0100, Lorenzo Pieralisi wrote:
 > 
-> This patch enables the basic infrastructure required in Linux to handle and
-> programme the CCI component.
+> > +static inline void init_cpu_port(struct cpu_port *port, u32 index, u32 mpidr)
 > 
-> Non-local variables used by the CCI management functions called by power
-> down function calls after disabling the cache must be flushed out to main
-> memory in advance, otherwise incoherency of those values may occur if they
-> are sitting in the cache of some other CPU when power down functions
-> execute. Driver code ensures that relevant data structures are flushed
-> from inner and outer caches after the driver probe is completed.
-> 
-> CCI slave port resources are linked to set of CPUs through bus masters
-> phandle properties that link the interface resources to masters node in
-> the device tree.
-> 
-> Documentation describing the CCI DT bindings is provided with the patch.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> ---
->  Documentation/devicetree/bindings/arm/cci.txt | 161 ++++++++++
->  drivers/bus/Kconfig                           |   7 +
->  drivers/bus/Makefile                          |   2 +
->  drivers/bus/arm-cci.c                         | 420 ++++++++++++++++++++++++++
->  include/linux/arm-cci.h                       |  61 ++++
->  5 files changed, 651 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/cci.txt
->  create mode 100644 drivers/bus/arm-cci.c
->  create mode 100644 include/linux/arm-cci.h
-> 
+> The mpidr should be u64.
 
-[...]
+Why?
 
-> diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
-> new file mode 100644
-> index 0000000..000102f
-> --- /dev/null
-> +++ b/drivers/bus/arm-cci.c
-> @@ -0,0 +1,420 @@
-> +/*
-> + * CCI cache coherent interconnect driver
-> + *
-> + * Copyright (C) 2013 ARM Ltd.
-> + * Author: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-> + * kind, whether express or implied; without even the implied warranty
-> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/arm-cci.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/slab.h>
-> +
-> +#include <asm/cacheflush.h>
-> +#include <asm/smp_plat.h>
-> +
-> +#define DRIVER_NAME            "CCI"
-> +
-> +#define CCI_PORT_CTRL          0x0
-> +#define CCI_CTRL_STATUS                0xc
-> +
-> +#define CCI_ENABLE_SNOOP_REQ   0x1
-> +#define CCI_ENABLE_DVM_REQ     0x2
-> +#define CCI_ENABLE_REQ         (CCI_ENABLE_SNOOP_REQ | CCI_ENABLE_DVM_REQ)
-> +
-> +struct cci_nb_ports {
-> +       unsigned int nb_ace;
-> +       unsigned int nb_ace_lite;
-> +};
-> +
-> +enum cci_ace_port_type {
-> +       ACE_INVALID_PORT = 0x0,
-> +       ACE_PORT,
-> +       ACE_LITE_PORT,
-> +};
-> +
-> +struct cci_ace_port {
-> +       void __iomem *base;
-> +       enum cci_ace_port_type type;
-> +       struct device_node *dn;
-> +};
-> +
-> +static struct cci_ace_port *ports;
-> +static unsigned int nb_cci_ports;
-> +
-> +static void __iomem *cci_ctrl_base;
-> +
-> +struct cpu_port {
-> +       u64 mpidr;
-> +       u32 port;
-> +};
-> +/*
-> + * Use the port MSB as valid flag, shift can be made dynamic
-> + * by computing number of bits required for port indexes.
-> + * Code disabling CCI cpu ports runs with D-cache invalidated
-> + * and SCTLR bit clear so data accesses must be kept to a minimum
-> + * to improve performance; for now shift is left static to
-> + * avoid one more data access while disabling the CCI port.
-> + */
-> +#define PORT_VALID_SHIFT       31
-> +#define PORT_VALID             (0x1 << PORT_VALID_SHIFT)
-> +
-> +static inline void init_cpu_port(struct cpu_port *port, u32 index, u32 mpidr)
 
-The mpidr should be u64.
-
-> +{
-> +       port->port = PORT_VALID | index;
-> +       port->mpidr = mpidr;
-> +}
-> +
-> +static inline bool cpu_port_is_valid(struct cpu_port *port)
-> +{
-> +       return !!(port->port & PORT_VALID);
-> +}
-> +
-> +static inline bool cpu_port_match(struct cpu_port *port, u32 mpidr)
-
-Same here.
-
-> +{
-> +       return port->mpidr == (mpidr & MPIDR_HWID_BITMASK);
-> +}
-> +
-
-Cheers,
-Javi
+Nicolas
