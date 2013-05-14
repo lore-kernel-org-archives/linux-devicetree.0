@@ -1,7 +1,7 @@
 From: Vikas Sajjan <vikas.sajjan@linaro.org>
-Subject: [PATCH v2 2/3] ARM: dts: Add clock provider information for DP controller in Exynos5250 SoC
-Date: Tue, 14 May 2013 19:42:45 +0530
-Message-ID: <1368540766-9818-3-git-send-email-vikas.sajjan@linaro.org>
+Subject: [PATCH v2 3/3] ARM: dts: Add display timing node to exynos5250-arndale.dts
+Date: Tue, 14 May 2013 19:42:46 +0530
+Message-ID: <1368540766-9818-4-git-send-email-vikas.sajjan@linaro.org>
 References: <1368540766-9818-1-git-send-email-vikas.sajjan@linaro.org>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 In-Reply-To: <1368540766-9818-1-git-send-email-vikas.sajjan@linaro.org>
@@ -10,27 +10,39 @@ To: linux-samsung-soc@vger.kernel.org
 Cc: jg1.han@samsung.com, s.trumtrar@pengutronix.de, tomasz.figa@gmail.com, olof@lixom.net, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, linaro-kernel@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Adds clock provider information for DP controller required by CCF.
+Adds display timing node for a DP panel to Arndale Board DTS file
 
 Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-Acked-by: Jingoo Han <jg1.han@samsung.com>
 ---
- arch/arm/boot/dts/exynos5250.dtsi |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/exynos5250-arndale.dts |   18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 98dfc3e..a55255b 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -606,6 +606,8 @@
- 		reg = <0x145b0000 0x1000>;
- 		interrupts = <10 3>;
- 		interrupt-parent = <&combiner>;
-+		clocks = <&clock 342>;
-+		clock-names = "dp";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+index f68b820..c371f7c 100644
+--- a/arch/arm/boot/dts/exynos5250-arndale.dts
++++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+@@ -459,4 +459,22 @@
+ 		samsung,lane-count = <4>;
+ 	};
  
++	fimd: fimd@14400000 {
++		display-timings {
++			native-mode = <&timing0>;
++			timing0: timing@0 {
++				/* 2560x1600 DP panel */
++				clock-frequency = <50000>;
++				hactive = <2560>;
++				vactive = <1600>;
++				hfront-porch = <48>;
++				hback-porch = <80>;
++				hsync-len = <32>;
++				vback-porch = <16>;
++				vfront-porch = <8>;
++				vsync-len = <6>;
++			};
++		};
++	};
++
+ };
 -- 
 1.7.9.5
