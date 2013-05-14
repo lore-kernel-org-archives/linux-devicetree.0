@@ -1,42 +1,222 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH v4] extcon: Palmas Extcon Driver
-Date: Wed, 15 May 2013 00:13:02 +0530
-Message-ID: <519285B6.2090701@nvidia.com>
-References: <1362662506-14823-4-git-send-email-kishon@ti.com> <1367846225-15685-1-git-send-email-kishon@ti.com> <20130506144010.GF13472@opensource.wolfsonmicro.com> <51888D55.3090907@ti.com> <20130507075824.GM7478@sirena.org.uk> <5188CD9C.6010602@ti.com> <20130507104502.GQ7478@sirena.org.uk> <5192017D.6060108@ti.com> <20130514095402.GA9721@xora-build.xora.org.uk>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] clk: si5351: Allow user to define disabled state for
+ every clock output
+Date: Tue, 14 May 2013 12:13:50 -0700
+Message-ID: <20130514191350.10068.22100@quantum>
+References: <1367559207-20086-1-git-send-email-marek.belisko@streamunlimited.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130514095402.GA9721@xora-build.xora.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Graeme Gregory <gg@slimlogic.co.uk>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mark Brown <broonie@kernel.org>, "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, "cw00.choi@samsung.com" <cw00.choi@samsung.com>, "balbi@ti.com" <balbi@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "ruchika@ti.com" <ruchika@ti.com>, "tony@atomide.com" <tony@atomide.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1367559207-20086-1-git-send-email-marek.belisko-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Marek Belisko <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, vladimir.koutny-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marek Belisko <marek.belisko-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>, daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 14 May 2013 03:24 PM, Graeme Gregory wrote:
-> On Tue, May 14, 2013 at 02:48:53PM +0530, Kishon Vijay Abraham I wrote:
->> On Tuesday 07 May 2013 04:15 PM, Mark Brown wrote:
->>> On Tue, May 07, 2013 at 03:17:08PM +0530, Kishon Vijay Abraham I wrote:
->>>> On Tuesday 07 May 2013 01:28 PM, Mark Brown wrote:
->>>>>> The platform can provide it's own vbus control in which case this is
->>>>>> not needed.
->>>>> So why is there no interaction with this external VBUS control and how
->>>>> does the driver distinguish between that and an error getting the
->>>>> regulator?
->>>> The platform specifies if it provides its own VBUS control by the dt
->>>> property ti,no_control_vbus. So the driver will give an error only
->>>> when *ti,no_control_vbus* is not set. Graeme?
->>> That doesn't answer the question about why there's no interaction with
->>> the external control...
->>>
->> Graeme?
->>
-> I already partially answered this, it was written for a SoC where VBUS
-> generation was in hardware on the SoC with no information.
->
-> I would say if nvidia/Laxman do not need this remove it, if someone ever
-> uses it then they can re-add it easy enough!
+Quoting Marek Belisko (2013-05-02 22:33:27)
+> From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> This patch adds platform data and DT bindings to allow to overwrite
+> the stored disabled state for each clock output.
+> 
+> Signed-off-by: Marek Belisko <marek.belisko-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org>
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-I think we really do not require this. Just we need the notification 
-through extcon about the cable connection. We should remove it for 
-avoiding complexity for now.
+Taken into clk-next.
+
+Thanks,
+Mike
+
+> ---
+> Changes from v1->v2:
+> Sebastian Hesselbarth send me updated version of patch which was based
+> on v1. Resending with updates.
+> 
+>  .../devicetree/bindings/clock/silabs,si5351.txt    |    5 ++
+>  drivers/clk/clk-si5351.c                           |   74 +++++++++++++++++++-
+>  drivers/clk/clk-si5351.h                           |    1 +
+>  include/linux/platform_data/si5351.h               |   18 +++++
+>  4 files changed, 95 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/silabs,si5351.txt b/Documentation/devicetree/bindings/clock/silabs,si5351.txt
+> index cc37465..66c75b2 100644
+> --- a/Documentation/devicetree/bindings/clock/silabs,si5351.txt
+> +++ b/Documentation/devicetree/bindings/clock/silabs,si5351.txt
+> @@ -44,6 +44,11 @@ Optional child node properties:
+>  - silabs,multisynth-source: source pll A(0) or B(1) of corresponding multisynth
+>    divider.
+>  - silabs,pll-master: boolean, multisynth can change pll frequency.
+> +- silabs,disable-state : clock output disable state, shall be
+> +  0 = clock output is driven LOW when disabled
+> +  1 = clock output is driven HIGH when disabled
+> +  2 = clock output is FLOATING (HIGH-Z) when disabled
+> +  3 = clock output is NEVER disabled
+>  
+>  ==Example==
+>  
+> diff --git a/drivers/clk/clk-si5351.c b/drivers/clk/clk-si5351.c
+> index 8323c31..098f28b 100644
+> --- a/drivers/clk/clk-si5351.c
+> +++ b/drivers/clk/clk-si5351.c
+> @@ -851,6 +851,41 @@ static int _si5351_clkout_set_drive_strength(
+>         return 0;
+>  }
+>  
+> +static int _si5351_clkout_set_disable_state(
+> +       struct si5351_driver_data *drvdata, int num,
+> +       enum si5351_disable_state state)
+> +{
+> +       u8 reg = (num < 4) ? SI5351_CLK3_0_DISABLE_STATE :
+> +               SI5351_CLK7_4_DISABLE_STATE;
+> +       u8 shift = (num < 4) ? (2 * num) : (2 * (num-4));
+> +       u8 mask = SI5351_CLK_DISABLE_STATE_MASK << shift;
+> +       u8 val;
+> +
+> +       if (num > 8)
+> +               return -EINVAL;
+> +
+> +       switch (state) {
+> +       case SI5351_DISABLE_LOW:
+> +               val = SI5351_CLK_DISABLE_STATE_LOW;
+> +               break;
+> +       case SI5351_DISABLE_HIGH:
+> +               val = SI5351_CLK_DISABLE_STATE_HIGH;
+> +               break;
+> +       case SI5351_DISABLE_FLOATING:
+> +               val = SI5351_CLK_DISABLE_STATE_FLOAT;
+> +               break;
+> +       case SI5351_DISABLE_NEVER:
+> +               val = SI5351_CLK_DISABLE_STATE_NEVER;
+> +               break;
+> +       default:
+> +               return 0;
+> +       }
+> +
+> +       si5351_set_bits(drvdata, reg, mask, val << shift);
+> +
+> +       return 0;
+> +}
+> +
+>  static int si5351_clkout_prepare(struct clk_hw *hw)
+>  {
+>         struct si5351_hw_data *hwdata =
+> @@ -1225,6 +1260,33 @@ static int si5351_dt_parse(struct i2c_client *client)
+>                         }
+>                 }
+>  
+> +               if (!of_property_read_u32(child, "silabs,disable-state",
+> +                                         &val)) {
+> +                       switch (val) {
+> +                       case 0:
+> +                               pdata->clkout[num].disable_state =
+> +                                       SI5351_DISABLE_LOW;
+> +                               break;
+> +                       case 1:
+> +                               pdata->clkout[num].disable_state =
+> +                                       SI5351_DISABLE_HIGH;
+> +                               break;
+> +                       case 2:
+> +                               pdata->clkout[num].disable_state =
+> +                                       SI5351_DISABLE_FLOATING;
+> +                               break;
+> +                       case 3:
+> +                               pdata->clkout[num].disable_state =
+> +                                       SI5351_DISABLE_NEVER;
+> +                               break;
+> +                       default:
+> +                               dev_err(&client->dev,
+> +                                       "invalid disable state %d for clkout %d\n",
+> +                                       val, num);
+> +                               return -EINVAL;
+> +                       }
+> +               }
+> +
+>                 if (!of_property_read_u32(child, "clock-frequency", &val))
+>                         pdata->clkout[num].rate = val;
+>  
+> @@ -1281,9 +1343,6 @@ static int si5351_i2c_probe(struct i2c_client *client,
+>  
+>         /* Disable interrupts */
+>         si5351_reg_write(drvdata, SI5351_INTERRUPT_MASK, 0xf0);
+> -       /* Set disabled output drivers to drive low */
+> -       si5351_reg_write(drvdata, SI5351_CLK3_0_DISABLE_STATE, 0x00);
+> -       si5351_reg_write(drvdata, SI5351_CLK7_4_DISABLE_STATE, 0x00);
+>         /* Ensure pll select is on XTAL for Si5351A/B */
+>         if (drvdata->variant != SI5351_VARIANT_C)
+>                 si5351_set_bits(drvdata, SI5351_PLL_INPUT_SOURCE,
+> @@ -1327,6 +1386,15 @@ static int si5351_i2c_probe(struct i2c_client *client,
+>                                 n, pdata->clkout[n].drive);
+>                         return ret;
+>                 }
+> +
+> +               ret = _si5351_clkout_set_disable_state(drvdata, n,
+> +                                               pdata->clkout[n].disable_state);
+> +               if (ret) {
+> +                       dev_err(&client->dev,
+> +                               "failed set disable state of clkout%d to %d\n",
+> +                               n, pdata->clkout[n].disable_state);
+> +                       return ret;
+> +               }
+>         }
+>  
+>         /* register xtal input clock gate */
+> diff --git a/drivers/clk/clk-si5351.h b/drivers/clk/clk-si5351.h
+> index af41b50..c0dbf26 100644
+> --- a/drivers/clk/clk-si5351.h
+> +++ b/drivers/clk/clk-si5351.h
+> @@ -81,6 +81,7 @@
+>  
+>  #define SI5351_CLK3_0_DISABLE_STATE            24
+>  #define SI5351_CLK7_4_DISABLE_STATE            25
+> +#define  SI5351_CLK_DISABLE_STATE_MASK         3
+>  #define  SI5351_CLK_DISABLE_STATE_LOW          0
+>  #define  SI5351_CLK_DISABLE_STATE_HIGH         1
+>  #define  SI5351_CLK_DISABLE_STATE_FLOAT                2
+> diff --git a/include/linux/platform_data/si5351.h b/include/linux/platform_data/si5351.h
+> index 92dabca..5433439 100644
+> --- a/include/linux/platform_data/si5351.h
+> +++ b/include/linux/platform_data/si5351.h
+> @@ -79,6 +79,23 @@ enum si5351_drive_strength {
+>  };
+>  
+>  /**
+> + * enum si5351_disable_state - Si5351 clock output disable state
+> + * @SI5351_DISABLE_DEFAULT: default, do not change eeprom config
+> + * @SI5351_DISABLE_LOW: CLKx is set to a LOW state when disabled
+> + * @SI5351_DISABLE_HIGH: CLKx is set to a HIGH state when disabled
+> + * @SI5351_DISABLE_FLOATING: CLKx is set to a FLOATING state when
+> + *                             disabled
+> + * @SI5351_DISABLE_NEVER: CLKx is NEVER disabled
+> + */
+> +enum si5351_disable_state {
+> +       SI5351_DISABLE_DEFAULT = 0,
+> +       SI5351_DISABLE_LOW,
+> +       SI5351_DISABLE_HIGH,
+> +       SI5351_DISABLE_FLOATING,
+> +       SI5351_DISABLE_NEVER,
+> +};
+> +
+> +/**
+>   * struct si5351_clkout_config - Si5351 clock output configuration
+>   * @clkout: clkout number
+>   * @multisynth_src: multisynth source clock
+> @@ -91,6 +108,7 @@ struct si5351_clkout_config {
+>         enum si5351_multisynth_src multisynth_src;
+>         enum si5351_clkout_src clkout_src;
+>         enum si5351_drive_strength drive;
+> +       enum si5351_disable_state disable_state;
+>         bool pll_master;
+>         unsigned long rate;
+>  };
+> -- 
+> 1.7.9.5
