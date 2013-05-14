@@ -1,114 +1,220 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v3] ARM:dts:omap4-panda:Update the LED support for the panda DTS
-Date: Tue, 14 May 2013 09:17:56 -0500
-Message-ID: <1368541076-6854-1-git-send-email-dmurphy@ti.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 5/5] media: i2c: tvp7002: add OF support
+Date: Tue, 14 May 2013 17:34:15 +0200
+Message-ID: <4149647.zqpmlIlQDP@avalon>
+References: <1368528334-13595-1-git-send-email-prabhakar.csengg@gmail.com> <1368528334-13595-6-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk
-Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1368528334-13595-6-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The GPIO for LED D1 on the omap4-panda a1-a3 rev and the omap4-panda-es
-are different.
+Hi Prabhakar,
 
-A1-A3 = gpio_wk7
-ES = gpio_110
+Thank you for the patch.
 
-There is no change to LED D2
+On Tuesday 14 May 2013 16:15:34 Lad Prabhakar wrote:
+> From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> 
+> add OF support for the tvp7002 driver.
+> 
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> Cc: Hans Verkuil <hans.verkuil@cisco.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+> Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Cc: Sakari Ailus <sakari.ailus@iki.fi>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Rob Landley <rob@landley.net>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: davinci-linux-open-source@linux.davincidsp.com
+> ---
+>  .../devicetree/bindings/media/i2c/tvp7002.txt      |   42 +++++++++++++
+>  drivers/media/i2c/tvp7002.c                        |   64 +++++++++++++++--
+>  2 files changed, 99 insertions(+), 7 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+> b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt new file mode
+> 100644
+> index 0000000..1ebd8b1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+> @@ -0,0 +1,42 @@
+> +* Texas Instruments TV7002 video decoder
+> +
+> +The TVP7002 device supports digitizing of video and graphics signal in RGB
+> and
+> +YPbPr color space.
+> +
+> +Required Properties :
+> +- compatible : Must be "ti,tvp7002"
+> +
+> +- hsync-active: HSYNC Polarity configuration for endpoint.
+> +
+> +- vsync-active: VSYNC Polarity configuration for endpoint.
+> +
+> +- pclk-sample: Clock polarity of the endpoint.
+> +
+> +- ti,tvp7002-fid-polarity: Active-high Field ID polarity of the endpoint.
+> +
+> +- ti,tvp7002-sog-polarity: Sync on Green output polarity of the endpoint.
 
-Abstract away the pinmux and the LED definitions for the two boards into
-the respective DTS files.
+Would it make sense to define field-active and sog-active properties in the 
+V4L2 bindings instead of having per-chip properties ?
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- arch/arm/boot/dts/omap4-panda-common.dtsi |   16 +++++++++++-
- arch/arm/boot/dts/omap4-panda-es.dts      |   40 +++++++++++++++++++++++++++++
- 2 files changed, 55 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
-index 03bd60d..2b516af 100644
---- a/arch/arm/boot/dts/omap4-panda-common.dtsi
-+++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
-@@ -16,7 +16,7 @@
- 		reg = <0x80000000 0x40000000>; /* 1 GB */
- 	};
- 
--	leds {
-+	leds: leds {
- 		compatible = "gpio-leds";
- 		heartbeat {
- 			label = "pandaboard::status1";
-@@ -137,6 +137,20 @@
- 	};
- };
- 
-+&omap4_pmx_wkup {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <
-+		&led_wkgpio_pins
-+	>;
-+
-+	led_wkgpio_pins: pinmux_leds_wkpins {
-+		pinctrl-single,pins = <
-+			0x1a 0x3	/* gpio_wk7 OUTPUT | MODE 3 */
-+			0x1c 0x3	/* gpio_wk8 OUTPUT | MODE 3 */
-+		>;
-+	};
-+};
-+
- &i2c1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c1_pins>;
-diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts/omap4-panda-es.dts
-index f1d8c21..8d1ba03 100644
---- a/arch/arm/boot/dts/omap4-panda-es.dts
-+++ b/arch/arm/boot/dts/omap4-panda-es.dts
-@@ -34,3 +34,43 @@
- 		0x5e 0x100	/* hdmi_sda.hdmi_sda INPUT | MODE 0 */
- 		>;
- };
-+
-+&leds {
-+	compatible = "gpio-leds";
-+	heartbeat {
-+		label = "pandaboard::status1";
-+		gpios = <&gpio4 14 0>;
-+		linux,default-trigger = "heartbeat";
-+	};
-+	mmc {
-+		label = "pandaboard::status2";
-+		gpios = <&gpio1 8 0>;
-+		linux,default-trigger = "gpio";
-+	};
-+};
-+
-+&omap4_pmx_core {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <
-+		&led_gpio_pins
-+	>;
-+
-+	led_gpio_pins: gpio_led_pmx {
-+		pinctrl-single,pins = <
-+			0xb6 0x3	/* gpio_110 OUTPUT | MODE 3 */
-+		>;
-+	};
-+};
-+
-+&omap4_pmx_wkup {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <
-+		&led_wkgpio_pins
-+	>;
-+
-+	led_wkgpio_pins: pinmux_leds_wkpins {
-+		pinctrl-single,pins = <
-+			0x1c 0x3	/* gpio_wk8 OUTPUT | MODE 3 */
-+		>;
-+	};
-+};
+> +For further reading of port node refer
+> Documentation/devicetree/bindings/media/ +video-interfaces.txt.
+> +
+> +Example:
+> +
+> +	i2c0@1c22000 {
+> +		...
+> +		...
+> +		tvp7002@5c {
+> +			compatible = "ti,tvp7002";
+> +			reg = <0x5c>;
+> +
+> +			port {
+> +				tvp7002_1: endpoint {
+> +					hsync-active = <1>;
+> +					vsync-active = <1>;
+> +					pclk-sample = <0>;
+> +					ti,tvp7002-fid-polarity;
+> +					ti,tvp7002-sog-polarity;
+> +				};
+> +			};
+> +		};
+> +		...
+> +	};
+> diff --git a/drivers/media/i2c/tvp7002.c b/drivers/media/i2c/tvp7002.c
+> index d5113d1..942e0d8 100644
+> --- a/drivers/media/i2c/tvp7002.c
+> +++ b/drivers/media/i2c/tvp7002.c
+> @@ -35,6 +35,7 @@
+>  #include <media/v4l2-chip-ident.h>
+>  #include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-device.h>
+> +#include <media/v4l2-of.h>
+> 
+>  #include "tvp7002_reg.h"
+> 
+> @@ -976,6 +977,46 @@ static const struct v4l2_subdev_ops tvp7002_ops = {
+>  	.pad = &tvp7002_pad_ops,
+>  };
+> 
+> +static struct tvp7002_config *
+> +tvp7002_get_pdata(struct i2c_client *client)
+> +{
+> +	struct v4l2_of_endpoint bus_cfg;
+> +	struct tvp7002_config *pdata;
+> +	struct device_node *endpoint;
+> +	unsigned int flags;
+> +
+> +	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
+> +		return client->dev.platform_data;
+> +
+> +	endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
+> +	if (!endpoint)
+> +		return NULL;
+> +
+> +	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return NULL;
+> +
+> +	v4l2_of_parse_endpoint(endpoint, &bus_cfg);
+> +	flags = bus_cfg.bus.parallel.flags;
+> +
+> +	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
+> +		pdata->hs_polarity = 1;
+> +
+> +	if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
+> +		pdata->vs_polarity = 1;
+> +
+> +	if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
+> +		pdata->clk_polarity = 1;
+> +
+> +	pdata->fid_polarity = of_property_read_bool(endpoint,
+> +						    "ti,tvp7002-fid-polarity");
+> +
+> +	pdata->sog_polarity = of_property_read_bool(endpoint,
+> +						    "ti,tvp7002-sog-polarity");
+> +
+> +	return pdata;
+> +}
+> +
+>  /*
+>   * tvp7002_probe - Probe a TVP7002 device
+>   * @c: ptr to i2c_client struct
+> @@ -987,32 +1028,32 @@ static const struct v4l2_subdev_ops tvp7002_ops = {
+>   */
+>  static int tvp7002_probe(struct i2c_client *c, const struct i2c_device_id
+> *id) {
+> +	struct tvp7002_config *pdata = tvp7002_get_pdata(c);
+>  	struct v4l2_subdev *sd;
+>  	struct tvp7002 *device;
+>  	struct v4l2_dv_timings timings;
+>  	int polarity_a;
+>  	int polarity_b;
+>  	u8 revision;
+> -
+>  	int error;
+> 
+> +	if (pdata == NULL) {
+> +		dev_err(&c->dev, "No platform data\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	/* Check if the adapter supports the needed features */
+>  	if (!i2c_check_functionality(c->adapter,
+>  		I2C_FUNC_SMBUS_READ_BYTE | I2C_FUNC_SMBUS_WRITE_BYTE_DATA))
+>  		return -EIO;
+> 
+> -	if (!c->dev.platform_data) {
+> -		v4l_err(c, "No platform data!!\n");
+> -		return -ENODEV;
+> -	}
+> -
+>  	device = devm_kzalloc(&c->dev, sizeof(struct tvp7002), GFP_KERNEL);
+> 
+>  	if (!device)
+>  		return -ENOMEM;
+> 
+>  	sd = &device->sd;
+> -	device->pdata = c->dev.platform_data;
+> +	device->pdata = pdata;
+>  	device->current_timings = tvp7002_timings;
+> 
+>  	/* Tell v4l2 the device is ready */
+> @@ -1119,9 +1160,18 @@ static const struct i2c_device_id tvp7002_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, tvp7002_id);
+> 
+> +#if IS_ENABLED(CONFIG_OF)
+> +static const struct of_device_id tvp7002_of_match[] = {
+> +	{ .compatible = "ti,tvp7002", },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, tvp7002_of_match);
+> +#endif
+> +
+>  /* I2C driver data */
+>  static struct i2c_driver tvp7002_driver = {
+>  	.driver = {
+> +		.of_match_table = of_match_ptr(tvp7002_of_match),
+>  		.owner = THIS_MODULE,
+>  		.name = TVP7002_MODULE_NAME,
+>  	},
 -- 
-1.7.9.5
+Regards,
+
+Laurent Pinchart
 
