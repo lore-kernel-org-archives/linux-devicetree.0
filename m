@@ -1,132 +1,81 @@
-From: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v7] i2c-designware: make SDA hold time configurable
-Date: Tue, 14 May 2013 14:07:45 +0300
-Message-ID: <20130514110745.GA10906@intel.com>
-References: <20130327084158.GB11010@ab42.lan>
- <1364373760-12469-1-git-send-email-christian.ruppert@abilis.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 9/9] mfd: ab8500-core: Pass GPADC compatible string to MFD core
+Date: Tue, 14 May 2013 13:06:29 +0200
+Message-ID: <CACRpkdaiZNeh9u_e7wSkHPmrxfaFQLeQEpZXEV4f+rXCCpW_eg@mail.gmail.com>
+References: <1368019749-19455-1-git-send-email-lee.jones@linaro.org>
+	<1368019749-19455-10-git-send-email-lee.jones@linaro.org>
+	<CACRpkdY8SLRR0HQvD5AFUeNeeHRVt3XM-MOkwJs_h_EfeRctKw@mail.gmail.com>
+	<20130514092614.GH3297@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1364373760-12469-1-git-send-email-christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130514092614.GH3297@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus WALLEIJ <linus.walleij@stericsson.com>, Srinidhi KASAGAR <srinidhi.kasagar@stericsson.com>, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 09, 2013 at 12:59:54PM +0200, Christian Ruppert wrote:
-> This patch makes the SDA hold time configurable through device tree.
-> 
-> Signed-off-by: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+On Tue, May 14, 2013 at 11:26 AM, Lee Jones <lee.jones@linaro.org> wrote:
 
-Hi Wolfram,
+>> probing and does not have an .of_match_table defined in it's
+>> driver struct? I mean, what could possibly match that
+>> compatible string? The .name field will take care of naming
+>> the device does it not?
+>
+> You only need that stuff if you require _extra_ bindings. Things like
+> regulators and interrupt numbers are configured behind the scenes.
 
-What happened to this patch? I don't see it merged for 3.10.
+Sure, but isn't the idea with of_match_table that this should be
+used in drivers when probing from device tree?
 
-The reason I'm asking is that I would like to add ACPI support for the SDA
-hold time parameter analogous to the DT version.
+Surely it *works* with other schemes but I always thought about
+them as some kind of rough fallback hacks. I would be way more
+convenient with the patch if it added an of_match_table to
+the ADC driver as well, because then I understand what is
+going on.
 
-Thanks.
+>> For non-emergency merging though:
+>> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> If we don't put this into v3.10-rcX, then the GPADC driver will be
+> broken in v3.10 when booting with DT.
 
-> ---
->  .../devicetree/bindings/i2c/i2c-designware.txt     |   14 ++++++++++++++
->  drivers/i2c/busses/i2c-designware-core.c           |    5 +++++
->  drivers/i2c/busses/i2c-designware-core.h           |    1 +
->  drivers/i2c/busses/i2c-designware-platdrv.c        |    9 +++++++++
->  4 files changed, 29 insertions(+), 0 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> index e42a2ee..21fabe7 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> @@ -10,6 +10,9 @@ Recommended properties :
->  
->   - clock-frequency : desired I2C bus clock frequency in Hz.
->  
-> +Optional properties :
-> + - sda-hold-time : should contain the SDA hold time in nanoseconds.
-> +
->  Example :
->  
->  	i2c@f0000 {
-> @@ -20,3 +23,14 @@ Example :
->  		interrupts = <11>;
->  		clock-frequency = <400000>;
->  	};
-> +
-> +	i2c@1120000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "snps,designware-i2c";
-> +		reg = <0x1120000 0x1000>;
-> +		interrupt-parent = <&ictl>;
-> +		interrupts = <12 1>;
-> +		clock-frequency = <400000>;
-> +		sda-hold-time = <300>;
-> +	};
-> diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busses/i2c-designware-core.c
-> index 94fd818..ba40e14 100644
-> --- a/drivers/i2c/busses/i2c-designware-core.c
-> +++ b/drivers/i2c/busses/i2c-designware-core.c
-> @@ -67,6 +67,7 @@
->  #define DW_IC_STATUS		0x70
->  #define DW_IC_TXFLR		0x74
->  #define DW_IC_RXFLR		0x78
-> +#define DW_IC_SDA_HOLD		0x7c
->  #define DW_IC_TX_ABRT_SOURCE	0x80
->  #define DW_IC_COMP_PARAM_1	0xf4
->  #define DW_IC_COMP_TYPE		0xfc
-> @@ -310,6 +311,10 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
->  	dw_writel(dev, lcnt, DW_IC_FS_SCL_LCNT);
->  	dev_dbg(dev->dev, "Fast-mode HCNT:LCNT = %d:%d\n", hcnt, lcnt);
->  
-> +	/* Configure SDA Hold Time if required */
-> +	if (dev->sda_hold_time)
-> +		dw_writel(dev, dev->sda_hold_time, DW_IC_SDA_HOLD);
-> +
->  	/* Configure Tx/Rx FIFO threshold levels */
->  	dw_writel(dev, dev->tx_fifo_depth - 1, DW_IC_TX_TL);
->  	dw_writel(dev, 0, DW_IC_RX_TL);
-> diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
-> index 9c1840e..33dfec3 100644
-> --- a/drivers/i2c/busses/i2c-designware-core.h
-> +++ b/drivers/i2c/busses/i2c-designware-core.h
-> @@ -88,6 +88,7 @@ struct dw_i2c_dev {
->  	u32			master_cfg;
->  	unsigned int		tx_fifo_depth;
->  	unsigned int		rx_fifo_depth;
-> +	u32			sda_hold_time;
->  };
->  
->  #define ACCESS_SWAP		0x00000001
-> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-> index 0ceb6e1..0a6e29b 100644
-> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
-> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-> @@ -34,6 +34,7 @@
->  #include <linux/sched.h>
->  #include <linux/err.h>
->  #include <linux/interrupt.h>
-> +#include <linux/of.h>
->  #include <linux/of_i2c.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm.h>
-> @@ -136,6 +137,14 @@ static int dw_i2c_probe(struct platform_device *pdev)
->  	}
->  	clk_prepare_enable(dev->clk);
->  
-> +	if (pdev->dev.of_node) {
-> +		u32 ht;
-> +		u32 ic_clk = dev->get_clk_rate_khz(dev);
-> +
-> +		of_property_read_u32(pdev->dev.of_node, "sda-hold-time", &ht);
-> +		dev->sda_hold_time = ((u64)ic_clk * ht + 500000) / 1000000;
-> +	}
-> +
->  	dev->functionality =
->  		I2C_FUNC_I2C |
->  		I2C_FUNC_10BIT_ADDR |
-> -- 
-> 1.7.1
-> 
+OK I think I understand why now...
+
+>> But for this to make sense the AB8500 ADC driver needs
+>> to be augmented for DT probing and preferrably also moved
+>> to drivers/adc and made to utilize that subsystem.
+>
+> Not sure I understand the reasoning for this. It works well as a plain
+> MFD device.
+
+The commit message says:
+ "Without it, the driver won't be able to interrogate the Device Tree or
+  locate suitable regulators and will most likely fail to probe."
+
+That commit message makes it sound like the driver is
+interrogating (hm is that the right term...) the device tree, but
+now you say it isn't (as you say it is a plain MFD device).
+Of course the MFD core and drivers/of/platform.c is doing
+all sorts of magic based on the device tree, and that is
+what the patch fixes, right? Nothing to do with the driver
+really?
+
+I suspect the missing regulators due to how the OF core or
+MFD core uses the device tree is the actual problem
+solved by the patch?
+
+Anyway I think I was after this:
+
+Isn't the idea that all devices that get probed from a device tree
+shall have corresponding bindings documented under
+Documentation/devicetree/bindings/*?
+
+And this driver is definately in the wrong subsystem (not your
+fault) so I suspect the binding doc should be in
+Documentation/devicetree/bindings/adc/ab8500.txt or
+something. I'm not pointing that out as a problem in this
+patch, I'm just discussing the mess we're in ...
+
+Yours,
+Linus Walleij
