@@ -1,48 +1,37 @@
 From: Doug Anderson <dianders@google.com>
 Subject: Re: Pulls and drive strengths in the pinctrl world
-Date: Wed, 15 May 2013 14:57:43 -0700
-Message-ID: <CAD=FV=WSa9BBDKu8jE43ZG+NS1ZSZYQE5Z2n2ts7BmmbTUnSWg@mail.gmail.com>
+Date: Wed, 15 May 2013 15:01:23 -0700
+Message-ID: <CAD=FV=XBHtVO6TzbNVXc_omW8ki7DAMx58hLmT0HsyEvUs3YMg@mail.gmail.com>
 References: <CAD=FV=V9h3RUfvAxj8k2EbYXYPO4FfoNwh=f=dno5ZBUFYeG0w@mail.gmail.com>
-	<2016052.zneaYHvtGE@flatron>
-	<CAD=FV=VQ3X=xGhQapcDM6kMRSz0_06wWj7Oxn8hU-zPcajTZDg@mail.gmail.com>
-	<2019038.uIdiqCOAdU@flatron>
+	<CACRpkdbgjqF3xhxUvfvNJn5Vt-3i0AFBzR_Q8gHdNq919dnNsA@mail.gmail.com>
+	<CAD=FV=V-1uO3XSg603zyJx907EhhkMC5UCOfzrhgyGWw_0TO0A@mail.gmail.com>
+	<2118733.fzZiu9I5M5@flatron>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <2019038.uIdiqCOAdU@flatron>
+In-Reply-To: <2118733.fzZiu9I5M5@flatron>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thomas Abraham <thomas.abraham@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Simon Glass <sjg@chromium.org>, Olof Johansson <olof@lixom.net>, Kukjin Kim <kgene.kim@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thomas Abraham <thomas.abraham@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Simon Glass <sjg@chromium.org>, Olof Johansson <olof@lixom.net>, Kukjin Kim <kgene.kim@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 Tomasz,
 
-On Wed, May 15, 2013 at 2:36 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
->> One potential reason for leaving them is the hopes that it might cause
->> a little less line glitching, especially in the case of outputs.
->> There is some delay between the pinmux being configured at the start
->> of device probe and the device actually claiming the GPIO.  Things
->> might be worse in the case of deferred probe (?).  Can you think of
->> any reason to remove (other than yet more lines of device tree to deal
->> with)?
+On Wed, May 15, 2013 at 2:41 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> This will be hard, since the phandle in interrupt-parent is represented by
+> an IRQ domain in kernel code. One-interrupt IRQ domains seem a bit awkward
+> to me.
 >
-> Well, actually in case of interrupts the function should not be configured
-> manually, because it is likely to cause a false interrupt to be caught,
-> before appropriate interrupt trigger type is configured. The correct way
-> is to leave setting pin function to EINT to the pin control driver once
-> the trigger gets configured (the pin control driver configures pin
-> function from set_irq_type callback).
+> Since we are already going to modify the binding, let's think a bit more
+> about this problem and try to figure out a solution that doesn't add any
+> disadvantages (at least any significant) to avoid such situation in future
+> again.
 
-Ah, OK.  I'll set to input for these.
+I'm definitely not super familiar with the implementation at that
+level of detail, so don't take my proposed syntax as something I've
+thought all the way through.  ...but hopefully you understand what I'm
+getting at in terms of eliminating duplication?
 
-
->> I will probably leave them even for inputs.  They shouldn't matter but
->> I like the idea of initting things to a known state...
->
-> Well, the binding you proposed for interrupts doesn't initialize it. This
-> is why I pointed that it can be omitted using current way as well.
-
-Agreed.  ...though you could say that the actual code in that case
-would just be setting the drive strength to 0 (for consistency).  ;)
+Thanks!  :)
 
 -Doug
