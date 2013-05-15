@@ -1,96 +1,51 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v3 17/20] ARM: shmobile: kzm9g-reference: Move SDHI regulators to DT
-Date: Wed, 15 May 2013 02:18:17 +0200
-Message-ID: <1368577100-3530-18-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1368577100-3530-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1368577100-3530-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH V2 07/10] ARM: mvebu: Use standard MMC binding for all
+ users of mvsdio
+Date: Tue, 14 May 2013 20:29:56 -0400
+Message-ID: <20130515002956.GH31290@titan.lakedaemon.net>
+References: <1368479941-10084-1-git-send-email-gmbnomis@gmail.com>
+ <1368479941-10084-8-git-send-email-gmbnomis@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1368479941-10084-8-git-send-email-gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Create two GPIO-controlled fixed-voltage regulators in the
-kzm9g-reference DT and remove manual configuration of the corresponding
-GPIOs from board code.
+On Mon, May 13, 2013 at 11:18:58PM +0200, Simon Baatz wrote:
+> In order to prepare the switch to the standard MMC device tree parser
+> for mvsdio, adapt all current uses of mvsdio in the dts files to the
+> standard format.
+> 
+> Signed-off-by: Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/armada-370-db.dts                |    1 +
+>  arch/arm/boot/dts/armada-370-mirabox.dts           |    1 +
+>  arch/arm/boot/dts/armada-370-rd.dts                |    1 +
+>  arch/arm/boot/dts/armada-370-xp.dtsi               |    4 ++++
+>  arch/arm/boot/dts/armada-xp-db.dts                 |    1 +
+>  arch/arm/boot/dts/kirkwood-dreamplug.dts           |    1 +
+>  .../arm/boot/dts/kirkwood-guruplug-server-plus.dts |    2 ++
+>  arch/arm/boot/dts/kirkwood-mplcec4.dts             |    2 +-
+>  arch/arm/boot/dts/kirkwood-topkick.dts             |    1 +
+>  arch/arm/boot/dts/kirkwood.dtsi                    |    4 ++++
+>  10 files changed, 17 insertions(+), 1 deletion(-)
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- arch/arm/boot/dts/sh73a0-kzm9g-reference.dts   | 22 ++++++++++++++++++++--
- arch/arm/mach-shmobile/board-kzm9g-reference.c |  6 ------
- 2 files changed, 20 insertions(+), 8 deletions(-)
+Applied to mvebu/dt
 
-diff --git a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-index 475535f..cdfd71a 100644
---- a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-+++ b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-@@ -58,6 +58,24 @@
- 		regulator-boot-on;
- 	};
- 
-+	vmmc_sdhi0: regulator@2 {
-+	        compatible = "regulator-fixed";
-+		regulator-name = "SDHI0 Vcc";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&pfc 15 0>;
-+		enable-active-high;
-+	};
-+
-+	vmmc_sdhi2: regulator@3 {
-+	        compatible = "regulator-fixed";
-+		regulator-name = "SDHI2 Vcc";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&pfc 14 0>;
-+		enable-active-high;
-+	};
-+
- 	lan9220@10000000 {
- 		compatible = "smsc,lan9220", "smsc,lan9115";
- 		reg = <0x10000000 0x100>;
-@@ -200,7 +218,7 @@
- 	pinctrl-0 = <&sdhi0_pins>;
- 	pinctrl-names = "default";
- 
--	vmmc-supply = <&reg_3p3v>;
-+	vmmc-supply = <&vmmc_sdhi0>;
- 	bus-width = <4>;
- 	status = "okay";
- };
-@@ -209,7 +227,7 @@
- 	pinctrl-0 = <&sdhi2_pins>;
- 	pinctrl-names = "default";
- 
--	vmmc-supply = <&reg_3p3v>;
-+	vmmc-supply = <&vmmc_sdhi2>;
- 	bus-width = <4>;
- 	broken-cd;
- 	status = "okay";
-diff --git a/arch/arm/mach-shmobile/board-kzm9g-reference.c b/arch/arm/mach-shmobile/board-kzm9g-reference.c
-index fc2bb37..1847b4d 100644
---- a/arch/arm/mach-shmobile/board-kzm9g-reference.c
-+++ b/arch/arm/mach-shmobile/board-kzm9g-reference.c
-@@ -21,7 +21,6 @@
-  */
- 
- #include <linux/delay.h>
--#include <linux/gpio.h>
- #include <linux/io.h>
- #include <linux/irq.h>
- #include <linux/irqchip.h>
-@@ -37,11 +36,6 @@ static void __init kzm_init(void)
- {
- 	sh73a0_add_standard_devices_dt();
- 
--	/* enable SD */
--	gpio_request_one(15, GPIOF_OUT_INIT_HIGH, NULL); /* power */
--
--	gpio_request_one(14, GPIOF_OUT_INIT_HIGH, NULL); /* power */
--
- #ifdef CONFIG_CACHE_L2X0
- 	/* Early BRESP enable, Shared attribute override enable, 64K*8way */
- 	l2x0_init(IOMEM(0xf0100000), 0x40460000, 0x82000fff);
--- 
-1.8.1.5
+thx,
 
+Jason.
