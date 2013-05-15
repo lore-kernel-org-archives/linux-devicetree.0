@@ -1,37 +1,52 @@
-From: Libo Chen <clbchenlibo.chen@huawei.com>
-Subject: [PATCH] usb: omap2430: fix memleak in err case
-Date: Wed, 15 May 2013 09:35:12 +0800
-Message-ID: <5192E650.3070303@huawei.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [RFC/PATCH 1/2] gpio-rcar: Make the platform data gpio_base
+ field signed
+Date: Wed, 15 May 2013 11:00:38 +0900
+Message-ID: <20130515020038.GA14751@verge.net.au>
+References: <1368197317-13169-1-git-send-email-laurent.pinchart@ideasonboard.com>
+ <1368197317-13169-2-git-send-email-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@linaro.org, rob.herring@calxeda.com
-Cc: linux-mips@linux-mips.org, LKML <linux-kernel@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1368197317-13169-2-git-send-email-laurent.pinchart@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm@opensource.se>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, May 10, 2013 at 04:48:36PM +0200, Laurent Pinchart wrote:
+> The gpio_base field is used to specify the desired GPIO base for the
+> GPIO controller. The GPIO core can automatically allocate a GPIO number
+> range when the base is set to -1. To make this possible, make the field
+> signed.
+> 
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-when omap_get_control_dev fail, we should release relational platform_device
+Thanks, queued-up for v3.11 in the gpio-car branch.
 
-Signed-off-by: Libo Chen <libo.chen@huawei.com>
----
- drivers/usb/musb/omap2430.c |    3 ++-
- 1 files changed, 2 insertions(+), 1 deletions(-)
-
-diff --git a/drivers/usb/musb/omap2430.c b/drivers/usb/musb/omap2430.c
-index 3551f1a..b626f19 100644
---- a/drivers/usb/musb/omap2430.c
-+++ b/drivers/usb/musb/omap2430.c
-@@ -549,7 +549,8 @@ static int omap2430_probe(struct platform_device *pdev)
- 		glue->control_otghs = omap_get_control_dev();
- 		if (IS_ERR(glue->control_otghs)) {
- 			dev_vdbg(&pdev->dev, "Failed to get control device\n");
--			return -ENODEV;
-+			ret = -ENODEV;
-+			goto err2;
- 		}
- 	} else {
- 		glue->control_otghs = ERR_PTR(-ENODEV);
--- 
-1.7.1
+> ---
+>  include/linux/platform_data/gpio-rcar.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/platform_data/gpio-rcar.h b/include/linux/platform_data/gpio-rcar.h
+> index cc472f6..fb2c718 100644
+> --- a/include/linux/platform_data/gpio-rcar.h
+> +++ b/include/linux/platform_data/gpio-rcar.h
+> @@ -17,7 +17,7 @@
+>  #define __GPIO_RCAR_H__
+>  
+>  struct gpio_rcar_config {
+> -	unsigned int gpio_base;
+> +	int gpio_base;
+>  	unsigned int irq_base;
+>  	unsigned int number_of_pins;
+>  	const char *pctl_name;
+> -- 
+> 1.8.1.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
