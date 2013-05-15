@@ -1,96 +1,98 @@
-From: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/5] media: i2c: tvp7002: add OF support
-Date: Wed, 15 May 2013 10:48:05 +0530
-Message-ID: <CA+V-a8u+peO+6MiZuU_juhYpzHa3yUZbyjeEU3xi3gDhPRb3Bw@mail.gmail.com>
-References: <1368528334-13595-1-git-send-email-prabhakar.csengg@gmail.com>
- <1368528334-13595-6-git-send-email-prabhakar.csengg@gmail.com>
- <4149647.zqpmlIlQDP@avalon>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH] ARM: OMAP2+: Allow NAND transfer mode to be specified
+ in DT
+Date: Wed, 15 May 2013 05:28:37 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73E9C47EC@DBDE04.ent.ti.com>
+References: <5171A43C.7040602@newflow.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4149647.zqpmlIlQDP@avalon>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Mauro Carvalho Chehab <mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5171A43C.7040602@newflow.co.uk>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Jackson <mpfj-list@newflow.co.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Cc: "Cousson, Benoit" <b-cousson@ti.com>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Acked-by: Pekon Gupta <pekon@ti.com>
 
-Thanks for the review.
-
-On Tue, May 14, 2013 at 9:04 PM, Laurent Pinchart
-<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
-> Hi Prabhakar,
->
-> Thank you for the patch.
->
-> On Tuesday 14 May 2013 16:15:34 Lad Prabhakar wrote:
->> From: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> add OF support for the tvp7002 driver.
->>
->> Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
->> Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
->> Cc: Mauro Carvalho Chehab <mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> Cc: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
->> Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
->> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->> Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
->> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->> Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
->> ---
->>  .../devicetree/bindings/media/i2c/tvp7002.txt      |   42 +++++++++++++
->>  drivers/media/i2c/tvp7002.c                        |   64 +++++++++++++++--
->>  2 files changed, 99 insertions(+), 7 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp7002.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
->> b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt new file mode
->> 100644
->> index 0000000..1ebd8b1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
->> @@ -0,0 +1,42 @@
->> +* Texas Instruments TV7002 video decoder
->> +
->> +The TVP7002 device supports digitizing of video and graphics signal in RGB
->> and
->> +YPbPr color space.
->> +
->> +Required Properties :
->> +- compatible : Must be "ti,tvp7002"
->> +
->> +- hsync-active: HSYNC Polarity configuration for endpoint.
->> +
->> +- vsync-active: VSYNC Polarity configuration for endpoint.
->> +
->> +- pclk-sample: Clock polarity of the endpoint.
->> +
->> +- ti,tvp7002-fid-polarity: Active-high Field ID polarity of the endpoint.
->> +
->> +- ti,tvp7002-sog-polarity: Sync on Green output polarity of the endpoint.
->
-> Would it make sense to define field-active and sog-active properties in the
-> V4L2 bindings instead of having per-chip properties ?
->
-yes you are right these properties need to be in the device node
-rather than the
-port node. I'll send alone this patch of the series as v2 fixing the above.
-
-Regards,
---Prabhakar Lad
+> OMAP devices support various NAND transfer modes.
+> 
+> Currently all device-tree definitions will use the default "prefetch
+> polled" mode, so this patch enables the transfer mode to be specified
+> in the device-tree.
+> ---
+>  .../devicetree/bindings/mtd/gpmc-nand.txt          |    8 ++++++++
+>  arch/arm/mach-omap2/gpmc.c                         |   14 ++++++++++++++
+>  2 files changed, 22 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> index e7f8d7e..cd4a19b 100644
+> --- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> @@ -29,6 +29,13 @@ Optional properties:
+>  		"bch4"		4-bit BCH ecc code
+>  		"bch8"		8-bit BCH ecc code
+> 
+> + - ti,nand-xfer-type:		A string setting the data transfer type.
+> One of:
+> +
+> +		"prefetch-polled"	Prefetch polled mode (default)
+> +		"polled"		Polled mode, without prefetch
+> +		"prefetch-dma"		Prefetch enabled sDMA
+> mode
+> +		"prefetch-irq"		Prefetch enabled irq mode
+> +
+>   - elm_id:	Specifies elm device node. This is required to support
+> BCH
+>   		error correction using ELM module.
+> 
+> @@ -55,6 +62,7 @@ Example for an AM33xx board:
+>  			reg = <0 0 0>; /* CS0, offset 0 */
+>  			nand-bus-width = <16>;
+>  			ti,nand-ecc-opt = "bch8";
+> +			ti,nand-xfer-type = "polled";
+> 
+>  			gpmc,sync-clk = <0>;
+>  			gpmc,cs-on = <0>;
+> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-
+> omap2/gpmc.c
+> index 410e1ba..2f47f76 100644
+> --- a/arch/arm/mach-omap2/gpmc.c
+> +++ b/arch/arm/mach-omap2/gpmc.c
+> @@ -1212,6 +1212,13 @@ static const char * const nand_ecc_opts[] = {
+>  	[OMAP_ECC_BCH8_CODE_HW]			= "bch8",
+>  };
+> 
+> +static const char * const nand_xfer_types[] = {
+> +	[NAND_OMAP_PREFETCH_POLLED]		= "prefetch-
+> polled",
+> +	[NAND_OMAP_POLLED]			= "polled",
+> +	[NAND_OMAP_PREFETCH_DMA]		= "prefetch-
+> dma",
+> +	[NAND_OMAP_PREFETCH_IRQ]		= "prefetch-irq",
+> +};
+> +
+>  static int gpmc_probe_nand_child(struct platform_device *pdev,
+>  				 struct device_node *child)
+>  {
+> @@ -1241,6 +1248,13 @@ static int gpmc_probe_nand_child(struct
+> platform_device *pdev,
+>  				break;
+>  			}
+> 
+> +	if (!of_property_read_string(child, "ti,nand-xfer-type", &s))
+> +		for (val = 0; val < ARRAY_SIZE(nand_xfer_types); val++)
+> +			if (!strcasecmp(s, nand_xfer_types[val])) {
+> +				gpmc_nand_data->xfer_type = val;
+> +				break;
+> +			}
+> +
+>  	val = of_get_nand_bus_width(child);
+>  	if (val == 16)
+>  		gpmc_nand_data->devsize = NAND_BUSWIDTH_16;
+> --
+> 1.7.9.5
+> --
