@@ -1,44 +1,37 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH V2 10/10] ARM: Kirkwood: add DT support for Sheevaplug
- and Sheevaplug eSATA
-Date: Tue, 14 May 2013 20:42:37 -0400
-Message-ID: <20130515004237.GJ31290@titan.lakedaemon.net>
-References: <1368479941-10084-1-git-send-email-gmbnomis@gmail.com>
- <1368479941-10084-11-git-send-email-gmbnomis@gmail.com>
+From: Libo Chen <clbchenlibo.chen@huawei.com>
+Subject: [PATCH] usb: omap2430: fix memleak in err case
+Date: Wed, 15 May 2013 09:35:12 +0800
+Message-ID: <5192E650.3070303@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1368479941-10084-11-git-send-email-gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: grant.likely@linaro.org, rob.herring@calxeda.com
+Cc: linux-mips@linux-mips.org, LKML <linux-kernel@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 13, 2013 at 11:19:01PM +0200, Simon Baatz wrote:
-> 
-> Signed-off-by: Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/mach-kirkwood/Kconfig            |    7 +++++++
->  arch/arm/mach-kirkwood/Makefile           |    1 +
->  arch/arm/mach-kirkwood/board-dt.c         |    4 ++++
->  arch/arm/mach-kirkwood/board-sheevaplug.c |   27 +++++++++++++++++++++++++++
->  arch/arm/mach-kirkwood/common.h           |    5 +++++
->  5 files changed, 44 insertions(+)
->  create mode 100644 arch/arm/mach-kirkwood/board-sheevaplug.c
 
-Applied to mvebu/boards
+when omap_get_control_dev fail, we should release relational platform_device
 
-thx,
+Signed-off-by: Libo Chen <libo.chen@huawei.com>
+---
+ drivers/usb/musb/omap2430.c |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
 
-Jason.
+diff --git a/drivers/usb/musb/omap2430.c b/drivers/usb/musb/omap2430.c
+index 3551f1a..b626f19 100644
+--- a/drivers/usb/musb/omap2430.c
++++ b/drivers/usb/musb/omap2430.c
+@@ -549,7 +549,8 @@ static int omap2430_probe(struct platform_device *pdev)
+ 		glue->control_otghs = omap_get_control_dev();
+ 		if (IS_ERR(glue->control_otghs)) {
+ 			dev_vdbg(&pdev->dev, "Failed to get control device\n");
+-			return -ENODEV;
++			ret = -ENODEV;
++			goto err2;
+ 		}
+ 	} else {
+ 		glue->control_otghs = ERR_PTR(-ENODEV);
+-- 
+1.7.1
