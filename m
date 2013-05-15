@@ -1,40 +1,89 @@
-From: Andreas Fenkart <andreas.fenkart@streamunlimited.com>
-Subject: [RESEND PATCH v2 3/3] mmc: omap_hsmmc: add PSTATE to debugfs regs_show.
-Date: Wed, 15 May 2013 10:45:16 +0200
-Message-ID: <1368607516-2789-4-git-send-email-andreas.fenkart@streamunlimited.com>
-References: <1368607516-2789-1-git-send-email-andreas.fenkart@streamunlimited.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1368607516-2789-1-git-send-email-andreas.fenkart@streamunlimited.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: cjb@laptop.org, arnd@arndb.de, svenkatr@ti.com, balajitk@ti.com, grant.likely@secretlab.ca, linux-mmc@vger.kernel.org, rob@landley.net, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, zonque@gmail.com, Andreas Fenkart <andreas.fenkart@streamunlimited.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 5/5] media: i2c: tvp7002: add OF support
+Date: Wed, 15 May 2013 11:42:11 +0200
+Message-ID: <4739069.jGxFT2O6sk@avalon>
+References: <1368528334-13595-1-git-send-email-prabhakar.csengg@gmail.com> <4149647.zqpmlIlQDP@avalon> <CA+V-a8u+peO+6MiZuU_juhYpzHa3yUZbyjeEU3xi3gDhPRb3Bw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+V-a8u+peO+6MiZuU_juhYpzHa3yUZbyjeEU3xi3gDhPRb3Bw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PSTATE shows current state of data lines.
+Hi Prabhakar,
 
-Signed-off-by: Andreas Fenkart <andreas.fenkart@streamunlimited.com>
+On Wednesday 15 May 2013 10:48:05 Prabhakar Lad wrote:
+> On Tue, May 14, 2013 at 9:04 PM, Laurent Pinchart wrote:
+> > On Tuesday 14 May 2013 16:15:34 Lad Prabhakar wrote:
+> >> From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> >> 
+> >> add OF support for the tvp7002 driver.
+> >> 
+> >> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> >> Cc: Hans Verkuil <hans.verkuil@cisco.com>
+> >> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >> Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+> >> Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> >> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> >> Cc: Sakari Ailus <sakari.ailus@iki.fi>
+> >> Cc: Grant Likely <grant.likely@secretlab.ca>
+> >> Cc: Rob Herring <rob.herring@calxeda.com>
+> >> Cc: Rob Landley <rob@landley.net>
+> >> Cc: devicetree-discuss@lists.ozlabs.org
+> >> Cc: linux-doc@vger.kernel.org
+> >> Cc: linux-kernel@vger.kernel.org
+> >> Cc: davinci-linux-open-source@linux.davincidsp.com
+> >> ---
+> >> 
+> >>  .../devicetree/bindings/media/i2c/tvp7002.txt      |   42 +++++++++++++
+> >>  drivers/media/i2c/tvp7002.c                        |   64 ++++++++++++--
+> >>  2 files changed, 99 insertions(+), 7 deletions(-)
+> >>  create mode 100644
+> >>  Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+> >> b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt new file mode
+> >> 100644
+> >> index 0000000..1ebd8b1
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/media/i2c/tvp7002.txt
+> >> @@ -0,0 +1,42 @@
+> >> +* Texas Instruments TV7002 video decoder
+> >> +
+> >> +The TVP7002 device supports digitizing of video and graphics signal in
+> >> +RGB and +YPbPr color space.
+> >> +
+> >> +Required Properties :
+> >> +- compatible : Must be "ti,tvp7002"
+> >> +
+> >> +- hsync-active: HSYNC Polarity configuration for endpoint.
+> >> +
+> >> +- vsync-active: VSYNC Polarity configuration for endpoint.
+> >> +
+> >> +- pclk-sample: Clock polarity of the endpoint.
+> >> +
+> >> +- ti,tvp7002-fid-polarity: Active-high Field ID polarity of the
+> >> endpoint.
+> >> +
+> >> +- ti,tvp7002-sog-polarity: Sync on Green output polarity of the
+> >> endpoint.
+> > 
+> > Would it make sense to define field-active and sog-active properties in
+> > the V4L2 bindings instead of having per-chip properties ?
+> 
+> yes you are right these properties need to be in the device node rather than
+> the port node. I'll send alone this patch of the series as v2 fixing the
+> above.
 
-diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index 2b2ec09..61c0254 100644
---- a/drivers/mmc/host/omap_hsmmc.c
-+++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -53,6 +53,7 @@
- #define OMAP_HSMMC_RSP54	0x0118
- #define OMAP_HSMMC_RSP76	0x011C
- #define OMAP_HSMMC_DATA		0x0120
-+#define OMAP_HSMMC_PSTATE	0x0124
- #define OMAP_HSMMC_HCTL		0x0128
- #define OMAP_HSMMC_SYSCTL	0x012C
- #define OMAP_HSMMC_STAT		0x0130
-@@ -1809,6 +1810,8 @@ static int omap_hsmmc_regs_show(struct seq_file *s, void *data)
- 	seq_printf(s, "\nregs:\n");
- 	seq_printf(s, "CON:\t\t0x%08x\n",
- 			OMAP_HSMMC_READ(host->base, CON));
-+	seq_printf(s, "PSTATE:\t\t0x%08x\n",
-+		   OMAP_HSMMC_READ(host->base, PSTATE));
- 	seq_printf(s, "HCTL:\t\t0x%08x\n",
- 			OMAP_HSMMC_READ(host->base, HCTL));
- 	seq_printf(s, "SYSCTL:\t\t0x%08x\n",
+That wasn't my point. What I'm wondering is whether ti,tvp7002-fid-polarity 
+shouldn't be named field-active and specified in 
+Documentation/devicetree/bindings/media/video-interfaces.txt (same for 
+ti,tvp7002-sog-polarity).
+
 -- 
-1.7.10.4
+Regards,
 
+Laurent Pinchart
