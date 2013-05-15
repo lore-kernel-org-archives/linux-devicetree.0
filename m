@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v3 18/20] ARM: shmobile: kzm9g-reference: Add LED1-LED4 to the device tree
-Date: Wed, 15 May 2013 02:18:18 +0200
-Message-ID: <1368577100-3530-19-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v3 13/20] ARM: shmobile: armadillo-reference: Add st1232 pin mappings
+Date: Wed, 15 May 2013 02:18:13 +0200
+Message-ID: <1368577100-3530-14-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1368577100-3530-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1368577100-3530-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
@@ -10,40 +10,37 @@ To: linux-sh@vger.kernel.org
 Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-LED1 to LED4 are GPIO LEDs. Add corresponding DT nodes.
+Add pin mappings for the st1232 device to the device tree and reference
+them as the default state for the device.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- arch/arm/boot/dts/sh73a0-kzm9g-reference.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-index cdfd71a..21b0fe3 100644
---- a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-+++ b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-@@ -88,6 +88,22 @@
- 		vddvario-supply = <&reg_1p8v>;
- 		vdd33a-supply = <&reg_3p3v>;
+diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+index 4a7ae32..a6c6606 100644
+--- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
++++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+@@ -41,6 +41,8 @@
+ 		reg = <0x55>;
+ 		interrupt-parent = <&irqpin1>;
+ 		interrupts = <2 0>; /* IRQ10: hwirq 2 on irqpin1 */
++		pinctrl-0 = <&st1232_pins>;
++		pinctrl-names = "default";
  	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		led1 {
-+			gpios = <&pfc 20 1>; /* Active low */
-+		};
-+		led2 {
-+			gpios = <&pfc 21 1>; /* Active low */
-+		};
-+		led3 {
-+			gpios = <&pfc 22 1>; /* Active low */
-+		};
-+		led4 {
-+			gpios = <&pfc 23 1>; /* Active low */
-+		};
-+	};
  };
  
- &i2c0 {
+@@ -52,4 +54,9 @@
+ 		renesas,groups = "scifa1_data";
+ 		renesas,function = "scifa1";
+ 	};
++
++	st1232_pins: st1232 {
++		renesas,groups = "intc_irq10";
++		renesas,function = "intc";
++	};
+ };
 -- 
 1.8.1.5
 
