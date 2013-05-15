@@ -1,52 +1,86 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCHv9 5/9] clk: mvebu: create parent-child relation for PCIe clocks
- on Armada 370
-Date: Wed, 15 May 2013 14:41:54 -0700
-Message-ID: <20130515214154.12127.73539@quantum>
-References: <1368624323-24311-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1368624323-24311-6-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: Pulls and drive strengths in the pinctrl world
+Date: Wed, 15 May 2013 23:43:40 +0200
+Message-ID: <3605069.eT96cYVWIJ@flatron>
+References: <CAD=FV=V9h3RUfvAxj8k2EbYXYPO4FfoNwh=f=dno5ZBUFYeG0w@mail.gmail.com> <CAD=FV=V-1uO3XSg603zyJx907EhhkMC5UCOfzrhgyGWw_0TO0A@mail.gmail.com> <2118733.fzZiu9I5M5@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1368624323-24311-6-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Lior Amsalem <alior@marvell.com>, Maen Suleiman <maen@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, linux-pci@vger.kernel.org, Thierry Reding <thierry.reding@avionic-design.de>, Rob Herring <rob.herring@calxeda.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <2118733.fzZiu9I5M5@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@google.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thomas Abraham <thomas.abraham@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Simon Glass <sjg@chromium.org>, Olof Johansson <olof@lixom.net>, Kukjin Kim <kgene.kim@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Thomas Petazzoni (2013-05-15 06:25:19)
-> The Armada 370 has two gatable clocks for each PCIe interface, and we
-> want both of them to be enabled. We therefore make one of the two
-> clocks a child of the other, as we did for the sataX and sataXlnk
-> clocks on Armada XP.
+On Wednesday 15 of May 2013 23:41:54 Tomasz Figa wrote:
+> On Wednesday 15 of May 2013 14:31:20 Doug Anderson wrote:
+> > Linus,
+> > 
+> > Thank you for your comments.  See below...
+> > 
+> > Stephen: sorry for missing you earlier!  :(
+> > 
+> > On Wed, May 15, 2013 at 11:29 AM, Linus Walleij
+> > 
+> > <linus.walleij@linaro.org> wrote:
+> > > But please use the preprocessor to provide symbolic names for
+> > > the configurations. See for example these two patches from
+> > > J-C:
+> > > http://www.mail-archive.com/devicetree-discuss@lists.ozlabs.org/msg3
+> > > 21
+> > > 64.html
+> > 
+> > Ah, that does look nice!  This probably needs to be addressed in a
+> > separate patch to cleanup all of the samsung pinctrl devicetrees.
+> > 
+> > > I don't think the idea with device tree is to write as compact trees
+> > > as possible, but as expressive and exact yet abstract trees as
+> > > possible for OS independence.
+> > 
+> > The compactness was one benefit, but also it was about trying to avoid
+> > excessive duplication of information.  I found it awkward that I
+> > needed to list that my interrupt was "gpx1-2" in two different ways.
+> > 
+> > I would find it just as good if I could express things like this (for
+> > 
+> > interrupts):
+> >   pinctrl@11400000 {
+> >   
+> >     cyapa_irq: cyapa-irq {
+> >     
+> >       samsung,pins = "gpx1-2";
+> >       samsung,pin-function = <0xf>;
+> >       samsung,pin-pud = <0>;
+> >       samsung,pin-drv = <0>;
+> >       
+> >       interrupt-controller;
+> >       #interrupt-cells = <1>;
+> >     
+> >     };
+> >   
+> >   };
+> >   
+> >   trackpad {
+> >   
+> >     reg = <0x67>;
+> >     compatible = "cypress,cyapa";
+> >     interrupt-parent = <&cyapa_irq>;
+> >     interrupts = <0>;
+> >     wakeup-source;
+> >   
+> >   };
+> > 
+> > In this case I'm not saying that my interrupt parent is "gpx1-2" in
+> > two separate places that could diverge.
 > 
+> This will be hard, since the phandle in interrupt-parent is represented
+> by an IRQ domain in kernel code. One-interrupt IRQ domains seem a bit
+> awkward to me.
 
-Ack for patches #5 and #6.  Do you want me to take them?
+Ahh, not even saying that a single interrupt signal is not really an 
+interrupt controller, which would make device tree diverge from real 
+hardware description.
 
-Regards,
-Mike
-
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> Cc: Mike Turquette <mturquette@linaro.org>
-> ---
->  drivers/clk/mvebu/clk-gating-ctrl.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/clk/mvebu/clk-gating-ctrl.c b/drivers/clk/mvebu/clk-gating-ctrl.c
-> index ebf141d..b35785a 100644
-> --- a/drivers/clk/mvebu/clk-gating-ctrl.c
-> +++ b/drivers/clk/mvebu/clk-gating-ctrl.c
-> @@ -119,8 +119,8 @@ static const struct mvebu_soc_descr __initconst armada_370_gating_descr[] = {
->         { "pex1_en", NULL,  2 },
->         { "ge1", NULL, 3 },
->         { "ge0", NULL, 4 },
-> -       { "pex0", NULL, 5 },
-> -       { "pex1", NULL, 9 },
-> +       { "pex0", "pex0_en", 5 },
-> +       { "pex1", "pex1_en", 9 },
->         { "sata0", NULL, 15 },
->         { "sdio", NULL, 17 },
->         { "tdm", NULL, 25 },
-> -- 
-> 1.7.9.5
+Best regards,
+Tomasz
