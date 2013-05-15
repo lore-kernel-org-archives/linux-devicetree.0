@@ -1,91 +1,84 @@
-From: Tom Rini <trini@ti.com>
-Subject: Re: [PATCH v4 0/19] Allow images to work on sandbox
-Date: Wed, 15 May 2013 08:48:36 -0400
-Message-ID: <20130515124836.GX29196@bill-the-cat>
-References: <1367943123-16013-1-git-send-email-sjg@chromium.org>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1432148313=="
-Return-path: <u-boot-bounces@lists.denx.de>
-In-Reply-To: <1367943123-16013-1-git-send-email-sjg@chromium.org>
-List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
-	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Sender: u-boot-bounces@lists.denx.de
-Errors-To: u-boot-bounces@lists.denx.de
-To: Simon Glass <sjg@chromium.org>
-Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, u-boot-review@google.com, Joe Hershberger <joe.hershberger@ni.com>
+From: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Subject: [PATCH RFC] media: OF: add field-active and sync-on-green endpoint properties
+Date: Wed, 15 May 2013 18:22:29 +0530
+Message-ID: <1368622349-32185-1-git-send-email-prabhakar.csengg@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: LMML <linux-media@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 
---===============1432148313==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="McQJJYUzjTUqtsGv"
-Content-Disposition: inline
+This patch adds "field-active" and "sync-on-green" as part of
+endpoint properties and also support to parse them in the parser.
 
+Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: davinci-linux-open-source@linux.davincidsp.com
+Cc: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ .../devicetree/bindings/media/video-interfaces.txt |    4 ++++
+ drivers/media/v4l2-core/v4l2-of.c                  |    6 ++++++
+ include/media/v4l2-mediabus.h                      |    2 ++
+ 3 files changed, 12 insertions(+), 0 deletions(-)
 
---McQJJYUzjTUqtsGv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+index e022d2d..6bf87d0 100644
+--- a/Documentation/devicetree/bindings/media/video-interfaces.txt
++++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+@@ -101,6 +101,10 @@ Optional endpoint properties
+   array contains only one entry.
+ - clock-noncontinuous: a boolean property to allow MIPI CSI-2 non-continuous
+   clock mode.
++-field-active: a boolean property indicating active high filed ID output
++ polarity is inverted.
++-sync-on-green: a boolean property indicating to sync with the green signal in
++ RGB.
+ 
+ 
+ Example
+diff --git a/drivers/media/v4l2-core/v4l2-of.c b/drivers/media/v4l2-core/v4l2-of.c
+index aa59639..1d59455 100644
+--- a/drivers/media/v4l2-core/v4l2-of.c
++++ b/drivers/media/v4l2-core/v4l2-of.c
+@@ -100,6 +100,12 @@ static void v4l2_of_parse_parallel_bus(const struct device_node *node,
+ 	if (!of_property_read_u32(node, "data-shift", &v))
+ 		bus->data_shift = v;
+ 
++	if (of_get_property(node, "field-active", &v))
++		flags |= V4L2_MBUS_FIELD_ACTIVE;
++
++	if (of_get_property(node, "sync-on-green", &v))
++		flags |= V4L2_MBUS_SOG;
++
+ 	bus->flags = flags;
+ 
+ }
+diff --git a/include/media/v4l2-mediabus.h b/include/media/v4l2-mediabus.h
+index 83ae07e..b95553d 100644
+--- a/include/media/v4l2-mediabus.h
++++ b/include/media/v4l2-mediabus.h
+@@ -40,6 +40,8 @@
+ #define V4L2_MBUS_FIELD_EVEN_HIGH		(1 << 10)
+ /* FIELD = 1/0 - Field1 (odd)/Field2 (even) */
+ #define V4L2_MBUS_FIELD_EVEN_LOW		(1 << 11)
++#define V4L2_MBUS_FIELD_ACTIVE			(1 << 12)
++#define V4L2_MBUS_SOG				(1 << 13)
+ 
+ /* Serial flags */
+ /* How many lanes the client can use */
+-- 
+1.7.4.1
 
-On Tue, May 07, 2013 at 09:11:44AM -0700, Simon Glass wrote:
-
-> This series adjusts the image code to work with sandbox and prepares it f=
-or
-> verified boot to come later.
->=20
-> The primary goal here is to get image loading to work on sandbox, which is
-> mostly a set of fairly minor changes such as using map_sysmem() instead of
-> just a cast when converting from a U-Boot address to a pointer. Since
-> common/image.c runs to over 3000 lines and half of it is FIT-related code
-> behind an #ifdef, this code is moved into a new image-fit.c file.
->=20
-> Changes in v4:
-> - Bring in upstream version of fdt_first/next_subnode()
-> - Use new upstream fdt_first/next_subnode()
-
-Applied to u-boot/master, thanks!
-
---=20
-Tom
-
---McQJJYUzjTUqtsGv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRk4QkAAoJENk4IS6UOR1WSEUQAK2rOIMjpxHituQJSIEt+HBS
-6bBpbfE+1EhOHszbvKIKpYlfYfBi1Z2fMJKVh1jbF2bgrOsLs60OLUab7fweP68Q
-ObLA8MSv3QY3PgRseKe2SN0OIkkYDlwATQCL0H5wdQ7xWXMBXgWi92+5GGo7vL0T
-Vv83lLvlMpLigEsYV46cyU5VMrMt+MIesHMQakoFzK6o1Ek/lb6NGrM9g7Mxozj1
-lYlIye1oieObcuOJGt37Dk0QburCv3fDXXNE3dSG9Qd3Qtrmwz8TWB7AJfzdei5l
-sDMmGl5xAyUq5/TSIioFqobUGjxK+G/xcZ3IEXyP/i+/mf/YVFww/KYNiMEc1qJ2
-iE2YEy8frpHNDZZJZL97jQiW6qdw6pCs17b6H/VC1msTjqu8R4yx9vjxS8bW9YxK
-T7dAiemT3Zh4kW0X6gM0eR8/Socuwm+atr9iqxCSwCti48BR26UbYCgputLp3mN+
-UkGtXY9z0Xa0Pv2Er2XSyeJUo0pX4fsbQpwb7CB5H9mRYmGLe8TiNEcJYCmK8F0r
-zMqRwzKVLXJDwesKZRxg58CD/0IYNaQcmIwmuvOwRlt6rKjn7DC+movyCFPThSzT
-FvNEuqIGlwOVZ1dUccZyrpa8XhqTDl3HZ/+yAfbcJW+W1qTdjB3i4rF+1K6RXm6K
-XOYoiYNsNLGAMHes/q8r
-=qXs6
------END PGP SIGNATURE-----
-
---McQJJYUzjTUqtsGv--
-
---===============1432148313==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-U-Boot mailing list
-U-Boot@lists.denx.de
-http://lists.denx.de/mailman/listinfo/u-boot
-
---===============1432148313==--
