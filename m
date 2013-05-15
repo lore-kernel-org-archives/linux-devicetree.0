@@ -1,56 +1,51 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH v3] drivers: bus: add ARM CCI support
-Date: Wed, 15 May 2013 15:55:57 +0100
-Message-ID: <20130515145557.GB385@e102568-lin.cambridge.arm.com>
-References: <1368095640-3675-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1368095640-3675-2-git-send-email-lorenzo.pieralisi@arm.com>
- <20130514130005.GD29592@e102654-lin.cambridge.arm.com>
- <alpine.LFD.2.03.1305141820280.31158@syhkavp.arg>
- <20130515142441.GA385@e102568-lin.cambridge.arm.com>
- <alpine.LFD.2.03.1305151037330.31158@syhkavp.arg>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: [PATCHv2 2/3] arm: dts: add bandgap entry for OMAP443x devices
+Date: Wed, 15 May 2013 10:58:47 -0400
+Message-ID: <1368629928-6723-3-git-send-email-eduardo.valentin@ti.com>
+References: <1368629928-6723-1-git-send-email-eduardo.valentin@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.03.1305151037330.31158-hIgblCxmbi8OMTOF05IoTw@public.gmane.org>
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Javi Merino <Javi.Merino-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1368629928-6723-1-git-send-email-eduardo.valentin@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: tony@atomide.com
+Cc: linux-omap@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 15, 2013 at 03:51:43PM +0100, Nicolas Pitre wrote:
-> On Wed, 15 May 2013, Lorenzo Pieralisi wrote:
-> 
-> > On Tue, May 14, 2013 at 11:21:32PM +0100, Nicolas Pitre wrote:
-> > > On Tue, 14 May 2013, Javi Merino wrote:
-> > > 
-> > > > On Thu, May 09, 2013 at 11:34:00AM +0100, Lorenzo Pieralisi wrote:
-> > > > 
-> > > > > +static inline void init_cpu_port(struct cpu_port *port, u32 index, u32 mpidr)
-> > > > 
-> > > > The mpidr should be u64.
-> > > 
-> > > Why?
-> > 
-> > Since on arm64 MPIDR_EL1 size is 64 bits, we need the driver to work on
-> > both arm and arm64.
-> 
-> OK.
-> 
-> Are you OK for me to carry this patch in the series for MCPM support 
-> on RTSM?  I would like to send it to arm-soc ASAP.
+This patch add the bandgap entry for OMAP4430 devices.
 
-Absolutely, I will apply the latest fixes and send the updated version
-to you for arm-soc inclusion today.
+Cc: "Beno=C3=AEt Cousson" <b-cousson@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: linux-omap@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+---
+ arch/arm/boot/dts/omap443x.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Lorenzo
+diff --git a/arch/arm/boot/dts/omap443x.dtsi b/arch/arm/boot/dts/omap44=
+3x.dtsi
+index cccf39a..8d6c968 100644
+--- a/arch/arm/boot/dts/omap443x.dtsi
++++ b/arch/arm/boot/dts/omap443x.dtsi
+@@ -24,4 +24,8 @@
+ 			clock-latency =3D <300000>; /* From legacy driver */
+ 		};
+ 	};
++	bandgap {
++		reg =3D <0x4a002260 0x4 0x4a00232C 0x4>;
++		compatible =3D "ti,omap4430-bandgap";
++	};
+ };
+--=20
+1.8.2.1.342.gfa7285d
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
