@@ -1,157 +1,77 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: Pulls and drive strengths in the pinctrl world
-Date: Wed, 15 May 2013 20:29:47 +0200
-Message-ID: <CACRpkdbgjqF3xhxUvfvNJn5Vt-3i0AFBzR_Q8gHdNq919dnNsA@mail.gmail.com>
-References: <CAD=FV=V9h3RUfvAxj8k2EbYXYPO4FfoNwh=f=dno5ZBUFYeG0w@mail.gmail.com>
+Subject: Re: [PATCH 5/8] pinctrl-tz1090: add TZ1090 pinctrl driver
+Date: Wed, 15 May 2013 21:07:46 +0200
+Message-ID: <CACRpkdZ5KW0qUF7vG1ZTmc0gez2T+e4KBugUGMpkXnXNmEMdEw@mail.gmail.com>
+References: <1366727607-27444-1-git-send-email-james.hogan@imgtec.com>
+	<1366727607-27444-6-git-send-email-james.hogan@imgtec.com>
+	<CACRpkdbYwDvF=gNurLzc+wE0BYpoqog7sPdRTY59BGS7yn3n9Q@mail.gmail.com>
+	<517A6B01.5000708@imgtec.com>
+	<CACRpkdYooPNgJuA-fZOiGJV03R_783uAOmR=QgYOahYdHcad9w@mail.gmail.com>
+	<5183AC54.30503@imgtec.com>
+	<CACRpkdYYhsY-2vQnxpM-rB9_6yXiY4XBNhb4eyNvK=eD=dxK5w@mail.gmail.com>
+	<5183D262.7000107@imgtec.com>
+	<CACRpkdbJpnpZwoCqtFk+U9fsJXPLw+AhPBSCxawS2-QwAjBftA@mail.gmail.com>
+	<51922C89.30403@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=V9h3RUfvAxj8k2EbYXYPO4FfoNwh=f=dno5ZBUFYeG0w@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@google.com>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thomas Abraham <thomas.abraham@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Simon Glass <sjg@chromium.org>, Olof Johansson <olof@lixom.net>, Kukjin Kim <kgene.kim@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51922C89.30403@imgtec.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: James Hogan <james.hogan@imgtec.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 15, 2013 at 6:44 PM, Doug Anderson <dianders@google.com> wrote:
+On Tue, May 14, 2013 at 2:22 PM, James Hogan <james.hogan@imgtec.com> wrote:
 
-Pls include Stephen Warren on mailings regarding DT mappings,
-he's very good at this stuff.
-
-> I'm running into an issue when trying to specify pullups /
-> pulldowns and drive strengths on lines that are just GPIOs or just
-> interrupts.  This is important not just for power usage but also for
-> proper functioning (the default internal pulldown was overpowering the
-> weak external pullup in one case).  In the old GPIO specifier you
-> could do specify pulls, but the new simpler one doesn't allow it.
-
-Background:
-
-The idea with the subsystems is that the GPIO subsystem will
-handle any aspect of "GPIOs" which are not necessarily
-synonymous to pins.
-
-So the two subsystems are orthogonal and the decisions in
-each subsystem may result on combined electrical effects.
-
-If there are cross-dependencies, GPIO ranges are used to
-cross-map the GPIOs to pins.
-
-> I've managed to make things work and you can see my progress at
-> <https://gerrit.chromium.org/gerrit/#/c/51232/>, but it feels a bit
-> awkward.  Is there a better way?  If so, then I'm all ears!  :
-
-This seems good. default states are used to set up pins.
-
-But please use the preprocessor to provide symbolic names for
-the configurations. See for example these two patches from
-J-C:
-http://www.mail-archive.com/devicetree-discuss@lists.ozlabs.org/msg32164.html
-
-> I really wish that:
+> I think that's the other way around, i.e. that's talking about mapping
+> several pingroups to the same function. The next paragraph is closer to
+> the problem:
 >
-> * The GPIO specifier could specify initial drive strength and pull
-> values for pins.
-> * The interrupt specifier could specify pull values for pins (drive
-> strength shouldn't be needed since these are inputs).
-
-The subsystem does not differentiate between different configs,
-what you say is that you want GPIO and interrupt specifiers
-to pass arbitrary configs.
-
-> Here's how I need to do things when I'm using "just an interrupt":
+> Documentation/pinctrl.txt
+>> - PINS for a certain FUNCTION using a certain PIN GROUP on a certain
+>>   PIN CONTROLLER are provided on a first-come first-serve basis, so if some
+>>   other device mux setting or GPIO pin request has already taken your physical
+>>   pin, you will be denied the use of it. To get (activate) a new setting, the
+>>   old one has to be put (deactivated) first.
 >
->   pinctrl@11400000 {
->     cyapa_irq: cyapa-irq {
->       samsung,pins = "gpx1-2";
->       samsung,pin-function = <0xf>;
->       samsung,pin-pud = <0>;
->       samsung,pin-drv = <0>;
->     };
->   };
+> In my example the tft pingroup contains all the tft pins, but I might
+> want a particular pin inside that pingroup to never be controlled by the
+> mux (using the per-pin mux disable (SELECT) bits).
 >
->   trackpad {
->     reg = <0x67>;
->     compatible = "cypress,cyapa";
->     interrupts = <2 0>;
->     interrupt-parent = <&gpx1>;
->     pinctrl-names = "default";
->     pinctrl-0 = <&cyapa_irq>;
->     wakeup-source;
->   };
->
->
-> I really wish I could add a 3rd number to the interrupt specifier for
-> pud and skip the pinctrl bit:
->
->   trackpad {
->     reg = <0x67>;
->     compatible = "cypress,cyapa";
->     interrupts = <2 0 0>;
->     interrupt-parent = <&gpx1>;
->     wakeup-source;
->   };
+> So if I use pinmux I'd have something like:
+> * "tft" pingroup maps to "tft" function
+> * "tft_green0" pingroup (containing individual pin inside "tft"
+> pingroup) maps to "none" function to disable muxing (or the inverse,
+> with each pin in use mapping to "periph" to enable muxing).
+> in which case the pin has multiple muxes "controlling" it (even though
+> they're sort of nested). The above paragraph seems to condemn this
+> arrangement.
 
-I don't think the idea with device tree is to write as compact trees
-as possible, but as expressive and exact yet abstract trees as
-possible for OS independence.
+So if this usecase is what you want to support, why don't you just
+exclude that one pin from the "tft" group and put it into another
+group?
 
-Instead of referring to a node containing the config relevant for
-another piece of hardware and associating this with the ampersand
-notation (as is done with regulators, clocks, dma channels ...)
-you here want to break that pattern totally and just hardcode
-a numeric argument into the specifier. (Well could be a #define
-using includes, but...)
+If you want it activated anyway as part of some state e.g.
+"default", you can just specify multiple groups for that state.
 
-That is not the pattern used so far I've seen to indicate dependent
-resources. Dependent resources are passed using the ampersand.
+> Or using pinconf I'd have something like:
+> * "tft" pingroup maps to "tft" function
+> * "tft_green0" pin (in "tft" pingroup) has pinconf "no-periph" (or the
+> inverse, with each one in use having pinconf "periph")
 
-While a number may suffice to describe all config for your hardware,
-other pinctrl hardware needs more than one single numeric
-argument. And device trees should be similar to each other.
+If you want some pinconf set up for this one pin as part
+of a configured state that's OK even if the pin isn't muxed
+in as part of this state. muxing and config are orthogonal.
 
-If you're not doing that using the ampersand, the same could
-potentially be done for a regulator powering a GPIO pin
-and you get a fourth argument, and a fifth argument supplying
-the color of the LED at the other end and ... I guess this is
-why ampersands are being used.
+> Or modifying the pinctrl subsystem maybe something like:
+> * [optional: particular named pins in] "tft" pingroup map to "tft" function
+> that way enabling a mux doesn't necessarily apply to all pins in the
+> group, and drivers for hardware that doesn't support partial enabling of
+> the mux can reject it (I might experiment with this if I get the time).
 
-Other than that I think you should ask a DT expert and I'm
-no such.
-
-> An example with the GPIO specifier instead of the interrupt one:
->
->   pinctrl@11400000 {
->     ptn3460_gpios: ptn3460-gpios {
->       samsung,pins = "gpy2-5", "gpx1-5";
->       samsung,pin-function = <1>;
->       samsung,pin-pud = <0>;
->       samsung,pin-drv = <0>;
->     };
->   };
->
->   ptn3460-bridge@20 {
->     compatible = "nxp,ptn3460";
->     reg = <0x20>;
->     powerdown-gpio = <&gpy2 5 0>;
->     reset-gpio = <&gpx1 5 0>;
->     edid-emulation = <5>;
->     pinctrl-names = "default";
->     pinctrl-0 = <&ptn3460_gpios>;
->   };
->
->
-> I don't want to specify function/direction (code can handle that), but do wish
-> I could specify the pulls and strength.  Perhaps:
->
->   ptn3460-bridge@20 {
->     compatible = "nxp,ptn3460";
->     reg = <0x20>;
->     powerdown-gpio = <&gpy2 5 0 0 0>;
->     reset-gpio = <&gpx1 5 0 0 0>;
->     edid-emulation = <5>;
->   };
-
-Dito.
+No thanks, this will be hopeless to understand, the pinctrl
+subsystem is already really hard for outsiders to understand,
+let us not raise the bar even more...
 
 Yours,
 Linus Walleij
