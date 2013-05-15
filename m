@@ -1,128 +1,112 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCHv2 3/3] arm: dts: add bandgap entry for OMAP4460 devices
-Date: Wed, 15 May 2013 12:36:58 -0400
-Message-ID: <5193B9AA.7020507@ti.com>
-References: <1368629928-6723-1-git-send-email-eduardo.valentin@ti.com>
- <1368629928-6723-4-git-send-email-eduardo.valentin@ti.com>
- <5193A875.1020000@ti.com>
+From: Doug Anderson <dianders@google.com>
+Subject: Pulls and drive strengths in the pinctrl world
+Date: Wed, 15 May 2013 09:44:22 -0700
+Message-ID: <CAD=FV=V9h3RUfvAxj8k2EbYXYPO4FfoNwh=f=dno5ZBUFYeG0w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6716343872136691422=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5193A875.1020000@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Russell King <linux@arm.linux.org.uk>, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, Thomas Abraham <thomas.abraham@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Simon Glass <sjg@chromium.org>, Olof Johansson <olof@lixom.net>, Kukjin Kim <kgene.kim@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---===============6716343872136691422==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="----enig2AHSMNFSXBHAXNXAONRQT"
+Linus,
 
-------enig2AHSMNFSXBHAXNXAONRQT
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On 15-05-2013 11:23, Benoit Cousson wrote:
-> Hi Eduardo,
->=20
-> On 05/15/2013 04:58 PM, Eduardo Valentin wrote:
->> Include bandgap devices for OMAP4460 devices.
->>
->> Cc: "Beno=C3=AEt Cousson" <b-cousson@ti.com>
->> Cc: Tony Lindgren <tony@atomide.com>
->> Cc: Russell King <linux@arm.linux.org.uk>
->> Cc: linux-omap@vger.kernel.org
->> Cc: devicetree-discuss@lists.ozlabs.org
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
->> ---
->>  arch/arm/boot/dts/omap4460.dtsi | 9 +++++++++
->>  1 file changed, 9 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/omap4460.dtsi b/arch/arm/boot/dts/omap4=
-460.dtsi
->> index 2cf227c..e5bfbfe 100644
->> --- a/arch/arm/boot/dts/omap4460.dtsi
->> +++ b/arch/arm/boot/dts/omap4460.dtsi
->> @@ -29,4 +29,13 @@
->>  			     <0 55 0x4>;
->>  		ti,hwmods =3D "debugss";
->>  	};
->> +
->> +	bandgap {
->> +		reg =3D <0x4a002260 0x4
->> +			0x4a00232C 0x4
->> +			0x4a002378 0x18>;
->> +		compatible =3D "ti,omap4460-bandgap";
->> +		interrupts =3D <0 126 4>; /* talert */
->> +		ti,tshut-gpio =3D <86>;
+I'm currently working towards adapting exynos5250-snow (the ARM
+Chromebook) to work well in the new world of pinctrl.  We've got a
+backport of exynos5250 pinctrl in our kernel-3.8 tree and are now
+fixing all of the bugs that have popped up.  Patches will be sent
+upstream (where applicable) shortly.
 
 
+...but I'm running into an issue when trying to specify pullups /
+pulldowns and drive strengths on lines that are just GPIOs or just
+interrupts.  This is important not just for power usage but also for
+proper functioning (the default internal pulldown was overpowering the
+weak external pullup in one case).  In the old GPIO specifier you
+could do specify pulls, but the new simpler one doesn't allow it.
 
->=20
-> Why do you need a custom attribute for GPIO? Cannot you use the standar=
-d
-> one?
-
-I believe it was by your suggestion :-), during the first attempts to
-send this driver. But could not find the thread link :-( sorry.
-
-
-I guess the reasoning to mark it as a ti specific is because it will be
-used as IRQ line to treat thermal shutdown (in SW).
-
->=20
-> Where is the gpio controller phandle?
->=20
-> Usually it looks like this:
->=20
-> 	gpios =3D <&gpio1 8 0>;
->=20
->=20
-> Regards,
-> Benoit
->=20
->=20
->=20
+I've managed to make things work and you can see my progress at
+<https://gerrit.chromium.org/gerrit/#/c/51232/>, but it feels a bit
+awkward.  Is there a better way?  If so, then I'm all ears!  :)
 
 
+If not, then I guess that what I have will have to do for now.  ...but
+I really wish that:
 
-------enig2AHSMNFSXBHAXNXAONRQT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+* The GPIO specifier could specify initial drive strength and pull
+values for pins.
+* The interrupt specifier could specify pull values for pins (drive
+strength shouldn't be needed since these are inputs).
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+Some examples from the gerrit CL referenced above...
 
-iF4EAREIAAYFAlGTuaoACgkQCXcVR3XQvP0mewEA80FWDjFHsyjQKn6zoEavUGEw
-Y/jcu3nmm1lZFuG3pagBANQBOpLfSHCykCv38SNWdNV6//KxTJCmQuYEDpG+QZ5d
-=LBcc
------END PGP SIGNATURE-----
+Here's how I need to do things when I'm using "just an interrupt":
 
-------enig2AHSMNFSXBHAXNXAONRQT--
+  pinctrl@11400000 {
+    cyapa_irq: cyapa-irq {
+      samsung,pins = "gpx1-2";
+      samsung,pin-function = <0xf>;
+      samsung,pin-pud = <0>;
+      samsung,pin-drv = <0>;
+    };
+  };
+
+  trackpad {
+    reg = <0x67>;
+    compatible = "cypress,cyapa";
+    interrupts = <2 0>;
+    interrupt-parent = <&gpx1>;
+    pinctrl-names = "default";
+    pinctrl-0 = <&cyapa_irq>;
+    wakeup-source;
+  };
 
 
---===============6716343872136691422==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+I really wish I could add a 3rd number to the interrupt specifier for
+pud and skip the pinctrl bit:
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+  trackpad {
+    reg = <0x67>;
+    compatible = "cypress,cyapa";
+    interrupts = <2 0 0>;
+    interrupt-parent = <&gpx1>;
+    wakeup-source;
+  };
 
---===============6716343872136691422==--
+
+An example with the GPIO specifier instead of the interrupt one:
+
+  pinctrl@11400000 {
+    ptn3460_gpios: ptn3460-gpios {
+      samsung,pins = "gpy2-5", "gpx1-5";
+      samsung,pin-function = <1>;
+      samsung,pin-pud = <0>;
+      samsung,pin-drv = <0>;
+    };
+  };
+
+  ptn3460-bridge@20 {
+    compatible = "nxp,ptn3460";
+    reg = <0x20>;
+    powerdown-gpio = <&gpy2 5 0>;
+    reset-gpio = <&gpx1 5 0>;
+    edid-emulation = <5>;
+    pinctrl-names = "default";
+    pinctrl-0 = <&ptn3460_gpios>;
+  };
+
+
+I don't want to specify function/direction (code can handle that), but do wish
+I could specify the pulls and strength.  Perhaps:
+
+  ptn3460-bridge@20 {
+    compatible = "nxp,ptn3460";
+    reg = <0x20>;
+    powerdown-gpio = <&gpy2 5 0 0 0>;
+    reset-gpio = <&gpx1 5 0 0 0>;
+    edid-emulation = <5>;
+  };
+
+
+-Doug
