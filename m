@@ -1,161 +1,91 @@
-From: Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH 6/6] media: i2c: ths7303: add OF support
-Date: Wed, 15 May 2013 17:27:22 +0530
-Message-ID: <1368619042-28252-7-git-send-email-prabhakar.csengg@gmail.com>
-References: <1368619042-28252-1-git-send-email-prabhakar.csengg@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1368619042-28252-1-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: LMML <linux-media@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+From: Tom Rini <trini@ti.com>
+Subject: Re: [PATCH v4 0/19] Allow images to work on sandbox
+Date: Wed, 15 May 2013 08:48:36 -0400
+Message-ID: <20130515124836.GX29196@bill-the-cat>
+References: <1367943123-16013-1-git-send-email-sjg@chromium.org>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============1432148313=="
+Return-path: <u-boot-bounces@lists.denx.de>
+In-Reply-To: <1367943123-16013-1-git-send-email-sjg@chromium.org>
+List-Unsubscribe: <http://lists.denx.de/mailman/options/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
+List-Archive: <http://lists.denx.de/pipermail/u-boot>
+List-Post: <mailto:u-boot@lists.denx.de>
+List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
+List-Subscribe: <http://lists.denx.de/mailman/listinfo/u-boot>,
+	<mailto:u-boot-request@lists.denx.de?subject=subscribe>
+Sender: u-boot-bounces@lists.denx.de
+Errors-To: u-boot-bounces@lists.denx.de
+To: Simon Glass <sjg@chromium.org>
+Cc: U-Boot Mailing List <u-boot@lists.denx.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, u-boot-review@google.com, Joe Hershberger <joe.hershberger@ni.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 
-add OF support for the ths7303 driver.
+--===============1432148313==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="McQJJYUzjTUqtsGv"
+Content-Disposition: inline
 
-Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: davinci-linux-open-source@linux.davincidsp.com
----
- .../devicetree/bindings/media/i2c/ths73x3.txt      |   50 ++++++++++++++++++++
- drivers/media/i2c/ths7303.c                        |   37 ++++++++++++++-
- 2 files changed, 86 insertions(+), 1 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ths73x3.txt
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ths73x3.txt b/Documentation/devicetree/bindings/media/i2c/ths73x3.txt
-new file mode 100644
-index 0000000..62f63e8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ths73x3.txt
-@@ -0,0 +1,50 @@
-+* Texas Instruments THS7303/THS7353 video amplifier
-+
-+The THS7303/THS7353 device is a low power 3-channel integrated video buffer
-+which can be configured individually via i2c for all the functions which makes
-+it flexible for any application. It incorporates a selectable fifth-order
-+Butterworth filter to eliminate data converter images.
-+
-+Required Properties :
-+- compatible : value should be either one among the following
-+	(a) "ti,ths7303" for ths7303 video amplifier.
-+	(b) "ti,ths7353" for ths7353 video amplifier.
-+
-+- ti,ths73x3-ch1-bias: Bias value for channel 1.
-+
-+- ti,ths73x3-ch2-bias: Bias value for channel 2.
-+
-+- ti,ths73x3-ch3-bias: Bias value for channel 3.
-+
-+Bias values for channel-1/2/3 can be following (values default to zero):-
-+ - 0: Disable Channel - Conserves Power
-+ - 1: Channel On - Mute Function - No Output
-+ - 2: Channel On - DC Bias Select
-+ - 3: Channel On - DC Bias + 250 mV Offset Select
-+ - 4: Channel On - AC Bias Select
-+ - 5: Channel On - Sync Tip Clam with low bias
-+ - 6: Channel On - Sync Tip Clam with mid bias
-+ - 7: Channel On - Sync Tip Clam with high bias
-+
-+For further reading of port node refer Documentation/devicetree/bindings/media/
-+video-interfaces.txt.
-+
-+Example:
-+
-+	i2c0@1c22000 {
-+		...
-+		...
-+		ths7303@2c {
-+			compatible = "ti,ths7303";
-+			reg = <0x2c>;
-+
-+			port {
-+				ths7303_1: endpoint {
-+					ti,ths73x3-ch1-bias = <3>;
-+					ti,ths73x3-ch2-bias = <3>;
-+					ti,ths73x3-ch3-bias = <3>;
-+				};
-+			};
-+		};
-+		...
-+	};
-diff --git a/drivers/media/i2c/ths7303.c b/drivers/media/i2c/ths7303.c
-index 4f772a2..a648313 100644
---- a/drivers/media/i2c/ths7303.c
-+++ b/drivers/media/i2c/ths7303.c
-@@ -29,6 +29,7 @@
- #include <media/v4l2-async.h>
- #include <media/v4l2-chip-ident.h>
- #include <media/v4l2-device.h>
-+#include <media/v4l2-of.h>
- 
- #define THS7303_CHANNEL_1	1
- #define THS7303_CHANNEL_2	2
-@@ -350,10 +351,34 @@ static const struct v4l2_subdev_ops ths7303_ops = {
- 	.video 	= &ths7303_video_ops,
- };
- 
-+static struct ths7303_platform_data *
-+ths7303_get_pdata(struct i2c_client *client)
-+{
-+	struct ths7303_platform_data *pdata;
-+	struct device_node *endpoint;
-+
-+	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
-+		return client->dev.platform_data;
-+
-+	endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
-+	if (!endpoint)
-+		return NULL;
-+
-+	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return NULL;
-+
-+	of_property_read_u8(endpoint, "ti,ths73x3-ch1-bias", &pdata->ch_1);
-+	of_property_read_u8(endpoint, "ti,ths73x3-ch2-bias", &pdata->ch_2);
-+	of_property_read_u8(endpoint, "ti,ths73x3-ch3-bias", &pdata->ch_3);
-+
-+	return pdata;
-+}
-+
- static int ths7303_probe(struct i2c_client *client,
- 			const struct i2c_device_id *id)
- {
--	struct ths7303_platform_data *pdata = client->dev.platform_data;
-+	struct ths7303_platform_data *pdata = ths7303_get_pdata(client);
- 	struct ths7303_state *state;
- 	struct v4l2_subdev *sd;
- 	int ret;
-@@ -414,8 +439,18 @@ static const struct i2c_device_id ths7303_id[] = {
- 
- MODULE_DEVICE_TABLE(i2c, ths7303_id);
- 
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id ths73x3_of_match[] = {
-+	{ .compatible = "ti,ths7303", },
-+	{ .compatible = "ti,ths7353", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, ths73x3_of_match);
-+#endif
-+
- static struct i2c_driver ths7303_driver = {
- 	.driver = {
-+		.of_match_table = of_match_ptr(ths73x3_of_match),
- 		.owner	= THIS_MODULE,
- 		.name	= "ths73x3",
- 	},
--- 
-1.7.4.1
+--McQJJYUzjTUqtsGv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, May 07, 2013 at 09:11:44AM -0700, Simon Glass wrote:
+
+> This series adjusts the image code to work with sandbox and prepares it f=
+or
+> verified boot to come later.
+>=20
+> The primary goal here is to get image loading to work on sandbox, which is
+> mostly a set of fairly minor changes such as using map_sysmem() instead of
+> just a cast when converting from a U-Boot address to a pointer. Since
+> common/image.c runs to over 3000 lines and half of it is FIT-related code
+> behind an #ifdef, this code is moved into a new image-fit.c file.
+>=20
+> Changes in v4:
+> - Bring in upstream version of fdt_first/next_subnode()
+> - Use new upstream fdt_first/next_subnode()
+
+Applied to u-boot/master, thanks!
+
+--=20
+Tom
+
+--McQJJYUzjTUqtsGv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRk4QkAAoJENk4IS6UOR1WSEUQAK2rOIMjpxHituQJSIEt+HBS
+6bBpbfE+1EhOHszbvKIKpYlfYfBi1Z2fMJKVh1jbF2bgrOsLs60OLUab7fweP68Q
+ObLA8MSv3QY3PgRseKe2SN0OIkkYDlwATQCL0H5wdQ7xWXMBXgWi92+5GGo7vL0T
+Vv83lLvlMpLigEsYV46cyU5VMrMt+MIesHMQakoFzK6o1Ek/lb6NGrM9g7Mxozj1
+lYlIye1oieObcuOJGt37Dk0QburCv3fDXXNE3dSG9Qd3Qtrmwz8TWB7AJfzdei5l
+sDMmGl5xAyUq5/TSIioFqobUGjxK+G/xcZ3IEXyP/i+/mf/YVFww/KYNiMEc1qJ2
+iE2YEy8frpHNDZZJZL97jQiW6qdw6pCs17b6H/VC1msTjqu8R4yx9vjxS8bW9YxK
+T7dAiemT3Zh4kW0X6gM0eR8/Socuwm+atr9iqxCSwCti48BR26UbYCgputLp3mN+
+UkGtXY9z0Xa0Pv2Er2XSyeJUo0pX4fsbQpwb7CB5H9mRYmGLe8TiNEcJYCmK8F0r
+zMqRwzKVLXJDwesKZRxg58CD/0IYNaQcmIwmuvOwRlt6rKjn7DC+movyCFPThSzT
+FvNEuqIGlwOVZ1dUccZyrpa8XhqTDl3HZ/+yAfbcJW+W1qTdjB3i4rF+1K6RXm6K
+XOYoiYNsNLGAMHes/q8r
+=qXs6
+-----END PGP SIGNATURE-----
+
+--McQJJYUzjTUqtsGv--
+
+--===============1432148313==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+U-Boot mailing list
+U-Boot@lists.denx.de
+http://lists.denx.de/mailman/listinfo/u-boot
+
+--===============1432148313==--
