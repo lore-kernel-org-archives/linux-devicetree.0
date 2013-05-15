@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v3 14/20] ARM: shmobile: armadillo-reference: Move st1232 reset GPIO to DT
-Date: Wed, 15 May 2013 02:18:14 +0200
-Message-ID: <1368577100-3530-15-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v3 11/20] ARM: shmobile: sh73a0: Add pin control device to device tree
+Date: Wed, 15 May 2013 02:18:11 +0200
+Message-ID: <1368577100-3530-12-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1368577100-3530-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1368577100-3530-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
@@ -10,52 +10,93 @@ To: linux-sh@vger.kernel.org
 Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Reference the st1232 reset GPIO from the device tree and remove it from
-board code.
+Add a pfc node to the sh73a0 device tree and remove manual pinmux
+initialization from the corresponding board files.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts  | 1 +
- arch/arm/mach-shmobile/board-armadillo800eva-reference.c | 7 -------
- 2 files changed, 1 insertion(+), 7 deletions(-)
+ arch/arm/boot/dts/sh73a0.dtsi                  |  8 ++++++++
+ arch/arm/mach-shmobile/board-kzm9g-reference.c | 27 +++++++++++++-------------
+ 2 files changed, 21 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-index a6c6606..a037776 100644
---- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-+++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-@@ -43,6 +43,7 @@
- 		interrupts = <2 0>; /* IRQ10: hwirq 2 on irqpin1 */
- 		pinctrl-0 = <&st1232_pins>;
- 		pinctrl-names = "default";
-+		gpios = <&pfc 166 1>;
+diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
+index 17fd9c6..9b1e8f8 100644
+--- a/arch/arm/boot/dts/sh73a0.dtsi
++++ b/arch/arm/boot/dts/sh73a0.dtsi
+@@ -233,4 +233,12 @@
+ 		cap-sd-highspeed;
+ 		status = "disabled";
  	};
++
++	pfc: pfc@e6050000 {
++		compatible = "renesas,pfc-sh73a0";
++		reg = <0xe6050000 0x8000>,
++		      <0xe605801c 0x1c>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
+ };
+diff --git a/arch/arm/mach-shmobile/board-kzm9g-reference.c b/arch/arm/mach-shmobile/board-kzm9g-reference.c
+index 44055fe..6ff6ca2 100644
+--- a/arch/arm/mach-shmobile/board-kzm9g-reference.c
++++ b/arch/arm/mach-shmobile/board-kzm9g-reference.c
+@@ -40,35 +40,35 @@ static unsigned long pin_pullup_conf[] = {
  };
  
-diff --git a/arch/arm/mach-shmobile/board-armadillo800eva-reference.c b/arch/arm/mach-shmobile/board-armadillo800eva-reference.c
-index 4ddd299..002d8d3 100644
---- a/arch/arm/mach-shmobile/board-armadillo800eva-reference.c
-+++ b/arch/arm/mach-shmobile/board-armadillo800eva-reference.c
-@@ -158,7 +158,6 @@ clock_error:
-  */
- static void __init eva_init(void)
+ static const struct pinctrl_map kzm_pinctrl_map[] = {
+-	PIN_MAP_MUX_GROUP_DEFAULT("e6826000.i2c", "pfc-sh73a0",
++	PIN_MAP_MUX_GROUP_DEFAULT("e6826000.i2c", "e6050000.pfc",
+ 				  "i2c3_1", "i2c3"),
+ 	/* MMCIF */
+-	PIN_MAP_MUX_GROUP_DEFAULT("e6bd0000.mmcif", "pfc-sh73a0",
++	PIN_MAP_MUX_GROUP_DEFAULT("e6bd0000.mmcif", "e6050000.pfc",
+ 				  "mmc0_data8_0", "mmc0"),
+-	PIN_MAP_MUX_GROUP_DEFAULT("e6bd0000.mmcif", "pfc-sh73a0",
++	PIN_MAP_MUX_GROUP_DEFAULT("e6bd0000.mmcif", "e6050000.pfc",
+ 				  "mmc0_ctrl_0", "mmc0"),
+-	PIN_MAP_CONFIGS_PIN_DEFAULT("e6bd0000.mmcif", "pfc-sh73a0",
++	PIN_MAP_CONFIGS_PIN_DEFAULT("e6bd0000.mmcif", "e6050000.pfc",
+ 				    "PORT279", pin_pullup_conf),
+-	PIN_MAP_CONFIGS_GROUP_DEFAULT("e6bd0000.mmcif", "pfc-sh73a0",
++	PIN_MAP_CONFIGS_GROUP_DEFAULT("e6bd0000.mmcif", "e6050000.pfc",
+ 				      "mmc0_data8_0", pin_pullup_conf),
+ 	/* SCIFA4 */
+-	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.4", "pfc-sh73a0",
++	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.4", "e6050000.pfc",
+ 				  "scifa4_data", "scifa4"),
+-	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.4", "pfc-sh73a0",
++	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.4", "e6050000.pfc",
+ 				  "scifa4_ctrl", "scifa4"),
+ 	/* SDHI0 */
+-	PIN_MAP_MUX_GROUP_DEFAULT("ee100000.sdhi", "pfc-sh73a0",
++	PIN_MAP_MUX_GROUP_DEFAULT("ee100000.sdhi", "e6050000.pfc",
+ 				  "sdhi0_data4", "sdhi0"),
+-	PIN_MAP_MUX_GROUP_DEFAULT("ee100000.sdhi", "pfc-sh73a0",
++	PIN_MAP_MUX_GROUP_DEFAULT("ee100000.sdhi", "e6050000.pfc",
+ 				  "sdhi0_ctrl", "sdhi0"),
+-	PIN_MAP_MUX_GROUP_DEFAULT("ee100000.sdhi", "pfc-sh73a0",
++	PIN_MAP_MUX_GROUP_DEFAULT("ee100000.sdhi", "e6050000.pfc",
+ 				  "sdhi0_cd", "sdhi0"),
+-	PIN_MAP_MUX_GROUP_DEFAULT("ee100000.sdhi", "pfc-sh73a0",
++	PIN_MAP_MUX_GROUP_DEFAULT("ee100000.sdhi", "e6050000.pfc",
+ 				  "sdhi0_wp", "sdhi0"),
+ 	/* SDHI2 */
+-	PIN_MAP_MUX_GROUP_DEFAULT("ee140000.sdhi", "pfc-sh73a0",
++	PIN_MAP_MUX_GROUP_DEFAULT("ee140000.sdhi", "e6050000.pfc",
+ 				  "sdhi2_data4", "sdhi2"),
+-	PIN_MAP_MUX_GROUP_DEFAULT("ee140000.sdhi", "pfc-sh73a0",
++	PIN_MAP_MUX_GROUP_DEFAULT("ee140000.sdhi", "e6050000.pfc",
+ 				  "sdhi2_ctrl", "sdhi2"),
+ };
+ 
+@@ -76,7 +76,6 @@ static void __init kzm_init(void)
  {
--
- 	r8a7740_clock_init(MD_CK0 | MD_CK2);
- 	eva_clock_init();
+ 	sh73a0_add_standard_devices_dt();
+ 	pinctrl_register_mappings(kzm_pinctrl_map, ARRAY_SIZE(kzm_pinctrl_map));
+-	sh73a0_pinmux_init();
  
-@@ -171,12 +170,6 @@ static void __init eva_init(void)
- 
- 	r8a7740_add_standard_devices_dt();
- 
--	/*
--	 * Touchscreen
--	 * TODO: Move reset GPIO over to .dts when we can reference it
--	 */
--	gpio_request_one(166, GPIOF_OUT_INIT_HIGH, NULL); /* TP_RST_B */
--
- 	r8a7740_pm_init();
- }
- 
+ 	/* enable SD */
+ 	gpio_request_one(15, GPIOF_OUT_INIT_HIGH, NULL); /* power */
 -- 
 1.8.1.5
 
