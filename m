@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v3 08/20] ARM: shmobile: r8a7790: Add pin control device to device tree
-Date: Wed, 15 May 2013 02:18:08 +0200
-Message-ID: <1368577100-3530-9-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v3 20/20] ARM: shmobile: marzen-reference: Add LED2-LED4 to the device tree
+Date: Wed, 15 May 2013 02:18:20 +0200
+Message-ID: <1368577100-3530-21-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1368577100-3530-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1368577100-3530-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
@@ -10,27 +10,37 @@ To: linux-sh@vger.kernel.org
 Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a pfc node to the r8a7790 device tree.
+LED2 to LED4 are GPIO LEDs. Add corresponding DT nodes.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- arch/arm/boot/dts/r8a7790.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/r8a7779-marzen-reference.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index 7a17110..ee21061 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -60,4 +60,9 @@
- 		interrupt-parent = <&gic>;
- 		interrupts = <0 0 4>, <0 1 4>, <0 2 4>,	<0 3 4>;
+diff --git a/arch/arm/boot/dts/r8a7779-marzen-reference.dts b/arch/arm/boot/dts/r8a7779-marzen-reference.dts
+index 07ef31f..0533c31 100644
+--- a/arch/arm/boot/dts/r8a7779-marzen-reference.dts
++++ b/arch/arm/boot/dts/r8a7779-marzen-reference.dts
+@@ -47,6 +47,19 @@
+ 		vddvario-supply = <&fixedregulator3v3>;
+ 		vdd33a-supply = <&fixedregulator3v3>;
  	};
 +
-+	pfc: pfc@e6060000 {
-+		compatible = "renesas,pfc-r8a7790";
-+		reg = <0xe6060000 0x250>;
++	leds {
++		compatible = "gpio-leds";
++		led2 {
++			gpios = <&gpio4 29 0>;
++		};
++		led3 {
++			gpios = <&gpio4 30 0>;
++		};
++		led4 {
++			gpios = <&gpio4 31 0>;
++		};
 +	};
  };
+ 
+ &pfc {
 -- 
 1.8.1.5
 
