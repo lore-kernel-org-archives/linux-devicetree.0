@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v3 19/20] ARM: shmobile: marzen-reference: Move pinctrl mappings to device tree
-Date: Wed, 15 May 2013 02:18:19 +0200
-Message-ID: <1368577100-3530-20-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v3 17/20] ARM: shmobile: kzm9g-reference: Move SDHI regulators to DT
+Date: Wed, 15 May 2013 02:18:17 +0200
+Message-ID: <1368577100-3530-18-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1368577100-3530-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1368577100-3530-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
@@ -10,112 +10,87 @@ To: linux-sh@vger.kernel.org
 Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Replace the pinctrl mappings in board code by device tree mappings.
-For devices that are still instantiated from board code reference the
-mappings as the default pin controller state to apply them at boot time.
+Create two GPIO-controlled fixed-voltage regulators in the
+kzm9g-reference DT and remove manual configuration of the corresponding
+GPIOs from board code.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- arch/arm/boot/dts/r8a7779-marzen-reference.dts  | 35 +++++++++++++++++++++++++
- arch/arm/mach-shmobile/board-marzen-reference.c | 27 -------------------
- 2 files changed, 35 insertions(+), 27 deletions(-)
+ arch/arm/boot/dts/sh73a0-kzm9g-reference.dts   | 22 ++++++++++++++++++++--
+ arch/arm/mach-shmobile/board-kzm9g-reference.c |  6 ------
+ 2 files changed, 20 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7779-marzen-reference.dts b/arch/arm/boot/dts/r8a7779-marzen-reference.dts
-index 10cfc7f..07ef31f 100644
---- a/arch/arm/boot/dts/r8a7779-marzen-reference.dts
-+++ b/arch/arm/boot/dts/r8a7779-marzen-reference.dts
-@@ -37,6 +37,9 @@
- 	lan0@18000000 {
- 		compatible = "smsc,lan9220", "smsc,lan9115";
- 		reg = <0x18000000 0x100>;
-+		pinctrl-0 = <&lan0_pins>;
-+		pinctrl-names = "default";
-+
- 		phy-mode = "mii";
- 		interrupt-parent = <&irqpin0>;
- 		interrupts = <1 0x4>;
-@@ -45,3 +48,35 @@
- 		vdd33a-supply = <&fixedregulator3v3>;
+diff --git a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
+index 475535f..cdfd71a 100644
+--- a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
++++ b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
+@@ -58,6 +58,24 @@
+ 		regulator-boot-on;
  	};
+ 
++	vmmc_sdhi0: regulator@2 {
++	        compatible = "regulator-fixed";
++		regulator-name = "SDHI0 Vcc";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&pfc 15 0>;
++		enable-active-high;
++	};
++
++	vmmc_sdhi2: regulator@3 {
++	        compatible = "regulator-fixed";
++		regulator-name = "SDHI2 Vcc";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&pfc 14 0>;
++		enable-active-high;
++	};
++
+ 	lan9220@10000000 {
+ 		compatible = "smsc,lan9220", "smsc,lan9115";
+ 		reg = <0x10000000 0x100>;
+@@ -200,7 +218,7 @@
+ 	pinctrl-0 = <&sdhi0_pins>;
+ 	pinctrl-names = "default";
+ 
+-	vmmc-supply = <&reg_3p3v>;
++	vmmc-supply = <&vmmc_sdhi0>;
+ 	bus-width = <4>;
+ 	status = "okay";
  };
-+
-+&pfc {
-+	pinctrl-0 = <&scif2_pins &scif4_pins &sdhi0_pins>;
-+	pinctrl-names = "default";
-+
-+	lan0_pins: lan0 {
-+		intc {
-+			renesas,groups = "intc_irq1_b";
-+			renesas,function = "intc";
-+		};
-+		lbsc {
-+			renesas,groups = "lbsc_ex_cs0";
-+			renesas,function = "lbsc";
-+		};
-+	};
-+
-+	scif2_pins: scif2 {
-+		renesas,groups = "scif2_data_c";
-+		renesas,function = "scif2";
-+	};
-+
-+	scif4_pins: scif4 {
-+		renesas,groups = "scif4_data";
-+		renesas,function = "scif4";
-+	};
-+
-+	sdhi0_pins: sdhi0 {
-+		renesas,groups = "sdhi0_data4", "sdhi0_ctrl", "sdhi0_cd",
-+				 "sdhi0_wp";
-+		renesas,function = "sdhi0";
-+	};
-+};
-diff --git a/arch/arm/mach-shmobile/board-marzen-reference.c b/arch/arm/mach-shmobile/board-marzen-reference.c
-index fa7fc07..3d1c439 100644
---- a/arch/arm/mach-shmobile/board-marzen-reference.c
-+++ b/arch/arm/mach-shmobile/board-marzen-reference.c
-@@ -19,41 +19,14 @@
-  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+@@ -209,7 +227,7 @@
+ 	pinctrl-0 = <&sdhi2_pins>;
+ 	pinctrl-names = "default";
+ 
+-	vmmc-supply = <&reg_3p3v>;
++	vmmc-supply = <&vmmc_sdhi2>;
+ 	bus-width = <4>;
+ 	broken-cd;
+ 	status = "okay";
+diff --git a/arch/arm/mach-shmobile/board-kzm9g-reference.c b/arch/arm/mach-shmobile/board-kzm9g-reference.c
+index fc2bb37..1847b4d 100644
+--- a/arch/arm/mach-shmobile/board-kzm9g-reference.c
++++ b/arch/arm/mach-shmobile/board-kzm9g-reference.c
+@@ -21,7 +21,6 @@
   */
  
--#include <linux/pinctrl/machine.h>
- #include <mach/r8a7779.h>
- #include <mach/common.h>
- #include <mach/irqs.h>
- #include <asm/irq.h>
- #include <asm/mach/arch.h>
- 
--static const struct pinctrl_map marzen_pinctrl_map[] = {
--	/* SCIF2 (CN18: DEBUG0) */
--	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.2", "fffc0000.pfc",
--				  "scif2_data_c", "scif2"),
--	/* SCIF4 (CN19: DEBUG1) */
--	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.4", "fffc0000.pfc",
--				  "scif4_data", "scif4"),
--	/* SDHI0 */
--	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_sdhi.0", "fffc0000.pfc",
--				  "sdhi0_data4", "sdhi0"),
--	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_sdhi.0", "fffc0000.pfc",
--				  "sdhi0_ctrl", "sdhi0"),
--	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_sdhi.0", "fffc0000.pfc",
--				  "sdhi0_cd", "sdhi0"),
--	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_sdhi.0", "fffc0000.pfc",
--				  "sdhi0_wp", "sdhi0"),
--	/* SMSC */
--	PIN_MAP_MUX_GROUP_DEFAULT("18000000.lan0", "fffc0000.pfc",
--				  "intc_irq1_b", "intc"),
--	PIN_MAP_MUX_GROUP_DEFAULT("18000000.lan0", "fffc0000.pfc",
--				  "lbsc_ex_cs0", "lbsc"),
--};
--
- static void __init marzen_init(void)
+ #include <linux/delay.h>
+-#include <linux/gpio.h>
+ #include <linux/io.h>
+ #include <linux/irq.h>
+ #include <linux/irqchip.h>
+@@ -37,11 +36,6 @@ static void __init kzm_init(void)
  {
--	pinctrl_register_mappings(marzen_pinctrl_map,
--				  ARRAY_SIZE(marzen_pinctrl_map));
--
- 	r8a7779_add_standard_devices_dt();
- }
+ 	sh73a0_add_standard_devices_dt();
  
+-	/* enable SD */
+-	gpio_request_one(15, GPIOF_OUT_INIT_HIGH, NULL); /* power */
+-
+-	gpio_request_one(14, GPIOF_OUT_INIT_HIGH, NULL); /* power */
+-
+ #ifdef CONFIG_CACHE_L2X0
+ 	/* Early BRESP enable, Shared attribute override enable, 64K*8way */
+ 	l2x0_init(IOMEM(0xf0100000), 0x40460000, 0x82000fff);
 -- 
 1.8.1.5
 
