@@ -1,58 +1,77 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH RFC 0/2] clk: add metag specific gate/mux clocks
-Date: Wed, 15 May 2013 15:31:11 -0700
-Message-ID: <51940CAF.6010808@codeaurora.org>
-References: <1368198127-1295-1-git-send-email-james.hogan@imgtec.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: Pulls and drive strengths in the pinctrl world
+Date: Wed, 15 May 2013 17:51:00 -0600
+Message-ID: <51941F64.9090104@wwwdotorg.org>
+References: <CAD=FV=V9h3RUfvAxj8k2EbYXYPO4FfoNwh=f=dno5ZBUFYeG0w@mail.gmail.com> <CACRpkdbgjqF3xhxUvfvNJn5Vt-3i0AFBzR_Q8gHdNq919dnNsA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1368198127-1295-1-git-send-email-james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbgjqF3xhxUvfvNJn5Vt-3i0AFBzR_Q8gHdNq919dnNsA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Doug Anderson <dianders@google.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thomas Abraham <thomas.abraham@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Simon Glass <sjg@chromium.org>, Olof Johansson <olof@lixom.net>, Kukjin Kim <kgene.kim@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/10/13 08:02, James Hogan wrote:
-> This adds a metag architecture specific clk-gate and clk-mux which
-> extends the generic ones to use global lock2 to protect the register
-> fields. It is common with metag to have an RTOS running on a different
-> thread or core with access to different bits in the same register (which
-> contain clock gate/switch bits for other clocks). Access to such
-> registers must be serialised with a global lock such as the one provided
-> by the metag architecture port in <asm/global_lock.h>
->
-> RFC because despite extending the generic clocks there's still a bit of
-> duplicated code necessary. One alternative is to add special cases to
-> the generic clock components for when a global or callback function
-> based lock is desired instead of a spinlock, but I wasn't sure if that
-> sort of hack would really be appreciated in the generic drivers.
->
-> Comments?
+On 05/15/2013 12:29 PM, Linus Walleij wrote:
+> On Wed, May 15, 2013 at 6:44 PM, Doug Anderson <dianders@google.com> wrote:
+...
+>> Here's how I need to do things when I'm using "just an interrupt":
+>>
+>>   pinctrl@11400000 {
+>>     cyapa_irq: cyapa-irq {
+>>       samsung,pins = "gpx1-2";
+>>       samsung,pin-function = <0xf>;
+>>       samsung,pin-pud = <0>;
+>>       samsung,pin-drv = <0>;
+>>     };
+>>   };
+>>
+>>   trackpad {
+>>     reg = <0x67>;
+>>     compatible = "cypress,cyapa";
+>>     interrupts = <2 0>;
+>>     interrupt-parent = <&gpx1>;
+>>     pinctrl-names = "default";
+>>     pinctrl-0 = <&cyapa_irq>;
+>>     wakeup-source;
+>>   };
 
-Can you please Cc the devicetree mailing list when proposing new bindings?
+I don't really see much disadvantage here; the interrupt bindings
+specify things related to interrupts and the pinctrl bindings specify
+thing related to pin configuration.
 
-Your patchset brings up a question I've had which is if we should be
-putting the bits and register width information in devicetree at all. On
-the one hand it's nice to not have anything in C code, just iterate over
-nodes and register clocks. On the other hand, it's the first time I've
-seen anyone put the register interface into devicetree. From what I can
-tell, the regulator bindings have put at most the register base and
-physical properties like enable-time, max voltage, etc., but not what
-bits are needed to enable/disable a regulator. Also I thought I read
-somewhere that reg properties shouldn't overlap each other, so if you
-ever have two clocks living in the same register we're going to violate
-that.
+If you want to condense the DT, I'd suggest using a the pinctrl hogging
+feature, i.e. don't put pinctrl-* properties in the trackpad node, but
+rather define a system-wide "default" pinctrl state in the pin
+controller node itself. That configuration will be applied as soon as
+the pin controller driver is registered. That'd be the same as the
+above, with the following added:
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+pinctrl@11400000 {
+    pinctrl-names = "default";
+    pinctrl-0 = <&cyapa_irq>;
+};
+
+except that the pinctrl-0 property would probably end up configuring a
+whole bunch of basic pinctrl state rather than just that one interrupt pin.
+
+I prefer to put all the static pinctrl configuration in the pinctrl hog,
+and only the dynamic stuff in the individual device nodes.
+
+I know LinusW won't like this suggestion much though:-)
+
+>> I really wish I could add a 3rd number to the interrupt specifier for
+>> pud and skip the pinctrl bit:
+>>
+>>   trackpad {
+>>     reg = <0x67>;
+>>     compatible = "cypress,cyapa";
+>>     interrupts = <2 0 0>;
+>>     interrupt-parent = <&gpx1>;
+>>     wakeup-source;
+>>   };
+
+I don't like that myself, since it makes the interrupt binding (and I
+assume you'd want to go back to the similar misuse in the GPIO binding)
+also configure pinctrl-related stuff.
