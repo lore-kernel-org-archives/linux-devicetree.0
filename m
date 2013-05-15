@@ -1,112 +1,113 @@
-From: Doug Anderson <dianders@google.com>
-Subject: Pulls and drive strengths in the pinctrl world
-Date: Wed, 15 May 2013 09:44:22 -0700
-Message-ID: <CAD=FV=V9h3RUfvAxj8k2EbYXYPO4FfoNwh=f=dno5ZBUFYeG0w@mail.gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v4] ARM:dts:omap4-panda: Update the LED support for the panda DTS
+Date: Wed, 15 May 2013 11:46:26 -0500
+Message-ID: <1368636386-17138-1-git-send-email-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, Thomas Abraham <thomas.abraham@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Simon Glass <sjg@chromium.org>, Olof Johansson <olof@lixom.net>, Kukjin Kim <kgene.kim@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk
+Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Linus,
+The GPIO for LED D1 on the omap4-panda a1-a3 rev and the omap4-panda-es
+are different.
 
-I'm currently working towards adapting exynos5250-snow (the ARM
-Chromebook) to work well in the new world of pinctrl.  We've got a
-backport of exynos5250 pinctrl in our kernel-3.8 tree and are now
-fixing all of the bugs that have popped up.  Patches will be sent
-upstream (where applicable) shortly.
+A1-A3 = gpio_wk7
+ES = gpio_110
 
+There is no change to LED D2
 
-...but I'm running into an issue when trying to specify pullups /
-pulldowns and drive strengths on lines that are just GPIOs or just
-interrupts.  This is important not just for power usage but also for
-proper functioning (the default internal pulldown was overpowering the
-weak external pullup in one case).  In the old GPIO specifier you
-could do specify pulls, but the new simpler one doesn't allow it.
+Abstract away the pinmux and the LED definitions for the two boards into
+the respective DTS files.
 
-I've managed to make things work and you can see my progress at
-<https://gerrit.chromium.org/gerrit/#/c/51232/>, but it feels a bit
-awkward.  Is there a better way?  If so, then I'm all ears!  :)
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ arch/arm/boot/dts/omap4-panda-common.dtsi |   16 +++++++++++-
+ arch/arm/boot/dts/omap4-panda-es.dts      |   40 +++++++++++++++++++++++++++++
+ 2 files changed, 55 insertions(+), 1 deletions(-)
 
-
-If not, then I guess that what I have will have to do for now.  ...but
-I really wish that:
-
-* The GPIO specifier could specify initial drive strength and pull
-values for pins.
-* The interrupt specifier could specify pull values for pins (drive
-strength shouldn't be needed since these are inputs).
-
-Some examples from the gerrit CL referenced above...
-
-Here's how I need to do things when I'm using "just an interrupt":
-
-  pinctrl@11400000 {
-    cyapa_irq: cyapa-irq {
-      samsung,pins = "gpx1-2";
-      samsung,pin-function = <0xf>;
-      samsung,pin-pud = <0>;
-      samsung,pin-drv = <0>;
-    };
-  };
-
-  trackpad {
-    reg = <0x67>;
-    compatible = "cypress,cyapa";
-    interrupts = <2 0>;
-    interrupt-parent = <&gpx1>;
-    pinctrl-names = "default";
-    pinctrl-0 = <&cyapa_irq>;
-    wakeup-source;
-  };
-
-
-I really wish I could add a 3rd number to the interrupt specifier for
-pud and skip the pinctrl bit:
-
-  trackpad {
-    reg = <0x67>;
-    compatible = "cypress,cyapa";
-    interrupts = <2 0 0>;
-    interrupt-parent = <&gpx1>;
-    wakeup-source;
-  };
-
-
-An example with the GPIO specifier instead of the interrupt one:
-
-  pinctrl@11400000 {
-    ptn3460_gpios: ptn3460-gpios {
-      samsung,pins = "gpy2-5", "gpx1-5";
-      samsung,pin-function = <1>;
-      samsung,pin-pud = <0>;
-      samsung,pin-drv = <0>;
-    };
-  };
-
-  ptn3460-bridge@20 {
-    compatible = "nxp,ptn3460";
-    reg = <0x20>;
-    powerdown-gpio = <&gpy2 5 0>;
-    reset-gpio = <&gpx1 5 0>;
-    edid-emulation = <5>;
-    pinctrl-names = "default";
-    pinctrl-0 = <&ptn3460_gpios>;
-  };
-
-
-I don't want to specify function/direction (code can handle that), but do wish
-I could specify the pulls and strength.  Perhaps:
-
-  ptn3460-bridge@20 {
-    compatible = "nxp,ptn3460";
-    reg = <0x20>;
-    powerdown-gpio = <&gpy2 5 0 0 0>;
-    reset-gpio = <&gpx1 5 0 0 0>;
-    edid-emulation = <5>;
-  };
-
-
--Doug
+diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+index 03bd60d..2b516af 100644
+--- a/arch/arm/boot/dts/omap4-panda-common.dtsi
++++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+@@ -16,7 +16,7 @@
+ 		reg = <0x80000000 0x40000000>; /* 1 GB */
+ 	};
+ 
+-	leds {
++	leds: leds {
+ 		compatible = "gpio-leds";
+ 		heartbeat {
+ 			label = "pandaboard::status1";
+@@ -137,6 +137,20 @@
+ 	};
+ };
+ 
++&omap4_pmx_wkup {
++	pinctrl-names = "default";
++	pinctrl-0 = <
++		&led_wkgpio_pins
++	>;
++
++	led_wkgpio_pins: pinmux_leds_wkpins {
++		pinctrl-single,pins = <
++			0x1a 0x3	/* gpio_wk7 OUTPUT | MODE 3 */
++			0x1c 0x3	/* gpio_wk8 OUTPUT | MODE 3 */
++		>;
++	};
++};
++
+ &i2c1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c1_pins>;
+diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts/omap4-panda-es.dts
+index f1d8c21..e6f696d 100644
+--- a/arch/arm/boot/dts/omap4-panda-es.dts
++++ b/arch/arm/boot/dts/omap4-panda-es.dts
+@@ -34,3 +34,43 @@
+ 		0x5e 0x100	/* hdmi_sda.hdmi_sda INPUT | MODE 0 */
+ 		>;
+ };
++
++&leds {
++	compatible = "gpio-leds";
++	heartbeat {
++		label = "pandaboard::status1";
++		gpios = <&gpio4 14 0>;
++		linux,default-trigger = "heartbeat";
++	};
++	mmc {
++		label = "pandaboard::status2";
++		gpios = <&gpio1 8 0>;
++		linux,default-trigger = "mmc0";
++	};
++};
++
++&omap4_pmx_core {
++	pinctrl-names = "default";
++	pinctrl-0 = <
++		&led_gpio_pins
++	>;
++
++	led_gpio_pins: gpio_led_pmx {
++		pinctrl-single,pins = <
++			0xb6 0x3	/* gpio_110 OUTPUT | MODE 3 */
++		>;
++	};
++};
++
++&omap4_pmx_wkup {
++	pinctrl-names = "default";
++	pinctrl-0 = <
++		&led_wkgpio_pins
++	>;
++
++	led_wkgpio_pins: pinmux_leds_wkpins {
++		pinctrl-single,pins = <
++			0x1c 0x3	/* gpio_wk8 OUTPUT | MODE 3 */
++		>;
++	};
++};
+-- 
+1.7.5.4
