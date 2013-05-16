@@ -1,161 +1,122 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v4] ARM:dts:omap4-panda: Update the LED support for the
- panda DTS
-Date: Thu, 16 May 2013 10:35:57 -0500
-Message-ID: <5194FCDD.8080209@ti.com>
-References: <1368636386-17138-1-git-send-email-dmurphy@ti.com>
- <20130515170516.GA6135@kahuna>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH 3/3] ARM: kernel: fix __cpu_logical_map default initialization
+Date: Thu, 16 May 2013 16:34:07 +0100
+Message-ID: <1368718447-19209-4-git-send-email-lorenzo.pieralisi@arm.com>
+References: <1368718447-19209-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130515170516.GA6135@kahuna>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nishanth Menon <nm@ti.com>
-Cc: linux@arm.linux.org.uk, b-cousson@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1368718447-19209-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/15/2013 12:05 PM, Nishanth Menon wrote:
-> On 11:46-20130515, Dan Murphy wrote:
->> The GPIO for LED D1 on the omap4-panda a1-a3 rev and the omap4-panda-es
->> are different.
->>
->> A1-A3 = gpio_wk7
->> ES = gpio_110
->>
->> There is no change to LED D2
->>
->> Abstract away the pinmux and the LED definitions for the two boards into
->> the respective DTS files.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
-> nit: Giving patch history is a nice practise.
->>  arch/arm/boot/dts/omap4-panda-common.dtsi |   16 +++++++++++-
->>  arch/arm/boot/dts/omap4-panda-es.dts      |   40 +++++++++++++++++++++++++++++
->>  2 files changed, 55 insertions(+), 1 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
->> index 03bd60d..2b516af 100644
->> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
->> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
->> @@ -16,7 +16,7 @@
->>  		reg = <0x80000000 0x40000000>; /* 1 GB */
->>  	};
->>  
->> -	leds {
->> +	leds: leds {
->>  		compatible = "gpio-leds";
->>  		heartbeat {
->>  			label = "pandaboard::status1";
->> @@ -137,6 +137,20 @@
-> I missed noticing this previously, Apologies on the same.
-> Considering that drivers/leds/leds-gpio.c has ability to handle pinctrl,
-> One better option might be to provide pinctrl phandle with leds -
-> Couple of reasons why this might be good:
-> a) one gets the following warning at boot:
-> "leds-gpio leds.8: pins are not configured from the driver"
-> b) you donot need to setup the pins by default at boot - it is not
-> mandatory for the system functionality, instead we do it *if* the driver
-> is enabled.
-> Further, optionally, all you'd have to do in panda-es.dts is the following
-> &led_wkgpio_pins {
-> 		pinctrl-single,pins = <
-> 			0x1c 0x3	/* gpio_wk8 OUTPUT | MODE 3 */
-> 		>;
-> }
-> Similarly for gpios override for panda-es.
-I am not sure you really want to do this.
-If I make the pinctrl part of the led structure then the only way the gpio_wk7 on a1-a3 to be configured is when
-the CONFIG_LEDS_GPIO flag is set.
+For legacy reasons, the __cpu_logical_map array is initialized to 0.
+On old pre-DT ARM platforms, smp_setup_processor_id() generates
+__cpu_logical_map entries at boot before the number of possible CPUs is
+set-up, with values that can be considered valid MPIDRs even if they are
+not present in the system booting; this implies that the __cpu_logical_map[]
+might end up containing MPIDR values that can be considered valid at logical
+indexes corresponding to CPUs that are not marked as possible.
 
-Do you really want that dependency?  You did say it was a key fix
-At least this way the pins are configured regardless of that flag.
->>  	};
->>  };
->>  
->> +&omap4_pmx_wkup {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <
->> +		&led_wkgpio_pins
->> +	>;
->> +
->> +	led_wkgpio_pins: pinmux_leds_wkpins {
->> +		pinctrl-single,pins = <
->> +			0x1a 0x3	/* gpio_wk7 OUTPUT | MODE 3 */
->> +			0x1c 0x3	/* gpio_wk8 OUTPUT | MODE 3 */
->> +		>;
->> +	};
->> +};
->> +
->>  &i2c1 {
->>  	pinctrl-names = "default";
->>  	pinctrl-0 = <&i2c1_pins>;
->> diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts/omap4-panda-es.dts
->> index f1d8c21..e6f696d 100644
->> --- a/arch/arm/boot/dts/omap4-panda-es.dts
->> +++ b/arch/arm/boot/dts/omap4-panda-es.dts
->> @@ -34,3 +34,43 @@
->>  		0x5e 0x100	/* hdmi_sda.hdmi_sda INPUT | MODE 0 */
->>  		>;
->>  };
->> +
->> +&leds {
->> +	compatible = "gpio-leds";
->> +	heartbeat {
->> +		label = "pandaboard::status1";
->> +		gpios = <&gpio4 14 0>;
->> +		linux,default-trigger = "heartbeat";
->> +	};
->> +	mmc {
->> +		label = "pandaboard::status2";
->> +		gpios = <&gpio1 8 0>;
->> +		linux,default-trigger = "mmc0";
->> +	};
->> +};
->> +
->> +&omap4_pmx_core {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <
->> +		&led_gpio_pins
->> +	>;
->> +
->> +	led_gpio_pins: gpio_led_pmx {
->> +		pinctrl-single,pins = <
->> +			0xb6 0x3	/* gpio_110 OUTPUT | MODE 3 */
->> +		>;
->> +	};
->> +};
->> +
->> +&omap4_pmx_wkup {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <
->> +		&led_wkgpio_pins
->> +	>;
->> +
->> +	led_wkgpio_pins: pinmux_leds_wkpins {
->> +		pinctrl-single,pins = <
->> +			0x1c 0x3	/* gpio_wk8 OUTPUT | MODE 3 */
->> +		>;
->> +	};
->> +};
->> -- 
->> 1.7.5.4
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+To prevent issues with the current implementation, this patch defines an
+MPIDR_INVALID value, statically initializes the __cpu_logical_map[] array to it
+and allows DT parsing code to overwrite values in the __cpu_logical_map array
+that were erroneously set-up in smp_setup_processor_id().
 
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+CC: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm/include/asm/cputype.h  |  2 ++
+ arch/arm/include/asm/smp_plat.h |  2 +-
+ arch/arm/kernel/devtree.c       | 10 ++++++----
+ arch/arm/kernel/setup.c         |  2 +-
+ 4 files changed, 10 insertions(+), 6 deletions(-)
 
+diff --git a/arch/arm/include/asm/cputype.h b/arch/arm/include/asm/cputype.h
+index 7652712..dba62cb 100644
+--- a/arch/arm/include/asm/cputype.h
++++ b/arch/arm/include/asm/cputype.h
+@@ -32,6 +32,8 @@
+ 
+ #define MPIDR_HWID_BITMASK 0xFFFFFF
+ 
++#define MPIDR_INVALID (~MPIDR_HWID_BITMASK)
++
+ #define MPIDR_LEVEL_BITS 8
+ #define MPIDR_LEVEL_MASK ((1 << MPIDR_LEVEL_BITS) - 1)
+ 
+diff --git a/arch/arm/include/asm/smp_plat.h b/arch/arm/include/asm/smp_plat.h
+index aaa61b6..e789832 100644
+--- a/arch/arm/include/asm/smp_plat.h
++++ b/arch/arm/include/asm/smp_plat.h
+@@ -49,7 +49,7 @@ static inline int cache_ops_need_broadcast(void)
+ /*
+  * Logical CPU mapping.
+  */
+-extern int __cpu_logical_map[];
++extern u32 __cpu_logical_map[];
+ #define cpu_logical_map(cpu)	__cpu_logical_map[cpu]
+ /*
+  * Retrieve logical cpu index corresponding to a given MPIDR[23:0]
+diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+index d2293c0..08f012e 100644
+--- a/arch/arm/kernel/devtree.c
++++ b/arch/arm/kernel/devtree.c
+@@ -79,12 +79,12 @@ void __init arm_dt_init_cpu_maps(void)
+ 	 * read as 0.
+ 	 */
+ 	static u32 tmp_map[NR_CPUS] __initdata = {
+-				[0 ... NR_CPUS-1] = UINT_MAX };
++				[0 ... NR_CPUS-1] = MPIDR_INVALID };
+ 	struct device_node *cpu, *cpus;
+ 	u32 i, j, cpuidx = 1;
+ 	u32 mpidr = is_smp() ? read_cpuid_mpidr() & MPIDR_HWID_BITMASK : 0;
+-
+ 	bool bootcpu_valid = false;
++
+ 	cpus = of_find_node_by_path("/cpus");
+ 
+ 	if (!cpus)
+@@ -160,11 +160,13 @@ void __init arm_dt_init_cpu_maps(void)
+ 	/*
+ 	 * Since the boot CPU node contains proper data, and all nodes have
+ 	 * a reg property, the DT CPU list can be considered valid and the
+-	 * logical map created in smp_setup_processor_id() can be overridden
++	 * logical map created in smp_setup_processor_id() can be overridden,
++	 * inclusive of entries that must contain invalid MPIDRs
+ 	 */
++	memcpy(__cpu_logical_map, tmp_map,
++			nr_cpu_ids * sizeof(tmp_map[0]));
+ 	for (i = 0; i < cpuidx; i++) {
+ 		set_cpu_possible(i, true);
+-		cpu_logical_map(i) = tmp_map[i];
+ 		pr_debug("cpu logical map 0x%x\n", cpu_logical_map(i));
+ 	}
+ }
+diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+index 6ae71b7..eeac924 100644
+--- a/arch/arm/kernel/setup.c
++++ b/arch/arm/kernel/setup.c
+@@ -457,7 +457,7 @@ void notrace cpu_init(void)
+ 	    : "r14");
+ }
+ 
+-int __cpu_logical_map[NR_CPUS];
++u32 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = MPIDR_INVALID };
+ 
+ void __init smp_setup_processor_id(void)
+ {
 -- 
-------------------
-Dan Murphy
+1.8.2.2
