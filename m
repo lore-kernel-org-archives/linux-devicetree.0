@@ -1,62 +1,66 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH RFC 0/2] clk: add metag specific gate/mux clocks
-Date: Thu, 16 May 2013 10:56:51 +0100
-Message-ID: <5194AD63.9020804@imgtec.com>
-References: <1368198127-1295-1-git-send-email-james.hogan@imgtec.com> <51940CAF.6010808@codeaurora.org>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH RFC] media: OF: add field-active and sync-on-green endpoint
+ properties
+Date: Thu, 16 May 2013 12:43:02 +0200
+Message-ID: <5194B836.1020808@gmail.com>
+References: <1368622349-32185-1-git-send-email-prabhakar.csengg@gmail.com> <2510029.UKsn4JyZOW@avalon> <CA+V-a8tsohAyGRCn3NhwsS19X84N_xOwLB_wd0bPvyu1fLy3+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51940CAF.6010808@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CA+V-a8tsohAyGRCn3NhwsS19X84N_xOwLB_wd0bPvyu1fLy3+g@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 15/05/13 23:31, Stephen Boyd wrote:
-> On 05/10/13 08:02, James Hogan wrote:
->> This adds a metag architecture specific clk-gate and clk-mux which
->> extends the generic ones to use global lock2 to protect the register
->> fields. It is common with metag to have an RTOS running on a different
->> thread or core with access to different bits in the same register (which
->> contain clock gate/switch bits for other clocks). Access to such
->> registers must be serialised with a global lock such as the one provided
->> by the metag architecture port in <asm/global_lock.h>
->>
->> RFC because despite extending the generic clocks there's still a bit of
->> duplicated code necessary. One alternative is to add special cases to
->> the generic clock components for when a global or callback function
->> based lock is desired instead of a spinlock, but I wasn't sure if that
->> sort of hack would really be appreciated in the generic drivers.
->>
->> Comments?
-> 
-> Can you please Cc the devicetree mailing list when proposing new bindings?
+Hi,
 
-Erm, I think it was on Cc (devicetree-discuss@lists.ozlabs.org yeh?)
+On 05/16/2013 06:53 AM, Prabhakar Lad wrote:
+>>> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt
+>>> >>  b/Documentation/devicetree/bindings/media/video-interfaces.txt index
+>>> >>  e022d2d..6bf87d0 100644
+>>> >>  --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+>>> >>  +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+>>> >>  @@ -101,6 +101,10 @@ Optional endpoint properties
+>>> >>      array contains only one entry.
+>>> >>    - clock-noncontinuous: a boolean property to allow MIPI CSI-2
+>>> >>  non-continuous clock mode.
+>>> >>  +-field-active: a boolean property indicating active high filed ID output
+>>> >>  + polarity is inverted.
+>> >
+>> >  Looks like we already have field-even-active property to describe the level of
+>> >  the field signal. Could you please check whether it fulfills your use cases ?
+>> >  Sorry for not pointing you to it earlier.
+>> >
+> I had looked at it earlier it only means "field signal level during the even
+> field data transmission" it only speaks of even filed. Ideally the field ID
+> output is set to logic 1 for odd field and set to 0 for even field, what I
+> want is to invert the FID out polarity when "field-active" property is set.
+>
+> May be we rename "field-active" to "fid-pol" ?
 
-> Your patchset brings up a question I've had which is if we should be
-> putting the bits and register width information in devicetree at all. On
-> the one hand it's nice to not have anything in C code, just iterate over
-> nodes and register clocks. On the other hand, it's the first time I've
-> seen anyone put the register interface into devicetree. From what I can
-> tell, the regulator bindings have put at most the register base and
-> physical properties like enable-time, max voltage, etc., but not what
-> bits are needed to enable/disable a regulator. Also I thought I read
-> somewhere that reg properties shouldn't overlap each other, so if you
-> ever have two clocks living in the same register we're going to violate
-> that.
+I guess we failed to clearly describe the 'field-even-active' property then.
+It seems to be exactly what you need.
 
-Oh, I wasn't aware of that limitation.
+It is not enough to say e.g. field-active = <1>;, because it would not have
+been clear which field it refers to, odd or even ? Unlike VSYNC, HSYNC both
+levels of the FIELD signal are "active", there is no "idle" state for FIELD.
 
-The SoC I'm working with has some registers full of clock enable bits (I
-guess one could have a gate array component with up to 32 clock inputs
-and outputs) and some registers full of clock mux switch bits (that
-would get really messy to define as a block since each bit switches
-between 2 parents, and some of the parents are other clock muxes in the
-same block). Some registers contain a bunch of low power related bits
-together, including clock enable bits in the same register as various
-pinconf settings which is used by a separate pinctrl driver.
+So field-even-active = <1>; means the FIELD signal at logic high level
+indicates EVEN field _and_ this implies FIELD = 0 indicates ODD field, i.e.
 
-Cheers
-James
+FIELD = 0 => odd field
+FIELD = 1 => even field
+
+For field-even-active = <0>; it is the other way around:
+
+FIELD = 0 => even field
+FIELD = 1 => odd field
+
+It looks like only "sync-on-green" property is missing. BTW, is it really
+commonly used ? What drivers would need it ?
+I'm not against making it a common property, it's just first time I see it.
+
+Thanks,
+Sylwester
