@@ -1,58 +1,30 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] of_net.h: Make of_get_phy_mode() return int i.s.o. const int
-Date: Thu, 16 May 2013 17:50:48 +0200
-Message-ID: <CAMuHMdVq+nCOHCwhfWyuTgDniJgA8fkFVKvAuAoEAJEEv6hEHA@mail.gmail.com>
-References: <1367616754-5142-1-git-send-email-geert@linux-m68k.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2] ARM: OMAP2+: Allow NAND transfer mode to be
+ specified in DT
+Date: Thu, 16 May 2013 08:56:06 -0700
+Message-ID: <20130516155605.GU5600@atomide.com>
+References: <51767D49.1010909@newflow.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1367616754-5142-1-git-send-email-geert@linux-m68k.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
-Cc: devicetree-discuss@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51767D49.1010909@newflow.co.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Jackson <mpfj-list@newflow.co.uk>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 3, 2013 at 11:32 PM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> include/linux/of_net.h:16: warning: type qualifiers ignored on function return type
->
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> ---
->  include/linux/of_net.h |    4 ++--
->  1 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/of_net.h b/include/linux/of_net.h
-> index 61bf53b..34597c8 100644
-> --- a/include/linux/of_net.h
-> +++ b/include/linux/of_net.h
-> @@ -9,10 +9,10 @@
->
->  #ifdef CONFIG_OF_NET
->  #include <linux/of.h>
-> -extern const int of_get_phy_mode(struct device_node *np);
-> +extern int of_get_phy_mode(struct device_node *np);
->  extern const void *of_get_mac_address(struct device_node *np);
->  #else
-> -static inline const int of_get_phy_mode(struct device_node *np)
-> +static inline int of_get_phy_mode(struct device_node *np)
->  {
->         return -ENODEV;
->  }
+* Mark Jackson <mpfj-list@newflow.co.uk> [130423 05:28]:
+> OMAP devices support various NAND transfer modes.
+> 
+> Currently all device-tree definitions will use the default "prefetch
+> polled" mode, so this patch enables the transfer mode to be specified
+> in the device-tree.
+> 
+> Signed-off-by: Mark Jackson <mpfj@newflow.co.uk>
 
-drivers/of/of_net.c:41:11: error: conflicting types for 'of_get_phy_mode'
-include/linux/of_net.h:12:12: note: previous declaration of
-'of_get_phy_mode' was here
+Thanks applying into omap-for-v3.11/gpmc with Pekon's ack.
 
-Doh, of course I also have to update the actual function in drivers/of/of_net.c.
-Stay tuned for v2.
+Regards,
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Tony
