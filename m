@@ -1,81 +1,73 @@
-From: Lad Prabhakar <prabhakar.csengg@gmail.com>
-Subject: [PATCH RFC v2] media: OF: add sync-on-green endpoint property
-Date: Thu, 16 May 2013 18:48:07 +0530
-Message-ID: <1368710287-8741-1-git-send-email-prabhakar.csengg@gmail.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: LMML <linux-media@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCHv9 5/9] clk: mvebu: create parent-child relation for
+ PCIe clocks on Armada 370
+Date: Thu, 16 May 2013 11:06:16 -0400
+Message-ID: <20130516150616.GD6563@titan.lakedaemon.net>
+References: <1368624323-24311-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1368624323-24311-6-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20130515214154.12127.73539@quantum>
+ <20130516094417.24b1ca0d@skate> <51949830.70306@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <51949830.70306-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Mike, Sebastian,
 
-This patch adds "sync-on-green" property as part of
-endpoint properties and also support to parse them in the parser.
+On Thu, May 16, 2013 at 10:26:24AM +0200, Sebastian Hesselbarth wrote:
+> On 05/16/2013 09:44 AM, Thomas Petazzoni wrote:
+> >Dear Mike Turquette,
+> >
+> >On Wed, 15 May 2013 14:41:54 -0700, Mike Turquette wrote:
+> >>Quoting Thomas Petazzoni (2013-05-15 06:25:19)
+> >>>The Armada 370 has two gatable clocks for each PCIe interface, and we
+> >>>want both of them to be enabled. We therefore make one of the two
+> >>>clocks a child of the other, as we did for the sataX and sataXlnk
+> >>>clocks on Armada XP.
+> >>
+> >>Ack for patches #5 and #6.  Do you want me to take them?
 
-Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: davinci-linux-open-source@linux.davincidsp.com
-Cc: Kyungmin Park <kyungmin.park@samsung.com>
----
- Changes for v2:
- 1: Dropped "field-active" property as it same as existing
-    "field-even-active" property.
+Thanks for the Ack!
 
- .../devicetree/bindings/media/video-interfaces.txt |    2 ++
- drivers/media/v4l2-core/v4l2-of.c                  |    3 +++
- include/media/v4l2-mediabus.h                      |    1 +
- 3 files changed, 6 insertions(+), 0 deletions(-)
+> >I don't know, I guess with your Ack, it would be easier to carry them
+> >through the Marvell maintainers and then the arm-soc tree, so that we
+> >can test arm-soc and have all the pieces needed in here.
+> >
+> >That said, Sebastian Hesselbarth has submitted a big rework of the
+> >mvebu clock drivers, which would conflict with this patch, and
+> >Sebastian's rework would most likely go through your tree. If that's
+> >the case, I guess it would be better to let you take #5 and #6 in this
+> >patch series.
+> 
+> I also requested to take the restructure patches through ARM tree. They
+> are only touching files in drivers/clk/mvebu and by taking them through
+> ARM, we can update PCIe clock patches easily. The dependency between
+> Thomas' and my patches basically is that I renamed files that Thomas
+> now commits to. (I switched clk/mvebu from per-function files to per-soc
+> files).
 
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-index e022d2d..f91821f 100644
---- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -101,6 +101,8 @@ Optional endpoint properties
-   array contains only one entry.
- - clock-noncontinuous: a boolean property to allow MIPI CSI-2 non-continuous
-   clock mode.
-+-sync-on-green: a boolean property indicating to sync with the green signal in
-+ RGB.
- 
- 
- Example
-diff --git a/drivers/media/v4l2-core/v4l2-of.c b/drivers/media/v4l2-core/v4l2-of.c
-index aa59639..b51d61f 100644
---- a/drivers/media/v4l2-core/v4l2-of.c
-+++ b/drivers/media/v4l2-core/v4l2-of.c
-@@ -100,6 +100,9 @@ static void v4l2_of_parse_parallel_bus(const struct device_node *node,
- 	if (!of_property_read_u32(node, "data-shift", &v))
- 		bus->data_shift = v;
- 
-+	if (of_get_property(node, "sync-on-green", &v))
-+		flags |= V4L2_MBUS_SYNC_ON_GREEN;
-+
- 	bus->flags = flags;
- 
- }
-diff --git a/include/media/v4l2-mediabus.h b/include/media/v4l2-mediabus.h
-index 83ae07e..cf2c66f9 100644
---- a/include/media/v4l2-mediabus.h
-+++ b/include/media/v4l2-mediabus.h
-@@ -40,6 +40,7 @@
- #define V4L2_MBUS_FIELD_EVEN_HIGH		(1 << 10)
- /* FIELD = 1/0 - Field1 (odd)/Field2 (even) */
- #define V4L2_MBUS_FIELD_EVEN_LOW		(1 << 11)
-+#define V4L2_MBUS_SYNC_ON_GREEN			(1 << 12)
- 
- /* Serial flags */
- /* How many lanes the client can use */
--- 
-1.7.4.1
+I agree.  My heart jumped into my throat a little there :)  Mike, if
+it's ok with you, I'd prefer to take these through arm-soc.  Any merge
+conflicts should be minimal.  And at any rate, resolving the conflicts
+are *much* easier to handle than having arm-soc depend on an outside
+tree (then Linus has to take care in the order he merges them, no
+rebasing for clk tree, dogs and cats living together, etc ;-) )
+
+thx,
+
+Jason.
