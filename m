@@ -1,30 +1,68 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2] ARM: OMAP2+: Allow NAND transfer mode to be
- specified in DT
-Date: Thu, 16 May 2013 08:56:06 -0700
-Message-ID: <20130516155605.GU5600@atomide.com>
-References: <51767D49.1010909@newflow.co.uk>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCHv9 7/9] pci: PCIe driver for Marvell Armada 370/XP systems
+Date: Thu, 16 May 2013 11:56:17 -0400
+Message-ID: <20130516155617.GH6563@titan.lakedaemon.net>
+References: <1368624323-24311-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1368624323-24311-8-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20130516093312.GB2459@localhost>
+ <20130516154031.GF6563@titan.lakedaemon.net>
+ <20130516174903.3a7a07ef@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <51767D49.1010909@newflow.co.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Jackson <mpfj-list@newflow.co.uk>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>
+In-Reply-To: <20130516174903.3a7a07ef@skate>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Mark Jackson <mpfj-list@newflow.co.uk> [130423 05:28]:
-> OMAP devices support various NAND transfer modes.
+On Thu, May 16, 2013 at 05:49:03PM +0200, Thomas Petazzoni wrote:
+> Dear Jason Cooper,
 > 
-> Currently all device-tree definitions will use the default "prefetch
-> polled" mode, so this patch enables the transfer mode to be specified
-> in the device-tree.
+> On Thu, 16 May 2013 11:40:31 -0400, Jason Cooper wrote:
 > 
-> Signed-off-by: Mark Jackson <mpfj@newflow.co.uk>
+> > > > +static int mvebu_pcie_init(void)
+> > > 
+> > > Building this showed a warning here. It seems you forgot
+> > > to mark this one as __init.
+> > 
+> > Thomas, I'll fix this up when I pull this in, no need to resend. :)
+> 
+> I'll resend, because beyond this function pointed by Ezequiel, there
+> are two other functions that can be marked __init. The one pointed by
+> Ezequiel is important because it causes a section mismatch
+> when !CONFIG_MODULES, because in this case platform_driver_probe() is
+> __init (and this explains what I wasn't seeing the warning, since I'm
+> building CONFIG_MODULES=y). The two other functions are more cosmetic,
+> but good to have as well.
+> 
+> It would already been sent if git hadn't decided to do a 'git gc' right
+> after my rebase. It's been gc-ing for quite some time now...
 
-Thanks applying into omap-for-v3.11/gpmc with Pekon's ack.
+Dear boss,
 
-Regards,
+I am in desperate need of a 500GB SSD on which to do my kernel work.
 
-Tony
+Thanks,
+
+Kranky Kernel Developer
+
+hehehe...
+
+
+I'll pull in once you send.
+
+thx,
+
+Jason.
