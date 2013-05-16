@@ -1,48 +1,77 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4] ARM:dts:omap4-panda: Update the LED support for the
- panda DTS
-Date: Thu, 16 May 2013 15:42:39 -0500
-Message-ID: <CAGo_u6oQP6eGkCQe=uTBmUsKQqFbS9_xXYt24_HRtjEr561O=g@mail.gmail.com>
-References: <1368636386-17138-1-git-send-email-dmurphy@ti.com>
- <20130515170516.GA6135@kahuna> <5194FCDD.8080209@ti.com>
- <CAGo_u6pX+DdVNWqdPXDChzMr27YAXL_Zvt7DxWBijOCW0rXpkA@mail.gmail.com>
- <5195401B.5070209@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] <linux/of_platform.h>: fix compilation warnings with
+ DT disabled
+Date: Fri, 17 May 2013 00:58:23 +0400
+Message-ID: <5195486F.1040603@cogentembedded.com>
+References: <201302190258.25726.sergei.shtylyov@cogentembedded.com> <20130301070925.GA24369@verge.net.au> <5130B12F.20409@gmail.com> <5130B1A7.9060001@gmail.com> <5130B34F.2090700@cogentembedded.com> <5130B506.5020908@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5195401B.5070209-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <5130B506.5020908@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Simon Horman <horms@verge.net.au>, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, vladimir.barinov@cogentembedded.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 16, 2013 at 3:22 PM, Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org> wrote:
-> On 05/16/2013 01:18 PM, Nishanth Menon wrote:
->> On Thu, May 16, 2013 at 10:35 AM, Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org> wrote:
->>> I am not sure you really want to do this.
->>> If I make the pinctrl part of the led structure then the only way the gpio_wk7 on a1-a3 to be configured is when
->>> the CONFIG_LEDS_GPIO flag is set.
->>>
->>> Do you really want that dependency?  You did say it was a key fix
->>> At least this way the pins are configured regardless of that flag.
->> That is better as the system will be left in the pinmux configuration
->> handed over from bootloader.
-> So you want to depend on a boot loader to configure pins correctly for the kernel?
-> Hmmm seems risky to me.
+Hello.
 
-Not really! if it is a critical pinmux, pinmux defaults are great,
-else belongs definitely to device->pinctrl :) depending on bootloader
-pinmux implies NOT having pinmux even for device - NO. that is
-definitely not what I stated.
-Regards,
-NM
+On 03/01/2013 05:02 PM, Rob Herring wrote:
+
+>>>>>> Fix the following compilation warnings (in Simon Horman's
+>>>>>> renesas.git repo):
+>>>>>> In file included from arch/arm/mach-shmobile/setup-r8a7779.c:24:=
+0:
+>>>>>> include/linux/of_platform.h:107:13: warning: =E2=80=98struct of_=
+device_id=E2=80=99
+>>>>>> declared
+>>>>>> inside parameter list [enabled by default]
+>>>>>> include/linux/of_platform.h:107:13: warning: its scope is only t=
+his
+>>>>>> definition
+>>>>>> or declaration, which is probably not what you want [enabled by
+>>>>>> default]
+>>>>>> include/linux/of_platform.h:107:13: warning: =E2=80=98struct dev=
+ice_node=E2=80=99
+>>>>>> declared
+>>>>>> inside parameter list [enabled by default]
+>>>>>> <linux/of_platform.h> only #include's headers with definitions o=
+f
+>>>>>> the above
+>>>>>> mentioned structures if CONFIG_OF_DEVICE=3Dy but uses them even =
+if
+>>>>>> not. One
+>>>>>> solution is to move some #include's out of #ifdef CONFIG_OF_DEVI=
+CE
+>>>>>> and use
+>>>>>> incomplete declarations for the rest of the structures where the
+>>>>>> #ifdef move
+>>>>>> doesn't help...
+>>>>>> Reported-by: Vladimir Barinov <vladimir.barinov@cogentembedded.c=
+om>
+>>>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.c=
+om>
+>>>>> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+>>>>> Grant, could you consider taking this patch?
+>>>> Yes, I can, but I don't seem to have the original patch. Can you s=
+end it
+>>>> again.
+>>> Nevermind. Found it. I'll apply it.
+>>     Will you drop 'struct device_node' declaration then or should I
+>> resend? In fact, I think I should better resend it with the changelo=
+g
+>> somewhat edited.
+> No, I plan to leave it as is and not rely on device.h by chance
+> declaring device_node.
+
+     I hoped to see this fix in 3.10-rc1. Is there any hope to see it i=
+n=20
+3.10-rc's?
+The code it fixes the warnings in is already in Linus tree.
+
+>
+>>> Rob
+
+WBR, Sergei
+
