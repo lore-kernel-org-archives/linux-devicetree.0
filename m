@@ -1,73 +1,161 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCHv9 5/9] clk: mvebu: create parent-child relation for
- PCIe clocks on Armada 370
-Date: Thu, 16 May 2013 11:06:16 -0400
-Message-ID: <20130516150616.GD6563@titan.lakedaemon.net>
-References: <1368624323-24311-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1368624323-24311-6-git-send-email-thomas.petazzoni@free-electrons.com>
- <20130515214154.12127.73539@quantum>
- <20130516094417.24b1ca0d@skate> <51949830.70306@gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v4] ARM:dts:omap4-panda: Update the LED support for the
+ panda DTS
+Date: Thu, 16 May 2013 10:35:57 -0500
+Message-ID: <5194FCDD.8080209@ti.com>
+References: <1368636386-17138-1-git-send-email-dmurphy@ti.com>
+ <20130515170516.GA6135@kahuna>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51949830.70306-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130515170516.GA6135@kahuna>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nishanth Menon <nm@ti.com>
+Cc: linux@arm.linux.org.uk, b-cousson@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Mike, Sebastian,
+On 05/15/2013 12:05 PM, Nishanth Menon wrote:
+> On 11:46-20130515, Dan Murphy wrote:
+>> The GPIO for LED D1 on the omap4-panda a1-a3 rev and the omap4-panda-es
+>> are different.
+>>
+>> A1-A3 = gpio_wk7
+>> ES = gpio_110
+>>
+>> There is no change to LED D2
+>>
+>> Abstract away the pinmux and the LED definitions for the two boards into
+>> the respective DTS files.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+> nit: Giving patch history is a nice practise.
+>>  arch/arm/boot/dts/omap4-panda-common.dtsi |   16 +++++++++++-
+>>  arch/arm/boot/dts/omap4-panda-es.dts      |   40 +++++++++++++++++++++++++++++
+>>  2 files changed, 55 insertions(+), 1 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+>> index 03bd60d..2b516af 100644
+>> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
+>> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+>> @@ -16,7 +16,7 @@
+>>  		reg = <0x80000000 0x40000000>; /* 1 GB */
+>>  	};
+>>  
+>> -	leds {
+>> +	leds: leds {
+>>  		compatible = "gpio-leds";
+>>  		heartbeat {
+>>  			label = "pandaboard::status1";
+>> @@ -137,6 +137,20 @@
+> I missed noticing this previously, Apologies on the same.
+> Considering that drivers/leds/leds-gpio.c has ability to handle pinctrl,
+> One better option might be to provide pinctrl phandle with leds -
+> Couple of reasons why this might be good:
+> a) one gets the following warning at boot:
+> "leds-gpio leds.8: pins are not configured from the driver"
+> b) you donot need to setup the pins by default at boot - it is not
+> mandatory for the system functionality, instead we do it *if* the driver
+> is enabled.
+> Further, optionally, all you'd have to do in panda-es.dts is the following
+> &led_wkgpio_pins {
+> 		pinctrl-single,pins = <
+> 			0x1c 0x3	/* gpio_wk8 OUTPUT | MODE 3 */
+> 		>;
+> }
+> Similarly for gpios override for panda-es.
+I am not sure you really want to do this.
+If I make the pinctrl part of the led structure then the only way the gpio_wk7 on a1-a3 to be configured is when
+the CONFIG_LEDS_GPIO flag is set.
 
-On Thu, May 16, 2013 at 10:26:24AM +0200, Sebastian Hesselbarth wrote:
-> On 05/16/2013 09:44 AM, Thomas Petazzoni wrote:
-> >Dear Mike Turquette,
-> >
-> >On Wed, 15 May 2013 14:41:54 -0700, Mike Turquette wrote:
-> >>Quoting Thomas Petazzoni (2013-05-15 06:25:19)
-> >>>The Armada 370 has two gatable clocks for each PCIe interface, and we
-> >>>want both of them to be enabled. We therefore make one of the two
-> >>>clocks a child of the other, as we did for the sataX and sataXlnk
-> >>>clocks on Armada XP.
-> >>
-> >>Ack for patches #5 and #6.  Do you want me to take them?
+Do you really want that dependency?  You did say it was a key fix
+At least this way the pins are configured regardless of that flag.
+>>  	};
+>>  };
+>>  
+>> +&omap4_pmx_wkup {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <
+>> +		&led_wkgpio_pins
+>> +	>;
+>> +
+>> +	led_wkgpio_pins: pinmux_leds_wkpins {
+>> +		pinctrl-single,pins = <
+>> +			0x1a 0x3	/* gpio_wk7 OUTPUT | MODE 3 */
+>> +			0x1c 0x3	/* gpio_wk8 OUTPUT | MODE 3 */
+>> +		>;
+>> +	};
+>> +};
+>> +
+>>  &i2c1 {
+>>  	pinctrl-names = "default";
+>>  	pinctrl-0 = <&i2c1_pins>;
+>> diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts/omap4-panda-es.dts
+>> index f1d8c21..e6f696d 100644
+>> --- a/arch/arm/boot/dts/omap4-panda-es.dts
+>> +++ b/arch/arm/boot/dts/omap4-panda-es.dts
+>> @@ -34,3 +34,43 @@
+>>  		0x5e 0x100	/* hdmi_sda.hdmi_sda INPUT | MODE 0 */
+>>  		>;
+>>  };
+>> +
+>> +&leds {
+>> +	compatible = "gpio-leds";
+>> +	heartbeat {
+>> +		label = "pandaboard::status1";
+>> +		gpios = <&gpio4 14 0>;
+>> +		linux,default-trigger = "heartbeat";
+>> +	};
+>> +	mmc {
+>> +		label = "pandaboard::status2";
+>> +		gpios = <&gpio1 8 0>;
+>> +		linux,default-trigger = "mmc0";
+>> +	};
+>> +};
+>> +
+>> +&omap4_pmx_core {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <
+>> +		&led_gpio_pins
+>> +	>;
+>> +
+>> +	led_gpio_pins: gpio_led_pmx {
+>> +		pinctrl-single,pins = <
+>> +			0xb6 0x3	/* gpio_110 OUTPUT | MODE 3 */
+>> +		>;
+>> +	};
+>> +};
+>> +
+>> +&omap4_pmx_wkup {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <
+>> +		&led_wkgpio_pins
+>> +	>;
+>> +
+>> +	led_wkgpio_pins: pinmux_leds_wkpins {
+>> +		pinctrl-single,pins = <
+>> +			0x1c 0x3	/* gpio_wk8 OUTPUT | MODE 3 */
+>> +		>;
+>> +	};
+>> +};
+>> -- 
+>> 1.7.5.4
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Thanks for the Ack!
 
-> >I don't know, I guess with your Ack, it would be easier to carry them
-> >through the Marvell maintainers and then the arm-soc tree, so that we
-> >can test arm-soc and have all the pieces needed in here.
-> >
-> >That said, Sebastian Hesselbarth has submitted a big rework of the
-> >mvebu clock drivers, which would conflict with this patch, and
-> >Sebastian's rework would most likely go through your tree. If that's
-> >the case, I guess it would be better to let you take #5 and #6 in this
-> >patch series.
-> 
-> I also requested to take the restructure patches through ARM tree. They
-> are only touching files in drivers/clk/mvebu and by taking them through
-> ARM, we can update PCIe clock patches easily. The dependency between
-> Thomas' and my patches basically is that I renamed files that Thomas
-> now commits to. (I switched clk/mvebu from per-function files to per-soc
-> files).
-
-I agree.  My heart jumped into my throat a little there :)  Mike, if
-it's ok with you, I'd prefer to take these through arm-soc.  Any merge
-conflicts should be minimal.  And at any rate, resolving the conflicts
-are *much* easier to handle than having arm-soc depend on an outside
-tree (then Linus has to take care in the order he merges them, no
-rebasing for clk tree, dogs and cats living together, etc ;-) )
-
-thx,
-
-Jason.
+-- 
+------------------
+Dan Murphy
