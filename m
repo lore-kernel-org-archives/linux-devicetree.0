@@ -1,172 +1,62 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: Re: [PATCHv9 7/9] pci: PCIe driver for Marvell Armada 370/XP systems
-Date: Thu, 16 May 2013 06:33:14 -0300
-Message-ID: <20130516093312.GB2459@localhost>
-References: <1368624323-24311-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1368624323-24311-8-git-send-email-thomas.petazzoni@free-electrons.com>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: [PATCH RFC 0/2] clk: add metag specific gate/mux clocks
+Date: Thu, 16 May 2013 10:56:51 +0100
+Message-ID: <5194AD63.9020804@imgtec.com>
+References: <1368198127-1295-1-git-send-email-james.hogan@imgtec.com> <51940CAF.6010808@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1368624323-24311-8-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Lior Amsalem <alior@marvell.com>, Maen Suleiman <maen@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, linux-pci@vger.kernel.org, Thierry Reding <thierry.reding@avionic-design.de>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51940CAF.6010808@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 15, 2013 at 03:25:21PM +0200, Thomas Petazzoni wrote:
-[..]
-> +
-> +static int __init mvebu_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct mvebu_pcie *pcie;
-> +	struct device_node *np =3D pdev->dev.of_node;
-> +	struct of_pci_range range;
-> +	struct of_pci_range_parser parser;
-> +	struct device_node *child;
-> +	int i, ret;
-> +
-> +	pcie =3D devm_kzalloc(&pdev->dev, sizeof(struct mvebu_pcie),
-> +			    GFP_KERNEL);
-> +	if (!pcie)
-> +		return -ENOMEM;
-> +
-> +	pcie->pdev =3D pdev;
-> +
-> +	if (of_pci_range_parser_init(&parser, np))
-> +		return -EINVAL;
-> +
-> +	/* Get the I/O and memory ranges from DT */
-> +	for_each_of_pci_range(&parser, &range) {
-> +		unsigned long restype =3D range.flags & IORESOURCE_TYPE_BITS;
-> +		if (restype =3D=3D IORESOURCE_IO) {
-> +			of_pci_range_to_resource(&range, np, &pcie->io);
-> +			of_pci_range_to_resource(&range, np, &pcie->realio);
-> +			pcie->io.name =3D "I/O";
-> +			pcie->realio.start =3D max_t(resource_size_t,
-> +						   PCIBIOS_MIN_IO,
-> +						   range.pci_addr);
-> +			pcie->realio.end =3D min_t(resource_size_t,
-> +						 IO_SPACE_LIMIT,
-> +						 range.pci_addr + range.size);
-> +		}
-> +		if (restype =3D=3D IORESOURCE_MEM) {
-> +			of_pci_range_to_resource(&range, np, &pcie->mem);
-> +			pcie->mem.name =3D "MEM";
-> +		}
-> +	}
-> +
-> +	/* Get the bus range */
-> +	ret =3D of_pci_parse_bus_range(np, &pcie->busn);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to parse bus-range property: %d\n",
-> +			ret);
-> +		return ret;
-> +	}
-> +
-> +	for_each_child_of_node(pdev->dev.of_node, child) {
-> +		if (!of_device_is_available(child))
-> +			continue;
-> +		pcie->nports++;
-> +	}
-> +
-> +	pcie->ports =3D devm_kzalloc(&pdev->dev, pcie->nports *
-> +				   sizeof(struct mvebu_pcie_port),
-> +				   GFP_KERNEL);
-> +	if (!pcie->ports)
-> +		return -ENOMEM;
-> +
-> +	i =3D 0;
-> +	for_each_child_of_node(pdev->dev.of_node, child) {
-> +		struct mvebu_pcie_port *port =3D &pcie->ports[i];
-> +
-> +		if (!of_device_is_available(child))
-> +			continue;
-> +
-> +		port->pcie =3D pcie;
-> +
-> +		if (of_property_read_u32(child, "marvell,pcie-port",
-> +					 &port->port)) {
-> +			dev_warn(&pdev->dev,
-> +				 "ignoring PCIe DT node, missing pcie-port property\n");
-> +			continue;
-> +		}
-> +
-> +		if (of_property_read_u32(child, "marvell,pcie-lane",
-> +					 &port->lane))
-> +			port->lane =3D 0;
-> +
-> +		port->name =3D kasprintf(GFP_KERNEL, "pcie%d.%d",
-> +				       port->port, port->lane);
-> +
-> +		port->devfn =3D of_pci_get_devfn(child);
-> +		if (port->devfn < 0)
-> +			continue;
-> +
-> +		port->base =3D mvebu_pcie_map_registers(pdev, child, port);
-> +		if (!port->base) {
-> +			dev_err(&pdev->dev, "PCIe%d.%d: cannot map registers\n",
-> +				port->port, port->lane);
-> +			continue;
-> +		}
-> +
-> +		if (mvebu_pcie_link_up(port)) {
-> +			port->haslink =3D 1;
-> +			dev_info(&pdev->dev, "PCIe%d.%d: link up\n",
-> +				 port->port, port->lane);
-> +		} else {
-> +			port->haslink =3D 0;
-> +			dev_info(&pdev->dev, "PCIe%d.%d: link down\n",
-> +				 port->port, port->lane);
-> +		}
-> +
-> +		port->clk =3D of_clk_get_by_name(child, NULL);
-> +		if (!port->clk) {
-> +			dev_err(&pdev->dev, "PCIe%d.%d: cannot get clock\n",
-> +			       port->port, port->lane);
-> +			iounmap(port->base);
-> +			port->haslink =3D 0;
-> +			continue;
-> +		}
-> +
-> +		port->dn =3D child;
-> +
-> +		clk_prepare_enable(port->clk);
-> +		spin_lock_init(&port->conf_lock);
-> +
-> +		mvebu_sw_pci_bridge_init(port);
-> +
-> +		i++;
-> +	}
-> +
-> +	mvebu_pcie_enable(pcie);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id mvebu_pcie_of_match_table[] =3D {
-> +	{ .compatible =3D "marvell,armada-xp-pcie", },
-> +	{ .compatible =3D "marvell,armada-370-pcie", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, mvebu_pcie_of_match_table);
-> +
-> +static struct platform_driver mvebu_pcie_driver =3D {
-> +	.driver =3D {
-> +		.owner =3D THIS_MODULE,
-> +		.name =3D "mvebu-pcie",
-> +		.of_match_table =3D
-> +		   of_match_ptr(mvebu_pcie_of_match_table),
-> +	},
-> +};
-> +
-> +static int mvebu_pcie_init(void)
+On 15/05/13 23:31, Stephen Boyd wrote:
+> On 05/10/13 08:02, James Hogan wrote:
+>> This adds a metag architecture specific clk-gate and clk-mux which
+>> extends the generic ones to use global lock2 to protect the register
+>> fields. It is common with metag to have an RTOS running on a different
+>> thread or core with access to different bits in the same register (which
+>> contain clock gate/switch bits for other clocks). Access to such
+>> registers must be serialised with a global lock such as the one provided
+>> by the metag architecture port in <asm/global_lock.h>
+>>
+>> RFC because despite extending the generic clocks there's still a bit of
+>> duplicated code necessary. One alternative is to add special cases to
+>> the generic clock components for when a global or callback function
+>> based lock is desired instead of a spinlock, but I wasn't sure if that
+>> sort of hack would really be appreciated in the generic drivers.
+>>
+>> Comments?
+> 
+> Can you please Cc the devicetree mailing list when proposing new bindings?
 
-Building this showed a warning here. It seems you forgot
-to mark this one as __init.
+Erm, I think it was on Cc (devicetree-discuss@lists.ozlabs.org yeh?)
 
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
+> Your patchset brings up a question I've had which is if we should be
+> putting the bits and register width information in devicetree at all. On
+> the one hand it's nice to not have anything in C code, just iterate over
+> nodes and register clocks. On the other hand, it's the first time I've
+> seen anyone put the register interface into devicetree. From what I can
+> tell, the regulator bindings have put at most the register base and
+> physical properties like enable-time, max voltage, etc., but not what
+> bits are needed to enable/disable a regulator. Also I thought I read
+> somewhere that reg properties shouldn't overlap each other, so if you
+> ever have two clocks living in the same register we're going to violate
+> that.
+
+Oh, I wasn't aware of that limitation.
+
+The SoC I'm working with has some registers full of clock enable bits (I
+guess one could have a gate array component with up to 32 clock inputs
+and outputs) and some registers full of clock mux switch bits (that
+would get really messy to define as a block since each bit switches
+between 2 parents, and some of the parents are other clock muxes in the
+same block). Some registers contain a bunch of low power related bits
+together, including clock enable bits in the same register as various
+pinconf settings which is used by a separate pinctrl driver.
+
+Cheers
+James
