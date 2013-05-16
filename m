@@ -1,75 +1,49 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH v3 09/20] ARM: shmobile: r8a7790: Add GPIO controller
- devices to device tree
-Date: Thu, 16 May 2013 09:57:20 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1305160951040.21125@axis700.grange>
-References: <1368577100-3530-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1368577100-3530-10-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCHv9 5/9] clk: mvebu: create parent-child relation for PCIe
+ clocks on Armada 370
+Date: Thu, 16 May 2013 10:26:24 +0200
+Message-ID: <51949830.70306@gmail.com>
+References: <1368624323-24311-1-git-send-email-thomas.petazzoni@free-electrons.com> <1368624323-24311-6-git-send-email-thomas.petazzoni@free-electrons.com> <20130515214154.12127.73539@quantum> <20130516094417.24b1ca0d@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1368577100-3530-10-git-send-email-laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20130516094417.24b1ca0d@skate>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Mike Turquette <mturquette@linaro.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Lior Amsalem <alior@marvell.com>, Maen Suleiman <maen@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, linux-pci@vger.kernel.org, Thierry Reding <thierry.reding@avionic-design.de>, Rob Herring <rob.herring@calxeda.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent
+On 05/16/2013 09:44 AM, Thomas Petazzoni wrote:
+> Dear Mike Turquette,
+>
+> On Wed, 15 May 2013 14:41:54 -0700, Mike Turquette wrote:
+>> Quoting Thomas Petazzoni (2013-05-15 06:25:19)
+>>> The Armada 370 has two gatable clocks for each PCIe interface, and we
+>>> want both of them to be enabled. We therefore make one of the two
+>>> clocks a child of the other, as we did for the sataX and sataXlnk
+>>> clocks on Armada XP.
+>>
+>> Ack for patches #5 and #6.  Do you want me to take them?
+>
+> I don't know, I guess with your Ack, it would be easier to carry them
+> through the Marvell maintainers and then the arm-soc tree, so that we
+> can test arm-soc and have all the pieces needed in here.
+>
+> That said, Sebastian Hesselbarth has submitted a big rework of the
+> mvebu clock drivers, which would conflict with this patch, and
+> Sebastian's rework would most likely go through your tree. If that's
+> the case, I guess it would be better to let you take #5 and #6 in this
+> patch series.
 
-On Wed, 15 May 2013, Laurent Pinchart wrote:
+I also requested to take the restructure patches through ARM tree. They
+are only touching files in drivers/clk/mvebu and by taking them through
+ARM, we can update PCIe clock patches easily. The dependency between
+Thomas' and my patches basically is that I renamed files that Thomas
+now commits to. (I switched clk/mvebu from per-function files to per-soc
+files).
 
-> Add GPIO controller nodes to the r8a7790 core device tree.
-> 
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> ---
->  arch/arm/boot/dts/r8a7790.dtsi | 54 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-> index ee21061..b5fe51da 100644
-> --- a/arch/arm/boot/dts/r8a7790.dtsi
-> +++ b/arch/arm/boot/dts/r8a7790.dtsi
-> @@ -44,6 +44,60 @@
->  		};
->  	};
->  
-> +	gpio0: gpio@ffc40000 {
-> +		compatible = "renesas,gpio-r8a7790", "renesas,gpio-rcar";
-> +		reg = <0xffc40000 0x2c>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <0 4 0x4>;
-> +		#gpio-cells = <2>;
-> +		gpio-controller;
-> +	};
+> That's something to be discussed with the Marvell maintainers (Jason
+> Cooper, Andrew Lunn, Gregory Clement).
 
-I'm testing your patches on Lager and GPIOs don't seem to get registered:
-
-/ # ls /sys/class/gpio/
-export    unexport
-/ #
-
-And this is easy to trace back: sh_pfc_probe() calls 
-sh_pfc_register_gpiochip(), where a check
-
-	if (pfc->info->data_regs == NULL)
-		return 0;
-
-successfully fails GPIO initialisation :) Is this known and there are 
-still some pieces missing, or you weren't aware of this?
-
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+Sebastian
