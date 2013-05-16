@@ -1,368 +1,260 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 01/20] sh-pfc: Add DT support
-Date: Thu, 16 May 2013 13:53:25 +0200
-Message-ID: <1711141.qqk6hopDLW@avalon>
-References: <1368577100-3530-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1368577100-3530-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <Pine.LNX.4.64.1305151417300.10596@axis700.grange>
+Subject: Re: [PATCH v3] media: i2c: tvp514x: add OF support
+Date: Thu, 16 May 2013 14:10:28 +0200
+Message-ID: <11504129.E8jKKy4N2e@avalon>
+References: <1368529236-18199-1-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1305151417300.10596@axis700.grange>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1368529236-18199-1-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guennadi,
+Hi Prabhakar,
 
-On Wednesday 15 May 2013 16:03:10 Guennadi Liakhovetski wrote:
-> Hi Laurent
+Thank you for the patch.
+
+On Tuesday 14 May 2013 16:30:36 Lad Prabhakar wrote:
+> From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 > 
-> Thanks for your work on this! Sorry for jumping in so late in the game.
-
-No worries.
-
-> Let's do it this way: I don't think my comments are serious enough to
-> enforce a v4. If noone else complains, I'm fine with addressing them in an
-> incremental patch. If you get more comments and have to do a v4, you can
-> address mine too, otherwise I'm fine with this version going in and
-> improving it slightly afterwards.
-
-I don't mind submitting a v4.
-
-> On Wed, 15 May 2013, Laurent Pinchart wrote:
-> > Support device instantiation through the device tree. The compatible
-> > property is used to select the SoC pinmux information.
-> > 
-> > Set the gpio_chip device field to the PFC device to enable automatic
-> > GPIO OF support.
-> > 
-> > Cc: devicetree-discuss@lists.ozlabs.org
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas@ideasonboard.com>
-> > ---
-> > 
-> >  .../bindings/pinctrl/renesas,pfc-pinctrl.txt       | 143 ++++++++++++
-> >  drivers/pinctrl/sh-pfc/core.c                      |  66 +++++-
-> >  drivers/pinctrl/sh-pfc/pinctrl.c                   | 244 ++++++++++++++++
-> >  3 files changed, 451 insertions(+), 2 deletions(-)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt> 
-> > diff --git
-> > a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-> > b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt new
-> > file mode 100644
-> > index 0000000..e7aae39
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-> > @@ -0,0 +1,143 @@
-> > +* Renesas Pin Function Controller (GPIO and Pin Mux/Config)
-> > +
-> > +The Pin Function Controller (PFC) is a Pin Mux/Config controller. On
-> > SH7372, +SH73A0, R8A73A4 and R8A7740 it also acts as a GPIO controller.
-> > +
-> > +
-> > +Pin Control
-> > +-----------
-> > +
-> > +Required Properties:
-> > +
-> > +  - compatible: should be one of the following.
-> > +    - "renesas,pfc-r8a73a4": for R8A73A4 (R-Mobile APE6) compatible
-> > pin-controller.
-> > +    - "renesas,pfc-r8a7740": for R8A7740 (R-Mobile A1) compatible pin-
-> > controller.
-> > +    - "renesas,pfc-r8a7778": for R8A7778 (R-Mobile M1) compatible pin-
-> > controller.
-> > +    - "renesas,pfc-r8a7779": for R8A7779 (R-Car H1) compatible pin-
-> > controller.
-> > +    - "renesas,pfc-r8a7790": for R8A7790 (R-Car H2) compatible pin-
-> > controller.
-> > +    - "renesas,pfc-sh7372": for SH7372 (SH-Mobile AP4) compatible
-> > pin-controller.
-> > +    - "renesas,pfc-sh73a0": for SH73A0 (SH-Mobile AG5) compatible pin-
-> > controller.
-> > +
-> > +  - reg: Base address and length of each memory resource used by the pin
-> > +    controller hardware module.
-> > +
-> > +The PFC node also acts as a container for pin configuration nodes. Please
-> > +refer to pinctrl-bindings.txt in this directory for the definition of the
-> > +term "pin configuration node" and for the common pinctrl bindings used by
-> > +client devices.
-> > +
-> > +Each pin configuration node represents a desired configuration for a pin,
-> > +a pin group, or a list of pins or pin groups. The configuration can
-> > +include the function to select on those pin(s) and pin configuration
-> > +parameters (such as +pull-up and pull-down).
-> > +
-> > +Pin configuration nodes contain pin configuration properties, either
-> > +directly or grouped in child subnodes. Both pin muxing and configuration
-> > +parameters can be grouped in that way and referenced as a single pin
-> > +configuration node by client devices.
-> > +
-> > +A configuration node or subnode must reference at least one pin (through
-> > +the pins or pin groups properties) and contain at least a function or one
-> > +configuration parameter. When the function is present only pin groups can
-> > +be used to reference pins.
-> > +
-> > +All pin configuration nodes and subnodes names are ignored. All of those
-> > +nodes are parsed through phandles and processed purely based on their
-> > +content.
-> > +
-> > +Pin Configuration Node Properties:
-> > +
-> > +- renesas,pins : An array of strings, each string containing the name of
-> > +  a pin.
-> > +- renesas,groups : An array of strings, each string containing the name
-> > +  of a pin group.
-> > +
-> > +- renesas,function: A string containing the name of the function to mux
-> > +  to the pin group(s) specified by the renesas,groups property
-> > +
-> > +  Valid values for pin, group and function names can be found in the
-> > +  group and function arrays of the PFC data file corresponding to the SoC
-> > +  (drivers/pinctrl/sh-pfc/pfc-*.c)
-> > +
-> > +- renesas,pull-up: An integer representing the pull-up strength to be
-> > +  applied to all pins specified by the renesas,pins and renesas-groups
-> > +  properties. 0 disables the pull-up, 1 enables it. Other values should
-> > +  not be used.
-> > +- renesas,pull-down: An integer representing the pull-down strength to be
-> > +  applied to all pins specified by the renesas,pins and renesas-groups
-> > +  properties. 0 disables the pull-down, 1 enables it. Other values should
-> > +  not be used.
-> > +
-> > +
-> > +GPIO
-> > +----
-> > +
-> > +Required Properties:
-> > +
-> > +  - gpio-controller: Marks the device node as a gpio controller.
-> > +
-> > +  - #gpio-cells: Should be 2. The first cell is the pin number and the
-> > +    second cell is used to specify optional parameters as bit flags.
-> > +    Only the GPIO active low flag (bit 0) is currently supported.
-> > +
-> > +The syntax of the gpio specifier used by client nodes should be the
-> > +following with values derived from the SoC user manual.
-> > +
-> > +  <[phandle of the gpio controller node]
-> > +   [pin number within the gpio controller]
-> > +   [flags and pull up/down]>
+> add OF support for the tvp514x driver. Alongside this patch
+> removes unnecessary header file inclusion and sorts them alphabetically.
 > 
-> How should pull up / down be specified? Above you say only "active low" is
-> supported so far.
-
-My bad. It should be [flags] only. Pull-up and pull-down configuration should 
-go through the renesas,pull-up and renesas,pull-down properties in pin 
-configuration nodes.
- 
-> Actually, I'm a bit confused by how pinctrl and GPIO DT nodes should be
-> implemented:
->
-> > +
-> > +
-> > +Examples
-> > +--------
-> > +
-> > +Example 1: SH73A0 (SH-Mobile AG5) pin controller node
-> > +
-> > +	pfc: pfc@e6050000 {
-> > +		compatible = "renesas,pfc-sh73a0";
-> > +		reg = <0xe6050000 0x8000>,
-> > +		      <0xe605801c 0x1c>;
-> > +		gpio-controller;
-> > +		#gpio-cells = <2>;
-> > +	};
+> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> Cc: Hans Verkuil <hans.verkuil@cisco.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+> Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Cc: Sakari Ailus <sakari.ailus@iki.fi>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Rob Landley <rob@landley.net>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: davinci-linux-open-source@linux.davincidsp.com
+> ---
+> Tested on da850-evm.
 > 
-> In this example you add one node, that implements both - a pinctrl and a
-> GPIO controller. However, on some platforms you add two DT nodes: one for
-> pinctrl and one for GPIO. While doing that your GPIO node has a compatible
-> string like
+>  RFC v1: https://patchwork.kernel.org/patch/2030061/
+>  RFC v2: https://patchwork.kernel.org/patch/2061811/
 > 
-> 		compatible = "renesas,gpio-r8a7778", "renesas,gpio-rcar";
+>  Changes for current version from RFC v2:
+>  1: Fixed review comments pointed by Sylwester.
 > 
-> Do I understand it right, that a separate DT node is used for a GPIO
-> controller if the controllers are really well separated on the hardware,
-> probably, don't share register address ranges? Is there a driver in the
-> kernel, that actually probes those compatible strings? Or the driver for
-> those GPIO controllers isn't DT based?
-
-On platforms where the GPIO controller hardware is separate from the PFC 
-hardware, GPIOs are handled by the gpio-rcar driver. I've added DT support to 
-gpio-rcar, the patches have been posted to the linux-sh mailing list and are 
-in my tree at git://linuxtv.org/pinchartl/fbdev.git pinmux/3.9/dt.
-
-> Maybe at least a short explanation and an example with two DT nodes here, or
-> a reference to another documentation would help.
-
-What about
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt 
-b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-index e7aae39..ce2584c 100644
---- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-@@ -68,6 +68,9 @@ Pin Configuration Node Properties:
- GPIO
- ----
- 
-+On SH7372, SH73A0, R8A73A4 and R8A7740 the PFC node is also a GPIO controller
-+node.
-+
- Required Properties:
- 
-   - gpio-controller: Marks the device node as a gpio controller.
-@@ -81,7 +84,11 @@ with values derived from the SoC user manual.
- 
-   <[phandle of the gpio controller node]
-    [pin number within the gpio controller]
-    [flags and pull up/down]>
-+
-+On other mach-shmobile platforms GPIO is handled by the gpio-rcar driver.
-+Please refer to Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-+for documentation of the GPIO device tree bindings on those platforms.
-
-> [snip]
+>  Changes for v2:
+>  1: Listed all the compatible property values in the documentation text
+> file. 2: Removed "-decoder" from compatible property values.
+>  3: Added a reference to the V4L2 DT bindings documentation to explain
+>     what the port and endpoint nodes are for.
+>  4: Fixed some Nits pointed by Laurent.
+>  5: Removed unnecessary header file includes and sort them alphabetically.
 > 
-> > diff --git a/drivers/pinctrl/sh-pfc/core.c b/drivers/pinctrl/sh-pfc/core.c
-> > index 3b2fd43..5fa1c6b 100644
-> > --- a/drivers/pinctrl/sh-pfc/core.c
-> > +++ b/drivers/pinctrl/sh-pfc/core.c
-> > @@ -18,6 +18,7 @@
-> >  #include <linux/ioport.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/module.h>
-> > +#include <linux/of_device.h>
-> >  #include <linux/pinctrl/machine.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/slab.h>
-> > @@ -348,14 +349,74 @@ int sh_pfc_config_mux(struct sh_pfc *pfc, unsigned
-> > mark, int pinmux_type)> 
-> >  	return 0;
-> >  
-> >  }
-> > 
-> > +#ifdef CONFIG_OF
+>  Changes for v3:
+>  1: Rebased on patch https://patchwork.kernel.org/patch/2539411/
 > 
-> Not sure, is it really a good idea to use this #ifdef here?
-
-I think there's no point in making the driver larger if CONFIG_OF isn't 
-defined, especially for SH platforms.
-
-> I think you could drop all 3 of them in this hunk:
-
-I've dropped the other two.
-
-> [snip]
+>  .../devicetree/bindings/media/i2c/tvp514x.txt      |   45 ++++++++++++
+>  drivers/media/i2c/tvp514x.c                        |   74 +++++++++++++----
+>  2 files changed, 103 insertions(+), 16 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp514x.txt
 > 
-> >  static int sh_pfc_probe(struct platform_device *pdev)
-> >  {
-> > 
-> > +	const struct platform_device_id *platid = 
-platform_get_device_id(pdev);
-> > +#ifdef CONFIG_OF
-> 
-> also here
-
-Dropped.
-
-> > +	struct device_node *np = pdev->dev.of_node;
-> > +#endif
-> > 
-> >  	const struct sh_pfc_soc_info *info;
-> >  	struct sh_pfc *pfc;
-> >  	int ret;
-> > 
-> > -	info = pdev->id_entry->driver_data
-> > -	      ? (void *)pdev->id_entry->driver_data : pdev-
->dev.platform_data;
-> > +	if (platid)
-> > +		info = (const void *)platid->driver_data;
-> > +#ifdef CONFIG_OF
-> 
-> and here.
-
-Dropped.
-
-> > +	else if (np)
-> > +		info = of_match_device(sh_pfc_of_table, &pdev->dev)->data;
-> > +#endif
-> > +	else
-> > +		info = pdev->dev.platform_data;
-
-I will also add a new patch that removes support for pdev->dev.platform_data, 
-as we don't use it anymore.
-
-> > +
-> > 
-> >  	if (info == NULL)
-> >  	
-> >  		return -ENODEV;
-> 
-> [snip]
-> 
-> > +static int sh_pfc_dt_node_to_map(struct pinctrl_dev *pctldev,
-> > +				 struct device_node *np,
-> > +				 struct pinctrl_map **map, unsigned *num_maps)
-> > +{
-> > +	struct sh_pfc_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
-> > +	struct device *dev = pmx->pfc->dev;
-> > +	struct device_node *child;
-> > +	unsigned int index;
-> > +	int ret;
-> > +
-> > +	*map = NULL;
-> > +	*num_maps = 0;
-> > +	index = 0;
-> > +
-> > +	for_each_child_of_node(np, child) {
-> > +		ret = sh_pfc_dt_subnode_to_map(dev, child, map, num_maps,
-> > +					       &index);
-> > +		if (ret < 0)
-> > +			goto done;
-> > +	}
-> > +
-> > +	/* If no mapping has been found in child nodes try the config node. 
-*/
-> > +	if (*num_maps == 0) {
-> > +		ret = sh_pfc_dt_subnode_to_map(dev, np, map, num_maps, &index);
-> > +		if (ret < 0)
-> > +			goto done;
-> > +	}
-> > +
-> > +	if (*num_maps == 0) {
-> > +		dev_err(dev, "no mapping found in node %s\n", np->full_name);
-> > +		ret = -EINVAL;
-> > +		goto done;
-> > +	}
-> > +
-> > +	ret = 0;
-> > +
-> > +done:
-> > +	if (ret < 0)
-> > +		sh_pfc_dt_free_map(pctldev, *map, *num_maps);
-> > +
-> > +	return ret;
-> > +}
-> 
-> Maybe simpler
-> 
-> +	if (*num_maps)
-> +		return 0;
+> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+> b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt new file mode
+> 100644
+> index 0000000..cc09424
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+> @@ -0,0 +1,45 @@
+> +* Texas Instruments TVP514x video decoder
 > +
-> +	dev_err(dev, "no mapping found in node %s\n", np->full_name);
-> +	ret = -EINVAL;
+> +The TVP5146/TVP5146m2/TVP5147/TVP5147m1 device is high quality, single-chip
+> +digital video decoder that digitizes and decodes all popular baseband
+> +analog video formats into digital video component. The tvp514x decoder
+> +supports analog-to-digital (A/D) conversion of component RGB and YPbPr
+> +signals as well as A/D conversion and decoding of NTSC, PAL and SECAM
+> +composite and S-video into component YCbCr.
 > +
-> +done:
-> +	sh_pfc_dt_free_map(pctldev, *map, *num_maps);
+> +Required Properties :
+> +- compatible : value should be either one among the following
+> +	(a) "ti,tvp5146" for tvp5146 decoder.
+> +	(b) "ti,tvp5146m2" for tvp5146m2 decoder.
+> +	(c) "ti,tvp5147" for tvp5147 decoder.
+> +	(d) "ti,tvp5147m1" for tvp5147m1 decoder.
 > +
-> +	return ret;
+> +- hsync-active: HSYNC Polarity configuration for endpoint.
+> +
+> +- vsync-active: VSYNC Polarity configuration for endpoint.
+> +
+> +- pclk-sample: Clock polarity of the endpoint.
+> +
+> +
+> +For further reading of port node refer Documentation/devicetree/bindings/
+> +media/video-interfaces.txt.
+> +
+> +Example:
+> +
+> +	i2c0@1c22000 {
+> +		...
+> +		...
+> +		tvp514x@5c {
+> +			compatible = "ti,tvp5146";
+> +			reg = <0x5c>;
+> +
+> +			port {
+> +				tvp514x_1: endpoint {
+> +					hsync-active = <1>;
+> +					vsync-active = <1>;
+> +					pclk-sample = <0>;
+> +				};
+> +			};
+> +		};
+> +		...
+> +	};
+> diff --git a/drivers/media/i2c/tvp514x.c b/drivers/media/i2c/tvp514x.c
+> index 01d9757..202c8cb 100644
+> --- a/drivers/media/i2c/tvp514x.c
+> +++ b/drivers/media/i2c/tvp514x.c
+> @@ -29,21 +29,16 @@
+>   *
+>   */
+> 
+> -#include <linux/i2c.h>
+> -#include <linux/slab.h>
+>  #include <linux/delay.h>
+> -#include <linux/videodev2.h>
+> +#include <linux/i2c.h>
+>  #include <linux/module.h>
+> -#include <linux/v4l2-mediabus.h>
+> 
+> +#include <media/media-entity.h>
+> +#include <media/tvp514x.h>
+>  #include <media/v4l2-async.h>
+> -#include <media/v4l2-device.h>
+> -#include <media/v4l2-common.h>
+> -#include <media/v4l2-mediabus.h>
+> -#include <media/v4l2-chip-ident.h>
+>  #include <media/v4l2-ctrls.h>
+> -#include <media/tvp514x.h>
+> -#include <media/media-entity.h>
+> +#include <media/v4l2-device.h>
+> +#include <media/v4l2-of.h>
+> 
+>  #include "tvp514x_regs.h"
+> 
+> @@ -1056,6 +1051,40 @@ static struct tvp514x_decoder tvp514x_dev = {
+> 
+>  };
+> 
+> +static struct tvp514x_platform_data *
+> +tvp514x_get_pdata(struct i2c_client *client)
+> +{
+> +	struct tvp514x_platform_data *pdata;
+> +	struct v4l2_of_endpoint bus_cfg;
+> +	struct device_node *endpoint;
+> +	unsigned int flags;
+> +
+> +	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
+> +		return client->dev.platform_data;
+> +
+> +	endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
+> +	if (!endpoint)
+> +		return NULL;
+> +
+> +	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
 
-OK I'll change that.
+I've started playing with the V4L2 OF bindings, and realized that should 
+should call of_node_put() here.
 
+> +		return NULL;
+> +
+> +	v4l2_of_parse_endpoint(endpoint, &bus_cfg);
+> +	flags = bus_cfg.bus.parallel.flags;
+> +
+> +	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
+> +		pdata->hs_polarity = 1;
+> +
+> +	if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
+> +		pdata->vs_polarity = 1;
+> +
+> +	if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
+> +		pdata->clk_polarity = 1;
+> +
+
+As well as here. Maybe a
+
+done:
+	of_node_put(endpoint);
+	return pdata;
+
+with a goto done in the devm_kzalloc error path would be better.
+
+> +	return pdata;
+> +}
+> +
+>  /**
+>   * tvp514x_probe() - decoder driver i2c probe handler
+>   * @client: i2c driver client device structure
+> @@ -1067,19 +1096,20 @@ static struct tvp514x_decoder tvp514x_dev = {
+>  static int
+>  tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  {
+> +	struct tvp514x_platform_data *pdata = tvp514x_get_pdata(client);
+>  	struct tvp514x_decoder *decoder;
+>  	struct v4l2_subdev *sd;
+>  	int ret;
+> 
+> +	if (pdata == NULL) {
+> +		dev_err(&client->dev, "No platform data\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	/* Check if the adapter supports the needed features */
+>  	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
+>  		return -EIO;
+> 
+> -	if (!client->dev.platform_data) {
+> -		v4l2_err(client, "No platform data!!\n");
+> -		return -ENODEV;
+> -	}
+> -
+>  	decoder = devm_kzalloc(&client->dev, sizeof(*decoder), GFP_KERNEL);
+>  	if (!decoder)
+>  		return -ENOMEM;
+> @@ -1091,7 +1121,7 @@ tvp514x_probe(struct i2c_client *client, const struct
+> i2c_device_id *id) sizeof(tvp514x_reg_list_default));
+> 
+>  	/* Copy board specific information here */
+> -	decoder->pdata = client->dev.platform_data;
+> +	decoder->pdata = pdata;
+> 
+>  	/**
+>  	 * Fetch platform specific data, and configure the
+> @@ -1239,8 +1269,20 @@ static const struct i2c_device_id tvp514x_id[] = {
+> 
+>  MODULE_DEVICE_TABLE(i2c, tvp514x_id);
+> 
+> +#if IS_ENABLED(CONFIG_OF)
+> +static const struct of_device_id tvp514x_of_match[] = {
+> +	{ .compatible = "ti,tvp5146", },
+> +	{ .compatible = "ti,tvp5146m2", },
+> +	{ .compatible = "ti,tvp5147", },
+> +	{ .compatible = "ti,tvp5147m1", },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, tvp514x_of_match);
+> +#endif
+> +
+>  static struct i2c_driver tvp514x_driver = {
+>  	.driver = {
+> +		.of_match_table = of_match_ptr(tvp514x_of_match),
+>  		.owner = THIS_MODULE,
+>  		.name = TVP514X_MODULE_NAME,
+>  	},
 -- 
 Regards,
 
