@@ -1,61 +1,36 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCHv10 6/9] clk: mvebu: add more PCIe clocks for Armada XP
-Date: Thu, 16 May 2013 17:55:21 +0200
-Message-ID: <1368719725-21265-7-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv10 8/9] arm: mvebu: PCIe support is now available on mvebu
+Date: Thu, 16 May 2013 17:55:23 +0200
+Message-ID: <1368719725-21265-9-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1368719725-21265-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1368719725-21265-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Sender: linux-pci-owner@vger.kernel.org
 To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Lior Amsalem <alior@marvell.com>, Maen Suleiman <maen@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, linux-pci@vger.kernel.org, Thierry Reding <thierry.reding@avionic-design.de>, Rob Herring <rob.herring@calxeda.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, Mike Turquette <mturquette@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Lior Amsalem <alior@marvell.com>, Maen Suleiman <maen@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, linux-pci@vger.kernel.org, Thierry Reding <thierry.reding@avionic-design.de>, Rob Herring <rob.herring@calxeda.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-The current revision of the datasheet only mentions the gatable clocks
-for the PCIe 0.0, 0.1, 0.2 and 0.3 interfaces, and forgot to mention
-the ones for the PCIe 1.0, 1.1, 1.2, 1.3, 2.0 and 3.0
-interfaces. After confirmation with Marvell engineers, this patch adds
-the missing gatable clocks for those PCIe interfaces.
-
-It also changes the name of the previously existing PCIe gatable
-clocks, in order to match the naming using the datasheets.
+Now that the PCIe driver for mvebu has been integrated and all its
+relevant dependencies, we can mark the ARCH_MVEBU platform has
+MIGHT_HAVE_PCI, which allows to select the PCI bus support if needed.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Mike Turquette <mturquette@linaro.org>
 ---
- drivers/clk/mvebu/clk-gating-ctrl.c |   14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ arch/arm/mach-mvebu/Kconfig |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clk/mvebu/clk-gating-ctrl.c b/drivers/clk/mvebu/clk-gating-ctrl.c
-index b35785a..2f03723 100644
---- a/drivers/clk/mvebu/clk-gating-ctrl.c
-+++ b/drivers/clk/mvebu/clk-gating-ctrl.c
-@@ -137,10 +137,14 @@ static const struct mvebu_soc_descr __initconst armada_xp_gating_descr[] = {
- 	{ "ge2", NULL,  2 },
- 	{ "ge1", NULL, 3 },
- 	{ "ge0", NULL, 4 },
--	{ "pex0", NULL, 5 },
--	{ "pex1", NULL, 6 },
--	{ "pex2", NULL, 7 },
--	{ "pex3", NULL, 8 },
-+	{ "pex00", NULL, 5 },
-+	{ "pex01", NULL, 6 },
-+	{ "pex02", NULL, 7 },
-+	{ "pex03", NULL, 8 },
-+	{ "pex10", NULL, 9 },
-+	{ "pex11", NULL, 10 },
-+	{ "pex12", NULL, 11 },
-+	{ "pex13", NULL, 12 },
- 	{ "bp", NULL, 13 },
- 	{ "sata0lnk", NULL, 14 },
- 	{ "sata0", "sata0lnk", 15 },
-@@ -152,6 +156,8 @@ static const struct mvebu_soc_descr __initconst armada_xp_gating_descr[] = {
- 	{ "xor0", NULL, 22 },
- 	{ "crypto", NULL, 23 },
- 	{ "tdm", NULL, 25 },
-+	{ "pex20", NULL, 26 },
-+	{ "pex30", NULL, 27 },
- 	{ "xor1", NULL, 28 },
- 	{ "sata1lnk", NULL, 29 },
- 	{ "sata1", "sata1lnk", 30 },
+diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
+index e11acbb..381062d 100644
+--- a/arch/arm/mach-mvebu/Kconfig
++++ b/arch/arm/mach-mvebu/Kconfig
+@@ -15,6 +15,8 @@ config ARCH_MVEBU
+ 	select MVEBU_CLK_GATING
+ 	select MVEBU_MBUS
+ 	select ZONE_DMA if ARM_LPAE
++	select MIGHT_HAVE_PCI
++	select PCI_QUIRKS if PCI
+ 
+ if ARCH_MVEBU
+ 
 -- 
 1.7.9.5
