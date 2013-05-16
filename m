@@ -1,67 +1,50 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCHv2 3/3] arm: dts: add bandgap entry for OMAP4460 devices
-Date: Thu, 16 May 2013 09:20:51 +0200
-Message-ID: <519488D3.5070003@ti.com>
-References: <1368629928-6723-1-git-send-email-eduardo.valentin@ti.com>
- <1368629928-6723-4-git-send-email-eduardo.valentin@ti.com>
- <5193A875.1020000@ti.com> <5193B9AA.7020507@ti.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCHv9 5/9] clk: mvebu: create parent-child relation for PCIe
+ clocks on Armada 370
+Date: Thu, 16 May 2013 09:44:17 +0200
+Message-ID: <20130516094417.24b1ca0d@skate>
+References: <1368624323-24311-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1368624323-24311-6-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20130515214154.12127.73539@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5193B9AA.7020507@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: Russell King <linux@arm.linux.org.uk>, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20130515214154.12127.73539@quantum>
+Sender: linux-pci-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Lior Amsalem <alior@marvell.com>, Maen Suleiman <maen@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, linux-pci@vger.kernel.org, Thierry Reding <thierry.reding@avionic-design.de>, Rob Herring <rob.herring@calxeda.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRWR1YXJkbywKCk9uIDA1LzE1LzIwMTMgMDY6MzYgUE0sIEVkdWFyZG8gVmFsZW50aW4gd3Jv
-dGU6Cj4gT24gMTUtMDUtMjAxMyAxMToyMywgQmVub2l0IENvdXNzb24gd3JvdGU6Cj4+IEhpIEVk
-dWFyZG8sCj4+Cj4+IE9uIDA1LzE1LzIwMTMgMDQ6NTggUE0sIEVkdWFyZG8gVmFsZW50aW4gd3Jv
-dGU6Cj4+PiBJbmNsdWRlIGJhbmRnYXAgZGV2aWNlcyBmb3IgT01BUDQ0NjAgZGV2aWNlcy4KPj4+
-Cj4+PiBDYzogIkJlbm/DrnQgQ291c3NvbiIgPGItY291c3NvbkB0aS5jb20+Cj4+PiBDYzogVG9u
-eSBMaW5kZ3JlbiA8dG9ueUBhdG9taWRlLmNvbT4KPj4+IENjOiBSdXNzZWxsIEtpbmcgPGxpbnV4
-QGFybS5saW51eC5vcmcudWs+Cj4+PiBDYzogbGludXgtb21hcEB2Z2VyLmtlcm5lbC5vcmcKPj4+
-IENjOiBkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwo+Pj4gQ2M6IGxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+Pj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmcKPj4+IFNpZ25lZC1vZmYtYnk6IEVkdWFyZG8gVmFsZW50aW4gPGVkdWFyZG8udmFs
-ZW50aW5AdGkuY29tPgo+Pj4gLS0tCj4+PiAgYXJjaC9hcm0vYm9vdC9kdHMvb21hcDQ0NjAuZHRz
-aSB8IDkgKysrKysrKysrCj4+PiAgMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKQo+Pj4K
-Pj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9vbWFwNDQ2MC5kdHNpIGIvYXJjaC9h
-cm0vYm9vdC9kdHMvb21hcDQ0NjAuZHRzaQo+Pj4gaW5kZXggMmNmMjI3Yy4uZTViZmJmZSAxMDA2
-NDQKPj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXA0NDYwLmR0c2kKPj4+ICsrKyBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL29tYXA0NDYwLmR0c2kKPj4+IEBAIC0yOSw0ICsyOSwxMyBAQAo+Pj4g
-IAkJCSAgICAgPDAgNTUgMHg0PjsKPj4+ICAJCXRpLGh3bW9kcyA9ICJkZWJ1Z3NzIjsKPj4+ICAJ
-fTsKPj4+ICsKPj4+ICsJYmFuZGdhcCB7Cj4+PiArCQlyZWcgPSA8MHg0YTAwMjI2MCAweDQKPj4+
-ICsJCQkweDRhMDAyMzJDIDB4NAo+Pj4gKwkJCTB4NGEwMDIzNzggMHgxOD47Cj4+PiArCQljb21w
-YXRpYmxlID0gInRpLG9tYXA0NDYwLWJhbmRnYXAiOwo+Pj4gKwkJaW50ZXJydXB0cyA9IDwwIDEy
-NiA0PjsgLyogdGFsZXJ0ICovCj4+PiArCQl0aSx0c2h1dC1ncGlvID0gPDg2PjsKPiAKPiAKPiAK
-Pj4KPj4gV2h5IGRvIHlvdSBuZWVkIGEgY3VzdG9tIGF0dHJpYnV0ZSBmb3IgR1BJTz8gQ2Fubm90
-IHlvdSB1c2UgdGhlIHN0YW5kYXJkCj4+IG9uZT8KPiAKPiBJIGJlbGlldmUgaXQgd2FzIGJ5IHlv
-dXIgc3VnZ2VzdGlvbiA6LSksIGR1cmluZyB0aGUgZmlyc3QgYXR0ZW1wdHMgdG8KPiBzZW5kIHRo
-aXMgZHJpdmVyLiBCdXQgY291bGQgbm90IGZpbmQgdGhlIHRocmVhZCBsaW5rIDotKCBzb3JyeS4K
-Ck9vb3BzIDotKSBJIGRvIG5vdCByZW1lbWJlciB0aGF0Li4uIG1heWJlIGl0IHdhcyBsb25nIHRp
-bWUgYWdvLCBiZWZvcmUKd2UgaGFkIGFueSBkZWNlbnQgYmluZGluZyBhdmFpbGFibGUgZm9yIEdQ
-SU8gYW5kIElSUS4uLgoKPiBJIGd1ZXNzIHRoZSByZWFzb25pbmcgdG8gbWFyayBpdCBhcyBhIHRp
-IHNwZWNpZmljIGlzIGJlY2F1c2UgaXQgd2lsbCBiZQo+IHVzZWQgYXMgSVJRIGxpbmUgdG8gdHJl
-YXQgdGhlcm1hbCBzaHV0ZG93biAoaW4gU1cpLgoKTW1tLCBvaywgc28gaW4gdGhhdCBjYXNlLCBp
-dCBpcyBub3QgZXZlbiBhIGdwaW8sIGJ1dCBhbiBpbnRlcnJ1cHQgZW50cnkKdGhhdCBpcyBuZWVk
-ZWQgbGlrZSB0aGF0OgoKCWludGVycnVwdC1wYXJlbnQgPSA8JmdwaW8zPjsKCWludGVycnVwdHMg
-PSA8MjI+OyAvKiBncGlvIGxpbmUgODYgKi8KCkV4Y2VwdCB0aGF0IHdlIGFscmVhZHkgaGF2ZSBh
-biBJUlEgbGluZSBjb25uZWN0ZWQgdG8gR0lDIGZvciB0aGUKVGFsZXJ0Li4uIEknbSBub3Qgc3Vy
-ZSB3ZSBjYW4gaGF2ZSAyIGRpZmZlcmVudCBJUlEgY29udHJvbGxlcnMgZm9yIG9uZQpkZXZpY2Ug
-Oi0oCgpXZSBuZWVkIHRvIGNoZWNrLgoKUmVnYXJkcywKQmVub2l0CgoKPj4gV2hlcmUgaXMgdGhl
-IGdwaW8gY29udHJvbGxlciBwaGFuZGxlPwo+Pgo+PiBVc3VhbGx5IGl0IGxvb2tzIGxpa2UgdGhp
-czoKPj4KPj4gCWdwaW9zID0gPCZncGlvMSA4IDA+Owo+Pgo+Pgo+PiBSZWdhcmRzLAo+PiBCZW5v
-aXQKPj4KPj4KPj4KPiAKPiAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Dear Mike Turquette,
+
+On Wed, 15 May 2013 14:41:54 -0700, Mike Turquette wrote:
+> Quoting Thomas Petazzoni (2013-05-15 06:25:19)
+> > The Armada 370 has two gatable clocks for each PCIe interface, and we
+> > want both of them to be enabled. We therefore make one of the two
+> > clocks a child of the other, as we did for the sataX and sataXlnk
+> > clocks on Armada XP.
+> 
+> Ack for patches #5 and #6.  Do you want me to take them?
+
+I don't know, I guess with your Ack, it would be easier to carry them
+through the Marvell maintainers and then the arm-soc tree, so that we
+can test arm-soc and have all the pieces needed in here.
+
+That said, Sebastian Hesselbarth has submitted a big rework of the
+mvebu clock drivers, which would conflict with this patch, and
+Sebastian's rework would most likely go through your tree. If that's
+the case, I guess it would be better to let you take #5 and #6 in this
+patch series.
+
+That's something to be discussed with the Marvell maintainers (Jason
+Cooper, Andrew Lunn, Gregory Clement).
+
+Thanks!
+
+Thomas
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
