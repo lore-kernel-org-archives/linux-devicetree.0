@@ -1,66 +1,68 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH RFC] media: OF: add field-active and sync-on-green
- endpoint properties
-Date: Thu, 16 May 2013 16:24:19 +0530
-Message-ID: <CA+V-a8v9AuwyQqnSekASGyVHz9RRux+ttQqPf+35rux5YehaCw@mail.gmail.com>
-References: <1368622349-32185-1-git-send-email-prabhakar.csengg@gmail.com> <5194B8DA.4080204@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 09/20] ARM: shmobile: r8a7790: Add GPIO controller devices to device tree
+Date: Thu, 16 May 2013 12:55 +0200
+Message-ID: <1483674.dsLuiHpOf9@avalon>
+References: <1368577100-3530-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1368577100-3530-10-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <Pine.LNX.4.64.1305160951040.21125@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5194B8DA.4080204@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1305160951040.21125@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+Hi Guennadi,
 
-Thanks for the review.
+On Thursday 16 May 2013 09:57:20 Guennadi Liakhovetski wrote:
+> On Wed, 15 May 2013, Laurent Pinchart wrote:
+> > Add GPIO controller nodes to the r8a7790 core device tree.
+> > 
+> > Signed-off-by: Laurent Pinchart
+> > <laurent.pinchart+renesas@ideasonboard.com>
+> > ---
+> > 
+> >  arch/arm/boot/dts/r8a7790.dtsi | 54 +++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 54 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/r8a7790.dtsi
+> > b/arch/arm/boot/dts/r8a7790.dtsi index ee21061..b5fe51da 100644
+> > --- a/arch/arm/boot/dts/r8a7790.dtsi
+> > +++ b/arch/arm/boot/dts/r8a7790.dtsi
+> > @@ -44,6 +44,60 @@
+> >  		};
+> >  	};
+> > 
+> > +	gpio0: gpio@ffc40000 {
+> > +		compatible = "renesas,gpio-r8a7790", "renesas,gpio-rcar";
+> > +		reg = <0xffc40000 0x2c>;
+> > +		interrupt-parent = <&gic>;
+> > +		interrupts = <0 4 0x4>;
+> > +		#gpio-cells = <2>;
+> > +		gpio-controller;
+> > +	};
+> 
+> I'm testing your patches on Lager and GPIOs don't seem to get registered:
+> 
+> / # ls /sys/class/gpio/
+> export    unexport
+> / #
+> 
+> And this is easy to trace back: sh_pfc_probe() calls
+> sh_pfc_register_gpiochip(), where a check
+> 
+> 	if (pfc->info->data_regs == NULL)
+> 		return 0;
+> 
+> successfully fails GPIO initialisation :) Is this known and there are
+> still some pieces missing, or you weren't aware of this?
 
-On Thu, May 16, 2013 at 4:15 PM, Sylwester Nawrocki
-<sylvester.nawrocki@gmail.com> wrote:
-> On 05/15/2013 02:52 PM, Lad Prabhakar wrote:
->>
->> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt
->> b/Documentation/devicetree/bindings/media/video-interfaces.txt
->> index e022d2d..6bf87d0 100644
->> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
->> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
->> @@ -101,6 +101,10 @@ Optional endpoint properties
->>     array contains only one entry.
->>   - clock-noncontinuous: a boolean property to allow MIPI CSI-2
->> non-continuous
->>     clock mode.
->> +-field-active: a boolean property indicating active high filed ID output
->> + polarity is inverted.
->
->
-> You can drop this property and use the existing 'field-even-active' property
-> instead.
->
-OK
+GPIOs are handled by the gpio-rcar driver on R8A7790, not by the sh-pfc 
+driver.
 
->
->> +-sync-on-green: a boolean property indicating to sync with the green
->> signal in
->> + RGB.
->
->
->> diff --git a/include/media/v4l2-mediabus.h b/include/media/v4l2-mediabus.h
->> index 83ae07e..b95553d 100644
->> --- a/include/media/v4l2-mediabus.h
->> +++ b/include/media/v4l2-mediabus.h
->> @@ -40,6 +40,8 @@
->>   #define V4L2_MBUS_FIELD_EVEN_HIGH             (1<<  10)
->>   /* FIELD = 1/0 - Field1 (odd)/Field2 (even) */
->>   #define V4L2_MBUS_FIELD_EVEN_LOW              (1<<  11)
->> +#define V4L2_MBUS_FIELD_ACTIVE                 (1<<  12)
->> +#define V4L2_MBUS_SOG                          (1<<  13)
->
->
-> How about V4L2_MBUS_SYNC_ON_GREEN ?
->
-OK makes it more readable.
-
+-- 
 Regards,
---Prabhakar Lad
+
+Laurent Pinchart
+
