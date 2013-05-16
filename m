@@ -1,43 +1,41 @@
-From: Doug Anderson <dianders@google.com>
-Subject: Re: Pulls and drive strengths in the pinctrl world
-Date: Wed, 15 May 2013 17:58:23 -0700
-Message-ID: <CAD=FV=U7TK4s_GM6XNu3T_gfB+Ky9+dbsYQOVtKz_A_gcp3rmg@mail.gmail.com>
-References: <CAD=FV=V9h3RUfvAxj8k2EbYXYPO4FfoNwh=f=dno5ZBUFYeG0w@mail.gmail.com>
-	<51941F64.9090104@wwwdotorg.org>
-	<CAD=FV=UWftrtEe+qUT92RTd-3BG8hpznu3CtztOfw4eMWOqHrw@mail.gmail.com>
-	<4404195.qJMM4PHBj7@flatron>
+From: =?euc-kr?B?x9HB+LG4?= <jg1.han@samsung.com>
+Subject: Re: [PATCH 1/2] video: exynos_dp: Add parsing of gpios pins to
+ exynos-dp driver
+Date: Thu, 16 May 2013 02:03:59 +0000 (GMT)
+Message-ID: <26364319.123371368669839202.JavaMail.weblogic@epml12>
+Reply-To: jg1.han@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=euc-kr
+Content-Transfer-Encoding: base64
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <4404195.qJMM4PHBj7@flatron>
+MIME-version: 1.0
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Linus Walleij <linus.walleij@linaro.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thomas Abraham <thomas.abraham@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Simon Glass <sjg@chromium.org>, Olof Johansson <olof@lixom.net>, Kukjin Kim <kgene.kim@gmail.com>
+To: Tomasz Figa <t.figa@samsung.com>, Vikas Sajjan <vikas.sajjan@linaro.org>
+Cc: =?euc-kr?Q?=C7=D1=C1=F8=B1=B8?= <jg1.han@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, =?euc-kr?Q?=B1=E8=B1=B9=C1=F8?= <kgene.kim@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "patches@linaro.org" <patches@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "FlorianSchandinat@gmx.de" <FlorianSchandinat@gmx.de>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Tomasz,
-
-On Wed, May 15, 2013 at 5:19 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Hmm, last thing before I fell asleep: We already have support for power
-> down configuration in pinctrl-samsung. See samsung,pin-conpdn and
-> samsung,pin-pudpdn.
-
-Dang it! OK, we'll work on using those.
-
-
-> Also I already have patches for suspend/resume support of pinctrl-samsung
-> and pinctrl-exynos, as well as configuration of wake-up sources. I'm going
-> to post them soon.
-
-Huh, I wonder if they look just like the one we've been working on:
-* https://gerrit.chromium.org/gerrit/#/c/51336/
-* https://gerrit.chromium.org/gerrit/#/c/51342/
-
-Those are about ready for upstream, too.  I was going to send them
-this morning when I found out that we were missing a bunch of pinctrl
-patches and had to rework then.  :(
-
-Anyway, we can compare our solutions and figure out which is better.
-;)  I'm happy with anything that works!
-
--Doug
+VHVlc2RheSwgTWF5IDE0LCAyMDEzIDExOjE3IFBNLCBWaWthcyBTYWpqYW4gd3JvdGU6DQo+IA0K
+PiBIaSBWaWthcywNCj4gDQo+IE9uIFR1ZXNkYXkgMTQgb2YgTWF5IDIwMTMgMTg6MjU6NTEgVmlr
+YXMgU2FqamFuIHdyb3RlOg0KPiA+ICBBZGRzIEdQSU8gcGFyc2luZyBmdW5jdGlvbmFsaXR5IGZv
+ciAiTENEIGJhY2tsaWdodCIgYW5kICJMQ0QgZW5hYmxlIg0KPiA+ICBHUElPIHBpbnMgb2YgZXh5
+bm9zIGRwIGNvbnRyb2xsZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBWaWthcyBTYWpqYW4g
+PHZpa2FzLnNhamphbkBsaW5hcm8ub3JnPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3ZpZGVvL2V4
+eW5vcy9leHlub3NfZHBfY29yZS5jIHwgICA0NQ0KPiA+ICsrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKyAxIGZpbGUgY2hhbmdlZCwgNDUgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+IA0KPiBJ
+IGRvbid0IHRoaW5rIHRoYXQgRXh5bm9zIERQIGRyaXZlciBpcyByaWdodCBwbGFjZSBmb3Igc3Vj
+aCBjb2RlLiBCYWNrbGlnaHQNCj4gYW5kIExDRCBkcml2ZXJzIGFyZSByZXNwb25zaWJsZSBmb3Ig
+YmFja2xpZ2h0IGFuZCBMQ0QgcG93ZXIgY29udHJvbCB1c2luZw0KPiBiYWNrbGlnaHQgYW5kIExD
+RCBzdWJzeXN0ZW1zLg0KPiANCj4gSU1ITyB0aGUgY29ycmVjdCBzb2x1dGlvbiB3b3VsZCBiZSB0
+byBlaXRoZXIgZXh0ZW5kIGV4aXN0aW5nIGJhY2tsaWdodC9sY2QNCj4gZHJpdmVycyBmb3VuZCBp
+biBkcml2ZXJzL3ZpZGVvL2JhY2tsaWdodCB0byBzdXBwb3J0IGRpcmVjdCBHUElPIGNvbnRyb2wg
+YW5kDQo+IHBhcnNlIEdQSU8gcGlucyBmcm9tIGRldmljZSB0cmVlIG9yIGNyZWF0ZSBuZXcgZ3Bp
+b19ibCBhbmQgZ3Bpb19sY2QgZHJpdmVycy4NCg0KSGkgVmlrYXMgU2FqaWFuLA0KDQpJIGFncmVl
+IHdpdGggVG9tYXN6IEZpZ2EncyBvcGluaW9uLg0KQmFja2xpZ2h0L0xDRCBmcmFtZXdvcmsgc2hv
+dWxkIGJlIHVzZWQuDQplRFAgcGFuZWwgYmFja2xpZ2h0IG9uIFNNREs1MjEwIGJvYXJkIGNhbiBi
+ZSBjb250cm9sbGVkIGJ5IFBXTTsNCnRodXMsIHB3bS1iYWNrbGlnaHQgZHJpdmVyIHNob3VsZCBi
+ZSB1c2VkLg0KQWxzbywgZURQIHBhbmVsIHJlc2V0IHBpbiBzaG91bGQgYmUgY29udHJvbGxlZCBi
+eSB1c2luZw0KcGxhdGZvcm0tbGNkIGRyaXZlci4NCg0KPiANCj4gQ0NpbmcgUmljaGFyZCwgRmxv
+cmlhbiBhbmQgbGludXgtZmJkZXYuDQoNCkFsc28sIEkgaGF2ZSBiZWVuIGRvaW5nIGJhY2tsaWdo
+dCByZXZpZXdzIGluc3RlYWQgb2YgUmljaGFyZCwNCnBsZWFzZSBkbyBDQydpbmcgbWUuDQoNCkJl
+c3QgcmVnYXJkcywNCkppbmdvbyBIYW4NCg0KPiANCj4gQmVzdCByZWdhcmRzLA0KPiBUb21hc3oN
+Cg==
