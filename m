@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCHv10 1/9] arm: mvebu: fix the 'ranges' property to handle PCIe
-Date: Thu, 16 May 2013 17:55:16 +0200
-Message-ID: <1368719725-21265-2-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv10 3/9] of/pci: Add of_pci_get_devfn() function
+Date: Thu, 16 May 2013 17:55:18 +0200
+Message-ID: <1368719725-21265-4-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1368719725-21265-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1368719725-21265-1-git-send-email-thomas.petazzoni@free-electrons.com>
@@ -10,53 +10,81 @@ To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory C
 Cc: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Lior Amsalem <alior@marvell.com>, Maen Suleiman <maen@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, linux-pci@vger.kernel.org, Thierry Reding <thierry.reding@avionic-design.de>, Rob Herring <rob.herring@calxeda.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Since 82a682676 ('ARM: dts: mvebu: Convert all the mvebu files to use
-the range property') all the device nodes of Armada 370/XP are under a
-common 'ranges' property that translates the device register addresses
-into their absolute address, thanks to the base address of the
-internal register space.
+From: Thierry Reding <thierry.reding@avionic-design.de>
 
-However, beyond just the register areas, there are also PCIe I/O and
-memory regions, whose addresses should be properly translated. This
-patch fixes the Armada 370 and XP ranges property to take PCIe into
-account properly.
+This function can be used to parse the device and function number from a
+standard 5-cell PCI resource. PCI_SLOT() and PCI_FUNC() can be used on
+the returned value obtain the device and function numbers respectively.
 
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
-Since the PCIe Device Tree description has been merged in 3.10-rc1,
-this commit should go in 3.10-rc as well.
----
- arch/arm/boot/dts/armada-370-xp.dtsi |    3 ++-
- arch/arm/boot/dts/armada-370.dtsi    |    3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/of/of_pci.c    |   34 +++++++++++++++++++++++++++++-----
+ include/linux/of_pci.h |    1 +
+ 2 files changed, 30 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
-index 272bbc6..550eb77 100644
---- a/arch/arm/boot/dts/armada-370-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-370-xp.dtsi
-@@ -33,7 +33,8 @@
- 		#size-cells = <1>;
- 		compatible = "simple-bus";
- 		interrupt-parent = <&mpic>;
--		ranges = <0 0 0xd0000000 0x100000>;
-+		ranges = <0          0 0xd0000000 0x0100000 /* internal registers */
-+			  0xe0000000 0 0xe0000000 0x8100000 /* PCIe */>;
+diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+index 13e37e2..4dd7b9b 100644
+--- a/drivers/of/of_pci.c
++++ b/drivers/of/of_pci.c
+@@ -5,14 +5,15 @@
+ #include <asm/prom.h>
  
- 		internal-regs {
- 			compatible = "simple-bus";
-diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
-index b2c1b5a..834c9be 100644
---- a/arch/arm/boot/dts/armada-370.dtsi
-+++ b/arch/arm/boot/dts/armada-370.dtsi
-@@ -29,7 +29,8 @@
- 	};
+ static inline int __of_pci_pci_compare(struct device_node *node,
+-				       unsigned int devfn)
++				       unsigned int data)
+ {
+-	unsigned int size;
+-	const __be32 *reg = of_get_property(node, "reg", &size);
++	int devfn;
  
- 	soc {
--		ranges = <0 0xd0000000 0x100000>;
-+		ranges = <0          0xd0000000 0x0100000 /* internal registers */
-+			  0xe0000000 0xe0000000 0x8100000 /* PCIe */>;
- 		internal-regs {
- 			system-controller@18200 {
- 				compatible = "marvell,armada-370-xp-system-controller";
+-	if (!reg || size < 5 * sizeof(__be32))
++	devfn = of_pci_get_devfn(node);
++	if (devfn < 0)
+ 		return 0;
+-	return ((be32_to_cpup(&reg[0]) >> 8) & 0xff) == devfn;
++
++	return devfn == data;
+ }
+ 
+ struct device_node *of_pci_find_child_device(struct device_node *parent,
+@@ -40,3 +41,26 @@ struct device_node *of_pci_find_child_device(struct device_node *parent,
+ 	return NULL;
+ }
+ EXPORT_SYMBOL_GPL(of_pci_find_child_device);
++
++/**
++ * of_pci_get_devfn() - Get device and function numbers for a device node
++ * @np: device node
++ *
++ * Parses a standard 5-cell PCI resource and returns an 8-bit value that can
++ * be passed to the PCI_SLOT() and PCI_FUNC() macros to extract the device
++ * and function numbers respectively. On error a negative error code is
++ * returned.
++ */
++int of_pci_get_devfn(struct device_node *np)
++{
++	unsigned int size;
++	const __be32 *reg;
++
++	reg = of_get_property(np, "reg", &size);
++
++	if (!reg || size < 5 * sizeof(__be32))
++		return -EINVAL;
++
++	return (be32_to_cpup(reg) >> 8) & 0xff;
++}
++EXPORT_SYMBOL_GPL(of_pci_get_devfn);
+diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+index bb115de..91ec484 100644
+--- a/include/linux/of_pci.h
++++ b/include/linux/of_pci.h
+@@ -10,5 +10,6 @@ int of_irq_map_pci(const struct pci_dev *pdev, struct of_irq *out_irq);
+ struct device_node;
+ struct device_node *of_pci_find_child_device(struct device_node *parent,
+ 					     unsigned int devfn);
++int of_pci_get_devfn(struct device_node *np);
+ 
+ #endif
 -- 
 1.7.9.5
