@@ -1,203 +1,170 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH RFC V4 FINAL] media: i2c: mt9p031: add OF support
-Date: Thu, 16 May 2013 14:11:47 +0200
-Message-ID: <3373593.tmPgXHFIzk@avalon>
-References: <1368422224-19590-1-git-send-email-prabhakar.csengg@gmail.com>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: Re: [PATCHv2 3/3] arm: dts: add bandgap entry for OMAP4460 devices
+Date: Thu, 16 May 2013 08:27:27 -0400
+Message-ID: <5194D0AF.3010407@ti.com>
+References: <1368629928-6723-1-git-send-email-eduardo.valentin@ti.com>
+ <1368629928-6723-4-git-send-email-eduardo.valentin@ti.com>
+ <5193A875.1020000@ti.com> <5193B9AA.7020507@ti.com> <519488D3.5070003@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1368422224-19590-1-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lad Prabhakar <prabhakar.csengg@gmail.com>
-Cc: LMML <linux-media@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@redhat.com>, Hans Verkuil <hans.verkuil@cisco.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============5730588031658618725=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <519488D3.5070003@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Russell King <linux@arm.linux.org.uk>, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+--===============5730588031658618725==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="----enig2WPGVVWNXVXLSNVGIKHOK"
 
-Thank you for the patch.
+------enig2WPGVVWNXVXLSNVGIKHOK
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Monday 13 May 2013 10:47:04 Lad Prabhakar wrote:
-> From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> 
-> add OF support for the mt9p031 sensor driver.
-> Alongside this patch sorts the header inclusion alphabetically.
-> 
-> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
-> Cc: Hans Verkuil <hans.verkuil@cisco.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
-> Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Cc: Sakari Ailus <sakari.ailus@iki.fi>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Rob Landley <rob@landley.net>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: davinci-linux-open-source@linux.davincidsp.com
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  Changes for v4:
->  1: Renamed "gpio-reset" property to "reset-gpios".
->  2: Dropped assigning the driver data from the of node.
-> 
->  Changes for v3:
->  1: Dropped check if gpio-reset is valid.
->  2: Fixed some code nits.
->  3: Included a reference to the V4L2 DT bindings documentation.
-> 
->  Changes for v2:
->  1: Used '-' instead of '_' for device properties.
->  2: Specified gpio reset pin as phandle in device node.
->  3: Handle platform data properly even if kernel is compiled with
->     devicetree support.
->  4: Used dev_* for messages in drivers instead of pr_*.
->  5: Changed compatible property to "aptina,mt9p031" and "aptina,mt9p031m".
->  6: Sorted the header inclusion alphabetically and fixed some minor code
-> nits.
-> 
->  .../devicetree/bindings/media/i2c/mt9p031.txt      |   40 +++++++++++++++++
->  drivers/media/i2c/mt9p031.c                        |   42 ++++++++++++++++-
->  2 files changed, 80 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/mt9p031.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
-> b/Documentation/devicetree/bindings/media/i2c/mt9p031.txt new file mode
-> 100644
-> index 0000000..59d613c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
-> @@ -0,0 +1,40 @@
-> +* Aptina 1/2.5-Inch 5Mp CMOS Digital Image Sensor
-> +
-> +The Aptina MT9P031 is a 1/2.5-inch CMOS active pixel digital image sensor
-> with +an active array size of 2592H x 1944V. It is programmable through a
-> simple +two-wire serial interface.
-> +
-> +Required Properties :
-> +- compatible : value should be either one among the following
-> +	(a) "aptina,mt9p031" for mt9p031 sensor
-> +	(b) "aptina,mt9p031m" for mt9p031m sensor
-> +
-> +- input-clock-frequency : Input clock frequency.
-> +
-> +- pixel-clock-frequency : Pixel clock frequency.
-> +
-> +Optional Properties :
-> +- reset-gpios: Chip reset GPIO
-> +
-> +For further reading of port node refer
-> Documentation/devicetree/bindings/media/ +video-interfaces.txt.
-> +
-> +Example:
-> +
-> +	i2c0@1c22000 {
-> +		...
-> +		...
-> +		mt9p031@5d {
-> +			compatible = "aptina,mt9p031";
-> +			reg = <0x5d>;
-> +			reset-gpios = <&gpio3 30 0>;
-> +
-> +			port {
-> +				mt9p031_1: endpoint {
-> +					input-clock-frequency = <6000000>;
-> +					pixel-clock-frequency = <96000000>;
-> +				};
-> +			};
-> +		};
-> +		...
-> +	};
-> diff --git a/drivers/media/i2c/mt9p031.c b/drivers/media/i2c/mt9p031.c
-> index 28cf95b..a58207c 100644
-> --- a/drivers/media/i2c/mt9p031.c
-> +++ b/drivers/media/i2c/mt9p031.c
-> @@ -16,9 +16,11 @@
->  #include <linux/delay.h>
->  #include <linux/device.h>
->  #include <linux/gpio.h>
-> -#include <linux/module.h>
->  #include <linux/i2c.h>
->  #include <linux/log2.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/pm.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/slab.h>
-> @@ -28,6 +30,7 @@
->  #include <media/v4l2-chip-ident.h>
->  #include <media/v4l2-ctrls.h>
->  #include <media/v4l2-device.h>
-> +#include <media/v4l2-of.h>
->  #include <media/v4l2-subdev.h>
-> 
->  #include "aptina-pll.h"
-> @@ -928,10 +931,35 @@ static const struct v4l2_subdev_internal_ops
-> mt9p031_subdev_internal_ops = { * Driver initialization and probing
->   */
-> 
-> +static struct mt9p031_platform_data *
-> +mt9p031_get_pdata(struct i2c_client *client)
-> +{
-> +	struct device_node *np;
-> +	struct mt9p031_platform_data *pdata;
-> +
-> +	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
-> +		return client->dev.platform_data;
-> +
-> +	np = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
-> +	if (!np)
-> +		return NULL;
-> +
-> +	pdata = devm_kzalloc(&client->dev, sizeof(struct mt9p031_platform_data),
-> +			     GFP_KERNEL);
-> +	if (!pdata)
+On 16-05-2013 03:20, Benoit Cousson wrote:
+> Hi Eduardo,
+>=20
+> On 05/15/2013 06:36 PM, Eduardo Valentin wrote:
+>> On 15-05-2013 11:23, Benoit Cousson wrote:
+>>> Hi Eduardo,
+>>>
+>>> On 05/15/2013 04:58 PM, Eduardo Valentin wrote:
+>>>> Include bandgap devices for OMAP4460 devices.
+>>>>
+>>>> Cc: "Beno=C3=AEt Cousson" <b-cousson@ti.com>
+>>>> Cc: Tony Lindgren <tony@atomide.com>
+>>>> Cc: Russell King <linux@arm.linux.org.uk>
+>>>> Cc: linux-omap@vger.kernel.org
+>>>> Cc: devicetree-discuss@lists.ozlabs.org
+>>>> Cc: linux-arm-kernel@lists.infradead.org
+>>>> Cc: linux-kernel@vger.kernel.org
+>>>> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+>>>> ---
+>>>>  arch/arm/boot/dts/omap4460.dtsi | 9 +++++++++
+>>>>  1 file changed, 9 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/omap4460.dtsi b/arch/arm/boot/dts/oma=
+p4460.dtsi
+>>>> index 2cf227c..e5bfbfe 100644
+>>>> --- a/arch/arm/boot/dts/omap4460.dtsi
+>>>> +++ b/arch/arm/boot/dts/omap4460.dtsi
+>>>> @@ -29,4 +29,13 @@
+>>>>  			     <0 55 0x4>;
+>>>>  		ti,hwmods =3D "debugss";
+>>>>  	};
+>>>> +
+>>>> +	bandgap {
+>>>> +		reg =3D <0x4a002260 0x4
+>>>> +			0x4a00232C 0x4
+>>>> +			0x4a002378 0x18>;
+>>>> +		compatible =3D "ti,omap4460-bandgap";
+>>>> +		interrupts =3D <0 126 4>; /* talert */
+>>>> +		ti,tshut-gpio =3D <86>;
+>>
+>>
+>>
+>>>
+>>> Why do you need a custom attribute for GPIO? Cannot you use the stand=
+ard
+>>> one?
+>>
+>> I believe it was by your suggestion :-), during the first attempts to
+>> send this driver. But could not find the thread link :-( sorry.
+>=20
+> Ooops :-) I do not remember that... maybe it was long time ago, before
+> we had any decent binding available for GPIO and IRQ...
+>=20
 
-As mentioned in my review of your tvp514x OF support patch, you're missing 
-of_node_put() calls here and at the end of this function.
 
-> +		return NULL;
-> +
-> +	pdata->reset = of_get_named_gpio(client->dev.of_node, "reset-gpios", 0);
-> +	of_property_read_u32(np, "input-clock-frequency", &pdata->ext_freq);
-> +	of_property_read_u32(np, "pixel-clock-frequency", &pdata->target_freq);
-> +
-> +	return pdata;
-> +}
-> +
->  static int mt9p031_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *did)
->  {
-> -	struct mt9p031_platform_data *pdata = client->dev.platform_data;
-> +	struct mt9p031_platform_data *pdata = mt9p031_get_pdata(client);
->  	struct i2c_adapter *adapter = to_i2c_adapter(client->dev.parent);
->  	struct mt9p031 *mt9p031;
->  	unsigned int i;
-> @@ -1070,8 +1098,18 @@ static const struct i2c_device_id mt9p031_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, mt9p031_id);
-> 
-> +#if IS_ENABLED(CONFIG_OF)
-> +static const struct of_device_id mt9p031_of_match[] = {
-> +	{ .compatible = "aptina,mt9p031", },
-> +	{ .compatible = "aptina,mt9p031m", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, mt9p031_of_match);
-> +#endif
-> +
->  static struct i2c_driver mt9p031_i2c_driver = {
->  	.driver = {
-> +		.of_match_table = of_match_ptr(mt9p031_of_match),
->  		.name = "mt9p031",
->  	},
->  	.probe          = mt9p031_probe,
--- 
-Regards,
+Probably it was because by that time we didnt have GPIO binding ready, ye=
+ah.
 
-Laurent Pinchart
+>> I guess the reasoning to mark it as a ti specific is because it will b=
+e
+>> used as IRQ line to treat thermal shutdown (in SW).
+>=20
+> Mmm, ok, so in that case, it is not even a gpio, but an interrupt entry=
 
+> that is needed like that:
+>=20
+> 	interrupt-parent =3D <&gpio3>;
+> 	interrupts =3D <22>; /* gpio line 86 */
+>=20
+> Except that we already have an IRQ line connected to GIC for the
+> Talert... I'm not sure we can have 2 different IRQ controllers for one
+> device :-(
+>=20
+> We need to check.
+>=20
+
+
+Yeah, I also dont think this will work, because we will reparent the
+interrupt, setting to a different controller. That will break the TALERT
+signal already defined at GIC (check original patch).
+
+I propose keeping the way I sent. Unless there is a way to set two
+different controllers to same device.
+
+> Regards,
+> Benoit
+>=20
+>=20
+>>> Where is the gpio controller phandle?
+>>>
+>>> Usually it looks like this:
+>>>
+>>> 	gpios =3D <&gpio1 8 0>;
+>>>
+>>>
+>>> Regards,
+>>> Benoit
+>>>
+>>>
+>>>
+>>
+>>
+>=20
+>=20
+>=20
+
+
+
+------enig2WPGVVWNXVXLSNVGIKHOK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iF4EAREIAAYFAlGU0K8ACgkQCXcVR3XQvP3STgEA3qVqjYpu0sXO/xLYF2jcIQAO
+k2rSR8Wr7+SFbbuNmmgA/25JHmBHftgHR19NSqadmsQKq8SQ8iUookOvkC9bm4zV
+=s5/6
+-----END PGP SIGNATURE-----
+
+------enig2WPGVVWNXVXLSNVGIKHOK--
+
+
+--===============5730588031658618725==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5730588031658618725==--
