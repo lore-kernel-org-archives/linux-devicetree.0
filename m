@@ -1,16 +1,11 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCHv9 7/9] pci: PCIe driver for Marvell Armada 370/XP systems
-Date: Thu, 16 May 2013 11:40:31 -0400
-Message-ID: <20130516154031.GF6563@titan.lakedaemon.net>
-References: <1368624323-24311-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1368624323-24311-8-git-send-email-thomas.petazzoni@free-electrons.com>
- <20130516093312.GB2459@localhost>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH 0/3] ARM: kernel: cpu_logical_map misc fixes
+Date: Thu, 16 May 2013 16:34:04 +0100
+Message-ID: <1368718447-19209-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130516093312.GB2459@localhost>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,164 +16,30 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+To: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 16, 2013 at 06:33:14AM -0300, Ezequiel Garcia wrote:
-> On Wed, May 15, 2013 at 03:25:21PM +0200, Thomas Petazzoni wrote:
-> [..]
-> > +
-> > +static int __init mvebu_pcie_probe(struct platform_device *pdev)
-> > +{
-> > +	struct mvebu_pcie *pcie;
-> > +	struct device_node *np = pdev->dev.of_node;
-> > +	struct of_pci_range range;
-> > +	struct of_pci_range_parser parser;
-> > +	struct device_node *child;
-> > +	int i, ret;
-> > +
-> > +	pcie = devm_kzalloc(&pdev->dev, sizeof(struct mvebu_pcie),
-> > +			    GFP_KERNEL);
-> > +	if (!pcie)
-> > +		return -ENOMEM;
-> > +
-> > +	pcie->pdev = pdev;
-> > +
-> > +	if (of_pci_range_parser_init(&parser, np))
-> > +		return -EINVAL;
-> > +
-> > +	/* Get the I/O and memory ranges from DT */
-> > +	for_each_of_pci_range(&parser, &range) {
-> > +		unsigned long restype = range.flags & IORESOURCE_TYPE_BITS;
-> > +		if (restype == IORESOURCE_IO) {
-> > +			of_pci_range_to_resource(&range, np, &pcie->io);
-> > +			of_pci_range_to_resource(&range, np, &pcie->realio);
-> > +			pcie->io.name = "I/O";
-> > +			pcie->realio.start = max_t(resource_size_t,
-> > +						   PCIBIOS_MIN_IO,
-> > +						   range.pci_addr);
-> > +			pcie->realio.end = min_t(resource_size_t,
-> > +						 IO_SPACE_LIMIT,
-> > +						 range.pci_addr + range.size);
-> > +		}
-> > +		if (restype == IORESOURCE_MEM) {
-> > +			of_pci_range_to_resource(&range, np, &pcie->mem);
-> > +			pcie->mem.name = "MEM";
-> > +		}
-> > +	}
-> > +
-> > +	/* Get the bus range */
-> > +	ret = of_pci_parse_bus_range(np, &pcie->busn);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "failed to parse bus-range property: %d\n",
-> > +			ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	for_each_child_of_node(pdev->dev.of_node, child) {
-> > +		if (!of_device_is_available(child))
-> > +			continue;
-> > +		pcie->nports++;
-> > +	}
-> > +
-> > +	pcie->ports = devm_kzalloc(&pdev->dev, pcie->nports *
-> > +				   sizeof(struct mvebu_pcie_port),
-> > +				   GFP_KERNEL);
-> > +	if (!pcie->ports)
-> > +		return -ENOMEM;
-> > +
-> > +	i = 0;
-> > +	for_each_child_of_node(pdev->dev.of_node, child) {
-> > +		struct mvebu_pcie_port *port = &pcie->ports[i];
-> > +
-> > +		if (!of_device_is_available(child))
-> > +			continue;
-> > +
-> > +		port->pcie = pcie;
-> > +
-> > +		if (of_property_read_u32(child, "marvell,pcie-port",
-> > +					 &port->port)) {
-> > +			dev_warn(&pdev->dev,
-> > +				 "ignoring PCIe DT node, missing pcie-port property\n");
-> > +			continue;
-> > +		}
-> > +
-> > +		if (of_property_read_u32(child, "marvell,pcie-lane",
-> > +					 &port->lane))
-> > +			port->lane = 0;
-> > +
-> > +		port->name = kasprintf(GFP_KERNEL, "pcie%d.%d",
-> > +				       port->port, port->lane);
-> > +
-> > +		port->devfn = of_pci_get_devfn(child);
-> > +		if (port->devfn < 0)
-> > +			continue;
-> > +
-> > +		port->base = mvebu_pcie_map_registers(pdev, child, port);
-> > +		if (!port->base) {
-> > +			dev_err(&pdev->dev, "PCIe%d.%d: cannot map registers\n",
-> > +				port->port, port->lane);
-> > +			continue;
-> > +		}
-> > +
-> > +		if (mvebu_pcie_link_up(port)) {
-> > +			port->haslink = 1;
-> > +			dev_info(&pdev->dev, "PCIe%d.%d: link up\n",
-> > +				 port->port, port->lane);
-> > +		} else {
-> > +			port->haslink = 0;
-> > +			dev_info(&pdev->dev, "PCIe%d.%d: link down\n",
-> > +				 port->port, port->lane);
-> > +		}
-> > +
-> > +		port->clk = of_clk_get_by_name(child, NULL);
-> > +		if (!port->clk) {
-> > +			dev_err(&pdev->dev, "PCIe%d.%d: cannot get clock\n",
-> > +			       port->port, port->lane);
-> > +			iounmap(port->base);
-> > +			port->haslink = 0;
-> > +			continue;
-> > +		}
-> > +
-> > +		port->dn = child;
-> > +
-> > +		clk_prepare_enable(port->clk);
-> > +		spin_lock_init(&port->conf_lock);
-> > +
-> > +		mvebu_sw_pci_bridge_init(port);
-> > +
-> > +		i++;
-> > +	}
-> > +
-> > +	mvebu_pcie_enable(pcie);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id mvebu_pcie_of_match_table[] = {
-> > +	{ .compatible = "marvell,armada-xp-pcie", },
-> > +	{ .compatible = "marvell,armada-370-pcie", },
-> > +	{},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, mvebu_pcie_of_match_table);
-> > +
-> > +static struct platform_driver mvebu_pcie_driver = {
-> > +	.driver = {
-> > +		.owner = THIS_MODULE,
-> > +		.name = "mvebu-pcie",
-> > +		.of_match_table =
-> > +		   of_match_ptr(mvebu_pcie_of_match_table),
-> > +	},
-> > +};
-> > +
-> > +static int mvebu_pcie_init(void)
-> 
-> Building this showed a warning here. It seems you forgot
-> to mark this one as __init.
+Hi Russell, Rob,
 
-Thomas, I'll fix this up when I pull this in, no need to resend. :)
+this series contains simple fixes/improvements related to the DT
+cpu_logical_map initialization code. I would like to get these patches
+in in order to have a stable base on top of which I can send the DT topology
+bindings and cpu_logical_map bindings/parsing code updates for arm and arm64.
 
-thx,
+Thank you very much,
+Lorenzo
 
-Jason.
+Lorenzo Pieralisi (3):
+  ARM: DT: kernel: move temporary cpu map stack array to static data
+  ARM: kernel: fix arm_dt_init_cpu_maps() to skip non-cpu nodes
+  ARM: kernel: fix __cpu_logical_map default initialization
+
+ arch/arm/include/asm/cputype.h  |  2 ++
+ arch/arm/include/asm/smp_plat.h |  2 +-
+ arch/arm/kernel/devtree.c       | 14 ++++++++++----
+ arch/arm/kernel/setup.c         |  2 +-
+ 4 files changed, 14 insertions(+), 6 deletions(-)
+
+-- 
+1.8.2.2
