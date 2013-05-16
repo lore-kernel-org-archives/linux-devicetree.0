@@ -1,98 +1,61 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: kernel: fix __cpu_logical_map default
- initialization
-Date: Thu, 16 May 2013 16:50:38 +0100
-Message-ID: <20130516155038.GK11706@mudshark.cambridge.arm.com>
-References: <1368718447-19209-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1368718447-19209-4-git-send-email-lorenzo.pieralisi@arm.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCHv9 7/9] pci: PCIe driver for Marvell Armada 370/XP
+ systems
+Date: Thu, 16 May 2013 18:08:50 +0200
+Message-ID: <20130516180850.3622e1a8@skate>
+References: <1368624323-24311-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1368624323-24311-8-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20130516093312.GB2459@localhost>
+	<20130516154031.GF6563@titan.lakedaemon.net>
+	<20130516174903.3a7a07ef@skate>
+	<20130516155617.GH6563@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1368718447-19209-4-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20130516155617.GH6563@titan.lakedaemon.net>
+Sender: linux-pci-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Olof Johansson <olof@lixom.net>, Gregory Clement <gregory.clement@free-electrons.com>, Tawfik Bayouk <tawfik@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Michael Opdenacker <michael.opdenacker@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 16, 2013 at 04:34:07PM +0100, Lorenzo Pieralisi wrote:
-> For legacy reasons, the __cpu_logical_map array is initialized to 0.
-> On old pre-DT ARM platforms, smp_setup_processor_id() generates
-> __cpu_logical_map entries at boot before the number of possible CPUs is
-> set-up, with values that can be considered valid MPIDRs even if they are
-> not present in the system booting; this implies that the __cpu_logical_map[]
-> might end up containing MPIDR values that can be considered valid at logical
-> indexes corresponding to CPUs that are not marked as possible.
+Dear Jason Cooper,
+
+On Thu, 16 May 2013 11:56:17 -0400, Jason Cooper wrote:
+
+> > > > Building this showed a warning here. It seems you forgot
+> > > > to mark this one as __init.
+> > > 
+> > > Thomas, I'll fix this up when I pull this in, no need to resend. :)
+> > 
+> > I'll resend, because beyond this function pointed by Ezequiel, there
+> > are two other functions that can be marked __init. The one pointed by
+> > Ezequiel is important because it causes a section mismatch
+> > when !CONFIG_MODULES, because in this case platform_driver_probe() is
+> > __init (and this explains what I wasn't seeing the warning, since I'm
+> > building CONFIG_MODULES=y). The two other functions are more cosmetic,
+> > but good to have as well.
+> > 
+> > It would already been sent if git hadn't decided to do a 'git gc' right
+> > after my rebase. It's been gc-ing for quite some time now...
 > 
-> To prevent issues with the current implementation, this patch defines an
-> MPIDR_INVALID value, statically initializes the __cpu_logical_map[] array to it
-> and allows DT parsing code to overwrite values in the __cpu_logical_map array
-> that were erroneously set-up in smp_setup_processor_id().
-
-What issues have you actually hit with this?
-
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> CC: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm/include/asm/cputype.h  |  2 ++
->  arch/arm/include/asm/smp_plat.h |  2 +-
->  arch/arm/kernel/devtree.c       | 10 ++++++----
->  arch/arm/kernel/setup.c         |  2 +-
->  4 files changed, 10 insertions(+), 6 deletions(-)
+> Dear boss,
 > 
-> diff --git a/arch/arm/include/asm/cputype.h b/arch/arm/include/asm/cputype.h
-> index 7652712..dba62cb 100644
-> --- a/arch/arm/include/asm/cputype.h
-> +++ b/arch/arm/include/asm/cputype.h
-> @@ -32,6 +32,8 @@
->  
->  #define MPIDR_HWID_BITMASK 0xFFFFFF
->  
-> +#define MPIDR_INVALID (~MPIDR_HWID_BITMASK)
-> +
->  #define MPIDR_LEVEL_BITS 8
->  #define MPIDR_LEVEL_MASK ((1 << MPIDR_LEVEL_BITS) - 1)
->  
-> diff --git a/arch/arm/include/asm/smp_plat.h b/arch/arm/include/asm/smp_plat.h
-> index aaa61b6..e789832 100644
-> --- a/arch/arm/include/asm/smp_plat.h
-> +++ b/arch/arm/include/asm/smp_plat.h
-> @@ -49,7 +49,7 @@ static inline int cache_ops_need_broadcast(void)
->  /*
->   * Logical CPU mapping.
->   */
-> -extern int __cpu_logical_map[];
-> +extern u32 __cpu_logical_map[];
->  #define cpu_logical_map(cpu)	__cpu_logical_map[cpu]
->  /*
->   * Retrieve logical cpu index corresponding to a given MPIDR[23:0]
-> diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-> index d2293c0..08f012e 100644
-> --- a/arch/arm/kernel/devtree.c
-> +++ b/arch/arm/kernel/devtree.c
-> @@ -79,12 +79,12 @@ void __init arm_dt_init_cpu_maps(void)
->  	 * read as 0.
->  	 */
->  	static u32 tmp_map[NR_CPUS] __initdata = {
-> -				[0 ... NR_CPUS-1] = UINT_MAX };
-> +				[0 ... NR_CPUS-1] = MPIDR_INVALID };
->  	struct device_node *cpu, *cpus;
->  	u32 i, j, cpuidx = 1;
->  	u32 mpidr = is_smp() ? read_cpuid_mpidr() & MPIDR_HWID_BITMASK : 0;
-> -
->  	bool bootcpu_valid = false;
-> +
+> I am in desperate need of a 500GB SSD on which to do my kernel work.
+> 
+> Thanks,
+> 
+> Kranky Kernel Developer
+> 
+> hehehe...
 
-Random whitespace change.
+Adding boss in the Cc list :-)
 
-Will
+Thanks!
+
+Thomas
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
