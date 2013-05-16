@@ -1,75 +1,67 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH RFC] media: OF: add field-active and sync-on-green
- endpoint properties
-Date: Thu, 16 May 2013 10:23:34 +0530
-Message-ID: <CA+V-a8tsohAyGRCn3NhwsS19X84N_xOwLB_wd0bPvyu1fLy3+g@mail.gmail.com>
-References: <1368622349-32185-1-git-send-email-prabhakar.csengg@gmail.com> <2510029.UKsn4JyZOW@avalon>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCHv2 3/3] arm: dts: add bandgap entry for OMAP4460 devices
+Date: Thu, 16 May 2013 09:20:51 +0200
+Message-ID: <519488D3.5070003@ti.com>
+References: <1368629928-6723-1-git-send-email-eduardo.valentin@ti.com>
+ <1368629928-6723-4-git-send-email-eduardo.valentin@ti.com>
+ <5193A875.1020000@ti.com> <5193B9AA.7020507@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <2510029.UKsn4JyZOW@avalon>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5193B9AA.7020507@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>
+Cc: Russell King <linux@arm.linux.org.uk>, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-
-On Wed, May 15, 2013 at 6:54 PM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> Hi Prabhakar,
->
-> Thank you for the patch.
->
-> On Wednesday 15 May 2013 18:22:29 Lad Prabhakar wrote:
->> From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
->>
->> This patch adds "field-active" and "sync-on-green" as part of
->> endpoint properties and also support to parse them in the parser.
->>
->> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
->> Cc: Hans Verkuil <hans.verkuil@cisco.com>
->> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->> Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
->> Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
->> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> Cc: Sakari Ailus <sakari.ailus@iki.fi>
->> Cc: Grant Likely <grant.likely@secretlab.ca>
->> Cc: Rob Herring <rob.herring@calxeda.com>
->> Cc: Rob Landley <rob@landley.net>
->> Cc: devicetree-discuss@lists.ozlabs.org
->> Cc: linux-doc@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Cc: davinci-linux-open-source@linux.davincidsp.com
->> Cc: Kyungmin Park <kyungmin.park@samsung.com>
->> ---
->>  .../devicetree/bindings/media/video-interfaces.txt |    4 ++++
->>  drivers/media/v4l2-core/v4l2-of.c                  |    6 ++++++
->>  include/media/v4l2-mediabus.h                      |    2 ++
->>  3 files changed, 12 insertions(+), 0 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt
->> b/Documentation/devicetree/bindings/media/video-interfaces.txt index
->> e022d2d..6bf87d0 100644
->> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
->> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
->> @@ -101,6 +101,10 @@ Optional endpoint properties
->>    array contains only one entry.
->>  - clock-noncontinuous: a boolean property to allow MIPI CSI-2
->> non-continuous clock mode.
->> +-field-active: a boolean property indicating active high filed ID output
->> + polarity is inverted.
->
-> Looks like we already have field-even-active property to describe the level of
-> the field signal. Could you please check whether it fulfills your use cases ?
-> Sorry for not pointing you to it earlier.
->
-I had looked at it earlier it only means "field signal level during the even
-field data transmission" it only speaks of even filed. Ideally the field ID
-output is set to logic 1 for odd field and set to 0 for even field, what I
-want is to invert the FID out polarity when "field-active" property is set.
-
-May be we rename "field-active" to "fid-pol" ?
-
-Regards,
---Prabhakar Lad
+SGkgRWR1YXJkbywKCk9uIDA1LzE1LzIwMTMgMDY6MzYgUE0sIEVkdWFyZG8gVmFsZW50aW4gd3Jv
+dGU6Cj4gT24gMTUtMDUtMjAxMyAxMToyMywgQmVub2l0IENvdXNzb24gd3JvdGU6Cj4+IEhpIEVk
+dWFyZG8sCj4+Cj4+IE9uIDA1LzE1LzIwMTMgMDQ6NTggUE0sIEVkdWFyZG8gVmFsZW50aW4gd3Jv
+dGU6Cj4+PiBJbmNsdWRlIGJhbmRnYXAgZGV2aWNlcyBmb3IgT01BUDQ0NjAgZGV2aWNlcy4KPj4+
+Cj4+PiBDYzogIkJlbm/DrnQgQ291c3NvbiIgPGItY291c3NvbkB0aS5jb20+Cj4+PiBDYzogVG9u
+eSBMaW5kZ3JlbiA8dG9ueUBhdG9taWRlLmNvbT4KPj4+IENjOiBSdXNzZWxsIEtpbmcgPGxpbnV4
+QGFybS5saW51eC5vcmcudWs+Cj4+PiBDYzogbGludXgtb21hcEB2Z2VyLmtlcm5lbC5vcmcKPj4+
+IENjOiBkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwo+Pj4gQ2M6IGxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+Pj4gQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
+cm5lbC5vcmcKPj4+IFNpZ25lZC1vZmYtYnk6IEVkdWFyZG8gVmFsZW50aW4gPGVkdWFyZG8udmFs
+ZW50aW5AdGkuY29tPgo+Pj4gLS0tCj4+PiAgYXJjaC9hcm0vYm9vdC9kdHMvb21hcDQ0NjAuZHRz
+aSB8IDkgKysrKysrKysrCj4+PiAgMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKQo+Pj4K
+Pj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9vbWFwNDQ2MC5kdHNpIGIvYXJjaC9h
+cm0vYm9vdC9kdHMvb21hcDQ0NjAuZHRzaQo+Pj4gaW5kZXggMmNmMjI3Yy4uZTViZmJmZSAxMDA2
+NDQKPj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXA0NDYwLmR0c2kKPj4+ICsrKyBiL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL29tYXA0NDYwLmR0c2kKPj4+IEBAIC0yOSw0ICsyOSwxMyBAQAo+Pj4g
+IAkJCSAgICAgPDAgNTUgMHg0PjsKPj4+ICAJCXRpLGh3bW9kcyA9ICJkZWJ1Z3NzIjsKPj4+ICAJ
+fTsKPj4+ICsKPj4+ICsJYmFuZGdhcCB7Cj4+PiArCQlyZWcgPSA8MHg0YTAwMjI2MCAweDQKPj4+
+ICsJCQkweDRhMDAyMzJDIDB4NAo+Pj4gKwkJCTB4NGEwMDIzNzggMHgxOD47Cj4+PiArCQljb21w
+YXRpYmxlID0gInRpLG9tYXA0NDYwLWJhbmRnYXAiOwo+Pj4gKwkJaW50ZXJydXB0cyA9IDwwIDEy
+NiA0PjsgLyogdGFsZXJ0ICovCj4+PiArCQl0aSx0c2h1dC1ncGlvID0gPDg2PjsKPiAKPiAKPiAK
+Pj4KPj4gV2h5IGRvIHlvdSBuZWVkIGEgY3VzdG9tIGF0dHJpYnV0ZSBmb3IgR1BJTz8gQ2Fubm90
+IHlvdSB1c2UgdGhlIHN0YW5kYXJkCj4+IG9uZT8KPiAKPiBJIGJlbGlldmUgaXQgd2FzIGJ5IHlv
+dXIgc3VnZ2VzdGlvbiA6LSksIGR1cmluZyB0aGUgZmlyc3QgYXR0ZW1wdHMgdG8KPiBzZW5kIHRo
+aXMgZHJpdmVyLiBCdXQgY291bGQgbm90IGZpbmQgdGhlIHRocmVhZCBsaW5rIDotKCBzb3JyeS4K
+Ck9vb3BzIDotKSBJIGRvIG5vdCByZW1lbWJlciB0aGF0Li4uIG1heWJlIGl0IHdhcyBsb25nIHRp
+bWUgYWdvLCBiZWZvcmUKd2UgaGFkIGFueSBkZWNlbnQgYmluZGluZyBhdmFpbGFibGUgZm9yIEdQ
+SU8gYW5kIElSUS4uLgoKPiBJIGd1ZXNzIHRoZSByZWFzb25pbmcgdG8gbWFyayBpdCBhcyBhIHRp
+IHNwZWNpZmljIGlzIGJlY2F1c2UgaXQgd2lsbCBiZQo+IHVzZWQgYXMgSVJRIGxpbmUgdG8gdHJl
+YXQgdGhlcm1hbCBzaHV0ZG93biAoaW4gU1cpLgoKTW1tLCBvaywgc28gaW4gdGhhdCBjYXNlLCBp
+dCBpcyBub3QgZXZlbiBhIGdwaW8sIGJ1dCBhbiBpbnRlcnJ1cHQgZW50cnkKdGhhdCBpcyBuZWVk
+ZWQgbGlrZSB0aGF0OgoKCWludGVycnVwdC1wYXJlbnQgPSA8JmdwaW8zPjsKCWludGVycnVwdHMg
+PSA8MjI+OyAvKiBncGlvIGxpbmUgODYgKi8KCkV4Y2VwdCB0aGF0IHdlIGFscmVhZHkgaGF2ZSBh
+biBJUlEgbGluZSBjb25uZWN0ZWQgdG8gR0lDIGZvciB0aGUKVGFsZXJ0Li4uIEknbSBub3Qgc3Vy
+ZSB3ZSBjYW4gaGF2ZSAyIGRpZmZlcmVudCBJUlEgY29udHJvbGxlcnMgZm9yIG9uZQpkZXZpY2Ug
+Oi0oCgpXZSBuZWVkIHRvIGNoZWNrLgoKUmVnYXJkcywKQmVub2l0CgoKPj4gV2hlcmUgaXMgdGhl
+IGdwaW8gY29udHJvbGxlciBwaGFuZGxlPwo+Pgo+PiBVc3VhbGx5IGl0IGxvb2tzIGxpa2UgdGhp
+czoKPj4KPj4gCWdwaW9zID0gPCZncGlvMSA4IDA+Owo+Pgo+Pgo+PiBSZWdhcmRzLAo+PiBCZW5v
+aXQKPj4KPj4KPj4KPiAKPiAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
