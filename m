@@ -1,62 +1,117 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v4 01/18] ARM: kernel: fix arm_dt_init_cpu_maps() to
- skip non-cpu nodes
-Date: Fri, 17 May 2013 11:49:19 -0400 (EDT)
-Message-ID: <alpine.LFD.2.03.1305171148460.31158@syhkavp.arg>
-References: <1368804061-4421-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1368804061-4421-2-git-send-email-lorenzo.pieralisi@arm.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v6] ARM:dts:omap4-panda: Update the LED support for the panda
+ DTS
+Date: Fri, 17 May 2013 11:02:32 -0500
+Message-ID: <1368806552-8851-1-git-send-email-dmurphy@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1368804061-4421-2-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk
+Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 17 May 2013, Lorenzo Pieralisi wrote:
+The GPIO for LED D1 on the omap4-panda a1-a3 rev and the omap4-panda-es
+are different.
 
-> The introduction of the cpu-map topology node in the cpus node implies
-> that cpus node might have children that are not cpu nodes. The DT
-> parsing code needs updating otherwise it would check for cpu nodes
-> properties in nodes that are not required to contain them, resulting
-> in warnings that have no bearing on bindings defined in the dts source file.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+A1-A3 = gpio_wk7
+ES = gpio_110
 
-Acked-by: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+There is no change to LED D2
 
+Abstract away the pinmux and the LED definitions for the two boards into
+the respective DTS files.
 
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+Changes in this version:
+	- review comments incorporated.
+Previous version of this patch was discussed in:
+	https://patchwork.kernel.org/patch/2582771/
 
-> ---
->  arch/arm/kernel/devtree.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-> index 5af04f6..904cad5 100644
-> --- a/arch/arm/kernel/devtree.c
-> +++ b/arch/arm/kernel/devtree.c
-> @@ -92,6 +92,9 @@ void __init arm_dt_init_cpu_maps(void)
->  	for_each_child_of_node(cpus, cpu) {
->  		u32 hwid;
->  
-> +		if (of_node_cmp(cpu->type, "cpu"))
-> +			continue;
-> +
->  		pr_debug(" * %s...\n", cpu->full_name);
->  		/*
->  		 * A device tree containing CPU nodes with missing "reg"
-> -- 
-> 1.8.2.2
-> 
-> 
+ arch/arm/boot/dts/omap4-panda-common.dtsi |   16 +++++++++++++++-
+ arch/arm/boot/dts/omap4-panda-es.dts      |   28 ++++++++++++++++++++++++++++
+ 2 files changed, 43 insertions(+), 1 deletions(-)
+
+diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+index 03bd60d..5fd59b3 100644
+--- a/arch/arm/boot/dts/omap4-panda-common.dtsi
++++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+@@ -16,8 +16,13 @@
+ 		reg = <0x80000000 0x40000000>; /* 1 GB */
+ 	};
+ 
+-	leds {
++	leds: leds {
+ 		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <
++			&led_wkgpio_pins
++		>;
++
+ 		heartbeat {
+ 			label = "pandaboard::status1";
+ 			gpios = <&gpio1 7 0>;
+@@ -137,6 +142,15 @@
+ 	};
+ };
+ 
++&omap4_pmx_wkup {
++	led_wkgpio_pins: pinmux_leds_wkpins {
++		pinctrl-single,pins = <
++			0x1a 0x3	/* gpio_wk7 OUTPUT | MODE 3 */
++			0x1c 0x3	/* gpio_wk8 OUTPUT | MODE 3 */
++		>;
++	};
++};
++
+ &i2c1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c1_pins>;
+diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts/omap4-panda-es.dts
+index f1d8c21..c968a3b 100644
+--- a/arch/arm/boot/dts/omap4-panda-es.dts
++++ b/arch/arm/boot/dts/omap4-panda-es.dts
+@@ -34,3 +34,31 @@
+ 		0x5e 0x100	/* hdmi_sda.hdmi_sda INPUT | MODE 0 */
+ 		>;
+ };
++
++&omap4_pmx_core {
++	led_gpio_pins: gpio_led_pmx {
++		pinctrl-single,pins = <
++			0xb6 0x3	/* gpio_110 OUTPUT | MODE 3 */
++		>;
++	};
++};
++
++&led_wkgpio_pins {
++	pinctrl-single,pins = <
++		0x1c 0x3	/* gpio_wk8 OUTPUT | MODE 3 */
++	>;
++};
++
++&leds {
++	pinctrl-0 = <
++		&led_gpio_pins
++		&led_wkgpio_pins
++	>;
++
++	heartbeat {
++		gpios = <&gpio4 14 0>;
++	};
++	mmc {
++		gpios = <&gpio1 8 0>;
++	};
++};
+-- 
+1.7.5.4
