@@ -1,133 +1,53 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [RFC PATCH v4 00/18] ARM: DT cpu bindings updates
-Date: Fri, 17 May 2013 16:20:43 +0100
-Message-ID: <1368804061-4421-1-git-send-email-lorenzo.pieralisi@arm.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: [RFC PATCH v4 15/18] ARM: dts: sh7372: cpus/cpu nodes dts updates
+Date: Fri, 17 May 2013 16:20:58 +0100
+Message-ID: <1368804061-4421-16-git-send-email-lorenzo.pieralisi@arm.com>
+References: <1368804061-4421-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Jon Medhurst <tixy@linaro.org>, Dave Martin <dave.martin@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Lennert Buytenhek <kernel@wantstofly.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Russell King <linux@arm.linux.org.uk>, Magnus Damm <magnus.damm@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Grant Likely <grant.likely@linaro.org>, David Brown <davidb@codeaurora.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Dinh Nguyen <dinguyen@altera.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Sekhar Nori <nse>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1368804061-4421-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset is an update of a previous posting:
+This patch updates the in-kernel dts files according to the latest cpus
+and cpu bindings updates for ARM.
 
-http://lists.infradead.org/pipermail/linux-arm-kernel/2013-April/165219.html
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Acked-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+---
+ arch/arm/boot/dts/sh7372.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-v4 changes:
-
-- Replaced WARN* with pr_warn
-- Removed tmp_map in arm_dt_init_cpu_maps()
-- Rebased against 3.10-rc1
-- Patched additional atmel and sunxi dts files
-- Removed BUG_ON on !bootcpu_valid, now flagged up as an error
-- Added code to reset invalid entries in cpu_logical_map after DT parsing
-
-v3 changes:
-
-- More dts fixes of in-kernel dts
-- Defined ARM v8 behaviour with different cpus node #address-cells
-- Added pre ARM11 processors suffixes in the cpu node compatible list
-- Reordered series
-- Reworded #address-cells definition
-- Added ARM v8 - cores running on AArch32 bindings example
-- Moved WARN* calls on one line to prevent grepping issues
-
-v2 changes:
-
-- Reworded DT cpu bindings
-- Split the set, with per-mach specific dts updates
-- Updated cpu node compatible string list
-- Defined behaviour of OS running on v8 in AArch32
-
-The introduction of DT cpus/cpu bindings for ARM requires well established
-rules to enforce the reg property definition for 32-bit and 64-bit ARM
-processors, inclusive of legacy and current uniprocessor/SMP systems.
-
-ARM 64 bit architecture also requires dtb compiled for 64-bit configurations
-to be reused for kernels running in 32 bit mode, so the cpus/cpu bindings
-specification must be made compliant to cope with this configuration.
-
-Patch #1-#2 of this series are fixes and are included to have a clean patch
-series and should get reviewed and merged separately.
-
-Patch #3-18, along with some kernel fixes related to DT parsing function,
-update the cpu node bindings and in kernel dts files to cope with legacy,
-current and upcoming ARM systems.
-
-In-kernel device tree source files are updated to comply with the latest
-specification, so thorough testing is required in order to validate all
-changes on all affected ARM systems, in particular systems with exotic
-MPIDR configurations that are likely to break with the changes provided.
-
-Code relying on the reg property size to be 4-bytes must be updated so that
-dtbs compiled for 64-bit kernels can also be used to boot a 32-bit system.
-
-Lorenzo Pieralisi (18):
-  ARM: kernel: fix arm_dt_init_cpu_maps() to skip non-cpu nodes
-  ARM: kernel: fix __cpu_logical_map default initialization
-  Documentation: devicetree: arm: cpus/cpu nodes bindings updates
-  ARM: dts: am33xx: cpus/cpu nodes dts updates
-  ARM: dts: armada-370-xp: cpus/cpu node dts updates
-  ARM: dts: at91: cpus/cpu node dts updates
-  ARM: dts: exynos5440: cpus/cpu nodes dts updates
-  ARM: dts: imx: cpus/cpu nodes dts updates
-  ARM: dts: lpc32xx: cpus/cpu nodes dts updates
-  ARM: dts: omap: cpus/cpu nodes dts updates
-  ARM: dts: picoxcell: cpus/cpu nodes dts updates
-  ARM: dts: prima2: cpus/cpu node dts updates
-  ARM: dts: pxa2xx: cpus/cpu nodes dts updates
-  ARM: dts: r8a7740: cpus/cpu nodes dts updates
-  ARM: dts: sh7372: cpus/cpu nodes dts updates
-  ARM: dts: spear: cpus/cpu nodes dts updates
-  ARM: dts: sunxi: cpus/cpu nodes dts updates
-  ARM: DT: kernel: DT cpus/cpu node bindings update
-
- Documentation/devicetree/bindings/arm/cpus.txt | 459 ++++++++++++++++++++++---
- arch/arm/boot/dts/am33xx.dtsi                  |   4 +
- arch/arm/boot/dts/armada-370-xp.dtsi           |   4 +
- arch/arm/boot/dts/at91rm9200.dtsi              |   6 +-
- arch/arm/boot/dts/at91sam9260.dtsi             |   8 +-
- arch/arm/boot/dts/at91sam9263.dtsi             |   8 +-
- arch/arm/boot/dts/at91sam9g45.dtsi             |   8 +-
- arch/arm/boot/dts/at91sam9n12.dtsi             |   8 +-
- arch/arm/boot/dts/at91sam9x5.dtsi              |   8 +-
- arch/arm/boot/dts/exynos5440.dtsi              |   4 +
- arch/arm/boot/dts/imx23.dtsi                   |   8 +-
- arch/arm/boot/dts/imx28.dtsi                   |   8 +-
- arch/arm/boot/dts/imx6dl.dtsi                  |   2 +
- arch/arm/boot/dts/imx6q.dtsi                   |   4 +
- arch/arm/boot/dts/lpc32xx.dtsi                 |   8 +-
- arch/arm/boot/dts/omap2.dtsi                   |   6 +-
- arch/arm/boot/dts/omap3.dtsi                   |   5 +
- arch/arm/boot/dts/omap4.dtsi                   |   7 +
- arch/arm/boot/dts/omap5.dtsi                   |   7 +
- arch/arm/boot/dts/picoxcell-pc3x2.dtsi         |   8 +-
- arch/arm/boot/dts/picoxcell-pc3x3.dtsi         |   8 +-
- arch/arm/boot/dts/prima2.dtsi                  |   2 +
- arch/arm/boot/dts/pxa2xx.dtsi                  |   7 +-
- arch/arm/boot/dts/r8a7740.dtsi                 |   4 +
- arch/arm/boot/dts/sama5d3.dtsi                 |   2 +
- arch/arm/boot/dts/sh7372.dtsi                  |   5 +
- arch/arm/boot/dts/spear13xx.dtsi               |   2 +
- arch/arm/boot/dts/spear3xx.dtsi                |   8 +-
- arch/arm/boot/dts/spear600.dtsi                |   8 +-
- arch/arm/boot/dts/sun4i-a10.dtsi               |   2 +
- arch/arm/boot/dts/sun5i-a13.dtsi               |   2 +
- arch/arm/include/asm/cputype.h                 |   2 +
- arch/arm/include/asm/smp_plat.h                |   2 +-
- arch/arm/kernel/devtree.c                      | 149 ++++----
- arch/arm/kernel/setup.c                        |   2 +-
- 35 files changed, 646 insertions(+), 139 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sh7372.dtsi b/arch/arm/boot/dts/sh7372.dtsi
+index 677fc60..7bf020e 100644
+--- a/arch/arm/boot/dts/sh7372.dtsi
++++ b/arch/arm/boot/dts/sh7372.dtsi
+@@ -14,8 +14,13 @@
+ 	compatible = "renesas,sh7372";
+ 
+ 	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
+ 		cpu@0 {
+ 			compatible = "arm,cortex-a8";
++			device_type = "cpu";
++			reg = <0x0>;
+ 		};
+ 	};
+ };
 -- 
 1.8.2.2
