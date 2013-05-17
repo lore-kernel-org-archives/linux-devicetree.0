@@ -1,93 +1,45 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] <linux/of_platform.h>: fix compilation warnings with DT disabled
-Date: Thu, 16 May 2013 17:44:15 -0500
-Message-ID: <CAL_JsqLkshrBDDKtdf+KYufg=83Yn7zAFmHKUpoA848JzbQKmw@mail.gmail.com>
-References: <201302190258.25726.sergei.shtylyov@cogentembedded.com>
-	<20130301070925.GA24369@verge.net.au>
-	<5130B12F.20409@gmail.com>
-	<5130B1A7.9060001@gmail.com>
-	<5130B34F.2090700@cogentembedded.com>
-	<5130B506.5020908@gmail.com>
-	<5195486F.1040603@cogentembedded.com>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 2/2] powerpc/512x: DMA via LocalPlus Bus testing driver
+Date: Thu, 16 May 2013 18:15:23 -0700
+Message-ID: <20130517011523.GA9555@kroah.com>
+References: <1367508195-2420-1-git-send-email-a13xp0p0v88@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5195486F.1040603@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, linux-sh@vger.kernel.org, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, vladimir.barinov@cogentembedded.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1367508195-2420-1-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 16, 2013 at 3:58 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Hello.
->
->
-> On 03/01/2013 05:02 PM, Rob Herring wrote:
->
->>>>>>> Fix the following compilation warnings (in Simon Horman's
->>>>>>> renesas.git repo):
->>>>>>> In file included from arch/arm/mach-shmobile/setup-r8a7779.c:24=
-:0:
->>>>>>> include/linux/of_platform.h:107:13: warning: =91struct of_devic=
-e_id=92
->>>>>>> declared
->>>>>>> inside parameter list [enabled by default]
->>>>>>> include/linux/of_platform.h:107:13: warning: its scope is only =
-this
->>>>>>> definition
->>>>>>> or declaration, which is probably not what you want [enabled by
->>>>>>> default]
->>>>>>> include/linux/of_platform.h:107:13: warning: =91struct device_n=
-ode=92
->>>>>>> declared
->>>>>>> inside parameter list [enabled by default]
->>>>>>> <linux/of_platform.h> only #include's headers with definitions =
-of
->>>>>>> the above
->>>>>>> mentioned structures if CONFIG_OF_DEVICE=3Dy but uses them even=
- if
->>>>>>> not. One
->>>>>>> solution is to move some #include's out of #ifdef CONFIG_OF_DEV=
-ICE
->>>>>>> and use
->>>>>>> incomplete declarations for the rest of the structures where th=
-e
->>>>>>> #ifdef move
->>>>>>> doesn't help...
->>>>>>> Reported-by: Vladimir Barinov <vladimir.barinov@cogentembedded.=
-com>
->>>>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.=
-com>
->>>>>>
->>>>>> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
->>>>>> Grant, could you consider taking this patch?
->>>>>
->>>>> Yes, I can, but I don't seem to have the original patch. Can you =
-send
->>>>> it
->>>>> again.
->>>>
->>>> Nevermind. Found it. I'll apply it.
->>>
->>>     Will you drop 'struct device_node' declaration then or should I
->>> resend? In fact, I think I should better resend it with the changel=
-og
->>> somewhat edited.
->>
->> No, I plan to leave it as is and not rely on device.h by chance
->> declaring device_node.
->
->
->     I hoped to see this fix in 3.10-rc1. Is there any hope to see it =
-in
-> 3.10-rc's?
-> The code it fixes the warnings in is already in Linus tree.
+On Thu, May 02, 2013 at 07:23:15PM +0400, Alexander Popov wrote:
+> This module tests Direct Memory Access to some device on LocalPlus Bus
+> for Freescale MPC512x. In other words it tests the bundle
+> of mpc512x_lpbfifo and mpc512x_dma drivers.
+> 
+> This testing driver was multiply used with static RAM (CY62167EV30LL-45ZXI)
+> which lives on LocalPlus Bus on our board. This testing driver was used
+> instead of the original static RAM driver and it is an abnormal hack.
+> That is why I just provide the driver code and don't modify any environment.
+> 
+> Signed-off-by: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/misc/mpc512x_lpbdma_test.c | 310 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 310 insertions(+)
+>  create mode 100644 drivers/misc/mpc512x_lpbdma_test.c
 
-So I had this queued up, but Grant did not send DT update to Linus for
-3.10. The main thing we had was the preprocessor support and that went
-thru arm-soc tree. I plan to send this and other fixes to Linus for
-3.10.
+You obviously didn't test your testing driver to see if it would build
+in the kernel source tree :(
 
-Rob
+Care to try again?
