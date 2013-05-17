@@ -1,56 +1,71 @@
-From: Alexander Popov <a13xp0p0v88@gmail.com>
-Subject: Re: [PATCH 2/2] powerpc/512x: DMA via LocalPlus Bus testing driver
-Date: Fri, 17 May 2013 10:53:58 +0400
-Message-ID: <CAF0T0X5RuT-7Zg9HG=tAG8CE+BLfYDv=m8vPEi2j9en5KqRkWg@mail.gmail.com>
-References: <1367508195-2420-1-git-send-email-a13xp0p0v88@gmail.com>
-	<20130517011523.GA9555@kroah.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCHv9 5/9] clk: mvebu: create parent-child relation for PCIe clocks
+ on Armada 370
+Date: Fri, 17 May 2013 00:08:26 -0700
+Message-ID: <20130517070826.12127.41382@quantum>
+References: <1368624323-24311-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1368624323-24311-6-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20130515214154.12127.73539@quantum> <20130516094417.24b1ca0d@skate>
+ <51949830.70306@gmail.com> <20130516150616.GD6563@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130517011523.GA9555@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Anatolij Gustschin <agust@denx.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Timur Tabi <timur@tabi.org>, Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20130516150616.GD6563@titan.lakedaemon.net>
+Sender: linux-pci-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@secretlab.ca>, Lior Amsalem <alior@marvell.com>, Maen Suleiman <maen@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, linux-pci@vger.kernel.org, Thierry Reding <thierry.reding@avionic-design.de>, Rob Herring <rob.herring@calxeda.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-2013/5/17 Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
-> On Thu, May 02, 2013 at 07:23:15PM +0400, Alexander Popov wrote:
->> This module tests Direct Memory Access to some device on LocalPlus Bus
->> for Freescale MPC512x. In other words it tests the bundle
->> of mpc512x_lpbfifo and mpc512x_dma drivers.
->>
->> This testing driver was multiply used with static RAM (CY62167EV30LL-45ZXI)
->> which lives on LocalPlus Bus on our board. This testing driver was used
->> instead of the original static RAM driver and it is an abnormal hack.
->> That is why I just provide the driver code and don't modify any environment.
->>
->
-> You obviously didn't test your testing driver to see if it would build
-> in the kernel source tree :(
->
-> Care to try again?
+Quoting Jason Cooper (2013-05-16 08:06:16)
+> Mike, Sebastian,
+> 
+> On Thu, May 16, 2013 at 10:26:24AM +0200, Sebastian Hesselbarth wrote:
+> > On 05/16/2013 09:44 AM, Thomas Petazzoni wrote:
+> > >Dear Mike Turquette,
+> > >
+> > >On Wed, 15 May 2013 14:41:54 -0700, Mike Turquette wrote:
+> > >>Quoting Thomas Petazzoni (2013-05-15 06:25:19)
+> > >>>The Armada 370 has two gatable clocks for each PCIe interface, and we
+> > >>>want both of them to be enabled. We therefore make one of the two
+> > >>>clocks a child of the other, as we did for the sataX and sataXlnk
+> > >>>clocks on Armada XP.
+> > >>
+> > >>Ack for patches #5 and #6.  Do you want me to take them?
+> 
+> Thanks for the Ack!
+> 
+> > >I don't know, I guess with your Ack, it would be easier to carry them
+> > >through the Marvell maintainers and then the arm-soc tree, so that we
+> > >can test arm-soc and have all the pieces needed in here.
+> > >
+> > >That said, Sebastian Hesselbarth has submitted a big rework of the
+> > >mvebu clock drivers, which would conflict with this patch, and
+> > >Sebastian's rework would most likely go through your tree. If that's
+> > >the case, I guess it would be better to let you take #5 and #6 in this
+> > >patch series.
+> > 
+> > I also requested to take the restructure patches through ARM tree. They
+> > are only touching files in drivers/clk/mvebu and by taking them through
+> > ARM, we can update PCIe clock patches easily. The dependency between
+> > Thomas' and my patches basically is that I renamed files that Thomas
+> > now commits to. (I switched clk/mvebu from per-function files to per-soc
+> > files).
+> 
+> I agree.  My heart jumped into my throat a little there :)  Mike, if
+> it's ok with you, I'd prefer to take these through arm-soc.  Any merge
+> conflicts should be minimal.  And at any rate, resolving the conflicts
+> are *much* easier to handle than having arm-soc depend on an outside
+> tree (then Linus has to take care in the order he merges them, no
+> rebasing for clk tree, dogs and cats living together, etc ;-) )
+> 
 
-Hello Greg,
-thanks for your comment.
+Yeah that all sounds good to me.  I'll review the restructure patches
+shortly.
 
-You are right, this testing driver will not be built in the kernel source tree,
-because I intentionally didn't send patches for the corresponding
-Makefile, Kconfig and dts.
+Regards,
+Mike
 
-I would try to explain the reason once again:
-
-I multiply used this testing driver with static RAM (CY62167EV30LL-45ZXI)
-to test mpc512x_lpbfifo driver (which is [PATCH 1/2]:
-https://patchwork.kernel.org/patch/2511941/ ).
-I used this testing driver _instead_ of the original static RAM driver
-and it is an abnormal hack.
-Because it breaks the usual work of static RAM.
-That's why I just provided the code of this testing driver and didn't
-modify Makefile, Kconfig and dts.
-
-I hoped that the code of this testing driver will help to review
-mpc512x_lpbfifo in the first part of this patch.
-Thanks.
-
-Best regards,
-Alexander.
+> thx,
+> 
+> Jason.
