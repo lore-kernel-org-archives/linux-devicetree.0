@@ -1,55 +1,51 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: Pulls and drive strengths in the pinctrl world
-Date: Fri, 17 May 2013 13:59:54 +0200
-Message-ID: <CACRpkdZvN_0fd6N11NeSRtVZd5A1oE9TEhbOOz6Q27x6M39bcQ@mail.gmail.com>
-References: <CAD=FV=V9h3RUfvAxj8k2EbYXYPO4FfoNwh=f=dno5ZBUFYeG0w@mail.gmail.com>
-	<CAD=FV=UWftrtEe+qUT92RTd-3BG8hpznu3CtztOfw4eMWOqHrw@mail.gmail.com>
-	<CACRpkdZ+wrV9O6T0XQFtpLeOgvEhACXc4ycokiqof81K7GSLjg@mail.gmail.com>
-	<2465185.vYkbXUqoOT@flatron>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [RFC/PATCH 2/2] gpio-rcar: Add DT support
+Date: Fri, 17 May 2013 14:22:22 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1305171416230.31481@axis700.grange>
+References: <1368197317-13169-1-git-send-email-laurent.pinchart@ideasonboard.com>
+ <1368197317-13169-3-git-send-email-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <2465185.vYkbXUqoOT@flatron>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Doug Anderson <dianders@google.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thomas Abraham <thomas.abraham@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Simon Glass <sjg@chromium.org>, Olof Johansson <olof@lixom.net>, Kukjin Kim <kgene.kim@gmail.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1368197317-13169-3-git-send-email-laurent.pinchart@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm@opensource.se>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 17, 2013 at 11:09 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+Hi Laurent
 
->> Just add another state, pctldev->hog_shutdown to this, and
->> add an operation pinctrl_force_poweroff() in the same spirit as
->> pinctrl_force_sleep() that we already have.
->>
->> Add a new state to include/linux/pinctrl/pinctrl-state.h:
->> #define PINCTRL_STATE_POWEROFF "poweroff"
->>
->> And define you pin table to hog these pins with the mentioned
->> default and poweroff states.
->>
->> Result: pinctrl core keeps track of your offstate too.
->
-> Power down mode settings on our pin controller are completely unrelated to
-> normal mode settings. You can set them once in appropriate registers and
-> pins are switched to them automatically when the SoC enters sleep mode.
+On Fri, 10 May 2013, Laurent Pinchart wrote:
 
-Aha so it's actually automatic sleep modes, not power down
-(as in, disconnect the power and then push the "on" button to
-get it back up).
+> Add DT bindings for the gpio-rcar driver and read the device
+> configuration from the DT node at probe time if available.
+> 
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> ---
+>  .../devicetree/bindings/gpio/renesas,gpio-rcar.txt | 48 +++++++++++++++++
+>  drivers/gpio/gpio-rcar.c                           | 63 ++++++++++++++++++----
+>  2 files changed, 101 insertions(+), 10 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
 
-Please remember to document it per above in the code and the
-device tree, so everybody understands what it is.
+Testing this patch reveals, that (at least) one thing is missing here:
 
-> So IMHO in our case power mode settings are just additional pin
-> configuration options, next to pull-up/-down and driver strength.
+diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
+index a499ea6..e233778 100644
+--- a/drivers/gpio/gpio-rcar.c
++++ b/drivers/gpio/gpio-rcar.c
+@@ -342,6 +342,7 @@ static int gpio_rcar_probe(struct platform_device *pdev)
+ 	gpio_chip->owner = THIS_MODULE;
+ 	gpio_chip->base = p->config.gpio_base;
+ 	gpio_chip->ngpio = p->config.number_of_pins;
++	gpio_chip->dev = &pdev->dev;
+ 
+ 	irq_chip = &p->irq_chip;
+ 	irq_chip->name = name;
 
-I see. Yes that is different.
-
-You might want to have a debugfs file in your driver for inspecting
-them though, that sounds like it could be helpful. I'd recommend
-augmenting your .pin_config_dbg_show() callback in the
-struct pinconf_ops to display this for each pin, in addition to the
-current configuration.
-
-Yours,
-Linus Walleij
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
