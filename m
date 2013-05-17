@@ -1,7 +1,7 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFC PATCH v4 15/18] ARM: dts: sh7372: cpus/cpu nodes dts updates
-Date: Fri, 17 May 2013 16:20:58 +0100
-Message-ID: <1368804061-4421-16-git-send-email-lorenzo.pieralisi@arm.com>
+Subject: [RFC PATCH v4 17/18] ARM: dts: sunxi: cpus/cpu nodes dts updates
+Date: Fri, 17 May 2013 16:21:00 +0100
+Message-ID: <1368804061-4421-18-git-send-email-lorenzo.pieralisi@arm.com>
 References: <1368804061-4421-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -26,28 +26,39 @@ This patch updates the in-kernel dts files according to the latest cpus
 and cpu bindings updates for ARM.
 
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Acked-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/sh7372.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/sun4i-a10.dtsi | 2 ++
+ arch/arm/boot/dts/sun5i-a13.dtsi | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sh7372.dtsi b/arch/arm/boot/dts/sh7372.dtsi
-index 677fc60..7bf020e 100644
---- a/arch/arm/boot/dts/sh7372.dtsi
-+++ b/arch/arm/boot/dts/sh7372.dtsi
-@@ -14,8 +14,13 @@
- 	compatible = "renesas,sh7372";
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index e7ef619..39a8f61 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -17,7 +17,9 @@
  
  	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
  		cpu@0 {
- 			compatible = "arm,cortex-a8";
 +			device_type = "cpu";
+ 			compatible = "arm,cortex-a8";
 +			reg = <0x0>;
  		};
  	};
- };
+ 
+diff --git a/arch/arm/boot/dts/sun5i-a13.dtsi b/arch/arm/boot/dts/sun5i-a13.dtsi
+index 31fa38f..00a2637 100644
+--- a/arch/arm/boot/dts/sun5i-a13.dtsi
++++ b/arch/arm/boot/dts/sun5i-a13.dtsi
+@@ -18,7 +18,9 @@
+ 
+ 	cpus {
+ 		cpu@0 {
++			device_type = "cpu";
+ 			compatible = "arm,cortex-a8";
++			reg = <0x0>;
+ 		};
+ 	};
+ 
 -- 
 1.8.2.2
