@@ -1,65 +1,139 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: Pulls and drive strengths in the pinctrl world
-Date: Fri, 17 May 2013 14:38:14 +0200
-Message-ID: <4505921.rFrq65cY6P@amdc1227>
-References: <CAD=FV=V9h3RUfvAxj8k2EbYXYPO4FfoNwh=f=dno5ZBUFYeG0w@mail.gmail.com>
- <2465185.vYkbXUqoOT@flatron>
- <CACRpkdZvN_0fd6N11NeSRtVZd5A1oE9TEhbOOz6Q27x6M39bcQ@mail.gmail.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 0/5 v2] ARM: at91: dt: switch to pre-processor
+Date: Fri, 17 May 2013 14:38:07 +0200
+Message-ID: <20130517123807.GA16804@game.jcrosoft.org>
+References: <20130515141906.GI22508@game.jcrosoft.org>
+ <5195EA33.4010400@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CACRpkdZvN_0fd6N11NeSRtVZd5A1oE9TEhbOOz6Q27x6M39bcQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Doug Anderson <dianders@google.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thomas Abraham <thomas.abraham@linaro.org>, Simon Glass <sjg@chromium.org>, Olof Johansson <olof@lixom.net>, Kukjin Kim <kgene.kim@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <5195EA33.4010400@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Olof Johansson <olof@lixom.net>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-On Friday 17 of May 2013 13:59:54 Linus Walleij wrote:
-> On Fri, May 17, 2013 at 11:09 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> >> Just add another state, pctldev->hog_shutdown to this, and
-> >> add an operation pinctrl_force_poweroff() in the same spirit as
-> >> pinctrl_force_sleep() that we already have.
-> >> 
-> >> Add a new state to include/linux/pinctrl/pinctrl-state.h:
-> >> #define PINCTRL_STATE_POWEROFF "poweroff"
-> >> 
-> >> And define you pin table to hog these pins with the mentioned
-> >> default and poweroff states.
-> >> 
-> >> Result: pinctrl core keeps track of your offstate too.
-> > 
-> > Power down mode settings on our pin controller are completely unrelated to
-> > normal mode settings. You can set them once in appropriate registers and
-> > pins are switched to them automatically when the SoC enters sleep mode.
+On 10:28 Fri 17 May     , Nicolas Ferre wrote:
+> On 15/05/2013 16:19, Jean-Christophe PLAGNIOL-VILLARD :
+> >HI,
+> >
+> >	v2:
+> >	 use common IRQ define
+> >	 split patch
+> >	 rebase on 3.10-rc1
+> >
+> >         The follow patch series switch the at91 to DT pre-processor
+> >
+> >         So we can use macro for AIC and Pinctrl instead of magic
 > 
-> Aha so it's actually automatic sleep modes, not power down
-> (as in, disconnect the power and then push the "on" button to
-> get it back up).
+> Hi, this is very good for me: nice to use the common GPIO and IRQ
+> defines. It increases readability a lot!
+and avoid typo when adding pinctrl
 > 
-> Please remember to document it per above in the code and the
-> device tree, so everybody understands what it is.
+> So, it seems natural to push this series through arm-soc. It would
+> be integrated early in a "cleanup" branch for 3.11.
+> We also would like to make it a prerequisite for all AT91 material
+> that are touching the changed files, targeted for 3.11.
 
-Sure.
-
-> > So IMHO in our case power mode settings are just additional pin
-> > configuration options, next to pull-up/-down and driver strength.
+agreed
 > 
-> I see. Yes that is different.
+> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+
+Best Regards,
+J.
 > 
-> You might want to have a debugfs file in your driver for inspecting
-> them though, that sounds like it could be helpful. I'd recommend
-> augmenting your .pin_config_dbg_show() callback in the
-> struct pinconf_ops to display this for each pin, in addition to the
-> current configuration.
-
-Seems reasonable.
-
-Best regards,
--- 
-Tomasz Figa
-Linux Kernel Developer
-Samsung R&D Institute Poland
-Samsung Electronics
+> Thanks, best regards.
+> 
+> >The following changes since commit f722406faae2d073cc1d01063d1123c35425939e:
+> >
+> >   Linux 3.10-rc1 (2013-05-11 17:14:08 -0700)
+> >
+> >are available in the git repository at:
+> >
+> >   git://github.com/at91linux/linux-at91.git j/for-3.11-dt
+> >
+> >for you to fetch changes up to 3668ac6a70bc5af71a947ad7b531c57b8a787ea0:
+> >
+> >   ARM: at91: dt: switch to standard IRQ flag defines (2013-05-15 21:56:18 +0800)
+> >
+> >----------------------------------------------------------------
+> >Jean-Christophe PLAGNIOL-VILLARD (5):
+> >       ARM: at91: dt: use #include for all device trees
+> >       ARM: at91: dt: switch to standard GPIO flag defines.
+> >       ARM: at91: dt: add pinctrl pre-processor define
+> >       ARM: at91: dt: switch to pinctrl to pre-processor
+> >       ARM: at91: dt: switch to standard IRQ flag defines
+> >
+> >  arch/arm/boot/dts/aks-cdu.dts               |   12 +--
+> >  arch/arm/boot/dts/animeo_ip.dts             |   18 ++---
+> >  arch/arm/boot/dts/at91-ariag25.dts          |    6 +-
+> >  arch/arm/boot/dts/at91rm9200.dtsi           |  207 +++++++++++++++++++++++++------------------------
+> >  arch/arm/boot/dts/at91rm9200ek.dts          |   10 +--
+> >  arch/arm/boot/dts/at91sam9260.dtsi          |  215 ++++++++++++++++++++++++++-------------------------
+> >  arch/arm/boot/dts/at91sam9263.dtsi          |  203 ++++++++++++++++++++++++------------------------
+> >  arch/arm/boot/dts/at91sam9263ek.dts         |   24 +++---
+> >  arch/arm/boot/dts/at91sam9g15.dtsi          |    2 +-
+> >  arch/arm/boot/dts/at91sam9g15ek.dts         |    4 +-
+> >  arch/arm/boot/dts/at91sam9g20.dtsi          |    2 +-
+> >  arch/arm/boot/dts/at91sam9g20ek.dts         |    6 +-
+> >  arch/arm/boot/dts/at91sam9g20ek_2mmc.dts    |   10 +--
+> >  arch/arm/boot/dts/at91sam9g20ek_common.dtsi |   28 ++++---
+> >  arch/arm/boot/dts/at91sam9g25.dtsi          |    2 +-
+> >  arch/arm/boot/dts/at91sam9g25ek.dts         |    4 +-
+> >  arch/arm/boot/dts/at91sam9g35.dtsi          |    2 +-
+> >  arch/arm/boot/dts/at91sam9g35ek.dts         |    4 +-
+> >  arch/arm/boot/dts/at91sam9g45.dtsi          |  213 +++++++++++++++++++++++++-------------------------
+> >  arch/arm/boot/dts/at91sam9m10g45ek.dts      |   38 ++++-----
+> >  arch/arm/boot/dts/at91sam9n12.dtsi          |  141 +++++++++++++++++-----------------
+> >  arch/arm/boot/dts/at91sam9n12ek.dts         |   14 ++--
+> >  arch/arm/boot/dts/at91sam9x25.dtsi          |   22 +++---
+> >  arch/arm/boot/dts/at91sam9x25ek.dts         |    4 +-
+> >  arch/arm/boot/dts/at91sam9x35.dtsi          |    2 +-
+> >  arch/arm/boot/dts/at91sam9x35ek.dts         |    4 +-
+> >  arch/arm/boot/dts/at91sam9x5.dtsi           |  279 +++++++++++++++++++++++++++++++++---------------------------------
+> >  arch/arm/boot/dts/at91sam9x5cm.dtsi         |    8 +-
+> >  arch/arm/boot/dts/at91sam9x5ek.dtsi         |   14 ++--
+> >  arch/arm/boot/dts/ethernut5.dts             |    6 +-
+> >  arch/arm/boot/dts/evk-pro3.dts              |    6 +-
+> >  arch/arm/boot/dts/ge863-pro3.dtsi           |    2 +-
+> >  arch/arm/boot/dts/kizbox.dts                |   16 ++--
+> >  arch/arm/boot/dts/mpa1600.dts               |    4 +-
+> >  arch/arm/boot/dts/pm9g45.dts                |   22 +++---
+> >  arch/arm/boot/dts/sama5d3.dtsi              |  520 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------------------------------------------------------
+> >  arch/arm/boot/dts/sama5d31ek.dts            |    6 +-
+> >  arch/arm/boot/dts/sama5d33ek.dts            |    4 +-
+> >  arch/arm/boot/dts/sama5d34ek.dts            |    6 +-
+> >  arch/arm/boot/dts/sama5d35ek.dts            |    4 +-
+> >  arch/arm/boot/dts/sama5d3xcm.dtsi           |    4 +-
+> >  arch/arm/boot/dts/sama5d3xdm.dtsi           |    2 +-
+> >  arch/arm/boot/dts/sama5d3xmb.dtsi           |   26 +++----
+> >  arch/arm/boot/dts/tny_a9260.dts             |    4 +-
+> >  arch/arm/boot/dts/tny_a9263.dts             |    4 +-
+> >  arch/arm/boot/dts/tny_a9g20.dts             |    4 +-
+> >  arch/arm/boot/dts/usb_a9260.dts             |    4 +-
+> >  arch/arm/boot/dts/usb_a9260_common.dtsi     |    6 +-
+> >  arch/arm/boot/dts/usb_a9263.dts             |    8 +-
+> >  arch/arm/boot/dts/usb_a9g20-dab-mmx.dtsi    |   22 +++---
+> >  arch/arm/boot/dts/usb_a9g20.dts             |    4 +-
+> >  include/dt-bindings/pinctrl/at91.h          |   35 +++++++++
+> >  52 files changed, 1139 insertions(+), 1078 deletions(-)
+> >  create mode 100644 include/dt-bindings/pinctrl/at91.h
+> >
+> >Best Regards,
+> >J.
+> >
+> >
+> 
+> 
+> -- 
+> Nicolas Ferre
