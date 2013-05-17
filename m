@@ -1,13 +1,15 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFC PATCH v4 10/18] ARM: dts: omap: cpus/cpu nodes dts updates
-Date: Fri, 17 May 2013 16:20:53 +0100
-Message-ID: <1368804061-4421-11-git-send-email-lorenzo.pieralisi@arm.com>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v4 02/18] ARM: kernel: fix __cpu_logical_map default
+ initialization
+Date: Fri, 17 May 2013 11:46:38 -0400 (EDT)
+Message-ID: <alpine.LFD.2.03.1305171146100.31158@syhkavp.arg>
 References: <1368804061-4421-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1368804061-4421-3-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1368804061-4421-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1368804061-4421-3-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,104 +20,90 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch updates the in-kernel dts files according to the latest cpus
-and cpu bindings updates for ARM.
+On Fri, 17 May 2013, Lorenzo Pieralisi wrote:
 
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
----
- arch/arm/boot/dts/omap2.dtsi | 6 +++++-
- arch/arm/boot/dts/omap3.dtsi | 5 +++++
- arch/arm/boot/dts/omap4.dtsi | 7 +++++++
- arch/arm/boot/dts/omap5.dtsi | 7 +++++++
- 4 files changed, 24 insertions(+), 1 deletion(-)
+> The __cpu_logical_map array is statically initialized to 0, which is a valid
+> MPIDR value. To prevent issues with the current implementation, this patch
+> defines an MPIDR_INVALID value, and statically initializes the
+> __cpu_logical_map[] array to it. Entries in the arm_dt_init_cpu_maps()
+> tmp_map array used to stash DT reg properties while parsing DT are initialized
+> with the MPIDR_INVALID value as well for consistency.
+> 
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> CC: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 
-diff --git a/arch/arm/boot/dts/omap2.dtsi b/arch/arm/boot/dts/omap2.dtsi
-index 37aa748..4aac404 100644
---- a/arch/arm/boot/dts/omap2.dtsi
-+++ b/arch/arm/boot/dts/omap2.dtsi
-@@ -21,8 +21,12 @@
- 	};
- 
- 	cpus {
--		cpu@0 {
-+		#address-cells = <0>;
-+		#size-cells = <0>;
-+
-+		cpu {
- 			compatible = "arm,arm1136jf-s";
-+			device_type = "cpu";
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-index 82a404d..ba05d7f 100644
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -21,8 +21,13 @@
- 	};
- 
- 	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
- 		cpu@0 {
- 			compatible = "arm,cortex-a8";
-+			device_type = "cpu";
-+			reg = <0x0>;
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-index 2a56428..33a9450 100644
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -28,13 +28,20 @@
- 	};
- 
- 	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
- 		cpu@0 {
- 			compatible = "arm,cortex-a9";
-+			device_type = "cpu";
- 			next-level-cache = <&L2>;
-+			reg = <0x0>;
- 		};
- 		cpu@1 {
- 			compatible = "arm,cortex-a9";
-+			device_type = "cpu";
- 			next-level-cache = <&L2>;
-+			reg = <0x1>;
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index 3dd7ff8..35a6536 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -34,11 +34,18 @@
- 	};
- 
- 	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
- 		cpu@0 {
-+			device_type = "cpu";
- 			compatible = "arm,cortex-a15";
-+			reg = <0x0>;
- 		};
- 		cpu@1 {
-+			device_type = "cpu";
- 			compatible = "arm,cortex-a15";
-+			reg = <0x1>;
- 		};
- 	};
- 
--- 
-1.8.2.2
+Acked-by: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+
+> ---
+>  arch/arm/include/asm/cputype.h  | 2 ++
+>  arch/arm/include/asm/smp_plat.h | 2 +-
+>  arch/arm/kernel/devtree.c       | 2 +-
+>  arch/arm/kernel/setup.c         | 2 +-
+>  4 files changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/include/asm/cputype.h b/arch/arm/include/asm/cputype.h
+> index 7652712..dba62cb 100644
+> --- a/arch/arm/include/asm/cputype.h
+> +++ b/arch/arm/include/asm/cputype.h
+> @@ -32,6 +32,8 @@
+>  
+>  #define MPIDR_HWID_BITMASK 0xFFFFFF
+>  
+> +#define MPIDR_INVALID (~MPIDR_HWID_BITMASK)
+> +
+>  #define MPIDR_LEVEL_BITS 8
+>  #define MPIDR_LEVEL_MASK ((1 << MPIDR_LEVEL_BITS) - 1)
+>  
+> diff --git a/arch/arm/include/asm/smp_plat.h b/arch/arm/include/asm/smp_plat.h
+> index aaa61b6..e789832 100644
+> --- a/arch/arm/include/asm/smp_plat.h
+> +++ b/arch/arm/include/asm/smp_plat.h
+> @@ -49,7 +49,7 @@ static inline int cache_ops_need_broadcast(void)
+>  /*
+>   * Logical CPU mapping.
+>   */
+> -extern int __cpu_logical_map[];
+> +extern u32 __cpu_logical_map[];
+>  #define cpu_logical_map(cpu)	__cpu_logical_map[cpu]
+>  /*
+>   * Retrieve logical cpu index corresponding to a given MPIDR[23:0]
+> diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+> index 904cad5..0905502 100644
+> --- a/arch/arm/kernel/devtree.c
+> +++ b/arch/arm/kernel/devtree.c
+> @@ -82,7 +82,7 @@ void __init arm_dt_init_cpu_maps(void)
+>  	u32 i, j, cpuidx = 1;
+>  	u32 mpidr = is_smp() ? read_cpuid_mpidr() & MPIDR_HWID_BITMASK : 0;
+>  
+> -	u32 tmp_map[NR_CPUS] = { [0 ... NR_CPUS-1] = UINT_MAX };
+> +	u32 tmp_map[NR_CPUS] = { [0 ... NR_CPUS-1] = MPIDR_INVALID };
+>  	bool bootcpu_valid = false;
+>  	cpus = of_find_node_by_path("/cpus");
+>  
+> diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+> index 6ae71b7..eeac924 100644
+> --- a/arch/arm/kernel/setup.c
+> +++ b/arch/arm/kernel/setup.c
+> @@ -457,7 +457,7 @@ void notrace cpu_init(void)
+>  	    : "r14");
+>  }
+>  
+> -int __cpu_logical_map[NR_CPUS];
+> +u32 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = MPIDR_INVALID };
+>  
+>  void __init smp_setup_processor_id(void)
+>  {
+> -- 
+> 1.8.2.2
+> 
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
