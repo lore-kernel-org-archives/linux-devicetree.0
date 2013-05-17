@@ -1,127 +1,218 @@
-From: Andreas Herrmann <andreas.herrmann@calxeda.com>
-Subject: Re: [PATCH v2] documentation: iommu: add description of ARM System
- MMU binding
-Date: Fri, 17 May 2013 22:16:39 +0200
-Message-ID: <20130517201639.GL10369@alberich>
-References: <1365789727-5371-1-git-send-email-will.deacon@arm.com>
- <20130513095020.GB10369@alberich>
- <20130513095846.GC29814@mudshark.cambridge.arm.com>
- <20130513104147.GF10369@alberich>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: Pulls and drive strengths in the pinctrl world
+Date: Fri, 17 May 2013 14:17:00 -0700 (PDT)
+Message-ID: <1426243.rhL8pXoalu@flatron>
+References: <CAD=FV=V9h3RUfvAxj8k2EbYXYPO4FfoNwh=f=dno5ZBUFYeG0w@mail.gmail.com> <519426A8.8090908@wwwdotorg.org> <20130517122625.GC1952@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20130513104147.GF10369@alberich>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Olav Haugan <ohaugan@codeaurora.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130517122625.GC1952@game.jcrosoft.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Doug Anderson <dianders@google.com>, Kukjin Kim <kgene.kim@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 13, 2013 at 12:41:47PM +0200, Andreas Herrmann wrote:
-> On Mon, May 13, 2013 at 05:58:46AM -0400, Will Deacon wrote:
-> > On Mon, May 13, 2013 at 10:50:20AM +0100, Andreas Herrmann wrote:
+Hi Jean-Christophe,
 
-[snip]
-
-> > > I also think that it is more useful to move the stream-id property to
-> > > the device node of a master device. (It's a characteristic of the
-> > > master device not of the SMMU.) Currently with multiple stream IDs per
-> > > master device you have repeated entries in the mmu-master property.
+On Friday 17 of May 2013 14:26:25 Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 18:22 Wed 15 May     , Stephen Warren wrote:
+> > On 05/15/2013 06:13 PM, Tomasz Figa wrote:
+> > > On Wednesday 15 of May 2013 16:55:37 Doug Anderson wrote:
+> > >> Tomasz / Linus,
+> > >> 
+> > >> On Wed, May 15, 2013 at 3:06 PM, Tomasz Figa
+> > >> <tomasz.figa@gmail.com>
+> > > 
+> > > wrote:
+> > >>> Yes. I don't like the current way too much either, duplication
+> > >>> being
+> > >>> one of the reasons.
+> > >> 
+> > >> Do you have any other ideas?  It sounds like Linus didn't like my
+> > >> suggestion and makes some good points...
+> > > 
+> > > I don't have anything interesting at the moment. It's a bit late now
+> > > here (2 AM), so I'm going to get some sleep first.
+> > > 
+> > > Also after reading Stephen's reply, I'm wondering if hogging
+> > > wouldn't
+> > > solve the problem indeed. (It might have to be fixed on
+> > > pinctrl-samsung
+> > > first, as last time I tried to use it, it caused some errors from
+> > > pinctrl core, but haven't time to track them down, as it wasn't
+> > > anything important at that time).
 > > 
-> > The problem with that approach is how to handle StreamID remastering. This
-> > can and will happen, so the StreamID for a device is actually a property of
-> > both the device *and* a particular point in the bus topology. Putting this
-> > information in the device nodes will drag topology information all over the
-> > place and I don't think it will make things clearer to read or easier to parse.
-> 
-> Ok, good point, didn't think about that.
-> And agreed, adding remastered StreamIDs as a property to a device node is odd.
-> 
-> > > But all that is needed is to point (once) to each mmu-master in the
-> > > SMMU device node. Then you should be able to look up the corresponding
-> > > stream IDs in the device node for each mmu-master.
+> > One issue I noticed with the DT fragments earlier in this thread. It
+> > looks like hogs in the Samsung pinctrl bingings end up looking like:
 > > 
-> > Again, you also need to tie in topology information if you go down this
-> > route.
+> > pinctrl {
+> > 
+> >     pina {
+> >     
+> >         samsung,pins = <PIN_A PIN_B PIN_C>;
+> >         samsung,pin-function = <0xf>;
+> >         samsung,pin-pud = <0>;
+> >         ...
+> 
+> I have a huge issue here that we had on at91 too
+> 
+> we are going to have a huge numbet of node
+> 
+> and on at91 we handle the pin the same way as samsung
+> and ST have also a similiar IP
+> 
+> so I'll prefer to reuse the AT91 DT bindings
+> 
+> as said by Linus I just push a cleanup of the magic by using Macro
+> which make it really readable now
+> 
+> some extract of the sama5 pinctrl
+> 
+> 	mmc0 {
+> 		pinctrl_mmc0_clk_cmd_dat0: mmc0_clk_cmd_dat0 {
+> 			atmel,pins =
+> 				<AT91_PIOD 9 AT91_PERIPH_A 
+AT91_PINCTRL_NONE	/* PD9 periph A MCI0_CK
+> */ AT91_PIOD 0 AT91_PERIPH_A AT91_PINCTRL_PULL_UP	/* PD0 periph A
+> MCI0_CDA with pullup */ AT91_PIOD 1 AT91_PERIPH_A
+> AT91_PINCTRL_PULL_UP>;	/* PD1 periph A MCI0_DA0 with pullup */ };
+> 		pinctrl_mmc0_dat1_3: mmc0_dat1_3 {
+> 			atmel,pins =
+> 				<AT91_PIOD 2 AT91_PERIPH_A 
+AT91_PINCTRL_PULL_UP	/* PD2 periph A
+> MCI0_DA1 with pullup */ AT91_PIOD 3 AT91_PERIPH_A
+> AT91_PINCTRL_PULL_UP	/* PD3 periph A MCI0_DA2 with pullup */ AT91_PIOD
+> 4 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;	/* PD4 periph A MCI0_DA3 
+with
+> pullup */ };
+> 		pinctrl_mmc0_dat4_7: mmc0_dat4_7 {
+> 			atmel,pins =
+> 				<AT91_PIOD 5 AT91_PERIPH_A 
+AT91_PINCTRL_PULL_UP	/* PD5 periph A
+> MCI0_DA4 with pullup, conflicts with TIOA0, PWMH2 */ AT91_PIOD 6
+> AT91_PERIPH_A AT91_PINCTRL_PULL_UP	/* PD6 periph A MCI0_DA5 with
+> pullup, conflicts with TIOB0, PWML2 */ AT91_PIOD 7 AT91_PERIPH_A
+> AT91_PINCTRL_PULL_UP	/* PD7 periph A MCI0_DA6 with pullup, conlicts
+> with TCLK0, PWMH3 */ AT91_PIOD 8 AT91_PERIPH_A
+> AT91_PINCTRL_PULL_UP>;	/* PD8 periph A MCI0_DA7 with pullup, 
+conflicts
+> with PWML3 */ };
+> 	};
+> 
+> of sam9g45
+> 
+> 	i2c_gpio2 {
+> 		pinctrl_i2c_gpio2: i2c_gpio2-0 {
+> 			atmel,pins =
+> 				<AT91_PIOB 4 AT91_PERIPH_GPIO 
+AT91_PINCTRL_MULTI_DRIVE	/* PB4 gpio
+> multidrive I2C2 data */ AT91_PIOB 5 AT91_PERIPH_GPIO
+> AT91_PINCTRL_MULTI_DRIVE>;	/* PB5 gpio multidrive I2C2 clock */ };
+> 	};
+> 
+> so we could share the c code too
 
-I still don't like the approach of having two independend lists that
-must be in sync to associate a master with its stream-ids.
+I'd have a question with regard to AT91 bindings.
 
-Why? Say you have 8 masters for an SMMU with 1 or 2 stream-ids each:
+Using Samsung bindings we don't need to specify all configuration options 
+for a pin, only those that are relevant for the platform. Do your bindings 
+allow this?
 
-     	 smmu {
-		...
-                mmu-masters = <&dma0>, <&dma0>, <&dma1>, <&dma1>,
-			      <&dma2>, <&dma2>, <&dma4>, <&dma4>,
-			      <&dma5>, <&dma6>, <&dma7>, <&dma8>;
-                stream-ids =	<0>, <1>, <2>, <3>,
-				<4>, <5>, <6>, <7>,
-		                <8>, <9>, <0xa>, <0xb>;
-	}
+Apparently AT91 has less configurable things and those available are 
+usually always configured together so it's not a problem. But on our SoCs 
+we have a bit more of them:
+- function (input, output, special functions)
+- pull-down/-up
+- driver strength
+- power down mode function (input, output low, output high, retention)
+- power down mode pull-down/-up
+- one could argue that default output value could be set this way as well, 
+by adding samsung,pin-value property.
 
-Couldn't we use of_phandle_args for this purpose? So your example
+Best regards,
+Tomasz
 
-+        smmu {
-		 ...
-+                mmu-masters = <&dma0>,
-+                              <&dma0>,
-+                              <&dma1>;
-+                stream-ids  = <0xd01d>,
-+                              <0xd01e>,
-+                              <0xd11c>;
-+        };
-
-would look like
-
-	dma0 {
-		...
-		#stream-id-cells = <2>
-		...
-	}
-
-	dma1 {
-		...
-		#stream-id-cells = <1>
-		...
-	}
-
-        smmu {
-		...
-		mmu-masters = <&dma0 0xd01d 0xd01e
-			       &dma1 0xd11c>,
-       };
-
-and my example would be converted to
-
-	smmu {
-		...
-                mmu-masters = <&dma0 0 1 &dma1 2 3 &dma2 4 5
-			       &dma4 6 7 &dma5 8 &dma6 9
-			       &dma7 0xa &dma8 0xb>
-		...
-	}
-
-where each master has #stream-id-cells property with value 1 or 2.
-And if dma4 has #stream-id-cells = <1>, the parsing code quickly
-notifies us about an error whereas such an error can't be noticed
-right from the beginning with the two-list-approach. In this example
-stream-id 6 belongs to dma3 which was completely ommitted in both
-descriptions.
-
-Of course usage of of_phandle_args would restrict the number of
-stream-ids per master to 8 (which is currently used as
-MAX_PHANDLE_ARGS). But I don't think that this is a restriction in
-practice or do you expect to have more than 8 stream-ids per master
-(ie. per struct device in Linux)?
-
-
-Andreas
+> Best Regards,
+> J,
+> 
+> >     };
+> >     pinp {
+> >     
+> >         samsung,pins = <PIN_P PIN_Q>;
+> >         samsung,pin-function = <0xe>;
+> >         samsung,pin-pud = <1>;
+> >         ...
+> >     
+> >     };
+> >     pinx {
+> >     
+> >         samsung,pins = <PIN_X PIN_Y PIN_Z>;
+> >         samsung,pin-function = <0xd>;
+> >         samsung,pin-pud = <2>;
+> >         ...
+> >     
+> >     };
+> >     
+> >     pinctrl-names = "default";
+> >     pinctrl-0 = <&pina &pinp &pinx>;
+> > 
+> > };
+> > 
+> > That pinctrl-0 property could get rather large (hard to
+> > write/maintain,
+> > unwieldy) if it needs to set up lots of different configurations.
+> > That's why I made the equivalent Tegra bindings be:
+> > 
+> > pinctrl {
+> > 
+> >     pins_default {
+> >     
+> >         pina {
+> >         
+> >             samsung,pins = <PIN_A PIN_B PIN_C>;
+> >             samsung,pin-function = <0xf>;
+> >             samsung,pin-pud = <0>;
+> >             ...
+> >         
+> >         };
+> >         pinp {
+> >         
+> >             samsung,pins = <PIN_P PIN_Q>;
+> >             samsung,pin-function = <0xe>;
+> >             samsung,pin-pud = <1>;
+> >             ...
+> >         
+> >         };
+> >         pinx {
+> >         
+> >             samsung,pins = <PIN_X PIN_Y PIN_Z>;
+> >             samsung,pin-function = <0xd>;
+> >             samsung,pin-pud = <2>;
+> >             ...
+> >         
+> >         };
+> >     
+> >     };
+> >     
+> >     pinctrl-names = "default";
+> >     pinctrl-0 = <&pins_default>;
+> > 
+> > };
+> > 
+> > The extra level within the "pinctrl configuration node"
+> > ("pins_default"
+> > here) makes the pinctrl-0 property a lot easier to write, and the
+> > advantage happens at every use-site that needs to configure different
+> > subsets of the relevant pins in different ways.
+> > 
+> > If you're changing all the bindings anyway, introducing this extra
+> > level might be something to think about.
+> > 
+> > I did try to explain my philosophy here when we all got together to
+> > design the pinctrl bindings, but I obviously didn't explain it well
+> > enough, or people didn't like it anyway.
+> > _______________________________________________
+> > devicetree-discuss mailing list
+> > devicetree-discuss@lists.ozlabs.org
+> > https://lists.ozlabs.org/listinfo/devicetree-discuss
