@@ -1,45 +1,34 @@
-From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ipmi: add missing platform_device_put() on error in
- try_smi_init()
-Date: Fri, 17 May 2013 16:25:17 +0800
-Message-ID: <CAPgLHd-L6gbKfv+5O0iJ+6vkS_o6QguxWj+7yPp-h9ZQDhb+1A@mail.gmail.com>
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Subject: [PATCH] gianfar: add missing iounmap() on error in gianfar_ptp_probe()
+Date: Fri, 17 May 2013 16:25:34 +0800
+Message-ID: <CAPgLHd9ED7YCCTmKtD9PURq_cWy5GG=M+4ExC1wd+xOpgB97CQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: minyard-HInyCGIudOg@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: richardcochran@gmail.com, grant.likely@linaro.org, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-Add the missing platform_device_put() before return from
-try_smi_init() in the platform_device_add() fail case.
+Add the missing iounmap() before return from gianfar_ptp_probe()
+in the error handling case.
 
-Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 ---
- drivers/char/ipmi/ipmi_si_intf.c | 1 +
+ drivers/net/ethernet/freescale/gianfar_ptp.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-index af4b23f..3f6c390 100644
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -3299,6 +3299,7 @@ static int try_smi_init(struct smi_info *new_smi)
- 			       "Unable to register system interface device:"
- 			       " %d\n",
- 			       rv);
-+			platform_device_put(new_smi->pdev);
- 			goto out_err;
- 		}
- 		new_smi->dev_registered = 1;
+diff --git a/drivers/net/ethernet/freescale/gianfar_ptp.c b/drivers/net/ethernet/freescale/gianfar_ptp.c
+index 576e4b8..083ea2b 100644
+--- a/drivers/net/ethernet/freescale/gianfar_ptp.c
++++ b/drivers/net/ethernet/freescale/gianfar_ptp.c
+@@ -524,6 +524,7 @@ static int gianfar_ptp_probe(struct platform_device *dev)
+ 	return 0;
+ 
+ no_clock:
++	iounmap(etsects->regs);
+ no_ioremap:
+ 	release_resource(etsects->rsrc);
+ no_resource:
