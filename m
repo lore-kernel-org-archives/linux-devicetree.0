@@ -1,98 +1,83 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH v3 09/20] ARM: shmobile: r8a7790: Add GPIO controller
- devices to device tree
-Date: Fri, 17 May 2013 14:26:48 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1305171423270.31481@axis700.grange>
-References: <1368577100-3530-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1368577100-3530-10-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 1/2] video: exynos_dp: Add parsing of gpios pins to
+ exynos-dp driver
+Date: Fri, 17 May 2013 14:29:35 +0200
+Message-ID: <6459883.FZan3akiXR@amdc1227>
+References: <26364319.123371368669839202.JavaMail.weblogic@epml12>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1368577100-3530-10-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <26364319.123371368669839202.JavaMail.weblogic@epml12>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: jg1.han@samsung.com
+Cc: Vikas Sajjan <vikas.sajjan@linaro.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, =?utf-8?B?6rmA6rWt7KeE?= <kgene.kim@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "patches@linaro.org" <patches@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "FlorianSchandinat@gmx.de" <FlorianSchandinat@gmx.de>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent
+Hi Jingoo,
 
-On Wed, 15 May 2013, Laurent Pinchart wrote:
+On Thursday 16 of May 2013 02:03:59 =ED=95=9C=EC=A7=84=EA=B5=AC wrote:
+> Tuesday, May 14, 2013 11:17 PM, Vikas Sajjan wrote:
+>=20
+> >=20
+> > Hi Vikas,
+> >=20
+> > On Tuesday 14 of May 2013 18:25:51 Vikas Sajjan wrote:
+> >=20
+> > >  Adds GPIO parsing functionality for "LCD backlight" and "LCD ena=
+ble"
+> > >  GPIO pins of exynos dp controller.
+> > >
+> > >
+> > >
+> > > Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
+> > > ---
+> > >=20
+> > >  drivers/video/exynos/exynos_dp_core.c |   45
+> > >=20
+> > > +++++++++++++++++++++++++++++++++ 1 file changed, 45 insertions(+=
+)
+> > >
+> > >
+> >=20
+> >=20
+> > I don't think that Exynos DP driver is right place for such code.
+> > Backlight
+ and LCD drivers are responsible for backlight and LCD power
+> > control using backlight and LCD subsystems.
+> >=20
+> > IMHO the correct solution would be to either extend existing
+> > backlight/lcd
+> > drivers found in drivers/video/backlight to support direct GPIO con=
+trol
+> > and
+ parse GPIO pins from device tree or create new gpio_bl and gpio_lcd
+> > drivers.
+>=20
+> Hi Vikas Sajian,
+>=20
+> I agree with Tomasz Figa's opinion.
+> Backlight/LCD framework should be used.
+> eDP panel backlight on SMDK5210 board can be controlled by PWM;
+> thus, pwm-backlight driver should be used.
+> Also, eDP panel reset pin should be controlled by using
+> platform-lcd driver.
+>=20
+>=20
+> >=20
+> > CCing Richard, Florian and linux-fbdev.
+>=20
+>=20
+> Also, I have been doing backlight reviews instead of Richard,
+> please do CC'ing me.
 
-> Add GPIO controller nodes to the r8a7790 core device tree.
-> 
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> ---
->  arch/arm/boot/dts/r8a7790.dtsi | 54 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
+OK. I used get_maintainers script, but it seems like the result was a b=
+it off=20
+in this case. Will remember for future.
 
-Also here a couple of things are missing (presumably, for other SoCs you 
-need the same):
-
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi 
-b/arch/arm/boot/dts/r8a7790.dtsi
-index 674ee39..cd1a04f 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -51,6 +51,7 @@
- 		interrupts = <0 4 0x4>;
- 		#gpio-cells = <2>;
- 		gpio-controller;
-+		gpio-ranges = <&pfc 0 0 32>;
- 	};
- 
- 	gpio1: gpio@ffc41000 {
-@@ -60,6 +61,7 @@
- 		interrupts = <0 5 0x4>;
- 		#gpio-cells = <2>;
- 		gpio-controller;
-+		gpio-ranges = <&pfc 0 32 32>;
- 	};
- 
- 	gpio2: gpio@ffc42000 {
-@@ -69,6 +71,7 @@
- 		interrupts = <0 6 0x4>;
- 		#gpio-cells = <2>;
- 		gpio-controller;
-+		gpio-ranges = <&pfc 0 64 32>;
- 	};
- 
- 	gpio3: gpio@ffc43000 {
-@@ -78,6 +81,7 @@
- 		interrupts = <0 7 0x4>;
- 		#gpio-cells = <2>;
- 		gpio-controller;
-+		gpio-ranges = <&pfc 0 96 32>;
- 	};
- 
- 	gpio4: gpio@ffc44000 {
-@@ -87,6 +91,7 @@
- 		interrupts = <0 8 0x4>;
- 		#gpio-cells = <2>;
- 		gpio-controller;
-+		gpio-ranges = <&pfc 0 128 32>;
- 	};
- 
- 	gpio5: gpio@ffc45000 {
-@@ -96,6 +101,7 @@
- 		interrupts = <0 9 0x4>;
- 		#gpio-cells = <2>;
- 		gpio-controller;
-+		gpio-ranges = <&pfc 0 160 32>;
- 	};
- 
- 	timer {
-@@ -118,6 +124,7 @@
- 	pfc: pfc@e6060000 {
- 		compatible = "renesas,pfc-r8a7790";
- 		reg = <0 0xe6060000 0 0x250>;
-+		#gpio-range-cells = <3>;
- 	};
- 
- 	/* No MMC_CAP_UHS_DDR50 (dual data rate) capability on r8a7790! */
-
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+Best regards,
+--=20
+Tomasz Figa
+Linux Kernel Developer
+Samsung R&D Institute Poland
+Samsung Electronics
