@@ -1,97 +1,127 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [GIT PULL] DT changes for v3.10
-Date: Fri, 17 May 2013 21:11:27 +0100
-Message-ID: <CACxGe6tVT9sDLgJwmKjjejYe2wnmYz4A5HaQThiOfyW3T8gU_Q@mail.gmail.com>
+From: Andreas Herrmann <andreas.herrmann@calxeda.com>
+Subject: Re: [PATCH v2] documentation: iommu: add description of ARM System
+ MMU binding
+Date: Fri, 17 May 2013 22:16:39 +0200
+Message-ID: <20130517201639.GL10369@alberich>
+References: <1365789727-5371-1-git-send-email-will.deacon@arm.com>
+ <20130513095020.GB10369@alberich>
+ <20130513095846.GC29814@mudshark.cambridge.arm.com>
+ <20130513104147.GF10369@alberich>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20130513104147.GF10369@alberich>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Olav Haugan <ohaugan@codeaurora.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Mon, May 13, 2013 at 12:41:47PM +0200, Andreas Herrmann wrote:
+> On Mon, May 13, 2013 at 05:58:46AM -0400, Will Deacon wrote:
+> > On Mon, May 13, 2013 at 10:50:20AM +0100, Andreas Herrmann wrote:
 
-Here are a few DT bug fixes and documentation updates. Sorry this pull
-request came after -rc1. I hope it is still okay to pull in. All has
-been in linux-next well before the merge window.
+[snip]
 
-g.
+> > > I also think that it is more useful to move the stream-id property to
+> > > the device node of a master device. (It's a characteristic of the
+> > > master device not of the SMMU.) Currently with multiple stream IDs per
+> > > master device you have repeated entries in the mmu-master property.
+> > 
+> > The problem with that approach is how to handle StreamID remastering. This
+> > can and will happen, so the StreamID for a device is actually a property of
+> > both the device *and* a particular point in the bus topology. Putting this
+> > information in the device nodes will drag topology information all over the
+> > place and I don't think it will make things clearer to read or easier to parse.
+> 
+> Ok, good point, didn't think about that.
+> And agreed, adding remastered StreamIDs as a property to a device node is odd.
+> 
+> > > But all that is needed is to point (once) to each mmu-master in the
+> > > SMMU device node. Then you should be able to look up the corresponding
+> > > stream IDs in the device node for each mmu-master.
+> > 
+> > Again, you also need to tie in topology information if you go down this
+> > route.
 
-The following changes since commit 31880c37c11e28cb81c70757e38392b42e69=
-5dc6:
+I still don't like the approach of having two independend lists that
+must be in sync to associate a master with its stream-ids.
 
-  Linux 3.9-rc6 (2013-04-07 20:49:54 -0700)
+Why? Say you have 8 masters for an SMMU with 1 or 2 stream-ids each:
 
-are available in the git repository at:
+     	 smmu {
+		...
+                mmu-masters = <&dma0>, <&dma0>, <&dma1>, <&dma1>,
+			      <&dma2>, <&dma2>, <&dma4>, <&dma4>,
+			      <&dma5>, <&dma6>, <&dma7>, <&dma8>;
+                stream-ids =	<0>, <1>, <2>, <3>,
+				<4>, <5>, <6>, <7>,
+		                <8>, <9>, <0xa>, <0xb>;
+	}
 
-  git://git.secretlab.ca/git/linux tags/devicetree-for-linus
+Couldn't we use of_phandle_args for this purpose? So your example
 
-for you to fetch changes up to 3132f623386e9ac87077bd839e726f7b940fbc94=
-:
++        smmu {
+		 ...
++                mmu-masters = <&dma0>,
++                              <&dma0>,
++                              <&dma1>;
++                stream-ids  = <0xd01d>,
++                              <0xd01e>,
++                              <0xd11c>;
++        };
 
-  Merge branch 'for-next' of git://sources.calxeda.com/kernel/linux
-into HEAD (2013-05-07 12:03:42 +0100)
+would look like
 
-----------------------------------------------------------------
+	dma0 {
+		...
+		#stream-id-cells = <2>
+		...
+	}
 
-Device tree bug fixes and documentation updates for v3.10
+	dma1 {
+		...
+		#stream-id-cells = <1>
+		...
+	}
 
-Nothing earth shattering here. A build failure fix, and fix for
-releasing nodes and some documenation updates.
+        smmu {
+		...
+		mmu-masters = <&dma0 0xd01d 0xd01e
+			       &dma1 0xd11c>,
+       };
 
-----------------------------------------------------------------
-Grant Likely (1):
-      Merge branch 'for-next' of
-git://sources.calxeda.com/kernel/linux into HEAD
+and my example would be converted to
 
-Rahul Sharma (1):
-      of/documentation: move video device bindings to a common place
+	smmu {
+		...
+                mmu-masters = <&dma0 0 1 &dma1 2 3 &dma2 4 5
+			       &dma4 6 7 &dma5 8 &dma6 9
+			       &dma7 0xa &dma8 0xb>
+		...
+	}
 
-Rob Herring (1):
-      Merge tag 'tegra-for-3.10-dtc-cpp-chroot-std-headers' of
-git://git.kernel.org/.../swarren/linux-tegra into for-next
+where each master has #stream-id-cells property with value 1 or 2.
+And if dma4 has #stream-id-cells = <1>, the parsing code quickly
+notifies us about an error whereas such an error can't be noticed
+right from the beginning with the two-list-approach. In this example
+stream-id 6 belongs to dma3 which was completely ommitted in both
+descriptions.
 
-Sergei Shtylyov (1):
-      <linux/of_platform.h>: fix compilation warnings with DT disabled
-
-Tang Yuantian (1):
-      of/base: release the node correctly in of_parse_phandle_with_args=
-()
-
-Uwe Kleine-K=F6nig (1):
-      Documentation/devicetree: make semantic of initrd-end more explic=
-it
-
- .../{drm/exynos/hdmi.txt =3D> video/exynos_hdmi.txt} |  0
- .../hdmiddc.txt =3D> video/exynos_hdmiddc.txt}       |  0
- .../hdmiphy.txt =3D> video/exynos_hdmiphy.txt}       |  0
- .../exynos/mixer.txt =3D> video/exynos_mixer.txt}    |  0
- Documentation/devicetree/usage-model.txt           |  8 +-
- arch/arm/boot/dts/include/dt-bindings              |  1 +
- drivers/of/base.c                                  |  4 +-
- include/dt-bindings/gpio/gpio.h                    | 15 ++++
- include/dt-bindings/interrupt-controller/arm-gic.h | 22 +++++
- include/dt-bindings/interrupt-controller/irq.h     | 19 +++++
- include/linux/of_platform.h                        |  5 +-
- scripts/Makefile.lib                               | 17 ++--
- scripts/basic/fixdep.c                             | 93 ++++++++++++++=
---------
- 13 files changed, 135 insertions(+), 49 deletions(-)
- rename Documentation/devicetree/bindings/{drm/exynos/hdmi.txt =3D>
-video/exynos_hdmi.txt} (100%)
- rename Documentation/devicetree/bindings/{drm/exynos/hdmiddc.txt =3D>
-video/exynos_hdmiddc.txt} (100%)
- rename Documentation/devicetree/bindings/{drm/exynos/hdmiphy.txt =3D>
-video/exynos_hdmiphy.txt} (100%)
- rename Documentation/devicetree/bindings/{drm/exynos/mixer.txt =3D>
-video/exynos_mixer.txt} (100%)
- create mode 120000 arch/arm/boot/dts/include/dt-bindings
- create mode 100644 include/dt-bindings/gpio/gpio.h
- create mode 100644 include/dt-bindings/interrupt-controller/arm-gic.h
- create mode 100644 include/dt-bindings/interrupt-controller/irq.h
+Of course usage of of_phandle_args would restrict the number of
+stream-ids per master to 8 (which is currently used as
+MAX_PHANDLE_ARGS). But I don't think that this is a restriction in
+practice or do you expect to have more than 8 stream-ids per master
+(ie. per struct device in Linux)?
 
 
---
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Andreas
