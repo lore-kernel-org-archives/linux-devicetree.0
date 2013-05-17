@@ -1,7 +1,7 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFC PATCH v4 08/18] ARM: dts: imx: cpus/cpu nodes dts updates
-Date: Fri, 17 May 2013 16:20:51 +0100
-Message-ID: <1368804061-4421-9-git-send-email-lorenzo.pieralisi@arm.com>
+Subject: [RFC PATCH v4 10/18] ARM: dts: omap: cpus/cpu nodes dts updates
+Date: Fri, 17 May 2013 16:20:53 +0100
+Message-ID: <1368804061-4421-11-git-send-email-lorenzo.pieralisi@arm.com>
 References: <1368804061-4421-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -26,104 +26,96 @@ This patch updates the in-kernel dts files according to the latest cpus
 and cpu bindings updates for ARM.
 
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/imx23.dtsi  | 8 ++++++--
- arch/arm/boot/dts/imx28.dtsi  | 8 ++++++--
- arch/arm/boot/dts/imx6dl.dtsi | 2 ++
- arch/arm/boot/dts/imx6q.dtsi  | 4 ++++
- 4 files changed, 18 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/omap2.dtsi | 6 +++++-
+ arch/arm/boot/dts/omap3.dtsi | 5 +++++
+ arch/arm/boot/dts/omap4.dtsi | 7 +++++++
+ arch/arm/boot/dts/omap5.dtsi | 7 +++++++
+ 4 files changed, 24 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx23.dtsi b/arch/arm/boot/dts/imx23.dtsi
-index 73fd7d0..587ceef 100644
---- a/arch/arm/boot/dts/imx23.dtsi
-+++ b/arch/arm/boot/dts/imx23.dtsi
-@@ -23,8 +23,12 @@
+diff --git a/arch/arm/boot/dts/omap2.dtsi b/arch/arm/boot/dts/omap2.dtsi
+index 37aa748..4aac404 100644
+--- a/arch/arm/boot/dts/omap2.dtsi
++++ b/arch/arm/boot/dts/omap2.dtsi
+@@ -21,8 +21,12 @@
  	};
  
  	cpus {
 -		cpu@0 {
--			compatible = "arm,arm926ejs";
 +		#address-cells = <0>;
 +		#size-cells = <0>;
 +
 +		cpu {
-+			compatible = "arm,arm926ej-s";
+ 			compatible = "arm,arm1136jf-s";
 +			device_type = "cpu";
  		};
  	};
  
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index 600f7cb..4c10a19 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -32,8 +32,12 @@
+diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+index 82a404d..ba05d7f 100644
+--- a/arch/arm/boot/dts/omap3.dtsi
++++ b/arch/arm/boot/dts/omap3.dtsi
+@@ -21,8 +21,13 @@
  	};
  
  	cpus {
--		cpu@0 {
--			compatible = "arm,arm926ejs";
-+		#address-cells = <0>;
++		#address-cells = <1>;
 +		#size-cells = <0>;
 +
-+		cpu {
-+			compatible = "arm,arm926ej-s";
+ 		cpu@0 {
+ 			compatible = "arm,cortex-a8";
 +			device_type = "cpu";
++			reg = <0x0>;
  		};
  	};
  
-diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-index 5bcdf3a..62dc781 100644
---- a/arch/arm/boot/dts/imx6dl.dtsi
-+++ b/arch/arm/boot/dts/imx6dl.dtsi
-@@ -18,12 +18,14 @@
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 2a56428..33a9450 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -28,13 +28,20 @@
+ 	};
  
+ 	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
  		cpu@0 {
  			compatible = "arm,cortex-a9";
 +			device_type = "cpu";
- 			reg = <0>;
  			next-level-cache = <&L2>;
++			reg = <0x0>;
  		};
- 
  		cpu@1 {
  			compatible = "arm,cortex-a9";
 +			device_type = "cpu";
- 			reg = <1>;
  			next-level-cache = <&L2>;
++			reg = <0x1>;
  		};
-diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-index 21e6758..dc54a72 100644
---- a/arch/arm/boot/dts/imx6q.dtsi
-+++ b/arch/arm/boot/dts/imx6q.dtsi
-@@ -18,6 +18,7 @@
+ 	};
  
+diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+index 3dd7ff8..35a6536 100644
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -34,11 +34,18 @@
+ 	};
+ 
+ 	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
  		cpu@0 {
- 			compatible = "arm,cortex-a9";
 +			device_type = "cpu";
- 			reg = <0>;
- 			next-level-cache = <&L2>;
- 			operating-points = <
-@@ -39,18 +40,21 @@
- 
+ 			compatible = "arm,cortex-a15";
++			reg = <0x0>;
+ 		};
  		cpu@1 {
- 			compatible = "arm,cortex-a9";
 +			device_type = "cpu";
- 			reg = <1>;
- 			next-level-cache = <&L2>;
+ 			compatible = "arm,cortex-a15";
++			reg = <0x1>;
  		};
+ 	};
  
- 		cpu@2 {
- 			compatible = "arm,cortex-a9";
-+			device_type = "cpu";
- 			reg = <2>;
- 			next-level-cache = <&L2>;
- 		};
- 
- 		cpu@3 {
- 			compatible = "arm,cortex-a9";
-+			device_type = "cpu";
- 			reg = <3>;
- 			next-level-cache = <&L2>;
- 		};
 -- 
 1.8.2.2
