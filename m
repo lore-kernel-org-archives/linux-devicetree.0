@@ -1,47 +1,94 @@
 From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [RFC/PATCH 2/2] gpio-rcar: Add DT support
-Date: Fri, 17 May 2013 14:22:22 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1305171416230.31481@axis700.grange>
-References: <1368197317-13169-1-git-send-email-laurent.pinchart@ideasonboard.com>
- <1368197317-13169-3-git-send-email-laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 09/20] ARM: shmobile: r8a7790: Add GPIO controller
+ devices to device tree
+Date: Fri, 17 May 2013 14:26:48 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1305171423270.31481@axis700.grange>
+References: <1368577100-3530-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1368577100-3530-10-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1368197317-13169-3-git-send-email-laurent.pinchart@ideasonboard.com>
+In-Reply-To: <1368577100-3530-10-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm@opensource.se>
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi Laurent
 
-On Fri, 10 May 2013, Laurent Pinchart wrote:
+On Wed, 15 May 2013, Laurent Pinchart wrote:
 
-> Add DT bindings for the gpio-rcar driver and read the device
-> configuration from the DT node at probe time if available.
+> Add GPIO controller nodes to the r8a7790 core device tree.
 > 
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 > ---
->  .../devicetree/bindings/gpio/renesas,gpio-rcar.txt | 48 +++++++++++++++++
->  drivers/gpio/gpio-rcar.c                           | 63 ++++++++++++++++++----
->  2 files changed, 101 insertions(+), 10 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+>  arch/arm/boot/dts/r8a7790.dtsi | 54 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
 
-Testing this patch reveals, that (at least) one thing is missing here:
+Also here a couple of things are missing (presumably, for other SoCs you 
+need the same):
 
-diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
-index a499ea6..e233778 100644
---- a/drivers/gpio/gpio-rcar.c
-+++ b/drivers/gpio/gpio-rcar.c
-@@ -342,6 +342,7 @@ static int gpio_rcar_probe(struct platform_device *pdev)
- 	gpio_chip->owner = THIS_MODULE;
- 	gpio_chip->base = p->config.gpio_base;
- 	gpio_chip->ngpio = p->config.number_of_pins;
-+	gpio_chip->dev = &pdev->dev;
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi 
+b/arch/arm/boot/dts/r8a7790.dtsi
+index 674ee39..cd1a04f 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -51,6 +51,7 @@
+ 		interrupts = <0 4 0x4>;
+ 		#gpio-cells = <2>;
+ 		gpio-controller;
++		gpio-ranges = <&pfc 0 0 32>;
+ 	};
  
- 	irq_chip = &p->irq_chip;
- 	irq_chip->name = name;
+ 	gpio1: gpio@ffc41000 {
+@@ -60,6 +61,7 @@
+ 		interrupts = <0 5 0x4>;
+ 		#gpio-cells = <2>;
+ 		gpio-controller;
++		gpio-ranges = <&pfc 0 32 32>;
+ 	};
+ 
+ 	gpio2: gpio@ffc42000 {
+@@ -69,6 +71,7 @@
+ 		interrupts = <0 6 0x4>;
+ 		#gpio-cells = <2>;
+ 		gpio-controller;
++		gpio-ranges = <&pfc 0 64 32>;
+ 	};
+ 
+ 	gpio3: gpio@ffc43000 {
+@@ -78,6 +81,7 @@
+ 		interrupts = <0 7 0x4>;
+ 		#gpio-cells = <2>;
+ 		gpio-controller;
++		gpio-ranges = <&pfc 0 96 32>;
+ 	};
+ 
+ 	gpio4: gpio@ffc44000 {
+@@ -87,6 +91,7 @@
+ 		interrupts = <0 8 0x4>;
+ 		#gpio-cells = <2>;
+ 		gpio-controller;
++		gpio-ranges = <&pfc 0 128 32>;
+ 	};
+ 
+ 	gpio5: gpio@ffc45000 {
+@@ -96,6 +101,7 @@
+ 		interrupts = <0 9 0x4>;
+ 		#gpio-cells = <2>;
+ 		gpio-controller;
++		gpio-ranges = <&pfc 0 160 32>;
+ 	};
+ 
+ 	timer {
+@@ -118,6 +124,7 @@
+ 	pfc: pfc@e6060000 {
+ 		compatible = "renesas,pfc-r8a7790";
+ 		reg = <0 0xe6060000 0 0x250>;
++		#gpio-range-cells = <3>;
+ 	};
+ 
+ 	/* No MMC_CAP_UHS_DDR50 (dual data rate) capability on r8a7790! */
 
 Thanks
 Guennadi
