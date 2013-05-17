@@ -1,7 +1,7 @@
 From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFC PATCH v4 16/18] ARM: dts: spear: cpus/cpu nodes dts updates
-Date: Fri, 17 May 2013 16:20:59 +0100
-Message-ID: <1368804061-4421-17-git-send-email-lorenzo.pieralisi@arm.com>
+Subject: [RFC PATCH v4 08/18] ARM: dts: imx: cpus/cpu nodes dts updates
+Date: Fri, 17 May 2013 16:20:51 +0100
+Message-ID: <1368804061-4421-9-git-send-email-lorenzo.pieralisi@arm.com>
 References: <1368804061-4421-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -26,18 +26,57 @@ This patch updates the in-kernel dts files according to the latest cpus
 and cpu bindings updates for ARM.
 
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/spear13xx.dtsi | 2 ++
- arch/arm/boot/dts/spear3xx.dtsi  | 8 ++++++--
- arch/arm/boot/dts/spear600.dtsi  | 8 ++++++--
- 3 files changed, 14 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/imx23.dtsi  | 8 ++++++--
+ arch/arm/boot/dts/imx28.dtsi  | 8 ++++++--
+ arch/arm/boot/dts/imx6dl.dtsi | 2 ++
+ arch/arm/boot/dts/imx6q.dtsi  | 4 ++++
+ 4 files changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/spear13xx.dtsi b/arch/arm/boot/dts/spear13xx.dtsi
-index 45597fd..4382547 100644
---- a/arch/arm/boot/dts/spear13xx.dtsi
-+++ b/arch/arm/boot/dts/spear13xx.dtsi
-@@ -22,12 +22,14 @@
+diff --git a/arch/arm/boot/dts/imx23.dtsi b/arch/arm/boot/dts/imx23.dtsi
+index 73fd7d0..587ceef 100644
+--- a/arch/arm/boot/dts/imx23.dtsi
++++ b/arch/arm/boot/dts/imx23.dtsi
+@@ -23,8 +23,12 @@
+ 	};
+ 
+ 	cpus {
+-		cpu@0 {
+-			compatible = "arm,arm926ejs";
++		#address-cells = <0>;
++		#size-cells = <0>;
++
++		cpu {
++			compatible = "arm,arm926ej-s";
++			device_type = "cpu";
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+index 600f7cb..4c10a19 100644
+--- a/arch/arm/boot/dts/imx28.dtsi
++++ b/arch/arm/boot/dts/imx28.dtsi
+@@ -32,8 +32,12 @@
+ 	};
+ 
+ 	cpus {
+-		cpu@0 {
+-			compatible = "arm,arm926ejs";
++		#address-cells = <0>;
++		#size-cells = <0>;
++
++		cpu {
++			compatible = "arm,arm926ej-s";
++			device_type = "cpu";
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
+index 5bcdf3a..62dc781 100644
+--- a/arch/arm/boot/dts/imx6dl.dtsi
++++ b/arch/arm/boot/dts/imx6dl.dtsi
+@@ -18,12 +18,14 @@
  
  		cpu@0 {
  			compatible = "arm,cortex-a9";
@@ -52,43 +91,39 @@ index 45597fd..4382547 100644
  			reg = <1>;
  			next-level-cache = <&L2>;
  		};
-diff --git a/arch/arm/boot/dts/spear3xx.dtsi b/arch/arm/boot/dts/spear3xx.dtsi
-index c2a852d..f0e3fcf 100644
---- a/arch/arm/boot/dts/spear3xx.dtsi
-+++ b/arch/arm/boot/dts/spear3xx.dtsi
-@@ -17,8 +17,12 @@
- 	interrupt-parent = <&vic>;
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index 21e6758..dc54a72 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -18,6 +18,7 @@
  
- 	cpus {
--		cpu@0 {
--			compatible = "arm,arm926ejs";
-+		#address-cells = <0>;
-+		#size-cells = <0>;
-+
-+		cpu {
-+			compatible = "arm,arm926ej-s";
+ 		cpu@0 {
+ 			compatible = "arm,cortex-a9";
 +			device_type = "cpu";
- 		};
- 	};
+ 			reg = <0>;
+ 			next-level-cache = <&L2>;
+ 			operating-points = <
+@@ -39,18 +40,21 @@
  
-diff --git a/arch/arm/boot/dts/spear600.dtsi b/arch/arm/boot/dts/spear600.dtsi
-index 19f99dc..9f60a7b 100644
---- a/arch/arm/boot/dts/spear600.dtsi
-+++ b/arch/arm/boot/dts/spear600.dtsi
-@@ -15,8 +15,12 @@
- 	compatible = "st,spear600";
- 
- 	cpus {
--		cpu@0 {
--			compatible = "arm,arm926ejs";
-+		#address-cells = <0>;
-+		#size-cells = <0>;
-+
-+		cpu {
-+			compatible = "arm,arm926ej-s";
+ 		cpu@1 {
+ 			compatible = "arm,cortex-a9";
 +			device_type = "cpu";
+ 			reg = <1>;
+ 			next-level-cache = <&L2>;
  		};
- 	};
  
+ 		cpu@2 {
+ 			compatible = "arm,cortex-a9";
++			device_type = "cpu";
+ 			reg = <2>;
+ 			next-level-cache = <&L2>;
+ 		};
+ 
+ 		cpu@3 {
+ 			compatible = "arm,cortex-a9";
++			device_type = "cpu";
+ 			reg = <3>;
+ 			next-level-cache = <&L2>;
+ 		};
 -- 
 1.8.2.2
