@@ -1,15 +1,12 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v5] ARM:dts:omap4-panda: Update the LED support for the
- panda DTS
-Date: Fri, 17 May 2013 08:34:18 -0500
-Message-ID: <20130517133418.GA5068@kahuna>
-References: <1368796883-5501-1-git-send-email-dmurphy@ti.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: [PATCH 0/5 v3] ARM: at91: dt: add USBA support
+Date: Fri, 17 May 2013 16:14:43 +0200
+Message-ID: <20130517141443.GB16804@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1368796883-5501-1-git-send-email-dmurphy@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,64 +16,49 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: linux@arm.linux.org.uk, b-cousson@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08:21-20130517, Dan Murphy wrote:
-[...]
-May be others with better DT experience can help here..
-but here is a trick to reduce dts file changes:
-> diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts/omap4-panda-es.dts
-> index f1d8c21..08d2e38 100644
-> --- a/arch/arm/boot/dts/omap4-panda-es.dts
-> +++ b/arch/arm/boot/dts/omap4-panda-es.dts
-> @@ -34,3 +34,37 @@
->  		0x5e 0x100	/* hdmi_sda.hdmi_sda INPUT | MODE 0 */
->  		>;
->  };
-> +
-> +&omap4_pmx_core {
-> +	led_gpio_pins: gpio_led_pmx {
-> +		pinctrl-single,pins = <
-> +			0xb6 0x3	/* gpio_110 OUTPUT | MODE 3 */
-> +		>;
-> +	};
-> +};
-> +
-> +&led_wkgpio_pins {
-> +	pinctrl-single,pins = <
-> +		0x1c 0x3	/* gpio_wk8 OUTPUT | MODE 3 */
-> +	>;
-> +};
-> +
-> +&leds {
-> +	compatible = "gpio-leds";
-> +	pinctrl-names = "default";
-Normally, override  will either add (if new param) OR replace (if same param)
-	So the above two are superfluous.
-> +	pinctrl-0 = <
-> +		&led_gpio_pins
-> +		&led_wkgpio_pins
-> +	>;
-These are needed
-> +
-> +	heartbeat {
-> +		label = "pandaboard::status1";
-can drop this
-> +		gpios = <&gpio4 14 0>;
-needed
-> +		linux,default-trigger = "heartbeat";
-can be dropped
-> +	};
-> +	mmc {
-> +		label = "pandaboard::status2";
-could be dropped
-> +		gpios = <&gpio1 8 0>;
-needed
-> +		linux,default-trigger = "mmc0";
-could be dropped.
+HI,
 
--- 
-Regards,
-Nishanth Menon
+	v3:
+	rebase againt 3.10-rc1 + dt macro cleanup
+
+	This patch serie finish to add the usb device support to dt for at91
+	with the usba support present on the last at91 generation since sam9g45
+
+The following changes since commit b3f442b0eedbc20b5ce3f4a96530588d14901199:
+
+  ARM: at91: udpate defconfigs (2013-05-17 15:05:08 +0200)
+
+are available in the git repository at:
+
+  git://github.com/at91linux/linux-at91.git j/for-3.11-usba
+
+for you to fetch changes up to f24c9792c29803420a7bf7204223ef028191d449:
+
+  ARM: at91: sam9m10g45ek add udc DT support (2013-05-17 22:05:46 +0800)
+
+----------------------------------------------------------------
+Jean-Christophe PLAGNIOL-VILLARD (5):
+      usb: add Atmel USBA UDC DT support
+      ARM: at91: sam9x5 add udc DT support
+      ARM: at91: sam9x5ek add udc DT support
+      ARM: at91: sam9g45 add udc DT support
+      ARM: at91: sam9m10g45ek add udc DT support
+
+ Documentation/devicetree/bindings/usb/atmel-usb.txt |   82 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/at91sam9g45.dtsi                  |   62 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/at91sam9m10g45ek.dts              |    5 +++++
+ arch/arm/boot/dts/at91sam9x5.dtsi                   |   62 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/at91sam9x5ek.dtsi                 |    5 +++++
+ arch/arm/mach-at91/at91sam9g45.c                    |    2 ++
+ arch/arm/mach-at91/at91sam9x5.c                     |    2 ++
+ drivers/usb/gadget/Kconfig                          |    2 +-
+ drivers/usb/gadget/atmel_usba_udc.c                 |  214 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++----------------------------------------------------
+ drivers/usb/gadget/atmel_usba_udc.h                 |    1 +
+ 10 files changed, 382 insertions(+), 55 deletions(-)
+
+Best Regards,
+J.
