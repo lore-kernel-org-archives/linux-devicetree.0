@@ -1,61 +1,97 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC PATCH v4 05/18] ARM: dts: armada-370-xp: cpus/cpu node dts
- updates
-Date: Fri, 17 May 2013 19:16:36 +0200
-Message-ID: <519665F4.8090707@free-electrons.com>
-References: <1368804061-4421-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1368804061-4421-6-git-send-email-lorenzo.pieralisi@arm.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [GIT PULL] DT changes for v3.10
+Date: Fri, 17 May 2013 21:11:27 +0100
+Message-ID: <CACxGe6tVT9sDLgJwmKjjejYe2wnmYz4A5HaQThiOfyW3T8gU_Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1368804061-4421-6-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/17/2013 05:20 PM, Lorenzo Pieralisi wrote:
-> This patch updates the in-kernel dts files according to the latest cpus
-> and cpu bindings updates for ARM.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm/boot/dts/armada-370-xp.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
-> index 272bbc6..2407903 100644
-> --- a/arch/arm/boot/dts/armada-370-xp.dtsi
-> +++ b/arch/arm/boot/dts/armada-370-xp.dtsi
-> @@ -23,8 +23,12 @@
->  	compatible = "marvell,armada-370-xp";
->  
->  	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
->  		cpu@0 {
->  			compatible = "marvell,sheeva-v7";
-> +			device_type = "cpu";
-> +			reg = <0>;
->  		};
->  	};
->  
-> 
+Hi Linus,
 
-Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Here are a few DT bug fixes and documentation updates. Sorry this pull
+request came after -rc1. I hope it is still okay to pull in. All has
+been in linux-next well before the merge window.
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+g.
+
+The following changes since commit 31880c37c11e28cb81c70757e38392b42e69=
+5dc6:
+
+  Linux 3.9-rc6 (2013-04-07 20:49:54 -0700)
+
+are available in the git repository at:
+
+  git://git.secretlab.ca/git/linux tags/devicetree-for-linus
+
+for you to fetch changes up to 3132f623386e9ac87077bd839e726f7b940fbc94=
+:
+
+  Merge branch 'for-next' of git://sources.calxeda.com/kernel/linux
+into HEAD (2013-05-07 12:03:42 +0100)
+
+----------------------------------------------------------------
+
+Device tree bug fixes and documentation updates for v3.10
+
+Nothing earth shattering here. A build failure fix, and fix for
+releasing nodes and some documenation updates.
+
+----------------------------------------------------------------
+Grant Likely (1):
+      Merge branch 'for-next' of
+git://sources.calxeda.com/kernel/linux into HEAD
+
+Rahul Sharma (1):
+      of/documentation: move video device bindings to a common place
+
+Rob Herring (1):
+      Merge tag 'tegra-for-3.10-dtc-cpp-chroot-std-headers' of
+git://git.kernel.org/.../swarren/linux-tegra into for-next
+
+Sergei Shtylyov (1):
+      <linux/of_platform.h>: fix compilation warnings with DT disabled
+
+Tang Yuantian (1):
+      of/base: release the node correctly in of_parse_phandle_with_args=
+()
+
+Uwe Kleine-K=F6nig (1):
+      Documentation/devicetree: make semantic of initrd-end more explic=
+it
+
+ .../{drm/exynos/hdmi.txt =3D> video/exynos_hdmi.txt} |  0
+ .../hdmiddc.txt =3D> video/exynos_hdmiddc.txt}       |  0
+ .../hdmiphy.txt =3D> video/exynos_hdmiphy.txt}       |  0
+ .../exynos/mixer.txt =3D> video/exynos_mixer.txt}    |  0
+ Documentation/devicetree/usage-model.txt           |  8 +-
+ arch/arm/boot/dts/include/dt-bindings              |  1 +
+ drivers/of/base.c                                  |  4 +-
+ include/dt-bindings/gpio/gpio.h                    | 15 ++++
+ include/dt-bindings/interrupt-controller/arm-gic.h | 22 +++++
+ include/dt-bindings/interrupt-controller/irq.h     | 19 +++++
+ include/linux/of_platform.h                        |  5 +-
+ scripts/Makefile.lib                               | 17 ++--
+ scripts/basic/fixdep.c                             | 93 ++++++++++++++=
+--------
+ 13 files changed, 135 insertions(+), 49 deletions(-)
+ rename Documentation/devicetree/bindings/{drm/exynos/hdmi.txt =3D>
+video/exynos_hdmi.txt} (100%)
+ rename Documentation/devicetree/bindings/{drm/exynos/hdmiddc.txt =3D>
+video/exynos_hdmiddc.txt} (100%)
+ rename Documentation/devicetree/bindings/{drm/exynos/hdmiphy.txt =3D>
+video/exynos_hdmiphy.txt} (100%)
+ rename Documentation/devicetree/bindings/{drm/exynos/mixer.txt =3D>
+video/exynos_mixer.txt} (100%)
+ create mode 120000 arch/arm/boot/dts/include/dt-bindings
+ create mode 100644 include/dt-bindings/gpio/gpio.h
+ create mode 100644 include/dt-bindings/interrupt-controller/arm-gic.h
+ create mode 100644 include/dt-bindings/interrupt-controller/irq.h
+
+
+--
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
