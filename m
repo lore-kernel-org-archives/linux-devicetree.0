@@ -1,48 +1,52 @@
-From: Doug Anderson <dianders@google.com>
-Subject: Re: Pulls and drive strengths in the pinctrl world
-Date: Fri, 17 May 2013 07:56:48 -0700
-Message-ID: <CAD=FV=X7AK2+Ur2ZcHMrFm1Ty7wVN7_7Lr=ThhNasFKnt-2SFg@mail.gmail.com>
-References: <CAD=FV=V9h3RUfvAxj8k2EbYXYPO4FfoNwh=f=dno5ZBUFYeG0w@mail.gmail.com>
-	<2465185.vYkbXUqoOT@flatron>
-	<CACRpkdZvN_0fd6N11NeSRtVZd5A1oE9TEhbOOz6Q27x6M39bcQ@mail.gmail.com>
-	<4505921.rFrq65cY6P@amdc1227>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: [RFC PATCH v4 14/18] ARM: dts: r8a7740: cpus/cpu nodes dts updates
+Date: Fri, 17 May 2013 16:20:57 +0100
+Message-ID: <1368804061-4421-15-git-send-email-lorenzo.pieralisi@arm.com>
+References: <1368804061-4421-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <4505921.rFrq65cY6P@amdc1227>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thomas Abraham <thomas.abraham@linaro.org>, Simon Glass <sjg@chromium.org>, Olof Johansson <olof@lixom.net>, Kukjin Kim <kgene.kim@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1368804061-4421-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lennert Buytenhek <kernel-OLH4Qvv75CYX/NnBR394Jw@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Tomasz,
+This patch updates the in-kernel dts files according to the latest cpus
+and cpu bindings updates for ARM.
 
-On Fri, May 17, 2013 at 5:38 AM, Tomasz Figa <t.figa@samsung.com> wrote:
->> You might want to have a debugfs file in your driver for inspecting
->> them though, that sounds like it could be helpful. I'd recommend
->> augmenting your .pin_config_dbg_show() callback in the
->> struct pinconf_ops to display this for each pin, in addition to the
->> current configuration.
->
-> Seems reasonable.
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Acked-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+---
+ arch/arm/boot/dts/r8a7740.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-If you do this I'd love to be CCed.  I have a super-ugly userspace
-tool that shows this info and have been contemplating moving it into
-debugfs and cleaning it up there.
-
-See <https://gerrit.chromium.org/gerrit/#/c/51380/>
-
-A small snippet of the output looks like:
-
-GPIO x3[4]@0x11400c60: con=0x0 dat=0 pulldwn(1) drv=1(0)
-GPIO x3[5]@0x11400c60: con=0xf dat=1  nopull(0) drv=1(0)
-GPIO x3[6]@0x11400c60: con=0x0 dat=1 pulldwn(1) drv=1(0)
-GPIO x3[7]@0x11400c60: con=0x0 dat=0 pulldwn(1) drv=1(0)
-GPIO e0[0]@0x13400000: con=0x0 dat=0 pulldwn(1) drv=1(0) pdn= low(0),
-pdn= nopull(0)
-GPIO e0[1]@0x13400000: con=0x0 dat=0 pulldwn(1) drv=1(0) pdn=  in(2),
-pdn=pulldwn(1)
-GPIO e0[2]@0x13400000: con=0x0 dat=0 pulldwn(1) drv=1(0) pdn=  in(2),
-pdn=pulldwn(1)
-
--Doug
+diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+index 798fa35..8a831e9 100644
+--- a/arch/arm/boot/dts/r8a7740.dtsi
++++ b/arch/arm/boot/dts/r8a7740.dtsi
+@@ -14,8 +14,12 @@
+ 	compatible = "renesas,r8a7740";
+ 
+ 	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 		cpu@0 {
+ 			compatible = "arm,cortex-a9";
++			device_type = "cpu";
++			reg = <0x0>;
+ 		};
+ 	};
+ };
+-- 
+1.8.2.2
