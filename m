@@ -1,7 +1,7 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] ARM: nomadik: add led and key for S8815
-Date: Sun, 19 May 2013 00:13:04 +0200
-Message-ID: <1368915184-29657-1-git-send-email-linus.walleij@linaro.org>
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] of: irq: Pass trigger type in IRQ resource flags
+Date: Sun, 19 May 2013 00:56:30 +0200
+Message-ID: <1368917790-23770-1-git-send-email-tomasz.figa@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -16,91 +16,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree hunks for the LED and userbutton on the
-USB S8815 board, and set up a heartbeat trigger on the LED and
-an escape key on the user button. Alter the defconfig to enable
-these standard DT-enabled GPIO drivers.
+Some drivers might rely on availability of trigger flags in IRQ
+resource, for example to configure the hardware for particular interrupt
+type. However current code creating IRQ resources from data in device
+tree does not configure trigger flags in resulting resources.
 
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+This patch solves the problem, based on the fact that
+irq_of_parse_and_map() configures the trigger based on DT interrupt
+specifier, IRQD_TRIGGER_* flags are consistent with IORESOURCE_IRQ_*,
+and we can get trigger type by calling irqd_get_trigger_type() after
+mapping the interrupt.
+
+Signed-off-by: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/ste-nomadik-s8815.dts | 22 ++++++++++++++++++++++
- arch/arm/configs/nhk8815_defconfig      |  6 ++++++
- arch/arm/mach-nomadik/cpu-8815.c        |  4 ++++
- 3 files changed, 32 insertions(+)
+ drivers/of/irq.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/ste-nomadik-s8815.dts b/arch/arm/boot/dts/ste-nomadik-s8815.dts
-index b28fbf3..666945a 100644
---- a/arch/arm/boot/dts/ste-nomadik-s8815.dts
-+++ b/arch/arm/boot/dts/ste-nomadik-s8815.dts
-@@ -27,4 +27,26 @@
- 			gpios = <&gpio3 16 0x1>;
- 		};
- 	};
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index a3c1c5a..79a7a26 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -355,6 +355,16 @@ int of_irq_to_resource(struct device_node *dev, int index, struct resource *r)
+ 		r->start = r->end = irq;
+ 		r->flags = IORESOURCE_IRQ;
+ 		r->name = name ? name : dev->full_name;
 +
-+	/* The user LED on the board is set up to be used for heartbeat */
-+	leds {
-+		compatible = "gpio-leds";
-+		user-led {
-+			label = "user_led";
-+			gpios = <&gpio0 2 0x1>;
-+			default-state = "off";
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+
-+	/* User key mapped in as "escape" */
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		user-button {
-+			label = "user_button";
-+			gpios = <&gpio0 3 0x1>;
-+			linux,code = <1>; /* KEY_ESC */
-+			gpio-key,wakeup;
-+		};
-+	};
- };
-diff --git a/arch/arm/configs/nhk8815_defconfig b/arch/arm/configs/nhk8815_defconfig
-index b01e763..35f8cf2 100644
---- a/arch/arm/configs/nhk8815_defconfig
-+++ b/arch/arm/configs/nhk8815_defconfig
-@@ -81,6 +81,7 @@ CONFIG_PPP_SYNC_TTY=m
- # CONFIG_INPUT_MOUSEDEV is not set
- CONFIG_INPUT_EVDEV=y
- # CONFIG_KEYBOARD_ATKBD is not set
-+CONFIG_KEYBOARD_GPIO=y
- # CONFIG_MOUSE_PS2 is not set
- # CONFIG_SERIO is not set
- # CONFIG_LEGACY_PTYS is not set
-@@ -96,6 +97,11 @@ CONFIG_DEBUG_GPIO=y
- CONFIG_MMC=y
- CONFIG_MMC_CLKGATE=y
- CONFIG_MMC_ARMMMCI=y
-+CONFIG_NEW_LEDS=y
-+CONFIG_LEDS_CLASS=y
-+CONFIG_LEDS_GPIO=y
-+CONFIG_LEDS_TRIGGERS=y
-+CONFIG_LEDS_TRIGGER_HEARTBEAT=y
- CONFIG_RTC_CLASS=y
- CONFIG_RTC_DRV_PL031=y
- CONFIG_DMADEVICES=y
-diff --git a/arch/arm/mach-nomadik/cpu-8815.c b/arch/arm/mach-nomadik/cpu-8815.c
-index 59f6ff5..1e0ec38 100644
---- a/arch/arm/mach-nomadik/cpu-8815.c
-+++ b/arch/arm/mach-nomadik/cpu-8815.c
-@@ -99,6 +99,10 @@ static unsigned long in_pullup[] = { PIN_INPUT_PULLUP };
- static struct pinctrl_map __initdata nhk8815_pinmap[] = {
- 	PIN_MAP_MUX_GROUP_DEFAULT("uart0", "pinctrl-stn8815", "u0_a_1", "u0"),
- 	PIN_MAP_MUX_GROUP_DEFAULT("uart1", "pinctrl-stn8815", "u1_a_1", "u1"),
-+	/* User LED on S8815 */
-+	PIN_MAP_CONFIGS_PIN_HOG_DEFAULT("pinctrl-stn8815", "GPIO2_C5", out_high),
-+	/* User button on S8815 */
-+	PIN_MAP_CONFIGS_PIN_HOG_DEFAULT("pinctrl-stn8815", "GPIO3_A4", in_nopull),
- 	/* Hog in MMC/SD card mux */
- 	PIN_MAP_MUX_GROUP_HOG_DEFAULT("pinctrl-stn8815", "mmcsd_a_1", "mmcsd"),
- 	/* MCCLK */
++		/*
++		 * Some drivers might rely on availability of trigger flags
++		 * in IRQ resource. Since irq_of_parse_and_map() configures the
++		 * trigger based on interrupt specifier and IRQD_TRIGGER_*
++		 * flags are consistent with IORESOURCE_IRQ_*, we can get
++		 * trigger type that was just set and pass it through resource
++		 * flags as well.
++		 */
++		r->flags |= irqd_get_trigger_type(irq_get_irq_data(irq));
+ 	}
+ 
+ 	return irq;
 -- 
-1.8.1.4
+1.8.2.1
