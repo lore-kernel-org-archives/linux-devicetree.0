@@ -1,36 +1,54 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH] gianfar: add missing iounmap() on error in
- gianfar_ptp_probe()
-Date: Fri, 17 May 2013 18:20:03 -0700 (PDT)
-Message-ID: <20130517.182003.132169969783675734.davem@davemloft.net>
-References: <CAPgLHd9ED7YCCTmKtD9PURq_cWy5GG=M+4ExC1wd+xOpgB97CQ@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC/PATCH 2/2] gpio-rcar: Add DT support
+Date: Sat, 18 May 2013 08:30:23 +0200
+Message-ID: <171110063.t2Kcvcq8kf@avalon>
+References: <1368197317-13169-1-git-send-email-laurent.pinchart@ideasonboard.com> <1368197317-13169-3-git-send-email-laurent.pinchart@ideasonboard.com> <Pine.LNX.4.64.1305171416230.31481@axis700.grange>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAPgLHd9ED7YCCTmKtD9PURq_cWy5GG=M+4ExC1wd+xOpgB97CQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1305171416230.31481@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm@opensource.se>
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Date: Fri, 17 May 2013 16:25:34 +0800
+Hi Guennadi,
 
-> From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+On Friday 17 May 2013 14:22:22 Guennadi Liakhovetski wrote:
+> On Fri, 10 May 2013, Laurent Pinchart wrote:
+> > Add DT bindings for the gpio-rcar driver and read the device
+> > configuration from the DT node at probe time if available.
+> > 
+> > Cc: devicetree-discuss@lists.ozlabs.org
+> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > ---
+> > 
+> >  .../devicetree/bindings/gpio/renesas,gpio-rcar.txt | 48 +++++++++++++++++
+> >  drivers/gpio/gpio-rcar.c                           | 63 +++++++++++++----
+> >  2 files changed, 101 insertions(+), 10 deletions(-)
+> >  create mode 100644
+> >  Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+> Testing this patch reveals, that (at least) one thing is missing here:
 > 
-> Add the missing iounmap() before return from gianfar_ptp_probe()
-> in the error handling case.
+> diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
+> index a499ea6..e233778 100644
+> --- a/drivers/gpio/gpio-rcar.c
+> +++ b/drivers/gpio/gpio-rcar.c
+> @@ -342,6 +342,7 @@ static int gpio_rcar_probe(struct platform_device *pdev)
+> gpio_chip->owner = THIS_MODULE;
+>  	gpio_chip->base = p->config.gpio_base;
+>  	gpio_chip->ngpio = p->config.number_of_pins;
+> +	gpio_chip->dev = &pdev->dev;
 > 
-> Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+>  	irq_chip = &p->irq_chip;
+>  	irq_chip->name = name;
 
-Applied, thanks.
+Indeed, thank you. I wonder how I managed not to notice this. I'll integrate 
+the modification for v2.
+
+-- 
+Regards,
+
+Laurent Pinchart
+
