@@ -1,50 +1,106 @@
-From: Matthijs Kooijman <matthijs@stdin.nl>
-Subject: Re: [PATCH] kbuild: Don't assume dts files live in arch/*/boot/dts
-Date: Sat, 18 May 2013 20:41:01 +0200
-Message-ID: <20130518184101.GS25742@login.drsnuggles.stderr.nl>
-References: <1368010744-11281-1-git-send-email-matthijs@stdin.nl>
- <518A6649.1020501@wwwdotorg.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] ARM: nomadik: add led and key for S8815
+Date: Sun, 19 May 2013 00:13:04 +0200
+Message-ID: <1368915184-29657-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <518A6649.1020501@wwwdotorg.org>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Michal Marek <mmarek@suse.cz>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Stephen Warren <swarren@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Michal,
+This adds device tree hunks for the LED and userbutton on the
+USB S8815 board, and set up a heartbeat trigger on the LED and
+an escape key on the user button. Alter the defconfig to enable
+these standard DT-enabled GPIO drivers.
 
-On Wed, May 08, 2013 at 08:50:49AM -0600, Stephen Warren wrote:
-> On 05/08/2013 04:59 AM, Matthijs Kooijman wrote:
-> > In commit b40b25ff (kbuild: always run gcc -E on *.dts, remove cmd_dtc_cpp),
-> > dts building was changed to always use the C preprocessor. This meant
-> > that the .dts file passed to dtc is not the original, but the
-> > preprocessed one.
-> > 
-> > When compiling with a separate build directory (i.e., with O=), this
-> > preprocessed file will not live in the same directory as the original.
-> > When the .dts file includes .dtsi files, dtc will look for them in the
-> > build directory, not in the source directory and compilation will fail.
-> > 
-> > The commit referenced above tried to fix this by passing arch/*/boot/dts
-> > as an include path to dtc. However, for mips, the .dts files are not in
-> > this directory, so dts compilation on mips breaks for some targets.
-> > 
-> > Instead of hardcoding this particular include path, this commit just
-> > uses the directory of the .dts file that is being compiled, which
-> > effectively restores the previous behaviour wrt includes. For most .dts
-> > files, this path is just the same as the previous hardcoded
-> > arch/*/boot/dts path.
-> > 
-> > This was tested on a mips (rt3052) and an arm (bcm2835) target.
-> 
-> Reviewed-by: Stephen Warren <swarren@nvidia.com>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/ste-nomadik-s8815.dts | 22 ++++++++++++++++++++++
+ arch/arm/configs/nhk8815_defconfig      |  6 ++++++
+ arch/arm/mach-nomadik/cpu-8815.c        |  4 ++++
+ 3 files changed, 32 insertions(+)
 
-Did this patch look ok to you? If so, could you pick it up and send it
-over to Linus for 3.10 (or should I send it directly)?
-
-Gr.
-
-Matthijs
+diff --git a/arch/arm/boot/dts/ste-nomadik-s8815.dts b/arch/arm/boot/dts/ste-nomadik-s8815.dts
+index b28fbf3..666945a 100644
+--- a/arch/arm/boot/dts/ste-nomadik-s8815.dts
++++ b/arch/arm/boot/dts/ste-nomadik-s8815.dts
+@@ -27,4 +27,26 @@
+ 			gpios = <&gpio3 16 0x1>;
+ 		};
+ 	};
++
++	/* The user LED on the board is set up to be used for heartbeat */
++	leds {
++		compatible = "gpio-leds";
++		user-led {
++			label = "user_led";
++			gpios = <&gpio0 2 0x1>;
++			default-state = "off";
++			linux,default-trigger = "heartbeat";
++		};
++	};
++
++	/* User key mapped in as "escape" */
++	gpio-keys {
++		compatible = "gpio-keys";
++		user-button {
++			label = "user_button";
++			gpios = <&gpio0 3 0x1>;
++			linux,code = <1>; /* KEY_ESC */
++			gpio-key,wakeup;
++		};
++	};
+ };
+diff --git a/arch/arm/configs/nhk8815_defconfig b/arch/arm/configs/nhk8815_defconfig
+index b01e763..35f8cf2 100644
+--- a/arch/arm/configs/nhk8815_defconfig
++++ b/arch/arm/configs/nhk8815_defconfig
+@@ -81,6 +81,7 @@ CONFIG_PPP_SYNC_TTY=m
+ # CONFIG_INPUT_MOUSEDEV is not set
+ CONFIG_INPUT_EVDEV=y
+ # CONFIG_KEYBOARD_ATKBD is not set
++CONFIG_KEYBOARD_GPIO=y
+ # CONFIG_MOUSE_PS2 is not set
+ # CONFIG_SERIO is not set
+ # CONFIG_LEGACY_PTYS is not set
+@@ -96,6 +97,11 @@ CONFIG_DEBUG_GPIO=y
+ CONFIG_MMC=y
+ CONFIG_MMC_CLKGATE=y
+ CONFIG_MMC_ARMMMCI=y
++CONFIG_NEW_LEDS=y
++CONFIG_LEDS_CLASS=y
++CONFIG_LEDS_GPIO=y
++CONFIG_LEDS_TRIGGERS=y
++CONFIG_LEDS_TRIGGER_HEARTBEAT=y
+ CONFIG_RTC_CLASS=y
+ CONFIG_RTC_DRV_PL031=y
+ CONFIG_DMADEVICES=y
+diff --git a/arch/arm/mach-nomadik/cpu-8815.c b/arch/arm/mach-nomadik/cpu-8815.c
+index 59f6ff5..1e0ec38 100644
+--- a/arch/arm/mach-nomadik/cpu-8815.c
++++ b/arch/arm/mach-nomadik/cpu-8815.c
+@@ -99,6 +99,10 @@ static unsigned long in_pullup[] = { PIN_INPUT_PULLUP };
+ static struct pinctrl_map __initdata nhk8815_pinmap[] = {
+ 	PIN_MAP_MUX_GROUP_DEFAULT("uart0", "pinctrl-stn8815", "u0_a_1", "u0"),
+ 	PIN_MAP_MUX_GROUP_DEFAULT("uart1", "pinctrl-stn8815", "u1_a_1", "u1"),
++	/* User LED on S8815 */
++	PIN_MAP_CONFIGS_PIN_HOG_DEFAULT("pinctrl-stn8815", "GPIO2_C5", out_high),
++	/* User button on S8815 */
++	PIN_MAP_CONFIGS_PIN_HOG_DEFAULT("pinctrl-stn8815", "GPIO3_A4", in_nopull),
+ 	/* Hog in MMC/SD card mux */
+ 	PIN_MAP_MUX_GROUP_HOG_DEFAULT("pinctrl-stn8815", "mmcsd_a_1", "mmcsd"),
+ 	/* MCCLK */
+-- 
+1.8.1.4
