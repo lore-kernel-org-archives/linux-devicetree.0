@@ -1,114 +1,264 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH] net: dm9000: Allow instantiation using device tree
-Date: Sun, 19 May 2013 12:35:44 +0200
-Message-ID: <20130519103544.GZ32299@pengutronix.de>
-References: <1368918194-24030-1-git-send-email-tomasz.figa@gmail.com>
- <20130519070538.GX32299@pengutronix.de>
- <2763249.7aFBh8NOHl@flatron>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: Pulls and drive strengths in the pinctrl world
+Date: Sun, 19 May 2013 12:39:26 +0200
+Message-ID: <20130519103926.GG1952@game.jcrosoft.org>
+References: <CAD=FV=V9h3RUfvAxj8k2EbYXYPO4FfoNwh=f=dno5ZBUFYeG0w@mail.gmail.com>
+ <91263163.s2uhtsH4YZ@flatron>
+ <20130519091736.GF1952@game.jcrosoft.org>
+ <2052598.uZo1hJQL7b@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <2763249.7aFBh8NOHl@flatron>
-Sender: netdev-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+In-Reply-To: <2052598.uZo1hJQL7b@flatron>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Kukjin Kim <kgene.kim-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 19, 2013 at 10:54:53AM +0200, Tomasz Figa wrote:
-> Hi Sascha,
-> 
-> On Sunday 19 of May 2013 09:05:38 Sascha Hauer wrote:
-> > Hi Tomasz,
-> > 
-> > On Sun, May 19, 2013 at 01:03:14AM +0200, Tomasz Figa wrote:
-> > > This patch adds Device Tree support to dm9000 driver.
+On 11:46 Sun 19 May     , Tomasz Figa wrote:
+> On Sunday 19 of May 2013 11:17:36 Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > > > > > PULL_UP         (1 << 0): indicate this pin need a pull up.
+> > > > > > MULTIDRIVE      (1 << 1): indicate this pin need to be
+> > > > > > configured as
+> > > > > > multidrive. DEGLITCH        (1 << 2): indicate this pin need
+> > > > > > deglitch.
+> > > > > > PULL_DOWN       (1 << 3): indicate this pin need a pull down.
+> > > > > > DIS_SCHMIT      (1 << 4): indicate this pin need to disable
+> > > > > > schmit
+> > > > > > trigger. DEBOUNCE        (1 << 16): indicate this pin need
+> > > > > > debounce.
+> > > > > > DEBOUNCE_VAL    (0x3fff << 17): debounce val.
+> > > > > > 
+> > > > > > today I was planning to update the binding to allow to this
+> > > > > > 
+> > > > > > instead of writing this
+> > > > > > 
+> > > > > > dbgu {
+> > > > > > 
+> > > > > > 	pinctrl_dbgu: dbgu-0 {
+> > > > > > 	
+> > > > > > 		atmel,pins =
+> > > > > > 		
+> > > > > > 			<AT91_PIOB 30 AT91_PERIPH_A 
+> AT91_PINCTRL_NONE
+> > > > > > 			
+> > > > > > 			 AT91_PIOB 31 AT91_PERIPH_A 
+> AT91_PINCTRL_PULL_UP>;
+> > > > > > 	
+> > > > > > 	};
+> > > > > > 
+> > > > > > };
+> > > > > > 
+> > > > > > we will write this
+> > > > > > 
+> > > > > > dbgu {
+> > > > > > 
+> > > > > > 	pinctrl_dbgu: dbgu-0 {
+> > > > > > 	
+> > > > > > 		atmel,pins =
+> > > > > > 		
+> > > > > > 			<AT91_PIOB 30 AT91_PERIPH_A>,
+> > > > > > 			
+> > > > > > 			 AT91_PIOB 31 AT91_PERIPH_A 
+> AT91_PINCTRL_PULL_UP>;
+> > > > > > 	
+> > > > > > 	};
+> > > > > > 
+> > > > > > };
+> > > > > > 
+> > > > > > so a pin can have 3 or more parameter
+> > > > > > 
+> > > > > > so as a generic binding only the 3 first will be namdatory (bank
+> > > > > > pinnp
+> > > > > > muxid) the rest will driver specific
+> > > > > > 
+> > > > > > for power down I plan to define an other node
+> > > > > > dbgu {
+> > > > > > 
+> > > > > > 	pinctrl_dbgu_sleep: dbgu_sleep-0 {
+> > > > > > 	
+> > > > > > 		atmel,pins =
+> > > > > > 		
+> > > > > > 			<AT91_PIOB 30 AT91_PERIPH_GPIO>,
+> > > > > > 			
+> > > > > > 			 AT91_PIOB 31 AT91_PERIPH_A
+> > > > > 
+> > > > > AT91_PINCTRL_PULL_DOWN>;
+> > > > > 
+> > > > > > 	};
+> > > > > > 
+> > > > > > };
+> > > > > 
+> > > > > I'm afraid this won't work for Samsung SoCs. In our case normal
+> > > > > and
+> > > > > power down settings are completely unrelated, i.e. stored in
+> > > > > separate
+> > > > > registers and one doesn't affect another (a system controller
+> > > > > automatically switches between normal and power down settings when
+> > > > > entering or leaving low power modes, like SoC-level suspend).
+> > > > 
+> > > > and?
 > > > 
-> > > Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-> > > ---
+> > > Pin configuration node on Exynos SoCs will need 7 values for each pin
+> > > in samsung,pins property, just like in following example:
 > > > 
-> > >  .../devicetree/bindings/net/davicom-dm9000.txt     | 27 ++++++++++
-> > >  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
-> > >  drivers/net/ethernet/davicom/dm9000.c              | 60
-> > >  ++++++++++++++++++++++ 3 files changed, 88 insertions(+)
-> > >  create mode 100644
-> > >  Documentation/devicetree/bindings/net/davicom-dm9000.txt> 
-> > > diff --git a/Documentation/devicetree/bindings/net/davicom-dm9000.txt
-> > > b/Documentation/devicetree/bindings/net/davicom-dm9000.txt new file
-> > > mode 100644
-> > > index 0000000..d2902db
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/net/davicom-dm9000.txt
-> > > @@ -0,0 +1,27 @@
-> > > +Davicom DM9000 Fast Ethernet controller
-> > > +
-> > > +Required properties:
-> > > +- compatible = "davicom,dm9000";
-> > > +- reg : physical addresses and sizes of registers, must contain 2
-> > > entries: +    first entry : address register,
-> > > +    second entry : address register.
-> > > +- interrupt-parent : interrupt controller to which the device is
-> > > connected +- interrupts : interrupt specifier specific to interrupt
-> > > controller +
-> > > +Optional properties:
-> > > +- local-mac-address : A bytestring of 6 bytes specifying Ethernet MAC
-> > > address +    to use (from firmware or bootloader)
-> > > +- davicom,no-eeprom : Configuration EEPROM is not available
-> > > +- davicom,ext-phy : Use external PHY
-> > > +- davicom,simple-phy : Use NSR to find LinkStatus
+> > > mmc0 {
+> > > 
+> > > 	mmc0_bus1: mmc0-bus1 {
+> > > 	
+> > > 		pins = <GPA0 4 SFN3 PULL_UP DRV4 PDN_IN PDN_PULL_UP>;
+> > > 	
+> > > 	};
+> > > 	/* ... */
+> > > 
+> > > };
+> > > 
+> > > Now if I just want to enable pull-up for a single pin, I will have to
+> > > add following node:
+> > > 
+> > > foo {
+> > > 
+> > > 	pins = <GPK1 2 NONE PULL_UP NONE NONE NONE>;
+> > > 
+> > > };
 > > 
-> > Do we really need to expose this simple-phy property? Looking at the
-> > drvier code this more looks like a work around shortcomings of the
-> > driver code rather than something really necessary.
-> 
-> Well, depending on this property it can use two different methods of 
-> checking carrier status and it seems to depend on hardware, which one 
-> should be used. I don't see any driver shortcomings here, but maybe I'm 
-> missing something.
-
-It's not hardware dependent, at least not from the original commit log.
-
-The driver doesn't use mdiobus_register which you normally would do
-today. If someone ports the driver over to mdiobus we would still have
-to support this legacy flag as a special case.
-
-Since no mainline user makes use of this flag I suggest to skip it from
-the devicetree, at least until someone really asks for this specific
-flag (and has good reasons to use it)
-
-> 
-> > > +#ifdef CONFIG_OF
-> > > +static struct dm9000_plat_data *dm9000_parse_dt(struct device *dev)
-> > > +{
-> > > +	struct dm9000_plat_data *pdata;
-> > > +	struct device_node *np = dev->of_node;
-> > > +	const void *prop;
-> > > +	int len;
-> > > +
-> > > +	if (!np)
-> > > +		return NULL;
+> > no you will not
 > > 
-> > You should be able to kill the ifdef around this function by doing
+> > foo {
+> > 	pins = <GPK1 2 NONE PULL_UP>;
+> > };
 > 
-> Basically this would be a kill with a double-edged sword.
+> OK, this will work in case of one pin, but if you need two it starts to 
+> become problematic. Let's look at an example:
 > 
-> I could completely drop the #ifdef without any additional check, as it is 
-> not possible that np is not NULL with !CONFIG_OF,
+> We have two pins for which we don't need to specify power down mode 
+> settings (e.g. they are in alive banks):
+> 
+> foo {
+>  	pins = <GPK1 2 NONE PULL_UP>,
+> 		<GPK1 3 NONE PULL_UP>;
+> };
 
-Yes, but the compiler doesn't know this.
+as done for cs-gpios
+> 
+> After compilation you will get just a series of u32 values, like
+> 
+> foo {
+> 	pins = <1 2 255 3 1 3 255 3>;
+> };
 
-> but I decided to keep 
-> the code conditional to reduce driver code a bit on platforms that don't 
-> need OF.
 
-IS_ENABLED(CONFIG_OF) will expand to 0 without OF and the compiler will
-through the unused code away. You won't find differences in the binary
-size.
 
-Sascha
+> 
+> How are you going to distinguish such setup with:
+> 
+> foo {
+>  	pins = <GPK1 2 NONE PULL_UP NONE NONE NONE>,
+> 		<GPK1 3 NONE PULL_UP NONE NONE NONE>;
+> };
+> 
+>> which translates to
+> 
+> foo {
+> 	pins = <1 2 255 3 255 255 255 1 3 255 3 255 255 255>;
+> };
+> 
+> I mean, you don't know where one entry ends and another starts, if you 
+> allow to left out some values.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+on gpios we can do so, I want to have the same feature here
+> 
+> > how a pin can not have mux?
+> 
+> I don't always want to change the mux. Sometimes I just want to change one 
+> of the other parameters. For example, I don't want to switch the pin to 
+> interrupt mode on driver probe (it is a separate pin mux value), but 
+> rather after the trigger type gets configured, which is done by 
+> request_irq() based on trigger flags.
+so request the same
+
+> 
+> > > while with current bindings I can simply omit properties that I don't
+> > > care about (or are going to be set up correctly by other means - e.g.
+> > > gpio_direction_input() or request_irq(), ending with following node:
+> > > 
+> > > foo {
+> > > 
+> > > 	samsung,pins = "gpk1-2";
+> > > 	samsung,pin-pud = <3>;
+> > > 
+> > > };
+> > 
+> > except here you will 100s of NODE which we do NOT want in the dtb
+> 
+> Is this really an issue?
+just one example
+
+slow down the boot
+> 
+> We are already using this method to describe really complex boards (not 
+> necessarily in mainline) and we don't have any problems.
+> 
+> > > This is all I need to configure for simple things like open-drain
+> > > interrupt lines.
+> > > 
+> > > Another thing is that we're using one driver for many SoCs, which have
+> > > different variants of the controller. So for example some of them
+> > > don't
+> > > have driver strength configuration (S3C24xx, S3C64xx), other don't
+> > > have
+> > > power down mode configuration (S3C24xx) and even some of the banks on
+> > > some SoCs don't support particular type of configuration (alive banks
+> > > of SoCs
+> > same on at91 some IP have less feature
+> > and some SoC have the IP/die but not the same pins package
+> > 
+> > the key point is to share the pin DT handling between at91, ST and
+> > Samsung ofcourse all the IP will have more or less parameter per pin
+> > but the basic is the same for DT and C code
+> > 
+> > > >= S3C64xx don't have power down mode configuration, because they are
+> > > 
+> > > always on).
+> > > 
+> > > > on at91 I've x banks of registers to handle each gpio bank
+> > > > 
+> > > > on ST with have same situation but the controller work the same way
+> > > > at
+> > > > the end
+> > > > 
+> > > > so we need to factorise code
+> > > > 
+> > > > > Personally I'd prefer a solution with separate property for each
+> > > > > parameter, because it's much more flexible and allows shorter
+> > > > > lines,
+> > > > > making device tree sources more readable.
+> > > > 
+> > > > we already discuss this on the ML the one property perline will
+> > > > endup
+> > > > with 100s of node if not 1000s so we all do agree we do not want
+> > > > this
+> > > > in the DT
+> > > 
+> > > Could you point me to this discussion, please? I'd really like to take
+> > > a look.
+> > 
+> > you have to search this on the dt ML, it was about the clk bindings IIRC
+> > and agree on this at Prague durring kernel Summit
+> 
+> OK. Will look for it.
+> 
+> Best regards,
+> Tomasz
+> 
