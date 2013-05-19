@@ -1,53 +1,53 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v2] net: dm9000: Allow instantiation using device tree
-Date: Sun, 19 May 2013 19:18:41 +0200
-Message-ID: <51990971.2050306@gmail.com>
-References: <1368962191-32594-1-git-send-email-tomasz.figa@gmail.com> <5198D359.5060608@gmail.com> <15046898.dr5fzcR9ZS@flatron>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCHv10 1/9] arm: mvebu: fix the 'ranges' property to handle
+ PCIe
+Date: Sun, 19 May 2013 16:28:24 -0400
+Message-ID: <20130519202824.GN11137@titan.lakedaemon.net>
+References: <1368719725-21265-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1368719725-21265-2-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <15046898.dr5fzcR9ZS@flatron>
-Sender: netdev-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Sascha Hauer <s.hauer@pengutronix.de>, David Miller <davem@davemloft.net>, Francois Romieu <romieu@fr.zoreil.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1368719725-21265-2-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/19/2013 03:41 PM, Tomasz Figa wrote:
->>> +static struct dm9000_plat_data *dm9000_parse_dt(struct device *dev)
->>> >  >  +{
->>> >  >  +	struct dm9000_plat_data *pdata;
->>> >  >  +	struct device_node *np = dev->of_node;
->>> >  >  +	const void *mac_addr;
->>> >  >  +
->>> >  >  +	if (!IS_ENABLED(CONFIG_OF) || !np)
->>> >  >  +		return NULL;
->> >
->> >  Shouldn't ERR_PTR() value be returned here ?
->
-> Nope. No platform data is a valid case, so no error here.
+On Thu, May 16, 2013 at 05:55:16PM +0200, Thomas Petazzoni wrote:
+> Since 82a682676 ('ARM: dts: mvebu: Convert all the mvebu files to use
+> the range property') all the device nodes of Armada 370/XP are under a
+> common 'ranges' property that translates the device register addresses
+> into their absolute address, thanks to the base address of the
+> internal register space.
+> 
+> However, beyond just the register areas, there are also PCIe I/O and
+> memory regions, whose addresses should be properly translated. This
+> patch fixes the Armada 370 and XP ranges property to take PCIe into
+> account properly.
+> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+> Since the PCIe Device Tree description has been merged in 3.10-rc1,
+> this commit should go in 3.10-rc as well.
+> ---
+>  arch/arm/boot/dts/armada-370-xp.dtsi |    3 ++-
+>  arch/arm/boot/dts/armada-370.dtsi    |    3 ++-
+>  2 files changed, 4 insertions(+), 2 deletions(-)
 
-OK, sorry, I should have checked that.
+Applied to mvebu/fixes
 
->>> >  >  +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
->>> >  >  +	if (!pdata) {
->>> >  >  +		dev_err(dev, "failed to allocate platform data struct\n");
->> >
->> >  There is no need for this error log, k*alloc already logs any failures.
->
-> Hmm. Does it print what allocation exactly failed? (e.g. a backtrace)
+thx,
 
-It seems the caller tracking is supported in subset of the kernel 
-configurations.
-
-> Not that it would give anything that could help you in an out of memory
-> condition like this, but in general it's good to know in what point the
-> failure happened.
-
-As long as it is ENOMEM and the driver core reports failed probe I wouldn't
-really care. Nevertheless I saw patch series removing such already existing
-"Not enough memory" kind of error logs from the kernel, pointing out that mm
-already provides relevant error logging.
-
-Thanks,
-Sylwester
+Jason.
