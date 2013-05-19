@@ -1,98 +1,49 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
+From: Francois Romieu <romieu@fr.zoreil.com>
 Subject: Re: [PATCH] net: dm9000: Allow instantiation using device tree
-Date: Sun, 19 May 2013 09:05:38 +0200
-Message-ID: <20130519070538.GX32299@pengutronix.de>
+Date: Sun, 19 May 2013 10:38:22 +0200
+Message-ID: <20130519083822.GA31087@electric-eye.fr.zoreil.com>
 References: <1368918194-24030-1-git-send-email-tomasz.figa@gmail.com>
+ <20130519070538.GX32299@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1368918194-24030-1-git-send-email-tomasz.figa@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+In-Reply-To: <20130519070538.GX32299@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Tomasz Figa <tomasz.figa@gmail.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
-
-On Sun, May 19, 2013 at 01:03:14AM +0200, Tomasz Figa wrote:
-> This patch adds Device Tree support to dm9000 driver.
+Sascha Hauer <s.hauer@pengutronix.de> :
+[...]
+> > +#ifdef CONFIG_OF
+> > +static struct dm9000_plat_data *dm9000_parse_dt(struct device *dev)
+> > +{
+> > +	struct dm9000_plat_data *pdata;
+> > +	struct device_node *np = dev->of_node;
+> > +	const void *prop;
+> > +	int len;
+> > +
+> > +	if (!np)
+> > +		return NULL;
 > 
-> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-> ---
->  .../devicetree/bindings/net/davicom-dm9000.txt     | 27 ++++++++++
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  drivers/net/ethernet/davicom/dm9000.c              | 60 ++++++++++++++++++++++
->  3 files changed, 88 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/davicom-dm9000.txt
+> You should be able to kill the ifdef around this function by doing
 > 
-> diff --git a/Documentation/devicetree/bindings/net/davicom-dm9000.txt b/Documentation/devicetree/bindings/net/davicom-dm9000.txt
-> new file mode 100644
-> index 0000000..d2902db
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/davicom-dm9000.txt
-> @@ -0,0 +1,27 @@
-> +Davicom DM9000 Fast Ethernet controller
-> +
-> +Required properties:
-> +- compatible = "davicom,dm9000";
-> +- reg : physical addresses and sizes of registers, must contain 2 entries:
-> +    first entry : address register,
-> +    second entry : address register.
-> +- interrupt-parent : interrupt controller to which the device is connected
-> +- interrupts : interrupt specifier specific to interrupt controller
-> +
-> +Optional properties:
-> +- local-mac-address : A bytestring of 6 bytes specifying Ethernet MAC address
-> +    to use (from firmware or bootloader)
-> +- davicom,no-eeprom : Configuration EEPROM is not available
-> +- davicom,ext-phy : Use external PHY
-> +- davicom,simple-phy : Use NSR to find LinkStatus
+> 	if (!IS_ENABLED(CONFIG_OF) || !np)
+> 		return NULL;
 
-Do we really need to expose this simple-phy property? Looking at the
-drvier code this more looks like a work around shortcomings of the
-driver code rather than something really necessary.
+It will be the first such use of IS_ENABLED in net land.
 
-> +#ifdef CONFIG_OF
-> +static struct dm9000_plat_data *dm9000_parse_dt(struct device *dev)
-> +{
-> +	struct dm9000_plat_data *pdata;
-> +	struct device_node *np = dev->of_node;
-> +	const void *prop;
-> +	int len;
-> +
-> +	if (!np)
-> +		return NULL;
-
-You should be able to kill the ifdef around this function by doing
-
-	if (!IS_ENABLED(CONFIG_OF) || !np)
-		return NULL;
-
-> +
-> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata) {
-> +		dev_err(dev, "failed to allocate platform data struct\n");
-> +		return ERR_PTR(-ENOMEM);
-> +	}
-> +
-> +	if (of_find_property(np, "davicom,ext-phy", NULL))
-> +		pdata->flags |= DM9000_PLATF_EXT_PHY;
-> +	if (of_find_property(np, "davicom,no-eeprom", NULL))
-> +		pdata->flags |= DM9000_PLATF_NO_EEPROM;
-> +	if (of_find_property(np, "davicom,simple-phy", NULL))
-> +		pdata->flags |= DM9000_PLATF_SIMPLE_PHY;
-> +
-> +	prop = of_get_property(np, "local-mac-address", &len);
-> +	if (!prop)
-> +		return pdata;
-
-I think you should use of_get_mac_address() here.
-
-Sascha
+David, is it ok ?
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Ueimor
