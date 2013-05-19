@@ -1,117 +1,171 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH] net: dm9000: Allow instantiation using device tree
-Date: Sun, 19 May 2013 10:54:53 +0200
-Message-ID: <2763249.7aFBh8NOHl@flatron>
-References: <1368918194-24030-1-git-send-email-tomasz.figa@gmail.com> <20130519070538.GX32299@pengutronix.de>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: Pulls and drive strengths in the pinctrl world
+Date: Sun, 19 May 2013 11:17:36 +0200
+Message-ID: <20130519091736.GF1952@game.jcrosoft.org>
+References: <CAD=FV=V9h3RUfvAxj8k2EbYXYPO4FfoNwh=f=dno5ZBUFYeG0w@mail.gmail.com>
+ <1855701.nJQdRzsWsg@flatron>
+ <20130518163001.GE1952@game.jcrosoft.org>
+ <91263163.s2uhtsH4YZ@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20130519070538.GX32299@pengutronix.de>
-Sender: netdev-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <91263163.s2uhtsH4YZ@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Doug Anderson <dianders@google.com>, Kukjin Kim <kgene.kim@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
-
-On Sunday 19 of May 2013 09:05:38 Sascha Hauer wrote:
-> Hi Tomasz,
-> 
-> On Sun, May 19, 2013 at 01:03:14AM +0200, Tomasz Figa wrote:
-> > This patch adds Device Tree support to dm9000 driver.
+> > > > PULL_UP         (1 << 0): indicate this pin need a pull up.
+> > > > MULTIDRIVE      (1 << 1): indicate this pin need to be configured as
+> > > > multidrive. DEGLITCH        (1 << 2): indicate this pin need
+> > > > deglitch.
+> > > > PULL_DOWN       (1 << 3): indicate this pin need a pull down.
+> > > > DIS_SCHMIT      (1 << 4): indicate this pin need to disable schmit
+> > > > trigger. DEBOUNCE        (1 << 16): indicate this pin need debounce.
+> > > > DEBOUNCE_VAL    (0x3fff << 17): debounce val.
+> > > > 
+> > > > today I was planning to update the binding to allow to this
+> > > > 
+> > > > instead of writing this
+> > > > 
+> > > > dbgu {
+> > > > 
+> > > > 	pinctrl_dbgu: dbgu-0 {
+> > > > 	
+> > > > 		atmel,pins =
+> > > > 		
+> > > > 			<AT91_PIOB 30 AT91_PERIPH_A AT91_PINCTRL_NONE
+> > > > 			
+> > > > 			 AT91_PIOB 31 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+> > > > 	
+> > > > 	};
+> > > > 
+> > > > };
+> > > > 
+> > > > we will write this
+> > > > 
+> > > > dbgu {
+> > > > 
+> > > > 	pinctrl_dbgu: dbgu-0 {
+> > > > 	
+> > > > 		atmel,pins =
+> > > > 		
+> > > > 			<AT91_PIOB 30 AT91_PERIPH_A>,
+> > > > 			
+> > > > 			 AT91_PIOB 31 AT91_PERIPH_A AT91_PINCTRL_PULL_UP>;
+> > > > 	
+> > > > 	};
+> > > > 
+> > > > };
+> > > > 
+> > > > so a pin can have 3 or more parameter
+> > > > 
+> > > > so as a generic binding only the 3 first will be namdatory (bank
+> > > > pinnp
+> > > > muxid) the rest will driver specific
+> > > > 
+> > > > for power down I plan to define an other node
+> > > > dbgu {
+> > > > 
+> > > > 	pinctrl_dbgu_sleep: dbgu_sleep-0 {
+> > > > 	
+> > > > 		atmel,pins =
+> > > > 		
+> > > > 			<AT91_PIOB 30 AT91_PERIPH_GPIO>,
+> > > > 			
+> > > > 			 AT91_PIOB 31 AT91_PERIPH_A
+> > > 
+> > > AT91_PINCTRL_PULL_DOWN>;
+> > > 
+> > > > 	};
+> > > > 
+> > > > };
+> > > 
+> > > I'm afraid this won't work for Samsung SoCs. In our case normal and
+> > > power down settings are completely unrelated, i.e. stored in separate
+> > > registers and one doesn't affect another (a system controller
+> > > automatically switches between normal and power down settings when
+> > > entering or leaving low power modes, like SoC-level suspend).
 > > 
-> > Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-> > ---
+> > and?
+> 
+> Pin configuration node on Exynos SoCs will need 7 values for each pin in 
+> samsung,pins property, just like in following example:
+> 
+> mmc0 {
+> 	mmc0_bus1: mmc0-bus1 {
+> 		pins = <GPA0 4 SFN3 PULL_UP DRV4 PDN_IN PDN_PULL_UP>;
+> 	};
+> 	/* ... */
+> };
+> 
+> Now if I just want to enable pull-up for a single pin, I will have to add 
+> following node:
+> 
+> foo {
+> 	pins = <GPK1 2 NONE PULL_UP NONE NONE NONE>;
+> };
+> 
+
+no you will not
+
+foo {
+	pins = <GPK1 2 NONE PULL_UP>;
+};
+
+how a pin can not have mux?
+
+> while with current bindings I can simply omit properties that I don't care 
+> about (or are going to be set up correctly by other means - e.g. 
+> gpio_direction_input() or request_irq(), ending with following node:
+> 
+> foo {
+> 	samsung,pins = "gpk1-2";
+> 	samsung,pin-pud = <3>;
+> };
+
+except here you will 100s of NODE which we do NOT want in the dtb
+> 
+> This is all I need to configure for simple things like open-drain 
+> interrupt lines.
+> 
+> Another thing is that we're using one driver for many SoCs, which have 
+> different variants of the controller. So for example some of them don't 
+> have driver strength configuration (S3C24xx, S3C64xx), other don't have 
+> power down mode configuration (S3C24xx) and even some of the banks on some 
+> SoCs don't support particular type of configuration (alive banks of SoCs 
+
+same on at91 some IP have less feature
+and some SoC have the IP/die but not the same pins package
+
+the key point is to share the pin DT handling between at91, ST and Samsung
+ofcourse all the IP will have more or less parameter per pin but the basic is
+the same for DT and C code
+
+> >= S3C64xx don't have power down mode configuration, because they are 
+> always on).
+> 
+> > on at91 I've x banks of registers to handle each gpio bank
 > > 
-> >  .../devicetree/bindings/net/davicom-dm9000.txt     | 27 ++++++++++
-> >  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
-> >  drivers/net/ethernet/davicom/dm9000.c              | 60
-> >  ++++++++++++++++++++++ 3 files changed, 88 insertions(+)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/net/davicom-dm9000.txt> 
-> > diff --git a/Documentation/devicetree/bindings/net/davicom-dm9000.txt
-> > b/Documentation/devicetree/bindings/net/davicom-dm9000.txt new file
-> > mode 100644
-> > index 0000000..d2902db
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/davicom-dm9000.txt
-> > @@ -0,0 +1,27 @@
-> > +Davicom DM9000 Fast Ethernet controller
-> > +
-> > +Required properties:
-> > +- compatible = "davicom,dm9000";
-> > +- reg : physical addresses and sizes of registers, must contain 2
-> > entries: +    first entry : address register,
-> > +    second entry : address register.
-> > +- interrupt-parent : interrupt controller to which the device is
-> > connected +- interrupts : interrupt specifier specific to interrupt
-> > controller +
-> > +Optional properties:
-> > +- local-mac-address : A bytestring of 6 bytes specifying Ethernet MAC
-> > address +    to use (from firmware or bootloader)
-> > +- davicom,no-eeprom : Configuration EEPROM is not available
-> > +- davicom,ext-phy : Use external PHY
-> > +- davicom,simple-phy : Use NSR to find LinkStatus
+> > on ST with have same situation but the controller work the same way at
+> > the end
+> > 
+> > so we need to factorise code
+> > 
+> > > Personally I'd prefer a solution with separate property for each
+> > > parameter, because it's much more flexible and allows shorter lines,
+> > > making device tree sources more readable.
+> > 
+> > we already discuss this on the ML the one property perline will endup
+> > with 100s of node if not 1000s so we all do agree we do not want this
+> > in the DT
 > 
-> Do we really need to expose this simple-phy property? Looking at the
-> drvier code this more looks like a work around shortcomings of the
-> driver code rather than something really necessary.
+> Could you point me to this discussion, please? I'd really like to take a 
+> look.
 
-Well, depending on this property it can use two different methods of 
-checking carrier status and it seems to depend on hardware, which one 
-should be used. I don't see any driver shortcomings here, but maybe I'm 
-missing something.
+you have to search this on the dt ML, it was about the clk bindings IIRC and
+agree on this at Prague durring kernel Summit
 
-> > +#ifdef CONFIG_OF
-> > +static struct dm9000_plat_data *dm9000_parse_dt(struct device *dev)
-> > +{
-> > +	struct dm9000_plat_data *pdata;
-> > +	struct device_node *np = dev->of_node;
-> > +	const void *prop;
-> > +	int len;
-> > +
-> > +	if (!np)
-> > +		return NULL;
-> 
-> You should be able to kill the ifdef around this function by doing
-
-Basically this would be a kill with a double-edged sword.
-
-I could completely drop the #ifdef without any additional check, as it is 
-not possible that np is not NULL with !CONFIG_OF, but I decided to keep 
-the code conditional to reduce driver code a bit on platforms that don't 
-need OF.
-
-Maybe this single driver wouldn't give any significant difference, but if 
-you make all the drivers used on the platform this way, you will save some 
-kilobytes.
-
-> 	if (!IS_ENABLED(CONFIG_OF) || !np)
-> 		return NULL;
-> 
-> > +
-> > +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> > +	if (!pdata) {
-> > +		dev_err(dev, "failed to allocate platform data struct\n");
-> > +		return ERR_PTR(-ENOMEM);
-> > +	}
-> > +
-> > +	if (of_find_property(np, "davicom,ext-phy", NULL))
-> > +		pdata->flags |= DM9000_PLATF_EXT_PHY;
-> > +	if (of_find_property(np, "davicom,no-eeprom", NULL))
-> > +		pdata->flags |= DM9000_PLATF_NO_EEPROM;
-> > +	if (of_find_property(np, "davicom,simple-phy", NULL))
-> > +		pdata->flags |= DM9000_PLATF_SIMPLE_PHY;
-> > +
-> > +	prop = of_get_property(np, "local-mac-address", &len);
-> > +	if (!prop)
-> > +		return pdata;
-> 
-> I think you should use of_get_mac_address() here.
-
-Oops. Right, this is what I was looking for, but somehow I failed. Will 
-change this in next version. Thanks.
-
-Best regards,
-Tomasz
+Best Regards,
+J.
