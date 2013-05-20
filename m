@@ -1,51 +1,29 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCHv10 5/9] clk: mvebu: create parent-child relation for
- PCIe clocks on Armada 370
-Date: Mon, 20 May 2013 14:02:54 -0400
-Message-ID: <20130520180254.GD31290@titan.lakedaemon.net>
-References: <1368719725-21265-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1368719725-21265-6-git-send-email-thomas.petazzoni@free-electrons.com>
- <20130519204703.GP11137@titan.lakedaemon.net>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC/PATCH 1/2] gpio-rcar: Make the platform data gpio_base field signed
+Date: Mon, 20 May 2013 20:08:52 +0200
+Message-ID: <CACRpkdYZMvWE6HX8K0_Rv6JET0wE=m0MWyuK3ztAgjA34w=-Dw@mail.gmail.com>
+References: <1368197317-13169-1-git-send-email-laurent.pinchart@ideasonboard.com>
+	<1368197317-13169-2-git-send-email-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130519204703.GP11137-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1368197317-13169-2-git-send-email-laurent.pinchart@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <damm@opensource.se>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 19, 2013 at 04:47:03PM -0400, Jason Cooper wrote:
-> On Thu, May 16, 2013 at 05:55:20PM +0200, Thomas Petazzoni wrote:
-> > The Armada 370 has two gatable clocks for each PCIe interface, and we
-> > want both of them to be enabled. We therefore make one of the two
-> > clocks a child of the other, as we did for the sataX and sataXlnk
-> > clocks on Armada XP.
-> > 
-> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  drivers/clk/mvebu/clk-gating-ctrl.c |    4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> Patches 5 - 8 applied to mvebu/pcie, with a dep on Sebastian's clock
-> rework and mvebu/of_pci.  Thanks for the head's up on the clk conflict.
-> My resolution should match yours.  Please let me know if it doesn't.
+On Fri, May 10, 2013 at 4:48 PM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
 
-As stated in the clk thread, I'm going to re-order this so pcie doesn't
-depend on the clk series.
+> The gpio_base field is used to specify the desired GPIO base for the
+> GPIO controller. The GPIO core can automatically allocate a GPIO number
+> range when the base is set to -1. To make this possible, make the field
+> signed.
+>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-thx,
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Jason.
+Yours,
+Linus Walleij
