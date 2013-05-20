@@ -1,55 +1,27 @@
-From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/1] of/documentation: Update document related to exynos_hdmi
-Date: Mon, 20 May 2013 10:21:04 +0530
-Message-ID: <1369025464-8810-1-git-send-email-sachin.kamat@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCHv10 2/9] of/pci: Provide support for parsing PCI DT ranges property
+Date: Mon, 20 May 2013 09:03:00 +0200
+Message-ID: <CACRpkdamm9vh_bXenJigwTYmN=n_SsEp+GQqAe9rdm8PRxPsqw@mail.gmail.com>
+References: <1368719725-21265-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1368719725-21265-3-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20130519203156.GO11137@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20130519203156.GO11137@titan.lakedaemon.net>
+Sender: linux-pci-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Tawfik Bayouk <tawfik@marvell.com>, linux-pci@vger.kernel.org, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thierry Reding <thierry.reding@avionic-design.de>, Liviu Dudau <Liviu.Dudau@arm.com>, Rob Herring <rob.herring@calxeda.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Andrew Murray <Andrew.Murray@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Exynos SoCs use pinctrl to configure GPIOs. Update the document
-to reflect this change.
+On Sun, May 19, 2013 at 10:31 PM, Jason Cooper <jason@lakedaemon.net> wrote:
 
-Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/video/exynos_hdmi.txt      |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+> patches 2, 3, and 4 applied to mvebu/of_pci to facilitate others
+> (LinusW) basing their work off of it.
 
-diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-index 589edee..584385a 100644
---- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-+++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
-@@ -8,9 +8,7 @@ Required properties:
- - hpd-gpio: following information about the hotplug gpio pin.
- 	a) phandle of the gpio controller node.
- 	b) pin number within the gpio controller.
--	c) pin function mode.
--	d) optional flags and pull up/down.
--	e) drive strength.
-+	c) optional flags and pull up/down.
- 
- Example:
- 
-@@ -18,5 +16,5 @@ Example:
- 		compatible = "samsung,exynos5-hdmi";
- 		reg = <0x14530000 0x100000>;
- 		interrupts = <0 95 0>;
--		hpd-gpio = <&gpx3 7 0xf 1 3>;
-+		hpd-gpio = <&gpx3 7 1>;
- 	};
--- 
-1.7.9.5
+Thanks, is this going to be pulled into ARM SoC soon-ish?
+
+I think Arnd may need this for some PCI work too.
+
+Yours,
+Linus Walleij
