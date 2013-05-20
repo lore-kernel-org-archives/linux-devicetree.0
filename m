@@ -1,96 +1,112 @@
-From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 2/6] ARM: dts: imx6q{dl}: fix the pin conflict between SPI and
- WEIM
-Date: Mon, 20 May 2013 16:48:58 +0800
-Message-ID: <1369039742-10893-3-git-send-email-b32955@freescale.com>
-References: <1369039742-10893-1-git-send-email-b32955@freescale.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] documentation: iommu: add description of ARM System
+	MMU binding
+Date: Mon, 20 May 2013 11:18:41 +0100
+Message-ID: <20130520101841.GK31359@mudshark.cambridge.arm.com>
+References: <1365789727-5371-1-git-send-email-will.deacon@arm.com>
+	<20130513095020.GB10369@alberich>
+	<20130513095846.GC29814@mudshark.cambridge.arm.com>
+	<20130513104147.GF10369@alberich> <20130517201639.GL10369@alberich>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1369039742-10893-1-git-send-email-b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130517201639.GL10369@alberich>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In the imx6q-sabreauto and imx6dl-sabreauto boards,
-the pin MX6Q{DL}_PAD_EIM_D19 is used as a GPIO for SPI NOR, but
-it is used as a data pin for the WEIM NOR.
+Hi Andreas,
 
-In order to fix the conflict, this patch removes the pin from the hog,
-and adds a new pinctrl item: pinctrl_ecspi1_2.
+On Fri, May 17, 2013 at 09:16:39PM +0100, Andreas Herrmann wrote:
+> On Mon, May 13, 2013 at 12:41:47PM +0200, Andreas Herrmann wrote:
+> > On Mon, May 13, 2013 at 05:58:46AM -0400, Will Deacon wrote:
+> > > Again, you also need to tie in topology information if you go down this
+> > > route.
+> 
+> I still don't like the approach of having two independend lists that
+> must be in sync to associate a master with its stream-ids.
+> 
+> Why? Say you have 8 masters for an SMMU with 1 or 2 stream-ids each:
+> 
+>      	 smmu {
+> 		...
+>                 mmu-masters = <&dma0>, <&dma0>, <&dma1>, <&dma1>,
+> 			      <&dma2>, <&dma2>, <&dma4>, <&dma4>,
+> 			      <&dma5>, <&dma6>, <&dma7>, <&dma8>;
+>                 stream-ids =	<0>, <1>, <2>, <3>,
+> 				<4>, <5>, <6>, <7>,
+> 		                <8>, <9>, <0xa>, <0xb>;
+> 	}
+> 
+> Couldn't we use of_phandle_args for this purpose? So your example
+> 
+> +        smmu {
+> 		 ...
+> +                mmu-masters = <&dma0>,
+> +                              <&dma0>,
+> +                              <&dma1>;
+> +                stream-ids  = <0xd01d>,
+> +                              <0xd01e>,
+> +                              <0xd11c>;
+> +        };
+> 
+> would look like
+> 
+> 	dma0 {
+> 		...
+> 		#stream-id-cells = <2>
+> 		...
+> 	}
+> 
+> 	dma1 {
+> 		...
+> 		#stream-id-cells = <1>
+> 		...
+> 	}
+> 
+>         smmu {
+> 		...
+> 		mmu-masters = <&dma0 0xd01d 0xd01e
+> 			       &dma1 0xd11c>,
+>        };
+> 
+> and my example would be converted to
+> 
+> 	smmu {
+> 		...
+>                 mmu-masters = <&dma0 0 1 &dma1 2 3 &dma2 4 5
+> 			       &dma4 6 7 &dma5 8 &dma6 9
+> 			       &dma7 0xa &dma8 0xb>
+> 		...
+> 	}
 
-The SPI NOR selects this pinctrl_ecspi1_2 when it is enabled.
+That also looks fine to me, although I'd like to write the parsing code in
+my driver before I commit to anything!
 
-Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/arm/boot/dts/imx6dl-sabreauto.dts   |    9 ++++++++-
- arch/arm/boot/dts/imx6q-sabreauto.dts    |    9 ++++++++-
- arch/arm/boot/dts/imx6qdl-sabreauto.dtsi |    2 +-
- 3 files changed, 17 insertions(+), 3 deletions(-)
+> Of course usage of of_phandle_args would restrict the number of
+> stream-ids per master to 8 (which is currently used as
+> MAX_PHANDLE_ARGS). But I don't think that this is a restriction in
+> practice or do you expect to have more than 8 stream-ids per master
+> (ie. per struct device in Linux)?
 
-diff --git a/arch/arm/boot/dts/imx6dl-sabreauto.dts b/arch/arm/boot/dts/imx6dl-sabreauto.dts
-index 60f3038..7695f70 100644
---- a/arch/arm/boot/dts/imx6dl-sabreauto.dts
-+++ b/arch/arm/boot/dts/imx6dl-sabreauto.dts
-@@ -25,7 +25,14 @@
- 			fsl,pins = <
- 				MX6DL_PAD_NANDF_CS2__GPIO6_IO15 0x80000000
- 				MX6DL_PAD_SD2_DAT2__GPIO1_IO13  0x80000000
--				MX6DL_PAD_EIM_D19__GPIO3_IO19 	0x80000000
-+			>;
-+		};
-+	};
-+
-+	ecspi1 {
-+		pinctrl_ecspi1_2: ecspi1grp-2 {
-+			fsl,pins = <
-+				MX6DL_PAD_EIM_D19__GPIO3_IO19  0x80000000
- 			>;
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/imx6q-sabreauto.dts b/arch/arm/boot/dts/imx6q-sabreauto.dts
-index 9fb3e99..67a3a6b 100644
---- a/arch/arm/boot/dts/imx6q-sabreauto.dts
-+++ b/arch/arm/boot/dts/imx6q-sabreauto.dts
-@@ -29,7 +29,14 @@
- 			fsl,pins = <
- 				MX6Q_PAD_NANDF_CS2__GPIO6_IO15 0x80000000
- 				MX6Q_PAD_SD2_DAT2__GPIO1_IO13  0x80000000
--				MX6Q_PAD_EIM_D19__GPIO3_IO19   0x80000000
-+			>;
-+		};
-+	};
-+
-+	ecspi1 {
-+		pinctrl_ecspi1_2: ecspi1grp-2 {
-+			fsl,pins = <
-+				MX6Q_PAD_EIM_D19__GPIO3_IO19  0x80000000
- 			>;
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-index d6baa51..eb293f5 100644
---- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-@@ -20,7 +20,7 @@
- 	fsl,spi-num-chipselects = <1>;
- 	cs-gpios = <&gpio3 19 0>;
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_ecspi1_1>;
-+	pinctrl-0 = <&pinctrl_ecspi1_1 &pinctrl_ecspi1_2>;
- 	status = "disabled"; /* pin conflict with WEIM NOR */
- 
- 	flash: m25p80@0 {
--- 
-1.7.1
+Actually, I think that could be a problem. It doesn't sound unlikely that
+multi-channel DMA controllers could have:
+
+	- Separate instruction fetch streamid per channel
+	- Separate read/write streamids per channel
+
+so 8 does sound a bit small to me. How difficult would it be to bump that
+number in the future if we needed to?
+
+Will
