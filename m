@@ -1,14 +1,17 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2] video: implement a simple framebuffer driver
-Date: Mon, 20 May 2013 09:25:46 -0600
-Message-ID: <519A407A.4040006@wwwdotorg.org>
-References: <1365043183-28905-1-git-send-email-swarren@wwwdotorg.org>
- <CAAVeFuJ5q4Y0QtvJX2iVmq_O2ofs1B9=MB_aA8VdcEBdM4zf2Q@mail.gmail.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/5] usb: add Atmel USBA UDC DT support
+Date: Mon, 20 May 2013 17:44:15 +0200
+Message-ID: <20130520154415.GB9937@game.jcrosoft.org>
+References: <20130517141443.GB16804@game.jcrosoft.org>
+ <1368801730-31383-1-git-send-email-plagnioj@jcrosoft.com>
+ <519997CA.8010503@atmel.com>
+ <20130520101237.GA9937@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAAVeFuJ5q4Y0QtvJX2iVmq_O2ofs1B9=MB_aA8VdcEBdM4zf2Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130520101237.GA9937-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,43 +22,51 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/18/2013 04:29 AM, Alexandre Courbot wrote:
-> On Thu, Apr 4, 2013 at 11:39 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> +struct simplefb_format {
->> +       const char *name;
->> +       u32 bits_per_pixel;
->> +       struct fb_bitfield red;
->> +       struct fb_bitfield green;
->> +       struct fb_bitfield blue;
->> +       struct fb_bitfield transp;
->> +};
->> +
->> +struct simplefb_format simplefb_formats[] = {
->> +       { "r5g6b5", 16, {11, 5}, {5, 6}, {0, 5}, {0, 0} },
->> +};
+On 12:12 Mon 20 May     , Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > >
+> > >-static int __init usba_udc_probe(struct platform_device *pdev)
+> > >+#ifdef CONFIG_OF
+> > >+static struct usba_ep * atmel_udc_of_init(struct platform_device *pdev,
+> > >+						    struct usba_udc *udc)
+> > >+{
+> > >+	u32 val;
+> > >+	const char *name;
+> > >+	enum of_gpio_flags flags;
+> > >+	struct device_node *np = pdev->dev.of_node;
+> > >+	struct device_node *pp;
+> > >+	int i, ret;
+> > >+	struct usba_ep *eps, *ep;
+> > >+
+> > >+	udc->num_ep = 0;
+> > >+
+> > >+	udc->vbus_pin = of_get_named_gpio_flags(np, "atmel,vbus-gpio", 0,
+> > >+						&flags);
+> > >+	udc->vbus_pin_inverted = (flags & OF_GPIO_ACTIVE_LOW) ? 1 : 0;
+> > >+
+> > >+	pp = NULL;
+> > >+	while ((pp = of_get_next_child(np, pp)))
+> > >+		udc->num_ep++;
+> > >+
+> > >+	eps = devm_kzalloc(&pdev->dev, sizeof(struct usba_ep) * udc->num_ep,
+> > >+			   GFP_KERNEL);
+> > 
+> > Using devm_kzalloc will cause issue when build as modules, and load
+> > and unload this driver, the second time unload, it will come out
+> > following segment fault, log as following. Using kzalloc will fix
+> > it.
 > 
-> I have been adding a few extra formats to this list, and I wonder if
-> this could not simply be turned into a function that would directly
-> convert the name string into the corresponding right format. The
-> mapping between name and format seems to be a 1:1 and this would
-> probably avoid errors in the future. I'm especially thinking about
-> color order here - I started adding a mode that reads
+> no devm_kzalloc is the right one to use
 > 
->     { "r8g8b8a8", 32, {0, 8}, {8, 8}, {16, 8}, {24, 8} },
-> 
-> while it should probably be called "a8b8g8r8" as the order of colors
-> is not the same as your r5g6b5.
-> 
-> I can submit a patch if there is no issue with that idea.
+> if there is a this not in the drivers and kzalloc is not the solution
+> we need to find the real reason as devm_xxx are used everywhere by now
 
-I chose r5g6b5 rather than rgb565 specifically to make that format
-trivially name machine-parsable. So, I'm not opposed to converting that
-table to code. I'm not 100% sure if it's worth it or necessary by the
-time we get to just 2 formats in the array, but I don't see any big
-disadvantage, so why not. The DT binding documentation might want
-enhancing with a more general description of how formats should be
-represented if this is implemented.
+The issue come from that the current driver have some hack that forbiden
+multi-instance
+
+I'll drop that
+
+so yes devm_kzalloc is the right alloc to use
