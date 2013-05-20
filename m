@@ -1,52 +1,55 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [v2, 3/3] ARM: dts: AM33XX: Add NAND flash device tree data to
- am335x-evm
-Date: Mon, 20 May 2013 04:44:31 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73E9C5629@DBDE04.ent.ti.com>
-References: <ebfab3e9123b3e50b9a9678c1480191addd86d59.1359007746.git.avinashphilip@ti.com>
- <517F5126.5000509@ti.com> <20130508235404.GX32546@atomide.com>
- <20980858CB6D3A4BAE95CA194937D5E73E9C320D@DBDE04.ent.ti.com>
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/1] of/documentation: Update document related to exynos_hdmi
+Date: Mon, 20 May 2013 10:21:04 +0530
+Message-ID: <1369025464-8810-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73E9C320D@DBDE04.ent.ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "Cousson, Benoit" <b-cousson@ti.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "Philip, Avinash" <avinashphilip@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "Hiremath, Vaibhav" <hvaibhav@ti.com>, "zonque@gmail.com" <zonque@gmail.com>, "jacmet@sunsite.dk" <jacmet@sunsite.dk>, "Nori, Sekhar" <nsekhar@ti.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Exynos SoCs use pinctrl to configure GPIOs. Update the document
+to reflect this change.
+
+Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ .../devicetree/bindings/video/exynos_hdmi.txt      |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+index 589edee..584385a 100644
+--- a/Documentation/devicetree/bindings/video/exynos_hdmi.txt
++++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+@@ -8,9 +8,7 @@ Required properties:
+ - hpd-gpio: following information about the hotplug gpio pin.
+ 	a) phandle of the gpio controller node.
+ 	b) pin number within the gpio controller.
+-	c) pin function mode.
+-	d) optional flags and pull up/down.
+-	e) drive strength.
++	c) optional flags and pull up/down.
  
-> > > >
-> > > >  	am33xx_pinmux: pinmux@44e10800 {
-> > > >  		pinctrl-names = "default";
-> > > > -		pinctrl-0 = <&matrix_keypad_s0 &volume_keys_s0>;
-> > > > +		pinctrl-0 = <&matrix_keypad_s0 &volume_keys_s0
-> > > > +			&nandflash_pins_s0>;
-> > >
-> > > Why add this to the board level fallback (called pinctrl hogs, I think)?
-> > > This can be part of nand node you added below so that the pinctrl will
-> > > take effect when nand gets probed instead of all the time.
-> >
-> > Yes we should have all the pinctrl entries under the related drivers.
-> > This makes it easy remux pins during runtime if needed, and also
-> > allows unloading pinctrl-single.ko for development.
-> >
-> Yes, accepted. This has been already fixed in v3 of this patch set.
-> If all fine, then please pull this for next merge..
-> 
-> http://lists.infradead.org/pipermail/linux-mtd/2013-May/046712.html
-> 
-> http://lists.infradead.org/pipermail/linux-mtd/2013-May/046814.html
-> 
-> http://lists.infradead.org/pipermail/linux-mtd/2013-May/046710.html
-> 
-> 
-> with regards, pekon
-
-Request you to please accept | provide feedbacks on this patch series.
-These are waiting acceptance since Jan-2013, and are necessary for 
-DT based configs for board having NAND support.
-
-with regards, pekon
+ Example:
+ 
+@@ -18,5 +16,5 @@ Example:
+ 		compatible = "samsung,exynos5-hdmi";
+ 		reg = <0x14530000 0x100000>;
+ 		interrupts = <0 95 0>;
+-		hpd-gpio = <&gpx3 7 0xf 1 3>;
++		hpd-gpio = <&gpx3 7 1>;
+ 	};
+-- 
+1.7.9.5
