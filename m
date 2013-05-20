@@ -1,8 +1,9 @@
 From: Linus Walleij <linus.walleij@linaro.org>
 Subject: Re: [PATCH 1/2] pinmux: Add TB10x pinmux driver
-Date: Mon, 20 May 2013 10:03:24 +0200
-Message-ID: <CACRpkdY2R9uf0s6LGVCSPZmdNTDQV4RT65SuxCR_+hQ2eK90Yg@mail.gmail.com>
-References: <516EEAA0.10906@wwwdotorg.org>
+Date: Mon, 20 May 2013 10:10:33 +0200
+Message-ID: <CACRpkdYtKr5w2=1sONG4Qn2TQue38nV7epWfzxNQz5rjSs0DZQ@mail.gmail.com>
+References: <1365608728-30494-1-git-send-email-christian.ruppert@abilis.com>
+	<516EEAA0.10906@wwwdotorg.org>
 	<20130418090310.GA17636@ab42.lan>
 	<CACRpkdZd0_W432od5565phhUcJMRWiV9vXX4QVF4osKkxstC0Q@mail.gmail.com>
 	<20130429161725.GB30136@ab42.lan>
@@ -11,169 +12,82 @@ References: <516EEAA0.10906@wwwdotorg.org>
 	<20130508164123.GA10248@ab42.lan>
 	<518AAF31.8080502@wwwdotorg.org>
 	<20130510082521.GA2125@ab42.lan>
-	<CACRpkdbkqzyr0r0CostUx9RYa=pyPoyVvvW+VxEzyAYSESxp_g@mail.gmail.com>
-	<20130515094146.GA19925@ab42.lan>
+	<51942472.9010402@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130515094146.GA19925@ab42.lan>
+In-Reply-To: <51942472.9010402@wwwdotorg.org>
 Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>
+To: Stephen Warren <swarren@wwwdotorg.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Shiraz HASHIM <shiraz.hashim@st.com>
+Cc: Christian Ruppert <christian.ruppert@abilis.com>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 15, 2013 at 11:41 AM, Christian Ruppert
-<christian.ruppert@abilis.com> wrote:
-> On Tue, May 14, 2013 at 02:29:46PM +0200, Linus Walleij wrote:
+On Thu, May 16, 2013 at 2:12 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 05/10/2013 02:25 AM, Christian Ruppert wrote:
 
->> Look at for example
->> drivers/pinctrl/pinctrl-abx500.c:
->>
->> static u8 abx500_get_mode(struct pinctrl_dev *pctldev, struct gpio_chip *chip,
->>                           unsigned gpio)
->> {
->> (...)
->>         /* on ABx5xx, there is no GPIO0, so adjust the offset */
->>         unsigned offset = gpio - 1;
->>
->> As you can see, this driver, which does not use device tree,
->> is working around the same problem. Here the problem is that
->> the pins are numbered starting at 1 instead of 0, a very trivial
->> numberspace shuffleing.
+>> (*1) TB100 GPIO ranges are defined as a phandle to the I/O function
+>>      which provides all pins of a given GPIO port. This function is not
+>>      necessarily requested from pinctrl and GPIO ports may overlap with
+>>      other functions. The pin controller knows about this and provides
+>>      whatever GPIO pin is available after mapping other requested
+>>      functions.
+>> (*2) Here, the entire GPIOB port is explicitly requested by the GPIO
+>>      module, i.e. all pins of the port are made available as GPIOs.
 >
-> Let me see if I understand this right:
-> In ABx5xx, the pin numbering is offset by 1 wrt. GPIO numbering?
-
-No, sorry that the code is strange... The variable is named "gpio"
-because that is the numbering used in the data sheet.
-
-Think of "gpio" as "the number in the data sheet".
-
-Then offset is calculated to start from 0.
-
->> I'd be open to this approach if you:
->>
->> - Make it generic for all pinctrl drivers, i.e. add the translation
->>   to the core so it does not just apply to devices using device tree.
+> So I think all you're looking for is a way in DT to represent GPIO
+> ranges? I don't think that should be by string name, but rather numbers:
 >
-> Do you mean what would be required here is a generic way to translate
-> pin numbers to GPIO numbers in the pin controller?
+> (actually, doesn't pinctrl-simple already have this?)
 
-No that is already done by the GPIO ranges.
+Now I'm ever more confused ... we already have this :-)
 
-I thought this discussion was about shuffleing around/translating
-the numberings of the pins themselves.
+It's not even pinctrl-simple-centric it is completely generic.
+The code is in drivers/gpio/gpiolib-of.c.
 
-> This translation is currently achieved by the gpio_range mechanism.
+It was written by Shiraz Hashin and Haojian Zhuang.
+At the time I augmented the core code quite a bit to make
+a good fit.
 
-Yep.
+This is from:
+Documentation/devicetree/bindings/gpio/gpio.txt
 
-> Internals of gpio_range leak into the pinctrl drivers and are bypassed
-> in many cases. E.g. pinctrl-abx500.c uses an internal reimplementation
-> of gpio ranges and the offset by one instead of the information in the
-> pinctrl_gpio_range structure.
+2.1) gpio-controller and pinctrl subsystem
+------------------------------------------
 
-It has abx500_pinrange to associate some information with certain
-ranges of pins. It has nothing to do with GPIO ranges if you look
-closer at it.
+gpio-controller on a SOC might be tightly coupled with the pinctrl
+subsystem, in the sense that the pins can be used by other functions
+together with optional gpio feature.
 
-The offset by one is achieved not by this range type, but by hard-coding
-a subtraction with one at every entry point, as illustrated. This
-is orthogonal to all range concepts.
+While the pin allocation is totally managed by the pin ctrl subsystem,
+gpio (under gpiolib) is still maintained by gpio drivers. It may happen
+that different pin ranges in a SoC is managed by different gpio drivers.
 
-> Mapping pin numbers to GPIO numbers in the pin controller would have the
-> following advantages:
->  - It makes GPIO numbering well defined which is clearly an advantage
->    for the /sys/class/gpio interface: GPIO numbering is now controlled
->    by the pinctrl driver author and no longer needs to be kernel
->    internal.
->  - The device tree/acpi issue is solved since a GPIO controller could
->    now define its range in GPIO number space (which becomes public)
->    rather than kernel-internal pin number space. At least for our
->    products, GPIO numbering generally doesn't change between different
->    variants of the same chip and the /sys/class/gpio customer
->    documentation would apply to device also.
+This makes it logical to let gpio drivers announce their pin ranges to
+the pin ctrl subsystem and call 'pinctrl_request_gpio' in order to
+request the corresponding pin before any gpio usage.
 
-This is getting very confused so I can't follow it.
+For this, the gpio controller can use a pinctrl phandle and pins to
+announce the pinrange to the pin ctrl subsystem. For example,
 
-For the GPIO and pin control subsystems there exist three things:
+        qe_pio_e: gpio-controller@1460 {
+                #gpio-cells = <2>;
+                compatible = "fsl,qe-pario-bank-e", "fsl,qe-pario-bank";
+                reg = <0x1460 0x18>;
+                gpio-controller;
+                gpio-ranges = <&pinctrl1 0 20 10>, <&pinctrl2 10 50 20>;
 
-- Local offsets on the GPIO controller, such as if there is a
-  GPIO controller for 32 lines represented by 32 bits, offset
-  0 .. 31.
+    }
 
-- The global GPIO number space, which is a big array with
-  some roof, where the GPIO numbers are shoehorned in,
-  trying not to collide.
+where,
+   &pinctrl1 and &pinctrl2 is the phandle to the pinctrl DT node.
 
-- Local offsets on the pin controller, which work the same way
-  as GPIO local offsets.
+   Next values specify the base pin and number of pins for the range
+   handled by 'qe_pio_e' gpio. In the given example from base pin 20 to
+   pin 29 under pinctrl1 with gpio offset 0 and pin 50 to pin 69 under
+   pinctrl2 with gpio offset 10 is handled by this gpio controller.
 
-I think you are talking about something completely different
-here, and that might be the numbering scheme used in the
-data sheet, or device tree is this correct? Please call that
-the data sheet or device tree numbering system in that
-case, or it will be very confusing for me. To me all
-"GPIO numbers" are pure kernel concepts.
-
-If you mean that you try to map the global GPIO number space
-1:1 on top of what your datasheet has, just *don't do that*.
-Because we want to get rid of this global GPIO numberspace.
-Alexandre is already working hard on this!
-
-Can you please try to be very specific on what is
-going on here?
-
->  - The custom logic inside many pinctrl drivers would be confined in one
->    translation function the driver provides instead of being spread out
->    all over the driver.
->  - "Sparse GPIO ranges" are easy to implement if required by the
->    platform/driver.
-
-This looks good.
-
->> - Augment the pinctrl-abx500.c driver to show how this simplifies
->>   that driver. (Does not need to be perfect, I'll help out finalizing it
->>   for sure.)
->
-> The issue is that such a change is quite fundamental, all pinctrl
-> drivers would have to be upgraded (not just pinctrl-abx500.c) and struct
-> pinctrl_gpio_range would have to be removed from the gpio_request_enable
-> callback and friends in favour of some generic translation mechanism.
-
-Doing large refactorings is a normal part of kernel life.
-See: Documentation/stable_api_nonsense.txt
-
-> I am also afraid that the custom logic in many drivers could only be
-> rewritten with the help of the respective driver's author.
-
-If you're patching their drivers they are obliged to help out
-by reviewing and testing, that is how we work. If they don't
-review and test patches to their own code, they obviously do
-not care if we break it either. All testing in linux-next and the
-release cycle is about being able to change things if need be.
-
->> - Then add DT-specific wrapper using this core feature.
->
-> GPIO ranges definitions in DT would probably be no longer be compatible
-> with previous definitions since the number space would change from pin
-> numbers to GPIO numbers. I don't think this is acceptable.
-
-I can't see why you're saying this. Please elaborate.
-
-What I hear is that DT need a translation mechanism, and
-what I say is that OK, implement that in the core then, the
-semantic effect will be the same.
-
->> This way the problem will be solved for everybody, including
->> ACPI when they sooner or later come back with the same issue.
->
-> Given the issues highlighted above I'm not sure if I understand your
-> proposal correctly. Although I see the advantages, I wonder if the
-> migration to such a system is feasible in practise.
-
-We need to iterate this discussion a few turns until I actually
-understand your problem I think.
+The pinctrl node must have "#gpio-range-cells" property to show number of
+arguments to pass with phandle from gpio controllers node.
 
 Yours,
 Linus Walleij
