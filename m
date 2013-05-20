@@ -1,83 +1,106 @@
-From: "Jon Medhurst (Tixy)" <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v3] drivers: bus: add ARM CCI support
-Date: Mon, 20 May 2013 13:11:21 +0100
-Message-ID: <1369051881.3511.4.camel@linaro1.home>
-References: <1368095640-3675-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1368095640-3675-2-git-send-email-lorenzo.pieralisi@arm.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: Re: [RFC 3/8] mfd:syscon: Introduce claim/read/write/release APIs
+Date: Mon, 20 May 2013 13:48:59 +0100
+Message-ID: <519A1BBB.2070903@st.com>
+References: <1368022187-1633-1-git-send-email-srinivas.kandagatla@st.com> <201305082148.10933.arnd@arndb.de> <518B77C1.70107@st.com> <201305171636.49627.arnd@arndb.de>
+Reply-To: srinivas.kandagatla@st.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1368095640-3675-2-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Javi Merino <javi.merino-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <201305171636.49627.arnd@arndb.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: dong.aisheng@linaro.org, sameo@linux.intel.com, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Stuart Menefy <stuart.menefy@st.com>, Shawn Guo <shawn.guo@linaro.org>, Olof Johansson <olof@lixom.net>, Jason Cooper <jason@lakedaemon.net>, Stephen Warren <swarren@nvidia.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Nicolas Pitre <nico@linaro.org>, Will Deacon <will.deacon@arm.com>, Dave Martin <dave.martin@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2013-05-09 at 11:34 +0100, Lorenzo Pieralisi wrote:
-[...]
-> +static int __init cci_probe(void)
-> +{
-> +	struct cci_nb_ports const *cci_config;
-> +	int ret, i, nb_ace = 0, nb_ace_lite = 0;
-> +	struct device_node *np, *cp;
-> +	const char *match_str;
-> +	bool is_ace;
-> +
-> +	np = of_find_matching_node(NULL, arm_cci_matches);
-> +	if (!np)
-> +		return -ENODEV;
-> +
-> +	cci_config = of_match_node(arm_cci_matches, np)->data;
-> +	if (!cci_config)
-> +		return -ENODEV;
-> +
-> +	nb_cci_ports = cci_config->nb_ace + cci_config->nb_ace_lite;
-> +
-> +	ports = kcalloc(sizeof(*ports), nb_cci_ports, GFP_KERNEL);
-> +	if (!ports)
-> +		return -ENOMEM;
-> +
-> +	cci_ctrl_base = of_iomap(np, 0);
-> +
-> +	if (!cci_ctrl_base) {
-> +		WARN(1, "unable to ioremap CCI ctrl\n");
-> +		ret = -ENXIO;
-> +		goto memalloc_err;
-> +	}
-> +
-> +	for_each_child_of_node(np, cp) {
-> +		i = nb_ace + nb_ace_lite;
-> +
-> +		if (i >= nb_cci_ports)
-> +			break;
+Hi Arnd,
+Thankyou for the comments.
 
-I know this is a bit late, but...
+On 17/05/13 15:36, Arnd Bergmann wrote:
+> On Thursday 09 May 2013, Srinivas KANDAGATLA wrote:
+>> On 08/05/13 20:48, Arnd Bergmann wrote:
+>> I agree, my initial approach was having a dedicated driver specific to
+>> ST syscon, however syscon seems to do things very much similar to what
+>> we want, so I have integrated those 3 functions in syscon.
+>> Am happy to go back with my first approach of adding ST specific syscon
+>> driver if no one is actually going to benefit with such a change to
+>> syscon driver.
+> 
+> That would at least be less controversial.
 
-Would it not be best to check here that the node type is in fact
-"slave-if", that way if we add support in later versions for other node
-types (e.g. for the PMU) then we don't cause backward compatibility
-issues. I'm thinking here of the same concerns that Rob raised with
-"ARM: kernel: fix arm_dt_init_cpu_maps() to skip non-cpu nodes"
+yes I agree.
+> 
+>> Total layout of the sysconf changes per SOC, and the bit arrangements
+>> aswell, however the core IP(pinctrl, etherenet ...) and logic to drive
+>> those bits remains exactly same.
+> 
+> It sounds like you really need a driver with high-level interfaces
+> for the bits that change by each core and are needed by otherwise
+> identical drivers, like the Ethernet driver you mention.
+> 
+> I would not go as far as you did describing the individual bits in
+> the device node using these however. That driver can be layered on
+> top of the existing syscon driver, but hardcode the bits for each
+> SoC it knows of.
+Some of the drivers like Ethernet already provide higher level
+interfaces via callbacks. We did implement such a callbacks per each SOC
+in non-DT case, and ended up having code duplicated for each SOC.
 
+On the other hand using device trees to describe the HW
+configuration(sysconfs) made more sense and got rid of SOC specific
+callbacks.
 
-> +		if (of_property_read_string(cp, "interface-type",
-> +					&match_str)) {
-> +			WARN(1, "node %s missing interface-type property\n",
-> +				  cp->full_name);
-> +			continue;
-> +		}
-> +
-[..]
+> 
+> For drivers that are essentially just wrappers around sysconf,
+> I would make them one driver per SoC and use a low-level interface
+> but still hardcode the offsets in the driver instead of using DT
+> to find the registers.
+> 
+> The pinctrl and reset drivers are examples of this.
 
--- 
-Tixy
+In pinctrl bindings case, I think we could do better job by replacing
+the existing bindings of sysconfs for a group of banks with just two
+integer offsets. This would mean that, we can still use the a common
+driver across the SOCs.
+
+And w.r.t to reset, we are planning on using sysconf based
+reset-controller API sitting underneath the reset-controller subsystem.
+Passing the information from device trees would be much clear and
+flexible than adding new driver per/SOC.
+
+>> 2> The infrastructure should protect the claimed registers from
+>> over-writing by other drivers. We do this by claim-read/write-release
+>> style API.
+> 
+> I don't understand this part. Is it about atomicity of accesses to
+> 32-bit registers when you only want to change a bit? That is something
+> the regmap interface handles already.
+
+I forget to mention a important point here, the protection is at bit
+level for the sysconfs. Some of sysconfs have bits shared across IPs, so
+protecting them while the IP is still using it is what we are trying to
+achieve with sysconf-claim/release apis.
+While it may be overkill, but In past it has found bugs and been helpful
+with a meaning full debug output.
+
+>> 3> The driver should be able to set a group of sysconf registers bits to
+>> a particular values before initialises the IP. I was thinking of doing
+>> this in a same way as pinctrl state.
+> 
+> That does not fit well with the model we use for other subsystems. If possible,
+> try to use the existing abstractions for clock, regulator, pinctrl, reset,
+> etc. and call generic interfaces from the driver. When that does not work,
+> create a high-level function call from your sysconf driver to do a particular
+> thing (e.g. stih_sysconf_ethernet_set_phy_mode()) rather than set up random
+> bits from the driver.
+I agree going for a higher level api in this case makes sense.
+
+Thanks,
+srini
+
+> 
+> 	Arnd
+> 
+> 
+
