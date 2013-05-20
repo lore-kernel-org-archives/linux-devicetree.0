@@ -1,44 +1,98 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v3 6/7] ARM: kirkwood: add gigabit ethernet and mvmdio
- device tree nodes
-Date: Mon, 20 May 2013 23:38:00 +0200
-Message-ID: <519A97B8.1090503@gmail.com>
-References: <1365071235-11611-1-git-send-email-florian@openwrt.org> <1367854420-8006-1-git-send-email-sebastian.hesselbarth@gmail.com> <1367854420-8006-7-git-send-email-sebastian.hesselbarth@gmail.com> <20130520212708.GA26519@schnuecks.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130520212708.GA26519@schnuecks.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Simon Baatz <gmbnomis@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, David Miller <davem@davemloft.net>, Florian Fainelli <florian@openwrt.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Simon Baatz <gmbnomis@gmail.com>
+Subject: [PATCH V3 00/10] mmc_of_parse() adaptations, DT support for Sheevaplugs
+Date: Tue, 21 May 2013 01:01:41 +0200
+Message-ID: <1369090911-1479-1-git-send-email-gmbnomis@gmail.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Chris Ball <cjb@laptop.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/20/2013 11:27 PM, Simon Baatz wrote:
-> Hi Sebastian,
->
-> On Mon, May 06, 2013 at 05:33:39PM +0200, Sebastian Hesselbarth wrote:
->> This patch adds mv643xx_eth and mvmdio device tree nodes for DT enabled
->> Kirkwood boards. Phy nodes are also added with reg property set on a
->> per-board basis.
-> ...
->> diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
->> index fada7e6..c01a273 100644
->> --- a/arch/arm/boot/dts/kirkwood.dtsi
->> +++ b/arch/arm/boot/dts/kirkwood.dtsi
->> @@ -202,5 +202,57 @@
->>   			clocks =<&gate_clk 4>;
->>   			status = "disabled";
->>   		};
->> +
->> +		mdio: mdio-bus@72004 {
->> +			compatible = "marvell,orion-mdio";
->> +			reg =<0x72004 0x84>;
->> +			interrupts =<11>;
->
-> Shouldn't this be 46?
+Hi,
 
-Yes, mdio is using GbE0Err interrupt and that is 14 on IRQ HIGH CAUSE.
-I was misled by 11 on IRQ LOW CAUSE.
+	V3 changes:
+	- Patch 01/10: Added EPROBE_DEFER case to mmc_of_parse() 
+	- Added Acked-By to (unmodified) patches 02 and 03.
 
-Sebastian
+	V2 changes:
+	- Converted mvsdio to use mmc_of_parse()
+	- Adapted DTS files using mvsdio accordingly
+	- Changed mmc_of_parse() to return errors to the caller
+
+While adding DT support for the Sheevaplugs by Globalscale Technologies
+(Kirkwood), it turned out that the DT binding of mvsdio lacked features to
+properly support the hardware (active high/low of CD and WP pins could not
+be described in DT).
+
+This is standard functionality provided by the mmc_of_parse() helper
+function.  However, mmc_of_parse() may allocate GPIO lines.  If the
+allocation fails, it outputs an error, but does not return an error to its
+caller.  Therefore, a proposal to handle errors in mmc_of_parse() is made.
+
+The patch set is structured as follows:
+
+1   Adapt mmc_of_parse() to return errors
+2-6 Handle errors in current drivers using mmc_of_parse() (compile tested
+    only)
+7-8 Convert mvsdio and respective dts files to mmc_of_parse() (tested on
+    kirkwood)
+9   Add dts files for (eSATA) Sheevaplug
+10  Add DT support for (eSATA) Sheevaplug
+
+
+I could only test on an eSATA Sheevaplug. I found patches with
+different LEDs for the Sheevaplug.  Thus, I would highly appreciate if
+someone with the hardware could give this a spin on a non-eSATA
+version.  Some additional testing of the change detect and write
+protect behaviour for mvsdio can't hurt either.  I hope that there aren't
+board revisions with different CD/WP pins out there.
+
+Simon Baatz (10):
+  mmc: return mmc_of_parse() errors to caller
+  mmc: sh_mmcif: handle mmc_of_parse() errors during probe
+  mmc: tmio-mmc: handle mmc_of_parse() errors during probe
+  mmc: mxcmmc: handle mmc_of_parse() errors during probe
+  mmc: sdhci-pxav3: handle mmc_of_parse() errors during probe
+  mmc: tegra: handle mmc_of_parse() errors during probe
+  ARM: mvebu: Use standard MMC binding for all users of mvsdio
+  mmc: mvsdio: use standard MMC device-tree binding parser
+    mmc_of_parse()
+  ARM: Kirkwood: Add dts files for Sheevaplug and eSATA Sheevaplug
+  ARM: Kirkwood: add DT support for Sheevaplug and Sheevaplug eSATA
+
+ arch/arm/boot/dts/Makefile                         |    2 +
+ arch/arm/boot/dts/armada-370-db.dts                |    1 +
+ arch/arm/boot/dts/armada-370-mirabox.dts           |    1 +
+ arch/arm/boot/dts/armada-370-rd.dts                |    1 +
+ arch/arm/boot/dts/armada-370-xp.dtsi               |    4 +
+ arch/arm/boot/dts/armada-xp-db.dts                 |    1 +
+ arch/arm/boot/dts/kirkwood-dreamplug.dts           |    1 +
+ .../arm/boot/dts/kirkwood-guruplug-server-plus.dts |    2 +
+ arch/arm/boot/dts/kirkwood-mplcec4.dts             |    2 +-
+ arch/arm/boot/dts/kirkwood-sheevaplug-common.dtsi  |   97 ++++++++++++++++++++
+ arch/arm/boot/dts/kirkwood-sheevaplug-esata.dts    |   40 ++++++++
+ arch/arm/boot/dts/kirkwood-sheevaplug.dts          |   45 +++++++++
+ arch/arm/boot/dts/kirkwood-topkick.dts             |    1 +
+ arch/arm/boot/dts/kirkwood.dtsi                    |    4 +
+ arch/arm/mach-kirkwood/Kconfig                     |    7 ++
+ arch/arm/mach-kirkwood/Makefile                    |    1 +
+ arch/arm/mach-kirkwood/board-dt.c                  |    4 +
+ arch/arm/mach-kirkwood/board-sheevaplug.c          |   27 ++++++
+ arch/arm/mach-kirkwood/common.h                    |    5 +
+ drivers/mmc/core/host.c                            |   30 +++++-
+ drivers/mmc/host/mvsdio.c                          |   73 ++++++++-------
+ drivers/mmc/host/mxcmmc.c                          |    4 +-
+ drivers/mmc/host/sdhci-pxav3.c                     |    7 +-
+ drivers/mmc/host/sdhci-tegra.c                     |    9 +-
+ drivers/mmc/host/sh_mmcif.c                        |    7 +-
+ drivers/mmc/host/tmio_mmc_pio.c                    |    4 +-
+ include/linux/mmc/host.h                           |    2 +-
+ 27 files changed, 334 insertions(+), 48 deletions(-)
+ create mode 100644 arch/arm/boot/dts/kirkwood-sheevaplug-common.dtsi
+ create mode 100644 arch/arm/boot/dts/kirkwood-sheevaplug-esata.dts
+ create mode 100644 arch/arm/boot/dts/kirkwood-sheevaplug.dts
+ create mode 100644 arch/arm/mach-kirkwood/board-sheevaplug.c
+
+-- 
+1.7.9.5
+
