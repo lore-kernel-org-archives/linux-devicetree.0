@@ -1,105 +1,154 @@
 From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [RFC 2/2] clk: samsung: add exynos5250 composite clock for hdmi
-Date: Mon, 20 May 2013 11:57:03 -0700 (PDT)
-Message-ID: <5956307.B4Gm3xbmhh@flatron>
-References: <1369059428-26820-1-git-send-email-rahul.sharma@samsung.com> <1369059428-26820-3-git-send-email-rahul.sharma@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1369059428-26820-3-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, inki.dae@samsung.com, s.nawrocki@samsung.com, thomas.abraham@linaro.org, joshi@samsung.com, r.sh.open@gmail.com
+Subject: [PATCH v3] net: dm9000: Allow instantiation using device tree
+Date: Mon, 20 May 2013 21:16:58 +0200
+Message-ID: <1369077418-5966-1-git-send-email-tomasz.figa@gmail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Sascha Hauer <s.hauer@pengutronix.de>, David Miller <davem@davemloft.net>, Francois Romieu <romieu@fr.zoreil.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rahul,
+This patch adds Device Tree support to dm9000 driver.
 
-On Monday 20 of May 2013 19:47:08 Rahul Sharma wrote:
-> HDMI driver needs to change the parent of sclk_hdmi clock to
-> sclk_pixel or to sclk_hdmiphy, depends on the status of hdmiphy.
-> sclk_hdmi which is gate clock doesn't support the set_parent
-> operation.
+Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+---
 
-Wouldn't it be better to simply allow calling clk_set_parent() on gate 
-clocks and propagate parent change to nearest mux, just like it is done 
-with clk_set_rate()?
+Changes since v2:
+ - corrected a typo in bindings documentation
+ - removed redundant error message about failed memory allocation
+Changes since v1:
+ - dropped davicom,simple-phy property as it seems to be of no use
+ - used of_get_mac_address() to get MAC address from device tree
+ - replaced #ifdef CONFIG_OF around dm9000_parse_dt() with IS_ENABLED
 
-It wouldn't require any SoC-specific composite clocks and keep the nice 
-property of the clock tree, which is built from basic, generic clock 
-blocks that nicely correspond to blocks shown in the documentation.
+ .../devicetree/bindings/net/davicom-dm9000.txt     | 26 ++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ drivers/net/ethernet/davicom/dm9000.c              | 42 ++++++++++++++++++++++
+ 3 files changed, 69 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/davicom-dm9000.txt
 
-We had discussed this already at SRPOL and got to the conclusion that it's 
-a step backwards, making the clock driver more complex, because each 
-composite block would have to be described using a structure with many 
-fields. In addition there are many special cases, for which the composite 
-scheme wouldn't work anyway and they would end up with simple clocks 
-attached after the composite block, defeating the purpose of your patch.
-
-Best regards,
-Tomasz
-
-> This patch adds sclk_hdmi as a composite clock which is a
-> combination of mux clock and gate clock. Being a composite
-> clock, above clock supports both set_parent and enable/disable
-> functionality. Therefore hdmi driver need not be modified
-> different S0Cs. This will handled inside CCF.
-> 
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> ---
->  drivers/clk/samsung/clk-exynos5250.c |   20 +++++++++++++++++---
->  1 file changed, 17 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/clk/samsung/clk-exynos5250.c
-> b/drivers/clk/samsung/clk-exynos5250.c index 5c97e75..0c9e37a 100644
-> --- a/drivers/clk/samsung/clk-exynos5250.c
-> +++ b/drivers/clk/samsung/clk-exynos5250.c
-> @@ -231,7 +231,6 @@ struct samsung_mux_clock exynos5250_mux_clks[]
-> __initdata = { MUX(none, "mout_fimd1", mout_group1_p, SRC_DISP1_0, 0,
-> 4),
->  	MUX(none, "mout_mipi1", mout_group1_p, SRC_DISP1_0, 12, 4),
->  	MUX(none, "mout_dp", mout_group1_p, SRC_DISP1_0, 16, 4),
-> -	MUX(none, "mout_hdmi", mout_hdmi_p, SRC_DISP1_0, 20, 1),
->  	MUX(none, "mout_audio0", mout_audio0_p, SRC_MAU, 0, 4),
->  	MUX(none, "mout_mmc0", mout_group1_p, SRC_FSYS, 0, 4),
->  	MUX(none, "mout_mmc1", mout_group1_p, SRC_FSYS, 4, 4),
-> @@ -416,8 +415,6 @@ struct samsung_gate_clock exynos5250_gate_clks[]
-> __initdata = { SRC_MASK_DISP1_0, 12, CLK_SET_RATE_PARENT, 0),
->  	GATE(sclk_dp, "sclk_dp", "div_dp",
->  			SRC_MASK_DISP1_0, 16, CLK_SET_RATE_PARENT, 0),
-> -	GATE(sclk_hdmi, "sclk_hdmi", "mout_hdmi",
-> -			SRC_MASK_DISP1_0, 20, 0, 0),
->  	GATE(sclk_audio0, "sclk_audio0", "div_audio0",
->  			SRC_MASK_MAU, 0, CLK_SET_RATE_PARENT, 0),
->  	GATE(sclk_mmc0, "sclk_mmc0", "div_mmc_pre0",
-> @@ -464,6 +461,21 @@ struct samsung_gate_clock exynos5250_gate_clks[]
-> __initdata = { GATE(hdmi, "hdmi", "aclk200", GATE_IP_DISP1, 6, 0, 0),
->  };
-> 
-> +struct samsung_composite_clock exynos5250_composite_clks[] __initdata =
-> { +	{
-> +		.id = sclk_hdmi,
-> +		.name = "sclk_hdmi",
-> +		.parent_names = mout_hdmi_p,
-> +		.num_parents = ARRAY_SIZE(mout_hdmi_p),
-> +		.mux_clk = MUX(none, NULL, mout_hdmi_p, SRC_DISP1_0, 20,
-> +				1),
-> +		.gate_clk = GATE(none, NULL, NULL, SRC_MASK_DISP1_0, 20,
-> +				0, 0),
-> +		.composition_flags = SAMSUNG_CLK_TYPE_GATE |
-> +			SAMSUNG_CLK_TYPE_MUX,
-> +	},
-> +};
-> +
->  static __initdata struct of_device_id ext_clk_match[] = {
->  	{ .compatible = "samsung,clock-xxti", .data = (void *)0, },
->  	{ },
-> @@ -515,6 +527,8 @@ void __init exynos5250_clk_init(struct device_node
-> *np) ARRAY_SIZE(exynos5250_div_clks));
->  	samsung_clk_register_gate(exynos5250_gate_clks,
->  			ARRAY_SIZE(exynos5250_gate_clks));
-> +	samsung_clk_register_composite(exynos5250_composite_clks,
-> +			ARRAY_SIZE(exynos5250_composite_clks));
-> 
->  	pr_info("Exynos5250: clock setup completed, armclk=%ld\n",
->  			_get_rate("armclk"));
+diff --git a/Documentation/devicetree/bindings/net/davicom-dm9000.txt b/Documentation/devicetree/bindings/net/davicom-dm9000.txt
+new file mode 100644
+index 0000000..2d39c99
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/davicom-dm9000.txt
+@@ -0,0 +1,26 @@
++Davicom DM9000 Fast Ethernet controller
++
++Required properties:
++- compatible = "davicom,dm9000";
++- reg : physical addresses and sizes of registers, must contain 2 entries:
++    first entry : address register,
++    second entry : data register.
++- interrupt-parent : interrupt controller to which the device is connected
++- interrupts : interrupt specifier specific to interrupt controller
++
++Optional properties:
++- local-mac-address : A bytestring of 6 bytes specifying Ethernet MAC address
++    to use (from firmware or bootloader)
++- davicom,no-eeprom : Configuration EEPROM is not available
++- davicom,ext-phy : Use external PHY
++
++Example:
++
++	ethernet@18000000 {
++		compatible = "davicom,dm9000";
++		reg = <0x18000000 0x2 0x18000004 0x2>;
++		interrupt-parent = <&gpn>;
++		interrupts = <7 4>;
++		local-mac-address = [00 00 de ad be ef];
++		davicom,no-eeprom;
++	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 6931c43..2fe74e6 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -18,6 +18,7 @@ chrp	Common Hardware Reference Platform
+ cirrus	Cirrus Logic, Inc.
+ cortina	Cortina Systems, Inc.
+ dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
++davicom	DAVICOM Semiconductor, Inc.
+ denx	Denx Software Engineering
+ emmicro	EM Microelectronic
+ epson	Seiko Epson Corp.
+diff --git a/drivers/net/ethernet/davicom/dm9000.c b/drivers/net/ethernet/davicom/dm9000.c
+index 9105465..7af6126 100644
+--- a/drivers/net/ethernet/davicom/dm9000.c
++++ b/drivers/net/ethernet/davicom/dm9000.c
+@@ -29,6 +29,8 @@
+ #include <linux/spinlock.h>
+ #include <linux/crc32.h>
+ #include <linux/mii.h>
++#include <linux/of.h>
++#include <linux/of_net.h>
+ #include <linux/ethtool.h>
+ #include <linux/dm9000.h>
+ #include <linux/delay.h>
+@@ -1358,6 +1360,31 @@ static const struct net_device_ops dm9000_netdev_ops = {
+ #endif
+ };
+ 
++static struct dm9000_plat_data *dm9000_parse_dt(struct device *dev)
++{
++	struct dm9000_plat_data *pdata;
++	struct device_node *np = dev->of_node;
++	const void *mac_addr;
++
++	if (!IS_ENABLED(CONFIG_OF) || !np)
++		return NULL;
++
++	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
++
++	if (of_find_property(np, "davicom,ext-phy", NULL))
++		pdata->flags |= DM9000_PLATF_EXT_PHY;
++	if (of_find_property(np, "davicom,no-eeprom", NULL))
++		pdata->flags |= DM9000_PLATF_NO_EEPROM;
++
++	mac_addr = of_get_mac_address(np);
++	if (mac_addr)
++		memcpy(pdata->dev_addr, mac_addr, sizeof(pdata->dev_addr));
++
++	return pdata;
++}
++
+ /*
+  * Search DM9000 board, allocate space and register it
+  */
+@@ -1373,6 +1400,12 @@ dm9000_probe(struct platform_device *pdev)
+ 	int i;
+ 	u32 id_val;
+ 
++	if (!pdata) {
++		pdata = dm9000_parse_dt(&pdev->dev);
++		if (IS_ERR(pdata))
++			return PTR_ERR(pdata);
++	}
++
+ 	/* Init network device */
+ 	ndev = alloc_etherdev(sizeof(struct board_info));
+ 	if (!ndev)
+@@ -1683,11 +1716,20 @@ dm9000_drv_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id dm9000_of_matches[] = {
++	{ .compatible = "davicom,dm9000", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, dm9000_of_matches);
++#endif
++
+ static struct platform_driver dm9000_driver = {
+ 	.driver	= {
+ 		.name    = "dm9000",
+ 		.owner	 = THIS_MODULE,
+ 		.pm	 = &dm9000_drv_pm_ops,
++		.of_match_table = of_match_ptr(dm9000_of_matches),
+ 	},
+ 	.probe   = dm9000_probe,
+ 	.remove  = dm9000_drv_remove,
+-- 
+1.8.2.1
