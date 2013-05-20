@@ -1,7 +1,7 @@
 From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 4/7] ARM: at91: sam9x5 add udc DT support
-Date: Mon, 20 May 2013 18:25:57 +0200
-Message-ID: <1369067160-3230-4-git-send-email-plagnioj@jcrosoft.com>
+Subject: [PATCH 5/7] ARM: at91: sam9x5ek add udc DT support
+Date: Mon, 20 May 2013 18:25:58 +0200
+Message-ID: <1369067160-3230-5-git-send-email-plagnioj@jcrosoft.com>
 References: <20130520162149.GC9937@game.jcrosoft.org>
  <1369067160-3230-1-git-send-email-plagnioj@jcrosoft.com>
 Mime-Version: 1.0
@@ -26,95 +26,24 @@ List-Id: devicetree@vger.kernel.org
 Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/at91sam9x5.dtsi |   62 +++++++++++++++++++++++++++++++++++++
- arch/arm/mach-at91/at91sam9x5.c   |    2 ++
- 2 files changed, 64 insertions(+)
+ arch/arm/boot/dts/at91sam9x5ek.dtsi |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index af91599..01a815d 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -645,6 +645,68 @@
- 				status = "disabled";
+diff --git a/arch/arm/boot/dts/at91sam9x5ek.dtsi b/arch/arm/boot/dts/at91sam9x5ek.dtsi
+index 19c8ebb..5e10027 100644
+--- a/arch/arm/boot/dts/at91sam9x5ek.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5ek.dtsi
+@@ -52,6 +52,11 @@
+ 				status = "okay";
  			};
  
 +			usb2: gadget@f803c000 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				compatible = "atmel,at91sam9rl-udc";
-+				reg = <0x00500000 0x80000
-+				       0xf803c000 0x400>;
-+				interrupts = <23 IRQ_TYPE_LEVEL_HIGH 0>;
-+				status = "disabled";
-+
-+				ep0 {
-+					reg = <0>;
-+					atmel,fifo-size = <64>;
-+					atmel,nb-banks = <1>;
-+				};
-+
-+				ep1 {
-+					reg = <1>;
-+					atmel,fifo-size = <1024>;
-+					atmel,nb-banks = <2>;
-+					atmel,can-dma;
-+					atmel,can-isoc;
-+				};
-+
-+				ep2 {
-+					reg = <2>;
-+					atmel,fifo-size = <1024>;
-+					atmel,nb-banks = <2>;
-+					atmel,can-dma;
-+					atmel,can-isoc;
-+				};
-+
-+				ep3 {
-+					reg = <3>;
-+					atmel,fifo-size = <1024>;
-+					atmel,nb-banks = <3>;
-+					atmel,can-dma;
-+				};
-+
-+				ep4 {
-+					reg = <4>;
-+					atmel,fifo-size = <1024>;
-+					atmel,nb-banks = <3>;
-+					atmel,can-dma;
-+				};
-+
-+				ep5 {
-+					reg = <5>;
-+					atmel,fifo-size = <1024>;
-+					atmel,nb-banks = <3>;
-+					atmel,can-dma;
-+					atmel,can-isoc;
-+				};
-+
-+				ep6 {
-+					reg = <6>;
-+					atmel,fifo-size = <1024>;
-+					atmel,nb-banks = <3>;
-+					atmel,can-dma;
-+					atmel,can-isoc;
-+				};
++				atmel,vbus-gpio = <&pioB 16 GPIO_ACTIVE_HIGH>;
++				status = "okay";
 +			};
 +
- 			rtc@fffffeb0 {
- 				compatible = "atmel,at91rm9200-rtc";
- 				reg = <0xfffffeb0 0x40>;
-diff --git a/arch/arm/mach-at91/at91sam9x5.c b/arch/arm/mach-at91/at91sam9x5.c
-index e631fec..2abee66 100644
---- a/arch/arm/mach-at91/at91sam9x5.c
-+++ b/arch/arm/mach-at91/at91sam9x5.c
-@@ -249,6 +249,8 @@ static struct clk_lookup periph_clocks_lookups[] = {
- 	CLKDEV_CON_DEV_ID("hclk", "600000.ohci", &uhphs_clk),
- 	CLKDEV_CON_DEV_ID("ohci_clk", "600000.ohci", &uhphs_clk),
- 	CLKDEV_CON_DEV_ID("ehci_clk", "700000.ehci", &uhphs_clk),
-+	CLKDEV_CON_DEV_ID("hclk", "500000.gadget", &utmi_clk),
-+	CLKDEV_CON_DEV_ID("pclk", "500000.gadget", &udphs_clk),
- };
- 
- /*
+ 			i2c0: i2c@f8010000 {
+ 				status = "okay";
+ 			};
 -- 
 1.7.10.4
