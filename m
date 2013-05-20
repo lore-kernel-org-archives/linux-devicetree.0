@@ -1,82 +1,137 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [RFC 2/2] clk: samsung: add exynos5250 composite clock for hdmi
-Date: Mon, 20 May 2013 19:47:08 +0530
-Message-ID: <1369059428-26820-3-git-send-email-rahul.sharma@samsung.com>
-References: <1369059428-26820-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1369059428-26820-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, inki.dae@samsung.com, s.nawrocki@samsung.com, thomas.abraham@linaro.org, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
+From: "Camaras, Raul" <Raul.Camaras-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: help with eth0
+Date: Mon, 20 May 2013 14:03:52 +0000
+Message-ID: <243A1E4814EC264E9476E68C8898F467281CF554@hnombx02.corp.atmel.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============8950095715703888665=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-HDMI driver needs to change the parent of sclk_hdmi clock to
-sclk_pixel or to sclk_hdmiphy, depends on the status of hdmiphy.
-sclk_hdmi which is gate clock doesn't support the set_parent
-operation.
+--===============8950095715703888665==
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_243A1E4814EC264E9476E68C8898F467281CF554hnombx02corpatm_"
 
-This patch adds sclk_hdmi as a composite clock which is a
-combination of mux clock and gate clock. Being a composite
-clock, above clock supports both set_parent and enable/disable
-functionality. Therefore hdmi driver need not be modified
-different S0Cs. This will handled inside CCF.
+--_000_243A1E4814EC264E9476E68C8898F467281CF554hnombx02corpatm_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
----
- drivers/clk/samsung/clk-exynos5250.c |   20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
+Hello,
 
-diff --git a/drivers/clk/samsung/clk-exynos5250.c b/drivers/clk/samsung/clk-exynos5250.c
-index 5c97e75..0c9e37a 100644
---- a/drivers/clk/samsung/clk-exynos5250.c
-+++ b/drivers/clk/samsung/clk-exynos5250.c
-@@ -231,7 +231,6 @@ struct samsung_mux_clock exynos5250_mux_clks[] __initdata = {
- 	MUX(none, "mout_fimd1", mout_group1_p, SRC_DISP1_0, 0, 4),
- 	MUX(none, "mout_mipi1", mout_group1_p, SRC_DISP1_0, 12, 4),
- 	MUX(none, "mout_dp", mout_group1_p, SRC_DISP1_0, 16, 4),
--	MUX(none, "mout_hdmi", mout_hdmi_p, SRC_DISP1_0, 20, 1),
- 	MUX(none, "mout_audio0", mout_audio0_p, SRC_MAU, 0, 4),
- 	MUX(none, "mout_mmc0", mout_group1_p, SRC_FSYS, 0, 4),
- 	MUX(none, "mout_mmc1", mout_group1_p, SRC_FSYS, 4, 4),
-@@ -416,8 +415,6 @@ struct samsung_gate_clock exynos5250_gate_clks[] __initdata = {
- 			SRC_MASK_DISP1_0, 12, CLK_SET_RATE_PARENT, 0),
- 	GATE(sclk_dp, "sclk_dp", "div_dp",
- 			SRC_MASK_DISP1_0, 16, CLK_SET_RATE_PARENT, 0),
--	GATE(sclk_hdmi, "sclk_hdmi", "mout_hdmi",
--			SRC_MASK_DISP1_0, 20, 0, 0),
- 	GATE(sclk_audio0, "sclk_audio0", "div_audio0",
- 			SRC_MASK_MAU, 0, CLK_SET_RATE_PARENT, 0),
- 	GATE(sclk_mmc0, "sclk_mmc0", "div_mmc_pre0",
-@@ -464,6 +461,21 @@ struct samsung_gate_clock exynos5250_gate_clks[] __initdata = {
- 	GATE(hdmi, "hdmi", "aclk200", GATE_IP_DISP1, 6, 0, 0),
- };
- 
-+struct samsung_composite_clock exynos5250_composite_clks[] __initdata = {
-+	{
-+		.id = sclk_hdmi,
-+		.name = "sclk_hdmi",
-+		.parent_names = mout_hdmi_p,
-+		.num_parents = ARRAY_SIZE(mout_hdmi_p),
-+		.mux_clk = MUX(none, NULL, mout_hdmi_p, SRC_DISP1_0, 20,
-+				1),
-+		.gate_clk = GATE(none, NULL, NULL, SRC_MASK_DISP1_0, 20,
-+				0, 0),
-+		.composition_flags = SAMSUNG_CLK_TYPE_GATE |
-+			SAMSUNG_CLK_TYPE_MUX,
-+	},
-+};
-+
- static __initdata struct of_device_id ext_clk_match[] = {
- 	{ .compatible = "samsung,clock-xxti", .data = (void *)0, },
- 	{ },
-@@ -515,6 +527,8 @@ void __init exynos5250_clk_init(struct device_node *np)
- 			ARRAY_SIZE(exynos5250_div_clks));
- 	samsung_clk_register_gate(exynos5250_gate_clks,
- 			ARRAY_SIZE(exynos5250_gate_clks));
-+	samsung_clk_register_composite(exynos5250_composite_clks,
-+			ARRAY_SIZE(exynos5250_composite_clks));
- 
- 	pr_info("Exynos5250: clock setup completed, armclk=%ld\n",
- 			_get_rate("armclk"));
--- 
-1.7.10.4
+I would like to know how to add eth0 to my DTS file.
+Data:
+Processor: ATMEL SAM9N12
+Interface: EBI at @0x30000000
+Ethernet controller: MICREL - KSZ8851 MLL
+
+Please help. Thank you.
+Best regards,
+Ra=FAl
+
+
+
+
+
+--_000_243A1E4814EC264E9476E68C8898F467281CF554hnombx02corpatm_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
+osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
+//www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
+1">
+<meta name=3D"Generator" content=3D"Microsoft Word 12 (filtered medium)">
+<style><!--
+/* Font Definitions */
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:70.85pt 85.05pt 70.85pt 85.05pt;}
+div.WordSection1
+	{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]-->
+</head>
+<body lang=3D"EN-US" link=3D"blue" vlink=3D"purple">
+<div class=3D"WordSection1">
+<p class=3D"MsoNormal">Hello,<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">I would like to know how to add eth0 to my DTS file.=
+<o:p></o:p></p>
+<p class=3D"MsoNormal">Data:<o:p></o:p></p>
+<p class=3D"MsoNormal" style=3D"text-indent:.5in">Processor: ATMEL SAM9N12<=
+o:p></o:p></p>
+<p class=3D"MsoNormal" style=3D"text-indent:.5in">Interface: EBI at @0x3000=
+0000<o:p></o:p></p>
+<p class=3D"MsoNormal" style=3D"text-indent:.5in">Ethernet controller: MICR=
+EL - KSZ8851 MLL<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">Please help. Thank you.<o:p></o:p></p>
+<p class=3D"MsoNormal">Best regards,<o:p></o:p></p>
+<p class=3D"MsoNormal">Ra=FAl<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+</div>
+</body>
+</html>
+
+--_000_243A1E4814EC264E9476E68C8898F467281CF554hnombx02corpatm_--
+
+--===============8950095715703888665==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============8950095715703888665==--
