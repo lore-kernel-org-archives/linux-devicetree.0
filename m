@@ -1,63 +1,44 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH V3 00/10] mmc_of_parse() adaptations, DT support for
- Sheevaplugs
-Date: Tue, 21 May 2013 09:14:55 -0400
-Message-ID: <20130521131455.GP31290@titan.lakedaemon.net>
-References: <1369090911-1479-1-git-send-email-gmbnomis@gmail.com>
+From: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/3] pinctrl: pinctrl-single: Add full fledge support to
+	configure multiple pins of different modules
+Date: Tue, 21 May 2013 19:37:58 +0530
+Message-ID: <1369145282-14419-1-git-send-email-prakash.pm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1369090911-1479-1-git-send-email-gmbnomis@gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Simon Baatz <gmbnomis@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>, Chris Ball <cjb@laptop.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 21, 2013 at 01:01:41AM +0200, Simon Baatz wrote:
-> Hi,
-> 
-> 	V3 changes:
-> 	- Patch 01/10: Added EPROBE_DEFER case to mmc_of_parse() 
-> 	- Added Acked-By to (unmodified) patches 02 and 03.
-> 
-> 	V2 changes:
-> 	- Converted mvsdio to use mmc_of_parse()
-> 	- Adapted DTS files using mvsdio accordingly
-> 	- Changed mmc_of_parse() to return errors to the caller
-> 
-> While adding DT support for the Sheevaplugs by Globalscale Technologies
-> (Kirkwood), it turned out that the DT binding of mvsdio lacked features to
-> properly support the hardware (active high/low of CD and WP pins could not
-> be described in DT).
-> 
-> This is standard functionality provided by the mmc_of_parse() helper
-> function.  However, mmc_of_parse() may allocate GPIO lines.  If the
-> allocation fails, it outputs an error, but does not return an error to its
-> caller.  Therefore, a proposal to handle errors in mmc_of_parse() is made.
-> 
-> The patch set is structured as follows:
-> 
-> 1   Adapt mmc_of_parse() to return errors
-> 2-6 Handle errors in current drivers using mmc_of_parse() (compile tested
->     only)
-> 7-8 Convert mvsdio and respective dts files to mmc_of_parse() (tested on
->     kirkwood)
-> 9   Add dts files for (eSATA) Sheevaplug
-> 10  Add DT support for (eSATA) Sheevaplug
+Based function-mask and submask preoperties patch allocates and registers pins.
+Patch is fixes the issue reported and discussed here:
+http://www.spinics.net/lists/arm-kernel/msg235213.html
 
-Patches 7, 9, and 10 already pulled into mvebu/dt.  You can drop those
-from this series if you need to do another revision.
+Applies on top of 3.10-rc2 of linus's tree.
 
-> I could only test on an eSATA Sheevaplug. I found patches with
-> different LEDs for the Sheevaplug.  Thus, I would highly appreciate if
-> someone with the hardware could give this a spin on a non-eSATA
-> version.  
+Tested on da850-evm.
 
-I happen to have one.  Unfortunately, it is currently my primary email
-server, dhcp, dns, file server, and a few other irreplaceable things. :(
-I *really* need to upgrade/reconfigure ...
+Manjunathappa, Prakash (3):
+  pinctrl: pinctrl-single: enhance to configure multiple pins of
+    different     modules
+  pinctrl: pinctrl-single: pin names for pinctrl-single.bits
+  ARM: davinci: da850: adopt to pinctrl-single driver to configure
+    multiple     pins
 
-thx,
+ .../devicetree/bindings/pinctrl/pinctrl-single.txt |    3 +-
+ arch/arm/boot/dts/da850.dtsi                       |    2 +-
+ drivers/pinctrl/pinctrl-single.c                   |  215 ++++++++++++++++----
+ 3 files changed, 179 insertions(+), 41 deletions(-)
 
-Jason.
+-- 
+1.7.4.1
