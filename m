@@ -1,7 +1,7 @@
 From: "Chaiken, Alison" <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/6] drivers: bus: add a new driver for WEIM
-Date: Tue, 21 May 2013 16:29:22 +0000
-Message-ID: <60BA5429A0E1584BA3633194F6F993B50252C924@NA-MBX-03.mgc.mentorg.com>
+Subject: RE: [PATCH 4/6] ARM: dts: imx6q: add pinctrl for WEIM NOR
+Date: Tue, 21 May 2013 16:16:11 +0000
+Message-ID: <60BA5429A0E1584BA3633194F6F993B50252C8D8@NA-MBX-03.mgc.mentorg.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -21,40 +21,41 @@ To: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-dis
 Cc: "b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> +	weim: weim at 021b8000 {
-> +		compatible = "fsl,imx6q-weim";
-> +		reg = <0x021b8000 0x4000>;
-> +		interrupts = <0 14 0x04>;
-> +		clocks = <&clks 196>;
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0 0x08000000 0x08000000>;
+> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+> index ed11bcf..e6174c7 100644
+> --- a/arch/arm/boot/dts/imx6q.dtsi
+> +++ b/arch/arm/boot/dts/imx6q.dtsi
+> @@ -323,6 +323,64 @@
+>  						>;
+>  					};
+>  				};
 > +
-> +		nor at 0,0 {
-> +			compatible = "cfi-flash";
+> +				weim {
+> +					pinctrl_weim_nor_1: weim_norgrp-1 {
+> +						fsl,pins = <
+> +							MX6Q_PAD_EIM_OE__EIM_OE_B     0x10
+> +							MX6Q_PAD_EIM_RW__EIM_RW       0x10
+> +							MX6Q_PAD_EIM_CS0__EIM_CS0_B   0x10
+> +							MX6Q_PAD_EIM_LBA__EIM_LBA_B   0x10
+> +							MX6Q_PAD_EIM_WAIT__EIM_WAIT_B 0x8000
+> +							MX6Q_PAD_EIM_BCLK__EIM_BCLK   0x8000
 
-Why not use 
+The following values are derived using Table 4-1 of "i.MX 6Dual/6Quad Applications Processor Reference Manual Document Number: IMX6DQRM Rev. 1, 04/2013":
 
-compatible = "micron,M29W256G", "cfi-flash";
+MX6Q_PAD_EIM_OE__WEIM_WEIM_OE        0xb0b1
+MX6Q_PAD_EIM_RW__WEIM_WEIM_RW       0xb0b1
+MX6Q_PAD_EIM_CS0__WEIM_WEIM_CS_0   0xb0b1
+MX6Q_PAD_EIM_WAIT__WEIM_WEIM_WAIT 0xb060
 
-since that's what's on the SABRE-AI board?
+(I wrote a short C program that parses a human-readable property table for the pins and spits out hex to generate them.)   How are 0x10 values calculated?   Are settings for MX6Q_PAD_EIM_LBA__EIM_LBA_B and MX6Q_PAD_EIM_BCLK__EIM_BCLK useful?   We run NOR without them.
 
-> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
-> index b05ecab..0f997af 100644
-> --- a/drivers/bus/Kconfig
-> +++ b/drivers/bus/Kconfig
-> @@ -4,6 +4,15 @@
->  
->  menu "Bus devices"
->  
-> +config IMX_WEIM
-> +	tristate "Freescale EIM DRIVER"
-> +	depends on ARCH_MXC && MTD_PHYSMAP_OF
+> +							MX6Q_PAD_EIM_A17__EIM_ADDR17 0xb0b1
+> +							MX6Q_PAD_EIM_A16__EIM_ADDR16 0xb0b1
+> +							MX6Q_PAD_EIM_DA15__EIM_AD15  0xb0b1
+> +							MX6Q_PAD_EIM_DA14__EIM_AD14  0xb0b1
+> +							MX6Q_PAD_EIM_DA13__EIM_AD13  0xb0b1
 
-Shawn Guo:
-I do not see how this driver depends on MTD_PHYSMAP_OF.
-
-physmap_of is the module that provides the mapping driver for the cfi-flash that associates memory with the "reg" properties of the nor node.   However, since EIM can also attach Bluetooth module or GPS, the EIM driver itself certainly does not depend on the map module.
+Are these names correct?    "MX6Q_PAD_EIM_A16__EIM_ADDR16" but "MX6Q_PAD_EIM_DA15__EIM_AD15" et cetera?
 
 -- 
 Alison Chaiken
