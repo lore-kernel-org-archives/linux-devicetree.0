@@ -1,144 +1,153 @@
-From: Andreas Herrmann <andreas.herrmann-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] documentation: iommu: add description of ARM System
-	MMU binding
-Date: Tue, 21 May 2013 12:25:01 +0200
-Message-ID: <20130521102501.GB14432@alberich>
-References: <1365789727-5371-1-git-send-email-will.deacon@arm.com>
-	<20130513095020.GB10369@alberich>
-	<20130513095846.GC29814@mudshark.cambridge.arm.com>
-	<20130513104147.GF10369@alberich> <20130517201639.GL10369@alberich>
-	<20130520101841.GK31359@mudshark.cambridge.arm.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [RFC 0/2] V4L2 API for exposing flash subdevs as LED class device
+Date: Tue, 21 May 2013 13:54:37 +0300
+Message-ID: <20130521105436.GB2041@valkosipuli.retiisi.org.uk>
+References: <1367832828-30771-1-git-send-email-a.hajda@samsung.com>
+ <A874F61F95741C4A9BA573A70FE3998F82E5C879@DQHE06.ent.ti.com>
+ <1958801.k4UEk5OhXt@avalon>
+ <5189FF81.5030405@samsung.com>
+ <20130512211244.GC6748@valkosipuli.retiisi.org.uk>
+ <519B31AD.90408@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130520101841.GK31359-MRww78TxoiP5vMa5CHWGZ34zcgK1vI+I0E9HWUfgJXw@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <519B31AD.90408@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "Kim, Milo" <Milo.Kim@ti.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "hj210.choi@samsung.com" <hj210.choi@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2013 at 06:18:41AM -0400, Will Deacon wrote:
-> Hi Andreas,
-> 
-> On Fri, May 17, 2013 at 09:16:39PM +0100, Andreas Herrmann wrote:
-> > On Mon, May 13, 2013 at 12:41:47PM +0200, Andreas Herrmann wrote:
-> > > On Mon, May 13, 2013 at 05:58:46AM -0400, Will Deacon wrote:
-> > > > Again, you also need to tie in topology information if you go down this
-> > > > route.
-> > 
-> > I still don't like the approach of having two independend lists that
-> > must be in sync to associate a master with its stream-ids.
-> > 
-> > Why? Say you have 8 masters for an SMMU with 1 or 2 stream-ids each:
-> > 
-> >      	 smmu {
-> > 		...
-> >                 mmu-masters = <&dma0>, <&dma0>, <&dma1>, <&dma1>,
-> > 			      <&dma2>, <&dma2>, <&dma4>, <&dma4>,
-> > 			      <&dma5>, <&dma6>, <&dma7>, <&dma8>;
-> >                 stream-ids =	<0>, <1>, <2>, <3>,
-> > 				<4>, <5>, <6>, <7>,
-> > 		                <8>, <9>, <0xa>, <0xb>;
-> > 	}
-> > 
-> > Couldn't we use of_phandle_args for this purpose? So your example
-> > 
-> > +        smmu {
-> > 		 ...
-> > +                mmu-masters = <&dma0>,
-> > +                              <&dma0>,
-> > +                              <&dma1>;
-> > +                stream-ids  = <0xd01d>,
-> > +                              <0xd01e>,
-> > +                              <0xd11c>;
-> > +        };
-> > 
-> > would look like
-> > 
-> > 	dma0 {
-> > 		...
-> > 		#stream-id-cells = <2>
-> > 		...
-> > 	}
-> > 
-> > 	dma1 {
-> > 		...
-> > 		#stream-id-cells = <1>
-> > 		...
-> > 	}
-> > 
-> >         smmu {
-> > 		...
-> > 		mmu-masters = <&dma0 0xd01d 0xd01e
-> > 			       &dma1 0xd11c>,
-> >        };
-> > 
-> > and my example would be converted to
-> > 
-> > 	smmu {
-> > 		...
-> >                 mmu-masters = <&dma0 0 1 &dma1 2 3 &dma2 4 5
-> > 			       &dma4 6 7 &dma5 8 &dma6 9
-> > 			       &dma7 0xa &dma8 0xb>
-> > 		...
-> > 	}
-> 
-> That also looks fine to me, although I'd like to write the parsing code in
-> my driver before I commit to anything!
-> 
-> > Of course usage of of_phandle_args would restrict the number of
-> > stream-ids per master to 8 (which is currently used as
-> > MAX_PHANDLE_ARGS). But I don't think that this is a restriction in
-> > practice or do you expect to have more than 8 stream-ids per master
-> > (ie. per struct device in Linux)?
-> 
-> Actually, I think that could be a problem. It doesn't sound unlikely that
-> multi-channel DMA controllers could have:
-> 
-> 	- Separate instruction fetch streamid per channel
-> 	- Separate read/write streamids per channel
-> 
-> so 8 does sound a bit small to me. How difficult would it be to bump that
-> number in the future if we needed to?
+Hi Andrzej,
 
-Seems it was introduced with commit 15c9a0acc3f7873db4b7d35d016729b2dc229b49
-(of: create of_phandle_args to simplify return of phandle parsing data)
-by Grant Likely.
+On Tue, May 21, 2013 at 10:34:53AM +0200, Andrzej Hajda wrote:
+> On 12.05.2013 23:12, Sakari Ailus wrote:
+> > On Wed, May 08, 2013 at 09:32:17AM +0200, Andrzej Hajda wrote:
+> >> On 07.05.2013 17:07, Laurent Pinchart wrote:
+> >>> On Tuesday 07 May 2013 02:11:27 Kim, Milo wrote:
+> >>>> On Monday, May 06, 2013 6:34 PM Andrzej Hajda wrote:
+> >>>>> This RFC proposes generic API for exposing flash subdevices via LED
+> >>>>> framework.
+> >>>>>
+> >>>>> Rationale
+> >>>>>
+> >>>>> Currently there are two frameworks which are used for exposing LED
+> >>>>> flash to user space:
+> >>>>> - V4L2 flash controls,
+> >>>>> - LED framework(with custom sysfs attributes).
+> >>>>>
+> >>>>> The list below shows flash drivers in mainline kernel with initial
+> >>>>> commit date and typical chip application (according to producer):
+> >>>>>
+> >>>>> LED API:
+> >>>>>     lm3642: 2012-09-12, Cameras
+> >>>>>     lm355x: 2012-09-05, Cameras
+> >>>>>     max8997: 2011-12-14, Cameras (?)
+> >>>>>     lp3944: 2009-06-19, Cameras, Lights, Indicators, Toys
+> >>>>>     pca955x: 2008-07-16, Cameras, Indicators (?)
+> >>>>>
+> >>>>> V4L2 API:
+> >>>>>     as3645a:  2011-05-05, Cameras
+> >>>>>     adp1653: 2011-05-05, Cameras
+> >>>>>
+> >>>>> V4L2 provides richest functionality, but there is often demand from
+> >>>>> application developers to provide already established LED API. We would
+> >>>>> like to have an unified user interface for flash devices. Some of devices
+> >>>>> already have the LED API driver exposing limited set of a Flash IC
+> >>>>> functionality. In order to support all required features the LED API
+> >>>>> would have to be extended or the V4L2 API would need to be used. However
+> >>>>> when switching from a LED to a V4L2 Flash driver existing LED API
+> >>>>> interface would need to be retained.
+> >>>>>
+> >>>>> Proposed solution
+> >>>>>
+> >>>>> This patch adds V4L2 helper functions to register existing V4L2 flash
+> >>>>> subdev as LED class device. After registration via v4l2_leddev_register
+> >>>>> appropriate entry in /sys/class/leds/ is created. During registration all
+> >>>>> V4L2 flash controls are enumerated and corresponding attributes are added.
+> >>>>>
+> >>>>> I have attached also patch with new max77693-led driver using v4l2_leddev.
+> >>>>> This patch requires presence of the patch "max77693: added device tree
+> >>>>> support": https://patchwork.kernel.org/patch/2414351/ .
+> >>>>>
+> >>>>> Additional features
+> >>>>>
+> >>>>> - simple API to access all V4L2 flash controls via sysfs,
+> >>>>> - V4L2 subdevice should not be registered by V4L2 device to use it,
+> >>>>> - LED triggers API can be used to control the device,
+> >>>>> - LED device is optional - it will be created only if V4L2_LEDDEV
+> >>>>>   configuration option is enabled and the subdev driver calls
+> >>>>>   v4l2_leddev_register.
+> >>>>>
+> >>>>> Doubts
+> >>>>>
+> >>>>> This RFC is a result of a uncertainty which API developers should expose
+> >>>>> by their flash drivers. It is a try to gluing together both APIs. I am not
+> >>>>> sure if it is the best solution, but I hope there will be some discussion
+> >>>>> and hopefully some decisions will be taken which way we should follow.
+> >>>> The LED subsystem provides similar APIs for the Camera driver.
+> >>>> With LED trigger event, flash and torch are enabled/disabled.
+> >>>> I'm not sure this is applicable for you.
+> >>>> Could you take a look at LED camera trigger feature?
+> >>>>
+> >>>> For the camera LED trigger,
+> >>>> https://git.kernel.org/cgit/linux/kernel/git/cooloney/linux-leds.git/commit/
+> >>>> ?h=f or-next&id=48a1d032c954b9b06c3adbf35ef4735dd70ab757
+> >>>>
+> >>>> Example of camera flash driver,
+> >>>> https://git.kernel.org/cgit/linux/kernel/git/cooloney/linux-leds.git/commit/
+> >>>> ?h=f or-next&id=313bf0b1a0eaeaac17ea8c4b748f16e28fce8b7a
+> >>> I think we should decide on one API. Implementing two APIs for a single device 
+> >>> is usually messy, and will result in different feature sets (and different 
+> >>> bugs) being implemented through each API, depending on the driver. 
+> >>> Interactions between the APIs are also a pain point on the kernel side to 
+> >>> properly synchronize calls.
+> > I don't like having two APIs either. Especially we shouldn't have multiple
+> > drivers implementing different APIs for the same device.
+> >
+> > That said, I wonder if it's possible to support camera-related use cases
+> > using the LED API: it's originally designed for quite different devices.
+> > Even if you could handle flash strobing using the LED API, the functionality
+> > provided by the Media controller and subdev APIs will always be missing:
+> > device enumeration and association with the right camera.
+> Is there a generic way to associate flash and camera subdevs in
+> current V4L2 API? The only ways I see now are:
+> - both belongs to the same media controller, but this is not enough if there
+> is more than one camera subdev in that controller,
 
-The macro is primarily used in struct of_phandle_args. I don't believe
-that increasing the number of args (e.g. doubling it if necessary)
-would cause objections.
+Yes, there is. That's the group_id field in struct media_entity_desc. The
+lens subdev is associated to the rest of the devices the same way.
 
-struct of_phandle_args is used as argument for various (parsing
-functions). In several functions objects of that type are on the
-stack.
+> - using media links/pads - at first sight it seems to be overkill/abuse...
 
-And there is a private data structure in gpiolib-of.c which also
-contains an object of that type:
+No. Links describe the flow of data, not relations between entities.
 
-  struct gg_data {
-        enum of_gpio_flags *flags;
-        struct of_phandle_args gpiospec;
-        int out_gpio;
-  };
+...
 
-I don't expect that stack overflows or significant blowup of kernel
-size will be casued by a moderate bump of MAX_PHANDLE_ARGS. I think
-doubling it or even increasing it to 32 will not cause issues.
+> >>> The LED API is too limited for torch and flash usage, but I'm definitely open 
+> >>> to moving flash devices to the LED API is we can extend it in a way that it 
+> >>> covers all the use cases.
+> >>>
+> >> Extending LED API IMHO seems to be quite straightforward - by adding
+> >> attributes for supported functionalities. We just need a specification for
+> >> standard flash/torch attributes.
+> >> I could prepare an RFC about it if there is a will to explore this
+> >> direction.
+> > I'm leaning towards providing a wrapper that provides torch functionality
+> > using V4L2 flash API unless it's really proven to be insane. ;-) The code
+> > supporting that in an individual flash driver should be minimal --- which is
+> > what the patchset essentially already does.
+> Providing only torch functionality do not require adding new attributes
+> (besides the ones already present in the led_classdev), so the patch will
+> be much simpler.
 
-(Of course its impossible to increase it to the theoretical maximum of
-32k (15-bit) stream-ids. But 32k stream-ids for just one Linux device?
-I'd say practically irrelevant.)
+Yes. Attributes could be added later on to the LED API to support flash and
+the wrapper could be extended accordingly. My thinking is however that the
+main use case is torch, not strobing flash, so it would be fulfilled already
+without extensions to the LED API.
 
+-- 
+Kind regards,
 
-Andreas
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
