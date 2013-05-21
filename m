@@ -1,255 +1,136 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RESEND PATCH v2 1/3] mmc: omap_hsmmc: Enable SDIO IRQ using a
- GPIO in idle mode.
-Date: Mon, 20 May 2013 19:49:47 -0700
-Message-ID: <20130521024946.GM10378@atomide.com>
-References: <1368607516-2789-1-git-send-email-andreas.fenkart@streamunlimited.com>
- <1368607516-2789-2-git-send-email-andreas.fenkart@streamunlimited.com>
- <20130520205815.GJ10378@atomide.com>
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [RFC 2/2] clk: samsung: add exynos5250 composite clock for hdmi
+Date: Tue, 21 May 2013 09:42:25 +0530
+Message-ID: <CAPdUM4NKA8DfvqiB1OawAwQRn3_qM3joOwtwLFaQbwMzHdK5Lg@mail.gmail.com>
+References: <1369059428-26820-1-git-send-email-rahul.sharma@samsung.com>
+	<1369059428-26820-3-git-send-email-rahul.sharma@samsung.com>
+	<5956307.B4Gm3xbmhh@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130520205815.GJ10378@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Andreas Fenkart <andreas.fenkart@streamunlimited.com>
-Cc: cjb@laptop.org, arnd@arndb.de, svenkatr@ti.com, balajitk@ti.com, grant.likely@secretlab.ca, linux-mmc@vger.kernel.org, rob@landley.net, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, zonque@gmail.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5956307.B4Gm3xbmhh@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, inki.dae@samsung.com, s.nawrocki@samsung.com, thomas.abraham@linaro.org, joshi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [130520 14:03]:
-> * Andreas Fenkart <andreas.fenkart@streamunlimited.com> [130515 01:51]:
-> > Without functional clock the omap_hsmmc module can't forward SDIO IRQs to
-> > the system. This patch reconfigures dat1 line as a gpio while the fclk is
-> > off. When the fclk is present it uses the standard SDIO IRQ detection of
-> > the module.
-> > 
-> > The gpio irq is managed via the 'disable_depth' ref counter of the irq
-> > subsystem, this driver simply calls enable_irq/disable_irq when needed.
-> > 
-> >                       sdio irq    sdio irq
-> >                       unmasked     masked
-> >    -----------------------------------------
-> >     runtime default  |    1     |   2
-> >     runtime suspend  |    0     |   1
-> > 
-> >                   irq disable depth
-> > 
-> > 
-> > only when sdio irq is enabled AND the module is idle, the reference
-> > count drops to zero and the gpio irq is effectively armed.
-> > 
-> > Patch was tested on AM335x/Stream800. Test setup was two modules
-> > with sdio wifi cards. Modules where connected to a dual-band AP, each
-> > module using a different band. One of module was running iperf as server
-> > the other as client connecting to the server in a while true loop. Test
-> > was running for 4+ weeks. There were about 60 Mio. suspend/resume
-> > transitions. Test was shut down regularly.
-> 
-> Looks like this somehow breaks detecting of eMMC on mmc2 for me at least
-> with the non-dt legacyboot. For a removable mmc1 still keeps working.
-> 
-> For mmc2 I have .nonremovable = true and no gpio_cd or gpio_wp.
+On Tue, May 21, 2013 at 12:27 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> Hi Rahul,
+>
+> On Monday 20 of May 2013 19:47:08 Rahul Sharma wrote:
+>> HDMI driver needs to change the parent of sclk_hdmi clock to
+>> sclk_pixel or to sclk_hdmiphy, depends on the status of hdmiphy.
+>> sclk_hdmi which is gate clock doesn't support the set_parent
+>> operation.
+>
+> Wouldn't it be better to simply allow calling clk_set_parent() on gate
+> clocks and propagate parent change to nearest mux, just like it is done
+> with clk_set_rate()?
 
-Looks like that's because gpio0 is considered valid. But for these pins
-gpio0 is not valid, so let's cut the dependency to updating the pdata
-and ignore gpio0.
+Sorry, I din't get you completly here. Allowing clk_set_parent() on gate
+clocks is like changing the inherent property of the gate clock. I dont see
+it possible without overiding the default gate_ops (clk_gate_ops). Please
+cite me the code/patch doing the same for clk_set_rate.
 
-We should also have three pinmux states: default, active and idle to
-avoid remuxing all the pins unnecessarily. The default pins should
-contain the fixed pins, active mmc_dat1, and idle the gpio pin.
+What I did here is rather simple and utilising the exisiting composite clock
+framework for exynos (as well). I register comp. clock with default
+gate/mux/rate operations. No customised clk type /ops in this patch.
 
-I've attempted to fix up these issues, did not add the wake-up events
-from Steve Sakoman's patch for the non-muxed case:
+>
+> It wouldn't require any SoC-specific composite clocks and keep the nice
+> property of the clock tree, which is built from basic, generic clock
+> blocks that nicely correspond to blocks shown in the documentation.
+>
+> We had discussed this already at SRPOL and got to the conclusion that it's
+> a step backwards, making the clock driver more complex, because each
+> composite block would have to be described using a structure with many
 
-http://www.sakoman.com/cgi-bin/gitweb.cgi?p=linux.git;a=commitdiff_plain;h=010810d22f6f49ac03da4ba384969432e0320453
+I respectfully disagree with above. If we adhere to generic composite
+clocks (in drivers/clk/clk-composite.c) we donot need to add different
+struct for different blocks. I have further restricted the ops overriding in
+drivers/clk/samsung/clk.c. Please refer the previous patch.
 
-Based on the patch above, sounds like the wake-up events won't work
-for deeper idle states though. But we should probably still support
-those as most people run without the deeper idle states anyways.
+> fields. In addition there are many special cases, for which the composite
+> scheme wouldn't work anyway and they would end up with simple clocks
+> attached after the composite block, defeating the purpose of your patch.
+>
 
-Can you check if the following changes on top of your patch still
-work for you? Note that you need to update your .dts file for the
-new pinctrl states.
+Purpose of the patch is to avoid spilling complextiy of clk path/block to
+all over the drivers. Just for instance hdmi/fimd needs 2 extra mux clocks
+and 1 divider clock for set_parent and set_rate operations (other than
+gating operation) which was not required before CCF and still avoidable.
+I am sure, there will be many more similar cases. This list of exposed
+clock IDs will keep explanding when all drivers migrate to CCF.
 
-Regards,
+We have to take a call on this.
 
-Tony
+regards,
+Rahul Sharma.
 
-
---- a/drivers/mmc/host/omap_hsmmc.c
-+++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -186,7 +186,7 @@ struct omap_hsmmc_host {
- 	struct omap_hsmmc_next	next_data;
- 	bool			sdio_irq_en;
- 	struct pinctrl		*pinctrl;
--	struct pinctrl_state	*active, *idle;
-+	struct pinctrl_state	*fixed, *active, *idle;
- 	bool			active_pinmux;
- 
- 	struct	omap_mmc_platform_data	*pdata;
-@@ -434,7 +434,8 @@ static int omap_hsmmc_gpio_init(struct omap_mmc_platform_data *pdata)
- 	} else
- 		pdata->slots[0].gpio_wp = -EINVAL;
- 
--	if (gpio_is_valid(pdata->slots[0].gpio_cirq)) {
-+	if (pdata->slots[0].gpio_cirq > 0 &&
-+	    gpio_is_valid(pdata->slots[0].gpio_cirq)) {
- 		pdata->slots[0].sdio_irq =
- 				gpio_to_irq(pdata->slots[0].gpio_cirq);
- 
-@@ -1635,7 +1636,7 @@ static void omap_hsmmc_init_card(struct mmc_host *mmc, struct mmc_card *card)
- static void omap_hsmmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
- {
- 	struct omap_hsmmc_host *host = mmc_priv(mmc);
--	u32 irq_mask;
-+	u32 irq_mask, con;
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&host->irq_lock, flags);
-@@ -2116,35 +2117,43 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
- 
- 	omap_hsmmc_disable_irq(host);
- 
-+	mmc->caps |= MMC_CAP_SDIO_IRQ;
-+
- 	host->pinctrl = devm_pinctrl_get(&pdev->dev);
--	if (IS_ERR(host->pinctrl)) {
--		ret = PTR_ERR(host->pinctrl);
--		goto err_pinctrl;
--	}
--
--	host->active = pinctrl_lookup_state(host->pinctrl,
--					    PINCTRL_STATE_DEFAULT);
--	if (IS_ERR(host->active)) {
--		dev_warn(mmc_dev(host->mmc), "Unable to lookup active pinmux\n");
--		ret = PTR_ERR(host->active);
--		goto err_pinctrl_state;
--	}
--
--	if (mmc_slot(host).sdio_irq) {
--		host->idle = pinctrl_lookup_state(host->pinctrl,
--						  PINCTRL_STATE_IDLE);
--		if (IS_ERR(host->idle)) {
--			dev_warn(mmc_dev(host->mmc), "Unable to lookup idle pinmux\n");
--			ret = PTR_ERR(host->idle);
--			goto err_pinctrl_state;
-+	if (!IS_ERR(host->pinctrl)) {
-+		host->fixed = pinctrl_lookup_state(host->pinctrl,
-+						   PINCTRL_STATE_DEFAULT);
-+		if (IS_ERR(host->fixed)) {
-+			dev_warn(mmc_dev(host->mmc), "Unable to lookup default pinmux\n");
-+		} else {
-+			pinctrl_select_state(host->pinctrl, host->fixed);
-+			if (ret < 0)
-+				dev_warn(mmc_dev(host->mmc), "Unable to select default pins\n");
- 		}
--		mmc->caps |= MMC_CAP_SDIO_IRQ;
--	}
- 
--	ret = pinctrl_select_state(host->pinctrl, host->active);
--	if (ret < 0) {
--		dev_warn(mmc_dev(host->mmc), "Unable to select idle pinmux\n");
--		goto err_pinctrl_state;
-+		if (mmc_slot(host).sdio_irq) {
-+			host->active = pinctrl_lookup_state(host->pinctrl, "active");
-+			if (IS_ERR(host->active)) {
-+				dev_warn(mmc_dev(host->mmc), "Unable to lookup active pinmux\n");
-+			} else {
-+				ret = pinctrl_select_state(host->pinctrl, host->active);
-+				if (ret < 0) {
-+					dev_warn(mmc_dev(host->mmc), "Unable to select active pinmux\n");
-+					goto err_pinctrl_state;
-+				}
-+			}
-+
-+			host->idle = pinctrl_lookup_state(host->pinctrl,
-+							  PINCTRL_STATE_IDLE);
-+			if (IS_ERR(host->idle)) {
-+				dev_warn(mmc_dev(host->mmc), "Unable to lookup idle pinmux\n");
-+				ret = PTR_ERR(host->idle);
-+				mmc->caps &= ~MMC_CAP_SDIO_IRQ;
-+			}
-+		}
-+	} else {
-+		dev_warn(&pdev->dev,
-+			"pins are not configured from the driver\n");
- 	}
- 
- 	omap_hsmmc_protect_card(host);
-@@ -2173,7 +2182,6 @@ err_slot_name:
- 	mmc_remove_host(mmc);
- err_pinctrl_state:
- 	devm_pinctrl_put(host->pinctrl);
--err_pinctrl:
- 	if ((mmc_slot(host).sdio_irq))
- 		free_irq(mmc_slot(host).sdio_irq, host);
- err_irq_sdio:
-@@ -2350,14 +2358,16 @@ static int omap_hsmmc_resume(struct device *dev)
- static int omap_hsmmc_runtime_suspend(struct device *dev)
- {
- 	struct omap_hsmmc_host *host;
-+	struct mmc_host *mmc;
- 	unsigned long flags;
- 	int ret = 0;
- 
- 	host = platform_get_drvdata(to_platform_device(dev));
-+	mmc = host->mmc;
- 	omap_hsmmc_context_save(host);
- 	dev_dbg(dev, "disabled\n");
- 
--	if (mmc_slot(host).sdio_irq && host->pinctrl) {
-+	if (mmc->caps & MMC_CAP_SDIO_IRQ) {
- 		spin_lock_irqsave(&host->irq_lock, flags);
- 		host->active_pinmux = false;
- 		OMAP_HSMMC_WRITE(host->base, ISE, 0);
-@@ -2365,13 +2375,14 @@ static int omap_hsmmc_runtime_suspend(struct device *dev)
- 		OMAP_HSMMC_WRITE(host->base, STAT, STAT_CLEAR);
- 		spin_unlock_irqrestore(&host->irq_lock, flags);
- 
--		ret = pinctrl_select_state(host->pinctrl, host->idle);
--		if (ret < 0) {
--			dev_warn(mmc_dev(host->mmc), "Unable to select idle pinmux\n");
--			return ret;
-+		if (host->pinctrl && host->idle) {
-+			ret = pinctrl_select_state(host->pinctrl, host->idle);
-+			if (ret < 0)
-+				dev_warn(mmc_dev(host->mmc), "Unable to select idle pinmux\n");
- 		}
- 
--		enable_irq(mmc_slot(host).sdio_irq);
-+		if (mmc_slot(host).sdio_irq)
-+			enable_irq(mmc_slot(host).sdio_irq);
- 	}
- 
- 	return ret;
-@@ -2380,20 +2391,24 @@ static int omap_hsmmc_runtime_suspend(struct device *dev)
- static int omap_hsmmc_runtime_resume(struct device *dev)
- {
- 	struct omap_hsmmc_host *host;
-+	struct mmc_host *mmc;
- 	unsigned long flags;
- 	int ret = 0;
- 
- 	host = platform_get_drvdata(to_platform_device(dev));
-+	mmc = host->mmc;
- 	omap_hsmmc_context_restore(host);
- 	dev_dbg(dev, "enabled\n");
- 
--	if (mmc_slot(host).sdio_irq && host->pinctrl) {
--		disable_irq(mmc_slot(host).sdio_irq);
-+	if (mmc->caps & MMC_CAP_SDIO_IRQ) {
- 
--		ret = pinctrl_select_state(host->pinctrl, host->active);
--		if (ret < 0) {
--			dev_warn(mmc_dev(host->mmc), "Unable to select active pinmux\n");
--			return ret;
-+		if (mmc_slot(host).sdio_irq)
-+			disable_irq(mmc_slot(host).sdio_irq);
-+
-+		if (host->pinctrl && host->active) {
-+			ret = pinctrl_select_state(host->pinctrl, host->active);
-+			if (ret < 0)
-+				dev_warn(mmc_dev(host->mmc), "Unable to select active pinmux\n");
- 		}
- 
- 		spin_lock_irqsave(&host->irq_lock, flags);
+> Best regards,
+> Tomasz
+>
+>> This patch adds sclk_hdmi as a composite clock which is a
+>> combination of mux clock and gate clock. Being a composite
+>> clock, above clock supports both set_parent and enable/disable
+>> functionality. Therefore hdmi driver need not be modified
+>> different S0Cs. This will handled inside CCF.
+>>
+>> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+>> ---
+>>  drivers/clk/samsung/clk-exynos5250.c |   20 +++++++++++++++++---
+>>  1 file changed, 17 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/clk/samsung/clk-exynos5250.c
+>> b/drivers/clk/samsung/clk-exynos5250.c index 5c97e75..0c9e37a 100644
+>> --- a/drivers/clk/samsung/clk-exynos5250.c
+>> +++ b/drivers/clk/samsung/clk-exynos5250.c
+>> @@ -231,7 +231,6 @@ struct samsung_mux_clock exynos5250_mux_clks[]
+>> __initdata = { MUX(none, "mout_fimd1", mout_group1_p, SRC_DISP1_0, 0,
+>> 4),
+>>       MUX(none, "mout_mipi1", mout_group1_p, SRC_DISP1_0, 12, 4),
+>>       MUX(none, "mout_dp", mout_group1_p, SRC_DISP1_0, 16, 4),
+>> -     MUX(none, "mout_hdmi", mout_hdmi_p, SRC_DISP1_0, 20, 1),
+>>       MUX(none, "mout_audio0", mout_audio0_p, SRC_MAU, 0, 4),
+>>       MUX(none, "mout_mmc0", mout_group1_p, SRC_FSYS, 0, 4),
+>>       MUX(none, "mout_mmc1", mout_group1_p, SRC_FSYS, 4, 4),
+>> @@ -416,8 +415,6 @@ struct samsung_gate_clock exynos5250_gate_clks[]
+>> __initdata = { SRC_MASK_DISP1_0, 12, CLK_SET_RATE_PARENT, 0),
+>>       GATE(sclk_dp, "sclk_dp", "div_dp",
+>>                       SRC_MASK_DISP1_0, 16, CLK_SET_RATE_PARENT, 0),
+>> -     GATE(sclk_hdmi, "sclk_hdmi", "mout_hdmi",
+>> -                     SRC_MASK_DISP1_0, 20, 0, 0),
+>>       GATE(sclk_audio0, "sclk_audio0", "div_audio0",
+>>                       SRC_MASK_MAU, 0, CLK_SET_RATE_PARENT, 0),
+>>       GATE(sclk_mmc0, "sclk_mmc0", "div_mmc_pre0",
+>> @@ -464,6 +461,21 @@ struct samsung_gate_clock exynos5250_gate_clks[]
+>> __initdata = { GATE(hdmi, "hdmi", "aclk200", GATE_IP_DISP1, 6, 0, 0),
+>>  };
+>>
+>> +struct samsung_composite_clock exynos5250_composite_clks[] __initdata =
+>> { +   {
+>> +             .id = sclk_hdmi,
+>> +             .name = "sclk_hdmi",
+>> +             .parent_names = mout_hdmi_p,
+>> +             .num_parents = ARRAY_SIZE(mout_hdmi_p),
+>> +             .mux_clk = MUX(none, NULL, mout_hdmi_p, SRC_DISP1_0, 20,
+>> +                             1),
+>> +             .gate_clk = GATE(none, NULL, NULL, SRC_MASK_DISP1_0, 20,
+>> +                             0, 0),
+>> +             .composition_flags = SAMSUNG_CLK_TYPE_GATE |
+>> +                     SAMSUNG_CLK_TYPE_MUX,
+>> +     },
+>> +};
+>> +
+>>  static __initdata struct of_device_id ext_clk_match[] = {
+>>       { .compatible = "samsung,clock-xxti", .data = (void *)0, },
+>>       { },
+>> @@ -515,6 +527,8 @@ void __init exynos5250_clk_init(struct device_node
+>> *np) ARRAY_SIZE(exynos5250_div_clks));
+>>       samsung_clk_register_gate(exynos5250_gate_clks,
+>>                       ARRAY_SIZE(exynos5250_gate_clks));
+>> +     samsung_clk_register_composite(exynos5250_composite_clks,
+>> +                     ARRAY_SIZE(exynos5250_composite_clks));
+>>
+>>       pr_info("Exynos5250: clock setup completed, armclk=%ld\n",
+>>                       _get_rate("armclk"));
