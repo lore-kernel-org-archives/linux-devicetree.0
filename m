@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v4 10/21] ARM: shmobile: r8a7790: Add GPIO controller devices to device tree
-Date: Tue, 21 May 2013 14:14:31 +0200
-Message-ID: <1369138482-5871-11-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v4 18/21] ARM: shmobile: kzm9g-reference: Move SDHI regulators to DT
+Date: Tue, 21 May 2013 14:14:39 +0200
+Message-ID: <1369138482-5871-19-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1369138482-5871-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1369138482-5871-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
@@ -10,91 +10,87 @@ To: linux-sh@vger.kernel.org
 Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm@opensource.se>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-Add GPIO controller nodes to the r8a7790 core device tree.
+Create two GPIO-controlled fixed-voltage regulators in the
+kzm9g-reference DT and remove manual configuration of the corresponding
+GPIOs from board code.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- arch/arm/boot/dts/r8a7790.dtsi | 61 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
+ arch/arm/boot/dts/sh73a0-kzm9g-reference.dts   | 22 ++++++++++++++++++++--
+ arch/arm/mach-shmobile/board-kzm9g-reference.c |  6 ------
+ 2 files changed, 20 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index c14fbd1..89afccd 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -44,6 +44,66 @@
- 		};
+diff --git a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
+index 475535f..cdfd71a 100644
+--- a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
++++ b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
+@@ -58,6 +58,24 @@
+ 		regulator-boot-on;
  	};
  
-+	gpio0: gpio@ffc40000 {
-+		compatible = "renesas,gpio-r8a7790", "renesas,gpio-rcar";
-+		reg = <0 0xffc40000 0 0x2c>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 4 0x4>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		gpio-ranges = <&pfc 0 0 32>;
++	vmmc_sdhi0: regulator@2 {
++	        compatible = "regulator-fixed";
++		regulator-name = "SDHI0 Vcc";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&pfc 15 0>;
++		enable-active-high;
 +	};
 +
-+	gpio1: gpio@ffc41000 {
-+		compatible = "renesas,gpio-r8a7790", "renesas,gpio-rcar";
-+		reg = <0 0xffc41000 0 0x2c>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 5 0x4>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		gpio-ranges = <&pfc 0 32 32>;
++	vmmc_sdhi2: regulator@3 {
++	        compatible = "regulator-fixed";
++		regulator-name = "SDHI2 Vcc";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&pfc 14 0>;
++		enable-active-high;
 +	};
 +
-+	gpio2: gpio@ffc42000 {
-+		compatible = "renesas,gpio-r8a7790", "renesas,gpio-rcar";
-+		reg = <0 0xffc42000 0 0x2c>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 6 0x4>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		gpio-ranges = <&pfc 0 64 32>;
-+	};
-+
-+	gpio3: gpio@ffc43000 {
-+		compatible = "renesas,gpio-r8a7790", "renesas,gpio-rcar";
-+		reg = <0 0xffc43000 0 0x2c>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 7 0x4>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		gpio-ranges = <&pfc 0 96 32>;
-+	};
-+
-+	gpio4: gpio@ffc44000 {
-+		compatible = "renesas,gpio-r8a7790", "renesas,gpio-rcar";
-+		reg = <0 0xffc44000 0 0x2c>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 8 0x4>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		gpio-ranges = <&pfc 0 128 32>;
-+	};
-+
-+	gpio5: gpio@ffc45000 {
-+		compatible = "renesas,gpio-r8a7790", "renesas,gpio-rcar";
-+		reg = <0 0xffc45000 0 0x2c>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 9 0x4>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		gpio-ranges = <&pfc 0 160 32>;
-+	};
-+
- 	timer {
- 		compatible = "arm,armv7-timer";
- 		interrupts = <1 13 0xf08>,
-@@ -64,5 +124,6 @@
- 	pfc: pfc@e6060000 {
- 		compatible = "renesas,pfc-r8a7790";
- 		reg = <0 0xe6060000 0 0x250>;
-+		#gpio-range-cells = <3>;
- 	};
+ 	lan9220@10000000 {
+ 		compatible = "smsc,lan9220", "smsc,lan9115";
+ 		reg = <0x10000000 0x100>;
+@@ -200,7 +218,7 @@
+ 	pinctrl-0 = <&sdhi0_pins>;
+ 	pinctrl-names = "default";
+ 
+-	vmmc-supply = <&reg_3p3v>;
++	vmmc-supply = <&vmmc_sdhi0>;
+ 	bus-width = <4>;
+ 	status = "okay";
  };
+@@ -209,7 +227,7 @@
+ 	pinctrl-0 = <&sdhi2_pins>;
+ 	pinctrl-names = "default";
+ 
+-	vmmc-supply = <&reg_3p3v>;
++	vmmc-supply = <&vmmc_sdhi2>;
+ 	bus-width = <4>;
+ 	broken-cd;
+ 	status = "okay";
+diff --git a/arch/arm/mach-shmobile/board-kzm9g-reference.c b/arch/arm/mach-shmobile/board-kzm9g-reference.c
+index fc2bb37..1847b4d 100644
+--- a/arch/arm/mach-shmobile/board-kzm9g-reference.c
++++ b/arch/arm/mach-shmobile/board-kzm9g-reference.c
+@@ -21,7 +21,6 @@
+  */
+ 
+ #include <linux/delay.h>
+-#include <linux/gpio.h>
+ #include <linux/io.h>
+ #include <linux/irq.h>
+ #include <linux/irqchip.h>
+@@ -37,11 +36,6 @@ static void __init kzm_init(void)
+ {
+ 	sh73a0_add_standard_devices_dt();
+ 
+-	/* enable SD */
+-	gpio_request_one(15, GPIOF_OUT_INIT_HIGH, NULL); /* power */
+-
+-	gpio_request_one(14, GPIOF_OUT_INIT_HIGH, NULL); /* power */
+-
+ #ifdef CONFIG_CACHE_L2X0
+ 	/* Early BRESP enable, Shared attribute override enable, 64K*8way */
+ 	l2x0_init(IOMEM(0xf0100000), 0x40460000, 0x82000fff);
 -- 
 1.8.1.5
 
