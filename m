@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v4 18/21] ARM: shmobile: kzm9g-reference: Move SDHI regulators to DT
-Date: Tue, 21 May 2013 14:14:39 +0200
-Message-ID: <1369138482-5871-19-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v4 13/21] ARM: shmobile: armadillo-reference: Move pinctrl mappings to device tree
+Date: Tue, 21 May 2013 14:14:34 +0200
+Message-ID: <1369138482-5871-14-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1369138482-5871-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1369138482-5871-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
@@ -10,87 +10,68 @@ To: linux-sh@vger.kernel.org
 Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm@opensource.se>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-Create two GPIO-controlled fixed-voltage regulators in the
-kzm9g-reference DT and remove manual configuration of the corresponding
-GPIOs from board code.
+Replace the pinctrl mappings in board code by device tree mappings.
+For devices that are still instantiated from board code reference the
+mappings as the default pin controller state to apply them at boot time.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- arch/arm/boot/dts/sh73a0-kzm9g-reference.dts   | 22 ++++++++++++++++++++--
- arch/arm/mach-shmobile/board-kzm9g-reference.c |  6 ------
- 2 files changed, 20 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts  | 10 ++++++++++
+ arch/arm/mach-shmobile/board-armadillo800eva-reference.c |  9 ---------
+ 2 files changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-index 475535f..cdfd71a 100644
---- a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-+++ b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-@@ -58,6 +58,24 @@
- 		regulator-boot-on;
+diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+index 09ea22c..4a7ae32 100644
+--- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
++++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+@@ -43,3 +43,13 @@
+ 		interrupts = <2 0>; /* IRQ10: hwirq 2 on irqpin1 */
  	};
- 
-+	vmmc_sdhi0: regulator@2 {
-+	        compatible = "regulator-fixed";
-+		regulator-name = "SDHI0 Vcc";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&pfc 15 0>;
-+		enable-active-high;
-+	};
-+
-+	vmmc_sdhi2: regulator@3 {
-+	        compatible = "regulator-fixed";
-+		regulator-name = "SDHI2 Vcc";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&pfc 14 0>;
-+		enable-active-high;
-+	};
-+
- 	lan9220@10000000 {
- 		compatible = "smsc,lan9220", "smsc,lan9115";
- 		reg = <0x10000000 0x100>;
-@@ -200,7 +218,7 @@
- 	pinctrl-0 = <&sdhi0_pins>;
- 	pinctrl-names = "default";
- 
--	vmmc-supply = <&reg_3p3v>;
-+	vmmc-supply = <&vmmc_sdhi0>;
- 	bus-width = <4>;
- 	status = "okay";
  };
-@@ -209,7 +227,7 @@
- 	pinctrl-0 = <&sdhi2_pins>;
- 	pinctrl-names = "default";
- 
--	vmmc-supply = <&reg_3p3v>;
-+	vmmc-supply = <&vmmc_sdhi2>;
- 	bus-width = <4>;
- 	broken-cd;
- 	status = "okay";
-diff --git a/arch/arm/mach-shmobile/board-kzm9g-reference.c b/arch/arm/mach-shmobile/board-kzm9g-reference.c
-index fc2bb37..1847b4d 100644
---- a/arch/arm/mach-shmobile/board-kzm9g-reference.c
-+++ b/arch/arm/mach-shmobile/board-kzm9g-reference.c
-@@ -21,7 +21,6 @@
++
++&pfc {
++	pinctrl-0 = <&scifa1_pins>;
++	pinctrl-names = "default";
++
++	scifa1_pins: scifa1 {
++		renesas,groups = "scifa1_data";
++		renesas,function = "scifa1";
++	};
++};
+diff --git a/arch/arm/mach-shmobile/board-armadillo800eva-reference.c b/arch/arm/mach-shmobile/board-armadillo800eva-reference.c
+index f25b6aa..4ddd299 100644
+--- a/arch/arm/mach-shmobile/board-armadillo800eva-reference.c
++++ b/arch/arm/mach-shmobile/board-armadillo800eva-reference.c
+@@ -24,7 +24,6 @@
+ #include <linux/kernel.h>
+ #include <linux/gpio.h>
+ #include <linux/io.h>
+-#include <linux/pinctrl/machine.h>
+ #include <mach/common.h>
+ #include <mach/r8a7740.h>
+ #include <asm/mach/arch.h>
+@@ -119,12 +118,6 @@
+  *	usbhsf_power_ctrl()
   */
  
- #include <linux/delay.h>
--#include <linux/gpio.h>
- #include <linux/io.h>
- #include <linux/irq.h>
- #include <linux/irqchip.h>
-@@ -37,11 +36,6 @@ static void __init kzm_init(void)
+-static const struct pinctrl_map eva_pinctrl_map[] = {
+-	/* SCIFA1 */
+-	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.1", "e6050000.pfc",
+-				  "scifa1_data", "scifa1"),
+-};
+-
+ static void __init eva_clock_init(void)
  {
- 	sh73a0_add_standard_devices_dt();
+ 	struct clk *system	= clk_get(NULL, "system_clk");
+@@ -169,8 +162,6 @@ static void __init eva_init(void)
+ 	r8a7740_clock_init(MD_CK0 | MD_CK2);
+ 	eva_clock_init();
  
--	/* enable SD */
--	gpio_request_one(15, GPIOF_OUT_INIT_HIGH, NULL); /* power */
+-	pinctrl_register_mappings(eva_pinctrl_map, ARRAY_SIZE(eva_pinctrl_map));
 -
--	gpio_request_one(14, GPIOF_OUT_INIT_HIGH, NULL); /* power */
--
+ 	r8a7740_meram_workaround();
+ 
  #ifdef CONFIG_CACHE_L2X0
- 	/* Early BRESP enable, Shared attribute override enable, 64K*8way */
- 	l2x0_init(IOMEM(0xf0100000), 0x40460000, 0x82000fff);
 -- 
 1.8.1.5
 
