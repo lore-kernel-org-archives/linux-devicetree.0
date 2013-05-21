@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v4 16/21] ARM: shmobile: armadillo-reference: Add LED1-LED4 to the device tree
-Date: Tue, 21 May 2013 14:14:37 +0200
-Message-ID: <1369138482-5871-17-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v4 05/21] ARM: shmobile: r8a7778: Add pin control device to device tree
+Date: Tue, 21 May 2013 14:14:26 +0200
+Message-ID: <1369138482-5871-6-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1369138482-5871-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1369138482-5871-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
@@ -10,39 +10,27 @@ To: linux-sh@vger.kernel.org
 Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm@opensource.se>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-LED1 to LED4 are GPIO LEDs. Add corresponding DT nodes.
+Add a pfc node to the r8a7778 device tree.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/arm/boot/dts/r8a7778.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-index a037776..746c64a 100644
---- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-+++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-@@ -33,6 +33,21 @@
- 		regulator-boot-on;
+diff --git a/arch/arm/boot/dts/r8a7778.dtsi b/arch/arm/boot/dts/r8a7778.dtsi
+index 4743735..c8dbf14 100644
+--- a/arch/arm/boot/dts/r8a7778.dtsi
++++ b/arch/arm/boot/dts/r8a7778.dtsi
+@@ -32,4 +32,9 @@
+ 		reg = <0xfe438000 0x1000>,
+ 		      <0xfe430000 0x100>;
  	};
- 
-+	leds {
-+		compatible = "gpio-leds";
-+		led1 {
-+			gpios = <&pfc 102 0>;
-+		};
-+		led2 {
-+			gpios = <&pfc 111 0>;
-+		};
-+		led3 {
-+			gpios = <&pfc 110 0>;
-+		};
-+		led4 {
-+			gpios = <&pfc 177 0>;
-+		};
++
++	pfc: pfc@fffc0000 {
++		compatible = "renesas,pfc-r8a7778";
++		reg = <0xfffc000 0x118>;
 +	};
  };
- 
- &i2c0 {
 -- 
 1.8.1.5
 
