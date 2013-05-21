@@ -1,53 +1,251 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v6 0/9] Generic PHY Framework
-Date: Tue, 21 May 2013 10:31:09 +0530
-Message-ID: <519AFF95.9060002@ti.com>
-References: <1367229812-30574-1-git-send-email-kishon@ti.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH V3 09/10] ARM: Kirkwood: Add dts files for Sheevaplug and
+ eSATA Sheevaplug
+Date: Tue, 21 May 2013 07:11:32 +0200
+Message-ID: <20130521051132.GJ26249@lunn.ch>
+References: <1369090911-1479-1-git-send-email-gmbnomis@gmail.com>
+ <1369090911-1479-10-git-send-email-gmbnomis@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1367229812-30574-1-git-send-email-kishon@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, grant.likely@linaro.org, tony@atomide.com, balbi@ti.com, arnd@arndb.de, swarren@nvidia.com, sylvester.nawrocki@gmail.com, gregkh@linuxfoundation.org, akpm@linux-foundation.org
-Cc: rnayak@ti.com, linux@arm.linux.org.uk, b-cousson@ti.com, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, shawn.guo@linaro.org, santosh.shilimkar@ti.com, cesarb@cesarb.net, rob@landley.net, benoit.cousson@linaro.org, linux-omap@vger.kernel.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org, mchehab@redhat.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1369090911-1479-10-git-send-email-gmbnomis@gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Simon Baatz <gmbnomis@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Chris Ball <cjb@laptop.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, May 21, 2013 at 01:01:50AM +0200, Simon Baatz wrote:
+> Signed-off-by: Simon Baatz <gmbnomis@gmail.com>
+> ---
+>  arch/arm/boot/dts/Makefile                        |    2 +
+>  arch/arm/boot/dts/kirkwood-sheevaplug-common.dtsi |   97 +++++++++++++++++++++
+>  arch/arm/boot/dts/kirkwood-sheevaplug-esata.dts   |   40 +++++++++
+>  arch/arm/boot/dts/kirkwood-sheevaplug.dts         |   45 ++++++++++
+>  4 files changed, 184 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/kirkwood-sheevaplug-common.dtsi
+>  create mode 100644 arch/arm/boot/dts/kirkwood-sheevaplug-esata.dts
+>  create mode 100644 arch/arm/boot/dts/kirkwood-sheevaplug.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index b9f7121..e81a387 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -84,6 +84,8 @@ dtb-$(CONFIG_ARCH_KIRKWOOD) += kirkwood-cloudbox.dtb \
+>  	kirkwood-ns2max.dtb \
+>  	kirkwood-ns2mini.dtb \
+>  	kirkwood-nsa310.dtb \
+> +	kirkwood-sheevaplug.dtb \
+> +	kirkwood-sheevaplug-esata.dtb \
+>  	kirkwood-topkick.dtb \
+>  	kirkwood-ts219-6281.dtb \
+>  	kirkwood-ts219-6282.dtb \
+> diff --git a/arch/arm/boot/dts/kirkwood-sheevaplug-common.dtsi b/arch/arm/boot/dts/kirkwood-sheevaplug-common.dtsi
+> new file mode 100644
+> index 0000000..9d59475
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/kirkwood-sheevaplug-common.dtsi
+> @@ -0,0 +1,97 @@
+> +/*
+> + * kirkwood-sheevaplug-common.dts - Common parts for Sheevaplugs
+> + *
+> + * Copyright (C) 2013 Simon Baatz <gmbnomis@gmail.com>
+> + *
+> + * Licensed under GPLv2
+> + */
+> +
+> +/include/ "kirkwood.dtsi"
+> +/include/ "kirkwood-6281.dtsi"
+> +
+> +/ {
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x20000000>;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200n8 earlyprintk";
+> +	};
+> +
+> +	ocp@f1000000 {
+> +		pinctrl: pinctrl@10000 {
+> +
+> +			pmx_usb_power_enable: pmx-usb-power-enable {
+> +				marvell,pins = "mpp29";
+> +				marvell,function = "gpio";
+> +			};
+> +			pmx_led_red: pmx-led-red {
+> +				marvell,pins = "mpp46";
+> +				marvell,function = "gpio";
+> +			};
+> +			pmx_led_blue: pmx-led-blue {
+> +				marvell,pins = "mpp49";
+> +				marvell,function = "gpio";
+> +			};
+> +			pmx_sdio_cd: pmx-sdio-cd {
+> +				marvell,pins = "mpp44";
+> +				marvell,function = "gpio";
+> +			};
+> +			pmx_sdio_wp: pmx-sdio-wp {
+> +				marvell,pins = "mpp47";
+> +				marvell,function = "gpio";
+> +			};
+> +		};
+> +		serial@12000 {
+> +			status = "okay";
+> +		};
+> +
+> +		nand@3000000 {
+> +			status = "okay";
+> +
+> +			partition@0 {
+> +				label = "u-boot";
+> +				reg = <0x0000000 0x100000>;
+> +			};
+> +
+> +			partition@100000 {
+> +				label = "uImage";
+> +				reg = <0x0100000 0x400000>;
+> +			};
+> +
+> +			partition@500000 {
+> +				label = "root";
+> +				reg = <0x0500000 0x1fb00000>;
+> +			};
+> +		};
+> +	};
+> +
+> +	regulators {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		usb_power: regulator@1 {
+> +			compatible = "regulator-fixed";
+> +			reg = <1>;
+> +			regulator-name = "USB Power";
+> +			regulator-min-microvolt = <5000000>;
+> +			regulator-max-microvolt = <5000000>;
+> +			enable-active-high;
+> +			regulator-always-on;
+> +			regulator-boot-on;
+> +			gpio = <&gpio0 29 0>;
+> +		};
+> +	};
+> +
+> +	gpio-leds {
+> +		compatible = "gpio-leds";
+> +
+> +		health {
+> +			label = "sheevaplug:blue:health";
+> +			gpios = <&gpio1 17 1>;
+> +			linux,default-trigger = "default-on";
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/kirkwood-sheevaplug-esata.dts b/arch/arm/boot/dts/kirkwood-sheevaplug-esata.dts
+> new file mode 100644
+> index 0000000..1c6946a
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/kirkwood-sheevaplug-esata.dts
+> @@ -0,0 +1,40 @@
+> +/*
+> + * kirkwood-sheevaplug-esata.dts - Device tree file for eSATA Sheevaplug
+> + *
+> + * Copyright (C) 2013 Simon Baatz <gmbnomis@gmail.com>
+> + *
+> + * Licensed under GPLv2
+> + */
+> +
+> +/dts-v1/;
+> +
+> +/include/ "kirkwood-sheevaplug-common.dtsi"
+> +
+> +/ {
+> +	model = "Globalscale Technologies eSATA SheevaPlug";
+> +	compatible = "globalscale,sheevaplug-esata-rev13", "globalscale,sheevaplug-esata", "globalscale,sheevaplug", "marvell,kirkwood-88f6281", "marvell,kirkwood";
+> +
+> +	ocp@f1000000 {
+> +		pinctrl: pinctrl@10000 {
+> +
+> +			pinctrl-0 = < &pmx_nand &pmx_uart0
+> +				      &pmx_usb_power_enable
+> +				      &pmx_led_blue>;
+> +			pinctrl-names = "default";
+> +
+> +		};
+> +
+> +		sata@80000 {
+> +			status = "okay";
+> +			nr-ports = <2>;
+> +		};
+> +
+> +		mvsdio@90000 {
+> +			pinctrl-0 = <&pmx_sdio &pmx_sdio_cd &pmx_sdio_wp>;
+> +			pinctrl-names = "default";
+> +			status = "okay";
+> +			cd-gpios = <&gpio1 12 1>;
+> +			wp-gpios = <&gpio1 15 0>;
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/kirkwood-sheevaplug.dts b/arch/arm/boot/dts/kirkwood-sheevaplug.dts
+> new file mode 100644
+> index 0000000..f7684066
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/kirkwood-sheevaplug.dts
+> @@ -0,0 +1,45 @@
+> +/*
+> + * kirkwood-sheevaplug-esata.dts - Device tree file for Sheevaplug
+> + *
+> + * Copyright (C) 2013 Simon Baatz <gmbnomis@gmail.com>
+> + *
+> + * Licensed under GPLv2
+> + */
+> +
+> +/dts-v1/;
+> +
+> +/include/ "kirkwood-sheevaplug-common.dtsi"
+> +
+> +/ {
+> +	model = "Globalscale Technologies SheevaPlug";
+> +	compatible = "globalscale,sheevaplug", "marvell,kirkwood-88f6281", "marvell,kirkwood";
+> +
+> +	ocp@f1000000 {
+> +		pinctrl: pinctrl@10000 {
+> +
+> +			pinctrl-0 = < &pmx_nand &pmx_uart0
+> +				      &pmx_usb_power_enable
+> +				      &pmx_led_red
+> +				      &pmx_led_blue>;
+> +			pinctrl-names = "default";
+> +
+> +		};
+> +
+> +		mvsdio@90000 {
+> +			pinctrl-0 = <&pmx_sdio>;
+> +			pinctrl-names = "default";
+> +			status = "okay";
+> +			/* No CD or WP GPIOs */
+> +			broken-cd;
+> +		};
+> +	};
+> +
+> +	gpio-leds {
+> +		compatible = "gpio-leds";
+> +
+> +		misc {
+> +			label = "sheevaplug:red:misc";
+> +			gpios = <&gpio1 14 1>;
+> +		};
+> +	};
+> +};
+> -- 
+> 1.7.9.5
+> 
 
-On Monday 29 April 2013 03:33 PM, Kishon Vijay Abraham I wrote:
-> Added a generic PHY framework that provides a set of APIs for the PHY drivers
-> to create/destroy a PHY and APIs for the PHY users to obtain a reference to
-> the PHY with or without using phandle.
->
-> This framework will be of use only to devices that uses external PHY (PHY
-> functionality is not embedded within the controller).
->
-> The intention of creating this framework is to bring the phy drivers spread
-> all over the Linux kernel to drivers/phy to increase code re-use and to
-> increase code maintainability.
->
-> Comments to make PHY as bus wasn't done because PHY devices can be part of
-> other bus and making a same device attached to multiple bus leads to bad
-> design.
->
-> If the PHY driver has to send notification on connect/disconnect, the PHY
-> driver should make use of the extcon framework. Using this susbsystem
-> to use extcon framwork will have to be analysed.
->
-> Making omap-usb2 and twl4030 to use this framework is provided as a sample.
->
-> This patch series is developed on linux-next tree.
+Hi Simon
 
-Any comments on this patch series?
+Looks good
 
-Thanks
-Kishon
+Acked-by: Andrew Lunn <andrew@lunn.ch>
