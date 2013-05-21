@@ -1,7 +1,7 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v4 05/21] ARM: shmobile: r8a7778: Add pin control device to device tree
-Date: Tue, 21 May 2013 14:14:26 +0200
-Message-ID: <1369138482-5871-6-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v4 15/21] ARM: shmobile: armadillo-reference: Move st1232 reset GPIO to DT
+Date: Tue, 21 May 2013 14:14:36 +0200
+Message-ID: <1369138482-5871-16-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 References: <1369138482-5871-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1369138482-5871-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
@@ -10,27 +10,52 @@ To: linux-sh@vger.kernel.org
 Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm@opensource.se>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-Add a pfc node to the r8a7778 device tree.
+Reference the st1232 reset GPIO from the device tree and remove it from
+board code.
 
 Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- arch/arm/boot/dts/r8a7778.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts  | 1 +
+ arch/arm/mach-shmobile/board-armadillo800eva-reference.c | 7 -------
+ 2 files changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7778.dtsi b/arch/arm/boot/dts/r8a7778.dtsi
-index 4743735..c8dbf14 100644
---- a/arch/arm/boot/dts/r8a7778.dtsi
-+++ b/arch/arm/boot/dts/r8a7778.dtsi
-@@ -32,4 +32,9 @@
- 		reg = <0xfe438000 0x1000>,
- 		      <0xfe430000 0x100>;
+diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+index a6c6606..a037776 100644
+--- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
++++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+@@ -43,6 +43,7 @@
+ 		interrupts = <2 0>; /* IRQ10: hwirq 2 on irqpin1 */
+ 		pinctrl-0 = <&st1232_pins>;
+ 		pinctrl-names = "default";
++		gpios = <&pfc 166 1>;
  	};
-+
-+	pfc: pfc@fffc0000 {
-+		compatible = "renesas,pfc-r8a7778";
-+		reg = <0xfffc000 0x118>;
-+	};
  };
+ 
+diff --git a/arch/arm/mach-shmobile/board-armadillo800eva-reference.c b/arch/arm/mach-shmobile/board-armadillo800eva-reference.c
+index 4ddd299..002d8d3 100644
+--- a/arch/arm/mach-shmobile/board-armadillo800eva-reference.c
++++ b/arch/arm/mach-shmobile/board-armadillo800eva-reference.c
+@@ -158,7 +158,6 @@ clock_error:
+  */
+ static void __init eva_init(void)
+ {
+-
+ 	r8a7740_clock_init(MD_CK0 | MD_CK2);
+ 	eva_clock_init();
+ 
+@@ -171,12 +170,6 @@ static void __init eva_init(void)
+ 
+ 	r8a7740_add_standard_devices_dt();
+ 
+-	/*
+-	 * Touchscreen
+-	 * TODO: Move reset GPIO over to .dts when we can reference it
+-	 */
+-	gpio_request_one(166, GPIOF_OUT_INIT_HIGH, NULL); /* TP_RST_B */
+-
+ 	r8a7740_pm_init();
+ }
+ 
 -- 
 1.8.1.5
 
