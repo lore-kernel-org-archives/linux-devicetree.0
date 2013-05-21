@@ -1,168 +1,156 @@
-From: "Christian Daudt" <csd@broadcom.com>
-Subject: Re: [PATCH V2 1/2] ARM: mmc: bcm281xx SDHCI driver
-Date: Tue, 21 May 2013 01:22:05 -0700
-Message-ID: <519B2EAD.4000208@broadcom.com>
-References: <1368200883-15668-1-git-send-email-csd@broadcom.com>
- <201305170009.46244.arnd@arndb.de>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [RFC 0/2] V4L2 API for exposing flash subdevs as LED class device
+Date: Tue, 21 May 2013 10:34:53 +0200
+Message-ID: <519B31AD.90408@samsung.com>
+References: <1367832828-30771-1-git-send-email-a.hajda@samsung.com>
+ <A874F61F95741C4A9BA573A70FE3998F82E5C879@DQHE06.ent.ti.com>
+ <1958801.k4UEk5OhXt@avalon> <5189FF81.5030405@samsung.com>
+ <20130512211244.GC6748@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=iso-8859-15;
- format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201305170009.46244.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Chris Ball <cjb@laptop.org>, Stephen Warren <swarren@nvidia.com>, Olof Johansson <olof@lixom.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Wei WANG <wei_wang@realsil.com.cn>, Ludovic Desroches <ludovic.desroches@atmel.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, csd_b@daudt.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <20130512211244.GC6748@valkosipuli.retiisi.org.uk>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "Kim, Milo" <Milo.Kim@ti.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "hj210.choi@samsung.com" <hj210.choi@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-  Thanks for the review. See below for comments.
+Hi All,
 
-On 13-05-16 03:09 PM, Arnd Bergmann wrote:
-> On Friday 10 May 2013, Christian Daudt wrote:
->> +
->> +struct sdhci_bcm_kona_cfg {
->> +	unsigned int	max_freq;
->> +	int		is_8bit;
->> +	int		irq;
->> +	int		cd_gpio;
->> +	int		wp_gpio;
->> +	int		non_removable;
->> +};
-> I see no use for this structure to be separate: a lot of the fields are
-> duplicated in the sdhci_host, or should just get merged into
-> sdhci_bcm_kona_dev.
-ok. Will do
->> +struct sdhci_bcm_kona_dev {
->> +	struct sdhci_bcm_kona_cfg *cfg;
->> +	struct device *dev;
->> +	struct sdhci_host *host;
->> +	struct clk *peri_clk;
->> +	struct clk *sleep_clk;
->> +};
-> The *dev and *host members in this structure are redundant, just
-> allocate it together with sdhci_host and use use container_of()
-> to get from the sdhci_host back it it.
-ok.
->> +static void sdhci_bcm_kona_sd_init(struct sdhci_host *host)
->> +{
->> +	unsigned int val;
->> +
->> +	/* enable the interrupt from the IP core */
->> +	val = sdhci_readl(host, KONA_SDHOST_COREIMR);
->> +	val |= KONA_SDHOST_IP;
->> +	sdhci_writel(host, val, KONA_SDHOST_COREIMR);
->> +
->> +	/* Enable the AHB clock gating module to the host */
->> +	val = sdhci_readl(host, KONA_SDHOST_CORECTRL);
->> +	val |= KONA_SDHOST_EN;
->> +
->> +	/*
->> +	 * Back-to-Back register write needs a delay of 1ms at bootup (min 10uS)
->> +	 * Back-to-Back writes to same register needs delay when SD bus clock
->> +	 * is very low w.r.t AHB clock, mainly during boot-time and during card
->> +	 * insert-removal.
->> +	 */
->> +	mdelay(1);
->> +	sdhci_writel(host, val, KONA_SDHOST_CORECTRL);
->> +}
-> Why not use msleep() instead of mdelay() here?
-I don't think that there's any reason. will replace.
->
->> +static int sdhci_bcm_kona_sd_card_emulate(struct sdhci_host *host, int insert)
->> +{
->> +	struct sdhci_pltfm_host *pltfm_priv = sdhci_priv(host);
->> +	struct sdhci_bcm_kona_dev *kona_dev = pltfm_priv->priv;
->> +	u32 val;
->> +	unsigned long flags;
->> +
->> +	/* this function can be called from various contexts including ISR */
->> +	spin_lock_irqsave(&host->lock, flags);
->> +	/* Ensure SD bus scanning to detect media change */
->> +	host->mmc->rescan_disable = 0;
->> +
->> +	/*
->> +	 * Back-to-Back register write needs a delay of min 10uS.
->> +	 * Back-to-Back writes to same register needs delay when SD bus clock
->> +	 * is very low w.r.t AHB clock, mainly during boot-time and during card
->> +	 * insert-removal.
->> +	 * We keep 20uS
->> +	 */
->> +	udelay(20);
->> +	val = sdhci_readl(host, KONA_SDHOST_CORESTAT);
-> Does the delay have to be done with interrupts disabled? That is not particularly
-> nice.
->
-> I hope the hardware designers have been appropriately punished for the creating
-> such crap.
-I had some internal discussions on this one, and the code was originally 
-written for non-threaded irqs. Now that it is only called as 
-threaded_irq thread_fn, it is safe to replace the spinlock that includes 
-the delay with a mutex instead.
+Thanks for comments and sorry for late response.
 
->> +static void sdhci_bcm_kona_init_74_clocks(struct sdhci_host *host,
->> +				u8 power_mode)
->> +{
->> +	if (power_mode == MMC_POWER_OFF)
->> +		return;
->> +	else
->> +		mdelay(10);
->> +}
-> This requires at the minimum a comment about why the mdelay is needed.
-> Maybe we can change the set_ios function so we never need to call it
-> in atomic context.
-I'll look into this one.
->> +static struct sdhci_bcm_kona_cfg * __init sdhci_bcm_kona_parse_dt(
->> +			struct platform_device *pdev)
->> +{
->> +	struct sdhci_bcm_kona_cfg *cfg;
->> +	struct device_node *np = pdev->dev.of_node;
->> +	u32 temp;
-> fold this function into probe()
-ok.
->> +	if (!np)
->> +		return NULL;
-> impossible
-ok
->> +	cfg = devm_kzalloc(&pdev->dev, sizeof(*cfg), GFP_KERNEL);
->> +	if (!cfg) {
->> +		dev_err(&pdev->dev, "Can't allocate platform cfg\n");
->> +		return NULL;
->> +	}
-> Not needed
-what is not needed ?
->> +static int __init sdhci_bcm_kona_probe(struct platform_device *pdev)
->> +{
->> +	const struct of_device_id *match;
-> constant, so not needed.
-I'll remove it.
->> +	struct sdhci_bcm_kona_cfg *kona_cfg = NULL;
-> No need to initialize this.
-ok
->> +	const struct sdhci_pltfm_data *plat_data;
-> make it global.
-why make this global ?
+On 12.05.2013 23:12, Sakari Ailus wrote:
+> Hi all,
 >
->> +	struct sdhci_bcm_kona_dev *kona_dev = NULL;
-> No need to initialize this.
-ok.
->> +	kona_dev = devm_kzalloc(dev, sizeof(*kona_dev), GFP_KERNEL);
->> +	if (!kona_dev) {
->> +		dev_err(dev, "Can't allocate kona_dev\n");
->> +		ret = -ENOMEM;
->> +		goto err_pltfm_free;
->> +	}
-> It is rather silly to have the base sdhci code allocate extra
-> memory for the platform drivers but then require an extra allocation.
-> Better change the sdhci_pltfm_init function to let you pass the extra
-> allocation size.
-ok, I'll look into this.
->> +MODULE_AUTHOR("Broadcom");
-> No person?
+> On Wed, May 08, 2013 at 09:32:17AM +0200, Andrzej Hajda wrote:
+>> On 07.05.2013 17:07, Laurent Pinchart wrote:
+>>> On Tuesday 07 May 2013 02:11:27 Kim, Milo wrote:
+>>>> On Monday, May 06, 2013 6:34 PM Andrzej Hajda wrote:
+>>>>> This RFC proposes generic API for exposing flash subdevices via LED
+>>>>> framework.
+>>>>>
+>>>>> Rationale
+>>>>>
+>>>>> Currently there are two frameworks which are used for exposing LED
+>>>>> flash to user space:
+>>>>> - V4L2 flash controls,
+>>>>> - LED framework(with custom sysfs attributes).
+>>>>>
+>>>>> The list below shows flash drivers in mainline kernel with initial
+>>>>> commit date and typical chip application (according to producer):
+>>>>>
+>>>>> LED API:
+>>>>>     lm3642: 2012-09-12, Cameras
+>>>>>     lm355x: 2012-09-05, Cameras
+>>>>>     max8997: 2011-12-14, Cameras (?)
+>>>>>     lp3944: 2009-06-19, Cameras, Lights, Indicators, Toys
+>>>>>     pca955x: 2008-07-16, Cameras, Indicators (?)
+>>>>>
+>>>>> V4L2 API:
+>>>>>     as3645a:  2011-05-05, Cameras
+>>>>>     adp1653: 2011-05-05, Cameras
+>>>>>
+>>>>> V4L2 provides richest functionality, but there is often demand from
+>>>>> application developers to provide already established LED API. We would
+>>>>> like to have an unified user interface for flash devices. Some of devices
+>>>>> already have the LED API driver exposing limited set of a Flash IC
+>>>>> functionality. In order to support all required features the LED API
+>>>>> would have to be extended or the V4L2 API would need to be used. However
+>>>>> when switching from a LED to a V4L2 Flash driver existing LED API
+>>>>> interface would need to be retained.
+>>>>>
+>>>>> Proposed solution
+>>>>>
+>>>>> This patch adds V4L2 helper functions to register existing V4L2 flash
+>>>>> subdev as LED class device. After registration via v4l2_leddev_register
+>>>>> appropriate entry in /sys/class/leds/ is created. During registration all
+>>>>> V4L2 flash controls are enumerated and corresponding attributes are added.
+>>>>>
+>>>>> I have attached also patch with new max77693-led driver using v4l2_leddev.
+>>>>> This patch requires presence of the patch "max77693: added device tree
+>>>>> support": https://patchwork.kernel.org/patch/2414351/ .
+>>>>>
+>>>>> Additional features
+>>>>>
+>>>>> - simple API to access all V4L2 flash controls via sysfs,
+>>>>> - V4L2 subdevice should not be registered by V4L2 device to use it,
+>>>>> - LED triggers API can be used to control the device,
+>>>>> - LED device is optional - it will be created only if V4L2_LEDDEV
+>>>>>   configuration option is enabled and the subdev driver calls
+>>>>>   v4l2_leddev_register.
+>>>>>
+>>>>> Doubts
+>>>>>
+>>>>> This RFC is a result of a uncertainty which API developers should expose
+>>>>> by their flash drivers. It is a try to gluing together both APIs. I am not
+>>>>> sure if it is the best solution, but I hope there will be some discussion
+>>>>> and hopefully some decisions will be taken which way we should follow.
+>>>> The LED subsystem provides similar APIs for the Camera driver.
+>>>> With LED trigger event, flash and torch are enabled/disabled.
+>>>> I'm not sure this is applicable for you.
+>>>> Could you take a look at LED camera trigger feature?
+>>>>
+>>>> For the camera LED trigger,
+>>>> https://git.kernel.org/cgit/linux/kernel/git/cooloney/linux-leds.git/commit/
+>>>> ?h=f or-next&id=48a1d032c954b9b06c3adbf35ef4735dd70ab757
+>>>>
+>>>> Example of camera flash driver,
+>>>> https://git.kernel.org/cgit/linux/kernel/git/cooloney/linux-leds.git/commit/
+>>>> ?h=f or-next&id=313bf0b1a0eaeaac17ea8c4b748f16e28fce8b7a
+>>> I think we should decide on one API. Implementing two APIs for a single device 
+>>> is usually messy, and will result in different feature sets (and different 
+>>> bugs) being implemented through each API, depending on the driver. 
+>>> Interactions between the APIs are also a pain point on the kernel side to 
+>>> properly synchronize calls.
+> I don't like having two APIs either. Especially we shouldn't have multiple
+> drivers implementing different APIs for the same device.
 >
-A collective effort :)
+> That said, I wonder if it's possible to support camera-related use cases
+> using the LED API: it's originally designed for quite different devices.
+> Even if you could handle flash strobing using the LED API, the functionality
+> provided by the Media controller and subdev APIs will always be missing:
+> device enumeration and association with the right camera.
+Is there a generic way to associate flash and camera subdevs in
+current V4L2 API? The only ways I see now are:
+- both belongs to the same media controller, but this is not enough if there
+is more than one camera subdev in that controller,
+- using media links/pads - at first sight it seems to be overkill/abuse...
 
+On the other hand creating association between v4l2 subdev and led_classdev
+should be possible using sysfs links and/or v4l2 controls or even using
+led trigger API.
+Of course it seems much less consistent than performing everything in V4L2.
+>
+> The strobe functionality is connected to the sensor (hardware strobe pin)
+> which also is why it's natural for the flash to be accessible over the V4L2
+> API.
+>
+> This was briefly discussed some time ago:
+>
+> <URL:http://www.spinics.net/lists/linux-media/msg53645.html>
+>
+>>> The LED API is too limited for torch and flash usage, but I'm definitely open 
+>>> to moving flash devices to the LED API is we can extend it in a way that it 
+>>> covers all the use cases.
+>>>
+>> Extending LED API IMHO seems to be quite straightforward - by adding
+>> attributes for supported functionalities. We just need a specification for
+>> standard flash/torch attributes.
+>> I could prepare an RFC about it if there is a will to explore this
+>> direction.
+> I'm leaning towards providing a wrapper that provides torch functionality
+> using V4L2 flash API unless it's really proven to be insane. ;-) The code
+> supporting that in an individual flash driver should be minimal --- which is
+> what the patchset essentially already does.
+Providing only torch functionality do not require adding new attributes
+(besides the ones already present in the led_classdev), so the patch will
+be much simpler.
 
-  Thanks,
-    csd
+Regards
+Andrzej
+>
+> There are caveats though, such as if powering the flash controller requires
+> a regulator, then power management also must be done. Albeit I still
+> wouldn't expect this to be a major issue.
+>
