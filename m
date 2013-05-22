@@ -1,78 +1,184 @@
-From: Simon Baatz <gmbnomis@gmail.com>
-Subject: Re: [PATCH V3 00/10] mmc_of_parse() adaptations, DT support for
- Sheevaplugs
-Date: Wed, 22 May 2013 21:25:02 +0200
-Message-ID: <20130522192501.GC25367@schnuecks.de>
-References: <1369090911-1479-1-git-send-email-gmbnomis@gmail.com>
- <20130521131455.GP31290@titan.lakedaemon.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130521131455.GP31290@titan.lakedaemon.net>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Ulf Hansson <ulf.hansson@linaro.org>, Chris Ball <cjb@laptop.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
+Subject: [RFC/RFT] ARM: dts: add minimal DT support for Nokia N950 & N9
+Date: Wed, 22 May 2013 22:44:04 +0300
+Message-ID: <1369251845-29605-1-git-send-email-aaro.koskinen@iki.fi>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
+Add minimal DT support for Nokia N950 & N9. The basic boot works. I can
+connect to both devices with USB networking & ssh. dmesg output looks OK.
 
-On Tue, May 21, 2013 at 09:14:55AM -0400, Jason Cooper wrote:
-> On Tue, May 21, 2013 at 01:01:41AM +0200, Simon Baatz wrote:
-> > Hi,
-> > 
-> > 	V3 changes:
-> > 	- Patch 01/10: Added EPROBE_DEFER case to mmc_of_parse() 
-> > 	- Added Acked-By to (unmodified) patches 02 and 03.
-> > 
-> > 	V2 changes:
-> > 	- Converted mvsdio to use mmc_of_parse()
-> > 	- Adapted DTS files using mvsdio accordingly
-> > 	- Changed mmc_of_parse() to return errors to the caller
-> > 
-> > While adding DT support for the Sheevaplugs by Globalscale Technologies
-> > (Kirkwood), it turned out that the DT binding of mvsdio lacked features to
-> > properly support the hardware (active high/low of CD and WP pins could not
-> > be described in DT).
-> > 
-> > This is standard functionality provided by the mmc_of_parse() helper
-> > function.  However, mmc_of_parse() may allocate GPIO lines.  If the
-> > allocation fails, it outputs an error, but does not return an error to its
-> > caller.  Therefore, a proposal to handle errors in mmc_of_parse() is made.
-> > 
-> > The patch set is structured as follows:
-> > 
-> > 1   Adapt mmc_of_parse() to return errors
-> > 2-6 Handle errors in current drivers using mmc_of_parse() (compile tested
-> >     only)
-> > 7-8 Convert mvsdio and respective dts files to mmc_of_parse() (tested on
-> >     kirkwood)
-> > 9   Add dts files for (eSATA) Sheevaplug
-> > 10  Add DT support for (eSATA) Sheevaplug
-> 
-> Patches 7, 9, and 10 already pulled into mvebu/dt.  You can drop those
-> from this series if you need to do another revision.
+Functionality compared to the legacy board file:
 
-If you don't mind too much, as this crosses two trees, I would prefer
-to keep the series "self-contained" if people want to test.
-Additionally, I have two Acked-bys for 9 and 10 from Andrew that are
-not part of the patches yet.
- 
-> > I could only test on an eSATA Sheevaplug. I found patches with
-> > different LEDs for the Sheevaplug.  Thus, I would highly appreciate if
-> > someone with the hardware could give this a spin on a non-eSATA
-> > version.  
-> 
-> I happen to have one.  Unfortunately, it is currently my primary email
-> server, dhcp, dns, file server, and a few other irreplaceable things. :(
-> I *really* need to upgrade/reconfigure ...
+	- MMC not detected - reason unknown, any tips welcome
 
-Even without reinstalling, can you please have a look if your
-"plug:green:health" LED is really green (mine is blue)?  And if your
-kernel already has a "plug:red:misc" LED could you verify whether it
-is really there?  Do you happen to know which board revision you
-have?
+	- OneNAND missing completely
 
+Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+---
+ arch/arm/boot/dts/Makefile           |    2 +
+ arch/arm/boot/dts/omap3-n9.dts       |   18 ++++++++
+ arch/arm/boot/dts/omap3-n950-n9.dtsi |   84 ++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/omap3-n950.dts     |   18 ++++++++
+ 4 files changed, 122 insertions(+)
+ create mode 100644 arch/arm/boot/dts/omap3-n9.dts
+ create mode 100644 arch/arm/boot/dts/omap3-n950-n9.dtsi
+ create mode 100644 arch/arm/boot/dts/omap3-n950.dts
 
-Thanks,
-   Simon
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b9f7121..e7e1c82 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -144,6 +144,8 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+ 	omap3-tobi.dtb \
+ 	omap3-igep0020.dtb \
+ 	omap3-igep0030.dtb \
++	omap3-n9.dtb \
++	omap3-n950.dtb \
+ 	omap4-panda.dtb \
+ 	omap4-panda-a4.dtb \
+ 	omap4-panda-es.dtb \
+diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n9.dts
+new file mode 100644
+index 0000000..0553b33
+--- /dev/null
++++ b/arch/arm/boot/dts/omap3-n9.dts
+@@ -0,0 +1,18 @@
++/*
++ * omap3-n9.dts - Device Tree file for Nokia N9
++ *
++ * Written by: Aaro Koskinen <aaro.koskinen@iki.fi>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++/dts-v1/;
++
++/include/ "omap3-n950-n9.dtsi"
++
++/ {
++	model = "Nokia N9";
++	compatible = "nokia,omap3-n9", "ti,omap3";
++};
+diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+new file mode 100644
+index 0000000..3f983f7
+--- /dev/null
++++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+@@ -0,0 +1,84 @@
++/*
++ * omap3-n950-n9.dtsi - Device Tree file for Nokia N950 & N9 (common stuff)
++ *
++ * Written by: Aaro Koskinen <aaro.koskinen@iki.fi>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++/include/ "omap36xx.dtsi"
++
++/ {
++	cpus {
++		cpu@0 {
++			cpu0-supply = <&vcc>;
++		};
++	};
++
++	memory {
++		device_type = "memory";
++		reg = <0x80000000 0x40000000>; /* 1 GB */
++	};
++
++	rm6xx_vemmc: fixedregulator@0 {
++		compatible = "regulator-fixed";
++		regulator-name = "VEMMC";
++		regulator-min-microvolt = <2900000>;
++		regulator-max-microvolt = <2900000>;
++		gpio = <&gpio5 29 0>; /* gpio line 157 */
++		startup-delay-us = <150>;
++		enable-active-high;
++	};
++};
++
++&i2c1 {
++	clock-frequency = <2900000>;
++
++	twl: twl@48 {
++		reg = <0x48>;
++		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
++		interrupt-parent = <&intc>;
++	};
++};
++
++/include/ "twl4030.dtsi"
++
++&twl {
++	compatible = "ti,twl5031";
++};
++
++&twl_gpio {
++	ti,pullups	= <0x000001>; /* BIT(0) */
++	ti,pulldowns	= <0x008106>; /* BIT(1) | BIT(2) | BIT(8) | BIT(15) */
++};
++
++&i2c2 {
++	clock-frequency = <400000>;
++};
++
++&i2c3 {
++	clock-frequency = <400000>;
++};
++
++&mmc1 {
++	status = "disabled";
++};
++
++&mmc2 {
++	vmmc-supply = <&rm6xx_vemmc>;
++	bus-width = <4>;
++	ti,non-removable;
++};
++
++&mmc3 {
++	status = "disabled";
++};
++
++&usb_otg_hs {
++	interface-type = <0>;
++	usb-phy = <&usb2_phy>;
++	mode = <3>;
++	power = <50>;
++};
+diff --git a/arch/arm/boot/dts/omap3-n950.dts b/arch/arm/boot/dts/omap3-n950.dts
+new file mode 100644
+index 0000000..25fd9ec
+--- /dev/null
++++ b/arch/arm/boot/dts/omap3-n950.dts
+@@ -0,0 +1,18 @@
++/*
++ * omap3-n950.dts - Device Tree file for Nokia N950
++ *
++ * Written by: Aaro Koskinen <aaro.koskinen@iki.fi>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++/dts-v1/;
++
++/include/ "omap3-n950-n9.dtsi"
++
++/ {
++	model = "Nokia N950";
++	compatible = "nokia,omap3-n950", "ti,omap3";
++};
+-- 
+1.7.10.4
+
