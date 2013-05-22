@@ -1,42 +1,40 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [v2 0/6] CLK: tegra: convert device tree files to use CLK defines
-Date: Wed, 22 May 2013 09:20:04 -0600
-Message-ID: <519CE224.3010107@wwwdotorg.org>
-References: <1369127450-15203-1-git-send-email-hdoyu@nvidia.com><519B9B5D.4050402@wwwdotorg.org><20130522091248.b3acd9c56ab66535d75b8fd1@nvidia.com> <20130522.130730.1153046210420942555.hdoyu@nvidia.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 2/5] ARM: dts: OMAP2+: create a DT header for GPIO
+Date: Wed, 22 May 2013 09:26:51 -0600
+Message-ID: <519CE3BB.3040704@wwwdotorg.org>
+References: <1369232864-14460-1-git-send-email-florian.vaussard@epfl.ch> <1369232864-14460-3-git-send-email-florian.vaussard@epfl.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130522.130730.1153046210420942555.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1369232864-14460-3-git-send-email-florian.vaussard@epfl.ch>
+Sender: linux-omap-owner@vger.kernel.org
+To: Florian Vaussard <florian.vaussard@epfl.ch>
+Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2013 04:07 AM, Hiroshi Doyu wrote:
-> Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote @ Wed, 22 May 2013 08:12:48 +0200:
+On 05/22/2013 08:27 AM, Florian Vaussard wrote:
+> Define the OMAP_GPIO macro to conveniently use GPIO inside OMAP DT.
+> For example:
 > 
->> On Tue, 21 May 2013 18:05:49 +0200
->> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->>
->>> On 05/21/2013 03:10 AM, Hiroshi Doyu wrote:
->>>> This patchset converts device tree files to use CLK defines. This
->>>> version was updated along with the latest DT changes.
->>>>
->>>> The following changes since commit 7479d8bb5650f43053d0e82fa44db668cf968f11:
->>>>
->>>>   TESTING: Build Tegra USB as a module (2013-05-20 13:11:19 -0600)
->>>
->>> That commit is in my personal work-in-progress branch. This series
->>> should be based on Tegra's for-3.11/dt branch. This will make a
->>> difference (at least) in patch 6/6, where you've edited some DT nodes
->>> that don't yet exist upstream (i.e. Tegra's for-3.11/dt branch) and
->>> hence this series won't apply there.
->>
->> I'll rebase.
+> 	gpios = <&gpio6 3 0>;  /* GPIO 163 */
 > 
-> Rebased on Tegra's for-3.11/dt, including fix: [2/6] over 80 columns.
+> can be replaced by
 > 
-> If you want me to send patches again, please let me know.
+> 	gpios = OMAP_GPIO(163, 0);
 
-Yes, you should always send the patches for review on mailing lists.
+> diff --git a/include/dt-bindings/gpio/omap-gpio.h b/include/dt-bindings/gpio/omap-gpio.h
+
+> +#define OMAP_GPIO_0_BANK        gpio1
+> +#define OMAP_GPIO_1_BANK        gpio1
+> +#define OMAP_GPIO_2_BANK        gpio1
+> +#define OMAP_GPIO_3_BANK        gpio1
+
+There are a /lot/ of those. Is this really worth it?
+
+If the OMAP GPIO HW is already represented as a bunch of separate DT
+nodes which represent separate GPIO blocks, then I would have thought
+the syntax <&gpioN M 0> more directly represents what would be found in
+the HW manual? If not, surely the DT should have a single node to
+represent a single GPIO controller, which just happens to internally
+support a bunch of register arrays.
