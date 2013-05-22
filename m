@@ -1,137 +1,86 @@
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: Re: [PATCH 1/2] pinmux: Add TB10x pinmux driver
-Date: Wed, 22 May 2013 11:49:59 +0200
-Message-ID: <20130522094958.GA4789@ab42.lan>
-References: <CACRpkdZd0_W432od5565phhUcJMRWiV9vXX4QVF4osKkxstC0Q@mail.gmail.com>
- <20130429161725.GB30136@ab42.lan>
- <5182B557.4040804@wwwdotorg.org>
- <CACRpkdaxO0q_P2wJFy3zv4F-QM9dZk54qW8ft350XqcBt1Gr1w@mail.gmail.com>
- <20130508164123.GA10248@ab42.lan>
- <518AAF31.8080502@wwwdotorg.org>
- <20130510082521.GA2125@ab42.lan>
- <CACRpkdbkqzyr0r0CostUx9RYa=pyPoyVvvW+VxEzyAYSESxp_g@mail.gmail.com>
- <20130515094146.GA19925@ab42.lan>
- <CACRpkdY2R9uf0s6LGVCSPZmdNTDQV4RT65SuxCR_+hQ2eK90Yg@mail.gmail.com>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [v2 0/6] CLK: tegra: convert device tree files to use CLK
+ defines
+Date: Wed, 22 May 2013 12:07:30 +0200
+Message-ID: <20130522.130730.1153046210420942555.hdoyu@nvidia.com>
+References: <1369127450-15203-1-git-send-email-hdoyu@nvidia.com><519B9B5D.4050402@wwwdotorg.org><20130522091248.b3acd9c56ab66535d75b8fd1@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdY2R9uf0s6LGVCSPZmdNTDQV4RT65SuxCR_+hQ2eK90Yg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130522091248.b3acd9c56ab66535d75b8fd1-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 20, 2013 at 10:03:24AM +0200, Linus Walleij wrote:
-> On Wed, May 15, 2013 at 11:41 AM, Christian Ruppert
-> <christian.ruppert@abilis.com> wrote:
-> > On Tue, May 14, 2013 at 02:29:46PM +0200, Linus Walleij wrote:
->=20
-> >> Look at for example
-> >> drivers/pinctrl/pinctrl-abx500.c:
-> >>
-> >> static u8 abx500_get_mode(struct pinctrl_dev *pctldev, struct gpio=
-_chip *chip,
-> >>                           unsigned gpio)
-> >> {
-> >> (...)
-> >>         /* on ABx5xx, there is no GPIO0, so adjust the offset */
-> >>         unsigned offset =3D gpio - 1;
-> >>
-> >> As you can see, this driver, which does not use device tree,
-> >> is working around the same problem. Here the problem is that
-> >> the pins are numbered starting at 1 instead of 0, a very trivial
-> >> numberspace shuffleing.
-> >
-> > Let me see if I understand this right:
-> > In ABx5xx, the pin numbering is offset by 1 wrt. GPIO numbering?
->=20
-> No, sorry that the code is strange... The variable is named "gpio"
-> because that is the numbering used in the data sheet.
->=20
-> Think of "gpio" as "the number in the data sheet".
->=20
-> Then offset is calculated to start from 0.
+Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote @ Wed, 22 May 2013 08:12:48 +0200:
 
-OK, seems like I thoroughly misunderstood what you were saying and drew
-some wrong conclusions from that. In order to avoid confusion I'll
-delete everything related to this misunderstanding below.
+> On Tue, 21 May 2013 18:05:49 +0200
+> Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> 
+> > On 05/21/2013 03:10 AM, Hiroshi Doyu wrote:
+> > > This patchset converts device tree files to use CLK defines. This
+> > > version was updated along with the latest DT changes.
+> > > 
+> > > The following changes since commit 7479d8bb5650f43053d0e82fa44db668cf968f11:
+> > > 
+> > >   TESTING: Build Tegra USB as a module (2013-05-20 13:11:19 -0600)
+> > 
+> > That commit is in my personal work-in-progress branch. This series
+> > should be based on Tegra's for-3.11/dt branch. This will make a
+> > difference (at least) in patch 6/6, where you've edited some DT nodes
+> > that don't yet exist upstream (i.e. Tegra's for-3.11/dt branch) and
+> > hence this series won't apply there.
+> 
+> I'll rebase.
 
-> [...]
-> If you mean that you try to map the global GPIO number space
-> 1:1 on top of what your datasheet has, just *don't do that*.
-> Because we want to get rid of this global GPIO numberspace.
-> Alexandre is already working hard on this!
+Rebased on Tegra's for-3.11/dt, including fix: [2/6] over 80 columns.
 
-Thanks for the hint. Defining a global GPIO number space in the data
-sheet was one of our ideas but I agree it would be preferable to do awa=
-y
-with this completely and rather deal with GPIOs on a bank level.
+If you want me to send patches again, please let me know.
 
-> >  - The custom logic inside many pinctrl drivers would be confined i=
-n one
-> >    translation function the driver provides instead of being spread=
- out
-> >    all over the driver.
-> >  - "Sparse GPIO ranges" are easy to implement if required by the
-> >    platform/driver.
->=20
-> This looks good.
+The following changes since commit 4d0c81c723f78a2f7f6ef844ff8e1fd174180029:
 
-I think these advantages could be maintained through two alternative
-methods:
-1) Extend the GPIO ranges mechanism to allow for pin groups in addition
-   to contiguous pin ranges. This would be my preferred method since no
-   pin numbers are exposed to the user at all (neither kernel internal
-   nor physical). All pin numbering remains inside the driver. This
-   would be a clean version of what I did in the original patch.
-2) Add a physical-to-Linux-internal pin number translation callback to
-   the pinmux driver core interface. Map 1-to-1 if this callback is not
-   defined to maintain backwards compatibility. I don't like this
-   solution as much as 1) for the following reasons:
-     . It adds yet another number space to confuse things even more.
-     . Managing contiguous ranges becomes more difficult because ranges
-       contiguous in one number space (physical pins, Linux pins, GPIOs=
-)
-       are not necessarily contiguous in the others, requiring more
-       complex translation mechanisms.
-     . Some chips have matrix like number schemes (A1, A2, ..., B1, B1,
-       ...) etc. which cannot be directly addressed with this and would
-       need to introduce yet another layer of indirection.
-     . In cases where different package options need to be supported, a
-       translation table is required for each inside the driver. For
-       modern SOCs, each of these tables can easily be a few kB in size
-       and I don't know if we want to add that amount of static data to
-       the kernel, esp. because all but one of the tables are unused.
+  ARM: tegra: Add charger subnode to tps65090 node (2013-05-20 13:14:09 -0600)
 
-I don't know ACPI and one of the two solutions might not be applicable
-there.
+are available in the git repository at:
 
-> [...]
-> We need to iterate this discussion a few turns until I actually
-> understand your problem I think.
+  git://nv-tegra.nvidia.com/user/hdoyu/linux.git dt-replace-clkid3
 
-I agree. Let me resume my high level constraints again:
-- Align customer visible interfaces (such as device tree and
-  sys/class/gpio) with our hardware documentation.
-- Documentation can be augmented (e.g. a global GPIO number space
-  _could_ be added) but fundamentals (such as physical pin numbering,
-  our GPIO bank structure) must not be changed.
-- Several distinct naming schemes for the same thing (such as pins) are
-  only allowed if it is obvious to which naming scheme a given name
-  belongs. E.g. pins may have both a name (string) and a number (and
-  they actually have) but it is not allowed to have two different
-  numbers designating the same pin.
+for you to fetch changes up to 00535ac4b17af0691a73737a70b0cbd78a9d2262:
 
-Greetings,
-  Christian
+  ARM: tegra114: convert device tree files to use CLK defines (2013-05-22 12:58:04 +0300)
 
---=20
-  Christian Ruppert              ,          <christian.ruppert@abilis.c=
-om>
-                                /|
-  Tel: +41/(0)22 816 19-42     //|                 3, Chemin du Pr=E9-F=
-leuri
-                             _// | bilis Systems   CH-1228 Plan-les-Oua=
-tes
+----------------------------------------------------------------
+Hiroshi Doyu (6):
+      ARM: tegra20: create a DT header defining CLK IDs
+      ARM: tegra20: convert device tree files to use CLK defines
+      ARM: tegra30: create a DT header defining CLK IDs
+      ARM: tegra30: convert device tree files to use CLK defines
+      ARM: tegra114: create a DT header defining CLK IDs
+      ARM: tegra114: convert device tree files to use CLK defines
+
+ .../bindings/clock/nvidia,tegra114-car.txt         | 252 +--------------
+ .../bindings/clock/nvidia,tegra20-car.txt          | 154 +---------
+ .../bindings/clock/nvidia,tegra30-car.txt          | 211 +------------
+ arch/arm/boot/dts/tegra114.dtsi                    |  51 +--
+ arch/arm/boot/dts/tegra20-colibri-512.dtsi         |   4 +-
+ arch/arm/boot/dts/tegra20-harmony.dts              |   4 +-
+ arch/arm/boot/dts/tegra20-medcom-wide.dts          |   4 +-
+ arch/arm/boot/dts/tegra20-paz00.dts                |   7 +-
+ arch/arm/boot/dts/tegra20-plutux.dts               |   4 +-
+ arch/arm/boot/dts/tegra20-seaboard.dts             |   4 +-
+ arch/arm/boot/dts/tegra20-tec.dts                  |   4 +-
+ arch/arm/boot/dts/tegra20-trimslice.dts            |   4 +-
+ arch/arm/boot/dts/tegra20-ventana.dts              |   4 +-
+ arch/arm/boot/dts/tegra20-whistler.dts             |   4 +-
+ arch/arm/boot/dts/tegra20.dtsi                     | 116 +++----
+ arch/arm/boot/dts/tegra30-cardhu.dtsi              |   4 +-
+ arch/arm/boot/dts/tegra30.dtsi                     | 110 ++++---
+ include/dt-bindings/clk/tegra114-car.h             | 342 +++++++++++++++++++++
+ include/dt-bindings/clk/tegra20-car.h              | 158 ++++++++++
+ include/dt-bindings/clk/tegra30-car.h              | 265 ++++++++++++++++
+ 20 files changed, 963 insertions(+), 743 deletions(-)
+ create mode 100644 include/dt-bindings/clk/tegra114-car.h
+ create mode 100644 include/dt-bindings/clk/tegra20-car.h
+ create mode 100644 include/dt-bindings/clk/tegra30-car.h
