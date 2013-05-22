@@ -1,184 +1,86 @@
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
-Subject: [RFC/RFT] ARM: dts: add minimal DT support for Nokia N950 & N9
-Date: Wed, 22 May 2013 22:44:04 +0300
-Message-ID: <1369251845-29605-1-git-send-email-aaro.koskinen@iki.fi>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: Add ssm2518 support
+Date: Wed, 22 May 2013 17:07:56 -0500
+Message-ID: <20130522220756.GF1627@sirena.org.uk>
+References: <1369242013-27672-1-git-send-email-lars@metafoo.de>
+ <20130522175705.GU1627@sirena.org.uk> <519D0B84.70307@metafoo.de>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============4945488481126624509=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <519D0B84.70307@metafoo.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Grant Likely <grant.likely@linaro.org>, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Add minimal DT support for Nokia N950 & N9. The basic boot works. I can
-connect to both devices with USB networking & ssh. dmesg output looks OK.
 
-Functionality compared to the legacy board file:
+--===============4945488481126624509==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+5X6wed+orjucm7J"
+Content-Disposition: inline
 
-	- MMC not detected - reason unknown, any tips welcome
 
-	- OneNAND missing completely
+--+5X6wed+orjucm7J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
----
- arch/arm/boot/dts/Makefile           |    2 +
- arch/arm/boot/dts/omap3-n9.dts       |   18 ++++++++
- arch/arm/boot/dts/omap3-n950-n9.dtsi |   84 ++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/omap3-n950.dts     |   18 ++++++++
- 4 files changed, 122 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap3-n9.dts
- create mode 100644 arch/arm/boot/dts/omap3-n950-n9.dtsi
- create mode 100644 arch/arm/boot/dts/omap3-n950.dts
+On Wed, May 22, 2013 at 08:16:36PM +0200, Lars-Peter Clausen wrote:
+> On 05/22/2013 07:57 PM, Mark Brown wrote:
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b9f7121..e7e1c82 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -144,6 +144,8 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
- 	omap3-tobi.dtb \
- 	omap3-igep0020.dtb \
- 	omap3-igep0030.dtb \
-+	omap3-n9.dtb \
-+	omap3-n950.dtb \
- 	omap4-panda.dtb \
- 	omap4-panda-a4.dtb \
- 	omap4-panda-es.dtb \
-diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n9.dts
-new file mode 100644
-index 0000000..0553b33
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-n9.dts
-@@ -0,0 +1,18 @@
-+/*
-+ * omap3-n9.dts - Device Tree file for Nokia N9
-+ *
-+ * Written by: Aaro Koskinen <aaro.koskinen@iki.fi>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/dts-v1/;
-+
-+/include/ "omap3-n950-n9.dtsi"
-+
-+/ {
-+	model = "Nokia N9";
-+	compatible = "nokia,omap3-n9", "ti,omap3";
-+};
-diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-new file mode 100644
-index 0000000..3f983f7
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-@@ -0,0 +1,84 @@
-+/*
-+ * omap3-n950-n9.dtsi - Device Tree file for Nokia N950 & N9 (common stuff)
-+ *
-+ * Written by: Aaro Koskinen <aaro.koskinen@iki.fi>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/include/ "omap36xx.dtsi"
-+
-+/ {
-+	cpus {
-+		cpu@0 {
-+			cpu0-supply = <&vcc>;
-+		};
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x40000000>; /* 1 GB */
-+	};
-+
-+	rm6xx_vemmc: fixedregulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VEMMC";
-+		regulator-min-microvolt = <2900000>;
-+		regulator-max-microvolt = <2900000>;
-+		gpio = <&gpio5 29 0>; /* gpio line 157 */
-+		startup-delay-us = <150>;
-+		enable-active-high;
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <2900000>;
-+
-+	twl: twl@48 {
-+		reg = <0x48>;
-+		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-+		interrupt-parent = <&intc>;
-+	};
-+};
-+
-+/include/ "twl4030.dtsi"
-+
-+&twl {
-+	compatible = "ti,twl5031";
-+};
-+
-+&twl_gpio {
-+	ti,pullups	= <0x000001>; /* BIT(0) */
-+	ti,pulldowns	= <0x008106>; /* BIT(1) | BIT(2) | BIT(8) | BIT(15) */
-+};
-+
-+&i2c2 {
-+	clock-frequency = <400000>;
-+};
-+
-+&i2c3 {
-+	clock-frequency = <400000>;
-+};
-+
-+&mmc1 {
-+	status = "disabled";
-+};
-+
-+&mmc2 {
-+	vmmc-supply = <&rm6xx_vemmc>;
-+	bus-width = <4>;
-+	ti,non-removable;
-+};
-+
-+&mmc3 {
-+	status = "disabled";
-+};
-+
-+&usb_otg_hs {
-+	interface-type = <0>;
-+	usb-phy = <&usb2_phy>;
-+	mode = <3>;
-+	power = <50>;
-+};
-diff --git a/arch/arm/boot/dts/omap3-n950.dts b/arch/arm/boot/dts/omap3-n950.dts
-new file mode 100644
-index 0000000..25fd9ec
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-n950.dts
-@@ -0,0 +1,18 @@
-+/*
-+ * omap3-n950.dts - Device Tree file for Nokia N950
-+ *
-+ * Written by: Aaro Koskinen <aaro.koskinen@iki.fi>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/dts-v1/;
-+
-+/include/ "omap3-n950-n9.dtsi"
-+
-+/ {
-+	model = "Nokia N950";
-+	compatible = "nokia,omap3-n950", "ti,omap3";
-+};
--- 
-1.7.10.4
+> >> +	if (slots =3D=3D 0) {
+> >> +		return regmap_update_bits(ssm2518->regmap,
+> >> +			SSM2518_REG_SAI_CTRL1, SSM2518_SAI_CTRL1_SAI_MASK,
+> >> +			SSM2518_SAI_CTRL1_SAI_I2S);
+> >> +	}
 
+> > You've got quite a few single statement if () blocks with { } which
+> > shouldn't be there.
+> >=20
+
+> I prefer to only do this for single single-line statements.
+
+That's not the kernel coding style and I have to say these examples were
+all jumping out at me as weird, I was looking for an else clause or
+something.
+
+--+5X6wed+orjucm7J
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRnUG5AAoJELSic+t+oim95xgP/1KTrB2KGotNi+F2baTbJ3bG
+fmSTQhhQUitoN46ugYxGD3warq1ZVwIMcf0a3oehToy3eKacDHER2aWhMTwpRQ4X
+jRIWV3xhS2aToDylha0NTA+dGLwJNUmkNFaLfd83En7NzUMsq6vsJAYoiPI1R1aG
+zvtRctoy4JL4IcsZ+RMUBptW6Dwk0RwLb9lqs2romOmQEhCGpVkbc9Kv/ouBXuD5
+bjJImEL8wlt4H5I7p082Va1VGxfrjrFsxpJ9IvOvduxHrHTUrDTjGlZlQKjT26DO
+/1HVCPhcczFsY2yhmDS5hCEVd6s3+Zc29YU78KureHnxJbQ4cs14zgqv0ZUPAdUQ
+c/tPDTiBDYGQykByeuSbi96kf4o7MmammVCHul1/sY7dTD7+rNY3O3z3x1iEIAUN
+tLkyfvIGQ1ocyiPXj0rfbhK8+vuJdQZdfBRoQwsA8JHyzy+fwdfaBe9C+sK0d11V
+KKpsJFBO2RFTbWBR+0CTu8vYpioVLC16kz9KDDZrFK+DmlCA+/FxxqwtsdJP0rPC
+2Q23cmlpFlKYlznWQCu48xhPlWlxiLQZL3gRGRr+3ruw5uTMVnbltQTQyG/pgzxe
+CC3mc33XhrJupsJy4OwDOe+3JgEk8V2we7EsHizDnW8MdVLN1cDZqtxHSy/gPXq1
+fPVkGcqzzlQNJ6euSP1F
+=XQto
+-----END PGP SIGNATURE-----
+
+--+5X6wed+orjucm7J--
+
+--===============4945488481126624509==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============4945488481126624509==--
