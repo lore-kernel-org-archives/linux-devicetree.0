@@ -1,59 +1,89 @@
-From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 4/6] ARM: dts: imx6q: add pinctrl for WEIM NOR
-Date: Wed, 22 May 2013 16:12:00 +0800
-Message-ID: <519C7DD0.6050807@freescale.com>
-References: <60BA5429A0E1584BA3633194F6F993B50252C8D8@NA-MBX-03.mgc.mentorg.com>
+From: Linus Walleij <linus.walleij@stericsson.com>
+Subject: [PATCH] ARM: ux500: register LP5521 LEDs in the device tree
+Date: Wed, 22 May 2013 10:12:11 +0200
+Message-ID: <1369210331-18545-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <60BA5429A0E1584BA3633194F6F993B50252C8D8-0dz9ie/QGrnnlEkxMdpx1dQH9K4/4qFeAL8bYrjMMd8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Chaiken, Alison" <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Milo Kim <Milo.Kim@ti.com>, devicetree-discuss@lists.ozlabs.org, Bryan Wu <cooloney@gmail.com>, Gabriel Fernandez <gabriel.fernandez.st@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-5LqOIDIwMTPlubQwNeaciDIy5pelIDAwOjE2LCBDaGFpa2VuLCBBbGlzb24g5YaZ6YGTOgo+PiBk
-aWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnEuZHRzaSBiL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2lteDZxLmR0c2kKPj4gaW5kZXggZWQxMWJjZi4uZTYxNzRjNyAxMDA2NDQKPj4gLS0tIGEv
-YXJjaC9hcm0vYm9vdC9kdHMvaW14NnEuZHRzaQo+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9p
-bXg2cS5kdHNpCj4+IEBAIC0zMjMsNiArMzIzLDY0IEBACj4+ICAgCQkJCQkJPjsKPj4gICAJCQkJ
-CX07Cj4+ICAgCQkJCX07Cj4+ICsKPj4gKwkJCQl3ZWltIHsKPj4gKwkJCQkJcGluY3RybF93ZWlt
-X25vcl8xOiB3ZWltX25vcmdycC0xIHsKPj4gKwkJCQkJCWZzbCxwaW5zID08Cj4+ICsJCQkJCQkJ
-TVg2UV9QQURfRUlNX09FX19FSU1fT0VfQiAgICAgMHgxMAo+PiArCQkJCQkJCU1YNlFfUEFEX0VJ
-TV9SV19fRUlNX1JXICAgICAgIDB4MTAKPj4gKwkJCQkJCQlNWDZRX1BBRF9FSU1fQ1MwX19FSU1f
-Q1MwX0IgICAweDEwCj4+ICsJCQkJCQkJTVg2UV9QQURfRUlNX0xCQV9fRUlNX0xCQV9CICAgMHgx
-MAo+PiArCQkJCQkJCU1YNlFfUEFEX0VJTV9XQUlUX19FSU1fV0FJVF9CIDB4ODAwMAo+PiArCQkJ
-CQkJCU1YNlFfUEFEX0VJTV9CQ0xLX19FSU1fQkNMSyAgIDB4ODAwMAo+IFRoZSBmb2xsb3dpbmcg
-dmFsdWVzIGFyZSBkZXJpdmVkIHVzaW5nIFRhYmxlIDQtMSBvZiAiaS5NWCA2RHVhbC82UXVhZCBB
-cHBsaWNhdGlvbnMgUHJvY2Vzc29yIFJlZmVyZW5jZSBNYW51YWwgRG9jdW1lbnQgTnVtYmVyOiBJ
-TVg2RFFSTSBSZXYuIDEsIDA0LzIwMTMiOgo+Cj4gTVg2UV9QQURfRUlNX09FX19XRUlNX1dFSU1f
-T0UgICAgICAgIDB4YjBiMQo+IE1YNlFfUEFEX0VJTV9SV19fV0VJTV9XRUlNX1JXICAgICAgIDB4
-YjBiMQo+IE1YNlFfUEFEX0VJTV9DUzBfX1dFSU1fV0VJTV9DU18wICAgMHhiMGIxCj4gTVg2UV9Q
-QURfRUlNX1dBSVRfX1dFSU1fV0VJTV9XQUlUIDB4YjA2MAo+Cj4gKEkgd3JvdGUgYSBzaG9ydCBD
-IHByb2dyYW0gdGhhdCBwYXJzZXMgYSBodW1hbi1yZWFkYWJsZSBwcm9wZXJ0eSB0YWJsZSBmb3Ig
-dGhlIHBpbnMgYW5kIHNwaXRzIG91dCBoZXggdG8gZ2VuZXJhdGUgdGhlbS4pICAgSG93IGFyZSAw
-eDEwIHZhbHVlcyBjYWxjdWxhdGVkPyAgIEFyZSBzZXR0aW5ncwoweDEwIGlzIGZyb20gb3VyIGxl
-Z2FjeSBic3AgY29kZS4KSSB0aGluayB0aGUgMHhiMGIxIGlzIG9rIHRvby4KPiBmb3IgTVg2UV9Q
-QURfRUlNX0xCQV9fRUlNX0xCQV9CIGFuZCBNWDZRX1BBRF9FSU1fQkNMS19fRUlNX0JDTEsgdXNl
-ZnVsPyAgIFdlIHJ1biBOT1Igd2l0aG91dCB0aGVtLgp5ZXMuIHdlIG1heSByZW1vdmUgdGhlbS4K
-Pj4gKwkJCQkJCQlNWDZRX1BBRF9FSU1fQTE3X19FSU1fQUREUjE3IDB4YjBiMQo+PiArCQkJCQkJ
-CU1YNlFfUEFEX0VJTV9BMTZfX0VJTV9BRERSMTYgMHhiMGIxCj4+ICsJCQkJCQkJTVg2UV9QQURf
-RUlNX0RBMTVfX0VJTV9BRDE1ICAweGIwYjEKPj4gKwkJCQkJCQlNWDZRX1BBRF9FSU1fREExNF9f
-RUlNX0FEMTQgIDB4YjBiMQo+PiArCQkJCQkJCU1YNlFfUEFEX0VJTV9EQTEzX19FSU1fQUQxMyAg
-MHhiMGIxCj4gQXJlIHRoZXNlIG5hbWVzIGNvcnJlY3Q/ICAgICJNWDZRX1BBRF9FSU1fQTE2X19F
-SU1fQUREUjE2IiBidXQgIk1YNlFfUEFEX0VJTV9EQTE1X19FSU1fQUQxNSIgZXQgY2V0ZXJhPwo+
-CkkgdGhpbmsgaXQncyBjb3JyZWN0LgoKV2UgZG8gbm90IGhhdmUgdGhlIE1YNlFfUEFEX0VJTV9E
-QTE2X19FSU1fQUQxNi4KCnRoYW5rcwpIdWFuZyBTaGlqaWUKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxp
-c3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxh
-YnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+From: Linus Walleij <linus.walleij@linaro.org>
+
+Based on pending device tree support in the LP55xx drivers
+we can add the correct LED and channel configuration from the
+ux500 device tree for all HREF variants.
+
+Cc: Milo Kim <Milo.Kim@ti.com>
+Cc: Bryan Wu <cooloney@gmail.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ arch/arm/boot/dts/href.dtsi | 38 ++++++++++++++++++++++++++++++++------
+ 1 file changed, 32 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/boot/dts/href.dtsi b/arch/arm/boot/dts/href.dtsi
+index 62523f6..e315429 100644
+--- a/arch/arm/boot/dts/href.dtsi
++++ b/arch/arm/boot/dts/href.dtsi
+@@ -63,16 +63,42 @@
+ 		};
+ 
+ 		i2c@80128000 {
+-			lp5521@0x33 {
+-				compatible = "lp5521";
++			lp5521@33 {
++				compatible = "national,lp5521";
+ 				reg = <0x33>;
++				label = "lp5521_pri";
++				clock-mode = /bits/ 8 <2>;
++				chan0 {
++					led-cur = /bits/ 8 <0x2f>;
++					max-cur = /bits/ 8 <0x5f>;
++				};
++				chan1 {
++					led-cur = /bits/ 8 <0x2f>;
++					max-cur = /bits/ 8 <0x5f>;
++				};
++				chan2 {
++					led-cur = /bits/ 8 <0x2f>;
++					max-cur = /bits/ 8 <0x5f>;
++				};
+ 			};
+-
+-			lp5521@0x34 {
+-				compatible = "lp5521";
++			lp5521@34 {
++				compatible = "national,lp5521";
+ 				reg = <0x34>;
++				label = "lp5521_sec";
++				clock-mode = /bits/ 8 <2>;
++				chan0 {
++					led-cur = /bits/ 8 <0x2f>;
++					max-cur = /bits/ 8 <0x5f>;
++				};
++				chan1 {
++					led-cur = /bits/ 8 <0x2f>;
++					max-cur = /bits/ 8 <0x5f>;
++				};
++				chan2 {
++					led-cur = /bits/ 8 <0x2f>;
++					max-cur = /bits/ 8 <0x5f>;
++				};
+ 			};
+-
+ 			bh1780@0x29 {
+ 				compatible = "rohm,bh1780gli";
+ 				reg = <0x33>;
+-- 
+1.7.11.3
