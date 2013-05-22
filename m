@@ -1,35 +1,51 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] i2c: core: make it possible to match a pure device
- tree driver
-Date: Wed, 22 May 2013 09:56:44 +0200
-Message-ID: <CACRpkdae1chj9ZKuQV5MuiaicLUTKr4hZqr8rtjbB3Yjt+U_fg@mail.gmail.com>
-References: <1368476301-10495-1-git-send-email-linus.walleij@linaro.org>
+From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 1/6] drivers: bus: add a new driver for WEIM
+Date: Wed, 22 May 2013 16:01:24 +0800
+Message-ID: <519C7B54.40307@freescale.com>
+References: <60BA5429A0E1584BA3633194F6F993B50252C924@NA-MBX-03.mgc.mentorg.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1368476301-10495-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <60BA5429A0E1584BA3633194F6F993B50252C924-0dz9ie/QGrnnlEkxMdpx1dQH9K4/4qFeAL8bYrjMMd8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Chaiken, Alison" <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 13, 2013 at 10:18 PM, Linus Walleij
-<linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-
-> This tries to address an issue found when writing an MFD driver
-> for the Nomadik STw481x PMICs: as the platform is using device
-> tree exclusively I want to specify the driver matching like
-> this:
-(...)
-> ---
-> ChangeLog v1->v2:
-> - Use of_match_device() to determine if there is a DT match in
->   the probe code. If there is a match we pass NULL for the
->   id_table match parameter.
-
-Ping on this.
-
-v2 should be doing what Grant suggested...
-
-Yours,
-Linus Walleij
+5LqOIDIwMTPlubQwNeaciDIy5pelIDAwOjI5LCBDaGFpa2VuLCBBbGlzb24g5YaZ6YGTOgo+PiAr
+CXdlaW06IHdlaW0gYXQgMDIxYjgwMDAgewo+PiArCQljb21wYXRpYmxlID0gImZzbCxpbXg2cS13
+ZWltIjsKPj4gKwkJcmVnID08MHgwMjFiODAwMCAweDQwMDA+Owo+PiArCQlpbnRlcnJ1cHRzID08
+MCAxNCAweDA0PjsKPj4gKwkJY2xvY2tzID08JmNsa3MgMTk2PjsKPj4gKwkJI2FkZHJlc3MtY2Vs
+bHMgPTwyPjsKPj4gKwkJI3NpemUtY2VsbHMgPTwxPjsKPj4gKwkJcmFuZ2VzID08MCAwIDB4MDgw
+MDAwMDAgMHgwODAwMDAwMD47Cj4+ICsKPj4gKwkJbm9yIGF0IDAsMCB7Cj4+ICsJCQljb21wYXRp
+YmxlID0gImNmaS1mbGFzaCI7Cj4gV2h5IG5vdCB1c2UKPgo+IGNvbXBhdGlibGUgPSAibWljcm9u
+LE0yOVcyNTZHIiwgImNmaS1mbGFzaCI7Cj4KPiBzaW5jZSB0aGF0J3Mgd2hhdCdzIG9uIHRoZSBT
+QUJSRS1BSSBib2FyZD8KPgp3ZSBtYXkgdXNlIG90aGVyIE5PUi4gOikKc28gaXQncyBiZXR0ZXIg
+ZG8gbm90IGJpbmQgdGhlIHNwZWNpZmljIE5PUiwgZXZlbiBmb3IgU0FCUkUtQUkuCkkgZXZlbiB0
+ZXN0ZWQgU3BhbmlvbiBOT1IgaW4gdGhlIFNBQlJFLUFJIGJvYXJkcy4KPj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvYnVzL0tjb25maWcgYi9kcml2ZXJzL2J1cy9LY29uZmlnCj4+IGluZGV4IGIwNWVj
+YWIuLjBmOTk3YWYgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvYnVzL0tjb25maWcKPj4gKysrIGIv
+ZHJpdmVycy9idXMvS2NvbmZpZwo+PiBAQCAtNCw2ICs0LDE1IEBACj4+Cj4+ICAgbWVudSAiQnVz
+IGRldmljZXMiCj4+Cj4+ICtjb25maWcgSU1YX1dFSU0KPj4gKwl0cmlzdGF0ZSAiRnJlZXNjYWxl
+IEVJTSBEUklWRVIiCj4+ICsJZGVwZW5kcyBvbiBBUkNIX01YQyYmICBNVERfUEhZU01BUF9PRgo+
+IFNoYXduIEd1bzoKPiBJIGRvIG5vdCBzZWUgaG93IHRoaXMgZHJpdmVyIGRlcGVuZHMgb24gTVRE
+X1BIWVNNQVBfT0YuCj4KPiBwaHlzbWFwX29mIGlzIHRoZSBtb2R1bGUgdGhhdCBwcm92aWRlcyB0
+aGUgbWFwcGluZyBkcml2ZXIgZm9yIHRoZSBjZmktZmxhc2ggdGhhdCBhc3NvY2lhdGVzIG1lbW9y
+eSB3aXRoIHRoZSAicmVnIiBwcm9wZXJ0aWVzIG9mIHRoZSBub3Igbm9kZS4gICBIb3dldmVyLCBz
+aW5jZSBFSU0gY2FuIGFsc28gYXR0YWNoIEJsdWV0b290aCBtb2R1bGUgb3IgR1BTLCB0aGUgRUlN
+IGRyaXZlciBpdHNlbGYgY2VydGFpbmx5IGRvZXMgbm90IGRlcGVuZCBvbiB0aGUgbWFwIG1vZHVs
+ZS4KPgpvay4KCmkgd2lsbCByZW1vdmUgaXQgaW4gbmV4dCB2ZXJzaW9uLgoKdGhhbmtzIGZvciB0
+aGUgY29tbWVudCBhbmQgcmV2aWV3LgoKCkh1YW5nIFNoaWppZQoKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5n
+IGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5v
+emxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
