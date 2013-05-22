@@ -1,72 +1,137 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH] ASoC: Add ssm2518 support
-Date: Wed, 22 May 2013 20:16:36 +0200
-Message-ID: <519D0B84.70307@metafoo.de>
-References: <1369242013-27672-1-git-send-email-lars@metafoo.de>
- <20130522175705.GU1627@sirena.org.uk>
+From: Nishanth Menon <nm@ti.com>
+Subject: [RFC PATCH 0/4] regulator/OMAP: support VC/VP support in dts
+Date: Wed, 22 May 2013 13:18:33 -0500
+Message-ID: <1369246717-4167-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20130522175705.GU1627@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Grant Likely <grant.likely@linaro.org>, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kevin Hilman <khilman@deeprootsystems.com>, Tony Lindgren <tony@atomide.com>
+Cc: Nishanth Menon <nm@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2013 07:57 PM, Mark Brown wrote:
-> On Wed, May 22, 2013 at 07:00:13PM +0200, Lars-Peter Clausen wrote:
->> This patch adds a ASoC CODEC driver for the SSM2516. The SSM2516 is a stereo
->> Class-D audio amplifier with an I2S interface for audio in and a built-in
->> dynamic range control processor.
-> 
-> I'll apply this but 
+Hi,
 
-I'll send a v2 with your comments fixed.
+Texas Instrument's OMAP Processor have a dedicated hardware module
+which is customised to operate with Power Management IC(PMIC) over an dedicated
+I2C. The communication involves a few SoC internal modules as follows:
+PMIC - The power management chip on the dedicated I2C (sometimes called I2C_SR)
+Voltage controller - consists of an hardware i2c controller and interface
+customized for PMICs. VC consists of multiple VC Channels, each channel
+representing a variable voltage rail supply to the SoC.
+Voltage Processor(VP) - controls the voltage requests to VC channel
+SmartReflex(Adaptive Voltage control) - (SR/AVS)- specialized hardware block
+which can dynamically control device voltage without software intervention. This
+module communicates with VP.
 
-> 
->> +	if (slots == 0) {
->> +		return regmap_update_bits(ssm2518->regmap,
->> +			SSM2518_REG_SAI_CTRL1, SSM2518_SAI_CTRL1_SAI_MASK,
->> +			SSM2518_SAI_CTRL1_SAI_I2S);
->> +	}
-> 
-> You've got quite a few single statement if () blocks with { } which
-> shouldn't be there.
-> 
+In the simplest view, a simple voltage set operation is as follows:
+Vp->VC Channel -> VC -> PMIC
 
-I prefer to only do this for single single-line statements.
+Note, there may be dedicated PMIC per variable voltage rail OR PMICs which
+provide control for multiple SMPS supplying variable rails etc.
 
+In addition, there is an Adaptive Voltage Control (AVS) technique called
+SmartReflex which can operate (in a configuration called continous monitoring
+hardware loop or class 3 mode of operation), in which the SmartReflex block
+communicates with Voltage Processor.
 
-[...]
-> 
->> +	switch (freq) {
->> +	case 2048000:
-> 
-> Looks like the user can't select 0 for the SYSCLK, I'd expect that to be
-> possible for systems that can reprogram the clock so that they can avoid
-> having constraints set when they don't need them.
-> 
+We have an OMAP specific implementation in arch/arm/mach-omap2 which does not
+tree VC/VP or PMIC as Linux devices, but as data which is configured as needed.
 
-Makes sense.
+In this series, we introduce replacement approach which has support for only
+Device Tree as OMAP is transitioning completely away from non-DT approach.
 
->> +	} else if (i2c->dev.of_node) {
->> +		ssm2518->enable_gpio = of_get_gpio(i2c->dev.of_node, 0);
->> +		if (ssm2518->enable_gpio == -EPROBE_DEFER)
->> +			return -EPROBE_DEFER;
-> 
-> Why are other errors being ignored here?
+As an overview, the following approach is taken.
 
-To make the property optional. But I think it might be better to only allow
--ENOENT and treat everything else as an error in this case.
+PMIC is now the regulator driver - generic omap-pmic-regulator (patch #1)
+Voltage controller and voltage controller channel is handled by
+driver/power/avs/omap_vc.c
 
-Thanks,
-- Lars
+Voltage processor is handled by driver/power/avs/omap_vp.c
+
+Benefit of using drivers/power/avs is also to set the foundation to convert
+SmartReflex AVS into device tree based solution. (next stage).
+
+S/w dependency is as follows:
+Voltage controller <- Voltage Processor
+Voltage Processor registers with OMAP_PMIC it's controller operations
+OMAP_PMIC uses the controller operations to call vp which in turn calls VC to
+setup the communication chain.
+
+This allows us to maintain this as a module if needed as well (something our
+existing implementation was not capable  of doing).
+
+The series is also available here:
+https://github.com/nmenon/linux-2.6-playground/commits/devel/vc-vp-regulator-rfc
+git://github.com/nmenon/linux-2.6-playground.git
+branch: devel/vc-vp-regulator-rfc
+
+This depends on a few patches for cpufreq/clock node i added in, merged with
+3.10-rc2 master and a intermediate GPIO fix from Dan that I picked up available in
+branch devel/vc-vp-base
+
+Note: 
+1. AVS device tree conversion will have to depend on this due to dependency on VP
+2. Clock node strategy used here is based on implementation I had posted here:
+	http://marc.info/?t=136804008400001&r=1&w=2
+3. I chose OMAP4460 based PandaBoard ES platform as my development platform
+   and patch #4 in this series is an attempt to showcase how it will look like.
+   Rationale: weird PMIC configuration was used in PandaBoard ES. Ability to
+   handle that platform makes introduction to other platforms/SoCs trivial.
+   example patch for 4430 sdp: http://pastebin.com/SkAGB273
+4. Once this approach is agreed upon, I can do the dts changes for all SoCs
+   OMAP3-5 and will post a formal series.
+
+Related defects:
+  https://bugzilla.kernel.org/show_bug.cgi?id=58541
+  https://bugzilla.kernel.org/show_bug.cgi?id=58611
+
+Nishanth Menon (4):
+  regulator: Introduce OMAP regulator to control PMIC over VC/VP
+  PM / AVS: Introduce support for OMAP Voltage Controller(VC) with
+    device tree nodes
+  PM / AVS: Introduce support for OMAP Voltage Processor(VP) with
+    device tree nodes
+  HACK: OMAP4460/TPS/TWL/PandaBoardES - Enable VP regulator for cpufreq
+
+ .../devicetree/bindings/power/omap-vc.txt          |   99 ++
+ .../devicetree/bindings/power/omap-vp.txt          |   39 +
+ .../bindings/regulator/omap-pmic-regulator.txt     |  121 ++
+ arch/arm/boot/dts/omap4-panda-es.dts               |   55 +-
+ arch/arm/boot/dts/omap4.dtsi                       |   84 ++
+ arch/arm/boot/dts/omap4460.dtsi                    |    1 +
+ arch/arm/boot/dts/tps62361.dtsi                    |   90 ++
+ arch/arm/boot/dts/twl6030.dtsi                     |   68 +
+ drivers/power/avs/Kconfig                          |   15 +
+ drivers/power/avs/Makefile                         |   20 +
+ drivers/power/avs/omap_vc.c                        | 1508 ++++++++++++++++++++
+ drivers/power/avs/omap_vc.h                        |   67 +
+ drivers/power/avs/omap_vp.c                        |  886 ++++++++++++
+ drivers/regulator/Kconfig                          |   12 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/omap-pmic-regulator.c            |  554 +++++++
+ include/linux/regulator/omap-pmic-regulator.h      |  147 ++
+ 17 files changed, 3763 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/omap-vc.txt
+ create mode 100644 Documentation/devicetree/bindings/power/omap-vp.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/omap-pmic-regulator.txt
+ create mode 100644 arch/arm/boot/dts/tps62361.dtsi
+ create mode 100644 drivers/power/avs/omap_vc.c
+ create mode 100644 drivers/power/avs/omap_vc.h
+ create mode 100644 drivers/power/avs/omap_vp.c
+ create mode 100644 drivers/regulator/omap-pmic-regulator.c
+ create mode 100644 include/linux/regulator/omap-pmic-regulator.h
+
+Regards,
+Nishanth Menon
+-- 
+1.7.9.5
