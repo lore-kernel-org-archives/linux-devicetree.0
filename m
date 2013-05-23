@@ -1,189 +1,61 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH 26/63] dmaengine: ste_dma40: Supply full Device Tree
- parsing support
-Date: Thu, 23 May 2013 16:24:40 +0530
-Message-ID: <20130523105440.GH30200@intel.com>
-References: <1367591569-32197-1-git-send-email-lee.jones@linaro.org>
- <1367591569-32197-27-git-send-email-lee.jones@linaro.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: [GIT PULL] ARM cpu logical map init updates
+Date: Thu, 23 May 2013 12:49:56 +0100
+Message-ID: <20130523114956.GA3872@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1367591569-32197-27-git-send-email-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, arnd@arndb.de, linus.walleij@stericsson.com, srinidhi.kasagar@stericsson.com, Dan Williams <djbw@fb.com>, Per Forlin <per.forlin@stericsson.com>, Rabin Vincent <rabin@rab.in>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 03, 2013 at 03:32:12PM +0100, Lee Jones wrote:
-> Using the new DMA DT bindings and API, we can register the DMA40 driver
-> as Device Tree capable. Now, when a client attempts to allocate a
-> channel using the DMA DT bindings via its own node, we are able to parse
-> the request and allocate a channel in the correct manner.
-> 
-> Cc: Vinod Koul <vinod.koul@intel.com>
-> Cc: Dan Williams <djbw@fb.com>
-> Cc: Per Forlin <per.forlin@stericsson.com>
-> Cc: Rabin Vincent <rabin@rab.in>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Acked-by: Vinod Koul <vinod.koul@intel.com>
+Hi Russell,
 
---
-~Vinod
-> ---
->  .../devicetree/bindings/dma/ste-dma40.txt          |   62 ++++++++++++++++++++
->  drivers/dma/ste_dma40.c                            |   52 ++++++++++++++++
->  2 files changed, 114 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/ste-dma40.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/ste-dma40.txt b/Documentation/devicetree/bindings/dma/ste-dma40.txt
-> new file mode 100644
-> index 0000000..2679a87
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/ste-dma40.txt
-> @@ -0,0 +1,62 @@
-> +* DMA40 DMA Controller
-> +
-> +Required properties:
-> +- compatible: "stericsson,dma40"
-> +- reg: Address range of the DMAC registers
-> +- reg-names: Names of the above areas to use during resource look-up
-> +- interrupt: Should contain the DMAC interrupt number
-> +- #dma-cells: must be <3>
-> +
-> +Optional properties:
-> +- dma-channels: Number of channels supported by hardware - if not present
-> +		the driver will attempt to obtain the information from H/W
-> +
-> +Example:
-> +
-> +	dma: dma-controller@801C0000 {
-> +		compatible = "stericsson,db8500-dma40", "stericsson,dma40";
-> +		reg = <0x801C0000 0x1000  0x40010000 0x800>;
-> +		reg-names = "base", "lcpa";
-> +		interrupt-parent = <&intc>;
-> +		interrupts = <0 25 0x4>;
-> +
-> +		#dma-cells = <2>;
-> +		dma-channels = <8>;
-> +	};
-> +
-> +Clients
-> +Required properties:
-> +- dmas: Comma separated list of dma channel requests
-> +- dma-names: Names of the aforementioned requested channels
-> +
-> +Each dmas request consists of 4 cells:
-> +  1. A phandle pointing to the DMA controller
-> +  2. Device Type
-> +  3. The DMA request line number (only when 'use fixed channel' is set)
-> +  4. A 32bit mask specifying; mode, direction and endianess [NB: This list will grow]
-> +        0x00000001: Mode:
-> +                Logical channel when unset
-> +                Physical channel when set
-> +        0x00000002: Direction:
-> +                Memory to Device when unset
-> +                Device to Memory when set
-> +        0x00000004: Endianess:
-> +                Little endian when unset
-> +                Big endian when set
-> +        0x00000008: Use fixed channel:
-> +                Use automatic channel selection when unset
-> +                Use DMA request line number when set
-> +
-> +Example:
-> +
-> +	uart@80120000 {
-> +		compatible = "arm,pl011", "arm,primecell";
-> +		reg = <0x80120000 0x1000>;
-> +		interrupts = <0 11 0x4>;
-> +
-> +		dmas = <&dma 13 0 0x2>, /* Logical - DevToMem */
-> +		       <&dma 13 0 0x0>; /* Logical - MemToDev */
-> +		dma-names = "rx", "rx";
-> +
-> +		status = "disabled";
-> +	};
-> diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
-> index d7c2397..b77d508 100644
-> --- a/drivers/dma/ste_dma40.c
-> +++ b/drivers/dma/ste_dma40.c
-> @@ -18,6 +18,7 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/err.h>
->  #include <linux/of.h>
-> +#include <linux/of_dma.h>
->  #include <linux/amba/bus.h>
->  #include <linux/regulator/consumer.h>
->  #include <linux/platform_data/dma-ste-dma40.h>
-> @@ -2419,6 +2420,50 @@ static void d40_set_prio_realtime(struct d40_chan *d40c)
->  		__d40_set_prio_rt(d40c, d40c->dma_cfg.dev_type, false);
->  }
->  
-> +#define D40_DT_FLAGS_MODE(flags)       ((flags >> 0) & 0x1)
-> +#define D40_DT_FLAGS_DIR(flags)        ((flags >> 1) & 0x1)
-> +#define D40_DT_FLAGS_BIG_ENDIAN(flags) ((flags >> 2) & 0x1)
-> +#define D40_DT_FLAGS_FIXED_CHAN(flags) ((flags >> 3) & 0x1)
-> +
-> +static struct dma_chan *d40_xlate(struct of_phandle_args *dma_spec,
-> +				  struct of_dma *ofdma)
-> +{
-> +	struct stedma40_chan_cfg cfg;
-> +	dma_cap_mask_t cap;
-> +	u32 flags;
-> +
-> +	memset(&cfg, 0, sizeof(struct stedma40_chan_cfg));
-> +
-> +	dma_cap_zero(cap);
-> +	dma_cap_set(DMA_SLAVE, cap);
-> +
-> +	cfg.dev_type = dma_spec->args[0];
-> +	flags = dma_spec->args[2];
-> +
-> +	switch (D40_DT_FLAGS_MODE(flags)) {
-> +	case 0: cfg.mode = STEDMA40_MODE_LOGICAL; break;
-> +	case 1: cfg.mode = STEDMA40_MODE_PHYSICAL; break;
-> +	}
-> +
-> +	switch (D40_DT_FLAGS_DIR(flags)) {
-> +	case 0:
-> +		cfg.dir = STEDMA40_MEM_TO_PERIPH;
-> +		cfg.dst_info.big_endian = D40_DT_FLAGS_BIG_ENDIAN(flags);
-> +		break;
-> +	case 1:
-> +		cfg.dir = STEDMA40_PERIPH_TO_MEM;
-> +		cfg.src_info.big_endian = D40_DT_FLAGS_BIG_ENDIAN(flags);
-> +		break;
-> +	}
-> +
-> +	if (D40_DT_FLAGS_FIXED_CHAN(flags)) {
-> +		cfg.phy_channel = dma_spec->args[1];
-> +		cfg.use_fixed_channel = true;
-> +	}
-> +
-> +	return dma_request_channel(cap, stedma40_filter, &cfg);
-> +}
-> +
->  /* DMA ENGINE functions */
->  static int d40_alloc_chan_resources(struct dma_chan *chan)
->  {
-> @@ -3632,6 +3677,13 @@ static int __init d40_probe(struct platform_device *pdev)
->  
->  	d40_hw_init(base);
->  
-> +	if (np) {
-> +		err = of_dma_controller_register(np, d40_xlate, NULL);
-> +		if (err && err != -ENODEV)
-> +			dev_err(&pdev->dev,
-> +				"could not register of_dma_controller\n");
-> +	}
-> +
->  	dev_info(base->dev, "initialized\n");
->  	return 0;
->  
-> -- 
-> 1.7.10.4
-> 
+following the pull request for DT cpus/cpu bindings for arm/arm64
+updates and relative dts files updates:
+
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-May/170234.html
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-May/170242.html
+
+please pull the arm core code patches that enable the parsing of the
+new bindings. First two patches are two fixes, the first aimed also at
+the stable kernel, as marked in the commit log.
+
+Thank you very much indeed,
+Lorenzo
+
+The following changes since commit c7788792a5e7b0d5d7f96d0766b4cb6112d47d75:
+
+  Linux 3.10-rc2 (2013-05-20 14:37:38 -0700)
+
+are available in the git repository at:
+
+  git://linux-arm.org/linux-2.6-lp.git dt-init-map-updates
+
+for you to fetch changes up to 1b4a70726dfafb82ebedc017bf02c20edaf5dd29:
+
+  ARM: DT: kernel: DT cpus/cpu node bindings update (2013-05-23 12:35:51 +0100)
+
+----------------------------------------------------------------
+Lorenzo Pieralisi (3):
+      ARM: kernel: fix arm_dt_init_cpu_maps() to skip non-cpu nodes
+      ARM: kernel: fix __cpu_logical_map default initialization
+      ARM: DT: kernel: DT cpus/cpu node bindings update
+
+ arch/arm/include/asm/cputype.h  |   2 +
+ arch/arm/include/asm/smp_plat.h |   2 +-
+ arch/arm/kernel/devtree.c       | 149 ++++++++++++++++++++++++----------------
+ arch/arm/kernel/setup.c         |   2 +-
+ 4 files changed, 95 insertions(+), 60 deletions(-)
