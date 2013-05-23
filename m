@@ -1,63 +1,28 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH V2 1/6] drivers: bus: add a new driver for WEIM
-Date: Thu, 23 May 2013 13:55:05 +0200
-Message-ID: <20130523115505.GG32299@pengutronix.de>
-References: <1369296978-7669-1-git-send-email-b32955@freescale.com>
- <20130523092344.GF32299@pengutronix.de>
- <519DE2EE.1050006@freescale.com> <201305231153.38111.arnd@arndb.de>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: Re: [PATCH] of/base: fix typos
+Date: Thu, 23 May 2013 17:58:28 +0530
+Message-ID: <CA+V-a8sf-SVKiw6wjazV3VRd78efOU9qTO_qtr3RbOtrTifwgw@mail.gmail.com>
+References: <1367906651-5058-1-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201305231153.38111.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1367906651-5058-1-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXkgMjMsIDIwMTMgYXQgMTE6NTM6MzdBTSArMDIwMCwgQXJuZCBCZXJnbWFubiB3
-cm90ZToKPiBPbiBUaHVyc2RheSAyMyBNYXkgMjAxMywgSHVhbmcgU2hpamllIHdyb3RlOgo+ID4g
-5LqOIDIwMTPlubQwNeaciDIz5pelIDE3OjIzLCBTYXNjaGEgSGF1ZXIg5YaZ6YGTOgo+ID4gPiBP
-biBUaHUsIE1heSAyMywgMjAxMyBhdCAwNDoxNjoxM1BNICswODAwLCBIdWFuZyBTaGlqaWUgd3Jv
-dGU6Cj4gPiA+PiArCQkJPGNzLW51bWJlcj4gIDA8cGh5c2ljYWwgYWRkcmVzcyBvZiBtYXBwaW5n
-PiAgPHNpemU+Cj4gPiA+PiArCj4gPiA+PiArVGltaW5nIHByb3BlcnR5IGZvciBjaGlsZCBub2Rl
-cy4gSXQgaXMgbWFuZGF0b3J5LCBub3Qgb3B0aW9uYWwuCj4gPiA+PiArCj4gPiA+PiArIC0gZnNs
-LHdlaW0tY3MtdGltaW5nOglUaGUgdGltaW5nIGFycmF5LCBjb250YWlucyA2IHRpbWluZyB2YWx1
-ZXMgZm9yIHRoZQo+ID4gPj4gKwkJCWNoaWxkIG5vZGUuIFdlIGNhbiBnZXQgdGhlIENTIGluZGV4
-IGZyb20gdGhlIGNoaWxkCj4gPiA+PiArCQkJbm9kZSdzICJyZWciIHByb3BlcnR5Lgo+ID4gPiBU
-aGlzIHNob3VsZCBiZSBtb3JlIGRldGFpbGVkLCBzb21ldGhpbmcgbGlrZToKPiA+ID4KPiA+ID4g
-VGhpcyBjb250YWlucyB0aGUgdmFsdWVzIGZvciB0aGUgcmVnaXN0ZXJzIEVJTV9DU25HQ1IxLCBF
-SU1fQ1NuR0NSMiwKPiA+ID4gRUlNX0NTblJDUjEsIEVJTV9DU25SQ1IyLCBFSU1fQ1NuV0NSMSwg
-RUlNX0NTbldDUjIgaW4gdGhpcyBvcmRlci4KPiA+ID4KPiA+IAo+ID4gCj4gPiBkbyB5b3UgbWVh
-biBpIHNob3VsZCBhZGQgc29tZSBuZXcgcHJvcGVydGllcywgc3VjaCBhcwo+ID4gImZzbCxlaW1f
-Y3NucmNyMSIsICJmc2wsZWltX2NzbnJjcjIiIC4uLgo+IAo+IE5vLCB0aGUgcHJvcGVydHkgaXMg
-ZmluZSwganVzdCB1cGRhdGUgdGhlIGRvY3VtZW50YXRpb24gdGhlIHdheSB0aGF0Cj4gU2FzY2hh
-IHN1Z2dlc3RlZC4KClllcywgdGhhdCdzIHdoYXQgSSBtZWFudC4KCj4gCj4gPiA+PiArc3RhdGlj
-IGludCB3ZWltX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4gPj4gK3sK
-PiA+ID4+ICsJc3RydWN0IGlteF93ZWltICp3ZWltID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRl
-dik7Cj4gPiA+PiArCj4gPiA+PiArCWNsa19kaXNhYmxlX3VucHJlcGFyZSh3ZWltLT5jbGspOwo+
-ID4gPiBPbmNlIGFnYWluOiBJcyB0aGlzIGNsb2NrIG5lZWRlZCBmb3IgdGhlIGNoaWxkIGRldmlj
-ZXM/IElmIHllcywgeW91Cj4gPiA+IGNhbid0IGRpc2FibGUgaXQgaGVyZSBhbmQgbGVhdmUgdGhl
-IGNoaWxkIGRldmljZXMgcmVnaXN0ZXJlZC4KPiA+ID4KPiAKPiBCdXQgd2VpbV9yZW1vdmUgd2ls
-bCBub3QgYmUgY2FsbGVkIGFzIGxvbmcgYXMgdGhlcmUgYXJlIGNoaWxkcmVuCj4gcmVnaXN0ZXJl
-ZCwgcmlnaHQ/CgpCdXQgdGhlbiB3ZWltX3JlbW92ZSB3b3VsZCBuZXZlciBiZSBjYWxsZWQgc2lu
-Y2Ugbm9ib2R5IHVucmVnaXN0ZXJzIHRoZQpjaGlsZHJlbiwgcmlnaHQ/CgpTYXNjaGEKCi0tIApQ
-ZW5ndXRyb25peCBlLksuICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgfApJbmR1c3RyaWFsIExpbnV4IFNvbHV0aW9ucyAgICAgICAgICAgICAg
-ICAgfCBodHRwOi8vd3d3LnBlbmd1dHJvbml4LmRlLyAgfApQZWluZXIgU3RyLiA2LTgsIDMxMTM3
-IEhpbGRlc2hlaW0sIEdlcm1hbnkgfCBQaG9uZTogKzQ5LTUxMjEtMjA2OTE3LTAgICAgfApBbXRz
-Z2VyaWNodCBIaWxkZXNoZWltLCBIUkEgMjY4NiAgICAgICAgICAgfCBGYXg6ICAgKzQ5LTUxMjEt
-MjA2OTE3LTU1NTUgfApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0Bs
-aXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0
-cmVlLWRpc2N1c3MK
+Hi Rob/Grant,
+
+On Tue, May 7, 2013 at 11:34 AM, Prabhakar Lad
+<prabhakar.csengg@gmail.com> wrote:
+> From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+>
+> the function of_property_read_u8/16/32_array() has a parameter
+> out_values, but the description mentioned it as out_value. This
+> patch fixes this typo.
+>
+gentle ping.
+
+Regards,
+--Prabhakar Lad
