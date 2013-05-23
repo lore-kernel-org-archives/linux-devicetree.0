@@ -1,209 +1,112 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [RFC/RFT] ARM: dts: add minimal DT support for Nokia N950 & N9
-Date: Thu, 23 May 2013 09:22:04 +0200
-Message-ID: <519DC39C.6010809@ti.com>
-References: <1369251845-29605-1-git-send-email-aaro.koskinen@iki.fi>
+From: Haojian Zhuang <haojian.zhuang@linaro.org>
+Subject: Re: [PATCH 1/2] pinmux: Add TB10x pinmux driver
+Date: Thu, 23 May 2013 15:43:27 +0800
+Message-ID: <CAD6h2NT4FqmEsLvtTDwwDL2YVzXYNpw72hTOcSxSMvHLhWvFPQ@mail.gmail.com>
+References: <20130418090310.GA17636@ab42.lan>
+	<CACRpkdZd0_W432od5565phhUcJMRWiV9vXX4QVF4osKkxstC0Q@mail.gmail.com>
+	<20130429161725.GB30136@ab42.lan>
+	<5182B557.4040804@wwwdotorg.org>
+	<CACRpkdaxO0q_P2wJFy3zv4F-QM9dZk54qW8ft350XqcBt1Gr1w@mail.gmail.com>
+	<20130508164123.GA10248@ab42.lan>
+	<518AAF31.8080502@wwwdotorg.org>
+	<20130510082521.GA2125@ab42.lan>
+	<51942472.9010402@wwwdotorg.org>
+	<CACRpkdYtKr5w2=1sONG4Qn2TQue38nV7epWfzxNQz5rjSs0DZQ@mail.gmail.com>
+	<20130522142824.GC4789@ab42.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1369251845-29605-1-git-send-email-aaro.koskinen@iki.fi>
-Sender: linux-omap-owner@vger.kernel.org
-To: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sakari Ailus <sakari.ailus@iki.fi>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130522142824.GC4789@ab42.lan>
+Sender: linux-doc-owner@vger.kernel.org
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Shiraz HASHIM <shiraz.hashim@st.com>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Aaro,
+On 22 May 2013 22:28, Christian Ruppert <christian.ruppert@abilis.com> wrote:
+>
+> On Mon, May 20, 2013 at 10:10:33AM +0200, Linus Walleij wrote:
+> > On Thu, May 16, 2013 at 2:12 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> > > On 05/10/2013 02:25 AM, Christian Ruppert wrote:
+> >
+> > >> (*1) TB100 GPIO ranges are defined as a phandle to the I/O function
+> > >>      which provides all pins of a given GPIO port. This function is not
+> > >>      necessarily requested from pinctrl and GPIO ports may overlap with
+> > >>      other functions. The pin controller knows about this and provides
+> > >>      whatever GPIO pin is available after mapping other requested
+> > >>      functions.
+> > >> (*2) Here, the entire GPIOB port is explicitly requested by the GPIO
+> > >>      module, i.e. all pins of the port are made available as GPIOs.
+> > >
+> > > So I think all you're looking for is a way in DT to represent GPIO
+> > > ranges? I don't think that should be by string name, but rather numbers:
+> > >
+> > > (actually, doesn't pinctrl-simple already have this?)
+> >
+> > Now I'm ever more confused ... we already have this :-)
+> >
+> > It's not even pinctrl-simple-centric it is completely generic.
+> > The code is in drivers/gpio/gpiolib-of.c.
+> >
+> > It was written by Shiraz Hashin and Haojian Zhuang.
+> > At the time I augmented the core code quite a bit to make
+> > a good fit.
+>
+> I agree. Unluckily, it uses pinctrl-internal pin numbering which we
+> would have to make coherent with the physical pin numbers of the
+> individual packaging variants of the chip in order to expose them to
+> customers (see my previous mail at https://lkml.org/lkml/2013/5/22/207).
+>
+> Adapting the kernel-internal pin numbering in function of the product
+> variant doesn't seem such a good idea to me: All pin groups etc. will
+> have to be redefined for every product, a huge source of bugs and
+> unnecessary static data within the drivers.
+>I review two methods you mentioned in this mail.
 
-On 05/22/2013 09:44 PM, Aaro Koskinen wrote:
-> Add minimal DT support for Nokia N950 & N9. The basic boot works. I can
-> connect to both devices with USB networking & ssh. dmesg output looks OK.
+I think that you want to keep the logic simple. If so, I prefer you can
+check pinctrl-single driver first. All pins are defined in DTS instead.
 
-That's great! Tony will like that :-)
-It is too bad I just have a N900 :-(
+Here's the sample on Hi3620 SoC. And some pins even share one pinctrl
+registers.
 
-> Functionality compared to the legacy board file:
-> 
-> 	- MMC not detected - reason unknown, any tips welcome
+gpio controller:
+                        gpio-ranges = < &pmx0 3 94 1 &pmx0 7 96 1>;
+Each gpio pins in gpio controller could trace to the pin controller.
 
-On OMAP4 panda I used to have the similar issue due to the pbias not set
-properly.
+pin controller:
+                        pinctrl-single,gpio-range = <&range 0 3 0 &range 3 9 1
+                                                &range 12 1 0 &range 13 29 1
+                                                &range 43 1 0 &range 44 49 1
+                                                &range 94 1 1 &range 96 2 1>;
 
-> 	- OneNAND missing completely
+                        range: gpio-range {
+                                #pinctrl-single,gpio-range-cells = <3>;
+                        };
+If the pin could be configured as GPIO mode, we could trace to the
+gpio controller by this table. We can see those pins are not continuous,
+and it doesn't matter. And it could handle the relations between
+multiple gpio controllers and multiple pin controllers.
 
-The GPMC for OMAP3 support is pretty new, so maybe some tweak are still
-needed.
+These pin numbers are only used to bind GPIO number. Customers
+needn't to know the details. The device driver only set the pins to
+right mode (GPIO or any other) with right configuration. The device
+driver even needn't know the GPIO number and the pin number.
+Because everything is already handled. They only need the pinctrl
+array. I prefer you to check drivers/tty/serial/amba-pl011.c.
 
-Is it RFC because you are still working on the missing functionalities?
-Otherwise the patches are already good to be merged if you want.
-As soon as you don't break legacy boot, we can merge even half-working DTS.
+In some SoC, both pin26 & pin104 could be configured as GPIO3.
+We only need to define one in your DTS because only one could
+be effect in the real world.
 
-Thanks,
-Benoit
+And we abstract pin number from the register offset. You also needn't
+worry the pin name such as AA1, AB1. Those names are used to
+communicate with hardware guys, not software guys.
 
+If you want to redefine the pin groups because they're used as LCD pins,
+not MMC pins any more. You needn't have to modify the pin arrays in
+your pinctrl driver anymore. Because pinctrl-single driver don't define
+any pin arrays. You can only define pin arrays in your DTS file.
 
-> 
-> Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-> ---
->  arch/arm/boot/dts/Makefile           |    2 +
->  arch/arm/boot/dts/omap3-n9.dts       |   18 ++++++++
->  arch/arm/boot/dts/omap3-n950-n9.dtsi |   84 ++++++++++++++++++++++++++++++++++
->  arch/arm/boot/dts/omap3-n950.dts     |   18 ++++++++
->  4 files changed, 122 insertions(+)
->  create mode 100644 arch/arm/boot/dts/omap3-n9.dts
->  create mode 100644 arch/arm/boot/dts/omap3-n950-n9.dtsi
->  create mode 100644 arch/arm/boot/dts/omap3-n950.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index b9f7121..e7e1c82 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -144,6 +144,8 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
->  	omap3-tobi.dtb \
->  	omap3-igep0020.dtb \
->  	omap3-igep0030.dtb \
-> +	omap3-n9.dtb \
-> +	omap3-n950.dtb \
->  	omap4-panda.dtb \
->  	omap4-panda-a4.dtb \
->  	omap4-panda-es.dtb \
-> diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n9.dts
-> new file mode 100644
-> index 0000000..0553b33
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omap3-n9.dts
-> @@ -0,0 +1,18 @@
-> +/*
-> + * omap3-n9.dts - Device Tree file for Nokia N9
-> + *
-> + * Written by: Aaro Koskinen <aaro.koskinen@iki.fi>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +/include/ "omap3-n950-n9.dtsi"
-> +
-> +/ {
-> +	model = "Nokia N9";
-> +	compatible = "nokia,omap3-n9", "ti,omap3";
-> +};
-> diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> new file mode 100644
-> index 0000000..3f983f7
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
-> @@ -0,0 +1,84 @@
-> +/*
-> + * omap3-n950-n9.dtsi - Device Tree file for Nokia N950 & N9 (common stuff)
-> + *
-> + * Written by: Aaro Koskinen <aaro.koskinen@iki.fi>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +/include/ "omap36xx.dtsi"
-> +
-> +/ {
-> +	cpus {
-> +		cpu@0 {
-> +			cpu0-supply = <&vcc>;
-> +		};
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x80000000 0x40000000>; /* 1 GB */
-> +	};
-> +
-> +	rm6xx_vemmc: fixedregulator@0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VEMMC";
-> +		regulator-min-microvolt = <2900000>;
-> +		regulator-max-microvolt = <2900000>;
-> +		gpio = <&gpio5 29 0>; /* gpio line 157 */
-> +		startup-delay-us = <150>;
-> +		enable-active-high;
-> +	};
-> +};
-> +
-> +&i2c1 {
-> +	clock-frequency = <2900000>;
-> +
-> +	twl: twl@48 {
-> +		reg = <0x48>;
-> +		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-> +		interrupt-parent = <&intc>;
-> +	};
-> +};
-> +
-> +/include/ "twl4030.dtsi"
-> +
-> +&twl {
-> +	compatible = "ti,twl5031";
-> +};
-> +
-> +&twl_gpio {
-> +	ti,pullups	= <0x000001>; /* BIT(0) */
-> +	ti,pulldowns	= <0x008106>; /* BIT(1) | BIT(2) | BIT(8) | BIT(15) */
-> +};
-> +
-> +&i2c2 {
-> +	clock-frequency = <400000>;
-> +};
-> +
-> +&i2c3 {
-> +	clock-frequency = <400000>;
-> +};
-> +
-> +&mmc1 {
-> +	status = "disabled";
-> +};
-> +
-> +&mmc2 {
-> +	vmmc-supply = <&rm6xx_vemmc>;
-> +	bus-width = <4>;
-> +	ti,non-removable;
-> +};
-> +
-> +&mmc3 {
-> +	status = "disabled";
-> +};
-> +
-> +&usb_otg_hs {
-> +	interface-type = <0>;
-> +	usb-phy = <&usb2_phy>;
-> +	mode = <3>;
-> +	power = <50>;
-> +};
-> diff --git a/arch/arm/boot/dts/omap3-n950.dts b/arch/arm/boot/dts/omap3-n950.dts
-> new file mode 100644
-> index 0000000..25fd9ec
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omap3-n950.dts
-> @@ -0,0 +1,18 @@
-> +/*
-> + * omap3-n950.dts - Device Tree file for Nokia N950
-> + *
-> + * Written by: Aaro Koskinen <aaro.koskinen@iki.fi>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +/include/ "omap3-n950-n9.dtsi"
-> +
-> +/ {
-> +	model = "Nokia N950";
-> +	compatible = "nokia,omap3-n950", "ti,omap3";
-> +};
-> 
+Is it helpful to you?
 
+Regards
+Haojian
