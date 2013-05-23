@@ -1,53 +1,132 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v2 0/5] ARM: dts: OMAP2+: use preprocessor for device trees
-Date: Thu, 23 May 2013 12:00:22 -0400
-Message-ID: <519E3D16.2090003@ti.com>
-References: <1369323421-4180-1-git-send-email-florian.vaussard@epfl.ch>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] video: simplefb: add mode parsing function
+Date: Thu, 23 May 2013 10:27:54 -0600
+Message-ID: <519E438A.9030408@wwwdotorg.org>
+References: <1369296231-26597-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1369323421-4180-1-git-send-email-florian.vaussard@epfl.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Vaussard <florian.vaussard@epfl.ch>
-Cc: Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1369296231-26597-1-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 23 May 2013 11:36 AM, Florian Vaussard wrote:
-> Hello,
+On 05/23/2013 02:03 AM, Alexandre Courbot wrote:
+> The naming scheme of simplefb's mode is precise enough to allow building
+> the mode structure from it instead of using a static list of modes. This
+> patch introduces a function that does this. In case exotic modes that
+> cannot be represented from their name alone are needed, the static list
+> of modes is still available as a backup.
 > 
-> Following a similar proposal by Stephen Warren for tegra [1], this series
-> makes use of the C preprocessor when compiling OMAP DT files, and
-> accomplishes some improvements to improve overall readability.
-> 
-> Patch 1 is a preparation for the rest of the series.
-> Patch 2 uses existing constants for GPIOs. Patch 3 does the same for
-> IRQs. Patch 4 creates a new header for OMAP's padmux, and patch 5 uses
-> it to simplify pinctrl DT.
-> 
-> For all targets, the .dtb files were diff-tested before and after
-> applying the series to guarantee identity.
-> 
+> Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> Stephen, please note that the "r5g6b5" mode initially supported
+> by the driver becomes "b5g6r5" with the new function. This is because
+> the least significant bits are defined first in the string - this
+> makes parsing much easier, notably for modes which do not fill whole
+> bytes (e.g. 15 bit modes). I hope this is not a problem - it's probably
+> better to do the change now while the driver is still new.
 
-> 
-> Florian Vaussard (5):
->   ARM: dts: OMAP2+: use #include for all device trees
->   ARM: dts: OMAP2+: use existing constants for GPIOs
->   ARM: dts: OMAP4/5: use existing constants for IRQs
->   ARM: dts: OMAP2+: header file for pinctrl constants
->   ARM: dts: OMAP2+: use pinctrl constants
-> 
-I just quickly scanned the series and patches looks
-good to my eyes. Its a nice clean-up to align OMAP
-dts files with others.
+Hmm. searchin Google (and even looking at the VDPAU spec I myself wrote)
+does imply that format names like this do typically list the LSBs first.
 
-FWIW,
-Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+I guess the problem is that when I decided to change from rgb565 to a
+machine-parsable r5g6b5, I didn't think enough to realize that the field
+order in the name "rgb565" didn't follow the same convention as when you
+write out the fields in the style "r5g6b5"/"b5g6r5":-(
+
+I guess this driver and DT binding are only in linux-next and targeted
+at 3.11, and didn't make 3.10, so I'd assert it's probably still OK to
+change the DT binding, if this patch also gets into 3.11.
+
+The only two users of it I know are:
+
+a) From U-Boot on the Raspberry Pi, and those patches haven't been
+accepted into U-Boot yet.
+
+b) From U-Boot on the Samsung ARM Chromebook yet. I know Olof built a
+U-Boot that uses them and it'd linked from the chromiumos.org web pages.
+I assume it's not too horrible for him to update them. I don't know how
+widely the patch that enables simple-fb in that binary is distributed
+though. Olof, care to comment on how much pain it'd be to change?
+
+> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+
+> -- format: The format of the framebuffer surface. Valid values are:
+> -  - r5g6b5 (16-bit pixels, d[15:11]=r, d[10:5]=g, d[4:0]=b).
+> +- format: The format of the framebuffer surface. Described as a sequence of
+> +	channel/nbbits pairs, where each pair describes how many bits are used
+
+Change nbbits to bitcount, num-bits, nr-bits?
+
+> +	by a given color channel. Value channels are "r" (red), "g" (green),
+> +	"b" (blue) and "a" (alpha).
+
+I think you'll need "x" too, to represent any gaps/unused bits.
+
+> Channels are listed starting in bit-significance order.
+
+I would explicitly add ", starting from the LSB." to the end there.
+Perhaps drop "-significance" too?
+
+> For instance, a format named "r5g6b5" describes
+> +	a 16-bit format where red is encoded in the 5 less significant bits,
+> +	green in the 6 following ones, and blue in the 5 last:
+> +				BBBBBGGG GGGRRRRR
+> +				^               ^
+> +			       MSB             LSB
+
+> diff --git a/drivers/video/simplefb.c b/drivers/video/simplefb.c
+
+> +static struct simplefb_format *simplefb_parse_format(struct device *dev,
+> +						     const char *str)
+> +{
+> +	struct simplefb_format *format;
+> +	unsigned int cpt = 0;
+
+What does cpt mean? Something like bit or bitnum or bitindex might be
+more descriptive.
+
+> +	unsigned int i = 0;
+> +
+> +	format = devm_kzalloc(dev, sizeof(*format), GFP_KERNEL);
+> +	if (!format)
+> +		return ERR_PTR(-ENOMEM);
+
+Can we just add some storage into the FB object itself for this, so we
+don't need to make a special allocation? The first parameter to
+framebuffer_alloc() allows allocating that, although you would have to
+rejig the order of probe() a bit to do that:-( Perhaps it's fine as you
+wrote it.
+
+> +		field->offset = cpt;
+> +		field->length = c - '0';
+
+What about R10G10B10A2? Something like strtol() is needed here.
+
+> +
+> +		cpt += field->length;
+> +	}
+> +
+> +	format->bits_per_pixel = ((cpt + 7) / 8) * 8;
+
+Should this error-check that isn't > 32?
+
+> +	if (!params->format || IS_ERR(params->format)) {
+
+That's just saying IS_ERR_OR_NULL(params->format). It'd be better to
+pick one thing to represent errors; either NULL or an error-pointer. I
+think having simplefb_parse_format() just return NULL on error would be
+best; the caller can't really do anything useful with the information
+anyway.
