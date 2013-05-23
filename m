@@ -1,157 +1,29 @@
-From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] video: simplefb: add mode parsing function
-Date: Thu, 23 May 2013 17:03:51 +0900
-Message-ID: <1369296231-26597-1-git-send-email-acourbot@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: [PATCH 0/2] ARM: dts: updates for omap3-overo
+Date: Thu, 23 May 2013 10:09:10 +0200
+Message-ID: <1369296552-22281-1-git-send-email-florian.vaussard@epfl.ch>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Florian Vaussard <florian.vaussard@epfl.ch>
 List-Id: devicetree@vger.kernel.org
 
-The naming scheme of simplefb's mode is precise enough to allow building
-the mode structure from it instead of using a static list of modes. This
-patch introduces a function that does this. In case exotic modes that
-cannot be represented from their name alone are needed, the static list
-of modes is still available as a backup.
+Hello,
 
-Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Stephen, please note that the "r5g6b5" mode initially supported
-by the driver becomes "b5g6r5" with the new function. This is because
-the least significant bits are defined first in the string - this
-makes parsing much easier, notably for modes which do not fill whole
-bytes (e.g. 15 bit modes). I hope this is not a problem - it's probably
-better to do the change now while the driver is still new.
+This series adds support to omap3-overo for the onboard NAND memory, and
+restore the default trigger for the pwm-led provided by TWL4030.
 
- .../bindings/video/simple-framebuffer.txt          | 12 +++-
- drivers/video/simplefb.c                           | 66 +++++++++++++++++++++-
- 2 files changed, 73 insertions(+), 5 deletions(-)
+Best regards,
 
-diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-index 3ea4605..f933b3d 100644
---- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-+++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-@@ -10,8 +10,16 @@ Required properties:
- - width: The width of the framebuffer in pixels.
- - height: The height of the framebuffer in pixels.
- - stride: The number of bytes in each line of the framebuffer.
--- format: The format of the framebuffer surface. Valid values are:
--  - r5g6b5 (16-bit pixels, d[15:11]=r, d[10:5]=g, d[4:0]=b).
-+- format: The format of the framebuffer surface. Described as a sequence of
-+	channel/nbbits pairs, where each pair describes how many bits are used
-+	by a given color channel. Value channels are "r" (red), "g" (green),
-+	"b" (blue) and "a" (alpha). Channels are listed starting in
-+	bit-significance order. For instance, a format named "r5g6b5" describes
-+	a 16-bit format where red is encoded in the 5 less significant bits,
-+	green in the 6 following ones, and blue in the 5 last:
-+				BBBBBGGG GGGRRRRR
-+				^               ^
-+			       MSB             LSB
- 
- Example:
- 
-diff --git a/drivers/video/simplefb.c b/drivers/video/simplefb.c
-index 8105c3d..1a1be71 100644
---- a/drivers/video/simplefb.c
-+++ b/drivers/video/simplefb.c
-@@ -21,6 +21,7 @@
-  */
- 
- #include <linux/errno.h>
-+#include <linux/ctype.h>
- #include <linux/fb.h>
- #include <linux/io.h>
- #include <linux/module.h>
-@@ -82,8 +83,64 @@ struct simplefb_format {
- 	struct fb_bitfield transp;
- };
- 
--struct simplefb_format simplefb_formats[] = {
--	{ "r5g6b5", 16, {11, 5}, {5, 6}, {0, 5}, {0, 0} },
-+static struct simplefb_format *simplefb_parse_format(struct device *dev,
-+						     const char *str)
-+{
-+	struct simplefb_format *format;
-+	unsigned int cpt = 0;
-+	unsigned int i = 0;
-+
-+	format = devm_kzalloc(dev, sizeof(*format), GFP_KERNEL);
-+	if (!format)
-+		return ERR_PTR(-ENOMEM);
-+
-+	while (str[i] != 0) {
-+		struct fb_bitfield *field = 0;
-+		char c = str[i++];
-+
-+		switch (c) {
-+		case 'r':
-+		case 'R':
-+			field = &format->red;
-+			break;
-+		case 'g':
-+		case 'G':
-+			field = &format->green;
-+			break;
-+		case 'b':
-+		case 'B':
-+			field = &format->blue;
-+			break;
-+		case 'a':
-+		case 'A':
-+			field = &format->transp;
-+			break;
-+		default:
-+			goto error;
-+		}
-+
-+		c = str[i++];
-+		if (c == 0 || !isdigit(c))
-+			goto error;
-+
-+		field->offset = cpt;
-+		field->length = c - '0';
-+
-+		cpt += field->length;
-+	}
-+
-+	format->bits_per_pixel = ((cpt + 7) / 8) * 8;
-+	format->name = str;
-+	return format;
-+
-+error:
-+	dev_err(dev, "Invalid format string\n");
-+	return ERR_PTR(-EINVAL);
-+}
-+
-+/* if you use exotic modes that simplefb_parse_format cannot decode, you can
-+   specify them here. */
-+static struct simplefb_format simplefb_formats[] = {
- };
- 
- struct simplefb_params {
-@@ -131,7 +188,10 @@ static int simplefb_parse_dt(struct platform_device *pdev,
- 		params->format = &simplefb_formats[i];
- 		break;
- 	}
--	if (!params->format) {
-+	if (!params->format)
-+		params->format = simplefb_parse_format(&pdev->dev, format);
-+
-+	if (!params->format || IS_ERR(params->format)) {
- 		dev_err(&pdev->dev, "Invalid format value\n");
- 		return -EINVAL;
- 	}
+Florian
+
+Florian Vaussard (2):
+  ARM: dts: Add omap3-overo NAND flash memory binding
+  ARM: dts: omap3-overo: add default trigger for TWL4030 LED
+
+ arch/arm/boot/dts/omap3-overo.dtsi |   51 ++++++++++++++++++++++++++++++++++++
+ 1 files changed, 51 insertions(+), 0 deletions(-)
+
 -- 
-1.8.2.3
+1.7.5.4
+
