@@ -1,45 +1,53 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/7] USB: gadget: atmel_usba: move global struct usba_ep
- usba_ep to struct usba_udc
-Date: Thu, 23 May 2013 12:22:32 +0200
-Message-ID: <519DEDE8.3040503@atmel.com>
-References: <20130520162149.GC9937@game.jcrosoft.org> <1369067160-3230-1-git-send-email-plagnioj@jcrosoft.com> <519D7D9F.1070109@atmel.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: [GIT PULL] ARM DT cpus/cpu bindings documentation updates
+Date: Thu, 23 May 2013 11:33:15 +0100
+Message-ID: <20130523103315.GA2866@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <519D7D9F.1070109-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/05/2013 04:23, Bo Shen :
-> Hi J,
->
-> On 5/21/2013 00:25, Jean-Christophe PLAGNIOL-VILLARD wrote:
->> so we can have multiple usb gadget instance
->>
->> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
->> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->> Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->
-> For this series, test OK on at91sam9m10g45ek and at91sam9x5ek board
-> Tested-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Hi Grant, Rob,
 
-After reading this v4 series, it seems good. So, on the whole series:
+please pull the cpus/cpu nodes bindings updates for ARM. This pull
+request completes my previous pull request:
 
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-May/169110.html
 
-> PS: When do testing, we need build in or choose as module: "Device
-> Drivers ---> Generic Target Core Mod (TCM) and ConfigFS infrastructure"
+with the required changes for cpus/cpu nodes.
 
-Thanks a lot to you, Bo and Jean-Christophe.
+Thanks a lot,
+Lorenzo
 
-Bye,
--- 
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The following changes since commit c7788792a5e7b0d5d7f96d0766b4cb6112d47d75:
+
+  Linux 3.10-rc2 (2013-05-20 14:37:38 -0700)
+
+are available in the git repository at:
+
+  git://linux-arm.org/linux-2.6-lp.git dt-cpus-bindings
+
+for you to fetch changes up to 8e11f862d6a5491bb5f8ef73e13cfd66562e7be3:
+
+  Documentation: devicetree: arm: cpus/cpu nodes bindings updates (2013-05-23 10:46:46 +0100)
+
+----------------------------------------------------------------
+Lorenzo Pieralisi (1):
+      Documentation: devicetree: arm: cpus/cpu nodes bindings updates
+
+ Documentation/devicetree/bindings/arm/cpus.txt | 459 ++++++++++++++++++++++---
+ 1 file changed, 412 insertions(+), 47 deletions(-)
