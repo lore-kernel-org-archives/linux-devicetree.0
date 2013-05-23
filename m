@@ -1,62 +1,38 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/1] ARM: at91: at91sam9n12: move external irq declatation to
- DT
-Date: Fri, 24 May 2013 00:59:16 +0200
-Message-ID: <1369349956-22985-1-git-send-email-plagnioj@jcrosoft.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 4/6] i2c: stu300: do not request a specific clock name
+Date: Fri, 24 May 2013 01:09:46 +0200
+Message-ID: <20130523230943.GA3645@katana>
+References: <1369330288-14856-1-git-send-email-linus.walleij@stericsson.com>
+ <1369330288-14856-5-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1369330288-14856-5-git-send-email-linus.walleij@stericsson.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@stericsson.com>
+Cc: Mike Turquette <mturquette@linaro.org>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/at91sam9n12.dtsi |    1 +
- arch/arm/mach-at91/at91sam9n12.c   |    6 ------
- 2 files changed, 1 insertion(+), 6 deletions(-)
+On Thu, May 23, 2013 at 07:31:26PM +0200, Linus Walleij wrote:
+> From: Linus Walleij <linus.walleij@linaro.org>
+> 
+> We have used the default clock associated with the block
+> for a long time, only heuristics in the clock system has
+> made this work anyway. This needs to be done away with as
+> we start probing this driver and its clocks exclusively
+> from the device tree.
+> 
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-index 566af32..d864f7a9 100644
---- a/arch/arm/boot/dts/at91sam9n12.dtsi
-+++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-@@ -60,6 +60,7 @@
- 				compatible = "atmel,at91rm9200-aic";
- 				interrupt-controller;
- 				reg = <0xfffff000 0x200>;
-+				atmel,external-irqs = <31>;
- 			};
- 
- 			ramc0: ramc@ffffe800 {
-diff --git a/arch/arm/mach-at91/at91sam9n12.c b/arch/arm/mach-at91/at91sam9n12.c
-index 13cdbcd..c7d670d1 100644
---- a/arch/arm/mach-at91/at91sam9n12.c
-+++ b/arch/arm/mach-at91/at91sam9n12.c
-@@ -223,13 +223,7 @@ static void __init at91sam9n12_map_io(void)
- 	at91_init_sram(0, AT91SAM9N12_SRAM_BASE, AT91SAM9N12_SRAM_SIZE);
- }
- 
--void __init at91sam9n12_initialize(void)
--{
--	at91_extern_irq = (1 << AT91SAM9N12_ID_IRQ0);
--}
--
- AT91_SOC_START(at91sam9n12)
- 	.map_io = at91sam9n12_map_io,
- 	.register_clocks = at91sam9n12_register_clocks,
--	.init = at91sam9n12_initialize,
- AT91_SOC_END
--- 
-1.7.10.4
+Acked-by: Wolfram Sang <wsa@the-dreams.de>
