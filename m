@@ -1,79 +1,43 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] video: simplefb: add mode parsing function
-Date: Thu, 23 May 2013 21:42:57 +0200
-Message-ID: <CAMuHMdWLvWcQXCyvag1DCU=6De2_8US6Zj2VhnZ6Fo5UKwG5WA@mail.gmail.com>
-References: <1369296231-26597-1-git-send-email-acourbot@nvidia.com>
- <519E438A.9030408@wwwdotorg.org>
- <CAMuHMdVs4hy7dWAGxN51XP3YuWBY6rk22Z6tCU+-HujZH4jL2Q@mail.gmail.com>
- <519E6C37.2010706@wwwdotorg.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: Pulls and drive strengths in the pinctrl world
+Date: Thu, 23 May 2013 15:39:55 -0600
+Message-ID: <519E8CAB.7000807@wwwdotorg.org>
+References: <CAD=FV=V9h3RUfvAxj8k2EbYXYPO4FfoNwh=f=dno5ZBUFYeG0w@mail.gmail.com> <1426243.rhL8pXoalu@flatron> <20130518081847.GD1952@game.jcrosoft.org> <1855701.nJQdRzsWsg@flatron> <20130518163001.GE1952@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <519E6C37.2010706-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130518163001.GE1952@game.jcrosoft.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Doug Anderson <dianders@google.com>, Kukjin Kim <kgene.kim@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 23, 2013 at 9:21 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 05/23/2013 10:57 AM, Geert Uytterhoeven wrote:
->> On Thu, May 23, 2013 at 6:27 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->>>> +
->>>> +             cpt += field->length;
->>>> +     }
->>>> +
->>>> +     format->bits_per_pixel = ((cpt + 7) / 8) * 8;
->>>
->>> Should this error-check that isn't > 32?
->>
->> So pixels can't be larger than 32 bits?
->> IIRC, some SGI and Sun graphics cards had e.g. 80 bit pixels (incl. Z buffer).
+On 05/18/2013 10:30 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 16:57 Sat 18 May     , Tomasz Figa wrote:
+...
+>> Personally I'd prefer a solution with separate property for each 
+>> parameter, because it's much more flexible and allows shorter lines, 
+>> making device tree sources more readable.
 >
-> That's a good point.
->
-> Out of curiosity, how does the FB core treat these format definitions?
-> Are they expected to fit into a 16-/32-/64-/128- bit power-of-two
-> bit-size, or are they treated as a string of bytes that get serialized
-> into memory LSB first (or perhaps MSB first on BE systems?)
->
-> The difference would be that from a CPU perspective only, if you pack
-> the RGB components into a u32, then write that to RAM as a u32, then the
-> in-memory byte-by-byte order is different on different endian systems,
-> whereas if the FB core treats it as a series of bytes only, then
-> presumably the in-memory byte-by-byte order is identical irrespective of
-> host CPU endianness.
+> we already discuss this on the ML the one property perline will endup with
+> 100s of node if not 1000s so we all do agree we do not want this in the DT
 
-I don't think any of the current FB drivers support these.
+If you introduce s second level of nodes into the DT like the Tegra
+bindings do, that's really not an issue.
 
-Conceptually, a (packed) frame buffer is just a block of memory,
-containing lines
-of line_length bytes.
-Each line contains xres_virtual pixels, each of bits_per_pixel bits.
+For Tegra, each pinctrl state is a node.
 
-As long as bits_per_pixel is an integer multiple of 8, it's
-more-or-less well-defined.
-We did have issues with endianness on e.g. bits_per_pixel = 4 (2 pixels in
-one byte, which order?), bits_per_pixel = 16 (byteswapped RGB565), etc.
-If bits_per_pixel is larger than 32, and not an integer multiple of 32,
-you indeed can have more of them...
+Within this, there are a bunch of child nodes, each of which applies to
+n pins, and sets up an arbitrary set of parameters; some nodes can set
+up mux functions, some can set up e.g. pull-up, etc. The same pin can be
+affected by multiple of these nodes.
 
-Gr{oetje,eeting}s,
+This all allows you to group together common settings and avoid
+duplication and having too many nodes.
 
-                        Geert
+Then, client drivers' pincrl-0 properties just reference a single
+top-level "state" node, not each of the 10/100/... child nodes.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Take a look at something like nodes state_i2xmux_* in
+arch/arm/boot/dts/tegra20-seaboard.dts.
