@@ -1,63 +1,290 @@
-From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH V2 6/6] ARM: dts: imx6qdl: enable the WEIM NOR
-Date: Thu, 23 May 2013 16:16:18 +0800
-Message-ID: <1369296978-7669-7-git-send-email-b32955@freescale.com>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCBWMiAxLzZdIGRyaXZlcnM6IGJ1czogYWRkIGEgbmV3IGRy?=
+ =?UTF-8?B?aXZlciBmb3IgV0VJTQ==?=
+Date: Thu, 23 May 2013 12:46:46 +0400
+Message-ID: <1369298806.527290461@f60.mail.ru>
 References: <1369296978-7669-1-git-send-email-b32955@freescale.com>
+ <1369296978-7669-2-git-send-email-b32955@freescale.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1369296978-7669-1-git-send-email-b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1369296978-7669-2-git-send-email-b32955@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?SHVhbmcgU2hpamll?= <b32955@freescale.com>
+Cc: s.hauer@pengutronix.de, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, grant.likely@linaro.org, shawn.guo@linaro.org, Alison_Chaiken@mentor.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Enable the WEIM NOR for imx6q{dl} boards.
+> The WEIM(Wireless External Interface Module) works like a bus.
+> You can attach many different devices on it, such as NOR, onenand.
+> 
+> In the case of i.MX6q-sabreauto, the NOR is connected to WEIM.
+> 
+> This patch also adds the devicetree binding document.
+> The driver only works when the devicetree is enabled.
+> 
+> Signed-off-by: Huang Shijie <b32955@freescale.com>
+> ---
+>  Documentation/devicetree/bindings/bus/imx-weim.txt |   50 +++++++
+>  drivers/bus/Kconfig                                |    9 ++
+>  drivers/bus/Makefile                               |    1 +
+>  drivers/bus/imx-weim.c                             |  146 ++++++++++++++++++++
+>  4 files changed, 206 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/bus/imx-weim.txt
+>  create mode 100644 drivers/bus/imx-weim.c
+> 
+> diff --git a/Documentation/devicetree/bindings/bus/imx-weim.txt b/Documentation/devicetree/bindings/bus/imx-weim.txt
+> new file mode 100644
+> index 0000000..3db588e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/bus/imx-weim.txt
+> @@ -0,0 +1,50 @@
+> +Device tree bindings for i.MX Wireless External Interface Module (WEIM)
+> +
+> +The term "wireless" does not imply that the WEIM is literally an interface
+> +without wires. It simply means that this module was originally designed for
+> +wireless and mobile applications that use low-power technology.
+> +
+> +The actual devices are instantiated from the child nodes of a WEIM node.
+> +
+> +Required properties:
+> +
+> + - compatible:		Should be set to "fsl,imx6q-weim"
+> + - reg:			A resource specifier for the register space
+> +			(see the example below)
+> + - interrupts:		the interrupt number, see the example below.
 
-For the pin conflict with SPI NOR, its status is set to "disabled".
+Where interrupt is used in the driver?
 
-Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> + - clocks:		the clock, see the example below.
+> + - #address-cells:	Must be set to 2 to allow memory address translation
+> + - #size-cells:		Must be set to 1 to allow CS address passing
+> + - ranges:		Must be set up to reflect the memory layout with four
+> +			integer values for each chip-select line in use:
+> +
+> +			   <cs-number> 0 <physical address of mapping> <size>
+> +
+> +Timing property for child nodes. It is mandatory, not optional.
+> +
+> + - fsl,weim-cs-timing:	The timing array, contains 6 timing values for the
+> +			child node. We can get the CS index from the child
+> +			node's "reg" property.
+> +
+> +Example for an imx6q-sabreauto board, the NOR flash connected to the WEIM:
+> +
+> +	weim: weim@021b8000 {
+> +		compatible = "fsl,imx6q-weim";
+> +		reg = <0x021b8000 0x4000>;
+> +		interrupts = <0 14 0x04>;
+> +		clocks = <&clks 196>;
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0x08000000 0x08000000>;
+> +
+> +		nor@0,0 {
+> +			compatible = "cfi-flash";
+> +			reg = <0 0 0x02000000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			bank-width = <2>;
+> +
+> +			fsl,weim-cs-timing = <0x00620081 0x00000001 0x1C022000
+> +					0x0000C000 0x1404a38e 0x00000000>;
+> +		};
+> +	};
+> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+> index b05ecab..488702b 100644
+> --- a/drivers/bus/Kconfig
+> +++ b/drivers/bus/Kconfig
+> @@ -4,6 +4,15 @@
+>  
+>  menu "Bus devices"
+>  
+> +config IMX_WEIM
+> +	tristate "Freescale EIM DRIVER"
+> +	depends on ARCH_MXC
+> +	help
+> +	  Driver for i.MX6 WEIM controller.
+> +	  The WEIM(Wireless External Interface Module) works like a bus.
+> +	  You can attach many different devices on it, such as NOR, onenand.
+> +	  But now, we only support the Parallel NOR.
+> +
+>  config MVEBU_MBUS
+>  	bool
+>  	depends on PLAT_ORION
+> diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
+> index 3c7b53c..436bbcc 100644
+> --- a/drivers/bus/Makefile
+> +++ b/drivers/bus/Makefile
+> @@ -2,6 +2,7 @@
+>  # Makefile for the bus drivers.
+>  #
+>  
+> +obj-$(CONFIG_IMX_WEIM)	+= imx-weim.o
+>  obj-$(CONFIG_MVEBU_MBUS) += mvebu-mbus.o
+>  obj-$(CONFIG_OMAP_OCP2SCP)	+= omap-ocp2scp.o
+>  
+> diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
+> new file mode 100644
+> index 0000000..b932add
+> --- /dev/null
+> +++ b/drivers/bus/imx-weim.c
+> @@ -0,0 +1,146 @@
+> +/*
+> + * EIM driver for Freescale's i.MX chips
+> + *
+> + * Copyright (C) 2013 Freescale Semiconductor, Inc.
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2. This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +#include <linux/module.h>
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/of_device.h>
+> +
+> +struct imx_weim {
+> +	void __iomem *base;
+> +	struct clk *clk;
+> +};
+> +
+> +static const struct of_device_id weim_id_table[] = {
+> +	{ .compatible = "fsl,imx6q-weim", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, weim_id_table);
+> +
+> +#define CS_TIMING_LEN 6
+> +#define CS_REG_RANGE  0x18
+> +
+> +/* Parse and set the timing for this device. */
+> +static int
+> +weim_timing_setup(struct platform_device *pdev, struct device_node *np)
+> +{
+> +	struct imx_weim *weim = platform_get_drvdata(pdev);
+> +	u32 value[CS_TIMING_LEN];
+> +	u32 cs_idx;
+> +	int ret;
+> +	int i;
+> +
+> +	/* get the CS index from this child node's "reg" property. */
+> +	ret = of_property_read_u32(np, "reg", &cs_idx);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* The weim has four chip selects. */
+> +	if (cs_idx > 3)
+> +		return -EINVAL;
+> +
+> +	ret = of_property_read_u32_array(np, "fsl,weim-cs-timing",
+> +					value, CS_TIMING_LEN);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* set the timing for WEIM */
+> +	for (i = 0; i < CS_TIMING_LEN; i++)
+> +		writel(value[i], weim->base + cs_idx * CS_REG_RANGE + i * 4);
+> +	return 0;
+> +}
+> +
+> +static int weim_parse_dt(struct platform_device *pdev)
+> +{
+> +	struct device_node *child;
+> +	int ret;
+> +
+> +	for_each_child_of_node(pdev->dev.of_node, child) {
+> +		if (!child->name)
+> +			continue;
+> +
+> +		ret = weim_timing_setup(pdev, child);
+> +		if (ret)
+> +			goto parse_fail;
+> +
+> +		if (!of_platform_device_create(child, NULL, &pdev->dev)) {
+> +			ret = -EINVAL;
+> +			goto parse_fail;
+> +		}
+> +
+> +	}
+> +	return 0;
+> +
+> +parse_fail:
+> +	return ret;
+> +}
+> +
+> +static int weim_probe(struct platform_device *pdev)
+> +{
+> +	struct imx_weim *weim;
+> +	struct resource *res;
+> +	int ret = -EINVAL;
+> +
+> +	weim = devm_kzalloc(&pdev->dev, sizeof(*weim), GFP_KERNEL);
+> +	if (!weim) {
+> +		ret = -ENOMEM;
+> +		goto weim_err;
+> +	}
+> +	platform_set_drvdata(pdev, weim);
+> +
+> +	/* get the resource */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	weim->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(weim->base)) {
+> +		ret = PTR_ERR(weim->base);
+> +		goto weim_err;
+> +	}
+> +
+> +	/* get the clock */
+> +	weim->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(weim->clk))
+> +		goto weim_err;
+> +
+> +	clk_prepare_enable(weim->clk);
+> +
+> +	/* parse the device node */
+> +	ret = weim_parse_dt(pdev);
+> +	if (ret) {
+> +		clk_disable_unprepare(weim->clk);
+> +		goto weim_err;
+> +	}
+> +
+> +	dev_info(&pdev->dev, "WEIM driver registered.\n");
+> +	return 0;
+> +
+> +weim_err:
+> +	return ret;
+> +}
+> +
+> +static int weim_remove(struct platform_device *pdev)
+> +{
+> +	struct imx_weim *weim = platform_get_drvdata(pdev);
+> +
+> +	clk_disable_unprepare(weim->clk);
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver weim_driver = {
+> +	.driver = {
+> +		.name = "imx-weim",
+> +		.of_match_table = weim_id_table,
+> +	},
+> +	.probe   = weim_probe,
+> +	.remove  = weim_remove,
+> +};
+> +
+> +module_platform_driver(weim_driver);
+> +MODULE_AUTHOR("Freescale Semiconductor Inc.");
+> +MODULE_DESCRIPTION("i.MX EIM Controller Driver");
+> +MODULE_LICENSE("GPL");
+> -- 
+
 ---
- arch/arm/boot/dts/imx6qdl-sabreauto.dtsi |   20 ++++++++++++++++++++
- 1 files changed, 20 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-index a4466e6..684b208 100644
---- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-@@ -58,3 +58,23 @@
- 	wp-gpios = <&gpio1 13 0>;
- 	status = "okay";
- };
-+
-+&weim {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_weim_nor_1>;
-+	#address-cells = <2>;
-+	#size-cells = <1>;
-+	ranges = <0 0 0x08000000 0x08000000>;
-+	status = "disabled"; /* pin conflict with SPI NOR */
-+
-+	nor@0,0 {
-+		compatible = "cfi-flash";
-+		reg = <0 0 0x02000000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		bank-width = <2>;
-+
-+		fsl,weim-cs-timing = <0x00620081 0x00000001 0x1C022000
-+				0x0000C000 0x1404a38e 0x00000000>;
-+	};
-+};
--- 
-1.7.1
