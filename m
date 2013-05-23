@@ -1,112 +1,157 @@
-From: Haojian Zhuang <haojian.zhuang@linaro.org>
-Subject: Re: [PATCH 1/2] pinmux: Add TB10x pinmux driver
-Date: Thu, 23 May 2013 15:43:27 +0800
-Message-ID: <CAD6h2NT4FqmEsLvtTDwwDL2YVzXYNpw72hTOcSxSMvHLhWvFPQ@mail.gmail.com>
-References: <20130418090310.GA17636@ab42.lan>
-	<CACRpkdZd0_W432od5565phhUcJMRWiV9vXX4QVF4osKkxstC0Q@mail.gmail.com>
-	<20130429161725.GB30136@ab42.lan>
-	<5182B557.4040804@wwwdotorg.org>
-	<CACRpkdaxO0q_P2wJFy3zv4F-QM9dZk54qW8ft350XqcBt1Gr1w@mail.gmail.com>
-	<20130508164123.GA10248@ab42.lan>
-	<518AAF31.8080502@wwwdotorg.org>
-	<20130510082521.GA2125@ab42.lan>
-	<51942472.9010402@wwwdotorg.org>
-	<CACRpkdYtKr5w2=1sONG4Qn2TQue38nV7epWfzxNQz5rjSs0DZQ@mail.gmail.com>
-	<20130522142824.GC4789@ab42.lan>
+From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] video: simplefb: add mode parsing function
+Date: Thu, 23 May 2013 17:03:51 +0900
+Message-ID: <1369296231-26597-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130522142824.GC4789@ab42.lan>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Shiraz HASHIM <shiraz.hashim@st.com>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 22 May 2013 22:28, Christian Ruppert <christian.ruppert@abilis.com> wrote:
->
-> On Mon, May 20, 2013 at 10:10:33AM +0200, Linus Walleij wrote:
-> > On Thu, May 16, 2013 at 2:12 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> > > On 05/10/2013 02:25 AM, Christian Ruppert wrote:
-> >
-> > >> (*1) TB100 GPIO ranges are defined as a phandle to the I/O function
-> > >>      which provides all pins of a given GPIO port. This function is not
-> > >>      necessarily requested from pinctrl and GPIO ports may overlap with
-> > >>      other functions. The pin controller knows about this and provides
-> > >>      whatever GPIO pin is available after mapping other requested
-> > >>      functions.
-> > >> (*2) Here, the entire GPIOB port is explicitly requested by the GPIO
-> > >>      module, i.e. all pins of the port are made available as GPIOs.
-> > >
-> > > So I think all you're looking for is a way in DT to represent GPIO
-> > > ranges? I don't think that should be by string name, but rather numbers:
-> > >
-> > > (actually, doesn't pinctrl-simple already have this?)
-> >
-> > Now I'm ever more confused ... we already have this :-)
-> >
-> > It's not even pinctrl-simple-centric it is completely generic.
-> > The code is in drivers/gpio/gpiolib-of.c.
-> >
-> > It was written by Shiraz Hashin and Haojian Zhuang.
-> > At the time I augmented the core code quite a bit to make
-> > a good fit.
->
-> I agree. Unluckily, it uses pinctrl-internal pin numbering which we
-> would have to make coherent with the physical pin numbers of the
-> individual packaging variants of the chip in order to expose them to
-> customers (see my previous mail at https://lkml.org/lkml/2013/5/22/207).
->
-> Adapting the kernel-internal pin numbering in function of the product
-> variant doesn't seem such a good idea to me: All pin groups etc. will
-> have to be redefined for every product, a huge source of bugs and
-> unnecessary static data within the drivers.
->I review two methods you mentioned in this mail.
+The naming scheme of simplefb's mode is precise enough to allow building
+the mode structure from it instead of using a static list of modes. This
+patch introduces a function that does this. In case exotic modes that
+cannot be represented from their name alone are needed, the static list
+of modes is still available as a backup.
 
-I think that you want to keep the logic simple. If so, I prefer you can
-check pinctrl-single driver first. All pins are defined in DTS instead.
+Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Stephen, please note that the "r5g6b5" mode initially supported
+by the driver becomes "b5g6r5" with the new function. This is because
+the least significant bits are defined first in the string - this
+makes parsing much easier, notably for modes which do not fill whole
+bytes (e.g. 15 bit modes). I hope this is not a problem - it's probably
+better to do the change now while the driver is still new.
 
-Here's the sample on Hi3620 SoC. And some pins even share one pinctrl
-registers.
+ .../bindings/video/simple-framebuffer.txt          | 12 +++-
+ drivers/video/simplefb.c                           | 66 +++++++++++++++++++++-
+ 2 files changed, 73 insertions(+), 5 deletions(-)
 
-gpio controller:
-                        gpio-ranges = < &pmx0 3 94 1 &pmx0 7 96 1>;
-Each gpio pins in gpio controller could trace to the pin controller.
-
-pin controller:
-                        pinctrl-single,gpio-range = <&range 0 3 0 &range 3 9 1
-                                                &range 12 1 0 &range 13 29 1
-                                                &range 43 1 0 &range 44 49 1
-                                                &range 94 1 1 &range 96 2 1>;
-
-                        range: gpio-range {
-                                #pinctrl-single,gpio-range-cells = <3>;
-                        };
-If the pin could be configured as GPIO mode, we could trace to the
-gpio controller by this table. We can see those pins are not continuous,
-and it doesn't matter. And it could handle the relations between
-multiple gpio controllers and multiple pin controllers.
-
-These pin numbers are only used to bind GPIO number. Customers
-needn't to know the details. The device driver only set the pins to
-right mode (GPIO or any other) with right configuration. The device
-driver even needn't know the GPIO number and the pin number.
-Because everything is already handled. They only need the pinctrl
-array. I prefer you to check drivers/tty/serial/amba-pl011.c.
-
-In some SoC, both pin26 & pin104 could be configured as GPIO3.
-We only need to define one in your DTS because only one could
-be effect in the real world.
-
-And we abstract pin number from the register offset. You also needn't
-worry the pin name such as AA1, AB1. Those names are used to
-communicate with hardware guys, not software guys.
-
-If you want to redefine the pin groups because they're used as LCD pins,
-not MMC pins any more. You needn't have to modify the pin arrays in
-your pinctrl driver anymore. Because pinctrl-single driver don't define
-any pin arrays. You can only define pin arrays in your DTS file.
-
-Is it helpful to you?
-
-Regards
-Haojian
+diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+index 3ea4605..f933b3d 100644
+--- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
++++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+@@ -10,8 +10,16 @@ Required properties:
+ - width: The width of the framebuffer in pixels.
+ - height: The height of the framebuffer in pixels.
+ - stride: The number of bytes in each line of the framebuffer.
+-- format: The format of the framebuffer surface. Valid values are:
+-  - r5g6b5 (16-bit pixels, d[15:11]=r, d[10:5]=g, d[4:0]=b).
++- format: The format of the framebuffer surface. Described as a sequence of
++	channel/nbbits pairs, where each pair describes how many bits are used
++	by a given color channel. Value channels are "r" (red), "g" (green),
++	"b" (blue) and "a" (alpha). Channels are listed starting in
++	bit-significance order. For instance, a format named "r5g6b5" describes
++	a 16-bit format where red is encoded in the 5 less significant bits,
++	green in the 6 following ones, and blue in the 5 last:
++				BBBBBGGG GGGRRRRR
++				^               ^
++			       MSB             LSB
+ 
+ Example:
+ 
+diff --git a/drivers/video/simplefb.c b/drivers/video/simplefb.c
+index 8105c3d..1a1be71 100644
+--- a/drivers/video/simplefb.c
++++ b/drivers/video/simplefb.c
+@@ -21,6 +21,7 @@
+  */
+ 
+ #include <linux/errno.h>
++#include <linux/ctype.h>
+ #include <linux/fb.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
+@@ -82,8 +83,64 @@ struct simplefb_format {
+ 	struct fb_bitfield transp;
+ };
+ 
+-struct simplefb_format simplefb_formats[] = {
+-	{ "r5g6b5", 16, {11, 5}, {5, 6}, {0, 5}, {0, 0} },
++static struct simplefb_format *simplefb_parse_format(struct device *dev,
++						     const char *str)
++{
++	struct simplefb_format *format;
++	unsigned int cpt = 0;
++	unsigned int i = 0;
++
++	format = devm_kzalloc(dev, sizeof(*format), GFP_KERNEL);
++	if (!format)
++		return ERR_PTR(-ENOMEM);
++
++	while (str[i] != 0) {
++		struct fb_bitfield *field = 0;
++		char c = str[i++];
++
++		switch (c) {
++		case 'r':
++		case 'R':
++			field = &format->red;
++			break;
++		case 'g':
++		case 'G':
++			field = &format->green;
++			break;
++		case 'b':
++		case 'B':
++			field = &format->blue;
++			break;
++		case 'a':
++		case 'A':
++			field = &format->transp;
++			break;
++		default:
++			goto error;
++		}
++
++		c = str[i++];
++		if (c == 0 || !isdigit(c))
++			goto error;
++
++		field->offset = cpt;
++		field->length = c - '0';
++
++		cpt += field->length;
++	}
++
++	format->bits_per_pixel = ((cpt + 7) / 8) * 8;
++	format->name = str;
++	return format;
++
++error:
++	dev_err(dev, "Invalid format string\n");
++	return ERR_PTR(-EINVAL);
++}
++
++/* if you use exotic modes that simplefb_parse_format cannot decode, you can
++   specify them here. */
++static struct simplefb_format simplefb_formats[] = {
+ };
+ 
+ struct simplefb_params {
+@@ -131,7 +188,10 @@ static int simplefb_parse_dt(struct platform_device *pdev,
+ 		params->format = &simplefb_formats[i];
+ 		break;
+ 	}
+-	if (!params->format) {
++	if (!params->format)
++		params->format = simplefb_parse_format(&pdev->dev, format);
++
++	if (!params->format || IS_ERR(params->format)) {
+ 		dev_err(&pdev->dev, "Invalid format value\n");
+ 		return -EINVAL;
+ 	}
+-- 
+1.8.2.3
