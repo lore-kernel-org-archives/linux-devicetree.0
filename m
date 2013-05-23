@@ -1,49 +1,51 @@
-From: Michal Marek <mmarek@suse.cz>
-Subject: Re: [PATCH] kbuild: Don't assume dts files live in arch/*/boot/dts
-Date: Thu, 23 May 2013 10:15:53 +0200
-Message-ID: <519DD039.4030107@suse.cz>
-References: <1368010744-11281-1-git-send-email-matthijs@stdin.nl> <518A6649.1020501@wwwdotorg.org> <20130518184101.GS25742@login.drsnuggles.stderr.nl>
+From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH V2 3/6] ARM: dts: imx6qdl: add more information for WEIM
+Date: Thu, 23 May 2013 16:16:15 +0800
+Message-ID: <1369296978-7669-4-git-send-email-b32955@freescale.com>
+References: <1369296978-7669-1-git-send-email-b32955@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <20130518184101.GS25742@login.drsnuggles.stderr.nl>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Stephen Warren <swarren@nvidia.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1369296978-7669-1-git-send-email-b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 18.5.2013 20:41, Matthijs Kooijman wrote:
-> Hi Michal,
-> 
-> On Wed, May 08, 2013 at 08:50:49AM -0600, Stephen Warren wrote:
->> On 05/08/2013 04:59 AM, Matthijs Kooijman wrote:
->>> In commit b40b25ff (kbuild: always run gcc -E on *.dts, remove cmd_dtc_cpp),
->>> dts building was changed to always use the C preprocessor. This meant
->>> that the .dts file passed to dtc is not the original, but the
->>> preprocessed one.
->>>
->>> When compiling with a separate build directory (i.e., with O=), this
->>> preprocessed file will not live in the same directory as the original.
->>> When the .dts file includes .dtsi files, dtc will look for them in the
->>> build directory, not in the source directory and compilation will fail.
->>>
->>> The commit referenced above tried to fix this by passing arch/*/boot/dts
->>> as an include path to dtc. However, for mips, the .dts files are not in
->>> this directory, so dts compilation on mips breaks for some targets.
->>>
->>> Instead of hardcoding this particular include path, this commit just
->>> uses the directory of the .dts file that is being compiled, which
->>> effectively restores the previous behaviour wrt includes. For most .dts
->>> files, this path is just the same as the previous hardcoded
->>> arch/*/boot/dts path.
->>>
->>> This was tested on a mips (rt3052) and an arm (bcm2835) target.
->>
->> Reviewed-by: Stephen Warren <swarren@nvidia.com>
-> 
-> Did this patch look ok to you? If so, could you pick it up and send it
-> over to Linus for 3.10 (or should I send it directly)?
+Add the clock and compatible information for the weim.
+Also adds the weim label.
 
-I applied the patch to kbuild.git#rc-fixes now.
+Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6qdl.dtsi |    4 +++-
+ 1 files changed, 3 insertions(+), 1 deletions(-)
 
-Michal
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 42e461c..f21d259 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -744,9 +744,11 @@
+ 				reg = <0x021b4000 0x4000>;
+ 			};
+ 
+-			weim@021b8000 {
++			weim: weim@021b8000 {
++				compatible = "fsl,imx6q-weim";
+ 				reg = <0x021b8000 0x4000>;
+ 				interrupts = <0 14 0x04>;
++				clocks = <&clks 196>;
+ 			};
+ 
+ 			ocotp@021bc000 {
+-- 
+1.7.1
