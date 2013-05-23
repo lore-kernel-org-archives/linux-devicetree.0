@@ -1,135 +1,100 @@
-From: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Subject: RE: [PATCH 1/4] ARM: davinci: uart: move to dev_id based clk_get
-Date: Thu, 23 May 2013 13:25:57 +0000
-Message-ID: <A73F36158E33644199EB82C5EC81C7BC3EA6726A@DBDE04.ent.ti.com>
-References: <1365510481-32129-1-git-send-email-prakash.pm@ti.com>
- <1365510664-1394-2-git-send-email-prakash.pm@ti.com>
- <517A2661.3000605@ti.com>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [RFC PATCH 1/2] uio: Use Use of_match_ptr() macro in uio_pdrv_genirq.c
+Date: Thu, 23 May 2013 16:01:58 +0200
+Message-ID: <086bdaf83fe546bd3c7fe163e565a0887770770f.1369317710.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <517A2661.3000605@ti.com>
-Content-Language: en-US
-Sender: linux-serial-owner@vger.kernel.org
-To: "Nori, Sekhar" <nsekhar@ti.com>
-Cc: "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "hs@denx.de" <hs@denx.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Content-Type: multipart/mixed; boundary="===============3884616939256607320=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "Hans J. Koch" <hjk-vqZO0P4V72/QD6PfKP4TzA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2VraGFyLA0KDQpUaGFua3MgZm9yIHJldmlld2luZy4NCg0KT24gRnJpLCBBcHIgMjYsIDIw
-MTMgYXQgMTI6MzE6NTMsIE5vcmksIFNla2hhciB3cm90ZToNCj4gSGkgUHJha2FzaCwNCj4gDQo+
-IE9uIDQvOS8yMDEzIDY6MDEgUE0sIE1hbmp1bmF0aGFwcGEsIFByYWthc2ggd3JvdGU6DQo+ID4g
-Rm9yIG1vZHVsZXMgaGF2aW5nIHNpbmdsZSBjbG9jaywgY2xrX2dldCBzaG91bGQgYmUgZG9uZSB3
-aXRoIGRldl9pZC4NCj4gPiBCdXQgY3VycmVudCBkYXZpbmNpIGltcGxlbWVudGF0aW9uIGhhbmRs
-ZXMgbXVsdGlwbGUgaW5zdGFuY2VzDQo+ID4gb2YgdGhlIFVBUlQgZGV2aWNlcyB3aXRoIHNpbmds
-ZSBwbGF0Zm9ybV9kZXZpY2VfcmVnaXN0ZXIuIEhlbmNlIGNsa19nZXQNCj4gPiBpcyBiYXNlZCBv
-biBjb25faWQgcmF0aGVyIHRoYW4gZGV2X2lkLCB0aGlzIGlzIG5vdCBjb3JyZWN0LiBEbw0KPiA+
-IHBsYXRmb3JtX2RldmljZV9yZWdpc3RlciBmb3IgZWFjaCBpbnN0YW5jZSBhbmQgY2xrX2dldCBv
-biBkZXZfaWQuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogTWFuanVuYXRoYXBwYSwgUHJha2Fz
-aCA8cHJha2FzaC5wbUB0aS5jb20+DQo+ID4gLS0tDQo+ID4gIGFyY2gvYXJtL21hY2gtZGF2aW5j
-aS9kYTgzMC5jICAgICAgICAgICAgICAgICAgfCAgICA4ICsrLS0NCj4gPiAgYXJjaC9hcm0vbWFj
-aC1kYXZpbmNpL2RhODUwLmMgICAgICAgICAgICAgICAgICB8ICAgIDggKystLQ0KPiA+ICBhcmNo
-L2FybS9tYWNoLWRhdmluY2kvZGV2aWNlcy1kYTh4eC5jICAgICAgICAgIHwgICA0MCArKysrKysr
-KysrKysrKysrLS0tDQo+ID4gIGFyY2gvYXJtL21hY2gtZGF2aW5jaS9kZXZpY2VzLXRuZXR2MTA3
-eC5jICAgICAgfCAgIDM1ICsrKysrKysrKysrKysrLS0tDQo+ID4gIGFyY2gvYXJtL21hY2gtZGF2
-aW5jaS9kbTM1NS5jICAgICAgICAgICAgICAgICAgfCAgIDQ4ICsrKysrKysrKysrKysrKysrKy0t
-LS0tDQo+ID4gIGFyY2gvYXJtL21hY2gtZGF2aW5jaS9kbTM2NS5jICAgICAgICAgICAgICAgICAg
-fCAgIDM1ICsrKysrKysrKysrKy0tLS0NCj4gPiAgYXJjaC9hcm0vbWFjaC1kYXZpbmNpL2RtNjQ0
-eC5jICAgICAgICAgICAgICAgICB8ICAgNDggKysrKysrKysrKysrKysrKysrLS0tLS0NCj4gPiAg
-YXJjaC9hcm0vbWFjaC1kYXZpbmNpL2RtNjQ2eC5jICAgICAgICAgICAgICAgICB8ICAgNDkgKysr
-KysrKysrKysrKysrKysrKy0tLS0tDQo+ID4gIGFyY2gvYXJtL21hY2gtZGF2aW5jaS9pbmNsdWRl
-L21hY2gvZGE4eHguaCAgICAgfCAgICAyICstDQo+ID4gIGFyY2gvYXJtL21hY2gtZGF2aW5jaS9p
-bmNsdWRlL21hY2gvdG5ldHYxMDd4LmggfCAgICAyICstDQo+ID4gIGFyY2gvYXJtL21hY2gtZGF2
-aW5jaS9zZXJpYWwuYyAgICAgICAgICAgICAgICAgfCAgIDE5ICsrKysrKy0tLQ0KPiA+ICBhcmNo
-L2FybS9tYWNoLWRhdmluY2kvdG5ldHYxMDd4LmMgICAgICAgICAgICAgIHwgICAgOCArKy0tDQo+
-ID4gIDEyIGZpbGVzIGNoYW5nZWQsIDIzMCBpbnNlcnRpb25zKCspLCA3MiBkZWxldGlvbnMoLSkN
-Cj4gDQo+IFsuLi5dDQo+IA0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNoLWRhdmluY2kv
-ZGV2aWNlcy1kYTh4eC5jIGIvYXJjaC9hcm0vbWFjaC1kYXZpbmNpL2RldmljZXMtZGE4eHguYw0K
-PiA+IGluZGV4IGZjNTAyNDMuLmVlYzcxMzIgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vbWFj
-aC1kYXZpbmNpL2RldmljZXMtZGE4eHguYw0KPiA+ICsrKyBiL2FyY2gvYXJtL21hY2gtZGF2aW5j
-aS9kZXZpY2VzLWRhOHh4LmMNCj4gPiBAQCAtNjcsNyArNjcsNyBAQA0KPiA+ICB2b2lkIF9faW9t
-ZW0gKmRhOHh4X3N5c2NmZzBfYmFzZTsNCj4gPiAgdm9pZCBfX2lvbWVtICpkYTh4eF9zeXNjZmcx
-X2Jhc2U7DQo+ID4gIA0KPiA+IC1zdGF0aWMgc3RydWN0IHBsYXRfc2VyaWFsODI1MF9wb3J0IGRh
-OHh4X3NlcmlhbF9wZGF0YVtdID0gew0KPiA+ICtzdGF0aWMgc3RydWN0IHBsYXRfc2VyaWFsODI1
-MF9wb3J0IGRhOHh4X3NlcmlhbF9wZGF0YTBbXSA9IHsNCj4gDQo+IGRhOHh4X3NlcmlhbDBfcGRh
-dGEgaXMgbW9yZSBhcHByb3ByaWF0ZS4gTGlrZXdpc2UgZm9yIG90aGVyIGVudHJpZXMgYmVsb3cu
-DQo+IA0KDQpUcnVlLCB3aWxsIGNoYW5nZSB0aGVtLg0KDQo+ID4gIAl7DQo+ID4gIAkJLm1hcGJh
-c2UJPSBEQThYWF9VQVJUMF9CQVNFLA0KPiA+ICAJCS5pcnEJCT0gSVJRX0RBOFhYX1VBUlRJTlQw
-LA0KPiA+IEBAIC03Nyw2ICs3NywxMSBAQCBzdGF0aWMgc3RydWN0IHBsYXRfc2VyaWFsODI1MF9w
-b3J0IGRhOHh4X3NlcmlhbF9wZGF0YVtdID0gew0KPiA+ICAJCS5yZWdzaGlmdAk9IDIsDQo+ID4g
-IAl9LA0KPiA+ICAJew0KPiA+ICsJCS5mbGFncwk9IDAsDQo+ID4gKwl9LA0KPiANCj4gTm8gbmVl
-ZCBvZiB0cmFpbGluZyAnLCcgb24gc2VudGluZWwuIE5vIG5lZWQgb2YgdGhlIHplcm8gaW5pdGlh
-bGl6YXRpb24uDQo+IEhlcmUgYW5kIG90aGVyIHBsYWNlcyBiZWxvdy4NCj4gDQoNCk9rLiBJIHdp
-bGwgcmVtb3ZlIHRoZW0uDQoNCj4gPiArfTsNCj4gPiArc3RhdGljIHN0cnVjdCBwbGF0X3Nlcmlh
-bDgyNTBfcG9ydCBkYTh4eF9zZXJpYWxfcGRhdGExW10gPSB7DQo+ID4gKwl7DQo+ID4gIAkJLm1h
-cGJhc2UJPSBEQThYWF9VQVJUMV9CQVNFLA0KPiA+ICAJCS5pcnEJCT0gSVJRX0RBOFhYX1VBUlRJ
-TlQxLA0KPiA+ICAJCS5mbGFncwkJPSBVUEZfQk9PVF9BVVRPQ09ORiB8IFVQRl9TS0lQX1RFU1Qg
-fA0KPiA+IEBAIC04NSw2ICs5MCwxMSBAQCBzdGF0aWMgc3RydWN0IHBsYXRfc2VyaWFsODI1MF9w
-b3J0IGRhOHh4X3NlcmlhbF9wZGF0YVtdID0gew0KPiA+ICAJCS5yZWdzaGlmdAk9IDIsDQo+ID4g
-IAl9LA0KPiA+ICAJew0KPiA+ICsJCS5mbGFncwk9IDAsDQo+ID4gKwl9LA0KPiA+ICt9Ow0KPiA+
-ICtzdGF0aWMgc3RydWN0IHBsYXRfc2VyaWFsODI1MF9wb3J0IGRhOHh4X3NlcmlhbF9wZGF0YTJb
-XSA9IHsNCj4gPiArCXsNCj4gPiAgCQkubWFwYmFzZQk9IERBOFhYX1VBUlQyX0JBU0UsDQo+ID4g
-IAkJLmlycQkJPSBJUlFfREE4WFhfVUFSVElOVDIsDQo+ID4gIAkJLmZsYWdzCQk9IFVQRl9CT09U
-X0FVVE9DT05GIHwgVVBGX1NLSVBfVEVTVCB8DQo+ID4gQEAgLTk3LDExICsxMDcsMjkgQEAgc3Rh
-dGljIHN0cnVjdCBwbGF0X3NlcmlhbDgyNTBfcG9ydCBkYTh4eF9zZXJpYWxfcGRhdGFbXSA9IHsN
-Cj4gPiAgCX0sDQo+ID4gIH07DQo+ID4gIA0KPiA+IC1zdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlIGRh
-OHh4X3NlcmlhbF9kZXZpY2UgPSB7DQo+ID4gLQkubmFtZQk9ICJzZXJpYWw4MjUwIiwNCj4gPiAt
-CS5pZAk9IFBMQVQ4MjUwX0RFVl9QTEFURk9STSwNCj4gPiAtCS5kZXYJPSB7DQo+ID4gLQkJLnBs
-YXRmb3JtX2RhdGEJPSBkYTh4eF9zZXJpYWxfcGRhdGEsDQo+ID4gK3N0cnVjdCBwbGF0Zm9ybV9k
-ZXZpY2UgZGE4eHhfc2VyaWFsX2RldmljZVtdID0gew0KPiA+ICsJew0KPiA+ICsJCS5uYW1lCT0g
-InNlcmlhbDgyNTAiLA0KPiA+ICsJCS5pZAk9IFBMQVQ4MjUwX0RFVl9QTEFURk9STSwNCj4gPiAr
-CQkuZGV2CT0gew0KPiA+ICsJCQkucGxhdGZvcm1fZGF0YQk9IGRhOHh4X3NlcmlhbF9wZGF0YTAs
-DQo+ID4gKwkJfSwNCj4gPiArCX0sDQo+ID4gKwl7DQo+ID4gKwkJLm5hbWUJPSAic2VyaWFsODI1
-MCIsDQo+ID4gKwkJLmlkCT0gUExBVDgyNTBfREVWX1BMQVRGT1JNMSwNCj4gPiArCQkuZGV2CT0g
-ew0KPiA+ICsJCQkucGxhdGZvcm1fZGF0YQk9IGRhOHh4X3NlcmlhbF9wZGF0YTEsDQo+ID4gKwkJ
-fSwNCj4gPiArCX0sDQo+ID4gKwl7DQo+ID4gKwkJLm5hbWUJPSAic2VyaWFsODI1MCIsDQo+ID4g
-KwkJLmlkCT0gUExBVDgyNTBfREVWX1BMQVRGT1JNMiwNCj4gPiArCQkuZGV2CT0gew0KPiA+ICsJ
-CQkucGxhdGZvcm1fZGF0YQk9IGRhOHh4X3NlcmlhbF9wZGF0YTIsDQo+ID4gKwkJfSwNCj4gPiAr
-CX0sDQo+ID4gKwl7DQo+ID4gIAl9LA0KPiA+ICB9Ow0KPiANCj4gWy4uLl0NCj4gDQo+ID4gZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtZGF2aW5jaS9zZXJpYWwuYyBiL2FyY2gvYXJtL21hY2gt
-ZGF2aW5jaS9zZXJpYWwuYw0KPiA+IGluZGV4IGYyNjI1ODEuLjU3ZTYxNTAgMTAwNjQ0DQo+ID4g
-LS0tIGEvYXJjaC9hcm0vbWFjaC1kYXZpbmNpL3NlcmlhbC5jDQo+ID4gKysrIGIvYXJjaC9hcm0v
-bWFjaC1kYXZpbmNpL3NlcmlhbC5jDQo+ID4gQEAgLTc2LDcgKzc2LDcgQEAgaW50IF9faW5pdCBk
-YXZpbmNpX3NlcmlhbF9zZXR1cF9jbGsodW5zaWduZWQgaW5zdGFuY2UsIHVuc2lnbmVkIGludCAq
-cmF0ZSkNCj4gPiAgCWNoYXIgbmFtZVsxNl07DQo+ID4gIAlzdHJ1Y3QgY2xrICpjbGs7DQo+ID4g
-IAlzdHJ1Y3QgZGF2aW5jaV9zb2NfaW5mbyAqc29jX2luZm8gPSAmZGF2aW5jaV9zb2NfaW5mbzsN
-Cj4gPiAtCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZzb2NfaW5mby0+c2VyaWFsX2Rldi0+ZGV2Ow0K
-PiA+ICsJc3RydWN0IGRldmljZSAqZGV2ID0gJnNvY19pbmZvLT5zZXJpYWxfZGV2W2luc3RhbmNl
-XS5kZXY7DQo+ID4gIA0KPiA+ICAJc3ByaW50ZihuYW1lLCAidWFydCVkIiwgaW5zdGFuY2UpOw0K
-PiA+ICAJY2xrID0gY2xrX2dldChkZXYsIG5hbWUpOw0KPiANCj4gV2h5IG5vdCBwYXNzIGNvbl9p
-ZCA9IE5VTEwgbm93Pw0KPiANCg0KQ29ycmVjdCwgSSB3aWxsIGNoYW5nZSBpdC4NCg0KPiA+IEBA
-IC05NiwxOSArOTYsMjUgQEAgaW50IF9faW5pdCBkYXZpbmNpX3NlcmlhbF9zZXR1cF9jbGsodW5z
-aWduZWQgaW5zdGFuY2UsIHVuc2lnbmVkIGludCAqcmF0ZSkNCj4gPiAgDQo+ID4gIGludCBfX2lu
-aXQgZGF2aW5jaV9zZXJpYWxfaW5pdChzdHJ1Y3QgZGF2aW5jaV91YXJ0X2NvbmZpZyAqaW5mbykN
-Cj4gPiAgew0KPiA+IC0JaW50IGksIHJldDsNCj4gPiArCWludCBpLCByZXQgPSAwOw0KPiA+ICAJ
-c3RydWN0IGRhdmluY2lfc29jX2luZm8gKnNvY19pbmZvID0gJmRhdmluY2lfc29jX2luZm87DQo+
-ID4gLQlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmc29jX2luZm8tPnNlcmlhbF9kZXYtPmRldjsNCj4g
-PiAtCXN0cnVjdCBwbGF0X3NlcmlhbDgyNTBfcG9ydCAqcCA9IGRldi0+cGxhdGZvcm1fZGF0YTsN
-Cj4gPiArCXN0cnVjdCBkZXZpY2UgKmRldjsNCj4gPiArCXN0cnVjdCBwbGF0X3NlcmlhbDgyNTBf
-cG9ydCAqcDsNCj4gPiAgDQo+ID4gIAkvKg0KPiA+ICAJICogTWFrZSBzdXJlIHRoZSBzZXJpYWwg
-cG9ydHMgYXJlIG11eGVkIG9uIGF0IHRoaXMgcG9pbnQuDQo+ID4gIAkgKiBZb3UgaGF2ZSB0byBt
-dXggdGhlbSBvZmYgaW4gZGV2aWNlIGRyaXZlcnMgbGF0ZXIgb24gaWYgbm90IG5lZWRlZC4NCj4g
-PiAgCSAqLw0KPiA+IC0JZm9yIChpID0gMDsgcC0+ZmxhZ3M7IGkrKywgcCsrKSB7DQo+ID4gKwlm
-b3IgKGkgPSAwOyBzb2NfaW5mby0+c2VyaWFsX2RldltpXS5kZXYucGxhdGZvcm1fZGF0YSAhPSBO
-VUxMOyBpKyspIHsNCj4gPiArCQlkZXYgPSAmc29jX2luZm8tPnNlcmlhbF9kZXZbaV0uZGV2Ow0K
-PiA+ICsJCXAgPSBkZXYtPnBsYXRmb3JtX2RhdGE7DQo+ID4gIAkJaWYgKCEoaW5mby0+ZW5hYmxl
-ZF91YXJ0cyAmICgxIDw8IGkpKSkNCj4gPiAgCQkJY29udGludWU7DQo+ID4gIA0KPiA+ICsJCXJl
-dCA9IHBsYXRmb3JtX2RldmljZV9yZWdpc3Rlcigmc29jX2luZm8tPnNlcmlhbF9kZXZbaV0pOw0K
-PiA+ICsJCWlmIChyZXQpDQo+ID4gKwkJCWNvbnRpbnVlOw0KPiA+ICsNCj4gPiAgCQlyZXQgPSBk
-YXZpbmNpX3NlcmlhbF9zZXR1cF9jbGsoaSwgJnAtPnVhcnRjbGspOw0KPiA+ICAJCWlmIChyZXQp
-DQo+ID4gIAkJCWNvbnRpbnVlOw0KPiA+IEBAIC0xMjUsNiArMTMxLDUgQEAgaW50IF9faW5pdCBk
-YXZpbmNpX3NlcmlhbF9pbml0KHN0cnVjdCBkYXZpbmNpX3VhcnRfY29uZmlnICppbmZvKQ0KPiA+
-ICAJCWlmIChwLT5tZW1iYXNlICYmIHAtPnR5cGUgIT0gUE9SVF9BUjcpDQo+ID4gIAkJCWRhdmlu
-Y2lfc2VyaWFsX3Jlc2V0KHApOw0KPiA+ICAJfQ0KPiA+IC0NCj4gPiAtCXJldHVybiBwbGF0Zm9y
-bV9kZXZpY2VfcmVnaXN0ZXIoc29jX2luZm8tPnNlcmlhbF9kZXYpOw0KPiA+ICsJcmV0dXJuIHJl
-dDsNCj4gPiAgfQ0KPiANCj4gTm93IHRoYXQgd2UgYXJlIG92ZXJoYXVsaW5nIHRoaXMgcGFydCBv
-ZiBjb2RlLCBzb21lIGltcHJvdmVtZW50cyBjYW4gYmUNCj4gZG9uZS4gRmlyc3QsIGdldCByaWQg
-b2Ygc3RydWN0IGRhdmluY2lfdWFydF9jb25maWcuIE5vbmUgb2YgdGhlIGJvYXJkDQo+IGZpbGVz
-IHVzZSBpdCBtZWFuaW5nZnVsbHkgYW5kIHdlIGtub3cgd2UgYXJlIG5vdCBnb2luZyB0byBoYXZl
-IG1vcmUNCj4gYm9hcmQgZmlsZXMuIFNlY29uZCwgbWFrZSBkYXZpbmNpX3NlcmlhbF9pbml0KCkg
-dGFrZSBwb2ludGVyIHRvIHNlcmlhbA0KPiBwbGF0Zm9ybSBkZXZpY2UgZGlyZWN0bHkuIFRoaXMg
-ZWxpbWluYXRlcyBuZWVkIGZvciBzZXJpYWxfZGV2IGluIHRoZQ0KPiBzb2NfaW5mbyBzdHJ1Y3R1
-cmUgKHlheSEpLiBZb3UgbWlnaHQgYWxzbyBmaW5kIHRoYXQNCj4gZGF2aW5jaV9zZXJpYWxfc2V0
-dXBfY2xrKCkgY2FuIGJlIGVsaW1pbmF0ZWQgYXMgd2VsbCBzaW5jZSB0aGVyZSBpcyBub3QNCj4g
-bXVjaCB0byBkbyB0aGVyZSBub3cuDQo+IA0KDQpPayBJIHdpbGwgY2xlYW51cCB0aGlzIGFuZCBz
-dWJtaXQgdjIuDQoNClRoYW5rcywNClByYWthc2gNCg==
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
+
+--===============3884616939256607320==
+Content-Type: multipart/signed;
+    boundary="=_mimegpg-monstr-desktop-8037-1369317719-0001";
+    micalg=pgp-sha1; protocol="application/pgp-signature"
+
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
+
+--=_mimegpg-monstr-desktop-8037-1369317719-0001
+
+This eliminates having an #ifdef returning NULL for the case
+when OF is disabled.
+
+Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/uio/uio_pdrv_genirq.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/uio/uio_pdrv_genirq.c b/drivers/uio/uio_pdrv_genirq.c
+index c122bca..d7ba355 100644
+--- a/drivers/uio/uio_pdrv_genirq.c
++++ b/drivers/uio/uio_pdrv_genirq.c
+@@ -267,8 +267,6 @@ static const struct of_device_id uio_of_genirq_match[] = {
+ 	{ /* empty for now */ },
+ };
+ MODULE_DEVICE_TABLE(of, uio_of_genirq_match);
+-#else
+-# define uio_of_genirq_match NULL
+ #endif
+
+ static struct platform_driver uio_pdrv_genirq = {
+@@ -278,7 +276,7 @@ static struct platform_driver uio_pdrv_genirq = {
+ 		.name = DRIVER_NAME,
+ 		.owner = THIS_MODULE,
+ 		.pm = &uio_pdrv_genirq_dev_pm_ops,
+-		.of_match_table = uio_of_genirq_match,
++		.of_match_table = of_match_ptr(uio_of_genirq_match),
+ 	},
+ };
+
+--
+1.8.2.3
+
+
+--=_mimegpg-monstr-desktop-8037-1369317719-0001
+Content-Type: application/pgp-signature
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEABECAAYFAlGeIVcACgkQykllyylKDCENXQCdFpB65jqAu+9bvU7H+7iqcTfM
+XPwAni+CY+jM/eTf+OL2DsMym2w7FThD
+=GBCS
+-----END PGP SIGNATURE-----
+
+--=_mimegpg-monstr-desktop-8037-1369317719-0001--
+
+--===============3884616939256607320==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============3884616939256607320==--
