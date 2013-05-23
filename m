@@ -1,71 +1,36 @@
-From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH V2 1/6] drivers: bus: add a new driver for WEIM
-Date: Thu, 23 May 2013 17:35:42 +0800
-Message-ID: <519DE2EE.1050006@freescale.com>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmVbMl06IFtQQVRDSCBWMiA0LzZdIEFSTTogZHRzOiBpbXg2cTogYWRkIHBp?=
+ =?UTF-8?B?bmN0cmwgZm9yIFdFSU0gTk9S?=
+Date: Thu, 23 May 2013 13:39:56 +0400
+Message-ID: <1369301996.738631947@f310.mail.ru>
 References: <1369296978-7669-1-git-send-email-b32955@freescale.com>
- <1369296978-7669-2-git-send-email-b32955@freescale.com>
- <20130523092344.GF32299@pengutronix.de>
+ <1369300440.725629549@f101.mail.ru>
+ <519DE109.1030903@freescale.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130523092344.GF32299-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <519DE109.1030903@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?SHVhbmcgU2hpamll?= <b32955@freescale.com>
+Cc: arnd@arndb.de, s.hauer@pengutronix.de, rob.herring@calxeda.com, Alison_Chaiken@mentor.com, grant.likely@linaro.org, shawn.guo@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-5LqOIDIwMTPlubQwNeaciDIz5pelIDE3OjIzLCBTYXNjaGEgSGF1ZXIg5YaZ6YGTOgo+IE9uIFRo
-dSwgTWF5IDIzLCAyMDEzIGF0IDA0OjE2OjEzUE0gKzA4MDAsIEh1YW5nIFNoaWppZSB3cm90ZToK
-Pj4gKwkJCTxjcy1udW1iZXI+ICAwPHBoeXNpY2FsIGFkZHJlc3Mgb2YgbWFwcGluZz4gIDxzaXpl
-Pgo+PiArCj4+ICtUaW1pbmcgcHJvcGVydHkgZm9yIGNoaWxkIG5vZGVzLiBJdCBpcyBtYW5kYXRv
-cnksIG5vdCBvcHRpb25hbC4KPj4gKwo+PiArIC0gZnNsLHdlaW0tY3MtdGltaW5nOglUaGUgdGlt
-aW5nIGFycmF5LCBjb250YWlucyA2IHRpbWluZyB2YWx1ZXMgZm9yIHRoZQo+PiArCQkJY2hpbGQg
-bm9kZS4gV2UgY2FuIGdldCB0aGUgQ1MgaW5kZXggZnJvbSB0aGUgY2hpbGQKPj4gKwkJCW5vZGUn
-cyAicmVnIiBwcm9wZXJ0eS4KPiBUaGlzIHNob3VsZCBiZSBtb3JlIGRldGFpbGVkLCBzb21ldGhp
-bmcgbGlrZToKPgo+IFRoaXMgY29udGFpbnMgdGhlIHZhbHVlcyBmb3IgdGhlIHJlZ2lzdGVycyBF
-SU1fQ1NuR0NSMSwgRUlNX0NTbkdDUjIsCj4gRUlNX0NTblJDUjEsIEVJTV9DU25SQ1IyLCBFSU1f
-Q1NuV0NSMSwgRUlNX0NTbldDUjIgaW4gdGhpcyBvcmRlci4KPgoKCmRvIHlvdSBtZWFuIGkgc2hv
-dWxkIGFkZCBzb21lIG5ldyBwcm9wZXJ0aWVzLCBzdWNoIGFzCiJmc2wsZWltX2NzbnJjcjEiLCAi
-ZnNsLGVpbV9jc25yY3IyIiAuLi4KPj4gK3N0YXRpYyBpbnQgd2VpbV9wYXJzZV9kdChzdHJ1Y3Qg
-cGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+PiArewo+PiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqY2hp
-bGQ7Cj4+ICsJaW50IHJldDsKPj4gKwo+PiArCWZvcl9lYWNoX2NoaWxkX29mX25vZGUocGRldi0+
-ZGV2Lm9mX25vZGUsIGNoaWxkKSB7Cj4+ICsJCWlmICghY2hpbGQtPm5hbWUpCj4+ICsJCQljb250
-aW51ZTsKPj4gKwo+PiArCQlyZXQgPSB3ZWltX3RpbWluZ19zZXR1cChwZGV2LCBjaGlsZCk7Cj4+
-ICsJCWlmIChyZXQpCj4+ICsJCQlnb3RvIHBhcnNlX2ZhaWw7Cj4+ICsKPj4gKwkJaWYgKCFvZl9w
-bGF0Zm9ybV9kZXZpY2VfY3JlYXRlKGNoaWxkLCBOVUxMLCZwZGV2LT5kZXYpKSB7Cj4+ICsJCQly
-ZXQgPSAtRUlOVkFMOwo+PiArCQkJZ290byBwYXJzZV9mYWlsOwo+PiArCQl9Cj4gSSB3b3VsZCBw
-cmludCBzb21lIHdhcm5pbmcgaGVyZSBmb3IgdGhlIGZhaWx1cmVzIGluIHRoaXMgbG9vcCwgYnV0
-IEkKPiBkb24ndCB0aGluayBpdCdzIG5lY2Vzc2FyeSB0byBiYWlsIG91dC4gTm8gbmVlZCB0byBt
-YWtlIGFsbCBXRUlNIGRldmljZXMKPiBmYWlsIGlmIG9uZSBoYXMgYW4gZXJyb25lb3VzIGRldmlj
-ZSBub2RlLgo+Cm9rLgo+PiArCj4+ICsJLyogZ2V0IHRoZSByZXNvdXJjZSAqLwo+PiArCXJlcyA9
-IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01FTSwgMCk7Cj4+ICsJd2Vp
-bS0+YmFzZSA9IGRldm1faW9yZW1hcF9yZXNvdXJjZSgmcGRldi0+ZGV2LCByZXMpOwo+PiArCWlm
-IChJU19FUlIod2VpbS0+YmFzZSkpIHsKPj4gKwkJcmV0ID0gUFRSX0VSUih3ZWltLT5iYXNlKTsK
-Pj4gKwkJZ290byB3ZWltX2VycjsKPj4gKwl9Cj4+ICsKPj4gKwkvKiBnZXQgdGhlIGNsb2NrICov
-Cj4+ICsJd2VpbS0+Y2xrID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsIE5VTEwpOwo+PiArCWlm
-IChJU19FUlIod2VpbS0+Y2xrKSkKPj4gKwkJZ290byB3ZWltX2VycjsKPj4gKwo+PiArCWNsa19w
-cmVwYXJlX2VuYWJsZSh3ZWltLT5jbGspOwo+PiArCj4+ICsJLyogcGFyc2UgdGhlIGRldmljZSBu
-b2RlICovCj4+ICsJcmV0ID0gd2VpbV9wYXJzZV9kdChwZGV2KTsKPj4gKwlpZiAocmV0KSB7Cj4+
-ICsJCWNsa19kaXNhYmxlX3VucHJlcGFyZSh3ZWltLT5jbGspOwo+PiArCQlnb3RvIHdlaW1fZXJy
-Owo+PiArCX0KPj4gKwo+PiArCWRldl9pbmZvKCZwZGV2LT5kZXYsICJXRUlNIGRyaXZlciByZWdp
-c3RlcmVkLlxuIik7Cj4+ICsJcmV0dXJuIDA7Cj4+ICsKPj4gK3dlaW1fZXJyOgo+PiArCXJldHVy
-biByZXQ7Cj4+ICt9Cj4+ICsKPj4gK3N0YXRpYyBpbnQgd2VpbV9yZW1vdmUoc3RydWN0IHBsYXRm
-b3JtX2RldmljZSAqcGRldikKPj4gK3sKPj4gKwlzdHJ1Y3QgaW14X3dlaW0gKndlaW0gPSBwbGF0
-Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2KTsKPj4gKwo+PiArCWNsa19kaXNhYmxlX3VucHJlcGFyZSh3
-ZWltLT5jbGspOwo+IE9uY2UgYWdhaW46IElzIHRoaXMgY2xvY2sgbmVlZGVkIGZvciB0aGUgY2hp
-bGQgZGV2aWNlcz8gSWYgeWVzLCB5b3UKPiBjYW4ndCBkaXNhYmxlIGl0IGhlcmUgYW5kIGxlYXZl
-IHRoZSBjaGlsZCBkZXZpY2VzIHJlZ2lzdGVyZWQuCj4KYWdhaW4uIHllcy4gd2UgbmVlZCB0aGlz
-IGNsb2NrLgoKCnRoYW5rcwpIdWFuZyBTaGlqaWUKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2
-aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3Jn
-L2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+> > I suggest remove "nor" label here since it can be used for other devices later.
+> this pinctrl is just for NOR.
+> 
+> If we attach other device to WEIM, it maybe needs other PAD, such as
+> MX6Q_PAD_EIM_LBA__EIM_LBA_B. We need to add another pinctrl then.
+
+How we should define CS1 pin in your example for second device?
+
+---
