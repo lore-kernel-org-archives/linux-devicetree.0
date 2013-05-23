@@ -1,100 +1,61 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: [net-next PATCH v2 5/6] ARM: dts: AM33XX: Add pinmux configuration for CPSW to EVMsk
-Date: Thu, 23 May 2013 18:00:27 +0530
-Message-ID: <1369312228-3308-6-git-send-email-mugunthanvnm@ti.com>
-References: <1369312228-3308-1-git-send-email-mugunthanvnm@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V2 1/6] drivers: bus: add a new driver for WEIM
+Date: Thu, 23 May 2013 15:09:57 +0200
+Message-ID: <201305231509.57651.arnd@arndb.de>
+References: <1369296978-7669-1-git-send-email-b32955@freescale.com>
+ <201305231153.38111.arnd@arndb.de> <20130523115505.GG32299@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1369312228-3308-1-git-send-email-mugunthanvnm@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, benoit.cousson@linaro.org, paul@pwsan.com, Mugunthan V N <mugunthanvnm@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130523115505.GG32299@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, Huang Shijie <b32955@freescale.com>, grant.likely@linaro.org, shawn.guo@linaro.org, Alison_Chaiken@mentor.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add pinmux configurations for MII based CPSW ethernet to AM335x EVMsk.
-In this patch, only single named mode/state is added and these pins
-are configured during pinctrl driver initialization.
+On Thursday 23 May 2013, Sascha Hauer wrote:
+> > > >> +static int weim_remove(struct platform_device *pdev)
+> > > >> +{
+> > > >> +        struct imx_weim *weim = platform_get_drvdata(pdev);
+> > > >> +
+> > > >> +        clk_disable_unprepare(weim->clk);
+> > > > Once again: Is this clock needed for the child devices? If yes, you
+> > > > can't disable it here and leave the child devices registered.
+> > > >
+> > 
+> > But weim_remove will not be called as long as there are children
+> > registered, right?
+> 
+> But then weim_remove would never be called since nobody unregisters the
+> children, right?
+> 
 
-Default mode is nothing but the values required for the module during
-active state. With this configurations module is functional as
-expected.
+Ah, right. That is actually another problem: if the probe() function
+creates the child devices, the remove() function should tear them down
+again. If we do that, we can ensure that the clock is only turned
+off after the last child is gone.
 
-Todo:
-- if an idle state is available for pins, add support for it.
+OTOH, I agree that it would be nicer if the clk could remain turned
+off as long as no children are active. Can we do a clk_disable()
+after setting up the timings for the children and then expect those
+to actually start up the clk again when they need it?
 
-Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
----
- arch/arm/boot/dts/am335x-evmsk.dts |   50 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+Or to take things further: would it make sense to represent WEIM
+itself as a clock driver and perform the settings for each child
+only when it sets up its own clk?
 
-diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-index acbcac3..12cbe4e 100644
---- a/arch/arm/boot/dts/am335x-evmsk.dts
-+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-@@ -51,6 +51,46 @@
- 				0x9c 0x27	/* gpmc_ben0_cle.gpio2_5, INPUT | MODE7 */
- 			>;
- 		};
-+
-+		cpsw_default: cpsw_default {
-+			pinctrl-single,pins = <
-+				/* Slave 1 */
-+				0x114 0x2	/* mii1_txen.rgmii1_tctl, MODE2 | OUTPUT */
-+				0x118 0x22	/* mii1_rxdv.rgmii1_rctl, MODE2 | INPUT_PULLDOWN */
-+				0x11c 0x2	/* mii1_txd3.rgmii1_td3, MODE2 | OUTPUT */
-+				0x120 0x2	/* mii1_txd2.rgmii1_td2, MODE2 | OUTPUT */
-+				0x124 0x2	/* mii1_txd1.rgmii1_td1, MODE2 | OUTPUT */
-+				0x128 0x2	/* mii1_txd0.rgmii1_td0, MODE2 | OUTPUT */
-+				0x12c 0x2	/* mii1_txclk.rgmii1_tclk, MODE2 | OUTPUT */
-+				0x130 0x22	/* mii1_rxclk.rgmii1_rclk, MODE2 | INPUT_PULLDOWN */
-+				0x134 0x22	/* mii1_rxd3.rgmii1_rd3, MODE2 | INPUT_PULLDOWN */
-+				0x138 0x22	/* mii1_rxd2.rgmii1_rd2, MODE2 | INPUT_PULLDOWN */
-+				0x13c 0x22	/* mii1_rxd1.rgmii1_rd1, MODE2 | INPUT_PULLDOWN */
-+				0x140 0x22	/* mii1_rxd0.rgmii1_rd0, MODE2 | INPUT_PULLDOWN */
-+
-+				/* Slave 2 */
-+				0x40 0x2	/* gpmc_a0.rgmii2_tctl", MODE2 | OUTPUT */
-+				0x44 0x22	/* gpmc_a1.rgmii2_rctl", MODE2 | INPUT_PULLDOWN */
-+				0x48 0x2	/* gpmc_a2.rgmii2_td3", MODE2 | OUTPUT */
-+				0x4c 0x2	/* gpmc_a3.rgmii2_td2", MODE2 | OUTPUT */
-+				0x50 0x2	/* gpmc_a4.rgmii2_td1", MODE2 | OUTPUT */
-+				0x54 0x2	/* gpmc_a5.rgmii2_td0", MODE2 | OUTPUT */
-+				0x58 0x2	/* gpmc_a6.rgmii2_tclk", MODE2 | OUTPUT */
-+				0x5c 0x22	/* gpmc_a7.rgmii2_rclk", MODE2 | INPUT_PULLDOWN */
-+				0x60 0x22	/* gpmc_a8.rgmii2_rd3", MODE2 | INPUT_PULLDOWN */
-+				0x64 0x22	/* gpmc_a9.rgmii2_rd2", MODE2 | INPUT_PULLDOWN */
-+				0x68 0x22	/* gpmc_a10.rgmii2_rd1", MODE2 | INPUT_PULLDOWN */
-+				0x6c 0x22	/* gpmc_a11.rgmii2_rd0", MODE2 | INPUT_PULLDOWN */
-+			>;
-+		};
-+
-+		davinci_mdio_default: davinci_mdio_default {
-+			pinctrl-single,pins = <
-+				/* MDIO */
-+				0x148 0x30	/* mdio_data.mdio_data, MODE0 | INPUT_PULLUP */
-+				0x14c 0x10	/* mdio_clk.mdio_clk, MODE0 | OUTPUT_PULLUP */
-+			>;
-+		};
- 	};
- 
- 	ocp {
-@@ -249,6 +289,16 @@
- 	};
- };
- 
-+&mac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&cpsw_default>;
-+};
-+
-+&davinci_mdio {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&davinci_mdio_default>;
-+};
-+
- &cpsw_emac0 {
- 	phy_id = <&davinci_mdio>, <0>;
- };
--- 
-1.7.9.5
+I guess it would also make sense to use of_platform_populate() instead
+of of_platform_device_create() when creating the children, so we actually
+create the entire hierarchy in case of the children itself is a
+"simple-bus".
+
+	Arnd
