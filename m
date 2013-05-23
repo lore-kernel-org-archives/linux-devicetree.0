@@ -1,47 +1,149 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] video: simplefb: add mode parsing function
-Date: Thu, 23 May 2013 18:57:55 +0200
-Message-ID: <CAMuHMdVs4hy7dWAGxN51XP3YuWBY6rk22Z6tCU+-HujZH4jL2Q@mail.gmail.com>
-References: <1369296231-26597-1-git-send-email-acourbot@nvidia.com>
- <519E438A.9030408@wwwdotorg.org>
+From: Linus Walleij <linus.walleij@stericsson.com>
+Subject: [PATCH 6/6] ARM: u300: convert MMC/SD clock to device tree
+Date: Thu, 23 May 2013 19:31:28 +0200
+Message-ID: <1369330288-14856-7-git-send-email-linus.walleij@stericsson.com>
+References: <1369330288-14856-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <519E438A.9030408-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1369330288-14856-1-git-send-email-linus.walleij@stericsson.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, Rob Herring <robherring2@gmail.com>, Mike Turquette <mturquette@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 23, 2013 at 6:27 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> +
->> +             cpt += field->length;
->> +     }
->> +
->> +     format->bits_per_pixel = ((cpt + 7) / 8) * 8;
->
-> Should this error-check that isn't > 32?
+From: Linus Walleij <linus.walleij@linaro.org>
 
-So pixels can't be larger than 32 bits?
-IIRC, some SGI and Sun graphics cards had e.g. 80 bit pixels (incl. Z buffer).
+This converts the last of the U300 clocks to being probed from
+the device tree.
 
-Gr{oetje,eeting}s,
+Cc: Mike Turquette <mturquette@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+Hi Mike, I'm seeking an ACK on this to take it through the
+ARM SoC tree.
+---
+ .../bindings/clock/ste-u300-syscon-clock.txt       | 23 ++++++++++++++++++++++
+ arch/arm/boot/dts/ste-u300.dts                     |  9 +++++++--
+ drivers/clk/clk-u300.c                             | 22 ++++++++++++++++-----
+ 3 files changed, 47 insertions(+), 7 deletions(-)
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/Documentation/devicetree/bindings/clock/ste-u300-syscon-clock.txt b/Documentation/devicetree/bindings/clock/ste-u300-syscon-clock.txt
+index b6a30f5..7cafcb9 100644
+--- a/Documentation/devicetree/bindings/clock/ste-u300-syscon-clock.txt
++++ b/Documentation/devicetree/bindings/clock/ste-u300-syscon-clock.txt
+@@ -55,3 +55,26 @@ gpio: gpio@c0016000 {
+ 	(...)
+ 	clocks = <&gpio_clk>;
+ };
++
++
++Bindings for the MMC/SD card clock:
++
++Required properties:
++- compatible: must be "stericsson,u300-syscon-mclk"
++- #clock-cells: must be <0>
++
++Optional properties:
++- clocks: parent clock(s)
++
++mmc_mclk: mmc_mclk {
++	#clock-cells = <0>;
++	compatible = "stericsson,u300-syscon-mclk";
++	clocks = <&mmc_pclk>;
++};
++
++mmcsd: mmcsd@c0001000 {
++	compatible = "arm,pl18x", "arm,primecell";
++	clocks = <&mmc_pclk>, <&mmc_mclk>;
++	clock-names = "apb_pclk", "mclk";
++	(...)
++};
+diff --git a/arch/arm/boot/dts/ste-u300.dts b/arch/arm/boot/dts/ste-u300.dts
+index e83aafc..d5dd243 100644
+--- a/arch/arm/boot/dts/ste-u300.dts
++++ b/arch/arm/boot/dts/ste-u300.dts
+@@ -205,6 +205,11 @@
+ 			clock-id = <5>;
+ 			clocks = <&fast_clk>;
+ 		};
++		mmc_mclk: mmc_mclk {
++			#clock-cells = <0>;
++			compatible = "stericsson,u300-syscon-mclk";
++			clocks = <&mmc_pclk>;
++		};
+ 		spi_clk: spi_p_clk@26M {
+ 			#clock-cells = <0>;
+ 			compatible = "stericsson,u300-syscon-clk";
+@@ -433,8 +438,8 @@
+ 			reg = <0xc0001000 0x1000>;
+ 			interrupt-parent = <&vicb>;
+ 			interrupts = <6 7>;
+-			clocks = <&mmc_pclk>;
+-			clock-names = "apb_pclk";
++			clocks = <&mmc_pclk>, <&mmc_mclk>;
++			clock-names = "apb_pclk", "mclk";
+ 			max-frequency = <24000000>;
+ 			bus-width = <4>; // SD-card slot
+ 			mmc-cap-mmc-highspeed;
+diff --git a/drivers/clk/clk-u300.c b/drivers/clk/clk-u300.c
+index 5f234d3..8774e05 100644
+--- a/drivers/clk/clk-u300.c
++++ b/drivers/clk/clk-u300.c
+@@ -1139,6 +1139,18 @@ mclk_clk_register(struct device *dev, const char *name,
+ 	return clk;
+ }
+ 
++static void __init of_u300_syscon_mclk_init(struct device_node *np)
++{
++	struct clk *clk = ERR_PTR(-EINVAL);
++	const char *clk_name = np->name;
++	const char *parent_name;
++
++	parent_name = of_clk_get_parent_name(np, 0);
++	clk = mclk_clk_register(NULL, clk_name, parent_name, false);
++	if (!IS_ERR(clk))
++		of_clk_add_provider(np, of_clk_src_simple_get, clk);
++}
++
+ static const __initconst struct of_device_id u300_clk_match[] = {
+ 	{
+ 		.compatible = "fixed-clock",
+@@ -1152,12 +1164,16 @@ static const __initconst struct of_device_id u300_clk_match[] = {
+ 		.compatible = "stericsson,u300-syscon-clk",
+ 		.data = of_u300_syscon_clk_init,
+ 	},
++	{
++		.compatible = "stericsson,u300-syscon-mclk",
++		.data = of_u300_syscon_mclk_init,
++	},
+ };
+ 
++
+ void __init u300_clk_init(void __iomem *base)
+ {
+ 	u16 val;
+-	struct clk *clk;
+ 
+ 	syscon_vbase = base;
+ 
+@@ -1175,8 +1191,4 @@ void __init u300_clk_init(void __iomem *base)
+ 	writew(val, syscon_vbase + U300_SYSCON_PMCR);
+ 
+ 	of_clk_init(u300_clk_match);
+-
+-	/* Then this special MMC/SD clock */
+-	clk = mclk_clk_register(NULL, "mmc_clk", "mmc_p_clk", false);
+-	clk_register_clkdev(clk, NULL, "mmci");
+ }
+-- 
+1.7.11.3
