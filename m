@@ -1,13 +1,11 @@
 From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH V2 5/6] ARM: dts: imx6dl: add a pinctrl for WEIM NOR
-Date: Thu, 23 May 2013 16:16:17 +0800
-Message-ID: <1369296978-7669-6-git-send-email-b32955@freescale.com>
-References: <1369296978-7669-1-git-send-email-b32955@freescale.com>
+Subject: [PATCH V2 0/6] ARM: imx6q{dl}: add the WEIM driver
+Date: Thu, 23 May 2013 16:16:12 +0800
+Message-ID: <1369296978-7669-1-git-send-email-b32955@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1369296978-7669-1-git-send-email-b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,78 +20,39 @@ To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a new pinctrl for WEIN NOR.
+This patch set adds a new driver for WEIM in the imx6q{dl}-sabreauto boards.
 
-Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- arch/arm/boot/dts/imx6dl.dtsi |   55 +++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 55 insertions(+), 0 deletions(-)
+The WEIM(Wireless External Interface Module) works like a bus.
+You can attach many different devices on it, such as NOR, onenand.
 
-diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-index 4b13454..4c8f838 100644
---- a/arch/arm/boot/dts/imx6dl.dtsi
-+++ b/arch/arm/boot/dts/imx6dl.dtsi
-@@ -183,6 +183,61 @@
- 					};
- 				};
- 
-+				weim {
-+					pinctrl_weim_nor_1: weim_norgrp-1 {
-+						fsl,pins = <
-+							MX6DL_PAD_EIM_CS0__EIM_CS0_B   0xb0b1
-+							MX6DL_PAD_EIM_OE__EIM_OE_B     0xb0b1
-+							MX6DL_PAD_EIM_RW__EIM_RW       0xb0b1
-+							MX6DL_PAD_EIM_WAIT__EIM_WAIT_B 0xb060
-+
-+							/* data */
-+							MX6DL_PAD_EIM_D16__EIM_DATA16 0xb0b1
-+							MX6DL_PAD_EIM_D17__EIM_DATA17 0xb0b1
-+							MX6DL_PAD_EIM_D18__EIM_DATA18 0xb0b1
-+							MX6DL_PAD_EIM_D19__EIM_DATA19 0xb0b1
-+							MX6DL_PAD_EIM_D20__EIM_DATA20 0xb0b1
-+							MX6DL_PAD_EIM_D21__EIM_DATA21 0xb0b1
-+							MX6DL_PAD_EIM_D22__EIM_DATA22 0xb0b1
-+							MX6DL_PAD_EIM_D23__EIM_DATA23 0xb0b1
-+							MX6DL_PAD_EIM_D24__EIM_DATA24 0xb0b1
-+							MX6DL_PAD_EIM_D25__EIM_DATA25 0xb0b1
-+							MX6DL_PAD_EIM_D26__EIM_DATA26 0xb0b1
-+							MX6DL_PAD_EIM_D27__EIM_DATA27 0xb0b1
-+							MX6DL_PAD_EIM_D28__EIM_DATA28 0xb0b1
-+							MX6DL_PAD_EIM_D29__EIM_DATA29 0xb0b1
-+							MX6DL_PAD_EIM_D30__EIM_DATA30 0xb0b1
-+							MX6DL_PAD_EIM_D31__EIM_DATA31 0xb0b1
-+
-+							/* address */
-+							MX6DL_PAD_EIM_A23__EIM_ADDR23 0xb0b1
-+							MX6DL_PAD_EIM_A22__EIM_ADDR22 0xb0b1
-+							MX6DL_PAD_EIM_A21__EIM_ADDR21 0xb0b1
-+							MX6DL_PAD_EIM_A20__EIM_ADDR20 0xb0b1
-+							MX6DL_PAD_EIM_A19__EIM_ADDR19 0xb0b1
-+							MX6DL_PAD_EIM_A18__EIM_ADDR18 0xb0b1
-+							MX6DL_PAD_EIM_A17__EIM_ADDR17 0xb0b1
-+							MX6DL_PAD_EIM_A16__EIM_ADDR16 0xb0b1
-+							MX6DL_PAD_EIM_DA15__EIM_AD15  0xb0b1
-+							MX6DL_PAD_EIM_DA14__EIM_AD14  0xb0b1
-+							MX6DL_PAD_EIM_DA13__EIM_AD13  0xb0b1
-+							MX6DL_PAD_EIM_DA12__EIM_AD12  0xb0b1
-+							MX6DL_PAD_EIM_DA11__EIM_AD11  0xb0b1
-+							MX6DL_PAD_EIM_DA10__EIM_AD10  0xb0b1
-+							MX6DL_PAD_EIM_DA9__EIM_AD09   0xb0b1
-+							MX6DL_PAD_EIM_DA8__EIM_AD08   0xb0b1
-+							MX6DL_PAD_EIM_DA7__EIM_AD07   0xb0b1
-+							MX6DL_PAD_EIM_DA6__EIM_AD06   0xb0b1
-+							MX6DL_PAD_EIM_DA5__EIM_AD05   0xb0b1
-+							MX6DL_PAD_EIM_DA4__EIM_AD04   0xb0b1
-+							MX6DL_PAD_EIM_DA3__EIM_AD03   0xb0b1
-+							MX6DL_PAD_EIM_DA2__EIM_AD02   0xb0b1
-+							MX6DL_PAD_EIM_DA1__EIM_AD01   0xb0b1
-+							MX6DL_PAD_EIM_DA0__EIM_AD00   0xb0b1
-+						>;
-+					};
-+
-+				};
- 
- 			};
- 
--- 
-1.7.1
+In the case of i.MX6q-sabreauto, only the NOR is connected to WEIM.
+
+v1 --> v2:
+	[0] remove used PADs.
+	[1] fix the wrong pad values, (thanks Alison Chaiken)
+	[2] remove the weim-cs-index.
+	[3] add "fsl" for the weim-cs-timing.
+	[4] remove the partitions info in the document.
+	[5] rewrite the drivers(follow Sascha and Shawn's comments)
+
+Huang Shijie (6):
+  drivers: bus: add a new driver for WEIM
+  ARM: dts: imx6q{dl}: fix the pin conflict between SPI and WEIM
+  ARM: dts: imx6qdl: add more information for WEIM
+  ARM: dts: imx6q: add pinctrl for WEIM NOR
+  ARM: dts: imx6dl: add a pinctrl for WEIM NOR
+  ARM: dts: imx6qdl: enable the WEIM NOR
+
+ Documentation/devicetree/bindings/bus/imx-weim.txt |   50 +++++++
+ arch/arm/boot/dts/imx6dl-sabreauto.dts             |    9 +-
+ arch/arm/boot/dts/imx6dl.dtsi                      |   55 ++++++++
+ arch/arm/boot/dts/imx6q-sabreauto.dts              |    9 +-
+ arch/arm/boot/dts/imx6q.dtsi                       |   56 ++++++++
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi           |   22 +++-
+ arch/arm/boot/dts/imx6qdl.dtsi                     |    4 +-
+ drivers/bus/Kconfig                                |    9 ++
+ drivers/bus/Makefile                               |    1 +
+ drivers/bus/imx-weim.c                             |  146 ++++++++++++++++++++
+ 10 files changed, 357 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/imx-weim.txt
+ create mode 100644 drivers/bus/imx-weim.c
