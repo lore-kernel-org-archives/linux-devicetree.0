@@ -1,41 +1,71 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH -next] pinctrl: sunxi: fix error return code in sunxi_pinctrl_probe()
-Date: Thu, 23 May 2013 17:32:14 +0800
-Message-ID: <CAPgLHd_v3oNBP5DcqJ9bkGKkCDqwr1UzJNnVT6uz8V--FWEQ0Q@mail.gmail.com>
+From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH V2 1/6] drivers: bus: add a new driver for WEIM
+Date: Thu, 23 May 2013 17:35:42 +0800
+Message-ID: <519DE2EE.1050006@freescale.com>
+References: <1369296978-7669-1-git-send-email-b32955@freescale.com>
+ <1369296978-7669-2-git-send-email-b32955@freescale.com>
+ <20130523092344.GF32299@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, grant.likely@linaro.org, rob.herring@calxeda.com, emilio@elopez.com.ar
-Cc: yongjun_wei@trendmicro.com.cn, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130523092344.GF32299-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
-
-Fix to return a negative error code from the devm_clk_get() error
-handling case instead of 0, as done elsewhere in this function.
-
-Introduced by commit 950707c0eb5c7aeaa2c446a04c824f4be686d2f6
-(pinctrl: sunxi: add clock support)
-
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
----
- drivers/pinctrl/pinctrl-sunxi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/pinctrl-sunxi.c b/drivers/pinctrl/pinctrl-sunxi.c
-index c058529..b7d8c89 100644
---- a/drivers/pinctrl/pinctrl-sunxi.c
-+++ b/drivers/pinctrl/pinctrl-sunxi.c
-@@ -1990,8 +1990,10 @@ static int sunxi_pinctrl_probe(struct platform_device *pdev)
- 	}
- 
- 	clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(clk))
-+	if (IS_ERR(clk)) {
-+		ret = PTR_ERR(clk);
- 		goto gpiochip_error;
-+	}
- 
- 	clk_prepare_enable(clk);
- 
+5LqOIDIwMTPlubQwNeaciDIz5pelIDE3OjIzLCBTYXNjaGEgSGF1ZXIg5YaZ6YGTOgo+IE9uIFRo
+dSwgTWF5IDIzLCAyMDEzIGF0IDA0OjE2OjEzUE0gKzA4MDAsIEh1YW5nIFNoaWppZSB3cm90ZToK
+Pj4gKwkJCTxjcy1udW1iZXI+ICAwPHBoeXNpY2FsIGFkZHJlc3Mgb2YgbWFwcGluZz4gIDxzaXpl
+Pgo+PiArCj4+ICtUaW1pbmcgcHJvcGVydHkgZm9yIGNoaWxkIG5vZGVzLiBJdCBpcyBtYW5kYXRv
+cnksIG5vdCBvcHRpb25hbC4KPj4gKwo+PiArIC0gZnNsLHdlaW0tY3MtdGltaW5nOglUaGUgdGlt
+aW5nIGFycmF5LCBjb250YWlucyA2IHRpbWluZyB2YWx1ZXMgZm9yIHRoZQo+PiArCQkJY2hpbGQg
+bm9kZS4gV2UgY2FuIGdldCB0aGUgQ1MgaW5kZXggZnJvbSB0aGUgY2hpbGQKPj4gKwkJCW5vZGUn
+cyAicmVnIiBwcm9wZXJ0eS4KPiBUaGlzIHNob3VsZCBiZSBtb3JlIGRldGFpbGVkLCBzb21ldGhp
+bmcgbGlrZToKPgo+IFRoaXMgY29udGFpbnMgdGhlIHZhbHVlcyBmb3IgdGhlIHJlZ2lzdGVycyBF
+SU1fQ1NuR0NSMSwgRUlNX0NTbkdDUjIsCj4gRUlNX0NTblJDUjEsIEVJTV9DU25SQ1IyLCBFSU1f
+Q1NuV0NSMSwgRUlNX0NTbldDUjIgaW4gdGhpcyBvcmRlci4KPgoKCmRvIHlvdSBtZWFuIGkgc2hv
+dWxkIGFkZCBzb21lIG5ldyBwcm9wZXJ0aWVzLCBzdWNoIGFzCiJmc2wsZWltX2NzbnJjcjEiLCAi
+ZnNsLGVpbV9jc25yY3IyIiAuLi4KPj4gK3N0YXRpYyBpbnQgd2VpbV9wYXJzZV9kdChzdHJ1Y3Qg
+cGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+PiArewo+PiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqY2hp
+bGQ7Cj4+ICsJaW50IHJldDsKPj4gKwo+PiArCWZvcl9lYWNoX2NoaWxkX29mX25vZGUocGRldi0+
+ZGV2Lm9mX25vZGUsIGNoaWxkKSB7Cj4+ICsJCWlmICghY2hpbGQtPm5hbWUpCj4+ICsJCQljb250
+aW51ZTsKPj4gKwo+PiArCQlyZXQgPSB3ZWltX3RpbWluZ19zZXR1cChwZGV2LCBjaGlsZCk7Cj4+
+ICsJCWlmIChyZXQpCj4+ICsJCQlnb3RvIHBhcnNlX2ZhaWw7Cj4+ICsKPj4gKwkJaWYgKCFvZl9w
+bGF0Zm9ybV9kZXZpY2VfY3JlYXRlKGNoaWxkLCBOVUxMLCZwZGV2LT5kZXYpKSB7Cj4+ICsJCQly
+ZXQgPSAtRUlOVkFMOwo+PiArCQkJZ290byBwYXJzZV9mYWlsOwo+PiArCQl9Cj4gSSB3b3VsZCBw
+cmludCBzb21lIHdhcm5pbmcgaGVyZSBmb3IgdGhlIGZhaWx1cmVzIGluIHRoaXMgbG9vcCwgYnV0
+IEkKPiBkb24ndCB0aGluayBpdCdzIG5lY2Vzc2FyeSB0byBiYWlsIG91dC4gTm8gbmVlZCB0byBt
+YWtlIGFsbCBXRUlNIGRldmljZXMKPiBmYWlsIGlmIG9uZSBoYXMgYW4gZXJyb25lb3VzIGRldmlj
+ZSBub2RlLgo+Cm9rLgo+PiArCj4+ICsJLyogZ2V0IHRoZSByZXNvdXJjZSAqLwo+PiArCXJlcyA9
+IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01FTSwgMCk7Cj4+ICsJd2Vp
+bS0+YmFzZSA9IGRldm1faW9yZW1hcF9yZXNvdXJjZSgmcGRldi0+ZGV2LCByZXMpOwo+PiArCWlm
+IChJU19FUlIod2VpbS0+YmFzZSkpIHsKPj4gKwkJcmV0ID0gUFRSX0VSUih3ZWltLT5iYXNlKTsK
+Pj4gKwkJZ290byB3ZWltX2VycjsKPj4gKwl9Cj4+ICsKPj4gKwkvKiBnZXQgdGhlIGNsb2NrICov
+Cj4+ICsJd2VpbS0+Y2xrID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsIE5VTEwpOwo+PiArCWlm
+IChJU19FUlIod2VpbS0+Y2xrKSkKPj4gKwkJZ290byB3ZWltX2VycjsKPj4gKwo+PiArCWNsa19w
+cmVwYXJlX2VuYWJsZSh3ZWltLT5jbGspOwo+PiArCj4+ICsJLyogcGFyc2UgdGhlIGRldmljZSBu
+b2RlICovCj4+ICsJcmV0ID0gd2VpbV9wYXJzZV9kdChwZGV2KTsKPj4gKwlpZiAocmV0KSB7Cj4+
+ICsJCWNsa19kaXNhYmxlX3VucHJlcGFyZSh3ZWltLT5jbGspOwo+PiArCQlnb3RvIHdlaW1fZXJy
+Owo+PiArCX0KPj4gKwo+PiArCWRldl9pbmZvKCZwZGV2LT5kZXYsICJXRUlNIGRyaXZlciByZWdp
+c3RlcmVkLlxuIik7Cj4+ICsJcmV0dXJuIDA7Cj4+ICsKPj4gK3dlaW1fZXJyOgo+PiArCXJldHVy
+biByZXQ7Cj4+ICt9Cj4+ICsKPj4gK3N0YXRpYyBpbnQgd2VpbV9yZW1vdmUoc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldikKPj4gK3sKPj4gKwlzdHJ1Y3QgaW14X3dlaW0gKndlaW0gPSBwbGF0
+Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2KTsKPj4gKwo+PiArCWNsa19kaXNhYmxlX3VucHJlcGFyZSh3
+ZWltLT5jbGspOwo+IE9uY2UgYWdhaW46IElzIHRoaXMgY2xvY2sgbmVlZGVkIGZvciB0aGUgY2hp
+bGQgZGV2aWNlcz8gSWYgeWVzLCB5b3UKPiBjYW4ndCBkaXNhYmxlIGl0IGhlcmUgYW5kIGxlYXZl
+IHRoZSBjaGlsZCBkZXZpY2VzIHJlZ2lzdGVyZWQuCj4KYWdhaW4uIHllcy4gd2UgbmVlZCB0aGlz
+IGNsb2NrLgoKCnRoYW5rcwpIdWFuZyBTaGlqaWUKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2
+aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3Jn
+L2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
