@@ -1,41 +1,52 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [net-next resend PATCH 1/6] net: cpsw: enhance pinctrl support
-Date: Thu, 23 May 2013 12:10:37 -0700 (PDT)
-Message-ID: <20130523.121037.84357412382839522.davem@davemloft.net>
-References: <1369130103-743-2-git-send-email-mugunthanvnm@ti.com>
-	<20130522.235741.135665074490271750.davem@davemloft.net>
-	<1BAFE6F6C881BF42822005164F1491C33EBF928C@DBDE04.ent.ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] video: simplefb: add mode parsing function
+Date: Thu, 23 May 2013 13:21:27 -0600
+Message-ID: <519E6C37.2010706@wwwdotorg.org>
+References: <1369296231-26597-1-git-send-email-acourbot@nvidia.com>
+ <519E438A.9030408@wwwdotorg.org>
+ <CAMuHMdVs4hy7dWAGxN51XP3YuWBY6rk22Z6tCU+-HujZH4jL2Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1BAFE6F6C881BF42822005164F1491C33EBF928C@DBDE04.ent.ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: gururaja.hebbar@ti.com
-Cc: mugunthanvnm@ti.com, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, benoit.cousson@linaro.orgm, paul@pwsan.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAMuHMdVs4hy7dWAGxN51XP3YuWBY6rk22Z6tCU+-HujZH4jL2Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
-Date: Thu, 23 May 2013 11:28:38 +0000
-
-> On Thu, May 23, 2013 at 12:27:41, David Miller wrote:
->> From: Mugunthan V N <mugunthanvnm@ti.com>
->> Date: Tue, 21 May 2013 15:24:58 +0530
->> 
->> > +		priv->pins_default = pinctrl_lookup_state(priv->pinctrl,
->> > +						PINCTRL_STATE_DEFAULT);
->> 
->> This is not indented correctly.
->> 
->> Argument on the second, and subsequent, lines of a function call
->> must start at the first column after the openning parenthesis of
->> the function call itself.
+On 05/23/2013 10:57 AM, Geert Uytterhoeven wrote:
+> On Thu, May 23, 2013 at 6:27 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>>> +
+>>> +             cpt += field->length;
+>>> +     }
+>>> +
+>>> +     format->bits_per_pixel = ((cpt + 7) / 8) * 8;
+>>
+>> Should this error-check that isn't > 32?
 > 
-> Well, if I am correct, doing so will make the line cross 80 character limit.
-> If you could (please I ask), can you let me know how it can be handled in 
-> above situation. I will make the changes/corrections and re-send it.
-> 
-> Thanks a lot in advance.
+> So pixels can't be larger than 32 bits?
+> IIRC, some SGI and Sun graphics cards had e.g. 80 bit pixels (incl. Z buffer).
 
-Avoid the deep indentation by coding the basic block into a helper
-function.
+That's a good point.
+
+Out of curiosity, how does the FB core treat these format definitions?
+Are they expected to fit into a 16-/32-/64-/128- bit power-of-two
+bit-size, or are they treated as a string of bytes that get serialized
+into memory LSB first (or perhaps MSB first on BE systems?)
+
+The difference would be that from a CPU perspective only, if you pack
+the RGB components into a u32, then write that to RAM as a u32, then the
+in-memory byte-by-byte order is different on different endian systems,
+whereas if the FB core treats it as a series of bytes only, then
+presumably the in-memory byte-by-byte order is identical irrespective of
+host CPU endianness.
