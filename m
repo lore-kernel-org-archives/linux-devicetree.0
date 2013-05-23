@@ -1,33 +1,53 @@
-From: "Kim, Milo" <Milo.Kim@ti.com>
-Subject: RE: [PATCH] ARM: ux500: register LP5521 LEDs in the device tree
-Date: Wed, 22 May 2013 23:14:49 +0000
-Message-ID: <A874F61F95741C4A9BA573A70FE3998F82E5FC0E@DQHE06.ent.ti.com>
-References: <1369210331-18545-1-git-send-email-linus.walleij@stericsson.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [RFC/PATCH v2 1/2] gpio-rcar: Make the platform data gpio_base
+ field signed
+Date: Thu, 23 May 2013 10:39:30 +0900
+Message-ID: <20130523013930.GH22608@verge.net.au>
+References: <1369136406-23800-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1369136406-23800-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1369210331-18545-1-git-send-email-linus.walleij@stericsson.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@stericsson.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Bryan Wu <cooloney@gmail.com>, Gabriel Fernandez <gabriel.fernandez.st@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1369136406-23800-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm@opensource.se>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-> Based on pending device tree support in the LP55xx drivers
-> we can add the correct LED and channel configuration from the
-> ux500 device tree for all HREF variants.
+On Tue, May 21, 2013 at 01:40:05PM +0200, Laurent Pinchart wrote:
+> The gpio_base field is used to specify the desired GPIO base for the
+> GPIO controller. The GPIO core can automatically allocate a GPIO number
+> range when the base is set to -1. To make this possible, make the field
+> signed.
 > 
-> Cc: Milo Kim <Milo.Kim@ti.com>
-> Cc: Bryan Wu <cooloney@gmail.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Acked-by: Milo Kim <Milo.Kim@ti.com>
+Thanks, this is queued-up for v3.11 in the gpio-rcar branch.
+
+> ---
+>  include/linux/platform_data/gpio-rcar.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/platform_data/gpio-rcar.h b/include/linux/platform_data/gpio-rcar.h
+> index cc472f6..fb2c718 100644
+> --- a/include/linux/platform_data/gpio-rcar.h
+> +++ b/include/linux/platform_data/gpio-rcar.h
+> @@ -17,7 +17,7 @@
+>  #define __GPIO_RCAR_H__
+>  
+>  struct gpio_rcar_config {
+> -	unsigned int gpio_base;
+> +	int gpio_base;
+>  	unsigned int irq_base;
+>  	unsigned int number_of_pins;
+>  	const char *pctl_name;
+> -- 
+> 1.8.1.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
