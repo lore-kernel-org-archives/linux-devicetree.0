@@ -1,28 +1,39 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH] of/base: fix typos
-Date: Thu, 23 May 2013 17:58:28 +0530
-Message-ID: <CA+V-a8sf-SVKiw6wjazV3VRd78efOU9qTO_qtr3RbOtrTifwgw@mail.gmail.com>
-References: <1367906651-5058-1-git-send-email-prabhakar.csengg@gmail.com>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: [net-next PATCH v2 0/6] Adding pinctrl PM support for CPSW and MDIO
+Date: Thu, 23 May 2013 18:00:22 +0530
+Message-ID: <1369312228-3308-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1367906651-5058-1-git-send-email-prabhakar.csengg@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, benoit.cousson@linaro.org, paul@pwsan.com, Mugunthan V N <mugunthanvnm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob/Grant,
+This patch series adds the following features
+* Adding pinctrl PM support for CPSW and MDIO for Power Optimization
+* Adding phy address to the CPSW node for EVMsk board
 
-On Tue, May 7, 2013 at 11:34 AM, Prabhakar Lad
-<prabhakar.csengg@gmail.com> wrote:
-> From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
->
-> the function of_property_read_u8/16/32_array() has a parameter
-> out_values, but the description mentioned it as out_value. This
-> patch fixes this typo.
->
-gentle ping.
+Changes from initial version
+* Fixed the multiline function call indentation as per David Miller
+  recommendation.
 
-Regards,
---Prabhakar Lad
+Hebbar Gururaja (1):
+  net: cpsw: enhance pinctrl support
+
+Mugunthan V N (5):
+  net: davinci_mdio: enhance pinctrl support
+  ARM: dts: AM33XX: Add pinmux configuration for CPSW to beaglebone
+  ARM: dts: AM33XX: Add CPSW phy_id device tree data to am335x-evmsk
+  ARM: dts: AM33XX: Add pinmux configuration for CPSW to EVMsk
+  ARM: dts: AM33XX: Add pinmux configuration for CPSW to am335x EVM
+
+ arch/arm/boot/dts/am335x-bone.dts      |   38 +++++++++++++++++++++
+ arch/arm/boot/dts/am335x-evm.dts       |   36 ++++++++++++++++++++
+ arch/arm/boot/dts/am335x-evmsk.dts     |   58 ++++++++++++++++++++++++++++++++
+ drivers/net/ethernet/ti/cpsw.c         |   49 +++++++++++++++++++++++++++
+ drivers/net/ethernet/ti/davinci_mdio.c |   46 +++++++++++++++++++++++++
+ 5 files changed, 227 insertions(+)
+
+-- 
+1.7.9.5
