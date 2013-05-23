@@ -1,224 +1,334 @@
-From: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-Subject: [PATCH 1/6] ARM: u300: add syscon node
-Date: Thu, 23 May 2013 19:31:23 +0200
-Message-ID: <1369330288-14856-2-git-send-email-linus.walleij@stericsson.com>
+From: Linus Walleij <linus.walleij@stericsson.com>
+Subject: [PATCH 2/6] ARM: u300: remove register definition file
+Date: Thu, 23 May 2013 19:31:24 +0200
+Message-ID: <1369330288-14856-3-git-send-email-linus.walleij@stericsson.com>
 References: <1369330288-14856-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1369330288-14856-1-git-send-email-linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1369330288-14856-1-git-send-email-linus.walleij@stericsson.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, Rob Herring <robherring2@gmail.com>, Mike Turquette <mturquette@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-This adds a device tree node for the U300 system controller
-and remaps this dynamically instead of using hard-coded
-virtual addresses. The board power set-up code is altered
-to fetch a reference to the syscon using ampersand <&syscon>
-notation. This way of passing a pointer to the syscon will
-also be used by the clocks.
+Now that the core file is the only one actually using any
+of the base addresses, we can delete that header and move
+the base address definitions into the one and only core
+file.
 
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- Documentation/devicetree/bindings/arm/ste-u300.txt | 30 +++++++++++++++++++---
- arch/arm/boot/dts/ste-u300.dts                     |  6 +++++
- arch/arm/mach-u300/core.c                          | 22 +++++++++++++---
- arch/arm/mach-u300/regulator.c                     | 21 ++++++++++++---
- 4 files changed, 69 insertions(+), 10 deletions(-)
+ arch/arm/mach-u300/core.c      | 113 +++++++++++++++++++++++++++-
+ arch/arm/mach-u300/u300-regs.h | 165 -----------------------------------------
+ 2 files changed, 112 insertions(+), 166 deletions(-)
+ delete mode 100644 arch/arm/mach-u300/u300-regs.h
 
-diff --git a/Documentation/devicetree/bindings/arm/ste-u300.txt b/Documentation/devicetree/bindings/arm/ste-u300.txt
-index cd9001a..69b5ab0 100644
---- a/Documentation/devicetree/bindings/arm/ste-u300.txt
-+++ b/Documentation/devicetree/bindings/arm/ste-u300.txt
-@@ -8,15 +8,39 @@ Required root node property:
- 
- compatible="stericsson,u300";
- 
-+Required node: syscon
-+This contains the system controller.
-+- compatible: must be "stericsson,u300-syscon".
-+- reg: the base address and size of the system controller.
-+
- Boards with the U300 SoC include:
- 
- S365 "Small Board U365":
- 
- Required node: s365
-+This contains the board-specific information.
-+- compatible: must be "stericsson,s365".
-+- vana15-supply: the regulator supplying the 1.5V to drive the
-+  board.
-+- syscon: a pointer to the syscon node so we can acccess the
-+  syscon registers to set the board as self-powered.
- 
- Example:
- 
--s365 {
--	compatible = "stericsson,s365";
--	vana15-supply = <&ab3100_ldo_d_reg>;
-+/ {
-+	model = "ST-Ericsson U300";
-+	compatible = "stericsson,u300";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	s365 {
-+		compatible = "stericsson,s365";
-+		vana15-supply = <&ab3100_ldo_d_reg>;
-+		syscon = <&syscon>;
-+	};
-+
-+	syscon: syscon@c0011000 {
-+		compatible = "stericsson,u300-syscon";
-+		reg = <0xc0011000 0x1000>;
-+	};
- };
-diff --git a/arch/arm/boot/dts/ste-u300.dts b/arch/arm/boot/dts/ste-u300.dts
-index 35a2d58..0530095 100644
---- a/arch/arm/boot/dts/ste-u300.dts
-+++ b/arch/arm/boot/dts/ste-u300.dts
-@@ -27,6 +27,12 @@
- 	s365 {
- 		compatible = "stericsson,s365";
- 		vana15-supply = <&ab3100_ldo_d_reg>;
-+		syscon = <&syscon>;
-+	};
-+
-+	syscon: syscon@c0011000 {
-+		compatible = "stericsson,u300-syscon";
-+		reg = <0xc0011000 0x1000>;
- 	};
- 
- 	timer: timer@c0014000 {
 diff --git a/arch/arm/mach-u300/core.c b/arch/arm/mach-u300/core.c
-index 9caf5ea..bde6540 100644
+index bde6540..4db0b76 100644
 --- a/arch/arm/mach-u300/core.c
 +++ b/arch/arm/mach-u300/core.c
-@@ -18,6 +18,7 @@
- #include <linux/platform_data/pinctrl-coh901.h>
- #include <linux/platform_data/dma-coh901318.h>
- #include <linux/irqchip.h>
-+#include <linux/of_address.h>
- #include <linux/of_platform.h>
- #include <linux/clocksource.h>
- #include <linux/clk.h>
-@@ -52,6 +53,8 @@
- #define U300_SYSCON_BCR_EXTRA_BOOT_OPTION_MASK			(0x01FC)
- #define U300_SYSCON_BCR_APP_BOOT_SERV_MASK			(0x0003)
+@@ -26,7 +26,118 @@
+ #include <asm/mach/map.h>
+ #include <asm/mach/arch.h>
  
-+static void __iomem *syscon_base;
-+
- /*
-  * Static I/O mappings that are needed for booting the U300 platforms. The
-  * only things we need are the areas where we find the timer, syscon and
-@@ -205,7 +208,7 @@ static void __init u300_init_check_chip(void)
- 	const char unknown[] = "UNKNOWN";
- 
- 	/* Read out and print chip ID */
--	val = readw(U300_SYSCON_VBASE + U300_SYSCON_CIDR);
-+	val = readw(syscon_base + U300_SYSCON_CIDR);
- 	/* This is in funky bigendian order... */
- 	val = (val & 0xFFU) << 8 | (val >> 8);
- 	chip = db_chips;
-@@ -294,10 +297,21 @@ static struct of_dev_auxdata u300_auxdata_lookup[] __initdata = {
- 
- static void __init u300_init_irq_dt(void)
- {
-+	struct device_node *syscon;
- 	struct clk *clk;
- 
-+	syscon = of_find_node_by_path("/syscon@c0011000");
-+	if (!syscon) {
-+		pr_crit("could not find syscon node\n");
-+		return;
-+	}
-+	syscon_base = of_iomap(syscon, 0);
-+	if (!syscon_base) {
-+		pr_crit("could not remap syscon\n");
-+		return;
-+	}
- 	/* initialize clocking early, we want to clock the INTCON */
--	u300_clk_init(U300_SYSCON_VBASE);
-+	u300_clk_init(syscon_base);
- 
- 	/* Bootstrap EMIF and SEMI clocks */
- 	clk = clk_get_sys("pl172", NULL);
-@@ -330,9 +344,9 @@ static void __init u300_init_machine_dt(void)
- 			u300_auxdata_lookup, NULL);
- 
- 	/* Enable SEMI self refresh */
--	val = readw(U300_SYSCON_VBASE + U300_SYSCON_SMCR) |
-+	val = readw(syscon_base + U300_SYSCON_SMCR) |
- 		U300_SYSCON_SMCR_SEMI_SREFREQ_ENABLE;
--	writew(val, U300_SYSCON_VBASE + U300_SYSCON_SMCR);
-+	writew(val, syscon_base + U300_SYSCON_SMCR);
- }
- 
- static const char * u300_board_compat[] = {
-diff --git a/arch/arm/mach-u300/regulator.c b/arch/arm/mach-u300/regulator.c
-index 1cbe88c..273fceb 100644
---- a/arch/arm/mach-u300/regulator.c
-+++ b/arch/arm/mach-u300/regulator.c
-@@ -16,8 +16,8 @@
- #include <linux/regulator/machine.h>
- #include <linux/regulator/consumer.h>
- /* Those are just for writing in syscon */
-+#include <linux/of_address.h>
- #include <linux/io.h>
 -#include "u300-regs.h"
- 
- /* Power Management Control 16bit (R/W) */
- #define U300_SYSCON_PMCR					(0x50)
-@@ -57,10 +57,25 @@ void u300_pm_poweroff(void)
-  */
- static int __init __u300_init_boardpower(struct platform_device *pdev)
- {
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device_node *syscon_np;
-+	static void __iomem *syscon_base;
- 	int err;
- 	u32 val;
- 
- 	pr_info("U300: setting up board power\n");
++/*
++ * These are the large blocks of memory allocated for I/O.
++ * the defines are used for setting up the I/O memory mapping.
++ */
 +
-+	syscon_np = of_parse_phandle(np, "syscon", 0);
-+	if (!syscon_np) {
-+		pr_crit("U300: no syscon node\n");
-+		return -ENODEV;
-+	}
-+	syscon_base = of_iomap(syscon_np, 0);
-+	if (!syscon_base) {
-+		pr_crit("U300: could not remap syscon\n");
-+		return -ENODEV;
-+	}
++/* NAND Flash CS0 */
++#define U300_NAND_CS0_PHYS_BASE		0x80000000
++/* NFIF */
++#define U300_NAND_IF_PHYS_BASE		0x9f800000
++/* ALE, CLE offset for FSMC NAND */
++#define PLAT_NAND_CLE			(1 << 16)
++#define PLAT_NAND_ALE			(1 << 17)
++/* AHB Peripherals */
++#define U300_AHB_PER_PHYS_BASE		0xa0000000
++#define U300_AHB_PER_VIRT_BASE		0xff010000
++/* FAST Peripherals */
++#define U300_FAST_PER_PHYS_BASE		0xc0000000
++#define U300_FAST_PER_VIRT_BASE		0xff020000
++/* SLOW Peripherals */
++#define U300_SLOW_PER_PHYS_BASE		0xc0010000
++#define U300_SLOW_PER_VIRT_BASE		0xff000000
++/* Boot ROM */
++#define U300_BOOTROM_PHYS_BASE		0xffff0000
++#define U300_BOOTROM_VIRT_BASE		0xffff0000
++/* SEMI config base */
++#define U300_SEMI_CONFIG_BASE		0x2FFE0000
 +
- 	main_power_15 = regulator_get(&pdev->dev, "vana15");
++/*
++ * AHB peripherals
++ */
++
++/* AHB Peripherals Bridge Controller */
++#define U300_AHB_BRIDGE_BASE		(U300_AHB_PER_PHYS_BASE+0x0000)
++/* Vectored Interrupt Controller 0, servicing 32 interrupts */
++#define U300_INTCON0_BASE		(U300_AHB_PER_PHYS_BASE+0x1000)
++#define U300_INTCON0_VBASE		IOMEM(U300_AHB_PER_VIRT_BASE+0x1000)
++/* Vectored Interrupt Controller 1, servicing 32 interrupts */
++#define U300_INTCON1_BASE		(U300_AHB_PER_PHYS_BASE+0x2000)
++#define U300_INTCON1_VBASE		IOMEM(U300_AHB_PER_VIRT_BASE+0x2000)
++/* Memory Stick Pro (MSPRO) controller */
++#define U300_MSPRO_BASE			(U300_AHB_PER_PHYS_BASE+0x3000)
++/* EMIF Configuration Area */
++#define U300_EMIF_CFG_BASE		(U300_AHB_PER_PHYS_BASE+0x4000)
++
++/*
++ * FAST peripherals
++ */
++
++/* FAST bridge control */
++#define U300_FAST_BRIDGE_BASE		(U300_FAST_PER_PHYS_BASE+0x0000)
++/* MMC/SD controller */
++#define U300_MMCSD_BASE			(U300_FAST_PER_PHYS_BASE+0x1000)
++/* PCM I2S0 controller */
++#define U300_PCM_I2S0_BASE		(U300_FAST_PER_PHYS_BASE+0x2000)
++/* PCM I2S1 controller */
++#define U300_PCM_I2S1_BASE		(U300_FAST_PER_PHYS_BASE+0x3000)
++/* I2C0 controller */
++#define U300_I2C0_BASE			(U300_FAST_PER_PHYS_BASE+0x4000)
++/* I2C1 controller */
++#define U300_I2C1_BASE			(U300_FAST_PER_PHYS_BASE+0x5000)
++/* SPI controller */
++#define U300_SPI_BASE			(U300_FAST_PER_PHYS_BASE+0x6000)
++/* Fast UART1 on U335 only */
++#define U300_UART1_BASE			(U300_FAST_PER_PHYS_BASE+0x7000)
++
++/*
++ * SLOW peripherals
++ */
++
++/* SLOW bridge control */
++#define U300_SLOW_BRIDGE_BASE		(U300_SLOW_PER_PHYS_BASE)
++/* SYSCON */
++#define U300_SYSCON_BASE		(U300_SLOW_PER_PHYS_BASE+0x1000)
++#define U300_SYSCON_VBASE		IOMEM(U300_SLOW_PER_VIRT_BASE+0x1000)
++/* Watchdog */
++#define U300_WDOG_BASE			(U300_SLOW_PER_PHYS_BASE+0x2000)
++/* UART0 */
++#define U300_UART0_BASE			(U300_SLOW_PER_PHYS_BASE+0x3000)
++/* APP side special timer */
++#define U300_TIMER_APP_BASE		(U300_SLOW_PER_PHYS_BASE+0x4000)
++#define U300_TIMER_APP_VBASE		IOMEM(U300_SLOW_PER_VIRT_BASE+0x4000)
++/* Keypad */
++#define U300_KEYPAD_BASE		(U300_SLOW_PER_PHYS_BASE+0x5000)
++/* GPIO */
++#define U300_GPIO_BASE			(U300_SLOW_PER_PHYS_BASE+0x6000)
++/* RTC */
++#define U300_RTC_BASE			(U300_SLOW_PER_PHYS_BASE+0x7000)
++/* Bus tracer */
++#define U300_BUSTR_BASE			(U300_SLOW_PER_PHYS_BASE+0x8000)
++/* Event handler (hardware queue) */
++#define U300_EVHIST_BASE		(U300_SLOW_PER_PHYS_BASE+0x9000)
++/* Genric Timer */
++#define U300_TIMER_BASE			(U300_SLOW_PER_PHYS_BASE+0xa000)
++/* PPM */
++#define U300_PPM_BASE			(U300_SLOW_PER_PHYS_BASE+0xb000)
++
++/*
++ * REST peripherals
++ */
++
++/* ISP (image signal processor) */
++#define U300_ISP_BASE			(0xA0008000)
++/* DMA Controller base */
++#define U300_DMAC_BASE			(0xC0020000)
++/* MSL Base */
++#define U300_MSL_BASE			(0xc0022000)
++/* APEX Base */
++#define U300_APEX_BASE			(0xc0030000)
++/* Video Encoder Base */
++#define U300_VIDEOENC_BASE		(0xc0080000)
++/* XGAM Base */
++#define U300_XGAM_BASE			(0xd0000000)
  
- 	if (IS_ERR(main_power_15)) {
-@@ -81,9 +96,9 @@ static int __init __u300_init_boardpower(struct platform_device *pdev)
- 	 * the rest of the U300 power management is implemented.
- 	 */
- 	pr_info("U300: disable system controller pull-up\n");
--	val = readw(U300_SYSCON_VBASE + U300_SYSCON_PMCR);
-+	val = readw(syscon_base + U300_SYSCON_PMCR);
- 	val &= ~U300_SYSCON_PMCR_DCON_ENABLE;
--	writew(val, U300_SYSCON_VBASE + U300_SYSCON_PMCR);
-+	writew(val, syscon_base + U300_SYSCON_PMCR);
- 
- 	/* Register globally exported PM poweroff hook */
- 	pm_power_off = u300_pm_poweroff;
+ /*
+  * SYSCON addresses applicable to the core machine.
+diff --git a/arch/arm/mach-u300/u300-regs.h b/arch/arm/mach-u300/u300-regs.h
+deleted file mode 100644
+index 0320495..0000000
+--- a/arch/arm/mach-u300/u300-regs.h
++++ /dev/null
+@@ -1,165 +0,0 @@
+-/*
+- *
+- * arch/arm/mach-u300/include/mach/u300-regs.h
+- *
+- *
+- * Copyright (C) 2006-2009 ST-Ericsson AB
+- * License terms: GNU General Public License (GPL) version 2
+- * Basic register address definitions in physical memory and
+- * some block definitions for core devices like the timer.
+- * Author: Linus Walleij <linus.walleij@stericsson.com>
+- */
+-
+-#ifndef __MACH_U300_REGS_H
+-#define __MACH_U300_REGS_H
+-
+-/*
+- * These are the large blocks of memory allocated for I/O.
+- * the defines are used for setting up the I/O memory mapping.
+- */
+-
+-/* NAND Flash CS0 */
+-#define U300_NAND_CS0_PHYS_BASE		0x80000000
+-
+-/* NFIF */
+-#define U300_NAND_IF_PHYS_BASE		0x9f800000
+-
+-/* ALE, CLE offset for FSMC NAND */
+-#define PLAT_NAND_CLE			(1 << 16)
+-#define PLAT_NAND_ALE			(1 << 17)
+-
+-/* AHB Peripherals */
+-#define U300_AHB_PER_PHYS_BASE		0xa0000000
+-#define U300_AHB_PER_VIRT_BASE		0xff010000
+-
+-/* FAST Peripherals */
+-#define U300_FAST_PER_PHYS_BASE		0xc0000000
+-#define U300_FAST_PER_VIRT_BASE		0xff020000
+-
+-/* SLOW Peripherals */
+-#define U300_SLOW_PER_PHYS_BASE		0xc0010000
+-#define U300_SLOW_PER_VIRT_BASE		0xff000000
+-
+-/* Boot ROM */
+-#define U300_BOOTROM_PHYS_BASE		0xffff0000
+-#define U300_BOOTROM_VIRT_BASE		0xffff0000
+-
+-/* SEMI config base */
+-#define U300_SEMI_CONFIG_BASE		0x2FFE0000
+-
+-/*
+- * AHB peripherals
+- */
+-
+-/* AHB Peripherals Bridge Controller */
+-#define U300_AHB_BRIDGE_BASE		(U300_AHB_PER_PHYS_BASE+0x0000)
+-
+-/* Vectored Interrupt Controller 0, servicing 32 interrupts */
+-#define U300_INTCON0_BASE		(U300_AHB_PER_PHYS_BASE+0x1000)
+-#define U300_INTCON0_VBASE		IOMEM(U300_AHB_PER_VIRT_BASE+0x1000)
+-
+-/* Vectored Interrupt Controller 1, servicing 32 interrupts */
+-#define U300_INTCON1_BASE		(U300_AHB_PER_PHYS_BASE+0x2000)
+-#define U300_INTCON1_VBASE		IOMEM(U300_AHB_PER_VIRT_BASE+0x2000)
+-
+-/* Memory Stick Pro (MSPRO) controller */
+-#define U300_MSPRO_BASE			(U300_AHB_PER_PHYS_BASE+0x3000)
+-
+-/* EMIF Configuration Area */
+-#define U300_EMIF_CFG_BASE		(U300_AHB_PER_PHYS_BASE+0x4000)
+-
+-
+-/*
+- * FAST peripherals
+- */
+-
+-/* FAST bridge control */
+-#define U300_FAST_BRIDGE_BASE		(U300_FAST_PER_PHYS_BASE+0x0000)
+-
+-/* MMC/SD controller */
+-#define U300_MMCSD_BASE			(U300_FAST_PER_PHYS_BASE+0x1000)
+-
+-/* PCM I2S0 controller */
+-#define U300_PCM_I2S0_BASE		(U300_FAST_PER_PHYS_BASE+0x2000)
+-
+-/* PCM I2S1 controller */
+-#define U300_PCM_I2S1_BASE		(U300_FAST_PER_PHYS_BASE+0x3000)
+-
+-/* I2C0 controller */
+-#define U300_I2C0_BASE			(U300_FAST_PER_PHYS_BASE+0x4000)
+-
+-/* I2C1 controller */
+-#define U300_I2C1_BASE			(U300_FAST_PER_PHYS_BASE+0x5000)
+-
+-/* SPI controller */
+-#define U300_SPI_BASE			(U300_FAST_PER_PHYS_BASE+0x6000)
+-
+-/* Fast UART1 on U335 only */
+-#define U300_UART1_BASE			(U300_FAST_PER_PHYS_BASE+0x7000)
+-
+-/*
+- * SLOW peripherals
+- */
+-
+-/* SLOW bridge control */
+-#define U300_SLOW_BRIDGE_BASE		(U300_SLOW_PER_PHYS_BASE)
+-
+-/* SYSCON */
+-#define U300_SYSCON_BASE		(U300_SLOW_PER_PHYS_BASE+0x1000)
+-#define U300_SYSCON_VBASE		IOMEM(U300_SLOW_PER_VIRT_BASE+0x1000)
+-
+-/* Watchdog */
+-#define U300_WDOG_BASE			(U300_SLOW_PER_PHYS_BASE+0x2000)
+-
+-/* UART0 */
+-#define U300_UART0_BASE			(U300_SLOW_PER_PHYS_BASE+0x3000)
+-
+-/* APP side special timer */
+-#define U300_TIMER_APP_BASE		(U300_SLOW_PER_PHYS_BASE+0x4000)
+-#define U300_TIMER_APP_VBASE		IOMEM(U300_SLOW_PER_VIRT_BASE+0x4000)
+-
+-/* Keypad */
+-#define U300_KEYPAD_BASE		(U300_SLOW_PER_PHYS_BASE+0x5000)
+-
+-/* GPIO */
+-#define U300_GPIO_BASE			(U300_SLOW_PER_PHYS_BASE+0x6000)
+-
+-/* RTC */
+-#define U300_RTC_BASE			(U300_SLOW_PER_PHYS_BASE+0x7000)
+-
+-/* Bus tracer */
+-#define U300_BUSTR_BASE			(U300_SLOW_PER_PHYS_BASE+0x8000)
+-
+-/* Event handler (hardware queue) */
+-#define U300_EVHIST_BASE		(U300_SLOW_PER_PHYS_BASE+0x9000)
+-
+-/* Genric Timer */
+-#define U300_TIMER_BASE			(U300_SLOW_PER_PHYS_BASE+0xa000)
+-
+-/* PPM */
+-#define U300_PPM_BASE			(U300_SLOW_PER_PHYS_BASE+0xb000)
+-
+-
+-/*
+- * REST peripherals
+- */
+-
+-/* ISP (image signal processor) */
+-#define U300_ISP_BASE			(0xA0008000)
+-
+-/* DMA Controller base */
+-#define U300_DMAC_BASE			(0xC0020000)
+-
+-/* MSL Base */
+-#define U300_MSL_BASE			(0xc0022000)
+-
+-/* APEX Base */
+-#define U300_APEX_BASE			(0xc0030000)
+-
+-/* Video Encoder Base */
+-#define U300_VIDEOENC_BASE		(0xc0080000)
+-
+-/* XGAM Base */
+-#define U300_XGAM_BASE			(0xd0000000)
+-
+-#endif
 -- 
 1.7.11.3
