@@ -1,71 +1,47 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: ux500: enable the crypto and hash on all dbx500
-Date: Fri, 24 May 2013 13:13:58 +0200
-Message-ID: <CACRpkdb1CZKoaG6nNF-yBC3Eovoe3_0BHa6uO-OQkePDcrkamg@mail.gmail.com>
-References: <1369378122-25897-1-git-send-email-linus.walleij@stericsson.com>
- <20130524082758.GP22683@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 5/6] crypto: ux500/cryp - Enable DT probing of the driver
+Date: Fri, 24 May 2013 13:16:42 +0200
+Message-ID: <CACRpkdbek9PFXOwCVQ+PcSMMCZyD3gW+bC6PhyjSnB76zCiHmA@mail.gmail.com>
+References: <1368703646-26418-1-git-send-email-lee.jones@linaro.org>
+	<1368703646-26418-6-git-send-email-lee.jones@linaro.org>
+	<CACRpkdZHT0g_Agtug6jC3rU+DYKOpmwqZ9eQAkRGRw5Kj0wW4A@mail.gmail.com>
+	<20130524083231.GQ22683@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130524082758.GP22683-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez.st-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20130524083231.GQ22683@gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus WALLEIJ <linus.walleij@stericsson.com>, Srinidhi KASAGAR <srinidhi.kasagar@stericsson.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 24, 2013 at 10:27 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+On Fri, May 24, 2013 at 10:32 AM, Lee Jones <lee.jones@linaro.org> wrote:
 > On Fri, 24 May 2013, Linus Walleij wrote:
->> From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> On Thu, May 16, 2013 at 1:27 PM, Lee Jones <lee.jones@linaro.org> wrote:
 >>
->> Commits:
->> "ARM: ux500: Add Device Tree nodes for the ux500 Crypt device"
->> "ARM: ux500: Add Device Tree nodes for the ux500 Hash device"
+>> > By providing an OF match table with a suitable compatible string, we
+>> > can ensure the ux500-crypt driver is probed by supplying an associated
+>> > DT node in a given platform's Device Tree.
+>> >
+>> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
+>> > Cc: linux-crypto@vger.kernel.org
+>> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
 >>
->> Added the crypto and hash devices conditionally, i.e. so as to
->> be turned on per-board by setting an "status" property on the
->> device from "disabled" to "okay" on each device.
->>
->> This is wrong since this is an SoC feature, it is not board
->> dependent. It is the same ASIC under all circumstances and
->> functionality does not vary with board family.
->>
->> This moves the enablement into the SoC file.
->>
->> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/dbx5x0.dtsi  | 4 ----
->>  arch/arm/boot/dts/snowball.dts | 8 --------
->>  2 files changed, 12 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/dbx5x0.dtsi b/arch/arm/boot/dts/dbx5x0.dtsi
->> index f051963..cd5cd09 100644
->> --- a/arch/arm/boot/dts/dbx5x0.dtsi
->> +++ b/arch/arm/boot/dts/dbx5x0.dtsi
->> @@ -760,17 +760,13 @@
->>                       compatible = "stericsson,ux500-cryp";
->>                       reg = <0xa03cb000 0x1000>;
->>                       interrupts = <0 15 0x4>;
->> -
+>> Herbert, can I have your ACK on patch 5 & 6 in this series to take it
+>> through the ARM SoC tree?
 >
-> Why do you insist on removing all line spacings from the DTS file?
->
-> I saw you removing them in between nodes too.
+> Right, there are no bindings, so they don't need a document.
 
-I was hit by a linespace when I was a child, since then I take
-every opportunity for revenge.
+Surely the requirement that the node must have <reg>,
+<irqs> and <regulator> for the driver to even probe is a
+binding?
 
-If I keep the spacing, can I have your ACK?
+The fact that the drivers/of/* core on Linux will auto-populate
+platform devices with those properties is a pure Linux
+pecularity, and the bindings are there for OS independence.
+
+Whether we need to document it for such standard things
+is another thing, hopefully Rob or someone can answer that?
 
 Yours,
 Linus Walleij
