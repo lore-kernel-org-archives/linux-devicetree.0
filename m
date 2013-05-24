@@ -1,72 +1,55 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: [PATCH 1/2] ARM: shmobile: irqpin: add a DT property to enable
- masking on parent
-Date: Fri, 24 May 2013 11:13:03 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1305241109530.1090@axis700.grange>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] pinmux: Add TB10x pinmux driver
+Date: Fri, 24 May 2013 11:20:31 +0200
+Message-ID: <CACRpkdYsSwJeVPcLFT7pMjyRsgvoEc+302Zah1Zy2sDOBvVwEg@mail.gmail.com>
+References: <20130418090310.GA17636@ab42.lan>
+	<CACRpkdZd0_W432od5565phhUcJMRWiV9vXX4QVF4osKkxstC0Q@mail.gmail.com>
+	<20130429161725.GB30136@ab42.lan>
+	<5182B557.4040804@wwwdotorg.org>
+	<CACRpkdaxO0q_P2wJFy3zv4F-QM9dZk54qW8ft350XqcBt1Gr1w@mail.gmail.com>
+	<20130508164123.GA10248@ab42.lan>
+	<518AAF31.8080502@wwwdotorg.org>
+	<20130510082521.GA2125@ab42.lan>
+	<51942472.9010402@wwwdotorg.org>
+	<CACRpkdYtKr5w2=1sONG4Qn2TQue38nV7epWfzxNQz5rjSs0DZQ@mail.gmail.com>
+	<20130522142824.GC4789@ab42.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130522142824.GC4789@ab42.lan>
+Sender: linux-doc-owner@vger.kernel.org
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Shiraz HASHIM <shiraz.hashim@st.com>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-To disable spurious interrupts, that get triggered on certain hardware, the
-irqpin driver masks them on the parent interrupt controller. To specify
-such broken devices a .control_parent parameter can be provided in the
-platform data. In the DT case we need a property, to do the same.
+On Wed, May 22, 2013 at 4:28 PM, Christian Ruppert
+<christian.ruppert@abilis.com> wrote:
+> On Mon, May 20, 2013 at 10:10:33AM +0200, Linus Walleij wrote:
 
-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
----
+>> It's not even pinctrl-simple-centric it is completely generic.
+>> The code is in drivers/gpio/gpiolib-of.c.
+>>
+>> It was written by Shiraz Hashin and Haojian Zhuang.
+>> At the time I augmented the core code quite a bit to make
+>> a good fit.
+>
+> I agree. Unluckily, it uses pinctrl-internal pin numbering which we
+> would have to make coherent with the physical pin numbers of the
+> individual packaging variants of the chip in order to expose them to
+> customers (see my previous mail at https://lkml.org/lkml/2013/5/22/207).
 
-These two patches simply split the earlier "ARM: shmobile: irqpin: fix 
-handling of spurious interrupts in DT case" patch into two parts. 
-Otherwise no change.
+Again, the Linux pin numberspace is sparse, you can use whatever
+pin number you like as long as it fits in a u32 and does not overlap
+with other pins.
 
- .../interrupt-controller/renesas,intc-irqpin.txt   |    2 ++
- drivers/irqchip/irq-renesas-intc-irqpin.c          |    7 +++++--
- 2 files changed, 7 insertions(+), 2 deletions(-)
+If you have a problem that the physical pin numbers and the
+bank offsets or bits you need to poke or something doesn't
+match, that is an issue for the *driver* not for the pin control
+subsystem. However the pin control core may provide
+cross-mapping helpers as discussed elsewhere, but the
+pin control internal numbering is *not* an issue. Those are
+just "some number" on a certain pin controller, use the number
+from the datasheet if you like.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-index c6f09b7..152b10a 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-@@ -11,3 +11,5 @@ Optional properties:
-   resource allocation properties
- - sense-bitfield-width: width of a single sense bitfield in the SENSE register,
-   if different from the default 4 bits
-+- control-parent: disable and enable interrupts on the parent interrupt
-+  controller, needed for some broken implementations
-diff --git a/drivers/irqchip/irq-renesas-intc-irqpin.c b/drivers/irqchip/irq-renesas-intc-irqpin.c
-index 4aca1b2..82cec63 100644
---- a/drivers/irqchip/irq-renesas-intc-irqpin.c
-+++ b/drivers/irqchip/irq-renesas-intc-irqpin.c
-@@ -348,11 +348,14 @@ static int intc_irqpin_probe(struct platform_device *pdev)
- 	}
- 
- 	/* deal with driver instance configuration */
--	if (pdata)
-+	if (pdata) {
- 		memcpy(&p->config, pdata, sizeof(*pdata));
--	else
-+	} else {
- 		of_property_read_u32(pdev->dev.of_node, "sense-bitfield-width",
- 				     &p->config.sense_bitfield_width);
-+		p->config.control_parent = of_property_read_bool(pdev->dev.of_node,
-+								 "control-parent");
-+	}
- 	if (!p->config.sense_bitfield_width)
- 		p->config.sense_bitfield_width = 4; /* default to 4 bits */
- 
--- 
-1.7.2.5
+Yours,
+Linus Walleij
