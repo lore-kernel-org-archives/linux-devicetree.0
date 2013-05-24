@@ -1,69 +1,112 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] video: simplefb: add mode parsing function
-Date: Fri, 24 May 2013 09:37:42 -0600
-Message-ID: <519F8946.4050705@wwwdotorg.org>
-References: <1369296231-26597-1-git-send-email-acourbot@nvidia.com>
- <519E438A.9030408@wwwdotorg.org> <519F1729.2050003@nvidia.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: Re: [RFC 3/8] mfd:syscon: Introduce claim/read/write/release APIs
+Date: Fri, 24 May 2013 17:06:38 +0100
+Message-ID: <519F900E.308@st.com>
+References: <1368022187-1633-1-git-send-email-srinivas.kandagatla@st.com> <201305171636.49627.arnd@arndb.de> <519A1BBB.2070903@st.com> <201305232344.11974.arnd@arndb.de>
+Reply-To: srinivas.kandagatla@st.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <519F1729.2050003-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <201305232344.11974.arnd@arndb.de>
+Sender: linux-serial-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: dong.aisheng@linaro.org, sameo@linux.intel.com, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Stuart Menefy <stuart.menefy@st.com>, Shawn Guo <shawn.guo@linaro.org>, Olof Johansson <olof@lixom.net>, Jason Cooper <jason@lakedaemon.net>, Stephen Warren <swarren@nvidia.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Nicolas Pitre <nico@linaro.org>, Will Deacon <will.deacon@arm.com>, Dave Martin <dave.martin@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/24/2013 01:30 AM, Alex Courbot wrote:
-> On 05/24/2013 01:27 AM, Stephen Warren wrote:
->>> Stephen, please note that the "r5g6b5" mode initially supported
->>> by the driver becomes "b5g6r5" with the new function. This is because
->>> the least significant bits are defined first in the string - this
->>> makes parsing much easier, notably for modes which do not fill whole
->>> bytes (e.g. 15 bit modes). I hope this is not a problem - it's probably
->>> better to do the change now while the driver is still new.
+On 23/05/13 22:44, Arnd Bergmann wrote:
+Thankyou Arnd for extending this discussion.
+> On Monday 20 May 2013, Srinivas KANDAGATLA wrote:
+>> On 17/05/13 15:36, Arnd Bergmann wrote:
+>>
+>> On the other hand using device trees to describe the HW
+>> configuration(sysconfs) made more sense and got rid of SOC specific
+>> callbacks.
+> 
+> I'm sure it's possible to reduce the duplication without going all
+> the way to describing every bit in DT.
+
+Yes, I agree with you. I think just passing the offset information from
+DT would enough in cases like Ethernet or USB where the sysconf
+registers tend to be mostly standard. And the generic higher level
+function should be able to do the rest.
+
+>> I forget to mention a important point here, the protection is at bit
+>> level for the sysconfs. Some of sysconfs have bits shared across IPs, so
+>> protecting them while the IP is still using it is what we are trying to
+>> achieve with sysconf-claim/release apis.
+>> While it may be overkill, but In past it has found bugs and been helpful
+>> with a meaning full debug output.
+> 
+> Can you give an example of something that is shared across multiple IPs?
+> 
+> Are those always done in the way that you have e.g. the ethernet pinctrl
+> in the same register as the usb pinctrl, or could you have an ethernet
+> pinctrl setting mixed together with the usb clock setting for instance?
+> 
+> If the hardware has been designed in a sensible way rather than just
+> grown by randomly adding bits in open spaces, I would assume that it's
+> possible to have high-level interfaces built around ranges of registers
+> rather than arbitrary subsets of registers.
+
+We have decided to go with using higher level functions as you
+suggested, hopefully based on regmap with some helper functions on top
+of it.
+
+System configuration registers in the past used to very much shared
+across IPs, However with the new chips they seems be mostly dedicated
+registers for specific IP configurations.
+As we have no plans to support very old chips, So I think I can move
+this out bit level information from device tree and add a higher level
+functions to be accessed by the drivers.
+
+As an example the below sysconf register for a STi7105 chip(Very old
+SOC) looks like:
+SYSTEM_CONFIG7 Comms/Ethernet config control register
+
+[31:28] RESERVED
+[27] ENMII:
+	1: MII mode 0: Reverse MII mode
+[26:25] PHY_INTF_SELECT: Selects the type of Ethernet mode
+	00: MII mode (Default)
+	01: Reserved
+	1x: Reserved
+[23] GLOBAL_POWER_DOWN:
+	1: Activate low power
+[24] RESERVED
+	0: Normal mode
+[22] DAA_CONFIG_CTRL: DAA configuration control
+[21] RESERVED
+[20] MAC_SPEED_SEL:
+	1: Indicates that the MAC is running at 100 Mbps speed
+	0: Indicates that the MAC is running at 10 Mbps speed
+[19] RESERVED
+[18] RMII_MODE:
+	1: RMII interface activated
+	0: MII interface activated
+[17] MIIM_DIO_SELECT:
+	1: MIIM_DIO from external input, else from GMAC
+	0: All MII pads in input mode
+[16] ETHERNET_INTERFACE_ON:
+	1: Ethernet on (pads enables controlled by MAC)
+[15:13] RESERVED
+[12] DAA_SERIAL_MODE: DAA serial interface mode select pin
+
+[11] SC1_COND_VCC_ENABLE: Enables control of smart card VCC upon
+bit in the PDES.
+[10] SC_DETECT_VPP_POL:
+	1: Output pin SC_NOT_SETVPP is inverted of PDES_SC_SETVPP
+	0: Output pin SC_NOT_SETVPP is PDES_SC_SETVPP
+[9] IRB_DATA_OUT_POL_OD: Selection of polarity of IRB output signal
+routed as alternate function
+
 ...
->>> +    by a given color channel. Value channels are "r" (red), "g"
->>> (green),
->>> +    "b" (blue) and "a" (alpha).
->>
->> I think you'll need "x" too, to represent any gaps/unused bits.
-> 
-> Are there such formats? 15-bit formats do exist but AFAIK they just drop
-> the MSB. Anyway, this can be done easily, so I won't argue. :)
+...
+Thanks,
+srini
 
-Yes, I believe there are e.g. both a2r10g10b10 and b10g10r10a2 for
-example, and it's quite common to replace a with x, especially for
-scanout buffers. Google certainly has hits for that.
-
->>> +    if (!params->format || IS_ERR(params->format)) {
->>
->> That's just saying IS_ERR_OR_NULL(params->format). It'd be better to
->> pick one thing to represent errors; either NULL or an error-pointer. I
->> think having simplefb_parse_format() just return NULL on error would be
->> best; the caller can't really do anything useful with the information
->> anyway.
 > 
-> Weird - I actually removed that NULL check since the parse function can
-> only return a valid pointed an error code. Probably forgot to
-> format-patch again after that.
+> 	Arnd
 > 
-> It seems more customary to let the function that fails decide the error
-> code and have it propagated by its caller (even though in the current
-> case there is no much variety in the returned error codes). If you see
-> no problem with it, I will stick to that way of doing.
+> 
 
-Using just an error-return is probably fine. I was going to say that the
-table lookup might propagate a NULL all the way through to that check,
-and hence require both checks above, but I guess that case can't happen,
-since if there is no table entry, then simplefb_parse_format() will
-always be called, so that's fine.
