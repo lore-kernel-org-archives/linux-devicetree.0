@@ -1,79 +1,109 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/2] net: mv643xx_eth: proper initialization for Kirkwood SoCs
-Date: Fri, 24 May 2013 13:03:25 +0200
-Message-ID: <CACRpkdbsicPkPAiaQCOg2mQF2Ce2dg_K=BKqqx=FCdAH7Y+QBg@mail.gmail.com>
-References: <1369154510-4927-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1369253042-15082-1-git-send-email-sebastian.hesselbarth@gmail.com>
-	<1369253042-15082-2-git-send-email-sebastian.hesselbarth@gmail.com>
-	<20130522201607.GA18823@obsidianresearch.com>
-	<20130523160111.GP31290@titan.lakedaemon.net>
-	<20130523171112.GB31281@obsidianresearch.com>
-	<20130523172339.GQ31290@titan.lakedaemon.net>
-	<20130523175357.GB2821@obsidianresearch.com>
-	<20130523184028.GU31290@titan.lakedaemon.net>
-	<519E9ADA.3040204@gmail.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH RFC v2] media: OF: add sync-on-green endpoint property
+Date: Fri, 24 May 2013 13:11:35 +0200
+Message-ID: <519F4AE7.8000003@gmail.com>
+References: <1368710287-8741-1-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <519E9ADA.3040204@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>
-Cc: Jason Cooper <jason@lakedaemon.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Andrew Lunn <andrew@lunn.ch>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "linuxppc-dev@lists.ozlabs.org list" <linuxppc-dev@lists.ozlabs.org>, David Miller <davem@davemloft.net>, Lennert Buytenhek <buytenh@wantstofly.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1368710287-8741-1-git-send-email-prabhakar.csengg@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lad Prabhakar <prabhakar.csengg@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 24, 2013 at 12:40 AM, Sebastian Hesselbarth
-<sebastian.hesselbarth@gmail.com> wrote:
-> On 05/23/2013 08:40 PM, Jason Cooper wrote:
+Prabhakar,
 
->> I think marvell,psc1_reset =<>; gives us the most flexibility in
->> accurately describing the hardware.
+On 05/16/2013 03:18 PM, Lad Prabhakar wrote:
+> From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 >
+> This patch adds "sync-on-green" property as part of
+> endpoint properties and also support to parse them in the parser.
+
+> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> @@ -101,6 +101,8 @@ Optional endpoint properties
+>     array contains only one entry.
+>   - clock-noncontinuous: a boolean property to allow MIPI CSI-2 non-continuous
+>     clock mode.
+> +-sync-on-green: a boolean property indicating to sync with the green signal in
+> + RGB.
+
+Are you sure this is what you need for the TVP7002 chip ?
+
+I think we should differentiate between analog and digital signals and 
+the related
+device's configuration. AFAIU for the analog part there can be various video
+sychronisation methods, i.e. ways in which the synchronisation signals are
+transmitted along side the video component (RGB or luma/chroma) signals. 
+According
+to [1] (presumably not most reliable source of information) there are 
+following
+methods of transmitting sync signals:
+
+  - Separate sync
+  - Composite sync
+  - Sync-on-green (SOG)
+  - Sync-on-luminance
+  - Sync-on-composite
+
+And all these seem to refer to analog video signal.
+
+ From looking at Figure 8 "TVP7002 Application Example" in the TVP7002's 
+datasheet
+([2], p. 52) and your initial TVP7002 patches it looks like what you 
+want is to
+specify polarity of the SOGOUT signal, so the processor that receives 
+this signal
+can properly interpret it, is it correct ?
+
+If so then wouldn't it be more appropriate to define e.g. 'sog-active' 
+property
+and media bus flags:
+	V4L2_MBUS_SYNC_ON_GREEN_ACTIVE_LOW
+	V4L2_MBUS_SYNC_ON_GREEN_ACTIVE_HIGH
+?
+
+And for synchronisation method on the analog part we could perhaps define
+'component-sync' or similar property that would enumerate all possible
+synchronisation methods. We might as well use separate boolean properties,
+but I'm a bit concerned about the increasing number of properties that need
+to be parsed for each parallel video bus "endpoint".
+
+Anyway I'm not sure if we would already have use cases for the 
+'component-sync'
+property.
+
+[1] http://en.wikipedia.org/wiki/Component_video_sync
+[2] 
+http://www.ti.com/general/docs/lit/getliterature.tsp?genericPartNumber=tvp7002&fileType=pdf
+
+>   Example
+> diff --git a/drivers/media/v4l2-core/v4l2-of.c b/drivers/media/v4l2-core/v4l2-of.c
+> index aa59639..b51d61f 100644
+> --- a/drivers/media/v4l2-core/v4l2-of.c
+> +++ b/drivers/media/v4l2-core/v4l2-of.c
+> @@ -100,6 +100,9 @@ static void v4l2_of_parse_parallel_bus(const struct device_node *node,
+>   	if (!of_property_read_u32(node, "data-shift",&v))
+>   		bus->data_shift = v;
 >
-> IMHO using that is just another workaround for a broken driver. We
-> could hack the whole register setup in DT as it would still accurately
-> describe HW. Don't get me wrong, but I don't like it.
+> +	if (of_get_property(node, "sync-on-green",&v))
+> +		flags |= V4L2_MBUS_SYNC_ON_GREEN;
+> +
+>   	bus->flags = flags;
 >
-> Haven't checked how happy Linus Walleij is about pinctrl drivers with
-> reg values hacked in lately.
+>   }
+> diff --git a/include/media/v4l2-mediabus.h b/include/media/v4l2-mediabus.h
+> index 83ae07e..cf2c66f9 100644
+> --- a/include/media/v4l2-mediabus.h
+> +++ b/include/media/v4l2-mediabus.h
+> @@ -40,6 +40,7 @@
+>   #define V4L2_MBUS_FIELD_EVEN_HIGH		(1<<  10)
+>   /* FIELD = 1/0 - Field1 (odd)/Field2 (even) */
+>   #define V4L2_MBUS_FIELD_EVEN_LOW		(1<<  11)
+> +#define V4L2_MBUS_SYNC_ON_GREEN		(1<<  12)
 
-One of the things I've been ranting about lately is that Linux
-subsystem maintainers have become de-facto device tree
-standard commite chairs. :-(
-
-So to the actual question:
-
-In general I think we need to draw a line and define what we
-mean with "describing the hardware" in a device tree.
-
-We have some consensus:
-- <reg> properties to describe regsiter BASE offset in physical
-  memory and size.
-- Resources like IRQ, DMA channel, regulator, GPIO pin control
-  handles, are passed using <&ampersand> notation.
-
-And so it goes on.
-
-When it comes to defining different registers and their individual
-bits and the meaning of these and/or default values, I personally
-think that is making things harder for developers rather than
-simplifying things. I know that pinctrl-single is anyway doing this
-and I was talked into accepting it under circumstances where
-developers are being passed opaque machine-generated
-data that would otherwise be translated into unreadable header
-files littering the kernel.
-
-For a coder it is definately better if the *driver* know these
-details, but whether that is possible seems to depend on things
-like hardware development process.
-
-IMO: if you want to go down that road, what you really want is not
-ever more expressible device trees, but real open firmware,
-or ACPI or UEFI that can interpret and run bytecode as some
-"bios" for you. With DT coming from OF maybe this is a natural
-progression of things, but one has to realize when we reach the
-point where what we really want is a bios. Then your time is
-likely better spent with Tianocore or something than with the
-kernel.
-
-Yours,
-Linus Walleij
+--
+Regards,
+Sylwester
