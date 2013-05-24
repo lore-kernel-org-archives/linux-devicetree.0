@@ -1,65 +1,164 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: ux500: enable the crypto and hash on all dbx500
-Date: Fri, 24 May 2013 09:27:58 +0100
-Message-ID: <20130524082758.GP22683@gmail.com>
-References: <1369378122-25897-1-git-send-email-linus.walleij@stericsson.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 02/21] sh-pfc: Add DT support
+Date: Fri, 24 May 2013 10:52:42 +0200
+Message-ID: <CACRpkdZNv5AO48Bmquyr8mBQvgjBMCk3Ob8ngutSq8RV1HFT0w@mail.gmail.com>
+References: <1369138482-5871-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<1369138482-5871-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1369378122-25897-1-git-send-email-linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Gabriel Fernandez <gabriel.fernandez.st-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1369138482-5871-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <damm@opensource.se>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyNCBNYXkgMjAxMywgTGludXMgV2FsbGVpaiB3cm90ZToKCj4gRnJvbTogTGludXMg
-V2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPgo+IAo+IENvbW1pdHM6Cj4gIkFSTTog
-dXg1MDA6IEFkZCBEZXZpY2UgVHJlZSBub2RlcyBmb3IgdGhlIHV4NTAwIENyeXB0IGRldmljZSIK
-PiAiQVJNOiB1eDUwMDogQWRkIERldmljZSBUcmVlIG5vZGVzIGZvciB0aGUgdXg1MDAgSGFzaCBk
-ZXZpY2UiCj4gCj4gQWRkZWQgdGhlIGNyeXB0byBhbmQgaGFzaCBkZXZpY2VzIGNvbmRpdGlvbmFs
-bHksIGkuZS4gc28gYXMgdG8KPiBiZSB0dXJuZWQgb24gcGVyLWJvYXJkIGJ5IHNldHRpbmcgYW4g
-InN0YXR1cyIgcHJvcGVydHkgb24gdGhlCj4gZGV2aWNlIGZyb20gImRpc2FibGVkIiB0byAib2th
-eSIgb24gZWFjaCBkZXZpY2UuCj4gCj4gVGhpcyBpcyB3cm9uZyBzaW5jZSB0aGlzIGlzIGFuIFNv
-QyBmZWF0dXJlLCBpdCBpcyBub3QgYm9hcmQKPiBkZXBlbmRlbnQuIEl0IGlzIHRoZSBzYW1lIEFT
-SUMgdW5kZXIgYWxsIGNpcmN1bXN0YW5jZXMgYW5kCj4gZnVuY3Rpb25hbGl0eSBkb2VzIG5vdCB2
-YXJ5IHdpdGggYm9hcmQgZmFtaWx5Lgo+IAo+IFRoaXMgbW92ZXMgdGhlIGVuYWJsZW1lbnQgaW50
-byB0aGUgU29DIGZpbGUuCj4gCj4gQ2M6IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+
-Cj4gU2lnbmVkLW9mZi1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3Jn
-Pgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9kYng1eDAuZHRzaSAgfCA0IC0tLS0KPiAgYXJj
-aC9hcm0vYm9vdC9kdHMvc25vd2JhbGwuZHRzIHwgOCAtLS0tLS0tLQo+ICAyIGZpbGVzIGNoYW5n
-ZWQsIDEyIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9k
-Yng1eDAuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2RieDV4MC5kdHNpCj4gaW5kZXggZjA1MTk2
-My4uY2Q1Y2QwOSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9kYng1eDAuZHRzaQo+
-ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2RieDV4MC5kdHNpCj4gQEAgLTc2MCwxNyArNzYwLDEz
-IEBACj4gIAkJCWNvbXBhdGlibGUgPSAic3Rlcmljc3Nvbix1eDUwMC1jcnlwIjsKPiAgCQkJcmVn
-ID0gPDB4YTAzY2IwMDAgMHgxMDAwPjsKPiAgCQkJaW50ZXJydXB0cyA9IDwwIDE1IDB4ND47Cj4g
-LQoKV2h5IGRvIHlvdSBpbnNpc3Qgb24gcmVtb3ZpbmcgYWxsIGxpbmUgc3BhY2luZ3MgZnJvbSB0
-aGUgRFRTIGZpbGU/CgpJIHNhdyB5b3UgcmVtb3ZpbmcgdGhlbSBpbiBiZXR3ZWVuIG5vZGVzIHRv
-by4KCj4gIAkJCXYtYXBlLXN1cHBseSA9IDwmZGI4NTAwX3ZhcGVfcmVnPjsKPiAtCQkJc3RhdHVz
-ID0gImRpc2FibGVkIjsKPiAgCQl9Owo+ICAKPiAgCQloYXNoQGEwM2MyMDAwIHsKPiAgCQkJY29t
-cGF0aWJsZSA9ICJzdGVyaWNzc29uLHV4NTAwLWhhc2giOwo+ICAJCQlyZWcgPSA8MHhhMDNjMjAw
-MCAweDEwMDA+Owo+IC0KPiAgCQkJdi1hcGUtc3VwcGx5ID0gPCZkYjg1MDBfdmFwZV9yZWc+Owo+
-IC0JCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICAJCX07Cj4gIAl9Owo+ICB9Owo+IGRpZmYgLS1n
-aXQgYS9hcmNoL2FybS9ib290L2R0cy9zbm93YmFsbC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9z
-bm93YmFsbC5kdHMKPiBpbmRleCBiZGEwMDJmLi5lODIxOWNjNyAxMDA2NDQKPiAtLS0gYS9hcmNo
-L2FybS9ib290L2R0cy9zbm93YmFsbC5kdHMKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zbm93
-YmFsbC5kdHMKPiBAQCAtMzU2LDEzICszNTYsNSBAQAo+ICAJCQkJfTsKPiAgCQkJfTsKPiAgCQl9
-Owo+IC0KPiAtCQljcnlwQGEwM2NiMDAwIHsKPiAtCQkJc3RhdHVzID0gIm9rYXkiOwo+IC0JCX07
-Cj4gLQo+IC0JCWhhc2hAYTAzYzIwMDAgewo+IC0JCQlzdGF0dXMgPSAib2theSI7Cj4gLQkJfTsK
-PiAgCX07Cj4gIH07CgotLSAKTGVlIEpvbmVzCkxpbmFybyBTVC1Fcmljc3NvbiBMYW5kaW5nIFRl
-YW0gTGVhZApMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MK
-Rm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGlu
-ZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMu
-b3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+On Tue, May 21, 2013 at 2:14 PM, Laurent Pinchart
+<laurent.pinchart+renesas@ideasonboard.com> wrote:
+
+> Support device instantiation through the device tree. The compatible
+> property is used to select the SoC pinmux information.
+>
+> Set the gpio_chip device field to the PFC device to enable automatic
+> GPIO OF support.
+>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+(...)
+
+(Again I'm rather nervous about all the device tree binding reviewing being
+dropped in the lap of Linux subsystem maintainers and then expecting them
+to be good and OS-neutral... Not your fault though.)
+
+> +Pin Configuration Node Properties:
+> +
+> +- renesas,pins : An array of strings, each string containing the name of a pin.
+> +- renesas,groups : An array of strings, each string containing the name of a pin
+> +  group.
+> +
+> +- renesas,function: A string containing the name of the function to mux to the
+> +  pin group(s) specified by the renesas,groups property
+> +
+> +  Valid values for pin, group and function names can be found in the group and
+> +  function arrays of the PFC data file corresponding to the SoC
+> +  (drivers/pinctrl/sh-pfc/pfc-*.c)
+> +
+> +- renesas,pull-up: An integer representing the pull-up strength to be applied
+> +  to all pins specified by the renesas,pins and renesas-groups properties.
+> +  0 disables the pull-up, 1 enables it. Other values should not be used.
+
+Then just use a boolean.
+
+> +- renesas,pull-down: An integer representing the pull-down strength to be
+> +  applied to all pins specified by the renesas,pins and renesas-groups
+> +  properties. 0 disables the pull-down, 1 enables it. Other values should not
+> +  be used.
+
+Just use a boolean oneliner then.
+
+But I prefer that you define something really generic in
+Documentation/devicetree/bindings/pinconf.txt for anyone using
+generic pin config, then reference that.
+
+This way we can have a more general config binding for any system
+using generic pin config, mapping to the configs we have in
+<linux/pinctrl/pinconf-generic.h>
+
+The upside is that we could move the pinconf generic parsing code
+to drivers/pinctrl/pinconf-generic.c and thus avoid code duplication.
+
+We have so far not tried much to standardize pinctrl bindings, but
+this would be a good opportunity.
+
+> +On SH7372, SH73A0, R8A73A4 and R8A7740 the PFC node is also a GPIO controller
+> +node.
+> +
+> +Required Properties:
+> +
+> +  - gpio-controller: Marks the device node as a gpio controller.
+> +
+> +  - #gpio-cells: Should be 2. The first cell is the pin number and the second
+> +    cell is used to specify optional parameters as bit flags. Only the GPIO
+> +    active low flag (bit 0) is currently supported.
+
+
+I suggest these properties shall be defined in an include file using that new
+include hierarchy, since you're using pinconf generic.
+
+include/dt-bindings/gpio/gpio.h
+Referenced by <dt-bindings/gpio/gpio.h> in the .dts[i] files.
+
+In Linux-next you find how tegra machines and the imx6sl DTs have
+started to use this facility for symbolic names.
+
+And for that you should reference
+<dt-bindings/gpio/gpio.h>
+
+Use the symbolic names GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW
+here.
+
+(...)
+> +Example 2: A GPIO LED node that references a GPIO
+> +
+> +       leds {
+> +               compatible = "gpio-leds";
+> +               led1 {
+> +                       gpios = <&pfc 20 1>; /* Active low */
+
+
+#include <dt-bindings/gpio/gpio.h>
+gpios = <&pfc 20 GPIO_ACTIVE_LOW>;
+
+(...)
+> +Example 3: KZM-A9-GT (SH-Mobile AG5) default pin state hog and pin control maps
+> +           for the MMCIF and SCIFA4 devices
+> +
+> +       &pfc {
+> +               pinctrl-0 = <&scifa4_pins>;
+> +               pinctrl-names = "default";
+> +
+> +               mmcif_pins: mmcif {
+> +                       mux {
+> +                               renesas,groups = "mmc0_data8_0", "mmc0_ctrl_0";
+> +                               renesas,function = "mmc0";
+> +                       };
+> +                       cfg {
+> +                               renesas,groups = "mmc0_data8_0";
+> +                               renesas,pins = "PORT279";
+> +                               renesas,pull-up = <1>;
+
+Just
+renesas,pull-up;
+
+Or go for the generic pinconf binding I'm suggesting.
+Then I guess it'd be something like:
+
+pinconf-bias-pull-up;
+
+(Quite readable.)
+
+(...)
+> +++ b/drivers/pinctrl/sh-pfc/pinctrl.c
+> +static const struct sh_pfc_config_param sh_pfc_config_params[] = {
+> +       { "renesas,pull-up", PIN_CONFIG_BIAS_PULL_UP },
+> +       { "renesas,pull-down", PIN_CONFIG_BIAS_PULL_DOWN },
+> +};
+
+So these should be checked as booleans instead:
+
+> +       for (i = 0; i < ARRAY_SIZE(sh_pfc_config_params); ++i) {
+> +               const struct sh_pfc_config_param *param =
+> +                       &sh_pfc_config_params[i];
+> +               unsigned long config;
+> +               u32 val;
+> +
+> +               ret = of_property_read_u32(np, param->name, &val);
+
+of_property_read_bool()
+
+Though I much rather like this code added as helper lib
+in pinconf-generic.c. Use drivers/pinctrl/pinconf.h for
+API.
+
+Yours,
+Linus Walleij
