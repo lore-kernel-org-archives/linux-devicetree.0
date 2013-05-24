@@ -1,205 +1,144 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: [PATCH v2 2/9] metag: minimal TZ1090 (Comet) SoC infrastructure
-Date: Fri, 24 May 2013 17:21:09 +0100
-Message-ID: <1369412476-14245-3-git-send-email-james.hogan@imgtec.com>
-References: <1369412476-14245-1-git-send-email-james.hogan@imgtec.com>
+From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 0/9] Add some TZ1090 SoC infrastructure
+Date: Fri, 24 May 2013 17:21:07 +0100
+Message-ID: <1369412476-14245-1-git-send-email-james.hogan@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1369412476-14245-1-git-send-email-james.hogan@imgtec.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: James Hogan <james.hogan@imgtec.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add really minimal support for Toumaz Xenif TZ1090 SoC (A.K.A. Comet).
-This consists of minimal build infrastructure, device tree files, and a
-defconfig based on meta2_defconfig.
+The Toumaz Xenif TZ1090 SoC (AKA Comet) contains a 2-threaded
+Linux-capable HTP (Meta 2), and is found in a number of development
+boards and digital radios, such as the Minimorph Development Platform.
 
-This SoC contains a 2-threaded HTP (Meta 2) as the main application
-processor, and is found in a number of development boards and digital
-radios, such as the Minimorph Development Platform.
+This patchset adds some core infrastructure for the TZ1090, including
+drivers for the powerdown controller (PDC) irqchip, general/PDC pin
+controllers, and general/PDC GPIO controllers. It's not yet enough to
+get the UARTs going (no common clock framework) so JTAG/QEMU with DA TTY
+is still needed to get a shell.
 
-Signed-off-by: James Hogan <james.hogan@imgtec.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-doc@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org
----
+A QEMU with a Meta frontend and some TZ1090 emulation, and the SoC
+Technical Reference Manual which documents the registers used by both
+GPIO drivers and both pin control drivers can be downloaded from the
+Minimorph SDK (registration of a Minimorph is currently required):
+http://imgtec.com/meta_insider/metaflow-sdk.asp
+
 Changes in v2:
- - removed arch/metag/soc/ directory
 
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- arch/metag/Kconfig.soc                             |  9 +++++
- arch/metag/Makefile                                |  2 +-
- arch/metag/boot/dts/Makefile                       |  2 ++
- arch/metag/boot/dts/tz1090.dtsi                    | 29 +++++++++++++++
- arch/metag/boot/dts/tz1090_generic.dts             | 10 ++++++
- arch/metag/configs/tz1090_defconfig                | 42 ++++++++++++++++++++++
- 7 files changed, 94 insertions(+), 1 deletion(-)
+There've been plenty of changes since v1 (thanks for all the feedback!)
+so I think it's time for v2. I believe the only feedback not yet
+addressed is changing irq-imgpdc driver to use generic irqchip.
+
+ - rebased on v3.10-rc2
+ - removed arch/metag/soc/ directory
+ - removed arch/metag/include/asm/soc-tz1090/gpio.h
+ - irq-imgpdc: use cached versions of irq_en and irq_route registers
+ - irq-imgpdc: switch to using raw_spinlock
+ - irq-imgpdc: (not had time to switch to generic irqchip yet)
+ - add drive strength to generic pinconf debugfs output (patch 4)
+ - add BIAS_BUS_HOLD generic pinconf (patch 5)
+ - pinctrl-tz1090: switched to generic pinconf (a previous patch adds
+   the BIAS_BUS_HOLD generic pinconf)
+ - pinctrl-tz1090: changed device tree bindings to more closely match
+   generic pinconf (separate tristate, pull-up, pull-down, bus-hold
+   flags instead of pull=<X>, drive-strength measured in mA)
+ - pinctrl-tz1090: removed "select" pinconf. Instead pins in a pin group
+   have their own individual pin groups and can be individually muxed.
+   Different pins in same pin mux group muxed to different functions is
+   disallowed. Pin switched to peripheral mode when mux enabled.
+ - pinctrl-tz1090: make use of BIT() from linux/bitops.h
+ - pinctrl-tz1090: add a whole bunch of comments
+ - gpio-tz1090: remove references to Linux flags in dt bindings
+ - gpio-tz1090: make use of BIT() from linux/bitops.h
+ - gpio-tz1090: make register accessors inline to match pinctrl
+ - gpio-tz1090: update gpio-ranges to use 3 cells after recent ABI
+   breakage
+ - pinctrl-tz1090-pdc: switched to generic pinconf (a previous patch
+   adds the BIAS_BUS_HOLD generic pinconf)
+ - pinctrl-tz1090-pdc: changed device tree bindings to more closely
+   match generic pinconf (separate tristate, pull-up, pull-down,
+   bus-hold flags instead of pull=<X>, drive-strength measured in mA)
+ - pinctrl-tz1090-pdc: make use of BIT() from linux/bitops.h
+ - pinctrl-tz1090-pdc: add a whole bunch of comments
+ - gpio-tz1090-pdc: remove references to Linux flags in dt bindings
+ - gpio-tz1090-pdc: make use of BIT() from linux/bitops.h
+ - gpio-tz1090-pdc: make register accessors inline to match pinctrl
+ - gpio-tz1090-pdc: update gpio-ranges to use 3 cells after recent ABI
+   breakage
+
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+
+James Hogan (9):
+  metag: of_platform_populate from arch generic code
+  metag: minimal TZ1090 (Comet) SoC infrastructure
+  irq-imgpdc: add ImgTec PDC irqchip driver
+  pinconf-generic: add drive strength to debugfs output
+  pinconf-generic: add BIAS_BUS_HOLD pinconf
+  pinctrl-tz1090: add TZ1090 pinctrl driver
+  gpio-tz1090: add TZ1090 gpio driver
+  pinctrl-tz1090-pdc: add TZ1090 PDC pinctrl driver
+  gpio-tz1090-pdc: add TZ1090 PDC gpio driver
+
+ .../devicetree/bindings/gpio/gpio-tz1090-pdc.txt   |   41 +
+ .../devicetree/bindings/gpio/gpio-tz1090.txt       |   83 +
+ .../devicetree/bindings/metag/pdc-intc.txt         |  112 +
+ .../bindings/pinctrl/img,tz1090-pdc-pinctrl.txt    |  128 ++
+ .../bindings/pinctrl/img,tz1090-pinctrl.txt        |  223 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ arch/metag/Kconfig.soc                             |   14 +
+ arch/metag/Makefile                                |    2 +-
+ arch/metag/boot/dts/Makefile                       |    2 +
+ arch/metag/boot/dts/tz1090.dtsi                    |  106 +
+ arch/metag/boot/dts/tz1090_generic.dts             |   10 +
+ arch/metag/configs/tz1090_defconfig                |   42 +
+ arch/metag/kernel/setup.c                          |    4 +
+ drivers/gpio/Kconfig                               |   14 +
+ drivers/gpio/Makefile                              |    2 +
+ drivers/gpio/gpio-tz1090-pdc.c                     |  242 +++
+ drivers/gpio/gpio-tz1090.c                         |  629 ++++++
+ drivers/irqchip/Kconfig                            |    4 +
+ drivers/irqchip/Makefile                           |    1 +
+ drivers/irqchip/irq-imgpdc.c                       |  541 +++++
+ drivers/pinctrl/Kconfig                            |   12 +
+ drivers/pinctrl/Makefile                           |    2 +
+ drivers/pinctrl/pinconf-generic.c                  |    2 +
+ drivers/pinctrl/pinctrl-tz1090-pdc.c               | 1105 ++++++++++
+ drivers/pinctrl/pinctrl-tz1090.c                   | 2150 ++++++++++++++++++++
+ include/linux/pinctrl/pinconf-generic.h            |    6 +
+ 26 files changed, 5477 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tz1090-pdc.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-tz1090.txt
+ create mode 100644 Documentation/devicetree/bindings/metag/pdc-intc.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/img,tz1090-pdc-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/img,tz1090-pinctrl.txt
  create mode 100644 arch/metag/boot/dts/tz1090.dtsi
  create mode 100644 arch/metag/boot/dts/tz1090_generic.dts
  create mode 100644 arch/metag/configs/tz1090_defconfig
+ create mode 100644 drivers/gpio/gpio-tz1090-pdc.c
+ create mode 100644 drivers/gpio/gpio-tz1090.c
+ create mode 100644 drivers/irqchip/irq-imgpdc.c
+ create mode 100644 drivers/pinctrl/pinctrl-tz1090-pdc.c
+ create mode 100644 drivers/pinctrl/pinctrl-tz1090.c
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 6931c43..be80992 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -57,6 +57,7 @@ snps 	Synopsys, Inc.
- st	STMicroelectronics
- ste	ST-Ericsson
- stericsson	ST-Ericsson
-+toumaz	Toumaz
- ti	Texas Instruments
- toshiba	Toshiba Corporation
- via	VIA Technologies, Inc.
-diff --git a/arch/metag/Kconfig.soc b/arch/metag/Kconfig.soc
-index ec079cf..653b479 100644
---- a/arch/metag/Kconfig.soc
-+++ b/arch/metag/Kconfig.soc
-@@ -14,6 +14,15 @@ config META21_FPGA
- 	help
- 	  This is a Meta 2.1 FPGA bitstream, just a bare CPU.
- 
-+config SOC_TZ1090
-+	bool "Toumaz Xenif TZ1090 SoC (Comet)"
-+	select METAG_LNKGET_AROUND_CACHE
-+	select METAG_META21
-+	select METAG_SMP_WRITE_REORDERING
-+	help
-+	  This is a Toumaz Technology Xenif TZ1090 (A.K.A. Comet) SoC containing
-+	  a 2-threaded HTP.
-+
- endchoice
- 
- menu "SoC configuration"
-diff --git a/arch/metag/Makefile b/arch/metag/Makefile
-index b566116..9739857 100644
---- a/arch/metag/Makefile
-+++ b/arch/metag/Makefile
-@@ -20,7 +20,7 @@ checkflags-$(CONFIG_METAG_META12)	+= -DMETAC_1_2
- checkflags-$(CONFIG_METAG_META21)	+= -DMETAC_2_1
- CHECKFLAGS				+= -D__metag__ $(checkflags-y)
- 
--KBUILD_DEFCONFIG			:= meta2_defconfig
-+KBUILD_DEFCONFIG			:= tz1090_defconfig
- 
- sflags-$(CONFIG_METAG_META12)		+= -mmetac=1.2
- ifeq ($(CONFIG_METAG_META12),y)
-diff --git a/arch/metag/boot/dts/Makefile b/arch/metag/boot/dts/Makefile
-index dbd9521..72c1218 100644
---- a/arch/metag/boot/dts/Makefile
-+++ b/arch/metag/boot/dts/Makefile
-@@ -1,7 +1,9 @@
- dtb-y	+= skeleton.dtb
-+dtb-y	+= tz1090_generic.dtb
- 
- # Built-in dtb
- builtindtb-y				:= skeleton
-+builtindtb-$(CONFIG_SOC_TZ1090)		:= tz1090_generic
- 
- ifneq ($(CONFIG_METAG_BUILTIN_DTB_NAME),"")
- 	builtindtb-y			:= $(patsubst "%",%,$(CONFIG_METAG_BUILTIN_DTB_NAME))
-diff --git a/arch/metag/boot/dts/tz1090.dtsi b/arch/metag/boot/dts/tz1090.dtsi
-new file mode 100644
-index 0000000..ca057f0
---- /dev/null
-+++ b/arch/metag/boot/dts/tz1090.dtsi
-@@ -0,0 +1,29 @@
-+/*
-+ * Copyright (C) 2012 Imagination Technologies Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	compatible = "toumaz,tz1090", "img,meta";
-+
-+	interrupt-parent = <&intc>;
-+
-+	intc: interrupt-controller {
-+		compatible = "img,meta-intc";
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		num-banks = <2>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+	};
-+};
-diff --git a/arch/metag/boot/dts/tz1090_generic.dts b/arch/metag/boot/dts/tz1090_generic.dts
-new file mode 100644
-index 0000000..aa826cb
---- /dev/null
-+++ b/arch/metag/boot/dts/tz1090_generic.dts
-@@ -0,0 +1,10 @@
-+/*
-+ * Copyright (C) 2012 Imagination Technologies Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+/dts-v1/;
-+
-+/include/ "tz1090.dtsi"
-diff --git a/arch/metag/configs/tz1090_defconfig b/arch/metag/configs/tz1090_defconfig
-new file mode 100644
-index 0000000..9f9316a
---- /dev/null
-+++ b/arch/metag/configs/tz1090_defconfig
-@@ -0,0 +1,42 @@
-+# CONFIG_LOCALVERSION_AUTO is not set
-+# CONFIG_SWAP is not set
-+CONFIG_SYSVIPC=y
-+CONFIG_SYSFS_DEPRECATED=y
-+CONFIG_SYSFS_DEPRECATED_V2=y
-+CONFIG_KALLSYMS_ALL=y
-+# CONFIG_ELF_CORE is not set
-+CONFIG_SLAB=y
-+# CONFIG_BLK_DEV_BSG is not set
-+CONFIG_PARTITION_ADVANCED=y
-+# CONFIG_MSDOS_PARTITION is not set
-+# CONFIG_IOSCHED_DEADLINE is not set
-+# CONFIG_IOSCHED_CFQ is not set
-+CONFIG_FLATMEM_MANUAL=y
-+CONFIG_SOC_TZ1090=y
-+CONFIG_METAG_HALT_ON_PANIC=y
-+# CONFIG_METAG_FPU is not set
-+CONFIG_METAG_DA=y
-+CONFIG_HZ_100=y
-+CONFIG_DEVTMPFS=y
-+# CONFIG_STANDALONE is not set
-+# CONFIG_PREVENT_FIRMWARE_BUILD is not set
-+# CONFIG_FW_LOADER is not set
-+CONFIG_BLK_DEV_RAM=y
-+CONFIG_BLK_DEV_RAM_COUNT=1
-+CONFIG_BLK_DEV_RAM_SIZE=16384
-+# CONFIG_INPUT is not set
-+# CONFIG_SERIO is not set
-+# CONFIG_VT is not set
-+# CONFIG_LEGACY_PTYS is not set
-+CONFIG_DA_TTY=y
-+CONFIG_DA_CONSOLE=y
-+# CONFIG_DEVKMEM is not set
-+# CONFIG_HW_RANDOM is not set
-+CONFIG_GPIOLIB=y
-+# CONFIG_HWMON is not set
-+# CONFIG_USB_SUPPORT is not set
-+# CONFIG_DNOTIFY is not set
-+CONFIG_TMPFS=y
-+# CONFIG_MISC_FILESYSTEMS is not set
-+# CONFIG_SCHED_DEBUG is not set
-+CONFIG_DEBUG_INFO=y
 -- 
 1.8.1.2
