@@ -1,63 +1,36 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 15/21] ARM: shmobile: armadillo-reference: Move st1232
- reset GPIO to DT
-Date: Fri, 24 May 2013 10:59:50 +0200
-Message-ID: <CACRpkdYUQjtmzFzQBES-bcjjT5iTTXifa2BQSusBzMdTCRtyiA@mail.gmail.com>
-References: <1369138482-5871-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-	<1369138482-5871-16-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/3] pinctrl: pinctrl-single: Add full fledge support to
+ configure multiple pins of different modules
+Date: Fri, 24 May 2013 11:03:36 +0200
+Message-ID: <CACRpkdZEsRaaE9dJLDNMzJZSLZ35pqS6XVj5KgCzJGG5nnvPQg@mail.gmail.com>
+References: <1369145282-14419-1-git-send-email-prakash.pm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1369138482-5871-16-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <damm@opensource.se>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1369145282-14419-1-git-send-email-prakash.pm-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, ext Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 21, 2013 at 2:14 PM, Laurent Pinchart
-<laurent.pinchart+renesas@ideasonboard.com> wrote:
+On Tue, May 21, 2013 at 4:07 PM, Manjunathappa, Prakash
+<prakash.pm-l0cyMroinI0@public.gmane.org> wrote:
 
-> Reference the st1232 reset GPIO from the device tree and remove it from
-> board code.
->
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Based function-mask and submask preoperties patch allocates and registers pins.
+> Patch is fixes the issue reported and discussed here:
+> http://www.spinics.net/lists/arm-kernel/msg235213.html
 
-> +++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-> @@ -43,6 +43,7 @@
->                 interrupts = <2 0>; /* IRQ10: hwirq 2 on irqpin1 */
->                 pinctrl-0 = <&st1232_pins>;
->                 pinctrl-names = "default";
-> +               gpios = <&pfc 166 1>;
-
-Just as a random example this becomes:
-
-gpios = <&pfc 166 GPIO_ACTIVE_LOW>;
-
-Which is WAAAY more readable.
-
-> +++ b/arch/arm/mach-shmobile/board-armadillo800eva-reference.c
-> @@ -158,7 +158,6 @@ clock_error:
->   */
->  static void __init eva_init(void)
->  {
-> -
->         r8a7740_clock_init(MD_CK0 | MD_CK2);
->         eva_clock_init();
->
-> @@ -171,12 +170,6 @@ static void __init eva_init(void)
->
->         r8a7740_add_standard_devices_dt();
->
-> -       /*
-> -        * Touchscreen
-> -        * TODO: Move reset GPIO over to .dts when we can reference it
-> -        */
-> -       gpio_request_one(166, GPIOF_OUT_INIT_HIGH, NULL); /* TP_RST_B */
-> -
-
-Not really my business but I guess the driver is already augmented to pick its
-GPIO from the device tree in this case? And are you willingly breaking
-non-DT boots or something?
+I'd like Tony to ACK this, and Haojian to have a look at it before applying.
 
 Yours,
 Linus Walleij
