@@ -1,189 +1,142 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFC PATCH 1/3] drivers: mfd: refactor the vexpress config bridge API
-Date: Fri, 24 May 2013 13:53:04 +0100
-Message-ID: <1369399986-15649-2-git-send-email-lorenzo.pieralisi@arm.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [RFC PATCH 2/3] drivers: mfd: vexpress: add timeout API to vexpress config interface
+Date: Fri, 24 May 2013 13:53:05 +0100
+Message-ID: <1369399986-15649-3-git-send-email-lorenzo.pieralisi@arm.com>
 References: <1369399986-15649-1-git-send-email-lorenzo.pieralisi@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1369399986-15649-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Achin Gupta <achin.gupta-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1369399986-15649-1-git-send-email-lorenzo.pieralisi@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Samuel Ortiz <sameo@linux.intel.com>, Achin Gupta <achin.gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Pawel Moll <pawel.moll@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+In case some transactions to the Serial Power Controller (SPC) are lost owi=
+ng
+to multiple operations handled at once by the M3 controller the OS needs to
+rely on a configuration API that can time out so that failures do not resul=
+t
+in an unusable system.
 
-The introduction of Serial Power Controller (SPC) requires the vexpress
-config interface to change slightly since the SPC memory mapped interface
-can be used as configuration bus but also for operating points
-programming and retrieval. The helper that allocates the bridge functions
-requires an additional parameter allowing to request component specific
-functions that need not be initialized through device tree bindings but
-just using simple look-up and statically defined constants.
+This patch adds a timeout API to the vexpress config programming interface,
+and refactors the existing read/write functions so that they can be reused
+seamlessly on top of the newly defined API.
 
-This patch introduces the necessary changes to the vexpress config layer
-to cater for the new vexpress bridge interface requirements.
-
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Achin Gupta <achin.gupta-5wv7dgnIgG8@public.gmane.org>
-Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha-5wv7dgnIgG8@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>
+Cc: Achin Gupta <achin.gupta@arm.com>
+Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Jon Medhurst <tixy@linaro.org>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 ---
- drivers/mfd/vexpress-config.c | 61 ++++++----
- drivers/mfd/vexpress-sysreg.c |  2 +-
- include/linux/vexpress.h      | 16 ++-
- 3 files changed, 51 insertions(+), 28 deletions(-)
+ drivers/mfd/vexpress-config.c | 26 +++++++---
+ include/linux/vexpress.h      | 23 ++++++--
+ 2 files changed, 37 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/mfd/vexpress-config.c b/drivers/mfd/vexpress-config.c
-index 84ce6b9..1af2b0e 100644
+index 1af2b0e..6f4aa5a 100644
 --- a/drivers/mfd/vexpress-config.c
 +++ b/drivers/mfd/vexpress-config.c
-@@ -86,29 +86,13 @@ void vexpress_config_bridge_unregister(struct vexpress_config_bridge *bridge)
+@@ -266,8 +266,18 @@ int vexpress_config_wait(struct vexpress_config_trans =
+*trans)
  }
- EXPORT_SYMBOL(vexpress_config_bridge_unregister);
- 
--
--struct vexpress_config_func {
--	struct vexpress_config_bridge *bridge;
--	void *func;
--};
--
--struct vexpress_config_func *__vexpress_config_func_get(struct device *dev,
--		struct device_node *node)
-+static struct vexpress_config_bridge *
-+		vexpress_config_bridge_find(struct device_node *node)
- {
--	struct device_node *bridge_node;
--	struct vexpress_config_func *func;
- 	int i;
-+	struct vexpress_config_bridge *res = NULL;
-+	struct device_node *bridge_node = of_node_get(node);
- 
--	if (WARN_ON(dev && node && dev->of_node != node))
--		return NULL;
--	if (dev && !node)
--		node = dev->of_node;
--
--	func = kzalloc(sizeof(*func), GFP_KERNEL);
--	if (!func)
--		return NULL;
--
--	bridge_node = of_node_get(node);
- 	while (bridge_node) {
- 		const __be32 *prop = of_get_property(bridge_node,
- 				"arm,vexpress,config-bridge", NULL);
-@@ -129,13 +113,46 @@ struct vexpress_config_func *__vexpress_config_func_get(struct device *dev,
- 
- 		if (test_bit(i, vexpress_config_bridges_map) &&
- 				bridge->node == bridge_node) {
--			func->bridge = bridge;
--			func->func = bridge->info->func_get(dev, node);
-+			res = bridge;
- 			break;
- 		}
- 	}
- 	mutex_unlock(&vexpress_config_bridges_mutex);
- 
-+	return res;
-+}
-+
-+
-+struct vexpress_config_func {
-+	struct vexpress_config_bridge *bridge;
-+	void *func;
-+};
-+
-+struct vexpress_config_func *__vexpress_config_func_get(
-+		struct vexpress_config_bridge *bridge,
-+		struct device *dev,
-+		struct device_node *node,
-+		const char *id)
+ EXPORT_SYMBOL(vexpress_config_wait);
+=20
+-int vexpress_config_read(struct vexpress_config_func *func, int offset,
+-=09=09u32 *data)
++int vexpress_config_wait_timeout(struct vexpress_config_trans *trans,
++=09=09=09long jiffies)
 +{
-+	struct vexpress_config_func *func;
++=09int ret;
++=09ret =3D wait_for_completion_timeout(&trans->completion, jiffies);
 +
-+	if (WARN_ON(dev && node && dev->of_node != node))
-+		return NULL;
-+	if (dev && !node)
-+		node = dev->of_node;
++=09return ret ? trans->status : -ETIMEDOUT;
++}
++EXPORT_SYMBOL(vexpress_config_wait_timeout);
 +
-+	if (!bridge)
-+		bridge = vexpress_config_bridge_find(node);
-+	if (!bridge)
-+		return NULL;
-+
-+	func = kzalloc(sizeof(*func), GFP_KERNEL);
-+	if (!func)
-+		return NULL;
-+
-+	func->bridge = bridge;
-+	func->func = bridge->info->func_get(dev, node, id);
-+
- 	if (!func->func) {
- 		of_node_put(node);
- 		kfree(func);
-diff --git a/drivers/mfd/vexpress-sysreg.c b/drivers/mfd/vexpress-sysreg.c
-index 96a020b..d2599aa 100644
---- a/drivers/mfd/vexpress-sysreg.c
-+++ b/drivers/mfd/vexpress-sysreg.c
-@@ -165,7 +165,7 @@ static u32 *vexpress_sysreg_config_data;
- static int vexpress_sysreg_config_tries;
- 
- static void *vexpress_sysreg_config_func_get(struct device *dev,
--		struct device_node *node)
-+		struct device_node *node, const char *id)
++int vexpress_config_read_timeout(struct vexpress_config_func *func, int of=
+fset,
++=09=09u32 *data, long jiffies)
  {
- 	struct vexpress_sysreg_config_func *config_func;
- 	u32 site;
+ =09struct vexpress_config_trans trans =3D {
+ =09=09.func =3D func,
+@@ -279,14 +289,14 @@ int vexpress_config_read(struct vexpress_config_func =
+*func, int offset,
+ =09int status =3D vexpress_config_schedule(&trans);
+=20
+ =09if (status =3D=3D VEXPRESS_CONFIG_STATUS_WAIT)
+-=09=09status =3D vexpress_config_wait(&trans);
++=09=09status =3D vexpress_config_wait_timeout(&trans, jiffies);
+=20
+ =09return status;
+ }
+-EXPORT_SYMBOL(vexpress_config_read);
++EXPORT_SYMBOL(vexpress_config_read_timeout);
+=20
+-int vexpress_config_write(struct vexpress_config_func *func, int offset,
+-=09=09u32 data)
++int vexpress_config_write_timeout(struct vexpress_config_func *func,
++=09=09=09=09  int offset, u32 data, long jiffies)
+ {
+ =09struct vexpress_config_trans trans =3D {
+ =09=09.func =3D func,
+@@ -298,8 +308,8 @@ int vexpress_config_write(struct vexpress_config_func *=
+func, int offset,
+ =09int status =3D vexpress_config_schedule(&trans);
+=20
+ =09if (status =3D=3D VEXPRESS_CONFIG_STATUS_WAIT)
+-=09=09status =3D vexpress_config_wait(&trans);
++=09=09status =3D vexpress_config_wait_timeout(&trans, jiffies);
+=20
+ =09return status;
+ }
+-EXPORT_SYMBOL(vexpress_config_write);
++EXPORT_SYMBOL(vexpress_config_write_timeout);
 diff --git a/include/linux/vexpress.h b/include/linux/vexpress.h
-index 6e7980d..50368e0 100644
+index 50368e0..e5015d8 100644
 --- a/include/linux/vexpress.h
 +++ b/include/linux/vexpress.h
-@@ -68,7 +68,8 @@
-  */
- struct vexpress_config_bridge_info {
- 	const char *name;
--	void *(*func_get)(struct device *dev, struct device_node *node);
-+	void *(*func_get)(struct device *dev, struct device_node *node,
-+			  const char *id);
- 	void (*func_put)(void *func);
- 	int (*func_exec)(void *func, int offset, bool write, u32 *data);
- };
-@@ -87,12 +88,17 @@ void vexpress_config_complete(struct vexpress_config_bridge *bridge,
- 
- struct vexpress_config_func;
- 
--struct vexpress_config_func *__vexpress_config_func_get(struct device *dev,
--		struct device_node *node);
-+struct vexpress_config_func *__vexpress_config_func_get(
-+		struct vexpress_config_bridge *bridge,
-+		struct device *dev,
-+		struct device_node *node,
-+		const char *id);
-+#define vexpress_config_func_get(bridge, id) \
-+		__vexpress_config_func_get(bridge, NULL, NULL, id)
- #define vexpress_config_func_get_by_dev(dev) \
--		__vexpress_config_func_get(dev, NULL)
-+		__vexpress_config_func_get(NULL, dev, NULL, NULL)
- #define vexpress_config_func_get_by_node(node) \
--		__vexpress_config_func_get(NULL, node)
-+		__vexpress_config_func_get(NULL, NULL, node, NULL)
+@@ -15,6 +15,7 @@
+ #define _LINUX_VEXPRESS_H
+=20
+ #include <linux/device.h>
++#include <linux/sched.h>
+=20
+ #define VEXPRESS_SITE_MB=09=090
+ #define VEXPRESS_SITE_DB1=09=091
+@@ -102,10 +103,24 @@ struct vexpress_config_func *__vexpress_config_func_g=
+et(
  void vexpress_config_func_put(struct vexpress_config_func *func);
- 
+=20
  /* Both may sleep! */
--- 
+-int vexpress_config_read(struct vexpress_config_func *func, int offset,
+-=09=09u32 *data);
+-int vexpress_config_write(struct vexpress_config_func *func, int offset,
+-=09=09u32 data);
++int vexpress_config_read_timeout(struct vexpress_config_func *func, int of=
+fset,
++=09=09u32 *data, long jiffies);
++int vexpress_config_write_timeout(struct vexpress_config_func *func,
++=09=09int offset, u32 data, long jiffies);
++
++static inline int vexpress_config_read(struct vexpress_config_func *func,
++=09=09=09=09 int offset, u32 *data)
++{
++=09return vexpress_config_read_timeout(func, offset, data,
++=09=09=09=09=09     MAX_SCHEDULE_TIMEOUT);
++}
++
++static inline int vexpress_config_write(struct vexpress_config_func *func,
++=09=09=09=09 int offset, u32 data)
++{
++=09return vexpress_config_write_timeout(func, offset, data,
++=09=09=09=09=09     MAX_SCHEDULE_TIMEOUT);
++}
+=20
+ /* Platform control */
+=20
+--=20
 1.8.2.2
