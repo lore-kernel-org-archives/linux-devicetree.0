@@ -1,47 +1,45 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 5/6] crypto: ux500/cryp - Enable DT probing of the driver
-Date: Fri, 24 May 2013 13:16:42 +0200
-Message-ID: <CACRpkdbek9PFXOwCVQ+PcSMMCZyD3gW+bC6PhyjSnB76zCiHmA@mail.gmail.com>
-References: <1368703646-26418-1-git-send-email-lee.jones@linaro.org>
-	<1368703646-26418-6-git-send-email-lee.jones@linaro.org>
-	<CACRpkdZHT0g_Agtug6jC3rU+DYKOpmwqZ9eQAkRGRw5Kj0wW4A@mail.gmail.com>
-	<20130524083231.GQ22683@gmail.com>
+From: Javier Martinez Canillas <martinez.javier@gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: omap3-igep0020: Add NAND flash support
+Date: Fri, 24 May 2013 13:29:10 +0200
+Message-ID: <CAAwP0s3S8OZ7Riu80jVuj=07cHwGayP_VEEd11ye_mYT0qcxxA@mail.gmail.com>
+References: <1368214271-22780-1-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20130524083231.GQ22683@gmail.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus WALLEIJ <linus.walleij@stericsson.com>, Srinidhi KASAGAR <srinidhi.kasagar@stericsson.com>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1368214271-22780-1-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: =?UTF-8?Q?Beno=C3=AEt_Cousson?= <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 24, 2013 at 10:32 AM, Lee Jones <lee.jones@linaro.org> wrote:
-> On Fri, 24 May 2013, Linus Walleij wrote:
->> On Thu, May 16, 2013 at 1:27 PM, Lee Jones <lee.jones@linaro.org> wrote:
->>
->> > By providing an OF match table with a suitable compatible string, we
->> > can ensure the ux500-crypt driver is probed by supplying an associated
->> > DT node in a given platform's Device Tree.
->> >
->> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
->> > Cc: linux-crypto@vger.kernel.org
->> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
->>
->> Herbert, can I have your ACK on patch 5 & 6 in this series to take it
->> through the ARM SoC tree?
+On Fri, May 10, 2013 at 9:31 PM, Javier Martinez Canillas
+<javier.martinez@collabora.co.uk> wrote:
+> The IGEPv2 board has an 512MB NAND flash memory.
 >
-> Right, there are no bindings, so they don't need a document.
+> Add a device node for this NAND and its parition layout.
+>
+> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> ---
+>
+> Benoit,
+>
+> This patch depends on a previous posted patch:
+>
+> [PATCH] ARM: dts: omap3-igep0020: Add SMSC911x LAN chip support
+>
+> Best regards,
+> Javier
+>
+>  arch/arm/boot/dts/omap3-igep0020.dts |   50 +++++++++++++++++++++++++++++++++-
+>  1 files changed, 49 insertions(+), 1 deletions(-)
+>
 
-Surely the requirement that the node must have <reg>,
-<irqs> and <regulator> for the driver to even probe is a
-binding?
+Hello Benoit,
 
-The fact that the drivers/of/* core on Linux will auto-populate
-platform devices with those properties is a pure Linux
-pecularity, and the bindings are there for OS independence.
+Any comments on these patches?
 
-Whether we need to document it for such standard things
-is another thing, hopefully Rob or someone can answer that?
+Should I resend or if you want I can put all IGEP DT patches on a
+branch and send a pull request if that's easier for you.
 
-Yours,
-Linus Walleij
+Tnaks a lot and best regards,
+Javier
