@@ -1,86 +1,73 @@
-From: Linus Walleij <linus.walleij@stericsson.com>
-Subject: [PATCH] ARM: ux500: enable the crypto and hash on all dbx500
-Date: Fri, 24 May 2013 08:48:42 +0200
-Message-ID: <1369378122-25897-1-git-send-email-linus.walleij@stericsson.com>
+From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH V2 1/6] drivers: bus: add a new driver for WEIM
+Date: Fri, 24 May 2013 15:16:53 +0800
+Message-ID: <519F13E5.2040701@freescale.com>
+References: <1369296978-7669-1-git-send-email-b32955@freescale.com>
+ <201305231153.38111.arnd@arndb.de> <20130523115505.GG32299@pengutronix.de>
+ <201305231509.57651.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org, Gabriel Fernandez <gabriel.fernandez.st@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201305231509.57651.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
-
-Commits:
-"ARM: ux500: Add Device Tree nodes for the ux500 Crypt device"
-"ARM: ux500: Add Device Tree nodes for the ux500 Hash device"
-
-Added the crypto and hash devices conditionally, i.e. so as to
-be turned on per-board by setting an "status" property on the
-device from "disabled" to "okay" on each device.
-
-This is wrong since this is an SoC feature, it is not board
-dependent. It is the same ASIC under all circumstances and
-functionality does not vary with board family.
-
-This moves the enablement into the SoC file.
-
-Cc: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- arch/arm/boot/dts/dbx5x0.dtsi  | 4 ----
- arch/arm/boot/dts/snowball.dts | 8 --------
- 2 files changed, 12 deletions(-)
-
-diff --git a/arch/arm/boot/dts/dbx5x0.dtsi b/arch/arm/boot/dts/dbx5x0.dtsi
-index f051963..cd5cd09 100644
---- a/arch/arm/boot/dts/dbx5x0.dtsi
-+++ b/arch/arm/boot/dts/dbx5x0.dtsi
-@@ -760,17 +760,13 @@
- 			compatible = "stericsson,ux500-cryp";
- 			reg = <0xa03cb000 0x1000>;
- 			interrupts = <0 15 0x4>;
--
- 			v-ape-supply = <&db8500_vape_reg>;
--			status = "disabled";
- 		};
- 
- 		hash@a03c2000 {
- 			compatible = "stericsson,ux500-hash";
- 			reg = <0xa03c2000 0x1000>;
--
- 			v-ape-supply = <&db8500_vape_reg>;
--			status = "disabled";
- 		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/snowball.dts b/arch/arm/boot/dts/snowball.dts
-index bda002f..e8219cc7 100644
---- a/arch/arm/boot/dts/snowball.dts
-+++ b/arch/arm/boot/dts/snowball.dts
-@@ -356,13 +356,5 @@
- 				};
- 			};
- 		};
--
--		cryp@a03cb000 {
--			status = "okay";
--		};
--
--		hash@a03c2000 {
--			status = "okay";
--		};
- 	};
- };
--- 
-1.7.11.3
+5LqOIDIwMTPlubQwNeaciDIz5pelIDIxOjA5LCBBcm5kIEJlcmdtYW5uIOWGmemBkzoKPiBPVE9I
+LCBJIGFncmVlIHRoYXQgaXQgd291bGQgYmUgbmljZXIgaWYgdGhlIGNsayBjb3VsZCByZW1haW4g
+dHVybmVkCj4gb2ZmIGFzIGxvbmcgYXMgbm8gY2hpbGRyZW4gYXJlIGFjdGl2ZS4gQ2FuIHdlIGRv
+IGEgY2xrX2Rpc2FibGUoKQo+IGFmdGVyIHNldHRpbmcgdXAgdGhlIHRpbWluZ3MgZm9yIHRoZSBj
+aGlsZHJlbiBhbmQgdGhlbiBleHBlY3QgdGhvc2UKPiB0byBhY3R1YWxseSBzdGFydCB1cCB0aGUg
+Y2xrIGFnYWluIHdoZW4gdGhleSBuZWVkIGl0Pwo+Cj4gT3IgdG8gdGFrZSB0aGluZ3MgZnVydGhl
+cjogd291bGQgaXQgbWFrZSBzZW5zZSB0byByZXByZXNlbnQgV0VJTQo+IGl0c2VsZiBhcyBhIGNs
+b2NrIGRyaXZlciBhbmQgcGVyZm9ybSB0aGUgc2V0dGluZ3MgZm9yIGVhY2ggY2hpbGQKPiBvbmx5
+IHdoZW4gaXQgc2V0cyB1cCBpdHMgb3duIGNsaz8KPgpJZiB0aGUgY2hpbGQncyBzdWJzeXN0ZW0g
+c3VwcG9ydHMgaXQsIHdlIGNhbiBkbyBpdC4KClRoZSBtdGQgbmFuZCBkb2VzIHN1cHBvcnQgdGhp
+cyBmZWF0dXJlLCBpdCBoYXMgQHNlbGVjdF9jaGlwKCkgaG9vay4KV2UgY2FuIGVuYWJsZS9kaXNh
+YmxlIHRoZSBjbG9jayBpbiB0aGUgQHNlbGVjdF9jaGlwKCkuCgpCdXQgdGhlIG10ZCBOT1IgZG9l
+cyBfbm90XyBzdXBwb3J0cyBpdC4KUGxlYXNlIHJlYWQgdGhlIC9kcml2ZXJzL210ZC9tYXBzL3Bo
+eXNtYXBfb2YuYyBhbmQgCi9kcml2ZXJzL210ZC9jaGlwcy9jZmlfY21kX3NldF94eHguYy4KT2Yg
+Y291cnNlLCB3ZSBjYW4gYWRkIHRoZSBmZWF0dXJlIHRvIE5PUiBzdWJzeXN0ZW0uIEJ1dCB0aGF0
+J3MgYW5vdGhlciAKaXNzdWUuCgpTbyB0aGUgd2VpbSBzaG91bGQgZW5hYmxlIHRoZSBjbG9jayBh
+bGwgdGhlIHRpbWUgbm93LgoKCj4gSSBndWVzcyBpdCB3b3VsZCBhbHNvIG1ha2Ugc2Vuc2UgdG8g
+dXNlIG9mX3BsYXRmb3JtX3BvcHVsYXRlKCkgaW5zdGVhZAo+IG9mIG9mX3BsYXRmb3JtX2Rldmlj
+ZV9jcmVhdGUoKSB3aGVuIGNyZWF0aW5nIHRoZSBjaGlsZHJlbiwgc28gd2UgYWN0dWFsbHkKSSB0
+cmllZCB0aGUgb2ZfcGxhdGZvcm1fcG9wdWxhdGUoKSwgYnV0IGZhaWxlZC4KCmZpcnN0bHksIHdl
+IHNob3VsZCBzZXQgdGhlIHRpbWluZyBmb3IgdGhlIGRldmljZSBfYmVmb3JlXyB3ZSBkbyB0aGUg
+Cm9mX3BsYXRmb3JtX3BvcHVsYXRlKCkuCmFuZCBpIHJld3JpdGUgdGhlIHdlaW1fcGFyc2VfZHQo
+KSB0bzoKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCnN0YXRpYyB2b2lkIHdlaW1f
+cGFyc2VfZHQoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKewogICAgIHN0cnVjdCBkZXZp
+Y2Vfbm9kZSAqY2hpbGQ7CgogICAgIGZvcl9lYWNoX2NoaWxkX29mX25vZGUocGRldi0+ZGV2Lm9m
+X25vZGUsIGNoaWxkKSB7CiAgICAgICAgIGlmICghY2hpbGQtPm5hbWUpCiAgICAgICAgICAgICBj
+b250aW51ZTsKCiAgICAgICAgIGlmICh3ZWltX3RpbWluZ19zZXR1cChwZGV2LCBjaGlsZCkpIHsK
+ICAgICAgICAgICAgIGRldl9lcnIoJnBkZXYtPmRldiwgIiVzIHNldCB0aW1pbmcgZmFpbGVkLlxu
+IiwKICAgICAgICAgICAgICAgICBjaGlsZC0+ZnVsbF9uYW1lKTsKICAgICAgICAgICAgIGNvbnRp
+bnVlOwogICAgICAgICB9CgogICAgIH0KICAgICBpZiAoIW9mX3BsYXRmb3JtX3BvcHVsYXRlKHBk
+ZXYtPmRldi5vZl9ub2RlLCBOVUxMLCBOVUxMLCAmcGRldi0+ZGV2KSkKICAgICAgICAgZGV2X2Vy
+cigmcGRldi0+ZGV2LCAiJXMgZGV2aWNlIGNyZWF0ZSBmYWlsZWQuXG4iLAogICAgICAgICAgICAg
+Y2hpbGQtPmZ1bGxfbmFtZSk7Cn0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCgpU
+aGUgc3lzdGVtIGhhbmcgYXQgOgorKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKwoKIyMgQm9vdGluZyBrZXJuZWwgZnJvbSBMZWdh
+Y3kgSW1hZ2UgYXQgMTA4MDAwMDAgLi4uCiAgICBJbWFnZSBOYW1lOiAgIExpbnV4CiAgICBJbWFn
+ZSBUeXBlOiAgIEFSTSBMaW51eCBLZXJuZWwgSW1hZ2UgKHVuY29tcHJlc3NlZCkKICAgIERhdGEg
+U2l6ZTogICAgNDI1OTg1MSBCeXRlcyA9ICA0LjEgTUIKICAgIExvYWQgQWRkcmVzczogMTAwMDgw
+MDAKICAgIEVudHJ5IFBvaW50OiAgMTAwMDgwMDAKICAgIFZlcmlmeWluZyBDaGVja3N1bSAuLi4g
+T0sKICAgIExvYWRpbmcgS2VybmVsIEltYWdlIC4uLiBPSwpPSwoKU3RhcnRpbmcga2VybmVsIC4u
+LgorKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKz09CgoKCnRoYW5rcwpIdWFuZyBTaGlqaWUKCgoKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxp
+c3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxh
+YnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
