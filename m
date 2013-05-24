@@ -1,36 +1,70 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/3] pinctrl: pinctrl-single: Add full fledge support to
- configure multiple pins of different modules
-Date: Fri, 24 May 2013 11:03:36 +0200
-Message-ID: <CACRpkdZEsRaaE9dJLDNMzJZSLZ35pqS6XVj5KgCzJGG5nnvPQg@mail.gmail.com>
-References: <1369145282-14419-1-git-send-email-prakash.pm@ti.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: [PATCH 2/2] ARM: shmobile: irqpin: map spurious interrupts in DT
+ case
+Date: Fri, 24 May 2013 11:13:07 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1305241112210.1090@axis700.grange>
+References: <Pine.LNX.4.64.1305241109530.1090@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1369145282-14419-1-git-send-email-prakash.pm-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, ext Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1305241109530.1090@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 21, 2013 at 4:07 PM, Manjunathappa, Prakash
-<prakash.pm-l0cyMroinI0@public.gmane.org> wrote:
+In the non-DT case all interrupts get mapped statically during probing,
+therefore, if a spurious interrupt arrives, it can easily be mapped back
+to hardware registers and bits and handled. In the DT case interrupts are
+mapped only when a device, using that interrupt is instantiated from DT.
+So, spurious interrupts occur unmapped and thus cannot be handled properly.
+This patch fixes this by mapping such interrupts as they occur.
 
-> Based function-mask and submask preoperties patch allocates and registers pins.
-> Patch is fixes the issue reported and discussed here:
-> http://www.spinics.net/lists/arm-kernel/msg235213.html
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+---
+ drivers/irqchip/irq-renesas-intc-irqpin.c |    8 ++++++++
+ 1 files changed, 8 insertions(+), 0 deletions(-)
 
-I'd like Tony to ACK this, and Haojian to have a look at it before applying.
+diff --git a/drivers/irqchip/irq-renesas-intc-irqpin.c b/drivers/irqchip/irq-renesas-intc-irqpin.c
+index 82cec63..e62d76d 100644
+--- a/drivers/irqchip/irq-renesas-intc-irqpin.c
++++ b/drivers/irqchip/irq-renesas-intc-irqpin.c
+@@ -71,6 +71,7 @@ struct intc_irqpin_priv {
+ 	struct intc_irqpin_iomem iomem[INTC_IRQPIN_REG_NR];
+ 	struct intc_irqpin_irq irq[INTC_IRQPIN_MAX];
+ 	struct renesas_intc_irqpin_config config;
++	unsigned int min_irq;
+ 	unsigned int number_of_irqs;
+ 	struct platform_device *pdev;
+ 	struct irq_chip irq_chip;
+@@ -274,6 +275,10 @@ static irqreturn_t intc_irqpin_irq_handler(int irq, void *dev_id)
+ 	struct intc_irqpin_priv *p = i->p;
+ 	unsigned long bit;
+ 
++	if (!i->domain_irq)
++		/* unmapped: spurious IRQ, map it now */
++		irq_create_mapping(p->irq_domain, irq - p->min_irq);
++
+ 	intc_irqpin_dbg(i, "demux1");
+ 	bit = intc_irqpin_hwirq_mask(p, INTC_IRQPIN_REG_SOURCE, i->hw_irq);
+ 
+@@ -372,6 +377,7 @@ static int intc_irqpin_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++	p->min_irq = INT_MAX;
+ 	/* allow any number of IRQs between 1 and INTC_IRQPIN_MAX */
+ 	for (k = 0; k < INTC_IRQPIN_MAX; k++) {
+ 		irq = platform_get_resource(pdev, IORESOURCE_IRQ, k);
+@@ -380,6 +386,8 @@ static int intc_irqpin_probe(struct platform_device *pdev)
+ 
+ 		p->irq[k].p = p;
+ 		p->irq[k].requested_irq = irq->start;
++		if (p->min_irq > irq->start)
++			p->min_irq = irq->start;
+ 	}
+ 
+ 	p->number_of_irqs = k;
+-- 
+1.7.2.5
 
-Yours,
-Linus Walleij
