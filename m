@@ -1,164 +1,63 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 02/21] sh-pfc: Add DT support
-Date: Fri, 24 May 2013 10:52:42 +0200
-Message-ID: <CACRpkdZNv5AO48Bmquyr8mBQvgjBMCk3Ob8ngutSq8RV1HFT0w@mail.gmail.com>
+Subject: Re: [PATCH v4 15/21] ARM: shmobile: armadillo-reference: Move st1232
+ reset GPIO to DT
+Date: Fri, 24 May 2013 10:59:50 +0200
+Message-ID: <CACRpkdYUQjtmzFzQBES-bcjjT5iTTXifa2BQSusBzMdTCRtyiA@mail.gmail.com>
 References: <1369138482-5871-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-	<1369138482-5871-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<1369138482-5871-16-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1369138482-5871-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+In-Reply-To: <1369138482-5871-16-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Haojian Zhuang <haojian.zhuang@linaro.org>
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <damm@opensource.se>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
 On Tue, May 21, 2013 at 2:14 PM, Laurent Pinchart
 <laurent.pinchart+renesas@ideasonboard.com> wrote:
 
-> Support device instantiation through the device tree. The compatible
-> property is used to select the SoC pinmux information.
+> Reference the st1232 reset GPIO from the device tree and remove it from
+> board code.
 >
-> Set the gpio_chip device field to the PFC device to enable automatic
-> GPIO OF support.
->
-> Cc: devicetree-discuss@lists.ozlabs.org
 > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-(...)
 
-(Again I'm rather nervous about all the device tree binding reviewing being
-dropped in the lap of Linux subsystem maintainers and then expecting them
-to be good and OS-neutral... Not your fault though.)
+> +++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> @@ -43,6 +43,7 @@
+>                 interrupts = <2 0>; /* IRQ10: hwirq 2 on irqpin1 */
+>                 pinctrl-0 = <&st1232_pins>;
+>                 pinctrl-names = "default";
+> +               gpios = <&pfc 166 1>;
 
-> +Pin Configuration Node Properties:
-> +
-> +- renesas,pins : An array of strings, each string containing the name of a pin.
-> +- renesas,groups : An array of strings, each string containing the name of a pin
-> +  group.
-> +
-> +- renesas,function: A string containing the name of the function to mux to the
-> +  pin group(s) specified by the renesas,groups property
-> +
-> +  Valid values for pin, group and function names can be found in the group and
-> +  function arrays of the PFC data file corresponding to the SoC
-> +  (drivers/pinctrl/sh-pfc/pfc-*.c)
-> +
-> +- renesas,pull-up: An integer representing the pull-up strength to be applied
-> +  to all pins specified by the renesas,pins and renesas-groups properties.
-> +  0 disables the pull-up, 1 enables it. Other values should not be used.
+Just as a random example this becomes:
 
-Then just use a boolean.
+gpios = <&pfc 166 GPIO_ACTIVE_LOW>;
 
-> +- renesas,pull-down: An integer representing the pull-down strength to be
-> +  applied to all pins specified by the renesas,pins and renesas-groups
-> +  properties. 0 disables the pull-down, 1 enables it. Other values should not
-> +  be used.
+Which is WAAAY more readable.
 
-Just use a boolean oneliner then.
+> +++ b/arch/arm/mach-shmobile/board-armadillo800eva-reference.c
+> @@ -158,7 +158,6 @@ clock_error:
+>   */
+>  static void __init eva_init(void)
+>  {
+> -
+>         r8a7740_clock_init(MD_CK0 | MD_CK2);
+>         eva_clock_init();
+>
+> @@ -171,12 +170,6 @@ static void __init eva_init(void)
+>
+>         r8a7740_add_standard_devices_dt();
+>
+> -       /*
+> -        * Touchscreen
+> -        * TODO: Move reset GPIO over to .dts when we can reference it
+> -        */
+> -       gpio_request_one(166, GPIOF_OUT_INIT_HIGH, NULL); /* TP_RST_B */
+> -
 
-But I prefer that you define something really generic in
-Documentation/devicetree/bindings/pinconf.txt for anyone using
-generic pin config, then reference that.
-
-This way we can have a more general config binding for any system
-using generic pin config, mapping to the configs we have in
-<linux/pinctrl/pinconf-generic.h>
-
-The upside is that we could move the pinconf generic parsing code
-to drivers/pinctrl/pinconf-generic.c and thus avoid code duplication.
-
-We have so far not tried much to standardize pinctrl bindings, but
-this would be a good opportunity.
-
-> +On SH7372, SH73A0, R8A73A4 and R8A7740 the PFC node is also a GPIO controller
-> +node.
-> +
-> +Required Properties:
-> +
-> +  - gpio-controller: Marks the device node as a gpio controller.
-> +
-> +  - #gpio-cells: Should be 2. The first cell is the pin number and the second
-> +    cell is used to specify optional parameters as bit flags. Only the GPIO
-> +    active low flag (bit 0) is currently supported.
-
-
-I suggest these properties shall be defined in an include file using that new
-include hierarchy, since you're using pinconf generic.
-
-include/dt-bindings/gpio/gpio.h
-Referenced by <dt-bindings/gpio/gpio.h> in the .dts[i] files.
-
-In Linux-next you find how tegra machines and the imx6sl DTs have
-started to use this facility for symbolic names.
-
-And for that you should reference
-<dt-bindings/gpio/gpio.h>
-
-Use the symbolic names GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW
-here.
-
-(...)
-> +Example 2: A GPIO LED node that references a GPIO
-> +
-> +       leds {
-> +               compatible = "gpio-leds";
-> +               led1 {
-> +                       gpios = <&pfc 20 1>; /* Active low */
-
-
-#include <dt-bindings/gpio/gpio.h>
-gpios = <&pfc 20 GPIO_ACTIVE_LOW>;
-
-(...)
-> +Example 3: KZM-A9-GT (SH-Mobile AG5) default pin state hog and pin control maps
-> +           for the MMCIF and SCIFA4 devices
-> +
-> +       &pfc {
-> +               pinctrl-0 = <&scifa4_pins>;
-> +               pinctrl-names = "default";
-> +
-> +               mmcif_pins: mmcif {
-> +                       mux {
-> +                               renesas,groups = "mmc0_data8_0", "mmc0_ctrl_0";
-> +                               renesas,function = "mmc0";
-> +                       };
-> +                       cfg {
-> +                               renesas,groups = "mmc0_data8_0";
-> +                               renesas,pins = "PORT279";
-> +                               renesas,pull-up = <1>;
-
-Just
-renesas,pull-up;
-
-Or go for the generic pinconf binding I'm suggesting.
-Then I guess it'd be something like:
-
-pinconf-bias-pull-up;
-
-(Quite readable.)
-
-(...)
-> +++ b/drivers/pinctrl/sh-pfc/pinctrl.c
-> +static const struct sh_pfc_config_param sh_pfc_config_params[] = {
-> +       { "renesas,pull-up", PIN_CONFIG_BIAS_PULL_UP },
-> +       { "renesas,pull-down", PIN_CONFIG_BIAS_PULL_DOWN },
-> +};
-
-So these should be checked as booleans instead:
-
-> +       for (i = 0; i < ARRAY_SIZE(sh_pfc_config_params); ++i) {
-> +               const struct sh_pfc_config_param *param =
-> +                       &sh_pfc_config_params[i];
-> +               unsigned long config;
-> +               u32 val;
-> +
-> +               ret = of_property_read_u32(np, param->name, &val);
-
-of_property_read_bool()
-
-Though I much rather like this code added as helper lib
-in pinconf-generic.c. Use drivers/pinctrl/pinconf.h for
-API.
+Not really my business but I guess the driver is already augmented to pick its
+GPIO from the device tree in this case? And are you willingly breaking
+non-DT boots or something?
 
 Yours,
 Linus Walleij
