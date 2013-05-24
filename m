@@ -1,57 +1,69 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] drivers: regulator: palmas: add an API to set/clear
- the switch bit on SMPS10
-Date: Fri, 24 May 2013 19:09:14 +0400
-Message-ID: <519F829A.6070604@cogentembedded.com>
-References: <1369405896-30246-1-git-send-email-kishon@ti.com> <1369405896-30246-2-git-send-email-kishon@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] video: simplefb: add mode parsing function
+Date: Fri, 24 May 2013 09:37:42 -0600
+Message-ID: <519F8946.4050705@wwwdotorg.org>
+References: <1369296231-26597-1-git-send-email-acourbot@nvidia.com>
+ <519E438A.9030408@wwwdotorg.org> <519F1729.2050003@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1369405896-30246-2-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <519F1729.2050003-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 05/24/2013 01:30 AM, Alex Courbot wrote:
+> On 05/24/2013 01:27 AM, Stephen Warren wrote:
+>>> Stephen, please note that the "r5g6b5" mode initially supported
+>>> by the driver becomes "b5g6r5" with the new function. This is because
+>>> the least significant bits are defined first in the string - this
+>>> makes parsing much easier, notably for modes which do not fill whole
+>>> bytes (e.g. 15 bit modes). I hope this is not a problem - it's probably
+>>> better to do the change now while the driver is still new.
+...
+>>> +    by a given color channel. Value channels are "r" (red), "g"
+>>> (green),
+>>> +    "b" (blue) and "a" (alpha).
+>>
+>> I think you'll need "x" too, to represent any gaps/unused bits.
+> 
+> Are there such formats? 15-bit formats do exist but AFAIK they just drop
+> the MSB. Anyway, this can be done easily, so I won't argue. :)
 
-On 24-05-2013 18:31, Kishon Vijay Abraham I wrote:
+Yes, I believe there are e.g. both a2r10g10b10 and b10g10r10a2 for
+example, and it's quite common to replace a with x, especially for
+scanout buffers. Google certainly has hits for that.
 
-> From: Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
+>>> +    if (!params->format || IS_ERR(params->format)) {
+>>
+>> That's just saying IS_ERR_OR_NULL(params->format). It'd be better to
+>> pick one thing to represent errors; either NULL or an error-pointer. I
+>> think having simplefb_parse_format() just return NULL on error would be
+>> best; the caller can't really do anything useful with the information
+>> anyway.
+> 
+> Weird - I actually removed that NULL check since the parse function can
+> only return a valid pointed an error code. Probably forgot to
+> format-patch again after that.
+> 
+> It seems more customary to let the function that fails decide the error
+> code and have it propagated by its caller (even though in the current
+> case there is no much variety in the returned error codes). If you see
+> no problem with it, I will stick to that way of doing.
 
-> Added an API to set/clear the switch bit on SMPS10 which can be used by
-> palmas usb. The switch bit should be set in order for palmas to
-> supply VBUS and is needed when OMAP is acting as USB HOST.
-
-> Signed-off-by: Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
-> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> ---
->   drivers/regulator/palmas-regulator.c | 26 ++++++++++++++++++++++++++
->   include/linux/mfd/palmas.h           |  2 ++
->   2 files changed, 28 insertions(+)
-
-> diff --git a/drivers/regulator/palmas-regulator.c b/drivers/regulator/palmas-regulator.c
-> index 92ceed0..d57ab55 100644
-> --- a/drivers/regulator/palmas-regulator.c
-> +++ b/drivers/regulator/palmas-regulator.c
-> @@ -465,6 +465,32 @@ static int palmas_smps_set_ramp_delay(struct regulator_dev *rdev,
->   	return ret;
->   }
->
-> +/**
-> + * palmas_set_switch_smps10() - set or clear the switch bit on SMPS10
-> + * @param palmas pointer to the palmas mfd structure
-> + * @param sw boolean to indicate switch status
-
-    Please follow the kernel-doc style described in 
-Documentation/kernel-doc-nano-HOWTO.txt.
-
-[...]
-
-WBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Using just an error-return is probably fine. I was going to say that the
+table lookup might propagate a NULL all the way through to that check,
+and hence require both checks above, but I guess that case can't happen,
+since if there is no table entry, then simplefb_parse_format() will
+always be called, so that's fine.
