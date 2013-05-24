@@ -1,142 +1,65 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: [RFC PATCH 2/3] drivers: mfd: vexpress: add timeout API to vexpress config interface
-Date: Fri, 24 May 2013 13:53:05 +0100
-Message-ID: <1369399986-15649-3-git-send-email-lorenzo.pieralisi@arm.com>
-References: <1369399986-15649-1-git-send-email-lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1369399986-15649-1-git-send-email-lorenzo.pieralisi@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Samuel Ortiz <sameo@linux.intel.com>, Achin Gupta <achin.gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Pawel Moll <pawel.moll@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: ux500: enable the crypto and hash on all dbx500
+Date: Fri, 24 May 2013 13:53:14 +0100
+Message-ID: <20130524125314.GZ22683@gmail.com>
+References: <1369378122-25897-1-git-send-email-linus.walleij@stericsson.com>
+ <20130524082758.GP22683@gmail.com>
+ <CACRpkdb1CZKoaG6nNF-yBC3Eovoe3_0BHa6uO-OQkePDcrkamg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdb1CZKoaG6nNF-yBC3Eovoe3_0BHa6uO-OQkePDcrkamg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez.st-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In case some transactions to the Serial Power Controller (SPC) are lost owi=
-ng
-to multiple operations handled at once by the M3 controller the OS needs to
-rely on a configuration API that can time out so that failures do not resul=
-t
-in an unusable system.
-
-This patch adds a timeout API to the vexpress config programming interface,
-and refactors the existing read/write functions so that they can be reused
-seamlessly on top of the newly defined API.
-
-Cc: Samuel Ortiz <sameo@linux.intel.com>
-Cc: Achin Gupta <achin.gupta@arm.com>
-Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: Jon Medhurst <tixy@linaro.org>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
----
- drivers/mfd/vexpress-config.c | 26 +++++++---
- include/linux/vexpress.h      | 23 ++++++--
- 2 files changed, 37 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/mfd/vexpress-config.c b/drivers/mfd/vexpress-config.c
-index 1af2b0e..6f4aa5a 100644
---- a/drivers/mfd/vexpress-config.c
-+++ b/drivers/mfd/vexpress-config.c
-@@ -266,8 +266,18 @@ int vexpress_config_wait(struct vexpress_config_trans =
-*trans)
- }
- EXPORT_SYMBOL(vexpress_config_wait);
-=20
--int vexpress_config_read(struct vexpress_config_func *func, int offset,
--=09=09u32 *data)
-+int vexpress_config_wait_timeout(struct vexpress_config_trans *trans,
-+=09=09=09long jiffies)
-+{
-+=09int ret;
-+=09ret =3D wait_for_completion_timeout(&trans->completion, jiffies);
-+
-+=09return ret ? trans->status : -ETIMEDOUT;
-+}
-+EXPORT_SYMBOL(vexpress_config_wait_timeout);
-+
-+int vexpress_config_read_timeout(struct vexpress_config_func *func, int of=
-fset,
-+=09=09u32 *data, long jiffies)
- {
- =09struct vexpress_config_trans trans =3D {
- =09=09.func =3D func,
-@@ -279,14 +289,14 @@ int vexpress_config_read(struct vexpress_config_func =
-*func, int offset,
- =09int status =3D vexpress_config_schedule(&trans);
-=20
- =09if (status =3D=3D VEXPRESS_CONFIG_STATUS_WAIT)
--=09=09status =3D vexpress_config_wait(&trans);
-+=09=09status =3D vexpress_config_wait_timeout(&trans, jiffies);
-=20
- =09return status;
- }
--EXPORT_SYMBOL(vexpress_config_read);
-+EXPORT_SYMBOL(vexpress_config_read_timeout);
-=20
--int vexpress_config_write(struct vexpress_config_func *func, int offset,
--=09=09u32 data)
-+int vexpress_config_write_timeout(struct vexpress_config_func *func,
-+=09=09=09=09  int offset, u32 data, long jiffies)
- {
- =09struct vexpress_config_trans trans =3D {
- =09=09.func =3D func,
-@@ -298,8 +308,8 @@ int vexpress_config_write(struct vexpress_config_func *=
-func, int offset,
- =09int status =3D vexpress_config_schedule(&trans);
-=20
- =09if (status =3D=3D VEXPRESS_CONFIG_STATUS_WAIT)
--=09=09status =3D vexpress_config_wait(&trans);
-+=09=09status =3D vexpress_config_wait_timeout(&trans, jiffies);
-=20
- =09return status;
- }
--EXPORT_SYMBOL(vexpress_config_write);
-+EXPORT_SYMBOL(vexpress_config_write_timeout);
-diff --git a/include/linux/vexpress.h b/include/linux/vexpress.h
-index 50368e0..e5015d8 100644
---- a/include/linux/vexpress.h
-+++ b/include/linux/vexpress.h
-@@ -15,6 +15,7 @@
- #define _LINUX_VEXPRESS_H
-=20
- #include <linux/device.h>
-+#include <linux/sched.h>
-=20
- #define VEXPRESS_SITE_MB=09=090
- #define VEXPRESS_SITE_DB1=09=091
-@@ -102,10 +103,24 @@ struct vexpress_config_func *__vexpress_config_func_g=
-et(
- void vexpress_config_func_put(struct vexpress_config_func *func);
-=20
- /* Both may sleep! */
--int vexpress_config_read(struct vexpress_config_func *func, int offset,
--=09=09u32 *data);
--int vexpress_config_write(struct vexpress_config_func *func, int offset,
--=09=09u32 data);
-+int vexpress_config_read_timeout(struct vexpress_config_func *func, int of=
-fset,
-+=09=09u32 *data, long jiffies);
-+int vexpress_config_write_timeout(struct vexpress_config_func *func,
-+=09=09int offset, u32 data, long jiffies);
-+
-+static inline int vexpress_config_read(struct vexpress_config_func *func,
-+=09=09=09=09 int offset, u32 *data)
-+{
-+=09return vexpress_config_read_timeout(func, offset, data,
-+=09=09=09=09=09     MAX_SCHEDULE_TIMEOUT);
-+}
-+
-+static inline int vexpress_config_write(struct vexpress_config_func *func,
-+=09=09=09=09 int offset, u32 data)
-+{
-+=09return vexpress_config_write_timeout(func, offset, data,
-+=09=09=09=09=09     MAX_SCHEDULE_TIMEOUT);
-+}
-=20
- /* Platform control */
-=20
---=20
-1.8.2.2
+T24gRnJpLCAyNCBNYXkgMjAxMywgTGludXMgV2FsbGVpaiB3cm90ZToKCj4gT24gRnJpLCBNYXkg
+MjQsIDIwMTMgYXQgMTA6MjcgQU0sIExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+IHdy
+b3RlOgo+ID4gT24gRnJpLCAyNCBNYXkgMjAxMywgTGludXMgV2FsbGVpaiB3cm90ZToKPiA+PiBG
+cm9tOiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+Cj4gPj4KPiA+PiBD
+b21taXRzOgo+ID4+ICJBUk06IHV4NTAwOiBBZGQgRGV2aWNlIFRyZWUgbm9kZXMgZm9yIHRoZSB1
+eDUwMCBDcnlwdCBkZXZpY2UiCj4gPj4gIkFSTTogdXg1MDA6IEFkZCBEZXZpY2UgVHJlZSBub2Rl
+cyBmb3IgdGhlIHV4NTAwIEhhc2ggZGV2aWNlIgo+ID4+Cj4gPj4gQWRkZWQgdGhlIGNyeXB0byBh
+bmQgaGFzaCBkZXZpY2VzIGNvbmRpdGlvbmFsbHksIGkuZS4gc28gYXMgdG8KPiA+PiBiZSB0dXJu
+ZWQgb24gcGVyLWJvYXJkIGJ5IHNldHRpbmcgYW4gInN0YXR1cyIgcHJvcGVydHkgb24gdGhlCj4g
+Pj4gZGV2aWNlIGZyb20gImRpc2FibGVkIiB0byAib2theSIgb24gZWFjaCBkZXZpY2UuCj4gPj4K
+PiA+PiBUaGlzIGlzIHdyb25nIHNpbmNlIHRoaXMgaXMgYW4gU29DIGZlYXR1cmUsIGl0IGlzIG5v
+dCBib2FyZAo+ID4+IGRlcGVuZGVudC4gSXQgaXMgdGhlIHNhbWUgQVNJQyB1bmRlciBhbGwgY2ly
+Y3Vtc3RhbmNlcyBhbmQKPiA+PiBmdW5jdGlvbmFsaXR5IGRvZXMgbm90IHZhcnkgd2l0aCBib2Fy
+ZCBmYW1pbHkuCj4gPj4KPiA+PiBUaGlzIG1vdmVzIHRoZSBlbmFibGVtZW50IGludG8gdGhlIFNv
+QyBmaWxlLgo+ID4+Cj4gPj4gQ2M6IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+Cj4g
+Pj4gU2lnbmVkLW9mZi1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3Jn
+Pgo+ID4+IC0tLQo+ID4+ICBhcmNoL2FybS9ib290L2R0cy9kYng1eDAuZHRzaSAgfCA0IC0tLS0K
+PiA+PiAgYXJjaC9hcm0vYm9vdC9kdHMvc25vd2JhbGwuZHRzIHwgOCAtLS0tLS0tLQo+ID4+ICAy
+IGZpbGVzIGNoYW5nZWQsIDEyIGRlbGV0aW9ucygtKQo+ID4+Cj4gPj4gZGlmZiAtLWdpdCBhL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL2RieDV4MC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvZGJ4NXgwLmR0
+c2kKPiA+PiBpbmRleCBmMDUxOTYzLi5jZDVjZDA5IDEwMDY0NAo+ID4+IC0tLSBhL2FyY2gvYXJt
+L2Jvb3QvZHRzL2RieDV4MC5kdHNpCj4gPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZGJ4NXgw
+LmR0c2kKPiA+PiBAQCAtNzYwLDE3ICs3NjAsMTMgQEAKPiA+PiAgICAgICAgICAgICAgICAgICAg
+ICAgY29tcGF0aWJsZSA9ICJzdGVyaWNzc29uLHV4NTAwLWNyeXAiOwo+ID4+ICAgICAgICAgICAg
+ICAgICAgICAgICByZWcgPSA8MHhhMDNjYjAwMCAweDEwMDA+Owo+ID4+ICAgICAgICAgICAgICAg
+ICAgICAgICBpbnRlcnJ1cHRzID0gPDAgMTUgMHg0PjsKPiA+PiAtCj4gPgo+ID4gV2h5IGRvIHlv
+dSBpbnNpc3Qgb24gcmVtb3ZpbmcgYWxsIGxpbmUgc3BhY2luZ3MgZnJvbSB0aGUgRFRTIGZpbGU/
+Cj4gPgo+ID4gSSBzYXcgeW91IHJlbW92aW5nIHRoZW0gaW4gYmV0d2VlbiBub2RlcyB0b28uCj4g
+Cj4gSSB3YXMgaGl0IGJ5IGEgbGluZXNwYWNlIHdoZW4gSSB3YXMgYSBjaGlsZCwgc2luY2UgdGhl
+biBJIHRha2UKPiBldmVyeSBvcHBvcnR1bml0eSBmb3IgcmV2ZW5nZS4KCjopCgo+IElmIEkga2Vl
+cCB0aGUgc3BhY2luZywgY2FuIEkgaGF2ZSB5b3VyIEFDSz8KCllvdSBjYW4uCgpGb3IgcmVmZXJl
+bmNlLCBJIGxpa2UgYSBzcGFjZSBzZXBhcmF0aW5nIGFsbCBub2RlcyB0b28uIDopCgotLSAKTGVl
+IEpvbmVzCkxpbmFybyBTVC1Fcmljc3NvbiBMYW5kaW5nIFRlYW0gTGVhZApMaW5hcm8ub3JnIOKU
+giBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKRm9sbG93IExpbmFybzogRmFjZWJv
+b2sgfCBUd2l0dGVyIHwgQmxvZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlz
+Y3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9k
+ZXZpY2V0cmVlLWRpc2N1c3MK
