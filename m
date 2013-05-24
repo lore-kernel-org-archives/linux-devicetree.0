@@ -1,108 +1,79 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: [PATCH 1/1] net: micrel : ks8851-ml: add dt support
-Date: Fri, 24 May 2013 11:01:22 +0200
-Message-ID: <1369386082-8941-1-git-send-email-plagnioj@jcrosoft.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/2] net: mv643xx_eth: proper initialization for Kirkwood SoCs
+Date: Fri, 24 May 2013 13:03:25 +0200
+Message-ID: <CACRpkdbsicPkPAiaQCOg2mQF2Ce2dg_K=BKqqx=FCdAH7Y+QBg@mail.gmail.com>
+References: <1369154510-4927-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1369253042-15082-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1369253042-15082-2-git-send-email-sebastian.hesselbarth@gmail.com>
+	<20130522201607.GA18823@obsidianresearch.com>
+	<20130523160111.GP31290@titan.lakedaemon.net>
+	<20130523171112.GB31281@obsidianresearch.com>
+	<20130523172339.GQ31290@titan.lakedaemon.net>
+	<20130523175357.GB2821@obsidianresearch.com>
+	<20130523184028.GU31290@titan.lakedaemon.net>
+	<519E9ADA.3040204@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <519E9ADA.3040204@gmail.com>
 Sender: netdev-owner@vger.kernel.org
-To: devicetree-discuss@ozlabs.org
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, netdev@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>
+Cc: Jason Cooper <jason@lakedaemon.net>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Andrew Lunn <andrew@lunn.ch>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "linuxppc-dev@lists.ozlabs.org list" <linuxppc-dev@lists.ozlabs.org>, David Miller <davem@davemloft.net>, Lennert Buytenhek <buytenh@wantstofly.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Cc: netdev@vger.kernel.org
----
- .../devicetree/bindings/net/micrel-ks8851.txt      |    9 ++++++
- drivers/net/ethernet/micrel/ks8851_mll.c           |   33 +++++++++++++++-----
- 2 files changed, 35 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/micrel-ks8851.txt
+On Fri, May 24, 2013 at 12:40 AM, Sebastian Hesselbarth
+<sebastian.hesselbarth@gmail.com> wrote:
+> On 05/23/2013 08:40 PM, Jason Cooper wrote:
 
-diff --git a/Documentation/devicetree/bindings/net/micrel-ks8851.txt b/Documentation/devicetree/bindings/net/micrel-ks8851.txt
-new file mode 100644
-index 0000000..11ace3c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/micrel-ks8851.txt
-@@ -0,0 +1,9 @@
-+Micrel KS8851 Ethernet mac
-+
-+Required properties:
-+- compatible = "micrel,ks8851-ml" of parallel interface
-+- reg : 2 physical address and size of registers for data and command
-+- interrupts : interrupt connection
-+
-+Optional properties:
-+- local-mac-address : Ethernet mac address to use
-diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
-index ddaf138..5fed734 100644
---- a/drivers/net/ethernet/micrel/ks8851_mll.c
-+++ b/drivers/net/ethernet/micrel/ks8851_mll.c
-@@ -35,6 +35,9 @@
- #include <linux/delay.h>
- #include <linux/slab.h>
- #include <linux/ks8851_mll.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_net.h>
- 
- #define	DRV_NAME	"ks8851_mll"
- 
-@@ -1524,6 +1527,13 @@ static int ks_hw_init(struct ks_net *ks)
- 	return true;
- }
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id ks8851_ml_dt_ids[] = {
-+	{ .compatible = "micrel,ks8851-mll" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, ks8851_ml_dt_ids);
-+#endif
- 
- static int ks8851_probe(struct platform_device *pdev)
- {
-@@ -1532,7 +1542,7 @@ static int ks8851_probe(struct platform_device *pdev)
- 	struct net_device *netdev;
- 	struct ks_net *ks;
- 	u16 id, data;
--	struct ks8851_mll_platform_data *pdata;
-+	const char *mac;
- 
- 	io_d = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	io_c = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-@@ -1619,13 +1629,21 @@ static int ks8851_probe(struct platform_device *pdev)
- 	ks_wrreg16(ks, KS_OBCR, data | OBCR_ODS_16MA);
- 
- 	/* overwriting the default MAC address */
--	pdata = pdev->dev.platform_data;
--	if (!pdata) {
--		netdev_err(netdev, "No platform data\n");
--		err = -ENODEV;
--		goto err_pdata;
-+	if (pdev->dev.of_node) {
-+		mac = of_get_mac_address(pdev->dev.of_node);
-+		if (mac)
-+			memcpy(ks->mac_addr, mac, ETH_ALEN);
-+	} else {
-+		struct ks8851_mll_platform_data *pdata;
-+
-+		pdata = pdev->dev.platform_data;
-+		if (!pdata) {
-+			netdev_err(netdev, "No platform data\n");
-+			err = -ENODEV;
-+			goto err_pdata;
-+		}
-+		memcpy(ks->mac_addr, pdata->mac_addr, ETH_ALEN);
- 	}
--	memcpy(ks->mac_addr, pdata->mac_addr, 6);
- 	if (!is_valid_ether_addr(ks->mac_addr)) {
- 		/* Use random MAC address if none passed */
- 		eth_random_addr(ks->mac_addr);
-@@ -1680,6 +1698,7 @@ static struct platform_driver ks8851_platform_driver = {
- 	.driver = {
- 		.name = DRV_NAME,
- 		.owner = THIS_MODULE,
-+		.of_match_table	= of_match_ptr(ks8851_ml_dt_ids),
- 	},
- 	.probe = ks8851_probe,
- 	.remove = ks8851_remove,
--- 
-1.7.10.4
+>> I think marvell,psc1_reset =<>; gives us the most flexibility in
+>> accurately describing the hardware.
+>
+>
+> IMHO using that is just another workaround for a broken driver. We
+> could hack the whole register setup in DT as it would still accurately
+> describe HW. Don't get me wrong, but I don't like it.
+>
+> Haven't checked how happy Linus Walleij is about pinctrl drivers with
+> reg values hacked in lately.
+
+One of the things I've been ranting about lately is that Linux
+subsystem maintainers have become de-facto device tree
+standard commite chairs. :-(
+
+So to the actual question:
+
+In general I think we need to draw a line and define what we
+mean with "describing the hardware" in a device tree.
+
+We have some consensus:
+- <reg> properties to describe regsiter BASE offset in physical
+  memory and size.
+- Resources like IRQ, DMA channel, regulator, GPIO pin control
+  handles, are passed using <&ampersand> notation.
+
+And so it goes on.
+
+When it comes to defining different registers and their individual
+bits and the meaning of these and/or default values, I personally
+think that is making things harder for developers rather than
+simplifying things. I know that pinctrl-single is anyway doing this
+and I was talked into accepting it under circumstances where
+developers are being passed opaque machine-generated
+data that would otherwise be translated into unreadable header
+files littering the kernel.
+
+For a coder it is definately better if the *driver* know these
+details, but whether that is possible seems to depend on things
+like hardware development process.
+
+IMO: if you want to go down that road, what you really want is not
+ever more expressible device trees, but real open firmware,
+or ACPI or UEFI that can interpret and run bytecode as some
+"bios" for you. With DT coming from OF maybe this is a natural
+progression of things, but one has to realize when we reach the
+point where what we really want is a bios. Then your time is
+likely better spent with Tianocore or something than with the
+kernel.
+
+Yours,
+Linus Walleij
