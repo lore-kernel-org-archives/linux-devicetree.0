@@ -1,73 +1,77 @@
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: Re: [PATCH 1/2] pinmux: Add TB10x pinmux driver
-Date: Fri, 24 May 2013 14:03:00 +0200
-Message-ID: <20130524120259.GC5203@ab42.lan>
-References: <20130429161725.GB30136@ab42.lan>
- <5182B557.4040804@wwwdotorg.org>
- <CACRpkdaxO0q_P2wJFy3zv4F-QM9dZk54qW8ft350XqcBt1Gr1w@mail.gmail.com>
- <20130508164123.GA10248@ab42.lan>
- <518AAF31.8080502@wwwdotorg.org>
- <20130510082521.GA2125@ab42.lan>
- <51942472.9010402@wwwdotorg.org>
- <CACRpkdYtKr5w2=1sONG4Qn2TQue38nV7epWfzxNQz5rjSs0DZQ@mail.gmail.com>
- <20130522142824.GC4789@ab42.lan>
- <CACRpkdYsSwJeVPcLFT7pMjyRsgvoEc+302Zah1Zy2sDOBvVwEg@mail.gmail.com>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH v4 15/21] ARM: shmobile: armadillo-reference: Move st1232
+ reset GPIO to DT
+Date: Fri, 24 May 2013 21:24:26 +0900
+Message-ID: <CANqRtoTVjBcsKVP=2jJ7ThC0gXuF-Xd-iByo7db53YhK1x+-wA@mail.gmail.com>
+References: <1369138482-5871-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<1369138482-5871-16-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<CACRpkdYUQjtmzFzQBES-bcjjT5iTTXifa2BQSusBzMdTCRtyiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYsSwJeVPcLFT7pMjyRsgvoEc+302Zah1Zy2sDOBvVwEg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYUQjtmzFzQBES-bcjjT5iTTXifa2BQSusBzMdTCRtyiA@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Shiraz HASHIM <shiraz.hashim@st.com>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <damm@opensource.se>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 24, 2013 at 11:20:31AM +0200, Linus Walleij wrote:
-> On Wed, May 22, 2013 at 4:28 PM, Christian Ruppert
-> <christian.ruppert@abilis.com> wrote:
-> > On Mon, May 20, 2013 at 10:10:33AM +0200, Linus Walleij wrote:
->=20
-> >> It's not even pinctrl-simple-centric it is completely generic.
-> >> The code is in drivers/gpio/gpiolib-of.c.
-> >>
-> >> It was written by Shiraz Hashin and Haojian Zhuang.
-> >> At the time I augmented the core code quite a bit to make
-> >> a good fit.
-> >
-> > I agree. Unluckily, it uses pinctrl-internal pin numbering which we
-> > would have to make coherent with the physical pin numbers of the
-> > individual packaging variants of the chip in order to expose them t=
-o
-> > customers (see my previous mail at https://lkml.org/lkml/2013/5/22/=
-207).
->=20
-> Again, the Linux pin numberspace is sparse, you can use whatever
-> pin number you like as long as it fits in a u32 and does not overlap
-> with other pins.
->=20
-> If you have a problem that the physical pin numbers and the
-> bank offsets or bits you need to poke or something doesn't
-> match, that is an issue for the *driver* not for the pin control
-> subsystem. However the pin control core may provide
-> cross-mapping helpers as discussed elsewhere, but the
-> pin control internal numbering is *not* an issue. Those are
-> just "some number" on a certain pin controller, use the number
-> from the datasheet if you like.
+Hi Linus,
 
-Understood. What I'm looking for is a way to support different products
-with different physical pin numbering, ideally without changing Linux
-internal pin numbers from one product variant under the constraints
-highlighted in the thread you call "elsewhere".
+On Fri, May 24, 2013 at 5:59 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Tue, May 21, 2013 at 2:14 PM, Laurent Pinchart
+> <laurent.pinchart+renesas@ideasonboard.com> wrote:
+>
+>> Reference the st1232 reset GPIO from the device tree and remove it from
+>> board code.
+>>
+>> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+>
+>> +++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+>> @@ -43,6 +43,7 @@
+>>                 interrupts = <2 0>; /* IRQ10: hwirq 2 on irqpin1 */
+>>                 pinctrl-0 = <&st1232_pins>;
+>>                 pinctrl-names = "default";
+>> +               gpios = <&pfc 166 1>;
+>
+> Just as a random example this becomes:
+>
+> gpios = <&pfc 166 GPIO_ACTIVE_LOW>;
+>
+> Which is WAAAY more readable.
 
-Greetings,
-  Christian
+Yes, agreed, even grumpy me starts thinking this looks good. =)
 
---=20
-  Christian Ruppert              ,          <christian.ruppert@abilis.c=
-om>
-                                /|
-  Tel: +41/(0)22 816 19-42     //|                 3, Chemin du Pr=E9-F=
-leuri
-                             _// | bilis Systems   CH-1228 Plan-les-Oua=
-tes
+>> +++ b/arch/arm/mach-shmobile/board-armadillo800eva-reference.c
+>> @@ -158,7 +158,6 @@ clock_error:
+>>   */
+>>  static void __init eva_init(void)
+>>  {
+>> -
+>>         r8a7740_clock_init(MD_CK0 | MD_CK2);
+>>         eva_clock_init();
+>>
+>> @@ -171,12 +170,6 @@ static void __init eva_init(void)
+>>
+>>         r8a7740_add_standard_devices_dt();
+>>
+>> -       /*
+>> -        * Touchscreen
+>> -        * TODO: Move reset GPIO over to .dts when we can reference it
+>> -        */
+>> -       gpio_request_one(166, GPIOF_OUT_INIT_HIGH, NULL); /* TP_RST_B */
+>> -
+>
+> Not really my business but I guess the driver is already augmented to pick its
+> GPIO from the device tree in this case? And are you willingly breaking
+> non-DT boots or something?
+
+Regarding dependency handing of driver and board code, I believe
+Laurent has us covered.
+
+As for breaking non-DT boot, under mach-shmobile the code for DT
+"-reference" board support is DT only so judging by the file name this
+kind of change should be fine.
+
+Thanks,
+
+/ magnus
