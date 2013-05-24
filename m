@@ -1,37 +1,86 @@
-From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH V2 1/6] drivers: bus: add a new driver for WEIM
-Date: Fri, 24 May 2013 10:42:53 +0800
-Message-ID: <519ED3AD.6040403@freescale.com>
-References: <1369296978-7669-1-git-send-email-b32955@freescale.com>
- <1369296978-7669-2-git-send-email-b32955@freescale.com>
- <20130523101921.GM18614@n2100.arm.linux.org.uk>
+From: Linus Walleij <linus.walleij@stericsson.com>
+Subject: [PATCH] ARM: ux500: enable the crypto and hash on all dbx500
+Date: Fri, 24 May 2013 08:48:42 +0200
+Message-ID: <1369378122-25897-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130523101921.GM18614-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, Gabriel Fernandez <gabriel.fernandez.st@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-5LqOIDIwMTPlubQwNeaciDIz5pelIDE4OjE5LCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXgg5YaZ
-6YGTOgo+IE9uIFRodSwgTWF5IDIzLCAyMDEzIGF0IDA0OjE2OjEzUE0gKzA4MDAsIEh1YW5nIFNo
-aWppZSB3cm90ZToKPj4gKwkvKiBnZXQgdGhlIGNsb2NrICovCj4+ICsJd2VpbS0+Y2xrID0gZGV2
-bV9jbGtfZ2V0KCZwZGV2LT5kZXYsIE5VTEwpOwo+PiArCWlmIChJU19FUlIod2VpbS0+Y2xrKSkK
-Pj4gKwkJZ290byB3ZWltX2VycjsKPj4gKwo+PiArCWNsa19wcmVwYXJlX2VuYWJsZSh3ZWltLT5j
-bGspOwo+IEkgbm90aWNlIHBlb3BsZSBhcmUgZ2V0dGluZyBsYXp5IGFib3V0IHRoaXMuICBjbGtf
-cHJlcGFyZV9lbmFibGUoKSBjYW4KPiByZXR1cm4gYW4gZXJyb3IuLi4KPgppIHdpbGwgYWRkIHRo
-ZSBlcnJvciBjaGVjayBpbiBuZXh0IHZlcnNpb24uCgp0aGFua3MKSHVhbmcgU2hpamllCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRp
-c2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0
-dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+From: Linus Walleij <linus.walleij@linaro.org>
+
+Commits:
+"ARM: ux500: Add Device Tree nodes for the ux500 Crypt device"
+"ARM: ux500: Add Device Tree nodes for the ux500 Hash device"
+
+Added the crypto and hash devices conditionally, i.e. so as to
+be turned on per-board by setting an "status" property on the
+device from "disabled" to "okay" on each device.
+
+This is wrong since this is an SoC feature, it is not board
+dependent. It is the same ASIC under all circumstances and
+functionality does not vary with board family.
+
+This moves the enablement into the SoC file.
+
+Cc: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ arch/arm/boot/dts/dbx5x0.dtsi  | 4 ----
+ arch/arm/boot/dts/snowball.dts | 8 --------
+ 2 files changed, 12 deletions(-)
+
+diff --git a/arch/arm/boot/dts/dbx5x0.dtsi b/arch/arm/boot/dts/dbx5x0.dtsi
+index f051963..cd5cd09 100644
+--- a/arch/arm/boot/dts/dbx5x0.dtsi
++++ b/arch/arm/boot/dts/dbx5x0.dtsi
+@@ -760,17 +760,13 @@
+ 			compatible = "stericsson,ux500-cryp";
+ 			reg = <0xa03cb000 0x1000>;
+ 			interrupts = <0 15 0x4>;
+-
+ 			v-ape-supply = <&db8500_vape_reg>;
+-			status = "disabled";
+ 		};
+ 
+ 		hash@a03c2000 {
+ 			compatible = "stericsson,ux500-hash";
+ 			reg = <0xa03c2000 0x1000>;
+-
+ 			v-ape-supply = <&db8500_vape_reg>;
+-			status = "disabled";
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/snowball.dts b/arch/arm/boot/dts/snowball.dts
+index bda002f..e8219cc7 100644
+--- a/arch/arm/boot/dts/snowball.dts
++++ b/arch/arm/boot/dts/snowball.dts
+@@ -356,13 +356,5 @@
+ 				};
+ 			};
+ 		};
+-
+-		cryp@a03cb000 {
+-			status = "okay";
+-		};
+-
+-		hash@a03c2000 {
+-			status = "okay";
+-		};
+ 	};
+ };
+-- 
+1.7.11.3
