@@ -1,63 +1,108 @@
-From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v3 6/6] ARM: dts: imx6qdl: enable the WEIM NOR
-Date: Fri, 24 May 2013 17:59:24 +0800
-Message-ID: <1369389564-13181-7-git-send-email-b32955@freescale.com>
-References: <1369389564-13181-1-git-send-email-b32955@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1369389564-13181-1-git-send-email-b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: shc_work-JGs/UdohzUI@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: [PATCH 1/1] net: micrel : ks8851-ml: add dt support
+Date: Fri, 24 May 2013 11:01:22 +0200
+Message-ID: <1369386082-8941-1-git-send-email-plagnioj@jcrosoft.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: devicetree-discuss@ozlabs.org
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable the WEIM NOR for imx6q{dl} boards.
-
-For the pin conflict with SPI NOR, its status is set to "disabled".
-
-Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: netdev@vger.kernel.org
 ---
- arch/arm/boot/dts/imx6qdl-sabreauto.dtsi |   20 ++++++++++++++++++++
- 1 files changed, 20 insertions(+), 0 deletions(-)
+ .../devicetree/bindings/net/micrel-ks8851.txt      |    9 ++++++
+ drivers/net/ethernet/micrel/ks8851_mll.c           |   33 +++++++++++++++-----
+ 2 files changed, 35 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/micrel-ks8851.txt
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-index a4466e6..bb0f185 100644
---- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-@@ -58,3 +58,23 @@
- 	wp-gpios = <&gpio1 13 0>;
- 	status = "okay";
- };
+diff --git a/Documentation/devicetree/bindings/net/micrel-ks8851.txt b/Documentation/devicetree/bindings/net/micrel-ks8851.txt
+new file mode 100644
+index 0000000..11ace3c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/micrel-ks8851.txt
+@@ -0,0 +1,9 @@
++Micrel KS8851 Ethernet mac
 +
-+&weim {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_weim_nor_1 &pinctrl_weim_cs_0>;
-+	#address-cells = <2>;
-+	#size-cells = <1>;
-+	ranges = <0 0 0x08000000 0x08000000>;
-+	status = "disabled"; /* pin conflict with SPI NOR */
++Required properties:
++- compatible = "micrel,ks8851-ml" of parallel interface
++- reg : 2 physical address and size of registers for data and command
++- interrupts : interrupt connection
 +
-+	nor@0,0 {
-+		compatible = "cfi-flash";
-+		reg = <0 0 0x02000000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		bank-width = <2>;
-+
-+		fsl,weim-cs-timing = <0x00620081 0x00000001 0x1C022000
-+				0x0000C000 0x1404a38e 0x00000000>;
-+	};
++Optional properties:
++- local-mac-address : Ethernet mac address to use
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index ddaf138..5fed734 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -35,6 +35,9 @@
+ #include <linux/delay.h>
+ #include <linux/slab.h>
+ #include <linux/ks8851_mll.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_net.h>
+ 
+ #define	DRV_NAME	"ks8851_mll"
+ 
+@@ -1524,6 +1527,13 @@ static int ks_hw_init(struct ks_net *ks)
+ 	return true;
+ }
+ 
++#if defined(CONFIG_OF)
++static const struct of_device_id ks8851_ml_dt_ids[] = {
++	{ .compatible = "micrel,ks8851-mll" },
++	{ /* sentinel */ }
 +};
++MODULE_DEVICE_TABLE(of, ks8851_ml_dt_ids);
++#endif
+ 
+ static int ks8851_probe(struct platform_device *pdev)
+ {
+@@ -1532,7 +1542,7 @@ static int ks8851_probe(struct platform_device *pdev)
+ 	struct net_device *netdev;
+ 	struct ks_net *ks;
+ 	u16 id, data;
+-	struct ks8851_mll_platform_data *pdata;
++	const char *mac;
+ 
+ 	io_d = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	io_c = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+@@ -1619,13 +1629,21 @@ static int ks8851_probe(struct platform_device *pdev)
+ 	ks_wrreg16(ks, KS_OBCR, data | OBCR_ODS_16MA);
+ 
+ 	/* overwriting the default MAC address */
+-	pdata = pdev->dev.platform_data;
+-	if (!pdata) {
+-		netdev_err(netdev, "No platform data\n");
+-		err = -ENODEV;
+-		goto err_pdata;
++	if (pdev->dev.of_node) {
++		mac = of_get_mac_address(pdev->dev.of_node);
++		if (mac)
++			memcpy(ks->mac_addr, mac, ETH_ALEN);
++	} else {
++		struct ks8851_mll_platform_data *pdata;
++
++		pdata = pdev->dev.platform_data;
++		if (!pdata) {
++			netdev_err(netdev, "No platform data\n");
++			err = -ENODEV;
++			goto err_pdata;
++		}
++		memcpy(ks->mac_addr, pdata->mac_addr, ETH_ALEN);
+ 	}
+-	memcpy(ks->mac_addr, pdata->mac_addr, 6);
+ 	if (!is_valid_ether_addr(ks->mac_addr)) {
+ 		/* Use random MAC address if none passed */
+ 		eth_random_addr(ks->mac_addr);
+@@ -1680,6 +1698,7 @@ static struct platform_driver ks8851_platform_driver = {
+ 	.driver = {
+ 		.name = DRV_NAME,
+ 		.owner = THIS_MODULE,
++		.of_match_table	= of_match_ptr(ks8851_ml_dt_ids),
+ 	},
+ 	.probe = ks8851_probe,
+ 	.remove = ks8851_remove,
 -- 
-1.7.1
+1.7.10.4
