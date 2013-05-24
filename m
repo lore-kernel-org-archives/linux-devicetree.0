@@ -1,77 +1,53 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH v4 15/21] ARM: shmobile: armadillo-reference: Move st1232
- reset GPIO to DT
-Date: Fri, 24 May 2013 21:24:26 +0900
-Message-ID: <CANqRtoTVjBcsKVP=2jJ7ThC0gXuF-Xd-iByo7db53YhK1x+-wA@mail.gmail.com>
-References: <1369138482-5871-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-	<1369138482-5871-16-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-	<CACRpkdYUQjtmzFzQBES-bcjjT5iTTXifa2BQSusBzMdTCRtyiA@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: [RFC PATCH 0/3] drivers: mfd: Versatile Express SPC support
+Date: Fri, 24 May 2013 13:53:03 +0100
+Message-ID: <1369399986-15649-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYUQjtmzFzQBES-bcjjT5iTTXifa2BQSusBzMdTCRtyiA@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <damm@opensource.se>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Medhurst <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Achin Gupta <achin.gupta-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+This patch series introduces support for the Versatile Express Serial
+Power Controller (SPC) present in ARM Versatile Express TC2 core tiles.
+SPC driver is a fundamental component of TC2 power management and allows
+to carry out C-state management and DVFS for A15 and A7 clusters.
 
-On Fri, May 24, 2013 at 5:59 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Tue, May 21, 2013 at 2:14 PM, Laurent Pinchart
-> <laurent.pinchart+renesas@ideasonboard.com> wrote:
->
->> Reference the st1232 reset GPIO from the device tree and remove it from
->> board code.
->>
->> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
->
->> +++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
->> @@ -43,6 +43,7 @@
->>                 interrupts = <2 0>; /* IRQ10: hwirq 2 on irqpin1 */
->>                 pinctrl-0 = <&st1232_pins>;
->>                 pinctrl-names = "default";
->> +               gpios = <&pfc 166 1>;
->
-> Just as a random example this becomes:
->
-> gpios = <&pfc 166 GPIO_ACTIVE_LOW>;
->
-> Which is WAAAY more readable.
+First two patches provide changes required by SPC to comply with the
+Versatile Express config API, third patch is the SPC driver implementation.
 
-Yes, agreed, even grumpy me starts thinking this looks good. =)
+Code extensively exercised through CPUidle and CPUfreq power states and
+operating point transitions.
 
->> +++ b/arch/arm/mach-shmobile/board-armadillo800eva-reference.c
->> @@ -158,7 +158,6 @@ clock_error:
->>   */
->>  static void __init eva_init(void)
->>  {
->> -
->>         r8a7740_clock_init(MD_CK0 | MD_CK2);
->>         eva_clock_init();
->>
->> @@ -171,12 +170,6 @@ static void __init eva_init(void)
->>
->>         r8a7740_add_standard_devices_dt();
->>
->> -       /*
->> -        * Touchscreen
->> -        * TODO: Move reset GPIO over to .dts when we can reference it
->> -        */
->> -       gpio_request_one(166, GPIOF_OUT_INIT_HIGH, NULL); /* TP_RST_B */
->> -
->
-> Not really my business but I guess the driver is already augmented to pick its
-> GPIO from the device tree in this case? And are you willingly breaking
-> non-DT boots or something?
+Lorenzo Pieralisi (2):
+  drivers: mfd: vexpress: add timeout API to vexpress config interface
+  drivers: mfd: vexpress: add Serial Power Controller (SPC) support
 
-Regarding dependency handing of driver and board code, I believe
-Laurent has us covered.
+Pawel Moll (1):
+  drivers: mfd: refactor the vexpress config bridge API
 
-As for breaking non-DT boot, under mach-shmobile the code for DT
-"-reference" board support is DT only so judging by the file name this
-kind of change should be fine.
+ Documentation/devicetree/bindings/mfd/vexpress-spc.txt |  35 +
+ drivers/mfd/Kconfig                                    |   7 +
+ drivers/mfd/Makefile                                   |   1 +
+ drivers/mfd/vexpress-config.c                          |  87 +-
+ drivers/mfd/vexpress-spc.c                             | 626 ++++++++++
+ drivers/mfd/vexpress-sysreg.c                          |   2 +-
+ include/linux/vexpress.h                               |  82 +-
+ 7 files changed, 800 insertions(+), 40 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/vexpress-spc.txt
+ create mode 100644 drivers/mfd/vexpress-spc.c
 
-Thanks,
-
-/ magnus
+-- 
+1.8.2.2
