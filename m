@@ -1,70 +1,72 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: [PATCH 2/2] ARM: shmobile: irqpin: map spurious interrupts in DT
- case
-Date: Fri, 24 May 2013 11:13:07 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1305241112210.1090@axis700.grange>
-References: <Pine.LNX.4.64.1305241109530.1090@axis700.grange>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: [PATCH 1/2] ARM: shmobile: irqpin: add a DT property to enable
+ masking on parent
+Date: Fri, 24 May 2013 11:13:03 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1305241109530.1090@axis700.grange>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1305241109530.1090@axis700.grange>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In the non-DT case all interrupts get mapped statically during probing,
-therefore, if a spurious interrupt arrives, it can easily be mapped back
-to hardware registers and bits and handled. In the DT case interrupts are
-mapped only when a device, using that interrupt is instantiated from DT.
-So, spurious interrupts occur unmapped and thus cannot be handled properly.
-This patch fixes this by mapping such interrupts as they occur.
+To disable spurious interrupts, that get triggered on certain hardware, the
+irqpin driver masks them on the parent interrupt controller. To specify
+such broken devices a .control_parent parameter can be provided in the
+platform data. In the DT case we need a property, to do the same.
 
-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
 ---
- drivers/irqchip/irq-renesas-intc-irqpin.c |    8 ++++++++
- 1 files changed, 8 insertions(+), 0 deletions(-)
 
+These two patches simply split the earlier "ARM: shmobile: irqpin: fix 
+handling of spurious interrupts in DT case" patch into two parts. 
+Otherwise no change.
+
+ .../interrupt-controller/renesas,intc-irqpin.txt   |    2 ++
+ drivers/irqchip/irq-renesas-intc-irqpin.c          |    7 +++++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+index c6f09b7..152b10a 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
+@@ -11,3 +11,5 @@ Optional properties:
+   resource allocation properties
+ - sense-bitfield-width: width of a single sense bitfield in the SENSE register,
+   if different from the default 4 bits
++- control-parent: disable and enable interrupts on the parent interrupt
++  controller, needed for some broken implementations
 diff --git a/drivers/irqchip/irq-renesas-intc-irqpin.c b/drivers/irqchip/irq-renesas-intc-irqpin.c
-index 82cec63..e62d76d 100644
+index 4aca1b2..82cec63 100644
 --- a/drivers/irqchip/irq-renesas-intc-irqpin.c
 +++ b/drivers/irqchip/irq-renesas-intc-irqpin.c
-@@ -71,6 +71,7 @@ struct intc_irqpin_priv {
- 	struct intc_irqpin_iomem iomem[INTC_IRQPIN_REG_NR];
- 	struct intc_irqpin_irq irq[INTC_IRQPIN_MAX];
- 	struct renesas_intc_irqpin_config config;
-+	unsigned int min_irq;
- 	unsigned int number_of_irqs;
- 	struct platform_device *pdev;
- 	struct irq_chip irq_chip;
-@@ -274,6 +275,10 @@ static irqreturn_t intc_irqpin_irq_handler(int irq, void *dev_id)
- 	struct intc_irqpin_priv *p = i->p;
- 	unsigned long bit;
- 
-+	if (!i->domain_irq)
-+		/* unmapped: spurious IRQ, map it now */
-+		irq_create_mapping(p->irq_domain, irq - p->min_irq);
-+
- 	intc_irqpin_dbg(i, "demux1");
- 	bit = intc_irqpin_hwirq_mask(p, INTC_IRQPIN_REG_SOURCE, i->hw_irq);
- 
-@@ -372,6 +377,7 @@ static int intc_irqpin_probe(struct platform_device *pdev)
- 		}
+@@ -348,11 +348,14 @@ static int intc_irqpin_probe(struct platform_device *pdev)
  	}
  
-+	p->min_irq = INT_MAX;
- 	/* allow any number of IRQs between 1 and INTC_IRQPIN_MAX */
- 	for (k = 0; k < INTC_IRQPIN_MAX; k++) {
- 		irq = platform_get_resource(pdev, IORESOURCE_IRQ, k);
-@@ -380,6 +386,8 @@ static int intc_irqpin_probe(struct platform_device *pdev)
+ 	/* deal with driver instance configuration */
+-	if (pdata)
++	if (pdata) {
+ 		memcpy(&p->config, pdata, sizeof(*pdata));
+-	else
++	} else {
+ 		of_property_read_u32(pdev->dev.of_node, "sense-bitfield-width",
+ 				     &p->config.sense_bitfield_width);
++		p->config.control_parent = of_property_read_bool(pdev->dev.of_node,
++								 "control-parent");
++	}
+ 	if (!p->config.sense_bitfield_width)
+ 		p->config.sense_bitfield_width = 4; /* default to 4 bits */
  
- 		p->irq[k].p = p;
- 		p->irq[k].requested_irq = irq->start;
-+		if (p->min_irq > irq->start)
-+			p->min_irq = irq->start;
- 	}
- 
- 	p->number_of_irqs = k;
 -- 
 1.7.2.5
-
