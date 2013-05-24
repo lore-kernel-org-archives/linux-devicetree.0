@@ -1,14 +1,14 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: at91: at91sam9n12: move external irq declatation
- to DT
-Date: Fri, 24 May 2013 10:26:41 +0200
-Message-ID: <519F2441.4010000@atmel.com>
-References: <1369349956-22985-1-git-send-email-plagnioj@jcrosoft.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: ux500: enable the crypto and hash on all dbx500
+Date: Fri, 24 May 2013 09:27:58 +0100
+Message-ID: <20130524082758.GP22683@gmail.com>
+References: <1369378122-25897-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1369349956-22985-1-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1369378122-25897-1-git-send-email-linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,56 +19,47 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Gabriel Fernandez <gabriel.fernandez.st-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 24/05/2013 00:59, Jean-Christophe PLAGNIOL-VILLARD :
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-
-Stacked on at91-3.10-fixes. Thanks.
-
-
-> ---
->   arch/arm/boot/dts/at91sam9n12.dtsi |    1 +
->   arch/arm/mach-at91/at91sam9n12.c   |    6 ------
->   2 files changed, 1 insertion(+), 6 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-> index 566af32..d864f7a9 100644
-> --- a/arch/arm/boot/dts/at91sam9n12.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-> @@ -60,6 +60,7 @@
->   				compatible = "atmel,at91rm9200-aic";
->   				interrupt-controller;
->   				reg = <0xfffff000 0x200>;
-> +				atmel,external-irqs = <31>;
->   			};
->
->   			ramc0: ramc@ffffe800 {
-> diff --git a/arch/arm/mach-at91/at91sam9n12.c b/arch/arm/mach-at91/at91sam9n12.c
-> index 13cdbcd..c7d670d1 100644
-> --- a/arch/arm/mach-at91/at91sam9n12.c
-> +++ b/arch/arm/mach-at91/at91sam9n12.c
-> @@ -223,13 +223,7 @@ static void __init at91sam9n12_map_io(void)
->   	at91_init_sram(0, AT91SAM9N12_SRAM_BASE, AT91SAM9N12_SRAM_SIZE);
->   }
->
-> -void __init at91sam9n12_initialize(void)
-> -{
-> -	at91_extern_irq = (1 << AT91SAM9N12_ID_IRQ0);
-> -}
-> -
->   AT91_SOC_START(at91sam9n12)
->   	.map_io = at91sam9n12_map_io,
->   	.register_clocks = at91sam9n12_register_clocks,
-> -	.init = at91sam9n12_initialize,
->   AT91_SOC_END
->
-
-
--- 
-Nicolas Ferre
+T24gRnJpLCAyNCBNYXkgMjAxMywgTGludXMgV2FsbGVpaiB3cm90ZToKCj4gRnJvbTogTGludXMg
+V2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPgo+IAo+IENvbW1pdHM6Cj4gIkFSTTog
+dXg1MDA6IEFkZCBEZXZpY2UgVHJlZSBub2RlcyBmb3IgdGhlIHV4NTAwIENyeXB0IGRldmljZSIK
+PiAiQVJNOiB1eDUwMDogQWRkIERldmljZSBUcmVlIG5vZGVzIGZvciB0aGUgdXg1MDAgSGFzaCBk
+ZXZpY2UiCj4gCj4gQWRkZWQgdGhlIGNyeXB0byBhbmQgaGFzaCBkZXZpY2VzIGNvbmRpdGlvbmFs
+bHksIGkuZS4gc28gYXMgdG8KPiBiZSB0dXJuZWQgb24gcGVyLWJvYXJkIGJ5IHNldHRpbmcgYW4g
+InN0YXR1cyIgcHJvcGVydHkgb24gdGhlCj4gZGV2aWNlIGZyb20gImRpc2FibGVkIiB0byAib2th
+eSIgb24gZWFjaCBkZXZpY2UuCj4gCj4gVGhpcyBpcyB3cm9uZyBzaW5jZSB0aGlzIGlzIGFuIFNv
+QyBmZWF0dXJlLCBpdCBpcyBub3QgYm9hcmQKPiBkZXBlbmRlbnQuIEl0IGlzIHRoZSBzYW1lIEFT
+SUMgdW5kZXIgYWxsIGNpcmN1bXN0YW5jZXMgYW5kCj4gZnVuY3Rpb25hbGl0eSBkb2VzIG5vdCB2
+YXJ5IHdpdGggYm9hcmQgZmFtaWx5Lgo+IAo+IFRoaXMgbW92ZXMgdGhlIGVuYWJsZW1lbnQgaW50
+byB0aGUgU29DIGZpbGUuCj4gCj4gQ2M6IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+
+Cj4gU2lnbmVkLW9mZi1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3Jn
+Pgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9kYng1eDAuZHRzaSAgfCA0IC0tLS0KPiAgYXJj
+aC9hcm0vYm9vdC9kdHMvc25vd2JhbGwuZHRzIHwgOCAtLS0tLS0tLQo+ICAyIGZpbGVzIGNoYW5n
+ZWQsIDEyIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9k
+Yng1eDAuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2RieDV4MC5kdHNpCj4gaW5kZXggZjA1MTk2
+My4uY2Q1Y2QwOSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9kYng1eDAuZHRzaQo+
+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2RieDV4MC5kdHNpCj4gQEAgLTc2MCwxNyArNzYwLDEz
+IEBACj4gIAkJCWNvbXBhdGlibGUgPSAic3Rlcmljc3Nvbix1eDUwMC1jcnlwIjsKPiAgCQkJcmVn
+ID0gPDB4YTAzY2IwMDAgMHgxMDAwPjsKPiAgCQkJaW50ZXJydXB0cyA9IDwwIDE1IDB4ND47Cj4g
+LQoKV2h5IGRvIHlvdSBpbnNpc3Qgb24gcmVtb3ZpbmcgYWxsIGxpbmUgc3BhY2luZ3MgZnJvbSB0
+aGUgRFRTIGZpbGU/CgpJIHNhdyB5b3UgcmVtb3ZpbmcgdGhlbSBpbiBiZXR3ZWVuIG5vZGVzIHRv
+by4KCj4gIAkJCXYtYXBlLXN1cHBseSA9IDwmZGI4NTAwX3ZhcGVfcmVnPjsKPiAtCQkJc3RhdHVz
+ID0gImRpc2FibGVkIjsKPiAgCQl9Owo+ICAKPiAgCQloYXNoQGEwM2MyMDAwIHsKPiAgCQkJY29t
+cGF0aWJsZSA9ICJzdGVyaWNzc29uLHV4NTAwLWhhc2giOwo+ICAJCQlyZWcgPSA8MHhhMDNjMjAw
+MCAweDEwMDA+Owo+IC0KPiAgCQkJdi1hcGUtc3VwcGx5ID0gPCZkYjg1MDBfdmFwZV9yZWc+Owo+
+IC0JCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICAJCX07Cj4gIAl9Owo+ICB9Owo+IGRpZmYgLS1n
+aXQgYS9hcmNoL2FybS9ib290L2R0cy9zbm93YmFsbC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9z
+bm93YmFsbC5kdHMKPiBpbmRleCBiZGEwMDJmLi5lODIxOWNjNyAxMDA2NDQKPiAtLS0gYS9hcmNo
+L2FybS9ib290L2R0cy9zbm93YmFsbC5kdHMKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zbm93
+YmFsbC5kdHMKPiBAQCAtMzU2LDEzICszNTYsNSBAQAo+ICAJCQkJfTsKPiAgCQkJfTsKPiAgCQl9
+Owo+IC0KPiAtCQljcnlwQGEwM2NiMDAwIHsKPiAtCQkJc3RhdHVzID0gIm9rYXkiOwo+IC0JCX07
+Cj4gLQo+IC0JCWhhc2hAYTAzYzIwMDAgewo+IC0JCQlzdGF0dXMgPSAib2theSI7Cj4gLQkJfTsK
+PiAgCX07Cj4gIH07CgotLSAKTGVlIEpvbmVzCkxpbmFybyBTVC1Fcmljc3NvbiBMYW5kaW5nIFRl
+YW0gTGVhZApMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MK
+Rm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGlu
+ZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMu
+b3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
