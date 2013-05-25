@@ -1,116 +1,73 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH RFC v2] media: OF: add sync-on-green endpoint property
-Date: Sat, 25 May 2013 19:56:41 +0530
-Message-ID: <CA+V-a8tqQGk1v_QdSsn2rt-OJY5PxoFmr1LLkp1bQQb3GuerMA@mail.gmail.com>
-References: <1368710287-8741-1-git-send-email-prabhakar.csengg@gmail.com>
- <519F4AE7.8000003@gmail.com> <CA+V-a8tMQnjh=8qaRoNhwkdrcoTCK2zofTkCOd79hAMoz5qK2A@mail.gmail.com>
- <51A0C6A8.5090302@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2] ASoC: Add ssm2518 support
+Date: Sat, 25 May 2013 10:34:06 -0400
+Message-ID: <20130525143406.GF7660@sirena.org.uk>
+References: <1369332891-15164-1-git-send-email-lars@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51A0C6A8.5090302@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: multipart/mixed; boundary="===============4442565407447220474=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1369332891-15164-1-git-send-email-lars@metafoo.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Grant Likely <grant.likely@linaro.org>, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
 
-On Sat, May 25, 2013 at 7:41 PM, Sylwester Nawrocki
-<sylvester.nawrocki@gmail.com> wrote:
-> Hi,
->
->
-> On 05/25/2013 11:17 AM, Prabhakar Lad wrote:
->>>
->>>  From looking at Figure 8 "TVP7002 Application Example" in the TVP7002's
->>> >  datasheet
->>> >  ([2], p. 52) and your initial TVP7002 patches it looks like what you
->>> > want is
->>> >  to
->>> >  specify polarity of the SOGOUT signal, so the processor that receives
->>> > this
->>> >  signal
->>> >  can properly interpret it, is it correct ?
->>> >
->>
->> Yes
->>>
->>> >  If so then wouldn't it be more appropriate to define e.g. 'sog-active'
->>> >  property
->>> >  and media bus flags:
->>> >           V4L2_MBUS_SYNC_ON_GREEN_ACTIVE_LOW
->>> >           V4L2_MBUS_SYNC_ON_GREEN_ACTIVE_HIGH
->>> >  ?
->>> >
->>
->> Agreed I'll add these flags.
->>
->>> >  And for synchronisation method on the analog part we could perhaps
->>> > define
->>> >  'component-sync' or similar property that would enumerate all possible
->>> >  synchronisation methods. We might as well use separate boolean
->>> > properties,
->>> >  but I'm a bit concerned about the increasing number of properties that
->>> > need
->>> >  to be parsed for each parallel video bus "endpoint".
->>> >
->>
->> I am not clear on it can please elaborate more on this.
->
->
-> I thought about two possible options:
->
-> 1. single property 'component-sync' or 'video-sync' that would have values:
->
-> #define VIDEO_SEPARATE_SYNC     0x01
-> #define VIDEO_COMPOSITE_SYNC    0x02
-> #define VIDEO_SYNC_ON_COMPOSITE 0x04
-> #define VIDEO_SYNC_ON_GREEN     0x08
-> #define VIDEO_SYNC_ON_LUMINANCE 0x10
->
-> And we could put these definitions into a separate header, e.g.
-> <dt-bindings/video-interfaces.h>
->
-> Then in a device tree source file one could have, e.g.
->
-> video-sync = <VIDEO_SYNC_ON_GREEN>;
->
->
-> 2. Separate boolean property for each video sync type, e.g.
->
->         "video-composite-sync"
->         "video-sync-on-composite"
->         "video-sync-on-green"
->         "video-sync-on-luminance"
->
-> Separate sync, with separate VSYNC, HSYNC lines, would be the default, when
-> none of the above is specified and 'vsync-active', 'hsync-active' properties
-> are present.
->
-> However, I suppose the better would be to deduce the video synchronisation
-> method from the sync signal polarity flags. Then, for instance, when an
-> endpoint node contains "composite-sync-active" property the parser would
-> determine the "composite sync" synchronisation type is used.
->
-> Thus it might make sense to have only following integer properties (added
-> as needed):
->
-> composite-sync-active
-> sync-on-green-active
-> sync-on-comp-active
-> sync-on-luma-active
->
-> This would allow to specify polarity of each signal and at the same time
-> the parsing code could derive synchronisation type. A new field could be
-> added to struct v4l2_of_parallel_bus, e.g. sync_type and it would be filled
-> within v4l2_of_parse_endpoint().
->
-I am OK with this option. and I hope you meant "struct
-v4l2_of_bus_parallel" instead
-of " struct v4l2_of_parallel_bus" and to fill sync_type within
-v4l2_of_parse_parallel_bus()
-and not in v4l2_of_parse_endpoint().
+--===============4442565407447220474==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yH1ZJFh+qWm+VodA"
+Content-Disposition: inline
 
-Regards,
---Prabhakar Lad
+
+--yH1ZJFh+qWm+VodA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, May 23, 2013 at 08:14:50PM +0200, Lars-Peter Clausen wrote:
+> This patch adds a ASoC CODEC driver for the SSM2516. The SSM2516 is a stereo
+> Class-D audio amplifier with an I2S interface for audio in and a built-in
+> dynamic range control processor.
+
+Applied, thanks.  Always generate patches against the tree you're
+submitting for - this has context differences with -next.
+
+--yH1ZJFh+qWm+VodA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRoMvbAAoJELSic+t+oim9U0cP/0WE7VLzFDhr6siuoE2VxUMc
+L2smhmeKT8SEeOZhAkGPuHNlQtVf33BDjkoUji1qB1QbKps2opQ8OjzmpIVgqLO0
+rSpWA3AP6zZnwaAK4MB8hjzLsIEPjYaonUeB2sPt3vud7SFavFYoqY1bD6s7rkAH
+3bNljLXsNE11zAcZKEzbVxEtpgOpHKUjwcTjU/5p2VJRMG4JIGzmP5axw5uG0bjX
+FyNUJeLOMKpHFT8qJ90cjSDb/nYPfRI7Kn86DFRre/fVogFh1CKeWje4nsANmY5p
+6JTGFYxEBIrF1YehysBOXwBqojMYujQI1JrrA5XVzd4Hpjh/PLLXyBMupI1s5Jy5
+1xJCbZWpjiEwQQik4hXqEu1yTWLWQw9k6g3rAUOxiuL63tK8Z0icWGACG1mEN3fK
+x7gS7d0SX9zdIcha1JfaWogocAZtR3NX19RrMyUiUOYYmf86VnwZWj74Zk52Qq72
+y0vTuMWqAc6ejyexSCfCDQ/stNqYYhemlgCt2nVwnqdy9QlT0GSpEAhplM6tX8c6
+0DQkxguBqGqecIisbnbddEZLNWTsqtyQWB21fMHXGDic+PEc6le/OyyMxkZhSasA
+9hSugKgSn0cVHGY2DAqE/qwcqogudckfBUgJhw7Gf87CKJtYEKWN4BvY7e/fuA4L
+6hBlUXHImxjUA4NqHHmC
+=Rsu9
+-----END PGP SIGNATURE-----
+
+--yH1ZJFh+qWm+VodA--
+
+--===============4442565407447220474==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============4442565407447220474==--
