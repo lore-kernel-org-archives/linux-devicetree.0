@@ -1,72 +1,45 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] ARM: shmobile: irqpin: add a DT property to enable
- masking on parent
-Date: Sat, 25 May 2013 09:39:50 +0900
-Message-ID: <20130525003950.GA4476@verge.net.au>
-References: <Pine.LNX.4.64.1305241109530.1090@axis700.grange>
+Subject: Re: [RFC/PATCH v2 0/2] R-Car GPIO DT bindings
+Date: Sat, 25 May 2013 10:24:34 +0900
+Message-ID: <20130525012434.GA24005@verge.net.au>
+References: <1369136406-23800-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.64.1305241109530.1090@axis700.grange>
+In-Reply-To: <1369136406-23800-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <damm@opensource.se>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 24, 2013 at 11:13:03AM +0200, Guennadi Liakhovetski wrote:
-> To disable spurious interrupts, that get triggered on certain hardware, the
-> irqpin driver masks them on the parent interrupt controller. To specify
-> such broken devices a .control_parent parameter can be provided in the
-> platform data. In the DT case we need a property, to do the same.
+On Tue, May 21, 2013 at 01:40:04PM +0200, Laurent Pinchart wrote:
+> Hello,
 > 
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> ---
+> Here's the second version of the gpio-rcar driver DT bindings. I've tested the
+> patches on the Marzen board (r8a7779).
 > 
-> These two patches simply split the earlier "ARM: shmobile: irqpin: fix 
-> handling of spurious interrupts in DT case" patch into two parts. 
-> Otherwise no change.
+> Once again I'd appreciate feedback on the DT bindings. I'm particularly
+> wondering whether getting the number of lines through the gpio-ranges property
+> instead of using a dedicated #gpio-lines property as in v1 is a good idea.
+> 
+> Changes since v1:
+> 
+> - Initialize the gpiochip dev field at probe time.
+> - Add the gpio-ranges property.
+> - Remove the #gpio-lines property. The number of lines is now passed through
+>   the gpio-ranges property.
+> 
+> Laurent Pinchart (2):
+>   gpio-rcar: Make the platform data gpio_base field signed
+>   gpio-rcar: Add DT support
+> 
+>  .../devicetree/bindings/gpio/renesas,gpio-rcar.txt | 52 +++++++++++++++++
+>  drivers/gpio/gpio-rcar.c                           | 66 ++++++++++++++++++----
+>  include/linux/platform_data/gpio-rcar.h            |  2 +-
+>  3 files changed, 109 insertions(+), 11 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
 
-Magnus,
+Hi Magnus,
 
-could you please review this series?
-
-> 
->  .../interrupt-controller/renesas,intc-irqpin.txt   |    2 ++
->  drivers/irqchip/irq-renesas-intc-irqpin.c          |    7 +++++--
->  2 files changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-> index c6f09b7..152b10a 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,intc-irqpin.txt
-> @@ -11,3 +11,5 @@ Optional properties:
->    resource allocation properties
->  - sense-bitfield-width: width of a single sense bitfield in the SENSE register,
->    if different from the default 4 bits
-> +- control-parent: disable and enable interrupts on the parent interrupt
-> +  controller, needed for some broken implementations
-> diff --git a/drivers/irqchip/irq-renesas-intc-irqpin.c b/drivers/irqchip/irq-renesas-intc-irqpin.c
-> index 4aca1b2..82cec63 100644
-> --- a/drivers/irqchip/irq-renesas-intc-irqpin.c
-> +++ b/drivers/irqchip/irq-renesas-intc-irqpin.c
-> @@ -348,11 +348,14 @@ static int intc_irqpin_probe(struct platform_device *pdev)
->  	}
->  
->  	/* deal with driver instance configuration */
-> -	if (pdata)
-> +	if (pdata) {
->  		memcpy(&p->config, pdata, sizeof(*pdata));
-> -	else
-> +	} else {
->  		of_property_read_u32(pdev->dev.of_node, "sense-bitfield-width",
->  				     &p->config.sense_bitfield_width);
-> +		p->config.control_parent = of_property_read_bool(pdev->dev.of_node,
-> +								 "control-parent");
-> +	}
->  	if (!p->config.sense_bitfield_width)
->  		p->config.sense_bitfield_width = 4; /* default to 4 bits */
->  
-> -- 
-> 1.7.2.5
-> 
+could you please review these changes?
