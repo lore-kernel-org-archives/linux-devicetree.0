@@ -1,7 +1,7 @@
 From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: [PATCH v5] media: i2c: tvp514x: add OF support
-Date: Sun, 26 May 2013 18:49:46 +0530
-Message-ID: <1369574386-24486-1-git-send-email-prabhakar.csengg@gmail.com>
+Subject: [PATCH] media: i2c: ths7303: add OF support
+Date: Sun, 26 May 2013 19:25:33 +0530
+Message-ID: <1369576533-11277-1-git-send-email-prabhakar.csengg@gmail.com>
 Return-path: <linux-doc-owner@vger.kernel.org>
 Sender: linux-doc-owner@vger.kernel.org
 To: LMML <linux-media@vger.kernel.org>
@@ -10,7 +10,7 @@ List-Id: devicetree@vger.kernel.org
 
 From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 
-add OF support for the tvp514x driver.
+add OF support for the ths7303 driver.
 
 Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 Cc: Hans Verkuil <hans.verkuil@cisco.com>
@@ -27,65 +27,44 @@ Cc: linux-doc@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Cc: davinci-linux-open-source@linux.davincidsp.com
 ---
-Tested on da850-evm.
+ .../devicetree/bindings/media/i2c/ths73x3.txt      |   50 ++++++++++++++++++++
+ drivers/media/i2c/ths7303.c                        |   40 +++++++++++++++-
+ 2 files changed, 89 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ths73x3.txt
 
- RFC v1: https://patchwork.kernel.org/patch/2030061/
- RFC v2: https://patchwork.kernel.org/patch/2061811/
-
- Changes for current version from RFC v2:
- 1: Fixed review comments pointed by Sylwester.
-
- Changes for v2:
- 1: Listed all the compatible property values in the documentation text file.
- 2: Removed "-decoder" from compatible property values.
- 3: Added a reference to the V4L2 DT bindings documentation to explain
-    what the port and endpoint nodes are for.
- 4: Fixed some Nits pointed by Laurent.
- 5: Removed unnecessary header file includes and sort them alphabetically.
-
- Changes for v3:
- 1: Rebased on patch https://patchwork.kernel.org/patch/2539411/
-
- Changes for v4:
- 1: added missing call for of_node_put().
- 2: Rebased the patch on v3.11.
- 
- Changes for v5:
- 1: Fixed calling to a wrong label.
- 
- .../devicetree/bindings/media/i2c/tvp514x.txt      |   45 ++++++++++++++
- drivers/media/i2c/tvp514x.c                        |   62 ++++++++++++++++++--
- 2 files changed, 101 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp514x.txt
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+diff --git a/Documentation/devicetree/bindings/media/i2c/ths73x3.txt b/Documentation/devicetree/bindings/media/i2c/ths73x3.txt
 new file mode 100644
-index 0000000..cc09424
+index 0000000..62f63e8
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
-@@ -0,0 +1,45 @@
-+* Texas Instruments TVP514x video decoder
++++ b/Documentation/devicetree/bindings/media/i2c/ths73x3.txt
+@@ -0,0 +1,50 @@
++* Texas Instruments THS7303/THS7353 video amplifier
 +
-+The TVP5146/TVP5146m2/TVP5147/TVP5147m1 device is high quality, single-chip
-+digital video decoder that digitizes and decodes all popular baseband analog
-+video formats into digital video component. The tvp514x decoder supports analog-
-+to-digital (A/D) conversion of component RGB and YPbPr signals as well as A/D
-+conversion and decoding of NTSC, PAL and SECAM composite and S-video into
-+component YCbCr.
++The THS7303/THS7353 device is a low power 3-channel integrated video buffer
++which can be configured individually via i2c for all the functions which makes
++it flexible for any application. It incorporates a selectable fifth-order
++Butterworth filter to eliminate data converter images.
 +
 +Required Properties :
 +- compatible : value should be either one among the following
-+	(a) "ti,tvp5146" for tvp5146 decoder.
-+	(b) "ti,tvp5146m2" for tvp5146m2 decoder.
-+	(c) "ti,tvp5147" for tvp5147 decoder.
-+	(d) "ti,tvp5147m1" for tvp5147m1 decoder.
++	(a) "ti,ths7303" for ths7303 video amplifier.
++	(b) "ti,ths7353" for ths7353 video amplifier.
 +
-+- hsync-active: HSYNC Polarity configuration for endpoint.
++- ti,ths73x3-ch1-bias: Bias value for channel 1.
 +
-+- vsync-active: VSYNC Polarity configuration for endpoint.
++- ti,ths73x3-ch2-bias: Bias value for channel 2.
 +
-+- pclk-sample: Clock polarity of the endpoint.
++- ti,ths73x3-ch3-bias: Bias value for channel 3.
 +
++Bias values for channel-1/2/3 can be following (values default to zero):-
++ - 0: Disable Channel - Conserves Power
++ - 1: Channel On - Mute Function - No Output
++ - 2: Channel On - DC Bias Select
++ - 3: Channel On - DC Bias + 250 mV Offset Select
++ - 4: Channel On - AC Bias Select
++ - 5: Channel On - Sync Tip Clam with low bias
++ - 6: Channel On - Sync Tip Clam with mid bias
++ - 7: Channel On - Sync Tip Clam with high bias
 +
 +For further reading of port node refer Documentation/devicetree/bindings/media/
 +video-interfaces.txt.
@@ -95,43 +74,41 @@ index 0000000..cc09424
 +	i2c0@1c22000 {
 +		...
 +		...
-+		tvp514x@5c {
-+			compatible = "ti,tvp5146";
-+			reg = <0x5c>;
++		ths7303@2c {
++			compatible = "ti,ths7303";
++			reg = <0x2c>;
 +
 +			port {
-+				tvp514x_1: endpoint {
-+					hsync-active = <1>;
-+					vsync-active = <1>;
-+					pclk-sample = <0>;
++				ths7303_1: endpoint {
++					ti,ths73x3-ch1-bias = <3>;
++					ti,ths73x3-ch2-bias = <3>;
++					ti,ths73x3-ch3-bias = <3>;
 +				};
 +			};
 +		};
 +		...
 +	};
-diff --git a/drivers/media/i2c/tvp514x.c b/drivers/media/i2c/tvp514x.c
-index 7438e01..7ed999b 100644
---- a/drivers/media/i2c/tvp514x.c
-+++ b/drivers/media/i2c/tvp514x.c
-@@ -39,6 +39,7 @@
- #include <media/v4l2-device.h>
- #include <media/v4l2-common.h>
- #include <media/v4l2-mediabus.h>
-+#include <media/v4l2-of.h>
+diff --git a/drivers/media/i2c/ths7303.c b/drivers/media/i2c/ths7303.c
+index b954195..b218b0f 100644
+--- a/drivers/media/i2c/ths7303.c
++++ b/drivers/media/i2c/ths7303.c
+@@ -28,6 +28,7 @@
+ #include <media/ths7303.h>
  #include <media/v4l2-chip-ident.h>
- #include <media/v4l2-ctrls.h>
- #include <media/tvp514x.h>
-@@ -1055,6 +1056,42 @@ static struct tvp514x_decoder tvp514x_dev = {
+ #include <media/v4l2-device.h>
++#include <media/v4l2-of.h>
  
+ #define THS7303_CHANNEL_1	1
+ #define THS7303_CHANNEL_2	2
+@@ -349,10 +350,37 @@ static const struct v4l2_subdev_ops ths7303_ops = {
+ 	.video 	= &ths7303_video_ops,
  };
  
-+static struct tvp514x_platform_data *
-+tvp514x_get_pdata(struct i2c_client *client)
++static struct ths7303_platform_data *
++ths7303_get_pdata(struct i2c_client *client)
 +{
-+	struct tvp514x_platform_data *pdata = NULL;
-+	struct v4l2_of_endpoint bus_cfg;
++	struct ths7303_platform_data *pdata;
 +	struct device_node *endpoint;
-+	unsigned int flags;
 +
 +	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
 +		return client->dev.platform_data;
@@ -144,81 +121,42 @@ index 7438e01..7ed999b 100644
 +	if (!pdata)
 +		goto done;
 +
-+	v4l2_of_parse_endpoint(endpoint, &bus_cfg);
-+	flags = bus_cfg.bus.parallel.flags;
-+
-+	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
-+		pdata->hs_polarity = 1;
-+
-+	if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
-+		pdata->vs_polarity = 1;
-+
-+	if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
-+		pdata->clk_polarity = 1;
++	of_property_read_u8(endpoint, "ti,ths73x3-ch1-bias", &pdata->ch_1);
++	of_property_read_u8(endpoint, "ti,ths73x3-ch2-bias", &pdata->ch_2);
++	of_property_read_u8(endpoint, "ti,ths73x3-ch3-bias", &pdata->ch_3);
 +
 +done:
 +	of_node_put(endpoint);
++
 +	return pdata;
 +}
 +
- /**
-  * tvp514x_probe() - decoder driver i2c probe handler
-  * @client: i2c driver client device structure
-@@ -1066,19 +1103,20 @@ static struct tvp514x_decoder tvp514x_dev = {
- static int
- tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ static int ths7303_probe(struct i2c_client *client,
+ 			const struct i2c_device_id *id)
  {
-+	struct tvp514x_platform_data *pdata = tvp514x_get_pdata(client);
- 	struct tvp514x_decoder *decoder;
+-	struct ths7303_platform_data *pdata = client->dev.platform_data;
++	struct ths7303_platform_data *pdata = ths7303_get_pdata(client);
+ 	struct ths7303_state *state;
  	struct v4l2_subdev *sd;
- 	int ret;
  
-+	if (pdata == NULL) {
-+		dev_err(&client->dev, "No platform data\n");
-+		return -EINVAL;
-+	}
-+
- 	/* Check if the adapter supports the needed features */
- 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
- 		return -EIO;
+@@ -405,8 +433,18 @@ static const struct i2c_device_id ths7303_id[] = {
  
--	if (!client->dev.platform_data) {
--		v4l2_err(client, "No platform data!!\n");
--		return -ENODEV;
--	}
--
- 	decoder = devm_kzalloc(&client->dev, sizeof(*decoder), GFP_KERNEL);
- 	if (!decoder)
- 		return -ENOMEM;
-@@ -1090,7 +1128,7 @@ tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 			sizeof(tvp514x_reg_list_default));
- 
- 	/* Copy board specific information here */
--	decoder->pdata = client->dev.platform_data;
-+	decoder->pdata = pdata;
- 
- 	/**
- 	 * Fetch platform specific data, and configure the
-@@ -1230,8 +1268,20 @@ static const struct i2c_device_id tvp514x_id[] = {
- 
- MODULE_DEVICE_TABLE(i2c, tvp514x_id);
+ MODULE_DEVICE_TABLE(i2c, ths7303_id);
  
 +#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id tvp514x_of_match[] = {
-+	{ .compatible = "ti,tvp5146", },
-+	{ .compatible = "ti,tvp5146m2", },
-+	{ .compatible = "ti,tvp5147", },
-+	{ .compatible = "ti,tvp5147m1", },
++static const struct of_device_id ths73x3_of_match[] = {
++	{ .compatible = "ti,ths7303", },
++	{ .compatible = "ti,ths7353", },
 +	{ /* sentinel */ },
 +};
-+MODULE_DEVICE_TABLE(of, tvp514x_of_match);
++MODULE_DEVICE_TABLE(of, ths73x3_of_match);
 +#endif
 +
- static struct i2c_driver tvp514x_driver = {
+ static struct i2c_driver ths7303_driver = {
  	.driver = {
-+		.of_match_table = of_match_ptr(tvp514x_of_match),
- 		.owner = THIS_MODULE,
- 		.name = TVP514X_MODULE_NAME,
++		.of_match_table = of_match_ptr(ths73x3_of_match),
+ 		.owner	= THIS_MODULE,
+ 		.name	= "ths73x3",
  	},
 -- 
 1.7.0.4
