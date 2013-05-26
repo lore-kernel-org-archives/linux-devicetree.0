@@ -1,7 +1,7 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v6] video: imxfb: Add DT support
-Date: Sun, 26 May 2013 12:35:38 +0200
-Message-ID: <1369564538-21835-1-git-send-email-mpa@pengutronix.de>
+From: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4] media: i2c: tvp514x: add OF support
+Date: Sun, 26 May 2013 18:10:37 +0530
+Message-ID: <1369572037-10200-1-git-send-email-prabhakar.csengg@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -16,466 +16,218 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Mauro Carvalho Chehab <mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree support for imx framebuffer driver. It uses the generic
-display bindings and helper functions.
+From: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+add OF support for the tvp514x driver.
+
+Signed-off-by: Lad, Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
 ---
+ Tested on da850-evm.
 
-Notes:
-    Changed in v6:
-    - Rebased onto v3.10-rc2
-    - Dropped alpha support patch in this series
-    
-    Changed in v5:
-    - Fix compatible property of the example
-    - Rename property fsl,bpp to bits-per-pixel
-    - Add selects for FB_MODE_HELPERS and VIDEOMODE_HELPERS to Kconfig FB_IMX
-    
-    Changes in v4:
-    - Remove eukrea specific dmacr property.
-    - Add optional dmacr property. If not present, the dmacr reset value is not
-      changed.
-    
-    Changes in v3:
-    - Fix returncodes of of_read_mode function and print error messages
-    - Introduce a lower bound check for bits per pixel
-    - Calculate correct bytes per pixel value before using it for the calculation of
-    	memory size
-    - Change DT property names
-    
-    Changes in v2:
-    - Removed pwmr register property
-    - Cleanup of devicetree binding documentation
-    - Use default values for pwmr and lscr1
+ RFC v1: https://patchwork.kernel.org/patch/2030061/
+ RFC v2: https://patchwork.kernel.org/patch/2061811/
 
- .../devicetree/bindings/video/fsl,imx-fb.txt       |  51 ++++++
- drivers/video/Kconfig                              |   2 +
- drivers/video/imxfb.c                              | 194 +++++++++++++++++----
- 3 files changed, 212 insertions(+), 35 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/video/fsl,imx-fb.txt
+ Changes for current version from RFC v2:
+ 1: Fixed review comments pointed by Sylwester.
 
-diff --git a/Documentation/devicetree/bindings/video/fsl,imx-fb.txt b/Documentation/devicetree/bindings/video/fsl,imx-fb.txt
+ Changes for v2:
+ 1: Listed all the compatible property values in the documentation text file.
+ 2: Removed "-decoder" from compatible property values.
+ 3: Added a reference to the V4L2 DT bindings documentation to explain
+    what the port and endpoint nodes are for.
+ 4: Fixed some Nits pointed by Laurent.
+ 5: Removed unnecessary header file includes and sort them alphabetically.
+
+ Changes for v3:
+ 1: Rebased on patch https://patchwork.kernel.org/patch/2539411/
+ 
+ Changes for v4:
+ 1: added missing call for of_node_put().
+ 2: Rebased the patch on v3.11.
+ 
+ .../devicetree/bindings/media/i2c/tvp514x.txt      |   45 ++++++++++++++
+ drivers/media/i2c/tvp514x.c                        |   62 ++++++++++++++++++--
+ 2 files changed, 101 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
 new file mode 100644
-index 0000000..46da08d
+index 0000000..cc09424
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/video/fsl,imx-fb.txt
-@@ -0,0 +1,51 @@
-+Freescale imx21 Framebuffer
++++ b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+@@ -0,0 +1,45 @@
++* Texas Instruments TVP514x video decoder
 +
-+This framebuffer driver supports devices imx1, imx21, imx25, and imx27.
++The TVP5146/TVP5146m2/TVP5147/TVP5147m1 device is high quality, single-chip
++digital video decoder that digitizes and decodes all popular baseband analog
++video formats into digital video component. The tvp514x decoder supports analog-
++to-digital (A/D) conversion of component RGB and YPbPr signals as well as A/D
++conversion and decoding of NTSC, PAL and SECAM composite and S-video into
++component YCbCr.
 +
-+Required properties:
-+- compatible : "fsl,<chip>-fb", chip should be imx1 or imx21
-+- reg : Should contain 1 register ranges(address and length)
-+- interrupts : One interrupt of the fb dev
++Required Properties :
++- compatible : value should be either one among the following
++	(a) "ti,tvp5146" for tvp5146 decoder.
++	(b) "ti,tvp5146m2" for tvp5146m2 decoder.
++	(c) "ti,tvp5147" for tvp5147 decoder.
++	(d) "ti,tvp5147m1" for tvp5147m1 decoder.
 +
-+Required nodes:
-+- display: Phandle to a display node as described in
-+	Documentation/devicetree/bindings/video/display-timing.txt
-+	Additional, the display node has to define properties:
-+	- bits-per-pixel: Bits per pixel
-+	- fsl,pcr: LCDC PCR value
++- hsync-active: HSYNC Polarity configuration for endpoint.
 +
-+Optional properties:
-+- fsl,dmacr: DMA Control Register value. This is optional. By default, the
-+	register is not modified as recommended by the datasheet.
-+- fsl,lscr1: LCDC Sharp Configuration Register value.
++- vsync-active: VSYNC Polarity configuration for endpoint.
++
++- pclk-sample: Clock polarity of the endpoint.
++
++
++For further reading of port node refer Documentation/devicetree/bindings/media/
++video-interfaces.txt.
 +
 +Example:
 +
-+	imxfb: fb@10021000 {
-+		compatible = "fsl,imx21-fb";
-+		interrupts = <61>;
-+		reg = <0x10021000 0x1000>;
-+		display = <&display0>;
-+	};
++	i2c0@1c22000 {
++		...
++		...
++		tvp514x@5c {
++			compatible = "ti,tvp5146";
++			reg = <0x5c>;
 +
-+	...
-+
-+	display0: display0 {
-+		model = "Primeview-PD050VL1";
-+		native-mode = <&timing_disp0>;
-+		bits-per-pixel = <16>;
-+		fsl,pcr = <0xf0c88080>;	/* non-standard but required */
-+		display-timings {
-+			timing_disp0: 640x480 {
-+				hactive = <640>;
-+				vactive = <480>;
-+				hback-porch = <112>;
-+				hfront-porch = <36>;
-+				hsync-len = <32>;
-+				vback-porch = <33>;
-+				vfront-porch = <33>;
-+				vsync-len = <2>;
-+				clock-frequency = <25000000>;
++			port {
++				tvp514x_1: endpoint {
++					hsync-active = <1>;
++					vsync-active = <1>;
++					pclk-sample = <0>;
++				};
 +			};
 +		};
++		...
 +	};
-diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
-index d71d60f..588af1d 100644
---- a/drivers/video/Kconfig
-+++ b/drivers/video/Kconfig
-@@ -367,6 +367,8 @@ config FB_IMX
- 	select FB_CFB_FILLRECT
- 	select FB_CFB_COPYAREA
- 	select FB_CFB_IMAGEBLIT
-+	select FB_MODE_HELPERS
-+	select VIDEOMODE_HELPERS
+diff --git a/drivers/media/i2c/tvp514x.c b/drivers/media/i2c/tvp514x.c
+index 7438e01..803f3b8 100644
+--- a/drivers/media/i2c/tvp514x.c
++++ b/drivers/media/i2c/tvp514x.c
+@@ -38,6 +38,7 @@
  
- config FB_CYBER2000
- 	tristate "CyberPro 2000/2010/5000 support"
-diff --git a/drivers/video/imxfb.c b/drivers/video/imxfb.c
-index 0abf2bf..a2ed71d 100644
---- a/drivers/video/imxfb.c
-+++ b/drivers/video/imxfb.c
-@@ -31,6 +31,12 @@
- #include <linux/dma-mapping.h>
- #include <linux/io.h>
- #include <linux/math64.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+
-+#include <video/of_display_timing.h>
-+#include <video/of_videomode.h>
-+#include <video/videomode.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-common.h>
++#include <media/v4l2-of.h>
+ #include <media/v4l2-mediabus.h>
+ #include <media/v4l2-chip-ident.h>
+ #include <media/v4l2-ctrls.h>
+@@ -1055,6 +1056,42 @@ static struct tvp514x_decoder tvp514x_dev = {
  
- #include <linux/platform_data/video-imxfb.h>
- 
-@@ -112,10 +118,11 @@
- #define LCDISR_EOF	(1<<1)
- #define LCDISR_BOF	(1<<0)
- 
-+#define IMXFB_LSCR1_DEFAULT 0x00120300
-+
- /* Used fb-mode. Can be set on kernel command line, therefore file-static. */
- static const char *fb_mode;
- 
--
- /*
-  * These are the bitfields for each
-  * display depth that we support.
-@@ -187,6 +194,19 @@ static struct platform_device_id imxfb_devtype[] = {
  };
- MODULE_DEVICE_TABLE(platform, imxfb_devtype);
  
-+static struct of_device_id imxfb_of_dev_id[] = {
-+	{
-+		.compatible = "fsl,imx1-fb",
-+		.data = &imxfb_devtype[IMX1_FB],
-+	}, {
-+		.compatible = "fsl,imx21-fb",
-+		.data = &imxfb_devtype[IMX21_FB],
-+	}, {
-+		/* sentinel */
-+	}
-+};
-+MODULE_DEVICE_TABLE(of, imxfb_of_dev_id);
++static struct tvp514x_platform_data *
++tvp514x_get_pdata(struct i2c_client *client)
++{
++	struct tvp514x_platform_data *pdata = NULL;
++	struct v4l2_of_endpoint bus_cfg;
++	struct device_node *endpoint;
++	unsigned int flags;
 +
- static inline int is_imx1_fb(struct imxfb_info *fbi)
- {
- 	return fbi->devtype == IMX1_FB;
-@@ -319,6 +339,9 @@ static const struct imx_fb_videomode *imxfb_find_mode(struct imxfb_info *fbi)
- 	struct imx_fb_videomode *m;
- 	int i;
- 
-+	if (!fb_mode)
-+		return &fbi->mode[0];
++	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
++		return client->dev.platform_data;
 +
- 	for (i = 0, m = &fbi->mode[0]; i < fbi->num_modes; i++, m++) {
- 		if (!strcmp(m->mode.name, fb_mode))
- 			return m;
-@@ -474,6 +497,9 @@ static int imxfb_bl_update_status(struct backlight_device *bl)
- 	struct imxfb_info *fbi = bl_get_data(bl);
- 	int brightness = bl->props.brightness;
- 
-+	if (!fbi->pwmr)
-+		return 0;
++	endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
++	if (!endpoint)
++		goto done;
 +
- 	if (bl->props.power != FB_BLANK_UNBLANK)
- 		brightness = 0;
- 	if (bl->props.fb_blank != FB_BLANK_UNBLANK)
-@@ -684,10 +710,14 @@ static int imxfb_activate_var(struct fb_var_screeninfo *var, struct fb_info *inf
- 
- 	writel(fbi->pcr, fbi->regs + LCDC_PCR);
- #ifndef PWMR_BACKLIGHT_AVAILABLE
--	writel(fbi->pwmr, fbi->regs + LCDC_PWMR);
-+	if (fbi->pwmr)
-+		writel(fbi->pwmr, fbi->regs + LCDC_PWMR);
- #endif
- 	writel(fbi->lscr1, fbi->regs + LCDC_LSCR1);
--	writel(fbi->dmacr, fbi->regs + LCDC_DMACR);
++	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		goto done;
 +
-+	/* dmacr = 0 is no valid value, as we need DMA control marks. */
-+	if (fbi->dmacr)
-+		writel(fbi->dmacr, fbi->regs + LCDC_DMACR);
- 
- 	return 0;
- }
-@@ -723,13 +753,12 @@ static int imxfb_resume(struct platform_device *dev)
- #define imxfb_resume	NULL
- #endif
- 
--static int __init imxfb_init_fbinfo(struct platform_device *pdev)
-+static int imxfb_init_fbinfo(struct platform_device *pdev)
- {
- 	struct imx_fb_platform_data *pdata = pdev->dev.platform_data;
- 	struct fb_info *info = dev_get_drvdata(&pdev->dev);
- 	struct imxfb_info *fbi = info->par;
--	struct imx_fb_videomode *m;
--	int i;
-+	struct device_node *np;
- 
- 	pr_debug("%s\n",__func__);
- 
-@@ -760,41 +789,95 @@ static int __init imxfb_init_fbinfo(struct platform_device *pdev)
- 	info->fbops			= &imxfb_ops;
- 	info->flags			= FBINFO_FLAG_DEFAULT |
- 					  FBINFO_READS_FAST;
--	info->var.grayscale		= pdata->cmap_greyscale;
--	fbi->cmap_inverse		= pdata->cmap_inverse;
--	fbi->cmap_static		= pdata->cmap_static;
--	fbi->lscr1			= pdata->lscr1;
--	fbi->dmacr			= pdata->dmacr;
--	fbi->pwmr			= pdata->pwmr;
--	fbi->lcd_power			= pdata->lcd_power;
--	fbi->backlight_power		= pdata->backlight_power;
--
--	for (i = 0, m = &pdata->mode[0]; i < pdata->num_modes; i++, m++)
--		info->fix.smem_len = max_t(size_t, info->fix.smem_len,
--				m->mode.xres * m->mode.yres * m->bpp / 8);
-+	if (pdata) {
-+		info->var.grayscale		= pdata->cmap_greyscale;
-+		fbi->cmap_inverse		= pdata->cmap_inverse;
-+		fbi->cmap_static		= pdata->cmap_static;
-+		fbi->lscr1			= pdata->lscr1;
-+		fbi->dmacr			= pdata->dmacr;
-+		fbi->pwmr			= pdata->pwmr;
-+		fbi->lcd_power			= pdata->lcd_power;
-+		fbi->backlight_power		= pdata->backlight_power;
-+	} else {
-+		np = pdev->dev.of_node;
-+		info->var.grayscale = of_property_read_bool(np,
-+						"cmap-greyscale");
-+		fbi->cmap_inverse = of_property_read_bool(np, "cmap-inverse");
-+		fbi->cmap_static = of_property_read_bool(np, "cmap-static");
++	v4l2_of_parse_endpoint(endpoint, &bus_cfg);
++	flags = bus_cfg.bus.parallel.flags;
 +
-+		fbi->lscr1 = IMXFB_LSCR1_DEFAULT;
-+		of_property_read_u32(np, "fsl,lscr1", &fbi->lscr1);
++	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
++		pdata->hs_polarity = 1;
 +
-+		of_property_read_u32(np, "fsl,dmacr", &fbi->dmacr);
++	if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
++		pdata->vs_polarity = 1;
 +
-+		/* These two function pointers could be used by some specific
-+		 * platforms. */
-+		fbi->lcd_power = NULL;
-+		fbi->backlight_power = NULL;
-+	}
++	if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
++		pdata->clk_polarity = 1;
 +
-+	return 0;
++done:
++	of_node_put(endpoint);
++	return pdata;
 +}
 +
-+static int imxfb_of_read_mode(struct device *dev, struct device_node *np,
-+		struct imx_fb_videomode *imxfb_mode)
-+{
-+	int ret;
-+	struct fb_videomode *of_mode = &imxfb_mode->mode;
-+	u32 bpp;
-+	u32 pcr;
-+
-+	ret = of_property_read_string(np, "model", &of_mode->name);
-+	if (ret)
-+		of_mode->name = NULL;
-+
-+	ret = of_get_fb_videomode(np, of_mode, OF_USE_NATIVE_MODE);
-+	if (ret) {
-+		dev_err(dev, "Failed to get videomode from DT\n");
-+		return ret;
-+	}
-+
-+	ret = of_property_read_u32(np, "bits-per-pixel", &bpp);
-+	ret |= of_property_read_u32(np, "fsl,pcr", &pcr);
-+
-+	if (ret) {
-+		dev_err(dev, "Failed to read bpp and pcr from DT\n");
-+		return -EINVAL;
-+	}
-+
-+	if (bpp < 1 || bpp > 255) {
-+		dev_err(dev, "Bits per pixel have to be between 1 and 255\n");
-+		return -EINVAL;
-+	}
-+
-+	imxfb_mode->bpp = bpp;
-+	imxfb_mode->pcr = pcr;
- 
- 	return 0;
- }
- 
--static int __init imxfb_probe(struct platform_device *pdev)
-+static int imxfb_probe(struct platform_device *pdev)
+ /**
+  * tvp514x_probe() - decoder driver i2c probe handler
+  * @client: i2c driver client device structure
+@@ -1066,19 +1103,20 @@ static struct tvp514x_decoder tvp514x_dev = {
+ static int
+ tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
  {
- 	struct imxfb_info *fbi;
- 	struct fb_info *info;
- 	struct imx_fb_platform_data *pdata;
- 	struct resource *res;
-+	struct imx_fb_videomode *m;
-+	const struct of_device_id *of_id;
- 	int ret, i;
-+	int bytes_per_pixel;
++	struct tvp514x_platform_data *pdata = tvp514x_get_pdata(client);
+ 	struct tvp514x_decoder *decoder;
+ 	struct v4l2_subdev *sd;
+ 	int ret;
  
- 	dev_info(&pdev->dev, "i.MX Framebuffer driver\n");
- 
-+	of_id = of_match_device(imxfb_of_dev_id, &pdev->dev);
-+	if (of_id)
-+		pdev->id_entry = of_id->data;
-+
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!res)
- 		return -ENODEV;
- 
- 	pdata = pdev->dev.platform_data;
--	if (!pdata) {
--		dev_err(&pdev->dev,"No platform_data available\n");
--		return -ENOMEM;
--	}
- 
- 	info = framebuffer_alloc(sizeof(struct imxfb_info), &pdev->dev);
- 	if (!info)
-@@ -802,15 +885,55 @@ static int __init imxfb_probe(struct platform_device *pdev)
- 
- 	fbi = info->par;
- 
--	if (!fb_mode)
--		fb_mode = pdata->mode[0].mode.name;
--
- 	platform_set_drvdata(pdev, info);
- 
- 	ret = imxfb_init_fbinfo(pdev);
- 	if (ret < 0)
- 		goto failed_init;
- 
-+	if (pdata) {
-+		if (!fb_mode)
-+			fb_mode = pdata->mode[0].mode.name;
-+
-+		fbi->mode = pdata->mode;
-+		fbi->num_modes = pdata->num_modes;
-+	} else {
-+		struct device_node *display_np;
-+		fb_mode = NULL;
-+
-+		display_np = of_parse_phandle(pdev->dev.of_node, "display", 0);
-+		if (!display_np) {
-+			dev_err(&pdev->dev, "No display defined in devicetree\n");
-+			ret = -EINVAL;
-+			goto failed_of_parse;
-+		}
-+
-+		/*
-+		 * imxfb does not support more modes, we choose only the native
-+		 * mode.
-+		 */
-+		fbi->num_modes = 1;
-+
-+		fbi->mode = devm_kzalloc(&pdev->dev,
-+				sizeof(struct imx_fb_videomode), GFP_KERNEL);
-+		if (!fbi->mode) {
-+			ret = -ENOMEM;
-+			goto failed_of_parse;
-+		}
-+
-+		ret = imxfb_of_read_mode(&pdev->dev, display_np, fbi->mode);
-+		if (ret)
-+			goto failed_of_parse;
++	if (pdata == NULL) {
++		dev_err(&client->dev, "No platform data\n");
++		return -EINVAL;
 +	}
 +
-+	/* Calculate maximum bytes used per pixel. In most cases this should
-+	 * be the same as m->bpp/8 */
-+	m = &fbi->mode[0];
-+	bytes_per_pixel = (m->bpp + 7) / 8;
-+	for (i = 0; i < fbi->num_modes; i++, m++)
-+		info->fix.smem_len = max_t(size_t, info->fix.smem_len,
-+				m->mode.xres * m->mode.yres * bytes_per_pixel);
+ 	/* Check if the adapter supports the needed features */
+ 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
+ 		return -EIO;
+ 
+-	if (!client->dev.platform_data) {
+-		v4l2_err(client, "No platform data!!\n");
+-		return -ENODEV;
+-	}
+-
+ 	decoder = devm_kzalloc(&client->dev, sizeof(*decoder), GFP_KERNEL);
+ 	if (!decoder)
+ 		return -ENOMEM;
+@@ -1090,7 +1128,7 @@ tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 			sizeof(tvp514x_reg_list_default));
+ 
+ 	/* Copy board specific information here */
+-	decoder->pdata = client->dev.platform_data;
++	decoder->pdata = pdata;
+ 
+ 	/**
+ 	 * Fetch platform specific data, and configure the
+@@ -1230,8 +1268,20 @@ static const struct i2c_device_id tvp514x_id[] = {
+ 
+ MODULE_DEVICE_TABLE(i2c, tvp514x_id);
+ 
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id tvp514x_of_match[] = {
++	{ .compatible = "ti,tvp5146", },
++	{ .compatible = "ti,tvp5146m2", },
++	{ .compatible = "ti,tvp5147", },
++	{ .compatible = "ti,tvp5147m1", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, tvp514x_of_match);
++#endif
 +
- 	res = request_mem_region(res->start, resource_size(res),
- 				DRIVER_NAME);
- 	if (!res) {
-@@ -843,7 +966,8 @@ static int __init imxfb_probe(struct platform_device *pdev)
- 		goto failed_ioremap;
- 	}
- 
--	if (!pdata->fixed_screen_cpu) {
-+	/* Seems not being used by anyone, so no support for oftree */
-+	if (!pdata || !pdata->fixed_screen_cpu) {
- 		fbi->map_size = PAGE_ALIGN(info->fix.smem_len);
- 		fbi->map_cpu = dma_alloc_writecombine(&pdev->dev,
- 				fbi->map_size, &fbi->map_dma, GFP_KERNEL);
-@@ -868,18 +992,16 @@ static int __init imxfb_probe(struct platform_device *pdev)
- 		info->fix.smem_start = fbi->screen_dma;
- 	}
- 
--	if (pdata->init) {
-+	if (pdata && pdata->init) {
- 		ret = pdata->init(fbi->pdev);
- 		if (ret)
- 			goto failed_platform_init;
- 	}
- 
--	fbi->mode = pdata->mode;
--	fbi->num_modes = pdata->num_modes;
- 
- 	INIT_LIST_HEAD(&info->modelist);
--	for (i = 0; i < pdata->num_modes; i++)
--		fb_add_videomode(&pdata->mode[i].mode, &info->modelist);
-+	for (i = 0; i < fbi->num_modes; i++)
-+		fb_add_videomode(&fbi->mode[i].mode, &info->modelist);
- 
- 	/*
- 	 * This makes sure that our colour bitfield
-@@ -909,10 +1031,10 @@ static int __init imxfb_probe(struct platform_device *pdev)
- failed_register:
- 	fb_dealloc_cmap(&info->cmap);
- failed_cmap:
--	if (pdata->exit)
-+	if (pdata && pdata->exit)
- 		pdata->exit(fbi->pdev);
- failed_platform_init:
--	if (!pdata->fixed_screen_cpu)
-+	if (pdata && !pdata->fixed_screen_cpu)
- 		dma_free_writecombine(&pdev->dev,fbi->map_size,fbi->map_cpu,
- 			fbi->map_dma);
- failed_map:
-@@ -921,6 +1043,7 @@ failed_ioremap:
- failed_getclock:
- 	release_mem_region(res->start, resource_size(res));
- failed_req:
-+failed_of_parse:
- 	kfree(info->pseudo_palette);
- failed_init:
- 	platform_set_drvdata(pdev, NULL);
-@@ -945,7 +1068,7 @@ static int imxfb_remove(struct platform_device *pdev)
- 	unregister_framebuffer(info);
- 
- 	pdata = pdev->dev.platform_data;
--	if (pdata->exit)
-+	if (pdata && pdata->exit)
- 		pdata->exit(fbi->pdev);
- 
- 	fb_dealloc_cmap(&info->cmap);
-@@ -974,6 +1097,7 @@ static struct platform_driver imxfb_driver = {
- 	.shutdown	= imxfb_shutdown,
- 	.driver		= {
- 		.name	= DRIVER_NAME,
-+		.of_match_table = imxfb_of_dev_id,
+ static struct i2c_driver tvp514x_driver = {
+ 	.driver = {
++		.of_match_table = of_match_ptr(tvp514x_of_match),
+ 		.owner = THIS_MODULE,
+ 		.name = TVP514X_MODULE_NAME,
  	},
- 	.id_table	= imxfb_devtype,
- };
 -- 
-1.8.2.1
+1.7.0.4
