@@ -1,15 +1,18 @@
-From: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/3] pinctrl: pinctrl-single: Add full fledge support to
- configure multiple pins of different modules
-Date: Mon, 27 May 2013 00:11:10 +0800
-Message-ID: <CAD6h2NTPp9BdxpjjQig1B-gVk+7PvxBvtUKi=kcbiUQeQ5wYjA@mail.gmail.com>
-References: <1369145282-14419-1-git-send-email-prakash.pm@ti.com>
- <CACRpkdZEsRaaE9dJLDNMzJZSLZ35pqS6XVj5KgCzJGG5nnvPQg@mail.gmail.com>
+From: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] powerpc: Make Book E watchdog reset type configurable
+Date: Sun, 26 May 2013 19:04:54 +0200
+Message-ID: <20130526170454.GA8395@spo001.leaseweb.com>
+References: <1367505913-18970-1-git-send-email-dirk.eibach@gdsys.cc>
+ <20130502161720.GA7797@roeck-us.net>
+ <429ec64cf7c30a139db40eb20fd3e682@gdsys.cc>
+ <20130503011741.GA23266@roeck-us.net>
+ <7be2cb3417615ff206270a756c6422d6@gdsys.cc>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdZEsRaaE9dJLDNMzJZSLZ35pqS6XVj5KgCzJGG5nnvPQg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <7be2cb3417615ff206270a756c6422d6-2c4SBQpdCik@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,25 +23,22 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, "Manjunathappa,
- Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Dirk Eibach <dirk.eibach-2c4SBQpdCik@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24 May 2013 17:03, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, May 21, 2013 at 4:07 PM, Manjunathappa, Prakash
-> <prakash.pm-l0cyMroinI0@public.gmane.org> wrote:
->
->> Based function-mask and submask preoperties patch allocates and registers pins.
->> Patch is fixes the issue reported and discussed here:
->> http://www.spinics.net/lists/arm-kernel/msg235213.html
->
-> I'd like Tony to ACK this, and Haojian to have a look at it before applying.
->
-> Yours,
-> Linus Walleij
+Hi Dirk,
 
-I'll give feedback in the next week.
+> having a closer look, I realized booke_wdt is not device-tree based 
+> yet. Migrating it would come close to a rewrite, breaking compatibility 
+> for all current users. Sorry, this is way beyond the time I have for 
+> this project. So I suggest merging the change the way it is, as it is 
+> clearly an improvement.
 
-Regards
-Haojian
+My opinion: don't put it in Kconfig.
+I see 2 options for the time being:
+1) the DT way
+2) introduce a moduleparam for it.
+
+Kind regards,
+Wim.
