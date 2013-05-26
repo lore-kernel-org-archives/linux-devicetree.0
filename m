@@ -1,13 +1,11 @@
 From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v7 2/2] DMA: imx-dma: imxdma->dev used uninitialized
-Date: Sun, 26 May 2013 11:53:21 +0200
-Message-ID: <1369562001-11494-3-git-send-email-mpa@pengutronix.de>
-References: <1369562001-11494-1-git-send-email-mpa@pengutronix.de>
+Subject: [PATCH v7 0/2] dma: imx-dma: OFTree support
+Date: Sun, 26 May 2013 11:53:19 +0200
+Message-ID: <1369562001-11494-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1369562001-11494-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,33 +20,24 @@ To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-imxdma->dev is used for dev_warn before it was set.
+Hi,
 
-Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Reviewed-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/dma/imx-dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+this series adds support for the generic DMA DT bindings for imx-dma.
 
-diff --git a/drivers/dma/imx-dma.c b/drivers/dma/imx-dma.c
-index 34c54cf..ff2aab9 100644
---- a/drivers/dma/imx-dma.c
-+++ b/drivers/dma/imx-dma.c
-@@ -1067,6 +1067,7 @@ static int __init imxdma_probe(struct platform_device *pdev)
- 	if (!imxdma)
- 		return -ENOMEM;
- 
-+	imxdma->dev = &pdev->dev;
- 	imxdma->devtype = pdev->id_entry->driver_data;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -1171,7 +1172,6 @@ static int __init imxdma_probe(struct platform_device *pdev)
- 			      &imxdma->dma_device.channels);
- 	}
- 
--	imxdma->dev = &pdev->dev;
- 	imxdma->dma_device.dev = &pdev->dev;
- 
- 	imxdma->dma_device.device_alloc_chan_resources = imxdma_alloc_chan_resources;
--- 
-1.8.2.1
+Regards,
+
+Markus
+
+
+Changes in v7:
+ - rebased onto v3.10-rc2
+
+Markus Pargmann (2):
+      dma: imx-dma: Add oftree support
+      DMA: imx-dma: imxdma->dev used uninitialized
+
+ .../devicetree/bindings/dma/fsl-imx-dma.txt        | 48 ++++++++++++++
+ drivers/dma/imx-dma.c                              | 77 +++++++++++++++++++++-
+ include/linux/platform_data/dma-imx.h              |  6 +-
+ 3 files changed, 126 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/fsl-imx-dma.txt
