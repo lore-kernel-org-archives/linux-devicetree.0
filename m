@@ -1,38 +1,45 @@
-From: Chris Ball <cjb@laptop.org>
-Subject: Re: [PATCH -next] mmc: mxs-mmc: fix error return code in mxs_mmc_probe()
-Date: Sun, 26 May 2013 13:29:25 -0400
-Message-ID: <8761y5r6oa.fsf@octavius.laptop.org>
-References: <CAPgLHd8+rdPX-B8raEjF0ygrG1QC2OFkuTzXw1eeaWsO0dHmcg@mail.gmail.com>
-	<201304191407.33143.marex@denx.de>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: [net-next PATCH v3 0/6] Adding pinctrl PM support for CPSW and MDIO
+Date: Sun, 26 May 2013 23:53:30 +0530
+Message-ID: <1369592616-23972-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <201304191407.33143.marex@denx.de> (Marek Vasut's message of
-	"Fri, 19 Apr 2013 14:07:32 +0200")
-Sender: linux-mmc-owner@vger.kernel.org
-To: Marek Vasut <marex@denx.de>
-Cc: Wei Yongjun <weiyj.lk@gmail.com>, grant.likely@linaro.org, rob.herring@calxeda.com, shawn.guo@linaro.org, fabio.estevam@freescale.com, broonie@opensource.wolfsonmicro.com, yongjun_wei@trendmicro.com.cn, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, benoit.cousson@linaro.org, paul@pwsan.com, Mugunthan V N <mugunthanvnm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch series adds the following features
+* Adding pinctrl PM support for CPSW and MDIO for Power Optimization
+* Adding phy address to the CPSW node for EVMsk board
 
-On Fri, Apr 19 2013, Marek Vasut wrote:
-> Dear Wei Yongjun,
->
->> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->> 
->> Fix to return -ENODEV in the request dma error case instead
->> of 0, as done elsewhere in this function.
->> 
->> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->
-> Seems ok to me.
->
-> Reviewed-by: Marek Vasut <marex@denx.de>
+Changes from initial version
+* Fixed the multiline function call indentation as per David Miller
+  recommendation.
 
-Thanks, pushed to mmc-next for 3.11.
+Changes from v2
+* Fixed the multi comment style as per net coding style
+* Fixed checkpatch error (more than 80 characters)
 
-- Chris.
+
+Hebbar Gururaja (1):
+  net: cpsw: enhance pinctrl support
+
+Mugunthan V N (5):
+  net: davinci_mdio: enhance pinctrl support
+  ARM: dts: AM33XX: Add pinmux configuration for CPSW to beaglebone
+  ARM: dts: AM33XX: Add CPSW phy_id device tree data to am335x-evmsk
+  ARM: dts: AM33XX: Add pinmux configuration for CPSW to EVMsk
+  ARM: dts: AM33XX: Add pinmux configuration for CPSW to am335x EVM
+
+ arch/arm/boot/dts/am335x-bone.dts      |   38 +++++++++++++++++++++
+ arch/arm/boot/dts/am335x-evm.dts       |   36 ++++++++++++++++++++
+ arch/arm/boot/dts/am335x-evmsk.dts     |   58 ++++++++++++++++++++++++++++++++
+ drivers/net/ethernet/ti/cpsw.c         |   48 ++++++++++++++++++++++++++
+ drivers/net/ethernet/ti/davinci_mdio.c |   45 +++++++++++++++++++++++++
+ 5 files changed, 225 insertions(+)
+
 -- 
-Chris Ball   <cjb@laptop.org>   <http://printf.net/>
-One Laptop Per Child
+1.7.9.5
+
