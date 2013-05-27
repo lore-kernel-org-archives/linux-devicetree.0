@@ -1,190 +1,327 @@
-From: David Herrmann <dh.herrmann@gmail.com>
-Subject: Re: [PATCH v2] video: simplefb: add mode parsing function
-Date: Mon, 27 May 2013 20:22:21 +0200
-Message-ID: <CANq1E4Qa6g-zrA6o_u3w6mpVcUk8-ZPPR+edu6EXgpk-kGQULQ@mail.gmail.com>
-References: <1369626821-28494-1-git-send-email-acourbot@nvidia.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2] pwm: add pca9685 driver
+Date: Mon, 27 May 2013 21:13:34 +0200
+Message-ID: <20130527191333.GA10219@mithrandir>
+References: <1369646907-18424-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1369626821-28494-1-git-send-email-acourbot@nvidia.com>
+Content-Disposition: inline
+In-Reply-To: <1369646907-18424-1-git-send-email-s.trumtrar@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Stephen Warren <swarren@wwwdotorg.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Clark <robclark@gmail.com>, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>, gnurou@gmail.com
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi
 
-On Mon, May 27, 2013 at 5:53 AM, Alexandre Courbot <acourbot@nvidia.com> wrote:
-> The naming scheme of simplefb's mode is precise enough to allow building
-> the mode structure from it instead of using a static list of modes. This
-> patch introduces a function that does this. In case exotic modes that
-> cannot be represented from their name alone are needed, the static list
-> of modes is still available as a backup.
->
-> It also changes the order in which colors are declared from MSB first to
-> the more standard LSB first.
->
-> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+--ReaqsoxgOBHFXBhH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, May 27, 2013 at 11:28:27AM +0200, Steffen Trumtrar wrote:
+> Add pwm driver for the NXP pca9685 16 channel pwm-led controller.
+
+Please stick to the all-caps spelling of PWM in prose. Also why is this
+called pwm-led? Can't the generated PWM signal be used for other
+purposes?
+
+> The driver is really barebones at this stage. E.g. the OE' pin and
+> therefore the according registers are not supported.
+
+s/according/corresponding/?
+
+> The driver was tested on a HW where this pin is tied to GND.
+>=20
+> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 > ---
-> Changes from v1:
-> - amended documentation following Stephen's suggestion
-> - allow parsing of bitfields larger than 9 bits
-> - made it clear that the parsing order of bits is changed with respect
->   to the original patch
->
-> Andrew, since this patch introduces a (small) change in the DT bindings,
-> could we try to merge it during the -rc cycle so we don't have to come
-> with a more complex solution in the future?
->
->  .../bindings/video/simple-framebuffer.txt          | 12 +++-
->  drivers/video/simplefb.c                           | 72 +++++++++++++++++++++-
->  2 files changed, 80 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-> index 3ea4605..18d03e2 100644
-> --- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-> +++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
-> @@ -10,8 +10,16 @@ Required properties:
->  - width: The width of the framebuffer in pixels.
->  - height: The height of the framebuffer in pixels.
->  - stride: The number of bytes in each line of the framebuffer.
-> -- format: The format of the framebuffer surface. Valid values are:
-> -  - r5g6b5 (16-bit pixels, d[15:11]=r, d[10:5]=g, d[4:0]=b).
-> +- format: The format of the framebuffer surface. Described as a sequence of
-> +       channel/num-bits pairs, where each pair describes how many bits are used
-> +       by a given color channel. Value channels are "r" (red), "g" (green),
-> +       "b" (blue), "a" (alpha) and "x" (unused). Channels are listed in bit
-> +       order, starting from the LSB. For instance, a format named "r5g6b5"
-> +       describes a 16-bit format where red is encoded in the 5 less significant
-> +       bits, green in the 6 following ones, and blue in the 5 last:
-> +                               BBBBBGGG GGGRRRRR
-> +                               ^               ^
-> +                              MSB             LSB
+> Changes since v1:
+> 	- fix typo in documentation example
+>=20
+>  .../devicetree/bindings/pwm/nxp,pca9685-pwmled.txt |  28 +++
+>  drivers/pwm/Kconfig                                |   9 +
+>  drivers/pwm/Makefile                               |   1 +
+>  drivers/pwm/pwm-pca9685-led.c                      | 245 +++++++++++++++=
+++++++
+>  4 files changed, 283 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/nxp,pca9685-pwm=
+led.txt
+>  create mode 100644 drivers/pwm/pwm-pca9685-led.c
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/nxp,pca9685-pwmled.txt=
+ b/Documentation/devicetree/bindings/pwm/nxp,pca9685-pwmled.txt
+> new file mode 100644
+> index 0000000..6646980
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/nxp,pca9685-pwmled.txt
+> @@ -0,0 +1,28 @@
+> +NXP PCA9685 16-channel 12-bit PWM LED controller
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Required properties:
+> +  - compatible: "nxp,pca9685-pwmled"
+> +  - #pwm-cells: should be 2.  The first cell specifies the per-chip index
+> +    of the PWM to use and the second cell is the period in nanoseconds.
+> +    The index 16 is the ALLCALL channel, that sets all pwm channels at t=
+he same
 
-Is there a specific reason why we need arbitrary RGB formats? I have a
-KMS/DRM driver based on dvbe that can provide the exact same
-functionality as this fbdev driver (including an fbdev
-backwards-compat layer). However, DRM does not allow arbitrary formats
-but rather provides a huge list of supported formats.
+"PWM channels" please.
 
-If we apply this patch it will get very hard to support this with a
-KMS driver. So any reason why we cannot use the DRM FOURCC constants
-instead?
+> +Optional properties:
+> +  - invrt:  <0> output logic state not inverted
+> +	    <1> output logic state inverted
 
-The dvbe proposal is available here: (also see the two following patches)
-  http://lkml.indiana.edu/hypermail/linux/kernel/1302.2/00274.html
+Why not make this "invert"?
 
-it provides a simple DRM driver that uses VESA / VBE. I am currently
-trying to rework it to "SimpleDRM" which can support arbitrary
-firmware framebuffers.
+> +  - outdrv: <0> configure outputs with open-drain structure
+> +	    <1> configure outputs with totem pole structure
 
-Cheers
-David
+And this could be a boolean property called "totem-pole"? I think that's
+much more intuitive to use.
 
->  Example:
->
-> diff --git a/drivers/video/simplefb.c b/drivers/video/simplefb.c
-> index e2e9e3e..1430752 100644
-> --- a/drivers/video/simplefb.c
-> +++ b/drivers/video/simplefb.c
-> @@ -21,6 +21,7 @@
->   */
->
->  #include <linux/errno.h>
-> +#include <linux/ctype.h>
->  #include <linux/fb.h>
->  #include <linux/io.h>
->  #include <linux/module.h>
-> @@ -82,8 +83,72 @@ struct simplefb_format {
->         struct fb_bitfield transp;
->  };
->
-> +static struct simplefb_format *simplefb_parse_format(struct device *dev,
-> +                                                    const char *str)
+> +Example:
+> +
+> +For LEDs that are directly connected to the pca, the following setting is
+
+"to the PCA"?
+
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 115b644..8696f61 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -97,6 +97,15 @@ config PWM_MXS
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-mxs.
+> =20
+> +config PWM_PCA9685_LED
+> +	tristate "NXP PCA9685 PWM support for LED drivers"
+> +	depends on OF
+
+Isn't this missing a "depends on REGMAP_I2C"? And again, why is this LED
+specific? Even if only LEDs are driven by the PWM signals, the part does
+not have other functionality than driving PWM signals, right? So adding
+an -led suffix isn't meaningful.
+
+> diff --git a/drivers/pwm/pwm-pca9685-led.c b/drivers/pwm/pwm-pca9685-led.c
+[...]
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +#include <linux/i2c.h>
+
+I know I'm being picky here, but can you leave a blank line between the
+end of the comment and the first #include, please?
+
+> +#define PCA9685_MODE1		0x00
+> +#define PCA9685_MODE2		0x01
+> +#define PCA9685_SUBADDR1	0x02
+> +#define PCA9685_SUBADDR2	0x03
+> +#define PCA9685_SUBADDR3	0x04
+> +#define PCA9685_ALLCALLADDR	0x05
+> +#define PCA9685_LEDX_ON_L	0x06
+> +#define PCA9685_LEDX_ON_H	0x07
+> +#define PCA9685_LEDX_OFF_L	0x08
+> +#define PCA9685_LEDX_OFF_H	0x09
+> +
+> +#define PCA9685_ALL_LED_ON_L	0xFA
+> +#define PCA9685_ALL_LED_ON_H	0xFB
+> +#define PCA9685_ALL_LED_OFF_L	0xFC
+> +#define PCA9685_ALL_LED_OFF_H	0xFD
+> +#define PCA9685_PRESCALE	0xFE
+> +
+> +#define PCA9685_NUMREGS		0xFF
+> +#define PCA9685_MAXCHAN		0x10
+> +
+> +#define LED_FULL		(1 << 4)
+> +#define MODE1_SLEEP		(1 << 4)
+> +#define MODE2_INVRT		(1 << 4)
+> +#define MODE2_OUTDRV		(1 << 2)
+> +
+> +#define LED_N_ON_H(N)		(PCA9685_LEDX_ON_H + (4 * (N)))
+> +#define LED_N_ON_L(N)		(PCA9685_LEDX_ON_L + (4 * (N)))
+> +#define LED_N_OFF_H(N)		(PCA9685_LEDX_OFF_H + (4 * (N)))
+> +#define LED_N_OFF_L(N)		(PCA9685_LEDX_OFF_L + (4 * (N)))
+> +
+> +struct pca9685 {
+> +	struct pwm_chip chip;
+> +	struct regmap *regmap;
+> +	struct device *dev;
+> +};
+> +
+> +static inline struct pca9685 *to_pca(struct pwm_chip *chip)
 > +{
-> +       struct simplefb_format *format;
-> +       unsigned int offset = 0;
-> +       unsigned int i = 0;
-> +
-> +       format = devm_kzalloc(dev, sizeof(*format), GFP_KERNEL);
-> +       if (!format)
-> +               return ERR_PTR(-ENOMEM);
-> +
-> +       while (str[i] != 0) {
-> +               struct fb_bitfield *field = NULL;
-> +               int length = 0;
-> +
-> +               switch (str[i++]) {
-> +               case 'r':
-> +               case 'R':
-> +                       field = &format->red;
-> +                       break;
-> +               case 'g':
-> +               case 'G':
-> +                       field = &format->green;
-> +                       break;
-> +               case 'b':
-> +               case 'B':
-> +                       field = &format->blue;
-> +                       break;
-> +               case 'a':
-> +               case 'A':
-> +                       field = &format->transp;
-> +                       break;
-> +               case 'x':
-> +               case 'X':
-> +                       break;
-> +               default:
-> +                       goto error;
-> +               }
-> +
-> +               if (!isdigit(str[i]))
-> +                       goto error;
-> +
-> +               while (isdigit(str[i])) {
-> +                       length = length * 10 + (str[i++] - '0');
-> +               }
-> +
-> +               if (field) {
-> +                       field->offset = offset;
-> +                       field->length = length;
-> +               }
-> +
-> +               offset += length;
-> +       }
-> +
-> +       format->bits_per_pixel = (offset + 7) & ~0x7;
-> +       format->name = str;
-> +       return format;
-> +
-> +error:
-> +       dev_err(dev, "Invalid format string\n");
-> +       return ERR_PTR(-EINVAL);
+> +	return container_of(chip, struct pca9685, chip);
 > +}
 > +
-> +/* if you use exotic modes that simplefb_parse_format cannot decode, you can
-> +   specify them here. */
->  static struct simplefb_format simplefb_formats[] = {
-> -       { "r5g6b5", 16, {11, 5}, {5, 6}, {0, 5}, {0, 0} },
->  };
->
->  struct simplefb_params {
-> @@ -131,7 +196,10 @@ static int simplefb_parse_dt(struct platform_device *pdev,
->                 params->format = &simplefb_formats[i];
->                 break;
->         }
-> -       if (!params->format) {
-> +       if (!params->format)
-> +               params->format = simplefb_parse_format(&pdev->dev, format);
+> +static int pca9685_pwmled_config(struct pwm_chip *chip, struct pwm_devic=
+e *pwm,
+> +			      int duty_ns, int period_ns)
+
+The alignment doesn't look right here.
+
+> +{
+> +	struct pca9685 *pca =3D to_pca(chip);
+> +	unsigned long long duty;
+> +	unsigned int reg;
 > +
-> +       if (IS_ERR(params->format)) {
->                 dev_err(&pdev->dev, "Invalid format value\n");
->                 return -EINVAL;
->         }
-> --
-> 1.8.3
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-fbdev" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	if (duty_ns < 1)
+> +		return 0;
+
+Doesn't duty_ns < 1 mean the signal is off? Why are you ignoring this
+case?
+
+> +
+> +	if (duty_ns =3D=3D period_ns) {
+> +		reg =3D (pwm->hwpwm =3D=3D PCA9685_MAXCHAN) ? PCA9685_ALL_LED_ON_H
+> +						: LED_N_ON_H(pwm->hwpwm);
+
+There's a few occurrences of this style in the driver. I don't like it
+much because it makes things hard to read. How about writing it this
+way?
+
+	if (pwm->hwpwm < PCA9685_MAXCHAN)
+		reg =3D LED_N_ON_H(pwm->hwpwm);
+	else
+		reg =3D PCA9685_ALL_LED_ON_H;
+
+And similar for the other cases.
+
+> +	duty =3D 4096 * (unsigned long long)duty_ns;
+> +	duty =3D DIV_ROUND_UP_ULL(duty, period_ns);
+> +
+> +	reg =3D (pwm->hwpwm =3D=3D PCA9685_MAXCHAN) ? PCA9685_ALL_LED_OFF_L
+> +					: LED_N_OFF_L(pwm->hwpwm);
+
+Like here.
+
+> +	regmap_write(pca->regmap, reg, 0xff & (int)duty);
+
+"(int)duty & 0xff", please.
+
+> +	regmap_write(pca->regmap, reg, 0xf & ((int)duty >> 8));
+
+Same here.
+
+> +static int pca9685_pwmled_enable(struct pwm_chip *chip, struct pwm_devic=
+e *pwm)
+> +{
+> +	struct pca9685 *pca =3D to_pca(chip);
+> +	unsigned int reg;
+> +
+> +	/* the PWM subsystem does not support a pre-delay */
+
+What do you mean by that? How is it relevant to this code. Maybe there's
+a case to be made to add functionality that you miss.
+
+> +static int pca9685_pwmled_request(struct pwm_chip *chip, struct pwm_devi=
+ce *pwm)
+> +{
+> +	struct pca9685 *pca =3D to_pca(chip);
+> +
+> +	return regmap_update_bits(pca->regmap, PCA9685_MODE1, MODE1_SLEEP, 0x0);
+> +}
+
+Don't you need to set the SLEEP bit in a pca9685_pwmled_free() function?
+Since the SLEEP bit is for all PWM channels, you probably need some
+reference counting to make sure you only set it when all channels have
+been released.
+
+> +static int pca9685_pwmled_probe(struct i2c_client *client,
+> +				const struct i2c_device_id *id)
+> +{
+> +	struct device_node *np =3D client->dev.of_node;
+> +	struct pca9685 *pca;
+> +	int ret;
+> +	int val;
+> +	int mode2;
+> +
+> +	pca =3D devm_kzalloc(&client->dev, sizeof(*pca), GFP_KERNEL);
+> +	if (!pca)
+> +		return -ENOMEM;
+> +
+> +	pca->regmap =3D devm_regmap_init_i2c(client, &pca9685_regmap_i2c_config=
+);
+> +	if (IS_ERR(pca->regmap)) {
+> +		ret =3D PTR_ERR(pca->regmap);
+> +		dev_err(&client->dev, "Failed to initialize register map: %d\n",
+> +				ret);
+> +		return ret;
+> +	}
+> +
+> +	i2c_set_clientdata(client, pca);
+> +	pca->dev =3D &client->dev;
+> +
+> +	regmap_read(pca->regmap, PCA9685_MODE2, &mode2);
+> +	if (!of_property_read_u32(np, "invrt", &val)) {
+
+These two lines could use a blank line as a separator.
+
+> +		if (val)
+> +			mode2 |=3D MODE2_INVRT;
+> +		else
+> +			mode2 &=3D ~MODE2_INVRT;
+> +	}
+> +	if (!of_property_read_u32(np, "outdrv", &val)) {
+
+These too.
+
+> +		if (val)
+> +			mode2 |=3D MODE2_OUTDRV;
+> +		else
+> +			mode2 &=3D ~MODE2_OUTDRV;
+> +	}
+> +	regmap_write(pca->regmap, PCA9685_MODE2, mode2);
+
+And these.
+
+> +	ret =3D pwmchip_add(&pca->chip);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+
+"return pwmchip_add(&pca->chip);"?
+
+> +static const struct i2c_device_id pca9685_id[] =3D {
+> +	{"pca9685", 0},
+
+Spaces between '{' and '"' as well as '0' and '}', please.
+
+> +	{},
+
+"{ }", please. Or "{ /* sentinel */ }" as in the "of" table.
+
+> +static struct i2c_driver pca9685_i2c_driver =3D {
+> +	.driver =3D {
+> +		   .name =3D "pca9685",
+> +		   .owner =3D THIS_MODULE,
+> +		   .of_match_table =3D pca9685_dt_ids,
+> +		   },
+
+This uses weird identing. Please fix.
+
+Thierry
+
+--ReaqsoxgOBHFXBhH
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRo7BdAAoJEN0jrNd/PrOhp3kQAKLMbYFLNhjEc0DrWnJV9lf9
+ymITkhuB7ZDnkV+qU6Gf3sQhg0m2uVUuL6us8cmw0fEUsT2zK6WYJIm4PYq4qg3O
+eA0WwZRRzZB8h6VRXkqrWyXI1ssJzHNHC1CFS5q6/zxKeDGRRld/9yzptWwwhAKI
+W0fKqFNhLq8iPrK5Swuuk12mV+CwKMyn0qGsAsKanOVnptYSYG+kcEAf/7hnT4Gw
+EsaJ9uVQ1oZzH+A51oTyeMakmfMlxlQxsi0BPJV25wJMm+SCh/s7V2oByLl5cz+q
+U1zLRrSsOfC15RYloEOorI+BZlkXgiZxvxqpu6X68HcZXcTnQ1NtNpMKaVj6iO52
+r+xmlcV4o01M9ZQEsnYvO91ujiFdw4Ltapf6JrTfdFTXOvpWD4YtxbrQzjAmTtbW
+jkjRz+dHyUyPFqAP7gZFsw8EDYslmzcT2ivUtxfbGlqQsvMjkOmB2h9e3gEWMiOv
+BRmodUXQKSH8baIYtjHZCgNolA6t8v+OSOFf2oHtzLgyryygbsz6oGSLywccVkqi
+/Yt4XWxvMjGQ1d5BcejQoypb15Xl/WuFvSEAC48VIumhhi1pR0HafPWRwky9XEKE
+YK0Xzssqo++6AAqIkvrmn55eryee9VOiJfuPqhXU7Nh36/UqkNU2zzqisMThRinp
+yHLwJf8GaZ+lcjSncvFR
+=tX6a
+-----END PGP SIGNATURE-----
+
+--ReaqsoxgOBHFXBhH--
