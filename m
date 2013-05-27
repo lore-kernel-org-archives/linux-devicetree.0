@@ -1,79 +1,97 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 6/6] ARM: dts: imx6qdl: enable the WEIM NOR
-Date: Mon, 27 May 2013 09:44:57 +0200
-Message-ID: <20130527074457.GY20989@pengutronix.de>
-References: <1369389564-13181-1-git-send-email-b32955@freescale.com>
- <1369389564-13181-7-git-send-email-b32955@freescale.com>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: omap3-igep0030: Add NAND flash support
+Date: Mon, 27 May 2013 10:40:30 +0200
+Message-ID: <51A31BFE.7090908@ti.com>
+References: <1368214859-23558-1-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1369389564-13181-7-git-send-email-b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: shc_work-JGs/UdohzUI@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1368214859-23558-1-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-In the subject: s/imx6qdl/imx6qdl-sabreauto/
+Hi Javier,
 
-Sascha
-
-On Fri, May 24, 2013 at 05:59:24PM +0800, Huang Shijie wrote:
-> Enable the WEIM NOR for imx6q{dl} boards.
+On 05/10/2013 09:40 PM, Javier Martinez Canillas wrote:
+> The IGEP COM Module has an 512MB NAND flash memory.
 > 
-> For the pin conflict with SPI NOR, its status is set to "disabled".
+> Add a device node for this NAND and its parition layout.
 > 
-> Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 > ---
->  arch/arm/boot/dts/imx6qdl-sabreauto.dtsi |   20 ++++++++++++++++++++
->  1 files changed, 20 insertions(+), 0 deletions(-)
 > 
-> diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-> index a4466e6..bb0f185 100644
-> --- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-> @@ -58,3 +58,23 @@
->  	wp-gpios = <&gpio1 13 0>;
->  	status = "okay";
+> Changes since v1:
+>  - I just realized that sent a wrong version of the patch, sorry for the noise
+
+And what about the first one? For igep0020?
+
+Thanks,
+Benoit
+
+> 
+>  arch/arm/boot/dts/omap3-igep0030.dts |   50 ++++++++++++++++++++++++++++++++++
+>  1 files changed, 50 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/omap3-igep0030.dts b/arch/arm/boot/dts/omap3-igep0030.dts
+> index 9dc48d2..f65bc3a 100644
+> --- a/arch/arm/boot/dts/omap3-igep0030.dts
+> +++ b/arch/arm/boot/dts/omap3-igep0030.dts
+> @@ -42,3 +42,53 @@
+>  		};
+>  	};
 >  };
 > +
-> +&weim {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_weim_nor_1 &pinctrl_weim_cs_0>;
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +	ranges = <0 0 0x08000000 0x08000000>;
-> +	status = "disabled"; /* pin conflict with SPI NOR */
+> +&gpmc {
+> +	ranges = <0 0 0x00000000 0x20000000>;
 > +
-> +	nor@0,0 {
-> +		compatible = "cfi-flash";
-> +		reg = <0 0 0x02000000>;
+> +	nand@0,0 {
+> +		linux,mtd-name= "micron,mt29c4g96maz";
+> +		reg = <0 0 0>;
+> +		nand-bus-width = <16>;
+> +		ti,nand-ecc-opt = "bch8";
+> +
+> +		gpmc,sync-clk-ps = <0>;
+> +		gpmc,cs-on-ns = <0>;
+> +		gpmc,cs-rd-off-ns = <44>;
+> +		gpmc,cs-wr-off-ns = <44>;
+> +		gpmc,adv-on-ns = <6>;
+> +		gpmc,adv-rd-off-ns = <34>;
+> +		gpmc,adv-wr-off-ns = <44>;
+> +		gpmc,we-off-ns = <40>;
+> +		gpmc,oe-off-ns = <54>;
+> +		gpmc,access-ns = <64>;
+> +		gpmc,rd-cycle-ns = <82>;
+> +		gpmc,wr-cycle-ns = <82>;
+> +		gpmc,wr-access-ns = <40>;
+> +		gpmc,wr-data-mux-bus-ns = <0>;
+> +
 > +		#address-cells = <1>;
 > +		#size-cells = <1>;
-> +		bank-width = <2>;
 > +
-> +		fsl,weim-cs-timing = <0x00620081 0x00000001 0x1C022000
-> +				0x0000C000 0x1404a38e 0x00000000>;
+> +		partition@0 {
+> +			label = "SPL";
+> +			reg = <0 0x100000>;
+> +		};
+> +		partition@0x80000 {
+> +			label = "U-Boot";
+> +			reg = <0x100000 0x180000>;
+> +		};
+> +		partition@0x1c0000 {
+> +			label = "Environment";
+> +			reg = <0x280000 0x100000>;
+> +		};
+> +		partition@0x280000 {
+> +			label = "Kernel";
+> +			reg = <0x380000 0x300000>;
+> +		};
+> +		partition@0x780000 {
+> +			label = "Filesystem";
+> +			reg = <0x680000 0x1f980000>;
+> +		};
 > +	};
 > +};
-> -- 
-> 1.7.1
-> 
-> 
 > 
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
