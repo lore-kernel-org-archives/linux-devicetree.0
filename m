@@ -1,36 +1,52 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: [PATCH REBASE] irqchip: Add TB10x interrupt controller driver
-Date: Mon, 27 May 2013 15:36:02 +0530
-Message-ID: <51A3300A.2060403@synopsys.com>
-References: <1365686252-9828-1-git-send-email-christian.ruppert@abilis.com> <1367930258-27056-1-git-send-email-christian.ruppert@abilis.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 0/2] dma: imx-dma: OFTree support
+Date: Mon, 27 May 2013 15:33:57 +0530
+Message-ID: <20130527100357.GA30200@intel.com>
+References: <1369562001-11494-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1367930258-27056-1-git-send-email-christian.ruppert@abilis.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Pierrick Hascoet <pierrick.hascoet@abilis.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1369562001-11494-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/2013 06:07 PM, Christian Ruppert wrote:
-> The SOC interrupt controller driver for the Abilis Systems TB10x series of
-> SOCs based on ARC700 CPUs.
+On Sun, May 26, 2013 at 11:53:19AM +0200, Markus Pargmann wrote:
+> Hi,
 > 
-> This driver is required to boot the arch/arc/plat-tb10x platform already
-> present in linux-next. Please consider this patch for inclusion in 3.10.
-> This is the rebase of a previous version on linux-next.
+> this series adds support for the generic DMA DT bindings for imx-dma.
 > 
-> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
-> Signed-off-by: Pierrick Hascoet <pierrick.hascoet@abilis.com>
+> Regards,
+> 
+> Markus
+> 
+> 
+> Changes in v7:
+>  - rebased onto v3.10-rc2
+Applied thanks...
 
-Looks good to me !
-
-Reviewed-by: Vineet Gupta <vgupta@synopsys.com>
-
-P.S. @tglx can you please review this at your earliest convenience and provide any
-feedback to Chrisitian. This driver is essential to their platform and it would be
-nice to have it in mainline in 3.11
-
-Thx,
--Vineet
+--
+~Vinod
+> 
+> Markus Pargmann (2):
+>       dma: imx-dma: Add oftree support
+>       DMA: imx-dma: imxdma->dev used uninitialized
+> 
+>  .../devicetree/bindings/dma/fsl-imx-dma.txt        | 48 ++++++++++++++
+>  drivers/dma/imx-dma.c                              | 77 +++++++++++++++++++++-
+>  include/linux/platform_data/dma-imx.h              |  6 +-
+>  3 files changed, 126 insertions(+), 5 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/fsl-imx-dma.txt
+> 
