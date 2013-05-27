@@ -1,38 +1,29 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH -next] pci: mvebu: fix return value check in
- mvebu_pcie_probe()
-Date: Mon, 27 May 2013 12:05:28 -0400
-Message-ID: <20130527160528.GH31290@titan.lakedaemon.net>
-References: <CAPgLHd_B-RBGTcQPeeWeJb9QVkf-RjO1WtBC0JK2KOEoBaus_Q@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v4 8/8] reset: Add driver for gpio-controlled reset pins
+Date: Mon, 27 May 2013 13:25:24 -0300
+Message-ID: <CAOMZO5BJ7h=_cqSUG6X25SHTMe5ym1_nToj5P_PMR9bxN+B2Ow@mail.gmail.com>
+References: <1361878774-6382-1-git-send-email-p.zabel@pengutronix.de>
+	<1361878774-6382-9-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPgLHd_B-RBGTcQPeeWeJb9QVkf-RjO1WtBC0JK2KOEoBaus_Q@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: bhelgaas@google.com, grant.likely@linaro.org, rob.herring@calxeda.com, thomas.petazzoni@free-electrons.com, yongjun_wei@trendmicro.com.cn, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1361878774-6382-9-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-pm-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Stephen Warren <swarren@wwwdotorg.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@sisk.pl>, kernel@pengutronix.de, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-All,
+On Tue, Feb 26, 2013 at 8:39 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> This driver implements a reset controller device that toggles gpios
+> connected to reset pins of peripheral ICs. The delay between assertion
+> and de-assertion of the reset signal can be configured.
+>
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-On Mon, May 27, 2013 at 11:38:41AM +0800, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
-> 
-> In case of error, function of_clk_get_by_name() returns
-> ERR_PTR() never returns NULL. The NULL test in the return
-> value check should be replaced with IS_ERR().
-> 
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
-> ---
->  drivers/pci/host/pci-mvebu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Looks good and it is a very useful binding.
 
-Applied to mvebu/pcie.
+Will anyone apply this?
 
-FYI: mvebu/pcie_bridge, and mvebu/pcie_kirkwood have been rebased on top
-of this change.
+Thanks,
 
-thx,
-
-Jason.
+Fabio Estevam
