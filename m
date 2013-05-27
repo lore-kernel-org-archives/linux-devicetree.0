@@ -1,36 +1,170 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH -next] pci: mvebu: fix return value check in mvebu_pcie_probe()
-Date: Mon, 27 May 2013 11:38:41 +0800
-Message-ID: <CAPgLHd_B-RBGTcQPeeWeJb9QVkf-RjO1WtBC0JK2KOEoBaus_Q@mail.gmail.com>
+From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2] video: simplefb: add mode parsing function
+Date: Mon, 27 May 2013 12:53:41 +0900
+Message-ID: <1369626821-28494-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: bhelgaas@google.com, grant.likely@linaro.org, rob.herring@calxeda.com, jason@lakedaemon.net, thomas.petazzoni@free-electrons.com
-Cc: yongjun_wei@trendmicro.com.cn, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+The naming scheme of simplefb's mode is precise enough to allow building
+the mode structure from it instead of using a static list of modes. This
+patch introduces a function that does this. In case exotic modes that
+cannot be represented from their name alone are needed, the static list
+of modes is still available as a backup.
 
-In case of error, function of_clk_get_by_name() returns
-ERR_PTR() never returns NULL. The NULL test in the return
-value check should be replaced with IS_ERR().
+It also changes the order in which colors are declared from MSB first to
+the more standard LSB first.
 
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/pci/host/pci-mvebu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes from v1:
+- amended documentation following Stephen's suggestion
+- allow parsing of bitfields larger than 9 bits
+- made it clear that the parsing order of bits is changed with respect
+  to the original patch
 
-diff --git a/drivers/pci/host/pci-mvebu.c b/drivers/pci/host/pci-mvebu.c
-index 91106df..c8397c4 100644
---- a/drivers/pci/host/pci-mvebu.c
-+++ b/drivers/pci/host/pci-mvebu.c
-@@ -828,7 +828,7 @@ static int __init mvebu_pcie_probe(struct platform_device *pdev)
- 		}
+Andrew, since this patch introduces a (small) change in the DT bindings,
+could we try to merge it during the -rc cycle so we don't have to come
+with a more complex solution in the future?
+
+ .../bindings/video/simple-framebuffer.txt          | 12 +++-
+ drivers/video/simplefb.c                           | 72 +++++++++++++++++++++-
+ 2 files changed, 80 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/video/simple-framebuffer.txt b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+index 3ea4605..18d03e2 100644
+--- a/Documentation/devicetree/bindings/video/simple-framebuffer.txt
++++ b/Documentation/devicetree/bindings/video/simple-framebuffer.txt
+@@ -10,8 +10,16 @@ Required properties:
+ - width: The width of the framebuffer in pixels.
+ - height: The height of the framebuffer in pixels.
+ - stride: The number of bytes in each line of the framebuffer.
+-- format: The format of the framebuffer surface. Valid values are:
+-  - r5g6b5 (16-bit pixels, d[15:11]=r, d[10:5]=g, d[4:0]=b).
++- format: The format of the framebuffer surface. Described as a sequence of
++	channel/num-bits pairs, where each pair describes how many bits are used
++	by a given color channel. Value channels are "r" (red), "g" (green),
++	"b" (blue), "a" (alpha) and "x" (unused). Channels are listed in bit
++	order, starting from the LSB. For instance, a format named "r5g6b5"
++	describes a 16-bit format where red is encoded in the 5 less significant
++	bits, green in the 6 following ones, and blue in the 5 last:
++				BBBBBGGG GGGRRRRR
++				^               ^
++			       MSB             LSB
  
- 		port->clk = of_clk_get_by_name(child, NULL);
--		if (!port->clk) {
-+		if (IS_ERR(port->clk)) {
- 			dev_err(&pdev->dev, "PCIe%d.%d: cannot get clock\n",
- 			       port->port, port->lane);
- 			iounmap(port->base);
+ Example:
+ 
+diff --git a/drivers/video/simplefb.c b/drivers/video/simplefb.c
+index e2e9e3e..1430752 100644
+--- a/drivers/video/simplefb.c
++++ b/drivers/video/simplefb.c
+@@ -21,6 +21,7 @@
+  */
+ 
+ #include <linux/errno.h>
++#include <linux/ctype.h>
+ #include <linux/fb.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
+@@ -82,8 +83,72 @@ struct simplefb_format {
+ 	struct fb_bitfield transp;
+ };
+ 
++static struct simplefb_format *simplefb_parse_format(struct device *dev,
++						     const char *str)
++{
++	struct simplefb_format *format;
++	unsigned int offset = 0;
++	unsigned int i = 0;
++
++	format = devm_kzalloc(dev, sizeof(*format), GFP_KERNEL);
++	if (!format)
++		return ERR_PTR(-ENOMEM);
++
++	while (str[i] != 0) {
++		struct fb_bitfield *field = NULL;
++		int length = 0;
++
++		switch (str[i++]) {
++		case 'r':
++		case 'R':
++			field = &format->red;
++			break;
++		case 'g':
++		case 'G':
++			field = &format->green;
++			break;
++		case 'b':
++		case 'B':
++			field = &format->blue;
++			break;
++		case 'a':
++		case 'A':
++			field = &format->transp;
++			break;
++		case 'x':
++		case 'X':
++			break;
++		default:
++			goto error;
++		}
++
++		if (!isdigit(str[i]))
++			goto error;
++
++		while (isdigit(str[i])) {
++			length = length * 10 + (str[i++] - '0');
++		}
++
++		if (field) {
++			field->offset = offset;
++			field->length = length;
++		}
++
++		offset += length;
++	}
++
++	format->bits_per_pixel = (offset + 7) & ~0x7;
++	format->name = str;
++	return format;
++
++error:
++	dev_err(dev, "Invalid format string\n");
++	return ERR_PTR(-EINVAL);
++}
++
++/* if you use exotic modes that simplefb_parse_format cannot decode, you can
++   specify them here. */
+ static struct simplefb_format simplefb_formats[] = {
+-	{ "r5g6b5", 16, {11, 5}, {5, 6}, {0, 5}, {0, 0} },
+ };
+ 
+ struct simplefb_params {
+@@ -131,7 +196,10 @@ static int simplefb_parse_dt(struct platform_device *pdev,
+ 		params->format = &simplefb_formats[i];
+ 		break;
+ 	}
+-	if (!params->format) {
++	if (!params->format)
++		params->format = simplefb_parse_format(&pdev->dev, format);
++
++	if (IS_ERR(params->format)) {
+ 		dev_err(&pdev->dev, "Invalid format value\n");
+ 		return -EINVAL;
+ 	}
+-- 
+1.8.3
