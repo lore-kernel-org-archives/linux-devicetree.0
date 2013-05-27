@@ -1,16 +1,15 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 2/3] extcon: Palmas Extcon Driver
-Date: Mon, 27 May 2013 12:01:46 +0530
-Message-ID: <51A2FDD2.10309@ti.com>
-References: <1369405896-30246-1-git-send-email-kishon@ti.com>
- <1369405896-30246-3-git-send-email-kishon@ti.com>
- <51A2F07F.8070009@samsung.com> <51A2F512.2090907@ti.com>
- <51A2F84D.9030605@samsung.com> <51A2FB88.9000303@nvidia.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/6] drivers: bus: add a new driver for WEIM
+Date: Mon, 27 May 2013 14:34:49 +0800
+Message-ID: <20130527063448.GF7782@S2101-09.ap.freescale.net>
+References: <1369389564-13181-1-git-send-email-b32955@freescale.com>
+ <1369389564-13181-2-git-send-email-b32955@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51A2FB88.9000303-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1369389564-13181-2-git-send-email-b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,51 +20,39 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "george.cherian-l0cyMroinI0@public.gmane.org" <george.cherian-l0cyMroinI0@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org" <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
+To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: shc_work-JGs/UdohzUI@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, May 24, 2013 at 05:59:19PM +0800, Huang Shijie wrote:
+> +Example for an imx6q-sabreauto board, the NOR flash connected to the WEIM:
+> +
+> +	weim: weim@021b8000 {
+> +		compatible = "fsl,imx6q-weim";
+> +		reg = <0x021b8000 0x4000>;
+> +		clocks = <&clks 196>;
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0x08000000 0x08000000>;
+> +
+> +		nor@0,0 {
+> +			compatible = "cfi-flash";
+> +			reg = <0 0 0x02000000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			bank-width = <2>;
+> +
+Nit: remove this unneeded blank line.
+> +			fsl,weim-cs-timing = <0x00620081 0x00000001 0x1C022000
+> +					0x0000C000 0x1404a38e 0x00000000>;
 
-On Monday 27 May 2013 11:52 AM, Laxman Dewangan wrote:
-> On Monday 27 May 2013 11:38 AM, Chanwoo Choi wrote:
->> On 05/27/2013 02:54 PM, Kishon Vijay Abraham I wrote:
->>> Hi,
->>>
->>> On Monday 27 May 2013 11:04 AM, Chanwoo Choi wrote:
->>>> Hi Kishon,
->>>>
->>>> I have some comment about this patch
->>>> and upload modified patch to following repository (extcon-for-palmas).
->>>> -
->>>> http://git.kernel.org/cgit/linux/kernel/git/chanwoo/extcon.git/commit/=
-?h=3Dextcon-for-palmas&id=3Df2b7cb80699cbe1a5fd6c97ef2c600915f8d7f2c
->>>>
->>>>
->>>> This patchset include patch related to other module
->>>> ,so I need your opinion to apply this patchset to git repository.
->>> yeah.. Still there is some confusion with palmas_set_switch_smps10().
->>> I think we can remove it for now and add it separately later. By this
->>> at least we can have device mode fully functional in OMAP5. What do
->>> you think?
->>>
->>   I agree your opinion.
->>
->> But, I propose some fixes about palmas_set_switch_smps10().
->> I dont' prefer to call global function in exton-palmas.c from
->> palmas-regulator.c.
->> So, Why don't you use regulator consumer instead of global function?
->> You can register specific regulator for enabling or disabling
->> SMPS10_SWITCH_EN
->> and then control SMPS10_SWITCH_EN bit through regulator framework in
->> extcon-palmas.c
->> without calling global function.
->
-> Along with this, I also like to make the VBUS regulator control to be
-> optional here. Currently it is mandatory.
+Nit: please consistently use lower case for hex value.
 
-But dint you just tell on my v4 of this patch that you don=92t require this.
-http://www.spinics.net/lists/linux-doc/msg10638.html
+Please update patch #6 as well.
 
-Thanks
-Kishon
+Other than that,
+
+Reviewed-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+> +		};
+> +	};
