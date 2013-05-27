@@ -1,88 +1,141 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH REBASE] irqchip: Add TB10x interrupt controller driver
-Date: Mon, 27 May 2013 14:26:36 +0200 (CEST)
-Message-ID: <alpine.LFD.2.02.1305271414270.4220@ionos>
-References: <1365686252-9828-1-git-send-email-christian.ruppert@abilis.com> <1367930258-27056-1-git-send-email-christian.ruppert@abilis.com>
+From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
+Subject: RE: [PATCH] ARM: dts: omap2plus: remove interrupt-parent property
+Date: Mon, 27 May 2013 12:45:35 +0000
+Message-ID: <A4887BF146CD57468F700B415D2F470159537D@DBDE04.ent.ti.com>
+References: <1362996002-15552-1-git-send-email-manishv.b@ti.com>
+ <A4887BF146CD57468F700B415D2F470158738C@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1367930258-27056-1-git-send-email-christian.ruppert@abilis.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Pierrick Hascoet <pierrick.hascoet@abilis.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <A4887BF146CD57468F700B415D2F470158738C@DBDE01.ent.ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Cc: "tony@atomide.com" <tony@atomide.com>, "Cousson, Benoit" <b-cousson@ti.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 7 May 2013, Christian Ruppert wrote:
-> +#include <linux/interrupt.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/io.h>
-> +#include <linux/slab.h>
-> +#include "../../drivers/irqchip/irqchip.h"
+Hi Benoit,
 
-#include "irqchip.h" perhaps?
+Are there any review comments on this patch?
+Could you please accept this patch if there are not any review comments?
 
-> +#define AB_IRQCTL_INT_ENABLE   (0x00)
+Thanks and Regards
+Manish Badarkhe
 
-What's the purpose of the parens? Decrease readability?
+-----Original Message-----
+From: Vishwanathrao Badarkhe, Manish 
+Sent: Friday, April 12, 2013 12:20 PM
+To: Vishwanathrao Badarkhe, Manish; devicetree-discuss@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; linux-omap@vger.kernel.org
+Cc: tony@atomide.com; Cousson, Benoit; linux@arm.linux.org.uk
+Subject: RE: [PATCH] ARM: dts: omap2plus: remove interrupt-parent property
 
-> +static void tb10x_irq_unmask(struct irq_data *data)
-> +{
-> +	struct tb10x_ictl *ictl = irq_data_get_irq_chip_data(data);
-> +	unsigned int hwirq = irqd_to_hwirq(data);
-> +
-> +	ab_irqctl_writereg(ictl, AB_IRQCTL_INT_ENABLE,
-> +		ab_irqctl_readreg(ictl, AB_IRQCTL_INT_ENABLE) | (1 << hwirq));
+Hi Benoit,
+Are there any review comments on this patch? 
+Could you please accept this patch if there are not any review comments?
 
-Another implementation of the generic interrupt chip functionality.
+Thanks
+Manish Badarkhe
 
-> +static int tb10x_irq_map(struct irq_domain *d, unsigned int irq,
-> +				irq_hw_number_t hw)
-> +{
-> +	irq_set_chip_data(irq, d->host_data);
-> +	irq_set_chip_and_handler(irq, &irq_tb10x_chip, handle_level_irq);
-> +
-> +	return 0;
-> +}
-> +
-> +static int tb10x_irq_xlate(struct irq_domain *d, struct device_node *node,
-> +			const u32 *intspec, unsigned int intsize,
-> +			unsigned long *out_hwirq, unsigned int *out_type)
-> +{
-> +	static const unsigned int tb10x_xlate_types[] = {
-> +		IRQ_TYPE_EDGE_RISING,
-> +		IRQ_TYPE_LEVEL_LOW,
-> +		IRQ_TYPE_LEVEL_HIGH,
-> +		IRQ_TYPE_EDGE_FALLING,
+-----Original Message-----
+From: Vishwanathrao Badarkhe, Manish 
+Sent: Monday, March 11, 2013 3:30 PM
+To: devicetree-discuss@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org; linux-omap@vger.kernel.org
+Cc: tony@atomide.com; Cousson, Benoit; linux@arm.linux.org.uk; Vishwanathrao Badarkhe, Manish
+Subject: [PATCH] ARM: dts: omap2plus: remove interrupt-parent property
 
-Why do you need to introduce another format for specifying the
-interrupt type instead of using the IRQ_TYPE values and
-irq_domain_xlate_twocell()?
+Removed interrupt-parent property from dts file as it is already
+with root node in dtsi file.
 
-> +static void tb10x_irq_cascade(unsigned int irq, struct irq_desc *desc)
-> +{
-> +	struct tb10x_ictl *ictl = irq_desc_get_handler_data(desc);
-> +
-> +	generic_handle_irq(irq_find_mapping(ictl->domain, irq));
-> +}
-> +
-> +static int __init of_tb10x_init_irq(struct device_node *ictl,
-> +					struct device_node *parent)
-> +{
-> +	int i;
-> +	int ret;
-> +	int nrirqs = of_irq_count(ictl);
+Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b@ti.com>
+---
+:100644 100644 f624dc8... 36e839a... M	arch/arm/boot/dts/omap3-beagle.dts
+:100644 100644 e8ba1c2... a5375fd... M	arch/arm/boot/dts/omap3-evm.dts
+:100644 100644 4122efe... 389c9c7... M	arch/arm/boot/dts/omap4-panda.dts
+:100644 100644 43e5258... cdf5dfd... M	arch/arm/boot/dts/omap4-sdp.dts
+:100644 100644 6601e6a... 1d4a9d4... M	arch/arm/boot/dts/omap4-var-som.dts
+ arch/arm/boot/dts/omap3-beagle.dts  |    1 -
+ arch/arm/boot/dts/omap3-evm.dts     |    1 -
+ arch/arm/boot/dts/omap4-panda.dts   |    2 --
+ arch/arm/boot/dts/omap4-sdp.dts     |    2 --
+ arch/arm/boot/dts/omap4-var-som.dts |    1 -
+ 5 files changed, 0 insertions(+), 7 deletions(-)
 
-One line for all those ints please
-
-> +	ic->domain = irq_domain_add_tree(ictl, &irq_tb10x_domain_ops, ic);
-
-Why do you want a tree, if you require that the interrupts are mapped
-1:1 to the hardware interrupt numbers? This doesn't make any sense at
-all and makes the above cascade handler a pointless waste of cpu cycles.
-
-Thanks,
-
-	tglx
+diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
+index f624dc8..36e839a 100644
+--- a/arch/arm/boot/dts/omap3-beagle.dts
++++ b/arch/arm/boot/dts/omap3-beagle.dts
+@@ -46,7 +46,6 @@
+ 	twl: twl@48 {
+ 		reg = <0x48>;
+ 		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
+-		interrupt-parent = <&intc>;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/omap3-evm.dts b/arch/arm/boot/dts/omap3-evm.dts
+index e8ba1c2..a5375fd 100644
+--- a/arch/arm/boot/dts/omap3-evm.dts
++++ b/arch/arm/boot/dts/omap3-evm.dts
+@@ -34,7 +34,6 @@
+ 	twl: twl@48 {
+ 		reg = <0x48>;
+ 		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
+-		interrupt-parent = <&intc>;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
+index 4122efe..389c9c7 100644
+--- a/arch/arm/boot/dts/omap4-panda.dts
++++ b/arch/arm/boot/dts/omap4-panda.dts
+@@ -119,7 +119,6 @@
+ 		reg = <0x48>;
+ 		/* SPI = 0, IRQ# = 7, 4 = active high level-sensitive */
+ 		interrupts = <0 7 4>; /* IRQ_SYS_1N cascaded to gic */
+-		interrupt-parent = <&gic>;
+ 	};
+ 
+ 	twl6040: twl@4b {
+@@ -127,7 +126,6 @@
+ 		reg = <0x4b>;
+ 		/* SPI = 0, IRQ# = 119, 4 = active high level-sensitive */
+ 		interrupts = <0 119 4>; /* IRQ_SYS_2N cascaded to gic */
+-		interrupt-parent = <&gic>;
+ 		ti,audpwron-gpio = <&gpio4 31 0>;  /* gpio line 127 */
+ 
+ 		vio-supply = <&v1v8>;
+diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
+index 43e5258..cdf5dfd 100644
+--- a/arch/arm/boot/dts/omap4-sdp.dts
++++ b/arch/arm/boot/dts/omap4-sdp.dts
+@@ -221,7 +221,6 @@
+ 		reg = <0x48>;
+ 		/* SPI = 0, IRQ# = 7, 4 = active high level-sensitive */
+ 		interrupts = <0 7 4>; /* IRQ_SYS_1N cascaded to gic */
+-		interrupt-parent = <&gic>;
+ 	};
+ 
+ 	twl6040: twl@4b {
+@@ -229,7 +228,6 @@
+ 		reg = <0x4b>;
+ 		/* SPI = 0, IRQ# = 119, 4 = active high level-sensitive */
+ 		interrupts = <0 119 4>; /* IRQ_SYS_2N cascaded to gic */
+-		interrupt-parent = <&gic>;
+ 		ti,audpwron-gpio = <&gpio4 31 0>;  /* gpio line 127 */
+ 
+ 		vio-supply = <&v1v8>;
+diff --git a/arch/arm/boot/dts/omap4-var-som.dts b/arch/arm/boot/dts/omap4-var-som.dts
+index 6601e6a..1d4a9d4 100644
+--- a/arch/arm/boot/dts/omap4-var-som.dts
++++ b/arch/arm/boot/dts/omap4-var-som.dts
+@@ -35,7 +35,6 @@
+ 		reg = <0x48>;
+ 		/* SPI = 0, IRQ# = 7, 4 = active high level-sensitive */
+ 		interrupts = <0 7 4>; /* IRQ_SYS_1N cascaded to gic */
+-		interrupt-parent = <&gic>;
+ 	};
+ };
+ 
+-- 
+1.7.4.1
