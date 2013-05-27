@@ -1,40 +1,281 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH -next] pci: mvebu: fix return value check in
- mvebu_pcie_probe()
-Date: Mon, 27 May 2013 09:12:49 +0200
-Message-ID: <20130527091249.52902073@skate>
-References: <CAPgLHd_B-RBGTcQPeeWeJb9QVkf-RjO1WtBC0JK2KOEoBaus_Q@mail.gmail.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/6] drivers: bus: add a new driver for WEIM
+Date: Mon, 27 May 2013 09:44:00 +0200
+Message-ID: <20130527074400.GD32299@pengutronix.de>
+References: <1369389564-13181-1-git-send-email-b32955@freescale.com>
+ <1369389564-13181-2-git-send-email-b32955@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAPgLHd_B-RBGTcQPeeWeJb9QVkf-RjO1WtBC0JK2KOEoBaus_Q@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: bhelgaas@google.com, grant.likely@linaro.org, rob.herring@calxeda.com, jason@lakedaemon.net, yongjun_wei@trendmicro.com.cn, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1369389564-13181-2-git-send-email-b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: shc_work-JGs/UdohzUI@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Wei Yongjun,
-
-On Mon, 27 May 2013 11:38:41 +0800, Wei Yongjun wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+On Fri, May 24, 2013 at 05:59:19PM +0800, Huang Shijie wrote:
+> The WEIM(Wireless External Interface Module) works like a bus.
+> You can attach many different devices on it, such as NOR, onenand.
 > 
-> In case of error, function of_clk_get_by_name() returns
-> ERR_PTR() never returns NULL. The NULL test in the return
-> value check should be replaced with IS_ERR().
+> In the case of i.MX6q-sabreauto, the NOR is connected to WEIM.
 > 
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> This patch also adds the devicetree binding document.
+> The driver only works when the devicetree is enabled.
+> 
+> Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/bus/imx-weim.txt |   50 +++++++
+>  drivers/bus/Kconfig                                |    9 ++
+>  drivers/bus/Makefile                               |    1 +
+>  drivers/bus/imx-weim.c                             |  139 ++++++++++++++++++++
+>  4 files changed, 199 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/bus/imx-weim.txt
+>  create mode 100644 drivers/bus/imx-weim.c
+> 
+> diff --git a/Documentation/devicetree/bindings/bus/imx-weim.txt b/Documentation/devicetree/bindings/bus/imx-weim.txt
+> new file mode 100644
+> index 0000000..e7a2950
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/bus/imx-weim.txt
+> @@ -0,0 +1,50 @@
+> +Device tree bindings for i.MX Wireless External Interface Module (WEIM)
+> +
+> +The term "wireless" does not imply that the WEIM is literally an interface
+> +without wires. It simply means that this module was originally designed for
+> +wireless and mobile applications that use low-power technology.
+> +
+> +The actual devices are instantiated from the child nodes of a WEIM node.
+> +
+> +Required properties:
+> +
+> + - compatible:		Should be set to "fsl,imx6q-weim"
+> + - reg:			A resource specifier for the register space
+> +			(see the example below)
+> + - clocks:		the clock, see the example below.
+> + - #address-cells:	Must be set to 2 to allow memory address translation
+> + - #size-cells:		Must be set to 1 to allow CS address passing
+> + - ranges:		Must be set up to reflect the memory layout with four
+> +			integer values for each chip-select line in use:
+> +
+> +			   <cs-number> 0 <physical address of mapping> <size>
+> +
+> +Timing property for child nodes. It is mandatory, not optional.
+> +
+> + - fsl,weim-cs-timing:	The timing array, contains 6 timing values for the
+> +			child node. We can get the CS index from the child
+> +			node's "reg" property. This property contains the values
+> +			for the registers EIM_CSnGCR1, EIM_CSnGCR2, EIM_CSnRCR1,
+> +			EIM_CSnRCR2, EIM_CSnWCR1, EIM_CSnWCR2 in this order.
+> +
+> +Example for an imx6q-sabreauto board, the NOR flash connected to the WEIM:
+> +
+> +	weim: weim@021b8000 {
+> +		compatible = "fsl,imx6q-weim";
+> +		reg = <0x021b8000 0x4000>;
+> +		clocks = <&clks 196>;
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +		ranges = <0 0 0x08000000 0x08000000>;
+> +
+> +		nor@0,0 {
+> +			compatible = "cfi-flash";
+> +			reg = <0 0 0x02000000>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			bank-width = <2>;
+> +
+> +			fsl,weim-cs-timing = <0x00620081 0x00000001 0x1C022000
+> +					0x0000C000 0x1404a38e 0x00000000>;
+> +		};
+> +	};
+> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+> index b05ecab..46cd5bb 100644
+> --- a/drivers/bus/Kconfig
+> +++ b/drivers/bus/Kconfig
+> @@ -4,6 +4,15 @@
+>  
+>  menu "Bus devices"
+>  
+> +config IMX_WEIM
+> +	bool "Freescale EIM DRIVER"
+> +	depends on ARCH_MXC
+> +	help
+> +	  Driver for i.MX6 WEIM controller.
+> +	  The WEIM(Wireless External Interface Module) works like a bus.
+> +	  You can attach many different devices on it, such as NOR, onenand.
+> +	  But now, we only support the Parallel NOR.
+> +
+>  config MVEBU_MBUS
+>  	bool
+>  	depends on PLAT_ORION
+> diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
+> index 3c7b53c..436bbcc 100644
+> --- a/drivers/bus/Makefile
+> +++ b/drivers/bus/Makefile
+> @@ -2,6 +2,7 @@
+>  # Makefile for the bus drivers.
+>  #
+>  
+> +obj-$(CONFIG_IMX_WEIM)	+= imx-weim.o
+>  obj-$(CONFIG_MVEBU_MBUS) += mvebu-mbus.o
+>  obj-$(CONFIG_OMAP_OCP2SCP)	+= omap-ocp2scp.o
+>  
+> diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
+> new file mode 100644
+> index 0000000..aef865d
+> --- /dev/null
+> +++ b/drivers/bus/imx-weim.c
+> @@ -0,0 +1,139 @@
+> +/*
+> + * EIM driver for Freescale's i.MX chips
+> + *
+> + * Copyright (C) 2013 Freescale Semiconductor, Inc.
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2. This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +#include <linux/module.h>
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/of_device.h>
+> +
+> +struct imx_weim {
+> +	void __iomem *base;
+> +	struct clk *clk;
+> +};
+> +
+> +static const struct of_device_id weim_id_table[] = {
+> +	{ .compatible = "fsl,imx6q-weim", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, weim_id_table);
+> +
+> +#define CS_TIMING_LEN 6
+> +#define CS_REG_RANGE  0x18
+> +
+> +/* Parse and set the timing for this device. */
+> +static int
+> +weim_timing_setup(struct platform_device *pdev, struct device_node *np)
+> +{
+> +	struct imx_weim *weim = platform_get_drvdata(pdev);
+> +	u32 value[CS_TIMING_LEN];
+> +	u32 cs_idx;
+> +	int ret;
+> +	int i;
+> +
+> +	/* get the CS index from this child node's "reg" property. */
+> +	ret = of_property_read_u32(np, "reg", &cs_idx);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* The weim has four chip selects. */
+> +	if (cs_idx > 3)
+> +		return -EINVAL;
+> +
+> +	ret = of_property_read_u32_array(np, "fsl,weim-cs-timing",
+> +					value, CS_TIMING_LEN);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* set the timing for WEIM */
+> +	for (i = 0; i < CS_TIMING_LEN; i++)
+> +		writel(value[i], weim->base + cs_idx * CS_REG_RANGE + i * 4);
+> +	return 0;
+> +}
+> +
+> +static void weim_parse_dt(struct platform_device *pdev)
+> +{
+> +	struct device_node *child;
+> +
+> +	for_each_child_of_node(pdev->dev.of_node, child) {
+> +		if (!child->name)
+> +			continue;
+> +
+> +		if (weim_timing_setup(pdev, child)) {
+> +			dev_err(&pdev->dev, "%s set timing failed.\n",
+> +				child->full_name);
+> +			continue;
+> +		}
 
-Acked-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Since you know use of_platform_populate you can't skip erroneous devices
+anymore, so you have to bail out.
 
-Jason, this needs to be in the mvebu/pcie branch, so I'll guess you
-would have to rebase mvebu/pcie_bridge on top of it.
+> +	}
+> +
+> +	if (of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev) < 0)
+> +		dev_err(&pdev->dev, "%s fail to create devices.\n",
+> +			pdev->dev.of_node->full_name);
+> +}
+> +
+> +static int weim_probe(struct platform_device *pdev)
+> +{
+> +	struct imx_weim *weim;
+> +	struct resource *res;
+> +	int ret = -EINVAL;
+> +
+> +	weim = devm_kzalloc(&pdev->dev, sizeof(*weim), GFP_KERNEL);
+> +	if (!weim) {
+> +		ret = -ENOMEM;
+> +		goto weim_err;
+> +	}
+> +	platform_set_drvdata(pdev, weim);
+> +
+> +	/* get the resource */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	weim->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(weim->base)) {
+> +		ret = PTR_ERR(weim->base);
+> +		goto weim_err;
+> +	}
+> +
+> +	/* get the clock */
+> +	weim->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(weim->clk))
+> +		goto weim_err;
+> +
+> +	ret = clk_prepare_enable(weim->clk);
+> +	if (ret)
+> +		goto weim_err;
+> +
+> +	/* parse the device node */
+> +	weim_parse_dt(pdev);
+> +
+> +	dev_info(&pdev->dev, "WEIM driver registered.\n");
+> +	return 0;
+> +
+> +weim_err:
+> +	return ret;
+> +}
+> +
+> +static int weim_remove(struct platform_device *pdev)
+> +{
+> +	struct imx_weim *weim = platform_get_drvdata(pdev);
+> +
+> +	clk_disable_unprepare(weim->clk);
 
-Thanks!
+I'm running out of ideas how to explain this. Just drop this remove
+function. You do not allow building this as module. If you did, then
+your first job here would be to unregister your child devices. Then
+afterwards you could disable the clock. If you just disable the clock
+without unregistering your children then all you do is to make the
+child devices nonfuntional.
 
-Thomas
+Sascha
+
 -- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
