@@ -1,163 +1,88 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH] ARM: ux500: bump MMC/SD max frequency for DT boots
-Date: Mon, 27 May 2013 13:25:31 +0200
-Message-ID: <CAPDyKFpETu5mmN6Z0vOA=WVHp05EFoGCinXfZkbKYORcZrx+UQ@mail.gmail.com>
-References: <1369653569-21855-1-git-send-email-linus.walleij@stericsson.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH REBASE] irqchip: Add TB10x interrupt controller driver
+Date: Mon, 27 May 2013 14:26:36 +0200 (CEST)
+Message-ID: <alpine.LFD.2.02.1305271414270.4220@ionos>
+References: <1365686252-9828-1-git-send-email-christian.ruppert@abilis.com> <1367930258-27056-1-git-send-email-christian.ruppert@abilis.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1369653569-21855-1-git-send-email-linus.walleij@stericsson.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@stericsson.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Gabriel Fernandez <gabriel.fernandez.st@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1367930258-27056-1-git-send-email-christian.ruppert@abilis.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Pierrick Hascoet <pierrick.hascoet@abilis.com>
 List-Id: devicetree@vger.kernel.org
 
-On 27 May 2013 13:19, Linus Walleij <linus.walleij@stericsson.com> wrote:
-> From: Linus Walleij <linus.walleij@linaro.org>
->
-> In patch:
-> "ARM: ux500: Enable 100MHz for SD/SDIO/MMC devices"
-> the max frequency for the MMC/SD/SDIO adapters was
-> increased from 50 to 100MHz. Do the same for the
-> device tree boot path.
->
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Gabriel Fernandez <gabriel.fernandez.st@gmail.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  arch/arm/boot/dts/ccu9540.dts     | 2 +-
->  arch/arm/boot/dts/href.dtsi       | 8 ++++----
->  arch/arm/boot/dts/hrefv60plus.dts | 8 ++++----
->  arch/arm/boot/dts/snowball.dts    | 4 ++--
->  4 files changed, 11 insertions(+), 11 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/ccu9540.dts b/arch/arm/boot/dts/ccu9540.dts
-> index c72d7aa..b657d71 100644
-> --- a/arch/arm/boot/dts/ccu9540.dts
-> +++ b/arch/arm/boot/dts/ccu9540.dts
-> @@ -52,7 +52,7 @@
->                 // WLAN SDIO channel
->                 sdi1_per2@80118000 {
->                         arm,primecell-periphid = <0x10480180>;
-> -                       max-frequency = <50000000>;
-> +                       max-frequency = <100000000>;
->                         bus-width = <4>;
->
->                         status = "okay";
-> diff --git a/arch/arm/boot/dts/href.dtsi b/arch/arm/boot/dts/href.dtsi
-> index e315429..567a18b 100644
-> --- a/arch/arm/boot/dts/href.dtsi
-> +++ b/arch/arm/boot/dts/href.dtsi
-> @@ -108,7 +108,7 @@
->                 // External Micro SD slot
->                 sdi0_per1@80126000 {
->                         arm,primecell-periphid = <0x10480180>;
-> -                       max-frequency = <50000000>;
-> +                       max-frequency = <100000000>;
->                         bus-width = <4>;
->                         mmc-cap-sd-highspeed;
->                         mmc-cap-mmc-highspeed;
-> @@ -123,7 +123,7 @@
->                 // WLAN SDIO channel
->                 sdi1_per2@80118000 {
->                         arm,primecell-periphid = <0x10480180>;
-> -                       max-frequency = <50000000>;
-> +                       max-frequency = <100000000>;
->                         bus-width = <4>;
->
->                         status = "okay";
-> @@ -132,7 +132,7 @@
->                 // PoP:ed eMMC
->                 sdi2_per3@80005000 {
->                         arm,primecell-periphid = <0x10480180>;
-> -                       max-frequency = <50000000>;
-> +                       max-frequency = <100000000>;
->                         bus-width = <8>;
->                         mmc-cap-mmc-highspeed;
->
-> @@ -142,7 +142,7 @@
->                 // On-board eMMC
->                 sdi4_per2@80114000 {
->                         arm,primecell-periphid = <0x10480180>;
-> -                       max-frequency = <50000000>;
-> +                       max-frequency = <100000000>;
->                         bus-width = <8>;
->                         mmc-cap-mmc-highspeed;
->                         vmmc-supply = <&ab8500_ldo_aux2_reg>;
-> diff --git a/arch/arm/boot/dts/hrefv60plus.dts b/arch/arm/boot/dts/hrefv60plus.dts
-> index 5dfc73a..26f33a6f 100644
-> --- a/arch/arm/boot/dts/hrefv60plus.dts
-> +++ b/arch/arm/boot/dts/hrefv60plus.dts
-> @@ -34,7 +34,7 @@
->                 // External Micro SD slot
->                 sdi0_per1@80126000 {
->                         arm,primecell-periphid = <0x10480180>;
-> -                       max-frequency = <50000000>;
-> +                       max-frequency = <100000000>;
->                         bus-width = <4>;
->                         mmc-cap-sd-highspeed;
->                         mmc-cap-mmc-highspeed;
-> @@ -48,7 +48,7 @@
->                 // WLAN SDIO channel
->                 sdi1_per2@80118000 {
->                         arm,primecell-periphid = <0x10480180>;
-> -                       max-frequency = <50000000>;
-> +                       max-frequency = <100000000>;
->                         bus-width = <4>;
->
->                         status = "okay";
-> @@ -57,7 +57,7 @@
->                 // PoP:ed eMMC
->                 sdi2_per3@80005000 {
->                         arm,primecell-periphid = <0x10480180>;
-> -                       max-frequency = <50000000>;
-> +                       max-frequency = <100000000>;
->                         bus-width = <8>;
->                         mmc-cap-mmc-highspeed;
->
-> @@ -67,7 +67,7 @@
->                 // On-board eMMC
->                 sdi4_per2@80114000 {
->                         arm,primecell-periphid = <0x10480180>;
-> -                       max-frequency = <50000000>;
-> +                       max-frequency = <100000000>;
->                         bus-width = <8>;
->                         mmc-cap-mmc-highspeed;
->                         vmmc-supply = <&ab8500_ldo_aux2_reg>;
-> diff --git a/arch/arm/boot/dts/snowball.dts b/arch/arm/boot/dts/snowball.dts
-> index e8219cc7..829a65f 100644
-> --- a/arch/arm/boot/dts/snowball.dts
-> +++ b/arch/arm/boot/dts/snowball.dts
-> @@ -129,7 +129,7 @@
->                 // External Micro SD slot
->                 sdi0_per1@80126000 {
->                         arm,primecell-periphid = <0x10480180>;
-> -                       max-frequency = <50000000>;
-> +                       max-frequency = <100000000>;
->                         bus-width = <4>;
->                         mmc-cap-mmc-highspeed;
->                         vmmc-supply = <&ab8500_ldo_aux3_reg>;
-> @@ -144,7 +144,7 @@
->                 // On-board eMMC
->                 sdi4_per2@80114000 {
->                         arm,primecell-periphid = <0x10480180>;
-> -                       max-frequency = <50000000>;
-> +                       max-frequency = <100000000>;
->                         bus-width = <8>;
->                         mmc-cap-mmc-highspeed;
->                         vmmc-supply = <&ab8500_ldo_aux2_reg>;
-> --
-> 1.7.11.3
->
+On Tue, 7 May 2013, Christian Ruppert wrote:
+> +#include <linux/interrupt.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/io.h>
+> +#include <linux/slab.h>
+> +#include "../../drivers/irqchip/irqchip.h"
 
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+#include "irqchip.h" perhaps?
+
+> +#define AB_IRQCTL_INT_ENABLE   (0x00)
+
+What's the purpose of the parens? Decrease readability?
+
+> +static void tb10x_irq_unmask(struct irq_data *data)
+> +{
+> +	struct tb10x_ictl *ictl = irq_data_get_irq_chip_data(data);
+> +	unsigned int hwirq = irqd_to_hwirq(data);
+> +
+> +	ab_irqctl_writereg(ictl, AB_IRQCTL_INT_ENABLE,
+> +		ab_irqctl_readreg(ictl, AB_IRQCTL_INT_ENABLE) | (1 << hwirq));
+
+Another implementation of the generic interrupt chip functionality.
+
+> +static int tb10x_irq_map(struct irq_domain *d, unsigned int irq,
+> +				irq_hw_number_t hw)
+> +{
+> +	irq_set_chip_data(irq, d->host_data);
+> +	irq_set_chip_and_handler(irq, &irq_tb10x_chip, handle_level_irq);
+> +
+> +	return 0;
+> +}
+> +
+> +static int tb10x_irq_xlate(struct irq_domain *d, struct device_node *node,
+> +			const u32 *intspec, unsigned int intsize,
+> +			unsigned long *out_hwirq, unsigned int *out_type)
+> +{
+> +	static const unsigned int tb10x_xlate_types[] = {
+> +		IRQ_TYPE_EDGE_RISING,
+> +		IRQ_TYPE_LEVEL_LOW,
+> +		IRQ_TYPE_LEVEL_HIGH,
+> +		IRQ_TYPE_EDGE_FALLING,
+
+Why do you need to introduce another format for specifying the
+interrupt type instead of using the IRQ_TYPE values and
+irq_domain_xlate_twocell()?
+
+> +static void tb10x_irq_cascade(unsigned int irq, struct irq_desc *desc)
+> +{
+> +	struct tb10x_ictl *ictl = irq_desc_get_handler_data(desc);
+> +
+> +	generic_handle_irq(irq_find_mapping(ictl->domain, irq));
+> +}
+> +
+> +static int __init of_tb10x_init_irq(struct device_node *ictl,
+> +					struct device_node *parent)
+> +{
+> +	int i;
+> +	int ret;
+> +	int nrirqs = of_irq_count(ictl);
+
+One line for all those ints please
+
+> +	ic->domain = irq_domain_add_tree(ictl, &irq_tb10x_domain_ops, ic);
+
+Why do you want a tree, if you require that the interrupts are mapped
+1:1 to the hardware interrupt numbers? This doesn't make any sense at
+all and makes the above cascade handler a pointless waste of cpu cycles.
+
+Thanks,
+
+	tglx
