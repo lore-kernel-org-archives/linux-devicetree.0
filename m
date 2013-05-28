@@ -1,77 +1,147 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [net-next PATCH v3 1/6] net: cpsw: enhance pinctrl support
-Date: Tue, 28 May 2013 19:35:09 +0530
-Message-ID: <51A4B995.9050203@ti.com>
-References: <1369592616-23972-1-git-send-email-mugunthanvnm@ti.com> <1369592616-23972-2-git-send-email-mugunthanvnm@ti.com> <20130527213600.GO13507@atomide.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: wm8994: Add wm8994 regulator support on
+ smdk5250.
+Date: Tue, 28 May 2013 10:19:24 -0400
+Message-ID: <20130528141924.GH3660@sirena.org.uk>
+References: <1369737322-10907-1-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20130527213600.GO13507@atomide.com>
-Sender: netdev-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Hebbar Gururaja <gururaja.hebbar@ti.com>, benoit.cousson@linaro.org, linux-omap@vger.kernel.org, davem@davemloft.net
+Content-Type: multipart/mixed; boundary="===============6920524425364849973=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1369737322-10907-1-git-send-email-padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Padmavathi Venna <padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/28/2013 3:06 AM, Tony Lindgren wrote:
-> * Mugunthan V N <mugunthanvnm@ti.com> [130526 11:28]:
->> From: Hebbar Gururaja <gururaja.hebbar@ti.com>
->>
->> Amend cpsw controller to optionally take a pin control handle and set
->> the state of the pins to:
->>
->> - "default" on boot, resume
->> - "sleep" on suspend()
->>
->> This should make it possible to optimize energy usage for the pins
->> for the suspend/resume cycle.
->>
->> If any of the above pin states are missing in dt, a warning message
->> about the missing state is displayed.
->> If certain pin-states are not available, to remove this warning message
->> pass respective state name with null phandler.
->>
->> Signed-off-by: Hebbar Gururaja <gururaja.hebbar@ti.com>
->> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
->> ---
->>   drivers/net/ethernet/ti/cpsw.c |   48 ++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 48 insertions(+)
->>
->> diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
->> index 21a5b29..c9ed730 100644
->> --- a/drivers/net/ethernet/ti/cpsw.c
->> +++ b/drivers/net/ethernet/ti/cpsw.c
->> @@ -35,6 +35,7 @@
->>   #include <linux/if_vlan.h>
->>   
->>   #include <linux/platform_data/cpsw.h>
->> +#include <linux/pinctrl/consumer.h>
->>   
->>   #include "cpsw_ale.h"
->>   #include "cpts.h"
->> @@ -351,6 +352,11 @@ struct cpsw_priv {
->>   	bool irq_enabled;
->>   	struct cpts *cpts;
->>   	u32 emac_port;
->> +
->> +	/* Two optional pin states - default & sleep */
->> +	struct pinctrl		*pinctrl;
->> +	struct pinctrl_state	*pins_def;
->> +	struct pinctrl_state	*pins_sleep;
->>   };
-> Which pins do you need to dynamically remux? If it's not all
-> the pins, you should have three sets: default, active and idle.
-> This way the static pins in the default group don't need to be
-> constantly toggled.
->
-> Regards,
->
-> Tony
-Tony
 
-I am using this for all the pins, in probe all the cpsw pins will be 
-configured
-and i have used the same in suspend/resume callback for power saving.
+--===============6920524425364849973==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="smOfPzt+Qjm5bNGJ"
+Content-Disposition: inline
 
-Regards
-Mugunthan V N
+
+--smOfPzt+Qjm5bNGJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, May 28, 2013 at 04:05:22PM +0530, Padmavathi Venna wrote:
+
+> +	avdd2:fixed-regulator@0 {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "avdd2-supply";
+> +		regulator-min-microvolt =3D <1800000>;
+> +		regulator-max-microvolt =3D <1800000>;
+> +		regulator-always-on;
+> +	};
+
+> +	cpvdd:fixed-regulator@1 {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "cpvdd-supply";
+> +		regulator-min-microvolt =3D <1800000>;
+> +		regulator-max-microvolt =3D <1800000>;
+> +		regulator-always-on;
+> +	};
+
+Several of these look like the same supply (especially the speaker ones)
+so it seems like it'd be sensible to define a single regulator for each
+of them.  Not much practical difference but it might be neater.
+
+> +
+> +	dbvdd:fixed-regulator@2 {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "dbvdd-supply";
+> +		regulator-min-microvolt =3D <3300000>;
+> +		regulator-max-microvolt =3D <3300000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	spkvdd1:fixed-regulator@3 {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "spkvdd1-supply";
+> +		regulator-min-microvolt =3D <5000000>;
+> +		regulator-max-microvolt =3D <5000000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	spkvdd2:fixed-regulator@4 {
+> +		compatible =3D "regulator-fixed";
+> +		regulator-name =3D "spkvdd2-supply";
+> +		regulator-min-microvolt =3D <5000000>;
+> +		regulator-max-microvolt =3D <5000000>;
+> +		regulator-always-on;
+> +	};
+> +
+>  	i2c@12C70000 {
+>  		samsung,i2c-sda-delay =3D <100>;
+>  		samsung,i2c-max-bus-freq =3D <20000>;
+> @@ -47,8 +87,17 @@
+>  		};
+> =20
+>  		wm8994: wm8994@1a {
+> -			 compatible =3D "wlf,wm8994";
+> -			 reg =3D <0x1a>;
+> +			compatible =3D "wlf,wm8994";
+> +			reg =3D <0x1a>;
+> +
+> +			gpio-controller;
+> +			#gpio-cells =3D <2>;
+> +
+> +			AVDD2-supply =3D <&avdd2>;
+> +			CPVDD-supply =3D <&cpvdd>;
+> +			DBVDD-supply =3D <&dbvdd>;
+> +			SPKVDD1-supply =3D <&spkvdd1>;
+> +			SPKVDD2-supply =3D <&spkvdd2>;
+>  		};
+>  	};
+> =20
+> --=20
+> 1.7.4.4
+>=20
+>=20
+
+--smOfPzt+Qjm5bNGJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRpLzoAAoJELSic+t+oim9y5QP/iKrEm5mSbr9glcXsIsIrnUY
+vW3loMn06JfoxFNreyn6oDBlVjmlZb1KUPrmsao65F5g9FOT4cHUiv4ncVa+Lf1l
+52JVmUIL+cGSwudazKyMXwEH33h8LBMwDTjmRFUcvHL7nQJ9LO0xThqrj2Zt9UWP
+dDNUlJOSsPE9L0KYfdLW8oSrz2xeoo46IstHdiDijzyC2FRYOm3JeYcRLK/YzmkE
+EIxFx8noOk8Iv89C1hx45TsNfTEYoBpSueOS4kLylh91A3QYvpE+DefErS2rwThR
+NEWREPEfXiHjNkuOqxe6Wu3flmQ/ByABV0lMaA69r1D0z/0wd0BioYPgEOys+bPE
+khJRQ6pfM7MIRfHqccTkY9z4IHpJVAX+9gg2DsiIOsb3+3Kb7znyYRBkX54q0J4Q
+bkpMdklS5SjbNbAnqZ5B/w6QaEFN+JsCMcgBqtzDaonbX1fScwDCgn0A64z6lmsL
+1AAqXs3b/eFzFk7atIgxfzpJ5gD5ZnT91GJQteZIEcMISsy6zKhTjtQgVv2Khvxl
+MtyPo/Jj1Clyvv8t3gSibl1LlR7c4AWnlKgzrufClXdMEaiuXJ3LVp/EBeTPHe1c
+5ux9jIMPV8YVzXQpvozX9DthRKIzBUabRxsybh1I/dxBgNmq5+DDGww6Bg5jzJiY
+K7qr4xZTkXQcFp044OL1
+=01H1
+-----END PGP SIGNATURE-----
+
+--smOfPzt+Qjm5bNGJ--
+
+--===============6920524425364849973==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============6920524425364849973==--
