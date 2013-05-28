@@ -1,67 +1,72 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v6 0/9] Generic PHY Framework
-Date: Tue, 28 May 2013 12:05:45 +0530
-Message-ID: <51A45041.2030105@ti.com>
-References: <1367229812-30574-1-git-send-email-kishon@ti.com>
- <519AFF95.9060002@ti.com>
+From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH v4 0/6] ARM: imx6q{dl}: add the WEIM driver
+Date: Tue, 28 May 2013 14:20:06 +0800
+Message-ID: <1369722012-6915-1-git-send-email-b32955@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <519AFF95.9060002@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: mchehab@redhat.com, linux-doc@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, swarren@nvidia.com, grant.likely@linaro.org, cesarb@cesarb.net, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, rob.herring@calxeda.com, linux@arm.linux.org.uk, sylvester.nawrocki@gmail.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b-cousson@ti.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, santosh.shilimkar@ti.com, rob@landley.net, benoit.cousson@linaro.org, akpm@linux-foundation.org, shawn.guo@linaro.org, davem@davemloft.net
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: shc_work-JGs/UdohzUI@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch set adds a new driver for WEIM in the imx6q{dl}-sabreauto boards.
 
-On Tuesday 21 May 2013 10:31 AM, Kishon Vijay Abraham I wrote:
-> Hi,
->
-> On Monday 29 April 2013 03:33 PM, Kishon Vijay Abraham I wrote:
->> Added a generic PHY framework that provides a set of APIs for the PHY
->> drivers
->> to create/destroy a PHY and APIs for the PHY users to obtain a
->> reference to
->> the PHY with or without using phandle.
->>
->> This framework will be of use only to devices that uses external PHY (PHY
->> functionality is not embedded within the controller).
->>
->> The intention of creating this framework is to bring the phy drivers
->> spread
->> all over the Linux kernel to drivers/phy to increase code re-use and to
->> increase code maintainability.
->>
->> Comments to make PHY as bus wasn't done because PHY devices can be
->> part of
->> other bus and making a same device attached to multiple bus leads to bad
->> design.
->>
->> If the PHY driver has to send notification on connect/disconnect, the PHY
->> driver should make use of the extcon framework. Using this susbsystem
->> to use extcon framwork will have to be analysed.
->>
->> Making omap-usb2 and twl4030 to use this framework is provided as a
->> sample.
->>
->> This patch series is developed on linux-next tree.
->
-> Any comments on this patch series?
+The WEIM(Wireless External Interface Module) works like a bus.
+You can attach many different devices on it, such as NOR, onenand.
 
-Ping..
+In the case of i.MX6q-sabreauto, only the NOR is connected to WEIM.
 
-This series is needed for usb3 phy/sata phy and can also be used by 
-certain video phys. I think it's important to get this in.
+v3 --> v4:
+	[0] use a more proper pad value for the data pins.
+	[1] remove the weim_remove() hook.
+	[2] remove the blank line.
+	[3] use the lower case for the hex value.
+	[4] add returne value for weim_parse_dt().
+	[5] rename the pinctrls.
 
-Thanks
-Kishon
+v2 --> v3:
+	[0] split the NOR pinctrl.
+	[1] make the driver unloaded. change to bool type in Kconfig.
+	[2] use the of_platform_populate().
+	[3] remove the unused "interrupt" property from the Doc.
+v1 --> v2:
+	[0] remove used PADs.
+	[1] fix the wrong pad values, (thanks Alison Chaiken)
+	[2] remove the weim-cs-index.
+	[3] add "fsl" for the weim-cs-timing.
+	[4] remove the partitions info in the document.
+	[5] rewrite the drivers(follow Sascha and Shawn's comments)
+
+
+Huang Shijie (6):
+  drivers: bus: add a new driver for WEIM
+  ARM: dts: imx6q{dl}: fix the pin conflict between SPI and WEIM
+  ARM: dts: imx6qdl: add more information for WEIM
+  ARM: dts: imx6q: add pinctrls for WEIM NOR
+  ARM: dts: imx6dl: add pinctrls for WEIM NOR
+  ARM: dts: imx6qdl-sabreauto: enable the WEIM NOR
+
+ Documentation/devicetree/bindings/bus/imx-weim.txt |   49 +++++++
+ arch/arm/boot/dts/imx6dl-sabreauto.dts             |    9 +-
+ arch/arm/boot/dts/imx6dl.dtsi                      |   58 ++++++++
+ arch/arm/boot/dts/imx6q-sabreauto.dts              |    9 +-
+ arch/arm/boot/dts/imx6q.dtsi                       |   59 +++++++++
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi           |   21 +++-
+ arch/arm/boot/dts/imx6qdl.dtsi                     |    4 +-
+ drivers/bus/Kconfig                                |    9 ++
+ drivers/bus/Makefile                               |    1 +
+ drivers/bus/imx-weim.c                             |  138 ++++++++++++++++++++
+ 10 files changed, 353 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/bus/imx-weim.txt
+ create mode 100644 drivers/bus/imx-weim.c
