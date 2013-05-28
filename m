@@ -1,30 +1,46 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCHv2 0/3] Add G762/G763 PWM fan controller
-Date: Tue, 28 May 2013 00:15:15 +0200
-Message-ID: <152190814.eApXVbVBPA@wuerfel>
-References: <cover.1369687670.git.arno@natisbad.org>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] usb: dwc3: use extcon fwrk to receive
+ connect/disconnect notification
+Date: Tue, 28 May 2013 11:24:25 +0900
+Message-ID: <51A41559.20808@samsung.com>
+References: <1369405896-30246-1-git-send-email-kishon@ti.com>
+ <1369661740-15966-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <cover.1369687670.git.arno@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Arnaud Ebalard <arno@natisbad.org>, Guenter Roeck <linux@roeck-us.net>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Simon Guinot <simon.guinot@sequanux.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <1369661740-15966-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: george.cherian-l0cyMroinI0@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 28 May 2013 00:02:29 Arnaud Ebalard wrote:
-> 
-> This series adds support for GMT G762/G763. This work is based on a
-> basic version for 2.6.31 kernel developed Olivier Mouchet for LaCie
-> NAS. Updates have been performed to run on recent kernels. Support has
-> been completed and additional features added: ability to configure
-> various characteristics from .dts file, better initialization, alarms
-> and error reporting support, gear mode, polarity, fan pulse per
-> revolution, fan startup voltage control.
+On 05/27/2013 10:35 PM, Kishon Vijay Abraham I wrote:
+> Modified dwc3-omap to receive connect and disconnect notification using
+> extcon framework. Also did the necessary cleanups required after
+> adapting to extcon framework.
+>
+> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> Acked-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+> Changes from v1:
+> * regulator enable/disable is now done here instead of palmas-usb as some users
+> of palmas-usb wont need regulator.
+>  drivers/usb/dwc3/dwc3-omap.c  | 103 ++++++++++++++++++++++++++++++++++--------
+>  include/linux/usb/dwc3-omap.h |  30 ------------
+>  2 files changed, 85 insertions(+), 48 deletions(-)
+>  delete mode 100644 include/linux/usb/dwc3-omap.h
+I think that usb or other maintainer have to confirm this patch
+for applying extcon-next branch.
 
-I wonder if this could be split into two separate drivers, one for
-the pwm subsystem, and one for a hardware-independent fan controller
-based on the pwm interfaces.
-
-	Arnd
+Thanks,
+Chanwoo Choi
