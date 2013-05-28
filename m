@@ -1,11 +1,13 @@
 From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v4 0/6] ARM: imx6q{dl}: add the WEIM driver
-Date: Tue, 28 May 2013 14:20:06 +0800
-Message-ID: <1369722012-6915-1-git-send-email-b32955@freescale.com>
+Subject: [PATCH v4 1/6] drivers: bus: add a new driver for WEIM
+Date: Tue, 28 May 2013 14:20:07 +0800
+Message-ID: <1369722012-6915-2-git-send-email-b32955@freescale.com>
+References: <1369722012-6915-1-git-send-email-b32955@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1369722012-6915-1-git-send-email-b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,53 +22,254 @@ To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Cc: shc_work-JGs/UdohzUI@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds a new driver for WEIM in the imx6q{dl}-sabreauto boards.
-
 The WEIM(Wireless External Interface Module) works like a bus.
 You can attach many different devices on it, such as NOR, onenand.
 
-In the case of i.MX6q-sabreauto, only the NOR is connected to WEIM.
+In the case of i.MX6q-sabreauto, the NOR is connected to WEIM.
 
-v3 --> v4:
-	[0] use a more proper pad value for the data pins.
-	[1] remove the weim_remove() hook.
-	[2] remove the blank line.
-	[3] use the lower case for the hex value.
-	[4] add returne value for weim_parse_dt().
-	[5] rename the pinctrls.
+This patch also adds the devicetree binding document.
+The driver only works when the devicetree is enabled.
 
-v2 --> v3:
-	[0] split the NOR pinctrl.
-	[1] make the driver unloaded. change to bool type in Kconfig.
-	[2] use the of_platform_populate().
-	[3] remove the unused "interrupt" property from the Doc.
-v1 --> v2:
-	[0] remove used PADs.
-	[1] fix the wrong pad values, (thanks Alison Chaiken)
-	[2] remove the weim-cs-index.
-	[3] add "fsl" for the weim-cs-timing.
-	[4] remove the partitions info in the document.
-	[5] rewrite the drivers(follow Sascha and Shawn's comments)
-
-
-Huang Shijie (6):
-  drivers: bus: add a new driver for WEIM
-  ARM: dts: imx6q{dl}: fix the pin conflict between SPI and WEIM
-  ARM: dts: imx6qdl: add more information for WEIM
-  ARM: dts: imx6q: add pinctrls for WEIM NOR
-  ARM: dts: imx6dl: add pinctrls for WEIM NOR
-  ARM: dts: imx6qdl-sabreauto: enable the WEIM NOR
-
+Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
  Documentation/devicetree/bindings/bus/imx-weim.txt |   49 +++++++
- arch/arm/boot/dts/imx6dl-sabreauto.dts             |    9 +-
- arch/arm/boot/dts/imx6dl.dtsi                      |   58 ++++++++
- arch/arm/boot/dts/imx6q-sabreauto.dts              |    9 +-
- arch/arm/boot/dts/imx6q.dtsi                       |   59 +++++++++
- arch/arm/boot/dts/imx6qdl-sabreauto.dtsi           |   21 +++-
- arch/arm/boot/dts/imx6qdl.dtsi                     |    4 +-
  drivers/bus/Kconfig                                |    9 ++
  drivers/bus/Makefile                               |    1 +
  drivers/bus/imx-weim.c                             |  138 ++++++++++++++++++++
- 10 files changed, 353 insertions(+), 4 deletions(-)
+ 4 files changed, 197 insertions(+), 0 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/bus/imx-weim.txt
  create mode 100644 drivers/bus/imx-weim.c
+
+diff --git a/Documentation/devicetree/bindings/bus/imx-weim.txt b/Documentation/devicetree/bindings/bus/imx-weim.txt
+new file mode 100644
+index 0000000..cedc2a9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/bus/imx-weim.txt
+@@ -0,0 +1,49 @@
++Device tree bindings for i.MX Wireless External Interface Module (WEIM)
++
++The term "wireless" does not imply that the WEIM is literally an interface
++without wires. It simply means that this module was originally designed for
++wireless and mobile applications that use low-power technology.
++
++The actual devices are instantiated from the child nodes of a WEIM node.
++
++Required properties:
++
++ - compatible:		Should be set to "fsl,imx6q-weim"
++ - reg:			A resource specifier for the register space
++			(see the example below)
++ - clocks:		the clock, see the example below.
++ - #address-cells:	Must be set to 2 to allow memory address translation
++ - #size-cells:		Must be set to 1 to allow CS address passing
++ - ranges:		Must be set up to reflect the memory layout with four
++			integer values for each chip-select line in use:
++
++			   <cs-number> 0 <physical address of mapping> <size>
++
++Timing property for child nodes. It is mandatory, not optional.
++
++ - fsl,weim-cs-timing:	The timing array, contains 6 timing values for the
++			child node. We can get the CS index from the child
++			node's "reg" property. This property contains the values
++			for the registers EIM_CSnGCR1, EIM_CSnGCR2, EIM_CSnRCR1,
++			EIM_CSnRCR2, EIM_CSnWCR1, EIM_CSnWCR2 in this order.
++
++Example for an imx6q-sabreauto board, the NOR flash connected to the WEIM:
++
++	weim: weim@021b8000 {
++		compatible = "fsl,imx6q-weim";
++		reg = <0x021b8000 0x4000>;
++		clocks = <&clks 196>;
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges = <0 0 0x08000000 0x08000000>;
++
++		nor@0,0 {
++			compatible = "cfi-flash";
++			reg = <0 0 0x02000000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			bank-width = <2>;
++			fsl,weim-cs-timing = <0x00620081 0x00000001 0x1c022000
++					0x0000c000 0x1404a38e 0x00000000>;
++		};
++	};
+diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+index b05ecab..46cd5bb 100644
+--- a/drivers/bus/Kconfig
++++ b/drivers/bus/Kconfig
+@@ -4,6 +4,15 @@
+ 
+ menu "Bus devices"
+ 
++config IMX_WEIM
++	bool "Freescale EIM DRIVER"
++	depends on ARCH_MXC
++	help
++	  Driver for i.MX6 WEIM controller.
++	  The WEIM(Wireless External Interface Module) works like a bus.
++	  You can attach many different devices on it, such as NOR, onenand.
++	  But now, we only support the Parallel NOR.
++
+ config MVEBU_MBUS
+ 	bool
+ 	depends on PLAT_ORION
+diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
+index 3c7b53c..436bbcc 100644
+--- a/drivers/bus/Makefile
++++ b/drivers/bus/Makefile
+@@ -2,6 +2,7 @@
+ # Makefile for the bus drivers.
+ #
+ 
++obj-$(CONFIG_IMX_WEIM)	+= imx-weim.o
+ obj-$(CONFIG_MVEBU_MBUS) += mvebu-mbus.o
+ obj-$(CONFIG_OMAP_OCP2SCP)	+= omap-ocp2scp.o
+ 
+diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
+new file mode 100644
+index 0000000..349f14e
+--- /dev/null
++++ b/drivers/bus/imx-weim.c
+@@ -0,0 +1,138 @@
++/*
++ * EIM driver for Freescale's i.MX chips
++ *
++ * Copyright (C) 2013 Freescale Semiconductor, Inc.
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2. This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++#include <linux/module.h>
++#include <linux/clk.h>
++#include <linux/io.h>
++#include <linux/of_device.h>
++
++struct imx_weim {
++	void __iomem *base;
++	struct clk *clk;
++};
++
++static const struct of_device_id weim_id_table[] = {
++	{ .compatible = "fsl,imx6q-weim", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, weim_id_table);
++
++#define CS_TIMING_LEN 6
++#define CS_REG_RANGE  0x18
++
++/* Parse and set the timing for this device. */
++static int
++weim_timing_setup(struct platform_device *pdev, struct device_node *np)
++{
++	struct imx_weim *weim = platform_get_drvdata(pdev);
++	u32 value[CS_TIMING_LEN];
++	u32 cs_idx;
++	int ret;
++	int i;
++
++	/* get the CS index from this child node's "reg" property. */
++	ret = of_property_read_u32(np, "reg", &cs_idx);
++	if (ret)
++		return ret;
++
++	/* The weim has four chip selects. */
++	if (cs_idx > 3)
++		return -EINVAL;
++
++	ret = of_property_read_u32_array(np, "fsl,weim-cs-timing",
++					value, CS_TIMING_LEN);
++	if (ret)
++		return ret;
++
++	/* set the timing for WEIM */
++	for (i = 0; i < CS_TIMING_LEN; i++)
++		writel(value[i], weim->base + cs_idx * CS_REG_RANGE + i * 4);
++	return 0;
++}
++
++static int weim_parse_dt(struct platform_device *pdev)
++{
++	struct device_node *child;
++	int ret;
++
++	for_each_child_of_node(pdev->dev.of_node, child) {
++		if (!child->name)
++			continue;
++
++		ret = weim_timing_setup(pdev, child);
++		if (ret) {
++			dev_err(&pdev->dev, "%s set timing failed.\n",
++				child->full_name);
++			return ret;
++		}
++	}
++
++	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
++	if (ret)
++		dev_err(&pdev->dev, "%s fail to create devices.\n",
++			pdev->dev.of_node->full_name);
++	return ret;
++}
++
++static int weim_probe(struct platform_device *pdev)
++{
++	struct imx_weim *weim;
++	struct resource *res;
++	int ret = -EINVAL;
++
++	weim = devm_kzalloc(&pdev->dev, sizeof(*weim), GFP_KERNEL);
++	if (!weim) {
++		ret = -ENOMEM;
++		goto weim_err;
++	}
++	platform_set_drvdata(pdev, weim);
++
++	/* get the resource */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	weim->base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(weim->base)) {
++		ret = PTR_ERR(weim->base);
++		goto weim_err;
++	}
++
++	/* get the clock */
++	weim->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(weim->clk))
++		goto weim_err;
++
++	ret = clk_prepare_enable(weim->clk);
++	if (ret)
++		goto weim_err;
++
++	/* parse the device node */
++	ret = weim_parse_dt(pdev);
++	if (ret) {
++		clk_disable_unprepare(weim->clk);
++		goto weim_err;
++	}
++
++	dev_info(&pdev->dev, "WEIM driver registered.\n");
++	return 0;
++
++weim_err:
++	return ret;
++}
++
++static struct platform_driver weim_driver = {
++	.driver = {
++		.name = "imx-weim",
++		.of_match_table = weim_id_table,
++	},
++	.probe   = weim_probe,
++};
++
++module_platform_driver(weim_driver);
++MODULE_AUTHOR("Freescale Semiconductor Inc.");
++MODULE_DESCRIPTION("i.MX EIM Controller Driver");
++MODULE_LICENSE("GPL");
+-- 
+1.7.1
