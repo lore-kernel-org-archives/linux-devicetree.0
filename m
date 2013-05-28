@@ -1,161 +1,52 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 6/9] pinctrl-tz1090: add TZ1090 pinctrl driver
-Date: Tue, 28 May 2013 08:48:57 +0200
-Message-ID: <CACRpkdYaHbX0ixU=ZEbeK6MYnBL3poPwCBkW6O88cBL+LxpdDw@mail.gmail.com>
-References: <1369412476-14245-1-git-send-email-james.hogan@imgtec.com>
-	<1369412476-14245-7-git-send-email-james.hogan@imgtec.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/6] drivers: bus: add a new driver for WEIM
+Date: Tue, 28 May 2013 14:50:48 +0800
+Message-ID: <20130528065047.GC19608@S2101-09.ap.freescale.net>
+References: <1369722012-6915-1-git-send-email-b32955@freescale.com>
+ <1369722012-6915-2-git-send-email-b32955@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1369412476-14245-7-git-send-email-james.hogan@imgtec.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: James Hogan <james.hogan@imgtec.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1369722012-6915-2-git-send-email-b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org
+Cc: shc_work-JGs/UdohzUI@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi James, I want to route this patch by Laurent Pinchart, as he's also
-adding device tree support for a SoC using generic pinconf.
+Hi Arnd,
 
-Creating new bindings for every pin controller defining the same thing
-and implementing the same OF parsers is not sane.
+On Tue, May 28, 2013 at 02:20:07PM +0800, Huang Shijie wrote:
+> The WEIM(Wireless External Interface Module) works like a bus.
+> You can attach many different devices on it, such as NOR, onenand.
+> 
+> In the case of i.MX6q-sabreauto, the NOR is connected to WEIM.
+> 
+> This patch also adds the devicetree binding document.
+> The driver only works when the devicetree is enabled.
+> 
+> Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/bus/imx-weim.txt |   49 +++++++
+>  drivers/bus/Kconfig                                |    9 ++
+>  drivers/bus/Makefile                               |    1 +
+>  drivers/bus/imx-weim.c                             |  138 ++++++++++++++++++++
 
-We need to:
+What's the general merge path for drivers/bus/ ones?  It's not clear to
+me who is collecting those drivers/bus/ patches.
 
-- Define generic pinconf bindings
-- Implement a common parser for these in drivers/pinctrl/pinconf-generic.c
+Shawn
 
-I'll merge your patches to <linux/pinctrl/pinctrl-generic.h> as a
-baseline.
-
-On Fri, May 24, 2013 at 6:21 PM, James Hogan <james.hogan@imgtec.com> wrote:
-
-(...)
-
-> +Optional subnode-properties:
-> +- function: A string containing the name of the function to mux to the pin or
-> +  group. Valid values for function names are listed below, including which
-> +  pingroups can be muxed to them.
-> +- tristate: Flag, put pin into high impedance state.
-> +- pull-up: Flag, pull pin high.
-> +- pull-down: Flag, pull pin low.
-> +- bus-hold: Flag, weak latch last value on tristate bus.
-> +- schmitt: Integer, enable or disable Schmitt trigger mode for the pins.
-> +    0: no hysteresis
-> +    1: schmitt trigger
-> +- slew-rate: Integer, control slew rate of pins.
-> +    0: slow (half frequency)
-> +    1: fast
-> +- drive-strength: Integer, control drive strength of pins in mA.
-> +    2: 2mA
-> +    4: 4mA
-> +    8: 8mA
-> +    12: 12mA
-
-So if you want to use these names they shall be made generic.
-
-Else you have to prefix everything with "tz1090,<property>"
-
-> +/* Describes pinconf properties/flags available from device tree */
-> +static const struct cfg_param {
-> +       const char *property;
-> +       enum pin_config_param param;
-> +       bool flag;
-> +} cfg_params[] = {
-> +       {"tristate",            PIN_CONFIG_BIAS_HIGH_IMPEDANCE,         true},
-> +       {"pull-up",             PIN_CONFIG_BIAS_PULL_UP,                true},
-> +       {"pull-down",           PIN_CONFIG_BIAS_PULL_DOWN,              true},
-> +       {"bus-hold",            PIN_CONFIG_BIAS_BUS_HOLD,               true},
-> +       {"schmitt",             PIN_CONFIG_INPUT_SCHMITT_ENABLE,        true},
-> +       {"slew-rate",           PIN_CONFIG_SLEW_RATE,                   false},
-> +       {"drive-strength",      PIN_CONFIG_DRIVE_STRENGTH,              false},
-> +};
-> +
-> +int tz1090_pinctrl_dt_subnode_to_map(struct device *dev,
-> +                                    struct device_node *np,
-> +                                    struct pinctrl_map **map,
-> +                                    unsigned *reserved_maps,
-> +                                    unsigned *num_maps)
-> +{
-> +       int ret, i;
-> +       const char *function;
-> +       u32 val;
-> +       unsigned long config;
-> +       unsigned long *configs = NULL;
-> +       unsigned num_configs = 0;
-> +       unsigned reserve;
-> +       struct property *prop;
-> +       const char *group;
-> +
-> +       ret = of_property_read_string(np, "function", &function);
-> +       if (ret < 0) {
-> +               /* EINVAL=missing, which is fine since it's optional */
-> +               if (ret != -EINVAL)
-> +                       dev_err(dev, "could not parse property function\n");
-> +               function = NULL;
-> +       }
-> +
-> +       for (i = 0; i < ARRAY_SIZE(cfg_params); i++) {
-> +               ret = of_property_read_u32(np, cfg_params[i].property, &val);
-> +               /* flags don't have to have a value */
-> +               if (ret == -EOVERFLOW && cfg_params[i].flag) {
-> +                       val = 1;
-> +                       ret = 0;
-> +               }
-> +               if (!ret) {
-> +                       config = pinconf_to_config_packed(cfg_params[i].param,
-> +                                                         val);
-> +                       ret = add_config(dev, &configs, &num_configs, config);
-> +                       if (ret < 0)
-> +                               goto exit;
-> +               /* EINVAL=missing, which is fine since it's optional */
-> +               } else if (ret != -EINVAL) {
-> +                       dev_err(dev, "could not parse property %s (%d)\n",
-> +                               cfg_params[i].property, ret);
-> +               }
-> +       }
-> +
-> +       reserve = 0;
-> +       if (function != NULL)
-> +               reserve++;
-> +       if (num_configs)
-> +               reserve++;
-> +       ret = of_property_count_strings(np, "pins");
-> +       if (ret < 0) {
-> +               dev_err(dev, "could not parse property pins\n");
-> +               goto exit;
-> +       }
-> +       reserve *= ret;
-> +
-> +       ret = reserve_map(dev, map, reserved_maps, num_maps, reserve);
-> +       if (ret < 0)
-> +               goto exit;
-> +
-> +       of_property_for_each_string(np, "pins", prop, group) {
-> +               if (function) {
-> +                       ret = add_map_mux(map, reserved_maps, num_maps,
-> +                                         group, function);
-> +                       if (ret < 0)
-> +                               goto exit;
-> +               }
-> +
-> +               if (num_configs) {
-> +                       ret = add_map_configs(dev, map, reserved_maps,
-> +                                             num_maps, group, configs,
-> +                                             num_configs);
-> +                       if (ret < 0)
-> +                               goto exit;
-> +               }
-> +       }
-> +
-> +       ret = 0;
-> +
-> +exit:
-> +       kfree(configs);
-> +       return ret;
-> +}
-
-This is looking good. Can you split out the pin config mapping in
-some way and put that into pinconf-generic.c?
-
-Yours,
-Linus Walleij
+>  4 files changed, 197 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/bus/imx-weim.txt
+>  create mode 100644 drivers/bus/imx-weim.c
