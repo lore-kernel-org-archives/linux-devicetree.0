@@ -1,91 +1,54 @@
-From: Padmavathi Venna <padma.v@samsung.com>
-Subject: [PATCH] ARM: dts: wm8994: Add wm8994 regulator support on smdk5250.
-Date: Tue, 28 May 2013 16:05:22 +0530
-Message-ID: <1369737322-10907-1-git-send-email-padma.v@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.v@samsung.com, padma.kvr@gmail.com
-Cc: sbkim73@samsung.com, broonie@kernel.org, kgene.kim@samsung.com
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: fb_monspecs and device tree
+Date: Tue, 28 May 2013 12:47:48 +0200
+Message-ID: <20130528104748.GL1952@game.jcrosoft.org>
+References: <CACQ1gAg=nyZrXMKk2g+cFvn5g7kHnRKMQ9R2G7ufAqs07dkYHg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACQ1gAg=nyZrXMKk2g+cFvn5g7kHnRKMQ9R2G7ufAqs07dkYHg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the required regulator supplies and properties
-for wm8994 codec on smdk5250 board.
+On 11:41 Tue 28 May     , Richard Genoud wrote:
+> Hi !
+> 
+> I've been using the display-timings device tree node (great job !) on
+> a sam9x5 soc.
+> 
+> I was wondering if there's a planned support for struct fb_monspecs in
+> device tree, (or if it is irrelevant), if someone is already working
+> on that etc...
 
-Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
----
- arch/arm/boot/dts/exynos5250-smdk5250.dts |   53 +++++++++++++++++++++++++++-
- 1 files changed, 51 insertions(+), 2 deletions(-)
+ I'm working on this but not on fbdev on DRI/KMS
+ so we can have a full support of the overlay & co
+ but I'm going to change complely the dt binding with the one present on
+ github
 
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index f2a025e..42fc79e 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -37,6 +37,46 @@
- 		};
- 	};
- 
-+	avdd2:fixed-regulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "avdd2-supply";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+
-+	cpvdd:fixed-regulator@1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "cpvdd-supply";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+
-+	dbvdd:fixed-regulator@2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "dbvdd-supply";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	spkvdd1:fixed-regulator@3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "spkvdd1-supply";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+
-+	spkvdd2:fixed-regulator@4 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "spkvdd2-supply";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+
- 	i2c@12C70000 {
- 		samsung,i2c-sda-delay = <100>;
- 		samsung,i2c-max-bus-freq = <20000>;
-@@ -47,8 +87,17 @@
- 		};
- 
- 		wm8994: wm8994@1a {
--			 compatible = "wlf,wm8994";
--			 reg = <0x1a>;
-+			compatible = "wlf,wm8994";
-+			reg = <0x1a>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+
-+			AVDD2-supply = <&avdd2>;
-+			CPVDD-supply = <&cpvdd>;
-+			DBVDD-supply = <&dbvdd>;
-+			SPKVDD1-supply = <&spkvdd1>;
-+			SPKVDD2-supply = <&spkvdd2>;
- 		};
- 	};
- 
--- 
-1.7.4.4
+ beawre the lcdc is already done on fbdev with display-timings
+
+ but I'll be off the first week on June so wait a few for sam9x5
+
+ Best Regards,
+ J.
+> 
+> 
+> Regards,
+> Richard.
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-fbdev" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
