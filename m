@@ -1,13 +1,11 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: wm8994: Add wm8994 regulator support on
- smdk5250.
-Date: Tue, 28 May 2013 10:19:24 -0400
-Message-ID: <20130528141924.GH3660@sirena.org.uk>
-References: <1369737322-10907-1-git-send-email-padma.v@samsung.com>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v6 00/10] ASoC: fsl-ssi: ac97-slave support
+Date: Tue, 28 May 2013 16:47:48 +0200
+Message-ID: <1369752478-30260-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6920524425364849973=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1369737322-10907-1-git-send-email-padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,130 +16,61 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Padmavathi Venna <padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---===============6920524425364849973==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="smOfPzt+Qjm5bNGJ"
-Content-Disposition: inline
+This series adds DT support for phycore-ac97. Beside ac97 support, the series
+adds imx-pcm-fiq and generic DMA bindings to fsl-ssi.
 
+Regards,
 
---smOfPzt+Qjm5bNGJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Markus
 
-On Tue, May 28, 2013 at 04:05:22PM +0530, Padmavathi Venna wrote:
+Changes in v6:
+ - Rebased onto 3.10-rc3 with Shawn's pcm cleanup patches
+ - Setup of reset functions moved to phycore-ac97.c
 
-> +	avdd2:fixed-regulator@0 {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "avdd2-supply";
-> +		regulator-min-microvolt =3D <1800000>;
-> +		regulator-max-microvolt =3D <1800000>;
-> +		regulator-always-on;
-> +	};
+Changes in v5:
+ - Pass of_node via parent device to imx-pcm-dma.
 
-> +	cpvdd:fixed-regulator@1 {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "cpvdd-supply";
-> +		regulator-min-microvolt =3D <1800000>;
-> +		regulator-max-microvolt =3D <1800000>;
-> +		regulator-always-on;
-> +	};
+Changes in v4:
+ - phycore-ac97 uses the iomux functions based on audmux phandle now.
+ - fsl-ssi imx-pcm-fiq got some new comments about problems with imx-ssi and
+   incompatible codecs
 
-Several of these look like the same supply (especially the speaker ones)
-so it seems like it'd be sensible to define a single regulator for each
-of them.  Not much practical difference but it might be neater.
+Changes in v3:
+ - Rebased onto pcm dma cleanup patches
+ - A lot of cleanups for the fsl-ssi ac97 integration
+ - Some small changes which are listed in the notes of the patches.
 
-> +
-> +	dbvdd:fixed-regulator@2 {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "dbvdd-supply";
-> +		regulator-min-microvolt =3D <3300000>;
-> +		regulator-max-microvolt =3D <3300000>;
-> +		regulator-always-on;
-> +	};
-> +
-> +	spkvdd1:fixed-regulator@3 {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "spkvdd1-supply";
-> +		regulator-min-microvolt =3D <5000000>;
-> +		regulator-max-microvolt =3D <5000000>;
-> +		regulator-always-on;
-> +	};
-> +
-> +	spkvdd2:fixed-regulator@4 {
-> +		compatible =3D "regulator-fixed";
-> +		regulator-name =3D "spkvdd2-supply";
-> +		regulator-min-microvolt =3D <5000000>;
-> +		regulator-max-microvolt =3D <5000000>;
-> +		regulator-always-on;
-> +	};
-> +
->  	i2c@12C70000 {
->  		samsung,i2c-sda-delay =3D <100>;
->  		samsung,i2c-max-bus-freq =3D <20000>;
-> @@ -47,8 +87,17 @@
->  		};
-> =20
->  		wm8994: wm8994@1a {
-> -			 compatible =3D "wlf,wm8994";
-> -			 reg =3D <0x1a>;
-> +			compatible =3D "wlf,wm8994";
-> +			reg =3D <0x1a>;
-> +
-> +			gpio-controller;
-> +			#gpio-cells =3D <2>;
-> +
-> +			AVDD2-supply =3D <&avdd2>;
-> +			CPVDD-supply =3D <&cpvdd>;
-> +			DBVDD-supply =3D <&dbvdd>;
-> +			SPKVDD1-supply =3D <&spkvdd1>;
-> +			SPKVDD2-supply =3D <&spkvdd2>;
->  		};
->  	};
-> =20
-> --=20
-> 1.7.4.4
->=20
->=20
+Markus Pargmann (10):
+      ASoC: phycore-ac97: Add DT support
+      ASoC: imx-pcm-dma: DT support
+      ASoC: imx-pcm-fiq: Introduce pcm-fiq-params
+      ASoC: fsl-ssi: Add support for imx-pcm-fiq
+      ASoC: fsl-ssi: Use generic DMA bindings if possible
+      ARM: imx: Export ac97 reset functions
+      ASoC: fsl-ssi: imx ac97 support
+      ASoC: fsl: Kconfig: Use fsl-ssi for phycore-ac97
+      ASoC: fsl: Move fsl-ssi binding doc to sound/
+      ASoC: fsl: Update fsl-ssi binding doc
 
---smOfPzt+Qjm5bNGJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRpLzoAAoJELSic+t+oim9y5QP/iKrEm5mSbr9glcXsIsIrnUY
-vW3loMn06JfoxFNreyn6oDBlVjmlZb1KUPrmsao65F5g9FOT4cHUiv4ncVa+Lf1l
-52JVmUIL+cGSwudazKyMXwEH33h8LBMwDTjmRFUcvHL7nQJ9LO0xThqrj2Zt9UWP
-dDNUlJOSsPE9L0KYfdLW8oSrz2xeoo46IstHdiDijzyC2FRYOm3JeYcRLK/YzmkE
-EIxFx8noOk8Iv89C1hx45TsNfTEYoBpSueOS4kLylh91A3QYvpE+DefErS2rwThR
-NEWREPEfXiHjNkuOqxe6Wu3flmQ/ByABV0lMaA69r1D0z/0wd0BioYPgEOys+bPE
-khJRQ6pfM7MIRfHqccTkY9z4IHpJVAX+9gg2DsiIOsb3+3Kb7znyYRBkX54q0J4Q
-bkpMdklS5SjbNbAnqZ5B/w6QaEFN+JsCMcgBqtzDaonbX1fScwDCgn0A64z6lmsL
-1AAqXs3b/eFzFk7atIgxfzpJ5gD5ZnT91GJQteZIEcMISsy6zKhTjtQgVv2Khvxl
-MtyPo/Jj1Clyvv8t3gSibl1LlR7c4AWnlKgzrufClXdMEaiuXJ3LVp/EBeTPHe1c
-5ux9jIMPV8YVzXQpvozX9DthRKIzBUabRxsybh1I/dxBgNmq5+DDGww6Bg5jzJiY
-K7qr4xZTkXQcFp044OL1
-=01H1
------END PGP SIGNATURE-----
-
---smOfPzt+Qjm5bNGJ--
-
---===============6920524425364849973==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============6920524425364849973==--
+ .../{powerpc/fsl/ssi.txt => sound/fsl,ssi.txt}     |  10 +
+ .../bindings/sound/phytec,phycore-ac97.txt         |  14 +
+ arch/arm/mach-imx/mach-pca100.c                    |   7 +-
+ arch/arm/mach-imx/mach-pcm043.c                    |   7 +-
+ sound/soc/fsl/Kconfig                              |   2 +-
+ sound/soc/fsl/fsl_ssi.c                            | 441 +++++++++++++++++----
+ sound/soc/fsl/fsl_ssi.h                            |   7 +
+ sound/soc/fsl/imx-pcm-dma.c                        |   1 -
+ sound/soc/fsl/imx-pcm-fiq.c                        |  18 +-
+ sound/soc/fsl/imx-pcm.h                            |  12 +-
+ sound/soc/fsl/imx-ssi.c                            |   7 +-
+ sound/soc/fsl/imx-ssi.h                            |   1 +
+ sound/soc/fsl/phycore-ac97.c                       | 241 +++++++++--
+ 13 files changed, 643 insertions(+), 125 deletions(-)
+ rename Documentation/devicetree/bindings/{powerpc/fsl/ssi.txt => sound/fsl,ssi.txt} (88%)
+ create mode 100644 Documentation/devicetree/bindings/sound/phytec,phycore-ac97.txt
