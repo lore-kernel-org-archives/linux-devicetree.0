@@ -1,51 +1,51 @@
-From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: fb_monspecs and device tree
-Date: Tue, 28 May 2013 13:37:45 +0200
-Message-ID: <CACQ1gAg-PyMkswKb3jz_ZMRXiRCU5WNoDv9U9_vf_xWK5SWkhA@mail.gmail.com>
-References: <CACQ1gAg=nyZrXMKk2g+cFvn5g7kHnRKMQ9R2G7ufAqs07dkYHg@mail.gmail.com>
- <20130528104748.GL1952@game.jcrosoft.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCHv2 0/3] Add G762/G763 PWM fan controller
+Date: Tue, 28 May 2013 05:29:40 -0700
+Message-ID: <20130528122940.GA29012@roeck-us.net>
+References: <cover.1369687670.git.arno@natisbad.org>
+ <152190814.eApXVbVBPA@wuerfel>
+ <87li6z2yxj.fsf@natisbad.org>
+ <20130528111921.GD11547@mithrandir>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130528104748.GL1952-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130528111921.GD11547@mithrandir>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Arnaud Ebalard <arno@natisbad.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Simon Guinot <simon.guinot@sequanux.org>
 List-Id: devicetree@vger.kernel.org
 
-2013/5/28 Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>:
-> On 11:41 Tue 28 May     , Richard Genoud wrote:
->> Hi !
->>
->> I've been using the display-timings device tree node (great job !) on
->> a sam9x5 soc.
->>
->> I was wondering if there's a planned support for struct fb_monspecs in
->> device tree, (or if it is irrelevant), if someone is already working
->> on that etc...
->
->  I'm working on this but not on fbdev on DRI/KMS
->  so we can have a full support of the overlay & co
->  but I'm going to change complely the dt binding with the one present on
->  github
->
->  beawre the lcdc is already done on fbdev with display-timings
->
->  but I'll be off the first week on June so wait a few for sam9x5
->
->  Best Regards,
->  J.
+On Tue, May 28, 2013 at 01:19:23PM +0200, Thierry Reding wrote:
+> On Tue, May 28, 2013 at 12:15:04PM +0200, Arnaud Ebalard wrote:
+> > Hi Arnd,
+> > 
+> > Arnd Bergmann <arnd@arndb.de> writes:
+> > 
+> > > On Tuesday 28 May 2013 00:02:29 Arnaud Ebalard wrote:
+> > >> 
+> > >> This series adds support for GMT G762/G763. This work is based on a
+> > >> basic version for 2.6.31 kernel developed Olivier Mouchet for LaCie
+> > >> NAS. Updates have been performed to run on recent kernels. Support has
+> > >> been completed and additional features added: ability to configure
+> > >> various characteristics from .dts file, better initialization, alarms
+> > >> and error reporting support, gear mode, polarity, fan pulse per
+> > >> revolution, fan startup voltage control.
+> > >
+> > > I wonder if this could be split into two separate drivers, one for
+> > > the pwm subsystem, and one for a hardware-independent fan controller
+> > > based on the pwm interfaces.
+> > 
+> > To be honest, I wouldn't even know how to start in order to do that.
+> > Additionally, it would be worth the effort if other drivers could be
+> > easily refactored using this idea. I'll let hwmon people provide some
+> > feedback and try and comply with their directions (based on the cpu
+> > cycle I can spend on this).
+> 
+> What Arnd proposes doesn't sounds like a very good idea. PWM-controlled
+> fans should be able to work just fine using a generic driver that uses
+> the PWM framework, similar to the PWM backlight and LED drivers.
+> 
+Isn't that exactly what Arnd proposed ?
 
-ok, that's good news !
-
-thanks.
+Guenter
