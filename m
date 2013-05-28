@@ -1,51 +1,45 @@
-From: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [U-Boot] [PATCH] fdt: Enhance dts/Makefile to be all things to
- all men
-Date: Tue, 28 May 2013 23:08:29 +0200
-Message-ID: <20130528210829.850203831A2@gemini.denx.de>
-References: <1369769778-12455-1-git-send-email-sjg@chromium.org>
+From: Jon Hunter <jgchunter@gmail.com>
+Subject: Re: [PATCH v2 11/14] Documentation: dt: binding: omap: am43x timer
+Date: Tue, 28 May 2013 22:25:09 +0100
+Message-ID: <51A520B5.8040803@gmail.com>
+References: <cover.1369658705.git.afzal@ti.com> <223d90dc9eeab13d8496690d336cdf0f7d27cd22.1369658705.git.afzal@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1369769778-12455-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: u-boot-review-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Tom Rini <trini-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <223d90dc9eeab13d8496690d336cdf0f7d27cd22.1369658705.git.afzal@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Afzal Mohammed <afzal@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Benoit Cousson <benoit.cousson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Simon Glass,
 
-In message <1369769778-12455-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> you wrote:
+On 27/05/13 15:37, Afzal Mohammed wrote:
+> AM43x timer bindings.
 > 
-> Some device tree files use the word 'linux' which gets replaced with '1' by
-> many version of gcc, including version 4.7. So undefine this.
+> Signed-off-by: Afzal Mohammed <afzal@ti.com>
+> ---
+>  Documentation/devicetree/bindings/arm/omap/timer.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/omap/timer.txt b/Documentation/devicetree/bindings/arm/omap/timer.txt
+> index d02e27c..70cb398 100644
+> --- a/Documentation/devicetree/bindings/arm/omap/timer.txt
+> +++ b/Documentation/devicetree/bindings/arm/omap/timer.txt
+> @@ -14,6 +14,8 @@ Required properties:
+>  			ti,omap5430-timer (applicable to OMAP543x devices)
+>  			ti,am335x-timer	(applicable to AM335x devices)
+>  			ti,am335x-timer-1ms (applicable to AM335x devices)
+> +			"ti,am4372-timer-1ms", "ti,am335x-timer-1ms" for AM43x 1ms timer
+> +			"ti,am4372-timer", "ti,am335x-timer" for AM43x timers other than 1ms one
+>  
+>  - reg:			Contains timer register address range (base address and
+>  			length).
 
-I think this is not a good way to address this issue.  The GCC
-documentation (section "System-specific Predefined Macros" [1])
-desribes how this should be handled.  The "correct" (TM) way to fix
-this is by adding "-ansi" or any "-std" option that requests strict
-conformance to the compiler/preprocessor command line.
+If you are adding more compatibility strings, then this implies that the
+AM43x timers are not 100% compatible with any other device listed (such
+as am335x or any omap device). That's fine but you should state that in
+the changelog. If the AM43x timer registers are 100% compatible with
+existing devices you should not add these.
 
-[1] http://gcc.gnu.org/onlinedocs/cpp/System_002dspecific-Predefined-Macros.html#System_002dspecific-Predefined-Macros
-
-
-Best regards,
-
-Wolfgang Denk
-
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd-ynQEQJNshbs@public.gmane.org
-The human race is faced with a cruel choice: work  or  daytime  tele-
-vision.
+Jon
