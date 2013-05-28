@@ -1,34 +1,30 @@
-From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: fb_monspecs and device tree
-Date: Tue, 28 May 2013 11:41:25 +0200
-Message-ID: <CACQ1gAg=nyZrXMKk2g+cFvn5g7kHnRKMQ9R2G7ufAqs07dkYHg@mail.gmail.com>
+From: Peter Korsgaard <jacmet@sunsite.dk>
+Subject: Re: [PATCH] dts: am33xx: Correct properties on gpmc node
+Date: Tue, 28 May 2013 11:50:40 +0200
+Message-ID: <87mwrfbfgv.fsf@dell.be.48ers.dk>
+References: <1369729497-11897-1-git-send-email-larsi@wh2.tu-dresden.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1369729497-11897-1-git-send-email-larsi@wh2.tu-dresden.de> (Lars
+	Poeschel's message of "Tue, 28 May 2013 10:24:57 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars Poeschel <larsi@wh2.tu-dresden.de>
+Cc: poeschel@lemonage.de, b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi !
+>>>>> "Lars" == Lars Poeschel <larsi@wh2.tu-dresden.de> writes:
 
-I've been using the display-timings device tree node (great job !) on
-a sam9x5 soc.
+ Lars> From: Lars Poeschel <poeschel@lemonage.de>
+ Lars> The gpmc driver is actually looking for "gpmc,num-cs" and
+ Lars> "gpmc,num-waitpins" properties in DT. The binding doc also states
+ Lars> this.
+ Lars> Correct the properties in the dts to provide the right values for the
+ Lars> gpmc driver.
 
-I was wondering if there's a planned support for struct fb_monspecs in
-device tree, (or if it is irrelevant), if someone is already working
-on that etc...
+ Lars> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
 
+Acked-by: Peter Korsgaard <jacmet@sunsite.dk>
 
-Regards,
-Richard.
+-- 
+Bye, Peter Korsgaard
