@@ -1,149 +1,131 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH v2 14/14] ARM: dts: AM43x: initial support
-Date: Wed, 29 May 2013 11:05:53 +0200
-Message-ID: <51A5C4F1.3010809@ti.com>
-References: <cover.1369658705.git.afzal@ti.com> <3790fa57fc4c69da12224fbcec17cd07c59771a0.1369658705.git.afzal@ti.com> <51A5C1F3.2070605@ti.com> <51A5C2EE.4060607@epfl.ch>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH v6] ARM:dts:omap4-panda: Update the LED support for the
+ panda DTS
+Date: Wed, 29 May 2013 11:40:10 +0200
+Message-ID: <51A5CCFA.2010209@ti.com>
+References: <1368806552-8851-1-git-send-email-dmurphy@ti.com> <20130517161525.GA30014@kahuna> <5196580D.1070209@ti.com> <519FB7F7.7080009@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51A5C2EE.4060607@epfl.ch>
-Sender: linux-doc-owner@vger.kernel.org
-To: florian.vaussard@epfl.ch
-Cc: Afzal Mohammed <afzal@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>, Ankur Kishore <a-kishore@ti.com>, Grant Likely <grant.likely@linaro.org>, Benoit Cousson <benoit.cousson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <519FB7F7.7080009@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: Nishanth Menon <nm@ti.com>, tony@atomide.com, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/29/2013 10:57 AM, Florian Vaussard wrote:
-> Hello,
-> 
-> On 05/29/2013 10:53 AM, Benoit Cousson wrote:
->> + Florian
->>
->> Hi Afzal,
->>
->> On 05/27/2013 04:37 PM, Afzal Mohammed wrote:
->>> DT source (minimal) for AM4372 SoC to represent AM43x SoC's. Those
->>> represented here are the minimal DT nodes necessary to get kernel
->>> booting.
->>>
->>> In DT nodes, "ti,hwmod" property has not been added, this would be
->>> added along with PRCM support for AM43x.
->>>
->>> Signed-off-by: Ankur Kishore <a-kishore@ti.com>
->>> Signed-off-by: Afzal Mohammed <afzal@ti.com>
->>> ---
->>>
->>> v2: Add gptimer 1ms, timer2, synctimer and remove twd local timer
->>>
->>>   arch/arm/boot/dts/am4372.dtsi | 66
->>> +++++++++++++++++++++++++++++++++++++++++++
->>>   1 file changed, 66 insertions(+)
->>>   create mode 100644 arch/arm/boot/dts/am4372.dtsi
->>>
->>> diff --git a/arch/arm/boot/dts/am4372.dtsi
->>> b/arch/arm/boot/dts/am4372.dtsi
->>> new file mode 100644
->>> index 0000000..1d58298
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/am4372.dtsi
->>> @@ -0,0 +1,66 @@
->>> +/*
->>> + * Device Tree Source for AM4372 SoC
->>> + *
->>> + * Copyright (C) 2013 Texas Instruments Incorporated -
->>> http://www.ti.com/
->>> + *
->>> + * This file is licensed under the terms of the GNU General Public
->>> License
->>> + * version 2.  This program is licensed "as is" without any warranty
->>> of any
->>> + * kind, whether express or implied.
->>> + */
->>> +
->>> +/include/ "skeleton.dtsi"
->>
->> You can now use the C preprocessor statement instead of this one.
->> Florian already started doing the change [1].
->>
->> Beside that detail, that patch looks good to me.
->> I'll pull it separately of the series.
->>
-> 
-> If you pull the patch in your branch, I can take care of the changes
-> when I rebase
-> my series. This will allow me to clean the 'interrupts' statements below
-> as well.
+Hi Dan,
 
-Ooops, thanks, I missed that one.
+On 5/24/2013 8:56 PM, Dan Murphy wrote:
+> On 05/17/2013 11:17 AM, Dan Murphy wrote:
+>> On 05/17/2013 11:15 AM, Nishanth Menon wrote:
+>>> On 11:02-20130517, Dan Murphy wrote:
+>>>> The GPIO for LED D1 on the omap4-panda a1-a3 rev and the omap4-panda-es
+>>>> are different.
+>>>>
+>>>> A1-A3 = gpio_wk7
+>>>> ES = gpio_110
+>>>>
+>>>> There is no change to LED D2
+>>>>
+>>>> Abstract away the pinmux and the LED definitions for the two boards into
+>>>> the respective DTS files.
+>>>>
+>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>> ---
+>>>> Changes in this version:
+>>>> 	- review comments incorporated.
+>>>> Previous version of this patch was discussed in:
+>>>> 	https://patchwork.kernel.org/patch/2582771/
+>>> one minor nit,
+>>> $subject could do with space after the ':'
+>>> otherwise, it looks fine to me. Will suggest waiting for further
+>>> reviewers if they have an opinion prior to a new rev.
+>> Thanks NM I will queue up this change locally and await further review prior to sending v7.
+>>
+>>>>   arch/arm/boot/dts/omap4-panda-common.dtsi |   16 +++++++++++++++-
+>>>>   arch/arm/boot/dts/omap4-panda-es.dts      |   28 ++++++++++++++++++++++++++++
+>>>>   2 files changed, 43 insertions(+), 1 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>> index 03bd60d..5fd59b3 100644
+>>>> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+>>>> @@ -16,8 +16,13 @@
+>>>>   		reg = <0x80000000 0x40000000>; /* 1 GB */
+>>>>   	};
+>>>>
+>>>> -	leds {
+>>>> +	leds: leds {
+>>>>   		compatible = "gpio-leds";
+>>>> +		pinctrl-names = "default";
+>>>> +		pinctrl-0 = <
+>>>> +			&led_wkgpio_pins
+>>>> +		>;
+>>>> +
+>>>>   		heartbeat {
+>>>>   			label = "pandaboard::status1";
+>>>>   			gpios = <&gpio1 7 0>;
+>>>> @@ -137,6 +142,15 @@
+>>>>   	};
+>>>>   };
+>>>>
+>>>> +&omap4_pmx_wkup {
+>>>> +	led_wkgpio_pins: pinmux_leds_wkpins {
+>>>> +		pinctrl-single,pins = <
+>>>> +			0x1a 0x3	/* gpio_wk7 OUTPUT | MODE 3 */
+>>>> +			0x1c 0x3	/* gpio_wk8 OUTPUT | MODE 3 */
+>>>> +		>;
+>>>> +	};
+>>>> +};
+>>>> +
+>>>>   &i2c1 {
+>>>>   	pinctrl-names = "default";
+>>>>   	pinctrl-0 = <&i2c1_pins>;
+>>>> diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts/omap4-panda-es.dts
+>>>> index f1d8c21..c968a3b 100644
+>>>> --- a/arch/arm/boot/dts/omap4-panda-es.dts
+>>>> +++ b/arch/arm/boot/dts/omap4-panda-es.dts
+>>>> @@ -34,3 +34,31 @@
+>>>>   		0x5e 0x100	/* hdmi_sda.hdmi_sda INPUT | MODE 0 */
+>>>>   		>;
+>>>>   };
+>>>> +
+>>>> +&omap4_pmx_core {
+>>>> +	led_gpio_pins: gpio_led_pmx {
+>>>> +		pinctrl-single,pins = <
+>>>> +			0xb6 0x3	/* gpio_110 OUTPUT | MODE 3 */
+>>>> +		>;
+>>>> +	};
+>>>> +};
+>>>> +
+>>>> +&led_wkgpio_pins {
+>>>> +	pinctrl-single,pins = <
+>>>> +		0x1c 0x3	/* gpio_wk8 OUTPUT | MODE 3 */
+>>>> +	>;
+>>>> +};
+>>>> +
+>>>> +&leds {
+>>>> +	pinctrl-0 = <
+>>>> +		&led_gpio_pins
+>>>> +		&led_wkgpio_pins
+>>>> +	>;
+>>>> +
+>>>> +	heartbeat {
+>>>> +		gpios = <&gpio4 14 0>;
+>>>> +	};
+>>>> +	mmc {
+>>>> +		gpios = <&gpio1 8 0>;
+>>>> +	};
+>>>> +};
+>>
+> Any additional comments besides the headline?
+>
+> If not I will post v7
+
+Sorry for the delay.
+
+Go ahead and I'll take it in my dts branch for 3.11.
 
 Thanks,
 Benoit
-
-> 
-> Regards,
-> 
-> Florian
-> 
->> Regards,
->> Benoit
->>
->> [1] http://thread.gmane.org/gmane.linux.ports.arm.omap/98320
->>
->>> +
->>> +/ {
->>> +    compatible = "ti,am4372", "ti,am43";
->>> +    interrupt-parent = <&gic>;
->>> +
->>> +
->>> +    aliases {
->>> +        serial0 = &uart1;
->>> +    };
->>> +
->>> +    cpus {
->>> +        cpu@0 {
->>> +            compatible = "arm,cortex-a9";
->>> +        };
->>> +    };
->>> +
->>> +    gic: interrupt-controller@48241000 {
->>> +        compatible = "arm,cortex-a9-gic";
->>> +        interrupt-controller;
->>> +        #interrupt-cells = <3>;
->>> +        reg = <0x48241000 0x1000>,
->>> +              <0x48240100 0x0100>;
->>> +    };
->>> +
->>> +    ocp {
->>> +        compatible = "simple-bus";
->>> +        #address-cells = <1>;
->>> +        #size-cells = <1>;
->>> +        ranges;
->>> +
->>> +        uart1: serial@44e09000 {
->>> +            compatible = "ti,am4372-uart","ti,omap2-uart";
->>> +            reg = <0x44e09000 0x2000>;
->>> +            interrupts = <0 72 0x4>;
->>> +        };
->>> +
->>> +        timer1: timer@44e31000 {
->>> +            compatible = "ti,am4372-timer-1ms","ti,am335x-timer-1ms";
->>> +            reg = <0x44e31000 0x400>;
->>> +            interrupts = <0 67 0x4>;
->>> +            ti,timer-alwon;
->>> +        };
->>> +
->>> +        timer2: timer@48040000  {
->>> +            compatible = "ti,am4372-timer","ti,am335x-timer";
->>> +            reg = <0x48040000  0x400>;
->>> +            interrupts = <0 68 0x4>;
->>> +        };
->>> +
->>> +        counter32k: counter@44e86000 {
->>> +            compatible = "ti,am4372-counter32k","ti,omap-counter32k";
->>> +            reg = <0x44e86000 0x40>;
->>> +        };
->>> +    };
->>> +};
->>>
->>
-
