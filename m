@@ -1,50 +1,56 @@
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
-Subject: Re: [RFC/RFT] ARM: dts: add minimal DT support for Nokia N950 & N9
-Date: Wed, 29 May 2013 23:56:48 +0300
-Message-ID: <20130529205648.GC3345@blackmetal.musicnaut.iki.fi>
-References: <1369251845-29605-1-git-send-email-aaro.koskinen@iki.fi>
- <519DC39C.6010809@ti.com>
+From: Wolfgang Denk <wd-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [U-Boot] [PATCH] fdt: Enhance dts/Makefile to be all things to
+ all men
+Date: Wed, 29 May 2013 23:02:44 +0200
+Message-ID: <20130529210244.C70AD3831A5@gemini.denx.de>
+References: <1369769778-12455-1-git-send-email-sjg@chromium.org>
+ <20130528210829.850203831A2@gemini.denx.de>
+ <CAPnjgZ2a+qrsPWTz5Y=48m_LCRqAikY0-seJudW8AY5asdwmxw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <519DC39C.6010809@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sakari Ailus <sakari.ailus@iki.fi>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <CAPnjgZ2a+qrsPWTz5Y=48m_LCRqAikY0-seJudW8AY5asdwmxw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: u-boot-review <u-boot-review-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Tom Rini <trini-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Dear Simon,
 
-On Thu, May 23, 2013 at 09:22:04AM +0200, Benoit Cousson wrote:
-> On 05/22/2013 09:44 PM, Aaro Koskinen wrote:
-> > Add minimal DT support for Nokia N950 & N9. The basic boot works. I can
-> > connect to both devices with USB networking & ssh. dmesg output looks OK.
+In message <CAPnjgZ2a+qrsPWTz5Y=48m_LCRqAikY0-seJudW8AY5asdwmxw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org> you wrote:
 > 
-> That's great! Tony will like that :-)
-> It is too bad I just have a N900 :-(
+> > I think this is not a good way to address this issue.  The GCC
+> > documentation (section "System-specific Predefined Macros" [1])
+> > desribes how this should be handled.  The "correct" (TM) way to fix
+> > this is by adding "-ansi" or any "-std" option that requests strict
+> > conformance to the compiler/preprocessor command line.
+> >
+> > [1] http://gcc.gnu.org/onlinedocs/cpp/System_002dspecific-Predefined-Macros.html#System_002dspecific-Predefined-Macros
 > 
-> > Functionality compared to the legacy board file:
-> > 
-> > 	- MMC not detected - reason unknown, any tips welcome
-> 
-> On OMAP4 panda I used to have the similar issue due to the pbias not set
-> properly.
-> 
-> > 	- OneNAND missing completely
-> 
-> The GPMC for OMAP3 support is pretty new, so maybe some tweak are still
-> needed.
-> 
-> Is it RFC because you are still working on the missing functionalities?
-> Otherwise the patches are already good to be merged if you want.
-> As soon as you don't break legacy boot, we can merge even half-working DTS.
+> Stephen suggested a slightly more extreme version too - I was worried
+> that all the typing stuff in U-Boot headers would break in this case,
+> but I didn't actually test it, so perhaps it is fine.
 
-I was hoping to get the MMC working and OneNAND binding added before
-merging this... If we could do that, we could deprecate the legacy board
-file as DT would offer the same functionality.
+Yes, I've seen it.  I think either approach is better that manually
+undef-ing specific variables.  From my personal point of view I think
+the -undef approach is a bit of overkill, but I would not protest.
 
-Anyway, if half-working DTS is also fine, I'll resend this as "PATCH"
-in a few days.
+Best regards,
 
-A.
+Wolfgang Denk
+
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd-ynQEQJNshbs@public.gmane.org
+panic: can't find /
