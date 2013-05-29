@@ -1,59 +1,90 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/3] palmas usb driver
-Date: Wed, 29 May 2013 11:36:01 +0530
-Message-ID: <51A59AC9.9000908@ti.com>
-References: <1369405896-30246-1-git-send-email-kishon@ti.com>
- <20130528173554.GD15794@arwen.pp.htv.fi>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH] mmc: sh_mobile_sdhi: fix error return code in
+ sh_mobile_sdhi_probe()
+Date: Wed, 29 May 2013 08:58:03 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1305290841080.14157@axis700.grange>
+References: <CAPgLHd_dwxRp8Ug7=05=3gTTa9bPME5tb-Mq1aqRFXZSrgqFGg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130528173554.GD15794-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: george.cherian-l0cyMroinI0@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPgLHd_dwxRp8Ug7=05=3gTTa9bPME5tb-Mq1aqRFXZSrgqFGg@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Wei Yongjun <weiyj.lk@gmail.com>
+Cc: ian@mnementh.co.uk, cjb@laptop.org, grant.likely@linaro.org, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
+Hi
 
-On Tuesday 28 May 2013 11:05 PM, Felipe Balbi wrote:
-> On Fri, May 24, 2013 at 08:01:33PM +0530, Kishon Vijay Abraham I wrote:
->> This patch series adds driver for palmas usb which is used to detect
->> attach/detach events of usb device and usb host.
->>
->> [PATCH v5 2/3] extcon: Palmas Extcon Driver which was sent previously
->> is added in this patch series itself. The revision history is added
->> in the patch comments section.
->>
->> A checkpatch warning "WARNING: static const char * array should
->> probably be static const char * const"is ignored since it introduces a
->> compilation warning.
->>
->> Graeme Gregory (2):
->>    drivers: regulator: palmas: add an API to set/clear the switch bit on
->>      SMPS10
->>    extcon: Palmas Extcon Driver
->>
->> Kishon Vijay Abraham I (1):
->>    usb: dwc3: use extcon fwrk to receive connect/disconnect notification
->
->
-> There were some comments to this series, what will happen with it ? Any
-> new versions coming ?
+On Tue, 28 May 2013, Wei Yongjun wrote:
 
-I've already sent new versions. Palmas Extcon Driver is already queued 
-in extcon-next.
-Chanwoo can take this patch in his tree after your ACK. [PATCH v2] usb: 
-dwc3: use extcon fwrk to receive connect/disconnect notification.
+> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> 
+> Fix to return a negative error code instead of 0 when we cannot get
+> IRQ source by platform_get_irq(), as done elsewhere in this function.
+> 
+> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+
+Thanks for the patch. Do you think the following version would be even a 
+bit simpler?
+
+diff --git a/drivers/mmc/host/sh_mobile_sdhi.c b/drivers/mmc/host/sh_mobile_sdhi.c
+index fe90853..76661b6 100644
+--- a/drivers/mmc/host/sh_mobile_sdhi.c
++++ b/drivers/mmc/host/sh_mobile_sdhi.c
+@@ -255,18 +255,17 @@ static int sh_mobile_sdhi_probe(struct platform_device *pdev)
+ 	if (multiplexed_isr) {
+ 		while (1) {
+ 			irq = platform_get_irq(pdev, i);
+-			if (irq < 0)
+-				break;
++			/* There must be at least one IRQ source */
++			if (irq < 0) {
++				ret = irq;
++				goto eirq;
++			}
+ 			i++;
+ 			ret = devm_request_irq(&pdev->dev, irq, tmio_mmc_irq, 0,
+ 					  dev_name(&pdev->dev), host);
+ 			if (ret)
+ 				goto eirq;
+ 		}
+-
+-		/* There must be at least one IRQ source */
+-		if (!i)
+-			goto eirq;
+ 	}
+ 
+ 	dev_info(&pdev->dev, "%s base at 0x%08lx clock rate %u MHz\n",
+
+If you agree, maybe you could send a v2 of your patch in this form, I'll 
+ack it then.
 
 Thanks
-Kishon
+Guennadi
+
+> ---
+>  drivers/mmc/host/sh_mobile_sdhi.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sh_mobile_sdhi.c b/drivers/mmc/host/sh_mobile_sdhi.c
+> index cc4c872..a4316b3 100644
+> --- a/drivers/mmc/host/sh_mobile_sdhi.c
+> +++ b/drivers/mmc/host/sh_mobile_sdhi.c
+> @@ -273,8 +273,10 @@ static int sh_mobile_sdhi_probe(struct platform_device *pdev)
+>  		}
+>  
+>  		/* There must be at least one IRQ source */
+> -		if (!i)
+> +		if (!i) {
+> +			ret = irq;
+>  			goto eirq;
+> +		}
+>  	}
+>  
+>  	dev_info(&pdev->dev, "%s base at 0x%08lx clock rate %u MHz\n",
+> 
+
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
