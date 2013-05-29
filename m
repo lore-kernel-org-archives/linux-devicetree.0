@@ -1,77 +1,27 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [patch 7/8] genirq: generic chip: Add linear irq domain support
-Date: Wed, 29 May 2013 03:22:49 +0100
-Message-ID: <20130529022249.DE5ED3E14F1@localhost>
-References: <20130503212258.385818955@linutronix.de> <20130506142348.321859745@linutronix.de> <20130506142539.450634298@linutronix.de>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130506142539.450634298@linutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Arnd Bergmann <arnd@arndb.de>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jean-Francois Moine <moinejf@free.fr>, Gerlando Falauto <gerlando.falauto@keymile.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: [0/10] Pending patches pull request
+Date: Wed, 29 May 2013 12:51:28 +1000
+Message-ID: <1369795898-7631-1-git-send-email-david@gibson.dropbear.id.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: jdl-CYoMK+44s/E@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 06 May 2013 14:30:27 -0000, Thomas Gleixner <tglx@linutronix.de> wrote:
-> Provide infrastructure for irq chip implementations which work on
-> linear irq domains.
-> 
-> - Interface to allocate multiple generic chips which are associated to
->   the irq domain.
-> 
-> - Interface to get the generic chip pointer for a particular hardware
->   interrupt in the domain.
-> 
-> - irq domain mapping function to install the chip for a particular
->   interrupt.
-> 
-> Note: This lacks a removal function for now, but this is a draft patch
-> the ARM folks to work on.
-> 
-> [ Sebastian Hesselbarth: Mask cache and pointer math fixups ]
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Hi Jon,
 
-Hi Thomas,
-
-Acked-by: Grant Likely <grant.likely@linaro.org>
-
-But I have some comments below...
-
-> ---
->  include/linux/irq.h       |   30 +++++++
->  include/linux/irqdomain.h |   12 ++
->  kernel/irq/generic-chip.c |  187 ++++++++++++++++++++++++++++++++++++++++++++--
->  kernel/irq/irqdomain.c    |    6 -
->  4 files changed, 223 insertions(+), 12 deletions(-)
-> 
-> Index: linux-2.6/include/linux/irq.h
-> ===================================================================
-> --- linux-2.6.orig/include/linux/irq.h
-> +++ linux-2.6/include/linux/irq.h
-> @@ -678,6 +678,8 @@ struct irq_chip_type {
->   * @wake_active:	Interrupt is marked as an wakeup from suspend source
->   * @num_ct:		Number of available irq_chip_type instances (usually 1)
->   * @private:		Private data for non generic chip callbacks
-> + * @installed:		bitfield to denote installed interrupts
-> + * @domain:		irq domain pointer
->   * @list:		List head for keeping track of instances
->   * @chip_types:		Array of interrupt irq_chip_types
->   *
-> @@ -699,6 +701,8 @@ struct irq_chip_generic {
->  	u32			wake_active;
->  	unsigned int		num_ct;
->  	void			*private;
-> +	unsigned long		installed;
-
-This is probably something that the irqdomain should be keeping track of
-internally, but that's an issue for a separate patch series.
-
-[...]
-> +struct irq_domain_ops irq_generic_chip_ops = {
-> +	.map = irq_map_generic_chip,
-> +	.xlate = irq_domain_xlate_onecell,
-
-As discussed on IRC, should use onetwocell here for greater
-compatibility with existing bindings.
-
-Cheers,
-g.
+Here's a batch of patches, a few from me, mostly from others, which I
+think should go into dtc/libfdt.  Please apply, or you can pull from:
+	git://github.com/dgibson/dtc.git (branch 'master')
