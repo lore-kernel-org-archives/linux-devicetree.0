@@ -1,81 +1,165 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCHv2 3/3] arm: dts: add bandgap entry for OMAP4460 devices
-Date: Wed, 29 May 2013 11:42:35 -0400
-Message-ID: <51A621EB.5080805@ti.com>
-References: <1368629928-6723-1-git-send-email-eduardo.valentin@ti.com> <1368629928-6723-4-git-send-email-eduardo.valentin@ti.com> <5193A875.1020000@ti.com> <5193B9AA.7020507@ti.com> <519488D3.5070003@ti.com> <5194D0AF.3010407@ti.com> <51A60C74.4010307@ti.com> <51A60E7E.2070905@ti.com>
+From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] fdt: Enhance dts/Makefile to be all things to all men
+Date: Wed, 29 May 2013 08:59:14 -0700
+Message-ID: <CAPnjgZ04BKhQtpJct9tvN8rW5Wae+6fxxOOQDnEkmgrr-mAfwg@mail.gmail.com>
+References: <1369769778-12455-1-git-send-email-sjg@chromium.org>
+ <51A51A50.4050308@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="----enig2KVESOHHRXAJFUWOMHFSK"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51A60E7E.2070905@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, tony@atomide.com, linux-omap@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51A51A50.4050308-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: u-boot-review <u-boot-review-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, U-Boot Mailing List <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>, Tom Warren <twarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Tom Rini <trini-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-------enig2KVESOHHRXAJFUWOMHFSK
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi Stephen,
 
-On 29-05-2013 10:19, Cousson, Benoit wrote:
-> Hi Eduardo,
->=20
-> On 5/29/2013 4:11 PM, Eduardo Valentin wrote:
->> Salut Monsieur Benoit,
+On Tue, May 28, 2013 at 1:57 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 05/28/2013 01:36 PM, Simon Glass wrote:
+>> There are a few partially conflicting requirements in compiling the device
+>> tree, since U-Boot relies on whatever is installed on the build machine.
 >>
->> On 16-05-2013 08:27, Eduardo Valentin wrote:
->>> On 16-05-2013 03:20, Benoit Cousson wrote:
->>>> Hi Eduardo,
->>>>
+>> Some versions of dtc support -i, and this is often better than using #include
+>> since you get correct line number information in errors.
+>
+> What issue is there with line numbers when using dtc? Recent dtc
+> supports #line directives from the pre-processing results, and hence
+> reports errors in terms of the source files, just like raw dtc without cpp.
+
+That's the issue. What does dtc v1.3 do?
+
+>
+>> Unfortunately this
+>> version must be installed manually in current Linux distributions.
+>
+> Well, then that gets into the problem of some .dts files choosing to use
+> /include/ and rely on -i, but others using #include and not. I don't
+> really think it's a good idea to propagate both versions. Picking one
+> and using it would be far better.
+>
+> I really do think we should simply require a reasonably recent dtc and
+> be done with it.
+
+I would be happy with that, but it can be an extra barrier to getting
+U-Boot building. So do we need using #include at all if we are using
+-i ?
+
+>
+>> Some device tree files use the word 'linux' which gets replaced with '1' by
+>> many version of gcc, including version 4.7. So undefine this.
+>
+> Linux chose to use -undef rather than undefining specific/individual
+> defines. It'd be best to be consistent to that .dts files are more
+> likely to be portable between the two.
+
+Seems a bit extreme, but OK. Are you worried that gcc defines other
+things without the double underscore?
+
+>
+>> diff --git a/dts/Makefile b/dts/Makefile
+>
+>> +# Provide a list of include directories for dtc
+>> +DTS_INCS-y := -i $(SRCTREE)/arch/$(ARCH)/dts
+>> +
+>> +DTS_INCS-y += -i $(SRCTREE)/board/$(VENDOR)/dts
+>
+> That has arch/ first then board/ ... (continued a few comments below)
+>
+>> +DTS_INCS-$(CONFIG_CHROMEOS) += -i $(SRCTREE)/cros/dts
+>
+> Is that meant to be upstream?
+>
+>> +# Check if our dtc includes the -i option
+>> +DTS_FLAGS := $(shell if ! dtc -i 2>&1 | grep -q "invalid option"; then \
+>> +             echo $(DTS_INCS-y); fi)
+>> +
+>>  # We preprocess the device tree file provide a useful define
+>> -DTS_CPPFLAGS := -x assembler-with-cpp \
+>> +# Undefine 'linux' since it might be used in device tree files
+>> +DTS_CPPFLAGS := -x assembler-with-cpp -Ulinux \
+>
+> I'll repeat my request to use -undef instead.
+>
+>>               -DARCH_CPU_DTS=\"$(SRCTREE)/arch/$(ARCH)/dts/$(CONFIG_ARCH_DEVICE_TREE).dtsi\" \
+>>               -DBOARD_DTS=\"$(SRCTREE)/board/$(VENDOR)/$(BOARD)/dts/$(DEVICE_TREE).dts\" \
+>> -             -I$(SRCTREE)/board/$(VENDOR)/dts -I$(SRCTREE)/arch/$(ARCH)/dts
+>> +             -D__ASSEMBLY__ -I$(OBJTREE)/include -I$(SRCTREE)/include \
+>> +             -I$(OBJTREE)/include2 \
+>
+> Do we really want include or include2 (what's that?) at all? The .dts
+> files really should be standalone, and not interact with the U-Boot
+> headers at all.
+
+I understood that you were wanting to make use of U-Boot defines. If
+you want to include include/config.h then I think you need these.
+
+>
+>> +             -I$(SRCTREE)/board/$(VENDOR)/dts -I$(SRCTREE)/arch/$(ARCH)/dts \
+>
+> ... whereas this has board/ first then arch/. It'd be better to be
+> consistent.
+
+OK
+
+>
+>> +             -include $(OBJTREE)/include/config.h
+>> +
+>> +DTS_TMP := $(OBJTREE)/include/generated/$(DEVICE_TREE).dts.in
+>
+> Hmm. This really isn't a generated header file. Can this instead be
+> $(OBJTREE)/$(dir $@).$(notdir $@).dts or something like that?
+
+I didn't say header file.
+
+The nice thing about having everything in include/generated is that it
+doesn't pollute the source for in-tree builds.
+
+>
+>> +DTS_SRC := board/$(VENDOR)/dts/$(DEVICE_TREE).dts
 >>
->> <cut>
+>>  all: $(obj).depend $(LIB)
 >>
->>>> We need to check.
->>>
->>> Yeah, I also dont think this will work, because we will reparent the
->>> interrupt, setting to a different controller. That will break the TAL=
-ERT
->>> signal already defined at GIC (check original patch).
->>>
->>> I propose keeping the way I sent. Unless there is a way to set two
->>> different controllers to same device.
->>>
+>> @@ -50,13 +68,19 @@ all:      $(obj).depend $(LIB)
+>>  # the filename.
+>>  DT_BIN       := $(obj)dt.dtb
 >>
->> Any idea on this patch? Shall we keep the way it is?
->=20
-> Well since we cannot use directly interrupt, I think we need to use at
-> least the proper gpio binding.
->=20
+>> -$(DT_BIN): $(TOPDIR)/board/$(VENDOR)/dts/$(DEVICE_TREE).dts
+>> +DTC_CMD := $(DTC) -R 4 -p 0x1000 -O dtb -o ${DT_BIN} $(DTS_FLAGS) $(DTS_TMP)
+>
+> It may be better to leave $(DTS_TMP) in the make script below, so it's
+> more obvious what file is being compiled; the re-direct to $(DTS_TMP) is
+> left in the $(CPP) invocation below, so it'd also be consistent with that.
+>
+>> +$(DT_BIN): $(TOPDIR)/$(DTS_SRC)
+>>       rc=$$( \
+>> -             cat $< | $(CPP) -P $(DTS_CPPFLAGS) - | \
+>> -             { { $(DTC) -R 4 -p 0x1000 -O dtb -o ${DT_BIN} - 2>&1 ; \
+>> +             cat $< | $(CPP) -P $(DTS_CPPFLAGS) - > $(DTS_TMP); \
+>> +             { { $(DTC_CMD)  2>&1 ; \
+> ...
+>
+>> +     if [ $$rc != 0 ]; then \
+>> +             echo "Source file is $(DTS_SRC)"; \
+>> +             echo "Compiler: $(DTC_CMD)"; \
+>> +     fi; \
+>
+> Isn't that what make V=1 is for?
 
-hmm... OK. sounds reasonable. I will change the driver and resend this
-one in one single series.
+It produces about 800KB of other spiel though. If the build fails it
+is already printing stuff out - so I find this useful.
 
-> Thanks,
-> Benoit
->=20
->=20
->=20
+>
 
-
---=20
-You have got to be excited about what you are doing. (L. Lamport)
-
-Eduardo Valentin
-
-
-------enig2KVESOHHRXAJFUWOMHFSK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlGmIesACgkQCXcVR3XQvP37TQEAxrSUBxkTI4JmfVk7HhZWLm0g
-G9lnqJzWPAGmxXVi6yYA/jiTHsN0hzhgGxYSTuTK2S/iITYDpfH6mDuLyew4Z64A
-=wxT/
------END PGP SIGNATURE-----
-
-------enig2KVESOHHRXAJFUWOMHFSK--
+Regards,
+Simon
