@@ -1,54 +1,76 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: [PATCH 7/7] thermal: ti-soc-thermal: add DT example for DRA752 chip
-Date: Wed, 29 May 2013 11:07:46 -0400
-Message-ID: <1369840066-20357-8-git-send-email-eduardo.valentin@ti.com>
-References: <1369840066-20357-1-git-send-email-eduardo.valentin@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2 11/14] Documentation: dt: binding: omap: am43x timer
+Date: Wed, 29 May 2013 09:27:28 -0600
+Message-ID: <51A61E60.4070708@wwwdotorg.org>
+References: <cover.1369658705.git.afzal@ti.com> <223d90dc9eeab13d8496690d336cdf0f7d27cd22.1369658705.git.afzal@ti.com> <51A520B5.8040803@gmail.com> <51A52A16.1040204@wwwdotorg.org> <C8443D0743D26F4388EA172BF4E2A7A93EAFB044@DBDE04.ent.ti.com> <51A5BEB6.6070809@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1369840066-20357-1-git-send-email-eduardo.valentin@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: rui.zhang@intel.com
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, J Keerthy <j-keerthy@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51A5BEB6.6070809@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: "Mohammed, Afzal" <afzal@ti.com>, Jon Hunter <jgchunter@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Benoit Cousson <benoit.cousson@linaro.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Update documentation by adding an example for DRA752 on DT description.
+On 05/29/2013 02:39 AM, Benoit Cousson wrote:
+> Hi Afzal,
+> 
+> On 05/29/2013 10:06 AM, Mohammed, Afzal wrote:
+>> Hi Jon,
+>>
+>> On Wed, May 29, 2013 at 03:35:10, Stephen Warren wrote:
+>>> On 05/28/2013 03:25 PM, Jon Hunter wrote:
+>>
+>>>>>  			ti,am335x-timer	(applicable to AM335x devices)
+>>>>>  			ti,am335x-timer-1ms (applicable to AM335x devices)
+>>>>> +			"ti,am4372-timer-1ms", "ti,am335x-timer-1ms" for AM43x 1ms timer
+>>>>> +			"ti,am4372-timer", "ti,am335x-timer" for AM43x timers other than 1ms one
+>>
+>>>> If you are adding more compatibility strings, then this implies that the
+>>>> AM43x timers are not 100% compatible with any other device listed (such
+>>>> as am335x or any omap device). That's fine but you should state that in
+>>>> the changelog. If the AM43x timer registers are 100% compatible with
+>>>> existing devices you should not add these.
+>>>
+>>> I'm not sure that's true; .dts files should always include a compatible
+>>> value that describes the most specific model of the HW, plus any
+>>> baseline compatible value that the HW is compatible with. This allows
+>>> any required quirks/fixes/... to be applied for the specific HW model
+>>> later even if nobody knows right now they'll be needed. Hence, defining
+>>> new compatible values doesn't necessarily mean incompatible HW.
+>>
+>> Stephen took words out of my finger ;)
+>>  
+>> Some explanations,I don;t 
+>>
+>> 1. first compatible should be exact device [A], followed by compatible
+>> model (if one)
+>> 2. Minor effort in getting DT right the first time may help prevent
+>> difficult effort later modifying it (if a necessity comes), considering
+>> the fact that DT sources has  to move out of Kernel at some point of
+>> time. And DT is not supposed to be modified, which may cause difficulty
+>> for the users (I had been a minor victim of this during rebase).
+>>
+>> As we both were in GPMC land earlier, an example,
+>>
+>> If my memory is right, GPMC IP in am335x is rev 6, and IP has 8 chip
+>> select, but one is not pinned out. Now assume that same IP is integrated
+>> in another SoC (probably OMAP4 has rev 6). Here if we use same compatible
+>> for both, driver cannot handle it properly (w/o knowledge about platform).
+>> But if exact compatible is mentioned, without modifying DT (which should
+>> be considered as a firmware) just by modifying Kernel, deciding based on
+>> compatible would help achieve what is required.
+> 
+> That's true for the DTS itself, but here your are changing the binding
+> documentation which is supposed to reflect the driver "interface" in the
+> Device Tree model description.
+> 
+> Since the driver does not support any new compatible string, you should
+> not update the binding.
 
-Cc: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: J Keerthy <j-keerthy@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
----
- Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt b/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt
-index 1629652..1953b33 100644
---- a/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt
-@@ -59,3 +59,15 @@ bandgap {
- 	compatible = "ti,omap5430-bandgap";
- 	interrupts = <0 126 4>; /* talert */
- };
-+
-+DRA752:
-+bandgap {
-+	reg = <0x4a0021e0 0xc
-+		0x4a00232c 0xc
-+		0x4a002380 0x2c
-+		0x4a0023C0 0x3c
-+		0x4a002564 0x8
-+		0x4a002574 0x50>;
-+	compatible = "ti,dra752-bandgap";
-+	interrupts = <0 126 4>; /* talert */
-+};
--- 
-1.8.2.1.342.gfa7285d
+I don't agree here; the DT binding should define all the required and/or
+allowed values that must/should/can be present in the DT - the entire
+legal schema. The set of all compatible values is included in that,
+irrespective of whether a particular value actually (currently) defines
+a different HW interface or not.
