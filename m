@@ -1,106 +1,57 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v5] media: i2c: tvp514x: add OF support
-Date: Wed, 29 May 2013 09:49:03 +0530
-Message-ID: <CA+V-a8vn7VOKjJ5EWnT-=eGeUgAwsUyeAF-bv1N6w3HmRefgBQ@mail.gmail.com>
-References: <1369574386-24486-1-git-send-email-prabhakar.csengg@gmail.com> <1417519.vVjfDJcATe@avalon>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v6 1/9] drivers: phy: add generic PHY framework
+Date: Wed, 29 May 2013 11:08:46 +0530
+Message-ID: <51A59466.6090504@ti.com>
+References: <1367229812-30574-1-git-send-email-kishon@ti.com>
+ <1367229812-30574-2-git-send-email-kishon@ti.com>
+ <51A531A9.4030800@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1417519.vVjfDJcATe@avalon>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, LMML <linux-media@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <51A531A9.4030800@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: mchehab@redhat.com, linux-doc@vger.kernel.org, tony@atomide.com, nsekhar@ti.com, swarren@nvidia.com, grant.likely@linaro.org, cesarb@cesarb.net, arnd@arndb.de, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, rob.herring@calxeda.com, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, b-cousson@ti.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, balbi@ti.com, santosh.shilimkar@ti.com, rob@landley.net, benoit.cousson@linaro.org, akpm@linux-foundation.org, shawn.guo@linaro.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi,
 
-On Wed, May 29, 2013 at 6:52 AM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> Hi Prabhakar,
+On Wednesday 29 May 2013 04:07 AM, Sylwester Nawrocki wrote:
+> Hi Kishon,
 >
-> Thanks for the patch.
->
-> On Sunday 26 May 2013 18:49:46 Prabhakar Lad wrote:
->> From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> On 04/29/2013 12:03 PM, Kishon Vijay Abraham I wrote:
+>> The PHY framework provides a set of APIs for the PHY drivers to
+>> create/destroy a PHY and APIs for the PHY users to obtain a reference
+>> to the
+>> PHY with or without using phandle. For dt-boot, the PHY drivers should
+>> also register *PHY provider* with the framework.
 >>
->> add OF support for the tvp514x driver.
+>> PHY drivers should create the PHY by passing id and ops like init, exit,
+>> power_on and power_off. This framework is also pm runtime enabled.
 >>
->> Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
->> Cc: Hans Verkuil <hans.verkuil@cisco.com>
->> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->> Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
->> Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
->> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> Cc: Sakari Ailus <sakari.ailus@iki.fi>
->> Cc: Grant Likely <grant.likely@secretlab.ca>
->> Cc: Rob Herring <rob.herring@calxeda.com>
->> Cc: Rob Landley <rob@landley.net>
->> Cc: devicetree-discuss@lists.ozlabs.org
->> Cc: linux-doc@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Cc: davinci-linux-open-source@linux.davincidsp.com
+>> The documentation for the generic PHY framework is added in
+>> Documentation/phy.txt and the documentation for dt binding can be
+>> found at
+>> Documentation/devicetree/bindings/phy/phy-bindings.txt
+>>
+>> Signed-off-by: Kishon Vijay Abraham I<kishon@ti.com>
 >
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->
-Thanks for the ack.
+> Thanks for working on this. For the record, I plan to give this a try
+> in the end of this week, with my simple MIPI CSI/DSI PHY driver. I might
+> have some more comments then. For now just couple of remarks after
+> reading the documentation.
 
-> (with two small comment below).
->
->> ---
->> Tested on da850-evm.
->>
-[snip]
->
-> s/of port/on port/
-> s/refer/refer to/
->
-OK
+Thanks for reviewing. I'll wait for your comments before posting the 
+next version.
 
->> Documentation/devicetree/bindings/media/video-interfaces.txt.
->> +
->> +Example:
->> +
->> +     i2c0@1c22000 {
->> +             ...
->> +             ...
->> +             tvp514x@5c {
->> +                     compatible = "ti,tvp5146";
->> +                     reg = <0x5c>;
->> +
->> +                     port {
->> +                             tvp514x_1: endpoint {
->> +                                     hsync-active = <1>;
->> +                                     vsync-active = <1>;
->> +                                     pclk-sample = <0>;
->> +                             };
->> +                     };
->> +             };
->> +             ...
->> +     };
->> diff --git a/drivers/media/i2c/tvp514x.c b/drivers/media/i2c/tvp514x.c
->> index 7438e01..7ed999b 100644
->> --- a/drivers/media/i2c/tvp514x.c
->> +++ b/drivers/media/i2c/tvp514x.c
->> @@ -39,6 +39,7 @@
->>  #include <media/v4l2-device.h>
->>  #include <media/v4l2-common.h>
->>  #include <media/v4l2-mediabus.h>
->> +#include <media/v4l2-of.h>
->>  #include <media/v4l2-chip-ident.h>
->>  #include <media/v4l2-ctrls.h>
->>  #include <media/tvp514x.h>
->> @@ -1055,6 +1056,42 @@ static struct tvp514x_decoder tvp514x_dev = {
->>
->>  };
->>
->> +static struct tvp514x_platform_data *
->> +tvp514x_get_pdata(struct i2c_client *client)
->> +{
->> +     struct tvp514x_platform_data *pdata = NULL;
->
-> No need to initialize pdata to NULL.
->
-OK will fix it in the next version.
-
-Regards,
---Prabhakar Lad
+Thanks
+Kishon
