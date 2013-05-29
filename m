@@ -1,124 +1,63 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/8] video: atmel_lcdfb: fix platform data struct
-Date: Wed, 29 May 2013 21:32:20 +0200
-Message-ID: <20130529193220.GB19468@game.jcrosoft.org>
-References: <20130411145741.GB25242@game.jcrosoft.org>
- <1365692422-9565-1-git-send-email-plagnioj@jcrosoft.com>
- <CACQ1gAjF5kuu-czkj56-pQdTBUhvY5VodvfnF3RA_DN-O0b9NQ@mail.gmail.com>
- <20130529173538.GC23899@game.jcrosoft.org>
- <CACQ1gAhhsMw1-Znd8BC=A0rJBrB4pphCtH9v9qOQR+j2dY3vCw@mail.gmail.com>
+From: Jon Hunter <jgchunter@gmail.com>
+Subject: Re: [PATCH v2 11/14] Documentation: dt: binding: omap: am43x timer
+Date: Wed, 29 May 2013 21:17:38 +0100
+Message-ID: <51A66262.7000305@gmail.com>
+References: <cover.1369658705.git.afzal@ti.com> <223d90dc9eeab13d8496690d336cdf0f7d27cd22.1369658705.git.afzal@ti.com> <51A520B5.8040803@gmail.com> <51A52A16.1040204@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACQ1gAhhsMw1-Znd8BC=A0rJBrB4pphCtH9v9qOQR+j2dY3vCw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andreas =?iso-8859-1?Q?Bie=DFmann?= <biessmann-pDveNdigDaDu9UdzE1sIFA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51A52A16.1040204@wwwdotorg.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Afzal Mohammed <afzal@ti.com>, Russell King <linux@arm.linux.org.uk>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Benoit Cousson <benoit.cousson@linaro.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 19:44 Wed 29 May     , Richard Genoud wrote:
-> 2013/5/29 Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>:
-> > On 16:36 Wed 29 May     , Richard Genoud wrote:
-> >> 2013/4/11 Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>:
-> >> > Today we mix pdata and drivers data in the struct atmel_lcdfb_info
-> >> > Fix it and introduce a new struct atmel_lcdfb_pdata for platform data only
-> >> >
-> >> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> >> > Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >> > Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> >> > Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-> >> > Cc: Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>
-> >> > ---
-> >> >  arch/arm/mach-at91/at91sam9261_devices.c    |    6 +-
-> >> >  arch/arm/mach-at91/at91sam9263_devices.c    |    6 +-
-> >> >  arch/arm/mach-at91/at91sam9g45_devices.c    |    6 +-
-> >> >  arch/arm/mach-at91/at91sam9rl_devices.c     |    6 +-
-> >> >  arch/arm/mach-at91/board-sam9261ek.c        |    6 +-
-> >> >  arch/arm/mach-at91/board-sam9263ek.c        |    4 +-
-> >> >  arch/arm/mach-at91/board-sam9m10g45ek.c     |    4 +-
-> >> >  arch/arm/mach-at91/board-sam9rlek.c         |    4 +-
-> >> >  arch/arm/mach-at91/board.h                  |    4 +-
-> >> >  arch/avr32/boards/atngw100/evklcd10x.c      |    6 +-
-> >> >  arch/avr32/boards/atngw100/mrmt.c           |    4 +-
-> >> >  arch/avr32/boards/atstk1000/atstk1000.h     |    2 +-
-> >> >  arch/avr32/boards/atstk1000/setup.c         |    2 +-
-> >> >  arch/avr32/boards/favr-32/setup.c           |    2 +-
-> >> >  arch/avr32/boards/hammerhead/setup.c        |    2 +-
-> >> >  arch/avr32/boards/merisc/display.c          |    2 +-
-> >> >  arch/avr32/boards/mimc200/setup.c           |    4 +-
-> >> >  arch/avr32/mach-at32ap/at32ap700x.c         |    8 +--
-> >> >  arch/avr32/mach-at32ap/include/mach/board.h |    4 +-
-> >> >  drivers/video/atmel_lcdfb.c                 |  104 +++++++++++++++++----------
-> >> >  include/video/atmel_lcdc.h                  |   24 +------
-> >> >  21 files changed, 109 insertions(+), 101 deletions(-)
-> >> >
-> >> [snip]
-> >> > diff --git a/drivers/video/atmel_lcdfb.c b/drivers/video/atmel_lcdfb.c
-> >> > index c1a2914..98733cd4 100644
-> >> > --- a/drivers/video/atmel_lcdfb.c
-> >> > +++ b/drivers/video/atmel_lcdfb.c
-> >> > @@ -20,12 +20,45 @@
-> >> >  #include <linux/gfp.h>
-> >> >  #include <linux/module.h>
-> >> >  #include <linux/platform_data/atmel.h>
-> >> > +#include <video/of_display_timing.h>
-> >> >
-> >> >  #include <mach/cpu.h>
-> >> >  #include <asm/gpio.h>
-> >> >
-> >> >  #include <video/atmel_lcdc.h>
-> >> >
-> >> > +struct atmel_lcdfb_config {
-> >> > +       bool have_alt_pixclock;
-> >> > +       bool have_hozval;
-> >> > +       bool have_intensity_bit;
-> >> > +};
-> >> > +
-> >> > + /* LCD Controller info data structure, stored in device platform_data */
-> >> > +struct atmel_lcdfb_info {
-> >> > +       spinlock_t              lock;
-> >> > +       struct fb_info          *info;
-> >> > +       void __iomem            *mmio;
-> >> > +       int                     irq_base;
-> >> > +       struct work_struct      task;
-> >> > +
-> >> > +       unsigned int            smem_len;
-> >> > +       struct platform_device  *pdev;
-> >> > +       struct clk              *bus_clk;
-> >> > +       struct clk              *lcdc_clk;
-> >> > +
-> >> > +       struct backlight_device *backlight;
-> >> > +       u8                      bl_power;
-> >> > +       bool                    lcdcon_pol_negative;
-> >> I think lcdcon_pol_negative should be part of pdata, because it really
-> >> depends on how the PWM is wired on the board.
-> >>
-> >
-> > maybe but no one mainline use it on any pdata for non-dt boars
-> > so I did not want to expose it
-> Well, at least, I'm using it :)
-> (and I guess that Andreas is using it also, otherwise he wouldn't have
-> introduce it !)
 
-yes but pdata is for non-dt boards, for dt you can keep it in struct
-atmel_lcdfb_info and add a property
-
-if non-dt boards want it my answer is I do not care switch to DT
-
-Best Regards,
-J.
+On 28/05/13 23:05, Stephen Warren wrote:
+> On 05/28/2013 03:25 PM, Jon Hunter wrote:
+>>
+>> On 27/05/13 15:37, Afzal Mohammed wrote:
+>>> AM43x timer bindings.
+>>>
+>>> Signed-off-by: Afzal Mohammed <afzal@ti.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/arm/omap/timer.txt | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/omap/timer.txt b/Documentation/devicetree/bindings/arm/omap/timer.txt
+>>> index d02e27c..70cb398 100644
+>>> --- a/Documentation/devicetree/bindings/arm/omap/timer.txt
+>>> +++ b/Documentation/devicetree/bindings/arm/omap/timer.txt
+>>> @@ -14,6 +14,8 @@ Required properties:
+>>>  			ti,omap5430-timer (applicable to OMAP543x devices)
+>>>  			ti,am335x-timer	(applicable to AM335x devices)
+>>>  			ti,am335x-timer-1ms (applicable to AM335x devices)
+>>> +			"ti,am4372-timer-1ms", "ti,am335x-timer-1ms" for AM43x 1ms timer
+>>> +			"ti,am4372-timer", "ti,am335x-timer" for AM43x timers other than 1ms one
+>>>  
+>>>  - reg:			Contains timer register address range (base address and
+>>>  			length).
+>>
+>> If you are adding more compatibility strings, then this implies that the
+>> AM43x timers are not 100% compatible with any other device listed (such
+>> as am335x or any omap device). That's fine but you should state that in
+>> the changelog. If the AM43x timer registers are 100% compatible with
+>> existing devices you should not add these.
 > 
-> 
-> Best regards,
-> Richard.
+> I'm not sure that's true; .dts files should always include a compatible
+> value that describes the most specific model of the HW, plus any
+> baseline compatible value that the HW is compatible with. This allows
+> any required quirks/fixes/... to be applied for the specific HW model
+> later even if nobody knows right now they'll be needed. Hence, defining
+> new compatible values doesn't necessarily mean incompatible HW.
+
+Yes that does seem to agree with what Grant had told me in the past [1].
+So this is ok then. However, I still think that the changelog needs to
+be vastly improved and more explicit about the changes.
+
+Cheers
+Jon
+
+[1] http://thread.gmane.org/gmane.linux.ports.arm.omap/90551/focus=26447
+
