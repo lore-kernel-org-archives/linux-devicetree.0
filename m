@@ -1,76 +1,170 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2 11/14] Documentation: dt: binding: omap: am43x timer
-Date: Wed, 29 May 2013 09:27:28 -0600
-Message-ID: <51A61E60.4070708@wwwdotorg.org>
-References: <cover.1369658705.git.afzal@ti.com> <223d90dc9eeab13d8496690d336cdf0f7d27cd22.1369658705.git.afzal@ti.com> <51A520B5.8040803@gmail.com> <51A52A16.1040204@wwwdotorg.org> <C8443D0743D26F4388EA172BF4E2A7A93EAFB044@DBDE04.ent.ti.com> <51A5BEB6.6070809@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 7/9] gpio-tz1090: add TZ1090 gpio driver
+Date: Wed, 29 May 2013 17:32:51 +0200
+Message-ID: <CACRpkdb-JNbWxUiiJf=2Y8C0txcKBVoFjBCwkaMVq4my1nzHzQ@mail.gmail.com>
+References: <1369412476-14245-1-git-send-email-james.hogan@imgtec.com>
+	<1369412476-14245-8-git-send-email-james.hogan@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <51A5BEB6.6070809@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: "Mohammed, Afzal" <afzal@ti.com>, Jon Hunter <jgchunter@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Benoit Cousson <benoit.cousson@linaro.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1369412476-14245-8-git-send-email-james.hogan@imgtec.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: James Hogan <james.hogan@imgtec.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/29/2013 02:39 AM, Benoit Cousson wrote:
-> Hi Afzal,
-> 
-> On 05/29/2013 10:06 AM, Mohammed, Afzal wrote:
->> Hi Jon,
->>
->> On Wed, May 29, 2013 at 03:35:10, Stephen Warren wrote:
->>> On 05/28/2013 03:25 PM, Jon Hunter wrote:
->>
->>>>>  			ti,am335x-timer	(applicable to AM335x devices)
->>>>>  			ti,am335x-timer-1ms (applicable to AM335x devices)
->>>>> +			"ti,am4372-timer-1ms", "ti,am335x-timer-1ms" for AM43x 1ms timer
->>>>> +			"ti,am4372-timer", "ti,am335x-timer" for AM43x timers other than 1ms one
->>
->>>> If you are adding more compatibility strings, then this implies that the
->>>> AM43x timers are not 100% compatible with any other device listed (such
->>>> as am335x or any omap device). That's fine but you should state that in
->>>> the changelog. If the AM43x timer registers are 100% compatible with
->>>> existing devices you should not add these.
->>>
->>> I'm not sure that's true; .dts files should always include a compatible
->>> value that describes the most specific model of the HW, plus any
->>> baseline compatible value that the HW is compatible with. This allows
->>> any required quirks/fixes/... to be applied for the specific HW model
->>> later even if nobody knows right now they'll be needed. Hence, defining
->>> new compatible values doesn't necessarily mean incompatible HW.
->>
->> Stephen took words out of my finger ;)
->>  
->> Some explanations,I don;t 
->>
->> 1. first compatible should be exact device [A], followed by compatible
->> model (if one)
->> 2. Minor effort in getting DT right the first time may help prevent
->> difficult effort later modifying it (if a necessity comes), considering
->> the fact that DT sources has  to move out of Kernel at some point of
->> time. And DT is not supposed to be modified, which may cause difficulty
->> for the users (I had been a minor victim of this during rebase).
->>
->> As we both were in GPMC land earlier, an example,
->>
->> If my memory is right, GPMC IP in am335x is rev 6, and IP has 8 chip
->> select, but one is not pinned out. Now assume that same IP is integrated
->> in another SoC (probably OMAP4 has rev 6). Here if we use same compatible
->> for both, driver cannot handle it properly (w/o knowledge about platform).
->> But if exact compatible is mentioned, without modifying DT (which should
->> be considered as a firmware) just by modifying Kernel, deciding based on
->> compatible would help achieve what is required.
-> 
-> That's true for the DTS itself, but here your are changing the binding
-> documentation which is supposed to reflect the driver "interface" in the
-> Device Tree model description.
-> 
-> Since the driver does not support any new compatible string, you should
-> not update the binding.
+On Fri, May 24, 2013 at 6:21 PM, James Hogan <james.hogan@imgtec.com> wrote:
 
-I don't agree here; the DT binding should define all the required and/or
-allowed values that must/should/can be present in the DT - the entire
-legal schema. The set of all compatible values is included in that,
-irrespective of whether a particular value actually (currently) defines
-a different HW interface or not.
+> Add a GPIO driver for the main GPIOs found in the TZ1090 (Comet) SoC.
+> This doesn't include low-power GPIOs as they're controlled separately
+> via the Powerdown Controller (PDC) registers.
+>
+> The driver is instantiated by device tree and supports interrupts for
+> all GPIOs.
+
+(...)
+
+This is looking much better.
+
+However I have some more improvement comments, due to new
+knowledge. I am sorry about the moving target but it's not my fault...
+
+Basically you should adopt the new style of referencing
+flags using the preprocessor.
+
+The examples can be found in the linux-next tree.
+
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-tz1090.txt
+(...)
+> +  - #gpio-cells: Should be 2. The syntax of the gpio specifier used by client
+> +    nodes should have the following values.
+> +       <[phandle of the gpio controller node]
+> +        [gpio number within the gpio bank]
+> +        [gpio flags]>
+> +
+> +    Values for gpio specifier:
+> +    - GPIO number: a value in the range 0 to 29.
+> +    - GPIO flags: bit field of flags:
+> +        1: active low
+
+Reference flags from
+#include <dt-bindings/gpio/gpio.h>
+
+Then you can use the named constants:
+GPIO_ACTIVE_HIGH, GPIO_ACTIVE_LOW
+
+(...)
+> +  - #interrupt-cells: Should be 2. The syntax of the interrupt specifier used by
+> +    client nodes should have the following values.
+> +       <[phandle of the interurupt controller]
+> +        [gpio number within the gpio bank]
+> +        [irq flags]>
+> +
+> +    Values for irq specifier:
+> +    - GPIO number: a value in the range 0 to 29
+> +    - IRQ flags: value to describe edge and level triggering
+> +        1: trigger on rising edge
+> +        2: trigger on falling edge
+> +        3: trigger on both rising and falling edges
+> +        4: trigger when high
+> +        8: trigger when low
+
+This goes here as well.
+#include <dt-bindings/interrupt-controller/irq.h>
+
+Then you can use:
+IRQ_TYPE_NONE. IRQ_TYPE_EDGE_RISING (etc)
+
+> +       gpios: gpio-controller@02005800 {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               compatible = "img,tz1090-gpio";
+> +               reg = <0x02005800 0x90>;
+> +
+> +               /* bank 0 with an interrupt */
+> +               gpios0: bank@0 {
+> +                       #gpio-cells = <2>;
+> +                       #interrupt-cells = <2>;
+> +                       reg = <0>;
+> +                       interrupts = <13 4 /* level */>;
+
+And it will look like:
+interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
+
+Which is way easier to understand and you no longer
+need to insert comments to explain things.
+
+(...)
+> +++ b/drivers/gpio/gpio-tz1090.c
+
+(...)
+> +/* REG_GPIO_IRQ_PLRT */
+> +#define GPIO_POLARITY_LOW      0
+> +#define GPIO_POLARITY_HIGH     1
+> +
+> +/* REG_GPIO_IRQ_TYPE */
+> +#define GPIO_LEVEL_TRIGGERED   0
+> +#define GPIO_EDGE_TRIGGERED    1
+
+Why does the comment start with REG_* but not the actual
+definition?
+
+(...)
+> +/* caller must hold LOCK2 */
+> +static inline void _tz1090_gpio_mod_bit(struct tz1090_gpio_bank *bank,
+> +                                       unsigned int reg_offs,
+> +                                       unsigned int offset,
+> +                                       int val)
+> +{
+> +       u32 value;
+> +
+> +       value = tz1090_gpio_read(bank, reg_offs);
+> +       value &= ~BIT(offset);
+> +       value |= !!val << offset;
+
+I can't parse that last line, it is equivalent to writing:
+
+if (val)
+    value |= BIT(offset);
+
+Which I think is easier to understand.
+
+
+> +/* set polarity to trigger on next edge, whether rising or falling */
+> +static void tz1090_gpio_irq_next_edge(struct tz1090_gpio_bank *bank,
+> +                                     unsigned int offset)
+> +{
+> +       unsigned int value_p, value_i;
+> +       int lstat;
+> +
+> +       __global_lock2(lstat);
+> +       /* irq_polarity[offset] = !input[offset] */
+
+This comments probably need to be a bit more verbose, like explain
+to readers what is happening here.
+
+> +       value_i = ~tz1090_gpio_read(bank, REG_GPIO_DIN);
+> +       value_p = tz1090_gpio_read(bank, REG_GPIO_IRQ_PLRT);
+> +       value_p &= ~BIT(offset);
+> +       value_p |= value_i & BIT(offset);
+> +       tz1090_gpio_write(bank, REG_GPIO_IRQ_PLRT, value_p);
+> +       __global_unlock2(lstat);
+> +}
+
+This looks like it'll work though, nice!
+
+(...)
+> +static struct of_device_id tz1090_gpio_of_match[] = {
+> +       { .compatible = "img,tz1090-gpio" },
+> +       { },
+> +};
+
+(...)
+> +postcore_initcall(tz1090_gpio_init);
+
+Is it really necessary to have this so early?
+
+Apart from these remarks it is looking very good.
+
+Yours,
+Linus Walleij
