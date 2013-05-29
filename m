@@ -1,42 +1,59 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH] serial: samsung: missing uart_unregister_driver() on error in s3c24xx_serial_modinit()
-Date: Wed, 29 May 2013 13:47:09 +0800
-Message-ID: <CAPgLHd9ZCxMnYkEVOMtNafY=PsZX7AZ0-+D=9wBOLEc8fF-0_w@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/3] palmas usb driver
+Date: Wed, 29 May 2013 11:36:01 +0530
+Message-ID: <51A59AC9.9000908@ti.com>
+References: <1369405896-30246-1-git-send-email-kishon@ti.com>
+ <20130528173554.GD15794@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-serial-owner@vger.kernel.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130528173554.GD15794-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: george.cherian-l0cyMroinI0@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+Hi Felipe,
 
-Add the missing uart_unregister_driver() before return from
-s3c24xx_serial_modinit() in the error handling case.
+On Tuesday 28 May 2013 11:05 PM, Felipe Balbi wrote:
+> On Fri, May 24, 2013 at 08:01:33PM +0530, Kishon Vijay Abraham I wrote:
+>> This patch series adds driver for palmas usb which is used to detect
+>> attach/detach events of usb device and usb host.
+>>
+>> [PATCH v5 2/3] extcon: Palmas Extcon Driver which was sent previously
+>> is added in this patch series itself. The revision history is added
+>> in the patch comments section.
+>>
+>> A checkpatch warning "WARNING: static const char * array should
+>> probably be static const char * const"is ignored since it introduces a
+>> compilation warning.
+>>
+>> Graeme Gregory (2):
+>>    drivers: regulator: palmas: add an API to set/clear the switch bit on
+>>      SMPS10
+>>    extcon: Palmas Extcon Driver
+>>
+>> Kishon Vijay Abraham I (1):
+>>    usb: dwc3: use extcon fwrk to receive connect/disconnect notification
+>
+>
+> There were some comments to this series, what will happen with it ? Any
+> new versions coming ?
 
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
----
- drivers/tty/serial/samsung.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+I've already sent new versions. Palmas Extcon Driver is already queued 
+in extcon-next.
+Chanwoo can take this patch in his tree after your ACK. [PATCH v2] usb: 
+dwc3: use extcon fwrk to receive connect/disconnect notification.
 
-diff --git a/drivers/tty/serial/samsung.c b/drivers/tty/serial/samsung.c
-index 8942941..1c2b8c3 100644
---- a/drivers/tty/serial/samsung.c
-+++ b/drivers/tty/serial/samsung.c
-@@ -1798,7 +1798,13 @@ static int __init s3c24xx_serial_modinit(void)
- 		return ret;
- 	}
- 
--	return platform_driver_register(&samsung_serial_driver);
-+	ret = platform_driver_register(&samsung_serial_driver);
-+	if (ret < 0) {
-+		pr_err("Failed to register platform driver\n");
-+		uart_unregister_driver(&s3c24xx_uart_drv);
-+	}
-+
-+	return ret;
- }
- 
- static void __exit s3c24xx_serial_modexit(void)
-
+Thanks
+Kishon
