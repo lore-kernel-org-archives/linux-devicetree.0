@@ -1,55 +1,41 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 9/9] gpio-tz1090-pdc: add TZ1090 PDC gpio driver
-Date: Wed, 29 May 2013 17:38:48 +0200
-Message-ID: <CACRpkdZ0Gav0TKDXyD9MwaUrdcenV=+JV9oWNN1+ifsbO3uJ1w@mail.gmail.com>
-References: <1369412476-14245-1-git-send-email-james.hogan@imgtec.com>
-	<1369412476-14245-10-git-send-email-james.hogan@imgtec.com>
+From: Timur Tabi <timur@tabi.org>
+Subject: Re: [PATCH v6 01/10] ASoC: phycore-ac97: Add DT support
+Date: Wed, 29 May 2013 10:41:58 -0500
+Message-ID: <CAOZdJXVL2uP-qW=kydgS-t3C=C+6Cn9D3FWqbMuoK2c-EnckyA@mail.gmail.com>
+References: <1369752478-30260-1-git-send-email-mpa@pengutronix.de>
+ <1369752478-30260-2-git-send-email-mpa@pengutronix.de>
+ <20130529135342.GB29528@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1369412476-14245-10-git-send-email-james.hogan@imgtec.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: James Hogan <james.hogan@imgtec.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20130529135342.GB29528@S2101-09.ap.freescale.net>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel mailing list <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Sascha Hauer <kernel@pengutronix.de>, Markus Pargmann <mpa@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 24, 2013 at 6:21 PM, James Hogan <james.hogan@imgtec.com> wrote:
+On Wed, May 29, 2013 at 8:53 AM, Shawn Guo <shawn.guo@linaro.org> wrote:
+>
+>
+> This function is unavailable until patch #7, right?
 
-> Add a GPIO driver for the low-power Powerdown Controller GPIOs in the
-> TZ1090 SoC.
-(...)
-> +  Values for gpio specifier:
-> +  - GPIO number: a value in the range 0 to 6.
-> +  - GPIO flags: bit field of flags:
-> +      1: active low
 
-Use #include <dt-bindings/gpio/gpio.h>
-for flags and symbolic names.
+May I suggest that Markus run this script:
 
-> +Optional properties:
-> +- gpio-ranges: Mapping to pin controller pins
-> +
-> +- interrupts: Individual syswake interrupts (other GPIOs cannot interrupt)
-> +
-> +
-> +Example:
-> +
-> +       pdc_gpios: gpio-controller@02006500 {
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +
-> +               compatible = "img,tz1090-pdc-gpio";
-> +               reg = <0x02006500 0x100>;
-> +
-> +               interrupt-parent = <&pdc>;
-> +               interrupts =    <1 0 0>,        /* Syswake 0 */
-> +                               <1 1 0>,        /* Syswake 1 */
-> +                               <1 2 0>;        /* Syswake 2 */
-> +       };
+for i in 1 2 3 4 5 6 7 8 9
+do
+  git checkout HEAD^
+  make
+done
 
-Interrupt flags seem to be undocumented here.
-
-Apart from this it's looking nice.
-
-Yours,
-Linus Walleij
+It's important that each commit in a patchset be compilable, otherwise
+git-bisect will break.
