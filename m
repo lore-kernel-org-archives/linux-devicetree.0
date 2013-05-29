@@ -1,11 +1,13 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: [0/10] Pending patches pull request
-Date: Wed, 29 May 2013 12:51:28 +1000
-Message-ID: <1369795898-7631-1-git-send-email-david@gibson.dropbear.id.au>
+Subject: [PATCH 01/10] fdtdump: make usage a bit more friendly
+Date: Wed, 29 May 2013 12:51:29 +1000
+Message-ID: <1369795898-7631-2-git-send-email-david@gibson.dropbear.id.au>
+References: <1369795898-7631-1-git-send-email-david@gibson.dropbear.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1369795898-7631-1-git-send-email-david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,8 +22,206 @@ To: jdl-CYoMK+44s/E@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon,
+From: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
 
-Here's a batch of patches, a few from me, mostly from others, which I
-think should go into dtc/libfdt.  Please apply, or you can pull from:
-	git://github.com/dgibson/dtc.git (branch 'master')
+This starts a new usage framework and then cuts fdtdump over to it.
+Now we can do `fdtdump -h` and get something useful back.
+
+Signed-off-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org>
+Signed-off-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+---
+ fdtdump.c |   31 +++++++++++++++++++++++--------
+ util.c    |   54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ util.h    |   61 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 138 insertions(+), 8 deletions(-)
+
+diff --git a/fdtdump.c b/fdtdump.c
+index 03ea429..a6e522c 100644
+--- a/fdtdump.c
++++ b/fdtdump.c
+@@ -117,21 +117,36 @@ static void dump_blob(void *blob)
+ 	}
+ }
+ 
++/* Usage related data. */
++static const char usage_synopsis[] = "fdtdump [options] <file>";
++static const char usage_short_opts[] = USAGE_COMMON_SHORT_OPTS;
++static struct option const usage_long_opts[] = {
++	USAGE_COMMON_LONG_OPTS
++};
++static const char * const usage_opts_help[] = {
++	USAGE_COMMON_OPTS_HELP
++};
+ 
+ int main(int argc, char *argv[])
+ {
++	int opt;
++	const char *file;
+ 	char *buf;
+ 
+-	if (argc < 2) {
+-		fprintf(stderr, "supply input filename\n");
+-		return 5;
++	while ((opt = util_getopt_long()) != EOF) {
++		switch (opt) {
++		case_USAGE_COMMON_FLAGS
++		}
+ 	}
++	if (optind != argc - 1)
++		long_usage("missing input filename");
++	file = argv[optind];
++
++	buf = utilfdt_read(file);
++	if (!buf)
++		die("could not read: %s\n", file);
+ 
+-	buf = utilfdt_read(argv[1]);
+-	if (buf)
+-		dump_blob(buf);
+-	else
+-		return 10;
++	dump_blob(buf);
+ 
+ 	return 0;
+ }
+diff --git a/util.c b/util.c
+index 350cf8b..d9a823a 100644
+--- a/util.c
++++ b/util.c
+@@ -392,3 +392,57 @@ void util_version(void)
+ 	printf("Version: %s\n", DTC_VERSION);
+ 	exit(0);
+ }
++
++void util_long_usage(const char *errmsg, const char *synopsis,
++		     const char *short_opts, struct option const long_opts[],
++		     const char * const opts_help[])
++{
++	FILE *fp = errmsg ? stderr : stdout;
++	const char a_arg[] = "<arg>";
++	size_t a_arg_len = strlen(a_arg) + 1;
++	size_t i;
++	int optlen;
++
++	fprintf(fp,
++		"Usage: %s\n"
++		"\n"
++		"Options: -[%s]\n", synopsis, short_opts);
++
++	/* prescan the --long opt length to auto-align */
++	optlen = 0;
++	for (i = 0; long_opts[i].name; ++i) {
++		/* +1 is for space between --opt and help text */
++		int l = strlen(long_opts[i].name) + 1;
++		if (long_opts[i].has_arg == a_argument)
++			l += a_arg_len;
++		if (optlen < l)
++			optlen = l;
++	}
++
++	for (i = 0; long_opts[i].name; ++i) {
++		/* helps when adding new applets or options */
++		assert(opts_help[i] != NULL);
++
++		/* first output the short flag if it has one */
++		if (long_opts[i].val > '~')
++			fprintf(fp, "      ");
++		else
++			fprintf(fp, "  -%c, ", long_opts[i].val);
++
++		/* then the long flag */
++		if (long_opts[i].has_arg == no_argument)
++			fprintf(fp, "--%-*s", optlen, long_opts[i].name);
++		else
++			fprintf(fp, "--%s %s%*s", long_opts[i].name, a_arg,
++				(int)(optlen - strlen(long_opts[i].name) - a_arg_len), "");
++
++		/* finally the help text */
++		fprintf(fp, "%s\n", opts_help[i]);
++	}
++
++	if (errmsg) {
++		fprintf(fp, "\nError: %s\n", errmsg);
++		exit(EXIT_FAILURE);
++	} else
++		exit(EXIT_SUCCESS);
++}
+diff --git a/util.h b/util.h
+index 95ae531..1da3bd3 100644
+--- a/util.h
++++ b/util.h
+@@ -2,6 +2,7 @@
+ #define _UTIL_H
+ 
+ #include <stdarg.h>
++#include <getopt.h>
+ 
+ /*
+  * Copyright 2011 The Chromium Authors, All Rights Reserved.
+@@ -184,4 +185,64 @@ void utilfdt_print_data(const char *data, int len);
+  */
+ void util_version(void) __attribute__((noreturn));
+ 
++/**
++ * Show usage and exit
++ *
++ * This helps standardize the output of various utils.  You most likely want
++ * to use the long_usage() helper below rather than call this.
++ *
++ * @param errmsg	If non-NULL, an error message to display
++ * @param synopsis	The initial example usage text (and possible examples)
++ * @param short_opts	The string of short options
++ * @param long_opts	The structure of long options
++ * @param opts_help	An array of help strings (should align with long_opts)
++ */
++void util_long_usage(const char *errmsg, const char *synopsis,
++		     const char *short_opts, struct option const long_opts[],
++		     const char * const opts_help[]) __attribute__((noreturn));
++
++/**
++ * Show usage and exit
++ *
++ * If you name all your usage variables with usage_xxx, then you can call this
++ * help macro rather than expanding all arguments yourself.
++ *
++ * @param errmsg	If non-NULL, an error message to display
++ */
++#define long_usage(errmsg) \
++	util_long_usage(errmsg, usage_synopsis, usage_short_opts, \
++			usage_long_opts, usage_opts_help)
++
++/**
++ * Call getopt_long() with standard options
++ *
++ * Since all util code runs getopt in the same way, provide a helper.
++ */
++#define util_getopt_long() getopt_long(argc, argv, usage_short_opts, \
++				       usage_long_opts, NULL)
++
++/* Helper for aligning long_opts array */
++#define a_argument required_argument
++
++/* Helper for usage_short_opts string constant */
++#define USAGE_COMMON_SHORT_OPTS "hV"
++
++/* Helper for usage_long_opts option array */
++#define USAGE_COMMON_LONG_OPTS \
++	{"help",      no_argument, NULL, 'h'}, \
++	{"version",   no_argument, NULL, 'V'}, \
++	{NULL,        no_argument, NULL, 0x0}
++
++/* Helper for usage_opts_help array */
++#define USAGE_COMMON_OPTS_HELP \
++	"Print this help and exit", \
++	"Print version and exit", \
++	NULL
++
++/* Helper for getopt case statements */
++#define case_USAGE_COMMON_FLAGS \
++	case 'h': long_usage(NULL); \
++	case 'V': util_version(); \
++	case '?': long_usage("unknown option");
++
+ #endif /* _UTIL_H */
+-- 
+1.7.10.4
