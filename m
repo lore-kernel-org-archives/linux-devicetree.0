@@ -1,313 +1,51 @@
-From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/8] video: atmel_lcdfb: add device tree suport
-Date: Wed, 29 May 2013 17:01:58 +0200
-Message-ID: <CACQ1gAhbnsrmCzdv0KNDMN153+0F_8cwNPZUz=SF8sKUPbty3g@mail.gmail.com>
-References: <20130411145741.GB25242@game.jcrosoft.org>
- <1365692422-9565-1-git-send-email-plagnioj@jcrosoft.com>
- <1365692422-9565-4-git-send-email-plagnioj@jcrosoft.com>
+From: Eduardo Valentin <eduardo.valentin@ti.com>
+Subject: [PATCH 1/7] thermal: ti-soc-thermal: update DT reference for OMAP5430
+Date: Wed, 29 May 2013 11:07:40 -0400
+Message-ID: <1369840066-20357-2-git-send-email-eduardo.valentin@ti.com>
+References: <1369840066-20357-1-git-send-email-eduardo.valentin@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1365692422-9565-4-git-send-email-plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, =?UTF-8?Q?Andreas_Bie=C3=9Fmann?= <biessmann-pDveNdigDaDu9UdzE1sIFA@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1369840066-20357-1-git-send-email-eduardo.valentin@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: rui.zhang@intel.com
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Eduardo Valentin <eduardo.valentin@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, J Keerthy <j-keerthy@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2013/4/11 Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>:
-> get display timings from device tree
-> Use videomode helpers to get display timings and configurations from
-> device tree
->
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-> ---
->  .../devicetree/bindings/video/atmel,lcdc.txt       |   75 ++++++
->  drivers/video/Kconfig                              |    2 +
->  drivers/video/atmel_lcdfb.c                        |  244 +++++++++++++++++---
->  3 files changed, 289 insertions(+), 32 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/video/atmel,lcdc.txt
->
-> diff --git a/Documentation/devicetree/bindings/video/atmel,lcdc.txt b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-> new file mode 100644
-> index 0000000..1ec175e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-> @@ -0,0 +1,75 @@
-> +Atmel LCDC Framebuffer
-> +-----------------------------------------------------
-> +
-> +Required properties:
-> +- compatible :
-> +       "atmel,at91sam9261-lcdc" ,
-> +       "atmel,at91sam9263-lcdc" ,
-> +       "atmel,at91sam9g10-lcdc" ,
-> +       "atmel,at91sam9g45-lcdc" ,
-> +       "atmel,at91sam9g45es-lcdc" ,
-> +       "atmel,at91sam9rl-lcdc" ,
-> +       "atmel,at32ap-lcdc"
-> +- reg : Should contain 1 register ranges(address and length)
-> +- interrupts : framebuffer controller interrupt
-> +- display: a phandle pointing to the display node
-> +
-> +Required nodes:
-> +- display: a display node is required to initialize the lcd panel
-> +       This should be in the board dts.
-> +- default-mode: a videomode within the display with timing parameters
-> +       as specified below.
-> +
-> +Example:
-> +
-> +       fb0: fb@0x00500000 {
-> +               compatible = "atmel,at91sam9g45-lcdc";
-> +               reg = <0x00500000 0x1000>;
-> +               interrupts = <23 3 0>;
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_fb>;
-> +               display = <&display0>;
-> +               status = "okay";
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +
-> +       };
-> +
-> +Atmel LCDC Display
-> +-----------------------------------------------------
-> +Required properties (as per of_videomode_helper):
-> +
-> + - atmel,dmacon: dma controler configuration
-> + - atmel,lcdcon2: lcd controler configuration
-> + - atmel,guard-time: lcd guard time (Delay in frame periods)
-> + - bits-per-pixel: lcd panel bit-depth.
-> +
-> +Optional properties (as per of_videomode_helper):
-> + - atmel,lcdcon-backlight: enable backlight
-> + - atmel,lcd-wiring-mode: lcd wiring mode "RGB" or "BRG"
-> + - atmel,power-control-gpio: gpio to power on or off the LCD (as many as needed)
-still on lcdcon_pol_negative, we can add something like that:
- - atmel,lcdcon-pwm-pulse-low: Output PWM pulses are low level (high
-level if not set)
+Add missing irq line for TALERT on DT entry for OMAP5430.
 
-> +
-> +Example:
-> +       display0: display {
-> +               bits-per-pixel = <32>;
-> +               atmel,lcdcon-backlight;
-> +               atmel,dmacon = <0x1>;
-> +               atmel,lcdcon2 = <0x80008002>;
-> +               atmel,guard-time = <9>;
-> +               atmel,lcd-wiring-mode = <1>;
-> +
-> +               display-timings {
-> +                       native-mode = <&timing0>;
-> +                       timing0: timing0 {
-> +                               clock-frequency = <9000000>;
-> +                               hactive = <480>;
-> +                               vactive = <272>;
-> +                               hback-porch = <1>;
-> +                               hfront-porch = <1>;
-> +                               vback-porch = <40>;
-> +                               vfront-porch = <1>;
-> +                               hsync-len = <45>;
-> +                               vsync-len = <1>;
-> +                       };
-> +               };
-> +       };
-> diff --git a/drivers/video/Kconfig b/drivers/video/Kconfig
-> index 4c1546f..0687482 100644
-> --- a/drivers/video/Kconfig
-> +++ b/drivers/video/Kconfig
-> @@ -1018,6 +1018,8 @@ config FB_ATMEL
->         select FB_CFB_FILLRECT
->         select FB_CFB_COPYAREA
->         select FB_CFB_IMAGEBLIT
-> +       select FB_MODE_HELPERS
-> +       select OF_VIDEOMODE
->         help
->           This enables support for the AT91/AT32 LCD Controller.
->
-> diff --git a/drivers/video/atmel_lcdfb.c b/drivers/video/atmel_lcdfb.c
-> index f67e226..4a31570 100644
-> --- a/drivers/video/atmel_lcdfb.c
-> +++ b/drivers/video/atmel_lcdfb.c
-> @@ -20,7 +20,11 @@
->  #include <linux/gfp.h>
->  #include <linux/module.h>
->  #include <linux/platform_data/atmel.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_gpio.h>
->  #include <video/of_display_timing.h>
-> +#include <video/videomode.h>
->
->  #include <mach/cpu.h>
->  #include <asm/gpio.h>
-> @@ -59,6 +63,13 @@ struct atmel_lcdfb_info {
->         struct atmel_lcdfb_config *config;
->  };
->
-> +struct atmel_lcdfb_power_ctrl_gpio {
-> +       int gpio;
-> +       int active_low;
-> +
-> +       struct list_head list;
-> +};
-> +
->  #define lcdc_readl(sinfo, reg)         __raw_readl((sinfo)->mmio+(reg))
->  #define lcdc_writel(sinfo, reg, val)   __raw_writel((val), (sinfo)->mmio+(reg))
->
-> @@ -945,16 +956,187 @@ static void atmel_lcdfb_stop_clock(struct atmel_lcdfb_info *sinfo)
->         clk_disable(sinfo->lcdc_clk);
->  }
->
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id atmel_lcdfb_dt_ids[] = {
-> +       { .compatible = "atmel,at91sam9261-lcdc" , .data = &at91sam9261_config, },
-> +       { .compatible = "atmel,at91sam9263-lcdc" , .data = &at91sam9263_config, },
-> +       { .compatible = "atmel,at91sam9g10-lcdc" , .data = &at91sam9g10_config, },
-> +       { .compatible = "atmel,at91sam9g45-lcdc" , .data = &at91sam9g45_config, },
-> +       { .compatible = "atmel,at91sam9g45es-lcdc" , .data = &at91sam9g45es_config, },
-> +       { .compatible = "atmel,at91sam9rl-lcdc" , .data = &at91sam9rl_config, },
-> +       { .compatible = "atmel,at32ap-lcdc" , .data = &at32ap_config, },
-> +       { /* sentinel */ }
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, atmel_lcdfb_dt_ids);
-> +
-> +static const char *atmel_lcdfb_wiring_modes[] = {
-> +       [ATMEL_LCDC_WIRING_BGR] = "BRG",
-> +       [ATMEL_LCDC_WIRING_RGB] = "RGB",
-> +};
-> +
-> +const int atmel_lcdfb_get_of_wiring_modes(struct device_node *np)
-> +{
-> +       const char *mode;
-> +       int err, i;
-> +
-> +       err = of_property_read_string(np, "atmel,lcd-wiring-mode", &mode);
-> +       if (err < 0)
-> +               return ATMEL_LCDC_WIRING_BGR;
-> +
-> +       for (i = 0; i < ARRAY_SIZE(atmel_lcdfb_wiring_modes); i++)
-> +               if (!strcasecmp(mode, atmel_lcdfb_wiring_modes[i]))
-> +                       return i;
-> +
-> +       return -ENODEV;
-> +}
-> +
-> +static void atmel_lcdfb_power_control_gpio(struct atmel_lcdfb_pdata *pdata, int on)
-> +{
-> +       struct atmel_lcdfb_power_ctrl_gpio *og;
-> +
-> +       list_for_each_entry(og, &pdata->pwr_gpios, list)
-> +               gpio_set_value(og->gpio, on);
-> +}
-> +
-> +static int atmel_lcdfb_of_init(struct atmel_lcdfb_info *sinfo)
-> +{
-> +       struct fb_info *info = sinfo->info;
-> +       struct atmel_lcdfb_pdata *pdata = &sinfo->pdata;
-> +       struct fb_var_screeninfo *var = &info->var;
-> +       struct device *dev = &sinfo->pdev->dev;
-> +       struct device_node *np =dev->of_node;
-> +       struct device_node *display_np;
-> +       struct device_node *timings_np;
-> +       struct display_timings *timings;
-> +       enum of_gpio_flags flags;
-> +       struct atmel_lcdfb_power_ctrl_gpio *og;
-> +       bool is_gpio_power = false;
-> +       int ret = -ENOENT;
-> +       int i, gpio;
-> +
-> +       sinfo->config = (struct atmel_lcdfb_config*)
-> +               of_match_device(atmel_lcdfb_dt_ids, dev)->data;
-> +
-> +       display_np = of_parse_phandle(np, "display", 0);
-> +       if (!display_np) {
-> +               dev_err(dev, "failed to find display phandle\n");
-> +               return -ENOENT;
-> +       }
-> +
-> +       ret = of_property_read_u32(display_np, "bits-per-pixel", &var->bits_per_pixel);
-> +       if (ret < 0) {
-> +               dev_err(dev, "failed to get property bits-per-pixel\n");
-> +               goto put_display_node;
-> +       }
-> +
-> +       ret = of_property_read_u32(display_np, "atmel,guard-time", &pdata->guard_time);
-> +       if (ret < 0) {
-> +               dev_err(dev, "failed to get property atmel,guard-time\n");
-> +               goto put_display_node;
-> +       }
-> +
-> +       ret = of_property_read_u32(display_np, "atmel,lcdcon2", &pdata->default_lcdcon2);
-> +       if (ret < 0) {
-> +               dev_err(dev, "failed to get property atmel,lcdcon2\n");
-> +               goto put_display_node;
-> +       }
-> +
-> +       ret = of_property_read_u32(display_np, "atmel,dmacon", &pdata->default_dmacon);
-> +       if (ret < 0) {
-> +               dev_err(dev, "failed to get property bits-per-pixel\n");
-> +               goto put_display_node;
-> +       }
-> +
-> +       ret = -ENOMEM;
-> +       for (i = 0; i < of_gpio_named_count(display_np, "atmel,power-control-gpio"); i++) {
-> +               gpio = of_get_named_gpio_flags(display_np, "atmel,power-control-gpio",
-> +                                              i, &flags);
-> +               if (gpio < 0)
-> +                       continue;
-> +
-> +               og = devm_kzalloc(dev, sizeof(*og), GFP_KERNEL);
-> +               if (!og)
-> +                       goto put_display_node;
-> +
-> +               og->gpio = gpio;
-> +               og->active_low = flags & OF_GPIO_ACTIVE_LOW;
-> +               is_gpio_power = true;
-> +               ret = devm_gpio_request(dev, gpio, "lcd-power-control-gpio");
-> +               if (ret) {
-> +                       dev_err(dev, "request gpio %d failed\n", gpio);
-> +                       goto put_display_node;
-> +               }
-> +
-> +               ret = gpio_direction_output(gpio, og->active_low);
-> +               if (ret) {
-> +                       dev_err(dev, "set direction output gpio %d failed\n", gpio);
-> +                       goto put_display_node;
-> +               }
-> +       }
-> +
-> +       if (is_gpio_power)
-> +               pdata->atmel_lcdfb_power_control = atmel_lcdfb_power_control_gpio;
-> +
-> +       ret = atmel_lcdfb_get_of_wiring_modes(display_np);
-> +       if (ret < 0) {
-> +               dev_err(dev, "invalid atmel,lcd-wiring-mode\n");
-> +               goto put_display_node;
-> +       }
-> +       pdata->lcd_wiring_mode = ret;
-> +
-> +       pdata->lcdcon_is_backlight = of_property_read_bool(display_np, "atmel,lcdcon-backlight");
+Cc: linux-pm@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Zhang Rui <rui.zhang@intel.com>
+Cc: J Keerthy <j-keerthy@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
+---
+ Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt | 1 +
+ 1 file changed, 1 insertion(+)
+---
+This patch was added to the staging tree post 3.10-rc1 but
+is not included after the move from staging to thermal. This is
+because the thermal tree is based of 3.10-rc1 and not staging/next
+or linux-next/master.
 
-and here, something like:
-pdata->lcdcon_pol_negative = of_property_read_bool(display_np,
-"atmel,lcdcon-pwm-pulse-low");
-would be nice
+For your reference:
+https://git.kernel.org/cgit/linux/kernel/git/gregkh/staging.git/commit/drivers/staging/ti-soc-thermal?h=staging-next&id=faa4b9de12fa433f06be917feb3f13792b12fefa
 
-
-Regards,
-Richard.
+diff --git a/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt b/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt
+index a4a33d1..1629652 100644
+--- a/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt
+@@ -57,4 +57,5 @@ bandgap {
+ 		0x4a002380 0x2c
+ 		0x4a0023C0 0x3c>;
+ 	compatible = "ti,omap5430-bandgap";
++	interrupts = <0 126 4>; /* talert */
+ };
+-- 
+1.8.2.1.342.gfa7285d
