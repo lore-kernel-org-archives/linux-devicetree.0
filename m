@@ -1,42 +1,34 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v6 07/10] ASoC: fsl-ssi: imx ac97 support
-Date: Wed, 29 May 2013 21:12:35 +0800
-Message-ID: <20130529131233.GA29528@S2101-09.ap.freescale.net>
-References: <1369752478-30260-1-git-send-email-mpa@pengutronix.de>
- <1369752478-30260-8-git-send-email-mpa@pengutronix.de>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [0/10] Pending patches pull request
+Date: Wed, 29 May 2013 08:17:09 -0500
+Message-ID: <E1UhgFZ-0005t3-3C@jdl.com>
+References: <1369795898-7631-1-git-send-email-david@gibson.dropbear.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <1369752478-30260-8-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Timur Tabi <timur@tabi.org>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <1369795898-7631-1-git-send-email-david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 28, 2013 at 04:47:55PM +0200, Markus Pargmann wrote:
-> +struct snd_ac97_bus_ops soc_ac97_ops = {
-> +	.read		= fsl_ssi_ac97_read,
-> +	.write		= fsl_ssi_ac97_write,
-> +};
-> +EXPORT_SYMBOL_GPL(soc_ac97_ops);
+> Hi Jon,
+> 
+> Here's a batch of patches, a few from me, mostly from others, which I
+> think should go into dtc/libfdt.  Please apply, or you can pull from:
+> 	git://github.com/dgibson/dtc.git (branch 'master')
 
-I'm seeing the following compile error.
+Pulled and pushed!
 
-  LD      sound/soc/fsl/built-in.o
-sound/soc/fsl/snd-soc-imx-ssi.o: In function `__crc_soc_ac97_ops':
-imx-ssi.c:(*ABS*+0xd390d3c4): multiple definition of `__crc_soc_ac97_ops'
-sound/soc/fsl/snd-soc-imx-ssi.o:(.data+0x168): multiple definition of `soc_ac97_ops'
-sound/soc/fsl/snd-soc-fsl-ssi.o:(.data+0x0): first defined here
-make[4]: *** [sound/soc/fsl/built-in.o] Error 1
-
-Shawn
+Thanks,
+jdl
