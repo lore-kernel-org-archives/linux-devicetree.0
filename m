@@ -1,99 +1,58 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 2/2] DT: Add documentation for gpio-xilinx
-Date: Wed, 29 May 2013 13:27:08 +0200
-Message-ID: <f0768251290255269fa3a864f8399080d6433415.1369826814.git.michal.simek@xilinx.com>
-References: <4b90b06fce0475b579cfba4d968b4778359154f6.1369826814.git.michal.simek@xilinx.com>
-Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-12816-1369826843-0001";
-    micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4b90b06fce0475b579cfba4d968b4778359154f6.1369826814.git.michal.simek@xilinx.com>
-In-Reply-To: <4b90b06fce0475b579cfba4d968b4778359154f6.1369826814.git.michal.simek@xilinx.com>
-References: <4b90b06fce0475b579cfba4d968b4778359154f6.1369826814.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC] [PATCH 3/3] IRQ: irq domain: defer of irq ressoure
+ resolve at platform_drv_probe
+Date: Wed, 29 May 2013 13:26:51 +0200
+Message-ID: <20130529112651.GC30411@game.jcrosoft.org>
+References: <20130528145219.GA30411@game.jcrosoft.org>
+ <1369753729-12997-1-git-send-email-plagnioj@jcrosoft.com>
+ <1369753729-12997-3-git-send-email-plagnioj@jcrosoft.com>
+ <51A53363.6040004@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <51A53363.6040004-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a MIME GnuPG-signed message.  If you see this text, it means that
-your E-mail or Usenet software does not support MIME signed messages.
-The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
-To open this message correctly you will need to install E-mail or Usenet
-software that supports modern Internet standards.
+> > + */
+> > +int of_device_init_irq(struct platform_device *dev)
+> > +{
+> > +	struct device_node *np = dev->dev.of_node;
+> > +	int num_irq;
+> > +	int ret;
+> > +	struct resource *res = dev->resource;
+> > +
+> > +	if (!np)
+> > +		return 0;
+> > +
+> > +	num_irq = of_irq_count(np);
+> > +	if (!num_irq)
+> > +		return 0;
+> > +
+> > +	res += dev->num_resources - num_irq;
+> 
+> This looks fragile to me as it relies on how of_device_alloc happens to
+> be implemented.
+> 
+> > +	ret = of_irq_to_resource_table(np, res, num_irq);
+> > +	if (ret != num_irq)
+> > +		return -EPROBE_DEFER;
 
---=_mimegpg-monstr-desktop-12816-1369826843-0001
+I could reduce the depency on the resource allocation order
+but I do want to preallocate the ressource
 
-Describe gpio-xilinx binding.
-
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
- .../devicetree/bindings/gpio/gpio-xilinx.txt       | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt b/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
-new file mode 100644
-index 0000000..65bf386
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
-@@ -0,0 +1,43 @@
-+Xilinx plb/axi GPIO controller
-+
-+Required properties:
-+- compatible : Should be "xlnx,xps-gpio-1.00.a"
-+- reg : Address and length of the register set for the device
-+- #gpio-cells : Should be two. The first cell is the pin number and the
-+  second cell is used to specify optional parameters (currently unused).
-+- gpio-controller : Marks the device node as a GPIO controller.
-+
-+Optional properties:
-+- interrupts : Interrupt mapping for GPIO IRQ.
-+- interrupt-parent : Phandle for the interrupt controller that
-+   services interrupts for this device.
-+- xlnx,all-inputs : if n-th bit is setup, GPIO-n is input
-+- xlnx,dout-default : if n-th bit is 1, GPIO-n default value is 1
-+- xlnx,gpio-width : gpio width
-+- xlnx,tri-default : if n-th bit is 1, GPIO-n is in tristate mode
-+- xlnx,is-dual : if 1, controller also uses the second channel
-+- xlnx,all-inputs-2 : as above but for the second channel
-+- xlnx,dout-default-2 : as above but the second channel
-+- xlnx,gpio2-width : as above but for the second channel
-+- xlnx,tri-default-2 : as above but for the second channel
-+
-+
-+Example:
-+gpio: gpio@40000000 {
-+	#gpio-cells = <2>;
-+	compatible = "xlnx,xps-gpio-1.00.a";
-+	gpio-controller ;
-+	interrupt-parent = <&microblaze_0_intc>;
-+	interrupts = < 6 2 >;
-+	reg = < 0x40000000 0x10000 >;
-+	xlnx,all-inputs = <0x0>;
-+	xlnx,all-inputs-2 = <0x0>;
-+	xlnx,dout-default = <0x0>;
-+	xlnx,dout-default-2 = <0x0>;
-+	xlnx,gpio-width = <0x2>;
-+	xlnx,gpio2-width = <0x2>;
-+	xlnx,interrupt-present = <0x1>;
-+	xlnx,is-dual = <0x1>;
-+	xlnx,tri-default = <0xffffffff>;
-+	xlnx,tri-default-2 = <0xffffffff>;
-+} ;
---
-1.8.2.3
-
-
---=_mimegpg-monstr-desktop-12816-1369826843-0001
-Content-Type: application/pgp-signature
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEABECAAYFAlGl5hsACgkQykllyylKDCFWwgCfZ5JdnFUeJM/RWdw/LgmWNvVI
-fDoAnikME8mOpHM2nZ5YWxDxSIcY2/tk
-=jZKM
------END PGP SIGNATURE-----
-
---=_mimegpg-monstr-desktop-12816-1369826843-0001--
+Best Regards,
+J.
