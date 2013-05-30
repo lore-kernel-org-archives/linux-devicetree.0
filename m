@@ -1,39 +1,74 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 09/10] ASoC: fsl: Move fsl-ssi binding doc to sound/
-Date: Thu, 30 May 2013 16:51:59 +0800
-Message-ID: <20130530085156.GC2670@S2101-09.ap.freescale.net>
-References: <1369752478-30260-1-git-send-email-mpa@pengutronix.de>
- <1369752478-30260-10-git-send-email-mpa@pengutronix.de>
+From: keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH 7/7] thermal: ti-soc-thermal: add DT example for DRA752
+ chip
+Date: Thu, 30 May 2013 14:26:53 +0530
+Message-ID: <51A71455.9000002@ti.com>
+References: <1369840066-20357-1-git-send-email-eduardo.valentin@ti.com> <1369840066-20357-8-git-send-email-eduardo.valentin@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1369752478-30260-10-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1369840066-20357-8-git-send-email-eduardo.valentin@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>
+Cc: rui.zhang@intel.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 28, 2013 at 04:47:57PM +0200, Markus Pargmann wrote:
-> fsl-ssi was located in powerpc/fsl/ssi.txt. This is no powerpc specific
-> device, so it should be moved to sound/ as it connects to differen audio
-> codecs.
+Hi Eduardo,
+
+On 05/29/2013 08:37 PM, Eduardo Valentin wrote:
+
+> Update documentation by adding an example for DRA752 on DT description.
 > 
-> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Rob Landley <rob@landley.net>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Zhang Rui <rui.zhang@intel.com>
+> Cc: J Keerthy <j-keerthy@ti.com>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
 > ---
->  .../devicetree/bindings/powerpc/fsl/ssi.txt        | 73 ----------------------
->  .../devicetree/bindings/sound/fsl,ssi.txt          | 73 ++++++++++++++++++++++
+>  Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt b/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt
+> index 1629652..1953b33 100644
+> --- a/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt
+> @@ -59,3 +59,15 @@ bandgap {
+>  	compatible = "ti,omap5430-bandgap";
+>  	interrupts = <0 126 4>; /* talert */
+>  };
+> +
+> +DRA752:
+> +bandgap {
+> +	reg = <0x4a0021e0 0xc
+> +		0x4a00232c 0xc
+> +		0x4a002380 0x2c
+> +		0x4a0023C0 0x3c
+> +		0x4a002564 0x8
+> +		0x4a002574 0x50>;
+> +	compatible = "ti,dra752-bandgap";
 
-Please add -M to git format-patch command.
 
-Shawn
+The general convention seems to be keeping it as dra7xx or dra7.
+Why add specific nodes like dra752? We can always reuse for
+forthcoming dra7 processors if the same address mapping and IP
+is retained right?
+
+> +	interrupts = <0 126 4>; /* talert */
+
+
+The TRM does not have any term called talert. Can the comment
+be /* thermal_alert */ so it is easy to figure out what it is.
+
+> +};
+
+
+Regards,
+Keerthy
