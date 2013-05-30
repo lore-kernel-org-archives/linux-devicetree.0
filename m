@@ -1,32 +1,39 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 25/39] usb: musb: ux500: add device tree probing support
-Date: Thu, 30 May 2013 10:38:34 +0200
-Message-ID: <CACRpkdZE-i5v_B7CCVPVNpU+EgCx4D17mZ+OvwAHZXXDBdoi1w@mail.gmail.com>
-References: <1368611522-9984-1-git-send-email-lee.jones@linaro.org>
-	<1368611522-9984-26-git-send-email-lee.jones@linaro.org>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 09/10] ASoC: fsl: Move fsl-ssi binding doc to sound/
+Date: Thu, 30 May 2013 16:51:59 +0800
+Message-ID: <20130530085156.GC2670@S2101-09.ap.freescale.net>
+References: <1369752478-30260-1-git-send-email-mpa@pengutronix.de>
+ <1369752478-30260-10-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1368611522-9984-26-git-send-email-lee.jones@linaro.org>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, Herbert Xu <herbert@gondor.apana.org.au>, Vinod Koul <vinod.koul@intel.com>, Linus WALLEIJ <linus.walleij@stericsson.com>, Srinidhi KASAGAR <srinidhi.kasagar@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1369752478-30260-10-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 15, 2013 at 11:51 AM, Lee Jones <lee.jones@linaro.org> wrote:
+On Tue, May 28, 2013 at 04:47:57PM +0200, Markus Pargmann wrote:
+> fsl-ssi was located in powerpc/fsl/ssi.txt. This is no powerpc specific
+> device, so it should be moved to sound/ as it connects to differen audio
+> codecs.
+> 
+> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/powerpc/fsl/ssi.txt        | 73 ----------------------
+>  .../devicetree/bindings/sound/fsl,ssi.txt          | 73 ++++++++++++++++++++++
 
-> This patch will allow ux500-musb to be probed and configured solely from
-> configuration found in Device Tree.
->
-> Cc: Felipe Balbi <balbi@ti.com>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: linux-usb@vger.kernel.org
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> Acked-by: Fabio Baltieri <fabio.baltieri@linaro.org>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Please add -M to git format-patch command.
 
-Tentatively applied with Felipe's ACK.
-
-Yours,
-Linus Walleij
+Shawn
