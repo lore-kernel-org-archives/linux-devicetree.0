@@ -1,57 +1,65 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v7] reset: Add driver for gpio-controlled reset pins
-Date: Wed, 29 May 2013 17:19:20 -0600
-Message-ID: <51A68CF8.7000303@wwwdotorg.org>
-References: <1369753575-9818-1-git-send-email-p.zabel@pengutronix.de>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC/RFT] ARM: dts: add minimal DT support for Nokia N950 & N9
+Date: Wed, 29 May 2013 17:08:42 -0700
+Message-ID: <20130530000841.GQ13507@atomide.com>
+References: <1369251845-29605-1-git-send-email-aaro.koskinen@iki.fi>
+ <519DC39C.6010809@ti.com>
+ <20130529205648.GC3345@blackmetal.musicnaut.iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1369753575-9818-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130529205648.GC3345@blackmetal.musicnaut.iki.fi>
+Sender: linux-omap-owner@vger.kernel.org
+To: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Benoit Cousson <b-cousson@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Sakari Ailus <sakari.ailus@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-On 05/28/2013 09:06 AM, Philipp Zabel wrote:
-> This driver implements a reset controller device that toggle a gpio
-> connected to a reset pin of a peripheral IC. The delay between assertion
-> and de-assertion of the reset signal can be configured via device tree.
+* Aaro Koskinen <aaro.koskinen@iki.fi> [130529 14:02]:
+> Hi,
+> 
+> On Thu, May 23, 2013 at 09:22:04AM +0200, Benoit Cousson wrote:
+> > On 05/22/2013 09:44 PM, Aaro Koskinen wrote:
+> > > Add minimal DT support for Nokia N950 & N9. The basic boot works. I can
+> > > connect to both devices with USB networking & ssh. dmesg output looks OK.
+> > 
+> > That's great! Tony will like that :-)
+> > It is too bad I just have a N900 :-(
+> > 
+> > > Functionality compared to the legacy board file:
+> > > 
+> > > 	- MMC not detected - reason unknown, any tips welcome
+> > 
+> > On OMAP4 panda I used to have the similar issue due to the pbias not set
+> > properly.
+> > 
+> > > 	- OneNAND missing completely
+> > 
+> > The GPMC for OMAP3 support is pretty new, so maybe some tweak are still
+> > needed.
+> > 
+> > Is it RFC because you are still working on the missing functionalities?
+> > Otherwise the patches are already good to be merged if you want.
+> > As soon as you don't break legacy boot, we can merge even half-working DTS.
+> 
+> I was hoping to get the MMC working and OneNAND binding added before
+> merging this... If we could do that, we could deprecate the legacy board
+> file as DT would offer the same functionality.
 
-> diff --git a/drivers/reset/gpio-reset.c b/drivers/reset/gpio-reset.c
+Great sounds like a plan. Take a look at the wl12xx patches I posted for
+setting up the MMC regulators, that might help with the MMC.
 
-> +static void __gpio_reset_set(struct reset_controller_dev *rcdev, int asserted)
+I doubt that the missing PBIAS support is an issue as the eMMC has it's
+own fixed regulator.
 
-Nit: Technically I think __ is a reserved name-space, so you shouldn't
-prefix "user-level" (rather than libc/similar) symbols with it, but it's
-not a big deal.
+Then the GPMC patches might do the trick with the OneNAND as there have
+been patches posted for various boards for NAND and smc911x.
+ 
+> Anyway, if half-working DTS is also fine, I'll resend this as "PATCH"
+> in a few days.
 
-> +static int gpio_reset_probe(struct platform_device *pdev)
+Yes that's cool.
 
-> +	if (of_gpio_named_count(np, "reset-gpios") != 1)
-> +		return -EINVAL;
+Regards,
 
-Should that error-path (and the path for of_property_read_u32() failure)
-include a dev_err() like some already do, so it's obvious what the
-failure is?
-
-> +	reset_controller_register(&drvdata->rcdev);
-> +
-> +	platform_set_drvdata(pdev, drvdata);
-
-It might be better to set the drvdata right after it's been allocated.
-It perhaps doesn't matter much here, but if the reset controller core
-ever starts calling into the registered device inside the call to
-reset_controller_register(), then there might be a problem.
-
-Aside from those minor issues,
-Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Tony
