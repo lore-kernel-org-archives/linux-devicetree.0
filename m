@@ -1,48 +1,45 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH 3/3] at_hdmac: add FIFO configuration parameter to DMA
- DT binding
-Date: Thu, 30 May 2013 18:39:36 +0200
-Message-ID: <20130530163936.GC23653@game.jcrosoft.org>
-References: <1369930103-11963-1-git-send-email-ludovic.desroches@atmel.com>
- <1369930103-11963-4-git-send-email-ludovic.desroches@atmel.com>
- <51A77F10.8020808@atmel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC/PATCH v2 2/2] gpio-rcar: Add DT support
+Date: Thu, 30 May 2013 19:38:12 +0200
+Message-ID: <CACRpkdb8GYpx3ASzXB7HX5oEpAUBe-yBo0N5Ep9S+DqoE6oCLw@mail.gmail.com>
+References: <1369136406-23800-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<1369136406-23800-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <51A77F10.8020808@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: vinod.koul@intel.com, devicetree-discuss@lists.ozlabs.org, ludovic.desroches@atmel.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1369136406-23800-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <damm@opensource.se>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-On 18:32 Thu 30 May     , Nicolas Ferre wrote:
-> On 30/05/2013 18:08, ludovic.desroches@atmel.com :
-> >From: Ludovic Desroches <ludovic.desroches@atmel.com>
-> >
-> >For most devices the FIFO configuration is the same i.e. when half FIFO size is
-> >available/filled, a source/destination request is serviced. But USART devices
-> >have to do it when there is enough space/data available to perform a single
-> >AHB access so the ASAP configuration.
-> >
-> >Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> >Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
-> 
-> Clear and neat: thanks Ludo.
+On Tue, May 21, 2013 at 1:40 PM, Laurent Pinchart
+<laurent.pinchart+renesas@ideasonboard.com> wrote:
 
-agreed
+> Add DT bindings for the gpio-rcar driver and read the device
+> configuration from the DT node at probe time if available.
+>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 
-can we apply this via AT91 as this depends on some cleanup I did on DT and
-could result on some nigthmware conflict
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Best Regards,
-J.
+I am assuming this will go through Simon's tree?
+
+Note:
+
+> +  - gpio-ranges: Range of pins managed by the GPIO controller as a 4-cells
+> +    tuple using the following syntax.
+> +
+> +    <[phandle of the pin controller node]
+> +     0
+> +     [index of the first pin]
+> +     [number of pins]>
+> +
+> +Please refer to gpio.txt in this directory for details of the common GPIO
+> +bindings used by client devices.
+
+The above ranges are part of that document.
+
+Yours,
+Linus Walleij
