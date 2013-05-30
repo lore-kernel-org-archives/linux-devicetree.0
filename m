@@ -1,140 +1,94 @@
-From: Eduardo Valentin <eduardo.valentin@ti.com>
-Subject: Re: [PATCH 7/7] thermal: ti-soc-thermal: add DT example for DRA752
- chip
-Date: Thu, 30 May 2013 09:52:40 -0400
-Message-ID: <51A759A8.1040705@ti.com>
-References: <1369840066-20357-1-git-send-email-eduardo.valentin@ti.com> <1369840066-20357-8-git-send-email-eduardo.valentin@ti.com> <51A71455.9000002@ti.com>
+From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Subject: [PATCH 3/3] mfd: twl4030-power: Simplify error path
+Date: Thu, 30 May 2013 15:51:56 +0200
+Message-ID: <1369921916-7435-4-git-send-email-florian.vaussard@epfl.ch>
+References: <1369921916-7435-1-git-send-email-florian.vaussard@epfl.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="----enig2DOJICIONRFSMSMTKDJGQ"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51A71455.9000002@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: keerthy <j-keerthy@ti.com>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, rui.zhang@intel.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1369921916-7435-1-git-send-email-florian.vaussard-p8DiymsW2f8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-------enig2DOJICIONRFSMSMTKDJGQ
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Remove unnecessary goto statements, causing duplicated if
+conditions.
 
-On 30-05-2013 04:56, keerthy wrote:
-> Hi Eduardo,
->=20
-> On 05/29/2013 08:37 PM, Eduardo Valentin wrote:
->=20
->> Update documentation by adding an example for DRA752 on DT description=
-=2E
->>
->> Cc: linux-pm@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Cc: Grant Likely <grant.likely@linaro.org>
->> Cc: Rob Herring <rob.herring@calxeda.com>
->> Cc: Rob Landley <rob@landley.net>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Zhang Rui <rui.zhang@intel.com>
->> Cc: J Keerthy <j-keerthy@ti.com>
->> Cc: devicetree-discuss@lists.ozlabs.org
->> Cc: linux-doc@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
->> ---
->>  Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt | 12 +++=
-+++++++++
->>  1 file changed, 12 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/thermal/ti_soc_thermal.=
-txt b/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt
->> index 1629652..1953b33 100644
->> --- a/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt
->> +++ b/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt
->> @@ -59,3 +59,15 @@ bandgap {
->>  	compatible =3D "ti,omap5430-bandgap";
->>  	interrupts =3D <0 126 4>; /* talert */
->>  };
->> +
->> +DRA752:
->> +bandgap {
->> +	reg =3D <0x4a0021e0 0xc
->> +		0x4a00232c 0xc
->> +		0x4a002380 0x2c
->> +		0x4a0023C0 0x3c
->> +		0x4a002564 0x8
->> +		0x4a002574 0x50>;
->> +	compatible =3D "ti,dra752-bandgap";
->=20
->=20
-> The general convention seems to be keeping it as dra7xx or dra7.
-> Why add specific nodes like dra752? We can always reuse for
-> forthcoming dra7 processors if the same address mapping and IP
-> is retained right?
->=20
->>
+Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+---
+ drivers/mfd/twl4030-power.c |   37 ++++++++++++++-----------------------
+ 1 files changed, 14 insertions(+), 23 deletions(-)
 
-
-In fact, I must agree with you that using a node such as dra752 is
-restrictive. And I must also admit my original plan was to use dra7xx
-naming convention. Not only on DT nodes, but in driver source code
-symbols too. Well, this is about re-usability, right?
-
-However, I took a step back and thought about the bandgap IP history.
-Take that in mind, just look to the source code. We never succeed to
-reuse nodes fully and it is because bandgap IPs do change from chip
-version to chip version. That is also understandable as every chip has
-its own thermal peculiarities. For instance, we do not have a omap4xxx
-node because each OMAP4 chip has a different bandgap IP, with different
-features.
-
-I really would like to use a dra7xxx node, but that would contradict the
-IP history :-). If we are trying to avoid patching the driver in the
-future, I would say it is more likely to have a patch for another dra7
-chip with specifics different from the current one than having a patch
-reusing the existing dra752 node. This statement is obviously based on
-driver and IP history (I might be wrong of course and the IP could
-actually have reached a development stabilization point).
-
- +	interrupts =3D <0 126 4>; /* talert */
->=20
->=20
-> The TRM does not have any term called talert. Can the comment
-> be /* thermal_alert */ so it is easy to figure out what it is.
->=20
-
-
-Indeed, TRM does not, in fact! But the TI thermal engineering community
-have coined this term and I think it is quite common used (within that
-community) and if you look to the driver code too, it is all over. I
-believe there is no doubt that talert stands for thermal alert. The
-driver code does have documentation about that.
-
->> +};
->=20
->=20
-> Regards,
-> Keerthy
->=20
->=20
-
-
---=20
-You have got to be excited about what you are doing. (L. Lamport)
-
-Eduardo Valentin
-
-
-------enig2DOJICIONRFSMSMTKDJGQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iF4EAREIAAYFAlGnWagACgkQCXcVR3XQvP3yVAEApyBajpOt9VD2nqQiDYiRXwus
-SAkUcaUOFmc9KHLW/vwBAInG6i1sGZzemg39P86zYKVfFhGJI+N3hxuWEED0MSQR
-=L3SH
------END PGP SIGNATURE-----
-
-------enig2DOJICIONRFSMSMTKDJGQ--
+diff --git a/drivers/mfd/twl4030-power.c b/drivers/mfd/twl4030-power.c
+index d12d748..7eed526 100644
+--- a/drivers/mfd/twl4030-power.c
++++ b/drivers/mfd/twl4030-power.c
+@@ -567,21 +567,25 @@ int twl4030_power_probe(struct platform_device *pdev)
+ 
+ 	err = twl_i2c_write_u8(TWL_MODULE_PM_MASTER, TWL4030_PM_MASTER_KEY_CFG1,
+ 			       TWL4030_PM_MASTER_PROTECT_KEY);
+-	if (err)
+-		goto unlock;
+-
+-	err = twl_i2c_write_u8(TWL_MODULE_PM_MASTER, TWL4030_PM_MASTER_KEY_CFG2,
++	err |= twl_i2c_write_u8(TWL_MODULE_PM_MASTER, TWL4030_PM_MASTER_KEY_CFG2,
+ 			       TWL4030_PM_MASTER_PROTECT_KEY);
+-	if (err)
+-		goto unlock;
++
++	if (err) {
++		pr_err("TWL4030 Unable to unlock registers\n");
++		return err;
++	}
+ 
+ 	if (pdata) {
+ 		err = twl4030_power_configure_scripts(pdata);
+-		if (err)
+-			goto load;
++		if (err) {
++			pr_err("TWL4030 failed to load scripts\n");
++			return err;
++		}
+ 		err = twl4030_power_configure_resources(pdata);
+-		if (err)
+-			goto resource;
++		if (err) {
++			pr_err("TWL4030 failed to configure resource\n");
++			return err;
++		}
+ 	}
+ 
+ 	/* Board has to be wired properly to use this feature */
+@@ -611,19 +615,6 @@ relock:
+ 	if (err)
+ 		pr_err("TWL4030 Unable to relock registers\n");
+ 	return err;
+-
+-unlock:
+-	if (err)
+-		pr_err("TWL4030 Unable to unlock registers\n");
+-	return err;
+-load:
+-	if (err)
+-		pr_err("TWL4030 failed to load scripts\n");
+-	return err;
+-resource:
+-	if (err)
+-		pr_err("TWL4030 failed to configure resource\n");
+-	return err;
+ }
+ 
+ static int twl4030_power_remove(struct platform_device *pdev)
+-- 
+1.7.5.4
