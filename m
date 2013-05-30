@@ -1,105 +1,116 @@
-From: <ludovic.desroches@atmel.com>
-Subject: [PATCH 3/3] at_hdmac: add FIFO configuration parameter to DMA DT
- binding
-Date: Thu, 30 May 2013 18:08:23 +0200
-Message-ID: <1369930103-11963-4-git-send-email-ludovic.desroches@atmel.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] at_hdmac: add FIFO configuration parameter to DMA
+ DT binding
+Date: Thu, 30 May 2013 18:32:16 +0200
+Message-ID: <51A77F10.8020808@atmel.com>
 References: <1369930103-11963-1-git-send-email-ludovic.desroches@atmel.com>
+ <1369930103-11963-4-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1369930103-11963-1-git-send-email-ludovic.desroches@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: vinod.koul@intel.com, plagnioj@jcrosoft.com, Ludovic Desroches <ludovic.desroches@atmel.com>, nicolas.ferre@atmel.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1369930103-11963-4-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Desroches <ludovic.desroches@atmel.com>
+On 30/05/2013 18:08, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org :
+> From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>
+> For most devices the FIFO configuration is the same i.e. when half FIFO size is
+> available/filled, a source/destination request is serviced. But USART devices
+> have to do it when there is enough space/data available to perform a single
+> AHB access so the ASAP configuration.
+>
+> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-For most devices the FIFO configuration is the same i.e. when half FIFO size is
-available/filled, a source/destination request is serviced. But USART devices
-have to do it when there is enough space/data available to perform a single
-AHB access so the ASAP configuration.
+Clear and neat: thanks Ludo.
 
-Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
----
- .../devicetree/bindings/dma/atmel-dma.txt          |  7 ++++--
- drivers/dma/at_hdmac.c                             | 25 ++++++++++++++++++----
- 2 files changed, 26 insertions(+), 6 deletions(-)
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/dma/atmel-dma.txt b/Documentation/devicetree/bindings/dma/atmel-dma.txt
-index c80e8a3..c280a0e 100644
---- a/Documentation/devicetree/bindings/dma/atmel-dma.txt
-+++ b/Documentation/devicetree/bindings/dma/atmel-dma.txt
-@@ -24,8 +24,11 @@ The three cells in order are:
- 1. A phandle pointing to the DMA controller.
- 2. The memory interface (16 most significant bits), the peripheral interface
- (16 less significant bits).
--3. The peripheral identifier for the hardware handshaking interface. The
--identifier can be different for tx and rx.
-+3. Parameters for the at91 DMA configuration register which are device
-+dependant:
-+  - bit 7-0: peripheral identifier for the hardware handshaking interface. The
-+  identifier can be different for tx and rx.
-+  - bit 11-8: FIFO configuration. 0 for half FIFO, 1 for ALAP, 1 for ASAP.
- 
- Example:
- 
-diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
-index e923cda..bfd73e1 100644
---- a/drivers/dma/at_hdmac.c
-+++ b/drivers/dma/at_hdmac.c
-@@ -14,6 +14,7 @@
-  * found on AT91SAM9263.
-  */
- 
-+#include <dt-bindings/dma/at91.h>
- #include <linux/clk.h>
- #include <linux/dmaengine.h>
- #include <linux/dma-mapping.h>
-@@ -1223,14 +1224,30 @@ static struct dma_chan *at_dma_xlate(struct of_phandle_args *dma_spec,
- 	atslave = devm_kzalloc(&dmac_pdev->dev, sizeof(*atslave), GFP_KERNEL);
- 	if (!atslave)
- 		return NULL;
-+
-+	atslave->cfg = ATC_DST_H2SEL_HW | ATC_SRC_H2SEL_HW;
- 	/*
- 	 * We can fill both SRC_PER and DST_PER, one of these fields will be
- 	 * ignored depending on DMA transfer direction.
- 	 */
--	per_id = dma_spec->args[1];
--	atslave->cfg = ATC_FIFOCFG_HALFFIFO | ATC_DST_H2SEL_HW
--		      | ATC_SRC_H2SEL_HW | ATC_DST_PER(per_id)
--		      | ATC_SRC_PER(per_id);
-+	per_id = dma_spec->args[1] & AT91_DMA_CFG_PER_ID_MASK;
-+	atslave->cfg |= ATC_DST_PER(per_id) | ATC_SRC_PER(per_id);
-+	/*
-+	 * We have to translate the value we get from the device tree since
-+	 * the half FIFO configuration value had to be 0 to keep backward
-+	 * compatibility.
-+	 */
-+	switch(dma_spec->args[1] & AT91_DMA_CFG_FIFOCFG_MASK) {
-+		case AT91_DMA_CFG_FIFOCFG_ALAP:
-+			atslave->cfg |= ATC_FIFOCFG_LARGESTBURST;
-+			break;
-+		case AT91_DMA_CFG_FIFOCFG_ASAP:
-+			atslave->cfg |= ATC_FIFOCFG_ENOUGHSPACE;
-+			break;
-+		case AT91_DMA_CFG_FIFOCFG_HALF:
-+		default:
-+			atslave->cfg |= ATC_FIFOCFG_HALFFIFO;
-+	}
- 	atslave->dma_dev = &dmac_pdev->dev;
- 
- 	chan = dma_request_channel(mask, at_dma_filter, atslave);
+> ---
+>   .../devicetree/bindings/dma/atmel-dma.txt          |  7 ++++--
+>   drivers/dma/at_hdmac.c                             | 25 ++++++++++++++++++----
+>   2 files changed, 26 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/dma/atmel-dma.txt b/Documentation/devicetree/bindings/dma/atmel-dma.txt
+> index c80e8a3..c280a0e 100644
+> --- a/Documentation/devicetree/bindings/dma/atmel-dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/atmel-dma.txt
+> @@ -24,8 +24,11 @@ The three cells in order are:
+>   1. A phandle pointing to the DMA controller.
+>   2. The memory interface (16 most significant bits), the peripheral interface
+>   (16 less significant bits).
+> -3. The peripheral identifier for the hardware handshaking interface. The
+> -identifier can be different for tx and rx.
+> +3. Parameters for the at91 DMA configuration register which are device
+> +dependant:
+> +  - bit 7-0: peripheral identifier for the hardware handshaking interface. The
+> +  identifier can be different for tx and rx.
+> +  - bit 11-8: FIFO configuration. 0 for half FIFO, 1 for ALAP, 1 for ASAP.
+>
+>   Example:
+>
+> diff --git a/drivers/dma/at_hdmac.c b/drivers/dma/at_hdmac.c
+> index e923cda..bfd73e1 100644
+> --- a/drivers/dma/at_hdmac.c
+> +++ b/drivers/dma/at_hdmac.c
+> @@ -14,6 +14,7 @@
+>    * found on AT91SAM9263.
+>    */
+>
+> +#include <dt-bindings/dma/at91.h>
+>   #include <linux/clk.h>
+>   #include <linux/dmaengine.h>
+>   #include <linux/dma-mapping.h>
+> @@ -1223,14 +1224,30 @@ static struct dma_chan *at_dma_xlate(struct of_phandle_args *dma_spec,
+>   	atslave = devm_kzalloc(&dmac_pdev->dev, sizeof(*atslave), GFP_KERNEL);
+>   	if (!atslave)
+>   		return NULL;
+> +
+> +	atslave->cfg = ATC_DST_H2SEL_HW | ATC_SRC_H2SEL_HW;
+>   	/*
+>   	 * We can fill both SRC_PER and DST_PER, one of these fields will be
+>   	 * ignored depending on DMA transfer direction.
+>   	 */
+> -	per_id = dma_spec->args[1];
+> -	atslave->cfg = ATC_FIFOCFG_HALFFIFO | ATC_DST_H2SEL_HW
+> -		      | ATC_SRC_H2SEL_HW | ATC_DST_PER(per_id)
+> -		      | ATC_SRC_PER(per_id);
+> +	per_id = dma_spec->args[1] & AT91_DMA_CFG_PER_ID_MASK;
+> +	atslave->cfg |= ATC_DST_PER(per_id) | ATC_SRC_PER(per_id);
+> +	/*
+> +	 * We have to translate the value we get from the device tree since
+> +	 * the half FIFO configuration value had to be 0 to keep backward
+> +	 * compatibility.
+> +	 */
+> +	switch(dma_spec->args[1] & AT91_DMA_CFG_FIFOCFG_MASK) {
+> +		case AT91_DMA_CFG_FIFOCFG_ALAP:
+> +			atslave->cfg |= ATC_FIFOCFG_LARGESTBURST;
+> +			break;
+> +		case AT91_DMA_CFG_FIFOCFG_ASAP:
+> +			atslave->cfg |= ATC_FIFOCFG_ENOUGHSPACE;
+> +			break;
+> +		case AT91_DMA_CFG_FIFOCFG_HALF:
+> +		default:
+> +			atslave->cfg |= ATC_FIFOCFG_HALFFIFO;
+> +	}
+>   	atslave->dma_dev = &dmac_pdev->dev;
+>
+>   	chan = dma_request_channel(mask, at_dma_filter, atslave);
+>
+
+
 -- 
-1.7.11.3
+Nicolas Ferre
