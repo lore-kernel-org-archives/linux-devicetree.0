@@ -1,176 +1,107 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/3] palmas usb driver
-Date: Thu, 30 May 2013 11:46:29 +0900
-Message-ID: <CAGTfZH2RbSZMNbH7NKtoLh-13WX0Z2iQ6_D4DcBgC1ej5PKTTQ@mail.gmail.com>
-References: <1369405896-30246-1-git-send-email-kishon@ti.com>
- <20130528173554.GD15794@arwen.pp.htv.fi> <51A59AC9.9000908@ti.com>
- <20130529173851.GC21290@arwen.pp.htv.fi>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH RFC v2] media: OF: add sync-on-green endpoint property
+Date: Thu, 30 May 2013 05:21:57 +0200
+Message-ID: <44193648.yaA827Trlv@avalon>
+References: <1368710287-8741-1-git-send-email-prabhakar.csengg@gmail.com> <CA+V-a8tMQnjh=8qaRoNhwkdrcoTCK2zofTkCOd79hAMoz5qK2A@mail.gmail.com> <51A0C6A8.5090302@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1106535675768415329=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130529173851.GC21290-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: george.cherian-l0cyMroinI0@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51A0C6A8.5090302@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Hans Verkuil <hans.verkuil@cisco.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---===============1106535675768415329==
-Content-Type: multipart/alternative; boundary=089e013a19205d13df04dde681f9
+Hi Sylwester,
 
---089e013a19205d13df04dde681f9
-Content-Type: text/plain; charset=ISO-8859-1
+On Saturday 25 May 2013 16:11:52 Sylwester Nawrocki wrote:
+> On 05/25/2013 11:17 AM, Prabhakar Lad wrote:
+> >> > From looking at Figure 8 "TVP7002 Application Example" in the TVP7002's
+> >> > datasheet ([2], p. 52) and your initial TVP7002 patches it looks like
+> >> > what you want is to specify polarity of the SOGOUT signal, so the
+> >> > processor that receives this signal can properly interpret it, is it
+> >> > correct ?
+> > 
+> > Yes
+> > 
+> >> >  If so then wouldn't it be more appropriate to define e.g. 'sog-active'
+> >> >  property and media bus flags:
+> >> >           V4L2_MBUS_SYNC_ON_GREEN_ACTIVE_LOW
+> >> >           V4L2_MBUS_SYNC_ON_GREEN_ACTIVE_HIGH
+> >> >  
+> >> >  ?
+> > 
+> > Agreed I'll add these flags.
+> > 
+> >> >  And for synchronisation method on the analog part we could perhaps
+> >> >  define 'component-sync' or similar property that would enumerate all
+> >> >  possible synchronisation methods. We might as well use separate
+> >> >  boolean properties, but I'm a bit concerned about the increasing
+> >> >  number of properties that need to be parsed for each parallel video
+> >> >  bus "endpoint".
+> > 
+> > I am not clear on it can please elaborate more on this.
+> 
+> I thought about two possible options:
+> 
+> 1. single property 'component-sync' or 'video-sync' that would have values:
+> 
+> #define VIDEO_SEPARATE_SYNC	0x01
+> #define VIDEO_COMPOSITE_SYNC	0x02
+> #define VIDEO_SYNC_ON_COMPOSITE	0x04
+> #define VIDEO_SYNC_ON_GREEN	0x08
+> #define VIDEO_SYNC_ON_LUMINANCE	0x10
+> 
+> And we could put these definitions into a separate header, e.g.
+> <dt-bindings/video-interfaces.h>
+> 
+> Then in a device tree source file one could have, e.g.
+> 
+> video-sync = <VIDEO_SYNC_ON_GREEN>;
+> 
+> 
+> 2. Separate boolean property for each video sync type, e.g.
+> 
+> 	"video-composite-sync"
+> 	"video-sync-on-composite"
+> 	"video-sync-on-green"
+> 	"video-sync-on-luminance"
+> 
+> Separate sync, with separate VSYNC, HSYNC lines, would be the default, when
+> none of the above is specified and 'vsync-active', 'hsync-active' properties
+> are present.
 
-On Thu, May 30, 2013 at 2:38 AM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+I prefer 1. over 2.
 
-> Hi,
->
-> On Wed, May 29, 2013 at 11:36:01AM +0530, Kishon Vijay Abraham I wrote:
-> > Hi Felipe,
-> >
-> > On Tuesday 28 May 2013 11:05 PM, Felipe Balbi wrote:
-> > >On Fri, May 24, 2013 at 08:01:33PM +0530, Kishon Vijay Abraham I wrote:
-> > >>This patch series adds driver for palmas usb which is used to detect
-> > >>attach/detach events of usb device and usb host.
-> > >>
-> > >>[PATCH v5 2/3] extcon: Palmas Extcon Driver which was sent previously
-> > >>is added in this patch series itself. The revision history is added
-> > >>in the patch comments section.
-> > >>
-> > >>A checkpatch warning "WARNING: static const char * array should
-> > >>probably be static const char * const"is ignored since it introduces a
-> > >>compilation warning.
-> > >>
-> > >>Graeme Gregory (2):
-> > >>   drivers: regulator: palmas: add an API to set/clear the switch bit
-> on
-> > >>     SMPS10
-> > >>   extcon: Palmas Extcon Driver
-> > >>
-> > >>Kishon Vijay Abraham I (1):
-> > >>   usb: dwc3: use extcon fwrk to receive connect/disconnect
-> notification
-> > >
-> > >
-> > >There were some comments to this series, what will happen with it ? Any
-> > >new versions coming ?
-> >
-> > I've already sent new versions. Palmas Extcon Driver is already
-> > queued in extcon-next.
-> > Chanwoo can take this patch in his tree after your ACK. [PATCH v2]
-> > usb: dwc3: use extcon fwrk to receive connect/disconnect
-> > notification.
->
-> alright, thanks for the note, here it is:
->
->
-> Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
->
->
-> --
-> balbi
->
+> However, I suppose the better would be to deduce the video synchronisation
+> method from the sync signal polarity flags. Then, for instance, when an
+> endpoint node contains "composite-sync-active" property the parser would
+> determine the "composite sync" synchronisation type is used.
+> 
+> Thus it might make sense to have only following integer properties (added
+> as needed):
+> 
+> composite-sync-active
+> sync-on-green-active
+> sync-on-comp-active
+> sync-on-luma-active
+> 
+> This would allow to specify polarity of each signal and at the same time
+> the parsing code could derive synchronisation type. A new field could be
+> added to struct v4l2_of_parallel_bus, e.g. sync_type and it would be filled
+> within v4l2_of_parse_endpoint().
+> 
+> What do you think ?
 
-OK, I applied this patchset on extcon-next branch
-and I will send pull-request to GregKH.
+My gut feeling is that we should have separate properties for the video sync 
+type and the synchronization signals polarities. We could have a chip that 
+supports sync-on-green on the analog (input) side and outputs separate hsync 
+and vsync signals only on the digital (output) side. There would be no sync-
+on-green polarity in that case.
 
-You can check on following git repository:
-http://git.kernel.org/cgit/linux/kernel/git/chanwoo/extcon.git/log/?h=extcon-next
+-- 
+Regards,
 
-Thanks,
-Chanwoo Choi
+Laurent Pinchart
 
---089e013a19205d13df04dde681f9
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On T=
-hu, May 30, 2013 at 2:38 AM, Felipe Balbi <span dir=3D"ltr">&lt;<a href=3D"=
-mailto:balbi-l0cyMroinI0@public.gmane.org" target=3D"_blank">balbi-l0cyMroinI0@public.gmane.org</a>&gt;</span> wrote:<b=
-r><blockquote style=3D"margin:0px 0px 0px 0.8ex;padding-left:1ex;border-lef=
-t-color:rgb(204,204,204);border-left-width:1px;border-left-style:solid" cla=
-ss=3D"gmail_quote">
-Hi,<br>
-<div><div class=3D"h5"><br>
-On Wed, May 29, 2013 at 11:36:01AM +0530, Kishon Vijay Abraham I wrote:<br>
-&gt; Hi Felipe,<br>
-&gt;<br>
-&gt; On Tuesday 28 May 2013 11:05 PM, Felipe Balbi wrote:<br>
-&gt; &gt;On Fri, May 24, 2013 at 08:01:33PM +0530, Kishon Vijay Abraham I w=
-rote:<br>
-&gt; &gt;&gt;This patch series adds driver for palmas usb which is used to =
-detect<br>
-&gt; &gt;&gt;attach/detach events of usb device and usb host.<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt;[PATCH v5 2/3] extcon: Palmas Extcon Driver which was sent pre=
-viously<br>
-&gt; &gt;&gt;is added in this patch series itself. The revision history is =
-added<br>
-&gt; &gt;&gt;in the patch comments section.<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt;A checkpatch warning &quot;WARNING: static const char * array =
-should<br>
-&gt; &gt;&gt;probably be static const char * const&quot;is ignored since it=
- introduces a<br>
-&gt; &gt;&gt;compilation warning.<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt;Graeme Gregory (2):<br>
-&gt; &gt;&gt; =A0 drivers: regulator: palmas: add an API to set/clear the s=
-witch bit on<br>
-&gt; &gt;&gt; =A0 =A0 SMPS10<br>
-&gt; &gt;&gt; =A0 extcon: Palmas Extcon Driver<br>
-&gt; &gt;&gt;<br>
-&gt; &gt;&gt;Kishon Vijay Abraham I (1):<br>
-&gt; &gt;&gt; =A0 usb: dwc3: use extcon fwrk to receive connect/disconnect =
-notification<br>
-&gt; &gt;<br>
-&gt; &gt;<br>
-&gt; &gt;There were some comments to this series, what will happen with it =
-? Any<br>
-&gt; &gt;new versions coming ?<br>
-&gt;<br>
-&gt; I&#39;ve already sent new versions. Palmas Extcon Driver is already<br=
->
-&gt; queued in extcon-next.<br>
-&gt; Chanwoo can take this patch in his tree after your ACK. [PATCH v2]<br>
-&gt; usb: dwc3: use extcon fwrk to receive connect/disconnect<br>
-&gt; notification.<br>
-<br>
-</div></div>alright, thanks for the note, here it is:<br>
-<br>
-<br>
-Acked-by: Felipe Balbi &lt;<a href=3D"mailto:balbi-l0cyMroinI0@public.gmane.org">balbi-l0cyMroinI0@public.gmane.org</a>=
-&gt;<br>
-<span><font color=3D"#888888"><br>
-<br>
---<br>
-balbi<br></font></span></blockquote><div>=A0</div><div>OK, I applied this p=
-atchset on extcon-next branch<br>and I will send pull-request to GregKH.</d=
-iv><div>=A0</div><div>You can check on following git repository:<br><a href=
-=3D"http://git.kernel.org/cgit/linux/kernel/git/chanwoo/extcon.git/log/?h=
-=3Dextcon-next">http://git.kernel.org/cgit/linux/kernel/git/chanwoo/extcon.=
-git/log/?h=3Dextcon-next</a></div>
-<div>=A0</div><div>Thanks,<br>Chanwoo Choi=A0</div></div><br></div></div>
-
---089e013a19205d13df04dde681f9--
-
---===============1106535675768415329==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============1106535675768415329==--
