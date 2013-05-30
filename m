@@ -1,61 +1,48 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/3] at_hdmac: dt dma bindings update
-Date: Thu, 30 May 2013 18:37:54 +0200
-Message-ID: <20130530163754.GB23653@game.jcrosoft.org>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 3/3] at_hdmac: add FIFO configuration parameter to DMA
+ DT binding
+Date: Thu, 30 May 2013 18:39:36 +0200
+Message-ID: <20130530163936.GC23653@game.jcrosoft.org>
 References: <1369930103-11963-1-git-send-email-ludovic.desroches@atmel.com>
+ <1369930103-11963-4-git-send-email-ludovic.desroches@atmel.com>
+ <51A77F10.8020808@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1369930103-11963-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <51A77F10.8020808@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: vinod.koul@intel.com, devicetree-discuss@lists.ozlabs.org, ludovic.desroches@atmel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 18:08 Thu 30 May     , ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org wrote:
-> From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+On 18:32 Thu 30 May     , Nicolas Ferre wrote:
+> On 30/05/2013 18:08, ludovic.desroches@atmel.com :
+> >From: Ludovic Desroches <ludovic.desroches@atmel.com>
+> >
+> >For most devices the FIFO configuration is the same i.e. when half FIFO size is
+> >available/filled, a source/destination request is serviced. But USART devices
+> >have to do it when there is enough space/data available to perform a single
+> >AHB access so the ASAP configuration.
+> >
+> >Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> >Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
 > 
-> Hi,
-> 
-> This set of patches update the dt dma binding for at_hdmac since we need one
-> more parameter. In order to keep backward compatibility, an existing cell will
-> be used to add this parameter. Since the content of that cell will become a
-> magic value due to the concatenation of the two parameters, it is time to
-> use macros.
+> Clear and neat: thanks Ludo.
 
-For the record this is based on the cleanup branch for 3.11
+agreed
+
+can we apply this via AT91 as this depends on some cleanup I did on DT and
+could result on some nigthmware conflict
 
 Best Regards,
 J.
-> 
-> Regards
-> 
-> Ludovic Desroches (3):
->   ARM: at91: dt: add header to define at_hdmac configuration
->   ARM: at91: dt: switch DMA DT bindings to pre-processor
->   at_hdmac: add FIFO configuration parameter to DMA DT binding
-> 
->  .../devicetree/bindings/dma/atmel-dma.txt          |  7 ++++--
->  arch/arm/boot/dts/at91sam9g45.dtsi                 |  5 ++--
->  arch/arm/boot/dts/at91sam9n12.dtsi                 | 11 +++++----
->  arch/arm/boot/dts/at91sam9x5.dtsi                  | 17 +++++++-------
->  arch/arm/boot/dts/sama5d3.dtsi                     | 19 +++++++--------
->  drivers/dma/at_hdmac.c                             | 25 ++++++++++++++++----
->  include/dt-bindings/dma/at91.h                     | 27 ++++++++++++++++++++++
->  7 files changed, 81 insertions(+), 30 deletions(-)
->  create mode 100644 include/dt-bindings/dma/at91.h
-> 
-> -- 
-> 1.7.11.3
-> 
