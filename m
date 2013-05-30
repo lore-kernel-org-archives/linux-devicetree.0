@@ -1,55 +1,168 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH] clk/mpc85xx: Update the compatible string
-Date: Thu, 30 May 2013 11:57:32 -0700
-Message-ID: <20130530185732.4470.91176@quantum>
-References: <1369210939-25087-1-git-send-email-Yuantian.Tang@freescale.com>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/6] clk: move the U300 fixed and fixed-factor to DT
+Date: Thu, 30 May 2013 12:00:12 -0700
+Message-ID: <20130530190012.4470.50181@quantum>
+References: <1369330288-14856-1-git-send-email-linus.walleij@stericsson.com>
+ <1369330288-14856-4-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1369210939-25087-1-git-send-email-Yuantian.Tang@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-Cc: Tang Yuantian <Yuantian.Tang@freescale.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1369330288-14856-4-git-send-email-linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Yuantian.Tang@freescale.com (2013-05-22 01:22:19)
-> From: Tang Yuantian <yuantian.tang@freescale.com>
+Quoting Linus Walleij (2013-05-23 10:31:25)
+> From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> The compatible string of clock is changed from *-2 to *-2.0
-> on chassis 2. So updated it accordingly.
+> This converts the fixed and fixed-factor clocks in the U300
+> platform to register themselves from the device tree.
 > 
-> Signed-off-by: Tang Yuantian <Yuantian.Tang@freescale.com>
+> Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> Hi Mike, seeking an ACK on this to take the series through
+> ARM SoC.
 
-Taken into clk-next.
+I'm happy to see another conversion to of_clk_init.
 
-Regards,
-Mike
+Acked-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 > ---
->  drivers/clk/clk-ppc-corenet.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/arm/boot/dts/ste-u300.dts | 44 ++++++++++++++++++++++++++++++++++++++++++
+>  drivers/clk/clk-u300.c         | 33 +++++++++++++------------------
+>  2 files changed, 57 insertions(+), 20 deletions(-)
 > 
-> diff --git a/drivers/clk/clk-ppc-corenet.c b/drivers/clk/clk-ppc-corenet.c
-> index a2d483f..e958707 100644
-> --- a/drivers/clk/clk-ppc-corenet.c
-> +++ b/drivers/clk/clk-ppc-corenet.c
-> @@ -260,7 +260,7 @@ static int __init ppc_corenet_clk_probe(struct platform_device *pdev)
+> diff --git a/arch/arm/boot/dts/ste-u300.dts b/arch/arm/boot/dts/ste-u300.dts
+> index 0530095..c51a8c7 100644
+> --- a/arch/arm/boot/dts/ste-u300.dts
+> +++ b/arch/arm/boot/dts/ste-u300.dts
+> @@ -33,6 +33,49 @@
+>         syscon: syscon@c0011000 {
+>                 compatible = "stericsson,u300-syscon";
+>                 reg = <0xc0011000 0x1000>;
+> +               clk32: app_32_clk@32k {
+> +                       #clock-cells = <0>;
+> +                       compatible = "fixed-clock";
+> +                       clock-frequency = <32768>;
+> +               };
+> +               pll13: pll13@13M {
+> +                       #clock-cells = <0>;
+> +                       compatible = "fixed-clock";
+> +                       clock-frequency = <13000000>;
+> +               };
+> +               pll208: pll208@208M {
+> +                       #clock-cells = <0>;
+> +                       compatible = "fixed-clock";
+> +                       clock-frequency = <208000000>;
+> +               };
+> +               app208: app_208_clk@208M {
+> +                       #clock-cells = <0>;
+> +                       compatible = "fixed-factor-clock";
+> +                       clock-div = <1>;
+> +                       clock-mult = <1>;
+> +                       clocks = <&pll208>;
+> +               };
+> +               app104: app_104_clk@104M {
+> +                       #clock-cells = <0>;
+> +                       compatible = "fixed-factor-clock";
+> +                       clock-div = <2>;
+> +                       clock-mult = <1>;
+> +                       clocks = <&pll208>;
+> +               };
+> +               app52: app_52_clk@52M {
+> +                       #clock-cells = <0>;
+> +                       compatible = "fixed-factor-clock";
+> +                       clock-div = <4>;
+> +                       clock-mult = <1>;
+> +                       clocks = <&pll208>;
+> +               };
+> +               app26: app_26_clk@26M {
+> +                       #clock-cells = <0>;
+> +                       compatible = "fixed-factor-clock";
+> +                       clock-div = <2>;
+> +                       clock-mult = <1>;
+> +                       clocks = <&app52>;
+> +               };
+>         };
 >  
->  static const struct of_device_id ppc_clk_ids[] __initconst = {
->         { .compatible = "fsl,qoriq-clockgen-1.0", },
-> -       { .compatible = "fsl,qoriq-clockgen-2", },
-> +       { .compatible = "fsl,qoriq-clockgen-2.0", },
->         {}
->  };
+>         timer: timer@c0014000 {
+> @@ -65,6 +108,7 @@
+>                 reg = <0xc0012000 0x1000>;
+>                 interrupt-parent = <&vicb>;
+>                 interrupts = <3>;
+> +               clocks = <&clk32>;
+>         };
 >  
+>         rtc: rtc@c0017000 {
+> diff --git a/drivers/clk/clk-u300.c b/drivers/clk/clk-u300.c
+> index a41e42e..bebd6c9 100644
+> --- a/drivers/clk/clk-u300.c
+> +++ b/drivers/clk/clk-u300.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/io.h>
+>  #include <linux/clk-provider.h>
+>  #include <linux/spinlock.h>
+> +#include <linux/of.h>
+>  
+>  /* APP side SYSCON registers */
+>  /* CLK Control Register 16bit (R/W) */
+> @@ -931,6 +932,17 @@ mclk_clk_register(struct device *dev, const char *name,
+>         return clk;
+>  }
+>  
+> +static const __initconst struct of_device_id u300_clk_match[] = {
+> +       {
+> +               .compatible = "fixed-clock",
+> +               .data = of_fixed_clk_setup,
+> +       },
+> +       {
+> +               .compatible = "fixed-factor-clock",
+> +               .data = of_fixed_factor_clk_setup,
+> +       },
+> +};
+> +
+>  void __init u300_clk_init(void __iomem *base)
+>  {
+>         u16 val;
+> @@ -951,26 +963,7 @@ void __init u300_clk_init(void __iomem *base)
+>         val |= U300_SYSCON_PMCR_PWR_MGNT_ENABLE;
+>         writew(val, syscon_vbase + U300_SYSCON_PMCR);
+>  
+> -       /* These are always available (RTC and PLL13) */
+> -       clk = clk_register_fixed_rate(NULL, "app_32_clk", NULL,
+> -                                     CLK_IS_ROOT, 32768);
+> -       /* The watchdog sits directly on the 32 kHz clock */
+> -       clk_register_clkdev(clk, NULL, "coh901327_wdog");
+> -       clk = clk_register_fixed_rate(NULL, "pll13", NULL,
+> -                                     CLK_IS_ROOT, 13000000);
+> -
+> -       /* These derive from PLL208 */
+> -       clk = clk_register_fixed_rate(NULL, "pll208", NULL,
+> -                                     CLK_IS_ROOT, 208000000);
+> -       clk = clk_register_fixed_factor(NULL, "app_208_clk", "pll208",
+> -                                       0, 1, 1);
+> -       clk = clk_register_fixed_factor(NULL, "app_104_clk", "pll208",
+> -                                       0, 1, 2);
+> -       clk = clk_register_fixed_factor(NULL, "app_52_clk", "pll208",
+> -                                       0, 1, 4);
+> -       /* The 52 MHz is divided down to 26 MHz */
+> -       clk = clk_register_fixed_factor(NULL, "app_26_clk", "app_52_clk",
+> -                                       0, 1, 2);
+> +       of_clk_init(u300_clk_match);
+>  
+>         /* Directly on the AMBA interconnect */
+>         clk = syscon_clk_register(NULL, "cpu_clk", "app_208_clk", 0, true,
 > -- 
-> 1.8.0
+> 1.7.11.3
