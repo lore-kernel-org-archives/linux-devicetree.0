@@ -1,95 +1,74 @@
-From: Mark Langsdorf <mark.langsdorf@calxeda.com>
-Subject: [PATCH 1/2] ahci: make ahci_transmit_led_message into a function pointer
-Date: Thu, 30 May 2013 15:17:30 -0500
-Message-ID: <1369945051-2582-1-git-send-email-mark.langsdorf@calxeda.com>
-Return-path: <linux-ide-owner@vger.kernel.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, tj@kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org
-Cc: Mark Langsdorf <mark.langsdorf@calxeda.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 0/3] at_hdmac: dt dma bindings update
+Date: Thu, 30 May 2013 22:13:21 +0200
+Message-ID: <20130530201321.GE23653@game.jcrosoft.org>
+References: <1369930103-11963-1-git-send-email-ludovic.desroches@atmel.com>
+ <20130530172649.GC3767@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130530172649.GC3767-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Create a new ata_port_operations function pointer called
-transmit_led_message and give it the default value of
-ahci_transmit_led_message. This allows AHCI controllers with
-non-standard LED interfaces to use the existing em_ interface.
+On 22:56 Thu 30 May     , Vinod Koul wrote:
+> On Thu, May 30, 2013 at 06:08:20PM +0200, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org wrote:
+> > From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > 
+> > Hi,
+> > 
+> > This set of patches update the dt dma binding for at_hdmac since we need one
+> > more parameter. In order to keep backward compatibility, an existing cell will
+> > be used to add this parameter. Since the content of that cell will become a
+> > magic value due to the concatenation of the two parameters, it is time to
+> > use macros.
+> which tree is this targetted to be applied? 
 
-Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
----
- drivers/ata/libahci.c  | 11 ++++++-----
- include/linux/libata.h |  3 +++
- 2 files changed, 9 insertions(+), 5 deletions(-)
+arm-soc as this depends on alreadied applied cleanup I've 
+> 
+> Arnd, can you review this series and ack if this needs to be applied thru
+> dmaengine?
 
-diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-index 34c8216..0c36360 100644
---- a/drivers/ata/libahci.c
-+++ b/drivers/ata/libahci.c
-@@ -173,6 +173,7 @@ struct ata_port_operations ahci_ops = {
- 	.em_store		= ahci_led_store,
- 	.sw_activity_show	= ahci_activity_show,
- 	.sw_activity_store	= ahci_activity_store,
-+	.transmit_led_message	= ahci_transmit_led_message,
- #ifdef CONFIG_PM
- 	.port_suspend		= ahci_port_suspend,
- 	.port_resume		= ahci_port_resume,
-@@ -774,7 +775,7 @@ static void ahci_start_port(struct ata_port *ap)
- 
- 			/* EM Transmit bit maybe busy during init */
- 			for (i = 0; i < EM_MAX_RETRY; i++) {
--				rc = ahci_transmit_led_message(ap,
-+				rc = ap->ops->transmit_led_message(ap,
- 							       emp->led_state,
- 							       4);
- 				if (rc == -EBUSY)
-@@ -915,7 +916,7 @@ static void ahci_sw_activity_blink(unsigned long arg)
- 			led_message |= (1 << 16);
- 	}
- 	spin_unlock_irqrestore(ap->lock, flags);
--	ahci_transmit_led_message(ap, led_message, 4);
-+	ap->ops->transmit_led_message(ap, led_message, 4);
- }
- 
- static void ahci_init_sw_activity(struct ata_link *link)
-@@ -1044,7 +1045,7 @@ static ssize_t ahci_led_store(struct ata_port *ap, const char *buf,
- 	if (emp->blink_policy)
- 		state &= ~EM_MSG_LED_VALUE_ACTIVITY;
- 
--	return ahci_transmit_led_message(ap, state, size);
-+	return ap->ops->transmit_led_message(ap, state, size);
- }
- 
- static ssize_t ahci_activity_store(struct ata_device *dev, enum sw_activity val)
-@@ -1063,7 +1064,7 @@ static ssize_t ahci_activity_store(struct ata_device *dev, enum sw_activity val)
- 		/* set the LED to OFF */
- 		port_led_state &= EM_MSG_LED_VALUE_OFF;
- 		port_led_state |= (ap->port_no | (link->pmp << 8));
--		ahci_transmit_led_message(ap, port_led_state, 4);
-+		ap->ops->transmit_led_message(ap, port_led_state, 4);
- 	} else {
- 		link->flags |= ATA_LFLAG_SW_ACTIVITY;
- 		if (val == BLINK_OFF) {
-@@ -1071,7 +1072,7 @@ static ssize_t ahci_activity_store(struct ata_device *dev, enum sw_activity val)
- 			port_led_state &= EM_MSG_LED_VALUE_OFF;
- 			port_led_state |= (ap->port_no | (link->pmp << 8));
- 			port_led_state |= EM_MSG_LED_VALUE_ON; /* check this */
--			ahci_transmit_led_message(ap, port_led_state, 4);
-+			ap->ops->transmit_led_message(ap, port_led_state, 4);
- 		}
- 	}
- 	emp->blink_policy = val;
-diff --git a/include/linux/libata.h b/include/linux/libata.h
-index eae7a05..1d09b65 100644
---- a/include/linux/libata.h
-+++ b/include/linux/libata.h
-@@ -908,6 +908,9 @@ struct ata_port_operations {
- 	ssize_t (*sw_activity_show)(struct ata_device *dev, char *buf);
- 	ssize_t (*sw_activity_store)(struct ata_device *dev,
- 				     enum sw_activity val);
-+	ssize_t (*transmit_led_message)(struct ata_port *ap, u32 state,
-+					ssize_t size);
-+
- 	/*
- 	 * Obsolete
- 	 */
--- 
-1.8.1.4
+I prefer the invert
 
+Best Regards,
+J.
+> 
+> --
+> ~Vinod
+> > 
+> > Regards
+> > 
+> > Ludovic Desroches (3):
+> >   ARM: at91: dt: add header to define at_hdmac configuration
+> >   ARM: at91: dt: switch DMA DT bindings to pre-processor
+> >   at_hdmac: add FIFO configuration parameter to DMA DT binding
+> > 
+> >  .../devicetree/bindings/dma/atmel-dma.txt          |  7 ++++--
+> >  arch/arm/boot/dts/at91sam9g45.dtsi                 |  5 ++--
+> >  arch/arm/boot/dts/at91sam9n12.dtsi                 | 11 +++++----
+> >  arch/arm/boot/dts/at91sam9x5.dtsi                  | 17 +++++++-------
+> >  arch/arm/boot/dts/sama5d3.dtsi                     | 19 +++++++--------
+> >  drivers/dma/at_hdmac.c                             | 25 ++++++++++++++++----
+> >  include/dt-bindings/dma/at91.h                     | 27 ++++++++++++++++++++++
+> >  7 files changed, 81 insertions(+), 30 deletions(-)
+> >  create mode 100644 include/dt-bindings/dma/at91.h
+> > 
+> > -- 
+> > 1.7.11.3
+> > 
+> 
+> -- 
