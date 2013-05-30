@@ -1,76 +1,44 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH v2 1/3] video: xilinxfb: Fix OF probing on little-endian systems
-Date: Thu, 30 May 2013 11:41:00 +0200
-Message-ID: <27e53d5633766ab0dc1ac492023d5a0d0199e3aa.1369906849.git.michal.simek@xilinx.com>
-Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-15062-1369906862-0001";
-    micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Pavel Machek <pavel@denx.de>
+Subject: Re: [PATCH v8] reset: Add driver for gpio-controlled reset pins
+Date: Thu, 30 May 2013 12:37:00 +0200
+Message-ID: <20130530103659.GA24712@amd.pavel.ucw.cz>
+References: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Mike Turquette <mturquette@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Len Brown <len.brown@intel.com>, Sascha Hauer <s.hauer@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Olof Johansson <olof@lixom.net>, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is a MIME GnuPG-signed message.  If you see this text, it means that
-your E-mail or Usenet software does not support MIME signed messages.
-The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
-To open this message correctly you will need to install E-mail or Usenet
-software that supports modern Internet standards.
+Hi!
 
---=_mimegpg-monstr-desktop-15062-1369906862-0001
+> This driver implements a reset controller device that toggle a gpio
+> connected to a reset pin of a peripheral IC. The delay between assertion
+> and de-assertion of the reset signal can be configured via device tree.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Reviewed-by: Stephen Warren <swarren@nvidia.com>
 
-From: Michal Simek <monstr@monstr.eu>
+Reviewed-by: Pavel Machek <pavel@ucw.cz>
 
-DTB is always big-endian that's why is necessary
-to convert it.
+Seems ok to me. Having value = asserted is interesting, but you are
+basically using it as a documentation, so it looks ok.
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
-Changes in v2:
-- use of_property_read_u32 helper function
+Thanks,
 
- drivers/video/xilinxfb.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/video/xilinxfb.c b/drivers/video/xilinxfb.c
-index af0b4fd..aecd15d 100644
---- a/drivers/video/xilinxfb.c
-+++ b/drivers/video/xilinxfb.c
-@@ -406,8 +406,7 @@ static int xilinxfb_release(struct device *dev)
- static int xilinxfb_of_probe(struct platform_device *op)
- {
- 	const u32 *prop;
--	u32 *p;
--	u32 tft_access;
-+	u32 tft_access = 0;
- 	struct xilinxfb_platform_data pdata;
- 	struct resource res;
- 	int size, rc;
-@@ -427,8 +426,8 @@ static int xilinxfb_of_probe(struct platform_device *op)
- 	 * To check whether the core is connected directly to DCR or PLB
- 	 * interface and initialize the tft_access accordingly.
- 	 */
--	p = (u32 *)of_get_property(op->dev.of_node, "xlnx,dcr-splb-slave-if", NULL);
--	tft_access = p ? *p : 0;
-+	of_property_read_u32(op->dev.of_node, "xlnx,dcr-splb-slave-if",
-+			     &tft_access);
-
- 	/*
- 	 * Fill the resource structure if its direct PLB interface
---
-1.8.2.3
-
-
---=_mimegpg-monstr-desktop-15062-1369906862-0001
-Content-Type: application/pgp-signature
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEABECAAYFAlGnHq4ACgkQykllyylKDCHicQCfa321WW8tMg8wbS2w8IIhGCM8
-jm4An3UPkCJTRPQjf42rvMccZNuBsrFl
-=eLYO
------END PGP SIGNATURE-----
-
---=_mimegpg-monstr-desktop-15062-1369906862-0001--
+								Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
