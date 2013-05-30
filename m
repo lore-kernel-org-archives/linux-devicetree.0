@@ -1,90 +1,83 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH v2 11/14] Documentation: dt: binding: omap: am43x timer
-Date: Thu, 30 May 2013 13:44:23 +0200
-Message-ID: <51A73B97.2020701@ti.com>
-References: <cover.1369658705.git.afzal@ti.com> <223d90dc9eeab13d8496690d336cdf0f7d27cd22.1369658705.git.afzal@ti.com> <51A520B5.8040803@gmail.com> <51A52A16.1040204@wwwdotorg.org> <C8443D0743D26F4388EA172BF4E2A7A93EAFB044@DBDE04.ent.ti.com> <51A5BEB6.6070809@ti.com> <51A61E60.4070708@wwwdotorg.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RFCv1 09/11] pci: mvebu: add MSI support
+Date: Thu, 30 May 2013 14:15:19 +0200
+Message-ID: <20130530121518.GA20267@mithrandir>
+References: <1364316746-8702-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1364316746-8702-10-git-send-email-thomas.petazzoni@free-electrons.com>
+ <CAErSpo7yC_97Vg-zuype-jyfqiY+77OE97cxYoEO9ZZnXjQ95A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51A61E60.4070708@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "Mohammed, Afzal" <afzal@ti.com>, Jon Hunter <jgchunter@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Benoit Cousson <benoit.cousson@linaro.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAErSpo7yC_97Vg-zuype-jyfqiY+77OE97cxYoEO9ZZnXjQ95A@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Maen Suleiman <maen@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Olof Johansson <olof@lixom.net>, Tawfik Bayouk <tawfik@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mitch Bradley <wmb@firmworks.com>, Andrew Murray <andrew.murray@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
 
-On 05/29/2013 05:27 PM, Stephen Warren wrote:
-> On 05/29/2013 02:39 AM, Benoit Cousson wrote:
->> Hi Afzal,
->>
->> On 05/29/2013 10:06 AM, Mohammed, Afzal wrote:
->>> Hi Jon,
->>>
->>> On Wed, May 29, 2013 at 03:35:10, Stephen Warren wrote:
->>>> On 05/28/2013 03:25 PM, Jon Hunter wrote:
->>>
->>>>>>  			ti,am335x-timer	(applicable to AM335x devices)
->>>>>>  			ti,am335x-timer-1ms (applicable to AM335x devices)
->>>>>> +			"ti,am4372-timer-1ms", "ti,am335x-timer-1ms" for AM43x 1ms timer
->>>>>> +			"ti,am4372-timer", "ti,am335x-timer" for AM43x timers other than 1ms one
->>>
->>>>> If you are adding more compatibility strings, then this implies that the
->>>>> AM43x timers are not 100% compatible with any other device listed (such
->>>>> as am335x or any omap device). That's fine but you should state that in
->>>>> the changelog. If the AM43x timer registers are 100% compatible with
->>>>> existing devices you should not add these.
->>>>
->>>> I'm not sure that's true; .dts files should always include a compatible
->>>> value that describes the most specific model of the HW, plus any
->>>> baseline compatible value that the HW is compatible with. This allows
->>>> any required quirks/fixes/... to be applied for the specific HW model
->>>> later even if nobody knows right now they'll be needed. Hence, defining
->>>> new compatible values doesn't necessarily mean incompatible HW.
->>>
->>> Stephen took words out of my finger ;)
->>>  
->>> Some explanations,I don;t 
->>>
->>> 1. first compatible should be exact device [A], followed by compatible
->>> model (if one)
->>> 2. Minor effort in getting DT right the first time may help prevent
->>> difficult effort later modifying it (if a necessity comes), considering
->>> the fact that DT sources has  to move out of Kernel at some point of
->>> time. And DT is not supposed to be modified, which may cause difficulty
->>> for the users (I had been a minor victim of this during rebase).
->>>
->>> As we both were in GPMC land earlier, an example,
->>>
->>> If my memory is right, GPMC IP in am335x is rev 6, and IP has 8 chip
->>> select, but one is not pinned out. Now assume that same IP is integrated
->>> in another SoC (probably OMAP4 has rev 6). Here if we use same compatible
->>> for both, driver cannot handle it properly (w/o knowledge about platform).
->>> But if exact compatible is mentioned, without modifying DT (which should
->>> be considered as a firmware) just by modifying Kernel, deciding based on
->>> compatible would help achieve what is required.
->>
->> That's true for the DTS itself, but here your are changing the binding
->> documentation which is supposed to reflect the driver "interface" in the
->> Device Tree model description.
->>
->> Since the driver does not support any new compatible string, you should
->> not update the binding.
-> 
-> I don't agree here; the DT binding should define all the required and/or
-> allowed values that must/should/can be present in the DT - the entire
-> legal schema. The set of all compatible values is included in that,
-> irrespective of whether a particular value actually (currently) defines
-> a different HW interface or not.
+--HcAYCG3uE/tztfnV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Well, I tend to agree on the principle, but so far it was never really
-done like that. That's not necessarily a good excuse, but if we start
-adding new bindings for the huge number of OMAP|AM variants TI has been
-introduced for 10 years, I'd rather use a wildcard than a exhaustive
-list of all the devices.
-Something like ti,[omap|am]*-timer for example .
+On Mon, Apr 08, 2013 at 04:29:07PM -0600, Bjorn Helgaas wrote:
+> On Tue, Mar 26, 2013 at 10:52 AM, Thomas Petazzoni <thomas.petazzoni@free=
+-electrons.com> wrote:
+[...]
+> > +static int mvebu_pcie_setup_msi_irq(struct msi_chip *chip,
+> > +                                   struct pci_dev *pdev,
+> > +                                   struct msi_desc *desc)
+> > +{
+> > +       struct mvebu_pcie_msi *msi =3D to_mvebu_msi(chip);
+>=20
+> If this took only the pci_dev (not the msi_chip), I think you could do th=
+is:
+>=20
+>   struct mvebu_pcie_msi *msi =3D &pdev->bus->sysdata->msi;
 
-Regards,
-Benoit
+That would mean that the arch_setup_msi_irq() and friends could still be
+architecture-agnostic because they only pass around pci_dev, and the
+driver specific implementations would know how to lookup sysdata and
+=66rom there the MSI chip.
 
+So I was almost convinced that putting the struct msi_chip pointer into
+sysdata is a good idea. However that also means that each PCI host
+bridge driver becomes architecture-specific. If we ever get a driver
+that can be used on multiple architectures (however unlikely), the only
+way to make it work would be to #ifdef those parts. We could make that
+easier to deal with by providing an accessor (pci_sysdata_set_msi_chip()
+or similar), though.
+
+But maybe it's something we don't need to be concerned about because no
+PCI host bridge driver will ever support two different architecture?
+
+One related point is compile coverage. If the drivers are completely
+architecture-agnostic it makes it a lot easier to compile-test all
+drivers, which might come in useful when doing core changes and such.
+
+Thierry
+
+--HcAYCG3uE/tztfnV
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRp0LWAAoJEN0jrNd/PrOhZpkP/ii59Y2qEZJQiPHMb0kNVjZk
+en5yU4Z+H47YgwtaUHhlfvkDuP/rQvR3dT/DWQv3so/1ft9nPBUhVn16+cZjzGrC
+BnJ9P6Mg5rqHNBzsklnQPivRkcQDXHaYfuGz4stHUGPaOcGR+upvPQQymeAL8FB9
+YbMzfX3wt8Aup1fJWViP6fBR2VijCpcfkuVW7TstdtQvAmcpUn2itShdL89c/UPi
+llobYQM/nGPvA44g6r9YHYfCSSCXV7czPF8zlLnxhteF82/eD25E7vvXziZIihDc
+lsslh8FjForTt2tZQcUFpt1bA6SNpFdem/FYa06es/X+shSsDXy/nRTh+yNopS/D
+BjHNWAzmd3nMnBplxwmRtreVtedudGz7uXqoPv5wySIbC4L5GhE1CIIRUYmV0DTE
+OmhoYRi93fFv7NuCeW4FsS2gs/kNqTH+WzFyz29nobRjgSDMSAc+ELwzuUfkWn0L
+WOKqtZQmo4iD1ulDdjN7nomEtp6rna6eaXBUa14BygBgBAkxFU+aPc5DsVQEP8Cv
+AeabJw+DwaD/gREfT1qOtE19kU3N8A6f9EaaVbabz96S2lEGd9rGm26meqawnxjr
+sDksusEYjnCRFPOtnLl0tAO1/sYuJhA1Ei9ol8RjAT6hO8GaTo+N82876p80CrSS
+vCNkYUbS6OilKxm/H7ax
+=kQQb
+-----END PGP SIGNATURE-----
+
+--HcAYCG3uE/tztfnV--
