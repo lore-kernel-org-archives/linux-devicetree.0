@@ -1,14 +1,10 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v7] reset: Add driver for gpio-controlled reset pins
-Date: Thu, 30 May 2013 15:16:21 +0200
-Message-ID: <201305301516.22111.arnd@arndb.de>
-References: <1369753575-9818-1-git-send-email-p.zabel@pengutronix.de>
- <51A68CF8.7000303@wwwdotorg.org> <20130530103843.GB24712@amd.pavel.ucw.cz>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] of: Export of_irq_count for using in modules
+Date: Thu, 30 May 2013 15:49:43 +0200
+Message-ID: <6aa29b1d109a46278a7f37b598defe07d6edfe60.1369921774.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============8347542641284570195=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130530103843.GB24712-tWAi6jLit6GreWDznjuHag@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,33 +15,80 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 30 May 2013, Pavel Machek wrote:
-> On Wed 2013-05-29 17:19:20, Stephen Warren wrote:
-> > On 05/28/2013 09:06 AM, Philipp Zabel wrote:
-> > > This driver implements a reset controller device that toggle a gpio
-> > > connected to a reset pin of a peripheral IC. The delay between assertion
-> > > and de-assertion of the reset signal can be configured via device tree.
-> > 
-> > > diff --git a/drivers/reset/gpio-reset.c b/drivers/reset/gpio-reset.c
-> > 
-> > > +static void __gpio_reset_set(struct reset_controller_dev *rcdev, int asserted)
-> > 
-> > Nit: Technically I think __ is a reserved name-space, so you shouldn't
-> > prefix "user-level" (rather than libc/similar) symbols with it, but it's
-> > not a big deal.
-> 
-> Well.. this is kernel :-). We don't have libc around... and this
-> standard is normally ignored here. __ is normally used as a prefix for
-> "simpler" function.
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
 
-We're not really consistent in the kernel, but I agree the most common
-use is where you have a wrapper calling the __foo function and normal
-drivers are supposed to call foo instead. My reading is usually that
-by calling __foo, the caller says "I know exactly what I'm doing so
-I can optimize this".
+--===============8347542641284570195==
+Content-Type: multipart/signed;
+    boundary="=_mimegpg-monstr-desktop-9587-1369921783-0001";
+    micalg=pgp-sha1; protocol="application/pgp-signature"
 
-	Arnd
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
+
+--=_mimegpg-monstr-desktop-9587-1369921783-0001
+
+Export of_irq_count for modules.
+
+Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+We are using this function in remoteproc module drivers.
+There is also drivers/gpio/gpio-mvebu.c in the tree
+which use this function but this driver can't be compiled
+as module. This could be also the reason why is not this driver as module.
+---
+ drivers/of/irq.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index a3c1c5a..c918dde 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -374,6 +374,7 @@ int of_irq_count(struct device_node *dev)
+
+ 	return nr;
+ }
++EXPORT_SYMBOL_GPL(of_irq_count);
+
+ /**
+  * of_irq_to_resource_table - Fill in resource table with node's IRQ info
+--
+1.8.2.3
+
+
+--=_mimegpg-monstr-desktop-9587-1369921783-0001
+Content-Type: application/pgp-signature
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEABECAAYFAlGnWPcACgkQykllyylKDCGXcQCfS3tTNrxzX02PzyO+iVbc9UuT
+Bx8AoINF/8ZfB9Hw6Tyu+vR/xKiL66KK
+=UDmo
+-----END PGP SIGNATURE-----
+
+--=_mimegpg-monstr-desktop-9587-1369921783-0001--
+
+--===============8347542641284570195==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============8347542641284570195==--
