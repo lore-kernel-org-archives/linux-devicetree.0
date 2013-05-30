@@ -1,22 +1,11 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH 1/8] video: atmel_lcdfb: fix platform data struct
-Date: Thu, 30 May 2013 16:59:38 +0200
-Message-ID: <20130530145938.GK19468@game.jcrosoft.org>
-References: <20130411145741.GB25242@game.jcrosoft.org>
- <1365692422-9565-1-git-send-email-plagnioj@jcrosoft.com>
- <CACQ1gAjF5kuu-czkj56-pQdTBUhvY5VodvfnF3RA_DN-O0b9NQ@mail.gmail.com>
- <20130529173538.GC23899@game.jcrosoft.org>
- <CACQ1gAhhsMw1-Znd8BC=A0rJBrB4pphCtH9v9qOQR+j2dY3vCw@mail.gmail.com>
- <20130529193220.GB19468@game.jcrosoft.org>
- <CACQ1gAj_m_aWaq5J41SY8EPwOH5-3zYPsf2WJCunvVnBCyq00Q@mail.gmail.com>
- <20130530072328.GE19468@game.jcrosoft.org>
- <51A761DA.6020109@corscience.de>
+From: <ludovic.desroches@atmel.com>
+Subject: [PATCH 0/3] at_hdmac: dt dma bindings update
+Date: Thu, 30 May 2013 18:08:20 +0200
+Message-ID: <1369930103-11963-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <51A761DA.6020109@corscience.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -26,140 +15,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andreas =?iso-8859-1?Q?Bie=DFmann?= <andreas.biessmann@corscience.de>
-Cc: linux-fbdev@vger.kernel.org, Richard Genoud <richard.genoud@gmail.com>, devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Andreas =?iso-8859-1?Q?Bie=DFmann?= <biessmann@corscience.de>, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org, Hans-Christian Egtvedt <egtvedt@samfundet.no>
+To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: vinod.koul@intel.com, plagnioj@jcrosoft.com, Ludovic Desroches <ludovic.desroches@atmel.com>, nicolas.ferre@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-On 16:27 Thu 30 May     , Andreas Bie=DFmann wrote:
-> On 30.05.13 09:23, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > On 08:39 Thu 30 May     , Richard Genoud wrote:
-> >> 2013/5/29 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>:
-> >>> On 19:44 Wed 29 May     , Richard Genoud wrote:
-> >>>> 2013/5/29 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>:
-> >>>>> On 16:36 Wed 29 May     , Richard Genoud wrote:
-> >>>>>> 2013/4/11 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>:
-> >>>>>>> Today we mix pdata and drivers data in the struct atmel_lcdfb_info
-> >>>>>>> Fix it and introduce a new struct atmel_lcdfb_pdata for platform =
-data only
-> >>>>>>>
-> >>>>>>> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosof=
-t.com>
-> >>>>>>> Cc: linux-fbdev@vger.kernel.org
-> >>>>>>> Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
-> >>>>>>> Cc: Andrew Morton <akpm@linux-foundation.org>
-> >>>>>>> Cc: Hans-Christian Egtvedt <egtvedt@samfundet.no>
-> >>>>>>> ---
-> >>>>>>>  arch/arm/mach-at91/at91sam9261_devices.c    |    6 +-
-> >>>>>>>  arch/arm/mach-at91/at91sam9263_devices.c    |    6 +-
-> >>>>>>>  arch/arm/mach-at91/at91sam9g45_devices.c    |    6 +-
-> >>>>>>>  arch/arm/mach-at91/at91sam9rl_devices.c     |    6 +-
-> >>>>>>>  arch/arm/mach-at91/board-sam9261ek.c        |    6 +-
-> >>>>>>>  arch/arm/mach-at91/board-sam9263ek.c        |    4 +-
-> >>>>>>>  arch/arm/mach-at91/board-sam9m10g45ek.c     |    4 +-
-> >>>>>>>  arch/arm/mach-at91/board-sam9rlek.c         |    4 +-
-> >>>>>>>  arch/arm/mach-at91/board.h                  |    4 +-
-> >>>>>>>  arch/avr32/boards/atngw100/evklcd10x.c      |    6 +-
-> >>>>>>>  arch/avr32/boards/atngw100/mrmt.c           |    4 +-
-> >>>>>>>  arch/avr32/boards/atstk1000/atstk1000.h     |    2 +-
-> >>>>>>>  arch/avr32/boards/atstk1000/setup.c         |    2 +-
-> >>>>>>>  arch/avr32/boards/favr-32/setup.c           |    2 +-
-> >>>>>>>  arch/avr32/boards/hammerhead/setup.c        |    2 +-
-> >>>>>>>  arch/avr32/boards/merisc/display.c          |    2 +-
-> >>>>>>>  arch/avr32/boards/mimc200/setup.c           |    4 +-
-> >>>>>>>  arch/avr32/mach-at32ap/at32ap700x.c         |    8 +--
-> >>>>>>>  arch/avr32/mach-at32ap/include/mach/board.h |    4 +-
-> >>>>>>>  drivers/video/atmel_lcdfb.c                 |  104 +++++++++++++=
-++++----------
-> >>>>>>>  include/video/atmel_lcdc.h                  |   24 +------
-> >>>>>>>  21 files changed, 109 insertions(+), 101 deletions(-)
-> >>>>>>>
-> >>>>>> [snip]
-> >>>>>>> diff --git a/drivers/video/atmel_lcdfb.c b/drivers/video/atmel_lc=
-dfb.c
-> >>>>>>> index c1a2914..98733cd4 100644
-> >>>>>>> --- a/drivers/video/atmel_lcdfb.c
-> >>>>>>> +++ b/drivers/video/atmel_lcdfb.c
-> >>>>>>> @@ -20,12 +20,45 @@
-> >>>>>>>  #include <linux/gfp.h>
-> >>>>>>>  #include <linux/module.h>
-> >>>>>>>  #include <linux/platform_data/atmel.h>
-> >>>>>>> +#include <video/of_display_timing.h>
-> >>>>>>>
-> >>>>>>>  #include <mach/cpu.h>
-> >>>>>>>  #include <asm/gpio.h>
-> >>>>>>>
-> >>>>>>>  #include <video/atmel_lcdc.h>
-> >>>>>>>
-> >>>>>>> +struct atmel_lcdfb_config {
-> >>>>>>> +       bool have_alt_pixclock;
-> >>>>>>> +       bool have_hozval;
-> >>>>>>> +       bool have_intensity_bit;
-> >>>>>>> +};
-> >>>>>>> +
-> >>>>>>> + /* LCD Controller info data structure, stored in device platfor=
-m_data */
-> >>>>>>> +struct atmel_lcdfb_info {
-> >>>>>>> +       spinlock_t              lock;
-> >>>>>>> +       struct fb_info          *info;
-> >>>>>>> +       void __iomem            *mmio;
-> >>>>>>> +       int                     irq_base;
-> >>>>>>> +       struct work_struct      task;
-> >>>>>>> +
-> >>>>>>> +       unsigned int            smem_len;
-> >>>>>>> +       struct platform_device  *pdev;
-> >>>>>>> +       struct clk              *bus_clk;
-> >>>>>>> +       struct clk              *lcdc_clk;
-> >>>>>>> +
-> >>>>>>> +       struct backlight_device *backlight;
-> >>>>>>> +       u8                      bl_power;
-> >>>>>>> +       bool                    lcdcon_pol_negative;
-> >>>>>> I think lcdcon_pol_negative should be part of pdata, because it re=
-ally
-> >>>>>> depends on how the PWM is wired on the board.
-> >>>>>>
-> >>>>>
-> >>>>> maybe but no one mainline use it on any pdata for non-dt boars
-> >>>>> so I did not want to expose it
-> >>>> Well, at least, I'm using it :)
-> >>>> (and I guess that Andreas is using it also, otherwise he wouldn't ha=
-ve
-> >>>> introduce it !)
-> >>>
-> >>> yes but pdata is for non-dt boards, for dt you can keep it in struct
-> >>> atmel_lcdfb_info and add a property
-> >>>
-> >>> if non-dt boards want it my answer is I do not care switch to DT
-> >>
-> >> ok (I use a full DT board based on sam9g35)
-> >>
-> >> so I'll add something like
-> >> sinfo->lcdcon_pol_negative =3D of_property_read_bool(display_np,
-> >> "atmel,lcdcon-pwm-pulse-low");
-> >> in /atmel_lcdfb.c
-> >>
-> >> But I thought the goal of this patch was to separate driver data from
-> >> platform specific data, and IMHO, lcdcon_pol_negative is a specificity
-> >> of the platform.
-> > =
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
 
-> > You are right but as non one mainline use it as pdata I choose to drop =
-it
-> > and only keep it on the driver as we can still use it for DT
-> > =
+Hi,
 
-> > It's a way to force peopoe to switch to DT
-> =
+This set of patches update the dt dma binding for at_hdmac since we need one
+more parameter. In order to keep backward compatibility, an existing cell will
+be used to add this parameter. Since the content of that cell will become a
+magic value due to the concatenation of the two parameters, it is time to
+use macros.
 
-> well, we use it on an avr32 board (not mainlined; though no kernel
-> update planned currently) ... but no way to use DT currently.
+Regards
 
-If there is 1 ARV32 user it's an other story
+Ludovic Desroches (3):
+  ARM: at91: dt: add header to define at_hdmac configuration
+  ARM: at91: dt: switch DMA DT bindings to pre-processor
+  at_hdmac: add FIFO configuration parameter to DMA DT binding
 
-Best Regards,
-J.
-> =
+ .../devicetree/bindings/dma/atmel-dma.txt          |  7 ++++--
+ arch/arm/boot/dts/at91sam9g45.dtsi                 |  5 ++--
+ arch/arm/boot/dts/at91sam9n12.dtsi                 | 11 +++++----
+ arch/arm/boot/dts/at91sam9x5.dtsi                  | 17 +++++++-------
+ arch/arm/boot/dts/sama5d3.dtsi                     | 19 +++++++--------
+ drivers/dma/at_hdmac.c                             | 25 ++++++++++++++++----
+ include/dt-bindings/dma/at91.h                     | 27 ++++++++++++++++++++++
+ 7 files changed, 81 insertions(+), 30 deletions(-)
+ create mode 100644 include/dt-bindings/dma/at91.h
 
-> Best regards
-> =
-
-> Andreas Bie=DFmann
+-- 
+1.7.11.3
