@@ -1,11 +1,16 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v8] reset: Add driver for gpio-controlled reset pins
-Date: Thu, 30 May 2013 11:09:00 +0200
-Message-ID: <1369904940-716-1-git-send-email-p.zabel@pengutronix.de>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v6 01/10] ASoC: phycore-ac97: Add DT support
+Date: Thu, 30 May 2013 11:10:54 +0200
+Message-ID: <20130530091054.GA31548@pengutronix.de>
+References: <1369752478-30260-1-git-send-email-mpa@pengutronix.de>
+ <1369752478-30260-2-git-send-email-mpa@pengutronix.de>
+ <20130529135342.GB29528@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130529135342.GB29528-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,277 +21,437 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This driver implements a reset controller device that toggle a gpio
-connected to a reset pin of a peripheral IC. The delay between assertion
-and de-assertion of the reset signal can be configured via device tree.
+On Wed, May 29, 2013 at 09:53:45PM +0800, Shawn Guo wrote:
+> On Tue, May 28, 2013 at 04:47:49PM +0200, Markus Pargmann wrote:
+> > Add devicetree support for this audio soc fabric driver.
+> > 
+> > platform_of_node and cpu_of_node are set according to the fsl,audmux
+> > phandle.
+> > 
+> > This patch adds handling of ac97 reset functions according to fsl ac97
+> > support. They are setup from here to avoid board specific code in the
+> > generic fsl-ssi driver.
+> > 
+> > This patch changes the handling of pca100 boards from non-DT to DT only.
+> > pcm043 is still handled without DT.
+> > 
+> > Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> > 
+> > Notes:
+> >     Changes in v6:
+> >      - phycore-ac97 now manages the ac97 reset functions of the boards using
+> >        this combination of ssi-codec.
+> >      - Removed preprocessor ifs for DT, non-DT distinction. pcm043 is now
+> >        non-DT only and pca100 DT only.
+> >     
+> >     Changes in v4:
+> >      - New property phytec,audmux to check which audmux setup should be
+> >        executed. Checking for fsl,imx21-audmux and fsl,imx31-audmux.
+> >     
+> >     Changes in v3:
+> >      - Add some more information in the commit message.
+> >     
+> >     Changes in v2:
+> >      - Simplify the driver, by combining audmux port configurations. The
+> >        audmux driver actually knows on which platform he is running and
+> >        will return the appropriate error code if we use functions for
+> >        another platform. So we don't need to have the knowledge about it
+> >        in phycore-ac97 and can try both functions. This removes the need
+> >        of different compatibilities and renames it to phycore-ac97.
+> >      - Use a phandle for the cpu_dai link.
+> >      - Add devicetree binding documentation.
+> >      - Rename binding to phytec,phycore-ac97 and fsl,ssi to phytec,ssi
+> >     
+> >     Changes in v2:
+> >      - Simplify the driver, by combining audmux port configurations. The
+> >        audmux driver actually knows on which platform he is running and
+> >        will return the appropriate error code if we use functions for
+> >        another platform. So we don't need to have the knowledge about it
+> >        in phycore-ac97 and can try both functions. This removes the need
+> >        of different compatibilities and renames it to imx27-ac97.
+> >      - Use a phandle for the cpu_dai link.
+> >      - Add devicetree binding documentation.
+> >      - Rename binding to phytec,phycore-ac97 and fsl,ssi to phytec,ssi
+> > 
+> >  .../bindings/sound/phytec,phycore-ac97.txt         |  14 ++
+> >  sound/soc/fsl/phycore-ac97.c                       | 241 ++++++++++++++++++---
+> >  2 files changed, 229 insertions(+), 26 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/sound/phytec,phycore-ac97.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/sound/phytec,phycore-ac97.txt b/Documentation/devicetree/bindings/sound/phytec,phycore-ac97.txt
+> > new file mode 100644
+> > index 0000000..41201ff
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/sound/phytec,phycore-ac97.txt
+> > @@ -0,0 +1,14 @@
+> > +Phytec phycore AC97
+> > +
+> > +Required properties:
+> > +- compatible: "phytec,phycore-ac97"
+> > +- phytec,ssi: A phandle to the ssi device that is connected to ac97.
+> > +- phytec,audmux: A phandle to the audmux device.
+> > +
+> > +Example:
+> > +
+> > +sound {
+> > +	compatible = "phytec,phycore-ac97";
+> > +	phytec,ssi = <&ssi1>;
+> > +	phytec,audmux = <&audmux>;
+> > +};
+> > diff --git a/sound/soc/fsl/phycore-ac97.c b/sound/soc/fsl/phycore-ac97.c
+> > index ae403c2..bf2c600 100644
+> > --- a/sound/soc/fsl/phycore-ac97.c
+> > +++ b/sound/soc/fsl/phycore-ac97.c
+> > @@ -20,8 +20,14 @@
+> >  #include <asm/mach-types.h>
+> >  
+> >  #include "imx-audmux.h"
+> > +#include "fsl_ssi.h"
+> > +
+> > +#define DRV_NAME "phycore-audio-fabric"
+> >  
+> >  static struct snd_soc_card imx_phycore;
+> > +static struct device_node *phycore_dai_cpu_node;
+> > +static void (*phycore_ac97_reset) (struct snd_ac97 *ac97);
+> > +static void (*phycore_ac97_warm_reset)(struct snd_ac97 *ac97);
+> >  
+> >  static struct snd_soc_ops imx_phycore_hifi_ops = {
+> >  };
+> > @@ -32,12 +38,12 @@ static struct snd_soc_dai_link imx_phycore_dai_ac97[] = {
+> >  		.stream_name	= "HiFi",
+> >  		.codec_dai_name		= "wm9712-hifi",
+> >  		.codec_name	= "wm9712-codec",
+> > -		.cpu_dai_name	= "imx-ssi.0",
+> > -		.platform_name	= "imx-ssi.0",
+> 
+> I do not think these and phycore_ac97_plat_name changes are necessary,
+> since of_node will always take precedence over name in match.
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Changes since v7:
- - renamed __gpio_reset_set to gpio_reset_set
- - made delay_us signed, negative if reset-delay-us is not set
- - added error messages for reset-gpios and reset-delay-us misconfiguration
- - set drvdata before calling reset_controller_register
----
- .../devicetree/bindings/reset/gpio-reset.txt       |  35 +++++
- drivers/reset/Kconfig                              |  11 ++
- drivers/reset/Makefile                             |   1 +
- drivers/reset/gpio-reset.c                         | 174 +++++++++++++++++++++
- 4 files changed, 221 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/gpio-reset.txt
- create mode 100644 drivers/reset/gpio-reset.c
+They are necessary, snd_soc_register_card returns with -EINVAL if both,
+name and of_node, are set.
 
-diff --git a/Documentation/devicetree/bindings/reset/gpio-reset.txt b/Documentation/devicetree/bindings/reset/gpio-reset.txt
-new file mode 100644
-index 0000000..bca5348
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/gpio-reset.txt
-@@ -0,0 +1,35 @@
-+GPIO reset controller
-+=====================
-+
-+A GPIO reset controller controls a single GPIO that is connected to the reset
-+pin of a peripheral IC. Please also refer to reset.txt in this directory for
-+common reset controller binding usage.
-+
-+Required properties:
-+- compatible: Should be "gpio-reset"
-+- reset-gpios: A gpio used as reset line. The gpio specifier for this property
-+               depends on the gpio controller that provides the gpio.
-+- #reset-cells: 0, see below
-+
-+Optional properties:
-+- reset-delay-us: delay in microseconds. The gpio reset line will be asserted for
-+                  this duration to reset.
-+- initially-in-reset: boolean. If not set, the initial state should be a
-+                      deasserted reset line. If this property exists, the
-+                      reset line should be kept in reset.
-+
-+example:
-+
-+sii902x_reset: gpio-reset {
-+	compatible = "gpio-reset";
-+	reset-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
-+	reset-delay-us = <10000>;
-+	initially-in-reset;
-+	#reset-cells = <0>;
-+};
-+
-+/* Device with nRESET pin connected to GPIO5_0 */
-+sii902x@39 {
-+	/* ... */
-+	resets = <&sii902x_reset>; /* active-low GPIO5_0, 10 ms delay */
-+};
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index c9d04f7..1a862df 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -11,3 +11,14 @@ menuconfig RESET_CONTROLLER
- 	  via GPIOs or SoC-internal reset controller modules.
- 
- 	  If unsure, say no.
-+
-+if RESET_CONTROLLER
-+
-+config RESET_GPIO
-+	tristate "GPIO reset controller support"
-+	depends on GPIOLIB && OF
-+	help
-+	  This driver provides support for reset lines that are controlled
-+	  directly by GPIOs.
-+
-+endif
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 1e2d83f..b854f20 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_RESET_CONTROLLER) += core.o
-+obj-$(CONFIG_RESET_GPIO) += gpio-reset.o
-diff --git a/drivers/reset/gpio-reset.c b/drivers/reset/gpio-reset.c
-new file mode 100644
-index 0000000..5d2515a
---- /dev/null
-+++ b/drivers/reset/gpio-reset.c
-@@ -0,0 +1,174 @@
-+/*
-+ * GPIO Reset Controller driver
-+ *
-+ * Copyright 2013 Philipp Zabel, Pengutronix
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/gpio.h>
-+#include <linux/module.h>
-+#include <linux/of_gpio.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+
-+struct gpio_reset_data {
-+	struct reset_controller_dev rcdev;
-+	unsigned int gpio;
-+	bool active_low;
-+	s32 delay_us;
-+};
-+
-+static void gpio_reset_set(struct reset_controller_dev *rcdev, int asserted)
-+{
-+	struct gpio_reset_data *drvdata = container_of(rcdev,
-+			struct gpio_reset_data, rcdev);
-+	int value = asserted;
-+
-+	if (drvdata->active_low)
-+		value = !value;
-+
-+	gpio_set_value(drvdata->gpio, value);
-+}
-+
-+static int gpio_reset(struct reset_controller_dev *rcdev, unsigned long id)
-+{
-+	struct gpio_reset_data *drvdata = container_of(rcdev,
-+			struct gpio_reset_data, rcdev);
-+
-+	if (drvdata->delay_us < 0)
-+		return -ENOSYS;
-+
-+	gpio_reset_set(rcdev, 1);
-+	udelay(drvdata->delay_us);
-+	gpio_reset_set(rcdev, 0);
-+
-+	return 0;
-+}
-+
-+static int gpio_reset_assert(struct reset_controller_dev *rcdev,
-+		unsigned long id)
-+{
-+	gpio_reset_set(rcdev, 1);
-+
-+	return 0;
-+}
-+
-+static int gpio_reset_deassert(struct reset_controller_dev *rcdev,
-+		unsigned long id)
-+{
-+	gpio_reset_set(rcdev, 0);
-+
-+	return 0;
-+}
-+
-+static struct reset_control_ops gpio_reset_ops = {
-+	.reset = gpio_reset,
-+	.assert = gpio_reset_assert,
-+	.deassert = gpio_reset_deassert,
-+};
-+
-+static int of_gpio_reset_xlate(struct reset_controller_dev *rcdev,
-+			       const struct of_phandle_args *reset_spec)
-+{
-+	if (WARN_ON(reset_spec->args_count != 0))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int gpio_reset_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct gpio_reset_data *drvdata;
-+	enum of_gpio_flags flags;
-+	unsigned long gpio_flags;
-+	bool initially_in_reset;
-+	int ret;
-+
-+	drvdata = devm_kzalloc(&pdev->dev, sizeof(*drvdata), GFP_KERNEL);
-+	if (drvdata == NULL)
-+		return -ENOMEM;
-+
-+	if (of_gpio_named_count(np, "reset-gpios") != 1) {
-+		dev_err(&pdev->dev,
-+			"reset-gpios property missing, or not a single gpio\n");
-+		return -EINVAL;
-+	}
-+
-+	drvdata->gpio = of_get_named_gpio_flags(np, "reset-gpios", 0, &flags);
-+	if (drvdata->gpio == -EPROBE_DEFER) {
-+		return drvdata->gpio;
-+	} else if (!gpio_is_valid(drvdata->gpio)) {
-+		dev_err(&pdev->dev, "invalid reset gpio: %d\n", drvdata->gpio);
-+		return drvdata->gpio;
-+	}
-+
-+	drvdata->active_low = flags & OF_GPIO_ACTIVE_LOW;
-+
-+	ret = of_property_read_u32(np, "reset-delay-us", &drvdata->delay_us);
-+	if (ret < 0)
-+		drvdata->delay_us = -1;
-+	else if (drvdata->delay_us < 0)
-+		dev_warn(&pdev->dev, "reset delay too high\n");
-+
-+	initially_in_reset = of_property_read_bool(np, "initially-in-reset");
-+	if (drvdata->active_low ^ initially_in_reset)
-+		gpio_flags = GPIOF_OUT_INIT_HIGH;
-+	else
-+		gpio_flags = GPIOF_OUT_INIT_LOW;
-+
-+	ret = devm_gpio_request_one(&pdev->dev, drvdata->gpio, gpio_flags, NULL);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to request gpio %d: %d\n",
-+			drvdata->gpio, ret);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, drvdata);
-+
-+	drvdata->rcdev.of_node = np;
-+	drvdata->rcdev.owner = THIS_MODULE;
-+	drvdata->rcdev.nr_resets = 1;
-+	drvdata->rcdev.ops = &gpio_reset_ops;
-+	drvdata->rcdev.of_xlate = of_gpio_reset_xlate;
-+	reset_controller_register(&drvdata->rcdev);
-+
-+	return 0;
-+}
-+
-+static int gpio_reset_remove(struct platform_device *pdev)
-+{
-+	struct gpio_reset_data *drvdata = platform_get_drvdata(pdev);
-+
-+	reset_controller_unregister(&drvdata->rcdev);
-+
-+	return 0;
-+}
-+
-+static struct of_device_id gpio_reset_dt_ids[] = {
-+	{ .compatible = "gpio-reset" },
-+	{ }
-+};
-+
-+static struct platform_driver gpio_reset_driver = {
-+	.probe = gpio_reset_probe,
-+	.remove = gpio_reset_remove,
-+	.driver = {
-+		.name = "gpio-reset",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(gpio_reset_dt_ids),
-+	},
-+};
-+
-+module_platform_driver(gpio_reset_driver);
-+
-+MODULE_AUTHOR("Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>");
-+MODULE_DESCRIPTION("gpio reset controller");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:gpio-reset");
-+MODULE_DEVICE_TABLE(of, gpio_reset_dt_ids);
+> 
+> >  		.ops		= &imx_phycore_hifi_ops,
+> >  	},
+> >  };
+> >  
+> > +static const char phycore_ac97_plat_name[] = "imx-ssi.0";
+> > +
+> >  static struct snd_soc_card imx_phycore = {
+> >  	.name		= "PhyCORE-ac97-audio",
+> >  	.owner		= THIS_MODULE,
+> > @@ -45,40 +51,52 @@ static struct snd_soc_card imx_phycore = {
+> >  	.num_links	= ARRAY_SIZE(imx_phycore_dai_ac97),
+> >  };
+> >  
+> > -static struct platform_device *imx_phycore_snd_ac97_device;
+> > +static void phycore_ac97_imx21_audmux(void)
+> > +{
+> > +	imx_audmux_v1_configure_port(MX27_AUDMUX_HPCR1_SSI0,
+> > +		IMX_AUDMUX_V1_PCR_SYN | /* 4wire mode */
+> > +		IMX_AUDMUX_V1_PCR_TFCSEL(3) |
+> > +		IMX_AUDMUX_V1_PCR_TCLKDIR | /* clock is output */
+> > +		IMX_AUDMUX_V1_PCR_RXDSEL(3));
+> > +	imx_audmux_v1_configure_port(3,
+> > +		IMX_AUDMUX_V1_PCR_SYN | /* 4wire mode */
+> > +		IMX_AUDMUX_V1_PCR_TFCSEL(0) |
+> > +		IMX_AUDMUX_V1_PCR_TFSDIR |
+> > +		IMX_AUDMUX_V1_PCR_RXDSEL(0));
+> > +}
+> > +
+> > +static void phycore_ac97_imx31_audmux(void)
+> > +{
+> > +	imx_audmux_v2_configure_port(3,
+> > +		IMX_AUDMUX_V2_PTCR_SYN | /* 4wire mode */
+> > +		IMX_AUDMUX_V2_PTCR_TFSEL(0) |
+> > +		IMX_AUDMUX_V2_PTCR_TFSDIR,
+> > +		IMX_AUDMUX_V2_PDCR_RXDSEL(0));
+> > +	imx_audmux_v2_configure_port(0,
+> > +		IMX_AUDMUX_V2_PTCR_SYN | /* 4wire mode */
+> > +		IMX_AUDMUX_V2_PTCR_TCSEL(3) |
+> > +		IMX_AUDMUX_V2_PTCR_TCLKDIR, /* clock is output */
+> > +		IMX_AUDMUX_V2_PDCR_RXDSEL(3));
+> > +}
+> > +
+> >  static struct platform_device *imx_phycore_snd_device;
+> >  
+> > +static struct platform_device *imx_phycore_snd_ac97_device;
+> > +
+> >  static int __init imx_phycore_init(void)
+> >  {
+> >  	int ret;
+> >  
+> > -	if (machine_is_pca100()) {
+> > -		imx_audmux_v1_configure_port(MX27_AUDMUX_HPCR1_SSI0,
+> > -			IMX_AUDMUX_V1_PCR_SYN | /* 4wire mode */
+> > -			IMX_AUDMUX_V1_PCR_TFCSEL(3) |
+> > -			IMX_AUDMUX_V1_PCR_TCLKDIR | /* clock is output */
+> > -			IMX_AUDMUX_V1_PCR_RXDSEL(3));
+> > -		imx_audmux_v1_configure_port(3,
+> > -			IMX_AUDMUX_V1_PCR_SYN | /* 4wire mode */
+> > -			IMX_AUDMUX_V1_PCR_TFCSEL(0) |
+> > -			IMX_AUDMUX_V1_PCR_TFSDIR |
+> > -			IMX_AUDMUX_V1_PCR_RXDSEL(0));
+> > -	} else if (machine_is_pcm043()) {
+> > -		imx_audmux_v2_configure_port(3,
+> > -			IMX_AUDMUX_V2_PTCR_SYN | /* 4wire mode */
+> > -			IMX_AUDMUX_V2_PTCR_TFSEL(0) |
+> > -			IMX_AUDMUX_V2_PTCR_TFSDIR,
+> > -			IMX_AUDMUX_V2_PDCR_RXDSEL(0));
+> > -		imx_audmux_v2_configure_port(0,
+> > -			IMX_AUDMUX_V2_PTCR_SYN | /* 4wire mode */
+> > -			IMX_AUDMUX_V2_PTCR_TCSEL(3) |
+> > -			IMX_AUDMUX_V2_PTCR_TCLKDIR, /* clock is output */
+> > -			IMX_AUDMUX_V2_PDCR_RXDSEL(3));
+> > +	if (machine_is_pcm043()) {
+> > +		phycore_ac97_imx31_audmux();
+> >  	} else {
+> >  		/* return happy. We might run on a totally different machine */
+> >  		return 0;
+> >  	}
+> >  
+> > +	imx_phycore_dai_ac97[0].cpu_dai_name = phycore_ac97_plat_name;
+> > +	imx_phycore_dai_ac97[0].platform_name = phycore_ac97_plat_name;
+> > +
+> >  	imx_phycore_snd_ac97_device = platform_device_alloc("soc-audio", -1);
+> >  	if (!imx_phycore_snd_ac97_device)
+> >  		return -ENOMEM;
+> > @@ -108,18 +126,189 @@ fail2:
+> >  	platform_device_del(imx_phycore_snd_ac97_device);
+> >  fail1:
+> >  	platform_device_put(imx_phycore_snd_ac97_device);
+> > +	imx_phycore_dai_ac97[0].cpu_dai_name = NULL;
+> > +	imx_phycore_dai_ac97[0].platform_name = NULL;
+> >  	return ret;
+> >  }
+> >  
+> >  static void __exit imx_phycore_exit(void)
+> >  {
+> > +	if (!machine_is_pcm043())
+> > +		return;
+> > +
+> >  	platform_device_unregister(imx_phycore_snd_device);
+> >  	platform_device_unregister(imx_phycore_snd_ac97_device);
+> > +
+> > +	imx_phycore_dai_ac97[0].cpu_dai_name = NULL;
+> > +	imx_phycore_dai_ac97[0].platform_name = NULL;
+> >  }
+> >  
+> >  late_initcall(imx_phycore_init);
+> >  module_exit(imx_phycore_exit);
+> >  
+> > +
+> > +static const struct of_device_id imx_phycore_ac97_of_dev_id[] = {
+> > +	{
+> > +		.compatible = "phytec,phycore-ac97",
+> > +	}, {
+> > +		/* sentinel */
+> > +	}
+> > +};
+> > +MODULE_DEVICE_TABLE(of, imx_phycore_ac97_of_dev_id);
+> > +
+> > +
+> > +/*
+> > + * Pointer to AC97 reset functions for specific boards
+> > + */
+> > +#if IS_ENABLED(CONFIG_MACH_PCA100)
+> > +extern void pca100_ac97_cold_reset(struct snd_ac97 *ac97);
+> > +extern void pca100_ac97_warm_reset(struct snd_ac97 *ac97);
+> > +#else
+> > +void pca100_ac97_cold_reset(struct snd_ac97 *ac97) { }
+> > +void pca100_ac97_warm_reset(struct snd_ac97 *ac97) { }
+> 
+> static?
+
+Thanks, added.
+
+> 
+> > +#endif
+> > +
+> > +#if IS_ENABLED(CONFIG_MACH_PCM043)
+> > +extern void pcm043_ac97_cold_reset(struct snd_ac97 *ac97);
+> > +extern void pcm043_ac97_warm_reset(struct snd_ac97 *ac97);
+> > +#else
+> > +void pcm043_ac97_cold_reset(struct snd_ac97 *ac97) { }
+> > +void pcm043_ac97_warm_reset(struct snd_ac97 *ac97) { }
+> > +#endif
+> > +
+> > +static void phycore_soc_ac97_reset(struct snd_ac97 *ac97)
+> > +{
+> > +	if (phycore_ac97_reset)
+> > +		phycore_ac97_reset(ac97);
+> > +	/* First read sometimes fails, do a dummy read */
+> > +	fsl_ssi_ac97_read(ac97, 0);
+> 
+> This function is unavailable until patch #7, right?
+
+Yes, sorry, I missed to update the order of the patches. I will fix it.
+
+> 
+> > +}
+> > +
+> > +static void phycore_soc_ac97_warm_reset(struct snd_ac97 *ac97)
+> > +{
+> > +	if (phycore_ac97_warm_reset)
+> > +		phycore_ac97_warm_reset(ac97);
+> > +
+> > +	/* First read sometimes fails, do a dummy read */
+> > +	fsl_ssi_ac97_read(ac97, 0);
+> > +}
+> > +
+> > +static int phycore_ac97_setup_devices(struct platform_device *pdev)
+> > +{
+> > +	int ret;
+> > +
+> > +	imx_phycore_snd_device = platform_device_alloc("wm9712-codec", -1);
+> > +	if (!imx_phycore_snd_device)
+> > +		return -ENOMEM;
+> > +
+> > +	ret = platform_device_add(imx_phycore_snd_device);
+> > +	if (ret) {
+> > +		dev_err(&pdev->dev, "ASoC: Platform device allocation failed\n");
+> > +		goto fail1;
+> > +	}
+> > +
+> > +	ret = snd_soc_register_card(&imx_phycore);
+> > +	if (ret) {
+> > +		dev_err(&pdev->dev, "ASoC: soc card registration failed\n");
+> > +		goto fail2;
+> > +	}
+> > +	return 0;
+> > +
+> > +fail2:
+> > +	platform_device_del(imx_phycore_snd_device);
+> > +fail1:
+> > +	platform_device_put(imx_phycore_snd_device);
+> > +	return ret;
+> > +}
+> > +
+> > +static int imx_phycore_ac97_probe(struct platform_device *pdev)
+> > +{
+> > +	int ret;
+> > +	struct device_node *ssi_np;
+> > +	struct device_node *audmux_np;
+> > +	const char *sprop;
+> > +	const char *p;
+> > +
+> > +	imx_phycore.dev = &pdev->dev;
+> > +
+> > +	audmux_np = of_parse_phandle(pdev->dev.of_node, "phytec,audmux", 0);
+> > +	if (!audmux_np) {
+> > +		dev_err(&pdev->dev, "Failed to parse phytec,audmux phandle\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	if (of_device_is_compatible(audmux_np, "fsl,imx21-audmux")) {
+> > +		phycore_ac97_imx21_audmux();
+> > +	} else if (of_device_is_compatible(audmux_np, "fsl,imx31-audmux")) {
+> > +		phycore_ac97_imx31_audmux();
+> > +	} else {
+> > +		dev_err(&pdev->dev, "Unknown audmux, failed to setup audmux\n");
+> > +		of_node_put(audmux_np);
+> > +		return -EINVAL;
+> > +	}
+> > +	of_node_put(audmux_np);
+> > +
+> > +	ssi_np = of_parse_phandle(pdev->dev.of_node, "phytec,ssi", 0);
+> > +	if (!ssi_np) {
+> > +		dev_err(&pdev->dev, "No valid ssi phandle found\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	imx_phycore_dai_ac97[0].cpu_of_node = ssi_np;
+> > +	imx_phycore_dai_ac97[0].platform_of_node = ssi_np;
+> > +	phycore_dai_cpu_node = ssi_np;
+> > +
+> > +	sprop = of_get_property(of_find_node_by_path("/"), "compatible", NULL);
+> > +	p = strrchr(sprop, ',');
+> > +	if (p)
+> > +		sprop = p + 1;
+> > +
+> > +	if (!strcmp(sprop, "imx27-pca100")) {
+> 
+> Since this is a phycore/phytec specific ASoC-machine driver, what's the
+> problem with matching the machine compatible string by simply calling
+> of_machine_is_compatible()?
+
+Changed.
+
+> 
+> > +		phycore_ac97_reset = pca100_ac97_cold_reset;
+> > +		phycore_ac97_warm_reset = pca100_ac97_warm_reset;
+> > +	} else if (!strcmp(sprop, "imx35-pcm043")) {
+> > +		phycore_ac97_reset = pcm043_ac97_cold_reset;
+> > +		phycore_ac97_warm_reset = pcm043_ac97_warm_reset;
+> > +	} else {
+> > +		dev_err(&pdev->dev, "Failed to set AC97 reset functions, unknown board.\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	fsl_ssi_ac97_set_reset(phycore_soc_ac97_reset,
+> > +			phycore_soc_ac97_warm_reset);
+> > +
+> > +	ret = phycore_ac97_setup_devices(pdev);
+> > +	if (ret)
+> > +		of_node_put(phycore_dai_cpu_node);
+> > +
+> > +	return ret;
+> > +}
+> > +
+> > +static int imx_phycore_ac97_remove(struct platform_device *pdev)
+> > +{
+> > +	of_node_put(phycore_dai_cpu_node);
+> > +	phycore_dai_cpu_node = NULL;
+> > +
+> > +	platform_device_unregister(imx_phycore_snd_device);
+> 
+> snd_soc_unregister_card() call is missing?
+
+Yes.
+
+Thanks,
+
+Markus
+
+> 
+> Shawn
+> 
+> > +
+> > +	phycore_ac97_reset = NULL;
+> > +	phycore_ac97_warm_reset = NULL;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct platform_driver imx_phycore_ac97_driver = {
+> > +	.probe		= imx_phycore_ac97_probe,
+> > +	.remove		= imx_phycore_ac97_remove,
+> > +	.driver		= {
+> > +		.name	= DRV_NAME,
+> > +		.owner	= THIS_MODULE,
+> > +		.of_match_table = imx_phycore_ac97_of_dev_id,
+> > +	},
+> > +};
+> > +
+> > +module_platform_driver(imx_phycore_ac97_driver);
+> > +
+> >  MODULE_AUTHOR("Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>");
+> > -MODULE_DESCRIPTION("PhyCORE ALSA SoC driver");
+> > +MODULE_DESCRIPTION(DRV_NAME ": PhyCORE ALSA SoC fabric driver");
+> >  MODULE_LICENSE("GPL");
+> > -- 
+> > 1.8.2.1
+> > 
+> 
+> 
+
 -- 
-1.8.2.rc2
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
