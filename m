@@ -1,48 +1,64 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: RFC: New release for DTC?
-Date: Thu, 30 May 2013 11:45:23 -0600
-Message-ID: <51A79033.7080800@wwwdotorg.org>
-References: <201208232015.39613.yann.morin.1998@free.fr>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH 0/3] at_hdmac: dt dma bindings update
+Date: Thu, 30 May 2013 22:56:49 +0530
+Message-ID: <20130530172649.GC3767@intel.com>
+References: <1369930103-11963-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201208232015.39613.yann.morin.1998-GANU6spQydw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Yann E. MORIN" <yann.morin.1998-GANU6spQydw@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1369930103-11963-1-git-send-email-ludovic.desroches@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: ludovic.desroches@atmel.com, Arnd Bergmann <arnd@arndb.de>
+Cc: plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/23/2012 12:15 PM, Yann E. MORIN wrote:
-> Hello All!
+On Thu, May 30, 2013 at 06:08:20PM +0200, ludovic.desroches@atmel.com wrote:
+> From: Ludovic Desroches <ludovic.desroches@atmel.com>
 > 
-> Following advice from Jon Loeliger, I would suggest that a new release
-> of DTC be tagged and packaged.
+> Hi,
 > 
-> It is important for some projects to rely on a released version, rather
-> than use a random cset from the repository. Comes to mind, the automated
-> build-systems, such as buildroot.
-> 
-> Of course, I can help, if need be! ;-)
-> 
-> Are there any others who think that a release would make sense?
+> This set of patches update the dt dma binding for at_hdmac since we need one
+> more parameter. In order to keep backward compatibility, an existing cell will
+> be used to add this parameter. Since the content of that cell will become a
+> magic value due to the concatenation of the two parameters, it is time to
+> use macros.
+which tree is this targetted to be applied? 
 
-I'd love to see a new release. This would for example allow the U-Boot
-project to say "dtc vXXX is required to build the DT files contained in
-U-Boot", which might make agreeing on allowing the use of new dtc
-features in U-Boot easier. While this could simply be done by referring
-to a specific git commit ID, release versions or tags probably carry
-more weight. Tagging a release might also act as a specific trigger for
-distros to pick up and carry the new version.
+Arnd, can you review this series and ack if this needs to be applied thru
+dmaengine?
 
-Does it make sense to simply tag the current git HEAD as v1.4? If so,
-can we do this?
+--
+~Vinod
+> 
+> Regards
+> 
+> Ludovic Desroches (3):
+>   ARM: at91: dt: add header to define at_hdmac configuration
+>   ARM: at91: dt: switch DMA DT bindings to pre-processor
+>   at_hdmac: add FIFO configuration parameter to DMA DT binding
+> 
+>  .../devicetree/bindings/dma/atmel-dma.txt          |  7 ++++--
+>  arch/arm/boot/dts/at91sam9g45.dtsi                 |  5 ++--
+>  arch/arm/boot/dts/at91sam9n12.dtsi                 | 11 +++++----
+>  arch/arm/boot/dts/at91sam9x5.dtsi                  | 17 +++++++-------
+>  arch/arm/boot/dts/sama5d3.dtsi                     | 19 +++++++--------
+>  drivers/dma/at_hdmac.c                             | 25 ++++++++++++++++----
+>  include/dt-bindings/dma/at91.h                     | 27 ++++++++++++++++++++++
+>  7 files changed, 81 insertions(+), 30 deletions(-)
+>  create mode 100644 include/dt-bindings/dma/at91.h
+> 
+> -- 
+> 1.7.11.3
+> 
+
+-- 
