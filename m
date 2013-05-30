@@ -1,55 +1,55 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH -next v2] dmaengine: ste_dma40: fix error return code in d40_probe()
-Date: Thu, 30 May 2013 21:29:16 +0300
-Message-ID: <CAHp75Vf+ifmn62vRNZbqpVX1hnqeUkenzvY81gZLenFkEJ9pFA@mail.gmail.com>
-References: <CAPgLHd-gjJ6ju3HyhiQi98YFGojvU3aYSTn7SOe4NhQPY1r++w@mail.gmail.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH] clk/mpc85xx: Update the compatible string
+Date: Thu, 30 May 2013 11:57:32 -0700
+Message-ID: <20130530185732.4470.91176@quantum>
+References: <1369210939-25087-1-git-send-email-Yuantian.Tang@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPgLHd-gjJ6ju3HyhiQi98YFGojvU3aYSTn7SOe4NhQPY1r++w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: srinidhi.kasagar@stericsson.com, Linus Walleij <linus.walleij@linaro.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <djbw@fb.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, yongjun_wei@trendmicro.com.cn, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1369210939-25087-1-git-send-email-Yuantian.Tang@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Cc: Tang Yuantian <Yuantian.Tang@freescale.com>, devicetree-discuss@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 30, 2013 at 7:32 AM, Wei Yongjun <weiyj.lk@gmail.com> wrote:
-> In many of the error handling case, the return value 'ret' not set
-> and 0 will be return from d40_probe() even if error, but we should
-> return a negative error code instead in those error handling case.
-> This patch fixed them, and also removed useless variable 'err'.
+Quoting Yuantian.Tang@freescale.com (2013-05-22 01:22:19)
+> From: Tang Yuantian <yuantian.tang@freescale.com>
+> 
+> The compatible string of clock is changed from *-2 to *-2.0
+> on chassis 2. So updated it accordingly.
+> 
+> Signed-off-by: Tang Yuantian <Yuantian.Tang@freescale.com>
 
-Hold on, please.
+Taken into clk-next.
 
-> --- a/drivers/dma/ste_dma40.c
-> +++ b/drivers/dma/ste_dma40.c
+Regards,
+Mike
 
-> @@ -3619,6 +3618,7 @@ static int __init d40_probe(struct platform_device *pdev)
->                 if (IS_ERR(base->lcpa_regulator)) {
->                         d40_err(&pdev->dev, "Failed to get lcpa_regulator\n");
->                         base->lcpa_regulator = NULL;
-> +                       ret = PTR_ERR(base->lcpa_regulator);
-
-Is it really what we want?
-
-I thixh you may remove that NULL assignment.
-
-
->                         goto failure;
->                 }
->
-
-> @@ -3647,8 +3647,8 @@ static int __init d40_probe(struct platform_device *pdev)
->         d40_hw_init(base);
->
->         if (np) {
-> -               err = of_dma_controller_register(np, d40_xlate, NULL);
-> -               if (err && err != -ENODEV)
-> +               ret = of_dma_controller_register(np, d40_xlate, NULL);
-> +               if (ret && ret != -ENODEV)
-
->From the discussion of dw_dmac I remember we decide that ENODEV check
-is redundant.
-
---
-With Best Regards,
-Andy Shevchenko
+> ---
+>  drivers/clk/clk-ppc-corenet.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/clk-ppc-corenet.c b/drivers/clk/clk-ppc-corenet.c
+> index a2d483f..e958707 100644
+> --- a/drivers/clk/clk-ppc-corenet.c
+> +++ b/drivers/clk/clk-ppc-corenet.c
+> @@ -260,7 +260,7 @@ static int __init ppc_corenet_clk_probe(struct platform_device *pdev)
+>  
+>  static const struct of_device_id ppc_clk_ids[] __initconst = {
+>         { .compatible = "fsl,qoriq-clockgen-1.0", },
+> -       { .compatible = "fsl,qoriq-clockgen-2", },
+> +       { .compatible = "fsl,qoriq-clockgen-2.0", },
+>         {}
+>  };
+>  
+> -- 
+> 1.8.0
