@@ -1,13 +1,16 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v7 02/11] ASoC: imx-pcm-fiq: Introduce pcm-fiq-params
-Date: Thu, 30 May 2013 16:51:44 +0200
-Message-ID: <1369925513-19329-3-git-send-email-mpa@pengutronix.de>
-References: <1369925513-19329-1-git-send-email-mpa@pengutronix.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC] [PATCH 3/3] IRQ: irq domain: defer of irq ressoure resolve
+ at platform_drv_probe
+Date: Thu, 30 May 2013 16:57:33 +0200
+Message-ID: <201305301657.34093.arnd@arndb.de>
+References: <20130528145219.GA30411@game.jcrosoft.org>
+ <201305301510.33650.arnd@arndb.de>
+ <CACxGe6vewNv-4AtLeNDkzJnP50StrXtchi3GiKcd2HZG6YMvkA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1369925513-19329-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <CACxGe6vewNv-4AtLeNDkzJnP50StrXtchi3GiKcd2HZG6YMvkA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,152 +21,25 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Cleaner parameter passing for imx-pcm-fiq. Create a seperated fiq-params
-struct to pass all arguments.
+On Thursday 30 May 2013, Grant Likely wrote:
+> On Thu, May 30, 2013 at 2:10 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Thursday 30 May 2013, Grant Likely wrote:
 
-Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
+> > Right, so we clearly need it. I also though of a second case, which
+> > is that the xlate() function might itself return -EPROBE_DEFER in
+> > the case that the irqchip driver is registered but e.g. not the
+> > parent of a cascaded irqchip.
+> 
+> That shouldn't happen. If the parent isn't registered, then how can
+> the child set itself up?
 
-Notes:
-    Changes in v7:
-     - Fix init function signature for !CONFIG_SND_SOC_IMX_PCM_FIQ
-    
-    Changes in v6:
-     - After rebasing onto Shawn's imx-pcm cleanups, the imx_pcm_fiq_params are now
-       passed as function arguments instead of platform driver data.
-    
-    Changes in v3:
-     - Using snd_dmaengine_dai_dma_data for dma_params after rebasing onto
-       dmaengine cleanups.
+I guess it can just register the domain, but as long as no irqs
+are needed, it doesn't have to set up a chained handler. I don't
+think any irqchip driver today does it that way, but I think there
+is nothing stopping us from doing a driver that does.
 
- sound/soc/fsl/imx-pcm-fiq.c | 18 ++++++++++--------
- sound/soc/fsl/imx-pcm.h     | 15 +++++++++++++--
- sound/soc/fsl/imx-ssi.c     |  7 ++++++-
- sound/soc/fsl/imx-ssi.h     |  1 +
- 4 files changed, 30 insertions(+), 11 deletions(-)
-
-diff --git a/sound/soc/fsl/imx-pcm-fiq.c b/sound/soc/fsl/imx-pcm-fiq.c
-index 310d902..3b2ba99 100644
---- a/sound/soc/fsl/imx-pcm-fiq.c
-+++ b/sound/soc/fsl/imx-pcm-fiq.c
-@@ -22,6 +22,7 @@
- #include <linux/slab.h>
- 
- #include <sound/core.h>
-+#include <sound/dmaengine_pcm.h>
- #include <sound/initval.h>
- #include <sound/pcm.h>
- #include <sound/pcm_params.h>
-@@ -32,6 +33,7 @@
- #include <linux/platform_data/asoc-imx-ssi.h>
- 
- #include "imx-ssi.h"
-+#include "imx-pcm.h"
- 
- struct imx_pcm_runtime_data {
- 	unsigned int period;
-@@ -366,9 +368,9 @@ static struct snd_soc_platform_driver imx_soc_platform_fiq = {
- 	.pcm_free	= imx_pcm_fiq_free,
- };
- 
--int imx_pcm_fiq_init(struct platform_device *pdev)
-+int imx_pcm_fiq_init(struct platform_device *pdev,
-+		struct imx_pcm_fiq_params *params)
- {
--	struct imx_ssi *ssi = platform_get_drvdata(pdev);
- 	int ret;
- 
- 	ret = claim_fiq(&fh);
-@@ -377,15 +379,15 @@ int imx_pcm_fiq_init(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	mxc_set_irq_fiq(ssi->irq, 1);
--	ssi_irq = ssi->irq;
-+	mxc_set_irq_fiq(params->irq, 1);
-+	ssi_irq = params->irq;
- 
--	imx_pcm_fiq = ssi->irq;
-+	imx_pcm_fiq = params->irq;
- 
--	imx_ssi_fiq_base = (unsigned long)ssi->base;
-+	imx_ssi_fiq_base = (unsigned long)params->base;
- 
--	ssi->dma_params_tx.maxburst = 4;
--	ssi->dma_params_rx.maxburst = 6;
-+	params->dma_params_tx->maxburst = 4;
-+	params->dma_params_rx->maxburst = 6;
- 
- 	ret = snd_soc_register_platform(&pdev->dev, &imx_soc_platform_fiq);
- 	if (ret)
-diff --git a/sound/soc/fsl/imx-pcm.h b/sound/soc/fsl/imx-pcm.h
-index 67f656c..cd8a796 100644
---- a/sound/soc/fsl/imx-pcm.h
-+++ b/sound/soc/fsl/imx-pcm.h
-@@ -32,6 +32,15 @@ imx_pcm_dma_params_init_data(struct imx_dma_data *dma_data,
- 		dma_data->peripheral_type = IMX_DMATYPE_SSI;
- }
- 
-+struct imx_pcm_fiq_params {
-+	int irq;
-+	void __iomem *base;
-+
-+	/* Pointer to original ssi driver to setup tx rx sizes */
-+	struct snd_dmaengine_dai_dma_data *dma_params_rx;
-+	struct snd_dmaengine_dai_dma_data *dma_params_tx;
-+};
-+
- #ifdef CONFIG_SND_SOC_IMX_PCM_DMA
- int imx_pcm_dma_init(struct platform_device *pdev);
- void imx_pcm_dma_exit(struct platform_device *pdev);
-@@ -47,10 +56,12 @@ static inline void imx_pcm_dma_exit(struct platform_device *pdev)
- #endif
- 
- #ifdef CONFIG_SND_SOC_IMX_PCM_FIQ
--int imx_pcm_fiq_init(struct platform_device *pdev);
-+int imx_pcm_fiq_init(struct platform_device *pdev,
-+		struct imx_pcm_fiq_params *params);
- void imx_pcm_fiq_exit(struct platform_device *pdev);
- #else
--static inline int imx_pcm_fiq_init(struct platform_device *pdev)
-+static inline int imx_pcm_fiq_init(struct platform_device *pdev,
-+		struct imx_pcm_fiq_params *params);
- {
- 	return -ENODEV;
- }
-diff --git a/sound/soc/fsl/imx-ssi.c b/sound/soc/fsl/imx-ssi.c
-index a8362be..16ae16d 100644
---- a/sound/soc/fsl/imx-ssi.c
-+++ b/sound/soc/fsl/imx-ssi.c
-@@ -590,7 +590,12 @@ static int imx_ssi_probe(struct platform_device *pdev)
- 		goto failed_register;
- 	}
- 
--	ret = imx_pcm_fiq_init(pdev);
-+	ssi->fiq_params.irq = ssi->irq;
-+	ssi->fiq_params.base = ssi->base;
-+	ssi->fiq_params.dma_params_rx = &ssi->dma_params_rx;
-+	ssi->fiq_params.dma_params_tx = &ssi->dma_params_tx;
-+
-+	ret = imx_pcm_fiq_init(pdev, &ssi->fiq_params);
- 	if (ret)
- 		goto failed_pcm_fiq;
- 
-diff --git a/sound/soc/fsl/imx-ssi.h b/sound/soc/fsl/imx-ssi.h
-index d5003ce..fb1616b 100644
---- a/sound/soc/fsl/imx-ssi.h
-+++ b/sound/soc/fsl/imx-ssi.h
-@@ -209,6 +209,7 @@ struct imx_ssi {
- 	struct snd_dmaengine_dai_dma_data dma_params_tx;
- 	struct imx_dma_data filter_data_tx;
- 	struct imx_dma_data filter_data_rx;
-+	struct imx_pcm_fiq_params fiq_params;
- 
- 	int enabled;
- };
--- 
-1.8.2.1
+	Arnd
