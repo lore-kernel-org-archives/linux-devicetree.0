@@ -1,17 +1,20 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [v2, 3/3] ARM: dts: AM33XX: Add NAND flash device tree data to
- am335x-evm
-Date: Thu, 30 May 2013 09:24:24 +0200
-Message-ID: <51A6FEA8.5030704@ti.com>
-References: <ebfab3e9123b3e50b9a9678c1480191addd86d59.1359007746.git.avinashphilip@ti.com>
- <517F5126.5000509@ti.com> <20130508235404.GX32546@atomide.com>
- <20980858CB6D3A4BAE95CA194937D5E73E9C320D@DBDE04.ent.ti.com>
- <20980858CB6D3A4BAE95CA194937D5E73E9C5629@DBDE04.ent.ti.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 1/8] video: atmel_lcdfb: fix platform data struct
+Date: Thu, 30 May 2013 09:23:28 +0200
+Message-ID: <20130530072328.GE19468@game.jcrosoft.org>
+References: <20130411145741.GB25242@game.jcrosoft.org>
+ <1365692422-9565-1-git-send-email-plagnioj@jcrosoft.com>
+ <CACQ1gAjF5kuu-czkj56-pQdTBUhvY5VodvfnF3RA_DN-O0b9NQ@mail.gmail.com>
+ <20130529173538.GC23899@game.jcrosoft.org>
+ <CACQ1gAhhsMw1-Znd8BC=A0rJBrB4pphCtH9v9qOQR+j2dY3vCw@mail.gmail.com>
+ <20130529193220.GB19468@game.jcrosoft.org>
+ <CACQ1gAj_m_aWaq5J41SY8EPwOH5-3zYPsf2WJCunvVnBCyq00Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73E9C5629@DBDE04.ent.ti.com>
+Content-Disposition: inline
+In-Reply-To: <CACQ1gAj_m_aWaq5J41SY8EPwOH5-3zYPsf2WJCunvVnBCyq00Q@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,52 +24,119 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Gupta, Pekon" <pekon@ti.com>
-Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori, Sekhar" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Hiremath,
- Vaibhav" <hvaibhav@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "zonque@gmail.com" <zonque@gmail.com>, "Philip,
- Avinash" <avinashphilip@ti.com>, "jacmet@sunsite.dk" <jacmet@sunsite.dk>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Richard Genoud <richard.genoud@gmail.com>
+Cc: linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Andreas =?iso-8859-1?Q?Bie=DFmann?= <biessmann@corscience.de>, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org, Hans-Christian Egtvedt <egtvedt@samfundet.no>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pekon,
-
-On 05/20/2013 06:44 AM, Gupta, Pekon wrote:
->  
->>>>>
->>>>>  	am33xx_pinmux: pinmux@44e10800 {
->>>>>  		pinctrl-names = "default";
->>>>> -		pinctrl-0 = <&matrix_keypad_s0 &volume_keys_s0>;
->>>>> +		pinctrl-0 = <&matrix_keypad_s0 &volume_keys_s0
->>>>> +			&nandflash_pins_s0>;
->>>>
->>>> Why add this to the board level fallback (called pinctrl hogs, I think)?
->>>> This can be part of nand node you added below so that the pinctrl will
->>>> take effect when nand gets probed instead of all the time.
->>>
->>> Yes we should have all the pinctrl entries under the related drivers.
->>> This makes it easy remux pins during runtime if needed, and also
->>> allows unloading pinctrl-single.ko for development.
->>>
->> Yes, accepted. This has been already fixed in v3 of this patch set.
->> If all fine, then please pull this for next merge..
->>
->> http://lists.infradead.org/pipermail/linux-mtd/2013-May/046712.html
->>
->> http://lists.infradead.org/pipermail/linux-mtd/2013-May/046814.html
->>
->> http://lists.infradead.org/pipermail/linux-mtd/2013-May/046710.html
->>
->>
->> with regards, pekon
+On 08:39 Thu 30 May     , Richard Genoud wrote:
+> 2013/5/29 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>:
+> > On 19:44 Wed 29 May     , Richard Genoud wrote:
+> >> 2013/5/29 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>:
+> >> > On 16:36 Wed 29 May     , Richard Genoud wrote:
+> >> >> 2013/4/11 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>:
+> >> >> > Today we mix pdata and drivers data in the struct atmel_lcdfb_info
+> >> >> > Fix it and introduce a new struct atmel_lcdfb_pdata for platform data only
+> >> >> >
+> >> >> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> >> >> > Cc: linux-fbdev@vger.kernel.org
+> >> >> > Cc: Nicolas Ferre <nicolas.ferre@atmel.com>
+> >> >> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> >> >> > Cc: Hans-Christian Egtvedt <egtvedt@samfundet.no>
+> >> >> > ---
+> >> >> >  arch/arm/mach-at91/at91sam9261_devices.c    |    6 +-
+> >> >> >  arch/arm/mach-at91/at91sam9263_devices.c    |    6 +-
+> >> >> >  arch/arm/mach-at91/at91sam9g45_devices.c    |    6 +-
+> >> >> >  arch/arm/mach-at91/at91sam9rl_devices.c     |    6 +-
+> >> >> >  arch/arm/mach-at91/board-sam9261ek.c        |    6 +-
+> >> >> >  arch/arm/mach-at91/board-sam9263ek.c        |    4 +-
+> >> >> >  arch/arm/mach-at91/board-sam9m10g45ek.c     |    4 +-
+> >> >> >  arch/arm/mach-at91/board-sam9rlek.c         |    4 +-
+> >> >> >  arch/arm/mach-at91/board.h                  |    4 +-
+> >> >> >  arch/avr32/boards/atngw100/evklcd10x.c      |    6 +-
+> >> >> >  arch/avr32/boards/atngw100/mrmt.c           |    4 +-
+> >> >> >  arch/avr32/boards/atstk1000/atstk1000.h     |    2 +-
+> >> >> >  arch/avr32/boards/atstk1000/setup.c         |    2 +-
+> >> >> >  arch/avr32/boards/favr-32/setup.c           |    2 +-
+> >> >> >  arch/avr32/boards/hammerhead/setup.c        |    2 +-
+> >> >> >  arch/avr32/boards/merisc/display.c          |    2 +-
+> >> >> >  arch/avr32/boards/mimc200/setup.c           |    4 +-
+> >> >> >  arch/avr32/mach-at32ap/at32ap700x.c         |    8 +--
+> >> >> >  arch/avr32/mach-at32ap/include/mach/board.h |    4 +-
+> >> >> >  drivers/video/atmel_lcdfb.c                 |  104 +++++++++++++++++----------
+> >> >> >  include/video/atmel_lcdc.h                  |   24 +------
+> >> >> >  21 files changed, 109 insertions(+), 101 deletions(-)
+> >> >> >
+> >> >> [snip]
+> >> >> > diff --git a/drivers/video/atmel_lcdfb.c b/drivers/video/atmel_lcdfb.c
+> >> >> > index c1a2914..98733cd4 100644
+> >> >> > --- a/drivers/video/atmel_lcdfb.c
+> >> >> > +++ b/drivers/video/atmel_lcdfb.c
+> >> >> > @@ -20,12 +20,45 @@
+> >> >> >  #include <linux/gfp.h>
+> >> >> >  #include <linux/module.h>
+> >> >> >  #include <linux/platform_data/atmel.h>
+> >> >> > +#include <video/of_display_timing.h>
+> >> >> >
+> >> >> >  #include <mach/cpu.h>
+> >> >> >  #include <asm/gpio.h>
+> >> >> >
+> >> >> >  #include <video/atmel_lcdc.h>
+> >> >> >
+> >> >> > +struct atmel_lcdfb_config {
+> >> >> > +       bool have_alt_pixclock;
+> >> >> > +       bool have_hozval;
+> >> >> > +       bool have_intensity_bit;
+> >> >> > +};
+> >> >> > +
+> >> >> > + /* LCD Controller info data structure, stored in device platform_data */
+> >> >> > +struct atmel_lcdfb_info {
+> >> >> > +       spinlock_t              lock;
+> >> >> > +       struct fb_info          *info;
+> >> >> > +       void __iomem            *mmio;
+> >> >> > +       int                     irq_base;
+> >> >> > +       struct work_struct      task;
+> >> >> > +
+> >> >> > +       unsigned int            smem_len;
+> >> >> > +       struct platform_device  *pdev;
+> >> >> > +       struct clk              *bus_clk;
+> >> >> > +       struct clk              *lcdc_clk;
+> >> >> > +
+> >> >> > +       struct backlight_device *backlight;
+> >> >> > +       u8                      bl_power;
+> >> >> > +       bool                    lcdcon_pol_negative;
+> >> >> I think lcdcon_pol_negative should be part of pdata, because it really
+> >> >> depends on how the PWM is wired on the board.
+> >> >>
+> >> >
+> >> > maybe but no one mainline use it on any pdata for non-dt boars
+> >> > so I did not want to expose it
+> >> Well, at least, I'm using it :)
+> >> (and I guess that Andreas is using it also, otherwise he wouldn't have
+> >> introduce it !)
+> >
+> > yes but pdata is for non-dt boards, for dt you can keep it in struct
+> > atmel_lcdfb_info and add a property
+> >
+> > if non-dt boards want it my answer is I do not care switch to DT
 > 
-> Request you to please accept | provide feedbacks on this patch series.
-> These are waiting acceptance since Jan-2013, and are necessary for 
-> DT based configs for board having NAND support.
+> ok (I use a full DT board based on sam9g35)
 > 
-> with regards, pekon
+> so I'll add something like
+> sinfo->lcdcon_pol_negative = of_property_read_bool(display_np,
+> "atmel,lcdcon-pwm-pulse-low");
+> in /atmel_lcdfb.c
+> 
+> But I thought the goal of this patch was to separate driver data from
+> platform specific data, and IMHO, lcdcon_pol_negative is a specificity
+> of the platform.
 
-Sorry, I missed that series.
+You are right but as non one mainline use it as pdata I choose to drop it
+and only keep it on the driver as we can still use it for DT
 
-I'm applying it right now.
+It's a way to force peopoe to switch to DT
 
-Thanks,
-Benoit
+Best Regards,
+J.
+> 
+> Best regards,
+> Richard.
