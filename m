@@ -1,13 +1,15 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] GPIO: Add support for dual channel in gpio-xilinx.c
-Date: Thu, 30 May 2013 21:46:54 +0200
-Message-ID: <CACRpkdY4xaCOe28nu-NrYQ7pafjhj8-xqFcJRF9iJUy3SrCVrA@mail.gmail.com>
-References: <4b90b06fce0475b579cfba4d968b4778359154f6.1369826814.git.michal.simek@xilinx.com>
+Subject: Re: [PATCH 1/2] gpiolib: add gpio_export_with_name
+Date: Thu, 30 May 2013 22:03:58 +0200
+Message-ID: <CACRpkdb9F+wJ0hkNqPTP34r3JAEp2s07Q8U24fD6oCdj7MqCFA@mail.gmail.com>
+References: <20121121101259.GQ4398@game.jcrosoft.org>
+ <1353492849-29397-1-git-send-email-plagnioj@jcrosoft.com>
+ <20121126135911.2F1D33E187C@localhost> <51A719A5.50906@epfl.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <4b90b06fce0475b579cfba4d968b4778359154f6.1369826814.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <51A719A5.50906-p8DiymsW2f8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,102 +20,44 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 29, 2013 at 1:27 PM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+On Thu, May 30, 2013 at 11:19 AM, Florian Vaussard
+<florian.vaussard-p8DiymsW2f8@public.gmane.org> wrote:
 
-> Supporting the second channel in the driver.
-> Offset is 0x8 and both channnels share the same
-> IRQ.
->
-> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Even if work is progressing towards
+> having gpio-controlled reset pins [1], some boards still need GPIOs to
+> be exported to userspace for other functionalities.
 
-(...)
-> +/* Read/Write access to the GPIO registers */
-> +#define xgpio_readreg(offset)          __raw_readl(offset)
-> +#define xgpio_writereg(offset, val)    __raw_writel(val, offset)
+Which are these?
 
-So you're swithing in_be32/out_be32 to the CPU-dependent
-__raw_readl/__raw_writel functions? Why?
+When I have inquired I have heard all kind of horrible things:
 
-Can you explain exactly why you are using __raw_* accessors
-rather than e.g. atleast readl_relaxed()/writel_relaxed()
-or even plain readl/writel so you know the writes will hit
-the hardware as immediately as possible?
+- Userspace replicating drivers/leds/leds-gpio.c to
+  turn on/off and even PWM (!) LEDs from userspace, when we have
+  a standard sysfs interface for LEDs.
 
-I'd prefer this step to be a separate patch.
+- Userspace replicating drivers/input/keyboard/gpio_keys[_polled].c
+  to "just read this one button" instead of going through the
+  Linux input subsystem like everyone else.
 
->  struct xgpio_instance {
->         struct of_mm_gpio_chip mmchip;
->         u32 gpio_state;         /* GPIO state shadow register */
->         u32 gpio_dir;           /* GPIO direction shadow register */
-> +       u32 offset;
->         spinlock_t gpio_lock;   /* Lock used for synchronization */
->  };
+- Userspace replicating drivers/regulator/gpio-regulator.c
+  to "turn on just this one voltage source".
 
-Why not take this opportunity to move the comments out to
-kerneldoc above this struct, plus document what "offset"
-means.
+All invalid reasons for using the sysfs ABI and trying to do the
+kernels work. All creating horrs for users and developers who now
+have to stash everything were trying to stach into the device tree
+(the above is all perfectly expressed with DT nodes) into their
+userspace app and then requiring their users to match a certain
+app to a certain board.
 
-> -       return (in_be32(mm_gc->regs + XGPIO_DATA_OFFSET) >> gpio) & 1;
-> +       return (xgpio_readreg(regs + XGPIO_DATA_OFFSET) >> gpio) & 1;
-
-
-Another way would be:
-
-#include <linux/bitops.h>
-
-return !!(xgpio_readreg(regs + XGPIO_DATA_OFFSET & BIT(gpio));
-
-> +
-> +       pr_info("XGpio: %s: registered, base is %d\n", np->full_name,
-> +                                                       chip->mmchip.gc.base);
-> +
-> +       tree_info = of_get_property(np, "xlnx,is-dual", NULL);
-
-This looks like you want to use of_property_read_bool().
-
-Have you documented these new bindings? It doesn't seem so.
-Documentation/devicetree/bindings/gpio/*...
-
-If it's undocumented so far, this is a good oppotunity to add it.
-
-> +       if (tree_info && be32_to_cpup(tree_info)) {
-> +               chip = kzalloc(sizeof(*chip), GFP_KERNEL);
-> +               if (!chip)
-> +                       return -ENOMEM;
-> +
-> +               /* Add dual channel offset */
-> +               chip->offset = XGPIO_CHANNEL_OFFSET;
-> +
-> +               /* Update GPIO state shadow register with default value */
-> +               tree_info = of_get_property(np, "xlnx,dout-default-2", NULL);
-> +               if (tree_info)
-> +                       chip->gpio_state = be32_to_cpup(tree_info);
-
-This is basically a jam table (hardware set-up) in the device tree.
-
-I don't exactly like this. Is this necessary?
-
-> +               /* Update GPIO direction shadow register with default value */
-> +               /* By default, all pins are inputs */
-> +               chip->gpio_dir = 0xFFFFFFFF;
-> +               tree_info = of_get_property(np, "xlnx,tri-default-2", NULL);
-> +               if (tree_info)
-> +                       chip->gpio_dir = be32_to_cpup(tree_info);
-
-Dito.
-
-> +               /* Check device node and parent device node for device width */
-> +               /* By default assume full GPIO controller */
-> +               chip->mmchip.gc.ngpio = 32;
-> +               tree_info = of_get_property(np, "xlnx,gpio2-width", NULL);
-> +               if (tree_info)
-> +                       chip->mmchip.gc.ngpio = be32_to_cpup(tree_info);
-
-Seems fine, but document it in the binding.
+The only examples I've really come to accept considers using
+things like relays and switches on factory lines where the meaning
+(semantics) of the GPIOs can only be properly understood from the
+GUI in the userspace APP running that factory line. Or robotics.
+In both cases presumably RT processes.
 
 Yours,
 Linus Walleij
