@@ -1,63 +1,95 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] gpiolib: add gpio_export_with_name
-Date: Thu, 30 May 2013 22:03:58 +0200
-Message-ID: <CACRpkdb9F+wJ0hkNqPTP34r3JAEp2s07Q8U24fD6oCdj7MqCFA@mail.gmail.com>
-References: <20121121101259.GQ4398@game.jcrosoft.org>
- <1353492849-29397-1-git-send-email-plagnioj@jcrosoft.com>
- <20121126135911.2F1D33E187C@localhost> <51A719A5.50906@epfl.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51A719A5.50906-p8DiymsW2f8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Mark Langsdorf <mark.langsdorf@calxeda.com>
+Subject: [PATCH 1/2] ahci: make ahci_transmit_led_message into a function pointer
+Date: Thu, 30 May 2013 15:17:30 -0500
+Message-ID: <1369945051-2582-1-git-send-email-mark.langsdorf@calxeda.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, tj@kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org
+Cc: Mark Langsdorf <mark.langsdorf@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 30, 2013 at 11:19 AM, Florian Vaussard
-<florian.vaussard-p8DiymsW2f8@public.gmane.org> wrote:
+Create a new ata_port_operations function pointer called
+transmit_led_message and give it the default value of
+ahci_transmit_led_message. This allows AHCI controllers with
+non-standard LED interfaces to use the existing em_ interface.
 
-> Even if work is progressing towards
-> having gpio-controlled reset pins [1], some boards still need GPIOs to
-> be exported to userspace for other functionalities.
+Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
+---
+ drivers/ata/libahci.c  | 11 ++++++-----
+ include/linux/libata.h |  3 +++
+ 2 files changed, 9 insertions(+), 5 deletions(-)
 
-Which are these?
+diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+index 34c8216..0c36360 100644
+--- a/drivers/ata/libahci.c
++++ b/drivers/ata/libahci.c
+@@ -173,6 +173,7 @@ struct ata_port_operations ahci_ops = {
+ 	.em_store		= ahci_led_store,
+ 	.sw_activity_show	= ahci_activity_show,
+ 	.sw_activity_store	= ahci_activity_store,
++	.transmit_led_message	= ahci_transmit_led_message,
+ #ifdef CONFIG_PM
+ 	.port_suspend		= ahci_port_suspend,
+ 	.port_resume		= ahci_port_resume,
+@@ -774,7 +775,7 @@ static void ahci_start_port(struct ata_port *ap)
+ 
+ 			/* EM Transmit bit maybe busy during init */
+ 			for (i = 0; i < EM_MAX_RETRY; i++) {
+-				rc = ahci_transmit_led_message(ap,
++				rc = ap->ops->transmit_led_message(ap,
+ 							       emp->led_state,
+ 							       4);
+ 				if (rc == -EBUSY)
+@@ -915,7 +916,7 @@ static void ahci_sw_activity_blink(unsigned long arg)
+ 			led_message |= (1 << 16);
+ 	}
+ 	spin_unlock_irqrestore(ap->lock, flags);
+-	ahci_transmit_led_message(ap, led_message, 4);
++	ap->ops->transmit_led_message(ap, led_message, 4);
+ }
+ 
+ static void ahci_init_sw_activity(struct ata_link *link)
+@@ -1044,7 +1045,7 @@ static ssize_t ahci_led_store(struct ata_port *ap, const char *buf,
+ 	if (emp->blink_policy)
+ 		state &= ~EM_MSG_LED_VALUE_ACTIVITY;
+ 
+-	return ahci_transmit_led_message(ap, state, size);
++	return ap->ops->transmit_led_message(ap, state, size);
+ }
+ 
+ static ssize_t ahci_activity_store(struct ata_device *dev, enum sw_activity val)
+@@ -1063,7 +1064,7 @@ static ssize_t ahci_activity_store(struct ata_device *dev, enum sw_activity val)
+ 		/* set the LED to OFF */
+ 		port_led_state &= EM_MSG_LED_VALUE_OFF;
+ 		port_led_state |= (ap->port_no | (link->pmp << 8));
+-		ahci_transmit_led_message(ap, port_led_state, 4);
++		ap->ops->transmit_led_message(ap, port_led_state, 4);
+ 	} else {
+ 		link->flags |= ATA_LFLAG_SW_ACTIVITY;
+ 		if (val == BLINK_OFF) {
+@@ -1071,7 +1072,7 @@ static ssize_t ahci_activity_store(struct ata_device *dev, enum sw_activity val)
+ 			port_led_state &= EM_MSG_LED_VALUE_OFF;
+ 			port_led_state |= (ap->port_no | (link->pmp << 8));
+ 			port_led_state |= EM_MSG_LED_VALUE_ON; /* check this */
+-			ahci_transmit_led_message(ap, port_led_state, 4);
++			ap->ops->transmit_led_message(ap, port_led_state, 4);
+ 		}
+ 	}
+ 	emp->blink_policy = val;
+diff --git a/include/linux/libata.h b/include/linux/libata.h
+index eae7a05..1d09b65 100644
+--- a/include/linux/libata.h
++++ b/include/linux/libata.h
+@@ -908,6 +908,9 @@ struct ata_port_operations {
+ 	ssize_t (*sw_activity_show)(struct ata_device *dev, char *buf);
+ 	ssize_t (*sw_activity_store)(struct ata_device *dev,
+ 				     enum sw_activity val);
++	ssize_t (*transmit_led_message)(struct ata_port *ap, u32 state,
++					ssize_t size);
++
+ 	/*
+ 	 * Obsolete
+ 	 */
+-- 
+1.8.1.4
 
-When I have inquired I have heard all kind of horrible things:
-
-- Userspace replicating drivers/leds/leds-gpio.c to
-  turn on/off and even PWM (!) LEDs from userspace, when we have
-  a standard sysfs interface for LEDs.
-
-- Userspace replicating drivers/input/keyboard/gpio_keys[_polled].c
-  to "just read this one button" instead of going through the
-  Linux input subsystem like everyone else.
-
-- Userspace replicating drivers/regulator/gpio-regulator.c
-  to "turn on just this one voltage source".
-
-All invalid reasons for using the sysfs ABI and trying to do the
-kernels work. All creating horrs for users and developers who now
-have to stash everything were trying to stach into the device tree
-(the above is all perfectly expressed with DT nodes) into their
-userspace app and then requiring their users to match a certain
-app to a certain board.
-
-The only examples I've really come to accept considers using
-things like relays and switches on factory lines where the meaning
-(semantics) of the GPIOs can only be properly understood from the
-GUI in the userspace APP running that factory line. Or robotics.
-In both cases presumably RT processes.
-
-Yours,
-Linus Walleij
