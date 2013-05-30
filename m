@@ -1,150 +1,166 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC] [PATCH 3/3] IRQ: irq domain: defer of irq ressoure
- resolve at platform_drv_probe
-Date: Thu, 30 May 2013 12:36:39 +0200
-Message-ID: <20130530103639.GD19834@game.jcrosoft.org>
-References: <20130528145219.GA30411@game.jcrosoft.org>
- <1369753729-12997-1-git-send-email-plagnioj@jcrosoft.com>
- <1369753729-12997-3-git-send-email-plagnioj@jcrosoft.com>
- <20130529224814.3F8F53E16F4@localhost>
+From: keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH v10 01/12] mfd: DT bindings for the palmas family MFD
+Date: Thu, 30 May 2013 17:03:28 +0530
+Message-ID: <51A73908.7020206@ti.com>
+References: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk> <1363964122-19201-2-git-send-email-ian@slimlogic.co.uk> <5150906F.9040202@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130529224814.3F8F53E16F4@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5150906F.9040202@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, gg@slimlogic.co.uk
+Cc: Ian Lartey <ian@slimlogic.co.uk>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, linux-watchdog@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, rob@landley.net, mturquette@linaro.org, linus.walleij@linaro.org, cooloney@gmail.com, sfr@canb.auug.org.au, rpurdie@rpsys.net, akpm@linux-foundation.org, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, ldewangan@nvidia.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 23:48 Wed 29 May     , Grant Likely wrote:
-> On Tue, 28 May 2013 17:08:49 +0200, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> > Today in the current of implementation we populate all the ressources
-> > at of_platform_populate time. But this leed to a chicken-egg dilemat
-> > some the irq present in DT are from platform_device too. And you can
-> > not resolve them as of_platform_populate. So delay the populate of irq
-> > at platform_drv_probe.
-> > 
-> > And if the irq_domain is not yet present just defer the probe (GPIO as example)
-> 
-> Hi Jean-Christophe,
-> 
-> Thanks for looking at this.
-> 
-> Hmmm, this is an interesting idea. I had been thinking about taping into
-> the platform_get_irq() call to lookup irq numbers at probe time, but
-> that assumes that all platform drivers use that call (which they clearly
-> do not). This approach should work for all drivers as is.
 
-Thanks, I try to do not introduce dt or c work around as done in other
-drivers (mmc_spi & co) as I do not want to handle gpio as irq in ANY drivers
-and just provide the irq number of the gpio via pdev resource or DT interrupts
+On 03/25/2013 11:29 PM, Stephen Warren wrote:
 
-while discussing with Arnd on IRC the idea come to do this and that we should
-do the same for reset and clock by handling it at probe time
+> On 03/22/2013 08:55 AM, Ian Lartey wrote:
+>> From: Graeme Gregory <gg@slimlogic.co.uk>
+>>
+>> Add the various binding files for the palmas family of chips. There is a
+>> top level MFD binding then a seperate binding for IP blocks on chips.
 > 
-> However care needs to be taken to not waste too much time processing
-> irqs every time probe is called. Mapping irqs over and over will get
-> expensive, especially with the current code. It would be better to
-> rework the mapping function to iterate once over the interrupts property
-> and map all the IRQs at once instead of calling of_irq_to_resource()
-> over and over again. (I would however accept the argument that this is a
-> bug fix and the refactoring should be a separate patch)
+>> diff --git a/Documentation/devicetree/bindings/clock/palmas-clk.txt b/Documentation/devicetree/bindings/clock/palmas-clk.txt
+> 
+> Where is the reg property; if you're instantiating the clk device as a
+> standalone DT node and driver, it should be possible to retrieve the
+> address of this IP block instance from DT, not using driver-internal APIs.
+> 
+> This same comment likely applies everywhere, so I won't repeat it.
+> 
+>> +Example:
+>> +
+>> +clk {
+>> +    compatible = "ti,twl6035-clk", "ti,palmas-clk";
+>> +    ti,clk32kg-mode-sleep = <0>;
+>> +    ti,clk32kgaudio-mode-sleep = <0>;
+> 
+>> +    #clock-cells = <1>;
+>> +    clock-frequency = <32000000>;
+>> +    clock-names = "clk32kg", "clk32kgaudio";
+> 
+> The binding description itself should describe what clocks this node
+> provides and consumes.
+> 
+> What is clock-frequency; which clock does it affect?
+> 
+> The presence of #clock-cells implies this is a clock provider. This
+> binding should define the format of the clock cells that this property
+> implies. I assume it's just the ID of the output clocks, but what values
+> correspond to which output clocks? That mapping table needs to be listed
+> here.
+> 
+> The presence of clock-names implies this is a clock consumer. However,
+> there is no clocks property in the example. Is clks missing from the
+> example, or should this property be clock-output-names instead? If this
+> node is a clock consumer, the list of which clocks it requires should be
+> documented.
+> 
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-palmas.txt b/Documentation/devicetree/bindings/gpio/gpio-palmas.txt
+> 
+>> +- gpio-controller: mark the device as a GPIO controller
+>> +- gpio-cells = <1>:  GPIO lines are provided.
+> 
+> That's #gpio-cells not gpio-cells.
+> 
+> I assume that cell simply contains the GPIO ID/number. That should be
+> documented for clarity.
+> 
+> Surely gpio-cells should be 2 not 1, so there is space for flags. At
+> least an "inverted" or "active-low" flag should be included; GPIO
+> consumers would typically implement that flag in SW, so there' no
+> requirement that the flag only be supported if the HW supports the feature.
+> 
+>> +- interrupt-controller : palmas has its own internal IRQs
+>> +- #interrupt-cells : should be set to 2 for IRQ number and flags
+>> +  The first cell is the IRQ number.
+>> +  The second cell is the flags, encoded as the trigger masks from
+>> +  Documentation/devicetree/bindings/interrupts.txt
+> 
+> You need "/interrupt-controller" before the filename there.
+> 
+>> +- interrupt-parent : The parent interrupt controller.
+> 
+> If this IP block has interrupt outputs, it should require an
+> "interrupts" property too. This is the same concept that drives the need
+> for a reg property. This same comment likely applies everywhere, so I
+> won't repeat it.
+> 
+>> diff --git a/Documentation/devicetree/bindings/input/palmas-pwrbutton.txt b/Documentation/devicetree/bindings/input/palmas-pwrbutton.txt
+> 
+>> +- interrupts: the interrupt outputs of the controller.
+> 
+> How many entries are there, what do they mean, and in what order must
+> they appear? (Note that the binding of a node must define the order of
+> the interrupts property, since historically it's been accessed by index,
+> not by name, and all bindings must allow that access method to be used).
+> 
+>> +- interrupt-names : Should be the name of irq resource. Each interrupt
+>> +  binds its interrupt-name.
+> 
+> The binding needs to define standard names for the entries in this
+> property, or define that interrupts are only retrieved by index, in
+> which case interrupt-names shouldn't be present. This same comment
+> likely applies everywhere, so I won't repeat it.
+> 
+>> diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documentation/devicetree/bindings/mfd/palmas.txt
+> 
+>> +Required properties:
+> ...
+> 
+> I believe the Palmas devices have many separate I2C addresses, even
+> buses, which are I think are at least partially independently SW
+> configurable. In that case, the reg property for this node should
+> probably enumerate all the I2C addresses that this chip responds to, so
+> that they can each be passed down to the child nodes.
 
-I'm very concern too by booting time I'll take a look on those issues
+
+Stephen,
+
+The palmas devices do have multiple I2C slave IDs. From OMAP5 as the master
+all the palmas slave devices are connected via I2C1 bus.
+
+I did not understand the SW configurable part. It is more board
+dependent. Correct me if i understood it wrongly.
+
+Graeme,
+
+Can i send a separate Documentation patch for palmas-core and palmas-regulators
+outside this series since the drivers are already part of mainline kernel.
+This will ensure at least the bare minimal DT support for palmas family
+will be available in the mainline kernel?
 
 > 
-> > 
-> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> > Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> > Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> > Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> > Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> > Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-> > Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  drivers/base/platform.c     |    5 +++++
-> >  drivers/of/platform.c       |   29 +++++++++++++++++++++++++++--
-> >  include/linux/of_platform.h |    7 +++++++
-> >  3 files changed, 39 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> > index 9eda842..c0f7906 100644
-> > --- a/drivers/base/platform.c
-> > +++ b/drivers/base/platform.c
-> > @@ -13,6 +13,7 @@
-> >  #include <linux/string.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/of_device.h>
-> > +#include <linux/of_platform.h>
-> >  #include <linux/module.h>
-> >  #include <linux/init.h>
-> >  #include <linux/dma-mapping.h>
-> > @@ -484,6 +485,10 @@ static int platform_drv_probe(struct device *_dev)
-> >  	struct platform_device *dev = to_platform_device(_dev);
-> >  	int ret;
-> >  
-> > +	ret = of_device_init_irq(dev);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> >  	if (ACPI_HANDLE(_dev))
-> >  		acpi_dev_pm_attach(_dev, true);
-> >  
-> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> > index 00a0971..c290943 100644
-> > --- a/drivers/of/platform.c
-> > +++ b/drivers/of/platform.c
-> > @@ -131,6 +131,32 @@ void of_device_make_bus_id(struct device *dev)
-> >  }
-> >  
-> >  /**
-> > + * of_device_alloc_irq - initialize irq of an platfrom_device
-> > + * @dev: plaform_device to work on
-> > + */
-> > +int of_device_init_irq(struct platform_device *dev)
-> > +{
-> > +	struct device_node *np = dev->dev.of_node;
-> > +	int num_irq;
-> > +	int ret;
-> > +	struct resource *res = dev->resource;
-> > +
-> > +	if (!np)
-> > +		return 0;
-> > +
-> > +	num_irq = of_irq_count(np);
-> > +	if (!num_irq)
-> > +		return 0;
-> > +
-> > +	res += dev->num_resources - num_irq;
-> 
-> This is a little fragile. Instead of statically calculating the offset,
-> scan the table and make *absolutely* sure that there is a free block of
-> irq resources.
 
-yeah was thinking about it too, but did simple for RFC
+>> diff --git a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
 > 
-> Also, if the table has already been populated successfully, then that
-> should be checked for. That would prevent the same table from being
-> parsed over and over in the case of a device that keeps getting
-> deferred.
-
-can I add a new boolean for this in pdev of device_node?
+>> +Optional nodes:
+>> +- regulators : should contain the constrains and init information for the
+>> +	       regulators. It should contain a subnode per regulator from the
+>> +	       list.
+>> +	       For ti,palmas-pmic - smps12, smps123, smps3 depending on OTP,
+>> +	       smps45, smps457, smps7 depending on varient, smps6, smps[8-10],
+>> +	       ldo[1-9], ldoln, ldousb
+>> +	       For ti,palmas-charger-pmic - smps12, smps123, smps3 depending on OTP,
+>> +	       smps[6-9], boost, ldo[1-14], ldoln, ldousb
 > 
-> Finally, if it fails, make sure any entries that have been filled in get
-> cleared out again before exiting.
-ok
+> The list of legal compatible values for this node above doesn't include
+> both ti,palmas-pmic and ti,palmas-charger-pmic. Should it? This node
+> should describe this PMIC block in a completely standalone fashion,
+> without the need to go look at the top-level node to see if it's a
+> "charger" variant or not.
+> 
+>> +	       optional chip specific regulator fields :-
+>> +	       ti,warm-reset - maintain voltage during warm reset
+>> +	       ti,roof-floor - control voltage selection by pin
+> 
+> I assume those are Boolean not integer. It's worth mentioning the type
+> of each property.
 
-Best Regards,
-J.
+
+
+
+Reagrds,
+Keerthy
