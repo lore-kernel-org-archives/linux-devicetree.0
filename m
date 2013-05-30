@@ -1,107 +1,86 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH RFC v2] media: OF: add sync-on-green endpoint property
-Date: Thu, 30 May 2013 05:21:57 +0200
-Message-ID: <44193648.yaA827Trlv@avalon>
-References: <1368710287-8741-1-git-send-email-prabhakar.csengg@gmail.com> <CA+V-a8tMQnjh=8qaRoNhwkdrcoTCK2zofTkCOd79hAMoz5qK2A@mail.gmail.com> <51A0C6A8.5090302@gmail.com>
+From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH -next v2] dmaengine: ste_dma40: fix error return code in
+ d40_probe()
+Date: Thu, 30 May 2013 12:32:45 +0800
+Message-ID: <CAPgLHd-gjJ6ju3HyhiQi98YFGojvU3aYSTn7SOe4NhQPY1r++w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51A0C6A8.5090302@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Hans Verkuil <hans.verkuil@cisco.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: srinidhi.kasagar-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, djbw-b10kYP2dOMg@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Cc: yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 
-On Saturday 25 May 2013 16:11:52 Sylwester Nawrocki wrote:
-> On 05/25/2013 11:17 AM, Prabhakar Lad wrote:
-> >> > From looking at Figure 8 "TVP7002 Application Example" in the TVP7002's
-> >> > datasheet ([2], p. 52) and your initial TVP7002 patches it looks like
-> >> > what you want is to specify polarity of the SOGOUT signal, so the
-> >> > processor that receives this signal can properly interpret it, is it
-> >> > correct ?
-> > 
-> > Yes
-> > 
-> >> >  If so then wouldn't it be more appropriate to define e.g. 'sog-active'
-> >> >  property and media bus flags:
-> >> >           V4L2_MBUS_SYNC_ON_GREEN_ACTIVE_LOW
-> >> >           V4L2_MBUS_SYNC_ON_GREEN_ACTIVE_HIGH
-> >> >  
-> >> >  ?
-> > 
-> > Agreed I'll add these flags.
-> > 
-> >> >  And for synchronisation method on the analog part we could perhaps
-> >> >  define 'component-sync' or similar property that would enumerate all
-> >> >  possible synchronisation methods. We might as well use separate
-> >> >  boolean properties, but I'm a bit concerned about the increasing
-> >> >  number of properties that need to be parsed for each parallel video
-> >> >  bus "endpoint".
-> > 
-> > I am not clear on it can please elaborate more on this.
-> 
-> I thought about two possible options:
-> 
-> 1. single property 'component-sync' or 'video-sync' that would have values:
-> 
-> #define VIDEO_SEPARATE_SYNC	0x01
-> #define VIDEO_COMPOSITE_SYNC	0x02
-> #define VIDEO_SYNC_ON_COMPOSITE	0x04
-> #define VIDEO_SYNC_ON_GREEN	0x08
-> #define VIDEO_SYNC_ON_LUMINANCE	0x10
-> 
-> And we could put these definitions into a separate header, e.g.
-> <dt-bindings/video-interfaces.h>
-> 
-> Then in a device tree source file one could have, e.g.
-> 
-> video-sync = <VIDEO_SYNC_ON_GREEN>;
-> 
-> 
-> 2. Separate boolean property for each video sync type, e.g.
-> 
-> 	"video-composite-sync"
-> 	"video-sync-on-composite"
-> 	"video-sync-on-green"
-> 	"video-sync-on-luminance"
-> 
-> Separate sync, with separate VSYNC, HSYNC lines, would be the default, when
-> none of the above is specified and 'vsync-active', 'hsync-active' properties
-> are present.
+In many of the error handling case, the return value 'ret' not set
+and 0 will be return from d40_probe() even if error, but we should
+return a negative error code instead in those error handling case.
+This patch fixed them, and also removed useless variable 'err'.
 
-I prefer 1. over 2.
+Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+---
+v1 -> v2: rebased on linux-next.git
+---
+ drivers/dma/ste_dma40.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-> However, I suppose the better would be to deduce the video synchronisation
-> method from the sync signal polarity flags. Then, for instance, when an
-> endpoint node contains "composite-sync-active" property the parser would
-> determine the "composite sync" synchronisation type is used.
-> 
-> Thus it might make sense to have only following integer properties (added
-> as needed):
-> 
-> composite-sync-active
-> sync-on-green-active
-> sync-on-comp-active
-> sync-on-luma-active
-> 
-> This would allow to specify polarity of each signal and at the same time
-> the parsing code could derive synchronisation type. A new field could be
-> added to struct v4l2_of_parallel_bus, e.g. sync_type and it would be filled
-> within v4l2_of_parse_endpoint().
-> 
-> What do you think ?
-
-My gut feeling is that we should have separate properties for the video sync 
-type and the synchronization signals polarities. We could have a chip that 
-supports sync-on-green on the analog (input) side and outputs separate hsync 
-and vsync signals only on the digital (output) side. There would be no sync-
-on-green polarity in that case.
-
--- 
-Regards,
-
-Laurent Pinchart
-
+diff --git a/drivers/dma/ste_dma40.c b/drivers/dma/ste_dma40.c
+index 7f23d45..a241e25 100644
+--- a/drivers/dma/ste_dma40.c
++++ b/drivers/dma/ste_dma40.c
+@@ -3506,7 +3506,6 @@ static int __init d40_probe(struct platform_device *pdev)
+ {
+ 	struct stedma40_platform_data *plat_data = pdev->dev.platform_data;
+ 	struct device_node *np = pdev->dev.of_node;
+-	int err;
+ 	int ret = -ENOENT;
+ 	struct d40_base *base = NULL;
+ 	struct resource *res = NULL;
+@@ -3619,6 +3618,7 @@ static int __init d40_probe(struct platform_device *pdev)
+ 		if (IS_ERR(base->lcpa_regulator)) {
+ 			d40_err(&pdev->dev, "Failed to get lcpa_regulator\n");
+ 			base->lcpa_regulator = NULL;
++			ret = PTR_ERR(base->lcpa_regulator);
+ 			goto failure;
+ 		}
+ 
+@@ -3633,13 +3633,13 @@ static int __init d40_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	base->initialized = true;
+-	err = d40_dmaengine_init(base, num_reserved_chans);
+-	if (err)
++	ret = d40_dmaengine_init(base, num_reserved_chans);
++	if (ret)
+ 		goto failure;
+ 
+ 	base->dev->dma_parms = &base->dma_parms;
+-	err = dma_set_max_seg_size(base->dev, STEDMA40_MAX_SEG_SIZE);
+-	if (err) {
++	ret = dma_set_max_seg_size(base->dev, STEDMA40_MAX_SEG_SIZE);
++	if (ret) {
+ 		d40_err(&pdev->dev, "Failed to set dma max seg size\n");
+ 		goto failure;
+ 	}
+@@ -3647,8 +3647,8 @@ static int __init d40_probe(struct platform_device *pdev)
+ 	d40_hw_init(base);
+ 
+ 	if (np) {
+-		err = of_dma_controller_register(np, d40_xlate, NULL);
+-		if (err && err != -ENODEV)
++		ret = of_dma_controller_register(np, d40_xlate, NULL);
++		if (ret && ret != -ENODEV)
+ 			dev_err(&pdev->dev,
+ 				"could not register of_dma_controller\n");
+ 	}
