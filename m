@@ -1,74 +1,71 @@
-From: keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH 7/7] thermal: ti-soc-thermal: add DT example for DRA752
- chip
-Date: Thu, 30 May 2013 14:26:53 +0530
-Message-ID: <51A71455.9000002@ti.com>
-References: <1369840066-20357-1-git-send-email-eduardo.valentin@ti.com> <1369840066-20357-8-git-send-email-eduardo.valentin@ti.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v7] reset: Add driver for gpio-controlled reset pins
+Date: Thu, 30 May 2013 11:08:48 +0200
+Message-ID: <1369904928.24693.6.camel@pizza.hi.pengutronix.de>
+References: <1369753575-9818-1-git-send-email-p.zabel@pengutronix.de>
+ <51A68CF8.7000303@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1369840066-20357-8-git-send-email-eduardo.valentin@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Eduardo Valentin <eduardo.valentin@ti.com>
-Cc: rui.zhang@intel.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51A68CF8.7000303-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Eduardo,
+Hi Stephen,
 
-On 05/29/2013 08:37 PM, Eduardo Valentin wrote:
-
-> Update documentation by adding an example for DRA752 on DT description.
+Am Mittwoch, den 29.05.2013, 17:19 -0600 schrieb Stephen Warren:
+> On 05/28/2013 09:06 AM, Philipp Zabel wrote:
+> > This driver implements a reset controller device that toggle a gpio
+> > connected to a reset pin of a peripheral IC. The delay between assertion
+> > and de-assertion of the reset signal can be configured via device tree.
 > 
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Rob Landley <rob@landley.net>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Zhang Rui <rui.zhang@intel.com>
-> Cc: J Keerthy <j-keerthy@ti.com>
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: linux-doc@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Eduardo Valentin <eduardo.valentin@ti.com>
-> ---
->  Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+> > diff --git a/drivers/reset/gpio-reset.c b/drivers/reset/gpio-reset.c
 > 
-> diff --git a/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt b/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt
-> index 1629652..1953b33 100644
-> --- a/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/ti_soc_thermal.txt
-> @@ -59,3 +59,15 @@ bandgap {
->  	compatible = "ti,omap5430-bandgap";
->  	interrupts = <0 126 4>; /* talert */
->  };
-> +
-> +DRA752:
-> +bandgap {
-> +	reg = <0x4a0021e0 0xc
-> +		0x4a00232c 0xc
-> +		0x4a002380 0x2c
-> +		0x4a0023C0 0x3c
-> +		0x4a002564 0x8
-> +		0x4a002574 0x50>;
-> +	compatible = "ti,dra752-bandgap";
+> > +static void __gpio_reset_set(struct reset_controller_dev *rcdev, int asserted)
+> 
+> Nit: Technically I think __ is a reserved name-space, so you shouldn't
+> prefix "user-level" (rather than libc/similar) symbols with it, but it's
+> not a big deal.
 
+I'll s/__//.
 
-The general convention seems to be keeping it as dra7xx or dra7.
-Why add specific nodes like dra752? We can always reuse for
-forthcoming dra7 processors if the same address mapping and IP
-is retained right?
+> > +static int gpio_reset_probe(struct platform_device *pdev)
+> 
+> > +	if (of_gpio_named_count(np, "reset-gpios") != 1)
+> > +		return -EINVAL;
+> 
+> Should that error-path (and the path for of_property_read_u32() failure)
+> include a dev_err() like some already do, so it's obvious what the
+> failure is?
 
-> +	interrupts = <0 126 4>; /* talert */
+For reset-gpios, yes. reset-delay-us is marked as optional in the
+bindings.
 
+> > +	reset_controller_register(&drvdata->rcdev);
+> > +
+> > +	platform_set_drvdata(pdev, drvdata);
+> 
+> It might be better to set the drvdata right after it's been allocated.
+> It perhaps doesn't matter much here, but if the reset controller core
+> ever starts calling into the registered device inside the call to
+> reset_controller_register(), then there might be a problem.
 
-The TRM does not have any term called talert. Can the comment
-be /* thermal_alert */ so it is easy to figure out what it is.
+Alright. I'll move ist above the reset_controller_register() call.
 
-> +};
+> Aside from those minor issues,
+> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-
-Regards,
-Keerthy
+thanks
+Philipp
