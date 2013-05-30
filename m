@@ -1,94 +1,79 @@
-From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-Subject: [PATCH 3/3] mfd: twl4030-power: Simplify error path
-Date: Thu, 30 May 2013 15:51:56 +0200
-Message-ID: <1369921916-7435-4-git-send-email-florian.vaussard@epfl.ch>
-References: <1369921916-7435-1-git-send-email-florian.vaussard@epfl.ch>
+From: Hans-Christian Egtvedt <egtvedt@samfundet.no>
+Subject: Re: [PATCH 1/8] video: atmel_lcdfb: fix platform data struct
+Date: Thu, 30 May 2013 16:05:55 +0200
+Message-ID: <20130530140555.GA10370@samfundet.no>
+References: <20130411145741.GB25242@game.jcrosoft.org>
+ <1365692422-9565-1-git-send-email-plagnioj@jcrosoft.com>
+ <CACQ1gAjF5kuu-czkj56-pQdTBUhvY5VodvfnF3RA_DN-O0b9NQ@mail.gmail.com>
+ <20130529173538.GC23899@game.jcrosoft.org>
+ <CACQ1gAhhsMw1-Znd8BC=A0rJBrB4pphCtH9v9qOQR+j2dY3vCw@mail.gmail.com>
+ <20130529193220.GB19468@game.jcrosoft.org>
+ <CACQ1gAj_m_aWaq5J41SY8EPwOH5-3zYPsf2WJCunvVnBCyq00Q@mail.gmail.com>
+ <20130530072328.GE19468@game.jcrosoft.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1369921916-7435-1-git-send-email-florian.vaussard-p8DiymsW2f8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20130530072328.GE19468@game.jcrosoft.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: linux-fbdev@vger.kernel.org, Richard Genoud <richard.genoud@gmail.com>, devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Andreas =?iso-8859-1?Q?Bie=DFmann?= <biessmann@corscience.de>, Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Remove unnecessary goto statements, causing duplicated if
-conditions.
+Around Thu 30 May 2013 09:23:28 +0200 or thereabout, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 08:39 Thu 30 May     , Richard Genoud wrote:
+>> 2013/5/29 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>:
+>> > On 19:44 Wed 29 May     , Richard Genoud wrote:
+>> >> 2013/5/29 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>:
+>> >> > On 16:36 Wed 29 May     , Richard Genoud wrote:
+>> >> >> 2013/4/11 Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>:
 
-Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
----
- drivers/mfd/twl4030-power.c |   37 ++++++++++++++-----------------------
- 1 files changed, 14 insertions(+), 23 deletions(-)
+<snipp diff>
 
-diff --git a/drivers/mfd/twl4030-power.c b/drivers/mfd/twl4030-power.c
-index d12d748..7eed526 100644
---- a/drivers/mfd/twl4030-power.c
-+++ b/drivers/mfd/twl4030-power.c
-@@ -567,21 +567,25 @@ int twl4030_power_probe(struct platform_device *pdev)
- 
- 	err = twl_i2c_write_u8(TWL_MODULE_PM_MASTER, TWL4030_PM_MASTER_KEY_CFG1,
- 			       TWL4030_PM_MASTER_PROTECT_KEY);
--	if (err)
--		goto unlock;
--
--	err = twl_i2c_write_u8(TWL_MODULE_PM_MASTER, TWL4030_PM_MASTER_KEY_CFG2,
-+	err |= twl_i2c_write_u8(TWL_MODULE_PM_MASTER, TWL4030_PM_MASTER_KEY_CFG2,
- 			       TWL4030_PM_MASTER_PROTECT_KEY);
--	if (err)
--		goto unlock;
-+
-+	if (err) {
-+		pr_err("TWL4030 Unable to unlock registers\n");
-+		return err;
-+	}
- 
- 	if (pdata) {
- 		err = twl4030_power_configure_scripts(pdata);
--		if (err)
--			goto load;
-+		if (err) {
-+			pr_err("TWL4030 failed to load scripts\n");
-+			return err;
-+		}
- 		err = twl4030_power_configure_resources(pdata);
--		if (err)
--			goto resource;
-+		if (err) {
-+			pr_err("TWL4030 failed to configure resource\n");
-+			return err;
-+		}
- 	}
- 
- 	/* Board has to be wired properly to use this feature */
-@@ -611,19 +615,6 @@ relock:
- 	if (err)
- 		pr_err("TWL4030 Unable to relock registers\n");
- 	return err;
--
--unlock:
--	if (err)
--		pr_err("TWL4030 Unable to unlock registers\n");
--	return err;
--load:
--	if (err)
--		pr_err("TWL4030 failed to load scripts\n");
--	return err;
--resource:
--	if (err)
--		pr_err("TWL4030 failed to configure resource\n");
--	return err;
- }
- 
- static int twl4030_power_remove(struct platform_device *pdev)
+>> >> >> > +       bool                    lcdcon_pol_negative;
+>> >> >> I think lcdcon_pol_negative should be part of pdata, because it really
+>> >> >> depends on how the PWM is wired on the board.
+>> >> >>
+>> >> >
+>> >> > maybe but no one mainline use it on any pdata for non-dt boars
+>> >> > so I did not want to expose it
+>> >> Well, at least, I'm using it :)
+>> >> (and I guess that Andreas is using it also, otherwise he wouldn't have
+>> >> introduce it !)
+>> >
+>> > yes but pdata is for non-dt boards, for dt you can keep it in struct
+>> > atmel_lcdfb_info and add a property
+>> >
+>> > if non-dt boards want it my answer is I do not care switch to DT
+>> 
+>> ok (I use a full DT board based on sam9g35)
+>> 
+>> so I'll add something like
+>> sinfo->lcdcon_pol_negative = of_property_read_bool(display_np,
+>> "atmel,lcdcon-pwm-pulse-low");
+>> in /atmel_lcdfb.c
+>> 
+>> But I thought the goal of this patch was to separate driver data from
+>> platform specific data, and IMHO, lcdcon_pol_negative is a specificity
+>> of the platform.
+> 
+> You are right but as non one mainline use it as pdata I choose to drop it
+> and only keep it on the driver as we can still use it for DT
+>
+> It's a way to force peopoe to switch to DT
+
+FYI AVR32 architecture doesn't support device tree, nor is it likely to do
+so. However there are no users of the PWM output from the LCDC block for the
+boards in the current kernel, and I doubt new boards will pop.
+
 -- 
-1.7.5.4
+Hans-Christian Egtvedt
