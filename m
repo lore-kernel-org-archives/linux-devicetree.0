@@ -1,15 +1,13 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] clk/mpc85xx: Update the compatible string
-Date: Thu, 30 May 2013 12:44:51 -0700
-Message-ID: <20130530194451.4470.55599@quantum>
-References: <1369210939-25087-1-git-send-email-Yuantian.Tang@freescale.com>
- <20130530185732.4470.91176@quantum> <20130530192143.4470.23214@quantum>
- <17C23704-7017-427C-A00F-CEFA6247D65D@kernel.crashing.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] GPIO: Add support for dual channel in gpio-xilinx.c
+Date: Thu, 30 May 2013 21:46:54 +0200
+Message-ID: <CACRpkdY4xaCOe28nu-NrYQ7pafjhj8-xqFcJRF9iJUy3SrCVrA@mail.gmail.com>
+References: <4b90b06fce0475b579cfba4d968b4778359154f6.1369826814.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <17C23704-7017-427C-A00F-CEFA6247D65D-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <4b90b06fce0475b579cfba4d968b4778359154f6.1369826814.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,44 +18,102 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Kumar Gala (2013-05-30 12:26:38)
-> On May 30, 2013, at 2:21 PM, Mike Turquette wrote:
-> 
-> > Quoting Mike Turquette (2013-05-30 11:57:32)
-> >> Quoting Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org (2013-05-22 01:22:19)
-> >>> From: Tang Yuantian <yuantian.tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> >>> 
-> >>> The compatible string of clock is changed from *-2 to *-2.0
-> >>> on chassis 2. So updated it accordingly.
-> >>> 
-> >>> Signed-off-by: Tang Yuantian <Yuantian.Tang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> >> 
-> >> Taken into clk-next.
-> >> 
-> > 
-> > One small nitpick.  I updated the $SUBJECT to:
-> > 
-> > clk: mpc85xx: Update the compatible string
-> > 
-> > The difference being "clk: mpc85xx:" versus "clk/mpc85xx:".  Please use
-> > the former format in the future.
-> > 
-> > Thanks,
-> > Mike
-> 
-> Mike,
-> 
-> If clk-ppc-corenet.c went into v3.10, than I think this fix is needed there and shouldn't wait til v3.11
-> 
+On Wed, May 29, 2013 at 1:27 PM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
 
-clk-ppc-corenet.c is first introduced in the current clk-next branch.
-It is not merged into Linus' tree yet.
+> Supporting the second channel in the driver.
+> Offset is 0x8 and both channnels share the same
+> IRQ.
+>
+> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 
-Regards,
-Mike
+(...)
+> +/* Read/Write access to the GPIO registers */
+> +#define xgpio_readreg(offset)          __raw_readl(offset)
+> +#define xgpio_writereg(offset, val)    __raw_writel(val, offset)
 
-> - k
+So you're swithing in_be32/out_be32 to the CPU-dependent
+__raw_readl/__raw_writel functions? Why?
+
+Can you explain exactly why you are using __raw_* accessors
+rather than e.g. atleast readl_relaxed()/writel_relaxed()
+or even plain readl/writel so you know the writes will hit
+the hardware as immediately as possible?
+
+I'd prefer this step to be a separate patch.
+
+>  struct xgpio_instance {
+>         struct of_mm_gpio_chip mmchip;
+>         u32 gpio_state;         /* GPIO state shadow register */
+>         u32 gpio_dir;           /* GPIO direction shadow register */
+> +       u32 offset;
+>         spinlock_t gpio_lock;   /* Lock used for synchronization */
+>  };
+
+Why not take this opportunity to move the comments out to
+kerneldoc above this struct, plus document what "offset"
+means.
+
+> -       return (in_be32(mm_gc->regs + XGPIO_DATA_OFFSET) >> gpio) & 1;
+> +       return (xgpio_readreg(regs + XGPIO_DATA_OFFSET) >> gpio) & 1;
+
+
+Another way would be:
+
+#include <linux/bitops.h>
+
+return !!(xgpio_readreg(regs + XGPIO_DATA_OFFSET & BIT(gpio));
+
+> +
+> +       pr_info("XGpio: %s: registered, base is %d\n", np->full_name,
+> +                                                       chip->mmchip.gc.base);
+> +
+> +       tree_info = of_get_property(np, "xlnx,is-dual", NULL);
+
+This looks like you want to use of_property_read_bool().
+
+Have you documented these new bindings? It doesn't seem so.
+Documentation/devicetree/bindings/gpio/*...
+
+If it's undocumented so far, this is a good oppotunity to add it.
+
+> +       if (tree_info && be32_to_cpup(tree_info)) {
+> +               chip = kzalloc(sizeof(*chip), GFP_KERNEL);
+> +               if (!chip)
+> +                       return -ENOMEM;
+> +
+> +               /* Add dual channel offset */
+> +               chip->offset = XGPIO_CHANNEL_OFFSET;
+> +
+> +               /* Update GPIO state shadow register with default value */
+> +               tree_info = of_get_property(np, "xlnx,dout-default-2", NULL);
+> +               if (tree_info)
+> +                       chip->gpio_state = be32_to_cpup(tree_info);
+
+This is basically a jam table (hardware set-up) in the device tree.
+
+I don't exactly like this. Is this necessary?
+
+> +               /* Update GPIO direction shadow register with default value */
+> +               /* By default, all pins are inputs */
+> +               chip->gpio_dir = 0xFFFFFFFF;
+> +               tree_info = of_get_property(np, "xlnx,tri-default-2", NULL);
+> +               if (tree_info)
+> +                       chip->gpio_dir = be32_to_cpup(tree_info);
+
+Dito.
+
+> +               /* Check device node and parent device node for device width */
+> +               /* By default assume full GPIO controller */
+> +               chip->mmchip.gc.ngpio = 32;
+> +               tree_info = of_get_property(np, "xlnx,gpio2-width", NULL);
+> +               if (tree_info)
+> +                       chip->mmchip.gc.ngpio = be32_to_cpup(tree_info);
+
+Seems fine, but document it in the binding.
+
+Yours,
+Linus Walleij
