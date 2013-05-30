@@ -1,271 +1,148 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH V2] irqchip: Add TB10x interrupt controller driver
-Date: Thu, 30 May 2013 22:19:43 +0100
-Message-ID: <20130530211944.05F4D3E0A90@localhost>
-References: <alpine.LFD.2.02.1305271414270.4220@ionos> <1369758847-5642-1-git-send-email-christian.ruppert@abilis.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1369758847-5642-1-git-send-email-christian.ruppert@abilis.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Christian Ruppert <christian.ruppert@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v10 01/12] mfd: DT bindings for the palmas family MFD
+Date: Thu, 30 May 2013 17:03:30 -0600
+Message-ID: <51A7DAC2.80602@wwwdotorg.org>
+References: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
+ <1363964122-19201-2-git-send-email-ian@slimlogic.co.uk>
+ <5150906F.9040202@wwwdotorg.org> <51A73908.7020206@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51A73908.7020206-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Ian Lartey <ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 28 May 2013 18:34:07 +0200, Christian Ruppert <christian.ruppert@abilis.com> wrote:
-> The SOC interrupt controller driver for the Abilis Systems TB10x series of
-> SOCs based on ARC700 CPUs.
+On 05/30/2013 05:33 AM, keerthy wrote:
 > 
-> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
-> Signed-off-by: Pierrick Hascoet <pierrick.hascoet@abilis.com>
-> ---
->  .../interrupt-controller/abilis,tb10x_ictl.txt     |   38 ++++
->  arch/arc/boot/dts/abilis_tb100.dtsi                |   32 ++--
->  arch/arc/boot/dts/abilis_tb101.dtsi                |   32 ++--
->  arch/arc/boot/dts/abilis_tb10x.dtsi                |   30 ++--
->  arch/arc/plat-tb10x/Kconfig                        |    1 +
->  drivers/irqchip/Kconfig                            |    5 +
->  drivers/irqchip/Makefile                           |    1 +
->  drivers/irqchip/irq-tb10x.c                        |  205 ++++++++++++++++++++
->  8 files changed, 291 insertions(+), 53 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x_ictl.txt
->  create mode 100644 drivers/irqchip/irq-tb10x.c
+> On 03/25/2013 11:29 PM, Stephen Warren wrote:
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x_ictl.txt b/Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x_ictl.txt
-> new file mode 100644
-> index 0000000..bc292cd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/abilis,tb10x_ictl.txt
-> @@ -0,0 +1,38 @@
-> +TB10x Top Level Interrupt Controller
-> +====================================
-> +
-> +The Abilis TB10x SOC contains a custom interrupt controller. It performs
-> +one-to-one mapping of external interrupt sources to CPU interrupts and
-> +provides support for reconfigurable trigger modes.
-> +
-> +Required properties
-> +-------------------
-> +
-> +- compatible: Should be "abilis,tb10x_ictl"
-
-Use '-' instead of underscore for compatible values. Otherwise the
-binding looks fine.
-
-> +- reg: specifies physical base address and size of register range.
-> +- interrupt-congroller: Identifies the node as an interrupt controller.
-> +- #interrupt cells: Specifies the number of cells used to encode an interrupt
-> +  source connected to this controller. The value shall be 2.
-> +- interrupt-parent: Specifies the parent interrupt controller.
-> +- interrupts: Specifies the list of interrupt lines which are handled by
-> +  the interrupt controller in the parent controller's notation. Interrupts
-> +  are mapped one-to-one to parent interrupts.
-> +
-> +Example
-> +-------
-> +
-> +intc: interrupt-controller {	/* Parent interrupt controller */
-> +	interrupt-controller;
-> +	#interrupt-cells = <1>;	/* For example below */
-> +	/* ... */
-> +};
-> +
-> +tb10x_ictl: pic@2000 {		/* TB10x interrupt controller */
-> +	compatible = "abilis,tb10x_ictl";
-> +	reg = <0x2000 0x20>;
-> +	interrupt-controller;
-> +	#interrupt-cells = <2>;
-> +	interrupt-parent = <&intc>;
-> +	interrupts = <5 6 7 8 9 10 11 12 13 14 15 16 17 18 19
-> +			20 21 22 23 24 25 26 27 28 29 30 31>;
-> +};
-
-[...]
-> +#define AB_IRQCTL_MAXIRQ       32
-> +#define TB10X_IRQCHIP_BASE     NR_CPU_IRQS
-> +
-> +static inline void ab_irqctl_writereg(struct irq_chip_generic *gc, u32 reg,
-> +	u32 val)
-> +{
-> +	irq_reg_writel(val, (u32 *)(gc->reg_base + reg));
-
-In most cases, if you have to use a cast, then the code is unsafe.
-->reg_base is a void*, so the cast should be unnecessary.
-
-> +}
-> +
-> +static inline u32 ab_irqctl_readreg(struct irq_chip_generic *gc, u32 reg)
-> +{
-> +	return irq_reg_readl((u32 *)(gc->reg_base + reg));
-> +}
-> +
-> +static int tb10x_irq_set_type(struct irq_data *data, unsigned int flow_type)
-> +{
-> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
-> +	unsigned int irq = data->irq;
-
-irq is used exactly once for a debug pr_err(). I'd drop it from here.
-
-> +	unsigned int hwirq = irqd_to_hwirq(data);
-> +	uint32_t im, mod, pol;
-> +
-> +	im = BIT(hwirq);
-
-data->mask should work here with Thomas' branch (see below)
-
-> +
-> +	irq_gc_lock(gc);
-> +
-> +	mod = ab_irqctl_readreg(gc, AB_IRQCTL_SRC_MODE) | im;
-> +	pol = ab_irqctl_readreg(gc, AB_IRQCTL_SRC_POLARITY) | im;
-> +
-> +	switch (flow_type & IRQF_TRIGGER_MASK) {
-> +	case IRQ_TYPE_EDGE_FALLING:
-> +		pol ^= im;
-> +		break;
-> +	case IRQ_TYPE_LEVEL_HIGH:
-> +		mod ^= im;
-> +		break;
-> +	case IRQ_TYPE_NONE:
-> +		flow_type = IRQ_TYPE_LEVEL_LOW;
-> +	case IRQ_TYPE_LEVEL_LOW:
-> +		mod ^= im;
-> +		pol ^= im;
-> +		break;
-> +	case IRQ_TYPE_EDGE_RISING:
-> +		break;
-> +	default:
-> +		irq_gc_unlock(gc);
-> +		pr_err("%s: Cannot assign multiple trigger modes to IRQ %d.\n",
-> +			__func__, irq);
-> +		return -EBADR;
-> +	}
-> +
-> +	irqd_set_trigger_type(data, flow_type);
-> +	irq_setup_alt_chip(data, flow_type);
-> +
-> +	ab_irqctl_writereg(gc, AB_IRQCTL_SRC_MODE, mod);
-> +	ab_irqctl_writereg(gc, AB_IRQCTL_SRC_POLARITY, pol);
-> +	ab_irqctl_writereg(gc, AB_IRQCTL_INT_STATUS, im);
-> +
-> +	irq_gc_unlock(gc);
-> +
-> +	return IRQ_SET_MASK_OK;
-> +}
-> +
-> +static struct irq_domain_ops irq_tb10x_domain_ops = {
-> +	.xlate	= irq_domain_xlate_twocell,
-> +};
-> +
-> +static void tb10x_irq_cascade(unsigned int irq, struct irq_desc *desc)
-> +{
-> +	struct irq_domain *domain = irq_desc_get_handler_data(desc);
-> +
-> +	generic_handle_irq(irq_find_mapping(domain, irq));
-> +}
-> +
-> +static int __init of_tb10x_init_irq(struct device_node *ictl,
-> +					struct device_node *parent)
-> +{
-> +	int i, ret, nrirqs = of_irq_count(ictl);
-> +	u32 mask = 0;
-> +	struct resource mem;
-> +	struct irq_chip_generic *gc;
-> +	struct irq_domain *domain;
-> +	void __iomem *reg_base;
-> +
-> +	if (of_address_to_resource(ictl, 0, &mem)) {
-> +		pr_err("%s: No registers declared in DeviceTree.\n",
-> +			ictl->name);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (!request_mem_region(mem.start, resource_size(&mem),
-> +		ictl->name)) {
-> +		pr_err("%s: Request mem region failed.\n", ictl->name);
-> +		return -EBUSY;
-> +	}
-> +
-> +	reg_base = ioremap(mem.start, resource_size(&mem));
-> +	if (!reg_base) {
-> +		ret = -EBUSY;
-> +		pr_err("%s: ioremap failed.\n", ictl->name);
-> +		goto ioremap_fail;
-> +	}
-> +
-> +	gc = irq_alloc_generic_chip(ictl->name, 2, TB10X_IRQCHIP_BASE,
-> +				reg_base, handle_level_irq);
-> +	if (!gc) {
-> +		ret = -ENOMEM;
-> +		pr_err("%s: Could not allocate generic interrupt chip.\n",
-> +			ictl->name);
-> +		goto gc_alloc_fail;
-> +	}
-
-Thomas has merged patches to add irq_alloc_domain_generic_chips() which
-you should be using here. It takes care of linking the generic chip into
-the irq domain. You can find the patches in the irq/for-arm branch of
-the tip tree:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
-
-> +
-> +	gc->chip_types[0].type               = IRQ_TYPE_LEVEL_MASK;
-> +	gc->chip_types[0].chip.irq_mask      = irq_gc_mask_clr_bit;
-> +	gc->chip_types[0].chip.irq_unmask    = irq_gc_mask_set_bit;
-> +	gc->chip_types[0].chip.irq_set_type  = tb10x_irq_set_type;
-> +	gc->chip_types[0].regs.mask          = AB_IRQCTL_INT_ENABLE;
-> +
-> +	gc->chip_types[1].type               = IRQ_TYPE_EDGE_BOTH;
-> +	gc->chip_types[1].chip.name          = gc->chip_types[0].chip.name;
-> +	gc->chip_types[1].chip.irq_ack       = irq_gc_ack_set_bit;
-> +	gc->chip_types[1].chip.irq_mask      = irq_gc_mask_clr_bit;
-> +	gc->chip_types[1].chip.irq_unmask    = irq_gc_mask_set_bit;
-> +	gc->chip_types[1].chip.irq_set_type  = tb10x_irq_set_type;
-> +	gc->chip_types[1].regs.ack           = AB_IRQCTL_INT_STATUS;
-> +	gc->chip_types[1].regs.mask          = AB_IRQCTL_INT_ENABLE;
-> +	gc->chip_types[1].handler            = handle_edge_irq;
-> +
-> +	domain = irq_domain_add_legacy(ictl, AB_IRQCTL_MAXIRQ,
-> +					TB10X_IRQCHIP_BASE, 0,
-> +					&irq_tb10x_domain_ops, gc);
-> +	if (!domain) {
-> +		ret = -ENOMEM;
-> +		pr_err("%s: Could not register interrupt domain.\n",
-> +			ictl->name);
-> +		goto irq_domain_add_fail;
-> +	}
-> +
-> +	for (i = 0; i < nrirqs; i++) {
-> +		unsigned int irq = irq_of_parse_and_map(ictl, i);
-> +
-> +		irq_set_handler_data(irq, domain);
-> +		irq_set_chained_handler(irq, tb10x_irq_cascade);
-> +
-> +		mask |= BIT(of_irq_to_resource(ictl, i, NULL));
-> +	}
-> +
-> +	ab_irqctl_writereg(gc, AB_IRQCTL_INT_ENABLE, 0);
-> +	ab_irqctl_writereg(gc, AB_IRQCTL_INT_MODE, 0);
-> +	ab_irqctl_writereg(gc, AB_IRQCTL_INT_POLARITY, 0);
-> +	ab_irqctl_writereg(gc, AB_IRQCTL_INT_STATUS, ~0UL);
-> +
-> +	irq_setup_generic_chip(gc, mask, IRQ_GC_INIT_MASK_CACHE,
-> +				IRQ_NOREQUEST, IRQ_NOPROBE);
-> +
-> +	return 0;
-> +
-> +irq_domain_add_fail:
-> +	kfree(gc);
-> +gc_alloc_fail:
-> +	iounmap(gc->reg_base);
-> +ioremap_fail:
-> +	release_mem_region(mem.start, resource_size(&mem));
-> +	return ret;
-> +}
-> +IRQCHIP_DECLARE(tb10x_intc, "abilis,tb10x_ictl", of_tb10x_init_irq);
-> -- 
-> 1.7.1
+>> On 03/22/2013 08:55 AM, Ian Lartey wrote:
+>>> From: Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
+>>>
+>>> Add the various binding files for the palmas family of chips. There is a
+>>> top level MFD binding then a seperate binding for IP blocks on chips.
+>>
+>>> diff --git a/Documentation/devicetree/bindings/clock/palmas-clk.txt b/Documentation/devicetree/bindings/clock/palmas-clk.txt
+>>
+>> Where is the reg property; if you're instantiating the clk device as a
+>> standalone DT node and driver, it should be possible to retrieve the
+>> address of this IP block instance from DT, not using driver-internal APIs.
+>>
+>> This same comment likely applies everywhere, so I won't repeat it.
+>>
+>>> +Example:
+>>> +
+>>> +clk {
+>>> +    compatible = "ti,twl6035-clk", "ti,palmas-clk";
+>>> +    ti,clk32kg-mode-sleep = <0>;
+>>> +    ti,clk32kgaudio-mode-sleep = <0>;
+>>
+>>> +    #clock-cells = <1>;
+>>> +    clock-frequency = <32000000>;
+>>> +    clock-names = "clk32kg", "clk32kgaudio";
+>>
+>> The binding description itself should describe what clocks this node
+>> provides and consumes.
+>>
+>> What is clock-frequency; which clock does it affect?
+>>
+>> The presence of #clock-cells implies this is a clock provider. This
+>> binding should define the format of the clock cells that this property
+>> implies. I assume it's just the ID of the output clocks, but what values
+>> correspond to which output clocks? That mapping table needs to be listed
+>> here.
+>>
+>> The presence of clock-names implies this is a clock consumer. However,
+>> there is no clocks property in the example. Is clks missing from the
+>> example, or should this property be clock-output-names instead? If this
+>> node is a clock consumer, the list of which clocks it requires should be
+>> documented.
+>>
+>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-palmas.txt b/Documentation/devicetree/bindings/gpio/gpio-palmas.txt
+>>
+>>> +- gpio-controller: mark the device as a GPIO controller
+>>> +- gpio-cells = <1>:  GPIO lines are provided.
+>>
+>> That's #gpio-cells not gpio-cells.
+>>
+>> I assume that cell simply contains the GPIO ID/number. That should be
+>> documented for clarity.
+>>
+>> Surely gpio-cells should be 2 not 1, so there is space for flags. At
+>> least an "inverted" or "active-low" flag should be included; GPIO
+>> consumers would typically implement that flag in SW, so there' no
+>> requirement that the flag only be supported if the HW supports the feature.
+>>
+>>> +- interrupt-controller : palmas has its own internal IRQs
+>>> +- #interrupt-cells : should be set to 2 for IRQ number and flags
+>>> +  The first cell is the IRQ number.
+>>> +  The second cell is the flags, encoded as the trigger masks from
+>>> +  Documentation/devicetree/bindings/interrupts.txt
+>>
+>> You need "/interrupt-controller" before the filename there.
+>>
+>>> +- interrupt-parent : The parent interrupt controller.
+>>
+>> If this IP block has interrupt outputs, it should require an
+>> "interrupts" property too. This is the same concept that drives the need
+>> for a reg property. This same comment likely applies everywhere, so I
+>> won't repeat it.
+>>
+>>> diff --git a/Documentation/devicetree/bindings/input/palmas-pwrbutton.txt b/Documentation/devicetree/bindings/input/palmas-pwrbutton.txt
+>>
+>>> +- interrupts: the interrupt outputs of the controller.
+>>
+>> How many entries are there, what do they mean, and in what order must
+>> they appear? (Note that the binding of a node must define the order of
+>> the interrupts property, since historically it's been accessed by index,
+>> not by name, and all bindings must allow that access method to be used).
+>>
+>>> +- interrupt-names : Should be the name of irq resource. Each interrupt
+>>> +  binds its interrupt-name.
+>>
+>> The binding needs to define standard names for the entries in this
+>> property, or define that interrupts are only retrieved by index, in
+>> which case interrupt-names shouldn't be present. This same comment
+>> likely applies everywhere, so I won't repeat it.
+>>
+>>> diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documentation/devicetree/bindings/mfd/palmas.txt
+>>
+>>> +Required properties:
+>> ...
+>>
+>> I believe the Palmas devices have many separate I2C addresses, even
+>> buses, which are I think are at least partially independently SW
+>> configurable. In that case, the reg property for this node should
+>> probably enumerate all the I2C addresses that this chip responds to, so
+>> that they can each be passed down to the child nodes.
 > 
+> 
+> Stephen,
+> 
+> The palmas devices do have multiple I2C slave IDs. From OMAP5 as the master
+> all the palmas slave devices are connected via I2C1 bus.
+> 
+> I did not understand the SW configurable part. It is more board
+> dependent. Correct me if i understood it wrongly.
 
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+IIRC (and I may not sine it's been a while since I looked at this),
+there are SW registers that can modify the I2C address that the chip
+will respond to, so you could access the main I2C address, then program
+which other I2C addresses get used.
+
+Or, perhaps I was just thinking of the fact that there are strapping
+pins on the chip that affect both the main I2C address, and some/all of
+the other I2C addresses, so the driver needs to be told each and every
+I2C address, not just one single overall I2C address.
