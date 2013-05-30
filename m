@@ -1,17 +1,18 @@
 From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFC] [PATCH 1/3] of: irq: rename of_irq_count to
- of_irq_valid_count
-Date: Thu, 30 May 2013 12:28:12 +0200
-Message-ID: <20130530102812.GC19834@game.jcrosoft.org>
+Subject: Re: [RFC] [PATCH 3/3] IRQ: irq domain: defer of irq ressoure
+ resolve at platform_drv_probe
+Date: Thu, 30 May 2013 12:24:41 +0200
+Message-ID: <20130530102441.GA19834@game.jcrosoft.org>
 References: <20130528145219.GA30411@game.jcrosoft.org>
- <1369753729-12997-1-git-send-email-plagnioj@jcrosoft.com>
- <20130529222530.453203E16F4@localhost>
+ <1369753729-12997-3-git-send-email-plagnioj@jcrosoft.com>
+ <20130529224814.3F8F53E16F4@localhost>
+ <201305300952.06036.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130529222530.453203E16F4@localhost>
+In-Reply-To: <201305300952.06036.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,24 +23,62 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23:25 Wed 29 May     , Grant Likely wrote:
-> On Tue, 28 May 2013 17:08:47 +0200, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> > as we count valid mapped irq not just present irq
+On 09:52 Thu 30 May     , Arnd Bergmann wrote:
+> On Thursday 30 May 2013, Grant Likely wrote:
+> > On Tue, 28 May 2013 17:08:49 +0200, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> > >  
+> > >  /**
+> > > + * of_device_alloc_irq - initialize irq of an platfrom_device
+> > > + * @dev: plaform_device to work on
+> > > + */
+> > > +int of_device_init_irq(struct platform_device *dev)
+> > > +{
+> > > +	struct device_node *np = dev->dev.of_node;
+> > > +	int num_irq;
+> > > +	int ret;
+> > > +	struct resource *res = dev->resource;
+> > > +
+> > > +	if (!np)
+> > > +		return 0;
+> > > +
+> > > +	num_irq = of_irq_count(np);
+> > > +	if (!num_irq)
+> > > +		return 0;
+> > > +
+> > > +	res += dev->num_resources - num_irq;
 > > 
-> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> > This is a little fragile. Instead of statically calculating the offset,
+> > scan the table and make *absolutely* sure that there is a free block of
+> > irq resources.
+> > 
+> > Also, if the table has already been populated successfully, then that
+> > should be checked for. That would prevent the same table from being
+> > parsed over and over in the case of a device that keeps getting
+> > deferred.
+> > 
+> > Finally, if it fails, make sure any entries that have been filled in get
+> > cleared out again before exiting.
 > 
-> Hmmm, even with it being in-accurately named, I think it is dangerous to
-> rename the existing function and re-use the old name. Anyone with
-> out-of-tree code will get the behaviour changed under their feet. I
-> think it would be better to drop this patch from the series.
+> Can we actually ever get a case where mapping a subset of the interrupts
+> fail but works at a later point? If not, we could just return a fatal
+> error here and won't get called again.
+> 
+> Since a platform device only has one "interrupt-parent", as soon as
+> one of the interrupts can get mapped, I would expect that the controller
+> is present, and we don't need to defer the probing any more.
+this is where I disagre we can have 2 interrupt-parent, this is why I get
+other issue on some devices as you get interrupts from the code controller and
+then use an irq on a gpio controller so you end up with 2 :(
 
-after think I known this can be consider as noisy change but I think we could
-rename it anyway to make it more clear and use a different name as you propose for the counting irq
-in PATCH 2/3
+Assume we can only have one will end-up with issue to descript such hardware
+
+as example I comment some TI patch where we need such configuration
 
 Best Regards,
 J.
+> 
+> 	Arnd
