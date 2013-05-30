@@ -1,14 +1,17 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] of: Export of_irq_count for using in modules
-Date: Thu, 30 May 2013 22:17:14 +0200
-Message-ID: <20130530201714.GE19834@game.jcrosoft.org>
-References: <6aa29b1d109a46278a7f37b598defe07d6edfe60.1369921774.git.michal.simek@xilinx.com>
+From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Subject: Re: [PATCH 1/2] gpiolib: add gpio_export_with_name
+Date: Thu, 30 May 2013 22:38:37 +0200
+Message-ID: <51A7B8CD.4080702@epfl.ch>
+References: <20121121101259.GQ4398@game.jcrosoft.org>
+ <1353492849-29397-1-git-send-email-plagnioj@jcrosoft.com>
+ <20121126135911.2F1D33E187C@localhost> <51A719A5.50906@epfl.ch>
+ <CACRpkdb9F+wJ0hkNqPTP34r3JAEp2s07Q8U24fD6oCdj7MqCFA@mail.gmail.com>
+Reply-To: florian.vaussard-p8DiymsW2f8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6aa29b1d109a46278a7f37b598defe07d6edfe60.1369921774.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CACRpkdb9F+wJ0hkNqPTP34r3JAEp2s07Q8U24fD6oCdj7MqCFA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,47 +22,61 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15:49 Thu 30 May     , Michal Simek wrote:
-> Export of_irq_count for modules.
+Hello Linus,
 
-can you explain why do you need to call of_irq_count
+On 05/30/2013 10:03 PM, Linus Walleij wrote:
+> On Thu, May 30, 2013 at 11:19 AM, Florian Vaussard
+> <florian.vaussard-p8DiymsW2f8@public.gmane.org> wrote:
+>
+>> Even if work is progressing towards
+>> having gpio-controlled reset pins [1], some boards still need GPIOs to
+>> be exported to userspace for other functionalities.
+>
+> Which are these?
+>
 
-Best Regards,
-J.
-> 
-> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
-> We are using this function in remoteproc module drivers.
-> There is also drivers/gpio/gpio-mvebu.c in the tree
-> which use this function but this driver can't be compiled
-> as module. This could be also the reason why is not this driver as module.
-> ---
->  drivers/of/irq.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index a3c1c5a..c918dde 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -374,6 +374,7 @@ int of_irq_count(struct device_node *dev)
-> 
->  	return nr;
->  }
-> +EXPORT_SYMBOL_GPL(of_irq_count);
-> 
->  /**
->   * of_irq_to_resource_table - Fill in resource table with node's IRQ info
-> --
-> 1.8.2.3
-> 
+Sorry, I should have been more precise.
 
+> When I have inquired I have heard all kind of horrible things:
+>
+> - Userspace replicating drivers/leds/leds-gpio.c to
+>    turn on/off and even PWM (!) LEDs from userspace, when we have
+>    a standard sysfs interface for LEDs.
+>
+> - Userspace replicating drivers/input/keyboard/gpio_keys[_polled].c
+>    to "just read this one button" instead of going through the
+>    Linux input subsystem like everyone else.
+>
+> - Userspace replicating drivers/regulator/gpio-regulator.c
+>    to "turn on just this one voltage source".
+>
+> All invalid reasons for using the sysfs ABI and trying to do the
+> kernels work. All creating horrs for users and developers who now
+> have to stash everything were trying to stach into the device tree
+> (the above is all perfectly expressed with DT nodes) into their
+> userspace app and then requiring their users to match a certain
+> app to a certain board.
+>
 
+100% agree with you.
 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> The only examples I've really come to accept considers using
+> things like relays and switches on factory lines where the meaning
+> (semantics) of the GPIOs can only be properly understood from the
+> GUI in the userspace APP running that factory line. Or robotics.
+> In both cases presumably RT processes.
+>
+
+Indeed, I work in a robotics lab :-) One of our board (mach-imx/
+mx31moboard*.c) controls for example the multiplexing of two cameras
+sharing the same acquisition bus (I know, a bit hackish).
+I developed a similar board with an OMAP3. Such control do not
+fit well in the above-mentioned cases, but we do not need RT processes.
+
+Best regards,
+
+Florian
