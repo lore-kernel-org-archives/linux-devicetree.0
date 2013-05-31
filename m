@@ -1,46 +1,109 @@
-From: "Christian Daudt" <csd@broadcom.com>
-Subject: Re: [PATCH V4 1/3] mmc: sdhci: Add size for caller in
- init+register
-Date: Fri, 31 May 2013 08:41:40 -0700
-Message-ID: <51A8C4B4.6020104@broadcom.com>
-References: <1369860607-25572-1-git-send-email-csd@broadcom.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v10 1/2] ARM: dts: omap4-panda: Update the LED support for the panda DTS
+Date: Fri, 31 May 2013 10:44:55 -0500
+Message-ID: <1370015095-26746-1-git-send-email-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1369860607-25572-1-git-send-email-csd@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chris Ball <cjb@laptop.org>
-Cc: linux-doc@vger.kernel.org, Christian Daudt <csd@broadcom.com>, Jerry Huang <Chang-Ming.Huang@freescale.com>, Grant Likely <grant.likely@secretlab.ca>, Wei WANG <wei_wang@realsil.com.cn>, matt.porter@linaro.org, Kevin Liu <kliu5@marvell.com>, Lars-Peter Clausen <lars@metafoo.de>, Russell King <linux@arm.linux.org.uk>, csd_b@daudt.org, Viresh Kumar <viresh.kumar@linaro.org>, plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, Bill Pemberton <wfp5p@virginia.edu>, Haojian Zhuang <haojian.zhuang@gmail.com>, Stephen Warren <swarren@nvidia.com>, Anton Vorontsov <avorontsov@ru.mvista.com>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Ludovic Desroches <ludovic.desroc>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk
+Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
-  Can you pls take this patch and the one named "[PATCH V4 2/3] ARM: 
-mmc: bcm281xx SDHCI driver" into your tree ?
+The GPIO for LED D1 on the omap4-panda a1-a3 rev and the omap4-panda-es
+are different.
 
-  Thanks,
-     csd.
+A1-A3 = gpio_wk7
+ES = gpio_110
 
-On 13-05-29 01:50 PM, Christian Daudt wrote:
-> Add a param to allow users of sdhci_pltfm to allocate private space
-> in calls to sdhci_pltfm_init+sdhci_pltfm_register. This is implemented
-> in the same way as sdhci does for its users.
->   None of the users have been migrated yet and are passing in zero to
-> retain their private allocation.
->
-> - todo: migrate clients to using allocation this way
-> - todo: remove priv variable once migration is complete
->
-> Also removed unused variable in sdhci_pltfm_init fn
->
-> Signed-off-by: Christian Daudt <csd@broadcom.com>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+There is no change to LED D2
+
+Abstract away the pinmux and the LED definitions for the two boards into
+the respective DTS files.
+
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+v10 - Update gpio entries to use gpio macros - https://patchwork.kernel.org/patch/2644561/ 
+v9 - Removed comments for mux config - https://patchwork.kernel.org/patch/2644391/
+v8 - Rebase to latest and use pinctrl macros - https://patchwork.kernel.org/patch/2629351/
+v7 - Update headline to add spaces - https://patchwork.kernel.org/patch/2583661/
+v6 - Review comments updated - https://patchwork.kernel.org/patch/2582771/
+v5 - Provide pincrtl phandle to the gpio-led driver - https://patchwork.kernel.org/patch/2573981/
+ arch/arm/boot/dts/omap4-panda-common.dtsi |   16 +++++++++++++++-
+ arch/arm/boot/dts/omap4-panda-es.dts      |   28 ++++++++++++++++++++++++++++
+ 2 files changed, 43 insertions(+), 1 deletions(-)
+
+diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+index d5d144a..800fa4e 100644
+--- a/arch/arm/boot/dts/omap4-panda-common.dtsi
++++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+@@ -16,8 +16,13 @@
+ 		reg = <0x80000000 0x40000000>; /* 1 GB */
+ 	};
+ 
+-	leds {
++	leds: leds {
+ 		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <
++			&led_wkgpio_pins
++		>;
++
+ 		heartbeat {
+ 			label = "pandaboard::status1";
+ 			gpios = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+@@ -157,6 +162,15 @@
+ 	};
+ };
+ 
++&omap4_pmx_wkup {
++	led_wkgpio_pins: pinmux_leds_wkpins {
++		pinctrl-single,pins = <
++			0x1a (PIN_OUTPUT | MUX_MODE3)	/* gpio_wk7 */
++			0x1c (PIN_OUTPUT | MUX_MODE3)	/* gpio_wk8 */
++		>;
++	};
++};
++
+ &i2c1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c1_pins>;
+diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts/omap4-panda-es.dts
+index 5cfdf19..56c4354 100644
+--- a/arch/arm/boot/dts/omap4-panda-es.dts
++++ b/arch/arm/boot/dts/omap4-panda-es.dts
+@@ -34,3 +34,31 @@
+ 		0x5e (PIN_INPUT | MUX_MODE0)		/* hdmi_sda.hdmi_sda */
+ 		>;
+ };
++
++&omap4_pmx_core {
++	led_gpio_pins: gpio_led_pmx {
++		pinctrl-single,pins = <
++			0xb6 (PIN_OUTPUT | MUX_MODE3)	/* gpio_110 */
++		>;
++	};
++};
++
++&led_wkgpio_pins {
++	pinctrl-single,pins = <
++		0x1c (PIN_OUTPUT | MUX_MODE3)	/* gpio_wk8 */
++	>;
++};
++
++&leds {
++	pinctrl-0 = <
++		&led_gpio_pins
++		&led_wkgpio_pins
++	>;
++
++	heartbeat {
++		gpios = <&gpio4 14 GPIO_ACTIVE_HIGH>;
++	};
++	mmc {
++		gpios = <&gpio1 8 GPIO_ACTIVE_HIGH>;
++	};
++};
+-- 
+1.7.5.4
+
