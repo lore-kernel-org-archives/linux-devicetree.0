@@ -1,70 +1,77 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH] dtc: Ensure #line directives don't consume data from the next line
-Date: Fri, 31 May 2013 11:14:10 -0600
-Message-ID: <1370020450-18136-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: David Gibson <david@gibson.dropbear.id.au>, jdl@jdl.com
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, mmarek@suse.cz, rob.herring@calxeda.com, grant.likely@secretlab.ca, linux-kbuild@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH V3] irqchip: Add TB10x interrupt controller driver
+Date: Fri, 31 May 2013 19:32:34 +0200 (CEST)
+Message-ID: <alpine.LFD.2.02.1305311835040.2905@ionos>
+References: <20130530211944.05F4D3E0A90@localhost>
+ <1370014348-21121-1-git-send-email-christian.ruppert@abilis.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1370014348-21121-1-git-send-email-christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+Cc: Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
+On Fri, 31 May 2013, Christian Ruppert wrote:
 
-Previously, the #line parsing regex ended with ({WS}+[0-9]+)?. The {WS}
-could match line-break characters. If the #line directive did not contain
-the optional flags field at the end, this could cause any integer data on
-the next line to be consumed as part of the #line directive parsing. This
-could cause syntax errors (i.e. #line parsing consuming the leading 0
-from a hex constant 0x1234, leaving x1234 to be parsed as cell data,
-which is a syntax error), or invalid compilation results (i.e. simply
-consuming integer 1234 as part of the #line processing, thus removing it
-from the cell data).
+> The SOC interrupt controller driver for the Abilis Systems TB10x series of
+> SOCs based on ARC700 CPUs.
+> 
+> This patch depends on commits eb76bdd407d8a90e59a06cb0158886df390e5d1c and
+> 712bc93df9e7f14b8a163148d2aa7c778e151627 from branch irq/for-arm of
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git.
 
-Fix this by replacing {WS} with [ \t] so that it can't match line-breaks.
+That branch can be pulled into ARC as well. It only contains the
+changes, which are necessary for the irq domain support of the generic
+irq chip.
 
-Reported-by: Ian Campbell <Ian.Campbell@citrix.com>
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
----
-This is a patch for dtc upstream, in response to thread "DTB build
-failure due to preproccessing". If/when it's accepted into dtc, I'll
-follow up with a kernel patch that makes the same fix.
+> +static void tb10x_irq_cascade(unsigned int irq, struct irq_desc *desc)
+> +{
+> +	struct irq_domain *domain = irq_desc_get_handler_data(desc);
+> +
+> +	generic_handle_irq(irq_find_mapping(domain, irq));
+> +}
 
- dtc-lexer.l               |    2 +-
- tests/line_directives.dts |   10 ++++++++++
- 2 files changed, 11 insertions(+), 1 deletion(-)
+...
 
-diff --git a/dtc-lexer.l b/dtc-lexer.l
-index 254d5af..a3a4c69 100644
---- a/dtc-lexer.l
-+++ b/dtc-lexer.l
-@@ -71,7 +71,7 @@ static int pop_input_file(void);
- 			push_input_file(name);
- 		}
- 
--<*>^"#"(line)?{WS}+[0-9]+{WS}+{STRING}({WS}+[0-9]+)? {
-+<*>^"#"(line)?{WS}+[0-9]+{WS}+{STRING}([ \t]+[0-9]+)? {
- 			char *line, *tmp, *fn;
- 			/* skip text before line # */
- 			line = yytext;
-diff --git a/tests/line_directives.dts b/tests/line_directives.dts
-index e9d0800..046ef37 100644
---- a/tests/line_directives.dts
-+++ b/tests/line_directives.dts
-@@ -8,4 +8,14 @@
- # 6 "bar.dts"
- 
- / {
-+/*
-+ * Make sure optional flags don't consume integer data on next line. The issue
-+ * was that the {WS} in the trailing ({WS}+[0-9]+)? could cross the * line-
-+ * break, and consume the leading "0" of the hex constant, leaving "x12345678"
-+ * to be parsed as a number, which is invalid syntax.
-+ */
-+	prop1 = <
-+# 10 "qux.dts"
-+		0x12345678
-+	>;
- };
--- 
-1.7.10.4
+> +	for (i = 0; i < nrirqs; i++) {
+> +		unsigned int irq = irq_of_parse_and_map(ictl, i);
+> +
+> +		irq_set_handler_data(irq, domain);
+> +		irq_set_chained_handler(irq, tb10x_irq_cascade);
+> +	}
 
+I might be completely confused, but this does not make any sense at
+all.
+
+You allocate a linear domain and then map the interrupts in the
+domain. The mapping function retrieves the hardware interrupt number
+and creates a virtual interrupt number, installs the chip and the
+handler for the interrupt and finally returns the virtual interrupt
+number.
+
+Now you take that virtual interrupt number and install
+tb10x_irq_cascade as the handler. irq_set_chained_handler() will
+startup (unmask) the interrupt right away.
+
+In the cascade handler you take the virtual interrupt number, which
+you get as argument, and find the mapping, i.e. the matching VIRTUAL
+interrupt number for the VIRTUAL interrupt number and then call the
+handler.
+
+How is this supposed to work?
+
+Thanks,
+
+	tglx
