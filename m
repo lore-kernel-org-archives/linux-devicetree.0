@@ -1,50 +1,152 @@
-From: Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 0/2] rtc: rtc-omap: add support for DT wakeup & alarm events
-Date: Fri, 31 May 2013 12:03:23 +0530
-Message-ID: <1369982005-8572-1-git-send-email-gururaja.hebbar@ti.com>
+From: Hebbar Gururaja <gururaja.hebbar@ti.com>
+Subject: [PATCH 2/2] rtc: omap: add rtc wakeup support to alarm events
+Date: Fri, 31 May 2013 12:03:25 +0530
+Message-ID: <1369982005-8572-3-git-send-email-gururaja.hebbar@ti.com>
+References: <1369982005-8572-1-git-send-email-gururaja.hebbar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
-Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1369982005-8572-1-git-send-email-gururaja.hebbar@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: akpm@linux-foundation.org
+Cc: linux@arm.linux.org.uk, zonque@gmail.com, linux-arm-kernel@lists.infradead.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, a.zummo@towertech.it, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, davinci-linux-open-source@linux.davincidsp.com, khilman@linaro.org, vaibhav.bedia@ti.com, sudhakar.raj@ti.com, gururaja.hebbar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Current rtc-omap driver expects the rtc module wake-up capabilities to
-be set up by board specific code. However, in case of DT, this is not
-possible.
-
-So, add a DT property "ti,wakeup_capable" to indicate that the module
-is wake-up capable.
-
-Also, on some platforms (like AM33xx), a special register
-(RTC_IRQWAKEEN) is available to enable Wakeup feature for Alarm Events.
+On some platforms (like AM33xx), a special register (RTC_IRQWAKEEN)
+is available to enable Wakeup feature for Alarm Events.
 
 Since new platforms/Boards are now added through DT only, this feature
-is supported via DT property only. Platforms using such IP should add
-the property "ti,has_irq_wake_enb" in rtc DT node.
+is supported via DT property only.
 
-Kernel Base for the series is
-	> git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/
-linux-omap-dt.git
-	> linux-omap-git/for_3.11/dts
+Platforms using such IP should add the property "ti,has_irq_wake_enb"
+in rtc DT node.
 
-Hebbar Gururaja (2):
-  rtc: omap: add option to indicate wakeup support through DT
-  rtc: omap: add rtc wakeup support to alarm events
+Signed-off-by: Hebbar Gururaja <gururaja.hebbar@ti.com>
+---
+:100644 100644 108a629... b870d87... M	Documentation/devicetree/bindings/rtc/rtc-omap.txt
+:100644 100644 000a02f... 5e9c0dd... M	drivers/rtc/rtc-omap.c
+ Documentation/devicetree/bindings/rtc/rtc-omap.txt |    2 +
+ drivers/rtc/rtc-omap.c                             |   47 ++++++++++++++++----
+ 2 files changed, 41 insertions(+), 8 deletions(-)
 
- Documentation/devicetree/bindings/rtc/rtc-omap.txt |    6 +++
- drivers/rtc/rtc-omap.c                             |   50 +++++++++++++++++---
- 2 files changed, 49 insertions(+), 7 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+index 108a629..b870d87 100644
+--- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
++++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
+@@ -9,6 +9,8 @@ Required properties:
+ Optional properties:
+ - ti,wakeup_capable: Inform the rtc driver that this module is wake-up
+   capable so that rtcwake and suspend tests can work.
++- ti,has_irq_wake_enb: Inform rtc driver that this module has a a
++  special register to enable Wakeup feature for Alarm events.
+ 
+ Example:
+ 
+diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
+index 000a02f..5e9c0dd 100644
+--- a/drivers/rtc/rtc-omap.c
++++ b/drivers/rtc/rtc-omap.c
+@@ -72,6 +72,8 @@
+ #define OMAP_RTC_KICK0_REG		0x6c
+ #define OMAP_RTC_KICK1_REG		0x70
+ 
++#define OMAP_RTC_IRQWAKEEN		0x7C
++
+ /* OMAP_RTC_CTRL_REG bit fields: */
+ #define OMAP_RTC_CTRL_SPLIT		(1<<7)
+ #define OMAP_RTC_CTRL_DISABLE		(1<<6)
+@@ -96,6 +98,9 @@
+ #define OMAP_RTC_INTERRUPTS_IT_ALARM    (1<<3)
+ #define OMAP_RTC_INTERRUPTS_IT_TIMER    (1<<2)
+ 
++/* OMAP_RTC_IRQWAKEEN bit fields: */
++#define OMAP_RTC_IRQWAKEEN_ALARM_WAKEEN    (1<<1)
++
+ /* OMAP_RTC_KICKER values */
+ #define	KICK0_VALUE			0x83e70b13
+ #define	KICK1_VALUE			0x95a4f1e0
+@@ -103,6 +108,7 @@
+ #define	OMAP_RTC_HAS_KICKER		0x1
+ 
+ static void __iomem	*rtc_base;
++static unsigned int	has_irq_wake_enb_bit;
+ 
+ #define rtc_read(addr)		readb(rtc_base + (addr))
+ #define rtc_write(val, addr)	writeb(val, rtc_base + (addr))
+@@ -425,9 +431,14 @@ static int __init omap_rtc_probe(struct platform_device *pdev)
+ 
+ 	/* Fixup wakeup-enable feature based on the device tree */
+ 	if (of_id && of_find_property(pdev->dev.of_node,
+-				      "ti,wakeup_capable", NULL))
++				      "ti,wakeup_capable", NULL)) {
+ 		device_init_wakeup(&pdev->dev, 1);
+ 
++		if (of_find_property(pdev->dev.of_node,
++				     "ti,has_irq_wake_enb", NULL))
++			has_irq_wake_enb_bit = true;
++	}
++
+ 	if (new_ctrl & (u8) OMAP_RTC_CTRL_SPLIT)
+ 		pr_info("%s: split power mode\n", pdev->name);
+ 
+@@ -469,16 +480,26 @@ static u8 irqstat;
+ 
+ static int omap_rtc_suspend(struct device *dev)
+ {
++	u8 irqwake_stat;
++
+ 	irqstat = rtc_read(OMAP_RTC_INTERRUPTS_REG);
+ 
+-	/* FIXME the RTC alarm is not currently acting as a wakeup event
+-	 * source, and in fact this enable() call is just saving a flag
+-	 * that's never used...
++	/*
++	 * FIXME. On some platforms the RTC alarm is not currently acting as a
++	 * wakeup event source, and in fact this enable() call is just saving a
++	 * flag that's never used...
+ 	 */
+-	if (device_may_wakeup(dev))
++	if (device_may_wakeup(dev)) {
+ 		enable_irq_wake(omap_rtc_alarm);
+-	else
++
++		if (has_irq_wake_enb_bit == true) {
++			irqwake_stat = rtc_read(OMAP_RTC_IRQWAKEEN);
++			irqwake_stat |= OMAP_RTC_IRQWAKEEN_ALARM_WAKEEN;
++			rtc_write(irqwake_stat, OMAP_RTC_IRQWAKEEN);
++		}
++	} else {
+ 		rtc_write(0, OMAP_RTC_INTERRUPTS_REG);
++	}
+ 
+ 	/* Disable the clock/module */
+ 	pm_runtime_put_sync(dev);
+@@ -488,13 +509,23 @@ static int omap_rtc_suspend(struct device *dev)
+ 
+ static int omap_rtc_resume(struct device *dev)
+ {
++	u8 irqwake_stat;
++
+ 	/* Enable the clock/module so that we can access the registers */
+ 	pm_runtime_get_sync(dev);
+ 
+-	if (device_may_wakeup(dev))
++	if (device_may_wakeup(dev)) {
+ 		disable_irq_wake(omap_rtc_alarm);
+-	else
++
++		if (has_irq_wake_enb_bit == true) {
++			irqwake_stat = rtc_read(OMAP_RTC_IRQWAKEEN);
++			irqwake_stat &= ~OMAP_RTC_IRQWAKEEN_ALARM_WAKEEN;
++			rtc_write(irqwake_stat, OMAP_RTC_IRQWAKEEN);
++		}
++	} else {
+ 		rtc_write(irqstat, OMAP_RTC_INTERRUPTS_REG);
++	}
++
+ 	return 0;
+ }
+ #endif
 -- 
 1.7.9.5
+
