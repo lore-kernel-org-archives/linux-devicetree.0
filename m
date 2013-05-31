@@ -1,76 +1,79 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH V2] dtc: ensure #line directives don't consume data from the next line
-Date: Fri, 31 May 2013 12:33:04 -0600
-Message-ID: <1370025184-23808-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: David Gibson <david@gibson.dropbear.id.au>, jdl@jdl.com
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, mmarek@suse.cz, rob.herring@calxeda.com, grant.likely@secretlab.ca, linux-kbuild@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+From: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 2/7] USB: chipidea: ci13xxx-imx: move static pdata into probe function
+Date: Fri, 31 May 2013 20:38:44 +0200
+Message-ID: <1370025529-7414-3-git-send-email-mgr@pengutronix.de>
+References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1370025529-7414-1-git-send-email-mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
+From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Previously, the #line parsing regex ended with ({WS}+[0-9]+)?. The {WS}
-could match line-break characters. If the #line directive did not contain
-the optional flags field at the end, this could cause any integer data on
-the next line to be consumed as part of the #line directive parsing. This
-could cause syntax errors (i.e. #line parsing consuming the leading 0
-from a hex literal 0x1234, leaving x1234 to be parsed as cell data,
-which is a syntax error), or invalid compilation results (i.e. simply
-consuming literal 1234 as part of the #line processing, thus removing it
-from the cell data).
+The pdata structure gets copied anyway inside ci13xxx_add_device
+by platform_device_add. We don't need to have it static.
 
-Fix this by replacing {WS} with [ \t] so that it can't match line-breaks.
-
-Convert all instances of {WS}, even though the other instances should be
-irrelevant for any well-formed #line directive. This is done for
-consistency and ultimate safety.
-
-Reported-by: Ian Campbell <Ian.Campbell@citrix.com>
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
+Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Reviewed-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
-v2: Convert all instances of {WS} in the regex.
+ drivers/usb/chipidea/ci13xxx_imx.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
-This is a patch for dtc upstream, in response to thread "DTB build
-failure due to preproccessing". If/when it's accepted into dtc, I'll
-follow up with a kernel patch that makes the same fix.
----
- dtc-lexer.l               |    2 +-
- tests/line_directives.dts |   10 ++++++++++
- 2 files changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/dtc-lexer.l b/dtc-lexer.l
-index 254d5af..3b41bfc 100644
---- a/dtc-lexer.l
-+++ b/dtc-lexer.l
-@@ -71,7 +71,7 @@ static int pop_input_file(void);
- 			push_input_file(name);
- 		}
+diff --git a/drivers/usb/chipidea/ci13xxx_imx.c b/drivers/usb/chipidea/ci13xxx_imx.c
+index 73f9d5f..4d64541 100644
+--- a/drivers/usb/chipidea/ci13xxx_imx.c
++++ b/drivers/usb/chipidea/ci13xxx_imx.c
+@@ -88,17 +88,16 @@ EXPORT_SYMBOL_GPL(usbmisc_get_init_data);
  
--<*>^"#"(line)?{WS}+[0-9]+{WS}+{STRING}({WS}+[0-9]+)? {
-+<*>^"#"(line)?[ \t]+[0-9]+[ \t]+{STRING}([ \t]+[0-9]+)? {
- 			char *line, *tmp, *fn;
- 			/* skip text before line # */
- 			line = yytext;
-diff --git a/tests/line_directives.dts b/tests/line_directives.dts
-index e9d0800..046ef37 100644
---- a/tests/line_directives.dts
-+++ b/tests/line_directives.dts
-@@ -8,4 +8,14 @@
- # 6 "bar.dts"
+ /* End of common functions shared by usbmisc drivers*/
  
- / {
-+/*
-+ * Make sure optional flags don't consume integer data on next line. The issue
-+ * was that the {WS} in the trailing ({WS}+[0-9]+)? could cross the * line-
-+ * break, and consume the leading "0" of the hex constant, leaving "x12345678"
-+ * to be parsed as a number, which is invalid syntax.
-+ */
-+	prop1 = <
-+# 10 "qux.dts"
-+		0x12345678
-+	>;
- };
+-static struct ci13xxx_platform_data ci13xxx_imx_platdata  = {
+-	.name			= "ci13xxx_imx",
+-	.flags			= CI13XXX_REQUIRE_TRANSCEIVER |
+-				  CI13XXX_PULLUP_ON_VBUS |
+-				  CI13XXX_DISABLE_STREAMING,
+-	.capoffset		= DEF_CAPOFFSET,
+-};
+-
+ static int ci13xxx_imx_probe(struct platform_device *pdev)
+ {
+ 	struct ci13xxx_imx_data *data;
++	struct ci13xxx_platform_data pdata = {
++		.name		= "ci13xxx_imx",
++		.capoffset	= DEF_CAPOFFSET,
++		.flags		= CI13XXX_REQUIRE_TRANSCEIVER |
++				  CI13XXX_PULLUP_ON_VBUS |
++				  CI13XXX_DISABLE_STREAMING,
++	};
+ 	struct platform_device *plat_ci, *phy_pdev;
+ 	struct device_node *phy_np;
+ 	struct resource *res;
+@@ -171,7 +170,7 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
+ 		reg_vbus = NULL;
+ 	}
+ 
+-	ci13xxx_imx_platdata.phy = data->phy;
++	pdata.phy = data->phy;
+ 
+ 	if (!pdev->dev.dma_mask)
+ 		pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
+@@ -189,7 +188,7 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
+ 
+ 	plat_ci = ci13xxx_add_device(&pdev->dev,
+ 				pdev->resource, pdev->num_resources,
+-				&ci13xxx_imx_platdata);
++				&pdata);
+ 	if (IS_ERR(plat_ci)) {
+ 		ret = PTR_ERR(plat_ci);
+ 		dev_err(&pdev->dev,
 -- 
-1.7.10.4
+1.8.2.rc2
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
