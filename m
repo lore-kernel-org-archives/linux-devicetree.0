@@ -1,19 +1,28 @@
-From: Hebbar Gururaja <gururaja.hebbar@ti.com>
-Subject: [PATCH 08/11] pwm: pwm-tiecap: enhance pinctrl support
-Date: Fri, 31 May 2013 15:43:08 +0530
-Message-ID: <1369995191-20855-9-git-send-email-gururaja.hebbar@ti.com>
+From: Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 07/11] pwm: pwm-tiehrpwm: enhance pinctrl support
+Date: Fri, 31 May 2013 15:43:07 +0530
+Message-ID: <1369995191-20855-8-git-send-email-gururaja.hebbar@ti.com>
 References: <1369995191-20855-1-git-send-email-gururaja.hebbar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1369995191-20855-1-git-send-email-gururaja.hebbar@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: khilman@linaro.org, grant.likely@linaro.org, linus.walleij@linaro.org, rob.herring@calxeda.com
-Cc: davinci-linux-open-source@linux.davincidsp.com, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, vaibhav.bedia@ti.com, sudhakar.raj@ti.com, gururaja.hebbar@ti.com, Thierry Reding <thierry.reding@avionic-design.de>, "Philip, Avinash" <avinashphilip@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1369995191-20855-1-git-send-email-gururaja.hebbar-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Philip, Avinash" <avinashphilip-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Amend TI ecap controller to optionally take a pin control handle and
-set the state of the pins to:
+Amend the ti ehrpwm controller to optionally take a pin control handle
+and set the state of the pins to:
 
 - "default" on boot, resume
 - "sleep" on suspend()
@@ -33,22 +42,22 @@ pass respective state name with null phandler.
 Todo:
         - if an idle state is available for pins, add support for it.
 
-Signed-off-by: Hebbar Gururaja <gururaja.hebbar@ti.com>
-Cc: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Philip, Avinash <avinashphilip@ti.com>
+Signed-off-by: Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: Philip, Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
 ---
-:100644 100644 72ca42d... d02769d... M	drivers/pwm/pwm-tiecap.c
- drivers/pwm/pwm-tiecap.c |   48 +++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 43 insertions(+), 5 deletions(-)
+:100644 100644 48a485c... ed55460ae. M	drivers/pwm/pwm-tiehrpwm.c
+ drivers/pwm/pwm-tiehrpwm.c |   49 +++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 44 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pwm/pwm-tiecap.c b/drivers/pwm/pwm-tiecap.c
-index 72ca42d..d02769d 100644
---- a/drivers/pwm/pwm-tiecap.c
-+++ b/drivers/pwm/pwm-tiecap.c
-@@ -52,6 +52,11 @@ struct ecap_pwm_chip {
- 	unsigned int	clk_rate;
- 	void __iomem	*mmio_base;
- 	struct ecap_context ctx;
+diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
+index 48a485c..ed55460ae 100644
+--- a/drivers/pwm/pwm-tiehrpwm.c
++++ b/drivers/pwm/pwm-tiehrpwm.c
+@@ -132,6 +132,11 @@ struct ehrpwm_pwm_chip {
+ 	enum pwm_polarity polarity[NUM_PWM_CHANNEL];
+ 	struct	clk	*tbclk;
+ 	struct ehrpwm_context ctx;
 +
 +	/* two pin states - default, sleep */
 +	struct pinctrl			*pinctrl;
@@ -56,10 +65,10 @@ index 72ca42d..d02769d 100644
 +	struct pinctrl_state		*pins_sleep;
  };
  
- static inline struct ecap_pwm_chip *to_ecap_pwm_chip(struct pwm_chip *chip)
-@@ -208,11 +213,6 @@ static int ecap_pwm_probe(struct platform_device *pdev)
+ static inline struct ehrpwm_pwm_chip *to_ehrpwm_pwm_chip(struct pwm_chip *chip)
+@@ -439,11 +444,6 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
  	struct clk *clk;
- 	struct ecap_pwm_chip *pc;
+ 	struct ehrpwm_pwm_chip *pc;
  	u16 status;
 -	struct pinctrl *pinctrl;
 -
@@ -69,7 +78,7 @@ index 72ca42d..d02769d 100644
  
  	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
  	if (!pc) {
-@@ -220,6 +220,34 @@ static int ecap_pwm_probe(struct platform_device *pdev)
+@@ -451,6 +451,34 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
  		return -ENOMEM;
  	}
  
@@ -104,10 +113,11 @@ index 72ca42d..d02769d 100644
  	clk = devm_clk_get(&pdev->dev, "fck");
  	if (IS_ERR(clk)) {
  		dev_err(&pdev->dev, "failed to get clock\n");
-@@ -318,6 +346,11 @@ static int ecap_pwm_suspend(struct device *dev)
- 	if (test_bit(PWMF_ENABLED, &pwm->flags))
+@@ -570,6 +598,12 @@ static int ehrpwm_pwm_suspend(struct device *dev)
+ 		/* Disable explicitly if PWM is running */
  		pm_runtime_put_sync(dev);
- 
+ 	}
++
 +	/* Optionally let pins go into sleep states */
 +	if (!IS_ERR(pc->pins_sleep))
 +		if (pinctrl_select_state(pc->pinctrl, pc->pins_sleep))
@@ -116,17 +126,17 @@ index 72ca42d..d02769d 100644
  	return 0;
  }
  
-@@ -326,6 +359,11 @@ static int ecap_pwm_resume(struct device *dev)
- 	struct ecap_pwm_chip *pc = dev_get_drvdata(dev);
- 	struct pwm_device *pwm = pc->chip.pwms;
+@@ -578,6 +612,11 @@ static int ehrpwm_pwm_resume(struct device *dev)
+ 	struct ehrpwm_pwm_chip *pc = dev_get_drvdata(dev);
+ 	int i;
  
 +	/* Optionaly enable pins to be muxed in and configured */
 +	if (!IS_ERR(pc->pins_default))
 +		if (pinctrl_select_state(pc->pinctrl, pc->pins_default))
 +			dev_err(dev, "could not set default pins\n");
 +
- 	/* Enable explicitly if PWM was running */
- 	if (test_bit(PWMF_ENABLED, &pwm->flags))
- 		pm_runtime_get_sync(dev);
+ 	for (i = 0; i < pc->chip.npwm; i++) {
+ 		struct pwm_device *pwm = &pc->chip.pwms[i];
+ 
 -- 
 1.7.9.5
