@@ -1,31 +1,31 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH 2/2] rtc: omap: add rtc wakeup support to alarm events
-Date: Fri, 31 May 2013 10:41:22 -0700
-Message-ID: <87a9nb2gjh.fsf@linaro.org>
-References: <1369982005-8572-1-git-send-email-gururaja.hebbar@ti.com>
-	<1369982005-8572-3-git-send-email-gururaja.hebbar@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] dtc: Ensure #line directives don't consume data from
+ the next line
+Date: Fri, 31 May 2013 11:42:06 -0600
+Message-ID: <51A8E0EE.1040305@wwwdotorg.org>
+References: <1370020450-18136-1-git-send-email-swarren@wwwdotorg.org> <87sj13dp72.fsf@hase.home>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1369982005-8572-3-git-send-email-gururaja.hebbar@ti.com> (Hebbar
-	Gururaja's message of "Fri, 31 May 2013 12:03:25 +0530")
-Sender: linux-doc-owner@vger.kernel.org
-To: Hebbar Gururaja <gururaja.hebbar@ti.com>
-Cc: akpm@linux-foundation.org, linux@arm.linux.org.uk, zonque@gmail.com, linux-arm-kernel@lists.infradead.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, a.zummo@towertech.it, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, davinci-linux-open-source@linux.davincidsp.com, vaibhav.bedia@ti.com, sudhakar.raj@ti.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <87sj13dp72.fsf@hase.home>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Andreas Schwab <schwab@linux-m68k.org>
+Cc: David Gibson <david@gibson.dropbear.id.au>, jdl@jdl.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, mmarek@suse.cz, rob.herring@calxeda.com, grant.likely@secretlab.ca, linux-kbuild@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hebbar Gururaja <gururaja.hebbar@ti.com> writes:
+On 05/31/2013 11:38 AM, Andreas Schwab wrote:
+> Stephen Warren <swarren@wwwdotorg.org> writes:
+> 
+>> Fix this by replacing {WS} with [ \t] so that it can't match line-breaks.
+> 
+> I think the other uses of {WS} shouldn't span lines either.
 
-> On some platforms (like AM33xx), a special register (RTC_IRQWAKEEN)
-> is available to enable Wakeup feature for Alarm Events.
->
-> Since new platforms/Boards are now added through DT only, this feature
-> is supported via DT property only.
+That is true, but only the optional occurrence /should/ matter. Any
+changes to the other occurrences would only affect malformed #line
+directives, whereas changing this one occurrence would also affect
+well-formed #line directives, due to the optional nature of the trailing
+flags field.
 
-> Platforms using such IP should add the property "ti,has_irq_wake_enb"
-> in rtc DT node.
-
-This is a property of the IP, not the board.  Can't you detect this
-based on the revision of the IP?
-
-Kevin
+Still, it may be reasonable just to change all the occurrences anyway.
+Does anyone have a strong opinion either way?
