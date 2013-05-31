@@ -1,137 +1,73 @@
-From: Jan Luebbe <jlu@pengutronix.de>
-Subject: [PATCH] pps-gpio: add device-tree binding and support
-Date: Fri, 31 May 2013 20:46:55 +0200
-Message-ID: <1370026015-9584-1-git-send-email-jlu@pengutronix.de>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rodolfo Giometti <giometti@enneenne.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Jan Luebbe <jlu@pengutronix.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] pps-gpio: add device-tree binding and support
+Date: Fri, 31 May 2013 21:15:19 +0200
+Message-ID: <1588516.WvWWFWzAui@wuerfel>
+References: <1370026015-9584-1-git-send-email-jlu@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1370026015-9584-1-git-send-email-jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
----
-This patch depends on my two recent pps-gpio patches, which are currently
-in Andrew Morton's mmotm. So it should probably also go via Andrew if it
-is acceptable.
+On Friday 31 May 2013 20:46:55 Jan Luebbe wrote:
+> 
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id pps_gpio_dt_ids[] = {
+> +       { .compatible = "pps-gpio", },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, pps_gpio_dt_ids);
+> +
+> +static struct pps_gpio_platform_data *
+> +of_get_pps_gpio_pdata(struct platform_device *pdev)
+> +{
+> +       struct device_node *np = pdev->dev.of_node;
+> +       struct pps_gpio_platform_data *pdata;
+> +       int ret;
+> +
+> +       pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> +       if (!pdata)
+> +               return NULL;
+> +
+> +       ret = of_get_gpio(np, 0);
+> +       if (ret < 0) {
+> +               pr_err("failed to get GPIO from device tree\n");
+> +               return NULL;
+> +       }
+> +
+> +       pdata->gpio_pin = ret;
+> +       pdata->gpio_label = PPS_GPIO_NAME;
+> +
+> +       if (of_get_property(np, "assert-falling-edge", NULL))
+> +               pdata->assert_falling_edge = true;
+> +
+> +       return pdata;
+> +}
+> +#else
+> +static struct pps_gpio_platform_data *
+> +of_get_pps_gpio_pdata(struct platform_device *pdev)
+> +{
+> +       return NULL;
+> +}
+> +#endif
 
- Documentation/devicetree/bindings/pps/pps-gpio.txt |   20 +++++++
- drivers/pps/clients/pps-gpio.c                     |   55 +++++++++++++++++++-
- 2 files changed, 73 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pps/pps-gpio.txt
+I don't think it's worth the effort of doing a dynamic
+allocation if you just need to store two integers and a flag.
+I would just put them all into pps_gpio_device_data, which also
+gets rid of a couple of indirect pointer accesses and the #ifdef
+above.
 
-diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt b/Documentation/devicetree/bindings/pps/pps-gpio.txt
-new file mode 100644
-index 0000000..40bf9c3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
-@@ -0,0 +1,20 @@
-+Device-Tree Bindings for a PPS Signal on GPIO
-+
-+These properties describe a PPS (pulse-per-second) signal connected to
-+a GPIO pin.
-+
-+Required properties:
-+- compatible: should be "pps-gpio"
-+- gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
-+
-+Optional properties:
-+- assert-falling-edge: when present, assert is indicated by a falling edge
-+                       (instead of by a rising edge)
-+
-+Example:
-+	pps {
-+		compatible = "pps-gpio";
-+		gpios = <&gpio2 6 0>;
-+
-+		assert-falling-edge;
-+	};
-diff --git a/drivers/pps/clients/pps-gpio.c b/drivers/pps/clients/pps-gpio.c
-index 6768f95..b5806da 100644
---- a/drivers/pps/clients/pps-gpio.c
-+++ b/drivers/pps/clients/pps-gpio.c
-@@ -33,6 +33,8 @@
- #include <linux/pps-gpio.h>
- #include <linux/gpio.h>
- #include <linux/list.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
- 
- /* Info for each registered platform device */
- struct pps_gpio_device_data {
-@@ -103,14 +105,62 @@ get_irqf_trigger_flags(const struct pps_gpio_platform_data *pdata)
- 	return flags;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id pps_gpio_dt_ids[] = {
-+	{ .compatible = "pps-gpio", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, pps_gpio_dt_ids);
-+
-+static struct pps_gpio_platform_data *
-+of_get_pps_gpio_pdata(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct pps_gpio_platform_data *pdata;
-+	int ret;
-+
-+	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return NULL;
-+
-+	ret = of_get_gpio(np, 0);
-+	if (ret < 0) {
-+		pr_err("failed to get GPIO from device tree\n");
-+		return NULL;
-+	}
-+
-+	pdata->gpio_pin = ret;
-+	pdata->gpio_label = PPS_GPIO_NAME;
-+
-+	if (of_get_property(np, "assert-falling-edge", NULL))
-+		pdata->assert_falling_edge = true;
-+
-+	return pdata;
-+}
-+#else
-+static struct pps_gpio_platform_data *
-+of_get_pps_gpio_pdata(struct platform_device *pdev)
-+{
-+	return NULL;
-+}
-+#endif
-+
- static int pps_gpio_probe(struct platform_device *pdev)
- {
- 	struct pps_gpio_device_data *data;
- 	int irq;
- 	int ret;
- 	int pps_default_params;
--	const struct pps_gpio_platform_data *pdata = pdev->dev.platform_data;
-+	struct pps_gpio_platform_data *pdata;
-+	const struct of_device_id *match;
-+
-+	match = of_match_device(pps_gpio_dt_ids, &pdev->dev);
-+	if (match)
-+		pdev->dev.platform_data = of_get_pps_gpio_pdata(pdev);
-+	pdata = pdev->dev.platform_data;
- 
-+	if (!pdata)
-+		return -ENODEV;
- 
- 	/* GPIO setup */
- 	ret = pps_gpio_setup(pdev);
-@@ -184,7 +234,8 @@ static struct platform_driver pps_gpio_driver = {
- 	.remove		= pps_gpio_remove,
- 	.driver		= {
- 		.name	= PPS_GPIO_NAME,
--		.owner	= THIS_MODULE
-+		.owner	= THIS_MODULE,
-+		.of_match_table	= of_match_ptr(pps_gpio_dt_ids),
- 	},
- };
- 
--- 
-1.7.10.4
-
+	Arnd
