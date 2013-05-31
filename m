@@ -1,61 +1,50 @@
-From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Subject: RE: [PATCH V3 0/2] Add DT support for tps6507x touchscreen
-Date: Fri, 31 May 2013 06:04:32 +0000
-Message-ID: <A4887BF146CD57468F700B415D2F470159C239@DBDE04.ent.ti.com>
-References: <1369126458-24872-1-git-send-email-manishv.b@ti.com>
+From: Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/2] rtc: rtc-omap: add support for DT wakeup & alarm events
+Date: Fri, 31 May 2013 12:03:23 +0530
+Message-ID: <1369982005-8572-1-git-send-email-gururaja.hebbar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1369126458-24872-1-git-send-email-manishv.b@ti.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
+Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry
-Please let me know, are there any review comments on this patch series?
+Current rtc-omap driver expects the rtc module wake-up capabilities to
+be set up by board specific code. However, in case of DT, this is not
+possible.
 
-Thanks
-Manish Badarkhe
+So, add a DT property "ti,wakeup_capable" to indicate that the module
+is wake-up capable.
 
-On Tue, May 21, 2013 at 14:24:16, Vishwanathrao Badarkhe, Manish wrote:
-> Patch set adds DT support for tps6507x based touchscreen.
-> Also, add DT data for tps6507x touchscreen in da850-evm by
-> providing touchscreen node inside tps6507x mfd device.
-> 
-> This patch series applies on top of linux-next tree and depends on [1].
-> 
-> [1]tps6507x-ts: update to devm_* API
->    https://patchwork.kernel.org/patch/2324441/
-> 
-> Tested on da850-evm board.
-> 
-> Changes since V2:
->  - Updated tps6507x documentation.
->  - Removed unnecessary code.
-> 
-> Changes since V1:
->  - Updated tps6507x documentation.
->  - Updated commit message.
->  - return proper error value in absence platform and DT data
->    for touchscreen.
-> 
-> Vishwanathrao Badarkhe, Manish (2):
->   tps6507x-ts: Add DT support
->   ARM: davinci: da850: add tps6507x touchscreen DT data
-> 
->  Documentation/devicetree/bindings/mfd/tps6507x.txt |   28 ++++++-
->  arch/arm/boot/dts/da850-evm.dts                    |    9 ++
->  drivers/input/touchscreen/tps6507x-ts.c            |   98 ++++++++++++++------
->  3 files changed, 104 insertions(+), 31 deletions(-)
-> 
-> -- 
-> 1.7.4.1
-> 
-> 
+Also, on some platforms (like AM33xx), a special register
+(RTC_IRQWAKEEN) is available to enable Wakeup feature for Alarm Events.
 
+Since new platforms/Boards are now added through DT only, this feature
+is supported via DT property only. Platforms using such IP should add
+the property "ti,has_irq_wake_enb" in rtc DT node.
 
-Regards, 
-Manish
+Kernel Base for the series is
+	> git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/
+linux-omap-dt.git
+	> linux-omap-git/for_3.11/dts
+
+Hebbar Gururaja (2):
+  rtc: omap: add option to indicate wakeup support through DT
+  rtc: omap: add rtc wakeup support to alarm events
+
+ Documentation/devicetree/bindings/rtc/rtc-omap.txt |    6 +++
+ drivers/rtc/rtc-omap.c                             |   50 +++++++++++++++++---
+ 2 files changed, 49 insertions(+), 7 deletions(-)
+
+-- 
+1.7.9.5
