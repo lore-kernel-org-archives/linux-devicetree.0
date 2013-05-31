@@ -1,19 +1,18 @@
-From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-Subject: Re: [PATCH 1/2] gpiolib: add gpio_export_with_name
-Date: Fri, 31 May 2013 10:17:22 +0200
-Message-ID: <51A85C92.4090701@epfl.ch>
-References: <20121121101259.GQ4398@game.jcrosoft.org>
- <1353492849-29397-1-git-send-email-plagnioj@jcrosoft.com>
- <20121126135911.2F1D33E187C@localhost> <51A719A5.50906@epfl.ch>
- <CACRpkdb9F+wJ0hkNqPTP34r3JAEp2s07Q8U24fD6oCdj7MqCFA@mail.gmail.com>
- <51A7B8CD.4080702@epfl.ch>
- <CACRpkdZMj-Xin5PMDWavaWOTCSZF3NBWXk4fG4QXsJzhwBcs_Q@mail.gmail.com>
-Reply-To: florian.vaussard-p8DiymsW2f8@public.gmane.org
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] at_hdmac: add FIFO configuration parameter to DMA DT
+ binding
+Date: Fri, 31 May 2013 11:16:27 +0200
+Message-ID: <12016.8864531026$1369991807@news.gmane.org>
+References: <1369930103-11963-1-git-send-email-ludovic.desroches@atmel.com>
+ <1369930103-11963-4-git-send-email-ludovic.desroches@atmel.com>
+ <51A77F10.8020808@atmel.com>
+ <20130530163936.GC23653@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdZMj-Xin5PMDWavaWOTCSZF3NBWXk4fG4QXsJzhwBcs_Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130530163936.GC23653-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,30 +23,38 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Linus,
+On Thu, May 30, 2013 at 06:39:36PM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 18:32 Thu 30 May     , Nicolas Ferre wrote:
+> > On 30/05/2013 18:08, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org :
+> > >From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > >
+> > >For most devices the FIFO configuration is the same i.e. when half FIFO size is
+> > >available/filled, a source/destination request is serviced. But USART devices
+> > >have to do it when there is enough space/data available to perform a single
+> > >AHB access so the ASAP configuration.
+> > >
+> > >Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> > >Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > 
+> > Clear and neat: thanks Ludo.
+> 
+> agreed
+> 
+> can we apply this via AT91 as this depends on some cleanup I did on DT and
+> could result on some nigthmware conflict
+> 
 
-On 05/30/2013 11:11 PM, Linus Walleij wrote:
-> On Thu, May 30, 2013 at 10:38 PM, Florian Vaussard
-> <florian.vaussard-p8DiymsW2f8@public.gmane.org> wrote:
->
->> Indeed, I work in a robotics lab :-) One of our board (mach-imx/
->> mx31moboard*.c) controls for example the multiplexing of two cameras
->> sharing the same acquisition bus (I know, a bit hackish).
->> I developed a similar board with an OMAP3. Such control do not
->> fit well in the above-mentioned cases, but we do not need RT processes.
->
-> It does seem to fit well with V4L and/or the media controller
-> framework though, or is this one of those "oh, we don't really
-> like to use V4L so we have this special hack instead" things?
->
+In fact, I am not sure it's the best solution. I have noticed that there is a
+conflict with a patch sent by Nicolas (dmaengine: at_hdmac: extend hardware
+handshaking interface identification) which is already in Vinod's tree but
+which is not present on Jean-Christophe's cleanup tree on which I based these
+patches.
 
-Sorry, I was not aware of this mux capability inside V4L. Thank
-you. So we can live without gpio-export for most of our hardware.
+Moreover this patch doesn't use macros introduced by Nicolas' patch. I may
+update it and it should go through Vinod's tree with a dependence on patch 1/3.
 
-Regards,
-
-Florian
+What's your point of view?
