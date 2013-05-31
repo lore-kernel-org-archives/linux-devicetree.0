@@ -1,159 +1,45 @@
-From: Simon Guinot <simon.guinot@sequanux.org>
-Subject: Re: [PATCHv2 1/3] Add support for GMT G762/G763 PWM fan controller
-Date: Sat, 1 Jun 2013 00:16:16 +0200
-Message-ID: <20130531221616.GG7626@kw.sim.vm.gnt>
-References: <cover.1369687670.git.arno@natisbad.org>
- <b44f55c4194f6cd8c94f8a3d63ad5c8bd1d1cfe0.1369687670.git.arno@natisbad.org>
+From: "Anna, Suman" <s-anna@ti.com>
+Subject: RE: [PATCH 1/2] ARM: dts: OMAP5: add PWM capability to timer nodes
+ missing it
+Date: Fri, 31 May 2013 22:17:13 +0000
+Message-ID: <37C860A02101E749A747FA2D3C1E3C504BE487@DLEE11.ent.ti.com>
+References: <1366240995-53538-1-git-send-email-s-anna@ti.com>
+ <516F3696.9080008@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="J/zg8ciPNcraoWb6"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b44f55c4194f6cd8c94f8a3d63ad5c8bd1d1cfe0.1369687670.git.arno@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnaud Ebalard <arno@natisbad.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <516F3696.9080008@ti.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, device-tree <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-
---J/zg8ciPNcraoWb6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, May 28, 2013 at 12:03:14AM +0200, Arnaud Ebalard wrote:
->=20
-> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
-> ---
->  drivers/hwmon/Kconfig              |   10 +
->  drivers/hwmon/Makefile             |    1 +
->  drivers/hwmon/g762.c               | 1012 ++++++++++++++++++++++++++++++=
-++++++
->  include/linux/platform_data/g762.h |   54 ++
->  4 files changed, 1077 insertions(+)
->  create mode 100644 drivers/hwmon/g762.c
->  create mode 100644 include/linux/platform_data/g762.h
-
-Hi Arnaud,
-
-After more tests on my 2Big Network v2 board, it appears that the fan
-doesn't rotate when PWM mode (the preferred operating mode for this
-board) is selected. Nevertheless, DC mode is usable (even if not ideal
-given the hardware). After some investigations I noticed that an extra
-initialization is needed to enable PWM mode on my board: the set_cnt
-register must be set to 0 while the default value is 0xff. Is that
-specific to my hardware ? Is PWM mode working on your ReadyNAS with
-the default set_cnt value ?
-
-I haven't noticed this issue while testing your v1 patch series because
-at the time I was using a board with an U-Boot modified by LaCie. This
-last sets the set_cnt register to 0 while U-Boot mainline don't.
-Actually, the 2Big fan is not configured nor even started by U-Boot
-mainline. I have to fix this but maybe that something can be done in
-the g762 Linux driver too ?
-
->=20
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 0428e8a..142bdf8 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-
-Snip
-
-> diff --git a/include/linux/platform_data/g762.h b/include/linux/platform_=
-data/g762.h
-> new file mode 100644
-> index 0000000..29e3934
-> --- /dev/null
-> +++ b/include/linux/platform_data/g762.h
-> @@ -0,0 +1,54 @@
-> +/*
-> + * Platform data structure for g762 fan controller driver
-> + *
-> + * Copyright (C) 2013, Arnaud EBALARD <arno@natisbad.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program; if not, write to the Free Software
-> + * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 =
- USA
-> + */
-> +#ifndef __LINUX_PLATFORM_DATA_G762_H__
-> +#define __LINUX_PLATFORM_DATA_G762_H__
-> +
-> +#define G762_DEFAULT_NO_OVERLOAD 0xffffffff
-> +
-> +struct g762_platform_data {
-> +	u32 fan_startv;
-> +	u32 fan_gear_mode;
-> +	u32 fan_div;
-> +	u32 fan_pulses;
-> +	u32 fan_target;
-> +	u32 pwm_polarity;
-> +	u32 pwm_enable;
-> +	u32 pwm_freq;
-> +	u32 pwm_mode;
-> +};
-> +
-> +/* When filling a g762_platform_data structure to be passed during platf=
-orm
-> + * init to the driver, it needs to be initialized to the following defau=
-lt
-> + * value before changing specific fields. This is needed to avoid a spar=
-se
-> + * initialization to have current values replaced by 0 */
-
-In other places, you use this multi-line comment format:
-
-/*
- * ...
- * ...
- */
-
-> +
-> +static const struct g762_platform_data G762_DEFAULT_PDATA =3D {
-> +	.fan_startv =3D G762_DEFAULT_NO_OVERLOAD,
-> +	.fan_gear_mode =3D G762_DEFAULT_NO_OVERLOAD,
-> +	.fan_div =3D G762_DEFAULT_NO_OVERLOAD,
-> +	.fan_pulses =3D G762_DEFAULT_NO_OVERLOAD,
-> +	.fan_target =3D G762_DEFAULT_NO_OVERLOAD,
-> +	.pwm_polarity =3D G762_DEFAULT_NO_OVERLOAD,
-> +	.pwm_enable =3D G762_DEFAULT_NO_OVERLOAD,
-> +	.pwm_freq =3D G762_DEFAULT_NO_OVERLOAD,
-> +	.pwm_mode =3D G762_DEFAULT_NO_OVERLOAD,
-> +};
-
-Are you sure that all this settings are needed ? IMHO the g762 platform
-data should only holds the platform specific configuration: fan_startv,
-fan_gear_mode, fan_div and fan_pulses. The other settings are not really
-related with the platform but more with the operating fan configuration.
-For my part, I am happy enough with the sysfs hwmon interface.
-
-The same comment applies to the g762 DT binding properties.
-
-Regards,
-
-Simon
-
---J/zg8ciPNcraoWb6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlGpITAACgkQgtp0PDeOcDp53wCfa1quBnLps+Vc5RF0cIdR8bQj
-SJ0An1IU/RmEIGWDkAaGj+0Xs5CrcXdN
-=ABZ1
------END PGP SIGNATURE-----
-
---J/zg8ciPNcraoWb6--
+QmVub2l0LCBUb255LA0KIA0KPiBPbiAwNC8xNy8yMDEzIDA2OjIzIFBNLCBTdW1hbiBBbm5hIHdy
+b3RlOg0KPiA+IE9NQVA1IGhhcyA2IHRpbWVycyAoR1BUaW1lcnMgNSwgNiwgOCB0byAxMSkgdGhh
+dCBhcmUgY2FwYWJsZSBvZiBQV00uDQo+ID4gVGhlIFBXTSBjYXBhYmlsaXR5IHByb3BlcnR5IGlz
+IG1pc3NpbmcgZnJvbSB0aGUgbm9kZSBkZWZpbml0aW9ucyBvZg0KPiA+IGNvdXBsZSBvZiB0aW1l
+cnMsIGFuZCB0aGlzIGhhcyBiZWVuIGZpeGVkLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogU3Vt
+YW4gQW5uYSA8cy1hbm5hQHRpLmNvbT4NCj4gPiAtLS0NCj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMv
+b21hcDUuZHRzaSB8IDMgKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKykN
+Cj4gPg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9vbWFwNS5kdHNpIGIvYXJj
+aC9hcm0vYm9vdC9kdHMvb21hcDUuZHRzaQ0KPiA+IGluZGV4IDc5MGJiMmEuLjBkMTU1ZjUgMTAw
+NjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDUuZHRzaQ0KPiA+ICsrKyBiL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL29tYXA1LmR0c2kNCj4gPiBAQCAtNDIyLDYgKzQyMiw3IEBADQo+ID4g
+IAkJCWludGVycnVwdHMgPSA8MCA0MSAweDQ+Ow0KPiA+ICAJCQl0aSxod21vZHMgPSAidGltZXI1
+IjsNCj4gPiAgCQkJdGksdGltZXItZHNwOw0KPiA+ICsJCQl0aSx0aW1lci1wd207DQo+ID4gIAkJ
+fTsNCj4gPg0KPiA+ICAJCXRpbWVyNjogdGltZXJANDAxM2EwMDAgew0KPiA+IEBAIC00NTgsNiAr
+NDU5LDcgQEANCj4gPiAgCQkJcmVnID0gPDB4NDgwM2UwMDAgMHg4MD47DQo+ID4gIAkJCWludGVy
+cnVwdHMgPSA8MCA0NSAweDQ+Ow0KPiA+ICAJCQl0aSxod21vZHMgPSAidGltZXI5IjsNCj4gPiAr
+CQkJdGksdGltZXItcHdtOw0KPiA+ICAJCX07DQo+ID4NCj4gPiAgCQl0aW1lcjEwOiB0aW1lckA0
+ODA4NjAwMCB7DQo+ID4gQEAgLTQ2NSw2ICs0NjcsNyBAQA0KPiA+ICAJCQlyZWcgPSA8MHg0ODA4
+NjAwMCAweDgwPjsNCj4gPiAgCQkJaW50ZXJydXB0cyA9IDwwIDQ2IDB4ND47DQo+ID4gIAkJCXRp
+LGh3bW9kcyA9ICJ0aW1lcjEwIjsNCj4gPiArCQkJdGksdGltZXItcHdtOw0KPiA+ICAJCX07DQo+
+ID4NCj4gPiAgCQl0aW1lcjExOiB0aW1lckA0ODA4ODAwMCB7DQo+IA0KPiBNYWtlIHN1cmUgeW91
+IGNvcHkgdGhlIGxpbnV4LWFybSBhbmQgZGV2aWNlLXRyZWUgbWFpbGluZyBsaXN0cy4NCj4gDQo+
+IEFja2VkLWJ5OiBKb24gSHVudGVyIDxqb24taHVudGVyQHRpLmNvbT4NCj4gDQoNCkNhbiB5b3Ug
+aW5jbHVkZSB0aGlzIHBhdGNoIGluIHlvdXIgbmV4dCBmaXhlcyBwdWxsIHJlcXVlc3QgKGlmIHlv
+dSBoYXZlbid0DQphbHJlYWR5IGRvbmUgc28pPyBUaGUgb3RoZXIgcGF0Y2ggaW4gdGhlIHNlcmll
+cyBpcyBhIGZlYXR1cmUgY2hhbmdlLCBidXQNCnRoaXMgaXMgYSBmaXgsIGFuZCBjYW4gZ28gaW50
+byAzLjEwIGl0c2VsZi4NCg0KUmVnYXJkcw0KU3VtYW4NCg==
