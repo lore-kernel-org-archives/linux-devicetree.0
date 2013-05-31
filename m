@@ -1,57 +1,70 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 00/11] drivers: Add Pinctrl PM support
-Date: Fri, 31 May 2013 10:04:37 -0700
-Message-ID: <20130531170437.GA17591@core.coreip.homeip.net>
-References: <1369995191-20855-1-git-send-email-gururaja.hebbar@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1369995191-20855-1-git-send-email-gururaja.hebbar-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, sudhakar.raj-l0cyMroinI0@public.gmane.org, vaibhav.bedia-l0cyMroinI0@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH] dtc: Ensure #line directives don't consume data from the next line
+Date: Fri, 31 May 2013 11:14:10 -0600
+Message-ID: <1370020450-18136-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: David Gibson <david@gibson.dropbear.id.au>, jdl@jdl.com
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, mmarek@suse.cz, rob.herring@calxeda.com, grant.likely@secretlab.ca, linux-kbuild@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hebbar,
+From: Stephen Warren <swarren@nvidia.com>
 
-On Fri, May 31, 2013 at 03:43:00PM +0530, Hebbar Gururaja wrote:
-> By optionally putting the pins into sleep state in the suspend [or in
-> runtime_suspend] callback we can accomplish two things.
-> - One is to minimize current leakage from pins and thus save power,
-> - second, we can prevent the IP from driving pins output in an
-> uncontrolled manner, which may happen if the power domain drops the
-> domain regulator.
-> 
-> These states can be specified in the DT blob and corresponding driver
-> can pick these states during probe & set the related values during
-> idle/suspend.
-> 
-> Not all drivers support/has idle state. Drivers like i2c, spi, mmc has
-> idle states and hence these drivers are updated to support all the
-> three states
-> - default  : during regular operation
-> - idle : when the module is in idle state
-> - sleep : when the module is in suspend state
-> 
-> For those drivers which doesn't support/have idle state (at least at
-> the moment), only default & sleep state is added.
+Previously, the #line parsing regex ended with ({WS}+[0-9]+)?. The {WS}
+could match line-break characters. If the #line directive did not contain
+the optional flags field at the end, this could cause any integer data on
+the next line to be consumed as part of the #line directive parsing. This
+could cause syntax errors (i.e. #line parsing consuming the leading 0
+from a hex constant 0x1234, leaving x1234 to be parsed as cell data,
+which is a syntax error), or invalid compilation results (i.e. simply
+consuming integer 1234 as part of the #line processing, thus removing it
+from the cell data).
 
-As with the original introduction of pinctrl states my question is: "Can
-all of this be handled in the driver/bus core instead of adding a lot
-of boilerplate code to the individual drivers".
+Fix this by replacing {WS} with [ \t] so that it can't match line-breaks.
 
-Thanks.
+Reported-by: Ian Campbell <Ian.Campbell@citrix.com>
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+This is a patch for dtc upstream, in response to thread "DTB build
+failure due to preproccessing". If/when it's accepted into dtc, I'll
+follow up with a kernel patch that makes the same fix.
 
+ dtc-lexer.l               |    2 +-
+ tests/line_directives.dts |   10 ++++++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/dtc-lexer.l b/dtc-lexer.l
+index 254d5af..a3a4c69 100644
+--- a/dtc-lexer.l
++++ b/dtc-lexer.l
+@@ -71,7 +71,7 @@ static int pop_input_file(void);
+ 			push_input_file(name);
+ 		}
+ 
+-<*>^"#"(line)?{WS}+[0-9]+{WS}+{STRING}({WS}+[0-9]+)? {
++<*>^"#"(line)?{WS}+[0-9]+{WS}+{STRING}([ \t]+[0-9]+)? {
+ 			char *line, *tmp, *fn;
+ 			/* skip text before line # */
+ 			line = yytext;
+diff --git a/tests/line_directives.dts b/tests/line_directives.dts
+index e9d0800..046ef37 100644
+--- a/tests/line_directives.dts
++++ b/tests/line_directives.dts
+@@ -8,4 +8,14 @@
+ # 6 "bar.dts"
+ 
+ / {
++/*
++ * Make sure optional flags don't consume integer data on next line. The issue
++ * was that the {WS} in the trailing ({WS}+[0-9]+)? could cross the * line-
++ * break, and consume the leading "0" of the hex constant, leaving "x12345678"
++ * to be parsed as a number, which is invalid syntax.
++ */
++	prop1 = <
++# 10 "qux.dts"
++		0x12345678
++	>;
+ };
 -- 
-Dmitry
+1.7.10.4
+
