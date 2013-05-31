@@ -1,88 +1,55 @@
-From: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 11/11] i2c: omap: enhance pinctrl support
-Date: Fri, 31 May 2013 11:07:02 -0700
-Message-ID: <87bo7r10s9.fsf@linaro.org>
+From: Kevin Hilman <khilman@linaro.org>
+Subject: Re: [PATCH 00/11] drivers: Add Pinctrl PM support
+Date: Fri, 31 May 2013 11:08:06 -0700
+Message-ID: <8761xz10qh.fsf@linaro.org>
 References: <1369995191-20855-1-git-send-email-gururaja.hebbar@ti.com>
-	<1369995191-20855-12-git-send-email-gururaja.hebbar@ti.com>
+	<20130531170437.GA17591@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1369995191-20855-12-git-send-email-gururaja.hebbar-l0cyMroinI0@public.gmane.org>
-	(Hebbar Gururaja's message of "Fri, 31 May 2013 15:43:11 +0530")
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130531170437.GA17591@core.coreip.homeip.net> (Dmitry
+	Torokhov's message of "Fri, 31 May 2013 10:04:37 -0700")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Hebbar Gururaja <gururaja.hebbar@ti.com>, grant.likely@linaro.org, linus.walleij@linaro.org, rob.herring@calxeda.com, davinci-linux-open-source@linux.davincidsp.com, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, vaibhav.bedia@ti.com, sudhakar.raj@ti.comLinus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-+Linus Walleij (pinctrl maintainer)
++ Linus W. (pinctrl maintainer)
 
-Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org> writes:
+Dmitry Torokhov <dmitry.torokhov@gmail.com> writes:
 
-> Amend the I2C omap pin controller to optionally take a pin control
-> handle and set the state of the pins to:
+> Hi Hebbar,
 >
-> - "default" on boot, resume and before performing an i2c transfer
-> - "idle" after initial default, after resume default, and after each
-> i2c xfer
-> - "sleep" on suspend()
+> On Fri, May 31, 2013 at 03:43:00PM +0530, Hebbar Gururaja wrote:
+>> By optionally putting the pins into sleep state in the suspend [or in
+>> runtime_suspend] callback we can accomplish two things.
+>> - One is to minimize current leakage from pins and thus save power,
+>> - second, we can prevent the IP from driving pins output in an
+>> uncontrolled manner, which may happen if the power domain drops the
+>> domain regulator.
+>> 
+>> These states can be specified in the DT blob and corresponding driver
+>> can pick these states during probe & set the related values during
+>> idle/suspend.
+>> 
+>> Not all drivers support/has idle state. Drivers like i2c, spi, mmc has
+>> idle states and hence these drivers are updated to support all the
+>> three states
+>> - default  : during regular operation
+>> - idle : when the module is in idle state
+>> - sleep : when the module is in suspend state
+>> 
+>> For those drivers which doesn't support/have idle state (at least at
+>> the moment), only default & sleep state is added.
 >
-> By optionally putting the pins into sleep state in the suspend callback
-> we can accomplish two things.
-> - One is to minimize current leakage from pins and thus save power,
-> - second, we can prevent the IP from driving pins output in an
-> uncontrolled manner, which may happen if the power domain drops the
-> domain regulator.
->
-> Note:
-> A .suspend & .resume callback is added which simply puts the pins to sleep
-> state upon suspend & are moved to default & idle state upon resume.
->
-> If any of the above pin states are missing in dt, a warning message
-> about the missing state is displayed.
-> If certain pin-states are not available, to remove this warning message
-> pass respective state name with null phandler.
->
-> (Changes based on i2c-nomadik.c)
->
-> Signed-off-by: Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
-> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-> Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> As with the original introduction of pinctrl states my question is: "Can
+> all of this be handled in the driver/bus core instead of adding a lot
+> of boilerplate code to the individual drivers".
 
-[...]
+Yes, I had the same thought.
 
-> @@ -1123,14 +1138,47 @@ omap_i2c_probe(struct platform_device *pdev)
->  		dev->set_mpu_wkup_lat = pdata->set_mpu_wkup_lat;
->  	}
->  
-> -	dev->pins = devm_pinctrl_get_select_default(&pdev->dev);
-> -	if (IS_ERR(dev->pins)) {
-> -		if (PTR_ERR(dev->pins) == -EPROBE_DEFER)
-> +	dev->pinctrl = devm_pinctrl_get(&pdev->dev);
-> +	if (!IS_ERR(dev->pinctrl)) {
-> +		dev->pins_default = pinctrl_lookup_state(dev->pinctrl,
-> +							 PINCTRL_STATE_DEFAULT);
-
-This part is already done by probe in driver core, why does it need to
-be done again.  dev->pins->default_state should already have this.
-(c.f. pinctrl_bind_pins() in drivers/base/pinctrl.c)
-
-But that brings up a bigger question about whether or not we should be
-doing the rest of this (idle/sleep) pin management in the drivers or in
-the driver core as well.  I would much prefer it be handled by the
-driver core.
-
-In fact, since these are all PM related events, it should probably be
-handled by the PM core and seems pretty straight forward to do so.
+What's being handled here are either events related to runtime PM
+(runtime suspend, runtime resume) or system PM (suspend/resume) so seems
+appropriat to handle them in the PM core.
 
 Kevin
