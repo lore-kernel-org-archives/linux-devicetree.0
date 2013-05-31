@@ -1,73 +1,67 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] pps-gpio: add device-tree binding and support
-Date: Fri, 31 May 2013 21:15:19 +0200
-Message-ID: <1588516.WvWWFWzAui@wuerfel>
-References: <1370026015-9584-1-git-send-email-jlu@pengutronix.de>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 5/7] USB chipidea i.MX: use devm_usb_get_phy_by_phandle
+ to get phy
+Date: Fri, 31 May 2013 23:23:02 +0400
+Message-ID: <51A8F896.6080603@cogentembedded.com>
+References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de> <1370025529-7414-6-git-send-email-mgr@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1370026015-9584-1-git-send-email-jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1370025529-7414-6-git-send-email-mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 31 May 2013 20:46:55 Jan Luebbe wrote:
-> 
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id pps_gpio_dt_ids[] = {
-> +       { .compatible = "pps-gpio", },
-> +       { /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, pps_gpio_dt_ids);
-> +
-> +static struct pps_gpio_platform_data *
-> +of_get_pps_gpio_pdata(struct platform_device *pdev)
-> +{
-> +       struct device_node *np = pdev->dev.of_node;
-> +       struct pps_gpio_platform_data *pdata;
-> +       int ret;
-> +
-> +       pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> +       if (!pdata)
-> +               return NULL;
-> +
-> +       ret = of_get_gpio(np, 0);
-> +       if (ret < 0) {
-> +               pr_err("failed to get GPIO from device tree\n");
-> +               return NULL;
-> +       }
-> +
-> +       pdata->gpio_pin = ret;
-> +       pdata->gpio_label = PPS_GPIO_NAME;
-> +
-> +       if (of_get_property(np, "assert-falling-edge", NULL))
-> +               pdata->assert_falling_edge = true;
-> +
-> +       return pdata;
-> +}
-> +#else
-> +static struct pps_gpio_platform_data *
-> +of_get_pps_gpio_pdata(struct platform_device *pdev)
-> +{
-> +       return NULL;
-> +}
-> +#endif
+Hello.
 
-I don't think it's worth the effort of doing a dynamic
-allocation if you just need to store two integers and a flag.
-I would just put them all into pps_gpio_device_data, which also
-gets rid of a couple of indirect pointer accesses and the #ifdef
-above.
+On 05/31/2013 10:38 PM, Michael Grzeschik wrote:
 
-	Arnd
+> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>
+> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>   drivers/usb/chipidea/ci13xxx_imx.c | 41 ++++++++++++++++++--------------------
+>   1 file changed, 19 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/usb/chipidea/ci13xxx_imx.c b/drivers/usb/chipidea/ci13xxx_imx.c
+> index 4d64541..48c446b 100644
+> --- a/drivers/usb/chipidea/ci13xxx_imx.c
+> +++ b/drivers/usb/chipidea/ci13xxx_imx.c
+[...]
+> @@ -140,19 +139,21 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
+[...]
+> +	phy = devm_usb_get_phy_by_phandle(&pdev->dev, "fsl,usbphy", 0);
+> +
+
+     Empty line is not really needed here, don't you think?
+
+> +	if (PTR_ERR(phy) == -EPROBE_DEFER) {
+
+    Hm, can PTR_ERR() be called on non-error pointers? Seems so...
+
+> +		ret = -EPROBE_DEFER;
+> +		goto err_clk;
+> +	}
+> +
+> +	if (!IS_ERR(phy)) {
+> +		ret = usb_phy_init(phy);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "unable to init phy: %d\n", ret);
+> +			goto err_clk;
+>   		}
+> +
+> +		data->phy = phy;
+>   	}
+
+     Shouldn't this come first instead, with the above PTR_ERR() 
+condition in
+the *else* branch?
+
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
