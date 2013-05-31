@@ -1,91 +1,93 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH V3] irqchip: Add TB10x interrupt controller driver
-Date: Fri, 31 May 2013 23:18:14 +0100
-Message-ID: <20130531221814.534DF3E08FE@localhost>
-References: <20130530211944.05F4D3E0A90@localhost> <1370014348-21121-1-git-send-email-christian.ruppert@abilis.com> <alpine.LFD.2.02.1305311835040.2905@ionos>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <alpine.LFD.2.02.1305311835040.2905@ionos>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Pierrick Hascoet <pierrick.hascoet@abilis.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 3/3] at_hdmac: add FIFO configuration parameter to DMA DT
+ binding
+Date: Fri, 31 May 2013 16:11:40 -0700
+Message-ID: <CAOesGMhQetZfyzMpCax63xoRqtRW2ZRXt04MCbgCT-CcvUq43A@mail.gmail.com>
+References: <1369930103-11963-1-git-send-email-ludovic.desroches@atmel.com>
+ <1369930103-11963-4-git-send-email-ludovic.desroches@atmel.com>
+ <51A77F10.8020808@atmel.com>
+ <20130530163936.GC23653@game.jcrosoft.org>
+ <51A86DF5.4010808@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51A86DF5.4010808-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: "Koul, Vinod" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 31 May 2013 19:32:34 +0200 (CEST), Thomas Gleixner <tglx@linutronix.de> wrote:
-> On Fri, 31 May 2013, Christian Ruppert wrote:
-> 
-> > The SOC interrupt controller driver for the Abilis Systems TB10x series of
-> > SOCs based on ARC700 CPUs.
-> > 
-> > This patch depends on commits eb76bdd407d8a90e59a06cb0158886df390e5d1c and
-> > 712bc93df9e7f14b8a163148d2aa7c778e151627 from branch irq/for-arm of
-> > git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git.
-> 
-> That branch can be pulled into ARC as well. It only contains the
-> changes, which are necessary for the irq domain support of the generic
-> irq chip.
-> 
-> > +static void tb10x_irq_cascade(unsigned int irq, struct irq_desc *desc)
-> > +{
-> > +	struct irq_domain *domain = irq_desc_get_handler_data(desc);
-> > +
-> > +	generic_handle_irq(irq_find_mapping(domain, irq));
-> > +}
-> 
-> ...
-> 
-> > +	for (i = 0; i < nrirqs; i++) {
-> > +		unsigned int irq = irq_of_parse_and_map(ictl, i);
-> > +
-> > +		irq_set_handler_data(irq, domain);
-> > +		irq_set_chained_handler(irq, tb10x_irq_cascade);
-> > +	}
-> 
-> I might be completely confused, but this does not make any sense at
-> all.
-> 
-> You allocate a linear domain and then map the interrupts in the
-> domain. The mapping function retrieves the hardware interrupt number
-> and creates a virtual interrupt number, installs the chip and the
-> handler for the interrupt and finally returns the virtual interrupt
-> number.
-> 
-> Now you take that virtual interrupt number and install
-> tb10x_irq_cascade as the handler. irq_set_chained_handler() will
-> startup (unmask) the interrupt right away.
-> 
-> In the cascade handler you take the virtual interrupt number, which
-> you get as argument, and find the mapping, i.e. the matching VIRTUAL
-> interrupt number for the VIRTUAL interrupt number and then call the
-> handler.
-> 
-> How is this supposed to work?
+On Fri, May 31, 2013 at 2:31 AM, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
+> On 31/05/2013 11:16, Ludovic Desroches :
+>>
+>> On Thu, May 30, 2013 at 06:39:36PM +0200, Jean-Christophe PLAGNIOL-VILLARD
+>> wrote:
+>>>
+>>> On 18:32 Thu 30 May     , Nicolas Ferre wrote:
+>>>>
+>>>> On 30/05/2013 18:08, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org :
+>>>>>
+>>>>> From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>>>>>
+>>>>> For most devices the FIFO configuration is the same i.e. when half FIFO
+>>>>> size is
+>>>>> available/filled, a source/destination request is serviced. But USART
+>>>>> devices
+>>>>> have to do it when there is enough space/data available to perform a
+>>>>> single
+>>>>> AHB access so the ASAP configuration.
+>>>>>
+>>>>> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+>>>>> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>>>>
+>>>>
+>>>> Clear and neat: thanks Ludo.
+>>>
+>>>
+>>> agreed
+>>>
+>>> can we apply this via AT91 as this depends on some cleanup I did on DT
+>>> and
+>>> could result on some nigthmware conflict
+>>>
+>>
+>> In fact, I am not sure it's the best solution. I have noticed that there
+>> is a
+>> conflict with a patch sent by Nicolas (dmaengine: at_hdmac: extend
+>> hardware
+>> handshaking interface identification) which is already in Vinod's tree but
+>> which is not present on Jean-Christophe's cleanup tree on which I based
+>> these
+>> patches.
+>>
+>> Moreover this patch doesn't use macros introduced by Nicolas' patch. I may
+>> update it and it should go through Vinod's tree with a dependence on patch
+>> 1/3.
+>>
+>> What's your point of view?
+>
+>
+> Indeed. Another option could be to push patches 1 and 3 in dmaengine's tree
+> and make the 2nd patch go through arm-soc with a dependency on slave-dma GIT
+> tree (it seems it is an usual patern).
+>
+> Arnd, Jean-Christophe, what do you think?
 
-I think what is going on here is that the tb10x interrupt controller
-appears to be more of a front-end to another interrupt controller with
-each input wired up 1:1 to the interrupt inputs of the other controller.
-(I don't know why someone would design an interrupt controller that way,
-but that's another issue). The loop above is mapping each of the
-interrupt inputs on the parent controller so that each child controller
-can be chained to it as an input. I can't think of how else it could be
-set up with the current code if the drivers were kept separate.
+I'm not sure patch 1 needs to go through the dma-engine tree? Sure,
+it's a dma-related header file but it's only used to craft the device
+tree in patch 2, it doesn't affect the driver.
 
-Christian, what is the parent interrupt controller for this SoC? It
-really feels like the tb10x-ictl belongs as part of the parent
-controller. I went and looked at the parent node, and I saw this:
+(Arnd has comments on the patch that should be resolved though).
 
-		intc: interrupt-controller {
-				compatible = "snps,arc700-intc";
-				interrupt-controller;
-				#interrupt-cells = <1>;
-		};
 
-I noticed the conspicuous absence of a reg property. Is this something
-architectural? If I were working on this system I'd drop the
-snps,arc700-intc node entirely and have a single abilis,tb10x-intc that
-encapsulated the properties of both (you would of course want to share
-handler functions for the 'normal' inputs without the custom features).
-That would eliminate the goofyness of listing 27 separate interrupts in
-the abilis,tb10x-ictl interrupts property.
-
-g.
-
+-Olof
