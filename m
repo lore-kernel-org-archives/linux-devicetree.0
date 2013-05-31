@@ -1,95 +1,86 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH RFC v2] media: OF: add sync-on-green endpoint property
-Date: Fri, 31 May 2013 12:31:33 +0200
-Message-ID: <51A87C05.9020703@samsung.com>
-References: <1368710287-8741-1-git-send-email-prabhakar.csengg@gmail.com>
- <CA+V-a8tMQnjh=8qaRoNhwkdrcoTCK2zofTkCOd79hAMoz5qK2A@mail.gmail.com>
- <51A0C6A8.5090302@gmail.com> <44193648.yaA827Trlv@avalon>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] of: Export of_irq_count for using in modules
+Date: Fri, 31 May 2013 13:00:45 +0200
+Message-ID: <20130531110045.GF19834@game.jcrosoft.org>
+References: <6aa29b1d109a46278a7f37b598defe07d6edfe60.1369921774.git.michal.simek@xilinx.com>
+ <20130530201714.GE19834@game.jcrosoft.org>
+ <51A85BEE.4000009@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <44193648.yaA827Trlv@avalon>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Hans Verkuil <hans.verkuil@cisco.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <51A85BEE.4000009-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/30/2013 05:21 AM, Laurent Pinchart wrote:
-> Hi Sylwester,
+On 10:14 Fri 31 May     , Michal Simek wrote:
+> Hi Jean-Christophe,
 > 
-> On Saturday 25 May 2013 16:11:52 Sylwester Nawrocki wrote:
->> On 05/25/2013 11:17 AM, Prabhakar Lad wrote:
-[...]
->>>>>  And for synchronisation method on the analog part we could perhaps
->>>>>  define 'component-sync' or similar property that would enumerate all
->>>>>  possible synchronisation methods. We might as well use separate
->>>>>  boolean properties, but I'm a bit concerned about the increasing
->>>>>  number of properties that need to be parsed for each parallel video
->>>>>  bus "endpoint".
->>>
->>> I am not clear on it can please elaborate more on this.
->>
->> I thought about two possible options:
->>
->> 1. single property 'component-sync' or 'video-sync' that would have values:
->>
->> #define VIDEO_SEPARATE_SYNC	0x01
->> #define VIDEO_COMPOSITE_SYNC	0x02
->> #define VIDEO_SYNC_ON_COMPOSITE	0x04
->> #define VIDEO_SYNC_ON_GREEN	0x08
->> #define VIDEO_SYNC_ON_LUMINANCE	0x10
->>
->> And we could put these definitions into a separate header, e.g.
->> <dt-bindings/video-interfaces.h>
->>
->> Then in a device tree source file one could have, e.g.
->>
->> video-sync = <VIDEO_SYNC_ON_GREEN>;
->>
->>
->> 2. Separate boolean property for each video sync type, e.g.
->>
->> 	"video-composite-sync"
->> 	"video-sync-on-composite"
->> 	"video-sync-on-green"
->> 	"video-sync-on-luminance"
->>
->> Separate sync, with separate VSYNC, HSYNC lines, would be the default, when
->> none of the above is specified and 'vsync-active', 'hsync-active' properties
->> are present.
+> On 05/30/2013 10:17 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > On 15:49 Thu 30 May     , Michal Simek wrote:
+> >> Export of_irq_count for modules.
+> > 
+> > can you explain why do you need to call of_irq_count
 > 
-> I prefer 1. over 2.
+> I need to count number of irq written in the DTS node.
+> It is not fixed size that's why I need to proper way how to
+> find it out.
 > 
->> However, I suppose the better would be to deduce the video synchronisation
->> method from the sync signal polarity flags. Then, for instance, when an
->> endpoint node contains "composite-sync-active" property the parser would
->> determine the "composite sync" synchronisation type is used.
->>
->> Thus it might make sense to have only following integer properties (added
->> as needed):
->>
->> composite-sync-active
->> sync-on-green-active
->> sync-on-comp-active
->> sync-on-luma-active
->>
->> This would allow to specify polarity of each signal and at the same time
->> the parsing code could derive synchronisation type. A new field could be
->> added to struct v4l2_of_parallel_bus, e.g. sync_type and it would be filled
->> within v4l2_of_parse_endpoint().
->>
->> What do you think ?
+> I am using this loop.
+> 	count = of_irq_count(pdev->dev.of_node);
+> 	/* Alloc IRQ based on DTS to be sure that no other driver will use it */
+> 	while (count--) {
+> 		tmp->irq = irq_of_parse_and_map(pdev->dev.of_node, count);
+> 		dev_info(&pdev->dev, "%d: Alloc irq: %d\n", count, tmp->irq);
+> 		ret = request_irq(tmp->irq, zynq_remoteproc_interrupt, 0,
+> 					dev_name(&pdev->dev), &pdev->dev);
+> 		if (ret) {
+> 			...
+> 		}
+> 	}
 > 
-> My gut feeling is that we should have separate properties for the video sync 
-> type and the synchronization signals polarities. We could have a chip that 
-> supports sync-on-green on the analog (input) side and outputs separate hsync 
-> and vsync signals only on the digital (output) side. There would be no sync-
-> on-green polarity in that case.
+> But of course if you think that this is incorrect to export it
+> I can use what it is in of_irq_count body
+> 368 int of_irq_count(struct device_node *dev)
+> 369 {
+> 370         int nr = 0;
+> 371
+> 372         while (of_irq_to_resource(dev, nr, NULL))
+> 373                 nr++;
+> 374
+> 375         return nr;
+> 376 }
+> 
+> Because of_irq_to_resource is exported for modules.
+> Or is there any better way how to loop over all interrupts in DT node?
 
-Yes, agreed. I've had some doubts that using single DT property for defining
-really 2 distinct H/W properties like this might not be flexible enough.
-The option 1. seems most correct then.
+can just explain me why you need to call irq_of_parse_and_map in your driver?
 
-Regards,
-Sylwester
+as the irq will be provided in the resources normally
+
+Best Regards,
+J.
+> 
+> Thanks,
+> Michal
+> 
+> -- 
+> Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+> w: www.monstr.eu p: +42-0-721842854
+> Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+> Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+> Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+> 
+> 
