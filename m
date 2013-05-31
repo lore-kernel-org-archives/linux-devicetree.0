@@ -1,86 +1,52 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] of: Export of_irq_count for using in modules
-Date: Fri, 31 May 2013 13:00:45 +0200
-Message-ID: <20130531110045.GF19834@game.jcrosoft.org>
-References: <6aa29b1d109a46278a7f37b598defe07d6edfe60.1369921774.git.michal.simek@xilinx.com>
- <20130530201714.GE19834@game.jcrosoft.org>
- <51A85BEE.4000009@monstr.eu>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: [PATCH v2 9/9] gpio-tz1090-pdc: add TZ1090 PDC gpio driver
+Date: Fri, 31 May 2013 13:17:47 +0100
+Message-ID: <51A894EB.3040604@imgtec.com>
+References: <1369412476-14245-1-git-send-email-james.hogan@imgtec.com> <1369412476-14245-10-git-send-email-james.hogan@imgtec.com> <CACRpkdZ0Gav0TKDXyD9MwaUrdcenV=+JV9oWNN1+ifsbO3uJ1w@mail.gmail.com> <51A628E1.8060805@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51A85BEE.4000009-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51A628E1.8060805@imgtec.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10:14 Fri 31 May     , Michal Simek wrote:
-> Hi Jean-Christophe,
+On 29/05/13 17:12, James Hogan wrote:
+> On 29/05/13 16:38, Linus Walleij wrote:
+>> On Fri, May 24, 2013 at 6:21 PM, James Hogan <james.hogan@imgtec.com> wrote:
+>>> +Optional properties:
+>>> +- gpio-ranges: Mapping to pin controller pins
+>>> +
+>>> +- interrupts: Individual syswake interrupts (other GPIOs cannot interrupt)
+>>> +
+>>> +
+>>> +Example:
+>>> +
+>>> +       pdc_gpios: gpio-controller@02006500 {
+>>> +               gpio-controller;
+>>> +               #gpio-cells = <2>;
+>>> +
+>>> +               compatible = "img,tz1090-pdc-gpio";
+>>> +               reg = <0x02006500 0x100>;
+>>> +
+>>> +               interrupt-parent = <&pdc>;
+>>> +               interrupts =    <1 0 0>,        /* Syswake 0 */
+>>> +                               <1 1 0>,        /* Syswake 1 */
+>>> +                               <1 2 0>;        /* Syswake 2 */
+>>> +       };
+>>
+>> Interrupt flags seem to be undocumented here.
 > 
-> On 05/30/2013 10:17 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > On 15:49 Thu 30 May     , Michal Simek wrote:
-> >> Export of_irq_count for modules.
-> > 
-> > can you explain why do you need to call of_irq_count
-> 
-> I need to count number of irq written in the DTS node.
-> It is not fixed size that's why I need to proper way how to
-> find it out.
-> 
-> I am using this loop.
-> 	count = of_irq_count(pdev->dev.of_node);
-> 	/* Alloc IRQ based on DTS to be sure that no other driver will use it */
-> 	while (count--) {
-> 		tmp->irq = irq_of_parse_and_map(pdev->dev.of_node, count);
-> 		dev_info(&pdev->dev, "%d: Alloc irq: %d\n", count, tmp->irq);
-> 		ret = request_irq(tmp->irq, zynq_remoteproc_interrupt, 0,
-> 					dev_name(&pdev->dev), &pdev->dev);
-> 		if (ret) {
-> 			...
-> 		}
-> 	}
-> 
-> But of course if you think that this is incorrect to export it
-> I can use what it is in of_irq_count body
-> 368 int of_irq_count(struct device_node *dev)
-> 369 {
-> 370         int nr = 0;
-> 371
-> 372         while (of_irq_to_resource(dev, nr, NULL))
-> 373                 nr++;
-> 374
-> 375         return nr;
-> 376 }
-> 
-> Because of_irq_to_resource is exported for modules.
-> Or is there any better way how to loop over all interrupts in DT node?
+> Hmmm yes, good spot.
 
-can just explain me why you need to call irq_of_parse_and_map in your driver?
+Looking again at this, the driver doesn't expose any new interrupts.
+These 3 interrupts are simply passed on by the gpio chip's to_irq()
+callback. The flags in the example depend entirely on the interrupt
+parent, in this case the PDC irq driver in patch 2, so they don't need
+documenting here.
 
-as the irq will be provided in the resources normally
+Cheers
+James
 
-Best Regards,
-J.
-> 
-> Thanks,
-> Michal
-> 
-> -- 
-> Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-> w: www.monstr.eu p: +42-0-721842854
-> Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-> Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-> Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-> 
-> 
