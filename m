@@ -1,14 +1,14 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] at_hdmac: dt dma bindings update
-Date: Fri, 31 May 2013 10:04:37 +0200
-Message-ID: <51A85995.1050909@atmel.com>
-References: <1369930103-11963-1-git-send-email-ludovic.desroches@atmel.com>
- <20130530172649.GC3767@intel.com> <20130530201321.GE23653@game.jcrosoft.org>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH] of: Export of_irq_count for using in modules
+Date: Fri, 31 May 2013 10:14:38 +0200
+Message-ID: <51A85BEE.4000009@monstr.eu>
+References: <6aa29b1d109a46278a7f37b598defe07d6edfe60.1369921774.git.michal.simek@xilinx.com>
+ <20130530201714.GE19834@game.jcrosoft.org>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============4347699902370009688=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130530201321.GE23653-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+In-Reply-To: <20130530201714.GE19834-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,75 +19,99 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 30/05/2013 22:13, Jean-Christophe PLAGNIOL-VILLARD :
-> On 22:56 Thu 30 May     , Vinod Koul wrote:
->> On Thu, May 30, 2013 at 06:08:20PM +0200, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org wrote:
->>> From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->>>
->>> Hi,
->>>
->>> This set of patches update the dt dma binding for at_hdmac since we need one
->>> more parameter. In order to keep backward compatibility, an existing cell will
->>> be used to add this parameter. Since the content of that cell will become a
->>> magic value due to the concatenation of the two parameters, it is time to
->>> use macros.
->> which tree is this targetted to be applied?
->
-> arm-soc as this depends on alreadied applied cleanup I've
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--===============4347699902370009688==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="----enig2WUSGCNSSCTXIHIQWTIFL"
 
-... already pushed (it must be the end of your sentence, Jean-Christophe...)
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+------enig2WUSGCNSSCTXIHIQWTIFL
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Vinod, Arnd,
+Hi Jean-Christophe,
 
-- patch 1 shall be applied before any of the two others of the series
-- patch 2 is pure DT modification, but relies on Jean-Christophe's
-   already pushed cleanup branch in arm-soc
-- patch 3 is the pure dmaengine one, but relies on the 1st patch
+On 05/30/2013 10:17 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 15:49 Thu 30 May     , Michal Simek wrote:
+>> Export of_irq_count for modules.
+>=20
+> can you explain why do you need to call of_irq_count
 
-So, maybe the preferred way to include this material upstream is to go 
-through arm-soc as suggested by Jean-Christophe.
+I need to count number of irq written in the DTS node.
+It is not fixed size that's why I need to proper way how to
+find it out.
 
-Bye,
+I am using this loop.
+	count =3D of_irq_count(pdev->dev.of_node);
+	/* Alloc IRQ based on DTS to be sure that no other driver will use it */=
 
->> Arnd, can you review this series and ack if this needs to be applied thru
->> dmaengine?
->
-> I prefer the invert
->
-> Best Regards,
-> J.
->>
->> --
->> ~Vinod
->>>
->>> Regards
->>>
->>> Ludovic Desroches (3):
->>>    ARM: at91: dt: add header to define at_hdmac configuration
->>>    ARM: at91: dt: switch DMA DT bindings to pre-processor
->>>    at_hdmac: add FIFO configuration parameter to DMA DT binding
->>>
->>>   .../devicetree/bindings/dma/atmel-dma.txt          |  7 ++++--
->>>   arch/arm/boot/dts/at91sam9g45.dtsi                 |  5 ++--
->>>   arch/arm/boot/dts/at91sam9n12.dtsi                 | 11 +++++----
->>>   arch/arm/boot/dts/at91sam9x5.dtsi                  | 17 +++++++-------
->>>   arch/arm/boot/dts/sama5d3.dtsi                     | 19 +++++++--------
->>>   drivers/dma/at_hdmac.c                             | 25 ++++++++++++++++----
->>>   include/dt-bindings/dma/at91.h                     | 27 ++++++++++++++++++++++
->>>   7 files changed, 81 insertions(+), 30 deletions(-)
->>>   create mode 100644 include/dt-bindings/dma/at91.h
->>>
->>> --
->>> 1.7.11.3
->>>
->>
->> --
->
+	while (count--) {
+		tmp->irq =3D irq_of_parse_and_map(pdev->dev.of_node, count);
+		dev_info(&pdev->dev, "%d: Alloc irq: %d\n", count, tmp->irq);
+		ret =3D request_irq(tmp->irq, zynq_remoteproc_interrupt, 0,
+					dev_name(&pdev->dev), &pdev->dev);
+		if (ret) {
+			...
+		}
+	}
+
+But of course if you think that this is incorrect to export it
+I can use what it is in of_irq_count body
+368 int of_irq_count(struct device_node *dev)
+369 {
+370         int nr =3D 0;
+371
+372         while (of_irq_to_resource(dev, nr, NULL))
+373                 nr++;
+374
+375         return nr;
+376 }
+
+Because of_irq_to_resource is exported for modules.
+Or is there any better way how to loop over all interrupts in DT node?
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
 
--- 
-Nicolas Ferre
+
+------enig2WUSGCNSSCTXIHIQWTIFL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlGoW+4ACgkQykllyylKDCE+WQCfRaCIjTDTNtlGJRaqw9CQvHeW
+RBEAnj7CELDQ+XLUZV+sqkEa04Ky6ndc
+=kFse
+-----END PGP SIGNATURE-----
+
+------enig2WUSGCNSSCTXIHIQWTIFL--
+
+--===============4347699902370009688==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============4347699902370009688==--
