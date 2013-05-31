@@ -1,133 +1,79 @@
 From: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 5/7] USB chipidea i.MX: use devm_usb_get_phy_by_phandle to get
- phy
-Date: Fri, 31 May 2013 20:38:47 +0200
-Message-ID: <1370025529-7414-6-git-send-email-mgr@pengutronix.de>
+Subject: [PATCH 6/7] usb: chipidea: udc: add force-full-speed option
+Date: Fri, 31 May 2013 20:38:48 +0200
+Message-ID: <1370025529-7414-7-git-send-email-mgr@pengutronix.de>
 References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1370025529-7414-1-git-send-email-mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+This patch makes it possible to set the chipidea udc
+into full-speed only mode. It can be set by the oftree
+property "force-full-speed".
+
+Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/usb/chipidea/ci13xxx_imx.c | 41 ++++++++++++++++++--------------------
- 1 file changed, 19 insertions(+), 22 deletions(-)
+ drivers/usb/chipidea/bits.h |  2 ++
+ drivers/usb/chipidea/core.c | 11 +++++++++++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/drivers/usb/chipidea/ci13xxx_imx.c b/drivers/usb/chipidea/ci13xxx_imx.c
-index 4d64541..48c446b 100644
---- a/drivers/usb/chipidea/ci13xxx_imx.c
-+++ b/drivers/usb/chipidea/ci13xxx_imx.c
-@@ -29,7 +29,6 @@
- 	((struct usb_phy *)platform_get_drvdata(pdev))
+diff --git a/drivers/usb/chipidea/bits.h b/drivers/usb/chipidea/bits.h
+index 93efe4e..4c14ab7 100644
+--- a/drivers/usb/chipidea/bits.h
++++ b/drivers/usb/chipidea/bits.h
+@@ -49,11 +49,13 @@
+ #define PORTSC_HSP            BIT(9)
+ #define PORTSC_PTC            (0x0FUL << 16)
+ /* PTS and PTW for non lpm version only */
++#define PORTSC_PFSC           BIT(24)
+ #define PORTSC_PTS(d)         ((((d) & 0x3) << 30) | (((d) & 0x4) ? BIT(25) : 0))
+ #define PORTSC_PTW            BIT(28)
+ #define PORTSC_STS            BIT(29)
  
- struct ci13xxx_imx_data {
--	struct device_node *phy_np;
- 	struct usb_phy *phy;
- 	struct platform_device *ci_pdev;
- 	struct clk *clk;
-@@ -98,12 +97,12 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
- 				  CI13XXX_PULLUP_ON_VBUS |
- 				  CI13XXX_DISABLE_STREAMING,
- 	};
--	struct platform_device *plat_ci, *phy_pdev;
--	struct device_node *phy_np;
-+	struct platform_device *plat_ci;
- 	struct resource *res;
- 	struct regulator *reg_vbus;
- 	struct pinctrl *pinctrl;
- 	int ret;
-+	struct usb_phy *phy;
+ /* DEVLC */
++#define DEVLC_PFSC            BIT(23)
+ #define DEVLC_PSPD            (0x03UL << 25)
+ #define DEVLC_PSPD_HS         (0x02UL << 25)
+ #define DEVLC_PTW             BIT(27)
+diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+index dcf2a0b..4b8b3e7 100644
+--- a/drivers/usb/chipidea/core.c
++++ b/drivers/usb/chipidea/core.c
+@@ -73,6 +73,11 @@
+ #include "host.h"
+ #include "debug.h"
  
- 	if (of_find_property(pdev->dev.of_node, "fsl,usbmisc", NULL)
- 		&& !usbmisc_ops)
-@@ -140,19 +139,21 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	phy_np = of_parse_phandle(pdev->dev.of_node, "fsl,usbphy", 0);
--	if (phy_np) {
--		data->phy_np = phy_np;
--		phy_pdev = of_find_device_by_node(phy_np);
--		if (phy_pdev) {
--			struct usb_phy *phy;
--			phy = pdev_to_phy(phy_pdev);
--			if (phy &&
--			    try_module_get(phy_pdev->dev.driver->owner)) {
--				usb_phy_init(phy);
--				data->phy = phy;
--			}
-+	phy = devm_usb_get_phy_by_phandle(&pdev->dev, "fsl,usbphy", 0);
++/* force full-speed operation */
++static bool full_speed;
++module_param(full_speed, bool, 0444);
++MODULE_PARM_DESC(full_speed, "force full-speed mode");
 +
-+	if (PTR_ERR(phy) == -EPROBE_DEFER) {
-+		ret = -EPROBE_DEFER;
-+		goto err_clk;
+ /* Controller register map */
+ static uintptr_t ci_regs_nolpm[] = {
+ 	[CAP_CAPLENGTH]		= 0x000UL,
+@@ -265,6 +270,12 @@ int hw_device_reset(struct ci13xxx *ci, u32 mode)
+ 	while (hw_read(ci, OP_USBCMD, USBCMD_RST))
+ 		udelay(10);		/* not RTOS friendly */
+ 
++	if (full_speed) {
++		if (ci->hw_bank.lpm)
++			hw_write(ci, OP_PORTSC, DEVLC_PFSC, DEVLC_PFSC);
++		else
++			hw_write(ci, OP_PORTSC, PORTSC_PFSC, PORTSC_PFSC);
 +	}
-+
-+	if (!IS_ERR(phy)) {
-+		ret = usb_phy_init(phy);
-+		if (ret) {
-+			dev_err(&pdev->dev, "unable to init phy: %d\n", ret);
-+			goto err_clk;
- 		}
-+
-+		data->phy = phy;
- 	}
  
- 	/* we only support host now, so enable vbus here */
-@@ -163,7 +164,7 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
- 			dev_err(&pdev->dev,
- 				"Failed to enable vbus regulator, err=%d\n",
- 				ret);
--			goto put_np;
-+			goto err_clk;
- 		}
- 		data->reg_vbus = reg_vbus;
- 	} else {
-@@ -202,7 +203,7 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
- 		if (ret) {
- 			dev_err(&pdev->dev,
- 				"usbmisc post failed, ret=%d\n", ret);
--			goto put_np;
-+			goto err;
- 		}
- 	}
- 
-@@ -217,9 +218,7 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
- err:
- 	if (reg_vbus)
- 		regulator_disable(reg_vbus);
--put_np:
--	if (phy_np)
--		of_node_put(phy_np);
-+err_clk:
- 	clk_disable_unprepare(data->clk);
- 	return ret;
- }
-@@ -239,8 +238,6 @@ static int ci13xxx_imx_remove(struct platform_device *pdev)
- 		module_put(data->phy->dev->driver->owner);
- 	}
- 
--	of_node_put(data->phy_np);
--
- 	clk_disable_unprepare(data->clk);
- 
- 	platform_set_drvdata(pdev, NULL);
+ 	if (ci->platdata->notify_event)
+ 		ci->platdata->notify_event(ci,
 -- 
 1.8.2.rc2
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
