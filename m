@@ -1,46 +1,44 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH 2/2] rtc: omap: add rtc wakeup support to alarm events
-Date: Fri, 31 May 2013 12:20:39 +0530
-Message-ID: <CA+V-a8tpPV35Z22YCNKOvCP36+v1sF8+9Fiy_Wrk4T-iCVv4nw@mail.gmail.com>
-References: <1369982005-8572-1-git-send-email-gururaja.hebbar@ti.com> <1369982005-8572-3-git-send-email-gururaja.hebbar@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC/PATCH v2 2/2] gpio-rcar: Add DT support
+Date: Fri, 31 May 2013 09:01:44 +0200
+Message-ID: <CACRpkda4rRWcVkdGPcSvJeQq_KaJE5uxD+0P62Ot8=Xuf2-B+A@mail.gmail.com>
+References: <1369136406-23800-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<1369136406-23800-3-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<CACRpkdb8GYpx3ASzXB7HX5oEpAUBe-yBo0N5Ep9S+DqoE6oCLw@mail.gmail.com>
+	<4678059.RuWR6CiQ8n@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1369982005-8572-3-git-send-email-gururaja.hebbar@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Hebbar Gururaja <gururaja.hebbar@ti.com>
-Cc: akpm@linux-foundation.org, a.zummo@towertech.it, davinci-linux-open-source@linux.davincidsp.com, linux@arm.linux.org.uk, rtc-linux@googlegroups.com, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, zonque@gmail.com, rob@landley.net, grant.likely@linaro.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <4678059.RuWR6CiQ8n@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Magnus Damm <damm@opensource.se>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gururaja,
+On Fri, May 31, 2013 at 3:20 AM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
 
-Thanks for the patch.
-
-On Fri, May 31, 2013 at 12:03 PM, Hebbar Gururaja
-<gururaja.hebbar@ti.com> wrote:
-> On some platforms (like AM33xx), a special register (RTC_IRQWAKEEN)
-[snip]
->  - ti,wakeup_capable: Inform the rtc driver that this module is wake-up
->    capable so that rtcwake and suspend tests can work.
-> +- ti,has_irq_wake_enb: Inform rtc driver that this module has a a
-same comment applies here as well.
-s/has a a/ has a
-
-> +  special register to enable Wakeup feature for Alarm events.
+> I've so far pushed GPIO and pinctrl patches for SH through Simon's tree due to
+> the many cross-dependencies between SH arch code and the GPIO and pinctrl
+> drivers. As the situation now stabilizes, we could now push the patches
+> through their respective subsystem trees.
 >
->  Example:
->
-> diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
-> index 000a02f..5e9c0dd 100644
-> --- a/drivers/rtc/rtc-omap.c
-> +++ b/drivers/rtc/rtc-omap.c
-> @@ -72,6 +72,8 @@
->  #define OMAP_RTC_KICK0_REG             0x6c
->  #define OMAP_RTC_KICK1_REG             0x70
->
-> +#define OMAP_RTC_IRQWAKEEN             0x7C
-> +
-why not have the hex values in smaller case as done in the rest of the file ?
+> Simon, Linus, any opinion/preference on that ?
 
-Regards,
---Prabhakar Lad
+Depends, if they are still large patch sets I'd prefer Simon to
+take it, but once the drivers are in place and going to maintenance
+mode I'll handle them in pinctrl.
+
+>> The above ranges are part of that document.
+>
+> What about replacing that with
+>
+>   - gpio-ranges: Range of pins managed by the GPIO controller.
+>
+> Please refer to gpio.txt in this directory for details of gpio-ranges property
+> and the common GPIO bindings used by client devices.
+
+Go for it!
+
+Yours,
+Linus Walleij
