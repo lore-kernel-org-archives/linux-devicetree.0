@@ -1,32 +1,70 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH] of/base: fix typos
-Date: Fri, 31 May 2013 15:00:41 +0530
-Message-ID: <CA+V-a8us-dzX4BGzWOO0AbBxVCv-9LpitEgzFgNtx3uStj4R0w@mail.gmail.com>
-References: <1367906651-5058-1-git-send-email-prabhakar.csengg@gmail.com> <CA+V-a8sf-SVKiw6wjazV3VRd78efOU9qTO_qtr3RbOtrTifwgw@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] at_hdmac: add FIFO configuration parameter to DMA
+ DT binding
+Date: Fri, 31 May 2013 11:31:33 +0200
+Message-ID: <51A86DF5.4010808@atmel.com>
+References: <1369930103-11963-1-git-send-email-ludovic.desroches@atmel.com>
+ <1369930103-11963-4-git-send-email-ludovic.desroches@atmel.com>
+ <51A77F10.8020808@atmel.com> <20130530163936.GC23653@game.jcrosoft.org>
+ <20130531091627.GD11384@ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+V-a8sf-SVKiw6wjazV3VRd78efOU9qTO_qtr3RbOtrTifwgw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130531091627.GD11384-tOglhBvtKaELqBSMlTbpHvU/3Eu2kcEP@public.gmane.org@atmel.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-On Thu, May 23, 2013 at 5:58 PM, Prabhakar Lad
-<prabhakar.csengg@gmail.com> wrote:
-> Hi Rob/Grant,
+On 31/05/2013 11:16, Ludovic Desroches :
+> On Thu, May 30, 2013 at 06:39:36PM +0200, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>> On 18:32 Thu 30 May     , Nicolas Ferre wrote:
+>>> On 30/05/2013 18:08, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org :
+>>>> From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>>>>
+>>>> For most devices the FIFO configuration is the same i.e. when half FIFO size is
+>>>> available/filled, a source/destination request is serviced. But USART devices
+>>>> have to do it when there is enough space/data available to perform a single
+>>>> AHB access so the ASAP configuration.
+>>>>
+>>>> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+>>>> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>>>
+>>> Clear and neat: thanks Ludo.
+>>
+>> agreed
+>>
+>> can we apply this via AT91 as this depends on some cleanup I did on DT and
+>> could result on some nigthmware conflict
+>>
 >
-> On Tue, May 7, 2013 at 11:34 AM, Prabhakar Lad
-> <prabhakar.csengg@gmail.com> wrote:
->> From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
->>
->> the function of_property_read_u8/16/32_array() has a parameter
->> out_values, but the description mentioned it as out_value. This
->> patch fixes this typo.
->>
-Can you pick this patch ?
+> In fact, I am not sure it's the best solution. I have noticed that there is a
+> conflict with a patch sent by Nicolas (dmaengine: at_hdmac: extend hardware
+> handshaking interface identification) which is already in Vinod's tree but
+> which is not present on Jean-Christophe's cleanup tree on which I based these
+> patches.
+>
+> Moreover this patch doesn't use macros introduced by Nicolas' patch. I may
+> update it and it should go through Vinod's tree with a dependence on patch 1/3.
+>
+> What's your point of view?
 
-Regards,
---Prabhakar Lad
+Indeed. Another option could be to push patches 1 and 3 in dmaengine's 
+tree and make the 2nd patch go through arm-soc with a dependency on 
+slave-dma GIT tree (it seems it is an usual patern).
+
+Arnd, Jean-Christophe, what do you think?
+
+Bye,
+-- 
+Nicolas Ferre
