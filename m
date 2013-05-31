@@ -1,55 +1,76 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH 00/11] drivers: Add Pinctrl PM support
-Date: Fri, 31 May 2013 11:08:06 -0700
-Message-ID: <8761xz10qh.fsf@linaro.org>
-References: <1369995191-20855-1-git-send-email-gururaja.hebbar@ti.com>
-	<20130531170437.GA17591@core.coreip.homeip.net>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130531170437.GA17591@core.coreip.homeip.net> (Dmitry
-	Torokhov's message of "Fri, 31 May 2013 10:04:37 -0700")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hebbar Gururaja <gururaja.hebbar@ti.com>, grant.likely@linaro.org, linus.walleij@linaro.org, rob.herring@calxeda.com, davinci-linux-open-source@linux.davincidsp.com, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, linux-kernel@vger.kernel.org, vaibhav.bedia@ti.com, sudhakar.raj@ti.comLinus Walleij <linus.walleij@linaro.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH V2] dtc: ensure #line directives don't consume data from the next line
+Date: Fri, 31 May 2013 12:33:04 -0600
+Message-ID: <1370025184-23808-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: David Gibson <david@gibson.dropbear.id.au>, jdl@jdl.com
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, mmarek@suse.cz, rob.herring@calxeda.com, grant.likely@secretlab.ca, linux-kbuild@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-+ Linus W. (pinctrl maintainer)
+From: Stephen Warren <swarren@nvidia.com>
 
-Dmitry Torokhov <dmitry.torokhov@gmail.com> writes:
+Previously, the #line parsing regex ended with ({WS}+[0-9]+)?. The {WS}
+could match line-break characters. If the #line directive did not contain
+the optional flags field at the end, this could cause any integer data on
+the next line to be consumed as part of the #line directive parsing. This
+could cause syntax errors (i.e. #line parsing consuming the leading 0
+from a hex literal 0x1234, leaving x1234 to be parsed as cell data,
+which is a syntax error), or invalid compilation results (i.e. simply
+consuming literal 1234 as part of the #line processing, thus removing it
+from the cell data).
 
-> Hi Hebbar,
->
-> On Fri, May 31, 2013 at 03:43:00PM +0530, Hebbar Gururaja wrote:
->> By optionally putting the pins into sleep state in the suspend [or in
->> runtime_suspend] callback we can accomplish two things.
->> - One is to minimize current leakage from pins and thus save power,
->> - second, we can prevent the IP from driving pins output in an
->> uncontrolled manner, which may happen if the power domain drops the
->> domain regulator.
->> 
->> These states can be specified in the DT blob and corresponding driver
->> can pick these states during probe & set the related values during
->> idle/suspend.
->> 
->> Not all drivers support/has idle state. Drivers like i2c, spi, mmc has
->> idle states and hence these drivers are updated to support all the
->> three states
->> - default  : during regular operation
->> - idle : when the module is in idle state
->> - sleep : when the module is in suspend state
->> 
->> For those drivers which doesn't support/have idle state (at least at
->> the moment), only default & sleep state is added.
->
-> As with the original introduction of pinctrl states my question is: "Can
-> all of this be handled in the driver/bus core instead of adding a lot
-> of boilerplate code to the individual drivers".
+Fix this by replacing {WS} with [ \t] so that it can't match line-breaks.
 
-Yes, I had the same thought.
+Convert all instances of {WS}, even though the other instances should be
+irrelevant for any well-formed #line directive. This is done for
+consistency and ultimate safety.
 
-What's being handled here are either events related to runtime PM
-(runtime suspend, runtime resume) or system PM (suspend/resume) so seems
-appropriat to handle them in the PM core.
+Reported-by: Ian Campbell <Ian.Campbell@citrix.com>
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+v2: Convert all instances of {WS} in the regex.
 
-Kevin
+This is a patch for dtc upstream, in response to thread "DTB build
+failure due to preproccessing". If/when it's accepted into dtc, I'll
+follow up with a kernel patch that makes the same fix.
+---
+ dtc-lexer.l               |    2 +-
+ tests/line_directives.dts |   10 ++++++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/dtc-lexer.l b/dtc-lexer.l
+index 254d5af..3b41bfc 100644
+--- a/dtc-lexer.l
++++ b/dtc-lexer.l
+@@ -71,7 +71,7 @@ static int pop_input_file(void);
+ 			push_input_file(name);
+ 		}
+ 
+-<*>^"#"(line)?{WS}+[0-9]+{WS}+{STRING}({WS}+[0-9]+)? {
++<*>^"#"(line)?[ \t]+[0-9]+[ \t]+{STRING}([ \t]+[0-9]+)? {
+ 			char *line, *tmp, *fn;
+ 			/* skip text before line # */
+ 			line = yytext;
+diff --git a/tests/line_directives.dts b/tests/line_directives.dts
+index e9d0800..046ef37 100644
+--- a/tests/line_directives.dts
++++ b/tests/line_directives.dts
+@@ -8,4 +8,14 @@
+ # 6 "bar.dts"
+ 
+ / {
++/*
++ * Make sure optional flags don't consume integer data on next line. The issue
++ * was that the {WS} in the trailing ({WS}+[0-9]+)? could cross the * line-
++ * break, and consume the leading "0" of the hex constant, leaving "x12345678"
++ * to be parsed as a number, which is invalid syntax.
++ */
++	prop1 = <
++# 10 "qux.dts"
++		0x12345678
++	>;
+ };
+-- 
+1.7.10.4
+
