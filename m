@@ -1,89 +1,133 @@
 From: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 4/7] USB chipidea: introduce dual role mode pdata flags
-Date: Fri, 31 May 2013 20:38:46 +0200
-Message-ID: <1370025529-7414-5-git-send-email-mgr@pengutronix.de>
+Subject: [PATCH 5/7] USB chipidea i.MX: use devm_usb_get_phy_by_phandle to get
+ phy
+Date: Fri, 31 May 2013 20:38:47 +0200
+Message-ID: <1370025529-7414-6-git-send-email-mgr@pengutronix.de>
 References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 In-Reply-To: <1370025529-7414-1-git-send-email-mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Even if a chipidea core is otg capable the board may not. This allows
-to explicitly set the core to host/peripheral mode. Without these
-flags the driver falls back to the old behaviour.
-
 Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- .../devicetree/bindings/usb/ci13xxx-imx.txt        |  1 +
- drivers/usb/chipidea/core.c                        | 24 ++++++++++++++++------
- include/linux/usb/chipidea.h                       |  2 +-
- 3 files changed, 20 insertions(+), 7 deletions(-)
+ drivers/usb/chipidea/ci13xxx_imx.c | 41 ++++++++++++++++++--------------------
+ 1 file changed, 19 insertions(+), 22 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
-index 184a8e0..b4b5b79 100644
---- a/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
-+++ b/Documentation/devicetree/bindings/usb/ci13xxx-imx.txt
-@@ -9,6 +9,7 @@ Recommended properies:
- - phy_type: the type of the phy connected to the core. Should be one
-   of "utmi", "utmi_wide", "ulpi", "serial" or "hsic". Without this
-   property the PORTSC register won't be touched
-+- dr_mode: One of "host", "peripheral" or "otg". Defaults to "otg"
+diff --git a/drivers/usb/chipidea/ci13xxx_imx.c b/drivers/usb/chipidea/ci13xxx_imx.c
+index 4d64541..48c446b 100644
+--- a/drivers/usb/chipidea/ci13xxx_imx.c
++++ b/drivers/usb/chipidea/ci13xxx_imx.c
+@@ -29,7 +29,6 @@
+ 	((struct usb_phy *)platform_get_drvdata(pdev))
  
- Optional properties:
- - fsl,usbphy: phandler of usb phy that connects to the only one port
-diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
-index b49b682..dcf2a0b 100644
---- a/drivers/usb/chipidea/core.c
-+++ b/drivers/usb/chipidea/core.c
-@@ -404,6 +404,7 @@ static int ci_hdrc_probe(struct platform_device *pdev)
- 	struct resource	*res;
- 	void __iomem	*base;
- 	int		ret;
-+	enum usb_dr_mode dr_mode;
+ struct ci13xxx_imx_data {
+-	struct device_node *phy_np;
+ 	struct usb_phy *phy;
+ 	struct platform_device *ci_pdev;
+ 	struct clk *clk;
+@@ -98,12 +97,12 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
+ 				  CI13XXX_PULLUP_ON_VBUS |
+ 				  CI13XXX_DISABLE_STREAMING,
+ 	};
+-	struct platform_device *plat_ci, *phy_pdev;
+-	struct device_node *phy_np;
++	struct platform_device *plat_ci;
+ 	struct resource *res;
+ 	struct regulator *reg_vbus;
+ 	struct pinctrl *pinctrl;
+ 	int ret;
++	struct usb_phy *phy;
  
- 	if (!dev->platform_data) {
- 		dev_err(dev, "platform data missing\n");
-@@ -455,14 +456,25 @@ static int ci_hdrc_probe(struct platform_device *pdev)
- 	if (!ci->platdata->phy_mode)
- 		ci->platdata->phy_mode = of_usb_get_phy_mode(dev->of_node);
+ 	if (of_find_property(pdev->dev.of_node, "fsl,usbmisc", NULL)
+ 		&& !usbmisc_ops)
+@@ -140,19 +139,21 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
  
-+	if (!ci->platdata->dr_mode)
-+		ci->platdata->dr_mode = of_usb_get_dr_mode(dev->of_node);
+-	phy_np = of_parse_phandle(pdev->dev.of_node, "fsl,usbphy", 0);
+-	if (phy_np) {
+-		data->phy_np = phy_np;
+-		phy_pdev = of_find_device_by_node(phy_np);
+-		if (phy_pdev) {
+-			struct usb_phy *phy;
+-			phy = pdev_to_phy(phy_pdev);
+-			if (phy &&
+-			    try_module_get(phy_pdev->dev.driver->owner)) {
+-				usb_phy_init(phy);
+-				data->phy = phy;
+-			}
++	phy = devm_usb_get_phy_by_phandle(&pdev->dev, "fsl,usbphy", 0);
 +
-+	if (ci->platdata->dr_mode == USB_DR_MODE_UNKNOWN)
-+		ci->platdata->dr_mode = USB_DR_MODE_OTG;
++	if (PTR_ERR(phy) == -EPROBE_DEFER) {
++		ret = -EPROBE_DEFER;
++		goto err_clk;
++	}
 +
-+	dr_mode = ci->platdata->dr_mode;
- 	/* initialize role(s) before the interrupt is requested */
--	ret = ci_hdrc_host_init(ci);
--	if (ret)
--		dev_info(dev, "doesn't support host\n");
-+	if (dr_mode == USB_DR_MODE_OTG || dr_mode == USB_DR_MODE_HOST) {
-+		ret = ci_hdrc_host_init(ci);
-+		if (ret)
-+			dev_info(dev, "doesn't support host\n");
-+	}
++	if (!IS_ERR(phy)) {
++		ret = usb_phy_init(phy);
++		if (ret) {
++			dev_err(&pdev->dev, "unable to init phy: %d\n", ret);
++			goto err_clk;
+ 		}
++
++		data->phy = phy;
+ 	}
  
--	ret = ci_hdrc_gadget_init(ci);
--	if (ret)
--		dev_info(dev, "doesn't support gadget\n");
-+	if (dr_mode == USB_DR_MODE_OTG || dr_mode == USB_DR_MODE_PERIPHERAL) {
-+		ret = ci_hdrc_gadget_init(ci);
-+		if (ret)
-+			dev_info(dev, "doesn't support gadget\n");
-+	}
+ 	/* we only support host now, so enable vbus here */
+@@ -163,7 +164,7 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
+ 			dev_err(&pdev->dev,
+ 				"Failed to enable vbus regulator, err=%d\n",
+ 				ret);
+-			goto put_np;
++			goto err_clk;
+ 		}
+ 		data->reg_vbus = reg_vbus;
+ 	} else {
+@@ -202,7 +203,7 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
+ 		if (ret) {
+ 			dev_err(&pdev->dev,
+ 				"usbmisc post failed, ret=%d\n", ret);
+-			goto put_np;
++			goto err;
+ 		}
+ 	}
  
- 	if (!ci->roles[CI_ROLE_HOST] && !ci->roles[CI_ROLE_GADGET]) {
- 		dev_err(dev, "no supported roles\n");
-diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-index 1a2aa18..b314647 100644
---- a/include/linux/usb/chipidea.h
-+++ b/include/linux/usb/chipidea.h
-@@ -20,7 +20,7 @@ struct ci13xxx_platform_data {
- #define CI13XXX_REQUIRE_TRANSCEIVER	BIT(1)
- #define CI13XXX_PULLUP_ON_VBUS		BIT(2)
- #define CI13XXX_DISABLE_STREAMING	BIT(3)
+@@ -217,9 +218,7 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
+ err:
+ 	if (reg_vbus)
+ 		regulator_disable(reg_vbus);
+-put_np:
+-	if (phy_np)
+-		of_node_put(phy_np);
++err_clk:
+ 	clk_disable_unprepare(data->clk);
+ 	return ret;
+ }
+@@ -239,8 +238,6 @@ static int ci13xxx_imx_remove(struct platform_device *pdev)
+ 		module_put(data->phy->dev->driver->owner);
+ 	}
+ 
+-	of_node_put(data->phy_np);
+-
+ 	clk_disable_unprepare(data->clk);
+ 
+ 	platform_set_drvdata(pdev, NULL);
+-- 
+1.8.2.rc2
