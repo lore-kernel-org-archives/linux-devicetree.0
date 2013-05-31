@@ -1,86 +1,142 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: Re: [PATCH] ARM: dts: omap3-devkit8000: fix NAND memory binding
-Date: Fri, 31 May 2013 15:49:31 +0200
-Message-ID: <51A8AA6B.6010608@epfl.ch>
-References: <1369296697-22495-1-git-send-email-florian.vaussard@epfl.ch>
-Reply-To: florian.vaussard@epfl.ch
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH] of: Export of_irq_count for using in modules
+Date: Fri, 31 May 2013 15:57:31 +0200
+Message-ID: <51A8AC4B.906@monstr.eu>
+References: <6aa29b1d109a46278a7f37b598defe07d6edfe60.1369921774.git.michal.simek@xilinx.com>
+ <20130530201714.GE19834@game.jcrosoft.org> <51A85BEE.4000009@monstr.eu>
+ <20130531110045.GF19834@game.jcrosoft.org>
+Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1369296697-22495-1-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Florian Vaussard <florian.vaussard@epfl.ch>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: multipart/mixed; boundary="===============0573035747236625591=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130531110045.GF19834-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--===============0573035747236625591==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="----enig2GBJHVWBMTVNJMQHHRBQP"
 
-Gentle ping. Does someone has any comments on this fix? Can someone 
-tests on the real hardware?
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+------enig2GBJHVWBMTVNJMQHHRBQP
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
+On 05/31/2013 01:00 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 10:14 Fri 31 May     , Michal Simek wrote:
+>> Hi Jean-Christophe,
+>>
+>> On 05/30/2013 10:17 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>>> On 15:49 Thu 30 May     , Michal Simek wrote:
+>>>> Export of_irq_count for modules.
+>>>
+>>> can you explain why do you need to call of_irq_count
+>>
+>> I need to count number of irq written in the DTS node.
+>> It is not fixed size that's why I need to proper way how to
+>> find it out.
+>>
+>> I am using this loop.
+>> 	count =3D of_irq_count(pdev->dev.of_node);
+>> 	/* Alloc IRQ based on DTS to be sure that no other driver will use it=
+ */
+>> 	while (count--) {
+>> 		tmp->irq =3D irq_of_parse_and_map(pdev->dev.of_node, count);
+>> 		dev_info(&pdev->dev, "%d: Alloc irq: %d\n", count, tmp->irq);
+>> 		ret =3D request_irq(tmp->irq, zynq_remoteproc_interrupt, 0,
+>> 					dev_name(&pdev->dev), &pdev->dev);
+>> 		if (ret) {
+>> 			...
+>> 		}
+>> 	}
+>>
+>> But of course if you think that this is incorrect to export it
+>> I can use what it is in of_irq_count body
+>> 368 int of_irq_count(struct device_node *dev)
+>> 369 {
+>> 370         int nr =3D 0;
+>> 371
+>> 372         while (of_irq_to_resource(dev, nr, NULL))
+>> 373                 nr++;
+>> 374
+>> 375         return nr;
+>> 376 }
+>>
+>> Because of_irq_to_resource is exported for modules.
+>> Or is there any better way how to loop over all interrupts in DT node?=
 
-Florian
+>=20
+> can just explain me why you need to call irq_of_parse_and_map in your d=
+river?
+>=20
+> as the irq will be provided in the resources normally
 
-On 05/23/2013 10:11 AM, Florian Vaussard wrote:
-> Commit d36b4cd 'ARM: OMAP2+: Add additional GPMC timing parameters'
-> updated GPMC binding, but omap3-devkit8000 was not updated accordingly,
-> resulting in a broken configuration.
->
-> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
-> ---
->   arch/arm/boot/dts/omap3-devkit8000.dts |   29 +++++++++++++++--------------
->   1 files changed, 15 insertions(+), 14 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/omap3-devkit8000.dts b/arch/arm/boot/dts/omap3-devkit8000.dts
-> index 8a5cdcc..e5b35f5 100644
-> --- a/arch/arm/boot/dts/omap3-devkit8000.dts
-> +++ b/arch/arm/boot/dts/omap3-devkit8000.dts
-> @@ -123,20 +123,21 @@
->   		reg = <0 0 0>; /* CS0, offset 0 */
->   		nand-bus-width = <16>;
->
-> -		gpmc,sync-clk = <0>;
-> -		gpmc,cs-on = <0>;
-> -		gpmc,cs-rd-off = <44>;
-> -		gpmc,cs-wr-off = <44>;
-> -		gpmc,adv-on = <6>;
-> -		gpmc,adv-rd-off = <34>;
-> -		gpmc,adv-wr-off = <44>;
-> -		gpmc,we-off = <40>;
-> -		gpmc,oe-off = <54>;
-> -		gpmc,access = <64>;
-> -		gpmc,rd-cycle = <82>;
-> -		gpmc,wr-cycle = <82>;
-> -		gpmc,wr-access = <40>;
-> -		gpmc,wr-data-mux-bus = <0>;
-> +		gpmc,device-nand;
-> +		gpmc,sync-clki-ps = <0>;
-> +		gpmc,cs-on-ns = <0>;
-> +		gpmc,cs-rd-off-ns = <44>;
-> +		gpmc,cs-wr-off-ns = <44>;
-> +		gpmc,adv-on-ns = <6>;
-> +		gpmc,adv-rd-off-ns = <34>;
-> +		gpmc,adv-wr-off-ns = <44>;
-> +		gpmc,we-off-ns = <40>;
-> +		gpmc,oe-off-ns = <54>;
-> +		gpmc,access-ns = <64>;
-> +		gpmc,rd-cycle-ns = <82>;
-> +		gpmc,wr-cycle-ns = <82>;
-> +		gpmc,wr-access-ns = <40>;
-> +		gpmc,wr-data-mux-bus-ns = <0>;
->
->   		#address-cells = <1>;
->   		#size-cells = <1>;
->
+It is quite a long time I have written this driver on v3.1 or 3.3.
+But is this better?
 
--- 
-Florian Vaussard
-EPFL - STI - IMT - LSRO1
-MEB330 - Station 9
-1015 Lausanne / Switzerland
+	struct resource *res;
+	int i =3D 0;
+	do {
+		res =3D platform_get_resource(pdev, IORESOURCE_IRQ, i++);
+		if (res)
+			do something
+	} while(res);
 
-tel: +41 21 693 78 39
-fax: +41 21 693 78 07
-http://lsro.epfl.ch
+Also what about of_irq_to_resource()? Is it deprecated and all drivers
+shouldn't use it?
+
+I have no problem to rewrite the driver to use platform_get_resource.
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+------enig2GBJHVWBMTVNJMQHHRBQP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlGorEsACgkQykllyylKDCFD3ACfWn/f6RJnAymjf57U/1IT4vNV
+540AniZhKJCj2ddhIo94mdxKnGHoVxYh
+=vjJM
+-----END PGP SIGNATURE-----
+
+------enig2GBJHVWBMTVNJMQHHRBQP--
+
+--===============0573035747236625591==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============0573035747236625591==--
