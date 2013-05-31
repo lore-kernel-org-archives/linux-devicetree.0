@@ -1,65 +1,39 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v3 1/8] video: xilinxfb: Fix OF probing on little-endian
- systems
-Date: Fri, 31 May 2013 15:09:01 +0200
-Message-ID: <51A8A0ED.8090006@monstr.eu>
-References: <cover.1370004925.git.michal.simek@xilinx.com> <0a546c3de84c4650d019274debef0ded9007b36f.1370004925.git.michal.simek@xilinx.com> <51A8A016.3000306@tabi.org>
-Reply-To: monstr@monstr.eu
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: [GIT PULL] ARM: OMAP: dts fixes for 3.10-rc4
+Date: Fri, 31 May 2013 15:23:37 +0200
+Message-ID: <51A8A459.1000706@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="----enig2COALSFKQSHUSOCLLVCQF"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51A8A016.3000306@tabi.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Timur Tabi <timur@tabi.org>
-Cc: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: "tony >> \"tony@atomide.com\"" <tony@atomide.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kevin Hilman <khilman@linaro.org>, Lars Poeschel <poeschel@lemonage.de>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
-------enig2COALSFKQSHUSOCLLVCQF
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hi Tony,
 
-On 05/31/2013 03:05 PM, Timur Tabi wrote:
-> On 05/31/2013 07:55 AM, Michal Simek wrote:
->> -	p =3D (u32 *)of_get_property(op->dev.of_node, "xlnx,dcr-splb-slave-i=
-f", NULL);
->> -	tft_access =3D p ? *p : 0;
->> +	of_property_read_u32(op->dev.of_node, "xlnx,dcr-splb-slave-if",
->> +			     &tft_access);
->=20
-> This is okay, but just FYI, you could instead have just used be32_to_cp=
-up().
-
-yep. I was there in v1 but then Soren suggested to use of_property_read_u=
-32
-http://lkml.org/lkml/2013/5/29/365
+Please pull two DTS fixes for the next -rc.
 
 Thanks,
-Michal
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+Benoit
 
 
+The following changes since commit e4aa937ec75df0eea0bee03bffa3303ad36c986b:
+  Linus Torvalds (1):
+        Linux 3.10-rc3
 
-------enig2COALSFKQSHUSOCLLVCQF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+are available in the git repository at:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+  git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git dts-fixes-for-3.10
 
-iEYEARECAAYFAlGooO0ACgkQykllyylKDCFm6QCfcErRgHArTC4UtNG0FXRvG0eu
-tjoAnjN4rqVV65w6mQvRKiC0wJs3csAT
-=sghZ
------END PGP SIGNATURE-----
+Kevin Hilman (1):
+      ARM: dts: omap4-panda|sdp: Fix mux for twl6030 IRQ pin and msecure line
 
-------enig2COALSFKQSHUSOCLLVCQF--
+Lars Poeschel (1):
+      ARM: dts: AM33xx: Fix properties on gpmc node
+
+ arch/arm/boot/dts/am33xx.dtsi             |    4 ++--
+ arch/arm/boot/dts/omap4-panda-common.dtsi |   20 ++++++++++++++++++++
+ arch/arm/boot/dts/omap4-sdp.dts           |   20 ++++++++++++++++++++
+ 3 files changed, 42 insertions(+), 2 deletions(-)
