@@ -1,45 +1,109 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH v4 0/5] ARM: dts: OMAP2+: Use preprocessor for device
- trees
-Date: Fri, 31 May 2013 14:53:56 +0200
-Message-ID: <51A89D64.9000803@ti.com>
-References: <1370003579-30219-1-git-send-email-florian.vaussard@epfl.ch>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 0/8] xilinxfb changes
+Date: Fri, 31 May 2013 14:55:30 +0200
+Message-ID: <cover.1370004925.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1370003579-30219-1-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-omap-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@epfl.ch>
-Cc: Tony Lindgren <tony@atomide.com>, Stephen Warren <swarren@wwwdotorg.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============4999429056952855706=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
 
-On 05/31/2013 02:32 PM, Florian Vaussard wrote:
-> Hello,
-> 
-> Following a similar proposal by Stephen Warren for tegra [1], this series
-> makes use of the C preprocessor when compiling OMAP DT files, and
-> accomplishes some improvements to improve overall readability.
-> 
-> Patch 1 is a preparation for the rest of the series.
-> Patch 2 uses existing constants for GPIOs. Patch 3 does the same for
-> IRQs. Patch 4 creates a new header for OMAP's padmux, and patch 5 uses
-> it to simplify pinctrl DT.
-> 
-> As for previous versions, the .dtb files were diff-tested before and after
-> applying the series to guarantee identity for all targets.
-> 
-> The same series for AM3XXX will follow shortly.
-> 
-> Best regards,
-> 
-> Florian
+--===============4999429056952855706==
+Content-Type: multipart/signed;
+    boundary="=_mimegpg-monstr-desktop-8064-1370004938-0001";
+    micalg=pgp-sha1; protocol="application/pgp-signature"
 
-Thanks for the series. I've just applied it and will push the update
-for_3.11/dts branch ASAP.
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
 
-Regards,
-Benoit
+--=_mimegpg-monstr-desktop-8064-1370004938-0001
 
+Hi,
+
+I have done more changes in the driver to support probing
+on little and big endian system where detection is done
+directly on the hardware.
+I have also done some cleanups to get it to the better shape.
+
+Thanks for your review,
+Michal
+
+Changes in v3:
+- Remove out_be IO name from function name
+- Change patch subject from "Do not use out_be32 IO function"
+  to "Do not name out_be32 in function name"
+- New patch in this patchset based on discussions
+- New patch in this patchset based on discussions
+- New patch in this patchset
+- New patch in this patchset based on discussions
+- New patch in this patchset
+
+Changes in v2:
+- use of_property_read_u32 helper function
+Series-changes: 3
+- fix commit message
+
+Michal Simek (8):
+  video: xilinxfb: Fix OF probing on little-endian systems
+  video: xilinxfb: Do not name out_be32 in function name
+  video: xilinxfb: Rename PLB_ACCESS_FLAG to BUS_ACCESS_FLAG
+  video: xilinxfb: Use drvdata->regs_phys instead of physaddr
+  video: xilinxfb: Group bus initialization
+  video: xilinxfb: Add support for little endian accesses
+  video: xilinxfb: Fix sparse warnings
+  video: xilinxfb: Use driver for Xilinx ARM Zynq
+
+ drivers/video/Kconfig    |   2 +-
+ drivers/video/xilinxfb.c | 157 ++++++++++++++++++++++++-----------------------
+ 2 files changed, 81 insertions(+), 78 deletions(-)
+
+--
+1.8.2.3
+
+
+--=_mimegpg-monstr-desktop-8064-1370004938-0001
+Content-Type: application/pgp-signature
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEABECAAYFAlGoncoACgkQykllyylKDCH6YgCdFWERa94V6WU4izCoqkwPTwit
+Tk8AnRrcmvOeFNtkYcPge4Slbs3wJkfR
+=18q7
+-----END PGP SIGNATURE-----
+
+--=_mimegpg-monstr-desktop-8064-1370004938-0001--
+
+--===============4999429056952855706==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============4999429056952855706==--
