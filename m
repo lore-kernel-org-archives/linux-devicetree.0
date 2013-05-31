@@ -1,92 +1,93 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 2/2] ARM: shmobile: irqpin: map spurious interrupts in DT case
-Date: Fri, 31 May 2013 13:21:00 +0100
-Message-ID: <20130531122100.BEC173E0901@localhost>
-References: <Pine.LNX.4.64.1305241109530.1090@axis700.grange> <Pine.LNX.4.64.1305241112210.1090@axis700.grange>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1305241112210.1090@axis700.grange>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-sh@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Subject: [PATCH v4 4/5] ARM: dts: OMAP2+: Header file for pinctrl constants
+Date: Fri, 31 May 2013 14:32:58 +0200
+Message-ID: <1370003579-30219-5-git-send-email-florian.vaussard@epfl.ch>
+References: <1370003579-30219-1-git-send-email-florian.vaussard@epfl.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1370003579-30219-1-git-send-email-florian.vaussard-p8DiymsW2f8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 24 May 2013 11:13:07 +0200 (CEST), Guennadi Liakhovetski <g.liakhovetski@gmx.de> wrote:
-> In the non-DT case all interrupts get mapped statically during probing,
-> therefore, if a spurious interrupt arrives, it can easily be mapped back
-> to hardware registers and bits and handled. In the DT case interrupts are
-> mapped only when a device, using that interrupt is instantiated from DT.
-> So, spurious interrupts occur unmapped and thus cannot be handled properly.
-> This patch fixes this by mapping such interrupts as they occur.
+Most of the constants are taken from arch/arm/mach-omap2/mux.h.
+Define some others for the PIN_OUTPUT_* flavours.
 
-That sounds like a bad approach. If the driver really requires the irqs
-to be mapped, then it should do all of them when the controller is set
-up. Mapping at interrupt handling time is absolutely the wrong time to
-do it.
+Signed-off-by: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ include/dt-bindings/pinctrl/omap.h |   50 ++++++++++++++++++++++++++++++++++++
+ 1 files changed, 50 insertions(+), 0 deletions(-)
+ create mode 100644 include/dt-bindings/pinctrl/omap.h
 
-Also, why is mapping the irq necessary to handle it? You don't want to
-call generic_handle_irq() on a bad interrupt because there won't be
-anything listening for it. First of all, that particular irq should be
-entirely disabled if at all possible. Second, if it isn't possible to
-disable it, then the handler function should clear the state and get out
-of the handler as quickly as possible.
-
-g.
-
-> 
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> ---
->  drivers/irqchip/irq-renesas-intc-irqpin.c |    8 ++++++++
->  1 files changed, 8 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-renesas-intc-irqpin.c b/drivers/irqchip/irq-renesas-intc-irqpin.c
-> index 82cec63..e62d76d 100644
-> --- a/drivers/irqchip/irq-renesas-intc-irqpin.c
-> +++ b/drivers/irqchip/irq-renesas-intc-irqpin.c
-> @@ -71,6 +71,7 @@ struct intc_irqpin_priv {
->  	struct intc_irqpin_iomem iomem[INTC_IRQPIN_REG_NR];
->  	struct intc_irqpin_irq irq[INTC_IRQPIN_MAX];
->  	struct renesas_intc_irqpin_config config;
-> +	unsigned int min_irq;
->  	unsigned int number_of_irqs;
->  	struct platform_device *pdev;
->  	struct irq_chip irq_chip;
-> @@ -274,6 +275,10 @@ static irqreturn_t intc_irqpin_irq_handler(int irq, void *dev_id)
->  	struct intc_irqpin_priv *p = i->p;
->  	unsigned long bit;
->  
-> +	if (!i->domain_irq)
-> +		/* unmapped: spurious IRQ, map it now */
-> +		irq_create_mapping(p->irq_domain, irq - p->min_irq);
-> +
->  	intc_irqpin_dbg(i, "demux1");
->  	bit = intc_irqpin_hwirq_mask(p, INTC_IRQPIN_REG_SOURCE, i->hw_irq);
->  
-> @@ -372,6 +377,7 @@ static int intc_irqpin_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> +	p->min_irq = INT_MAX;
->  	/* allow any number of IRQs between 1 and INTC_IRQPIN_MAX */
->  	for (k = 0; k < INTC_IRQPIN_MAX; k++) {
->  		irq = platform_get_resource(pdev, IORESOURCE_IRQ, k);
-> @@ -380,6 +386,8 @@ static int intc_irqpin_probe(struct platform_device *pdev)
->  
->  		p->irq[k].p = p;
->  		p->irq[k].requested_irq = irq->start;
-> +		if (p->min_irq > irq->start)
-> +			p->min_irq = irq->start;
->  	}
->  
->  	p->number_of_irqs = k;
-> -- 
-> 1.7.2.5
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
+diff --git a/include/dt-bindings/pinctrl/omap.h b/include/dt-bindings/pinctrl/omap.h
+new file mode 100644
+index 0000000..370df3f
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/omap.h
+@@ -0,0 +1,50 @@
++/*
++ * This header provides constants for OMAP pinctrl bindings.
++ *
++ * Copyright (C) 2009 Nokia
++ * Copyright (C) 2009-2010 Texas Instruments
++ */
++
++/* 34xx mux mode options for each pin. See TRM for options */
++#define MUX_MODE0	0
++#define MUX_MODE1	1
++#define MUX_MODE2	2
++#define MUX_MODE3	3
++#define MUX_MODE4	4
++#define MUX_MODE5	5
++#define MUX_MODE6	6
++#define MUX_MODE7	7
++
++/* 24xx/34xx mux bit defines */
++#define PULL_ENA		(1 << 3)
++#define PULL_UP			(1 << 4)
++#define ALTELECTRICALSEL	(1 << 5)
++
++/* 34xx specific mux bit defines */
++#define INPUT_EN		(1 << 8)
++#define OFF_EN			(1 << 9)
++#define OFFOUT_EN		(1 << 10)
++#define OFFOUT_VAL		(1 << 11)
++#define OFF_PULL_EN		(1 << 12)
++#define OFF_PULL_UP		(1 << 13)
++#define WAKEUP_EN		(1 << 14)
++
++/* 44xx specific mux bit defines */
++#define WAKEUP_EVENT		(1 << 15)
++
++/* Active pin states */
++#define PIN_OUTPUT		0
++#define PIN_OUTPUT_PULLUP	(PIN_OUTPUT | PULL_ENA | PULL_UP)
++#define PIN_OUTPUT_PULLDOWN	(PIN_OUTPUT | PULL_ENA)
++#define PIN_INPUT		INPUT_EN
++#define PIN_INPUT_PULLUP	(PULL_ENA | INPUT_EN | PULL_UP)
++#define PIN_INPUT_PULLDOWN	(PULL_ENA | INPUT_EN)
++
++/* Off mode states */
++#define PIN_OFF_NONE		0
++#define PIN_OFF_OUTPUT_HIGH	(OFF_EN | OFFOUT_EN | OFFOUT_VAL)
++#define PIN_OFF_OUTPUT_LOW	(OFF_EN | OFFOUT_EN)
++#define PIN_OFF_INPUT_PULLUP	(OFF_EN | OFF_PULL_EN | OFF_PULL_UP)
++#define PIN_OFF_INPUT_PULLDOWN	(OFF_EN | OFF_PULL_EN)
++#define PIN_OFF_WAKEUPENABLE	WAKEUP_EN
++
 -- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+1.7.5.4
