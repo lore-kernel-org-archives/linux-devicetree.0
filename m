@@ -1,10 +1,15 @@
 From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 0/8] xilinxfb changes
-Date: Fri, 31 May 2013 14:55:30 +0200
-Message-ID: <cover.1370004925.git.michal.simek@xilinx.com>
+Subject: [PATCH v3 1/8] video: xilinxfb: Fix OF probing on little-endian
+ systems
+Date: Fri, 31 May 2013 14:55:31 +0200
+Message-ID: <0a546c3de84c4650d019274debef0ded9007b36f.1370004925.git.michal.simek@xilinx.com>
+References: <cover.1370004925.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4999429056952855706=="
+Content-Type: multipart/mixed; boundary="===============6758253883374216839=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <cover.1370004925.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <cover.1370004925.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+References: <cover.1370004925.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,7 +21,7 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 This is a MIME GnuPG-signed message.  If you see this text, it means that
@@ -25,9 +30,9 @@ The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
 To open this message correctly you will need to install E-mail or Usenet
 software that supports modern Internet standards.
 
---===============4999429056952855706==
+--===============6758253883374216839==
 Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-8064-1370004938-0001";
+    boundary="=_mimegpg-monstr-desktop-8083-1370004950-0001";
     micalg=pgp-sha1; protocol="application/pgp-signature"
 
 This is a MIME GnuPG-signed message.  If you see this text, it means that
@@ -36,66 +41,69 @@ The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
 To open this message correctly you will need to install E-mail or Usenet
 software that supports modern Internet standards.
 
---=_mimegpg-monstr-desktop-8064-1370004938-0001
+--=_mimegpg-monstr-desktop-8083-1370004950-0001
 
-Hi,
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
 
-I have done more changes in the driver to support probing
-on little and big endian system where detection is done
-directly on the hardware.
-I have also done some cleanups to get it to the better shape.
+DTB is always big-endian that's why it is necessary
+to properly convert value (*p).
+It is automatically done in of_property_read_u32().
 
-Thanks for your review,
-Michal
-
-Changes in v3:
-- Remove out_be IO name from function name
-- Change patch subject from "Do not use out_be32 IO function"
-  to "Do not name out_be32 in function name"
-- New patch in this patchset based on discussions
-- New patch in this patchset based on discussions
-- New patch in this patchset
-- New patch in this patchset based on discussions
-- New patch in this patchset
-
+Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v3: None
 Changes in v2:
 - use of_property_read_u32 helper function
 Series-changes: 3
 - fix commit message
 
-Michal Simek (8):
-  video: xilinxfb: Fix OF probing on little-endian systems
-  video: xilinxfb: Do not name out_be32 in function name
-  video: xilinxfb: Rename PLB_ACCESS_FLAG to BUS_ACCESS_FLAG
-  video: xilinxfb: Use drvdata->regs_phys instead of physaddr
-  video: xilinxfb: Group bus initialization
-  video: xilinxfb: Add support for little endian accesses
-  video: xilinxfb: Fix sparse warnings
-  video: xilinxfb: Use driver for Xilinx ARM Zynq
+ drivers/video/xilinxfb.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
- drivers/video/Kconfig    |   2 +-
- drivers/video/xilinxfb.c | 157 ++++++++++++++++++++++++-----------------------
- 2 files changed, 81 insertions(+), 78 deletions(-)
+diff --git a/drivers/video/xilinxfb.c b/drivers/video/xilinxfb.c
+index af0b4fd..aecd15d 100644
+--- a/drivers/video/xilinxfb.c
++++ b/drivers/video/xilinxfb.c
+@@ -406,8 +406,7 @@ static int xilinxfb_release(struct device *dev)
+ static int xilinxfb_of_probe(struct platform_device *op)
+ {
+ 	const u32 *prop;
+-	u32 *p;
+-	u32 tft_access;
++	u32 tft_access = 0;
+ 	struct xilinxfb_platform_data pdata;
+ 	struct resource res;
+ 	int size, rc;
+@@ -427,8 +426,8 @@ static int xilinxfb_of_probe(struct platform_device *op)
+ 	 * To check whether the core is connected directly to DCR or PLB
+ 	 * interface and initialize the tft_access accordingly.
+ 	 */
+-	p = (u32 *)of_get_property(op->dev.of_node, "xlnx,dcr-splb-slave-if", NULL);
+-	tft_access = p ? *p : 0;
++	of_property_read_u32(op->dev.of_node, "xlnx,dcr-splb-slave-if",
++			     &tft_access);
 
+ 	/*
+ 	 * Fill the resource structure if its direct PLB interface
 --
 1.8.2.3
 
 
---=_mimegpg-monstr-desktop-8064-1370004938-0001
+--=_mimegpg-monstr-desktop-8083-1370004950-0001
 Content-Type: application/pgp-signature
 Content-Transfer-Encoding: 7bit
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.10 (GNU/Linux)
 
-iEYEABECAAYFAlGoncoACgkQykllyylKDCH6YgCdFWERa94V6WU4izCoqkwPTwit
-Tk8AnRrcmvOeFNtkYcPge4Slbs3wJkfR
-=18q7
+iEYEABECAAYFAlGondYACgkQykllyylKDCFxWgCglLhiu60BXosY0FrAMT4CWmpt
+KqoAoJHGg/t2JL10JyXGVuSd+2MvDYqh
+=+Z/a
 -----END PGP SIGNATURE-----
 
---=_mimegpg-monstr-desktop-8064-1370004938-0001--
+--=_mimegpg-monstr-desktop-8083-1370004950-0001--
 
---===============4999429056952855706==
+--===============6758253883374216839==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -106,4 +114,4 @@ devicetree-discuss mailing list
 devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---===============4999429056952855706==--
+--===============6758253883374216839==--
