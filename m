@@ -1,48 +1,76 @@
-From: "Christian Daudt" <csd@broadcom.com>
-Subject: Re: [PATCH V4 2/3] ARM: mmc: bcm281xx SDHCI driver
-Date: Fri, 31 May 2013 17:17:36 -0700
-Message-ID: <51A93DA0.3070909@broadcom.com>
-References: <1369860607-25572-1-git-send-email-csd@broadcom.com>
- <1369860607-25572-2-git-send-email-csd@broadcom.com>
- <87d2s7ceh0.fsf@octavius.laptop.org>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v2] video: simplefb: add mode parsing function
+Date: Fri, 31 May 2013 22:12:23 -0700
+Message-ID: <20130601051223.GB5189@quad.lixom.net>
+References: <1369626821-28494-1-git-send-email-acourbot@nvidia.com>
+ <51A42ED5.2060104@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87d2s7ceh0.fsf@octavius.laptop.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chris Ball <cjb@laptop.org>
-Cc: linux-doc@vger.kernel.org, Jerry Huang <Chang-Ming.Huang@freescale.com>, Grant Likely <grant.likely@secretlab.ca>, Wei WANG <wei_wang@realsil.com.cn>, matt.porter@linaro.org, Kevin Liu <kliu5@marvell.com>, Lars-Peter Clausen <lars@metafoo.de>, Stephen Warren <swarren@nvidia.com>, csd_b@daudt.org, Viresh Kumar <viresh.kumar@linaro.org>, plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, Bill Pemberton <wfp5p@virginia.edu>, Haojian Zhuang <haojian.zhuang@gmail.com>, Russell King <linux@arm.linux.org.uk>, Anton Vorontsov <avorontsov@ru.mvista.com>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Ludovic Desroches <ludovic.desroches@atmel.com>, Rob Landley <rob@lan>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <51A42ED5.2060104-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
-On 13-05-31 09:15 AM, Chris Ball wrote:
->
-> Could you investigate replacing this section of code with a call to
-> mmc_of_parse(), please?  It should be able to replace your parsing
-> and handling of bus-width, cd-gpios, wp-gpios, and non-removable
-> (other than the initialization quirks specific to your hardware).
->
-> I'd like to avoid every driver having its own DT parsing.
-> Thanks,
->
-> - Chris.
-I looked into it and it can replace just about everything that our own 
-dt parsing code is doing. The only problem is with cd_gpio. If I call 
-mmc_of_parse, then it will install its own irq handler for cd gpio, and 
-our driver needs a different handler. the mmc irq handler can call a 
-card_event callback, but that is already pointing to sdhci_card_event. 
-So the only way I can use mmc_of_parse that I can see is by adding a 
-flag to it to skip cd_gpio parsing which only this driver will then set 
-to true. Any other ideas ?
+On Mon, May 27, 2013 at 10:13:09PM -0600, Stephen Warren wrote:
+> On 05/26/2013 09:53 PM, Alexandre Courbot wrote:
+> > The naming scheme of simplefb's mode is precise enough to allow building
+> > the mode structure from it instead of using a static list of modes. This
+> > patch introduces a function that does this. In case exotic modes that
+> > cannot be represented from their name alone are needed, the static list
+> > of modes is still available as a backup.
+> > 
+> > It also changes the order in which colors are declared from MSB first to
+> > the more standard LSB first.
+> > 
+> > Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> > Changes from v1:
+> > - amended documentation following Stephen's suggestion
+> > - allow parsing of bitfields larger than 9 bits
+> > - made it clear that the parsing order of bits is changed with respect
+> >   to the original patch
+> > 
+> > Andrew, since this patch introduces a (small) change in the DT bindings,
+> > could we try to merge it during the -rc cycle so we don't have to come
+> > with a more complex solution in the future?
+> 
+> So, I think we shouldn't change the DT binding at all now. The original
+> driver is now merged for 3.10, and I think it's far too late to take
+> code that implements new features for 3.10. This means that we couldn't
+> merge this patch until 3.11. However, by then, we shouldn't be changing
+> the DT binding in incompatible ways. Olof has already published some
+> U-Boot binaries that use the current binding, and on IRC indicated he'd
+> prefer not to change the binding because of that.
+> 
+> As such, we should either:
+> 
+> a) Just add new entries into the format array that already exists in the
+> driver. Given David's response, this might be simplest.
 
-  Thanks,
-    csd
+I think so too. Is this even needed? Do we have any users of the newer formats
+or is it just someone trying to feature-creep this driver to make the "simple"
+part of the name inaccurate? :)
+
+> b) Extend the DT binding in a 100% backwards-compatible way, which would
+> mean defaulting the bit-order to match the existing 1 format, and adding
+> a new Boolean property to indicate that the format string is specified
+> in the other order.
+
+Or just add a new property that has higher priority for the newer format
+strings, and make the driver use that if it exists, otherwise fall back.
+
+
+-Olof
