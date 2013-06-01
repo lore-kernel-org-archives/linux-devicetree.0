@@ -1,29 +1,55 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH V3 0/4] clk: Samsung: audss: Register audio subsytem clocks
- using common clk framework
-Date: Sat, 01 Jun 2013 11:20:50 +0200
-Message-ID: <51A9BCF2.1060009@gmail.com>
-References: <1369735378-10003-1-git-send-email-padma.v@samsung.com> <51A9B0D1.2090408@gmail.com> <CAAgF-BfSv2WYiZrPzbdsE+7ReoncOAf1gQn+N7A2yrETFb_D4g@mail.gmail.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 6/7] usb: chipidea: udc: add force-full-speed option
+Date: Sat, 1 Jun 2013 11:21:51 +0200
+Message-ID: <20130601092151.GP32299@pengutronix.de>
+References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de>
+ <1370025529-7414-7-git-send-email-mgr@pengutronix.de>
+ <20130601073933.GK32299@pengutronix.de>
+ <20130601081932.GA28181@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAAgF-BfSv2WYiZrPzbdsE+7ReoncOAf1gQn+N7A2yrETFb_D4g@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padma Venkat <padma.kvr@gmail.com>
-Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, sbkim73@samsung.com, broonie@kernel.org, kgene.kim@samsung.com, mturquette@linaro.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130601081932.GA28181-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sat, Jun 01, 2013 at 10:19:32AM +0200, Michael Grzeschik wrote:
+> On Sat, Jun 01, 2013 at 09:39:33AM +0200, Sascha Hauer wrote:
+> > On Fri, May 31, 2013 at 08:38:48PM +0200, Michael Grzeschik wrote:
+> > > From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > 
+> > > This patch makes it possible to set the chipidea udc
+> > > into full-speed only mode. It can be set by the oftree
+> > > property "force-full-speed".
+> > 
+> > [...]
+> > 
+> > > +/* force full-speed operation */
+> > > +static bool full_speed;
+> > > +module_param(full_speed, bool, 0444);
+> > > +MODULE_PARM_DESC(full_speed, "force full-speed mode");
+> > > +
+> > 
+> > ???
+> 
+> Right, i reworked that one to get rid of yet another of property.
+> But i forgot to change the description. I will fix that, thanks.
 
-On 06/01/2013 11:06 AM, Padma Venkat wrote:
-> Actuvally I added samsung prefix when I added s5pv210 compatible name.
->   But I also feel
-> Exynos would be better now. I will resend the patch with Exynos prefix
-> and with your reviewed-by.
+But a module parameter limits all instances to full speed. Is that what
+you want? I like a devicetree property better.
 
-Yes, that sounds like a good idea. S5PV210 is also known as Exynos3110,
-and before the Exynos4210 name first appeared we had S5PV310.
+Sascha
 
-Thanks,
-Sylwester
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
