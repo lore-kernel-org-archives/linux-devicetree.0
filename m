@@ -1,166 +1,35 @@
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: Re: [PATCH V3] irqchip: Add TB10x interrupt controller driver
-Date: Sat, 1 Jun 2013 13:01:34 +0200
-Message-ID: <20130601110133.GA4051@ab42.lan>
-References: <20130530211944.05F4D3E0A90@localhost>
- <1370014348-21121-1-git-send-email-christian.ruppert@abilis.com>
- <alpine.LFD.2.02.1305311835040.2905@ionos>
- <20130531221814.534DF3E08FE@localhost>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2] pps-gpio: add device-tree binding and support
+Date: Sat, 1 Jun 2013 13:44:35 +0200
+Message-ID: <201306011344.36214.arnd@arndb.de>
+References: <1588516.WvWWFWzAui@wuerfel>
+ <1370083449-11986-1-git-send-email-jlu@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130531221814.534DF3E08FE@localhost>
-Sender: linux-doc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Pierrick Hascoet <pierrick.hascoet@abilis.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1370083449-11986-1-git-send-email-jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 31, 2013 at 11:18:14PM +0100, Grant Likely wrote:
-> On Fri, 31 May 2013 19:32:34 +0200 (CEST), Thomas Gleixner <tglx@linu=
-tronix.de> wrote:
-> > On Fri, 31 May 2013, Christian Ruppert wrote:
-> >=20
-> > > The SOC interrupt controller driver for the Abilis Systems TB10x =
-series of
-> > > SOCs based on ARC700 CPUs.
-> > >=20
-> > > This patch depends on commits eb76bdd407d8a90e59a06cb0158886df390=
-e5d1c and
-> > > 712bc93df9e7f14b8a163148d2aa7c778e151627 from branch irq/for-arm =
-of
-> > > git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git.
-> >=20
-> > That branch can be pulled into ARC as well. It only contains the
-> > changes, which are necessary for the irq domain support of the gene=
-ric
-> > irq chip.
-
-Vineet, what do you think about this? For the moment I have pulled the
-patch set into our local branch and to me it doesn't matter, we just
-have to make sure to respect this dependency when merging everything
-together.
-
-> > > +static void tb10x_irq_cascade(unsigned int irq, struct irq_desc =
-*desc)
-> > > +{
-> > > +	struct irq_domain *domain =3D irq_desc_get_handler_data(desc);
-> > > +
-> > > +	generic_handle_irq(irq_find_mapping(domain, irq));
-> > > +}
-> >=20
-> > ...
-> >=20
-> > > +	for (i =3D 0; i < nrirqs; i++) {
-> > > +		unsigned int irq =3D irq_of_parse_and_map(ictl, i);
-> > > +
-> > > +		irq_set_handler_data(irq, domain);
-> > > +		irq_set_chained_handler(irq, tb10x_irq_cascade);
-> > > +	}
-> >=20
-> > I might be completely confused, but this does not make any sense at
-> > all.
-> >=20
-> > You allocate a linear domain and then map the interrupts in the
-> > domain. The mapping function retrieves the hardware interrupt numbe=
-r
-> > and creates a virtual interrupt number, installs the chip and the
-> > handler for the interrupt and finally returns the virtual interrupt
-> > number.
-> >=20
-> > Now you take that virtual interrupt number and install
-> > tb10x_irq_cascade as the handler. irq_set_chained_handler() will
-> > startup (unmask) the interrupt right away.
-> >=20
-> > In the cascade handler you take the virtual interrupt number, which
-> > you get as argument, and find the mapping, i.e. the matching VIRTUA=
-L
-> > interrupt number for the VIRTUAL interrupt number and then call the
-> > handler.
-> >=20
-> > How is this supposed to work?
->=20
-> I think what is going on here is that the tb10x interrupt controller
-> appears to be more of a front-end to another interrupt controller wit=
-h
-> each input wired up 1:1 to the interrupt inputs of the other controll=
-er.
-
-Exactly. The TB10x interrupt controller is a front-end for the ARC CPU
-built-in interrupt controller.
-
-> (I don't know why someone would design an interrupt controller that w=
-ay,
-> but that's another issue).
-
-There are several technical reasons for this front-end. The one that
-concerns us most in the kernel is that the TB10x front-end does the
-translation from all kinds of interrupt trigger modes to the level
-triggered interrupts natively understood by the ARC CPU built-in
-controller.
-
-> The loop above is mapping each of the
-> interrupt inputs on the parent controller so that each child controll=
-er
-> can be chained to it as an input. I can't think of how else it could =
-be
-> set up with the current code if the drivers were kept separate.
-
-This is exactly the intention. I haven't found an easier way to do this
-either but I'm open to suggestions. Btw, I have noticed that the parent
-controller interrupts from this loop are not listed in /proc/interrupts=
-=2E
-I'm not sure if what is done in the loop is sufficient or if I should
-add something else (the naive option of using request_irq doesn't work,
-the kernel saying something in the lines of "irq XX triggered but noone
-cares").
-
-> Christian, what is the parent interrupt controller for this SoC? It
-> really feels like the tb10x-ictl belongs as part of the parent
-> controller. I went and looked at the parent node, and I saw this:
->=20
-> 		intc: interrupt-controller {
-> 				compatible =3D "snps,arc700-intc";
-> 				interrupt-controller;
-> 				#interrupt-cells =3D <1>;
-> 		};
->=20
-> I noticed the conspicuous absence of a reg property. Is this somethin=
-g
-> architectural?
-
-The parent controller is part of the CPU itself, see
-arch/arc/kernel/irq.c. This controller is maintained by Vineet and IMHO
-we should keep it separate from the TB10x one since it is implicitly
-used in all ARC-based platforms whereas the TB10x controller is used in
-Abilis chips only.
-
-> If I were working on this system I'd drop the
-> snps,arc700-intc node entirely and have a single abilis,tb10x-intc th=
-at
-> encapsulated the properties of both (you would of course want to shar=
-e
-> handler functions for the 'normal' inputs without the custom features=
-).
-> That would eliminate the goofyness of listing 27 separate interrupts =
-in
-> the abilis,tb10x-ictl interrupts property.
-
-To complicate things even further, some ARC CPU built-in peripherals
-(e.g. timers) generate interrupts directly to the ARC built-in interrup=
-t
-controller (without going through the TB10x front-end), hence the
-"goofy" list of interrupts in the TB10x DT node.
-
-Greetings,
-  Christian
-
---=20
-  Christian Ruppert              ,          <christian.ruppert@abilis.c=
-om>
-                                /|
-  Tel: +41/(0)22 816 19-42     //|                 3, Chemin du Pr=E9-F=
-leuri
-                             _// | bilis Systems   CH-1228 Plan-les-Oua=
-tes
+On Saturday 01 June 2013, Jan Luebbe wrote:
+> Instead of allocating a struct pps_gpio_platform_data in the DT case, store
+> the necessary information in struct pps_gpio_device_data itself. This avoids
+> an additional allocation and the ifdef. It also gets rid of some indirection.
+> 
+> Also use dev_err instead of pr_err in the changed code.
+> 
+> Signed-off-by: Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> 
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
