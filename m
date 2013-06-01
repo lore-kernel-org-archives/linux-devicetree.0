@@ -1,55 +1,294 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 6/7] usb: chipidea: udc: add force-full-speed option
-Date: Sat, 1 Jun 2013 11:21:51 +0200
-Message-ID: <20130601092151.GP32299@pengutronix.de>
-References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de>
- <1370025529-7414-7-git-send-email-mgr@pengutronix.de>
- <20130601073933.GK32299@pengutronix.de>
- <20130601081932.GA28181@pengutronix.de>
+From: Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2] pps-gpio: add device-tree binding and support
+Date: Sat,  1 Jun 2013 12:44:09 +0200
+Message-ID: <1370083449-11986-1-git-send-email-jlu@pengutronix.de>
+References: <1588516.WvWWFWzAui@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130601081932.GA28181-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1588516.WvWWFWzAui@wuerfel>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rodolfo Giometti <giometti-AVVDYK/kqiJWk0Htik3J/w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 01, 2013 at 10:19:32AM +0200, Michael Grzeschik wrote:
-> On Sat, Jun 01, 2013 at 09:39:33AM +0200, Sascha Hauer wrote:
-> > On Fri, May 31, 2013 at 08:38:48PM +0200, Michael Grzeschik wrote:
-> > > From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > > 
-> > > This patch makes it possible to set the chipidea udc
-> > > into full-speed only mode. It can be set by the oftree
-> > > property "force-full-speed".
-> > 
-> > [...]
-> > 
-> > > +/* force full-speed operation */
-> > > +static bool full_speed;
-> > > +module_param(full_speed, bool, 0444);
-> > > +MODULE_PARM_DESC(full_speed, "force full-speed mode");
-> > > +
-> > 
-> > ???
-> 
-> Right, i reworked that one to get rid of yet another of property.
-> But i forgot to change the description. I will fix that, thanks.
+Instead of allocating a struct pps_gpio_platform_data in the DT case, store
+the necessary information in struct pps_gpio_device_data itself. This avoids
+an additional allocation and the ifdef. It also gets rid of some indirection.
 
-But a module parameter limits all instances to full speed. Is that what
-you want? I like a devicetree property better.
+Also use dev_err instead of pr_err in the changed code.
 
-Sascha
+Signed-off-by: Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
+---
+    This patch depends on my two recent pps-gpio patches, which are currently
+    in Andrew Morton's mmotm. So it should probably also go via Andrew if it
+    is acceptable.
+    
+    Changes since v1:
+      - Do not allocate a pdata struct, store info in pps_gpio_device_data.
+        Also fold the two calls from pps_gpio_setup into the probe function.
+        (suggested by Arnd Bergmann)
 
+ Documentation/devicetree/bindings/pps/pps-gpio.txt |   20 +++
+ drivers/pps/clients/pps-gpio.c                     |  128 +++++++++++---------
+ 2 files changed, 93 insertions(+), 55 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pps/pps-gpio.txt
+
+diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.txt b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+new file mode 100644
+index 0000000..40bf9c3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pps/pps-gpio.txt
+@@ -0,0 +1,20 @@
++Device-Tree Bindings for a PPS Signal on GPIO
++
++These properties describe a PPS (pulse-per-second) signal connected to
++a GPIO pin.
++
++Required properties:
++- compatible: should be "pps-gpio"
++- gpios: one PPS GPIO in the format described by ../gpio/gpio.txt
++
++Optional properties:
++- assert-falling-edge: when present, assert is indicated by a falling edge
++                       (instead of by a rising edge)
++
++Example:
++	pps {
++		compatible = "pps-gpio";
++		gpios = <&gpio2 6 0>;
++
++		assert-falling-edge;
++	};
+diff --git a/drivers/pps/clients/pps-gpio.c b/drivers/pps/clients/pps-gpio.c
+index 6768f95..eae0eda 100644
+--- a/drivers/pps/clients/pps-gpio.c
++++ b/drivers/pps/clients/pps-gpio.c
+@@ -33,13 +33,17 @@
+ #include <linux/pps-gpio.h>
+ #include <linux/gpio.h>
+ #include <linux/list.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
+ 
+ /* Info for each registered platform device */
+ struct pps_gpio_device_data {
+ 	int irq;			/* IRQ used as PPS source */
+ 	struct pps_device *pps;		/* PPS source device */
+ 	struct pps_source_info info;	/* PPS source information */
+-	const struct pps_gpio_platform_data *pdata;
++	bool assert_falling_edge;
++	bool capture_clear;
++	unsigned int gpio_pin;
+ };
+ 
+ /*
+@@ -57,45 +61,25 @@ static irqreturn_t pps_gpio_irq_handler(int irq, void *data)
+ 
+ 	info = data;
+ 
+-	rising_edge = gpio_get_value(info->pdata->gpio_pin);
+-	if ((rising_edge && !info->pdata->assert_falling_edge) ||
+-			(!rising_edge && info->pdata->assert_falling_edge))
++	rising_edge = gpio_get_value(info->gpio_pin);
++	if ((rising_edge && !info->assert_falling_edge) ||
++			(!rising_edge && info->assert_falling_edge))
+ 		pps_event(info->pps, &ts, PPS_CAPTUREASSERT, NULL);
+-	else if (info->pdata->capture_clear &&
+-			((rising_edge && info->pdata->assert_falling_edge) ||
+-			 (!rising_edge && !info->pdata->assert_falling_edge)))
++	else if (info->capture_clear &&
++			((rising_edge && info->assert_falling_edge) ||
++			 (!rising_edge && !info->assert_falling_edge)))
+ 		pps_event(info->pps, &ts, PPS_CAPTURECLEAR, NULL);
+ 
+ 	return IRQ_HANDLED;
+ }
+ 
+-static int pps_gpio_setup(struct platform_device *pdev)
+-{
+-	int ret;
+-	const struct pps_gpio_platform_data *pdata = pdev->dev.platform_data;
+-
+-	ret = devm_gpio_request(&pdev->dev, pdata->gpio_pin, pdata->gpio_label);
+-	if (ret) {
+-		pr_warning("failed to request GPIO %u\n", pdata->gpio_pin);
+-		return -EINVAL;
+-	}
+-
+-	ret = gpio_direction_input(pdata->gpio_pin);
+-	if (ret) {
+-		pr_warning("failed to set pin direction\n");
+-		return -EINVAL;
+-	}
+-
+-	return 0;
+-}
+-
+ static unsigned long
+-get_irqf_trigger_flags(const struct pps_gpio_platform_data *pdata)
++get_irqf_trigger_flags(const struct pps_gpio_device_data *data)
+ {
+-	unsigned long flags = pdata->assert_falling_edge ?
++	unsigned long flags = data->assert_falling_edge ?
+ 		IRQF_TRIGGER_FALLING : IRQF_TRIGGER_RISING;
+ 
+-	if (pdata->capture_clear) {
++	if (data->capture_clear) {
+ 		flags |= ((flags & IRQF_TRIGGER_RISING) ?
+ 				IRQF_TRIGGER_FALLING : IRQF_TRIGGER_RISING);
+ 	}
+@@ -106,35 +90,63 @@ get_irqf_trigger_flags(const struct pps_gpio_platform_data *pdata)
+ static int pps_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct pps_gpio_device_data *data;
+-	int irq;
++	const char *gpio_label;
+ 	int ret;
+ 	int pps_default_params;
+ 	const struct pps_gpio_platform_data *pdata = pdev->dev.platform_data;
++	struct device_node *np = pdev->dev.of_node;
+ 
++	/* allocate space for device info */
++	data = devm_kzalloc(&pdev->dev, sizeof(struct pps_gpio_device_data),
++			GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	if (pdata) {
++		data->gpio_pin = pdata->gpio_pin;
++		gpio_label = pdata->gpio_label;
++
++		data->assert_falling_edge = pdata->assert_falling_edge;
++		data->capture_clear = pdata->capture_clear;
++	} else {
++		ret = of_get_gpio(np, 0);
++		if (ret < 0) {
++			dev_err(&pdev->dev, "failed to get GPIO from device tree\n");
++			return ret;
++		}
++		data->gpio_pin = ret;
++		gpio_label = PPS_GPIO_NAME;
++
++		if (of_get_property(np, "assert-falling-edge", NULL))
++			data->assert_falling_edge = true;
++	}
+ 
+ 	/* GPIO setup */
+-	ret = pps_gpio_setup(pdev);
+-	if (ret)
+-		return -EINVAL;
++	ret = devm_gpio_request(&pdev->dev, data->gpio_pin, gpio_label);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to request GPIO %u\n",
++			data->gpio_pin);
++		return ret;
++	}
+ 
+-	/* IRQ setup */
+-	irq = gpio_to_irq(pdata->gpio_pin);
+-	if (irq < 0) {
+-		pr_err("failed to map GPIO to IRQ: %d\n", irq);
++	ret = gpio_direction_input(data->gpio_pin);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to set pin direction\n");
+ 		return -EINVAL;
+ 	}
+ 
+-	/* allocate space for device info */
+-	data = devm_kzalloc(&pdev->dev, sizeof(struct pps_gpio_device_data),
+-			GFP_KERNEL);
+-	if (data == NULL) {
+-		return -ENOMEM;
++	/* IRQ setup */
++	ret = gpio_to_irq(data->gpio_pin);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to map GPIO to IRQ: %d\n", ret);
++		return -EINVAL;
+ 	}
++	data->irq = ret;
+ 
+ 	/* initialize PPS specific parts of the bookkeeping data structure. */
+ 	data->info.mode = PPS_CAPTUREASSERT | PPS_OFFSETASSERT |
+ 		PPS_ECHOASSERT | PPS_CANWAIT | PPS_TSFMT_TSPEC;
+-	if (pdata->capture_clear)
++	if (data->capture_clear)
+ 		data->info.mode |= PPS_CAPTURECLEAR | PPS_OFFSETCLEAR |
+ 			PPS_ECHOCLEAR;
+ 	data->info.owner = THIS_MODULE;
+@@ -143,28 +155,27 @@ static int pps_gpio_probe(struct platform_device *pdev)
+ 
+ 	/* register PPS source */
+ 	pps_default_params = PPS_CAPTUREASSERT | PPS_OFFSETASSERT;
+-	if (pdata->capture_clear)
++	if (data->capture_clear)
+ 		pps_default_params |= PPS_CAPTURECLEAR | PPS_OFFSETCLEAR;
+ 	data->pps = pps_register_source(&data->info, pps_default_params);
+ 	if (data->pps == NULL) {
+-		pr_err("failed to register IRQ %d as PPS source\n", irq);
++		dev_err(&pdev->dev, "failed to register IRQ %d as PPS source\n",
++			data->irq);
+ 		return -EINVAL;
+ 	}
+ 
+-	data->irq = irq;
+-	data->pdata = pdata;
+-
+ 	/* register IRQ interrupt handler */
+-	ret = devm_request_irq(&pdev->dev, irq, pps_gpio_irq_handler,
+-			get_irqf_trigger_flags(pdata), data->info.name, data);
++	ret = devm_request_irq(&pdev->dev, data->irq, pps_gpio_irq_handler,
++			get_irqf_trigger_flags(data), data->info.name, data);
+ 	if (ret) {
+ 		pps_unregister_source(data->pps);
+-		pr_err("failed to acquire IRQ %d\n", irq);
++		dev_err(&pdev->dev, "failed to acquire IRQ %d\n", data->irq);
+ 		return -EINVAL;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, data);
+-	dev_info(data->pps->dev, "Registered IRQ %d as PPS source\n", irq);
++	dev_info(data->pps->dev, "Registered IRQ %d as PPS source\n",
++		 data->irq);
+ 
+ 	return 0;
+ }
+@@ -175,16 +186,23 @@ static int pps_gpio_remove(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, NULL);
+ 	pps_unregister_source(data->pps);
+-	pr_info("removed IRQ %d as PPS source\n", data->irq);
++	dev_info(&pdev->dev, "removed IRQ %d as PPS source\n", data->irq);
+ 	return 0;
+ }
+ 
++static const struct of_device_id pps_gpio_dt_ids[] = {
++	{ .compatible = "pps-gpio", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, pps_gpio_dt_ids);
++
+ static struct platform_driver pps_gpio_driver = {
+ 	.probe		= pps_gpio_probe,
+ 	.remove		= pps_gpio_remove,
+ 	.driver		= {
+ 		.name	= PPS_GPIO_NAME,
+-		.owner	= THIS_MODULE
++		.owner	= THIS_MODULE,
++		.of_match_table	= of_match_ptr(pps_gpio_dt_ids),
+ 	},
+ };
+ 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.10.4
