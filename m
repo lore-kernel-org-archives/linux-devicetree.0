@@ -1,93 +1,48 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH 3/3] at_hdmac: add FIFO configuration parameter to DMA DT
- binding
-Date: Fri, 31 May 2013 16:11:40 -0700
-Message-ID: <CAOesGMhQetZfyzMpCax63xoRqtRW2ZRXt04MCbgCT-CcvUq43A@mail.gmail.com>
-References: <1369930103-11963-1-git-send-email-ludovic.desroches@atmel.com>
- <1369930103-11963-4-git-send-email-ludovic.desroches@atmel.com>
- <51A77F10.8020808@atmel.com>
- <20130530163936.GC23653@game.jcrosoft.org>
- <51A86DF5.4010808@atmel.com>
+From: "Christian Daudt" <csd@broadcom.com>
+Subject: Re: [PATCH V4 2/3] ARM: mmc: bcm281xx SDHCI driver
+Date: Fri, 31 May 2013 17:17:36 -0700
+Message-ID: <51A93DA0.3070909@broadcom.com>
+References: <1369860607-25572-1-git-send-email-csd@broadcom.com>
+ <1369860607-25572-2-git-send-email-csd@broadcom.com>
+ <87d2s7ceh0.fsf@octavius.laptop.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51A86DF5.4010808-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: "Koul, Vinod" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87d2s7ceh0.fsf@octavius.laptop.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chris Ball <cjb@laptop.org>
+Cc: linux-doc@vger.kernel.org, Jerry Huang <Chang-Ming.Huang@freescale.com>, Grant Likely <grant.likely@secretlab.ca>, Wei WANG <wei_wang@realsil.com.cn>, matt.porter@linaro.org, Kevin Liu <kliu5@marvell.com>, Lars-Peter Clausen <lars@metafoo.de>, Stephen Warren <swarren@nvidia.com>, csd_b@daudt.org, Viresh Kumar <viresh.kumar@linaro.org>, plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, Bill Pemberton <wfp5p@virginia.edu>, Haojian Zhuang <haojian.zhuang@gmail.com>, Russell King <linux@arm.linux.org.uk>, Anton Vorontsov <avorontsov@ru.mvista.com>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Ludovic Desroches <ludovic.desroches@atmel.com>, Rob Landley <rob@lan>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 31, 2013 at 2:31 AM, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org> wrote:
-> On 31/05/2013 11:16, Ludovic Desroches :
->>
->> On Thu, May 30, 2013 at 06:39:36PM +0200, Jean-Christophe PLAGNIOL-VILLARD
->> wrote:
->>>
->>> On 18:32 Thu 30 May     , Nicolas Ferre wrote:
->>>>
->>>> On 30/05/2013 18:08, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org :
->>>>>
->>>>> From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->>>>>
->>>>> For most devices the FIFO configuration is the same i.e. when half FIFO
->>>>> size is
->>>>> available/filled, a source/destination request is serviced. But USART
->>>>> devices
->>>>> have to do it when there is enough space/data available to perform a
->>>>> single
->>>>> AHB access so the ASAP configuration.
->>>>>
->>>>> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
->>>>> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
->>>>
->>>>
->>>> Clear and neat: thanks Ludo.
->>>
->>>
->>> agreed
->>>
->>> can we apply this via AT91 as this depends on some cleanup I did on DT
->>> and
->>> could result on some nigthmware conflict
->>>
->>
->> In fact, I am not sure it's the best solution. I have noticed that there
->> is a
->> conflict with a patch sent by Nicolas (dmaengine: at_hdmac: extend
->> hardware
->> handshaking interface identification) which is already in Vinod's tree but
->> which is not present on Jean-Christophe's cleanup tree on which I based
->> these
->> patches.
->>
->> Moreover this patch doesn't use macros introduced by Nicolas' patch. I may
->> update it and it should go through Vinod's tree with a dependence on patch
->> 1/3.
->>
->> What's your point of view?
+Hi Chris,
+On 13-05-31 09:15 AM, Chris Ball wrote:
 >
+> Could you investigate replacing this section of code with a call to
+> mmc_of_parse(), please?  It should be able to replace your parsing
+> and handling of bus-width, cd-gpios, wp-gpios, and non-removable
+> (other than the initialization quirks specific to your hardware).
 >
-> Indeed. Another option could be to push patches 1 and 3 in dmaengine's tree
-> and make the 2nd patch go through arm-soc with a dependency on slave-dma GIT
-> tree (it seems it is an usual patern).
+> I'd like to avoid every driver having its own DT parsing.
+> Thanks,
 >
-> Arnd, Jean-Christophe, what do you think?
+> - Chris.
+I looked into it and it can replace just about everything that our own 
+dt parsing code is doing. The only problem is with cd_gpio. If I call 
+mmc_of_parse, then it will install its own irq handler for cd gpio, and 
+our driver needs a different handler. the mmc irq handler can call a 
+card_event callback, but that is already pointing to sdhci_card_event. 
+So the only way I can use mmc_of_parse that I can see is by adding a 
+flag to it to skip cd_gpio parsing which only this driver will then set 
+to true. Any other ideas ?
 
-I'm not sure patch 1 needs to go through the dma-engine tree? Sure,
-it's a dma-related header file but it's only used to craft the device
-tree in patch 2, it doesn't affect the driver.
-
-(Arnd has comments on the patch that should be resolved though).
-
-
--Olof
+  Thanks,
+    csd
