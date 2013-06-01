@@ -1,76 +1,71 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v2] video: simplefb: add mode parsing function
-Date: Fri, 31 May 2013 22:12:23 -0700
-Message-ID: <20130601051223.GB5189@quad.lixom.net>
-References: <1369626821-28494-1-git-send-email-acourbot@nvidia.com>
- <51A42ED5.2060104@wwwdotorg.org>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [PATCH V2] dtc: ensure #line directives don't consume data from
+ the next line
+Date: Sat, 1 Jun 2013 15:30:57 +1000
+Message-ID: <20130601053057.GB12059@boomeroo.fritz.box>
+References: <1370025184-23808-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oC1+HKm2/end4ao3"
+Return-path: <linux-kbuild-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <51A42ED5.2060104-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1370025184-23808-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: jdl@jdl.com, mmarek@suse.cz, Stephen Warren <swarren@nvidia.com>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 27, 2013 at 10:13:09PM -0600, Stephen Warren wrote:
-> On 05/26/2013 09:53 PM, Alexandre Courbot wrote:
-> > The naming scheme of simplefb's mode is precise enough to allow building
-> > the mode structure from it instead of using a static list of modes. This
-> > patch introduces a function that does this. In case exotic modes that
-> > cannot be represented from their name alone are needed, the static list
-> > of modes is still available as a backup.
-> > 
-> > It also changes the order in which colors are declared from MSB first to
-> > the more standard LSB first.
-> > 
-> > Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > ---
-> > Changes from v1:
-> > - amended documentation following Stephen's suggestion
-> > - allow parsing of bitfields larger than 9 bits
-> > - made it clear that the parsing order of bits is changed with respect
-> >   to the original patch
-> > 
-> > Andrew, since this patch introduces a (small) change in the DT bindings,
-> > could we try to merge it during the -rc cycle so we don't have to come
-> > with a more complex solution in the future?
-> 
-> So, I think we shouldn't change the DT binding at all now. The original
-> driver is now merged for 3.10, and I think it's far too late to take
-> code that implements new features for 3.10. This means that we couldn't
-> merge this patch until 3.11. However, by then, we shouldn't be changing
-> the DT binding in incompatible ways. Olof has already published some
-> U-Boot binaries that use the current binding, and on IRC indicated he'd
-> prefer not to change the binding because of that.
-> 
-> As such, we should either:
-> 
-> a) Just add new entries into the format array that already exists in the
-> driver. Given David's response, this might be simplest.
 
-I think so too. Is this even needed? Do we have any users of the newer formats
-or is it just someone trying to feature-creep this driver to make the "simple"
-part of the name inaccurate? :)
+--oC1+HKm2/end4ao3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> b) Extend the DT binding in a 100% backwards-compatible way, which would
-> mean defaulting the bit-order to match the existing 1 format, and adding
-> a new Boolean property to indicate that the format string is specified
-> in the other order.
+On Fri, May 31, 2013 at 12:33:04PM -0600, Stephen Warren wrote:
+> From: Stephen Warren <swarren@nvidia.com>
+>=20
+> Previously, the #line parsing regex ended with ({WS}+[0-9]+)?. The {WS}
+> could match line-break characters. If the #line directive did not contain
+> the optional flags field at the end, this could cause any integer data on
+> the next line to be consumed as part of the #line directive parsing. This
+> could cause syntax errors (i.e. #line parsing consuming the leading 0
+> from a hex literal 0x1234, leaving x1234 to be parsed as cell data,
+> which is a syntax error), or invalid compilation results (i.e. simply
+> consuming literal 1234 as part of the #line processing, thus removing it
+> from the cell data).
+>=20
+> Fix this by replacing {WS} with [ \t] so that it can't match line-breaks.
+>=20
+> Convert all instances of {WS}, even though the other instances should be
+> irrelevant for any well-formed #line directive. This is done for
+> consistency and ultimate safety.
+>=20
+> Reported-by: Ian Campbell <Ian.Campbell@citrix.com>
+> Signed-off-by: Stephen Warren <swarren@nvidia.com>
 
-Or just add a new property that has higher priority for the newer format
-strings, and make the driver use that if it exists, otherwise fall back.
+Nice catch.
 
+Acked-by: David Gibson <david@gibson.dropbear.id.au>
 
--Olof
+I'll pull it into my github tree.  Jon, please either apply directly
+or pull from my tree.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--oC1+HKm2/end4ao3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlGphxEACgkQaILKxv3ab8awPQCeL+iOBmgPbA5rnvnI6KTXMqxf
+W18AnjzJ4Pm02RaFdClj+TsWM5tqAJBo
+=zVV5
+-----END PGP SIGNATURE-----
+
+--oC1+HKm2/end4ao3--
