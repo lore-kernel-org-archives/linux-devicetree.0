@@ -1,53 +1,56 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v2] video: simplefb: add mode parsing function
-Date: Sat, 1 Jun 2013 22:09:04 -0700
-Message-ID: <CAOesGMi=f=2S9y96-DtBzOZydhsJ1pF+m26AzdQjj59qtQu-oA@mail.gmail.com>
-References: <1369626821-28494-1-git-send-email-acourbot@nvidia.com>
- <51A42ED5.2060104@wwwdotorg.org>
- <20130601051223.GB5189@quad.lixom.net>
- <51AAD326.4040809@wwwdotorg.org>
+From: Oded Gabbay <ogabbay@advaoptical.com>
+Subject: [PATCH 3/3] MMC: FSL SDHC: Add support for hard-wired (permanent) card. Kernel version 3.4.47
+Date: Sun, 2 Jun 2013 09:38:48 +0300
+Message-ID: <1370155128-680-1-git-send-email-ogabbay@advaoptical.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51AAD326.4040809-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, cjb@laptop.org, grant.likely@secretlab.ca, rob@landley.net
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, ogabbay@advaoptical.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 1, 2013 at 10:07 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 05/31/2013 11:12 PM, Olof Johansson wrote:
->> On Mon, May 27, 2013 at 10:13:09PM -0600, Stephen Warren wrote:
->>> On 05/26/2013 09:53 PM, Alexandre Courbot wrote:
->>>> The naming scheme of simplefb's mode is precise enough to allow building
->>>> the mode structure from it instead of using a static list of modes. This
->>>> patch introduces a function that does this. In case exotic modes that
->>>> cannot be represented from their name alone are needed, the static list
->>>> of modes is still available as a backup.
-> ...
->>> As such, we should either:
->>>
->>> a) Just add new entries into the format array that already exists in the
->>> driver. Given David's response, this might be simplest.
->>
->> I think so too. Is this even needed? Do we have any users of the newer formats
->> or is it just someone trying to feature-creep this driver to make the "simple"
->> part of the name inaccurate? :)
->
-> Alex is working on board support for a new NVIDIA board, where IIRC the
-> bootloader sets up some 32-bit ARGB format for the panel.
+This patch adds support of recognizing hard-wired (permanent) cards
+to Freescale's SDHC host driver. This is done by adding the option
+"fsl,card-wired" to the SDHC device-tree entry. Detection of this
+option is done in the probe function. Update documentation in file
+fsl-esdhc.txt
 
-Ah, ok. Let's just implement that one format too then. :)
+Signed-off-by: Oded Gabbay <ogabbay@advaoptical.com>
+---
+ Documentation/devicetree/bindings/mmc/fsl-esdhc.txt | 3 +++
+ drivers/mmc/host/sdhci-of-esdhc.c                   | 4 ++++
+ 2 files changed, 7 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+index 64bcb8b..6f0eefa 100644
+--- a/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
++++ b/Documentation/devicetree/bindings/mmc/fsl-esdhc.txt
+@@ -16,6 +16,9 @@ Required properties:
+     only handle 1-bit data transfers.
+   - sdhci,auto-cmd12: (optional) specifies that a controller can
+     only handle auto CMD12.
++  - fsl,card-wired : (optional) specifies that the card is
++    a permanent card and should not be detected for insertion or
++    removal
+ 
+ Example:
+ 
+diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
+index e70f22f..2f79ec2 100644
+--- a/drivers/mmc/host/sdhci-of-esdhc.c
++++ b/drivers/mmc/host/sdhci-of-esdhc.c
+@@ -222,6 +222,10 @@ static int __devinit sdhci_esdhc_probe(struct platform_device *pdev)
+ 		host->quirks2 |= SDHCI_QUIRK2_BROKEN_HOST_CONTROL;
+ 	}
+ 
++	/* If card is permanent, add capability of non-removable */
++	if (of_get_property(np, "fsl,card-wired", NULL))
++		host->mmc->caps |= MMC_CAP_NONREMOVABLE;
++
+ 	ret = sdhci_add_host(host);
+ 	if (ret)
+ 		sdhci_pltfm_free(pdev);
+-- 
+1.7.11.7
 
--Olof
