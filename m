@@ -1,59 +1,64 @@
-From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH RFC 2/3] clk: dt: binding for basic multiplexor clock
-Date: Mon, 3 Jun 2013 21:33:19 +0200
-Message-ID: <201306032133.20039.heiko@sntech.de>
-References: <1370281990-15090-1-git-send-email-mturquette@linaro.org> <1370281990-15090-3-git-send-email-mturquette@linaro.org>
+From: Tony Prisk <linux@prisktech.co.nz>
+Subject: [GIT PULL] vt8500 devicetree updates for 3.11
+Date: Tue, 04 Jun 2013 07:39:14 +1200
+Message-ID: <51ACF0E2.2000206@prisktech.co.nz>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1370281990-15090-3-git-send-email-mturquette@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mike Turquette <mturquette@linaro.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org
+Cc: "Johansson, Olof" <olof@lixom.net>, VT8500/WM8505 Linux Kernel <vt8500-wm8505-linux-kernel@googlegroups.com>, "List, Devicetree" <devicetree-discuss@lists.ozlabs.org>, "Bergmann,
+ Arnd" <arnd@arndb.de>, "Mailing List,
+ Arm" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+The following changes since commit f722406faae2d073cc1d01063d1123c35425939e:
 
-I think it's a multiplexEr clock in the patch title, and see below
+   Linux 3.10-rc1 (2013-05-11 17:14:08 -0700)
 
+are available in the git repository at:
 
-Am Montag, 3. Juni 2013, 19:53:09 schrieb Mike Turquette:
-> Device Tree binding for the basic clock multiplexor, plus the setup
-> function to register the clock.  Based on the existing fixed-clock
-> binding.
-> 
-> Also relocate declaration of of_fixed_factor_clk_setup to keep things
-> tidy.
-> 
-> Signed-off-by: Mike Turquette <mturquette@linaro.org>
+   git://github.com/linux-wmt/linux-vtwm.git tags/vt8500/dts-3.11
 
-[...]
+for you to fetch changes up to e36572b64df358f0bc3a508e8761c81d7f3b8215:
 
-> +
-> +	reg = of_iomap(node, 0);
-> +	pr_err("%s: reg is 0x%p\n", __func__, reg);
-> +
-> +	if (of_property_read_u32(node, "mask", &mask)) {
-> +		pr_err("%s: missing mask property for %s\n", __func__, node->name);
-> +		return;
-> +	}
-> +
-> +	if (of_property_read_u32(node, "shift", &shift))
-> +		pr_debug("%s: missing shift property defaults to zero for %s\n",
-> +				__func__, node->name);
-> +
-> +	if (of_property_read_bool(node, "index_one"))
-> +		clk_mux_flags |= CLK_MUX_INDEX_ONE;
-> +
-> +	clk = clk_register_mux_table(NULL, clk_name, parent_names, num_parents,
-> +			0, reg, 0, mask, clk_mux_flags,
+   dts: vt8500: Correct reference clock on WM8850 SoCs (2013-06-04 
+07:31:22 +1200)
 
-                      ^- should probably be shift
+----------------------------------------------------------------
+Devicetree updates for 3.11
 
+----------------------------------------------------------------
+Tony Prisk (7):
+       dts: vt8500: Fix invalid/missing cpu nodes for soc files.
+       dts: vt8500: Add devicetree support for WM8750 SoC and APC8750 board
+       dts: vt8500: Update serial nodes and disable by default in SoC files
+       dts: clk: vt8500: Update SoC dtsi to use WM8850 PLL clocks
+       dts: vt8500: Populate missing PLL nodes
+       dts: vt8500: Add ARM, AHB, APB and DDR clock nodes to SoC files
+       dts: vt8500: Correct reference clock on WM8850 SoCs
 
-Otherwise looks cool and I'm currently trying it with my Rockchip code.
-
-
-Heiko
+  arch/arm/boot/dts/Makefile           |    1 +
+  arch/arm/boot/dts/vt8500-bv07.dts    |    4 +
+  arch/arm/boot/dts/vt8500.dtsi        |   29 ++-
+  arch/arm/boot/dts/wm8505-ref.dts     |    4 +
+  arch/arm/boot/dts/wm8505.dtsi        |   84 +++++++-
+  arch/arm/boot/dts/wm8650-mid.dts     |    3 +
+  arch/arm/boot/dts/wm8650.dtsi        |   79 +++++++-
+  arch/arm/boot/dts/wm8750-apc8750.dts |   30 +++
+  arch/arm/boot/dts/wm8750.dtsi        |  347 
+++++++++++++++++++++++++++++++++++
+  arch/arm/boot/dts/wm8850-w70v2.dts   |    4 +
+  arch/arm/boot/dts/wm8850.dtsi        |   94 ++++++++-
+  11 files changed, 649 insertions(+), 30 deletions(-)
+  create mode 100644 arch/arm/boot/dts/wm8750-apc8750.dts
+  create mode 100644 arch/arm/boot/dts/wm8750.dtsi
