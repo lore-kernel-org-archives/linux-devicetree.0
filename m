@@ -1,42 +1,81 @@
-From: "Mohammed, Afzal" <afzal@ti.com>
-Subject: RE: [PATCH v2 11/14] Documentation: dt: binding: omap: am43x timer
-Date: Mon, 3 Jun 2013 07:49:28 +0000
-Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EB1238B@DBDE04.ent.ti.com>
-References: <cover.1369658705.git.afzal@ti.com>
- <223d90dc9eeab13d8496690d336cdf0f7d27cd22.1369658705.git.afzal@ti.com>
- <51A520B5.8040803@gmail.com> <51A52A16.1040204@wwwdotorg.org>
- <C8443D0743D26F4388EA172BF4E2A7A93EAFB044@DBDE04.ent.ti.com>
- <51A5BEB6.6070809@ti.com>
- <C8443D0743D26F4388EA172BF4E2A7A93EAFB174@DBDE04.ent.ti.com>
- <51A60427.6010409@ti.com>
+From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 02/10] clocksource: dw_apb_timer_of: add clock-handling
+Date: Mon, 3 Jun 2013 09:51:08 +0200
+Message-ID: <201306030951.09468.heiko@sntech.de>
+References: <201306030055.15413.heiko@sntech.de>
+ <201306030056.37724.heiko@sntech.de> <20130603032219.GM11798@tarshish>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <51A60427.6010409@ti.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Jon Hunter <jgchunter@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Benoit Cousson <benoit.cousson@linaro.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130603032219.GM11798@tarshish>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQmVub2l0LA0KDQpPbiBXZWQsIE1heSAyOSwgMjAxMyBhdCAxOTowNTozNSwgQ291c3Nvbiwg
-QmVub2l0IHdyb3RlOg0KDQo+IEFuZCBpbiB0aGlzIGNhc2UsIHlvdSBkbyBub3QgaW50cm9kdWNl
-IGFueSBuZXcgcmV2aXNpb24uDQo+IA0KPiBUaGVyZSBpcyBubyBwb2ludCB0byB1cGRhdGUgdGhl
-IGJpbmRpbmcgZWFjaCB0aW1lIHdlIGFkZCBhIG5ldyBTb0MNCj4gdmFyaWFudCB0aGF0IHdpbGwg
-Y29udGFpbiB0aGUgZXhhY3Qgc2FtZSBJUC4NCj4gDQo+IEkgdGhpbmsgaXQgd2lsbCBtYWlubHkg
-Y29uZnVzZSB0aGUgdXNlciB0aGF0IHdpbGwgd29uZGVyIHdoYXQgaXMNCj4gZGlmZmVyZW50IGlu
-IHRoYXQgdmVyc2lvbiBjb21wYXJlIHRvIHRoZSBwcmV2aW91cyBvbmUsIG1vcmVvdmVyIHdlIGNh
-bg0KPiBlbmQgdXAgd2l0aCBodW5kcmVkIG9mIGVudHJpZXMgZm9yIHRoZSBleGFjdCBzYW1lIElQ
-IGZvciBub3RoaW5nLg0KPiANCj4gVGhlIHJlYWwgcHJvYmxlbSBpcyBkdWUgdG8gdGhlIGludHJv
-ZHVjdGlvbiBvZiB0aGUgU29DIG5hbWUgaW4gdGhlDQo+IGRldmljZSBjb21wYXRpYmxlIG5hbWUu
-IFRoYXQgZG9lcyBpbnRyb2R1Y2VkIGEgU29DIGxldmVsIGluZm9ybWF0aW9uDQo+IHRoYXQgaXMg
-bW9zdGx5IGlycmVsZXZhbnQgYXQgZGV2aWNlIGxldmVsLiBJIGNhbiB1bmRlcnN0YW5kIHdoeSBp
-dCB3YXMNCj4gZG9uZSBmb3IgcHJhY3RpY2FsIGFzcGVjdCB3aGVuIHRoZSBJUCB2ZXJzaW9uIGlz
-IG5vdCB3ZWxsIGlkZW50aWZpZWQsDQo+IGJ1dCB0aGF0IGNhbiBsZWFkIHRvIHRoaXMgcHJvbGlm
-ZXJhdGlvbiBvZiBuZXcgcG9pbnRsZXNzIGJpbmRpbmdzLg0KDQpBcyBvcGluaW9ucyBvbiAkc3Vi
-amVjdCBzZWVtcyBub3QgeWV0IHRvIGJlIGNvbmNsdXNpdmUsIEkgcGxhbiB0bw0KcmViYXNlIERU
-UyBwYXRjaCAoMTQvMTQpIG92ZXIgeW91ciAnZm9yXzMuMTEvZHRzJyBicmFuY2ggKHRoYXQgbWFr
-ZXMNCnVzZSBvZiBDIHByZXByb2Nlc3NvciBvbiBPTUFQIERUUykgYW5kIHBvc3Qgc2VwYXJhdGVs
-eSBkcm9wcGluZw0KMTEtMTQgcGF0Y2hlcywgaXMgdGhhdCBva2F5ID8NCg0KUmVnYXJkcw0KQWZ6
-YWwNCg0K
+Am Montag, 3. Juni 2013, 05:22:19 schrieb Baruch Siach:
+> Hi Heiko,
+> =
+
+> On Mon, Jun 03, 2013 at 12:56:37AM +0200, Heiko St=FCbner wrote:
+> > Add the possibility to get the clock-frequency from a timer clock inste=
+ad
+> > of specifying it as dt property. Additionally also add the possibility
+> > to also define a controlling periphal clock for the timer block.
+> > =
+
+> > The clock-frequency property is kept to act as fallback if no clocks
+> > are specified.
+> > =
+
+> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> > ---
+> > =
+
+> >  Documentation/devicetree/bindings/rtc/dw-apb.txt |   19 ++++++++++++++=
+++
+> >  drivers/clocksource/dw_apb_timer_of.c            |   26
+> >  +++++++++++++++++++++- 2 files changed, 44 insertions(+), 1
+> >  deletions(-)
+> > =
+
+> > diff --git a/Documentation/devicetree/bindings/rtc/dw-apb.txt
+> > b/Documentation/devicetree/bindings/rtc/dw-apb.txt index
+> > 93e2b0f..80ab1c1 100644
+> > --- a/Documentation/devicetree/bindings/rtc/dw-apb.txt
+> > +++ b/Documentation/devicetree/bindings/rtc/dw-apb.txt
+> > =
+
+> > @@ -5,9 +5,20 @@ Required properties:
+> >  - reg: physical base address of the controller and length of memory
+> >  mapped
+> >  =
+
+> >    region.
+> >  =
+
+> >  - interrupts: IRQ line for the timer.
+> > =
+
+> > +- either clocks+clock-names or clock-frequency properties
+> > +
+> > +Optional properties:
+> > +- clocks	: list of clock specifiers, corresponding to entries in
+> > +		  the clock-names property;
+> > +- clock-names	: should contain "timer and "pclk" entries, matching
+> > entries
+> =
+
+> Missing closing quotes around "timer".
+
+thanks for finding ... will fix in the next run
