@@ -1,119 +1,195 @@
-From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH V3] irqchip: Add TB10x interrupt controller driver (2)
-Date: Mon, 3 Jun 2013 11:03:13 +0530
-Message-ID: <51AC2A99.30709@synopsys.com>
-References: <20130530211944.05F4D3E0A90@localhost>
- <1370014348-21121-1-git-send-email-christian.ruppert@abilis.com>
- <alpine.LFD.2.02.1305311835040.2905@ionos>
- <20130531221814.534DF3E08FE@localhost> <20130601110133.GA4051@ab42.lan>
+From: "J, KEERTHY" <j-keerthy@ti.com>
+Subject: RE: [PATCH v10 01/12] mfd: DT bindings for the palmas family MFD
+Date: Mon, 3 Jun 2013 06:55:56 +0000
+Message-ID: <DC88CAD03C0052499C1907B327FC63229E662E@DBDE04.ent.ti.com>
+References: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
+ <1363964122-19201-2-git-send-email-ian@slimlogic.co.uk>
+ <5150906F.9040202@wwwdotorg.org> <51A73908.7020206@ti.com>
+ <51A7DAC2.80602@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130601110133.GA4051-7oYq3qWSd+k@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
-Cc: Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <51A7DAC2.80602@wwwdotorg.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "wim@iguana.be" <wim@iguana.be>, "ldewangan@nvidia.com" <ldewangan@nvidia.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>, "mturquette@linaro.org" <mturquette@linaro.org>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "cooloney@gmail.com" <cooloney@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Ian Lartey <ian@slimlogic.co.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.inf>
 List-Id: devicetree@vger.kernel.org
 
-On 06/01/2013 04:31 PM, Christian Ruppert wrote:
-> On Fri, May 31, 2013 at 11:18:14PM +0100, Grant Likely wrote:
->> On Fri, 31 May 2013 19:32:34 +0200 (CEST), Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> wrote:
->>> On Fri, 31 May 2013, Christian Ruppert wrote:
->>>
->>>> The SOC interrupt controller driver for the Abilis Systems TB10x series of
->>>> SOCs based on ARC700 CPUs.
->>>>
->>>> This patch depends on commits eb76bdd407d8a90e59a06cb0158886df390e5d1c and
->>>> 712bc93df9e7f14b8a163148d2aa7c778e151627 from branch irq/for-arm of
->>>> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git.
->>> That branch can be pulled into ARC as well. It only contains the
->>> changes, which are necessary for the irq domain support of the generic
->>> irq chip.
-> Vineet, what do you think about this? For the moment I have pulled the
-> patch set into our local branch and to me it doesn't matter, we just
-> have to make sure to respect this dependency when merging everything
-> together.
+Hi Stephen,
 
-Yes what you did is right. I don't have to back-merge any of this into my tree -
-given that I'm not testing the v3 intc here. In 3.11 all respective changes will
-go in via the respective trees anyways.
+> -----Original Message-----
+> From: Stephen Warren [mailto:swarren@wwwdotorg.org]
+> Sent: Friday, May 31, 2013 4:34 AM
+> To: J, KEERTHY
+> Cc: gg@slimlogic.co.uk; Ian Lartey; linux-kernel@vger.kernel.org;
+> linux-doc@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> leds@vger.kernel.org; linux-watchdog@vger.kernel.org; devicetree-
+> discuss@lists.ozlabs.org; grant.likely@secretlab.ca;
+> broonie@opensource.wolfsonmicro.com; rob.herring@calxeda.com;
+> rob@landley.net; mturquette@linaro.org; linus.walleij@linaro.org;
+> cooloney@gmail.com; sfr@canb.auug.org.au; rpurdie@rpsys.net;
+> akpm@linux-foundation.org; sameo@linux.intel.com; wim@iguana.be;
+> lgirdwood@gmail.com; ldewangan@nvidia.com; Kristo, Tero
+> Subject: Re: [PATCH v10 01/12] mfd: DT bindings for the palmas family
+> MFD
+> 
+> On 05/30/2013 05:33 AM, keerthy wrote:
+> >
+> > On 03/25/2013 11:29 PM, Stephen Warren wrote:
+> >
+> >> On 03/22/2013 08:55 AM, Ian Lartey wrote:
+> >>> From: Graeme Gregory <gg@slimlogic.co.uk>
+> >>>
+> >>> Add the various binding files for the palmas family of chips. There
+> >>> is a top level MFD binding then a seperate binding for IP blocks on
+> chips.
+> >>
+> >>> diff --git a/Documentation/devicetree/bindings/clock/palmas-clk.txt
+> >>> b/Documentation/devicetree/bindings/clock/palmas-clk.txt
+> >>
+> >> Where is the reg property; if you're instantiating the clk device as
+> >> a standalone DT node and driver, it should be possible to retrieve
+> >> the address of this IP block instance from DT, not using driver-
+> internal APIs.
+> >>
+> >> This same comment likely applies everywhere, so I won't repeat it.
+> >>
+> >>> +Example:
+> >>> +
+> >>> +clk {
+> >>> +    compatible = "ti,twl6035-clk", "ti,palmas-clk";
+> >>> +    ti,clk32kg-mode-sleep = <0>;
+> >>> +    ti,clk32kgaudio-mode-sleep = <0>;
+> >>
+> >>> +    #clock-cells = <1>;
+> >>> +    clock-frequency = <32000000>;
+> >>> +    clock-names = "clk32kg", "clk32kgaudio";
+> >>
+> >> The binding description itself should describe what clocks this node
+> >> provides and consumes.
+> >>
+> >> What is clock-frequency; which clock does it affect?
+> >>
+> >> The presence of #clock-cells implies this is a clock provider. This
+> >> binding should define the format of the clock cells that this
+> >> property implies. I assume it's just the ID of the output clocks,
+> but
+> >> what values correspond to which output clocks? That mapping table
+> >> needs to be listed here.
+> >>
+> >> The presence of clock-names implies this is a clock consumer.
+> >> However, there is no clocks property in the example. Is clks missing
+> >> from the example, or should this property be clock-output-names
+> >> instead? If this node is a clock consumer, the list of which clocks
+> >> it requires should be documented.
+> >>
+> >>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-palmas.txt
+> >>> b/Documentation/devicetree/bindings/gpio/gpio-palmas.txt
+> >>
+> >>> +- gpio-controller: mark the device as a GPIO controller
+> >>> +- gpio-cells = <1>:  GPIO lines are provided.
+> >>
+> >> That's #gpio-cells not gpio-cells.
+> >>
+> >> I assume that cell simply contains the GPIO ID/number. That should
+> be
+> >> documented for clarity.
+> >>
+> >> Surely gpio-cells should be 2 not 1, so there is space for flags. At
+> >> least an "inverted" or "active-low" flag should be included; GPIO
+> >> consumers would typically implement that flag in SW, so there' no
+> >> requirement that the flag only be supported if the HW supports the
+> feature.
+> >>
+> >>> +- interrupt-controller : palmas has its own internal IRQs
+> >>> +- #interrupt-cells : should be set to 2 for IRQ number and flags
+> >>> +  The first cell is the IRQ number.
+> >>> +  The second cell is the flags, encoded as the trigger masks from
+> >>> +  Documentation/devicetree/bindings/interrupts.txt
+> >>
+> >> You need "/interrupt-controller" before the filename there.
+> >>
+> >>> +- interrupt-parent : The parent interrupt controller.
+> >>
+> >> If this IP block has interrupt outputs, it should require an
+> >> "interrupts" property too. This is the same concept that drives the
+> >> need for a reg property. This same comment likely applies
+> everywhere,
+> >> so I won't repeat it.
+> >>
+> >>> diff --git
+> >>> a/Documentation/devicetree/bindings/input/palmas-pwrbutton.txt
+> >>> b/Documentation/devicetree/bindings/input/palmas-pwrbutton.txt
+> >>
+> >>> +- interrupts: the interrupt outputs of the controller.
+> >>
+> >> How many entries are there, what do they mean, and in what order
+> must
+> >> they appear? (Note that the binding of a node must define the order
+> >> of the interrupts property, since historically it's been accessed by
+> >> index, not by name, and all bindings must allow that access method
+> to be used).
+> >>
+> >>> +- interrupt-names : Should be the name of irq resource. Each
+> >>> +interrupt
+> >>> +  binds its interrupt-name.
+> >>
+> >> The binding needs to define standard names for the entries in this
+> >> property, or define that interrupts are only retrieved by index, in
+> >> which case interrupt-names shouldn't be present. This same comment
+> >> likely applies everywhere, so I won't repeat it.
+> >>
+> >>> diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt
+> >>> b/Documentation/devicetree/bindings/mfd/palmas.txt
+> >>
+> >>> +Required properties:
+> >> ...
+> >>
+> >> I believe the Palmas devices have many separate I2C addresses, even
+> >> buses, which are I think are at least partially independently SW
+> >> configurable. In that case, the reg property for this node should
+> >> probably enumerate all the I2C addresses that this chip responds to,
+> >> so that they can each be passed down to the child nodes.
+> >
+> >
+> > Stephen,
+> >
+> > The palmas devices do have multiple I2C slave IDs. From OMAP5 as the
+> > master all the palmas slave devices are connected via I2C1 bus.
+> >
+> > I did not understand the SW configurable part. It is more board
+> > dependent. Correct me if i understood it wrongly.
+> 
+> IIRC (and I may not sine it's been a while since I looked at this),
+> there are SW registers that can modify the I2C address that the chip
+> will respond to, so you could access the main I2C address, then program
+> which other I2C addresses get used.
 
->
->> (I don't know why someone would design an interrupt controller that way,
->> but that's another issue).
-> There are several technical reasons for this front-end. The one that
-> concerns us most in the kernel is that the TB10x front-end does the
-> translation from all kinds of interrupt trigger modes to the level
-> triggered interrupts natively understood by the ARC CPU built-in
-> controller.
+Ok. I guess you are referring to the I2C_SPI register of Palmas.
+This register is indeed SW configurable and I tried changing the
+Slave IDs on the fly and I could change them. AFAIK these are OTP
+And never changed through software on the fly.
 
-As I mentioned in prev email,  arc in-core intc always exists, providing
-reasonable functionality so that simpler SoCs don't have to do that themselves.
+> 
+> Or, perhaps I was just thinking of the fact that there are strapping
+> pins on the chip that affect both the main I2C address, and some/all of
+> the other I2C addresses, so the driver needs to be told each and every
+> I2C address, not just one single overall I2C address.
 
+Looking at the register spec there seem to be 2 possible combinations:
+0x48, 0x49, 0x4A or 0x58, 0x59, 0x5A. Again these are OTP. By default
+It is 0x48, 0x49, 0x4A. So passing 0x48 or 0x58 as the main I2C
+Address seems sufficient here.
 
->> The loop above is mapping each of the
->> interrupt inputs on the parent controller so that each child controller
->> can be chained to it as an input. I can't think of how else it could be
->> set up with the current code if the drivers were kept separate.
-> This is exactly the intention. I haven't found an easier way to do this
-> either but I'm open to suggestions.
-
-But the child intc must only uplink to one parent intc IRQ line. In that case why
-do we need to enumerate the rest of them in code. Is that a limitation of
-framework or the parent intc (with it's legacy domain instantiation) is not doing
-something correct.
-
->  Btw, I have noticed that the parent
-> controller interrupts from this loop are not listed in /proc/interrupts.
-> I'm not sure if what is done in the loop is sufficient or if I should
-> add something else (the naive option of using request_irq doesn't work,
-> the kernel saying something in the lines of "irq XX triggered but noone
-> cares").
->
->> Christian, what is the parent interrupt controller for this SoC? It
->> really feels like the tb10x-ictl belongs as part of the parent
->> controller. I went and looked at the parent node, and I saw this:
->>
->> 		intc: interrupt-controller {
->> 				compatible = "snps,arc700-intc";
->> 				interrupt-controller;
->> 				#interrupt-cells = <1>;
->> 		};
->>
->> I noticed the conspicuous absence of a reg property. Is this something
->> architectural?
-> The parent controller is part of the CPU itself, see
-> arch/arc/kernel/irq.c. This controller is maintained by Vineet and IMHO
-> we should keep it separate from the TB10x one since it is implicitly
-> used in all ARC-based platforms whereas the TB10x controller is used in
-> Abilis chips only.
-
-Ofcourse they have to separate. The question is, what do we need to do to avoid
-clunkiness in code for the cascaded intc.
-
->> If I were working on this system I'd drop the
->> snps,arc700-intc node entirely and have a single abilis,tb10x-intc that
->> encapsulated the properties of both (you would of course want to share
->> handler functions for the 'normal' inputs without the custom features).
->> That would eliminate the goofyness of listing 27 separate interrupts in
->> the abilis,tb10x-ictl interrupts property.
-> To complicate things even further, some ARC CPU built-in peripherals
-> (e.g. timers) generate interrupts directly to the ARC built-in interrupt
-> controller (without going through the TB10x front-end), hence the
-> "goofy" list of interrupts in the TB10x DT node.
-
-But I presume that this is common-place for cascaded intc setups - some
-peripherals hooking up directly to topmost intc would be normal. But it seems I'm
-not as educated in area as I really should be.
-
--Vineet
+Regards,
+Keerthy
