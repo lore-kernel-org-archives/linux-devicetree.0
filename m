@@ -1,173 +1,54 @@
-From: "Jon Medhurst (Tixy)" <tixy@linaro.org>
-Subject: Re: [RFC PATCH 2/3] drivers: mfd: vexpress: add timeout API to
- vexpress config interface
-Date: Mon, 03 Jun 2013 11:15:32 +0100
-Message-ID: <1370254532.3407.36.camel@linaro1.home>
-References: <1369399986-15649-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1369399986-15649-3-git-send-email-lorenzo.pieralisi@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 10/10] arm: add basic support for Rockchip RK3066a boards
+Date: Mon, 03 Jun 2013 12:26:49 +0200
+Message-ID: <1822564.TIKVDZSzqK@wuerfel>
+References: <201306030055.15413.heiko@sntech.de> <9452845.qTGjLPCfXq@wuerfel> <201306031146.57611.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1369399986-15649-3-git-send-email-lorenzo.pieralisi@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>, Achin Gupta <achin.gupta@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201306031146.57611.heiko@sntech.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mike Turquette <mturquette@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <cjb@laptop.org>, linux-mmc@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2013-05-24 at 13:53 +0100, Lorenzo Pieralisi wrote:
-> In case some transactions to the Serial Power Controller (SPC) are lost owing
-> to multiple operations handled at once by the M3 controller the OS needs to
-> rely on a configuration API that can time out so that failures do not result
-> in an unusable system.
-> 
-> This patch adds a timeout API to the vexpress config programming interface,
-> and refactors the existing read/write functions so that they can be reused
-> seamlessly on top of the newly defined API.
+On Monday 03 June 2013 11:46:57 Heiko St=FCbner wrote:
+>=20
+> The timers are of the same type and the clocksource driver just grabs=
+ the=20
+> first of them as clockevent and the second as clocksource, so I think=
+ two=20
+> CLOCKSOURCE_OF_DECLARE lines won't do.
 
-Isn't one of the main purposes of the config interface to serialise
-transactions to the config bus, so why would the SPC be handling
-multiple transactions at once? And if we can in fact loose transactions
-doesn't this mean we get random failures in the system? E.g. if this
-happened at boot in vexpress_spc_populate_opps then cpufreq will fail.
+Ok, got it. I was confused by the fact that the existing two sets of
+"compatible" strings have separate sets of strings:
 
-Also, I think the code implementing timeouts is broken, see below.
+static const struct of_device_id sptimer_ids[] __initconst =3D {
+        { .compatible =3D "picochip,pc3x2-rtc" },
+        { .compatible =3D "snps,dw-apb-timer-sp" },
+        { /* Sentinel */ },
+};
 
-> Cc: Samuel Ortiz <sameo@linux.intel.com>
-> Cc: Achin Gupta <achin.gupta@arm.com>
-> Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
-> Cc: Amit Kucheria <amit.kucheria@linaro.org>
-> Cc: Jon Medhurst <tixy@linaro.org>
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> ---
->  drivers/mfd/vexpress-config.c | 26 +++++++---
->  include/linux/vexpress.h      | 23 ++++++--
->  2 files changed, 37 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/mfd/vexpress-config.c b/drivers/mfd/vexpress-config.c
-> index 1af2b0e..6f4aa5a 100644
-> --- a/drivers/mfd/vexpress-config.c
-> +++ b/drivers/mfd/vexpress-config.c
-> @@ -266,8 +266,18 @@ int vexpress_config_wait(struct vexpress_config_trans *trans)
->  }
->  EXPORT_SYMBOL(vexpress_config_wait);
->  
-> -int vexpress_config_read(struct vexpress_config_func *func, int offset,
-> -		u32 *data)
-> +int vexpress_config_wait_timeout(struct vexpress_config_trans *trans,
-> +			long jiffies)
-> +{
-> +	int ret;
-> +	ret = wait_for_completion_timeout(&trans->completion, jiffies);
+static const struct of_device_id osctimer_ids[] __initconst =3D {
+        { .compatible =3D "picochip,pc3x2-timer" },
+        { .compatible =3D "snps,dw-apb-timer-osc" },
+        {},
+};
 
-If the request times out, don't we need to call vexpress_config_complete
-to dequeue the timed out request and trigger the next one? Though we
-will still have a problem where the timeout happens but the request
-then does in fact complete normally, in that case we would signal
-completion of the second request before it has in fact completed.
+and thought they were for clocksource and clockevent respectively,
+which is wrong.
 
-So, if transactions really can get silently dropped by thing on the end
-of the config bus, then we must have a mechanism for associating a
-particular transaction with a completion signal, otherwise we won't know
-what transaction actually got completed OK and which ones were dropped
-and should receive -ETIMEDOUT.
+> But I just looked at clocksource_of_init a bit more closely, which do=
+es a=20
+> for_each_matching_node_and_match over the nodes. So the init_func cou=
+ld grab=20
+> the device for the clockevent on the first call and the clocksource w=
+hen it=20
+> gets called for the second matching node.
 
-Finally, I don't think these issues are purely theoretical, I'm pretty
-certain that the kernel panics and spinlock bad magic errors I see with
-his patch series are due to requests completing after they have been
-timed out and then the stack based transaction object is being accessed
-after it has gone out of scope.
+Yes, I think that should work. You just have to be careful about callin=
+g
+init_sched_clock() only once.
 
-> +	return ret ? trans->status : -ETIMEDOUT;
-> +}
-> +EXPORT_SYMBOL(vexpress_config_wait_timeout);
-> +
-> +int vexpress_config_read_timeout(struct vexpress_config_func *func, int offset,
-> +		u32 *data, long jiffies)
->  {
->  	struct vexpress_config_trans trans = {
->  		.func = func,
-> @@ -279,14 +289,14 @@ int vexpress_config_read(struct vexpress_config_func *func, int offset,
->  	int status = vexpress_config_schedule(&trans);
->  
->  	if (status == VEXPRESS_CONFIG_STATUS_WAIT)
-> -		status = vexpress_config_wait(&trans);
-> +		status = vexpress_config_wait_timeout(&trans, jiffies);
->  
->  	return status;
->  }
-> -EXPORT_SYMBOL(vexpress_config_read);
-> +EXPORT_SYMBOL(vexpress_config_read_timeout);
->  
-> -int vexpress_config_write(struct vexpress_config_func *func, int offset,
-> -		u32 data)
-> +int vexpress_config_write_timeout(struct vexpress_config_func *func,
-> +				  int offset, u32 data, long jiffies)
->  {
->  	struct vexpress_config_trans trans = {
->  		.func = func,
-> @@ -298,8 +308,8 @@ int vexpress_config_write(struct vexpress_config_func *func, int offset,
->  	int status = vexpress_config_schedule(&trans);
->  
->  	if (status == VEXPRESS_CONFIG_STATUS_WAIT)
-> -		status = vexpress_config_wait(&trans);
-> +		status = vexpress_config_wait_timeout(&trans, jiffies);
->  
->  	return status;
->  }
-> -EXPORT_SYMBOL(vexpress_config_write);
-> +EXPORT_SYMBOL(vexpress_config_write_timeout);
-> diff --git a/include/linux/vexpress.h b/include/linux/vexpress.h
-> index 50368e0..e5015d8 100644
-> --- a/include/linux/vexpress.h
-> +++ b/include/linux/vexpress.h
-> @@ -15,6 +15,7 @@
->  #define _LINUX_VEXPRESS_H
->  
->  #include <linux/device.h>
-> +#include <linux/sched.h>
->  
->  #define VEXPRESS_SITE_MB		0
->  #define VEXPRESS_SITE_DB1		1
-> @@ -102,10 +103,24 @@ struct vexpress_config_func *__vexpress_config_func_get(
->  void vexpress_config_func_put(struct vexpress_config_func *func);
->  
->  /* Both may sleep! */
-> -int vexpress_config_read(struct vexpress_config_func *func, int offset,
-> -		u32 *data);
-> -int vexpress_config_write(struct vexpress_config_func *func, int offset,
-> -		u32 data);
-> +int vexpress_config_read_timeout(struct vexpress_config_func *func, int offset,
-> +		u32 *data, long jiffies);
-> +int vexpress_config_write_timeout(struct vexpress_config_func *func,
-> +		int offset, u32 data, long jiffies);
-> +
-> +static inline int vexpress_config_read(struct vexpress_config_func *func,
-> +				 int offset, u32 *data)
-> +{
-> +	return vexpress_config_read_timeout(func, offset, data,
-> +					     MAX_SCHEDULE_TIMEOUT);
-> +}
-> +
-> +static inline int vexpress_config_write(struct vexpress_config_func *func,
-> +				 int offset, u32 data)
-> +{
-> +	return vexpress_config_write_timeout(func, offset, data,
-> +					     MAX_SCHEDULE_TIMEOUT);
-> +}
->  
->  /* Platform control */
->  
-
--- 
-Tixy
+	Arnd
