@@ -1,47 +1,80 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH v2 11/14] Documentation: dt: binding: omap: am43x timer
-Date: Mon, 3 Jun 2013 11:53:27 +0200
-Message-ID: <51AC6797.1040304@ti.com>
-References: <cover.1369658705.git.afzal@ti.com> <223d90dc9eeab13d8496690d336cdf0f7d27cd22.1369658705.git.afzal@ti.com> <51A520B5.8040803@gmail.com> <51A52A16.1040204@wwwdotorg.org> <C8443D0743D26F4388EA172BF4E2A7A93EAFB044@DBDE04.ent.ti.com> <51A5BEB6.6070809@ti.com> <C8443D0743D26F4388EA172BF4E2A7A93EAFB174@DBDE04.ent.ti.com> <51A60427.6010409@ti.com> <C8443D0743D26F4388EA172BF4E2A7A93EB1238B@DBDE04.ent.ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <C8443D0743D26F4388EA172BF4E2A7A93EB1238B@DBDE04.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Mohammed, Afzal" <afzal@ti.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Jon Hunter <jgchunter@gmail.com>, Russell King <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@linaro.org>, Benoit Cousson <benoit.cousson@linaro.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH v4 0/7] xilinxfb changes
+Date: Mon,  3 Jun 2013 12:13:15 +0200
+Message-ID: <cover.1370254386.git.michal.simek@xilinx.com>
+Content-Type: multipart/signed;
+    boundary="=_mimegpg-monstr-desktop-9717-1370254402-0001";
+    micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Arnd Bergmann <arnd@arndb.de>, Timur Tabi <timur@tabi.org>, devicetree-discuss@lists.ozlabs.org, linux-fbdev@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Afzal,
+This is a MIME GnuPG-signed message.  If you see this text, it means that
+your E-mail or Usenet software does not support MIME signed messages.
+The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
+To open this message correctly you will need to install E-mail or Usenet
+software that supports modern Internet standards.
 
-On 06/03/2013 09:49 AM, Mohammed, Afzal wrote:
-> Hi Benoit,
-> 
-> On Wed, May 29, 2013 at 19:05:35, Cousson, Benoit wrote:
-> 
->> And in this case, you do not introduce any new revision.
->>
->> There is no point to update the binding each time we add a new SoC
->> variant that will contain the exact same IP.
->>
->> I think it will mainly confuse the user that will wonder what is
->> different in that version compare to the previous one, moreover we can
->> end up with hundred of entries for the exact same IP for nothing.
->>
->> The real problem is due to the introduction of the SoC name in the
->> device compatible name. That does introduced a SoC level information
->> that is mostly irrelevant at device level. I can understand why it was
->> done for practical aspect when the IP version is not well identified,
->> but that can lead to this proliferation of new pointless bindings.
-> 
-> As opinions on $subject seems not yet to be conclusive, I plan to
-> rebase DTS patch (14/14) over your 'for_3.11/dts' branch (that makes
-> use of C preprocessor on OMAP DTS) and post separately dropping
-> 11-14 patches, is that okay ?
+--=_mimegpg-monstr-desktop-9717-1370254402-0001
 
-Yes, that sounds good to me.
+Hi,
 
-Thanks,
-Benoit
+I have done more changes in the driver to support probing
+on little and big endian system where detection is done
+directly on the hardware.
+I have also done some cleanups to get it to the better shape.
 
+Thanks for your review,
+Michal
+
+Changes in v4:
+- Acked by Arnd
+- Remove "video: xilinxfb: Fix sparse warnings"
+  patch because it is trying to fix incorrect API
+  usage and sparse should warn about it.
+
+Changes in v3:
+- fix commit message
+- Remove out_be IO name from function name
+- Change patch subject from "Do not use out_be32 IO function"
+  to "Do not name out_be32 in function name"
+- New patch in this patchset based on discussions
+- New patch in this patchset based on discussions
+- New patch in this patchset
+- New patch in this patchset based on discussions
+
+Changes in v2:
+- use of_property_read_u32 helper function
+
+Michal Simek (7):
+  video: xilinxfb: Fix OF probing on little-endian systems
+  video: xilinxfb: Do not name out_be32 in function name
+  video: xilinxfb: Rename PLB_ACCESS_FLAG to BUS_ACCESS_FLAG
+  video: xilinxfb: Use drvdata->regs_phys instead of physaddr
+  video: xilinxfb: Group bus initialization
+  video: xilinxfb: Add support for little endian accesses
+  video: xilinxfb: Use driver for Xilinx ARM Zynq
+
+ drivers/video/Kconfig    |   2 +-
+ drivers/video/xilinxfb.c | 135 +++++++++++++++++++++++------------------------
+ 2 files changed, 68 insertions(+), 69 deletions(-)
+
+--
+1.8.2.3
+
+
+--=_mimegpg-monstr-desktop-9717-1370254402-0001
+Content-Type: application/pgp-signature
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEABECAAYFAlGsbEIACgkQykllyylKDCHRkACfT0eCE/iqClD1fmcYOkHJEwtV
+1GMAn0GQr+VZqVPi0NzxHHLVMXf07O3V
+=5uOg
+-----END PGP SIGNATURE-----
+
+--=_mimegpg-monstr-desktop-9717-1370254402-0001--
