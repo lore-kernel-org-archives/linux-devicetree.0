@@ -1,115 +1,42 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH v3] ARM: dts: AM43x: initial support
-Date: Mon, 3 Jun 2013 16:15:10 +0200
-Message-ID: <51ACA4EE.6070603@ti.com>
-References: <1370265594-12883-1-git-send-email-afzal@ti.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCHv3 0/3] Add G762/G763 PWM fan controller
+Date: Mon, 3 Jun 2013 10:15:22 -0400
+Message-ID: <20130603141522.GE3803@titan.lakedaemon.net>
+References: <cover.1370202835.git.arno@natisbad.org>
+ <20130603023053.GA11723@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1370265594-12883-1-git-send-email-afzal@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Afzal Mohammed <afzal@ti.com>
-Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Ankur Kishore <a-kishore@ti.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130603023053.GA11723-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Olivier Mouchet <olivier.mouchet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/2013 03:19 PM, Afzal Mohammed wrote:
-> DT source (minimal) for AM4372 SoC to represent AM43x SoC's. Those
-> represented here are the minimal DT nodes necessary to get kernel
-> booting.
-> 
-> In DT nodes, "ti,hwmod" property has not been added, this would be
-> added along with PRCM support for AM43x.
-> 
-> Signed-off-by: Ankur Kishore <a-kishore@ti.com>
-> Signed-off-by: Afzal Mohammed <afzal@ti.com>
+On Sun, Jun 02, 2013 at 07:30:53PM -0700, Guenter Roeck wrote:
+> On Sun, Jun 02, 2013 at 10:14:05PM +0200, Arnaud Ebalard wrote:
+...
+> > note: this should not be an issue but this v3 is based on
+> >       jcooper/mvebu/fixes branch. 
+> > 
+> I don't know about this branch/repository. If there are hwmon fixes in it,
+> they should be submitted to the lm-sensors mailing list.
 
-Thanks Afzal. I've just applied it in my branch.
+Yes, please, unless you *need* a patch to build/boot that isn't in
+mainline yet, always base off of one of Linus' tags, eg v3.10-rc4.  Then,
+if asked, rebase as needed.
 
-Regards,
-Benoit
+thx,
 
-> ---
-> 
-> v3: Make use of C preprocessor, rebased over Benoit's 'for_3.11/dts' branch
-> v2: Add gptimer 1ms, timer2, synctimer and remove twd local timer
-> 
->  arch/arm/boot/dts/am4372.dtsi | 68 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 arch/arm/boot/dts/am4372.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-> new file mode 100644
-> index 0000000..ddc1df7
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/am4372.dtsi
-> @@ -0,0 +1,68 @@
-> +/*
-> + * Device Tree Source for AM4372 SoC
-> + *
-> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-> + *
-> + * This file is licensed under the terms of the GNU General Public License
-> + * version 2.  This program is licensed "as is" without any warranty of any
-> + * kind, whether express or implied.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +#include "skeleton.dtsi"
-> +
-> +/ {
-> +	compatible = "ti,am4372", "ti,am43";
-> +	interrupt-parent = <&gic>;
-> +
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	cpus {
-> +		cpu@0 {
-> +			compatible = "arm,cortex-a9";
-> +		};
-> +	};
-> +
-> +	gic: interrupt-controller@48241000 {
-> +		compatible = "arm,cortex-a9-gic";
-> +		interrupt-controller;
-> +		#interrupt-cells = <3>;
-> +		reg = <0x48241000 0x1000>,
-> +		      <0x48240100 0x0100>;
-> +	};
-> +
-> +	ocp {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		uart0: serial@44e09000 {
-> +			compatible = "ti,am4372-uart","ti,omap2-uart";
-> +			reg = <0x44e09000 0x2000>;
-> +			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		timer1: timer@44e31000 {
-> +			compatible = "ti,am4372-timer-1ms","ti,am335x-timer-1ms";
-> +			reg = <0x44e31000 0x400>;
-> +			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-> +			ti,timer-alwon;
-> +		};
-> +
-> +		timer2: timer@48040000  {
-> +			compatible = "ti,am4372-timer","ti,am335x-timer";
-> +			reg = <0x48040000  0x400>;
-> +			interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		counter32k: counter@44e86000 {
-> +			compatible = "ti,am4372-counter32k","ti,omap-counter32k";
-> +			reg = <0x44e86000 0x40>;
-> +		};
-> +	};
-> +};
-> 
+Jason.
