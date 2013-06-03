@@ -1,72 +1,59 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 10/10] arm: add basic support for Rockchip RK3066a boards
-Date: Mon, 03 Jun 2013 04:15:46 +0200
-Message-ID: <5760087.7O4UgypAot@wuerfel>
-References: <201306030055.15413.heiko@sntech.de> <201306030102.20890.heiko@sntech.de>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCHv3 0/3] Add G762/G763 PWM fan controller
+Date: Sun, 2 Jun 2013 19:30:53 -0700
+Message-ID: <20130603023053.GA11723@roeck-us.net>
+References: <cover.1370202835.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <201306030102.20890.heiko@sntech.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mike Turquette <mturquette@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <cjb@laptop.org>, linux-mmc@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1370202835.git.arno@natisbad.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnaud Ebalard <arno@natisbad.org>
+Cc: Jean Delvare <khali@linux-fr.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Simon Guinot <simon.guinot@sequanux.org>, Olivier Mouchet <olivier.mouchet@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 03 June 2013 01:02:20 Heiko St=FCbner wrote:
-> index 0000000..094b37d
-> --- /dev/null
-> +++ b/arch/arm/mach-rockchip/rockchip.c
+On Sun, Jun 02, 2013 at 10:14:05PM +0200, Arnaud Ebalard wrote:
+> Hi,
+> 
+> This series adds support for GMT G762/G763. This work is based on a
+> basic version for 2.6.31 kernel developed Olivier Mouchet for LaCie
+> NAS. Updates have been performed to run on recent kernels. Support has
+> been completed and additional features added: ability to configure
+> various characteristics from .dts file, better initialization, alarms
+> and error reporting support, gear mode, polarity, fan pulse per
+> revolution, fan startup voltage control. The following detailed
+> datasheet has been used as a basis for this work:
+> 
+>   http://natisbad.org/NAS/refs/GMT_EDS-762_763-080710-0.2.pdf
+> 
+> The patch was developed for and tested against the GMT G762 fan
+> controller used in a Netgear ReadyNAS Duo v2 (kirkwood 88F6282-based
+> NAS). This is the main reason for the device tree bindings provided in
+> first patch. The driver also support init via board file. The patches
+> are against current ARM tree; tell me if you need me to rebase it
+> against something else. Patch 2 and 3 provides documentation for the
+> driver and DT bindings, respectively.
+> 
+> As discussed in a previous email:
+> 
+>  - A macro is defined to pass values of platform data structure in
+>    board setup files. If one has a better approach ...
+>  - This v3 still has support for pwm1 sysfs entry in closed-loop mode.
+>    Guenter, if you still think it is a bad idea, I will change that
+>    in v4.
+> 
 
-If all goes well, this file can be removed again in 3.11 since it's
-all generic, but let's add it for now.
+If you want me to accept your code, I would suggest to change it such that
+pwm1 sets the FAN_SET_OUT register, and fan1_target sets the SET_CNT register,
+both unconditionally. Redefining the pwm1 attribute to set the fan target
+speed instead of a pwm / voltage value is not acceptable.
 
-> +
-> +static void __init rockchip_timer_init(void)
-> +{
-> +       rockchip_init_clocks();
-> +       dw_apb_timer_init();
-> +}
+> note: this should not be an issue but this v3 is based on
+>       jcooper/mvebu/fixes branch. 
+> 
+I don't know about this branch/repository. If there are hwmon fixes in it,
+they should be submitted to the lm-sensors mailing list.
 
-Can't you use=20
-
-	of_clk_init(NULL);
-	clocksource_of_init();
-
-here and change the two drivers to provide the respective macros?
-
-> +
-> +static void __init rockchip_dt_init(void)
-> +{
-> +#ifdef CONFIG_CACHE_L2X0
-> +       l2x0_of_init(0, ~0UL);
-> +#endif
-> +       of_platform_populate(NULL, of_default_bus_match_table, NULL, =
-NULL);
-> +}
-
-We still need to find a common location to call l2x0_of_init.
-
-> +
-> +static const char * const rockchip_board_dt_compat[] =3D {
-> +       "rockchip,rk2928", /* single core */
-> +       "rockchip,rk30xx", /* dual cores */
-> +       "rockchip,rk31xx", /* dual and quad cores */
-> +       NULL,
-> +};
-
-Please use real numbers instead of wildcards: rockchip,rk3066
-not rockchip,rk30xx.
-
-> +DT_MACHINE_START(ROCKCHIP_DT, "Rockchip Cortex-A9 (Device Tree)")
-> +       .map_io         =3D debug_ll_io_init,
-> +       .init_machine   =3D rockchip_dt_init,
-> +       .init_time      =3D rockchip_timer_init,
-> +       .dt_compat      =3D rockchip_board_dt_compat,
-> +MACHINE_END
-
-The map_io line can already get removed.
-
-What about SMP support? Still working on it?
-
-	Arnd
+Thanks,
+Guenter
