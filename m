@@ -1,14 +1,14 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH RFC 2/3] clk: dt: binding for basic multiplexor clock
-Date: Mon, 3 Jun 2013 23:39:38 +0200
-Message-ID: <201306032339.39176.heiko@sntech.de>
+From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH RFC 3/3] clk: dt: binding for basic divider clock
+Date: Tue, 4 Jun 2013 00:18:32 +0200
+Message-ID: <201306040018.33236.heiko@sntech.de>
 References: <1370281990-15090-1-git-send-email-mturquette@linaro.org>
- <20130603200722.6077.85426@quantum> <201306032215.45983.heiko@sntech.de>
+ <1370281990-15090-4-git-send-email-mturquette@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201306032215.45983.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <1370281990-15090-4-git-send-email-mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,45 +23,79 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gTW9udGFnLCAzLiBKdW5pIDIwMTMsIDIyOjE1OjQ1IHNjaHJpZWIgSGVpa28gU3TDvGJuZXI6
-Cj4gQW0gTW9udGFnLCAzLiBKdW5pIDIwMTMsIDIyOjA3OjIyIHNjaHJpZWIgTWlrZSBUdXJxdWV0
-dGU6Cj4gPiBRdW90aW5nIEhlaWtvIFN0w7xibmVyICgyMDEzLTA2LTAzIDEyOjMzOjE5KQo+ID4g
-Cj4gPiA+IEhpIE1pa2UsCj4gPiA+IAo+ID4gPiBJIHRoaW5rIGl0J3MgYSBtdWx0aXBsZXhFciBj
-bG9jayBpbiB0aGUgcGF0Y2ggdGl0bGUsIGFuZCBzZWUgYmVsb3cKPiA+IAo+ID4gRG9oLCB5b3Ug
-YXJlIHJpZ2h0LiAgQnV0ICJ4b3IiIGlzIHNvIG11Y2ggY29vbGVyIGxvb2tpbmcgdGhhbiAieGVy
-Ii4uLgo+ID4gCj4gPiA+IEFtIE1vbnRhZywgMy4gSnVuaSAyMDEzLCAxOTo1MzowOSBzY2hyaWVi
-IE1pa2UgVHVycXVldHRlOgo+ID4gPiA+IERldmljZSBUcmVlIGJpbmRpbmcgZm9yIHRoZSBiYXNp
-YyBjbG9jayBtdWx0aXBsZXhvciwgcGx1cyB0aGUgc2V0dXAKPiA+ID4gPiBmdW5jdGlvbiB0byBy
-ZWdpc3RlciB0aGUgY2xvY2suICBCYXNlZCBvbiB0aGUgZXhpc3RpbmcgZml4ZWQtY2xvY2sKPiA+
-ID4gPiBiaW5kaW5nLgo+ID4gPiA+IAo+ID4gPiA+IEFsc28gcmVsb2NhdGUgZGVjbGFyYXRpb24g
-b2Ygb2ZfZml4ZWRfZmFjdG9yX2Nsa19zZXR1cCB0byBrZWVwIHRoaW5ncwo+ID4gPiA+IHRpZHku
-Cj4gPiA+ID4gCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogTWlrZSBUdXJxdWV0dGUgPG10dXJxdWV0
-dGVAbGluYXJvLm9yZz4KPiA+ID4gCj4gPiA+IFsuLi5dCj4gPiA+IAo+ID4gPiA+ICsKPiA+ID4g
-PiArICAgICByZWcgPSBvZl9pb21hcChub2RlLCAwKTsKPiA+ID4gPiArICAgICBwcl9lcnIoIiVz
-OiByZWcgaXMgMHglcFxuIiwgX19mdW5jX18sIHJlZyk7Cj4gPiA+ID4gKwo+ID4gPiA+ICsgICAg
-IGlmIChvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2RlLCAibWFzayIsICZtYXNrKSkgewo+ID4gPiA+
-ICsgICAgICAgICAgICAgcHJfZXJyKCIlczogbWlzc2luZyBtYXNrIHByb3BlcnR5IGZvciAlc1xu
-IiwgX19mdW5jX18sCj4gPiA+ID4gbm9kZS0+bmFtZSk7ICsgICAgICAgICAgICAgcmV0dXJuOwo+
-ID4gPiA+ICsgICAgIH0KPiA+ID4gPiArCj4gPiA+ID4gKyAgICAgaWYgKG9mX3Byb3BlcnR5X3Jl
-YWRfdTMyKG5vZGUsICJzaGlmdCIsICZzaGlmdCkpCj4gPiA+ID4gKyAgICAgICAgICAgICBwcl9k
-ZWJ1ZygiJXM6IG1pc3Npbmcgc2hpZnQgcHJvcGVydHkgZGVmYXVsdHMgdG8gemVybwo+ID4gPiA+
-IGZvciAlc1xuIiwgKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX19mdW5jX18sIG5vZGUt
-Pm5hbWUpOwo+ID4gPiA+ICsKPiA+ID4gPiArICAgICBpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29s
-KG5vZGUsICJpbmRleF9vbmUiKSkKPiA+ID4gPiArICAgICAgICAgICAgIGNsa19tdXhfZmxhZ3Mg
-fD0gQ0xLX01VWF9JTkRFWF9PTkU7Cj4gPiA+ID4gKwo+ID4gPiA+ICsgICAgIGNsayA9IGNsa19y
-ZWdpc3Rlcl9tdXhfdGFibGUoTlVMTCwgY2xrX25hbWUsIHBhcmVudF9uYW1lcywKPiA+ID4gPiBu
-dW1fcGFyZW50cywgKyAgICAgICAgICAgICAgICAgICAgIDAsIHJlZywgMCwgbWFzaywgY2xrX211
-eF9mbGFncywKPiA+ID4gPiAKPiA+ID4gICAgICAgICAgICAgICAgICAgICAgIF4tIHNob3VsZCBw
-cm9iYWJseSBiZSBzaGlmdAo+ID4gPiAKPiA+ID4gT3RoZXJ3aXNlIGxvb2tzIGNvb2wgYW5kIEkn
-bSBjdXJyZW50bHkgdHJ5aW5nIGl0IHdpdGggbXkgUm9ja2NoaXAgY29kZS4KPiA+IAo+ID4gUmln
-aHQgYWdhaW4uICBNeSB0ZXN0IHBsYXRmb3JtIHNlZW1zIHRvIG5vdCBzaGlmdCB0aGUgbWFzayBh
-dCBhbGwgc28KPiA+IHRoaXMgZGlkIG5vdCBjYXVzZSBhIHZpc2libGUgYnVnIGZvciBtZS4KPiAK
-PiBJJ20gY3VycmVudGx5IGNvbnZlcnRpbmcgbXkgcm9ja2NoaXAgc3R1ZmYgdG8gaXQsIGFzIGl0
-IHdvdWxkIHNvbHZlIGEgbG90Cj4gb2YgcHJvYmxlbXMgd2l0aCB0aGUgbnVtZXJvdXMgY2xvY2sg
-dHlwZXMgSSdtIGRlZmluaW5nIGp1c3QgdG8gcHV0IHRoZQo+IHNoaWZ0IGFuZCBtYXNrIHZhbHVl
-cyBzb21ld2hlcmUuCj4gCj4gU28gbGV0cyBzZWUgaWYgYW55dGhpbmcgbW9yZSB0dXJucyB1cCA7
-LSkKCnllcCAuLi4gb2ZfbXV4X2Nsa19zZXR1cCBpcyBxdWl0ZSB0YWxrYXRpdmUgLi4uIHRoZXJl
-IGFyZSBxdWl0ZSBzb21lIChkZWJ1Zy0/KSAKcHJfZXJycyBpbiBpdCA7LSkKCgpIZWlrbwpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRp
-c2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0
-dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+Am Montag, 3. Juni 2013, 19:53:10 schrieb Mike Turquette:
+> Devicetree binding for the basic clock divider, plus the setup function
+> to register the clock.  Based on the existing fixed-clock binding.
+> 
+> Signed-off-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+
+[...]
+
+> +/**
+> + * of_div_clk_setup() - Setup function for simple div rate clock
+> + */
+> +void of_divider_clk_setup(struct device_node *node)
+> +{
+> +	struct clk *clk;
+> +	const char *clk_name = node->name;
+> +	void __iomem *reg;
+> +	const char *parent_name;
+> +	u8 clk_divider_flags = 0;
+> +	u8 mask = 0;
+> +	u8 shift = 0;
+
+in the mux-clock these 3 are unsigned long and u32 types ... what is correct?
+
+
+> +	struct clk_div_table *table;
+> +
+> +	of_property_read_string(node, "clock-output-names", &clk_name);
+> +
+> +	parent_name = of_clk_get_parent_name(node, 0);
+> +
+> +	reg = of_iomap(node, 0);
+> +
+> +	if (of_property_read_u8(node, "mask", &mask)) {
+> +		pr_err("%s: missing mask property for %s\n", __func__, node->name);
+> +		return;
+> +	}
+> +
+> +	if (of_property_read_u8(node, "shift", &shift))
+> +		pr_debug("%s: missing shift property defaults to zero for %s\n",
+> +				__func__, node->name);
+
+same here ... mux reads u32
+
+> +	if (of_property_read_bool(node, "index_one"))
+> +		clk_divider_flags |= CLK_DIVIDER_ONE_BASED;
+> +
+> +	if (of_property_read_bool(node, "index_power_of_two"))
+> +		clk_divider_flags |= CLK_DIVIDER_POWER_OF_TWO;
+> +
+> +	if (of_property_read_bool(node, "index_allow_zero"))
+> +		clk_divider_flags |= CLK_DIVIDER_ALLOW_ZERO;
+> +
+> +	table = of_clk_get_div_table(node);
+> +	if (IS_ERR(table))
+> +		return;
+> +
+> +	clk = clk_register_divider_table(NULL, clk_name,
+> +			parent_name, 0,
+> +			reg, shift, mask,
+> +			clk_divider_flags, table,
+> +			NULL);
+
+this causes trouble, as the divider clock code above still requires a width 
+instead of a mask. I remember talk about this going to change separately, but 
+couldn't find anything of the sort in linux-next.
+
+
+
+> +
+> +	if (!IS_ERR(clk))
+> +		of_clk_add_provider(node, of_clk_src_simple_get, clk);
+> +}
+> +EXPORT_SYMBOL_GPL(of_divider_clk_setup);
+> +CLK_OF_DECLARE(divider_clk, "divider-clock", of_divider_clk_setup);
+> +#endif
