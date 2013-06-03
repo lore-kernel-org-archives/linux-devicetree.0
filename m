@@ -1,53 +1,125 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: ux500: register LP5521 LEDs in the device tree
-Date: Mon, 3 Jun 2013 09:18:05 +0100
-Message-ID: <20130603081805.GC3370@gmail.com>
-References: <1369210331-18545-1-git-send-email-linus.walleij@stericsson.com>
- <CAK5ve-+oJL0fbtM=5xRSBjCztX1fP-fcwUvZurnj42hiXR5X+Q@mail.gmail.com>
+From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 10/10] arm: add basic support for Rockchip RK3066a boards
+Date: Mon, 3 Jun 2013 10:23:49 +0200
+Message-ID: <201306031023.49364.heiko@sntech.de>
+References: <201306030055.15413.heiko@sntech.de> <201306030102.20890.heiko@sntech.de> <5760087.7O4UgypAot@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAK5ve-+oJL0fbtM=5xRSBjCztX1fP-fcwUvZurnj42hiXR5X+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Milo Kim <Milo.Kim-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez.st-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <5760087.7O4UgypAot@wuerfel>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mike Turquette <mturquette@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <cjb@laptop.org>, linux-mmc@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAzMSBNYXkgMjAxMywgQnJ5YW4gV3Ugd3JvdGU6Cgo+IE9uIFdlZCwgTWF5IDIyLCAy
-MDEzIGF0IDE6MTIgQU0sIExpbnVzIFdhbGxlaWoKPiA8bGludXMud2FsbGVpakBzdGVyaWNzc29u
-LmNvbT4gd3JvdGU6Cj4gPiBGcm9tOiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFy
-by5vcmc+Cj4gPgo+ID4gQmFzZWQgb24gcGVuZGluZyBkZXZpY2UgdHJlZSBzdXBwb3J0IGluIHRo
-ZSBMUDU1eHggZHJpdmVycwo+ID4gd2UgY2FuIGFkZCB0aGUgY29ycmVjdCBMRUQgYW5kIGNoYW5u
-ZWwgY29uZmlndXJhdGlvbiBmcm9tIHRoZQo+ID4gdXg1MDAgZGV2aWNlIHRyZWUgZm9yIGFsbCBI
-UkVGIHZhcmlhbnRzLgo+ID4KPiA+IENjOiBNaWxvIEtpbSA8TWlsby5LaW1AdGkuY29tPgo+ID4g
-Q2M6IEJyeWFuIFd1IDxjb29sb25leUBnbWFpbC5jb20+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBMaW51
-cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+Cj4gPiAtLS0KPiA+ICBhcmNoL2Fy
-bS9ib290L2R0cy9ocmVmLmR0c2kgfCAzOCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-Ky0tLS0tLQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzMiBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9u
-cygtKQo+ID4KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9ocmVmLmR0c2kgYi9h
-cmNoL2FybS9ib290L2R0cy9ocmVmLmR0c2kKPiA+IGluZGV4IDYyNTIzZjYuLmUzMTU0MjkgMTAw
-NjQ0Cj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9ocmVmLmR0c2kKPiA+ICsrKyBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL2hyZWYuZHRzaQo+ID4gQEAgLTYzLDE2ICs2Myw0MiBAQAo+ID4gICAgICAg
-ICAgICAgICAgIH07Cj4gPgo+ID4gICAgICAgICAgICAgICAgIGkyY0A4MDEyODAwMCB7Cj4gPiAt
-ICAgICAgICAgICAgICAgICAgICAgICBscDU1MjFAMHgzMyB7Cj4gPiAtICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAibHA1NTIxIjsKPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgIGxwNTUyMUAzMyB7Cj4gCj4gSXMgdGhpcyByaWdodCwgSSBndWVzcyBpdCBzaG91
-bGQgYmUgc3RpbGwgImxwNTUyMUAweDMzIiwgYWx0aG91Z2ggaXQncwo+IGp1c3QgYSBuYW1lLgoK
-V2hhdCBtYWtlcyB5b3Ugc2F5IHRoYXQgQnJ5YW4/CgpBbGwgb3RoZXIgbm9kZXMgZHJvcCB0aGUg
-JzB4JywgYXMgaXQncyBpbXBsaWVkLgoKLS0gCkxlZSBKb25lcwpMaW5hcm8gU1QtRXJpY3Nzb24g
-TGFuZGluZyBUZWFtIExlYWQKTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9y
-IEFSTSBTb0NzCkZvbGxvdyBMaW5hcm86IEZhY2Vib29rIHwgVHdpdHRlciB8IEJsb2cKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNj
-dXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRw
-czovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+Am Montag, 3. Juni 2013, 04:15:46 schrieb Arnd Bergmann:
+> On Monday 03 June 2013 01:02:20 Heiko St=FCbner wrote:
+> > index 0000000..094b37d
+> > --- /dev/null
+> > +++ b/arch/arm/mach-rockchip/rockchip.c
+>=20
+> If all goes well, this file can be removed again in 3.11 since it's
+> all generic, but let's add it for now.
+>=20
+> > +
+> > +static void __init rockchip_timer_init(void)
+> > +{
+> > +       rockchip_init_clocks();
+> > +       dw_apb_timer_init();
+> > +}
+>=20
+> Can't you use
+>=20
+> 	of_clk_init(NULL);
+> 	clocksource_of_init();
+>=20
+> here and change the two drivers to provide the respective macros?
+
+hmm, while this would make a lot of things easier I don't see right now=
+ how=20
+this would work.
+
+The dw_apb_timer clocksource does not have its own device node, but ins=
+tead=20
+uses two timer devices as clocksource and clockevent.
+
+Hmm ... one idea would be to wrap them in the dt, like
+
+	clocksource {
+		compatible =3D "snps,dw-apb-clocksource"
+
+		timer@2003a000 {
+			compatible =3D "snps,dw-apb-timer-osc";
+			reg =3D <0x2003a000 0x100>;
+			interrupts =3D <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+			clocks =3D <&clk_gates1 1>, <&clk_gates7 8>;
+			clock-names =3D "timer", "pclk";
+		};
+
+		timer@2000e000 {
+			compatible =3D "snps,dw-apb-timer-osc";
+			reg =3D <0x2000e000 0x100>;
+			interrupts =3D <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+			clocks =3D <&clk_gates1 2>, <&clk_gates7 9>;
+			clock-names =3D "timer", "pclk";
+		};
+	};
+
+> > +
+> > +static void __init rockchip_dt_init(void)
+> > +{
+> > +#ifdef CONFIG_CACHE_L2X0
+> > +       l2x0_of_init(0, ~0UL);
+> > +#endif
+> > +       of_platform_populate(NULL, of_default_bus_match_table, NULL=
+,
+> > NULL); +}
+>=20
+> We still need to find a common location to call l2x0_of_init.
+>=20
+> > +
+> > +static const char * const rockchip_board_dt_compat[] =3D {
+> > +       "rockchip,rk2928", /* single core */
+> > +       "rockchip,rk30xx", /* dual cores */
+> > +       "rockchip,rk31xx", /* dual and quad cores */
+> > +       NULL,
+> > +};
+>=20
+> Please use real numbers instead of wildcards: rockchip,rk3066
+> not rockchip,rk30xx.
+
+ok
+
+> > +DT_MACHINE_START(ROCKCHIP_DT, "Rockchip Cortex-A9 (Device Tree)")
+> > +       .map_io         =3D debug_ll_io_init,
+> > +       .init_machine   =3D rockchip_dt_init,
+> > +       .init_time      =3D rockchip_timer_init,
+> > +       .dt_compat      =3D rockchip_board_dt_compat,
+> > +MACHINE_END
+>=20
+> The map_io line can already get removed.
+
+Yesterday I did grep thru the linux-next I was using as base looking fo=
+r the=20
+debug_ll_io_init default I read about but was not able to find it ... m=
+ost=20
+likely my linux-next is a tad to old.
+
+
+> What about SMP support? Still working on it?
+
+I haven't even looked into it yet ;-) . But this is one of the next ite=
+ms on=20
+my wishlist ... which also contains making the SoC run at more than 600=
+MHz=20
+(due to the currently read-only pll which starts at this value and need=
+s to be=20
+set)
+
+Reading the "upstream" kernel code to get the necessary informations do=
+es not=20
+make this easier ;-)
+
+
+Heiko
