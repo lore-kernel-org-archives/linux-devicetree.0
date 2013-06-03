@@ -1,36 +1,102 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH V4 4/4] ARM: dts: add clock provider information for i2s
- controllers in Exynos5250
-Date: Mon, 3 Jun 2013 13:18:01 -0700
-Message-ID: <CAD=FV=X_XVmQ-jyorxATqBad5hhdFe5dodg_AzjsRQ-S+1=NeA@mail.gmail.com>
-References: <1370236744-16802-1-git-send-email-padma.v@samsung.com>
-	<1370236744-16802-5-git-send-email-padma.v@samsung.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 2/2 v2] sata highbank: add bit-banged SGPIO driver support
+Date: Mon, 3 Jun 2013 13:37:27 -0700
+Message-ID: <20130603203727.GB29989@mtj.dyndns.org>
+References: <1369945051-2582-2-git-send-email-mark.langsdorf@calxeda.com>
+ <1370266538-14211-1-git-send-email-mark.langsdorf@calxeda.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1370236744-16802-5-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padmavathi Venna <padma.v@samsung.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, alsa-devel@alsa-project.org, padma.kvr@gmail.com, sbkim73@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, broonie@kernel.org, Mike Turquette <mturquette@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1370266538-14211-1-git-send-email-mark.langsdorf@calxeda.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Langsdorf <mark.langsdorf@calxeda.com>
+Cc: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Padmavathi,
+Hello, Mark.
 
-On Sun, Jun 2, 2013 at 10:19 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
-> +               clocks = <&clock_audss EXYNOS_I2S_BUS>,
-> +                       <&clock_audss EXYNOS_I2S_BUS>,
-> +                       <&clock_audss EXYNOS_SCLK_I2S>,
-> +                       <&clock_audss EXYNOS_MOUT_AUDSS>,
-> +                       <&clock_audss EXYNOS_MOUT_I2S>;
-> +               clock-names = "iis", "i2s_opclk0", "i2s_opclk1",
-> +                               "mout_audss", "mout_i2s";
+In general, please try to reply to reviews addressing each point.  It
+gives much better sense of what's going on to the reviewer and also
+helps the reviewee to avoid misunderstandings or missing points.
 
-Are there bindings for these clocks? Would be nice to see a
-description for what they are supposed to be.
+> +static DEFINE_SPINLOCK(sgpio_lock);
+> +#define SCLOCK				0
+> +#define SLOAD				1
+> +#define SDATA				2
+> +#define SGPIO_PINS			3
+> +#define SGPIO_PORTS			8
+> +
+> +/* can be cast as an ahci_host_priv for compatibility with most functions */
 
-I looked up i2s_opclk0 / i2s_opclk1 and they look reasonable at a
-quick glance. ...and it does seem right that iis and i2s_opclk0 are
-the same. ...but I don't see any place that uses the last two. Is
-there an in-flight patch?
+This sounds awfully scary.  What's going on here?  Are you actually
+overriding ahci_host_priv?  If so, please don't ever do things like
+that.  Do it properly.  Add host_priv->platform_priv or whatever and
+chain the pointer there.  If you're worried about the extra deref,
+update ahci core such that it allows specifying extra size and you can
+embed ahci_host_priv in your own priv.  ie.
 
--Doug
+	struct ecx_host_priv {
+		struct ahci_host_priv	ahci_priv;	/* must be the first field */
+		/* your own stuff */
+	};
+
+And tell ahci core sizeof(ecx_host_priv) some way, but really, just
+having a plain pointer should be enough, I think.
+
+> +struct ecx_host_priv {
+> +	void __iomem	*mmio;		/* bus-independent mem map */
+> +	unsigned int	flags;		/* AHCI_HFLAG_* */
+> +	u32		cap;		/* cap to use */
+> +	u32		cap2;		/* cap2 to use */
+> +	u32		port_map;	/* port map to use */
+> +	u32		saved_cap;	/* saved initial cap */
+> +	u32		saved_cap2;	/* saved initial cap2 */
+> +	u32		saved_port_map;	/* saved initial port_map */
+> +	u32		em_loc;		/* enclosure management location */
+> +	u32		em_buf_sz;      /* EM buffer size in byte */
+> +	u32		em_msg_type;    /* EM message type */
+> +	struct clk	*clk;		/* Only for platforms supporting clk */
+> +	u32		n_ports;
+> +	unsigned	sgpio_gpio[SGPIO_PINS];
+> +	u32		sgpio_pattern;
+> +	u32		port_to_sgpio[SGPIO_PORTS];
+> +};
+> +
+> +#define SGPIO_SIGNALS			3
+> +#define ECX_ACTIVITY_BITS		0x300000
+> +#define ECX_ACTIVITY_SHIFT		2
+> +#define ECX_LOCATE_BITS		0x80000
+> +#define ECX_LOCATE_SHIFT		1
+> +#define ECX_FAULT_BITS			0x400000
+> +#define ECX_FAULT_SHIFT			0
+> +static inline int sgpio_bit_shift(struct ecx_host_priv *hpriv, u32 port,
+> +				u32 shift)
+> +{
+> +	return 1 << (3 * hpriv->port_to_sgpio[port] + shift);
+> +}
+> +
+> +static void ecx_parse_sgpio(struct ecx_host_priv *hpriv, u32 port, u32 state)
+
+Would be kinda nice to have comment explaining what the function does
+as @state == 0 turns off everything while anything else would just
+turn things on.
+
+> +static ssize_t ecx_transmit_led_message(struct ata_port *ap, u32 state,
+> +					ssize_t size)
+> +{
+...
+> +	if (!hpriv->em_msg_type & EM_MSG_TYPE_LED)
+> +		return size;
+
+Is this really correct?  You first negate and convert it to bool and
+then bit-wise and it with a mask?  How is supposed to work?
+
+> -	ahci_save_initial_config(dev, hpriv, 0, 0);
+> +	ahci_save_initial_config(dev, (struct ahci_host_priv *) hpriv, 0, 0);
+
+Ugh....... how is this supposed to work?  What if ahci_host_priv grows
+larger than ecx one in the future? :(
+
+-- 
+tejun
