@@ -1,64 +1,45 @@
-From: Tony Prisk <linux@prisktech.co.nz>
-Subject: [GIT PULL] vt8500 devicetree updates for 3.11
-Date: Tue, 04 Jun 2013 07:39:14 +1200
-Message-ID: <51ACF0E2.2000206@prisktech.co.nz>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 0/3] dw_apb_timer: osc as sched_clock,
+ clocks and clocksource_of support
+Date: Mon, 3 Jun 2013 21:57:40 +0200
+Message-ID: <201306032157.40488.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arm@kernel.org
-Cc: "Johansson, Olof" <olof@lixom.net>, VT8500/WM8505 Linux Kernel <vt8500-wm8505-linux-kernel@googlegroups.com>, "List, Devicetree" <devicetree-discuss@lists.ozlabs.org>, "Bergmann,
- Arnd" <arnd@arndb.de>, "Mailing List,
- Arm" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The following changes since commit f722406faae2d073cc1d01063d1123c35425939e:
+This is split off of my Rockchip support series from yesterday. It's now
+a patch more than before, as the third patch enables the timer to be used
+thru clocksource_of_init and moves picoxcell and socfpga to it.
+ 
 
-   Linux 3.10-rc1 (2013-05-11 17:14:08 -0700)
+Heiko Stuebner (3):
+  clocksource: dw_apb_timer_of: use the clocksource as sched clock if
+    necessary
+  clocksource: dw_apb_timer_of: add clock-handling
+  clocksource: dw_apb_timer_of: use clocksource_of_init
 
-are available in the git repository at:
+ Documentation/devicetree/bindings/rtc/dw-apb.txt |   19 +++++
+ arch/arm/mach-picoxcell/Kconfig                  |    1 +
+ arch/arm/mach-picoxcell/common.c                 |    2 -
+ arch/arm/mach-socfpga/Kconfig                    |    1 +
+ arch/arm/mach-socfpga/socfpga.c                  |    2 -
+ drivers/clocksource/dw_apb_timer_of.c            |   95 ++++++++++++++-------
+ include/linux/dw_apb_timer.h                     |    1 -
+ 7 files changed, 84 insertions(+), 37 deletions(-)
 
-   git://github.com/linux-wmt/linux-vtwm.git tags/vt8500/dts-3.11
-
-for you to fetch changes up to e36572b64df358f0bc3a508e8761c81d7f3b8215:
-
-   dts: vt8500: Correct reference clock on WM8850 SoCs (2013-06-04 
-07:31:22 +1200)
-
-----------------------------------------------------------------
-Devicetree updates for 3.11
-
-----------------------------------------------------------------
-Tony Prisk (7):
-       dts: vt8500: Fix invalid/missing cpu nodes for soc files.
-       dts: vt8500: Add devicetree support for WM8750 SoC and APC8750 board
-       dts: vt8500: Update serial nodes and disable by default in SoC files
-       dts: clk: vt8500: Update SoC dtsi to use WM8850 PLL clocks
-       dts: vt8500: Populate missing PLL nodes
-       dts: vt8500: Add ARM, AHB, APB and DDR clock nodes to SoC files
-       dts: vt8500: Correct reference clock on WM8850 SoCs
-
-  arch/arm/boot/dts/Makefile           |    1 +
-  arch/arm/boot/dts/vt8500-bv07.dts    |    4 +
-  arch/arm/boot/dts/vt8500.dtsi        |   29 ++-
-  arch/arm/boot/dts/wm8505-ref.dts     |    4 +
-  arch/arm/boot/dts/wm8505.dtsi        |   84 +++++++-
-  arch/arm/boot/dts/wm8650-mid.dts     |    3 +
-  arch/arm/boot/dts/wm8650.dtsi        |   79 +++++++-
-  arch/arm/boot/dts/wm8750-apc8750.dts |   30 +++
-  arch/arm/boot/dts/wm8750.dtsi        |  347 
-++++++++++++++++++++++++++++++++++
-  arch/arm/boot/dts/wm8850-w70v2.dts   |    4 +
-  arch/arm/boot/dts/wm8850.dtsi        |   94 ++++++++-
-  11 files changed, 649 insertions(+), 30 deletions(-)
-  create mode 100644 arch/arm/boot/dts/wm8750-apc8750.dts
-  create mode 100644 arch/arm/boot/dts/wm8750.dtsi
+-- 
+1.7.2.3
