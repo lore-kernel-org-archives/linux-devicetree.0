@@ -1,107 +1,44 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH v2 6/6] DT: Add documentation for gpio-xilinx
-Date: Mon,  3 Jun 2013 14:31:21 +0200
-Message-ID: <af7595252de09373f5591f21262e5ffa7c9e0dc2.1370262666.git.michal.simek@xilinx.com>
-References: <d96317c2681b5feb9e058efe0bd60ff101a0e0fa.1370262666.git.michal.simek@xilinx.com>
-Content-Type: multipart/signed;
-    boundary="=_mimegpg-monstr-desktop-25624-1370262725-0001";
-    micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d96317c2681b5feb9e058efe0bd60ff101a0e0fa.1370262666.git.michal.simek@xilinx.com>
-In-Reply-To: <d96317c2681b5feb9e058efe0bd60ff101a0e0fa.1370262666.git.michal.simek@xilinx.com>
-References: <d96317c2681b5feb9e058efe0bd60ff101a0e0fa.1370262666.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Michal Simek <monstr@monstr.eu>, Michal Simek <michal.simek@xilinx.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+From: Rodolfo Giometti <giometti-AVVDYK/kqiJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2] pps-gpio: add device-tree binding and support
+Date: Mon, 3 Jun 2013 14:04:45 +0200
+Message-ID: <20130603120445.GF4393@enneenne.com>
+References: <1588516.WvWWFWzAui@wuerfel>
+ <1370083449-11986-1-git-send-email-jlu@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1370083449-11986-1-git-send-email-jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a MIME GnuPG-signed message.  If you see this text, it means that
-your E-mail or Usenet software does not support MIME signed messages.
-The Internet standard for MIME PGP messages, RFC 2015, was published in 1996.
-To open this message correctly you will need to install E-mail or Usenet
-software that supports modern Internet standards.
+On Sat, Jun 01, 2013 at 12:44:09PM +0200, Jan Luebbe wrote:
+> Instead of allocating a struct pps_gpio_platform_data in the DT case, store
+> the necessary information in struct pps_gpio_device_data itself. This avoids
+> an additional allocation and the ifdef. It also gets rid of some indirection.
+> 
+> Also use dev_err instead of pr_err in the changed code.
+> 
+> Signed-off-by: Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
---=_mimegpg-monstr-desktop-25624-1370262725-0001
+Acked-by: Rodolfo Giometti <giometti-AVVDYK/kqiJWk0Htik3J/w@public.gmane.org>
 
-Describe gpio-xilinx binding.
+-- 
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
-Changes in v2:
-- Extend description
-
- .../devicetree/bindings/gpio/gpio-xilinx.txt       | 48 ++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt b/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
-new file mode 100644
-index 0000000..63bf4be
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
-@@ -0,0 +1,48 @@
-+Xilinx plb/axi GPIO controller
-+
-+Dual channel GPIO controller with configurable number of pins
-+(from 1 to 32 per channel). Every pin can be configured as
-+input/output/tristate. Both channels share the same global IRQ but
-+local interrupts can be enabled on channel basis.
-+
-+Required properties:
-+- compatible : Should be "xlnx,xps-gpio-1.00.a"
-+- reg : Address and length of the register set for the device
-+- #gpio-cells : Should be two. The first cell is the pin number and the
-+  second cell is used to specify optional parameters (currently unused).
-+- gpio-controller : Marks the device node as a GPIO controller.
-+
-+Optional properties:
-+- interrupts : Interrupt mapping for GPIO IRQ.
-+- interrupt-parent : Phandle for the interrupt controller that
-+  services interrupts for this device.
-+- xlnx,all-inputs : if n-th bit is setup, GPIO-n is input
-+- xlnx,dout-default : if n-th bit is 1, GPIO-n default value is 1
-+- xlnx,gpio-width : gpio width
-+- xlnx,tri-default : if n-th bit is 1, GPIO-n is in tristate mode
-+- xlnx,is-dual : if 1, controller also uses the second channel
-+- xlnx,all-inputs-2 : as above but for the second channel
-+- xlnx,dout-default-2 : as above but the second channel
-+- xlnx,gpio2-width : as above but for the second channel
-+- xlnx,tri-default-2 : as above but for the second channel
-+
-+
-+Example:
-+gpio: gpio@40000000 {
-+	#gpio-cells = <2>;
-+	compatible = "xlnx,xps-gpio-1.00.a";
-+	gpio-controller ;
-+	interrupt-parent = <&microblaze_0_intc>;
-+	interrupts = < 6 2 >;
-+	reg = < 0x40000000 0x10000 >;
-+	xlnx,all-inputs = <0x0>;
-+	xlnx,all-inputs-2 = <0x0>;
-+	xlnx,dout-default = <0x0>;
-+	xlnx,dout-default-2 = <0x0>;
-+	xlnx,gpio-width = <0x2>;
-+	xlnx,gpio2-width = <0x2>;
-+	xlnx,interrupt-present = <0x1>;
-+	xlnx,is-dual = <0x1>;
-+	xlnx,tri-default = <0xffffffff>;
-+	xlnx,tri-default-2 = <0xffffffff>;
-+} ;
---
-1.8.2.3
-
-
---=_mimegpg-monstr-desktop-25624-1370262725-0001
-Content-Type: application/pgp-signature
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-
-iEYEABECAAYFAlGsjMUACgkQykllyylKDCFjzwCgnkPMFRTVvkWVatG7yQ0KvOH9
-5XUAn16LKaX63p7hlqq+OJo59FBx/O7O
-=V4wL
------END PGP SIGNATURE-----
-
---=_mimegpg-monstr-desktop-25624-1370262725-0001--
+GNU/Linux Solutions                  e-mail: giometti-AVVDYK/kqiJWk0Htik3J/w@public.gmane.org
+Linux Device Driver                          giometti-k2GhghHVRtY@public.gmane.org
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming                     skype:  rodolfo.giometti
+Freelance ICT Italia - Consulente ICT Italia - www.consulenti-ict.it
