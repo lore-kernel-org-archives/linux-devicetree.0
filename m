@@ -1,50 +1,32 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RFC PATCH 2/3] drivers: mfd: vexpress: add timeout API to
- vexpress config interface
-Date: Mon, 3 Jun 2013 14:15:27 +0100
-Message-ID: <20130603131527.GC22821@e102568-lin.cambridge.arm.com>
-References: <1369399986-15649-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1369399986-15649-3-git-send-email-lorenzo.pieralisi@arm.com>
- <1370254532.3407.36.camel@linaro1.home>
- <20130603115219.GA22821@e102568-lin.cambridge.arm.com>
- <1370261030.16073.5.camel@linaro1.home>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC] dw_apb_timer_of: use clocksource_of_init
+Date: Mon, 03 Jun 2013 15:20:49 +0200
+Message-ID: <2776800.oNsvP2SGCJ@wuerfel>
+References: <201306030055.15413.heiko@sntech.de> <1822564.TIKVDZSzqK@wuerfel> <201306031415.29411.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1370261030.16073.5.camel@linaro1.home>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Jon Medhurst (Tixy)" <tixy@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Nicolas Pitre <nicolas.pitre@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <Pawel.Moll@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Amit Kucheria <amit.kucheria@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201306031415.29411.heiko@sntech.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mike Turquette <mturquette@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <cjb@laptop.org>, linux-mmc@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 03, 2013 at 01:03:50PM +0100, Jon Medhurst (Tixy) wrote:
-> On Mon, 2013-06-03 at 12:52 +0100, Lorenzo Pieralisi wrote:
-> > On Mon, Jun 03, 2013 at 11:15:32AM +0100, Jon Medhurst (Tixy) wrote:
-> > > On Fri, 2013-05-24 at 13:53 +0100, Lorenzo Pieralisi wrote:
-> > > > In case some transactions to the Serial Power Controller (SPC) are lost owing
-> > > > to multiple operations handled at once by the M3 controller the OS needs to
-> > > > rely on a configuration API that can time out so that failures do not result
-> > > > in an unusable system.
-> > > > 
-> > > > This patch adds a timeout API to the vexpress config programming interface,
-> > > > and refactors the existing read/write functions so that they can be reused
-> > > > seamlessly on top of the newly defined API.
-> > > 
-> > > Isn't one of the main purposes of the config interface to serialise
-> > > transactions to the config bus, so why would the SPC be handling
-> > > multiple transactions at once? And if we can in fact loose transactions
-> > > doesn't this mean we get random failures in the system? E.g. if this
-> > > happened at boot in vexpress_spc_populate_opps then cpufreq will fail.
-> > 
-> > It has more to do with firmware carrying out background operations like
-> > powering up a cluster when a DVFS is requested.
-> 
-> Would that make it drop transactions or just take a longer time to get
-> around to servicing them?
+On Monday 03 June 2013 14:15:28 Heiko St=FCbner wrote:
+> dw_apb_timer_init used to search the devicetree for matching timer
+> devices, making calls to it from board files necessary.
+>=20
+> Change the dw_apb_timer_init to work with CLOCKSOURCE_OF_DECLARE.
+> With this change the function gets called once for each timer node
+> and tracks these number of calls to attach clockevent and clocksource
+> devices to the nodes.
+>=20
+> Also convert all previous users of dw_apb_timer_init to use
+> clocksource_of_init.
+>=20
+> Tested on the upcoming rk3066 code.
+>=20
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 
-It should just take longer to service them, that's what the behaviour
-should be.
-
-Lorenzo
+Acked-by: Arnd Bergmann <arnd@arndb.de>
