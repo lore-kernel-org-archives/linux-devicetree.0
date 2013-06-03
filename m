@@ -1,75 +1,47 @@
-From: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/7] USB: chipidea: add PTW, PTS and STS handling
-Date: Mon, 3 Jun 2013 18:11:36 +0200
-Message-ID: <20130603161136.GB28181@pengutronix.de>
-References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de>
- <1370025529-7414-4-git-send-email-mgr@pengutronix.de>
- <8738szjrs6.fsf@ashishki-desk.ger.corp.intel.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 3/5] extcon: add EXPORT_SYMBOL_GPL for exported functions
+Date: Mon, 3 Jun 2013 21:43:38 +0530
+Message-ID: <1370276020-17446-4-git-send-email-kishon@ti.com>
+References: <1370276020-17446-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <8738szjrs6.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1370276020-17446-1-git-send-email-kishon@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: myungjoo.ham@samsung.com, cw00.choi@samsung.com, balbi@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: kishon@ti.com, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, gregkh@linuxfoundation.org, benoit.cousson@linaro.org, anish198519851985@gmail.com, pmeerw@pmeerw.net, Lokesh Vutla <lokeshvutla@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hey Alex,
+Added EXPORT_SYMBOL_GPL() for extcon_register_interest and
+extcon_register_notifier in order to avoid undefined reference
+error when building the consumer modules of extcon as _modules_.
 
-On Mon, Jun 03, 2013 at 03:35:37PM +0300, Alexander Shishkin wrote:
-> Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
->=20
-> > From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >
-> > This patch makes it possible to configure the PTW, PTS and STS bits
-> > inside the portsc register for host and device mode before the driv=
-er
-> > starts and the phy can be addressed as hardware implementation is
-> > designed.
->=20
-> The bulk of this patch is good, but the OF part should still go to
-> ci13xxx_imx along with the dt bindings description.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+---
+ drivers/extcon/extcon-class.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-referring to the last discussion [=B9] about what should be handled
-where, your last statement is pretty confusing. We might say we
-somehow stuck in a loop if i would repost this patch again
-and somebody (probably you :]) is telling me to do the opposite again!
+diff --git a/drivers/extcon/extcon-class.c b/drivers/extcon/extcon-class.c
+index 265d549..51a5f5f 100644
+--- a/drivers/extcon/extcon-class.c
++++ b/drivers/extcon/extcon-class.c
+@@ -541,6 +541,7 @@ int extcon_register_interest(struct extcon_specific_cable_nb *obj,
+ 		return -ENODEV;
+ 	}
+ }
++EXPORT_SYMBOL_GPL(extcon_register_interest);
+ 
+ /**
+  * extcon_unregister_interest() - Unregister the notifier registered by
+@@ -555,6 +556,7 @@ int extcon_unregister_interest(struct extcon_specific_cable_nb *obj)
+ 
+ 	return raw_notifier_chain_unregister(&obj->edev->nh, &obj->internal_nb);
+ }
++EXPORT_SYMBOL_GPL(extcon_unregister_interest);
+ 
+ /**
+  * extcon_register_notifier() - Register a notifiee to get notified by
+-- 
+1.7.10.4
 
-If you have a closer look, you can see that we are checking for
-valid pdata:
-
-@@ -408,6 +452,9 @@ static int ci_hdrc_probe(struct platform_device *pd=
-ev)
-                return -ENODEV;
-        }
-
-+       if (!ci->platdata->phy_mode)
-+               ci->platdata->phy_mode =3D of_usb_get_phy_mode(dev->of_=
-node);
-+
-
-This way we can ensure that platforms without OF still
-can use the pdata. _But_ we always fall back to OF in the
-core _if_ nobody cared. This should be done with all properties
-that are not SoC, but _common_ device specific settings.
-
-[=B9] https://patchwork.kernel.org/patch/2196981/
-
-Thanks,
-Michael
-
---=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
