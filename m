@@ -1,76 +1,86 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH RFC 2/3] clk: dt: binding for basic multiplexor clock
-Date: Mon, 03 Jun 2013 13:07:22 -0700
-Message-ID: <20130603200722.6077.85426@quantum>
-References: <1370281990-15090-1-git-send-email-mturquette@linaro.org>
- <1370281990-15090-3-git-send-email-mturquette@linaro.org>
- <201306032133.20039.heiko@sntech.de>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH V4 2/4] clk: samsung: register audio subsystem clocks
+ using common clock framework
+Date: Mon, 3 Jun 2013 13:10:56 -0700
+Message-ID: <CAD=FV=XOfi=BsaF+-96SqKwyiwP9h0h3MCJxJ+qWNKaGoP=CcA@mail.gmail.com>
+References: <1370236744-16802-1-git-send-email-padma.v@samsung.com>
+	<1370236744-16802-3-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201306032133.20039.heiko@sntech.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1370236744-16802-3-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, alsa-devel@alsa-project.org, padma.kvr@gmail.com, sbkim73@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, broonie@kernel.org, Mike Turquette <mturquette@linaro.org>, Andrew Bresticker <abrestic@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Heiko St=C3=BCbner (2013-06-03 12:33:19)
-> Hi Mike,
->=20
-> I think it's a multiplexEr clock in the patch title, and see below
->=20
+Padmavathi,
 
-Doh, you are right.  But "xor" is so much cooler looking than "xer"...
+On Sun, Jun 2, 2013 at 10:19 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
 
->=20
-> Am Montag, 3. Juni 2013, 19:53:09 schrieb Mike Turquette:
-> > Device Tree binding for the basic clock multiplexor, plus the setup
-> > function to register the clock.  Based on the existing fixed-clock
-> > binding.
-> >=20
-> > Also relocate declaration of of_fixed_factor_clk_setup to keep thin=
-gs
-> > tidy.
-> >=20
-> > Signed-off-by: Mike Turquette <mturquette@linaro.org>
->=20
-> [...]
->=20
-> > +
-> > +     reg =3D of_iomap(node, 0);
-> > +     pr_err("%s: reg is 0x%p\n", __func__, reg);
-> > +
-> > +     if (of_property_read_u32(node, "mask", &mask)) {
-> > +             pr_err("%s: missing mask property for %s\n", __func__=
-, node->name);
-> > +             return;
-> > +     }
-> > +
-> > +     if (of_property_read_u32(node, "shift", &shift))
-> > +             pr_debug("%s: missing shift property defaults to zero=
- for %s\n",
-> > +                             __func__, node->name);
-> > +
-> > +     if (of_property_read_bool(node, "index_one"))
-> > +             clk_mux_flags |=3D CLK_MUX_INDEX_ONE;
-> > +
-> > +     clk =3D clk_register_mux_table(NULL, clk_name, parent_names, =
-num_parents,
-> > +                     0, reg, 0, mask, clk_mux_flags,
->=20
->                       ^- should probably be shift
->=20
->=20
-> Otherwise looks cool and I'm currently trying it with my Rockchip cod=
-e.
->=20
+> +static unsigned long reg_save[][2] = {
+> +       {ASS_CLK_SRC,  0},
+> +       {ASS_CLK_DIV,  0},
+> +       {ASS_CLK_GATE, 0},
+> +};
+> +
+> +/* list of all parent clock list */
+> +static const char *mout_audss_p[] = { "fin_pll", "fout_epll" };
 
-Right again.  My test platform seems to not shift the mask at all so
-this did not cause a visible bug for me.
+I think this is supposed to be "xxti" which might or might not be
+"fin_pll".  In the exynos4 code these are two different clocks that
+are chosen by OM[0].  I'd bet that 99% of the time they are the same,
+but it seems better to use "xxti".
 
-Thanks for the review,
-Mike
+At the moment the 5250 code doesn't expose "xxti".  It probably
+should.  Andrew (CCed) is looking at this.
 
->=20
-> Heiko
+
+> +static const char *mout_i2s_p[] = { "mout_audss", "cdclk0", "sclk_audio0" };
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int exynos_audss_clk_suspend(void)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < 3; i++)
+
+Can't you use ARRAY_SIZE?
+
+
+> +void __init exynos_audss_clk_init(struct device_node *np)
+> +{
+> +       reg_base = of_iomap(np, 0);
+> +       if (!reg_base) {
+> +               pr_err("%s: failed to map audss registers\n", __func__);
+> +               return;
+> +       }
+> +
+> +       clk_table = kzalloc(sizeof(struct clk *) * EXYNOS_AUDSS_MAX_CLKS,
+> +                               GFP_KERNEL);
+> +       if (!clk_table) {
+> +               pr_err("%s: could not allocate clk lookup table\n", __func__);
+> +               return;
+> +       }
+> +
+> +       clk_data.clks = clk_table;
+> +       clk_data.clk_num = EXYNOS_AUDSS_MAX_CLKS;
+> +       of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
+> +
+> +       clk_table[EXYNOS_MOUT_AUDSS] = clk_register_mux(NULL, "mout_audss",
+> +                               mout_audss_p, ARRAY_SIZE(mout_audss_p), 0,
+> +                               reg_base + ASS_CLK_SRC, 0, 1, 0, &lock);
+> +
+> +       clk_table[EXYNOS_MOUT_I2S] = clk_register_mux(NULL, "mout_i2s",
+> +                               mout_i2s_p, ARRAY_SIZE(mout_i2s_p), 0,
+> +                               reg_base + ASS_CLK_SRC, 2, 2, 0, &lock);
+> +
+> +       clk_table[EXYNOS_DOUT_SRP] = clk_register_divider(NULL, "dout_srp",
+> +                               "mout_audss", 0, reg_base + ASS_CLK_DIV, 0, 4,
+> +                               0, &lock);
+> +
+> +       clk_table[EXYNOS_DOUT_BUS] = clk_register_divider(NULL, "dout_bus",
+
+I'm learning that clock names need to be globally unique in a given
+system.  Perhaps "dout_aud_bus" might be more descriptive and less
+likely to cause conflicts?
