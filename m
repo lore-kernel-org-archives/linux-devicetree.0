@@ -1,42 +1,67 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] mfd: DT bindings for the palmas family MFD
-Date: Mon, 03 Jun 2013 14:38:34 -0600
-Message-ID: <51ACFECA.10209@wwwdotorg.org>
-References: <1370261333-5121-1-git-send-email-j-keerthy@ti.com> <20130603141851.GG3370@gmail.com>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH RFC 2/3] clk: dt: binding for basic multiplexor clock
+Date: Mon, 3 Jun 2013 23:39:38 +0200
+Message-ID: <201306032339.39176.heiko@sntech.de>
+References: <1370281990-15090-1-git-send-email-mturquette@linaro.org>
+ <20130603200722.6077.85426@quantum> <201306032215.45983.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130603141851.GG3370@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: J Keerthy <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, rob@landley.net, mturquette@linaro.org, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, gg@slimlogic.co.uk, t-kristo@ti.com, Ian Lartey <ian@slimlogic.co.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201306032215.45983.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/2013 08:18 AM, Lee Jones wrote:
-> On Mon, 03 Jun 2013, J Keerthy wrote:
->> Add the various binding files for the palmas family of chips. There is a
->> top level MFD binding then a seperate binding for regulators IP blocks on chips.
-
->> diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documentation/devicetree/bindings/mfd/palmas.txt
-
->> +Example:
->> +
->> +palmas {
-> 
-> Should this be 'palmas@48 {', as it has an address?
-
-It's common to only include the unit-address (@48) if it's needed to
-make the node name unique (i.e. if you had multiple palmas devices).
-
->> diff --git a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
-
-> See: Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-> 
->> +	       ti,sleep-mode - mode to adopt in pmic sleep 0 - off, 1 - auto,
->> +	       2 - eco, 3 - forced pwm
-> 
-> I've seen lots of sleep-mode properties, can't we define a generic
-> one?
-
-Isn't it HW-specific?
+QW0gTW9udGFnLCAzLiBKdW5pIDIwMTMsIDIyOjE1OjQ1IHNjaHJpZWIgSGVpa28gU3TDvGJuZXI6
+Cj4gQW0gTW9udGFnLCAzLiBKdW5pIDIwMTMsIDIyOjA3OjIyIHNjaHJpZWIgTWlrZSBUdXJxdWV0
+dGU6Cj4gPiBRdW90aW5nIEhlaWtvIFN0w7xibmVyICgyMDEzLTA2LTAzIDEyOjMzOjE5KQo+ID4g
+Cj4gPiA+IEhpIE1pa2UsCj4gPiA+IAo+ID4gPiBJIHRoaW5rIGl0J3MgYSBtdWx0aXBsZXhFciBj
+bG9jayBpbiB0aGUgcGF0Y2ggdGl0bGUsIGFuZCBzZWUgYmVsb3cKPiA+IAo+ID4gRG9oLCB5b3Ug
+YXJlIHJpZ2h0LiAgQnV0ICJ4b3IiIGlzIHNvIG11Y2ggY29vbGVyIGxvb2tpbmcgdGhhbiAieGVy
+Ii4uLgo+ID4gCj4gPiA+IEFtIE1vbnRhZywgMy4gSnVuaSAyMDEzLCAxOTo1MzowOSBzY2hyaWVi
+IE1pa2UgVHVycXVldHRlOgo+ID4gPiA+IERldmljZSBUcmVlIGJpbmRpbmcgZm9yIHRoZSBiYXNp
+YyBjbG9jayBtdWx0aXBsZXhvciwgcGx1cyB0aGUgc2V0dXAKPiA+ID4gPiBmdW5jdGlvbiB0byBy
+ZWdpc3RlciB0aGUgY2xvY2suICBCYXNlZCBvbiB0aGUgZXhpc3RpbmcgZml4ZWQtY2xvY2sKPiA+
+ID4gPiBiaW5kaW5nLgo+ID4gPiA+IAo+ID4gPiA+IEFsc28gcmVsb2NhdGUgZGVjbGFyYXRpb24g
+b2Ygb2ZfZml4ZWRfZmFjdG9yX2Nsa19zZXR1cCB0byBrZWVwIHRoaW5ncwo+ID4gPiA+IHRpZHku
+Cj4gPiA+ID4gCj4gPiA+ID4gU2lnbmVkLW9mZi1ieTogTWlrZSBUdXJxdWV0dGUgPG10dXJxdWV0
+dGVAbGluYXJvLm9yZz4KPiA+ID4gCj4gPiA+IFsuLi5dCj4gPiA+IAo+ID4gPiA+ICsKPiA+ID4g
+PiArICAgICByZWcgPSBvZl9pb21hcChub2RlLCAwKTsKPiA+ID4gPiArICAgICBwcl9lcnIoIiVz
+OiByZWcgaXMgMHglcFxuIiwgX19mdW5jX18sIHJlZyk7Cj4gPiA+ID4gKwo+ID4gPiA+ICsgICAg
+IGlmIChvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2RlLCAibWFzayIsICZtYXNrKSkgewo+ID4gPiA+
+ICsgICAgICAgICAgICAgcHJfZXJyKCIlczogbWlzc2luZyBtYXNrIHByb3BlcnR5IGZvciAlc1xu
+IiwgX19mdW5jX18sCj4gPiA+ID4gbm9kZS0+bmFtZSk7ICsgICAgICAgICAgICAgcmV0dXJuOwo+
+ID4gPiA+ICsgICAgIH0KPiA+ID4gPiArCj4gPiA+ID4gKyAgICAgaWYgKG9mX3Byb3BlcnR5X3Jl
+YWRfdTMyKG5vZGUsICJzaGlmdCIsICZzaGlmdCkpCj4gPiA+ID4gKyAgICAgICAgICAgICBwcl9k
+ZWJ1ZygiJXM6IG1pc3Npbmcgc2hpZnQgcHJvcGVydHkgZGVmYXVsdHMgdG8gemVybwo+ID4gPiA+
+IGZvciAlc1xuIiwgKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX19mdW5jX18sIG5vZGUt
+Pm5hbWUpOwo+ID4gPiA+ICsKPiA+ID4gPiArICAgICBpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29s
+KG5vZGUsICJpbmRleF9vbmUiKSkKPiA+ID4gPiArICAgICAgICAgICAgIGNsa19tdXhfZmxhZ3Mg
+fD0gQ0xLX01VWF9JTkRFWF9PTkU7Cj4gPiA+ID4gKwo+ID4gPiA+ICsgICAgIGNsayA9IGNsa19y
+ZWdpc3Rlcl9tdXhfdGFibGUoTlVMTCwgY2xrX25hbWUsIHBhcmVudF9uYW1lcywKPiA+ID4gPiBu
+dW1fcGFyZW50cywgKyAgICAgICAgICAgICAgICAgICAgIDAsIHJlZywgMCwgbWFzaywgY2xrX211
+eF9mbGFncywKPiA+ID4gPiAKPiA+ID4gICAgICAgICAgICAgICAgICAgICAgIF4tIHNob3VsZCBw
+cm9iYWJseSBiZSBzaGlmdAo+ID4gPiAKPiA+ID4gT3RoZXJ3aXNlIGxvb2tzIGNvb2wgYW5kIEkn
+bSBjdXJyZW50bHkgdHJ5aW5nIGl0IHdpdGggbXkgUm9ja2NoaXAgY29kZS4KPiA+IAo+ID4gUmln
+aHQgYWdhaW4uICBNeSB0ZXN0IHBsYXRmb3JtIHNlZW1zIHRvIG5vdCBzaGlmdCB0aGUgbWFzayBh
+dCBhbGwgc28KPiA+IHRoaXMgZGlkIG5vdCBjYXVzZSBhIHZpc2libGUgYnVnIGZvciBtZS4KPiAK
+PiBJJ20gY3VycmVudGx5IGNvbnZlcnRpbmcgbXkgcm9ja2NoaXAgc3R1ZmYgdG8gaXQsIGFzIGl0
+IHdvdWxkIHNvbHZlIGEgbG90Cj4gb2YgcHJvYmxlbXMgd2l0aCB0aGUgbnVtZXJvdXMgY2xvY2sg
+dHlwZXMgSSdtIGRlZmluaW5nIGp1c3QgdG8gcHV0IHRoZQo+IHNoaWZ0IGFuZCBtYXNrIHZhbHVl
+cyBzb21ld2hlcmUuCj4gCj4gU28gbGV0cyBzZWUgaWYgYW55dGhpbmcgbW9yZSB0dXJucyB1cCA7
+LSkKCnllcCAuLi4gb2ZfbXV4X2Nsa19zZXR1cCBpcyBxdWl0ZSB0YWxrYXRpdmUgLi4uIHRoZXJl
+IGFyZSBxdWl0ZSBzb21lIChkZWJ1Zy0/KSAKcHJfZXJycyBpbiBpdCA7LSkKCgpIZWlrbwpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRp
+c2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0
+dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
