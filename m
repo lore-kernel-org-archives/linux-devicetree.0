@@ -1,115 +1,40 @@
-From: Afzal Mohammed <afzal@ti.com>
-Subject: [PATCH v3] ARM: dts: AM43x: initial support
-Date: Mon, 3 Jun 2013 18:49:54 +0530
-Message-ID: <1370265594-12883-1-git-send-email-afzal@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Tony Lindgren <tony@atomide.com>, Ankur Kishore <a-kishore@ti.com>, Russell King <linux@arm.linux.org.uk>, Benoit Cousson <b-cousson@ti.com>
+From: Jon Loeliger <jdl@jdl.com>
+Subject: Re: [PATCH V2] dtc: ensure #line directives don't consume data from the next line
+Date: Mon, 03 Jun 2013 08:32:54 -0500
+Message-ID: <E1UjUsY-0008Td-Bj@jdl.com>
+References: <1370025184-23808-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-reply-to: <1370025184-23808-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: David Gibson <david@gibson.dropbear.id.au>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, mmarek@suse.cz, rob.herring@calxeda.com, grant.likely@secretlab.ca, linux-kbuild@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-DT source (minimal) for AM4372 SoC to represent AM43x SoC's. Those
-represented here are the minimal DT nodes necessary to get kernel
-booting.
+> From: Stephen Warren <swarren@nvidia.com>
+> 
+> Previously, the #line parsing regex ended with ({WS}+[0-9]+)?. The {WS}
+> could match line-break characters. If the #line directive did not contain
+> the optional flags field at the end, this could cause any integer data on
+> the next line to be consumed as part of the #line directive parsing. This
+> could cause syntax errors (i.e. #line parsing consuming the leading 0
+> from a hex literal 0x1234, leaving x1234 to be parsed as cell data,
+> which is a syntax error), or invalid compilation results (i.e. simply
+> consuming literal 1234 as part of the #line processing, thus removing it
+> from the cell data).
+> 
+> Fix this by replacing {WS} with [ \t] so that it can't match line-breaks.
+> 
+> Convert all instances of {WS}, even though the other instances should be
+> irrelevant for any well-formed #line directive. This is done for
+> consistency and ultimate safety.
+> 
+> Reported-by: Ian Campbell <Ian.Campbell@citrix.com>
+> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> ---
+> v2: Convert all instances of {WS} in the regex.
 
-In DT nodes, "ti,hwmod" property has not been added, this would be
-added along with PRCM support for AM43x.
+Applied.
 
-Signed-off-by: Ankur Kishore <a-kishore@ti.com>
-Signed-off-by: Afzal Mohammed <afzal@ti.com>
----
+Thanks!
 
-v3: Make use of C preprocessor, rebased over Benoit's 'for_3.11/dts' branch
-v2: Add gptimer 1ms, timer2, synctimer and remove twd local timer
-
- arch/arm/boot/dts/am4372.dtsi | 68 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 68 insertions(+)
- create mode 100644 arch/arm/boot/dts/am4372.dtsi
-
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-new file mode 100644
-index 0000000..ddc1df7
---- /dev/null
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -0,0 +1,68 @@
-+/*
-+ * Device Tree Source for AM4372 SoC
-+ *
-+ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+#include "skeleton.dtsi"
-+
-+/ {
-+	compatible = "ti,am4372", "ti,am43";
-+	interrupt-parent = <&gic>;
-+
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	cpus {
-+		cpu@0 {
-+			compatible = "arm,cortex-a9";
-+		};
-+	};
-+
-+	gic: interrupt-controller@48241000 {
-+		compatible = "arm,cortex-a9-gic";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		reg = <0x48241000 0x1000>,
-+		      <0x48240100 0x0100>;
-+	};
-+
-+	ocp {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		uart0: serial@44e09000 {
-+			compatible = "ti,am4372-uart","ti,omap2-uart";
-+			reg = <0x44e09000 0x2000>;
-+			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		timer1: timer@44e31000 {
-+			compatible = "ti,am4372-timer-1ms","ti,am335x-timer-1ms";
-+			reg = <0x44e31000 0x400>;
-+			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+			ti,timer-alwon;
-+		};
-+
-+		timer2: timer@48040000  {
-+			compatible = "ti,am4372-timer","ti,am335x-timer";
-+			reg = <0x48040000  0x400>;
-+			interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		counter32k: counter@44e86000 {
-+			compatible = "ti,am4372-counter32k","ti,omap-counter32k";
-+			reg = <0x44e86000 0x40>;
-+		};
-+	};
-+};
--- 
-1.7.12
+jdl
