@@ -1,82 +1,50 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH 1/2] ARM: dts: OMAP5: add PWM capability to timer nodes
- missing it
-Date: Mon, 3 Jun 2013 14:55:27 +0200
-Message-ID: <51AC923F.2010607@ti.com>
-References: <1366240995-53538-1-git-send-email-s-anna@ti.com> <516F3696.9080008@ti.com> <37C860A02101E749A747FA2D3C1E3C504BE487@DLEE11.ent.ti.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [RFC PATCH 2/3] drivers: mfd: vexpress: add timeout API to
+ vexpress config interface
+Date: Mon, 3 Jun 2013 14:15:27 +0100
+Message-ID: <20130603131527.GC22821@e102568-lin.cambridge.arm.com>
+References: <1369399986-15649-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1369399986-15649-3-git-send-email-lorenzo.pieralisi@arm.com>
+ <1370254532.3407.36.camel@linaro1.home>
+ <20130603115219.GA22821@e102568-lin.cambridge.arm.com>
+ <1370261030.16073.5.camel@linaro1.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <37C860A02101E749A747FA2D3C1E3C504BE487@DLEE11.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Anna, Suman" <s-anna@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, device-tree <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1370261030.16073.5.camel@linaro1.home>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Jon Medhurst (Tixy)" <tixy@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Nicolas Pitre <nicolas.pitre@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <Pawel.Moll@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Amit Kucheria <amit.kucheria@linaro.org>, Achin Gupta <Achin.Gupta@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Suman,
-
-On 06/01/2013 12:17 AM, Anna, Suman wrote:
-> Benoit, Tony,
->  
->> On 04/17/2013 06:23 PM, Suman Anna wrote:
->>> OMAP5 has 6 timers (GPTimers 5, 6, 8 to 11) that are capable of PWM.
->>> The PWM capability property is missing from the node definitions of
->>> couple of timers, and this has been fixed.
->>>
->>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>> ---
->>>  arch/arm/boot/dts/omap5.dtsi | 3 +++
->>>  1 file changed, 3 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
->>> index 790bb2a..0d155f5 100644
->>> --- a/arch/arm/boot/dts/omap5.dtsi
->>> +++ b/arch/arm/boot/dts/omap5.dtsi
->>> @@ -422,6 +422,7 @@
->>>  			interrupts = <0 41 0x4>;
->>>  			ti,hwmods = "timer5";
->>>  			ti,timer-dsp;
->>> +			ti,timer-pwm;
->>>  		};
->>>
->>>  		timer6: timer@4013a000 {
->>> @@ -458,6 +459,7 @@
->>>  			reg = <0x4803e000 0x80>;
->>>  			interrupts = <0 45 0x4>;
->>>  			ti,hwmods = "timer9";
->>> +			ti,timer-pwm;
->>>  		};
->>>
->>>  		timer10: timer@48086000 {
->>> @@ -465,6 +467,7 @@
->>>  			reg = <0x48086000 0x80>;
->>>  			interrupts = <0 46 0x4>;
->>>  			ti,hwmods = "timer10";
->>> +			ti,timer-pwm;
->>>  		};
->>>
->>>  		timer11: timer@48088000 {
->>
->> Make sure you copy the linux-arm and device-tree mailing lists.
->>
->> Acked-by: Jon Hunter <jon-hunter@ti.com>
->>
+On Mon, Jun 03, 2013 at 01:03:50PM +0100, Jon Medhurst (Tixy) wrote:
+> On Mon, 2013-06-03 at 12:52 +0100, Lorenzo Pieralisi wrote:
+> > On Mon, Jun 03, 2013 at 11:15:32AM +0100, Jon Medhurst (Tixy) wrote:
+> > > On Fri, 2013-05-24 at 13:53 +0100, Lorenzo Pieralisi wrote:
+> > > > In case some transactions to the Serial Power Controller (SPC) are lost owing
+> > > > to multiple operations handled at once by the M3 controller the OS needs to
+> > > > rely on a configuration API that can time out so that failures do not result
+> > > > in an unusable system.
+> > > > 
+> > > > This patch adds a timeout API to the vexpress config programming interface,
+> > > > and refactors the existing read/write functions so that they can be reused
+> > > > seamlessly on top of the newly defined API.
+> > > 
+> > > Isn't one of the main purposes of the config interface to serialise
+> > > transactions to the config bus, so why would the SPC be handling
+> > > multiple transactions at once? And if we can in fact loose transactions
+> > > doesn't this mean we get random failures in the system? E.g. if this
+> > > happened at boot in vexpress_spc_populate_opps then cpufreq will fail.
+> > 
+> > It has more to do with firmware carrying out background operations like
+> > powering up a cluster when a DVFS is requested.
 > 
-> Can you include this patch in your next fixes pull request (if you haven't
-> already done so)? The other patch in the series is a feature change, but
-> this is a fix, and can go into 3.10 itself.
+> Would that make it drop transactions or just take a longer time to get
+> around to servicing them?
 
-I've just sent a pull request with two fixes to Tony. Since -rc4 is
-already there, I'll update it with this fix.
+It should just take longer to service them, that's what the behaviour
+should be.
 
-Tony,
-
-I will resend a new pull-request rebased on -rc4 that will include this
-new fix.
-
-Regards,
-Benoit
-
-
-
+Lorenzo
