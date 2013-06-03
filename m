@@ -1,48 +1,65 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCHv3 1/3] Add support for GMT G762/G763 PWM fan controller
-Date: Sun, 2 Jun 2013 19:34:44 -0700
-Message-ID: <20130603023444.GB11723@roeck-us.net>
-References: <cover.1370202835.git.arno@natisbad.org>
- <a7bfda1de9cce8044434369428341d3fb05cf42c.1370202835.git.arno@natisbad.org>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [PATCH 02/10] clocksource: dw_apb_timer_of: add clock-handling
+Date: Mon, 3 Jun 2013 06:22:19 +0300
+Message-ID: <20130603032219.GM11798@tarshish>
+References: <201306030055.15413.heiko@sntech.de>
+ <201306030056.37724.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <a7bfda1de9cce8044434369428341d3fb05cf42c.1370202835.git.arno@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnaud Ebalard <arno@natisbad.org>
-Cc: Jean Delvare <khali@linux-fr.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Simon Guinot <simon.guinot@sequanux.org>, Olivier Mouchet <olivier.mouchet@gmail.com>
+In-Reply-To: <201306030056.37724.heiko@sntech.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Seungwon Jeon <tgih.jun@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, linux-mmc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Jaehoon Chung <jh80.chung@samsung.com>, Olof Johansson <olof@lixom.net>, John Stultz <john.stultz@linaro.org>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 02, 2013 at 10:14:19PM +0200, Arnaud Ebalard wrote:
-> 
-> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
+Hi Heiko,
+
+On Mon, Jun 03, 2013 at 12:56:37AM +0200, Heiko St=FCbner wrote:
+> Add the possibility to get the clock-frequency from a timer clock ins=
+tead
+> of specifying it as dt property. Additionally also add the possibilit=
+y
+> to also define a controlling periphal clock for the timer block.
+>=20
+> The clock-frequency property is kept to act as fallback if no clocks
+> are specified.
+>=20
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 > ---
->  drivers/hwmon/Kconfig              |   10 +
->  drivers/hwmon/Makefile             |    1 +
->  drivers/hwmon/g762.c               | 1179 ++++++++++++++++++++++++++++++++++++
->  include/linux/platform_data/g762.h |   51 ++
->  4 files changed, 1241 insertions(+)
->  create mode 100644 drivers/hwmon/g762.c
->  create mode 100644 include/linux/platform_data/g762.h
-> 
-[ ... ]
-
-> +static inline int g762_read_byte(const struct i2c_client *client, u8 reg,
-> +				 u8 *dest)
-> +{
-> +	int ret;
+>  Documentation/devicetree/bindings/rtc/dw-apb.txt |   19 ++++++++++++=
+++++
+>  drivers/clocksource/dw_apb_timer_of.c            |   26 ++++++++++++=
++++++++++-
+>  2 files changed, 44 insertions(+), 1 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/rtc/dw-apb.txt b/Docum=
+entation/devicetree/bindings/rtc/dw-apb.txt
+> index 93e2b0f..80ab1c1 100644
+> --- a/Documentation/devicetree/bindings/rtc/dw-apb.txt
+> +++ b/Documentation/devicetree/bindings/rtc/dw-apb.txt
+> @@ -5,9 +5,20 @@ Required properties:
+>  - reg: physical base address of the controller and length of memory =
+mapped
+>    region.
+>  - interrupts: IRQ line for the timer.
+> +- either clocks+clock-names or clock-frequency properties
 > +
-> +	ret = i2c_smbus_read_byte_data(client, reg);
-> +	if (ret < 0) {
-> +		dev_err(&client->dev, "failed to read reg %x02x, err %d\n",
-> +			(int)reg, ret);
+> +Optional properties:
+> +- clocks	: list of clock specifiers, corresponding to entries in
+> +		  the clock-names property;
+> +- clock-names	: should contain "timer and "pclk" entries, matching e=
+ntries
 
-I would suggest to write a piece of test code for the above statement and
-observe its output. "printf("%x02x\n", 0x1234);" should do.
+Missing closing quotes around "timer".
 
-Is the error message really needed ? If there is a persistent error,
-it will clog the log.
+baruch
 
-Thanks,
-Guenter
+--=20
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Sy=
+stems
+=3D}------------------------------------------------ooO--U--Ooo--------=
+----{=3D
+   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
