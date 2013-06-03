@@ -1,108 +1,53 @@
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: Re: [PATCH V3] irqchip: Add TB10x interrupt controller driver (2)
-Date: Mon, 3 Jun 2013 10:00:04 +0200
-Message-ID: <20130603080001.GA31808@ab42.lan>
-References: <20130530211944.05F4D3E0A90@localhost>
- <1370014348-21121-1-git-send-email-christian.ruppert@abilis.com>
- <alpine.LFD.2.02.1305311835040.2905@ionos>
- <20130531221814.534DF3E08FE@localhost>
- <20130601110133.GA4051@ab42.lan>
- <51AC2A99.30709@synopsys.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: ux500: register LP5521 LEDs in the device tree
+Date: Mon, 3 Jun 2013 09:18:05 +0100
+Message-ID: <20130603081805.GC3370@gmail.com>
+References: <1369210331-18545-1-git-send-email-linus.walleij@stericsson.com>
+ <CAK5ve-+oJL0fbtM=5xRSBjCztX1fP-fcwUvZurnj42hiXR5X+Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <51AC2A99.30709@synopsys.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Pierrick Hascoet <pierrick.hascoet@abilis.com>
+In-Reply-To: <CAK5ve-+oJL0fbtM=5xRSBjCztX1fP-fcwUvZurnj42hiXR5X+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Milo Kim <Milo.Kim-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez.st-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 03, 2013 at 11:03:13AM +0530, Vineet Gupta wrote:
-> On 06/01/2013 04:31 PM, Christian Ruppert wrote:
-> > On Fri, May 31, 2013 at 11:18:14PM +0100, Grant Likely wrote:
-> >> On Fri, 31 May 2013 19:32:34 +0200 (CEST), Thomas Gleixner <tglx@l=
-inutronix.de> wrote:
-> >>> On Fri, 31 May 2013, Christian Ruppert wrote:
-> [...]
-> >> The loop above is mapping each of the
-> >> interrupt inputs on the parent controller so that each child contr=
-oller
-> >> can be chained to it as an input. I can't think of how else it cou=
-ld be
-> >> set up with the current code if the drivers were kept separate.
-> > This is exactly the intention. I haven't found an easier way to do =
-this
-> > either but I'm open to suggestions.
->=20
-> But the child intc must only uplink to one parent intc IRQ line. In t=
-hat
-> case why do we need to enumerate the rest of them in code. Is that a
-> limitation of framework or the parent intc (with it's legacy domain
-> instantiation) is not doing something correct.
-
-You are right, it would have been possible to "merge" several interrupt
-sources onto the same ARC input. This is done (where required) further
-down the interrupt controller hierarchy, however, and the way our
-hardware is designed is that every input line of the tb10x-ictl control=
-s
-a separate output line. Every one of these output lines is connected to
-a different ARC interrupt input. tb10x-ictl does not "merge" several
-interrupts:
-
-                      ...
-                   |
-               3 --+ 3
-                   |
-               4 --+ 4
-       +-----+     |
-   5 --+.....+-----+ 5
-       |tb10x|     |     ARC770
-   6 --+.....+-----+ 6
-       |-ictl|     |
-   7 --+.....+-----+ 7
-       |     |     |
-   8 --+.....+-----+ 8
-       |     |     |
-         ...          ...
-
-> [...]
-> >> If I were working on this system I'd drop the
-> >> snps,arc700-intc node entirely and have a single abilis,tb10x-intc=
- that
-> >> encapsulated the properties of both (you would of course want to s=
-hare
-> >> handler functions for the 'normal' inputs without the custom featu=
-res).
-> >> That would eliminate the goofyness of listing 27 separate interrup=
-ts in
-> >> the abilis,tb10x-ictl interrupts property.
-> > To complicate things even further, some ARC CPU built-in peripheral=
-s
-> > (e.g. timers) generate interrupts directly to the ARC built-in inte=
-rrupt
-> > controller (without going through the TB10x front-end), hence the
-> > "goofy" list of interrupts in the TB10x DT node.
->=20
-> But I presume that this is common-place for cascaded intc setups - so=
-me
-> peripherals hooking up directly to topmost intc would be normal. But =
-it
-> seems I'm not as educated in area as I really should be.
-
-Yep, that's completely normal. But it forces us to tell the driver whic=
-h
-ones of the interrupts it must manage and which ones it should ignore.
-
-Greetings,
-  Christian
-
---=20
-  Christian Ruppert              ,          <christian.ruppert@abilis.c=
-om>
-                                /|
-  Tel: +41/(0)22 816 19-42     //|                 3, Chemin du Pr=E9-F=
-leuri
-                             _// | bilis Systems   CH-1228 Plan-les-Oua=
-tes
+T24gRnJpLCAzMSBNYXkgMjAxMywgQnJ5YW4gV3Ugd3JvdGU6Cgo+IE9uIFdlZCwgTWF5IDIyLCAy
+MDEzIGF0IDE6MTIgQU0sIExpbnVzIFdhbGxlaWoKPiA8bGludXMud2FsbGVpakBzdGVyaWNzc29u
+LmNvbT4gd3JvdGU6Cj4gPiBGcm9tOiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFy
+by5vcmc+Cj4gPgo+ID4gQmFzZWQgb24gcGVuZGluZyBkZXZpY2UgdHJlZSBzdXBwb3J0IGluIHRo
+ZSBMUDU1eHggZHJpdmVycwo+ID4gd2UgY2FuIGFkZCB0aGUgY29ycmVjdCBMRUQgYW5kIGNoYW5u
+ZWwgY29uZmlndXJhdGlvbiBmcm9tIHRoZQo+ID4gdXg1MDAgZGV2aWNlIHRyZWUgZm9yIGFsbCBI
+UkVGIHZhcmlhbnRzLgo+ID4KPiA+IENjOiBNaWxvIEtpbSA8TWlsby5LaW1AdGkuY29tPgo+ID4g
+Q2M6IEJyeWFuIFd1IDxjb29sb25leUBnbWFpbC5jb20+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBMaW51
+cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+Cj4gPiAtLS0KPiA+ICBhcmNoL2Fy
+bS9ib290L2R0cy9ocmVmLmR0c2kgfCAzOCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+Ky0tLS0tLQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzMiBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9u
+cygtKQo+ID4KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9ocmVmLmR0c2kgYi9h
+cmNoL2FybS9ib290L2R0cy9ocmVmLmR0c2kKPiA+IGluZGV4IDYyNTIzZjYuLmUzMTU0MjkgMTAw
+NjQ0Cj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9ocmVmLmR0c2kKPiA+ICsrKyBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL2hyZWYuZHRzaQo+ID4gQEAgLTYzLDE2ICs2Myw0MiBAQAo+ID4gICAgICAg
+ICAgICAgICAgIH07Cj4gPgo+ID4gICAgICAgICAgICAgICAgIGkyY0A4MDEyODAwMCB7Cj4gPiAt
+ICAgICAgICAgICAgICAgICAgICAgICBscDU1MjFAMHgzMyB7Cj4gPiAtICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAibHA1NTIxIjsKPiA+ICsgICAgICAgICAgICAg
+ICAgICAgICAgIGxwNTUyMUAzMyB7Cj4gCj4gSXMgdGhpcyByaWdodCwgSSBndWVzcyBpdCBzaG91
+bGQgYmUgc3RpbGwgImxwNTUyMUAweDMzIiwgYWx0aG91Z2ggaXQncwo+IGp1c3QgYSBuYW1lLgoK
+V2hhdCBtYWtlcyB5b3Ugc2F5IHRoYXQgQnJ5YW4/CgpBbGwgb3RoZXIgbm9kZXMgZHJvcCB0aGUg
+JzB4JywgYXMgaXQncyBpbXBsaWVkLgoKLS0gCkxlZSBKb25lcwpMaW5hcm8gU1QtRXJpY3Nzb24g
+TGFuZGluZyBUZWFtIExlYWQKTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9y
+IEFSTSBTb0NzCkZvbGxvdyBMaW5hcm86IEZhY2Vib29rIHwgVHdpdHRlciB8IEJsb2cKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNj
+dXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRw
+czovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
