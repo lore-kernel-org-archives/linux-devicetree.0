@@ -1,56 +1,86 @@
-From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH RFC 0/3] clk: dt: bindings for mux & divider clocks
-Date: Tue, 4 Jun 2013 00:31:02 +0200
-Message-ID: <201306040031.02935.heiko@sntech.de>
-References: <1370281990-15090-1-git-send-email-mturquette@linaro.org>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2] pps-gpio: add device-tree binding and support
+Date: Mon, 3 Jun 2013 15:56:27 -0700
+Message-ID: <20130603155627.3f63cfd0ae1cec3c0e0a1444@linux-foundation.org>
+References: <1588516.WvWWFWzAui@wuerfel>
+	<1370083449-11986-1-git-send-email-jlu@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1370281990-15090-1-git-send-email-mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1370083449-11986-1-git-send-email-jlu@pengutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jan Luebbe <jlu@pengutronix.de>
+Cc: Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rodolfo Giometti <giometti@enneenne.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 3. Juni 2013, 19:53:07 schrieb Mike Turquette:
-> This series introduces binding definitions for common register-mapped
-> clock multiplexor and divider IP blocks, and the corresponding setup
-> functions once they are matched.  The bindings are close the struct
-> definitions but please don't hold that against the binding: the struct
-> definitions closely model the hardware.
+On Sat,  1 Jun 2013 12:44:09 +0200 Jan Luebbe <jlu@pengutronix.de> wrote:
+
+> Instead of allocating a struct pps_gpio_platform_data in the DT case, store
+> the necessary information in struct pps_gpio_device_data itself. This avoids
+> an additional allocation and the ifdef. It also gets rid of some indirection.
 > 
-> The only missing basic clock type is the gate clock.  A binding for that
-> was posted some time back and is similar in spirit to these[1].  I guess
-> we'll need to decide whether register-level programming details belong
-> in DT.  I believe they do since those details describe the hardware.
+> Also use dev_err instead of pr_err in the changed code.
 > 
-> Note that there is still no generic clock driver that matches these
-> basic types, but it would be trivial to write one.  Thoughts on that?
-> Is it better for each of the basic clock types to be a driver that
-> matches, or should there be one drivers/clk/clk-basic.c which matches
-> all of the basic clock building blocks?  I like the latter for aesthetic
-> purposes.
-> 
-> I am using this code while converting the OMAP4 clock data over to DT
-> and some common boilerplate code can be factored out of several clock
-> drivers if this is merged.
+> ...
+>
+>  static int pps_gpio_probe(struct platform_device *pdev)
+>  {
+>  	struct pps_gpio_device_data *data;
+> -	int irq;
+> +	const char *gpio_label;
+>  	int ret;
+>  	int pps_default_params;
+>  	const struct pps_gpio_platform_data *pdata = pdev->dev.platform_data;
+> +	struct device_node *np = pdev->dev.of_node;
+>  
+> +	/* allocate space for device info */
+> +	data = devm_kzalloc(&pdev->dev, sizeof(struct pps_gpio_device_data),
+> +			GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	if (pdata) {
+> +		data->gpio_pin = pdata->gpio_pin;
+> +		gpio_label = pdata->gpio_label;
+> +
+> +		data->assert_falling_edge = pdata->assert_falling_edge;
+> +		data->capture_clear = pdata->capture_clear;
+> +	} else {
+> +		ret = of_get_gpio(np, 0);
+> +		if (ret < 0) {
+> +			dev_err(&pdev->dev, "failed to get GPIO from device tree\n");
+> +			return ret;
+> +		}
+> +		data->gpio_pin = ret;
+> +		gpio_label = PPS_GPIO_NAME;
+> +
+> +		if (of_get_property(np, "assert-falling-edge", NULL))
+> +			data->assert_falling_edge = true;
+> +	}
+>  
+>  	/* GPIO setup */
+> -	ret = pps_gpio_setup(pdev);
+> -	if (ret)
+> -		return -EINVAL;
+> +	ret = devm_gpio_request(&pdev->dev, data->gpio_pin, gpio_label);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to request GPIO %u\n",
+> +			data->gpio_pin);
+> +		return ret;
+> +	}
+>  
+> -	/* IRQ setup */
+> -	irq = gpio_to_irq(pdata->gpio_pin);
+> -	if (irq < 0) {
+> -		pr_err("failed to map GPIO to IRQ: %d\n", irq);
+> +	ret = gpio_direction_input(data->gpio_pin);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to set pin direction\n");
+>  		return -EINVAL;
 
-apart from the stuff pointed out in the replies to the patches this works 
-really well on my upcoming Rockchip platform and saves quite a lot silly clock 
-definitions whose only purpose is to hold the shift and width values.
+Should we propagate the gpio_direction_input() return value?
 
+>  	}
+>  
 
-So, for this series:
-
-Tested-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Acked-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
