@@ -1,41 +1,93 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 08/10] clk: add basic Rockchip rk3066a clock support
-Date: Sun, 2 Jun 2013 20:27:11 -0700
-Message-ID: <20130603032711.GA3379@quad.lixom.net>
-References: <201306030055.15413.heiko@sntech.de>
- <201306030100.31647.heiko@sntech.de>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: Re: [PATCH V3] irqchip: Add TB10x interrupt controller driver
+Date: Mon, 3 Jun 2013 09:35:14 +0530
+Message-ID: <51AC15FA.4060800@synopsys.com>
+References: <20130530211944.05F4D3E0A90@localhost> <1370014348-21121-1-git-send-email-christian.ruppert@abilis.com> <alpine.LFD.2.02.1305311835040.2905@ionos> <20130531221814.534DF3E08FE@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201306030100.31647.heiko@sntech.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mike Turquette <mturquette@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <cjb@laptop.org>, linux-mmc@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130531221814.534DF3E08FE@localhost>
+Sender: linux-doc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Christian Ruppert <christian.ruppert@abilis.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Pierrick Hascoet <pierrick.hascoet@abilis.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 03, 2013 at 01:00:31AM +0200, Heiko St=FCbner wrote:
-> This adds basic support for clocks on Rockchip rk3066 SoCs.
-> The clock handling thru small dt nodes is heavily inspired by the
-> sunxi clk code.
->=20
-> The clock specifiers are named as "x-cortex-a9-x", because the clock
-> semantics are the same thru the whole cortex-a9 series (rk30xx,
-> rk3188, rk2928; but not the other rk29 SoCs, which are Cortex-A8 base=
-d).
+On 06/01/2013 03:48 AM, Grant Likely wrote:
+> On Fri, 31 May 2013 19:32:34 +0200 (CEST), Thomas Gleixner <tglx@linutronix.de> wrote:
+>> irq chip.
+>>> +static void tb10x_irq_cascade(unsigned int irq, struct irq_desc *desc)
+>>> +{
+>>> +	struct irq_domain *domain = irq_desc_get_handler_data(desc);
+>>> +
+>>> +	generic_handle_irq(irq_find_mapping(domain, irq));
+>>> +}
+>> ...
+>>
+>>> +	for (i = 0; i < nrirqs; i++) {
+>>> +		unsigned int irq = irq_of_parse_and_map(ictl, i);
+>>> +
+>>> +		irq_set_handler_data(irq, domain);
+>>> +		irq_set_chained_handler(irq, tb10x_irq_cascade);
+>>> +	}
+>> I might be completely confused, but this does not make any sense at
+>> all.
+>>
+>> You allocate a linear domain and then map the interrupts in the
+>> domain. The mapping function retrieves the hardware interrupt number
+>> and creates a virtual interrupt number, installs the chip and the
+>> handler for the interrupt and finally returns the virtual interrupt
+>> number.
+>>
+>> Now you take that virtual interrupt number and install
+>> tb10x_irq_cascade as the handler. irq_set_chained_handler() will
+>> startup (unmask) the interrupt right away.
+>>
+>> In the cascade handler you take the virtual interrupt number, which
+>> you get as argument, and find the mapping, i.e. the matching VIRTUAL
+>> interrupt number for the VIRTUAL interrupt number and then call the
+>> handler.
+>>
+>> How is this supposed to work?
+> I think what is going on here is that the tb10x interrupt controller
+> appears to be more of a front-end to another interrupt controller with
+> each input wired up 1:1 to the interrupt inputs of the other controller.
+> (I don't know why someone would design an interrupt controller that way,
+> but that's another issue). 
 
-Hi,
+Actually ARC700 core has an integrated intc with 32 lines and ability to
+mask/unmask each of the lines, priority/level per line etc. Simpler SoCs don't
+need to have anymore.
 
-I think you're better off naming them after the first SoC of that serie=
-s.
-Otherwise, if there's an A9-based platform in the future that is not
-compatible, things will get complicated.
+> The loop above is mapping each of the
+> interrupt inputs on the parent controller so that each child controller
+> can be chained to it as an input. I can't think of how else it could be
+> set up with the current code if the drivers were kept separate.
+>
+> Christian, what is the parent interrupt controller for this SoC? It
+> really feels like the tb10x-ictl belongs as part of the parent
+> controller. I went and looked at the parent node, and I saw this:
+>
+> 		intc: interrupt-controller {
+> 				compatible = "snps,arc700-intc";
+> 				interrupt-controller;
+> 				#interrupt-cells = <1>;
+> 		};
+>
+> I noticed the conspicuous absence of a reg property. Is this something
+> architectural? 
 
-It's pretty common that we do this for other kinds of devices, so it se=
-ems
-appropriate for clock drivers too.
+Indeed, the intc is not memory mapped. It is accessed via the separate AUX address
+space (and separate r/w instructions) similar to x86 I/O address space.
 
+> If I were working on this system I'd drop the
+> snps,arc700-intc node entirely and have a single abilis,tb10x-intc that
+> encapsulated the properties of both (you would of course want to share
+> handler functions for the 'normal' inputs without the custom features).
+> That would eliminate the goofyness of listing 27 separate interrupts in
+> the abilis,tb10x-ictl interrupts property.
 
--Olof
+But how is this different from other systems with a primary in-core intc and a
+cascaded external intc. How do they do it. I guess I need to read up more on this.
 
+-Vineet
