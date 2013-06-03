@@ -1,63 +1,36 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH RFC 2/3] clk: dt: binding for basic multiplexor clock
-Date: Mon, 3 Jun 2013 22:15:45 +0200
-Message-ID: <201306032215.45983.heiko@sntech.de>
-References: <1370281990-15090-1-git-send-email-mturquette@linaro.org>
- <201306032133.20039.heiko@sntech.de> <20130603200722.6077.85426@quantum>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH V4 4/4] ARM: dts: add clock provider information for i2s
+ controllers in Exynos5250
+Date: Mon, 3 Jun 2013 13:18:01 -0700
+Message-ID: <CAD=FV=X_XVmQ-jyorxATqBad5hhdFe5dodg_AzjsRQ-S+1=NeA@mail.gmail.com>
+References: <1370236744-16802-1-git-send-email-padma.v@samsung.com>
+	<1370236744-16802-5-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130603200722.6077.85426@quantum>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1370236744-16802-5-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, alsa-devel@alsa-project.org, padma.kvr@gmail.com, sbkim73@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, broonie@kernel.org, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gTW9udGFnLCAzLiBKdW5pIDIwMTMsIDIyOjA3OjIyIHNjaHJpZWIgTWlrZSBUdXJxdWV0dGU6
-Cj4gUXVvdGluZyBIZWlrbyBTdMO8Ym5lciAoMjAxMy0wNi0wMyAxMjozMzoxOSkKPiAKPiA+IEhp
-IE1pa2UsCj4gPiAKPiA+IEkgdGhpbmsgaXQncyBhIG11bHRpcGxleEVyIGNsb2NrIGluIHRoZSBw
-YXRjaCB0aXRsZSwgYW5kIHNlZSBiZWxvdwo+IAo+IERvaCwgeW91IGFyZSByaWdodC4gIEJ1dCAi
-eG9yIiBpcyBzbyBtdWNoIGNvb2xlciBsb29raW5nIHRoYW4gInhlciIuLi4KPiAKPiA+IEFtIE1v
-bnRhZywgMy4gSnVuaSAyMDEzLCAxOTo1MzowOSBzY2hyaWViIE1pa2UgVHVycXVldHRlOgo+ID4g
-PiBEZXZpY2UgVHJlZSBiaW5kaW5nIGZvciB0aGUgYmFzaWMgY2xvY2sgbXVsdGlwbGV4b3IsIHBs
-dXMgdGhlIHNldHVwCj4gPiA+IGZ1bmN0aW9uIHRvIHJlZ2lzdGVyIHRoZSBjbG9jay4gIEJhc2Vk
-IG9uIHRoZSBleGlzdGluZyBmaXhlZC1jbG9jawo+ID4gPiBiaW5kaW5nLgo+ID4gPiAKPiA+ID4g
-QWxzbyByZWxvY2F0ZSBkZWNsYXJhdGlvbiBvZiBvZl9maXhlZF9mYWN0b3JfY2xrX3NldHVwIHRv
-IGtlZXAgdGhpbmdzCj4gPiA+IHRpZHkuCj4gPiA+IAo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBNaWtl
-IFR1cnF1ZXR0ZSA8bXR1cnF1ZXR0ZUBsaW5hcm8ub3JnPgo+ID4gCj4gPiBbLi4uXQo+ID4gCj4g
-PiA+ICsKPiA+ID4gKyAgICAgcmVnID0gb2ZfaW9tYXAobm9kZSwgMCk7Cj4gPiA+ICsgICAgIHBy
-X2VycigiJXM6IHJlZyBpcyAweCVwXG4iLCBfX2Z1bmNfXywgcmVnKTsKPiA+ID4gKwo+ID4gPiAr
-ICAgICBpZiAob2ZfcHJvcGVydHlfcmVhZF91MzIobm9kZSwgIm1hc2siLCAmbWFzaykpIHsKPiA+
-ID4gKyAgICAgICAgICAgICBwcl9lcnIoIiVzOiBtaXNzaW5nIG1hc2sgcHJvcGVydHkgZm9yICVz
-XG4iLCBfX2Z1bmNfXywKPiA+ID4gbm9kZS0+bmFtZSk7ICsgICAgICAgICAgICAgcmV0dXJuOwo+
-ID4gPiArICAgICB9Cj4gPiA+ICsKPiA+ID4gKyAgICAgaWYgKG9mX3Byb3BlcnR5X3JlYWRfdTMy
-KG5vZGUsICJzaGlmdCIsICZzaGlmdCkpCj4gPiA+ICsgICAgICAgICAgICAgcHJfZGVidWcoIiVz
-OiBtaXNzaW5nIHNoaWZ0IHByb3BlcnR5IGRlZmF1bHRzIHRvIHplcm8gZm9yCj4gPiA+ICVzXG4i
-LCArICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfX2Z1bmNfXywgbm9kZS0+bmFtZSk7Cj4g
-PiA+ICsKPiA+ID4gKyAgICAgaWYgKG9mX3Byb3BlcnR5X3JlYWRfYm9vbChub2RlLCAiaW5kZXhf
-b25lIikpCj4gPiA+ICsgICAgICAgICAgICAgY2xrX211eF9mbGFncyB8PSBDTEtfTVVYX0lOREVY
-X09ORTsKPiA+ID4gKwo+ID4gPiArICAgICBjbGsgPSBjbGtfcmVnaXN0ZXJfbXV4X3RhYmxlKE5V
-TEwsIGNsa19uYW1lLCBwYXJlbnRfbmFtZXMsCj4gPiA+IG51bV9wYXJlbnRzLCArICAgICAgICAg
-ICAgICAgICAgICAgMCwgcmVnLCAwLCBtYXNrLCBjbGtfbXV4X2ZsYWdzLAo+ID4gPiAKPiA+ICAg
-ICAgICAgICAgICAgICAgICAgICBeLSBzaG91bGQgcHJvYmFibHkgYmUgc2hpZnQKPiA+IAo+ID4g
-T3RoZXJ3aXNlIGxvb2tzIGNvb2wgYW5kIEknbSBjdXJyZW50bHkgdHJ5aW5nIGl0IHdpdGggbXkg
-Um9ja2NoaXAgY29kZS4KPiAKPiBSaWdodCBhZ2Fpbi4gIE15IHRlc3QgcGxhdGZvcm0gc2VlbXMg
-dG8gbm90IHNoaWZ0IHRoZSBtYXNrIGF0IGFsbCBzbwo+IHRoaXMgZGlkIG5vdCBjYXVzZSBhIHZp
-c2libGUgYnVnIGZvciBtZS4KCkknbSBjdXJyZW50bHkgY29udmVydGluZyBteSByb2NrY2hpcCBz
-dHVmZiB0byBpdCwgYXMgaXQgd291bGQgc29sdmUgYSBsb3Qgb2YgCnByb2JsZW1zIHdpdGggdGhl
-IG51bWVyb3VzIGNsb2NrIHR5cGVzIEknbSBkZWZpbmluZyBqdXN0IHRvIHB1dCB0aGUgc2hpZnQg
-YW5kIAptYXNrIHZhbHVlcyBzb21ld2hlcmUuCgpTbyBsZXRzIHNlZSBpZiBhbnl0aGluZyBtb3Jl
-IHR1cm5zIHVwIDstKQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0Bs
-aXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0
-cmVlLWRpc2N1c3MK
+Padmavathi,
+
+On Sun, Jun 2, 2013 at 10:19 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
+> +               clocks = <&clock_audss EXYNOS_I2S_BUS>,
+> +                       <&clock_audss EXYNOS_I2S_BUS>,
+> +                       <&clock_audss EXYNOS_SCLK_I2S>,
+> +                       <&clock_audss EXYNOS_MOUT_AUDSS>,
+> +                       <&clock_audss EXYNOS_MOUT_I2S>;
+> +               clock-names = "iis", "i2s_opclk0", "i2s_opclk1",
+> +                               "mout_audss", "mout_i2s";
+
+Are there bindings for these clocks? Would be nice to see a
+description for what they are supposed to be.
+
+I looked up i2s_opclk0 / i2s_opclk1 and they look reasonable at a
+quick glance. ...and it does seem right that iis and i2s_opclk0 are
+the same. ...but I don't see any place that uses the last two. Is
+there an in-flight patch?
+
+-Doug
