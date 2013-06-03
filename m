@@ -1,96 +1,95 @@
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: Re: [PATCH 1/2] pinmux: Add TB10x pinmux driver
-Date: Mon, 3 Jun 2013 11:42:05 +0200
-Message-ID: <20130603094204.GC31808@ab42.lan>
-References: <CACRpkdaxO0q_P2wJFy3zv4F-QM9dZk54qW8ft350XqcBt1Gr1w@mail.gmail.com>
- <20130508164123.GA10248@ab42.lan>
- <518AAF31.8080502@wwwdotorg.org>
- <20130510082521.GA2125@ab42.lan>
- <51942472.9010402@wwwdotorg.org>
- <CACRpkdYtKr5w2=1sONG4Qn2TQue38nV7epWfzxNQz5rjSs0DZQ@mail.gmail.com>
- <20130522142824.GC4789@ab42.lan>
- <CAD6h2NT4FqmEsLvtTDwwDL2YVzXYNpw72hTOcSxSMvHLhWvFPQ@mail.gmail.com>
- <20130524115053.GB5203@ab42.lan>
- <CACRpkdbqzSZefYB2jywkkKDE_Qse83+MDJ+D+UNYnQGFUzwQWQ@mail.gmail.com>
+From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 10/10] arm: add basic support for Rockchip RK3066a boards
+Date: Mon, 3 Jun 2013 11:46:57 +0200
+Message-ID: <201306031146.57611.heiko@sntech.de>
+References: <201306030055.15413.heiko@sntech.de> <201306031023.49364.heiko@sntech.de> <9452845.qTGjLPCfXq@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: Text/Plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbqzSZefYB2jywkkKDE_Qse83+MDJ+D+UNYnQGFUzwQWQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Haojian Zhuang <haojian.zhuang@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Shiraz HASHIM <shiraz.hashim@st.com>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <9452845.qTGjLPCfXq@wuerfel>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mike Turquette <mturquette@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <cjb@laptop.org>, linux-mmc@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 29, 2013 at 02:21:05PM +0200, Linus Walleij wrote:
-> On Fri, May 24, 2013 at 1:50 PM, Christian Ruppert
-> <christian.ruppert@abilis.com> wrote:
+Am Montag, 3. Juni 2013, 11:22:35 schrieb Arnd Bergmann:
+> On Monday 03 June 2013 10:23:49 Heiko St=FCbner wrote:
+> > Am Montag, 3. Juni 2013, 04:15:46 schrieb Arnd Bergmann:
+> > > Can't you use
+> > >=20
+> > > 	of_clk_init(NULL);
+> > > 	clocksource_of_init();
+> > >=20
+> > > here and change the two drivers to provide the respective macros?
+> >=20
+> > hmm, while this would make a lot of things easier I don't see right=
+ now
+> > how this would work.
+> >=20
+> > The dw_apb_timer clocksource does not have its own device node, but
+> > instead uses two timer devices as clocksource and clockevent.
+> >=20
+> > Hmm ... one idea would be to wrap them in the dt, like
+> >=20
+> > 	clocksource {
+> > =09
+> > 		compatible =3D "snps,dw-apb-clocksource"
+> > 	=09
+> > 		timer@2003a000 {
+> > 	=09
+> > 			compatible =3D "snps,dw-apb-timer-osc";
+> > 			reg =3D <0x2003a000 0x100>;
+> > 			interrupts =3D <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+> > 			clocks =3D <&clk_gates1 1>, <&clk_gates7 8>;
+> > 			clock-names =3D "timer", "pclk";
+> > 	=09
+> > 		};
+> > 	=09
+> > 		timer@2000e000 {
+> > 	=09
+> > 			compatible =3D "snps,dw-apb-timer-osc";
+> > 			reg =3D <0x2000e000 0x100>;
+> > 			interrupts =3D <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+> > 			clocks =3D <&clk_gates1 2>, <&clk_gates7 9>;
+> > 			clock-names =3D "timer", "pclk";
+> > 	=09
+> > 		};
+> > =09
+> > 	};
 >=20
-> > I haven't understood how to associate GPIOs to
-> > other functions, however: Our hardware pin controller makes GPIO pi=
-ns
-> > available depending on the configuration of the non-GPIO interfaces=
-=2E
-> > This means that in many configurations, GPIO banks are only partial=
-ly
-> > available because some pins are used for other purposes. We can't e=
-xpect
-> > our customers to manually change the pin assignments in the device =
-tree
-> > in order to take this into account for every PCB.
+> Can't you just have multiple CLOCKSOURCE_OF_DECLARE() lines, one
+> for each of the nodes?
+
+The timers are of the same type and the clocksource driver just grabs t=
+he=20
+first of them as clockevent and the second as clocksource, so I think t=
+wo=20
+CLOCKSOURCE_OF_DECLARE lines won't do.
+
+But I just looked at clocksource_of_init a bit more closely, which does=
+ a=20
+for_each_matching_node_and_match over the nodes. So the init_func could=
+ grab=20
+the device for the clockevent on the first call and the clocksource whe=
+n it=20
+gets called for the second matching node.
+
+
+> > > > +DT_MACHINE_START(ROCKCHIP_DT, "Rockchip Cortex-A9 (Device Tree=
+)")
+> > > > +       .map_io         =3D debug_ll_io_init,
+> > > > +       .init_machine   =3D rockchip_dt_init,
+> > > > +       .init_time      =3D rockchip_timer_init,
+> > > > +       .dt_compat      =3D rockchip_board_dt_compat,
+> > > > +MACHINE_END
+> > >=20
+> > > The map_io line can already get removed.
+> >=20
+> > Yesterday I did grep thru the linux-next I was using as base lookin=
+g for
+> > the debug_ll_io_init default I read about but was not able to find =
+it
+> > ... most likely my linux-next is a tad to old.
 >=20
-> But what is it your customers do when customizing a board then?
-
-Ideally, they just select the pin functions they would like to use on
-their PCB using the phandle mechanism outlined in
-Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt.
-We will prepare the nodes to point to in our SOC .dtsi files. Obviously=
-,
-customers will look at these files, in particular the nodes they point
-to. The simpler these nodes are (and the easier to understand) the
-better.
-
-> Part of the promise of the device tree is to make it easy for downstr=
-eam
-> users to customize the kernel, *especially* for different boards/syst=
-ems
-> using the same SoC, for example. It is very much intended as a
-> customization tools for embedded developers getting boards from
-> a chipset vendor.
-
-Yes, this is our understanding as well. This is why we would like to
-avoid confusion through the exposure of obscure number spaces, even
-if a customer is not supposed to modify them.
-
-Ease of use is also the reason why I added the gpio-base property to th=
-e
-original driver: Finding out the global GPIO number to use in
-/sys/class/gpio for a given GPIO of a given bank seems to be a recurrin=
-g
-headache for our customers and the definition of the bank's base number
-in the device tree is an attempt to improve this situation. I am lookin=
-g
-forward to the patch you said Alexandre is working on which will
-probably be a much better solution.
-
-> Maybe I don't understand what is meant by changing the pin
-> assignments above ...
-
-Every pin can have exactly one function at a time and is thus assigned
-to that function. Ideally, conflicts are cleanly managed in the pinmux
-driver and an error message is generated so customers can understand wh=
-y
-something doesn't work and how to fix it.
-
-Greetings,
-  Christian
-
---=20
-  Christian Ruppert              ,          <christian.ruppert@abilis.c=
-om>
-                                /|
-  Tel: +41/(0)22 816 19-42     //|                 3, Chemin du Pr=E9-F=
-leuri
-                             _// | bilis Systems   CH-1228 Plan-les-Oua=
-tes
+> Yes, it only showed up in today's linux-next. I thought it was older.
