@@ -1,59 +1,92 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [net-next PATCH 1/8] drivers: net: phy: at803x code cleanup on
- register and unregister driver
-Date: Tue, 04 Jun 2013 16:02:06 +0400
-Message-ID: <51ADD73E.40405@cogentembedded.com>
-References: <1370326212-17580-1-git-send-email-mugunthanvnm@ti.com> <1370326212-17580-2-git-send-email-mugunthanvnm@ti.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: DT version of kirkwood_ge0x_init()
+Date: Tue, 4 Jun 2013 08:05:00 -0400
+Message-ID: <20130604120500.GZ3803@titan.lakedaemon.net>
+References: <51ADBEE0.5040500@keymile.com> <51ADC2C2.6010106@gmail.com>
+ <20130604104302.GX3803@titan.lakedaemon.net>
+ <20130604115927.GJ7626@kw.sim.vm.gnt>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1370326212-17580-2-git-send-email-mugunthanvnm@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mugunthan V N <mugunthanvnm@ti.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, benoit.cousson@linaro.org, paul@pwsan.com, Matus Ujhelyi <ujhelyi.m@gmail.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130604115927.GJ7626-tZfvYpCFA3RN6yImKYG91Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "Longchamp,
+ Valentin" <Valentin.Longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Brunck,
+ Holger" <Holger.Brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Simon Guinot <simon-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Tue, Jun 04, 2013 at 01:59:27PM +0200, Simon Guinot wrote:
+> On Tue, Jun 04, 2013 at 06:43:02AM -0400, Jason Cooper wrote:
+> > On Tue, Jun 04, 2013 at 12:34:42PM +0200, Sebastian Hesselbarth wrote:
+> > > On 06/04/13 12:18, Gerlando Falauto wrote:
+> > > >I noticed how most of the DT-aware board-setup files only have a single
+> > > ><board>_init() function, calling kirkwood_ge00_init() with a struct
+> > > >mv643xx_eth_platform_data as a single argument.
+> > > >
+> > > >I was wondering -- is there a reason why we cannot remove all this
+> > > >board-specific code and move all this to the DT?
+> > > 
+> > > Gerlando,
+> > > 
+> > > DT for mv643xx_eth is on the way (https://lkml.org/lkml/2013/5/29/527).
+> > > We wait for the driver to surface to relax branch dependencies and then
+> > > move all DT Orion SoCs to it.
+> > > 
+> > > > I would really love to have all our boards under a single
+> > > > CONFIG_<FAMILY>_DT and a single compatible string, with all the
+> > > > differences within the DTs itself -- no more #ifdef CONFIG_<BOARD>,
+> > > > no more of_machine_is_compatible("boardXXX").
+> > > 
+> > > All those will happen if there is DT support for mv643xx_eth which
+> > > is the only driver left without DT and board dependencies. But there
+> > > will be no CONFIG_LACIE_DT or whatever, but just CONFIG_KIRKWOOD_DT
+> > > and board dependent stuff described in the corresponding dts.
+> > 
+> > Gerlando,
+> > 
+> > Yes, the mess you describe is temporary.  Those board files used to have
+> > a lot more code in them, legacy init of partitions, MPP, LEDs, etc.  As
+> > we have converted drivers, they have gotten smaller and smaller.
+> > 
+> > Now, with Sebastian's hard work, we'll finally be able to remove them
+> > and kirkwood will be completely DT.  We're very excited about this. :)
+> > 
+> > Next, we'll move the Marvell DT boards over to mach-mvebu/ and only
+> > legacy boards in -kirkwood/, -orion5x/, -dove/, and -mv78xx0/ will
+> > remain.  After a few releases we will deprecate any legacy boards which
+> > haven't been converted to DT.
+> 
+> Hi Jason,
+> 
+> While I have obviously planed to convert all the LaCie boards to DT,
+> I think that removing the legacy support so quickly is a little bit
+> harsh.
 
-On 04-06-2013 10:10, Mugunthan V N wrote:
+Yeah, my wording might not have been the best.  See below.
 
-> Make use of phy_drivers_register/phy_drivers_unregister to register/unregister
-> multiple phy drivers in a single module.
+> IMHO, it could be nice to wait the end-of-life for all this products
+> before removing their support.
 
-> Cc: Matus Ujhelyi <ujhelyi.m@gmail.com>
-> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
-> ---
->   drivers/net/phy/at803x.c |   35 ++++++++++-------------------------
->   1 file changed, 10 insertions(+), 25 deletions(-)
+I'd prefer to convert them to DT, then keep them as long as folks are
+interested in them.  If no one cares about a board, and no one wants to
+convert it to DT or test the conversion, why keep it around?
 
-> diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-> index 45cbc10..a1063e1 100644
-> --- a/drivers/net/phy/at803x.c
-> +++ b/drivers/net/phy/at803x.c
-> @@ -108,8 +108,9 @@ static int at803x_config_init(struct phy_device *phydev)
->   	return 0;
->   }
->
-> -/* ATHEROS 8035 */
-> -static struct phy_driver at8035_driver = {
-> +static struct phy_driver at803x_driver[] = {
-> +{
-> +	/* ATHEROS 8035 */
->   	.phy_id		= 0x004dd072,
->   	.name		= "Atheros 8035 ethernet",
->   	.phy_id_mask	= 0xffffffef,
+Let me clarify, by 'deprecate them' I meant *begin* the process of
+deprecating them.  eg marking them as deprecated for around three
+releases or so.
 
-     That's improper indentation. Needs to be shifted by one tab.
+thx,
 
-> @@ -136,32 +135,18 @@ static struct phy_driver at8030_driver = {
->   	.driver		= {
->   		.owner = THIS_MODULE,
->   	},
-> -};
-> +} };
-
-    Looks ugly...
-
-WBR, Sergei
-
+Jason.
