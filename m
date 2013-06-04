@@ -1,7 +1,7 @@
 From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 2/4] clocksource: dw_apb_timer_of: add clock-handling
-Date: Tue, 4 Jun 2013 11:37:36 +0200
-Message-ID: <201306041137.37036.heiko@sntech.de>
+Subject: [PATCH v2 3/4] clocksource: dw_apb_timer_of: select DW_APB_TIMER
+Date: Tue, 4 Jun 2013 11:38:11 +0200
+Message-ID: <201306041138.11447.heiko@sntech.de>
 References: <201306041136.09566.heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,110 +18,61 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the possibility to get the clock-frequency from a timer clock instead
-of specifying it as dt property. Additionally also add the possibility
-to also define a controlling periphal clock for the timer block.
+dw_apb_timer_of is the driver part facing devicetree platforms and
+calls into dw_apb_timer with the data gathered from the dt.
 
-The clock-frequency property is kept to act as fallback if no clocks
-are specified.
+Currently the two platforms using the dw_apb_timer_of select both
+the options for the core timer and the dt addon.
+
+As dw_apb_timer_of always depends on dw_apb_timer let it select
+DW_APB_TIMER itself without the need for every platform to do it.
 
 Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/rtc/dw-apb.txt |   19 ++++++++++++++++
- drivers/clocksource/dw_apb_timer_of.c            |   26 +++++++++++++++++++++-
- 2 files changed, 44 insertions(+), 1 deletions(-)
+ arch/arm/mach-picoxcell/Kconfig |    1 -
+ arch/arm/mach-socfpga/Kconfig   |    1 -
+ drivers/clocksource/Kconfig     |    1 +
+ 3 files changed, 1 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/dw-apb.txt b/Documentation/devicetree/bindings/rtc/dw-apb.txt
-index 93e2b0f..eb2327b 100644
---- a/Documentation/devicetree/bindings/rtc/dw-apb.txt
-+++ b/Documentation/devicetree/bindings/rtc/dw-apb.txt
-@@ -5,9 +5,20 @@ Required properties:
- - reg: physical base address of the controller and length of memory mapped
-   region.
- - interrupts: IRQ line for the timer.
-+- either clocks+clock-names or clock-frequency properties
-+
-+Optional properties:
-+- clocks	: list of clock specifiers, corresponding to entries in
-+		  the clock-names property;
-+- clock-names	: should contain "timer" and "pclk" entries, matching entries
-+		  in the clocks property.
- - clock-frequency: The frequency in HZ of the timer.
- - clock-freq: For backwards compatibility with picoxcell
+diff --git a/arch/arm/mach-picoxcell/Kconfig b/arch/arm/mach-picoxcell/Kconfig
+index 13bae78..b1022f4 100644
+--- a/arch/arm/mach-picoxcell/Kconfig
++++ b/arch/arm/mach-picoxcell/Kconfig
+@@ -4,7 +4,6 @@ config ARCH_PICOXCELL
+ 	select ARM_PATCH_PHYS_VIRT
+ 	select ARM_VIC
+ 	select CPU_V6K
+-	select DW_APB_TIMER
+ 	select DW_APB_TIMER_OF
+ 	select GENERIC_CLOCKEVENTS
+ 	select HAVE_TCM
+diff --git a/arch/arm/mach-socfpga/Kconfig b/arch/arm/mach-socfpga/Kconfig
+index 566e804..a279fb3 100644
+--- a/arch/arm/mach-socfpga/Kconfig
++++ b/arch/arm/mach-socfpga/Kconfig
+@@ -7,7 +7,6 @@ config ARCH_SOCFPGA
+ 	select CLKDEV_LOOKUP
+ 	select COMMON_CLK
+ 	select CPU_V7
+-	select DW_APB_TIMER
+ 	select DW_APB_TIMER_OF
+ 	select GENERIC_CLOCKEVENTS
+ 	select GPIO_PL061 if GPIOLIB
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index f151c6c..48a0f2e 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -21,6 +21,7 @@ config DW_APB_TIMER
  
-+If using the clock specifiers, the pclk clock is optional, as not all
-+systems may use one.
-+
-+
- Example:
+ config DW_APB_TIMER_OF
+ 	bool
++	select DW_APB_TIMER
  
- 		timer1: timer@ffc09000 {
-@@ -23,3 +34,11 @@ Example:
- 				clock-frequency = <200000000>;
- 				reg = <0xffd00000 0x1000>;
- 			};
-+
-+		timer3: timer@ffe00000 {
-+				compatible = "snps,dw-apb-timer-osc";
-+				interrupts = <0 170 4>;
-+				reg = <0xffe00000 0x1000>;
-+				clocks = <&timer_clk>, <&timer_pclk>;
-+				clock-names = "timer", "pclk";
-+			};
-diff --git a/drivers/clocksource/dw_apb_timer_of.c b/drivers/clocksource/dw_apb_timer_of.c
-index d6c0fda..1964f87 100644
---- a/drivers/clocksource/dw_apb_timer_of.c
-+++ b/drivers/clocksource/dw_apb_timer_of.c
-@@ -20,6 +20,7 @@
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
-+#include <linux/clk.h>
- 
- #include <asm/mach/time.h>
- #include <asm/sched_clock.h>
-@@ -27,14 +28,37 @@
- static void timer_get_base_and_rate(struct device_node *np,
- 				    void __iomem **base, u32 *rate)
- {
-+	struct clk *timer_clk;
-+	struct clk *pclk;
-+
- 	*base = of_iomap(np, 0);
- 
- 	if (!*base)
- 		panic("Unable to map regs for %s", np->name);
- 
-+	/*
-+	 * Not all implementations use a periphal clock, so don't panic
-+	 * if it's not present
-+	 */
-+	pclk = of_clk_get_by_name(np, "pclk");
-+	if (!IS_ERR(pclk))
-+		if (clk_prepare_enable(pclk))
-+			pr_warn("pclk for %s is present, but could not be activated\n",
-+				np->name);
-+
-+	timer_clk = of_clk_get_by_name(np, "timer");
-+	if (IS_ERR(timer_clk))
-+		goto try_clock_freq;
-+
-+	if (!clk_prepare_enable(timer_clk)) {
-+		*rate = clk_get_rate(timer_clk);
-+		return;
-+	}
-+
-+try_clock_freq:
- 	if (of_property_read_u32(np, "clock-freq", rate) &&
- 		of_property_read_u32(np, "clock-frequency", rate))
--		panic("No clock-frequency property for %s", np->name);
-+		panic("No clock nor clock-frequency property for %s", np->name);
- }
- 
- static void add_clockevent(struct device_node *event_timer)
+ config ARMADA_370_XP_TIMER
+ 	bool
 -- 
 1.7.2.3
