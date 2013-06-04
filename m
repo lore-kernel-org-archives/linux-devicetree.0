@@ -1,17 +1,17 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: DT version of kirkwood_ge0x_init()
-Date: Tue, 4 Jun 2013 09:10:03 -0400
-Message-ID: <20130604131003.GA3803@titan.lakedaemon.net>
-References: <51ADBEE0.5040500@keymile.com> <51ADC2C2.6010106@gmail.com>
- <20130604104302.GX3803@titan.lakedaemon.net>
- <20130604115927.GJ7626@kw.sim.vm.gnt>
- <20130604120500.GZ3803@titan.lakedaemon.net>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: at91: dt: add header to define at_hdmac
+ configuration
+Date: Tue, 4 Jun 2013 15:17:45 +0200
+Message-ID: <51ADE8F9.7090200@atmel.com>
+References: <1369930103-11963-1-git-send-email-ludovic.desroches@atmel.com>
+ <1369930103-11963-2-git-send-email-ludovic.desroches@atmel.com>
+ <201305312330.29364.arnd@arndb.de>
+ <20130603073226.GG11384@ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130604120500.GZ3803-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+In-Reply-To: <20130603073226.GG11384-tOglhBvtKaELqBSMlTbpHvU/3Eu2kcEP@public.gmane.org@atmel.com>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,80 +22,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "Longchamp,
- Valentin" <Valentin.Longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Brunck,
- Holger" <Holger.Brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Simon Guinot <simon-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 04, 2013 at 08:05:00AM -0400, Jason Cooper wrote:
-> On Tue, Jun 04, 2013 at 01:59:27PM +0200, Simon Guinot wrote:
-> > On Tue, Jun 04, 2013 at 06:43:02AM -0400, Jason Cooper wrote:
-> > > On Tue, Jun 04, 2013 at 12:34:42PM +0200, Sebastian Hesselbarth wrote:
-> > > > On 06/04/13 12:18, Gerlando Falauto wrote:
-> > > > >I noticed how most of the DT-aware board-setup files only have a single
-> > > > ><board>_init() function, calling kirkwood_ge00_init() with a struct
-> > > > >mv643xx_eth_platform_data as a single argument.
-> > > > >
-> > > > >I was wondering -- is there a reason why we cannot remove all this
-> > > > >board-specific code and move all this to the DT?
-> > > > 
-> > > > Gerlando,
-> > > > 
-> > > > DT for mv643xx_eth is on the way (https://lkml.org/lkml/2013/5/29/527).
-> > > > We wait for the driver to surface to relax branch dependencies and then
-> > > > move all DT Orion SoCs to it.
-> > > > 
-> > > > > I would really love to have all our boards under a single
-> > > > > CONFIG_<FAMILY>_DT and a single compatible string, with all the
-> > > > > differences within the DTs itself -- no more #ifdef CONFIG_<BOARD>,
-> > > > > no more of_machine_is_compatible("boardXXX").
-> > > > 
-> > > > All those will happen if there is DT support for mv643xx_eth which
-> > > > is the only driver left without DT and board dependencies. But there
-> > > > will be no CONFIG_LACIE_DT or whatever, but just CONFIG_KIRKWOOD_DT
-> > > > and board dependent stuff described in the corresponding dts.
-> > > 
-> > > Gerlando,
-> > > 
-> > > Yes, the mess you describe is temporary.  Those board files used to have
-> > > a lot more code in them, legacy init of partitions, MPP, LEDs, etc.  As
-> > > we have converted drivers, they have gotten smaller and smaller.
-> > > 
-> > > Now, with Sebastian's hard work, we'll finally be able to remove them
-> > > and kirkwood will be completely DT.  We're very excited about this. :)
-> > > 
-> > > Next, we'll move the Marvell DT boards over to mach-mvebu/ and only
-> > > legacy boards in -kirkwood/, -orion5x/, -dove/, and -mv78xx0/ will
-> > > remain.  After a few releases we will deprecate any legacy boards which
-> > > haven't been converted to DT.
-> > 
-> > Hi Jason,
-> > 
-> > While I have obviously planed to convert all the LaCie boards to DT,
-> > I think that removing the legacy support so quickly is a little bit
-> > harsh.
-> 
-> Yeah, my wording might not have been the best.  See below.
-> 
-> > IMHO, it could be nice to wait the end-of-life for all this products
-> > before removing their support.
-> 
-> I'd prefer to convert them to DT, then keep them as long as folks are
-> interested in them.  If no one cares about a board, and no one wants to
-> convert it to DT or test the conversion, why keep it around?
-> 
-> Let me clarify, by 'deprecate them' I meant *begin* the process of
-> deprecating them.  eg marking them as deprecated for around three
-> releases or so.
+On 03/06/2013 09:32, Ludovic Desroches :
+> On Fri, May 31, 2013 at 11:30:29PM +0200, Arnd Bergmann wrote:
+>> On Thursday 30 May 2013, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org wrote:
+>>> +/*
+>>> + * Source and/or destination peripheral ID
+>>> + */
+>>> +#define AT91_DMA_CFG_PER_ID_MASK       (0xff)
+>>> +#define AT91_DMA_CFG_PER_ID(id)                (id & AT91_DMA_CFG_PER_ID_MASK)
+>>> +
+>>
+>> I'm a little worried about macros like this one spreading in the name
+>> of readability, and I don't see this as actual value-add here:
+>>
+>> The output of the macro is always the same as the input, and passing
+>> an invalid number still results in an invalid output and no error message,
+>> it actually prevents us from warning about the mistake at run-time.
+>>
+>
+> You are right, this macro is here only for readability in order to not have
+> something like this:
+>
+> dmas = <&dma0 AT91_DMA_CFG_FIFOCFG_ASAP | 13>
+>
+> In this case, I prefer having a macro instead of using a numeric value which
+> can stand for other things than the peripheral id and which could conflict
+> with other parameters such as the FIFO configuration.
+>
+> If adding this macro is really an issue, it could be removed of course but
+> in this case I am in favor of readability.
 
-And, now that I've had some coffee, I should also mention that any
-boards that are removed can always be brought back by reverting the
-commit.  Sometimes people don't complain until it outright disappears
-;-)
+Arnd,
 
-Heads up:  complain = "volunteer to convert to DT"
+I think that the case highlighted by Ludovic is indeed a case where 
+someone can be confused by the presentation of data in the cell... even 
+if I like the use of macro as implemented by Ludovic, I do not have a 
+strong opinion about this.
 
-thx,
-
-Jason.
+Best regards,
+-- 
+Nicolas Ferre
