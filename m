@@ -1,83 +1,87 @@
-From: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: ux500: register LP5521 LEDs in the device tree
-Date: Tue, 4 Jun 2013 10:33:46 -0700
-Message-ID: <CAK5ve-Ke62f0q-BeALPj4ToE2a3f-b7VvAGwMeQJwt=WZ+fRyg@mail.gmail.com>
-References: <1369210331-18545-1-git-send-email-linus.walleij@stericsson.com>
- <CAK5ve-+oJL0fbtM=5xRSBjCztX1fP-fcwUvZurnj42hiXR5X+Q@mail.gmail.com>
- <20130603081805.GC3370@gmail.com>
- <CAK5ve-+ykvTfpfsyAfnoURwuZt1nF4aFPGU5yQa0HXXBmWW_9Q@mail.gmail.com>
- <20130604073507.GL3370@gmail.com>
+From: Matt Sealey <neko@bakuhatsu.net>
+Subject: Re: [PATCH RFC 3/3] clk: dt: binding for basic divider clock
+Date: Tue, 4 Jun 2013 12:39:53 -0500
+Message-ID: <CAHCPf3tZAbdVZPuKOjxJbCOAE76Pa6wMVHjnBRPhSpj0aMBMHg@mail.gmail.com>
+References: <1370281990-15090-1-git-send-email-mturquette@linaro.org>
+ <1370281990-15090-4-git-send-email-mturquette@linaro.org>
+ <51AE1FBB.1070806@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130604073507.GL3370-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Milo Kim <Milo.Kim-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez.st-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <51AE1FBB.1070806@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree-discuss@lists.ozlabs.org, Mike Turquette <mturquette@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 4, 2013 at 12:35 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, 03 Jun 2013, Bryan Wu wrote:
+On Tue, Jun 4, 2013 at 12:11 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 06/03/13 10:53, Mike Turquette wrote:
+>> +Required properties:
+>> +- compatible : shall be "divider-clock".
+>> +- #clock-cells : from common clock binding; shall be set to 0.
+>> +- clocks : link to phandle of parent clock
+>> +- reg : base address for register controlling adjustable divider
+>> +- mask : arbitrary bitmask for programming the adjustable divider
+>> +
+>> +Optional properties:
+>> +- clock-output-names : From common clock binding.
+>> +- table : array of integer pairs defining divisors & bitfield values
+>> +- shift : number of bits to shift the mask, defaults to 0 if not present
+>> +- index_one : valid divisor programming starts at 1, not zero
+>> +- index_power_of_two : valid divisor programming must be a power of two
+>> +- allow_zero : implies index_one, and programming zero results in
+>> +  divide-by-one
 >
->> On Mon, Jun 3, 2013 at 1:18 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> > On Fri, 31 May 2013, Bryan Wu wrote:
->> >
->> >> On Wed, May 22, 2013 at 1:12 AM, Linus Walleij
->> >> <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org> wrote:
->> >> > From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> >> >
->> >> > Based on pending device tree support in the LP55xx drivers
->> >> > we can add the correct LED and channel configuration from the
->> >> > ux500 device tree for all HREF variants.
->> >> >
->> >> > Cc: Milo Kim <Milo.Kim-l0cyMroinI0@public.gmane.org>
->> >> > Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> >> > Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> >> > ---
->> >> >  arch/arm/boot/dts/href.dtsi | 38 ++++++++++++++++++++++++++++++++------
->> >> >  1 file changed, 32 insertions(+), 6 deletions(-)
->> >> >
->> >> > diff --git a/arch/arm/boot/dts/href.dtsi b/arch/arm/boot/dts/href.dtsi
->> >> > index 62523f6..e315429 100644
->> >> > --- a/arch/arm/boot/dts/href.dtsi
->> >> > +++ b/arch/arm/boot/dts/href.dtsi
->> >> > @@ -63,16 +63,42 @@
->> >> >                 };
->> >> >
->> >> >                 i2c@80128000 {
->> >> > -                       lp5521@0x33 {
->> >> > -                               compatible = "lp5521";
->> >> > +                       lp5521@33 {
->> >>
->> >> Is this right, I guess it should be still "lp5521@0x33", although it's
->> >> just a name.
->> >
->> > What makes you say that Bryan?
->> >
->> > All other nodes drop the '0x', as it's implied.
->> >
->>
->> But I still got this in this patch
->> "  bh1780@0x29 {"
->>
->> which is not changed. So which one should be the right?
->
-> The one without the '0x' is correct.
->
-> If there are any of these left over that Linus hasn't fixed yet, I'm
-> happy to fix.
+> It's preferred that property names have dashes instead of underscores.
 
-Sure, no problem. I just found this inconsistence confused me.
+I think I have a suggestion or two here..
 
-Thanks,
--Bryan
+I mailed one to Mike earlier, I have had some mailing list problems
+which I think are solved now..
+
+If you provide a mask for programming the divider, surely the "shift"
+property is therefore redundant. Unless some device has a completely
+strange way of doing things and uses two seperated bitfields for
+programming in the same register, the shift value is simply a function
+of ffs() on the mask, isn't it? It is nice to put the information
+specifically in the device tree, but where a shift is not specified
+it'd probably be a good idea to go about deriving that value that way
+anyway, right, and if we're doing that.. why specify it?
+
+Also it may be much simpler to simply define the default clock setup
+as being an integer divider that follows the form 2^n - I am not sure
+I can think off the top of my head of any clock dividers doing the
+rounds that have divide-by-non-power-of-two and if they exist out
+there (please correct me) they would be the rare ones. I think
+properties that modify behavior should err on the side of being rarely
+used and to define unusual behavior, not confirm the status quo.
+
+Just to be sure, though, someone would need to go visit a bunch of
+current clock handlers already implemented or read a lot of docs to
+see how they're expecting their dividers. Maybe some of the Samsung,
+Qualcomm, TI, Freescale guys can comment on what is the most common
+case inside their SoCs.
+
+In any case, once you figure out that, rather than specifying a full
+table of <0 1>, <1 2>, <2, 4> and creating a big list, you could just
+give the lower and upper limits and let the driver figure out what is
+in between with two values. If there were gaps, a full table would be
+necessary. The allow zero property might be better served by the very
+same range property.
+
+I would also say.. bit-mask rather than mask, divider-table rather
+than table, divider-range (modifying the idea above). While we're
+inside a particular namespace in the binding I think naming properties
+with their intent (i.e. what table is it?) is good behavior.
+
+--
+Matt Sealey <matt@genesi-usa.com>
