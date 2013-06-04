@@ -1,91 +1,81 @@
-From: Padmavathi Venna <padma.v@samsung.com>
-Subject: [PATCH V5 5/5] ARM: dts: Update Samsung I2S documentation
-Date: Tue, 04 Jun 2013 17:58:10 +0530
-Message-ID: <1370348890-6645-6-git-send-email-padma.v@samsung.com>
-References: <1370348890-6645-1-git-send-email-padma.v@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1370348890-6645-1-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.v@samsung.com, padma.kvr@gmail.com
-Cc: sbkim73@samsung.com, broonie@kernel.org, kgene.kim@samsung.com, mturquette@linaro.org
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: Re: [net-next PATCH 1/8] drivers: net: phy: at803x code cleanup on
+ register and unregister driver
+Date: Tue, 4 Jun 2013 18:13:22 +0530
+Message-ID: <51ADE0EA.7060008@ti.com>
+References: <1370326212-17580-1-git-send-email-mugunthanvnm@ti.com> <1370326212-17580-2-git-send-email-mugunthanvnm@ti.com> <51ADD73E.40405@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51ADD73E.40405@cogentembedded.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, benoit.cousson@linaro.org, paul@pwsan.com, Matus Ujhelyi <ujhelyi.m@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch updates the samsung i2s documentation for pinmux and
-clock entries.
+On 6/4/2013 5:32 PM, Sergei Shtylyov wrote:
+> Hello.
+>
+> On 04-06-2013 10:10, Mugunthan V N wrote:
+>
+>> Make use of phy_drivers_register/phy_drivers_unregister to 
+>> register/unregister
+>> multiple phy drivers in a single module.
+>
+>> Cc: Matus Ujhelyi <ujhelyi.m@gmail.com>
+>> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+>> ---
+>>   drivers/net/phy/at803x.c |   35 ++++++++++-------------------------
+>>   1 file changed, 10 insertions(+), 25 deletions(-)
+>
+>> diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+>> index 45cbc10..a1063e1 100644
+>> --- a/drivers/net/phy/at803x.c
+>> +++ b/drivers/net/phy/at803x.c
+>> @@ -108,8 +108,9 @@ static int at803x_config_init(struct phy_device 
+>> *phydev)
+>>       return 0;
+>>   }
+>>
+>> -/* ATHEROS 8035 */
+>> -static struct phy_driver at8035_driver = {
+>> +static struct phy_driver at803x_driver[] = {
+>> +{
+>> +    /* ATHEROS 8035 */
+>>       .phy_id        = 0x004dd072,
+>>       .name        = "Atheros 8035 ethernet",
+>>       .phy_id_mask    = 0xffffffef,
+>
+>     That's improper indentation. Needs to be shifted by one tab.
+This indentation is as per the coding style followed in all ethernet
+phy drivers. If this need so to be changed, it must be a separate patch
+for all the ethernet phy drivers.
+>
+>> @@ -136,32 +135,18 @@ static struct phy_driver at8030_driver = {
+>>       .driver        = {
+>>           .owner = THIS_MODULE,
+>>       },
+>> -};
+>> +} };
+>
+>    Looks ugly...
+This is also the same as per the style followed in ethernet phy drivers
+Please refer the below grep output
 
-Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
----
- .../devicetree/bindings/sound/samsung-i2s.txt      |   40 ++++++-------------
- 1 files changed, 13 insertions(+), 27 deletions(-)
+$ grep -rnaI "} };" drivers/net/phy/*
+drivers/net/phy/at803x.c:201:} };
+drivers/net/phy/bcm63xx.c:101:} };
+drivers/net/phy/bcm87xx.c:217:} };
+drivers/net/phy/broadcom.c:829:} };
+drivers/net/phy/cicada.c:130:} };
+drivers/net/phy/davicom.c:183:} };
+drivers/net/phy/icplus.c:254:} };
+drivers/net/phy/lxt.c:313:} };
+drivers/net/phy/micrel.c:323:} };
+drivers/net/phy/smsc.c:242:} };
+drivers/net/phy/ste10Xp.c:113:} };
+drivers/net/phy/vitesse.c:192:} };
 
-diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.txt b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
-index 3070046..6f9d29f 100644
---- a/Documentation/devicetree/bindings/sound/samsung-i2s.txt
-+++ b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
-@@ -8,6 +8,10 @@ Required SoC Specific Properties:
- - dmas: list of DMA controller phandle and DMA request line ordered pairs.
- - dma-names: identifier string for each DMA request line in the dmas property.
-   These strings correspond 1:1 with the ordered pairs in dmas.
-+- clocks: from common clock binding. Handle to iis clock and RCLK src clk.
-+- clock-names: from common clock binding: Should be "iis","i2s_opclk0" and
-+  "i2s_opclk1". "iis" is the i2s bus clock and i2s_opclk selects the src of
-+  RCLK which is a mux inside i2s controller.
- 
- Optional SoC Specific Properties:
- 
-@@ -20,44 +24,26 @@ Optional SoC Specific Properties:
-   then this flag is enabled.
- - samsung,idma-addr: Internal DMA register base address of the audio
-   sub system(used in secondary sound source).
--
--Required Board Specific Properties:
--
--- gpios: The gpio specifier for data out,data in, LRCLK, CDCLK and SCLK
--  interface lines. The format of the gpio specifier depends on the gpio
--  controller.
--  The syntax of samsung gpio specifier is
--	<[phandle of the gpio controller node]
--	 [pin number within the gpio controller]
--	 [mux function]
--	 [flags and pull up/down]
--	 [drive strength]>
-+- pinctrl-0: Should specify pin control groups used for this controller.
-+- pinctrl-names: Should contain only one value - "default".
- 
- Example:
- 
--- SoC Specific Portion:
--
--i2s@03830000 {
-+i2s0: i2s@03830000 {
- 	compatible = "samsung,i2s-v5";
- 	reg = <0x03830000 0x100>;
- 	dmas = <&pdma0 10
- 		&pdma0 9
- 		&pdma0 8>;
- 	dma-names = "tx", "rx", "tx-sec";
-+	clocks = <&clock_audss EXYNOS_I2S_BUS>,
-+		<&clock_audss EXYNOS_I2S_BUS>,
-+		<&clock_audss EXYNOS_SCLK_I2S>;
-+	clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
- 	samsung,supports-6ch;
- 	samsung,supports-rstclr;
- 	samsung,supports-secdai;
- 	samsung,idma-addr = <0x03000000>;
--};
--
--- Board Specific Portion:
--
--i2s@03830000 {
--	gpios = <&gpz 0 2 0 0>, /* I2S_0_SCLK */
--		<&gpz 1 2 0 0>, /* I2S_0_CDCLK */
--		<&gpz 2 2 0 0>, /* I2S_0_LRCK */
--		<&gpz 3 2 0 0>, /* I2S_0_SDI */
--		<&gpz 4 2 0 0>, /* I2S_0_SDO[1] */
--		<&gpz 5 2 0 0>, /* I2S_0_SDO[2] */
--		<&gpz 6 2 0 0>; /* I2S_0_SDO[3] */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2s0_bus>;
- };
--- 
-1.7.4.4
+Regards
+Mugunthan V N
