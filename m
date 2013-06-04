@@ -1,135 +1,100 @@
-From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] clocksource: dw_apb_timer_of: use
- clocksource_of_init
-Date: Tue, 4 Jun 2013 17:06:29 +0200
-Message-ID: <201306041706.30112.heiko@sntech.de>
-References: <201306041136.09566.heiko@sntech.de>
- <201306041138.42639.heiko@sntech.de> <20130604142120.GD5308@maple>
+From: Mark Langsdorf <mark.langsdorf@calxeda.com>
+Subject: Re: [PATCH 2/2 v2] sata highbank: add bit-banged SGPIO driver support
+Date: Tue, 04 Jun 2013 10:09:41 -0500
+Message-ID: <51AE0335.902@calxeda.com>
+References: <1369945051-2582-2-git-send-email-mark.langsdorf@calxeda.com> <1370266538-14211-1-git-send-email-mark.langsdorf@calxeda.com> <20130603203727.GB29989@mtj.dyndns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130604142120.GD5308@maple>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20130603203727.GB29989@mtj.dyndns.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 4. Juni 2013, 16:21:20 schrieb Jamie Iles:
-> Hi Heiko,
-> =
+On 06/03/2013 03:37 PM, Tejun Heo wrote:
+> Hello, Mark.
+> 
+> In general, please try to reply to reviews addressing each point.  It
+> gives much better sense of what's going on to the reviewer and also
+> helps the reviewee to avoid misunderstandings or missing points.
+> 
+>> +static DEFINE_SPINLOCK(sgpio_lock);
+>> +#define SCLOCK				0
+>> +#define SLOAD				1
+>> +#define SDATA				2
+>> +#define SGPIO_PINS			3
+>> +#define SGPIO_PORTS			8
+>> +
+>> +/* can be cast as an ahci_host_priv for compatibility with most functions */
+> 
+> This sounds awfully scary.  What's going on here?  Are you actually
+> overriding ahci_host_priv?  If so, please don't ever do things like
+> that.  Do it properly.  Add host_priv->platform_priv or whatever and
+> chain the pointer there.  If you're worried about the extra deref,
+> update ahci core such that it allows specifying extra size and you can
+> embed ahci_host_priv in your own priv.  ie.
+> 
+> 	struct ecx_host_priv {
+> 		struct ahci_host_priv	ahci_priv;	/* must be the first field */
+> 		/* your own stuff */
+> 	};
+> 
+> And tell ahci core sizeof(ecx_host_priv) some way, but really, just
+> having a plain pointer should be enough, I think.
 
-> On Tue, Jun 04, 2013 at 11:38:42AM +0200, Heiko St=FCbner wrote:
-> > dw_apb_timer_init used to search the devicetree for matching timer
-> > devices, making calls to it from board files necessary.
-> > =
+I think I want to do the opposite. For 90% of the AHCI EM functions,
+I want ecx_host_priv to be an ahci_host_priv so that I can use those
+functions without having to keep a local copy of them.
 
-> > Change the dw_apb_timer_init to work with CLOCKSOURCE_OF_DECLARE.
-> > With this change the function gets called once for each timer node
-> > and tracks these number of calls to attach clockevent and clocksource
-> > devices to the nodes.
-> > =
+Would something like this:
+struct ahci_host_priv {
+	/* standard AHCI existing stuff */
+	void *private_data;
+};
 
-> > Also remove the calls to dw_apb_timer_init from all previous users, as
-> > clocksource_of_init is the default for init_time now.
-> > =
+I shied away from that because a private data structure having a private
+data structure doesn't seem right.
 
-> > Tested on the upcoming rk3066 code.
-> > =
+>> +static inline int sgpio_bit_shift(struct ecx_host_priv *hpriv, u32 port,
+>> +				u32 shift)
+>> +{
+>> +	return 1 << (3 * hpriv->port_to_sgpio[port] + shift);
+>> +}
+>> +
+>> +static void ecx_parse_sgpio(struct ecx_host_priv *hpriv, u32 port, u32 state)
+> 
+> Would be kinda nice to have comment explaining what the function does
+> as @state == 0 turns off everything while anything else would just
+> turn things on.
 
-> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> > Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> > Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> > ---
-> =
+Okay.
 
+>> +static ssize_t ecx_transmit_led_message(struct ata_port *ap, u32 state,
+>> +					ssize_t size)
+>> +{
 > ...
-> =
+>> +	if (!hpriv->em_msg_type & EM_MSG_TYPE_LED)
+>> +		return size;
+> 
+> Is this really correct?  You first negate and convert it to bool and
+> then bit-wise and it with a mask?  How is supposed to work?
 
-> > -void __init dw_apb_timer_init(void)
-> > +static int num_called;
-> > +static void __init dw_apb_timer_init(struct device_node *timer)
-> > =
+Am I confused about the order of operations? It's meant to be "continue
+if hpriv->em_msg_type doesn't have EM_MSG_TYPE_LED set".
 
-> >  {
-> > =
+>> -	ahci_save_initial_config(dev, hpriv, 0, 0);
+>> +	ahci_save_initial_config(dev, (struct ahci_host_priv *) hpriv, 0, 0);
+> 
+> Ugh....... how is this supposed to work?  What if ahci_host_priv grows
+> larger than ecx one in the future? :(
 
-> > -	struct device_node *event_timer, *source_timer;
-> > -
-> > -	event_timer =3D of_find_matching_node(NULL, osctimer_ids);
-> > -	if (!event_timer)
-> > -		panic("No timer for clockevent");
-> > -	add_clockevent(event_timer);
-> > -
-> > -	source_timer =3D of_find_matching_node(event_timer, osctimer_ids);
-> > -	if (!source_timer)
-> > -		panic("No timer for clocksource");
-> > -	add_clocksource(source_timer);
-> > -
-> > -	of_node_put(source_timer);
-> > +	switch (num_called) {
-> > +	case 0:
-> > +		pr_debug("%s: found clockevent timer\n", __func__);
-> > +		add_clockevent(timer);
-> > +		of_node_put(timer);
-> > +		break;
-> > +	case 1:
-> > +		pr_debug("%s: found clocksource timer\n", __func__);
-> > +		add_clocksource(timer);
-> > +		of_node_put(timer);
-> > +		init_sched_clock();
-> > +		break;
-> > +	default:
-> > +		break;
-> > +	}
-> > =
+For functions like ahci_save_initial_config, I just want to use the
+already defined ahci_ functions with my extra data along for the ride.
+What's the best way to do that?
 
-> > -	init_sched_clock();
-> > +	num_called++;
-> > =
-
-> >  }
-> > =
-
-> > +CLOCKSOURCE_OF_DECLARE(pc3x2_timer, "picochip,pc3x2-timer",
-> > dw_apb_timer_init); +CLOCKSOURCE_OF_DECLARE(apb_timer,
-> > "snps,dw-apb-timer-osc", dw_apb_timer_init);
-> =
-
-> I think maybe we also want CLOCKSOURCE_OF_DECLARE() instances for the
-> contents of sptimer_ids for completeness, otherwise looks good.
-
-Hmm ... difficult.
-
-As you can see, currently we call init_sched_clock when the second timer is =
-
-found, which then tries to find the sptimer or uses the clocksource as =
-
-sched_clock.
-
-So to use CLOCKSOURCE_OF_DECLARE for the sptimer the init_sched_clock call =
-
-would need to move to its init function. So on system without sptimer (like =
-
-mine) this third call would never happen, and the system would be missing a =
-
-sched_clock.
-
-Or I just don't see the solution currently. In any case this could probably=
- be =
-
-handled by someone with the relevant hardware to test ;-) .
+--Mark Langsdorf
+Calxeda, Inc.
 
 
-> Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
-
-thanks
