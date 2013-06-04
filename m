@@ -1,49 +1,46 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/7] USB chipidea: introduce dual role mode pdata flags
-Date: Tue, 4 Jun 2013 09:42:21 +0800
-Message-ID: <CAL411-pMnJC55M3n5bAuffH3pwRZTzhBfDiEfT+egtGN29c7uw@mail.gmail.com>
-References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de>
- <1370025529-7414-5-git-send-email-mgr@pengutronix.de> <87zjv7id52.fsf@ashishki-desk.ger.corp.intel.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH 05/10] mmc: dw_mmc-pltfm: remove static from
+ dw_mci_pltfm_remove
+Date: Tue, 04 Jun 2013 12:59:11 +0900
+Message-ID: <51AD660F.7060508@samsung.com>
+References: <201306030055.15413.heiko@sntech.de>
+ <201306030058.27184.heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87zjv7id52.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <201306030058.27184.heiko@sntech.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Seungwon Jeon <tgih.jun@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, linux-mmc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Jaehoon Chung <jh80.chung@samsung.com>, Olof Johansson <olof@lixom.net>, John Stultz <john.stultz@linaro.org>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 3, 2013 at 8:37 PM, Alexander Shishkin
-<alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
->
->> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>
->> Even if a chipidea core is otg capable the board may not. This allows
->
-> "may not be"
->
->> to explicitly set the core to host/peripheral mode. Without these
->> flags the driver falls back to the old behaviour.
->>
->> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> ---
->
-> [snip]
->
->> +     if (!ci->platdata->dr_mode)
->> +             ci->platdata->dr_mode = of_usb_get_dr_mode(dev->of_node);
->
-> same as previous one, let's keep it in the platform.
+Acked-by: Jaehoon Chung <jh80.chung@samsung.com>
 
-Alex, have you made the conclusion with Felipe, whether we need DT support
-at core driver to handle such kinds of things or use platform data is ok?
-Last time, I remember he disagreed the way this patch uses.
+On 06/03/2013 07:58 AM, Heiko St=FCbner wrote:
+> dw_mci_pltfm_remove gets exported and used by dw_mmc-exynos, so shoul=
+d
+> not be static.
+>=20
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+>  drivers/mmc/host/dw_mmc-pltfm.c |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
+>=20
+> diff --git a/drivers/mmc/host/dw_mmc-pltfm.c b/drivers/mmc/host/dw_mm=
+c-pltfm.c
+> index 37873f1..0048da8 100644
+> --- a/drivers/mmc/host/dw_mmc-pltfm.c
+> +++ b/drivers/mmc/host/dw_mmc-pltfm.c
+> @@ -68,7 +68,7 @@ static int dw_mci_pltfm_probe(struct platform_devic=
+e *pdev)
+>  	return dw_mci_pltfm_register(pdev, NULL);
+>  }
+> =20
+> -static int dw_mci_pltfm_remove(struct platform_device *pdev)
+> +int dw_mci_pltfm_remove(struct platform_device *pdev)
+>  {
+>  	struct dw_mci *host =3D platform_get_drvdata(pdev);
+> =20
+>=20
 
---
-BR,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
