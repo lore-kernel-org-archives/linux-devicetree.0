@@ -1,31 +1,33 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH V4 2/4] clk: samsung: register audio subsystem clocks
- using common clock framework
-Date: Mon, 3 Jun 2013 17:07:26 -0700
-Message-ID: <CAD=FV=Wu6u=gvh5Anut8MtC+Bb43EG7hxRN=vs-ML35P1qTJYQ@mail.gmail.com>
-References: <1370236744-16802-1-git-send-email-padma.v@samsung.com>
-	<1370236744-16802-3-git-send-email-padma.v@samsung.com>
-	<CAD=FV=XOfi=BsaF+-96SqKwyiwP9h0h3MCJxJ+qWNKaGoP=CcA@mail.gmail.com>
-	<CAL1qeaEkomoDQPyGqqLL-WzoLS=nND-eXeRAGD2HpoV6WW3yRQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAL1qeaEkomoDQPyGqqLL-WzoLS=nND-eXeRAGD2HpoV6WW3yRQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, alsa-devel@alsa-project.org, padma.kvr@gmail.com, sbkim73@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, "broonie@kernel.org" <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>
+From: Rohit Vaswani <rvaswani@codeaurora.org>
+Subject: [PATCH 0/3] Add SMP support for MSM8660 and MSM8960
+Date: Mon,  3 Jun 2013 17:19:42 -0700
+Message-ID: <1370305185-6450-1-git-send-email-rvaswani@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, David Brown <davidb@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>
+Cc: Rohit Vaswani <rvaswani@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Andrew,
+This series re-organizes the platsmp.c and adds SMP support for
+MSM8660 and MSM8960. We convert to using the cpus property in
+device tree and add a "enable-method" property for arm32.
 
-On Mon, Jun 3, 2013 at 4:46 PM, Andrew Bresticker <abrestic@chromium.org> wrote:
->> I think this is supposed to be "xxti" which might or might not be
->> "fin_pll".  In the exynos4 code these are two different clocks that
->> are chosen by OM[0].  I'd bet that 99% of the time they are the same,
->> but it seems better to use "xxti".
->
-> OM[0] also appears to mux the input here between "xxti" and "xusbxti"
-> as well.  So this should probably remain "fin_pll".
+Rohit Vaswani (3):
+  msm: platsmp: Consolidate write to pen_release
+  ARM: msm: Re-organize platsmp to make it extensible
+  ARM: msm: Add SMP support for 8960
 
-Thanks!  ...so I'm OK with this landing "as-is" or a re-spin with nits
-fixed, since all of the rest of my comments were just nits...
+ Documentation/devicetree/bindings/arm/cpus.txt     |    8 +
+ Documentation/devicetree/bindings/arm/msm/kpss.txt |   16 ++
+ Documentation/devicetree/bindings/arm/msm/scss.txt |   15 ++
+ arch/arm/boot/dts/msm8660-surf.dts                 |   21 +++
+ arch/arm/boot/dts/msm8960-cdp.dts                  |   22 +++
+ arch/arm/mach-msm/platsmp.c                        |  165 ++++++++++++++++---
+ arch/arm/mach-msm/scm-boot.h                       |    8 +-
+ 7 files changed, 226 insertions(+), 29 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/msm/kpss.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/msm/scss.txt
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
