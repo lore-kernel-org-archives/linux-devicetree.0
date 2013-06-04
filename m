@@ -1,99 +1,49 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH RFC 2/3] clk: dt: binding for basic multiplexor clock
-Date: Mon, 3 Jun 2013 23:14:58 -0700
-Message-ID: <CAPtuhTitiDVBTLF==je9_Ydks5OCqM1cDv-UwPsGkkgwEj6VWQ@mail.gmail.com>
-References: <1370281990-15090-1-git-send-email-mturquette@linaro.org>
- <20130603200722.6077.85426@quantum> <201306032215.45983.heiko@sntech.de> <201306032339.39176.heiko@sntech.de>
+From: "J, KEERTHY" <j-keerthy@ti.com>
+Subject: RE: [PATCH] mfd: DT bindings for the palmas family MFD
+Date: Tue, 4 Jun 2013 06:24:45 +0000
+Message-ID: <DC88CAD03C0052499C1907B327FC63229E8AFE@DBDE04.ent.ti.com>
+References: <1370261333-5121-1-git-send-email-j-keerthy@ti.com>
+ <20130603141851.GG3370@gmail.com> <51ACFECA.10209@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201306032339.39176.heiko@sntech.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree-discuss@lists.ozlabs.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51ACFECA.10209@wwwdotorg.org>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee.jones@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "wim@iguana.be" <wim@iguana.be>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "Kristo, Tero" <t-kristo@ti.com>, Ian Lartey <ian@slimlogic.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 3, 2013 at 2:39 PM, Heiko St=FCbner <heiko@sntech.de> wrote=
-:
-> Am Montag, 3. Juni 2013, 22:15:45 schrieb Heiko St=FCbner:
->> Am Montag, 3. Juni 2013, 22:07:22 schrieb Mike Turquette:
->> > Quoting Heiko St=FCbner (2013-06-03 12:33:19)
->> >
->> > > Hi Mike,
->> > >
->> > > I think it's a multiplexEr clock in the patch title, and see bel=
-ow
->> >
->> > Doh, you are right.  But "xor" is so much cooler looking than "xer=
-"...
->> >
->> > > Am Montag, 3. Juni 2013, 19:53:09 schrieb Mike Turquette:
->> > > > Device Tree binding for the basic clock multiplexor, plus the =
-setup
->> > > > function to register the clock.  Based on the existing fixed-c=
-lock
->> > > > binding.
->> > > >
->> > > > Also relocate declaration of of_fixed_factor_clk_setup to keep=
- things
->> > > > tidy.
->> > > >
->> > > > Signed-off-by: Mike Turquette <mturquette@linaro.org>
->> > >
->> > > [...]
->> > >
->> > > > +
->> > > > +     reg =3D of_iomap(node, 0);
->> > > > +     pr_err("%s: reg is 0x%p\n", __func__, reg);
->> > > > +
->> > > > +     if (of_property_read_u32(node, "mask", &mask)) {
->> > > > +             pr_err("%s: missing mask property for %s\n", __f=
-unc__,
->> > > > node->name); +             return;
->> > > > +     }
->> > > > +
->> > > > +     if (of_property_read_u32(node, "shift", &shift))
->> > > > +             pr_debug("%s: missing shift property defaults to=
- zero
->> > > > for %s\n", +                             __func__, node->name)=
-;
->> > > > +
->> > > > +     if (of_property_read_bool(node, "index_one"))
->> > > > +             clk_mux_flags |=3D CLK_MUX_INDEX_ONE;
->> > > > +
->> > > > +     clk =3D clk_register_mux_table(NULL, clk_name, parent_na=
-mes,
->> > > > num_parents, +                     0, reg, 0, mask, clk_mux_fl=
-ags,
->> > > >
->> > >                       ^- should probably be shift
->> > >
->> > > Otherwise looks cool and I'm currently trying it with my Rockchi=
-p code.
->> >
->> > Right again.  My test platform seems to not shift the mask at all =
-so
->> > this did not cause a visible bug for me.
->>
->> I'm currently converting my rockchip stuff to it, as it would solve =
-a lot
->> of problems with the numerous clock types I'm defining just to put t=
-he
->> shift and mask values somewhere.
->>
->> So lets see if anything more turns up ;-)
->
-> yep ... of_mux_clk_setup is quite talkative ... there are quite some =
-(debug-?)
-> pr_errs in it ;-)
->
-
-Yes I realized that after sending.  Hopefully not too many curse words
-in the trace messages.  Will remove for v2.
-
-Regards,
-Mike
-
->
-> Heiko
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU3RlcGhlbiBXYXJyZW4g
+W21haWx0bzpzd2FycmVuQHd3d2RvdG9yZy5vcmddDQo+IFNlbnQ6IFR1ZXNkYXksIEp1bmUgMDQs
+IDIwMTMgMjowOSBBTQ0KPiBUbzogTGVlIEpvbmVzDQo+IENjOiBKLCBLRUVSVEhZOyBsaW51eC1r
+ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4gZG9jQHZnZXIua2VybmVsLm9yZzsgZGV2
+aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmc7DQo+IGJyb29uaWVAb3BlbnNvdXJjZS53
+b2xmc29ubWljcm8uY29tOyByb2IuaGVycmluZ0BjYWx4ZWRhLmNvbTsNCj4gcm9iQGxhbmRsZXku
+bmV0OyBtdHVycXVldHRlQGxpbmFyby5vcmc7IHNhbWVvQGxpbnV4LmludGVsLmNvbTsNCj4gd2lt
+QGlndWFuYS5iZTsgbGdpcmR3b29kQGdtYWlsLmNvbTsgZ2dAc2xpbWxvZ2ljLmNvLnVrOyBLcmlz
+dG8sIFRlcm87DQo+IElhbiBMYXJ0ZXkNCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gbWZkOiBEVCBi
+aW5kaW5ncyBmb3IgdGhlIHBhbG1hcyBmYW1pbHkgTUZEDQo+IA0KPiBPbiAwNi8wMy8yMDEzIDA4
+OjE4IEFNLCBMZWUgSm9uZXMgd3JvdGU6DQo+ID4gT24gTW9uLCAwMyBKdW4gMjAxMywgSiBLZWVy
+dGh5IHdyb3RlOg0KPiA+PiBBZGQgdGhlIHZhcmlvdXMgYmluZGluZyBmaWxlcyBmb3IgdGhlIHBh
+bG1hcyBmYW1pbHkgb2YgY2hpcHMuIFRoZXJlDQo+ID4+IGlzIGEgdG9wIGxldmVsIE1GRCBiaW5k
+aW5nIHRoZW4gYSBzZXBlcmF0ZSBiaW5kaW5nIGZvciByZWd1bGF0b3JzIElQDQo+IGJsb2NrcyBv
+biBjaGlwcy4NCj4gDQo+ID4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvbWZkL3BhbG1hcy50eHQNCj4gPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvbWZkL3BhbG1hcy50eHQNCj4gDQo+ID4+ICtFeGFtcGxlOg0KPiA+PiArDQo+ID4+
+ICtwYWxtYXMgew0KPiA+DQo+ID4gU2hvdWxkIHRoaXMgYmUgJ3BhbG1hc0A0OCB7JywgYXMgaXQg
+aGFzIGFuIGFkZHJlc3M/DQo+IA0KPiBJdCdzIGNvbW1vbiB0byBvbmx5IGluY2x1ZGUgdGhlIHVu
+aXQtYWRkcmVzcyAoQDQ4KSBpZiBpdCdzIG5lZWRlZCB0bw0KPiBtYWtlIHRoZSBub2RlIG5hbWUg
+dW5pcXVlIChpLmUuIGlmIHlvdSBoYWQgbXVsdGlwbGUgcGFsbWFzIGRldmljZXMpLg0KDQpZZWFo
+LiBXZSBnZW5lcmFsbHkgaGF2ZSBvbmUgUGFsbWFzIGRldmljZS4NCg0KPiANCj4gPj4gZGlmZiAt
+LWdpdA0KPiA+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3Iv
+cGFsbWFzLXBtaWMudHh0DQo+ID4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3JlZ3VsYXRvci9wYWxtYXMtcG1pYy50eHQNCj4gDQo+ID4gU2VlOiBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL2dwaW8tcmVndWxhdG9yLnR4dA0KPiA+DQo+ID4+
+ICsJICAgICAgIHRpLHNsZWVwLW1vZGUgLSBtb2RlIHRvIGFkb3B0IGluIHBtaWMgc2xlZXAgMCAt
+IG9mZiwgMSAtDQo+IGF1dG8sDQo+ID4+ICsJICAgICAgIDIgLSBlY28sIDMgLSBmb3JjZWQgcHdt
+DQo+ID4NCj4gPiBJJ3ZlIHNlZW4gbG90cyBvZiBzbGVlcC1tb2RlIHByb3BlcnRpZXMsIGNhbid0
+IHdlIGRlZmluZSBhIGdlbmVyaWMNCj4gPiBvbmU/DQo+IA0KPiBJc24ndCBpdCBIVy1zcGVjaWZp
+Yz8NCg0KWWVhaC4gSGVuY2UgaXQgaXMgdGksc2xlZXAtbW9kZS4NCg0KUmVnYXJkcywNCktlZXJ0
+aHkNCg==
