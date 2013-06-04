@@ -1,158 +1,306 @@
-From: Matt Sealey <neko@bakuhatsu.net>
-Subject: Re: [PATCH RFC 3/3] clk: dt: binding for basic divider clock
-Date: Tue, 4 Jun 2013 15:13:37 -0500
-Message-ID: <CAHCPf3t-oqsS0Kt84rOM02F3SDM4yG4Vaf94Ne0+14jLAZyirg@mail.gmail.com>
-References: <1370281990-15090-1-git-send-email-mturquette@linaro.org>
-	<1370281990-15090-4-git-send-email-mturquette@linaro.org>
-	<51AE1FBB.1070806@codeaurora.org>
-	<CAHCPf3tZAbdVZPuKOjxJbCOAE76Pa6wMVHjnBRPhSpj0aMBMHg@mail.gmail.com>
-	<20130604192243.10233.76496@quantum>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/7] USB: add devicetree helpers for determining dr_mode
+ and phy_type
+Date: Tue, 4 Jun 2013 23:25:22 +0300
+Message-ID: <20130604202522.GE28302@arwen.pp.htv.fi>
+References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de>
+ <1370025529-7414-2-git-send-email-mgr@pengutronix.de>
+ <8761xvjrwt.fsf@ashishki-desk.ger.corp.intel.com>
+ <20130604130140.GF28181@pengutronix.de>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130604192243.10233.76496@quantum>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============3520857273996047599=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130604130140.GF28181-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 4, 2013 at 2:22 PM, Mike Turquette <mturquette@linaro.org> wrote:
-> Quoting Matt Sealey (2013-06-04 10:39:53)
->> On Tue, Jun 4, 2013 at 12:11 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
->> > On 06/03/13 10:53, Mike Turquette wrote:
->> >> +Required properties:
->> >> +- compatible : shall be "divider-clock".
->> >> +- #clock-cells : from common clock binding; shall be set to 0.
->> >> +- clocks : link to phandle of parent clock
->> >> +- reg : base address for register controlling adjustable divider
->> >> +- mask : arbitrary bitmask for programming the adjustable divider
->> >> +
->> >> +Optional properties:
->> >> +- clock-output-names : From common clock binding.
->> >> +- table : array of integer pairs defining divisors & bitfield values
->> >> +- shift : number of bits to shift the mask, defaults to 0 if not present
->> >> +- index_one : valid divisor programming starts at 1, not zero
->> >> +- index_power_of_two : valid divisor programming must be a power of two
->> >> +- allow_zero : implies index_one, and programming zero results in
->> >> +  divide-by-one
->> >
->> > It's preferred that property names have dashes instead of underscores.
->>
->> I think I have a suggestion or two here..
->>
->> I mailed one to Mike earlier, I have had some mailing list problems
->> which I think are solved now..
->>
->> If you provide a mask for programming the divider, surely the "shift"
->> property is therefore redundant. Unless some device has a completely
->> strange way of doing things and uses two seperated bitfields for
->> programming in the same register, the shift value is simply a function
->> of ffs() on the mask, isn't it? It is nice to put the information
->> specifically in the device tree, but where a shift is not specified
->> it'd probably be a good idea to go about deriving that value that way
->> anyway, right, and if we're doing that.. why specify it?
->
-> Shift is optional.  Also I think the integer values in a DTS are
-> 32-bits, so if some day someone had a clock driver that needed to write
-> to a 64-bit register then shift might be useful there, combined with a
-> 32-bit mask.  Or perhaps dtc will have a 64-bit value for that case?  I
-> don't know.
->
-> I certainly do see your point about only using the mask, and the
-> original clock basic types did this a while back before the shift+width
-> style came into vogue.
->
-> If other reviewers also want to use a pure 32-bit mask and no shift then
-> I'll drop it in the next round.
+--===============3520857273996047599==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BZaMRJmqxGScZ8Mx"
+Content-Disposition: inline
 
-Hmm.. that's a very good point...
+--BZaMRJmqxGScZ8Mx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You can't have a 64-bit OF property unless you're on a 64-bit platform
-or do some really weird workarounds for it (multiple cells etc.).
-That's how the OF spec was laid out, it sucks.. but it's the standard
-and the DT seems to stay compatible with the general concept. A
-supplemental binding to support clock dividers living in 64-bit
-registers may be a better way.
+HI,
 
-You'd need a shift for the mask if you could only do a 32-bit property
-(32-bit platform with a 4-byte cell size) and a shift for the bits
-that would go into the mask as well as a width property for the
-register size to bound the shift..  Too complicated for now. I would
-say stick with 32-bit until this magical 64-bit divider register
-appears, and then do something slightly different :)
+On Tue, Jun 04, 2013 at 03:01:40PM +0200, Michael Grzeschik wrote:
+> On Mon, Jun 03, 2013 at 03:32:50PM +0300, Alexander Shishkin wrote:
+> > Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+> >=20
+> > > From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > >
+> > > This adds two little devicetree helper functions for determining the
+> > > dr_mode (host, peripheral, otg) and phy_type (utmi, ulpi,...) from
+> > > the devicetree.
+> >=20
+> > This one needs an ack from Felipe.
+>=20
+> Right, we currently also wait for his answer in another thread.
+>=20
+> http://www.spinics.net/lists/linux-usb/msg86906.html
 
->> Also it may be much simpler to simply define the default clock setup
->> as being an integer divider that follows the form 2^n - I am not sure
->> I can think off the top of my head of any clock dividers doing the
->> rounds that have divide-by-non-power-of-two and if they exist out
->> there (please correct me) they would be the rare ones. I think
->> properties that modify behavior should err on the side of being rarely
->> used and to define unusual behavior, not confirm the status quo.
->
-> Please review the current use of CLK_DIVIDER_POWER_OF_TWO in the kernel.
+heh, it's so difficult to take vacations :-p
 
-You're right, I think I got it backwards or was actually thinking of
-allow_zero (as in, 0x0 divider = divide by 1)? i.MX definitely has
-more 0x0=div-by-1 than any other kind..
+I think this patch is good to go.
 
->> In any case, once you figure out that, rather than specifying a full
->> table of <0 1>, <1 2>, <2, 4> and creating a big list, you could just
->> give the lower and upper limits and let the driver figure out what is
->> in between with two values. If there were gaps, a full table would be
->> necessary. The allow zero property might be better served by the very
->> same range property.
->
-> You have described how it already works.  The table is only there for
-> when a common formula fails to capture the possible divisor
-> combinations.  For the default the driver starts the index at 0 and goes
-> up to mask/width, for index_one the driver does the same but starts at
-> 1, not 0, for power of two ... well you get the picture.  The table is
-> only of use when these common divider schemes are insufficient to
-> determine the divisors.
+Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 
-Right, but in the case of index_one and allow_zero, one property for
-ranges basically covers the case where a slight modification to the
-formula used would be required, and allows specifying the first valid
-divider and the last valid divider which might come in handy when you
-have a mask of a certain size (say, 6 bits), but the actual divider is
-only 4 bits wide. You may need to ensure that you clear reserved bits
-within that masked region, but not use the mask itself to calculate
-the full range.
 
-I can't think of a good case but on i.MX53 the DVFSP load tracking
-register 1 has a field that subdivides the ARM core clock by 1, 2 or 3
-(using 0, 1 or 2 as the divider value) in a 6-bit field, where
-000011-111111 are reserved. I would think the correct value for the
-mask is the full 6-bit field, but the range should define that only
-1-3 are valid (saving one entry). It isn't really something that would
-end up using a clock framework divider though.
+> > > Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > ---
+> > >  drivers/usb/phy/Makefile |  1 +
+> > >  drivers/usb/phy/of.c     | 47 ++++++++++++++++++++++++++++++++++++++=
++++++++++
+> > >  drivers/usb/usb-common.c | 35 +++++++++++++++++++++++++++++++++++
+> > >  include/linux/usb/of.h   | 28 ++++++++++++++++++++++++++++
+> > >  include/linux/usb/otg.h  |  7 +++++++
+> > >  include/linux/usb/phy.h  |  9 +++++++++
+> > >  6 files changed, 127 insertions(+)
+> > >  create mode 100644 drivers/usb/phy/of.c
+> > >  create mode 100644 include/linux/usb/of.h
+> > >
+> > > diff --git a/drivers/usb/phy/Makefile b/drivers/usb/phy/Makefile
+> > > index a9169cb..070eca3 100644
+> > > --- a/drivers/usb/phy/Makefile
+> > > +++ b/drivers/usb/phy/Makefile
+> > > @@ -5,6 +5,7 @@
+> > >  ccflags-$(CONFIG_USB_DEBUG) :=3D -DDEBUG
+> > > =20
+> > >  obj-$(CONFIG_USB_PHY)			+=3D phy.o
+> > > +obj-$(CONFIG_OF)			+=3D of.o
+> > > =20
+> > >  # transceiver drivers, keep the list sorted
+> > > =20
+> > > diff --git a/drivers/usb/phy/of.c b/drivers/usb/phy/of.c
+> > > new file mode 100644
+> > > index 0000000..e6f3b74
+> > > --- /dev/null
+> > > +++ b/drivers/usb/phy/of.c
+> > > @@ -0,0 +1,47 @@
+> > > +/*
+> > > + * USB of helper code
+> > > + *
+> > > + * This program is free software; you can redistribute it and/or mod=
+ify
+> > > + * it under the terms of the GNU General Public License as published=
+ by
+> > > + * the Free Software Foundation; either version 2 of the License, or
+> > > + * (at your option) any later version.
+> > > + */
+> > > +
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/usb/of.h>
+> > > +#include <linux/usb/otg.h>
+> > > +
+> > > +static const char *usbphy_modes[] =3D {
+> > > +	[USBPHY_INTERFACE_MODE_UNKNOWN]	=3D "",
+> > > +	[USBPHY_INTERFACE_MODE_UTMI]	=3D "utmi",
+> > > +	[USBPHY_INTERFACE_MODE_UTMIW]	=3D "utmi_wide",
+> > > +	[USBPHY_INTERFACE_MODE_ULPI]	=3D "ulpi",
+> > > +	[USBPHY_INTERFACE_MODE_SERIAL]	=3D "serial",
+> > > +	[USBPHY_INTERFACE_MODE_HSIC]	=3D "hsic",
+> > > +};
+> > > +
+> > > +/**
+> > > + * of_usb_get_phy_mode - Get phy mode for given device_node
+> > > + * @np:	Pointer to the given device_node
+> > > + *
+> > > + * The function gets phy interface string from property 'phy_type',
+> > > + * and returns the correspondig enum usb_phy_interface
+> > > + */
+> > > +enum usb_phy_interface of_usb_get_phy_mode(struct device_node *np)
+> > > +{
+> > > +	const char *phy_type;
+> > > +	int err, i;
+> > > +
+> > > +	err =3D of_property_read_string(np, "phy_type", &phy_type);
+> > > +	if (err < 0)
+> > > +		return USBPHY_INTERFACE_MODE_UNKNOWN;
+> > > +
+> > > +	for (i =3D 0; i < ARRAY_SIZE(usbphy_modes); i++)
+> > > +		if (!strcmp(phy_type, usbphy_modes[i]))
+> > > +			return i;
+> > > +
+> > > +	return USBPHY_INTERFACE_MODE_UNKNOWN;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(of_usb_get_phy_mode);
+> > > diff --git a/drivers/usb/usb-common.c b/drivers/usb/usb-common.c
+> > > index 0db0a91..027582d 100644
+> > > --- a/drivers/usb/usb-common.c
+> > > +++ b/drivers/usb/usb-common.c
+> > > @@ -13,7 +13,9 @@
+> > > =20
+> > >  #include <linux/kernel.h>
+> > >  #include <linux/module.h>
+> > > +#include <linux/of.h>
+> > >  #include <linux/usb/ch9.h>
+> > > +#include <linux/usb/of.h>
+> > >  #include <linux/usb/otg.h>
+> > > =20
+> > >  const char *usb_otg_state_string(enum usb_otg_state state)
+> > > @@ -79,4 +81,37 @@ const char *usb_state_string(enum usb_device_state=
+ state)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(usb_state_string);
+> > > =20
+> > > +#ifdef CONFIG_OF
+> > > +static const char *usb_dr_modes[] =3D {
+> > > +	[USB_DR_MODE_UNKNOWN]		=3D "",
+> > > +	[USB_DR_MODE_HOST]		=3D "host",
+> > > +	[USB_DR_MODE_PERIPHERAL]	=3D "peripheral",
+> > > +	[USB_DR_MODE_OTG]		=3D "otg",
+> > > +};
+> > > +
+> > > +/**
+> > > + * of_usb_get_dr_mode - Get dual role mode for given device_node
+> > > + * @np:	Pointer to the given device_node
+> > > + *
+> > > + * The function gets phy interface string from property 'dr_mode',
+> > > + * and returns the correspondig enum usb_dr_mode
+> > > + */
+> > > +enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np)
+> > > +{
+> > > +	const char *dr_mode;
+> > > +	int err, i;
+> > > +
+> > > +	err =3D of_property_read_string(np, "dr_mode", &dr_mode);
+> > > +	if (err < 0)
+> > > +		return USB_DR_MODE_UNKNOWN;
+> > > +
+> > > +	for (i =3D 0; i < ARRAY_SIZE(usb_dr_modes); i++)
+> > > +		if (!strcmp(dr_mode, usb_dr_modes[i]))
+> > > +			return i;
+> > > +
+> > > +	return USB_DR_MODE_UNKNOWN;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(of_usb_get_dr_mode);
+> > > +#endif
+> > > +
+> > >  MODULE_LICENSE("GPL");
+> > > diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
+> > > new file mode 100644
+> > > index 0000000..e460a24
+> > > --- /dev/null
+> > > +++ b/include/linux/usb/of.h
+> > > @@ -0,0 +1,28 @@
+> > > +/*
+> > > + * OF helpers for usb devices.
+> > > + *
+> > > + * This file is released under the GPLv2
+> > > + */
+> > > +
+> > > +#ifndef __LINUX_USB_OF_H
+> > > +#define __LINUX_USB_OF_H
+> > > +
+> > > +#include <linux/usb/otg.h>
+> > > +#include <linux/usb/phy.h>
+> > > +
+> > > +#ifdef CONFIG_OF
+> > > +enum usb_phy_interface of_usb_get_phy_mode(struct device_node *np);
+> > > +enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np);
+> > > +#else
+> > > +static inline enum usb_phy_interface of_usb_get_phy_mode(struct devi=
+ce_node *np)
+> > > +{
+> > > +	return USBPHY_INTERFACE_MODE_UNKNOWN;
+> > > +}
+> > > +
+> > > +static inline enum usb_dr_mode of_usb_get_dr_mode(struct device_node=
+ *np)
+> > > +{
+> > > +	return USB_DR_MODE_UNKNOWN;
+> > > +}
+> > > +#endif
+> > > +
+> > > +#endif /* __LINUX_USB_OF_H */
+> > > diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
+> > > index 291e01b..154332b 100644
+> > > --- a/include/linux/usb/otg.h
+> > > +++ b/include/linux/usb/otg.h
+> > > @@ -92,4 +92,11 @@ otg_start_srp(struct usb_otg *otg)
+> > >  /* for OTG controller drivers (and maybe other stuff) */
+> > >  extern int usb_bus_start_enum(struct usb_bus *bus, unsigned port_num=
+);
+> > > =20
+> > > +enum usb_dr_mode {
+> > > +	USB_DR_MODE_UNKNOWN,
+> > > +	USB_DR_MODE_HOST,
+> > > +	USB_DR_MODE_PERIPHERAL,
+> > > +	USB_DR_MODE_OTG,
+> > > +};
+> > > +
+> >=20
+> > I would suggest turning this into a bitmask, so that further tests look
+> > like
+> >=20
+> >   if (dr_mode & USB_DR_MODE_HOST) {...}
+> >
+> > instead of how they currently look like in the other patch.
+>=20
+> You mean 32 modes will be enough? :)
+>=20
+> These helpers are derived from drivers/of/of_net.c. Its enums are
+> commonly used all over the kernel. We should align to already used
+> coding patterns. I also prefer to switch over an enum than compare bits.
 
-If there's a divider built for future expandability or somehow
-restricted at the design level to only accept a few bits, or only
-'restricted' at the documentation level (.. it's been done) then it
-might be best to use the mask to mask off the register, and not to
-define valid bits to set, unless you resolve to specify two masks..
-but a range property would be better and cover every case, while not
-having to force DT writers to list every divider in a big field
-(imagine if it's 3 bits that's a 16 entry table.. there are some 5 and
-6-bit clock dividers floating around), I think an opportunity to
-consolidate two properties into one AND give an easy out to
-oddly-ranged dividers (where low and high divider settings may be
-'invalid' but between those values is a contiguous range of a
-significant number of values (and here I would say, more than 2).
+I will agree with you Michael here. Besides, bitmasks would make OTG
+mode useless. Matter of taste, I guess.
 
-Since we shouldn't be guessing, divider-p-o-2 is still required but as
-you corrected me.. rarer.
+--=20
+balbi
 
->> I would also say.. bit-mask rather than mask, divider-table rather
->> than table, divider-range (modifying the idea above). While we're
->> inside a particular namespace in the binding I think naming properties
->> with their intent (i.e. what table is it?) is good behavior.
->>
->
-> I'll make the properties more verbose in the next patch.
+--BZaMRJmqxGScZ8Mx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Lovely :)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
--- 
-Matt Sealey <matt@genesi-usa.com>
+iQIcBAEBAgAGBQJRrk0yAAoJEIaOsuA1yqRE3KEP/i48rCq5ddlL7XMfytaOWfCu
+kitneEppiS+sPgNvPIwaezbFonzFLCF5jbffTgKsGLpkdQu2oHo7mU19hiytCovO
+8mORjvdRQnhDtz7XfQemxe0/qEsEqnR7Tg3fIB4wRj8mFfbhAsdclHc4J+dUfZPN
+ElmWRto049o/IfuQZ0Fkp/xInlAPlonch+U/10Ua/hGP6jkRyBi4Ux4N8AhfTcFN
+IK+5v8T9bIUlp/lEchomT4RXKaW3tq9Bun1CVTlnR3kS6zAVCCHVqIVYFoB50obw
+TmpJ5HTskBjl4xcJt/51N4OLPYh5PItNeqLVX9tlWFgpAfGbOdmOHeRincU2N/Eq
+YIp8M/HfzA5K8r5modYft0sKzjZYeSrgfzvcitTZtej8CXgvSmpgvPU5FWx4bEap
+XJ4dEMyGKsVaRtSuftogp1SMN7TeNqarYW58LXtHhNm/hSfMrkbKmSnlDJGw3+6X
+e7OcRuqMAFGMRF6o5OonhwiKxtLFathiiBO4YwCOjId3Cqe+TiRlj1W/+Las8bOS
+HNvWqesoGD9fcjHaN3sFALVOjjxS1mRRqt3vV6r9jpTpXtGkl94I9Fvrl1B6epu2
+QD1IxMxSaoOlxzRw4N7lB50vozWUfVgiXW7Y369etMQ2lRArJKbieGhJTAUnt199
+KPzddIf5B8Ok4+MdW+eF
+=CTyk
+-----END PGP SIGNATURE-----
+
+--BZaMRJmqxGScZ8Mx--
+
+--===============3520857273996047599==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============3520857273996047599==--
