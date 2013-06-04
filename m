@@ -1,16 +1,15 @@
 From: "Hebbar, Gururaja" <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH 1/2] rtc: omap: add option to indicate wakeup support
-	through DT
-Date: Tue, 4 Jun 2013 09:48:25 +0000
-Message-ID: <1BAFE6F6C881BF42822005164F1491C33EC22315@DBDE04.ent.ti.com>
-References: <1369982005-8572-1-git-send-email-gururaja.hebbar@ti.com>
-	<1369982005-8572-2-git-send-email-gururaja.hebbar@ti.com>
-	<87wqqf11nw.fsf@linaro.org>
+Subject: RE: [PATCH 11/11] i2c: omap: enhance pinctrl support
+Date: Tue, 4 Jun 2013 09:50:49 +0000
+Message-ID: <1BAFE6F6C881BF42822005164F1491C33EC22349@DBDE04.ent.ti.com>
+References: <1369995191-20855-1-git-send-email-gururaja.hebbar@ti.com>
+	<1369995191-20855-12-git-send-email-gururaja.hebbar@ti.com>
+	<87bo7r10s9.fsf@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <87wqqf11nw.fsf-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <87bo7r10s9.fsf-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Content-Language: en-US
 List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
 	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
@@ -22,65 +21,76 @@ List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open
 Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
 Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
 To: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org" <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 31, 2013 at 23:18:03, Kevin Hilman wrote:
+On Fri, May 31, 2013 at 23:37:02, Kevin Hilman wrote:
+> +Linus Walleij (pinctrl maintainer)
+> 
 > Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org> writes:
 > 
-> > Even though RTC-IP is wakeup capable, Not all Boards support it.
+> > Amend the I2C omap pin controller to optionally take a pin control
+> > handle and set the state of the pins to:
 > >
-> > For example
-> > The rtc alarm wakeup is available in rtc-ip since omap1 days but alarm
-> > was not wired properly in previous ompa1 boards.
+> > - "default" on boot, resume and before performing an i2c transfer
+> > - "idle" after initial default, after resume default, and after each
+> > i2c xfer
+> > - "sleep" on suspend()
 > >
-> > 	commit fa5b07820fe3a0fc06ac368516e71f10a59b9539
-> > 	Author: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> > 	Date:   Wed Oct 27 15:33:05 2010 -0700
+> > By optionally putting the pins into sleep state in the suspend callback
+> > we can accomplish two things.
+> > - One is to minimize current leakage from pins and thus save power,
+> > - second, we can prevent the IP from driving pins output in an
+> > uncontrolled manner, which may happen if the power domain drops the
+> > domain regulator.
 > >
-> > 	rtc: omap: let device wakeup capability be configured from chip
-> > 	init logic
+> > Note:
+> > A .suspend & .resume callback is added which simply puts the pins to sleep
+> > state upon suspend & are moved to default & idle state upon resume.
 > >
-> > 	The rtc-omap driver currently hardcodes the RTC wakeup
-> > 	capability to be "not capable".  While this seems to be true for
-> > 	existing OMAP1 boards which are not wired for this, the
-> > 	DA850/OMAP-L138 SoC, the RTC can always be wake up source from
-> > 	its "deep sleep" mode.
+> > If any of the above pin states are missing in dt, a warning message
+> > about the missing state is displayed.
+> > If certain pin-states are not available, to remove this warning message
+> > pass respective state name with null phandler.
 > >
-> > Current rtc-omap driver expects the rtc module wake-up capabilities to
-> > be set up by board specific code. However, in case of DT, this is not
-> > possible.
+> > (Changes based on i2c-nomadik.c)
 > >
-> > So, add a DT property "ti,wakeup_capable" to indicate that the module is
-> > wake-up capable.
+> > Signed-off-by: Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
+> > Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> > Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+> > Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > 
-> Why is this a TI-specific property?  
-
-May be I am wrong but isn't this driver used only be TI SoC (Davinci, OMAP ...)
-
+> [...]
 > 
-> Also, I think we can do this without a new DT property.Did you see this
-> patch from Tony which is already queued for v3.11:
+> > @@ -1123,14 +1138,47 @@ omap_i2c_probe(struct platform_device *pdev)
+> >  		dev->set_mpu_wkup_lat = pdata->set_mpu_wkup_lat;
+> >  	}
+> >  
+> > -	dev->pins = devm_pinctrl_get_select_default(&pdev->dev);
+> > -	if (IS_ERR(dev->pins)) {
+> > -		if (PTR_ERR(dev->pins) == -EPROBE_DEFER)
+> > +	dev->pinctrl = devm_pinctrl_get(&pdev->dev);
+> > +	if (!IS_ERR(dev->pinctrl)) {
+> > +		dev->pins_default = pinctrl_lookup_state(dev->pinctrl,
+> > +							 PINCTRL_STATE_DEFAULT);
 > 
->     http://marc.info/?l=linux-omap&m=136917244530612&w=2
-
-AFAIK, all boards that use twl rtc IP by default support rtc wakeup.
-
-However, as mentioned in the commit message not all boards that uses
-OMAP rtc IP supports rtc wake up (due to somoe wiring issue).
-Hence I am adding a new DT property for this.
-
+> This part is already done by probe in driver core, why does it need to
+> be done again.  dev->pins->default_state should already have this.
+> (c.f. pinctrl_bind_pins() in drivers/base/pinctrl.c)
 > 
-> I think this is the right way to go.  Platforms that don't want/need
-> wakeup support can disable it from userspace via:
+> But that brings up a bigger question about whether or not we should be
+> doing the rest of this (idle/sleep) pin management in the drivers or in
+> the driver core as well.  I would much prefer it be handled by the
+> driver core.
 > 
->     echo disabled > /sys/devices/.../power/wakeup
+> In fact, since these are all PM related events, it should probably be
+> handled by the PM core and seems pretty straight forward to do so.
 
-Hmmm. Debatable. Let me get some more info about this and come back
+Let me pull out some info about these and come back
 
 > 
 > Kevin
-> 
 > 
 
 
