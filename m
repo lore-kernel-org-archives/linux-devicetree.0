@@ -1,53 +1,68 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 09/11] mmc: omap_hsmmc: enhance pinctrl support
-Date: Tue, 4 Jun 2013 09:19:57 +0200
-Message-ID: <CACRpkdYeh6UXnbUXiiZLPP+FUz11HKaD-FrHHaqUGX8AmA_p6g@mail.gmail.com>
-References: <1369995191-20855-1-git-send-email-gururaja.hebbar@ti.com>
-	<1369995191-20855-10-git-send-email-gururaja.hebbar@ti.com>
-	<CACRpkdbiYX5q8rvtV3Xcv7VdiJo2-6rGHNtvB1V=8C_qCpc=JA@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] mfd: DT bindings for the palmas family MFD
+Date: Tue, 4 Jun 2013 08:21:15 +0100
+Message-ID: <20130604072115.GI3370@gmail.com>
+References: <1370261333-5121-1-git-send-email-j-keerthy@ti.com>
+ <20130603141851.GG3370@gmail.com>
+ <51ACFECA.10209@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbiYX5q8rvtV3Xcv7VdiJo2-6rGHNtvB1V=8C_qCpc=JA@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Hebbar Gururaja <gururaja.hebbar@ti.com>
-Cc: Kevin Hilman <khilman@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vaibhav Bedia <vaibhav.bedia@ti.com>, sudhakar.raj@ti.com, Balaji T K <balajitk@ti.com>, Chris Ball <cjb@laptop.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51ACFECA.10209@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: J Keerthy <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, rob@landley.net, mturquette@linaro.org, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, gg@slimlogic.co.uk, t-kristo@ti.com, Ian Lartey <ian@slimlogic.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 4, 2013 at 9:11 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Fri, May 31, 2013 at 12:13 PM, Hebbar Gururaja
-> <gururaja.hebbar@ti.com> wrote:
->
->> Amend the hsmmc controller to optionally take a pin control handle and
->> set the state of the pins to:
->>
->> - "default" on boot, resume and before performing a mmc transfer
->> - "idle" after initial default, after resume default, and after each
->> mmc/sd card access
->> - "sleep" on suspend()
->>
->> By optionally putting the pins into sleep state in the suspend callback
->> we can accomplish two things.
->> - One is to minimize current leakage from pins and thus save power,
->> - second, we can prevent the IP from driving pins output in an
->> uncontrolled manner, which may happen if the power domain drops the
->> domain regulator.
->>
->> If any of the above pin states are missing in dt, a warning message
->> about the missing state is displayed.
->> If certain pin-states are not available, to remove this warning message
->> pass respective state name with null phandler.
->>
->> Signed-off-by: Hebbar Gururaja <gururaja.hebbar@ti.com>
->> Cc: Balaji T K <balajitk@ti.com>
->> Cc: Chris Ball <cjb@laptop.org>
->> Cc: linux-mmc@vger.kernel.org
->> Cc: linux-omap@vger.kernel.org
->
-> This is perfectly correct.
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+On Mon, 03 Jun 2013, Stephen Warren wrote:
 
-So please consider my other option given in patch 2 instead.
+> On 06/03/2013 08:18 AM, Lee Jones wrote:
+> > On Mon, 03 Jun 2013, J Keerthy wrote:
+> >> Add the various binding files for the palmas family of chips. Ther=
+e is a
+> >> top level MFD binding then a seperate binding for regulators IP bl=
+ocks on chips.
+>=20
+> >> diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Do=
+cumentation/devicetree/bindings/mfd/palmas.txt
+>=20
+> >> +Example:
+> >> +
+> >> +palmas {
+> >=20
+> > Should this be 'palmas@48 {', as it has an address?
+>=20
+> It's common to only include the unit-address (@48) if it's needed to
+> make the node name unique (i.e. if you had multiple palmas devices).
 
-Yours,
-Linus Walleij
+I was working on the basis of, if it has a 'reg' value, it should be
+highlighted in the node name, but if this is the common way of doing
+things then fair enough.
+
+> >> diff --git a/Documentation/devicetree/bindings/regulator/palmas-pm=
+ic.txt b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
+>=20
+> > See: Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+> >=20
+> >> +	       ti,sleep-mode - mode to adopt in pmic sleep 0 - off, 1 - =
+auto,
+> >> +	       2 - eco, 3 - forced pwm
+> >=20
+> > I've seen lots of sleep-mode properties, can't we define a generic
+> > one?
+>=20
+> Isn't it HW-specific?
+
+Yes, they're not all identical. I haven't studied them all in detail,
+but I assumed a we would be able to do something in order to
+consolidate them somewhat. If they are vastly different then no
+problem, it was just an idea to cut down on vendor specific
+properties.=20
+
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
