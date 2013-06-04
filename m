@@ -1,71 +1,56 @@
-From: Arnaud Ebalard <arno@natisbad.org>
-Subject: [PATCHv4 3/3] Add DT bindings documentation for g762 driver
-Date: Tue, 04 Jun 2013 09:15:07 +0200
-Message-ID: <0162ace15ab54e9b585af0f91588552fbd39ad39.1370327864.git.arno@natisbad.org>
-References: <cover.1340327864.git.arno@natisbad.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 02/11] leds: leds-gpio: Enhance pinctrl support
+Date: Tue, 4 Jun 2013 09:18:46 +0200
+Message-ID: <CACRpkdYAo-VxYkNwsBGXE4pHob=ubaak+zLGc5QwLNTXu0Qp2g@mail.gmail.com>
+References: <1369995191-20855-1-git-send-email-gururaja.hebbar@ti.com>
+	<1369995191-20855-3-git-send-email-gururaja.hebbar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <cover.1340327864.git.arno@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Jean Delvare <khali@linux-fr.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Simon Guinot <simon.guinot@sequanux.org>, Olivier Mouchet <olivier.mouchet@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1369995191-20855-3-git-send-email-gururaja.hebbar@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hebbar Gururaja <gururaja.hebbar@ti.com>
+Cc: Kevin Hilman <khilman@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vaibhav Bedia <vaibhav.bedia@ti.com>, sudhakar.raj@ti.com, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, May 31, 2013 at 12:13 PM, Hebbar Gururaja
+<gururaja.hebbar@ti.com> wrote:
 
-Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
----
- Documentation/devicetree/bindings/hwmon/g762.txt |   41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/g762.txt
+>  struct gpio_leds_priv {
+>         int num_leds;
+> +       /* Two optional pin states - default & sleep */
+> +       struct pinctrl          *pinctrl;
+> +       struct pinctrl_state    *pins_default;
+> +       struct pinctrl_state    *pins_sleep;
+>         struct gpio_led_data leds[];
+>  };
 
-diff --git a/Documentation/devicetree/bindings/hwmon/g762.txt b/Documentation/devicetree/bindings/hwmon/g762.txt
-new file mode 100644
-index 0000000..574524d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/g762.txt
-@@ -0,0 +1,41 @@
-+GMT G762/G763 PWM Fan controller
-+
-+Required node properties:
-+
-+ - "compatible": must be either "gmt,g762" or "gmt,g763"
-+ - "reg": I2C bus address of the device
-+
-+Optional properties:
-+
-+ - "pwm_freq": reference clock frequency for PWM mode in Hz. If not set,
-+               default value is 32768.
-+
-+ - "fan_pulses": number of pulses per fan revolution. Supported values
-+               are 2 and 4.
-+
-+ - "fan_startv": fan startup voltage. Accepted values are 0, 1, 2 and 3.
-+               The higher the more.
-+
-+ - "pwm_polarity": pwm polarity. Accepted values are 0 (positive duty)
-+               and 1 (negative duty).
-+
-+ - "fan_gear_mode": fan gear mode. Supported values are 0, 1 and 2.
-+
-+If an optional property is not set in .dts file, then current value is kept
-+unmodified (e.g. u-boot installed value).
-+
-+Additional information on operational parameters for the device is available
-+in Documentation/hwmon/g762. A detailed datasheet for the device is available
-+at http://natisbad.org/NAS/refs/GMT_EDS-762_763-080710-0.2.pdf.
-+
-+Example g762 node:
-+
-+   g762: g762@3e {
-+	compatible = "gmt,g762";
-+	reg = <0x3e>;
-+	pwm_freq = <8192>;   /* PWM reference clock freq */
-+	fan_pulses = <2>;    /* 2 pulses per rev */
-+	fan_gear_mode = <0>; /* chip default */
-+	fan_startv = <1>;    /* chip default */
-+	pwm_polarity = <0>;  /* chip default */
-+   };
--- 
-1.7.10.4
+Or actually, wait. You're adding quite a lot of these.
 
+Could you try:
+
+- Adding pins_sleep and pins_idle to struct dev_pin_info
+  in include/linux/pinctrl/devinfo.h
+
+- Modify drivers/base/pinctrl.c to optionally look up
+  sleep and idle states, you can make that code
+  #ifdef CONFIG_PM I think.
+
+- Add something like static inline functions to
+  include/linux/pinctrl/consumer.h
+  with names like pinctrl_select_pm_idle(struct device *)
+  pinctrl_select_pm_sleep(struct device *) to switch states
+  using the device core containers, and includes
+  checking IS_ERR() on the handles etc.
+
+I think this will save a *lot* of identical code in all the
+drivers, that will just have to call
+pinctrl_select_pm_sleep(), pinctrl_select_pm_default()
+pinctrl_select_pm_idle() instead of all the complex code.
+
+This is what I planned to do but never got around to.
+
+Please?
+
+Yours,
+Linus Walleij
