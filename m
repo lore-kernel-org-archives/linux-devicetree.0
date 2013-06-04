@@ -1,61 +1,55 @@
 From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 3/7] USB: chipidea: add PTW, PTS and STS handling
-Date: Tue, 04 Jun 2013 12:22:00 +0300
-Message-ID: <87hahei62v.fsf@ashishki-desk.ger.corp.intel.com>
-References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de> <1370025529-7414-4-git-send-email-mgr@pengutronix.de> <8738szjrs6.fsf@ashishki-desk.ger.corp.intel.com> <20130603161136.GB28181@pengutronix.de>
+Subject: Re: [PATCH 4/7] USB chipidea: introduce dual role mode pdata flags
+Date: Tue, 04 Jun 2013 12:31:31 +0300
+Message-ID: <87ehcii5n0.fsf@ashishki-desk.ger.corp.intel.com>
+References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de> <1370025529-7414-5-git-send-email-mgr@pengutronix.de> <87zjv7id52.fsf@ashishki-desk.ger.corp.intel.com> <CAL411-pMnJC55M3n5bAuffH3pwRZTzhBfDiEfT+egtGN29c7uw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130603161136.GB28181-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <CAL411-pMnJC55M3n5bAuffH3pwRZTzhBfDiEfT+egtGN29c7uw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-usb@vger.kernel.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi@ti.com" <balbi-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 
-> Hey Alex,
->
-> On Mon, Jun 03, 2013 at 03:35:37PM +0300, Alexander Shishkin wrote:
+> On Mon, Jun 3, 2013 at 8:37 PM, Alexander Shishkin
+> <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
 >> Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
->> 
->> > From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> >
->> > This patch makes it possible to configure the PTW, PTS and STS bits
->> > inside the portsc register for host and device mode before the driver
->> > starts and the phy can be addressed as hardware implementation is
->> > designed.
->> 
->> The bulk of this patch is good, but the OF part should still go to
->> ci13xxx_imx along with the dt bindings description.
+>>
+>>> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>>
+>>> Even if a chipidea core is otg capable the board may not. This allows
+>>
+>> "may not be"
+>>
+>>> to explicitly set the core to host/peripheral mode. Without these
+>>> flags the driver falls back to the old behaviour.
+>>>
+>>> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>> ---
+>>
+>> [snip]
+>>
+>>> +     if (!ci->platdata->dr_mode)
+>>> +             ci->platdata->dr_mode = of_usb_get_dr_mode(dev->of_node);
+>>
+>> same as previous one, let's keep it in the platform.
 >
-> referring to the last discussion [1] about what should be handled
-> where, your last statement is pretty confusing. We might say we
-> somehow stuck in a loop if i would repost this patch again
-> and somebody (probably you :]) is telling me to do the opposite again!
+> Alex, have you made the conclusion with Felipe, whether we need DT support
+> at core driver to handle such kinds of things or use platform data is ok?
+> Last time, I remember he disagreed the way this patch uses.
 
-I know it's a difficult topic and I'm sorry for all the confusion. It
-was Felipe, he's a big proponent of core drivers fetching everything
-related to the core from DT. It's right there in the followups to that
-patch.
+He wanted everything to be fetched from the core driver, I wanted
+most things to be fetched from the platform driver, we never came to a
+common denominator, though. This (and the other one) patch is made to
+fetch phy_mode and dr_mode from the core if it's not passed from the
+platform driver, so pretty much Felipe's idea. The more I think about it
+now, the more it makes sense to me too. For instance, this way we can
+avoid any extra boilerplate platform code.
 
-> If you have a closer look, you can see that we are checking for
-> valid pdata:
->
-> @@ -408,6 +452,9 @@ static int ci_hdrc_probe(struct platform_device *pdev)
->                 return -ENODEV;
->         }
->
-> +       if (!ci->platdata->phy_mode)
-> +               ci->platdata->phy_mode = of_usb_get_phy_mode(dev->of_node);
-> +
->
-> This way we can ensure that platforms without OF still
-> can use the pdata. _But_ we always fall back to OF in the
-> core _if_ nobody cared. This should be done with all properties
-> that are not SoC, but _common_ device specific settings.
-
-Ok, let's leave it like this.
+So, we're going to have it this way for now.
 
 Regards,
 --
