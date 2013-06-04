@@ -1,209 +1,49 @@
-From: Rohit Vaswani <rvaswani@codeaurora.org>
-Subject: [PATCH 3/3] ARM: msm: Add SMP support for 8960
-Date: Mon,  3 Jun 2013 17:19:45 -0700
-Message-ID: <1370305185-6450-4-git-send-email-rvaswani@codeaurora.org>
-References: <1370305185-6450-1-git-send-email-rvaswani@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1370305185-6450-1-git-send-email-rvaswani@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, David Brown <davidb@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>
-Cc: Rohit Vaswani <rvaswani@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/7] USB chipidea: introduce dual role mode pdata flags
+Date: Tue, 4 Jun 2013 09:42:21 +0800
+Message-ID: <CAL411-pMnJC55M3n5bAuffH3pwRZTzhBfDiEfT+egtGN29c7uw@mail.gmail.com>
+References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de>
+ <1370025529-7414-5-git-send-email-mgr@pengutronix.de> <87zjv7id52.fsf@ashishki-desk.ger.corp.intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87zjv7id52.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the cpus bindings and the Krait release sequence
-to make SMP work for MSM8960
+On Mon, Jun 3, 2013 at 8:37 PM, Alexander Shishkin
+<alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+> Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+>
+>> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>
+>> Even if a chipidea core is otg capable the board may not. This allows
+>
+> "may not be"
+>
+>> to explicitly set the core to host/peripheral mode. Without these
+>> flags the driver falls back to the old behaviour.
+>>
+>> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> ---
+>
+> [snip]
+>
+>> +     if (!ci->platdata->dr_mode)
+>> +             ci->platdata->dr_mode = of_usb_get_dr_mode(dev->of_node);
+>
+> same as previous one, let's keep it in the platform.
 
-Signed-off-by: Rohit Vaswani <rvaswani@codeaurora.org>
----
- Documentation/devicetree/bindings/arm/cpus.txt     |    2 +
- Documentation/devicetree/bindings/arm/msm/kpss.txt |   16 ++++++
- arch/arm/boot/dts/msm8960-cdp.dts                  |   22 ++++++++
- arch/arm/mach-msm/platsmp.c                        |   57 ++++++++++++++++++++
- arch/arm/mach-msm/scm-boot.h                       |    8 ++-
- 5 files changed, 102 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/msm/kpss.txt
+Alex, have you made the conclusion with Felipe, whether we need DT support
+at core driver to handle such kinds of things or use platform data is ok?
+Last time, I remember he disagreed the way this patch uses.
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 327aad2..1132eac 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -45,11 +45,13 @@ For the ARM architecture every CPU node must contain the following properties:
- 		"marvell,xsc3"
- 		"marvell,xscale"
- 		"qcom,scorpion"
-+		"qcom,krait"
- - enable-method: Specifies the method used to enable or take the secondary cores
- 		 out of reset. This allows different reset sequence for
- 		 different types of cpus.
- 		 This should be one of:
- 		 "qcom,scss"
-+		 "qcom,kpssv1"
- 
- Example:
- 
-diff --git a/Documentation/devicetree/bindings/arm/msm/kpss.txt b/Documentation/devicetree/bindings/arm/msm/kpss.txt
-new file mode 100644
-index 0000000..7272340
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/msm/kpss.txt
-@@ -0,0 +1,16 @@
-+* KPSS - Krait Processor Sub-system
-+
-+Properties
-+
-+- compatible : Should contain "qcom,kpss".
-+
-+- reg: Specifies the base address for the KPSS registers used for
-+       booting up secondary cores.
-+
-+Example:
-+
-+	kpss@2088000 {
-+		compatible = "qcom,kpss";
-+		reg = <0x02088000 0x1000
-+			0x02098000 0x2000>;
-+	};
-diff --git a/arch/arm/boot/dts/msm8960-cdp.dts b/arch/arm/boot/dts/msm8960-cdp.dts
-index 2e4d87a..fd2f3ec 100644
---- a/arch/arm/boot/dts/msm8960-cdp.dts
-+++ b/arch/arm/boot/dts/msm8960-cdp.dts
-@@ -7,6 +7,22 @@
- 	compatible = "qcom,msm8960-cdp", "qcom,msm8960";
- 	interrupt-parent = <&intc>;
- 
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "qcom,krait";
-+		device_type = "cpu";
-+		enable-method = "qcom,kpssv1";
-+
-+		cpu@0 {
-+			reg = <0>;
-+		};
-+
-+		cpu@1 {
-+			reg = <1>;
-+		};
-+	};
-+
- 	intc: interrupt-controller@2000000 {
- 		compatible = "qcom,msm-qgic2";
- 		interrupt-controller;
-@@ -26,6 +42,12 @@
- 		cpu-offset = <0x80000>;
- 	};
- 
-+	kpss@2088000 {
-+		compatible = "qcom,kpss";
-+		reg = <0x02088000 0x1000
-+			0x02098000 0x2000>;
-+	};
-+
- 	serial@19c400000 {
- 		compatible = "qcom,msm-hsuart", "qcom,msm-uart";
- 		reg = <0x16440000 0x1000>,
-diff --git a/arch/arm/mach-msm/platsmp.c b/arch/arm/mach-msm/platsmp.c
-index ccf4168..2e9e0a1 100644
---- a/arch/arm/mach-msm/platsmp.c
-+++ b/arch/arm/mach-msm/platsmp.c
-@@ -88,6 +88,56 @@ static int __cpuinit scorpion_release_secondary(void)
- 	return 0;
- }
- 
-+static int __cpuinit msm8960_release_secondary(unsigned int cpu)
-+{
-+	void __iomem *reg;
-+	struct device_node *dn = NULL;
-+
-+	if (cpu == 0 || cpu >= num_possible_cpus())
-+		return -EINVAL;
-+
-+	dn = of_find_compatible_node(dn, NULL, "qcom,kpss");
-+	if (!dn) {
-+		pr_err("%s : Missing kpss node from device tree\n", __func__);
-+		return -ENXIO;
-+	}
-+
-+	reg = of_iomap(dn, cpu);
-+	if (!reg)
-+		return -ENOMEM;
-+
-+	pr_debug("Starting secondary CPU %d\n", cpu);
-+
-+	/* Turn on CPU Rail */
-+	writel_relaxed(0xA4, reg+0x1014);
-+	mb();
-+	udelay(512);
-+
-+	/* Krait bring-up sequence */
-+	writel_relaxed(0x109, reg+0x04);
-+	writel_relaxed(0x101, reg+0x04);
-+	mb();
-+	ndelay(300);
-+
-+	writel_relaxed(0x121, reg+0x04);
-+	mb();
-+	udelay(2);
-+
-+	writel_relaxed(0x120, reg+0x04);
-+	mb();
-+	udelay(2);
-+
-+	writel_relaxed(0x100, reg+0x04);
-+	mb();
-+	udelay(100);
-+
-+	writel_relaxed(0x180, reg+0x04);
-+	mb();
-+
-+	iounmap(reg);
-+	return 0;
-+}
-+
- static DEFINE_PER_CPU(int, cold_boot_done);
- 
- static __cpuinit void boot_cold_cpu(unsigned int cpu)
-@@ -110,6 +160,11 @@ static __cpuinit void boot_cold_cpu(unsigned int cpu)
- 			scorpion_release_secondary();
- 			per_cpu(cold_boot_done, cpu) = true;
- 		}
-+	} else if (!strcmp(enable_method, "qcom,kpssv1")) {
-+		if (per_cpu(cold_boot_done, cpu) == false) {
-+			msm8960_release_secondary(cpu);
-+			per_cpu(cold_boot_done, cpu) = true;
-+		}
- 	} else {
- 		pr_err("%s: Invalid enable-method property: %s\n",
- 				__func__, enable_method);
-@@ -186,6 +241,8 @@ static void __init msm_smp_init_cpus(void)
- static const int cold_boot_flags[] __initconst = {
- 	0,
- 	SCM_FLAG_COLDBOOT_CPU1,
-+	SCM_FLAG_COLDBOOT_CPU2,
-+	SCM_FLAG_COLDBOOT_CPU3,
- };
- 
- static void __init msm_smp_prepare_cpus(unsigned int max_cpus)
-diff --git a/arch/arm/mach-msm/scm-boot.h b/arch/arm/mach-msm/scm-boot.h
-index 7be32ff..6aabb24 100644
---- a/arch/arm/mach-msm/scm-boot.h
-+++ b/arch/arm/mach-msm/scm-boot.h
-@@ -13,9 +13,11 @@
- #define __MACH_SCM_BOOT_H
- 
- #define SCM_BOOT_ADDR			0x1
--#define SCM_FLAG_COLDBOOT_CPU1		0x1
--#define SCM_FLAG_WARMBOOT_CPU1		0x2
--#define SCM_FLAG_WARMBOOT_CPU0		0x4
-+#define SCM_FLAG_COLDBOOT_CPU1		0x01
-+#define SCM_FLAG_COLDBOOT_CPU2		0x08
-+#define SCM_FLAG_COLDBOOT_CPU3		0x20
-+#define SCM_FLAG_WARMBOOT_CPU0		0x04
-+#define SCM_FLAG_WARMBOOT_CPU1		0x02
- 
- int scm_set_boot_addr(phys_addr_t addr, int flags);
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+--
+BR,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
