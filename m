@@ -1,103 +1,87 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 4/8] ARM i.MX53: mba53: add sound support
-Date: Tue,  4 Jun 2013 13:07:11 +0200
-Message-ID: <1370344035-7417-5-git-send-email-s.trumtrar@pengutronix.de>
-References: <1370344035-7417-1-git-send-email-s.trumtrar@pengutronix.de>
+From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 4/7] USB chipidea: introduce dual role mode pdata flags
+Date: Tue, 04 Jun 2013 14:09:46 +0300
+Message-ID: <878v2qi139.fsf@ashishki-desk.ger.corp.intel.com>
+References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de> <1370025529-7414-5-git-send-email-mgr@pengutronix.de> <87zjv7id52.fsf@ashishki-desk.ger.corp.intel.com> <CAL411-pMnJC55M3n5bAuffH3pwRZTzhBfDiEfT+egtGN29c7uw@mail.gmail.com> <87ehcii5n0.fsf@ashishki-desk.ger.corp.intel.com> <CAL411-pyrFXxyEX_GAFRS5ubh_Pf2yWLZXYC3PJevu1WSJS78g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1370344035-7417-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL411-pyrFXxyEX_GAFRS5ubh_Pf2yWLZXYC3PJevu1WSJS78g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-usb@vger.kernel.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi@ti.com" <balbi-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>
+Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 
-Enable the sgtl5000 found on MBa53 mainboard.
-Also enable audio muxer and ssi, which are needed for sound to work.
+> On Tue, Jun 4, 2013 at 5:31 PM, Alexander Shishkin
+> <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+>> Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+>>
+>>> On Mon, Jun 3, 2013 at 8:37 PM, Alexander Shishkin
+>>> <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+>>>> Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+>>>>
+>>>>> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>>>>
+>>>>> Even if a chipidea core is otg capable the board may not. This allows
+>>>>
+>>>> "may not be"
+>>>>
+>>>>> to explicitly set the core to host/peripheral mode. Without these
+>>>>> flags the driver falls back to the old behaviour.
+>>>>>
+>>>>> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>>>> ---
+>>>>
+>>>> [snip]
+>>>>
+>>>>> +     if (!ci->platdata->dr_mode)
+>>>>> +             ci->platdata->dr_mode = of_usb_get_dr_mode(dev->of_node);
+>>>>
+>>>> same as previous one, let's keep it in the platform.
+>>>
+>>> Alex, have you made the conclusion with Felipe, whether we need DT support
+>>> at core driver to handle such kinds of things or use platform data is ok?
+>>> Last time, I remember he disagreed the way this patch uses.
+>>
+>> He wanted everything to be fetched from the core driver, I wanted
+>> most things to be fetched from the platform driver, we never came to a
+>> common denominator, though. This (and the other one) patch is made to
+>> fetch phy_mode and dr_mode from the core if it's not passed from the
+>> platform driver, so pretty much Felipe's idea. The more I think about it
+>> now, the more it makes sense to me too. For instance, this way we can
+>> avoid any extra boilerplate platform code.
+>>
+>> So, we're going to have it this way for now.
+>>
+>
+> For this patch, there may be wrong since it wants get the phy_mode and dr_mode
+> from the core DT node, but seems there is no core DT node at all, and the device
+> tree binding doc add dr_mode is for gluy layer.
 
-Signed-off-by: Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/imx53-mba53.dts | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+I don't follow. In the previous patch it sets core's of_node to that of
+platform glue, so here the core fetches phy_mode and dr_mode from the
+platform device's of_node.
 
-diff --git a/arch/arm/boot/dts/imx53-mba53.dts b/arch/arm/boot/dts/imx53-mba53.dts
-index 2889bab..b171c00 100644
---- a/arch/arm/boot/dts/imx53-mba53.dts
-+++ b/arch/arm/boot/dts/imx53-mba53.dts
-@@ -42,6 +42,28 @@
- 		interface-pix-fmt = "rgb24";
- 		status = "disabled";
- 	};
-+
-+	reg_3p2v: 3p2v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P2V";
-+		regulator-min-microvolt = <3200000>;
-+		regulator-max-microvolt = <3200000>;
-+		regulator-always-on;
-+	};
-+
-+	sound {
-+		compatible = "tq,imx53-mba53-sgtl5000",
-+			     "fsl,imx-audio-sgtl5000";
-+		model = "imx53-mba53-sgtl5000";
-+		ssi-controller = <&ssi2>;
-+		audio-codec = <&codec>;
-+		audio-routing =
-+			"MIC_IN", "Mic Jack",
-+			"Mic Jack", "Mic Bias",
-+			"Headphone Jack", "HP_OUT";
-+		mux-int-port = <2>;
-+		mux-ext-port = <5>;
-+	};
- };
- 
- &ldb {
-@@ -122,10 +144,19 @@
- 	status = "okay";
- };
- 
-+&audmux {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux_1>;
-+};
-+
- &i2c2 {
- 	codec: sgtl5000@a {
- 		compatible = "fsl,sgtl5000";
- 		reg = <0x0a>;
-+		clocks = <&clks 150>;
-+		VDDA-supply = <&reg_3p2v>;
-+		VDDIO-supply = <&reg_3p2v>;
- 	};
- 
- 	expander: pca9554@20 {
-@@ -169,6 +200,11 @@
- 	status = "okay";
- };
- 
-+&ssi2 {
-+	fsl,mode = "i2s-slave";
-+	status = "okay";
-+};
-+
- &uart2 {
- 	status = "okay";
- };
--- 
-1.8.2.rc2
+Of course, if the core driver is taking care of some of the DT
+properties, it might make sense to document them as such, as opposed to
+documenting them for each and every platform device, but I'll leave that
+up to DT savants.
+
+> OK, so you have accepted the way we pass something from glue layer DT
+> node, and using
+> ci->platdata->xxx (dr_mode, phy_mode, vbus, force_full_speed, etc) at
+> core driver, right?
+
+Yes, let's do it this way.
+
+Another related matter is ownership of phys and clocks.
+
+Regards,
+--
+Alex
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
