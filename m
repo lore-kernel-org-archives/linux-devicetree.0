@@ -1,37 +1,31 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH RFC 3/3] clk: dt: binding for basic divider clock
-Date: Tue, 04 Jun 2013 10:11:23 -0700
-Message-ID: <51AE1FBB.1070806@codeaurora.org>
-References: <1370281990-15090-1-git-send-email-mturquette@linaro.org> <1370281990-15090-4-git-send-email-mturquette@linaro.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH V5 4/5] ARM: dts: add clock provider information for i2s
+ controllers in Exynos5250
+Date: Tue, 4 Jun 2013 10:12:36 -0700
+Message-ID: <CAD=FV=X6u51rYuBOT+EGBdKptgCSM-6PvW9L9Xgbiih9wOH+3A@mail.gmail.com>
+References: <1370348890-6645-1-git-send-email-padma.v@samsung.com>
+	<1370348890-6645-5-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1370281990-15090-4-git-send-email-mturquette@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1370348890-6645-5-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, alsa-devel@alsa-project.org, Padma Venkat <padma.kvr@gmail.com>, sbkim73@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, "broonie@kernel.org" <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/13 10:53, Mike Turquette wrote:
-> +Required properties:
-> +- compatible : shall be "divider-clock".
-> +- #clock-cells : from common clock binding; shall be set to 0.
-> +- clocks : link to phandle of parent clock
-> +- reg : base address for register controlling adjustable divider
-> +- mask : arbitrary bitmask for programming the adjustable divider
-> +
-> +Optional properties:
-> +- clock-output-names : From common clock binding.
-> +- table : array of integer pairs defining divisors & bitfield values
-> +- shift : number of bits to shift the mask, defaults to 0 if not present
-> +- index_one : valid divisor programming starts at 1, not zero
-> +- index_power_of_two : valid divisor programming must be a power of two
-> +- allow_zero : implies index_one, and programming zero results in
-> +  divide-by-one
+Padmavathi,
 
-It's preferred that property names have dashes instead of underscores.
+On Tue, Jun 4, 2013 at 5:28 AM, Padmavathi Venna <padma.v@samsung.com> wrote:
+> Add clock lookup information for i2s controllers on exynos5250 SoC.
+>
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5250.dtsi |   10 ++++++++++
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Would still like to see a separate patch documenting these clocks in
+"Documentation/devicetree/bindings/sound/samsung-i2s.txt".  ...but
+what's here looks good, thanks!
+
+Reviewed-by: Doug Anderson <dianders@chromium.org>
