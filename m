@@ -1,48 +1,66 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH -next v2] dmaengine: ste_dma40: fix error return code in d40_probe()
-Date: Tue, 4 Jun 2013 11:14:16 +0200
-Message-ID: <CACRpkdZhK6TUAC132vzcaLKqdMTwPma+ZhKG5Y+AUvekNpz6EQ@mail.gmail.com>
-References: <CAPgLHd-gjJ6ju3HyhiQi98YFGojvU3aYSTn7SOe4NhQPY1r++w@mail.gmail.com>
-	<CACRpkdYBfvr0kA7bd-6Ns78UH7JtBCFDzFxyHLgtReB32O4D+w@mail.gmail.com>
-	<20130530173326.GD3767@intel.com>
+From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 3/7] USB: chipidea: add PTW, PTS and STS handling
+Date: Tue, 04 Jun 2013 12:22:00 +0300
+Message-ID: <87hahei62v.fsf@ashishki-desk.ger.corp.intel.com>
+References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de> <1370025529-7414-4-git-send-email-mgr@pengutronix.de> <8738szjrs6.fsf@ashishki-desk.ger.corp.intel.com> <20130603161136.GB28181@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130530173326.GD3767@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Wei Yongjun <weiyj.lk@gmail.com>, Srinidhi KASAGAR <srinidhi.kasagar@stericsson.com>, Dan Williams <djbw@fb.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Wei Yongjun <yongjun_wei@trendmicro.com.cn>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130603161136.GB28181-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 30, 2013 at 7:33 PM, Vinod Koul <vinod.koul@intel.com> wrote:
-> On Thu, May 30, 2013 at 09:41:38AM +0200, Linus Walleij wrote:
->> On Thu, May 30, 2013 at 6:32 AM, Wei Yongjun <weiyj.lk@gmail.com> wrote:
->>
->> > From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->> >
->> > In many of the error handling case, the return value 'ret' not set
->> > and 0 will be return from d40_probe() even if error, but we should
->> > return a negative error code instead in those error handling case.
->> > This patch fixed them, and also removed useless variable 'err'.
->> >
->> > Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
->> > ---
->> > v1 -> v2: rebased on linux-next.git
->>
->> I've tentatively applied this to my dma40 branch, waiting for Vinod
->> to ACK it.
-> I though you wanted me to apply this :)
+Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+
+> Hey Alex,
 >
-> Nevertheless, Acked-by: Vinod Koul <vinod.koul@intel.com>
+> On Mon, Jun 03, 2013 at 03:35:37PM +0300, Alexander Shishkin wrote:
+>> Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+>> 
+>> > From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> >
+>> > This patch makes it possible to configure the PTW, PTS and STS bits
+>> > inside the portsc register for host and device mode before the driver
+>> > starts and the phy can be addressed as hardware implementation is
+>> > designed.
+>> 
+>> The bulk of this patch is good, but the OF part should still go to
+>> ci13xxx_imx along with the dt bindings description.
 >
-> Can you CC stable too, pls.
+> referring to the last discussion [1] about what should be handled
+> where, your last statement is pretty confusing. We might say we
+> somehow stuck in a loop if i would repost this patch again
+> and somebody (probably you :]) is telling me to do the opposite again!
 
-Hm I'm not sending any DMA40 stuff for stable, sorry ...
-if you want it to go into stable you'd better pick this
-(the v3 version) into the DMA tree.
+I know it's a difficult topic and I'm sorry for all the confusion. It
+was Felipe, he's a big proponent of core drivers fetching everything
+related to the core from DT. It's right there in the followups to that
+patch.
 
-Let me know how you want it, I've removed it from my
-dma40 branch for the time being.
+> If you have a closer look, you can see that we are checking for
+> valid pdata:
+>
+> @@ -408,6 +452,9 @@ static int ci_hdrc_probe(struct platform_device *pdev)
+>                 return -ENODEV;
+>         }
+>
+> +       if (!ci->platdata->phy_mode)
+> +               ci->platdata->phy_mode = of_usb_get_phy_mode(dev->of_node);
+> +
+>
+> This way we can ensure that platforms without OF still
+> can use the pdata. _But_ we always fall back to OF in the
+> core _if_ nobody cared. This should be done with all properties
+> that are not SoC, but _common_ device specific settings.
 
-Yours,
-Linus Walleij
+Ok, let's leave it like this.
+
+Regards,
+--
+Alex
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
