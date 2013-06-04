@@ -1,87 +1,45 @@
-From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 4/7] USB chipidea: introduce dual role mode pdata flags
-Date: Tue, 04 Jun 2013 14:09:46 +0300
-Message-ID: <878v2qi139.fsf@ashishki-desk.ger.corp.intel.com>
-References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de> <1370025529-7414-5-git-send-email-mgr@pengutronix.de> <87zjv7id52.fsf@ashishki-desk.ger.corp.intel.com> <CAL411-pMnJC55M3n5bAuffH3pwRZTzhBfDiEfT+egtGN29c7uw@mail.gmail.com> <87ehcii5n0.fsf@ashishki-desk.ger.corp.intel.com> <CAL411-pyrFXxyEX_GAFRS5ubh_Pf2yWLZXYC3PJevu1WSJS78g@mail.gmail.com>
+From: "Mohammed, Afzal" <afzal@ti.com>
+Subject: RE: [PATCH v2 00/14] ARM: OMAP2+: AM43x initial support
+Date: Tue, 4 Jun 2013 11:25:45 +0000
+Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EB14140@DBDE04.ent.ti.com>
+References: <cover.1369658705.git.afzal@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL411-pyrFXxyEX_GAFRS5ubh_Pf2yWLZXYC3PJevu1WSJS78g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-usb@vger.kernel.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi@ti.com" <balbi-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <cover.1369658705.git.afzal@ti.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tony Lindgren <tony@atomide.com>
+Cc: Russell King <linux@arm.linux.org.uk>, Benoit Cousson <benoit.cousson@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
-
-> On Tue, Jun 4, 2013 at 5:31 PM, Alexander Shishkin
-> <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
->> Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
->>
->>> On Mon, Jun 3, 2013 at 8:37 PM, Alexander Shishkin
->>> <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
->>>> Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
->>>>
->>>>> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>>>>
->>>>> Even if a chipidea core is otg capable the board may not. This allows
->>>>
->>>> "may not be"
->>>>
->>>>> to explicitly set the core to host/peripheral mode. Without these
->>>>> flags the driver falls back to the old behaviour.
->>>>>
->>>>> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>>>> ---
->>>>
->>>> [snip]
->>>>
->>>>> +     if (!ci->platdata->dr_mode)
->>>>> +             ci->platdata->dr_mode = of_usb_get_dr_mode(dev->of_node);
->>>>
->>>> same as previous one, let's keep it in the platform.
->>>
->>> Alex, have you made the conclusion with Felipe, whether we need DT support
->>> at core driver to handle such kinds of things or use platform data is ok?
->>> Last time, I remember he disagreed the way this patch uses.
->>
->> He wanted everything to be fetched from the core driver, I wanted
->> most things to be fetched from the platform driver, we never came to a
->> common denominator, though. This (and the other one) patch is made to
->> fetch phy_mode and dr_mode from the core if it's not passed from the
->> platform driver, so pretty much Felipe's idea. The more I think about it
->> now, the more it makes sense to me too. For instance, this way we can
->> avoid any extra boilerplate platform code.
->>
->> So, we're going to have it this way for now.
->>
->
-> For this patch, there may be wrong since it wants get the phy_mode and dr_mode
-> from the core DT node, but seems there is no core DT node at all, and the device
-> tree binding doc add dr_mode is for gluy layer.
-
-I don't follow. In the previous patch it sets core's of_node to that of
-platform glue, so here the core fetches phy_mode and dr_mode from the
-platform device's of_node.
-
-Of course, if the core driver is taking care of some of the DT
-properties, it might make sense to document them as such, as opposed to
-documenting them for each and every platform device, but I'll leave that
-up to DT savants.
-
-> OK, so you have accepted the way we pass something from glue layer DT
-> node, and using
-> ci->platdata->xxx (dr_mode, phy_mode, vbus, force_full_speed, etc) at
-> core driver, right?
-
-Yes, let's do it this way.
-
-Another related matter is ownership of phys and clocks.
-
-Regards,
---
-Alex
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgVG9ueSwNCg0KT24gTW9uLCBNYXkgMjcsIDIwMTMgYXQgMjA6MDM6MjcsIE1vaGFtbWVkLCBB
+ZnphbCB3cm90ZToNCg0KPiBUaGlzIHNlcmllcyBhZGRzIGluaXRpYWwgc3VwcG9ydCBmb3IgQU00
+M3ggYmFzZWQgU29DJ3MuIFRvIGJvb3QNCj4gQU00M3gsIGluIGFkZGl0aW9uIHRvIHRoZXNlIHBh
+dGNoZXMsIFBSQ00gc3VwcG9ydCBpcyBhbHNvIG5lZWRlZCwNCj4gd2hpY2ggd291bGQgYmUgcG9z
+dGVkIGxhdGVyIGFzIGEgc2VwYXJhdGUgc2VyaWVzLiBEVCBzb3VyY2VzIGRvZXNuJ3QNCj4gaGF2
+ZSAidGksaHdtb2QiIGVudHJ5IC0gdGhpcyB3b3VsZCBiZSBhZGRlZCBhbG9uZyB3aXRoIFBSQ00g
+c3VwcG9ydC4NCj4gDQo+IEFNNDN4IFNvQydzIGFyZSBiYXNlZCBvbiBBUk0gQ29ydGV4LUE5IHdp
+dGggb25lIGNvcmUuIEFNNDN4IGlzIHNpbWlsYXINCj4gdG8gQU0zMzV4IGluIGl0J3MgcGVyaXBo
+ZXJhbCBjYXBhYmlsaXRpZXMsIGV4Y2VwdCBhIGZldyBhZGRpdGlvbmFsDQo+IG9uZXMsIHdpdGgg
+bWFueSBvZiB0aGUgcGVyaXBoZXJhbCByZWdpc3RlciBtYXBwaW5nJ3Mgc2ltaWxhci4gQU00M3gN
+Cj4gaGFzIGEgc3luYyB0aW1lciwgd2hpY2ggaXMgYmVpbmcgdXNlZCBhcyBjbG9ja3NvdXJjZS4g
+Q2xvY2tldmVudCB1c2VkDQo+IGlzIDFtcyBkbXRpbWVyLg0KPiANCj4gU29DIGhhcyBQTDMxMCBM
+MiBjYWNoZSwgc3VwcG9ydCBmb3IgaXQgd291bGQgYmUgYWRkZWQgbGF0ZXIuDQo+IA0KPiBzb2Nf
+aXNfYW00M3h4KCkgaXMgaW50cm9kdWNlZCB0byBoYW5kbGUgQU00M3ggc3BlY2lmaWMgZGV0YWls
+cyBhbmQNCj4gc29jX2lzX2FtNDM3eCgpIGlzIGEgc3ViY2xhc3Mgb2YgaXQgLSBmaXJzdCBtZW1i
+ZXIgb2YgdGhlIGNsYXNzLg0KPiANCj4gQU00M3ggaXMgY3VycmVudGx5IGluIHByZS1zaWxpY29u
+IHN0YWdlIGFuZCBjdXJyZW50bHkgdGhlcmUgYXJlIG5vDQo+IHB1YmxpYyBkb2N1bWVudHMuDQo+
+IA0KPiBUaGlzIGhhcyBiZWVuIHRlc3RlZCBvbiBhIHByZS1zaWxpY29uIHBsYXRmb3JtIHRoYXQg
+ZW11bGF0ZXMgQU00M3ggU29DDQo+IHdpdGggYWRkaXRpb25hbCBjaGFuZ2VzIG9uIHRvcCBvZiB0
+aGlzLg0KPiANCj4gQU0zMzV4IGJhc2VkIGJvYXJkIChBTTMzNXggRVZNKSBoYXMgYmVlbiB2ZXJm
+aWVkIHRvIGJvb3QgYXMgZWFybGllcg0KPiB3aXRoIHRoaXMgc2VyaWVzLg0KPiANCj4gQmFzZWxp
+bmU6IHYzLjEwLXJjMw0KPiBEZXBlbmRlbmN5OiAiQVJNOiBPTUFQMys6IGFtMzN4eCBpZDogQWRk
+IG5ldyBhbTMzeHggc3BlY2lmaWMgZnVuY3Rpb24gdG8gY2hlY2sgZGV2X2ZlYXR1cmUiDQo+IAkJ
+YnkgVmFpYmhhdiBIaXJlbWF0aCA8aHZhaWJoYXZAdGkuY29tPg0KDQpJZiB5b3UgaGF2ZSBhbnkg
+Y29tbWVudHMgb24gdGhpcyBzZXJpZXMgcGxlYXNlIGxldCBtZSBrbm93LCBlbHNlIGlmDQp5b3Ug
+YXJlIG9rYXkgd2l0aCB0aGlzLCBwbGVhc2UgY29uc2lkZXIgcGF0Y2hlcyAxLTEwIGZvciBpbmNs
+dXNpb24NCmluIHRoZSBjb21pbmcgbWVyZ2Ugd2luZG93Lg0KDQpQYXRjaCAxNC8xNCBoYXMgYmVl
+biB0YWtlbiBieSBCZW5vaXQgYW5kIHBhdGNoZXMgMTEtMTMgYXJlIHRvIGJlDQpkcm9wcGVkIChh
+cyBwZXIgZGlzY3Vzc2lvbiBpbiAxMS8xNCB0aHJlYWQpDQoNClJlZ2FyZHMNCkFmemFsDQoNCg==
