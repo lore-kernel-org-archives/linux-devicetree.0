@@ -1,15 +1,13 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 21/21] clk: ux500: Supply provider look-up functionality
- to support Device Tree
-Date: Tue, 4 Jun 2013 12:57:06 +0200
-Message-ID: <CACRpkdaNMR=6JT+pi+9aqOJXW3gK9Yb4hztx3rOiY3c+f3UTRA@mail.gmail.com>
-References: <1370266965-7901-1-git-send-email-lee.jones@linaro.org>
- <1370266965-7901-22-git-send-email-lee.jones@linaro.org>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 2/8] ARM i.MX53: mba53: Add display support
+Date: Tue,  4 Jun 2013 13:07:09 +0200
+Message-ID: <1370344035-7417-3-git-send-email-s.trumtrar@pengutronix.de>
+References: <1370344035-7417-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1370266965-7901-22-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1370344035-7417-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,29 +18,63 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus WALLEIJ <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Srinidhi KASAGAR <srinidhi.kasagar-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 3, 2013 at 3:42 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-> In this patch we're populating a clk_data array, one clock per element to
-> act as a clk look-up using indexes supplied from Device Tree.
->
-> Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+As the displays are optional and we have more than one, also
+set the status of the parallel display and the ldb to disabled.
 
-This needs to be patch 1/21 because otherwise the rest of the
-stuff is non-bisectable right? It's being broken the first time
-you remove auxdata and not fixed until this patch.
+Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx53-mba53.dts | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-The whole thing is very different from other DT clock things
-I've seen, usually you add a compatible node for each
-clock type, and a node for each physical gate. But there
-may be several ways to skin this cat...
-
-Make sure to include devicetree-discuss in the series for
-an OS-neutral review opportunity.
-
-Yours,
-Linus Walleij
+diff --git a/arch/arm/boot/dts/imx53-mba53.dts b/arch/arm/boot/dts/imx53-mba53.dts
+index 1420fe5..6fa9a09 100644
+--- a/arch/arm/boot/dts/imx53-mba53.dts
++++ b/arch/arm/boot/dts/imx53-mba53.dts
+@@ -16,6 +16,38 @@
+ / {
+ 	model = "TQ MBa53 starter kit";
+ 	compatible = "tq,mba53", "tq,tqma53", "fsl,imx53";
++
++	reg_backlight: fixed@0 {
++		compatible = "regulator-fixed";
++		regulator-name = "lcd-supply";
++		gpio = <&gpio2 5 0>;
++		startup-delay-us = <5000>;
++		enable-active-low;
++	};
++
++	backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm2 0 50000 0 0>;
++		brightness-levels = <0 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100>;
++		default-brightness-level = <10>;
++		enable-gpios = <&gpio7 7 0>;
++		power-supply = <&reg_backlight>;
++	};
++
++	disp1: display@disp1 {
++		compatible = "fsl,imx-parallel-display";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_disp1_1>;
++		crtcs = <&ipu 1>;
++		interface-pix-fmt = "rgb24";
++		status = "disabled";
++	};
++};
++
++&ldb {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_lvds1_1>;
++	status = "disabled";
+ };
+ 
+ &iomuxc {
+-- 
+1.8.2.rc2
