@@ -1,29 +1,51 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 2/3] ARM: msm: Re-organize platsmp to make it extensible
-Date: Tue, 4 Jun 2013 10:32:58 +0100
-Message-ID: <20130604093258.GS18614@n2100.arm.linux.org.uk>
-References: <1370305185-6450-1-git-send-email-rvaswani@codeaurora.org> <1370305185-6450-3-git-send-email-rvaswani@codeaurora.org>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 0/4] dw_apb_timer: osc as sched_clock,
+ clocks and clocksource_of support
+Date: Tue, 4 Jun 2013 11:36:09 +0200
+Message-ID: <201306041136.09566.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1370305185-6450-3-git-send-email-rvaswani@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rohit Vaswani <rvaswani@codeaurora.org>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, David Brown <davidb@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 03, 2013 at 05:19:44PM -0700, Rohit Vaswani wrote:
-> +	sc1_base_ptr = of_iomap(dn, 0);
-> +	if (sc1_base_ptr) {
-> +		writel_relaxed(0, sc1_base_ptr + VDD_SC1_ARRAY_CLAMP_GFS_CTL);
-> +		writel_relaxed(0, sc1_base_ptr + SCSS_CPU1CORE_RESET);
-> +		writel_relaxed(3, sc1_base_ptr + SCSS_DBG_STATUS_CORE_PWRDUP);
-> +		mb();
-> +		iounmap(sc1_base_ptr);
+This is split off of my Rockchip support series from yesterday. It's now
+a patch more than before, as the third patch enables the timer to be used
+thru clocksource_of_init and moves picoxcell and socfpga to it.
 
-If you need to fiddle with power rails and resets for your secondary
-core, you don't need any of the pen_release stuff, and you really
-should get rid of it.  The pen_release stuff is only there for
-platforms where there's no proper way of controlling the secondary
-CPUs except by using a software method.
+changes since v1:
+- hopefully improve the patch description of patch 1
+  after a suggestion by Linus Walleij
+- move the selection of DW_APB_TIMER and CLKSRC_OF into DW_APB_TIMER_OF
+  after a suggestion by Baruch Siach
+
+Heiko Stuebner (4):
+  clocksource: dw_apb_timer_of: enable the use the clocksource as sched clock
+  clocksource: dw_apb_timer_of: add clock-handling
+  clocksource: dw_apb_timer_of: select DW_APB_TIMER
+  clocksource: dw_apb_timer_of: use clocksource_of_init
+
+ Documentation/devicetree/bindings/rtc/dw-apb.txt |   19 +++++
+ arch/arm/mach-picoxcell/Kconfig                  |    1 -
+ arch/arm/mach-picoxcell/common.c                 |    2 -
+ arch/arm/mach-socfpga/Kconfig                    |    1 -
+ arch/arm/mach-socfpga/socfpga.c                  |    2 -
+ drivers/clocksource/Kconfig                      |    2 +
+ drivers/clocksource/dw_apb_timer_of.c            |   95 ++++++++++++++-------
+ include/linux/dw_apb_timer.h                     |    1 -
+ 8 files changed, 84 insertions(+), 39 deletions(-)
+
+-- 
+1.7.2.3
