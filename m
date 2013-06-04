@@ -1,239 +1,101 @@
-From: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/7] USB: add devicetree helpers for determining
- dr_mode and phy_type
-Date: Tue, 4 Jun 2013 15:01:40 +0200
-Message-ID: <20130604130140.GF28181@pengutronix.de>
-References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de>
- <1370025529-7414-2-git-send-email-mgr@pengutronix.de>
- <8761xvjrwt.fsf@ashishki-desk.ger.corp.intel.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: DT version of kirkwood_ge0x_init()
+Date: Tue, 4 Jun 2013 09:10:03 -0400
+Message-ID: <20130604131003.GA3803@titan.lakedaemon.net>
+References: <51ADBEE0.5040500@keymile.com> <51ADC2C2.6010106@gmail.com>
+ <20130604104302.GX3803@titan.lakedaemon.net>
+ <20130604115927.GJ7626@kw.sim.vm.gnt>
+ <20130604120500.GZ3803@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <8761xvjrwt.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20130604120500.GZ3803-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "Longchamp,
+ Valentin" <Valentin.Longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Brunck,
+ Holger" <Holger.Brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Simon Guinot <simon-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 03, 2013 at 03:32:50PM +0300, Alexander Shishkin wrote:
-> Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+On Tue, Jun 04, 2013 at 08:05:00AM -0400, Jason Cooper wrote:
+> On Tue, Jun 04, 2013 at 01:59:27PM +0200, Simon Guinot wrote:
+> > On Tue, Jun 04, 2013 at 06:43:02AM -0400, Jason Cooper wrote:
+> > > On Tue, Jun 04, 2013 at 12:34:42PM +0200, Sebastian Hesselbarth wrote:
+> > > > On 06/04/13 12:18, Gerlando Falauto wrote:
+> > > > >I noticed how most of the DT-aware board-setup files only have a single
+> > > > ><board>_init() function, calling kirkwood_ge00_init() with a struct
+> > > > >mv643xx_eth_platform_data as a single argument.
+> > > > >
+> > > > >I was wondering -- is there a reason why we cannot remove all this
+> > > > >board-specific code and move all this to the DT?
+> > > > 
+> > > > Gerlando,
+> > > > 
+> > > > DT for mv643xx_eth is on the way (https://lkml.org/lkml/2013/5/29/527).
+> > > > We wait for the driver to surface to relax branch dependencies and then
+> > > > move all DT Orion SoCs to it.
+> > > > 
+> > > > > I would really love to have all our boards under a single
+> > > > > CONFIG_<FAMILY>_DT and a single compatible string, with all the
+> > > > > differences within the DTs itself -- no more #ifdef CONFIG_<BOARD>,
+> > > > > no more of_machine_is_compatible("boardXXX").
+> > > > 
+> > > > All those will happen if there is DT support for mv643xx_eth which
+> > > > is the only driver left without DT and board dependencies. But there
+> > > > will be no CONFIG_LACIE_DT or whatever, but just CONFIG_KIRKWOOD_DT
+> > > > and board dependent stuff described in the corresponding dts.
+> > > 
+> > > Gerlando,
+> > > 
+> > > Yes, the mess you describe is temporary.  Those board files used to have
+> > > a lot more code in them, legacy init of partitions, MPP, LEDs, etc.  As
+> > > we have converted drivers, they have gotten smaller and smaller.
+> > > 
+> > > Now, with Sebastian's hard work, we'll finally be able to remove them
+> > > and kirkwood will be completely DT.  We're very excited about this. :)
+> > > 
+> > > Next, we'll move the Marvell DT boards over to mach-mvebu/ and only
+> > > legacy boards in -kirkwood/, -orion5x/, -dove/, and -mv78xx0/ will
+> > > remain.  After a few releases we will deprecate any legacy boards which
+> > > haven't been converted to DT.
+> > 
+> > Hi Jason,
+> > 
+> > While I have obviously planed to convert all the LaCie boards to DT,
+> > I think that removing the legacy support so quickly is a little bit
+> > harsh.
 > 
-> > From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >
-> > This adds two little devicetree helper functions for determining the
-> > dr_mode (host, peripheral, otg) and phy_type (utmi, ulpi,...) from
-> > the devicetree.
+> Yeah, my wording might not have been the best.  See below.
 > 
-> This one needs an ack from Felipe.
-
-Right, we currently also wait for his answer in another thread.
-
-http://www.spinics.net/lists/linux-usb/msg86906.html
-
-> > Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> >  drivers/usb/phy/Makefile |  1 +
-> >  drivers/usb/phy/of.c     | 47 +++++++++++++++++++++++++++++++++++++++++++++++
-> >  drivers/usb/usb-common.c | 35 +++++++++++++++++++++++++++++++++++
-> >  include/linux/usb/of.h   | 28 ++++++++++++++++++++++++++++
-> >  include/linux/usb/otg.h  |  7 +++++++
-> >  include/linux/usb/phy.h  |  9 +++++++++
-> >  6 files changed, 127 insertions(+)
-> >  create mode 100644 drivers/usb/phy/of.c
-> >  create mode 100644 include/linux/usb/of.h
-> >
-> > diff --git a/drivers/usb/phy/Makefile b/drivers/usb/phy/Makefile
-> > index a9169cb..070eca3 100644
-> > --- a/drivers/usb/phy/Makefile
-> > +++ b/drivers/usb/phy/Makefile
-> > @@ -5,6 +5,7 @@
-> >  ccflags-$(CONFIG_USB_DEBUG) := -DDEBUG
-> >  
-> >  obj-$(CONFIG_USB_PHY)			+= phy.o
-> > +obj-$(CONFIG_OF)			+= of.o
-> >  
-> >  # transceiver drivers, keep the list sorted
-> >  
-> > diff --git a/drivers/usb/phy/of.c b/drivers/usb/phy/of.c
-> > new file mode 100644
-> > index 0000000..e6f3b74
-> > --- /dev/null
-> > +++ b/drivers/usb/phy/of.c
-> > @@ -0,0 +1,47 @@
-> > +/*
-> > + * USB of helper code
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License as published by
-> > + * the Free Software Foundation; either version 2 of the License, or
-> > + * (at your option) any later version.
-> > + */
-> > +
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/usb/of.h>
-> > +#include <linux/usb/otg.h>
-> > +
-> > +static const char *usbphy_modes[] = {
-> > +	[USBPHY_INTERFACE_MODE_UNKNOWN]	= "",
-> > +	[USBPHY_INTERFACE_MODE_UTMI]	= "utmi",
-> > +	[USBPHY_INTERFACE_MODE_UTMIW]	= "utmi_wide",
-> > +	[USBPHY_INTERFACE_MODE_ULPI]	= "ulpi",
-> > +	[USBPHY_INTERFACE_MODE_SERIAL]	= "serial",
-> > +	[USBPHY_INTERFACE_MODE_HSIC]	= "hsic",
-> > +};
-> > +
-> > +/**
-> > + * of_usb_get_phy_mode - Get phy mode for given device_node
-> > + * @np:	Pointer to the given device_node
-> > + *
-> > + * The function gets phy interface string from property 'phy_type',
-> > + * and returns the correspondig enum usb_phy_interface
-> > + */
-> > +enum usb_phy_interface of_usb_get_phy_mode(struct device_node *np)
-> > +{
-> > +	const char *phy_type;
-> > +	int err, i;
-> > +
-> > +	err = of_property_read_string(np, "phy_type", &phy_type);
-> > +	if (err < 0)
-> > +		return USBPHY_INTERFACE_MODE_UNKNOWN;
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(usbphy_modes); i++)
-> > +		if (!strcmp(phy_type, usbphy_modes[i]))
-> > +			return i;
-> > +
-> > +	return USBPHY_INTERFACE_MODE_UNKNOWN;
-> > +}
-> > +EXPORT_SYMBOL_GPL(of_usb_get_phy_mode);
-> > diff --git a/drivers/usb/usb-common.c b/drivers/usb/usb-common.c
-> > index 0db0a91..027582d 100644
-> > --- a/drivers/usb/usb-common.c
-> > +++ b/drivers/usb/usb-common.c
-> > @@ -13,7 +13,9 @@
-> >  
-> >  #include <linux/kernel.h>
-> >  #include <linux/module.h>
-> > +#include <linux/of.h>
-> >  #include <linux/usb/ch9.h>
-> > +#include <linux/usb/of.h>
-> >  #include <linux/usb/otg.h>
-> >  
-> >  const char *usb_otg_state_string(enum usb_otg_state state)
-> > @@ -79,4 +81,37 @@ const char *usb_state_string(enum usb_device_state state)
-> >  }
-> >  EXPORT_SYMBOL_GPL(usb_state_string);
-> >  
-> > +#ifdef CONFIG_OF
-> > +static const char *usb_dr_modes[] = {
-> > +	[USB_DR_MODE_UNKNOWN]		= "",
-> > +	[USB_DR_MODE_HOST]		= "host",
-> > +	[USB_DR_MODE_PERIPHERAL]	= "peripheral",
-> > +	[USB_DR_MODE_OTG]		= "otg",
-> > +};
-> > +
-> > +/**
-> > + * of_usb_get_dr_mode - Get dual role mode for given device_node
-> > + * @np:	Pointer to the given device_node
-> > + *
-> > + * The function gets phy interface string from property 'dr_mode',
-> > + * and returns the correspondig enum usb_dr_mode
-> > + */
-> > +enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np)
-> > +{
-> > +	const char *dr_mode;
-> > +	int err, i;
-> > +
-> > +	err = of_property_read_string(np, "dr_mode", &dr_mode);
-> > +	if (err < 0)
-> > +		return USB_DR_MODE_UNKNOWN;
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(usb_dr_modes); i++)
-> > +		if (!strcmp(dr_mode, usb_dr_modes[i]))
-> > +			return i;
-> > +
-> > +	return USB_DR_MODE_UNKNOWN;
-> > +}
-> > +EXPORT_SYMBOL_GPL(of_usb_get_dr_mode);
-> > +#endif
-> > +
-> >  MODULE_LICENSE("GPL");
-> > diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
-> > new file mode 100644
-> > index 0000000..e460a24
-> > --- /dev/null
-> > +++ b/include/linux/usb/of.h
-> > @@ -0,0 +1,28 @@
-> > +/*
-> > + * OF helpers for usb devices.
-> > + *
-> > + * This file is released under the GPLv2
-> > + */
-> > +
-> > +#ifndef __LINUX_USB_OF_H
-> > +#define __LINUX_USB_OF_H
-> > +
-> > +#include <linux/usb/otg.h>
-> > +#include <linux/usb/phy.h>
-> > +
-> > +#ifdef CONFIG_OF
-> > +enum usb_phy_interface of_usb_get_phy_mode(struct device_node *np);
-> > +enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np);
-> > +#else
-> > +static inline enum usb_phy_interface of_usb_get_phy_mode(struct device_node *np)
-> > +{
-> > +	return USBPHY_INTERFACE_MODE_UNKNOWN;
-> > +}
-> > +
-> > +static inline enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np)
-> > +{
-> > +	return USB_DR_MODE_UNKNOWN;
-> > +}
-> > +#endif
-> > +
-> > +#endif /* __LINUX_USB_OF_H */
-> > diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
-> > index 291e01b..154332b 100644
-> > --- a/include/linux/usb/otg.h
-> > +++ b/include/linux/usb/otg.h
-> > @@ -92,4 +92,11 @@ otg_start_srp(struct usb_otg *otg)
-> >  /* for OTG controller drivers (and maybe other stuff) */
-> >  extern int usb_bus_start_enum(struct usb_bus *bus, unsigned port_num);
-> >  
-> > +enum usb_dr_mode {
-> > +	USB_DR_MODE_UNKNOWN,
-> > +	USB_DR_MODE_HOST,
-> > +	USB_DR_MODE_PERIPHERAL,
-> > +	USB_DR_MODE_OTG,
-> > +};
-> > +
+> > IMHO, it could be nice to wait the end-of-life for all this products
+> > before removing their support.
 > 
-> I would suggest turning this into a bitmask, so that further tests look
-> like
+> I'd prefer to convert them to DT, then keep them as long as folks are
+> interested in them.  If no one cares about a board, and no one wants to
+> convert it to DT or test the conversion, why keep it around?
 > 
->   if (dr_mode & USB_DR_MODE_HOST) {...}
->
-> instead of how they currently look like in the other patch.
+> Let me clarify, by 'deprecate them' I meant *begin* the process of
+> deprecating them.  eg marking them as deprecated for around three
+> releases or so.
 
-You mean 32 modes will be enough? :)
+And, now that I've had some coffee, I should also mention that any
+boards that are removed can always be brought back by reverting the
+commit.  Sometimes people don't complain until it outright disappears
+;-)
 
-These helpers are derived from drivers/of/of_net.c. Its enums are
-commonly used all over the kernel. We should align to already used
-coding patterns. I also prefer to switch over an enum than compare bits.
+Heads up:  complain = "volunteer to convert to DT"
 
-Thanks,
-Michael
+thx,
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jason.
