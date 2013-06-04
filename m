@@ -1,68 +1,57 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH V4 3/4] ARM: dts: add Exynos audio subsystem clock
- controller node
-Date: Tue, 4 Jun 2013 08:15:00 -0700
-Message-ID: <CAD=FV=Wpm0bch13c6KmZmuH0OkRr-ts_DcbTa315KZ9tnxujkA@mail.gmail.com>
-References: <1370236744-16802-1-git-send-email-padma.v@samsung.com>
-	<1370236744-16802-4-git-send-email-padma.v@samsung.com>
-	<CAD=FV=WXEDA+R3BSn7TgSB5BpS2yuWGGmFDpxcQoYmQHGTAQMw@mail.gmail.com>
-	<CAAgF-Bds5yy3J4fMQXhR4LEw5-6gtd2sHZOA+1dR-poASxrj4A@mail.gmail.com>
+From: Dinh Nguyen <dinguyen@altera.com>
+Subject: Re: [PATCH v2 0/4] dw_apb_timer: osc as sched_clock, clocks and
+ clocksource_of support
+Date: Tue, 4 Jun 2013 10:28:50 -0500
+Message-ID: <1370359730.16167.4.camel@linux-builds1>
+References: <201306041136.09566.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAAgF-Bds5yy3J4fMQXhR4LEw5-6gtd2sHZOA+1dR-poASxrj4A@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padma Venkat <padma.kvr@gmail.com>
-Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, alsa-devel@alsa-project.org, sbkim73@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, "broonie@kernel.org" <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201306041136.09566.heiko@sntech.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc: John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jamie Iles <jamie@jamieiles.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Baruch Siach <baruch@tkos.co.il>
 List-Id: devicetree@vger.kernel.org
 
-Padma,
+Hi Heiko,
 
-On Mon, Jun 3, 2013 at 9:25 PM, Padma Venkat <padma.kvr@gmail.com> wrote:
-> Hi Doug,
->
-> On Tue, Jun 4, 2013 at 1:43 AM, Doug Anderson <dianders@chromium.org> wrote:
->> Padmavathi,
->>
->> On Sun, Jun 2, 2013 at 10:19 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
->>> Audio subsystem introduced in s5pv210 and exynos platforms
->>> which has a internal clock controller. This patch adds a node
->>> for the same on exynos5250.
->>>
->>> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
->>> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->>> ---
->>>  arch/arm/boot/dts/exynos5250.dtsi |    6 ++++++
->>>  1 files changed, 6 insertions(+), 0 deletions(-)
->>>
->>> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
->>> index bccda67..388983e 100644
->>> --- a/arch/arm/boot/dts/exynos5250.dtsi
->>> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->>> @@ -72,6 +72,12 @@
->>>                 #clock-cells = <1>;
->>>         };
->>>
->>> +       clock_audss: audss-clock-controller@3810000 {
->
-> I removed this leading 0 as Tomasz Figa suggested.
+On Tue, 2013-06-04 at 11:36 +0200, Heiko St=C3=BCbner wrote:
+> This is split off of my Rockchip support series from yesterday. It's =
+now
+> a patch more than before, as the third patch enables the timer to be =
+used
+> thru clocksource_of_init and moves picoxcell and socfpga to it.
+>=20
+> changes since v1:
+> - hopefully improve the patch description of patch 1
+>   after a suggestion by Linus Walleij
+> - move the selection of DW_APB_TIMER and CLKSRC_OF into DW_APB_TIMER_=
+OF
+>   after a suggestion by Baruch Siach
+>=20
+> Heiko Stuebner (4):
+>   clocksource: dw_apb_timer_of: enable the use the clocksource as sch=
+ed clock
+>   clocksource: dw_apb_timer_of: add clock-handling
+>   clocksource: dw_apb_timer_of: select DW_APB_TIMER
+>   clocksource: dw_apb_timer_of: use clocksource_of_init
+>=20
+>  Documentation/devicetree/bindings/rtc/dw-apb.txt |   19 +++++
+>  arch/arm/mach-picoxcell/Kconfig                  |    1 -
+>  arch/arm/mach-picoxcell/common.c                 |    2 -
+>  arch/arm/mach-socfpga/Kconfig                    |    1 -
+>  arch/arm/mach-socfpga/socfpga.c                  |    2 -
+>  drivers/clocksource/Kconfig                      |    2 +
+>  drivers/clocksource/dw_apb_timer_of.c            |   95 ++++++++++++=
+++-------
+>  include/linux/dw_apb_timer.h                     |    1 -
+>  8 files changed, 84 insertions(+), 39 deletions(-)
+>=20
 
-Let's just leave this as-is if Tomasz wants no leading 0.  I don't
-much care either way but it's really nice if we're consistent within
-the file.
+=46or all the mach-socfpga parts:
 
+Acked-by: Dinh Nguyen <dinguyen@altera.com>
 
->> Nit: other places in the same file have the leading 0, like
->>   i2s0: i2s@03830000 {
->
-> This was the patch which got merged earlier. So I didn't modify this.
-> Is it okey if I remove  leading 0 for both of the nodes now?
-
-No, don't touch the i2s0 one in this patch.  I guess we'll have to
-merge a "cleanup" patch sometime later to try to normalize all this
-stuff, since nobody seems to be keeping a close eye on keeping it
-consistent.  I also see a whole bunch that have the 0x in the name
-which is yet another inconsistency.
-
-
-Reviewed-by: Doug Anderson <dianders@chromium.org>
+Thanks,
+Dinh
