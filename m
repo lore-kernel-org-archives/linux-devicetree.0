@@ -1,159 +1,45 @@
-From: J Keerthy <j-keerthy@ti.com>
-Subject: [PATCH v2] mfd: DT bindings for the palmas family MFD
-Date: Tue, 4 Jun 2013 14:11:49 +0530
-Message-ID: <1370335309-6319-1-git-send-email-j-keerthy@ti.com>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 0/4] updates for tqma53.dtsi
+Date: Tue,  4 Jun 2013 11:12:26 +0200
+Message-ID: <1370337150-18487-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, rob@landley.net, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, gg@slimlogic.co.uk, t-kristo@ti.com, lee.jones@linaro.org, J Keerthy <j-keerthy@ti.com>, Ian Lartey <ian@slimlogic.co.uk>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Graeme Gregory <gg@slimlogic.co.uk>
+Hi!
 
-Add the various binding files for the palmas family of chips. There is a
-top level MFD binding then a seperate binding for regulators IP blocks on chips.
+This series consists of misc updates for the tqma53.dtsi.
+It is rebased to Shawns for-next branch.
 
-Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
-Signed-off-by: J Keerthy <j-keerthy@ti.com>
-Signed-off-by: Ian Lartey <ian@slimlogic.co.uk>
----
-Changes from v1:
-* Corrected ti,ldo6_vibrator property ---> ti,ldo6-vibrator
-* Added the irq.h header file inclusion for defining type of interrupt
+Regards,
+Steffen
 
- Documentation/devicetree/bindings/mfd/palmas.txt   |   49 +++++++++++++++
- .../devicetree/bindings/regulator/palmas-pmic.txt  |   65 ++++++++++++++++++++
- 2 files changed, 114 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/palmas.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/palmas-pmic.txt
+Philipp Zabel (2):
+  ARM i.MX53: tqma53: fix pinctrl settings
+  ARM i.MX53: tqma53: rev 300 specific pin configuration
 
-diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documentation/devicetree/bindings/mfd/palmas.txt
-new file mode 100644
-index 0000000..c6c5e78
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/palmas.txt
-@@ -0,0 +1,49 @@
-+* palmas device tree bindings
-+
-+The TI palmas family current members :-
-+twl6035 (palmas)
-+twl6037 (palmas)
-+tps65913 (palmas)
-+tps65914 (palmas)
-+
-+Required properties:
-+- compatible : Should be from the list
-+  ti,twl6035
-+  ti,twl6036
-+  ti,twl6037
-+  ti,tps65913
-+  ti,tps65914
-+  ti,tps80036
-+and also the generic series names
-+  ti,palmas
-+- interrupt-controller : palmas has its own internal IRQs
-+- #interrupt-cells : should be set to 2 for IRQ number and flags
-+  The first cell is the IRQ number.
-+  The second cell is the flags, encoded as the trigger masks from
-+  Documentation/devicetree/bindings/interrupts.txt
-+- interrupt-parent : The parent interrupt controller.
-+
-+Optional properties:
-+  ti,mux_padX : set the pad register X (1-2) to the correct muxing for the
-+  		hardware, if not set will use muxing in OTP.
-+
-+Example:
-+
-+palmas {
-+	compatible = "ti,twl6035", "ti,palmas";
-+	reg = <0x48>
-+	interrupt-parent = <&intc>;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+
-+	ti,mux-pad1 = <0>;
-+	ti,mux-pad2 = <0>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	pmic {
-+		compatible = "ti,twl6035-pmic", "ti,palmas-pmic";
-+		....
-+	};
-+}
-diff --git a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
-new file mode 100644
-index 0000000..a0ccdf2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
-@@ -0,0 +1,65 @@
-+* palmas regulator IP block devicetree bindings
-+
-+Required properties:
-+- compatible : Should be from the list
-+  ti,twl6035-pmic
-+  ti,twl6036-pmic
-+  ti,twl6037-pmic
-+  ti,tps65913-pmic
-+  ti,tps65914-pmic
-+and also the generic series names
-+  ti,palmas-pmic
-+
-+Optional properties:
-+- ti,ldo6-vibrator : ldo6 is in vibrator mode
-+
-+Optional nodes:
-+- regulators : should contain the constrains and init information for the
-+	       regulators. It should contain a subnode per regulator from the
-+	       list.
-+	       For ti,palmas-pmic - smps12, smps123, smps3 depending on OTP,
-+	       smps45, smps457, smps7 depending on varient, smps6, smps[8-10],
-+	       ldo[1-9], ldoln, ldousb
-+
-+	       optional chip specific regulator fields :-
-+	       ti,warm-reset - maintain voltage during warm reset(boolean)
-+	       ti,roof-floor - control voltage selection by pin(boolean)
-+	       ti,sleep-mode - mode to adopt in pmic sleep 0 - off, 1 - auto,
-+	       2 - eco, 3 - forced pwm
-+	       ti,tstep - slope control 0 - Jump, 1 10mV/us, 2 5mV/us, 3 2.5mV/us
-+	       ti,smps-range - OTP has the wrong range set for the hardware so override
-+	       0 - low range, 1 - high range
-+
-+Example:
-+
-+#include <include/dt-bindings/interrupt-controller/irq.h>
-+
-+pmic {
-+	compatible = "ti,twl6035-pmic", "ti,palmas-pmic";
-+	interrupt-parent = <&palmas>;
-+	interrupts = <14 IRQ_TYPE_NONE>;
-+	interrupt-name = "short-irq";
-+
-+	ti,ldo6-vibrator;
-+
-+	regulators {
-+		smps12_reg : smps12 {
-+			regulator-name = "smps12";
-+			regulator-min-microvolt = < 600000>;
-+			regulator-max-microvolt = <1500000>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			ti,warm-reset;
-+			ti,roof-floor;
-+			ti,mode-sleep = <0>;
-+			ti,tstep = <0>;
-+			ti,smps-range = <1>;
-+		};
-+
-+		ldo1_reg: ldo1 {
-+			regulator-name = "ldo1";
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2800000>;
-+		};
-+	};
-+};
+Sascha Hauer (1):
+  ARM i.MX53: tqma53: Fix interrupt polarity for the mc34708
+
+Steffen Trumtrar (1):
+  ARM i.MX53: tqma53: add WP/CD pinctrl and vmmc to esdhc2
+
+ arch/arm/boot/dts/imx53-tqma53.dtsi | 45 +++++++++++++++++++++++--------------
+ 1 file changed, 28 insertions(+), 17 deletions(-)
+
 -- 
-1.7.5.4
+1.8.2.rc2
