@@ -1,100 +1,68 @@
-From: Mark Langsdorf <mark.langsdorf@calxeda.com>
-Subject: Re: [PATCH 2/2 v2] sata highbank: add bit-banged SGPIO driver support
-Date: Tue, 04 Jun 2013 10:09:41 -0500
-Message-ID: <51AE0335.902@calxeda.com>
-References: <1369945051-2582-2-git-send-email-mark.langsdorf@calxeda.com> <1370266538-14211-1-git-send-email-mark.langsdorf@calxeda.com> <20130603203727.GB29989@mtj.dyndns.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH V4 3/4] ARM: dts: add Exynos audio subsystem clock
+ controller node
+Date: Tue, 4 Jun 2013 08:15:00 -0700
+Message-ID: <CAD=FV=Wpm0bch13c6KmZmuH0OkRr-ts_DcbTa315KZ9tnxujkA@mail.gmail.com>
+References: <1370236744-16802-1-git-send-email-padma.v@samsung.com>
+	<1370236744-16802-4-git-send-email-padma.v@samsung.com>
+	<CAD=FV=WXEDA+R3BSn7TgSB5BpS2yuWGGmFDpxcQoYmQHGTAQMw@mail.gmail.com>
+	<CAAgF-Bds5yy3J4fMQXhR4LEw5-6gtd2sHZOA+1dR-poASxrj4A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20130603203727.GB29989@mtj.dyndns.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAAgF-Bds5yy3J4fMQXhR4LEw5-6gtd2sHZOA+1dR-poASxrj4A@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padma Venkat <padma.kvr@gmail.com>
+Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, alsa-devel@alsa-project.org, sbkim73@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, "broonie@kernel.org" <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/2013 03:37 PM, Tejun Heo wrote:
-> Hello, Mark.
-> 
-> In general, please try to reply to reviews addressing each point.  It
-> gives much better sense of what's going on to the reviewer and also
-> helps the reviewee to avoid misunderstandings or missing points.
-> 
->> +static DEFINE_SPINLOCK(sgpio_lock);
->> +#define SCLOCK				0
->> +#define SLOAD				1
->> +#define SDATA				2
->> +#define SGPIO_PINS			3
->> +#define SGPIO_PORTS			8
->> +
->> +/* can be cast as an ahci_host_priv for compatibility with most functions */
-> 
-> This sounds awfully scary.  What's going on here?  Are you actually
-> overriding ahci_host_priv?  If so, please don't ever do things like
-> that.  Do it properly.  Add host_priv->platform_priv or whatever and
-> chain the pointer there.  If you're worried about the extra deref,
-> update ahci core such that it allows specifying extra size and you can
-> embed ahci_host_priv in your own priv.  ie.
-> 
-> 	struct ecx_host_priv {
-> 		struct ahci_host_priv	ahci_priv;	/* must be the first field */
-> 		/* your own stuff */
-> 	};
-> 
-> And tell ahci core sizeof(ecx_host_priv) some way, but really, just
-> having a plain pointer should be enough, I think.
+Padma,
 
-I think I want to do the opposite. For 90% of the AHCI EM functions,
-I want ecx_host_priv to be an ahci_host_priv so that I can use those
-functions without having to keep a local copy of them.
+On Mon, Jun 3, 2013 at 9:25 PM, Padma Venkat <padma.kvr@gmail.com> wrote:
+> Hi Doug,
+>
+> On Tue, Jun 4, 2013 at 1:43 AM, Doug Anderson <dianders@chromium.org> wrote:
+>> Padmavathi,
+>>
+>> On Sun, Jun 2, 2013 at 10:19 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
+>>> Audio subsystem introduced in s5pv210 and exynos platforms
+>>> which has a internal clock controller. This patch adds a node
+>>> for the same on exynos5250.
+>>>
+>>> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+>>> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>>> ---
+>>>  arch/arm/boot/dts/exynos5250.dtsi |    6 ++++++
+>>>  1 files changed, 6 insertions(+), 0 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+>>> index bccda67..388983e 100644
+>>> --- a/arch/arm/boot/dts/exynos5250.dtsi
+>>> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+>>> @@ -72,6 +72,12 @@
+>>>                 #clock-cells = <1>;
+>>>         };
+>>>
+>>> +       clock_audss: audss-clock-controller@3810000 {
+>
+> I removed this leading 0 as Tomasz Figa suggested.
 
-Would something like this:
-struct ahci_host_priv {
-	/* standard AHCI existing stuff */
-	void *private_data;
-};
-
-I shied away from that because a private data structure having a private
-data structure doesn't seem right.
-
->> +static inline int sgpio_bit_shift(struct ecx_host_priv *hpriv, u32 port,
->> +				u32 shift)
->> +{
->> +	return 1 << (3 * hpriv->port_to_sgpio[port] + shift);
->> +}
->> +
->> +static void ecx_parse_sgpio(struct ecx_host_priv *hpriv, u32 port, u32 state)
-> 
-> Would be kinda nice to have comment explaining what the function does
-> as @state == 0 turns off everything while anything else would just
-> turn things on.
-
-Okay.
-
->> +static ssize_t ecx_transmit_led_message(struct ata_port *ap, u32 state,
->> +					ssize_t size)
->> +{
-> ...
->> +	if (!hpriv->em_msg_type & EM_MSG_TYPE_LED)
->> +		return size;
-> 
-> Is this really correct?  You first negate and convert it to bool and
-> then bit-wise and it with a mask?  How is supposed to work?
-
-Am I confused about the order of operations? It's meant to be "continue
-if hpriv->em_msg_type doesn't have EM_MSG_TYPE_LED set".
-
->> -	ahci_save_initial_config(dev, hpriv, 0, 0);
->> +	ahci_save_initial_config(dev, (struct ahci_host_priv *) hpriv, 0, 0);
-> 
-> Ugh....... how is this supposed to work?  What if ahci_host_priv grows
-> larger than ecx one in the future? :(
-
-For functions like ahci_save_initial_config, I just want to use the
-already defined ahci_ functions with my extra data along for the ride.
-What's the best way to do that?
-
---Mark Langsdorf
-Calxeda, Inc.
+Let's just leave this as-is if Tomasz wants no leading 0.  I don't
+much care either way but it's really nice if we're consistent within
+the file.
 
 
+>> Nit: other places in the same file have the leading 0, like
+>>   i2s0: i2s@03830000 {
+>
+> This was the patch which got merged earlier. So I didn't modify this.
+> Is it okey if I remove  leading 0 for both of the nodes now?
+
+No, don't touch the i2s0 one in this patch.  I guess we'll have to
+merge a "cleanup" patch sometime later to try to normalize all this
+stuff, since nobody seems to be keeping a close eye on keeping it
+consistent.  I also see a whole bunch that have the 0x in the name
+which is yet another inconsistency.
+
+
+Reviewed-by: Doug Anderson <dianders@chromium.org>
