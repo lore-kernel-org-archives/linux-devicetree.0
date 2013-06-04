@@ -1,155 +1,103 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: [PATCH RFC 3/3] ARM: omap4: register DT clocks & remove old data
-Date: Mon,  3 Jun 2013 23:39:18 -0700
-Message-ID: <1370327958-19776-4-git-send-email-mturquette@linaro.org>
-References: <1370327958-19776-1-git-send-email-mturquette@linaro.org>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1370327958-19776-1-git-send-email-mturquette@linaro.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Tero Kristo <t-kristo@ti.com>, Rajendra <rnayak@ti.com>, Nishanth Menon <nm@ti.com>, Benoit Cousson <b-cousson@ti.com>, Mike Turquette <mturquette@linaro.org>, Joel A Fernandes <joelagnel@ti.com>, Paul Walmsley <paul@pwsan.com>, Tony Lindgren <tony@atomide.com>
+From: arno@natisbad.org (Arnaud Ebalard)
+Subject: Re: [PATCHv2 1/3] Add support for GMT G762/G763 PWM fan controller
+Date: Tue, 04 Jun 2013 08:51:45 +0200
+Message-ID: <87zjv6z7um.fsf@natisbad.org>
+References: <cover.1369687670.git.arno@natisbad.org>
+	<b44f55c4194f6cd8c94f8a3d63ad5c8bd1d1cfe0.1369687670.git.arno@natisbad.org>
+	<20130531221616.GG7626@kw.sim.vm.gnt> <87fvx1pwrl.fsf@natisbad.org>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Simon Guinot <simon.guinot@sequanux.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that some of the OMAP4 PRCM clock data has been converted to a
-DeviceTree representation it is no longer needed as static clock data.
-Register the DT clocks first, followed by the remaining static clocks.
+Hi Simon,
 
-Cc: Benoit Cousson <b-cousson@ti.com>
-Cc: Rajendra Nayak <rnayak@ti.com>
-Cc: Joel A Fernandes <joelagnel@ti.com>
-Cc: Nishanth Menon <nm@ti.com>
-Cc: Paul Walmsley <paul@pwsan.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Mike Turquette <mturquette@linaro.org>
----
- arch/arm/mach-omap2/cclock44xx_data.c | 54 ++++-------------------------------
- 1 file changed, 6 insertions(+), 48 deletions(-)
+arno@natisbad.org (Arnaud Ebalard) writes:
 
-diff --git a/arch/arm/mach-omap2/cclock44xx_data.c b/arch/arm/mach-omap2/cclock44xx_data.c
-index 88e37a4..97fd65c 100644
---- a/arch/arm/mach-omap2/cclock44xx_data.c
-+++ b/arch/arm/mach-omap2/cclock44xx_data.c
-@@ -27,6 +27,7 @@
- #include <linux/clk-private.h>
- #include <linux/clkdev.h>
- #include <linux/io.h>
-+#include <linux/clk/omap.h>
- 
- #include "soc.h"
- #include "iomap.h"
-@@ -61,18 +62,12 @@
- 
- /* Root clocks */
- 
--DEFINE_CLK_FIXED_RATE(extalt_clkin_ck, CLK_IS_ROOT, 59000000, 0x0);
--
- DEFINE_CLK_FIXED_RATE(pad_clks_src_ck, CLK_IS_ROOT, 12000000, 0x0);
- 
- DEFINE_CLK_GATE(pad_clks_ck, "pad_clks_src_ck", &pad_clks_src_ck, 0x0,
- 		OMAP4430_CM_CLKSEL_ABE, OMAP4430_PAD_CLKS_GATE_SHIFT,
- 		0x0, NULL);
- 
--DEFINE_CLK_FIXED_RATE(pad_slimbus_core_clks_ck, CLK_IS_ROOT, 12000000, 0x0);
--
--DEFINE_CLK_FIXED_RATE(secure_32k_clk_src_ck, CLK_IS_ROOT, 32768, 0x0);
--
- DEFINE_CLK_FIXED_RATE(slimbus_src_clk, CLK_IS_ROOT, 12000000, 0x0);
- 
- DEFINE_CLK_GATE(slimbus_clk, "slimbus_src_clk", &slimbus_src_clk, 0x0,
-@@ -81,20 +76,6 @@ DEFINE_CLK_GATE(slimbus_clk, "slimbus_src_clk", &slimbus_src_clk, 0x0,
- 
- DEFINE_CLK_FIXED_RATE(sys_32k_ck, CLK_IS_ROOT, 32768, 0x0);
- 
--DEFINE_CLK_FIXED_RATE(virt_12000000_ck, CLK_IS_ROOT, 12000000, 0x0);
--
--DEFINE_CLK_FIXED_RATE(virt_13000000_ck, CLK_IS_ROOT, 13000000, 0x0);
--
--DEFINE_CLK_FIXED_RATE(virt_16800000_ck, CLK_IS_ROOT, 16800000, 0x0);
--
--DEFINE_CLK_FIXED_RATE(virt_19200000_ck, CLK_IS_ROOT, 19200000, 0x0);
--
--DEFINE_CLK_FIXED_RATE(virt_26000000_ck, CLK_IS_ROOT, 26000000, 0x0);
--
--DEFINE_CLK_FIXED_RATE(virt_27000000_ck, CLK_IS_ROOT, 27000000, 0x0);
--
--DEFINE_CLK_FIXED_RATE(virt_38400000_ck, CLK_IS_ROOT, 38400000, 0x0);
--
- static const char *sys_clkin_ck_parents[] = {
- 	"virt_12000000_ck", "virt_13000000_ck", "virt_16800000_ck",
- 	"virt_19200000_ck", "virt_26000000_ck", "virt_27000000_ck",
-@@ -105,16 +86,6 @@ DEFINE_CLK_MUX(sys_clkin_ck, sys_clkin_ck_parents, NULL, 0x0,
- 	       OMAP4430_CM_SYS_CLKSEL, OMAP4430_SYS_CLKSEL_SHIFT,
- 	       OMAP4430_SYS_CLKSEL_WIDTH, CLK_MUX_INDEX_ONE, NULL);
- 
--DEFINE_CLK_FIXED_RATE(tie_low_clock_ck, CLK_IS_ROOT, 0, 0x0);
--
--DEFINE_CLK_FIXED_RATE(utmi_phy_clkout_ck, CLK_IS_ROOT, 60000000, 0x0);
--
--DEFINE_CLK_FIXED_RATE(xclk60mhsp1_ck, CLK_IS_ROOT, 60000000, 0x0);
--
--DEFINE_CLK_FIXED_RATE(xclk60mhsp2_ck, CLK_IS_ROOT, 60000000, 0x0);
--
--DEFINE_CLK_FIXED_RATE(xclk60motg_ck, CLK_IS_ROOT, 60000000, 0x0);
--
- /* Module clocks and DPLL outputs */
- 
- static const char *abe_dpll_bypass_clk_mux_ck_parents[] = {
-@@ -826,7 +797,7 @@ DEFINE_CLK_GATE(dss_sys_clk, "syc_clk_div_ck", &syc_clk_div_ck, 0x0,
- 		OMAP4430_CM_DSS_DSS_CLKCTRL,
- 		OMAP4430_OPTFCLKEN_SYS_CLK_SHIFT, 0x0, NULL);
- 
--DEFINE_CLK_GATE(dss_tv_clk, "extalt_clkin_ck", &extalt_clkin_ck, 0x0,
-+DEFINE_CLK_GATE(dss_tv_clk, "extalt_clkin_ck", NULL, 0x0,
- 		OMAP4430_CM_DSS_DSS_CLKCTRL,
- 		OMAP4430_OPTFCLKEN_TV_CLK_SHIFT, 0x0, NULL);
- 
-@@ -1051,7 +1022,7 @@ DEFINE_CLK_GATE(slimbus2_fclk_0, "func_24mc_fclk", &func_24mc_fclk, 0x0,
- 		OMAP4430_OPTFCLKEN_PER24MC_GFCLK_SHIFT, 0x0, NULL);
- 
- DEFINE_CLK_GATE(slimbus2_slimbus_clk, "pad_slimbus_core_clks_ck",
--		&pad_slimbus_core_clks_ck, 0x0,
-+		NULL, 0x0,
- 		OMAP4430_CM_L4PER_SLIMBUS2_CLKCTRL,
- 		OMAP4430_OPTFCLKEN_SLIMBUS_CLK_SHIFT, 0x0, NULL);
- 
-@@ -1442,27 +1413,11 @@ static struct omap_clk omap443x_clks[] = {
-  * clocks common to omap44xx
-  */
- static struct omap_clk omap44xx_clks[] = {
--	CLK(NULL,	"extalt_clkin_ck",		&extalt_clkin_ck),
- 	CLK(NULL,	"pad_clks_src_ck",		&pad_clks_src_ck),
- 	CLK(NULL,	"pad_clks_ck",			&pad_clks_ck),
--	CLK(NULL,	"pad_slimbus_core_clks_ck",	&pad_slimbus_core_clks_ck),
--	CLK(NULL,	"secure_32k_clk_src_ck",	&secure_32k_clk_src_ck),
- 	CLK(NULL,	"slimbus_src_clk",		&slimbus_src_clk),
- 	CLK(NULL,	"slimbus_clk",			&slimbus_clk),
- 	CLK(NULL,	"sys_32k_ck",			&sys_32k_ck),
--	CLK(NULL,	"virt_12000000_ck",		&virt_12000000_ck),
--	CLK(NULL,	"virt_13000000_ck",		&virt_13000000_ck),
--	CLK(NULL,	"virt_16800000_ck",		&virt_16800000_ck),
--	CLK(NULL,	"virt_19200000_ck",		&virt_19200000_ck),
--	CLK(NULL,	"virt_26000000_ck",		&virt_26000000_ck),
--	CLK(NULL,	"virt_27000000_ck",		&virt_27000000_ck),
--	CLK(NULL,	"virt_38400000_ck",		&virt_38400000_ck),
--	CLK(NULL,	"sys_clkin_ck",			&sys_clkin_ck),
--	CLK(NULL,	"tie_low_clock_ck",		&tie_low_clock_ck),
--	CLK(NULL,	"utmi_phy_clkout_ck",		&utmi_phy_clkout_ck),
--	CLK(NULL,	"xclk60mhsp1_ck",		&xclk60mhsp1_ck),
--	CLK(NULL,	"xclk60mhsp2_ck",		&xclk60mhsp2_ck),
--	CLK(NULL,	"xclk60motg_ck",		&xclk60motg_ck),
- 	CLK(NULL,	"abe_dpll_bypass_clk_mux_ck",	&abe_dpll_bypass_clk_mux_ck),
- 	CLK(NULL,	"abe_dpll_refclk_mux_ck",	&abe_dpll_refclk_mux_ck),
- 	CLK(NULL,	"dpll_abe_ck",			&dpll_abe_ck),
-@@ -1690,6 +1645,9 @@ int __init omap4xxx_clk_init(void)
- {
- 	int rc;
- 
-+	/* FIXME register clocks from DT first */
-+	dt_omap_clk_init();
-+
- 	if (cpu_is_omap443x()) {
- 		cpu_mask = RATE_IN_4430;
- 		omap_clocks_register(omap443x_clks, ARRAY_SIZE(omap443x_clks));
--- 
-1.8.1.2
+> Regarding your problem, I first started by booting current version of my
+> driver on the Duo v2 w/o touching chip registers (only clock reference
+> value). This way, I inherit the values installed by (NETGEAR's) u-boot:
+>
+> $ for k in fan* pwm* ; do echo -n "$k:" ; echo `cat $k `; done
+> fan1_alarm:0
+> fan1_div:2
+> fan1_fault:0
+> fan1_input:1807
+> fan1_target:1807
+> pwm1:221
+> pwm1_enable:2        /* closed-loop, i.e. config is done via set_cnt */
+> pwm1_mode:1          /* PWM mode */ 
+>
+> If G762 datasheet is correct, NETGEAR's u-boot alters fan divisor ('01'
+> i.e. 2 instead of '00' i.e. 1). It also changes the default mode from
+> linear to pwm and sets set_cnt to 34 (255-221). 
+>
+> Then, I grabbed the GPL sources (5.3.7) of NETGEAR's u-boot and found
+> the following in a boot function:
+>
+>  /* Turn G76x(FAN controller, i2c address 0x3e) on.
+>   * The FAN_SET_CNT register's offset is 0x0.
+>   * Set [1300(rpm) == 65% == 5a(FAN_SET_CNT)] as default.
+>   */
+>  unsigned char byte=0x5a;
+>  if(i2c_write(0, 0x3e, 0x0, 1, &byte, 1) != 0) 
+>    puts ("Error writing the i2c chip : G76x(Fan controller).\n");
+>
+> AFAICT, this is the only location in the whole source tarball where 0x3e
+> reg is modified in an i2c function. 
+>
+>
+> Then, I grabbed the u-boot source code from NETGEAR for ReadyNAS 102
+> (Armada-370 based NAS, also using a G762) and it has the following:
+>
+>  /* Turn G76x(FAN controller, i2c address 0x3e) on.
+>   * The FAN_SET_CNT register's offset is 0x0.
+>   * Set [1300(rpm) == 65% == 5a(FAN_SET_CNT)] as default.
+>   */
+>  MV_U8 byte=0x5a;
+>  if(i2c_write(0x3e, 0x0, 1, &byte, 1) != 0)
+>  	puts ("Error writing the i2c chip : G76x(Fan controller).\n");
+>  /* Tune the FAN_STARTV */
+>  if (i2c_read(0x3e, 0x5, 1, &byte, 1) != 0)
+>  	puts ("Error reading the i2c chip : G76x(Fan controller).\n");
+>  byte |= 0x3;
+>  if(i2c_write(0x3e, 0x5, 1, &byte, 1) != 0)
+>  	puts ("Error writing the i2c chip : G76x(Fan controller).\n");
+>  
+> In the end, it does not seem NETGEAR's u-boot does some specific things
+> except setting a non-zero value to SET_CNT register for the fan to start
+> rotating.
+>
+> BTW, if you wonder why some attributes reported at the beginning have
+> different values than the ones in the datasheet (0x5a set in u-boot,
+> reading 0x22) although NETGEAR's u-boot code does not seem to tamper
+> those, I don't have the answer. 
 
+I was not happy with previous result and did some additional tests.
+Between each tests, I did a full power off (halt and removal of power
+cable) of the device instead of a simple reboot. With a power off, I
+get the following:
+
+fan1_alarm:0
+fan1_div:1
+fan1_fault:0
+fan1_input:1365
+fan1_target:1365
+pwm1:0
+pwm1_enable:2
+pwm1_mode:0
+
+Note that fan1_target reflects the fact that set_cnt is 165 (i.e. 255 -
+0x5a), which is exactly what NETGEAR's u-boot sets for this reg.
+
+Now, if I do a simple restart, there is some hysteresis which explains
+the weird difference in my first test.
+
+Another message follows w/ additional answers to your problem.
+
+Cheers,
+
+a+
