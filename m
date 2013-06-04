@@ -1,45 +1,103 @@
-From: "Christian Daudt" <csd@broadcom.com>
-Subject: Re: [PATCH V4 2/3] ARM: mmc: bcm281xx SDHCI driver
-Date: Tue, 4 Jun 2013 07:19:05 -0700
-Message-ID: <51ADF759.9000607@broadcom.com>
-References: <1369860607-25572-1-git-send-email-csd@broadcom.com>
- <87d2s7ceh0.fsf@octavius.laptop.org> <51A93DA0.3070909@broadcom.com>
- <201306012213.47386.arnd@arndb.de>
+From: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] clocksource: dw_apb_timer_of: use
+ clocksource_of_init
+Date: Tue, 4 Jun 2013 15:21:20 +0100
+Message-ID: <20130604142120.GD5308@maple>
+References: <201306041136.09566.heiko@sntech.de>
+ <201306041138.42639.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201306012213.47386.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-doc@vger.kernel.org, Jerry Huang <Chang-Ming.Huang@freescale.com>, Grant Likely <grant.likely@secretlab.ca>, Wei WANG <wei_wang@realsil.com.cn>, matt.porter@linaro.org, Kevin Liu <kliu5@marvell.com>, Lars-Peter Clausen <lars@metafoo.de>, Stephen Warren <swarren@nvidia.com>, csd_b@daudt.org, Viresh Kumar <viresh.kumar@linaro.org>, Chris Ball <cjb@laptop.org>, plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <rob.herring@calxeda.com>, Bill Pemberton <wfp5p@virginia.edu>, Haojian Zhuang <haojian.zhuang@gmail.com>, Russell King <linux@arm.linux.org.uk>, Anton Vorontsov <avorontsov@ru.mvista.com>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Ludovic Desroches <ludovic.desroches@atmel.com>, Rob Landley <rob@land>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201306041138.42639.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13-06-01 01:13 PM, Arnd Bergmann wrote:
-> On Saturday 01 June 2013, Christian Daudt wrote:
->> I looked into it and it can replace just about everything that our own
->> dt parsing code is doing. The only problem is with cd_gpio. If I call
->> mmc_of_parse, then it will install its own irq handler for cd gpio, and
->> our driver needs a different handler. the mmc irq handler can call a
->> card_event callback, but that is already pointing to sdhci_card_event.
->> So the only way I can use mmc_of_parse that I can see is by adding a
->> flag to it to skip cd_gpio parsing which only this driver will then set
->> to true. Any other ideas ?
-> Can't you add a callback handler into sdhci_card_event that can call
-> a platform specific function?
->
->
-I can add another layer of callbacks. I have to first check if I can 
-rework our driver to fit into this callback model. I'll update this when 
-I've tried it.
+Hi Heiko,
 
-  thanks,
-    csd
+On Tue, Jun 04, 2013 at 11:38:42AM +0200, Heiko St=FCbner wrote:
+> dw_apb_timer_init used to search the devicetree for matching timer
+> devices, making calls to it from board files necessary.
+> =
+
+> Change the dw_apb_timer_init to work with CLOCKSOURCE_OF_DECLARE.
+> With this change the function gets called once for each timer node
+> and tracks these number of calls to attach clockevent and clocksource
+> devices to the nodes.
+> =
+
+> Also remove the calls to dw_apb_timer_init from all previous users, as
+> clocksource_of_init is the default for init_time now.
+> =
+
+> Tested on the upcoming rk3066 code.
+> =
+
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> ---
+...
+> -void __init dw_apb_timer_init(void)
+> +static int num_called;
+> +static void __init dw_apb_timer_init(struct device_node *timer)
+>  {
+> -	struct device_node *event_timer, *source_timer;
+> -
+> -	event_timer =3D of_find_matching_node(NULL, osctimer_ids);
+> -	if (!event_timer)
+> -		panic("No timer for clockevent");
+> -	add_clockevent(event_timer);
+> -
+> -	source_timer =3D of_find_matching_node(event_timer, osctimer_ids);
+> -	if (!source_timer)
+> -		panic("No timer for clocksource");
+> -	add_clocksource(source_timer);
+> -
+> -	of_node_put(source_timer);
+> +	switch (num_called) {
+> +	case 0:
+> +		pr_debug("%s: found clockevent timer\n", __func__);
+> +		add_clockevent(timer);
+> +		of_node_put(timer);
+> +		break;
+> +	case 1:
+> +		pr_debug("%s: found clocksource timer\n", __func__);
+> +		add_clocksource(timer);
+> +		of_node_put(timer);
+> +		init_sched_clock();
+> +		break;
+> +	default:
+> +		break;
+> +	}
+>  =
+
+> -	init_sched_clock();
+> +	num_called++;
+>  }
+> +CLOCKSOURCE_OF_DECLARE(pc3x2_timer, "picochip,pc3x2-timer", dw_apb_timer=
+_init);
+> +CLOCKSOURCE_OF_DECLARE(apb_timer, "snps,dw-apb-timer-osc", dw_apb_timer_=
+init);
+
+I think maybe we also want CLOCKSOURCE_OF_DECLARE() instances for the =
+
+contents of sptimer_ids for completeness, otherwise looks good.
+
+Acked-by: Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>
+
+Thanks,
+
+Jamie
