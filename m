@@ -1,192 +1,340 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 1/9] drivers: phy: add generic PHY framework
-Date: Tue, 4 Jun 2013 17:56:01 +0530
-Message-ID: <51ADDCD9.8080400@ti.com>
-References: <1367229812-30574-1-git-send-email-kishon@ti.com>
- <1367229812-30574-2-git-send-email-kishon@ti.com>
- <51ADBF9B.5060403@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51ADBF9B.5060403-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, cesarb-PWySMVKUnqmsTnJN9+BGXg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+From: Padmavathi Venna <padma.v@samsung.com>
+Subject: [PATCH V5 1/5] ARM: samsung: use #include for all device trees
+Date: Tue, 04 Jun 2013 17:58:06 +0530
+Message-ID: <1370348890-6645-2-git-send-email-padma.v@samsung.com>
+References: <1370348890-6645-1-git-send-email-padma.v@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1370348890-6645-1-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, padma.v@samsung.com, padma.kvr@gmail.com
+Cc: sbkim73@samsung.com, broonie@kernel.org, kgene.kim@samsung.com, mturquette@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Replace /include/ (dtc) with #include (C pre-processor) for all
+Samsung DT files
 
-On Tuesday 04 June 2013 03:51 PM, Sylwester Nawrocki wrote:
-> On 04/29/2013 12:03 PM, Kishon Vijay Abraham I wrote:
->> The PHY framework provides a set of APIs for the PHY drivers to
->> create/destroy a PHY and APIs for the PHY users to obtain a reference to=
- the
->> PHY with or without using phandle. For dt-boot, the PHY drivers should
->> also register *PHY provider* with the framework.
->>
->> PHY drivers should create the PHY by passing id and ops like init, exit,
->> power_on and power_off. This framework is also pm runtime enabled.
->>
->> The documentation for the generic PHY framework is added in
->> Documentation/phy.txt and the documentation for dt binding can be found =
-at
->> Documentation/devicetree/bindings/phy/phy-bindings.txt
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->> ---
->>   .../devicetree/bindings/phy/phy-bindings.txt       |   66 +++
->>   Documentation/phy.txt                              |  123 +++++
->>   MAINTAINERS                                        |    7 +
->>   drivers/Kconfig                                    |    2 +
->>   drivers/Makefile                                   |    2 +
->>   drivers/phy/Kconfig                                |   13 +
->>   drivers/phy/Makefile                               |    5 +
->>   drivers/phy/phy-core.c                             |  539 ++++++++++++=
-++++++++
->>   include/linux/phy/phy.h                            |  248 +++++++++
->>   9 files changed, 1005 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/phy-bindings.=
-txt
->>   create mode 100644 Documentation/phy.txt
->>   create mode 100644 drivers/phy/Kconfig
->>   create mode 100644 drivers/phy/Makefile
->>   create mode 100644 drivers/phy/phy-core.c
->>   create mode 100644 include/linux/phy/phy.h
->
->> +static inline int phy_init(struct phy *phy)
->> +{
->> +	pm_runtime_get_sync(&phy->dev);
->
-> Hmm, no need to check return value here ? Also it looks a bit unexpected =
-to
+Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+---
+ arch/arm/boot/dts/exynos4.dtsi                  |    2 +-
+ arch/arm/boot/dts/exynos4210-origen.dts         |    2 +-
+ arch/arm/boot/dts/exynos4210-smdkv310.dts       |    2 +-
+ arch/arm/boot/dts/exynos4210-trats.dts          |    2 +-
+ arch/arm/boot/dts/exynos4210-universal_c210.dts |    2 +-
+ arch/arm/boot/dts/exynos4210.dtsi               |    4 ++--
+ arch/arm/boot/dts/exynos4212.dtsi               |    2 +-
+ arch/arm/boot/dts/exynos4412-odroidx.dts        |    2 +-
+ arch/arm/boot/dts/exynos4412-origen.dts         |    2 +-
+ arch/arm/boot/dts/exynos4412-smdk4412.dts       |    2 +-
+ arch/arm/boot/dts/exynos4412.dtsi               |    2 +-
+ arch/arm/boot/dts/exynos4x12.dtsi               |    4 ++--
+ arch/arm/boot/dts/exynos5250-arndale.dts        |    2 +-
+ arch/arm/boot/dts/exynos5250-smdk5250.dts       |    2 +-
+ arch/arm/boot/dts/exynos5250-snow.dts           |    4 ++--
+ arch/arm/boot/dts/exynos5250.dtsi               |    4 ++--
+ arch/arm/boot/dts/exynos5440-sd5v1.dts          |    2 +-
+ arch/arm/boot/dts/exynos5440-ssdk5440.dts       |    2 +-
+ arch/arm/boot/dts/exynos5440.dtsi               |    2 +-
+ arch/arm/boot/dts/s3c2416-smdk2416.dts          |    2 +-
+ arch/arm/boot/dts/s3c2416.dtsi                  |    4 ++--
+ arch/arm/boot/dts/s3c24xx.dtsi                  |    2 +-
+ 22 files changed, 27 insertions(+), 27 deletions(-)
 
-I purposely dint check the return values in order to support platforms =
-
-that don=92t enable pm_runtime.
-> possibly have runtime_resume callback of a PHY device called before ops->=
-init()
-> call ? It seems a bit unclear what the purpose of init() callback is.
-
-Not really. Anything that is used to initialize the PHY (internal =
-
-configuration) can go in phy_init. Usually in runtime_resume callback, =
-
-optional functional clocks are enabled and also in some cases context =
-
-restore is done. So it really makes sense to enable clocks/module =
-
-(pm_runtime_get_sync) before doing a PHY configuration (phy_init).
-
->
->> +	if (phy->ops->init)
->> +		return phy->ops->init(phy);
->> +
->> +	return -EINVAL;
->> +}
->> +
->> +static inline int phy_exit(struct phy *phy)
->> +{
->> +	int ret =3D -EINVAL;
->> +
->> +	if (phy->ops->exit)
->> +		ret =3D phy->ops->exit(phy);
->> +
->> +	pm_runtime_put_sync(&phy->dev);
->> +
->> +	return ret;
->> +}
->
-> Do phy_init/phy_exit need to be mandatory ? What if there is really
-
-No. phy_init/phy_exit is not mandatory at all.
-> nothing to do in those callbacks ? Perhaps -ENOIOCTLCMD should be
-> returned if a callback is not implemented, so PHY users can recognize
-> such situation and proceed ?
-
-So currently these APIs return -EINVAL if these callbacks are not =
-
-populated which is good enough IMHO.
->
->> +static inline int phy_power_on(struct phy *phy)
->> +{
->> +	if (phy->ops->power_on)
->> +		return phy->ops->power_on(phy);
->> +
->> +	return -EINVAL;
->> +}
->> +
->> +static inline int phy_power_off(struct phy *phy)
->> +{
->> +	if (phy->ops->power_off)
->> +		return phy->ops->power_off(phy);
->> +
->> +	return -EINVAL;
->> +}
->> +
->> +static inline int phy_pm_runtime_get(struct phy *phy)
->> +{
->> +	if (WARN(IS_ERR(phy), "Invalid PHY reference\n"))
->> +		return -EINVAL;
->> +
->> +	return pm_runtime_get(&phy->dev);
->> +}
->> +
->> +static inline int phy_pm_runtime_get_sync(struct phy *phy)
->> +{
->> +	if (WARN(IS_ERR(phy), "Invalid PHY reference\n"))
->> +		return -EINVAL;
->> +
->> +	return pm_runtime_get_sync(&phy->dev);
->> +}
->> +
->> +static inline int phy_pm_runtime_put(struct phy *phy)
->> +{
->> +	if (WARN(IS_ERR(phy), "Invalid PHY reference\n"))
->> +		return -EINVAL;
->> +
->> +	return pm_runtime_put(&phy->dev);
->> +}
->> +
->> +static inline int phy_pm_runtime_put_sync(struct phy *phy)
->> +{
->> +	if (WARN(IS_ERR(phy), "Invalid PHY reference\n"))
->> +		return -EINVAL;
->> +
->> +	return pm_runtime_put_sync(&phy->dev);
->> +}
->> +
->> +static inline void phy_pm_runtime_allow(struct phy *phy)
->> +{
->> +	if (WARN(IS_ERR(phy), "Invalid PHY reference\n"))
->> +		return;
->> +
->> +	pm_runtime_allow(&phy->dev);
->> +}
->> +
->> +static inline void phy_pm_runtime_forbid(struct phy *phy)
->> +{
->> +	if (WARN(IS_ERR(phy), "Invalid PHY reference\n"))
->> +		return;
->> +
->> +	pm_runtime_forbid(&phy->dev);
->> +}
->
-> Do we need to have all these runtime PM wrappers ? I guess you
-> intended to avoid referencing phy->dev from the PHY consumers ?
-
-Yeah.. I dint want pm_runtime of phy core device to be called from PHY =
-
-consumers.
-
-Thanks
-Kishon
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index bed40ee..3f94fe8 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -19,7 +19,7 @@
+  * published by the Free Software Foundation.
+  */
+ 
+-/include/ "skeleton.dtsi"
++#include "skeleton.dtsi"
+ 
+ / {
+ 	interrupt-parent = <&gic>;
+diff --git a/arch/arm/boot/dts/exynos4210-origen.dts b/arch/arm/boot/dts/exynos4210-origen.dts
+index bcf8079..5f851d7 100644
+--- a/arch/arm/boot/dts/exynos4210-origen.dts
++++ b/arch/arm/boot/dts/exynos4210-origen.dts
+@@ -15,7 +15,7 @@
+ */
+ 
+ /dts-v1/;
+-/include/ "exynos4210.dtsi"
++#include "exynos4210.dtsi"
+ 
+ / {
+ 	model = "Insignal Origen evaluation board based on Exynos4210";
+diff --git a/arch/arm/boot/dts/exynos4210-smdkv310.dts b/arch/arm/boot/dts/exynos4210-smdkv310.dts
+index 91332b7..9c01b71 100644
+--- a/arch/arm/boot/dts/exynos4210-smdkv310.dts
++++ b/arch/arm/boot/dts/exynos4210-smdkv310.dts
+@@ -15,7 +15,7 @@
+ */
+ 
+ /dts-v1/;
+-/include/ "exynos4210.dtsi"
++#include "exynos4210.dtsi"
+ 
+ / {
+ 	model = "Samsung smdkv310 evaluation board based on Exynos4210";
+diff --git a/arch/arm/boot/dts/exynos4210-trats.dts b/arch/arm/boot/dts/exynos4210-trats.dts
+index 9a14484..94eebff 100644
+--- a/arch/arm/boot/dts/exynos4210-trats.dts
++++ b/arch/arm/boot/dts/exynos4210-trats.dts
+@@ -13,7 +13,7 @@
+ */
+ 
+ /dts-v1/;
+-/include/ "exynos4210.dtsi"
++#include "exynos4210.dtsi"
+ 
+ / {
+ 	model = "Samsung Trats based on Exynos4210";
+diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+index 345cdb5..889cdad 100644
+--- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
++++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+@@ -13,7 +13,7 @@
+ */
+ 
+ /dts-v1/;
+-/include/ "exynos4210.dtsi"
++#include "exynos4210.dtsi"
+ 
+ / {
+ 	model = "Samsung Universal C210 based on Exynos4210 rev0";
+diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+index 366795a..75c2756 100644
+--- a/arch/arm/boot/dts/exynos4210.dtsi
++++ b/arch/arm/boot/dts/exynos4210.dtsi
+@@ -19,8 +19,8 @@
+  * published by the Free Software Foundation.
+ */
+ 
+-/include/ "exynos4.dtsi"
+-/include/ "exynos4210-pinctrl.dtsi"
++#include "exynos4.dtsi"
++#include "exynos4210-pinctrl.dtsi"
+ 
+ / {
+ 	compatible = "samsung,exynos4210";
+diff --git a/arch/arm/boot/dts/exynos4212.dtsi b/arch/arm/boot/dts/exynos4212.dtsi
+index c0f60f4..6f34d7f 100644
+--- a/arch/arm/boot/dts/exynos4212.dtsi
++++ b/arch/arm/boot/dts/exynos4212.dtsi
+@@ -17,7 +17,7 @@
+  * published by the Free Software Foundation.
+ */
+ 
+-/include/ "exynos4x12.dtsi"
++#include "exynos4x12.dtsi"
+ 
+ / {
+ 	compatible = "samsung,exynos4212";
+diff --git a/arch/arm/boot/dts/exynos4412-odroidx.dts b/arch/arm/boot/dts/exynos4412-odroidx.dts
+index 53bc8bf..7bb8d48 100644
+--- a/arch/arm/boot/dts/exynos4412-odroidx.dts
++++ b/arch/arm/boot/dts/exynos4412-odroidx.dts
+@@ -12,7 +12,7 @@
+ */
+ 
+ /dts-v1/;
+-/include/ "exynos4412.dtsi"
++#include "exynos4412.dtsi"
+ 
+ / {
+ 	model = "Hardkernel ODROID-X board based on Exynos4412";
+diff --git a/arch/arm/boot/dts/exynos4412-origen.dts b/arch/arm/boot/dts/exynos4412-origen.dts
+index 790a999..df097b5 100644
+--- a/arch/arm/boot/dts/exynos4412-origen.dts
++++ b/arch/arm/boot/dts/exynos4412-origen.dts
+@@ -13,7 +13,7 @@
+ */
+ 
+ /dts-v1/;
+-/include/ "exynos4412.dtsi"
++#include "exynos4412.dtsi"
+ 
+ / {
+ 	model = "Insignal Origen evaluation board based on Exynos4412";
+diff --git a/arch/arm/boot/dts/exynos4412-smdk4412.dts b/arch/arm/boot/dts/exynos4412-smdk4412.dts
+index c52b01f..1e816fa 100644
+--- a/arch/arm/boot/dts/exynos4412-smdk4412.dts
++++ b/arch/arm/boot/dts/exynos4412-smdk4412.dts
+@@ -13,7 +13,7 @@
+ */
+ 
+ /dts-v1/;
+-/include/ "exynos4412.dtsi"
++#include "exynos4412.dtsi"
+ 
+ / {
+ 	model = "Samsung SMDK evaluation board based on Exynos4412";
+diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
+index 270b389..e743e67 100644
+--- a/arch/arm/boot/dts/exynos4412.dtsi
++++ b/arch/arm/boot/dts/exynos4412.dtsi
+@@ -17,7 +17,7 @@
+  * published by the Free Software Foundation.
+ */
+ 
+-/include/ "exynos4x12.dtsi"
++#include "exynos4x12.dtsi"
+ 
+ / {
+ 	compatible = "samsung,exynos4412";
+diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
+index e3380a7..8896bb5 100644
+--- a/arch/arm/boot/dts/exynos4x12.dtsi
++++ b/arch/arm/boot/dts/exynos4x12.dtsi
+@@ -17,8 +17,8 @@
+  * published by the Free Software Foundation.
+ */
+ 
+-/include/ "exynos4.dtsi"
+-/include/ "exynos4x12-pinctrl.dtsi"
++#include "exynos4.dtsi"
++#include "exynos4x12-pinctrl.dtsi"
+ 
+ / {
+ 	aliases {
+diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+index 02cfc76..8e27120 100644
+--- a/arch/arm/boot/dts/exynos5250-arndale.dts
++++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+@@ -10,7 +10,7 @@
+ */
+ 
+ /dts-v1/;
+-/include/ "exynos5250.dtsi"
++#include "exynos5250.dtsi"
+ 
+ / {
+ 	model = "Insignal Arndale evaluation board based on EXYNOS5250";
+diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+index 3e0c792..f2a025e 100644
+--- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
++++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+@@ -10,7 +10,7 @@
+ */
+ 
+ /dts-v1/;
+-/include/ "exynos5250.dtsi"
++#include "exynos5250.dtsi"
+ 
+ / {
+ 	model = "SAMSUNG SMDK5250 board based on EXYNOS5250";
+diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
+index d449feb..fd711e2 100644
+--- a/arch/arm/boot/dts/exynos5250-snow.dts
++++ b/arch/arm/boot/dts/exynos5250-snow.dts
+@@ -9,8 +9,8 @@
+ */
+ 
+ /dts-v1/;
+-/include/ "exynos5250.dtsi"
+-/include/ "cros5250-common.dtsi"
++#include "exynos5250.dtsi"
++#include "cros5250-common.dtsi"
+ 
+ / {
+ 	model = "Google Snow";
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 9dfc6de..bccda67 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -17,8 +17,8 @@
+  * published by the Free Software Foundation.
+ */
+ 
+-/include/ "skeleton.dtsi"
+-/include/ "exynos5250-pinctrl.dtsi"
++#include "skeleton.dtsi"
++#include "exynos5250-pinctrl.dtsi"
+ 
+ / {
+ 	compatible = "samsung,exynos5250";
+diff --git a/arch/arm/boot/dts/exynos5440-sd5v1.dts b/arch/arm/boot/dts/exynos5440-sd5v1.dts
+index ef747b5..5e84c5f 100644
+--- a/arch/arm/boot/dts/exynos5440-sd5v1.dts
++++ b/arch/arm/boot/dts/exynos5440-sd5v1.dts
+@@ -10,7 +10,7 @@
+ */
+ 
+ /dts-v1/;
+-/include/ "exynos5440.dtsi"
++#include "exynos5440.dtsi"
+ 
+ / {
+ 	model = "SAMSUNG SD5v1 board based on EXYNOS5440";
+diff --git a/arch/arm/boot/dts/exynos5440-ssdk5440.dts b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
+index d55042b..2fd6646 100644
+--- a/arch/arm/boot/dts/exynos5440-ssdk5440.dts
++++ b/arch/arm/boot/dts/exynos5440-ssdk5440.dts
+@@ -10,7 +10,7 @@
+ */
+ 
+ /dts-v1/;
+-/include/ "exynos5440.dtsi"
++#include "exynos5440.dtsi"
+ 
+ / {
+ 	model = "SAMSUNG SSDK5440 board based on EXYNOS5440";
+diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
+index f6b1c89..13b40b3 100644
+--- a/arch/arm/boot/dts/exynos5440.dtsi
++++ b/arch/arm/boot/dts/exynos5440.dtsi
+@@ -9,7 +9,7 @@
+  * published by the Free Software Foundation.
+ */
+ 
+-/include/ "skeleton.dtsi"
++#include "skeleton.dtsi"
+ 
+ / {
+ 	compatible = "samsung,exynos5440";
+diff --git a/arch/arm/boot/dts/s3c2416-smdk2416.dts b/arch/arm/boot/dts/s3c2416-smdk2416.dts
+index ad1dd09..59594cf 100644
+--- a/arch/arm/boot/dts/s3c2416-smdk2416.dts
++++ b/arch/arm/boot/dts/s3c2416-smdk2416.dts
+@@ -9,7 +9,7 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "s3c2416.dtsi"
++#include "s3c2416.dtsi"
+ 
+ / {
+ 	model = "SMDK2416";
+diff --git a/arch/arm/boot/dts/s3c2416.dtsi b/arch/arm/boot/dts/s3c2416.dtsi
+index 6809324..e6555bd 100644
+--- a/arch/arm/boot/dts/s3c2416.dtsi
++++ b/arch/arm/boot/dts/s3c2416.dtsi
+@@ -8,8 +8,8 @@
+  * published by the Free Software Foundation.
+  */
+ 
+-/include/ "s3c24xx.dtsi"
+-/include/ "s3c2416-pinctrl.dtsi"
++#include "s3c24xx.dtsi"
++#include "s3c2416-pinctrl.dtsi"
+ 
+ / {
+ 	model = "Samsung S3C2416 SoC";
+diff --git a/arch/arm/boot/dts/s3c24xx.dtsi b/arch/arm/boot/dts/s3c24xx.dtsi
+index cab46ff..2d1d7dc 100644
+--- a/arch/arm/boot/dts/s3c24xx.dtsi
++++ b/arch/arm/boot/dts/s3c24xx.dtsi
+@@ -8,7 +8,7 @@
+  * published by the Free Software Foundation.
+  */
+ 
+-/include/ "skeleton.dtsi"
++#include "skeleton.dtsi"
+ 
+ / {
+ 	compatible = "samsung,s3c24xx";
+-- 
+1.7.4.4
