@@ -1,164 +1,54 @@
-From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 4/4] clocksource: dw_apb_timer_of: use clocksource_of_init
-Date: Tue, 4 Jun 2013 11:38:42 +0200
-Message-ID: <201306041138.42639.heiko@sntech.de>
-References: <201306041136.09566.heiko@sntech.de>
+From: "Hebbar, Gururaja" <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH 2/2] rtc: omap: add rtc wakeup support to alarm events
+Date: Tue, 4 Jun 2013 09:39:27 +0000
+Message-ID: <1BAFE6F6C881BF42822005164F1491C33EC222D4@DBDE04.ent.ti.com>
+References: <1369982005-8572-1-git-send-email-gururaja.hebbar@ti.com>
+	<1369982005-8572-3-git-send-email-gururaja.hebbar@ti.com>
+	<87a9nb2gjh.fsf@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201306041136.09566.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <87a9nb2gjh.fsf-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org" <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-dw_apb_timer_init used to search the devicetree for matching timer
-devices, making calls to it from board files necessary.
+On Fri, May 31, 2013 at 23:11:22, Kevin Hilman wrote:
+> Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org> writes:
+> 
+> > On some platforms (like AM33xx), a special register (RTC_IRQWAKEEN)
+> > is available to enable Wakeup feature for Alarm Events.
+> >
+> > Since new platforms/Boards are now added through DT only, this feature
+> > is supported via DT property only.
+> 
+> > Platforms using such IP should add the property "ti,has_irq_wake_enb"
+> > in rtc DT node.
+> 
+> This is a property of the IP, not the board.  
 
-Change the dw_apb_timer_init to work with CLOCKSOURCE_OF_DECLARE.
-With this change the function gets called once for each timer node
-and tracks these number of calls to attach clockevent and clocksource
-devices to the nodes.
+Correct.
 
-Also remove the calls to dw_apb_timer_init from all previous users, as
-clocksource_of_init is the default for init_time now.
+> Can't you detect this
+> based on the revision of the IP?
 
-Tested on the upcoming rk3066 code.
+Will check this and return.
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
- arch/arm/mach-picoxcell/common.c      |    2 -
- arch/arm/mach-socfpga/socfpga.c       |    2 -
- drivers/clocksource/Kconfig           |    1 +
- drivers/clocksource/dw_apb_timer_of.c |   41 ++++++++++++++++-----------------
- include/linux/dw_apb_timer.h          |    1 -
- 5 files changed, 21 insertions(+), 26 deletions(-)
+> 
+> Kevin
+> 
 
-diff --git a/arch/arm/mach-picoxcell/common.c b/arch/arm/mach-picoxcell/common.c
-index 70b441a..7cde042 100644
---- a/arch/arm/mach-picoxcell/common.c
-+++ b/arch/arm/mach-picoxcell/common.c
-@@ -15,7 +15,6 @@
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
--#include <linux/dw_apb_timer.h>
- 
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
-@@ -88,7 +87,6 @@ DT_MACHINE_START(PICOXCELL, "Picochip picoXcell")
- 	.map_io		= picoxcell_map_io,
- 	.nr_irqs	= NR_IRQS_LEGACY,
- 	.init_irq	= irqchip_init,
--	.init_time	= dw_apb_timer_init,
- 	.init_machine	= picoxcell_init_machine,
- 	.dt_compat	= picoxcell_dt_match,
- 	.restart	= picoxcell_wdt_restart,
-diff --git a/arch/arm/mach-socfpga/socfpga.c b/arch/arm/mach-socfpga/socfpga.c
-index 46a0513..8ea11b47 100644
---- a/arch/arm/mach-socfpga/socfpga.c
-+++ b/arch/arm/mach-socfpga/socfpga.c
-@@ -14,7 +14,6 @@
-  * You should have received a copy of the GNU General Public License
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
--#include <linux/dw_apb_timer.h>
- #include <linux/clk-provider.h>
- #include <linux/irqchip.h>
- #include <linux/of_address.h>
-@@ -120,7 +119,6 @@ DT_MACHINE_START(SOCFPGA, "Altera SOCFPGA")
- 	.smp		= smp_ops(socfpga_smp_ops),
- 	.map_io		= socfpga_map_io,
- 	.init_irq	= socfpga_init_irq,
--	.init_time	= dw_apb_timer_init,
- 	.init_machine	= socfpga_cyclone5_init,
- 	.restart	= socfpga_cyclone5_restart,
- 	.dt_compat	= altera_dt_match,
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 48a0f2e..5871933 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -22,6 +22,7 @@ config DW_APB_TIMER
- config DW_APB_TIMER_OF
- 	bool
- 	select DW_APB_TIMER
-+	select CLKSRC_OF
- 
- config ARMADA_370_XP_TIMER
- 	bool
-diff --git a/drivers/clocksource/dw_apb_timer_of.c b/drivers/clocksource/dw_apb_timer_of.c
-index 1964f87..cef5544 100644
---- a/drivers/clocksource/dw_apb_timer_of.c
-+++ b/drivers/clocksource/dw_apb_timer_of.c
-@@ -133,27 +133,26 @@ static void init_sched_clock(void)
- 	setup_sched_clock(read_sched_clock, 32, sched_rate);
- }
- 
--static const struct of_device_id osctimer_ids[] __initconst = {
--	{ .compatible = "picochip,pc3x2-timer" },
--	{ .compatible = "snps,dw-apb-timer-osc" },
--	{},
--};
--
--void __init dw_apb_timer_init(void)
-+static int num_called;
-+static void __init dw_apb_timer_init(struct device_node *timer)
- {
--	struct device_node *event_timer, *source_timer;
--
--	event_timer = of_find_matching_node(NULL, osctimer_ids);
--	if (!event_timer)
--		panic("No timer for clockevent");
--	add_clockevent(event_timer);
--
--	source_timer = of_find_matching_node(event_timer, osctimer_ids);
--	if (!source_timer)
--		panic("No timer for clocksource");
--	add_clocksource(source_timer);
--
--	of_node_put(source_timer);
-+	switch (num_called) {
-+	case 0:
-+		pr_debug("%s: found clockevent timer\n", __func__);
-+		add_clockevent(timer);
-+		of_node_put(timer);
-+		break;
-+	case 1:
-+		pr_debug("%s: found clocksource timer\n", __func__);
-+		add_clocksource(timer);
-+		of_node_put(timer);
-+		init_sched_clock();
-+		break;
-+	default:
-+		break;
-+	}
- 
--	init_sched_clock();
-+	num_called++;
- }
-+CLOCKSOURCE_OF_DECLARE(pc3x2_timer, "picochip,pc3x2-timer", dw_apb_timer_init);
-+CLOCKSOURCE_OF_DECLARE(apb_timer, "snps,dw-apb-timer-osc", dw_apb_timer_init);
-diff --git a/include/linux/dw_apb_timer.h b/include/linux/dw_apb_timer.h
-index dd755ce..07261d5 100644
---- a/include/linux/dw_apb_timer.h
-+++ b/include/linux/dw_apb_timer.h
-@@ -53,5 +53,4 @@ void dw_apb_clocksource_start(struct dw_apb_clocksource *dw_cs);
- cycle_t dw_apb_clocksource_read(struct dw_apb_clocksource *dw_cs);
- void dw_apb_clocksource_unregister(struct dw_apb_clocksource *dw_cs);
- 
--extern void dw_apb_timer_init(void);
- #endif /* __DW_APB_TIMER_H__ */
--- 
-1.7.2.3
+
+Regards, 
+Gururaja
