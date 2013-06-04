@@ -1,49 +1,202 @@
-From: "J, KEERTHY" <j-keerthy@ti.com>
-Subject: RE: [PATCH] mfd: DT bindings for the palmas family MFD
-Date: Tue, 4 Jun 2013 06:24:45 +0000
-Message-ID: <DC88CAD03C0052499C1907B327FC63229E8AFE@DBDE04.ent.ti.com>
-References: <1370261333-5121-1-git-send-email-j-keerthy@ti.com>
- <20130603141851.GG3370@gmail.com> <51ACFECA.10209@wwwdotorg.org>
+From: gg@slimlogic.co.uk
+Subject: RE: [PATCH v10 01/12] mfd: DT bindings for the palmas family MFD
+Date: Tue, 04 Jun 2013 07:24:36 +0100
+Message-ID: <6af100d1d4ba82de24f96561b5108072@slimlogic.co.uk>
+References: <1363964122-19201-1-git-send-email-ian@slimlogic.co.uk>
+ <1363964122-19201-2-git-send-email-ian@slimlogic.co.uk>
+ <5150906F.9040202@wwwdotorg.org> <51A73908.7020206@ti.com>
+ <51A7DAC2.80602@wwwdotorg.org>
+ <DC88CAD03C0052499C1907B327FC63229E662E@DBDE04.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51ACFECA.10209@wwwdotorg.org>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee.jones@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "wim@iguana.be" <wim@iguana.be>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "Kristo, Tero" <t-kristo@ti.com>, Ian Lartey <ian@slimlogic.co.uk>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <DC88CAD03C0052499C1907B327FC63229E662E@DBDE04.ent.ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "J, KEERTHY" <j-keerthy@ti.com>
+Cc: linux-doc@vger.kernel.org, linus.walleij@linaro.org, lgirdwood@gmail.com, grant.likely@secretlab.ca, wim@iguana.be, ldewangan@nvidia.com, linux-leds@vger.kernel.org, sfr@canb.auug.org.au, mturquette@linaro.org, sameo@linux.intel.com, linux-watchdog@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, cooloney@gmail.com, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, broonie@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, "Kristo, Tero" <t-kristo@ti.com>, rpurdie@rpsys.net, rob@landley.net, akpm@linux-foundation.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU3RlcGhlbiBXYXJyZW4g
-W21haWx0bzpzd2FycmVuQHd3d2RvdG9yZy5vcmddDQo+IFNlbnQ6IFR1ZXNkYXksIEp1bmUgMDQs
-IDIwMTMgMjowOSBBTQ0KPiBUbzogTGVlIEpvbmVzDQo+IENjOiBKLCBLRUVSVEhZOyBsaW51eC1r
-ZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4gZG9jQHZnZXIua2VybmVsLm9yZzsgZGV2
-aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmc7DQo+IGJyb29uaWVAb3BlbnNvdXJjZS53
-b2xmc29ubWljcm8uY29tOyByb2IuaGVycmluZ0BjYWx4ZWRhLmNvbTsNCj4gcm9iQGxhbmRsZXku
-bmV0OyBtdHVycXVldHRlQGxpbmFyby5vcmc7IHNhbWVvQGxpbnV4LmludGVsLmNvbTsNCj4gd2lt
-QGlndWFuYS5iZTsgbGdpcmR3b29kQGdtYWlsLmNvbTsgZ2dAc2xpbWxvZ2ljLmNvLnVrOyBLcmlz
-dG8sIFRlcm87DQo+IElhbiBMYXJ0ZXkNCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gbWZkOiBEVCBi
-aW5kaW5ncyBmb3IgdGhlIHBhbG1hcyBmYW1pbHkgTUZEDQo+IA0KPiBPbiAwNi8wMy8yMDEzIDA4
-OjE4IEFNLCBMZWUgSm9uZXMgd3JvdGU6DQo+ID4gT24gTW9uLCAwMyBKdW4gMjAxMywgSiBLZWVy
-dGh5IHdyb3RlOg0KPiA+PiBBZGQgdGhlIHZhcmlvdXMgYmluZGluZyBmaWxlcyBmb3IgdGhlIHBh
-bG1hcyBmYW1pbHkgb2YgY2hpcHMuIFRoZXJlDQo+ID4+IGlzIGEgdG9wIGxldmVsIE1GRCBiaW5k
-aW5nIHRoZW4gYSBzZXBlcmF0ZSBiaW5kaW5nIGZvciByZWd1bGF0b3JzIElQDQo+IGJsb2NrcyBv
-biBjaGlwcy4NCj4gDQo+ID4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbWZkL3BhbG1hcy50eHQNCj4gPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvbWZkL3BhbG1hcy50eHQNCj4gDQo+ID4+ICtFeGFtcGxlOg0KPiA+PiArDQo+ID4+
-ICtwYWxtYXMgew0KPiA+DQo+ID4gU2hvdWxkIHRoaXMgYmUgJ3BhbG1hc0A0OCB7JywgYXMgaXQg
-aGFzIGFuIGFkZHJlc3M/DQo+IA0KPiBJdCdzIGNvbW1vbiB0byBvbmx5IGluY2x1ZGUgdGhlIHVu
-aXQtYWRkcmVzcyAoQDQ4KSBpZiBpdCdzIG5lZWRlZCB0bw0KPiBtYWtlIHRoZSBub2RlIG5hbWUg
-dW5pcXVlIChpLmUuIGlmIHlvdSBoYWQgbXVsdGlwbGUgcGFsbWFzIGRldmljZXMpLg0KDQpZZWFo
-LiBXZSBnZW5lcmFsbHkgaGF2ZSBvbmUgUGFsbWFzIGRldmljZS4NCg0KPiANCj4gPj4gZGlmZiAt
-LWdpdA0KPiA+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3Iv
-cGFsbWFzLXBtaWMudHh0DQo+ID4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3JlZ3VsYXRvci9wYWxtYXMtcG1pYy50eHQNCj4gDQo+ID4gU2VlOiBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL2dwaW8tcmVndWxhdG9yLnR4dA0KPiA+DQo+ID4+
-ICsJICAgICAgIHRpLHNsZWVwLW1vZGUgLSBtb2RlIHRvIGFkb3B0IGluIHBtaWMgc2xlZXAgMCAt
-IG9mZiwgMSAtDQo+IGF1dG8sDQo+ID4+ICsJICAgICAgIDIgLSBlY28sIDMgLSBmb3JjZWQgcHdt
-DQo+ID4NCj4gPiBJJ3ZlIHNlZW4gbG90cyBvZiBzbGVlcC1tb2RlIHByb3BlcnRpZXMsIGNhbid0
-IHdlIGRlZmluZSBhIGdlbmVyaWMNCj4gPiBvbmU/DQo+IA0KPiBJc24ndCBpdCBIVy1zcGVjaWZp
-Yz8NCg0KWWVhaC4gSGVuY2UgaXQgaXMgdGksc2xlZXAtbW9kZS4NCg0KUmVnYXJkcywNCktlZXJ0
-aHkNCg==
+On 2013-06-03 07:55, J, KEERTHY wrote:
+> Hi Stephen,
+> 
+>> -----Original Message-----
+>> From: Stephen Warren [mailto:swarren@wwwdotorg.org]
+>> Sent: Friday, May 31, 2013 4:34 AM
+>> To: J, KEERTHY
+>> Cc: gg@slimlogic.co.uk; Ian Lartey; linux-kernel@vger.kernel.org;
+>> linux-doc@vger.kernel.org; linux-arm-kernel@lists.infradead.org; 
+>> linux-
+>> leds@vger.kernel.org; linux-watchdog@vger.kernel.org; devicetree-
+>> discuss@lists.ozlabs.org; grant.likely@secretlab.ca;
+>> broonie@opensource.wolfsonmicro.com; rob.herring@calxeda.com;
+>> rob@landley.net; mturquette@linaro.org; linus.walleij@linaro.org;
+>> cooloney@gmail.com; sfr@canb.auug.org.au; rpurdie@rpsys.net;
+>> akpm@linux-foundation.org; sameo@linux.intel.com; wim@iguana.be;
+>> lgirdwood@gmail.com; ldewangan@nvidia.com; Kristo, Tero
+>> Subject: Re: [PATCH v10 01/12] mfd: DT bindings for the palmas family
+>> MFD
+>> 
+>> On 05/30/2013 05:33 AM, keerthy wrote:
+>> >
+>> > On 03/25/2013 11:29 PM, Stephen Warren wrote:
+>> >
+>> >> On 03/22/2013 08:55 AM, Ian Lartey wrote:
+>> >>> From: Graeme Gregory <gg@slimlogic.co.uk>
+>> >>>
+>> >>> Add the various binding files for the palmas family of chips. There
+>> >>> is a top level MFD binding then a seperate binding for IP blocks on
+>> chips.
+>> >>
+>> >>> diff --git a/Documentation/devicetree/bindings/clock/palmas-clk.txt
+>> >>> b/Documentation/devicetree/bindings/clock/palmas-clk.txt
+>> >>
+>> >> Where is the reg property; if you're instantiating the clk device as
+>> >> a standalone DT node and driver, it should be possible to retrieve
+>> >> the address of this IP block instance from DT, not using driver-
+>> internal APIs.
+>> >>
+>> >> This same comment likely applies everywhere, so I won't repeat it.
+>> >>
+>> >>> +Example:
+>> >>> +
+>> >>> +clk {
+>> >>> +    compatible = "ti,twl6035-clk", "ti,palmas-clk";
+>> >>> +    ti,clk32kg-mode-sleep = <0>;
+>> >>> +    ti,clk32kgaudio-mode-sleep = <0>;
+>> >>
+>> >>> +    #clock-cells = <1>;
+>> >>> +    clock-frequency = <32000000>;
+>> >>> +    clock-names = "clk32kg", "clk32kgaudio";
+>> >>
+>> >> The binding description itself should describe what clocks this node
+>> >> provides and consumes.
+>> >>
+>> >> What is clock-frequency; which clock does it affect?
+>> >>
+>> >> The presence of #clock-cells implies this is a clock provider. This
+>> >> binding should define the format of the clock cells that this
+>> >> property implies. I assume it's just the ID of the output clocks,
+>> but
+>> >> what values correspond to which output clocks? That mapping table
+>> >> needs to be listed here.
+>> >>
+>> >> The presence of clock-names implies this is a clock consumer.
+>> >> However, there is no clocks property in the example. Is clks missing
+>> >> from the example, or should this property be clock-output-names
+>> >> instead? If this node is a clock consumer, the list of which clocks
+>> >> it requires should be documented.
+>> >>
+>> >>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-palmas.txt
+>> >>> b/Documentation/devicetree/bindings/gpio/gpio-palmas.txt
+>> >>
+>> >>> +- gpio-controller: mark the device as a GPIO controller
+>> >>> +- gpio-cells = <1>:  GPIO lines are provided.
+>> >>
+>> >> That's #gpio-cells not gpio-cells.
+>> >>
+>> >> I assume that cell simply contains the GPIO ID/number. That should
+>> be
+>> >> documented for clarity.
+>> >>
+>> >> Surely gpio-cells should be 2 not 1, so there is space for flags. At
+>> >> least an "inverted" or "active-low" flag should be included; GPIO
+>> >> consumers would typically implement that flag in SW, so there' no
+>> >> requirement that the flag only be supported if the HW supports the
+>> feature.
+>> >>
+>> >>> +- interrupt-controller : palmas has its own internal IRQs
+>> >>> +- #interrupt-cells : should be set to 2 for IRQ number and flags
+>> >>> +  The first cell is the IRQ number.
+>> >>> +  The second cell is the flags, encoded as the trigger masks from
+>> >>> +  Documentation/devicetree/bindings/interrupts.txt
+>> >>
+>> >> You need "/interrupt-controller" before the filename there.
+>> >>
+>> >>> +- interrupt-parent : The parent interrupt controller.
+>> >>
+>> >> If this IP block has interrupt outputs, it should require an
+>> >> "interrupts" property too. This is the same concept that drives the
+>> >> need for a reg property. This same comment likely applies
+>> everywhere,
+>> >> so I won't repeat it.
+>> >>
+>> >>> diff --git
+>> >>> a/Documentation/devicetree/bindings/input/palmas-pwrbutton.txt
+>> >>> b/Documentation/devicetree/bindings/input/palmas-pwrbutton.txt
+>> >>
+>> >>> +- interrupts: the interrupt outputs of the controller.
+>> >>
+>> >> How many entries are there, what do they mean, and in what order
+>> must
+>> >> they appear? (Note that the binding of a node must define the order
+>> >> of the interrupts property, since historically it's been accessed by
+>> >> index, not by name, and all bindings must allow that access method
+>> to be used).
+>> >>
+>> >>> +- interrupt-names : Should be the name of irq resource. Each
+>> >>> +interrupt
+>> >>> +  binds its interrupt-name.
+>> >>
+>> >> The binding needs to define standard names for the entries in this
+>> >> property, or define that interrupts are only retrieved by index, in
+>> >> which case interrupt-names shouldn't be present. This same comment
+>> >> likely applies everywhere, so I won't repeat it.
+>> >>
+>> >>> diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt
+>> >>> b/Documentation/devicetree/bindings/mfd/palmas.txt
+>> >>
+>> >>> +Required properties:
+>> >> ...
+>> >>
+>> >> I believe the Palmas devices have many separate I2C addresses, even
+>> >> buses, which are I think are at least partially independently SW
+>> >> configurable. In that case, the reg property for this node should
+>> >> probably enumerate all the I2C addresses that this chip responds to,
+>> >> so that they can each be passed down to the child nodes.
+>> >
+>> >
+>> > Stephen,
+>> >
+>> > The palmas devices do have multiple I2C slave IDs. From OMAP5 as the
+>> > master all the palmas slave devices are connected via I2C1 bus.
+>> >
+>> > I did not understand the SW configurable part. It is more board
+>> > dependent. Correct me if i understood it wrongly.
+>> 
+>> IIRC (and I may not sine it's been a while since I looked at this),
+>> there are SW registers that can modify the I2C address that the chip
+>> will respond to, so you could access the main I2C address, then 
+>> program
+>> which other I2C addresses get used.
+> 
+> Ok. I guess you are referring to the I2C_SPI register of Palmas.
+> This register is indeed SW configurable and I tried changing the
+> Slave IDs on the fly and I could change them. AFAIK these are OTP
+> And never changed through software on the fly.
+> 
+>> 
+>> Or, perhaps I was just thinking of the fact that there are strapping
+>> pins on the chip that affect both the main I2C address, and some/all 
+>> of
+>> the other I2C addresses, so the driver needs to be told each and every
+>> I2C address, not just one single overall I2C address.
+> 
+> Looking at the register spec there seem to be 2 possible combinations:
+> 0x48, 0x49, 0x4A or 0x58, 0x59, 0x5A. Again these are OTP. By default
+> It is 0x48, 0x49, 0x4A. So passing 0x48 or 0x58 as the main I2C
+> Address seems sufficient here.
+> 
+The I2C addresses are set in OTP, I do not think they should ever be 
+changed
+on the fly.
+
+Graeme
