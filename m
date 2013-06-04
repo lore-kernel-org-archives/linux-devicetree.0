@@ -1,81 +1,239 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [net-next PATCH 1/8] drivers: net: phy: at803x code cleanup on
- register and unregister driver
-Date: Tue, 4 Jun 2013 18:13:22 +0530
-Message-ID: <51ADE0EA.7060008@ti.com>
-References: <1370326212-17580-1-git-send-email-mugunthanvnm@ti.com> <1370326212-17580-2-git-send-email-mugunthanvnm@ti.com> <51ADD73E.40405@cogentembedded.com>
+From: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/7] USB: add devicetree helpers for determining
+ dr_mode and phy_type
+Date: Tue, 4 Jun 2013 15:01:40 +0200
+Message-ID: <20130604130140.GF28181@pengutronix.de>
+References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de>
+ <1370025529-7414-2-git-send-email-mgr@pengutronix.de>
+ <8761xvjrwt.fsf@ashishki-desk.ger.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <51ADD73E.40405@cogentembedded.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, benoit.cousson@linaro.org, paul@pwsan.com, Matus Ujhelyi <ujhelyi.m@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8761xvjrwt.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 6/4/2013 5:32 PM, Sergei Shtylyov wrote:
-> Hello.
->
-> On 04-06-2013 10:10, Mugunthan V N wrote:
->
->> Make use of phy_drivers_register/phy_drivers_unregister to 
->> register/unregister
->> multiple phy drivers in a single module.
->
->> Cc: Matus Ujhelyi <ujhelyi.m@gmail.com>
->> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
->> ---
->>   drivers/net/phy/at803x.c |   35 ++++++++++-------------------------
->>   1 file changed, 10 insertions(+), 25 deletions(-)
->
->> diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
->> index 45cbc10..a1063e1 100644
->> --- a/drivers/net/phy/at803x.c
->> +++ b/drivers/net/phy/at803x.c
->> @@ -108,8 +108,9 @@ static int at803x_config_init(struct phy_device 
->> *phydev)
->>       return 0;
->>   }
->>
->> -/* ATHEROS 8035 */
->> -static struct phy_driver at8035_driver = {
->> +static struct phy_driver at803x_driver[] = {
->> +{
->> +    /* ATHEROS 8035 */
->>       .phy_id        = 0x004dd072,
->>       .name        = "Atheros 8035 ethernet",
->>       .phy_id_mask    = 0xffffffef,
->
->     That's improper indentation. Needs to be shifted by one tab.
-This indentation is as per the coding style followed in all ethernet
-phy drivers. If this need so to be changed, it must be a separate patch
-for all the ethernet phy drivers.
->
->> @@ -136,32 +135,18 @@ static struct phy_driver at8030_driver = {
->>       .driver        = {
->>           .owner = THIS_MODULE,
->>       },
->> -};
->> +} };
->
->    Looks ugly...
-This is also the same as per the style followed in ethernet phy drivers
-Please refer the below grep output
+On Mon, Jun 03, 2013 at 03:32:50PM +0300, Alexander Shishkin wrote:
+> Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+> 
+> > From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >
+> > This adds two little devicetree helper functions for determining the
+> > dr_mode (host, peripheral, otg) and phy_type (utmi, ulpi,...) from
+> > the devicetree.
+> 
+> This one needs an ack from Felipe.
 
-$ grep -rnaI "} };" drivers/net/phy/*
-drivers/net/phy/at803x.c:201:} };
-drivers/net/phy/bcm63xx.c:101:} };
-drivers/net/phy/bcm87xx.c:217:} };
-drivers/net/phy/broadcom.c:829:} };
-drivers/net/phy/cicada.c:130:} };
-drivers/net/phy/davicom.c:183:} };
-drivers/net/phy/icplus.c:254:} };
-drivers/net/phy/lxt.c:313:} };
-drivers/net/phy/micrel.c:323:} };
-drivers/net/phy/smsc.c:242:} };
-drivers/net/phy/ste10Xp.c:113:} };
-drivers/net/phy/vitesse.c:192:} };
+Right, we currently also wait for his answer in another thread.
 
-Regards
-Mugunthan V N
+http://www.spinics.net/lists/linux-usb/msg86906.html
+
+> > Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> >  drivers/usb/phy/Makefile |  1 +
+> >  drivers/usb/phy/of.c     | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+> >  drivers/usb/usb-common.c | 35 +++++++++++++++++++++++++++++++++++
+> >  include/linux/usb/of.h   | 28 ++++++++++++++++++++++++++++
+> >  include/linux/usb/otg.h  |  7 +++++++
+> >  include/linux/usb/phy.h  |  9 +++++++++
+> >  6 files changed, 127 insertions(+)
+> >  create mode 100644 drivers/usb/phy/of.c
+> >  create mode 100644 include/linux/usb/of.h
+> >
+> > diff --git a/drivers/usb/phy/Makefile b/drivers/usb/phy/Makefile
+> > index a9169cb..070eca3 100644
+> > --- a/drivers/usb/phy/Makefile
+> > +++ b/drivers/usb/phy/Makefile
+> > @@ -5,6 +5,7 @@
+> >  ccflags-$(CONFIG_USB_DEBUG) := -DDEBUG
+> >  
+> >  obj-$(CONFIG_USB_PHY)			+= phy.o
+> > +obj-$(CONFIG_OF)			+= of.o
+> >  
+> >  # transceiver drivers, keep the list sorted
+> >  
+> > diff --git a/drivers/usb/phy/of.c b/drivers/usb/phy/of.c
+> > new file mode 100644
+> > index 0000000..e6f3b74
+> > --- /dev/null
+> > +++ b/drivers/usb/phy/of.c
+> > @@ -0,0 +1,47 @@
+> > +/*
+> > + * USB of helper code
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License as published by
+> > + * the Free Software Foundation; either version 2 of the License, or
+> > + * (at your option) any later version.
+> > + */
+> > +
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/usb/of.h>
+> > +#include <linux/usb/otg.h>
+> > +
+> > +static const char *usbphy_modes[] = {
+> > +	[USBPHY_INTERFACE_MODE_UNKNOWN]	= "",
+> > +	[USBPHY_INTERFACE_MODE_UTMI]	= "utmi",
+> > +	[USBPHY_INTERFACE_MODE_UTMIW]	= "utmi_wide",
+> > +	[USBPHY_INTERFACE_MODE_ULPI]	= "ulpi",
+> > +	[USBPHY_INTERFACE_MODE_SERIAL]	= "serial",
+> > +	[USBPHY_INTERFACE_MODE_HSIC]	= "hsic",
+> > +};
+> > +
+> > +/**
+> > + * of_usb_get_phy_mode - Get phy mode for given device_node
+> > + * @np:	Pointer to the given device_node
+> > + *
+> > + * The function gets phy interface string from property 'phy_type',
+> > + * and returns the correspondig enum usb_phy_interface
+> > + */
+> > +enum usb_phy_interface of_usb_get_phy_mode(struct device_node *np)
+> > +{
+> > +	const char *phy_type;
+> > +	int err, i;
+> > +
+> > +	err = of_property_read_string(np, "phy_type", &phy_type);
+> > +	if (err < 0)
+> > +		return USBPHY_INTERFACE_MODE_UNKNOWN;
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(usbphy_modes); i++)
+> > +		if (!strcmp(phy_type, usbphy_modes[i]))
+> > +			return i;
+> > +
+> > +	return USBPHY_INTERFACE_MODE_UNKNOWN;
+> > +}
+> > +EXPORT_SYMBOL_GPL(of_usb_get_phy_mode);
+> > diff --git a/drivers/usb/usb-common.c b/drivers/usb/usb-common.c
+> > index 0db0a91..027582d 100644
+> > --- a/drivers/usb/usb-common.c
+> > +++ b/drivers/usb/usb-common.c
+> > @@ -13,7 +13,9 @@
+> >  
+> >  #include <linux/kernel.h>
+> >  #include <linux/module.h>
+> > +#include <linux/of.h>
+> >  #include <linux/usb/ch9.h>
+> > +#include <linux/usb/of.h>
+> >  #include <linux/usb/otg.h>
+> >  
+> >  const char *usb_otg_state_string(enum usb_otg_state state)
+> > @@ -79,4 +81,37 @@ const char *usb_state_string(enum usb_device_state state)
+> >  }
+> >  EXPORT_SYMBOL_GPL(usb_state_string);
+> >  
+> > +#ifdef CONFIG_OF
+> > +static const char *usb_dr_modes[] = {
+> > +	[USB_DR_MODE_UNKNOWN]		= "",
+> > +	[USB_DR_MODE_HOST]		= "host",
+> > +	[USB_DR_MODE_PERIPHERAL]	= "peripheral",
+> > +	[USB_DR_MODE_OTG]		= "otg",
+> > +};
+> > +
+> > +/**
+> > + * of_usb_get_dr_mode - Get dual role mode for given device_node
+> > + * @np:	Pointer to the given device_node
+> > + *
+> > + * The function gets phy interface string from property 'dr_mode',
+> > + * and returns the correspondig enum usb_dr_mode
+> > + */
+> > +enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np)
+> > +{
+> > +	const char *dr_mode;
+> > +	int err, i;
+> > +
+> > +	err = of_property_read_string(np, "dr_mode", &dr_mode);
+> > +	if (err < 0)
+> > +		return USB_DR_MODE_UNKNOWN;
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(usb_dr_modes); i++)
+> > +		if (!strcmp(dr_mode, usb_dr_modes[i]))
+> > +			return i;
+> > +
+> > +	return USB_DR_MODE_UNKNOWN;
+> > +}
+> > +EXPORT_SYMBOL_GPL(of_usb_get_dr_mode);
+> > +#endif
+> > +
+> >  MODULE_LICENSE("GPL");
+> > diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
+> > new file mode 100644
+> > index 0000000..e460a24
+> > --- /dev/null
+> > +++ b/include/linux/usb/of.h
+> > @@ -0,0 +1,28 @@
+> > +/*
+> > + * OF helpers for usb devices.
+> > + *
+> > + * This file is released under the GPLv2
+> > + */
+> > +
+> > +#ifndef __LINUX_USB_OF_H
+> > +#define __LINUX_USB_OF_H
+> > +
+> > +#include <linux/usb/otg.h>
+> > +#include <linux/usb/phy.h>
+> > +
+> > +#ifdef CONFIG_OF
+> > +enum usb_phy_interface of_usb_get_phy_mode(struct device_node *np);
+> > +enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np);
+> > +#else
+> > +static inline enum usb_phy_interface of_usb_get_phy_mode(struct device_node *np)
+> > +{
+> > +	return USBPHY_INTERFACE_MODE_UNKNOWN;
+> > +}
+> > +
+> > +static inline enum usb_dr_mode of_usb_get_dr_mode(struct device_node *np)
+> > +{
+> > +	return USB_DR_MODE_UNKNOWN;
+> > +}
+> > +#endif
+> > +
+> > +#endif /* __LINUX_USB_OF_H */
+> > diff --git a/include/linux/usb/otg.h b/include/linux/usb/otg.h
+> > index 291e01b..154332b 100644
+> > --- a/include/linux/usb/otg.h
+> > +++ b/include/linux/usb/otg.h
+> > @@ -92,4 +92,11 @@ otg_start_srp(struct usb_otg *otg)
+> >  /* for OTG controller drivers (and maybe other stuff) */
+> >  extern int usb_bus_start_enum(struct usb_bus *bus, unsigned port_num);
+> >  
+> > +enum usb_dr_mode {
+> > +	USB_DR_MODE_UNKNOWN,
+> > +	USB_DR_MODE_HOST,
+> > +	USB_DR_MODE_PERIPHERAL,
+> > +	USB_DR_MODE_OTG,
+> > +};
+> > +
+> 
+> I would suggest turning this into a bitmask, so that further tests look
+> like
+> 
+>   if (dr_mode & USB_DR_MODE_HOST) {...}
+>
+> instead of how they currently look like in the other patch.
+
+You mean 32 modes will be enough? :)
+
+These helpers are derived from drivers/of/of_net.c. Its enums are
+commonly used all over the kernel. We should align to already used
+coding patterns. I also prefer to switch over an enum than compare bits.
+
+Thanks,
+Michael
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
