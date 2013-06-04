@@ -1,76 +1,56 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/7] USB chipidea: introduce dual role mode pdata flags
-Date: Tue, 4 Jun 2013 18:09:52 +0800
-Message-ID: <CAL411-pyrFXxyEX_GAFRS5ubh_Pf2yWLZXYC3PJevu1WSJS78g@mail.gmail.com>
-References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de>
- <1370025529-7414-5-git-send-email-mgr@pengutronix.de> <87zjv7id52.fsf@ashishki-desk.ger.corp.intel.com>
- <CAL411-pMnJC55M3n5bAuffH3pwRZTzhBfDiEfT+egtGN29c7uw@mail.gmail.com> <87ehcii5n0.fsf@ashishki-desk.ger.corp.intel.com>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH] ARM i.MX53: Add TVE entry to i.MX53 dtsi
+Date: Tue,  4 Jun 2013 12:12:22 +0200
+Message-ID: <1370340742-25172-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87ehcii5n0.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 4, 2013 at 5:31 PM, Alexander Shishkin
-<alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
->
->> On Mon, Jun 3, 2013 at 8:37 PM, Alexander Shishkin
->> <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
->>> Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
->>>
->>>> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>>>
->>>> Even if a chipidea core is otg capable the board may not. This allows
->>>
->>> "may not be"
->>>
->>>> to explicitly set the core to host/peripheral mode. Without these
->>>> flags the driver falls back to the old behaviour.
->>>>
->>>> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>>> ---
->>>
->>> [snip]
->>>
->>>> +     if (!ci->platdata->dr_mode)
->>>> +             ci->platdata->dr_mode = of_usb_get_dr_mode(dev->of_node);
->>>
->>> same as previous one, let's keep it in the platform.
->>
->> Alex, have you made the conclusion with Felipe, whether we need DT support
->> at core driver to handle such kinds of things or use platform data is ok?
->> Last time, I remember he disagreed the way this patch uses.
->
-> He wanted everything to be fetched from the core driver, I wanted
-> most things to be fetched from the platform driver, we never came to a
-> common denominator, though. This (and the other one) patch is made to
-> fetch phy_mode and dr_mode from the core if it's not passed from the
-> platform driver, so pretty much Felipe's idea. The more I think about it
-> now, the more it makes sense to me too. For instance, this way we can
-> avoid any extra boilerplate platform code.
->
-> So, we're going to have it this way for now.
->
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-For this patch, there may be wrong since it wants get the phy_mode and dr_mode
-from the core DT node, but seems there is no core DT node at all, and the device
-tree binding doc add dr_mode is for gluy layer.
+This adds the Television Encoder (TVEv2) device tree node
+to the i.MX53 dtsi.
 
-OK, so you have accepted the way we pass something from glue layer DT
-node, and using
-ci->platdata->xxx (dr_mode, phy_mode, vbus, force_full_speed, etc) at
-core driver, right?
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx53.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-
-
---
-BR,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index e448b33..3895fbb 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -1066,6 +1066,16 @@
+ 				clock-names = "ipg", "ahb", "ptp";
+ 				status = "disabled";
+ 			};
++
++			tve: tve@63ff0000 {
++				compatible = "fsl,imx53-tve";
++				reg = <0x63ff0000 0x1000>;
++				interrupts = <92>;
++				clocks = <&clks 69>, <&clks 116>;
++				clock-names = "tve", "di_sel";
++				crtcs = <&ipu 1>;
++				status = "disabled";
++			};
+ 		};
+ 	};
+ };
+-- 
+1.8.2.rc2
