@@ -1,87 +1,58 @@
-From: Matt Sealey <neko@bakuhatsu.net>
-Subject: Re: [PATCH RFC 3/3] clk: dt: binding for basic divider clock
-Date: Tue, 4 Jun 2013 12:39:53 -0500
-Message-ID: <CAHCPf3tZAbdVZPuKOjxJbCOAE76Pa6wMVHjnBRPhSpj0aMBMHg@mail.gmail.com>
-References: <1370281990-15090-1-git-send-email-mturquette@linaro.org>
- <1370281990-15090-4-git-send-email-mturquette@linaro.org>
- <51AE1FBB.1070806@codeaurora.org>
+From: Kevin Hilman <khilman@linaro.org>
+Subject: Re: [PATCH 00/11] drivers: Add Pinctrl PM support
+Date: Tue, 04 Jun 2013 11:15:51 -0700
+Message-ID: <87k3m92148.fsf@linaro.org>
+References: <1369995191-20855-1-git-send-email-gururaja.hebbar@ti.com>
+	<20130531170437.GA17591@core.coreip.homeip.net>
+	<CACRpkdYnhjpFp1CM=P_hddBe4qVigtE0c+CN9NKvk3nFgJS-ig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <51AE1FBB.1070806@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree-discuss@lists.ozlabs.org, Mike Turquette <mturquette@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYnhjpFp1CM=P_hddBe4qVigtE0c+CN9NKvk3nFgJS-ig@mail.gmail.com>
+	(Linus Walleij's message of "Tue, 4 Jun 2013 09:25:02 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hebbar Gururaja <gururaja.hebbar@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vaibhav Bedia <vaibhav.bedia@ti.com>, sudhakar.raj@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 4, 2013 at 12:11 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 06/03/13 10:53, Mike Turquette wrote:
->> +Required properties:
->> +- compatible : shall be "divider-clock".
->> +- #clock-cells : from common clock binding; shall be set to 0.
->> +- clocks : link to phandle of parent clock
->> +- reg : base address for register controlling adjustable divider
->> +- mask : arbitrary bitmask for programming the adjustable divider
->> +
->> +Optional properties:
->> +- clock-output-names : From common clock binding.
->> +- table : array of integer pairs defining divisors & bitfield values
->> +- shift : number of bits to shift the mask, defaults to 0 if not present
->> +- index_one : valid divisor programming starts at 1, not zero
->> +- index_power_of_two : valid divisor programming must be a power of two
->> +- allow_zero : implies index_one, and programming zero results in
->> +  divide-by-one
+Hi Linus,
+
+Linus Walleij <linus.walleij@linaro.org> writes:
+
+> On Fri, May 31, 2013 at 7:04 PM, Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
 >
-> It's preferred that property names have dashes instead of underscores.
+>> As with the original introduction of pinctrl states my question is: "Can
+>> all of this be handled in the driver/bus core instead of adding a lot
+>> of boilerplate code to the individual drivers".
+>
+> It can. Per the suggestion in 2/11:
+>
+> - Adding pins_sleep and pins_idle to struct dev_pin_info
+>   in include/linux/pinctrl/devinfo.h
+>
+> - Modify drivers/base/pinctrl.c to optionally look up
+>   sleep and idle states, you can make that code
+>   #ifdef CONFIG_PM I think.
+>
+> - Add something like static inline functions to
+>   include/linux/pinctrl/consumer.h
+>   with names like pinctrl_select_pm_idle(struct device *)
+>   pinctrl_select_pm_sleep(struct device *) to switch states
+>   using the device core containers, and includes
+>   checking IS_ERR() on the handles etc.
+>
+> I think this will save a *lot* of identical code in all the
+> drivers, that will just have to call
+> pinctrl_select_pm_sleep(), pinctrl_select_pm_default()
+> pinctrl_select_pm_idle() instead of all the complex code.
+>
+> This is what I planned to do but never got around to.
 
-I think I have a suggestion or two here..
+What about taking it one tiny step further, and having it done by the PM
+core itself?
 
-I mailed one to Mike earlier, I have had some mailing list problems
-which I think are solved now..
+Seems like something that should just be done as part of runtime PM
+transitions and the suspend/resume process.
 
-If you provide a mask for programming the divider, surely the "shift"
-property is therefore redundant. Unless some device has a completely
-strange way of doing things and uses two seperated bitfields for
-programming in the same register, the shift value is simply a function
-of ffs() on the mask, isn't it? It is nice to put the information
-specifically in the device tree, but where a shift is not specified
-it'd probably be a good idea to go about deriving that value that way
-anyway, right, and if we're doing that.. why specify it?
-
-Also it may be much simpler to simply define the default clock setup
-as being an integer divider that follows the form 2^n - I am not sure
-I can think off the top of my head of any clock dividers doing the
-rounds that have divide-by-non-power-of-two and if they exist out
-there (please correct me) they would be the rare ones. I think
-properties that modify behavior should err on the side of being rarely
-used and to define unusual behavior, not confirm the status quo.
-
-Just to be sure, though, someone would need to go visit a bunch of
-current clock handlers already implemented or read a lot of docs to
-see how they're expecting their dividers. Maybe some of the Samsung,
-Qualcomm, TI, Freescale guys can comment on what is the most common
-case inside their SoCs.
-
-In any case, once you figure out that, rather than specifying a full
-table of <0 1>, <1 2>, <2, 4> and creating a big list, you could just
-give the lower and upper limits and let the driver figure out what is
-in between with two values. If there were gaps, a full table would be
-necessary. The allow zero property might be better served by the very
-same range property.
-
-I would also say.. bit-mask rather than mask, divider-table rather
-than table, divider-range (modifying the idea above). While we're
-inside a particular namespace in the binding I think naming properties
-with their intent (i.e. what table is it?) is good behavior.
-
---
-Matt Sealey <matt@genesi-usa.com>
+Kevin
