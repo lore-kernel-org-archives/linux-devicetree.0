@@ -1,54 +1,111 @@
-From: "Hebbar, Gururaja" <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH 05/11] spi: omap2-mcspi: enhance pinctrl support
-Date: Tue, 4 Jun 2013 09:53:04 +0000
-Message-ID: <1BAFE6F6C881BF42822005164F1491C33EC22370@DBDE04.ent.ti.com>
-References: <1369995191-20855-1-git-send-email-gururaja.hebbar@ti.com>
-	<1369995191-20855-6-git-send-email-gururaja.hebbar@ti.com>
-	<20130601192726.GS16790@sirena.org.uk>
+From: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+Subject: [PATCH] ARM: ux500: drop any 0x prefix from I2C DT devices
+Date: Tue, 4 Jun 2013 11:53:16 +0200
+Message-ID: <1370339596-21606-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <20130601192726.GS16790-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Gabriel Fernandez <gabriel.fernandez.st-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 02, 2013 at 00:57:26, Mark Brown wrote:
-> On Fri, May 31, 2013 at 03:43:05PM +0530, Hebbar Gururaja wrote:
-> > Amend the spi omap controller to optionally take a pin control
-> > handle and set the state of the pins to:
-> > 
-> > - "default" on boot, resume and before performing an spi transfer
-> > - "idle" after initial default, after resume default, and after each
-> > spi xfer
-> > - "sleep" on suspend()
-> 
-> Looking at this code I can't really see what's OMAP-specific about it -
-> exactly the same flow should apply to pretty much any SPI controller,
-> especially given that the code will happily ignore missing states.
-> We're just setting the idle state when not actively transferring data
-> which seems sensible and generic.
-> 
-> This suggests to me that we should be adding this code into the core,
-> probably joined up with the transfer_one_message stuff, so that any
-> hardware which has an idle state will be able to get the benefit.  Can
-> anyone think of a reason why we shouldn't do that?
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Let me pull out some info about these and come back
+This removes the "0x" prefix in front of the I2C DT device
+address designation for each I2C DT node in the ux500
+devicetree files.
 
-> 
+Reported-by: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/href.dtsi      | 2 +-
+ arch/arm/boot/dts/hrefprev60.dts | 2 +-
+ arch/arm/boot/dts/snowball.dts   | 6 +++---
+ arch/arm/boot/dts/stuib.dtsi     | 4 ++--
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
-
-Regards, 
-Gururaja
+diff --git a/arch/arm/boot/dts/href.dtsi b/arch/arm/boot/dts/href.dtsi
+index 080c530..9db41b9 100644
+--- a/arch/arm/boot/dts/href.dtsi
++++ b/arch/arm/boot/dts/href.dtsi
+@@ -100,7 +100,7 @@
+ 					max-cur = /bits/ 8 <0x5f>;
+ 				};
+ 			};
+-			bh1780@0x29 {
++			bh1780@29 {
+ 				compatible = "rohm,bh1780gli";
+ 				reg = <0x33>;
+ 			};
+diff --git a/arch/arm/boot/dts/hrefprev60.dts b/arch/arm/boot/dts/hrefprev60.dts
+index 23c6dc1..c6bb07d 100644
+--- a/arch/arm/boot/dts/hrefprev60.dts
++++ b/arch/arm/boot/dts/hrefprev60.dts
+@@ -41,7 +41,7 @@
+ 		};
+ 
+ 		i2c@80110000 {
+-			bu21013_tp@0x5c {
++			bu21013_tp@5c {
+ 				reset-gpio = <&tc3589x_gpio 13 0x4>;
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/snowball.dts b/arch/arm/boot/dts/snowball.dts
+index 92c2f5ad..fb9dce5 100644
+--- a/arch/arm/boot/dts/snowball.dts
++++ b/arch/arm/boot/dts/snowball.dts
+@@ -178,15 +178,15 @@
+ 		};
+ 
+ 		i2c@80128000 {
+-			lp5521@0x33 {
++			lp5521@33 {
+ 				// compatible = "lp5521";
+ 				reg = <0x33>;
+ 			};
+-			lp5521@0x34 {
++			lp5521@34 {
+ 				// compatible = "lp5521";
+ 				reg = <0x34>;
+ 			};
+-			bh1780@0x29 {
++			bh1780@29 {
+ 				// compatible = "rohm,bh1780gli";
+ 				reg = <0x33>;
+ 			};
+diff --git a/arch/arm/boot/dts/stuib.dtsi b/arch/arm/boot/dts/stuib.dtsi
+index b47b62a..524e332 100644
+--- a/arch/arm/boot/dts/stuib.dtsi
++++ b/arch/arm/boot/dts/stuib.dtsi
+@@ -54,7 +54,7 @@
+ 		};
+ 
+ 		i2c@80110000 {
+-			bu21013_tp@0x5c {
++			bu21013_tp@5c {
+ 				compatible = "rohm,bu21013_tp";
+ 				reg = <0x5c>;
+ 				touch-gpio = <&gpio2 20 0x4>;
+@@ -65,7 +65,7 @@
+ 				rohm,flip-y;
+ 			};
+ 
+-			bu21013_tp@0x5d {
++			bu21013_tp@5d {
+ 				compatible = "rohm,bu21013_tp";
+ 				reg = <0x5d>;
+ 				touch-gpio = <&gpio2 20 0x4>;
+-- 
+1.7.11.3
