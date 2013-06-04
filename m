@@ -1,62 +1,88 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/1] USB: ehci-omap: Reset dma_mask pointer on probe
-Date: Tue, 4 Jun 2013 12:48:05 +0300
-Message-ID: <51ADB7D5.8070708@ti.com>
-References: <Pine.LNX.4.44L0.1305231009230.1459-100000@iolanthe.rowland.org> <519E2BD4.9020906@ti.com> <20130603175108.GA11188@kroah.com>
+From: "Hebbar, Gururaja" <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH 1/2] rtc: omap: add option to indicate wakeup support
+	through DT
+Date: Tue, 4 Jun 2013 09:48:25 +0000
+Message-ID: <1BAFE6F6C881BF42822005164F1491C33EC22315@DBDE04.ent.ti.com>
+References: <1369982005-8572-1-git-send-email-gururaja.hebbar@ti.com>
+	<1369982005-8572-2-git-send-email-gururaja.hebbar@ti.com>
+	<87wqqf11nw.fsf@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130603175108.GA11188-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <87wqqf11nw.fsf-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org" <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/2013 08:51 PM, Greg KH wrote:
-> On Thu, May 23, 2013 at 05:46:44PM +0300, Roger Quadros wrote:
->> On 05/23/2013 05:11 PM, Alan Stern wrote:
->>> On Thu, 23 May 2013, Roger Quadros wrote:
->>>
->>>> Device tree probed devices don't get dma_mask set. Previously
->>>> we were setting the dma_mask pointer only if it was NULL.
->>>> However, the address of 'omap_ehci_dma_mask' would change
->>>> each time the module is unloaded and loaded back thus causing
->>>> the devices dma_mask pointer to be invalid on the next load.
->>>>
->>>> This will cause page faults if any driver tries to access the
->>>> old dma_mask pointer.
->>>>
->>>> Unconditionally re-setting the dma_mask pointer fixes this problem.
->>>
->>>> diff --git a/drivers/usb/host/ehci-omap.c b/drivers/usb/host/ehci-omap.c
->>>> index 3d1491b..b33e306 100644
->>>> --- a/drivers/usb/host/ehci-omap.c
->>>> +++ b/drivers/usb/host/ehci-omap.c
->>>> @@ -146,8 +146,7 @@ static int ehci_hcd_omap_probe(struct platform_device *pdev)
->>>>  	 * Since shared usb code relies on it, set it here for now.
->>>>  	 * Once we have dma capability bindings this can go away.
->>>>  	 */
->>>> -	if (!pdev->dev.dma_mask)
->>>> -		pdev->dev.dma_mask = &omap_ehci_dma_mask;
->>>> +	pdev->dev.dma_mask = &omap_ehci_dma_mask;
->>>
->>> Is this the solution that people have agreed on?  There has been a lot 
->>> of discussion on this topic.  In particular, there has been talk about 
->>> fixing it in the DT core.
->>
->> Fixing it in DT core would be best.
+On Fri, May 31, 2013 at 23:18:03, Kevin Hilman wrote:
+> Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org> writes:
 > 
-> Then please do that.
->
+> > Even though RTC-IP is wakeup capable, Not all Boards support it.
+> >
+> > For example
+> > The rtc alarm wakeup is available in rtc-ip since omap1 days but alarm
+> > was not wired properly in previous ompa1 boards.
+> >
+> > 	commit fa5b07820fe3a0fc06ac368516e71f10a59b9539
+> > 	Author: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+> > 	Date:   Wed Oct 27 15:33:05 2010 -0700
+> >
+> > 	rtc: omap: let device wakeup capability be configured from chip
+> > 	init logic
+> >
+> > 	The rtc-omap driver currently hardcodes the RTC wakeup
+> > 	capability to be "not capable".  While this seems to be true for
+> > 	existing OMAP1 boards which are not wired for this, the
+> > 	DA850/OMAP-L138 SoC, the RTC can always be wake up source from
+> > 	its "deep sleep" mode.
+> >
+> > Current rtc-omap driver expects the rtc module wake-up capabilities to
+> > be set up by board specific code. However, in case of DT, this is not
+> > possible.
+> >
+> > So, add a DT property "ti,wakeup_capable" to indicate that the module is
+> > wake-up capable.
+> 
+> Why is this a TI-specific property?  
 
-It seems [1] went into 3.10-rc3 so this issue is fixed for 3.10.
+May be I am wrong but isn't this driver used only be TI SoC (Davinci, OMAP ...)
 
-[1] https://patchwork.kernel.org/patch/2537021/
+> 
+> Also, I think we can do this without a new DT property.Did you see this
+> patch from Tony which is already queued for v3.11:
+> 
+>     http://marc.info/?l=linux-omap&m=136917244530612&w=2
 
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+AFAIK, all boards that use twl rtc IP by default support rtc wakeup.
+
+However, as mentioned in the commit message not all boards that uses
+OMAP rtc IP supports rtc wake up (due to somoe wiring issue).
+Hence I am adding a new DT property for this.
+
+> 
+> I think this is the right way to go.  Platforms that don't want/need
+> wakeup support can disable it from userspace via:
+> 
+>     echo disabled > /sys/devices/.../power/wakeup
+
+Hmmm. Debatable. Let me get some more info about this and come back
+
+> 
+> Kevin
+> 
+> 
+
+
+Regards, 
+Gururaja
