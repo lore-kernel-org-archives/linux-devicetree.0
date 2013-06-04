@@ -1,53 +1,117 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 09/11] mmc: omap_hsmmc: enhance pinctrl support
-Date: Tue, 4 Jun 2013 09:11:00 +0200
-Message-ID: <CACRpkdbiYX5q8rvtV3Xcv7VdiJo2-6rGHNtvB1V=8C_qCpc=JA@mail.gmail.com>
-References: <1369995191-20855-1-git-send-email-gururaja.hebbar@ti.com>
-	<1369995191-20855-10-git-send-email-gururaja.hebbar@ti.com>
+From: Arnaud Ebalard <arno@natisbad.org>
+Subject: [PATCHv4 0/3] Add G762/G763 PWM fan controller
+Date: Tue, 04 Jun 2013 09:14:07 +0200
+Message-ID: <cover.1340327864.git.arno@natisbad.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1369995191-20855-10-git-send-email-gururaja.hebbar@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Hebbar Gururaja <gururaja.hebbar@ti.com>
-Cc: Kevin Hilman <khilman@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vaibhav Bedia <vaibhav.bedia@ti.com>, sudhakar.raj@ti.com, Balaji T K <balajitk@ti.com>, Chris Ball <cjb@laptop.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux-OMAP <linux-omap@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Jean Delvare <khali@linux-fr.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, devicetree-discuss@lists.ozlabs.org, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Simon Guinot <simon.guinot@sequanux.org>, Olivier Mouchet <olivier.mouchet@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 31, 2013 at 12:13 PM, Hebbar Gururaja
-<gururaja.hebbar@ti.com> wrote:
+Hi,
 
-> Amend the hsmmc controller to optionally take a pin control handle and
-> set the state of the pins to:
->
-> - "default" on boot, resume and before performing a mmc transfer
-> - "idle" after initial default, after resume default, and after each
-> mmc/sd card access
-> - "sleep" on suspend()
->
-> By optionally putting the pins into sleep state in the suspend callback
-> we can accomplish two things.
-> - One is to minimize current leakage from pins and thus save power,
-> - second, we can prevent the IP from driving pins output in an
-> uncontrolled manner, which may happen if the power domain drops the
-> domain regulator.
->
-> If any of the above pin states are missing in dt, a warning message
-> about the missing state is displayed.
-> If certain pin-states are not available, to remove this warning message
-> pass respective state name with null phandler.
->
-> Signed-off-by: Hebbar Gururaja <gururaja.hebbar@ti.com>
-> Cc: Balaji T K <balajitk@ti.com>
-> Cc: Chris Ball <cjb@laptop.org>
-> Cc: linux-mmc@vger.kernel.org
-> Cc: linux-omap@vger.kernel.org
+This series adds support for GMT G762/G763. This work is based on a
+basic version for 2.6.31 kernel developed Olivier Mouchet for LaCie
+NAS. Updates have been performed to run on recent kernels. Support has
+been completed and additional features added: ability to configure
+various characteristics from .dts file, better initialization, alarms
+and error reporting support, gear mode, polarity, fan pulse per
+revolution, fan startup voltage control. The following detailed
+datasheet has been used as a basis for this work:
 
-This is perfectly correct.
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+  http://natisbad.org/NAS/refs/GMT_EDS-762_763-080710-0.2.pdf
 
-As the PM code seems to be similar across platforms I have had
-loose plans to move this to the device core as well, but right now
-I'm too busy with other things, and it can surely be refactored later.
+The patch was developed for and tested against the GMT G762 fan
+controller used in a Netgear ReadyNAS Duo v2 (kirkwood 88F6282-based
+NAS). This is the main reason for the device tree bindings provided in
+first patch. The driver also support init via board file. Patch 2 and 3
+provides documentation for the driver and DT bindings, respectively.
 
-Yours,
-Linus Walleij
+Comments welcome,
+
+Cheers,
+
+a+
+
+Changes since v3:
+    rebased patch set against current head of Linus tree
+    removed dev_err() call when i2c_smbus_read/write_byte_data() fails
+    pwm1 sets SET_OUT reg, fan1_target sets SET_CNT reg, both unconditionally
+    removed all DT and platform_data knobs available via sysfs
+    updated documentation files to reflect two previous changes
+
+Changes since v2:
+    set ref_clk value to 32768 if not overloaded
+    fixed multi-line comment format in g762.h
+    removed static const G762_DEFAULT_PDATA in g762.h for a function
+    CodingStyle: add spaces between operatoirs when missing
+    check return value of i2c_smbus_{read,write}_byte_data()
+    remove { } is not needed in single-statement conditionals
+    introduced G762_ATTR_VAL() to allow sparse init of platform_data struc
+    changed missed reference to linear mode for DC mode
+
+Changes since v1
+    Changed author
+    removed bad tabs
+    Provide datasheet link w/o fud in g762 documentation
+    removed documentation for removed fan_gear_mode sysfs entry
+    removed tested-by from patch
+    removed FSF address in header file
+    removed useless include of <linux/slab.h>
+    removed useless parenthesis against HZ in define
+    use spaces around binary operators
+    use i2c_smbus_{read,write}_byte_data() instead of g762_{read,write}_value()
+    use return value of i2c_smbus_write_byte_data()
+    use true for initializing boolean
+    removed useless blank lines
+    do not enforce single return point rule where less readable
+    use dev_err() and dev_dbg() instead of dev_info() when it makes sense
+    remove leading '&' for function passed as pointers
+    allow passing parameter via platform_data struct for non-DT enabled boards
+    set data->valid to false when config is modified
+    s/linear/DC/ for mode (g762 datasheet uses linear)
+    more tests on rpm_from_cnt() and cnt_from_rpm() formula
+    dont overload     
+
+Changes since v0
+    removed forward declaration 
+    use bool for valid field instead of bit field.
+    protect macro args
+    fixed typo in subject line
+    Added mention for G763 support in Kconfig
+    fixed typo in driver name in Kconfig
+    do not use DRVNAME in i2c_device_id g762_id[] 
+    Following discussions, kept DEVICE_ATTR (i.e. no switch to SENSOR_DEVICE_ATTR)
+    removed useless casts when flipping bit values
+    Sanity check user input value (e.g. to prevent 256 to silenty become 0)
+    Added extra lines for multi line comments when needed
+    removed various testing knobs
+    make removed knobs available via DT
+    passed checkpatch script on the patch
+    removed useless lock protection againt clk setting
+    moved all setter at the beginning of the file
+    removed bad (u16) casts in g762_write_value() calls
+
+
+Arnaud Ebalard (3):
+  Add support for GMT G762/G763 PWM fan controller
+  Add documentation for g762 driver
+  Add DT bindings documentation for g762 driver
+
+ Documentation/devicetree/bindings/hwmon/g762.txt |   41 +
+ Documentation/hwmon/g762                         |   62 ++
+ drivers/hwmon/Kconfig                            |   10 +
+ drivers/hwmon/Makefile                           |    1 +
+ drivers/hwmon/g762.c                             | 1111 ++++++++++++++++++++++
+ include/linux/platform_data/g762.h               |   47 +
+ 6 files changed, 1272 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/g762.txt
+ create mode 100644 Documentation/hwmon/g762
+ create mode 100644 drivers/hwmon/g762.c
+ create mode 100644 include/linux/platform_data/g762.h
+
+-- 
+1.7.10.4
+
