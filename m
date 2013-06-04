@@ -1,58 +1,61 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH 00/11] drivers: Add Pinctrl PM support
-Date: Tue, 04 Jun 2013 11:15:51 -0700
-Message-ID: <87k3m92148.fsf@linaro.org>
-References: <1369995191-20855-1-git-send-email-gururaja.hebbar@ti.com>
-	<20130531170437.GA17591@core.coreip.homeip.net>
-	<CACRpkdYnhjpFp1CM=P_hddBe4qVigtE0c+CN9NKvk3nFgJS-ig@mail.gmail.com>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC 2/3] ARM: dts: omap4 clock data
+Date: Tue, 04 Jun 2013 11:34:49 -0700
+Message-ID: <20130604183449.10233.48956@quantum>
+References: <1370327958-19776-1-git-send-email-mturquette@linaro.org>
+ <1370327958-19776-3-git-send-email-mturquette@linaro.org>
+ <20130604145543.GK3331@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYnhjpFp1CM=P_hddBe4qVigtE0c+CN9NKvk3nFgJS-ig@mail.gmail.com>
-	(Linus Walleij's message of "Tue, 4 Jun 2013 09:25:02 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hebbar Gururaja <gururaja.hebbar@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vaibhav Bedia <vaibhav.bedia@ti.com>, sudhakar.raj@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130604145543.GK3331-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Joel A Fernandes <joelagnel-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Quoting Tony Lindgren (2013-06-04 07:55:43)
+> * Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [130603 23:45]:
+> > This is a first pass at creating a unique node for each clock in the
+> > OMAP4 power, reset and & clock manager (PRCM).  So far I have only
+> > converted mux clocks & fixed-rate clocks, which coexist with the current
+> > clock data in the kernel.  The rest needs to be done but better to
+> > publish early and often to see what others think of this approach.
+> 
+> > +/* FIXME need to print the address directly */
+> > +/*
+> > +#include "../../mach-omap2/prm44xx.h"
+> > +#include "../../mach-omap2/cm2_44xx.h"
+> > +#include "../../mach-omap2/cm1_44xx.h"
+> > +*/
+> 
+> I don't think you're using the above includes any longer
+> in this file?
+> 
 
-Linus Walleij <linus.walleij@linaro.org> writes:
+Correct.  I actually spotted this before emailing the patches out at
+midnight, but by then I didn't care to fix it.  The benefits of marking
+a patch as "RFC" ;-)
 
-> On Fri, May 31, 2013 at 7:04 PM, Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
->
->> As with the original introduction of pinctrl states my question is: "Can
->> all of this be handled in the driver/bus core instead of adding a lot
->> of boilerplate code to the individual drivers".
->
-> It can. Per the suggestion in 2/11:
->
-> - Adding pins_sleep and pins_idle to struct dev_pin_info
->   in include/linux/pinctrl/devinfo.h
->
-> - Modify drivers/base/pinctrl.c to optionally look up
->   sleep and idle states, you can make that code
->   #ifdef CONFIG_PM I think.
->
-> - Add something like static inline functions to
->   include/linux/pinctrl/consumer.h
->   with names like pinctrl_select_pm_idle(struct device *)
->   pinctrl_select_pm_sleep(struct device *) to switch states
->   using the device core containers, and includes
->   checking IS_ERR() on the handles etc.
->
-> I think this will save a *lot* of identical code in all the
-> drivers, that will just have to call
-> pinctrl_select_pm_sleep(), pinctrl_select_pm_default()
-> pinctrl_select_pm_idle() instead of all the complex code.
->
-> This is what I planned to do but never got around to.
+I had a mind to use the new preprocessor capabilities of dtc for the
+PRCM bit masks and shift values, but instead I ended up using the raw
+hex values.  I've actually come to prefer using the raw hex values for
+DT, which I think makes more sense for a description of the hardware
+which is not tied to any Linux implementation.
 
-What about taking it one tiny step further, and having it done by the PM
-core itself?
+Regards,
+Mike
 
-Seems like something that should just be done as part of runtime PM
-transitions and the suspend/resume process.
-
-Kevin
+> Regards,
+> 
+> Tony
