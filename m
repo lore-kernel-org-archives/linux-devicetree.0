@@ -1,13 +1,11 @@
 From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 7/8] ARM i.MX53: mba53: fix lvds/disp pinctrl
-Date: Tue,  4 Jun 2013 13:07:14 +0200
-Message-ID: <1370344035-7417-8-git-send-email-s.trumtrar@pengutronix.de>
-References: <1370344035-7417-1-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCH 0/8] update MBa53 support
+Date: Tue,  4 Jun 2013 13:07:07 +0200
+Message-ID: <1370344035-7417-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1370344035-7417-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,114 +17,51 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-use NO_PAD_CTL / 0x80000000 instead of 0x10000 to prevent misconfigured pads
+Hi!
 
-Signed-off-by: Markus Niebel <Markus.Niebel-77yLcl8UjJQ@public.gmane.org>
-[Steffen: split up patch into tqma53+mba53 part]
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/imx53-mba53.dts | 74 +++++++++++++++++++--------------------
- 1 file changed, 37 insertions(+), 37 deletions(-)
+This adds misc stuff to the MBa53 DT:
+	- Sound support
+	- pinctrl fixups
+	- USB
+	- Television Encoder
+	- Display support
 
-diff --git a/arch/arm/boot/dts/imx53-mba53.dts b/arch/arm/boot/dts/imx53-mba53.dts
-index 4515d01..869aa3e 100644
---- a/arch/arm/boot/dts/imx53-mba53.dts
-+++ b/arch/arm/boot/dts/imx53-mba53.dts
-@@ -76,21 +76,21 @@
- 	lvds1 {
- 		pinctrl_lvds1_1: lvds1-grp1 {
- 			fsl,pins = <
--				MX53_PAD_LVDS0_TX3_P__LDB_LVDS0_TX3 0x10000
--				MX53_PAD_LVDS0_CLK_P__LDB_LVDS0_CLK 0x10000
--				MX53_PAD_LVDS0_TX2_P__LDB_LVDS0_TX2 0x10000
--				MX53_PAD_LVDS0_TX1_P__LDB_LVDS0_TX1 0x10000
--				MX53_PAD_LVDS0_TX0_P__LDB_LVDS0_TX0 0x10000
-+				MX53_PAD_LVDS0_TX3_P__LDB_LVDS0_TX3 0x80000000
-+				MX53_PAD_LVDS0_CLK_P__LDB_LVDS0_CLK 0x80000000
-+				MX53_PAD_LVDS0_TX2_P__LDB_LVDS0_TX2 0x80000000
-+				MX53_PAD_LVDS0_TX1_P__LDB_LVDS0_TX1 0x80000000
-+				MX53_PAD_LVDS0_TX0_P__LDB_LVDS0_TX0 0x80000000
- 			>;
- 		};
- 
- 		pinctrl_lvds1_2: lvds1-grp2 {
- 			fsl,pins = <
--				MX53_PAD_LVDS1_TX3_P__LDB_LVDS1_TX3 0x10000
--				MX53_PAD_LVDS1_TX2_P__LDB_LVDS1_TX2 0x10000
--				MX53_PAD_LVDS1_CLK_P__LDB_LVDS1_CLK 0x10000
--				MX53_PAD_LVDS1_TX1_P__LDB_LVDS1_TX1 0x10000
--				MX53_PAD_LVDS1_TX0_P__LDB_LVDS1_TX0 0x10000
-+				MX53_PAD_LVDS1_TX3_P__LDB_LVDS1_TX3 0x80000000
-+				MX53_PAD_LVDS1_TX2_P__LDB_LVDS1_TX2 0x80000000
-+				MX53_PAD_LVDS1_CLK_P__LDB_LVDS1_CLK 0x80000000
-+				MX53_PAD_LVDS1_TX1_P__LDB_LVDS1_TX1 0x80000000
-+				MX53_PAD_LVDS1_TX0_P__LDB_LVDS1_TX0 0x80000000
- 			>;
- 		};
- 	};
-@@ -98,33 +98,33 @@
- 	disp1 {
- 		pinctrl_disp1_1: disp1-grp1 {
- 			fsl,pins = <
--				MX53_PAD_EIM_DA10__IPU_DI1_PIN15   0x10000 /* DISP1_DRDY */
--				MX53_PAD_EIM_D23__IPU_DI1_PIN2     0x10000 /* DISP1_HSYNC */
--				MX53_PAD_EIM_EB3__IPU_DI1_PIN3     0x10000 /* DISP1_VSYNC */
--				MX53_PAD_EIM_D26__IPU_DISP1_DAT_22 0x10000
--				MX53_PAD_EIM_D27__IPU_DISP1_DAT_23 0x10000
--				MX53_PAD_EIM_D30__IPU_DISP1_DAT_21 0x10000
--				MX53_PAD_EIM_D31__IPU_DISP1_DAT_20 0x10000
--				MX53_PAD_EIM_A24__IPU_DISP1_DAT_19 0x10000
--				MX53_PAD_EIM_A23__IPU_DISP1_DAT_18 0x10000
--				MX53_PAD_EIM_A22__IPU_DISP1_DAT_17 0x10000
--				MX53_PAD_EIM_A21__IPU_DISP1_DAT_16 0x10000
--				MX53_PAD_EIM_A20__IPU_DISP1_DAT_15 0x10000
--				MX53_PAD_EIM_A19__IPU_DISP1_DAT_14 0x10000
--				MX53_PAD_EIM_A18__IPU_DISP1_DAT_13 0x10000
--				MX53_PAD_EIM_A17__IPU_DISP1_DAT_12 0x10000
--				MX53_PAD_EIM_EB0__IPU_DISP1_DAT_11 0x10000
--				MX53_PAD_EIM_EB1__IPU_DISP1_DAT_10 0x10000
--				MX53_PAD_EIM_DA0__IPU_DISP1_DAT_9  0x10000
--				MX53_PAD_EIM_DA1__IPU_DISP1_DAT_8  0x10000
--				MX53_PAD_EIM_DA2__IPU_DISP1_DAT_7  0x10000
--				MX53_PAD_EIM_DA3__IPU_DISP1_DAT_6  0x10000
--				MX53_PAD_EIM_DA4__IPU_DISP1_DAT_5  0x10000
--				MX53_PAD_EIM_DA5__IPU_DISP1_DAT_4  0x10000
--				MX53_PAD_EIM_DA6__IPU_DISP1_DAT_3  0x10000
--				MX53_PAD_EIM_DA7__IPU_DISP1_DAT_2  0x10000
--				MX53_PAD_EIM_DA8__IPU_DISP1_DAT_1  0x10000
--				MX53_PAD_EIM_DA9__IPU_DISP1_DAT_0  0x10000
-+				MX53_PAD_EIM_DA10__IPU_DI1_PIN15   0x80000000 /* DISP1_DRDY */
-+				MX53_PAD_EIM_D23__IPU_DI1_PIN2     0x80000000 /* DISP1_HSYNC */
-+				MX53_PAD_EIM_EB3__IPU_DI1_PIN3     0x80000000 /* DISP1_VSYNC */
-+				MX53_PAD_EIM_D26__IPU_DISP1_DAT_22 0x80000000
-+				MX53_PAD_EIM_D27__IPU_DISP1_DAT_23 0x80000000
-+				MX53_PAD_EIM_D30__IPU_DISP1_DAT_21 0x80000000
-+				MX53_PAD_EIM_D31__IPU_DISP1_DAT_20 0x80000000
-+				MX53_PAD_EIM_A24__IPU_DISP1_DAT_19 0x80000000
-+				MX53_PAD_EIM_A23__IPU_DISP1_DAT_18 0x80000000
-+				MX53_PAD_EIM_A22__IPU_DISP1_DAT_17 0x80000000
-+				MX53_PAD_EIM_A21__IPU_DISP1_DAT_16 0x80000000
-+				MX53_PAD_EIM_A20__IPU_DISP1_DAT_15 0x80000000
-+				MX53_PAD_EIM_A19__IPU_DISP1_DAT_14 0x80000000
-+				MX53_PAD_EIM_A18__IPU_DISP1_DAT_13 0x80000000
-+				MX53_PAD_EIM_A17__IPU_DISP1_DAT_12 0x80000000
-+				MX53_PAD_EIM_EB0__IPU_DISP1_DAT_11 0x80000000
-+				MX53_PAD_EIM_EB1__IPU_DISP1_DAT_10 0x80000000
-+				MX53_PAD_EIM_DA0__IPU_DISP1_DAT_9  0x80000000
-+				MX53_PAD_EIM_DA1__IPU_DISP1_DAT_8  0x80000000
-+				MX53_PAD_EIM_DA2__IPU_DISP1_DAT_7  0x80000000
-+				MX53_PAD_EIM_DA3__IPU_DISP1_DAT_6  0x80000000
-+				MX53_PAD_EIM_DA4__IPU_DISP1_DAT_5  0x80000000
-+				MX53_PAD_EIM_DA5__IPU_DISP1_DAT_4  0x80000000
-+				MX53_PAD_EIM_DA6__IPU_DISP1_DAT_3  0x80000000
-+				MX53_PAD_EIM_DA7__IPU_DISP1_DAT_2  0x80000000
-+				MX53_PAD_EIM_DA8__IPU_DISP1_DAT_1  0x80000000
-+				MX53_PAD_EIM_DA9__IPU_DISP1_DAT_0  0x80000000
- 			>;
- 		};
- 	};
+The series is rebased to Shawns for-next branch.
+
+It was tested with and depends on the series
+	updates for tqma53.dtsi
+	<1370337150-18487-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
+The Television Encoder patch from Philipp depends on the Patch
+	ARM i.MX53: Add TVE entry to i.MX53 dtsi
+	<1370340742-25172-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
+Regards,
+Steffen
+
+Markus Niebel (4):
+  ARM i.MX53: mba53: add sound support
+  ARM i.MX53: mba53: add missing gpio stuff for pca9554
+  ARM i.MX53: mba53: use reset gpio for FEC
+  ARM i.MX53: mba53: add DI1_CLK to pinctrl for disp1
+
+Michael Olbrich (1):
+  ARM i.MX53: mba53: enable usbotg & usbh1
+
+Philipp Zabel (1):
+  ARM i.MX53: mba53: add Tevision Encoder
+
+Sascha Hauer (1):
+  ARM i.MX53: mba53: Add display support
+
+Steffen Trumtrar (1):
+  ARM i.MX53: mba53: fix lvds/disp pinctrl
+
+ arch/arm/boot/dts/imx53-mba53.dts | 175 ++++++++++++++++++++++++++++++--------
+ 1 file changed, 138 insertions(+), 37 deletions(-)
+
 -- 
 1.8.2.rc2
