@@ -1,176 +1,41 @@
-From: Simon Guinot <simon.guinot@sequanux.org>
-Subject: Re: [PATCHv2 1/3] Add support for GMT G762/G763 PWM fan controller
-Date: Tue, 4 Jun 2013 23:23:07 +0200
-Message-ID: <20130604212306.GL7626@kw.sim.vm.gnt>
-References: <cover.1369687670.git.arno@natisbad.org>
- <b44f55c4194f6cd8c94f8a3d63ad5c8bd1d1cfe0.1369687670.git.arno@natisbad.org>
- <20130531221616.GG7626@kw.sim.vm.gnt>
- <87fvx1pwrl.fsf@natisbad.org>
- <20130602215904.GH7626@kw.sim.vm.gnt>
- <87sj0yz7tv.fsf@natisbad.org>
+From: Rohit Vaswani <rvaswani@codeaurora.org>
+Subject: Re: [PATCH 2/3] ARM: msm: Re-organize platsmp to make it extensible
+Date: Tue, 04 Jun 2013 15:52:16 -0700
+Message-ID: <51AE6FA0.4030104@codeaurora.org>
+References: <1370305185-6450-1-git-send-email-rvaswani@codeaurora.org> <1370305185-6450-3-git-send-email-rvaswani@codeaurora.org> <20130604093258.GS18614@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Z1Z8UV8BNhgCynIS"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87sj0yz7tv.fsf@natisbad.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnaud Ebalard <arno@natisbad.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Olivier Mouchet <olivier.mouchet@gmail.com>, Rob Herring <rob.herring@calxeda.com>, lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, Nicolas Perrin <nperrin@lacie.com>, Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20130604093258.GS18614@n2100.arm.linux.org.uk>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, David Brown <davidb@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, Bryan Huntsman <bryanh@codeaurora.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On 6/4/2013 2:32 AM, Russell King - ARM Linux wrote:
+> On Mon, Jun 03, 2013 at 05:19:44PM -0700, Rohit Vaswani wrote:
+>> +	sc1_base_ptr = of_iomap(dn, 0);
+>> +	if (sc1_base_ptr) {
+>> +		writel_relaxed(0, sc1_base_ptr + VDD_SC1_ARRAY_CLAMP_GFS_CTL);
+>> +		writel_relaxed(0, sc1_base_ptr + SCSS_CPU1CORE_RESET);
+>> +		writel_relaxed(3, sc1_base_ptr + SCSS_DBG_STATUS_CORE_PWRDUP);
+>> +		mb();
+>> +		iounmap(sc1_base_ptr);
+> If you need to fiddle with power rails and resets for your secondary
+> core, you don't need any of the pen_release stuff, and you really
+> should get rid of it.  The pen_release stuff is only there for
+> platforms where there's no proper way of controlling the secondary
+> CPUs except by using a software method.
 
---Z1Z8UV8BNhgCynIS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We currently don't have hotplug support as that also needs pen_release. 
+We still need to do this.
+We could change that behavior, but we would need more time for that. 
+Please could we let this go through and cleanup the pen_release once we 
+have hotplug working.
 
-On Tue, Jun 04, 2013 at 08:52:12AM +0200, Arnaud Ebalard wrote:
-> Hi Simon,
->=20
-> Simon Guinot <simon.guinot@sequanux.org> writes:
->=20
-> > On Sat, Jun 01, 2013 at 07:26:54PM +0200, Arnaud Ebalard wrote:
-> >> Hi Simon and Guenter,
-> >>=20
-> >> Simon Guinot <simon.guinot@sequanux.org> writes:
-> >>=20
-> >> > On Tue, May 28, 2013 at 12:03:14AM +0200, Arnaud Ebalard wrote:
-> >> >>=20
-> >> >> Signed-off-by: Arnaud Ebalard <arno@natisbad.org>
-> >> >> ---
-> >> >>  drivers/hwmon/Kconfig              |   10 +
-> >> >>  drivers/hwmon/Makefile             |    1 +
-> >> >>  drivers/hwmon/g762.c               | 1012 ++++++++++++++++++++++++=
-++++++++++++
-> >> >>  include/linux/platform_data/g762.h |   54 ++
-> >> >>  4 files changed, 1077 insertions(+)
-> >> >>  create mode 100644 drivers/hwmon/g762.c
-> >> >>  create mode 100644 include/linux/platform_data/g762.h
-> >> >
-> >> > Hi Arnaud,
-> >> >
-> >> > After more tests on my 2Big Network v2 board, it appears that the fan
-> >> > doesn't rotate when PWM mode (the preferred operating mode for this
-> >> > board) is selected. Nevertheless, DC mode is usable (even if not ide=
-al
-> >> > given the hardware). After some investigations I noticed that an ext=
-ra
-> >> > initialization is needed to enable PWM mode on my board: the set_cnt
-> >> > register must be set to 0 while the default value is 0xff. Is that
-> >> > specific to my hardware ? Is PWM mode working on your ReadyNAS with
-> >> > the default set_cnt value ?
-> >>=20
-> >> First, thanks for testing this!
-> >>=20
-> >> Regarding your problem, I first started by booting current version of =
-my
-> >> driver on the Duo v2 w/o touching chip registers (only clock reference
-> >> value). This way, I inherit the values installed by (NETGEAR's) u-boot:
-> >>=20
-> >> $ for k in fan* pwm* ; do echo -n "$k:" ; echo `cat $k `; done
-> >> fan1_alarm:0
-> >> fan1_div:2
-> >> fan1_fault:0
-> >> fan1_input:1807
-> >> fan1_target:1807
-> >> pwm1:221
-> >> pwm1_enable:2        /* closed-loop, i.e. config is done via set_cnt */
-> >> pwm1_mode:1          /* PWM mode */=20
-> >
-> > Sorry, I realize that I have not been very accurate in my description of
-> > the problem: The fan doesn't rotate when PWM _and_ open-loop control are
-> > selected. On the 2Big2 board, 2 wires are used to drive the fan.
-> >
-> > Then with pwm1_mode=3D1, pwm1_enable=3D1 and set_cnt=3D0xff (default va=
-lue),
-> > nothing happen whatever the value I write in pwm1.
->=20
-> After boot, with set_cnt and set_out untouched by me (set_cnt set to
-> 0x5a by u-boot, i.e. 255-0x5a read on pwm1):
->=20
-> fan1_alarm:0
-> fan1_div:1
-> fan1_fault:0
-> fan1_input:1365
-> fan1_target:1365
-> pwm1:0                  /* set_out is 0 (considering fan1_target,
->                            set_cnt is 0x5a)*/
-> pwm1_enable:2           /* closed-loop */
-> pwm1_mode:0             /* DC mode */
->=20
-> # echo 1 > pwm1_mode    /* PWM mode */       # fan rotates=20
-> # echo 1 > pwm1_enable  /* open-loop */      # fan stops rotating
->=20
-> At that point we have:
->=20
-> fan1_alarm:0
-> fan1_div:1
-> fan1_fault:0
-> fan1_input:0
-> fan1_target:1365
-> pwm1:0                  /* set_out is 0, set_cnt is still 0x5a */
-> pwm1_enable:1
-> pwm1_mode:1
->=20
-> Then:
->=20
-> # echo 100 > pwm1                            # fan rotates
+Thanks,
+Rohit Vaswani
 
-OK you are lucky. Your bootloader initialize set_cnt with 0x5a. Mine
-don't and it is precisely the issue: set_cnt is still 0xff (the default
-value) when the driver controls the fan.
-
-Please, could you try open-loop mode with set_cnt set to 0xff ?  Maybe
-you can enforce this value for the test purpose ?
-
-If you observe the same behaviour than me, then could modify the driver
-to ensure that set_cnt is not 0xff when open-loop mode is selected ?
-Maybe by systematically setting a different value (as 0) ?
-
->=20
->=20
-> > By testing, I have discovered that writing 0 into set_cnt allows to work
-> > around the issue. I can do this by using the closed-loop control:
-> > pwm1_mode=3D1, pwm1_enable=3D2 and pwm=3D255. Now, set_cnt worths 0 and=
- if I
-> > switch back to open-loop control, all works as expected.
-> >
-> > Can you try open-loop control and PWM mode with your board ? I wonder if
-> > this issue is specific to the 2Big2 hardware.
->=20
-> AFAICT, set_cnt has never been set to 0 in my test and PWM+open-loop
-> works as expected, i.e. just by setting a non-zero value in set_out.
-> Tell me if I missed something or if you want me to perform another
-> test.
-
-Actually, I have only problems when set_cnt worths 0xff. Please, could
-you try the tests mentioned above ?
-
-Thanks in advance,
-
-Simon
-
->=20
-> Cheers,
->=20
-> a+
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---Z1Z8UV8BNhgCynIS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlGuWroACgkQgtp0PDeOcDqrCQCeLRyl+c1GMrSwkYwgMiWR7UCW
-9voAoIyAnw/tRfe4GD/7Zb9w5jqzeVZf
-=BrEr
------END PGP SIGNATURE-----
-
---Z1Z8UV8BNhgCynIS--
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, hosted by The Linux Foundation
