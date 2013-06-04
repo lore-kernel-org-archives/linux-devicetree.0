@@ -1,56 +1,64 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 00/11] drivers: Add Pinctrl PM support
-Date: Tue, 4 Jun 2013 09:25:02 +0200
-Message-ID: <CACRpkdYnhjpFp1CM=P_hddBe4qVigtE0c+CN9NKvk3nFgJS-ig@mail.gmail.com>
-References: <1369995191-20855-1-git-send-email-gururaja.hebbar@ti.com>
-	<20130531170437.GA17591@core.coreip.homeip.net>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: ux500: register LP5521 LEDs in the device tree
+Date: Tue, 4 Jun 2013 08:35:07 +0100
+Message-ID: <20130604073507.GL3370@gmail.com>
+References: <1369210331-18545-1-git-send-email-linus.walleij@stericsson.com>
+ <CAK5ve-+oJL0fbtM=5xRSBjCztX1fP-fcwUvZurnj42hiXR5X+Q@mail.gmail.com>
+ <20130603081805.GC3370@gmail.com>
+ <CAK5ve-+ykvTfpfsyAfnoURwuZt1nF4aFPGU5yQa0HXXBmWW_9Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <20130531170437.GA17591-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAK5ve-+ykvTfpfsyAfnoURwuZt1nF4aFPGU5yQa0HXXBmWW_9Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Milo Kim <Milo.Kim-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez.st-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 31, 2013 at 7:04 PM, Dmitry Torokhov
-<dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
-> As with the original introduction of pinctrl states my question is: "Can
-> all of this be handled in the driver/bus core instead of adding a lot
-> of boilerplate code to the individual drivers".
-
-It can. Per the suggestion in 2/11:
-
-- Adding pins_sleep and pins_idle to struct dev_pin_info
-  in include/linux/pinctrl/devinfo.h
-
-- Modify drivers/base/pinctrl.c to optionally look up
-  sleep and idle states, you can make that code
-  #ifdef CONFIG_PM I think.
-
-- Add something like static inline functions to
-  include/linux/pinctrl/consumer.h
-  with names like pinctrl_select_pm_idle(struct device *)
-  pinctrl_select_pm_sleep(struct device *) to switch states
-  using the device core containers, and includes
-  checking IS_ERR() on the handles etc.
-
-I think this will save a *lot* of identical code in all the
-drivers, that will just have to call
-pinctrl_select_pm_sleep(), pinctrl_select_pm_default()
-pinctrl_select_pm_idle() instead of all the complex code.
-
-This is what I planned to do but never got around to.
-
-Yours,
-Linus Walleij
+T24gTW9uLCAwMyBKdW4gMjAxMywgQnJ5YW4gV3Ugd3JvdGU6Cgo+IE9uIE1vbiwgSnVuIDMsIDIw
+MTMgYXQgMToxOCBBTSwgTGVlIEpvbmVzIDxsZWUuam9uZXNAbGluYXJvLm9yZz4gd3JvdGU6Cj4g
+PiBPbiBGcmksIDMxIE1heSAyMDEzLCBCcnlhbiBXdSB3cm90ZToKPiA+Cj4gPj4gT24gV2VkLCBN
+YXkgMjIsIDIwMTMgYXQgMToxMiBBTSwgTGludXMgV2FsbGVpago+ID4+IDxsaW51cy53YWxsZWlq
+QHN0ZXJpY3Nzb24uY29tPiB3cm90ZToKPiA+PiA+IEZyb206IExpbnVzIFdhbGxlaWogPGxpbnVz
+LndhbGxlaWpAbGluYXJvLm9yZz4KPiA+PiA+Cj4gPj4gPiBCYXNlZCBvbiBwZW5kaW5nIGRldmlj
+ZSB0cmVlIHN1cHBvcnQgaW4gdGhlIExQNTV4eCBkcml2ZXJzCj4gPj4gPiB3ZSBjYW4gYWRkIHRo
+ZSBjb3JyZWN0IExFRCBhbmQgY2hhbm5lbCBjb25maWd1cmF0aW9uIGZyb20gdGhlCj4gPj4gPiB1
+eDUwMCBkZXZpY2UgdHJlZSBmb3IgYWxsIEhSRUYgdmFyaWFudHMuCj4gPj4gPgo+ID4+ID4gQ2M6
+IE1pbG8gS2ltIDxNaWxvLktpbUB0aS5jb20+Cj4gPj4gPiBDYzogQnJ5YW4gV3UgPGNvb2xvbmV5
+QGdtYWlsLmNvbT4KPiA+PiA+IFNpZ25lZC1vZmYtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVzLndh
+bGxlaWpAbGluYXJvLm9yZz4KPiA+PiA+IC0tLQo+ID4+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2hy
+ZWYuZHRzaSB8IDM4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tCj4gPj4g
+PiAgMSBmaWxlIGNoYW5nZWQsIDMyIGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCj4gPj4g
+Pgo+ID4+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2hyZWYuZHRzaSBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL2hyZWYuZHRzaQo+ID4+ID4gaW5kZXggNjI1MjNmNi4uZTMxNTQyOSAxMDA2
+NDQKPiA+PiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2hyZWYuZHRzaQo+ID4+ID4gKysrIGIv
+YXJjaC9hcm0vYm9vdC9kdHMvaHJlZi5kdHNpCj4gPj4gPiBAQCAtNjMsMTYgKzYzLDQyIEBACj4g
+Pj4gPiAgICAgICAgICAgICAgICAgfTsKPiA+PiA+Cj4gPj4gPiAgICAgICAgICAgICAgICAgaTJj
+QDgwMTI4MDAwIHsKPiA+PiA+IC0gICAgICAgICAgICAgICAgICAgICAgIGxwNTUyMUAweDMzIHsK
+PiA+PiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJscDU1
+MjEiOwo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgbHA1NTIxQDMzIHsKPiA+Pgo+ID4+
+IElzIHRoaXMgcmlnaHQsIEkgZ3Vlc3MgaXQgc2hvdWxkIGJlIHN0aWxsICJscDU1MjFAMHgzMyIs
+IGFsdGhvdWdoIGl0J3MKPiA+PiBqdXN0IGEgbmFtZS4KPiA+Cj4gPiBXaGF0IG1ha2VzIHlvdSBz
+YXkgdGhhdCBCcnlhbj8KPiA+Cj4gPiBBbGwgb3RoZXIgbm9kZXMgZHJvcCB0aGUgJzB4JywgYXMg
+aXQncyBpbXBsaWVkLgo+ID4KPiAKPiBCdXQgSSBzdGlsbCBnb3QgdGhpcyBpbiB0aGlzIHBhdGNo
+Cj4gIiAgYmgxNzgwQDB4MjkgeyIKPiAKPiB3aGljaCBpcyBub3QgY2hhbmdlZC4gU28gd2hpY2gg
+b25lIHNob3VsZCBiZSB0aGUgcmlnaHQ/CgpUaGUgb25lIHdpdGhvdXQgdGhlICcweCcgaXMgY29y
+cmVjdC4KCklmIHRoZXJlIGFyZSBhbnkgb2YgdGhlc2UgbGVmdCBvdmVyIHRoYXQgTGludXMgaGFz
+bid0IGZpeGVkIHlldCwgSSdtCmhhcHB5IHRvIGZpeC4KCi0tIApMZWUgSm9uZXMKTGluYXJvIFNU
+LUVyaWNzc29uIExhbmRpbmcgVGVhbSBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNv
+ZnR3YXJlIGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBC
+bG9nCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRldmlj
+ZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFi
+cy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vz
+cwo=
