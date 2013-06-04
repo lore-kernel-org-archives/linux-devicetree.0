@@ -1,93 +1,51 @@
-From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] clocksource: dw_apb_timer_of: use clocksource_of_init
-Date: Tue, 4 Jun 2013 09:57:27 +0200
-Message-ID: <201306040957.27920.heiko@sntech.de>
-References: <201306032157.40488.heiko@sntech.de>
- <201306032159.55685.heiko@sntech.de> <20130604043620.GU11798@tarshish>
+From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 01/10] clocksource: dw_apb_timer_of: use the clocksource as sched clock if necessary
+Date: Tue, 4 Jun 2013 10:29:38 +0200
+Message-ID: <201306041029.39053.heiko@sntech.de>
+References: <201306030055.15413.heiko@sntech.de> <201306030056.03522.heiko@sntech.de> <CACRpkdYAvUQ+aymJm1Fw1bE1aGdO7RUqLR9byvoT7ECTk4tkpw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130604043620.GU11798@tarshish>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jamie Iles <jamie-wmLquQDDieKakBO8gow8eQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYAvUQ+aymJm1Fw1bE1aGdO7RUqLR9byvoT7ECTk4tkpw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mike Turquette <mturquette@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <cjb@laptop.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 4. Juni 2013, 06:36:20 schrieb Baruch Siach:
-> Hi Heiko,
-> =
+Am Dienstag, 4. Juni 2013, 08:34:44 schrieb Linus Walleij:
+> On Mon, Jun 3, 2013 at 12:56 AM, Heiko St=FCbner <heiko@sntech.de> wr=
+ote:
+> > Currently the dw_apb_timer always expects a separate special timer =
+to be
+> > availbable for the sched_clock. Some devices using dw_apb_timers do=
+ not
+> > have the sptimer but can use the clocksource as sched_clock.
+> > Therefore this patch adds using the clocksource timer as
+> > a fallback if no usable sched timer is found.
+> >=20
+> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+>=20
+> Is this really what the patch does? I mean "ass the clocksourse as
+> fallback", it seems more like that is controlled from the device tree=
+,
+> this looks more like some more careful handling of the device tree
+> input making the sched_timer optional, it doesn't really "add"
+> anything, does it?
 
-> On Mon, Jun 03, 2013 at 09:59:55PM +0200, Heiko St=FCbner wrote:
-> > dw_apb_timer_init used to search the devicetree for matching timer
-> > devices, making calls to it from board files necessary.
-> > =
+Right, the commit message is probably based a bit to much on the before=
+-state=20
+of the driver, always expecting the "sptimer" and panicing if not found=
+=2E
 
-> > Change the dw_apb_timer_init to work with CLOCKSOURCE_OF_DECLARE.
-> > With this change the function gets called once for each timer node
-> > and tracks these number of calls to attach clockevent and clocksource
-> > devices to the nodes.
-> > =
+How about:
 
-> > Also remove the calls to dw_apb_timer_init from all previous users, as
-> > clocksource_of_init is the default for init_time now.
-> > =
+Currently the dw_apb_timer always expects a separate special timer to b=
+e
+availbable for the sched_clock. Some devices using dw_apb_timers do not
+have this sptimer but can use the clocksource as sched_clock instead.
 
-> > Tested on the upcoming rk3066 code.
-> > =
-
-> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> > Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> > Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> > ---
-> > =
-
-> >  arch/arm/mach-picoxcell/Kconfig       |    1 +
-> >  arch/arm/mach-picoxcell/common.c      |    2 -
-> >  arch/arm/mach-socfpga/Kconfig         |    1 +
-> >  arch/arm/mach-socfpga/socfpga.c       |    2 -
-> >  drivers/clocksource/dw_apb_timer_of.c |   41
-> >  ++++++++++++++++----------------- include/linux/dw_apb_timer.h         =
-
-> >  |    1 -
-> >  6 files changed, 22 insertions(+), 26 deletions(-)
-> > =
-
-> > diff --git a/arch/arm/mach-picoxcell/Kconfig
-> > b/arch/arm/mach-picoxcell/Kconfig index 13bae78..3ef6bbe 100644
-> > --- a/arch/arm/mach-picoxcell/Kconfig
-> > +++ b/arch/arm/mach-picoxcell/Kconfig
-> > @@ -6,6 +6,7 @@ config ARCH_PICOXCELL
-> > =
-
-> >  	select CPU_V6K
-> >  	select DW_APB_TIMER
-> >  	select DW_APB_TIMER_OF
-> > =
-
-> > +	select CLKSRC_OF
-> =
-
-> Shouldn't DW_APB_TIMER 'select CLKSRC_OF if OF' instead of selecting is f=
-or
-> each and every platform? While at it we can do the same to DW_APB_TIMER_O=
-F.
-
-if anything DW_APB_TIMER_OF should select both DW_APB_TIMER and 'CLKSRC_OF =
-if =
-
-OF', as the base DW_APB_TIMER_OF is the platform glue, that uses DW_APB_TIM=
-ER =
-
-internally.
-
-But otherwise sounds sensible to not duplicate these selects everywhere.
+Therefore enable the driver to distiguish between devices with and with=
+out
+sptimer based on the devicetree data and select the correct timer as
+sched_clock.
