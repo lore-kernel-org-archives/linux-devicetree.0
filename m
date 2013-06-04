@@ -1,57 +1,228 @@
-From: Dinh Nguyen <dinguyen@altera.com>
-Subject: Re: [PATCH v2 0/4] dw_apb_timer: osc as sched_clock, clocks and
- clocksource_of support
-Date: Tue, 4 Jun 2013 10:28:50 -0500
-Message-ID: <1370359730.16167.4.camel@linux-builds1>
-References: <201306041136.09566.heiko@sntech.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201306041136.09566.heiko@sntech.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Cc: John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jamie Iles <jamie@jamieiles.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Baruch Siach <baruch@tkos.co.il>
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: [PATCH v6] media: i2c: tvp514x: add OF support
+Date: Tue,  4 Jun 2013 21:56:23 +0530
+Message-ID: <1370363183-10295-1-git-send-email-prabhakar.csengg@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: LMML <linux-media@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
 
-On Tue, 2013-06-04 at 11:36 +0200, Heiko St=C3=BCbner wrote:
-> This is split off of my Rockchip support series from yesterday. It's =
-now
-> a patch more than before, as the third patch enables the timer to be =
-used
-> thru clocksource_of_init and moves picoxcell and socfpga to it.
->=20
-> changes since v1:
-> - hopefully improve the patch description of patch 1
->   after a suggestion by Linus Walleij
-> - move the selection of DW_APB_TIMER and CLKSRC_OF into DW_APB_TIMER_=
-OF
->   after a suggestion by Baruch Siach
->=20
-> Heiko Stuebner (4):
->   clocksource: dw_apb_timer_of: enable the use the clocksource as sch=
-ed clock
->   clocksource: dw_apb_timer_of: add clock-handling
->   clocksource: dw_apb_timer_of: select DW_APB_TIMER
->   clocksource: dw_apb_timer_of: use clocksource_of_init
->=20
->  Documentation/devicetree/bindings/rtc/dw-apb.txt |   19 +++++
->  arch/arm/mach-picoxcell/Kconfig                  |    1 -
->  arch/arm/mach-picoxcell/common.c                 |    2 -
->  arch/arm/mach-socfpga/Kconfig                    |    1 -
->  arch/arm/mach-socfpga/socfpga.c                  |    2 -
->  drivers/clocksource/Kconfig                      |    2 +
->  drivers/clocksource/dw_apb_timer_of.c            |   95 ++++++++++++=
-++-------
->  include/linux/dw_apb_timer.h                     |    1 -
->  8 files changed, 84 insertions(+), 39 deletions(-)
->=20
+add OF support for the tvp514x driver.
 
-=46or all the mach-socfpga parts:
+Signed-off-by: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: davinci-linux-open-source@linux.davincidsp.com
+---
+ Tested on da850-evm.
 
-Acked-by: Dinh Nguyen <dinguyen@altera.com>
+ RFC v1: https://patchwork.kernel.org/patch/2030061/
+ RFC v2: https://patchwork.kernel.org/patch/2061811/
 
-Thanks,
-Dinh
+ Changes for current version from RFC v2:
+ 1: Fixed review comments pointed by Sylwester.
+
+ Changes for v2:
+ 1: Listed all the compatible property values in the documentation text file.
+ 2: Removed "-decoder" from compatible property values.
+ 3: Added a reference to the V4L2 DT bindings documentation to explain
+    what the port and endpoint nodes are for.
+ 4: Fixed some Nits pointed by Laurent.
+ 5: Removed unnecessary header file includes and sort them alphabetically.
+
+ Changes for v3:
+ 1: Rebased on patch https://patchwork.kernel.org/patch/2539411/
+
+ Changes for v4:
+ 1: added missing call for of_node_put().
+ 2: Rebased the patch on v3.11.
+ 
+ Changes for v5:
+ 1: Fixed calling to a wrong label.
+ 
+ Changes for v6:
+ 1: Fixed minor nits pointed by Laurent.
+ 2: Included the Ack from Laurent.
+ 
+ .../devicetree/bindings/media/i2c/tvp514x.txt      |   44 ++++++++++++++
+ drivers/media/i2c/tvp514x.c                        |   62 ++++++++++++++++++--
+ 2 files changed, 100 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+new file mode 100644
+index 0000000..46752cc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+@@ -0,0 +1,44 @@
++* Texas Instruments TVP514x video decoder
++
++The TVP5146/TVP5146m2/TVP5147/TVP5147m1 device is high quality, single-chip
++digital video decoder that digitizes and decodes all popular baseband analog
++video formats into digital video component. The tvp514x decoder supports analog-
++to-digital (A/D) conversion of component RGB and YPbPr signals as well as A/D
++conversion and decoding of NTSC, PAL and SECAM composite and S-video into
++component YCbCr.
++
++Required Properties :
++- compatible : value should be either one among the following
++	(a) "ti,tvp5146" for tvp5146 decoder.
++	(b) "ti,tvp5146m2" for tvp5146m2 decoder.
++	(c) "ti,tvp5147" for tvp5147 decoder.
++	(d) "ti,tvp5147m1" for tvp5147m1 decoder.
++
++- hsync-active: HSYNC Polarity configuration for endpoint.
++
++- vsync-active: VSYNC Polarity configuration for endpoint.
++
++- pclk-sample: Clock polarity of the endpoint.
++
++For further reading on port node refer to Documentation/devicetree/bindings/
++media/video-interfaces.txt.
++
++Example:
++
++	i2c0@1c22000 {
++		...
++		...
++		tvp514x@5c {
++			compatible = "ti,tvp5146";
++			reg = <0x5c>;
++
++			port {
++				tvp514x_1: endpoint {
++					hsync-active = <1>;
++					vsync-active = <1>;
++					pclk-sample = <0>;
++				};
++			};
++		};
++		...
++	};
+diff --git a/drivers/media/i2c/tvp514x.c b/drivers/media/i2c/tvp514x.c
+index 01d9757..a1fe823 100644
+--- a/drivers/media/i2c/tvp514x.c
++++ b/drivers/media/i2c/tvp514x.c
+@@ -40,6 +40,7 @@
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-common.h>
+ #include <media/v4l2-mediabus.h>
++#include <media/v4l2-of.h>
+ #include <media/v4l2-chip-ident.h>
+ #include <media/v4l2-ctrls.h>
+ #include <media/tvp514x.h>
+@@ -1056,6 +1057,42 @@ static struct tvp514x_decoder tvp514x_dev = {
+ 
+ };
+ 
++static struct tvp514x_platform_data *
++tvp514x_get_pdata(struct i2c_client *client)
++{
++	struct tvp514x_platform_data *pdata;
++	struct v4l2_of_endpoint bus_cfg;
++	struct device_node *endpoint;
++	unsigned int flags;
++
++	if (!IS_ENABLED(CONFIG_OF) || !client->dev.of_node)
++		return client->dev.platform_data;
++
++	endpoint = v4l2_of_get_next_endpoint(client->dev.of_node, NULL);
++	if (!endpoint)
++		return NULL;
++
++	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		goto done;
++
++	v4l2_of_parse_endpoint(endpoint, &bus_cfg);
++	flags = bus_cfg.bus.parallel.flags;
++
++	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
++		pdata->hs_polarity = 1;
++
++	if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
++		pdata->vs_polarity = 1;
++
++	if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
++		pdata->clk_polarity = 1;
++
++done:
++	of_node_put(endpoint);
++	return pdata;
++}
++
+ /**
+  * tvp514x_probe() - decoder driver i2c probe handler
+  * @client: i2c driver client device structure
+@@ -1067,19 +1104,20 @@ static struct tvp514x_decoder tvp514x_dev = {
+ static int
+ tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ {
++	struct tvp514x_platform_data *pdata = tvp514x_get_pdata(client);
+ 	struct tvp514x_decoder *decoder;
+ 	struct v4l2_subdev *sd;
+ 	int ret;
+ 
++	if (pdata == NULL) {
++		dev_err(&client->dev, "No platform data\n");
++		return -EINVAL;
++	}
++
+ 	/* Check if the adapter supports the needed features */
+ 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
+ 		return -EIO;
+ 
+-	if (!client->dev.platform_data) {
+-		v4l2_err(client, "No platform data!!\n");
+-		return -ENODEV;
+-	}
+-
+ 	decoder = devm_kzalloc(&client->dev, sizeof(*decoder), GFP_KERNEL);
+ 	if (!decoder)
+ 		return -ENOMEM;
+@@ -1091,7 +1129,7 @@ tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 			sizeof(tvp514x_reg_list_default));
+ 
+ 	/* Copy board specific information here */
+-	decoder->pdata = client->dev.platform_data;
++	decoder->pdata = pdata;
+ 
+ 	/**
+ 	 * Fetch platform specific data, and configure the
+@@ -1239,8 +1277,20 @@ static const struct i2c_device_id tvp514x_id[] = {
+ 
+ MODULE_DEVICE_TABLE(i2c, tvp514x_id);
+ 
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id tvp514x_of_match[] = {
++	{ .compatible = "ti,tvp5146", },
++	{ .compatible = "ti,tvp5146m2", },
++	{ .compatible = "ti,tvp5147", },
++	{ .compatible = "ti,tvp5147m1", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, tvp514x_of_match);
++#endif
++
+ static struct i2c_driver tvp514x_driver = {
+ 	.driver = {
++		.of_match_table = of_match_ptr(tvp514x_of_match),
+ 		.owner = THIS_MODULE,
+ 		.name = TVP514X_MODULE_NAME,
+ 	},
+-- 
+1.7.0.4
+
