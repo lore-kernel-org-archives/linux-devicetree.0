@@ -1,76 +1,45 @@
-From: "Lennart Sorensen" <lsorense@csclub.uwaterloo.ca>
-Subject: Re: getting allwinner SoC support upstream (was Re: Uploading
- linux (3.9.4-1))
-Date: Wed, 5 Jun 2013 17:38:45 -0400
-Message-ID: <20130605213845.GX11182@csclub.uwaterloo.ca>
-References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
- <CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
- <51AFA6DD.3000202@wwwdotorg.org>
- <CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 10/10] arm: add basic support for Rockchip RK3066a boards
+Date: Wed, 5 Jun 2013 23:45:06 +0200
+Message-ID: <20130605214506.GC14209@lukather>
+References: <201306030055.15413.heiko@sntech.de>
+ <201306030102.20890.heiko@sntech.de>
+ <20130605091119.18432af4@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
+In-Reply-To: <20130605091119.18432af4@skate>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luke Kenneth Casson Leighton <lkcl@lkcl.net>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel@lists.debian.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, linux-mmc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Jaehoon Chung <jh80.chung@samsung.com>, John Stultz <john.stultz@linaro.org>, Grant Likely <grant.likely@linaro.org>, Russell King <linux@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Chris Ball <cjb@laptop.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 05, 2013 at 10:24:15PM +0100, Luke Kenneth Casson Leighton wrote:
->   https://github.com/linux-sunxi/u-boot-sunxi
-> 
->  And Then Some, stephen.  there are two versions of u-boot being used:
-> one is the community-assembled [GPL-compliant] one, and the other
-> includes a [as-of-a-few-days-ago-but-no-longer, yay!]
-> formerly-GPL-violating one from allwinner.
-> 
->  the community-based one *doesn't* have fex integration (i don't
-> think, but henrik will know for sure), but the allwinner one
-> definitely does.
-> 
->  .... and then there's the boot0 and boot1 loaders, these *do* have
-> fex integration: they're absolutely tiny and they're designed to fit
-> into the 1st level cache.  the job of these bootloaders is to set up
-> the DDR3 RAM timings (so that you can access DRAM!!) and to then
-> decide whether to load from NAND, SD/MMC etc. and many other things.
-> 
->  these boot0 and boot1 loaders are themselves configureable so that
-> you can specify, through script.fex, what GPIO is to be the "reset
-> key" and so on.  that's a much simplified story btw.
-> 
->  so the point is: if anyone wishes me to propose to allwinner that
-> they convert over to devicetree, or any other proposal which involves
-> significant low-level changes to their working practices that could
-> potentially have a massive knock-on effect onto their
-> multi-million-dollar clients, it had better be a damn good story.
+Hi Thomas,
 
-Well certainly anyone interested in being a customer of allwinner should
-very much encourage them to get with it.  Having support upstream really
-is very helpful when trying to use a chip.  Going off an inventing your
-own thing rather than talking to the linux kernel developers first is
-just a bad idea as far as long term support is concerned.  Had they asked
-they would probably have been told devicetree would be a good idea to use.
+On Wed, Jun 05, 2013 at 09:11:19AM +0200, Thomas Petazzoni wrote:
+> Dear Heiko St=FCbner,
+>=20
+> On Mon, 3 Jun 2013 01:02:20 +0200, Heiko St=FCbner wrote:
+> > index 0000000..a2d8c70
+> > --- /dev/null
+> > +++ b/arch/arm/mach-rockchip/Makefile.boot
+> > @@ -0,0 +1,3 @@
+> > +zreladdr-$(CONFIG_ARCH_ROCKCHIP)	:=3D 0x60408000
+> > +params_phys-$(CONFIG_ARCH_ROCKCHIP)	:=3D 0x60088000
+> > +initrd_phys-$(CONFIG_ARCH_ROCKCHIP)	:=3D 0x60800000
+>=20
+> Thanks to the AUTO_ZRELADDR thing that you're using as part of the
+> MULTIPLATFORM support, this Makefile.boot file is no longer useful. S=
+ee
+> mach-socfpga, mach-mvebu, mach-bcm2835, mach-bcm, mach-highbank, etc.
+>=20
+> Cc'ing Maxime Ripard, since I see that mach-sunxi does have a
+> Makefile.boot, even though I believe it is not needed.
 
-Allwinner has some very nice chips, and it certainly would be nice if
-they would start doing things "properly".
+Yes, it is a left-over and should be removed obviously.
 
-Texas instruments uses devicetree for their arm devices.  It's very nice.
+Thanks for reminding it to me :)
 
-I haven't checked what freescale is doing yet, although at least for
-powerpc, freescale is very used to devicetree, so hopefully they are
-doing that for their arm chips too.
-
-Both are certainly pushing their drivers upstream for inclusion and seem
-to be listening to feedback on how to best do things.
-
-I haven't personally dealt with any nvidia arm devices, so I have no
-idea how those are turning out, nor have I looked much at the marvell
-ones yet (even though I have a cubox sitting on my desk I intend to play
-around with).
-
-Lots of others like qualcomm, samsung, and who knows who else.  No idea
-how they are doing things either.
-
--- 
-Len Sorensen
+Maxime
