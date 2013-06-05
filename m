@@ -1,452 +1,542 @@
-From: Loh Tien Hock <thloh@altera.com>
-Subject: Re: [PATCH 1/1] drivers/gpio: Altera soft IP GPIO driver
-Date: Wed, 5 Jun 2013 16:05:45 +0800
-Message-ID: <CAJKo0K6kL9=L8mcUGQDvwK=GuNKmGK19RjmyYsvE+K0e0v7F6g@mail.gmail.com>
-References: <1367980740-5716-1-git-send-email-thloh@altera.com> <CACRpkdaOZn=f7eqAOCw6Fnf=D+ZgrZO2UXitL2UOYixULa2r-w@mail.gmail.com>
+From: Nicolin Chen <b42378@freescale.com>
+Subject: [PATCH V2] ASoC: fsl: add imx-wm8962 machine driver
+Date: Wed, 5 Jun 2013 16:21:41 +0800
+Message-ID: <1370420501-8410-1-git-send-email-b42378@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaOZn=f7eqAOCw6Fnf=D+ZgrZO2UXitL2UOYixULa2r-w@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tien Hock Loh <thloh@altera.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
+Cc: grant.likely@linaro.org, broonie@kernel.org, lgirdwood@gmail.com, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 21, 2013 at 2:02 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Wed, May 8, 2013 at 4:39 AM, Tien Hock Loh <thloh@altera.com> wrote:
->
-> > Add driver support for Altera GPIO soft IP, including interrupts and I/O.
-> > Tested on Altera CV SoC board.
-> >
-> > Signed-off-by: Tien Hock Loh <thloh@altera.com>
-> (...)
->
-> Note: I have come to realize that there is apparently almost zero
-> review on the devicetree-discuss list, is there anyone in the world
-> reviewing new device tree bindings for generality, or is it all up to
-> Linux subsystem maintainers like myself to take care of this?
->
-> > +++ b/Documentation/devicetree/bindings/gpio/gpio-altera.txt
-> > @@ -0,0 +1,40 @@
-> > +Altera GPIO controller bindings
-> > +
-> > +Required properties:
-> > +- compatible:
-> > +  - "altr,pio-1.0"
->
-> This vendor prefix does not exist in
-> Documentation/devicetree/bindings/vendor-prefixes.txt
-> so atleast add it.
->
-> I don't see the point in abbreviating "altera" to "altr" to
-> save two letters, use the full name of the company!
-"altr" is used for all other Altera soft IP driver currently in
-kernel.org (such as drivers/tty/serial/altera_jtaguart.c and
-altera_uart.c), thus for consistency, we are using "altr" instead of
-"altera".
+This is the initial imx-wm8962 device-tree-only machine driver working with
+fsl_ssi driver. More features can be added on top of it later.
 
->
-> > +- reg: Physical base address and length of the controller's registers.
-> > +- #gpio-cells : Should be two.
-> > +  - first cell is the gpio offset number
-> > +  - second cell is used to specify optional parameters (unused)
->
-> So why do you add it? Because all other GPIO controllers
-> use it? Or because you will use it for something later?
->
-My bad, I copied over from other GPIO controller and assumed that is
-how things works. I'll update this.
+Signed-off-by: Nicolin Chen <b42378@freescale.com>
+---
+ChangeLog:
+v1->v2:
+ * fixed a typo in probe():
+ * data->dai.ops = &imx_hifi_ops,  ==>   data->dai.ops = &imx_hifi_ops;
+---
+ .../devicetree/bindings/sound/imx-audio-wm8962.txt |   61 +++
+ sound/soc/fsl/Kconfig                              |   12 +
+ sound/soc/fsl/Makefile                             |    2 +
+ sound/soc/fsl/imx-wm8962.c                         |  387 ++++++++++++++++++++
+ 4 files changed, 462 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-wm8962.txt
+ create mode 100644 sound/soc/fsl/imx-wm8962.c
 
-> > +- gpio-controller : Marks the device node as a GPIO controller.
-> > +- #interrupt-cells : Should be 1.
-> > +- interrupts: Specify the interrupt.
-> > +- interrupt-controller: Mark the device node as an interrupt controller
-> > +  The first cell is the GPIO number.
-> > +Altera GPIO specific properties:
-> > +- width: Width of the GPIO bank, range from 1-32
-> > +- level_trigger: Specifies whether the GPIO interrupt is level trigger.
-> > +  This field is required if the Altera GPIO controller used has IRQ enabled.
->
-> Is this how other GPIO controllers do it?
-
-Altera GPIO is configurable during hardware generation time, and
-cannot be changed in software. Other GPIOs are different because they
-have a software configurable trigger, thus we need this.
-
->
-> > +  Note: This field is does not specify whether Altera GPIO controller is
-> > +  level or edge trigger. It is used to detect internally how the trigger is
-> > +  handled.
->
-> I don't get it, but I guess reading the code will. I suspect this
-> needs editing since DT bindings shall be *reusable* without
-> having to read the code to understand them.
->
-> Explain exactly what you mean when you say it is "used to
-> detect internally how the trigger is handled". Used how?
-> Handled how? Internally to what?
-
-Sorry that the note is a little ambiguous. I'll update this (as what
-you replied below as well on the trigger handling).
-
->
-> > +Note: If the Altera GPIO is set to be built as a module, peripherals that uses
-> > +Altera GPIO as interrupt-parent should be a module so that the peripheral
-> > +doesn't get initialized before Altera GPIO is initialized.
->
-> Delete this. We do not put Linux-specific information into the
-> device tree bindings.
->
-
-Noted.
-
-> (...)
-> > +++ b/drivers/gpio/gpio-altera.c
-> (...)
-> > +#include <linux/platform_device.h>
->
-> Suggest
-> #include <linux/basic_mmio_gpio.h>
->
-> > +#define ALTERA_GPIO_DATA               0x0
-> > +#define ALTERA_GPIO_DIR                        0x4
-> > +#define ALTERA_GPIO_IRQ_MASK           0x8
-> > +#define ALTERA_GPIO_EDGE_CAP           0xc
-> > +#define ALTERA_GPIO_OUTSET             0x10
-> > +#define ALTERA_GPIO_OUTCLEAR           0x14
->
-> Looking at this is is pretty apparent that you shall use
-> the generic basic MMIO GPIO helper library.
->
-> In Kconfig:
-> select GPIO_GENERIC
->
-> Include #include <linux/basic_mmio_gpio.h>
->
-> See other GPIO drivers to figure out how to reuse the
-> generic MMIO GPIO helpers. For example the new
-> GRGPIO driver, drivers/gpio/gpio-grgpio.c.
->
-> > +struct altera_gpio_chip {
-> > +       struct of_mm_gpio_chip mmchip;
-> > +       struct irq_domain *irq; /* GPIO controller IRQ number */
-> > +       spinlock_t gpio_lock;   /* Lock used for synchronization */
-> > +       bool level_trigger;
-> > +       int hwirq;
-> > +};
->
-> Convert inline documentation to kerneldoc.
-> Document the rest of the members as well because
-> I don't understand them, and the documentation for the
-> irqdomain is plain wrong, the other comment is
-> just stating the obvious: tell us *what* is it locking
-> and *why*.
-
-Okay.
-
->
-> (...)
-> > +static int altera_gpio_irq_set_type(struct irq_data *d,
-> > +                               unsigned int type)
-> > +{
-> > +       /* There is no way to know the soft IP configuration,
-> > +          so we accept any interrupt types that are supported by the soft
-> > +          IP. Nothing to do here since it is hardware defined. Just return
-> > +          OK status to the caller. */
->
-> Eh what? Why don't you say pass in the capabilities from
-> the device tree then, if the hardware cannot say what it is
-> capable of, something else has to.
-
-I've updated Altera's tool to export this parameter to device tree
-generated so that we can handle this better.
-
-I'll update this in the next patch.
-
->
-> /*
->  * Please use this multiline comment
->  * style, it is easier to read.
->  */
-
-Understood.
-
->
-> > +       if (type == IRQ_TYPE_EDGE_RISING ||
-> > +               type == IRQ_TYPE_EDGE_FALLING ||
-> > +               type == IRQ_TYPE_EDGE_BOTH ||
-> > +               type == IRQ_TYPE_NONE) {
-> > +               return 0;
-> > +       }
->
-> This is not OK if it is unclear whether this is all supported.
->
-> Get that info from somewhere.
->
-> Apparently this is exactly what the level trigger field in
-> the device tree defines.
->
-> Especially handling both edges is quite tricky, have you
-> actually tested this?
-
-As above, I'll update this in the next patch. Yes, the level trigger
-tells if it is a level triggered. I'll add an edge_type field to
-identify when it is not level triggered, what is the edge type
-(rising, falling, both).
-
-I've tested "both edges" on a dev kit to control a LED blinking and it
-worked correctly.
-
->
-> (...)
-> > +static int altera_gpio_get(struct gpio_chip *gc, unsigned offset)
-> > +static void altera_gpio_set(struct gpio_chip *gc, unsigned offset, int value)
-> > +static int altera_gpio_direction_input(struct gpio_chip *gc, unsigned offset)
-> > +static int altera_gpio_direction_output(struct gpio_chip *gc,
-> > +               unsigned offset, int value)
->
-> These look like they could all use basic_mmio_gpio instead
-> of being verbatim copies of generic code.
-
-I couldn't update this because the bgpio_init doesn't really support
-ngpio that is other than 8, 16, 32, and 64. In Altera GPIO IP, the
-ngpio can be anywhere between 1-32.
-Please advise if you disagree.
-
->
-> > +static int altera_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
-> > +static void altera_gpio_irq_handler(unsigned int irq, struct irq_desc *desc)
-> > +{
-> > +       struct altera_gpio_chip *altera_gc = irq_desc_get_handler_data(desc);
-> > +       struct irq_chip *chip = irq_desc_get_chip(desc);
-> > +       struct of_mm_gpio_chip *mm_gc = &altera_gc->mmchip;
-> > +       unsigned long status;
-> > +
-> > +       int base;
-> > +       chip->irq_mask(&desc->irq_data);
-> > +
-> > +       if (altera_gc->level_trigger == ALTERA_TRIGGER_LEVEL_HIGH) {
-> > +{
-> > +       struct of_mm_gpio_chip *mm_gc = to_of_mm_gpio_chip(gc);
-> > +       struct altera_gpio_chip *altera_gc = container_of(mm_gc,
-> > +                               struct altera_gpio_chip, mmchip);
-> > +
-> > +       if (altera_gc->irq == 0)
-> > +               return -ENXIO;
-> > +       if ((altera_gc->irq && offset) < altera_gc->mmchip.gc.ngpio)
-> > +               return irq_create_mapping(altera_gc->irq, offset);
-> > +       else
-> > +               return -ENXIO;
-> > +}
-> > +
->
-> So here it is pretty clear what this thing in the device tree
-> means. It means "I am a level triggered chip".
-
-Yes, will do.
-
->
-> > +               status = readl(mm_gc->regs + ALTERA_GPIO_DATA);
-> > +               status &= readl(mm_gc->regs + ALTERA_GPIO_IRQ_MASK);
-> > +
-> > +               for (base = 0; base < mm_gc->gc.ngpio; base++) {
-> > +                       if ((1 << base) & status) {
-> > +                               generic_handle_irq(irq_linear_revmap(
-> > +                                       altera_gc->irq, base));
-> > +                       }
-> > +               }
-> > +       } else {
->
-> And if I'm not level triggered I'm edge triggered, right?
-
-Yup, will update this.
-
->
-> > +               while ((status = (readl(mm_gc->regs + ALTERA_GPIO_EDGE_CAP) &
-> > +                       readl(mm_gc->regs + ALTERA_GPIO_IRQ_MASK)))) {
-> > +                       writel(status, mm_gc->regs + ALTERA_GPIO_EDGE_CAP);
-> > +                       for (base = 0; base < mm_gc->gc.ngpio; base++) {
-> > +                               if ((1 << base) & status) {
-> > +                                       generic_handle_irq(irq_linear_revmap(
-> > +                                               altera_gc->irq, base));
-> > +                               }
-> > +                       }
-> > +               }
-> > +       }
-> > +
-> > +       chip->irq_eoi(irq_desc_get_irq_data(desc));
-> > +       chip->irq_unmask(&desc->irq_data);
-> > +}
->
-> (...)
-> > +int altera_gpio_probe(struct platform_device *pdev)
-> > +{
-> > +       struct device_node *node = pdev->dev.of_node;
-> > +       int id, reg, ret;
-> > +       struct altera_gpio_chip *altera_gc = devm_kzalloc(&pdev->dev,
-> > +                               sizeof(*altera_gc), GFP_KERNEL);
-> > +       if (altera_gc == NULL) {
-> > +               ret = -ENOMEM;
-> > +               pr_err("%s: registration failed with status %d\n",
-> > +                       node->full_name, ret);
-> > +               return ret;
->
-> dev_err(&pdev->dev, "%s out of memory\n");
-> return -ENOMEM;
->
-> So:
->
-> - Use dev_* print primitives
->
-> - Print the actual error, or we go back to the 1980ies
->   habit of having to look up an abstract error code in a
->   binder.
->
-> - Just return the error.
-
-Understood.
-
->
->
-> > +       }
-> > +       altera_gc->irq = 0;
-> > +
-> > +       spin_lock_init(&altera_gc->gpio_lock);
-> > +
-> > +       id = pdev->id;
-> > +
-> > +       if (of_property_read_u32(node, "width", &reg))
-> > +               /*By default assume full GPIO controller*/
-> > +               altera_gc->mmchip.gc.ngpio = 32;
-> > +       else
-> > +               altera_gc->mmchip.gc.ngpio = reg;
-> > +
-> > +       if (altera_gc->mmchip.gc.ngpio > 32) {
-> > +               pr_warn("%s: ngpio is greater than 32, defaulting to 32\n",
-> > +                       node->full_name);
-> > +               altera_gc->mmchip.gc.ngpio = 32;
-> > +       }
-> > +
-> > +       altera_gc->mmchip.gc.direction_input    = altera_gpio_direction_input;
-> > +       altera_gc->mmchip.gc.direction_output   = altera_gpio_direction_output;
-> > +       altera_gc->mmchip.gc.get                = altera_gpio_get;
-> > +       altera_gc->mmchip.gc.set                = altera_gpio_set;
-> > +       altera_gc->mmchip.gc.to_irq             = altera_gpio_to_irq;
-> > +       altera_gc->mmchip.gc.owner              = THIS_MODULE;
-> > +
-> > +       ret = of_mm_gpiochip_add(node, &altera_gc->mmchip);
-> > +       if (ret)
-> > +               goto err;
->
-> Just print the error and return directly.
->
-> There is nothing to free or clean up at the err: label.
-
-Okay
-
->
-> > +       platform_set_drvdata(pdev, altera_gc);
-> > +
-> > +       if (of_get_property(node, "interrupts", &reg) == NULL)
-> > +               goto skip_irq;
-> > +       altera_gc->hwirq = irq_of_parse_and_map(node, 0);
-> > +
-> > +       if (altera_gc->hwirq == NO_IRQ)
-> > +               goto skip_irq;
-> > +
-> > +       altera_gc->irq = irq_domain_add_linear(node, altera_gc->mmchip.gc.ngpio,
-> > +                               &altera_gpio_irq_ops, altera_gc);
-> > +
-> > +       if (!altera_gc->irq) {
-> > +               ret = -ENODEV;
-> > +               goto dispose_irq;
-> > +       }
-> > +
-> > +       if (of_property_read_u32(node, "level_trigger", &reg)) {
-> > +               ret = -EINVAL;
-> > +               pr_err("%s: level_trigger value not set in device tree\n",
-> > +                       node->full_name);
-> > +               goto teardown;
-> > +       }
-> > +       altera_gc->level_trigger = reg;
-> > +
-> > +       irq_set_handler_data(altera_gc->hwirq, altera_gc);
-> > +       irq_set_chained_handler(altera_gc->hwirq, altera_gpio_irq_handler);
-> > +
-> > +       return 0;
-> > +
-> > +teardown:
-> > +       irq_domain_remove(altera_gc->irq);
-> > +dispose_irq:
-> > +       irq_dispose_mapping(altera_gc->hwirq);
-> > +       WARN_ON(gpiochip_remove(&altera_gc->mmchip.gc) < 0);
-> > +
-> > +err:
-> > +       pr_err("%s: registration failed with status %d\n",
-> > +               node->full_name, ret);
-> > +       devm_kfree(&pdev->dev, altera_gc);
->
-> No. The devm_* managed resources take care of freeing when probe
-> fails, that is the major idea with it.
->
-
-Understood
-
-> > +
-> > +       return ret;
-> > +skip_irq:
-> > +       return 0;
-> > +}
-> > +
-> > +static int altera_gpio_remove(struct platform_device *pdev)
-> > +{
-> > +       unsigned int irq, i;
-> > +       int status;
-> > +       struct altera_gpio_chip *altera_gc = platform_get_drvdata(pdev);
-> > +
-> > +       status = gpiochip_remove(&altera_gc->mmchip.gc);
-> > +
-> > +       if (status < 0)
-> > +               return status;
-> > +
-> > +       if (altera_gc->irq) {
-> > +               irq_dispose_mapping(altera_gc->hwirq);
-> > +
-> > +               for (i = 0; i < altera_gc->mmchip.gc.ngpio; i++) {
-> > +                       irq = irq_find_mapping(altera_gc->irq, i);
-> > +                       if (irq > 0)
-> > +                               irq_dispose_mapping(irq);
-> > +               }
-> > +
-> > +               irq_domain_remove(altera_gc->irq);
-> > +       }
-> > +
-> > +       irq_set_handler_data(altera_gc->hwirq, NULL);
-> > +       irq_set_chained_handler(altera_gc->hwirq, NULL);
-> > +       devm_kfree(&pdev->dev, altera_gc);
->
-> Again no. You're missing the point with devm*.
-
-Understood.
-
->
-> > +#ifdef CONFIG_OF
-> > +static struct of_device_id altera_gpio_of_match[] = {
-> > +       { .compatible = "altr,pio-1.0", },
-> > +       {},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, altera_gpio_of_match);
-> > +#else
-> > +#define altera_gpio_of_match NULL
-> > +#endif
->
-> Your driver depends on OF_GPIO, which depends on OF.
->
-> Skip the #ifdefs.
-
-Will update this.
-
->
-> Yours,
-> Linus Walleij
+diff --git a/Documentation/devicetree/bindings/sound/imx-audio-wm8962.txt b/Documentation/devicetree/bindings/sound/imx-audio-wm8962.txt
+new file mode 100644
+index 0000000..cb188a6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/imx-audio-wm8962.txt
+@@ -0,0 +1,61 @@
++Freescale i.MX audio complex with WM8962 codec
++
++Required properties:
++- compatible : "fsl,imx-audio-wm8962"
++- model : The user-visible name of this sound complex
++- ssi-controller : The phandle of the i.MX SSI controller
++- audio-codec : The phandle of the WM8962 audio codec
++- audio-routing : A list of the connections between audio components.
++  Each entry is a pair of strings, the first being the connection's sink,
++  the second being the connection's source. Valid names could be power
++  supplies, WM8962 pins, and the jacks on the board:
++
++  Power supplies:
++   * Mic Bias
++
++  WM8962 pins:
++  * HPOUTL
++  * HPOUTR
++  * SPKOUTL
++  * SPKOUTR
++  * MICBIAS
++  * IN3R
++  * DMIC
++  * DMICDAT
++
++  Board connectors:
++   * Mic Jack
++   * Headphone Jack
++   * Ext Spk
++
++- mux-int-port : The internal port of the i.MX audio muxer (AUDMUX)
++- mux-ext-port : The external port of the i.MX audio muxer
++
++- hp-det-gpios : The gpio port of Headphone detection.
++- mic-det-gpios: The gpio port of Micphone detection.
++
++Note: The AUDMUX port numbering should start at 1, which is consistent with
++hardware manual.
++
++Example:
++
++sound {
++	compatible = "fsl,imx6q-sabresd-wm8962",
++		     "fsl,imx-audio-wm8962";
++	model = "wm8962-audio";
++	ssi-controller = <&ssi2>;
++	audio-codec = <&codec>;
++		audio-routing =
++		"Headphone Jack", "HPOUTL",
++		"Headphone Jack", "HPOUTR",
++		"Ext Spk", "SPKOUTL",
++		"Ext Spk", "SPKOUTR",
++		"MICBIAS", "AMIC",
++		"IN3R", "MICBIAS",
++		"DMIC", "MICBIAS",
++		"DMICDAT", "DMIC";
++	mux-int-port = <2>;
++	mux-ext-port = <3>;
++	hp-det-gpios = <&gpio7 8 1>;	/* active low */
++	mic-det-gpios = <&gpio1 9 1>;	/* active low */
++};
+diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
+index 7860cc2..aa43854 100644
+--- a/sound/soc/fsl/Kconfig
++++ b/sound/soc/fsl/Kconfig
+@@ -168,6 +168,18 @@ config SND_SOC_EUKREA_TLV320
+ 	  Enable I2S based access to the TLV320AIC23B codec attached
+ 	  to the SSI interface
+ 
++config SND_SOC_IMX_WM8962
++	tristate "SoC Audio support for i.MX boards with wm8962"
++	depends on OF && I2C
++	select SND_SOC_WM8962
++	select SND_SOC_IMX_PCM_DMA
++	select SND_SOC_IMX_AUDMUX
++	select SND_SOC_FSL_SSI
++	select SND_SOC_FSL_UTILS
++	help
++	  Say Y if you want to add support for SoC audio on an i.MX board with
++	  a wm8962 codec.
++
+ config SND_SOC_IMX_SGTL5000
+ 	tristate "SoC Audio support for i.MX boards with sgtl5000"
+ 	depends on OF && I2C
+diff --git a/sound/soc/fsl/Makefile b/sound/soc/fsl/Makefile
+index 91883f8..d4b4aa8 100644
+--- a/sound/soc/fsl/Makefile
++++ b/sound/soc/fsl/Makefile
+@@ -42,6 +42,7 @@ snd-soc-phycore-ac97-objs := phycore-ac97.o
+ snd-soc-mx27vis-aic32x4-objs := mx27vis-aic32x4.o
+ snd-soc-wm1133-ev1-objs := wm1133-ev1.o
+ snd-soc-imx-sgtl5000-objs := imx-sgtl5000.o
++snd-soc-imx-wm8962-objs := imx-wm8962.o
+ snd-soc-imx-mc13783-objs := imx-mc13783.o
+ 
+ obj-$(CONFIG_SND_SOC_EUKREA_TLV320) += snd-soc-eukrea-tlv320.o
+@@ -49,4 +50,5 @@ obj-$(CONFIG_SND_SOC_PHYCORE_AC97) += snd-soc-phycore-ac97.o
+ obj-$(CONFIG_SND_SOC_MX27VIS_AIC32X4) += snd-soc-mx27vis-aic32x4.o
+ obj-$(CONFIG_SND_MXC_SOC_WM1133_EV1) += snd-soc-wm1133-ev1.o
+ obj-$(CONFIG_SND_SOC_IMX_SGTL5000) += snd-soc-imx-sgtl5000.o
++obj-$(CONFIG_SND_SOC_IMX_WM8962) += snd-soc-imx-wm8962.o
+ obj-$(CONFIG_SND_SOC_IMX_MC13783) += snd-soc-imx-mc13783.o
+diff --git a/sound/soc/fsl/imx-wm8962.c b/sound/soc/fsl/imx-wm8962.c
+new file mode 100644
+index 0000000..cb54da4
+--- /dev/null
++++ b/sound/soc/fsl/imx-wm8962.c
+@@ -0,0 +1,387 @@
++/*
++ * Copyright 2013 Freescale Semiconductor, Inc.
++ *
++ * Based on imx-sgtl5000.c
++ * Copyright 2012 Freescale Semiconductor, Inc.
++ * Copyright 2012 Linaro Ltd.
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/of_i2c.h>
++#include <linux/of_gpio.h>
++#include <linux/slab.h>
++#include <linux/clk.h>
++#include <linux/irq.h>
++#include <sound/soc.h>
++#include <sound/pcm_params.h>
++#include <sound/soc-dapm.h>
++#include <linux/pinctrl/consumer.h>
++
++#include "../codecs/wm8962.h"
++#include "imx-audmux.h"
++
++#define DAI_NAME_SIZE	32
++
++struct imx_wm8962_data {
++	struct snd_soc_dai_link dai;
++	struct snd_soc_card card;
++	char codec_dai_name[DAI_NAME_SIZE];
++	char platform_name[DAI_NAME_SIZE];
++	struct clk *codec_clk;
++	unsigned int clk_frequency;
++};
++
++struct imx_priv {
++	int hp_gpio;
++	int hp_active_low;
++	int hp_status;
++	int amic_gpio;
++	int amic_active_low;
++	int amic_status;
++	struct platform_device *pdev;
++	struct snd_pcm_substream *first_stream;
++	struct snd_pcm_substream *second_stream;
++};
++static struct imx_priv card_priv;
++
++static const struct snd_soc_dapm_widget imx_wm8962_dapm_widgets[] = {
++	SND_SOC_DAPM_HP("Headphone Jack", NULL),
++	SND_SOC_DAPM_SPK("Ext Spk", NULL),
++	SND_SOC_DAPM_MIC("AMIC", NULL),
++	SND_SOC_DAPM_MIC("DMIC", NULL),
++};
++
++static int check_hw_params(struct snd_pcm_substream *substream,
++		snd_pcm_format_t sample_format, unsigned int sample_rate)
++{
++	struct imx_priv *priv = &card_priv;
++	struct device *dev = substream->pcm->card->dev;
++
++	substream->runtime->sample_bits =
++		snd_pcm_format_physical_width(sample_format);
++	substream->runtime->rate = sample_rate;
++	substream->runtime->format = sample_format;
++
++	if (!priv->first_stream) {
++		priv->first_stream = substream;
++	} else {
++		priv->second_stream = substream;
++
++		if (priv->first_stream->runtime->rate !=
++				priv->second_stream->runtime->rate) {
++			dev_err(dev, "KEEP THE SAME SAMPLE RATE: %d!\n",
++					priv->first_stream->runtime->rate);
++			return -EINVAL;
++		}
++		if (priv->first_stream->runtime->sample_bits !=
++				priv->second_stream->runtime->sample_bits) {
++			snd_pcm_format_t first_format =
++				priv->first_stream->runtime->format;
++
++			dev_err(dev, "KEEP THE SAME FORMAT: %s!\n",
++					snd_pcm_format_name(first_format));
++			return -EINVAL;
++		}
++	}
++
++	return 0;
++}
++
++static int imx_hifi_hw_params(struct snd_pcm_substream *substream,
++		struct snd_pcm_hw_params *params)
++{
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_dai *codec_dai = rtd->codec_dai;
++	struct device *dev = substream->pcm->card->dev;
++	struct imx_priv *priv = &card_priv;
++	struct imx_wm8962_data *data = platform_get_drvdata(priv->pdev);
++	unsigned int sample_rate = params_rate(params);
++	unsigned int sample_format = params_format(params);
++	int ret = 0;
++	unsigned int pll_out;
++
++	/*
++	 * WM8962 doesn't support two substreams in different sample rates or
++	 * sample formats. So check the two parameters of two substreams' when
++	 * there're two substreams of playback and of capture in the same time.
++	 */
++	ret = check_hw_params(substream, sample_format, sample_rate);
++	if (ret < 0) {
++		dev_err(dev, "Failed to match hw params: %d\n", ret);
++		return ret;
++	}
++
++	if (sample_format == SNDRV_PCM_FORMAT_S24_LE)
++		pll_out = sample_rate * 384;
++	else
++		pll_out = sample_rate * 256;
++
++	ret = snd_soc_dai_set_pll(codec_dai, WM8962_FLL, WM8962_FLL_MCLK,
++			data->clk_frequency, pll_out);
++	if (ret < 0) {
++		dev_err(dev, "Failed to start FLL: %d\n", ret);
++		return ret;
++	}
++
++	ret = snd_soc_dai_set_sysclk(codec_dai, WM8962_SYSCLK_FLL,
++			pll_out, SND_SOC_CLOCK_IN);
++	if (ret < 0) {
++		dev_err(dev, "Failed to set SYSCLK: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int imx_hifi_hw_free(struct snd_pcm_substream *substream)
++{
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_dai *codec_dai = rtd->codec_dai;
++	struct device *dev = substream->pcm->card->dev;
++	struct imx_priv *priv = &card_priv;
++	struct imx_wm8962_data *data = platform_get_drvdata(priv->pdev);
++	int ret;
++
++	/* We don't need to handle anything if there's no substream running */
++	if (!priv->first_stream)
++		return 0;
++
++	if (priv->first_stream == substream)
++		priv->first_stream = priv->second_stream;
++	priv->second_stream = NULL;
++
++	if (!priv->first_stream) {
++		/*
++		 * SYSCLK of wm8962's not disabled yet. If we wanna close FLL,
++		 * we need to keep SYSCLK alive by changing its source to MCLK.
++		 */
++		ret = snd_soc_dai_set_sysclk(codec_dai, WM8962_SYSCLK_MCLK,
++				data->clk_frequency, SND_SOC_CLOCK_IN);
++		if (ret < 0) {
++			dev_err(dev, "Failed to set SYSCLK: %d\n", ret);
++			return ret;
++		}
++
++		/* Disable FLL and let codec do pm_runtime_put() */
++		ret = snd_soc_dai_set_pll(codec_dai, WM8962_FLL, 0, 0, 0);
++		if (ret < 0) {
++			dev_err(dev, "Failed to disable FLL: %d\n", ret);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static struct snd_soc_ops imx_hifi_ops = {
++	.hw_params = imx_hifi_hw_params,
++	.hw_free = imx_hifi_hw_free,
++};
++
++static int imx_wm8962_late_probe(struct snd_soc_card *card)
++{
++	struct snd_soc_dai *codec_dai = card->rtd[0].codec_dai;
++	struct imx_priv *priv = &card_priv;
++	struct imx_wm8962_data *data = platform_get_drvdata(priv->pdev);
++	int ret;
++
++	ret = snd_soc_dai_set_sysclk(codec_dai, WM8962_SYSCLK_MCLK,
++			data->clk_frequency, SND_SOC_CLOCK_IN);
++	if (ret < 0)
++		dev_err(card->dev, "Failed to set sysclk in %s\n", __func__);
++
++	return ret;
++}
++
++static int imx_wm8962_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct device_node *ssi_np, *codec_np;
++	struct platform_device *ssi_pdev;
++	struct imx_priv *priv = &card_priv;
++	struct i2c_client *codec_dev;
++	struct imx_wm8962_data *data;
++	int int_port, ext_port;
++	int ret;
++
++	priv->pdev = pdev;
++
++	ret = of_property_read_u32(np, "mux-int-port", &int_port);
++	if (ret) {
++		dev_err(&pdev->dev, "mux-int-port missing or invalid\n");
++		return ret;
++	}
++	ret = of_property_read_u32(np, "mux-ext-port", &ext_port);
++	if (ret) {
++		dev_err(&pdev->dev, "mux-ext-port missing or invalid\n");
++		return ret;
++	}
++
++	/*
++	 * The port numbering in the hardware manual starts at 1, while
++	 * the audmux API expects it starts at 0.
++	 */
++	int_port--;
++	ext_port--;
++	ret = imx_audmux_v2_configure_port(int_port,
++			IMX_AUDMUX_V2_PTCR_SYN |
++			IMX_AUDMUX_V2_PTCR_TFSEL(ext_port) |
++			IMX_AUDMUX_V2_PTCR_TCSEL(ext_port) |
++			IMX_AUDMUX_V2_PTCR_TFSDIR |
++			IMX_AUDMUX_V2_PTCR_TCLKDIR,
++			IMX_AUDMUX_V2_PDCR_RXDSEL(ext_port));
++	if (ret) {
++		dev_err(&pdev->dev, "audmux internal port setup failed\n");
++		return ret;
++	}
++	imx_audmux_v2_configure_port(ext_port,
++			IMX_AUDMUX_V2_PTCR_SYN,
++			IMX_AUDMUX_V2_PDCR_RXDSEL(int_port));
++	if (ret) {
++		dev_err(&pdev->dev, "audmux external port setup failed\n");
++		return ret;
++	}
++
++	ssi_np = of_parse_phandle(pdev->dev.of_node, "ssi-controller", 0);
++	codec_np = of_parse_phandle(pdev->dev.of_node, "audio-codec", 0);
++	if (!ssi_np || !codec_np) {
++		dev_err(&pdev->dev, "phandle missing or invalid\n");
++		ret = -EINVAL;
++		goto fail;
++	}
++
++	ssi_pdev = of_find_device_by_node(ssi_np);
++	if (!ssi_pdev) {
++		dev_err(&pdev->dev, "failed to find SSI platform device\n");
++		ret = -EINVAL;
++		goto fail;
++	}
++	codec_dev = of_find_i2c_device_by_node(codec_np);
++	if (!codec_dev || !codec_dev->driver) {
++		dev_err(&pdev->dev, "failed to find codec platform device\n");
++		return -EINVAL;
++	}
++
++	priv->hp_gpio = of_get_named_gpio_flags(np, "hp-det-gpios", 0,
++				(enum of_gpio_flags *)&priv->hp_active_low);
++	priv->amic_gpio = of_get_named_gpio_flags(np, "mic-det-gpios", 0,
++				(enum of_gpio_flags *)&priv->amic_active_low);
++
++	priv->first_stream = NULL;
++	priv->second_stream = NULL;
++
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data) {
++		ret = -ENOMEM;
++		goto fail;
++	}
++
++	data->codec_clk = clk_get(&codec_dev->dev, NULL);
++	if (IS_ERR(data->codec_clk)) {
++		/* assuming clock enabled by default */
++		data->codec_clk = NULL;
++		ret = of_property_read_u32(codec_np, "clock-frequency",
++					&data->clk_frequency);
++		if (ret) {
++			dev_err(&codec_dev->dev,
++				"clock-frequency missing or invalid\n");
++			goto fail;
++		}
++	} else {
++		data->clk_frequency = clk_get_rate(data->codec_clk);
++		clk_prepare_enable(data->codec_clk);
++	}
++
++	data->dai.name = "HiFi";
++	data->dai.stream_name = "HiFi";
++	data->dai.codec_dai_name = "wm8962";
++	data->dai.codec_of_node = codec_np;
++	data->dai.cpu_dai_name = dev_name(&ssi_pdev->dev);
++	data->dai.platform_of_node = ssi_np;
++	data->dai.ops = &imx_hifi_ops;
++	data->dai.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
++			    SND_SOC_DAIFMT_CBM_CFM;
++
++	data->card.dev = &pdev->dev;
++	ret = snd_soc_of_parse_card_name(&data->card, "model");
++	if (ret)
++		goto clk_fail;
++	ret = snd_soc_of_parse_audio_routing(&data->card, "audio-routing");
++	if (ret)
++		goto clk_fail;
++	data->card.num_links = 1;
++	data->card.dai_link = &data->dai;
++	data->card.dapm_widgets = imx_wm8962_dapm_widgets;
++	data->card.num_dapm_widgets = ARRAY_SIZE(imx_wm8962_dapm_widgets);
++
++	data->card.late_probe = imx_wm8962_late_probe,
++
++	ret = snd_soc_register_card(&data->card);
++	if (ret) {
++		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
++		goto clk_fail;
++	}
++
++	platform_set_drvdata(pdev, data);
++	of_node_put(ssi_np);
++	of_node_put(codec_np);
++
++	return 0;
++
++clk_fail:
++	if (data->codec_clk) {
++		clk_disable_unprepare(data->codec_clk);
++		clk_put(data->codec_clk);
++	}
++fail:
++	if (ssi_np)
++		of_node_put(ssi_np);
++	if (codec_np)
++		of_node_put(codec_np);
++
++	return ret;
++}
++
++static int imx_wm8962_remove(struct platform_device *pdev)
++{
++	struct imx_wm8962_data *data = platform_get_drvdata(pdev);
++
++	if (data->codec_clk) {
++		clk_disable_unprepare(data->codec_clk);
++		clk_put(data->codec_clk);
++	}
++	snd_soc_unregister_card(&data->card);
++
++	return 0;
++}
++
++static const struct of_device_id imx_wm8962_dt_ids[] = {
++	{ .compatible = "fsl,imx-audio-wm8962", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, imx_wm8962_dt_ids);
++
++static struct platform_driver imx_wm8962_driver = {
++	.driver = {
++		.name = "imx-wm8962",
++		.owner = THIS_MODULE,
++		.of_match_table = imx_wm8962_dt_ids,
++	},
++	.probe = imx_wm8962_probe,
++	.remove = imx_wm8962_remove,
++};
++module_platform_driver(imx_wm8962_driver);
++
++MODULE_AUTHOR("Freescale Semiconductor, Inc.");
++MODULE_DESCRIPTION("Freescale i.MX WM8962 ASoC machine driver");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:imx-wm8962");
+-- 
+1.7.1
