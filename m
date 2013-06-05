@@ -1,84 +1,63 @@
-From: Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 06/10] mmc: dw_mmc-pltfm: add Rockchip variant
-Date: Wed, 05 Jun 2013 23:00:43 +0900
-Message-ID: <001601ce61f5$11b37b20$351a7160$%jun@samsung.com>
-References: <201306030055.15413.heiko@sntech.de>
- <201306030059.03783.heiko@sntech.de>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [RFC PATCH v2 2/2] drivers: mfd: vexpress: add Serial Power
+ Controller (SPC) support
+Date: Wed, 5 Jun 2013 10:07:03 -0400 (EDT)
+Message-ID: <alpine.LFD.2.03.1306050956081.1200@syhkavp.arg>
+References: <1370432767-6620-1-git-send-email-lorenzo.pieralisi@arm.com> <1370432767-6620-3-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <201306030059.03783.heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Content-language: ko
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: =?utf-8?Q?'Heiko_St=C3=BCbner'?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: 'Mike Turquette' <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Rob Herring' <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, 'Jaehoon Chung' <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'John Stultz' <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Grant Likely' <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Russell King' <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, 'Thomas Gleixner' <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, 'Chris Ball' <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1370432767-6620-3-git-send-email-lorenzo.pieralisi@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <achin.gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDYvMDMvMTMgNzo1OSBBTSwgSGVpa28gU3TDvGJuZXIgd3JvdGU6Cj4gQ29ydGV4LUE5IFNv
-Q3MgZnJvbSBSb2NrY2hpcCB1c2UgYSBzbGlnaHRseSBtb2RpZmllZCB2YXJpYW50IG9mIGR3X21t
-Ywo+IGNvbnRyb2xsZXJzIHRoYXQgc2VlbXMgdG8gcmVxdWlyZSB0aGUgU0RNTUNfQ01EX1VTRV9I
-T0xEX1JFRyBiaXQgdG8KPiBhbHdheXMgYmUgc2V0Lgo+IAo+IFRoZXJlIGFsc28gc2VlbSB0byBi
-ZSBubyBvdGhlciBtb2RpZmljYXRpb25zIChhZGRpdGlvbmFsIHJlZ2lzdGVyIGV0YykKPiBwcmVz
-ZW50LCBzbyB0byBrZWVwIHRoZSBmb290cHJpbnQgbG93LCBhZGQgdGhpcyBzbWFsbCB2YXJpYW50
-IHRvIHRoZQo+IHBsdGZtIGRyaXZlci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBIZWlrbyBTdHVlYm5l
-ciA8aGVpa29Ac250ZWNoLmRlPgo+IC0tLQo+ICBkcml2ZXJzL21tYy9ob3N0L2R3X21tYy1wbHRm
-bS5jIHwgICA0OCArKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLQo+ICAxIGZp
-bGVzIGNoYW5nZWQsIDM0IGluc2VydGlvbnMoKyksIDE0IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL21tYy9ob3N0L2R3X21tYy1wbHRmbS5jIGIvZHJpdmVycy9tbWMvaG9z
-dC9kd19tbWMtcGx0Zm0uYwo+IGluZGV4IDAwNDhkYTguLjdkMDQxYjUgMTAwNjQ0Cj4gLS0tIGEv
-ZHJpdmVycy9tbWMvaG9zdC9kd19tbWMtcGx0Zm0uYwo+ICsrKyBiL2RyaXZlcnMvbW1jL2hvc3Qv
-ZHdfbW1jLXBsdGZtLmMKPiBAQCAtMjQsNiArMjQsMTYgQEAKPiAKPiAgI2luY2x1ZGUgImR3X21t
-Yy5oIgo+IAo+ICsKPiArc3RhdGljIHZvaWQgZHdfbWNpX3JvY2tjaGlwX3ByZXBhcmVfY29tbWFu
-ZChzdHJ1Y3QgZHdfbWNpICpob3N0LCB1MzIgKmNtZHIpCj4gK3sKPiArCSpjbWRyIHw9IFNETU1D
-X0NNRF9VU0VfSE9MRF9SRUc7CkN1cnJlbnRseSwgU0RNTUNfQ01EX1VTRV9IT0xEX1JFRyBpcyBk
-ZWZpbmVkIGluIGR3X21tYy1leHlub3MuYwpJdCBzaG91bGQgYmUgbW92ZWQgdG8gZHdfbW1jLmgK
-ClRoYW5rcywKU2V1bmd3b24gSmVvbgo+ICt9Cj4gKwo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGR3
-X21jaV9kcnZfZGF0YSByb2NrY2hpcF9kcnZfZGF0YSA9IHsKPiArCS5wcmVwYXJlX2NvbW1hbmQJ
-PSBkd19tY2lfcm9ja2NoaXBfcHJlcGFyZV9jb21tYW5kLAo+ICt9Owo+ICsKPiAgaW50IGR3X21j
-aV9wbHRmbV9yZWdpc3RlcihzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LAo+ICAJCQkJY29u
-c3Qgc3RydWN0IGR3X21jaV9kcnZfZGF0YSAqZHJ2X2RhdGEpCj4gIHsKPiBAQCAtNjMsMjAgKzcz
-LDYgQEAgaW50IGR3X21jaV9wbHRmbV9yZWdpc3RlcihzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpw
-ZGV2LAo+ICB9Cj4gIEVYUE9SVF9TWU1CT0xfR1BMKGR3X21jaV9wbHRmbV9yZWdpc3Rlcik7Cj4g
-Cj4gLXN0YXRpYyBpbnQgZHdfbWNpX3BsdGZtX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2Ug
-KnBkZXYpCj4gLXsKPiAtCXJldHVybiBkd19tY2lfcGx0Zm1fcmVnaXN0ZXIocGRldiwgTlVMTCk7
-Cj4gLX0KPiAtCj4gLWludCBkd19tY2lfcGx0Zm1fcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZp
-Y2UgKnBkZXYpCj4gLXsKPiAtCXN0cnVjdCBkd19tY2kgKmhvc3QgPSBwbGF0Zm9ybV9nZXRfZHJ2
-ZGF0YShwZGV2KTsKPiAtCj4gLQlkd19tY2lfcmVtb3ZlKGhvc3QpOwo+IC0JcmV0dXJuIDA7Cj4g
-LX0KPiAtRVhQT1JUX1NZTUJPTF9HUEwoZHdfbWNpX3BsdGZtX3JlbW92ZSk7Cj4gLQo+ICAjaWZk
-ZWYgQ09ORklHX1BNX1NMRUVQCj4gIC8qCj4gICAqIFRPRE86IHdlIHNob3VsZCBwcm9iYWJseSBk
-aXNhYmxlIHRoZSBjbG9jayB0byB0aGUgY2FyZCBpbiB0aGUgc3VzcGVuZCBwYXRoLgo+IEBAIC0x
-MTQsMTAgKzExMCwzNCBAQCBFWFBPUlRfU1lNQk9MX0dQTChkd19tY2lfcGx0Zm1fcG1vcHMpOwo+
-IAo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBkd19tY2lfcGx0Zm1fbWF0Y2hb
-XSA9IHsKPiAgCXsgLmNvbXBhdGlibGUgPSAic25wcyxkdy1tc2hjIiwgfSwKPiArCXsgLmNvbXBh
-dGlibGUgPSAicm9ja2NoaXAsY29ydGV4LWE5LWR3LW1zaGMiLAo+ICsJCS5kYXRhID0gJnJvY2tj
-aGlwX2Rydl9kYXRhIH0sCj4gIAl7fSwKPiAgfTsKPiAgTU9EVUxFX0RFVklDRV9UQUJMRShvZiwg
-ZHdfbWNpX3BsdGZtX21hdGNoKTsKPiAKPiArc3RhdGljIGludCBkd19tY2lfcGx0Zm1fcHJvYmUo
-c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiArewo+ICsJY29uc3Qgc3RydWN0IGR3X21j
-aV9kcnZfZGF0YSAqZHJ2X2RhdGEgPSBOVUxMOwo+ICsJY29uc3Qgc3RydWN0IG9mX2RldmljZV9p
-ZCAqbWF0Y2g7Cj4gKwo+ICsJaWYgKHBkZXYtPmRldi5vZl9ub2RlKSB7Cj4gKwkJbWF0Y2ggPSBv
-Zl9tYXRjaF9ub2RlKGR3X21jaV9wbHRmbV9tYXRjaCwgcGRldi0+ZGV2Lm9mX25vZGUpOwo+ICsJ
-CWRydl9kYXRhID0gbWF0Y2gtPmRhdGE7Cj4gKwl9Cj4gKwo+ICsJcmV0dXJuIGR3X21jaV9wbHRm
-bV9yZWdpc3RlcihwZGV2LCBkcnZfZGF0YSk7Cj4gK30KPiArCj4gK2ludCBkd19tY2lfcGx0Zm1f
-cmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gK3sKPiArCXN0cnVjdCBkd19t
-Y2kgKmhvc3QgPSBwbGF0Zm9ybV9nZXRfZHJ2ZGF0YShwZGV2KTsKPiArCj4gKwlkd19tY2lfcmVt
-b3ZlKGhvc3QpOwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArRVhQT1JUX1NZTUJPTF9HUEwoZHdfbWNp
-X3BsdGZtX3JlbW92ZSk7Cj4gKwo+ICBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBkd19t
-Y2lfcGx0Zm1fZHJpdmVyID0gewo+ICAJLnByb2JlCQk9IGR3X21jaV9wbHRmbV9wcm9iZSwKPiAg
-CS5yZW1vdmUJCT0gZHdfbWNpX3BsdGZtX3JlbW92ZSwKPiAtLQo+IDEuNy4yLjMKPiAKPiAtLQo+
-IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmli
-ZSBsaW51eC1tbWMiIGluCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2Vy
-Lmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwu
-b3JnL21ham9yZG9tby1pbmZvLmh0bWwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJl
-ZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3Rp
-bmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+On Wed, 5 Jun 2013, Lorenzo Pieralisi wrote:
+
+> The TC2 versatile express core tile integrates a logic block that provides the
+> interface between the dual cluster test-chip and the M3 microcontroller that
+> carries out power management. The logic block, called Serial Power Controller
+> (SPC), contains several memory mapped registers to control among other things
+> low-power states, operating points and reset control.
+> 
+> This patch provides a driver that enables run-time control of features
+> implemented by the SPC control logic.
+> 
+> The driver also provides a bridge interface through the vexpress config
+> infrastructure. Operations allowing to read/write operating points are
+> made to go via the same interface as configuration transactions so that
+> all requests to M3 are serialized.
+> 
+> Device tree bindings documentation for the SPC component is provided with
+> the patchset.
+> 
+
+[...]
+
+> +/*
+> + * Versatile Express Serial Power Controller (SPC) support
+> + *
+> + * Copyright (C) 2013 ARM Ltd.
+> + *
+> + * Author(s): Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+> + *            Achin Gupta           <achin.gupta@arm.com>
+> + *            Lorenzo Pieralisi     <lorenzo.pieralisi@arm.com>
+
+I imagine "author(s)" can be written as "authors" without a doubt.  :-)
+
+> +EXPORT_SYMBOL_GPL(vexpress_spc_write_resume_reg);
+> +EXPORT_SYMBOL_GPL(vexpress_spc_set_global_wakeup_intr);
+> +EXPORT_SYMBOL_GPL(vexpress_spc_set_cpu_wakeup_irq);
+> +EXPORT_SYMBOL_GPL(vexpress_spc_powerdown_enable);
+
+I don't think anything that could possibly be made into modules should 
+ever have a need for those particular calls.  So I'd suggest not 
+exporting them.
+
+Other than that, you may add...
+
+Reviewed-by: Nicolas Pitre <nico@linaro.org>
+
+
+Nicolas
