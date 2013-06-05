@@ -1,51 +1,66 @@
-From: Gerlando Falauto <gerlando.falauto@keymile.com>
-Subject: Re: DT version of kirkwood_ge0x_init()
-Date: Wed, 05 Jun 2013 11:55:10 +0200
-Message-ID: <51AF0AFE.1000503@keymile.com>
-References: <51ADBEE0.5040500@keymile.com> <51ADC2C2.6010106@gmail.com>
- <51AE53D4.5070208@keymile.com> <51AEFF26.8080004@gmail.com>
- <51AF06E0.6040103@keymile.com> <51AF0990.7090406@gmail.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH 2/3] ARM: dts: Add clock provider information for DP
+ controller in Exynos5250 SoC
+Date: Wed, 05 Jun 2013 20:25:43 +0900
+Message-ID: <08db01ce61df$6acf12c0$406d3840$%kim@samsung.com>
+References: <1367992894-20198-1-git-send-email-vikas.sajjan@linaro.org>
+ <1367992894-20198-3-git-send-email-vikas.sajjan@linaro.org>
+ <000801ce4f78$442ef140$cc8cd3c0$@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <51AF0990.7090406@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "Longchamp, Valentin" <Valentin.Longchamp@keymile.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Brunck,
- Holger" <Holger.Brunck@keymile.com>, Thomas Gleixner <tglx@linutronix.de>, Simon Guinot <simon@sequanux.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <000801ce4f78$442ef140$cc8cd3c0$@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Jingoo Han' <jg1.han@samsung.com>, 'Vikas Sajjan' <vikas.sajjan@linaro.org>, linux-samsung-soc@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, patches@linaro.org, linaro-kernel@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/05/2013 11:49 AM, Sebastian Hesselbarth wrote:
-> On 06/05/13 11:37, Gerlando Falauto wrote:
->> On 06/05/2013 11:04 AM, Sebastian Hesselbarth wrote:
->> [...]
->>>
->>> I have irqchip and clocksource drivers ready for Orion SoCs (Kirkwood,
->>> Dove, Orion5x, MV78x00). Just need some time to rebase and send patches.
->>
->> [sorry we've moved to a different topic]
->> [adding Thomas Gleixner]
->> You mean the driver in arch/arm/plat-orion/gpio.c or the generic
->> one in drivers/gpio/gpio-mvebu.c?
->
-> For Kirkwood and Dove, DT kernels use gpio-mvebu. And that is there
-> from a time when there was no irqdomain support in generic chip. That
-> should be updated.
+Jingoo Han wrote:
+> 
+> On Wednesday, May 08, 2013 3:02 PM, Vikas Sajjan wrote:
+> >
+> > Adds clock provider information for DP controller required by CCF.
+> >
+> > Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
+> > Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+> 
+> Hi Vikas Sajjan,
+> 
+> Acked-by: Jingoo Han <jg1.han@samsung.com>
+> 
+Applied, thanks.
 
-I know, that's why I was wondering how it is possible to update this 
-driver and yet support per-cpu registers.
-But I am admittedly not 100% sure I know what I'm talking about.
+- Kukjin
 
-Anyway, could you please Cc: me when you post those patches?
 
-Thank you,
-Gerlando
+> Best regards,
+> Jingoo Han
+> 
+> > ---
+> >  arch/arm/boot/dts/exynos5250.dtsi |    2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+> b/arch/arm/boot/dts/exynos5250.dtsi
+> > index 4bd9e9c..2773d22 100644
+> > --- a/arch/arm/boot/dts/exynos5250.dtsi
+> > +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> > @@ -651,6 +651,8 @@
+> >  		reg = <0x145b0000 0x1000>;
+> >  		interrupts = <10 3>;
+> >  		interrupt-parent = <&combiner>;
+> > +		clocks = <&clock 342>;
+> > +		clock-names = "dp";
+> >  		#address-cells = <1>;
+> >  		#size-cells = <0>;
+> >
+> > --
+> > 1.7.9.5
+> >
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-samsung-
+> soc" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
