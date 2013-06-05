@@ -1,78 +1,53 @@
-From: Luke Kenneth Casson Leighton <lkcl@lkcl.net>
-Subject: Re: getting allwinner SoC support upstream (was Re:
-	Uploading linux (3.9.4-1))
-Date: Wed, 5 Jun 2013 22:15:08 +0100
-Message-ID: <CAPweEDzDC87KmOQ=0hyPcjPtPsRuXHxNTs97vbEqVNNnix69rA@mail.gmail.com>
-References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
-	<CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
-Reply-To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: getting allwinner SoC support upstream (was Re: Uploading
+	linux (3.9.4-1))
+Date: Wed, 5 Jun 2013 22:16:37 +0100
+Message-ID: <20130605211637.GH18614@n2100.arm.linux.org.uk>
+References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com> <CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com> <51AFA6DD.3000202@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <arm-netbook-bounces@lists.phcomp.co.uk>
-In-Reply-To: <CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.phcomp.co.uk/mailman/options/arm-netbook>,
-	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=unsubscribe>
-List-Archive: <http://lists.phcomp.co.uk/pipermail/arm-netbook/>
-List-Post: <mailto:arm-netbook@lists.phcomp.co.uk>
-List-Help: <mailto:arm-netbook-request@lists.phcomp.co.uk?subject=help>
-List-Subscribe: <http://lists.phcomp.co.uk/mailman/listinfo/arm-netbook>,
-	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=subscribe>
-Errors-To: arm-netbook-bounces@lists.phcomp.co.uk
-Sender: "arm-netbook" <arm-netbook-bounces@lists.phcomp.co.uk>
-To: "jonsmirl@gmail.com" <jonsmirl@gmail.com>
-Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel@lists.debian.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51AFA6DD.3000202@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "jonsmirl@gmail.com" <jonsmirl@gmail.com>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, Luke Kenneth Casson Leighton <lkcl@lkcl.net>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, debian-release@lists.debian.org, debian-kernel@lists.debian.org
 List-Id: devicetree@vger.kernel.org
 
-[i've just received word, please remove debian-release from discussions!]
+On Wed, Jun 05, 2013 at 03:00:13PM -0600, Stephen Warren wrote:
+> 2) Having U-Boot itself read a DT and configure itself, just like the
+> kernel does. This is relatively new, and only supported by a few boards
+> (all Tegra to some extent, and a couple each Samsung Exynos and Xilinx
+> boards). I suspect/guess this is the kind of thing that Luke was
+> referring to re: U-Boot fex integration.
 
-On Wed, Jun 5, 2013 at 9:46 PM, jonsmirl@gmail.com <jonsmirl@gmail.com> wrote:
+Reading what I have of this thread, this is just another case of
+$company runs of and does their own unique way of doing something,
+which is in a totally different direction from that path chosen by
+Linux kernel developers, and Linux kernel developers are _expected_
+to roll over and accept $company's unique way of doing it.
 
-> Why don't you try converting the sunxi code over to device tree?
+$company could have assisted with the DT effort, helping to sort out
+the common arch issues (which haven't been all that much), converting
+drivers to DT and such like.  But no, instead they've gone off and
+created their own thing.
 
-ok.  perhaps i wasn't clear.  whatever is proposed has to be be
-acceptable to allwinner, and i'm looking for proposals that i can put
-to them, i.e. i am going to act as the communications channel to them.
+I wonder how many more of these cases there needs to be before people
+get the message that Linux kernel developers *do* *not* like this
+behaviour, and if you do this, then chances are you're going to be
+stuck with having code which isn't able to be merged into mainline.
 
-what we do not want to happen is that they see upstream patches being
-submitted, they merge them into their internal tree (which to date has
-had zero upstream changes: they're currently only just getting round
-to doing 3.4 as we speak), and they *completely* ignore *absolutely
-everything* that's being done by the community, duplicating yet
-another set of device drivers (named drivers/*/sun8i_* and so on).
+And I don't buy the argument that we were still sorting out DT.  DT has
+been well defined for many many years before we started using it on ARM.
+It has been used for years on both PowerPC and Sparc architectures to
+describe their hardware, and all of the DT infrastructure was already
+present in the kernel.  What was left for us were:
 
-> I don't
-> think it will be as hard as you may think it is. Start off by mapping the
-> existing fex syntax into a DTS file. Send your DTS file to
-> devicetree-discuss to get help with the correct syntax. Once this DTS
-> template is constructed you can write a program to convert any fex file into
-> it.
+* converting our platform-data based drivers to use data from DT.
+* come up with ways of dealing with SoC issues such as clock
+  representation, pin muxing and such like in DT.
 
- this proposal is a start: however what you have to bear in mind is
-that you now have to convince a very busy company that it is in their
-best interests to disrupt their schedule, to drop their existing
-working practices, to tell all their customers "please stop using the
-existing tools and please use these ones instead".
+But no... all that had to be created in this custom fex stuff which now
+presents a barrier with getting support for something merged.
 
- you also need to convince the creators of the proprietary
-firmware-flashing tools "livesuite" and "phoenix" to *also* convert
-their tools over to the new proposed idea.
-
- so if that is to truly be accepted, it has to be framed in such a way
-that it will be clearly of financial benefit to the SoC vendor.
-
- can you provide such a supporting argument which would convince
-allwinner to accept the modifications to their working practices that
-you propose?
-
-
-> Device tree on ARM's goal is to achieve a single kernel across vendors, not
-> just a single kernel for a single vendor.
-
- you'll be aware that i've mentioned a number of times and have
-discussed at some length why this is a goal that is completely
-impossible to achieve [*1].  sadly.
-
-l.
-
-[*1] without a hardware-level redesign i.e. hardware standardisation that is.
+And somehow people make out that this is _our_ problem...
