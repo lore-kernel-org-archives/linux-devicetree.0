@@ -1,53 +1,31 @@
-From: "J, KEERTHY" <j-keerthy@ti.com>
-Subject: RE: [PATCH v2] mfd: DT bindings for the palmas family MFD
-Date: Wed, 5 Jun 2013 04:24:02 +0000
-Message-ID: <DC88CAD03C0052499C1907B327FC63229E8DF9@DBDE04.ent.ti.com>
-References: <1370335309-6319-1-git-send-email-j-keerthy@ti.com>
- <20130604121434.GN3370@gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 0/5] dwc3: omap: adapt dwc3 to use extcon framework
+Date: Wed, 5 Jun 2013 10:19:21 +0530
+Message-ID: <51AEC351.9030607@ti.com>
+References: <1370276020-17446-1-git-send-email-kishon@ti.com> <51ADF867.8060300@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130604121434.GN3370@gmail.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "wim@iguana.be" <wim@iguana.be>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "Kristo, Tero" <t-kristo@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51ADF867.8060300@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ruchika Kharwar <ruchika@ti.com>
+Cc: myungjoo.ham@samsung.com, cw00.choi@samsung.com, balbi@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, rob@landley.net, gregkh@linuxfoundation.org, benoit.cousson@linaro.org, anish198519851985@gmail.com, pmeerw@pmeerw.net
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gTGVlIEpvbmVzLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206
-IExlZSBKb25lcyBbbWFpbHRvOmxlZS5qb25lc0BsaW5hcm8ub3JnXQ0KPiBTZW50OiBUdWVzZGF5
-LCBKdW5lIDA0LCAyMDEzIDU6NDUgUE0NCj4gVG86IEosIEtFRVJUSFkNCj4gQ2M6IGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWRvY0B2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmlj
-ZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnOyBzd2FycmVuQHd3d2RvdG9yZy5vcmc7DQo+
-IGJyb29uaWVAb3BlbnNvdXJjZS53b2xmc29ubWljcm8uY29tOyByb2IuaGVycmluZ0BjYWx4ZWRh
-LmNvbTsNCj4gcm9iQGxhbmRsZXkubmV0OyBzYW1lb0BsaW51eC5pbnRlbC5jb207IHdpbUBpZ3Vh
-bmEuYmU7DQo+IGxnaXJkd29vZEBnbWFpbC5jb207IGdnQHNsaW1sb2dpYy5jby51azsgS3Jpc3Rv
-LCBUZXJvOyBJYW4gTGFydGV5DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjJdIG1mZDogRFQgYmlu
-ZGluZ3MgZm9yIHRoZSBwYWxtYXMgZmFtaWx5IE1GRA0KPiANCj4gT24gVHVlLCAwNCBKdW4gMjAx
-MywgSiBLZWVydGh5IHdyb3RlOg0KPiANCj4gPiBGcm9tOiBHcmFlbWUgR3JlZ29yeSA8Z2dAc2xp
-bWxvZ2ljLmNvLnVrPg0KPiA+DQo+ID4gQWRkIHRoZSB2YXJpb3VzIGJpbmRpbmcgZmlsZXMgZm9y
-IHRoZSBwYWxtYXMgZmFtaWx5IG9mIGNoaXBzLiBUaGVyZQ0KPiBpcw0KPiA+IGEgdG9wIGxldmVs
-IE1GRCBiaW5kaW5nIHRoZW4gYSBzZXBlcmF0ZSBiaW5kaW5nIGZvciByZWd1bGF0b3JzIElQDQo+
-IGJsb2NrcyBvbiBjaGlwcy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEdyYWVtZSBHcmVnb3J5
-IDxnZ0BzbGltbG9naWMuY28udWs+DQo+ID4gU2lnbmVkLW9mZi1ieTogSiBLZWVydGh5IDxqLWtl
-ZXJ0aHlAdGkuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IElhbiBMYXJ0ZXkgPGlhbkBzbGltbG9n
-aWMuY28udWs+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBmcm9tIHYxOg0KPiA+ICogQ29ycmVjdGVk
-IHRpLGxkbzZfdmlicmF0b3IgcHJvcGVydHkgLS0tPiB0aSxsZG82LXZpYnJhdG9yDQo+ID4gKiBB
-ZGRlZCB0aGUgaXJxLmggaGVhZGVyIGZpbGUgaW5jbHVzaW9uIGZvciBkZWZpbmluZyB0eXBlIG9m
-DQo+IGludGVycnVwdA0KPiA+DQo+ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9tZmQvcGFsbWFzLnR4dCAgIHwgICA0OQ0KPiArKysrKysrKysrKysrKysNCj4gPiAgLi4uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvcmVndWxhdG9yL3BhbG1hcy1wbWljLnR4dCAgfCAgIDY1DQo+ICsr
-KysrKysrKysrKysrKysrKysrDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMTE0IGluc2VydGlvbnMo
-KyksIDAgZGVsZXRpb25zKC0pICBjcmVhdGUgbW9kZQ0KPiA+IDEwMDY0NCBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3BhbG1hcy50eHQNCj4gPiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0DQo+ID4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3JlZ3VsYXRvci9wYWxt
-YXMtcG1pYy50eHQNCj4gDQo+IElzIHRoZXJlIGEgZHJpdmVyIHRvIGdvIHdpdGggdGhpcyBwYXRj
-aCwgb3Igd2FzIHRoZSBkb2N1bWVudGF0aW9uIGFuDQo+IGFmdGVydGhvdWdodCBpbiB0aGlzIGNh
-c2U/IElmIHRoZSBsYXR0ZXIgaXMgdHJ1ZSBJJ2QgYmUgaGFwcHkgdG8gYXBwbHkNCj4gdGhpcyBw
-YXRjaCB3aXRoIGFuIEFjayBmcm9tIFN0ZXBoZW4gb3Igb25lIG9mIHRoZSBvdGhlciBwcmV2aW91
-cw0KPiByZXZpZXdlcnMuDQoNCldlbGwgdGhhdCdzIHRoZSBsYXR0ZXIgY2FzZSA6LSkuIA0KDQpT
-dGVwaGVuLA0KDQpDYW4gdGhpcyBiZSB0YWtlbj8NCg0KPiANCj4gLS0NCj4gTGVlIEpvbmVzDQo+
-IExpbmFybyBTVC1Fcmljc3NvbiBMYW5kaW5nIFRlYW0gTGVhZA0KPiBMaW5hcm8ub3JnIOKUgiBP
-cGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MgRm9sbG93IExpbmFybzogRmFjZWJvb2sN
-Cj4gfCBUd2l0dGVyIHwgQmxvZw0KDQpSZWdhcmRzLA0KS2VlcnRoeQ0K
+Hi Ruchika,
+
+On Tuesday 04 June 2013 07:53 PM, Ruchika Kharwar wrote:
+> Kishon,
+> What is the expectation when there is no palmas tied to dwc3/dwc3-omap ?
+
+In the probe of dwc3-omap I have this check
+"if (of_property_read_bool(node, "extcon"))"
+So If dwc3 node does not have extcon property, it wont try to get extcon 
+device at all.
+
+You can refer this patch to see how its handled
+usb: dwc3: use extcon fwrk to receive connect/disconnect.
+
+Thanks
+Kishon
