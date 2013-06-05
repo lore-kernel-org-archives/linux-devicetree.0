@@ -1,8 +1,8 @@
 From: "luke.leighton" <luke.leighton@gmail.com>
 Subject: Re: getting allwinner SoC support upstream (was Re:
  Uploading linux (3.9.4-1))
-Date: Thu, 6 Jun 2013 00:52:42 +0100
-Message-ID: <CAPweEDyO+Sc1aQ64HBeh1OSzmPNsnwMwEo5kbHSan5vw_YEjXA@mail.gmail.com>
+Date: Thu, 6 Jun 2013 00:54:02 +0100
+Message-ID: <CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
 References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
 	<CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
 	<51AFA6DD.3000202@wwwdotorg.org>
@@ -11,13 +11,13 @@ References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
 	<CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
 	<CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
 	<CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com>
-	<CAKON4Oz79hUE_ReAqjeynwL6ZWntX2W1uw3YOg0G2AiY7Gjs=g@mail.gmail.com>
+	<1370475609.20454.44.camel@localhost>
 Reply-To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <arm-netbook-bounces@lists.phcomp.co.uk>
-In-Reply-To: <CAKON4Oz79hUE_ReAqjeynwL6ZWntX2W1uw3YOg0G2AiY7Gjs=g@mail.gmail.com>
+In-Reply-To: <1370475609.20454.44.camel@localhost>
 List-Unsubscribe: <http://lists.phcomp.co.uk/mailman/options/arm-netbook>,
 	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=unsubscribe>
 List-Archive: <http://lists.phcomp.co.uk/pipermail/arm-netbook/>
@@ -27,53 +27,28 @@ List-Subscribe: <http://lists.phcomp.co.uk/mailman/listinfo/arm-netbook>,
 	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=subscribe>
 Errors-To: arm-netbook-bounces@lists.phcomp.co.uk
 Sender: "arm-netbook" <arm-netbook-bounces@lists.phcomp.co.uk>
-To: "jonsmirl@gmail.com" <jonsmirl@gmail.com>
-Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel@lists.debian.org
+To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
+Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel@lists.debian.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 6, 2013 at 12:40 AM, jonsmirl@gmail.com <jonsmirl@gmail.com> wrote:
-
-> I have a Cubieboard and I have a pca9532 on my desk. Now I want to
-> attach this pca9532 to the Cubieboard so I wire them together on I2C.
->
-> How is the Allwinner kernel going to load the driver for the pca9532?
-> The mainline pca9532 driver does not understand fex so it can't read
-> the necessary initialization data.
-
- jon: you're immediately outside of the target market for which
-allwinner designed and deployed script.fex.
-
-> Luke, you of all people should see what is going on. Take an EOMA
-> module based on an A10. Now plug it into ten different hosts with
-> widely varying hardware support - like each of the ten hosts has a
-> different lm-sensor type chip. Where are the fex drivers for those ten
-> different lm-sensor chips going to come from? We already have DT
-> support for them.
-
- that's fantastic, because as you can see, the two systems complement
-each other.
-
-> fex is only supported on the small number of peripheral chips
-> Allwinner has blessed. Use any chip outside of that set and it isn't
-> going to boot.
-
- eeexactly.  i did say "target market".
-
- so, we have a clear illustration that neither script.fex nor
-devicetree actually help solve the "chip proliferation" problem.  but
-that's another story, and getting off-topic.
-
- what i need is a clear set of proposals, discussed and then the best
-one(s) that people can come up with be then summarised so that i can
-get them clearly and succinctly across to allwinner, along with the
-benefits to allwinner of each of the options.
-
- time is of the essence, speaking of which i'm pushing things to the
-limit including my health so i *really* have to go, i'm going to leave
-this up to everyone to discuss, please nominate someone to email me
-directly [on a different subject] so that i can read the proposals
-summaries should people choose to write any.
-
- thanks.
-
-l.
+T24gVGh1LCBKdW4gNiwgMjAxMyBhdCAxMjo0MCBBTSwgSGVucmlrIE5vcmRzdHLDtm0KPGhlbnJp
+a0BoZW5yaWtub3Jkc3Ryb20ubmV0PiB3cm90ZToKPiB0b3IgMjAxMy0wNi0wNiBrbG9ja2FuIDAw
+OjI2ICswMTAwIHNrcmV2IGx1a2UubGVpZ2h0b246Cj4KPj4gIG5vIGpvaG4gLSB0aGV5J3ZlIG9u
+bHkgYWRkZWQgaXQgdG8gdGhlIG11bHRpcGxleGVkIHNlY3Rpb25zIG9mIHRoZQo+PiBkcml2ZXJz
+IHdoaWNoIHRoZXkgdGhlbXNlbHZlcyBoYXZlIHdyaXR0ZW4uICBzdWNoIGFzCj4+IGRyaXZlcnMv
+dXNiL3N1bntOfWlfdXNiLyouW2NoXSwgZHJpdmVycy9ibG9jay9uYW5kL3N1bntOfV9pLAo+PiBh
+cmNoL2FybS9tYWNoLXN1bntOfWkgYW5kIHNvIG9uLgo+Cj4gQW5kIGEgbnVtYmVyIG9mIFNQSSBk
+ZXZpY2UgZHJpdmVycywgVVNCIGRldmljZSBkcml2ZXJzLCB2ZW5kb3IgcHJvdmlkZWQKPiBkZXZp
+Y2UgZHJpdmVycywgLi4uLi4uCj4KPj4gdGhlIHNjcmlwdC5mZXggc3lzdGVtIGRlYWxzIHdpdGgg
+dGhlIHBpbm11eCBpc3N1ZSBpbiBhIHZlcnkgbmVhdCB3YXkgdGhhdDoKPj4KPj4gICBhKSBoYXMg
+dmVyeSBsaXR0bGUgaW1wYWN0IG9uIHRoZSByZXN0IG9mIHRoZSBrZXJuZWwgdHJlZSBbY2l0YXRp
+b24KPj4gbmVlZGVkISAgaSdtIHNheWluZyB0aGF0OiBjb3VsZCBzb21lb25lIHBsZWFzZSBjb25m
+aXJtIGlmIGl0J3MgdHJ1ZV0KPgo+IE5vdCByZWFsbHkgdGhlIGNhc2UuIEFjdHVhbGx5IHRoZSBv
+cHBvc2l0ZS4gRFQgaGF2ZSB0aGlzIGFzIHdlbGwsIGFuZAo+IGludGVncmF0ZWQgaW4gZGV2aWNl
+IHByb2JpbmcuIEFsbHdpbm5lciBuZWVkIHRvIGhhY2sgZXZlcnkgZHJpdmVyIHVzZWQKPiB0byBh
+ZGQgdGhlaXIgZ3BpbyByZXF1ZXN0cyB0byBoYXZlIHBpbm11eGluZyB0cmlnZ2VyZWQuCgogYXVn
+aC4gIG9rLiAgc29sdXRpb25zLiAgd2hhdCBhcmUgdGhlIHNvbHV0aW9ucyBoZXJlPwoKbC4KCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmFybS1uZXRib29r
+IG1haWxpbmcgbGlzdCBhcm0tbmV0Ym9va0BsaXN0cy5waGNvbXAuY28udWsKaHR0cDovL2xpc3Rz
+LnBoY29tcC5jby51ay9tYWlsbWFuL2xpc3RpbmZvL2FybS1uZXRib29rClNlbmQgbGFyZ2UgYXR0
+YWNobWVudHMgdG8gYXJtLW5ldGJvb2tAZmlsZXMucGhjb21wLmNvLnVr
