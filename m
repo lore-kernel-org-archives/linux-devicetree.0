@@ -1,94 +1,76 @@
-From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 2/7] USB: chipidea: ci13xxx-imx: move static pdata into probe function
-Date: Wed, 05 Jun 2013 16:04:14 +0300
-Message-ID: <87wqq84skx.fsf@ashishki-desk.ger.corp.intel.com>
-References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de> <1370025529-7414-3-git-send-email-mgr@pengutronix.de> <20130605122906.GB20095@pengutronix.de>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: DT version of kirkwood_ge0x_init()
+Date: Wed, 5 Jun 2013 09:23:25 -0400
+Message-ID: <20130605132325.GI3803@titan.lakedaemon.net>
+References: <51ADBEE0.5040500@keymile.com> <51ADC2C2.6010106@gmail.com>
+ <51AE53D4.5070208@keymile.com> <51AEFF26.8080004@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130605122906.GB20095-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <51AEFF26.8080004-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "Longchamp,
+ Valentin" <Valentin.Longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Brunck, Holger" <Holger.Brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Simon Guinot <simon-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+Gerlando,
 
-> Hi Alexander,
->
-> On Fri, May 31, 2013 at 08:38:44PM +0200, Michael Grzeschik wrote:
->> From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> 
->> The pdata structure gets copied anyway inside ci13xxx_add_device
->> by platform_device_add. We don't need to have it static.
->> 
->> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Reviewed-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> ---
->>  drivers/usb/chipidea/ci13xxx_imx.c | 19 +++++++++----------
->>  1 file changed, 9 insertions(+), 10 deletions(-)
->> 
->> diff --git a/drivers/usb/chipidea/ci13xxx_imx.c b/drivers/usb/chipidea/ci13xxx_imx.c
->> index 73f9d5f..4d64541 100644
->> --- a/drivers/usb/chipidea/ci13xxx_imx.c
->> +++ b/drivers/usb/chipidea/ci13xxx_imx.c
->> @@ -88,17 +88,16 @@ EXPORT_SYMBOL_GPL(usbmisc_get_init_data);
->>  
->>  /* End of common functions shared by usbmisc drivers*/
->>  
->> -static struct ci13xxx_platform_data ci13xxx_imx_platdata  = {
->> -	.name			= "ci13xxx_imx",
->> -	.flags			= CI13XXX_REQUIRE_TRANSCEIVER |
->> -				  CI13XXX_PULLUP_ON_VBUS |
->> -				  CI13XXX_DISABLE_STREAMING,
->> -	.capoffset		= DEF_CAPOFFSET,
->> -};
->> -
->>  static int ci13xxx_imx_probe(struct platform_device *pdev)
->>  {
->>  	struct ci13xxx_imx_data *data;
->> +	struct ci13xxx_platform_data pdata = {
->> +		.name		= "ci13xxx_imx",
->> +		.capoffset	= DEF_CAPOFFSET,
->> +		.flags		= CI13XXX_REQUIRE_TRANSCEIVER |
->> +				  CI13XXX_PULLUP_ON_VBUS |
->> +				  CI13XXX_DISABLE_STREAMING,
->> +	};
->>  	struct platform_device *plat_ci, *phy_pdev;
->>  	struct device_node *phy_np;
->>  	struct resource *res;
->> @@ -171,7 +170,7 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
->>  		reg_vbus = NULL;
->>  	}
->>  
->> -	ci13xxx_imx_platdata.phy = data->phy;
->> +	pdata.phy = data->phy;
->>  
->>  	if (!pdev->dev.dma_mask)
->>  		pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
->> @@ -189,7 +188,7 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
->>  
->>  	plat_ci = ci13xxx_add_device(&pdev->dev,
->>  				pdev->resource, pdev->num_resources,
->> -				&ci13xxx_imx_platdata);
->> +				&pdata);
->>  	if (IS_ERR(plat_ci)) {
->>  		ret = PTR_ERR(plat_ci);
->>  		dev_err(&pdev->dev,
->
-> This and Patch 5, 6 and 7 of this series doesn't got much to do with
-> the the dr_mode/phy_type features. I will repost them in another series.
-> Beside the others, this one is missing any comments. If it's already good
-> to be taken, will you directly apply it?
+On Wed, Jun 05, 2013 at 11:04:38AM +0200, Sebastian Hesselbarth wrote:
+> On 06/04/13 22:53, Gerlando Falauto wrote:
+...
+> >Sorry, I am really more than lost when it's about tracking
+> >how/where/when changes are pulled. Any "mainlining for dummies" pointer
+> >would be more than appreciated.
+> 
+> Hmm, sometimes I am also lost especially about when branches will be
+> merged. Jason can tell you for sure. Basically, patches go into some
+> maintainer's or submaintainer's branch first.
 
-Ok, I'll take those. I'll let you know if there are any conflicts. :)
+In the simple case, we look at the diffstat to see what sections of the
+kernel are being changed.  drivers/net, arch/arm, arch/arm/mach-mvebu,
+arch/arm/mm are all maintained by different people.  Depending on where
+the changes are, that dictates who it will go through, DaveM, LinusW,
+Arnd and Olof, Russell King, etc.
 
-Regards,
---
-Alex
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Any code changes in arch/arm that are SoC dependent go through arm-soc.
+Otherwise, it goes through Russell.  arm-soc is maintained by Arnd and
+Olof.  It's so large, that they've broken it up into sub-archs with
+maintainers for each.  Myself, Andrew Lunn, and Gregory Clemente
+maintain code changes in
+arch/arm/mach-{mvebu,kirkwood,orion5x,dove,mv78xx0}.  We feed those
+changes in the form of branches to arm-soc, who put it all together and
+send it to Linus.
+
+It gets complicated when part of a patch series, like Sebastian's, needs
+to go through -net, and the rest through arm-soc.  If the two halves
+don't depend on one another, then it's easy.  In this case, the arm-soc
+changes _do_ depend on the -net changes.  So, we wait for the -net
+changes to get into mainline Linux (because all of the branches from
+everyone will have merged together), in this case, in v3.11-rc1.  Once
+that lands, I'll base a branch off of it and include Sebastian's changes
+to mach-kirkwood.  It will then be sent up to arm-soc for inclusion in
+v3.12-rc1.
+
+There's also a corner case where a driver maintainer will Ack a patch
+series he would normally take and allow arm-soc to take it.  Usually
+this is only if the driver changes are limited to a SoC specific file,
+eg drivers/clk/mvebu/*, and the driver maintainer doesn't anticipate any
+drivers/clk/* changes that will conflict.  Then, we can take the whole
+series in one merge window through arm-soc.  But that's purely up to the
+driver maintainer(s), and is by exception, not the rule.
+
+hth,
+
+Jason.
