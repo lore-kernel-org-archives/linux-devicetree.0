@@ -1,50 +1,76 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 00/11] drivers: Add Pinctrl PM support
-Date: Wed, 5 Jun 2013 14:41:29 +0200
-Message-ID: <CACRpkdbtVnieRZC+WVNrWZfe2X5SEdcq2ZbOj3kaTm3TLcHmHg@mail.gmail.com>
-References: <1369995191-20855-1-git-send-email-gururaja.hebbar@ti.com>
-	<20130531170437.GA17591@core.coreip.homeip.net>
-	<CACRpkdYnhjpFp1CM=P_hddBe4qVigtE0c+CN9NKvk3nFgJS-ig@mail.gmail.com>
-	<87k3m92148.fsf@linaro.org>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH v2 0/4] ARM: dts: AM3XXX: Use preprocessor for device trees
+Date: Wed, 5 Jun 2013 14:49:00 +0200
+Message-ID: <51AF33BC.4020708@ti.com>
+References: <1370268745-15860-1-git-send-email-florian.vaussard@epfl.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87k3m92148.fsf@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@linaro.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hebbar Gururaja <gururaja.hebbar@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vaibhav Bedia <vaibhav.bedia@ti.com>, sudhakar.raj@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1370268745-15860-1-git-send-email-florian.vaussard@epfl.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vaibhav Hiremath <hvaibhav@ti.com>, "Mohammed, Afzal" <afzal@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Joel A Fernandes <agnel.joel@gmail.com>, Florian Vaussard <florian.vaussard@epfl.ch>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 4, 2013 at 8:15 PM, Kevin Hilman <khilman@linaro.org> wrote:
-> [Me]
->> I think this will save a *lot* of identical code in all the
->> drivers, that will just have to call
->> pinctrl_select_pm_sleep(), pinctrl_select_pm_default()
->> pinctrl_select_pm_idle() instead of all the complex code.
->>
->> This is what I planned to do but never got around to.
->
-> What about taking it one tiny step further, and having it done by the PM
-> core itself?
++ Afzal,
 
-Maybe so, but atleast currently we cannot do it
-exclusively in the PM core.
+Hi Vaibhav and Afzal,
 
-We have things like what you find in
-drivers/tty/serial/amba-pl011.c
-where pl011_shutdown() puts the pins into sleep mode
-on unused TTYs.
+Can someone test this series before I pull it. I still don't have any AM
+board to do it myself :-(
 
-The same applies to any unused ports like that, we're
-thinking of a way to sleep pins for unused I2C hosts
-for example.
+In theory, it should be fine since Florian already checked the diff, but
+just in case.
 
-And that works fine also on systems that does not
-enable CONFIG_PM (so the pin control subsystem
-is completely orthogonal). But maybe that is
-complicating things? I was just thinking it was a bit
-thick to require everything and its dog to make a
-complete transition to (runtime)PM.
+Thanks,
+Benoit
 
-Yours,
-Linus Walleij
+
+On 06/03/2013 04:12 PM, Florian Vaussard wrote:
+> Hello,
+> 
+> Following my series for OMAP2+, this series makes use of the C preprocessor
+> when compiling AM3xxx DT files, and accomplishes some improvements to improve
+> overall readability.
+> 
+> The .dtb files were diff-tested before and after applying the series to
+> guarantee identity for all targets.
+> 
+> To enable pullup/down on the pad, the bit should be cleared on AM33xx, where
+> it should be set on OMAP3. This was wrong in my first version.
+> 
+> This series is based on Benoit's 'for_3.11/dts' branch.
+> 
+> Regards,
+> 
+> Florian
+> 
+> From v2:
+> - Rebased on Benoit's 'for_3.11/dts'
+> - Fixed inversed bit to enable pullups ('1' on OMAP, but '0' on AM33xx)
+> 
+> Florian Vaussard (4):
+>   ARM: dts: AM3XXX: Use #include for all device trees
+>   ARM: dts: AM33XX: Use existing constants for GPIOs
+>   ARM: dts: AM33XX: Specific pinctrl header
+>   ARM: dts: AM33XX: Use pinctrl constants
+> 
+>  arch/arm/boot/dts/am335x-bone.dts       |   28 ++++++------
+>  arch/arm/boot/dts/am335x-evm.dts        |   76 +++++++++++++++---------------
+>  arch/arm/boot/dts/am335x-evmsk.dts      |   46 +++++++++---------
+>  arch/arm/boot/dts/am33xx.dtsi           |    5 ++-
+>  arch/arm/boot/dts/am3517-evm.dts        |    2 +-
+>  arch/arm/boot/dts/am3517_mt_ventoux.dts |    2 +-
+>  include/dt-bindings/pinctrl/am33xx.h    |   37 +++++++++++++++
+>  7 files changed, 118 insertions(+), 78 deletions(-)
+>  create mode 100644 include/dt-bindings/pinctrl/am33xx.h
+> 
