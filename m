@@ -1,41 +1,59 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Subject: Re: [RFC PATCH v2 0/2] drivers: mfd: Versatile Express SPC support
-Date: Wed, 5 Jun 2013 10:15:39 -0400 (EDT)
-Message-ID: <alpine.LFD.2.03.1306051008590.1200@syhkavp.arg>
-References: <1370432767-6620-1-git-send-email-lorenzo.pieralisi@arm.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH -next] serial: omap: fix potential NULL pointer
+ dereference in serial_omap_runtime_suspend()
+Date: Wed, 5 Jun 2013 08:28:56 -0700
+Message-ID: <20130605152856.GS3331@atomide.com>
+References: <CAPgLHd-N6jTD_WvT2KgsG8vOtKCtpJET8ddyQBWUMp=qG_3G+Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1370432767-6620-1-git-send-email-lorenzo.pieralisi@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>, Achin Gupta <achin.gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPgLHd-N6jTD_WvT2KgsG8vOtKCtpJET8ddyQBWUMp=qG_3G+Q@mail.gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Wei Yongjun <weiyj.lk@gmail.com>
+Cc: gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, rob.herring@calxeda.com, sourav.poddar@ti.com, yongjun_wei@trendmicro.com.cn, devicetree-discuss@lists.ozlabs.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 5 Jun 2013, Lorenzo Pieralisi wrote:
-
-> This patch is v2 of a previous posting:
+* Wei Yongjun <weiyj.lk@gmail.com> [130604 19:10]:
+> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 > 
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-May/170624.html
-> 
-> V2 changes:
-> 
-> - Dropped timeout interface patch
-> - Converted interfaces to non-timeout ones, integrated and retested
-> - Removed mutex used at init
-> - Refactored code to work around init sections warning
-> - Fixed interface type enumeration init
-> - Fixed data write in SYSCFG write commands
-> 
-> This patch series introduces support for the Versatile Express Serial
-> Power Controller (SPC) present in ARM Versatile Express TC2 core tiles.
-> SPC driver is a fundamental component of TC2 power management and allows
-> to carry out C-state management and DVFS for A15 and A7 clusters.
-[...]
+> The dereference to 'up' should be moved below the NULL test.
+> Introduced by commit ddd85e225c8885b5e4419b0499ab27100e7c366a
+> (serial: omap: prevent runtime PM for "no_console_suspend")
 
-The MCPM backend for TC2 obviously depends on these patches and it 
-should probably be merged via the ARM SoC tree.  Could those patches go 
-with it as well?  If so, Samuel's ACK would be appreciated.
-
-
-Nicolas
+Acked-by: Tony Lindgren <tony@atomide.com>
+ 
+> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> ---
+>  drivers/tty/serial/omap-serial.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
+> index 1aaeca8..156b5aa 100644
+> --- a/drivers/tty/serial/omap-serial.c
+> +++ b/drivers/tty/serial/omap-serial.c
+> @@ -1613,6 +1613,9 @@ static int serial_omap_runtime_suspend(struct device *dev)
+>  	struct uart_omap_port *up = dev_get_drvdata(dev);
+>  	struct omap_uart_port_info *pdata = dev->platform_data;
+>  
+> +	if (!up)
+> +		return -EINVAL;
+> +
+>  	/*
+>  	* When using 'no_console_suspend', the console UART must not be
+>  	* suspended. Since driver suspend is managed by runtime suspend,
+> @@ -1623,9 +1626,6 @@ static int serial_omap_runtime_suspend(struct device *dev)
+>  	    uart_console(&up->port))
+>  		return -EBUSY;
+>  
+> -	if (!up)
+> -		return -EINVAL;
+> -
+>  	if (!pdata)
+>  		return 0;
+>  
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
