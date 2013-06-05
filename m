@@ -1,55 +1,114 @@
-From: Henrik =?ISO-8859-1?Q?Nordstr=F6m?= <henrik@henriknordstrom.net>
-Subject: Re: getting allwinner SoC support upstream (was Re:
+From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
  Uploading linux (3.9.4-1))
-Date: Thu, 06 Jun 2013 01:40:09 +0200
-Message-ID: <1370475609.20454.44.camel@localhost>
+Date: Wed, 5 Jun 2013 19:40:18 -0400
+Message-ID: <CAKON4Oz79hUE_ReAqjeynwL6ZWntX2W1uw3YOg0G2AiY7Gjs=g@mail.gmail.com>
 References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
-	<CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
-	<51AFA6DD.3000202@wwwdotorg.org>
-	<CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
-	<1370469574.18839.33.camel@localhost>
-	<CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
-	<CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
-	<CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com>
-Reply-To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
+ <CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
+ <51AFA6DD.3000202@wwwdotorg.org>
+ <CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
+ <1370469574.18839.33.camel@localhost>
+ <CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
+ <CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
+ <CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <arm-netbook-bounces@lists.phcomp.co.uk>
-In-Reply-To: <CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com>
-List-Unsubscribe: <http://lists.phcomp.co.uk/mailman/options/arm-netbook>,
-	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=unsubscribe>
-List-Archive: <http://lists.phcomp.co.uk/pipermail/arm-netbook/>
-List-Post: <mailto:arm-netbook@lists.phcomp.co.uk>
-List-Help: <mailto:arm-netbook-request@lists.phcomp.co.uk?subject=help>
-List-Subscribe: <http://lists.phcomp.co.uk/mailman/listinfo/arm-netbook>,
-	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=subscribe>
-Errors-To: arm-netbook-bounces@lists.phcomp.co.uk
-Sender: "arm-netbook" <arm-netbook-bounces@lists.phcomp.co.uk>
-To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
-Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel@lists.debian.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "luke.leighton" <luke.leighton-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, debian-arm-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org, Linux on small ARM machines <arm-netbook-Fj0DB6SUpRXNuVmtMlwsDbVCufUGDwFn@public.gmane.org>, ARM Linux Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, debian-kernel-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-tor 2013-06-06 klockan 00:26 +0100 skrev luke.leighton:
-
+On Wed, Jun 5, 2013 at 7:26 PM, luke.leighton <luke.leighton-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wro=
+te:
+> On Thu, Jun 6, 2013 at 12:07 AM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
+wrote:
+>> On Wed, Jun 5, 2013 at 6:47 PM, luke.leighton <luke.leighton-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
+wrote:
+>>> On Wed, Jun 5, 2013 at 10:59 PM, Henrik Nordstr=F6m
+>>> <henrik-N0bZODiMPoV/1Aw6q1k8hdHuzzzSOjJt@public.gmane.org> wrote:
+>>>
+>>>>>  .... and then there's the boot0 and boot1 loaders, these *do* have
+>>>
+>>>> no, these are not tiny. boot0 is 24KB to fit the initial embedded SRAM
+>>>> (not cache), but boot1 is on pair with u-boot in size and runs from
+>>>> DRAM.
+>>>
+>>>  btw, please listen to henrik: he knows what he's talking about, as
+>>> you can see :)   henrik, thank you for correcting my technical
+>>> misunderstandings, i'll try to remember them and not propagate
+>>> incorrect stuff.
+>>
+>> This is not about the fex syntax or uboot. The root problem is needing
+>> two sets of binding for every device driver in the kernel. Pick a
+>> random driver like gpio-pca953x.c and look at the source. In that file
+>> there are #ifdef CONFIG_OF_ sections. Those sections are directly
+>> reading the FDT binary via calls like of_get_property(node,
+>> "linux,gpio-base", &size);. If fex is added to the kernel every driver
+>> driver will now need both a #ifdef CONFIG_OF_ section and also a
+>> #ifdef CONFIG_FEX_ section. Doing that is just crazy.
+>
+>  yes.  which is why they haven't done it.
+>
+>> Is Allwinner
+>> going to add fex support to every single device driver in the kernel?
+>
 >  no john - they've only added it to the multiplexed sections of the
 > drivers which they themselves have written.  such as
 > drivers/usb/sun{N}i_usb/*.[ch], drivers/block/nand/sun{N}_i,
 > arch/arm/mach-sun{N}i and so on.
+>
+> even the touchscreen driver that they wrote, that's got nothing to do
+> with any other code in the touchscreen linux kernel source tree: it's
+> more of a "meta-"driver which even has the name of the linux kernel
+> module that needs to be loaded and what I2C address, GPIO options etc.
+> to pass in [normally done as modprobe options in userspace].
+>
+>  to be honest, there are better people to fully answer this question
+> (alejandro and henrik are two that spring to mind) but you're
+> definitely off-base, jon.  the script.fex system deals with the pinmux
+> issue in a very neat way that:
 
-And a number of SPI device drivers, USB device drivers, vendor provided
-device drivers, ......
+I have a Cubieboard and I have a pca9532 on my desk. Now I want to
+attach this pca9532 to the Cubieboard so I wire them together on I2C.
 
-> the script.fex system deals with the pinmux issue in a very neat way that:
-> 
+How is the Allwinner kernel going to load the driver for the pca9532?
+The mainline pca9532 driver does not understand fex so it can't read
+the necessary initialization data.
+
+Luke, you of all people should see what is going on. Take an EOMA
+module based on an A10. Now plug it into ten different hosts with
+widely varying hardware support - like each of the ten hosts has a
+different lm-sensor type chip. Where are the fex drivers for those ten
+different lm-sensor chips going to come from? We already have DT
+support for them.
+
+fex is only supported on the small number of peripheral chips
+Allwinner has blessed. Use any chip outside of that set and it isn't
+going to boot.
+
+>
 >   a) has very little impact on the rest of the kernel tree [citation
 > needed!  i'm saying that: could someone please confirm if it's true]
+>
+>   b) the linux kernel developers could, instead of criticising it,
+> actually learn a great deal from.
+>
+> l.
 
-Not really the case. Actually the opposite. DT have this as well, and
-integrated in device probing. Allwinner need to hack every driver used
-to add their gpio requests to have pinmuxing triggered.
 
-It is just layered a bit differently when using DT.
 
-Regards
-Henrik
+--
+Jon Smirl
+jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
