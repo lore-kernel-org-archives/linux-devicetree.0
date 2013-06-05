@@ -1,19 +1,21 @@
-From: Henrik =?ISO-8859-1?Q?Nordstr=F6m?= <henrik@henriknordstrom.net>
+From: "luke.leighton" <luke.leighton@gmail.com>
 Subject: Re: getting allwinner SoC support upstream (was Re:
  Uploading linux (3.9.4-1))
-Date: Thu, 06 Jun 2013 01:15:15 +0200
-Message-ID: <1370474115.20454.26.camel@localhost>
+Date: Thu, 6 Jun 2013 00:26:35 +0100
+Message-ID: <CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com>
 References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
 	<CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
 	<51AFA6DD.3000202@wwwdotorg.org>
 	<CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
-	<1370469574.18839.33.camel@localhost> <51AFC19F.9040601@wwwdotorg.org>
+	<1370469574.18839.33.camel@localhost>
+	<CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
+	<CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
 Reply-To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <arm-netbook-bounces@lists.phcomp.co.uk>
-In-Reply-To: <51AFC19F.9040601@wwwdotorg.org>
+In-Reply-To: <CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
 List-Unsubscribe: <http://lists.phcomp.co.uk/mailman/options/arm-netbook>,
 	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=unsubscribe>
 List-Archive: <http://lists.phcomp.co.uk/pipermail/arm-netbook/>
@@ -23,33 +25,54 @@ List-Subscribe: <http://lists.phcomp.co.uk/mailman/listinfo/arm-netbook>,
 	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=subscribe>
 Errors-To: arm-netbook-bounces@lists.phcomp.co.uk
 Sender: "arm-netbook" <arm-netbook-bounces@lists.phcomp.co.uk>
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel@lists.debian.org
+To: "jonsmirl@gmail.com" <jonsmirl@gmail.com>
+Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel@lists.debian.org
 List-Id: devicetree@vger.kernel.org
 
-ons 2013-06-05 klockan 16:54 -0600 skrev Stephen Warren:
-
-> 1) Put all the parameters in the U-Boot configuration header. This is
-> normal.
-
-Yes, we do so today for U-Boot SPL. But this won't fit very well with
-the Allwinner ODM workflow where one binary image works on a wide range
-of board configurations probed while flashing the image to the board,
-but on the other hand there is no real need for them to use u-boot as
-the primary boot loader, just keep using boot0 + boot1 + u-boot chain as
-they have always done.
-
-> 2) Read some data structure at run-time. This data structure could in
-> theory be some SoC-specific blob format (e.g. the packed version of
-> information that some tool extracts from FEX/DT), a whole FEX blob, or
-> device tree.
-
-This is likely to happen for the sunxi U-Boot SPL due to the sheer
-amount of boards involved, and is done to some extents for other boards
-as well. In the SPL there generally isn't room for full DT support. Main
-u-boot HW configuration could be done runtime via DT alone but we are
-not quite there yet, nothing major missing however other than getting it
-done.
-
-Regards
-Henrik
+T24gVGh1LCBKdW4gNiwgMjAxMyBhdCAxMjowNyBBTSwgam9uc21pcmxAZ21haWwuY29tIDxqb25z
+bWlybEBnbWFpbC5jb20+IHdyb3RlOgo+IE9uIFdlZCwgSnVuIDUsIDIwMTMgYXQgNjo0NyBQTSwg
+bHVrZS5sZWlnaHRvbiA8bHVrZS5sZWlnaHRvbkBnbWFpbC5jb20+IHdyb3RlOgo+PiBPbiBXZWQs
+IEp1biA1LCAyMDEzIGF0IDEwOjU5IFBNLCBIZW5yaWsgTm9yZHN0csO2bQo+PiA8aGVucmlrQGhl
+bnJpa25vcmRzdHJvbS5uZXQ+IHdyb3RlOgo+Pgo+Pj4+ICAuLi4uIGFuZCB0aGVuIHRoZXJlJ3Mg
+dGhlIGJvb3QwIGFuZCBib290MSBsb2FkZXJzLCB0aGVzZSAqZG8qIGhhdmUKPj4KPj4+IG5vLCB0
+aGVzZSBhcmUgbm90IHRpbnkuIGJvb3QwIGlzIDI0S0IgdG8gZml0IHRoZSBpbml0aWFsIGVtYmVk
+ZGVkIFNSQU0KPj4+IChub3QgY2FjaGUpLCBidXQgYm9vdDEgaXMgb24gcGFpciB3aXRoIHUtYm9v
+dCBpbiBzaXplIGFuZCBydW5zIGZyb20KPj4+IERSQU0uCj4+Cj4+ICBidHcsIHBsZWFzZSBsaXN0
+ZW4gdG8gaGVucmlrOiBoZSBrbm93cyB3aGF0IGhlJ3MgdGFsa2luZyBhYm91dCwgYXMKPj4geW91
+IGNhbiBzZWUgOikgICBoZW5yaWssIHRoYW5rIHlvdSBmb3IgY29ycmVjdGluZyBteSB0ZWNobmlj
+YWwKPj4gbWlzdW5kZXJzdGFuZGluZ3MsIGknbGwgdHJ5IHRvIHJlbWVtYmVyIHRoZW0gYW5kIG5v
+dCBwcm9wYWdhdGUKPj4gaW5jb3JyZWN0IHN0dWZmLgo+Cj4gVGhpcyBpcyBub3QgYWJvdXQgdGhl
+IGZleCBzeW50YXggb3IgdWJvb3QuIFRoZSByb290IHByb2JsZW0gaXMgbmVlZGluZwo+IHR3byBz
+ZXRzIG9mIGJpbmRpbmcgZm9yIGV2ZXJ5IGRldmljZSBkcml2ZXIgaW4gdGhlIGtlcm5lbC4gUGlj
+ayBhCj4gcmFuZG9tIGRyaXZlciBsaWtlIGdwaW8tcGNhOTUzeC5jIGFuZCBsb29rIGF0IHRoZSBz
+b3VyY2UuIEluIHRoYXQgZmlsZQo+IHRoZXJlIGFyZSAjaWZkZWYgQ09ORklHX09GXyBzZWN0aW9u
+cy4gVGhvc2Ugc2VjdGlvbnMgYXJlIGRpcmVjdGx5Cj4gcmVhZGluZyB0aGUgRkRUIGJpbmFyeSB2
+aWEgY2FsbHMgbGlrZSBvZl9nZXRfcHJvcGVydHkobm9kZSwKPiAibGludXgsZ3Bpby1iYXNlIiwg
+JnNpemUpOy4gSWYgZmV4IGlzIGFkZGVkIHRvIHRoZSBrZXJuZWwgZXZlcnkgZHJpdmVyCj4gZHJp
+dmVyIHdpbGwgbm93IG5lZWQgYm90aCBhICNpZmRlZiBDT05GSUdfT0ZfIHNlY3Rpb24gYW5kIGFs
+c28gYQo+ICNpZmRlZiBDT05GSUdfRkVYXyBzZWN0aW9uLiBEb2luZyB0aGF0IGlzIGp1c3QgY3Jh
+enkuCgogeWVzLiAgd2hpY2ggaXMgd2h5IHRoZXkgaGF2ZW4ndCBkb25lIGl0LgoKPiBJcyBBbGx3
+aW5uZXIKPiBnb2luZyB0byBhZGQgZmV4IHN1cHBvcnQgdG8gZXZlcnkgc2luZ2xlIGRldmljZSBk
+cml2ZXIgaW4gdGhlIGtlcm5lbD8KCiBubyBqb2huIC0gdGhleSd2ZSBvbmx5IGFkZGVkIGl0IHRv
+IHRoZSBtdWx0aXBsZXhlZCBzZWN0aW9ucyBvZiB0aGUKZHJpdmVycyB3aGljaCB0aGV5IHRoZW1z
+ZWx2ZXMgaGF2ZSB3cml0dGVuLiAgc3VjaCBhcwpkcml2ZXJzL3VzYi9zdW57Tn1pX3VzYi8qLltj
+aF0sIGRyaXZlcnMvYmxvY2svbmFuZC9zdW57Tn1faSwKYXJjaC9hcm0vbWFjaC1zdW57Tn1pIGFu
+ZCBzbyBvbi4KCmV2ZW4gdGhlIHRvdWNoc2NyZWVuIGRyaXZlciB0aGF0IHRoZXkgd3JvdGUsIHRo
+YXQncyBnb3Qgbm90aGluZyB0byBkbwp3aXRoIGFueSBvdGhlciBjb2RlIGluIHRoZSB0b3VjaHNj
+cmVlbiBsaW51eCBrZXJuZWwgc291cmNlIHRyZWU6IGl0J3MKbW9yZSBvZiBhICJtZXRhLSJkcml2
+ZXIgd2hpY2ggZXZlbiBoYXMgdGhlIG5hbWUgb2YgdGhlIGxpbnV4IGtlcm5lbAptb2R1bGUgdGhh
+dCBuZWVkcyB0byBiZSBsb2FkZWQgYW5kIHdoYXQgSTJDIGFkZHJlc3MsIEdQSU8gb3B0aW9ucyBl
+dGMuCnRvIHBhc3MgaW4gW25vcm1hbGx5IGRvbmUgYXMgbW9kcHJvYmUgb3B0aW9ucyBpbiB1c2Vy
+c3BhY2VdLgoKIHRvIGJlIGhvbmVzdCwgdGhlcmUgYXJlIGJldHRlciBwZW9wbGUgdG8gZnVsbHkg
+YW5zd2VyIHRoaXMgcXVlc3Rpb24KKGFsZWphbmRybyBhbmQgaGVucmlrIGFyZSB0d28gdGhhdCBz
+cHJpbmcgdG8gbWluZCkgYnV0IHlvdSdyZQpkZWZpbml0ZWx5IG9mZi1iYXNlLCBqb24uICB0aGUg
+c2NyaXB0LmZleCBzeXN0ZW0gZGVhbHMgd2l0aCB0aGUgcGlubXV4Cmlzc3VlIGluIGEgdmVyeSBu
+ZWF0IHdheSB0aGF0OgoKICBhKSBoYXMgdmVyeSBsaXR0bGUgaW1wYWN0IG9uIHRoZSByZXN0IG9m
+IHRoZSBrZXJuZWwgdHJlZSBbY2l0YXRpb24KbmVlZGVkISAgaSdtIHNheWluZyB0aGF0OiBjb3Vs
+ZCBzb21lb25lIHBsZWFzZSBjb25maXJtIGlmIGl0J3MgdHJ1ZV0KCiAgYikgdGhlIGxpbnV4IGtl
+cm5lbCBkZXZlbG9wZXJzIGNvdWxkLCBpbnN0ZWFkIG9mIGNyaXRpY2lzaW5nIGl0LAphY3R1YWxs
+eSBsZWFybiBhIGdyZWF0IGRlYWwgZnJvbS4KCmwuCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwphcm0tbmV0Ym9vayBtYWlsaW5nIGxpc3QgYXJtLW5ldGJv
+b2tAbGlzdHMucGhjb21wLmNvLnVrCmh0dHA6Ly9saXN0cy5waGNvbXAuY28udWsvbWFpbG1hbi9s
+aXN0aW5mby9hcm0tbmV0Ym9vawpTZW5kIGxhcmdlIGF0dGFjaG1lbnRzIHRvIGFybS1uZXRib29r
+QGZpbGVzLnBoY29tcC5jby51aw==
