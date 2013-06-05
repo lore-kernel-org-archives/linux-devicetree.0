@@ -1,56 +1,50 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH 1/1] ARM: dts: Remove combiner IRQ node from exynos4x12.dtsi
-Date: Wed, 05 Jun 2013 21:39:47 +0900
-Message-ID: <08f901ce61e9$c3a15ed0$4ae41c70$%kim@samsung.com>
-References: <1366710888-11059-1-git-send-email-sachin.kamat@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 00/11] drivers: Add Pinctrl PM support
+Date: Wed, 5 Jun 2013 14:41:29 +0200
+Message-ID: <CACRpkdbtVnieRZC+WVNrWZfe2X5SEdcq2ZbOj3kaTm3TLcHmHg@mail.gmail.com>
+References: <1369995191-20855-1-git-send-email-gururaja.hebbar@ti.com>
+	<20130531170437.GA17591@core.coreip.homeip.net>
+	<CACRpkdYnhjpFp1CM=P_hddBe4qVigtE0c+CN9NKvk3nFgJS-ig@mail.gmail.com>
+	<87k3m92148.fsf@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1366710888-11059-1-git-send-email-sachin.kamat@linaro.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: arnd@arndb.de, patches@linaro.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87k3m92148.fsf@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@linaro.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Hebbar Gururaja <gururaja.hebbar@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vaibhav Bedia <vaibhav.bedia@ti.com>, sudhakar.raj@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Sachin Kamat wrote:
-> 
-> These nodes have separately been added to 4212 and 4412 dtsi
-> files by commit 30269ddff1 ("ARM: exynos: add missing properties
-> for combiner IRQs"). The existing node also contained a few
-> incorrect entries.
-> 
-> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> ---
-> Patch based on linux-next tree (20130423)
-> ---
->  arch/arm/boot/dts/exynos4x12.dtsi |    8 --------
->  1 file changed, 8 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos4x12.dtsi
-> b/arch/arm/boot/dts/exynos4x12.dtsi
-> index ede3f9b..675c221 100644
-> --- a/arch/arm/boot/dts/exynos4x12.dtsi
-> +++ b/arch/arm/boot/dts/exynos4x12.dtsi
-> @@ -28,14 +28,6 @@
->  		pinctrl3 = &pinctrl_3;
->  	};
-> 
-> -	combiner:interrupt-controller@10440000 {
-> -		interrupts = <0 0 0>, <0 1 0>, <0 2 0>, <0 3 0>,
-> -			     <0 4 0>, <0 5 0>, <0 6 0>, <0 7 0>,
-> -			     <0 8 0>, <0 9 0>, <0 10 0>, <0 11 0>,
-> -			     <0 12 0>, <0 13 0>, <0 14 0>, <0 15 0>,
-> -			     <0 16 0>, <0 17 0>, <0 18 0>, <0 19 0>;
-> -	};
-> -
->  	clock: clock-controller@0x10030000 {
->  		compatible = "samsung,exynos4412-clock";
->  		reg = <0x10030000 0x20000>;
-> --
-> 1.7.9.5
+On Tue, Jun 4, 2013 at 8:15 PM, Kevin Hilman <khilman@linaro.org> wrote:
+> [Me]
+>> I think this will save a *lot* of identical code in all the
+>> drivers, that will just have to call
+>> pinctrl_select_pm_sleep(), pinctrl_select_pm_default()
+>> pinctrl_select_pm_idle() instead of all the complex code.
+>>
+>> This is what I planned to do but never got around to.
+>
+> What about taking it one tiny step further, and having it done by the PM
+> core itself?
 
-Applied, thanks.
+Maybe so, but atleast currently we cannot do it
+exclusively in the PM core.
 
-- Kukjin
+We have things like what you find in
+drivers/tty/serial/amba-pl011.c
+where pl011_shutdown() puts the pins into sleep mode
+on unused TTYs.
+
+The same applies to any unused ports like that, we're
+thinking of a way to sleep pins for unused I2C hosts
+for example.
+
+And that works fine also on systems that does not
+enable CONFIG_PM (so the pin control subsystem
+is completely orthogonal). But maybe that is
+complicating things? I was just thinking it was a bit
+thick to require everything and its dog to make a
+complete transition to (runtime)PM.
+
+Yours,
+Linus Walleij
