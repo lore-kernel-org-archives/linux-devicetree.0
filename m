@@ -1,13 +1,16 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [net-next PATCH v4 1/5] net: cpsw: enhance pinctrl support
-Date: Wed, 5 Jun 2013 20:23:45 +0100
-Message-ID: <20130605192345.GH31367@sirena.org.uk>
-References: <1370452099-24026-1-git-send-email-mugunthanvnm@ti.com>
- <1370452099-24026-2-git-send-email-mugunthanvnm@ti.com>
+From: Mark Langsdorf <mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/2 v2] sata highbank: add bit-banged SGPIO driver support
+Date: Wed, 05 Jun 2013 15:19:30 -0500
+Message-ID: <51AF9D52.2030609@calxeda.com>
+References: <1369945051-2582-2-git-send-email-mark.langsdorf@calxeda.com>
+ <1370266538-14211-1-git-send-email-mark.langsdorf@calxeda.com>
+ <20130603203727.GB29989@mtj.dyndns.org> <51AE0335.902@calxeda.com>
+ <20130604203251.GF14916@htj.dyndns.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5837998748277611889=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1370452099-24026-2-git-send-email-mugunthanvnm-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20130604203251.GF14916-Gd/HAXX7CRxy/B6EtB590w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,68 +21,57 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>, benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 06/04/2013 03:32 PM, Tejun Heo wrote:
+> Hello, Mark.
+> 
+> On Tue, Jun 04, 2013 at 10:09:41AM -0500, Mark Langsdorf wrote:
+>>> And tell ahci core sizeof(ecx_host_priv) some way, but really, just
+>>> having a plain pointer should be enough, I think.
+>>
+>> I think I want to do the opposite. For 90% of the AHCI EM functions,
+>> I want ecx_host_priv to be an ahci_host_priv so that I can use those
+>> functions without having to keep a local copy of them.
+>>
+>> Would something like this:
+>> struct ahci_host_priv {
+>> 	/* standard AHCI existing stuff */
+>> 	void *private_data;
+>> };
+>>
+>> I shied away from that because a private data structure having a private
+>> data structure doesn't seem right.
+> 
+> Aren't we talking about the same thing?  I'm perfectly fine with
+> adding a pointer to ahci_host_priv.  Maybe you can name it slightly
+> differently - say, *impl_data, *platform_data, whatever.
 
---===============5837998748277611889==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kY7Q1I7FwGue0/xS"
-Content-Disposition: inline
+I guess we are talking about the same thing. I'll do that.
 
+>>>> +static ssize_t ecx_transmit_led_message(struct ata_port *ap, u32 state,
+>>>> +					ssize_t size)
+>>>> +{
+>>> ...
+>>>> +	if (!hpriv->em_msg_type & EM_MSG_TYPE_LED)
+>>>> +		return size;
+>>>
+>>> Is this really correct?  You first negate and convert it to bool and
+>>> then bit-wise and it with a mask?  How is supposed to work?
+>>
+>> Am I confused about the order of operations? It's meant to be "continue
+>> if hpriv->em_msg_type doesn't have EM_MSG_TYPE_LED set".
+> 
+> Shouldn't that be
+> 
+> 	if (!(hpriv->em_msg_type & EM_MSG_TYPE_LED))
+> 
+> ! has higher priority than &.  You're converting em_msg_type to 1 or 0
+>   and then and'ing EM_MSG_TYPE_LED to it.
 
---kY7Q1I7FwGue0/xS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'll fix it then.
 
-On Wed, Jun 05, 2013 at 10:38:15PM +0530, Mugunthan V N wrote:
-> From: Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
->=20
-> Amend cpsw controller to optionally take a pin control handle and set
-> the state of the pins to:
->=20
-> - "default" on boot, resume
-> - "sleep" on suspend()
-
-Linus Walleij posted some patches which factor the state setting code
-out into generic functions earlier on today - it probably makes sense to
-pick those up rather than open coding
-
---kY7Q1I7FwGue0/xS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRr5A+AAoJELSic+t+oim9Tt4P/2kgMjKssw6c6sBUmpjPw9Ft
-dX0eBErXLq62o0+KLDsEF+2sRXB++lNC1BIMpFLh19ocKVIsG5EIR78nny7yvHEH
-y/agXhUN6js3YpKKmQ2AOTJEGLtrJ5PRnW1/q6NVFDwlaf1gNHOXQ3m3DTBwJE9z
-FjNeUm4PBBbT8DD80ks2y+IE4PMki3ubxPAPtMxlf+4DdmbsSziIKXXU1pyHkM6c
-14xw+Chv2dIikoHPx7JTE8tteL/YIFTAYQQo2n7URXe5CIBdTW5nHzjZ87nmBQZN
-uwe1GV7B+cMxt3wqfptoUAEkf0s8FEns1eKumcyCreXK4YtvpYSfwcHrM9HULQqf
-d7XzQ1V/cP/nXDgEbeymGe2QSCeaJTY7h+++qG+vLEptsg+a6wHVMpUVkeml7iQB
-Ijh3MsW0hYbY49xRRLdpWUx2zNJZEfbj5vxm0PGaR0UXLr3KLQOlnXH5DFn110uV
-SjQuRfz0QQcWBsLrL079DmR1ojA4YbNl7N4ZhlHIP7dMJj4l4Cw3xwQ//Ub+o3NA
-FptamzUPeTHVQxV8y418k0jT7gctMiaQyvhsuSog34aHuWZmyPqUOxjOp7Ib0OLV
-lbn6CTED394ui1J2b5q4rDLiSZY2Ypw5UbYdlMrGMpIHjOB4OuoeqdLAEbyZ316H
-hxATrzzdw7kNZJrYzugV
-=E6qz
------END PGP SIGNATURE-----
-
---kY7Q1I7FwGue0/xS--
-
---===============5837998748277611889==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============5837998748277611889==--
+--Mark Langsdorf
+Calxeda, Inc.
