@@ -1,51 +1,152 @@
-From: Mike Dunn <mikedunn@newsguy.com>
-Subject: pxa27x and pinctrl-single
-Date: Wed, 05 Jun 2013 10:23:16 -0700
-Message-ID: <51AF7404.3090003@newsguy.com>
+From: "Jon Medhurst (Tixy)" <tixy@linaro.org>
+Subject: Re: [RFC PATCH v2 2/2] drivers: mfd: vexpress: add Serial Power
+ Controller (SPC) support
+Date: Wed, 05 Jun 2013 19:08:33 +0100
+Message-ID: <1370455713.3496.22.camel@linaro1.home>
+References: <1370432767-6620-1-git-send-email-lorenzo.pieralisi@arm.com>
+	 <1370432767-6620-3-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org, haojian.zhuang@linaro.org, linus.walleij@linaro.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1370432767-6620-3-git-send-email-lorenzo.pieralisi@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Nicolas Pitre <nicolas.pitre@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Pawel Moll <pawel.moll@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Achin Gupta <achin.gupta@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, 2013-06-05 at 12:46 +0100, Lorenzo Pieralisi wrote:
+[...]
+> +static const struct of_device_id vexpress_spc_ids[] __initconst = {
+> +	{ .compatible = "arm,vexpress-spc,v2p-ca15_a7" },
+> +	{ .compatible = "arm,vexpress-spc" },
+> +	{},
+> +};
+> +
+> +static int __init vexpress_spc_init(void)
+> +{
+> +	int ret;
+> +	struct device_node *node = of_find_matching_node(NULL,
+> +							 vexpress_spc_ids);
 
-I'd like to start converting to device tree usage some of the old pxa27x
-platforms I'm fond of, starting with adding pinctrl support.  If I'm not
-mistaken, this will clear the way for some ongoing updates to the pinctrl/gpio
-code used by newer Marvell arches.
+To allow for devices without an SPC we should check for !node here and
+bail out, otherwise we get an ugly message from the WARN_ON further
+down. I see this on RTSM, and multiplatform kernels would suffer this as
+well.
 
-I noticed that Haojian pulled the pinctrl-pxa driver from the kernel, in favor
-of using pinctrl-single, so I turned my attention to that.  From what I can
-tell, pinctrl-single is currently inadequate for pxa27x because:
+Even if the ugly warning wasn't there, it still seems cleaner to me to
+have a proper check for an absent spc node.
 
-(1) On the pxa27x, setting the mux for a pin involves configuring both the alt
-function register *and* the direction register, requiring the ability to specify
-in the device tree multiple reg/value pairs for each pin.
+> +	info = kzalloc(sizeof(*info), GFP_KERNEL);
+> +	if (!info) {
+> +		pr_err("%s: unable to allocate mem\n", __func__);
+> +		return -ENOMEM;
+> +	}
+> +	info->cur_req_type = INVALID_TYPE;
+> +
+> +	info->baseaddr = of_iomap(node, 0);
+> +	if (WARN_ON(!info->baseaddr)) {
+> +		ret = -ENXIO;
+> +		goto mem_free;
+> +	}
+> +
+> +	info->irq = irq_of_parse_and_map(node, 0);
+> +
+> +	if (WARN_ON(!info->irq)) {
+> +		ret = -ENXIO;
+> +		goto unmap;
+> +	}
+> +
+> +	readl_relaxed(info->baseaddr + PWC_STATUS);
+> +
+> +	ret = request_irq(info->irq, vexpress_spc_irq_handler,
+> +		IRQF_DISABLED | IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+> +		"arm-spc", info);
+> +
+> +	if (ret) {
+> +		pr_err("IRQ %d request failed\n", info->irq);
+> +		ret = -ENODEV;
+> +		goto unmap;
+> +	}
+> +
+> +	info->a15_clusid = readl_relaxed(info->baseaddr + A15_CONF) & 0xf;
+> +
+> +	vexpress_spc_config_bridge = vexpress_config_bridge_register(
+> +			node, &vexpress_spc_config_bridge_info);
+> +
+> +	if (WARN_ON(!vexpress_spc_config_bridge)) {
+> +		ret = -ENODEV;
+> +		goto unmap;
+> +	}
+> +
+> +	opp_func = vexpress_config_func_get(vexpress_spc_config_bridge, "opp");
+> +	perf_func =
+> +		vexpress_config_func_get(vexpress_spc_config_bridge, "perf");
+> +
+> +	if (!opp_func || !perf_func) {
+> +		ret = -ENODEV;
+> +		goto unmap;
+> +	}
+> +
+> +	if (vexpress_spc_populate_opps(0) || vexpress_spc_populate_opps(1)) {
+> +		if (info->irq)
+> +			free_irq(info->irq, info);
+> +		pr_err("failed to build OPP table\n");
+> +		ret = -ENODEV;
+> +		goto unmap;
+> +	}
+> +	/*
+> +	 * Multi-cluster systems may need this data when non-coherent, during
+> +	 * cluster power-up/power-down. Make sure it reaches main memory:
+> +	 */
+> +	sync_cache_w(info);
+> +	sync_cache_w(&info);
+> +	pr_info("vexpress-spc loaded at %p\n", info->baseaddr);
+> +	return 0;
+> +
+> +unmap:
+> +	iounmap(info->baseaddr);
+> +
+> +mem_free:
+> +	kfree(info);
+> +	return ret;
+> +}
+> +
+> +static bool __init __vexpress_spc_check_loaded(void);
+> +static bool (*spc_check_loaded)(void) = &__vexpress_spc_check_loaded;
+> +
+> +static bool __init __vexpress_spc_check_loaded(void)
+> +{
+> +	if (vexpress_spc_load_result == -EAGAIN)
+> +		vexpress_spc_load_result = vexpress_spc_init();
+> +	spc_check_loaded = &vexpress_spc_initialized;
+> +	return vexpress_spc_initialized();
+> +}
+> +
+> +/*
+> + * Function exported to manage early_initcall ordering.
+> + * SPC code is needed very early in the boot process
+> + * to bring CPUs out of reset and initialize power
+> + * management back-end. After boot swap pointers to
+> + * make the functionality check available to loadable
+> + * modules, when early boot init functions have been
+> + * already freed from kernel address space.
+> + */
+> +bool vexpress_spc_check_loaded(void)
+> +{
+> +	return spc_check_loaded();
+> +}
+> +EXPORT_SYMBOL_GPL(vexpress_spc_check_loaded);
+> +
+> +static int __init vexpress_spc_early_init(void)
+> +{
+> +	__vexpress_spc_check_loaded();
+> +	return vexpress_spc_load_result;
+> +}
+> +early_initcall(vexpress_spc_early_init);
+> +MODULE_LICENSE("GPL");
+> +MODULE_DESCRIPTION("Serial Power Controller (SPC) support");
+[...]
 
-(2) Some of the pinctrl-single code still assumes one register-per-pin; see for
-example the functions pcs_allocate_pin_table() and pcs_get_pin_by_offset().
-Curiously, the recently added pcs_request_gpio() function also suffers from
-this, unless I'm mistaken.
-
-So I'm wondering if it's appropriate to patch pinctrl-single to make it suitable
-for pxa27x, or should there be a separate driver for pxa27x?
-
-Normally I'd just submit a patch for consideration, but I think that work is
-ongoing, so maybe I better ask first in case other plans are in progress.  Plus
-I'm new to pinctrl and device tree.  Any comments, suggestions, hints, etc
-appreciated.
-
-Thanks,
-Mike
+-- 
+Tixy
