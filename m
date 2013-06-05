@@ -1,79 +1,98 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] ASoC: WM8962: Add device tree binding
-Date: Wed, 5 Jun 2013 13:27:18 +0100
-Message-ID: <20130605122718.GC31367@sirena.org.uk>
-References: <cover.1370433363.git.b42378@freescale.com>
- <1c716a6860c9486071c11a7f7752d14b217f4ef1.1370433363.git.b42378@freescale.com>
+From: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/7] USB: chipidea: ci13xxx-imx: move static pdata into
+ probe function
+Date: Wed, 5 Jun 2013 14:29:06 +0200
+Message-ID: <20130605122906.GB20095@pengutronix.de>
+References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de>
+ <1370025529-7414-3-git-send-email-mgr@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1618430376563224890=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1c716a6860c9486071c11a7f7752d14b217f4ef1.1370433363.git.b42378@freescale.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Nicolin Chen <b42378@freescale.com>
-Cc: alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, patches@opensource.wolfsonmicro.com, lgirdwood@gmail.com, rob.herring@calxeda.com, grant.likely@linaro.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1370025529-7414-3-git-send-email-mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Alexander,
 
---===============1618430376563224890==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xtcA6s3naMKOsC7S"
-Content-Disposition: inline
+On Fri, May 31, 2013 at 08:38:44PM +0200, Michael Grzeschik wrote:
+> From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> 
+> The pdata structure gets copied anyway inside ci13xxx_add_device
+> by platform_device_add. We don't need to have it static.
+> 
+> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Reviewed-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  drivers/usb/chipidea/ci13xxx_imx.c | 19 +++++++++----------
+>  1 file changed, 9 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/usb/chipidea/ci13xxx_imx.c b/drivers/usb/chipidea/ci13xxx_imx.c
+> index 73f9d5f..4d64541 100644
+> --- a/drivers/usb/chipidea/ci13xxx_imx.c
+> +++ b/drivers/usb/chipidea/ci13xxx_imx.c
+> @@ -88,17 +88,16 @@ EXPORT_SYMBOL_GPL(usbmisc_get_init_data);
+>  
+>  /* End of common functions shared by usbmisc drivers*/
+>  
+> -static struct ci13xxx_platform_data ci13xxx_imx_platdata  = {
+> -	.name			= "ci13xxx_imx",
+> -	.flags			= CI13XXX_REQUIRE_TRANSCEIVER |
+> -				  CI13XXX_PULLUP_ON_VBUS |
+> -				  CI13XXX_DISABLE_STREAMING,
+> -	.capoffset		= DEF_CAPOFFSET,
+> -};
+> -
+>  static int ci13xxx_imx_probe(struct platform_device *pdev)
+>  {
+>  	struct ci13xxx_imx_data *data;
+> +	struct ci13xxx_platform_data pdata = {
+> +		.name		= "ci13xxx_imx",
+> +		.capoffset	= DEF_CAPOFFSET,
+> +		.flags		= CI13XXX_REQUIRE_TRANSCEIVER |
+> +				  CI13XXX_PULLUP_ON_VBUS |
+> +				  CI13XXX_DISABLE_STREAMING,
+> +	};
+>  	struct platform_device *plat_ci, *phy_pdev;
+>  	struct device_node *phy_np;
+>  	struct resource *res;
+> @@ -171,7 +170,7 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
+>  		reg_vbus = NULL;
+>  	}
+>  
+> -	ci13xxx_imx_platdata.phy = data->phy;
+> +	pdata.phy = data->phy;
+>  
+>  	if (!pdev->dev.dma_mask)
+>  		pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
+> @@ -189,7 +188,7 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
+>  
+>  	plat_ci = ci13xxx_add_device(&pdev->dev,
+>  				pdev->resource, pdev->num_resources,
+> -				&ci13xxx_imx_platdata);
+> +				&pdata);
+>  	if (IS_ERR(plat_ci)) {
+>  		ret = PTR_ERR(plat_ci);
+>  		dev_err(&pdev->dev,
 
+This and Patch 5, 6 and 7 of this series doesn't got much to do with
+the the dr_mode/phy_type features. I will repost them in another series.
+Beside the others, this one is missing any comments. If it's already good
+to be taken, will you directly apply it?
 
---xtcA6s3naMKOsC7S
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Regards,
+Michael
 
-On Wed, Jun 05, 2013 at 08:12:56PM +0800, Nicolin Chen wrote:
-
-> +  - gpio-cfg : A list of GPIO configuration register values. The list must
-> +    be 6 entries long. If absent, no configuration of these registers is
-> +    performed. And note that the max value for each entry is 0xffff, don't
-> +    fill a large one.
-
-It is nicer for users if out of band values are ignored, providing them
-with a method for specifying the default register value without having
-to actually encode it.  This is both more legible (they explicitly say
-"use the default, I don't care") and less work (as the default doesn't
-need to be checked).
-
---xtcA6s3naMKOsC7S
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRry6iAAoJELSic+t+oim9cPwP/3HFCjso8Dho22pyBjcSRf6v
-vvCXDOza+SweCtlLjuMiJNYRfMj3+/io2fcukquYT6CU9MBrJzyWw2eko8haKtsu
-Zwv8M170pLDLTAGCX8XfKRWxyK93dGyXzwxhlEV/vuiNikbogxEtwCCDUSBK/tWP
-24zSkwrazcFku2VVLXTGh5MQVB2cp5u5Hu5j4n9d6hWFGoLxDIhwfB7KCtYGT+8h
-VqbMohl04EU2lfa5d0ZaCCbxQWcSaJgnlNlUNhxdtYQHYWLk5dNvnJ1NNbn2DjbE
-m3+ij/h6ijAEVlS1EUeGSV/ClzWfpEUwWQQPSpAPTvC/0Oo/i8l883TzYuUolgQv
-Tu/1ON4RIG1gHOswemZWOzoZWgNMYucOu8C6/pNBEea3rst8QXFhJIGH89LcPxrk
-nNyNckI7oLb2nA4YAbfYT4A8QVaAZE6Geq1Uc1AAXQHMxVgbfklaEBxbcXA+Fwuf
-LtJx1bp3CK84RRKTLX+YzCojBBatqPsHmb0J7e/bexMJOw1GN+oyHxGJuTINhOOH
-dMRm8g6VQTrB3DHHha7SnyPY6/8BLmMnogI1hHemes1BYTqvNktCCXXUMKBgBAMW
-TiNClAWCot9WqicJFdZLuP0E4kJkSlLZKp9HQZLXchIq5k6tBhtXeW/5Z5R+SyzE
-KYqhNypOoVooDtPaS4tz
-=/it4
------END PGP SIGNATURE-----
-
---xtcA6s3naMKOsC7S--
-
---===============1618430376563224890==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============1618430376563224890==--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
