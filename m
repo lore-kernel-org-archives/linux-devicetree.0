@@ -1,15 +1,13 @@
-From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 07/10] pinctrl: add pinctrl driver for Rockchip SoCs
-Date: Wed, 5 Jun 2013 20:50:00 +0200
-Message-ID: <201306052050.00410.heiko@sntech.de>
-References: <201306030055.15413.heiko@sntech.de>
- <CACRpkdZty-TszfBTOab4_PUi8dy5DYim=wNERv=pyqC3HNuT4w@mail.gmail.com>
- <51AF72F9.3060307@wwwdotorg.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [net-next PATCH v4 1/5] net: cpsw: enhance pinctrl support
+Date: Wed, 5 Jun 2013 20:23:45 +0100
+Message-ID: <20130605192345.GH31367@sirena.org.uk>
+References: <1370452099-24026-1-git-send-email-mugunthanvnm@ti.com>
+ <1370452099-24026-2-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="===============5837998748277611889=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51AF72F9.3060307-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <1370452099-24026-2-git-send-email-mugunthanvnm-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,40 +18,68 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>, benoit.cousson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 5. Juni 2013, 19:18:49 schrieb Stephen Warren:
-> On 06/05/2013 01:01 AM, Linus Walleij wrote:
-> > On Tue, Jun 4, 2013 at 2:05 PM, Heiko St=FCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
-> ...
-> =
 
-> >> The only problem is the pull stuff mentioned above that is either pull
-> >> up or down without the driver having knowledge about it. And
-> >> generic_pinconf only knows about them separately right now.
-> > =
-
-> > Create a separate patch adding PIN_CONFIG_BIAS_PULL_AUTO
-> > to include/linux/pinctrl/pinconf-generic.h, don't forget the
-> > kerneldoc, and patching drivers/pinctrl/pinconf-generic.c.
-> =
-
-> "AUTO" sounds really rather generic. Based on just the word "AUTO", I
-> have no idea if it's a HW- or SW-supplied default, or what the algorithm
-> is for determining the automatically selected value. Perhaps
-> s/AUTO/PIN_DEFAULT/ or something like that?
-
-I would also go with PIN_DEFAULT, which somehow captures what the function =
-
-does better than "AUTO". So, if no-one objects I'll go with Stephen's =
-
-suggestion.
+--===============5837998748277611889==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="kY7Q1I7FwGue0/xS"
+Content-Disposition: inline
 
 
-> While the concept is simple enough, it's unusual enough that such a
-> patch would hopefully have a comment containing a full explanation of
-> exactly what this option means.
+--kY7Q1I7FwGue0/xS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-of course :-)
+On Wed, Jun 05, 2013 at 10:38:15PM +0530, Mugunthan V N wrote:
+> From: Hebbar Gururaja <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
+>=20
+> Amend cpsw controller to optionally take a pin control handle and set
+> the state of the pins to:
+>=20
+> - "default" on boot, resume
+> - "sleep" on suspend()
+
+Linus Walleij posted some patches which factor the state setting code
+out into generic functions earlier on today - it probably makes sense to
+pick those up rather than open coding
+
+--kY7Q1I7FwGue0/xS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRr5A+AAoJELSic+t+oim9Tt4P/2kgMjKssw6c6sBUmpjPw9Ft
+dX0eBErXLq62o0+KLDsEF+2sRXB++lNC1BIMpFLh19ocKVIsG5EIR78nny7yvHEH
+y/agXhUN6js3YpKKmQ2AOTJEGLtrJ5PRnW1/q6NVFDwlaf1gNHOXQ3m3DTBwJE9z
+FjNeUm4PBBbT8DD80ks2y+IE4PMki3ubxPAPtMxlf+4DdmbsSziIKXXU1pyHkM6c
+14xw+Chv2dIikoHPx7JTE8tteL/YIFTAYQQo2n7URXe5CIBdTW5nHzjZ87nmBQZN
+uwe1GV7B+cMxt3wqfptoUAEkf0s8FEns1eKumcyCreXK4YtvpYSfwcHrM9HULQqf
+d7XzQ1V/cP/nXDgEbeymGe2QSCeaJTY7h+++qG+vLEptsg+a6wHVMpUVkeml7iQB
+Ijh3MsW0hYbY49xRRLdpWUx2zNJZEfbj5vxm0PGaR0UXLr3KLQOlnXH5DFn110uV
+SjQuRfz0QQcWBsLrL079DmR1ojA4YbNl7N4ZhlHIP7dMJj4l4Cw3xwQ//Ub+o3NA
+FptamzUPeTHVQxV8y418k0jT7gctMiaQyvhsuSog34aHuWZmyPqUOxjOp7Ib0OLV
+lbn6CTED394ui1J2b5q4rDLiSZY2Ypw5UbYdlMrGMpIHjOB4OuoeqdLAEbyZ316H
+hxATrzzdw7kNZJrYzugV
+=E6qz
+-----END PGP SIGNATURE-----
+
+--kY7Q1I7FwGue0/xS--
+
+--===============5837998748277611889==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============5837998748277611889==--
