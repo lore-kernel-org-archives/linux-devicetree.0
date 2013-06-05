@@ -1,76 +1,187 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: DT version of kirkwood_ge0x_init()
-Date: Wed, 5 Jun 2013 09:23:25 -0400
-Message-ID: <20130605132325.GI3803@titan.lakedaemon.net>
-References: <51ADBEE0.5040500@keymile.com> <51ADC2C2.6010106@gmail.com>
- <51AE53D4.5070208@keymile.com> <51AEFF26.8080004@gmail.com>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [RFC PATCH v2 1/2] drivers: mfd: refactor the vexpress config
+ bridge API
+Date: Wed, 5 Jun 2013 09:52:41 -0400 (EDT)
+Message-ID: <alpine.LFD.2.03.1306050952080.1200@syhkavp.arg>
+References: <1370432767-6620-1-git-send-email-lorenzo.pieralisi@arm.com> <1370432767-6620-2-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51AEFF26.8080004-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, "Longchamp,
- Valentin" <Valentin.Longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Brunck, Holger" <Holger.Brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, Simon Guinot <simon-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1370432767-6620-2-git-send-email-lorenzo.pieralisi@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Pawel Moll <pawel.moll@arm.com>, Samuel Ortiz <sameo@linux.intel.com>, Achin Gupta <achin.gupta@arm.com>, Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>, Amit Kucheria <amit.kucheria@linaro.org>, Jon Medhurst <tixy@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Gerlando,
+On Wed, 5 Jun 2013, Lorenzo Pieralisi wrote:
 
-On Wed, Jun 05, 2013 at 11:04:38AM +0200, Sebastian Hesselbarth wrote:
-> On 06/04/13 22:53, Gerlando Falauto wrote:
-...
-> >Sorry, I am really more than lost when it's about tracking
-> >how/where/when changes are pulled. Any "mainlining for dummies" pointer
-> >would be more than appreciated.
+> From: Pawel Moll <pawel.moll@arm.com>
 > 
-> Hmm, sometimes I am also lost especially about when branches will be
-> merged. Jason can tell you for sure. Basically, patches go into some
-> maintainer's or submaintainer's branch first.
+> The introduction of Serial Power Controller (SPC) requires the vexpress
+> config interface to change slightly since the SPC memory mapped interface
+> can be used as configuration bus but also for operating points
+> programming and retrieval. The helper that allocates the bridge functions
+> requires an additional parameter allowing to request component specific
+> functions that need not be initialized through device tree bindings but
+> just using simple look-up and statically defined constants.
+> 
+> This patch introduces the necessary changes to the vexpress config layer
+> to cater for the new vexpress bridge interface requirements.
+> 
+> Cc: Samuel Ortiz <sameo@linux.intel.com>
+> Cc: Achin Gupta <achin.gupta@arm.com>
+> Cc: Sudeep KarkadaNagesha <Sudeep.KarkadaNagesha@arm.com>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
+> Cc: Amit Kucheria <amit.kucheria@linaro.org>
+> Cc: Jon Medhurst <tixy@linaro.org>
+> Signed-off-by: Pawel Moll <pawel.moll@arm.com>
 
-In the simple case, we look at the diffstat to see what sections of the
-kernel are being changed.  drivers/net, arch/arm, arch/arm/mach-mvebu,
-arch/arm/mm are all maintained by different people.  Depending on where
-the changes are, that dictates who it will go through, DaveM, LinusW,
-Arnd and Olof, Russell King, etc.
+Acked-by: Nicolas Pitre <nico@linaro.org>
 
-Any code changes in arch/arm that are SoC dependent go through arm-soc.
-Otherwise, it goes through Russell.  arm-soc is maintained by Arnd and
-Olof.  It's so large, that they've broken it up into sub-archs with
-maintainers for each.  Myself, Andrew Lunn, and Gregory Clemente
-maintain code changes in
-arch/arm/mach-{mvebu,kirkwood,orion5x,dove,mv78xx0}.  We feed those
-changes in the form of branches to arm-soc, who put it all together and
-send it to Linus.
-
-It gets complicated when part of a patch series, like Sebastian's, needs
-to go through -net, and the rest through arm-soc.  If the two halves
-don't depend on one another, then it's easy.  In this case, the arm-soc
-changes _do_ depend on the -net changes.  So, we wait for the -net
-changes to get into mainline Linux (because all of the branches from
-everyone will have merged together), in this case, in v3.11-rc1.  Once
-that lands, I'll base a branch off of it and include Sebastian's changes
-to mach-kirkwood.  It will then be sent up to arm-soc for inclusion in
-v3.12-rc1.
-
-There's also a corner case where a driver maintainer will Ack a patch
-series he would normally take and allow arm-soc to take it.  Usually
-this is only if the driver changes are limited to a SoC specific file,
-eg drivers/clk/mvebu/*, and the driver maintainer doesn't anticipate any
-drivers/clk/* changes that will conflict.  Then, we can take the whole
-series in one merge window through arm-soc.  But that's purely up to the
-driver maintainer(s), and is by exception, not the rule.
-
-hth,
-
-Jason.
+> ---
+>  drivers/mfd/vexpress-config.c | 61 +++++++++++++++++++++++++++----------------
+>  drivers/mfd/vexpress-sysreg.c |  2 +-
+>  include/linux/vexpress.h      | 16 ++++++++----
+>  3 files changed, 51 insertions(+), 28 deletions(-)
+> 
+> diff --git a/drivers/mfd/vexpress-config.c b/drivers/mfd/vexpress-config.c
+> index 84ce6b9..1af2b0e 100644
+> --- a/drivers/mfd/vexpress-config.c
+> +++ b/drivers/mfd/vexpress-config.c
+> @@ -86,29 +86,13 @@ void vexpress_config_bridge_unregister(struct vexpress_config_bridge *bridge)
+>  }
+>  EXPORT_SYMBOL(vexpress_config_bridge_unregister);
+>  
+> -
+> -struct vexpress_config_func {
+> -	struct vexpress_config_bridge *bridge;
+> -	void *func;
+> -};
+> -
+> -struct vexpress_config_func *__vexpress_config_func_get(struct device *dev,
+> -		struct device_node *node)
+> +static struct vexpress_config_bridge *
+> +		vexpress_config_bridge_find(struct device_node *node)
+>  {
+> -	struct device_node *bridge_node;
+> -	struct vexpress_config_func *func;
+>  	int i;
+> +	struct vexpress_config_bridge *res = NULL;
+> +	struct device_node *bridge_node = of_node_get(node);
+>  
+> -	if (WARN_ON(dev && node && dev->of_node != node))
+> -		return NULL;
+> -	if (dev && !node)
+> -		node = dev->of_node;
+> -
+> -	func = kzalloc(sizeof(*func), GFP_KERNEL);
+> -	if (!func)
+> -		return NULL;
+> -
+> -	bridge_node = of_node_get(node);
+>  	while (bridge_node) {
+>  		const __be32 *prop = of_get_property(bridge_node,
+>  				"arm,vexpress,config-bridge", NULL);
+> @@ -129,13 +113,46 @@ struct vexpress_config_func *__vexpress_config_func_get(struct device *dev,
+>  
+>  		if (test_bit(i, vexpress_config_bridges_map) &&
+>  				bridge->node == bridge_node) {
+> -			func->bridge = bridge;
+> -			func->func = bridge->info->func_get(dev, node);
+> +			res = bridge;
+>  			break;
+>  		}
+>  	}
+>  	mutex_unlock(&vexpress_config_bridges_mutex);
+>  
+> +	return res;
+> +}
+> +
+> +
+> +struct vexpress_config_func {
+> +	struct vexpress_config_bridge *bridge;
+> +	void *func;
+> +};
+> +
+> +struct vexpress_config_func *__vexpress_config_func_get(
+> +		struct vexpress_config_bridge *bridge,
+> +		struct device *dev,
+> +		struct device_node *node,
+> +		const char *id)
+> +{
+> +	struct vexpress_config_func *func;
+> +
+> +	if (WARN_ON(dev && node && dev->of_node != node))
+> +		return NULL;
+> +	if (dev && !node)
+> +		node = dev->of_node;
+> +
+> +	if (!bridge)
+> +		bridge = vexpress_config_bridge_find(node);
+> +	if (!bridge)
+> +		return NULL;
+> +
+> +	func = kzalloc(sizeof(*func), GFP_KERNEL);
+> +	if (!func)
+> +		return NULL;
+> +
+> +	func->bridge = bridge;
+> +	func->func = bridge->info->func_get(dev, node, id);
+> +
+>  	if (!func->func) {
+>  		of_node_put(node);
+>  		kfree(func);
+> diff --git a/drivers/mfd/vexpress-sysreg.c b/drivers/mfd/vexpress-sysreg.c
+> index 96a020b..d2599aa 100644
+> --- a/drivers/mfd/vexpress-sysreg.c
+> +++ b/drivers/mfd/vexpress-sysreg.c
+> @@ -165,7 +165,7 @@ static u32 *vexpress_sysreg_config_data;
+>  static int vexpress_sysreg_config_tries;
+>  
+>  static void *vexpress_sysreg_config_func_get(struct device *dev,
+> -		struct device_node *node)
+> +		struct device_node *node, const char *id)
+>  {
+>  	struct vexpress_sysreg_config_func *config_func;
+>  	u32 site;
+> diff --git a/include/linux/vexpress.h b/include/linux/vexpress.h
+> index 6e7980d..50368e0 100644
+> --- a/include/linux/vexpress.h
+> +++ b/include/linux/vexpress.h
+> @@ -68,7 +68,8 @@
+>   */
+>  struct vexpress_config_bridge_info {
+>  	const char *name;
+> -	void *(*func_get)(struct device *dev, struct device_node *node);
+> +	void *(*func_get)(struct device *dev, struct device_node *node,
+> +			  const char *id);
+>  	void (*func_put)(void *func);
+>  	int (*func_exec)(void *func, int offset, bool write, u32 *data);
+>  };
+> @@ -87,12 +88,17 @@ void vexpress_config_complete(struct vexpress_config_bridge *bridge,
+>  
+>  struct vexpress_config_func;
+>  
+> -struct vexpress_config_func *__vexpress_config_func_get(struct device *dev,
+> -		struct device_node *node);
+> +struct vexpress_config_func *__vexpress_config_func_get(
+> +		struct vexpress_config_bridge *bridge,
+> +		struct device *dev,
+> +		struct device_node *node,
+> +		const char *id);
+> +#define vexpress_config_func_get(bridge, id) \
+> +		__vexpress_config_func_get(bridge, NULL, NULL, id)
+>  #define vexpress_config_func_get_by_dev(dev) \
+> -		__vexpress_config_func_get(dev, NULL)
+> +		__vexpress_config_func_get(NULL, dev, NULL, NULL)
+>  #define vexpress_config_func_get_by_node(node) \
+> -		__vexpress_config_func_get(NULL, node)
+> +		__vexpress_config_func_get(NULL, NULL, node, NULL)
+>  void vexpress_config_func_put(struct vexpress_config_func *func);
+>  
+>  /* Both may sleep! */
+> -- 
+> 1.8.2.2
+> 
+> 
