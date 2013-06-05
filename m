@@ -1,98 +1,56 @@
-From: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 2/7] USB: chipidea: ci13xxx-imx: move static pdata into
- probe function
-Date: Wed, 5 Jun 2013 14:29:06 +0200
-Message-ID: <20130605122906.GB20095@pengutronix.de>
-References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de>
- <1370025529-7414-3-git-send-email-mgr@pengutronix.de>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH 1/1] ARM: dts: Remove combiner IRQ node from exynos4x12.dtsi
+Date: Wed, 05 Jun 2013 21:39:47 +0900
+Message-ID: <08f901ce61e9$c3a15ed0$4ae41c70$%kim@samsung.com>
+References: <1366710888-11059-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1370025529-7414-3-git-send-email-mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1366710888-11059-1-git-send-email-sachin.kamat@linaro.org>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: arnd@arndb.de, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexander,
-
-On Fri, May 31, 2013 at 08:38:44PM +0200, Michael Grzeschik wrote:
-> From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sachin Kamat wrote:
 > 
-> The pdata structure gets copied anyway inside ci13xxx_add_device
-> by platform_device_add. We don't need to have it static.
+> These nodes have separately been added to 4212 and 4412 dtsi
+> files by commit 30269ddff1 ("ARM: exynos: add missing properties
+> for combiner IRQs"). The existing node also contained a few
+> incorrect entries.
 > 
-> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Reviewed-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
 > ---
->  drivers/usb/chipidea/ci13xxx_imx.c | 19 +++++++++----------
->  1 file changed, 9 insertions(+), 10 deletions(-)
+> Patch based on linux-next tree (20130423)
+> ---
+>  arch/arm/boot/dts/exynos4x12.dtsi |    8 --------
+>  1 file changed, 8 deletions(-)
 > 
-> diff --git a/drivers/usb/chipidea/ci13xxx_imx.c b/drivers/usb/chipidea/ci13xxx_imx.c
-> index 73f9d5f..4d64541 100644
-> --- a/drivers/usb/chipidea/ci13xxx_imx.c
-> +++ b/drivers/usb/chipidea/ci13xxx_imx.c
-> @@ -88,17 +88,16 @@ EXPORT_SYMBOL_GPL(usbmisc_get_init_data);
->  
->  /* End of common functions shared by usbmisc drivers*/
->  
-> -static struct ci13xxx_platform_data ci13xxx_imx_platdata  = {
-> -	.name			= "ci13xxx_imx",
-> -	.flags			= CI13XXX_REQUIRE_TRANSCEIVER |
-> -				  CI13XXX_PULLUP_ON_VBUS |
-> -				  CI13XXX_DISABLE_STREAMING,
-> -	.capoffset		= DEF_CAPOFFSET,
-> -};
+> diff --git a/arch/arm/boot/dts/exynos4x12.dtsi
+> b/arch/arm/boot/dts/exynos4x12.dtsi
+> index ede3f9b..675c221 100644
+> --- a/arch/arm/boot/dts/exynos4x12.dtsi
+> +++ b/arch/arm/boot/dts/exynos4x12.dtsi
+> @@ -28,14 +28,6 @@
+>  		pinctrl3 = &pinctrl_3;
+>  	};
+> 
+> -	combiner:interrupt-controller@10440000 {
+> -		interrupts = <0 0 0>, <0 1 0>, <0 2 0>, <0 3 0>,
+> -			     <0 4 0>, <0 5 0>, <0 6 0>, <0 7 0>,
+> -			     <0 8 0>, <0 9 0>, <0 10 0>, <0 11 0>,
+> -			     <0 12 0>, <0 13 0>, <0 14 0>, <0 15 0>,
+> -			     <0 16 0>, <0 17 0>, <0 18 0>, <0 19 0>;
+> -	};
 > -
->  static int ci13xxx_imx_probe(struct platform_device *pdev)
->  {
->  	struct ci13xxx_imx_data *data;
-> +	struct ci13xxx_platform_data pdata = {
-> +		.name		= "ci13xxx_imx",
-> +		.capoffset	= DEF_CAPOFFSET,
-> +		.flags		= CI13XXX_REQUIRE_TRANSCEIVER |
-> +				  CI13XXX_PULLUP_ON_VBUS |
-> +				  CI13XXX_DISABLE_STREAMING,
-> +	};
->  	struct platform_device *plat_ci, *phy_pdev;
->  	struct device_node *phy_np;
->  	struct resource *res;
-> @@ -171,7 +170,7 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
->  		reg_vbus = NULL;
->  	}
->  
-> -	ci13xxx_imx_platdata.phy = data->phy;
-> +	pdata.phy = data->phy;
->  
->  	if (!pdev->dev.dma_mask)
->  		pdev->dev.dma_mask = &pdev->dev.coherent_dma_mask;
-> @@ -189,7 +188,7 @@ static int ci13xxx_imx_probe(struct platform_device *pdev)
->  
->  	plat_ci = ci13xxx_add_device(&pdev->dev,
->  				pdev->resource, pdev->num_resources,
-> -				&ci13xxx_imx_platdata);
-> +				&pdata);
->  	if (IS_ERR(plat_ci)) {
->  		ret = PTR_ERR(plat_ci);
->  		dev_err(&pdev->dev,
+>  	clock: clock-controller@0x10030000 {
+>  		compatible = "samsung,exynos4412-clock";
+>  		reg = <0x10030000 0x20000>;
+> --
+> 1.7.9.5
 
-This and Patch 5, 6 and 7 of this series doesn't got much to do with
-the the dr_mode/phy_type features. I will repost them in another series.
-Beside the others, this one is missing any comments. If it's already good
-to be taken, will you directly apply it?
+Applied, thanks.
 
-Regards,
-Michael
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Kukjin
