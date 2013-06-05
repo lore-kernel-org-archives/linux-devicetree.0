@@ -1,33 +1,31 @@
 From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/3] pinctrl: pinctrl-single: enhance to configure
- multiple pins of different modules
-Date: Wed, 5 Jun 2013 15:01:39 -0700
-Message-ID: <20130605220138.GE3331@atomide.com>
+Subject: Re: [PATCH 2/3] pinctrl: pinctrl-single: pin names for
+ pinctrl-single.bits
+Date: Wed, 5 Jun 2013 15:02:05 -0700
+Message-ID: <20130605220204.GF3331@atomide.com>
 References: <1369145282-14419-1-git-send-email-prakash.pm@ti.com>
- <1369145282-14419-3-git-send-email-prakash.pm@ti.com>
+ <1369145282-14419-4-git-send-email-prakash.pm@ti.com>
+ <CAN1soZx+xYJT24XZqoynFJj3wjTuq14S6dtpd=SFw5_iDWTiWw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1369145282-14419-3-git-send-email-prakash.pm@ti.com>
+In-Reply-To: <CAN1soZx+xYJT24XZqoynFJj3wjTuq14S6dtpd=SFw5_iDWTiWw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Cc: linus.walleij@linaro.org, nsekhar@ti.com, grant.likely@linaro.org, rob.herring@calxeda.com, linux@arm.linux.org.uk, rob@landley.net, prabhakar.csengg@gmail.com, peter.ujfalusi@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com
+To: Haojian Zhuang <haojian.zhuang@gmail.com>
+Cc: "Manjunathappa, Prakash" <prakash.pm@ti.com>, Walleij Linus <linus.walleij@linaro.org>, Sekhar Nori <nsekhar@ti.com>, grant.likely@linaro.org, Rob Herring <rob.herring@calxeda.com>, Linux Russell <linux@arm.linux.org.uk>, Rob Landley <rob@landley.net>, prabhakar.csengg@gmail.com, peter.ujfalusi@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, davinci-linux-open-source@linux.davincidsp.com
 List-Id: devicetree@vger.kernel.org
 
-* Manjunathappa, Prakash <prakash.pm@ti.com> [130521 07:13]:
-> Add support to configure multiple pins in each register, existing
-> implementation added by [1] does not support full fledge multiple pin
-> configuration in single register, reports a pin clash when different
-> modules configure different bits of same register. The issue reported
-> and discussed here
-> http://www.spinics.net/lists/arm-kernel/msg235213.html
+* Haojian Zhuang <haojian.zhuang@gmail.com> [130604 22:31]:
+> On Tue, May 21, 2013 at 10:08 PM, Manjunathappa, Prakash
+> <prakash.pm@ti.com> wrote:
+> > Take care to name pin names as
+> > register-offset.bit-pos-of-pin-in-register in case configuring multiple
+> > pins in register.
+> >
+> > Signed-off-by: Manjunathappa, Prakash <prakash.pm@ti.com>
+> > ---
 > 
-> With pinctrl-single,bits-per-mux property specified, use function-mask
-> property to find out number pins to configure. Allocate and register
-> pin control functions based sub mask.
-
-Thanks for fixing this! Looks good to me, and things keep
-working for me just fine with these applied:
+> Acked-by: Haojian Zhuang <haojian.zhuang@gmail.com>
 
 Acked-by: Tony Lindgren <tony@atomide.com>
