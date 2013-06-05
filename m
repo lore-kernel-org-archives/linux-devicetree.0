@@ -1,59 +1,90 @@
 From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH -next] serial: omap: fix potential NULL pointer
- dereference in serial_omap_runtime_suspend()
-Date: Wed, 5 Jun 2013 08:28:56 -0700
-Message-ID: <20130605152856.GS3331@atomide.com>
-References: <CAPgLHd-N6jTD_WvT2KgsG8vOtKCtpJET8ddyQBWUMp=qG_3G+Q@mail.gmail.com>
+Subject: Re: [net-next PATCH v3 1/6] net: cpsw: enhance pinctrl support
+Date: Wed, 5 Jun 2013 08:49:22 -0700
+Message-ID: <20130605154921.GW3331@atomide.com>
+References: <1369592616-23972-1-git-send-email-mugunthanvnm@ti.com>
+ <1369592616-23972-2-git-send-email-mugunthanvnm@ti.com>
+ <20130527213600.GO13507@atomide.com>
+ <51A4B995.9050203@ti.com>
+ <51A708F7.8010804@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAPgLHd-N6jTD_WvT2KgsG8vOtKCtpJET8ddyQBWUMp=qG_3G+Q@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@linaro.org, rob.herring@calxeda.com, sourav.poddar@ti.com, yongjun_wei@trendmicro.com.cn, devicetree-discuss@lists.ozlabs.org, linux-serial@vger.kernel.org
+In-Reply-To: <51A708F7.8010804@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mugunthan V N <mugunthanvnm@ti.com>
+Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Hebbar Gururaja <gururaja.hebbar@ti.com>, benoit.cousson@linaro.org, linux-omap@vger.kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-* Wei Yongjun <weiyj.lk@gmail.com> [130604 19:10]:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+* Mugunthan V N <mugunthanvnm@ti.com> [130530 01:14]:
+> On 5/28/2013 7:35 PM, Mugunthan V N wrote:
+> >On 5/28/2013 3:06 AM, Tony Lindgren wrote:
+> >>* Mugunthan V N <mugunthanvnm@ti.com> [130526 11:28]:
+> >>>From: Hebbar Gururaja <gururaja.hebbar@ti.com>
+> >>>
+> >>>Amend cpsw controller to optionally take a pin control handle and set
+> >>>the state of the pins to:
+> >>>
+> >>>- "default" on boot, resume
+> >>>- "sleep" on suspend()
+> >>>
+> >>>This should make it possible to optimize energy usage for the pins
+> >>>for the suspend/resume cycle.
+> >>>
+> >>>If any of the above pin states are missing in dt, a warning message
+> >>>about the missing state is displayed.
+> >>>If certain pin-states are not available, to remove this warning message
+> >>>pass respective state name with null phandler.
+> >>>
+> >>>Signed-off-by: Hebbar Gururaja <gururaja.hebbar@ti.com>
+> >>>Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+> >>>---
+> >>>  drivers/net/ethernet/ti/cpsw.c |   48
+> >>>++++++++++++++++++++++++++++++++++++++++
+> >>>  1 file changed, 48 insertions(+)
+> >>>
+> >>>diff --git a/drivers/net/ethernet/ti/cpsw.c
+> >>>b/drivers/net/ethernet/ti/cpsw.c
+> >>>index 21a5b29..c9ed730 100644
+> >>>--- a/drivers/net/ethernet/ti/cpsw.c
+> >>>+++ b/drivers/net/ethernet/ti/cpsw.c
+> >>>@@ -35,6 +35,7 @@
+> >>>  #include <linux/if_vlan.h>
+> >>>    #include <linux/platform_data/cpsw.h>
+> >>>+#include <linux/pinctrl/consumer.h>
+> >>>    #include "cpsw_ale.h"
+> >>>  #include "cpts.h"
+> >>>@@ -351,6 +352,11 @@ struct cpsw_priv {
+> >>>      bool irq_enabled;
+> >>>      struct cpts *cpts;
+> >>>      u32 emac_port;
+> >>>+
+> >>>+    /* Two optional pin states - default & sleep */
+> >>>+    struct pinctrl        *pinctrl;
+> >>>+    struct pinctrl_state    *pins_def;
+> >>>+    struct pinctrl_state    *pins_sleep;
+> >>>  };
+> >>Which pins do you need to dynamically remux? If it's not all
+> >>the pins, you should have three sets: default, active and idle.
+> >>This way the static pins in the default group don't need to be
+> >>constantly toggled.
+> >>
+> >>Regards,
+> >>
+> >>Tony
+> >Tony
+> >
+> >I am using this for all the pins, in probe all the cpsw pins will
+> >be configured
+> >and i have used the same in suspend/resume callback for power saving.
+> >
+> Tony
 > 
-> The dereference to 'up' should be moved below the NULL test.
-> Introduced by commit ddd85e225c8885b5e4419b0499ab27100e7c366a
-> (serial: omap: prevent runtime PM for "no_console_suspend")
+> Do you have any comments on this, or is it ok with two pinctrl_state nodes?
 
-Acked-by: Tony Lindgren <tony@atomide.com>
- 
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
-> ---
->  drivers/tty/serial/omap-serial.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
-> index 1aaeca8..156b5aa 100644
-> --- a/drivers/tty/serial/omap-serial.c
-> +++ b/drivers/tty/serial/omap-serial.c
-> @@ -1613,6 +1613,9 @@ static int serial_omap_runtime_suspend(struct device *dev)
->  	struct uart_omap_port *up = dev_get_drvdata(dev);
->  	struct omap_uart_port_info *pdata = dev->platform_data;
->  
-> +	if (!up)
-> +		return -EINVAL;
-> +
->  	/*
->  	* When using 'no_console_suspend', the console UART must not be
->  	* suspended. Since driver suspend is managed by runtime suspend,
-> @@ -1623,9 +1626,6 @@ static int serial_omap_runtime_suspend(struct device *dev)
->  	    uart_console(&up->port))
->  		return -EBUSY;
->  
-> -	if (!up)
-> -		return -EINVAL;
-> -
->  	if (!pdata)
->  		return 0;
->  
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+If you always need to remux all the pins, then yes that's fine with me.
+
+Regards,
+
+Tony
