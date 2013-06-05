@@ -1,78 +1,63 @@
-From: "luke.leighton" <luke.leighton@gmail.com>
-Subject: Re: getting allwinner SoC support upstream (was Re:
- Uploading linux (3.9.4-1))
-Date: Thu, 6 Jun 2013 00:26:35 +0100
-Message-ID: <CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com>
-References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
-	<CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
-	<51AFA6DD.3000202@wwwdotorg.org>
-	<CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
-	<1370469574.18839.33.camel@localhost>
-	<CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
-	<CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
-Reply-To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <arm-netbook-bounces@lists.phcomp.co.uk>
-In-Reply-To: <CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.phcomp.co.uk/mailman/options/arm-netbook>,
-	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=unsubscribe>
-List-Archive: <http://lists.phcomp.co.uk/pipermail/arm-netbook/>
-List-Post: <mailto:arm-netbook@lists.phcomp.co.uk>
-List-Help: <mailto:arm-netbook-request@lists.phcomp.co.uk?subject=help>
-List-Subscribe: <http://lists.phcomp.co.uk/mailman/listinfo/arm-netbook>,
-	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=subscribe>
-Errors-To: arm-netbook-bounces@lists.phcomp.co.uk
-Sender: "arm-netbook" <arm-netbook-bounces@lists.phcomp.co.uk>
-To: "jonsmirl@gmail.com" <jonsmirl@gmail.com>
-Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel@lists.debian.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/1] of/irq: store IRQ trigger/level in struct resource flags
+Date: Thu, 06 Jun 2013 00:26:47 +0100
+Message-ID: <20130605232647.55C8B3E10E4@localhost>
+References: <1365148088-11175-1-git-send-email-javier.martinez@collabora.co.uk> <51633F26.7000400@gmail.com> <51634835.5010302@collabora.co.uk>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51634835.5010302@collabora.co.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Herring <robherring2@gmail.com>
+Cc: Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, linux-omap <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBKdW4gNiwgMjAxMyBhdCAxMjowNyBBTSwgam9uc21pcmxAZ21haWwuY29tIDxqb25z
-bWlybEBnbWFpbC5jb20+IHdyb3RlOgo+IE9uIFdlZCwgSnVuIDUsIDIwMTMgYXQgNjo0NyBQTSwg
-bHVrZS5sZWlnaHRvbiA8bHVrZS5sZWlnaHRvbkBnbWFpbC5jb20+IHdyb3RlOgo+PiBPbiBXZWQs
-IEp1biA1LCAyMDEzIGF0IDEwOjU5IFBNLCBIZW5yaWsgTm9yZHN0csO2bQo+PiA8aGVucmlrQGhl
-bnJpa25vcmRzdHJvbS5uZXQ+IHdyb3RlOgo+Pgo+Pj4+ICAuLi4uIGFuZCB0aGVuIHRoZXJlJ3Mg
-dGhlIGJvb3QwIGFuZCBib290MSBsb2FkZXJzLCB0aGVzZSAqZG8qIGhhdmUKPj4KPj4+IG5vLCB0
-aGVzZSBhcmUgbm90IHRpbnkuIGJvb3QwIGlzIDI0S0IgdG8gZml0IHRoZSBpbml0aWFsIGVtYmVk
-ZGVkIFNSQU0KPj4+IChub3QgY2FjaGUpLCBidXQgYm9vdDEgaXMgb24gcGFpciB3aXRoIHUtYm9v
-dCBpbiBzaXplIGFuZCBydW5zIGZyb20KPj4+IERSQU0uCj4+Cj4+ICBidHcsIHBsZWFzZSBsaXN0
-ZW4gdG8gaGVucmlrOiBoZSBrbm93cyB3aGF0IGhlJ3MgdGFsa2luZyBhYm91dCwgYXMKPj4geW91
-IGNhbiBzZWUgOikgICBoZW5yaWssIHRoYW5rIHlvdSBmb3IgY29ycmVjdGluZyBteSB0ZWNobmlj
-YWwKPj4gbWlzdW5kZXJzdGFuZGluZ3MsIGknbGwgdHJ5IHRvIHJlbWVtYmVyIHRoZW0gYW5kIG5v
-dCBwcm9wYWdhdGUKPj4gaW5jb3JyZWN0IHN0dWZmLgo+Cj4gVGhpcyBpcyBub3QgYWJvdXQgdGhl
-IGZleCBzeW50YXggb3IgdWJvb3QuIFRoZSByb290IHByb2JsZW0gaXMgbmVlZGluZwo+IHR3byBz
-ZXRzIG9mIGJpbmRpbmcgZm9yIGV2ZXJ5IGRldmljZSBkcml2ZXIgaW4gdGhlIGtlcm5lbC4gUGlj
-ayBhCj4gcmFuZG9tIGRyaXZlciBsaWtlIGdwaW8tcGNhOTUzeC5jIGFuZCBsb29rIGF0IHRoZSBz
-b3VyY2UuIEluIHRoYXQgZmlsZQo+IHRoZXJlIGFyZSAjaWZkZWYgQ09ORklHX09GXyBzZWN0aW9u
-cy4gVGhvc2Ugc2VjdGlvbnMgYXJlIGRpcmVjdGx5Cj4gcmVhZGluZyB0aGUgRkRUIGJpbmFyeSB2
-aWEgY2FsbHMgbGlrZSBvZl9nZXRfcHJvcGVydHkobm9kZSwKPiAibGludXgsZ3Bpby1iYXNlIiwg
-JnNpemUpOy4gSWYgZmV4IGlzIGFkZGVkIHRvIHRoZSBrZXJuZWwgZXZlcnkgZHJpdmVyCj4gZHJp
-dmVyIHdpbGwgbm93IG5lZWQgYm90aCBhICNpZmRlZiBDT05GSUdfT0ZfIHNlY3Rpb24gYW5kIGFs
-c28gYQo+ICNpZmRlZiBDT05GSUdfRkVYXyBzZWN0aW9uLiBEb2luZyB0aGF0IGlzIGp1c3QgY3Jh
-enkuCgogeWVzLiAgd2hpY2ggaXMgd2h5IHRoZXkgaGF2ZW4ndCBkb25lIGl0LgoKPiBJcyBBbGx3
-aW5uZXIKPiBnb2luZyB0byBhZGQgZmV4IHN1cHBvcnQgdG8gZXZlcnkgc2luZ2xlIGRldmljZSBk
-cml2ZXIgaW4gdGhlIGtlcm5lbD8KCiBubyBqb2huIC0gdGhleSd2ZSBvbmx5IGFkZGVkIGl0IHRv
-IHRoZSBtdWx0aXBsZXhlZCBzZWN0aW9ucyBvZiB0aGUKZHJpdmVycyB3aGljaCB0aGV5IHRoZW1z
-ZWx2ZXMgaGF2ZSB3cml0dGVuLiAgc3VjaCBhcwpkcml2ZXJzL3VzYi9zdW57Tn1pX3VzYi8qLltj
-aF0sIGRyaXZlcnMvYmxvY2svbmFuZC9zdW57Tn1faSwKYXJjaC9hcm0vbWFjaC1zdW57Tn1pIGFu
-ZCBzbyBvbi4KCmV2ZW4gdGhlIHRvdWNoc2NyZWVuIGRyaXZlciB0aGF0IHRoZXkgd3JvdGUsIHRo
-YXQncyBnb3Qgbm90aGluZyB0byBkbwp3aXRoIGFueSBvdGhlciBjb2RlIGluIHRoZSB0b3VjaHNj
-cmVlbiBsaW51eCBrZXJuZWwgc291cmNlIHRyZWU6IGl0J3MKbW9yZSBvZiBhICJtZXRhLSJkcml2
-ZXIgd2hpY2ggZXZlbiBoYXMgdGhlIG5hbWUgb2YgdGhlIGxpbnV4IGtlcm5lbAptb2R1bGUgdGhh
-dCBuZWVkcyB0byBiZSBsb2FkZWQgYW5kIHdoYXQgSTJDIGFkZHJlc3MsIEdQSU8gb3B0aW9ucyBl
-dGMuCnRvIHBhc3MgaW4gW25vcm1hbGx5IGRvbmUgYXMgbW9kcHJvYmUgb3B0aW9ucyBpbiB1c2Vy
-c3BhY2VdLgoKIHRvIGJlIGhvbmVzdCwgdGhlcmUgYXJlIGJldHRlciBwZW9wbGUgdG8gZnVsbHkg
-YW5zd2VyIHRoaXMgcXVlc3Rpb24KKGFsZWphbmRybyBhbmQgaGVucmlrIGFyZSB0d28gdGhhdCBz
-cHJpbmcgdG8gbWluZCkgYnV0IHlvdSdyZQpkZWZpbml0ZWx5IG9mZi1iYXNlLCBqb24uICB0aGUg
-c2NyaXB0LmZleCBzeXN0ZW0gZGVhbHMgd2l0aCB0aGUgcGlubXV4Cmlzc3VlIGluIGEgdmVyeSBu
-ZWF0IHdheSB0aGF0OgoKICBhKSBoYXMgdmVyeSBsaXR0bGUgaW1wYWN0IG9uIHRoZSByZXN0IG9m
-IHRoZSBrZXJuZWwgdHJlZSBbY2l0YXRpb24KbmVlZGVkISAgaSdtIHNheWluZyB0aGF0OiBjb3Vs
-ZCBzb21lb25lIHBsZWFzZSBjb25maXJtIGlmIGl0J3MgdHJ1ZV0KCiAgYikgdGhlIGxpbnV4IGtl
-cm5lbCBkZXZlbG9wZXJzIGNvdWxkLCBpbnN0ZWFkIG9mIGNyaXRpY2lzaW5nIGl0LAphY3R1YWxs
-eSBsZWFybiBhIGdyZWF0IGRlYWwgZnJvbS4KCmwuCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwphcm0tbmV0Ym9vayBtYWlsaW5nIGxpc3QgYXJtLW5ldGJv
-b2tAbGlzdHMucGhjb21wLmNvLnVrCmh0dHA6Ly9saXN0cy5waGNvbXAuY28udWsvbWFpbG1hbi9s
-aXN0aW5mby9hcm0tbmV0Ym9vawpTZW5kIGxhcmdlIGF0dGFjaG1lbnRzIHRvIGFybS1uZXRib29r
-QGZpbGVzLnBoY29tcC5jby51aw==
+On Tue, 09 Apr 2013 00:44:05 +0200, Javier Martinez Canillas <javier.martinez@collabora.co.uk> wrote:
+> On 04/09/2013 12:05 AM, Rob Herring wrote:
+> > On 04/05/2013 02:48 AM, Javier Martinez Canillas wrote:
+> >> This means that drivers that need the IRQ type/level flags defined in
+> >> the DT won't be able to get it.
+> > 
+> > But the interrupt controllers that need the information should be able
+> > to get to it via irqd_get_trigger_type. What problem exactly are you
+> > trying to fix? What driver would use this?
+> >
+> 
+> Yes but this is not about the interrupt controller wanting this information but
+> a device driver that is using the IORESOURCE_IRQ struct resource that has the
+> information about the virtual IRQ associated with a GPIO-IRQ.
+> 
+> The driver doesn't know neither care if its IRQ line is connected to a line of
+> an real IRQ controller or to a GPIO controller that allows a GPIO line to be
+> used as an IRQ.
+> 
+> > My understanding of the IORESOURCE_IRQ_xxx (and DMA) bits are they are
+> > ISA specific and therefore should not be used on non-ISA buses.
+> > 
+> 
+> Many TI OMAP2+ SoC based boards have an SMSC LAN911x/912x controller
+> (drivers/net/ethernet/smsc/smsc911x.c) that is connected to the OMAP processor
+> through its General-Purpose Memory Controller (GPMC) and this LAN driver obtain
+> its IRQ and I/O address space from a struct resource IORESOURCE_IRQ and
+> IORESOURCE_MEM respectively, that is filled by the DeviceTree core.
+> 
+> It does this:
+> 
+> irq_res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> irq_flags = irq_res->flags & IRQF_TRIGGER_MASK;
+> 
+> Since of_irq_to_resource() doesn't fill the trigger/level flags on the
+> IORESOURCE_IRQ struct resource, irq_flags will always be 0 regarding the value
+> specified on the second cell of the "interrupts" DT property.
+> 
+> A previous discussion about this can be found here [1].
+
+I can't remember if there was ever a reason for not returning the IRQ
+flags, but I don't have any major objection to doing so if drivers find
+them useful. The one concern I do have however is if it will cause any
+problems with drivers that expect flags == IORESOURCE_IRQ without any
+additional flags. Any users doing that are buggy anyway, but I do want
+to be careful about breakage.
+
+I'll go over your patch and reply with comments.
+
+g.
+
