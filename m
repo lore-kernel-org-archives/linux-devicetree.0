@@ -1,177 +1,101 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: [PATCH 1/4] ARM: dts: omap5: Rename omap5-evm to omap5-uevm
-Date: Wed, 5 Jun 2013 12:24:27 +0530
-Message-ID: <1370415267-1624-1-git-send-email-r.sricharan@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 07/10] pinctrl: add pinctrl driver for Rockchip SoCs
+Date: Wed, 5 Jun 2013 09:01:44 +0200
+Message-ID: <CACRpkdZty-TszfBTOab4_PUi8dy5DYim=wNERv=pyqC3HNuT4w@mail.gmail.com>
+References: <201306030055.15413.heiko@sntech.de>
+	<201306030059.47611.heiko@sntech.de>
+	<CACRpkdbBr7s1NoTQewVOotorHJHLL8Z6-_gAx5GC0x6uNUX0gw@mail.gmail.com>
+	<201306041405.13320.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org, r.sricharan@ti.com, tony@atomide.com, rnayak@ti.com, b-cousson@ti.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201306041405.13320.heiko@sntech.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mike Turquette <mturquette@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <cjb@laptop.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-The uevm is the official board supported for the OMAP5 soc
-in mainline. The uevm has an OMAP5432 with a DDR3 memory.
-Renaming the board dts file and adding the following cleanups.
+On Tue, Jun 4, 2013 at 2:05 PM, Heiko St=FCbner <heiko@sntech.de> wrote=
+:
 
- * There are no devices connected on I2C 2,3,4 buses. So remove
-   the pinmux data for the same.
+>> > +PULL_AUTO      (1 << 0): indicate this pin needs a pull setting f=
+or SoCs
+>> > +                         that determine the pull up or down thems=
+elfs
+>>
+>> Hm, never saw that before...
+>
+> Citing the original gpio driver:
+>
+>         /*
+>          * Values written to this register independently
+>          * control Pullup/Pulldown or not for the
+>          * corresponding data bit in GPIO.
+>          * 0: pull up/down enable, PAD type will decide
+>          * to be up or down, not related with this value
+>          * 1: pull up/down disable
+>          */
+>
+> So if it's a pull up or down is decided based on the mux of the pin. =
+Calling
+> everything a "pull down" (or up) when it isn't seemed somehow wrong t=
+o me.
+>
+> The rk3188 on the other hand supports both pull up and down separatel=
+y.
+>
+> Or should this be selected as PULL_UP | PULL_DOWN in the config?
 
- * DDR3 memory is used in the uevm. Neither DVFS or temperature
-   polling is supported with DDR3. So remove the DDR3 device and
-   emif nodes.
+The generic config is pretty much either/or so it'd be a new
+config for that approach.
 
- * Keypad is not supported on uevm. So remove the device node.
+Basically it seems they have embedded knowledge into the
+silicon: there is no specific rule as to whether a pad should be
+pulled up or down depending on "pad type" as is stated, rather
+it's so that if you know a pad will be used for I2C SCL then
+you know it needs pull-up. Probably something like a "1" on
+some constant switch in VHDL/Verilog is hard-coded into
+the silicon turning on pull-up if I2C is selected and the
+autopull is set for example.
 
-Signed-off-by: Sricharan R <r.sricharan@ti.com>
----
- arch/arm/boot/dts/Makefile                         |    2 +-
- .../arm/boot/dts/{omap5-evm.dts => omap5-uevm.dts} |   83 +-------------------
- 2 files changed, 4 insertions(+), 81 deletions(-)
- rename arch/arm/boot/dts/{omap5-evm.dts => omap5-uevm.dts} (73%)
+>> +config PINCTRL_ROCKCHIP
+>> +       bool
+>> +       select PINMUX
+>> +       select PINCONF
+>> +       select GENERIC_IRQ_CHIP
+>>
+>> Why is this super-simple pin config thing not using
+>> GENERIC_PINCONF?
+>>
+>> I *know* it is simpler to implement your own thing, but think of the
+>> poor maintainers that have to wade through 50 identical implementati=
+ons.
+>> Do this, it pays off.
+>
+> generic pinconf sounds interesting ... will give it a try.
+>
+> The only problem is the pull stuff mentioned above that is either pul=
+l up or
+> down without the driver having knowledge about it. And generic_pincon=
+f only
+> knows about them separately right now.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index f0895c5..13b86bf 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -149,7 +149,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
- 	omap4-panda-es.dtb \
- 	omap4-var-som.dtb \
- 	omap4-sdp.dtb \
--	omap5-evm.dtb \
-+	omap5-uevm.dtb \
- 	am335x-evm.dtb \
- 	am335x-evmsk.dtb \
- 	am335x-bone.dtb
-diff --git a/arch/arm/boot/dts/omap5-evm.dts b/arch/arm/boot/dts/omap5-uevm.dts
-similarity index 73%
-rename from arch/arm/boot/dts/omap5-evm.dts
-rename to arch/arm/boot/dts/omap5-uevm.dts
-index 22e9ee8..843a001 100644
---- a/arch/arm/boot/dts/omap5-evm.dts
-+++ b/arch/arm/boot/dts/omap5-uevm.dts
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 as
-@@ -8,11 +8,10 @@
- /dts-v1/;
- 
- #include "omap5.dtsi"
--#include "samsung_k3pe0e000b.dtsi"
- 
- / {
--	model = "TI OMAP5 EVM board";
--	compatible = "ti,omap5-evm", "ti,omap5";
-+	model = "TI OMAP5 uEVM board";
-+	compatible = "ti,omap5-uevm", "ti,omap5";
- 
- 	memory {
- 		device_type = "memory";
-@@ -88,27 +87,6 @@
- 		>;
- 	};
- 
--	i2c2_pins: pinmux_i2c2_pins {
--		pinctrl-single,pins = <
--			0x178 (PIN_INPUT | MUX_MODE0)		/* i2c2_scl */
--			0x17a (PIN_INPUT | MUX_MODE0)		/* i2c2_sda */
--		>;
--	};
--
--	i2c3_pins: pinmux_i2c3_pins {
--		pinctrl-single,pins = <
--			0x13a (PIN_INPUT | MUX_MODE0)		/* i2c3_scl */
--			0x13c (PIN_INPUT | MUX_MODE0)		/* i2c3_sda */
--		>;
--	};
--
--	i2c4_pins: pinmux_i2c4_pins {
--		pinctrl-single,pins = <
--			0xb8 (PIN_INPUT | MUX_MODE0)		/* i2c4_scl */
--			0xba (PIN_INPUT | MUX_MODE0)		/* i2c4_sda */
--		>;
--	};
--
- 	i2c5_pins: pinmux_i2c5_pins {
- 		pinctrl-single,pins = <
- 			0x184 (PIN_INPUT | MUX_MODE0)		/* i2c5_scl */
-@@ -175,39 +153,6 @@
- 	clock-frequency = <400000>;
- };
- 
--&i2c2 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c2_pins>;
--
--	clock-frequency = <400000>;
--
--	/* Pressure Sensor */
--	bmp085@77 {
--		compatible = "bosch,bmp085";
--		reg = <0x77>;
--	};
--};
--
--&i2c3 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c3_pins>;
--
--	clock-frequency = <400000>;
--};
--
--&i2c4 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c4_pins>;
--
--	clock-frequency = <400000>;
--
--	/* Temperature Sensor */
--	tmp102@48{
--		compatible = "ti,tmp102";
--		reg = <0x48>;
--	};
--};
--
- &i2c5 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c5_pins>;
-@@ -215,32 +160,10 @@
- 	clock-frequency = <400000>;
- };
- 
--&keypad {
--	keypad,num-rows = <8>;
--	keypad,num-columns = <8>;
--	linux,keymap = <0x02020073	/* VOLUP */
--			0x02030072	/* VOLDOWM */
--			0x020400e7	/* SEND */
--			0x02050066	/* HOME */
--			0x0206006b	/* END */
--			0x020700d9>;	/* SEARCH */
--	linux,input-no-autorepeat;
--};
--
- &mcbsp3 {
- 	status = "disabled";
- };
- 
--&emif1 {
--	cs1-used;
--	device-handle = <&samsung_K3PE0E000B>;
--};
--
--&emif2 {
--	cs1-used;
--	device-handle = <&samsung_K3PE0E000B>;
--};
--
- &mcspi1 {
- 
- };
--- 
-1.7.9.5
+Create a separate patch adding PIN_CONFIG_BIAS_PULL_AUTO
+to include/linux/pinctrl/pinconf-generic.h, don't forget the
+kerneldoc, and patching drivers/pinctrl/pinconf-generic.c.
 
+I'll apply it right away.
+
+>> Nothing else you want to say about the pins here?
+>> (No big deal for sure, but....)
+>
+> when using pinconfig_generic, its dump_pin function should be more ta=
+lkative
+> right?
+
+Yes, one of the things you get for free... soon also the pin config
+DT parser will be for free I hope.
+
+Yours,
+Linus Walleij
