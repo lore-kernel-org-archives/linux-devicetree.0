@@ -1,76 +1,60 @@
-From: "luke.leighton" <luke.leighton@gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
  Uploading linux (3.9.4-1))
-Date: Wed, 5 Jun 2013 23:47:13 +0100
-Message-ID: <CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
+Date: Wed, 05 Jun 2013 16:54:23 -0600
+Message-ID: <51AFC19F.9040601@wwwdotorg.org>
 References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
-	<CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
-	<51AFA6DD.3000202@wwwdotorg.org>
-	<CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
-	<1370469574.18839.33.camel@localhost>
+ <CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
+ <51AFA6DD.3000202@wwwdotorg.org>
+ <CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
+ <1370469574.18839.33.camel@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 In-Reply-To: <1370469574.18839.33.camel@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
-Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel@lists.debian.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: =?UTF-8?B?SGVucmlrIE5vcmRzdHLDtm0=?= <henrik-N0bZODiMPoV/1Aw6q1k8hdHuzzzSOjJt@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, debian-arm-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org, "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux on small ARM machines <arm-netbook-Fj0DB6SUpRXNuVmtMlwsDbVCufUGDwFn@public.gmane.org>, ARM Linux Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, debian-kernel-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 5, 2013 at 10:59 PM, Henrik Nordstr=C3=B6m
-<henrik@henriknordstrom.net> wrote:
-
->>  .... and then there's the boot0 and boot1 loaders, these *do* have
-
-> no, these are not tiny. boot0 is 24KB to fit the initial embedded SRA=
-M
-> (not cache), but boot1 is on pair with u-boot in size and runs from
-> DRAM.
-
- btw, please listen to henrik: he knows what he's talking about, as
-you can see :)   henrik, thank you for correcting my technical
-misunderstandings, i'll try to remember them and not propagate
-incorrect stuff.
-
->>  so the point is: if anyone wishes me to propose to allwinner that
->> they convert over to devicetree, or any other proposal which involve=
-s
->> significant low-level changes to their working practices that could
->> potentially have a massive knock-on effect onto their
->> multi-million-dollar clients, it had better be a damn good story.
->
-> Calm down.
-
- i am - honest!  yes it's a little past my bed-time, but hey...
-
-> It isn't really a significant difference to them outside of
-> the kernel. They do not need to change any of their configuraiton
-> methods, only a small toolchain change in how the resultig images are
-> built to have a corresponding device tree built.
-
- henrik, jon (smirl), can i ask you both a favour?  could you write
-something up, preferably short, that i could put forward to allwinner?
- describing what's needed, who would need to do what and so on.
-
-
-> But it is a fair bit of one-time changes kernel side. And some
-> scratching to figure out how to use/improve/ignore the stuff being
-> mainlined.
-
- i still also - really - need a good justification for this.
-something which helps explain clearly what the immediate or perhaps
-strategic benefits would be to allwinner, as to why they should accept
-such changes.   i cannot emphasise enough how important that is.
-
- if someone can please help come up with a good justification as to
-why allwinner should change their working practices, that would be
-enormously helpful i feel, to solving this issue.
-
- otherwise we are stuck in the current situation which nobody really
-likes.  i'm inviting you - linux kernel developers - i'm giving you an
-opportunity to *fix* things.  you have 2 weeks to come up with a
-solution, which can be presented in a simple format.  that's the
-window of opportunity.
-
-l.
+T24gMDYvMDUvMjAxMyAwMzo1OSBQTSwgSGVucmlrIE5vcmRzdHLDtm0gd3JvdGU6Cj4gb25zIDIw
+MTMtMDYtMDUga2xvY2thbiAyMjoyNCArMDEwMCBza3JldiBMdWtlIEtlbm5ldGggQ2Fzc29uIExl
+aWdodG9uOgouLi4KPj4gIHNvIHRoZSBwb2ludCBpczogaWYgYW55b25lIHdpc2hlcyBtZSB0byBw
+cm9wb3NlIHRvIGFsbHdpbm5lciB0aGF0Cj4+IHRoZXkgY29udmVydCBvdmVyIHRvIGRldmljZXRy
+ZWUsIG9yIGFueSBvdGhlciBwcm9wb3NhbCB3aGljaCBpbnZvbHZlcwo+PiBzaWduaWZpY2FudCBs
+b3ctbGV2ZWwgY2hhbmdlcyB0byB0aGVpciB3b3JraW5nIHByYWN0aWNlcyB0aGF0IGNvdWxkCj4+
+IHBvdGVudGlhbGx5IGhhdmUgYSBtYXNzaXZlIGtub2NrLW9uIGVmZmVjdCBvbnRvIHRoZWlyCj4+
+IG11bHRpLW1pbGxpb24tZG9sbGFyIGNsaWVudHMsIGl0IGhhZCBiZXR0ZXIgYmUgYSBkYW1uIGdv
+b2Qgc3RvcnkuCj4gCj4gQ2FsbSBkb3duLiBJdCBpc24ndCByZWFsbHkgYSBzaWduaWZpY2FudCBk
+aWZmZXJlbmNlIHRvIHRoZW0gb3V0c2lkZSBvZgo+IHRoZSBrZXJuZWwuIFRoZXkgZG8gbm90IG5l
+ZWQgdG8gY2hhbmdlIGFueSBvZiB0aGVpciBjb25maWd1cmFpdG9uCj4gbWV0aG9kcywgb25seSBh
+IHNtYWxsIHRvb2xjaGFpbiBjaGFuZ2UgaW4gaG93IHRoZSByZXN1bHRpZyBpbWFnZXMgYXJlCj4g
+YnVpbHQgdG8gaGF2ZSBhIGNvcnJlc3BvbmRpbmcgZGV2aWNlIHRyZWUgYnVpbHQuCgpJZiBVLUJv
+b3QgbmVlZHMgdG8gYmUgcGFyYW1ldHJpemVkLCB0aGVyZSBhcmUgaW4gdGhlb3J5IGEgZmV3IG9w
+dGlvbnMgb3BlbjoKCjEpIFB1dCBhbGwgdGhlIHBhcmFtZXRlcnMgaW4gdGhlIFUtQm9vdCBjb25m
+aWd1cmF0aW9uIGhlYWRlci4gVGhpcyBpcwpub3JtYWwuCgoyKSBSZWFkIHNvbWUgZGF0YSBzdHJ1
+Y3R1cmUgYXQgcnVuLXRpbWUuIFRoaXMgZGF0YSBzdHJ1Y3R1cmUgY291bGQgaW4KdGhlb3J5IGJl
+IHNvbWUgU29DLXNwZWNpZmljIGJsb2IgZm9ybWF0IChlLmcuIHRoZSBwYWNrZWQgdmVyc2lvbiBv
+ZgppbmZvcm1hdGlvbiB0aGF0IHNvbWUgdG9vbCBleHRyYWN0cyBmcm9tIEZFWC9EVCksIGEgd2hv
+bGUgRkVYIGJsb2IsIG9yCmRldmljZSB0cmVlLiBUaGUgVS1Cb290IG1haW50YWluZXJzIGhhdmUg
+YWxyZWFkeSBpbmRpY2F0ZWQgdGhhdCB0aGV5Cndvbid0IGFjY2VwdCB0aGUgZmlyc3QgdHdvIG9w
+dGlvbnM7IHJ1bi10aW1lIGNvbmZpZ3VyYXRpb24gaGFzIHRvIGJlIHZpYQpEVCwgYW5kIG5vdCB2
+aWEgc29tZSBTb0Mtc3BlY2lmaWMgbWVjaGFuaXNtLiAoQXMgSSBmb3VuZCBvdXQgdG8gbXkKZGV0
+cmltZW50IHdoZW4gSSBhdHRlbXB0ZWQgdG8gbWFrZSBVLUJvb3Qgb24gVGVncmEgZGV0ZXJtaW5l
+IHdoaWNoIFVBUlQKdG8gdXNlIGZvciBkZWJ1ZyBhdCBydW4tdGltZSBieSByZWFkaW5nIHRoZSBj
+b25maWd1cmF0aW9uIGhlYWRlciB0aGF0Cm91ciBib290IFJPTSB1c2VzKS4gTm93IG9mIGNvdXJz
+ZSwgYm9vdDAvYm9vdDEgY291bGQgYWx3YXlzIHRyYW5zZm9ybQp3aGF0ZXZlciBkYXRhIHN0cnVj
+dHVyZSB0aGV5IHdpc2ggaW50byBhIERUQiBiZWZvcmUgcGFzc2luZyB0aGF0IHRvClUtQm9vdC4u
+LgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0
+cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMu
+b3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
