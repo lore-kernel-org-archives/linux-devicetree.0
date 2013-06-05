@@ -1,86 +1,82 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: [net-next PATCH v4 5/5] ARM: dts: AM33XX: Add pinmux configuration for CPSW to am335x EVM
-Date: Wed, 5 Jun 2013 22:38:19 +0530
-Message-ID: <1370452099-24026-6-git-send-email-mugunthanvnm@ti.com>
-References: <1370452099-24026-1-git-send-email-mugunthanvnm@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2] mfd: DT bindings for the palmas family MFD
+Date: Wed, 05 Jun 2013 11:13:46 -0600
+Message-ID: <51AF71CA.8060808@wwwdotorg.org>
+References: <1370335309-6319-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1370452099-24026-1-git-send-email-mugunthanvnm@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, benoit.cousson@linaro.org, paul@pwsan.com, Mugunthan V N <mugunthanvnm@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1370335309-6319-1-git-send-email-j-keerthy@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: J Keerthy <j-keerthy@ti.com>
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, rob@landley.net, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, gg@slimlogic.co.uk, t-kristo@ti.com, lee.jones@linaro.org, Ian Lartey <ian@slimlogic.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Add pinmux configurations for RGMII based CPSW ethernet to am335x-evm.
-In this patch, only single named mode/state is added and these pins
-are configured during pinctrl driver initialization.
+On 06/04/2013 02:41 AM, J Keerthy wrote:
+> From: Graeme Gregory <gg@slimlogic.co.uk>
+> 
+> Add the various binding files for the palmas family of chips. There is a
+> top level MFD binding then a seperate binding for regulators IP blocks on chips.
 
-Default mode is nothing but the values required for the module during
-active state. With this configurations module is functional as
-expected.
+> diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documentation/devicetree/bindings/mfd/palmas.txt
 
-Todo:
-- if an idle state is available for pins, add support for it.
+> +Optional properties:
+> +  ti,mux_padX : set the pad register X (1-2) to the correct muxing for the
+> +  		hardware, if not set will use muxing in OTP.
+> +
+> +Example:
+...
+> +	ti,mux-pad1 = <0>;
+> +	ti,mux-pad2 = <0>;
 
-Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
----
- arch/arm/boot/dts/am335x-evm.dts |   36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+Use of - vs. _ is inconsistent there. It should be -.
 
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index 814ee03..5db4b05 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -44,6 +44,32 @@
- 				0x154 0x27	/* spi0_d0.gpio0_3, INPUT | MODE7 */
- 			>;
- 		};
-+
-+		cpsw_default: cpsw_default {
-+			pinctrl-single,pins = <
-+				/* Slave 1 */
-+				0x114 0x2	/* mii1_txen.rgmii1_tctl, MODE2 | OUTPUT */
-+				0x118 0x22	/* mii1_rxdv.rgmii1_rctl, MODE2 | INPUT_PULLDOWN */
-+				0x11c 0x2	/* mii1_txd3.rgmii1_td3, MODE2 | OUTPUT */
-+				0x120 0x2	/* mii1_txd2.rgmii1_td2, MODE2 | OUTPUT */
-+				0x124 0x2	/* mii1_txd1.rgmii1_td1, MODE2 | OUTPUT */
-+				0x128 0x2	/* mii1_txd0.rgmii1_td0, MODE2 | OUTPUT */
-+				0x12c 0x2	/* mii1_txclk.rgmii1_tclk, MODE2 | OUTPUT */
-+				0x130 0x22	/* mii1_rxclk.rgmii1_rclk, MODE2 | INPUT_PULLDOWN */
-+				0x134 0x22	/* mii1_rxd3.rgmii1_rd3, MODE2 | INPUT_PULLDOWN */
-+				0x138 0x22	/* mii1_rxd2.rgmii1_rd2, MODE2 | INPUT_PULLDOWN */
-+				0x13c 0x22	/* mii1_rxd1.rgmii1_rd1, MODE2 | INPUT_PULLDOWN */
-+				0x140 0x22	/* mii1_rxd0.rgmii1_rd0, MODE2 | INPUT_PULLDOWN */
-+			>;
-+		};
-+
-+		davinci_mdio_default: davinci_mdio_default {
-+			pinctrl-single,pins = <
-+				/* MDIO */
-+				0x148 0x30	/* mdio_data.mdio_data, MODE0 | INPUT_PULLUP */
-+				0x14c 0x10	/* mdio_clk.mdio_clk, MODE0 | OUTPUT_PULLUP */
-+			>;
-+		};
- 	};
- 
- 	ocp {
-@@ -237,6 +263,16 @@
- 	};
- };
- 
-+&mac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&cpsw_default>;
-+};
-+
-+&davinci_mdio {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&davinci_mdio_default>;
-+};
-+
- &cpsw_emac0 {
- 	phy_id = <&davinci_mdio>, <0>;
- 	phy-mode = "rgmii-txid";
--- 
-1.7.9.5
+> diff --git a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
+
+> +Optional nodes:
+> +- regulators : should contain the constrains and init information for the
+> +	       regulators. It should contain a subnode per regulator from the
+> +	       list.
+
+I would re-phrase that as:
+
+Must contain a sub-node per regulator from the list below. Each sub-node
+should contain the constraints and initialization information for that
+regulator. See regulator.txt for a description of standard properties
+for these sub-nodes. Additional custom properties  are listed below.
+
+> +	       For ti,palmas-pmic - smps12, smps123, smps3 depending on OTP,
+> +	       smps45, smps457, smps7 depending on varient, smps6, smps[8-10],
+
+typo: s/varient/variant/.
+
+> +	       ldo[1-9], ldoln, ldousb
+
+nit: s/$/./ ?
+
+> +
+> +	       optional chip specific regulator fields :-
+
+Perhaps "Optional sub-node properties:"?
+
+> +pmic {
+> +	compatible = "ti,twl6035-pmic", "ti,palmas-pmic";
+> +	interrupt-parent = <&palmas>;
+> +	interrupts = <14 IRQ_TYPE_NONE>;
+> +	interrupt-name = "short-irq";
+
+If those are required, shouldn't they be listed in a "Required
+properties" section above? In particular, the order of entries in the
+interrupts property must be defined, as well as the expected nameds in
+the interrupt-name property.
+
+Oh, and it's interrupt-names not interrupt-name.
+
+Oh, one question though: How does the regulator driver determine the
+register address of the regulator sub-device within the overall PMIC?
+Presumably if these are pluggable independent modules, that could change
+depending on which overall chip the PMIC device is plugged into. don't
+you need a reg property to specify that?
+
+Aside from those comments, this all looks reasonable to me.
