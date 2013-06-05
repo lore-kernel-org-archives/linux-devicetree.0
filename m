@@ -1,96 +1,48 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [net-next PATCH v3 1/6] net: cpsw: enhance pinctrl support
-Date: Wed, 5 Jun 2013 22:13:03 +0530
-Message-ID: <51AF6A97.5060407@ti.com>
-References: <1369592616-23972-1-git-send-email-mugunthanvnm@ti.com> <1369592616-23972-2-git-send-email-mugunthanvnm@ti.com> <20130527213600.GO13507@atomide.com> <51A4B995.9050203@ti.com> <51A708F7.8010804@ti.com> <20130605154921.GW3331@atomide.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] dtc: ensure #line directives don't consume data from
+ the next line
+Date: Wed, 05 Jun 2013 10:50:02 -0600
+Message-ID: <51AF6C3A.5020609@wwwdotorg.org>
+References: <1370273816-19411-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20130605154921.GW3331@atomide.com>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net
-Cc: Tony Lindgren <tony@atomide.com>, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Hebbar Gururaja <gururaja.hebbar@ti.com>, benoit.cousson@linaro.org, linux-omap@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1370273816-19411-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ian Campbell <Ian.Campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/5/2013 9:19 PM, Tony Lindgren wrote:
-> * Mugunthan V N <mugunthanvnm@ti.com> [130530 01:14]:
->> On 5/28/2013 7:35 PM, Mugunthan V N wrote:
->>> On 5/28/2013 3:06 AM, Tony Lindgren wrote:
->>>> * Mugunthan V N <mugunthanvnm@ti.com> [130526 11:28]:
->>>>> From: Hebbar Gururaja <gururaja.hebbar@ti.com>
->>>>>
->>>>> Amend cpsw controller to optionally take a pin control handle and set
->>>>> the state of the pins to:
->>>>>
->>>>> - "default" on boot, resume
->>>>> - "sleep" on suspend()
->>>>>
->>>>> This should make it possible to optimize energy usage for the pins
->>>>> for the suspend/resume cycle.
->>>>>
->>>>> If any of the above pin states are missing in dt, a warning message
->>>>> about the missing state is displayed.
->>>>> If certain pin-states are not available, to remove this warning message
->>>>> pass respective state name with null phandler.
->>>>>
->>>>> Signed-off-by: Hebbar Gururaja <gururaja.hebbar@ti.com>
->>>>> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
->>>>> ---
->>>>>   drivers/net/ethernet/ti/cpsw.c |   48
->>>>> ++++++++++++++++++++++++++++++++++++++++
->>>>>   1 file changed, 48 insertions(+)
->>>>>
->>>>> diff --git a/drivers/net/ethernet/ti/cpsw.c
->>>>> b/drivers/net/ethernet/ti/cpsw.c
->>>>> index 21a5b29..c9ed730 100644
->>>>> --- a/drivers/net/ethernet/ti/cpsw.c
->>>>> +++ b/drivers/net/ethernet/ti/cpsw.c
->>>>> @@ -35,6 +35,7 @@
->>>>>   #include <linux/if_vlan.h>
->>>>>     #include <linux/platform_data/cpsw.h>
->>>>> +#include <linux/pinctrl/consumer.h>
->>>>>     #include "cpsw_ale.h"
->>>>>   #include "cpts.h"
->>>>> @@ -351,6 +352,11 @@ struct cpsw_priv {
->>>>>       bool irq_enabled;
->>>>>       struct cpts *cpts;
->>>>>       u32 emac_port;
->>>>> +
->>>>> +    /* Two optional pin states - default & sleep */
->>>>> +    struct pinctrl        *pinctrl;
->>>>> +    struct pinctrl_state    *pins_def;
->>>>> +    struct pinctrl_state    *pins_sleep;
->>>>>   };
->>>> Which pins do you need to dynamically remux? If it's not all
->>>> the pins, you should have three sets: default, active and idle.
->>>> This way the static pins in the default group don't need to be
->>>> constantly toggled.
->>>>
->>>> Regards,
->>>>
->>>> Tony
->>> Tony
->>>
->>> I am using this for all the pins, in probe all the cpsw pins will
->>> be configured
->>> and i have used the same in suspend/resume callback for power saving.
->>>
->> Tony
->>
->> Do you have any comments on this, or is it ok with two pinctrl_state nodes?
-> If you always need to remux all the pins, then yes that's fine with me.
->
-> Regards,
->
-> Tony
-David
+On 06/03/2013 09:36 AM, Stephen Warren wrote:
+> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> Previously, the #line parsing regex ended with ({WS}+[0-9]+)?. The {WS}
+> could match line-break characters. If the #line directive did not contain
+> the optional flags field at the end, this could cause any integer data on
+> the next line to be consumed as part of the #line directive parsing. This
+> could cause syntax errors (i.e. #line parsing consuming the leading 0
+> from a hex literal 0x1234, leaving x1234 to be parsed as cell data,
+> which is a syntax error), or invalid compilation results (i.e. simply
+> consuming literal 1234 as part of the #line processing, thus removing it
+> from the cell data).
+> 
+> Fix this by replacing {WS} with [ \t] so that it can't match line-breaks.
+> 
+> Convert all instances of {WS}, even though the other instances should be
+> irrelevant for any well-formed #line directive. This is done for
+> consistency and ultimate safety.
+> 
+> This is a port of upstream dtc commit a1ee6f0 (with same subject) to the
+> kernel's copy of dtc.
 
-As Tony accepted the implementation, I will resend the patch series as one
-of the patch (pasted below) in this series is already merged in net-next.
-
-f6655d6  Mugunthan V N   ARM: dts: AM33XX: Add CPSW phy_id device tree 
-data to am335x-evmsk Mon Jun 3 20:10:09 2013 +0000
-
-Regards
-Mugunthan V N
+Rob, Grant, does this look OK to apply for v3.10-rc*?
