@@ -1,95 +1,76 @@
-From: Luke Kenneth Casson Leighton <lkcl@lkcl.net>
-Subject: Re: getting allwinner SoC support upstream (was Re:
-	Uploading linux (3.9.4-1))
-Date: Wed, 5 Jun 2013 23:38:52 +0100
-Message-ID: <CAPweEDzk0T+fZ1aW16D8K4XpvRR2GRrOFtfcjzstnmEJWxmREg@mail.gmail.com>
+From: "luke.leighton" <luke.leighton@gmail.com>
+Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
+ Uploading linux (3.9.4-1))
+Date: Wed, 5 Jun 2013 23:47:13 +0100
+Message-ID: <CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
 References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
 	<CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
-	<CAPweEDzDC87KmOQ=0hyPcjPtPsRuXHxNTs97vbEqVNNnix69rA@mail.gmail.com>
-	<19865137.ey1FePPnmD@flatron>
-Reply-To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
+	<51AFA6DD.3000202@wwwdotorg.org>
+	<CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
+	<1370469574.18839.33.camel@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <arm-netbook-bounces@lists.phcomp.co.uk>
-In-Reply-To: <19865137.ey1FePPnmD@flatron>
-List-Unsubscribe: <http://lists.phcomp.co.uk/mailman/options/arm-netbook>,
-	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=unsubscribe>
-List-Archive: <http://lists.phcomp.co.uk/pipermail/arm-netbook/>
-List-Post: <mailto:arm-netbook@lists.phcomp.co.uk>
-List-Help: <mailto:arm-netbook-request@lists.phcomp.co.uk?subject=help>
-List-Subscribe: <http://lists.phcomp.co.uk/mailman/listinfo/arm-netbook>,
-	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=subscribe>
-Errors-To: arm-netbook-bounces@lists.phcomp.co.uk
-Sender: "arm-netbook" <arm-netbook-bounces@lists.phcomp.co.uk>
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, linux-arm-kernel@lists.infradead.org, debian-kernel@lists.debian.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1370469574.18839.33.camel@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
+Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel@lists.debian.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 5, 2013 at 10:52 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Hi Luke,
+On Wed, Jun 5, 2013 at 10:59 PM, Henrik Nordstr=C3=B6m
+<henrik@henriknordstrom.net> wrote:
 
- allo tomasz :)
+>>  .... and then there's the boot0 and boot1 loaders, these *do* have
 
- ok - much of what you say is duplicated by what russell said, so in
-effect the same reply is relevant, but there's been some cross-over.
-i'll summarise below and cut all but the key question below:
+> no, these are not tiny. boot0 is 24KB to fit the initial embedded SRA=
+M
+> (not cache), but boot1 is on pair with u-boot in size and runs from
+> DRAM.
 
-> I tend to disagree with your view. Is it really our task to convince such
-> companies to work with open source community?
+ btw, please listen to henrik: he knows what he's talking about, as
+you can see :)   henrik, thank you for correcting my technical
+misunderstandings, i'll try to remember them and not propagate
+incorrect stuff.
 
- their sheer overwhelming success provides us with mass-volume
-ultra-low cost hardware.  to not make an effort to accommodate them
-would in this specific instance be a huge missed opportunity,
-responsibility for which currently falls on the shoulders of the sunxi
-community, where that small community is in no way considered
-"authoritative" as an upstream source and thus every single GNU/Linux
-Distro is left in a position of forcing people to follow insane
-non-standard build procedures that are *way* outside of the capability
-of the average person.
-
- so by the linux kernel developers intransigent position, the reach of
-free software as a whole is greatly reduced.  simple logical
-unavoidable conclusion.
-
- please feel free - linux kernel developers - to maintain this
-intransigent position for as long as you find it useful to you to do
-so.  btw, that is a sincere statement, devoid and completely free of
-all and any implicit or explicit additional statements and
-implications.
-
-
->> > Device tree on ARM's goal is to achieve a single kernel across
->> > vendors, not just a single kernel for a single vendor.
->>
->>  you'll be aware that i've mentioned a number of times and have
->> discussed at some length why this is a goal that is completely
->> impossible to achieve [*1].  sadly.
+>>  so the point is: if anyone wishes me to propose to allwinner that
+>> they convert over to devicetree, or any other proposal which involve=
+s
+>> significant low-level changes to their working practices that could
+>> potentially have a massive knock-on effect onto their
+>> multi-million-dollar clients, it had better be a damn good story.
 >
-> I tend to disagree on this as well, but it's another story. Have read one
-> of the discussions on this topic and it seemed to look more like lobbying
-> for one of the standards being promoted by some company,
+> Calm down.
 
- yeahh, that's rather unfortunate.  i went to some lengths to avoid
-mentioning eoma [*1] until there was a natural point at which it
-became difficult *not* to bring it up, not least because i didn't hear
-anyone else presenting any actual real workable solutions.
+ i am - honest!  yes it's a little past my bed-time, but hey...
 
-but, you have to bear in mind a couple of things:
+> It isn't really a significant difference to them outside of
+> the kernel. They do not need to change any of their configuraiton
+> methods, only a small toolchain change in how the resultig images are
+> built to have a corresponding device tree built.
 
-a) i'm a free software developer and advocate.  "business", "lobbying"
-etc. do not come naturally to me.  my associates scream at me
-regularly.
+ henrik, jon (smirl), can i ask you both a favour?  could you write
+something up, preferably short, that i could put forward to allwinner?
+ describing what's needed, who would need to do what and so on.
 
-b) i've been thinking about this incredibly hard problem for at least
-4 years and almost *all* of my background in computing of the past 30
-years leads me naturally towards actually coming up with a solution
 
-c) i'm actually really, really really and truly going about *actively*
-implementing that solution rather than just complaining about it *and*
-i'm inviting free software developers to participate, why, because see
-first sentence of a) above.
+> But it is a fair bit of one-time changes kernel side. And some
+> scratching to figure out how to use/improve/ignore the stuff being
+> mainlined.
+
+ i still also - really - need a good justification for this.
+something which helps explain clearly what the immediate or perhaps
+strategic benefits would be to allwinner, as to why they should accept
+such changes.   i cannot emphasise enough how important that is.
+
+ if someone can please help come up with a good justification as to
+why allwinner should change their working practices, that would be
+enormously helpful i feel, to solving this issue.
+
+ otherwise we are stuck in the current situation which nobody really
+likes.  i'm inviting you - linux kernel developers - i'm giving you an
+opportunity to *fix* things.  you have 2 weeks to come up with a
+solution, which can be presented in a simple format.  that's the
+window of opportunity.
 
 l.
-
-[*1] which is an open standard, not a proprietary locked one.
