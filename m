@@ -1,46 +1,34 @@
-From: Mark Langsdorf <mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] sata highbank: add bit-banged SGPIO driver support
-Date: Thu, 06 Jun 2013 07:14:08 -0500
-Message-ID: <51B07D10.2060609@calxeda.com>
-References: <1369945051-2582-2-git-send-email-mark.langsdorf@calxeda.com>
- <1370471508-30806-1-git-send-email-mark.langsdorf@calxeda.com>
- <20130605231517.GP10693@mtj.dyndns.org>
+From: "luke.leighton" <luke.leighton@gmail.com>
+Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
+ Uploading linux (3.9.4-1))
+Date: Thu, 6 Jun 2013 13:19:15 +0100
+Message-ID: <CAPweEDzrYL5c9v1T=nTcyv9RPrJ-TEnCyyjpHQnhXXJY-32=5g@mail.gmail.com>
+References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+	<CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
+	<51AFA6DD.3000202@wwwdotorg.org>
+	<CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
+	<1370469574.18839.33.camel@localhost>
+	<CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
+	<CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
+	<CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com>
+	<CAKON4Oz79hUE_ReAqjeynwL6ZWntX2W1uw3YOg0G2AiY7Gjs=g@mail.gmail.com>
+	<CAPweEDyO+Sc1aQ64HBeh1OSzmPNsnwMwEo5kbHSan5vw_YEjXA@mail.gmail.com>
+	<1370477756.20454.65.camel@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130605231517.GP10693-9pTldWuhBndy/B6EtB590w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1370477756.20454.65.camel@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
+Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel@lists.debian.org
 List-Id: devicetree@vger.kernel.org
 
-,On 06/05/2013 06:15 PM, Tejun Heo wrote:
-> Hello,
-> 
-> On Wed, Jun 05, 2013 at 05:31:48PM -0500, Mark Langsdorf wrote:
->> +static void ecx_parse_sgpio(struct ecx_plat_data *pdata, u32 port, u32 state)
->> +{
->> +	if (state & ECX_ACTIVITY_BITS)
->> +		pdata->sgpio_pattern |= sgpio_bit_shift(pdata, port,
->> +						ECX_ACTIVITY_SHIFT);
->> +	else
->> +		pdata->sgpio_pattern &= sgpio_bit_shift(pdata, port,
->> +						ECX_ACTIVITY_SHIFT);
-> 
-> Shouldn't it be "&= ~" instead of "&="?  You're trying to turn the bit
-> off, right?
+On Thu, Jun 6, 2013 at 1:15 AM, Henrik Nordstr=C3=B6m
+<henrik@henriknordstrom.net> wrote:
 
-Oops. Thanks!
+> conditions. I don't know what you really mean here, only that it's no=
+t
+> "target market".
 
---Mark Langsdorf
-Calxeda, Inc.
+ mass-volume tablet, mass-volume IPTV box.  android OS, nothing else.
