@@ -1,28 +1,89 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] of/base: fix typos
-Date: Thu, 06 Jun 2013 01:09:15 +0100
-Message-ID: <20130606000915.BFE4F3E10E4@localhost>
-References: <1367906651-5058-1-git-send-email-prabhakar.csengg@gmail.com> <CA+V-a8sf-SVKiw6wjazV3VRd78efOU9qTO_qtr3RbOtrTifwgw@mail.gmail.com> <CA+V-a8us-dzX4BGzWOO0AbBxVCv-9LpitEgzFgNtx3uStj4R0w@mail.gmail.com> <CACRpkdbFNuLPnpRP11_eJDn7zTXR3ou88XTzHwpVdcDjurwt0g@mail.gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbFNuLPnpRP11_eJDn7zTXR3ou88XTzHwpVdcDjurwt0g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH RFC 3/3] clk: dt: binding for basic divider clock
+Date: Thu, 6 Jun 2013 02:09:43 +0200
+Message-ID: <201306060209.43486.heiko@sntech.de>
+References: <1370281990-15090-1-git-send-email-mturquette@linaro.org>
+ <CAHCPf3tZAbdVZPuKOjxJbCOAE76Pa6wMVHjnBRPhSpj0aMBMHg@mail.gmail.com>
+ <20130604192243.10233.76496@quantum>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130604192243.10233.76496@quantum>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 31 May 2013 11:34:49 +0200, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Fri, May 31, 2013 at 11:30 AM, Prabhakar Lad
-> <prabhakar.csengg@gmail.com> wrote:
+Am Dienstag, 4. Juni 2013, 21:22:43 schrieb Mike Turquette:
+> Quoting Matt Sealey (2013-06-04 10:39:53)
 > 
-> > Hi Linus,
-> (...)
-> > Can you pick this patch ?
+> > On Tue, Jun 4, 2013 at 12:11 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> 
+wrote:
+> > > On 06/03/13 10:53, Mike Turquette wrote:
+> > >> +Required properties:
+> > >> +- compatible : shall be "divider-clock".
+> > >> +- #clock-cells : from common clock binding; shall be set to 0.
+> > >> +- clocks : link to phandle of parent clock
+> > >> +- reg : base address for register controlling adjustable divider
+> > >> +- mask : arbitrary bitmask for programming the adjustable divider
+> > >> +
+> > >> +Optional properties:
+> > >> +- clock-output-names : From common clock binding.
+> > >> +- table : array of integer pairs defining divisors & bitfield values
+> > >> +- shift : number of bits to shift the mask, defaults to 0 if not
+> > >> present +- index_one : valid divisor programming starts at 1, not
+> > >> zero +- index_power_of_two : valid divisor programming must be a
+> > >> power of two +- allow_zero : implies index_one, and programming zero
+> > >> results in +  divide-by-one
+> > > 
+> > > It's preferred that property names have dashes instead of underscores.
+> > 
+> > I think I have a suggestion or two here..
+> > 
+> > I mailed one to Mike earlier, I have had some mailing list problems
+> > which I think are solved now..
+> > 
+> > If you provide a mask for programming the divider, surely the "shift"
+> > property is therefore redundant. Unless some device has a completely
+> > strange way of doing things and uses two seperated bitfields for
+> > programming in the same register, the shift value is simply a function
+> > of ffs() on the mask, isn't it? It is nice to put the information
+> > specifically in the device tree, but where a shift is not specified
+> > it'd probably be a good idea to go about deriving that value that way
+> > anyway, right, and if we're doing that.. why specify it?
 > 
-> No. I'm not a maintainer of drivers/of.
+> Shift is optional.  Also I think the integer values in a DTS are
+> 32-bits, so if some day someone had a clock driver that needed to write
+> to a 64-bit register then shift might be useful there, combined with a
+> 32-bit mask.  Or perhaps dtc will have a 64-bit value for that case?  I
+> don't know.
 > 
-> Only Grant and Rob can take changes to drivers/of.
-> (Check MAINTAINERS.)
+> I certainly do see your point about only using the mask, and the
+> original clock basic types did this a while back before the shift+width
+> style came into vogue.
+> 
+> If other reviewers also want to use a pure 32-bit mask and no shift then
+> I'll drop it in the next round.
 
-Applied.
+I would object to dropping the shift :-)
 
-g.
+If you look at the two clk extensions in my rockchip patches you can see that 
+they use a different regiment to set values.
+
+Using the lower 16 bits to set the value and the upper 16 bit to mark which 
+values are changed, i.e. (mask << shift + 16) | (val << shift).
+
+(I'm not sure, if the naming or solution could be improved though)
+
+
+Heiko
