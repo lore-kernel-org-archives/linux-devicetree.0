@@ -1,179 +1,173 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: [PATCH V2 1/4] ARM: dts: omap5: Rename omap5-evm to omap5-uevm
-Date: Thu, 6 Jun 2013 23:18:36 +0530
-Message-ID: <1370540919-4339-2-git-send-email-r.sricharan@ti.com>
-References: <1370540919-4339-1-git-send-email-r.sricharan@ti.com>
+From: Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH] ARM: tegra: add basic SecureOS support
+Date: Thu, 6 Jun 2013 19:08:24 +0100
+Message-ID: <20130606180824.GC3320@localhost.localdomain>
+References: <1370503687-17767-1-git-send-email-acourbot@nvidia.com>
+ <51B0BC80.9040007@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1370540919-4339-1-git-send-email-r.sricharan@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org, r.sricharan@ti.com, tony@atomide.com, rnayak@ti.com, b-cousson@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <51B0BC80.9040007@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: gnurou@gmail.com, devicetree-discuss@lists.ozlabs.org, Chris Johnson <CJohnson@nvidia.com>, linux-kernel@vger.kernel.org, Karan Jhavar <kjhavar@nvidia.com>, Matthew Longnecker <MLongnecker@nvidia.com>, Alexandre Courbot <acourbot@nvidia.com>, Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The uevm is the official board supported for the OMAP5 soc
-in mainline. The uevm has an OMAP5432 with a DDR3 memory.
-Renaming the board dts file and adding the following cleanups.
+On Thu, Jun 06, 2013 at 10:44:48AM -0600, Stephen Warren wrote:
+> On 06/06/2013 01:28 AM, Alexandre Courbot wrote:
+> > Boot loaders on some Tegra devices can be unlocked but do not let the
+> > system operate without SecureOS. SecureOS prevents access to some
+> > registers and requires the operating system to perform certain
+> > operations through Secure Monitor Calls instead of directly accessing
+> > the hardware.
+> > 
+> > This patch introduces basic SecureOS support for Tegra. SecureOS support
+> > can be enabled by adding a "nvidia,secure-os" property to the "chosen"
+> > node of the device tree.
+> 
+> I suspect "SecureOS" here is the name of a specific implementation of a
+> secure monitor, right? It's certainly a very unfortunate name, since it
+> sounds like a generic concept rather than a specific implementation:-(
+> 
+> There certainly could be (and I believe are in practice?) multiple
+> implementation of a secure monitor for Tegra. Presumably, each of those
+> implementations has (or could have) a different definition for what SVC
+> calls it supports, their parameters, etc.
+> 
+> I think we need to separate the concept of support for *a* secure
+> monitor, from support for a *particular* secure monitor.
 
- * There are no devices connected on I2C 2,3,4 buses. So remove
-   the pinmux data for the same.
+There is no fixed set of functionality implemented by these interfaces,
+so it might be better to think in terms of a generic "firmware" concept.
 
- * DDR3 memory is used in the uevm. Neither DVFS or temperature
-   polling is supported with DDR3. So remove the DDR3 device and
-   emif nodes.
 
- * Keypad is not supported on uevm. So remove the device node.
+Come to think of it...
 
-Signed-off-by: Sricharan R <r.sricharan@ti.com>
----
- arch/arm/boot/dts/Makefile                         |    2 +-
- .../arm/boot/dts/{omap5-evm.dts => omap5-uevm.dts} |   83 +-------------------
- 2 files changed, 4 insertions(+), 81 deletions(-)
- rename arch/arm/boot/dts/{omap5-evm.dts => omap5-uevm.dts} (73%)
+One option could be to have some standard baseline firmware calling
+conventions, so that we could have a few specific backends -- perhaps
+this could be built on the "method" notion used by PSCI
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index f0895c5..13b86bf 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -149,7 +149,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
- 	omap4-panda-es.dtb \
- 	omap4-var-som.dtb \
- 	omap4-sdp.dtb \
--	omap5-evm.dtb \
-+	omap5-uevm.dtb \
- 	am335x-evm.dtb \
- 	am335x-evmsk.dtb \
- 	am335x-bone.dtb
-diff --git a/arch/arm/boot/dts/omap5-evm.dts b/arch/arm/boot/dts/omap5-uevm.dts
-similarity index 73%
-rename from arch/arm/boot/dts/omap5-evm.dts
-rename to arch/arm/boot/dts/omap5-uevm.dts
-index 22e9ee8..843a001 100644
---- a/arch/arm/boot/dts/omap5-evm.dts
-+++ b/arch/arm/boot/dts/omap5-uevm.dts
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 as
-@@ -8,11 +8,10 @@
- /dts-v1/;
- 
- #include "omap5.dtsi"
--#include "samsung_k3pe0e000b.dtsi"
- 
- / {
--	model = "TI OMAP5 EVM board";
--	compatible = "ti,omap5-evm", "ti,omap5";
-+	model = "TI OMAP5 uEVM board";
-+	compatible = "ti,omap5-uevm", "ti,omap5";
- 
- 	memory {
- 		device_type = "memory";
-@@ -88,27 +87,6 @@
- 		>;
- 	};
- 
--	i2c2_pins: pinmux_i2c2_pins {
--		pinctrl-single,pins = <
--			0x178 (PIN_INPUT | MUX_MODE0)		/* i2c2_scl */
--			0x17a (PIN_INPUT | MUX_MODE0)		/* i2c2_sda */
--		>;
--	};
--
--	i2c3_pins: pinmux_i2c3_pins {
--		pinctrl-single,pins = <
--			0x13a (PIN_INPUT | MUX_MODE0)		/* i2c3_scl */
--			0x13c (PIN_INPUT | MUX_MODE0)		/* i2c3_sda */
--		>;
--	};
--
--	i2c4_pins: pinmux_i2c4_pins {
--		pinctrl-single,pins = <
--			0xb8 (PIN_INPUT | MUX_MODE0)		/* i2c4_scl */
--			0xba (PIN_INPUT | MUX_MODE0)		/* i2c4_sda */
--		>;
--	};
--
- 	i2c5_pins: pinmux_i2c5_pins {
- 		pinctrl-single,pins = <
- 			0x184 (PIN_INPUT | MUX_MODE0)		/* i2c5_scl */
-@@ -175,39 +153,6 @@
- 	clock-frequency = <400000>;
- };
- 
--&i2c2 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c2_pins>;
--
--	clock-frequency = <400000>;
--
--	/* Pressure Sensor */
--	bmp085@77 {
--		compatible = "bosch,bmp085";
--		reg = <0x77>;
--	};
--};
--
--&i2c3 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c3_pins>;
--
--	clock-frequency = <400000>;
--};
--
--&i2c4 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&i2c4_pins>;
--
--	clock-frequency = <400000>;
--
--	/* Temperature Sensor */
--	tmp102@48{
--		compatible = "ti,tmp102";
--		reg = <0x48>;
--	};
--};
--
- &i2c5 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c5_pins>;
-@@ -215,32 +160,10 @@
- 	clock-frequency = <400000>;
- };
- 
--&keypad {
--	keypad,num-rows = <8>;
--	keypad,num-columns = <8>;
--	linux,keymap = <0x02020073	/* VOLUP */
--			0x02030072	/* VOLDOWM */
--			0x020400e7	/* SEND */
--			0x02050066	/* HOME */
--			0x0206006b	/* END */
--			0x020700d9>;	/* SEARCH */
--	linux,input-no-autorepeat;
--};
--
- &mcbsp3 {
- 	status = "disabled";
- };
- 
--&emif1 {
--	cs1-used;
--	device-handle = <&samsung_K3PE0E000B>;
--};
--
--&emif2 {
--	cs1-used;
--	device-handle = <&samsung_K3PE0E000B>;
--};
--
- &mcspi1 {
- 
- };
--- 
-1.7.9.5
+(see Documentation/devicetree/bindings/arm/psci.tst; this is probably
+the most developed firmware interface binding we have today)
 
+There, method = "smc" means:
+
+	populate registers in a certain way
+	SMC #0
+	return results from register to caller in a certain way
+
+and method = "hvc" means:
+
+	populate registers in a certain way
+	HVC #0
+	return results from register to caller in a certain way
+
+
+The backend method arch/arm/kernel/psci.c:__invoke_psci_fn_smc()
+is probably close to what's needed for the tegra secureos case,
+so in theory it could be common, along with some of the DT binding
+conventions.
+
+The backends, and the convention for binding a firmware interface
+to the appropriate backend, could then theoretically be handled
+by a common framework.
+
+Firmwares with strange calling conventions which don't fit the
+standard backend could still add another one, within the framework.
+
+> 
+> > diff --git a/Documentation/devicetree/bindings/arm/tegra.txt b/Documentation/devicetree/bindings/arm/tegra.txt
+> 
+> > +node:
+> > +
+> > +  nvidia,secure-os: enable SecureOS.
+> 
+> ... as such, I think some work is needed here to allow specification of
+> which secure monitor is present and/or which secure monitor ABI it
+> implements. The suggestion to use a specific DT node, and hence use
+> compatible values for this, seems reasonable. Alternatively, perhaps:
+> 
+> nvidia,secure-monitor = "name_of_vendor_or_SMC_ABI";
+
+So, something like
+
+	foo-firmware {
+		compatible = "vendor1,foo-firmware-1.0", "vendor1,foo-firmware";
+		method = "smc";
+
+		// ...
+	};
+
+	bar-firmware {
+		compatible = "vendor2,bar-firmware-1.6", "vendor2,bar-firmware";
+		method = "smc";
+
+		// ...
+	};
+
+Could make sense.
+
+...where we would require all new firmware interface bindings to
+include the "-firmware" in their node names and compatible strings
+(with a version suffix encouraged for the compatible strings, where
+relevant).
+
+This could be a good opportunity to make things a bit more consistent,
+otherwise we will just reinvent this over and over.
+
+
+(Unfortunately the node for PSCI offers no clue that it describes a
+firmware interface, unless you go and read the binding documentation.
+It may be too late to fix that, but we can at least avoid repeating
+the mistake.)
+
+
+> might be reasonable, although using a node would allow ABI-specific
+> additional properties to be defined should they be needed, so I guess I
+> would lean towards that.
+> 
+> Similar comments may apply to the CONFIG_ option and description,
+> filenames, etc.
+> 
+> > diff --git a/arch/arm/mach-tegra/secureos.c b/arch/arm/mach-tegra/secureos.c
+> 
+> > +void __init tegra_init_secureos(void)
+> > +{
+> > +	struct device_node *node = of_find_node_by_path("/chosen");
+> > +
+> > +	if (node && of_property_read_bool(node, "nvidia,secure-os"))
+> > +		register_firmware_ops(&tegra_firmware_ops);
+> > +}
+> 
+> I'm tempted to think that function should /always/ exist an be called
+> (so no dummy inline in secureos.h).
+> 
+> In particular, what happens when a kernel without CONFIG_SECUREOS
+> enabled is booted under a secure monitor. Presumably we want the init
+> code to explicitly check for this condition, and either BUG(), or do
+> something to disable any features (like SMP) that require SVCs?
+> 
+> So, the algorithm here might be more like:
+> 
+> find node
+> if node exists
+>     if (!IS_ENABLED(SECURE_OS))
+>         BUG/WARN/...
+>     else
+>         register_firmware_ops()
+
+Agreed, something like that would be needed, but it depends on the
+firmware interface being described.
+
+Cheers
+---Dave
