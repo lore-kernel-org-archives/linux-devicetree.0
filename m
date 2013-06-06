@@ -1,89 +1,72 @@
-From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH RFC 3/3] clk: dt: binding for basic divider clock
-Date: Thu, 6 Jun 2013 02:09:43 +0200
-Message-ID: <201306060209.43486.heiko@sntech.de>
-References: <1370281990-15090-1-git-send-email-mturquette@linaro.org>
- <CAHCPf3tZAbdVZPuKOjxJbCOAE76Pa6wMVHjnBRPhSpj0aMBMHg@mail.gmail.com>
- <20130604192243.10233.76496@quantum>
+From: Henrik =?ISO-8859-1?Q?Nordstr=F6m?= <henrik@henriknordstrom.net>
+Subject: Re: getting allwinner SoC support upstream (was Re:
+ Uploading linux (3.9.4-1))
+Date: Thu, 06 Jun 2013 02:15:56 +0200
+Message-ID: <1370477756.20454.65.camel@localhost>
+References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+	<CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
+	<51AFA6DD.3000202@wwwdotorg.org>
+	<CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
+	<1370469574.18839.33.camel@localhost>
+	<CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
+	<CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
+	<CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com>
+	<CAKON4Oz79hUE_ReAqjeynwL6ZWntX2W1uw3YOg0G2AiY7Gjs=g@mail.gmail.com>
+	<CAPweEDyO+Sc1aQ64HBeh1OSzmPNsnwMwEo5kbHSan5vw_YEjXA@mail.gmail.com>
+Reply-To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130604192243.10233.76496@quantum>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+Return-path: <arm-netbook-bounces@lists.phcomp.co.uk>
+In-Reply-To: <CAPweEDyO+Sc1aQ64HBeh1OSzmPNsnwMwEo5kbHSan5vw_YEjXA@mail.gmail.com>
+List-Unsubscribe: <http://lists.phcomp.co.uk/mailman/options/arm-netbook>,
+	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=unsubscribe>
+List-Archive: <http://lists.phcomp.co.uk/pipermail/arm-netbook/>
+List-Post: <mailto:arm-netbook@lists.phcomp.co.uk>
+List-Help: <mailto:arm-netbook-request@lists.phcomp.co.uk?subject=help>
+List-Subscribe: <http://lists.phcomp.co.uk/mailman/listinfo/arm-netbook>,
+	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=subscribe>
+Errors-To: arm-netbook-bounces@lists.phcomp.co.uk
+Sender: "arm-netbook" <arm-netbook-bounces@lists.phcomp.co.uk>
+To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
+Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel@lists.debian.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 4. Juni 2013, 21:22:43 schrieb Mike Turquette:
-> Quoting Matt Sealey (2013-06-04 10:39:53)
+tor 2013-06-06 klockan 00:52 +0100 skrev luke.leighton:
+> > How is the Allwinner kernel going to load the driver for the pca9532?
+> > The mainline pca9532 driver does not understand fex so it can't read
+> > the necessary initialization data.
 > 
-> > On Tue, Jun 4, 2013 at 12:11 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> 
-wrote:
-> > > On 06/03/13 10:53, Mike Turquette wrote:
-> > >> +Required properties:
-> > >> +- compatible : shall be "divider-clock".
-> > >> +- #clock-cells : from common clock binding; shall be set to 0.
-> > >> +- clocks : link to phandle of parent clock
-> > >> +- reg : base address for register controlling adjustable divider
-> > >> +- mask : arbitrary bitmask for programming the adjustable divider
-> > >> +
-> > >> +Optional properties:
-> > >> +- clock-output-names : From common clock binding.
-> > >> +- table : array of integer pairs defining divisors & bitfield values
-> > >> +- shift : number of bits to shift the mask, defaults to 0 if not
-> > >> present +- index_one : valid divisor programming starts at 1, not
-> > >> zero +- index_power_of_two : valid divisor programming must be a
-> > >> power of two +- allow_zero : implies index_one, and programming zero
-> > >> results in +  divide-by-one
-> > > 
-> > > It's preferred that property names have dashes instead of underscores.
-> > 
-> > I think I have a suggestion or two here..
-> > 
-> > I mailed one to Mike earlier, I have had some mailing list problems
-> > which I think are solved now..
-> > 
-> > If you provide a mask for programming the divider, surely the "shift"
-> > property is therefore redundant. Unless some device has a completely
-> > strange way of doing things and uses two seperated bitfields for
-> > programming in the same register, the shift value is simply a function
-> > of ffs() on the mask, isn't it? It is nice to put the information
-> > specifically in the device tree, but where a shift is not specified
-> > it'd probably be a good idea to go about deriving that value that way
-> > anyway, right, and if we're doing that.. why specify it?
+>  jon: you're immediately outside of the target market for which
+> allwinner designed and deployed script.fex.
+
+You missed the point. Mainlne Kernel drivers do take advantege of DT to
+ease their bindings and configuration, much further than the fex can
+express.
+
+The exact same thing is experienced in designing a tablet. You add a
+pheriperal device, and it needs to be configured somehow. DT does this
+and it integrated in the kernel framework. fex also attemtps in doing
+part of this, but lacks integration and requires much more driver
+patching to fly.
+
+And I don't see how you can say that pca9532 is off the grid in the
+target market. It would fit nicely as a key backlight / edge colour
+controller in a tablet to give the tablet a personal touch.
+
+> > fex is only supported on the small number of peripheral chips
+> > Allwinner has blessed. Use any chip outside of that set and it isn't
+> > going to boot.
 > 
-> Shift is optional.  Also I think the integer values in a DTS are
-> 32-bits, so if some day someone had a clock driver that needed to write
-> to a 64-bit register then shift might be useful there, combined with a
-> 32-bit mask.  Or perhaps dtc will have a 64-bit value for that case?  I
-> don't know.
-> 
-> I certainly do see your point about only using the mask, and the
-> original clock basic types did this a while back before the shift+width
-> style came into vogue.
-> 
-> If other reviewers also want to use a pure 32-bit mask and no shift then
-> I'll drop it in the next round.
+>  eeexactly.  i did say "target market".
 
-I would object to dropping the shift :-)
+Yes you repeat that over an over. But what does it mean?
 
-If you look at the two clk extensions in my rockchip patches you can see that 
-they use a different regiment to set values.
+I think what you really mean is something else more in the line of "ODMs
+not allowed to step outside a very narrow range of possible designs or
+using less than a handful approved providers", typical lockin
+conditions. I don't know what you really mean here, only that it's not
+"target market".
 
-Using the lower 16 bits to set the value and the upper 16 bit to mark which 
-values are changed, i.e. (mask << shift + 16) | (val << shift).
-
-(I'm not sure, if the naming or solution could be improved though)
-
-
-Heiko
+Regards
+Henrik
