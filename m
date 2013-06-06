@@ -1,37 +1,74 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM i.MX53: tqma53: Fix interrupt polarity for the
- mc34708
-Date: Thu, 6 Jun 2013 16:43:38 +0800
-Message-ID: <20130606084336.GA11305@S2101-09.ap.freescale.net>
-References: <1370337150-18487-1-git-send-email-s.trumtrar@pengutronix.de>
- <1370337150-18487-2-git-send-email-s.trumtrar@pengutronix.de>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 1/1] of/irq: store IRQ trigger/level in struct resource
+ flags
+Date: Thu, 06 Jun 2013 10:47:55 +0200
+Message-ID: <51B04CBB.1000405@collabora.co.uk>
+References: <1365148088-11175-1-git-send-email-javier.martinez@collabora.co.uk> <20130605233422.3D6DE3E10E4@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1370337150-18487-2-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130605233422.3D6DE3E10E4@localhost>
+Sender: linux-omap-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: jgchunter@gmail.com, Rob Herring <rob.herring@calxeda.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree-discuss@lists.ozlabs.org, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Stephen Warren <swarren@nvidia.com>, linux-omap <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 04, 2013 at 11:12:27AM +0200, Steffen Trumtrar wrote:
-> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> It's active high, not active low.
-> 
-> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On 06/06/2013 01:34 AM, Grant Likely wrote:
+> On Fri,  5 Apr 2013 09:48:08 +0200, Javier Martinez Canillas <javier.martinez@collabora.co.uk> wrote:
+> [...]
+>> irq_of_parse_and_map() calls to irq_create_of_mapping() which calls to
+>> the correct xlate function handler according to "#interrupt-cells"
+>> (irq_domain_xlate_onecell or irq_domain_xlate_twocell) and to
+>> irq_set_irq_type() to set the IRQ type.
+>> 
+>> But the type is never returned so it can't be saved on the IRQ struct
+>> resource flags member.
+>> 
+>> This means that drivers that need the IRQ type/level flags defined in
+>> the DT won't be able to get it.
+>> 
+>> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> [...]
+>> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+>> index 535cecf..98aec57 100644
+>> --- a/include/linux/of_irq.h
+>> +++ b/include/linux/of_irq.h
+>> @@ -66,6 +66,10 @@ extern int of_irq_map_one(struct device_node *device, int index,
+>>  extern unsigned int irq_create_of_mapping(struct device_node *controller,
+>>  					  const u32 *intspec,
+>>  					  unsigned int intsize);
+>> +extern unsigned int irq_create_of_mapping_type(struct device_node *controller,
+>> +					       const u32 *intspec,
+>> +					       unsigned int intsize,
+>> +					       unsigned int *otype);
 
-Applied 1 ~ 3.
+Hi Grant, thanks a lot for your feedback.
 
-Shawn
+> 
+> I count 11 users of irq_create_of_mapping(). That's a managable number
+> to update.
+
+Yes, but since of_irq_to_resource() doesn't call irq_create_of_mapping()
+directly but it does though irq_of_parse_and_map(), then this function signature
+has to be modified too.
+
+I'm counting 223 users of irq_of_parse_and_map() so the change is not that small
+anymore. Another approach is to call of_irq_map_one() and
+irq_create_of_mapping() directly from of_irq_to_resource() instead of using
+irq_of_parse_and_map() but I don't like that...
+
+> Instead of creating a new function, please modify the
+> existing one and split it off into a separate patch.
+
+But that won't break git bisect-ability? or do you mean to first just change the
+functions signatures by adding an argument and update its users and then in a
+separate patch do the actual change to the functions to store the IRQ?
+
+> Otherwise the patch looks fine to me.
+> 
+> g.
+> 
+
+Best regards,
+Javier
