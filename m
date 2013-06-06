@@ -1,65 +1,104 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] spi: spi-omap2-mcspi.c: Add dts for slave device
- configuration.
-Date: Thu, 6 Jun 2013 11:19:19 +0100
-Message-ID: <20130606101919.GQ31367@sirena.org.uk>
-References: <1370432398-7796-1-git-send-email-illia.smyrnov@ti.com>
- <1370432398-7796-2-git-send-email-illia.smyrnov@ti.com>
- <20130605115734.GY31367@sirena.org.uk>
- <51B05FAE.60508@ti.com>
+From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: add basic SecureOS support
+Date: Thu, 6 Jun 2013 19:23:35 +0900
+Message-ID: <51B06327.5030508@nvidia.com>
+References: <1370503687-17767-1-git-send-email-acourbot@nvidia.com> <20130606093524.GM18614@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="NhnzZsTWd+R/yp6D"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51B05FAE.60508@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Illia Smyrnov <x0194613@ti.com>
-Cc: Illia Smyrnov <illia.smyrnov@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Daniel Mack <zonque@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130606093524.GM18614-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Karan Jhavar <kjhavar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Varun Wadekar <vwadekar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Chris Johnson <CJohnson-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 06/06/2013 06:35 PM, Russell King - ARM Linux wrote:
+> On Thu, Jun 06, 2013 at 04:28:07PM +0900, Alexandre Courbot wrote:
+>> +static int __attribute__((used)) __tegra_smc_stack[10];
+>> +
+>> +/*
+>> + * With EABI, subtype and arg already end up in r0, r1 and r2 as they are
+>> + * function arguments, but we prefer to play safe here and explicitly move
+>> + * these values into the expected registers anyway. mov instructions without
+>> + * any side-effect are turned into nops by the assembler, which limits
+>> + * overhead.
+>
+> No they aren't.  They will be preserved as:
+> 	mov r0, r0
+> 	mov r1, r1
+> 	mov r2, r2
 
---NhnzZsTWd+R/yp6D
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I'm pretty sure I checked with objdump and saw these replaced by nops at 
+some point, but for some reason I cannot get that behavior again. So 
+simply put, my statement is wrong indeed.
 
-On Thu, Jun 06, 2013 at 01:08:46PM +0300, Illia Smyrnov wrote:
-> On 06/05/2013 02:57 PM, Mark Brown wrote:
+> Moreover, things will go wrong if the compiler decides for whatever reason
+> to move 'arg' into r0 before calling your code sequence.  So really this
+> is quite fragile.
+>
+> There's also no point in mentioning EABI in the above paragraph; all ARM
+> ABIs under Linux have always placed the arguments in r0..r3 and then on
+> the stack.  You can assert that this is always true by using the __asmeq()
+> macro.
 
-> Turbo mode gives the expected results not for all cases. There are
-> some limitations:
-> - works only if a single channel is enabled (no effect when several
-> channels are enable);
-> - improves the throughput on RX direction only;
-> - effective only when a transfer exceeds two words. For single SPI
-> word transfers OMAP TRM [1] recommends deactivate turbo mode.
+Good to know, thanks.
 
-> So it is useful to have the property in DT, that allow us to switch
-> turbo mode off/on for certain slave.
+> Also...
+>
+>> + */
+>> +static void tegra_generic_smc(u32 type, u32 subtype, u32 arg)
+>> +{
+>> +	asm volatile(
+>> +		".arch_extension	sec\n\t"
+>> +		"ldr	r3, =__tegra_smc_stack\n\t"
+>> +		"stmia	r3, {r4-r12, lr}\n\t"
+>
+> using a statically allocated area to save the registers in this way is
+> probably a bad move; although the hotplug code guarantees that there
+> will be no concurrency between CPU hotplug operations, this sets a
+> precident for it being used in places where no such protection exists.
 
-Why?  These sound like conditions that can readily be detected at
-runtime.
+Indeed. This function will be called from other places in the future, 
+and for these we cannot assume there will be no concurrency.
 
---NhnzZsTWd+R/yp6D
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> What is wrong with stacking r4-r12, lr onto the SVC stack?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
+Nothing, actually. /o\
 
-iQIcBAEBAgAGBQJRsGIkAAoJELSic+t+oim9RocP/R1iT4kg2Q+gyyMmYSWK+dyY
-CYCn6FZ9drlQKYYaQTqnr8eCpDL2/6gPzRbF+xhBB6Zp1AGedlT9qdvQqySVGxCZ
-0CjtipwXfm7n+Nn5doXlx+SbpvUtKSJBY4yPR94/tEBJvshw5LODBghMiUgIPLtv
-kx2b6ot7ma+Lliw8NUa7Js+dDCgArYz9dTK8Kxezz0/Ujlfv1eeu9SuhwakaT5eQ
-JvsgqNHRSPgkcWpstU2zOpiqV9Fd9SoyxD7SJ8RcKsrKJ1zFP82vDMQOOG7oBcMj
-n3/qVtzAiPl1Vmj0qljZsf3EhLzyxRBxPtr3oRx5KfhaRI9rh2aOrFpy92K5L573
-cT9FOiGC9zvr7mCuPA1sGsOBl7zN7RzBP42meS4qSJbVUNpMFvZlr+bCGdUluC2x
-fDYHoCKyJGkvgU2esotWg9/bTfe5wGbGu1e+ian5bJHZMagfnAkmw3Yz1abpXfgI
-zZAm7uqu6g8Se+mHqaNv4WeHf+QdT9NU4qXbcEro/36YyP4bn1KI2CBjyNa2v3ov
-DOFEezQO6pUMmhVGM7jG9lfLFXj+Ara5i4VrfMb7KJKveU49AKewVUOM7E1YCOpV
-drZahuIHYPnUIFOB/lddMYPJ2MketnjBV7qW1ZUO+bay9jzPKQfl1/4b2Uu5WMSa
-rMamq1XMSMk1SybCmHgB
-=kwNA
------END PGP SIGNATURE-----
+> You don't
+> save the SVC stack pointer, so one can only assume that your SMC
+> implmentation preserves this (if it doesn't, that's yet another bug
+> with this assembly code.)
 
---NhnzZsTWd+R/yp6D--
+SVC stack pointer is ok AFAICT.
+
+> Combining these two issues, you're probably far better off using an
+> __attribute__((naked)) function for this - which means you get to
+> write the entire function in assembly code without any compiler
+> interference:
+ >
+> static void __attribute__((naked)) tegra_generic_smc(u32 type, u32 subtype, u32 arg)
+> {
+> 	asm volatile(
+> 		".arch_extension	sec\n\t"
+> 		"stmfd	sp!, {r4 - r12, lr}\n\t"
+> 		__asmeq("%0", "r0")
+> 		__asmeq("%1", "r1")
+> 		__asmeq("%2", "r2")
+> 		"mov	r3, #0\n\t"
+> 		"mov	r4, #0\n\t"
+> 		"dsb\n\t"
+> 		"smc	#0\n\t"
+> 		"ldmfd	sp!, {r4 - r12, pc}"
+> 		:
+> 		: "r" (type), "r" (subtype), "r" (arg)
+> 		: "memory");
+> }
+
+Well, that works beautifully indeed, and results in a much smaller 
+function that does nothing more beyond what's needed. On top of that, I 
+feel enlightened.
+
+Thanks, I will resubmit a fixed version soon.
+Alex.
