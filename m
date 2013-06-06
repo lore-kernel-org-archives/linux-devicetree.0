@@ -1,30 +1,77 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] ARM: tegra: add basic SecureOS support
-Date: Thu, 06 Jun 2013 10:28:32 -0600
-Message-ID: <51B0B8B0.3050503@wwwdotorg.org>
-References: <1370503687-17767-1-git-send-email-acourbot@nvidia.com> <1740292.8Sz57ytBcM@flatron> <51B0667D.30801@nvidia.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/4] mmc: sh_mmcif: add support for Device Tree DMA bindings
+Date: Thu, 06 Jun 2013 20:38:46 +0400
+Message-ID: <51B0BB16.6060401@cogentembedded.com>
+References: <1370533588-23642-1-git-send-email-g.liakhovetski@gmx.de> <1370533588-23642-2-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51B0667D.30801@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Courbot <acourbot@nvidia.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Joseph Lo <josephl@nvidia.com>, Karan Jhavar <kjhavar@nvidia.com>, Varun Wadekar <vwadekar@nvidia.com>, Chris Johnson <CJohnson@nvidia.com>, Matthew Longnecker <MLongnecker@nvidia.com>, "gnurou@gmail.com" <gnurou@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1370533588-23642-2-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-sh@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Chris Ball <cjb@laptop.org>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/06/2013 04:37 AM, Alex Courbot wrote:
-> Hi Tomasz,
-> 
-> On 06/06/2013 07:17 PM, Tomasz Figa wrote:
-...
->> I think this patch could be split into several patches:
->>   - add support for firmware
->>   - split reset function
->>   - add reset support using firmware.
-> 
-> Mmm possibly yes, but I wonder if that would not be too much splitting.
-> Stephen?
+Hello.
 
-That's probably fine. It might make bisection easier if there are
-regressions.
+On 06/06/2013 07:46 PM, Guennadi Liakhovetski wrote:
+
+> To use DMA in the Device Tree case the driver has to be modified
+> to use suitable API to obtain DMA channels.
+>
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+> ---
+>   drivers/mmc/host/sh_mmcif.c |   29 ++++++++++++++++++-----------
+>   1 files changed, 18 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sh_mmcif.c b/drivers/mmc/host/sh_mmcif.c
+> index 06caaae..a0937ae 100644
+> --- a/drivers/mmc/host/sh_mmcif.c
+> +++ b/drivers/mmc/host/sh_mmcif.c
+> @@ -386,25 +386,30 @@ static void sh_mmcif_request_dma(struct sh_mmcif_host *host,
+>   
+>   	host->dma_active = false;
+>   
+> -	if (!pdata)
+> -		return;
+> -
+> -	if (pdata->slave_id_tx <= 0 || pdata->slave_id_rx <= 0)
+> -		return;
+> +	if (pdata) {
+> +		if (pdata->slave_id_tx <= 0 || pdata->slave_id_rx <= 0)
+> +			return;
+> +	} else {
+> +		if (!host->pd->dev.of_node)
+
+   Why not *else if*?
+
+> +			return;
+> +	}
+>   
+>   	/* We can only either use DMA for both Tx and Rx or not use it at all */
+>   	dma_cap_zero(mask);
+>   	dma_cap_set(DMA_SLAVE, mask);
+>   
+> -	host->chan_tx = dma_request_channel(mask, shdma_chan_filter,
+> -					    (void *)pdata->slave_id_tx);
+> +	host->chan_tx = dma_request_slave_channel_compat(mask, shdma_chan_filter,
+> +				pdata ? (void *)pdata->slave_id_tx : NULL,
+> +				&host->pd->dev, "tx");
+
+    Could you leave the indentation unchanged here?
+
+> @@ -412,15 +417,17 @@ static void sh_mmcif_request_dma(struct sh_mmcif_host *host,
+>   	if (ret < 0)
+>   		goto ecfgtx;
+>   
+> -	host->chan_rx = dma_request_channel(mask, shdma_chan_filter,
+> -					    (void *)pdata->slave_id_rx);
+> +	host->chan_rx = dma_request_slave_channel_compat(mask, shdma_chan_filter,
+> +				pdata ? (void *)pdata->slave_id_rx : NULL,
+> +				&host->pd->dev, "rx");
+
+    ... and here?
+
+WBR, Sergei
+
