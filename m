@@ -1,13 +1,14 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] ASoC: WM8962: Add device tree binding
-Date: Thu, 6 Jun 2013 14:28:57 +0100
-Message-ID: <20130606132857.GA31367@sirena.org.uk>
-References: <cover.1370518627.git.b42378@freescale.com>
- <a7acc6e603272a9d48324712f54da9bb1fa46889.1370518627.git.b42378@freescale.com>
+Subject: Re: [PATCH V2] ASoC: fsl: add imx-wm8962 machine driver
+Date: Thu, 6 Jun 2013 14:33:42 +0100
+Message-ID: <20130606133342.GB31367@sirena.org.uk>
+References: <1370420501-8410-1-git-send-email-b42378@freescale.com>
+ <20130605115544.GX31367@sirena.org.uk>
+ <20130606124952.GA19153@MrMyself>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1076844599961466242=="
+Content-Type: multipart/mixed; boundary="===============4677791175056170414=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <a7acc6e603272a9d48324712f54da9bb1fa46889.1370518627.git.b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <20130606124952.GA19153@MrMyself>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,59 +20,62 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============1076844599961466242==
+--===============4677791175056170414==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HHsIqWg7hQfWlXNC"
+	protocol="application/pgp-signature"; boundary="6Rpt4tnX3EsKWamm"
 Content-Disposition: inline
 
 
---HHsIqWg7hQfWlXNC
+--6Rpt4tnX3EsKWamm
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Jun 06, 2013 at 07:38:46PM +0800, Nicolin Chen wrote:
+On Thu, Jun 06, 2013 at 08:49:53PM +0800, Nicolin Chen wrote:
+> On Wed, Jun 05, 2013 at 12:55:44PM +0100, Mark Brown wrote:
 
-> +Optional properties:
-> +  - spk-mono: Default register value for SPK_MONO of R51 (Class D Control 2).
+> > Since it's easy to define a fixed rate clock (there's a generic driver
+> > for that) I'd just require the user to provide a clock API clock and fix
+> > the rate using that.  This is going to be less error prone and makes the
+> > code simpler.
 
-This doesn't correspond to the code.  This is a boolean property, if
-it's present then that bit gets set indicating that the speaker is in
-mono mode.
+> I tried to use fixed rate clock as below:
 
-> +  - mic-cfg : Default register value for R48 (Additional Control 4).
-> +    If absent, the default is 0.
+> 	data->codec_clk = devm_clk_get(&codec_dev->dev, NULL);
+> 	if (IS_ERR(data->codec_clk)) {
+> 		of_fixed_clk_setup(codec_np);
+> 		data->codec_clk = clk_get(NULL, codec_np->name);
 
-Again if it's absent the default should be the register default.
+No, this is silly.  Have the board define the clock in the DT.
 
---HHsIqWg7hQfWlXNC
+--6Rpt4tnX3EsKWamm
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.20 (GNU/Linux)
 
-iQIcBAEBAgAGBQJRsI6WAAoJELSic+t+oim98yQP/0+Bq3FqFeJWM+Yn+X2XckGP
-pLr/HQiLDdhHTAohhHhIHA03MNHfh6pS7Shwp+Ht6xPDprDwR7ffFfe0d5yebWLk
-QrvcrKP3JHzY2dglA5p2IXhpm4GqLjhXiO1BGExSLKXSYD6r7hsspu/zlaO7YJpW
-8TPYu3d9arOOyhhCOefHGdvPq+4UkdvlMZC/7BlnoX6g1k9bGJnvioqACmUntvbv
-yiI0/yqw0HasIqOV1q90XfWKTq8LaVZtSB6KK2Dut9YxnCR3cmV2ch+F3cTXm13t
-EzzP4A1JuPbxiS4KE8iV8ekSZKljzf1FgYkTuYeLC4XAoIbS420zo+lSnuCWkB8O
-8v0ob/o4Ksy1qFxk48nzRTafOugjQwm9mYGpqi6NenZo3KbbqPbw24wCZMcYzDq1
-dM0nLsRX4UtxHCMK6jjn8WsW5UBqs1Um/RWt2HYJYnW/hmKp2skfqSXh6hDMk7Uz
-np5ZmlbzaBRG5ABuw2Rri7eGiZC7ik++GD2ZNAeYZIrpQ+iSl8RqSIxEnIJH1u38
-nx9TS4Z/ze2rpY9EZrOGLJc0w7WAN6o1ACsaaOHQxBMqHCyS8edDHVv/RmnPKwLP
-jA3v7kJgwl+Iy7+3OJAJKmLC+dexUh7EgpwiTSRFyNVpFv6DDSNeL4t0k+0BruP7
-Hqz40xwmXCeiczZO2Q7M
-=1LLn
+iQIcBAEBAgAGBQJRsI+zAAoJELSic+t+oim96BgP/RHI0Mat3JfVw5fWqZz4Suph
+06euQ4/jRRpYcmU0To473qWxfJJpN9aXJC6zL5R41OWYVsCgvVO1AkCGrtcSodeb
+korRbbT8EuLJpu0PngRxJwRzl55pTZ89OhVtEsUWixKHddjrDzVELZl4JQ3caX1w
+zVD3f/noi3Ecl1k7YI2x7JmXecHqdVo0gZZdYPn67pLSsukK4qnIAfC7oGPkmiat
+2QWseRKeoqNxIBQBD+Ozgj5aIyiC7XgWGPBYLfXb3jTRqUhDCbz9UzzMHoZszHy8
+fZuYuCCZctXNBrC58ko+u7DcOLSHb3anPBgz1QTp5BVQq9NJ2E9mGpet4+BElz/L
+rVi+kewFCtHhqWbVTppV2p0ldkgho2mvGGlGQXOQGQfCaaEvM3DKhUpGGwlZHTmM
+iUWv4mtUy4kxl0fBkKWZK7fGlvC5n8hOXuoGU8dQ0MS6kW1EyllzGxTPn9H9zqOy
+Bs3bLy3AkwbYkTBZt9VmfAFXAiksD3lmBkvl6NOZsyfGoU6TtHXkhkuHpmeUdOPS
+G4Cb45s29kFeMVxmWER30oba6VfE4T+bc3hR3MsqXxegsSW6VoAlgSuq7fRzs45J
+iLnksf9n9/DbSGuKNNcSAdN/HxcR/AV4wSujoWzet6bP9G71fBdPqEVftAhkYoL7
+QUlwaZxpKQjp027AdEPC
+=9plb
 -----END PGP SIGNATURE-----
 
---HHsIqWg7hQfWlXNC--
+--6Rpt4tnX3EsKWamm--
 
---===============1076844599961466242==
+--===============4677791175056170414==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -82,4 +86,4 @@ devicetree-discuss mailing list
 devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---===============1076844599961466242==--
+--===============4677791175056170414==--
