@@ -1,71 +1,75 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
  Uploading linux (3.9.4-1))
-Date: Thu, 6 Jun 2013 14:10:42 +0100
-Message-ID: <20130606131042.GN18614@n2100.arm.linux.org.uk>
-References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+Date: Thu, 6 Jun 2013 14:15:07 +0100
+Message-ID: <20130606131506.GO18614@n2100.arm.linux.org.uk>
+References: <51AFA6DD.3000202@wwwdotorg.org>
+ <CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
+ <1370469574.18839.33.camel@localhost>
+ <CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
+ <CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
+ <CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com>
  <1370475609.20454.44.camel@localhost>
  <CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
- <1733666.lHUBcfUXq9@flatron>
- <CAPweEDzYLDzh_-OWU61dtVhajZ40QpQgZKHFYDsh3FgF=r9_ag@mail.gmail.com>
+ <1370477958.20454.68.camel@localhost>
+ <CAPweEDyPffcN9cNJ10ZHt+AZJHTRdU0LMfCGM_756uAbf+NEBQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAPweEDzYLDzh_-OWU61dtVhajZ40QpQgZKHFYDsh3FgF=r9_ag@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "luke.leighton" <luke.leighton@gmail.com>
-Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, linux-arm-kernel@lists.infradead.org, debian-kernel@lists.debian.org
+In-Reply-To: <CAPweEDyPffcN9cNJ10ZHt+AZJHTRdU0LMfCGM_756uAbf+NEBQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "luke.leighton" <luke.leighton-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, debian-arm-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org, "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux on small ARM machines <arm-netbook-Fj0DB6SUpRXNuVmtMlwsDbVCufUGDwFn@public.gmane.org>, ARM Linux Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, debian-kernel-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 06, 2013 at 01:24:57PM +0100, luke.leighton wrote:
-> On Thu, Jun 6, 2013 at 1:01 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> 
-> > I don't see any other solution here than moving all the Allwinner code to
-> > DT (as it has been suggested in this thread several times already), as
-> > this is the only hardware description method supported by ARM Linux.
-> 
->  i repeat again: please state, explicitly and unequivocably that you -
-> linux kernel developers - are happy that the reach of linux and
-> gnu/linux OSes is dramatically reduced due to this intransigent
-> position.
+On Thu, Jun 06, 2013 at 01:22:04PM +0100, luke.leighton wrote:
+> On Thu, Jun 6, 2013 at 1:19 AM, Henrik Nordstr=F6m
+> <henrik-N0bZODiMPoV/1Aw6q1k8hdHuzzzSOjJt@public.gmane.org> wrote:
+> > tor 2013-06-06 klockan 00:54 +0100 skrev luke.leighton:
+> >
+> >> > Not really the case. Actually the opposite. DT have this as well, and
+> >> > integrated in device probing. Allwinner need to hack every driver us=
+ed
+> >> > to add their gpio requests to have pinmuxing triggered.
+> >>
+> >>  augh.  ok.  solutions.  what are the solutions here?
+> >
+> > What I said before.
+> =
 
-If companies are going to go off and invent the square wheel, and that
-makes *them* suffer the loss of being able to merge back into the
-mainline kernel, thereby making *their* job of moving forward with
-their kernel versions much harder, then yes, we *are* happy.
+>  idea: hook into devicetree gpio functions to allow script-fex gpio
+> functions to gain access in a separate module?  that sort of thing.
+> =
 
-Companies will always do idiotic things; it's *them* and their users
-who have to live with the results of that bad decision making process.
+> > Go with DT for the kernel. There is no need for two configuration
+> > mechanisms doing the same thing. Disguise it in fex form (and
+> > translator) if too hard for people with a DOS editior to configure.
+> =
 
-Eventually, the pain of being outside the mainline kernel will become
-too great, especially if their users demand things like kernel upgrades
-from them.  Eventually, they will change.
+>  what methods for doing that.  i need proposals.  4 days on the clock.
 
-And no, this isn't an intransigent position.  This is reality given
-that ARM already has way too much code in the Linux kernel and we're
-trying to reduce that through the use of technologies like DT.  The
-last thing we need right now is for another "DT" like implementation
-to come along which is only used on a minority of platforms - even if
-the platform it is used on is successful.
+No.
 
-The way this works is this:
-- you either go with the policies which are set, or
-- you change the policy as a whole because you have a technically
-  superior solution
+If you want to set time scales, please put up money to find the work to
+come up with those proposals.
 
-What that means in this case is either you adopt DT, or you convince
-everyone that DT isn't the solution, but your solution is, and we adopt
-your solution for *everything* instead.
+Virtually no one here is a charity; the charity days of open source are
+long gone.  Everyone needs money to put food in their mouths, and the
+way this works is that those who pay the most get the time.  That's the
+nature of a open and free market.
 
-If neither of those are possible, then that's really not our problem,
-and it's not _us_ who are being "intransigent".
+What's more is that you have been given some good proposals already:
+converting the fex description to DT for the kernel.  Wow, that means you
+can use the work which has already been done in the mainline kernel for
+free!  How cool is that!
