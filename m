@@ -1,34 +1,110 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v4 1/6] drivers: bus: add a new driver for WEIM
-Date: Thu, 6 Jun 2013 17:26:40 +0200
-Message-ID: <201306061726.40378.arnd@arndb.de>
-References: <1369722012-6915-1-git-send-email-b32955@freescale.com>
- <1369722012-6915-2-git-send-email-b32955@freescale.com>
- <20130606150935.GD28270@S2101-09.ap.freescale.net>
+From: "Lennart Sorensen" <lsorense@csclub.uwaterloo.ca>
+Subject: Re: getting allwinner SoC support upstream (was Re: Uploading
+ linux (3.9.4-1))
+Date: Thu, 6 Jun 2013 11:30:44 -0400
+Message-ID: <20130606153044.GZ11182@csclub.uwaterloo.ca>
+References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+ <CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
+ <CAPweEDzDC87KmOQ=0hyPcjPtPsRuXHxNTs97vbEqVNNnix69rA@mail.gmail.com>
+ <19865137.ey1FePPnmD@flatron>
+ <CAPweEDzk0T+fZ1aW16D8K4XpvRR2GRrOFtfcjzstnmEJWxmREg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130606150935.GD28270-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: shc_work-JGs/UdohzUI@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPweEDzk0T+fZ1aW16D8K4XpvRR2GRrOFtfcjzstnmEJWxmREg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luke Kenneth Casson Leighton <lkcl@lkcl.net>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, debian-kernel@lists.debian.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 06 June 2013, Shawn Guo wrote:
-> Since no one is collecting drivers/bus/ patches right now, I just
-> applied the whole series to have the patch go via imx -> arm-soc.
-> Please let me know if there is any problem.
+On Wed, Jun 05, 2013 at 11:38:52PM +0100, Luke Kenneth Casson Leighton wrote:
+>  their sheer overwhelming success provides us with mass-volume
+> ultra-low cost hardware.  to not make an effort to accommodate them
+> would in this specific instance be a huge missed opportunity,
+> responsibility for which currently falls on the shoulders of the sunxi
+> community, where that small community is in no way considered
+> "authoritative" as an upstream source and thus every single GNU/Linux
+> Distro is left in a position of forcing people to follow insane
+> non-standard build procedures that are *way* outside of the capability
+> of the average person.
 
-I think that's fine.
+Who cares what their sales volume is.
 
-	Arnd
+If they are that successful perhaps they could afford to spend some
+resources to fix the mess they have created.
+
+>  so by the linux kernel developers intransigent position, the reach of
+> free software as a whole is greatly reduced.  simple logical
+> unavoidable conclusion.
+
+Long term having maintainable code is important.  Companies like the
+maker of the allwinner come and go.  Maybe in a yaer or two they will be
+irrelevant after some much better design from another company takes over
+the market.  Perhaps even one sensible enough to work with the community
+in the first place, rather than violate the GPL for a long time.
+
+>  please feel free - linux kernel developers - to maintain this
+> intransigent position for as long as you find it useful to you to do
+> so.  btw, that is a sincere statement, devoid and completely free of
+> all and any implicit or explicit additional statements and
+> implications.
+
+I have not seen anything mentioned that the allwinner proprietary fex
+system does that devicetree does not already do.  So there is no benefit
+to anyone (except perhaps allwinner) to adding their system, and a lot
+of disadvantages in terms of changes to lots of drivers.  Life would
+become much easier for allwinner customers if they did change to
+devicetree.  Suddenly a much larger selection of hardware becomes trivial
+to include in designs.  Upgrades to new kernels become easier.  Life in
+general becomes easier.
+
+>  yeahh, that's rather unfortunate.  i went to some lengths to avoid
+> mentioning eoma [*1] until there was a natural point at which it
+> became difficult *not* to bring it up, not least because i didn't hear
+> anyone else presenting any actual real workable solutions.
+> 
+> but, you have to bear in mind a couple of things:
+> 
+> a) i'm a free software developer and advocate.  "business", "lobbying"
+> etc. do not come naturally to me.  my associates scream at me
+> regularly.
+> 
+> b) i've been thinking about this incredibly hard problem for at least
+> 4 years and almost *all* of my background in computing of the past 30
+> years leads me naturally towards actually coming up with a solution
+> 
+> c) i'm actually really, really really and truly going about *actively*
+> implementing that solution rather than just complaining about it *and*
+> i'm inviting free software developers to participate, why, because see
+> first sentence of a) above.
+
+Well making a tool to convert the fex stuff to devicetree sure sounds
+like it could be helpful to allwinner customers.
+
+And if there is anything you know if that can't be represented in
+devicetree, I am sure some people would like to know about it.  I doubt
+you can come up with anything though.
+
+Clearly adding fex to the upstream kernel isn't a good idea and isn't
+going to happen, so any "solution" has to involve getting allwinner to
+use devicetree and making doing that as easy as possible.
+
+> [*1] which is an open standard, not a proprietary locked one.
+
+It will be interesting to see if it ever turns into anything, or gets
+stuck as just an interesting idea that never took off.
+
+I just checked for my freescale i.mx53, and it has devicetree support
+as of 3.3 kernels.  The TI chips I have looked at recently all use
+devicetree, even the ones that have not yet been merged upstream.
+The marvell armada 370 and xp both appear to have devicetree support.
+Nvidia tegras appear to have devicetree support.  not sure if any of
+the qualcomm snapdragons have devicetree support yet.
+
+It seems to me almost everyone else is getting on with doing devicetree,
+and allwinner is the odd one out that just can't be bothered to get with
+the program.
+
+-- 
+Len Sorensen
