@@ -1,87 +1,64 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re: Uploading linux (3.9.4-1))
-Date: Thu, 06 Jun 2013 15:02:37 +0200
-Message-ID: <1622862.fXQWv0YWGV@flatron>
-References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com> <1851164.HnXhGSdttW@flatron> <CAPweEDxWW4LUeBaHLb+wHuAMq=63p88zsx4tumVb2PdP_+ohAw@mail.gmail.com>
+From: Nicolin Chen <b42378@freescale.com>
+Subject: Re: [PATCH V2] ASoC: fsl: add imx-wm8962 machine driver
+Date: Thu, 6 Jun 2013 20:49:53 +0800
+Message-ID: <20130606124952.GA19153@MrMyself>
+References: <1370420501-8410-1-git-send-email-b42378@freescale.com>
+ <20130605115544.GX31367@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPweEDxWW4LUeBaHLb+wHuAMq=63p88zsx4tumVb2PdP_+ohAw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "luke.leighton" <luke.leighton@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, debian-kernel@lists.debian.org
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20130605115544.GX31367@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: grant.likely@linaro.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, lgirdwood@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 06 of June 2013 13:49:38 luke.leighton wrote:
-> On Thu, Jun 6, 2013 at 1:43 PM, Tomasz Figa <tomasz.figa@gmail.com> 
-wrote:
-> > Luke,
-> > 
-> > On Thursday 06 of June 2013 13:24:57 luke.leighton wrote:
-> >> On Thu, Jun 6, 2013 at 1:01 AM, Tomasz Figa <tomasz.figa@gmail.com>
-> > 
-> > wrote:
-> >> > I don't see any other solution here than moving all the Allwinner
-> >> > code
-> >> > to DT (as it has been suggested in this thread several times
-> >> > already), as this is the only hardware description method supported
-> >> > by ARM Linux.
-> >>  
-> >>  i repeat again: please state, explicitly and unequivocably that you
-> >>  -
-> >> 
-> >> linux kernel developers - are happy that the reach of linux and
-> >> gnu/linux OSes is dramatically reduced due to this intransigent
-> >> position.
-> >> 
-> >>  or, tomasz, please state that you, tomasz, represent each and every
-> >> 
-> >> one of the linux kernel developers so that i do not need to keep
-> >> asking.
-> > 
-> > I do not represent all linux kernel developers by any means. I am just
-> > stating current policy of SoC/board support maintained by ARM Linux,
-> > which is common for all Linux kernel devlopers, or at least ARM Linux
-> > kernel developers.
-> > 
-> > Personally I am happy with numerous companies backing this policy and
-> > not making problems like this with Allwinner and I am really
-> > surprised that you are supporting a troublesome company like this.
+On Wed, Jun 05, 2013 at 12:55:44PM +0100, Mark Brown wrote:
+> > +		/* assuming clock enabled by default */
+> > +		data->codec_clk = NULL;
+> > +		ret = of_property_read_u32(codec_np, "clock-frequency",
+> > +					&data->clk_frequency);
+> > +		if (ret) {
+> > +			dev_err(&codec_dev->dev,
+> > +				"clock-frequency missing or invalid\n");
+> > +			goto fail;
+> > +		}
 > 
->  you've not read what i've written tomasz.
+> Since it's easy to define a fixed rate clock (there's a generic driver
+> for that) I'd just require the user to provide a clock API clock and fix
+> the rate using that.  This is going to be less error prone and makes the
+> code simpler.
 
-I have.
+I tried to use fixed rate clock as below:
 
-> > There are many other SoC vendors making low cost SoCs, like Rockchip,
-> > Boxchip,
-> 
->  boxchip *is* allwinner.
+	data->codec_clk = devm_clk_get(&codec_dev->dev, NULL);
+	if (IS_ERR(data->codec_clk)) {
+		of_fixed_clk_setup(codec_np);
+		data->codec_clk = clk_get(NULL, codec_np->name);
+		if (IS_ERR(data->codec_clk)) {
+			dev_err(&pdev->dev, "failed to create fixed clk\n");
+			ret = IS_ERR(data->codec_clk);
+			goto fail;
+		}
+	}
 
-Right, sorry. I am not really into this low cost hardware.
+	data->clk_frequency = clk_get_rate(data->codec_clk);
+	clk_prepare_enable(data->codec_clk);
 
-There is also AMLogic, though. 
+But I always got "failed to create fixed clk" error during system booting.
+So I think it's pretty different to get a fixed clock with normal since
+it's on the root_list of clock tree.
+How can I get the clock here, or more specifically, any way to get the 
+rate of the fixed-rate-clk?
 
-> > Telechips. Maybe they would be better candidates for being
-> > promoted as vendors of choice for hardware running free software?
-> 
->  no, because they're not selling at a low-enough price with
-> high-enough integration.  telechips and rockchip don't have the market
-> penetration.
-
-I do not have access to any numbers, so I am left to believe in what you 
-say. (Although here in Poland the cheap tablet market is almost evenly 
-divided between all those companies, you can find almost same amount of 
-tablets based on SoCs from each vendor.)
-
-Best regards,
-Tomasz
-
->  and many other reasons.
-> 
-> > (Just
-> > saying, as I do not know anything about their view on this. There is a
-> > lot of cheap tablets built using their products as well.)
-> > 
-> > Best regards,
-> > Tomasz
+Thanks.
