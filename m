@@ -1,104 +1,50 @@
-From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: add basic SecureOS support
-Date: Thu, 6 Jun 2013 19:23:35 +0900
-Message-ID: <51B06327.5030508@nvidia.com>
-References: <1370503687-17767-1-git-send-email-acourbot@nvidia.com> <20130606093524.GM18614@n2100.arm.linux.org.uk>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] ARM: davinci: serial: platform code cleanup
+Date: Thu, 6 Jun 2013 15:55:43 +0530
+Message-ID: <51B063A7.8020907@ti.com>
+References: <1369729686-6595-1-git-send-email-prakash.pm@ti.com>
+	<1369729686-6595-6-git-send-email-prakash.pm@ti.com>
+	<51AF2400.3020906@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130606093524.GM18614-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Karan Jhavar <kjhavar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Varun Wadekar <vwadekar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Chris Johnson <CJohnson-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <51AF2400.3020906-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/06/2013 06:35 PM, Russell King - ARM Linux wrote:
-> On Thu, Jun 06, 2013 at 04:28:07PM +0900, Alexandre Courbot wrote:
->> +static int __attribute__((used)) __tegra_smc_stack[10];
->> +
->> +/*
->> + * With EABI, subtype and arg already end up in r0, r1 and r2 as they are
->> + * function arguments, but we prefer to play safe here and explicitly move
->> + * these values into the expected registers anyway. mov instructions without
->> + * any side-effect are turned into nops by the assembler, which limits
->> + * overhead.
->
-> No they aren't.  They will be preserved as:
-> 	mov r0, r0
-> 	mov r1, r1
-> 	mov r2, r2
+On 6/5/2013 5:11 PM, Sekhar Nori wrote:
+> 
+> On 5/28/2013 1:58 PM, Manjunathappa, Prakash wrote:
+>> 1) "struct davinci_uart_config" is introduced to specify
+>>    UART ports brought out or enabled on the board. But
+>>    none of the boards use them for that purpose, so clean
+>>    it up.
+>> 2) Have pointer to platform device as a argument for
+>>    davinci_serial_init(), no need of serial_dev in
+>>    struct soc_info now.
+>> 3) No need of davinci_serial_setup_clk(), not called from
+>>    multiple places, hence reduce function call overhead.
+>>
+>> Signed-off-by: Manjunathappa, Prakash <prakash.pm-l0cyMroinI0@public.gmane.org>
+>> Suggested-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+> 
+> We generally clean up code before undertaking modifications. Is there a
+> reason why this cannot be done first-up?
 
-I'm pretty sure I checked with objdump and saw these replaced by nops at 
-some point, but for some reason I cannot get that behavior again. So 
-simply put, my statement is wrong indeed.
+Never mind this question. I figured it out myself. You need to have the
+serial clock setup removed from DT before you can do any reasonable
+clean-up and that happens only with 4/5.
 
-> Moreover, things will go wrong if the compiler decides for whatever reason
-> to move 'arg' into r0 before calling your code sequence.  So really this
-> is quite fragile.
->
-> There's also no point in mentioning EABI in the above paragraph; all ARM
-> ABIs under Linux have always placed the arguments in r0..r3 and then on
-> the stack.  You can assert that this is always true by using the __asmeq()
-> macro.
-
-Good to know, thanks.
-
-> Also...
->
->> + */
->> +static void tegra_generic_smc(u32 type, u32 subtype, u32 arg)
->> +{
->> +	asm volatile(
->> +		".arch_extension	sec\n\t"
->> +		"ldr	r3, =__tegra_smc_stack\n\t"
->> +		"stmia	r3, {r4-r12, lr}\n\t"
->
-> using a statically allocated area to save the registers in this way is
-> probably a bad move; although the hotplug code guarantees that there
-> will be no concurrency between CPU hotplug operations, this sets a
-> precident for it being used in places where no such protection exists.
-
-Indeed. This function will be called from other places in the future, 
-and for these we cannot assume there will be no concurrency.
-
-> What is wrong with stacking r4-r12, lr onto the SVC stack?
-
-Nothing, actually. /o\
-
-> You don't
-> save the SVC stack pointer, so one can only assume that your SMC
-> implmentation preserves this (if it doesn't, that's yet another bug
-> with this assembly code.)
-
-SVC stack pointer is ok AFAICT.
-
-> Combining these two issues, you're probably far better off using an
-> __attribute__((naked)) function for this - which means you get to
-> write the entire function in assembly code without any compiler
-> interference:
- >
-> static void __attribute__((naked)) tegra_generic_smc(u32 type, u32 subtype, u32 arg)
-> {
-> 	asm volatile(
-> 		".arch_extension	sec\n\t"
-> 		"stmfd	sp!, {r4 - r12, lr}\n\t"
-> 		__asmeq("%0", "r0")
-> 		__asmeq("%1", "r1")
-> 		__asmeq("%2", "r2")
-> 		"mov	r3, #0\n\t"
-> 		"mov	r4, #0\n\t"
-> 		"dsb\n\t"
-> 		"smc	#0\n\t"
-> 		"ldmfd	sp!, {r4 - r12, pc}"
-> 		:
-> 		: "r" (type), "r" (subtype), "r" (arg)
-> 		: "memory");
-> }
-
-Well, that works beautifully indeed, and results in a much smaller 
-function that does nothing more beyond what's needed. On top of that, I 
-feel enlightened.
-
-Thanks, I will resubmit a fixed version soon.
-Alex.
+Thanks,
+Sekhar
