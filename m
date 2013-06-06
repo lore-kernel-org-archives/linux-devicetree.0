@@ -1,77 +1,87 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM i.MX53: tqma53: add WP/CD pinctrl and vmmc to
- esdhc2
-Date: Thu, 6 Jun 2013 11:02:05 +0200
-Message-ID: <20130606090205.GH21522@pengutronix.de>
-References: <1370337150-18487-1-git-send-email-s.trumtrar@pengutronix.de>
- <1370337150-18487-5-git-send-email-s.trumtrar@pengutronix.de>
- <20130606085549.GB11305@S2101-09.ap.freescale.net>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH 1/1] of/irq: store IRQ trigger/level in struct resource flags
+Date: Thu, 6 Jun 2013 11:13:48 +0200
+Message-ID: <CABxcv==_37OxH1F=ELDMOL6Dni_x47emKHVnmMH8m2YWHgEZPw@mail.gmail.com>
+References: <1365148088-11175-1-git-send-email-javier.martinez@collabora.co.uk>
+	<51633F26.7000400@gmail.com>
+	<51634835.5010302@collabora.co.uk>
+	<20130605232647.55C8B3E10E4@localhost>
+	<20130606085039.GL23653@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130606085549.GB11305-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130606085039.GL23653@game.jcrosoft.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, jgchunter@gmail.com, Thomas Gleixner <tglx@linutronix.de>, linux-omap <linux-omap@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 06, 2013 at 04:55:51PM +0800, Shawn Guo wrote:
-> On Tue, Jun 04, 2013 at 11:12:30AM +0200, Steffen Trumtrar wrote:
-> > Add WP/CD pinctrl for esdhc2.
-> > Also, add vmmc-supply for esdhc2.
-> > 
-> > Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/imx53-tqma53.dtsi | 13 ++++++++++++-
-> >  1 file changed, 12 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/imx53-tqma53.dtsi b/arch/arm/boot/dts/imx53-tqma53.dtsi
-> > index 450e4de..9ecd198 100644
-> > --- a/arch/arm/boot/dts/imx53-tqma53.dtsi
-> > +++ b/arch/arm/boot/dts/imx53-tqma53.dtsi
-> > @@ -35,7 +35,9 @@
-> >  
-> >  &esdhc2 {
-> >  	pinctrl-names = "default";
-> > -	pinctrl-0 = <&pinctrl_esdhc2_1>;
-> > +	pinctrl-0 = <&pinctrl_esdhc2_1>,
-> > +		    <&pinctrl_esdhc2_2>;
-> > +	vmmc-supply = <&reg_3p3v>;
-> >  	wp-gpios = <&gpio1 2 0>;
-> >  	cd-gpios = <&gpio1 4 0>;
-> >  	status = "disabled";
-> > @@ -69,6 +71,15 @@
-> >  	pinctrl-names = "default";
-> >  	pinctrl-0 = <&pinctrl_hog>;
-> >  
-> > +	esdhc2_2 {
-> > +		pinctrl_esdhc2_2: esdhc2-grp2 {
-> 
-> pinctrl_esdhc2_2 should be used by <soc>.dtsi to define the second pin
-> group for esdhc2 function, so please encode the board name in it to
-> avoid the name space conflict. 
-> 
+On Thu, Jun 6, 2013 at 10:50 AM, Jean-Christophe PLAGNIOL-VILLARD
+<plagnioj@jcrosoft.com> wrote:
+> On 00:26 Thu 06 Jun     , Grant Likely wrote:
+>> On Tue, 09 Apr 2013 00:44:05 +0200, Javier Martinez Canillas <javier.martinez@collabora.co.uk> wrote:
+>> > On 04/09/2013 12:05 AM, Rob Herring wrote:
+>> > > On 04/05/2013 02:48 AM, Javier Martinez Canillas wrote:
+>> > >> This means that drivers that need the IRQ type/level flags defined in
+>> > >> the DT won't be able to get it.
+>> > >
+>> > > But the interrupt controllers that need the information should be able
+>> > > to get to it via irqd_get_trigger_type. What problem exactly are you
+>> > > trying to fix? What driver would use this?
+>> > >
+>> >
+>> > Yes but this is not about the interrupt controller wanting this information but
+>> > a device driver that is using the IORESOURCE_IRQ struct resource that has the
+>> > information about the virtual IRQ associated with a GPIO-IRQ.
+>> >
+>> > The driver doesn't know neither care if its IRQ line is connected to a line of
+>> > an real IRQ controller or to a GPIO controller that allows a GPIO line to be
+>> > used as an IRQ.
+>> >
+>> > > My understanding of the IORESOURCE_IRQ_xxx (and DMA) bits are they are
+>> > > ISA specific and therefore should not be used on non-ISA buses.
+>> > >
+>> >
+>> > Many TI OMAP2+ SoC based boards have an SMSC LAN911x/912x controller
+>> > (drivers/net/ethernet/smsc/smsc911x.c) that is connected to the OMAP processor
+>> > through its General-Purpose Memory Controller (GPMC) and this LAN driver obtain
+>> > its IRQ and I/O address space from a struct resource IORESOURCE_IRQ and
+>> > IORESOURCE_MEM respectively, that is filled by the DeviceTree core.
+>> >
+>> > It does this:
+>> >
+>> > irq_res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+>> > irq_flags = irq_res->flags & IRQF_TRIGGER_MASK;
+>> >
+>> > Since of_irq_to_resource() doesn't fill the trigger/level flags on the
+>> > IORESOURCE_IRQ struct resource, irq_flags will always be 0 regarding the value
+>> > specified on the second cell of the "interrupts" DT property.
+>
+> why do you need to known this in you driver this need to be handle in the irq
+> chip
+>
+> I does use irq gpio without at all
+>
+> Best Regards,
+> J.
+>
 
-Hi!
+Yes, in fact as I said on an earlier email on this thread if you don't
+pass a trigger type to the request_irq() call, it will use the trigger
+type set by the irq chip earlier with .xlate.
 
-Okay. I will fix that and resend.
+A few months ago when I was testing DT on my OMAP3 board, for some
+reasons it was not getting the right trigger type. That's why I sent
+this patch but it seems it was a bug on the GPIO omap irq_chip driver
+since now is working correctly without this. It is taking the trigger
+type that was set on the .xlate function handler.
 
-Thanks,
-Steffen
+So, I don't need this patch anymore to make the LAN chip work on my
+board and I don't know if the fact that an empty edge/level flags
+means that is going to be used whatever was set on the .xlate function
+handler is a reason enough to not return the IRQ flags on the struct
+resource or if someone else is still interested on this patch and
+filling this information on the struct resource.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Best regards,
+Javier
