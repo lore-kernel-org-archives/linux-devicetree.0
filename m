@@ -1,61 +1,56 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v3 06/11] staging: drm/imx: Add LDB support
-Date: Thu, 06 Jun 2013 17:54:42 +0200
-Message-ID: <1370534082.3931.7.camel@pizza.hi.pengutronix.de>
-References: <1364484215-13935-1-git-send-email-p.zabel@pengutronix.de>
- <1364484215-13935-7-git-send-email-p.zabel@pengutronix.de>
- <20130606151608.GE28270@S2101-09.ap.freescale.net>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
+ Uploading linux (3.9.4-1))
+Date: Thu, 6 Jun 2013 09:00:00 -0700
+Message-ID: <CAOesGMgqxhG45NyCfpHc_0uHS+_Gn-hGZm-+CRvK2EEf1AGTow@mail.gmail.com>
+References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+	<CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
+	<51AFA6DD.3000202@wwwdotorg.org>
+	<CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
+	<1370469574.18839.33.camel@localhost>
+	<CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
+	<CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
+	<CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com>
+	<1370475609.20454.44.camel@localhost>
+	<CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
+	<CAKON4OxPDpN3BTc9GWP44exDSkAZGJ5OeCpUP37vRnnvxwUnmw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20130606151608.GE28270@S2101-09.ap.freescale.net>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/devel>,
- <mailto:devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/devel/>
-List-Post: <mailto:devel@linuxdriverproject.org>
-List-Help: <mailto:devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/devel>,
- <mailto:devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: devel-bounces@linuxdriverproject.org
-Sender: "devel" <devel-bounces@linuxdriverproject.org>
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: devel@driverdev.osuosl.org, Fabio Estevam <fabio.estevam@freescale.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de, Martin Fuzzey <mfuzzey@parkeon.com>, Sean Cross <xobs@kosagi.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKON4OxPDpN3BTc9GWP44exDSkAZGJ5OeCpUP37vRnnvxwUnmw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "jonsmirl@gmail.com" <jonsmirl@gmail.com>
+Cc: "luke.leighton" <luke.leighton@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm <debian-arm@lists.debian.org>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel <debian-kernel@lists.debian.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+On Thu, Jun 6, 2013 at 8:13 AM, jonsmirl@gmail.com <jonsmirl@gmail.com> wrote:
+> On Wed, Jun 5, 2013 at 7:54 PM, luke.leighton <luke.leighton@gmail.com> wrote:
+>>  augh.  ok.  solutions.  what are the solutions here?
+>
+> Luke if you really want to fix this a good solution is to have
+> Allwinner join Linaro and provide an engineer to the Linaro effort.
+> That engineer will get educated on the right way to do kernel
+> development and he can pass that knowledge back to Allwinner each day
+> as he learns it.
 
-Am Donnerstag, den 06.06.2013, 23:16 +0800 schrieb Shawn Guo:
-> On Thu, Mar 28, 2013 at 04:23:30PM +0100, Philipp Zabel wrote:
-> > +static void imx_ldb_encoder_prepare(struct drm_encoder *encoder)
-> > +{
-> > +	struct imx_ldb_channel *imx_ldb_ch = enc_to_imx_ldb_ch(encoder);
-> > +	struct imx_ldb *ldb = imx_ldb_ch->ldb;
-> > +	struct drm_display_mode *mode = &encoder->crtc->mode;
-> > +	unsigned long serial_clk;
-> > +	unsigned long di_clk = mode->clock * 1000;
-> > +	int mux = imx_drm_encoder_get_mux_id(imx_ldb_ch->imx_drm_encoder,
-> > +					     encoder->crtc);
-> > +
-> > +	if (ldb->ldb_ctrl & LDB_SPLIT_MODE_EN) {
-> > +		/* dual channel LVDS mode */
-> > +		serial_clk = 3500UL * mode->clock;
-> > +		imx_ldb_set_clock(ldb, mux, 0, serial_clk, di_clk);
-> > +		imx_ldb_set_clock(ldb, mux, 1, serial_clk, di_clk);
-> > +	} else {
-> > +		serial_clk = 7000UL * mode->clock;
-> > +		imx_ldb_set_clock(ldb, mux, imx_ldb_ch->chno, serial_clk, di_clk);
-> > +	}
-> > +
-> > +	imx_drm_crtc_panel_format(encoder->crtc, DRM_MODE_ENCODER_LVDS,
-> > +			V4L2_PIX_FMT_RGB24);
-> 
-> I have panel which needs it to be V4L2_PIX_FMT_BGR666.  We should
-> probably have a device tree property for that like interface_pix_fmt in
-> parallel display support?
+There's no need for anybody to join Linaro to contribute upstream.
+That's a crazy notion.
 
-I'm not sure. Is this something that should be done unconditionally for
-fsl,data-width = <18>?
+Listen, Allwinner isn't working in a vacuum, believe it or not. I've
+talked to them, so has Arnd and other people working on ARM, including
+Maxime Ripard, who's been reimplementing upstream support for their
+platform. Everybody is interested in the right things happening, it's
+just a matter of figuring out how to do it. The right people are
+already talking.
 
-regards
-Philipp
+> Allwinner has expressed interest in the past in joining Linaro but the
+> price was too high. I believe there are cheaper options now for
+> joining. The benefits Allwinner receives from joining will far exceed
+> the cost of joining. The net result will likely be a reduction in the
+> amount they need to spend on in-house development since they will
+> learn how to better leverage other developer's work.
+
+Uh, you're listing the benefits of doing upstream work, not of joining Linaro.
+
+
+-Olof
