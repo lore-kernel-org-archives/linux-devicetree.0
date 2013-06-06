@@ -1,141 +1,72 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH] of: Export of_irq_count for using in modules
-Date: Thu, 6 Jun 2013 16:49:29 +0200
-Message-ID: <20130606144929.GI19834@game.jcrosoft.org>
-References: <6aa29b1d109a46278a7f37b598defe07d6edfe60.1369921774.git.michal.simek@xilinx.com>
- <20130530201714.GE19834@game.jcrosoft.org>
- <51A85BEE.4000009@monstr.eu>
- <20130531110045.GF19834@game.jcrosoft.org>
- <51A8AC4B.906@monstr.eu>
- <20130531151601.GG19834@game.jcrosoft.org>
- <51A8D3A3.5030200@monstr.eu>
- <20130606082941.GH19834@game.jcrosoft.org>
- <51B04AA9.4070803@monstr.eu>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
+ Uploading linux (3.9.4-1))
+Date: Thu, 6 Jun 2013 08:05:08 -0700
+Message-ID: <CAOesGMgukawVUN978xQARwOWBEhVQQXCPKYQ2eua8yAVgH5HCg@mail.gmail.com>
+References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+ <1370475609.20454.44.camel@localhost>
+ <CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
+ <1733666.lHUBcfUXq9@flatron>
+ <CAPweEDzYLDzh_-OWU61dtVhajZ40QpQgZKHFYDsh3FgF=r9_ag@mail.gmail.com>
+ <20130606140250.GA4839@thunk.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <51B04AA9.4070803@monstr.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130606140250.GA4839-AKGzg7BKzIDYtjvyW6yDsg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Theodore Ts'o <tytso-3s7WtUTddSA@public.gmane.org>, "luke.leighton" <luke.leighton-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux on small ARM machines <arm-netbook-Fj0DB6SUpRXNuVmtMlwsDbVCufUGDwFn@public.gmane.org>, devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, debian-arm-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org, "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, debian-kernel-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10:39 Thu 06 Jun     , Michal Simek wrote:
-> On 06/06/2013 10:29 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > On 18:45 Fri 31 May     , Michal Simek wrote:
-> >> On 05/31/2013 05:16 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> >>> On 15:57 Fri 31 May     , Michal Simek wrote:
-> >>>> On 05/31/2013 01:00 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> >>>>> On 10:14 Fri 31 May     , Michal Simek wrote:
-> >>>>>> Hi Jean-Christophe,
-> >>>>>>
-> >>>>>> On 05/30/2013 10:17 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
-> >>>>>>> On 15:49 Thu 30 May     , Michal Simek wrote:
-> >>>>>>>> Export of_irq_count for modules.
-> >>>>>>>
-> >>>>>>> can you explain why do you need to call of_irq_count
-> >>>>>>
-> >>>>>> I need to count number of irq written in the DTS node.
-> >>>>>> It is not fixed size that's why I need to proper way how to
-> >>>>>> find it out.
-> >>>>>>
-> >>>>>> I am using this loop.
-> >>>>>> 	count = of_irq_count(pdev->dev.of_node);
-> >>>>>> 	/* Alloc IRQ based on DTS to be sure that no other driver will use it */
-> >>>>>> 	while (count--) {
-> >>>>>> 		tmp->irq = irq_of_parse_and_map(pdev->dev.of_node, count);
-> >>>>>> 		dev_info(&pdev->dev, "%d: Alloc irq: %d\n", count, tmp->irq);
-> >>>>>> 		ret = request_irq(tmp->irq, zynq_remoteproc_interrupt, 0,
-> >>>>>> 					dev_name(&pdev->dev), &pdev->dev);
-> >>>>>> 		if (ret) {
-> >>>>>> 			...
-> >>>>>> 		}
-> >>>>>> 	}
-> >>>>>>
-> >>>>>> But of course if you think that this is incorrect to export it
-> >>>>>> I can use what it is in of_irq_count body
-> >>>>>> 368 int of_irq_count(struct device_node *dev)
-> >>>>>> 369 {
-> >>>>>> 370         int nr = 0;
-> >>>>>> 371
-> >>>>>> 372         while (of_irq_to_resource(dev, nr, NULL))
-> >>>>>> 373                 nr++;
-> >>>>>> 374
-> >>>>>> 375         return nr;
-> >>>>>> 376 }
-> >>>>>>
-> >>>>>> Because of_irq_to_resource is exported for modules.
-> >>>>>> Or is there any better way how to loop over all interrupts in DT node?
-> >>>>>
-> >>>>> can just explain me why you need to call irq_of_parse_and_map in your driver?
-> >>>>>
-> >>>>> as the irq will be provided in the resources normally
-> >>>>
-> >>>> It is quite a long time I have written this driver on v3.1 or 3.3.
-> >>>> But is this better?
-> >>>>
-> >>>> 	struct resource *res;
-> >>>> 	int i = 0;
-> >>>> 	do {
-> >>>> 		res = platform_get_resource(pdev, IORESOURCE_IRQ, i++);
-> >>>> 		if (res)
-> >>>> 			do something
-> >>>> 	} while(res);
-> >>>>
-> >>>> Also what about of_irq_to_resource()? Is it deprecated and all drivers
-> >>>> shouldn't use it?
-> >>>>
-> >>>> I have no problem to rewrite the driver to use platform_get_resource.
-> >>> yeah it's better but be aware there is a but in DT that I'm working on to fix
-> >>> if you use irq that are registered by a pdev this will not work
-> >>>
-> >>> I hope to fix it for 3.11
-> >>> and already send an RFC that fix it
-> >>
-> >> ok. good to know. Btw: Let's return to my origin point why not to
-> >> export of_irq_count for modules?
-> >> Or opposite question if platform_get_resource is correct way
-> >> why to export of_irq_to_resource for modules?
-> > 
-> > for old ppc drivers that are not converted yet to pdev
-> > 
-> > if you can do so just use pdev resource I should have fix the pb or irq_domain
-> > hopefully for 3.11
-> 
-> ok. It means it is currently deprecated.
-> I just wanted to be sure that I understand it correctly.
-> 
-> I have changed my drivers not to use this function and using resources as
-> we discussed.
-> 
-> btw: I have sent one email to device-tree ML about describing missing
-> connection between cpu and the first interrupt controller.
-> Can you please look at it and comment it?
-> https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-May/033955.html
+On Thu, Jun 6, 2013 at 7:02 AM, Theodore Ts'o <tytso-3s7WtUTddSA@public.gmane.org> wrote:
+> On Thu, Jun 06, 2013 at 01:24:57PM +0100, luke.leighton wrote:
+>> On Thu, Jun 6, 2013 at 1:01 AM, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>
+>> > I don't see any other solution here than moving all the Allwinner code to
+>> > DT (as it has been suggested in this thread several times already), as
+>> > this is the only hardware description method supported by ARM Linux.
+>>
+>>  i repeat again: please state, explicitly and unequivocably that you -
+>> linux kernel developers - are happy that the reach of linux and
+>> gnu/linux OSes is dramatically reduced due to this intransigent
+>> position.
+>
+> But that's not a true statement.  You've said that Allwinner is
+> perfectly happy to carry code out of tree, by constantly porting their
+> hacks from mainline kernels.
+>
+> For some of their customers, this will be acceptable to them.  In
+> those cases, Linux will still be in use.  Great!  So claiming that the
+> reach of Linux will be "dramatically reduced" just is not a
+> supportable position.
+>
+> For other (potential) customers, for whom mainline kernel support is
+> critically important, they will choose other hardware solutions that
+> are in the mainline kernel.
+>
+> I don't see the problem here.
 
-for the record as discussed with Grant I'm preparing to add a new property
-to handle interrupts so you will never have to use "interrupt-parent" any more
-and just do this
+This is all just a big storm in a cup. Mainline kernel support for
+allwinner SoCs are already happening through hobby development by
+Maxime Ripard and others. Allwinner are not yet actively
+participating, but they're aware of it. The whole situation is a
+non-issue.
 
-interrupt-lines = <&aic 5 0 &pioA 4>
+If the vendor prefers to keep carrying their own code for a while,
+they're free to. It makes more sense for them to move over to the
+upstream code as they move forward with their kernel versions, but
+they can do that on their own schedule.
 
-it will be more like gpio and will allow to have irq from different
-interrupt-parent in the same node
+We've seen all this before, it tends to turn out OK in the longer run.
 
-but wait a few I'll be really back next week as I'm half off this week
 
-Best Regards,
-J.
-> 
-> Thanks,
-> Michal
-> 
-> -- 
-> Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-> w: www.monstr.eu p: +42-0-721842854
-> Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-> Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-> Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-> 
-> 
+-Olof
