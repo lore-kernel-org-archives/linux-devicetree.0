@@ -1,66 +1,51 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: add basic SecureOS support
-Date: Thu, 06 Jun 2013 12:29:14 -0600
-Message-ID: <51B0D4FA.5070500@wwwdotorg.org>
-References: <1370503687-17767-1-git-send-email-acourbot@nvidia.com> <51B0BC80.9040007@wwwdotorg.org> <20130606180824.GC3320@localhost.localdomain>
+From: Henrik =?ISO-8859-1?Q?Nordstr=F6m?= <henrik@henriknordstrom.net>
+Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
+ Uploading linux (3.9.4-1))
+Date: Thu, 06 Jun 2013 20:44:42 +0200
+Message-ID: <1370544282.31564.5.camel@localhost>
+References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+ <CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
+ <51AFA6DD.3000202@wwwdotorg.org>
+ <CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
+ <1370469574.18839.33.camel@localhost>
+ <CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
+ <CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
+ <CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com>
+ <CAKON4Oz79hUE_ReAqjeynwL6ZWntX2W1uw3YOg0G2AiY7Gjs=g@mail.gmail.com>
+ <CAPweEDyO+Sc1aQ64HBeh1OSzmPNsnwMwEo5kbHSan5vw_YEjXA@mail.gmail.com>
+ <1370477756.20454.65.camel@localhost>
+ <CAPweEDzrYL5c9v1T=nTcyv9RPrJ-TEnCyyjpHQnhXXJY-32=5g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130606180824.GC3320-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Chris Johnson <CJohnson-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Karan Jhavar <kjhavar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPweEDzrYL5c9v1T=nTcyv9RPrJ-TEnCyyjpHQnhXXJY-32=5g@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
+Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel@lists.debian.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/06/2013 12:08 PM, Dave Martin wrote:
-> On Thu, Jun 06, 2013 at 10:44:48AM -0600, Stephen Warren wrote:
->> On 06/06/2013 01:28 AM, Alexandre Courbot wrote:
->>> Boot loaders on some Tegra devices can be unlocked but do not let the
->>> system operate without SecureOS. SecureOS prevents access to some
->>> registers and requires the operating system to perform certain
->>> operations through Secure Monitor Calls instead of directly accessing
->>> the hardware.
->>>
->>> This patch introduces basic SecureOS support for Tegra. SecureOS support
->>> can be enabled by adding a "nvidia,secure-os" property to the "chosen"
->>> node of the device tree.
-...
-> So, something like
-> 
-> 	foo-firmware {
-> 		compatible = "vendor1,foo-firmware-1.0", "vendor1,foo-firmware";
-> 		method = "smc";
-> 
-> 		// ...
-> 	};
-> 
-> 	bar-firmware {
-> 		compatible = "vendor2,bar-firmware-1.6", "vendor2,bar-firmware";
-> 		method = "smc";
-> 
-> 		// ...
-> 	};
-> 
-> Could make sense.
+tor 2013-06-06 klockan 13:19 +0100 skrev luke.leighton:
 
-I'm not sure if the method property is useful in most cases. For generic
-ABIs such as PSCI that actually support multiple communication paths,
-yes, it makes sense. However, it seems like for most custom ABIs, such
-as is presumably implemented by whatever "SecureOS" is on Tegra, the
-firmware type (or compatible value) directly implies that it operates
-over SMC not HVC. After all, presumably if the kernel was virtualized,
-it wouldn't have access to the raw secure monitor? I suppose you could
-argue that the hypervisor might end up emulating the same ABI over HVC
-instead? I'm not sure how likely that is. A compromise might be to
-assume SMC if no property was present, which would allow it to be
-optionally added later if it turned out to be useful.
+>  mass-volume tablet, mass-volume IPTV box.  android OS, nothing else.
 
-> ...where we would require all new firmware interface bindings to
-> include the "-firmware" in their node names and compatible strings
-> (with a version suffix encouraged for the compatible strings, where
-> relevant).
+Which still includes a number of possible configurations with different
+i2c, spi, usb etc devices connected on the board. Because Allwinner is
+not using mainline methods for configuration their customers are stuck
+in only selecting between a very limited set of "Allwinner compatible"
+auxillary chips (g-sensors, led controls, wifi modules, gps modules etc)
+in their designs.
 
-That's probably a good convention, but I'm not sure it should be
-required (or at least validated by code). Requiring this by code review
-might be OK. Node names aren't meant to be interpreted semantically.
+By using DT their customers are free to choose any device supported
+mainline.
+
+Regards
+Henrik
