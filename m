@@ -1,111 +1,82 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 4/6] ARM: kirkwood: move device tree nodes to DT irqchip
- and clocksource
-Date: Thu,  6 Jun 2013 18:27:12 +0200
-Message-ID: <1370536034-23956-5-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1370536034-23956-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH 0/6] Marvell Orion SoC irqchip and clocksource
+Date: Thu,  6 Jun 2013 18:27:08 +0200
+Message-ID: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Thomas Gleixner <tglx@linutronix.de>, John Stultz <john.stultz@linaro.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-With recent support for true irqchip and clocksource drivers for Orion
-SoCs, now make use of it on DT enabled Kirkwood boards.
+This patch set introduces DT-aware irqchip and clocksource drivers for
+Marvell Orion SoCs (Kirkwood, Dove, Orion5x, MV78x00) and corresponding
+patches for Dove and Kirkwood to enable them for DT-boards.
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- arch/arm/boot/dts/kirkwood.dtsi |   35 +++++++++++++++++++++++++++--------
- 1 files changed, 27 insertions(+), 8 deletions(-)
+The irqchip driver, of course, depends on Thomas Gleixner's work on
+irqdomain support for generic chip (tip irq/core).
 
-diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
-index c0c4811..ca296c3 100644
---- a/arch/arm/boot/dts/kirkwood.dtsi
-+++ b/arch/arm/boot/dts/kirkwood.dtsi
-@@ -8,13 +8,6 @@
- 	       gpio0 = &gpio0;
- 	       gpio1 = &gpio1;
- 	};
--	intc: interrupt-controller {
--		compatible = "marvell,orion-intc", "marvell,intc";
--		interrupt-controller;
--		#interrupt-cells = <1>;
--		reg = <0xf1020204 0x04>,
--		      <0xf1020214 0x04>;
--	};
- 
- 	ocp@f1000000 {
- 		compatible = "simple-bus";
-@@ -24,6 +17,30 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 
-+		timer: timer@20300 {
-+			compatible = "marvell,orion-timer";
-+			reg = <0x20300 0x20>;
-+			interrupt-parent = <&bridge_intc>;
-+			interrupts = <1>, <2>;
-+			clocks = <&core_clk 0>;
-+		};
-+
-+		intc: main-interrupt-ctrl@20200 {
-+			compatible = "marvell,orion-intc";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			reg = <0x20200 0x10>, <0x20210 0x10>;
-+		};
-+
-+		bridge_intc: bridge-interrupt-ctrl@20110 {
-+			compatible = "marvell,orion-bridge-intc";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			reg = <0x20110 0x8>;
-+			interrupts = <1>;
-+			marvell,#interrupts = <6>;
-+		};
-+
- 		core_clk: core-clocks@10030 {
- 			compatible = "marvell,kirkwood-core-clock";
- 			reg = <0x10030 0x4>;
-@@ -97,9 +114,11 @@
- 			#clock-cells = <1>;
- 		};
- 
--		wdt@20300 {
-+		wdt: watchdog-timer@20300 {
- 			compatible = "marvell,orion-wdt";
- 			reg = <0x20300 0x28>;
-+			interrupt-parent = <&bridge_intc>;
-+			interrupts = <3>;
- 			clocks = <&gate_clk 7>;
- 			status = "okay";
- 		};
+The ARM part of this patch set has a quite ridiculuous dependency havoc
+of mv643xx_eth DT support (current net-next) that will add to both irqchip
+and clocksource branches respectively. Therefore, I suggest that irq
+and clocksource maintainers take in the mere drivers (Patches 1+2) and
+Jason Cooper handles the remaining patches when all three drivers have
+surfaced on mainline linux.
+
+I prepared a branch for anyone to test on Kirkwood and Dove which takes
+care of the above dependencies based on v3.10-rc4 plus tip irq/core,
+net-next, and arm-soc for-next (I know it is unstable but contains latest
+mvebu related patches already). When Thomas, John, and Jason agree the
+dependencies will vanish and only Jason has to take care of ARM patches
+for enabling DT-based mv643xx_eth, irqchip, and clocksource.
+
+The branch can be found at
+
+git://github.com/shesselba/linux-dove.git orion-irqchip-for-v3.11
+
+and has been tested on Dove/CuBox and compile tested for Kirkwood.
+
+Sebastian Hesselbarth (6):
+  irqchip: add support for Marvell Orion SoCs
+  clocksource: add Marvell Orion SoC timer
+  ARM: dove: move device tree nodes to DT irqchip and clocksource
+  ARM: kirkwood: move device tree nodes to DT irqchip and clocksource
+  ARM: dove: convert to DT irqchip and clocksource
+  ARM: kirkwood: convert to DT irqchip and clocksource
+
+ .../interrupt-controller/marvell,orion-intc.txt    |   48 +++++
+ .../bindings/timer/marvell,orion-timer.txt         |   17 ++
+ arch/arm/boot/dts/dove.dtsi                        |   21 ++-
+ arch/arm/boot/dts/kirkwood.dtsi                    |   35 +++-
+ arch/arm/mach-dove/Kconfig                         |    2 +
+ arch/arm/mach-dove/Makefile                        |    4 +-
+ arch/arm/mach-dove/board-dt.c                      |   23 ++-
+ arch/arm/mach-kirkwood/Kconfig                     |   24 +++
+ arch/arm/mach-kirkwood/Makefile                    |    4 +-
+ arch/arm/mach-kirkwood/board-dt.c                  |   28 ++-
+ drivers/clocksource/Kconfig                        |    5 +
+ drivers/clocksource/Makefile                       |    1 +
+ drivers/clocksource/time-orion.c                   |  143 +++++++++++++++
+ drivers/irqchip/Kconfig                            |    5 +
+ drivers/irqchip/Makefile                           |    1 +
+ drivers/irqchip/irq-orion.c                        |  193 ++++++++++++++++++++
+ 16 files changed, 522 insertions(+), 32 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,orion-intc.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/marvell,orion-timer.txt
+ create mode 100644 drivers/clocksource/time-orion.c
+ create mode 100644 drivers/irqchip/irq-orion.c
+---
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Gregory Clement <gregory.clement@free-electrons.com>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
 -- 
 1.7.2.5
