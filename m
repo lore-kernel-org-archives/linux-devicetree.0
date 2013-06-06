@@ -1,62 +1,61 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v2] mfd: DT bindings for the palmas family MFD
-Date: Thu, 06 Jun 2013 09:53:41 -0600
-Message-ID: <51B0B085.7000908@wwwdotorg.org>
-References: <1370335309-6319-1-git-send-email-j-keerthy@ti.com> <51AF71CA.8060808@wwwdotorg.org> <DC88CAD03C0052499C1907B327FC63229EA0E9@DBDE04.ent.ti.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v3 06/11] staging: drm/imx: Add LDB support
+Date: Thu, 06 Jun 2013 17:54:42 +0200
+Message-ID: <1370534082.3931.7.camel@pizza.hi.pengutronix.de>
+References: <1364484215-13935-1-git-send-email-p.zabel@pengutronix.de>
+ <1364484215-13935-7-git-send-email-p.zabel@pengutronix.de>
+ <20130606151608.GE28270@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <DC88CAD03C0052499C1907B327FC63229EA0E9@DBDE04.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "J, KEERTHY" <j-keerthy@ti.com>
-Cc: "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "wim@iguana.be" <wim@iguana.be>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "Kristo, Tero" <t-kristo@ti.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, Ian Lartey <ian@slimlogic.co.uk>
+Return-path: <devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20130606151608.GE28270@S2101-09.ap.freescale.net>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/devel>,
+ <mailto:devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/devel/>
+List-Post: <mailto:devel@linuxdriverproject.org>
+List-Help: <mailto:devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/devel>,
+ <mailto:devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: devel-bounces@linuxdriverproject.org
+Sender: "devel" <devel-bounces@linuxdriverproject.org>
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: devel@driverdev.osuosl.org, Fabio Estevam <fabio.estevam@freescale.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de, Martin Fuzzey <mfuzzey@parkeon.com>, Sean Cross <xobs@kosagi.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/05/2013 09:34 PM, J, KEERTHY wrote:
-> Hi Stephen,
-> 
-> Thanks for the quick review.
-> 
-> Stephen Warren wrote at Wednesday, June 05, 2013 10:44 PM:
->> On 06/04/2013 02:41 AM, J Keerthy wrote:
->>> From: Graeme Gregory <gg@slimlogic.co.uk>
->>>
->>> Add the various binding files for the palmas family of chips. There is
->>> a top level MFD binding then a seperate binding for regulators IP
->> blocks on chips.
-...
->> Oh, one question though: How does the regulator driver determine the
->> register address of the regulator sub-device within the overall PMIC?
->> Presumably if these are pluggable independent modules, that could
->> change depending on which overall chip the PMIC device is plugged into.
->> don't you need a reg property to specify that?
-> 
-> The variants have identical register addresses. These are not pluggable
-> Independent modules. All the variants come with all the regulators
-> Listed above in general. The driver today has a statically defined
-> Array of all the above mentioned regulators with their addresses.
->  
-> drivers/regulator/palmas-regulator.c
-> 
-> Line 38.
+Hi Shawn,
 
-I meant the I2C address used to communicate with the regulator registers
-really, and I suppose the base address of the regulator register block.
+Am Donnerstag, den 06.06.2013, 23:16 +0800 schrieb Shawn Guo:
+> On Thu, Mar 28, 2013 at 04:23:30PM +0100, Philipp Zabel wrote:
+> > +static void imx_ldb_encoder_prepare(struct drm_encoder *encoder)
+> > +{
+> > +	struct imx_ldb_channel *imx_ldb_ch = enc_to_imx_ldb_ch(encoder);
+> > +	struct imx_ldb *ldb = imx_ldb_ch->ldb;
+> > +	struct drm_display_mode *mode = &encoder->crtc->mode;
+> > +	unsigned long serial_clk;
+> > +	unsigned long di_clk = mode->clock * 1000;
+> > +	int mux = imx_drm_encoder_get_mux_id(imx_ldb_ch->imx_drm_encoder,
+> > +					     encoder->crtc);
+> > +
+> > +	if (ldb->ldb_ctrl & LDB_SPLIT_MODE_EN) {
+> > +		/* dual channel LVDS mode */
+> > +		serial_clk = 3500UL * mode->clock;
+> > +		imx_ldb_set_clock(ldb, mux, 0, serial_clk, di_clk);
+> > +		imx_ldb_set_clock(ldb, mux, 1, serial_clk, di_clk);
+> > +	} else {
+> > +		serial_clk = 7000UL * mode->clock;
+> > +		imx_ldb_set_clock(ldb, mux, imx_ldb_ch->chno, serial_clk, di_clk);
+> > +	}
+> > +
+> > +	imx_drm_crtc_panel_format(encoder->crtc, DRM_MODE_ENCODER_LVDS,
+> > +			V4L2_PIX_FMT_RGB24);
+> 
+> I have panel which needs it to be V4L2_PIX_FMT_BGR666.  We should
+> probably have a device tree property for that like interface_pix_fmt in
+> parallel display support?
 
-In the driver, I see this is handled by the top-level Palmas driver
-creating a regmap object which the regulator driver used. This keeps the
-regulator driver completely unaware of these issues, only the top-level
-chip driver cares about this, which is fine.
+I'm not sure. Is this something that should be done unconditionally for
+fsl,data-width = <18>?
 
-While that justification is in terms of OS-specific code, the basic
-argument can be applied to the HW itself (the top-level chip implies the
-I2C address and any register offset), so this really is a HW-driven
-argument, so I guess it's fine not having a reg property in the
-top-level regulator node.
-
-One question though: I wonder why if the HW IP blocks aren't completely
-independent modules that can be mixed/matched together to form new
-chips, there's even a need for a separate regulator node with its own
-compatible value. Still, I suppose it's a valid way to construct the DT
-either way, so it's fine.
+regards
+Philipp
