@@ -1,97 +1,289 @@
-From: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/7] USB: chipidea: add PTW, PTS and STS handling
-Date: Thu, 6 Jun 2013 12:54:02 +0200
-Message-ID: <20130606105402.GA20751@pengutronix.de>
-References: <1370025529-7414-1-git-send-email-mgr@pengutronix.de>
- <1370025529-7414-4-git-send-email-mgr@pengutronix.de>
+From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: add basic SecureOS support
+Date: Thu, 6 Jun 2013 12:02:51 +0100
+Message-ID: <20130606110240.GA3320@localhost.localdomain>
+References: <1370503687-17767-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1370025529-7414-4-git-send-email-mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1370503687-17767-1-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Chris Johnson <CJohnson-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Karan Jhavar <kjhavar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, May 31, 2013 at 08:38:45PM +0200, Michael Grzeschik wrote:
-> From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Thu, Jun 06, 2013 at 04:28:07PM +0900, Alexandre Courbot wrote:
+> Boot loaders on some Tegra devices can be unlocked but do not let the
+> system operate without SecureOS. SecureOS prevents access to some
+> registers and requires the operating system to perform certain
+> operations through Secure Monitor Calls instead of directly accessing
+> the hardware.
 > 
-> This patch makes it possible to configure the PTW, PTS and STS bits
-> inside the portsc register for host and device mode before the driver
-> starts and the phy can be addressed as hardware implementation is
-> designed.
+> This patch introduces basic SecureOS support for Tegra. SecureOS support
+> can be enabled by adding a "nvidia,secure-os" property to the "chosen"
+> node of the device tree.
 > 
-> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Currently, only the bringup of secondary CPUs is performed by SMCs, but
+> more operations will be added later.
+> 
+> Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > ---
->  .../devicetree/bindings/usb/ci13xxx-imx.txt        |  5 +++
->  drivers/usb/chipidea/bits.h                        | 15 ++++++-
->  drivers/usb/chipidea/core.c                        | 49 ++++++++++++++++++++++
->  include/linux/usb/chipidea.h                       |  1 +
->  4 files changed, 69 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/arm/tegra.txt |  8 +++
+>  arch/arm/configs/tegra_defconfig                |  1 +
+>  arch/arm/mach-tegra/Kconfig                     | 11 ++++
+>  arch/arm/mach-tegra/Makefile                    |  2 +
+>  arch/arm/mach-tegra/common.c                    |  2 +
+>  arch/arm/mach-tegra/reset.c                     | 30 +++++++----
+>  arch/arm/mach-tegra/secureos.c                  | 70 +++++++++++++++++++++++++
+>  arch/arm/mach-tegra/secureos.h                  | 31 +++++++++++
+>  8 files changed, 145 insertions(+), 10 deletions(-)
+>  create mode 100644 arch/arm/mach-tegra/secureos.c
+>  create mode 100644 arch/arm/mach-tegra/secureos.h
 > 
-
-[snip]
-
-> diff --git a/drivers/usb/chipidea/bits.h b/drivers/usb/chipidea/bits.h
-> index 050de85..93efe4e 100644
-> --- a/drivers/usb/chipidea/bits.h
-> +++ b/drivers/usb/chipidea/bits.h
-
-[snip]
-
->  /**
->   * hw_device_reset: resets chip (execute without interruption)
->   * @ci: the controller
-> @@ -369,6 +410,9 @@ static int ci_hdrc_probe(struct platform_device *pdev)
->  		return -ENODEV;
->  	}
->  
-> +	if (!dev->of_node && dev->parent)
-> +		dev->of_node = dev->parent->of_node;
+> diff --git a/Documentation/devicetree/bindings/arm/tegra.txt b/Documentation/devicetree/bindings/arm/tegra.txt
+> index ed9c853..b543091 100644
+> --- a/Documentation/devicetree/bindings/arm/tegra.txt
+> +++ b/Documentation/devicetree/bindings/arm/tegra.txt
+> @@ -32,3 +32,11 @@ board-specific compatible values:
+>    nvidia,whistler
+>    toradex,colibri_t20-512
+>    toradex,iris
 > +
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	base = devm_ioremap_resource(dev, res);
->  	if (IS_ERR(base))
-> @@ -408,6 +452,9 @@ static int ci_hdrc_probe(struct platform_device *pdev)
->  		return -ENODEV;
->  	}
->  
-> +	if (!ci->platdata->phy_mode)
-> +		ci->platdata->phy_mode = of_usb_get_phy_mode(dev->of_node);
+> +Global properties
+> +-------------------------------------------
 > +
->  	/* initialize role(s) before the interrupt is requested */
->  	ret = ci_hdrc_host_init(ci);
->  	if (ret)
-> @@ -434,6 +481,8 @@ static int ci_hdrc_probe(struct platform_device *pdev)
->  			: CI_ROLE_GADGET;
->  	}
->  
-> +	hw_phymode_configure(ci);
+> +The following properties can be specified into the "chosen" root
+> +node:
 > +
+> +  nvidia,secure-os: enable SecureOS.
+> diff --git a/arch/arm/configs/tegra_defconfig b/arch/arm/configs/tegra_defconfig
+> index f7ba3161..f6ed0f5 100644
+> --- a/arch/arm/configs/tegra_defconfig
+> +++ b/arch/arm/configs/tegra_defconfig
+> @@ -28,6 +28,7 @@ CONFIG_ARCH_TEGRA_3x_SOC=y
+>  CONFIG_ARCH_TEGRA_114_SOC=y
+>  CONFIG_TEGRA_PCI=y
+>  CONFIG_TEGRA_EMC_SCALING_ENABLE=y
+> +CONFIG_TEGRA_SECUREOS=y
+>  CONFIG_SMP=y
+>  CONFIG_PREEMPT=y
+>  CONFIG_AEABI=y
+> diff --git a/arch/arm/mach-tegra/Kconfig b/arch/arm/mach-tegra/Kconfig
+> index 84d72fc..acb5d0a 100644
+> --- a/arch/arm/mach-tegra/Kconfig
+> +++ b/arch/arm/mach-tegra/Kconfig
+> @@ -87,4 +87,15 @@ config TEGRA_AHB
+>  config TEGRA_EMC_SCALING_ENABLE
+>  	bool "Enable scaling the memory frequency"
+>  
+> +config TEGRA_SECUREOS
+> +	bool "Enable SecureOS support"
+> +	help
+> +	  Support for Tegra devices which bootloader sets up a
+> +	  SecureOS environment. This will use Secure Monitor Calls
+> +	  instead of directly accessing the hardware for some protected
+> +	  operations.
+> +
+> +	  SecureOS support is enabled by declaring a "nvidia,secure-os"
+> +	  property into the "chosen" node of the device tree.
+> +
+>  endmenu
+> diff --git a/arch/arm/mach-tegra/Makefile b/arch/arm/mach-tegra/Makefile
+> index d011f0a..3adafe6 100644
+> --- a/arch/arm/mach-tegra/Makefile
+> +++ b/arch/arm/mach-tegra/Makefile
+> @@ -37,3 +37,5 @@ endif
+>  obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= board-harmony-pcie.o
+>  
+>  obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= board-paz00.o
+> +
+> +obj-$(CONFIG_TEGRA_SECUREOS)		+= secureos.o
+> diff --git a/arch/arm/mach-tegra/common.c b/arch/arm/mach-tegra/common.c
+> index 9f852c6..b7eea02 100644
+> --- a/arch/arm/mach-tegra/common.c
+> +++ b/arch/arm/mach-tegra/common.c
+> @@ -37,6 +37,7 @@
+>  #include "sleep.h"
+>  #include "pm.h"
+>  #include "reset.h"
+> +#include "secureos.h"
+>  
+>  /*
+>   * Storage for debug-macro.S's state.
+> @@ -97,6 +98,7 @@ static void __init tegra_init_cache(void)
+>  
+>  void __init tegra_init_early(void)
+>  {
+> +	tegra_init_secureos();
+>  	tegra_cpu_reset_handler_init();
+>  	tegra_apb_io_init();
+>  	tegra_init_fuse();
+> diff --git a/arch/arm/mach-tegra/reset.c b/arch/arm/mach-tegra/reset.c
+> index 1ac434e..4b9ebf9 100644
+> --- a/arch/arm/mach-tegra/reset.c
+> +++ b/arch/arm/mach-tegra/reset.c
+> @@ -21,38 +21,32 @@
+>  
+>  #include <asm/cacheflush.h>
+>  #include <asm/hardware/cache-l2x0.h>
+> +#include <asm/firmware.h>
+>  
+>  #include "iomap.h"
+>  #include "irammap.h"
+>  #include "reset.h"
+>  #include "sleep.h"
+>  #include "fuse.h"
+> +#include "secureos.h"
+>  
+>  #define TEGRA_IRAM_RESET_BASE (TEGRA_IRAM_BASE + \
+>  				TEGRA_IRAM_RESET_HANDLER_OFFSET)
+>  
+>  static bool is_enabled;
+>  
+> -static void __init tegra_cpu_reset_handler_enable(void)
+> +static void __init tegra_cpu_reset_handler_set(const u32 reset_address)
+>  {
+> -	void __iomem *iram_base = IO_ADDRESS(TEGRA_IRAM_RESET_BASE);
+>  	void __iomem *evp_cpu_reset =
+>  		IO_ADDRESS(TEGRA_EXCEPTION_VECTORS_BASE + 0x100);
+>  	void __iomem *sb_ctrl = IO_ADDRESS(TEGRA_SB_BASE);
+>  	u32 reg;
+>  
+> -	BUG_ON(is_enabled);
+> -	BUG_ON(tegra_cpu_reset_handler_size > TEGRA_IRAM_RESET_HANDLER_SIZE);
+> -
+> -	memcpy(iram_base, (void *)__tegra_cpu_reset_handler_start,
+> -			tegra_cpu_reset_handler_size);
+> -
+>  	/*
+>  	 * NOTE: This must be the one and only write to the EVP CPU reset
+>  	 *       vector in the entire system.
+>  	 */
+> -	writel(TEGRA_IRAM_RESET_BASE + tegra_cpu_reset_handler_offset,
+> -			evp_cpu_reset);
+> +	writel(reset_address, evp_cpu_reset);
+>  	wmb();
+>  	reg = readl(evp_cpu_reset);
+>  
+> @@ -66,6 +60,22 @@ static void __init tegra_cpu_reset_handler_enable(void)
+>  		writel(reg, sb_ctrl);
+>  		wmb();
+>  	}
+> +}
+> +
+> +static void __init tegra_cpu_reset_handler_enable(void)
+> +{
+> +	void __iomem *iram_base = IO_ADDRESS(TEGRA_IRAM_RESET_BASE);
+> +	const u32 reset_address = TEGRA_IRAM_RESET_BASE +
+> +						tegra_cpu_reset_handler_offset;
+> +
+> +	BUG_ON(is_enabled);
+> +	BUG_ON(tegra_cpu_reset_handler_size > TEGRA_IRAM_RESET_HANDLER_SIZE);
+> +
+> +	memcpy(iram_base, (void *)__tegra_cpu_reset_handler_start,
+> +			tegra_cpu_reset_handler_size);
+> +
+> +	if (call_firmware_op(set_cpu_boot_addr, 0, reset_address) == -ENOSYS)
+> +		tegra_cpu_reset_handler_set(reset_address);
+>  
+>  	is_enabled = true;
+>  }
+> diff --git a/arch/arm/mach-tegra/secureos.c b/arch/arm/mach-tegra/secureos.c
+> new file mode 100644
+> index 0000000..44c3514
+> --- /dev/null
+> +++ b/arch/arm/mach-tegra/secureos.c
+> @@ -0,0 +1,70 @@
+> +/*
+> + * SecureOS support for Tegra CPUs
+> + *
+> + * Copyright (c) 2013, NVIDIA Corporation.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/of.h>
+> +#include <asm/firmware.h>
+> +
+> +static int __attribute__((used)) __tegra_smc_stack[10];
 
-I just realised that this call has to be moved to hw_device_reset. As
-otherwise we will loose the configuration on any OTG case while changing
-from Host to Device and vice versa. The datasheet says that its value
-got reset on every controller reset. I will fix it in the next series.
+Use __used instead of using GCC attributes directly.
 
->  	ret = ci_role_start(ci, ci->role);
->  	if (ret) {
->  		dev_err(dev, "can't start %s role\n", ci_role(ci)->name);
+> +
+> +/*
+> + * With EABI, subtype and arg already end up in r0, r1 and r2 as they are
+> + * function arguments, but we prefer to play safe here and explicitly move
+> + * these values into the expected registers anyway. mov instructions without
+> + * any side-effect are turned into nops by the assembler, which limits
+> + * overhead.
+> + */
+> +static void tegra_generic_smc(u32 type, u32 subtype, u32 arg)
+> +{
+> +	asm volatile(
+> +		".arch_extension	sec\n\t"
+> +		"ldr	r3, =__tegra_smc_stack\n\t"
 
+ldr= should be avoided in inline asm, because GCC can't guess it's size,
+and can't guarantee that the literal pool word is close enough to be
+addressable (though for small compilation units it's unlikely to be a
+problem).
 
-Michael
+If you follow Russell's approach and define a naked function for this,
+you can put an explicit literal word after the return:
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+		ldr	r3, 1f
+
+		/* ... */
+
+		/* return instruction */
+
+		.align	2
+	1:	.long	__tegra_smc_stack
+
+> +		"stmia	r3, {r4-r12, lr}\n\t"
+> +		"mov	r0, %[type]\n\t"
+> +		"mov	r1, %[subtype]\n\t"
+> +		"mov	r2, %[arg]\n\t"
+> +		"mov	r3, #0\n\t"
+> +		"mov	r4, #0\n\t"
+> +		"dsb\n\t"
+
+Can you explain what this DSB is for?
+
+> +		"smc	#0\n\t"
+> +		"ldr	r3, =__tegra_smc_stack\n\t"
+> +		"ldmia	r3, {r4-r12, lr}"
+> +			:
+> +			: [type]    "r" (type),
+> +			  [subtype] "r" (subtype),
+> +			  [arg]     "r" (arg)
+> +			: "r0", "r1", "r2", "r3", "r4", "memory");
+
+If r5-r12 are not clobbered, why do you save and restore them?
+
+In the ARM ABI, r12 is a caller-save register, so you probably
+don't need to save/restore that even if it is clobbered.
+
+Cheers
+---Dave
