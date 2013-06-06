@@ -1,91 +1,86 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: add basic SecureOS support
-Date: Thu, 6 Jun 2013 10:35:25 +0100
-Message-ID: <20130606093524.GM18614@n2100.arm.linux.org.uk>
-References: <1370503687-17767-1-git-send-email-acourbot@nvidia.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
+ Uploading linux (3.9.4-1))
+Date: Thu, 6 Jun 2013 10:49:32 +0100
+Message-ID: <20130606094932.GN31367@sirena.org.uk>
+References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+ <1370475609.20454.44.camel@localhost>
+ <CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
+ <1733666.lHUBcfUXq9@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1370503687-17767-1-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Chris Johnson <CJohnson-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Karan Jhavar <kjhavar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============5638236685329725939=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1733666.lHUBcfUXq9@flatron>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, "luke.leighton" <luke.leighton@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, linux-arm-kernel@lists.infradead.org, debian-kernel@lists.debian.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 06, 2013 at 04:28:07PM +0900, Alexandre Courbot wrote:
-> +static int __attribute__((used)) __tegra_smc_stack[10];
-> +
-> +/*
-> + * With EABI, subtype and arg already end up in r0, r1 and r2 as they are
-> + * function arguments, but we prefer to play safe here and explicitly move
-> + * these values into the expected registers anyway. mov instructions without
-> + * any side-effect are turned into nops by the assembler, which limits
-> + * overhead.
 
-No they aren't.  They will be preserved as:
-	mov r0, r0
-	mov r1, r1
-	mov r2, r2
+--===============5638236685329725939==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5vxz5YoITinLs0qm"
+Content-Disposition: inline
 
-Moreover, things will go wrong if the compiler decides for whatever reason
-to move 'arg' into r0 before calling your code sequence.  So really this
-is quite fragile.
 
-There's also no point in mentioning EABI in the above paragraph; all ARM
-ABIs under Linux have always placed the arguments in r0..r3 and then on
-the stack.  You can assert that this is always true by using the __asmeq()
-macro.
+--5vxz5YoITinLs0qm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Also...
+On Thu, Jun 06, 2013 at 02:01:14AM +0200, Tomasz Figa wrote:
 
-> + */
-> +static void tegra_generic_smc(u32 type, u32 subtype, u32 arg)
-> +{
-> +	asm volatile(
-> +		".arch_extension	sec\n\t"
-> +		"ldr	r3, =__tegra_smc_stack\n\t"
-> +		"stmia	r3, {r4-r12, lr}\n\t"
+> I don't see any other solution here than moving all the Allwinner code to=
+=20
+> DT (as it has been suggested in this thread several times already), as=20
+> this is the only hardware description method supported by ARM Linux.
 
-using a statically allocated area to save the registers in this way is
-probably a bad move; although the hotplug code guarantees that there
-will be no concurrency between CPU hotplug operations, this sets a
-precident for it being used in places where no such protection exists.
+Well, the server guys are working on ACPI - people could contribute to
+that effort instead if they preferred (though I can see that they might
+not!).
 
-What is wrong with stacking r4-r12, lr onto the SVC stack?  You don't
-save the SVC stack pointer, so one can only assume that your SMC
-implmentation preserves this (if it doesn't, that's yet another bug
-with this assembly code.)
+--5vxz5YoITinLs0qm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Combining these two issues, you're probably far better off using an
-__attribute__((naked)) function for this - which means you get to
-write the entire function in assembly code without any compiler
-interference:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.20 (GNU/Linux)
 
-static void __attribute__((naked)) tegra_generic_smc(u32 type, u32 subtype, u32 arg)
-{
-	asm volatile(
-		".arch_extension	sec\n\t"
-		"stmfd	sp!, {r4 - r12, lr}\n\t"
-		__asmeq("%0", "r0")
-		__asmeq("%1", "r1")
-		__asmeq("%2", "r2")
-		"mov	r3, #0\n\t"
-		"mov	r4, #0\n\t"
-		"dsb\n\t"
-		"smc	#0\n\t"
-		"ldmfd	sp!, {r4 - r12, pc}"
-		:
-		: "r" (type), "r" (subtype), "r" (arg)
-		: "memory");
-}
+iQIcBAEBAgAGBQJRsFsoAAoJELSic+t+oim9GjEQAJT+tHVIRENdSTOdCMUrwjWf
+leW7rvKEvns8wQ4KhMO7w0pnIABxAc6ZniX8X/MjawpXVSBDOpN5H422PnS8zAPV
+A9gZL6uvnuuUa9nLb64a5YAl4Gc4BP2V/KyS8k7cXnYPvKBOdQLBZRd5H/cWdhBV
+J3dR3N00vR17qoO/kGsjUGotdqyRG83fCm4xrsbkZ3Sl7C0CU9UQma/rPuIZ5qzR
+YLZ0BHJFrZ21x9CSrPaQsPYC18ajaEHCP6BpGhev0iqyNHZJz2y+kdC2Rr1qZeek
+Rul5YjWk998U9AnfO9EQeqbQy4UdKwSK5kFBx/IXcXtI3gNT2eTfxXpXFa2BARLu
+nWwY4cqhuP8MxT42aFVNYjGQdDDmdYYzf2wQCV8bjSycGMz6JibFUvHQF/gMFk3w
+qkAONnIaekxtixATQg7vl/Va+wZvGlEBNvHQN6TvwdhaVjjDw/OTlDIGLcle138z
+8O2ygNxbgVY7iw17iLzkwIivPkM7xTSfQsLW685WWUnjXgr/xjJ4qyq6ow5t9isI
+hGZxc6yIOiOme8Vvn+jxKKe/uN6IkRf4PuV/LqqHTrdtNHX7vfLxsTIEpc5y/Vs8
+EYUzeVT1+Pnz7b1rGxs1LRtm1POt6VRuL/8+5e64G+CXsJ5VJdiWDlLYPusaVzEo
+aF38P8FQ2r272NbSedfi
+=fs+B
+-----END PGP SIGNATURE-----
+
+--5vxz5YoITinLs0qm--
+
+
+--===============5638236685329725939==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5638236685329725939==--
