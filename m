@@ -1,48 +1,116 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [net-next PATCH v4 0/5] Adding pinctrl PM support for CPSW and
- MDIO
-Date: Thu, 6 Jun 2013 13:57:25 +0530
-Message-ID: <51B047ED.5060203@ti.com>
-References: <1370452099-24026-1-git-send-email-mugunthanvnm@ti.com> <51B03D4E.3090504@ti.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH] of: Export of_irq_count for using in modules
+Date: Thu, 6 Jun 2013 10:29:41 +0200
+Message-ID: <20130606082941.GH19834@game.jcrosoft.org>
+References: <6aa29b1d109a46278a7f37b598defe07d6edfe60.1369921774.git.michal.simek@xilinx.com>
+ <20130530201714.GE19834@game.jcrosoft.org>
+ <51A85BEE.4000009@monstr.eu>
+ <20130531110045.GF19834@game.jcrosoft.org>
+ <51A8AC4B.906@monstr.eu>
+ <20130531151601.GG19834@game.jcrosoft.org>
+ <51A8D3A3.5030200@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <51B03D4E.3090504@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, benoit.cousson@linaro.org, linux-omap@vger.kernel.org, davem@davemloft.net
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51A8D3A3.5030200@monstr.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 6/6/2013 1:12 PM, Benoit Cousson wrote:
-> Hi Mugunthan,
->
-> On 06/05/2013 07:08 PM, Mugunthan V N wrote:
->> This patch series adds the following features
->> * Adding pinctrl PM support for CPSW and MDIO for Power Optimization
->> * Adding phy address to the CPSW node for EVMsk board
->>
->> Changes from initial version
->> * Fixed the multiline function call indentation as per David Miller
->>    recommendation.
->>
->> Changes from v2
->> * Fixed the multi comment style as per net coding style
->> * Fixed checkpatch error (more than 80 characters)
->>
->> Changes from v3
->> * Removed below patch as it has already merged to net-next
->> 	ARM: dts: AM33XX: Add CPSW phy_id device tree data to am335x-evmsk
->> * Rebased to net-next as there was a merge conflict in DT files
-> You should try to avoid pushing DTS patches outside the arm-soc tree, it
-> will generate a bunch a conflict when arm-soc and net trees will be merged.
->
-> Could you post separately all the DTS patches and rebase them on the
-> for_3.11/dts branch that already contains a bunch of AM33xx patches?
-Benoit
+On 18:45 Fri 31 May     , Michal Simek wrote:
+> On 05/31/2013 05:16 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > On 15:57 Fri 31 May     , Michal Simek wrote:
+> >> On 05/31/2013 01:00 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> >>> On 10:14 Fri 31 May     , Michal Simek wrote:
+> >>>> Hi Jean-Christophe,
+> >>>>
+> >>>> On 05/30/2013 10:17 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> >>>>> On 15:49 Thu 30 May     , Michal Simek wrote:
+> >>>>>> Export of_irq_count for modules.
+> >>>>>
+> >>>>> can you explain why do you need to call of_irq_count
+> >>>>
+> >>>> I need to count number of irq written in the DTS node.
+> >>>> It is not fixed size that's why I need to proper way how to
+> >>>> find it out.
+> >>>>
+> >>>> I am using this loop.
+> >>>> 	count = of_irq_count(pdev->dev.of_node);
+> >>>> 	/* Alloc IRQ based on DTS to be sure that no other driver will use it */
+> >>>> 	while (count--) {
+> >>>> 		tmp->irq = irq_of_parse_and_map(pdev->dev.of_node, count);
+> >>>> 		dev_info(&pdev->dev, "%d: Alloc irq: %d\n", count, tmp->irq);
+> >>>> 		ret = request_irq(tmp->irq, zynq_remoteproc_interrupt, 0,
+> >>>> 					dev_name(&pdev->dev), &pdev->dev);
+> >>>> 		if (ret) {
+> >>>> 			...
+> >>>> 		}
+> >>>> 	}
+> >>>>
+> >>>> But of course if you think that this is incorrect to export it
+> >>>> I can use what it is in of_irq_count body
+> >>>> 368 int of_irq_count(struct device_node *dev)
+> >>>> 369 {
+> >>>> 370         int nr = 0;
+> >>>> 371
+> >>>> 372         while (of_irq_to_resource(dev, nr, NULL))
+> >>>> 373                 nr++;
+> >>>> 374
+> >>>> 375         return nr;
+> >>>> 376 }
+> >>>>
+> >>>> Because of_irq_to_resource is exported for modules.
+> >>>> Or is there any better way how to loop over all interrupts in DT node?
+> >>>
+> >>> can just explain me why you need to call irq_of_parse_and_map in your driver?
+> >>>
+> >>> as the irq will be provided in the resources normally
+> >>
+> >> It is quite a long time I have written this driver on v3.1 or 3.3.
+> >> But is this better?
+> >>
+> >> 	struct resource *res;
+> >> 	int i = 0;
+> >> 	do {
+> >> 		res = platform_get_resource(pdev, IORESOURCE_IRQ, i++);
+> >> 		if (res)
+> >> 			do something
+> >> 	} while(res);
+> >>
+> >> Also what about of_irq_to_resource()? Is it deprecated and all drivers
+> >> shouldn't use it?
+> >>
+> >> I have no problem to rewrite the driver to use platform_get_resource.
+> > yeah it's better but be aware there is a but in DT that I'm working on to fix
+> > if you use irq that are registered by a pdev this will not work
+> > 
+> > I hope to fix it for 3.11
+> > and already send an RFC that fix it
+> 
+> ok. good to know. Btw: Let's return to my origin point why not to
+> export of_irq_count for modules?
+> Or opposite question if platform_get_resource is correct way
+> why to export of_irq_to_resource for modules?
 
-Will separate out the DT patches and will submit on top of for_3.11/dts 
-today as v5.
+for old ppc drivers that are not converted yet to pdev
 
-Regards
-Mugunthan V N
+if you can do so just use pdev resource I should have fix the pb or irq_domain
+hopefully for 3.11
+
+Best Regards,
+J.
+
+> 
+> Thanks,
+> Michal
+> 
+> -- 
+> Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+> w: www.monstr.eu p: +42-0-721842854
+> Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+> Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+> Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+> 
+> 
