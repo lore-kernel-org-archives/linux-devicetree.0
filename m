@@ -1,52 +1,107 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3] mfd: DT bindings for the palmas family MFD
-Date: Thu, 6 Jun 2013 08:06:10 +0100
-Message-ID: <20130606070610.GS3370@gmail.com>
-References: <1370496441-24620-1-git-send-email-j-keerthy@ti.com>
- <20130606070210.GR3370@gmail.com>
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: Re: [net-next PATCH v4 3/5] ARM: dts: AM33XX: Add pinmux configuration
+ for CPSW to beaglebone
+Date: Thu, 06 Jun 2013 09:06:21 +0200
+Message-ID: <51B034ED.7040603@epfl.ch>
+References: <1370452099-24026-1-git-send-email-mugunthanvnm@ti.com> <1370452099-24026-4-git-send-email-mugunthanvnm@ti.com>
+Reply-To: florian.vaussard@epfl.ch
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130606070210.GR3370@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: J Keerthy <j-keerthy@ti.com>
-Cc: linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org, swarren@nvidia.com, rob.herring@calxeda.com, rob@landley.net, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, gg@slimlogic.co.uk, t-kristo@ti.com, Ian Lartey <ian@slimlogic.co.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1370452099-24026-4-git-send-email-mugunthanvnm@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mugunthan V N <mugunthanvnm@ti.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, benoit.cousson@linaro.org, paul@pwsan.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 06 Jun 2013, Lee Jones wrote:
+Hello,
 
-> On Thu, 06 Jun 2013, J Keerthy wrote:
->=20
-> > Add the various binding files for the palmas family of chips. There=
- is a
-> > top level MFD binding then a seperate binding for regulators IP blo=
-cks on chips.
-> >=20
-> > Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
-> > Signed-off-by: J Keerthy <j-keerthy@ti.com>
-> > Signed-off-by: Ian Lartey <ian@slimlogic.co.uk>
-> > Reviewed-by: Stephen Warren <swarren@nvidia.com>=20
-> > ---
-> >  Documentation/devicetree/bindings/mfd/palmas.txt   |   49 ++++++++=
-+++++
-> >  .../devicetree/bindings/regulator/palmas-pmic.txt  |   72 ++++++++=
-++++++++++++
-> >  2 files changed, 121 insertions(+), 0 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/palmas.tx=
-t
-> >  create mode 100644
-> > Documentation/devicetree/bindings/regulator/palmas-pmic.tx
->=20
-> Applied, thanks.
+On 06/05/2013 07:08 PM, Mugunthan V N wrote:
+> Add pinmux configurations for MII based CPSW ethernet to am335x-bone.
+> In this patch, only single named mode/state is added and these pins
+> are configured during pinctrl driver initialization.
+>
+> Default mode is nothing but the values required for the module during
+> active state. With this configurations module is functional as
+> expected.
+>
+> Todo:
+> - if an idle state is available for pins, add support for it.
+>
+> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+> ---
+>   arch/arm/boot/dts/am335x-bone.dts |   38 +++++++++++++++++++++++++++++++++++++
+>   1 file changed, 38 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
+> index 4b5a8e0..008a13b 100644
+> --- a/arch/arm/boot/dts/am335x-bone.dts
+> +++ b/arch/arm/boot/dts/am335x-bone.dts
+> @@ -36,6 +36,33 @@
+>   				0x60 0x17	/* gpmc_a8.gpio1_24, OUTPUT_PULLUP | MODE7 */
+>   			>;
+>   		};
+> +
+> +		cpsw_default: cpsw_default {
+> +			pinctrl-single,pins = <
+> +				/* Slave 1 */
+> +				0x110 0x20	/* mii1_rxerr.mii1_rxerr, MODE0 | INPUT */
 
-Ah wait. It appears Grant wants to take this.
+Here I guess that the comment should be INPUT_PULLDOWN, instead of INPUT.
 
-Unapplied, thanks. :)
+> +				0x114 0x0	/* mii1_txen.mii1_txen, MODE0 | OUTPUT */
 
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+As bit PULLUDENABLE is 0, the pulldown is enabled according to the TRM, 
+right?
+Is this a desirable behaviour, as it will consume power when outputting 
+a high level?
+And consequently, the comment should probably be OUTPUT_PULLDOWN, no?
+
+> +				0x118 0x20	/* mii1_rxdv.mii1_rxdv, MODE0 | INPUT_PULLDOWN */
+> +				0x11c 0x0	/* mii1_txd3.mii1_txd3, MODE0 | OUTPUT */
+> +				0x120 0x0	/* mii1_txd2.mii1_txd2, MODE0 | OUTPUT */
+> +				0x124 0x0	/* mii1_txd1.mii1_txd1, MODE0 | OUTPUT */
+> +				0x128 0x0	/* mii1_txd0.mii1_txd0, MODE0 | OUTPUT */
+
+Same questions here.
+
+> +				0x12c 0x20	/* mii1_txclk.mii1_txclk, MODE0 | INPUT_PULLDOWN */
+> +				0x130 0x20	/* mii1_rxclk.mii1_rxclk, MODE0 | INPUT_PULLDOWN */
+> +				0x134 0x20	/* mii1_rxd3.mii1_rxd3, MODE0 | INPUT_PULLDOWN */
+> +				0x138 0x20	/* mii1_rxd2.mii1_rxd2, MODE0 | INPUT_PULLDOWN */
+> +				0x13c 0x20	/* mii1_rxd1.mii1_rxd1, MODE0 | INPUT_PULLDOWN */
+> +				0x140 0x20	/* mii1_rxd0.mii1_rxd0, MODE0 | INPUT_PULLDOWN */
+> +			>;
+> +		};
+> +
+> +		davinci_mdio_default: davinci_mdio_default {
+> +			pinctrl-single,pins = <
+> +				/* MDIO */
+> +				0x148 0x30	/* mdio_data.mdio_data, MODE0 | INPUT_PULLUP */
+> +				0x14c 0x10	/* mdio_clk.mdio_clk, MODE0 | OUTPUT_PULLUP */
+> +			>;
+> +		};
+>   	};
+>
+>   	ocp {
+> @@ -138,3 +165,14 @@
+>   	phy_id = <&davinci_mdio>, <1>;
+>   	phy-mode = "mii";
+>   };
+> +
+> +&mac {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&cpsw_default>;
+> +
+> +};
+> +
+> +&davinci_mdio {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&davinci_mdio_default>;
+> +};
+>
+
+Regards,
+
+Florian
