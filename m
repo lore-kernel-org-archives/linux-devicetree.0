@@ -1,15 +1,14 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: getting allwinner SoC support upstream (was Re: Uploading linux
- (3.9.4-1))
-Date: Thu, 6 Jun 2013 11:29:48 +0200
-Message-ID: <20130606112948.7cd444a4@skate>
-References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
- <CAKON4OyyRF4Z46RyJFDWUwo4L52Z8bgSH0CzDr2gDerw4iDwcw@mail.gmail.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: tegra: add basic SecureOS support
+Date: Thu, 6 Jun 2013 10:35:25 +0100
+Message-ID: <20130606093524.GM18614@n2100.arm.linux.org.uk>
+References: <1370503687-17767-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAKON4OyyRF4Z46RyJFDWUwo4L52Z8bgSH0CzDr2gDerw4iDwcw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1370503687-17767-1-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,37 +19,73 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, debian-arm-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org, debian-release-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org, Luke Kenneth Casson Leighton <lkcl-fw2G7BUl9JU@public.gmane.org>, Linux on small ARM machines <arm-netbook-Fj0DB6SUpRXNuVmtMlwsDbVCufUGDwFn@public.gmane.org>, ARM Linux Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, debian-kernel-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org
+To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Chris Johnson <CJohnson-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Karan Jhavar <kjhavar-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Thu, Jun 06, 2013 at 04:28:07PM +0900, Alexandre Courbot wrote:
+> +static int __attribute__((used)) __tegra_smc_stack[10];
+> +
+> +/*
+> + * With EABI, subtype and arg already end up in r0, r1 and r2 as they are
+> + * function arguments, but we prefer to play safe here and explicitly move
+> + * these values into the expected registers anyway. mov instructions without
+> + * any side-effect are turned into nops by the assembler, which limits
+> + * overhead.
 
-On Wed, 5 Jun 2013 16:48:27 -0400, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+No they aren't.  They will be preserved as:
+	mov r0, r0
+	mov r1, r1
+	mov r2, r2
 
-> >  fex covers *eeeeeevvveeerryyyythiiiing* - right from flipping the
-> > multiplexing for all 3 SD/MMC cards so that you can pretend that SD0
-> > is SD2 and you can specify *different* GPIOs for each to say which
-> > is
-> 
-> You can do all of this in device tree too. If the exact syntax doesn't
-> exist you can use 'allwinner,' prefixes on the node names.
-> Also check out pinctrl so that it doesn't get reinvented.
+Moreover, things will go wrong if the compiler decides for whatever reason
+to move 'arg' into r0 before calling your code sequence.  So really this
+is quite fragile.
 
-Are people looking at the mainline source code?
+There's also no point in mentioning EABI in the above paragraph; all ARM
+ABIs under Linux have always placed the arguments in r0..r3 and then on
+the stack.  You can assert that this is always true by using the __asmeq()
+macro.
 
-There is already a pinctrl driver for sunxi platforms (i.e Allwinner
-SoCs), it's at drivers/pinctrl/pinctrl-sunxi.c, and it's DT-based and
-allows to describe the pin muxing in the Device Tree.
+Also...
 
-Cc'ing Maxime Ripard, who is the mach-sunxi maintainer in the mainline
-kernel.
+> + */
+> +static void tegra_generic_smc(u32 type, u32 subtype, u32 arg)
+> +{
+> +	asm volatile(
+> +		".arch_extension	sec\n\t"
+> +		"ldr	r3, =__tegra_smc_stack\n\t"
+> +		"stmia	r3, {r4-r12, lr}\n\t"
 
-Best regards,
+using a statically allocated area to save the registers in this way is
+probably a bad move; although the hotplug code guarantees that there
+will be no concurrency between CPU hotplug operations, this sets a
+precident for it being used in places where no such protection exists.
 
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+What is wrong with stacking r4-r12, lr onto the SVC stack?  You don't
+save the SVC stack pointer, so one can only assume that your SMC
+implmentation preserves this (if it doesn't, that's yet another bug
+with this assembly code.)
+
+Combining these two issues, you're probably far better off using an
+__attribute__((naked)) function for this - which means you get to
+write the entire function in assembly code without any compiler
+interference:
+
+static void __attribute__((naked)) tegra_generic_smc(u32 type, u32 subtype, u32 arg)
+{
+	asm volatile(
+		".arch_extension	sec\n\t"
+		"stmfd	sp!, {r4 - r12, lr}\n\t"
+		__asmeq("%0", "r0")
+		__asmeq("%1", "r1")
+		__asmeq("%2", "r2")
+		"mov	r3, #0\n\t"
+		"mov	r4, #0\n\t"
+		"dsb\n\t"
+		"smc	#0\n\t"
+		"ldmfd	sp!, {r4 - r12, pc}"
+		:
+		: "r" (type), "r" (subtype), "r" (arg)
+		: "memory");
+}
