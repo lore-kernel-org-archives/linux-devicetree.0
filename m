@@ -1,161 +1,34 @@
-From: J Keerthy <j-keerthy@ti.com>
-Subject: [PATCH v3] mfd: DT bindings for the palmas family MFD
-Date: Thu, 6 Jun 2013 10:57:21 +0530
-Message-ID: <1370496441-24620-1-git-send-email-j-keerthy@ti.com>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: Re: [net-next PATCH v4 1/5] net: cpsw: enhance pinctrl support
+Date: Thu, 6 Jun 2013 11:29:39 +0530
+Message-ID: <51B0254B.4090304@ti.com>
+References: <1370452099-24026-1-git-send-email-mugunthanvnm@ti.com> <1370452099-24026-2-git-send-email-mugunthanvnm@ti.com> <20130605192345.GH31367@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, grant.likely@secretlab.ca
-Cc: linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org, swarren@nvidia.com, rob.herring@calxeda.com, rob@landley.net, sameo@linux.intel.com, wim@iguana.be, lgirdwood@gmail.com, gg@slimlogic.co.uk, t-kristo@ti.com, lee.jones@linaro.org, J Keerthy <j-keerthy@ti.com>, Ian Lartey <ian@slimlogic.co.uk>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130605192345.GH31367@sirena.org.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, benoit.cousson@linaro.org, paul@pwsan.com, Hebbar Gururaja <gururaja.hebbar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the various binding files for the palmas family of chips. There is a
-top level MFD binding then a seperate binding for regulators IP blocks on chips.
+On 6/6/2013 12:53 AM, Mark Brown wrote:
+> On Wed, Jun 05, 2013 at 10:38:15PM +0530, Mugunthan V N wrote:
+>> From: Hebbar Gururaja <gururaja.hebbar@ti.com>
+>>
+>> Amend cpsw controller to optionally take a pin control handle and set
+>> the state of the pins to:
+>>
+>> - "default" on boot, resume
+>> - "sleep" on suspend()
+> Linus Walleij posted some patches which factor the state setting code
+> out into generic functions earlier on today - it probably makes sense to
+> pick those up rather than open coding
+But this can go in as Linus Walleij's patch is not accepted yet. Once 
+that is
+accepted and present in net git repo I will submit a separate patch to use
+those APIs from pin ctrl core.
 
-Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
-Signed-off-by: J Keerthy <j-keerthy@ti.com>
-Signed-off-by: Ian Lartey <ian@slimlogic.co.uk>
-Reviewed-by: Stephen Warren <swarren@nvidia.com> 
----
- Documentation/devicetree/bindings/mfd/palmas.txt   |   49 +++++++++++++
- .../devicetree/bindings/regulator/palmas-pmic.txt  |   72 ++++++++++++++++++++
- 2 files changed, 121 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/palmas.txt
- create mode 100644 Documentation/devicetree/bindings/regulator/palmas-pmic.txt
-
-diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documentation/devicetree/bindings/mfd/palmas.txt
-new file mode 100644
-index 0000000..7bcd59c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/palmas.txt
-@@ -0,0 +1,49 @@
-+* palmas device tree bindings
-+
-+The TI palmas family current members :-
-+twl6035 (palmas)
-+twl6037 (palmas)
-+tps65913 (palmas)
-+tps65914 (palmas)
-+
-+Required properties:
-+- compatible : Should be from the list
-+  ti,twl6035
-+  ti,twl6036
-+  ti,twl6037
-+  ti,tps65913
-+  ti,tps65914
-+  ti,tps80036
-+and also the generic series names
-+  ti,palmas
-+- interrupt-controller : palmas has its own internal IRQs
-+- #interrupt-cells : should be set to 2 for IRQ number and flags
-+  The first cell is the IRQ number.
-+  The second cell is the flags, encoded as the trigger masks from
-+  Documentation/devicetree/bindings/interrupts.txt
-+- interrupt-parent : The parent interrupt controller.
-+
-+Optional properties:
-+  ti,mux-padX : set the pad register X (1-2) to the correct muxing for the
-+  		hardware, if not set will use muxing in OTP.
-+
-+Example:
-+
-+palmas {
-+	compatible = "ti,twl6035", "ti,palmas";
-+	reg = <0x48>
-+	interrupt-parent = <&intc>;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+
-+	ti,mux-pad1 = <0>;
-+	ti,mux-pad2 = <0>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	pmic {
-+		compatible = "ti,twl6035-pmic", "ti,palmas-pmic";
-+		....
-+	};
-+}
-diff --git a/Documentation/devicetree/bindings/regulator/palmas-pmic.txt b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
-new file mode 100644
-index 0000000..d5a3086
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/palmas-pmic.txt
-@@ -0,0 +1,72 @@
-+* palmas regulator IP block devicetree bindings
-+
-+Required properties:
-+- compatible : Should be from the list
-+  ti,twl6035-pmic
-+  ti,twl6036-pmic
-+  ti,twl6037-pmic
-+  ti,tps65913-pmic
-+  ti,tps65914-pmic
-+and also the generic series names
-+  ti,palmas-pmic
-+- interrupt-parent : The parent interrupt controller which is palmas.
-+- interrupts : The interrupt number and the type which can be looked up here:
-+	       arch/arm/boot/dts/include/dt-bindings/interrupt-controller/irq.h
-+- interrupts-name: The names of the individual interrupts.
-+
-+Optional properties:
-+- ti,ldo6-vibrator : ldo6 is in vibrator mode
-+
-+Optional nodes:
-+- regulators : Must contain a sub-node per regulator from the list below.
-+	       Each sub-node should contain the constraints and initialization
-+	       information for that regulator. See regulator.txt for a
-+	       description of standard properties for these sub-nodes.
-+	       Additional custom properties  are listed below.
-+
-+	       For ti,palmas-pmic - smps12, smps123, smps3 depending on OTP,
-+	       smps45, smps457, smps7 depending on variant, smps6, smps[8-10],
-+	       ldo[1-9], ldoln, ldousb.
-+
-+	       Optional sub-node properties:
-+	       ti,warm-reset - maintain voltage during warm reset(boolean)
-+	       ti,roof-floor - control voltage selection by pin(boolean)
-+	       ti,sleep-mode - mode to adopt in pmic sleep 0 - off, 1 - auto,
-+	       2 - eco, 3 - forced pwm
-+	       ti,tstep - slope control 0 - Jump, 1 10mV/us, 2 5mV/us, 3 2.5mV/us
-+	       ti,smps-range - OTP has the wrong range set for the hardware so override
-+	       0 - low range, 1 - high range.
-+
-+Example:
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+pmic {
-+	compatible = "ti,twl6035-pmic", "ti,palmas-pmic";
-+	interrupt-parent = <&palmas>;
-+	interrupts = <14 IRQ_TYPE_NONE>;
-+	interrupts-name = "short-irq";
-+
-+	ti,ldo6-vibrator;
-+
-+	regulators {
-+		smps12_reg : smps12 {
-+			regulator-name = "smps12";
-+			regulator-min-microvolt = < 600000>;
-+			regulator-max-microvolt = <1500000>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+			ti,warm-reset;
-+			ti,roof-floor;
-+			ti,mode-sleep = <0>;
-+			ti,tstep = <0>;
-+			ti,smps-range = <1>;
-+		};
-+
-+		ldo1_reg: ldo1 {
-+			regulator-name = "ldo1";
-+			regulator-min-microvolt = <2800000>;
-+			regulator-max-microvolt = <2800000>;
-+		};
-+	};
-+};
--- 
-1.7.5.4
+Regards
+Mugunthan V N
