@@ -1,81 +1,141 @@
-From: Haojian Zhuang <haojian.zhuang@linaro.org>
-Subject: Re: [PATCH 1/2] pinmux: Add TB10x pinmux driver
-Date: Thu, 6 Jun 2013 22:32:21 +0800
-Message-ID: <CAD6h2NRNMQP-ZQ0Cc613tGThVEo7AzRExBmWsbtr1DXgiPwz7w@mail.gmail.com>
-References: <518AAF31.8080502@wwwdotorg.org>
-	<20130510082521.GA2125@ab42.lan>
-	<51942472.9010402@wwwdotorg.org>
-	<CACRpkdYtKr5w2=1sONG4Qn2TQue38nV7epWfzxNQz5rjSs0DZQ@mail.gmail.com>
-	<20130522142824.GC4789@ab42.lan>
-	<CAD6h2NT4FqmEsLvtTDwwDL2YVzXYNpw72hTOcSxSMvHLhWvFPQ@mail.gmail.com>
-	<20130524115053.GB5203@ab42.lan>
-	<CAD6h2NSh_4TNAGeFhg+va5QX2hGia+gkw-mPaeMezghsa=Zc6Q@mail.gmail.com>
-	<20130603123001.GD31808@ab42.lan>
-	<CAD6h2NQVKKvcoPdD4sm5rUM5G-FpF3abL=k+WfQsnKnm7qhREA@mail.gmail.com>
-	<20130606141115.GA10345@ab42.lan>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH] of: Export of_irq_count for using in modules
+Date: Thu, 6 Jun 2013 16:49:29 +0200
+Message-ID: <20130606144929.GI19834@game.jcrosoft.org>
+References: <6aa29b1d109a46278a7f37b598defe07d6edfe60.1369921774.git.michal.simek@xilinx.com>
+ <20130530201714.GE19834@game.jcrosoft.org>
+ <51A85BEE.4000009@monstr.eu>
+ <20130531110045.GF19834@game.jcrosoft.org>
+ <51A8AC4B.906@monstr.eu>
+ <20130531151601.GG19834@game.jcrosoft.org>
+ <51A8D3A3.5030200@monstr.eu>
+ <20130606082941.GH19834@game.jcrosoft.org>
+ <51B04AA9.4070803@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130606141115.GA10345@ab42.lan>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Shiraz HASHIM <shiraz.hashim@st.com>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51B04AA9.4070803@monstr.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 6 June 2013 22:11, Christian Ruppert <christian.ruppert@abilis.com> wrote:
-> On Wed, Jun 05, 2013 at 09:44:27AM +0800, Haojian Zhuang wrote:
->> On 3 June 2013 20:30, Christian Ruppert <christian.ruppert@abilis.com> wrote:
->> > OK, here's a simplified example of what we would like to do (this seems
->> > pretty common so I suppose there is a way I haven't understood). Our
->> > situation is slightly more complex but for the purpose of discussion
->> > let's assume a chip with 8 pins which can be configured for the
->> > following functions:
->> >
->> > Pin   GPIO-A    I2C    SPI0     SPI1
->> > ------------------------------------
->> >  1    GPIOA0    SDA             MISO1
->> >  2    GPIOA1    SCL             MOSI1
->> >  3    GPIOA2                    SS1_B
->> >  4    GPIOA3                    SCLK1
->> >  5    GPIOA4           MISO0
->> >  6    GPIOA5           MOSI0
->> >  7    GPIOA6           SS0_B
->> >  8    GPIOA7           SCLK0
->> >
->> > We can now define the following pinctrl-single:
->> >
->> > pinmux: pinmux@0xFFEE0000 {
->> >         compatible = "pinctrl-single";
->> >         reg = <0xFFEE0000 0x8>;
->> >         #address-cells = <1>;
->> >         #size-cells = <0>;
->> >         #gpio-range-cells = <3>;
->> >         pinctrl-single,register-width = <32>;
->> >         pinctrl-single,function-mask = <0xffffffff>;
->> >         pinctrl-single,gpio-range = <&range 1 8 0>;
->> >         gpioa_pins: pinmux_gpioa_pins {
->> >                 pinctrl-single,pins = <0x0 0 0x4 0>
->> >         };
->> >         i2c_pins: pinmux_i2c_pins {
->> >                 pinctrl-single,pins = <0x0 1>
->> >         };
->> >         spi0_pins: pinmux_spi0_pins {
->> >                 pinctrl-single,pins = <0x1 1>
->> <0x1 1>?
->>
->> If each pinmux register is only for one pin in your SoC.
->> I think that your definitions are wrong above. We use
->> register offset as the first argument, not pin number.
->> And the second argument should be pin function number.
->
-> In our case each pinmux register (bit field) actually controls an entire
-> group of pins.
->
->> If multiple pins are sharing one register with different bits,
->> you need to enable "pinctrl-single,bit-per-mux".
->
-> Multiple pins are sharing the same bits in the same register. Do you
-> think this prevents us from using pinctrl-single?
->
-Could you give me your register definition? Then I can understand you
-better.
+On 10:39 Thu 06 Jun     , Michal Simek wrote:
+> On 06/06/2013 10:29 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > On 18:45 Fri 31 May     , Michal Simek wrote:
+> >> On 05/31/2013 05:16 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> >>> On 15:57 Fri 31 May     , Michal Simek wrote:
+> >>>> On 05/31/2013 01:00 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> >>>>> On 10:14 Fri 31 May     , Michal Simek wrote:
+> >>>>>> Hi Jean-Christophe,
+> >>>>>>
+> >>>>>> On 05/30/2013 10:17 PM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+> >>>>>>> On 15:49 Thu 30 May     , Michal Simek wrote:
+> >>>>>>>> Export of_irq_count for modules.
+> >>>>>>>
+> >>>>>>> can you explain why do you need to call of_irq_count
+> >>>>>>
+> >>>>>> I need to count number of irq written in the DTS node.
+> >>>>>> It is not fixed size that's why I need to proper way how to
+> >>>>>> find it out.
+> >>>>>>
+> >>>>>> I am using this loop.
+> >>>>>> 	count = of_irq_count(pdev->dev.of_node);
+> >>>>>> 	/* Alloc IRQ based on DTS to be sure that no other driver will use it */
+> >>>>>> 	while (count--) {
+> >>>>>> 		tmp->irq = irq_of_parse_and_map(pdev->dev.of_node, count);
+> >>>>>> 		dev_info(&pdev->dev, "%d: Alloc irq: %d\n", count, tmp->irq);
+> >>>>>> 		ret = request_irq(tmp->irq, zynq_remoteproc_interrupt, 0,
+> >>>>>> 					dev_name(&pdev->dev), &pdev->dev);
+> >>>>>> 		if (ret) {
+> >>>>>> 			...
+> >>>>>> 		}
+> >>>>>> 	}
+> >>>>>>
+> >>>>>> But of course if you think that this is incorrect to export it
+> >>>>>> I can use what it is in of_irq_count body
+> >>>>>> 368 int of_irq_count(struct device_node *dev)
+> >>>>>> 369 {
+> >>>>>> 370         int nr = 0;
+> >>>>>> 371
+> >>>>>> 372         while (of_irq_to_resource(dev, nr, NULL))
+> >>>>>> 373                 nr++;
+> >>>>>> 374
+> >>>>>> 375         return nr;
+> >>>>>> 376 }
+> >>>>>>
+> >>>>>> Because of_irq_to_resource is exported for modules.
+> >>>>>> Or is there any better way how to loop over all interrupts in DT node?
+> >>>>>
+> >>>>> can just explain me why you need to call irq_of_parse_and_map in your driver?
+> >>>>>
+> >>>>> as the irq will be provided in the resources normally
+> >>>>
+> >>>> It is quite a long time I have written this driver on v3.1 or 3.3.
+> >>>> But is this better?
+> >>>>
+> >>>> 	struct resource *res;
+> >>>> 	int i = 0;
+> >>>> 	do {
+> >>>> 		res = platform_get_resource(pdev, IORESOURCE_IRQ, i++);
+> >>>> 		if (res)
+> >>>> 			do something
+> >>>> 	} while(res);
+> >>>>
+> >>>> Also what about of_irq_to_resource()? Is it deprecated and all drivers
+> >>>> shouldn't use it?
+> >>>>
+> >>>> I have no problem to rewrite the driver to use platform_get_resource.
+> >>> yeah it's better but be aware there is a but in DT that I'm working on to fix
+> >>> if you use irq that are registered by a pdev this will not work
+> >>>
+> >>> I hope to fix it for 3.11
+> >>> and already send an RFC that fix it
+> >>
+> >> ok. good to know. Btw: Let's return to my origin point why not to
+> >> export of_irq_count for modules?
+> >> Or opposite question if platform_get_resource is correct way
+> >> why to export of_irq_to_resource for modules?
+> > 
+> > for old ppc drivers that are not converted yet to pdev
+> > 
+> > if you can do so just use pdev resource I should have fix the pb or irq_domain
+> > hopefully for 3.11
+> 
+> ok. It means it is currently deprecated.
+> I just wanted to be sure that I understand it correctly.
+> 
+> I have changed my drivers not to use this function and using resources as
+> we discussed.
+> 
+> btw: I have sent one email to device-tree ML about describing missing
+> connection between cpu and the first interrupt controller.
+> Can you please look at it and comment it?
+> https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-May/033955.html
+
+for the record as discussed with Grant I'm preparing to add a new property
+to handle interrupts so you will never have to use "interrupt-parent" any more
+and just do this
+
+interrupt-lines = <&aic 5 0 &pioA 4>
+
+it will be more like gpio and will allow to have irq from different
+interrupt-parent in the same node
+
+but wait a few I'll be really back next week as I'm half off this week
+
+Best Regards,
+J.
+> 
+> Thanks,
+> Michal
+> 
+> -- 
+> Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+> w: www.monstr.eu p: +42-0-721842854
+> Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+> Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+> Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+> 
+> 
