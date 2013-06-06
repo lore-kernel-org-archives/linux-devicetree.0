@@ -1,18 +1,13 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: getting allwinner SoC support upstream (was Re: Uploading linux
- (3.9.4-1))
-Date: Wed, 5 Jun 2013 17:35:53 -0700
-Message-ID: <20130606003553.GA7017@kroah.com>
-References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
- <CAKON4OyyRF4Z46RyJFDWUwo4L52Z8bgSH0CzDr2gDerw4iDwcw@mail.gmail.com>
- <3619282.JgdgeGHudI@flatron>
- <CAPweEDwyX4=Sme9kyDU64k9h3SPUHuErD8gEqfdYLGwBOocZDQ@mail.gmail.com>
+From: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: pxa27x and pinctrl-single
+Date: Thu, 6 Jun 2013 08:43:45 +0800
+Message-ID: <CAD6h2NTu9-E=Xy8zz5cgDdk5W4ShM9-B+p+gQtiA_HASQ7AEuQ@mail.gmail.com>
+References: <51AF7404.3090003@newsguy.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPweEDwyX4=Sme9kyDU64k9h3SPUHuErD8gEqfdYLGwBOocZDQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <51AF7404.3090003-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,32 +18,43 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Luke Kenneth Casson Leighton <lkcl-fw2G7BUl9JU@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, debian-arm-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org, "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux on small ARM machines <arm-netbook-Fj0DB6SUpRXNuVmtMlwsDbVCufUGDwFn@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, debian-kernel-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org
+To: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>, "Manjunathappa,
+ Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 05, 2013 at 11:56:43PM +0100, Luke Kenneth Casson Leighton wrote:
-> so there's a lot of factors which i believe the linux kernel
-> developers are not aware of, and haven't taken into account, and to
-> place blame onto the SoC vendors for not working with *you* when *you*
-> haven't made an effort to understand their situation is, i feel, not
-> really helping anyone.  not that i'm one to talk about understanding
-> people, but hey... :)
+On 6 June 2013 01:23, Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org> wrote:
+> Hi,
+>
+> I'd like to start converting to device tree usage some of the old pxa27x
+> platforms I'm fond of, starting with adding pinctrl support.  If I'm not
+> mistaken, this will clear the way for some ongoing updates to the pinctrl/gpio
+> code used by newer Marvell arches.
+>
+> I noticed that Haojian pulled the pinctrl-pxa driver from the kernel, in favor
+> of using pinctrl-single, so I turned my attention to that.  From what I can
+> tell, pinctrl-single is currently inadequate for pxa27x because:
+>
+> (1) On the pxa27x, setting the mux for a pin involves configuring both the alt
+> function register *and* the direction register, requiring the ability to specify
+> in the device tree multiple reg/value pairs for each pin.
+In PXA27x, GPIO controller control both GPIO & pin alternate function. The
+alternate function is covered by GAFRx registers.
 
-Wait, everyone in the world knows where we (Linux kernel developers)
-are, and how to contact us, how are we supposed to know we are supposed
-to go after these various companies and contact them directly?
+At first, we need to move GAFRx from gpio-pxa driver. Then we can support
+it by pinctrl-single driver since pinctrl-single driver could support mulitple
+pins in one pin registers. There's "bits-per-mux" property in pinctrl-single
+driver.
+>
+> (2) Some of the pinctrl-single code still assumes one register-per-pin; see for
+> example the functions pcs_allocate_pin_table() and pcs_get_pin_by_offset().
+> Curiously, the recently added pcs_request_gpio() function also suffers from
+> this, unless I'm mistaken.
+>
+Not exactly. pinctrl-single driver could support multiple pins in one register.
+Now Manjunathappa also fixed some issue in pinctrl-single for supporting
+multiple pins. (https://lkml.org/lkml/2013/5/21/226) I suggest you to develop
+based on his patches.
 
-So this SoC vendor doesn't want to merge their code upstream, fine, we
-(kernel community) don't really care, and it's obvious the company
-doesn't care, so what really is the issue here?
-
-Eventually, the SoC will realize that they do need to get their code
-merged, and we will still be here, as we aren't going anywhere.  At that
-point in time, we will be glad to review patches and code like we do
-every day for all of the thousands of other companies we deal with on a
-weekly basis.
-
-I don't see the problem here, do you?
-
-greg k-h
+Regards
+Haojian
