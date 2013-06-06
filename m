@@ -1,51 +1,43 @@
-From: Stefan Monnier <monnier@iro.umontreal.ca>
-Subject: Re: getting allwinner SoC support upstream (was Re:
-	Uploading linux (3.9.4-1))
-Date: Wed, 05 Jun 2013 21:56:39 -0400
-Message-ID: <jwvd2s0qaex.fsf-monnier+gmane.comp.hardware.netbook.arm@gnu.org>
-References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
-	<CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
-	<51AFA6DD.3000202@wwwdotorg.org>
-	<CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
-Reply-To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
+From: Nicolin Chen <b42378@freescale.com>
+Subject: Re: [PATCH 1/2] ASoC: WM8962: Create default platform
+	data structure
+Date: Thu, 6 Jun 2013 11:21:26 +0800
+Message-ID: <20130606032125.GA18783@MrMyself>
+References: <cover.1370433363.git.b42378@freescale.com>
+ <4e85e3a9b5dfdc04899958424eb53a9cfd0f4ace.1370433363.git.b42378@freescale.com>
+ <20130605122511.GB31367@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <arm-netbook-bounces@lists.phcomp.co.uk>
-List-Unsubscribe: <http://lists.phcomp.co.uk/mailman/options/arm-netbook>,
-	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=unsubscribe>
-List-Archive: <http://lists.phcomp.co.uk/pipermail/arm-netbook/>
-List-Post: <mailto:arm-netbook@lists.phcomp.co.uk>
-List-Help: <mailto:arm-netbook-request@lists.phcomp.co.uk?subject=help>
-List-Subscribe: <http://lists.phcomp.co.uk/mailman/listinfo/arm-netbook>,
-	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=subscribe>
-Errors-To: arm-netbook-bounces@lists.phcomp.co.uk
-Sender: "arm-netbook" <arm-netbook-bounces@lists.phcomp.co.uk>
-To: arm-netbook@lists.phcomp.co.uk
-Cc: debian-arm@lists.debian.org, devicetree-discuss@ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, debian-kernel@lists.debian.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20130605122511.GB31367@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, patches@opensource.wolfsonmicro.com, lgirdwood@gmail.com, rob.herring@calxeda.com, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
->  so the point is: if anyone wishes me to propose to allwinner that
-> they convert over to devicetree, or any other proposal which involves
-> significant low-level changes to their working practices that could
-> potentially have a massive knock-on effect onto their
-> multi-million-dollar clients, it had better be a damn good story.
+On Wed, Jun 05, 2013 at 01:25:11PM +0100, Mark Brown wrote:
+> On Wed, Jun 05, 2013 at 08:12:55PM +0800, Nicolin Chen wrote:
+> 
+> >  struct wm8962_priv {
+> > +	struct wm8962_pdata *pdata;
+> 
+> More idiomatic style for this is to just embed a copy of the platform
+> data struct in the private data then copy any driver model platform data
+> on top of it.  This simplifies usage as now the driver can assume that
+> there is platform data available at all times.
 
-AFAIK the only argument in favor of them following the mainline kernel's
-practices is to ease up future development, and maintenance.
-Apparently, they focus on the short term for now, so they may simply not
-care (yet).
+Hmm..sorry I don't fully get it. Does that mean I should do something like:
+struct wm8962_priv {
+	struct wm8962_pdata pdata;
 
-In that case, there isn't much we can do to convince them right away.
-One way is to do the job for them, i.e. port the drivers over to DT and
-write the various fex-to-DT and DOT-to-foo tools.
-
-At some point, they'll see that it's cheaper for them to use the sunxi
-(or mainline if/when it gets there) kernel than to keep hacking on their
-mess.
-
-Obviously, this has the disadvantage that someone needs to do the job
-that Allwinner should do.
-
-
-        Stefan
+instead of pointer? so no devm_kzalloc() for it any more?
