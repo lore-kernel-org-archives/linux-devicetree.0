@@ -1,47 +1,70 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re: Uploading linux (3.9.4-1))
-Date: Thu, 06 Jun 2013 12:02:06 +0200
-Message-ID: <3628961.Gph977QOV0@flatron>
-References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com> <1733666.lHUBcfUXq9@flatron> <20130606112723.71ddd70c@skate>
+From: Illia Smyrnov <x0194613-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/2] spi: spi-omap2-mcspi.c: Add dts for slave device
+	configuration.
+Date: Thu, 6 Jun 2013 13:08:46 +0300
+Message-ID: <51B05FAE.60508@ti.com>
+References: <1370432398-7796-1-git-send-email-illia.smyrnov@ti.com>
+	<1370432398-7796-2-git-send-email-illia.smyrnov@ti.com>
+	<20130605115734.GY31367@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130606112723.71ddd70c@skate>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, "luke.leighton" <luke.leighton@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, debian-kernel@lists.debian.org, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20130605115734.GY31367-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Illia Smyrnov <illia.smyrnov-l0cyMroinI0@public.gmane.org>, Greg, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+On 06/05/2013 02:57 PM, Mark Brown wrote:
+> On Wed, Jun 05, 2013 at 02:39:57PM +0300, Illia Smyrnov wrote:
+>
+>> +SPI Controller specific data in SPI slave nodes:
+>> +- The spi slave nodes can provide the following information which is used
+>> +  by the spi controller:
+>> +  - ti,spi-turbo-mode: Set turbo mode for this device.
+>> +
+>
+> What is turb mode and
 
-On Thursday 06 of June 2013 11:27:23 Thomas Petazzoni wrote:
-> Dear Tomasz Figa,
-> 
-> On Thu, 06 Jun 2013 02:01:14 +0200, Tomasz Figa wrote:
-> > I don't see any other solution here than moving all the Allwinner
-> > code to DT (as it has been suggested in this thread several times
-> > already), as this is the only hardware description method supported
-> > by ARM Linux.
-> 
-> Have you noticed that it is already the case in mainline? My colleague
-> Maxime Ripard (Cc'ed) is the maintainer of the mainline Allwinner sunxi
-> effort. It already supports a number of boards, has a pinctrl driver, a
-> GPIO driver, serial port is working, network is working, I2C is
-> working.
-> 
-> All in mainline, completely Device Tree based.
-> 
-> So isn't this entire discussion completely moot? The mainline support
-> for sunxi has already started since 6 months or so, and has been Device
-> Tree based from day one.
+According to OMAP TRM [1] MCSPI turbo mode improves the throughput of 
+the SPI interface when a single channel is enabled by allowing transfers 
+until the shift register and the MCSPI_RXx register are full.
 
-Sure, I've been observing the development of sunxi support since it 
-started.
+I tested turbo mode using KS8851 SPI Ethernet controller on Blaze with 
+OMAP4460 and nuttcp tool with -r for RX throughput measuring. Enabling 
+turbo mode was increased throughput form 7.5538 Mbps to 8.3848 Mbps
 
-This is the reason why any remaining Allwinner drivers must be converted 
-to use DT instead of this proprietary stuff as well, if they want to 
-upstream any of them.
+> why would we not want to just enable it all the
+> time?
 
-Best regards,
-Tomasz
+Turbo mode gives the expected results not for all cases. There are some 
+limitations:
+- works only if a single channel is enabled (no effect when several 
+channels are enable);
+- improves the throughput on RX direction only;
+- effective only when a transfer exceeds two words. For single SPI
+word transfers OMAP TRM [1] recommends deactivate turbo mode.
+
+So it is useful to have the property in DT, that allow us to switch 
+turbo mode off/on for certain slave.
+
+> Based on this documentation it's not really possible to tell...
+>
+I will add turbo mode description to documentation in the next patch version
+
+[1]: http://www.ti.com/lit/ug/swpu235z/swpu235z.pdf
+
+------------------------------------------------------------------------------
+How ServiceNow helps IT people transform IT departments:
+1. A cloud service to automate IT design, transition and operations
+2. Dashboards that offer high-level views of enterprise services
+3. A single system of record for all IT processes
+http://p.sf.net/sfu/servicenow-d2d-j
