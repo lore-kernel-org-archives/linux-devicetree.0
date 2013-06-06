@@ -1,33 +1,27 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 4/8] mmc: dw_mmc-pltfm: add Rockchip variant
-Date: Thu, 6 Jun 2013 23:35:07 +0300
-Message-ID: <CAHp75VdTYuXBu0Xu_BKZiBW9afjYprMBtBhSnNYjws-7b6hYmw@mail.gmail.com>
-References: <201306062107.58875.heiko@sntech.de>
-	<201306062111.06694.heiko@sntech.de>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 2/2 v4] sata highbank: add bit-banged SGPIO driver support
+Date: Thu, 6 Jun 2013 14:06:20 -0700
+Message-ID: <20130606210620.GE5045@htj.dyndns.org>
+References: <1369945051-2582-2-git-send-email-mark.langsdorf@calxeda.com>
+ <1370523161-32449-1-git-send-email-mark.langsdorf@calxeda.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <201306062111.06694.heiko@sntech.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <cjb@laptop.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1370523161-32449-1-git-send-email-mark.langsdorf@calxeda.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Mark Langsdorf <mark.langsdorf@calxeda.com>
+Cc: linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, grant.likely@linaro.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 6, 2013 at 10:11 PM, Heiko St=C3=BCbner <heiko@sntech.de> w=
-rote:
-> Cortex-A9 SoCs from Rockchip use a slightly modified variant of dw_mm=
-c
-> controllers that seems to require the SDMMC_CMD_USE_HOLD_REG bit to
-> always be set.
->
-> There also seem to be no other modifications (additional register etc=
-)
-> present, so to keep the footprint low, add this small variant to the
-> pltfm driver.
+On Thu, Jun 06, 2013 at 07:52:41AM -0500, Mark Langsdorf wrote:
+> Highbank supports SGPIO by bit-banging out the SGPIO signals over
+> three GPIO pins defined in the DTB. Add support for this SGPIO
+> functionality.
+> 
+> Signed-off-by: Mark Langsdorf <mark.langsdorf@calxeda.com>
 
-My comments against v1 of this patch are still valid.
+Applied to libata/for-3.11.  Thanks!
 
---
-With Best Regards,
-Andy Shevchenko
+-- 
+tejun
