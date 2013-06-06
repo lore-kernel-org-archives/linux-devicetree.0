@@ -1,86 +1,67 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
- Uploading linux (3.9.4-1))
-Date: Thu, 6 Jun 2013 10:49:32 +0100
-Message-ID: <20130606094932.GN31367@sirena.org.uk>
-References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
- <1370475609.20454.44.camel@localhost>
- <CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
- <1733666.lHUBcfUXq9@flatron>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2] ARM i.MX53: tqma53: add WP/CD pinctrl and vmmc to esdhc2
+Date: Thu,  6 Jun 2013 11:49:36 +0200
+Message-ID: <1370512176-19705-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5638236685329725939=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1733666.lHUBcfUXq9@flatron>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, "luke.leighton" <luke.leighton@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, linux-arm-kernel@lists.infradead.org, debian-kernel@lists.debian.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Add WP/CD pinctrl for esdhc2.
+Also, add vmmc-supply for esdhc2.
 
---===============5638236685329725939==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5vxz5YoITinLs0qm"
-Content-Disposition: inline
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
 
+Changes since v1:
+	- move pinctrl to boardspecific namespace
 
---5vxz5YoITinLs0qm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ arch/arm/boot/dts/imx53-tqma53.dtsi | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-On Thu, Jun 06, 2013 at 02:01:14AM +0200, Tomasz Figa wrote:
-
-> I don't see any other solution here than moving all the Allwinner code to=
-=20
-> DT (as it has been suggested in this thread several times already), as=20
-> this is the only hardware description method supported by ARM Linux.
-
-Well, the server guys are working on ACPI - people could contribute to
-that effort instead if they preferred (though I can see that they might
-not!).
-
---5vxz5YoITinLs0qm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRsFsoAAoJELSic+t+oim9GjEQAJT+tHVIRENdSTOdCMUrwjWf
-leW7rvKEvns8wQ4KhMO7w0pnIABxAc6ZniX8X/MjawpXVSBDOpN5H422PnS8zAPV
-A9gZL6uvnuuUa9nLb64a5YAl4Gc4BP2V/KyS8k7cXnYPvKBOdQLBZRd5H/cWdhBV
-J3dR3N00vR17qoO/kGsjUGotdqyRG83fCm4xrsbkZ3Sl7C0CU9UQma/rPuIZ5qzR
-YLZ0BHJFrZ21x9CSrPaQsPYC18ajaEHCP6BpGhev0iqyNHZJz2y+kdC2Rr1qZeek
-Rul5YjWk998U9AnfO9EQeqbQy4UdKwSK5kFBx/IXcXtI3gNT2eTfxXpXFa2BARLu
-nWwY4cqhuP8MxT42aFVNYjGQdDDmdYYzf2wQCV8bjSycGMz6JibFUvHQF/gMFk3w
-qkAONnIaekxtixATQg7vl/Va+wZvGlEBNvHQN6TvwdhaVjjDw/OTlDIGLcle138z
-8O2ygNxbgVY7iw17iLzkwIivPkM7xTSfQsLW685WWUnjXgr/xjJ4qyq6ow5t9isI
-hGZxc6yIOiOme8Vvn+jxKKe/uN6IkRf4PuV/LqqHTrdtNHX7vfLxsTIEpc5y/Vs8
-EYUzeVT1+Pnz7b1rGxs1LRtm1POt6VRuL/8+5e64G+CXsJ5VJdiWDlLYPusaVzEo
-aF38P8FQ2r272NbSedfi
-=fs+B
------END PGP SIGNATURE-----
-
---5vxz5YoITinLs0qm--
-
-
---===============5638236685329725939==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5638236685329725939==--
+diff --git a/arch/arm/boot/dts/imx53-tqma53.dtsi b/arch/arm/boot/dts/imx53-tqma53.dtsi
+index 38bed3e..dae03bb 100644
+--- a/arch/arm/boot/dts/imx53-tqma53.dtsi
++++ b/arch/arm/boot/dts/imx53-tqma53.dtsi
+@@ -35,7 +35,9 @@
+ 
+ &esdhc2 {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_esdhc2_1>;
++	pinctrl-0 = <&pinctrl_esdhc2_1>,
++		    <&pinctrl_tqma53_esdhc2_2>;
++	vmmc-supply = <&reg_3p3v>;
+ 	wp-gpios = <&gpio1 2 0>;
+ 	cd-gpios = <&gpio1 4 0>;
+ 	status = "disabled";
+@@ -69,6 +71,15 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_hog>;
+ 
++	esdhc2_2 {
++		pinctrl_tqma53_esdhc2_2: esdhc2-tqma53-grp2 {
++			fsl,pins = <
++				MX53_PAD_GPIO_4__GPIO1_4	0x80000000 /* SD2_CD */
++				MX53_PAD_GPIO_2__GPIO1_2	0x80000000 /* SD2_WP */
++			>;
++		};
++	};
++
+ 	i2s {
+ 		pinctrl_i2s_1: i2s-grp1 {
+ 			fsl,pins = <
+-- 
+1.8.2.rc2
