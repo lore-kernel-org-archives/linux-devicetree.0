@@ -1,62 +1,86 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
- Uploading linux (3.9.4-1))
-Date: Thu, 6 Jun 2013 19:28:10 +0200
-Message-ID: <20130606172810.GE14209@lukather>
-References: <51AFA6DD.3000202@wwwdotorg.org>
- <CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
- <1370469574.18839.33.camel@localhost>
- <CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
- <CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
- <CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com>
- <1370475609.20454.44.camel@localhost>
- <CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
- <CAKON4OxPDpN3BTc9GWP44exDSkAZGJ5OeCpUP37vRnnvxwUnmw@mail.gmail.com>
- <CAOesGMgqxhG45NyCfpHc_0uHS+_Gn-hGZm-+CRvK2EEf1AGTow@mail.gmail.com>
+From: Mike Dunn <mikedunn@newsguy.com>
+Subject: Re: pxa27x and pinctrl-single
+Date: Thu, 06 Jun 2013 10:33:28 -0700
+Message-ID: <51B0C7E8.5090308@newsguy.com>
+References: <51AF7404.3090003@newsguy.com>
+ <CAD6h2NTu9-E=Xy8zz5cgDdk5W4ShM9-B+p+gQtiA_HASQ7AEuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMgqxhG45NyCfpHc_0uHS+_Gn-hGZm-+CRvK2EEf1AGTow@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: "jonsmirl@gmail.com" <jonsmirl@gmail.com>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, "luke.leighton" <luke.leighton@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm <debian-arm@lists.debian.org>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel <debian-kernel@lists.debian.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAD6h2NTu9-E=Xy8zz5cgDdk5W4ShM9-B+p+gQtiA_HASQ7AEuQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: "Manjunathappa, Prakash" <prakash.pm@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+Thanks for the reply Haojian.
 
-On Thu, Jun 06, 2013 at 09:00:00AM -0700, Olof Johansson wrote:
-> On Thu, Jun 6, 2013 at 8:13 AM, jonsmirl@gmail.com <jonsmirl@gmail.com> wrote:
-> > On Wed, Jun 5, 2013 at 7:54 PM, luke.leighton <luke.leighton@gmail.com> wrote:
-> >>  augh.  ok.  solutions.  what are the solutions here?
-> >
-> > Luke if you really want to fix this a good solution is to have
-> > Allwinner join Linaro and provide an engineer to the Linaro effort.
-> > That engineer will get educated on the right way to do kernel
-> > development and he can pass that knowledge back to Allwinner each day
-> > as he learns it.
+On 06/05/2013 05:43 PM, Haojian Zhuang wrote:
+> On 6 June 2013 01:23, Mike Dunn <mikedunn@newsguy.com> wrote:
+>> Hi,
+>>
+>> I'd like to start converting to device tree usage some of the old pxa27x
+>> platforms I'm fond of, starting with adding pinctrl support.  If I'm not
+>> mistaken, this will clear the way for some ongoing updates to the pinctrl/gpio
+>> code used by newer Marvell arches.
+>>
+>> I noticed that Haojian pulled the pinctrl-pxa driver from the kernel, in favor
+>> of using pinctrl-single, so I turned my attention to that.  From what I can
+>> tell, pinctrl-single is currently inadequate for pxa27x because:
+>>
+>> (1) On the pxa27x, setting the mux for a pin involves configuring both the alt
+>> function register *and* the direction register, requiring the ability to specify
+>> in the device tree multiple reg/value pairs for each pin.
+> In PXA27x, GPIO controller control both GPIO & pin alternate function. The
+> alternate function is covered by GAFRx registers.
 > 
-> There's no need for anybody to join Linaro to contribute upstream.
-> That's a crazy notion.
-> 
-> Listen, Allwinner isn't working in a vacuum, believe it or not. I've
-> talked to them, so has Arnd and other people working on ARM, including
-> Maxime Ripard, who's been reimplementing upstream support for their
-> platform. Everybody is interested in the right things happening, it's
-> just a matter of figuring out how to do it. The right people are
-> already talking.
+> At first, we need to move GAFRx from gpio-pxa driver. Then we can support
 
-I should also add that Allwinner not only talked to us already, but also
-expressed interest in doing actual modern kernel development (like using
-"recently" introduced kernel frameworks, like the clk framework).
 
-I've received patches from them already for private reviews, they began
-to show up on the kernel mailing lists, they asked to be CCed on the
-patches I send upstream, they're even the one that reached out to me
-when the early support for their chips was released. So, like Olof said,
-they aren't in a vacuum, they are very aware of the mainline kernel and
-speak a decent english.
+Thanks... I wondered about division of labor between pinctrl and gpio.  Pinctrl
+did seem to be the appropriate place.
 
-So yes, Allwinner has an evil vendor tree (c), with a solution similar yet
-inferior (because not generic enough) to the device tree, but they show
-interest on going down the mainline road.
+
+> it by pinctrl-single driver since pinctrl-single driver could support mulitple
+> pins in one pin registers. There's "bits-per-mux" property in pinctrl-single
+> driver.
+
+
+Yes, but currently pinctrl-single only supports writing one register for a given
+pin (with multiple pins sharing a register if bit-per-mux==true).  On pxa27x, a
+pin's alt function is determined by the values written to both the GAFRx and the
+GPDRx registers, so I think that pinctrl-single may need to allow a device tree
+to specify multiple reg/value/mask sets for any one pin.  I don't have a
+pxa3xx/mmp developer's manual handy, but from the code it appears that on these
+arches the direction register is irrelevant to the mux setting.
+
+
+>>
+>> (2) Some of the pinctrl-single code still assumes one register-per-pin; see for
+>> example the functions pcs_allocate_pin_table() and pcs_get_pin_by_offset().
+>> Curiously, the recently added pcs_request_gpio() function also suffers from
+>> this, unless I'm mistaken.
+>>
+> Not exactly. pinctrl-single driver could support multiple pins in one register.
+> Now Manjunathappa also fixed some issue in pinctrl-single for supporting
+> multiple pins. (https://lkml.org/lkml/2013/5/21/226) I suggest you to develop
+> based on his patches.
+
+
+Thanks for the pointer.  I was away from the linux-arm-kernel ML until
+yesterday, so I didn't see the patch.  Yes, it looks like bits_per_pin corrects
+the problem.
+
+I guess I'll take a stab at this.  Any other comments greatly appreciated.
+
+Thanks again,
+Mike
