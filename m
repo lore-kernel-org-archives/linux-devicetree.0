@@ -1,124 +1,45 @@
-From: Nicolin Chen <b42378@freescale.com>
-Subject: [PATCH V2 2/2] ASoC: WM8962: Add device tree binding
-Date: Thu, 6 Jun 2013 19:38:46 +0800
-Message-ID: <a7acc6e603272a9d48324712f54da9bb1fa46889.1370518627.git.b42378@freescale.com>
-References: <cover.1370518627.git.b42378@freescale.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH] of: Export of_irq_count for using in modules
+Date: Thu, 6 Jun 2013 12:55:47 +0100
+Message-ID: <CACxGe6synO5mksUPF4bG3NGnkS7HB47m8u_O+WVb6GG-0153Yw@mail.gmail.com>
+References: <6aa29b1d109a46278a7f37b598defe07d6edfe60.1369921774.git.michal.simek@xilinx.com>
+ <20130530201714.GE19834@game.jcrosoft.org> <51A85BEE.4000009@monstr.eu>
+ <20130531110045.GF19834@game.jcrosoft.org> <51A8AC4B.906@monstr.eu>
+ <20130531151601.GG19834@game.jcrosoft.org> <51A8D3A3.5030200@monstr.eu>
+ <20130606082941.GH19834@game.jcrosoft.org> <51B04AA9.4070803@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <cover.1370518627.git.b42378@freescale.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: patches@opensource.wolfsonmicro.com, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
-Cc: grant.likely@linaro.org, broonie@kernel.org, lgirdwood@gmail.com, rob.herring@calxeda.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51B04AA9.4070803@monstr.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Michal Simek <michal.simek@xilinx.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Document the device tree binding for the WM8962 codec, and modify the
-driver to extract platform data from the device tree, if present.
+On Thu, Jun 6, 2013 at 9:39 AM, Michal Simek <monstr@monstr.eu> wrote:
+> On 06/06/2013 10:29 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
+>> On 18:45 Fri 31 May     , Michal Simek wrote:
+>>> ok. good to know. Btw: Let's return to my origin point why not to
+>>> export of_irq_count for modules?
+>>> Or opposite question if platform_get_resource is correct way
+>>> why to export of_irq_to_resource for modules?
+>>
+>> for old ppc drivers that are not converted yet to pdev
+>>
+>> if you can do so just use pdev resource I should have fix the pb or irq_domain
+>> hopefully for 3.11
+>
+> ok. It means it is currently deprecated.
+> I just wanted to be sure that I understand it correctly.
 
-Based on work of WM8903 by Stephen Warren <swarren@nvidia.com>
+It's deprecated for platform_devices, but should still be used for
+other bus types that don't provide the device driver with a list of
+irqs. For platform devices it is best to use the platform_bus irq
+table since that is portable regardless of how the device is
+instantiated.
 
-Signed-off-by: Nicolin Chen <b42378@freescale.com>
----
- Documentation/devicetree/bindings/sound/wm8962.txt |   20 +++++++++++
- sound/soc/codecs/wm8962.c                          |   35 +++++++++++++++++++-
- 2 files changed, 54 insertions(+), 1 deletions(-)
+As for not exporting of_irq_count(), I don't have a problem with it,
+but only if there is a user. It sounds like with the rework you
+discussed with Jean-Christophe that it is no longer the case.
 
-diff --git a/Documentation/devicetree/bindings/sound/wm8962.txt b/Documentation/devicetree/bindings/sound/wm8962.txt
-index dceb3b1..855d723 100644
---- a/Documentation/devicetree/bindings/sound/wm8962.txt
-+++ b/Documentation/devicetree/bindings/sound/wm8962.txt
-@@ -8,9 +8,29 @@ Required properties:
- 
-   - reg : the I2C address of the device.
- 
-+Optional properties:
-+  - spk-mono: Default register value for SPK_MONO of R51 (Class D Control 2).
-+
-+  - mic-cfg : Default register value for R48 (Additional Control 4).
-+    If absent, the default is 0.
-+
-+  - gpio-cfg : A list of GPIO configuration register values. The list must
-+    be 6 entries long. If absent, no configuration of these registers is
-+    performed. And note that only the value within [0x0, 0xffff] is valid.
-+    Any other value will be regarded as setting the GPIO register by its
-+    default value 0x0.
- Example:
- 
- codec: wm8962@1a {
- 	compatible = "wlf,wm8962";
- 	reg = <0x1a>;
-+
-+	gpio-cfg = <
-+		0x0000 /* 0:Default */
-+		0x0000 /* 1:Default */
-+		0x0013 /* 2:FN_DMICCLK */
-+		0x0000 /* 3:Default */
-+		0x8014 /* 4:FN_DMICCDAT */
-+		0x0000 /* 5:Default */
-+	>;
- };
-diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
-index d56dd86..26219ea 100644
---- a/sound/soc/codecs/wm8962.c
-+++ b/sound/soc/codecs/wm8962.c
-@@ -3584,6 +3584,34 @@ static const struct regmap_config wm8962_regmap = {
- 	.cache_type = REGCACHE_RBTREE,
- };
- 
-+static int wm8962_set_pdata_from_of(struct i2c_client *i2c,
-+				    struct wm8962_pdata *pdata)
-+{
-+	const struct device_node *np = i2c->dev.of_node;
-+	u32 val32;
-+	int i;
-+
-+	if (of_property_read_bool(np, "spk-mono"))
-+		pdata->spk_mono = true;
-+
-+	if (of_property_read_u32(np, "mic-cfg", &val32) >= 0)
-+		pdata->mic_cfg = val32;
-+
-+	if (of_property_read_u32_array(np, "gpio-cfg", pdata->gpio_init,
-+				       ARRAY_SIZE(pdata->gpio_init)) >= 0)
-+		for (i = 0; i < ARRAY_SIZE(pdata->gpio_init); i++) {
-+			/*
-+			 * The range of GPIO register value is [0x0, 0xffff]
-+			 * While the default value of each register is 0x0
-+			 * Any other value will be regarded as default value
-+			 */
-+			if (pdata->gpio_init[i] > 0xffff)
-+				pdata->gpio_init[i] = 0x0;
-+		}
-+
-+	return 0;
-+}
-+
- static int wm8962_i2c_probe(struct i2c_client *i2c,
- 			    const struct i2c_device_id *id)
- {
-@@ -3604,8 +3632,13 @@ static int wm8962_i2c_probe(struct i2c_client *i2c,
- 	wm8962->irq = i2c->irq;
- 
- 	/* If platform data was supplied, update the default data in priv */
--	if (pdata)
-+	if (pdata) {
- 		memcpy(&wm8962->pdata, pdata, sizeof(struct wm8962_pdata));
-+	} else if (i2c->dev.of_node) {
-+		ret = wm8962_set_pdata_from_of(i2c, &wm8962->pdata);
-+		if (ret != 0)
-+			return ret;
-+	}
- 
- 	for (i = 0; i < ARRAY_SIZE(wm8962->supplies); i++)
- 		wm8962->supplies[i].supply = wm8962_supply_names[i];
--- 
-1.7.1
+g.
