@@ -1,45 +1,46 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] of: Export of_irq_count for using in modules
-Date: Thu, 6 Jun 2013 12:55:47 +0100
-Message-ID: <CACxGe6synO5mksUPF4bG3NGnkS7HB47m8u_O+WVb6GG-0153Yw@mail.gmail.com>
-References: <6aa29b1d109a46278a7f37b598defe07d6edfe60.1369921774.git.michal.simek@xilinx.com>
- <20130530201714.GE19834@game.jcrosoft.org> <51A85BEE.4000009@monstr.eu>
- <20130531110045.GF19834@game.jcrosoft.org> <51A8AC4B.906@monstr.eu>
- <20130531151601.GG19834@game.jcrosoft.org> <51A8D3A3.5030200@monstr.eu>
- <20130606082941.GH19834@game.jcrosoft.org> <51B04AA9.4070803@monstr.eu>
+From: Mark Langsdorf <mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] sata highbank: add bit-banged SGPIO driver support
+Date: Thu, 06 Jun 2013 07:14:08 -0500
+Message-ID: <51B07D10.2060609@calxeda.com>
+References: <1369945051-2582-2-git-send-email-mark.langsdorf@calxeda.com>
+ <1370471508-30806-1-git-send-email-mark.langsdorf@calxeda.com>
+ <20130605231517.GP10693@mtj.dyndns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51B04AA9.4070803@monstr.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Michal Simek <michal.simek@xilinx.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130605231517.GP10693-9pTldWuhBndy/B6EtB590w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 6, 2013 at 9:39 AM, Michal Simek <monstr@monstr.eu> wrote:
-> On 06/06/2013 10:29 AM, Jean-Christophe PLAGNIOL-VILLARD wrote:
->> On 18:45 Fri 31 May     , Michal Simek wrote:
->>> ok. good to know. Btw: Let's return to my origin point why not to
->>> export of_irq_count for modules?
->>> Or opposite question if platform_get_resource is correct way
->>> why to export of_irq_to_resource for modules?
->>
->> for old ppc drivers that are not converted yet to pdev
->>
->> if you can do so just use pdev resource I should have fix the pb or irq_domain
->> hopefully for 3.11
->
-> ok. It means it is currently deprecated.
-> I just wanted to be sure that I understand it correctly.
+,On 06/05/2013 06:15 PM, Tejun Heo wrote:
+> Hello,
+> 
+> On Wed, Jun 05, 2013 at 05:31:48PM -0500, Mark Langsdorf wrote:
+>> +static void ecx_parse_sgpio(struct ecx_plat_data *pdata, u32 port, u32 state)
+>> +{
+>> +	if (state & ECX_ACTIVITY_BITS)
+>> +		pdata->sgpio_pattern |= sgpio_bit_shift(pdata, port,
+>> +						ECX_ACTIVITY_SHIFT);
+>> +	else
+>> +		pdata->sgpio_pattern &= sgpio_bit_shift(pdata, port,
+>> +						ECX_ACTIVITY_SHIFT);
+> 
+> Shouldn't it be "&= ~" instead of "&="?  You're trying to turn the bit
+> off, right?
 
-It's deprecated for platform_devices, but should still be used for
-other bus types that don't provide the device driver with a list of
-irqs. For platform devices it is best to use the platform_bus irq
-table since that is portable regardless of how the device is
-instantiated.
+Oops. Thanks!
 
-As for not exporting of_irq_count(), I don't have a problem with it,
-but only if there is a user. It sounds like with the rework you
-discussed with Jean-Christophe that it is no longer the case.
-
-g.
+--Mark Langsdorf
+Calxeda, Inc.
