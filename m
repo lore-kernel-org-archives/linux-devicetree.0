@@ -1,64 +1,71 @@
-From: Nicolin Chen <b42378@freescale.com>
-Subject: Re: [PATCH V2] ASoC: fsl: add imx-wm8962 machine driver
-Date: Thu, 6 Jun 2013 20:49:53 +0800
-Message-ID: <20130606124952.GA19153@MrMyself>
-References: <1370420501-8410-1-git-send-email-b42378@freescale.com>
- <20130605115544.GX31367@sirena.org.uk>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
+ Uploading linux (3.9.4-1))
+Date: Thu, 6 Jun 2013 14:10:42 +0100
+Message-ID: <20130606131042.GN18614@n2100.arm.linux.org.uk>
+References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+ <1370475609.20454.44.camel@localhost>
+ <CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
+ <1733666.lHUBcfUXq9@flatron>
+ <CAPweEDzYLDzh_-OWU61dtVhajZ40QpQgZKHFYDsh3FgF=r9_ag@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20130605115544.GX31367@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: grant.likely@linaro.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, lgirdwood@gmail.com
+In-Reply-To: <CAPweEDzYLDzh_-OWU61dtVhajZ40QpQgZKHFYDsh3FgF=r9_ag@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "luke.leighton" <luke.leighton@gmail.com>
+Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, linux-arm-kernel@lists.infradead.org, debian-kernel@lists.debian.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 05, 2013 at 12:55:44PM +0100, Mark Brown wrote:
-> > +		/* assuming clock enabled by default */
-> > +		data->codec_clk = NULL;
-> > +		ret = of_property_read_u32(codec_np, "clock-frequency",
-> > +					&data->clk_frequency);
-> > +		if (ret) {
-> > +			dev_err(&codec_dev->dev,
-> > +				"clock-frequency missing or invalid\n");
-> > +			goto fail;
-> > +		}
+On Thu, Jun 06, 2013 at 01:24:57PM +0100, luke.leighton wrote:
+> On Thu, Jun 6, 2013 at 1:01 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
 > 
-> Since it's easy to define a fixed rate clock (there's a generic driver
-> for that) I'd just require the user to provide a clock API clock and fix
-> the rate using that.  This is going to be less error prone and makes the
-> code simpler.
+> > I don't see any other solution here than moving all the Allwinner code to
+> > DT (as it has been suggested in this thread several times already), as
+> > this is the only hardware description method supported by ARM Linux.
+> 
+>  i repeat again: please state, explicitly and unequivocably that you -
+> linux kernel developers - are happy that the reach of linux and
+> gnu/linux OSes is dramatically reduced due to this intransigent
+> position.
 
-I tried to use fixed rate clock as below:
+If companies are going to go off and invent the square wheel, and that
+makes *them* suffer the loss of being able to merge back into the
+mainline kernel, thereby making *their* job of moving forward with
+their kernel versions much harder, then yes, we *are* happy.
 
-	data->codec_clk = devm_clk_get(&codec_dev->dev, NULL);
-	if (IS_ERR(data->codec_clk)) {
-		of_fixed_clk_setup(codec_np);
-		data->codec_clk = clk_get(NULL, codec_np->name);
-		if (IS_ERR(data->codec_clk)) {
-			dev_err(&pdev->dev, "failed to create fixed clk\n");
-			ret = IS_ERR(data->codec_clk);
-			goto fail;
-		}
-	}
+Companies will always do idiotic things; it's *them* and their users
+who have to live with the results of that bad decision making process.
 
-	data->clk_frequency = clk_get_rate(data->codec_clk);
-	clk_prepare_enable(data->codec_clk);
+Eventually, the pain of being outside the mainline kernel will become
+too great, especially if their users demand things like kernel upgrades
+from them.  Eventually, they will change.
 
-But I always got "failed to create fixed clk" error during system booting.
-So I think it's pretty different to get a fixed clock with normal since
-it's on the root_list of clock tree.
-How can I get the clock here, or more specifically, any way to get the 
-rate of the fixed-rate-clk?
+And no, this isn't an intransigent position.  This is reality given
+that ARM already has way too much code in the Linux kernel and we're
+trying to reduce that through the use of technologies like DT.  The
+last thing we need right now is for another "DT" like implementation
+to come along which is only used on a minority of platforms - even if
+the platform it is used on is successful.
 
-Thanks.
+The way this works is this:
+- you either go with the policies which are set, or
+- you change the policy as a whole because you have a technically
+  superior solution
+
+What that means in this case is either you adopt DT, or you convince
+everyone that DT isn't the solution, but your solution is, and we adopt
+your solution for *everything* instead.
+
+If neither of those are possible, then that's really not our problem,
+and it's not _us_ who are being "intransigent".
