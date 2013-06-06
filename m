@@ -1,43 +1,57 @@
-From: "jonsmirl@gmail.com" <jonsmirl@gmail.com>
-Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
- Uploading linux (3.9.4-1))
-Date: Thu, 6 Jun 2013 11:13:55 -0400
-Message-ID: <CAKON4OxPDpN3BTc9GWP44exDSkAZGJ5OeCpUP37vRnnvxwUnmw@mail.gmail.com>
-References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
-	<CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
-	<51AFA6DD.3000202@wwwdotorg.org>
-	<CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
-	<1370469574.18839.33.camel@localhost>
-	<CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
-	<CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
-	<CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com>
-	<1370475609.20454.44.camel@localhost>
-	<CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 06/11] staging: drm/imx: Add LDB support
+Date: Thu, 6 Jun 2013 23:16:10 +0800
+Message-ID: <20130606151608.GE28270@S2101-09.ap.freescale.net>
+References: <1364484215-13935-1-git-send-email-p.zabel@pengutronix.de>
+ <1364484215-13935-7-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "luke.leighton" <luke.leighton@gmail.com>
-Cc: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel@lists.debian.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1364484215-13935-7-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 5, 2013 at 7:54 PM, luke.leighton <luke.leighton@gmail.com> wrote:
->  augh.  ok.  solutions.  what are the solutions here?
+On Thu, Mar 28, 2013 at 04:23:30PM +0100, Philipp Zabel wrote:
+> +static void imx_ldb_encoder_prepare(struct drm_encoder *encoder)
+> +{
+> +	struct imx_ldb_channel *imx_ldb_ch = enc_to_imx_ldb_ch(encoder);
+> +	struct imx_ldb *ldb = imx_ldb_ch->ldb;
+> +	struct drm_display_mode *mode = &encoder->crtc->mode;
+> +	unsigned long serial_clk;
+> +	unsigned long di_clk = mode->clock * 1000;
+> +	int mux = imx_drm_encoder_get_mux_id(imx_ldb_ch->imx_drm_encoder,
+> +					     encoder->crtc);
+> +
+> +	if (ldb->ldb_ctrl & LDB_SPLIT_MODE_EN) {
+> +		/* dual channel LVDS mode */
+> +		serial_clk = 3500UL * mode->clock;
+> +		imx_ldb_set_clock(ldb, mux, 0, serial_clk, di_clk);
+> +		imx_ldb_set_clock(ldb, mux, 1, serial_clk, di_clk);
+> +	} else {
+> +		serial_clk = 7000UL * mode->clock;
+> +		imx_ldb_set_clock(ldb, mux, imx_ldb_ch->chno, serial_clk, di_clk);
+> +	}
+> +
+> +	imx_drm_crtc_panel_format(encoder->crtc, DRM_MODE_ENCODER_LVDS,
+> +			V4L2_PIX_FMT_RGB24);
 
-Luke if you really want to fix this a good solution is to have
-Allwinner join Linaro and provide an engineer to the Linaro effort.
-That engineer will get educated on the right way to do kernel
-development and he can pass that knowledge back to Allwinner each day
-as he learns it.
+I have panel which needs it to be V4L2_PIX_FMT_BGR666.  We should
+probably have a device tree property for that like interface_pix_fmt in
+parallel display support?
 
-Allwinner has expressed interest in the past in joining Linaro but the
-price was too high. I believe there are cheaper options now for
-joining. The benefits Allwinner receives from joining will far exceed
-the cost of joining. The net result will likely be a reduction in the
-amount they need to spend on in-house development since they will
-learn how to better leverage other developer's work.
+Shawn
 
---
-Jon Smirl
-jonsmirl@gmail.com
+> +}
