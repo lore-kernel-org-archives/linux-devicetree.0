@@ -1,107 +1,83 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] spi: omap2-mcspi: Add FIFO buffer support
-Date: Thu, 6 Jun 2013 11:30:32 +0100
-Message-ID: <20130606103032.GR31367@sirena.org.uk>
-References: <1370432398-7796-1-git-send-email-illia.smyrnov@ti.com>
- <1370432398-7796-3-git-send-email-illia.smyrnov@ti.com>
- <20130605120346.GZ31367@sirena.org.uk> <51B05FB8.6050903@ti.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] ARM: davinci: uart: move to devid based clk_get
+Date: Thu, 6 Jun 2013 16:02:39 +0530
+Message-ID: <51B06547.8030709@ti.com>
+References: <1369729686-6595-1-git-send-email-prakash.pm@ti.com>
+	<1369729686-6595-2-git-send-email-prakash.pm@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4958243636458554163=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51B05FB8.6050903-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Illia Smyrnov <x0194613-l0cyMroinI0@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Illia Smyrnov <illia.smyrnov-l0cyMroinI0@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1369729686-6595-2-git-send-email-prakash.pm-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Prakash,
 
---===============4958243636458554163==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="q32ofrQ8UfzBLMEG"
-Content-Disposition: inline
+It appears that this patch was not tested thoroughly. See below:
 
+On 5/28/2013 1:58 PM, Manjunathappa, Prakash wrote:
+> For modules having single clock, clk_get should be done with dev_id.
+> But current davinci implementation handles multiple instances
+> of the UART devices with single platform_device_register. Hence clk_get
+> is based on con_id rather than dev_id, this is not correct. Do
+> platform_device_register for each instance and clk_get on dev_id.
+> 
+> Signed-off-by: Manjunathappa, Prakash <prakash.pm-l0cyMroinI0@public.gmane.org>
+> ---
 
---q32ofrQ8UfzBLMEG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> -static struct plat_serial8250_port da8xx_serial_pdata[] = {
+> +static struct plat_serial8250_port da8xx_serial0_pdata[] = {
+>  	{
+>  		.mapbase	= DA8XX_UART0_BASE,
+>  		.irq		= IRQ_DA8XX_UARTINT0,
+> @@ -75,7 +75,9 @@ static struct plat_serial8250_port da8xx_serial_pdata[] = {
+>  					UPF_IOREMAP,
+>  		.iotype		= UPIO_MEM,
+>  		.regshift	= 2,
+> -	},
+> +	}
+> +};
+> +static struct plat_serial8250_port da8xx_serial1_pdata[] = {
+>  	{
+>  		.mapbase	= DA8XX_UART1_BASE,
+>  		.irq		= IRQ_DA8XX_UARTINT1,
+> @@ -83,7 +85,9 @@ static struct plat_serial8250_port da8xx_serial_pdata[] = {
+>  					UPF_IOREMAP,
+>  		.iotype		= UPIO_MEM,
+>  		.regshift	= 2,
+> -	},
+> +	}
+> +};
+> +static struct plat_serial8250_port da8xx_serial2_pdata[] = {
+>  	{
+>  		.mapbase	= DA8XX_UART2_BASE,
+>  		.irq		= IRQ_DA8XX_UARTINT2,
+> @@ -91,18 +95,31 @@ static struct plat_serial8250_port da8xx_serial_pdata[] = {
+>  					UPF_IOREMAP,
+>  		.iotype		= UPIO_MEM,
+>  		.regshift	= 2,
+> -	},
+> -	{
+> -		.flags	= 0,
+> -	},
+> +	}
 
-On Thu, Jun 06, 2013 at 01:08:56PM +0300, Illia Smyrnov wrote:
-> On 06/05/2013 03:03 PM, Mark Brown wrote:
+8250_core.c relies on sentinel value with p->flags = 0 to terminate
+looking for more ports. You don't have sentinel values in any of pdata
+the arrays you introduced so the code basically goes looking into areas
+of memory not its own. This caused bunch of "cannot register port"
+errors for me but I can easily imagine more serious errors.
 
-> >Why is this defined for slaves?  Surely the size of the FIFO in the
-> >controller is a property of the controller not the slave?
-
-> According to OMAP TRM [1] the FIFO buffer can be used by only one
-> channel at a time. If several channels are selected and several FIFO
-> enable bit fields are set to 1, the controller forces the buffer not
-> to be used.
-
-The controller ought to be able to figure this out for itself.  As a
-first pass just grabbing the FIFO on a first come first served basis
-will probably work well most of the time, the device would have to be
-very active for it to constantly be doing transfers on all channels.
-
-If there's more contention than that we probably ought to be looking at
-how we handle this in general, it seems like we'd have more problems
-than just the FIFO to worry about.
-
-> If there are several slaves on the controller we must select which
-> of slaves will use the FIFO for SPI transfers. Also, optimal FIFO
-
-A single controller is only going to be able to talk to one slave at
-once, everything on the bus except chip select is shared.
-
-> size is heavily dependent of the SPI transfers length specific for
-> certain slave.
-
-The transfer length doesn't seem like something that we want to be
-encoding in DT, particularly not indirectly - it is obviously readily
-available at runtime, variable during runtime (eg, firmware download may
-do large transfers on a device that only does small transfers most of
-the time) and is something that updates to the drivers could change.
-
---q32ofrQ8UfzBLMEG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.20 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRsGTAAAoJELSic+t+oim9dfEQAJArV1dyQATWzmsuwfEfsXXg
-ZNXsuLuPBaZ/jzt342a/MBDaSNeLyuxpq/w2XqP09zhydPozG00pOZJsSJgXxF9W
-2mWXtDv7lo/BBbDzGjSSmocGD7fhoHkJZbF4dSVuDNQNEXB+eIkUxQJhUYi/N1k6
-EmR43XboKn7FIA7eD/GPWFZ3flnx2ANygXisMpnGaAU+36hxX5CJHcQHK41+9SFx
-5ZB18Qqwv8xOwdXobe/4CtDDBTKgKIn2JWQUwEAzzuE8BG1Wb95W/aQ7EhCrtJQE
-tGdoLqAAS6fGSPZzpbCUZepbCswtTWqoGIY3SBt09wCBvSpysgn8SJtbkxRaeMTD
-2LFzYN6xsZJ7chC1r1GAPyUxDhU01pUywApOUbF3j20n0uBhagv9gL0z51Fwnrrq
-vOogf8CwC1DlQA2X+8up9YyHeZX4BQ6Y6lHv9uFSOkOw7SzD2TTxcI8+0g6JhU/5
-SqZt0/E7WyDq5hjL/MfTao+uEq6dirjBQyAa0yazWo+nDS4sYPxBEXTcSmSzokI6
-hFzXtGM85IB2UJiat0XgUTwUCGpVgWI2FkzoRDMs/w813I+Yd0SLHzFXdhLclKiM
-4/7RkdF8hhxqLcf/1z8tPagKjOXkV1u5P4PYxsCSGA2/FR/PShwst59zcKgSJ7Ak
-pRq9JpQyIwVCThfo8QPq
-=gKwp
------END PGP SIGNATURE-----
-
---q32ofrQ8UfzBLMEG--
-
---===============4958243636458554163==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============4958243636458554163==--
+Thanks,
+Sekhar
