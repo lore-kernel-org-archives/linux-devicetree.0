@@ -1,107 +1,51 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: Re: [net-next PATCH v4 3/5] ARM: dts: AM33XX: Add pinmux configuration
- for CPSW to beaglebone
-Date: Thu, 06 Jun 2013 09:06:21 +0200
-Message-ID: <51B034ED.7040603@epfl.ch>
-References: <1370452099-24026-1-git-send-email-mugunthanvnm@ti.com> <1370452099-24026-4-git-send-email-mugunthanvnm@ti.com>
-Reply-To: florian.vaussard@epfl.ch
+From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] ARM: dts: AM3XXX: Use preprocessor for device trees
+Date: Thu, 6 Jun 2013 09:22:26 +0200
+Message-ID: <51B038B2.4020007@ti.com>
+References: <1370268745-15860-1-git-send-email-florian.vaussard@epfl.ch>
+ <51AF33BC.4020708@ti.com>
+ <C8443D0743D26F4388EA172BF4E2A7A93EB16EED@DBDE04.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1370452099-24026-4-git-send-email-mugunthanvnm@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mugunthan V N <mugunthanvnm@ti.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, benoit.cousson@linaro.org, paul@pwsan.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <C8443D0743D26F4388EA172BF4E2A7A93EB16EED-yXqyApvAXouIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Joel A Fernandes <agnel.joel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On 06/06/2013 07:28 AM, Mohammed, Afzal wrote:
+> Hi Benoit,
+> 
+> On Wed, Jun 05, 2013 at 18:19:00, Cousson, Benoit wrote:
+>> + Afzal,
+>>
+>> Hi Vaibhav and Afzal,
+>>
+>> Can someone test this series before I pull it. I still don't have any AM
+>> board to do it myself :-(
+> 
+> Tested-by: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org> (am335x evm)
 
-On 06/05/2013 07:08 PM, Mugunthan V N wrote:
-> Add pinmux configurations for MII based CPSW ethernet to am335x-bone.
-> In this patch, only single named mode/state is added and these pins
-> are configured during pinctrl driver initialization.
->
-> Default mode is nothing but the values required for the module during
-> active state. With this configurations module is functional as
-> expected.
->
-> Todo:
-> - if an idle state is available for pins, add support for it.
->
-> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
-> ---
->   arch/arm/boot/dts/am335x-bone.dts |   38 +++++++++++++++++++++++++++++++++++++
->   1 file changed, 38 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
-> index 4b5a8e0..008a13b 100644
-> --- a/arch/arm/boot/dts/am335x-bone.dts
-> +++ b/arch/arm/boot/dts/am335x-bone.dts
-> @@ -36,6 +36,33 @@
->   				0x60 0x17	/* gpmc_a8.gpio1_24, OUTPUT_PULLUP | MODE7 */
->   			>;
->   		};
-> +
-> +		cpsw_default: cpsw_default {
-> +			pinctrl-single,pins = <
-> +				/* Slave 1 */
-> +				0x110 0x20	/* mii1_rxerr.mii1_rxerr, MODE0 | INPUT */
+Thanks Afzal.
 
-Here I guess that the comment should be INPUT_PULLDOWN, instead of INPUT.
 
-> +				0x114 0x0	/* mii1_txen.mii1_txen, MODE0 | OUTPUT */
+Florian,
 
-As bit PULLUDENABLE is 0, the pulldown is enabled according to the TRM, 
-right?
-Is this a desirable behaviour, as it will consume power when outputting 
-a high level?
-And consequently, the comment should probably be OUTPUT_PULLDOWN, no?
+I've just pushed the series including Azal tested-by.
+I added as well the Makefile change you have done to add missing target
+with a slight change in the subject:
+ARM: dts: OMAP4/AM35xx: Add missing dtb in the dtbs target
 
-> +				0x118 0x20	/* mii1_rxdv.mii1_rxdv, MODE0 | INPUT_PULLDOWN */
-> +				0x11c 0x0	/* mii1_txd3.mii1_txd3, MODE0 | OUTPUT */
-> +				0x120 0x0	/* mii1_txd2.mii1_txd2, MODE0 | OUTPUT */
-> +				0x124 0x0	/* mii1_txd1.mii1_txd1, MODE0 | OUTPUT */
-> +				0x128 0x0	/* mii1_txd0.mii1_txd0, MODE0 | OUTPUT */
-
-Same questions here.
-
-> +				0x12c 0x20	/* mii1_txclk.mii1_txclk, MODE0 | INPUT_PULLDOWN */
-> +				0x130 0x20	/* mii1_rxclk.mii1_rxclk, MODE0 | INPUT_PULLDOWN */
-> +				0x134 0x20	/* mii1_rxd3.mii1_rxd3, MODE0 | INPUT_PULLDOWN */
-> +				0x138 0x20	/* mii1_rxd2.mii1_rxd2, MODE0 | INPUT_PULLDOWN */
-> +				0x13c 0x20	/* mii1_rxd1.mii1_rxd1, MODE0 | INPUT_PULLDOWN */
-> +				0x140 0x20	/* mii1_rxd0.mii1_rxd0, MODE0 | INPUT_PULLDOWN */
-> +			>;
-> +		};
-> +
-> +		davinci_mdio_default: davinci_mdio_default {
-> +			pinctrl-single,pins = <
-> +				/* MDIO */
-> +				0x148 0x30	/* mdio_data.mdio_data, MODE0 | INPUT_PULLUP */
-> +				0x14c 0x10	/* mdio_clk.mdio_clk, MODE0 | OUTPUT_PULLUP */
-> +			>;
-> +		};
->   	};
->
->   	ocp {
-> @@ -138,3 +165,14 @@
->   	phy_id = <&davinci_mdio>, <1>;
->   	phy-mode = "mii";
->   };
-> +
-> +&mac {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&cpsw_default>;
-> +
-> +};
-> +
-> +&davinci_mdio {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&davinci_mdio_default>;
-> +};
->
-
-Regards,
-
-Florian
+Thanks,
+Benoit
