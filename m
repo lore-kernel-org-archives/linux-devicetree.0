@@ -1,34 +1,66 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [net-next PATCH v4 1/5] net: cpsw: enhance pinctrl support
-Date: Thu, 6 Jun 2013 11:29:39 +0530
-Message-ID: <51B0254B.4090304@ti.com>
-References: <1370452099-24026-1-git-send-email-mugunthanvnm@ti.com> <1370452099-24026-2-git-send-email-mugunthanvnm@ti.com> <20130605192345.GH31367@sirena.org.uk>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH 4/4] OF: modify function stubs to match proper function
+ declarations.
+Date: Thu, 6 Jun 2013 08:54:45 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1306060852070.32566@axis700.grange>
+References: <1367305883-2997-1-git-send-email-g.liakhovetski@gmx.de>
+ <1367305883-2997-5-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130605192345.GH31367@sirena.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, benoit.cousson@linaro.org, paul@pwsan.com, Hebbar Gururaja <gururaja.hebbar@ti.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1367305883-2997-5-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 6/6/2013 12:53 AM, Mark Brown wrote:
-> On Wed, Jun 05, 2013 at 10:38:15PM +0530, Mugunthan V N wrote:
->> From: Hebbar Gururaja <gururaja.hebbar@ti.com>
->>
->> Amend cpsw controller to optionally take a pin control handle and set
->> the state of the pins to:
->>
->> - "default" on boot, resume
->> - "sleep" on suspend()
-> Linus Walleij posted some patches which factor the state setting code
-> out into generic functions earlier on today - it probably makes sense to
-> pick those up rather than open coding
-But this can go in as Linus Walleij's patch is not accepted yet. Once 
-that is
-accepted and present in net git repo I will submit a separate patch to use
-those APIs from pin ctrl core.
+Hi
 
-Regards
-Mugunthan V N
+On Tue, 30 Apr 2013, Guennadi Liakhovetski wrote:
+
+> of_parse_phandle_with_args() and of_count_phandle_with_args() functions
+> are declared with their first parameter as const. However, their
+> respective stubs, used when CONFIG_OF isn't defined, don't have the "const"
+> modifier. This patch adds it to fix the mismatch.
+> 
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+> ---
+>  include/linux/of.h |    4 ++--
+>  1 files changed, 2 insertions(+), 2 deletions(-)
+
+This patch is a trivial fix and doesn't actually depend on others in this 
+series, any reason it hasn't been applied yet?
+
+Thanks
+Guennadi
+
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 30ae71f..d9dbf73 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -466,7 +466,7 @@ static inline struct device_node *of_parse_phandle(const struct device_node *np,
+>  	return NULL;
+>  }
+>  
+> -static inline int of_parse_phandle_with_args(struct device_node *np,
+> +static inline int of_parse_phandle_with_args(const struct device_node *np,
+>  					     const char *list_name,
+>  					     const char *cells_name,
+>  					     int index,
+> @@ -485,7 +485,7 @@ static inline int of_parse_phandle_with_child_args(const struct device_node *np,
+>  	return -ENOSYS;
+>  }
+>  
+> -static inline int of_count_phandle_with_args(struct device_node *np,
+> +static inline int of_count_phandle_with_args(const struct device_node *np,
+>  					     const char *list_name,
+>  					     const char *cells_name)
+>  {
+> -- 
+> 1.7.2.5
+> 
+
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
