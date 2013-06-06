@@ -1,89 +1,62 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH 1/1] of/irq: store IRQ trigger/level in struct resource
- flags
-Date: Thu, 06 Jun 2013 10:00:13 +0200
-Message-ID: <51B0418D.7040708@collabora.co.uk>
-References: <1365148088-11175-1-git-send-email-javier.martinez@collabora.co.uk> <51633F26.7000400@gmail.com> <51634835.5010302@collabora.co.uk> <20130605232647.55C8B3E10E4@localhost>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3] pwm: add pca9685 driver
+Date: Thu, 6 Jun 2013 10:03:00 +0200
+Message-ID: <20130606080300.GG21522@pengutronix.de>
+References: <1369900212-14368-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130605232647.55C8B3E10E4@localhost>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <robherring2@gmail.com>, jgchunter@gmail.com, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, linux-omap <linux-omap@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1369900212-14368-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/06/2013 01:26 AM, Grant Likely wrote:
-> On Tue, 09 Apr 2013 00:44:05 +0200, Javier Martinez Canillas <javier.martinez@collabora.co.uk> wrote:
->> On 04/09/2013 12:05 AM, Rob Herring wrote:
->> > On 04/05/2013 02:48 AM, Javier Martinez Canillas wrote:
->> >> This means that drivers that need the IRQ type/level flags defined in
->> >> the DT won't be able to get it.
->> > 
->> > But the interrupt controllers that need the information should be able
->> > to get to it via irqd_get_trigger_type. What problem exactly are you
->> > trying to fix? What driver would use this?
->> >
->> 
->> Yes but this is not about the interrupt controller wanting this information but
->> a device driver that is using the IORESOURCE_IRQ struct resource that has the
->> information about the virtual IRQ associated with a GPIO-IRQ.
->> 
->> The driver doesn't know neither care if its IRQ line is connected to a line of
->> an real IRQ controller or to a GPIO controller that allows a GPIO line to be
->> used as an IRQ.
->> 
->> > My understanding of the IORESOURCE_IRQ_xxx (and DMA) bits are they are
->> > ISA specific and therefore should not be used on non-ISA buses.
->> > 
->> 
->> Many TI OMAP2+ SoC based boards have an SMSC LAN911x/912x controller
->> (drivers/net/ethernet/smsc/smsc911x.c) that is connected to the OMAP processor
->> through its General-Purpose Memory Controller (GPMC) and this LAN driver obtain
->> its IRQ and I/O address space from a struct resource IORESOURCE_IRQ and
->> IORESOURCE_MEM respectively, that is filled by the DeviceTree core.
->> 
->> It does this:
->> 
->> irq_res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
->> irq_flags = irq_res->flags & IRQF_TRIGGER_MASK;
->> 
->> Since of_irq_to_resource() doesn't fill the trigger/level flags on the
->> IORESOURCE_IRQ struct resource, irq_flags will always be 0 regarding the value
->> specified on the second cell of the "interrupts" DT property.
->> 
->> A previous discussion about this can be found here [1].
+On Thu, May 30, 2013 at 09:50:12AM +0200, Steffen Trumtrar wrote:
+> Add pwm driver for the NXP pca9685 16 channel pwm-led controller.
 > 
-> I can't remember if there was ever a reason for not returning the IRQ
-> flags, but I don't have any major objection to doing so if drivers find
-> them useful. The one concern I do have however is if it will cause any
-> problems with drivers that expect flags == IORESOURCE_IRQ without any
-> additional flags. Any users doing that are buggy anyway, but I do want
-> to be careful about breakage.
+> The driver is really barebones at this stage. E.g. the OE' pin and
+> therefore the corresponding registers are not supported.
+> The driver was tested on a HW where this pin is tied to GND.
 > 
-> I'll go over your patch and reply with comments.
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+> Changes since v2:
+> 	- s/pwm-pca9685-led/pwm-pca9685/g
+> 	- replace DT properties with booleans
+> 	- whitespace/blank line cleanup
+> 	- add "depends on REGMAP_I2C" in Kconfig
+> 	- rework code readability
+> 	- add pwm_ops.free function
+> 	- set SLEEP bit on request/free/remove
 > 
-> g.
->
+> Changes since v1:
+> 	- fix typo in documentation example
+> 
+>  .../devicetree/bindings/pwm/nxp,pca9685-pwm.txt    |  27 ++
+>  drivers/pwm/Kconfig                                |   9 +
+>  drivers/pwm/Makefile                               |   1 +
+>  drivers/pwm/pwm-pca9685.c                          | 291 +++++++++++++++++++++
+>  4 files changed, 328 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/nxp,pca9685-pwm.txt
+>  create mode 100644 drivers/pwm/pwm-pca9685.c
+> 
 
-It turns out that if you don't pass a trigger type to the request_irq() call, it
-will use the trigger type set by the irq chip earlier with .xlate
+Ping ?!
 
-For some reasons it was not getting the right trigger type when I sent this
-patch but now it is working correctly so probably there was a bug on the
-irq_chip driver I was using (drivers/gpio/gpio-omap.c) and got fixed in the
-meantime.
-
-So I don't need this patch anymore to make the LAN chip work on my board and I
-don't know if the fact that an empty edge/level flags defaults to what was set
-using the .xlate function handler and this function is called in
-irq_create_of_mapping() is a reason enough to not return the IRQ flags on the
-struct resource.
-
-Having said that, if you still think this patch is useful then I can send a v2
-that take into account your comments on the patch.
-
-Best regards,
-Javier
-
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
