@@ -1,70 +1,233 @@
-From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v2 1/8] clk: flag to use upper half of the register as change indicator
-Date: Fri, 7 Jun 2013 14:27:20 +0200
-Message-ID: <201306071427.20512.heiko@sntech.de>
-References: <201306062107.58875.heiko@sntech.de> <201306062108.38587.heiko@sntech.de> <CACRpkda+QwnhCHBhQ3d-zUE9dD75Rv0_qt02h6prrzCBzNm5zw@mail.gmail.com>
+From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: add dtsi for palmas
+Date: Fri, 7 Jun 2013 14:27:21 +0200
+Message-ID: <51B1D1A9.40702@ti.com>
+References: <1370604504-32310-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda+QwnhCHBhQ3d-zUE9dD75Rv0_qt02h6prrzCBzNm5zw@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <cjb@laptop.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1370604504-32310-1-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 7. Juni 2013, 13:46:32 schrieb Linus Walleij:
-> On Thu, Jun 6, 2013 at 9:08 PM, Heiko St=FCbner <heiko@sntech.de> wro=
-te:
-> > There exist platforms, namely at least all Rockchip Cortex-A9 based=
- ones,
-> > that don't use the paradigm of reading-changing-writing the registe=
-r
-> > contents, but instead only write the changes to the register with a=
- mask
-> > that indicates the changed bits.
-> >=20
-> > This patch adds flags and code to support the case where the lower =
-16 bit
-> > of hold the information and the upper 16 bit are used as mask to
-> > indicate the written changes.
-> >=20
-> > As hardware-specific flags should not be added to the common clk fl=
-ags,
-> > the flags are added to gate, mux and divider clocks individually.
-> >=20
-> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
->=20
-> (...)
->=20
-> > +       if ((clk_gate_flags & CLK_GATE_MASK_UPPER_HALF) && bit_idx =
-> 15)
-> > { +               pr_err("%s: bit_idx %d invalid\n", __func__, bit_=
-idx);
-> > +               return ERR_PTR(-EINVAL);
-> > +       }
->=20
-> Now this looks *EXTREMELY* familiar to a patch just sent by Haojian
-> for HiSilicon.
->=20
-> "[PATCH v2 3/6] clk: divider: add CLK_DIVIDER_HIWORD_MASK flag"
-> http://marc.info/?l=3Dlinux-arm-kernel&m=3D137035873916777&w=3D2
->=20
-> What kind of coincidence is this? Are Rockchip and HiSilicon using
-> the same silicon IP or are they of a common origin? (It is a small
-> world after all.)
+Hi Keerthy,
 
-Now this is really interesting :-) and the handling really seems to fol=
-low the=20
-same pattern.
+On 06/07/2013 01:28 PM, J Keerthy wrote:
+> Adds palmas mfd and palmas regulator nodes. This is
+> based on the patch series:
+> 
+> http://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg89957.html
+> 
+> The device tree nodes are based on:
+> https://lkml.org/lkml/2013/6/6/25
 
+It looks like the board node to use palmas is missing? I cannot find it
+in the previous series as well?
 
-> I think you two guys need to read each others patch sets closely
-> here. I'd like Haojian to look at Heiko's patches and Heiko to look
-> at Haojian's patches, just to make sure you're not actually writing
-> two drivers for the same hardware in the end.
+> 
+> Signed-off-by: J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Graeme Gregory <gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/palmas.dtsi |  171 +++++++++++++++++++++++++++++++++++++++++
+>  1 files changed, 171 insertions(+), 0 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/palmas.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/palmas.dtsi b/arch/arm/boot/dts/palmas.dtsi
+> new file mode 100644
+> index 0000000..be631b5
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/palmas.dtsi
+> @@ -0,0 +1,171 @@
+> +/*
+> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +
+> +&palmas {
+> +	compatible = "ti,palmas";
+> +	interrupt-controller;
+> +	#interrupt-cells = <2>;
 
-I'll take a look
+The I2C address should be there as well. We used to put it in the board
+file, but this is really an I2C device specific information and not
+board specific in that case.
+
+Regards,
+Benoit
 
 
-Heiko
+> +
+> +	palmas_pmic {
+> +		compatible = "ti,palmas-pmic";
+> +		interrupt-parent = <&palmas>;
+> +		interrupts = <14 IRQ_TYPE_NONE>;
+> +		interrupt-name = "short-irq";
+> +
+> +		ti,ldo6-vibrator;
+> +
+> +		regulators {
+> +			smps123_reg: smps123 {
+> +				regulator-name = "smps123";
+> +				regulator-min-microvolt = < 600000>;
+> +				regulator-max-microvolt = <1500000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			smps45_reg: smps45 {
+> +				regulator-name = "smps45";
+> +				regulator-min-microvolt = < 600000>;
+> +				regulator-max-microvolt = <1310000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			smps6_reg: smps6 {
+> +				regulator-name = "smps6";
+> +				regulator-min-microvolt = <1200000>;
+> +				regulator-max-microvolt = <1200000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			smps7_reg: smps7 {
+> +				regulator-name = "smps7";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			smps8_reg: smps8 {
+> +				regulator-name = "smps8";
+> +				regulator-min-microvolt = < 600000>;
+> +				regulator-max-microvolt = <1310000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			smps9_reg: smps9 {
+> +				regulator-name = "smps9";
+> +				regulator-min-microvolt = <2100000>;
+> +				regulator-max-microvolt = <2100000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				ti,smps-range = <0x80>;
+> +			};
+> +
+> +			smps10_reg: smps10 {
+> +				regulator-name = "smps10";
+> +				regulator-min-microvolt = <5000000>;
+> +				regulator-max-microvolt = <5000000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			ldo1_reg: ldo1 {
+> +				regulator-name = "ldo1";
+> +				regulator-min-microvolt = <2800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			ldo2_reg: ldo2 {
+> +				regulator-name = "ldo2";
+> +				regulator-min-microvolt = <2900000>;
+> +				regulator-max-microvolt = <2900000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			ldo3_reg: ldo3 {
+> +				regulator-name = "ldo3";
+> +				regulator-min-microvolt = <3000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			ldo4_reg: ldo4 {
+> +				regulator-name = "ldo4";
+> +				regulator-min-microvolt = <2200000>;
+> +				regulator-max-microvolt = <2200000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			ldo5_reg: ldo5 {
+> +				regulator-name = "ldo5";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			ldo6_reg: ldo6 {
+> +				regulator-name = "ldo6";
+> +				regulator-min-microvolt = <1500000>;
+> +				regulator-max-microvolt = <1500000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			ldo7_reg: ldo7 {
+> +				regulator-name = "ldo7";
+> +				regulator-min-microvolt = <1500000>;
+> +				regulator-max-microvolt = <1500000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			ldo8_reg: ldo8 {
+> +				regulator-name = "ldo8";
+> +				regulator-min-microvolt = <1500000>;
+> +				regulator-max-microvolt = <1500000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			ldo9_reg: ldo9 {
+> +				regulator-name = "ldo9";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			ldoln_reg: ldoln {
+> +				regulator-name = "ldoln";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +
+> +			ldousb_reg: ldousb {
+> +				regulator-name = "ldousb";
+> +				regulator-min-microvolt = <3250000>;
+> +				regulator-max-microvolt = <3250000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +			};
+> +		};
+> +	};
+> +};
+> 
