@@ -1,14 +1,12 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] mmc: dw_mmc: Handle late vmmc regulator with
- EPROBE_DEFER
-Date: Fri, 7 Jun 2013 11:24:04 +0100
-Message-ID: <20130607102404.GO31367@sirena.org.uk>
-References: <1370580406-10254-1-git-send-email-dianders@chromium.org>
- <1664692.GUOAAQ3FLn@flatron>
+Subject: Re: [PATCH V4] ASoC: fsl: add imx-wm8962 machine driver
+Date: Fri, 7 Jun 2013 11:25:21 +0100
+Message-ID: <20130607102521.GP31367@sirena.org.uk>
+References: <1370600053-14808-1-git-send-email-b42378@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5163217904812608901=="
+Content-Type: multipart/mixed; boundary="===============2627312918996094243=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1664692.GUOAAQ3FLn@flatron>
+In-Reply-To: <1370600053-14808-1-git-send-email-b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,69 +17,58 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Will Newton <will.newton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============5163217904812608901==
+--===============2627312918996094243==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="DT/miTrKQuDYoJpq"
+	protocol="application/pgp-signature"; boundary="oGyU6H+2dQ5x0Lt2"
 Content-Disposition: inline
 
 
---DT/miTrKQuDYoJpq
+--oGyU6H+2dQ5x0Lt2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 07, 2013 at 12:19:58PM +0200, Tomasz Figa wrote:
-> On Thursday 06 of June 2013 21:46:45 Doug Anderson wrote:
+On Fri, Jun 07, 2013 at 06:14:13PM +0800, Nicolin Chen wrote:
 
-> > dw_mmc is probed.  This regulator is optional, though a warning will
-> > be printed if it's missing.  The fact that the regulator is optional
-> > means that (at the moment) it's not possible to use a regulator that
-> > probes _after_ dw_mmc.
+> +Optional properties:
+> +- hp-det-gpios : The gpio pin to detect plug in/out event that happens to
+> +  Headphone jack.
+> +
+> +- mic-det-gpios: The gpio pin to detect plug in/out event that happens to
+> +  Micphone jack.
 
-> > Fix this limitation by adding the ability to make vmmc required.  If a
-> > vmmc-supply is specified in the device tree we'll assume that vmmc is
-> > required.
+So this is for physically distinct headphone and microphone jacks rather
+than a headset?
 
-> This interesting case makes me think that regulator core should=20
-> differentiate between regulator lookup failure due to no lookup specified=
-=20
-> and due to the regulator specified in lookup being unavailable, returning=
-=20
-> appropriate (different) error codes.
-
-It does exactly that in so far as it can - you get -ENODEV if there's
-definitely no supply and -EPROBE_DEFER otherwise.
-
---DT/miTrKQuDYoJpq
+--oGyU6H+2dQ5x0Lt2
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.20 (GNU/Linux)
 
-iQIcBAEBAgAGBQJRsbTAAAoJELSic+t+oim98CMQAI+zyImtt0r0OTvU74sprUb9
-FZzN60D2+GUgf8v72Nzz7YTiDbTDUsehEI/FapNdxNA8HHgF8aDq63uIHgdtyuSA
-ThmNYWRRh1oacjzOXDFpl8JfWKm0EwTuTScOV8trBBbbfgTUlcf4+AYwyTF79fV3
-u6l5ijYFQFdmATuOgPDKqSTMzX6eFVynf1kn2nviMn23ksbwFnGqyKXoloRfEW+n
-IRQLWasm0eH0dH5XiVeNpyQfHqnTxgybQVrEAD/kjKy8VE6L9vOgWYYE7Yljpa2d
-8vO2wnoabGDCUvPyxW866p29VkQ20/xVBpoSu61U6dwaSh81OiGp7rjfZorUcgxy
-puANtbD9AtOElrM/lv0kVinf5vsNhQaUI5ND0/57WHQDq/DbJ+ceoGimjE371K0x
-jhIVYd9rv7nALSdxI8sQeIpEgkOBeX83pKsJO+VPijOw9r56PgUeW03Dkz4WcpCh
-eO7tMUYgYAEF6hx/xGKSiUcD4EIiRoKMd5nn5yV5nmV2j4ja5kosSUHMiDBSwolS
-DTIj8bu0m4ztrr9R43TJuNbvXBPzptZP8qg3ZuwAwv/s9xEHCJaDEUJa+bFj4G55
-khTa9eOko95+PeaNi8dFYxn0Cr9aws62i2vg+tGypEtYgHb5rj0RwTSPEpXfuvQf
-GFsAuQ+/wyjgD9G6gcMN
-=36I0
+iQIcBAEBAgAGBQJRsbUOAAoJELSic+t+oim9qbIP/iyfMdm115GJ3LbkJOCf0GNf
+d4n8o9UpYHUo0BAZJxZC7cX5hXMGSbrnDvACDBUAaFX0JX8Mf9EBV1UQpZVqEN3w
+dkBgyFwuAt4ZrhnWfT7UHWsJaqGHaTmUxZKUh5XJpX8jkC+1jfNJCSpmcPoh5hyr
+eyD5vBQS/pT4YV2SgCiQhm95N/eH/ONOVb8i7U7BskRyA3PIli0jrN7KgbykwmsN
+7Pa6JWNJvk1VKojeZvV/13qO+NItVlsXo5BW8uCBRE/BulXWb6kE1zCTedMjVxhm
+WXH8XyFB5duTdzw4HbUBt9s61Z/UfYXhAxjakPEWuvwcAPxbgKE0j6mxAckNOGex
+z8IxtnNDHYNlEeO7cC4TKGzmukIolUJayCt/eu1pl8k0JHyGR0q0/ISbMybPsTZ9
+IWZX1KvnFj959IRHQcYjpP2rggjUjCj5tdttDX2gXbVBWOL1J6TFVqU53Qm3dh0y
+ONcFRULIHWuGb9eVcDscmpsh60WnOhvVg8R0wPSq8lj0KftQRgNJgFtiX2TNPuKw
+y1yP4g268hYmnA0RRBwknMk3l51owN+e8xQ6LJdEmWaNs7Hmk3ke9h838qt8eNdf
+HIOAWUyIexrw7s4Kd+EwYEv02n+4CF64Ulud4zukta+ArX2NEk9lWe0wA0wLzB3M
+yXG5bBQeeE38KGk+xkyq
+=ZsYu
 -----END PGP SIGNATURE-----
 
---DT/miTrKQuDYoJpq--
+--oGyU6H+2dQ5x0Lt2--
 
---===============5163217904812608901==
+--===============2627312918996094243==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -92,4 +79,4 @@ devicetree-discuss mailing list
 devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---===============5163217904812608901==--
+--===============2627312918996094243==--
