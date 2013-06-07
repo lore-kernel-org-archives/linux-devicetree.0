@@ -1,91 +1,77 @@
 From: "luke.leighton" <luke.leighton@gmail.com>
-Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
+Subject: Re: getting allwinner SoC support upstream (was Re:
  Uploading linux (3.9.4-1))
-Date: Fri, 7 Jun 2013 09:02:43 +0100
-Message-ID: <CAPweEDyYt+pN+UaFuqWL5RrHpyuq_4So-tArmx3dr=0wLS+hwQ@mail.gmail.com>
+Date: Fri, 7 Jun 2013 09:06:24 +0100
+Message-ID: <CAPweEDxfWcv7HSDuO6Uc751iiPg9ngDQc5UB7mbxwBespwF_7Q@mail.gmail.com>
 References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+	<CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
+	<51AFA6DD.3000202@wwwdotorg.org>
+	<CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
+	<1370469574.18839.33.camel@localhost>
+	<CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
+	<CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
+	<CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com>
 	<1370475609.20454.44.camel@localhost>
 	<CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
-	<1733666.lHUBcfUXq9@flatron>
-	<CAPweEDzYLDzh_-OWU61dtVhajZ40QpQgZKHFYDsh3FgF=r9_ag@mail.gmail.com>
-	<20130606131042.GN18614@n2100.arm.linux.org.uk>
+	<1370477958.20454.68.camel@localhost>
+	<CAPweEDyPffcN9cNJ10ZHt+AZJHTRdU0LMfCGM_756uAbf+NEBQ@mail.gmail.com>
+	<51B085C6.3000605@gmail.com>
+	<CAPweEDwR_NWUSi-j53m8MuoaV1RxM4wNNXtRioa2CjNdYqEtzQ@mail.gmail.com>
+	<51B19046.5040401@gmail.com>
+Reply-To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130606131042.GN18614@n2100.arm.linux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, linux-arm-kernel@lists.infradead.org, debian-kernel@lists.debian.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <arm-netbook-bounces@lists.phcomp.co.uk>
+In-Reply-To: <51B19046.5040401@gmail.com>
+List-Unsubscribe: <http://lists.phcomp.co.uk/mailman/options/arm-netbook>,
+	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=unsubscribe>
+List-Archive: <http://lists.phcomp.co.uk/pipermail/arm-netbook/>
+List-Post: <mailto:arm-netbook@lists.phcomp.co.uk>
+List-Help: <mailto:arm-netbook-request@lists.phcomp.co.uk?subject=help>
+List-Subscribe: <http://lists.phcomp.co.uk/mailman/listinfo/arm-netbook>,
+	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=subscribe>
+Errors-To: arm-netbook-bounces@lists.phcomp.co.uk
+Sender: "arm-netbook" <arm-netbook-bounces@lists.phcomp.co.uk>
+To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
+Cc: debian-arm@lists.debian.org, devicetree-discuss <devicetree-discuss@ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel@lists.debian.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 6, 2013 at 2:10 PM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-
-> If companies are going to go off and invent the square wheel, and that
-> makes *them* suffer the loss of being able to merge back into the
-> mainline kernel, thereby making *their* job of moving forward with
-> their kernel versions much harder, then yes, we *are* happy.
-
- russell: they have more employees than sense :)  they also don't have
-any idea of what they *should* be doing, so this is an opportunity to
-educate them.
-
- they're not feeling any pain: they just employ more chinese
-developers and substitute bodies for time and common-sense.
-
- also, in this particular case, thanks to their script.fex system when
-i said they only need to develop one kernel and one u-boot i really
-wasn't kidding around: they really have got to the point which
-everyone else dreams of with device-tree [admittedly by limiting the
-product range that their clients can play with, but that product range
-has huge returns, so they're still happy].
-
-> Companies will always do idiotic things; it's *them* and their users
-> who have to live with the results of that bad decision making process.
-
- russell: the decision process they've made is actually an extremely
-effective one.
-
-> Eventually, the pain of being outside the mainline kernel will become
-> too great, especially if their users demand things like kernel upgrades
-> from them.  Eventually, they will change.
+On Fri, Jun 7, 2013 at 8:48 AM, Vladimir Pantelic <vladoman@gmail.com> wrote:
+> luke.leighton wrote:
+>>
+>> On Thu, Jun 6, 2013 at 1:51 PM, Vladimir Pantelic <vladoman@gmail.com>
+>> wrote:
+>>
+>>> 4 days? WTF? since when did setting an ultimatum to the kernel
+>>> community work?
+>>
+>>
+>>   i was only informed of the opportunity 2 days ago, vladimir.  this is
+>> an important meeting.  of course the linux kernel community is
+>> entirely free to:
+>>
+>> * completely ignore this opportunity
+>> * continue to complain that soc vendors do not follow their
+>> unilaterally-decided rules
 >
-> And no, this isn't an intransigent position.  This is reality given
-> that ARM already has way too much code in the Linux kernel and we're
-> trying to reduce that through the use of technologies like DT.  The
-> last thing we need right now is for another "DT" like implementation
-> to come along which is only used on a minority of platforms - even if
-> the platform it is used on is successful.
 >
-> The way this works is this:
-> - you either go with the policies which are set, or
+> SoC vendors are free to join the discussion, and many SoC vendors are part
+> of the kernel community, so calling this unilateral is plain wrong.
 
- .... which they weren't consulted on, it has to be pointed out.
+ you're free to believe that, vladimir.  i've explained why that
+hasn't happened, in prior messages.  can we move forward, please?
 
-> - you change the policy as a whole because you have a technically
->   superior solution
-
- i believe they have a technically more *successful* solution. whether
-it's more appropriate in a wider context is another matter.
-
- here we have a key to the crux of the problem: the linux kernel
-maintainers have to cater for _everyone_.  with no funding or
-incentive from the major contributors to work with them.  hmmm....
-
-> What that means in this case is either you adopt DT, or you convince
-> everyone that DT isn't the solution, but your solution is, and we adopt
-> your solution for *everything* instead.
 >
-> If neither of those are possible, then that's really not our problem,
-> and it's not _us_ who are being "intransigent".
+>>   3 days remaining on the clock.
+>
+>
+> what catastrophic thing will happen when the time runs out?
 
- indeed.
-
- ok.  so.  we come back to the question again: what shall i propose to
-them that they consider doing, and what benefit would it be to them to
-do so?
-
- i cannot go to them and say "you have to do this [insert proposal
-here]" - it has to be more subtle than that.
-
- l.
+ no catastrophe, vladimir: all that happens is that an opportunity is
+lost, and the result of that is that the situation remains as it is,
+with a major soc vendor being divorced from and isolated from the free
+software community, who will continue to have to shoulder the
+frustrating and isolated burden of responsibility of reworking
+"over-the-fence" kernel patches as best they can with the limited
+resources that they have.
