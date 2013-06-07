@@ -1,133 +1,161 @@
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: Re: [PATCH] ethernet/arc/arc_emac - Add new driver
-Date: Fri, 7 Jun 2013 10:42:28 +0000
-Message-ID: <4881796E12491D4BB15146FE0209CE643F5C77EC@DE02WEMBXB.internal.synopsys.com>
-References: <1370348510-23754-1-git-send-email-abrodkin@synopsys.com>
- <1505761.5DsauZd6eq@wuerfel>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 1/3] Add PCIe driver for Samsung Exynos
+Date: Fri, 07 Jun 2013 12:53:02 +0200
+Message-ID: <36071399.7aY6jgGn2d@wuerfel>
+References: <000d01ce6360$9504e7e0$bf0eb7a0$@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Alexey Brodkin <Alexey.Brodkin@synopsys.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Mischa Jonker <Mischa.Jonker@synopsys.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, "David S. Miller" <davem@davemloft.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <000d01ce6360$9504e7e0$bf0eb7a0$@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Jingoo Han <jg1.han@samsung.com>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, linux-samsung-soc@vger.kernel.org, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, linux-pci@vger.kernel.org, 'Thierry Reding' <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Andrew Murray' <andrew.murray@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/07/2013 12:47 PM, Arnd Bergmann wrote:
-> On Tuesday 04 June 2013 16:21:50 Alexey Brodkin wrote:
->
->>   drivers/net/ethernet/Kconfig             |    1 +
->>   drivers/net/ethernet/Makefile            |    1 +
->>   drivers/net/ethernet/arc/Kconfig         |   29 +
->>   drivers/net/ethernet/arc/Makefile        |    6 +
->>   drivers/net/ethernet/arc/arc_emac_main.c |  905 ++++++++++++++++++++++++++++++
->>   drivers/net/ethernet/arc/arc_emac_main.h |   82 +++
->>   drivers/net/ethernet/arc/arc_emac_mdio.c |  181 ++++++
->>   drivers/net/ethernet/arc/arc_emac_mdio.h |   22 +
->>   drivers/net/ethernet/arc/arc_emac_regs.h |   73 +++
->
-> I wonder if it would be better to name the directory "synopsys" or
-> "designware" rather than "arc" now. Is there a chance that the same
-> controller is used on non-arc CPUs?
+On Friday 07 June 2013 18:22:50 Jingoo Han wrote:
 
-The thing is - "arc_emac" is a custom ARC's (that was implemented before 
-acquisition of ARC by Synopsys) IP (it's not an IC - just a part of CPU) 
-Ethernet controller that only exists in some legacy FPGA boards we 
-(ex-ARC and our customers) still use a lot in development process.
+> diff --git a/Documentation/devicetree/bindings/pci/exynos-pcie.txt b/Documentation/devicetree/bindings/pci/exynos-pcie.txt
+> new file mode 100644
+> index 0000000..3eb4a2d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/exynos-pcie.txt
+> @@ -0,0 +1,56 @@
+> +* Samsung Exynos PCIe interface
+> +
+> +Required properties:
+> +-compatible: should be "samsung,exynos5440-pcie"
+> +-reg: base addresses and lengths of the pcie conteroller,
+> +	additional register for the pcie controller,
+> +	the phy controller,
+> +	additional register for the phy controller.
+> +- interrupts: interrupt values for level interrupt,
+> +	pulse interrupt, special interrupt.
+> +- device_type, set to "pci"
+> +- bus-range: PCI bus numbers covered
 
-Synopsys itself doesn't actively sell this device so there's no point in 
-putting ARC EMAC into Synopsys folder.
+Why is it that only a subset of bus numbers are used? Can't you address
+the entire range?
 
-And indeed we don't expect this device to be used with non-ARC CPU's.
+> +- ranges: ranges for the PCI memory and I/O regions
+> +- reset-gpio: gpio pin number of power good signal
 
-I didn't add dependency on ARC in Kconfig just because I wanted to leave 
-an ability to build this driver on x86 machine. I thought this is 
-important requirement - allow anybody to at least build this driver to 
-make sure it builds and doesn't cause tons of warnings to appear.
+The 'reset-gpio' property seems incorrect. I think this should either
+use the gpio binding or the reset-controller binding. Specifying 
+bare numbers to use as gpio pins does not work, since the number
+space for Linux internal gpio numbers is not necessarily the same
+as used by the hardware.
 
-If it's totally fine to add dependency on ARC - then it would be even 
-easier for me - refer to the next block of comments.
+I think you also need an interrupt-map property as mandated by
+the PCI binding, in order to use legacy interrupts, as well as
+#address-cells and #size-cells.
 
->> +static int arc_emac_probe(struct platform_device *pdev)
->> +{
->> +	struct net_device *net_dev;
->> +	struct arc_emac_priv *priv;
->> +	int err;
->> +	unsigned int clock_frequency;
->> +	unsigned int id;
->> +	struct resource res_regs;
->> +#ifdef CONFIG_OF_IRQ
->> +	struct resource res_irq;
->> +#endif
->> +	const char *mac_addr = NULL;
->
-> Please remove the #ifdef here. The driver does not work without this
-> anyway, so better make it 'depend on OF_IRQ' in Kconfig.
+> +       pcie0@40000000 {
+> +               compatible = "samsung,exynos5440-pcie";
+> +               reg = <0x40000000 0x4000
+> +                       0x290000 0x1000
+> +                       0x270000 0x1000
+> +                       0x271000 0x40>;
+> +               interrupts = <0 20 0>, <0 21 0>, <0 22 0>;
+> +               device_type = "pci";
+> +               bus-range = <0x0 0xf>;
+> +               ranges = <0x00000800 0 0x40000000 0x40000000 0 0x00200000   /* configuration space */
+> +                         0x81000000 0 0          0x40200000 0 0x00004000   /* downstream I/O */
+> +                         0x82000000 0 0          0x40204000 0 0x10000000>; /* non-prefetchable memory */
+> +       };
+> +
+> +       pcie1@60000000 {
+> +               compatible = "samsung,exynos5440-pcie";
+> +               reg = <0x60000000 0x4000
+> +                       0x2a0000 0x1000
+> +                       0x272000 0x1000
+> +                       0x271040 0x40>;
+> +               interrupts = <0 23 0>, <0 24 0>, <0 25 0>;
+> +               device_type = "pci";
+> +               bus-range = <0x0 0xf>;
+> +               ranges = <0x00000800 0 0x60000000 0x60000000 0 0x00200000   /* configuration space */
+> +                         0x81000000 0 0          0x60200000 0 0x00004000   /* downstream I/O */
+> +                         0x82000000 0 0          0x60204000 0 0x10000000>; /* non-prefetchable memory */
+> +       };
 
-As stated above I wanted to make it possible to compile on x86.
-And for this I needed to:
-1. Add explicit mentions of "linux/platform_device.h" because with 
-existence of OF "linux/of_platform.h" has "linux/platform_device.h" 
-included internally.
-2. Enclose "of_irq_to_resource" and "of_get_mac_address" in ifdefs 
-because neither of them has a stub for non-OF situation.
+Is it intentional that in this example you set up both buses to
+have both memory and I/O space start at address 0 in bus space?
 
-So if I may depend on ARC then I'm sure OF is selected and no need to worry.
-Otherwise do I need to add stubs for "of_irq_to_resource" and 
-"of_get_mac_address" somewhere in "of/of_xxx.h"?
+I think it would be more logical to have non-overlapping addresses.
+You can also choose to have an identity mapping for memory
+space where a PCI bus address maps directly to the physical address
+used to access it, although that will prevent you from using legacy
+VGA cards that require the use of the low 16 MB.
 
->
->> +	/* Get phy from device tree */
->> +	priv->phy_node = of_parse_phandle(pdev->dev.of_node, "phy", 0);
->> +	if (!priv->phy_node) {
->> +		dev_err(&pdev->dev,
->> +			"failed to retrieve phy description from device tree\n");
->> +		err = -ENODEV;
->> +		goto out;
->> +	}
->
-> You should add a binding document in Documentation/devicetree/bindings that
-> describes what properties are required.
+Using a 16kb I/O space rather than a 64KB I/O space per port will
+lead to pci_ioremap_io() map the start of your memory space into
+PCI_IO_VIRT_BASE, which you probably didn't intend.
 
-Will do.
+If your hardware cannot handle a full 64KB window, I would recommend
+to at least leave a hole before the start of the memory window.
 
->
->> +	/* Get EMAC registers base address from device tree */
->> +	err = of_address_to_resource(pdev->dev.of_node, 0, &res_regs);
->> +	if (err) {
->> +		dev_err(&pdev->dev,
->> +			"failed to retrieve base register from device tree\n");
->> +		err = -ENODEV;
->> +		goto out;
->> +	}
->> +
->> +	if (!devm_request_mem_region(&pdev->dev, res_regs.start,
->> +			resource_size(&res_regs), pdev->name)) {
->> +		dev_err(&pdev->dev,
->> +			"failed to request memory region for base registers\n");
->> +		err = -ENXIO;
->> +		goto out;
->> +	}
->> +
->> +	priv->reg_base_addr = (void *) devm_ioremap_nocache(&pdev->dev,
->> +			res_regs.start, resource_size(&res_regs));
->> +	if (!priv->reg_base_addr) {
->> +		dev_err(&pdev->dev, "failed to ioremap MAC registers\n");
->> +		err = -ENXIO;
->> +		goto out;
->> +	}
->
-> This block can be simplified to a single devm_ioremap_resource() now.
+> +struct pcie_port {
+> +	struct device		*dev;
+> +	u8			controller;
+> +	u8			root_bus_nr;
+> +	void __iomem		*dbi_base;
+> +	void __iomem		*va_dbi_base;
+> +	void __iomem		*elbi_base;
+> +	void __iomem		*va_elbi_base;
+> +	void __iomem		*base;
+> +	void __iomem		*phy_base;
+> +	void __iomem		*va_phy_base;
+> +	void __iomem		*purple_base;
+> +	void __iomem		*va_purple_base;
+> +	void __iomem		*cfg0_base;
+> +	void __iomem		*va_cfg0_base;
+> +	void __iomem		*cfg1_base;
+> +	void __iomem		*va_cfg1_base;
+> +	void __iomem		*io_base;
+> +	void __iomem		*mem_base;
+> +	spinlock_t		conf_lock;
+> +	struct resource		io;
+> +	struct resource		mem;
+> +	struct resource		busn;
 
-Thanks for pointing-out. Definitely will make code even simpler.
+A lot of the fields above appear to be duplicated. If you
+pass a physical address, that needs to be a phys_addr_t,
+not void __iomem*. I think most of the physical addresses
+can be removed there, and you just keep the virtual addresses
+but drop the va_ prefix.
 
->
-> The cast to 'void *' is wrong: please make sure that you always use '__iomem'
-> pointers for MMIO mappings. You can use 'sparse' with 'make C=1' to check this
-> at build time.
+> +static int add_pcie_port(struct pcie_port *pp, struct platform_device *pdev)
+> +{
+> +	struct resource *dbi_base;
+> +	struct resource *elbi_base;
+> +	struct resource *phy_base;
+> +	struct resource *purple_base;
+> +	int ret;
+> +
+> +	dbi_base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!dbi_base) {
+> +		dev_err(&pdev->dev, "couldn't get dbi base resource\n");
+> +		return -EINVAL;
+> +	}
+> +	if (!devm_request_mem_region(&pdev->dev, dbi_base->start,
+> +				resource_size(dbi_base), pdev->name)) {
+> +		dev_err(&pdev->dev, "dbi base resource is busy\n");
+> +		return -EBUSY;
+> +	}
+> +	pp->dbi_base = (void __iomem *) (unsigned long)dbi_base->start;
 
-Makes sense.
+That will also let you get rid of the casts here.
 
-Regards,
-Alexey
+
+> +static int __exit exynos_pcie_remove(struct platform_device *pdev)
+> +{
+> +	return 0;
+> +}
+> +
+
+an empty 'remove' function seems incorrect. I don't know what a
+removable PCI should be doing here, but at least you need to undo
+everything you set up in the probe function.
+
+
+	Arnd
