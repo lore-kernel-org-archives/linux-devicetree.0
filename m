@@ -1,14 +1,19 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: add dtsi for palmas
-Date: Fri, 07 Jun 2013 13:22:58 -0600
-Message-ID: <51B23312.8000402@wwwdotorg.org>
-References: <1370604504-32310-1-git-send-email-j-keerthy@ti.com>
- <51B1D1A9.40702@ti.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
+ Uploading linux (3.9.4-1))
+Date: Fri, 7 Jun 2013 20:30:14 +0100
+Message-ID: <20130607193014.GW18614@n2100.arm.linux.org.uk>
+References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+ <1622862.fXQWv0YWGV@flatron>
+ <CAPweEDx_1fvAv9sROtPreoyyj_yDAuYb040fM2zPc+tf22d=YA@mail.gmail.com>
+ <4466665.6pIGCIdISn@flatron>
+ <CAPweEDwmgr2JbH+txDDjR_gDA2R2C1v=AuVCUVTs7RriMhZNiA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51B1D1A9.40702-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPweEDwmgr2JbH+txDDjR_gDA2R2C1v=AuVCUVTs7RriMhZNiA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,33 +24,19 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
-Cc: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, J Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: "luke.leighton" <luke.leighton-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, debian-arm-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org, "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux on small ARM machines <arm-netbook-Fj0DB6SUpRXNuVmtMlwsDbVCufUGDwFn@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, debian-kernel-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/07/2013 06:27 AM, Benoit Cousson wrote:
-> Hi Keerthy,
-> 
-> On 06/07/2013 01:28 PM, J Keerthy wrote:
->> Adds palmas mfd and palmas regulator nodes. This is
->> based on the patch series:
->>
->> http://www.mail-archive.com/linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg89957.html
->>
->> The device tree nodes are based on:
->> https://lkml.org/lkml/2013/6/6/25
-...
->> diff --git a/arch/arm/boot/dts/palmas.dtsi b/arch/arm/boot/dts/palmas.dtsi
-...
->> +&palmas {
->> +	compatible = "ti,palmas";
->> +	interrupt-controller;
->> +	#interrupt-cells = <2>;
-> 
-> The I2C address should be there as well. We used to put it in the board
-> file, but this is really an I2C device specific information and not
-> board specific in that case.
+On Fri, Jun 07, 2013 at 08:02:03PM +0100, luke.leighton wrote:
+>  well, tough.  get me up to speed, *fast*.
 
-I thought the I2C address was variable depending on OTP settings, and
-hence the I2C address is board-specific; depending on which variant of
-the PMIC was stuffed onto the board?
+No, not unless you're willing to *pay* someone to spend time teaching you,
+because you are asking to be *taught* about the current situation, so
+you're asking someone to do some _work_ _for_ _you_.  If you're not
+willing to do that, then all the information is out there in the public
+domain for you to learn from yourself.
+
+> please stop wasting time like this:
+
+Pot. Black.
