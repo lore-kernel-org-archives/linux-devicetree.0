@@ -1,48 +1,81 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [GIT PULL v2] ARM: dts: OMAP fixes for 3.10-rc5
-Date: Fri, 7 Jun 2013 15:07:07 -0700
-Message-ID: <20130607220706.GO3331@atomide.com>
-References: <51ACA9FA.9000308@ti.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
+ Uploading linux (3.9.4-1))
+Date: Sat, 8 Jun 2013 00:08:53 +0200
+Message-ID: <20130607220853.GR14209@lukather>
+References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+ <1370475609.20454.44.camel@localhost>
+ <CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
+ <1733666.lHUBcfUXq9@flatron>
+ <20130606112723.71ddd70c@skate>
+ <CAPweEDzW60poOYahm31aW3_A=NvZmyBPPPgM9PzdvuPJnju69A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <51ACA9FA.9000308@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Kevin Hilman <khilman@linaro.org>, Lars Poeschel <poeschel@lemonage.de>, Suman Anna <s-anna@ti.com>
+In-Reply-To: <CAPweEDzW60poOYahm31aW3_A=NvZmyBPPPgM9PzdvuPJnju69A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "luke.leighton" <luke.leighton@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, debian-kernel@lists.debian.org
 List-Id: devicetree@vger.kernel.org
 
-* Benoit Cousson <b-cousson@ti.com> [130603 07:42]:
-> Hi Tony,
+On Fri, Jun 07, 2013 at 07:26:49PM +0100, luke.leighton wrote:
+>  maxime: we need to talk :)
 > 
-> Please pull three DTS fixes for the next -rc.
+>  please tell me in 4 or 5 sentences what you've managed to do so far,
+> expanding a little on what thomas says below, more specifically what
+> it achieves and/or allows rather than technically what it does
+> (suitable for managers and directors in other words), and what plans
+> you'd like to see happen.
 
-Thanks pulling into omap-for-v3.10/fixes.
+You mean something like http://linux-sunxi.org/Linux_mainlining_effort ?
 
-Regards,
+You should really do a bit of research before starting a thread like
+this one. This webpage has been around for like 9 monthes now on the wiki 
+of a community you pretend to represent (even though I fail to get how
+you can pretend such thing, but that's another topic).
 
-Tony
- 
-> The following changes since commit d683b96b072dc4680fc74964eca77e6a23d1fa6e:
->   Linus Torvalds (1):
->         Linux 3.10-rc4
+> > is the maintainer of the mainline Allwinner sunxi
+> > effort. It already supports a number of boards, has a pinctrl driver, a
+> > GPIO driver, serial port is working, network is working, I2C is
+> > working.
+> >
+> > All in mainline, completely Device Tree based.
 > 
-> are available in the git repository at:
+>  great.  which version did it first hit, i.e. what will the first
+> signs of this be when allwinner begin doing "git pulls"?
+
+3.8, as shown in the wiki page
+
+>  and which boards.  bear in mind that one of those "boards" should
+> really be "the total range of products available across hundreds of
+> chinese tablet clone manufacturers".
 > 
->   git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git dts-fixes-for-3.10
+>  specific question: is one of the "boards" the one that tom cubie
+> submitted, which covers virtually every android tablet product
+> manufactured in the millions by chinese tablet clone manufacturers?
+
+Again, wiki.
+
+> > So isn't this entire discussion completely moot?
 > 
-> Kevin Hilman (1):
->       ARM: dts: omap4-panda|sdp: Fix mux for twl6030 IRQ pin and msecure line
+>  no because it's totally in isolation from allwinner.  i need to give
+> them a heads-up, and get them involved, giving them specific
+> incentives [which nobody's yet given!!] for following a particular
+> path [or paths] yet to be recommended.
 > 
-> Lars Poeschel (1):
->       ARM: dts: AM33xx: Fix properties on gpmc node
+> > The mainline support
+> > for sunxi has already started since 6 months or so, and has been Device
+> > Tree based from day one.
 > 
-> Suman Anna (1):
->       ARM: dts: OMAP5: Fix missing PWM capability to timer nodes
-> 
->  arch/arm/boot/dts/am33xx.dtsi             |    4 ++--
->  arch/arm/boot/dts/omap4-panda-common.dtsi |   20 ++++++++++++++++++++
->  arch/arm/boot/dts/omap4-sdp.dts           |   20 ++++++++++++++++++++
->  arch/arm/boot/dts/omap5.dtsi              |    3 +++
->  4 files changed, 45 insertions(+), 2 deletions(-)
+> to clarify: the *community-driven* mainline support for sunxi.  ok -
+> which chips?  sun3i (ARM9), sun4i (Cortex A8), sun5i, sun6i and sun7i
+> (Dual-Core Cortex A7)?  which ones are in?
+
+A10, A13 for the moment. I just received hardware with A10s, A20 and A31
+that I need to work on, but support should come quite soon. I already
+have some patches pending to be tested on an A31 board, but didn't have
+as much time as I wanted lately to actually set a proper environment to
+test them.
+
+Maxime
