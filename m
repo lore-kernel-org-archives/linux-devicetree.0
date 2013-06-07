@@ -1,114 +1,111 @@
-From: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: pxa27x and pinctrl-single
-Date: Fri, 7 Jun 2013 07:58:49 +0800
-Message-ID: <CAD6h2NSRCti57NZtw0wzE8Th65_3Y8Dkz5zGsbnA2SUPYS263Q@mail.gmail.com>
-References: <51AF7404.3090003@newsguy.com>
- <CAD6h2NTu9-E=Xy8zz5cgDdk5W4ShM9-B+p+gQtiA_HASQ7AEuQ@mail.gmail.com>
- <51B0C7E8.5090308@newsguy.com>
+From: Haojian Zhuang <haojian.zhuang@linaro.org>
+Subject: Re: [PATCH 1/2] pinmux: Add TB10x pinmux driver
+Date: Fri, 7 Jun 2013 08:00:57 +0800
+Message-ID: <CAD6h2NQRdgeBkMJkJWeDt-304KY7e6+qyKVE-h9MY6bRnMAPLA@mail.gmail.com>
+References: <51942472.9010402@wwwdotorg.org>
+	<CACRpkdYtKr5w2=1sONG4Qn2TQue38nV7epWfzxNQz5rjSs0DZQ@mail.gmail.com>
+	<20130522142824.GC4789@ab42.lan>
+	<CAD6h2NT4FqmEsLvtTDwwDL2YVzXYNpw72hTOcSxSMvHLhWvFPQ@mail.gmail.com>
+	<20130524115053.GB5203@ab42.lan>
+	<CAD6h2NSh_4TNAGeFhg+va5QX2hGia+gkw-mPaeMezghsa=Zc6Q@mail.gmail.com>
+	<20130603123001.GD31808@ab42.lan>
+	<CAD6h2NQVKKvcoPdD4sm5rUM5G-FpF3abL=k+WfQsnKnm7qhREA@mail.gmail.com>
+	<20130606141115.GA10345@ab42.lan>
+	<CAD6h2NRNMQP-ZQ0Cc613tGThVEo7AzRExBmWsbtr1DXgiPwz7w@mail.gmail.com>
+	<20130606153030.GA19876@ab42.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51B0C7E8.5090308-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-Cc: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130606153030.GA19876@ab42.lan>
+Sender: linux-doc-owner@vger.kernel.org
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Shiraz HASHIM <shiraz.hashim@st.com>, Patrice CHOTARD <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sascha Leuenberger <sascha.leuenberger@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 7 June 2013 01:33, Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org> wrote:
-> Thanks for the reply Haojian.
+On 6 June 2013 23:30, Christian Ruppert <christian.ruppert@abilis.com> wrote:
+> On Thu, Jun 06, 2013 at 10:32:21PM +0800, Haojian Zhuang wrote:
+>> On 6 June 2013 22:11, Christian Ruppert <christian.ruppert@abilis.com> wrote:
+>> > On Wed, Jun 05, 2013 at 09:44:27AM +0800, Haojian Zhuang wrote:
+>> >> On 3 June 2013 20:30, Christian Ruppert <christian.ruppert@abilis.com> wrote:
+>> >> > OK, here's a simplified example of what we would like to do (this seems
+>> >> > pretty common so I suppose there is a way I haven't understood). Our
+>> >> > situation is slightly more complex but for the purpose of discussion
+>> >> > let's assume a chip with 8 pins which can be configured for the
+>> >> > following functions:
+>> >> >
+>> >> > Pin   GPIO-A    I2C    SPI0     SPI1
+>> >> > ------------------------------------
+>> >> >  1    GPIOA0    SDA             MISO1
+>> >> >  2    GPIOA1    SCL             MOSI1
+>> >> >  3    GPIOA2                    SS1_B
+>> >> >  4    GPIOA3                    SCLK1
+>> >> >  5    GPIOA4           MISO0
+>> >> >  6    GPIOA5           MOSI0
+>> >> >  7    GPIOA6           SS0_B
+>> >> >  8    GPIOA7           SCLK0
+>> >> >
+>> >> > We can now define the following pinctrl-single:
+>> >> >
+>> >> > pinmux: pinmux@0xFFEE0000 {
+>> >> >         compatible = "pinctrl-single";
+>> >> >         reg = <0xFFEE0000 0x8>;
+>> >> >         #address-cells = <1>;
+>> >> >         #size-cells = <0>;
+>> >> >         #gpio-range-cells = <3>;
+>> >> >         pinctrl-single,register-width = <32>;
+>> >> >         pinctrl-single,function-mask = <0xffffffff>;
+>> >> >         pinctrl-single,gpio-range = <&range 1 8 0>;
+>> >> >         gpioa_pins: pinmux_gpioa_pins {
+>> >> >                 pinctrl-single,pins = <0x0 0 0x4 0>
+>> >> >         };
+>> >> >         i2c_pins: pinmux_i2c_pins {
+>> >> >                 pinctrl-single,pins = <0x0 1>
+>> >> >         };
+>> >> >         spi0_pins: pinmux_spi0_pins {
+>> >> >                 pinctrl-single,pins = <0x1 1>
+>> >> <0x1 1>?
+>> >>
+>> >> If each pinmux register is only for one pin in your SoC.
+>> >> I think that your definitions are wrong above. We use
+>> >> register offset as the first argument, not pin number.
+>> >> And the second argument should be pin function number.
+>> >
+>> > In our case each pinmux register (bit field) actually controls an entire
+>> > group of pins.
+>> >
+>> >> If multiple pins are sharing one register with different bits,
+>> >> you need to enable "pinctrl-single,bit-per-mux".
+>> >
+>> > Multiple pins are sharing the same bits in the same register. Do you
+>> > think this prevents us from using pinctrl-single?
+>> >
+>> Could you give me your register definition? Then I can understand you
+>> better.
 >
-> On 06/05/2013 05:43 PM, Haojian Zhuang wrote:
->> On 6 June 2013 01:23, Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org> wrote:
->>> Hi,
->>>
->>> I'd like to start converting to device tree usage some of the old pxa27x
->>> platforms I'm fond of, starting with adding pinctrl support.  If I'm not
->>> mistaken, this will clear the way for some ongoing updates to the pinct=
-rl/gpio
->>> code used by newer Marvell arches.
->>>
->>> I noticed that Haojian pulled the pinctrl-pxa driver from the kernel, i=
-n favor
->>> of using pinctrl-single, so I turned my attention to that.  From what I=
- can
->>> tell, pinctrl-single is currently inadequate for pxa27x because:
->>>
->>> (1) On the pxa27x, setting the mux for a pin involves configuring both =
-the alt
->>> function register *and* the direction register, requiring the ability t=
-o specify
->>> in the device tree multiple reg/value pairs for each pin.
->> In PXA27x, GPIO controller control both GPIO & pin alternate function. T=
-he
->> alternate function is covered by GAFRx registers.
->>
->> At first, we need to move GAFRx from gpio-pxa driver. Then we can support
+> In our example, the register map would look a bit like the following.
+> Note that every register configures four pins at a time.
 >
+> Register 0x0:
+>  Mode  GPIO-A    I2C    SPI1
+>  Value 0x0       0x1    0x2
+>  ---------------------------
+>  Pin1  GPIOA0    SDA    MISO1
+>  Pin2  GPIOA1    SCL    MOSI1
+>  Pin3  GPIOA2           SS1_B
+>  Pin4  GPIOA3           SCLK1
 >
-> Thanks... I wondered about division of labor between pinctrl and gpio.  P=
-inctrl
-> did seem to be the appropriate place.
->
->
->> it by pinctrl-single driver since pinctrl-single driver could support mu=
-litple
->> pins in one pin registers. There's "bits-per-mux" property in pinctrl-si=
-ngle
->> driver.
->
->
-> Yes, but currently pinctrl-single only supports writing one register for =
-a given
-> pin (with multiple pins sharing a register if bit-per-mux=3D=3Dtrue).  On=
- pxa27x, a
-> pin's alt function is determined by the values written to both the GAFRx =
-and the
-> GPDRx registers, so I think that pinctrl-single may need to allow a devic=
-e tree
-> to specify multiple reg/value/mask sets for any one pin.  I don't have a
-> pxa3xx/mmp developer's manual handy, but from the code it appears that on=
- these
-> arches the direction register is irrelevant to the mux setting.
+> Register 0x4:
+>  Mode  GPIO-A    SPI0
+>  Value 0x0       0x1
+>  ---------------------
+>  Pin5  GPIOA4    MISO0
+>  Pin6  GPIOA5    MOSI0
+>  Pin7  GPIOA6    SS0_B
+>  Pin8  GPIOA7    SCLK0
 >
 
-No, it's not need to access both GAFRx & GPDRx. Let's focus on PXA27x first.
-
-GPIO =91x=92 Alternate Function Select Bits (where x =3D 112 through 120)
-A bit-pair in this register determines the corresponding GPIO pin=92s
-functionality as one of the alternate functions that is mapped to it or as a
-generic GPIO pin.
-
-0b00 =3D The corresponding GPIO pin (GPIO<x>) is used as a general-
-purpose I/O.
-0b01 =3D The corresponding GPIO pin (GPIO<x>) is used for its alternate
-function 1.
-0b10 =3D The corresponding GPIO pin (GPIO<x>) is used for its alternate
-function 2.
-0b11 =3D The corresponding GPIO pin (GPIO<x>) is used for its alternate
-function 3.
-
-We can see that GAFRx configures the pinmux. That's all. We can use
-pinctrl-single
-driver to cover this.
-
-I know that you're also talking the implementation in gpio-pxa driver.
-__gpio_is_occupied() checks both GAFRx & GPDRx. Because this GPIO
-pin should be configured as GPIO input. Actually we could also discard the
-checking.
-
-So there's no relationship between GAFRx and GPDRx. And "inverted" GPIO
-pins only exists in PXA26x. This "inverted" means that GPDR bits should
-also be inverted.
+You said "Multiple pins are sharing the same bits in the same register.".
+I need to understand which bits you're talking about in your register.
 
 Regards
 Haojian
