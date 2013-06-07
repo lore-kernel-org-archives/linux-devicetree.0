@@ -1,12 +1,9 @@
 From: "luke.leighton" <luke.leighton@gmail.com>
 Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
  Uploading linux (3.9.4-1))
-Date: Fri, 7 Jun 2013 20:04:26 +0100
-Message-ID: <CAPweEDzeyJh+DKX=8tzrT9AnG9NqLp8nWkWFmB2Wy+JnBkqEdg@mail.gmail.com>
-References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
-	<CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
-	<51AFA6DD.3000202@wwwdotorg.org>
-	<CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
+Date: Fri, 7 Jun 2013 20:08:24 +0100
+Message-ID: <CAPweEDw3_M_5e_B2HueCNcfXjO9_4_oiCJuEfTERetyoOx=+vw@mail.gmail.com>
+References: <CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
 	<1370469574.18839.33.camel@localhost>
 	<CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
 	<CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
@@ -15,46 +12,64 @@ References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
 	<CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
 	<CAKON4OxPDpN3BTc9GWP44exDSkAZGJ5OeCpUP37vRnnvxwUnmw@mail.gmail.com>
 	<CAOesGMgqxhG45NyCfpHc_0uHS+_Gn-hGZm-+CRvK2EEf1AGTow@mail.gmail.com>
-	<CAPweEDwU+RzTCGb20uh7jxAzjbrX_yHVa4sy_ATr7MWpBb4WcQ@mail.gmail.com>
-	<CAOesGMg+Xk5yy2W3n__QYEkrXb5FP6eruOWvZPNHkOVHf2+pDA@mail.gmail.com>
+	<20130606172810.GE14209@lukather>
+	<20130607185724.GZ14125@stoneboat.aleph1.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMg+Xk5yy2W3n__QYEkrXb5FP6eruOWvZPNHkOVHf2+pDA@mail.gmail.com>
+In-Reply-To: <20130607185724.GZ14125@stoneboat.aleph1.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm <debian-arm@lists.debian.org>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel <debian-kernel@lists.debian.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, "luke.leighton" <luke.leighton@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm <debian-arm@lists.debian.org>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel <debian-kernel@lists.debian.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 7, 2013 at 7:54 PM, Olof Johansson <olof@lixom.net> wrote:
-> Luke,
->
-> I want only one thing from you at this time. See below.
->
->
-> On Fri, Jun 7, 2013 at 11:45 AM, luke.leighton <luke.leighton@gmail.com> wrote:
->>  .... but the Directors of Allwinner aren't been kept in the loop,
->> here: that's my job, to get them up-to-speed.
->
-> The one job I would love for you to do instead of all this trolling
-> and time-wasting that's being done by _everybody_ involved, is to just
-> extract yourself from the situation and let us go on with our work.
-> You're causing nothing but confusion and extra work. Literally. You
-> represent nobody that matters in this discussion.
+On Fri, Jun 7, 2013 at 7:57 PM, Wookey <wookey@wookware.org> wrote:
+> OK, this sounds good. Could you say who the allwinner engineers are?
 
- absolutely correct.  i am nobody, who is in the right place at the
-right time.  i'm just a messenger.  so - what message do you wish to
-take to the Directors of Allwinner (if any).
+ [cross-over: i asked him if he'd be happy to let me know privately,
+so i have at least some context when speaking to the Directors]
 
-> By demanding
+> I
+> guess it's quite a large organisation, so if Crazy Luke can say 'the
+> work of mainline integration using device-tree is already being done
+> by $these $people, please talk to them to help move it along', that
+> might help get everyone on the same page.
 
- a-a-ah, no demands made.
+ .... *mull*, *mull*... yes exactly!
 
-> us to spend time and effort bringing you personally up to
-> speed on a subject that both we (ARM kernel community) and them
-> (Allwinner) are already having discussions about, it's nothing but a
-> distraction and waste of energy.
+> If it's like many large organisations, some bits of it will 'get it'
+> and see why, in the long term, mainline integration is worthwhile, but
+> other bits will look at what they have now and their android focus,
+> and decide it's easier to keep doing what they are doing.
 >
-> And yes, Allwinner knows about this public email thread
+> There is a lot of hardware using these socs, and I'd love to be able
+> to use that with mainstream stuff, rather than random vendor piles,
+> and specific android kernels, so anything we can do to help make that
+> happen is good.
+>
+>> So yes, Allwinner has an evil vendor tree (c), with a solution similar yet
+>> inferior (because not generic enough) to the device tree, but they show
+>> interest on going down the mainline road.
+>
+> So, luke: mainline is not going to support fex directly, whatever you
+> or allwinner do. The advantages to allwinner of working with mainline
+> are:
+> 1) Ability to use whatever (kernel supported) hardware they like with
+> new designs, with no driver work
+> 2) Ability to use latest kernels and thus whatever shiny goodies those
+> include
+> 3) No need to do fex-ready drivers for new hardware
+> 4) No need to keep backporting new kernels to add fex integration
+> forevermore
 
- that's good!
+ hooraaaaay - thank you wookey, this is exactly what i need.
+cut/paste, straight into the report.
+
+> If they want to keep existing tools and fex workflow then a fex<->DT
+> translation tool will be needed.
+
+ in-kernel or external tool?
+
+> (It's not clear to me to what degree
+> DT can simply be used instead directly)
+
+ TBD.  input here, anyone?
