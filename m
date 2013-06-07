@@ -1,135 +1,56 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 1/2] mmc: dw_mmc: Handle late vmmc regulator with EPROBE_DEFER
-Date: Fri, 07 Jun 2013 12:19:58 +0200
-Message-ID: <1664692.GUOAAQ3FLn@flatron>
-References: <1370580406-10254-1-git-send-email-dianders@chromium.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH] arm/dt: Don't add disabled CPUs to system topology
+Date: Fri, 7 Jun 2013 11:23:27 +0100
+Message-ID: <20130607102326.GA3111@e102568-lin.cambridge.arm.com>
+References: <1370538685-22386-1-git-send-email-james.king@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1370580406-10254-1-git-send-email-dianders@chromium.org>
+In-Reply-To: <1370538685-22386-1-git-send-email-james.king@linaro.org>
+Content-Disposition: inline
 Sender: linux-doc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Chris Ball <cjb@laptop.org>, Olof Johansson <olof@lixom.net>, Andrew Bresticker <abrestic@chromium.org>, Alim Akhtar <alim.akhtar@samsung.com>, Abhilash Kesavan <a.kesavan@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Will Newton <will.newton@imgtec.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org
+To: James King <james.king@linaro.org>
+Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "nico@linaro.org" <nico@linaro.org>, "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>, "namhyung@kernel.org" <namhyung@kernel.org>, "a.p.zijlstra@chello.nl" <a.p.zijlstra@chello.nl>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "patches@linaro.org" <patches@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Doug,
+Hi James,
 
-On Thursday 06 of June 2013 21:46:45 Doug Anderson wrote:
-> It is possible to specify a regulator that should be turned on when
-> dw_mmc is probed.  This regulator is optional, though a warning will
-> be printed if it's missing.  The fact that the regulator is optional
-> means that (at the moment) it's not possible to use a regulator that
-> probes _after_ dw_mmc.
+On Thu, Jun 06, 2013 at 06:11:25PM +0100, James King wrote:
+> If CPUs are marked as disabled in the devicetree, make sure they do
+> not exist in the system CPU information and CPU topology information.
+> In this case these CPUs will not be able to be added to the system later
+> using hot-plug. This allows a single chip with many CPUs to be easily
+> used in a variety of hardware devices where they may have different
+> actual processing requirements (eg for thermal/cost reasons).
 > 
-> Fix this limitation by adding the ability to make vmmc required.  If a
-> vmmc-supply is specified in the device tree we'll assume that vmmc is
-> required.
+> - Change devicetree.c to ignore any cpu nodes marked as disabled,
+>   this effectively limits the number of active cpu cores so no need
+>   for the max_cpus=x in the chosen node.
+> - Change topology.c to ignore any cpu nodes marked as disabled, this
+>   is where the scheduler would learn about big/LITTLE cores so this
+>   effectively keeps the scheduler in sync.
+> 
 
-This interesting case makes me think that regulator core should 
-differentiate between regulator lookup failure due to no lookup specified 
-and due to the regulator specified in lookup being unavailable, returning 
-appropriate (different) error codes.
+I have two questions:
 
-CCing Mark and Liam.
+1) Since with this approach the DT should change anyway if on different
+   hardware devices based on the same chip you want to allow booting a
+   different number of CPUs, why do not we remove the cpu nodes instead of
+   disabling them ? Put it another way: cpu nodes define a cpu as
+   possible (currently), we can simply remove the node if we do not want
+   that cpu to be seen by the kernel.
+2) If we go for the "status" property, why do not we use it to set present
+   mask ? That way the cpu is possible but not present, you cannot
+   hotplug it in. It is a bit of a stretch, granted, the cpu _is_ present,
+   we just want to disable it, do not know how this is handled in x86
+   and other archs though.
 
-Best regards,
-Tomasz
+I am just asking, since it is something I thought about while writing
+code that parses the DT cpu map, basically we do not have a way to
+"disable" a cpu in the DT and that's what you are doing, I just would like
+to understand the best way to put it into DT bindings.
 
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
-> ---
->  .../devicetree/bindings/mmc/synopsis-dw-mshc.txt   |  3 +++
->  drivers/mmc/host/dw_mmc.c                          | 22
-> ++++++++++++++++++++-- include/linux/mmc/dw_mmc.h                      
->   |  3 +++
->  3 files changed, 26 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt
-> b/Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt index
-> 726fd21..b09d2d0 100644
-> --- a/Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt
-> @@ -55,6 +55,9 @@ Optional properties:
-> 
->  * broken-cd: as documented in mmc core bindings.
-> 
-> +* vmmc-supply: The phandle to the regulator to use for vmmc.  If this
-> is +  specified we'll defer probe until we can find this regulator. +
->  Aliases:
-> 
->  - All the MSHC controller nodes should be represented in the aliases
-> node using diff --git a/drivers/mmc/host/dw_mmc.c
-> b/drivers/mmc/host/dw_mmc.c index bc3a1bc..d3a0f8a 100644
-> --- a/drivers/mmc/host/dw_mmc.c
-> +++ b/drivers/mmc/host/dw_mmc.c
-> @@ -1987,8 +1987,17 @@ static int dw_mci_init_slot(struct dw_mci *host,
-> unsigned int id)
-> 
->  	host->vmmc = devm_regulator_get(mmc_dev(mmc), "vmmc");
->  	if (IS_ERR(host->vmmc)) {
-> -		pr_info("%s: no vmmc regulator found\n", 
-mmc_hostname(mmc));
-> +		ret = PTR_ERR(host->vmmc);
->  		host->vmmc = NULL;
-> +
-> +		if (host->pdata->vmmc_required) {
-> +			if (ret != -EPROBE_DEFER)
-> +				pr_err("%s: vmmc required: %d\n",
-> +					mmc_hostname(mmc), ret);
-> +			goto err_setup_bus;
-> +		}
-> +		pr_info("%s: no vmmc regulator found %d\n", 
-mmc_hostname(mmc),
-> +			ret);
->  	} else {
->  		ret = regulator_enable(host->vmmc);
->  		if (ret) {
-> @@ -2026,7 +2035,7 @@ static int dw_mci_init_slot(struct dw_mci *host,
-> unsigned int id)
-> 
->  err_setup_bus:
->  	mmc_free_host(mmc);
-> -	return -EINVAL;
-> +	return ret;
->  }
-> 
->  static void dw_mci_cleanup_slot(struct dw_mci_slot *slot, unsigned int
-> id) @@ -2162,6 +2171,13 @@ static struct dw_mci_board
-> *dw_mci_parse_dt(struct dw_mci *host) if (of_find_property(np,
-> "enable-sdio-wakeup", NULL))
->  		pdata->pm_caps |= MMC_PM_WAKE_SDIO_IRQ;
-> 
-> +	/*
-> +	 * If vmmc is directly specified in the device tree then we'll 
-assume
-> +	 * it's required and honor EPROBE_DEFER so it can show up late.
-> +	 */
-> +	if (of_find_property(np, "vmmc-supply", NULL))
-> +		pdata->vmmc_required = 1;
-> +
->  	return pdata;
->  }
-> 
-> @@ -2352,6 +2368,8 @@ int dw_mci_probe(struct dw_mci *host)
->  	/* We need at least one slot to succeed */
->  	for (i = 0; i < host->num_slots; i++) {
->  		ret = dw_mci_init_slot(host, i);
-> +		if (ret == -EPROBE_DEFER)
-> +			goto err_workqueue;
->  		if (ret)
->  			dev_dbg(host->dev, "slot %d init failed\n", i);
->  		else
-> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
-> index 198f0fa..e84d288 100644
-> --- a/include/linux/mmc/dw_mmc.h
-> +++ b/include/linux/mmc/dw_mmc.h
-> @@ -244,6 +244,9 @@ struct dw_mci_board {
->  	/* delay in mS before detecting cards after interrupt */
->  	u32 detect_delay_ms;
-> 
-> +	/* If true then we won't probe until vmmc is available */
-> +	bool vmmc_required;
-> +
->  	int (*init)(u32 slot_id, irq_handler_t , void *);
->  	int (*get_ro)(u32 slot_id);
->  	int (*get_cd)(u32 slot_id);
+Thanks,
+Lorenzo
+
