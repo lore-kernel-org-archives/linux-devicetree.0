@@ -1,109 +1,231 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
- Uploading linux (3.9.4-1))
-Date: Fri, 7 Jun 2013 20:59:40 +0200
-Message-ID: <20130607205940.4816fed5@skate>
-References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
-	<1370475609.20454.44.camel@localhost>
-	<CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
-	<1733666.lHUBcfUXq9@flatron>
-	<20130606112723.71ddd70c@skate>
-	<CAPweEDzW60poOYahm31aW3_A=NvZmyBPPPgM9PzdvuPJnju69A@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 04/14] bus: mvebu-mbus: Add static window allocation to
+ the DT binding
+Date: Fri, 7 Jun 2013 21:01:44 +0200
+Message-ID: <201306072101.44694.arnd@arndb.de>
+References: <1370623671-7748-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1370623671-7748-5-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPweEDzW60poOYahm31aW3_A=NvZmyBPPPgM9PzdvuPJnju69A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "luke.leighton" <luke.leighton@gmail.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, debian-kernel@lists.debian.org, Maxime Ripard <maxime.ripard@free-electrons.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1370623671-7748-5-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Fri, 7 Jun 2013 19:26:49 +0100, luke.leighton wrote:
-
-> > Have you noticed that it is already the case in mainline?
+On Friday 07 June 2013, Ezequiel Garcia wrote:
+> This patch adds static window allocation to the device tree binding.
+> Each first-child of the mbus-compatible node, with a suitable 'ranges'
+> property, declaring an address translation, will trigger an address
+> decoding window allocation.
 > 
->  i knew there was a little bit, but not the extent of the commits.
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Then you could probably use a bit of your time to read the kernel
-commit logs rather than writing hundreds of e-mails, no?
+I think this is very good in general, but in some cases should be reworded
+for clarity, and in a few others we should remove the special cases from
+the binding and try to treat them more like the common case.
 
-> > My colleague Maxime Ripard (Cc'ed)
+>  .../devicetree/bindings/bus/mvebu-mbus.txt         | 152 +++++++++++++++++++++
+>  drivers/bus/mvebu-mbus.c                           | 110 ++++++++++++++-
+>  2 files changed, 261 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/bus/mvebu-mbus.txt
 > 
->  maxime: we need to talk :)
-> 
->  please tell me in 4 or 5 sentences what you've managed to do so far,
-> expanding a little on what thomas says below, more specifically what
-> it achieves and/or allows rather than technically what it does
-> (suitable for managers and directors in other words), and what plans
-> you'd like to see happen.
+> diff --git a/Documentation/devicetree/bindings/bus/mvebu-mbus.txt b/Documentation/devicetree/bindings/bus/mvebu-mbus.txt
+> new file mode 100644
+> index 0000000..2b0303e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/bus/mvebu-mbus.txt
+> @@ -0,0 +1,152 @@
+> +
+> +* Marvell MBus controller
+> +
+> +Required properties:
+> +
+> +- compatible:	Should be set to one of the following:
+> +		marvell,armada370-mbus
+> +		marvell,armadaxp-mbus
 
-Maxime will reply to this in more details, but I believe the status is:
+I thought they are compatible with all older ones at the register level,
+as long as we describe all the differences in the ranges property
+and other properties.
 
- * Interrupt controller is working.
- * Clock drivers are working.
- * Pinctrl is working.
- * GPIO is working.
- * Timer is working.
- * UART is working
- * Watchdog is on its way (patches posted)
- * Ethernet is on its way (patches posted)
- * I2C is on its way (patches posted)
+> +- reg:		Device's register space.
+> +		Two entries are expected, see the examples below.
+> +		The first one controls the devices decoding window and
+> +		the second one controls the SDRAM decoding window.
 
-Cubieboard (A10), Hackberry (A10), Mini XPlus (A10) And OLinuxino (A13)
-are supported.
+I think you should also list #address-cells=<2> and #size-cells=<1>
+as required here, as long as an optional "ranges" property.
 
-See arch/arm/boot/dts/sun{4,5}i* for a good overview.
+I think it makes sense to describe the "ranges" format here,
+even if we expect the property to be empty at boot time and
+only filled at run-time.
 
-> > All in mainline, completely Device Tree based.
-> 
->  great.  which version did it first hit, i.e. what will the first
-> signs of this be when allwinner begin doing "git pulls"?
+> +Example:
+> +
+> +	soc {
+> +		compatible = "marvell,armada370-mbus", "simple-bus";
+> +		reg = <0xd0020000 0x100>, <0xd0020180 0x20>;
+> +	};
+> +
+> +** How does it work?
+> +
+> +The MBus driver controls the allocation and release of the addresses
+> +decoding windows needed to access devices.
+> +
+> +Each window, is identified by its target ID and attribute ID. In order
+> +to represent this, each of mbus-node first-level child has to declare
+> +a suitable 'ranges' translation entry for the MBus to allocate a window
+> +for it. This entry will encode the target and attribute in a 'windowid'
+> +ad-hoc cell, like this:
+> +
+> +	soc {
+> +		bootrom {
+> +			ranges = <0 0x01e00000 0xfff00000 0x100000>;
+> +		};
+> +	};
 
-The very first support landed in 3.8.
+I think I'm a bit lost here. Is the "soc" node in this example the node
+that is described as compatible="marvell,armada370-mbus"? Maybe expand
+the example a little here to clarify this.
 
-> > So isn't this entire discussion completely moot?
-> 
->  no because it's totally in isolation from allwinner.  i need to give
-> them a heads-up, and get them involved, giving them specific
-> incentives [which nobody's yet given!!] for following a particular
-> path [or paths] yet to be recommended.
+> +
+> +In this case, the MBus driver will allocate a window with target ID = 0x01,
+> +attribute ID = 0xe0, base address 0xfff00000, and size 0x100000.
+> +The windowid cell encodes the target and attribute in the upper bytes.
 
-You really believe you're more important than you really are, I'd say.
+If you use the new preprocessor feature we have in DT now, you can
+actually list a macro that is used to assembly the cell from target
+and attribute ID.
 
-My colleague Maxime is in contact with Allwinner, he has regular
-discussion with them, started reviewing some of the kernel code they're
-writing, has received datasheets from them, and evaluation boards.
+> +Note that, the above 'ranges' property is creating a fictitious 2-cell address
+> +space with the windowid and the base address. We need to get rid of this
+> +2-cell address space, translating it into a real address space consisting of
+> +just the base address.
 
-So this work is definitely not done in isolation from Allwinner, and
-they have received much more than an heads-up from Maxime.
+I would not describe it as "fictious" here, rather an as "defined". This
+binding is what turns the fiction into a reality ;-)
 
-> > The mainline support
-> > for sunxi has already started since 6 months or so, and has been Device
-> > Tree based from day one.
-> 
-> to clarify: the *community-driven* mainline support for sunxi.  ok -
-> which chips?  sun3i (ARM9), sun4i (Cortex A8), sun5i, sun6i and sun7i
-> (Dual-Core Cortex A7)?  which ones are in?
+> +The obvious way is to add a translation at the mbus-node level, like this:
+> +
+> +	soc {
+> +		ranges = <0x01e00000 0xfff00000 0xfff00000 0x100000>;
+> +		bootrom {
+> +			ranges = <0 0x01e00000 0xfff00000 0x100000>;
+> +		};
+> +	};
+> +
+> +This would lead to a lot of 'ranges' properties duplication because
+> +when you need to declare a new translation for a given device, you have
+> +to do it at the per-board DTS file. But since 'ranges' entries are not
+> +inherited from included dtsi files, you would have to go through each of the
+> +included dtsi files, making sure you duplicate each of the previous entries.
 
-So far, A10 and A13. Maxime has received a A31 evaluation board from
-Allwinner very recently, and also A10S and A20 boards. I suppose he
-will be working on those fairly and posting the corresponding patches
-fairly soon.
+The part about "inheriting" is not clear. Also, this is not written more
+like a blog post than a specification ;-)
 
-In other words, it looks like you've started an entire discussion about
-the mainline support for Allwinner SoCs without having a look at what
-"git log" tells you... Which by itself is a very good indicator that
-you're probably not the best interlocutor for Allwinner as far as
-mainline development is concerned.
+> +So to avoid this duplication, the MBus driver is capable of adding the
+> +required translation entry to the device tree programatically. In other
+> +words, when writing the device tree you don't need to extend the mbus-node
+> +translation entry list; the driver will do it dynamically.
 
-Best regards,
+I think the key here is not to avoid duplication but to allow flexibility.
+I would write this as:
 
-Thomas Petazzoni
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+The mappings in the mbus device are expected to be dynamically created by
+the operating system at boot time, or a later point. Since the ranges property
+in the mbus device must match the actual mappings, it is also expected
+to be filled out dynamically. A boot loader may set up mappings before
+loading the operating system and describe them in the ranges property.
+
+> +So for instance, if you want to add support for a NOR device, that sits
+> +behind the Device Bus controller, you would have this device tree:
+> +(Note that the windowid cell is encoding the target ID = 0x01 and attribute
+> +ID = 0x2f, and the selected base address for the window is 0xe8000000).
+> +
+> +	soc {
+> +		devbus-bootcs {
+> +			status = "okay";
+> +			ranges = <0 0x012f0000 0xe8000000 0x8000000>;
+> +
+
+The example should also contain an #address-cells and #size-cells
+property in the devbus-bootcs, as those are required for interpreting the
+ranges property.
+
+> +** About the special target ID and attribute ID
+> +
+> +As stated above, for each 'ranges' translation entry in mbus-node first-level
+> +children, the MBus driver will allocate a decoding window.
+> +However, in some cases it's desirable to declare a translation entry but have
+> +the MBus driver skip it.
+
+I would leave out here what the driver does, or say that the mbus driver "may"
+skip them. For the purpose of this specification, it does not matter whether
+the driver leaves the translation in place or changes it.
+
+> +This is currently the case for the internal-regs and the pcie-controller
+> +nodes.
+> +
+> +In the former, a dummy translation entry is needed to map the regular device
+> +nodes into the {windowid / base address} address space, using a zeroed windowid
+> +(target = 0x0, attribute = 0x0). The MBus driver will skip entries with such
+> +windowid.
+> +
+> +	soc {
+> +		/* ... */
+> +		internal-regs {
+> +			compatible = "simple-bus";
+> +			ranges = <0 0 0 0x100000>;  /* Dummy translation */
+> +			serial@12000 {
+> +				reg = <0x12000 0x100>;
+> +				/* ... */
+> +			};
+> +		};
+> +	};
+
+I don't understand the part about zeroing a windowid. Is "target = 0x0,
+attribute = 0x0" the actual setting for the internal registers? If so,
+don't call it a dummy translation or a special case.
+If not, why not use the actual setting here?
+
+> +In the pcie-controller case, we have two kinds of entries we need to skip.
+> +The first one is identical to the internal-regs case; in fact it's declaring a
+> +translation into the internal-regs address space.
+> +
+> +The second one is identified by a target ID = 0xff and attribute ID = 0xff.
+> +We use this to create the mapping into the large region where the PCIe
+> +controller will request decoding window allocations from the MBus driver.
+> +
+> +	soc {
+> +		pcie-controller {
+> +			ranges =
+> +			       <0x82000000 0 0x40000    0          0x40000    0 0x00002000
+> +				0x82000000 0 0x80000    0          0x80000    0 0x00002000
+> +				0x82000000 0 0xe0000000 0xffff0000 0xe0000000 0 0x08000000
+> +				0x81000000 0 0          0xffff0000 0xe8000000 0 0x00100000>;
+> +
+> +			pcie@1,0 {
+> +				/* ... */
+> +			};
+> +		};
+> +	};
+
+Again, I don't understand this part. For the purpose of specification, I
+would not make a special case here. It is not a hardware property that makes
+these special but the way we use it from Linux. Consequently I would suggest
+we skip the PCI ranges in the initial boot time setup by identifying the
+pcie-controller node by its "compatible" property.
+
+	Arnd
