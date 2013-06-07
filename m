@@ -1,53 +1,83 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+From: "luke.leighton" <luke.leighton@gmail.com>
 Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
-	Uploading linux (3.9.4-1))
-Date: Fri, 7 Jun 2013 19:26:08 +0100
-Message-ID: <20130607182608.GV18614@n2100.arm.linux.org.uk>
-References: <CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com> <1370475609.20454.44.camel@localhost> <CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com> <1370477958.20454.68.camel@localhost> <CAPweEDyPffcN9cNJ10ZHt+AZJHTRdU0LMfCGM_756uAbf+NEBQ@mail.gmail.com> <51B085C6.3000605@gmail.com> <CAPweEDwR_NWUSi-j53m8MuoaV1RxM4wNNXtRioa2CjNdYqEtzQ@mail.gmail.com> <51B19046.5040401@gmail.com> <CAPweEDxfWcv7HSDuO6Uc751iiPg9ngDQc5UB7mbxwBespwF_7Q@mail.gmail.com> <1370616567.2433.20.camel@jm-desktop>
+ Uploading linux (3.9.4-1))
+Date: Fri, 7 Jun 2013 19:26:49 +0100
+Message-ID: <CAPweEDzW60poOYahm31aW3_A=NvZmyBPPPgM9PzdvuPJnju69A@mail.gmail.com>
+References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+	<1370475609.20454.44.camel@localhost>
+	<CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
+	<1733666.lHUBcfUXq9@flatron>
+	<20130606112723.71ddd70c@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1370616567.2433.20.camel@jm-desktop>
+In-Reply-To: <20130606112723.71ddd70c@skate>
 Sender: linux-kernel-owner@vger.kernel.org
-To: joem <joem@martindale-electric.co.uk>
-Cc: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, "debian-arm@lists.debian.org" <debian-arm@lists.debian.org>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, "debian-kernel@lists.debian.org" <debian-kernel@lists.debian.org>
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, debian-kernel@lists.debian.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 07, 2013 at 02:49:28PM +0000, joem wrote:
-> > > SoC vendors are free to join the discussion, and many SoC vendors are part
-> > > of the kernel community, so calling this unilateral is plain wrong.
-> > 
-> >  you're free to believe that, vladimir.  i've explained why that
-> > hasn't happened, in prior messages.  can we move forward, please?
-> 
-> I prefer it if the "vladimir" troll (and fellow trolls)
-> make requests for one of us to make or do something instead of
-> constantly whining and wasting time.
-> 
-> After all we are attached to funds and resources ready to
-> deploy if something sounds a good idea and gets a vote.
-> 
-> To vladimir - please put your thoughts in a blog where it belongs.
-> If its important, I'm sure others would offer comment
-> and take you up on your thoughts.
+thomas i _very_ briefly spotted this when i was extremely busy
+yesterday, and i'm grateful to the 2 or 3 people who've given me the
+keywords and/or links to catch up.
 
-I think your position is confused.  Everything that Vladimir (in his
-three posts) in this thread so far have been correct.  Vladimir is not
-the one doing any trolling in this thread.
+On Thu, Jun 6, 2013 at 10:27 AM, Thomas Petazzoni
+<thomas.petazzoni@free-electrons.com> wrote:
+> Dear Tomasz Figa,
+>
+> On Thu, 06 Jun 2013 02:01:14 +0200, Tomasz Figa wrote:
+>
+>> I don't see any other solution here than moving all the Allwinner
+>> code to DT (as it has been suggested in this thread several times
+>> already), as this is the only hardware description method supported
+>> by ARM Linux.
+>
+> Have you noticed that it is already the case in mainline?
 
-Vladimir has not requested anything.  He hasn't whined.  He hasn't
-wasted time.  He has stated the following in _three_ short succinct
-emails:
-(a) no one gets to impose stipulate timescales unless they're willing
-to financially sponsor the work.
-(b) the adopted position of the Linux kernel developers.
+ i knew there was a little bit, but not the extent of the commits.
 
-Luke Leighton on the other hand is demanding that we (Linux kernel
-developers) come up with proposals within three days so that Luke can
-act as a middle man between us and Allwinner, and is blaming the Linux
-kernel community for the situation with Allwinner.
+> My colleague Maxime Ripard (Cc'ed)
 
-As you seem to have your facts wrong, I can only conclude that you
-are also trolling... I hope I'm wrong about that and you've just made
-an innocent mistake.
+ maxime: we need to talk :)
+
+ please tell me in 4 or 5 sentences what you've managed to do so far,
+expanding a little on what thomas says below, more specifically what
+it achieves and/or allows rather than technically what it does
+(suitable for managers and directors in other words), and what plans
+you'd like to see happen.
+
+> is the maintainer of the mainline Allwinner sunxi
+> effort. It already supports a number of boards, has a pinctrl driver, a
+> GPIO driver, serial port is working, network is working, I2C is
+> working.
+>
+> All in mainline, completely Device Tree based.
+
+ great.  which version did it first hit, i.e. what will the first
+signs of this be when allwinner begin doing "git pulls"?
+
+ and which boards.  bear in mind that one of those "boards" should
+really be "the total range of products available across hundreds of
+chinese tablet clone manufacturers".
+
+ specific question: is one of the "boards" the one that tom cubie
+submitted, which covers virtually every android tablet product
+manufactured in the millions by chinese tablet clone manufacturers?
+
+
+> So isn't this entire discussion completely moot?
+
+ no because it's totally in isolation from allwinner.  i need to give
+them a heads-up, and get them involved, giving them specific
+incentives [which nobody's yet given!!] for following a particular
+path [or paths] yet to be recommended.
+
+> The mainline support
+> for sunxi has already started since 6 months or so, and has been Device
+> Tree based from day one.
+
+to clarify: the *community-driven* mainline support for sunxi.  ok -
+which chips?  sun3i (ARM9), sun4i (Cortex A8), sun5i, sun6i and sun7i
+(Dual-Core Cortex A7)?  which ones are in?
+
+l.
