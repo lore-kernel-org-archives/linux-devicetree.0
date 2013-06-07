@@ -1,139 +1,117 @@
-From: "luke.leighton" <luke.leighton@gmail.com>
-Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
- Uploading linux (3.9.4-1))
-Date: Fri, 7 Jun 2013 08:52:43 +0100
-Message-ID: <CAPweEDx_1fvAv9sROtPreoyyj_yDAuYb040fM2zPc+tf22d=YA@mail.gmail.com>
-References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
-	<1851164.HnXhGSdttW@flatron>
-	<CAPweEDxWW4LUeBaHLb+wHuAMq=63p88zsx4tumVb2PdP_+ohAw@mail.gmail.com>
-	<1622862.fXQWv0YWGV@flatron>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v3 06/11] staging: drm/imx: Add LDB support
+Date: Fri, 07 Jun 2013 09:54:18 +0200
+Message-ID: <1370591658.4470.9.camel@pizza.hi.pengutronix.de>
+References: <1364484215-13935-1-git-send-email-p.zabel@pengutronix.de>
+ <1364484215-13935-7-git-send-email-p.zabel@pengutronix.de>
+ <51B18E54.5030501@tqsc.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1622862.fXQWv0YWGV@flatron>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, debian-kernel@lists.debian.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devel-bounces@linuxdriverproject.org>
+In-Reply-To: <51B18E54.5030501@tqsc.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/devel>,
+ <mailto:devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/devel/>
+List-Post: <mailto:devel@linuxdriverproject.org>
+List-Help: <mailto:devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/devel>,
+ <mailto:devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: devel-bounces@linuxdriverproject.org
+Sender: "devel" <devel-bounces@linuxdriverproject.org>
+To: list-09@tqsc.de
+Cc: devel@driverdev.osuosl.org, Fabio Estevam <fabio.estevam@freescale.com>, Sascha Hauer <s.hauer@pengutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de, Martin Fuzzey <mfuzzey@parkeon.com>, Sean Cross <xobs@kosagi.com>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 6, 2013 at 2:02 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> On Thursday 06 of June 2013 13:49:38 luke.leighton wrote:
->> On Thu, Jun 6, 2013 at 1:43 PM, Tomasz Figa <tomasz.figa@gmail.com>
-> wrote:
->> > Luke,
->> >
->> > On Thursday 06 of June 2013 13:24:57 luke.leighton wrote:
->> >> On Thu, Jun 6, 2013 at 1:01 AM, Tomasz Figa <tomasz.figa@gmail.com>
->> >
->> > wrote:
->> >> > I don't see any other solution here than moving all the Allwinner
->> >> > code
->> >> > to DT (as it has been suggested in this thread several times
->> >> > already), as this is the only hardware description method supported
->> >> > by ARM Linux.
->> >>
->> >>  i repeat again: please state, explicitly and unequivocably that you
->> >>  -
->> >>
->> >> linux kernel developers - are happy that the reach of linux and
->> >> gnu/linux OSes is dramatically reduced due to this intransigent
->> >> position.
->> >>
->> >>  or, tomasz, please state that you, tomasz, represent each and every
->> >>
->> >> one of the linux kernel developers so that i do not need to keep
->> >> asking.
->> >
->> > I do not represent all linux kernel developers by any means. I am just
->> > stating current policy of SoC/board support maintained by ARM Linux,
->> > which is common for all Linux kernel devlopers, or at least ARM Linux
->> > kernel developers.
->> >
->> > Personally I am happy with numerous companies backing this policy and
->> > not making problems like this with Allwinner and I am really
->> > surprised that you are supporting a troublesome company like this.
->>
->>  you've not read what i've written tomasz.
+Am Freitag, den 07.06.2013, 09:40 +0200 schrieb Markus Niebel:
+> Am 28.03.2013 16:23, wrote Philipp Zabel:
+> > From: Sascha Hauer <s.hauer@pengutronix.de>
+> > 
+> > This adds support for the LVDS Display Bridge contained
+> > in i.MX5 and i.MX6 SoCs.
+> > 
+> > Bit mapping, data width, and video timings are configurable
+> > via device tree. Dual-channel mode is supported for a single
+> > high-resolution source.
+> > 
+> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > ---
+> > Changes since v2:
+> >  - Removed commented out code
+> >  - Replaced magic constants
+> >  - Select OF_VIDEOMODE
+> > ---
+> >  .../devicetree/bindings/staging/imx-drm/ldb.txt    |  99 ++++
+> >  drivers/staging/imx-drm/Kconfig                    |   8 +
+> >  drivers/staging/imx-drm/Makefile                   |   1 +
+> >  drivers/staging/imx-drm/imx-ldb.c                  | 609 +++++++++++++++++++++
+> >  4 files changed, 717 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/staging/imx-drm/ldb.txt
+> >  create mode 100644 drivers/staging/imx-drm/imx-ldb.c
+> > 
+[...]
+> > diff --git a/drivers/staging/imx-drm/imx-ldb.c b/drivers/staging/imx-drm/imx-ldb.c
+> > new file mode 100644
+> > index 0000000..75607b3
+> > --- /dev/null
+> > +++ b/drivers/staging/imx-drm/imx-ldb.c
+> > @@ -0,0 +1,609 @@
+[...]
+> > +static void imx_ldb_set_clock(struct imx_ldb *ldb, int mux, int chno,
+> > +		unsigned long serial_clk, unsigned long di_clk)
+> > +{
+> > +	int ret;
+> > +
+> > +	dev_dbg(ldb->dev, "%s: now: %ld want: %ld\n", __func__,
+> > +			clk_get_rate(ldb->clk_pll[chno]), serial_clk);
+> > +	clk_set_rate(ldb->clk_pll[chno], serial_clk);
+> > +
+> > +	dev_dbg(ldb->dev, "%s after: %ld\n", __func__,
+> > +			clk_get_rate(ldb->clk_pll[chno]));
+> > +
+> > +	dev_dbg(ldb->dev, "%s: now: %ld want: %ld\n", __func__,
+> > +			clk_get_rate(ldb->clk[chno]),
+> > +			(long int)di_clk);
+> > +	clk_set_rate(ldb->clk[chno], di_clk);
+> > +
+> > +	dev_dbg(ldb->dev, "%s after: %ld\n", __func__,
+> > +			clk_get_rate(ldb->clk[chno]));
+> > +
+> > +	/* set display clock mux to LDB input clock */
+> 
+> I think this will fail on i.MX53 with split mode enable in case of
+> mux != chno, since ipu_di<n> can only be muxed to ldb_di<n>_gate.
 >
-> I have.
+>> +     ret = clk_set_parent(ldb->clk_sel[mux], ldb->clk[chno]);
+
+That is true. We should use both ldb_di<n>_gates in split mode on
+i.MX53, with both ldb_di<n>_sel derived from the same parent.
+
+>> +     if (ret) {
+>> +             dev_err(ldb->dev, "unable to set di%d parent clock to ldb_di%d\n", mux, chno);
+>> +     }
+>> +}
+>> +
+>> +static void imx_ldb_encoder_prepare(struct drm_encoder *encoder)
+>> +{
+>> +     struct imx_ldb_channel *imx_ldb_ch = enc_to_imx_ldb_ch(encoder);
+>> +     struct imx_ldb *ldb = imx_ldb_ch->ldb;
+>> +     struct drm_display_mode *mode = &encoder->crtc->mode;
+>> +     unsigned long serial_clk;
+>> +     unsigned long di_clk = mode->clock * 1000;
+>> +     int mux = imx_drm_encoder_get_mux_id(imx_ldb_ch->imx_drm_encoder,
+>> +                                          encoder->crtc);
+>> +
+>> +     if (ldb->ldb_ctrl & LDB_SPLIT_MODE_EN) {
+>> +             /* dual channel LVDS mode */
+>> +             serial_clk = 3500UL * mode->clock;
+> 
+> See comment in imx_ldb_set_clock
 >
->> > There are many other SoC vendors making low cost SoCs, like Rockchip,
->> > Boxchip,
->>
->>  boxchip *is* allwinner.
->
-> Right, sorry. I am not really into this low cost hardware.
+>> +             imx_ldb_set_clock(ldb, mux, 0, serial_clk, di_clk);
+>> +             imx_ldb_set_clock(ldb, mux, 1, serial_clk, di_clk);
+[...]
 
- i've been tracking it for several years.
-
-> There is also AMLogic, though.
-
- they're *definitely* GPL-violators.
-
->> > Telechips. Maybe they would be better candidates for being
->> > promoted as vendors of choice for hardware running free software?
->>
->>  no, because they're not selling at a low-enough price with
->> high-enough integration.  telechips and rockchip don't have the market
->> penetration.
->
-> I do not have access to any numbers, so I am left to believe in what you
-> say.
-
- well... none of us do :)  that report (was it from IDC? it was in
-earlier messages) is a good analysis.
-
-> (Although here in Poland the cheap tablet market is almost evenly
-> divided between all those companies, you can find almost same amount of
-> tablets based on SoCs from each vendor.)
-
- most likely.
-
- allwinner is the one that's actually expressed an interest, at
-Director (Board) Level, of being GPL-compliant.  the software
-engineers understand that; their immediate Manager does not [and is
-causing considerable disruption].
-
- AMLogic stone-walled and cost us money and a large client due to
-their GPL violations. which they till have not resolved [in over 2
-years].  i will not work with them, ever again.
-
- Telechips are korean-based: they haven't responded to communications.
-
- Nufront got themselves in a muddle [late on silicon] so we ruled them
-out - we'll come back to them later.
-
- there's a number of others, but allwinner's the only one that is
-actively communicating.
-
- so.
-
- coming back to what you said earlier: i'm formulating what to say to
-allwinner [and need to pre-send something by monday so that they can
-consider it before the meeting].  so far, it consists of:
-
-* device-tree is what the linux kernel community has come up with, it
-is equivalent to FEX.
-
-* the linux kernel community would like to apologise for not
-consulting with you (allwinner) on the decision to only accept device
-tree
-
-[bear in mind that if this kind of thing isn't said, they risk just
-continuing to make the sunxi community's life absolute hell by
-continuing to work in isolation and continuing to duplicate drivers
-etc. etc. ]
-
-* work is being done by the free software community, they are
-beginning to integrate allwinner's work into the upstream kernel, and
-you (allwinner) will begin to see this when you get round to doing
-linux kernel 3.9
-
-* allwinner and the linux and sunxi community therefore need to work
-closer together, we propose:
-
-* {insert proposals here}
-
-3 days left on the clock.
-
-l.
+regards
+Philipp
