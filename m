@@ -1,35 +1,70 @@
-From: Nicolin Chen <b42378@freescale.com>
-Subject: Re: [PATCH V4] ASoC: fsl: add imx-wm8962 machine driver
-Date: Fri, 7 Jun 2013 20:16:09 +0800
-Message-ID: <20130607121608.GD19153@MrMyself>
-References: <1370600053-14808-1-git-send-email-b42378@freescale.com>
- <CAOMZO5AmNd_ifF7=F2vCyCRVDC9K5w9sJoiRF-j7eskhQ0Q46g@mail.gmail.com>
+From: Heiko =?iso-8859-1?q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v2 1/8] clk: flag to use upper half of the register as change indicator
+Date: Fri, 7 Jun 2013 14:27:20 +0200
+Message-ID: <201306071427.20512.heiko@sntech.de>
+References: <201306062107.58875.heiko@sntech.de> <201306062108.38587.heiko@sntech.de> <CACRpkda+QwnhCHBhQ3d-zUE9dD75Rv0_qt02h6prrzCBzNm5zw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5AmNd_ifF7=F2vCyCRVDC9K5w9sJoiRF-j7eskhQ0Q46g@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, lgirdwood@gmail.com, rob.herring@calxeda.com, broonie@kernel.org, grant.likely@linaro.org
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkda+QwnhCHBhQ3d-zUE9dD75Rv0_qt02h6prrzCBzNm5zw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <cjb@laptop.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 07, 2013 at 08:59:30AM -0300, Fabio Estevam wrote:
-> Please check the return value from 'clk_prepare_enable()'
-> 
-> Regards,
-> 
-> Fabio Estevam
->
+Am Freitag, 7. Juni 2013, 13:46:32 schrieb Linus Walleij:
+> On Thu, Jun 6, 2013 at 9:08 PM, Heiko St=FCbner <heiko@sntech.de> wro=
+te:
+> > There exist platforms, namely at least all Rockchip Cortex-A9 based=
+ ones,
+> > that don't use the paradigm of reading-changing-writing the registe=
+r
+> > contents, but instead only write the changes to the register with a=
+ mask
+> > that indicates the changed bits.
+> >=20
+> > This patch adds flags and code to support the case where the lower =
+16 bit
+> > of hold the information and the upper 16 bit are used as mask to
+> > indicate the written changes.
+> >=20
+> > As hardware-specific flags should not be added to the common clk fl=
+ags,
+> > the flags are added to gate, mux and divider clocks individually.
+> >=20
+> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+>=20
+> (...)
+>=20
+> > +       if ((clk_gate_flags & CLK_GATE_MASK_UPPER_HALF) && bit_idx =
+> 15)
+> > { +               pr_err("%s: bit_idx %d invalid\n", __func__, bit_=
+idx);
+> > +               return ERR_PTR(-EINVAL);
+> > +       }
+>=20
+> Now this looks *EXTREMELY* familiar to a patch just sent by Haojian
+> for HiSilicon.
+>=20
+> "[PATCH v2 3/6] clk: divider: add CLK_DIVIDER_HIWORD_MASK flag"
+> http://marc.info/?l=3Dlinux-arm-kernel&m=3D137035873916777&w=3D2
+>=20
+> What kind of coincidence is this? Are Rockchip and HiSilicon using
+> the same silicon IP or are they of a common origin? (It is a small
+> world after all.)
 
-Sent a V5.
-Thanks again.
+Now this is really interesting :-) and the handling really seems to fol=
+low the=20
+same pattern.
+
+
+> I think you two guys need to read each others patch sets closely
+> here. I'd like Haojian to look at Heiko's patches and Heiko to look
+> at Haojian's patches, just to make sure you're not actually writing
+> two drivers for the same hardware in the end.
+
+I'll take a look
+
+
+Heiko
