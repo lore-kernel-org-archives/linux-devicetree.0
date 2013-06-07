@@ -1,50 +1,100 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] mmc: dw_mmc: Handle late vmmc regulators with
- EPROBE_DEFER
-Date: Fri, 7 Jun 2013 11:14:44 -0700
-Message-ID: <CAD=FV=WOWk==gjnuEwZfywU2Wxccj7AbSVNj_zuF0bnn8uDf4w@mail.gmail.com>
-References: <1370580406-10254-1-git-send-email-dianders@chromium.org>
- <1370626110-1731-1-git-send-email-dianders@chromium.org>
- <2536139.bTRcfOkXer@flatron>
+From: "luke.leighton" <luke.leighton@gmail.com>
+Subject: Re: getting allwinner SoC support upstream (was Re:
+ Uploading linux (3.9.4-1))
+Date: Fri, 7 Jun 2013 19:15:24 +0100
+Message-ID: <CAPweEDy3hCvusHvWMBki0ak=Se51Rtu-1WyiD3haWoquT8waSA@mail.gmail.com>
+References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
+	<CAKON4OxDD5orX2w-_+d5kawTGXbE3KKj2QLERo9m7=NiUSXhgQ@mail.gmail.com>
+	<51AFA6DD.3000202@wwwdotorg.org>
+	<CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
+	<1370469574.18839.33.camel@localhost>
+	<CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
+	<CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
+	<CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com>
+	<1370475609.20454.44.camel@localhost>
+	<CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
+	<1370477958.20454.68.camel@localhost>
+	<CAPweEDyPffcN9cNJ10ZHt+AZJHTRdU0LMfCGM_756uAbf+NEBQ@mail.gmail.com>
+	<51B085C6.3000605@gmail.com>
+	<CAPweEDwR_NWUSi-j53m8MuoaV1RxM4wNNXtRioa2CjNdYqEtzQ@mail.gmail.com>
+	<51B19046.5040401@gmail.com>
+	<CAPweEDxfWcv7HSDuO6Uc751iiPg9ngDQc5UB7mbxwBespwF_7Q@mail.gmail.com>
+	<51B19769.4060706@free-electrons.com>
+Reply-To: Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <2536139.bTRcfOkXer@flatron>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Will Newton <will.newton-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <arm-netbook-bounces@lists.phcomp.co.uk>
+In-Reply-To: <51B19769.4060706@free-electrons.com>
+List-Unsubscribe: <http://lists.phcomp.co.uk/mailman/options/arm-netbook>,
+	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=unsubscribe>
+List-Archive: <http://lists.phcomp.co.uk/pipermail/arm-netbook/>
+List-Post: <mailto:arm-netbook@lists.phcomp.co.uk>
+List-Help: <mailto:arm-netbook-request@lists.phcomp.co.uk?subject=help>
+List-Subscribe: <http://lists.phcomp.co.uk/mailman/listinfo/arm-netbook>,
+	<mailto:arm-netbook-request@lists.phcomp.co.uk?subject=subscribe>
+Errors-To: arm-netbook-bounces@lists.phcomp.co.uk
+Sender: "arm-netbook" <arm-netbook-bounces@lists.phcomp.co.uk>
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: devicetree-discuss <devicetree-discuss@ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm@lists.debian.org, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel@lists.debian.org
 List-Id: devicetree@vger.kernel.org
 
-Tomasz,
-
-On Fri, Jun 7, 2013 at 10:42 AM, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> A question just out of curiousity: Is it really correct to have one vmmc
-> regulator for the whole device, instead of one regulator per slot?
+On Fri, Jun 7, 2013 at 9:18 AM, Alexandre Belloni
+<alexandre.belloni@free-electrons.com> wrote:
+> On 07/06/2013 10:06, luke.leighton wrote:
+>> On Fri, Jun 7, 2013 at 8:48 AM, Vladimir Pantelic <vladoman@gmail.com> wrote:
+>>> luke.leighton wrote:
+>>>>   3 days remaining on the clock.
+>>>
+>>> what catastrophic thing will happen when the time runs out?
+>>  no catastrophe, vladimir: all that happens is that an opportunity is
+>> lost, and the result of that is that the situation remains as it is,
+>> with a major soc vendor being divorced from and isolated from the free
+>> software community, who will continue to have to shoulder the
+>> frustrating and isolated burden of responsibility of reworking
+>> "over-the-fence" kernel patches as best they can with the limited
+>> resources that they have.
 >
-> This might be something obvious, but I don't know any details about
-> dw_mmc, so sorry if it's the case.
+> I think the question was: what will be done in 3 days that cannot be
+> undone ? and you didn't answer that.
 
-I don't actually know.  I've never seen a multi-slot implementation so
-I end up doing lots of speculation when I make changes.  Certainly the
-code I'm moving wouldn't have worked correctly in the
-more-than-one-slot case.  There's only space to pass one regulator
-(it's not per-slot) and that one regulator would have just been
-enabled multiple times.  ...and it would have only been disabled once
-in places like suspend/resume.
+ apologies for not being clear.  there is nothing that cannot be
+"undone".  i trust that that answers the specific question you've
+asked.
 
-If there is every a multi-slot implementation that needs vmmc on a
-per-slot it seems like we could address at that time?
+ let me try to put it into "undo" words.
 
-Thanks!
+ this is about me (a messenger) offering you plural (the linux kernel
+community) an opportunity to "undo" the
+mess-that-is-perceived-to-be-the-case wrt one specific SoC vendor,
+named "Allwinner".
 
--Doug
+ let me try to put it another way.  i cannot specifically state
+EXACTLY what will "be done", because i do not have authorisation to
+make that publicly known.  i am trying hard to hint at what can be
+"done", and the deadline is monday 10th june 2013 to get a clear
+proposal in which will make its way to allwinner, by means that i
+cannot specifically tell you about because i do not have the specific
+authorisation or permission to tell you.
+
+ does that point you in the right direction?
+
+ can we please get on with taking advantage of this opportunity and
+discuss options that can be presented, instead of asking these kinds
+of questions?
+
+> I don't understand why your are
+> still stating that Allwinner will never be able to get code in the
+> mainline
+
+ i didn't say that.  apologies if that wasn't clear.
+
+> after Olof and Maxime told you that they are already working,
+> at least discussing with them.
+>
+
+ apologies, i missed that.  there's a lot i need to get up-to-speed,
+in very little time.  i have some keywords to search for now i'll go
+find those messages.
+
+l.
