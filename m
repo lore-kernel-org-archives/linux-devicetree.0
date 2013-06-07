@@ -1,42 +1,48 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+From: Ben Hutchings <ben@decadent.org.uk>
 Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
  Uploading linux (3.9.4-1))
-Date: Fri, 7 Jun 2013 20:30:14 +0100
-Message-ID: <20130607193014.GW18614@n2100.arm.linux.org.uk>
-References: <CAPweEDx3mAy40BZrzrKPRbvg7vKMj7KevDQ3m_v4p6Yo50eSGg@mail.gmail.com>
- <1622862.fXQWv0YWGV@flatron>
- <CAPweEDx_1fvAv9sROtPreoyyj_yDAuYb040fM2zPc+tf22d=YA@mail.gmail.com>
- <4466665.6pIGCIdISn@flatron>
- <CAPweEDwmgr2JbH+txDDjR_gDA2R2C1v=AuVCUVTs7RriMhZNiA@mail.gmail.com>
+Date: Fri, 7 Jun 2013 20:31:04 +0100
+Message-ID: <20130607193104.GE4752@decadent.org.uk>
+References: <CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
+ <1370477958.20454.68.camel@localhost>
+ <CAPweEDyPffcN9cNJ10ZHt+AZJHTRdU0LMfCGM_756uAbf+NEBQ@mail.gmail.com>
+ <51B085C6.3000605@gmail.com>
+ <CAPweEDwR_NWUSi-j53m8MuoaV1RxM4wNNXtRioa2CjNdYqEtzQ@mail.gmail.com>
+ <51B19046.5040401@gmail.com>
+ <CAPweEDxfWcv7HSDuO6Uc751iiPg9ngDQc5UB7mbxwBespwF_7Q@mail.gmail.com>
+ <1370616567.2433.20.camel@jm-desktop>
+ <20130607182608.GV18614@n2100.arm.linux.org.uk>
+ <CAPweEDxXnRWYK4GhSkN-PzM1hLOZPiD1MUne1Q-4FT6PJRJUtw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAPweEDwmgr2JbH+txDDjR_gDA2R2C1v=AuVCUVTs7RriMhZNiA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "luke.leighton" <luke.leighton-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, debian-arm-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org, "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux on small ARM machines <arm-netbook-Fj0DB6SUpRXNuVmtMlwsDbVCufUGDwFn@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, debian-kernel-0aAXYlwwYIJuHlm7Suoebg@public.gmane.org
+In-Reply-To: <CAPweEDxXnRWYK4GhSkN-PzM1hLOZPiD1MUne1Q-4FT6PJRJUtw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luke Kenneth Casson Leighton <lkcl@lkcl.net>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, joem <joem@martindale-electric.co.uk>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, "debian-arm@lists.debian.org" <debian-arm@lists.debian.org>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, "debian-kernel@lists.debian.org" <debian-kernel@lists.debian.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 07, 2013 at 08:02:03PM +0100, luke.leighton wrote:
->  well, tough.  get me up to speed, *fast*.
+On Fri, Jun 07, 2013 at 08:18:14PM +0100, Luke Kenneth Casson Leighton wrote:
+> On Fri, Jun 7, 2013 at 7:26 PM, Russell King - ARM Linux
+> <linux@arm.linux.org.uk> wrote:
+> > Luke Leighton on the other hand is demanding that we
+> 
+>  no demands have been made, russell: i've informed you of an immovable
+> deadline which will pass beyond which the opportunity being presented
+> is lost.
+[...]
 
-No, not unless you're willing to *pay* someone to spend time teaching you,
-because you are asking to be *taught* about the current situation, so
-you're asking someone to do some _work_ _for_ _you_.  If you're not
-willing to do that, then all the information is out there in the public
-domain for you to learn from yourself.
+Would that be the opportunity for you to pose as an intermediary
+between the Linux community and Allwinner, which you failed to realise
+was a completely redundant position?
 
-> please stop wasting time like this:
+If not, please explain what you are actually hoping to do, and why
+anyone should care.
 
-Pot. Black.
+Ben.
+
+-- 
+Ben Hutchings
+We get into the habit of living before acquiring the habit of thinking.
+                                                              - Albert Camus
