@@ -1,60 +1,93 @@
-From: "luke.leighton" <luke.leighton@gmail.com>
+From: Wookey <wookey@wookware.org>
 Subject: Re: [Arm-netbook] getting allwinner SoC support upstream (was Re:
  Uploading linux (3.9.4-1))
-Date: Fri, 7 Jun 2013 19:56:26 +0100
-Message-ID: <CAPweEDyfrA9z55Yqt8jC8j=e=G_gAH_FA0XrOLxExajwQxN8rQ@mail.gmail.com>
-References: <51AFA6DD.3000202@wwwdotorg.org>
-	<CAOesGMgqxhG45NyCfpHc_0uHS+_Gn-hGZm-+CRvK2EEf1AGTow@mail.gmail.com>
-	<20130606172810.GE14209@lukather>
-	<201306062222.53780.arnd@arndb.de>
+Date: Fri, 7 Jun 2013 19:57:24 +0100
+Message-ID: <20130607185724.GZ14125@stoneboat.aleph1.co.uk>
+References: <CAPweEDz=hFxXW3XF9CSNZpEFSjayb5an1E8Xze1_uQcCZONVxg@mail.gmail.com>
+ <1370469574.18839.33.camel@localhost>
+ <CAPweEDxMpeJc-w=Yd7d2OT=UisRBp2rxf-MPMDUCOG3EyJz1GQ@mail.gmail.com>
+ <CAKON4OxwyV2f_iTEb5RnP_azc7EsSxPdku_TY5WLWxN7USiY1Q@mail.gmail.com>
+ <CAPweEDw1BabE0cmT5fxZ3Z9p9EH508M3Nzcqk2VcO0oz-qYsvg@mail.gmail.com>
+ <1370475609.20454.44.camel@localhost>
+ <CAPweEDwS3tR=wh-bZJb3vqR8fVQra=3XxDitowGRdH9c7WRfmQ@mail.gmail.com>
+ <CAKON4OxPDpN3BTc9GWP44exDSkAZGJ5OeCpUP37vRnnvxwUnmw@mail.gmail.com>
+ <CAOesGMgqxhG45NyCfpHc_0uHS+_Gn-hGZm-+CRvK2EEf1AGTow@mail.gmail.com>
+ <20130606172810.GE14209@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201306062222.53780.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm <debian-arm@lists.debian.org>, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, debian-kernel <debian-kernel@lists.debian.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <bounce-debian-arm=debian-arm=m.gmane.org@lists.debian.org>
+Content-Disposition: inline
+In-Reply-To: <20130606172810.GE14209@lukather>
+Resent-Message-ID: <46E0AJ5ikL.A.rUG.O1isRB@bendel>
+List-URL: <http://lists.debian.org/debian-arm/>
+List-Post: <mailto:debian-arm@lists.debian.org>
+List-Help: <mailto:debian-arm-request@lists.debian.org?subject=help>
+List-Subscribe: <mailto:debian-arm-request@lists.debian.org?subject=subscribe>
+List-Unsubscribe: <mailto:debian-arm-request@lists.debian.org?subject=unsubscribe>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Olof Johansson <olof@lixom.net>, "jonsmirl@gmail.com" <jonsmirl@gmail.com>, devicetree-discuss <devicetree-discuss@ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>, "luke.leighton" <luke.leighton@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, debian-arm <debian-arm@lists.debian.org>, Linux on small ARM machines <arm-netbook@lists.phcomp.co.uk>, ARM Linux Mailing List <linux-arm-kernel@lists.infradead.org>, debian-kernel <debian-kernel@lists.debian.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 6, 2013 at 9:22 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thursday 06 June 2013, Maxime Ripard wrote:
->> So yes, Allwinner has an evil vendor tree (c), with a solution similar yet
->> inferior (because not generic enough) to the device tree, but they show
->> interest on going down the mainline road.
->
-> Right, and of course there is nothing special about that, everybody starts
-> out with they own even vendor tree (c), and as hardware support gets merged
-> upstream, the diff gets smaller, even though the code in the mainline
-> kernel is normally very different from what they started out with.
++++ Maxime Ripard [2013-06-06 19:28 +0200]:
+> Hi everyone,
+> 
+> On Thu, Jun 06, 2013 at 09:00:00AM -0700, Olof Johansson wrote:
 
- *sigh* except if that idiot manager [whom we're keenly aware of]
-orders them to delete absolutely everything (find . -name '*sunxi*' |
-xargs git rm) and overwrite it with their internally-managed tree,
-causing absolute mayhem in the process...
+> > Listen, Allwinner isn't working in a vacuum, believe it or not. I've
+> > talked to them, so has Arnd and other people working on ARM, including
+> > Maxime Ripard, who's been reimplementing upstream support for their
+> > platform. Everybody is interested in the right things happening, it's
+> > just a matter of figuring out how to do it. The right people are
+> > already talking.
+> 
+> I should also add that Allwinner not only talked to us already, but also
+> expressed interest in doing actual modern kernel development (like using
+> "recently" introduced kernel frameworks, like the clk framework).
+> 
+> I've received patches from them already for private reviews, they began
+> to show up on the kernel mailing lists, they asked to be CCed on the
+> patches I send upstream, they're even the one that reached out to me
+> when the early support for their chips was released. So, like Olof said,
+> they aren't in a vacuum, they are very aware of the mainline kernel and
+> speak a decent english.
+
+OK, this sounds good. Could you say who the allwinner engineers are? I
+guess it's quite a large organisation, so if Crazy Luke can say 'the
+work of mainline integration using device-tree is already being done
+by $these $people, please talk to them to help move it along', that
+might help get everyone on the same page.
+
+If it's like many large organisations, some bits of it will 'get it'
+and see why, in the long term, mainline integration is worthwhile, but
+other bits will look at what they have now and their android focus,
+and decide it's easier to keep doing what they are doing. 
+
+There is a lot of hardware using these socs, and I'd love to be able
+to use that with mainstream stuff, rather than random vendor piles,
+and specific android kernels, so anything we can do to help make that
+happen is good.
+
+> So yes, Allwinner has an evil vendor tree (c), with a solution similar yet
+> inferior (because not generic enough) to the device tree, but they show
+> interest on going down the mainline road.
+
+So, luke: mainline is not going to support fex directly, whatever you
+or allwinner do. The advantages to allwinner of working with mainline
+are:
+1) Ability to use whatever (kernel supported) hardware they like with
+new designs, with no driver work
+2) Ability to use latest kernels and thus whatever shiny goodies those
+include
+3) No need to do fex-ready drivers for new hardware
+4) No need to keep backporting new kernels to add fex integration
+forevermore
+
+If they want to keep existing tools and fex workflow then a fex<->DT
+translation tool will be needed. (It's not clear to me to what degree
+DT can simply be used instead directly)
 
 
-> Chances are actually that the Allwinner (A10/A13/A20, not A31) platform may
-> end up being the first modern one that is fully supported upstream including
-> a GPU driver, since it is one of the obvious targets for the
-> reverse-engineering efforts.
-
- yes. http://libv.livejournal.com/24735.html
-
-> Ironically (given NVIDIA's reputation), the
-> Tegra platform is the strongest competitor I see in that race at the moment.
-
- at $7.50 for a dual-core processor, and i am *not* going to tell you
-the quad-core price, i don't believe it can be considered to be a
-race, or even a competition.  they're *OUT*, man.   really.
-
- oh wait - did you mean for "1st to have fully supported upstream GPU
-driver"?  that would be veery nice.
-
-> For all I can tell, things are progressing nicely, given that it's currently
-> a volunteer effort. If anyone needs things to move faster, I'd recommend
-> them to send money to free-electrons.com.
-
- i'll put that on the list of recommendations, but - again - i need a
-list of clear benefits and returns as to why that should happen.
-
-l.
+Wookey
+-- 
+Principal hats:  Linaro, Emdebian, Wookware, Balloonboard, ARM
+http://wookware.org/
