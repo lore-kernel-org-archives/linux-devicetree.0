@@ -1,206 +1,64 @@
-From: J Keerthy <j-keerthy@ti.com>
-Subject: [PATCH] ARM: dts: add dtsi for palmas
-Date: Fri, 7 Jun 2013 16:58:24 +0530
-Message-ID: <1370604504-32310-1-git-send-email-j-keerthy@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/8] clk: flag to use upper half of the register as
+ change indicator
+Date: Fri, 7 Jun 2013 13:46:32 +0200
+Message-ID: <CACRpkda+QwnhCHBhQ3d-zUE9dD75Rv0_qt02h6prrzCBzNm5zw@mail.gmail.com>
+References: <201306062107.58875.heiko@sntech.de>
+	<201306062108.38587.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: b-cousson@ti.com, devicetree-discuss@lists.ozlabs.org
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, ldewangan@nvidia.com, grant.likely@secretlab.ca, swarren@wwwdotorg.org, swarren@nvidia.com, sameo@linux.intel.com, gg@slimlogic.co.uk, lee.jones@linaro.org, J Keerthy <j-keerthy@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201306062108.38587.heiko@sntech.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <cjb@laptop.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Adds palmas mfd and palmas regulator nodes. This is
-based on the patch series:
+On Thu, Jun 6, 2013 at 9:08 PM, Heiko St=FCbner <heiko@sntech.de> wrote=
+:
 
-http://www.mail-archive.com/linux-omap@vger.kernel.org/msg89957.html
+> There exist platforms, namely at least all Rockchip Cortex-A9 based o=
+nes,
+> that don't use the paradigm of reading-changing-writing the register =
+contents,
+> but instead only write the changes to the register with a mask that i=
+ndicates
+> the changed bits.
+>
+> This patch adds flags and code to support the case where the lower 16=
+ bit of
+> hold the information and the upper 16 bit are used as mask to indicat=
+e the
+> written changes.
+>
+> As hardware-specific flags should not be added to the common clk flag=
+s, the
+> flags are added to gate, mux and divider clocks individually.
+>
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+(...)
+> +       if ((clk_gate_flags & CLK_GATE_MASK_UPPER_HALF) && bit_idx > =
+15) {
+> +               pr_err("%s: bit_idx %d invalid\n", __func__, bit_idx)=
+;
+> +               return ERR_PTR(-EINVAL);
+> +       }
 
-The device tree nodes are based on:
-https://lkml.org/lkml/2013/6/6/25
+Now this looks *EXTREMELY* familiar to a patch just sent by Haojian
+for HiSilicon.
 
-Signed-off-by: J Keerthy <j-keerthy@ti.com>
-Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
----
- arch/arm/boot/dts/palmas.dtsi |  171 +++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 171 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/boot/dts/palmas.dtsi
+"[PATCH v2 3/6] clk: divider: add CLK_DIVIDER_HIWORD_MASK flag"
+http://marc.info/?l=3Dlinux-arm-kernel&m=3D137035873916777&w=3D2
 
-diff --git a/arch/arm/boot/dts/palmas.dtsi b/arch/arm/boot/dts/palmas.dtsi
-new file mode 100644
-index 0000000..be631b5
---- /dev/null
-+++ b/arch/arm/boot/dts/palmas.dtsi
-@@ -0,0 +1,171 @@
-+/*
-+ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+
-+&palmas {
-+	compatible = "ti,palmas";
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+
-+	palmas_pmic {
-+		compatible = "ti,palmas-pmic";
-+		interrupt-parent = <&palmas>;
-+		interrupts = <14 IRQ_TYPE_NONE>;
-+		interrupt-name = "short-irq";
-+
-+		ti,ldo6-vibrator;
-+
-+		regulators {
-+			smps123_reg: smps123 {
-+				regulator-name = "smps123";
-+				regulator-min-microvolt = < 600000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			smps45_reg: smps45 {
-+				regulator-name = "smps45";
-+				regulator-min-microvolt = < 600000>;
-+				regulator-max-microvolt = <1310000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			smps6_reg: smps6 {
-+				regulator-name = "smps6";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1200000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			smps7_reg: smps7 {
-+				regulator-name = "smps7";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			smps8_reg: smps8 {
-+				regulator-name = "smps8";
-+				regulator-min-microvolt = < 600000>;
-+				regulator-max-microvolt = <1310000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			smps9_reg: smps9 {
-+				regulator-name = "smps9";
-+				regulator-min-microvolt = <2100000>;
-+				regulator-max-microvolt = <2100000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+				ti,smps-range = <0x80>;
-+			};
-+
-+			smps10_reg: smps10 {
-+				regulator-name = "smps10";
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5000000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			ldo1_reg: ldo1 {
-+				regulator-name = "ldo1";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			ldo2_reg: ldo2 {
-+				regulator-name = "ldo2";
-+				regulator-min-microvolt = <2900000>;
-+				regulator-max-microvolt = <2900000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			ldo3_reg: ldo3 {
-+				regulator-name = "ldo3";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			ldo4_reg: ldo4 {
-+				regulator-name = "ldo4";
-+				regulator-min-microvolt = <2200000>;
-+				regulator-max-microvolt = <2200000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			ldo5_reg: ldo5 {
-+				regulator-name = "ldo5";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			ldo6_reg: ldo6 {
-+				regulator-name = "ldo6";
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			ldo7_reg: ldo7 {
-+				regulator-name = "ldo7";
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			ldo8_reg: ldo8 {
-+				regulator-name = "ldo8";
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <1500000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			ldo9_reg: ldo9 {
-+				regulator-name = "ldo9";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			ldoln_reg: ldoln {
-+				regulator-name = "ldoln";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			ldousb_reg: ldousb {
-+				regulator-name = "ldousb";
-+				regulator-min-microvolt = <3250000>;
-+				regulator-max-microvolt = <3250000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+		};
-+	};
-+};
--- 
-1.7.5.4
+What kind of coincidence is this? Are Rockchip and HiSilicon using
+the same silicon IP or are they of a common origin? (It is a small
+world after all.)
+
+I think you two guys need to read each others patch sets closely
+here. I'd like Haojian to look at Heiko's patches and Heiko to look
+at Haojian's patches, just to make sure you're not actually writing
+two drivers for the same hardware in the end.
+
+Yours,
+Linus Walleij
