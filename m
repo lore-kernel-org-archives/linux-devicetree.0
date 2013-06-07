@@ -1,160 +1,80 @@
-From: Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: pxa27x and pinctrl-single
-Date: Fri, 7 Jun 2013 23:16:03 +0800
-Message-ID: <CAD6h2NStRcXm_X=0ib=RtKqVhmsfGo4z=_jzL1hUo_MLcfyBZw@mail.gmail.com>
-References: <51AF7404.3090003@newsguy.com>
- <CAD6h2NTu9-E=Xy8zz5cgDdk5W4ShM9-B+p+gQtiA_HASQ7AEuQ@mail.gmail.com>
- <51B0C7E8.5090308@newsguy.com>
- <CAD6h2NSRCti57NZtw0wzE8Th65_3Y8Dkz5zGsbnA2SUPYS263Q@mail.gmail.com>
- <51B12DE9.9040908@newsguy.com>
- <CAN1soZyOzrRewwx0up2s+4igUf77h+UbFpCsm324O-nkBWcsTQ@mail.gmail.com>
- <51B1F330.9080007@newsguy.com>
+From: Haojian Zhuang <haojian.zhuang@linaro.org>
+Subject: Re: [PATCH v2 1/8] clk: flag to use upper half of the register as
+ change indicator
+Date: Fri, 7 Jun 2013 23:21:00 +0800
+Message-ID: <CAD6h2NRBHh-4XNnDvyWmVPSpLzLCG32=xuwGZg4nu+WAD6r=Kg@mail.gmail.com>
+References: <201306062107.58875.heiko@sntech.de>
+	<201306062108.38587.heiko@sntech.de>
+	<CACRpkda+QwnhCHBhQ3d-zUE9dD75Rv0_qt02h6prrzCBzNm5zw@mail.gmail.com>
+	<201306071427.20512.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51B1F330.9080007-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "Manjunathappa,
- Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <201306071427.20512.heiko@sntech.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chris Ball <cjb@laptop.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On 7 June 2013 22:50, Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org> wrote:
-> On 06/06/2013 06:21 PM, Haojian Zhuang wrote:
->> On Fri, Jun 7, 2013 at 8:48 AM, Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org> wrote:
->>> On 06/06/2013 04:58 PM, Haojian Zhuang wrote:
->>>> On 7 June 2013 01:33, Mike Dunn <mikedunn-kFrNdAxtuftBDgjK7y7TUQ@public.gmane.org> wrote:
->>>>>
->>>
->>>
->>> [...]
->>>
->>>
->>>>>
->>>>> Yes, but currently pinctrl-single only supports writing one register =
-for a given
->>>>> pin (with multiple pins sharing a register if bit-per-mux=3D=3Dtrue).=
-  On pxa27x, a
->>>>> pin's alt function is determined by the values written to both the GA=
-FRx and the
->>>>> GPDRx registers, so I think that pinctrl-single may need to allow a d=
-evice tree
->>>>> to specify multiple reg/value/mask sets for any one pin.  I don't hav=
-e a
->>>>> pxa3xx/mmp developer's manual handy, but from the code it appears tha=
-t on these
->>>>> arches the direction register is irrelevant to the mux setting.
->>>>>
->>>>
->>>> No, it's not need to access both GAFRx & GPDRx. Let's focus on PXA27x =
-first.
->>>>
->>>> GPIO =91x=92 Alternate Function Select Bits (where x =3D 112 through 1=
-20)
->>>> A bit-pair in this register determines the corresponding GPIO pin=92s
->>>> functionality as one of the alternate functions that is mapped to it o=
-r as a
->>>> generic GPIO pin.
->>>>
->>>> 0b00 =3D The corresponding GPIO pin (GPIO<x>) is used as a general-
->>>> purpose I/O.
->>>> 0b01 =3D The corresponding GPIO pin (GPIO<x>) is used for its alternate
->>>> function 1.
->>>> 0b10 =3D The corresponding GPIO pin (GPIO<x>) is used for its alternate
->>>> function 2.
->>>> 0b11 =3D The corresponding GPIO pin (GPIO<x>) is used for its alternate
->>>> function 3.
->>>>
->>>> We can see that GAFRx configures the pinmux. That's all. We can use
->>>> pinctrl-single
->>>> driver to cover this.
->>>
->>>
->>> But on the pxa27x there are usually *two* meanings for any one of the 3=
- alt
->>> functions, depending on the direction.  As a random example... gpio28 a=
-lt fn
->>> 0b01 is AC97_BITCLK if the direction is input, but is I2S_BITCLK if the
->>> direction is output (from PXA27x Developer's Manual, Table 24-2).
->>>
+On 7 June 2013 20:27, Heiko St=FCbner <heiko@sntech.de> wrote:
+> Am Freitag, 7. Juni 2013, 13:46:32 schrieb Linus Walleij:
+>> On Thu, Jun 6, 2013 at 9:08 PM, Heiko St=FCbner <heiko@sntech.de> wr=
+ote:
+>> > There exist platforms, namely at least all Rockchip Cortex-A9 base=
+d ones,
+>> > that don't use the paradigm of reading-changing-writing the regist=
+er
+>> > contents, but instead only write the changes to the register with =
+a mask
+>> > that indicates the changed bits.
+>> >
+>> > This patch adds flags and code to support the case where the lower=
+ 16 bit
+>> > of hold the information and the upper 16 bit are used as mask to
+>> > indicate the written changes.
+>> >
+>> > As hardware-specific flags should not be added to the common clk f=
+lags,
+>> > the flags are added to gate, mux and divider clocks individually.
+>> >
+>> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 >>
->> You didn't understand the alternate function. GPIO mode is only one mode
->> of alternate functions. Because GPIO means that user can program the
->> pin, you also need to configure the direction for GPIO usage.
+>> (...)
 >>
->> Most of pins are either input or output. If the alternate function is
->> AC97_BITCLK,
->> input mode is configured by hardware automatically. You shouldn't config=
-ure
->> it in GPDR register. Since it's working in AC97 mode, not GPIO mode. Con=
-figuring
->> in GPDR register can't work.
+>> > +       if ((clk_gate_flags & CLK_GATE_MASK_UPPER_HALF) && bit_idx=
+ > 15)
+>> > { +               pr_err("%s: bit_idx %d invalid\n", __func__, bit=
+_idx);
+>> > +               return ERR_PTR(-EINVAL);
+>> > +       }
+>>
+>> Now this looks *EXTREMELY* familiar to a patch just sent by Haojian
+>> for HiSilicon.
+>>
+>> "[PATCH v2 3/6] clk: divider: add CLK_DIVIDER_HIWORD_MASK flag"
+>> http://marc.info/?l=3Dlinux-arm-kernel&m=3D137035873916777&w=3D2
+>>
+>> What kind of coincidence is this? Are Rockchip and HiSilicon using
+>> the same silicon IP or are they of a common origin? (It is a small
+>> world after all.)
+>
+> Now this is really interesting :-) and the handling really seems to f=
+ollow the
+> same pattern.
 >
 >
-> This is where you are wrong Haojian.  Now I am sure that this peculiarity=
- is
-> unique to pxa2xx.  From pxa27x developer's manual (section 24.4.2)...
+>> I think you two guys need to read each others patch sets closely
+>> here. I'd like Haojian to look at Heiko's patches and Heiko to look
+>> at Haojian's patches, just to make sure you're not actually writing
+>> two drivers for the same hardware in the end.
 >
-> GPIO pins can have as many as three alternate input and three alternate o=
-utput
-> functions.
->
-> And in the comments above the __gpio_is_occupied() function in gpio-pxa.c=
- you
-> mentioned earlier...
->
-> /*
->  * On PXA25x and PXA27x, GAFRx and GPDRx together decide the alternate
->  * function of a GPIO, and GPDRx cannot be altered once configured. It
+> I'll take a look
 >
 >
-> I'll try to state it another way... on the old Intel pxa arches, the dire=
-ction
-> bit is effectively a third alt function bit, as "alt function" is defined=
- by the
-> newer Marvell processors.
->
-> I'll be happy to send you the pxa27x developer's manual if you still have
-> doubts.  In the gpio chapter you will see a table with a row for each gpi=
-o pin,
-> each row containing 6 columns labeled
->
-> alt fn 1 (in)
-> alt fn 2 (in)
-> alt fn 3 (in)
-> alt fn 1 (out)
-> alt fn 2 (out)
-> alt fn 3 (out)
->
-> I hope that makes sense now.
->
-> Thanks again,
-> Mike
+> Heiko
 
-Thank you for pointing this to me. I didn't realize the GPDR needs to
-be configured
-in PXA2xx. It's totally different from PXA3xx.
-
-Since you need to configure both GPDRx and GAFRx. If we are talking
-pinctrl-single
-as reference, we can make it work by this way.
-
-We need to define two pinmux controllers. One is for GPDRx, and the
-other is for GAFRx.
-Both of them need to support pinctrl-single,bits property. For any
-alternate pins in DTS,
-we could include these two pins from two pinmux controllers. What's
-your opinion?
+Me too :)
 
 Regards
 Haojian
