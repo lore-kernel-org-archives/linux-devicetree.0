@@ -1,453 +1,275 @@
 From: Boris BREZILLON <b.brezillon@overkiz.com>
-Subject: [RFC PATCH 07/50] ARM: at91: add PMC programmable clocks
-Date: Fri,  7 Jun 2013 16:24:15 +0200
-Message-ID: <1370615115-16979-8-git-send-email-b.brezillon@overkiz.com>
+Subject: [RFC PATCH 11/50] ARM: at91: add PMC clk device tree binding doc.
+Date: Fri,  7 Jun 2013 16:24:19 +0200
+Message-ID: <1370615115-16979-12-git-send-email-b.brezillon@overkiz.com>
 References: <1370615115-16979-1-git-send-email-b.brezillon@overkiz.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1370615115-16979-1-git-send-email-b.brezillon@overkiz.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>
-Cc: Boris BREZILLON <b.brezillon@overkiz.com>, devicetree-discuss@lists.ozlabs.org
+Sender: linux-doc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Boris BREZILLON <b.brezillon@overkiz.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is the at91 programmable clocks implementation using common clk
-framework.
-A programmable clock is a clock which can be exported on a given pin to clock
-external devices.
-Each programmable clock is given an id (from 0 to 8).
-The number of available programmable clocks depends on the SoC you're using.
-Programmable clock driver only implements the clock setting (clock rate and
-parent setting). It must be chained to a system clock in order to
-enable/disable the generated clock.
-The PCKX pins used to output the clock signals must be assigned to the
-appropriate peripheral (see atmel's datasheets).
+This is the documentation of the dt bindings used by at91 clks.
 
 Signed-off-by: Boris BREZILLON <b.brezillon@overkiz.com>
 ---
- drivers/clk/at91/Makefile           |    2 +
- drivers/clk/at91/clk-programmable.c |  370 +++++++++++++++++++++++++++++++++++
- include/linux/clk/at91.h            |   18 ++
- 3 files changed, 390 insertions(+)
+ .../devicetree/bindings/clock/at91-clock.txt       |  247 ++++++++++++++++++++
+ 1 file changed, 247 insertions(+)
 
-diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
-index 3e2a670..2d7c119 100644
---- a/drivers/clk/at91/Makefile
-+++ b/drivers/clk/at91/Makefile
-@@ -4,3 +4,5 @@
- 
- obj-y += clk-main.o clk-pll.o clk-plldiv.o clk-master.o
- obj-y += clk-system.o clk-peripheral.o
-+
-+obj-$(CONFIG_AT91_PROGRAMMABLE_CLOCKS)	+= clk-programmable.o
-diff --git a/drivers/clk/at91/clk-programmable.c b/drivers/clk/at91/clk-programmable.c
+diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
 new file mode 100644
-index 0000000..e4b1fb0
+index 0000000..63c5d16
 --- /dev/null
-+++ b/drivers/clk/at91/clk-programmable.c
-@@ -0,0 +1,370 @@
-+/*
-+ * drivers/clk/at91/clk-programmable.c
-+ *
-+ *  Copyright (C) 2013 Boris BREZILLON <b.brezillon@overkiz.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/clk/at91.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/io.h>
-+
-+#define PROG_SOURCE_MAX		5
-+#define PROG_MAX		8
-+
-+#define to_clk_programmable(hw) container_of(hw, struct clk_programmable, hw)
-+struct clk_programmable {
-+	struct clk_hw hw;
-+	u8 id;
-+	u8 css;
-+	u8 pres;
-+	u8 slckmck;
-+	struct clk_programmable_layout *layout;
-+};
-+
-+static int clk_programmable_prepare(struct clk_hw *hw)
-+{
-+	u32 tmp;
-+	struct clk_programmable *prog = to_clk_programmable(hw);
-+	struct clk_programmable_layout *layout = prog->layout;
-+	tmp = prog->css | (prog->pres << layout->pres_shift);
-+	if (layout->have_slck_mck && prog->slckmck)
-+		tmp |= 1 << 8;
-+	at91_pmc_write(AT91_PMC_PCKR(prog->id), tmp);
-+	while (!(at91_pmc_read(AT91_PMC_SR) & (AT91_PMC_PCK0RDY << prog->id)))
-+		;
-+	return 0;
-+}
-+
-+static int clk_programmable_is_prepared(struct clk_hw *hw)
-+{
-+	struct clk_programmable *prog = to_clk_programmable(hw);
-+	return !!(at91_pmc_read(AT91_PMC_SR) & (AT91_PMC_PCK0RDY << prog->id));
-+}
-+
-+static unsigned long clk_programmable_recalc_rate(struct clk_hw *hw,
-+						  unsigned long parent_rate)
-+{
-+	u32 tmp;
-+	struct clk_programmable *prog = to_clk_programmable(hw);
-+	struct clk_programmable_layout *layout = prog->layout;
-+	tmp = at91_pmc_read(AT91_PMC_PCKR(prog->id));
-+	prog->pres = (tmp >> layout->pres_shift) & 0x7;
-+	return parent_rate >> prog->pres;
-+}
-+
-+static long clk_programmable_round_rate(struct clk_hw *hw, unsigned long rate,
-+					unsigned long *parent_rate)
-+{
-+	unsigned long best_rate = *parent_rate;
-+	unsigned long best_diff;
-+	unsigned long new_diff;
-+	unsigned long cur_rate;
-+	int shift = shift;
-+
-+	if (rate > *parent_rate)
-+		return *parent_rate;
-+	else
-+		best_diff = *parent_rate - rate;
-+
-+	if (!best_diff)
-+		return best_rate;
-+
-+	for (shift = 1; shift < 7; shift++) {
-+		cur_rate = *parent_rate >> shift;
-+
-+		if (cur_rate > rate)
-+			new_diff = cur_rate - rate;
-+		else
-+			new_diff = rate - cur_rate;
-+
-+		if (!new_diff)
-+			return cur_rate;
-+
-+		if (new_diff < best_diff) {
-+			best_diff = new_diff;
-+			best_rate = cur_rate;
-+		}
-+
-+		if (rate > cur_rate)
-+			break;
-+
-+	}
-+
-+	return best_rate;
-+}
-+
-+static int clk_programmable_set_parent(struct clk_hw *hw, u8 index)
-+{
-+	struct clk_programmable *prog = to_clk_programmable(hw);
-+	struct clk_programmable_layout *layout = prog->layout;
-+	if (index > layout->css_mask) {
-+		if (index == 4 && layout->have_slck_mck) {
-+			prog->css = 0;
-+			prog->slckmck = 1;
-+			return 0;
-+		} else
-+			return -EINVAL;
-+	}
-+
-+	prog->css = index;
-+	return 0;
-+}
-+
-+static u8 clk_programmable_get_parent(struct clk_hw *hw)
-+{
-+	u32 tmp;
-+	u8 ret;
-+	struct clk_programmable *prog = to_clk_programmable(hw);
-+	struct clk_programmable_layout *layout = prog->layout;
-+	tmp = at91_pmc_read(AT91_PMC_PCKR(prog->id));
-+	prog->css = tmp & layout->css_mask;
-+	ret = prog->css;
-+	if (layout->have_slck_mck) {
-+		prog->slckmck = !!(tmp & (1 << 8));
-+		if (prog->slckmck && !ret)
-+			ret = 4;
-+	}
-+
-+	return ret;
-+}
-+
-+static int clk_programmable_set_rate(struct clk_hw *hw, unsigned long rate,
-+				     unsigned long parent_rate)
-+{
-+	struct clk_programmable *prog = to_clk_programmable(hw);
-+	unsigned long best_rate = parent_rate;
-+	unsigned long best_diff;
-+	unsigned long new_diff;
-+	unsigned long cur_rate;
-+	int shift = 0;
-+
-+	if (rate > parent_rate)
-+		return parent_rate;
-+	else
-+		best_diff = parent_rate - rate;
-+
-+	if (!best_diff) {
-+		prog->pres = shift;
-+		return 0;
-+	}
-+
-+	for (shift = 1; shift < 7; shift++) {
-+		cur_rate = parent_rate >> shift;
-+
-+		if (cur_rate > rate)
-+			new_diff = cur_rate - rate;
-+		else
-+			new_diff = rate - cur_rate;
-+
-+		if (!new_diff)
-+			break;
-+
-+		if (new_diff < best_diff) {
-+			best_diff = new_diff;
-+			best_rate = cur_rate;
-+		}
-+
-+		if (rate > cur_rate)
-+			break;
-+
-+	}
-+
-+	prog->pres = shift;
-+	return 0;
-+}
-+
-+static const struct clk_ops programmable_ops = {
-+	.prepare = clk_programmable_prepare,
-+	.is_prepared = clk_programmable_is_prepared,
-+	.recalc_rate = clk_programmable_recalc_rate,
-+	.round_rate = clk_programmable_round_rate,
-+	.get_parent = clk_programmable_get_parent,
-+	.set_parent = clk_programmable_set_parent,
-+	.set_rate = clk_programmable_set_rate,
-+};
-+
-+struct clk * __init
-+at91_clk_register_programmable(const char *name, const char **parent_names,
-+			       u8 num_parents, u8 id,
-+			       struct clk_programmable_layout *layout)
-+{
-+	struct clk_programmable *prog;
-+	struct clk *clk = NULL;
-+	struct clk_init_data init;
-+
-+	id &= 7;
-+
-+	prog = kzalloc(sizeof(*prog), GFP_KERNEL);
-+	if (!prog)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = name;
-+	init.ops = &programmable_ops;
-+	init.parent_names = parent_names;
-+	init.num_parents = num_parents;
-+	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE;
-+
-+	prog->id = id;
-+	prog->layout = layout;
-+	prog->hw.init = &init;
-+
-+	clk = clk_register(NULL, &prog->hw);
-+
-+	if (IS_ERR(clk))
-+		kfree(prog);
-+
-+	return clk;
-+}
-+
-+struct clk_programmable_layout at91rm9200_programmable_layout = {
-+	.pres_shift = 2,
-+	.css_mask = 0x3,
-+	.have_slck_mck = 0,
-+};
-+
-+struct clk_programmable_layout at91sam9g45_programmable_layout = {
-+	.pres_shift = 2,
-+	.css_mask = 0x3,
-+	.have_slck_mck = 1,
-+};
-+
-+struct clk_programmable_layout at91sam9x5_programmable_layout = {
-+	.pres_shift = 4,
-+	.css_mask = 0x7,
-+	.have_slck_mck = 0,
-+};
-+
-+#if defined(CONFIG_OF)
-+struct clk_prog_data {
-+	struct clk **clks;
-+	u8 *ids;
-+	unsigned int clk_num;
-+};
-+
-+static struct clk * __init
-+of_clk_src_periph_get(struct of_phandle_args *clkspec, void *data)
-+{
-+	struct clk_prog_data *clk_data = data;
-+	unsigned int id = clkspec->args[0];
-+	int i;
-+
-+	if (id >= PROG_MAX)
-+		goto err;
-+
-+	for (i = 0; i < clk_data->clk_num; i++) {
-+		if (clk_data->ids[i] == id)
-+			return clk_data->clks[i];
-+	}
-+
-+err:
-+	pr_err("%s: invalid clock id %d\n", __func__, id);
-+	return ERR_PTR(-EINVAL);
-+}
-+
-+static void __init
-+of_at91_clk_prog_setup(struct device_node *np,
-+		       struct clk_programmable_layout *layout)
-+{
-+	int num;
-+	u32 id;
-+	int i;
-+	struct clk *clk;
-+	int num_parents;
-+	u8 *ids;
-+	struct clk **clks;
-+	struct clk_prog_data *clktab;
-+	const char *parent_names[PROG_SOURCE_MAX];
-+	const char *name = np->name;
-+
-+	num_parents = of_count_phandle_with_args(np, "clocks", "#clock-cells");
-+	if (num_parents <= 0 || num_parents > PROG_SOURCE_MAX)
-+		return;
-+
-+	for (i = 0; i < num_parents; ++i) {
-+		parent_names[i] = of_clk_get_parent_name(np, i);
-+		if (!parent_names[i])
-+			return;
-+	}
-+
-+	if (!of_get_property(np, "ids", &num))
-+		return;
-+
-+	num /= 4;
-+	if (num > PROG_MAX)
-+		return;
-+
-+	if (of_property_count_strings(np, "clock-output-names") != num)
-+		return;
-+
-+	clktab = kzalloc(sizeof(*clktab), GFP_KERNEL);
-+	if (!clktab)
-+		return;
-+
-+	ids = kzalloc(num * sizeof(*ids), GFP_KERNEL);
-+	if (!ids)
-+		goto out_free_clktab;
-+
-+	clks = kzalloc(num * sizeof(*clks), GFP_KERNEL);
-+	if (!clks)
-+		goto out_free_ids;
-+
-+	for (i = 0; i < num; i++) {
-+		of_property_read_u32_index(np, "ids", i, &id);
-+		if (id >= PROG_MAX)
-+			goto out_free_clks;
-+		of_property_read_string_index(np, "clock-output-names",
-+					      i, &name);
-+		clk = at91_clk_register_programmable(name, parent_names,
-+						     num_parents, id, layout);
-+
-+		if (IS_ERR(clk))
-+			goto out_free_clks;
-+		clks[i] = clk;
-+		ids[i] = id;
-+	}
-+
-+	clktab->clk_num = num;
-+	clktab->clks = clks;
-+	clktab->ids = ids;
-+	of_clk_add_provider(np, of_clk_src_periph_get, clktab);
-+	return;
-+
-+out_free_clks:
-+	kfree(clks);
-+out_free_ids:
-+	kfree(ids);
-+out_free_clktab:
-+	kfree(clktab);
-+}
-+
-+
-+static void __init of_at91rm9200_clk_prog_setup(struct device_node *np)
-+{
-+	of_at91_clk_prog_setup(np, &at91rm9200_programmable_layout);
-+}
-+CLK_OF_DECLARE(at91rm9200_clk_prog, "atmel,at91rm9200-clk-programmable",
-+	       of_at91rm9200_clk_prog_setup);
-+
-+static void __init of_at91sam9g45_clk_prog_setup(struct device_node *np)
-+{
-+	of_at91_clk_prog_setup(np, &at91sam9g45_programmable_layout);
-+}
-+CLK_OF_DECLARE(at91sam9g45_clk_prog, "atmel,at91sam9g45-clk-programmable",
-+	       of_at91sam9g45_clk_prog_setup);
-+
-+static void __init of_at91sam9x5_clk_prog_setup(struct device_node *np)
-+{
-+	of_at91_clk_prog_setup(np, &at91sam9x5_programmable_layout);
-+}
-+CLK_OF_DECLARE(at91sam9x5_clk_prog, "atmel,at91sam9x5-clk-programmable",
-+	       of_at91sam9x5_clk_prog_setup);
-+#endif
-diff --git a/include/linux/clk/at91.h b/include/linux/clk/at91.h
-index 4addfd6..eccdf74 100644
---- a/include/linux/clk/at91.h
-+++ b/include/linux/clk/at91.h
-@@ -221,6 +221,12 @@ struct clk_master_layout {
- 	u8 pres_shift;
- };
- 
-+struct clk_programmable_layout {
-+	u8 pres_shift;
-+	u8 css_mask;
-+	u8 have_slck_mck;
-+};
-+
- 
- struct clk * __init
- at91_clk_register_main(const char *name,
-@@ -267,4 +273,16 @@ struct clk * __init
- at91_clk_register_sam9x5_peripheral(const char *name, const char *parent_name,
- 				    u32 id, u32 default_div);
- 
-+
-+extern struct clk_programmable_layout at91rm9200_programmable_layout;
-+
-+extern struct clk_programmable_layout at91sam9g45_programmable_layout;
-+
-+extern struct clk_programmable_layout at91sam9x5_programmable_layout;
-+
-+struct clk * __init
-+at91_clk_register_programmable(const char *name, const char **parent_names,
-+			       u8 num_parents, u8 id,
-+			       struct clk_programmable_layout *layout);
-+
- #endif
++++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
+@@ -0,0 +1,247 @@
++Device Tree Clock bindings for arch-at91
++
++This binding uses the common clock binding[1].
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++Required properties:
++- compatible : shall be one of the following:
++	"atmel,at91rm9200-clk-main":
++		at91 main oscillator
++
++	"atmel,at91rm9200-clk-master" or
++	"atmel,at91sam9x5-clk-master":
++		at91 master clock
++
++	"atmel,at91sam9x5-clk-peripheral" or
++	"atmel,at91rm9200-clk-peripheral":
++		at91 peripheral clocks
++
++	"atmel,at91rm9200-clk-pll" or
++	"atmel,at91sam9g45-clk-pll" or
++	"atmel,at91sam9g20-clk-pllb" or
++	"atmel,sama5d3-clk-pll":
++		at91 pll clocks
++
++	"atmel,at91sam9x5-clk-plldiv":
++		at91 plla divisor
++
++	"atmel,at91rm9200-clk-programmable" or
++	"atmel,at91sam9g45-clk-programmable" or
++	"atmel,at91sam9x5-clk-programmable":
++		at91 programmable clocks
++
++	"atmel,at91sam9x5-clk-smd":
++		at91 SMD (Soft Modem) clock
++
++	"atmel,at91rm9200-clk-system":
++		at91 system clocks
++
++	"atmel,at91rm9200-clk-usb" or
++	"atmel,at91sam9x5-clk-usb":
++		at91 usb clock
++
++	"atmel,at91sam9x5-clk-utmi":
++		at91 utmi clock
++
++
++Required properties for main clock:
++- #clock-cells : from common clock binding; shall be set to 0.
++- clocks (optional if clock-frequency is provided) : shall be the slow clock
++	phandle. This clock is used to compute the main clock rate if
++	"clock-frequency" is not provided.
++- clock-frequency: the main oscillator frequency.Prefer the use of
++	"clock-frequency" over automatic clock rate computation.
++
++For example:
++	main: mainck {
++		compatible = "atmel,at91rm9200-clk-main";
++		#clock-cells = <0>;
++		clocks = <&ck32k>;
++		clock-frequency = <18432000>;
++	};
++
++Required properties for master clock:
++- #clock-cells : from common clock binding; shall be set to 0.
++- clocks : shall be the master clock sources (see atmel datasheet) phandles.
++	e.g. "<&ck32k>, <&main>, <&plla>, <&pllb>".
++- characteristics : device tree node describing master clock characteristics.
++	You can find these characteristics in atmel's SoC datasheets.
++	* output : minimum and maximum clock frequency (two u32 fields).
++		e.g. output = <0 133000000>; <=> 0 to 133MHz.
++	* divisors : master clock divisors table (four u32 fields).
++		0 <=> reserved value.
++		e.g. divisors = <1 2 4 6>;
++	* have-div3-pres : some SoC use the reserved value 7 in the PRES field
++		as CLOCK_DIV3 (e.g sam9x5).
++
++For example:
++	mck: mck {
++		compatible = "atmel,at91rm9200-clk-master";
++		#clock-cells = <0>;
++		characteristics = {
++			output = <0 133000000>;
++			divisors = <1 2 4 0>;
++		};
++	};
++
++Required properties for peripheral clocks:
++- #clock-cells : from common clock binding; shall be set to 1. The second cell
++	is used to encode the peripheral id. Peripheral ids are defined in
++	atmel's SoC datasheets.
++- clocks : shall be the master clock phandle.
++	e.g. clocks = <&mck>;
++- ids : peripheral ids (u32 array).
++- clock-output-names : name of clocks. These are the name used during clock
++	registration.
++- "default-divisors" (optional, only available for
++	"atmel,at91sam9x5-clk-peripheral") : sam9x5 and sama5d3 SoC provides
++	configurable peripheral clock divisors. If you define this property
++	(u32 array), the default divisor will be applied when enabling
++	peripheral clock. If not provided the peripheral clock is not divided.
++
++For example:
++	periph: periphck {
++		compatible = "atmel,at91sam9x5-clk-peripheral";
++		#clock-cells = <1>;
++		clocks = <&mck>;
++		ids = <2 6 7>;
++		clock-output-names = "pioA_clk", "pioB_clk", "pioB_clk";
++		default-divisors = <1 2 2>;
++	};
++
++
++Required properties for pll clocks:
++- #clock-cells : from common clock binding; shall be set to 0.
++- clocks : shall be the main clock phandle.
++- id : pll id
++	* 0 <=> plla
++	* 1 <=> pllb
++- characteristics : device tree node describing pll clock characteristics.
++	You can find these characteristics in atmel's SoC datasheets.
++	* input : minimum and maximum source clock frequency (two u32 fields).
++		e.g. input = <1 32000000>; <=> 1 to 32MHz.
++	* output : output frequency ranges.
++	* out: out field value for output frequency ranges.
++	* icpll (not available on some SoC): icpll field value for output
++		frequency ranges.
++
++For example:
++	plla: pllack {
++		compatible = "atmel,at91sam9g45-clk-pll";
++		#clock-cells = <0>;
++		clocks = <&main>;
++		id = <0>;
++		input = <2000000 32000000>;
++		output = <74500000 800000000
++			  69500000 750000000
++			  64500000 700000000
++			  59500000 650000000
++			  54500000 600000000
++			  49500000 550000000
++			  44500000 500000000
++			  40000000 450000000>;
++		out = <0 1 2 3 0 1 2 3>;
++		icpll = <0 0 0 0 1 1 1 1>;
++	};
++
++Required properties for plldiv clocks:
++- #clock-cells : from common clock binding; shall be set to 0.
++- clocks : shall be the plla clock phandle.
++
++For example:
++	plladiv: plladivck {
++		compatible = "atmel,at91sam9x5-clk-plldiv";
++		#clock-cells = <0>;
++		clocks = <&plla>;
++	};
++
++Required properties for programmable clocks:
++- #clock-cells : from common clock binding; shall be set to 1. The second cell
++	is used to encode the programmable clock id.
++	Peripheral ids are in atmel's SoC
++	datasheets.
++- clocks : shall be the programmable clock source phandles.
++	e.g. clocks = <&clk32k>, <&main>, <&plla>, <&pllb>;
++- ids : programmable clock ids (u32 array).
++- clock-output-names : name of clocks. These names are used during clock
++	registration.
++
++For example:
++	prog: progck {
++		compatible = "atmel,at91sam9g45-clk-programmable";
++		#clock-cells = <1>;
++		ids = <0 1>;
++		clocks = <&clk32k>, <&main>, <&plladiv>, <&utmi>, <&mck>;
++		clock-output-names = "prog0", "prog1";
++	};
++
++
++Required properties for smd clock:
++- #clock-cells : from common clock binding; shall be set to 0.
++- clocks : shall be the smd clock source phandles.
++	e.g. clocks = <&plladiv>, <&utmi>;
++
++For example:
++	smd: smdck {
++		compatible = "atmel,at91sam9x5-clk-smd";
++		#clock-cells = <0>;
++		clocks = <&plladiv>, <&utmi>;
++	};
++
++Required properties for system clocks:
++- #clock-cells : from common clock binding; shall be set to 1. The second cell
++	is used to encode the system clock id (bit used in SCER/SCDR register).
++- clocks : shall be the system clock source phandle.
++	e.g. clocks = <&usb>;
++- ids : peripheral ids (u32 array).
++- clock-output-names : name of clocks. These names are used during clock
++	registration.
++
++For example:
++	system: systemck {
++		compatible = "atmel,at91rm9200-clk-system";
++		#clock-cells = <1>;
++		ids = <2 4 6 7 8 9 10>;
++		clocks = <&mck>, <&smd>, <&usb>, <&usb>,
++			 <&prog 0>, <&prog 1>, <&prog 2>;
++		clock-output-names = "ddrck", "smdck", "uhpck", "udpck",
++				     "pck0", "pck1", "pck2";
++	};
++
++
++Required properties for usb clock:
++- #clock-cells : from common clock binding; shall be set to 0.
++- clocks : shall be the smd clock source phandles.
++	e.g. clocks = <&pllb>;
++- divisors (only available for "atmel,at91rm9200-clk-usb"):
++	usb clock divisor table.
++	e.g. divisors = <1 2 4 0>;
++- usbs0-unused (only available for "atmel,at91sam9x5-clk-usb"):
++	Some SoC (sam9n12) use usb source 0 to disable the usb clock.
++
++For example:
++	usb: usbck {
++		compatible = "atmel,at91sam9x5-clk-usb";
++		#clock-cells = <0>;
++		clocks = <&plladiv>, <&utmi>;
++	};
++
++	usb: usbck {
++		compatible = "atmel,at91rm9200-clk-usb";
++		#clock-cells = <0>;
++		clocks = <&pllb>;
++		divisors = <1 2 4 0>;
++	};
++
++
++Required properties for utmi clock:
++- #clock-cells : from common clock binding; shall be set to 0.
++- clocks : shall be the main clock source phandle.
++
++For example:
++	utmi: utmick {
++		compatible = "atmel,at91sam9x5-clk-utmi";
++		#clock-cells = <0>;
++		clocks = <&main>;
++	};
 -- 
 1.7.9.5
+
