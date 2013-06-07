@@ -1,112 +1,82 @@
-From: James King <james.king@linaro.org>
-Subject: Re: [PATCH] arm/dt: Don't add disabled CPUs to system topology
-Date: Fri, 7 Jun 2013 12:48:58 +0100
-Message-ID: <CAFtq+0FuzNcoQpK7=7d_KetYYHoPC7rdkFWMrApey5dxiWZ9mg@mail.gmail.com>
-References: <1370538685-22386-1-git-send-email-james.king@linaro.org>
-	<20130607102326.GA3111@e102568-lin.cambridge.arm.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v3 4/6] ARM: kirkwood: move device tree nodes to DT irqchip
+ and clocksource
+Date: Fri, 07 Jun 2013 13:51:32 +0200
+Message-ID: <51B1C944.3070509@gmail.com>
+References: <1370536034-23956-1-git-send-email-sebastian.hesselbarth@gmail.com> <1370536034-23956-5-git-send-email-sebastian.hesselbarth@gmail.com> <20130607103007.415575c8@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130607102326.GA3111@e102568-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "nico@linaro.org" <nico@linaro.org>, "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>, "namhyung@kernel.org" <namhyung@kernel.org>, "a.p.zijlstra@chello.nl" <a.p.zijlstra@chello.nl>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "patches@linaro.org" <patches@linaro.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130607103007.415575c8@skate>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Gregory Clement <gregory.clement@free-electrons.com>, John Stultz <john.stultz@linaro.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
-
-On 7 June 2013 11:23, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote:
-> Hi James,
+On 06/07/13 10:30, Thomas Petazzoni wrote:
+> On Thu,  6 Jun 2013 18:27:12 +0200, Sebastian Hesselbarth wrote:
 >
-> On Thu, Jun 06, 2013 at 06:11:25PM +0100, James King wrote:
->> If CPUs are marked as disabled in the devicetree, make sure they do
->> not exist in the system CPU information and CPU topology information.
->> In this case these CPUs will not be able to be added to the system later
->> using hot-plug. This allows a single chip with many CPUs to be easily
->> used in a variety of hardware devices where they may have different
->> actual processing requirements (eg for thermal/cost reasons).
->>
->> - Change devicetree.c to ignore any cpu nodes marked as disabled,
->>   this effectively limits the number of active cpu cores so no need
->>   for the max_cpus=x in the chosen node.
->> - Change topology.c to ignore any cpu nodes marked as disabled, this
->>   is where the scheduler would learn about big/LITTLE cores so this
->>   effectively keeps the scheduler in sync.
->>
+>> -		wdt@20300 {
+>> +		wdt: watchdog-timer@20300 {
+>>   			compatible = "marvell,orion-wdt";
+>>   			reg = <0x20300 0x28>;
+>> +			interrupt-parent = <&bridge_intc>;
+>> +			interrupts = <3>;
+>>   			clocks = <&gate_clk 7>;
+>>   			status = "okay";
+>>   		};
 >
-> I have two questions:
->
-> 1) Since with this approach the DT should change anyway if on different
->    hardware devices based on the same chip you want to allow booting a
->    different number of CPUs, why do not we remove the cpu nodes instead of
->    disabling them ? Put it another way: cpu nodes define a cpu as
->    possible (currently), we can simply remove the node if we do not want
->    that cpu to be seen by the kernel.
+> The watchdog driver is mapping the same registers as the timer driver
+> (0x20300) and is poking into the same TIMER_CTRL register that controls
+> both the timers and the watchdog.
 
-The reason we want disabled status rather than just remove the nodes
-is to use a common soc.dtsi file which is included in many board.dts
-files - eg:
+Thomas,
 
-file soc.dtsi contains:
+I didn't comment on the base address above: with issue (b) solved the
+actual reg property of wdt should be <0x20320 0x8> while timer's reg
+property is <0x20300 0x20>.
 
-                cpus {
-                                cpu0: cpu@0 {
-                                                device_type = "cpu";
-                                                compatible = "arm,cortex-a7";
-                                                reg = <0>;
-                                                cluster = <&cluster0>;
-                                                core = <&core0>;
-                                };
+I had a closer look at orion-wdt. Actually, I don't want to poke into it
+too much, but DT irqchip introduces that chained irq handler for bridge
+registers. While clocksource allows us to have separate drivers for DT
+and non-DT, current watchdog does not.
 
-                                cpu1: cpu@1 {
-                                                device_type = "cpu";
-                                                compatible = "arm,cortex-a7";
-                                                reg = <1>;
-                                                cluster = <&cluster0>;
-                                                core = <&core1>;
-                                };
+This introduces some issues to take care of when dealing with kernels
+where you have both non-DT and DT compiled in.
 
-                                cpu2: cpu@2 {
-                                                device_type = "cpu";
-                                                compatible = "arm,cortex-a15";
-                                                reg = <2>;
-                                                cluster = <&cluster0>;
-                                                core = <&core2>;
-                                };
-                };
+(a) non-DT timer and DT/non-DT watchdog poke BRIDGE_CAUSE
 
-file board1.dts where we want the A15 disabled contains:
+Convert non-DT irq to install chained irq and remove it from non-DT
+timer and DT/non-DT watchdog.
 
-/include/ "soc.dtsi"
+(b) non-DT timer, DT timer, and DT/non-DT watchdog poke TIMER_CTRL
 
-                cpus {
-                                cpu2: cpu@2 {
-                                                status = "disabled";
-                                };
-                };
+Have non-DT timer and DT timer export an orion_timer_ctrl_clrset()
+function that spin_locks access to TIMER_CTRL register. Make non-DT
+timer, DT timer, and DT/non-DT watchdog use that exported function.
 
-> 2) If we go for the "status" property, why do not we use it to set present
->    mask ? That way the cpu is possible but not present, you cannot
->    hotplug it in. It is a bit of a stretch, granted, the cpu _is_ present,
->    we just want to disable it, do not know how this is handled in x86
->    and other archs though.
+One thing we need to workaround here: You cannot have the same function
+name exported from both non-DT and DT timer. For a temporary "fix" this
+function could sit in arch/arm/plat-orion/temporary.c until we get rid
+of non-DT completely. Maybe we also want some place there to
+subsequently split-off code from common.c when we switch to other APIs
+for DT kernels (Reset API).
 
-I have been struggling to find any equivalent example for another
-arch, so just tried to solve our problem. I guess in the x86 world it
-is less likely to want to disable processors in a SoC for heat/battery
-issues so this has just never arisen. In this case the cpu is
-physically present but not possible, but I am not sure it should be in
-a present mask (giving the impression it can be used). Perhaps you
-could elaborate with an example what you are thinking about here?
+(c) common plat-orion reset and watchdog poke RSTOUTn_MASK
 
-Thanks,
-James
->
-> I am just asking, since it is something I thought about while writing
-> code that parses the DT cpu map, basically we do not have a way to
-> "disable" a cpu in the DT and that's what you are doing, I just would like
-> to understand the best way to put it into DT bindings.
->
-> Thanks,
-> Lorenzo
->
+Leave it.
+
+*OR* (d) implement a DT-only version of watchdog
+
+ From what I can see from current orion wdt I prefer forking the whole
+driver and remove of_device_id from the old one. Or just have non-DT
+and DT callbacks where required. That will safe us from messing with
+non-DT core drivers just for getting orion wdt to behave on DT kernels.
+
+And just for the record, we fork off new drivers for DT all the time
+but watchdog already sits in drivers/ while the rest moves from arch/arm
+to drivers/.
+
+Sebastian
+
